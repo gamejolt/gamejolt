@@ -1,0 +1,47 @@
+<a class="search-history-icon"
+	gj-popover-trigger="search-history-popover"
+	ng-class="{ active: ctrl.isVisible }"
+	gj-track-event="search:history:open"
+	>
+	<span class="jolticon jolticon-search"></span>
+	<span class="jolticon jolticon-trans-down caret"></span>
+</a>
+
+<gj-popover
+	class="search-history-popover popover-dark"
+	popover-id="search-history-popover"
+	popover-on-focus="ctrl.onShow()"
+	popover-on-blur="ctrl.onHide()"
+	>
+
+	<div class="popover-heading">{{ ::'search.recent.popover_heading' | translate }}</div>
+
+	<div class="alert alert-warning" ng-if="!ctrl.recentSearches.length">
+		{{ ::'search.recent.none' | translate }}
+	</div>
+
+	<div ng-if="ctrl.isVisible && ctrl.recentSearches.length">
+
+		<div class="list-group thin">
+			<a class="list-group-item"
+				ng-repeat="query in ctrl.recentSearches"
+				ng-click="ctrl.go( query )"
+				gj-track-event="search:history:go"
+				>
+				{{ query }}
+			</a>
+		</div>
+
+		<div class="list-group thin">
+			<a class="list-group-item has-icon"
+				ng-click="ctrl.clear()"
+				gj-track-event="search:history:clear"
+				>
+				<span class="jolticon jolticon-remove"></span>
+				{{ ::'search.recent.clear_button' | translate }}
+			</a>
+		</div>
+
+	</div>
+
+</gj-popover>

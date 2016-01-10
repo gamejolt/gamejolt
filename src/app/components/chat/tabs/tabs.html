@@ -1,0 +1,43 @@
+<div ng-if="ctrl.isShowing">
+	<nav class="chat-tabs">
+
+		<div class="chat-tab" ng-repeat="room in Chat.client.openRooms track by room.id">
+			<div class="chat-tab-inner" ng-class="{ active: Chat.client.room === room && Shell.isRightPaneVisible }" ng-click="ctrl.activateRoom( room.id )">
+				<div class="chat-tab-icon">
+					<img ng-src="{{ room.user.imgAvatar }}" ng-if="::Chat.client.isPMRoom( room )"/>
+					<span class="jolticon jolticon-number-sign" ng-if="::Chat.client.isGroupRoom( room )"></span>
+				</div>
+
+				<div class="chat-tab-messages-received" ng-if="Chat.client.notifications[ room.id ] !== 0">
+					<span class="tag tag-pink notifications-tag">{{ Chat.client.notifications[room.id] | number }}</span>
+				</div>
+
+				<span class="chat-tab-title" ng-if="::Chat.client.isPMRoom( room )">{{ room.user.displayName }}</span>
+				<span class="chat-tab-title" ng-if="::Chat.client.isGroupRoom( room )">{{ room.title }}</span>
+
+				<div class="chat-tab-right">
+					<div class="chat-tab-status"
+						ng-if="::Chat.client.isPMRoom( room )"
+						ng-class="{
+							'offline': !room.user.isOnline,
+							'online active': (room.user.isOnline && room.user.currentlyPlaying.length === 0),
+							'in-game active': (room.user.isOnline && room.user.currentlyPlaying.length !== 0) }"
+						>
+					</div>
+
+					<div class="chat-tab-users badge badge-active"
+						ng-if="::Chat.client.isGroupRoom( room )"
+						>
+						{{ Chat.client.usersOnline[ room.id ].onlineCount | number }}
+					</div>
+
+					<a class="chat-tab-close" ng-click="ctrl.closeRoom( room.id, $event )">
+						<span class="jolticon jolticon-remove close"></span>
+					</a>
+				</div>
+			<div>
+			<div class="chat-tab-separator"></div>
+		</div>
+
+	</nav>
+</div>

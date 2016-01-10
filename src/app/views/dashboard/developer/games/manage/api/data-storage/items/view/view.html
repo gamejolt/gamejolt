@@ -1,0 +1,42 @@
+<h2 class="section-header">
+	<div class="section-header-controls">
+		<a class="i-button big sparse" gj-popover-trigger="more-item-options">
+			<span class="jolticon jolticon-ellipsis-h"></span>
+		</a>
+	</div>
+
+	{{ ::'dash.games.data_store.items.view.heading' | translate }}
+</h2>
+
+<gj-popover popover-id="more-item-options">
+	<div class="list-group">
+		<a class="list-group-item has-icon" ng-click="viewCtrl.remove()">
+			<span class="jolticon jolticon-remove"></span>
+			{{ ::'dash.games.data_store.items.remove_button' | translate }}
+		</a>
+	</div>
+</gj-popover>
+
+<div class="table-responsive">
+	<table class="table table-fixed">
+		<colgroup>
+			<col class="col-sm-3 col-md-2">
+		</colgroup>
+		<tbody>
+			<tr>
+				<th>{{ ::'dash.games.data_store.items.view.key_label' | translate }}</td>
+				<td><code>{{ viewCtrl.item.key }}</code></td>
+			</tr>
+			<tr>
+				<th>{{ ::'dash.games.data_store.items.view.date_label' | translate }}</th>
+				<td>
+					{{ viewCtrl.item.posted_on | date:'medium' }}
+				</td>
+			</tr>
+			<tr>
+				<th>{{ ::'dash.games.data_store.items.view.data_label' | translate }}</th>
+				<td class="small"><pre>{{ viewCtrl.item.data }}</pre></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

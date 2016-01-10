@@ -1,0 +1,40 @@
+<form gj-form="formModel" name="loginForm" ng-submit="onSubmit()">
+	<fieldset ng-disabled="!Connection.isOnline">
+
+		<!--
+			Minlength not needed since the login will fail if incorrect anyway.
+		-->
+
+		<form-group name="username" label="{{ ::'auth.login.username_label' | translate }}" hide-label="true">
+			<input form-control="text"
+				ng-maxlength="30"
+				gj-pattern="username"
+				ng-keyup="keyup()"
+				ng-attr-placeholder="{{ ::'auth.login.username_label' | translate }}">
+
+			<control-errors></control-errors>
+		</form-group>
+
+		<form-group name="password" label="{{ ::'auth.login.password_label' | translate }}" hide-label="true">
+			<input form-control="password"
+				ng-maxlength="30"
+				ng-keyup="keyup()"
+				ng-attr-placeholder="{{ ::'auth.login.password_label' | translate }}">
+
+			<control-errors></control-errors>
+		</form-group>
+		<br>
+
+		<div class="alert alert-warning anim-fade-in-enlarge no-animate-leave" ng-if="formState.invalidLogin" translate="auth.login.invalid_login_error_html"></div>
+
+		<gj-loading ng-if="formState.isProcessing" label="{{ ::loadingMessage | translate }}" class="loading-centered"></gj-loading>
+
+		<div class="form-group">
+			<button gj-form-submit-button class="i-button block">
+				<span class="jolticon jolticon-sign-in"></span>
+				{{ ::'auth.login.submit_button' | translate }}
+			</button>
+		</div>
+		
+	</fieldset>
+</form>

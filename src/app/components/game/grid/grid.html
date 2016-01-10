@@ -1,0 +1,27 @@
+<gj-pagination
+	id="grid-pagination"
+	ng-if="ctrl.perPage && ctrl.gamesCount"
+	items-per-page="ctrl.perPage"
+	total-items="ctrl.gamesCount"
+	current-page="ctrl.currentPage">
+</gj-pagination>
+
+<p class="text-muted small" ng-if="ctrl.gamesCount == 1">{{ ::'games.list.games_count_one' | translate }}</p>
+<p class="text-muted small" ng-if="ctrl.gamesCount > 1">{{ 'games.list.games_count_other' | translate:{ page: ctrl.currentPage, count: ctrl.gamesCount } }}</p>
+
+<div class="row">
+	<gj-game-thumbnail
+		class="col-xs-12 col-sm-6 col-lg-4 game-thumbnail-anim"
+		ng-repeat="game in ctrl.games track by game.id"
+		gj-game="game"
+		gj-link-to="{{ ctrl.linkTo }}">
+	</gj-game-thumbnail>
+</div>
+
+<gj-pagination
+	ng-if="ctrl.perPage && ctrl.gamesCount"
+	items-per-page="ctrl.perPage"
+	total-items="ctrl.gamesCount"
+	current-page="ctrl.currentPage"
+	on-page-change="Scroll.to( 'grid-pagination', { animate: false } )">
+</gj-pagination>

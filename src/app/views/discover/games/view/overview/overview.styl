@@ -1,0 +1,59 @@
+.ctrl-discover-games-view-overview-page
+
+	#maturity-rating
+		margin-top: $line-height-computed
+
+	.developer-info
+		margin-top: $line-height-computed
+
+		@media $media-sm-up
+			margin-top: 0
+
+		.user-avatar
+			float: right
+			width: 100px
+			margin-left: 15px
+
+	.developer-info-icons
+		> a
+			display: inline-block
+			color: $gray-dark
+			&:hover
+				color: $black
+
+	.recommended-games
+		.game-thumbnail
+			margin-bottom: 0
+
+	.rating-breakdown
+		margin-bottom: 0
+
+		> table
+			margin-bottom: 0
+
+			> tbody > tr > th
+			> tbody > tr > td
+				border-top: 0
+
+	.rating-breakdown-label
+	.rating-breakdown-count
+		width: 1px
+
+	.rating-breakdown-count
+		color: $text-muted
+		font-size: $font-size-small
+		text-align: right
+
+	.rating-breakdown-progress
+		vertical-align: middle
+
+		.progress
+			margin-bottom: 0
+
+	// Collapse spacing between headers a bit on really small screens.
+	@media $media-xs
+		h2
+			margin-top: $line-height-computed
+
+			&.section-header
+				margin-top: 0

@@ -1,0 +1,27 @@
+<footer id="footer" class="section">
+	<div class="container" ng-class="{ 'text-center': Screen.isXs }">
+		<div class="clearfix small">
+			<div ng-class="{ 'pull-left': !Screen.isXs }">
+				<div class="social-widgets" ng-if="!Environment.isClient">
+					<gj-social-twitter-follow handle="gamejolt"></gj-social-twitter-follow>
+					<span class="dot-separator hidden-xs"></span>
+					<br ng-if="Screen.isXs">
+					<br ng-if="Screen.isXs">
+					<gj-social-facebook-like url="https://facebook.com/gamejolt" show-share="false"></gj-social-facebook-like>
+				</div>
+
+				<p class="small text-muted">Too many games... and counting!</p>
+			</div>
+			<div ng-class="{ 'pull-right text-right': !Screen.isXs }">
+				<p>
+					<a href="/terms">{{ ::'legal.terms' | translate }}</a>
+					<span class="dot-separator"></span>
+					<a href="/privacy">{{ ::'legal.privacy' | translate }}</a>
+					<span class="dot-separator"></span>
+					<a href="mailto:contact@gamejolt.com">Contact</a>
+				</p>
+				<p class="tiny">&copy; {{ ::curDate | date:'y' }} Lucent Web Creative, LLC</p>
+			</div>
+		</div>
+	</div>
+</footer>

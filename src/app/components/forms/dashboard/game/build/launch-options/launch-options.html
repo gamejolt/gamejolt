@@ -1,0 +1,29 @@
+<form gj-form="formModel" name="launchOptionsForm">
+
+	<form-group
+		ng-repeat="platform in platformOptions"
+		ng-if="build[ 'os_' + platform.key ]"
+		name="{{ platform.key }}"
+		label="{{ platform.label }}"
+		>
+		<input-group>
+			<input form-control="text" ng-maxlength="500">
+			<input-group-addon>
+				<a class="link-unstyled"
+					gj-tooltip="$translate.instant( 'dash.games.releases.builds.launch_options.form.file_selector_tooltip' )"
+					ng-click="openFileSelector( platform.key )"
+					>
+					<span class="jolticon jolticon-ellipsis-h"></span>
+				</a>
+			</input-group-addon>
+		</input-group>
+
+		<control-errors label="{{ ::'dash.games.releases.builds.launch_options.form.file_error_label' | translate }}"></control-errors>
+	</form-group>
+
+	<button gj-form-submit-button class="i-button" ng-disabled="!launchOptionsForm.$valid" ng-click="onSubmit()">
+		<span class="jolticon jolticon-add"></span>
+		{{ ::'dash.games.releases.builds.launch_options.form.submit_button' | translate }}
+	</button>
+
+</form>

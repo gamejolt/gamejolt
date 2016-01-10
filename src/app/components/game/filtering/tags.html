@@ -1,0 +1,27 @@
+<div class="game-filtering-tags" ng-if="!ctrl.filteringContainer.areTagFiltersEmpty || ctrl.genre">
+
+	<span class="anim-fade-enter no-animate-leave" ng-if="ctrl.genre">
+		<a class="tag tag-pink" ng-click="ctrl.clearGenre()">
+			<strong>{{ ::'games.filtering.genre_label' | translate }}:</strong>
+			{{ 'discover.categories.' + ctrl.genre.replace( '-', '_' ) | translate }}
+			<span class="jolticon jolticon-remove"></span>
+		</a>
+	</span>
+
+	<span ng-repeat="(filter, options) in ctrl.filteringContainer.filters track by filter"
+		ng-if="::Game_Filtering_Container.filterDefinitions[ filter ].type == 'array'">
+
+		<span class="anim-fade-enter no-animate-leave"
+			ng-repeat="option in options track by option">
+
+			<a class="tag tag-pink" ng-click="ctrl.removeFilterOption( filter, option )">
+				<strong>{{ ::Game_Filtering_Container.filterDefinitions[ filter ].label }}:</strong>
+				{{ ::Game_Filtering_Container.filterDefinitions[ filter ].options[ option ] }}
+				<span class="jolticon jolticon-remove"></span>
+			</a>
+
+		</span>
+
+	</span>
+
+</div>

@@ -1,0 +1,59 @@
+.fireside-post-list
+
+	$height = 100px
+	$line-height = 20px
+	$overlay-padding = 15px
+
+	list-style: none
+	padding: 0
+
+	> li
+		margin-top: 0
+		margin-bottom: $line-height-computed
+
+	&-item
+		position: relative
+		display: block
+		height: $height
+		overflow: hidden
+
+		&:hover
+			.fireside-post-list-item-title
+				color: $gj-blue
+
+			.fireside-post-list-item-meta
+				background-color: $gray-darkest
+
+		&-img
+			position: absolute
+			top: 0
+			right: 0
+			bottom: 0
+			left: 0
+			background-color: $gray-lightest
+			background-repeat: no-repeat
+			background-position: center center
+			background-size: cover
+
+		&-meta
+			position: absolute
+			left: 0
+			right: 0
+			top: 50%
+			margin-top: -(($line-height * 2 + $overlay-padding * 2) / 2)
+			padding: $overlay-padding
+			background-color: rgba( $gray-darkest, 0.8 )
+
+		&-title
+			@extend .h5
+			text-overflow()
+			font-weight: bold
+			line-height: $line-height
+			margin: 0
+			color: $white
+
+		&-byline
+			text-overflow()
+			line-height: $line-height
+			font-size: $font-size-small
+			color: $gray-lighter

@@ -1,0 +1,10 @@
+<ul class="stat-list">
+	<li class="stat-big stat-big-smaller" ng-if="collectionCtrl.type != 'bundle' && collectionCtrl.type != 'tag'">
+		<div class="stat-big-label">{{ ::'library.collection.followers_label' | translate }}</div>
+		<div class="stat-big-digit">{{ collectionCtrl.followerCount | number }}</div>
+	</li>
+	<li class="stat-big stat-big-smaller">
+		<div class="stat-big-label">{{ ::'library.collection.games_label' | translate  }}</div>
+		<div class="stat-big-digit">{{ collectionCtrl.totalGamesCount | number }}</div>
+	</li>
+</ul>

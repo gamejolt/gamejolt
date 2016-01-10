@@ -1,0 +1,13 @@
+<div class="trophy-thumbnail" ng-class="::{ 'trophy-thumbnail-achieved': ctrl.isAchieved }">
+
+	<div class="trophy-thumbnail-img">
+		<div class="trophy-thumbnail-img-inner anim-fade-in" ng-class="ctrl.isLoaded ? 'is-loaded' : ''">
+			<img ng-class="::(ctrl.trophy.has_thumbnail ? 'img-responsive' : '')"
+				ng-src="{{ ::ctrl.imgSrc }}"
+				alt="{{ ::ctrl.trophy.title }}">
+		</div>
+	</div>
+
+	<span class="trophy-thumbnail-difficulty">{{ ::ctrl.trophy.difficultyLabel }}</span>
+
+</div>

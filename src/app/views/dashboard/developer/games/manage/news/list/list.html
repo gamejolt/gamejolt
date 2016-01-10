@@ -1,0 +1,61 @@
+<section class="section">
+	<div class="container">
+
+		<h2 class="section-header">{{ ::'dash.games.news.heading' | translate }}</h2>
+
+		<div class="page-help">
+			<p>{{ ::'dash.games.news.page_help' | translate }}</p>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7">
+
+				<div ng-if="!listCtrl.newsArticles.length" class="alert alert-warning" translate="dash.games.news.no_news_html"></div>
+
+				<div>
+					<a class="i-button big block" ui-sref="^.add">
+						<span class="jolticon jolticon-add"></span>
+						{{ ::'dash.games.news.add_button' | translate }}
+					</a>
+				</div>
+				<br>
+
+				<div class="list-group" ng-if="listCtrl.newsArticles.length" id="articles-list">
+
+					<a class="list-group-item"
+						ng-repeat="article in listCtrl.newsArticles track by article.id"
+						ui-sref="^.article.stats( { articleId: article.id } )"
+						>
+						<h5 class="list-group-item-heading">
+							<strong>{{ article.title }}</strong>
+						</h5>
+						<div class="list-group-item-text clearfix">
+							<div class="news-list-item-date">
+								{{ ::'dash.games.news.posted_on' | translate:{ date: article.posted_on } }}
+							</div>
+							<div class="news-list-item-meta">
+								{{ ::'dash.games.news.views' | translate }}
+								{{ listCtrl.viewCounts[ article.id ] || 0 | number }}
+
+								<span class="dot-separator"></span>
+
+								{{ ::'dash.games.news.comments' | translate }}
+								{{ listCtrl.commentCounts[ article.id ] || 0 | number }}
+							</div>
+						</div>
+					</a>
+
+				</div>
+
+				<gj-pagination
+					items-per-page="listCtrl.perPage"
+					total-items="listCtrl.totalCount"
+					current-page="listCtrl.currentPage"
+					on-page-change="Scroll.to( 'articles-list', { animate: false } )">
+				</gj-pagination>
+
+			</div>
+		</div>
+
+	</div>
+</section>

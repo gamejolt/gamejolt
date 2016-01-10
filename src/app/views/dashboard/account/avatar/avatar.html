@@ -1,0 +1,26 @@
+<div class="row">
+	
+	<div class="col-md-4 col-md-push-8">
+
+		<div class="well fill-lightest text-center">
+			<p><strong>{{ ::'dash.avatar.current_label' | translate }}</strong></p>
+			<img class="img-responsive" style="display: inline-block; max-width: 100px" ng-src="{{ ::App.user.img_avatar }}" ng-attr-alt="{{ ::'dash.avatar.current_alt' | translate }}">
+		</div>
+
+	</div>
+
+	<div class="col-md-8 col-md-pull-4">
+
+		<div translate="dash.avatar.body_html"></div>
+
+		<p>
+			<a href="http://gravatar.com" class="i-button big" ng-class="{ block: Screen.isXs }">
+				<span class="jolticon jolticon-chevron-right"></span>
+				{{ ::'dash.avatar.get_avatar_button' | translate }}
+			</a>
+		</p>
+		<br>
+
+	</div>
+
+</div>

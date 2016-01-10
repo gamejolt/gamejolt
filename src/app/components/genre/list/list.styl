@@ -1,0 +1,36 @@
+.genre-list-genre
+	display: block
+	float: left
+	width: 10%
+	text-align: center
+
+	@media $media-xs
+		width: 20%
+
+		&:nth-child(1)
+		&:nth-child(2)
+		&:nth-child(3)
+		&:nth-child(4)
+		&:nth-child(5)
+			margin-bottom: $line-height-computed
+
+	&.active
+		.genre-list-genre-label
+			background-color: $gj-pink
+			color: $white
+
+	img
+		width: 58px
+		height: 58px
+
+	&-label
+		display: block
+		margin-top: 10px
+		font-size: 9px
+		text-transform: uppercase
+		color: $black
+
+	&:hover
+		.genre-list-genre-label
+			background-color: $black
+			color: $white

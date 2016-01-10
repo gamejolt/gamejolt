@@ -1,0 +1,17 @@
+<form gj-form="formModel" name="tokenForm">
+
+	<form-group name="token" label="Game Token">
+		<input form-control="text" ng-minlength="4" ng-maxlength="30" autocomplete="off">
+		<control-errors></control-errors>
+
+		<p class="help-block">
+			For security reasons, don't make your game token the same as your password.
+		</p>
+	</form-group>
+
+	<button gj-form-submit-button class="i-button" ng-disabled="!tokenForm.$valid" ng-click="onSubmit()">
+		<span class="jolticon jolticon-edit"></span>
+		Save Game Token
+	</button>
+
+</form>

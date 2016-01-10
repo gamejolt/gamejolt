@@ -1,0 +1,53 @@
+<form gj-form="formModel" name="settingsForm">
+
+	<form-group name="ga_tracking_id" label="{{ ::'dash.games.settings.ga_tracking_id_label' | translate }}" optional="true">
+		<input form-control="text"
+			gj-pattern="gaTrackingId"
+			ng-maxlength="30"
+			ng-attr-placeholder="{{ ::'dash.games.settings.ga_tracking_id_placeholder' | translate }}"
+			>
+
+		<control-errors label="{{ ::'dash.games.settings.ga_tracking_id_error_label' | translate }}"></control-errors>
+
+		<div class="help-block" translate="dash.games.settings.ga_tracking_id_help_html"></div>
+	</form-group>
+
+	<form-group name="ads_enabled" label="{{ ::'dash.games.settings.ads_label' | translate }}">
+		<div class="help-block" translate="dash.games.settings.ads_help_html"></div>
+
+		<gj-toggle-switch
+			form-control="checkbox"
+			toggle-switch-on-text="{{ ::'dash.forms.on' | translate }}"
+			toggle-switch-off-text="{{ ::'dash.forms.off' | translate }}"
+			>
+		</gj-toggle-switch>
+	</form-group>
+
+	<form-group name="comments_enabled" label="{{ ::'dash.games.settings.comments_label' | translate }}">
+		<div class="help-block" translate="dash.games.settings.comments_help_html"></div>
+
+		<gj-toggle-switch
+			form-control="checkbox"
+			toggle-switch-on-text="{{ ::'dash.forms.on' | translate }}"
+			toggle-switch-off-text="{{ ::'dash.forms.off' | translate }}"
+			>
+		</gj-toggle-switch>
+	</form-group>
+
+	<form-group name="ratings_enabled" label="{{ ::'dash.games.settings.ratings_label' | translate }}">
+		<div class="help-block" translate="dash.games.settings.ratings_help_html"></div>
+
+		<gj-toggle-switch
+			form-control="checkbox"
+			toggle-switch-on-text="{{ ::'dash.forms.on' | translate }}"
+			toggle-switch-off-text="{{ ::'dash.forms.off' | translate }}"
+			>
+		</gj-toggle-switch>
+	</form-group>
+
+	<button gj-form-submit-button class="i-button" ng-disabled="!settingsForm.$valid" ng-click="onSubmit()">
+		<span class="jolticon jolticon-edit"></span>
+		{{ ::'dash.games.settings.save_button' | translate }}
+	</button>
+
+</form>

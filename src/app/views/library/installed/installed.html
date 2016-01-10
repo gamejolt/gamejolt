@@ -1,0 +1,75 @@
+<header class="section">
+	<div class="container">
+
+		<h1>Installed Games</h1>
+		<br><br>
+
+	</div>
+</header>
+
+<section class="section" ng-if="installedCtrl.games.length">
+	<div class="container">
+
+		<div class="row">
+
+			<!--
+				We have to pull the z-index for any game that is showing options to be in front.
+				This way the dropdowns always show over other games.
+			-->
+			<div class="col-md-6 col-lg-4 client-installed-game game-thumbnail-anim"
+				ng-repeat="game in installedCtrl.games | orderBy:'title.toLowerCase()' track by game.id"
+				ng-class="{ installing: installedCtrl.installingGames[ game.id ].length }"
+				ng-mouseenter="game._isHovering = true"
+				ng-mouseleave="game._isHovering = false"
+				ng-style="{ 'z-index': game._isShowingOptions || game._isShowingLaunchOptions ? 2 : undefined }"
+				>
+
+				<gj-game-thumbnail gj-game="game._game"></gj-game-thumbnail>
+
+				<!--
+					Try to reduce the # of watchers on page.
+				-->
+				<div class="client-installed-game-meta-outer anim-fade-leave"
+					ng-if="game._isHovering
+						|| game._isShowingOptions
+						|| game._isShowingLaunchOptions
+						|| installedCtrl.installingGames[ game.id ].length
+						|| installedCtrl.updatingGames[ game.id ].length"
+					>
+					<div class="client-installed-game-meta">
+						<gj-client-game-buttons
+							game="game._game"
+							overlay-variant="true"
+							on-show-options="game._isShowingOptions = true"
+							on-hide-options="game._isShowingOptions = false"
+							on-show-launch-options="game._isShowingLaunchOptions = true"
+							on-hide-launch-options="game._isShowingLaunchOptions = false"
+							>
+						</gj-client-game-buttons>
+
+						<span
+							class="client-installed-game-version"
+							ng-if="Client_Library.packagesByGame[ game.id ].length == 1">
+							{{ ::Client_Library.packagesByGame[ game.id ][ 0 ].release.version_number }}
+						</span>
+
+						<span
+							class="client-installed-game-version"
+							ng-if="Client_Library.packagesByGame[ game.id ].length > 1">
+							Multiple Packages
+						</span>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+</section>
+
+<section class="section fill-pink" ng-if="!installedCtrl.games.length">
+	<div class="container">
+		Your installed games show up here... that is, once you have some!
+	</div>
+</section>

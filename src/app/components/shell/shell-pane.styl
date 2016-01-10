@@ -1,0 +1,38 @@
+.shell-pane
+	@extend .scrollable, .clearfix
+	display: none
+	position: fixed
+	left: 0
+	top: $shell-top-nav-height
+	bottom: 0
+	background-color: $gray-darkest
+	z-index: $zindex-shell-pane
+	width: $percentage-11
+
+	@media $media-sm-up
+		width: $shell-pane-width
+
+	// When we make this pane visible, we show it.
+	&.visible
+		display: block
+
+	// When we are hiding the pane and showing the content again, we want to also
+	// keep it visible during this time.
+	// To do that, we hook into the main shell removal animation.
+	#shell.left-pane-visible-remove &
+	#shell.right-pane-visible-remove &
+		display: block
+
+	// When things in the hot bottom are active, we need to move up the pane bottoms.
+	body.chat-tabs-visible &
+		bottom: $chat-tabs-height
+
+	body.status-bar-visible &
+		bottom: $status-bar-height
+
+	body.chat-tabs-visible.status-bar-visible &
+		bottom: $chat-tabs-height + $status-bar-height
+
+.shell-pane-right
+	left: auto
+	right: 0

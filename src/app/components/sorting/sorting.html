@@ -1,0 +1,29 @@
+<div class="sorting">
+	{{ ::'sorting.sort' | translate }}
+
+	<a class="sorting-selection" gj-popover-trigger="sorting-select">
+		{{ ctrl.options[ ($stateParams.sort || '') ] }}
+		<span class="jolticon jolticon-chevron-down"></span>
+	</a>
+
+	<gj-popover popover-id="sorting-select">
+
+		<!--
+			ui-sref doesn't update the URL if only the params change.
+			This allows us to make a binding scope that will recompile on change of state data.
+		-->
+		<div class="list-group" ng-repeat="stateData in [ ctrl.stateData ] track by stateData.id">
+			<a class="list-group-item has-addon"
+				ng-repeat="(key, option) in ctrl.options track by key"
+				ui-sref="{{ stateData.name }}( {{ ctrl.getStateParams( stateData.params, key ) }} )"
+				gj-no-auto-scroll
+				ng-click="ctrl.closePopover()"
+				>
+				<div class="list-group-item-addon">
+					<span class="jolticon" ng-class="(stateData.params.sort === undefined && key == '') || stateData.params.sort == key ? 'jolticon-radio-circle-filled' : 'jolticon-radio-circle text-muted'"></span>
+				</div>
+				{{ ::option }}
+			</a>
+		</div>
+	</gj-popover>
+</div>

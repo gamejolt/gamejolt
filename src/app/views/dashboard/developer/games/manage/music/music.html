@@ -1,0 +1,77 @@
+<section class="section">
+	<div class="container">
+
+		<h2 class="section-header">{{ ::'dash.games.music.heading' | translate }}</h2>
+
+		<div class="page-help" translate="dash.games.music.page_help_html"></div>
+
+		<div class="row">
+			<div class="col-sm-10 col-md-4" ng-class="{ 'pull-right': Screen.isDesktop }">
+
+				<div ng-if="musicCtrl.songs.length" class="alert alert-info">
+					<p>{{ ::'dash.games.music.direct_link_help' | translate }}</p>
+					<p>
+						<input type="text" class="form-control" gj-select-on-focus ng-value="::Environment.baseUrl + manageCtrl.game.getUrl( 'soundtrack' )">
+					</p>
+				</div>
+
+			</div>
+			<div class="col-sm-10 col-md-8 col-lg-7">
+
+				<div class="alert alert-warning" ng-if="!musicCtrl.songs.length" translate="dash.games.music.no_music_html"></div>
+
+				<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
+					<gj-editable-accordion
+						is-adding="musicCtrl.isAdding"
+						active-item="musicCtrl.activeItem">
+
+						<div ui-tree="{ dropped: musicCtrl.onSongsSorted }"
+							ui-tree-nodes
+							ng-model="musicCtrl.songs"
+							>
+
+							<!-- track by ID was breaking -->
+							<gj-editable-accordion-item
+								ng-repeat="song in musicCtrl.songs"
+								ui-tree-node>
+
+								<gj-editable-accordion-item-heading>
+									{{ song.title }}
+								</gj-editable-accordion-item-heading>
+
+								<gj-editable-accordion-item-body>
+									<div class="buttons clearfix">
+										<a class="i-button big warning pull-right" ng-click="musicCtrl.removeSong( song )">
+											<span class="jolticon jolticon-remove"></span>
+											{{ ::'dash.games.music.remove_button' | translate }}
+										</a>
+									</div>
+
+									<gj-form-dashboard-game-song
+										gj-game="manageCtrl.game"
+										gj-game-song="song"
+										gj-form-submit-handler="musicCtrl.onSongEdited( formModel )">
+									</gj-form-dashboard-game-song>
+								</gj-editable-accordion-item-body>
+
+							</gj-editable-accordion-item>
+
+						</div>
+
+						<gj-editable-accordion-add add-label="{{ ::'dash.games.music.add_button' | translate }}">
+
+							<gj-form-dashboard-game-song
+								gj-game="manageCtrl.game"
+								gj-form-submit-handler="musicCtrl.onSongAdded( formModel )">
+							</gj-form-dashboard-game-song>
+
+						</gj-editable-accordion-add>
+
+					</gj-editable-accordion>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</section>

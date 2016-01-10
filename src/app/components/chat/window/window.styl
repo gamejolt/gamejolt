@@ -1,0 +1,240 @@
+$chat-room-window-width = 1000px
+$chat-room-window-padding = 15px
+
+.chat-window-wrap
+	position: fixed
+	top: 0
+	left: 0
+	right: 0
+	bottom: 0
+	display: flex
+	justify-content: center
+	align-items: flex-start
+	z-index: $zindex-chat-window
+
+	@media $media-sm-up
+		top: $shell-top-nav-height + 10px
+		left: 0
+		right: $shell-pane-width + 10px
+
+		// When things in the hot bottom are active, we need to move up the bottom of the window.
+		bottom: $chat-tabs-height + 10px
+
+		body.chat-tabs-visible.status-bar-visible &
+			bottom: $chat-tabs-height + $status-bar-height + 10px
+
+.chat-window-back-close
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	background: transparent
+	z-index: 0
+
+.chat-window
+	@extend .anim-fade-enter-up, .anim-fade-leave-down
+	position: relative
+	display: flex
+	flex: 1 1 auto
+	justify-content: center
+	max-width: $chat-room-window-width
+	height: 100%
+	z-index: 1
+
+	@media $media-xs
+		position: fixed
+		top: 0
+		right: 0
+		left: 0
+		bottom: 0
+		height: auto !important
+		width: auto !important
+
+.chat-window-users
+	position: relative
+	background-color: $gray-darkest
+	z-index: 1
+
+	// Always show the scrollbar.
+	// This fixes a bug where it was flashing the scrollbar in and out on Chrome.
+	// https://github.com/gamejolt/issue-tracker/issues/454
+	overflow-y: scroll !important
+
+	@media $media-xs
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+		z-index: 3
+
+	@media $media-sm-up
+		flex: 0 0 25%
+
+.chat-window-main
+	position: relative
+	flex: 1 1 auto
+	display: flex
+	flex-direction: column
+	max-width: 1000px * 0.75  // Up to 75%
+	z-index: 1
+
+/**
+ * Chat Window Header
+ */
+.chat-window-header-wrap
+	flex: 0 0 auto
+	width: 100%
+	color: $gray-light
+	font-size: 14px
+
+.chat-window-header
+	@extend .clearfix
+	background-color: gray-darkest
+	padding: $chat-room-window-padding
+
+	h2
+	h3
+		text-overflow()
+		margin: 0
+
+	&-avatar
+		float: left
+		margin-right: 15px
+		width: 45px
+		height: 45px
+
+		img
+			display: block
+			width: 45px
+			height: 45px
+
+.chat-window-header-controls
+	float: right
+	margin-left: 10px
+
+	> .btn
+		position: relative
+		vertical-align: op
+		top: -($chat-room-window-padding)
+		right: -($chat-room-window-padding)
+		margin-left: 5px
+
+		&:last-child
+			margin-right: 10px
+
+.chat-window-header-room-description
+	font-size: $font-size-small
+	color: $text-muted
+	width: 100%
+	margin: 5px 0
+
+/**
+ * Chat Window Output
+ */
+.chat-window-output
+	flex: 1 1 auto
+	overflow-y: auto
+	overflow-x: hidde
+	padding: $chat-room-window-padding
+	font-size: $font-size-small
+	background-color: $white
+
+.chat-window-message
+	position: relative
+	margin-bottom: 3px
+	word-wrap: break-word
+	line-height: $font-size-small * 1.25
+
+	&-avatar
+		position: absolute
+		left: 0
+		top: 0
+		width: 35px
+		z-index: 1
+
+		> img
+			@extend .img-responsive
+
+	&-container
+		margin-left: 35px + 10px
+
+	&-user
+		text-overflow()
+		display: inline-block
+		max-width: 230px
+		font-weight: bold
+		vertical-align: bottom
+		margin-right: 5px
+
+	&-time
+		color: $text-muted
+		font-size: $font-size-tiny
+
+	// This ridiculousness is so that we can show <pre> tags full bleed even if they're in fade-collapsers.
+	// We basically make the content wrap full-bleed to the edges of the chat window, and then we make the
+	// content container have the padding. This allows any tags within the content area to full bleed again
+	// even if in fade-collapse and even with the `overflow-y: hidden` thing we do in the content.
+	&-content-wrap
+		margin-left: -(35px + 10px + $chat-room-window-padding)
+		margin-right: -($chat-room-window-padding)
+
+		// Some different styling for the fade collapse.
+		.fade-collapse-collapsed
+			margin-bottom: 5px
+			border-bottom: 1px dashed $gray-light
+
+			&::before
+				height: 5px
+				background: $white !important
+
+		// Only shown during fade-collapse of messages that are too long.
+		.hidden-text-expander
+			margin-left: 35px + 10px + $chat-room-window-padding
+
+	&-content
+		display: block
+
+		// Add in the padding again.
+		padding-left: 35px + 10px + $chat-room-window-padding
+		padding-right: $chat-room-window-padding
+
+		// Try to limit the effects of what zalgo text can do to chat.
+		overflow-y: hidden
+
+		p
+			margin-bottom: 5px
+
+		ul
+			list-style-position: inside
+			padding-left: 0
+			margin-bottom: 5px
+
+			> li
+				margin-bottom: 0
+
+		// Full-bleed pre tags.
+		pre
+			margin-bottom: 5px
+			margin-left: -(35px + 10px + $chat-room-window-padding)
+			margin-right: -($chat-room-window-padding)
+
+		// If this pre tag is the first part of the first message, be sure to move it down past the avatar.
+		.chat-window-message-not-combined & pre:first-child
+			margin-top: 30px
+
+	// System chat messages.
+	// Robo-Jolt and such.
+	.chat-msg-type-system
+		color: #666
+		font-style: italic
+
+		span
+			font-style: italic
+
+.chat-window-send-container
+	width: 100%
+	flex: 0 0 auto
+	background-color: $gray-lightest
+	padding: $chat-room-window-padding

@@ -1,0 +1,38 @@
+.ctrl-dashboard-overview
+
+	@media $media-xs
+		header
+			text-align: center
+
+	.header-user
+		@extend .clearfix
+		margin-top: 10px
+		margin-bottom: $line-height-computed * 2
+		color: $gray-lighter
+
+		.user-avatar
+			display: inline-block
+			width: 40px
+			margin-top: -5px
+			margin-right: 10px
+			vertical-align: middle
+
+	.broadcast
+		@extend .well, .fill-darker, .clearfix
+		display: block
+		margin-bottom: 5px
+
+		> .jolticon
+			float: right
+			margin-left: 15px
+
+		&-heading
+			margin: 0
+
+		&-lead
+			color: $text-muted
+
+		&:hover
+
+			> .jolticon
+				color: $gj-green

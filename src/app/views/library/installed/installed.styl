@@ -1,0 +1,59 @@
+.client-installed-game
+	position: relative
+
+	img
+		transition: all 1s
+		filter: grayscale( 0 )
+
+	&.installing
+		img
+			filter: grayscale( 100% )
+
+	// This matches the thumbnail ratio.
+	&-meta-outer
+		position: absolute
+		top: 0
+		left: 0
+		right: 0
+		height: 0
+		padding-top: 56.25%  // HD 16:9
+
+	&-meta
+		position: absolute
+		top: 0
+		left: 0
+		right: 0
+		bottom: 0
+		align-items: center
+		display: flex
+		text-align: center
+
+	gj-client-game-buttons
+		display: block
+		width: 100%
+
+		.btn
+			@extend .anim-fade-in, .stagger, .no-animate-leave
+
+	&-version
+		position: absolute
+		bottom: 0
+		right: ($grid-gutter-width / 2)
+		background: $gray-darkest
+		color: $white
+		padding: 5px 10px
+		font-size: $font-size-tiny
+
+	.client-install-progress
+		margin: 0
+		margin-left: ($grid-gutter-width / 2)
+		margin-right: ($grid-gutter-width / 2)
+		margin-bottom: 5px
+		padding: 2px 10px
+		background-color: rgba( $black, 0.7 )
+		color: $white
+
+		p
+		.progress
+			margin: 5px 0
+			font-size: $font-size-tiny

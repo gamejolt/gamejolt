@@ -1,0 +1,34 @@
+<div class="discover-home-row">
+
+	<div class="discover-home-row-arrows hidden-xs">
+		<button class="discover-home-row-prev i-button big sparse light"
+			ng-click="ctrl.prevSlide()"
+			ng-disabled="ctrl.currentSlide == 0"
+			gj-track-event="home:slider:prev"
+			>
+			<span class="jolticon jolticon-chevron-left"></span>
+		</button>
+
+		<button class="discover-home-row-next i-button big sparse light"
+			ng-click="ctrl.nextSlide()"
+			ng-disabled="ctrl.currentSlide == ctrl.numSlides - 1"
+			gj-track-event="home:slider:next"
+			>
+			<span class="jolticon jolticon-chevron-right"></span>
+		</button>
+	</div>
+
+	<div class="discover-home-row-slides">
+
+		<!-- Games -->
+		<div class="discover-home-row-slider" ng-if="ctrl.games.length">
+			<gj-discover-home-row-games></gj-discover-home-row-games>
+		</div>
+
+		<!-- Fs Posts -->
+		<div class="discover-home-row-slider" ng-if="ctrl.posts.length">
+			<gj-discover-home-row-fs-posts></gj-discover-home-row-fs-posts>
+		</div>
+
+	</div>
+</div>

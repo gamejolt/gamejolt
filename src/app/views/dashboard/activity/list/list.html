@@ -1,0 +1,105 @@
+<header class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-md-8 col-md-offset-3 col-lg-7 col-lg-offset-3">
+				<h1 class="section-header" id="activity-feed">
+					{{ ::'dash.activity.heading' | translate }}
+				</h1>
+
+				<nav class="platform-list inline">
+					<ul>
+						<li>
+							<a ng-class="{ active: listCtrl.tab == 'all' }"
+								ui-sref="^.list( { tab: 'all', page: undefined } )"
+								gj-no-auto-scroll
+								>
+								{{ ::'dash.activity.all_tab' | translate }}
+							</a>
+						</li>
+						<li ng-if="listCtrl.unreadCounts[ listCtrl.currentNotificationType.key ]">
+							<a ng-class="{ active: listCtrl.tab == 'unread' }"
+								ui-sref="^.list( { tab: 'unread', page: undefined } )"
+								gj-no-auto-scroll
+								>
+								{{ ::'dash.activity.unread_tab' | translate }}
+								<span class="tag tag-pink">{{ listCtrl.unreadCounts[ listCtrl.currentNotificationType.key ] | number }}</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+
+	</div>
+</header>
+
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-md-3" ng-if="Screen.isDesktop">
+				<div ng-include="'/app/views/dashboard/activity/list/_type-selector.html'"></div>
+			</div>
+
+			<div class="col-md-9 col-lg-7">
+
+				<div class="clearfix">
+
+					<div ng-class="{ 'pull-right': !Screen.isXs }">
+
+						<a class="i-button big sparse" gj-popover-trigger="filter-activity" ng-if="!Screen.isDesktop">
+							<span class="jolticon jolticon-filter"></span>
+							{{ ::'dash.activity.filter_button' | translate }}
+						</a>
+
+						&nbsp;
+
+						<gj-popover
+							popover-id="filter-activity"
+							ng-if="!Screen.isDesktop"
+							>
+							<div ng-include="'/app/views/dashboard/activity/list/_type-selector.html'"></div>
+						</gj-popover>
+
+						<a class="i-button big sparse pull-right anim-fade-in"
+							ng-if="listCtrl.unreadCounts[ listCtrl.currentNotificationType.key ]"
+							ng-click="listCtrl.markAllRead()"
+							>
+							<span class="jolticon jolticon-check"></span>
+							{{ ::'dash.activity.dismiss_all_button' | translate }}
+						</a>
+					</div>
+					<br>
+				</div>
+
+				<div class="alert alert-info full-bleed-xs text-center visible-xs visible-sm" ng-if="listCtrl.currentNotificationType.key">
+					{{ ::'dash.activity.current_filter' | translate:{ filter: $translate.instant( 'notifications.' + listCtrl.currentNotificationType.translationKey ) } }}
+				</div>
+
+				<p class="text-muted small" ng-if="listCtrl.notifications.length">
+					{{ ::'dash.activity.pages' | translate:{ page: listCtrl.page, total: listCtrl.notificationsCount } }}
+				</p>
+
+				<div class="alert alert-warning" ng-if="!listCtrl.notifications.length">
+					{{ ::'dash.activity.no_activity' | translate }}
+				</div>
+
+				<gj-activity-feed
+					activity-feed-notifications="listCtrl.filteredNotifications"
+					>
+				</gj-activity-feed>
+
+				<gj-pager
+					total-items="listCtrl.notificationsCount"
+					items-per-page="20"
+					current-page="listCtrl.page"
+					on-page-change="Scroll.to( 'activity-feed', { animate: false } )"
+					>
+				</gj-pager>
+
+			</div>
+		</div>
+
+	</div>
+</section>

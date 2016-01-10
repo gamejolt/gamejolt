@@ -1,0 +1,12 @@
+<!-- User -->
+<strong ng-if="notification.is_user_based">
+	{{ notification.subject_model.display_name }}
+</strong>
+
+<!-- Game -->
+<strong ng-if="notification.is_game_based">
+	{{ notification.object_model.title }}
+</strong>
+
+<!-- Actions -->
+<span translate="{{ ::translationKey }}" translate-values="::translationValues"></span>

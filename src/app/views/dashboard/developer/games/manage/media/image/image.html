@@ -1,0 +1,59 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-10 col-md-12">
+
+				<h2 class="section-header">
+					<div class="section-header-controls">
+						<a class="i-button big sparse" gj-popover-trigger="image-more">
+							<span class="jolticon jolticon-ellipsis-v"></span>
+						</a>
+					</div>
+
+					{{ ::'dash.games.media.image.heading' | translate }}
+				</h2>
+
+				<gj-popover popover-id="image-more">
+					<div class="list-group nowrap">
+						<a class="list-group-item has-icon" ng-click="imageCtrl.remove()">
+							<span class="jolticon jolticon-remove"></span>
+							{{ ::'dash.games.media.image.remove_button' | translate }}
+						</a>
+					</div>
+				</gj-popover>
+
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12 col-sm-10 col-md-4" ng-class="{ 'pull-right': Screen.isDesktop }">
+
+				<div class="alert alert-info">
+					<p>{{ ::'dash.games.media.image.direct_link_help' | translate }}</p>
+					<p>
+						<input type="text" class="form-control" gj-select-on-focus ng-value="Environment.baseUrl + imageCtrl.image.getUrl( manageCtrl.game )">
+					</p>
+				</div>
+
+			</div>
+			<div class="col-sm-10 col-md-8 col-lg-7">
+
+				<p class="anim-fade-in text-center">
+					<a ng-href="{{ imageCtrl.image.media_item.img_url }}" target="_blank">
+						<img class="img-responsive" ng-src="{{ imageCtrl.image.media_item.img_url }}" alt="{{ imageCtrl.image.caption }}">
+					</a>
+				</p>
+
+				<h2>{{ ::'dash.games.media.image.edit_heading' | translate }}</h2>
+
+				<gj-form-dashboard-game-image
+					gj-game="manageCtrl.game"
+					gj-game-screenshot="imageCtrl.image">
+				</gj-form-dashboard-game-image>
+
+			</div>
+		</div>
+
+	</div>
+</section>

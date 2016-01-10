@@ -1,0 +1,41 @@
+gj-game-collection-thumbnail
+	display: block
+
+.collection-thumbnail
+	position: relative
+	height: 0
+	padding-top: 56.25%  // HD 16:9
+	overflow: hidden
+	background-color: $gray-lightest
+
+	> .tag
+		position: absolute
+		left: 0
+		top: 10px
+		z-index: 2
+
+	> .jolticon
+		position: absolute
+		font-size: 16px * 4
+		left: 50%
+		margin-left: -(@font-size / 2)
+		top: @left
+		margin-top: @margin-left
+		color: $gray-lighter
+
+		// We have a much smaller view in lists.
+		.game-collection-list &
+			font-size: 16px
+			margin-left: -(@font-size / 2)
+			top: @left
+			margin-top: @margin-left
+
+	> img
+		display: block
+		position: absolute
+		left: 0
+		right: 0
+		top: 0
+		bottom: 0
+		width: 100%
+		height: 100%

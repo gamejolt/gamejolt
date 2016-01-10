@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="164"
+   height="18"
+   viewBox="0 0 164 18"
+   id="svg2">
+  <defs
+     id="defs4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>T. Gantt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <cc:license
+           rdf:resource="" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer2"
+     style="display:inline">
+    <path
+       d="m 14,1 0,1 -1,0 0,1 -1,0 0,1 -1,0 0,2 2,0 0,1 -1,0 0,1 -1,0 0,1 -1,0 0,1 -1,0 0,1 -1,0 0,1 -1,0 0,1 -1,0 0,1 -1,0 0,1 -1,0 0,2 0,1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 -2,0 0,-2 1,0 0,-1 1,0 0,-1 1,0 0,-1 z m 9,0 0,12 2,0 0,-8 12,0 0,-4 z m 28,0 0,2 -10,0 0,4 2,0 0,-2 8,0 0,4 -12,0 0,8 4,0 0,-6 8,0 0,6 4,0 0,-16 z m 18,0 0,2 -12,0 0,14 4,0 0,-12 2,0 0,12 4,0 0,-12 2,0 0,12 4,0 0,-16 z m 8,0 0,12 -2,0 0,4 16,0 0,-4 -12,0 0,-2 12,0 0,-4 -12,0 0,-2 12,0 0,-4 z m 33,0 0,14 -14,0 0,2 16,0 0,-16 z m 18,0 0,14 -14,0 0,2 16,0 0,-16 z m 10,0 0,8 2,0 0,-8 z m 24,0 0,6 -4,0 0,8 -6,0 0,2 8,0 0,-8 4,0 0,-8 z m -127,6 0,8 -14,0 0,2 16,0 0,-10 z m 113,0 0,2 4,0 0,-2 z M 1,9 1,11 7,11 7,9 z m 26,0 0,2 6,0 0,-2 z m 117,0 0,6 -12,0 0,2 14,0 0,-8 z"
+       id="rect3780"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    <path
+       d="M 4,0 4,2 3,2 3,4 2,4 2,6 1,6 1,8 0,8 l 0,2 6,0 0,2 -1,0 0,2 -1,0 0,2 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 -3,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 1,0 0,-1 z m 0,16 -1,0 0,1 1,0 z m 16,-16 0,16 16,0 0,-10 -10,0 0,4 6,0 0,2 -8,0 0,-8 12,0 0,-4 z m 18,0 0,16 4,0 0,-6 8,0 0,6 4,0 0,-16 z m 18,0 0,16 4,0 0,-12 2,0 0,12 4,0 0,-12 2,0 0,12 4,0 0,-16 z m 18,0 0,16 16,0 0,-4 -12,0 0,-2 12,0 0,-4 -12,0 0,-2 12,0 0,-4 z m 29,0 0,8 -8,0 0,8 16,0 0,-16 z m 10,0 0,16 16,0 0,-16 z m 18,0 0,16 14,0 0,-8 -6,0 0,-8 z m 16,0 0,8 4,0 0,8 8,0 0,-8 4,0 0,-8 z m -105,4 8,0 0,2 -8,0 z"
+       id="rect3815"
+       style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    <path
+       d="M 5,2 5,4 4,4 4,6 5,6 5,7 6,7 6,6 7,6 7,7 8,7 8,6 9,6 9,5 10,5 10,4 11,4 11,3 12,3 12,2 5,2 z M 8,7 8,8 9,8 9,7 8,7 z M 7,7 6,7 6,8 7,8 7,7 z M 5,7 4,7 4,8 5,8 5,7 z M 4,7 4,6 3,6 3,7 4,7 z m 101,-5 0,8 -8,0 0,4 1,0 0,-3 8,0 0,-2 1,0 0,-1 -1,0 0,-1 1,0 0,1 1,0 0,-1 1,0 0,-5 -4,0 z m 3,6 0,1 1,0 0,-1 -1,0 z m 7,-6 0,12 1,0 0,-5 1,0 0,-1 -1,0 0,-1 1,0 0,1 1,0 0,-1 1,0 0,-1 4,0 0,4 -3,0 0,1 4,0 0,-2 1,0 0,-1 -1,0 0,-1 1,0 0,1 1,0 0,-1 1,0 0,-5 -12,0 z m 11,6 0,1 1,0 0,-1 -1,0 z m -8,0 0,1 1,0 0,-1 -1,0 z m 15,-6 0,12 1,0 0,-5 1,0 0,-1 -1,0 0,-1 1,0 0,1 1,0 0,-1 1,0 0,-5 -4,0 z m 3,6 0,1 1,0 0,-1 -1,0 z m 13,-6 0,4 4,0 0,8 1,0 0,-5 1,0 0,-1 -1,0 0,-1 1,0 0,1 1,0 0,-1 1,0 0,-1 4,0 0,-4 -12,0 z m 7,6 0,1 1,0 0,-1 -1,0 z M 10,7 l 0,1 1,0 0,-1 -1,0 z m 128,3 0,1 5,0 0,-1 -5,0 z"
+       id="rect3858"
+       style="color:#000000;fill:#2f7f6f;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    <path
+       d="M 4,6 4,7 5,7 5,6 4,6 z M 5,7 5,8 6,8 6,7 5,7 z M 6,7 7,7 7,6 6,6 6,7 z M 7,7 7,8 8,8 8,7 7,7 z M 8,7 9,7 9,6 8,6 8,7 z M 9,7 9,8 8,8 8,10 9,10 9,9 10,9 10,7 9,7 z M 4,7 3,7 3,8 4,8 4,7 z m 102,0 0,1 1,0 0,-1 -1,0 z m 1,1 0,1 -1,0 0,2 -8,0 0,3 11,0 0,-5 -1,0 0,-1 -1,0 z m 1,0 1,0 0,-1 -1,0 0,1 z m 8,-1 0,1 1,0 0,-1 -1,0 z m 1,1 0,1 -1,0 0,5 11,0 0,-5 -1,0 0,-1 -1,0 0,1 -1,0 0,2 -4,0 0,-1 -1,0 0,-1 -1,0 0,-1 -1,0 z m 1,0 1,0 0,-1 -1,0 0,1 z m 7,0 0,-1 -1,0 0,1 1,0 z m 1,0 1,0 0,-1 -1,0 0,1 z m 8,-1 0,1 1,0 0,-1 -1,0 z m 1,1 0,1 -1,0 0,5 9,0 0,-3 -5,0 0,-1 -1,0 0,-1 -1,0 0,-1 -1,0 z m 1,0 1,0 0,-1 -1,0 0,1 z m 18,-1 0,1 1,0 0,-1 -1,0 z m 1,1 0,1 -1,0 0,5 3,0 0,-5 -1,0 0,-1 -1,0 z m 1,0 1,0 0,-1 -1,0 0,1 z"
+       id="rect3881"
+       style="color:#000000;fill:#ccff00;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+<form gj-form="formModel" name="packageForm">
+
+	<div ng-if="!isLoaded">
+		<gj-loading></gj-loading>
+	</div>
+
+	<div ng-if="isLoaded">
+		<form-group name="version_number" title="{{ ::'dash.games.releases.form.version_number_label' | translate }}">
+
+			<div class="help-block">
+				<div translate="dash.games.releases.form.version_number_help_html"></div>
+				<a class="link-help" href="https://help.gamejolt.com/dev-packages#release-version-numbers" target="_blank">
+					{{ ::'dash.games.releases.form.version_number_help_link' | translate }}
+				</a>
+			</div>
+
+			<input form-control="text"
+				gj-pattern="semver"
+				ng-maxlength="50"
+				gj-form-validate-availability="/web/dash/developer/games/releases/check-field-availability/{{ game.id }}/{{ package.id }}/version_number"
+				>
+			<control-errors></control-errors>
+
+		</form-group>
+
+		<button gj-form-submit-button class="i-button" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">
+			<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
+			{{ ::'dash.games.releases.form.' + (method == 'add' ? 'add' : 'save') + '_release_button' | translate }}
+		</button>
+	</div>
+
+</form>

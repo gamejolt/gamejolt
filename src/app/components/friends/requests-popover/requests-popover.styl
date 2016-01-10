@@ -1,0 +1,33 @@
+.friends-requests-popover
+
+	@media $media-sm-up
+		min-width: 360px
+
+	.list-group-item
+		@extend .clearfix
+
+	.friends-requests-popover-avatar
+		float: left
+
+		img
+			width: 40px
+
+.friends-requests-popover-body
+	display: block
+	width: 170px
+	margin-left: 50px
+	margin-right: 100px
+
+.friends-requests-popover-user-name
+	text-overflow()
+	display: block
+	max-width: 100%
+
+.friends-requests-popover-date
+	@extend .text-muted
+	font-size: $font-size-tiny
+
+.friends-requests-popover-controls
+	float: right
+	width: 90px
+	text-align: right

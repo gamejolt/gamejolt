@@ -1,0 +1,13 @@
+.growl-container
+	bottom: 10px
+
+	@media $media-sm-up
+
+		body.chat-tabs-visible &
+			bottom: $chat-tabs-height + 10px
+
+		body.status-bar-visible &
+			bottom: $status-bar-height + 10px
+
+		body.chat-tabs-visible.status-bar-visible &
+			bottom: $chat-tabs-height + $status-bar-height + 10px

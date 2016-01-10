@@ -1,0 +1,12 @@
+<div ng-if="ctrl.shouldShow && !ctrl.forceHidden">
+	<div class="offline-alert alert alert-warning">
+
+		<a class="close-btn" ng-click="ctrl.forceHidden = true">
+			<span class="jolticon jolticon-remove"></span>
+		</a>
+
+		<span class="jolticon jolticon-bolt-unfilled"></span>
+		Your device is not connected to the internet.
+
+	</div>
+</div>

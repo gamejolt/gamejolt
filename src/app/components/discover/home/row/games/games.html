@@ -1,0 +1,31 @@
+<!--
+	Mobile is just a scrollable grid.
+-->
+<div ng-if="Screen.isXs" class="scrollable-grid-xs">
+	<div class="row">
+		<gj-game-thumbnail
+			class="scrollable-grid-item col-xs-10 col-sm-4 anim-fade-in no-animate-leave"
+			ng-repeat="game in ctrl.games track by game.id"
+			gj-game="game"
+			gj-track-event="home:slider:game:{{ $index }}"
+			>
+		</gj-game-thumbnail>
+	</div>
+</div>
+
+<!--
+	For other size screens we show pageable slides.
+-->
+<div ng-if="!Screen.isXs">
+	<div class="discover-home-row-slide" ng-repeat="slide in ctrl.slides track by slide">
+		<div class="row" ng-if="ctrl.currentSlide == slide">
+			<gj-game-thumbnail
+				class="col-sm-4 col-md-3 anim-fade-in no-animate-leave"
+				ng-repeat="game in ctrl.games | limitTo:ctrl.numPerSlide:(slide * ctrl.numPerSlide) track by game.id"
+				gj-game="game"
+				gj-track-event="home:slider:game:{{ (slide * ctrl.numPerSlide) + $index }}"
+				>
+			</gj-game-thumbnail>
+		</div>
+	</div>
+</div>

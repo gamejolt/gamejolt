@@ -1,0 +1,47 @@
+<div class="row game-collection-grid">
+
+	<div ng-repeat="collection in ctrl.collections track by collection._id"
+		class="col-xs-12 col-sm-6 col-lg-4 game-collection-grid-item"
+		>
+
+		<a ui-sref="{{ ::collection.getSref( true ) }}" gj-track-event="{{ ::ctrl.eventLabel }}">
+			<gj-game-collection-thumbnail gj-game-collection="::collection"></gj-game-collection-thumbnail>
+
+			<div class="game-collection-title" ng-switch="::collection.type">
+				<span ng-switch-when="developer">
+					<span ng-if="::collection.from_subscription">{{ ::'library.playlists.subscription_developer_title' | translate }}</span>
+					<span ng-if="!collection.from_subscription && collection.id == App.user.id">{{ ::'library.playlists.owner_developer_title' | translate }}</span>
+					<span ng-if="!collection.from_subscription && collection.id != App.user.id">{{ ::'library.playlists.developer_title' | translate }}</span>
+				</span>
+
+				<span ng-switch-when="followed">
+					<span ng-if="::collection.from_subscription">{{ ::'library.playlists.subscription_followed_title' | translate }}</span>
+					<span ng-if="!collection.from_subscription && collection.id == App.user.id">{{ ::'library.playlists.owner_followed_title' | translate }}</span>
+					<span ng-if="!collection.from_subscription && collection.id != App.user.id">{{ ::'library.playlists.followed_title' | translate }}</span>
+				</span>
+
+				<span ng-switch-default>{{ ::collection.name }}</span>
+
+				<small ng-if="::collection.from_subscription">
+					{{ ::'library.by' | translate }}
+					{{ ::collection.owner.display_name }}
+				</small>
+			</div>
+
+			<div
+				ng-if="(collection.type == 'followed' || collection.type == 'developer') && collection.id != App.user.id"
+				ng-switch="::collection.type"
+				>
+				<p class="game-collection-desc" ng-switch-when="followed">
+					<span ng-if="::!collection.from_subscription">{{ ::'library.playlists.followed_description' | translate }}</span>
+					<span ng-if="::collection.from_subscription">{{ ::'library.playlists.subscription_followed_description' | translate:{ user: collection.owner.display_name } }}</span>
+				</p>
+				<p class="game-collection-desc" ng-switch-when="developer">
+					<span ng-if="::!collection.from_subscription">{{ ::'library.playlists.developer_description' | translate }}</span>
+					<span ng-if="::collection.from_subscription">{{ ::'library.playlists.subscription_developer_description' | translate:{ user: collection.owner.display_name } }}</span>
+				</p>
+			</div>
+		</a>
+	</div>
+
+</div>

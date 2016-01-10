@@ -1,0 +1,54 @@
+<section class="section fill-darker" ng-if="Screen.isXs">
+	<div class="container">
+		<gj-search
+			gj-search-autocomplete-disable="true"
+			>
+		</gj-search>
+	</div>
+</section>
+
+<header class="section" ng-class="{ 'nav-only': Screen.isXs }" ng-if="Search.query">
+	<div class="container">
+
+		<div class="visible-lg">
+			<p class="text-muted sans-margin">
+				{{ ::'search.showing_label' | translate }}
+			</p>
+
+			<h2 class="sans-margin">{{ searchCtrl.query }}</h2>
+		</div>
+
+		<nav class="platform-list inline">
+			<ul>
+				<li>
+					<a ui-sref="search.results( { q: searchCtrl.query } )" ng-class="{ active: $state.includes( 'search.results' ) }">
+						{{ ::'search.results.overview_tab' | translate }}
+					</a>
+				</li>
+				<li ng-if="searchCtrl.payload.usersCount">
+					<a ui-sref="search.users( { q: searchCtrl.query } )" ng-class="{ active: $state.includes( 'search.users' ) }">
+						{{ ::'search.results.users_tab' | translate }}
+						<span class="badge">{{ searchCtrl.payload.usersCount }}</span>
+					</a>
+				</li>
+				<li ng-if="searchCtrl.payload.gamesCount">
+					<a ui-sref="search.games( { q: searchCtrl.query } )" ng-class="{ active: $state.includes( 'search.games' ) }">
+						{{ ::'search.results.games_tab' | translate }}
+						<span class="badge">{{ searchCtrl.payload.gamesCount }}</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+	</div>
+</header>
+
+<div gj-expand-when="searchCtrl.noResults">
+	<section class="section fill-pink">
+		<div class="container">
+			{{ ::'search.results.no_results' | translate }}
+		</div>
+	</section>
+</div>
+
+<ui-view></ui-view>

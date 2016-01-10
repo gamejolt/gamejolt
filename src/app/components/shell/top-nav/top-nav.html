@@ -1,0 +1,140 @@
+<nav id="shell-top-nav" class="navbar">
+
+	<div class="navbar-left">
+
+		<!-- Mobile Menu Toggle -->
+		<ul class="navbar-items">
+			<li gj-tooltip="'Menu'" tooltip-placement="right">
+				<a ng-class="{ active: isMainMenuActive }"
+					gj-popover-trigger="main-menu"
+					gj-track-event="top-nav:main-menu:toggle"
+					>
+					<span class="jolticon jolticon-menu"></span>
+				</a>
+			</li>
+		</ul>
+
+		<gj-shell-menu-popover
+			is-shown="isMainMenuActive"
+			>
+		</gj-shell-menu-popover>
+
+		<!-- History Navigator (for desktop client) -->
+		<gj-shell-history-navigator ng-if="Environment.isClient"></gj-shell-history-navigator>
+
+		<a class="navbar-item" ui-sref="discover.home" ng-if="!Screen.isXs">
+			<img ng-if="!Screen.isMobile" src="/lib/gj-lib-client/components/site-selector/game-jolt-logo.svg" alt="Game Jolt">
+			<img ng-if="Screen.isSm" src="/lib/gj-lib-client/components/site-selector/jolt.svg" alt="Game Jolt">
+		</a>
+
+		<div class="navbar-separator hidden-xs"></div>
+
+	</div>
+
+	<div class="navbar-center">
+
+		<!-- Search Input -->
+		<gj-search ng-if="!Screen.isXs"></gj-search>
+
+	</div>
+
+	<!--
+		Cloak this so that it doesn't flash wrong things before we load the user.
+		Fixes: https://github.com/gamejolt/issue-tracker/issues/382
+	-->
+	<div class="navbar-right" ng-if="App.userBootstrapped">
+
+		<ul class="navbar-items" ng-if="App.user">
+
+			<!-- Notifications -->
+			<li ng-if="Connection.isOnline" gj-tooltip="'Notifications'" tooltip-placement="bottom">
+				<a
+					gj-popover-trigger="notifications"
+					ng-class="{ active: notificationsShowing }"
+					gj-track-event="top-nav:notifications:toggle"
+					>
+					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="notificationsCount">{{ notificationsCount }}</span>
+					<span class="jolticon jolticon-notifications"></span>
+				</a>
+				<gj-notifications-popover
+					notifications-count="notificationsCount"
+					is-shown="notificationsShowing"
+					>
+				</gj-notifications-popover>
+			</li>
+
+			<!-- Friend Requests -->
+			<li ng-if="Connection.isOnline" gj-tooltip="'Friend Requests'" tooltip-placement="bottom">
+				<a
+					gj-popover-trigger="friend-requests"
+					ng-class="{ active: friendRequestsShowing }"
+					gj-track-event="top-nav:friend-requests:toggle"
+					>
+					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="friendRequestCount">{{ friendRequestCount }}</span>
+					<span class="jolticon jolticon-friend-requests"></span>
+				</a>
+				<gj-friends-requests-popover
+					friend-request-count="friendRequestCount"
+					is-shown="friendRequestsShowing"
+					>
+				</gj-friends-requests-popover>
+			</li>
+
+			<!-- User Menu -->
+			<li>
+				<a class="navbar-avatar"
+					ng-class="{ active: userMenuShowing }"
+					gj-popover-trigger="account-popover"
+					gj-track-event="top-nav:user-menu:toggle"
+					>
+					<div class="avatar-circle" gj-user-avatar="App.user"></div>
+				</a>
+				<gj-shell-account-popover
+					is-shown="userMenuShowing"
+					>
+				</gj-shell-account-popover>
+			</li>
+		</ul>
+
+		<!-- Login/Join Buttons -->
+		<ul class="navbar-items" ng-if="!App.user">
+			<li>
+				<a ng-href="{{ ::Environment.authBaseUrl }}/login" target="_self" gj-track-event="top-nav:login:click">
+					<span class="jolticon jolticon-sign-in"></span>
+					{{ ::'nav.login' | translate }}
+				</a>
+			</li>
+			<li>
+				<a ng-href="{{ ::Environment.authBaseUrl }}/join" target="_self" gj-track-event="top-nav:join:click">
+					<span class="jolticon jolticon-friends"></span>
+					{{ ::'nav.join' | translate }}
+				</a>
+			</li>
+		</ul>
+
+		<div class="navbar-separator"></div>
+
+		<!-- Connection Status -->
+		<span ng-if="!Connection.isOnline">
+			<span class="navbar-item disconnected-icon" gj-tooltip="'You are currently offline.'" tooltip-placement="left">
+				<span class="jolticon jolticon-bolt-unfilled"></span>
+			</span>
+		</span>
+
+		<!-- Chat -->
+		<ul class="navbar-items">
+			<li gj-tooltip="App.user ? 'Chat and Friends List (c)' : 'Chat (c)'" tooltip-placement="left">
+				<a
+					ng-class="{ active: Shell.isRightPaneVisible }"
+					ng-click="Shell.toggleRightPane()"
+					gj-track-event="top-nav:chat:toggle"
+					>
+					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="Chat.totalNotifications">{{ Chat.totalNotifications }}</span>
+					<span class="jolticon jolticon-user-messages"></span>
+				</a>
+			</li>
+		</ul>
+
+	</div>
+
+</nav>

@@ -1,0 +1,1 @@
+angular.module( 'App.Game.Ogrs', [ 'gj.Game' ] );

@@ -1,0 +1,37 @@
+<h2 class="section-header">
+	<div class="section-header-controls">
+		<a class="i-button big sparse" gj-popover-trigger="user-scores-more">
+			<span class="jolticon jolticon-ellipsis-h"></span>
+		</a>
+	</div>
+
+	{{ ::'dash.games.scores.user.list.heading' | translate }}
+	<small>
+		{{ ::'dash.games.scores.user.list.heading_for' | translate }}
+		<a class="link-unstyled" ng-href="{{ listCtrl.user.url }}"><strong>{{ listCtrl.user.display_name }}</strong></a>
+		{{ ::'dash.games.scores.user.list.heading_on' | translate }}
+		<a class="link-unstyled" ui-sref="dashboard.developer.games.manage.api.scoreboards.scores.list( { table: listCtrl.scoreTable.id } )"><strong>{{ listCtrl.scoreTable.name }}</strong></a>
+	</small>
+</h2>
+
+<gj-popover popover-id="user-scores-more">
+	<div class="list-group">
+		<a class="list-group-item has-icon" ng-click="listCtrl.removeAll()">
+			<span class="jolticon jolticon-remove"></span>
+			{{ ::'dash.games.scores.user.list.remove_all_button' | translate }}
+		</a>
+	</div>
+</gj-popover>
+
+<div class="alert alert-warning anim-fade-in" ng-if="!listCtrl.scores.length">
+	<p>{{ ::'dash.games.scores.user.list.no_scores_html' | translate }}</p>
+</div>
+
+<gj-dash-list-scores-developer
+	ng-if="listCtrl.scores.length"
+	gj-score-table="listCtrl.scoreTable"
+	gj-scores="listCtrl.scores"
+	is-for-user="true"
+	on-remove="listCtrl.onScoreRemoved( $score )"
+	>
+</gj-dash-list-scores-developer>

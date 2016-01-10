@@ -1,0 +1,29 @@
+<div class="list-group game-collection-list">
+	<a class="list-group-item clearfix"
+		ng-repeat="collection in ctrl.collections track by collection._id"
+		ui-sref="{{ ::collection.getSref( true ) }}"
+		title="{{ ::collection.getTitle() }}"
+		gj-track-event="{{ ::ctrl.eventLabel }}"
+		>
+		<div class="row">
+			<div class="col-xs-3">
+				<gj-game-collection-thumbnail
+					gj-game-collection="::collection"
+					game-collection-hide-tag="true"
+					>
+				</gj-game-collection-thumbnail>
+			</div>
+			<div class="col-xs-9">
+				<div class="game-collection-title">
+
+					{{ ::collection.name }}
+
+					<small ng-if="::collection.from_subscription">
+						{{ ::'library.by' | translate }}
+						{{ ::collection.owner.display_name }}
+					</small>
+				</div>
+			</div>
+		</div>
+	</a>
+</div>

@@ -1,0 +1,108 @@
+<div class="row">
+	<div class="col-md-10 col-lg-9">
+
+		<h2 class="section-header">{{ ::'dash.games.trophies.heading' | translate }}</h2>
+
+		<div class="page-help">
+			<div translate="dash.games.trophies.page_help_html"></div>
+			<p>
+				<a class="link-help" href="https://help.gamejolt.com/dev-trophies" target="_blank">{{ ::'dash.games.trophies.page_help_link' | translate }}</a>
+			</p>
+		</div>
+
+		<div class="alert alert-warning" ng-if="listCtrl.hasHiddenTrophies" translate="dash.games.trophies.has_hidden_html"></div>
+
+		<div ng-repeat="difficulty in Game_Trophy.difficulties track by $index">
+
+			<h4>{{ ::'dash.games.trophies.section_heading' | translate:{ difficulty: listCtrl.trophyLabels[ difficulty ] } }}</h4>
+
+			<div ng-if="!listCtrl.groupedTrophies[ difficulty ].length">
+				<p class="text-muted small">{{ ::'dash.games.trophies.no_trophies' | translate:{ difficulty: listCtrl.trophyLabels[ difficulty ] } }}</p>
+			</div>
+
+			<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
+				<gj-editable-accordion
+					active-item="listCtrl.activeItem[ difficulty ]"
+					is-adding="listCtrl.isAdding[ difficulty ]"
+					>
+
+					<div
+						ui-tree="{ accept: listCtrl.canDrop, dropped: listCtrl.onTrophySorted }"
+						ui-tree-nodes
+						ng-model="listCtrl.groupedTrophies[ difficulty ]"
+						>
+
+						<!-- track by ID was breaking -->
+						<gj-editable-accordion-item
+							ng-repeat="trophy in listCtrl.groupedTrophies[ difficulty ]"
+							id="trophy-container-{{ trophy.id }}"
+							ng-class="{ inactive: !trophy.visible }"
+							ui-tree-node
+							>
+
+							<gj-editable-accordion-item-heading>
+
+								<!--
+									Since the trophy thumbnail directive bind-onces, we do this so that it refreshes the DOM
+									when the trophy thumbnail changes.
+								-->
+								<div ng-repeat="_trophyRefresh in [ trophy.img_thumbnail ]">
+									<gj-trophy-thumbnail trophy-thumbnail-trophy="trophy"></gj-trophy-thumbnail>
+								</div>
+
+								<div class="stats">
+									<div class="stat-big">
+										<div class="stat-big-label">{{ ::'dash.games.trophies.trophy_id_label' | translate }}</div>
+										<div class="stat-big-digit">{{ trophy.id }}</div>
+									</div>
+								</div>
+
+								<div class="trophy-list-body">
+									<h5 class="editable-accordion-item-heading-title">{{ trophy.title }}</h5>
+									<p class="editable-accordion-item-heading-description">{{ trophy.description }}</p>
+
+									<div class="trophy-list-tags" ng-if="!trophy.visible || trophy.secret">
+										<span ng-if="!trophy.visible" class="tag tag-pink" gj-tooltip="$translate.instant( 'dash.games.trophies.hidden_tooltip' )">{{ ::'dash.games.trophies.hidden_tag' | translate }}</span>
+										<span ng-if="trophy.secret" class="tag" gj-tooltip="$translate.instant( 'dash.games.trophies.secret_tooltip' )">{{ ::'dash.games.trophies.secret_tag' | translate }}</span>
+									</div>
+								</div>
+
+							</gj-editable-accordion-item-heading>
+
+							<gj-editable-accordion-item-body>
+								<div class="buttons clearfix">
+									<a class="i-button big warning pull-right" ng-click="listCtrl.removeTrophy( trophy )">
+										<span class="jolticon jolticon-remove"></span>
+										{{ ::'dash.games.trophies.remove_button' | translate }}
+									</a>
+								</div>
+
+								<gj-form-dashboard-game-trophy
+									gj-game="manageCtrl.game"
+									gj-game-trophy="trophy"
+									gj-form-submit-handler="listCtrl.onTrophyEdited( formModel )">
+								</gj-form-dashboard-game-trophy>
+							</gj-editable-accordion-item-body>
+
+						</gj-editable-accordion-item>
+
+					</div>
+
+					<gj-editable-accordion-add add-label="{{ ::'dash.games.trophies.add_button' | translate:{ difficulty: listCtrl.trophyLabels[ difficulty ] } }}">
+
+						<gj-form-dashboard-game-trophy
+							gj-game="manageCtrl.game"
+							trophy-difficulty="difficulty"
+							gj-form-submit-handler="listCtrl.onTrophyAdded( formModel )"
+							>
+						</gj-form-dashboard-game-trophy>
+
+					</gj-editable-accordion-add>
+
+				</gj-editable-accordion>
+			</div>
+
+		</div>
+
+	</div>
+</div>

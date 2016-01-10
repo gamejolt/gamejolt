@@ -1,0 +1,74 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7">
+
+				<h2 class="section-header sans-margin-bottom">
+					<div class="section-header-controls">
+						<a class="i-button big sparse" gj-popover-trigger="article-more">
+							<span class="jolticon jolticon-ellipsis-h"></span>
+						</a>
+					</div>
+
+					{{ ::'dash.games.news.article.heading' | translate }}
+				</h2>
+
+				<gj-popover popover-id="article-more">
+					<div class="list-group">
+						<a class="list-group-item has-icon" ng-click="articleCtrl.remove()">
+							<span class="jolticon jolticon-remove"></span>
+							{{ ::'dash.games.news.article.remove_option' | translate }}
+						</a>
+					</div>
+				</gj-popover>
+
+				<h4 class="sans-margin-top">
+					<a class="link-muted" ui-sref="discover.games.view.news.view( {
+						slug: manageCtrl.game.slug,
+						id: manageCtrl.game.id,
+						articleSlug: articleCtrl.article.slug,
+						articleId: articleCtrl.article.id
+					} )"
+					>
+						{{ articleCtrl.article.title }}
+					</a>
+				</h4>
+				<br>
+
+				<nav class="pills">
+					<ul>
+						<li>
+							<a gj-no-auto-scroll ui-sref=".stats" ui-sref-active="active">
+								<span class="jolticon jolticon-chart"></span>
+								{{ ::'dash.games.news.article.stats_tab' | translate }}
+							</a>
+						</li>
+						<li>
+							<a gj-no-auto-scroll ui-sref=".edit" ui-sref-active="active">
+								<span class="jolticon jolticon-edit"></span>
+								{{ ::'dash.games.news.article.edit_tab' | translate }}
+							</a>
+						</li>
+						<li>
+							<a ui-sref="discover.games.view.news.view( {
+								slug: manageCtrl.game.slug,
+								id: manageCtrl.game.id,
+								articleSlug: articleCtrl.article.slug,
+								articleId: articleCtrl.article.id
+							} )"
+							>
+								<span class="jolticon jolticon-share"></span>
+								{{ ::'dash.games.news.article.view_tab' | translate }}
+							</a>
+						</li>
+					</ul>
+				</nav>
+
+				<ui-view></ui-view>
+
+			</div>
+		</div>
+
+	</div>
+</section>

@@ -1,0 +1,13 @@
+// Use border instead of underlines so that icons work well in the link.
+#content a
+	border-bottom: 1px solid $white
+	text-decoration: none
+
+	&.i-button
+	&.link-unstyled
+		border-bottom: 0
+
+	&:hover
+	&.link-unstyled:hover
+		text-decoration: none
+		border-bottom: 1px solid $white

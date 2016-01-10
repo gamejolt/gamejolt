@@ -1,0 +1,6 @@
+[submodule "src/lib/gj-lib-client"]
+	path = src/lib/gj-lib-client
+	url = git@github.com:gamejolt/frontend-lib.git
+[submodule "src/lib/site-translations"]
+	path = src/lib/site-translations
+	url = git@github.com:gamejolt/translations.git

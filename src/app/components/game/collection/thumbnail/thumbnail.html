@@ -1,0 +1,16 @@
+<div class="collection-thumbnail">
+	<span class="tag tag-active" ng-if="::!ctrl.hideTag" ng-switch="::ctrl.collection.type">
+		<span ng-switch-when="developer">{{ ::'library.playlists.developer_tag' | translate }}</span>
+		<span ng-switch-when="followed">{{ ::'library.playlists.followed_tag' | translate }}</span>
+		<span ng-switch-when="playlist">{{ ::'library.playlists.playlist_tag' | translate }}</span>
+		<span ng-switch-when="bundle">{{ ::'library.playlists.bundle_tag' | translate }}</span>
+		<span ng-switch-when="tag">{{ ::'library.playlists.tag_tag' | translate }}</span>
+	</span>
+
+	<span class="jolticon jolticon-playlist"></span>
+
+	<img
+		ng-if="ctrl.collection.img_thumbnail"
+		gj-img-responsive="{{ ::ctrl.collection.img_thumbnail }}"
+		alt="{{ ::ctrl.collection.name }}">
+</div>

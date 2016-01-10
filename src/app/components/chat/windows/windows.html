@@ -1,0 +1,10 @@
+<!--
+	Can currently only have one window open at a time.
+-->
+<gj-chat-window
+	ng-if="client.room && Shell.isRightPaneVisible"
+	chat-window-room="client.room"
+	chat-window-users="client.usersOnline[ client.room.id ]"
+	chat-window-messages="client.messages[ client.room.id ]"
+	>
+</gj-chat-window>

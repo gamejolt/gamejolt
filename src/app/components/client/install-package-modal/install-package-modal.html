@@ -1,0 +1,77 @@
+<div class="row">
+	<div class="col-md-10 col-lg-8 col-centered">
+
+		<div class="modal-body">
+
+			<h2 class="modal-title">
+				<span class="jolticon jolticon-download-box big"></span>
+				Choose a Package
+			</h2>
+
+			<p>This game has multiple installable packages. Please choose the one you'd like to install.</p>
+
+			<div ng-if="modalCtrl.isLoading">
+				<gj-loading class="loading-big"></gj-loading>
+			</div>
+
+			<div ng-if="!modalCtrl.isLoading">
+				<div ng-if="modalCtrl.packages.length">
+
+					<!--
+						We only show the packages that can be installed to their computer.
+					-->
+					<div class="game-package-card fill-darker"
+						ng-repeat="package in modalCtrl.packages"
+						ng-if="modalCtrl.buildsByPackage[ package.id ]"
+						>
+						<div class="game-package-card-body">
+
+							<h4 class="game-package-card-title">
+								{{ ::(package.title || modalCtrl.game.title) }}
+							</h4>
+
+							<br ng-if="::!package.description">
+
+							<div class="game-package-card-description" ng-if="::package.description">
+								<gj-fade-collapse
+									fade-collapse-height="100"
+									fade-collapse-is-open="modalCtrl.showFullDescription"
+									fade-collapse-is-required="modalCtrl.canToggleDescription"
+									>
+									<p ng-bind-html="::package.description | linky"></p>
+								</gj-fade-collapse>
+							</div>
+
+							<a class="hidden-text-expander"
+								ng-if="modalCtrl.canToggleDescription"
+								ng-click="modalCtrl.showFullDescription = !modalCtrl.showFullDescription"
+								gj-track-event="game-package-card:show-full-description"
+								></a>
+
+								<button class="btn btn-success-outline" ng-click="modalCtrl.install( package )">
+								<span class="jolticon jolticon-download-box"></span>
+								Install
+								<small>({{ ::modalCtrl.buildsByPackage[ package.id ].primary_file.filesize | filesize }})</small>
+							</button>
+
+						</div>
+					</div>
+
+				</div>
+
+				<div ng-if="!modalCtrl.packages.length" class="alert alert-warning">
+					This game doesn't have any packages to install.
+				</div>
+			</div>
+
+		</div>
+
+		<div class="modal-footer">
+			<button class="btn btn-danger-outline" ng-click="modalCtrl.close()">
+				<span class="jolticon jolticon-remove"></span>
+				Close
+			</button>
+		</div>
+
+	</div>
+</div>

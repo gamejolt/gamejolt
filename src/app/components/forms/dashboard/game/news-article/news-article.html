@@ -1,0 +1,37 @@
+<form gj-form="formModel" name="newsArticleForm">
+
+	<form-group name="title" label="{{ ::'dash.games.news.form.title_label' | translate }}">
+		<input form-control="text" ng-maxlength="250">
+		<control-errors></control-errors>
+	</form-group>
+
+	<div oc-lazy-load="{ files: [ '/app/modules/codemirror.js' ] }">
+
+		<form-group name="content_markdown" label="{{ ::'dash.games.news.form.content_label' | translate }}">
+
+			<p class="help-block">
+				{{ ::'dash.games.news.form.content_help' | translate }}
+			</p>
+
+			<div
+				form-markdown-editor
+				preview-class="post-body"
+				markdown-preview-url="/web/dash/developer/games/news/preview"
+				>
+			</div>
+
+			<control-errors></control-errors>
+
+		</form-group>
+
+	</div>
+
+	<p class="help-block" ng-if="method == 'add'">{{ ::'dash.games.news.form.add_follower_message' | translate }}</p>
+
+	<button gj-form-submit-button class="i-button" ng-disabled="!newsArticleForm.$valid" ng-click="onSubmit()">
+		<span ng-if="method == 'add'" class="jolticon jolticon-add"></span>
+		<span ng-if="method == 'edit'" class="jolticon jolticon-edit"></span>
+		{{ ::(method == 'add' ? 'dash.games.news.form.add_button' : 'dash.games.news.form.edit_button') | translate }}
+	</button>
+
+</form>

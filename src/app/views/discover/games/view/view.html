@@ -1,0 +1,86 @@
+<!-- Game Header -->
+<div ng-if="Game_ViewState.showCover">
+	<gj-game-cover gj-game="gameCtrl.game"></gj-game-cover>
+</div>
+
+<!-- Media Bar -->
+<div ng-if="Game_ViewState.showExtendedHeader && gameCtrl.mediaItems.length">
+	<div ng-if="::gameCtrl.testMediaBarPos == 'above' || gameCtrl.testMediaBarPos == 'above-no-banner'">
+		<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
+	</div>
+</div>
+
+<div class="alert alert-warning sans-margin-bottom" ng-if="Game_ViewState.showExtendedHeader && gameCtrl.notificationCounts.news">
+	<div class="container">
+		<h4 class="section-header">
+			{{ ::'games.view.notifications_heading' | translate }}
+		</h4>
+		<ul>
+			<li ng-if="gameCtrl.notificationCounts.news">
+				<a ui-sref=".news.list">{{ ::'games.view.notifications_news' | translate:{ count: gameCtrl.notificationCounts.news } }}</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<header class="section game-header" ng-class="{ 'game-header-extended': Game_ViewState.showExtendedHeader }">
+
+	<div class="container">
+		<div class="clearfix">
+
+			<!-- Title / Byline / Date -->
+			<div class="game-header-meta">
+
+				<!-- Game Title -->
+				<h1 class="section-header game-header-title">
+					<a class="link-unstyled" ui-sref=".overview">
+						{{ ::gameCtrl.game.title }}
+					</a>
+				</h1>
+
+				<!-- Developer -->
+				<div class="game-header-byline">
+					by
+					<a ng-href="{{ ::gameCtrl.game.developer.url }}">{{ ::gameCtrl.game.developer.display_name }}</a>
+
+					<!--
+						Hide on mobile to keep it clean.
+						They can view in the game details.
+					-->
+					<span class="game-header-time-ago" ng-if="!Screen.isXs && gameCtrl.game.published_on">
+						<span class="dot-separator"></span>
+						<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )"
+							am-time-ago="::gameCtrl.game.published_on"></a>
+					</span>
+
+					<span class="game-header-ogrs" ng-if="gameCtrl.game.tigrs_age">
+						<span class="dot-separator hidden-xs"></span>
+						<gj-game-ogrs-tag gj-game="gameCtrl.game"></gj-game-ogrs-tag>
+					</span>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+	<div ng-if="Screen.isXs">
+		<div ng-include="'/app/views/discover/games/view/_header/header-xs.html'"></div>
+	</div>
+	<div ng-if="Screen.isSm">
+		<div ng-include="'/app/views/discover/games/view/_header/header-sm.html'"></div>
+	</div>
+	<div ng-if="Screen.isDesktop">
+		<div ng-include="'/app/views/discover/games/view/_header/header-desktop.html'"></div>
+	</div>
+
+</header>
+
+<!-- Media Bar -->
+<div ng-if="Game_ViewState.showExtendedHeader && gameCtrl.mediaItems.length">
+	<div ng-if="::gameCtrl.testMediaBarPos != 'above' && gameCtrl.testMediaBarPos != 'above-no-banner'">
+		<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
+	</div>
+</div>
+
+<ui-view></ui-view>

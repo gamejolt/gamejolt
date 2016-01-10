@@ -1,0 +1,96 @@
+<h2 class="section-header">{{ ::'dash.games.scoreboards.heading' | translate }}</h2>
+
+<div class="page-help">
+	<div translate="dash.games.scoreboards.page_help_html"></div>
+	<p>
+		<a class="link-help" href="https://help.gamejolt.com/dev-scoreboards" target="_blank">{{ ::'dash.games.scoreboards.page_help_link' | translate }}</a>
+	</p>
+</div>
+
+<div class="row">
+
+	<div class="col-md-10 col-lg-9">
+
+		<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
+			<gj-editable-accordion
+				active-item="listCtrl.activeItem"
+				is-adding="listCtrl.isAdding"
+				>
+
+				<div ui-tree="{ dropped: listCtrl.onTablesSorted }"
+					ui-tree-nodes
+					ng-model="listCtrl.scoreTables"
+					>
+
+					<!-- track by ID was breaking -->
+					<gj-editable-accordion-item
+						ng-repeat="scoreTable in listCtrl.scoreTables"
+						ui-tree-node
+						>
+
+						<gj-editable-accordion-item-heading>
+
+							<div class="stats">
+								<div class="stat-big">
+									<div class="stat-big-label">{{ ::'dash.games.scoreboards.table_id_label' | translate }}</div>
+									<div class="stat-big-digit">{{ scoreTable.id }}</div>
+								</div>
+							</div>
+
+							<h5 class="editable-accordion-item-heading-title">{{ scoreTable.name }}</h5>
+							<p class="editable-accordion-item-heading-description">{{ scoreTable.description }}</p>
+
+							<p class="tags">
+								<span class="tag tag-active" gj-tooltip="$translate.instant( 'dash.games.scoreboards.primary_tooltip' )" ng-if="$index == 0">{{ ::'dash.games.scoreboards.primary_tag' | translate }}</span>
+								<span class="tag tag-blue" gj-tooltip="$translate.instant( 'dash.games.scoreboards.guest_tooltip' )" ng-if="scoreTable.allow_guest_scores">{{ ::'dash.games.scoreboards.guest_tag' | translate }}</span>
+								<span class="tag tag-blue" gj-tooltip="$translate.instant( 'dash.games.scoreboards.unique_tooltip' )" ng-if="scoreTable.unique_scores">{{ ::'dash.games.scoreboards.unique_tag' | translate }}</span>
+								<span class="tag tag-blue" gj-tooltip="$translate.instant( 'dash.games.scoreboards.asc_tooltip' )" ng-if="scoreTable.scores_sorting_direction == Game_ScoreTable.SORTING_DIRECTION_ASC">{{ ::'dash.games.scoreboards.asc_tag' | translate }}</span>
+								<span class="tag tag-blue" gj-tooltip="$translate.instant( 'dash.games.scoreboards.desc_tooltip' )"ng-if="scoreTable.scores_sorting_direction == Game_ScoreTable.SORTING_DIRECTION_DESC">{{ ::'dash.games.scoreboards.desc_tag' | translate }}</span>
+							</p>
+
+							<!-- Don't propagate the click so that it doesn't open the accordion item. -->
+							<a class="i-button big pull-left" ui-sref="^.scores.list( { table: scoreTable.id } )" ng-click="$event.stopPropagation()">
+								<span class="jolticon jolticon-chevron-right"></span>
+								{{ ::'dash.games.scoreboards.scores_button' | translate }}
+							</a>
+
+						</gj-editable-accordion-item-heading>
+
+						<gj-editable-accordion-item-body>
+
+							<!--
+								Can only remove if there is more than one score table left.
+							-->
+							<div class="buttons clearfix" ng-if="listCtrl.scoreTables.length > 1">
+								<a class="i-button big warning pull-right" ng-click="listCtrl.removeTable( scoreTable )">
+									<span class="jolticon jolticon-remove"></span>
+									{{ ::'dash.games.scoreboards.remove_button' | translate }}
+								</a>
+							</div>
+
+							<gj-form-dashboard-game-score-table
+								gj-game="manageCtrl.game"
+								gj-game-score-table="scoreTable"
+								gj-form-submit-handler="listCtrl.onTableEdited( formModel )">
+							</gj-form-dashboard-game-score-table>
+						</gj-editable-accordion-item-body>
+
+					</gj-editable-accordion-item>
+
+				</div>
+
+				<!-- Add Table -->
+				<gj-editable-accordion-add add-label="{{ ::'dash.games.scoreboards.add_button' | translate }}">
+
+					<gj-form-dashboard-game-score-table
+						gj-game="manageCtrl.game"
+						gj-form-submit-handler="listCtrl.onTableAdded( formModel )">
+					</gj-form-dashboard-game-score-table>
+
+				</gj-editable-accordion-add>
+
+			</gj-editable-accordion>
+		</div>
+
+	</div>
+</div>

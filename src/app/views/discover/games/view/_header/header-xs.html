@@ -1,0 +1,15 @@
+<section class="section fill-darker game-header-controls" ng-if="App.user && Game_ViewState.showExtendedHeader">
+	<div class="container">
+		<div ng-include="'/app/views/discover/games/view/_header/controls.html'"></div>
+	</div>
+</section>
+
+<div ng-if="Game_ViewState.showExtendedHeader">
+	<div ng-include="'/app/views/discover/games/view/_header/stats.html'"></div>
+</div>
+
+<div class="game-header-nav">
+	<div class="container">
+		<div ng-include="'/app/views/discover/games/view/_header/nav.html'"></div>
+	</div>
+</div>

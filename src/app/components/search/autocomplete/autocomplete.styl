@@ -1,0 +1,59 @@
+.search-autocomplete-popover
+
+	.popover-content
+		max-height: none
+
+		// SUPER HACK!
+		// On client we show popover menus within the autocomplete.
+		// Because of this, we don't want the popover to mess with the scrollbar, so we just
+		// make it so it never scrolls in client.
+		// Most of the time they should have a large enough screen anyway.
+		body.is-client &
+			overflow: visible !important
+
+	.search-user-avatar
+	.search-game-thumbnail
+		float: left
+		margin-right: 10px
+		background-color: $gray-lightest
+		border: 0
+
+	.search-game-thumbnail
+		&
+		& > img
+			height: 20px
+			width: @height * (16 / 9)
+
+	.search-user-avatar
+		width: 20px
+		height: 20px
+
+	.game-compat-icons
+		margin-right: 15px
+
+	.progress
+		display: inline-block
+		margin: 0
+		width: 75px
+		vertical-align: middle
+
+		@media $media-md
+			width: 100px
+
+		@media $media-lg
+			width: 150px
+
+	.client-game-buttons
+
+		.tag
+			margin: 0
+
+		// In list-group-items this gets floated.
+		.tag-pink
+			float: none
+
+	.client-install-progress-info
+		display: none
+
+	.client-install-progress
+		display: inline-block

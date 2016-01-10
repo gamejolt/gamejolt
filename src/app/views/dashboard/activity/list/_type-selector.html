@@ -1,0 +1,22 @@
+<div class="list-group">
+
+	<!--
+		The fanciness with tab in the ui-sref below makes sure to switch them back to the "all" tab if they're currently on an "unread"
+		tab, but are trying to access a new filter that doesn't have unread notifications.
+	-->
+	<a class="list-group-item has-addon"
+		ng-repeat="notificationType in ::listCtrl.notificationTypes track by notificationType.key"
+		ui-sref="^.list( { filter: notificationType.key, page: undefined, tab: listCtrl.tab == 'unread' && !listCtrl.unreadCounts[ notificationType.key ] ? 'all' : listCtrl.tab } )"
+		gj-no-auto-scroll
+		>
+
+		<div class="list-group-item-addon">
+			<span class="jolticon jolticon-chevron-right" ng-show="listCtrl.filter === notificationType.key"></span>
+		</div>
+
+		{{ ::'notifications.' + notificationType.translationKey | translate }}
+
+		<span class="tag tag-pink" gj-tooltip="$translate.instant( 'notifications.unread_tooltip', { count: listCtrl.unreadCounts[ notificationType.key ] } )">{{ listCtrl.unreadCounts[ notificationType.key ] | number }}</span>
+	</a>
+
+</div>

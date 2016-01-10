@@ -1,0 +1,82 @@
+<section class="section fill-lightest">
+	<div class="container">
+
+		<h2 class="section-header">{{ viewCtrl.article.title }}</h2>
+
+		<div class="post-author-meta">
+			<span class="post-time-ago">
+				<span class="small" am-time-ago="viewCtrl.article.posted_on"></span>
+				<span class="dot-separator"></span>
+				<span class="jolticon jolticon-comment middle"></span>
+				<a class="link-unstyled"
+					href="#comments"
+					ng-switch="::viewCtrl.article.comments_count || 0"
+					>
+					<span ng-switch-when="0">{{ ::'news.list.post_comments_none' | translate }}</span>
+					<span ng-switch-when="1">{{ ::'news.list.post_comments_one' | translate }}</span>
+					<span ng-switch-default>{{ ::'news.list.post_comments_other' | translate:{ count: viewCtrl.article.comments_count } }}</span>
+				</a>
+			</span>
+		</div>
+
+	</div>
+</section>
+
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7">
+				<div class="post-body" ng-bind-html="::viewCtrl.article.content_compiled"></div>
+			</div>
+
+			<div class="col-md-4 col-lg-5 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isDesktop">
+				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+		</div>
+
+		<div ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isSm">
+			<br>
+			<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+		</div>
+
+	</div>
+</section>
+
+<section class="section section-thin fill-lightest more-news" ng-if="viewCtrl.latestArticles.length">
+	<div class="container">
+		<h2 class="section-header">More News</h2>
+		<gj-post-grid
+			post-grid-items="viewCtrl.latestArticles"
+			post-grid-hide-thumb="true"
+			>
+		</gj-post-grid>
+	</div>
+</section>
+
+<section class="section" id="comments">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-9 col-md-8 col-lg-7">
+
+				<div oc-lazy-load="{ files: [ '/app/modules/codemirror.js' ] }">
+					<gj-comment-widget
+						current-page="viewCtrl.currentCommentPage"
+						comment-resource="Game_News"
+						comment-resource-id="viewCtrl.article.id"
+						>
+					</gj-comment-widget>
+				</div>
+
+			</div>
+			<div class="col-sm-3 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isSm">
+				<gj-ad ad-size="skyscraper" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+			<div class="col-md-4 col-lg-5 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isDesktop">
+				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+		</div>
+
+	</div>
+</section>

@@ -1,0 +1,67 @@
+<nav class="game-filtering-widget-list platform-list inline">
+	<ul>
+		<li>
+			<a gj-popover-trigger="games-filter-os" gj-track-event="game-filtering:tab-os">
+				{{ ::'games.filtering.os_label' | translate }}
+				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.os.length">{{ ctrl.filteringContainer.filters.os.length | number }}</span>
+				<span class="jolticon jolticon-chevron-down"></span>
+			</a>
+		</li>
+		<li>
+			<a gj-popover-trigger="games-filter-browser" gj-track-event="game-filtering:tab-browser">
+				{{ ::'games.filtering.browser_label' | translate }}
+				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.browser.length">{{ ctrl.filteringContainer.filters.browser.length | number }}</span>
+				<span class="jolticon jolticon-chevron-down"></span>
+			</a>
+		</li>
+		<li>
+			<a gj-popover-trigger="games-filter-maturity" gj-track-event="game-filtering:tab-maturity">
+				{{ ::'games.filtering.maturity_label' | translate }}
+				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.maturity.length">{{ ctrl.filteringContainer.filters.maturity.length | number }}</span>
+				<span class="jolticon jolticon-chevron-down"></span>
+			</a>
+		</li>
+		<li>
+			<a gj-popover-trigger="games-filter-status" gj-track-event="game-filtering:tab-status">
+				{{ ::'games.filtering.status_label' | translate }}
+				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.status.length">{{ ctrl.filteringContainer.filters.status.length | number }}</span>
+				<span class="jolticon jolticon-chevron-down"></span>
+			</a>
+		</li>
+	</ul>
+</nav>
+
+<!--
+	No need to bind-once anything in these popovers since we remove from DOM when they're not visible.
+-->
+<gj-popover
+	ng-repeat="(filter, options) in ctrl.orderedFilters track by filter"
+	popover-id="games-filter-{{ filter }}"
+	popover-on-focus="ctrl.onPopoverShown( filter )"
+	popover-on-blur="ctrl.onPopoverHidden( filter )"
+	>
+
+	<div class="game-filtering-widget-list-group list-group">
+
+		<a class="list-group-item has-addon"
+			ng-repeat="option in options track by option"
+			ng-class="filter == 'os' || filter == 'browser' ? 'has-icon' : ''"
+			ng-click="ctrl.toggleFilterOption( filter, option )"
+			>
+
+			<div class="list-group-item-addon">
+				<span class="jolticon" ng-class="ctrl.filteringContainer.isFilterOptionSet( filter, option ) ? 'jolticon-checkbox' : 'jolticon-box-empty text-muted'"></span>
+			</div>
+
+			<span class="jolticon"
+				ng-show="filter == 'os' || filter == 'browser'"
+				ng-class="::ctrl.getJolticon( filter, option )"
+				>
+			</span>
+
+			{{ ::Game_Filtering_Container.filterDefinitions[ filter ].options[ option ] }}
+
+		</a>
+
+	</div>
+</gj-popover>

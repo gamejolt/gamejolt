@@ -1,0 +1,52 @@
+.game-form-disabled
+	opacity: 0.5
+	pointer-events: none
+
+/**
+ * The codemirror theme for games.
+ */
+
+.CodeMirror.cm-s-gj-game
+	background: $body-bg
+	color: $text-color
+
+	// Make it have the same styling as a game description.
+	font-family: $font-family-base
+	font-size: $font-size-base
+	line-height: $line-height-base
+
+	div.CodeMirror-selected
+		background: $gray-lighter !important
+
+	.CodeMirror-gutters
+		background: $gray-lightest
+		border-right: 0px
+
+	.CodeMirror-linenumber
+		font-family: $font-family-monospace
+		color: $gray-light
+
+	.CodeMirror-cursor
+		border-left: 1px solid $gray !important
+
+	// Links URLs.
+	span.cm-string
+		color: inherit
+		font-family: $font-family-monospace
+
+	// Blockquotes.
+	span.cm-quote
+		font-style: italic
+
+	// Image alt tags.
+	span.cm-tag
+		color: $gray-light
+
+	// Linked text.
+	// Will get underlined automatically.
+	span.cm-link
+		color: inherit
+
+	// HRs
+	span.cm-hr
+		color: $gray-light

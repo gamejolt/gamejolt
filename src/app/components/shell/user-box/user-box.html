@@ -1,0 +1,20 @@
+<div class="user-box-exp">
+	<div class="user-box-exp-stats">
+		<div class="user-box-exp-stats-current">
+			Level
+			<em>{{ App.user.level }}</em>
+			<span class="user-box-exp-stats-help">[<a href="https://help.gamejolt.com/user-exp" target="_blank">?</a>]</span>
+		</div>
+		<div class="user-box-exp-stats-next">
+			Next in
+			<strong>{{ App.user.experience_next | number }}</strong>
+			EXP
+		</div>
+	</div>
+	<div class="user-box-exp-progress">
+		<span class="jolticon jolticon-exp"></span>
+		<div class="progress progress-thin progress-green" gj-tooltip="App.user.level_next_percentage + '% progress to next level'">
+			<div class="progress-bar" ng-style="{ width: App.user.level_next_percentage + '%' }"></div>
+		</div>
+	</div>
+</div>

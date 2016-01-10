@@ -1,0 +1,15 @@
+<div class="minbar">
+	<div class="minbar-items">
+		<a class="minbar-item anim-fade-enter-up anim-fade-leave-shrink"
+			ng-class="{ active: item.isActive }"
+			ng-repeat="item in Minbar.items track by $index"
+			ng-click="ctrl.onItemClick( item, $event )">
+
+			<span class="tag tag-pink notification-tag anim-fade-enter anim-fade-leave" ng-if="item.notificationCount">{{ item.notificationCount }}</span>
+
+			<div class="minbar-item-thumb" gj-tooltip="item.title">
+				<img class="img-responsive" ng-src="{{ item.thumb }}" alt="">
+			</div>
+		</a>
+	</div>
+</div>

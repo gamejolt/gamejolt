@@ -1,0 +1,19 @@
+<div class="user-level-widget">
+	<div class="user-level-widget-level">
+		<div class="user-level-widget-level-digit">{{ ctrl.user.level }}</div>
+		<div class="user-level-widget-level-label">Current Level</div>
+	</div>
+	<div class="user-level-widget-experience text-right">
+		<div class="stat-big stat-big-smaller">
+			<div class="stat-big-label">Current EXP</div>
+			<div class="stat-big-digit">{{ ctrl.user.experience | number }} EXP</div>
+		</div>
+		<div class="stat-big stat-big-smaller">
+			<div class="stat-big-label">Next Level in</div>
+			<div class="stat-big-digit">{{ ctrl.user.experience_next | number }} EXP</div>
+		</div>
+	</div>
+	<div class="user-level-widget-progress progress progress-green progress-thin" gj-tooltip="ctrl.user.level_next_percentage + '% progress to next level'">
+		<div class="progress-bar" ng-style="::{ width: ctrl.user.level_next_percentage + '%' }"></div>
+	</div>
+</div>

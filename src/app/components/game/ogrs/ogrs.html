@@ -1,0 +1,12 @@
+<div class="game-ogrs" ng-if="ctrl.imgTag" ng-class="{ 'has-descriptors': !ctrl.hideDescriptors && ctrl.descriptors.length }">
+	<div class="game-ogrs-inner">
+		<div class="game-ogrs-tag">
+			<img class="game-ogrs-rating-img" ng-src="{{ ctrl.imgTagUrl }}" width="80" height="100" alt="{{ ctrl.imgTag }}">
+			<img class="game-ogrs-logo" ng-src="/app/components/game/ogrs/ogrs.png" width="80" height="10" alt="OGRS">
+			<!-- <div class="game-ogrs-id">og-gh986f</div> -->
+		</div>
+		<div class="game-ogrs-descriptors" ng-if="!ctrl.hideDescriptors && ctrl.descriptors.length">
+			<div class="game-ogrs-descriptor" ng-repeat="descriptor in ctrl.descriptors">{{ descriptor }}</div>
+		</div>
+	</div>
+</div>

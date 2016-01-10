@@ -1,0 +1,55 @@
+.rating-widget
+	@extend .clearfix
+	position: relative
+	display: inline-block
+
+.rating-widget-icons
+	display: inline-block
+	margin-right: 20px
+
+	.rating-widget-big &
+		margin-right: 40px
+
+.rating-widget-clear
+	position: absolute
+	bottom: 4px
+	right: 0
+	width: 20px
+	text-align: center
+	color: $gray-lightest
+	cursor: pointer
+
+	.rating-widget-big &
+		width: 40px
+		right: 5px
+
+	> .jolticon
+		display: none
+		cursor: pointer
+
+		&:hover
+			color: $gj-pink
+
+		.rating-widget:hover &
+			display: block
+
+.rating-widget-icon
+	float: left
+	margin: 0 !important
+	cursor: pointer
+
+	&
+	.rating-widget-icons:hover &
+		color: $gray-lightest
+
+	&.hover
+		color: $gj-green !important
+
+	&.selected
+		color: $gj-green
+
+.rating-widget-icon-bounce
+	@extend .stagger
+	animation-name: bounce
+	animation-duration: 300ms
+	animation-timing-function: $ease-out

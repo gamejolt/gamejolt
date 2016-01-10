@@ -1,0 +1,16 @@
+.chat-compiled-room-description
+
+	h1, h2, h3, h4, h5, h6
+		@extend .h5
+		font-weight: bold
+
+		&:first-child
+			margin-top: 0
+
+	// Widgets some times create empty P tags.
+	// This hides them so they don't add extra spacing to the page.
+	p:empty
+		display: none
+
+	table
+		@extend .table

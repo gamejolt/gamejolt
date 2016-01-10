@@ -1,0 +1,27 @@
+<!-- Buttons / Controls -->
+<a class="big"
+	ng-click="gameCtrl.onFollowClick()"
+	ng-class="{ 'cake-button': Screen.isXs, 'i-button': !Screen.isXs, active: gameCtrl.libraryGame }"
+	gj-tooltip="!gameCtrl.libraryGame
+		? $translate.instant( 'library.followed.follow_game_button_tooltip' )
+		: $translate.instant( 'library.followed.unfollow_game_button_tooltip' )"
+	>
+
+	<span class="jolticon" ng-class="{ big: Screen.isXs, 'jolticon-subscribed': gameCtrl.libraryGame, 'jolticon-subscribe': !gameCtrl.libraryGame }"></span>
+	{{ !gameCtrl.libraryGame ? $translate.instant( 'library.followed.follow_game_button' ) : $translate.instant( 'library.followed.unfollow_game_button' ) }}
+</a>
+
+<!--
+	Playlists
+	Can only add visible games to playlists.
+-->
+<a class="big"
+	ng-if="gameCtrl.game.status == Game.STATUS_VISIBLE"
+	ng-class="{ 'cake-button': Screen.isXs, 'i-button': !Screen.isXs }"
+	gj-popover-trigger="add-to-playlist">
+
+	<span class="jolticon jolticon-add" ng-class="{ big: Screen.isXs }"></span>
+	{{ ::'library.playlists.add_to.button' | translate }}
+</a>
+
+<gj-game-playlist-add-to-popover gj-game="gameCtrl.game"></gj-game-playlist-add-to-popover>

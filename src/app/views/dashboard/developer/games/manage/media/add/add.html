@@ -1,0 +1,32 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7">
+
+				<h2 class="section-header">{{ ::'dash.games.media.add.heading' | translate }}</h2>
+
+				<nav class="pills nav-justified">
+					<ul>
+						<li>
+							<a ui-sref=".image" ui-sref-active="active" gj-no-auto-scroll>
+								<span class="jolticon jolticon-screenshot"></span>
+								{{ ::'dash.games.media.image_label' | translate }}
+							</a>
+						</li>
+						<li>
+							<a ui-sref=".video" ui-sref-active="active" gj-no-auto-scroll>
+								<span class="jolticon jolticon-video"></span>
+								{{ ::'dash.games.media.video_label' | translate }}
+							</a>
+						</li>
+					</ul>
+				</nav>
+
+				<ui-view></ui-view>
+
+			</div>
+		</div>
+
+	</div>
+</section>

@@ -1,0 +1,180 @@
+/**
+ * Using the __screen classes since it's pretty complex.
+ * Don't want to switch back and forth between media and screen classes.
+ */
+.discover-home-featured
+	position: relative
+	cursor: pointer
+	overflow: hidden
+
+	// More subtle fade on mobile than on larger screens because of less space to work with.
+	background-image: linear-gradient( to right, rgba( $gj-pink, 0.20 ) 0%, rgba( $gj-pink, 0 ) 50%, rgba( $gj-blue, 0 ) 50%, rgba( $gj-blue, 0.20 ) 100% )
+
+	@media $media-sm-up
+		background-image: linear-gradient( to right, rgba( $gj-pink, 0.35 ) 0%, rgba( $gj-pink, 0 ) 25%, rgba( $gj-blue, 0 ) 75%, rgba( $gj-blue, 0.35 ) 100% )
+
+	// The actual .discover-home-featured is lazy loaded in.
+	// We wrap it up and set the height so that while it's being lazy loaded it has the correct height.
+	&
+	&-wrap
+		height: 450px
+		background-color: $gray-darkest
+
+	> .container
+		position: relative
+		height: 100%
+
+	&-body
+		position: absolute
+		z-index: 3
+		left: 0
+		right: 0
+		bottom: 80px
+
+		.tag
+			background-color: $gray-dark
+			color: $white
+			margin-bottom: 7px
+
+	&-byline
+		color: $white
+		font-size: $font-size-small
+		margin-bottom: 5px
+
+	&-copy
+		color: $white
+		text-shadow: 1px 1px 2px rgba( $black, 0.8 )
+
+		.h1
+			display: block
+			margin: 0
+			color: $white
+			font-weight: 300
+			line-height: 1.1
+
+		p
+			font-family: $font-family-heading
+			font-weight: 300
+			letter-spacing: 0.2
+			margin-bottom: 7px
+
+			@media $media-sm-up
+				font-size: $font-size-h4
+				letter-spacing: 0
+
+	&-meta
+		margin-bottom: $line-height-computed
+
+		.jolticon
+			color: $white
+
+	&-shade
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+		z-index: 2
+
+		@media $media-mobile
+			background-image: linear-gradient( to top, rgba( $black, 0.4 ) 0%, rgba( $black, 0.3 ) 40%, rgba( $black, 0 ) 80% )
+
+		@media $media-md-up
+			background-image: linear-gradient( to right, rgba( $black, 0.4 ) 0%, rgba( $black, 0.3 ) 40%, rgba( $black, 0 ) 60% )
+
+	&-background
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+		z-index: 1
+
+	&-background-inner
+		@extend .anim-fade-enter, .anim-fade-leave
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+		background-repeat: no-repeat
+		background-position: center center
+		background-size: cover
+
+	&-next
+	&-prev
+		position: absolute
+		padding: 10px
+		z-index: 5
+		user-select: none
+		bottom: 0
+
+		@media $media-sm-up
+			bottom: auto
+			top: 50%
+			padding: 20px
+			margin-top: -(((16px * 2) / 2) + (@padding / 2))
+
+		> .jolticon
+			font-size: 16px * 2
+			color: $white
+			text-shadow: 1px 1px 3px rgba( $black, 0.5 )
+
+		&:hover
+			background-color: $white
+
+			> .jolticon
+				color: $black
+				text-shadow: none
+
+	&-next
+		right: 0
+
+	&-prev
+		left: 0
+
+	&-blips
+		position: absolute
+		bottom: 0
+		text-align: center
+		z-index: 4
+		cursor: default
+
+		@media $media-xs
+			line-height: 60px
+			left: 60px
+			right: 60px
+
+		@media $media-sm-up
+			width: 400px
+			line-height: 40px
+			left: 50%
+			margin-left: -(@width / 2)
+
+		> a
+			display: inline-block
+			width: 18px
+			height: 18px
+			line-height: @height
+			vertical-align: middle
+
+			&:hover > .discover-home-featured-blip
+				background-color: $white
+
+			&.active > .discover-home-featured-blip
+				&
+				&:hover
+					background-color: $white
+
+	&-blip
+		display: inline-block
+		width: 9px
+		height: 9px
+		border-radius: 50%
+		background-color: rgba( $white, 0.5 )
+		box-shadow: 1px 1px 3px rgba( $black, 0.3 )
+		vertical-align: top
+		margin-top: ((18px - @height) / 2)
+
+	.i-button
+		text-shadow: none

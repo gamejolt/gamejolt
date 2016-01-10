@@ -1,0 +1,43 @@
+<div class="row linked-accounts-list">
+
+	<div class="col-md-6 col-lg-4" ng-repeat="provider in [ 'facebook', 'twitter' ] track by $index">
+
+		<div class="linked-accounts-list-icon">
+			<span class="jolticon big" ng-class="::{ 'jolticon-facebook': provider == 'facebook', 'jolticon-twitter-bird': provider == 'twitter' }"></span>
+		</div>
+
+		<div class="linked-accounts-list-body">
+			<h5 ng-if="::provider == 'facebook'">Facebook</h5>
+			<h5 ng-if="::provider == 'twitter'">Twitter</h5>
+
+			<div ng-if="provider == 'facebook' && !App.user.facebook_id || provider == 'twitter' && !App.user.twitter_id">
+				<p>
+					<small class="text-muted">Not linked.</small>
+				</p>
+				<a class="i-button" ng-click="linkedAccountsCtrl.link( provider )">
+					<span class="jolticon jolticon-link"></span>
+					Link Now
+				</a>
+			</div>
+
+			<div ng-if="provider == 'facebook' && App.user.facebook_id || provider == 'twitter' && App.user.twitter_id">
+				<p ng-if="::provider == 'facebook'"><strong><a ng-href="http://facebook.com/{{ App.user.facebook_id }}">{{ App.user.facebook_name }}</a></strong></p>
+				<p ng-if="::provider == 'twitter'"><strong><a ng-href="http://twitter.com/{{ App.user.twitter_screenname }}">@{{ App.user.twitter_screenname }}</a></strong></p>
+
+				<a class="i-button" ng-click="linkedAccountsCtrl.link( provider )">
+					<span class="jolticon jolticon-retweet need-icon"></span>
+					Synchronize
+				</a>
+				<a class="i-button warning" ng-click="linkedAccountsCtrl.unlink( provider )">
+					<span class="jolticon jolticon-remove"></span>
+					Unlink
+				</a>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+<!-- We need this for child routes, even though they have no templates -->
+<ui-view></ui-view>

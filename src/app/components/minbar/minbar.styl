@@ -1,0 +1,34 @@
+$minbar-padding = 3px
+$minbar-spacing = 10px
+$minbar-border-width = 0
+
+.minbar
+	@extend .clearfix
+
+	// Hide it when a shell pane is shown.
+	.right-pane-visible &
+	.left-pane-visible &
+		display: none
+
+	&-items
+		float: right
+
+	&-item
+		@extend .fill-dark
+		display: inline-block
+		position: relative
+		padding: $minbar-padding
+		border: $minbar-border-width solid $white
+		margin-right: ($minbar-spacing - ($minbar-border-width * 2))
+		margin-bottom: @margin-right
+
+		&.active
+			@extend .fill-pink
+
+		> .notification-tag
+			position: absolute
+			top: 0
+			right: 0
+
+	&-item-thumb > img
+		max-height: 50px

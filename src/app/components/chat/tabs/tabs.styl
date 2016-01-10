@@ -1,0 +1,102 @@
+.chat-tabs
+	display: flex
+	background-color: $gray-darkest
+
+.chat-tab-separator
+	position: absolute
+	display: inline-block
+	height: 24px
+	width: 1px
+	vertical-align: top
+	top: ($chat-tabs-height - @height) * 0.5
+	right: -1px
+	background-color: $gray-dark
+
+.chat-tab
+	position: relative
+	flex-grow: 1
+	max-width: 250px
+	padding-right: 1px
+	user-select: none
+
+.chat-tab-inner
+	position: relative
+	display: flex
+	flex-direction: row
+	align-items: center
+	padding: 0 10px
+	height: $chat-tabs-height
+	line-height: @height
+	font-size: $font-size-small
+	color: $white
+	cursor: pointer
+
+	&:hover
+		background-color: $gray-darker
+
+		.chat-tab-right .chat-tab-status
+		.chat-tab-right .chat-tab-users
+			display: none
+
+		.chat-tab-right .chat-tab-close
+			display: block
+
+	&.active
+		&
+		&:hover
+			color: $gj-green
+
+	.jolticon
+		vertical-align: text-bottom
+
+.chat-tab-icon
+	margin-right: 8px
+	color: $white !important
+
+	img
+		border-radius: 100%
+		width: 26px
+		height: 26px
+
+.chat-tab-messages-received
+	// margin-top: -17px
+	margin-right: 8px
+
+	> .tag
+		padding-top: 0
+		padding-bottom: 0
+		line-height: $chat-tabs-height
+
+.chat-tab-title
+	text-overflow()
+
+.chat-tab-right
+	display: inline-block
+	margin-left: auto
+
+	.chat-tab-status
+		width: 8px
+		height: 8px
+		margin: 0 6px
+		border-radius: 100%
+
+		&.online
+			background-color: $gj-green
+
+		&.in-game
+			background-color: $gj-pink
+
+		&.offline
+			background-color: $gray-lightest
+
+	.chat-tab-users
+		margin-left: 10px
+
+	.chat-tab-close
+		display: none
+		width: 20px
+		color: $gray-lighter
+
+		&:hover
+			cursor: pointer
+			color: $gj-pink

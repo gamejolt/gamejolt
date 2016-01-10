@@ -1,0 +1,43 @@
+<div class="scrollable-grid-xs post-grid" ng-class="{ 'post-grid-small': ctrl.size == 'small' }">
+	<div class="row">
+		<div class="anim-fade-in-up stagger no-animate-leave scrollable-grid-item post-grid-item post-item"
+			ng-class="ctrl.colClasses"
+			ng-repeat="post in ctrl.items track by post.id"
+			>
+
+			<div class="post-item-thumb" ng-if="!ctrl.hideThumb">
+				<a ui-sref="discover.games.view.news.view( { id: post.game_id, slug: post.game.slug, articleSlug: post.slug, articleId: post.id } )">
+					<img gj-img-responsive="{{ ::post.game.img_thumbnail }}" alt="">
+				</a>
+			</div>
+
+			<div>
+				<div class="post-item-title">
+					<span class="tag tag-pink" ng-if="::!!post.notification">New</span>
+					<a ui-sref="discover.games.view.news.view( { id: post.game_id, slug: post.game.slug, articleSlug: post.slug, articleId: post.id } )">
+						{{ ::post.title }}
+					</a>
+				</div>
+				<div class="post-item-for">
+					<a ui-sref="discover.games.view.overview( { id: post.game_id, slug: post.game.slug } )">
+						{{ ::post.game.title }}
+					</a>
+				</div>
+				<div class="post-item-excerpt">{{ ::post.excerpt }}</div>
+				<div class="post-item-time">
+					<a class="link-unstyled"
+						ui-sref="discover.games.view.news.view( { id: post.game_id, slug: post.game.slug, articleSlug: post.slug, articleId: post.id, '#': 'comments' } )"
+						ng-switch="::post.comments_count || 0"
+						>
+						<span ng-switch-when="0">{{ ::'news.list.post_comments_none' | translate }}</span>
+						<span ng-switch-when="1">{{ ::'news.list.post_comments_one' | translate }}</span>
+						<span ng-switch-default>{{ ::'news.list.post_comments_other' | translate:{ count: post.comments_count } }}</span>
+					</a>
+					<span class="dot-separator"></span>
+					<span am-time-ago="::post.posted_on"></span>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

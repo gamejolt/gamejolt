@@ -1,0 +1,36 @@
+.game-collection-grid-item
+	@extend .anim-fade-in-up, .stagger, .no-animate-xs
+	margin-bottom: $grid-gutter-width-xs
+
+	@media $media-sm
+		&:nth-child(odd)
+			clear: both
+			
+	@media $media-md
+		&:nth-child(odd)
+			clear: both
+
+	@media $media-lg
+		&:nth-child(3n+1)
+			clear: both
+
+	@media $media-sm-up
+		margin-bottom: $grid-gutter-width
+
+	> a
+		display: block
+
+.game-collection-title
+	@extend .h4
+	margin: 0
+	margin-top: $font-size-base
+
+	a &
+		color: $headings-color
+
+	> small
+		color: $text-muted
+
+.game-collection-desc
+	@extend .text-muted
+	font-size: $font-size-small

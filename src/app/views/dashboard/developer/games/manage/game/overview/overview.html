@@ -1,0 +1,191 @@
+<div class="row">
+	<div class="col-lg-8">
+		<h2 class="section-header">{{ ::'dash.games.overview.todo_heading' | translate }}</h2>
+
+		<p class="small" translate="dash.games.overview.todo_lead_html" translate-values="{ completion: overviewCtrl.todoPercentage }"></p>
+
+		<div class="progress progress-thin">
+			<div class="progress-bar"
+				ng-repeat="todoItem in overviewCtrl.todoItems"
+				ng-style="{ width: todoItem.percentage + '%' }"
+				ng-if="todoItem.status"
+				tooltip="{{ todoItem.progressLabel }}"></div>
+		</div>
+
+		<!--
+			We only show todo steps if they didn't finish them all.
+		-->
+		<div ng-if="todoPercentage != 100">
+
+			<div class="alert alert-info" ng-if="manageCtrl.game.is_published" translate="dash.games.overview.todo_additional_html"></div>
+
+			<table class="table">
+				<tbody>
+					<tr
+						ng-repeat="todoItem in overviewCtrl.todoItems"
+						ng-if="(!manageCtrl.game.is_published && todoItem.level != 'additional') || (manageCtrl.game.is_published && !todoItem.status)"
+						>
+						<td style="width: 1px">
+							<span class="jolticon jolticon-check" ng-class="todoItem.status ? 'active' : 'text-muted'"></span>
+						</td>
+						<td>
+							<span ng-if="todoItem.status" class="tag tag-active pull-right">
+								<span class="jolticon jolticon-check"></span>
+								{{ ::'dash.games.overview.todo_done' | translate }}
+							</span>
+							<span ng-if="todoItem.level && !todoItem.status && todoItem.level != 'additional'" class="tag pull-right" ng-class="{ 'tag-pink': todoItem.level == 'required' }">
+								<span ng-if="todoItem.level == 'required'">{{ ::'dash.games.overview.todo_required' | translate }}</span>
+								<span ng-if="todoItem.level == 'recommended' && !manageCtrl.game.is_published">{{ ::'dash.games.overview.todo_recommended' | translate }}</span>
+								<span ng-if="todoItem.level == 'recommended' && manageCtrl.game.is_published">{{ ::'dash.games.overview.todo_highly_recommended' | translate }}</span>
+							</span>
+							<a class="link-unstyled" ng-href="{{ todoItem.href }}">
+								{{ todoItem.title }}
+							</a>
+							<span ng-if="todoItem.meta">
+								<br>
+								<span class="small text-muted">{{ todoItem.meta }}</span>
+							</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+
+		<div gj-expand-when="!manageCtrl.game.is_published">
+
+			<!-- Game isn't ready to publish yet. -->
+			<div class="alert alert-warning" ng-if="!overviewCtrl.isPublishable">
+				<p translate="dash.games.overview.{{ manageCtrl.game.development_status == Game.DEVELOPMENT_STATUS_WIP ? 'todo_info_wip_html' : 'todo_info_html' }}" translate-values="{
+					thumbnailUrl: $state.href( '^.thumbnail' ),
+					maturityUrl: $state.href( '^.maturity' ),
+					buildsUrl: $state.href( '^.^.packages' ),
+				}"></p>
+			</div>
+
+			<!-- Ready to publish! -->
+			<div ng-if="overviewCtrl.isPublishable">
+				<div class="alert alert-success" ng-if="!overviewCtrl.hasBuildsProcessing">
+					<p translate="dash.games.overview.todo_info_ready_html"></p>
+				</div>
+
+				<!-- Show a little message if they still have builds being processed. -->
+				<div class="alert alert-info" ng-if="overviewCtrl.hasBuildsProcessing"
+					gj-progress-poller="/web/dash/developer/games/poll-build-progress/{{ manageCtrl.game.id }}"
+					progress-poller-on-complete="overviewCtrl.onAllBuildsProcessed()"
+					>
+					<div class="progress progress-thin progress-striped active">
+						<div class="progress-bar" style="width: 100%"></div>
+					</div>
+					<p>
+						<span class="jolticon jolticon-notice"></span>
+						<span translate="dash.games.overview.todo_info_builds_processing_html"></span>
+					</p>
+				</div>
+
+				<button class="i-button block" gj-tooltip="$translate.instant( 'dash.games.overview.todo_info_publish_button_tooltip' )" ng-click="overviewCtrl.publish()">
+					<span class="jolticon jolticon-active"></span>
+					{{ ::'dash.games.overview.todo_info_publish_button' | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<h2>{{ ::'dash.games.overview.stats_heading' | translate }}</h2>
+
+<div class="row">
+	<div class="col-lg-8">
+		<gj-graph-widget
+			graph-widget-url="/web/dash/developer/games/graphs/overview/{{ ::manageCtrl.game.id }}"
+			graph-widget-hide-table="true"
+			>
+		</gj-graph-widget>
+	</div>
+	<div class="col-lg-4">
+		<div class="row">
+			<div class="col-xs-6 col-sm-4 col-lg-6">
+				<div class="stat-big">
+					<div class="stat-big-label">
+						{{ ::'dash.games.overview.stats_views' | translate }}
+					</div>
+					<div class="stat-big-digit">
+						{{ overviewCtrl.viewCount | number }}
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6 col-sm-4 col-lg-6">
+				<div class="stat-big">
+					<div class="stat-big-label">
+						{{ ::'dash.games.overview.stats_plays' | translate }}
+					</div>
+					<div class="stat-big-digit">
+						{{ overviewCtrl.downloadCount + overviewCtrl.playCount | number }}
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6 col-sm-4 col-lg-6">
+				<div class="stat-big">
+					<div class="stat-big-label">
+						{{ ::'dash.games.overview.stats_rating' | translate }}
+					</div>
+					<div class="stat-big-digit">
+						<span ng-if="manageCtrl.game.avg_rating">
+							{{ manageCtrl.game.avg_rating | number }}
+						</span>
+						<span ng-if="!manageCtrl.game.avg_rating">
+							{{ ::'dash.games.overview.stats_na' | translate }}
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6 col-sm-4 col-lg-6">
+				<div class="stat-big">
+					<div class="stat-big-label">
+						{{ ::'dash.games.overview.stats_ratings' | translate }}
+					</div>
+					<div class="stat-big-digit">
+						{{ manageCtrl.game.rating_count || 0 | number }}
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6 col-sm-4 col-lg-6">
+				<div class="stat-big">
+					<div class="stat-big-label">
+						{{ ::'dash.games.overview.stats_comments' | translate }}
+					</div>
+					<div class="stat-big-digit">
+						{{ overviewCtrl.commentCount | number }}
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6 col-sm-4 col-lg-6">
+				<div class="stat-big">
+					<div class="stat-big-label">
+						{{ ::'dash.games.overview.stats_followers' | translate }}
+					</div>
+					<div class="stat-big-digit">
+						{{ overviewCtrl.followerCount | number }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-lg-8">
+		<h2>{{ ::'dash.games.overview.activity_heading' | translate }}</h2>
+
+		<div ng-if="!overviewCtrl.notifications.length">
+			<p class="small text-muted" translate="dash.games.overview.activity_none_html"></p>
+		</div>
+
+		<div ng-if="overviewCtrl.notifications.length">
+			<gj-activity-feed
+				activity-feed-notifications="overviewCtrl.notifications"
+				>
+			</gj-activity-feed>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,24 @@
+<div class="pull-right">
+	<span class="tag"
+		ng-if="ctrl.release.status == Game_Release.STATUS_HIDDEN"
+		tooltip="{{ ::'dash.games.packages.manage.releases.hidden_tooltip' | translate }}"
+		>
+		<span class="jolticon jolticon-inactive"></span>
+		{{ ::'dash.games.packages.manage.releases.hidden_tag' | translate }}
+	</span>
+
+	<span class="tag tag-active"
+		ng-if="ctrl.release.status == Game_Release.STATUS_PUBLISHED"
+		tooltip="{{ ::'dash.games.packages.manage.releases.published_tooltip' | translate }}"
+		>
+		<span class="jolticon jolticon-active"></span>
+		{{ ::'dash.games.packages.manage.releases.published_tag' | translate }}
+	</span>
+</div>
+<strong>{{ ::'dash.games.packages.manage.releases.release_title' | translate:{ version: ctrl.release.version_number } }}</strong>
+<br>
+<span class="text-muted small" ng-switch="ctrl.release.build_count || 0">
+	<span ng-switch-when="0" translate="dash.games.packages.manage.releases.builds_count_none"></span>
+	<span ng-switch-when="1" translate="dash.games.packages.manage.releases.builds_count_one"></span>
+	<span ng-switch-default translate="dash.games.packages.manage.releases.builds_count_other" translate-values="{ count: ctrl.release.build_count }"></span>
+</span>

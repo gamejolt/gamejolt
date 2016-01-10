@@ -1,0 +1,91 @@
+<gj-popover
+	class="notifications-popover popover-no-collapse popover-dark"
+	popover-id="notifications"
+	popover-append-to-body="true"
+	popover-position-by="position"
+	popover-on-focus="ctrl.onFocus()"
+	popover-on-blur="ctrl.onBlur()"
+	>
+
+	<a class="i-button big block"
+		ui-sref="dashboard.activity.list( { tab: 'all' } )"
+		ng-click="ctrl.close()"
+		>
+		<span class="jolticon jolticon-notifications"></span>
+		{{ ::'notifications.popover.view_all_button' | translate }}
+	</a>
+
+	<div ng-if="ctrl.isLoading && ctrl.isShown">
+		<br>
+		<gj-loading class="loading-centered" loading-stationary="true"></gj-loading>
+	</div>
+
+	<div ng-if="!ctrl.isLoading">
+
+		<div class="alert alert-warning" ng-if="!ctrl.notifications.length">
+			{{ ::'notifications.popover.no_notifications' | translate }}
+		</div>
+
+		<div class="notifications-popover-container-controls"
+			ng-if="ctrl.notifications.length"
+			>
+			<a class="link-muted" ng-click="ctrl.dismissAll()">
+				({{ ::'notifications.popover.dismiss_all' | translate }})
+			</a>
+		</div>
+
+		<div class="list-group"
+			ng-if="ctrl.notifications.length"
+			>
+
+			<!--
+				For some reason the page was reloading from the href, so now we have the ng-click hack.
+			-->
+			<a class="list-group-item notifications-popover-item clearfix"
+				ng-repeat="notification in ctrl.notifications track by notification.id"
+				ng-href="{{ notification.url }}"
+				ng-click="ctrl.go( $event, notification )"
+				>
+
+				<div class="notifications-popover-icon">
+					<span class="jolticon" ng-class="notification.jolticon"></span>
+				</div>
+
+				<div class="notifications-popover-body">
+
+					<div class="notifications-popover-heading">
+						<div class="notifications-popover-controls">
+							<button class="notifications-popover-mark i-button sparse trans" ng-click="ctrl.dismiss( $event, notification )">
+								<span class="jolticon jolticon-remove"></span>
+							</button>
+						</div>
+						{{ notification.action_label }}
+					</div>
+
+					<span class="notifications-popover-details" gj-notifications-descriptive-action="notification" in-popover></span>
+
+					<div class="notifications-popover-meta">
+						<span am-time-ago="notification.added_on"></span>
+					</div>
+
+				</div>
+
+			</a>
+		</div>
+
+		<a class="i-button big block"
+			ng-if="ctrl.leftoverCount"
+			ui-sref="dashboard.activity.list( { tab: 'unread' } )"
+			ng-click="ctrl.close()"
+			>
+			<span class="jolticon jolticon-notifications"></span>
+			<span ng-if="ctrl.leftoverCount == 1">
+				{{ ::'notifications.popover.more_notifications_one_button' | translate }}
+			</span>
+			<span ng-if="ctrl.leftoverCount > 1">
+				{{ ::'notifications.popover.more_notifications_other_button' | translate:{ count: ctrl.leftoverCount } }}
+			</span>
+		</a>
+	</div>
+
+</gj-popover>

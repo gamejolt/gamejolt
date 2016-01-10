@@ -1,0 +1,13 @@
+<a class="game-media-bar-item-wrapper" ng-click="ctrl.onClick()">
+
+	<img
+		gj-img-responsive="{{ ::ctrl.item.img_thumbnail }}"
+		is-loaded="ctrl.loaded"
+		title="{{ ::ctrl.item.media_type == 'image' ? ctrl.item.caption : ctrl.item.title }}"
+		alt="{{ ::ctrl.item.media_type == 'image' ? ctrl.item.caption : ctrl.item.title }}">
+
+	<span class="play-button-overlay" ng-if="ctrl.item.media_type == 'video'">
+		<span class="jolticon jolticon-play"></span>
+	</span>
+
+</a>

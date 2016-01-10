@@ -1,0 +1,72 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-9 col-md-8 col-lg-6">
+
+				<h2 class="section-header sans-margin-bottom">
+					News Updates
+				</h2>
+
+				<p class="small text-muted">
+					<span class="jolticon jolticon-rss"></span>
+					<a target="_blank" ng-href="{{ listCtrl.atomFeedUrl }}" class="link-unstyled">RSS</a>
+					|
+					<a target="_blank" href="{{ listCtrl.atomFeedUrl }}" class="link-unstyled">Atom</a>
+				</p>
+
+				<br>
+
+				<gj-pagination
+					id="news-pagination"
+					items-per-page="listCtrl.perPage"
+					total-items="listCtrl.newsArticlesCount"
+					current-page="listCtrl.currentPage">
+				</gj-pagination>
+
+				<div class="anim-fade-enter-right stagger-enter"
+					ng-repeat="article in listCtrl.newsArticles track by article.id"
+					>
+					<h5 ng-class="{ 'section-header': $first }">
+						<span class="tag tag-pink" ng-if="::!!article.notification">New</span>
+						<strong>
+							<a class="link-unstyled" ui-sref="^.view( { articleSlug: article.slug, articleId: article.id } )">{{ ::article.title }}</a>
+						</strong>
+					</h5>
+					<p class="text-muted small">{{ ::article.excerpt }}</p>
+					<p class="small">
+						<a class="link-unstyled"
+							ui-sref="discover.games.view.news.view( { id: article.game_id, slug: article.game.slug, articleSlug: article.slug, articleId: article.id, '#': 'comments' } )"
+							ng-switch="::article.comments_count || 0"
+							>
+							<span ng-switch-when="0">{{ ::'news.list.post_comments_none' | translate }}</span>
+							<span ng-switch-when="1">{{ ::'news.list.post_comments_one' | translate }}</span>
+							<span ng-switch-default>{{ ::'news.list.post_comments_other' | translate:{ count: article.comments_count } }}</span>
+						</a>
+						<span class="dot-separator"></span>
+						<em class="text-muted" am-time-ago="::article.posted_on"></em>
+					</p>
+				</div>
+
+				<gj-pagination
+					items-per-page="listCtrl.perPage"
+					total-items="listCtrl.newsArticlesCount"
+					current-page="listCtrl.currentPage"
+					on-page-change="Scroll.to( 'news-pagination', { animate: false } )">
+				</gj-pagination>
+
+			</div>
+			<div class="col-sm-3 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isSm">
+				<gj-ad ad-size="skyscraper" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+			<div class="col-md-4 col-lg-6 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isDesktop">
+				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
+	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+</section>

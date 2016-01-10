@@ -1,0 +1,52 @@
+<div ng-if="Screen.isXs" class="well fill-darker sans-margin-bottom">
+	<a class="i-button block big" ui-sref="dashboard.account-mobile-nav">
+		<span class="jolticon jolticon-chevron-left"></span>
+		Back to Account
+	</a>
+</div>
+
+<header class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+
+				<h1>{{ accountCtrl.heading }}</h1>
+				<br>
+
+			</div>
+		</div>
+	</div>
+</header>
+
+<section class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3 col-md-2" ng-if="!Screen.isXs">
+
+				<nav class="platform-list">
+					<ul>
+						<li>
+							<a ui-sref="dashboard.account.edit" ui-sref-active="active">Profile</a>
+						</li>
+						<li>
+							<a ui-sref="dashboard.account.avatar" ui-sref-active="active">Avatar</a>
+						</li>
+						<li>
+							<a ui-sref="dashboard.account.linked-accounts" ui-sref-active="active">Linked Accounts</a>
+						</li>
+						<li>
+							<a ui-sref="dashboard.account.email-preferences" ui-sref-active="active">Email Preferences</a>
+						</li>
+						<li>
+							<a ui-sref="dashboard.account.change-password" ui-sref-active="active">Password</a>
+						</li>
+					</ul>
+				</nav>
+
+			</div>
+			<div class="col-xs-12 col-sm-9 col-md-10">
+				<ui-view></ui-view>
+			</div>
+		</div>
+	</div>
+</section>

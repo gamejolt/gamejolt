@@ -1,0 +1,130 @@
+.ctrl-client
+	overflow-x: hidden
+
+	h1 sup
+		font-size: $font-size-small
+
+		@media $media-sm-up
+			top: -18px
+
+	.highlight-rows
+		h2
+			font-weight: 100
+
+		@media $media-sm-up
+			section
+				padding: 60px 0
+
+		.jolticon
+			color: $gj-green !important
+
+		p
+			font-size: 1.2em
+			line-height: 1.6
+			font-family: $font-family-heading
+			font-weight: 100
+			color: $gray-lightest
+
+		img
+			border: 2px solid $white
+
+	section.client-presentation
+		position: relative
+
+		.container
+			position: relative
+
+	.client-presentation-mascot
+		display: block
+		position: absolute
+		top: 0
+		right: 40px
+		margin-top: -(130px)
+		z-index: 2
+
+	.client-presentation-inner
+		position: relative
+		overflow: hidden
+
+		&::before
+			content: ''
+			display: block
+			position: absolute
+			top: -500px
+			left: -30%
+			width: 160%
+			height: 900px
+			background-color: $gray-dark
+			z-index: 0
+			transform: rotate( -8deg )
+
+		.container
+			z-index: 1
+
+		img
+			border: 2px solid $gray
+
+	section.features-stripe
+		margin-top: 150px
+		margin-bottom: 90px
+		position: relative
+		z-index: 2
+
+		&, h5
+			color: $gray-darkest
+
+		h5
+			margin-top: 0
+
+		&::before
+			content: ''
+			display: block
+			position: absolute
+			top: -60px
+			bottom: -60px
+			left: -30%
+			width: 160%
+			background-color: $gj-green
+			z-index: 0
+			transform: rotate( 8deg )
+
+		.container
+			position: relative
+			z-index: 1
+
+	@media $media-xs
+		.features-stripe-col
+			margin-bottom: ($grid-gutter-width)
+			&:last-child
+				margin-bottom: 0
+
+	section.download-footer
+		margin-top: 120px
+		margin-bottom: 70px
+		position: relative
+		z-index: 1
+
+		&, h5
+			color: $white
+
+		&::before
+			content: ''
+			display: block
+			position: absolute
+			top: -80px
+			bottom: -40px
+			left: -30%
+			width: 160%
+			background-color: $gj-pink
+			z-index: 0
+			transform: rotate( -8deg )
+
+		.container
+			position: relative
+			z-index: 1
+
+	@media $media-xs
+		.download-footer-col
+			margin-bottom: ($grid-gutter-width)
+			&:last-child
+				margin-bottom: 0

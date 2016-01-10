@@ -1,0 +1,16 @@
+<div class="collection-copy">
+
+	<!--
+		Binding Scope
+		As well as to make it animatable.
+	-->
+	<div class="anim-fade-in-right no-animate-leave" ng-repeat="collection in [ collectionCtrl.collection ] track by collection._id">
+
+		<p class="text-muted collection-copy-tag-lead">
+			{{ ::'library.collection.tag_heading_before' | translate }}
+		</p>
+		<h2 class="sans-margin">{{ ::'library.collection.tag_heading' | translate:{ tag: collectionCtrl.tag } }}</h2>
+
+	</div>
+
+</div>

@@ -1,0 +1,20 @@
+
+.games-section-header
+	$games-list-category-badge-size = 116px
+
+	text-align: center
+
+	.category-badge-image
+		margin-bottom: $font-size-base
+
+	@media $media-sm-up
+		text-align: left
+
+		.category-badge-image
+			float: left
+			margin-top: -15px
+			margin-bottom: 0
+
+		&-has-badge
+			.games-section-header-copy
+				margin-left: $games-list-category-badge-size + $grid-gutter-width

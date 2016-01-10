@@ -1,0 +1,18 @@
+<div section class="section fill-darker game-media-bar scrollable scrollable-x overlay-scrollbar">
+	<div class="game-media-bar-items">
+
+		<gj-game-media-bar-item ng-repeat="item in ctrl.mediaItems track by item.id" item="item"></gj-game-media-bar-item>
+
+	</div>
+</div>
+
+<!--
+	We don't show lightbox on mobile.
+	The media bar by itself already shows images larger than the lightbox will show.
+-->
+<div oc-lazy-load="{ files: [ '/app/modules/hammer.js' ] }">
+	<gj-game-media-bar-lightbox
+		ng-if="ctrl.activeItem && !Screen.isXs"
+		>
+	</gj-game-media-bar-lightbox>
+</div>

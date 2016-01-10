@@ -1,0 +1,120 @@
+<gj-popover class="popover-dark account-popover"
+	popover-id="account-popover"
+	popover-append-to-body="true"
+	popover-position-by="position"
+	popover-on-focus="ctrl.isShown = true"
+	popover-on-blur="ctrl.isShown = false"
+	popover-hide-on-state-change="true"
+	>
+
+	<div class="list-group">
+		<a class="list-group-item offline-disable"
+			ui-sref="profile.overview( { id: App.user.id } )"
+			gj-track-event="account-popover:profile"
+			>
+			<h4 class="account-popover-heading">{{ App.user.display_name }}</h4>
+			<small>View Profile</small>
+		</a>
+	</div>
+
+	<div class="account-popover-separator"></div>
+
+	<div class="list-group">
+		<a class="list-group-item"
+			ui-sref="{{ ::Environment.isClient ? 'library.installed' : 'library.overview' }}"
+			gj-track-event="account-popover:library"
+			>
+			Game Library
+		</a>
+		<a class="list-group-item offline-disable"
+			ui-sref="dashboard.overview"
+			gj-track-event="account-popover:dashboard"
+			>
+			Dashboard
+		</a>
+		<a class="list-group-item offline-disable"
+			ui-sref="{{ Screen.isXs ? 'dashboard.account-mobile-nav' : 'dashboard.account.edit' }}"
+			gj-track-event="account-popover:account"
+			>
+			Edit Account
+		</a>
+		<a class="list-group-item offline-disable"
+			ng-click="ctrl.showToken()"
+			gj-track-event="account-popover:token"
+			>
+			Game Token
+		</a>
+	</div>
+
+	<div class="account-popover-button offline-disable">
+		<a class="i-button big block" ui-sref="dashboard.developer.games.add"
+			gj-track-event="account-popover:add-game"
+			>
+			<span class="jolticon jolticon-add"></span>
+			Add Game
+		</a>
+	</div>
+
+	<div class="account-popover-separator"></div>
+
+	<div ng-if="::Environment.isClient">
+		<div class="list-group">
+			<a class="list-group-item" ui-sref="settings">
+				Client Settings
+			</a>
+		</div>
+
+		<div class="account-popover-separator"></div>
+	</div>
+
+	<gj-shell-user-box></gj-shell-user-box>
+
+	<!--
+		We do slightly different styling here whether we're in client or not.
+		Enough changes to require different markup.
+	-->
+	<div ng-if="::!Environment.isClient">
+		<div ng-if="Connection.isOnline">
+			<div class="account-popover-separator"></div>
+
+			<div class="list-group">
+				<a class="list-group-item text-right" ng-click="ctrl.logout()"
+					gj-track-event="account-popover:logout"
+					>
+					<span class="jolticon jolticon-logout warning"></span>
+					Logout
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div ng-if="::Environment.isClient">
+		<div class="account-popover-separator"></div>
+
+		<div class="clearfix">
+			<div ng-if="Connection.isOnline" class="pull-left text-center" style="width: 50%">
+
+				<div class="list-group">
+					<a class="list-group-item" ng-click="ctrl.logout()"
+						gj-track-event="account-popover:logout"
+						>
+						<span class="jolticon jolticon-logout warning"></span>
+						Logout
+					</a>
+				</div>
+
+			</div>
+			<div class="pull-right text-center" style="width: 50%">
+
+				<div class="list-group">
+					<a class="list-group-item" ng-click="Client.quit()">
+						<span class="jolticon jolticon-remove warning"></span>
+						Quit
+					</a>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</gj-popover>

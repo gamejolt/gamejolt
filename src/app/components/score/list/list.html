@@ -1,0 +1,23 @@
+<ol class="score-list">
+	<li class="score-list-item anim-fade-in-up stagger no-animate-leave"
+		ng-repeat="score in ctrl.scores track by score.id">
+
+		<div class="score-list-media">
+			<div gj-user-avatar="::score.user"></div>
+		</div>
+		<div class="score-list-content">
+			<div class="score-list-rank">
+				<span class="score-list-rank-sign">#</span>{{ ::(ctrl.startRank || 1) + (ctrl.step ? $index * ctrl.step : $index) | number }}
+			</div>
+			<div class="score-list-title" title="{{ ::score.score }}">{{ ::score.score }}</div>
+			<div class="score-list-user">
+				<a ng-if="::score.user" ng-href="{{ ::score.user.url }}">{{ ::score.user.display_name }}</a>
+				<span ng-if="::!score.user">
+					{{ ::score.guest }}
+					<em class="text-muted small">({{ ::'scores.guest' | translate }})</em>
+				</span>
+			</div>
+			<div class="score-list-time" am-time-ago="::score.logged_on"></div>
+		</div>
+	</li>
+</ol>

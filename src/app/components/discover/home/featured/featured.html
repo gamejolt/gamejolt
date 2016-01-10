@@ -1,0 +1,85 @@
+<section class="discover-home-featured-wrap">
+
+	<div oc-lazy-load="{ files: [ '/app/modules/hammer.js' ] }">
+		<div class="discover-home-featured"
+			ng-click="ctrl.go()"
+			hm-swiperight="ctrl.prevSlide( $event, { swipe: true } )"
+			hm-swipeleft="ctrl.nextSlide( $event, { swipe: true } )"
+			hm-recognizer-options='[{"type":"swipe","directions":"DIRECTION_HORIZONTAL"}]'
+			gj-track-event="home:featured:click:{{ ctrl.index }}"
+			>
+
+			<a class="discover-home-featured-prev" ng-click="ctrl.prevSlide( $event )" gj-track-event="home:featured:click-prev">
+				<span class="jolticon jolticon-chevron-left"></span>
+			</a>
+
+			<a class="discover-home-featured-next" ng-click="ctrl.nextSlide( $event )" gj-track-event="home:featured:click-next">
+				<span class="jolticon jolticon-chevron-right"></span>
+			</a>
+
+			<div class="discover-home-featured-body">
+				<div class="container">
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-7 col-md-offset-1 col-lg-6" ng-repeat="featuredItem in [ ctrl.item ] track by featuredItem.id">
+
+							<div class="anim-fade-in-down">
+								<div class="tag">FEATURED GAME</div>
+
+								<div class="discover-home-featured-copy">
+									<a class="h1" ui-sref="{{ ::featuredItem.game.getSref( null, true ) }}">{{ ::featuredItem.game.title }}</a>
+									<div class="discover-home-featured-byline">by {{ ::featuredItem.game.developer.display_name }}</div>
+									<p>{{ ::featuredItem.content }}</p>
+								</div>
+
+								<div class="discover-home-featured-meta">
+									<gj-game-compat-icons gj-game="::featuredItem.game"></gj-game-compat-icons>
+								</div>
+							</div>
+
+							<a class="btn btn-primary-outline btn-overlay-variant big anim-fade-in-enlarge"
+								ng-class="{ 'btn-block': Screen.isXs }"
+								ui-sref="{{ ::featuredItem.game.getSref( null, true ) }}"
+								gj-track-event="home:featured:button"
+								>
+								<span class="jolticon jolticon-chevron-right"></span>
+								View Game
+							</a>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--
+				We don't propagate so that the main container doesn't get the click.
+				This is to prevent accidental clicks when trying to click on a blip.
+			-->
+			<div class="discover-home-featured-blips" ng-click="$event.stopPropagation()">
+				<a
+					ng-repeat="item in ctrl.items track by item.id"
+					ng-click="ctrl.activateSlide( $index, $event )"
+					ng-class="{ active: item.id == ctrl.item.id }"
+					gj-track-event="home:featured:blip:{{ $index }}"
+					>
+
+					<span class="discover-home-featured-blip"></span>
+				</a>
+			</div>
+
+			<div class="discover-home-featured-shade"></div>
+
+			<div class="discover-home-featured-background" gj-parallax-scroll scroll-drag="0.4" scroll-dim="0.8">
+
+				<div class="discover-home-featured-background-inner"
+					ng-repeat="item in ctrl.items track by item.id"
+					ng-style="{ 'background-image': 'url(' + item.header_media_item.img_url + ')' }"
+					ng-if="item.id == ctrl.item.id"
+					>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</section>

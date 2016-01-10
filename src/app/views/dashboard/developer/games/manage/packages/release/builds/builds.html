@@ -1,0 +1,247 @@
+<!--
+	This is needed for the sub-states to hook into.
+-->
+<ui-view></ui-view>
+
+<h3>{{ ::'dash.games.releases.builds.heading' | translate }}</h3>
+
+<p class="page-help">
+	<a class="link-help" href="https://help.gamejolt.com/dev-packages#builds-and-files" target="_blank">{{ ::'dash.games.releases.builds.page_help_link' | translate }}</a>
+</p>
+
+<div class="alert alert-warning" ng-if="!releaseCtrl.builds.length" translate="dash.games.releases.builds.no_builds_html"></div>
+
+<gj-editable-accordion active-item="buildsCtrl.activeItem" is-adding="buildsCtrl.isAdding">
+
+	<gj-editable-accordion-item
+		ng-repeat="build in releaseCtrl.builds track by build.id"
+		item-id="{{ build.id }}"
+		class="edit-build-container"
+		>
+
+		<gj-editable-accordion-item-heading>
+
+			<div class="stats">
+				<div class="stat-big stat-big-smaller">
+					<div class="stat-big-label">{{ ::'dash.games.releases.builds.downloads_label' | translate }}</div>
+					<div class="stat-big-digit" ng-attr-title="{{ (buildsCtrl.buildDownloadCounts[ build.id ] || 0) | number }}">
+						{{ (buildsCtrl.buildDownloadCounts[ build.id ] || 0) | fuzzyNumber }}
+					</div>
+				</div>
+			</div>
+
+			<h5 class="editable-accordion-item-heading-title sans-margin-bottom">
+				<strong>{{ build.primary_file.filename }}</strong>
+			</h5>
+
+			<!--
+				Build details.
+			-->
+			<div>
+				<small class="text-muted">{{ build.primary_file.filesize | filesize }}</small>
+				<small ng-if="build.isBrowserBased()">
+					<span class="dot-separator"></span>
+					<span class="text-muted">
+						{{ build.embed_width }}x{{ build.embed_height }}
+					</span>
+				</small>
+			</div>
+
+			<!--
+				"Other" downloadable.
+			-->
+			<div ng-if="build.type == Game_Build.TYPE_DOWNLOADABLE && build.os_other">
+				<span class="tag">
+					<span class="jolticon jolticon-other-os"></span>
+					{{ ::'dash.games.releases.builds.other_downloadable_tag' | translate }}
+				</span>
+			</div>
+
+			<!--
+				Incomplete because launch options need work.
+			-->
+			<div ng-if="build.type == Game_Build.TYPE_DOWNLOADABLE && build.hasError( Game_Build.ERROR_LAUNCH_OPTIONS )">
+				<span class="tag tag-pink" gj-tooltip="$translate.instant( 'dash.games.releases.builds.incomplete_tag_tooltip' )">
+					<span class="jolticon jolticon-notice"></span>
+					{{ ::'dash.games.releases.builds.incomplete_tag' | translate }}
+				</span>
+			</div>
+
+			<!--
+				If a build is "incomplete" it may not have launch options yet.
+			-->
+			<div ng-if="build.type == Game_Build.TYPE_DOWNLOADABLE && !!buildsCtrl.launchOptionsByBuild[ build.id ].length">
+
+				<!--
+					Standalone executable downloadables.
+				-->
+				<div ng-if="!build.primary_file.is_archive">
+
+					<!--
+						Only mark it as a standalone executable if it's not an "Other" build.
+					-->
+					<span class="tag" ng-if="!build.os_other">
+						{{ ::'dash.games.releases.builds.standalone_tag' | translate }}
+					</span>
+
+					<span
+						ng-repeat="(platform, platformInfo) in buildsCtrl.platformsInfo"
+						ng-if="build[ 'os_' + platform ]"
+						>
+						<span class="tag">
+							<span class="jolticon" ng-class="'jolticon-' + platformInfo.icon"></span>
+							{{ platformInfo.label }}
+						</span>
+					</span>
+				</div>
+
+				<!--
+					Archive downloadables with launch option executable paths.
+				-->
+				<div ng-if="build.primary_file.is_archive">
+					<div class="text-muted small" ng-repeat="launchOption in buildsCtrl.launchOptionsByBuild[ build.id ] track by launchOption.id">
+						<span class="tag">
+							<span class="jolticon" ng-class="'jolticon-' + buildsCtrl.platformsInfo[ launchOption.os ].icon"></span>
+							{{ buildsCtrl.platformsInfo[ launchOption.os ].label }}
+						</span>
+						{{ launchOption.executable_path }}
+					</div>
+				</div>
+			</div>
+
+			<!--
+				Browser builds.
+			-->
+			<div ng-if="build.isBrowserBased()">
+				<span class="tag" ng-if="build.type == Game_Build.TYPE_HTML">
+					<span class="jolticon jolticon-html5"></span>
+					{{ ::'games.browser_html' | translate }}
+				</span>
+
+				<span class="tag" ng-if="build.type == Game_Build.TYPE_FLASH">
+					<span class="jolticon jolticon-flash"></span>
+					{{ ::'games.browser_flash' | translate }}
+				</span>
+
+				<span class="tag" ng-if="build.type == Game_Build.TYPE_UNITY">
+					<span class="jolticon jolticon-unity"></span>
+					{{ ::'games.browser_unity' | translate }}
+				</span>
+
+				<span class="tag" ng-if="build.type == Game_Build.TYPE_SILVERLIGHT">
+					<span class="jolticon jolticon-silverlight"></span>
+					{{ ::'games.browser_silverlight' | translate }}
+				</span>
+
+				<span class="tag" ng-if="build.type == Game_Build.TYPE_APPLET">
+					<span class="jolticon jolticon-java"></span>
+					{{ ::'games.browser_applet' | translate }}
+				</span>
+			</div>
+
+			<!--
+				Extra java applet stuff.
+			-->
+			<div ng-if="build.type == Game_Build.TYPE_APPLET">
+				<br>
+				<span class="badge">{{ (buildsCtrl.paramsByBuild[ build.id ].length || 0) | number }}</span>
+				{{ ::'dash.games.releases.builds.params_heading' | translate }}
+
+				<br>
+				<span class="badge">{{ (buildsCtrl.supplementalFilesByBuild[ build.id ].length || 0) | number }}</span>
+				{{ ::'dash.games.releases.builds.extra_files_heading' | translate }}
+			</div>
+
+			<!--
+				Processing the build.
+			-->
+			<div ng-if="build.status == Game_Build.STATUS_ADDING"
+				gj-progress-poller="/web/dash/developer/games/builds/poll-progress/{{ manageCtrl.game.id }}/{{ releaseCtrl.package.id }}/{{ releaseCtrl.release.id }}/{{ build.id }}"
+				progress-poller-on-complete="buildsCtrl.onBuildProcessingComplete( build, $response )"
+				>
+
+				<br>
+				<div class="progress progress-thin progress-striped active">
+					<div class="progress-bar" style="width: 100%"></div>
+				</div>
+
+				<div class="text-center small" translate="dash.games.releases.builds.processing_message_html"></div>
+			</div>
+
+		</gj-editable-accordion-item-heading>
+
+		<gj-editable-accordion-item-body>
+
+			<nav class="platform-list inline scrollable-xs no-animate">
+				<ul>
+					<li>
+						<a ui-sref=".edit( { buildId: build.id } )" ui-sref-active="active" gj-no-auto-scroll>
+							{{ ::'dash.games.releases.builds.edit_tab' | translate }}
+						</a>
+					</li>
+					<li ng-if="build.type == Game_Build.TYPE_DOWNLOADABLE && !build.os_other">
+						<a ui-sref=".launch-options( { buildId: build.id } )" ui-sref-active="active" gj-no-auto-scroll>
+							<span class="jolticon jolticon-notice warning" ng-if="build.hasError( Game_Build.ERROR_LAUNCH_OPTIONS )"></span>
+							{{ ::'dash.games.releases.builds.launch_options_tab' | translate }}
+						</a>
+					</li>
+					<li ng-if="build.type == Game_Build.TYPE_APPLET">
+						<a ui-sref=".params( { buildId: build.id } )" ui-sref-active="active" gj-no-auto-scroll>
+							{{ ::'dash.games.releases.builds.params_tab' | translate }}
+						</a>
+					</li>
+					<li ng-if="build.type == Game_Build.TYPE_APPLET">
+						<a ui-sref=".supplemental-files( { buildId: build.id } )" ui-sref-active="active" gj-no-auto-scroll>
+							{{ ::'dash.games.releases.builds.extra_files_tab' | translate }}
+						</a>
+					</li>
+					<li>
+						<a gj-popover-trigger="build-more-{{ build.id }}">
+							<span class="jolticon jolticon-ellipsis-h"></span>
+							{{ ::'options.more' | translate }}
+						</a>
+					</li>
+				</ul>
+			</nav>
+
+			<gj-popover popover-id="build-more-{{ build.id }}">
+				<div class="list-group">
+					<a class="list-group-item has-icon" ng-click="buildsCtrl.removeBuild( build )">
+						<span class="jolticon jolticon-remove"></span>
+						{{ ::'dash.games.releases.builds.remove_build_button' | translate }}
+					</a>
+				</div>
+			</gj-popover>
+
+			<div ng-if="buildsCtrl.buildTab == 'edit'">
+				<div ng-include="'/app/views/dashboard/developer/games/manage/packages/release/builds/edit/_edit.html'"></div>
+			</div>
+
+			<div ng-if="buildsCtrl.buildTab == 'launch-options'">
+				<div ng-include="'/app/views/dashboard/developer/games/manage/packages/release/builds/launch-options/_launch-options.html'"></div>
+			</div>
+
+			<div ng-if="buildsCtrl.buildTab == 'params'">
+				<div ng-include="'/app/views/dashboard/developer/games/manage/packages/release/builds/params/_params.html'"></div>
+			</div>
+
+			<div ng-if="buildsCtrl.buildTab == 'supplemental-files'">
+				<div ng-include="'/app/views/dashboard/developer/games/manage/packages/release/builds/supplemental-files/_supplemental-files.html'"></div>
+			</div>
+
+		</gj-editable-accordion-item-body>
+
+	</gj-editable-accordion-item>
+
+	<gj-editable-accordion-add
+		add-label="{{ ::'dash.games.releases.builds.add_build_button' | translate }}"
+		ng-if="!releaseCtrl.areBuildsLockedByJam"
+		>
+		<div ng-include="'/app/views/dashboard/developer/games/manage/packages/release/builds/add/_add.html'"></div>
+	</gj-editable-accordion-add>
+
+</gj-editable-accordion>
+
+<div class="alert alert-warning" ng-if="releaseCtrl.areBuildsLockedByJam">
+	<strong>Your game is part of a jam that locks builds during voting.</strong> You will not be able to add new builds until the voting period ends.
+</div>

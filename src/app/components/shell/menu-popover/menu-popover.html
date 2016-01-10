@@ -1,0 +1,119 @@
+<gj-popover class="popover-dark"
+	popover-id="main-menu"
+	popover-append-to-body="true"
+	popover-position-by="position"
+	popover-on-focus="ctrl.isShown = true"
+	popover-on-blur="ctrl.isShown = false"
+	popover-hide-on-state-change="true"
+	>
+
+	<div style="min-width: 300px">
+
+		<div class="list-group thin">
+			<a ng-if="Screen.isXs" class="list-group-item has-icon offline-disable" ui-sref="discover.home"
+				gj-track-event="discover-nav:home"
+				>
+				<span class="jolticon jolticon-gamejolt"></span>
+				Home
+			</a>
+			<a class="list-group-item has-icon offline-disable" ui-sref="discover.games.list.section( { section: 'featured' } )"
+				ui-sref-opts="{ inherit: false }"
+				gj-track-event="discover-nav:hot"
+				>
+				<span class="jolticon jolticon-game"></span>
+				Browse Games
+			</a>
+			<a class="list-group-item has-icon offline-disable" ui-sref="discover.news.list"
+				ui-sref-opts="{ inherit: false }"
+				gj-track-event="discover-nav:news"
+				>
+				<span class="jolticon jolticon-blog-article"></span>
+				Game News
+			</a>
+			<a ng-if="Screen.isXs" class="list-group-item has-icon offline-disable" ui-sref="search.results"
+				ui-sref-opts="{ inherit: false }"
+				gj-track-event="discover-nav:search"
+				>
+				<span class="jolticon jolticon-search"></span>
+				Search
+			</a>
+			<a class="list-group-item has-icon offline-disable" href="/community/forums" target="_self"
+				gj-track-event="discover-nav:forums"
+				>
+				<span class="jolticon jolticon-users"></span>
+				Forums
+			</a>
+		</div>
+
+		<div ng-if="App.user">
+			<div class="nav-heading">
+				{{ App.user.display_name }}
+			</div>
+
+			<div class="list-group thin">
+				<a class="list-group-item has-icon" ui-sref="{{ ::Environment.isClient ? 'library.installed' : 'library.overview' }}"
+					gj-track-event="discover-nav:library"
+					>
+					<span class="jolticon jolticon-books"></span>
+					Game Library
+				</a>
+				<a class="list-group-item has-icon offline-disable" ui-sref="dashboard.overview"
+					gj-track-event="discover-nav:dashboard"
+					>
+					<span class="jolticon jolticon-dashboard"></span>
+					Dashboard
+				</a>
+			</div>
+		</div>
+
+		<div class="nav-heading">
+			{{ ::'discover.nav.featured_playlists' | translate }}
+		</div>
+
+		<div class="list-group thin">
+			<a class="list-group-item has-icon offline-disable" ui-sref="library.collection.tag( { id: 'ldjam', sort: 'hot' } )"
+				ui-sref-opts="{ inherit: false }"
+				gj-track-event="discover-nav:tag-ldjam"
+				>
+				<span class="jolticon jolticon-tags"></span>
+				Ludum Dare
+			</a>
+			<a class="list-group-item has-icon offline-disable" ui-sref="library.collection.tag( { id: 'horror' } )"
+				ui-sref-opts="{ inherit: false }"
+				gj-track-event="discover-nav:tag-horror"
+				>
+				<span class="jolticon jolticon-tags"></span>
+				Horror
+			</a>
+			<a class="list-group-item has-icon offline-disable" ui-sref="library.collection.tag( { id: 'fnaf' } )"
+				ui-sref-opts="{ inherit: false }"
+				gj-track-event="discover-nav:tag-fnaf"
+				>
+				<span class="jolticon jolticon-tags"></span>
+				Five Nights at Freddy's
+			</a>
+		</div>
+
+		<div class="menu-popover-separator"></div>
+
+		<div class="list-group">
+
+			<a class="list-group-item" ng-href="{{ ::Environment.firesideBaseUrl }}"
+				title="Fireside - Indie gaming opinions, news, and reviews"
+				gj-track-event="discover-nav:fireside"
+				>
+				<img ng-src="/lib/gj-lib-client/components/site-selector/jolt-fireside.png" width="155" style="margin-top: -8px; margin-bottom: -2px" alt="Fireside">
+			</a>
+
+			<a class="list-group-item" ng-href="{{ ::Environment.jamsBaseUrl }}"
+				title="Game Jolt Jams"
+				gj-track-event="discover-nav:jams">
+				<img ng-src="/lib/gj-lib-client/components/site-selector/jolt.svg" alt="" style="margin-right: 6px;">
+				<img ng-src="/lib/gj-lib-client/components/site-selector/jams-logo.svg" alt="Game Jolt Jams">
+			</a>
+
+		</div>
+
+	</div>
+
+</gj-popover>

@@ -1,0 +1,27 @@
+<header class="section no-nav">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+				<h1>{{ ::'dash.games.add.heading' | translate }}</h1>
+			</div>
+		</div>
+	</div>
+</header>
+
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+
+				<gj-form-dashboard-game
+					show-rules="true"
+					gj-form-submit-handler="addCtrl.onSubmit( formModel )"
+					>
+				</gj-form-dashboard-game>
+
+			</div>
+		</div>
+
+	</div>
+</section>

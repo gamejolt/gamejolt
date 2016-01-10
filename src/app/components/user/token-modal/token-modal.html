@@ -1,0 +1,55 @@
+<div class="modal-body">
+	<h2 class="modal-title" ng-if="!modalCtrl.isChanging">
+		<span class="jolticon jolticon-token big"></span>
+		Your Game Token
+	</h2>
+
+	<h2 class="modal-title" ng-if="modalCtrl.isChanging">
+		Change Game Token
+	</h2>
+
+	<p class="text-muted small">
+		Your game token is like a special password you use to log into games that support high scores and achievements.
+		[ <a href="https://help.gamejolt.com/tokens" target="_blank" class="link-help">more info</a> ]
+	</p>
+
+	<p class="text-muted small">
+		Never share your account password. In fact, if a game asks for your password instead of your game token, please report it!
+	</p>
+
+	<div gj-expand-when="!modalCtrl.isChanging">
+		<table class="table">
+			<tbody>
+				<tr>
+					<th>Current Game Token</th>
+					<td>
+						<p ng-if="!modalCtrl.token" class="text-muted">Loading...</p>
+						<p ng-if="modalCtrl.token">
+							<code>{{ modalCtrl.token }}</code>
+						</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div gj-expand-when="modalCtrl.isChanging">
+		<gj-form-token
+			gj-user="App.user"
+			gj-token="modalCtrl.token"
+			gj-form-submit-handler="modalCtrl.onTokenChanged( formModel )">
+		</gj-form-token>
+	</div>
+
+</div>
+
+<div class="modal-footer">
+	<button class="i-button anim-fade-enter anim-fade-leave" ng-click="modalCtrl.showChangeForm()" ng-if="!modalCtrl.isChanging">
+		<span class="jolticon jolticon-edit"></span>
+		Change Game Token
+	</button>
+	<button class="i-button warning" ng-click="modalCtrl.close()">
+		<span class="jolticon jolticon-remove"></span>
+		Close
+	</button>
+</div>

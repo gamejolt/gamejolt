@@ -1,0 +1,129 @@
+<div class="chat-user-list">
+
+	<div class="nav-controls">
+		<input text="search"
+			class="form-control"
+			placeholder="Filter..."
+			ng-model="ctrl.filterQuery"
+			gj-focus-when="ctrl.focusFilter"
+			>
+	</div>
+
+	<ul class="shell-nav" ng-show="ctrl.users.length">
+
+		<!--
+			Completely bind-once everyone and use a special track by field to update them.
+			This is set on the user when pulling in new friends/users.
+			It only updates when any of the users information has changed from last pull.
+		-->
+		<li class="no-animate chat-user"
+			ng-repeat="user in ctrl.users track by user._trackId"
+			ng-show="!ctrl.filterQuery || user.displayName.toLowerCase().indexOf( ctrl.filterQuery.toLowerCase() ) != -1"
+			>
+
+			<a ng-href="{{ ::ctrl.getUserProfileUrl( user ) }}"
+				ng-click="ctrl.onUserClick( user, $event )"
+				ng-class="::{ active: ctrl.showPm && Chat.client.room.id == user.roomId }"
+				>
+
+				<!--
+					We have to make sure that it returns 0 if there is none, or it won't bind once.
+					Angular waits until the thing it's watching is undefined to bind once.
+					Notification tag has to go first to resolve a stupid bug:
+					https://github.com/gamejolt/next-issue-tracker/issues/96
+				-->
+				<span class="tag tag-pink notifications-tag" ng-if="::ctrl.notifications[ user.roomId ] || 0">
+					{{ ::ctrl.notifications[ user.roomId ] || 0 | number }}
+				</span>
+
+				<div class="chat-user-moderate" ng-if="::ctrl.showModTools">
+					<span class="chat-user-moderate-action"
+						ng-click="ctrl.moderateUser( $event, user )"
+						>
+						<span class="jolticon jolticon-cog"></span>
+					</span>
+				</div>
+
+				<div class="chat-user-avatar">
+					<img ng-src="{{ ::user.imgAvatar }}" />
+
+					<span class="chat-user-status"
+						ng-if="::user.isOnline !== undefined"
+						ng-class="::{
+							'offline': !user.isOnline,
+							'online active': user.isOnline,
+						}"
+						>
+					</span>
+				</div>
+
+				<!-- Only show tags in room user lists -->
+				<span ng-if="::ctrl.room">
+					<span class="chat-user-role tag tag-active" ng-if="::user.isMod == 'owner'" tooltip="Room Admin">A</span>
+					<span class="chat-user-role tag tag-active" ng-if="::user.isMod == 'moderator'" tooltip="Room Moderator">M</span>
+					<span class="chat-user-role tag tag-active" ng-if="::user.permissionLevel >= ChatConfig.SITE_MOD_PERMISSION" tooltip="Site Moderator">S</span>
+					<span class="chat-user-role tag tag-pink" ng-if="::ctrl.showModTools && (user.isMutedRoom || user.isMutedGlobal)" tooltip="Muted">
+						&#x274C;
+					</span>
+				</span>
+
+				<!-- Useful for debugging. -->
+				<!--{{ user._trackId }}-->
+
+				<span>{{ ::user.displayName }}</span>
+
+				<div class="chat-user-list-meta">
+
+					<!--
+						We have to make sure that it doesn't return undefined' if there is none, or it won't bind once.
+						Angular waits until the thing it's watching is undefined to bind once.
+					-->
+					<!-- <span ng-if="::user.currently_playing !== undefined && user.currently_playing">
+						Playing <em>{{ ::user.currently_playing.game }}</em>
+					</span> -->
+				</div>
+
+			</a>
+
+			<div class="well fill-darker sans-margin" ng-if="::ctrl.showModTools && ctrl.moderatingUser.id == user.id">
+
+				<div ng-if="::ctrl.canModerate( ctrl.moderatingUser )">
+					<span class="btn btn-sm btn-outline"
+						ng-if="::!user.isMutedRoom && Chat.client.canModerate( ctrl.room, user, 'mute' )"
+						ng-click="ctrl.mute( ctrl.moderatingUser )"
+						>
+						Mute
+					</span>
+
+					<span class="btn btn-sm btn-outline"
+						ng-if="::user.isMutedRoom && Chat.client.canModerate( ctrl.room, user, 'mute' )"
+						ng-click="ctrl.unmute( ctrl.moderatingUser )"
+						>
+						Unmute
+					</span>
+
+					<span class="btn btn-sm btn-outline"
+						ng-if="::!user.isMod && Chat.client.canModerate( ctrl.room, user, 'mod' )"
+						ng-click="ctrl.mod( ctrl.moderatingUser )"
+						>
+						Mod
+					</span>
+
+					<span class="btn btn-sm btn-outline"
+						ng-if="::!!user.isMod && Chat.client.canModerate( ctrl.room, user, 'mod' )"
+						ng-click="ctrl.demod( ctrl.moderatingUser )"
+						>
+						Demod
+					</span>
+				</div>
+
+				<div ng-if="::!ctrl.canModerate( ctrl.moderatingUser )">
+					You don't have the correct permissions to moderate this user.
+				</div>
+			</div>
+
+		</li>
+
+	</ul>
+
+</div>

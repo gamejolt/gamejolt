@@ -1,0 +1,132 @@
+<!doctype html>
+
+<html lang="en" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/" ng-app="App" ng-controller="AppCtrl">
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+		<!-- Base tag required -->
+		<base href="/">
+
+		<!-- http://docs.angularjs.org/guide/dev_guide.services.$location#hashbang-and-html5-modes_hashbang-mode_crawling-your-app -->
+		<!-- https://prerender.io/getting-started#test-it -->
+		<meta name="fragment" content="!">
+
+		<!-- https://github.com/ftlabs/fastclick#when-it-isnt-needed -->
+		<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+
+		<!-- Add to homescreen for Chrome on Android -->
+		<meta name="mobile-web-app-capable" content="yes">
+		<link rel="icon" sizes="192x192" href="/app/img/chrome-touch-icon-192x192.png">
+
+		<!-- Add to homescreen for Safari on iOS -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="apple-mobile-web-app-title" content="Game Jolt">
+		<link rel="apple-touch-icon-precomposed" href="/app/img/apple-touch-icon-precomposed.png">
+
+		<!-- Tile icon for Win8 (144x144 + tile color) -->
+		<meta name="msapplication-TileImage" content="/app/img/ms-touch-icon-144x144-precomposed.png">
+		<meta name="msapplication-TileColor" content="#292929">
+
+		<!-- http://blogs.windows.com/windows_phone/b/wpdev/archive/2012/11/15/adapting-your-webkit-optimized-site-for-internet-explorer-10.aspx#step5 -->
+		<meta name="msapplication-tap-highlight" content="no">
+
+		<!-- App start timer. -->
+		<script>
+			window._gjStartTime = Date.now();
+		</script>
+
+		<script type="text/javascript">
+
+			if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+				var msViewportStyle = document.createElement("style");
+				msViewportStyle.appendChild(
+					document.createTextNode(
+						"@-ms-viewport{width:auto!important}"
+					)
+				);
+				document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+			}
+
+		</script>
+
+		<link rel="stylesheet" href="/app/main.css">
+		<link rel="shortcut icon" href="/app/img/favicon.png">
+
+		<title ng-bind-html="Environment.isClient ? (App.title ? App.title + ' - Game Jolt' : 'Game Jolt') : (App.title ? App.title + ' on Game Jolt' : 'Game Jolt - Free Indie Games')">Game Jolt</title>
+
+		<meta name="description" ng-if="Meta.description" ng-attr-content="{{ Meta.description }}" content="Discover the largest community for indie games and the people that make and play them.">
+
+		<!-- Prerender Status -->
+		<meta name="prerender-status-code" ng-if="Meta.responseCode" ng-attr-content="{{ Meta.responseCode }}">
+		<meta name="prerender-header" ng-if="Meta.redirect" ng-attr-content="Location: {{ Meta.redirect }}">
+
+		<!-- FB -->
+		<meta property="fb:app_id" content="410666682312265">
+		<meta property="og:site_name" content="Game Jolt">
+		<meta property="fb:admins" content="1070315546">
+		<meta property="og:title" ng-if="Meta.fb.title" ng-attr-content="{{ Meta.fb.title }}" content="Game Jolt - Free Indie Games">
+		<meta property="og:description" ng-if="Meta.fb.description" ng-attr-content="{{ Meta.fb.description }}" content="Discover the largest community for indie games and the people that make and play them.">
+		<meta property="og:url" ng-if="Meta.fb.url" ng-attr-content="{{ Meta.fb.url }}">
+		<meta property="og:type" ng-if="Meta.fb.type" ng-attr-content="{{ Meta.fb.type }}">
+		<meta property="og:image" ng-attr-content="{{ Meta.fb.image || '/app/img/meta-default-image.png' }}">
+		<meta property="og:profile_id" ng-if="Meta.fb.profileId" ng-attr-content="{{ Meta.fb.profileId }}">
+
+		<!-- Twitter -->
+		<meta name="twitter:site" content="@gamejolt">
+		<meta name="twitter:card" ng-if="Meta.twitter.card" ng-attr-content="{{ Meta.twitter.card }}">
+		<meta name="twitter:title" ng-if="Meta.twitter.title" ng-attr-content="{{ Meta.twitter.title }}" content="Game Jolt - Free Indie Games">
+		<meta name="twitter:description" ng-if="Meta.twitter.description" ng-attr-content="{{ Meta.twitter.description }}" content="Discover the largest community for indie games and the people that make and play them.">
+		<meta name="twitter:image" ng-if="Meta.twitter.image" ng-attr-content="{{ Meta.twitter.image }}">
+		<meta name="twitter:url" ng-if="Meta.twitter.url" ng-attr-content="{{ Meta.twitter.url }}">
+
+	</head>
+
+	<!-- Add an empty class so we can hook into it when building and add classes for client, app, etc. -->
+	<body class="" gj-body-classes gj-auto-scroll ng-class="{ 'is-offline': !Connection.isOnline }">
+
+		<gj-client-intro client-intro-done="App.isClientIntroDone = true" ng-if="!App.isClientIntroDone"></gj-client-intro>
+
+		<gj-shell>
+
+			<gj-shell-top-nav></gj-shell-top-nav>
+
+			<gj-offline-alert></gj-offline-alert>
+
+			<gj-shell-body>
+				<ui-view id="content" ng-cloak></ui-view>
+			</gj-shell-body>
+
+			<gj-shell-chat-pane></gj-shell-chat-pane>
+
+			<gj-chat-windows></gj-chat-windows>
+			<gj-growls></gj-growls>
+
+			<gj-shell-hot-bottom>
+				<gj-minbar></gj-minbar>
+				<gj-chat-tabs></gj-chat-tabs>
+				<gj-client-status-bar></gj-client-status-bar>
+			</gj-shell-hot-bottom>
+
+		</gj-shell>
+
+		 <div gj-debug-bar></div>
+
+		<script async src="https://www.google-analytics.com/analytics.js"></script>
+		<script>
+			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+			ga('create', 'UA-6742777-1', 'auto');
+			ga('require', 'linkid', 'linkid.js');
+		</script>
+
+		<script src="/app/modules/error-tracking.js" crossorigin="anonymous"></script>
+		<script src="/app/vendor.js"></script>
+		<script src="/app/modules/vendor-app.js"></script>
+		<!-- inject client:modules -->
+		<script src="/app/app.js"></script>
+
+	</body>
+</html>

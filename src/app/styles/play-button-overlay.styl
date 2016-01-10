@@ -1,0 +1,46 @@
+.play-button-overlay
+	display: block
+	position: absolute
+	left: 50%
+	top: 50%
+	z-index: $zindex-play-button-overlay
+	background-color: rgba( $black, 0.65 )
+	border-radius: 50%
+	cursor: pointer
+
+	&:hover
+	&.active
+		background-color: rgba( $black, 0.85 )
+
+		.jolticon
+			color: $gj-green
+
+	.jolticon
+		position: relative
+		margin: 0
+		padding: 0
+		text-align: center
+		vertical-align: middle
+		color: $white
+		cursor: pointer
+
+	play-button-overlay-sizing( multiplier )
+		padding: multiplier * 10px
+		border-width: multiplier * 2px
+		line-height: multiplier * 20px
+		margin-top: -((@line-height + (@padding * 2) + @border-width) / 2)
+		margin-left: @margin-top
+
+		.jolticon
+			font-size: multiplier * 16px
+			width: multiplier * 20px
+			left: multiplier * 1px
+			top: -(@left)
+
+	play-button-overlay-sizing( 2 )
+
+	&.play-button-overlay-small
+		play-button-overlay-sizing( 1 )
+
+	&.play-button-overlay-big
+		play-button-overlay-sizing( 3 )

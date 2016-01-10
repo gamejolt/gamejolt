@@ -1,0 +1,25 @@
+<div ng-if="Screen.isXs">
+	<gj-fireside-post-list fireside-posts="ctrl.xsPosts"></gj-fireside-post-list>
+</div>
+
+<div ng-if="!Screen.isXs" class="discover-home-row-slide" ng-repeat="slide in ctrl.slides track by slide">
+	<div class="row discover-home-row-fs-posts" ng-if="ctrl.currentSlide == slide">
+
+		<div class="col-md-4 anim-fade-in stagger"
+			ng-if="Screen.isDesktop"
+			ng-repeat="post in ctrl.desktopPages[slide] track by post.id"
+			gj-track-event="home:slider:fs:{{ (slide * 3) + $index }}"
+			>
+			<gj-fireside-post-thumbnail fireside-post="post"></gj-fireside-post-thumbnail>
+		</div>
+
+		<div class="col-sm-6 anim-fade-in stagger"
+			ng-if="Screen.isSm"
+			ng-repeat="post in ctrl.smPages[slide] track by post.id"
+			gj-track-event="home:slider:fs:{{ (slide * 2) + $index }}"
+			>
+			<gj-fireside-post-thumbnail fireside-post="post"></gj-fireside-post-thumbnail>
+		</div>
+
+	</div>
+</div>

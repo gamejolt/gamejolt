@@ -1,0 +1,42 @@
+<div id="auth-container" ng-class="{ 'has-cover-img': App.shouldShowCoverImage && authCtrl.coverImgUrl }">
+
+	<gj-cover-img cover-img-url="{{ authCtrl.coverImgUrl }}" ng-if="App.shouldShowCoverImage" class="anim-fade-leave"></gj-cover-img>
+
+	<div class="auth-scroll-container">
+
+		<div class="auth-logo text-center anim-fade-in-enlarge stagger">
+			<a ng-href="{{ ::!Environment.isClient ? Environment.baseUrl + '/' : Environment.authBaseUrl + '/login' }}">
+				<img src="/app/img/game-jolt-logo.svg" width="164" height="18" alt="Game Jolt" class="visible-xs">
+				<img src="/app/img/game-jolt-logo.svg" width="328" height="36" alt="Game Jolt" class="hidden-xs">
+			</a>
+		</div>
+
+		<div class="container">
+			<div class="col-sm-8 col-md-6 col-lg-4 col-centered">
+
+				<div class="auth-island">
+					<div class="alert alert-warning" ng-if="!Connection.isOnline">
+						<p>
+							<span class="jolticon jolticon-notice"></span>
+							Your device is not connected to the internet. You won't be able to use Game Jolt until you're back online.
+						</p>
+					</div>
+
+					<ui-view></ui-view>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="auth-shell-bottom-links">
+			<a class="link-unstyled anim-fade-in stagger" ng-href="{{ ::Environment.baseUrl }}/terms">
+				{{ ::'legal.terms' | translate }}
+			</a>
+			<a class="link-unstyled anim-fade-in stagger" ng-href="{{ ::Environment.baseUrl }}/privacy">
+				{{ ::'legal.privacy' | translate }}
+			</a>
+		</div>
+
+	</div>
+
+</div>

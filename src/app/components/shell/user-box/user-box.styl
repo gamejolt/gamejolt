@@ -1,0 +1,59 @@
+.user-box-exp
+	color: $gray-light
+	margin-bottom: 10px
+
+	&-stats
+		@extend .clearfix
+		font-size: $font-size-tiny
+
+		&-current
+			float: left
+
+		&-next
+			float: right
+			text-align: right
+			position: relative
+			top: 7px
+
+		em
+		strong
+			display: inline-block
+			margin: 5px
+
+		em
+			font-family: $font-family-heading
+			font-size: $font-size-large
+			font-style: normal
+			font-weight: 300
+			color: $gj-green
+
+		strong
+			color: $white
+			font-size: $font-size-small
+			font-weight: bold
+
+		&-help
+			display: inline-block
+			vertical-align: text-bottom
+
+			a
+				display: inline-block
+				padding: 0 5px
+				color: $white
+
+				&:hover
+					color: $gj-blue
+
+	&-progress
+		@extend .clearfix
+
+		> .jolticon
+			color: $white
+			float: left
+
+		.progress
+			position: relative
+			top: 5px
+			margin-left: 30px
+			margin-bottom: 0
+			background-color: $gray-darkest

@@ -1,0 +1,13 @@
+<header class="section no-nav">
+	<div class="container">
+
+		<h1>
+			{{ ::profileCtrl.user.display_name }}
+		</h1>
+
+		<div class="text-muted small">
+			Joined <span am-time-ago="::profileCtrl.user.created_on"></span>
+		</div>
+
+	</div>
+</header>

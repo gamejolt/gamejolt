@@ -1,0 +1,80 @@
+<h2 class="section-header">
+	<div class="section-header-controls">
+		<a class="i-button big sparse" gj-popover-trigger="score-more">
+			<span class="jolticon jolticon-ellipsis-h"></span>
+		</a>
+	</div>
+
+	{{ ::'dash.games.scores.view.heading' | translate }}
+</h2>
+
+<gj-popover popover-id="score-more">
+	<div class="list-group nowrap">
+		<a class="list-group-item has-icon" ng-click="viewCtrl.removeScore()">
+			<span class="jolticon jolticon-remove"></span>
+			{{ ::'dash.games.scores.view.remove_button' | translate }}
+		</a>
+	</div>
+</gj-popover>
+
+<div class="table-responsive">
+	<table class="table">
+		<colgroup>
+			<col class="col-sm-3 col-lg-2">
+		</colgroup>
+		<tbody>
+			<tr>
+				<th>{{ ::'dash.games.scores.view.user_label' | translate }}</th>
+				<td>
+					<gj-dash-score-user-options-developer
+						gj-score-table="viewCtrl.scoreTable"
+						gj-score="viewCtrl.score"
+						>
+					</gj-dash-score-user-options-developer>
+
+					<!-- User Score -->
+					<span ng-if="viewCtrl.score.user_id">
+						<a ng-if="viewCtrl.score.user_id" ng-href="{{ viewCtrl.score.user.url }}">
+							{{ viewCtrl.score.user.display_name }}
+						</a>
+					</span>
+
+					<!-- Guest Score -->
+					<span ng-if="!viewCtrl.score.user_id">
+						{{ viewCtrl.score.guest }} <br>
+						<small class="text-muted">{{ ::'dash.games.scores.guest_tag' | translate }}</small>
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<th>{{ ::'dash.games.scores.view.table_label' | translate }}</th>
+				<td>
+					<a ui-sref="dashboard.developer.games.manage.api.scoreboards.scores.list( { table: viewCtrl.scoreTable.id } )">
+						{{ viewCtrl.scoreTable.name }}
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<th>{{ ::'dash.games.scores.view.string_label' | translate }}</th>
+				<td>{{ viewCtrl.score.score }}</td>
+			</tr>
+			<tr>
+				<th>{{ ::'dash.games.scores.view.sort_label' | translate }}</th>
+				<td>{{ viewCtrl.score.sort | number }}</td>
+			</tr>
+			<tr>
+				<th>{{ ::'dash.games.scores.view.date_label' | translate }}</th>
+				<td>
+					{{ viewCtrl.score.logged_on | date:'medium' }}
+				</td>
+			</tr>
+			<tr>
+				<th>{{ ::'dash.games.scores.view.data_label' | translate }}</th>
+				<td>
+					<pre ng-if="viewCtrl.score.extra_data" class="small">{{ viewCtrl.score.extra_data }}</pre>
+					<span ng-if="!viewCtrl.score.extra_data" class="small text-muted">{{ ::'dash.games.scores.view.data_none_help' | translate }}</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

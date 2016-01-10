@@ -1,0 +1,106 @@
+<section class="section fill-lightest section-thin" ng-if="Screen.isMobile && listCtrl.scoreTables.length > 1">
+	<div class="container">
+		<nav class="pills">
+			<ul class="sans-margin">
+				<li ng-repeat="table in listCtrl.scoreTables track by table.id">
+					<a
+						ui-sref="discover.games.view.scores.list( { tableId: table.id } )"
+						ng-class="{ active: listCtrl.scoreTable.id == table.id }"
+						gj-tooltip="table.description"
+						gj-no-auto-scroll
+						>
+						{{ ::table.name }}
+					</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</section>
+
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-md-8">
+
+				<h2 class="section-header sans-margin-bottom">
+					{{ listCtrl.scoreTable.name }}
+				</h2>
+
+				<p class="text-muted">{{ listCtrl.scoreTable.description }}</p>
+				<br>
+
+				<nav class="platform-list inline" ng-if="App.user">
+					<ul>
+						<li>
+							<a ui-sref="^.list( { type: 'best' } )" ui-sref-active="active" gj-no-auto-scroll>{{ ::'game.scores.best_tab' | translate }}</a>
+						</li>
+						<li>
+							<a ui-sref="^.list( { type: 'user' } )" ui-sref-active="active" gj-no-auto-scroll>{{ ::'game.scores.user_tab' | translate }}</a>
+						</li>
+					</ul>
+				</nav>
+
+				<!--
+					When screen isn't XS, we split the scores out into two columns.
+				-->
+				<div class="row" ng-if="!Screen.isXs">
+					<div class="col-sm-6">
+						<gj-score-list
+							score-list-scores="listCtrl.scoresLeft"
+							score-list-step="2">
+						</gj-score-list>
+					</div>
+					<div class="col-sm-6">
+						<gj-score-list
+							score-list-scores="listCtrl.scoresRight"
+							score-list-start-rank="2"
+							score-list-step="2">
+						</gj-score-list>
+					</div>
+				</div>
+
+				<!--
+					When screen is XS we just show as one long list.
+				-->
+				<gj-score-list
+					score-list-scores="listCtrl.scores"
+					ng-if="Screen.isXs">
+				</gj-score-list>
+
+				<div ng-if="!listCtrl.scores.length">
+					<div ng-switch="listCtrl.type" class="alert alert-warning full-bleed-xs">
+						<div ng-switch-when="best" translate>game.scores.no_scores_html</div>
+						<div ng-switch-when="user" translate>game.scores.no_user_scores_html</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!--
+				On larger screens we show the score board selector to the right.
+			-->
+			<div class="col-md-4" ng-if="Screen.isDesktop && listCtrl.scoreTables.length > 1">
+
+				<!--
+					We put some extra spacing in here because of the affixed game header.
+				-->
+				<div class="score-tables-list" gj-scroll-affix scroll-offset="-80">
+					<div class="list-group">
+						<a class="list-group-item" ng-repeat="table in listCtrl.scoreTables track by table.id"
+							ui-sref="discover.games.view.scores.list( { tableId: table.id } )"
+							ng-class="{ active: table.id == listCtrl.scoreTable.id }"
+							gj-no-auto-scroll
+							>
+
+							<h5 class="list-group-item-heading sans-margin-bottom"><strong>{{ ::table.name }}</strong></h5>
+							<p class="list-group-item-text">{{ ::table.description }}</p>
+						</a>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</section>

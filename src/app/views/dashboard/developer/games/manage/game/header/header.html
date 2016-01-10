@@ -1,0 +1,39 @@
+<div class="row">
+	<div class="col-md-10">
+
+		<h2 class="section-header">
+			<div class="section-header-controls">
+				<a class="i-button big sparse" gj-popover-trigger="header-more" ng-if="manageCtrl.game.header_media_item">
+					<span class="jolticon jolticon-ellipsis-h"></span>
+				</a>
+			</div>
+
+			{{ ::'dash.games.header.heading' | translate }}
+		</h2>
+
+		<gj-popover popover-id="header-more">
+			<div class="list-group nowrap">
+				<a class="list-group-item has-icon" ng-click="headerCtrl.clearHeader()">
+					<span class="jolticon jolticon-remove"></span>
+					{{ ::'dash.games.header.clear_button' | translate }}
+				</a>
+			</div>
+		</gj-popover>
+
+		<div class="page-help">
+			<div translate="dash.games.header.page_help_html"></div>
+			<p>
+				<a class="link-help" href="https://help.gamejolt.com/dev-page-headers" target="_blank">{{ ::'dash.games.header.page_help_link' | translate }}</a>
+			</p>
+		</div>
+
+		<gj-form-dashboard-game-header
+			gj-game="manageCtrl.game"
+			gj-form-submit-handler="headerCtrl.onSaved()"
+			>
+		</gj-form-dashboard-game-header>
+
+	</div>
+</div>
+
+

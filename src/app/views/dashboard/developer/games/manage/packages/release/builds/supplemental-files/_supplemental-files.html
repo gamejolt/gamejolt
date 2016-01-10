@@ -1,0 +1,29 @@
+<div class="well fill-white">
+
+	<div class="alert alert-info sans-margin-bottom" ng-if="!buildsCtrl.supplementalFilesByBuild[ build.id ].length" translate="dash.games.releases.builds.extra_files.info_html"></div>
+
+	<div class="list-group sans-margin-bottom" ng-if="buildsCtrl.supplementalFilesByBuild[ build.id ].length">
+		<div class="list-group-item anim-fade-enter-enlarge anim-fade-leave-shrink"
+			ng-repeat="file in buildsCtrl.supplementalFilesByBuild[ build.id ] track by file.id"
+			>
+			<a class="link-muted pull-right" ng-click="buildsCtrl.removeFile( file )">
+				<span class="jolticon jolticon-remove big"></span>
+			</a>
+			<h5 class="list-group-item-heading">{{ file.filename }}</h5>
+			<p class="list-group-item-text">
+				{{ ::'dash.games.releases.builds.extra_files.include_archive_label' | translate }}
+				<strong>{{ ::'dash.forms.' + (file.java_include_archive ? 'yes' : 'no') | translate }}</strong>
+			</p>
+		</div>
+	</div>
+
+</div>
+
+<gj-form-dashboard-game-build-supplemental-file
+	gj-game="manageCtrl.game"
+	gj-game-package="releaseCtrl.package"
+	gj-game-release="releaseCtrl.release"
+	gj-game-build="build"
+	gj-form-submit-handler="buildsCtrl.onFileAdded( formModel )"
+	>
+</gj-form-dashboard-game-build-supplemental-file>

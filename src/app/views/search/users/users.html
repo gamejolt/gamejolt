@@ -1,0 +1,29 @@
+<section class="section">
+	<div class="container" ng-if="Search.query">
+
+		<gj-pagination
+			id="users-pagination"
+			ng-if="searchCtrl.showPagination && searchCtrl.payload.perPage && searchCtrl.payload.count"
+			items-per-page="searchCtrl.payload.perPage"
+			total-items="searchCtrl.payload.count"
+			current-page="searchCtrl.payload.page">
+		</gj-pagination>
+
+		<div class="search-media-list row">
+			<div class="search-media-list-item search-media-list-user col-xs-3 col-sm-2 anim-fade-in-up no-animate-xs"
+				ng-repeat="user in searchCtrl.payload.users track by user.id">
+
+				<div gj-user-avatar="user" avatar-show-name="true"></div>
+			</div>
+		</div>
+
+		<gj-pagination
+			ng-if="searchCtrl.showPagination && searchCtrl.payload.perPage && searchCtrl.payload.count"
+			items-per-page="searchCtrl.payload.perPage"
+			total-items="searchCtrl.payload.count"
+			current-page="searchCtrl.payload.page"
+			on-page-change="Scroll.to( 'users-pagination', { animate: false } )">
+		</gj-pagination>
+
+	</div>
+</section>

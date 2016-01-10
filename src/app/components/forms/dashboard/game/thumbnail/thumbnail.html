@@ -1,0 +1,62 @@
+<div oc-lazy-load="{ files: [ '/app/modules/jquery.js', '/app/modules/upload.js' ] }">
+	<div oc-lazy-load="{ files: [ '/app/modules/jcrop.js' ] }">
+
+		<form gj-form="formModel" name="thumbnailForm">
+
+			<div ng-if="!isLoaded">
+				<gj-loading></gj-loading>
+			</div>
+
+			<div ng-if="isLoaded">
+
+				<!--
+					They are required to upload a media item if there is none set yet.
+				-->
+				<form-group name="file" label="{{ ::'dash.games.thumbnail.upload_label' | translate }}" optional="formModel.thumbnail_media_item && canCrop">
+
+					<p class="help-block" translate="dash.forms.thumbnail_filetype_help_html"></p>
+
+					<gj-form-upload-control
+						form-control="upload"
+						gj-max-filesize="maxFilesize"
+						gj-min-img-width="minWidth"
+						gj-min-img-height="minHeight"
+						gj-max-img-width="maxWidth"
+						gj-max-img-height="maxHeight"
+						accept=".png,.jpg,.jpeg,.gif"
+						>
+					</gj-form-upload-control>
+
+					<control-errors label="{{ ::'dash.games.thumbnail.upload_error_label' | translate }}"></control-errors>
+
+				</form-group>
+
+				<form-group name="crop" label="{{ (canCrop ? 'dash.games.thumbnail.crop_label' : 'dash.games.thumbnail.nocrop_label') | translate }}" ng-if="formModel.thumbnail_media_item && !formModel.file">
+
+					<div ng-if="canCrop" class="form-control-static">
+						<img ng-src="{{ formModel.thumbnail_media_item.img_url }}"
+							alt=""
+							gj-img-crop
+							form-control="crop"
+							img-crop-aspect-ratio="cropAspectRatio"
+							img-crop-min-width="minWidth"
+							img-crop-min-height="minHeight"
+							>
+						<control-errors label="{{ ::'dash.games.thumbnail.crop_error_label' | translate }}"></control-errors>
+					</div>
+
+					<div ng-if="!canCrop">
+						<img ng-src="{{ formModel.thumbnail_media_item.img_url }}" alt="">
+					</div>
+				</div>
+
+				<button gj-form-submit-button class="i-button" ng-disabled="!thumbnailForm.$valid" ng-click="onSubmit()">
+					<span class="jolticon jolticon-edit"></span>
+					{{ (formModel.file || !formModel.thumbnail_media_item || !canCrop ? 'dash.games.thumbnail.upload_button' : 'dash.games.thumbnail.save_button') | translate }}
+				</button>
+			</div>
+
+		</form>
+
+	</div>
+</div>

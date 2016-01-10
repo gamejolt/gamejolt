@@ -1,0 +1,110 @@
+<iframe nwdisable nwfaketop id="download-frame" class="hidden" ng-if="buildCtrl.src" ng-src="{{ buildCtrl.src }}"></iframe>
+
+<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
+	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+</section>
+
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-9 col-md-8 col-lg-8">
+
+				<h2 class="section-header">{{ ::'game.download.game.downloading_label' | translate:{ game: gameCtrl.game.title } }}</h2>
+				<p class="small text-muted">{{ ::'game.download.game.downloading_wait_message' | translate }}</p>
+
+				<!--
+					Social sharing
+				-->
+				<div ng-if="::!Environment.isClient">
+					<h4 class="section-header">{{ ::'game.download.game.share_heading' | translate }}</h4>
+					<div class="social-widgets">
+						<gj-social-twitter-share
+							url="{{ ::Environment.baseUrl }}{{ ::gameCtrl.game.getUrl() }}"
+							content="{{ ::buildCtrl.twitterShareMessage }}"
+							>
+						</gj-social-twitter-share>
+
+						<span class="dot-separator hidden-xs"></span>
+
+						<gj-social-facebook-like url="{{ ::Environment.baseUrl }}{{ ::gameCtrl.game.getUrl() }}"></gj-social-facebook-like>
+					</div>
+				</div>
+
+				<!--
+					Rating widget
+				-->
+				<div class="well fill-dark" ng-if="App.user && App.user.id != gameCtrl.game.developer.id && gameCtrl.game.ratings_enabled">
+					<p class="small" translate="game.download.game.rate_html"></p>
+
+					<gj-rating-widget
+						rating-widget-game="gameCtrl.game"
+						rating-widget-big="true"
+						rating-widget-rating="gameCtrl.userRating"
+						>
+					</gj-rating-widget>
+				</div>
+
+				<!--
+					Developer's games
+				-->
+				<div ng-if="buildCtrl.developerGames.length">
+
+					<h2>
+						<a class="link-unstyled" ui-sref="library.collection.developer( { slug: gameCtrl.game.developer.slug, id: gameCtrl.game.developer.id } )">
+							{{ ::'game.download.game.developer_games_heading' | translate }}
+						</a>
+						<small>{{ ::'game.download.game.developer_games_heading_small' | translate }}</small>
+					</h2>
+
+					<div class="scrollable-grid-xs game-thumbnail-grid">
+						<div class="row">
+							<gj-game-thumbnail
+								class="scrollable-grid-item col-xs-10 col-sm-6"
+								ng-repeat="game in buildCtrl.developerGames | limitTo:2 track by game.id"
+								gj-game="::game"
+								>
+							</gj-game-thumbnail>
+						</div>
+					</div>
+
+				</div>
+
+				<!--
+					Recommended games
+				-->
+				<h2>{{ ::'game.download.game.recommended_heading' | translate }}</h2>
+
+				<div class="scrollable-grid-xs">
+					<div class="row">
+						<gj-game-thumbnail
+							class="scrollable-grid-item col-xs-10 col-sm-6"
+							ng-repeat="game in buildCtrl.recommendedGames | limitTo:6 track by game.id"
+							gj-game="::game"
+							>
+						</gj-game-thumbnail>
+					</div>
+				</div>
+
+			</div>
+
+			<!--
+				Will overflow a little on sm/md, but what can ya do, amirite?
+			-->
+			<div class="col-sm-3 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isSm">
+				<gj-ad ad-size="skyscraper" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+
+			<div class="col-md-4 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isDesktop">
+				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+				<br>
+				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
+	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+</section>

@@ -1,0 +1,90 @@
+gj-game-media-bar-lightbox
+	transition: opacity 300ms
+
+	&.dragging
+		cursor: grabbing
+
+	&.ng-leave
+
+		// We want their pointer events to pass through so that they can interact with the page
+		// right away even while the overlay is animating out.
+		// This should make it less annoying for the user.
+		pointer-events: none
+
+		gj-game-media-bar-lightbox-item.active
+			transition: transform 250ms
+			transform: translateY( 0 )
+
+	&.ng-leave.ng-leave-active
+		opacity: 0
+
+		gj-game-media-bar-lightbox-item.active
+			transform: translateY( 200px )
+
+.game-media-bar-lightbox
+	position: fixed
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	z-index: $zindex-game-media-bar-lightbox
+	background-color: rgba( 0, 0, 0, 0.85 )
+	user-select: none
+
+.game-media-bar-lightbox-controls
+	padding: 0 20px
+	line-height: 80px
+	text-align: right
+	text-transform: uppercase
+
+	a
+		display: inline-block
+		color: $white
+		line-height: 40px
+		padding-right: 10px
+
+		&:hover
+			background-color: $white
+			color: $black
+
+	.jolticon
+		position: relative
+		top: -1px
+		vertical-align: middle
+
+.game-media-bar-lightbox-next
+.game-media-bar-lightbox-prev
+	position: absolute
+	top: 50%
+	padding: 20px
+	margin-top: -(((16px * 3) / 2) + (@padding / 2))
+	z-index: 1
+	background-color: rgba( $black, 0.5 )
+
+	> .jolticon
+		font-size: 16px * 3
+		color: $white
+
+	&:hover
+		background-color: $white
+
+		> .jolticon
+			color: $black
+
+.game-media-bar-lightbox-next
+	right: 0
+
+.game-media-bar-lightbox-prev
+	left: 0
+
+// http://stackoverflow.com/questions/10269290/how-to-arrange-many-div-elements-side-by-side-with-no-wrap
+.game-media-bar-lightbox-slider
+	height: 100%
+	white-space: nowrap
+
+	// Ease out so that with fast flicks it doesn't look like it slows down after letting go.
+	transition: transform 300ms $weak-ease-out
+
+	// We need manual control of styling when dragging.
+	.dragging &
+		transition: none

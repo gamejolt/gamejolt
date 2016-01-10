@@ -1,0 +1,30 @@
+<form gj-form="formModel" name="withdrawFundsForm">
+
+	<div class="alert alert-info" translate="dash.funds.withdraw.form_help_html"></div>
+
+	<form-group name="email_address" label="{{ ::'dash.funds.withdraw.email_label' | translate }}">
+		<p class="help-block above">{{ ::'dash.funds.withdraw.email_help' | translate }}</p>
+		<input form-control="email">
+		<control-errors></control-errors>
+	</form-group>
+
+	<form-group name="amount" label="{{ ::'dash.funds.withdraw.amount_label' | translate }}">
+		<p class="help-block above">{{ ::'dash.funds.withdraw.amount_help' | translate:{ amount: minAmount } }}</p>
+		<input-group>
+			<input-group-addon>$</input-group-addon>
+			<input form-control="number"
+				gj-form-currency-input
+				step="0.01"
+				ng-min="minAmount"
+				ng-max="withdrawableAmount"
+				>
+		</input-group>
+		<control-errors></control-errors>
+	</form-group>
+
+	<button gj-form-submit-button class="i-button" ng-disabled="!withdrawFundsForm.$valid" ng-click="onSubmit()">
+		<span class="jolticon jolticon-chevron-right needs-icon"></span>
+		{{ ::'dash.funds.withdraw.submit_button' | translate }}
+	</button>
+
+</form>

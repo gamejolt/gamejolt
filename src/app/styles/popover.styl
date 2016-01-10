@@ -1,0 +1,7 @@
+// Popovers that have been appended to the body should be fixed, as they
+// were most likely triggered by a shell component.
+body > .popover
+	position: fixed
+
+.popover-content
+	@extend .overlay-scrollbar, .overlay-scrollbar-light

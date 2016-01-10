@@ -1,0 +1,27 @@
+$trophy-list-thumbnail-size-xs = 70px
+$trophy-list-thumbnail-size = 100px
+$trophy-list-gutter-xs = $grid-gutter-width-xs / 2
+$trophy-list-gutter = $grid-gutter-width / 2
+
+.trophy-list-item
+	@extend .clearfix
+
+.trophy-list-item + .trophy-list-item
+	margin-top: $line-height-computed
+
+.trophy-list-item-thumbnail
+	float: left
+	width: $trophy-list-thumbnail-size-xs
+
+.trophy-list-item-content
+	margin-left: $trophy-list-thumbnail-size-xs + $trophy-list-gutter-xs
+
+@media $media-sm-up
+	.trophy-list-item-thumbnail
+		width: $trophy-list-thumbnail-size
+
+	.trophy-list-item-content
+		margin-left: $trophy-list-thumbnail-size + $trophy-list-gutter
+
+	.trophy-list-item-description
+		margin-bottom: $font-size-base

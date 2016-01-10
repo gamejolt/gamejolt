@@ -1,0 +1,31 @@
+<div class="game-media-bar-lightbox" hm-panstart="ctrl.panStart( $event )" hm-pan="ctrl.pan( $event )" hm-panend="ctrl.panEnd( $event )">
+
+	<a class="game-media-bar-lightbox-prev" ng-click="ctrl.goPrev()" ng-if="mediaBarCtrl.activeIndex > 0">
+		<span class="jolticon jolticon-chevron-left"></span>
+	</a>
+
+	<a class="game-media-bar-lightbox-next" ng-click="ctrl.goNext()" ng-if="mediaBarCtrl.activeIndex < mediaBarCtrl.mediaItems.length - 1">
+		<span class="jolticon jolticon-chevron-right"></span>
+	</a>
+
+	<div class="game-media-bar-lightbox-controls">
+		<a ng-click="ctrl.close()">
+			<span class="jolticon jolticon-remove big"></span>
+			{{ ::'games.view.media.close' | translate }}
+		</a>
+	</div>
+
+	<div class="game-media-bar-lightbox-slider">
+
+		<gj-game-media-bar-lightbox-item
+			ng-repeat="item in mediaBarCtrl.mediaItems track by item.id"
+			item="::item"
+			item-index="::$index"
+			active-index="mediaBarCtrl.activeIndex"
+			media-bar="mediaBarCtrl"
+			>
+		</gj-game-media-bar-lightbox-item>
+
+	</div>
+
+</div>

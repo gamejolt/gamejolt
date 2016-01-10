@@ -1,0 +1,27 @@
+.discover-home-row
+	position: relative
+
+	&-arrows
+		position: absolute
+		right: 0
+		top: -60px
+
+	&-next
+	&-prev
+		user-select: none
+
+	&-slides
+		overflow: hidden
+
+	&-slider
+		white-space: nowrap
+		transform: translate3d( 0, 0, 0 )
+		transition: transform 500ms $strong-ease-out
+
+	&-slide
+		display: inline-block
+		width: 100%
+		vertical-align: top
+		margin: 0
+		padding: 0
+		white-space: normal

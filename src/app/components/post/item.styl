@@ -1,0 +1,37 @@
+.post-item
+	margin-bottom: $line-height-computed * 2
+	word-wrap: break-word
+
+	&-thumb
+		margin-bottom: $line-height-computed
+
+		> a
+			display: block
+
+	&-title
+		@extend .h4
+		margin: 0
+
+		> a
+			&
+			.fill-lightest &
+				@extend .link-unstyled
+				font-weight: bold
+
+
+	&-for
+		margin-bottom: 5px
+
+		> a
+			&
+			.fill-lightest &
+				@extend .link-muted
+
+	&-excerpt
+		color: $gray
+		margin-bottom: 5px
+
+
+	&-time
+		font-size: $font-size-small
+		color: $text-muted

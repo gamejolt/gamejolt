@@ -1,0 +1,129 @@
+#auth-container
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+
+	&.has-cover-img
+		text-shadow: 1px 1px 1px rgba( $black, 0.3 )
+
+		.error
+		.alert
+			text-shadow: none
+
+	.form-group
+		@extend .anim-fade-in-up
+		margin: 0
+
+	.form-control
+
+		// Bigger form controls.
+		height: 40px
+
+		// Scrunch up the form controls so their borders overlap.
+		margin-top: -1px
+
+		// Don't change the color of the border on focus.
+		&:focus
+			border-color: $gray-lighter
+
+	button
+		height: 40px
+
+		&
+		& > .jolticon
+			line-height: 40px
+
+	.loading
+		color: $white
+
+	.line-thru
+		display: block
+		position: relative
+		text-align: center
+		width: 100%
+
+		&::before
+		&::after
+			content: ''
+			position: absolute
+			top: 50%
+			margin-top: 1px
+			height: 1px
+			line-height: 1px
+			border-bottom: 1px solid rgba( $white, 0.2 )
+
+		&::before
+			left: 0
+			right: 50%
+			margin-right: 40px
+
+		&::after
+			left: 50%
+			right: 0
+			margin-left: 40px
+
+.auth-scroll-container
+	@extend .scrollable
+	position: relative
+	height: 100%
+	z-index: $zindex-scroll-container
+
+.auth-island
+	position: relative
+	z-index: $zindex-content
+
+	@media $media-sm-up
+		margin-bottom: 20px
+
+.auth-logo
+	margin-top: 30px
+	margin-bottom: 30px
+	position: relative
+	z-index: $zindex-content
+
+	@media $media-sm-up
+		margin-top: 100px
+
+	a
+		&
+		&:hover
+			border-bottom: 0 !important
+
+	img
+		margin: 0 auto
+
+.auth-lead-text
+	text-align: center
+	margin-top: -20px
+
+.auth-social-buttons > button
+	margin-bottom: 10px
+
+.auth-page-links
+	margin-top: $line-height-computed
+
+	.auth-page-link
+		margin-bottom: ($line-height-computed / 2)
+
+.auth-shell-bottom-links
+	position: relative
+	margin-top: $grid-gutter-width-xs
+	margin-bottom: $grid-gutter-width-xs
+	text-align: center
+	z-index: $zindex-content
+
+	> a
+		margin-right: 20px
+
+		&:last-child
+			margin-right: 0
+
+	@media $media-sm-up
+		position: fixed
+		bottom: 0
+		left: 0
+		margin-left: 20px
+		margin-bottom: 20px
+		text-align: left

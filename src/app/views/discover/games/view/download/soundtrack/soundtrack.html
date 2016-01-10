@@ -1,0 +1,27 @@
+<iframe nwdisable nwfaketop id="download-frame" class="hidden" ng-if="soundtrackCtrl.src" ng-src="{{ soundtrackCtrl.src }}"></iframe>
+
+<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
+	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+</section>
+
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-7 col-md-8 col-lg-7">
+
+				<h2 class="section-header">{{ ::'game.download.soundtrack.downloading_label' | translate:{ game: gameCtrl.game.title } }}</h2>
+				<p class="small text-muted">{{ ::'game.download.soundtrack.downloading_wait_message' | translate }}</p>
+
+			</div>
+
+			<!--
+				Will overflow a little on md, but what can ya do, amirite?
+			-->
+			<div class="col-sm-5 col-md-4 col-lg-offset-1 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
+				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+		</div>
+
+	</div>
+</section>

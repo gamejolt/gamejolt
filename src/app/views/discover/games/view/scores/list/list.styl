@@ -1,0 +1,14 @@
+.ctrl-discover-games-view-scores-list
+
+	// Score list is way too big to animate this, yo!
+	.score-list-item
+		@extend .no-animate
+
+	.score-tables-list
+
+		// Put some extra spacing in here because of the affixed game header.
+		&.gj-scroll-affixed
+			margin-top: $shell-top-nav-height + 80px !important
+
+		.list-group-item-text
+			text-overflow()

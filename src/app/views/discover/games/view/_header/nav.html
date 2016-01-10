@@ -1,0 +1,59 @@
+<!-- Game Nav -->
+<nav class="platform-list inline">
+	<ul>
+		<li>
+			<a ui-sref=".overview" ui-sref-active="active">
+				{{ ::'games.view.overview_tab' | translate }}
+			</a>
+		</li>
+		<li ng-if="gameCtrl.newsArticlesCount">
+			<a ui-sref=".news.list" ng-class="{ active: $state.includes( 'discover.games.view.news' ) }">
+				{{ ::'games.view.news_tab' | translate }}
+				<span class="badge">{{ gameCtrl.newsArticlesCount | number }}</span>
+			</a>
+		</li>
+		<li ng-if="gameCtrl.hasScores">
+			<a ui-sref=".scores.list( { type: 'best', tableId: gameCtrl.primaryScoreTable.id } )"
+				ng-class="{ active: $state.includes( 'discover.games.view.scores' ) }">
+				{{ ::'games.view.scores_tab' | translate }}
+			</a>
+		</li>
+		<li ng-if="gameCtrl.trophiesCount">
+			<a ui-sref=".trophies.list" ng-class="{ active: $state.includes( 'discover.games.view.trophies' ) }">
+				{{ ::'games.view.trophies_tab' | translate }}
+				<span class="badge">{{ gameCtrl.trophiesCount | number }}</span>
+			</a>
+		</li>
+
+		<!--
+			More Options
+			Currently only for developers of the game and mods.
+		-->
+		<li ng-if="App.user && (App.user.id == gameCtrl.game.developer.id || App.user.permission_level > 0)">
+			<a gj-popover-trigger="game-more-options">
+				<span class="jolticon jolticon-ellipsis-h"></span>
+				{{ ::'options.more' | translate }}
+			</a>
+		</li>
+	</ul>
+</nav>
+
+<gj-popover popover-id="game-more-options">
+	<div class="list-group">
+		<a class="list-group-item has-icon"
+			ui-sref="dashboard.developer.games.manage.game.overview( { id: gameCtrl.game.id } )"
+			ng-if="App.user.id == gameCtrl.game.developer.id"
+			>
+			<span class="jolticon jolticon-cog"></span>
+			{{ ::'games.view.manage_game_button' | translate }}
+		</a>
+		<a class="list-group-item has-icon"
+			ng-href="{{ ::Environment.baseUrl }}/moderate/games/view/{{ ::gameCtrl.game.id }}"
+			target="_blank"
+			ng-if="App.user.permission_level > 0"
+			>
+			<span class="jolticon jolticon-cog"></span>
+			{{ ::'games.view.moderate_game_button' | translate }}
+		</a>
+	</div>
+</gj-popover>

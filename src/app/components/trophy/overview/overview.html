@@ -1,0 +1,73 @@
+<div class="trophy-overview">
+
+	<h2 ng-class="{ 'section-header': Screen.isDesktop || ctrl.size == 'full' }">
+		<span class="jolticon jolticon-trophy big"></span>
+		<a class="link-unstyled" ui-sref="discover.games.view.trophies.list( { slug: ctrl.game.slug, id: ctrl.game.id } )">
+			{{ ::'trophies.overview.heading' | translate }}
+		</a>
+		<small>({{ ::ctrl.trophies.length | number }})</small>
+	</h2>
+
+	<!--
+		If a user is logged in, then we show the completion widget.
+		In that case we throw it on the right side on LG screens.
+		We have to adjust the columns accordingly.
+		This only applies to full-sized overview.
+	-->
+	<div class="row">
+
+		<!--
+			Trophy completion is only needed if they are logged in.
+		-->
+		<div class="col-xs-12"
+			ng-class="::(ctrl.size == 'full' ? 'col-lg-6 col-lg-push-6' : '')"
+			ng-if="App.user">
+
+			<gj-trophy-completion
+				trophy-completion-total="::ctrl.trophies.length"
+				trophy-completion-achieved="::ctrl.achieved.length"
+				trophy-completion-experience="::ctrl.experience">
+			</gj-trophy-completion>
+
+		</div>
+
+		<div class="col-xs-12"
+			ng-class="(App.user && ctrl.size == 'full' ? 'col-lg-6 col-lg-pull-6' : '')">
+
+			<!--
+				Trophy thumbnail sizes depend on whether or not we're showing full size, whether or not they're logged in,
+				and their screen size. Test all of these when making changes.
+			-->
+			<div class="trophy-grid row">
+				<div class="trophy-grid-item col-xs-4 col-sm-2"
+					ng-class="::ctrl.desktopThumbSizes"
+					ng-repeat="trophy in ctrl.trophies | limitTo:ctrl.numberToShow track by trophy.id">
+
+					<gj-trophy-thumbnail
+						trophy-thumbnail-trophy="::trophy"
+						trophy-thumbnail-is-achieved="::ctrl.achievedIndexed[ trophy.id ]">
+					</gj-trophy-thumbnail>
+				</div>
+			</div>
+
+			<p ng-if="ctrl.extraCount">
+				<a class="link-muted small" ui-sref="discover.games.view.trophies.list( { slug: ctrl.game.slug, id: ctrl.game.id } )">
+					{{ 'trophies.overview.more_link' | translate:{ extraCount: ctrl.extraCount } }}
+				</a>
+			</p>
+
+			<div class="alert alert-warning" ng-if="::ctrl.showInvisibleTrophyMessage">
+				{{ ::'trophies.invisible_trophies_message' | translate }}
+			</div>
+
+			<p>
+				<a class="i-button big" ui-sref="discover.games.view.trophies.list( { slug: ctrl.game.slug, id: ctrl.game.id } )">
+					<span class="jolticon jolticon-media-list"></span>
+					{{ ::'trophies.overview.view_more_button' | translate }}
+				</a>
+			</p>
+
+		</div>
+	</div>
+
+</div>

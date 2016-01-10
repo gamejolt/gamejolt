@@ -1,0 +1,93 @@
+<div class="row collection-copy">
+
+	<!--
+		Collection thumbnail.
+		A montage of games.
+		Only when not mobile.
+	-->
+	<div class="col-sm-4 col-md-3" ng-if="!Screen.isXs">
+
+		<!-- Binding Scope -->
+		<gj-game-collection-thumbnail
+			ng-repeat="collection in [ collectionCtrl.collection ] track by collection._id"
+			class="anim-fade-in-enlarge no-animate-leave"
+			gj-game-collection="collection">
+		</gj-game-collection-thumbnail>
+	</div>
+
+	<div class="col-sm-8 col-md-9">
+
+		<!--
+			Binding Scope
+			As well as to make it animatable.
+		-->
+		<div class="anim-fade-in-right no-animate-leave" ng-repeat="collection in [ collectionCtrl.collection ] track by collection._id">
+
+			<div ng-switch="::collectionCtrl.type">
+
+				<!-- Followed Games -->
+				<div ng-switch-when="followed">
+					<div ng-if="::collectionCtrl.isOwner">
+						<h1>{{ ::'library.collection.followed_owner_heading' | translate }}</h1>
+						<p class="text-muted small" translate="library.collection.followed_owner_descriptive_html"></p>
+					</div>
+					<div ng-if="::!collectionCtrl.isOwner">
+						<h1>
+							{{ ::'library.collection.followed_heading' | translate }}
+						</h1>
+						<h4>
+							{{ ::'library.by' | translate }}
+							<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.user.slug, id: collectionCtrl.user.id } )">
+								{{ ::collectionCtrl.user.display_name }}
+							</a>
+						</h4>
+						<p class="text-muted small" translate="library.collection.followed_descriptive_html" translate-values="{ user: collectionCtrl.user.display_name }"></p>
+					</div>
+				</div>
+
+				<!-- Developer Games -->
+				<div ng-switch-when="developer">
+					<div ng-if="::collectionCtrl.isOwner">
+						<h1>{{ ::'library.collection.developer_owner_heading' | translate }}</h1>
+						<p class="text-muted small" translate="library.collection.developer_owner_descriptive_html"></p>
+					</div>
+					<div ng-if="::!collectionCtrl.isOwner">
+						<h1>
+							{{ ::'library.collection.developer_heading' | translate }}
+						</h1>
+						<h4>
+							{{ ::'library.by' | translate }}
+							<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.user.slug, id: collectionCtrl.user.id } )">
+								{{ ::collectionCtrl.user.display_name }}
+							</a>
+						</h4>
+						<p class="text-muted small" translate="library.collection.developer_descriptive_html" translate-values="{ user: collectionCtrl.user.display_name }"></p>
+					</div>
+				</div>
+
+				<!-- Playlist -->
+				<!-- Don't bind once name since they can edit it. -->
+				<div ng-switch-when="playlist">
+					<h1>
+						{{ 'library.collection.playlist_heading' | translate:{ playlist: collectionCtrl.playlist.name } }}
+					</h1>
+					<h4 ng-if="::!collectionCtrl.isOwner">
+						{{ ::'library.by' | translate }}
+						<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.playlist.user.slug, id: collectionCtrl.playlist.user.id } )">
+							{{ ::collectionCtrl.playlist.user.display_name }}
+						</a>
+					</h4>
+				</div>
+
+				<!-- Bundle -->
+				<div ng-switch-when="bundle">
+					<h1>{{ ::'library.collection.bundle_heading' | translate:{ bundle: collectionCtrl.bundle.title } }}</h1>
+					<p class="text-muted small">{{ ::collectionCtrl.bundle.description }}</p>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+</div>

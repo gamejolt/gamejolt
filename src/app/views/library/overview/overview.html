@@ -1,0 +1,50 @@
+<header class="section no-nav">
+	<div class="container">
+
+		<h1 class="section-header sans-margin-bottom">{{ ::'library.heading' | translate }}</h1>
+		<div class="text-muted small" translate="library.description_html"></div>
+
+	</div>
+</header>
+
+<!--
+	When they are offline, we show them this message.
+-->
+<section class="section fill-pink text-center" ng-if="!Connection.isOnline">
+	<p>
+		<span class="jolticon jolticon-notice big"></span>
+	</p>
+	<p class="sans-margin">You must be online to access your playlists.</p>
+</section>
+
+<gj-client-hide-offline>
+	<section class="section collection-row-section"
+		ng-repeat="type in overviewCtrl.collectionTypes track by type.key"
+		ng-if="overviewCtrl[ type.key ].length"
+		>
+
+		<div class="container" ng-if="::type.heading">
+			<h4 class="section-header" ng-if="Screen.isXs">{{ ::type.heading }}</h4>
+			<h2 class="section-header" ng-if="!Screen.isXs">{{ ::type.heading }}</h2>
+		</div>
+
+		<div ng-class="!Screen.isXs ? 'container' : ''">
+
+			<gj-game-collection-list
+				ng-if="Screen.isXs"
+				gj-game-collections="overviewCtrl[ type.key ]"
+				gj-event-label="library-overview:collection:{{ ::type.eventLabel }}"
+				>
+			</gj-game-collection-list>
+
+			<gj-game-collection-grid
+				ng-if="!Screen.isXs"
+				gj-game-collections="overviewCtrl[ type.key ]"
+				gj-event-label="library-overview:collection:{{ ::type.eventLabel }}"
+				>
+			</gj-game-collection-grid>
+
+		</div>
+
+	</section>
+</gj-client-hide-offline>

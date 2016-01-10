@@ -1,0 +1,37 @@
+<form gj-form="formModel" name="emailPreferencesForm">
+
+	<form-group name="email_address">
+		<input form-control="email"
+			ng-maxlength="200"
+			ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 500 } }"
+			gj-form-validate-availability="/web/dash/email-preferences/check-field-availability/email_address"
+			>
+		<control-errors></control-errors>
+	</form-group>
+
+	<form-group name="newsletter" label="{{ ::'dash.email_prefs.newsletter_label' | translate }}">
+		<p class="help-block">{{ ::'dash.email_prefs.newsletter_help' | translate }}</p>
+		<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="Yes" toggle-switch-off-text="No"></gj-toggle-switch>
+	</form-group>
+
+	<fieldset>
+		<legend>{{ ::'dash.email_prefs.notifications_heading' | translate }}</legend>
+
+		<div class="alert alert-info">{{ ::'dash.email_prefs.notifications_description' | translate }}</div>
+
+		<form-group
+			ng-repeat="notificationType in ::notificationTypes track by notificationType.key"
+			name="{{ ::notificationType.key }}"
+			label="{{ ::notificationType.label }}"
+			>
+			<p class="help-block" ng-if="::notificationType.help">{{ ::notificationType.help }}</p>
+			<gj-toggle-switch form-control="checkbox"></gj-toggle-switch>
+		</form-group>
+	</fieldset>
+
+	<button gj-form-submit-button class="i-button" ng-disabled="!emailPreferencesForm.$valid" ng-click="onSubmit()">
+		<span class="jolticon jolticon-edit"></span>
+		{{ ::'dash.email_prefs.submit_button' | translate }}
+	</button>
+
+</form>
