@@ -19,6 +19,8 @@ angular.module( 'App.Client.Forms' ).directive( 'gjClientFormSettings', function
 		formModel.max_extract_count = Client_Settings.get( 'max-extract-count' );
 		formModel.limit_extractions = (formModel.max_extract_count != -1);
 
+		formModel.chat_notify_friends_online = Client_Settings.get( 'chat-notify-friends-online' );
+
 		if ( Client_Autostart.canAutostart() ) {
 			formModel.autostart_client = Client_Settings.get( 'autostart-client' );
 		}
@@ -53,6 +55,7 @@ angular.module( 'App.Client.Forms' ).directive( 'gjClientFormSettings', function
 			Client_Settings.set( 'max-download-count', formModel.max_download_count );
 			Client_Settings.set( 'max-extract-count', formModel.max_extract_count );
 			Client_Settings.set( 'queue-when-playing', formModel.queue_when_playing );
+			Client_Settings.set( 'chat-notify-friends-online', formModel.chat_notify_friends_online );
 
 			if ( Client_Autostart.canAutostart() ) {
 				Client_Settings.set( 'autostart-client', formModel.autostart_client );

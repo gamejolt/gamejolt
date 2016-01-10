@@ -27,6 +27,10 @@ angular.module( 'App.Client.Settings' ).service( 'Client_Settings', function()
 			type: 'boolean',
 			val: 1,
 		},
+		'chat-notify-friends-online': {
+			type: 'boolean',
+			val: 1,
+		}
 	};
 
 	this.getDefault = function( setting )
