@@ -299,32 +299,49 @@ angular.module( 'App.Client.LocalDb' )
 			} );
 	};
 
-	LocalDb_Package.prototype.$uninstall = function( noNotify )
+	LocalDb_Package.prototype.$uninstall = function()
 	{
 		var _this = this;
 		var game;
+		var Client_Installer = $injector.get( 'Client_Installer' );
 
-		return LocalDb_Game.fetch( _this.game_id )
-			.then( function( _game )
-			{
-				game = _game;
+		// We just use this so they don't click "uninstall" twice in a row.
+		// No need to save to the DB.
+		if ( this._uninstallingPromise ) {
+			console.log( 'uninstall promise already set' );
+			return this._uninstallingPromise;
+		}
 
-				// Make sure we're clean.
-				delete _this.install_state;
-				delete _this.download_progress;
-				delete _this.unpack_progress;
-				delete _this.patch_paused;
-				delete _this.patch_queued;
+		this._uninstallingPromise = LocalDb.transaction( 'rw', [ LocalDb_Game, LocalDb_Package ], function()
+		{
+			// Are we removing a current install?
+			var wasInstalling = _this.isInstalling();
 
-				return _this.$setRemoveState( LocalDb_Package.REMOVING );
-			} )
-			.then( function()
-			{
-				return $injector.get( 'Client_Library' ).removePackage( _this );
-			} )
-			.then( function()
-			{
-				return LocalDb.transaction( 'rw', [ LocalDb_Game, LocalDb_Package ], function()
+			// Cancel any installs first.
+			// It may or may not be patching.
+			return Client_Installer.cancel( _this )
+				.then( function()
+				{
+					return LocalDb_Game.fetch( _this.game_id );
+				} )
+				.then( function( _game )
+				{
+					game = _game;
+
+					// Make sure we're clean.
+					delete _this.install_state;
+					delete _this.download_progress;
+					delete _this.unpack_progress;
+					delete _this.patch_paused;
+					delete _this.patch_queued;
+
+					return _this.$setRemoveState( LocalDb_Package.REMOVING );
+				} )
+				.then( function()
+				{
+					return $injector.get( 'Client_Library' ).removePackage( _this );
+				} )
+				.then( function()
 				{
 					// Get the number of packages in this game.
 					return LocalDb_Package.table().where( 'game_id' ).equals( _this.game_id ).count()
@@ -345,22 +362,29 @@ angular.module( 'App.Client.LocalDb' )
 						{
 							_this.$remove();
 						} );
+				} )
+				.then( function()
+				{
+					if ( !wasInstalling ) {
+						Growls.success( 'Removed ' + (_this.title || game.title || 'the package') + ' from your computer.', 'Package Removed' );
+					}
+				} )
+				.catch( function( err )
+				{
+					console.error( err );
+
+					if ( wasInstalling ) {
+						Growls.error( 'Could not stop the installation.' );
+					}
+					else {
+						Growls.error( 'Could not remove ' + (_this.title || game.title || 'the package') + '.', 'Remove Failed' );
+					}
+
+					_this.$setRemoveState( LocalDb_Package.REMOVE_FAILED );
 				} );
-			} )
-			.then( function()
-			{
-				if ( !noNotify ) {
-					Growls.success( 'Removed ' + (_this.title || game.title || 'the package') + ' from your computer.', 'Package Removed' );
-				}
-			} )
-			.catch( function( err )
-			{
-				console.error( err );
-				if ( !noNotify ) {
-					Growls.error( 'Could not remove ' + (_this.title || game.title || 'the package') + '.', 'Remove Failed' );
-				}
-				_this.$setRemoveState( LocalDb_Package.REMOVE_FAILED );
-			} );
+		} );
+
+		return this._uninstallingPromise;
 	};
 
 	return LocalDb_Model.create( LocalDb_Package );

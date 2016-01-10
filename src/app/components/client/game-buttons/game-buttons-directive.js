@@ -101,7 +101,7 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 			this.cancel = function()
 			{
 				Analytics.trackEvent( 'client-game-buttons', 'cancel-install' );
-				Client_Installer.cancel( this.localPackage );
+				this.localPackage.$uninstall();
 			};
 
 			this.retryInstall = function()

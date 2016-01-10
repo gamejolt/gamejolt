@@ -235,10 +235,6 @@ angular.module( 'App.Client.Installer' )
 							}
 						} );
 					} )
-					.onCanceled( function()
-					{
-
-					} )
 					.start();
 
 				_this._startPatching( localPackage, patchHandle );
@@ -326,30 +322,23 @@ angular.module( 'App.Client.Installer' )
 
 	this.cancel = function( localPackage )
 	{
-		LocalDb.transaction( 'rw', [ LocalDb_Package ], function()
+		return $q( function( resolve, reject )
 		{
-			var promise = $q.resolve();
-
-			// If it's currently installing, let's stop it first.
 			var patchHandle = _this.currentlyPatching[ localPackage.id ];
 			if ( patchHandle ) {
-				promise = promise.then( function()
-				{
-					patchHandle.cancel();
-					_this._stopPatching( localPackage );
-				} );
-			}
 
-			return promise
-				.then( function()
+				// This is absurd, ylivay.
+				patchHandle.onCanceled( function()
 				{
-					// `true` says not to notify.
-					localPackage.$uninstall( true );
-				} )
-				.catch( function( e )
-				{
-					Growls.error( 'Could not stop the installation.' );
+					_this._stopPatching( localPackage );
+					resolve();
 				} );
+
+				patchHandle.cancel();
+			}
+			else {
+				resolve();
+			}
 		} );
 	};
 } );
