@@ -49,7 +49,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 			{
 				_this.libraryGame = null;
 				_this.followerCount = response.followers;
-				Translate.growl( 'success', 'library.followed.remove_game_success' );
+				Translate.growl( 'success', 'library.followed.remove_game_success', { game: _this.game.title } );
 			} )
 			.catch( function()
 			{
@@ -65,7 +65,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 			{
 				_this.libraryGame = newLibraryGame;
 				_this.followerCount = response.followers;
-				Translate.growl( 'success', 'library.followed.add_game_success' );
+				Translate.growl( 'success', 'library.followed.add_game_success', { game: _this.game.title } );
 			} )
 			.catch( function()
 			{
