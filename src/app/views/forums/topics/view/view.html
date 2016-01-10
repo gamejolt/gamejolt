@@ -1,0 +1,142 @@
+<header class="section">
+	<div class="container forum-header">
+		
+		<div class="forum-breadcrumbs">
+			<a href="/forums" class="link-unstyled">Forums</a> / <a href="/forums/category/development" class="link-unstyled">Development</a> / <a href="/f/gamemaker">#gamemaker</a>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+				<img class="topic-author-avatar" src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
+				<h1>
+					How can I do this with that? Please help help help?!?!
+					<!--<span class="forum-header-private tag tag-pink" gj-tooltip="'This topic is locked and can no longer be replied to'">
+						<span class="jolticon jolticon-exclamation-circle"></span> Locked
+					</span>-->
+				</h1>
+				<div class="forum-stats">
+					<div class="clearfix">
+						<div class="topic-meta">
+							<span class="topic-author">by <strong><a href="#">Nik</a></strong></span>
+							on Nov 24, 2015
+							<span class="dot-separator hidden-sm hidden-xs"></span>
+							<br class="visible-sm visible-xs">
+							<span class="text-muted">2 days ago</span>
+							<span class="dot-separator"></span>
+							<span class="text-muted">25 Followers</span>
+							<span class="dot-separator"></span>
+							<span class="text-muted">14 Replies</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="text-right forum-header-buttons">
+			<br class="visible-sm">
+			<a href="#" class="btn btn-dark-variant btn-outline">
+				<span class="jolticon jolticon-add"></span> Add Reply
+			</a>
+			<a href="#" class="btn btn-dark-variant btn-outline" gj-tooltip="'Keep track of replies in this topic'">
+				<span class="jolticon jolticon-subscribe"></span> Follow
+			</a>
+		</div>
+		
+	</div>
+	<br>
+</header>
+
+<div class="section">
+	<div class="container">
+		
+		<div class="topic-post topic-main-post row">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+				<div class="topic-post-content">
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A temporibus, placeat molestiae reprehenderit, error eligendi et dolor atque vel necessitatibus alias consequuntur. Harum, velit debitis voluptas odio quidem deleniti aut?</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta modi, obcaecati quas eaque tempora! Reiciendis ipsa qui recusandae, dolorum molestias repellat debitis iusto pariatur non adipisci nulla assumenda expedita accusantium.</p>
+				</div>
+			</div>
+		</div>
+				
+		<div class="topic-post row" ng-repeat="post in [0, 1, 2]">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+				<img class="topic-post-avatar" src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
+				<div class="topic-post-content">
+					
+					<div class="topic-post-meta">
+						<div class="text-muted pull-right">
+							<small>20 hours ago</small>
+						
+							<span class="dot-separator"></span>
+						
+							<a class="btn btn-outline btn-sm btn-sparse"
+								gj-popover-trigger="post-options-{{ $index }}"
+								>
+								<span class="jolticon jolticon-ellipsis-h"></span>
+							</a>
+						</div>
+						<a href="#" class="topic-post-author link-unstyled">Nik</a>
+						<br>
+						<span class="text-muted">@nik</span>
+						<br>
+						<span class="text-muted">2,516 Posts</span>
+					</div>
+					
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda delectus nulla fugit qui atque sapiente voluptas tenetur est reprehenderit ratione, aperiam perspiciatis vitae eum cum repellendus veniam dolor dolorem tempora.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati deleniti voluptates omnis facere facilis velit beatae rerum amet! Reprehenderit quae nostrum, perspiciatis dolorem a facere necessitatibus cumque consequuntur. Nisi, officiis.</p>
+					
+					<div class="topic-post-actions">
+						
+						<a class="jolticon jolticon-thumbs-up link-unstyled"></a>
+						<span class="blip light filled">
+							<span class="blip-caret"></span>
+							<span class="blip-count">10</span>
+						</span>
+						
+						<span class="dot-separator"></span>
+						
+						<a class="btn btn-outline btn-sm">
+							<span class="jolticon jolticon-reply"></span>
+							Reply
+						</a>
+						
+						<div class="pull-right">
+							
+							<a class="btn btn-outline btn-sm">
+								<span class="jolticon jolticon-chevron-right"></span>
+								View replies
+							</a>
+							<span class="blip light">
+								<span class="blip-caret"></span>
+								<span class="blip-count">3</span>
+							</span>
+							
+						</div>
+					
+						<gj-popover
+							popover-id="post-options-{{ $index }}"
+							>
+							<div class="list-group thin">
+								<a href="#" class="list-group-item has-icon">
+									<span class="jolticon jolticon-edit"></span>
+									Edit
+								</a>
+								<a href="#" class="list-group-item has-icon">
+									<span class="jolticon jolticon-remove"></span>
+									Remove
+								</a>
+							</div>
+						</gj-popover>
+						
+					</div>
+					
+					<div class="topic-post-replies">
+						
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>
