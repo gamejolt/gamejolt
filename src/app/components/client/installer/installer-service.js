@@ -154,6 +154,11 @@ angular.module( 'App.Client.Installer' )
 		}
 
 		var operation = localPackage.install_state ? 'install' : 'update';
+		var packageTitle = (localPackage.title || game.title);
+		if ( packageTitle != game.title ) {
+			packageTitle += ' for ' + game.title;
+		}
+
 		var patchHandle = null;
 		return promise
 			.then( function()
@@ -255,7 +260,7 @@ angular.module( 'App.Client.Installer' )
 			{
 				var action = operation == 'install' ? 'finished installing' : 'updated to the latest version';
 				var title = operation == 'install' ? 'Game Installed' : 'Game Updated';
-				Growls.add( 'success', (localPackage.title || game.title) + ' has ' + action + '.', title );
+				Growls.add( 'success', packageTitle + ' has ' + action + '.', title );
 			} )
 			.catch( function( err )
 			{
@@ -263,7 +268,7 @@ angular.module( 'App.Client.Installer' )
 
 				var action = operation == 'install' ? 'install' : 'update';
 				var title = operation == 'install' ? 'Installation Failed' : 'Update Failed';
-				Growls.add( 'error', (localPackage.title || game.title) + ' failed to ' + action + '.', title );
+				Growls.add( 'error', packageTitle + ' failed to ' + action + '.', title );
 
 				if ( localPackage.install_state == LocalDb_Package.DOWNLOADING ) {
 					localPackage.$setInstallState( LocalDb_Package.DOWNLOAD_FAILED );
