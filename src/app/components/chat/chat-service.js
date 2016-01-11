@@ -7,6 +7,7 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 	this.visible = true;
 	this.windowFocused = true;
 	this.roomNotifications = 0;
+	this.totalNotifications = 0;
 	this.bootstrappingDefaultRoom = false;
 
 	this.connect = function()
@@ -50,9 +51,9 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 		} );
 
 
-		var totalNotifications = _this.roomNotifications + friendNotifications;
-		if ( totalNotifications ) {
-			Favicon.badge( totalNotifications );
+		_this.totalNotifications = _this.roomNotifications + friendNotifications;
+		if ( _this.totalNotifications ) {
+			Favicon.badge( _this.totalNotifications );
 		}
 		else {
 			Favicon.reset();
