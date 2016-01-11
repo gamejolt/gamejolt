@@ -308,7 +308,6 @@ angular.module( 'App.Client.LocalDb' )
 		// We just use this so they don't click "uninstall" twice in a row.
 		// No need to save to the DB.
 		if ( this._uninstallingPromise ) {
-			console.log( 'uninstall promise already set' );
 			return this._uninstallingPromise;
 		}
 
