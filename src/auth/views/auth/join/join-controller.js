@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Auth.JoinCtrl', function( $state, Translate, User_LinkedAccounts )
+angular.module( 'App.Views' ).controller( 'Auth.JoinCtrl', function( $state, Translate, App, User_LinkedAccounts )
 {
 	var _this = this;
 
@@ -10,8 +10,12 @@ angular.module( 'App.Views' ).controller( 'Auth.JoinCtrl', function( $state, Tra
 		_this.joinMessage = message;
 	} );
 
-	this.onJoined = function()
+	this.onJoined = function( formModel )
 	{
+		// We store these so we can log them in automatically once their verification happens.
+		// It will only be stored here and will be cleared out as soon as they leave this section.
+		App.credentials.username = formModel.username;
+		App.credentials.password = formModel.password;
 		$state.go( 'auth.join.almost' );
 	};
 

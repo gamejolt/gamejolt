@@ -34,6 +34,7 @@ angular.module( 'App', [
 	'gj.Scroll.AutoScroll',
 
 	'gj.Form',
+	'gj.Progress.Poller',
 
 	'gj.User',
 	'gj.User.LinkedAccounts',

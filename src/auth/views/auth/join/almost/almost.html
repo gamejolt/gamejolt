@@ -4,4 +4,14 @@
 	<div translate="auth.join.almost.body_html"></div>
 	<p class="small text-muted">{{ ::'auth.join.almost.spam' | translate }}</p>
 	<p class="small text-muted">{{ ::'auth.join.almost.urgency' | translate }}</p>
+
+	<!--
+		We poll to see if their account gets authorized or not.
+		When it does, we can log them in.
+	-->
+	<div
+		gj-progress-poller="/web/auth/poll-authorized/{{ App.credentials.username }}"
+		progress-poller-on-complete="almostCtrl.onAuthorized()"
+		>
+	</div>
 </div>
