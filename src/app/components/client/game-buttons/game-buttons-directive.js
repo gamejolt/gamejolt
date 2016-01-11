@@ -70,7 +70,7 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 					.then( function( packageData )
 					{
 						// If more than one package for their OS, then we have to show an install package modal.
-						if ( packageData.installableBuilds.length > 1 ) {
+						if ( _.size( _.groupBy( packageData.installableBuilds, 'game_package_id' ) ) > 1 ) {
 							Client_InstallPackageModal.show( _this.game );
 							return;
 						}
