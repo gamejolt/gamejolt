@@ -36,6 +36,7 @@ angular.module( 'App.Client.Launcher' )
 			} )
 			.catch( function( e )
 			{
+				_this.clear( localPackage );
 				console.error( e );
 				Growls.error( 'Could not launch game.' );
 			} );
@@ -48,13 +49,11 @@ angular.module( 'App.Client.Launcher' )
 		return $q.when( Launcher.attach( localPackage.running_pid ) )
 			.then( function( launchInstance )
 			{
-				// It's no longer running.
-				if ( !launchInstance ) {
-					_this.gameClosed( localPackage );
-					return;
-				}
-
 				return _this.attach( localPackage, launchInstance );
+			} )
+			.catch( function()
+			{
+				_this.clear( localPackage );
 			} );
 	};
 
@@ -62,9 +61,14 @@ angular.module( 'App.Client.Launcher' )
 	{
 		this.currentlyPlaying.push( localPackage );
 
+		launchInstance.on( 'pid', function()
+		{
+			localPackage.$setRunningPid( launchInstance.pid )
+		} );
+
 		launchInstance.on( 'end', function()
 		{
-			_this.gameClosed( localPackage );
+			_this.clear( localPackage );
 		} );
 
 		$rootScope.$emit( 'Client_Launcher.gameLaunched', this.currentlyPlaying.length );
@@ -72,10 +76,12 @@ angular.module( 'App.Client.Launcher' )
 		return localPackage.$setRunningPid( launchInstance.pid );
 	};
 
-	this.gameClosed = function( localPackage )
+	this.clear = function( localPackage )
 	{
+		var removedItems = _.remove( this.currentlyPlaying, { id: localPackage.id } );
 		localPackage.$clearRunningPid();
-		_.remove( this.currentlyPlaying, { id: localPackage.id } );
-		$rootScope.$emit( 'Client_Launcher.gameClosed', this.currentlyPlaying.length );
+		if ( removedItems.length ) {
+			$rootScope.$emit( 'Client_Launcher.gameClosed', this.currentlyPlaying.length );
+		}
 	};
 } );
