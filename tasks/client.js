@@ -8,6 +8,7 @@ var os = require( 'os' );
 var _ = require( 'lodash' );
 var shell = require( 'gulp-shell' );
 var path = require( 'path' );
+var fs = require( 'fs' );
 
 module.exports = function( config )
 {
@@ -31,8 +32,20 @@ module.exports = function( config )
 			throw new Error( 'Can not build client on your OS type.' );
 	}
 
+	// On Windows builds we have to use npm3. For other OSes it's faster to do npm2.
+	// npm3 does a flat directory structure in node_modules, so the path is different.
+	// We have to find where the lzma-native path is so we can compile it.
+	var lzmaPath = path.join( 'node_modules', 'lzma-native' );
+	try {
+		// Will throw if no path exists.
+		fs.statSync( path.resolve( lzmaPath ) );
+	}
+	catch ( e ) {
+		lzmaPath = path.join( 'node_modules', 'client-voodoo', 'node_modules', 'lzma-native' );
+	}
+
 	gulp.task( 'client:gyp', shell.task( [
-		'cd node_modules/lzma-native && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
+		'cd ' + path.resolve( lzmaPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
 	] ) );
 
 	var releaseDir = path.join( 'build/client/prod', 'v' + packageJson.version );
@@ -165,12 +178,12 @@ module.exports = function( config )
 
 	var nodeModuletasks = [
 		'cd ' + config.buildDir + ' && npm install --production',
-		'cd ' + config.buildDir + '/node_modules/lzma-native && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
+		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
 	];
 
 	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
-		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + config.buildDir + '/node_modules/lzma-native/build/Release/lzma_native.node nw.exe GameJoltClient.exe' )
+		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, '/build/Release/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' )
 	}
 
 	gulp.task( 'client:node-modules', shell.task( nodeModuletasks ) );
