@@ -16,19 +16,62 @@
 <div class="section">
 	<div class="container">
 		
+		<div class="page-header forum-list-heading">
+			<h2 class="sans-margin">Channels You Moderate</h2>
+		</div>
+		
 		<div class="forum-list-items row">
             
             <div class="col-sm-6" ng-repeat="i in [0, 1]">
 			
-                <div class="forum-list-item forum-channel row" ng-repeat="j in [0, 1, 2, 3, 4]">
+                <div class="forum-list-item forum-channel row" ng-repeat="j in [0]">
                     <div class="col-sm-7 col-md-8">
                         <h4 class="forum-list-item-title">
                             <a class="link-unstyled" ng-href="/f/gamemaker">#gamemaker</a>
                         </h4>
-                        <span class="forum-list-item-followers text-muted">1,300 Followers</span>
                         <a href="#" class="link-muted" gj-tooltip="'Stop following this channel'">
                             <span class="jolticon jolticon-remove"></span>
                         </a>
+                        <div class="text-muted small">
+                            1,300 Followers
+                            <span class="dot-separator hidden-xs"></span>
+                            <br class="visible-xs hidden-sm hidden-md hidden-lg">
+                            <strong><a href="#">Nik</a></strong> is the owner.
+                        </div>
+                        <p>Discussion and queries about GameMaker and GML.</p>
+                    </div>
+                    <div class="col-sm-5 col-md-4 forum-list-item-meta">
+                        <ul class="forum-list-item-stats">
+                            <li>25 Topics</li>
+                            <li class="hidden-sm hidden-md hidden-lg"><span class="dot-separator"></span></li>
+                            <li>2,123 Replies</li>
+                        </ul>
+                    </div>
+                </div>
+                
+            </div>
+            
+		</div>
+		
+		<div class="page-header forum-list-heading">
+			<h2 class="sans-margin">All Channels</h2>
+		</div>
+		
+		<div class="forum-list-items row">
+            
+            <div class="col-sm-6" ng-repeat="i in [0, 1]">
+			
+                <div class="forum-list-item forum-channel row" ng-repeat="j in [0, 1, 2, 3]">
+                    <div class="col-sm-7 col-md-8">
+                        <h4 class="forum-list-item-title">
+                            <a class="link-unstyled" ng-href="/f/gamemaker">#gamemaker</a>
+                        </h4>
+                        <a href="#" class="link-muted" gj-tooltip="'Stop following this channel'">
+                            <span class="jolticon jolticon-remove"></span>
+                        </a>
+                        <div class="text-muted small">
+                            1,300 Followers
+                        </div>
                         <p>Discussion and queries about GameMaker and GML.</p>
                     </div>
                     <div class="col-sm-5 col-md-4 forum-list-item-meta">
