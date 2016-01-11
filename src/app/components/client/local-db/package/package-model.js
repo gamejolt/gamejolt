@@ -276,7 +276,8 @@ angular.module( 'App.Client.LocalDb' )
 		var _this = this;
 
 		// If this package isn't installed (and at rest), we don't update.
-		if ( !this.isSettled() ) {
+		// We also don't update if we're currently running the game. Imagine that happening!
+		if ( !this.isSettled() || this.isRunning() ) {
 			return $q.resolve( false );
 		}
 
