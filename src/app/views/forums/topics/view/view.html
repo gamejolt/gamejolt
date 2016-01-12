@@ -58,85 +58,10 @@
 			</div>
 		</div>
 				
-		<div class="topic-post row" ng-repeat="post in [0, 1, 2]">
-			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-				<img class="topic-post-avatar" src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-				<div class="topic-post-content">
-					
-					<div class="topic-post-meta">
-						<div class="text-muted pull-right">
-							<small>20 hours ago</small>
-						
-							<span class="dot-separator"></span>
-						
-							<a class="btn btn-outline btn-sm btn-sparse"
-								gj-popover-trigger="post-options-{{ $index }}"
-								>
-								<span class="jolticon jolticon-ellipsis-h"></span>
-							</a>
-						</div>
-						<a href="#" class="topic-post-author link-unstyled">Nik</a>
-						<br>
-						<span class="text-muted">@nik</span>
-						<br>
-						<span class="text-muted">2,516 Posts</span>
-					</div>
-					
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda delectus nulla fugit qui atque sapiente voluptas tenetur est reprehenderit ratione, aperiam perspiciatis vitae eum cum repellendus veniam dolor dolorem tempora.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati deleniti voluptates omnis facere facilis velit beatae rerum amet! Reprehenderit quae nostrum, perspiciatis dolorem a facere necessitatibus cumque consequuntur. Nisi, officiis.</p>
-					
-					<div class="topic-post-actions">
-						
-						<a class="jolticon jolticon-thumbs-up link-unstyled"></a>
-						<span class="blip light filled">
-							<span class="blip-caret"></span>
-							<span class="blip-count">10</span>
-						</span>
-						
-						<span class="dot-separator"></span>
-						
-						<a class="btn btn-outline btn-sm">
-							<span class="jolticon jolticon-reply"></span>
-							Reply
-						</a>
-						
-						<div class="pull-right">
-							
-							<a class="btn btn-outline btn-sm">
-								<span class="jolticon jolticon-chevron-right"></span>
-								View replies
-							</a>
-							<span class="blip light">
-								<span class="blip-caret"></span>
-								<span class="blip-count">3</span>
-							</span>
-							
-						</div>
-					
-						<gj-popover
-							popover-id="post-options-{{ $index }}"
-							>
-							<div class="list-group thin">
-								<a href="#" class="list-group-item has-icon">
-									<span class="jolticon jolticon-edit"></span>
-									Edit
-								</a>
-								<a href="#" class="list-group-item has-icon">
-									<span class="jolticon jolticon-remove"></span>
-									Remove
-								</a>
-							</div>
-						</gj-popover>
-						
-					</div>
-					
-					<div class="topic-post-replies">
-						
-					</div>
-					
-				</div>
-			</div>
-		</div>
+		<gj-forums-post item-id="0"></gj-forums-post>
+		<gj-forums-post item-id="1"></gj-forums-post>
+		<gj-forums-post item-id="2"></gj-forums-post>
+		<gj-forums-post item-id="3"></gj-forums-post>
 		
 	</div>
 </div>
