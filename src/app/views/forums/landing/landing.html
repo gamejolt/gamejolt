@@ -6,7 +6,7 @@
                 <h1>Game Jolt Indie Game Forums</h1>
                 <p>Please read the <a href="#">Forum Rules</a> before posting.</p>
                 <img ng-show="Screen.isXs" class="social-butterflies center-block" src="/app/views/forums/landing/butterflies-mobile.png" alt="The Social Butterflies">
-                <a href="/forums/search" class="btn btn-outline btn-block">
+                <a ui-sref="forums.search" class="btn btn-outline btn-block">
                     <span class="jolticon jolticon-search"></span> Search Discussions
                 </a>
             </div>
@@ -25,7 +25,7 @@
 		
 		<div class="page-header forum-list-heading">
 			<h2 class="sans-margin">
-				<a class="link-unstyled" href="/forums/channels">Followed Channels</a>
+				<a class="link-unstyled" ui.sref="forums.channels.followed">Followed Channels</a>
 			</h2>
 			<div class="text-muted">10 Channels</div>
 		</div>
@@ -96,7 +96,7 @@
 			</div>
 				
 			<div class="clearfix text-right">
-				<a href="/forums/channels" class="btn btn-outline">
+				<a ui-sref="forums.channels.followed" class="btn btn-outline">
 					<span class="jolticon jolticon-chevron-right"></span>View all
 				</a>
 			</div>
@@ -105,7 +105,7 @@
         
         <div class="page-header forum-list-heading">
 			<h2 class="sans-margin">
-				<a class="link-unstyled" href="/forums/topics">Followed Topics</a>
+				<a class="link-unstyled" ui-sref="forums.topics.followed">Followed Topics</a>
 			</h2>
 			<div class="text-muted">10 Topics</div>
 		</div>
@@ -187,7 +187,7 @@
 			</div>
 				
 			<div class="clearfix text-right">
-				<a href="/forums/topics" class="btn btn-outline">
+				<a ui-sref="forums.topics.followed" class="btn btn-outline">
 					<span class="jolticon jolticon-chevron-right"></span>View all
 				</a>
 			</div>
