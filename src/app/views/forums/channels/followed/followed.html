@@ -7,7 +7,20 @@
 		
 		<h1>Followed Channels</h1>
 		<p>Here are the channels that you follow.</p>
-        <p class="text-muted">10 Channels</p>
+        
+        <div class="row">
+			
+			<div class="col-sm-8 col-md-6">
+                <p class="text-muted">10 Channels</p>
+			</div>
+			
+			<div class="col-sm-4 col-md-6 text-right forum-header-buttons">
+				<a ui-sref="forums.channels.create" class="btn btn-dark-variant btn-outline" gj-tooltip="'Create a new forum channel'" ng-class="{'btn-sparse': Screen.isSm}">
+					<span class="jolticon jolticon-add"></span> <span class="hidden-sm">Create a Channel</span>
+				</a>
+			</div>
+			
+		</div>
 		
 	</div>
 	<br>
