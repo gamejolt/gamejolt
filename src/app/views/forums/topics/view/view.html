@@ -40,7 +40,27 @@
 			<a href="#" class="btn btn-dark-variant btn-outline" gj-tooltip="'Keep track of replies in this topic'">
 				<span class="jolticon jolticon-subscribe"></span> Follow
 			</a>
+            <a class="btn btn-sparse btn-dark-variant btn-outline" gj-popover-trigger="forum-topic-popover">
+                <span class="jolticon jolticon-ellipsis-h"></span>
+            </a>
 		</div>
+        
+        <gj-popover popover-id="forum-topic-popover">
+            <div class="list-group thin">
+                <a href="#" class="list-group-item has-icon">
+                    <span class="jolticon jolticon-edit"></span>
+                    Edit
+                </a>
+                <a href="#" class="list-group-item has-icon">
+                    <span class="jolticon jolticon-remove"></span>
+                    Remove
+                </a>
+                <a href="#" class="list-group-item has-icon">
+                    <span class="jolticon jolticon-trophy"></span>
+                    Mod User
+                </a>
+            </div>
+        </gj-popover>
 		
 	</div>
 	<br>
