@@ -29,79 +29,8 @@
 			</h2>
 			<div class="text-muted">10 Channels</div>
 		</div>
-		
-		<div class="forum-list-items">
-			
-			<div class="forum-list-item forum-channel row">
-				<div class="col-sm-7 col-md-8">
-					<h4 class="forum-list-item-title">
-						<span class="tag tag-pink">2</span>
-						<a class="link-unstyled" ng-href="/f/gamemaker">#gamemaker</a>
-					</h4>
-					<span class="forum-list-item-followers text-muted">1,300 Followers</span>
-					<p>Discussion and queries about GameMaker and GML.</p>
-				</div>
-				<div class="col-sm-5 col-md-4 forum-list-item-meta">
-					<ul class="forum-list-item-stats">
-						<li>25 Topics</li>
-						<li class="hidden-sm hidden-md hidden-lg"><span class="dot-separator"></span></li>
-						<li>2,123 Replies</li>
-					</ul>
-					<ul class="hidden-xs forum-list-item-users">
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-					</ul>
-				</div>
-			</div>
-			
-			<div class="forum-list-item forum-channel row">
-				<div class="col-sm-7 col-md-8">
-					<h4 class="forum-list-item-title">
-						<a class="link-unstyled" ng-href="/f/unity">#unity</a>
-					</h4>
-					<span class="forum-list-item-followers text-muted">2,500 Followers</span>
-					<p>Discussion and queries about the Unity engine.</p>
-				</div>
-				<div class="col-sm-5 col-md-4 forum-list-item-meta">
-					<ul class="forum-list-item-stats">
-						<li>25 Topics</li>
-						<li class="hidden-sm hidden-md hidden-lg"><span class="dot-separator"></span></li>
-						<li>2,123 Replies</li>
-					</ul>
-					<ul class="hidden-xs forum-list-item-users">
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-					</ul>
-				</div>
-			</div>
-				
-			<div class="clearfix text-right">
-				<a ui-sref="forums.channels.followed" class="btn btn-outline">
-					<span class="jolticon jolticon-chevron-right"></span>View all
-				</a>
-			</div>
-			
-		</div>
+        
+        <gj-forums-channel-list items="[0, 1]" more-link="/forums/channels"></gj-forums-channel-list>
         
         <div class="page-header forum-list-heading">
 			<h2 class="sans-margin">
@@ -110,89 +39,7 @@
 			<div class="text-muted">10 Topics</div>
 		</div>
         
-        <div class="forum-list-items">
-            
-            <div class="forum-list-item forum-channel row">
-				<div class="col-sm-7 col-md-8">
-					<h4 class="forum-list-item-title">
-						<span class="tag tag-pink">New</span> <a class="link-unstyled" ng-href="/f/topic-name/123">Hello World!</a>
-					</h4>
-					<div class="small">
-						Posted 2 months ago by <strong><a href="#">CROS</a></strong>
-						<br class="visible-xs">
-						<span class="dot-separator hidden-xs"></span>
-						<span class="text-muted">25 Followers</span>
-						<span class="dot-separator"></span>
-						<span class="text-muted">14 Replies</span>
-					</div>
-					<p>Here's a snippet of content that will be visible in the topic listing when viewing a channel.</p>
-				</div>
-				<div class="col-sm-5 col-md-4 forum-list-item-meta">
-					<ul class="forum-list-item-stats">
-						<li><strong><a href="#">Nik</a></strong> replied</li>
-						<li>25 minutes ago</li>
-					</ul>
-					<ul class="hidden-xs forum-list-item-users">
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-					</ul>
-				</div>
-			</div>
-            
-            <div class="forum-list-item forum-channel row">
-				<div class="col-sm-7 col-md-8">
-					<h4 class="forum-list-item-title">
-						<a class="link-unstyled" ng-href="/f/topic-name/123">Hello World!</a>
-					</h4>
-					<div class="small">
-						Posted 2 months ago by <strong><a href="#">CROS</a></strong>
-						<br class="visible-xs">
-						<span class="dot-separator hidden-xs"></span>
-						<span class="text-muted">25 Followers</span>
-						<span class="dot-separator"></span>
-						<span class="text-muted">14 Replies</span>
-					</div>
-					<p>Here's a snippet of content that will be visible in the topic listing when viewing a channel.</p>
-				</div>
-				<div class="col-sm-5 col-md-4 forum-list-item-meta">
-					<ul class="forum-list-item-stats">
-						<li><strong><a href="#">Nik</a></strong> replied</li>
-						<li>25 minutes ago</li>
-					</ul>
-					<ul class="hidden-xs forum-list-item-users">
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-						<li>
-							<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-						</li>
-					</ul>
-				</div>
-			</div>
-				
-			<div class="clearfix text-right">
-				<a ui-sref="forums.topics.followed" class="btn btn-outline">
-					<span class="jolticon jolticon-chevron-right"></span>View all
-				</a>
-			</div>
-            
-        </div>
+        <gj-forums-topic-list items="[0, 1]" more-link="/forums/topics"></gj-forums-topic-list>
 		
 	</div>
 </section>
@@ -200,7 +47,6 @@
 <section class="section" ng-repeat="i in [0, 1, 2]" ng-class="{'fill-lightest': i % 2 == 0}">
 	<div class="container">
 		<div class="row">
-			
 			<div class="col-md-6" ng-repeat="j in [0, 1]">
 				
 				<div class="page-header forum-list-heading">
@@ -209,54 +55,10 @@
 					</h2>
 					<div class="text-muted">750 Channels</div>
 				</div>
-				
-				<div class="forum-list-items">
-					
-					<div class="forum-list-item forum-channel row">
-						<div class="col-sm-7 col-md-8">
-							<h4 class="forum-list-item-title">
-								<a class="link-unstyled" ng-href="/f/gamemaker">#gamemaker</a>
-							</h4>
-							<span class="forum-list-item-followers text-muted">1,300 Followers</span>
-							<p>Discussion and queries about GameMaker and GML.</p>
-						</div>
-						<div class="col-sm-5 col-md-4 forum-list-item-meta">
-							<ul class="forum-list-item-stats">
-								<li>25 Topics</li>
-								<li class="hidden-sm hidden-md hidden-lg"><span class="dot-separator"></span></li>
-								<li>2,123 Replies</li>
-							</ul>
-						</div>
-					</div>
-					
-					<div class="forum-list-item forum-channel row">
-						<div class="col-sm-7 col-md-8">
-							<h4 class="forum-list-item-title">
-								<a class="link-unstyled" ng-href="/f/unity">#unity</a>
-							</h4>
-							<span class="forum-list-item-followers text-muted">2,500 Followers</span>
-							<p>Discussion and queries about the Unity engine.</p>
-						</div>
-						<div class="col-sm-5 col-md-4 forum-list-item-meta">
-							<ul class="forum-list-item-stats">
-								<li>25 Topics</li>
-								<li class="hidden-sm hidden-md hidden-lg"><span class="dot-separator"></span></li>
-								<li>2,123 Replies</li>
-							</ul>
-						</div>
-					</div>
-				
-					<div class="clearfix text-right">
-						<a href="/forums/category/development" class="btn btn-outline">
-							<span class="jolticon jolticon-chevron-right"></span>View all
-						</a>
-					</div>
-					
-				</div>
+                
+                <gj-forums-channel-list items="[0, 1]" list-type="small" more-link="/forums/category/development"></gj-forums-channel-list>
 				
 			</div>
-			
 		</div>
-		
 	</div>
 </section>
