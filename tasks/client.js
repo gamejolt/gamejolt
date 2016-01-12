@@ -183,7 +183,7 @@ module.exports = function( config )
 
 	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
-		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, '/build/Release/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' )
+		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'build/Release/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' )
 	}
 
 	gulp.task( 'client:node-modules', shell.task( nodeModuletasks ) );
