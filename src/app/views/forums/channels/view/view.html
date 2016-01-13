@@ -36,6 +36,21 @@
 				<a href="#" class="btn btn-dark-variant btn-outline" gj-tooltip="'Join the community chatroom'" ng-class="{'btn-sparse': Screen.isSm}">
 					<span class="jolticon jolticon-comment"></span> <span class="hidden-sm">Chat</span>
 				</a>
+                <a class="btn btn-sparse btn-dark-variant btn-outline" gj-popover-trigger="forum-channel-popover">
+                    <span class="jolticon jolticon-ellipsis-h"></span>
+                </a>
+                <gj-popover popover-id="forum-channel-popover">
+                    <div class="list-group thin">
+                        <a href="#" class="list-group-item has-icon">
+                            <span class="jolticon jolticon-edit"></span>
+                            Edit Description
+                        </a>
+                        <a href="#" class="list-group-item has-icon">
+                            <span class="jolticon jolticon-claim"></span>
+                            Make Private
+                        </a>
+                    </div>
+                </gj-popover>
 			</div>
 			
 		</div>
