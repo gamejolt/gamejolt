@@ -152,10 +152,14 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 
 		var roomIndex = data.rooms.indexOf( roomId );
 		if ( roomIndex !== -1 ) {
-			do {
-				data.rooms.splice( roomIndex, 1 );
-				roomIndex = data.rooms.indexOf( roomId );
-			} while ( roomIndex !== -1 );
+			data.rooms = data.rooms.filter( function( roomId2 )
+			{
+				if ( roomId == roomId2 ) {
+					return false;
+				} else {
+					return true;
+				}
+			} );
 			data.time = new Date().getTime();
 			data.action = {
 				type: 'leave',
