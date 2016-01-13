@@ -43,6 +43,29 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 			$window.addEventListener( 'storage', onStorageEvent );
 			storageListener = true;
 		}
+
+		this.cleanRooms();
+	};
+
+	this.cleanRooms = function()
+	{
+		var data = JSON.parse( $window.localStorage.getItem( STORAGE_KEY ) );
+
+		data.rooms = data.rooms.filter( function( roomId )
+		{
+			if ( !roomId ) {
+				return false;
+			} else {
+				return true;
+			}
+		} );
+
+		data.time = new Date().getTime();
+		data.action = {
+			type: 'clean'
+		};
+
+		$window.localStorage.setItem( STORAGE_KEY, JSON.stringify( data ) );
 	};
 
 	this.destroy = function()

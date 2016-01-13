@@ -205,7 +205,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 			this.minimizeRoom();
 		}
 		else {
-			if ( !this.openRooms[roomId] ) {
+			if ( roomId && !this.openRooms[roomId] ) {
 
 				// Only allow a certain number of tabs to be open at once.
 				if ( _.size( this.openRooms ) >= ChatConfig.MAX_NUM_TABS ) {
@@ -237,7 +237,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 
 	ChatClient.prototype.leaveRoom = function( roomId )
 	{
-		if ( this.openRooms[roomId] ) {
+		if ( roomId && this.openRooms[roomId] ) {
 			this.primus.write( {
 				event: 'leave-room',
 				roomId: roomId,
