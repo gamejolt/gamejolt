@@ -219,6 +219,7 @@ angular.module( 'App', [
     'App.Forums.ChannelList',
     'App.Forums.TopicList',
     'App.Forums.Post',
+    'App.Forums.Reply',
 
 	// Views.
 	'App.Views',

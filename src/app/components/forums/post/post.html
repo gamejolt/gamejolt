@@ -31,8 +31,14 @@
                     </a>
                     
                     <div class="pull-right">
-                        <a class="btn btn-outline btn-sm">
-                            <span class="jolticon jolticon-chevron-right"></span>
+                        <a class="btn btn-outline btn-sm" ng-click="ctrl.viewReplies()">
+                            <span class="jolticon"
+                                ng-class="{
+                                    'jolticon-chevron-right': !ctrl.repliesActive,
+                                    'jolticon-chevron-down': ctrl.repliesActive
+                                }"
+                                >
+                            </span>
                             View replies
                         </a>
                         <span class="blip light">
@@ -64,8 +70,13 @@
                     
                 </div>
                 
-                <div class="topic-post-replies">
-                    <!-- TODO: Load post replies here dynamically -->
+                <div class="topic-post-replies clearfix" ng-if="ctrl.repliesActive">
+                    <gj-forums-reply item-id="123"></gj-forums-reply>
+                    <gj-forums-reply item-id="234"></gj-forums-reply>
+                    <a class="btn btn-outline btn-sm pull-right">
+                        <span class="jolticon jolticon-reply"></span>
+                        Reply
+                    </a>
                 </div>
                 
             </div>

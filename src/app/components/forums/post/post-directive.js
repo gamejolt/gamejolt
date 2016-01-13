@@ -8,6 +8,19 @@ angular.module( 'App.Forums.Post' ).directive( 'gjForumsPost', function()
         },
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $scope ) {}
+		controller: function( $scope )
+        {    
+            this.repliesActive = false;
+            
+            this.viewReplies = function()
+            {
+                if ( !this.repliesActive ) {
+                    // TODO: Load in the replies using an API request here
+                    this.repliesActive = true;
+                } else {
+                    this.repliesActive = false;
+                }
+            }
+        }
     }
 } );
