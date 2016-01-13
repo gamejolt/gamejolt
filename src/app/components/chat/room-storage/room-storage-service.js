@@ -55,7 +55,8 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 		{
 			if ( !roomId ) {
 				return false;
-			} else {
+			}
+			else {
 				return true;
 			}
 		} );
@@ -156,7 +157,8 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 			{
 				if ( roomId == roomId2 ) {
 					return false;
-				} else {
+				}
+				else {
 					return true;
 				}
 			} );
