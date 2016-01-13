@@ -11,6 +11,8 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 	{
 		var _this = this;
 
+		this.cleanRooms();
+
 		if ( !joinRoomEvent ) {
 			joinRoomEvent = $rootScope.$on( 'Chat.joinRoom', function( event, data )
 			{
@@ -43,8 +45,6 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 			$window.addEventListener( 'storage', onStorageEvent );
 			storageListener = true;
 		}
-
-		this.cleanRooms();
 	};
 
 	this.cleanRooms = function()
@@ -152,7 +152,10 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 
 		var roomIndex = data.rooms.indexOf( roomId );
 		if ( roomIndex !== -1 ) {
-			data.rooms.splice( roomIndex, 1 );
+			do {
+				data.rooms.splice( roomIndex, 1 );
+				roomIndex = data.rooms.indexOf( roomId );
+			} while ( roomIndex !== -1 );
 			data.time = new Date().getTime();
 			data.action = {
 				type: 'leave',

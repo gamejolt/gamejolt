@@ -573,6 +573,15 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 				delete this.pmUsers[roomId];
 			}
 		}
+		else if ( msg.event === 'invalid-room' ) {
+			var roomId = msg.data.roomId;
+
+			// Remove this room from room storage if it happened to be there.
+			// If other local sessions were joined, let's disconnect them.
+			$rootScope.$emit( 'Chat.leaveRoom', {
+				roomId: roomId,
+			} );
+		}
 		else if ( msg.event === 'online-count' ) {
 			this.allCount = msg.data.onlineCount;
 		}
