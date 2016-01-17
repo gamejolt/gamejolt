@@ -132,7 +132,7 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 
 		if ( data.rooms.indexOf( roomId ) === -1 ) {
 			data.rooms.push( roomId );
-			data.time = new Date.now();
+			data.time = Date.now();
 			data.action = {
 				type: 'join',
 				roomId: roomId,
@@ -162,7 +162,7 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 					return true;
 				}
 			} );
-			data.time = new Date.now();
+			data.time = Date.now();
 			data.action = {
 				type: 'leave',
 				roomId: roomId,
@@ -176,7 +176,7 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 	{
 		var data = JSON.parse( $window.localStorage.getItem( STORAGE_KEY ) );
 
-		data.time = new Date.now();
+		data.time = Date.now();
 		data.action = {
 			type: 'log-out',
 		};
