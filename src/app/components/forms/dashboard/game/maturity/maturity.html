@@ -1,8 +1,8 @@
 <form gj-form="formModel" name="gameMaturityForm">
 
-	<form-group name="tigrs_age" label="{{ ::'dash.games.maturity.age_label' | translate }}">
-		<p class="help-block" ng-if="baseModel.development_status == Game.DEVELOPMENT_STATUS_WIP">
-			{{ ::'dash.games.maturity.wip_help' | translate }}
+	<form-group name="tigrs_age" label="{{ 'dash.games.maturity.age_label' | translate }}">
+		<p class="help-block" ng-if="baseModel.development_status == Game.DEVELOPMENT_STATUS_WIP" translate>
+			dash.games.maturity.wip_help
 		</p>
 
 		<div class="radio" ng-repeat="item in age track by $index" ng-if="$index > 0">
@@ -18,9 +18,9 @@
 	<div gj-expand-when="formModel.tigrs_age != 0">
 
 		<fieldset>
-			<legend>{{ ::'dash.games.maturity.violence_legend' | translate }}</legend>
+			<legend translate>dash.games.maturity.violence_legend</legend>
 
-			<form-group name="tigrs_cartoon_violence" label="{{ ::'dash.games.maturity.cartoon_violence_label' | translate }}">
+			<form-group name="tigrs_cartoon_violence" label="{{ 'dash.games.maturity.cartoon_violence_label' | translate }}">
 				<div class="radio" ng-repeat="item in cartoonViolence track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -31,7 +31,7 @@
 				<control-errors></control-errors>
 			</form-group>
 
-			<form-group name="tigrs_fantasy_violence" label="{{ ::'dash.games.maturity.fantasy_violence_label' | translate }}">
+			<form-group name="tigrs_fantasy_violence" label="{{ 'dash.games.maturity.fantasy_violence_label' | translate }}">
 				<div class="radio" ng-repeat="item in fantasyViolence track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -42,7 +42,7 @@
 				<control-errors></control-errors>
 			</form-group>
 
-			<form-group name="tigrs_realistic_violence" label="{{ ::'dash.games.maturity.realistic_violence_label' | translate }}">
+			<form-group name="tigrs_realistic_violence" label="{{ 'dash.games.maturity.realistic_violence_label' | translate }}">
 				<div class="radio" ng-repeat="item in realisticViolence track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -53,7 +53,7 @@
 				<control-errors></control-errors>
 			</form-group>
 
-			<form-group name="tigrs_bloodshed" label="{{ ::'dash.games.maturity.bloodshed_label' | translate }}">
+			<form-group name="tigrs_bloodshed" label="{{ 'dash.games.maturity.bloodshed_label' | translate }}">
 				<div class="radio" ng-repeat="item in bloodshed track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -64,7 +64,7 @@
 				<control-errors></control-errors>
 			</form-group>
 
-			<form-group name="tigrs_sexual_violence" label="{{ ::'dash.games.maturity.sexual_violence_label' | translate }}">
+			<form-group name="tigrs_sexual_violence" label="{{ 'dash.games.maturity.sexual_violence_label' | translate }}">
 				<div class="radio" ng-repeat="item in sexualViolence track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -77,9 +77,9 @@
 		</fieldset>
 
 		<fieldset>
-			<legend>{{ ::'dash.games.maturity.substances_legend' | translate }}</legend>
+			<legend translate>dash.games.maturity.substances_legend</legend>
 
-			<form-group name="tigrs_alcohol" label="{{ ::'dash.games.maturity.alcohol_label' | translate }}">
+			<form-group name="tigrs_alcohol" label="{{ 'dash.games.maturity.alcohol_label' | translate }}">
 				<div class="radio" ng-repeat="item in alcohol track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -90,7 +90,7 @@
 				<control-errors></control-errors>
 			</form-group>
 
-			<form-group name="tigrs_drugs" label="{{ ::'dash.games.maturity.drugs_label' | translate }}">
+			<form-group name="tigrs_drugs" label="{{ 'dash.games.maturity.drugs_label' | translate }}">
 				<div class="radio" ng-repeat="item in drugs track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -101,7 +101,7 @@
 				<control-errors></control-errors>
 			</form-group>
 
-			<form-group name="tigrs_tobacco" label="{{ ::'dash.games.maturity.tobacco_label' | translate }}">
+			<form-group name="tigrs_tobacco" label="{{ 'dash.games.maturity.tobacco_label' | translate }}">
 				<div class="radio" ng-repeat="item in tobacco track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -114,9 +114,9 @@
 		</fieldset>
 
 		<fieldset>
-			<legend>{{ ::'dash.games.maturity.sex_nudity_legend' | translate }}</legend>
+			<legend translate>dash.games.maturity.sex_nudity_legend</legend>
 
-			<form-group name="tigrs_nudity" label="{{ ::'dash.games.maturity.nudity_label' | translate }}">
+			<form-group name="tigrs_nudity" label="{{ 'dash.games.maturity.nudity_label' | translate }}">
 				<div class="radio" ng-repeat="item in nudity track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -127,7 +127,7 @@
 				<control-errors></control-errors>
 			</form-group>
 
-			<form-group name="tigrs_sexual_themes" label="{{ ::'dash.games.maturity.sexual_themes_label' | translate }}">
+			<form-group name="tigrs_sexual_themes" label="{{ 'dash.games.maturity.sexual_themes_label' | translate }}">
 				<div class="radio" ng-repeat="item in sexualThemes track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -140,9 +140,9 @@
 		</fieldset>
 
 		<fieldset>
-			<legend>{{ ::'dash.games.maturity.misc_legend' | translate }}</legend>
+			<legend translate>dash.games.maturity.misc_legend</legend>
 
-			<form-group name="tigrs_language" label="{{ ::'dash.games.maturity.language_label' | translate }}">
+			<form-group name="tigrs_language" label="{{ 'dash.games.maturity.language_label' | translate }}">
 				<div class="radio" ng-repeat="item in language track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -153,7 +153,7 @@
 				<control-errors></control-errors>
 			</form-group>
 
-			<form-group name="tigrs_humor" label="{{ ::'dash.games.maturity.humor_label' | translate }}">
+			<form-group name="tigrs_humor" label="{{ 'dash.games.maturity.humor_label' | translate }}">
 				<div class="radio" ng-repeat="item in humor track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -164,7 +164,7 @@
 				<control-errors></control-errors>
 			</form-group>
 
-			<form-group name="tigrs_gambling" label="{{ ::'dash.games.maturity.gambling_label' | translate }}">
+			<form-group name="tigrs_gambling" label="{{ 'dash.games.maturity.gambling_label' | translate }}">
 				<div class="radio" ng-repeat="item in gambling track by $index">
 					<label>
 						<input form-control="radio" ng-value="::$index">
@@ -180,7 +180,7 @@
 
 	<button gj-form-submit-button class="i-button" ng-disabled="!gameMaturityForm.$valid || !formModel.tigrs_age" ng-click="onSubmit()">
 		<span class="jolticon jolticon-edit"></span>
-		{{ ::'dash.games.maturity.save_button' | translate }}
+		<span translate>dash.games.maturity.save_button</span>
 	</button>
 
 </form>

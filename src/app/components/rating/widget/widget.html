@@ -7,7 +7,7 @@
 			ng-mouseenter="ctrl.hover( i )"
 			ng-mouseleave="ctrl.hover()"
 			ng-click="ctrl.select( i )"
-			gj-tooltip="ctrl.labels[ (i - 1) ]"
+			gj-tooltip="{{ ctrl.labels[ (i - 1) ] }}"
 			gj-track-event="game-rating:rate:{{ i }}"
 			></span>
 	</span>
@@ -17,7 +17,7 @@
 			ng-if="ctrl.gameRating.rating"
 			ng-click="ctrl.clear()"
 			ng-class="{ big: ctrl.isBig }"
-			gj-tooltip="ctrl.clearLabel"
+			gj-tooltip="{{ 'rating.clear' | translate }}"
 			gj-track-event="game-rating:clear"
 			></span>
 	</span>

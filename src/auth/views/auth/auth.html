@@ -29,12 +29,14 @@
 		</div>
 
 		<div class="auth-shell-bottom-links">
-			<a class="link-unstyled anim-fade-in stagger" ng-href="{{ ::Environment.baseUrl }}/terms">
-				{{ ::'legal.terms' | translate }}
+			<a class="link-unstyled anim-fade-in stagger" ng-href="{{ ::Environment.baseUrl }}/terms" translate>
+				auth.legal.terms
 			</a>
-			<a class="link-unstyled anim-fade-in stagger" ng-href="{{ ::Environment.baseUrl }}/privacy">
-				{{ ::'legal.privacy' | translate }}
+			<a class="link-unstyled anim-fade-in stagger" ng-href="{{ ::Environment.baseUrl }}/privacy" translate>
+				auth.legal.privacy
 			</a>
+
+			<gj-translate-lang-selector></gj-translate-lang-selector>
 		</div>
 
 	</div>

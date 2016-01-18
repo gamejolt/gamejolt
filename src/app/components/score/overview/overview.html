@@ -72,7 +72,7 @@
 
 					<div class="alert alert-warning" ng-if="::!bestScore">
 						<h4 class="sans-margin">{{ ::'scores.overview.user_best_none_heading' | translate }}</h4>
-						<p translate="scores.overview.user_best_none_body_html"></p>
+						<p translate>scores.overview.user_best_none_body_html</p>
 					</div>
 
 					<div class="well fill-dark clearfix" ng-if="::bestScore">
@@ -90,7 +90,7 @@
 						<br>
 
 						<div>
-							<span gj-tooltip="$translate.instant( 'scores.overview.user_best_exp_tooltip', { experience: ctrl.userScoreExperience } )">
+							<span gj-tooltip="{{ 'scores.overview.user_best_exp_tooltip' | translate:{ experience: ctrl.userScoreExperience } }}">
 								<span class="jolticon jolticon-exp text-muted" style="vertical-align: middle"></span>
 								{{ ::ctrl.userScoreExperience | number }}
 								<span class="initialism">{{ ::'leveling.exp' | translate }}</span>
@@ -151,7 +151,7 @@
 				</a>
 			</div>
 
-			<div class="alert alert-warning full-bleed-xs" ng-if="!ctrl.scores.length" translate="scores.overview.no_scores_html"></div>
+			<div class="alert alert-warning full-bleed-xs" ng-if="!ctrl.scores.length" translate>scores.overview.no_scores_html</div>
 
 		</div>
 

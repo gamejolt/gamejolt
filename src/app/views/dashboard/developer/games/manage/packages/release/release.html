@@ -86,7 +86,7 @@
 <p ng-if="releaseCtrl.release.status == Game_Release.STATUS_HIDDEN && releaseCtrl.release.build_count">
 	<button class="i-button big block anim-fade-in no-animate-leave"
 		ng-click="releaseCtrl.publishRelease( releaseCtrl.release ); $event.stopPropagation()"
-		gj-tooltip="$translate.instant( 'dash.games.releases.manage.publish_release_tooltip' )"
+		gj-tooltip="{{ 'dash.games.releases.manage.publish_release_tooltip' | translate }}"
 		>
 		<span class="jolticon jolticon-active"></span>
 		{{ ::'dash.games.releases.manage.publish_release_button' | translate }}

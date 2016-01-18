@@ -1,10 +1,10 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.PackagesCtrl', function(
-	$scope, $state, Translate, App, Game_Package, packagesPayload )
+	$scope, $state, App, Game_Package, gettextCatalog, packagesPayload )
 {
 	var _this = this;
 	var manageCtrl = $scope.manageCtrl;
 
-	Translate.pageTitle( 'dash.games.packages.page_title', { game: manageCtrl.game.title } );
+	App.title = gettextCatalog.getString( 'dash.games.packages.page_title', { game: manageCtrl.game.title } );
 
 	this.packages = Game_Package.populate( packagesPayload.packages );
 

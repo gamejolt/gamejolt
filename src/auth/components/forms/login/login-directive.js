@@ -1,4 +1,4 @@
-angular.module( 'App.Forms' ).directive( 'gjFormLogin', function( $q, Translate, Api, Form, Connection )
+angular.module( 'App.Forms' ).directive( 'gjFormLogin', function( $q, Api, Form, Connection )
 {
 	var form = new Form( {
 		template: '/auth/components/forms/login/login.html'
@@ -7,12 +7,6 @@ angular.module( 'App.Forms' ).directive( 'gjFormLogin', function( $q, Translate,
 	form.onInit = function( scope )
 	{
 		scope.Connection = Connection;
-
-		scope.loadingMessage = '';
-		Translate.randomMessage( 'auth.login.loading_message' ).then( function( message )
-		{
-			scope.loadingMessage = message;
-		} );
 
 		scope.formState.invalidLogin = false;
 		scope.keyup = function()

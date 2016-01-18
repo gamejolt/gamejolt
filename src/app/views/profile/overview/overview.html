@@ -61,7 +61,7 @@
 								<span class="jolticon jolticon-friend-add-2"></span>
 								{{ ::'profile.friend_request_accept' | translate }}
 							</a>
-							<a class="i-button big warning" ng-click="profileCtrl.rejectFriendRequest()" gj-tooltip="$translate.instant( 'profile.friend_request_decline_tooltip' )">
+							<a class="i-button big warning" ng-click="profileCtrl.rejectFriendRequest()" gj-tooltip="{{ 'profile.friend_request_decline_tooltip' | translate }}">
 								<span class="jolticon jolticon-remove"></span>
 								{{ ::'profile.friend_request_decline' | translate }}
 							</a>
@@ -80,7 +80,7 @@
 						fade-collapse-is-required="overviewCtrl.canToggleDescription"
 						>
 						<div ng-if="::profileCtrl.user.description_compiled" class="user-compiled-description" ng-bind-html="::profileCtrl.user.description_compiled"></div>
-						<div ng-if="::!profileCtrl.user.description_compiled" class="text-muted" translate="profile.no_bio_html"></div>
+						<div ng-if="::!profileCtrl.user.description_compiled" class="text-muted" translate>profile.no_bio_html</div>
 					</gj-fade-collapse>
 
 					<a class="hidden-text-expander"
@@ -102,7 +102,7 @@
 	<section class="section fill-lightest" ng-if="profileCtrl.user.type == User.TYPE_DEVELOPER">
 		<div class="container">
 
-			<div ng-if="!profileCtrl.gamesCount" translate="profile.no_developer_games_html"></div>
+			<div ng-if="!profileCtrl.gamesCount" translate>profile.no_developer_games_html</div>
 
 			<div ng-if="profileCtrl.gamesCount">
 				<h2 class="section-header">

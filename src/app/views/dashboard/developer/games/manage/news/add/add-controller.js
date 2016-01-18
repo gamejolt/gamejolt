@@ -1,10 +1,13 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.News.AddCtrl', function( $state, App, Translate )
+angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.News.AddCtrl', function( $state, App, Growls, gettextCatalog )
 {
-	Translate.pageTitle( 'dash.games.news.add.page_title' );
+	App.title = gettextCatalog.getString( 'dash.games.news.add.page_title' );
 
 	this.onSubmitted = function()
 	{
-		Translate.growl( 'success', 'dash.games.news.add.added' );
+		Growls.success(
+			gettextCatalog.getString( 'dash.games.news.add.added_growl' ),
+			gettextCatalog.getString( 'dash.games.news.add.added_growl_title' )
+		);
 		$state.go( '^.list' );
 	};
 } );

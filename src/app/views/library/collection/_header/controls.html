@@ -1,18 +1,25 @@
-	<!-- ng-class="{ 'pull-left': !Screen.isXs }" -->
 <div ng-if="collectionCtrl.type != 'bundle' && collectionCtrl.type != 'tag'">
 
+	<!-- Following -->
 	<a class="i-button big anim-fade-in no-animate-leave stagger"
-		ng-if="collectionCtrl.shouldShowFollow()"
-		ng-class="collectionCtrl.isFollowing ? 'active' : ''"
-		gj-tooltip="!collectionCtrl.isFollowing
-			? $translate.instant( 'library.collection.follow_button_tooltip' )
-			: $translate.instant( 'library.collection.unfollow_button_tooltip' )"
+		ng-if="collectionCtrl.shouldShowFollow() && !collectionCtrl.isFollowing"
+		gj-tooltip="{{ 'library.collection.follow_button_tooltip' | translate }}"
 		ng-click="collectionCtrl.toggleFollow()"
 		>
-		<span class="jolticon" ng-class="!collectionCtrl.isFollowing ? 'jolticon-subscribe' : 'jolticon-subscribed'"></span>
-		{{ !collectionCtrl.isFollowing ? $translate.instant( 'library.collection.follow_button' ) : $translate.instant( 'library.collection.unfollow_button' ) }}
+		<span class="jolticon jolticon-subscribe"></span>
+		{{ 'library.collection.follow_button' | translate }}
 	</a>
 
+	<a class="i-button big anim-fade-in no-animate-leave stagger"
+		ng-if="collectionCtrl.shouldShowFollow() && collectionCtrl.isFollowing"
+		gj-tooltip="{{ 'library.collection.unfollow_button_tooltip' | translate }}"
+		ng-click="collectionCtrl.toggleFollow()"
+		>
+		<span class="jolticon jolticon-subscribed"></span>
+		{{ 'library.collection.unfollow_button' | translate }}
+	</a>
+
+	<!-- Editing Playlist -->
 	<a class="i-button big anim-fade-in no-animate-leave stagger"
 		ng-if="collectionCtrl.type == 'playlist' && collectionCtrl.isOwner"
 		ng-click="collectionCtrl.showEditPlaylist()"
@@ -21,6 +28,7 @@
 		{{ ::'library.collection.edit_playlist_button' | translate }}
 	</a>
 
+	<!-- More options -->
 	<a class="i-button big sparse anim-fade-in no-animate-leave stagger"
 		gj-popover-trigger="collection-options"
 		ng-if="collectionCtrl.type == 'playlist' && collectionCtrl.isOwner"

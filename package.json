@@ -14,6 +14,7 @@
     "decompress": "^3.0.0",
     "glob-expand": "~0.0.2",
     "gulp": "~3.8.1",
+    "gulp-angular-gettext": "^2.1.0",
     "gulp-autoprefixer": "~0.0.7",
     "gulp-clean": "~0.3.0",
     "gulp-concat": "~2.6.0",
@@ -35,7 +36,6 @@
     "gulp-size": "^1.2.0",
     "gulp-sourcemaps": "~1.5.2",
     "gulp-stylus": "2.0.5",
-    "stylus": "0.53.0",
     "gulp-svgmin": "~0.4.6",
     "gulp-tar": "1.3.0",
     "gulp-toml": "gamejolt/gulp-toml",
@@ -45,10 +45,11 @@
     "gulp-zip": "2.0.2",
     "minimist": "~0.2.0",
     "nw-builder": "gamejolt/nw-builder#skip-merge-app",
+    "nwjs-installer-builder": "0.0.1",
     "run-sequence": "~0.3.6",
     "streamqueue": "~0.1.1",
-    "through2": "~0.5.1",
-    "nwjs-installer-builder": "0.0.1"
+    "stylus": "0.53.0",
+    "through2": "~0.5.1"
   },
   "optionalDependencies": {
     "appdmg": "^0.3.5"

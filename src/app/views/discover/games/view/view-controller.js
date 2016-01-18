@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
-	$scope, Location, Api, SplitTest, Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable, Growls, Translate, Analytics, game, gamePayload )
+	$scope, Location, Api, SplitTest, Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable, Growls, Analytics, gettextCatalog, game, gamePayload )
 {
 	var _this = this;
 
@@ -49,11 +49,17 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 			{
 				_this.libraryGame = null;
 				_this.followerCount = response.followers;
-				Translate.growl( 'success', 'library.followed.remove_game_success', { game: _this.game.title } );
+				Growls.success(
+					gettextCatalog.getString( 'library.followed.remove_game_success_growl', { game: _this.game.title } ),
+					gettextCatalog.getString( 'library.followed.remove_game_success_growl_title', { game: _this.game.title } )
+				);
 			} )
 			.catch( function()
 			{
-				Translate.growl( 'success', 'library.followed.remove_game_error' );
+				Growls.success(
+					gettextCatalog.getString( 'library.followed.remove_game_error_growl' ),
+					gettextCatalog.getString( 'library.followed.remove_game_error_growl_title' )
+				);
 			} );
 
 			Analytics.trackEvent( 'game-following', 'unfollow' );
@@ -65,11 +71,17 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 			{
 				_this.libraryGame = newLibraryGame;
 				_this.followerCount = response.followers;
-				Translate.growl( 'success', 'library.followed.add_game_success', { game: _this.game.title } );
+				Growls.success(
+					gettextCatalog.getString( 'library.followed.add_game_success_growl', { game: _this.game.title } ),
+					gettextCatalog.getString( 'library.followed.add_game_success_growl_title', { game: _this.game.title } )
+				);
 			} )
 			.catch( function()
 			{
-				Translate.growl( 'success', 'library.followed.add_game_error' );
+				Growls.success(
+					gettextCatalog.getString( 'library.followed.add_game_error_growl' ),
+					gettextCatalog.getString( 'library.followed.add_game_error_growl_title' )
+				);
 			} );
 
 			Analytics.trackEvent( 'game-following', 'follow' );

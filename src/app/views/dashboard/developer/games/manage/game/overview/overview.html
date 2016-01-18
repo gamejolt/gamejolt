@@ -2,7 +2,7 @@
 	<div class="col-lg-8">
 		<h2 class="section-header">{{ ::'dash.games.overview.todo_heading' | translate }}</h2>
 
-		<p class="small" translate="dash.games.overview.todo_lead_html" translate-values="{ completion: overviewCtrl.todoPercentage }"></p>
+		<p class="small" translate translate-scope="{ completion: overviewCtrl.todoPercentage }">dash.games.overview.todo_lead_html</p>
 
 		<div class="progress progress-thin">
 			<div class="progress-bar"
@@ -17,7 +17,7 @@
 		-->
 		<div ng-if="todoPercentage != 100">
 
-			<div class="alert alert-info" ng-if="manageCtrl.game.is_published" translate="dash.games.overview.todo_additional_html"></div>
+			<div class="alert alert-info" ng-if="manageCtrl.game.is_published" translate>dash.games.overview.todo_additional_html</div>
 
 			<table class="table">
 				<tbody>
@@ -56,17 +56,23 @@
 
 			<!-- Game isn't ready to publish yet. -->
 			<div class="alert alert-warning" ng-if="!overviewCtrl.isPublishable">
-				<p translate="dash.games.overview.{{ manageCtrl.game.development_status == Game.DEVELOPMENT_STATUS_WIP ? 'todo_info_wip_html' : 'todo_info_html' }}" translate-values="{
+				<p ng-if="manageCtrl.game.development_status == Game.DEVELOPMENT_STATUS_WIP" translate translate-scope="{
 					thumbnailUrl: $state.href( '^.thumbnail' ),
 					maturityUrl: $state.href( '^.maturity' ),
 					buildsUrl: $state.href( '^.^.packages' ),
-				}"></p>
+				}">dash.games.overview.todo_info_wip_html</p>
+
+				<p ng-if="manageCtrl.game.development_status != Game.DEVELOPMENT_STATUS_WIP" translate translate-scope="{
+					thumbnailUrl: $state.href( '^.thumbnail' ),
+					maturityUrl: $state.href( '^.maturity' ),
+					buildsUrl: $state.href( '^.^.packages' ),
+				}">dash.games.overview.todo_info_html</p>
 			</div>
 
 			<!-- Ready to publish! -->
 			<div ng-if="overviewCtrl.isPublishable">
 				<div class="alert alert-success" ng-if="!overviewCtrl.hasBuildsProcessing">
-					<p translate="dash.games.overview.todo_info_ready_html"></p>
+					<p translate>dash.games.overview.todo_info_ready_html</p>
 				</div>
 
 				<!-- Show a little message if they still have builds being processed. -->
@@ -79,11 +85,11 @@
 					</div>
 					<p>
 						<span class="jolticon jolticon-notice"></span>
-						<span translate="dash.games.overview.todo_info_builds_processing_html"></span>
+						<span translate>dash.games.overview.todo_info_builds_processing_html</span>
 					</p>
 				</div>
 
-				<button class="i-button block" gj-tooltip="$translate.instant( 'dash.games.overview.todo_info_publish_button_tooltip' )" ng-click="overviewCtrl.publish()">
+				<button class="i-button block" gj-tooltip="{{ 'dash.games.overview.todo_info_publish_button_tooltip' | translate }}" ng-click="overviewCtrl.publish()">
 					<span class="jolticon jolticon-active"></span>
 					{{ ::'dash.games.overview.todo_info_publish_button' | translate }}
 				</button>
@@ -178,7 +184,7 @@
 		<h2>{{ ::'dash.games.overview.activity_heading' | translate }}</h2>
 
 		<div ng-if="!overviewCtrl.notifications.length">
-			<p class="small text-muted" translate="dash.games.overview.activity_none_html"></p>
+			<p class="small text-muted" translate>dash.games.overview.activity_none_html</p>
 		</div>
 
 		<div ng-if="overviewCtrl.notifications.length">

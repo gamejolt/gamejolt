@@ -1,14 +1,22 @@
 <!-- Buttons / Controls -->
 <a class="big"
+	ng-if="!gameCtrl.libraryGame"
 	ng-click="gameCtrl.onFollowClick()"
-	ng-class="{ 'cake-button': Screen.isXs, 'i-button': !Screen.isXs, active: gameCtrl.libraryGame }"
-	gj-tooltip="!gameCtrl.libraryGame
-		? $translate.instant( 'library.followed.follow_game_button_tooltip' )
-		: $translate.instant( 'library.followed.unfollow_game_button_tooltip' )"
+	ng-class="{ 'cake-button': Screen.isXs, 'i-button': !Screen.isXs }"
+	gj-tooltip="{{ 'library.followed.follow_game_button_tooltip' | translate }}"
 	>
+	<span class="jolticon jolticon-subscribe" ng-class="{ big: Screen.isXs }"></span>
+	{{ 'library.followed.follow_game_button' | translate }}
+</a>
 
-	<span class="jolticon" ng-class="{ big: Screen.isXs, 'jolticon-subscribed': gameCtrl.libraryGame, 'jolticon-subscribe': !gameCtrl.libraryGame }"></span>
-	{{ !gameCtrl.libraryGame ? $translate.instant( 'library.followed.follow_game_button' ) : $translate.instant( 'library.followed.unfollow_game_button' ) }}
+<a class="big active"
+	ng-if="gameCtrl.libraryGame"
+	ng-click="gameCtrl.onFollowClick()"
+	ng-class="{ 'cake-button': Screen.isXs, 'i-button': !Screen.isXs }"
+	gj-tooltip="{{ 'library.followed.unfollow_game_button_tooltip' | translate }}"
+	>
+	<span class="jolticon jolticon-subscribed" ng-class="{ big: Screen.isXs }"></span>
+	{{ 'library.followed.unfollow_game_button' | translate }}
 </a>
 
 <!--

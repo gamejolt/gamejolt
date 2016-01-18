@@ -27,11 +27,17 @@
 				<div class="post-item-time">
 					<a class="link-unstyled"
 						ui-sref="discover.games.view.news.view( { id: post.game_id, slug: post.game.slug, articleSlug: post.slug, articleId: post.id, '#': 'comments' } )"
-						ng-switch="::post.comments_count || 0"
 						>
-						<span ng-switch-when="0">{{ ::'news.list.post_comments_none' | translate }}</span>
-						<span ng-switch-when="1">{{ ::'news.list.post_comments_one' | translate }}</span>
-						<span ng-switch-default>{{ ::'news.list.post_comments_other' | translate:{ count: post.comments_count } }}</span>
+						<span ng-if="::!post.comments_count" translate>
+							news.list.post_comments_none
+						</span>
+						<span ng-if="::post.comments_count"
+							translate
+							translate-n="post.comments_count"
+							translate-plural="news.list.post_comments"
+							>
+							news.list.post_comments
+						</span>
 					</a>
 					<span class="dot-separator"></span>
 					<span am-time-ago="::post.posted_on"></span>

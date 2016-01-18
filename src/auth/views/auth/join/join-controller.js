@@ -1,14 +1,8 @@
-angular.module( 'App.Views' ).controller( 'Auth.JoinCtrl', function( $state, Translate, App, User_LinkedAccounts )
+angular.module( 'App.Views' ).controller( 'Auth.JoinCtrl', function( $state, App, User_LinkedAccounts, gettextCatalog )
 {
 	var _this = this;
 
-	Translate.pageTitle( 'auth.join.page_title' );
-
-	this.joinMessage = '';
-	Translate.randomMessage( 'auth.join.join_message_html' ).then( function( message )
-	{
-		_this.joinMessage = message;
-	} );
+	App.title = gettextCatalog.getString( 'auth.join.page_title' );
 
 	this.onJoined = function( formModel )
 	{

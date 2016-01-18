@@ -10,13 +10,12 @@ angular.module( 'App.Score.Overview' ).directive( 'gjScoreOverview', function()
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $scope, $translate, Api, App, Screen, Game_ScoreTable, User_GameScore, Popover )
+		controller: function( $scope, Api, App, Screen, Game_ScoreTable, User_GameScore, Popover )
 		{
 			var _this = this;
 
 			$scope.App = App;
 			$scope.Screen = Screen;
-			$scope.$translate = $translate;
 
 			if ( !this.size ) {
 				this.size = 'full';
