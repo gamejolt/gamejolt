@@ -1,15 +1,16 @@
 <div class="rating-widget" ng-class="{ 'rating-widget-big': ctrl.isBig }">
 
 	<span class="rating-widget-icons">
-		<span class="rating-widget-icon jolticon jolticon-gamejolt"
-			ng-repeat="i in [ 1, 2, 3, 4, 5 ]"
-			ng-class="{ hover: ctrl.hovered >= i, selected: ctrl.gameRating && ctrl.gameRating.rating >= i, big: ctrl.isBig }"
-			ng-mouseenter="ctrl.hover( i )"
-			ng-mouseleave="ctrl.hover()"
-			ng-click="ctrl.select( i )"
-			gj-tooltip="{{ ctrl.labels[ (i - 1) ] }}"
-			gj-track-event="game-rating:rate:{{ i }}"
-			></span>
+		<span ng-repeat="i in [ 1, 2, 3, 4, 5 ]">
+			<span class="rating-widget-icon jolticon jolticon-gamejolt"
+				ng-class="{ hover: ctrl.hovered >= i, selected: ctrl.gameRating && ctrl.gameRating.rating >= i, big: ctrl.isBig }"
+				ng-mouseenter="ctrl.hover( i )"
+				ng-mouseleave="ctrl.hover()"
+				ng-click="ctrl.select( i )"
+				gj-tooltip="{{ ctrl.labels[ (i - 1) ] }}"
+				gj-track-event="game-rating:rate:{{ i }}"
+				></span>
+		</span>
 	</span>
 
 	<span class="rating-widget-clear">
