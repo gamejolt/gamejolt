@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameTrophy', function( $translate, Translate, Form, Api, Game_Trophy, ModalConfirm )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameTrophy', function( Form, Api, Game_Trophy, ModalConfirm, gettextCatalog )
 {
 	var form = new Form( {
 		model: 'Game_Trophy',
@@ -25,10 +25,10 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameTrophy', 
 		}
 
 		scope.difficultyOptions = [
-			{ label: $translate.instant( 'trophies.bronze' ), value: Game_Trophy.DIFFICULTY_BRONZE },
-			{ label: $translate.instant( 'trophies.silver' ), value: Game_Trophy.DIFFICULTY_SILVER },
-			{ label: $translate.instant( 'trophies.gold' ), value: Game_Trophy.DIFFICULTY_GOLD },
-			{ label: $translate.instant( 'trophies.platinum' ), value: Game_Trophy.DIFFICULTY_PLATINUM },
+			{ label: gettextCatalog.getString( 'trophies.bronze' ), value: Game_Trophy.DIFFICULTY_BRONZE },
+			{ label: gettextCatalog.getString( 'trophies.silver' ), value: Game_Trophy.DIFFICULTY_SILVER },
+			{ label: gettextCatalog.getString( 'trophies.gold' ), value: Game_Trophy.DIFFICULTY_GOLD },
+			{ label: gettextCatalog.getString( 'trophies.platinum' ), value: Game_Trophy.DIFFICULTY_PLATINUM },
 		];
 
 		// If we're adding, set some defaults.
@@ -50,7 +50,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameTrophy', 
 
 		scope.clearImage = function()
 		{
-			ModalConfirm.show( $translate.instant( 'dash.games.trophies.form.clear_image_confirmation' ) )
+			ModalConfirm.show( gettextCatalog.getString( 'dash.games.trophies.form.clear_image_confirmation' ) )
 				.then( function()
 				{
 					// It's important we save on the base model!

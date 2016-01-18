@@ -6,7 +6,7 @@
 					<a
 						ui-sref="discover.games.view.scores.list( { tableId: table.id } )"
 						ng-class="{ active: listCtrl.scoreTable.id == table.id }"
-						gj-tooltip="table.description"
+						gj-tooltip="{{ table.description }}"
 						gj-no-auto-scroll
 						>
 						{{ ::table.name }}

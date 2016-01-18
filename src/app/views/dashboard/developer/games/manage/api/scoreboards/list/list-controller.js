@@ -1,8 +1,8 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.Scoreboards.ListCtrl', function( $scope, $translate, Translate, Game_ScoreTable, ModalConfirm, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.Scoreboards.ListCtrl', function( $scope, App, Game_ScoreTable, ModalConfirm, gettextCatalog, payload )
 {
 	var _this = this;
 
-	Translate.pageTitle( 'dash.games.scoreboards.page_title', { game: $scope.manageCtrl.game.title } );
+	App.title = gettextCatalog.getString( 'dash.games.scoreboards.page_title', { game: $scope.manageCtrl.game.title } );
 
 	$scope.Game_ScoreTable = Game_ScoreTable;
 
@@ -45,7 +45,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.
 
 	function removeTable( table )
 	{
-		ModalConfirm.show( $translate.instant( 'dash.games.scoreboards.remove_confirmation' ) )
+		ModalConfirm.show( gettextCatalog.getString( 'dash.games.scoreboards.remove_confirmation' ) )
 			.then( function()
 			{
 				return table.$remove();

@@ -1,38 +1,38 @@
 <form gj-form="formModel" name="scoreTableForm">
 
-	<form-group name="name" label="{{ ::'dash.games.scoreboard.form.name_label' | translate }}">
+	<form-group name="name" label="{{ 'dash.games.scoreboard.form.name_label' | translate }}">
 		<input form-control="text" maxlength="50">
 		<control-errors></control-errors>
 	</form-group>
 
-	<form-group name="description" optional="true" label="{{ ::'dash.games.scoreboard.form.description_label' | translate }}">
+	<form-group name="description" optional="true" label="{{ 'dash.games.scoreboard.form.description_label' | translate }}">
 		<textarea form-control rows="5" maxlength="250"></textarea>
 		<control-errors></control-errors>
 	</form-group>
 
-	<form-group name="allow_guest_scores" label="{{ ::'dash.games.scoreboard.form.guest_label' | translate }}">
-		<p class="help-block">{{ ::'dash.games.scoreboard.form.guest_help' | translate }}</p>
-		<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ ::'dash.forms.yes' | translate }}" toggle-switch-off-text="{{ ::'dash.forms.no' | translate }}"></gj-toggle-switch>
+	<form-group name="allow_guest_scores" label="{{ 'dash.games.scoreboard.form.guest_label' | translate }}">
+		<p class="help-block">{{ 'dash.games.scoreboard.form.guest_help' | translate }}</p>
+		<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'dash.forms.yes' | translate }}" toggle-switch-off-text="{{ 'dash.forms.no' | translate }}"></gj-toggle-switch>
 	</form-group>
 
-	<form-group name="unique_scores" label="{{ ::'dash.games.scoreboard.form.unique_label' | translate }}">
-		<p class="help-block">{{ ::'dash.games.scoreboard.form.unique_help' | translate }}</p>
-		<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ ::'dash.forms.yes' | translate }}" toggle-switch-off-text="{{ ::'dash.forms.no' | translate }}"></gj-toggle-switch>
+	<form-group name="unique_scores" label="{{ 'dash.games.scoreboard.form.unique_label' | translate }}">
+		<p class="help-block">{{ 'dash.games.scoreboard.form.unique_help' | translate }}</p>
+		<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'dash.forms.yes' | translate }}" toggle-switch-off-text="{{ 'dash.forms.no' | translate }}"></gj-toggle-switch>
 	</form-group>
 
-	<form-group name="scores_sorting_direction" label="{{ ::'dash.games.scoreboard.form.direction_label' | translate }}">
+	<form-group name="scores_sorting_direction" label="{{ 'dash.games.scoreboard.form.direction_label' | translate }}">
 		<div class="radio">
 			<label>
 				<input form-control="radio" ng-value="Game_ScoreTable.SORTING_DIRECTION_DESC">
-				{{ ::'dash.games.scoreboard.form.desc_label' | translate }} <br>
-				<span class="help-inline">{{ ::'dash.games.scoreboard.form.desc_help' | translate }}</span>
+				{{ 'dash.games.scoreboard.form.desc_label' | translate }} <br>
+				<span class="help-inline">{{ 'dash.games.scoreboard.form.desc_help' | translate }}</span>
 			</label>
 		</div>
 		<div class="radio">
 			<label>
 				<input form-control="radio" ng-value="Game_ScoreTable.SORTING_DIRECTION_ASC">
-				{{ ::'dash.games.scoreboard.form.asc_label' | translate }} <br>
-				<span class="help-inline">{{ ::'dash.games.scoreboard.form.asc_help' | translate }}</span>
+				{{ 'dash.games.scoreboard.form.asc_label' | translate }} <br>
+				<span class="help-inline">{{ 'dash.games.scoreboard.form.asc_help' | translate }}</span>
 			</label>
 		</div>
 	</form-group>

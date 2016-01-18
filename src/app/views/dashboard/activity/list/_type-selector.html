@@ -14,9 +14,9 @@
 			<span class="jolticon jolticon-chevron-right" ng-show="listCtrl.filter === notificationType.key"></span>
 		</div>
 
-		{{ ::'notifications.' + notificationType.translationKey | translate }}
+		{{ notificationType.label }}
 
-		<span class="tag tag-pink" gj-tooltip="$translate.instant( 'notifications.unread_tooltip', { count: listCtrl.unreadCounts[ notificationType.key ] } )">{{ listCtrl.unreadCounts[ notificationType.key ] | number }}</span>
+		<span class="tag tag-pink" tooltip="{{ listCtrl.getUnreadTooltip( listCtrl.unreadCounts[ notificationType.key ] ) }}">{{ listCtrl.unreadCounts[ notificationType.key ] | number }}</span>
 	</a>
 
 </div>

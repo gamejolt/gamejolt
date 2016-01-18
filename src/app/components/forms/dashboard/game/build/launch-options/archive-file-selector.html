@@ -1,11 +1,11 @@
 <div class="modal-body">
-	<h2 class="modal-title">{{ ::'dash.games.releases.builds.launch_options.file_selector.heading' | translate }}</h2>
+	<h2 class="modal-title" translate>dash.games.releases.builds.launch_options.file_selector.heading</h2>
 
 	<gj-loading ng-if="modalCtrl.isLoading" loading-big="true" class="loading-centered"></gj-loading>
 
 	<div ng-if="!modalCtrl.isLoading && modalCtrl.files.length">
 		<div class="form-group">
-			<input class="form-control" type="search" ng-attr-placeholder="{{ ::'dash.games.releases.builds.launch_options.file_selector.filter_placeholder' | translate }}" ng-model="modalCtrl.filter">
+			<input class="form-control" type="search" ng-attr-placeholder="{{ 'dash.games.releases.builds.launch_options.file_selector.filter_placeholder' | translate }}" ng-model="modalCtrl.filter">
 		</div>
 
 		<div class="list-group">
@@ -18,13 +18,13 @@
 		</div>
 	</div>
 
-	<div class="alert alert-warning" ng-if="!modalCtrl.isLoading && !modalCtrl.files.length" translate="dash.games.releases.builds.launch_options.file_selector.no_files_html"></div>
+	<div class="alert alert-warning" ng-if="!modalCtrl.isLoading && !modalCtrl.files.length" translate>dash.games.releases.builds.launch_options.file_selector.no_files_html</div>
 
 </div>
 
 <div class="modal-footer">
 	<button class="i-button warning" ng-click="modalCtrl.close()">
 		<span class="jolticon jolticon-remove"></span>
-		{{ ::'dash.games.releases.builds.launch_options.file_selector.cancel_button' | translate }}
+		<span translate>dash.games.releases.builds.launch_options.file_selector.cancel_button</span>
 	</button>
 </div>

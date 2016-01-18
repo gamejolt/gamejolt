@@ -10,7 +10,7 @@
 		ng-class="{ disabled: !ctrl.canInstall, 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small }"
 		ng-mousedown="$event.preventDefault()"
 		ng-click="$event.stopPropagation(); ctrl.install()"
-		gj-tooltip="ctrl.installTooltip"
+		gj-tooltip="{{ ctrl.installTooltip }}"
 		>
 		<span class="jolticon jolticon-download-box"></span>
 		Install
@@ -77,7 +77,7 @@
 				ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small }"
 				ng-mousedown="$event.preventDefault()"
 				ng-click="$event.stopPropagation(); ctrl.cancel()"
-				gj-tooltip="'Cancel Installation'"
+				gj-tooltip="Cancel Installation"
 				>
 				<span class="jolticon jolticon-remove"></span>
 			</button>
@@ -94,7 +94,7 @@
 					ng-if="!ctrl.localPackage.isRunning()"
 					ng-mousedown="$event.preventDefault()"
 					ng-click="$event.stopPropagation(); ctrl.launch( ctrl.localPackage )"
-					gj-tooltip="ctrl.localPackage.isRunning() ? 'This game is currently running.' : undefined"
+					gj-tooltip="{{ ctrl.localPackage.isRunning() ? 'This game is currently running.' : undefined }}"
 					>
 					<span class="jolticon jolticon-play"></span>
 					Launch

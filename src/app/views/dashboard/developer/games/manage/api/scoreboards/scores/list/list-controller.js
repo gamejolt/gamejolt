@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.Scoreboards.Scores.ListCtrl', function(
-	$scope, $state, Translate, AutoScroll, Game_ScoreTable, User_GameScore, payload )
+	$scope, $state, App, AutoScroll, Game_ScoreTable, User_GameScore, gettextCatalog, payload )
 {
 	var _this = this;
 
@@ -10,7 +10,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.
 
 	this.selectedTable = _.find( this.scoreTables, { id: this.scoreTable.id } );
 
-	Translate.pageTitle( 'dash.games.scores.list.page_title', {
+	App.title = gettextCatalog.getString( 'dash.games.scores.list.page_title', {
 		game: $scope.manageCtrl.game.title,
 		table: this.scoreTable.name,
 	} );

@@ -1,6 +1,6 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.WithdrawFundsCtrl', function( $state, Growls, Translate, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.WithdrawFundsCtrl', function( $state, Growls, App, gettextCatalog, payload )
 {
-	Translate.pageTitle( 'dash.funds.withdraw.page_title' );
+	App.title = gettextCatalog.getString( 'dash.funds.withdraw.page_title' );
 
 	this.minAmount = payload.minAmount || 0;
 	this.revenueTotal = payload.revenueTotal || 0;
@@ -13,7 +13,10 @@ angular.module( 'App.Views' ).controller( 'Dashboard.WithdrawFundsCtrl', functio
 
 	this.onSubmit = function( response )
 	{
-		Translate.growl( 'success', 'dash.funds.withdraw.success' );
+		Growls.success(
+			gettextCatalog.getString( 'dash.funds.withdraw.success_growl' ),
+			gettextCatalog.getString( 'dash.funds.withdraw.success_growl_title' )
+		);
 		$state.go( '^.overview' );
 	};
 } );

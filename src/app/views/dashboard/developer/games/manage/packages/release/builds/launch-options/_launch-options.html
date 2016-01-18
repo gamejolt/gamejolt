@@ -1,11 +1,11 @@
-<div class="alert alert-warning" ng-if="build.hasError( Game_Build.ERROR_LAUNCH_OPTIONS )" translate="dash.games.releases.builds.launch_options.incomplete_alert_html"></div>
+<div class="alert alert-warning" ng-if="build.hasError( Game_Build.ERROR_LAUNCH_OPTIONS )" translate>dash.games.releases.builds.launch_options.incomplete_alert_html</div>
 
 <!--
 	Archive files need to be filled in.
 -->
 <div ng-if="build.primary_file.is_archive">
 	<div class="alert fill-white">
-		<div translate="dash.games.releases.builds.launch_options.archive_info_html"></div>
+		<div translate>dash.games.releases.builds.launch_options.archive_info_html</div>
 		<br>
 		<a class="link-help" href="https://help.gamejolt.com/dev-packages#launch-options" target="_blank">{{ ::'dash.games.releases.builds.launch_options.page_help_link' | translate }}</a>
 	</div>
@@ -25,5 +25,5 @@
 	Standalone executables just have information.
 -->
 <div ng-if="!build.primary_file.is_archive">
-	<div class="alert fill-white sans-margin-bottom" translate="dash.games.releases.builds.launch_options.standalone_info_html"></div>
+	<div class="alert fill-white sans-margin-bottom" translate>dash.games.releases.builds.launch_options.standalone_info_html</div>
 </div>

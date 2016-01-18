@@ -1,6 +1,6 @@
-angular.module( 'App.Views' ).controller( 'Auth.Join.AlmostCtrl', function( $state, $scope, Translate, Api, App )
+angular.module( 'App.Views' ).controller( 'Auth.Join.AlmostCtrl', function( $state, $scope, Api, App, gettextCatalog )
 {
-	Translate.pageTitle( 'auth.join.almost.page_title' );
+	App.title = gettextCatalog.getString( 'auth.join.almost.page_title' );
 
 	this.onAuthorized = function()
 	{

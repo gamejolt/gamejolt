@@ -1,9 +1,9 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Packages.Package.ReleasesCtrl', function(
-	$scope, $state, Translate, App, Game_Release, AutoScroll )
+	$scope, $state, App, Game_Release, AutoScroll, gettextCatalog )
 {
 	$scope.Game_Release = Game_Release;
 
-	Translate.pageTitle( 'dash.games.packages.manage.releases.page_title', {
+	App.title = gettextCatalog.getString( 'dash.games.packages.manage.releases.page_title', {
 		game: $scope.manageCtrl.game.title,
 		package: ($scope.packageCtrl.package.title || $scope.manageCtrl.game.title),
 	} );

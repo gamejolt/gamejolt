@@ -1,6 +1,6 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.OverviewCtrl', function( $scope, $interval, $state, Translate, Game, Notification, Fireside_Post, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.OverviewCtrl', function( $scope, $interval, $state, App, Game, Notification, Fireside_Post, gettextCatalog, payload )
 {
-	Translate.pageTitle( 'dash.overview.page_title' );
+	App.title = gettextCatalog.getString( 'dash.overview.page_title' );
 
 	// Keep them undefined if not on the payload.
 	// This will ensure that if they aren't an account with revenue, it won't show the revenue widget.
@@ -32,4 +32,14 @@ angular.module( 'App.Views' ).controller( 'Dashboard.OverviewCtrl', function( $s
 			this.isFullyIntegrated = false;
 		}
 	}, this );
+
+	this.integrationTranslations = {
+		'played_game': gettextCatalog.getString( 'dash.integrate.played_game_html' ),
+		'rated_game': gettextCatalog.getString( 'dash.integrate.rated_game_html' ),
+		'got_trophy': gettextCatalog.getString( 'dash.integrate.got_trophy_html' ),
+		'got_score': gettextCatalog.getString( 'dash.integrate.got_score_html' ),
+		'has_friend': gettextCatalog.getString( 'dash.integrate.has_friend_html' ),
+		'has_facebook': gettextCatalog.getString( 'dash.integrate.has_facebook_html' ),
+		'has_twitter': gettextCatalog.getString( 'dash.integrate.has_twitter_html' ),
+	};
 } );

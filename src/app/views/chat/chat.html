@@ -19,7 +19,7 @@
 					<a class="link-unstyled" ng-click="chatCtrl.enterRoom( room )">
 						<strong class="text-muted">#</strong><strong>{{ ::room.title }}</strong>
 					</a>
-					<span class="badge" gj-tooltip="chatCtrl.userCounts[ room.id ].count + ' user(s) in room'">
+					<span class="badge" tooltip="{{ chatCtrl.userCounts[ room.id ].count | number }} user(s) in room">
 						{{ ::chatCtrl.userCounts[ room.id ].count }}
 					</span>
 				</p>

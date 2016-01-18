@@ -11,6 +11,7 @@ angular.module( 'App', [
 
 	// GJ lib.
 	'gj.Translate',
+	'gj.Translate.LangSelector',
 	'gj.Environment',
 	'gj.Api',
 	'gj.Payload',
@@ -30,6 +31,7 @@ angular.module( 'App', [
 	'gj.ExpandWhen',
 
 	'gj.Tooltip',
+	'gj.Popover',
 	'gj.Growls',
 	'gj.Scroll.AutoScroll',
 
@@ -52,7 +54,7 @@ angular.module( 'App', [
 	// Client.
 	/* inject client:auth:modules */
 ] )
-.config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $sceDelegateProvider )
+.config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $sceDelegateProvider, TranslateProvider )
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
 		'self',
@@ -90,4 +92,25 @@ angular.module( 'App', [
 		$compileProvider.aHrefSanitizationWhitelist( /^\s*(https?|ftp|mailto|tel|file|app):/ );
 		$compileProvider.imgSrcSanitizationWhitelist( /^\s*((https?|ftp|file|blob|app):|data:image\/)/ );
 	}
+
+	// Can't include in a foreach. Have to list out so that the revisioner for filenames will pull it.
+	var languages = {
+		auth: {
+			'en': '/translations/en/auth.json',
+			'en_US': '/translations/en_US/auth.json',
+			'nl': '/translations/nl/auth.json',
+			'ro': '/translations/ro/auth.json',
+			'de': '/translations/de/auth.json',
+			'es': '/translations/es/auth.json',
+			'fr': '/translations/fr/auth.json',
+			'ru': '/translations/ru/auth.json',
+			'sv': '/translations/sv/auth.json',
+			'tr': '/translations/tr/auth.json',
+			'pt_BR': '/translations/pt_BR/auth.json',
+			'fi': '/translations/fi/auth.json',
+			'nb': '/translations/nb/auth.json',
+		},
+	};
+
+	TranslateProvider.addLanguageUrls( languages );
 } );

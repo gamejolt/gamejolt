@@ -79,11 +79,11 @@
 			ng-click="ctrl.close()"
 			>
 			<span class="jolticon jolticon-notifications"></span>
-			<span ng-if="ctrl.leftoverCount == 1">
-				{{ ::'notifications.popover.more_notifications_one_button' | translate }}
-			</span>
-			<span ng-if="ctrl.leftoverCount > 1">
-				{{ ::'notifications.popover.more_notifications_other_button' | translate:{ count: ctrl.leftoverCount } }}
+			<span translate
+				translate-n="ctrl.leftoverCount"
+				translate-plural="notifications.popover.more_notifications_button"
+				>
+				notifications.popover.more_notifications_button
 			</span>
 		</a>
 	</div>

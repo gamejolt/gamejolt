@@ -1,10 +1,14 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.AddCtrl', function( $state, Translate, Growls, Game )
+angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.AddCtrl', function( $state, App, gettextCatalog, Growls, Game )
 {
-	Translate.pageTitle( 'dash.games.add.page_title' );
+	App.title = gettextCatalog.getString( 'dash.games.add.page_title' );
 
 	this.onSubmit = function( formModel )
 	{
-		Translate.growl( 'success', 'dash.games.add.add', { _sticky: true } );
+		Growls.success( {
+			message: gettextCatalog.getString( 'dash.games.add.add_growl' ),
+			title: gettextCatalog.getString( 'dash.games.add.add_growl_title' ),
+			sticky: true,
+		} );
 
 		$state.go( 'dashboard.developer.games.manage.game.overview', { id: formModel.id } );
 	};
