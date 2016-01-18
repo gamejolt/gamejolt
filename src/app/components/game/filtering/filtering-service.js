@@ -4,42 +4,42 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 
 	Game_Filtering_Container.filterDefinitions = {
 		os: {
-			label: gettextCatalog.getString[ 'games.filtering.os' ],
+			label: gettextCatalog.getString( 'games.filtering.os' ),
 			type: 'array',
 			options: {
-				windows: gettextCatalog.getString[ 'games.filtering.os_windows' ],
-				mac: gettextCatalog.getString[ 'games.filtering.os_mac' ],
-				linux: gettextCatalog.getString[ 'games.filtering.os_linux' ],
-				other: gettextCatalog.getString[ 'games.filtering.os_other' ],
+				windows: gettextCatalog.getString( 'games.filtering.os_windows' ),
+				mac: gettextCatalog.getString( 'games.filtering.os_mac' ),
+				linux: gettextCatalog.getString( 'games.filtering.os_linux' ),
+				other: gettextCatalog.getString( 'games.filtering.os_other' ),
 			}
 		},
 		browser: {
-			label: gettextCatalog.getString[ 'games.filtering.browser' ],
+			label: gettextCatalog.getString( 'games.filtering.browser' ),
 			type: 'array',
 			options: {
-				html: gettextCatalog.getString[ 'games.filtering.browser_html' ],
-				flash: gettextCatalog.getString[ 'games.filtering.browser_flash' ],
-				unity: gettextCatalog.getString[ 'games.filtering.browser_unity' ],
-				applet: gettextCatalog.getString[ 'games.filtering.browser_applet' ],
-				silverlight: gettextCatalog.getString[ 'games.filtering.browser_silverlight' ],
+				html: gettextCatalog.getString( 'games.filtering.browser_html' ),
+				flash: gettextCatalog.getString( 'games.filtering.browser_flash' ),
+				unity: gettextCatalog.getString( 'games.filtering.browser_unity' ),
+				applet: gettextCatalog.getString( 'games.filtering.browser_applet' ),
+				silverlight: gettextCatalog.getString( 'games.filtering.browser_silverlight' ),
 			}
 		},
 		maturity: {
-			label: gettextCatalog.getString[ 'games.filtering.maturity' ],
+			label: gettextCatalog.getString( 'games.filtering.maturity' ),
 			type: 'array',
 			options: {
-				everyone: gettextCatalog.getString[ 'games.filtering.maturity_everyone' ],
-				teen: gettextCatalog.getString[ 'games.filtering.maturity_teen' ],
-				adult: gettextCatalog.getString[ 'games.filtering.maturity_adult' ],
+				everyone: gettextCatalog.getString( 'games.filtering.maturity_everyone' ),
+				teen: gettextCatalog.getString( 'games.filtering.maturity_teen' ),
+				adult: gettextCatalog.getString( 'games.filtering.maturity_adult' ),
 			}
 		},
 		status: {
-			label: gettextCatalog.getString[ 'games.filtering.status' ],
+			label: gettextCatalog.getString( 'games.filtering.status' ),
 			type: 'array',
 			options: {
-				complete: gettextCatalog.getString[ 'games.filtering.status_complete' ],
-				wip: gettextCatalog.getString[ 'games.filtering.status_wip' ],
-				canceled: gettextCatalog.getString[ 'games.filtering.status_canceled' ],
+				complete: gettextCatalog.getString( 'games.filtering.status_complete' ),
+				wip: gettextCatalog.getString( 'games.filtering.status_wip' ),
+				canceled: gettextCatalog.getString( 'games.filtering.status_canceled' ),
 			}
 		},
 		query: {
