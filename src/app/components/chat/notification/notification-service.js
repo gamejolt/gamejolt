@@ -9,7 +9,7 @@ angular.module( 'App.Chat' )
 
 	// How long to wait before showing the friend online/offline message.
 	// This allows us to not flash online/offline messages when they refresh browser.
-	var FRIEND_CONNECTION_WAIT = 5000;
+	var FRIEND_CONNECTION_WAIT = 8000;
 
 	this.friendConnectionPromises = {};
 	this.friendConnectionStates = {};
