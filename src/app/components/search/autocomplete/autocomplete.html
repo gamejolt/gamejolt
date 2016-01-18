@@ -12,14 +12,14 @@
 		<!-- View All -->
 		<div class="list-group">
 			<a class="list-group-item" ng-class="{ active: ctrl.selected === 0 }" ng-click="ctrl.viewAll()">
-				{{ ::'search.autocomplete.show_all' | translate }}
+				{{ 'search.autocomplete.show_all' | translate }}
 			</a>
 		</div>
 
 		<!-- Installed Games -->
 		<div class="popover-heading" ng-if="ctrl.libraryGames.length">
 			<span class="jolticon jolticon-download-box"></span>
-			{{ ::'search.autocomplete.installed_heading' | translate }}
+			{{ 'search.autocomplete.installed_heading' | translate }}
 		</div>
 		<div class="list-group thin" ng-if="ctrl.libraryGames.length">
 			<a class="list-group-item"
@@ -45,7 +45,7 @@
 		<!-- Games -->
 		<div class="popover-heading" ng-if="ctrl.games.length">
 			<span class="jolticon jolticon-game"></span>
-			{{ ::'search.autocomplete.games_heading' | translate }}
+			{{ 'search.autocomplete.games_heading' | translate }}
 		</div>
 		<div class="list-group thin" ng-if="ctrl.games.length">
 			<a class="list-group-item"
@@ -75,7 +75,7 @@
 		<!-- Users -->
 		<div class="popover-heading" ng-if="ctrl.users.length">
 			<span class="jolticon jolticon-user"></span>
-			{{ ::'search.autocomplete.users_heading' | translate }}
+			{{ 'search.autocomplete.users_heading' | translate }}
 		</div>
 		<div class="list-group thin" ng-if="ctrl.users.length">
 			<a class="list-group-item"
@@ -103,7 +103,7 @@
 		</div>
 
 		<div class="alert alert-warning" ng-if="!ctrl.filteredCommands.length">
-			{{ ::'search.autocomplete.no_commands' | translate }}
+			{{ 'search.autocomplete.no_commands' | translate }}
 		</div>
 	</div>
 

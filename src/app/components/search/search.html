@@ -3,13 +3,13 @@
 <form class="search-input-form navbar-form" role="search">
 	<div class="form-group no-animate">
 
-		<label for="search-input-{{ ctrl.id }}" class="sr-only">{{ ::'search.input.placeholder' | translate }}</label>
+		<label for="search-input-{{ ctrl.id }}" class="sr-only">{{ 'search.input.placeholder' | translate }}</label>
 
 		<div class="navbar-form-control" ng-class="{ active: ctrl.isFocused }">
 
 			<input type="search" class="search-input form-control"
 				id="search-input-{{ ctrl.id }}"
-				ng-attr-placeholder="{{ ::'search.input.placeholder' | translate }}"
+				ng-attr-placeholder="{{ 'search.input.placeholder' | translate }}"
 				gj-search-input
 				ng-model="ctrl.query"
 				ng-focus="ctrl.isFocused = true"

@@ -14,10 +14,10 @@
 	popover-on-blur="ctrl.onHide()"
 	>
 
-	<div class="popover-heading">{{ ::'search.recent.popover_heading' | translate }}</div>
+	<div class="popover-heading">{{ 'search.recent.popover_heading' | translate }}</div>
 
 	<div class="alert alert-warning" ng-if="!ctrl.recentSearches.length">
-		{{ ::'search.recent.none' | translate }}
+		{{ 'search.recent.none' | translate }}
 	</div>
 
 	<div ng-if="ctrl.isVisible && ctrl.recentSearches.length">
@@ -38,7 +38,7 @@
 				gj-track-event="search:history:clear"
 				>
 				<span class="jolticon jolticon-remove"></span>
-				{{ ::'search.recent.clear_button' | translate }}
+				{{ 'search.recent.clear_button' | translate }}
 			</a>
 		</div>
 
