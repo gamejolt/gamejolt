@@ -1,33 +1,33 @@
 <form gj-form="formModel" name="joinForm" ng-submit="onSubmit()">
 	<fieldset ng-disabled="!Connection.isOnline">
 
-		<form-group name="email" label="{{ ::'auth.join.email_label' | translate }}" hide-label="true">
+		<form-group name="email" label="{{ 'auth.join.email_label' | translate }}" hide-label="true">
 			<input form-control="email"
 				ng-model-options="{ updateOn: 'blur', debounce: { 'blur': 0 } }"
 				gj-form-validate-availability="/web/auth/check-field-availability/email"
-				ng-attr-placeholder="{{ ::'auth.join.email_label' | translate }}">
+				ng-attr-placeholder="{{ 'auth.join.email_label' | translate }}">
 
 			<control-errors></control-errors>
 		</form-group>
 
-		<form-group name="username" label="{{ ::'auth.join.username_label' | translate }}" hide-label="true">
+		<form-group name="username" label="{{ 'auth.join.username_label' | translate }}" hide-label="true">
 			<input form-control="text"
 				ng-minlength="3"
 				ng-maxlength="30"
 				gj-pattern="username"
 				ng-model-options="{ updateOn: 'blur', debounce: { 'blur': 0 } }"
 				gj-form-validate-availability="/web/auth/check-field-availability/username"
-				ng-attr-placeholder="{{ ::'auth.join.username_label' | translate }}">
+				ng-attr-placeholder="{{ 'auth.join.username_label' | translate }}">
 
 			<control-errors></control-errors>
 		</form-group>
 
-		<form-group name="password" label="{{ ::'auth.join.password_label' | translate }}" hide-label="true">
+		<form-group name="password" label="{{ 'auth.join.password_label' | translate }}" hide-label="true">
 			<input form-control="password"
 				ng-minlength="4"
 				ng-maxlength="30"
 				ng-model-options="{ updateOn: 'blur', debounce: { 'blur': 0 } }"
-				ng-attr-placeholder="{{ ::'auth.join.password_label' | translate }}">
+				ng-attr-placeholder="{{ 'auth.join.password_label' | translate }}">
 
 			<control-errors></control-errors>
 		</form-group>
@@ -36,7 +36,7 @@
 		<div class="form-group">
 			<button gj-form-submit-button class="i-button block">
 				<span class="jolticon jolticon-friends"></span>
-				{{ ::'auth.join.submit_button' | translate }}
+				<span translate>auth.join.submit_button</span>
 			</button>
 		</div>
 

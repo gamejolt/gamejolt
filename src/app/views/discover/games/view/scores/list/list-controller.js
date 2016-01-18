@@ -1,6 +1,6 @@
-angular.module( 'App.Views' ).controller( 'Discover.Games.View.Scores.ListCtrl', function( $scope, $state, $stateParams, Translate, AutoScroll, Game_ScoreTable, User_GameScore, payload )
+angular.module( 'App.Views' ).controller( 'Discover.Games.View.Scores.ListCtrl', function( $scope, $state, $stateParams, App, AutoScroll, Game_ScoreTable, User_GameScore, gettextCatalog, payload )
 {
-	$scope.App.title = Translate.pageTitle( 'game.scores.page_title', { game: $scope.gameCtrl.game.title } );
+	App.title = gettextCatalog.getString( 'game.scores.page_title', { game: $scope.gameCtrl.game.title } );
 
 	this.type = $stateParams.type;
 

@@ -6,13 +6,13 @@
 
 	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
 		<div ng-if="isLoaded">
-			<form-group name="title" label="{{ ::'dash.games.music.form.title_label' | translate }}">
+			<form-group name="title" label="{{ 'dash.games.music.form.title_label' | translate }}">
 				<input form-control="text" ng-maxlength="150">
 				<control-errors></control-errors>
 			</form-group>
 
-			<form-group name="file" label="{{ ::'dash.games.music.form.' + (method == 'add' ? 'add' : 'change') + '_file_label' | translate }}" optional="method == 'edit'">
-				<p class="help-block">{{ ::'dash.games.music.form.file_help_block' | translate:{ maxFilesize: maxFilesize / 1024 / 1024 } }}</p>
+			<form-group name="file" label="{{ getFileLabel() }}" optional="method == 'edit'">
+				<p class="help-block">{{ 'dash.games.music.form.file_help_block' | translate:{ maxFilesize: maxFilesize / 1024 / 1024 } }}</p>
 
 				<gj-form-upload-control
 					form-control="upload"
@@ -21,12 +21,12 @@
 					>
 				</gj-form-upload-control>
 
-				<control-errors label="{{ ::'dash.games.music.form.file_error_label' | translate }}"></control-errors>
+				<control-errors label="{{ 'dash.games.music.form.file_error_label' | translate }}"></control-errors>
 			</form-group>
 
 			<button gj-form-submit-button class="i-button" ng-disabled="!songForm.$valid" ng-click="onSubmit()">
 				<span class="jolticon" ng-class="'jolticon-' + method"></span>
-				{{ ::'dash.games.music.form.submit_button' | translate }}
+				{{ 'dash.games.music.form.submit_button' | translate }}
 			</button>
 		</div>
 	</div>

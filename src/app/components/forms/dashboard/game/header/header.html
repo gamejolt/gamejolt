@@ -6,9 +6,9 @@
 
 	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
 		<div ng-if="isLoaded">
-			<form-group name="file" label="{{ ::'dash.games.header.upload_label' | translate }}">
+			<form-group name="file" label="{{ 'dash.games.header.upload_label' | translate }}">
 
-				<p class="help-block" translate="dash.forms.image_filetype_help_html"></p>
+				<p class="help-block" translate>dash.forms.image_filetype_help_html</p>
 
 				<gj-form-upload-control
 					form-control="upload"
@@ -21,13 +21,13 @@
 					>
 				</gj-form-upload-control>
 
-				<control-errors label="{{ ::'dash.games.header.upload_error_label' | translate }}"></control-errors>
+				<control-errors label="{{ 'dash.games.header.upload_error_label' | translate }}"></control-errors>
 
 			</form-group>
 
 			<button gj-form-submit-button class="i-button" ng-disabled="!headerForm.$valid" ng-click="onSubmit()">
 				<span class="jolticon jolticon-edit"></span>
-				{{ ::'dash.games.header.save_button' | translate }}
+				<span translate>dash.games.header.save_button</span>
 			</button>
 		</div>
 	</div>

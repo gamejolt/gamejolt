@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'ProfileCtrl', function( $scope, Location, User, User_GameSession, User_Friendship, User_FriendshipsHelper, ModalConfirm, Growls, profilePayload )
+angular.module( 'App.Views' ).controller( 'ProfileCtrl', function( $scope, Location, User, User_GameSession, User_Friendship, User_FriendshipsHelper, ModalConfirm, profilePayload )
 {
 	var _this = this;
 

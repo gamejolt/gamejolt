@@ -9,9 +9,8 @@ angular.module( 'App.Trophy.List' ).directive( 'gjTrophyList', function()
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $scope, $translate, Game_Trophy )
+		controller: function( $scope, Game_Trophy )
 		{
-			$scope.$translate = $translate;
 			this.achievedIndexed = Game_Trophy.indexAchieved( this.achieved );
 		}
 	};

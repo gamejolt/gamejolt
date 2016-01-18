@@ -7,7 +7,7 @@
 
 			<span class="tag tag-pink notification-tag anim-fade-enter anim-fade-leave" ng-if="item.notificationCount">{{ item.notificationCount }}</span>
 
-			<div class="minbar-item-thumb" gj-tooltip="item.title">
+			<div class="minbar-item-thumb" gj-tooltip="{{ item.title }}">
 				<img class="img-responsive" ng-src="{{ item.thumb }}" alt="">
 			</div>
 		</a>

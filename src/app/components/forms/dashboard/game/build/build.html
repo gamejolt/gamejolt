@@ -14,53 +14,53 @@
 				<nav class="platform-list inline nav-justified no-animate">
 					<ul>
 						<li>
-							<a ng-class="{ active: tab == 'downloadable' }" ng-click="changeTab( 'downloadable' )">
-								{{ ::'dash.games.builds.form.downloadable_tab' | translate }}
+							<a ng-class="{ active: tab == 'downloadable' }" ng-click="changeTab( 'downloadable' )" translate>
+								dash.games.builds.form.downloadable_tab
 							</a>
 						</li>
 						<li>
-							<a ng-class="{ active: tab == 'browser' }" ng-click="changeTab( 'browser' )">
-								{{ ::'dash.games.builds.form.browser_tab' | translate }}
+							<a ng-class="{ active: tab == 'browser' }" ng-click="changeTab( 'browser' )" translate>
+								dash.games.builds.form.browser_tab
 							</a>
 						</li>
 					</ul>
 				</nav>
 				<br>
 
-				<form-group name="type" label="{{ ::'dash.games.builds.form.browser_label' | translate }}" ng-if="tab == 'browser'">
+				<form-group name="type" label="{{ 'dash.games.builds.form.browser_label' | translate }}" ng-if="tab == 'browser'">
 					<div class="radio">
 						<label>
 							<input form-control="radio" ng-value="Game_Build.TYPE_HTML">
 							HTML <br>
-							<span class="help-inline">{{ ::'dash.games.builds.form.html_help' | translate }}</span>
+							<span class="help-inline" translate>dash.games.builds.form.html_help</span>
 						</label>
 					</div>
 					<div class="radio">
 						<label>
 							<input form-control="radio" ng-value="Game_Build.TYPE_UNITY">
 							Unity <br>
-							<span class="help-inline">{{ ::'dash.games.builds.form.unity_help' | translate }}</span>
+							<span class="help-inline" translate>dash.games.builds.form.unity_help</span>
 						</label>
 					</div>
 					<div class="radio">
 						<label>
 							<input form-control="radio" ng-value="Game_Build.TYPE_FLASH">
 							Flash <br>
-							<span class="help-inline">{{ ::'dash.games.builds.form.flash_help' | translate }}</span>
+							<span class="help-inline" translate>dash.games.builds.form.flash_help</span>
 						</label>
 					</div>
 					<div class="radio">
 						<label>
 							<input form-control="radio" ng-value="Game_Build.TYPE_SILVERLIGHT">
 							Silverlight <br>
-							<span class="help-inline">{{ ::'dash.games.builds.form.silverlight_help' | translate }}</span>
+							<span class="help-inline" translate>dash.games.builds.form.silverlight_help</span>
 						</label>
 					</div>
 					<div class="radio">
 						<label>
 							<input form-control="radio" ng-value="Game_Build.TYPE_APPLET">
 							Java Applet <br>
-							<span class="help-inline">{{ ::'dash.games.builds.form.applet_help' | translate }}</span>
+							<span class="help-inline" translate>dash.games.builds.form.applet_help</span>
 						</label>
 					</div>
 
@@ -72,11 +72,11 @@
 				Can only add files. Can't edit builds anymore.
 				They need to release a new version to do that.
 			-->
-			<form-group name="file" label="{{ ::'dash.games.builds.form.file_label' | translate }}" ng-if="method == 'add'">
+			<form-group name="file" label="{{ 'dash.games.builds.form.file_label' | translate }}" ng-if="method == 'add'">
 
-				<p class="help-block" translate="dash.games.builds.form.file_help_html" translate-values="{ maxFilesize: maxFilesize / 1024 / 1024 }"></p>
+				<p class="help-block" translate translate-scope="{ maxFilesize: maxFilesize / 1024 / 1024 }">dash.games.builds.form.file_help_html</p>
 
-				<p class="help-block" collapse="formModel.type != Game_Build.TYPE_HTML" translate="dash.games.builds.form.file_html_help_html"></p>
+				<p class="help-block" collapse="formModel.type != Game_Build.TYPE_HTML" translate>dash.games.builds.form.file_html_help_html</p>
 
 				<gj-form-upload-control
 					form-control="upload"
@@ -85,16 +85,16 @@
 					>
 				</gj-form-upload-control>
 
-				<control-errors label="{{ ::'dash.games.builds.form.file_error_label' | translate }}"></control-errors>
+				<control-errors label="{{ 'dash.games.builds.form.file_error_label' | translate }}"></control-errors>
 			</form-group>
 
 			<!-- Downloadable Fields -->
 			<div gj-expand-when="formModel.type == Game_Build.TYPE_DOWNLOADABLE">
 
 				<div class="form-group">
-					<label class="control-label">{{ ::'dash.games.builds.form.platforms_label' | translate }}</label>
+					<label class="control-label" translate>dash.games.builds.form.platforms_label</label>
 
-					<p class="help-block" translate="dash.games.builds.form.platforms_help_html"></p>
+					<p class="help-block" translate>dash.games.builds.form.platforms_help_html</p>
 
 					<div class="row" ng-repeat="_platformOptions in platformOptionsChunked">
 						<div class="col-xs-6" ng-class="$index == 0 ? 'col-sm-4' : 'col-sm-8'" ng-repeat="platform in _platformOptions">
@@ -113,7 +113,7 @@
 					</div>
 
 					<div class="clearfix" gj-expand-when="formState.werePlatformsTouched && !checkPlatformChecked()">
-						<p class="help-block error">{{ ::'dash.games.builds.form.no_platforms_error' | translate }}</p>
+						<p class="help-block error" translate>dash.games.builds.form.no_platforms_error</p>
 					</div>
 
 				</div>
@@ -123,17 +123,17 @@
 			<!-- Browser-based fields -->
 			<div gj-expand-when="formModel.isBrowserBased()">
 
-				<p class="help-block" translate="dash.games.builds.form.dimensions_help_html"></p>
+				<p class="help-block" translate>dash.games.builds.form.dimensions_help_html</p>
 
 				<div class="row">
 					<div class="col-sm-6">
-						<form-group name="embed_width" label="{{ ::'dash.games.builds.form.width_label' | translate }}">
+						<form-group name="embed_width" label="{{ 'dash.games.builds.form.width_label' | translate }}">
 							<input form-control="number">
 							<control-errors></control-errors>
 						</form-group>
 					</div>
 					<div class="col-sm-6">
-						<form-group name="embed_height" label="{{ ::'dash.games.builds.form.height_label' | translate }}">
+						<form-group name="embed_height" label="{{ 'dash.games.builds.form.height_label' | translate }}">
 							<input form-control="number">
 							<control-errors></control-errors>
 						</form-group>
@@ -145,7 +145,7 @@
 			<!-- Java Applet fields -->
 			<div gj-expand-when="formModel.type == Game_Build.TYPE_APPLET">
 
-				<form-group name="java_class_name" label="{{ ::'dash.games.builds.form.class_name_label' | translate }}">
+				<form-group name="java_class_name" label="{{ 'dash.games.builds.form.class_name_label' | translate }}">
 					<input form-control="text" ng-maxlength="200">
 					<control-errors></control-errors>
 				</form-group>
@@ -155,12 +155,12 @@
 			<!-- Unity Fields -->
 			<div gj-expand-when="formModel.type == Game_Build.TYPE_UNITY">
 
-				<form-group name="browser_disable_right_click" label="{{ ::'dash.games.builds.form.disable_right_click_label' | translate }}">
-					<p class="help-block">{{ ::'dash.games.builds.form.disable_right_click_help' | translate }}</p>
+				<form-group name="browser_disable_right_click" label="{{ 'dash.games.builds.form.disable_right_click_label' | translate }}">
+					<p class="help-block" translate>dash.games.builds.form.disable_right_click_help</p>
 					<gj-toggle-switch
 						form-control="checkbox"
-						toggle-switch-on-text="{{ ::'dash.forms.yes' | translate }}"
-						toggle-switch-off-text="{{ ::'dash.forms.no' | translate }}"
+						toggle-switch-on-text="{{ 'dash.forms.yes' | translate }}"
+						toggle-switch-off-text="{{ 'dash.forms.no' | translate }}"
 					></gj-toggle-switch>
 				</form-group>
 
@@ -168,7 +168,7 @@
 
 			<div gj-expand-when="formModel.isBrowserBased()">
 				<div class="alert alert-warning">
-					<p>{{ ::'dash.games.builds.form.browser_ads_alert' | translate }}</p>
+					<p translate>dash.games.builds.form.browser_ads_alert</p>
 					<p>
 						gamejolt.com <br>
 						*.gamejolt.com <br>
@@ -180,7 +180,8 @@
 
 			<button gj-form-submit-button class="i-button" ng-disabled="!buildForm.$valid || !checkPlatformChecked()" ng-click="onSubmit()">
 				<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
-				{{ ::'dash.games.builds.form.' + (method == 'add' ? 'upload' : 'save') + '_build_button' | translate }}
+				<span ng-if="::method == 'add'" translate>dash.games.builds.form.upload_build_button</span>
+				<span ng-if="::method == 'edit'" translate>dash.games.builds.form.save_build_button</span>
 			</button>
 		</div>
 	</div>

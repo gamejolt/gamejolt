@@ -1,10 +1,13 @@
-angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Twitter.FinalizeCtrl', function( $state, Translate, App )
+angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Twitter.FinalizeCtrl', function( $state, Growls, App, gettextCatalog )
 {
-	Translate.pageTitle( 'auth.linked_account.twitter.finalize.page_title' );
+	App.title = gettextCatalog.getString( 'auth.linked_account.twitter.finalize.page_title' );
 
 	this.onSubmitted = function()
 	{
-		Translate.growl( 'success', 'auth.linked_account.twitter.created' );
+		Growls.success(
+			gettextCatalog.getString( 'auth.linked_account.twitter.created_growl' ),
+			gettextCatalog.getString( 'auth.linked_account.twitter.created_growl_title' )
+		);
 		App.redirectDashboard();
 	};
 } );

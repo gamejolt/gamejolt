@@ -120,6 +120,10 @@ var config = {
 		'auth'
 	],
 	translations: 'site-translations',
+	translationSections: [
+		'auth',
+		'dash'
+	],
 };
 
 require( './src/lib/gj-lib-client/gulp/tasks/common.js' )( config );

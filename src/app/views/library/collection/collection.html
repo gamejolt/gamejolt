@@ -75,9 +75,15 @@
 
 			<div class="clearfix">
 				<div class="pull-left">
-					<p class="text-muted small" ng-show="!collectionCtrl.isLoading && collectionCtrl.gamesCount">
-						<span ng-if="collectionCtrl.gamesCount == 1">{{ ::'games.list.games_count_one' | translate }}</span>
-						<span ng-if="collectionCtrl.gamesCount > 1">{{ 'games.list.games_count_other' | translate:{ page: collectionCtrl.currentPage, count: collectionCtrl.gamesCount } }}</span>
+					<p class="text-muted small"
+						ng-show="!collectionCtrl.isLoading && collectionCtrl.gamesCount"
+						translate
+						translate-n="collectionCtrl.gamesCount"
+						translate-plural="games.list.games_count"
+						translate-scope="{ page: collectionCtrl.currentPage }"
+						translate-comment="{{ page }} expands to the current page of games"
+						>
+						games.list.games_count
 					</p>
 				</div>
 
@@ -110,16 +116,16 @@
 
 <!-- No Games Match Filters -->
 <section class="section fill-pink anim-fade-in no-animate-leave" ng-if="collectionCtrl.totalGamesCount && !collectionCtrl.gamesCount">
-	<div class="container" translate="library.collection.no_games_html"></div>
+	<div class="container" translate>library.collection.no_games_html</div>
 </section>
 
 <!-- No Games -->
 <section class="section fill-pink" ng-if="!collectionCtrl.totalGamesCount">
 	<div class="container" ng-switch="collectionCtrl.type">
-		<div ng-switch-when="playlist" translate="library.collection.no_games_playlist_html"></div>
-		<div ng-switch-when="developer" translate="library.collection.no_games_developer_html"></div>
-		<div ng-switch-when="followed" translate="library.collection.no_games_followed_html"></div>
-		<div ng-switch-when="bundle" translate="library.collection.no_games_bundle_html"></div>
-		<div ng-switch-when="tag" translate="library.collection.no_games_tag_html"></div>
+		<div ng-switch-when="playlist" translate>library.collection.no_games_playlist_html</div>
+		<div ng-switch-when="developer" translate>library.collection.no_games_developer_html</div>
+		<div ng-switch-when="followed" translate>library.collection.no_games_followed_html</div>
+		<div ng-switch-when="bundle" translate>library.collection.no_games_bundle_html</div>
+		<div ng-switch-when="tag" translate>library.collection.no_games_tag_html</div>
 	</div>
 </section>

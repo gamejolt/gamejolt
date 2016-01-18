@@ -1,23 +1,23 @@
 <form gj-form="formModel" name="twitterEmailForm" ng-submit="onSubmit()">
 
-	<form-group name="email" label="{{ ::'auth.linked_account.twitter.finalize.email_label' | translate }}" hide-label="true">
-		<p class="help-block">{{ ::'auth.linked_account.twitter.finalize.email_help' | translate }}</p>
+	<form-group name="email" label="{{ 'auth.linked_account.twitter.finalize.email_label' | translate }}" hide-label="true">
+		<p class="help-block" translate>auth.linked_account.twitter.finalize.email_help</p>
 
 		<input form-control="email"
 			ng-model-options="{ updateOn: 'blur', debounce: { 'blur': 0 } }"
 			ng-change="onChanged()"
-			ng-attr-placeholder="{{ ::'auth.linked_account.twitter.finalize.email_label' | translate }}">
+			ng-attr-placeholder="{{ 'auth.linked_account.twitter.finalize.email_label' | translate }}">
 
 		<control-errors></control-errors>
 	</form-group>
 	<br>
 
-	<div class="alert alert-warning anim-fade-in-enlarge no-animate-leave" ng-if="formState.duplicateEmail" translate="auth.linked_account.twitter.finalize.duplicate_email_error_html"></div>
+	<div class="alert alert-warning anim-fade-in-enlarge no-animate-leave" ng-if="formState.duplicateEmail" translate>auth.linked_account.twitter.finalize.duplicate_email_error_html</div>
 
 	<div class="form-group">
 		<button gj-form-submit-button class="i-button block">
 			<span class="jolticon jolticon-chevron-right"></span>
-			{{ ::'auth.linked_account.twitter.finalize.submit_button' | translate }}
+			<span translate>auth.linked_account.twitter.finalize.submit_button</span>
 		</button>
 	</div>
 

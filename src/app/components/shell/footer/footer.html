@@ -10,7 +10,20 @@
 					<gj-social-facebook-like url="https://facebook.com/gamejolt" show-share="false"></gj-social-facebook-like>
 				</div>
 
-				<p class="small text-muted">Too many games... and counting!</p>
+				<div>
+					<gj-translate-lang-selector
+						on-lang-change="ctrl.onLangChange()"
+						>
+					</gj-translate-lang-selector>
+				</div>
+				<br class="hidden-xs">
+
+				<p class="small text-muted">
+					<span translate>footer.translations</span>
+					<a href="https://poeditor.com/join/project/B4nWT6EgnD" translate>footer.translations_help</a>
+				</p>
+
+				<p class="small text-muted" translate>footer.tagline</p>
 			</div>
 			<div ng-class="{ 'pull-right text-right': !Screen.isXs }">
 				<p>
@@ -18,9 +31,9 @@
 					<span class="dot-separator"></span>
 					<a href="/privacy">{{ ::'legal.privacy' | translate }}</a>
 					<span class="dot-separator"></span>
-					<a href="mailto:contact@gamejolt.com">Contact</a>
+					<a href="mailto:contact@gamejolt.com" translate>footer.contact</a>
 				</p>
-				<p class="tiny">&copy; {{ ::curDate | date:'y' }} Lucent Web Creative, LLC</p>
+				<p class="tiny">&copy; {{ ::ctrl.curDate | date:'y' }} Lucent Web Creative, LLC</p>
 			</div>
 		</div>
 	</div>

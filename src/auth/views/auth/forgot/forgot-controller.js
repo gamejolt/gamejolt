@@ -1,6 +1,6 @@
-angular.module( 'App.Views' ).controller( 'Auth.ForgotCtrl', function( $state, Translate )
+angular.module( 'App.Views' ).controller( 'Auth.ForgotCtrl', function( $state, App, gettextCatalog )
 {
-	Translate.pageTitle( 'auth.forgot.page_title' );
+	App.title = gettextCatalog.getString( 'auth.forgot.page_title' );
 
 	this.onSubmitted = function()
 	{

@@ -1,9 +1,9 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.SoundtrackCtrl', function(
-	$scope, $sce, $window, $timeout, Translate, Game_Song )
+	$scope, $sce, $window, $timeout, App, Game_Song, gettextCatalog )
 {
 	var _this = this;
 
-	Translate.pageTitle( 'game.download.soundtrack.page_title', { game: $scope.gameCtrl.game.title } );
+	App.title = gettextCatalog.getString( 'game.download.soundtrack.page_title', { game: $scope.gameCtrl.game.title } );
 
 	this.src = undefined;
 

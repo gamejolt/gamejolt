@@ -1,6 +1,6 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.News.ListCtrl', function( $scope, $stateParams, Translate, Game_NewsArticle, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.News.ListCtrl', function( $scope, $stateParams, App, Game_NewsArticle, gettextCatalog, payload )
 {
-	Translate.pageTitle( 'dash.games.news.page_title', { game: $scope.manageCtrl.game.title } );
+	App.title = gettextCatalog.getString( 'dash.games.news.page_title', { game: $scope.manageCtrl.game.title } );
 
 	this.currentPage = $stateParams.page || 1;
 	this.perPage = payload.perPage || 0;

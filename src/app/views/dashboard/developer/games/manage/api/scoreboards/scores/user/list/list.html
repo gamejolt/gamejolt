@@ -5,11 +5,11 @@
 		</a>
 	</div>
 
-	{{ ::'dash.games.scores.user.list.heading' | translate }}
+	<span translate>dash.games.scores.user.list.heading</span>
 	<small>
-		{{ ::'dash.games.scores.user.list.heading_for' | translate }}
+		<span translate>dash.games.scores.user.list.heading_for</span>
 		<a class="link-unstyled" ng-href="{{ listCtrl.user.url }}"><strong>{{ listCtrl.user.display_name }}</strong></a>
-		{{ ::'dash.games.scores.user.list.heading_on' | translate }}
+		<span translate>dash.games.scores.user.list.heading_on</span>
 		<a class="link-unstyled" ui-sref="dashboard.developer.games.manage.api.scoreboards.scores.list( { table: listCtrl.scoreTable.id } )"><strong>{{ listCtrl.scoreTable.name }}</strong></a>
 	</small>
 </h2>
@@ -18,13 +18,13 @@
 	<div class="list-group">
 		<a class="list-group-item has-icon" ng-click="listCtrl.removeAll()">
 			<span class="jolticon jolticon-remove"></span>
-			{{ ::'dash.games.scores.user.list.remove_all_button' | translate }}
+			<span translate>dash.games.scores.user.list.remove_all_button</span>
 		</a>
 	</div>
 </gj-popover>
 
 <div class="alert alert-warning anim-fade-in" ng-if="!listCtrl.scores.length">
-	<p>{{ ::'dash.games.scores.user.list.no_scores_html' | translate }}</p>
+	<p translate>dash.games.scores.user.list.no_scores_html</p>
 </div>
 
 <gj-dash-list-scores-developer

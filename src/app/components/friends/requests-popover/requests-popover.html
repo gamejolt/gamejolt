@@ -36,10 +36,10 @@
 			<div class="list-group-item" ng-repeat="request in ctrl.requests track by request.id">
 				<div class="friends-requests-popover-avatar" gj-user-avatar="::request.getThem( App.user )"></div>
 				<div class="friends-requests-popover-controls">
-					<a class="i-button big sparse" gj-tooltip="'Add Friend'" ng-click="ctrl.acceptRequest( request )">
+					<a class="i-button big sparse" gj-tooltip="Add Friend" ng-click="ctrl.acceptRequest( request )">
 						<span class="jolticon jolticon-friend-add-2"></span>
 					</a>
-					<a class="i-button big sparse" gj-tooltip="'Dismiss request. Sender will not be notified.'" ng-click="ctrl.rejectRequest( request )">
+					<a class="i-button big sparse" gj-tooltip="Dismiss request. Sender will not be notified." ng-click="ctrl.rejectRequest( request )">
 						<span class="jolticon jolticon-friend-remove-2"></span>
 					</a>
 				</div>
@@ -65,7 +65,7 @@
 			<div class="list-group-item" ng-repeat="request in ctrl.pending track by request.id">
 				<div class="friends-requests-popover-avatar" gj-user-avatar="::request.getThem( App.user )"></div>
 				<div class="friends-requests-popover-controls">
-					<a class="i-button big sparse" gj-tooltip="'Cancel'" ng-click="ctrl.cancelRequest( request )">
+					<a class="i-button big sparse" gj-tooltip="Cancel" ng-click="ctrl.cancelRequest( request )">
 						<span class="jolticon jolticon-friend-remove-2"></span>
 					</a>
 				</div>
