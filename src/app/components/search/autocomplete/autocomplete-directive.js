@@ -1,4 +1,4 @@
-angular.module( 'App.Search' ).directive( 'gjSearchAutocomplete', function( gettextCatalog )
+angular.module( 'App.Search' ).directive( 'gjSearchAutocomplete', function( gettext )
 {
 	var KEYCODE_UP = 38;
 	var KEYCODE_DOWN = 40;
@@ -47,54 +47,54 @@ angular.module( 'App.Search' ).directive( 'gjSearchAutocomplete', function( gett
 				{
 					keyword: ':discover',
 					state: 'discover.home',
-					description: gettextCatalog.getString( 'commands.discover_description' ),
+					description: gettext( 'commands.discover_description' ),
 				},
 				{
 					keyword: ':games',
 					state: 'discover.games.list.section',
 					options: { section: 'featured' },
-					description: gettextCatalog.getString( 'commands.games_description' ),
+					description: gettext( 'commands.games_description' ),
 				},
 				{
 					keyword: ':news',
 					state: 'discover.news.list',
-					description: gettextCatalog.getString( 'commands.news_description' ),
+					description: gettext( 'commands.news_description' ),
 				},
 				{
 					keyword: ':dashboard',
 					state: 'dashboard.overview',
 					authRequired: true,
-					description: gettextCatalog.getString( 'commands.dashboard_description' ),
+					description: gettext( 'commands.dashboard_description' ),
 				},
 				{
 					keyword: ':library',
 					state: 'library.overview',
 					authRequired: true,
-					description: gettextCatalog.getString( 'commands.library_description' ),
+					description: gettext( 'commands.library_description' ),
 				},
 				{
 					keyword: ':installed',
 					state: 'library.installed',
 					clientRequired: true,
-					description: gettextCatalog.getString( 'commands.installed_description' ),
+					description: gettext( 'commands.installed_description' ),
 				},
 				{
 					keyword: ':account',
 					state: 'dashboard.account.edit',
 					authRequired: true,
-					description: gettextCatalog.getString( 'commands.account_description' ),
+					description: gettext( 'commands.account_description' ),
 				},
 				{
 					keyword: ':activity',
 					state: 'dashboard.activity.list',
 					authRequired: true,
-					description: gettextCatalog.getString( 'commands.activity_description' ),
+					description: gettext( 'commands.activity_description' ),
 				},
 				{
 					keyword: ':settings',
 					state: 'settings',
 					authRequired: true,
-					description: gettextCatalog.getString( 'commands.settings_description' ),
+					description: gettext( 'commands.settings_description' ),
 				},
 			];
 
