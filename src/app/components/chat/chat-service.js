@@ -8,6 +8,7 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 	this.windowFocused = true;
 	this.friendNotifications = 0;
 	this.roomNotifications = 0;
+	this.unfocusedNotifications = 0;
 	this.totalNotifications = 0;
 	this.bootstrappingDefaultRoom = false;
 
@@ -46,13 +47,20 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 
 	function updateNotifications()
 	{
-		var friendNotifications = _.reduce( _this.client.notifications, function( total, cur )
+		_this.friendNotifications = 0;
+		_this.roomNotifications = 0;
+
+		angular.forEach( _this.client.notifications, function( cur, key )
 		{
-			return total + (cur || 0);
+			// Notifications for a room? Increment friend notifications.
+			if ( _this.client.friendsList.getByRoom( parseInt( key, 10 ) ) ) {
+				_this.friendNotifications += (cur || 0);
+			}
+
+			_this.roomNotifications += (cur || 0);
 		} );
 
-		_this.friendNotifications = friendNotifications;
-		_this.totalNotifications = _this.roomNotifications + friendNotifications;
+		_this.totalNotifications = _this.unfocusedNotifications + _this.roomNotifications;
 		if ( _this.totalNotifications ) {
 			Favicon.badge( _this.totalNotifications );
 		}
@@ -80,7 +88,7 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 		// Set that we're not longer focused, and clear out room notifications.
 		// The user has now "seen" the messages.
 		_this.windowFocused = true;
-		_this.roomNotifications = 0;
+		_this.unfocusedNotifications = 0;
 
 		// Keep the title count up to date.
 		updateNotifications();
@@ -94,11 +102,12 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 		// we don't want to increase notification counts.
 		if ( !_this.windowFocused && _this.client.room ) {
 			if ( !data.isPrimer && data.message && data.message.roomId == _this.client.room.id ) {
-				++_this.roomNotifications;
+				++_this.unfocusedNotifications;
 				updateNotifications();
 			}
 		}
 	} );
 
 	$rootScope.$on( 'Chat.notificationsUpdated', updateNotifications );
+	$rootScope.$on( 'Chat.friendsListUpdated', updateNotifications );
 } );
