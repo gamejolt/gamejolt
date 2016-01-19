@@ -69,6 +69,8 @@ angular.module( 'App', [
 	'gj.Primus',
 	'gj.Activity.Stream',
 
+	'gj.WidgetCompiler',
+
 	'gj.Graph',
 	'gj.Graph.Table',
 	'gj.Graph.Widget',
@@ -176,6 +178,7 @@ angular.module( 'App', [
 
 	'App.Fireside.Post.Thumbnail',
 	'App.Fireside.Post.List',
+	'App.Fireside.Post.Feed',
 
 	'App.Post.Grid',
 	'App.Post.List',

@@ -1,7 +1,7 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', function(
 	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle,
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, Environment,
-	Jam,
+	Jam, Fireside_Post,
 	payload, scoresPayload, trophiesPayload )
 {
 	var _this = this;
@@ -97,4 +97,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	if ( payload.activeJam ) {
 		this.activeJam = new Jam( payload.activeJam );
 	}
+
+
+	this.latestPosts = Fireside_Post.populate( payload.latestPosts );
+	console.log( this.latestPosts );
 } );

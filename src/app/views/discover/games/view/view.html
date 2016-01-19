@@ -4,11 +4,11 @@
 </div>
 
 <!-- Media Bar -->
-<div ng-if="Game_ViewState.showExtendedHeader && gameCtrl.mediaItems.length">
+<!--<div ng-if="Game_ViewState.showExtendedHeader && gameCtrl.mediaItems.length">
 	<div ng-if="::gameCtrl.testMediaBarPos == 'above' || gameCtrl.testMediaBarPos == 'above-no-banner'">
 		<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
 	</div>
-</div>
+</div>-->
 
 <div class="alert alert-warning sans-margin-bottom" ng-if="Game_ViewState.showExtendedHeader && gameCtrl.notificationCounts.news">
 	<div class="container">
@@ -35,6 +35,14 @@
 			<!-- Title / Byline / Date -->
 			<div class="game-header-meta">
 
+				<!--<div class="small text-muted">
+					DEVLOG
+				</div>-->
+
+				<div>
+					<span class="tag tag-blue">DEVLOG</span>
+				</div>
+
 				<!-- Game Title -->
 				<h1 class="section-header game-header-title">
 					<a class="link-unstyled" ui-sref=".overview">
@@ -51,7 +59,7 @@
 						Hide on mobile to keep it clean.
 						They can view in the game details.
 					-->
-					<span class="game-header-time-ago" ng-if="!Screen.isXs && gameCtrl.game.published_on">
+					<!--<span class="game-header-time-ago" ng-if="!Screen.isXs && gameCtrl.game.published_on">
 						<span class="dot-separator"></span>
 						<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )"
 							am-time-ago="::gameCtrl.game.published_on"></a>
@@ -60,7 +68,7 @@
 					<span class="game-header-ogrs" ng-if="gameCtrl.game.tigrs_age">
 						<span class="dot-separator hidden-xs"></span>
 						<gj-game-ogrs-tag gj-game="gameCtrl.game"></gj-game-ogrs-tag>
-					</span>
+					</span>-->
 				</div>
 
 			</div>
