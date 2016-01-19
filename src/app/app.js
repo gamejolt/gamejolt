@@ -164,6 +164,7 @@ angular.module( 'App', [
 	'App.Minbar',
 	'App.Invite',
 	'App.Sorting',
+	'App.Settings',
 
 	'App.Forms',
 

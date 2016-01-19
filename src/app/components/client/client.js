@@ -5,7 +5,6 @@ angular.module( 'App.Client', [
 	'App.Client.Intro',
 	'App.Client.User',
 	'App.Client.LocalDb',
-	'App.Client.Settings',
 	'App.Client.Tray',
 	'App.Client.MacAppMenu',
 	'App.Client.Forms',

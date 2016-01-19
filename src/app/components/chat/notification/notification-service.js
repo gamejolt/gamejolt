@@ -44,7 +44,7 @@ angular.module( 'App.Chat' )
 
 		$rootScope.$on( 'Chat.friendOnline', function( event, userId )
 		{
-			if ( Environment.isClient && !$injector.get( 'Client_Settings' ).get( 'chat-notify-friends-online' ) ) {
+			if ( Environment.isClient && !$injector.get( 'Settings' ).get( 'chat-notify-friends-online' ) ) {
 				return;
 			}
 
@@ -64,7 +64,7 @@ angular.module( 'App.Chat' )
 
 		$rootScope.$on( 'Chat.friendOffline', function( event, userId )
 		{
-			if ( Environment.isClient && !$injector.get( 'Client_Settings' ).get( 'chat-notify-friends-online' ) ) {
+			if ( Environment.isClient && !$injector.get( 'Settings' ).get( 'chat-notify-friends-online' ) ) {
 				return;
 			}
 

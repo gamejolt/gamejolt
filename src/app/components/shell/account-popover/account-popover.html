@@ -44,6 +44,9 @@
 			>
 			Game Token
 		</a>
+		<a class="list-group-item" ui-sref="settings">
+			Settings
+		</a>
 	</div>
 
 	<div class="account-popover-button offline-disable">
@@ -57,15 +60,11 @@
 
 	<div class="account-popover-separator"></div>
 
-	<div ng-if="::Environment.isClient">
-		<div class="list-group">
-			<a class="list-group-item" ui-sref="settings">
-				Client Settings
-			</a>
-		</div>
+	<!--<div ng-if="::Environment.isClient">
+
 
 		<div class="account-popover-separator"></div>
-	</div>
+	</div>-->
 
 	<gj-shell-user-box></gj-shell-user-box>
 

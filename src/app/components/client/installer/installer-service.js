@@ -6,7 +6,7 @@ angular.module( 'App.Client.Installer' )
 		Client_Installer.init();
 	} );
 } )
-.service( 'Client_Installer', function( $q, $rootScope, Client, Client_Library, Client_Settings, LocalDb, LocalDb_Package, Growls )
+.service( 'Client_Installer', function( $q, $rootScope, Client, Client_Library, Settings, LocalDb, LocalDb_Package, Growls )
 {
 	var _this = this;
 
@@ -68,11 +68,11 @@ angular.module( 'App.Client.Installer' )
 		var Queue = require( 'client-voodoo' ).VoodooQueue;
 
 		Queue.faster = {
-			downloads: Client_Settings.get( 'max-download-count' ),
-			extractions: Client_Settings.get( 'max-extract-count' ),
+			downloads: Settings.get( 'max-download-count' ),
+			extractions: Settings.get( 'max-extract-count' ),
 		};
 
-		if ( Client_Settings.get( 'queue-when-playing' ) ) {
+		if ( Settings.get( 'queue-when-playing' ) ) {
 			Queue.slower = {
 				downloads: 0,
 				extractions: 0,
@@ -127,7 +127,7 @@ angular.module( 'App.Client.Installer' )
 			promise = promise.then( function()
 			{
 				return localPackage.$setInstallDir( path.join(
-					Client_Settings.get( 'game-install-dir' ),
+					Settings.get( 'game-install-dir' ),
 					game.slug + '-' + game.id,
 					(localPackage.name || 'default') + '-' + localPackage.id
 				) );

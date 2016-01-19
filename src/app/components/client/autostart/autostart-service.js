@@ -3,7 +3,7 @@ angular.module( 'App.Client.Autostart' )
 {
 	Client_Autostart.init();
 } )
-.service( 'Client_Autostart', function( $q, Device, Environment, Client_Settings )
+.service( 'Client_Autostart', function( $q, Device, Environment, Settings )
 {
 	var Autostarter = require( 'client-voodoo' ).Autostarter;
 	var execPath = process.execPath;
@@ -18,7 +18,7 @@ angular.module( 'App.Client.Autostart' )
 
 	this.init = function()
 	{
-		if ( Client_Settings.get( 'autostart-client' ) ) {
+		if ( Settings.get( 'autostart-client' ) ) {
 			this.set();
 		}
 	};

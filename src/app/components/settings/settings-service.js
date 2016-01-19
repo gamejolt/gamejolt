@@ -1,15 +1,18 @@
-angular.module( 'App.Client.Settings' ).service( 'Client_Settings', function()
+angular.module( 'App.Settings' ).service( 'Settings', function( Environment )
 {
 	var STORAGE_PREFIX = 'settings.';
-
-	var gui = require( 'nw.gui' );
-	var path = require( 'path' );
-	var dataPath = gui.App.dataPath;
 
 	var defaultSettings = {
 		'game-install-dir': {
 			type: 'string',
-			val: path.join( dataPath, 'Games' ),
+			val: function()
+			{
+				var gui = require( 'nw.gui' );
+				var path = require( 'path' );
+				var dataPath = gui.App.dataPath;
+
+				return path.join( dataPath, 'Games' );
+			},
 		},
 		'max-download-count': {
 			type: 'number',
@@ -29,12 +32,26 @@ angular.module( 'App.Client.Settings' ).service( 'Client_Settings', function()
 		},
 		'chat-notify-friends-online': {
 			type: 'boolean',
-			val: 1,
+			val: function()
+			{
+				// By default we don't notify friends state in site.
+				// We do notify by default in client.
+				if ( Environment.isClient ) {
+					return 1;
+				}
+				else {
+					return 0;
+				}
+			},
 		}
 	};
 
 	this.getDefault = function( setting )
 	{
+		if ( defaultSettings[ setting ].val && angular.isFunction( defaultSettings[ setting ].val ) ) {
+			return defaultSettings[ setting ].val();
+		}
+
 		return defaultSettings[ setting ].val || undefined;
 	};
 
@@ -47,7 +64,7 @@ angular.module( 'App.Client.Settings' ).service( 'Client_Settings', function()
 				val = localStorage.getItem( STORAGE_PREFIX + setting );
 			}
 			else {
-				val = defaultSettings[ setting ].val;
+				val = this.getDefault( setting );
 			}
 
 			if ( defaultSettings[ setting ].type == 'string' && !angular.isString( val ) ) {
