@@ -6,6 +6,7 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 
 	this.visible = true;
 	this.windowFocused = true;
+	this.friendNotifications = 0;
 	this.roomNotifications = 0;
 	this.totalNotifications = 0;
 	this.bootstrappingDefaultRoom = false;
@@ -43,14 +44,14 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 		this.client.reconnect();
 	};
 
-	function updateTitleCount()
+	function updateNotifications()
 	{
 		var friendNotifications = _.reduce( _this.client.notifications, function( total, cur )
 		{
 			return total + (cur || 0);
 		} );
 
-
+		_this.friendNotifications = friendNotifications;
 		_this.totalNotifications = _this.roomNotifications + friendNotifications;
 		if ( _this.totalNotifications ) {
 			Favicon.badge( _this.totalNotifications );
@@ -82,7 +83,7 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 		_this.roomNotifications = 0;
 
 		// Keep the title count up to date.
-		updateTitleCount();
+		updateNotifications();
 	} );
 
 	$rootScope.$on( 'Chat.newMessage', function( event, data )
@@ -92,12 +93,12 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 		// Note that if these messages came in because we were priming output for a room with old messages,
 		// we don't want to increase notification counts.
 		if ( !_this.windowFocused && _this.client.room ) {
-			if ( !data.isPrimer && data.message && data.message.roomId == _this.client.room.id /*&& data.message.room_type && data.message.room_type == ChatConfig.ROOM_TYPE_GENERAL*/ ) {
+			if ( !data.isPrimer && data.message && data.message.roomId == _this.client.room.id ) {
 				++_this.roomNotifications;
-				updateTitleCount();
+				updateNotifications();
 			}
 		}
 	} );
 
-	$rootScope.$on( 'Chat.notificationsUpdated', updateTitleCount );
+	$rootScope.$on( 'Chat.notificationsUpdated', updateNotifications );
 } );
