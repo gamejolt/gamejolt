@@ -22,7 +22,7 @@
 
 	Client_Updater.prototype.check = function()
 	{
-		console.log( 'checking' );
+		console.log( 'Checking for client update.' );
 
 		var os = require( 'os' );
 		var packageJson;
