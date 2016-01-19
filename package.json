@@ -31,7 +31,7 @@
     "gulp-plumber": "~1.0.0",
     "gulp-rename": "~1.2.0",
     "gulp-replace": "^0.5.1",
-    "gulp-rev-all": "0.8.22",
+    "gulp-rev-all": "gamejolt/gulp-rev-all#master",
     "gulp-shell": "^0.2.10",
     "gulp-size": "^1.2.0",
     "gulp-sourcemaps": "~1.5.2",
