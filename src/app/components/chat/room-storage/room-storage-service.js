@@ -11,8 +11,6 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 	{
 		var _this = this;
 
-		this.cleanRooms();
-
 		if ( !joinRoomEvent ) {
 			joinRoomEvent = $rootScope.$on( 'Chat.joinRoom', function( event, data )
 			{
@@ -45,6 +43,8 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 			$window.addEventListener( 'storage', onStorageEvent );
 			storageListener = true;
 		}
+
+		this.cleanRooms();
 	};
 
 	this.cleanRooms = function()
