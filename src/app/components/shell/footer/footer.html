@@ -33,7 +33,10 @@
 					<span class="dot-separator"></span>
 					<a href="mailto:contact@gamejolt.com" translate>footer.contact</a>
 				</p>
+
 				<p class="tiny">&copy; {{ ::ctrl.curDate | date:'y' }} Lucent Web Creative, LLC</p>
+
+				<p class="tiny text-muted" ng-if="Environment.isClient">v{{ ::ctrl.clientVersion }}</p>
 			</div>
 		</div>
 	</div>

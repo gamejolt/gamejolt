@@ -1,4 +1,4 @@
-angular.module( 'App.Shell' ).directive( 'gjShellFooter', function( $window, Screen, Environment )
+angular.module( 'App.Shell' ).directive( 'gjShellFooter', function( $window, $injector, Screen, Environment )
 {
 	return {
 		restrict: 'E',
@@ -22,6 +22,11 @@ angular.module( 'App.Shell' ).directive( 'gjShellFooter', function( $window, Scr
 					require( 'nw.gui' ).Window.get().reloadDev();
 				}
 			};
+
+			if ( Environment.isClient ) {
+				var Client_Info = $injector.get( 'Client_Info' );
+				this.clientVersion = Client_Info.getVersion();
+			}
 		}
 	};
 } );

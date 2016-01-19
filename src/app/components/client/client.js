@@ -19,4 +19,5 @@ angular.module( 'App.Client', [
 	'App.Client.GameButtons',
 	'App.Client.InstallPackageModal',
 	'App.Client.PackageCardOptions',
+	'App.Client.Info',
 ] );
