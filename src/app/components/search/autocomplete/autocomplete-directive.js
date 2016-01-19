@@ -1,54 +1,5 @@
 angular.module( 'App.Search' ).directive( 'gjSearchAutocomplete', function( gettextCatalog )
 {
-	var commands = [
-		{
-			keyword: ':discover',
-			state: 'discover.home',
-			description: gettextCatalog.getString( 'commands.discover_description' ),
-		},
-		{
-			keyword: ':games',
-			state: 'discover.games.list.section',
-			options: { section: 'featured' },
-			description: gettextCatalog.getString( 'commands.games_description' ),
-		},
-		{
-			keyword: ':news',
-			state: 'discover.news.list',
-			description: gettextCatalog.getString( 'commands.news_description' ),
-		},
-		{
-			keyword: ':dashboard',
-			state: 'dashboard.overview',
-			authRequired: true,
-			description: gettextCatalog.getString( 'commands.dashboard_description' ),
-		},
-		{
-			keyword: ':library',
-			state: 'library.overview',
-			authRequired: true,
-			description: gettextCatalog.getString( 'commands.library_description' ),
-		},
-		{
-			keyword: ':installed',
-			state: 'library.installed',
-			clientRequired: true,
-			description: gettextCatalog.getString( 'commands.installed_description' ),
-		},
-		{
-			keyword: ':account',
-			state: 'dashboard.account.edit',
-			authRequired: true,
-			description: gettextCatalog.getString( 'commands.account_description' ),
-		},
-		{
-			keyword: ':activity',
-			state: 'dashboard.activity.list',
-			authRequired: true,
-			description: gettextCatalog.getString( 'commands.activity_description' ),
-		},
-	];
-	
 	var KEYCODE_UP = 38;
 	var KEYCODE_DOWN = 40;
 	var KEYCODE_ENTER = 13;
@@ -92,7 +43,62 @@ angular.module( 'App.Search' ).directive( 'gjSearchAutocomplete', function( gett
 			this.libraryGames = [];
 			this.items = [];
 
-			this.commands = orderByFilter( commands, 'keyword' );
+			this.commands = [
+				{
+					keyword: ':discover',
+					state: 'discover.home',
+					description: gettextCatalog.getString( 'commands.discover_description' ),
+				},
+				{
+					keyword: ':games',
+					state: 'discover.games.list.section',
+					options: { section: 'featured' },
+					description: gettextCatalog.getString( 'commands.games_description' ),
+				},
+				{
+					keyword: ':news',
+					state: 'discover.news.list',
+					description: gettextCatalog.getString( 'commands.news_description' ),
+				},
+				{
+					keyword: ':dashboard',
+					state: 'dashboard.overview',
+					authRequired: true,
+					description: gettextCatalog.getString( 'commands.dashboard_description' ),
+				},
+				{
+					keyword: ':library',
+					state: 'library.overview',
+					authRequired: true,
+					description: gettextCatalog.getString( 'commands.library_description' ),
+				},
+				{
+					keyword: ':installed',
+					state: 'library.installed',
+					clientRequired: true,
+					description: gettextCatalog.getString( 'commands.installed_description' ),
+				},
+				{
+					keyword: ':account',
+					state: 'dashboard.account.edit',
+					authRequired: true,
+					description: gettextCatalog.getString( 'commands.account_description' ),
+				},
+				{
+					keyword: ':activity',
+					state: 'dashboard.activity.list',
+					authRequired: true,
+					description: gettextCatalog.getString( 'commands.activity_description' ),
+				},
+				{
+					keyword: ':settings',
+					state: 'settings',
+					authRequired: true,
+					description: gettextCatalog.getString( 'commands.settings_description' ),
+				},
+			];
+
+			this.commands = orderByFilter( this.commands, 'keyword' );
 			this.filteredCommands = this.commands;
 
 			this.init = function()
