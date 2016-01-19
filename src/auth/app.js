@@ -106,9 +106,14 @@ angular.module( 'App', [
 			'ru': '/translations/ru/auth.json',
 			'sv': '/translations/sv/auth.json',
 			'tr': '/translations/tr/auth.json',
+			'pt': '/translations/pt/auth.json',
 			'pt_BR': '/translations/pt_BR/auth.json',
 			'fi': '/translations/fi/auth.json',
 			'nb': '/translations/nb/auth.json',
+			'el': '/translations/el/auth.json',
+			'ms': '/translations/ms/auth.json',
+			'pl': '/translations/pl/auth.json',
+			'uk': '/translations/uk/auth.json',
 		},
 	};
 
