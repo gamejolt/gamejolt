@@ -3,7 +3,7 @@ angular.module( 'App.Chat' )
 {
 	Chat_Notification.init();
 } )
-.service( 'Chat_Notification', function( $rootScope, $timeout, $injector, Growls, Chat, App, Environment )
+.service( 'Chat_Notification', function( $rootScope, $timeout, Settings, Growls, Chat, App, Environment )
 {
 	var _this = this;
 
@@ -44,7 +44,7 @@ angular.module( 'App.Chat' )
 
 		$rootScope.$on( 'Chat.friendOnline', function( event, userId )
 		{
-			if ( Environment.isClient && !$injector.get( 'Settings' ).get( 'chat-notify-friends-online' ) ) {
+			if ( !Settings.get( 'chat-notify-friends-online' ) ) {
 				return;
 			}
 
@@ -64,7 +64,7 @@ angular.module( 'App.Chat' )
 
 		$rootScope.$on( 'Chat.friendOffline', function( event, userId )
 		{
-			if ( Environment.isClient && !$injector.get( 'Settings' ).get( 'chat-notify-friends-online' ) ) {
+			if ( !Settings.get( 'chat-notify-friends-online' ) ) {
 				return;
 			}
 
