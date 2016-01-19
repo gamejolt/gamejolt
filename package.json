@@ -47,6 +47,7 @@
     "nw-builder": "gamejolt/nw-builder#skip-merge-app",
     "nwjs-installer-builder": "0.0.1",
     "run-sequence": "~0.3.6",
+    "sanitize-html": "^1.11.3",
     "streamqueue": "~0.1.1",
     "stylus": "0.53.0",
     "through2": "~0.5.1"
