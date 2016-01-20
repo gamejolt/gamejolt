@@ -15,5 +15,8 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 				return User.touch();
 			}
 		},
+		data: {
+			availableOffline: true,
+		},
 	} );
 } );
