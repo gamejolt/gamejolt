@@ -46,7 +46,6 @@ angular.module( 'App', [
 	'gj.Device',
 	'gj.Location',
 	'gj.Connection',
-	'gj.Connection.StatePermissions',
 
 	'gj.Backdrop',
 	'gj.Tooltip',
