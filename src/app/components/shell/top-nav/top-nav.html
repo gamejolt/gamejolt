@@ -48,7 +48,7 @@
 		<ul class="navbar-items" ng-if="App.user">
 
 			<!-- Notifications -->
-			<li ng-if="Connection.isOnline" tooltip-placement="bottom">
+			<li ng-if="!Connection.isClientOffline" tooltip-placement="bottom">
 				<a
 					gj-popover-trigger="notifications"
 					ng-class="{ active: notificationsShowing }"
@@ -66,7 +66,7 @@
 			</li>
 
 			<!-- Friend Requests -->
-			<li ng-if="Connection.isOnline">
+			<li ng-if="!Connection.isClientOffline">
 				<a
 					gj-popover-trigger="friend-requests"
 					ng-class="{ active: friendRequestsShowing }"

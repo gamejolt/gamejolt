@@ -73,17 +73,15 @@
 		Enough changes to require different markup.
 	-->
 	<div ng-if="::!Environment.isClient">
-		<div ng-if="Connection.isOnline">
-			<div class="account-popover-separator"></div>
+		<div class="account-popover-separator"></div>
 
-			<div class="list-group">
-				<a class="list-group-item text-right" ng-click="ctrl.logout()"
-					gj-track-event="account-popover:logout"
-					>
-					<span class="jolticon jolticon-logout warning"></span>
-					Logout
-				</a>
-			</div>
+		<div class="list-group">
+			<a class="list-group-item text-right" ng-click="ctrl.logout()"
+				gj-track-event="account-popover:logout"
+				>
+				<span class="jolticon jolticon-logout warning"></span>
+				Logout
+			</a>
 		</div>
 	</div>
 
@@ -91,7 +89,7 @@
 		<div class="account-popover-separator"></div>
 
 		<div class="clearfix">
-			<div ng-if="Connection.isOnline" class="pull-left text-center" style="width: 50%">
+			<div ng-if="!Connection.isClientOffline" class="pull-left text-center" style="width: 50%">
 
 				<div class="list-group">
 					<a class="list-group-item" ng-click="ctrl.logout()"
