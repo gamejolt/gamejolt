@@ -92,6 +92,6 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Activity.ListCtrl', functio
 
 	this.getUnreadTooltip = function( count )
 	{
-		gettextCatalog.getPlural( count, 'notifications.unread_tooltip', 'notifications.unread_tooltip' );
+		gettextCatalog.getPlural( count, 'notifications.unread_tooltip', 'notifications.unread_tooltip', {} );
 	};
 } );
