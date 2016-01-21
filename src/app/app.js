@@ -116,6 +116,8 @@ angular.module( 'App', [
 	'gj.Jam.Game.Vote.Widget',
 	'gj.Jam.Award',
 
+	'gj.Translation',
+
 	'gj.Chat.Room',
 
 	'gj.Social.Twitter.Sdk',
