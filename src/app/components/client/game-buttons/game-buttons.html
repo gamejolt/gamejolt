@@ -141,6 +141,14 @@
 				</a>
 				<a class="list-group-item has-icon"
 					ng-repeat="package in Client_Library.packagesByGame[ ctrl.game.id ] track by package.id"
+					ng-click="ctrl.openFolder( package )"
+					ng-if="package.isSettled()"
+					>
+					<span class="jolticon jolticon-folder-open"></span>
+					Open Folder for {{ package.title || ctrl.game.title }}
+				</a>
+				<a class="list-group-item has-icon"
+					ng-repeat="package in Client_Library.packagesByGame[ ctrl.game.id ] track by package.id"
 					ng-if="!package.install_state && !package.isRemoving()"
 					ng-click="ctrl.uninstallPackage( package )"
 					ng-class="{ disabled: package.isRunning() }"
