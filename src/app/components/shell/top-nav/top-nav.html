@@ -47,12 +47,25 @@
 
 		<ul class="navbar-items" ng-if="App.user">
 
+			<li class="hidden-xs">
+				<a
+					ui-sref="{{ ::Environment.isClient ? 'library.installed' : 'library.overview' }}"
+					ng-class="{ active: $state.includes( 'library' ) }"
+					gj-tooltip="Your Game Library"
+					tooltip-placement="bottom"
+					gj-track-event="top-nav:library"
+					>
+					<span class="jolticon jolticon-books"></span>
+				</a>
+			</li>
+
 			<!-- Notifications -->
-			<li ng-if="!Connection.isClientOffline" tooltip-placement="bottom">
+			<li ng-if="!Connection.isClientOffline">
 				<a
 					gj-popover-trigger="notifications"
 					ng-class="{ active: notificationsShowing }"
 					gj-tooltip="Notifications"
+					tooltip-placement="bottom"
 					gj-track-event="top-nav:notifications:toggle"
 					>
 					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="notificationsCount">{{ notificationsCount }}</span>
@@ -70,7 +83,8 @@
 				<a
 					gj-popover-trigger="friend-requests"
 					ng-class="{ active: friendRequestsShowing }"
-					gj-tooltip="Friend Requests" tooltip-placement="bottom"
+					gj-tooltip="Friend Requests"
+					tooltip-placement="bottom"
 					gj-track-event="top-nav:friend-requests:toggle"
 					>
 					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="friendRequestCount">{{ friendRequestCount }}</span>
