@@ -45,7 +45,7 @@ module.exports = function( config )
 	}
 
 	gulp.task( 'client:gyp', shell.task( [
-		'cd ' + path.resolve( lzmaPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
+		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean install --runtime=node-webkit --target=0.12.3 --arch=' + config.gypArch + ' --fallback-to-build'
 	] ) );
 
 	var releaseDir = path.join( 'build/client/prod', 'v' + packageJson.version );
@@ -178,12 +178,12 @@ module.exports = function( config )
 
 	var nodeModuletasks = [
 		'cd ' + config.buildDir + ' && npm install --production',
-		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
+		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean install --runtime=node-webkit --target=0.12.3 --arch=' + config.gypArch + ' --fallback-to-build',
 	];
 
 	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
-		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'build/Release/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' )
+		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' )
 	}
 
 	gulp.task( 'client:node-modules', shell.task( nodeModuletasks ) );
