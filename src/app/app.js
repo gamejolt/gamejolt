@@ -64,6 +64,7 @@ angular.module( 'App', [
 	'gj.Favicon',
 	'gj.FadeCollapse',
 	'gj.Progress.Poller',
+	'gj.Alert.Dismissable',
 
 	'gj.Primus',
 	'gj.Activity.Stream',
