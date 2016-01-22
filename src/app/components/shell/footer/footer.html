@@ -47,7 +47,11 @@
 
 				<p class="tiny">&copy; {{ ::ctrl.curDate | date:'y' }} Lucent Web Creative, LLC</p>
 
-				<p class="tiny text-muted" ng-if="Environment.isClient">v{{ ::ctrl.clientVersion }}</p>
+				<p class="tiny text-muted" ng-if="Environment.isClient">
+					<a ng-click="ctrl.showSystemReport()" class="link-muted">Send System Report</a>
+					<span class="dot-separator"></span>
+					v{{ ::ctrl.clientVersion }}
+				</p>
 			</div>
 		</div>
 	</div>

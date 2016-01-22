@@ -1,0 +1,22 @@
+<div class="modal-body">
+	<h2 class="modal-title">Send System Report</h2>
+
+	<p class="help-block">
+		This will send a system report to us with details about your device and client log. We don't collect personal information through this.
+	</p>
+
+	<p class="help-block">
+		If you experienced a bug, please report it first on our <a href="https://github.com/gamejolt/issue-tracker">issue tracker</a>.
+	</p>
+
+	<gj-client-form-system-report
+		gj-form-submit-handler="modalCtrl.onSubmit()">
+	</gj-client-form-system-report>
+</div>
+
+<div class="modal-footer">
+	<button class="i-button warning" ng-click="modalCtrl.close()">
+		<span class="jolticon jolticon-remove"></span>
+		Close
+	</button>
+</div>
