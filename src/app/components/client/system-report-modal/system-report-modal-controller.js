@@ -1,8 +1,11 @@
-angular.module( 'App.Client.SystemReportModal' ).controller( 'Client.SystemReportModalCtrl', function( $scope, $modalInstance, Growls )
+angular.module( 'App.Client.SystemReportModal' ).controller( 'Client.SystemReportModalCtrl', function( $scope, $modalInstance, Growls, gettextCatalog )
 {
 	this.onSubmit = function()
 	{
-		Growls.success( 'Your system report has been sent.', 'Sent Report' );
+		Growls.success(
+			gettextCatalog.getString( 'system_report.sent_growl' ),
+			gettextCatalog.getString( 'system_report.sent_growl_title' )
+		);
 		$modalInstance.close();
 	};
 

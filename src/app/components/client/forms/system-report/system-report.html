@@ -1,14 +1,14 @@
 <form gj-form="formModel" name="systemReportForm">
 
-	<form-group name="description" label="Description">
-		<p class="help-block">Describe what this system report is about, any bugs you may have encountered, and how you can reproduce.</p>
+	<form-group name="description" label="{{ 'system_report.form.description_label' | translate }}">
+		<p class="help-block" translate>system_report.form.description_help</p>
 		<textarea form-control="description" ng-maxlength="1000" rows="5"></textarea>
 		<control-errors></control-errors>
 	</form-group>
 
 	<button gj-form-submit-button class="i-button" ng-disabled="!systemReportForm.$valid" ng-click="onSubmit()">
 		<span class="jolticon jolticon-add"></span>
-		Submit Bug Report
+		<span translate>system_report.form.submit_button</span>
 	</button>
 
 </form>
