@@ -55,7 +55,7 @@
     "appdmg": "^0.3.5"
   },
   "dependencies": {
-    "client-voodoo": "0.2.2",
+    "client-voodoo": "0.3.0",
     "lodash": "3.9.3",
     "nwjs-snappy-updater": "0.0.7"
   }

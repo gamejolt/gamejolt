@@ -24,6 +24,11 @@ angular.module( 'App.Shell' ).directive( 'gjShellFooter', function( $window, $in
 			};
 
 			if ( Environment.isClient ) {
+				this.showSystemReport = function()
+				{
+					$injector.get( 'Client_SystemReportModal' ).show();
+				};
+
 				var Client_Info = $injector.get( 'Client_Info' );
 				this.clientVersion = Client_Info.getVersion();
 			}
