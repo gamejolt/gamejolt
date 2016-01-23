@@ -293,6 +293,7 @@ angular.module( 'App', [
 			'ms': '/translations/ms/main.json',
 			'pl': '/translations/pl/main.json',
 			'uk': '/translations/uk/main.json',
+			'it': '/translations/it/main.json',
 		},
 		dash: {
 			'en': '/translations/en/dash.json',
@@ -313,6 +314,7 @@ angular.module( 'App', [
 			'ms': '/translations/ms/dash.json',
 			'pl': '/translations/pl/dash.json',
 			'uk': '/translations/uk/dash.json',
+			'it': '/translations/it/dash.json',
 		},
 	};
 

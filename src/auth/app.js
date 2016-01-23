@@ -114,6 +114,7 @@ angular.module( 'App', [
 			'ms': '/translations/ms/auth.json',
 			'pl': '/translations/pl/auth.json',
 			'uk': '/translations/uk/auth.json',
+			'it': '/translations/it/auth.json',
 		},
 	};
 
