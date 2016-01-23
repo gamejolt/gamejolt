@@ -81,12 +81,13 @@
 			</div>
 
 		</div>
+		<br><br>
 
-		<gj-game-filtering-widget
+		<!--<gj-game-filtering-widget
 			gj-filtering-container="listCtrl.filteringContainer"
 			gj-filters-changed="listCtrl.onFiltersChanged()"
 			>
-		</gj-game-filtering-widget>
+		</gj-game-filtering-widget>-->
 
 	</div>
 </header>
@@ -95,11 +96,11 @@
 	<div class="container" translate>games.list.new_games_warning_html</div>
 </section>
 
-<section class="section fill-lighter section-thin" ng-if="listCtrl.section != 'by-date'">
+<!--<section class="section fill-lighter section-thin" ng-if="listCtrl.section != 'by-date'">
 	<div class="container">
 		<gj-genre-list></gj-genre-list>
 	</div>
-</section>
+</section>-->
 
 <section class="section" id="games-list">
 	<div class="container">
@@ -115,13 +116,13 @@
 					>
 				</gj-game-filtering-input>
 			</div>
-			<div class="col-md-8">
+			<!--<div class="col-md-8">
 				<gj-game-filtering-tags
 					gj-filtering-container="listCtrl.filteringContainer"
 					gj-filters-changed="listCtrl.onFiltersChanged()"
 					>
 				</gj-game-filtering-tags>
-			</div>
+			</div>-->
 		</div>
 
 		<div class="clearfix">
@@ -190,15 +191,92 @@
 			</div>
 
 		</div>
-
-		<ui-view></ui-view>
-
-		<gj-pagination
-			items-per-page="listCtrl.perPage"
-			total-items="listCtrl.gamesCount"
-			current-page="listCtrl.currentPage"
-			on-page-change="Scroll.to( 'games-list', { animate: false } )">
-		</gj-pagination>
-
 	</div>
 </section>
+
+<div style="margin: 0 40px">
+	<div class="row">
+		<div class="col-xs-2 small">
+
+			<div>
+				<p><strong>Operating Systems</strong></p>
+
+				<div class="list-group thin list-group-dark">
+					<a class="list-group-item has-addon">
+						<div class="list-group-item-addon">
+							<span class="jolticon jolticon-check"></span>
+						</div>
+						Windows
+					</a>
+					<a class="list-group-item has-addon">
+						<div class="list-group-item-addon">
+							<!--<span class="jolticon jolticon-check"></span>-->
+						</div>
+						Mac
+					</a>
+					<a class="list-group-item has-addon">
+						<div class="list-group-item-addon">
+							<!--<span class="jolticon jolticon-check"></span>-->
+						</div>
+						Linux
+					</a>
+					<a class="list-group-item has-addon">
+						<div class="list-group-item-addon">
+							<!--<span class="jolticon jolticon-check"></span>-->
+						</div>
+						Other
+					</a>
+				</div>
+
+				<p><strong>Browser Games</strong></p>
+
+				<div class="list-group thin list-group-dark">
+					<a class="list-group-item has-addon">
+						<div class="list-group-item-addon">
+							<span class="jolticon jolticon-check"></span>
+						</div>
+						HTML
+					</a>
+					<a class="list-group-item has-addon">
+						<div class="list-group-item-addon">
+							<!--<span class="jolticon jolticon-check"></span>-->
+						</div>
+						Flash
+					</a>
+					<a class="list-group-item has-addon">
+						<div class="list-group-item-addon">
+							<!--<span class="jolticon jolticon-check"></span>-->
+						</div>
+						Unity
+					</a>
+					<a class="list-group-item has-addon">
+						<div class="list-group-item-addon">
+							<!--<span class="jolticon jolticon-check"></span>-->
+						</div>
+						Java Applet
+					</a>
+					<a class="list-group-item has-addon">
+						<div class="list-group-item-addon">
+							<!--<span class="jolticon jolticon-check"></span>-->
+						</div>
+						Silverlight
+					</a>
+				</div>
+
+			</div>
+
+		</div>
+		<div class="col-xs-10">
+
+			<ui-view></ui-view>
+
+			<gj-pagination
+				items-per-page="listCtrl.perPage"
+				total-items="listCtrl.gamesCount"
+				current-page="listCtrl.currentPage"
+				on-page-change="Scroll.to( 'games-list', { animate: false } )">
+			</gj-pagination>
+
+		</div>
+	</div>
+</div>
