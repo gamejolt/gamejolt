@@ -114,6 +114,9 @@ module.exports = function( config )
 		// Attach a class to say that we're in client.
 		// Makes it easy to target client before angular has loaded in completely with CSS.
 		'<body class="" ': '<body class="is-client" ',
+
+		// GA tag is different.
+		"ga('create', 'UA-6742777-1', 'auto');": "ga('create', 'UA-6742777-16', 'auto');",
 	};
 
 	/**
