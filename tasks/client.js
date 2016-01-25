@@ -8,13 +8,13 @@ var os = require( 'os' );
 var _ = require( 'lodash' );
 var shell = require( 'gulp-shell' );
 var path = require( 'path' );
-var fs = require( 'fs' );
+var mv = require( 'mv' );
 
 module.exports = function( config )
 {
 	var packageJson = require( path.resolve( __dirname, '../package.json' ) );
 	config.client = argv.client || false;
-	config.arch = argv.arch || '64';
+	config.arch = argv.arch || ( os.arch() === 'x64' ? '64' : '32' );
 	config.gypArch = config.arch == '64' ? 'x64' : 'ia32';
 
 	// Get our platform that we are building on.
@@ -45,7 +45,7 @@ module.exports = function( config )
 	}
 
 	gulp.task( 'client:gyp', shell.task( [
-		'cd ' + path.resolve( lzmaPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
+		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
 	] ) );
 
 	var releaseDir = path.join( 'build/client/prod', 'v' + packageJson.version );
@@ -181,12 +181,12 @@ module.exports = function( config )
 
 	var nodeModuletasks = [
 		'cd ' + config.buildDir + ' && npm install --production',
-		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
+		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
 	];
 
 	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
-		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'build/Release/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' )
+		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' )
 	}
 
 	gulp.task( 'client:node-modules', shell.task( nodeModuletasks ) );
@@ -313,9 +313,19 @@ module.exports = function( config )
 					stream.on( 'error', cb );
 					stream.on( 'end', function()
 					{
-						fs.renameSync( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ) );
-						fs.renameSync( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ) );
-						cb();
+						mv( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ), function( err )
+						{
+							if ( err ) {
+								throw err;
+							}
+							mv( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ), function( err )
+							{
+								if ( err ) {
+									throw err;
+								}
+								cb();
+							} );
+						} );
 					} );
 				} );
 		}
