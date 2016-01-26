@@ -215,11 +215,11 @@ angular.module( 'App', [
 	'App.User.TokenModal',
 	'App.User.SetPasswordModal',
 	'App.User.FriendshipsHelper',
-    
-    'App.Forums.ChannelList',
-    'App.Forums.TopicList',
-    'App.Forums.Post',
-    'App.Forums.Reply',
+	
+	'App.Forums.ChannelList',
+	'App.Forums.TopicList',
+	'App.Forums.Post',
+	'App.Forums.Reply',
 
 	// Views.
 	'App.Views',

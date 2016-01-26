@@ -1,43 +1,43 @@
 <div class="forums-channel-list">
-    <div class="forum-list-items">
-                
-        <div class="forum-list-item forum-channel row" ng-repeat="i in ctrl.items">
-            <div class="col-sm-7 col-md-8">
-                <h4 class="forum-list-item-title">
-                    <!--<span class="tag tag-pink">2</span>-->
-                    <a class="link-unstyled" ng-href="/f/gamemaker">#gamemaker</a>
-                </h4>
-                <span class="forum-list-item-followers text-muted">1,300 Followers</span>
-                <p>Discussion and queries about GameMaker and GML.</p>
-            </div>
-            <div class="col-sm-5 col-md-4 forum-list-item-meta">
-                <ul class="forum-list-item-stats">
-                    <li>25 Topics</li>
-                    <li class="hidden-sm hidden-md hidden-lg"><span class="dot-separator"></span></li>
-                    <li>2,123 Replies</li>
-                </ul>
-                <ul class="hidden-xs forum-list-item-users" ng-if="ctrl.listType !== 'small'">
-                    <li>
-                        <img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-                    </li>
-                    <li>
-                        <img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-                    </li>
-                    <li>
-                        <img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-                    </li>
-                    <li>
-                        <img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-                    </li>
-                </ul>
-            </div>
-        </div>
+	<div class="forum-list-items">
 				
-        <div ng-if="ctrl.moreLink" class="clearfix text-right">
-            <a href="{{ ctrl.moreLink }}" class="btn btn-outline">
-                <span class="jolticon jolticon-chevron-right"></span>View all
-            </a>
-        </div>
-        
-    </div>
+		<div class="forum-list-item forum-channel row" ng-repeat="i in ctrl.items">
+			<div class="col-sm-7 col-md-8">
+				<h4 class="forum-list-item-title">
+					<!--<span class="tag tag-pink">2</span>-->
+					<a class="link-unstyled" ng-href="/f/gamemaker">#gamemaker</a>
+				</h4>
+				<span class="forum-list-item-followers text-muted">1,300 Followers</span>
+				<p>Discussion and queries about GameMaker and GML.</p>
+			</div>
+			<div class="col-sm-5 col-md-4 forum-list-item-meta">
+				<ul class="forum-list-item-stats">
+					<li>25 Topics</li>
+					<li class="hidden-sm hidden-md hidden-lg"><span class="dot-separator"></span></li>
+					<li>2,123 Replies</li>
+				</ul>
+				<ul class="hidden-xs forum-list-item-users" ng-if="ctrl.listType !== 'small'">
+					<li>
+						<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
+					</li>
+					<li>
+						<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
+					</li>
+					<li>
+						<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
+					</li>
+					<li>
+						<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
+					</li>
+				</ul>
+			</div>
+		</div>
+				
+		<div ng-if="ctrl.moreLink" class="clearfix text-right">
+			<a href="{{ ctrl.moreLink }}" class="btn btn-outline">
+				<span class="jolticon jolticon-chevron-right"></span>View all
+			</a>
+		</div>
+		
+	</div>
 </div>

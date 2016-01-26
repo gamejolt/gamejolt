@@ -5,10 +5,10 @@ angular.module( 'App.Forums.TopicList' ).directive( 'gjForumsTopicList', functio
 		templateUrl: '/app/components/forums/topic-list/topic-list.html',
 		scope: {
 			items: '=items',
-            moreLink: '@moreLink'
+			moreLink: '@moreLink'
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function( $scope ) {}
-    }
+	}
 } );
