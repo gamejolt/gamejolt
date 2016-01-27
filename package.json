@@ -46,7 +46,6 @@
     "minimist": "~0.2.0",
     "mv": "^2.1.1",
     "nw-builder": "gamejolt/nw-builder#skip-merge-app",
-    "nwjs-installer-builder": "0.0.1",
     "run-sequence": "~0.3.6",
     "sanitize-html": "^1.11.3",
     "streamqueue": "~0.1.1",
@@ -57,7 +56,7 @@
     "appdmg": "^0.3.5"
   },
   "dependencies": {
-    "client-voodoo": "git://github.com/gamejolt/client-voodoo.git#update-lzma-dep",
+    "client-voodoo": "gamejolt/client-voodoo",
     "lodash": "3.9.3",
     "nwjs-snappy-updater": "0.0.7"
   }

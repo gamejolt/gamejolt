@@ -44,9 +44,25 @@ module.exports = function( config )
 		lzmaPath = path.join( 'node_modules', 'client-voodoo', 'node_modules', 'lzma-native' );
 	}
 
-	gulp.task( 'client:gyp', shell.task( [
+	var windowsMutexPath = path.join( 'node_modules', 'windows-mutex' );
+	if ( config.platform === 'win' ) {
+		try {
+			// Will throw if no path exists.
+			fs.statSync( path.resolve( windowsMutexPath ) );
+		}
+		catch ( e ) {
+			windowsMutexPath = path.join( 'node_modules', 'client-voodoo', 'node_modules', 'windows-mutex' );
+		}
+	}
+
+	var gypTasks = [
 		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
-	] ) );
+	];
+	if ( config.platform == 'win' ) {
+		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
+	}
+
+	gulp.task( 'client:gyp', shell.task( gypTasks ) );
 
 	var releaseDir = path.join( 'build/client/prod', 'v' + packageJson.version );
 	var s3Dir = 's3://gjolt-data/data/client/releases/v' + packageJson.version;
@@ -186,7 +202,9 @@ module.exports = function( config )
 
 	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
-		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' )
+		nodeModuletasks.push( 'cd ' + path.resolve( config.buildDir, windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
+		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' );
+		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, windowsMutexPath, 'build/Release/CreateMutex.node' ) + ' nw.exe GameJoltClient.exe' );
 	}
 
 	gulp.task( 'client:node-modules', shell.task( nodeModuletasks ) );
@@ -372,35 +390,13 @@ module.exports = function( config )
 	else if ( config.platform == 'win' ) {
 		gulp.task( 'client:package', function( cb )
 		{
-			var Builder = require( 'nwjs-installer-builder' ).Builder;
 			var releaseDir = getReleaseDir();
 			var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
 
-			var builder = new Builder( {
-				appDirectory: path.resolve( releaseDir, config.platformArch ),
-				outputDirectory: releaseDir,
-				name: 'GameJoltClient',
-				version: packageJson.version,
-				title: 'Game Jolt Client',
-				description: 'The Game Jolt Client for Windows.',
-				authors: 'Lucent Web Creative, LLC',
-				loadingGif: config.buildDir + '/app/img/client/winstalling.gif',
-				iconUrl: 'http://s.gjcdn.net/app/img/client/winico.ico',
-				setupIcon: config.buildDir + '/app/img/client/winico.ico',
-				certFile: path.resolve( __dirname, 'certs/win.p12' ),
-				certPassFile: path.resolve( __dirname, 'certs/win-pass' ),
-				files: {
-					'GameJoltClient.exe': '',
-					'locales\\**': 'locales',
-					'node_modules\\**': 'node_modules',
-					'package\\**': 'package',
-					'package.json': '',
-					'*.dll': '',
-					'*.pak': '',
-					'icudtl.dat': '',
-				}
-			} );
-
+			var InnoSetup = require( './inno-setup' );
+			var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
+			var certPw = config.production ? fs.readFileSync( path.resolve( __dirname, 'certs', 'win-pass' ), { encoding: 'utf8' } ) : 'GJ123456';
+			var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw );
 			return builder.build();
 		} );
 	}

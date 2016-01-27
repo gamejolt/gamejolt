@@ -1,3 +1,8 @@
+<!-- Media Bar -->
+<div ng-if="::gameCtrl.mediaItems.length">
+	<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
+</div>
+
 <!-- Convenience Messaging -->
 <section class="alert alert-warning" style="margin-bottom: 0" ng-if="::overviewCtrl.convenienceMessage">
 	<div class="container">
@@ -21,11 +26,9 @@
 	</div>
 </section>
 
-<div ng-if="::gameCtrl.testMediaBarPos != 'no-banner' && gameCtrl.testMediaBarPos != 'above-no-banner'">
-	<section class="ad-section" ng-class="::gameCtrl.mediaItems.length && gameCtrl.testMediaBarPos != 'above' ? 'dark' : ''" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
-		<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
-	</section>
-</div>
+<section class="ad-section" ng-class="::gameCtrl.mediaItems.length ? 'dark' : ''" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
+	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+</section>
 
 <section class="section section-thin fill-darker" ng-if="overviewCtrl.activeJam">
 	<div class="container">

@@ -10,8 +10,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		slug: game.slug,
 	} );
 
-	this.testMediaBarPos = SplitTest.getMediaBarPos( gamePayload );
-
 	this.game = game;
 	this.followerCount = gamePayload.followerCount;
 	this.libraryGame = gamePayload.libraryGame ? new GameLibrary_Game( gamePayload.libraryGame ) : null;

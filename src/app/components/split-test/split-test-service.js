@@ -1,23 +1,5 @@
 angular.module( 'App.SplitTest' ).service( 'SplitTest', function( $location, $window )
 {
-	var EXPERIMENT_GAME_MEDIA_BAR_POS = '5LcILHXgQxqyW60AGmoscw';
-
-	this.getMediaBarPos = function( payload )
-	{
-		var variation = getVariation( payload, EXPERIMENT_GAME_MEDIA_BAR_POS );
-		if ( variation === 1 ) {
-			return 'no-banner';
-		}
-		else if ( variation == 2 ) {
-			return 'above';
-		}
-		else if ( variation == 3 ) {
-			return 'above-no-banner';
-		}
-
-		return 'original';
-	};
-
 	function getVariation( payload, experiment )
 	{
 		// Allows you to put the experiment in the URL to force it.
