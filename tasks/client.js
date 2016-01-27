@@ -44,9 +44,25 @@ module.exports = function( config )
 		lzmaPath = path.join( 'node_modules', 'client-voodoo', 'node_modules', 'lzma-native' );
 	}
 
-	gulp.task( 'client:gyp', shell.task( [
-		'cd ' + path.resolve( lzmaPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
-	] ) );
+	var windowsMutexPath = path.join( 'node_modules', 'windows-mutex' );
+	if ( config.platform === 'win' ) {
+		try {
+			// Will throw if no path exists.
+			fs.statSync( path.resolve( windowsMutexPath ) );
+		}
+		catch ( e ) {
+			windowsMutexPath = path.join( 'node_modules', 'client-voodoo', 'node_modules', 'windows-mutex' );
+		}
+	}
+
+	var gypTasks = [
+		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
+	];
+	if ( config.platform == 'win' ) {
+		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
+	}
+
+	gulp.task( 'client:gyp', shell.task( gypTasks ) );
 
 	var releaseDir = path.join( 'build/client/prod', 'v' + packageJson.version );
 	var s3Dir = 's3://gjolt-data/data/client/releases/v' + packageJson.version;
@@ -181,12 +197,14 @@ module.exports = function( config )
 
 	var nodeModuletasks = [
 		'cd ' + config.buildDir + ' && npm install --production',
-		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
+		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
 	];
 
 	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
-		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'build/Release/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' )
+		nodeModuletasks.push( 'cd ' + path.resolve( config.buildDir, windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
+		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'build/Release/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' );
+		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, windowsMutexPath, 'build/Release/CreateMutex.node' ) + ' nw.exe GameJoltClient.exe' );
 	}
 
 	gulp.task( 'client:node-modules', shell.task( nodeModuletasks ) );
