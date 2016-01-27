@@ -362,35 +362,13 @@ module.exports = function( config )
 	else if ( config.platform == 'win' ) {
 		gulp.task( 'client:package', function( cb )
 		{
-			var Builder = require( 'nwjs-installer-builder' ).Builder;
 			var releaseDir = getReleaseDir();
 			var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
 
-			var builder = new Builder( {
-				appDirectory: path.resolve( releaseDir, config.platformArch ),
-				outputDirectory: releaseDir,
-				name: 'GameJoltClient',
-				version: packageJson.version,
-				title: 'Game Jolt Client',
-				description: 'The Game Jolt Client for Windows.',
-				authors: 'Lucent Web Creative, LLC',
-				loadingGif: config.buildDir + '/app/img/client/winstalling.gif',
-				iconUrl: 'http://s.gjcdn.net/app/img/client/winico.ico',
-				setupIcon: config.buildDir + '/app/img/client/winico.ico',
-				certFile: path.resolve( __dirname, 'certs/win.p12' ),
-				certPassFile: path.resolve( __dirname, 'certs/win-pass' ),
-				files: {
-					'GameJoltClient.exe': '',
-					'locales\\**': 'locales',
-					'node_modules\\**': 'node_modules',
-					'package\\**': 'package',
-					'package.json': '',
-					'*.dll': '',
-					'*.pak': '',
-					'icudtl.dat': '',
-				}
-			} );
-
+			var InnoSetup = require( './inno-setup' );
+			var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
+			var certPw = config.production ? fs.readFileSync( path.resolve( __dirname, 'certs', 'win-pass' ), { encoding: 'utf8' } ) : 'GJ123456';
+			var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw );
 			return builder.build();
 		} );
 	}

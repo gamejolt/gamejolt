@@ -44,7 +44,6 @@
     "gulp-zip": "2.0.2",
     "minimist": "~0.2.0",
     "nw-builder": "gamejolt/nw-builder#skip-merge-app",
-    "nwjs-installer-builder": "0.0.1",
     "run-sequence": "~0.3.6",
     "sanitize-html": "^1.11.3",
     "streamqueue": "~0.1.1",
