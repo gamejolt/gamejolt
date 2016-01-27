@@ -3,13 +3,6 @@
 	<gj-game-cover gj-game="gameCtrl.game"></gj-game-cover>
 </div>
 
-<!-- Media Bar -->
-<div ng-if="Game_ViewState.showExtendedHeader && gameCtrl.mediaItems.length">
-	<div ng-if="::gameCtrl.testMediaBarPos == 'above' || gameCtrl.testMediaBarPos == 'above-no-banner'">
-		<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
-	</div>
-</div>
-
 <div class="alert alert-warning sans-margin-bottom" ng-if="Game_ViewState.showExtendedHeader && gameCtrl.notificationCounts.news">
 	<div class="container">
 		<h4 class="section-header" translate>games.view.notifications_heading</h4>
@@ -79,12 +72,5 @@
 	</div>
 
 </header>
-
-<!-- Media Bar -->
-<div ng-if="Game_ViewState.showExtendedHeader && gameCtrl.mediaItems.length">
-	<div ng-if="::gameCtrl.testMediaBarPos != 'above' && gameCtrl.testMediaBarPos != 'above-no-banner'">
-		<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
-	</div>
-</div>
 
 <ui-view></ui-view>
