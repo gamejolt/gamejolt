@@ -1,0 +1,45 @@
+$page-content-sidebar-width = 200px
+$page-content-sidebar-width-lg = 250px
+
+.page-content-sidebar
+	@extend .fill-darker
+	position: fixed
+	top: $shell-top-nav-height
+	bottom: 0
+	left: 0
+	padding: $line-height-computed 0
+	width: $page-content-sidebar-width
+	overflow-y: auto
+
+	ul.shell-nav > li > a:hover
+		background-color: $gray-dark
+
+	&-main
+		margin-left: $page-content-sidebar-width
+
+	@media $media-min-lg-desktop
+		&
+			width: $page-content-sidebar-width-lg
+
+		&-main
+			margin-left: $page-content-sidebar-width-lg
+
+	&-main
+		@media $media-sm-up
+			min-height: 700px
+
+		.container
+			container-fixed()
+
+			@media $media-min-tablet
+				width: $container-sm - $page-content-sidebar-width
+
+			@media $media-min-desktop
+				width: $container-md - $page-content-sidebar-width
+
+			@media $media-min-lg-desktop
+				width: $container-lg - $page-content-sidebar-width-lg
+
+			$media-min-lg-desktop-sidebar = minw( $screen-lg + $page-content-sidebar-width-lg )
+			@media $media-min-lg-desktop-sidebar
+				width: $container-lg
