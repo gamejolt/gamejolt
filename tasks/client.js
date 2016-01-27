@@ -14,7 +14,7 @@ module.exports = function( config )
 {
 	var packageJson = require( path.resolve( __dirname, '../package.json' ) );
 	config.client = argv.client || false;
-	config.arch = argv.arch || ( os.arch() === 'x64' ? '64' : '32' );
+	config.arch = argv.arch || '64';
 	config.gypArch = config.arch == '64' ? 'x64' : 'ia32';
 
 	// Get our platform that we are building on.

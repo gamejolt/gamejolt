@@ -42,7 +42,7 @@ InnoSetup.prototype.build = function()
 	var scriptFile = path.resolve( __dirname, 'vendor', 'tmp-gamejolt.iss' );
 	fs.writeFileSync( scriptFile, script, { encoding: 'utf8' } );
 
-	return cp( 'iscc.exe', [ '/a', '/Sbyparam=' + shellEscape( path.resolve( __dirname, 'vendor', 'signtool.exe' ) ) + ' sign /f ' + shellEscape( this.certFile ) + ' /p ' + this.certPw, '/Q', scriptFile ] );
+	return cp( 'iscc.exe', [ '/Sbyparam=' + shellEscape( path.resolve( __dirname, 'vendor', 'signtool.exe' ) ) + ' sign /a /f ' + shellEscape( this.certFile ) + ' /p ' + this.certPw, '/Q', scriptFile ] );
 };
 
 module.exports = InnoSetup;
