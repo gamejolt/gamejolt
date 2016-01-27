@@ -55,7 +55,7 @@
     "appdmg": "^0.3.5"
   },
   "dependencies": {
-    "client-voodoo": "0.3.0",
+    "client-voodoo": "gamejolt/client-voodoo.git#application-mutex",
     "lodash": "3.9.3",
     "nwjs-snappy-updater": "0.0.7"
   }
