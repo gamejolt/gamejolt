@@ -4,11 +4,11 @@ angular.module( 'App.Forums.TopicList' ).directive( 'gjForumsTopicList', functio
 		restrict: 'E',
 		templateUrl: '/app/components/forums/topic-list/topic-list.html',
 		scope: {
-			items: '=items',
+			topics: '=',
 			moreLink: '@moreLink'
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $scope ) {}
+		controller: angular.noop,
 	}
 } );

@@ -4,20 +4,22 @@ angular.module( 'App.Forums.Post' ).directive( 'gjForumsPost', function()
 		restrict: 'E',
 		templateUrl: '/app/components/forums/post/post.html',
 		scope: {
-			itemId: '=itemId'
+			post: '='
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function( $scope )
-		{	
+		{
 			this.repliesActive = false;
-			
+
 			this.viewReplies = function()
 			{
 				if ( !this.repliesActive ) {
+					
 					// TODO: Load in the replies using an API request here
 					this.repliesActive = true;
-				} else {
+				}
+				else {
 					this.repliesActive = false;
 				}
 			}

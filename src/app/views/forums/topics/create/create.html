@@ -1,31 +1,26 @@
 <header class="section">
 	<div class="container forum-header">
 		<div class="forum-breadcrumbs">
-			<a ui-sref="forums.landing" class="link-unstyled">Forums</a> / <a href="/forums/category/development" class="link-unstyled">Development</a> / <a href="/f/gamemaker" class="link-unstyled">#gamemaker</a> / <a href="#">New Topic</a>
+			<a ui-sref="forums.landing" class="link-unstyled">Forums</a>
+			/ <a ui-sref="forums.category( { url: createCtrl.channel.category.url } )" class="link-unstyled">{{ createCtrl.channel.category.title }}</a>
+			/ <a ui-sref="forums.channels.view( { name: createCtrl.channel.name } )">#{{ createCtrl.channel.name }}</a>
+			/ <a href="#">New Topic</a>
 		</div>
 	</div>
 </header>
 
 <div class="section">
 	<div class="container">
-		
+
 		<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-		
-			<h1 class="sans-margin">New Topic</h1>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum sint eos illo id, dolore odio quisquam non recusandae excepturi, enim accusantium, voluptates possimus. Ipsa ab quas amet, deleniti accusamus eum.</p>
-			
-			<h2>Title</h2>
-			<input type="text" class="form-control" placeholder="My Topic Name">
-			
-			<h2>Content</h2>
-			<p>Markdown supported.</p>
-			<textarea name="" id="" cols="30" rows="10" class="form-control"></textarea>
-			
-			<hr>
-			
-			<a href="#" class="btn pull-right"><span class="jolticon jolticon-add"></span> Add Your Topic</a>
-			
+
+			<gj-form-forum-topic
+				channel="createCtrl.channel"
+				gj-form-submit-handler="createCtrl.onCreate()"
+				>
+			</gj-form-forum-topic>
+
 		</div>
-		
+
 	</div>
 </div>

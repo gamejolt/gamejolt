@@ -1,6 +1,6 @@
 <header class="section">
 	<div class="container forum-header forum-header-landing">
-		
+
 		<div class="col-xs-12 col-sm-9 forum-header-landing-content">
 			<div>
 				<h1>Game Jolt Indie Game Forums</h1>
@@ -11,54 +11,63 @@
 				</a>
 			</div>
 		</div>
-		
+
 		<div class="col-sm-3 hidden-xs">
 			<img class="social-butterflies" src="/app/views/forums/landing/butterflies.png" alt="The Social Butterflies">
 		</div>
-		
+
 	</div>
 	<br>
 </header>
 
-<section class="section">
+<!--<section class="section">
 	<div class="container">
-		
+
 		<div class="page-header forum-list-heading">
 			<h2 class="sans-margin">
 				<a class="link-unstyled" ui-sref="forums.channels.followed">Followed Channels</a>
 			</h2>
 			<div class="text-muted">10 Channels</div>
 		</div>
-		
+
 		<gj-forums-channel-list items="[0, 1]" more-link="/forums/channels"></gj-forums-channel-list>
-		
+
 		<div class="page-header forum-list-heading">
 			<h2 class="sans-margin">
 				<a class="link-unstyled" ui-sref="forums.topics.followed">Followed Topics</a>
 			</h2>
 			<div class="text-muted">10 Topics</div>
 		</div>
-		
-		<gj-forums-topic-list items="[0, 1]" more-link="/forums/topics"></gj-forums-topic-list>
-		
-	</div>
-</section>
 
-<section class="section" ng-repeat="i in [0, 1, 2]" ng-class="{'fill-lightest': i % 2 == 0}">
+		<gj-forums-topic-list items="[0, 1]" more-link="/forums/topics"></gj-forums-topic-list>
+
+	</div>
+</section>-->
+
+<!--<section class="section" ng-repeat="i in [0, 1, 2]" ng-class="{'fill-lightest': i % 2 == 0}">-->
+<section class="section">
 	<div class="container">
-		<div class="row">
-			<div class="col-md-6" ng-repeat="j in [0, 1]">
-				
+
+			<div ng-repeat="category in landingCtrl.categories track by category.id">
+
 				<div class="page-header forum-list-heading">
 					<h2 class="sans-margin">
-						<a class="link-unstyled" href="/forums/category/development">Development</a>
+						<a class="link-unstyled" ui-sref="forums.category( { url: category.url } )">
+							{{ category.title }}
+						</a>
 					</h2>
 					<div class="text-muted">750 Channels</div>
 				</div>
-				
-				<gj-forums-channel-list items="[0, 1]" list-type="small" more-link="/forums/category/development"></gj-forums-channel-list>
-				
+
+				<gj-forums-channel-list
+					channels="landingCtrl.channels[ category.id ]"
+					category="category"
+					more-link="/forums/category/development"
+					>
+				</gj-forums-channel-list>
+
 			</div>
-		</div>
+
 	</div>
 </section>
+<!--</section>-->

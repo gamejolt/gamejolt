@@ -1,15 +1,15 @@
 <header class="section">
 	<div class="container forum-header">
-		
+
 		<div class="forum-breadcrumbs">
-			<a ui-sref="forums.landing" class="link-unstyled">Forums</a> / <a href="#" ng-bind="categoryName"></a>
+			<a ui-sref="forums.landing" class="link-unstyled">Forums</a> / <a href="#">{{ categoryCtrl.category.title }}</a>
 		</div>
-		
-		<h1 ng-bind="categoryName"></h1>
-		<p>This is a description about the {{ categoryName }} category.</p>
-		
+
+		<h1>{{ categoryCtrl.category.title }}</h1>
+		<p>{{ categoryCtrl.category.description }}</p>
+
 		<div class="row">
-			
+
 			<div class="col-sm-7 col-md-8 forum-stats">
 				1,000 Channels
 				<span class="dot-separator hidden-xs"></span>
@@ -18,27 +18,29 @@
 				<span class="dot-separator"></span>
 				<span class="text-muted">2,123 Replies</span>
 			</div>
-			
+
 		</div>
-		
+
 	</div>
 	<br>
 </header>
 
 <div class="section">
 	<div class="container">
-		
-		<div class="page-header forum-list-heading">
+
+		<gj-forums-channel-list channels="categoryCtrl.recentChannels"></gj-forums-channel-list>
+
+		<!--<div class="page-header forum-list-heading">
 			<h2 class="sans-margin">Most Popular</h2>
 		</div>
-		
+
 		<gj-forums-channel-list items="[0, 1, 2]"></gj-forums-channel-list>
-		
+
 		<div class="page-header forum-list-heading">
 			<h2 class="sans-margin">Fresh for Discussion</h2>
 		</div>
-		
-		<gj-forums-channel-list items="[0, 1, 2]"></gj-forums-channel-list>
-		
+
+		<gj-forums-channel-list items="[0, 1, 2]"></gj-forums-channel-list>-->
+
 	</div>
 </div>

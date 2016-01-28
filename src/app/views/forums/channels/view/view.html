@@ -1,20 +1,24 @@
 <header class="section">
 	<div class="container forum-header">
-		
+
 		<div class="forum-breadcrumbs">
-			<a ui-sref="forums.landing" class="link-unstyled">Forums</a> / <a href="/forums/category/development" class="link-unstyled">Development</a> / <a href="#">#{{ channelName }}</a>
+			<a ui-sref="forums.landing" class="link-unstyled">Forums</a>
+			/ <a ui-sref="forums.category( { url: viewCtrl.channel.category.url } )" class="link-unstyled">{{ viewCtrl.channel.category.title }}</a>
+			/ <a ui-sref="forums.channels.view( { name: viewCtrl.channel.name } )">#{{ viewCtrl.channel.name }}</a>
 		</div>
-		
+
 		<h1>
-			<span class="jolticon jolticon-number-sign big"></span>{{ channelName }}
-			<!--<span class="forum-header-private tag tag-pink" gj-tooltip="'A private channel is not visible to the public'">
+			<span class="jolticon jolticon-number-sign big"></span>
+			{{ viewCtrl.channel.name }}
+			<!--<span class="forum-header-private tag tag-pink" gj-tooltip="A private channel is not visible to the public">
 				<span class="jolticon jolticon-exclamation-circle"></span> Private Channel
 			</span>-->
 		</h1>
-		<p>This is a description about the {{ channelName }} channel.</p>
-		
+
+		<p>{{ viewCtrl.channel.description }}</p>
+
 		<div class="row">
-			
+
 			<div class="col-sm-8 col-md-6 forum-stats">
 				13,000 Followers
 				<span class="dot-separator hidden-xs"></span>
@@ -25,18 +29,35 @@
 				<br class="visible-xs">
 				&nbsp;
 			</div>
-			
+
 			<div class="col-sm-4 col-md-6 text-right forum-header-buttons">
-				<a href="/f/{{ channelName }}/create" class="btn btn-dark-variant btn-outline" gj-tooltip="'Add a new topic for discussion'" ng-class="{'btn-sparse': Screen.isSm}">
-					<span class="jolticon jolticon-add"></span> <span class="hidden-sm">Add Topic</span>
+				<a ui-sref="forums.topics.create( { channelName: viewCtrl.channel.name } )"
+					class="btn btn-dark-variant btn-outline"
+					ng-class="{ 'btn-sparse': Screen.isSm }"
+					gj-tooltip="Add a new topic for discussion"
+					>
+					<span class="jolticon jolticon-add"></span>
+					<span class="hidden-sm">Add Topic</span>
 				</a>
-				<a href="#" class="btn btn-dark-variant btn-outline" gj-tooltip="'Keep track of topics in this channel'" ng-class="{'btn-sparse': Screen.isSm}">
-					<span class="jolticon jolticon-subscribe"></span> <span class="hidden-sm">Follow</span>
+				<a href="#"
+					class="btn btn-dark-variant btn-outline"
+					ng-class="{ 'btn-sparse': Screen.isSm }"
+					gj-tooltip="Keep track of topics in this channel"
+					>
+					<span class="jolticon jolticon-subscribe"></span>
+					<span class="hidden-sm">Follow</span>
 				</a>
-				<a href="#" class="btn btn-dark-variant btn-outline" gj-tooltip="'Join the community chatroom'" ng-class="{'btn-sparse': Screen.isSm}">
-					<span class="jolticon jolticon-comment"></span> <span class="hidden-sm">Chat</span>
-				</a>
-				<a class="btn btn-sparse btn-dark-variant btn-outline" gj-popover-trigger="forum-channel-popover">
+				<!--<a href="#"
+					class="btn btn-dark-variant btn-outline"
+					ng-class="{ 'btn-sparse': Screen.isSm }"
+					gj-tooltip="Join the community chatroom"
+					>
+					<span class="jolticon jolticon-comment"></span>
+					<span class="hidden-sm">Chat</span>
+				</a>-->
+				<a class="btn btn-sparse btn-dark-variant btn-outline"
+					gj-popover-trigger="forum-channel-popover"
+					>
 					<span class="jolticon jolticon-ellipsis-h"></span>
 				</a>
 				<gj-popover popover-id="forum-channel-popover">
@@ -52,21 +73,21 @@
 					</div>
 				</gj-popover>
 			</div>
-			
+
 		</div>
-		
+
 	</div>
 	<br>
 </header>
 
 <div class="section">
 	<div class="container">
-		
-		<div class="page-header forum-list-heading">
+
+		<!--<div class="page-header forum-list-heading">
 			<h2 class="sans-margin">Recent Topics</h2>
-		</div>
-			
-		<gj-forums-topic-list items="[0, 1, 2, 3]"></gj-forums-topic-list>
-		
+		</div>-->
+
+		<gj-forums-topic-list topics="viewCtrl.topics"></gj-forums-topic-list>
+
 	</div>
 </div>
