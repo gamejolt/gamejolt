@@ -3,7 +3,7 @@
 
 		<h2 class="section-header">{{ ::'dash.games.media.heading' | translate }}</h2>
 
-		<div class="page-help" translate="dash.games.media.page_help_html"></div>
+		<div class="page-help" translate>dash.games.media.page_help_html</div>
 
 		<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
 			<div class="media-item-list"
@@ -19,7 +19,7 @@
 						<a class="media-item hidden-xs" ui-sref="^.add">
 							<div class="media-item-add">
 								<span class="jolticon jolticon-add big"></span>
-								<span class="inner" translate="dash.games.media.add_button_html"></span>
+								<span class="inner" translate>dash.games.media.add_button_html</span>
 							</div>
 						</a>
 
@@ -42,20 +42,24 @@
 						<div class="media-item">
 							<div class="media-item-inner">
 								<div class="media-item-controls">
-									<span class="media-item-type" tooltip="{{ 'dash.games.media.' + item.media_type + '_label' | translate }}">
-										<span class="jolticon" ng-class="'jolticon-' + (item.media_type == 'image' ? 'screenshot' : 'video')"></span>
+									<span ng-if="item.media_type == 'image'" class="media-item-type" tooltip="{{ 'dash.games.media.image_label' | translate }}">
+										<span class="jolticon jolticon-screenshot"></span>
+									</span>
+
+									<span ng-if="item.media_type == 'video'" class="media-item-type" tooltip="{{ 'dash.games.media.video_label' | translate }}">
+										<span class="jolticon jolticon-video"></span>
 									</span>
 
 									<a class="media-item-edit"
 										ui-sref="^.{{ item.media_type }}( { {{ item.media_type + 'Id' }}: item.id } )"
-										gj-tooltip="$translate.instant( 'dash.games.media.edit_' + item.media_type + '_button' )"
+										gj-tooltip="{{ ::listCtrl.getEditTooltip( item ) | translate }}"
 										>
 										<span class="jolticon jolticon-edit"></span>
 									</a>
 
 									<a class="media-item-remove"
 										ng-click="listCtrl.removeItem( item )"
-										gj-tooltip="$translate.instant( 'dash.games.media.remove_' + item.media_type + '_button' )"
+										gj-tooltip="{{ ::listCtrl.getRemoveTooltip( item ) | translate }}"
 										>
 										<span class="jolticon jolticon-remove"></span>
 									</a>

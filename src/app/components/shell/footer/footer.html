@@ -10,17 +10,48 @@
 					<gj-social-facebook-like url="https://facebook.com/gamejolt" show-share="false"></gj-social-facebook-like>
 				</div>
 
-				<p class="small text-muted">Too many games... and counting!</p>
+				<p class="small text-muted" translate>footer.tagline</p>
+
+				<hr>
+
+				<div>
+					<gj-translate-lang-selector
+						on-lang-change="ctrl.onLangChange()"
+						>
+					</gj-translate-lang-selector>
+				</div>
+				<br class="hidden-xs">
+
+				<p class="small text-muted">
+					<span translate>footer.translations</span>
+					<a href="https://poeditor.com/join/project/B4nWT6EgnD" translate>footer.translations_help</a>
+				</p>
+
 			</div>
 			<div ng-class="{ 'pull-right text-right': !Screen.isXs }">
+
+				<hr class="visible-xs">
+
 				<p>
-					<a href="/terms">{{ ::'legal.terms' | translate }}</a>
+					<a href="https://github.com/gamejolt" translate>footer.open_source</a>
+
 					<span class="dot-separator"></span>
-					<a href="/privacy">{{ ::'legal.privacy' | translate }}</a>
+					<a href="/terms" translate>legal.terms</a>
+
 					<span class="dot-separator"></span>
-					<a href="mailto:contact@gamejolt.com">Contact</a>
+					<a href="/privacy" translate>legal.privacy</a>
+
+					<span class="dot-separator"></span>
+					<a href="mailto:contact@gamejolt.com" translate>footer.contact</a>
 				</p>
-				<p class="tiny">&copy; {{ ::curDate | date:'y' }} Lucent Web Creative, LLC</p>
+
+				<p class="tiny">&copy; {{ ::ctrl.curDate | date:'y' }} Lucent Web Creative, LLC</p>
+
+				<p class="tiny text-muted" ng-if="Environment.isClient">
+					<a ng-click="ctrl.showSystemReport()" class="link-muted" translate>footer.send_system_report</a>
+					<span class="dot-separator"></span>
+					v{{ ::ctrl.clientVersion }}
+				</p>
 			</div>
 		</div>
 	</div>

@@ -6,7 +6,9 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		controllerAs: 'listCtrl',
 		templateUrl: '/app/views/discover/games/list/list.html',
 		resolve: {
-			filteringContainer: function( Game_Filtering_Container )
+
+			// We need translations loaded in for the filtering container, so we wait for "init".
+			filteringContainer: function( init, Game_Filtering_Container )
 			{
 				return new Game_Filtering_Container();
 			}

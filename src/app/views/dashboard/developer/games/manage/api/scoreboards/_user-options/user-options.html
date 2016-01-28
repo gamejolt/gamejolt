@@ -7,12 +7,12 @@
 		<div class="list-group">
 			<a class="list-group-item has-icon" ui-sref="dashboard.developer.games.manage.api.scoreboards.scores.user.list( { table: ctrl.score.table_id, user: ctrl.score.user.id } )">
 				<span class="jolticon jolticon-pedestals-numbers"></span>
-				{{ ::'dash.games.scores.view_user_scores' | translate }} <br>
-				<small class="text-muted">{{ ::'dash.games.scores.view_user_scores_table' | translate:{ table: ctrl.scoreTable.name } }}</small>
+				<span translate>dash.games.scores.view_user_scores</span> <br>
+				<small class="text-muted" translate translate-scope="{ table: ctrl.scoreTable.name }">dash.games.scores.view_user_scores_table</small>
 			</a>
 			<a class="list-group-item has-icon" ng-href="{{ ctrl.score.user.url }}">
 				<span class="jolticon jolticon-user"></span>
-				{{ ::'dash.games.scores.goto_user_profile' | translate }}
+				<span translate>dash.games.scores.goto_user_profile</span>
 			</a>
 		</div>
 	</gj-popover>

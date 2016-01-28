@@ -8,7 +8,7 @@ angular.module( 'App.GamePlaylist.AddToPopover' ).directive( 'gjGamePlaylistAddT
 		},
 		controllerAs: 'ctrl',
 		bindToController: true,
-		controller: function( $scope, Translate, GamePlaylist, Growls, GamePlaylist_SaveModal, Popover, Screen, Analytics )
+		controller: function( $scope, GamePlaylist, Growls, GamePlaylist_SaveModal, Popover, Screen, Analytics, gettextCatalog )
 		{
 			var _this = this;
 
@@ -70,13 +70,19 @@ angular.module( 'App.GamePlaylist.AddToPopover' ).directive( 'gjGamePlaylistAddT
 			{
 				playlist.$addGame( this.game.id ).then( function( playlistGame )
 				{
-					Translate.growl( 'success', 'library.playlists.add_game_success', { game: _this.game.title, playlist: playlist.name } );
+					Growls.success(
+						gettextCatalog.getString( 'library.playlists.add_game_success_growl', { game: _this.game.title, playlist: playlist.name } ),
+						gettextCatalog.getString( 'library.playlists.add_game_success_growl_title', { game: _this.game.title, playlist: playlist.name } )
+					);
 					_this.playlistsWithGame.push( playlist.id );
 					Popover.hideAll();
 				} )
 				.catch( function()
 				{
-					Translate.growl( 'error', 'library.playlists.add_game_error', { game: _this.game.title, playlist: playlist.name } );
+					Growls.error(
+						gettextCatalog.getString( 'library.playlists.add_game_error_growl', { game: _this.game.title, playlist: playlist.name } ),
+						gettextCatalog.getString( 'library.playlists.add_game_error_growl_title', { game: _this.game.title, playlist: playlist.name } )
+					);
 				} );
 			};
 
@@ -84,13 +90,19 @@ angular.module( 'App.GamePlaylist.AddToPopover' ).directive( 'gjGamePlaylistAddT
 			{
 				playlist.$removeGame( this.game.id ).then( function( playlistGame )
 				{
-					Translate.growl( 'success', 'library.playlists.remove_game_success', { game: _this.game.title, playlist: playlist.name } );
+					Growls.success(
+						gettextCatalog.getString( 'library.playlists.remove_game_success_growl', { game: _this.game.title, playlist: playlist.name } ),
+						gettextCatalog.getString( 'library.playlists.remove_game_success_growl_title', { game: _this.game.title, playlist: playlist.name } )
+					);
 					_.pull( this.playlistsWithGame, playlist.id );
 					Popover.hideAll();
 				} )
 				.catch( function()
 				{
-					Translate.growl( 'error', 'library.playlists.remove_game_error', { game: _this.game.title, playlist: playlist.name } );
+					Growls.error(
+						gettextCatalog.getString( 'library.playlists.remove_game_error_growl', { game: _this.game.title, playlist: playlist.name } ),
+						gettextCatalog.getString( 'library.playlists.remove_game_error_growl_title', { game: _this.game.title, playlist: playlist.name } )
+					);
 				} );
 			};
 

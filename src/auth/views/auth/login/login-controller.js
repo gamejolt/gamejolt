@@ -1,6 +1,6 @@
-angular.module( 'App.Views' ).controller( 'Auth.LoginCtrl', function( $stateParams, $state, $window, $location, Environment, Translate, App, User_LinkedAccounts )
+angular.module( 'App.Views' ).controller( 'Auth.LoginCtrl', function( $stateParams, $state, $window, $location, Environment, App, User_LinkedAccounts, gettextCatalog )
 {
-	Translate.pageTitle( 'auth.login.page_title' );
+	App.title = gettextCatalog.getString( 'auth.login.page_title' );
 
 	this.onLoggedIn = function( formModel )
 	{

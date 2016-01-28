@@ -2,7 +2,7 @@
 	<div class="container">
 
 		<h1 class="section-header sans-margin-bottom">{{ ::'library.heading' | translate }}</h1>
-		<div class="text-muted small" translate="library.description_html"></div>
+		<div class="text-muted small" translate>library.description_html</div>
 
 	</div>
 </header>
@@ -10,7 +10,7 @@
 <!--
 	When they are offline, we show them this message.
 -->
-<section class="section fill-pink text-center" ng-if="!Connection.isOnline">
+<section class="section fill-pink text-center" ng-if="Connection.isClientOffline">
 	<p>
 		<span class="jolticon jolticon-notice big"></span>
 	</p>

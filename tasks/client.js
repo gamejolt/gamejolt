@@ -8,6 +8,7 @@ var os = require( 'os' );
 var _ = require( 'lodash' );
 var shell = require( 'gulp-shell' );
 var path = require( 'path' );
+var mv = require( 'mv' );
 
 module.exports = function( config )
 {
@@ -31,9 +32,37 @@ module.exports = function( config )
 			throw new Error( 'Can not build client on your OS type.' );
 	}
 
-	gulp.task( 'client:gyp', shell.task( [
-		'cd node_modules/lzma-native && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
-	] ) );
+	// On Windows builds we have to use npm3. For other OSes it's faster to do npm2.
+	// npm3 does a flat directory structure in node_modules, so the path is different.
+	// We have to find where the lzma-native path is so we can compile it.
+	var lzmaPath = path.join( 'node_modules', 'lzma-native' );
+	try {
+		// Will throw if no path exists.
+		fs.statSync( path.resolve( lzmaPath ) );
+	}
+	catch ( e ) {
+		lzmaPath = path.join( 'node_modules', 'client-voodoo', 'node_modules', 'lzma-native' );
+	}
+
+	var windowsMutexPath = path.join( 'node_modules', 'windows-mutex' );
+	if ( config.platform === 'win' ) {
+		try {
+			// Will throw if no path exists.
+			fs.statSync( path.resolve( windowsMutexPath ) );
+		}
+		catch ( e ) {
+			windowsMutexPath = path.join( 'node_modules', 'client-voodoo', 'node_modules', 'windows-mutex' );
+		}
+	}
+
+	var gypTasks = [
+		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
+	];
+	if ( config.platform == 'win' ) {
+		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
+	}
+
+	gulp.task( 'client:gyp', shell.task( gypTasks ) );
 
 	var releaseDir = path.join( 'build/client/prod', 'v' + packageJson.version );
 	var s3Dir = 's3://gjolt-data/data/client/releases/v' + packageJson.version;
@@ -101,6 +130,9 @@ module.exports = function( config )
 		// Attach a class to say that we're in client.
 		// Makes it easy to target client before angular has loaded in completely with CSS.
 		'<body class="" ': '<body class="is-client" ',
+
+		// GA tag is different.
+		"ga('create', 'UA-6742777-1', 'auto');": "ga('create', 'UA-6742777-16', 'auto');",
 	};
 
 	/**
@@ -165,12 +197,14 @@ module.exports = function( config )
 
 	var nodeModuletasks = [
 		'cd ' + config.buildDir + ' && npm install --production',
-		'cd ' + config.buildDir + '/node_modules/lzma-native && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
+		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
 	];
 
 	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
-		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + config.buildDir + '/node_modules/lzma-native/build/Release/lzma_native.node nw.exe GameJoltClient.exe' )
+		nodeModuletasks.push( 'cd ' + path.resolve( config.buildDir, windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
+		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' );
+		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, windowsMutexPath, 'build/Release/CreateMutex.node' ) + ' nw.exe GameJoltClient.exe' );
 	}
 
 	gulp.task( 'client:node-modules', shell.task( nodeModuletasks ) );
@@ -297,9 +331,19 @@ module.exports = function( config )
 					stream.on( 'error', cb );
 					stream.on( 'end', function()
 					{
-						fs.renameSync( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ) );
-						fs.renameSync( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ) );
-						cb();
+						mv( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ), function( err )
+						{
+							if ( err ) {
+								throw err;
+							}
+							mv( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ), function( err )
+							{
+								if ( err ) {
+									throw err;
+								}
+								cb();
+							} );
+						} );
 					} );
 				} );
 		}
@@ -346,35 +390,13 @@ module.exports = function( config )
 	else if ( config.platform == 'win' ) {
 		gulp.task( 'client:package', function( cb )
 		{
-			var Builder = require( 'nwjs-installer-builder' ).Builder;
 			var releaseDir = getReleaseDir();
 			var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
 
-			var builder = new Builder( {
-				appDirectory: path.resolve( releaseDir, config.platformArch ),
-				outputDirectory: releaseDir,
-				name: 'GameJoltClient',
-				version: packageJson.version,
-				title: 'Game Jolt Client',
-				description: 'The Game Jolt Client for Windows.',
-				authors: 'Lucent Web Creative, LLC',
-				loadingGif: config.buildDir + '/app/img/client/winstalling.gif',
-				iconUrl: 'http://s.gjcdn.net/app/img/client/winico.ico',
-				setupIcon: config.buildDir + '/app/img/client/winico.ico',
-				certFile: path.resolve( __dirname, 'certs/win.p12' ),
-				certPassFile: path.resolve( __dirname, 'certs/win-pass' ),
-				files: {
-					'GameJoltClient.exe': '',
-					'locales\\**': 'locales',
-					'node_modules\\**': 'node_modules',
-					'package\\**': 'package',
-					'package.json': '',
-					'*.dll': '',
-					'*.pak': '',
-					'icudtl.dat': '',
-				}
-			} );
-
+			var InnoSetup = require( './inno-setup' );
+			var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
+			var certPw = config.production ? fs.readFileSync( path.resolve( __dirname, 'certs', 'win-pass' ), { encoding: 'utf8' } ) : 'GJ123456';
+			var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw );
 			return builder.build();
 		} );
 	}

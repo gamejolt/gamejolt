@@ -1,70 +1,45 @@
-angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', function( $ocLazyLoad, $q, $window, $state, $location, $translate, $injector, Environment )
+angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', function( $ocLazyLoad, $q, $window, $state, $location, $injector, Environment, gettextCatalog )
 {
 	var STORAGE_KEY = 'game-filtering:filters';
 
-	var translations = $translate.instant( [
-		'games.filtering.os',
-		'games.filtering.os_windows',
-		'games.filtering.os_mac',
-		'games.filtering.os_linux',
-		'games.filtering.os_other',
-
-		'games.filtering.browser',
-		'games.filtering.browser_html',
-		'games.filtering.browser_flash',
-		'games.filtering.browser_unity',
-		'games.filtering.browser_applet',
-		'games.filtering.browser_silverlight',
-
-		'games.filtering.maturity',
-		'games.filtering.maturity_everyone',
-		'games.filtering.maturity_teen',
-		'games.filtering.maturity_adult',
-
-		'games.filtering.status',
-		'games.filtering.status_complete',
-		'games.filtering.status_wip',
-		'games.filtering.status_canceled',
-	] );
-
 	Game_Filtering_Container.filterDefinitions = {
 		os: {
-			label: translations[ 'games.filtering.os' ],
+			label: gettextCatalog.getString( 'games.filtering.os' ),
 			type: 'array',
 			options: {
-				windows: translations[ 'games.filtering.os_windows' ],
-				mac: translations[ 'games.filtering.os_mac' ],
-				linux: translations[ 'games.filtering.os_linux' ],
-				other: translations[ 'games.filtering.os_other' ],
+				windows: gettextCatalog.getString( 'games.filtering.os_windows' ),
+				mac: gettextCatalog.getString( 'games.filtering.os_mac' ),
+				linux: gettextCatalog.getString( 'games.filtering.os_linux' ),
+				other: gettextCatalog.getString( 'games.filtering.os_other' ),
 			}
 		},
 		browser: {
-			label: translations[ 'games.filtering.browser' ],
+			label: gettextCatalog.getString( 'games.filtering.browser' ),
 			type: 'array',
 			options: {
-				html: translations[ 'games.filtering.browser_html' ],
-				flash: translations[ 'games.filtering.browser_flash' ],
-				unity: translations[ 'games.filtering.browser_unity' ],
-				applet: translations[ 'games.filtering.browser_applet' ],
-				silverlight: translations[ 'games.filtering.browser_silverlight' ],
+				html: gettextCatalog.getString( 'games.filtering.browser_html' ),
+				flash: gettextCatalog.getString( 'games.filtering.browser_flash' ),
+				unity: gettextCatalog.getString( 'games.filtering.browser_unity' ),
+				applet: gettextCatalog.getString( 'games.filtering.browser_applet' ),
+				silverlight: gettextCatalog.getString( 'games.filtering.browser_silverlight' ),
 			}
 		},
 		maturity: {
-			label: translations[ 'games.filtering.maturity' ],
+			label: gettextCatalog.getString( 'games.filtering.maturity' ),
 			type: 'array',
 			options: {
-				everyone: translations[ 'games.filtering.maturity_everyone' ],
-				teen: translations[ 'games.filtering.maturity_teen' ],
-				adult: translations[ 'games.filtering.maturity_adult' ],
+				everyone: gettextCatalog.getString( 'games.filtering.maturity_everyone' ),
+				teen: gettextCatalog.getString( 'games.filtering.maturity_teen' ),
+				adult: gettextCatalog.getString( 'games.filtering.maturity_adult' ),
 			}
 		},
 		status: {
-			label: translations[ 'games.filtering.status' ],
+			label: gettextCatalog.getString( 'games.filtering.status' ),
 			type: 'array',
 			options: {
-				complete: translations[ 'games.filtering.status_complete' ],
-				wip: translations[ 'games.filtering.status_wip' ],
-				canceled: translations[ 'games.filtering.status_canceled' ],
+				complete: gettextCatalog.getString( 'games.filtering.status_complete' ),
+				wip: gettextCatalog.getString( 'games.filtering.status_wip' ),
+				canceled: gettextCatalog.getString( 'games.filtering.status_canceled' ),
 			}
 		},
 		query: {

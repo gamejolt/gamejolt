@@ -1,28 +1,28 @@
 <div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
 	<form gj-form="formModel" name="supplementalFileForm">
 
-		<form-group name="file" label="{{ ::'dash.games.releases.builds.extra_files.form.file_label' | translate }}">
+		<form-group name="file" label="{{ 'dash.games.releases.builds.extra_files.form.file_label' | translate }}">
 			<gj-form-upload-control
 				form-control="upload"
 				gj-max-filesize="maxFilesize"
 				>
 			</gj-form-upload-control>
 
-			<control-errors label="{{ ::'dash.games.releases.builds.extra_files.form.file_error_label' | translate }}"></control-errors>
+			<control-errors label="{{ 'dash.games.releases.builds.extra_files.form.file_error_label' | translate }}"></control-errors>
 		</form-group>
 
-		<form-group name="java_include_archive" label="{{ ::'dash.games.releases.builds.extra_files.form.include_archive_label' | translate }}">
-			<p class="help-block">{{ ::'dash.games.releases.builds.extra_files.form.include_archive_help' | translate }}</p>
+		<form-group name="java_include_archive" label="{{ 'dash.games.releases.builds.extra_files.form.include_archive_label' | translate }}">
+			<p class="help-block" translate>dash.games.releases.builds.extra_files.form.include_archive_help</p>
 			<gj-toggle-switch
 				form-control="checkbox"
-				toggle-switch-on-text="{{ ::'dash.forms.yes' | translate }}"
-				toggle-switch-off-text="{{ ::'dash.forms.no' | translate }}"
+				toggle-switch-on-text="{{ 'forms.yes' | translate }}"
+				toggle-switch-off-text="{{ 'forms.no' | translate }}"
 			></gj-toggle-switch>
 		</form-group>
 
 		<button gj-form-submit-button class="i-button" ng-disabled="!supplementalFileForm.$valid" ng-click="onSubmit()">
 			<span class="jolticon jolticon-add"></span>
-			{{ ::'dash.games.releases.builds.extra_files.form.submit_button' | translate }}
+			<span translate>dash.games.releases.builds.extra_files.form.submit_button</span>
 		</button>
 
 	</form>

@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Twitter.CallbackCtrl', function( $state, Translate, App, payload )
+angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Twitter.CallbackCtrl', function( $state, App, Growls, gettextCatalog, payload )
 {
 	/**
 	 * We do this in the controller so that we can show a processing message, just in case it takes a little bit.
@@ -11,7 +11,10 @@ angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Twitter.CallbackCt
 			$state.go( 'auth.linked-account.twitter.finalize' );
 		}
 		else {
-			Translate.growl( 'error', 'auth.linked_account.twitter.failed' );
+			Growls.error(
+				gettextCatalog.getString( 'auth.linked_account.twitter.failed_growl' ),
+				gettextCatalog.getString( 'auth.linked_account.twitter.failed_growl_title' )
+			);
 			$state.go( 'auth.join' );
 		}
 		return;

@@ -64,7 +64,8 @@
 					</ul>
 					<br>
 
-					<div class="alert alert-info" ng-if="::overviewCtrl.revenuePending" translate="dash.overview.revenue_pending_message_html" translate-values="{ amount: overviewCtrl.revenuePending }">
+					<div class="alert alert-info" ng-if="::overviewCtrl.revenuePending" translate translate-scope="{ amount: overviewCtrl.revenuePending }">
+						dash.overview.revenue_pending_message_html
 					</div>
 
 					<div>
@@ -109,7 +110,7 @@
 										<span class="jolticon jolticon-check"></span>
 										{{ ::'dash.integrate.done' | translate }}
 									</span>
-									<span ng-class="{ 'text-muted': overviewCtrl.integration[ key ].achieved }" translate="dash.integrate.{{ ::key }}_html"></span>
+									<span ng-class="{ 'text-muted': overviewCtrl.integration[ key ].achieved }" ng-bind-html="::overviewCtrl.integrationTranslations[ key ]"></span>
 								</td>
 							</tr>
 						</tbody>
@@ -120,7 +121,7 @@
 
 				<div class="alert alert-info">
 					<h4>{{ ::'dash.integrate.exp_help_heading' | translate }}</h4>
-					<div translate="dash.integrate.exp_help_body_html"></div>
+					<div translate>dash.integrate.exp_help_body_html</div>
 				</div>
 
 				<!--
@@ -136,7 +137,7 @@
 					>
 				</gj-activity-feed>
 
-				<div class="alert alert-info" ng-if="!overviewCtrl.activityNotifications.length" translate="dash.overview.activity_no_activity_html"></div>
+				<div class="alert alert-info" ng-if="!overviewCtrl.activityNotifications.length" translate>dash.overview.activity_no_activity_html</div>
 
 				<a class="i-button big block" ui-sref="dashboard.activity.list( { tab: 'all' } )" gj-track-event="dash:overview:all-activity">
 					<span class="jolticon jolticon-notifications"></span>
@@ -174,7 +175,7 @@
 						</a>
 					</div>
 
-					<div class="alert alert-warning full-bleed-xs" ng-if="!overviewCtrl.games.length" translate="dash.overview.developer_games_no_games_html"></div>
+					<div class="alert alert-warning full-bleed-xs" ng-if="!overviewCtrl.games.length" translate>dash.overview.developer_games_no_games_html</div>
 				</div>
 
 			</div>

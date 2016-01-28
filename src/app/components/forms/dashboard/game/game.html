@@ -7,15 +7,15 @@
 	<div ng-if="isLoaded">
 		<div ng-if="isShowingRules">
 
-			<h3 class="section-header">{{ ::'dash.games.add.rules_heading' | translate }}</h3>
+			<h3 class="section-header" translate>dash.games.add.rules_heading</h3>
 
-			<div translate="dash.games.add.rules_html"></div>
+			<div translate>dash.games.add.rules_html</div>
 
 			<br>
 			<div>
 				<a class="i-button big block" ng-click="acceptRules()">
 					<span class="jolticon jolticon-checkbox"></span>
-					{{ ::'dash.games.add.rules_accept_button' | translate }}
+					<span translate>dash.games.add.rules_accept_button</span>
 				</a>
 			</div>
 
@@ -25,66 +25,66 @@
 
 			<fieldset ng-class="{ 'game-form-disabled': isDisabled }" ng-disabled="isDisabled">
 
-				<form-group name="title" label="{{ ::'dash.games.form.title_label' | translate }}">
+				<form-group name="title" label="{{ 'dash.games.form.title_label' | translate }}">
 					<input form-control="text" ng-maxlength="250">
 					<control-errors></control-errors>
 				</form-group>
 
-				<form-group name="web_site" label="{{ ::'dash.games.form.website_label' | translate }}" optional="true">
+				<form-group name="web_site" label="{{ 'dash.games.form.website_label' | translate }}" optional="true">
 					<input form-control="url" ng-maxlength="250">
 					<control-errors></control-errors>
 				</form-group>
 
-				<form-group name="category" label="{{ ::'dash.games.form.category_label' | translate }}">
+				<form-group name="category" label="{{ 'dash.games.form.category_label' | translate }}">
 					<select form-control="select" ng-options="key as val for ( key, val ) in categories">
-						<option value="">{{ ::'dash.games.form.category_placeholder' | translate }}</option>
+						<option value="" translate>dash.games.form.category_placeholder</option>
 					</select>
 					<control-errors></control-errors>
 				</form-group>
 
-				<form-group name="creation_tool" label="{{ ::'dash.games.form.engine_label' | translate }}">
+				<form-group name="creation_tool" label="{{ 'dash.games.form.engine_label' | translate }}">
 					<select form-control="select" ng-options="key as val for (key, val) in engines">
-						<option value="">{{ ::'dash.games.form.engine_placeholder' | translate }}</option>
+						<option value="" translate>dash.games.form.engine_placeholder</option>
 					</select>
 					<control-errors></control-errors>
 				</form-group>
 
 				<div gj-expand-when="formModel.creation_tool == 'other'">
-					<form-group name="creation_tool_other" label="{{ ::'dash.games.form.engine_other_label' | translate }}" optional="true">
+					<form-group name="creation_tool_other" label="{{ 'dash.games.form.engine_other_label' | translate }}" optional="true">
 						<input form-control="text" ng-maxlength="200">
 						<control-errors></control-errors>
 
 						<p class="help-block">
-							{{ ::'dash.games.form.engine_other_help' | translate }}
-							<span class="text-help" tooltip="{{ ::'dash.games.form.engine_other_why_tooltip' | translate }}">
-								{{ ::'dash.games.form.engine_other_why' | translate }}
+							<span translate>dash.games.form.engine_other_help</span>
+							<span class="text-help" tooltip="{{ 'dash.games.form.engine_other_why_tooltip' | translate }}" translate>
+								dash.games.form.engine_other_why
 							</span>
 						</p>
 					</form-group>
 				</div>
 
-				<form-group name="development_status" label="{{ ::'dash.games.form.dev_status_label' | translate }}">
-					<div ng-if="!checkIsCompleteAllowed()" class="alert alert-info" translate="dash.games.form.dev_status_not_completable_info_html"></div>
+				<form-group name="development_status" label="{{ 'dash.games.form.dev_status_label' | translate }}">
+					<div ng-if="!checkIsCompleteAllowed()" class="alert alert-info" translate>dash.games.form.dev_status_not_completable_info_html</div>
 
 					<div class="radio" ng-class="{ disabled: !checkIsCompleteAllowed() }">
 						<label>
 							<input form-control="radio" ng-value="Game.DEVELOPMENT_STATUS_FINISHED" ng-disabled="!checkIsCompleteAllowed()">
-							{{ ::'dash.games.form.dev_status_finished' | translate }} <br>
-							<span class="help-inline">{{ ::'dash.games.form.dev_status_finished_help' | translate }}</span>
+							<span translate>dash.games.form.dev_status_finished</span <br>
+							<span class="help-inline" translate>dash.games.form.dev_status_finished_help</span>
 						</label>
 					</div>
 					<div class="radio">
 						<label>
 							<input form-control="radio" ng-value="Game.DEVELOPMENT_STATUS_WIP">
-							{{ ::'dash.games.form.dev_status_wip' | translate }} <br>
-							<span class="help-inline">{{ ::'dash.games.form.dev_status_wip_help' | translate }}</span>
+							<span translate>dash.games.form.dev_status_wip</span <br>
+							<span class="help-inline" translate>dash.games.form.dev_status_wip_help</span>
 						</label>
 					</div>
 					<div class="radio" ng-class="{ disabled: !checkIsCompleteAllowed() }">
 						<label>
 							<input form-control="radio" ng-value="Game.DEVELOPMENT_STATUS_CANCELED" ng-disabled="!checkIsCompleteAllowed()">
-							{{ ::'dash.games.form.dev_status_canceled' | translate }} <br>
-							<span class="help-inline">{{ ::'dash.games.form.dev_status_canceled_help' | translate }}</span>
+							<span translate>dash.games.form.dev_status_canceled</span <br>
+							<span class="help-inline" translate>dash.games.form.dev_status_canceled_help</span>
 						</label>
 					</div>
 
@@ -92,9 +92,9 @@
 				</form-group>
 
 				<div oc-lazy-load="{ files: [ '/app/modules/codemirror.js' ] }">
-					<form-group name="description_markdown" label="{{ ::'dash.games.form.description_label' | translate }}">
+					<form-group name="description_markdown" label="{{ 'dash.games.form.description_label' | translate }}">
 
-						<p class="help-block" translate="dash.games.form.description_help_html"></p>
+						<p class="help-block" translate>dash.games.form.description_help_html</p>
 
 						<div
 							form-markdown-editor
@@ -109,21 +109,21 @@
 					</form-group>
 				</div>
 
-				<form-group name="status" label="{{ ::'dash.games.form.status_label' | translate }}" ng-if="method == 'edit'">
-					<div ng-if="!checkIsPublishable()" class="alert alert-info" translate="dash.games.form.status_not_publishable_info_html"></div>
+				<form-group name="status" label="{{ 'dash.games.form.status_label' | translate }}" ng-if="method == 'edit'">
+					<div ng-if="!checkIsPublishable()" class="alert alert-info" translate>dash.games.form.status_not_publishable_info_html</div>
 
 					<div class="radio" ng-class="{ disabled: !checkIsPublishable() }">
 						<label>
 							<input form-control="radio" ng-value="Game.STATUS_VISIBLE" ng-disabled="!checkIsPublishable()">
-							{{ ::'dash.games.form.status_published' | translate }} <br>
-							<span class="help-inline">{{ ::'dash.games.form.status_published_help' | translate }}</span>
+							<span translate>dash.games.form.status_published</span> <br>
+							<span class="help-inline" translate>dash.games.form.status_published_help</span>
 						</label>
 					</div>
 					<div class="radio">
 						<label>
 							<input form-control="radio" ng-value="Game.STATUS_HIDDEN">
-							{{ ::'dash.games.form.status_hidden' | translate }} <br>
-							<span class="help-inline">{{ ::'dash.games.form.status_hidden_help' | translate }}</span>
+							<span translate>dash.games.form.status_hidden</span> <br>
+							<span class="help-inline" translate>dash.games.form.status_hidden_help</span>
 						</label>
 					</div>
 
@@ -131,16 +131,21 @@
 				</form-group>
 
 				<div gj-expand-when="baseModel.status != formModel.status && formModel.status == Game.STATUS_VISIBLE">
-					<div class="alert alert-warning">
-						{{ ::'dash.games.overview.publish_confirmation' | translate }}
+					<div class="alert alert-warning" translate>
+						dash.games.overview.publish_confirmation
 					</div>
 				</div>
 
 				<div ng-if="!isDisabled">
 					<button gj-form-submit-button class="i-button" ng-disabled="!gameForm.$valid" ng-click="onSubmit()">
-						<span ng-if="method == 'add'" class="jolticon jolticon-add"></span>
-						<span ng-if="method == 'edit'" class="jolticon jolticon-edit"></span>
-						{{ ::(method == 'add' ? 'dash.games.form.add_button' : 'dash.games.form.edit_button') | translate }}
+						<span ng-if="method == 'add'">
+							<span class="jolticon jolticon-add"></span>
+							<span translate>dash.games.form.add_button</span>
+						</span>
+						<span ng-if="method == 'edit'">
+							<span class="jolticon jolticon-edit"></span>
+							<span translate>dash.games.form.edit_button</span>
+						</span>
 					</button>
 				</div>
 
@@ -148,17 +153,17 @@
 
 			<div gj-expand-when="isFnafDetected">
 				<div class="alert alert-warning">
-					<div translate="dash.games.add.fnaf_autotag_message_html"></div>
+					<div translate>dash.games.add.fnaf_autotag_message_html</div>
 
 					<div class="alert-actions">
 						<button gj-form-submit-button class="i-button" ng-click="addAutotag( 'fnaf' )">
 							<span class="jolticon jolticon-tag"></span>
-							{{ 'dash.games.add.fnaf_autotag_accept' | translate }}
+							<span translate>dash.games.add.fnaf_autotag_accept</span>
 						</button>
 
 						<button gj-form-submit-button class="i-button trans" ng-click="skipAutotag()">
 							<span class="jolticon jolticon-remove"></span>
-							{{ 'dash.games.add.fnaf_autotag_reject' | translate }}
+							<span translate>dash.games.add.fnaf_autotag_reject</span>
 						</button>
 					</div>
 				</div>

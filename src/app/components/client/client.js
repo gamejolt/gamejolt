@@ -1,11 +1,12 @@
 angular.module( 'App.Client', [
+	'gj.Connection.StatePermissions',
+
 	'App.Client.Control',
 	'App.Client.Shortcut',
 	'App.Client.Autostart',
 	'App.Client.Intro',
 	'App.Client.User',
 	'App.Client.LocalDb',
-	'App.Client.Settings',
 	'App.Client.Tray',
 	'App.Client.MacAppMenu',
 	'App.Client.Forms',
@@ -20,4 +21,7 @@ angular.module( 'App.Client', [
 	'App.Client.GameButtons',
 	'App.Client.InstallPackageModal',
 	'App.Client.PackageCardOptions',
+	'App.Client.Logger',
+	'App.Client.SystemReportModal',
+	'App.Client.Info',
 ] );

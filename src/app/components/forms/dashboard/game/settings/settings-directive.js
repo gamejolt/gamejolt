@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameSettings', function( $translate, Form )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameSettings', function( Form )
 {
 	var form = new Form( {
 		model: 'Game',

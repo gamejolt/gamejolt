@@ -37,7 +37,7 @@
 
 			<form-group name="file" label="{{ !formModel.has_thumbnail ? 'dash.games.trophies.form.upload_label' : 'dash.games.trophies.form.change_image_label' | translate }}" optional="true">
 
-				<p class="help-block" translate="dash.forms.image_filetype_help_html"></p>
+				<p class="help-block" translate>dash.forms.image_filetype_help_html</p>
 
 				<p class="help-block">
 					<a class="link-help">{{ ::'dash.games.trophies.form.image_help_link' | translate }}</a>
@@ -68,12 +68,12 @@
 
 			<form-group name="secret" label="{{ ::'dash.games.trophies.form.secret_label' | translate }}">
 				<p class="help-block">{{ ::'dash.games.trophies.form.secret_help' | translate }}</p>
-				<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ ::'dash.forms.yes' | translate }}" toggle-switch-off-text="{{ ::'dash.forms.no' | translate }}"></gj-toggle-switch>
+				<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
 			</form-group>
 
 			<form-group name="hidden" label="{{ ::'dash.games.trophies.form.hidden_label' | translate }}">
 				<p class="help-block">{{ ::'dash.games.trophies.form.hidden_help' | translate }}</p>
-				<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ ::'dash.forms.yes' | translate }}" toggle-switch-off-text="{{ ::'dash.forms.no' | translate }}"></gj-toggle-switch>
+				<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
 			</form-group>
 
 			<button gj-form-submit-button class="i-button" ng-disabled="!trophyForm.$valid" ng-click="onSubmit()">

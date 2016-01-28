@@ -19,6 +19,12 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 					return $q.reject();
 				}
 			}
+		},
+		onExit: function( App )
+		{
+			// Clear out the credentials when they leave this route.
+			// It should just be around in this route and the "almost" route.
+			App.credentials = {};
 		}
 	} );
 } );

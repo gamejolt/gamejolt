@@ -98,7 +98,7 @@ angular.module( 'App.Client.PackageCardOptions' ).directive( 'gjClientPackageCar
 			ctrl.cancelInstall = function()
 			{
 				Analytics.trackEvent( 'game-package-card', 'cancel-install' );
-				Client_Installer.cancel( ctrl.localPackage );
+				ctrl.localPackage.$uninstall();
 			};
 
 			ctrl.retryInstall = function()

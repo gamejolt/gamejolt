@@ -6,7 +6,7 @@ angular.module( 'App.Client.Installer' )
 		Client_Installer.init();
 	} );
 } )
-.service( 'Client_Installer', function( $q, $rootScope, Client, Client_Library, Client_Settings, LocalDb, LocalDb_Package, Growls )
+.service( 'Client_Installer', function( $q, $rootScope, Client, Client_Library, Settings, LocalDb, LocalDb_Package, Growls )
 {
 	var _this = this;
 
@@ -68,11 +68,11 @@ angular.module( 'App.Client.Installer' )
 		var Queue = require( 'client-voodoo' ).VoodooQueue;
 
 		Queue.faster = {
-			downloads: Client_Settings.get( 'max-download-count' ),
-			extractions: Client_Settings.get( 'max-extract-count' ),
+			downloads: Settings.get( 'max-download-count' ),
+			extractions: Settings.get( 'max-extract-count' ),
 		};
 
-		if ( Client_Settings.get( 'queue-when-playing' ) ) {
+		if ( Settings.get( 'queue-when-playing' ) ) {
 			Queue.slower = {
 				downloads: 0,
 				extractions: 0,
@@ -127,7 +127,7 @@ angular.module( 'App.Client.Installer' )
 			promise = promise.then( function()
 			{
 				return localPackage.$setInstallDir( path.join(
-					Client_Settings.get( 'game-install-dir' ),
+					Settings.get( 'game-install-dir' ),
 					game.slug + '-' + game.id,
 					(localPackage.name || 'default') + '-' + localPackage.id
 				) );
@@ -235,10 +235,6 @@ angular.module( 'App.Client.Installer' )
 							}
 						} );
 					} )
-					.onCanceled( function()
-					{
-
-					} )
 					.start();
 
 				_this._startPatching( localPackage, patchHandle );
@@ -326,30 +322,23 @@ angular.module( 'App.Client.Installer' )
 
 	this.cancel = function( localPackage )
 	{
-		LocalDb.transaction( 'rw', [ LocalDb_Package ], function()
+		return $q( function( resolve, reject )
 		{
-			var promise = $q.resolve();
-
-			// If it's currently installing, let's stop it first.
 			var patchHandle = _this.currentlyPatching[ localPackage.id ];
 			if ( patchHandle ) {
-				promise = promise.then( function()
-				{
-					patchHandle.cancel();
-					_this._stopPatching( localPackage );
-				} );
-			}
 
-			return promise
-				.then( function()
+				// This is absurd, ylivay.
+				patchHandle.onCanceled( function()
 				{
-					// `true` says not to notify.
-					localPackage.$uninstall( true );
-				} )
-				.catch( function( e )
-				{
-					Growls.error( 'Could not stop the installation.' );
+					_this._stopPatching( localPackage );
+					resolve();
 				} );
+
+				patchHandle.cancel();
+			}
+			else {
+				resolve();
+			}
 		} );
 	};
 } );

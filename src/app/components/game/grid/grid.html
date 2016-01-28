@@ -6,8 +6,15 @@
 	current-page="ctrl.currentPage">
 </gj-pagination>
 
-<p class="text-muted small" ng-if="ctrl.gamesCount == 1">{{ ::'games.list.games_count_one' | translate }}</p>
-<p class="text-muted small" ng-if="ctrl.gamesCount > 1">{{ 'games.list.games_count_other' | translate:{ page: ctrl.currentPage, count: ctrl.gamesCount } }}</p>
+<p class="text-muted small"
+	translate
+	translate-n="ctrl.gamesCount"
+	translate-plural="games.list.games_count"
+	translate-scope="{ page: ctrl.currentPage }"
+	translate-comment="{{ page }} expands to the current page of games"
+	>
+	games.list.games_count
+</p>
 
 <div class="row">
 	<gj-game-thumbnail

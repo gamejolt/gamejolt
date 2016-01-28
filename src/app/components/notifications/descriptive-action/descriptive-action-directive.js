@@ -1,14 +1,14 @@
-angular.module( 'App.Notifications.DescriptiveAction' ).directive( 'gjNotificationsDescriptiveAction', function( Notification )
+angular.module( 'App.Notifications.DescriptiveAction' ).directive( 'gjNotificationsDescriptiveAction', function( Notification, gettext, gettextCatalog )
 {
-	var translationMapping = {};
-	translationMapping[ Notification.TYPE_COMMENT_ADD_OBJECT_OWNER ] = 'new_comment_title_html';
-	translationMapping[ Notification.TYPE_COMMENT_ADD ] = 'comment_reply_title_html';
-	translationMapping[ Notification.TYPE_FORUM_POST_ADD ] = 'forum_post_title_html';
-	translationMapping[ Notification.TYPE_FRIENDSHIP_REQUEST ] = 'friendship_request_title_html';
-	translationMapping[ Notification.TYPE_FRIENDSHIP_ACCEPT ] = 'friendship_accepted_title_html';
-	translationMapping[ Notification.TYPE_GAME_RATING_ADD ] = 'rating_title_html';
-	translationMapping[ Notification.TYPE_GAME_FOLLOW ] = 'game_follow_title_html';
-	translationMapping[ Notification.TYPE_GAME_NEWS_ADD ] = 'game_news_title_html';
+	var translationKeys = {};
+	translationKeys[ Notification.TYPE_COMMENT_ADD_OBJECT_OWNER ] = gettext( 'notifications.new_comment_title_html' );
+	translationKeys[ Notification.TYPE_COMMENT_ADD ] = gettext( 'notifications.comment_reply_title_html' );
+	translationKeys[ Notification.TYPE_FORUM_POST_ADD ] = gettext( 'notifications.forum_post_title_html' );
+	translationKeys[ Notification.TYPE_FRIENDSHIP_REQUEST ] = gettext( 'notifications.friendship_request_title_html' );
+	translationKeys[ Notification.TYPE_FRIENDSHIP_ACCEPT ] = gettext( 'notifications.friendship_accepted_title_html' );
+	translationKeys[ Notification.TYPE_GAME_RATING_ADD ] = gettext( 'notifications.rating_title_html' );
+	translationKeys[ Notification.TYPE_GAME_FOLLOW ] = gettext( 'notifications.game_follow_title_html' );
+	translationKeys[ Notification.TYPE_GAME_NEWS_ADD ] = gettext( 'notifications.game_news_title_html' );
 
 	return {
 		restrict: 'A',
@@ -19,7 +19,8 @@ angular.module( 'App.Notifications.DescriptiveAction' ).directive( 'gjNotificati
 		link: function( scope, element, attrs )
 		{
 			scope.Notification = Notification;
-			scope.translationKey = 'notifications.' + translationMapping[ scope.notification.type ];
+			var translationKey = translationKeys[ scope.notification.type ];
+			var translationValues = null;
 
 			// If this is a descriptive action in the popover, we do things a bit differently.
 			var inPopover = false;
@@ -29,27 +30,32 @@ angular.module( 'App.Notifications.DescriptiveAction' ).directive( 'gjNotificati
 
 			if ( scope.notification.type == Notification.TYPE_GAME_RATING_ADD ) {
 				if ( inPopover ) {
-					scope.translationKey = 'notifications.rating_title_popover_html';
+					translationKey = gettext( 'notifications.rating_title_popover_html' );
 				}
 
-				scope.translationValues = {
+				translationValues = {
 					rating: scope.notification.action_model.rating,
 				};
 			}
 			else if ( scope.notification.type == Notification.TYPE_GAME_NEWS_ADD ) {
 				if ( inPopover ) {
-					scope.translationKey = 'notifications.game_news_title_popover_html';
+					translationKey = gettext( 'notifications.game_news_title_popover_html' );
 				}
 
-				scope.translationValues = {
+				translationValues = {
 					title: scope.notification.action_model.title,
 				};
 			}
 			else {
-				scope.translationValues = {
+				translationValues = {
 					object: scope.notification.object_model.title,
 				};
 			}
+
+			scope.getAction = function()
+			{
+				return gettextCatalog.getString( translationKey, translationValues );
+			};
 		}
 	};
 } );

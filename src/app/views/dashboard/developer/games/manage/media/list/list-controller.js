@@ -1,9 +1,9 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Media.ListCtrl', function(
-	$scope, $translate, Api, Translate, Game_Screenshot, Game_Video, ModalConfirm, payload )
+	$scope, Api, App, Game_Screenshot, Game_Video, ModalConfirm, gettextCatalog, payload )
 {
 	var _this = this;
 
-	Translate.pageTitle( 'dash.games.media.page_title', { game: $scope.manageCtrl.game.title } );
+	App.title = gettextCatalog.getString( 'dash.games.media.page_title', { game: $scope.manageCtrl.game.title } );
 
 	this.currentSort = null;
 	this.mediaItems = [];
@@ -22,6 +22,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Medi
 
 	this.removeItem = removeItem;
 	this.onMediaSorted = onMediaSorted;
+	this.getEditTooltip = getEditTooltip;
 
 	function onMediaSorted()
 	{
@@ -38,9 +39,16 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Medi
 
 	function removeItem( item )
 	{
-		var message = $translate.instant( 'dash.games.media.remove_confirmation', {
-			type: $translate.instant( 'dash.games.media.' + item.media_type + '_label' ).toLowerCase(),
-		} );
+		var typeLabel;
+		if ( item.media_type == 'image' ) {
+			typeLabel = gettextCatalog.getString( 'dash.games.media.image_label' ).toLowerCase();
+		}
+		else if ( item.media_type == 'video' ) {
+			typeLabel = gettextCatalog.getString( 'dash.games.media.video_label' ).toLowerCase();
+		}
+
+		/// {{ type }} contains the translated media item type (image/video)
+		var message = gettextCatalog.getString( 'dash.games.media.remove_confirmation', { type: typeLabel } );
 
 		ModalConfirm.show( message ).then( function()
 		{
@@ -69,5 +77,25 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Medi
 	function updateSort()
 	{
 		_this.currentSort = getSort();
+	}
+
+	function getEditTooltip( item )
+	{
+		if ( item.media_type == 'image' ) {
+			return gettextCatalog.getString( 'dash.games.media.edit_image_button' );
+		}
+		else if ( item.media_type == 'video' ) {
+			return gettextCatalog.getString( 'dash.games.media.edit_video_button' );
+		}
+	}
+
+	function getRemoveTooltip( item )
+	{
+		if ( item.media_type == 'image' ) {
+			return gettextCatalog.getString( 'dash.games.media.remove_image_button' );
+		}
+		else if ( item.media_type == 'video' ) {
+			return gettextCatalog.getString( 'dash.games.media.remove_video_button' );
+		}
 	}
 } );

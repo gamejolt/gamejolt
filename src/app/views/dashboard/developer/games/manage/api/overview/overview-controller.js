@@ -1,8 +1,8 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.OverviewCtrl', function( $scope, $window, Translate, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.OverviewCtrl', function( $scope, $window, App, gettextCatalog, payload )
 {
 	var _this = this;
 
-	Translate.pageTitle( 'dash.games.api.overview.page_title', { game: $scope.manageCtrl.game.title } );
+	App.title = gettextCatalog.getString( 'dash.games.api.overview.page_title', { game: $scope.manageCtrl.game.title } );
 
 	this.sessionStats = payload.sessionStats;
 

@@ -17,6 +17,7 @@ angular.module( 'App', [
 
 	// GJ lib.
 	'gj.Translate',
+	'gj.Translate.LangSelector',
 	'gj.Environment',
 	'gj.Api',
 	'gj.Payload',
@@ -45,7 +46,6 @@ angular.module( 'App', [
 	'gj.Device',
 	'gj.Location',
 	'gj.Connection',
-	'gj.Connection.StatePermissions',
 
 	'gj.Backdrop',
 	'gj.Tooltip',
@@ -64,6 +64,7 @@ angular.module( 'App', [
 	'gj.Favicon',
 	'gj.FadeCollapse',
 	'gj.Progress.Poller',
+	'gj.Alert.Dismissable',
 
 	'gj.Primus',
 	'gj.Activity.Stream',
@@ -116,6 +117,8 @@ angular.module( 'App', [
 	'gj.Jam.Game.Vote.Widget',
 	'gj.Jam.Award',
 
+	'gj.Translation',
+
 	'gj.Chat.Room',
 
 	'gj.Social.Twitter.Sdk',
@@ -163,6 +166,7 @@ angular.module( 'App', [
 	'App.Minbar',
 	'App.Invite',
 	'App.Sorting',
+	'App.Settings',
 
 	'App.Forms',
 
@@ -227,7 +231,7 @@ angular.module( 'App', [
 	// Client.
 	/* inject client:modules */
 ] )
-.config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $ocLazyLoadProvider, $sceDelegateProvider, amTimeAgoConfig )
+.config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $ocLazyLoadProvider, $sceDelegateProvider, amTimeAgoConfig, TranslateProvider )
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
 		'self',
@@ -272,6 +276,54 @@ angular.module( 'App', [
 		$compileProvider.aHrefSanitizationWhitelist( /^\s*(https?|ftp|mailto|tel|file|app):/ );
 		$compileProvider.imgSrcSanitizationWhitelist( /^\s*((https?|ftp|file|blob|app):|data:image\/)/ );
 	}
+
+	// Can't include in a foreach. Have to list out so that the revisioner for filenames will pull it.
+	var languages = {
+		main: {
+			'en': '/translations/en/main.json',
+			'en_US': '/translations/en_US/main.json',
+			'nl': '/translations/nl/main.json',
+			'ro': '/translations/ro/main.json',
+			'de': '/translations/de/main.json',
+			'es': '/translations/es/main.json',
+			'fr': '/translations/fr/main.json',
+			'ru': '/translations/ru/main.json',
+			'sv': '/translations/sv/main.json',
+			'tr': '/translations/tr/main.json',
+			'pt': '/translations/pt/main.json',
+			'pt_BR': '/translations/pt_BR/main.json',
+			'fi': '/translations/fi/main.json',
+			'nb': '/translations/nb/main.json',
+			'el': '/translations/el/main.json',
+			'ms': '/translations/ms/main.json',
+			'pl': '/translations/pl/main.json',
+			'uk': '/translations/uk/main.json',
+			'it': '/translations/it/main.json',
+		},
+		dash: {
+			'en': '/translations/en/dash.json',
+			'en_US': '/translations/en_US/dash.json',
+			'nl': '/translations/nl/dash.json',
+			'ro': '/translations/ro/dash.json',
+			'de': '/translations/de/dash.json',
+			'es': '/translations/es/dash.json',
+			'fr': '/translations/fr/dash.json',
+			'ru': '/translations/ru/dash.json',
+			'sv': '/translations/sv/dash.json',
+			'tr': '/translations/tr/dash.json',
+			'pt': '/translations/pt/dash.json',
+			'pt_BR': '/translations/pt_BR/dash.json',
+			'fi': '/translations/fi/dash.json',
+			'nb': '/translations/nb/dash.json',
+			'el': '/translations/el/dash.json',
+			'ms': '/translations/ms/dash.json',
+			'pl': '/translations/pl/dash.json',
+			'uk': '/translations/uk/dash.json',
+			'it': '/translations/it/dash.json',
+		},
+	};
+
+	TranslateProvider.addLanguageUrls( languages );
 } )
 /**
  * angular-ui-router can't handle redirects between states yet.
@@ -302,30 +354,3 @@ angular.module( 'App', [
 	Analytics.trackTiming( 'shell', 'angular-start', ms );
 } )
 ;
-
-// For lazy loading.
-// TODO: Move this into a component!
-// TODO: Clean it up and get it working for more modules.
-// angular.module( 'App' ).config( function( $futureStateProvider )
-// {
-// 	$futureStateProvider.stateFactory( 'lazy', [ '$ocLazyLoad', 'futureState', function( $ocLazyLoad, futureState )
-// 	{
-// 		// I have no clue why, but for some reason it was failing without the .then().
-// 		return $ocLazyLoad.load( futureState.src ).then( angular.noop );
-// 	} ] );
-
-// 	$futureStateProvider.addResolve( [ '$http', function( $http )
-// 	{
-// 		return $http.get( '/app/modules/dash.json' ).then( function( response )
-// 		{
-// 			angular.forEach( response.data, function( futureState )
-// 			{
-// 				futureState.type = 'lazy';
-// 				futureState.src = [ '/app/modules/dash.js' ];
-// 				futureState.url = futureState.url || '';
-
-// 				$futureStateProvider.futureState( futureState );
-// 			} );
-// 		} );
-// 	} ] );
-// } );

@@ -22,21 +22,14 @@
 
 	Client_Updater.prototype.check = function()
 	{
-		console.log( 'checking' );
+		console.log( 'Checking for client update.' );
 
-		var os = require( 'os' );
-		var packageJson;
+		var cwd = path.dirname( process.mainModule.filename );
+		var packageJson = require( path.resolve( cwd, 'package.json' ) );
 
-		// Mac exec path looks like:
-		// root/blah.app/Contents/Frameworks/nwjs Helper.app/Contents/MacOS/nwjs
-		// The other OSes are just the root dir.
-		var cwd = path.dirname( process.execPath );
-		if ( os.type() == 'Darwin' ) {
-			cwd = path.resolve( cwd, '../../../../Resources' )
-			packageJson = require( path.join( cwd, 'app.nw', 'package.json' ) );
-		}
-		else {
-			packageJson = require( path.join( cwd, 'package.json' ) );
+		if ( packageJson['no-auto-update'] === true ) {
+			console.log( 'Skip update. Package says not to auto-update.' );
+			return;
 		}
 
 		var updater = new Updater( packageJson.version, CHECK_ENDPOINT, {

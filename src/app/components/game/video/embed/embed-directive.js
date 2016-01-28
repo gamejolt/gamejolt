@@ -23,8 +23,6 @@ angular.module( 'App.Game.Video.Embed' ).directive( 'gjGameVideoEmbed', function
 
 			$scope.$watch( 'ctrl.video.url', function( url )
 			{
-				var url;
-
 				if ( _this.video.type == Game_Video.TYPE_YOUTUBE ) {
 					url = 'https://www.youtube.com/embed/' + url;
 				}

@@ -1,5 +1,5 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Account.AvatarCtrl', function( $scope, $translate, Translate )
+angular.module( 'App.Views' ).controller( 'Dashboard.Account.AvatarCtrl', function( $scope, App, gettextCatalog )
 {
-	Translate.pageTitle( 'dash.avatar.page_title' );
-	$scope.accountCtrl.heading = $translate.instant( 'dash.avatar.heading' );
+	App.title = gettextCatalog.getString( 'dash.avatar.page_title' );
+	$scope.accountCtrl.heading = gettextCatalog.getString( 'dash.avatar.heading' );
 } );

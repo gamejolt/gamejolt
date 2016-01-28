@@ -1,9 +1,9 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.BuildCtrl', function(
-	$scope, $sce, $window, $timeout, Translate, Game, Game_Build, payload )
+	$scope, $sce, $window, $timeout, App, Game, Game_Build, gettextCatalog, payload )
 {
 	var _this = this;
 
-	Translate.pageTitle( 'game.download.game.page_title', { game: $scope.gameCtrl.game.title } );
+	App.title = gettextCatalog.getString( 'game.download.game.page_title', { game: $scope.gameCtrl.game.title } );
 
 	this.build = new Game_Build( payload.build );
 	this.src = undefined;

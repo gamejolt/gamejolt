@@ -5,10 +5,8 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		views: {
 			'@auth': {
 				templateUrl: '/auth/views/auth/join/almost/almost.html',
-				controller: function( Translate )
-				{
-					Translate.pageTitle( 'auth.join.almost.page_title' );
-				},
+				controllerAs: 'almostCtrl',
+				controller: 'Auth.Join.AlmostCtrl',
 			}
 		},
 		onEnter: function( App )

@@ -1,5 +1,5 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Account.ChangePasswordCtrl', function( $scope, $translate, Translate )
+angular.module( 'App.Views' ).controller( 'Dashboard.Account.ChangePasswordCtrl', function( $scope, App, gettextCatalog )
 {
-	Translate.pageTitle( 'dash.change_pass.page_title' );
-	$scope.accountCtrl.heading = $translate.instant( 'dash.change_pass.heading' );
+	App.title = gettextCatalog.getString( 'dash.change_pass.page_title' );
+	$scope.accountCtrl.heading = gettextCatalog.getString( 'dash.change_pass.heading' );
 } );

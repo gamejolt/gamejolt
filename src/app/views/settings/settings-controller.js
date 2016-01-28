@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'SettingsCtrl', function( $scope )
+angular.module( 'App.Views' ).controller( 'SettingsCtrl', function( App, gettextCatalog )
 {
-	$scope.App.title = 'Settings';
+	App.title = gettextCatalog.getString( 'settings.page_title');
 } );

@@ -1,0 +1,66 @@
+<form gj-form="formModel" name="settingsForm">
+
+	<fieldset id="settings-client" ng-if="Environment.isClient">
+		<legend translate>settings.client</legend>
+
+		<form-group name="game_install_dir" label="{{ 'settings.game_install_dir_label' | translate }}">
+			<p class="help-block" translate>settings.game_install_dir_help</p>
+
+			<input class="hidden" form-control="file" nwdirectory>
+
+			<div class="pull-right">
+				<button class="btn btn-sm btn-outline" ng-click="changeLocation( 'game_install_dir' )" translate>
+					settings.change_location_button
+				</button>
+			</div>
+
+			<div class="form-static">
+				<code>{{ formModel.game_install_dir }}</code>
+			</div>
+
+			<control-errors></control-errors>
+		</form-group>
+
+		<form-group ng-class="{ 'sans-margin-bottom': formModel.limit_downloads }" name="limit_downloads" label="{{ 'settings.limit_downloads_label' | translate }}">
+			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
+		</form-group>
+		<br ng-if="formModel.limit_downloads">
+
+		<form-group name="max_download_count" label="{{ 'settings.max_download_count_label' | translate }}" hide-label="true" ng-if="formModel.max_download_count != -1">
+			<p class="help-block" translate>settings.max_download_count_help</p>
+			<input form-control="number" min="1">
+			<control-errors></control-errors>
+		</form-group>
+
+		<form-group ng-class="{ 'sans-margin-bottom': formModel.limit_downloads }" name="limit_extractions" label="{{ 'settings.limit_extractions_label' | translate }}">
+			<p class="help-block" translate>settings.limit_extractions_help</p>
+			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
+		</form-group>
+		<br ng-if="formModel.limit_downloads">
+
+		<form-group name="max_extract_count" label="{{ 'settings.max_extract_count_label' | translate }}" hide-label="true" ng-if="formModel.max_extract_count != -1">
+			<p class="help-block" translate>settings.max_extract_count_help</p>
+			<input form-control="number" min="1">
+			<control-errors></control-errors>
+		</form-group>
+
+		<form-group name="queue_when_playing" label="{{ 'settings.queue_when_playing_label' | translate }}">
+			<p class="help-block" translate>settings.queue_when_playing_help</p>
+			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
+		</form-group>
+
+		<form-group name="autostart_client" label="{{ 'settings.autostart_client_label' | translate }}" ng-if="::Client_Autostart.canAutostart()">
+			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
+		</form-group>
+
+	</fieldset>
+
+	<fieldset id="settings-chat">
+		<legend>{{ 'settings.chat' | translate }}</legend>
+
+		<form-group name="chat_notify_friends_online" label="{{ 'settings.chat_notify_friends_online_label' | translate }}">
+			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
+		</form-group>
+	</fieldset>
+
+</form>

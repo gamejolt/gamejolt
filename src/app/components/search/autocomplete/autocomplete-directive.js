@@ -1,60 +1,5 @@
-angular.module( 'App.Search' ).directive( 'gjSearchAutocomplete', function( $translate )
+angular.module( 'App.Search' ).directive( 'gjSearchAutocomplete', function( gettext )
 {
-	var commands = [
-		{
-			keyword: ':discover',
-			state: 'discover.home',
-		},
-		{
-			keyword: ':games',
-			state: 'discover.games.list.section',
-			options: { section: 'featured' },
-		},
-		{
-			keyword: ':news',
-			state: 'discover.news.list',
-		},
-		{
-			keyword: ':dashboard',
-			state: 'dashboard.overview',
-			authRequired: true,
-		},
-		{
-			keyword: ':library',
-			state: 'library.overview',
-			authRequired: true,
-		},
-		{
-			keyword: ':installed',
-			state: 'library.installed',
-			clientRequired: true,
-		},
-		{
-			keyword: ':account',
-			state: 'dashboard.account.edit',
-			authRequired: true,
-		},
-		{
-			keyword: ':activity',
-			state: 'dashboard.activity.list',
-			authRequired: true,
-		},
-	];
-
-	// Get translations for commands.
-	var translationKeys = commands.map( function( command )
-	{
-		return 'commands.' + command.keyword.substring( 1 ) + '_description';
-	} );
-
-	$translate( translationKeys ).then( function( translations )
-	{
-		commands.forEach( function( command )
-		{
-			command.description = translations[ 'commands.' + command.keyword.substring( 1 ) + '_description' ];
-		} );
-	} );
-
 	var KEYCODE_UP = 38;
 	var KEYCODE_DOWN = 40;
 	var KEYCODE_ENTER = 13;
@@ -98,7 +43,62 @@ angular.module( 'App.Search' ).directive( 'gjSearchAutocomplete', function( $tra
 			this.libraryGames = [];
 			this.items = [];
 
-			this.commands = orderByFilter( commands, 'keyword' );
+			this.commands = [
+				{
+					keyword: ':discover',
+					state: 'discover.home',
+					description: gettext( 'commands.discover_description' ),
+				},
+				{
+					keyword: ':games',
+					state: 'discover.games.list.section',
+					options: { section: 'featured' },
+					description: gettext( 'commands.games_description' ),
+				},
+				{
+					keyword: ':news',
+					state: 'discover.news.list',
+					description: gettext( 'commands.news_description' ),
+				},
+				{
+					keyword: ':dashboard',
+					state: 'dashboard.overview',
+					authRequired: true,
+					description: gettext( 'commands.dashboard_description' ),
+				},
+				{
+					keyword: ':library',
+					state: 'library.overview',
+					authRequired: true,
+					description: gettext( 'commands.library_description' ),
+				},
+				{
+					keyword: ':installed',
+					state: 'library.installed',
+					clientRequired: true,
+					description: gettext( 'commands.installed_description' ),
+				},
+				{
+					keyword: ':account',
+					state: 'dashboard.account.edit',
+					authRequired: true,
+					description: gettext( 'commands.account_description' ),
+				},
+				{
+					keyword: ':activity',
+					state: 'dashboard.activity.list',
+					authRequired: true,
+					description: gettext( 'commands.activity_description' ),
+				},
+				{
+					keyword: ':settings',
+					state: 'settings',
+					authRequired: true,
+					description: gettext( 'commands.settings_description' ),
+				},
+			];
+
+			this.commands = orderByFilter( this.commands, 'keyword' );
 			this.filteredCommands = this.commands;
 
 			this.init = function()

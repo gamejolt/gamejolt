@@ -70,7 +70,7 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 					.then( function( packageData )
 					{
 						// If more than one package for their OS, then we have to show an install package modal.
-						if ( packageData.installableBuilds.length > 1 ) {
+						if ( _.size( _.groupBy( packageData.installableBuilds, 'game_package_id' ) ) > 1 ) {
 							Client_InstallPackageModal.show( _this.game );
 							return;
 						}
@@ -101,7 +101,7 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 			this.cancel = function()
 			{
 				Analytics.trackEvent( 'client-game-buttons', 'cancel-install' );
-				Client_Installer.cancel( this.localPackage );
+				this.localPackage.$uninstall();
 			};
 
 			this.retryInstall = function()
@@ -120,6 +120,24 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 				Analytics.trackEvent( 'client-game-buttons', 'launch' );
 				Popover.hideAll();
 				Client_Launcher.launch( localPackage );
+			};
+
+			this.openFolder = function( localPackage )
+			{
+				var fs = require( 'fs' );
+				var path = require( 'path' );
+				var gui = require( 'nw.gui' );
+
+				fs.readdir( path.resolve( localPackage.install_dir ), function( err, files )
+				{
+					if ( err ) {
+						return;
+					}
+
+					// Just open the first file in the folder.
+					// This way we open within the package folder instead of the parent folder.
+					gui.Shell.showItemInFolder( path.resolve( localPackage.install_dir, files[0] ) );
+				} );
 			};
 
 			this.uninstallPackage = function( localPackage )

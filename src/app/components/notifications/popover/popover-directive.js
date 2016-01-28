@@ -12,7 +12,7 @@ angular.module( 'App.Notifications.Popover' ).directive( 'gjNotificationsPopover
 			isShown: '=?',
 		},
 		controllerAs: 'ctrl',
-		controller: function( $scope, $interval, $location, $translate, App, Notification, Popover, ModalConfirm )
+		controller: function( $scope, $interval, $location, App, Notification, Popover, ModalConfirm, gettextCatalog )
 		{
 			var _this = this;
 
@@ -81,7 +81,7 @@ angular.module( 'App.Notifications.Popover' ).directive( 'gjNotificationsPopover
 
 			this.dismissAll = function()
 			{
-				ModalConfirm.show( $translate.instant( 'notifications.clear_all_confirmation' ) )
+				ModalConfirm.show( gettextCatalog.getString( 'notifications.clear_all_confirmation' ) )
 					.then( function()
 					{
 						return Notification.$readAll();

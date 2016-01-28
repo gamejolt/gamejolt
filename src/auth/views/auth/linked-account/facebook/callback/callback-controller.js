@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Facebook.CallbackCtrl', function( $state, $window, Translate, App, payload )
+angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Facebook.CallbackCtrl', function( $state, $window, App, Growls, gettextCatalog, payload )
 {
 	/**
 	 * We do this in the controller so that we can show a processing message, just in case it takes a little bit.
@@ -6,15 +6,24 @@ angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Facebook.CallbackC
 	if ( !payload.success ) {
 
 		if ( payload.reason && payload.reason == 'no-email' ) {
-			Translate.growl( 'error', 'auth.linked_account.facebook.no_email' );
+			Growls.error(
+				gettextCatalog.getString( 'auth.linked_account.facebook.no_email_growl' ),
+				gettextCatalog.getString( 'auth.linked_account.facebook.no_email_growl_title' )
+			);
 			$state.go( 'auth.join' );
 		}
 		else if ( payload.reason && payload.reason == 'duplicate-email' ) {
-			Translate.growl( 'error', 'auth.linked_account.facebook.duplicate_email' );
+			Growls.error(
+				gettextCatalog.getString( 'auth.linked_account.facebook.duplicate_email_growl' ),
+				gettextCatalog.getString( 'auth.linked_account.facebook.duplicate_email_growl_title' )
+			);
 			$state.go( 'auth.login' );  // Go to login page instead.
 		}
 		else {
-			Translate.growl( 'error', 'auth.linked_account.facebook.failed' );
+			Growls.error(
+				gettextCatalog.getString( 'auth.linked_account.facebook.failed_growl' ),
+				gettextCatalog.getString( 'auth.linked_account.facebook.failed_growl_title' )
+			);
 			$state.go( 'auth.join' );
 		}
 		return;
@@ -22,7 +31,10 @@ angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Facebook.CallbackC
 
 	// If a new account was created as part of the login.
 	if ( payload.accountCreated ) {
-		Translate.growl( 'success', 'auth.linked_account.facebook.created' );
+		Growls.success(
+			gettextCatalog.getString( 'auth.linked_account.facebook.created_growl' ),
+			gettextCatalog.getString( 'auth.linked_account.facebook.created_growl_title' )
+		);
 	}
 
 	App.redirectDashboard();

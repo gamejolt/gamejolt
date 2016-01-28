@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Discover.News.ListCtrl', function( $scope, $stateParams, Translate, Game_NewsArticle, payload )
+angular.module( 'App.Views' ).controller( 'Discover.News.ListCtrl', function( $scope, $stateParams, App, Game_NewsArticle, gettextCatalog, payload )
 {
 	var newsCtrl = $scope.newsCtrl;
 	newsCtrl.section = $stateParams.section || 'hot';
@@ -12,15 +12,15 @@ angular.module( 'App.Views' ).controller( 'Discover.News.ListCtrl', function( $s
 	newsCtrl.atomFeedUrl = payload.atomFeedUrl;
 
 	if ( newsCtrl.section == 'hot' ) {
-		Translate.pageTitle( 'news.list.all_page_title' );
+		App.title = gettextCatalog.getString( 'news.list.all_page_title' );
 	}
 	else if ( newsCtrl.section == 'followed' ) {
-		Translate.pageTitle( 'news.list.followed_page_title' );
+		App.title = gettextCatalog.getString( 'news.list.followed_page_title' );
 	}
 	else if ( newsCtrl.section == 'in-development' ) {
-		Translate.pageTitle( 'news.list.wip_page_title' );
+		App.title = gettextCatalog.getString( 'news.list.wip_page_title' );
 	}
 	else if ( newsCtrl.section == 'released' ) {
-		Translate.pageTitle( 'news.list.released_page_title' );
+		App.title = gettextCatalog.getString( 'news.list.released_page_title' );
 	}
 } );

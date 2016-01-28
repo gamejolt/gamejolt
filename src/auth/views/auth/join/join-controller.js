@@ -1,17 +1,15 @@
-angular.module( 'App.Views' ).controller( 'Auth.JoinCtrl', function( $state, Translate, User_LinkedAccounts )
+angular.module( 'App.Views' ).controller( 'Auth.JoinCtrl', function( $state, App, User_LinkedAccounts, gettextCatalog )
 {
 	var _this = this;
 
-	Translate.pageTitle( 'auth.join.page_title' );
+	App.title = gettextCatalog.getString( 'auth.join.page_title' );
 
-	this.joinMessage = '';
-	Translate.randomMessage( 'auth.join.join_message_html' ).then( function( message )
+	this.onJoined = function( formModel )
 	{
-		_this.joinMessage = message;
-	} );
-
-	this.onJoined = function()
-	{
+		// We store these so we can log them in automatically once their verification happens.
+		// It will only be stored here and will be cleared out as soon as they leave this section.
+		App.credentials.username = formModel.username;
+		App.credentials.password = formModel.password;
 		$state.go( 'auth.join.almost' );
 	};
 

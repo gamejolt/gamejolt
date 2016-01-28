@@ -4,9 +4,10 @@
 
 		<!-- Mobile Menu Toggle -->
 		<ul class="navbar-items">
-			<li gj-tooltip="'Menu'" tooltip-placement="right">
+			<li>
 				<a ng-class="{ active: isMainMenuActive }"
 					gj-popover-trigger="main-menu"
+					gj-tooltip="Menu" tooltip-placement="right"
 					gj-track-event="top-nav:main-menu:toggle"
 					>
 					<span class="jolticon jolticon-menu"></span>
@@ -46,11 +47,25 @@
 
 		<ul class="navbar-items" ng-if="App.user">
 
+			<li class="hidden-xs">
+				<a
+					ui-sref="{{ ::Environment.isClient ? 'library.installed' : 'library.overview' }}"
+					ng-class="{ active: $state.includes( 'library' ) }"
+					gj-tooltip="Your Game Library"
+					tooltip-placement="bottom"
+					gj-track-event="top-nav:library"
+					>
+					<span class="jolticon jolticon-books"></span>
+				</a>
+			</li>
+
 			<!-- Notifications -->
-			<li ng-if="Connection.isOnline" gj-tooltip="'Notifications'" tooltip-placement="bottom">
+			<li ng-if="!Connection.isClientOffline">
 				<a
 					gj-popover-trigger="notifications"
 					ng-class="{ active: notificationsShowing }"
+					gj-tooltip="Notifications"
+					tooltip-placement="bottom"
 					gj-track-event="top-nav:notifications:toggle"
 					>
 					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="notificationsCount">{{ notificationsCount }}</span>
@@ -64,10 +79,12 @@
 			</li>
 
 			<!-- Friend Requests -->
-			<li ng-if="Connection.isOnline" gj-tooltip="'Friend Requests'" tooltip-placement="bottom">
+			<li ng-if="!Connection.isClientOffline">
 				<a
 					gj-popover-trigger="friend-requests"
 					ng-class="{ active: friendRequestsShowing }"
+					gj-tooltip="Friend Requests"
+					tooltip-placement="bottom"
 					gj-track-event="top-nav:friend-requests:toggle"
 					>
 					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="friendRequestCount">{{ friendRequestCount }}</span>
@@ -101,13 +118,13 @@
 			<li>
 				<a ng-href="{{ ::Environment.authBaseUrl }}/login" target="_self" gj-track-event="top-nav:login:click">
 					<span class="jolticon jolticon-sign-in"></span>
-					{{ ::'nav.login' | translate }}
+					<span translate>nav.login</span>
 				</a>
 			</li>
 			<li>
 				<a ng-href="{{ ::Environment.authBaseUrl }}/join" target="_self" gj-track-event="top-nav:join:click">
 					<span class="jolticon jolticon-friends"></span>
-					{{ ::'nav.join' | translate }}
+					<span translate>nav.join</span>
 				</a>
 			</li>
 		</ul>
@@ -116,20 +133,21 @@
 
 		<!-- Connection Status -->
 		<span ng-if="!Connection.isOnline">
-			<span class="navbar-item disconnected-icon" gj-tooltip="'You are currently offline.'" tooltip-placement="left">
+			<span class="navbar-item disconnected-icon" tooltip="We're having trouble connecting to Game Jolt." tooltip-placement="left">
 				<span class="jolticon jolticon-bolt-unfilled"></span>
 			</span>
 		</span>
 
 		<!-- Chat -->
 		<ul class="navbar-items">
-			<li gj-tooltip="App.user ? 'Chat and Friends List (c)' : 'Chat (c)'" tooltip-placement="left">
+			<li>
 				<a
 					ng-class="{ active: Shell.isRightPaneVisible }"
 					ng-click="Shell.toggleRightPane()"
+					gj-tooltip="{{ App.user ? 'Chat and Friends List (c)' : 'Chat (c)' }}" tooltip-placement="left"
 					gj-track-event="top-nav:chat:toggle"
 					>
-					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="Chat.totalNotifications">{{ Chat.totalNotifications }}</span>
+					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="Chat.friendNotifications">{{ Chat.friendNotifications }}</span>
 					<span class="jolticon jolticon-user-messages"></span>
 				</a>
 			</li>

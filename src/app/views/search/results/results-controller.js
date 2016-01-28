@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Search.ResultsCtrl', function( $scope, $stateParams, Translate, App, Search, Search_History, payload )
+angular.module( 'App.Views' ).controller( 'Search.ResultsCtrl', function( $scope, $stateParams, App, Search, Search_History, gettextCatalog, payload )
 {
 	var searchCtrl = $scope.searchCtrl;
 
@@ -8,11 +8,11 @@ angular.module( 'App.Views' ).controller( 'Search.ResultsCtrl', function( $scope
 	searchCtrl.noResults = false;
 
 	if ( !$stateParams.q ) {
-		App.title = Translate.pageTitle( 'search.page_title' );
+		App.title = gettextCatalog.getString( 'search.page_title' );
 		return;
 	}
 
-	App.title = Translate.pageTitle( 'search.results.page_title', { query: $stateParams.q } );
+	App.title = gettextCatalog.getString( 'search.results.page_title', { query: $stateParams.q } );
 
 	searchCtrl.query = $stateParams.q;
 
