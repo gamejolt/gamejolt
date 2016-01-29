@@ -66,19 +66,34 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 			user = new User( payload.user );
 			this.user = user;
 			this.isOwner = App.user && user.id == App.user.id;
-			App.title = gettextCatalog.getString( 'library.collection.followed_' + (this.isOwner ? 'owner_' : '' ) + 'page_title', { user: user.display_name } );
+			if ( this.isOwner ) {
+				App.title = gettextCatalog.getString( 'library.collection.followed_owner_page_title', { user: user.display_name } );
+			}
+			else {
+				App.title = gettextCatalog.getString( 'library.collection.followed_page_title', { user: user.display_name } );
+			}
 		}
 		else if ( this.type == 'playlist' ) {
 			playlist = new GamePlaylist( payload.playlist );
 			this.playlist = playlist;
 			this.isOwner = App.user && playlist.user.id == App.user.id;
-			App.title = gettextCatalog.getString( 'library.collection.playlist_' + (this.isOwner ? 'owner_' : '' ) + 'page_title', { playlist: playlist.name, user: playlist.user.display_name } );
+			if ( this.isOwner ) {
+				App.title = gettextCatalog.getString( 'library.collection.playlist_owner_page_title', { playlist: playlist.name, user: playlist.user.display_name } );
+			}
+			else {
+				App.title = gettextCatalog.getString( 'library.collection.playlist_page_title', { playlist: playlist.name, user: playlist.user.display_name } );
+			}
 		}
 		else if ( this.type == 'developer' ) {
 			user = new User( payload.developer );
 			this.user = user;
 			this.isOwner = App.user && user.id == App.user.id;
-			App.title = gettextCatalog.getString( 'library.collection.developer_' + (this.isOwner ? 'owner_' : '' ) + 'page_title', { user: user.display_name } );
+			if ( this.isOwner ) {
+				App.title = gettextCatalog.getString( 'library.collection.developer_owner_page_title', { user: user.display_name } );
+			}
+			else {
+				App.title = gettextCatalog.getString( 'library.collection.developer_page_title', { user: user.display_name } );
+			}
 		}
 		else if ( this.type == 'bundle' ) {
 			bundle = new GameBundle( payload.bundle );
