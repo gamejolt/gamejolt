@@ -8,9 +8,8 @@ function cp( cmd, args )
 	{
 		childProcess.execFile( cmd, args, function ( err, stdout, stderr )
 		{
-			if ( err || stderr || stdout
-			 ) {
-				return reject( err || stderr || stdout );
+			if ( err || stderr ) {
+				return reject( err || stderr );
 			}
 			resolve();
 		} );
@@ -42,7 +41,7 @@ InnoSetup.prototype.build = function()
 	var scriptFile = path.resolve( __dirname, 'vendor', 'tmp-gamejolt.iss' );
 	fs.writeFileSync( scriptFile, script, { encoding: 'utf8' } );
 
-	return cp( 'iscc.exe', [ '/Sbyparam=' + shellEscape( path.resolve( __dirname, 'vendor', 'signtool.exe' ) ) + ' sign /a /f ' + shellEscape( this.certFile ) + ' /p ' + this.certPw, '/Q', scriptFile ] );
+	return cp( 'iscc.exe', [ '/Ssigntool=' + shellEscape( path.resolve( __dirname, 'vendor', 'signtool.exe' ) ) + ' sign /f ' + shellEscape( this.certFile ) + ' /p ' + this.certPw + ' /t http://timestamp.verisign.com/scripts/timstamp.dll $f', '/Q', scriptFile ] );
 };
 
 module.exports = InnoSetup;

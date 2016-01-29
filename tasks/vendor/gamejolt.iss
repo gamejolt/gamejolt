@@ -39,6 +39,7 @@ CloseApplications=force
 RestartApplications=no
 CloseApplicationsFilter=GameJoltClient.exe
 WizardSmallImageFile=package\app\img\client\win-installer-clyde.bmp
+SignTool=signtool
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -82,7 +83,7 @@ Function GetUninstallCmd( Var UninstallCmd: String; Const Silent: Boolean ): Boo
     Else
       KeyName := 'UninstallString';
 
-    Result := RegQueryStringValue( HKEY_CURRENT_USER, UninstallRegKey, KeyName, UninstallCmd ); 
+    Result := RegQueryStringValue( HKEY_CURRENT_USER, UninstallRegKey, KeyName, UninstallCmd );
   End;
 
 Function GetSquirrelUninstall( Var UninstallCmd: String ): Boolean;

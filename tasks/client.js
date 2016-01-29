@@ -396,7 +396,7 @@ module.exports = function( config )
 			var InnoSetup = require( './inno-setup' );
 			var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
 			var certPw = config.production ? fs.readFileSync( path.resolve( __dirname, 'certs', 'win-pass' ), { encoding: 'utf8' } ) : 'GJ123456';
-			var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw );
+			var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw.trim() );
 			return builder.build();
 		} );
 	}
