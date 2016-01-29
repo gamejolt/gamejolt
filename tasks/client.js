@@ -56,7 +56,7 @@ module.exports = function( config )
 	}
 
 	var gypTasks = [
-		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean install --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
+		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
 	];
 	if ( config.platform == 'win' ) {
 		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
@@ -197,7 +197,7 @@ module.exports = function( config )
 
 	var nodeModuletasks = [
 		'cd ' + config.buildDir + ' && npm install --production',
-		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean install --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
+		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
 	];
 
 	// http://developers.ironsrc.com/rename-import-dll/
