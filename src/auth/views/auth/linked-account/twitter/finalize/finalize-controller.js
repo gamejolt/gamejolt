@@ -1,6 +1,8 @@
-angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Twitter.FinalizeCtrl', function( $state, Growls, App, gettextCatalog )
+angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Twitter.FinalizeCtrl', function( $state, $stateParams, Growls, App, gettextCatalog )
 {
 	App.title = gettextCatalog.getString( 'auth.linked_account.twitter.finalize.page_title' );
+
+	this.state = $stateParams.state;
 
 	this.onSubmitted = function()
 	{

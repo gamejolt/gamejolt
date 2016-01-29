@@ -10,7 +10,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 				// Force POST.
 				if ( $stateParams.provider == 'twitter' ) {
 					return Api.sendRequest( '/web/dash/linked-accounts/link-callback/' + $stateParams.provider
-						+ '?oauth_verifier=' + $stateParams.oauth_verifier, {} );
+						+ '?oauth_verifier=' + $stateParams.oauth_verifier + '&state=' + $stateParams.state, {} );
 				}
 				else if ( $stateParams.provider == 'facebook' ) {
 					return Api.sendRequest( '/web/dash/linked-accounts/link-callback/' + $stateParams.provider

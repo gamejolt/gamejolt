@@ -1,0 +1,15 @@
+<div ng-if="pollCtrl.isPolling">
+	<p>Please login to your account through your web browser.</p>
+
+	<div
+		gj-progress-poller="/web/auth/poll-oauth/{{ pollCtrl.token }}"
+		progress-poller-on-complete="pollCtrl.completed( $response )"
+		progress-poller-on-error="pollCtrl.failed()"
+		progress-poller-interval="2500"
+		>
+	</div>
+</div>
+
+<div ng-if="!pollCtrl.isPolling">
+	<gj-loading label="{{ 'auth.linked_account.loading_message' | translate }}" class="loading-centered" loading-big></gj-loading>
+</div>
