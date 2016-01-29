@@ -10,7 +10,7 @@
 <section class="section">
 	<div class="container">
 
-		<div class="alert alert-warning" ng-if="installedCtrl.games.length"
+		<div class="alert alert-warning" ng-if="!installedCtrl.games.length"
 			translate
 			translate-comment="The message shown when there are no games installed yet in their library."
 			>
@@ -24,7 +24,7 @@
 			</span>
 		</gj-alert-dismissable>
 
-		<div class="row" ng-if="!installedCtrl.games.length">
+		<div class="row" ng-if="installedCtrl.games.length">
 
 			<!--
 				We have to pull the z-index for any game that is showing options to be in front.
