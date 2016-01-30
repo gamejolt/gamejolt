@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
-	$scope, Location, Api, SplitTest, Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable, Growls, Analytics, gettextCatalog, game, gamePayload )
+	$scope, Location, Api, SplitTest, Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable, Growls, Analytics, Report_Modal, gettextCatalog, game, gamePayload )
 {
 	var _this = this;
 
@@ -30,6 +30,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 
 	this.onFollowClick = onFollowClick;
 	this.refreshRatingInfo = refreshRatingInfo;
+	this.report = report;
 
 	// If the game has a GA tracking ID, then we attach it to this scope so all page views within get tracked.
 	if ( game.ga_tracking_id ) {
@@ -104,5 +105,10 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		if ( gameId == _this.game.id ) {
 			_this.refreshRatingInfo();
 		}
+	}
+
+	function report()
+	{
+		Report_Modal.show( _this.game );
 	}
 } );

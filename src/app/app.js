@@ -66,6 +66,9 @@ angular.module( 'App', [
 	'gj.Progress.Poller',
 	'gj.Alert.Dismissable',
 
+	'gj.Report.Form',
+	'gj.Report.Modal',
+
 	'gj.Primus',
 	'gj.Activity.Stream',
 

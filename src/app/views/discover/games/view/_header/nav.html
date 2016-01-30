@@ -24,12 +24,7 @@
 				<span class="badge">{{ gameCtrl.trophiesCount | number }}</span>
 			</a>
 		</li>
-
-		<!--
-			More Options
-			Currently only for developers of the game and mods.
-		-->
-		<li ng-if="App.user && (App.user.id == gameCtrl.game.developer.id || App.user.permission_level > 0)">
+		<li ng-if="App.user">
 			<a gj-popover-trigger="game-more-options">
 				<span class="jolticon jolticon-ellipsis-h"></span>
 				{{ ::'options.more' | translate }}
@@ -39,21 +34,28 @@
 </nav>
 
 <gj-popover popover-id="game-more-options">
-	<div class="list-group">
+	<div class="list-group list-group-dark">
 		<a class="list-group-item has-icon"
-			ui-sref="dashboard.developer.games.manage.game.overview( { id: gameCtrl.game.id } )"
-			ng-if="App.user.id == gameCtrl.game.developer.id"
+			ng-if="App.user && App.user.id != gameCtrl.game.developer.id"
+			ng-click="gameCtrl.report()"
 			>
-			<span class="jolticon jolticon-cog"></span>
-			{{ ::'games.view.manage_game_button' | translate }}
+			<span class="jolticon jolticon-notice warning"></span>
+			<span translate>games.view.report_game_button</span>
 		</a>
 		<a class="list-group-item has-icon"
-			ng-href="{{ ::Environment.baseUrl }}/moderate/games/view/{{ ::gameCtrl.game.id }}"
-			target="_blank"
-			ng-if="App.user.permission_level > 0"
+			ng-if="App.user.id == gameCtrl.game.developer.id"
+			ui-sref="dashboard.developer.games.manage.game.overview( { id: gameCtrl.game.id } )"
 			>
 			<span class="jolticon jolticon-cog"></span>
-			{{ ::'games.view.moderate_game_button' | translate }}
+			<span translate>games.view.manage_game_button</span>
+		</a>
+		<a class="list-group-item has-icon"
+			ng-if="App.user.permission_level > 0"
+			ng-href="{{ ::Environment.baseUrl }}/moderate/games/view/{{ ::gameCtrl.game.id }}"
+			target="_blank"
+			>
+			<span class="jolticon jolticon-cog"></span>
+			<span translate>games.view.moderate_game_button</span>
 		</a>
 	</div>
 </gj-popover>
