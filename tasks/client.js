@@ -389,17 +389,18 @@ module.exports = function( config )
 		} );
 	}
 	else if ( config.platform == 'win' ) {
-		// gulp.task( 'client:package', function( cb )
-		// {
-		// 	var releaseDir = getReleaseDir();
-		// 	var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
+		gulp.task( 'client:package', function( cb )
+		{
+			cb();
+			// var releaseDir = getReleaseDir();
+			// var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
 
-		// 	var InnoSetup = require( './inno-setup' );
-		// 	var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
-		// 	var certPw = config.production ? fs.readFileSync( path.resolve( __dirname, 'certs', 'win-pass' ), { encoding: 'utf8' } ) : 'GJ123456';
-		// 	var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw.trim() );
-		// 	return builder.build();
-		// } );
+			// var InnoSetup = require( './inno-setup' );
+			// var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
+			// var certPw = config.production ? fs.readFileSync( path.resolve( __dirname, 'certs', 'win-pass' ), { encoding: 'utf8' } ) : 'GJ123456';
+			// var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw.trim() );
+			// return builder.build();
+		} );
 	}
 	else {
 		gulp.task( 'client:package', function()
