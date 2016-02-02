@@ -1,0 +1,13 @@
+platform:
+  - x86
+
+shallow_clone: true
+
+install:
+  - ps: Install-Product node 5.5.0 x86 # We need npm@3 for windows builds
+  - npm install -g gulp bower node-pre-gyp nw-gyp
+
+build_script:
+  - bower i
+  - npm i --only=dev --dev --force
+  - npm run client-build-win
