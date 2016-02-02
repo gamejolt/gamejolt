@@ -98,6 +98,7 @@ angular.module( 'App', [
 		auth: {
 			'en': '/translations/en/auth.json',
 			'en_US': '/translations/en_US/auth.json',
+			'en_AU': '/translations/en_AU/auth.json',
 			'nl': '/translations/nl/auth.json',
 			'ro': '/translations/ro/auth.json',
 			'de': '/translations/de/auth.json',

@@ -280,6 +280,7 @@ angular.module( 'App', [
 		main: {
 			'en': '/translations/en/main.json',
 			'en_US': '/translations/en_US/main.json',
+			'en_AU': '/translations/en_AU/main.json',
 			'nl': '/translations/nl/main.json',
 			'ro': '/translations/ro/main.json',
 			'de': '/translations/de/main.json',
@@ -310,6 +311,7 @@ angular.module( 'App', [
 		dash: {
 			'en': '/translations/en/dash.json',
 			'en_US': '/translations/en_US/dash.json',
+			'en_AU': '/translations/en_AU/dash.json',
 			'nl': '/translations/nl/dash.json',
 			'ro': '/translations/ro/dash.json',
 			'de': '/translations/de/dash.json',
