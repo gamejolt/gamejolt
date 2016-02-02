@@ -1,0 +1,31 @@
+sudo: false
+language: cpp
+
+os:
+#   - linux
+  - osx
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.9
+      - g++-4.9
+      - gcc-4.9-multilib
+      - g++-4.9-multilib
+
+before_install:
+  - git submodule update --init --recursive
+  - git clone https://github.com/creationix/nvm.git ./.nvm
+  - source ./.nvm/nvm.sh
+  - nvm install 4.2.6
+  - nvm use 4.2.6
+  - npm install -g gulp bower node-pre-gyp nw-gyp
+
+install:
+  - bower i
+  - npm i
+
+script:
+  - npm run client-build-osx
