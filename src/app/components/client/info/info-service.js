@@ -5,11 +5,12 @@ angular.module( 'App.Client.Info' ).service( 'Client_Info', function( Environmen
 
 	this.getPackageJson = function()
 	{
+		var os = require( 'os' );
 		var cwd = path.dirname( process.mainModule.filename );
 
-		// Slightly different path on dev.
+		// Slightly different path on dev and mac.
 		var packagePath = path.resolve( cwd, '..', 'package.json' );
-		if ( Environment.env == 'development' ) {
+		if ( Environment.env == 'development' || os.type() == 'Darwin' ) {
 			packagePath = path.resolve( cwd, 'package.json' );
 		}
 

@@ -24,8 +24,16 @@
 	{
 		console.log( 'Checking for client update.' );
 
+		var os = require( 'os' );
 		var cwd = path.dirname( process.mainModule.filename );
-		var packageJson = require( path.resolve( cwd, '..', 'package.json' ) );
+
+		var packageJson;
+		if ( os.type() == 'Darwin' ) {
+			packageJson = require( path.resolve( cwd, 'package.json' ) );
+		}
+		else {
+			packageJson = require( path.resolve( cwd, '..', 'package.json' ) );
+		}
 
 		if ( packageJson['no-auto-update'] === true ) {
 			console.log( 'Skip update. Package says not to auto-update.' );
