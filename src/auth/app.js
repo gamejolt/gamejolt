@@ -115,6 +115,15 @@ angular.module( 'App', [
 			'pl': '/translations/pl/auth.json',
 			'uk': '/translations/uk/auth.json',
 			'it': '/translations/it/auth.json',
+			'bg': '/translations/bg/auth.json',
+			'cs': '/translations/cs/auth.json',
+			'es_419': '/translations/es_419/auth.json',
+			'es_AR': '/translations/es_AR/auth.json',
+			'es_CO': '/translations/es_CO/auth.json',
+			'es_MX': '/translations/es_MX/auth.json',
+			'hr': '/translations/hr/auth.json',
+			'id': '/translations/id/auth.json',
+			'zh_TW': '/translations/zh_TW/auth.json',
 		},
 	};
 
