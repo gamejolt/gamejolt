@@ -27,7 +27,7 @@ before_install:
 
 install:
   - bower i
-  - npm i --only=dev --dev
+  - npm i
 
 script:
   - echo $TRAVIS_OS_NAME

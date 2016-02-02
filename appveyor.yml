@@ -10,5 +10,5 @@ install:
 
 build_script:
   - bower i
-  - npm i --only=dev --dev
+  - npm i
   - npm run client-build-win
