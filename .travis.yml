@@ -2,7 +2,7 @@ sudo: false
 language: cpp
 
 os:
-#   - linux
+  - linux
   - osx
 
 addons:
@@ -34,4 +34,6 @@ install:
   - npm i --only=dev
 
 script:
-  - npm run client-build-osx
+  - echo $TRAVIS_OS_NAME
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then npm run client-build-linux64; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then npm run client-build-osx; fi
