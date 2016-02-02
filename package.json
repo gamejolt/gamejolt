@@ -11,7 +11,7 @@
   "devDependencies": {
     "concat-with-sourcemaps": "~1.0.2",
     "connect-history-api-fallback": "0.0.4",
-    "decompress": "^3.0.0",
+    "decompress-zip": "^0.2.0",
     "glob-expand": "~0.0.2",
     "gulp": "~3.8.1",
     "gulp-angular-gettext": "^2.1.0",

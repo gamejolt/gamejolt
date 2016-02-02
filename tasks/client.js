@@ -310,43 +310,39 @@ module.exports = function( config )
 		var packagePath = path.join( releaseDir, config.platformArch + '-package.zip' )
 
 		if ( config.platform != 'osx' ) {
-			var Decompress = require( 'decompress' );
-
 			fs.renameSync( path.join( base, 'package.nw' ), packagePath );
 
-			new Decompress()
-				.src( packagePath )
-				.dest( path.join( base, 'package' ) )
-				.use( Decompress.zip() )
-				.run( function( err, files )
+			var DecompressZip = require( 'decompress-zip' );
+			var unzipper = new DecompressZip( packagePath );
+
+			unzipper.on( 'error', cb );
+			unzipper.on( 'extract', function()
+			{
+				var stream = gulp.src( base + '/package/**/*' )
+					.pipe( plugins.tar( config.platformArch + '-package.tar' ) )
+					.pipe( plugins.gzip() )
+					.pipe( gulp.dest( releaseDir ) );
+
+				stream.on( 'error', cb );
+				stream.on( 'end', function()
 				{
-					if ( err ) {
-						throw err;
-					}
-
-					// var stream = gulp.src( base + '/package/**/*' )
-					// 	.pipe( plugins.tar( config.platformArch + '-package.tar' ) )
-					// 	.pipe( plugins.gzip() )
-					// 	.pipe( gulp.dest( releaseDir ) );
-
-					// stream.on( 'error', cb );
-					// stream.on( 'end', function()
-					// {
-					// 	mv( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ), function( err )
-					// 	{
-					// 		if ( err ) {
-					// 			throw err;
-					// 		}
-					// 		mv( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ), function( err )
-					// 		{
-					// 			if ( err ) {
-					// 				throw err;
-					// 			}
-					// 			cb();
-					// 		} );
-					// 	} );
-					// } );
+					mv( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ), function( err )
+					{
+						if ( err ) {
+							throw err;
+						}
+						mv( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ), function( err )
+						{
+							if ( err ) {
+								throw err;
+							}
+							cb();
+						} );
+					} );
 				} );
+			} );
+
+			unzipper.extract( { path: path.join( base, 'package' ) } );
 		}
 		else {
 			var stream = gulp.src( base + '/Game Jolt Client.app/Contents/Resources/app.nw/**/*' )
@@ -391,15 +387,14 @@ module.exports = function( config )
 	else if ( config.platform == 'win' ) {
 		gulp.task( 'client:package', function( cb )
 		{
-			cb();
-			// var releaseDir = getReleaseDir();
-			// var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
+			var releaseDir = getReleaseDir();
+			var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
 
-			// var InnoSetup = require( './inno-setup' );
-			// var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
-			// var certPw = config.production ? fs.readFileSync( path.resolve( __dirname, 'certs', 'win-pass' ), { encoding: 'utf8' } ) : 'GJ123456';
-			// var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw.trim() );
-			// return builder.build();
+			var InnoSetup = require( './inno-setup' );
+			var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
+			var certPw = config.production ? fs.readFileSync( path.resolve( __dirname, 'certs', 'win-pass' ), { encoding: 'utf8' } ) : 'GJ123456';
+			var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw.trim() );
+			return builder.build();
 		} );
 	}
 	else {
