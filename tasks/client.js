@@ -324,28 +324,28 @@ module.exports = function( config )
 						throw err;
 					}
 
-					var stream = gulp.src( base + '/package/**/*' )
-						.pipe( plugins.tar( config.platformArch + '-package.tar' ) )
-						.pipe( plugins.gzip() )
-						.pipe( gulp.dest( releaseDir ) );
+					// var stream = gulp.src( base + '/package/**/*' )
+					// 	.pipe( plugins.tar( config.platformArch + '-package.tar' ) )
+					// 	.pipe( plugins.gzip() )
+					// 	.pipe( gulp.dest( releaseDir ) );
 
-					stream.on( 'error', cb );
-					stream.on( 'end', function()
-					{
-						mv( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ), function( err )
-						{
-							if ( err ) {
-								throw err;
-							}
-							mv( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ), function( err )
-							{
-								if ( err ) {
-									throw err;
-								}
-								cb();
-							} );
-						} );
-					} );
+					// stream.on( 'error', cb );
+					// stream.on( 'end', function()
+					// {
+					// 	mv( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ), function( err )
+					// 	{
+					// 		if ( err ) {
+					// 			throw err;
+					// 		}
+					// 		mv( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ), function( err )
+					// 		{
+					// 			if ( err ) {
+					// 				throw err;
+					// 			}
+					// 			cb();
+					// 		} );
+					// 	} );
+					// } );
 				} );
 		}
 		else {
@@ -389,17 +389,17 @@ module.exports = function( config )
 		} );
 	}
 	else if ( config.platform == 'win' ) {
-		gulp.task( 'client:package', function( cb )
-		{
-			var releaseDir = getReleaseDir();
-			var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
+		// gulp.task( 'client:package', function( cb )
+		// {
+		// 	var releaseDir = getReleaseDir();
+		// 	var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
 
-			var InnoSetup = require( './inno-setup' );
-			var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
-			var certPw = config.production ? fs.readFileSync( path.resolve( __dirname, 'certs', 'win-pass' ), { encoding: 'utf8' } ) : 'GJ123456';
-			var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw.trim() );
-			return builder.build();
-		} );
+		// 	var InnoSetup = require( './inno-setup' );
+		// 	var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
+		// 	var certPw = config.production ? fs.readFileSync( path.resolve( __dirname, 'certs', 'win-pass' ), { encoding: 'utf8' } ) : 'GJ123456';
+		// 	var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw.trim() );
+		// 	return builder.build();
+		// } );
 	}
 	else {
 		gulp.task( 'client:package', function()
