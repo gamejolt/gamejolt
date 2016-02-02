@@ -3,10 +3,4 @@
 /typings/
 /tasks/certs
 /tasks/vendor/tmp-gamejolt.iss
-
-/build/dev/
-/build/translations/
-/build/client/cache/
-/build/client/dev/
-/build/client/prod/source/
-/build/client/prod/v*/*/
+/build/

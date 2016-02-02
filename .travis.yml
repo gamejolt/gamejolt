@@ -16,6 +16,11 @@ addons:
       - g++-4.9-multilib
   artifacts:
     debug: true
+    paths:
+      - ./build/client/prod/build/linux64-package.tar.gz
+      - ./build/client/prod/build/linux64.tar.gz
+      - ./build/client/prod/build/osx64-package.tar.gz
+      - ./build/client/prod/build/osx.dmg
 
 before_install:
   - git submodule update --init --recursive

@@ -64,7 +64,7 @@ module.exports = function( config )
 
 	gulp.task( 'client:gyp', shell.task( gypTasks ) );
 
-	var releaseDir = path.join( 'build/client/prod', 'v' + packageJson.version );
+	var releaseDir = path.join( 'build/client/prod', 'build' );
 	var s3Dir = 's3://gjolt-data/data/client/releases/v' + packageJson.version;
 
 	gulp.task( 'client:push-release:linux', shell.task( [
@@ -272,7 +272,8 @@ module.exports = function( config )
 			appName: appName,
 			buildType: function()
 			{
-				return 'v' + this.appVersion;
+				// return 'v' + this.appVersion;
+				return 'build';
 			},
 			appVersion: clientJson.version,
 			macZip: false,  // Use a app.nw folder instead of ZIP file
@@ -294,7 +295,7 @@ module.exports = function( config )
 	{
 		// Load in the client package.
 		var packageJson = require( '../package.json' );
-		return path.join( config.clientBuildDir, 'v' + packageJson.version );
+		return path.join( config.clientBuildDir, 'build' );
 	}
 
 	/**
