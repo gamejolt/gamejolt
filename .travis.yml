@@ -16,10 +16,6 @@ addons:
       - g++-4.9-multilib
   artifacts:
     debug: true
-    paths:
-      - $(./build/client/prod/v*/*.zip | tr "\n" ":")
-      - $(./build/client/prod/v*/*.tar.gz | tr "\n" ":")
-      - $(./build/client/prod/v*/*.dmg | tr "\n" ":")
 
 before_install:
   - git submodule update --init --recursive
@@ -31,7 +27,7 @@ before_install:
 
 install:
   - bower i
-  - npm i --only=dev
+  - npm i --only=dev --dev
 
 script:
   - echo $TRAVIS_OS_NAME
