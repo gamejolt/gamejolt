@@ -14,6 +14,12 @@ addons:
       - g++-4.9
       - gcc-4.9-multilib
       - g++-4.9-multilib
+  artifacts:
+  	debug: true
+  	paths:
+		- $(./build/client/prod/v*/*.zip | tr "\n" ":")
+		- $(./build/client/prod/v*/*.tar.gz | tr "\n" ":")
+		- $(./build/client/prod/v*/*.dmg | tr "\n" ":")
 
 before_install:
   - git submodule update --init --recursive
@@ -25,7 +31,7 @@ before_install:
 
 install:
   - bower i
-  - npm i
+  - npm i --only=dev
 
 script:
   - npm run client-build-osx
