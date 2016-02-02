@@ -14,5 +14,5 @@ build_script:
   - npm run client-build-win
 
 artifacts:
-  - path: Setup.exe
-  - path: win32-package.tar.gz
+  - path: build\client\prod\build\win32\Setup.exe
+  - path: build\client\prod\build\win32\win32-package.tar.gz
