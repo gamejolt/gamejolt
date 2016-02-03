@@ -64,20 +64,18 @@ module.exports = function( config )
 
 	gulp.task( 'client:gyp', shell.task( gypTasks ) );
 
-	var releaseDir = path.join( 'build/client/prod', 'build' );
+	// For releasing to S3.
+	// We have to gather all the builds into the versioned folder before pushing.
+	var releaseDir = path.join( 'build/client/prod', 'v' + packageJson.version );
 	var s3Dir = 's3://gjolt-data/data/client/releases/v' + packageJson.version;
 
-	gulp.task( 'client:push-release:linux', shell.task( [
+	gulp.task( 'client:push-releases', shell.task( [
 		'aws s3 cp ' + releaseDir + '/linux64.tar.gz ' + s3Dir + '/game-jolt-client.tar.gz --acl public-read',
 		'aws s3 cp ' + releaseDir + '/linux64-package.tar.gz ' + s3Dir + '/linux64-package.tar.gz --acl public-read',
-	] ) );
 
-	gulp.task( 'client:push-release:osx', shell.task( [
 		'aws s3 cp ' + releaseDir + '/osx.dmg ' + s3Dir + '/GameJoltClient.dmg --acl public-read',
 		'aws s3 cp ' + releaseDir + '/osx64-package.tar.gz ' + s3Dir + '/osx64-package.tar.gz --acl public-read',
-	] ) );
 
-	gulp.task( 'client:push-release:win', shell.task( [
 		'aws s3 cp ' + releaseDir + '/Setup.exe ' + s3Dir + '/GameJoltClientSetup.exe --acl public-read',
 		'aws s3 cp ' + releaseDir + '/win32-package.tar.gz ' + s3Dir + '/win32-package.tar.gz --acl public-read',
 	] ) );
