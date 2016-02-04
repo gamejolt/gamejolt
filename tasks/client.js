@@ -64,20 +64,18 @@ module.exports = function( config )
 
 	gulp.task( 'client:gyp', shell.task( gypTasks ) );
 
+	// For releasing to S3.
+	// We have to gather all the builds into the versioned folder before pushing.
 	var releaseDir = path.join( 'build/client/prod', 'v' + packageJson.version );
 	var s3Dir = 's3://gjolt-data/data/client/releases/v' + packageJson.version;
 
-	gulp.task( 'client:push-release:linux', shell.task( [
+	gulp.task( 'client:push-releases', shell.task( [
 		'aws s3 cp ' + releaseDir + '/linux64.tar.gz ' + s3Dir + '/game-jolt-client.tar.gz --acl public-read',
 		'aws s3 cp ' + releaseDir + '/linux64-package.tar.gz ' + s3Dir + '/linux64-package.tar.gz --acl public-read',
-	] ) );
 
-	gulp.task( 'client:push-release:osx', shell.task( [
 		'aws s3 cp ' + releaseDir + '/osx.dmg ' + s3Dir + '/GameJoltClient.dmg --acl public-read',
 		'aws s3 cp ' + releaseDir + '/osx64-package.tar.gz ' + s3Dir + '/osx64-package.tar.gz --acl public-read',
-	] ) );
 
-	gulp.task( 'client:push-release:win', shell.task( [
 		'aws s3 cp ' + releaseDir + '/Setup.exe ' + s3Dir + '/GameJoltClientSetup.exe --acl public-read',
 		'aws s3 cp ' + releaseDir + '/win32-package.tar.gz ' + s3Dir + '/win32-package.tar.gz --acl public-read',
 	] ) );
@@ -272,7 +270,8 @@ module.exports = function( config )
 			appName: appName,
 			buildType: function()
 			{
-				return 'v' + this.appVersion;
+				// return 'v' + this.appVersion;
+				return 'build';
 			},
 			appVersion: clientJson.version,
 			macZip: false,  // Use a app.nw folder instead of ZIP file
@@ -294,7 +293,7 @@ module.exports = function( config )
 	{
 		// Load in the client package.
 		var packageJson = require( '../package.json' );
-		return path.join( config.clientBuildDir, 'v' + packageJson.version );
+		return path.join( config.clientBuildDir, 'build' );
 	}
 
 	/**
@@ -309,43 +308,39 @@ module.exports = function( config )
 		var packagePath = path.join( releaseDir, config.platformArch + '-package.zip' )
 
 		if ( config.platform != 'osx' ) {
-			var Decompress = require( 'decompress' );
-
 			fs.renameSync( path.join( base, 'package.nw' ), packagePath );
 
-			new Decompress()
-				.src( packagePath )
-				.dest( path.join( base, 'package' ) )
-				.use( Decompress.zip() )
-				.run( function( err, files )
+			var DecompressZip = require( 'decompress-zip' );
+			var unzipper = new DecompressZip( packagePath );
+
+			unzipper.on( 'error', cb );
+			unzipper.on( 'extract', function()
+			{
+				var stream = gulp.src( base + '/package/**/*' )
+					.pipe( plugins.tar( config.platformArch + '-package.tar' ) )
+					.pipe( plugins.gzip() )
+					.pipe( gulp.dest( releaseDir ) );
+
+				stream.on( 'error', cb );
+				stream.on( 'end', function()
 				{
-					if ( err ) {
-						throw err;
-					}
-
-					var stream = gulp.src( base + '/package/**/*' )
-						.pipe( plugins.tar( config.platformArch + '-package.tar' ) )
-						.pipe( plugins.gzip() )
-						.pipe( gulp.dest( releaseDir ) );
-
-					stream.on( 'error', cb );
-					stream.on( 'end', function()
+					mv( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ), function( err )
 					{
-						mv( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ), function( err )
+						if ( err ) {
+							throw err;
+						}
+						mv( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ), function( err )
 						{
 							if ( err ) {
 								throw err;
 							}
-							mv( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ), function( err )
-							{
-								if ( err ) {
-									throw err;
-								}
-								cb();
-							} );
+							cb();
 						} );
 					} );
 				} );
+			} );
+
+			unzipper.extract( { path: path.join( base, 'package' ) } );
 		}
 		else {
 			var stream = gulp.src( base + '/Game Jolt Client.app/Contents/Resources/app.nw/**/*' )
@@ -395,8 +390,8 @@ module.exports = function( config )
 
 			var InnoSetup = require( './inno-setup' );
 			var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
-			var certPw = config.production ? fs.readFileSync( path.resolve( __dirname, 'certs', 'win-pass' ), { encoding: 'utf8' } ) : 'GJ123456';
-			var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw );
+			var certPw = config.production ? process.env['GJ_CERT_PASS'] : 'GJ123456';
+			var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw.trim() );
 			return builder.build();
 		} );
 	}

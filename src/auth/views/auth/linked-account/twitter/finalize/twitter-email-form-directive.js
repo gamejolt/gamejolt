@@ -4,6 +4,8 @@ angular.module( 'App.Views' ).directive( 'gjFormTwitterEmail', function( $q, Api
 		template: '/auth/views/auth/linked-account/twitter/finalize/twitter-email-form.html'
 	} );
 
+	form.scope.state = '=';
+
 	form.onInit = function( scope )
 	{
 		scope.formState.duplicateEmail = false;
@@ -21,7 +23,7 @@ angular.module( 'App.Views' ).directive( 'gjFormTwitterEmail', function( $q, Api
 	 */
 	form.onSubmit = function( scope )
 	{
-		return Api.sendRequest( '/web/auth/twitter/create-account', scope.formModel ).then( function( response )
+		return Api.sendRequest( '/web/auth/twitter/create-account?state=' + scope.state, scope.formModel ).then( function( response )
 		{
 			if ( !response.success ) {
 

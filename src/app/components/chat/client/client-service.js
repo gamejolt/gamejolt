@@ -97,7 +97,6 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 			// On any message...
 			_this.primus.on( 'data', function( msg )
 			{
-				console.log( msg );
 				// We want to make sure any changes in these function get digested.
 				$rootScope.$apply( function()
 				{

@@ -1,4 +1,4 @@
-angular.module( 'App.Client.Info' ).service( 'Client_Info', function()
+angular.module( 'App.Client.Info' ).service( 'Client_Info', function( Environment )
 {
 	var os = require( 'os' );
 	var path = require( 'path' );
@@ -6,7 +6,14 @@ angular.module( 'App.Client.Info' ).service( 'Client_Info', function()
 	this.getPackageJson = function()
 	{
 		var cwd = path.dirname( process.mainModule.filename );
-		return require( path.resolve( cwd, 'package.json' ) );
+
+		// Slightly different path on dev and mac.
+		var packagePath = path.resolve( cwd, '..', 'package.json' );
+		if ( Environment.env == 'development' || os.type() == 'Darwin' ) {
+			packagePath = path.resolve( cwd, 'package.json' );
+		}
+
+		return require( packagePath );
 	};
 
 	this.getVersion = function()

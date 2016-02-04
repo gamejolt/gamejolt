@@ -1,6 +1,6 @@
 {
   "name": "game-jolt",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "scripts": {
     "client": "nw build/client/dev/source",
     "client-build-win": "gulp --production --client --arch=32",
@@ -11,7 +11,7 @@
   "devDependencies": {
     "concat-with-sourcemaps": "~1.0.2",
     "connect-history-api-fallback": "0.0.4",
-    "decompress": "^3.0.0",
+    "decompress-zip": "^0.2.0",
     "glob-expand": "~0.0.2",
     "gulp": "~3.8.1",
     "gulp-angular-gettext": "^2.1.0",
@@ -55,7 +55,7 @@
     "appdmg": "^0.3.5"
   },
   "dependencies": {
-    "client-voodoo": "gamejolt/client-voodoo",
+    "client-voodoo": "0.4.3",
     "lodash": "3.9.3",
     "nwjs-snappy-updater": "0.0.7"
   }
