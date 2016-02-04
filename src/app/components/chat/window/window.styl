@@ -147,11 +147,6 @@ $chat-room-window-padding = 15px
 	word-wrap: break-word
 	line-height: $font-size-small * 1.25
 
-
-	&:hover
-		.chat-window-message-mod-tools
-			display: block
-
 	&-avatar
 		position: absolute
 		left: 0
@@ -199,16 +194,20 @@ $chat-room-window-padding = 15px
 		.hidden-text-expander
 			margin-left: 35px + 10px + $chat-room-window-padding
 
+	&-can-mod:hover
+		outline: 1px dashed $gray-lighter
 
 	&-mod-tools
 		display: none
 		position: absolute
-		top: 0px
-		right: 0px
-		padding-right: 12px
+		top: 0
+		right: 0
+		padding: 2px
+		background-color: $white
+		z-index: 2
 
-		a
-			cursor: pointer
+		../:hover &
+			display: block
 
 	&-content
 		display: block
