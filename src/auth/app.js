@@ -98,6 +98,7 @@ angular.module( 'App', [
 		auth: {
 			'en': '/translations/en/auth.json',
 			'en_US': '/translations/en_US/auth.json',
+			'en_AU': '/translations/en_AU/auth.json',
 			'nl': '/translations/nl/auth.json',
 			'ro': '/translations/ro/auth.json',
 			'de': '/translations/de/auth.json',
@@ -114,6 +115,16 @@ angular.module( 'App', [
 			'ms': '/translations/ms/auth.json',
 			'pl': '/translations/pl/auth.json',
 			'uk': '/translations/uk/auth.json',
+			'it': '/translations/it/auth.json',
+			'bg': '/translations/bg/auth.json',
+			'cs': '/translations/cs/auth.json',
+			'es_419': '/translations/es_419/auth.json',
+			'es_AR': '/translations/es_AR/auth.json',
+			'es_CO': '/translations/es_CO/auth.json',
+			'es_MX': '/translations/es_MX/auth.json',
+			'hr': '/translations/hr/auth.json',
+			'id': '/translations/id/auth.json',
+			'zh_TW': '/translations/zh_TW/auth.json',
 		},
 	};
 

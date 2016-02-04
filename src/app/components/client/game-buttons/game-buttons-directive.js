@@ -75,7 +75,7 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 							return;
 						}
 
-						var build = packageData.installableBuilds[0];
+						var build = Game.chooseBestBuild( packageData.installableBuilds, os, arch );
 						Client_Library.installPackage(
 							_this.game,
 							build._package,

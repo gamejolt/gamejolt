@@ -66,6 +66,9 @@ angular.module( 'App', [
 	'gj.Progress.Poller',
 	'gj.Alert.Dismissable',
 
+	'gj.Report.Form',
+	'gj.Report.Modal',
+
 	'gj.Primus',
 	'gj.Activity.Stream',
 
@@ -277,6 +280,7 @@ angular.module( 'App', [
 		main: {
 			'en': '/translations/en/main.json',
 			'en_US': '/translations/en_US/main.json',
+			'en_AU': '/translations/en_AU/main.json',
 			'nl': '/translations/nl/main.json',
 			'ro': '/translations/ro/main.json',
 			'de': '/translations/de/main.json',
@@ -293,10 +297,21 @@ angular.module( 'App', [
 			'ms': '/translations/ms/main.json',
 			'pl': '/translations/pl/main.json',
 			'uk': '/translations/uk/main.json',
+			'it': '/translations/it/main.json',
+			'bg': '/translations/bg/main.json',
+			'cs': '/translations/cs/main.json',
+			'es_419': '/translations/es_419/main.json',
+			'es_AR': '/translations/es_AR/main.json',
+			'es_CO': '/translations/es_CO/main.json',
+			'es_MX': '/translations/es_MX/main.json',
+			'hr': '/translations/hr/main.json',
+			'id': '/translations/id/main.json',
+			'zh_TW': '/translations/zh_TW/main.json',
 		},
 		dash: {
 			'en': '/translations/en/dash.json',
 			'en_US': '/translations/en_US/dash.json',
+			'en_AU': '/translations/en_AU/dash.json',
 			'nl': '/translations/nl/dash.json',
 			'ro': '/translations/ro/dash.json',
 			'de': '/translations/de/dash.json',
@@ -313,6 +328,16 @@ angular.module( 'App', [
 			'ms': '/translations/ms/dash.json',
 			'pl': '/translations/pl/dash.json',
 			'uk': '/translations/uk/dash.json',
+			'it': '/translations/it/dash.json',
+			'bg': '/translations/bg/dash.json',
+			'cs': '/translations/cs/dash.json',
+			'es_419': '/translations/es_419/dash.json',
+			'es_AR': '/translations/es_AR/dash.json',
+			'es_CO': '/translations/es_CO/dash.json',
+			'es_MX': '/translations/es_MX/dash.json',
+			'hr': '/translations/hr/dash.json',
+			'id': '/translations/id/dash.json',
+			'zh_TW': '/translations/zh_TW/dash.json',
 		},
 	};
 

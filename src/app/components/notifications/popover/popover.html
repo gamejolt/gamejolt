@@ -12,7 +12,7 @@
 		ng-click="ctrl.close()"
 		>
 		<span class="jolticon jolticon-notifications"></span>
-		{{ ::'notifications.popover.view_all_button' | translate }}
+		<span translate>notifications.popover.view_all_button</span>
 	</a>
 
 	<div ng-if="ctrl.isLoading && ctrl.isShown">
@@ -22,15 +22,15 @@
 
 	<div ng-if="!ctrl.isLoading">
 
-		<div class="alert alert-warning" ng-if="!ctrl.notifications.length">
-			{{ ::'notifications.popover.no_notifications' | translate }}
+		<div class="alert alert-warning" ng-if="!ctrl.notifications.length" translate>
+			notifications.popover.no_notifications
 		</div>
 
 		<div class="notifications-popover-container-controls"
 			ng-if="ctrl.notifications.length"
 			>
 			<a class="link-muted" ng-click="ctrl.dismissAll()">
-				({{ ::'notifications.popover.dismiss_all' | translate }})
+				(<span translate>notifications.popover.dismiss_all</span>)
 			</a>
 		</div>
 
