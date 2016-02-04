@@ -167,8 +167,10 @@
 						<div ng-if="::msg.contentRaw.length < 500" class="chat-window-message-content-wrap">
 							<div class="chat-window-message-content highlight" ng-bind-html="::msg.content"></div>
 
-							<div class="chat-window-message-mod-tools" ng-if="client.canModerate( room, msg.user )">
-								<span class="jolticon jolticon-friend-remove-2" tooltip="Mute User" ng-click="ctrl.muteUser( msg.user.id )"></span>
+							<div class="chat-window-message-mod-tools" ng-if="::client.canModerate( room, msg.user )">
+								<a gj-tooltip="Mute User" ng-click="ctrl.muteUser( msg.user.id )">
+									<span class="jolticon jolticon-friend-remove-2"></span>
+								</a>
 							</div>
 						</div>
 
@@ -185,8 +187,10 @@
 								<a class="hidden-text-expander" ng-click="msg._expanded = true"></a>
 							</p>
 
-							<div class="chat-window-message-mod-tools" ng-if="client.canModerate( room, msg.user )">
-								<span class="jolticon jolticon-friend-remove-2" tooltip="Mute User" ng-click="ctrl.muteUser( msg.user.id )"></span>
+							<div class="chat-window-message-mod-tools" ng-if="::client.canModerate( room, msg.user )">
+								<a ng-click="ctrl.muteUser( msg.user.id )">
+									<span tooltip="Mute User" class="jolticon jolticon-friend-remove-2"></span>
+								</a>
 							</div>
 						</div>
 					</div>
