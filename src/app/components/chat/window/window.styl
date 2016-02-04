@@ -147,6 +147,11 @@ $chat-room-window-padding = 15px
 	word-wrap: break-word
 	line-height: $font-size-small * 1.25
 
+
+	&:hover
+		.chat-window-message-mod-tools
+			display: block
+
 	&-avatar
 		position: absolute
 		left: 0
@@ -177,6 +182,7 @@ $chat-room-window-padding = 15px
 	// content container have the padding. This allows any tags within the content area to full bleed again
 	// even if in fade-collapse and even with the `overflow-y: hidden` thing we do in the content.
 	&-content-wrap
+		position: relative
 		margin-left: -(35px + 10px + $chat-room-window-padding)
 		margin-right: -($chat-room-window-padding)
 
@@ -193,12 +199,23 @@ $chat-room-window-padding = 15px
 		.hidden-text-expander
 			margin-left: 35px + 10px + $chat-room-window-padding
 
+
+	&-mod-tools
+		display: none
+		position: absolute
+		top: 0px
+		right: 0px
+		padding-right: 12px
+
+		span
+			cursor: pointer
+
 	&-content
 		display: block
 
 		// Add in the padding again.
 		padding-left: 35px + 10px + $chat-room-window-padding
-		padding-right: $chat-room-window-padding
+		padding-right: 34px + 1px + $chat-room-window-padding
 
 		// Try to limit the effects of what zalgo text can do to chat.
 		overflow-y: hidden
