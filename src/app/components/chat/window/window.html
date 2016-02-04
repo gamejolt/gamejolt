@@ -188,8 +188,8 @@
 							</p>
 
 							<div class="chat-window-message-mod-tools" ng-if="::client.canModerate( room, msg.user )">
-								<a ng-click="ctrl.muteUser( msg.user.id )">
-									<span tooltip="Mute User" class="jolticon jolticon-friend-remove-2"></span>
+								<a gj-tooltip="Mute User" ng-click="ctrl.muteUser( msg.user.id )">
+									<span class="jolticon jolticon-friend-remove-2"></span>
 								</a>
 							</div>
 						</div>
