@@ -86,7 +86,7 @@
 	</head>
 
 	<!-- Add an empty class so we can hook into it when building and add classes for client, app, etc. -->
-	<body class="" gj-body-classes gj-auto-scroll ng-class="{ 'is-offline': !Connection.isOnline }">
+	<body class="" gj-body-classes gj-auto-scroll ng-class="{ 'is-client-offline': Connection.isClientOffline }">
 
 		<gj-client-intro client-intro-done="App.isClientIntroDone = true" ng-if="!App.isClientIntroDone"></gj-client-intro>
 

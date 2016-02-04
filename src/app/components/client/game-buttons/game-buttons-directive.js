@@ -75,7 +75,7 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 							return;
 						}
 
-						var build = packageData.installableBuilds[0];
+						var build = Game.chooseBestBuild( packageData.installableBuilds, os, arch );
 						Client_Library.installPackage(
 							_this.game,
 							build._package,
@@ -120,6 +120,24 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 				Analytics.trackEvent( 'client-game-buttons', 'launch' );
 				Popover.hideAll();
 				Client_Launcher.launch( localPackage );
+			};
+
+			this.openFolder = function( localPackage )
+			{
+				var fs = require( 'fs' );
+				var path = require( 'path' );
+				var gui = require( 'nw.gui' );
+
+				fs.readdir( path.resolve( localPackage.install_dir ), function( err, files )
+				{
+					if ( err ) {
+						return;
+					}
+
+					// Just open the first file in the folder.
+					// This way we open within the package folder instead of the parent folder.
+					gui.Shell.showItemInFolder( path.resolve( localPackage.install_dir, files[0] ) );
+				} );
 			};
 
 			this.uninstallPackage = function( localPackage )

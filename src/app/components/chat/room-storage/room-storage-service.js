@@ -43,6 +43,30 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 			$window.addEventListener( 'storage', onStorageEvent );
 			storageListener = true;
 		}
+
+		this.cleanRooms();
+	};
+
+	this.cleanRooms = function()
+	{
+		var data = JSON.parse( $window.localStorage.getItem( STORAGE_KEY ) );
+
+		data.rooms = data.rooms.filter( function( roomId )
+		{
+			if ( !roomId ) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		} );
+
+		data.time = Date.now();
+		data.action = {
+			type: 'clean'
+		};
+
+		$window.localStorage.setItem( STORAGE_KEY, JSON.stringify( data ) );
 	};
 
 	this.destroy = function()
@@ -108,7 +132,7 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 
 		if ( data.rooms.indexOf( roomId ) === -1 ) {
 			data.rooms.push( roomId );
-			data.time = new Date().getTime();
+			data.time = Date.now();
 			data.action = {
 				type: 'join',
 				roomId: roomId,
@@ -129,8 +153,16 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 
 		var roomIndex = data.rooms.indexOf( roomId );
 		if ( roomIndex !== -1 ) {
-			data.rooms.splice( roomIndex, 1 );
-			data.time = new Date().getTime();
+			data.rooms = data.rooms.filter( function( roomId2 )
+			{
+				if ( roomId == roomId2 ) {
+					return false;
+				}
+				else {
+					return true;
+				}
+			} );
+			data.time = Date.now();
 			data.action = {
 				type: 'leave',
 				roomId: roomId,
@@ -144,7 +176,7 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomStorage', function( $injector, $
 	{
 		var data = JSON.parse( $window.localStorage.getItem( STORAGE_KEY ) );
 
-		data.time = new Date().getTime();
+		data.time = Date.now();
 		data.action = {
 			type: 'log-out',
 		};

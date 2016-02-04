@@ -10,14 +10,14 @@
 					Installed Games
 				</a>
 			</li>
-			<li ng-if="Connection.isOnline">
+			<li ng-if="!Connection.isClientOffline">
 				<a ui-sref="{{ ::libraryCtrl.followedCollection.getSref( true ) }}" ui-sref-active="active">
 					<span class="tag tag-pink" ng-show="libraryCtrl.followedNotificationCount">{{ libraryCtrl.followedNotificationCount | number }}</span>
 					<span class="jolticon jolticon-subscribe"></span>
 					{{ ::'library.nav.followed' | translate }}
 				</a>
 			</li>
-			<li ng-if="Connection.isOnline && libraryCtrl.developerCollection">
+			<li ng-if="!Connection.isClientOffline && libraryCtrl.developerCollection">
 				<a ui-sref="{{ ::libraryCtrl.developerCollection.getSref( true ) }}" ui-sref-active="active">
 					<span class="jolticon jolticon-user"></span>
 					{{ ::'library.nav.developer' | translate }}
@@ -25,7 +25,7 @@
 			</li>
 		</ul>
 
-		<div ng-if="Connection.isOnline">
+		<div ng-if="!Connection.isClientOffline">
 
 			<div class="nav-heading" ng-if="libraryCtrl.bundleCollections.length">
 				{{ ::'library.nav.bundles' | translate }}
@@ -62,7 +62,7 @@
 			</div>
 
 			<div ng-if="!libraryCtrl.collections.length">
-				<div class="alert fill-gray" translate="library.nav.no_playlists_html"></div>
+				<div class="alert fill-gray" translate>library.nav.no_playlists_html</div>
 			</div>
 
 			<!--

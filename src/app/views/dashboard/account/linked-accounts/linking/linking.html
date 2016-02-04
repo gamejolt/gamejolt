@@ -1,0 +1,11 @@
+<p>Please use your web browser to complete the process.</p>
+
+<div
+	gj-progress-poller="/web/auth/poll-oauth/{{ linkingCtrl.token }}"
+	progress-poller-on-complete="linkingCtrl.completed( $response )"
+	progress-poller-on-error="linkingCtrl.failed()"
+	progress-poller-interval="2500"
+	>
+</div>
+
+<gj-loading label="Linking..."></gj-loading>

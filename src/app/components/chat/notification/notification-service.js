@@ -3,13 +3,13 @@ angular.module( 'App.Chat' )
 {
 	Chat_Notification.init();
 } )
-.service( 'Chat_Notification', function( $rootScope, $timeout, $injector, Growls, Chat, App, Environment )
+.service( 'Chat_Notification', function( $rootScope, $timeout, Settings, Growls, Chat, App, Environment )
 {
 	var _this = this;
 
 	// How long to wait before showing the friend online/offline message.
 	// This allows us to not flash online/offline messages when they refresh browser.
-	var FRIEND_CONNECTION_WAIT = 5000;
+	var FRIEND_CONNECTION_WAIT = 8000;
 
 	this.friendConnectionPromises = {};
 	this.friendConnectionStates = {};
@@ -44,7 +44,7 @@ angular.module( 'App.Chat' )
 
 		$rootScope.$on( 'Chat.friendOnline', function( event, userId )
 		{
-			if ( Environment.isClient && !$injector.get( 'Client_Settings' ).get( 'chat-notify-friends-online' ) ) {
+			if ( !Settings.get( 'chat-notify-friends-online' ) ) {
 				return;
 			}
 
@@ -64,7 +64,7 @@ angular.module( 'App.Chat' )
 
 		$rootScope.$on( 'Chat.friendOffline', function( event, userId )
 		{
-			if ( Environment.isClient && !$injector.get( 'Client_Settings' ).get( 'chat-notify-friends-online' ) ) {
+			if ( !Settings.get( 'chat-notify-friends-online' ) ) {
 				return;
 			}
 

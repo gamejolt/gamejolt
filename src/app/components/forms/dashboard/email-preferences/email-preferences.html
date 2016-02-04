@@ -9,15 +9,15 @@
 		<control-errors></control-errors>
 	</form-group>
 
-	<form-group name="newsletter" label="{{ ::'dash.email_prefs.newsletter_label' | translate }}">
-		<p class="help-block">{{ ::'dash.email_prefs.newsletter_help' | translate }}</p>
+	<form-group name="newsletter" label="{{ 'dash.email_prefs.newsletter_label' | translate }}">
+		<p class="help-block" translte>dash.email_prefs.newsletter_help</p>
 		<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="Yes" toggle-switch-off-text="No"></gj-toggle-switch>
 	</form-group>
 
 	<fieldset>
-		<legend>{{ ::'dash.email_prefs.notifications_heading' | translate }}</legend>
+		<legend translate>dash.email_prefs.notifications_heading</legend>
 
-		<div class="alert alert-info">{{ ::'dash.email_prefs.notifications_description' | translate }}</div>
+		<div class="alert alert-info" translate>dash.email_prefs.notifications_description</div>
 
 		<form-group
 			ng-repeat="notificationType in ::notificationTypes track by notificationType.key"
@@ -31,7 +31,7 @@
 
 	<button gj-form-submit-button class="i-button" ng-disabled="!emailPreferencesForm.$valid" ng-click="onSubmit()">
 		<span class="jolticon jolticon-edit"></span>
-		{{ ::'dash.email_prefs.submit_button' | translate }}
+		<span translate>dash.email_prefs.submit_button</span>
 	</button>
 
 </form>

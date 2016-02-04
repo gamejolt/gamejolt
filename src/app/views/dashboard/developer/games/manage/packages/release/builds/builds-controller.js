@@ -1,11 +1,11 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Packages.Release.BuildsCtrl', function(
-	$scope, $state, $timeout, $translate, Translate, App, Game_Release, Game_Build, Game_Build_File, Game_Build_LaunchOption, Game_Build_Param, ModalConfirm, Growls, AutoScroll, payload )
+	$scope, $state, $timeout, App, Game_Release, Game_Build, Game_Build_File, Game_Build_LaunchOption, Game_Build_Param, ModalConfirm, Growls, AutoScroll, gettextCatalog, payload )
 {
 	var _this = this;
 	var manageCtrl = $scope.manageCtrl;
 	var releaseCtrl = $scope.releaseCtrl;
 
-	Translate.pageTitle( 'dash.games.releases.builds.page_title', {
+	App.title = gettextCatalog.getString( 'dash.games.releases.builds.page_title', {
 		game: manageCtrl.game.title,
 		package: releaseCtrl.packageTitle,
 		release: releaseCtrl.release.version_number,
@@ -29,31 +29,31 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 	this.platformsInfo = {
 		windows: {
 			icon: 'windows',
-			label: $translate.instant( 'dash.games.releases.builds.windows_tag' ),
+			label: gettextCatalog.getString( 'dash.games.releases.builds.windows_tag' ),
 		},
 		windows_64: {
 			icon: 'windows',
-			label: $translate.instant( 'dash.games.releases.builds.windows_64_tag' ),
+			label: gettextCatalog.getString( 'dash.games.releases.builds.windows_64_tag' ),
 		},
 		mac: {
 			icon: 'mac',
-			label: $translate.instant( 'dash.games.releases.builds.mac_tag' ),
+			label: gettextCatalog.getString( 'dash.games.releases.builds.mac_tag' ),
 		},
 		mac_64: {
 			icon: 'mac',
-			label: $translate.instant( 'dash.games.releases.builds.mac_64_tag' ),
+			label: gettextCatalog.getString( 'dash.games.releases.builds.mac_64_tag' ),
 		},
 		linux: {
 			icon: 'linux',
-			label: $translate.instant( 'dash.games.releases.builds.linux_tag' ),
+			label: gettextCatalog.getString( 'dash.games.releases.builds.linux_tag' ),
 		},
 		linux_64: {
 			icon: 'linux',
-			label: $translate.instant( 'dash.games.releases.builds.linux_64_tag' ),
+			label: gettextCatalog.getString( 'dash.games.releases.builds.linux_64_tag' ),
 		},
 		other: {
 			icon: 'other-os',
-			label: $translate.instant( 'dash.games.releases.builds.other_tag' ),
+			label: gettextCatalog.getString( 'dash.games.releases.builds.other_tag' ),
 		},
 	};
 
@@ -163,7 +163,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 
 	function removeBuild( build )
 	{
-		ModalConfirm.show( $translate.instant( 'dash.games.releases.builds.remove_build_confirmation' ) )
+		ModalConfirm.show( gettextCatalog.getString( 'dash.games.releases.builds.remove_build_confirmation' ) )
 			.then( function()
 			{
 				return build.$remove();
@@ -173,7 +173,10 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 				--releaseCtrl.release.build_count;
 				_.remove( releaseCtrl.builds, { id: build.id } );
 
-				Translate.growl( 'success', 'dash.games.releases.builds.remove_build' );
+				Growls.success(
+					gettextCatalog.getString( 'dash.games.releases.builds.remove_build_growl' ),
+					gettextCatalog.getString( 'dash.games.releases.builds.remove_build_growl_title' )
+				);
 			} );
 	}
 
@@ -209,7 +212,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 
 	function removeFile( file )
 	{
-		ModalConfirm.show( $translate.instant( 'dash.games.releases.builds.remove_extra_file_confirmation' ) )
+		ModalConfirm.show( gettextCatalog.getString( 'dash.games.releases.builds.remove_extra_file_confirmation' ) )
 			.then( function()
 			{
 				return file.$remove( manageCtrl.game.id, releaseCtrl.package.id, releaseCtrl.release.id );

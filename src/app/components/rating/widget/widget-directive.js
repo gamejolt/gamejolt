@@ -10,7 +10,7 @@ angular.module( 'App.Rating.Widget' ).directive( 'gjRatingWidget', function()
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $rootScope, $q, $transition, $translate, $element, Game_Rating )
+		controller: function( $rootScope, $q, $transition, $element, Game_Rating, gettextCatalog )
 		{
 			var _this = this;
 
@@ -19,18 +19,11 @@ angular.module( 'App.Rating.Widget' ).directive( 'gjRatingWidget', function()
 			this.hovered = 0;
 			this.isProcessing = false;
 
-			$translate( 'rating.clear' ).then( function( clear )
-			{
-				_this.clearLabel = clear;
-			} );
-
-			$translate( [ 'rating.one', 'rating.two', 'rating.three', 'rating.four', 'rating.five' ] ).then( function ( labels )
-			{
-				angular.forEach( labels, function( label )
-				{
-					_this.labels.push( label );
-				} );
-			} );
+			this.labels.push( gettextCatalog.getString( 'rating.one' ) );
+			this.labels.push( gettextCatalog.getString( 'rating.two' ) );
+			this.labels.push( gettextCatalog.getString( 'rating.three' ) );
+			this.labels.push( gettextCatalog.getString( 'rating.four' ) );
+			this.labels.push( gettextCatalog.getString( 'rating.five' ) );
 
 			this.hover = function( index )
 			{

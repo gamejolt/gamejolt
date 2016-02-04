@@ -5,4 +5,5 @@ angular.module( 'App.ClientAuth', [
 	'App.Client.Tray',
 	'App.Client.ExternalLink',
 	'App.Client.Hidpi',
+	'App.Client.Info',
 ] );

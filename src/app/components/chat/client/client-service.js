@@ -97,7 +97,6 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 			// On any message...
 			_this.primus.on( 'data', function( msg )
 			{
-				console.log( msg );
 				// We want to make sure any changes in these function get digested.
 				$rootScope.$apply( function()
 				{
@@ -205,7 +204,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 			this.minimizeRoom();
 		}
 		else {
-			if ( !this.openRooms[roomId] ) {
+			if ( roomId && !this.openRooms[roomId] ) {
 
 				// Only allow a certain number of tabs to be open at once.
 				if ( _.size( this.openRooms ) >= ChatConfig.MAX_NUM_TABS ) {
@@ -237,7 +236,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 
 	ChatClient.prototype.leaveRoom = function( roomId )
 	{
-		if ( this.openRooms[roomId] ) {
+		if ( roomId && this.openRooms[roomId] ) {
 			this.primus.write( {
 				event: 'leave-room',
 				roomId: roomId,
@@ -580,6 +579,15 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 				delete this.messages[roomId];
 				delete this.pmUsers[roomId];
 			}
+		}
+		else if ( msg.event === 'invalid-room' ) {
+			var roomId = msg.data.roomId;
+
+			// Remove this room from room storage if it happened to be there.
+			// If other local sessions were joined, let's disconnect them.
+			$rootScope.$emit( 'Chat.leaveRoom', {
+				roomId: roomId,
+			} );
 		}
 		else if ( msg.event === 'online-count' ) {
 			this.allCount = msg.data.onlineCount;

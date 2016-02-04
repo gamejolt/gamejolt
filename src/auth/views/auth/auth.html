@@ -18,7 +18,7 @@
 					<div class="alert alert-warning" ng-if="!Connection.isOnline">
 						<p>
 							<span class="jolticon jolticon-notice"></span>
-							Your device is not connected to the internet. You won't be able to use Game Jolt until you're back online.
+							We are having trouble connecting to Game Jolt. Please check your connection to the Internet.
 						</p>
 					</div>
 
@@ -29,12 +29,14 @@
 		</div>
 
 		<div class="auth-shell-bottom-links">
-			<a class="link-unstyled anim-fade-in stagger" ng-href="{{ ::Environment.baseUrl }}/terms">
-				{{ ::'legal.terms' | translate }}
+			<a class="link-unstyled anim-fade-in stagger" ng-href="{{ ::Environment.baseUrl }}/terms" translate>
+				auth.legal.terms
 			</a>
-			<a class="link-unstyled anim-fade-in stagger" ng-href="{{ ::Environment.baseUrl }}/privacy">
-				{{ ::'legal.privacy' | translate }}
+			<a class="link-unstyled anim-fade-in stagger" ng-href="{{ ::Environment.baseUrl }}/privacy" translate>
+				auth.legal.privacy
 			</a>
+
+			<gj-translate-lang-selector></gj-translate-lang-selector>
 		</div>
 
 	</div>

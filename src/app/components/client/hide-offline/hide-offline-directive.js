@@ -4,7 +4,7 @@ angular.module( 'App.Client.HideOffline' ).directive( 'gjClientHideOffline', fun
 		restrict: 'E',
 		scope: true,
 		transclude: true,
-		template: '<div ng-if="Connection.isOnline"><ng-transclude></ng-transclude></div>',
+		template: '<div ng-if="!Connection.isClientOffline"><ng-transclude></ng-transclude></div>',
 		link: function( scope )
 		{
 			scope.Connection = Connection;

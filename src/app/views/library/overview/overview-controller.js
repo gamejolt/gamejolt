@@ -1,8 +1,8 @@
-angular.module( 'App.Views' ).controller( 'Library.OverviewCtrl', function( $scope, $timeout, Translate, GameCollection, libraryPayload )
+angular.module( 'App.Views' ).controller( 'Library.OverviewCtrl', function( $scope, $timeout, App, GameCollection, gettextCatalog, libraryPayload )
 {
 	var _this = this;
 
-	Translate.pageTitle( 'library.page_title' );
+	App.title = gettextCatalog.getString( 'library.page_title' );
 
 	this.collectionTypes = [
 		{

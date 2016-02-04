@@ -3,9 +3,7 @@
 
 		<div class="row">
 			<div class="col-md-8 col-md-offset-3 col-lg-7 col-lg-offset-3">
-				<h1 class="section-header" id="activity-feed">
-					{{ ::'dash.activity.heading' | translate }}
-				</h1>
+				<h1 class="section-header" id="activity-feed" translate>dash.activity.heading</h1>
 
 				<nav class="platform-list inline">
 					<ul>
@@ -13,8 +11,9 @@
 							<a ng-class="{ active: listCtrl.tab == 'all' }"
 								ui-sref="^.list( { tab: 'all', page: undefined } )"
 								gj-no-auto-scroll
+								translate
 								>
-								{{ ::'dash.activity.all_tab' | translate }}
+								dash.activity.all_tab
 							</a>
 						</li>
 						<li ng-if="listCtrl.unreadCounts[ listCtrl.currentNotificationType.key ]">
@@ -22,7 +21,7 @@
 								ui-sref="^.list( { tab: 'unread', page: undefined } )"
 								gj-no-auto-scroll
 								>
-								{{ ::'dash.activity.unread_tab' | translate }}
+								<span translate>dash.activity.unread_tab</span>
 								<span class="tag tag-pink">{{ listCtrl.unreadCounts[ listCtrl.currentNotificationType.key ] | number }}</span>
 							</a>
 						</li>
@@ -50,7 +49,7 @@
 
 						<a class="i-button big sparse" gj-popover-trigger="filter-activity" ng-if="!Screen.isDesktop">
 							<span class="jolticon jolticon-filter"></span>
-							{{ ::'dash.activity.filter_button' | translate }}
+							<span translate>dash.activity.filter_button</span>
 						</a>
 
 						&nbsp;
@@ -67,23 +66,32 @@
 							ng-click="listCtrl.markAllRead()"
 							>
 							<span class="jolticon jolticon-check"></span>
-							{{ ::'dash.activity.dismiss_all_button' | translate }}
+							<span translate>dash.activity.dismiss_all_button</span>
 						</a>
 					</div>
 					<br>
 				</div>
 
-				<div class="alert alert-info full-bleed-xs text-center visible-xs visible-sm" ng-if="listCtrl.currentNotificationType.key">
-					{{ ::'dash.activity.current_filter' | translate:{ filter: $translate.instant( 'notifications.' + listCtrl.currentNotificationType.translationKey ) } }}
+				<div class="alert alert-info full-bleed-xs text-center visible-xs visible-sm"
+					ng-if="listCtrl.currentNotificationType.key"
+					translate
+					translate-comment="{{listCtrl.currentNotificationType.label}} expands to the type of notification"
+					>
+					dash.activity.current_filter
 				</div>
 
-				<p class="text-muted small" ng-if="listCtrl.notifications.length">
-					{{ ::'dash.activity.pages' | translate:{ page: listCtrl.page, total: listCtrl.notificationsCount } }}
+				<p class="text-muted small"
+					ng-if="listCtrl.notifications.length"
+					translate
+					translate-n="listCtrl.notificationsCount"
+					translate-plural="dash.activity.pages"
+					translate-scope="{ page: listCtrl.page }"
+					translate-comment="{{ page }} expands to the page number"
+					>
+					dash.activity.pages
 				</p>
 
-				<div class="alert alert-warning" ng-if="!listCtrl.notifications.length">
-					{{ ::'dash.activity.no_activity' | translate }}
-				</div>
+				<div class="alert alert-warning" ng-if="!listCtrl.notifications.length" translate>dash.activity.no_activity</div>
 
 				<gj-activity-feed
 					activity-feed-notifications="listCtrl.filteredNotifications"

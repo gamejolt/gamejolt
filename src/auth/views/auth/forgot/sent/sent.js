@@ -5,9 +5,9 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		views: {
 			'@auth': {
 				templateUrl: '/auth/views/auth/forgot/sent/sent.html',
-				controller: function( Translate )
+				controller: function( App, gettextCatalog )
 				{
-					Translate.pageTitle( 'auth.forgot.sent.page_title' );
+					App.title = gettextCatalog.getString( 'auth.forgot.sent.page_title' );
 				}
 			}
 		},

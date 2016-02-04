@@ -1,6 +1,6 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Packages.AddCtrl', function( $scope, $state, Translate )
+angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Packages.AddCtrl', function( $scope, $state, App, gettextCatalog )
 {
-	Translate.pageTitle( 'dash.games.packages.add.page_title', { game: $scope.manageCtrl.game.title } );
+	App.title = gettextCatalog.getString( 'dash.games.packages.add.page_title', { game: $scope.manageCtrl.game.title } );
 
 	this.onPackageAdded = onPackageAdded;
 

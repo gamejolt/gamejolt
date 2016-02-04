@@ -12,21 +12,22 @@
 		.alert
 			text-shadow: none
 
-	.form-group
-		@extend .anim-fade-in-up
-		margin: 0
+	form
+		.form-group
+			@extend .anim-fade-in-up
+			margin: 0
 
-	.form-control
+		.form-control
 
-		// Bigger form controls.
-		height: 40px
+			// Bigger form controls.
+			height: 40px
 
-		// Scrunch up the form controls so their borders overlap.
-		margin-top: -1px
+			// Scrunch up the form controls so their borders overlap.
+			margin-top: -1px
 
-		// Don't change the color of the border on focus.
-		&:focus
-			border-color: $gray-lighter
+			// Don't change the color of the border on focus.
+			&:focus
+				border-color: $gray-lighter
 
 	button
 		height: 40px
@@ -98,7 +99,7 @@
 	text-align: center
 	margin-top: -20px
 
-.auth-social-buttons > button
+.auth-social-buttons button
 	margin-bottom: 10px
 
 .auth-page-links
@@ -114,12 +115,6 @@
 	text-align: center
 	z-index: $zindex-content
 
-	> a
-		margin-right: 20px
-
-		&:last-child
-			margin-right: 0
-
 	@media $media-sm-up
 		position: fixed
 		bottom: 0
@@ -127,3 +122,6 @@
 		margin-left: 20px
 		margin-bottom: 20px
 		text-align: left
+
+	> a
+		margin-right: 20px

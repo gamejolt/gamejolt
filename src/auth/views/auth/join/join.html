@@ -1,14 +1,14 @@
 <div class="auth-lead-text" ng-if="Connection.isOnline">
-	<p class="lead anim-fade-in-enlarge" translate="{{ joinCtrl.joinMessage }}"></p>
+	<p class="lead anim-fade-in-enlarge" translate>auth.join.join_message_html</p>
 </div>
 
-<div class="auth-social-buttons" ng-if="::!Environment.isClient">
+<div class="auth-social-buttons">
 	<button class="i-button big block anim-fade-in-enlarge stagger"
 		ng-disabled="!Connection.isOnline"
 		ng-click="joinCtrl.linkedAccountLogin( 'facebook' )"
 		>
 		<span class="jolticon jolticon-facebook"></span>
-		{{ ::'auth.join.facebook_button' | translate }}
+		<span translate>auth.join.facebook_button</span>
 	</button>
 
 	<button class="i-button big block anim-fade-in-enlarge stagger"
@@ -16,21 +16,21 @@
 		ng-click="joinCtrl.linkedAccountLogin( 'twitter' )"
 		>
 		<span class="jolticon jolticon-twitter"></span>
-		{{ ::'auth.join.twitter_button' | translate }}
+		<span translate>auth.join.twitter_button</span>
 	</button>
 </div>
 
-<p class="line-thru anim-fade-in" ng-if="::!Environment.isClient">
-	{{ ::'auth.or' | translate }}
+<p class="line-thru anim-fade-in">
+	<span translate>auth.or</span>
 </p>
 
 <gj-form-join gj-form-submit-handler="joinCtrl.onJoined( formModel )"></gj-form-join>
 
 <div class="auth-page-links text-right anim-fade-in">
 	<div class="auth-page-link">
-		{{ ::'auth.or' | translate }}
+		<span translate>auth.or</span>
 		<a class="link-unstyled" ui-sref="auth.login">
-			{{ ::'auth.login_link' | translate }}
+			<span translate>auth.login_link</span>
 			<span class="jolticon jolticon-sign-in"></span>
 		</a>
 	</div>

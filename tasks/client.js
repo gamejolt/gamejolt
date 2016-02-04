@@ -8,7 +8,7 @@ var os = require( 'os' );
 var _ = require( 'lodash' );
 var shell = require( 'gulp-shell' );
 var path = require( 'path' );
-var fs = require( 'fs' );
+var mv = require( 'mv' );
 
 module.exports = function( config )
 {
@@ -44,24 +44,38 @@ module.exports = function( config )
 		lzmaPath = path.join( 'node_modules', 'client-voodoo', 'node_modules', 'lzma-native' );
 	}
 
-	gulp.task( 'client:gyp', shell.task( [
-		'cd ' + path.resolve( lzmaPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
-	] ) );
+	var windowsMutexPath = path.join( 'node_modules', 'windows-mutex' );
+	if ( config.platform === 'win' ) {
+		try {
+			// Will throw if no path exists.
+			fs.statSync( path.resolve( windowsMutexPath ) );
+		}
+		catch ( e ) {
+			windowsMutexPath = path.join( 'node_modules', 'client-voodoo', 'node_modules', 'windows-mutex' );
+		}
+	}
 
+	var gypTasks = [
+		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
+	];
+	if ( config.platform == 'win' ) {
+		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
+	}
+
+	gulp.task( 'client:gyp', shell.task( gypTasks ) );
+
+	// For releasing to S3.
+	// We have to gather all the builds into the versioned folder before pushing.
 	var releaseDir = path.join( 'build/client/prod', 'v' + packageJson.version );
 	var s3Dir = 's3://gjolt-data/data/client/releases/v' + packageJson.version;
 
-	gulp.task( 'client:push-release:linux', shell.task( [
+	gulp.task( 'client:push-releases', shell.task( [
 		'aws s3 cp ' + releaseDir + '/linux64.tar.gz ' + s3Dir + '/game-jolt-client.tar.gz --acl public-read',
 		'aws s3 cp ' + releaseDir + '/linux64-package.tar.gz ' + s3Dir + '/linux64-package.tar.gz --acl public-read',
-	] ) );
 
-	gulp.task( 'client:push-release:osx', shell.task( [
 		'aws s3 cp ' + releaseDir + '/osx.dmg ' + s3Dir + '/GameJoltClient.dmg --acl public-read',
 		'aws s3 cp ' + releaseDir + '/osx64-package.tar.gz ' + s3Dir + '/osx64-package.tar.gz --acl public-read',
-	] ) );
 
-	gulp.task( 'client:push-release:win', shell.task( [
 		'aws s3 cp ' + releaseDir + '/Setup.exe ' + s3Dir + '/GameJoltClientSetup.exe --acl public-read',
 		'aws s3 cp ' + releaseDir + '/win32-package.tar.gz ' + s3Dir + '/win32-package.tar.gz --acl public-read',
 	] ) );
@@ -114,6 +128,9 @@ module.exports = function( config )
 		// Attach a class to say that we're in client.
 		// Makes it easy to target client before angular has loaded in completely with CSS.
 		'<body class="" ': '<body class="is-client" ',
+
+		// GA tag is different.
+		"ga('create', 'UA-6742777-1', 'auto');": "ga('create', 'UA-6742777-16', 'auto');",
 	};
 
 	/**
@@ -178,12 +195,14 @@ module.exports = function( config )
 
 	var nodeModuletasks = [
 		'cd ' + config.buildDir + ' && npm install --production',
-		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch,
+		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
 	];
 
 	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
-		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'build/Release/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' )
+		nodeModuletasks.push( 'cd ' + path.resolve( config.buildDir, windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
+		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' );
+		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, windowsMutexPath, 'build/Release/CreateMutex.node' ) + ' nw.exe GameJoltClient.exe' );
 	}
 
 	gulp.task( 'client:node-modules', shell.task( nodeModuletasks ) );
@@ -251,7 +270,8 @@ module.exports = function( config )
 			appName: appName,
 			buildType: function()
 			{
-				return 'v' + this.appVersion;
+				// return 'v' + this.appVersion;
+				return 'build';
 			},
 			appVersion: clientJson.version,
 			macZip: false,  // Use a app.nw folder instead of ZIP file
@@ -273,7 +293,7 @@ module.exports = function( config )
 	{
 		// Load in the client package.
 		var packageJson = require( '../package.json' );
-		return path.join( config.clientBuildDir, 'v' + packageJson.version );
+		return path.join( config.clientBuildDir, 'build' );
 	}
 
 	/**
@@ -288,33 +308,39 @@ module.exports = function( config )
 		var packagePath = path.join( releaseDir, config.platformArch + '-package.zip' )
 
 		if ( config.platform != 'osx' ) {
-			var Decompress = require( 'decompress' );
-
 			fs.renameSync( path.join( base, 'package.nw' ), packagePath );
 
-			new Decompress()
-				.src( packagePath )
-				.dest( path.join( base, 'package' ) )
-				.use( Decompress.zip() )
-				.run( function( err, files )
+			var DecompressZip = require( 'decompress-zip' );
+			var unzipper = new DecompressZip( packagePath );
+
+			unzipper.on( 'error', cb );
+			unzipper.on( 'extract', function()
+			{
+				var stream = gulp.src( base + '/package/**/*' )
+					.pipe( plugins.tar( config.platformArch + '-package.tar' ) )
+					.pipe( plugins.gzip() )
+					.pipe( gulp.dest( releaseDir ) );
+
+				stream.on( 'error', cb );
+				stream.on( 'end', function()
 				{
-					if ( err ) {
-						throw err;
-					}
-
-					var stream = gulp.src( base + '/package/**/*' )
-						.pipe( plugins.tar( config.platformArch + '-package.tar' ) )
-						.pipe( plugins.gzip() )
-						.pipe( gulp.dest( releaseDir ) );
-
-					stream.on( 'error', cb );
-					stream.on( 'end', function()
+					mv( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ), function( err )
 					{
-						fs.renameSync( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ) );
-						fs.renameSync( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ) );
-						cb();
+						if ( err ) {
+							throw err;
+						}
+						mv( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ), function( err )
+						{
+							if ( err ) {
+								throw err;
+							}
+							cb();
+						} );
 					} );
 				} );
+			} );
+
+			unzipper.extract( { path: path.join( base, 'package' ) } );
 		}
 		else {
 			var stream = gulp.src( base + '/Game Jolt Client.app/Contents/Resources/app.nw/**/*' )
@@ -359,35 +385,13 @@ module.exports = function( config )
 	else if ( config.platform == 'win' ) {
 		gulp.task( 'client:package', function( cb )
 		{
-			var Builder = require( 'nwjs-installer-builder' ).Builder;
 			var releaseDir = getReleaseDir();
 			var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
 
-			var builder = new Builder( {
-				appDirectory: path.resolve( releaseDir, config.platformArch ),
-				outputDirectory: releaseDir,
-				name: 'GameJoltClient',
-				version: packageJson.version,
-				title: 'Game Jolt Client',
-				description: 'The Game Jolt Client for Windows.',
-				authors: 'Lucent Web Creative, LLC',
-				loadingGif: config.buildDir + '/app/img/client/winstalling.gif',
-				iconUrl: 'http://s.gjcdn.net/app/img/client/winico.ico',
-				setupIcon: config.buildDir + '/app/img/client/winico.ico',
-				certFile: path.resolve( __dirname, 'certs/win.p12' ),
-				certPassFile: path.resolve( __dirname, 'certs/win-pass' ),
-				files: {
-					'GameJoltClient.exe': '',
-					'locales\\**': 'locales',
-					'node_modules\\**': 'node_modules',
-					'package\\**': 'package',
-					'package.json': '',
-					'*.dll': '',
-					'*.pak': '',
-					'icudtl.dat': '',
-				}
-			} );
-
+			var InnoSetup = require( './inno-setup' );
+			var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
+			var certPw = config.production ? process.env['GJ_CERT_PASS'] : 'GJ123456';
+			var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw.trim() );
 			return builder.build();
 		} );
 	}

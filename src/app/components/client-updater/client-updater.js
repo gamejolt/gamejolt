@@ -22,7 +22,7 @@
 
 	Client_Updater.prototype.check = function()
 	{
-		console.log( 'checking' );
+		console.log( 'Checking for client update.' );
 
 		var os = require( 'os' );
 		var packageJson;
@@ -37,6 +37,11 @@
 		}
 		else {
 			packageJson = require( path.join( cwd, 'package.json' ) );
+		}
+
+		if ( packageJson['no-auto-update'] === true ) {
+			console.log( 'Skip update. Package says not to auto-update.' );
+			return;
 		}
 
 		var updater = new Updater( packageJson.version, CHECK_ENDPOINT, {

@@ -1,11 +1,9 @@
-<h2 class="section-header">
-	{{ ::'dash.games.data_store.items.heading' | translate }}
-</h2>
+<h2 class="section-header" translate>dash.games.data_store.items.heading</h2>
 
 <div class="page-help">
-	<div translate="dash.games.data_store.items.page_help_html"></div>
+	<div translate>dash.games.data_store.items.page_help_html</div>
 	<p>
-		<a class="link-help" href="https://help.gamejolt.com/dev-data-storage" target="_blank">{{ ::'dash.games.data_store.items.page_help_link' | translate }}</a>
+		<a class="link-help" href="https://help.gamejolt.com/dev-data-storage" target="_blank" translate>dash.games.data_store.items.page_help_link</a>
 	</p>
 </div>
 
@@ -17,9 +15,9 @@
 		</colgroup>
 		<thead>
 			<tr>
-				<th>{{ ::'dash.games.data_store.items.key_label' | translate }}</th>
-				<th>{{ ::'dash.games.data_store.items.preview_label' | translate }}</th>
-				<th>{{ ::'dash.games.data_store.items.date_label' | translate }}</th>
+				<th translate>dash.games.data_store.items.key_label</th>
+				<th translate>dash.games.data_store.items.preview_label</th>
+				<th translate>dash.games.data_store.items.date_label</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -38,13 +36,13 @@
 				<td class="text-right">
 					<a class="text-muted" gj-popover-trigger="data-storage-item-options-{{ item.id }}">
 						<span class="jolticon jolticon-ellipsis-h"></span>
-						{{ ::'options.options' | translate }}
+						<span translate>options.options</span>
 					</a>
 					<gj-popover popover-id="data-storage-item-options-{{ item.id }}">
 						<div class="list-group nowrap">
 							<a class="list-group-item has-icon" ng-click="$event.stopPropagation(); listCtrl.removeItem( item )">
 								<span class="jolticon jolticon-remove"></span>
-								{{ ::'dash.games.data_store.items.remove_button' | translate }}
+								<span translate>dash.games.data_store.items.remove_button</span>
 							</a>
 						</div>
 					</gj-popover>

@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Library.Collection.ListingCtrl', function(
-	$scope, $state, $stateParams, $translate, App, Translate, Game, GameLibrary_Game, ModalConfirm, payload )
+	$scope, $state, $stateParams, App, Game, GameLibrary_Game, ModalConfirm, Growls, gettextCatalog, payload )
 {
 	var _this = this;
 
@@ -16,12 +16,12 @@ angular.module( 'App.Views' ).controller( 'Library.Collection.ListingCtrl', func
 		if ( App.user && collectionCtrl.collection.owner && collectionCtrl.collection.owner.id == App.user.id ) {
 			if ( collectionCtrl.type == 'playlist' ) {
 				this.thumbnailControl = 'remove';
-				this.thumbnailControlLabel = $translate.instant( 'library.collection.thumbnail_control_playlist_tooltip' );
+				this.thumbnailControlLabel = gettextCatalog.getString( 'library.collection.thumbnail_control_playlist_tooltip' );
 				this.thumbnailControlAction = this.removeFromPlaylist;
 			}
 			else if ( collectionCtrl.type == 'followed' ) {
 				this.thumbnailControl = 'subscribed';
-				this.thumbnailControlLabel = $translate.instant( 'library.collection.thumbnail_control_unfollow_tooltip' );
+				this.thumbnailControlLabel = gettextCatalog.getString( 'library.collection.thumbnail_control_unfollow_tooltip' );
 				this.thumbnailControlAction = this.removeFromLibrary;
 			}
 		}
@@ -31,17 +31,23 @@ angular.module( 'App.Views' ).controller( 'Library.Collection.ListingCtrl', func
 	{
 		var playlist = collectionCtrl.playlist;
 
-		ModalConfirm.show( $translate.instant( 'library.playlists.remove_game_confirmation', { game: game.title, playlist: playlist.name } ) )
+		ModalConfirm.show( gettextCatalog.getString( 'library.playlists.remove_game_confirmation', { game: game.title, playlist: playlist.name } ) )
 			.then( function()
 			{
 				playlist.$removeGame( game.id ).then( function()
 				{
-					Translate.growl( 'success', 'library.playlists.remove_game_success', { game: game.title, playlist: playlist.name } );
+					Growls.success(
+						gettextCatalog.getString( 'library.playlists.remove_game_success_growl', { game: game.title, playlist: playlist.name } ),
+						gettextCatalog.getString( 'library.playlists.remove_game_success_growl_title', { game: game.title, playlist: playlist.name } )
+					);
 					_this._removeGame( game );
 				} )
 				.catch( function()
 				{
-					Translate.growl( 'error', 'library.playlists.remove_game_error', { game: game.title, playlist: playlist.name } );
+					Growls.error(
+						gettextCatalog.getString( 'library.playlists.remove_game_error_growl', { game: game.title, playlist: playlist.name } ),
+						gettextCatalog.getString( 'library.playlists.remove_game_error_growl_title', { game: game.title, playlist: playlist.name } )
+					);
 				} );
 			} );
 	};
@@ -51,17 +57,23 @@ angular.module( 'App.Views' ).controller( 'Library.Collection.ListingCtrl', func
 		var libraryGame = new GameLibrary_Game();
 		libraryGame.game_id = game.id;
 
-		ModalConfirm.show( $translate.instant( 'library.followed.remove_game_confirmation', { game: game.title } ) )
+		ModalConfirm.show( gettextCatalog.getString( 'library.followed.remove_game_confirmation', { game: game.title } ) )
 			.then( function()
 			{
 				libraryGame.$remove().then( function()
 				{
-					Translate.growl( 'success', 'library.followed.remove_game_success', { game: game.title } );
+					Growls.success(
+						gettextCatalog.getString( 'library.followed.remove_game_success_growl', { game: game.title } ),
+						gettextCatalog.getString( 'library.followed.remove_game_success_growl_title', { game: game.title } )
+					);
 					_this._removeGame( game );
 				} )
 				.catch( function()
 				{
-					Translate.growl( 'error', 'library.followed.remove_game_error', { game: game.title } );
+					Growls.error(
+						gettextCatalog.getString( 'library.followed.remove_game_error_growl', { game: game.title } ),
+						gettextCatalog.getString( 'library.followed.remove_game_error_growl_title', { game: game.title } )
+					);
 				} );
 			} );
 	};

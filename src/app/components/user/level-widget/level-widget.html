@@ -13,7 +13,7 @@
 			<div class="stat-big-digit">{{ ctrl.user.experience_next | number }} EXP</div>
 		</div>
 	</div>
-	<div class="user-level-widget-progress progress progress-green progress-thin" gj-tooltip="ctrl.user.level_next_percentage + '% progress to next level'">
+	<div class="user-level-widget-progress progress progress-green progress-thin" tooltip="{{ ctrl.user.level_next_percentage }}% progress to next level">
 		<div class="progress-bar" ng-style="::{ width: ctrl.user.level_next_percentage + '%' }"></div>
 	</div>
 </div>

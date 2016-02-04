@@ -63,7 +63,7 @@
 				<a
 					style="display: inline-block"
 					ng-class="{ active: overviewCtrl.isShowingRatingBreakdown }"
-					gj-tooltip="$translate.instant( 'games.view.stats.rating_breakdown_tooltip' )"
+					gj-tooltip="{{ 'games.view.stats.rating_breakdown_tooltip' | translate }}"
 					ng-click="overviewCtrl.isShowingRatingBreakdown = !overviewCtrl.isShowingRatingBreakdown"
 					>
 					<span class="jolticon jolticon-chart big text-muted" ng-class="{ active: overviewCtrl.isShowingRatingBreakdown }"></span>
@@ -126,7 +126,7 @@
 				<a
 					ng-if="gameCtrl.game.developer.twitter_id"
 					ng-href="http://twitter.com/{{ ::gameCtrl.game.developer.twitter_screenname }}"
-					gj-tooltip="'@' + gameCtrl.game.developer.twitter_screenname"
+					gj-tooltip="@{{ gameCtrl.game.developer.twitter_screenname }}"
 					target="_blank">
 
 					<span class="jolticon jolticon-twitter-bird big"></span>
@@ -135,7 +135,7 @@
 				<a
 					ng-if="gameCtrl.game.developer.web_site"
 					ng-href="{{ gameCtrl.game.developer.web_site }}"
-					gj-tooltip="'Visit Developer\'s Site'"
+					gj-tooltip="Visit Developer's Site"
 					target="_blank">
 
 					<span class="jolticon jolticon-world big"></span>

@@ -30,7 +30,7 @@
 				</li>
 				<li ng-if="App.user">
 					<a ui-sref="^.news.list-section( { section: 'followed', sort: undefined } )" ui-sref-active="active"
-						gj-tooltip="$translate.instant( 'news.list.followed_tooltip' )"
+						gj-tooltip="{{ 'news.list.followed_tooltip' | translate }}"
 						tooltip-placement="bottom"
 						>
 						{{ ::'news.list.followed_tab' | translate }}
@@ -38,7 +38,7 @@
 				</li>
 				<li>
 					<a ui-sref="^.news.list-section( { section: 'in-development' } )" ui-sref-active="active"
-						gj-tooltip="$translate.instant( 'news.list.wip_tooltip' )"
+						gj-tooltip="{{ 'news.list.wip_tooltip' | translate }}"
 						tooltip-placement="bottom"
 						>
 						{{ ::'news.list.wip_tab' | translate }}
@@ -46,7 +46,7 @@
 				</li>
 				<li>
 					<a ui-sref="^.news.list-section( { section: 'released' } )" ui-sref-active="active"
-						gj-tooltip="$translate.instant( 'news.list.released_tooltip' )"
+						gj-tooltip="{{ 'news.list.released_tooltip' | translate }}"
 						tooltip-placement="bottom"
 						>
 						{{ ::'news.list.released_tab' | translate }}
@@ -68,23 +68,29 @@
 
 			<div class="col-md-8" id="articles-list">
 
-				<div class="alert alert-info full-bleed-xs" ng-if="newsCtrl.section == 'followed'" translate="news.list.followed_help_html"></div>
+				<div class="alert alert-info full-bleed-xs" ng-if="newsCtrl.section == 'followed'" translate>news.list.followed_help_html</div>
 
 				<div class="clearfix">
 					<div class="pull-left">
-						<div class="text-muted small">
 
-							<!--
-								Only show page if needed.
-							-->
-							<span ng-if="newsCtrl.newsArticlesCount > newsCtrl.perPage">
-								{{ 'news.list.page' | translate:{ page: newsCtrl.currentPage } }}
-							</span>
-
-							<span ng-if="newsCtrl.newsArticlesCount == 0">{{ ::'news.list.posts_count_none' | translate }}</span>
-							<span ng-if="newsCtrl.newsArticlesCount == 1">{{ ::'news.list.posts_count_one' | translate }}</span>
-							<span ng-if="newsCtrl.newsArticlesCount > 1">{{ 'news.list.posts_count_other' | translate:{ count: newsCtrl.newsArticlesCount } }}</span>
+						<div class="text-muted small"
+							ng-if="newsCtrl.newsArticlesCount == 0"
+							translate
+							>
+							news.list.posts_count_none
 						</div>
+
+						<div class="text-muted small"
+							ng-if="newsCtrl.newsArticlesCount > 0"
+							translate
+							translate-n="newsCtrl.newsArticlesCount"
+							translate-plural="news.list.posts_count"
+							translate-scope="{ page: newsCtrl.currentPage }"
+							translate-comment="{{ page }} expands to the current page of articles"
+							>
+							news.list.posts_count
+						</div>
+
 					</div>
 
 					<div class="pull-right" ng-if="newsCtrl.section != 'followed'">
@@ -106,8 +112,8 @@
 
 				<div ng-if="!newsCtrl.articles.length">
 					<div class="alert alert-warning">
-						<p ng-if="newsCtrl.section != 'followed'" translate="news.list.no_posts_html"></p>
-						<p ng-if="newsCtrl.section == 'followed'" translate="news.list.no_posts_followed_html"></p>
+						<p ng-if="newsCtrl.section != 'followed'" translate>news.list.no_posts_html</p>
+						<p ng-if="newsCtrl.section == 'followed'" translate>news.list.no_posts_followed_html</p>
 					</div>
 				</div>
 

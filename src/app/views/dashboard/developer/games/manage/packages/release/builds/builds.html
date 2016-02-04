@@ -9,7 +9,7 @@
 	<a class="link-help" href="https://help.gamejolt.com/dev-packages#builds-and-files" target="_blank">{{ ::'dash.games.releases.builds.page_help_link' | translate }}</a>
 </p>
 
-<div class="alert alert-warning" ng-if="!releaseCtrl.builds.length" translate="dash.games.releases.builds.no_builds_html"></div>
+<div class="alert alert-warning" ng-if="!releaseCtrl.builds.length" translate>dash.games.releases.builds.no_builds_html</div>
 
 <gj-editable-accordion active-item="buildsCtrl.activeItem" is-adding="buildsCtrl.isAdding">
 
@@ -61,7 +61,7 @@
 				Incomplete because launch options need work.
 			-->
 			<div ng-if="build.type == Game_Build.TYPE_DOWNLOADABLE && build.hasError( Game_Build.ERROR_LAUNCH_OPTIONS )">
-				<span class="tag tag-pink" gj-tooltip="$translate.instant( 'dash.games.releases.builds.incomplete_tag_tooltip' )">
+				<span class="tag tag-pink" tooltip="{{ 'dash.games.releases.builds.incomplete_tag_tooltip' | translate }}">
 					<span class="jolticon jolticon-notice"></span>
 					{{ ::'dash.games.releases.builds.incomplete_tag' | translate }}
 				</span>
@@ -165,7 +165,7 @@
 					<div class="progress-bar" style="width: 100%"></div>
 				</div>
 
-				<div class="text-center small" translate="dash.games.releases.builds.processing_message_html"></div>
+				<div class="text-center small" translate>dash.games.releases.builds.processing_message_html</div>
 			</div>
 
 		</gj-editable-accordion-item-heading>

@@ -4,6 +4,12 @@ This is the whole frontend for Game Jolt. It powers the site and the client.
 
 We wanted to make it open source so everyone can get visibility into what we are working on. Browse the code to see how Game Jolt is put together. Feel free to offer suggestions on how to do things better, as well as contributing your own code. I'll get a better guide on how to contribute soon.
 
+### Translations
+
+Translations are done by the community. If you want to participate, feel free to join at https://poeditor.com/join/project/B4nWT6EgnD.
+
+### Building 
+
 Will work on better build instructions really really soon!
 
 For now... try something like this.

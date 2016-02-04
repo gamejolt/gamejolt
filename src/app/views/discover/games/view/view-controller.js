@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
-	$scope, Location, Api, SplitTest, Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable, Growls, Translate, Analytics, game, gamePayload )
+	$scope, Location, Api, SplitTest, Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable, Growls, Analytics, Report_Modal, gettextCatalog, game, gamePayload )
 {
 	var _this = this;
 
@@ -9,8 +9,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	Location.enforce( {
 		slug: game.slug,
 	} );
-
-	this.testMediaBarPos = SplitTest.getMediaBarPos( gamePayload );
 
 	this.game = game;
 	this.followerCount = gamePayload.followerCount;
@@ -32,6 +30,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 
 	this.onFollowClick = onFollowClick;
 	this.refreshRatingInfo = refreshRatingInfo;
+	this.report = report;
 
 	// If the game has a GA tracking ID, then we attach it to this scope so all page views within get tracked.
 	if ( game.ga_tracking_id ) {
@@ -49,11 +48,17 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 			{
 				_this.libraryGame = null;
 				_this.followerCount = response.followers;
-				Translate.growl( 'success', 'library.followed.remove_game_success', { game: _this.game.title } );
+				Growls.success(
+					gettextCatalog.getString( 'library.followed.remove_game_success_growl', { game: _this.game.title } ),
+					gettextCatalog.getString( 'library.followed.remove_game_success_growl_title', { game: _this.game.title } )
+				);
 			} )
 			.catch( function()
 			{
-				Translate.growl( 'success', 'library.followed.remove_game_error' );
+				Growls.success(
+					gettextCatalog.getString( 'library.followed.remove_game_error_growl' ),
+					gettextCatalog.getString( 'library.followed.remove_game_error_growl_title' )
+				);
 			} );
 
 			Analytics.trackEvent( 'game-following', 'unfollow' );
@@ -65,11 +70,17 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 			{
 				_this.libraryGame = newLibraryGame;
 				_this.followerCount = response.followers;
-				Translate.growl( 'success', 'library.followed.add_game_success', { game: _this.game.title } );
+				Growls.success(
+					gettextCatalog.getString( 'library.followed.add_game_success_growl', { game: _this.game.title } ),
+					gettextCatalog.getString( 'library.followed.add_game_success_growl_title', { game: _this.game.title } )
+				);
 			} )
 			.catch( function()
 			{
-				Translate.growl( 'success', 'library.followed.add_game_error' );
+				Growls.success(
+					gettextCatalog.getString( 'library.followed.add_game_error_growl' ),
+					gettextCatalog.getString( 'library.followed.add_game_error_growl_title' )
+				);
 			} );
 
 			Analytics.trackEvent( 'game-following', 'follow' );
@@ -94,5 +105,10 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		if ( gameId == _this.game.id ) {
 			_this.refreshRatingInfo();
 		}
+	}
+
+	function report()
+	{
+		Report_Modal.show( _this.game );
 	}
 } );

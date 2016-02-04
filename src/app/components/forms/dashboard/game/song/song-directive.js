@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameSong', function( Form, Api )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameSong', function( Form, Api, gettextCatalog )
 {
 	var form = new Form( {
 		model: 'Game_Song',
@@ -19,6 +19,16 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameSong', fu
 				angular.extend( scope, payload );
 			} );
 		}
+
+		scope.getFileLabel = function()
+		{
+			if ( scope.method == 'add' ) {
+				return gettextCatalog.getString( 'dash.games.music.form.add_file_label' );
+			}
+			else {
+				return gettextCatalog.getString( 'dash.games.music.form.change_file_label' );
+			}
+		};
 	};
 
 	return form;

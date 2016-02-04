@@ -1,44 +1,39 @@
 <div class="auth-social-buttons">
+	<button class="i-button big block anim-fade-in-enlarge stagger"
+		ng-disabled="!Connection.isOnline"
+		ng-click="loginCtrl.linkedAccountLogin( 'facebook' )"
+		>
+		<span class="jolticon jolticon-facebook"></span>
+		<span translate>auth.login.facebook_button</span>
+	</button>
 
-	<div ng-if="::Environment.isClient" class="text-center small">
-		<p>Client does not allow log in through Facebook or Twitter just yet. We're working on it!</p>
-	</div>
-	<div ng-if="::!Environment.isClient">
-		<button class="i-button big block anim-fade-in-enlarge stagger"
-			ng-disabled="!Connection.isOnline"
-			ng-click="loginCtrl.linkedAccountLogin( 'facebook' )"
-			>
-			<span class="jolticon jolticon-facebook"></span>
-			{{ ::'auth.login.facebook_button' | translate }}
-		</button>
-
-		<button class="i-button big block anim-fade-in-enlarge stagger"
-			ng-disabled="!Connection.isOnline"
-			ng-click="loginCtrl.linkedAccountLogin( 'twitter' )"
-			>
-			<span class="jolticon jolticon-twitter"></span>
-			{{ ::'auth.login.twitter_button' | translate }}
-		</button>
-	</div>
+	<button class="i-button big block anim-fade-in-enlarge stagger"
+		ng-disabled="!Connection.isOnline"
+		ng-click="loginCtrl.linkedAccountLogin( 'twitter' )"
+		>
+		<span class="jolticon jolticon-twitter"></span>
+		<span translate>auth.login.twitter_button</span>
+	</button>
 </div>
 
-<p class="line-thru anim-fade-in" ng-if="::!Environment.isClient">
-	{{ ::'auth.or' | translate }}
+<p class="line-thru anim-fade-in">
+	<span translate>auth.or</span>
 </p>
 
 <gj-form-login gj-form-submit-handler="loginCtrl.onLoggedIn( formModel )"></gj-form-login>
 
 <div class="auth-page-links text-right anim-fade-in">
 	<div class="auth-page-link">
-		{{ ::'auth.or' | translate }}
+		<span translate>auth.or</span>
 		<a class="link-unstyled" ui-sref="auth.join">
-			{{ ::'auth.join_link' | translate }}
+			<span translate>auth.join_link</span>
 			<span class="jolticon jolticon-friends"></span>
 		</a>
 	</div>
 	<div class="auth-page-link">
 		<a class="link-unstyled" ui-sref="auth.forgot">
-			{{ ::'auth.forgot_link' | translate }}
+			<!--<span>{{ 'auth.forgot_link' | translate:{ username: 'Username', password: 'Pass' } }}</span>-->
+			<span translate translate-scope="{ username: 'Username', password: 'Pass' }">auth.forgot_link</span>
 			<span class="jolticon jolticon-help-circle"></span>
 		</a>
 	</div>

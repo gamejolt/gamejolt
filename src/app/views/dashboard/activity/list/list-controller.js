@@ -1,8 +1,8 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Activity.ListCtrl', function( $scope, $state, $stateParams, $translate, Translate, Notification, ModalConfirm, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.Activity.ListCtrl', function( $scope, $state, $stateParams, App, Notification, ModalConfirm, gettextCatalog, payload )
 {
 	var _this = this;
 
-	Translate.pageTitle( 'dash.activity.page_title' );
+	App.title = gettextCatalog.getString( 'dash.activity.page_title' );
 
 	$scope.Notification = Notification;
 
@@ -18,35 +18,35 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Activity.ListCtrl', functio
 	this.notificationTypes = [
 		{
 			key: undefined,
-			translationKey: 'all_label',
+			label: gettextCatalog.getString( 'notifications.all_label' ),
 		},
 		{
 			key: Notification.TYPE_GAME_NEWS_ADD,
-			translationKey: 'game_news_label',
+			label: gettextCatalog.getString( 'notifications.game_news_label' ),
 		},
 		{
 			key: Notification.TYPE_COMMENT_ADD,
-			translationKey: 'comment_replies_label',
+			label: gettextCatalog.getString( 'notifications.comment_replies_label' ),
 		},
 		{
 			key: Notification.TYPE_FORUM_POST_ADD,
-			translationKey: 'forum_posts_label',
+			label: gettextCatalog.getString( 'notifications.forum_posts_label' ),
 		},
 		{
 			key: Notification.TYPE_FRIENDSHIP_ACCEPT,
-			translationKey: 'new_friends_label',
+			label: gettextCatalog.getString( 'notifications.new_friends_label' ),
 		},
 		{
 			key: Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
-			translationKey: 'new_comments_label',
+			label: gettextCatalog.getString( 'notifications.new_comments_label' ),
 		},
 		{
 			key: Notification.TYPE_GAME_RATING_ADD,
-			translationKey: 'game_ratings_label',
+			label: gettextCatalog.getString( 'notifications.game_ratings_label' ),
 		},
 		{
 			key: Notification.TYPE_GAME_FOLLOW,
-			translationKey: 'game_follows_label',
+			label: gettextCatalog.getString( 'notifications.game_follows_label' ),
 		},
 	];
 
@@ -74,12 +74,12 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Activity.ListCtrl', functio
 
 	this.markAllRead = function()
 	{
-		var translateKey = 'notifications.clear_all_confirmation';
+		var msg = gettextCatalog.getString( 'notifications.clear_all_confirmation' );
 		if ( this.currentNotificationType.key ) {
-			translateKey = 'notifications.clear_all_of_type_confirmation';
+			msg = gettextCatalog.getString( 'notifications.clear_all_of_type_confirmation' );
 		}
 
-		ModalConfirm.show( $translate.instant( translateKey ) )
+		ModalConfirm.show( msg )
 			.then( function()
 			{
 				return Notification.$readAll( _this.currentNotificationType.key );
@@ -88,5 +88,10 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Activity.ListCtrl', functio
 			{
 				$state.reload( $state.current );
 			} );
+	};
+
+	this.getUnreadTooltip = function( count )
+	{
+		gettextCatalog.getPlural( count, 'notifications.unread_tooltip', 'notifications.unread_tooltip', {} );
 	};
 } );

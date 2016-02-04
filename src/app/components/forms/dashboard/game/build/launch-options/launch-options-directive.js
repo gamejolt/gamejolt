@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuildLaunchOptions', function( $modal, $q, $translate, Api, Form, Game_Build_LaunchOption )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuildLaunchOptions', function( $modal, $q, Api, Form, Game_Build_LaunchOption, gettextCatalog )
 {
 	var form = new Form( {
 		template: '/app/components/forms/dashboard/game/build/launch-options/launch-options.html',
@@ -12,36 +12,34 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuildLaun
 
 	form.onInit = function( scope )
 	{
-		scope.$translate = $translate;
-
 		scope.platformOptions = [
 			{
 				key: 'windows',
-				label: $translate.instant( 'dash.games.builds.form.windows_tag' ),
+				label: gettextCatalog.getString( 'dash.games.builds.form.windows_tag' ),
 			},
 			{
 				key: 'windows_64',
-				label: $translate.instant( 'dash.games.builds.form.windows_64_tag' ),
+				label: gettextCatalog.getString( 'dash.games.builds.form.windows_64_tag' ),
 			},
 			{
 				key: 'mac',
-				label: $translate.instant( 'dash.games.builds.form.mac_tag' ),
+				label: gettextCatalog.getString( 'dash.games.builds.form.mac_tag' ),
 			},
 			{
 				key: 'mac_64',
-				label: $translate.instant( 'dash.games.builds.form.mac_64_tag' ),
+				label: gettextCatalog.getString( 'dash.games.builds.form.mac_64_tag' ),
 			},
 			{
 				key: 'linux',
-				label: $translate.instant( 'dash.games.builds.form.linux_tag' ),
+				label: gettextCatalog.getString( 'dash.games.builds.form.linux_tag' ),
 			},
 			{
 				key: 'linux_64',
-				label: $translate.instant( 'dash.games.builds.form.linux_64_tag' ),
+				label: gettextCatalog.getString( 'dash.games.builds.form.linux_64_tag' ),
 			},
 			{
 				key: 'other',
-				label: $translate.instant( 'dash.games.builds.form.other_tag' ),
+				label: gettextCatalog.getString( 'dash.games.builds.form.other_tag' ),
 			}
 		];
 

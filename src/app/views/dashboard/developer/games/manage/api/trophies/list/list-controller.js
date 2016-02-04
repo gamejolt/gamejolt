@@ -1,17 +1,16 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.Trophies.ListCtrl', function( $scope, $translate, $timeout, Translate, Game_Trophy, ModalConfirm, Scroll, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.Trophies.ListCtrl', function( $scope, $timeout, App, Game_Trophy, ModalConfirm, Scroll, gettextCatalog, payload )
 {
 	var _this = this;
 
-	Translate.pageTitle( 'dash.games.trophies.page_title', { game: $scope.manageCtrl.game.title } );
+	App.title = gettextCatalog.getString( 'dash.games.trophies.page_title', { game: $scope.manageCtrl.game.title } );
 
 	$scope.Game_Trophy = Game_Trophy;
 
-	var translations = $translate.instant( [ 'trophies.bronze', 'trophies.silver', 'trophies.gold', 'trophies.platinum' ] );
 	this.trophyLabels = {};
-	this.trophyLabels[ Game_Trophy.DIFFICULTY_BRONZE ] = translations['trophies.bronze'];
-	this.trophyLabels[ Game_Trophy.DIFFICULTY_SILVER ] = translations['trophies.silver'];
-	this.trophyLabels[ Game_Trophy.DIFFICULTY_GOLD ] = translations['trophies.gold'];
-	this.trophyLabels[ Game_Trophy.DIFFICULTY_PLATINUM ] = translations['trophies.platinum'];
+	this.trophyLabels[ Game_Trophy.DIFFICULTY_BRONZE ] = gettextCatalog.getString( 'trophies.bronze' );
+	this.trophyLabels[ Game_Trophy.DIFFICULTY_SILVER ] = gettextCatalog.getString( 'trophies.silver' );
+	this.trophyLabels[ Game_Trophy.DIFFICULTY_GOLD ] = gettextCatalog.getString( 'trophies.gold' );
+	this.trophyLabels[ Game_Trophy.DIFFICULTY_PLATINUM ] = gettextCatalog.getString( 'trophies.platinum' );
 
 	this.trophies = Game_Trophy.populate( payload.trophies );
 
@@ -88,7 +87,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.
 
 	function removeTrophy( trophy )
 	{
-		ModalConfirm.show( $translate.instant( 'dash.games.trophies.remove_confirmation' ) )
+		ModalConfirm.show( gettextCatalog.getString( 'dash.games.trophies.remove_confirmation' ) )
 			.then( function()
 			{
 				return trophy.$remove();

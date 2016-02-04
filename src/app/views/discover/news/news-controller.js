@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Discover.NewsCtrl', function( $scope, $translate, Game_NewsArticle )
+angular.module( 'App.Views' ).controller( 'Discover.NewsCtrl', function( $scope, Game_NewsArticle, gettextCatalog )
 {
 	this.section = null;
 	this.newsArticlesCount = 0;
@@ -7,7 +7,7 @@ angular.module( 'App.Views' ).controller( 'Discover.NewsCtrl', function( $scope,
 	this.articles = [];
 
 	this.sortingOptions = {
-		'': $translate.instant( 'sorting.hot' ),
-		'new': $translate.instant( 'sorting.new' ),
+		'': gettextCatalog.getString( 'sorting.hot' ),
+		'new': gettextCatalog.getString( 'sorting.new' ),
 	};
 } );

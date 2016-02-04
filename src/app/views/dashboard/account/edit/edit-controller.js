@@ -1,7 +1,7 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Account.EditCtrl', function( $scope, $translate, Translate, Api, Growls, Scroll )
+angular.module( 'App.Views' ).controller( 'Dashboard.Account.EditCtrl', function( $scope, App, Api, Growls, Scroll, gettextCatalog )
 {
-	Translate.pageTitle( 'dash.profile.edit.page_title' );
-	$scope.accountCtrl.heading = $translate.instant( 'dash.profile.edit.heading' );
+	App.title = gettextCatalog.getString( 'dash.profile.edit.page_title' );
+	$scope.accountCtrl.heading = gettextCatalog.getString( 'dash.profile.edit.heading' );
 
 	this.onProfileSaved = function()
 	{
