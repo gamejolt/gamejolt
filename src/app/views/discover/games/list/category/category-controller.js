@@ -37,6 +37,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.List.CategoryCtrl', fu
 	listCtrl.section = section;
 	listCtrl.category = category;
 
+	listCtrl.hasCleanGameFilters = SplitTest.hasCleanGameFilters( payload );
+
 	if ( $stateParams.date ) {
 
 		// Range?
