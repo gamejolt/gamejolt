@@ -141,7 +141,7 @@
 						'chat-msg-type-system': msg.type == ChatConfig.MSG_SYSTEM,
 						'chat-window-message-not-combined': !msg.combine,
 						'chat-window-message-combined': msg.combine,
-						'chat-window-message-can-mod': client.canModerate( room, msg.user ),
+						'chat-window-message-can-mod': client.canModerate( ctrl.room, msg.user ),
 					}"
 					>
 
@@ -165,7 +165,7 @@
 							{{ ::msg.loggedOn | amDateFormat:'h:mm A' }}
 						</span>
 
-						<div class="chat-window-message-mod-tools" ng-if="::client.canModerate( room, msg.user )">
+						<div class="chat-window-message-mod-tools" ng-if="::client.canModerate( ctrl.room, msg.user )">
 							<a class="link-muted" gj-tooltip="Mute User" ng-click="ctrl.muteUser( msg.user.id )">
 								<span class="jolticon jolticon-friend-remove-2"></span>
 							</a>
