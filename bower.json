@@ -21,7 +21,7 @@
     "ng-file-upload": "1.6.5",
     "ua-parser-js": "0.7.3",
     "jcrop": "0.9.12",
-    "ocLazyLoad": "1.0.0-beta.2",
+    "ocLazyLoad": "1.0.9",
     "angular-gettext": "https://github.com/gamejolt/angular-gettext.git#master",
     "angular-ui-utils": "bower-keypress",
     "angular-validation-match": "1.4.0",
