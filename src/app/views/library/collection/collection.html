@@ -1,5 +1,5 @@
 <div ng-if="Screen.isMobile && libraryCtrl.shouldShowSidebar" class="well fill-darker sans-margin-bottom">
-	<a class="i-button block big" ui-sref="^.overview">
+	<a class="btn btn-outline btn-block" ui-sref="^.overview">
 		<span class="jolticon jolticon-chevron-left"></span>
 		Back to Game Library
 	</a>
@@ -9,21 +9,21 @@
 	<div class="container">
 
 		<div ng-if="collectionCtrl.type == 'tag'">
-			<div ng-include="'/app/views/library/collection/_header-tag.html'"></div>
+			<div gj-partial="/app/views/library/collection/_header-tag.html"></div>
 		</div>
 		<div ng-if="collectionCtrl.type != 'tag'">
-			<div ng-include="'/app/views/library/collection/_header-default.html'"></div>
+			<div gj-partial="/app/views/library/collection/_header-default.html"></div>
 		</div>
 	</div>
 
 	<div ng-if="Screen.isXs">
-		<div ng-include="'/app/views/library/collection/_header/header-xs.html'"></div>
+		<div gj-partial="/app/views/library/collection/_header/_header-xs.html"></div>
 	</div>
 	<div ng-if="Screen.isSm || Screen.isMd">
-		<div ng-include="'/app/views/library/collection/_header/header-sm.html'"></div>
+		<div gj-partial="/app/views/library/collection/_header/_header-sm.html"></div>
 	</div>
 	<div ng-if="Screen.isLg">
-		<div ng-include="'/app/views/library/collection/_header/header-desktop.html'"></div>
+		<div gj-partial="/app/views/library/collection/_header/_header-desktop.html"></div>
 	</div>
 
 </header>

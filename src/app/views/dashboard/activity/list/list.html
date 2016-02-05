@@ -38,7 +38,7 @@
 
 		<div class="row">
 			<div class="col-md-3" ng-if="Screen.isDesktop">
-				<div ng-include="'/app/views/dashboard/activity/list/_type-selector.html'"></div>
+				<div gj-partial="/app/views/dashboard/activity/list/_type-selector.html"></div>
 			</div>
 
 			<div class="col-md-9 col-lg-7">
@@ -58,7 +58,7 @@
 							popover-id="filter-activity"
 							ng-if="!Screen.isDesktop"
 							>
-							<div ng-include="'/app/views/dashboard/activity/list/_type-selector.html'"></div>
+							<div gj-partial="/app/views/dashboard/activity/list/_type-selector.html"></div>
 						</gj-popover>
 
 						<a class="i-button big sparse pull-right anim-fade-in"

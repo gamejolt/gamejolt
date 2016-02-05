@@ -214,19 +214,19 @@
 			</gj-popover>
 
 			<div ng-if="buildsCtrl.buildTab == 'edit'">
-				<div ng-include="'/app/views/dashboard/developer/games/manage/packages/release/builds/edit/_edit.html'"></div>
+				<div gj-partial="/app/views/dashboard/developer/games/manage/packages/release/builds/edit/_edit.html"></div>
 			</div>
 
 			<div ng-if="buildsCtrl.buildTab == 'launch-options'">
-				<div ng-include="'/app/views/dashboard/developer/games/manage/packages/release/builds/launch-options/_launch-options.html'"></div>
+				<div gj-partial="/app/views/dashboard/developer/games/manage/packages/release/builds/launch-options/_launch-options.html"></div>
 			</div>
 
 			<div ng-if="buildsCtrl.buildTab == 'params'">
-				<div ng-include="'/app/views/dashboard/developer/games/manage/packages/release/builds/params/_params.html'"></div>
+				<div gj-partial="/app/views/dashboard/developer/games/manage/packages/release/builds/params/_params.html"></div>
 			</div>
 
 			<div ng-if="buildsCtrl.buildTab == 'supplemental-files'">
-				<div ng-include="'/app/views/dashboard/developer/games/manage/packages/release/builds/supplemental-files/_supplemental-files.html'"></div>
+				<div gj-partial="/app/views/dashboard/developer/games/manage/packages/release/builds/supplemental-files/_supplemental-files.html"></div>
 			</div>
 
 		</gj-editable-accordion-item-body>
@@ -237,7 +237,7 @@
 		add-label="{{ ::'dash.games.releases.builds.add_build_button' | translate }}"
 		ng-if="!releaseCtrl.areBuildsLockedByJam"
 		>
-		<div ng-include="'/app/views/dashboard/developer/games/manage/packages/release/builds/add/_add.html'"></div>
+		<div gj-partial="/app/views/dashboard/developer/games/manage/packages/release/builds/add/_add.html"></div>
 	</gj-editable-accordion-add>
 
 </gj-editable-accordion>

@@ -11,7 +11,7 @@
 	If this user is banned, we show very little.
 -->
 <div ng-if="!profileCtrl.user.status">
-	<div ng-include="'/app/views/profile/_banned.html'"></div>
+	<div gj-partial="/app/views/profile/_banned.html"></div>
 </div>
 
 <!--

@@ -1,6 +1,6 @@
 <section class="game-header-controls" ng-if="App.user">
 	<div class="container">
-		<div ng-include="'/app/views/discover/games/view/_header/controls.html'"></div>
+		<div gj-partial="/app/views/discover/games/view/_header/_controls.html"></div>
 	</div>
 </section>
 
@@ -11,10 +11,10 @@
 			ng-if="Game_ViewState.showExtendedHeader"
 			ng-class="{ 'animate-affixed-on': gameCtrl.isNavAffixed, 'animate-affixed-off': !gameCtrl.isNavAffixed }"
 			>
-			<div ng-include="'/app/views/discover/games/view/_header/rate.html'"></div>
-			<div ng-include="'/app/views/discover/games/view/_header/stats.html'"></div>
+			<div gj-partial="/app/views/discover/games/view/_header/_rate.html"></div>
+			<div gj-partial="/app/views/discover/games/view/_header/_stats.html"></div>
 		</div>
 
-		<div ng-include="'/app/views/discover/games/view/_header/nav.html'"></div>
+		<div gj-partial="/app/views/discover/games/view/_header/_nav.html"></div>
 	</div>
 </div>
