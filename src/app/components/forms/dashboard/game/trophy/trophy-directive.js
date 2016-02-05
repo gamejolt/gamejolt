@@ -1,5 +1,9 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameTrophy', function( Form, Api, Game_Trophy, ModalConfirm, gettextCatalog )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameTrophy', function( Form, Api, Game_Trophy, ModalConfirm, gettext, gettextCatalog )
 {
+	// Required for the upload label.
+	gettext( 'dash.games.trophies.form.upload_label' );
+	gettext( 'dash.games.trophies.form.change_image_label' );
+
 	var form = new Form( {
 		model: 'Game_Trophy',
 		template: '/app/components/forms/dashboard/game/trophy/trophy.html',

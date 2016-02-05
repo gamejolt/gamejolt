@@ -1,5 +1,9 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameThumbnail', function( Form, Api )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameThumbnail', function( Form, Api, gettext )
 {
+	// Needed for the crop label.
+	gettext( 'dash.games.thumbnail.crop_label' );
+	gettext( 'dash.games.thumbnail.nocrop_label' );
+
 	var form = new Form( {
 		model: 'Game',
 		template: '/app/components/forms/dashboard/game/thumbnail/thumbnail.html',
