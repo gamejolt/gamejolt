@@ -18,3 +18,28 @@
 		&-has-badge
 			.games-section-header-copy
 				margin-left: $games-list-category-badge-size + $grid-gutter-width
+
+.games-listing
+
+	&-container
+		@extend .clearfix
+
+	&-left
+		float: left
+		width: 18%
+		padding-right: ($grid-gutter-width * 0.5)
+		max-width: 275px
+		min-height: 1px
+
+		.well
+			padding: 10px
+
+	&-main
+		float: left
+		width: 82%
+		padding-left: ($grid-gutter-width * 0.5)
+		padding-right: $grid-gutter-width * 0.5
+
+	&-main-inner
+		margin: 0 auto
+		max-width: 1500px

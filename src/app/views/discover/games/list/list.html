@@ -1,7 +1,8 @@
 <header class="section">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-xs-offset-2 col-xs-10">
+	<div class="games-listing-container">
+		<div class="games-listing-left"></div>
+			<div class="games-listing-main">
+				<div class="games-listing-main-inner">
 
 				<div class="games-section-header"
 					ng-class="{ 'games-section-header-has-badge': !!listCtrl.badgeImage }"
@@ -81,11 +82,10 @@
 
 						</div>
 					</div>
-
 				</div>
-				<br><br>
-
 			</div>
+			<br><br>
+
 		</div>
 	</div>
 </header>
@@ -94,16 +94,22 @@
 	<div class="container" translate>games.list.new_games_warning_html</div>
 </section>
 
-<div class="container-fluid">
-	<section class="section" id="games-list">
+<section class="section fill-lighter section-thin" ng-if="listCtrl.section != 'by-date'">
+	<div class="container">
+		<gj-genre-list></gj-genre-list>
+	</div>
+</section>
 
-		<div class="row">
-			<div class="col-xs-offset-2 col-xs-10">
+<section class="section" id="games-list">
 
-				<nav class="game-sections-list pills"
+	<div class="games-listing-container">
+		<div class="games-listing-left"></div>
+		<div class="games-listing-main">
+			<div class="games-listing-main-inner">
+
+				<nav class="pull-left game-sections-list pills"
 					ng-if="listCtrl.section != 'by-date'"
 					>
-					<!--ng-class="{ 'nav-justified': Screen.isXs, 'pull-left': !Screen.isXs }"-->
 					<ul>
 						<li>
 							<a
@@ -148,44 +154,48 @@
 					</ul>
 				</nav>
 
-				<div class="pull-right" style="width: 350px">
-					<gj-game-filtering-input
-						ng-if="!Screen.isXs || listCtrl.filteringContainer.filters.query"
-						gj-filtering-container="listCtrl.filteringContainer"
-						gj-filters-changed="listCtrl.onFiltersChanged()"
+				<div class="pull-right">
+					<span class="text-muted small" ng-if="listCtrl.gamesCount == 0" translate>games.list.games_count_none</span>
+
+					<span class="text-muted small"
+						ng-if="listCtrl.gamesCount > 0"
+						translate
+						translate-n="listCtrl.gamesCount"
+						translate-plural="games.list.games_count"
+						translate-scope="{ page: listCtrl.currentPage }"
+						translate-comment="{{ page }} expands to the current page of games"
 						>
-					</gj-game-filtering-input>
+						games.list.games_count
+					</span>
+
+					<div style="display: inline-block; margin-left: 15px; width: 350px">
+						<gj-game-filtering-input
+							ng-if="!Screen.isXs || listCtrl.filteringContainer.filters.query"
+							gj-filtering-container="listCtrl.filteringContainer"
+							gj-filters-changed="listCtrl.onFiltersChanged()"
+							>
+						</gj-game-filtering-input>
+					</div>
 				</div>
-
-				<p class="text-muted small" ng-if="listCtrl.gamesCount == 0" translate>games.list.games_count_none</p>
-
-				<p class="text-muted small"
-					ng-if="listCtrl.gamesCount > 0"
-					translate
-					translate-n="listCtrl.gamesCount"
-					translate-plural="games.list.games_count"
-					translate-scope="{ page: listCtrl.currentPage }"
-					translate-comment="{{ page }} expands to the current page of games"
-					>
-					games.list.games_count
-				</p>
 
 			</div>
 		</div>
+	</div>
 
-		<div class="row">
-			<div class="col-xs-2">
+	<div class="games-listing-container">
+		<div class="games-listing-left">
 
-				<div class="well fill-darkest" style="margin-left: -20px"	>
-					<gj-game-filtering-sidebar-widget
-						gj-filtering-container="listCtrl.filteringContainer"
-						gj-filters-changed="listCtrl.onFiltersChanged()"
-						>
-					</gj-game-filtering-sidebar-widget>
-				</div>
-
+			<div class="well fill-darkest">
+				<gj-game-filtering-sidebar-widget
+					gj-filtering-container="listCtrl.filteringContainer"
+					gj-filters-changed="listCtrl.onFiltersChanged()"
+					>
+				</gj-game-filtering-sidebar-widget>
 			</div>
-			<div class="col-xs-10">
+
+		</div>
+		<div class="games-listing-main">
+			<div class="games-listing-main-inner">
 
 				<ui-view></ui-view>
 
@@ -198,5 +208,5 @@
 
 			</div>
 		</div>
-	</section>
-</div>
+	</div>
+</section>
