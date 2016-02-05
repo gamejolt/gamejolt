@@ -15,7 +15,7 @@ angular.module( 'App.Client.Library' )
 		} );
 } )
 .service( 'Client_Library', function(
-	$q, $timeout, $injector, $rootScope, LocalDb, LocalDb_Game, LocalDb_Package )
+	$q, $timeout, $injector, $rootScope, LocalDb, LocalDb_Game, LocalDb_Package, HistoryTick )
 {
 	var _this = this;
 
@@ -120,6 +120,8 @@ angular.module( 'App.Client.Library' )
 
 	this.installPackage = function( _game, _package, _release, _build, _launchOptions )
 	{
+		HistoryTick.sendBeacon( 'game-build', _build.id );
+
 		var game = LocalDb_Game.fromGame( _game );
 		var localPackage = LocalDb_Package.createForInstall( _package, _release, _build, _launchOptions );
 
