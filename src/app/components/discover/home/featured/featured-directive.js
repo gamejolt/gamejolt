@@ -24,6 +24,19 @@ angular.module( 'App.Views' ).directive( 'gjDiscoverHomeFeatured', function()
 			// Starts the process of sliding.
 			setupSlideTimeout();
 
+			this.swipe = function( dir, $event )
+			{
+				$scope.$apply( function()
+				{
+					if ( dir == 'left' ) {
+						_this.nextSlide( $event, { swipe: true } );
+					}
+					else if ( dir == 'right' ) {
+						_this.prevSlide( $event, { swipe: true } );
+					}
+				} );
+			};
+
 			this.nextSlide = function( $event, options )
 			{
 				if ( options && options.swipe ) {

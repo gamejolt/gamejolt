@@ -1,5 +1,18 @@
 angular.module( 'App.SplitTest' ).service( 'SplitTest', function( $location, $window )
 {
+	var EXPERIMENT_BETTER_HOT = 'XHRHghXDRDek_TePTCVj1A';
+	var EXPERIMENT_CLEAN_GAME_FILTERS = '2D1DwVrASM-bZA8JBMR7tQ';
+
+	this.hasBetterHot = function( payload )
+	{
+		return getVariation( payload, EXPERIMENT_BETTER_HOT ) == 1;
+	};
+
+	this.hasCleanGameFilters = function( payload )
+	{
+		return getVariation( payload, EXPERIMENT_CLEAN_GAME_FILTERS ) == 1;
+	};
+
 	function getVariation( payload, experiment )
 	{
 		// Allows you to put the experiment in the URL to force it.

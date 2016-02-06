@@ -106,7 +106,7 @@
 	</div>
 </section>
 
-<section class="section">
+<section class="section" ng-if="!homeCtrl.hasBetterHot">
 	<div class="container">
 
 		<h3 class="section-header sans-margin-bottom">
@@ -167,9 +167,9 @@
 		<div ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
 			<div class="row">
 				<gj-game-thumbnail
-					class="col-xs-10 col-sm-4 col-md-3"
-					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
-					ng-repeat="game in homeCtrl.hotGames | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
+					class="col-xs-10 col-sm-4"
+					ng-class="{ 'scrollable-grid-item': Screen.isXs, 'col-md-3': !homeCtrl.hasBetterHot }"
+					ng-repeat="game in homeCtrl.hotGames | limitTo:(Screen.isMobile ? 6 : (homeCtrl.hasBetterHot ? 9 : 8) ) track by game.id"
 					gj-game="game"
 					gj-track-event="home:slider:game:{{ $index }}"
 					>

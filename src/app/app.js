@@ -47,6 +47,7 @@ angular.module( 'App', [
 	'gj.Location',
 	'gj.Connection',
 
+	'gj.Partial',
 	'gj.Backdrop',
 	'gj.Tooltip',
 	'gj.Popover',

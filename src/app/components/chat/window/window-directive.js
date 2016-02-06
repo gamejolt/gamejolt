@@ -31,6 +31,16 @@ angular.module( 'App.Chat' ).directive( 'gjChatWindow', function()
 				Chat.client.leaveRoom( this.room.id );
 			};
 
+			this.muteUser = function( userId )
+			{
+				Chat.client.mute( userId, this.room.id );
+			};
+
+			this.removeMessage = function( msgId )
+			{
+				Chat.client.removeMessage( msgId, this.room.id );
+			};
+
 			this.showModTools = false;
 			$scope.$watch( 'ctrl.room.isMod', function( isMod, prev )
 			{

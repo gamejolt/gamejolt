@@ -5,7 +5,7 @@ angular.module( 'App.Client.PackageCardOptions' ).directive( 'gjClientPackageCar
 		require: '^gjGamePackageCard',
 		scope: true,
 		templateUrl: '/app/components/client/package-card-options/package-card-options.html',
-		controller: function( $scope, Device, Analytics, Client_Library, Client_Installer, Client_Launcher, LocalDb_Package, Game, Game_Build, Popover, HistoryTick )
+		controller: function( $scope, Device, Analytics, Client_Library, Client_Installer, Client_Launcher, LocalDb_Package, Game, Game_Build, Popover )
 		{
 			// Parent scope controller.
 			var ctrl = $scope.ctrl;
@@ -70,9 +70,7 @@ angular.module( 'App.Client.PackageCardOptions' ).directive( 'gjClientPackageCar
 
 			ctrl.startInstall = function( build )
 			{
-				// Be sure to log the build download.
 				Analytics.trackEvent( 'game-package-card', 'install' );
-				HistoryTick.sendBeacon( 'game-build', build.id );
 
 				Client_Library.installPackage(
 					ctrl.game,

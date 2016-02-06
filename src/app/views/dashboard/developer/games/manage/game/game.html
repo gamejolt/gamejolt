@@ -15,7 +15,7 @@
 
 <section class="section fill-lightest section-thin" ng-if="Screen.isMobile">
 	<div class="container">
-		<nav class="pills" ng-include="'/app/views/dashboard/developer/games/manage/game/_nav.html'"></nav>
+		<nav class="pills" gj-partial="/app/views/dashboard/developer/games/manage/game/_nav.html"></nav>
 	</div>
 </section>
 
@@ -24,7 +24,7 @@
 
 		<div class="row">
 			<div class="col-md-2" ng-if="Screen.isDesktop">
-				<nav class="platform-list" ng-include="'/app/views/dashboard/developer/games/manage/game/_nav.html'"></nav>
+				<nav class="platform-list" gj-partial="/app/views/dashboard/developer/games/manage/game/_nav.html"></nav>
 			</div>
 			<div class="col-xs-12 col-md-10">
 				<ui-view></ui-view>

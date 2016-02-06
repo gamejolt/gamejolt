@@ -389,6 +389,14 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 
 			$rootScope.$emit( 'Chat.message', message );
 		}
+		else if ( msg.event === 'message-removed' ) {
+			var id = msg.data.id;
+			var roomId = msg.data.roomId;
+
+			if ( this.messages[ roomId ].length ) {
+				_.remove( this.messages[ roomId ], { id: id } );
+			}
+		}
 		else if ( msg.event === 'notification' ) {
 			var message = msg.data.message;
 
@@ -643,6 +651,11 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 	ChatClient.prototype.unmute = function( userId, roomId )
 	{
 		this.primus.write( { event: 'user-unmute', userId: userId, roomId: roomId } );
+	};
+
+	ChatClient.prototype.removeMessage = function( msgId, roomId )
+	{
+		this.primus.write( { event: 'message-remove', msgId: msgId, roomId: roomId } );
 	};
 
 	ChatClient.prototype._processNewOutput = function( messages, isPrimer )
