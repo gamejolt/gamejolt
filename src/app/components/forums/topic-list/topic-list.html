@@ -1,59 +1,57 @@
-<div class="forums-channel-list">
-	<div class="forum-list-items">
+<div class="forum-topic-list">
 
-		<div class="forum-list-item forum-channel row" ng-repeat="topic in ctrl.topics track by topic.id">
-			<div class="col-sm-7 col-md-8">
-				<h4 class="forum-list-item-title">
-					<!--<span class="tag tag-active">Sticky</span>-->
-					<!--<span class="tag tag-pink">New</span>-->
-					<!--<span class="tag">Locked</span>-->
-					<a class="link-unstyled" ui-sref="forums.topics.view( { slug: topic.slug, id: topic.id } )">
-						{{ topic.title }}
-					</a>
-				</h4>
-				<p class="sans-margin">{{ topic.excerpt }}</p>
-				<div class="small">
-					by
-					<strong><a ui-sref="profile.overview( { slug: topic.user.slug, id: topic.user.id } )">
-						{{ topic.user.display_name }}
-					</a></strong>
-					<span class="dot-separator"></span>
-					<span class="text-muted" am-time-ago="topic.posted_on"></span>
-					<br class="visible-xs">
-					<span class="dot-separator hidden-xs"></span>
-					<span class="text-muted">25 Followers</span>
-					<span class="dot-separator"></span>
-					<span class="text-muted">14 Replies</span>
-				</div>
-			</div>
-			<div class="col-sm-5 col-md-4 forum-list-item-meta">
-				<ul class="forum-list-item-stats">
-					<li><strong><a href="#">Nik</a></strong> replied</li>
-					<li>25 minutes ago</li>
-				</ul>
-				<ul class="hidden-xs forum-list-item-users">
-					<li>
-						<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-					</li>
-					<li>
-						<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-					</li>
-					<li>
-						<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-					</li>
-					<li>
-						<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-					</li>
-				</ul>
+	<div class="forum-topic-list-item row" ng-repeat="topic in ctrl.topics track by topic.id">
+		<div class="col-sm-7 col-md-7">
+			<h4 class="forum-topic-list-item-title">
+
+				<!-- Notifications -->
+				<span class="tag tag-pink" ng-if="::!!topic.notifications.length">{{ topic.notifications.length | number }}</span>
+
+				<!-- Pinned -->
+				<span ng-if="::topic.is_sticky" tooltip="This topic is pinned.">
+					<span class="jolticon jolticon-verified active"></span>
+				</span>
+
+				<!-- Locked -->
+				<span ng-if="::topic.is_locked" tooltip="This topic is locked and can no longer be replied to.">
+					<span class="jolticon jolticon-exclamation-circle text-muted"></span>
+				</span>
+
+				<a class="link-unstyled" ui-sref="forums.topics.view.page( { slug: topic.slug, id: topic.id } )">
+					{{ ::topic.title }}
+				</a>
+			</h4>
+			<div class="forum-topic-list-item-author">
+				by
+				<a ui-sref="profile.overview( { slug: topic.user.slug, id: topic.user.id } )">
+					{{ ::topic.user.display_name }}
+				</a>
 			</div>
 		</div>
-
-		<div ng-if="ctrl.moreLink" class="clearfix text-right">
-			<a href="{{ ctrl.moreLink }}" class="btn btn-outline">
-				<span class="jolticon jolticon-chevron-right"></span>
-				View all
-			</a>
+		<div class="col-md-2 text-muted text-right small">
+			{{ ::topic.replies_count || 0 | number }} Replies
+			<br>
+			{{ ::topic.followers_count || 0 | number }} Followers
 		</div>
-
+		<div class="col-sm-5 col-md-3 text-muted text-right small">
+			<strong><a href="#">Nik</a></strong> replied
+			<br>
+			25 minutes ago
+			<!--<ul class="hidden-xs forum-topic-list-item-users">
+				<li>
+					<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
+				</li>
+				<li>
+					<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
+				</li>
+				<li>
+					<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
+				</li>
+				<li>
+					<img src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
+				</li>
+			</ul>-->
+		</div>
 	</div>
+
 </div>

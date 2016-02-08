@@ -6,9 +6,6 @@
 				<h1>Game Jolt Indie Game Forums</h1>
 				<p>Please read the <a href="#">Forum Rules</a> before posting.</p>
 				<img ng-show="Screen.isXs" class="social-butterflies center-block" src="/app/views/forums/landing/butterflies-mobile.png" alt="The Social Butterflies">
-				<a ui-sref="forums.search" class="btn btn-outline btn-block">
-					<span class="jolticon jolticon-search"></span> Search Discussions
-				</a>
 			</div>
 		</div>
 
@@ -20,54 +17,24 @@
 	<br>
 </header>
 
-<!--<section class="section">
-	<div class="container">
-
-		<div class="page-header forum-list-heading">
-			<h2 class="sans-margin">
-				<a class="link-unstyled" ui-sref="forums.channels.followed">Followed Channels</a>
-			</h2>
-			<div class="text-muted">10 Channels</div>
-		</div>
-
-		<gj-forums-channel-list items="[0, 1]" more-link="/forums/channels"></gj-forums-channel-list>
-
-		<div class="page-header forum-list-heading">
-			<h2 class="sans-margin">
-				<a class="link-unstyled" ui-sref="forums.topics.followed">Followed Topics</a>
-			</h2>
-			<div class="text-muted">10 Topics</div>
-		</div>
-
-		<gj-forums-topic-list items="[0, 1]" more-link="/forums/topics"></gj-forums-topic-list>
-
-	</div>
-</section>-->
-
-<!--<section class="section" ng-repeat="i in [0, 1, 2]" ng-class="{'fill-lightest': i % 2 == 0}">-->
 <section class="section">
 	<div class="container">
 
-			<div ng-repeat="category in landingCtrl.categories track by category.id">
+		<div ng-repeat="category in landingCtrl.categories track by category.id">
 
-				<div class="page-header forum-list-heading">
-					<h2 class="sans-margin">
-						<a class="link-unstyled" ui-sref="forums.category( { url: category.url } )">
-							{{ category.title }}
-						</a>
-					</h2>
-					<div class="text-muted">750 Channels</div>
-				</div>
-
-				<gj-forums-channel-list
-					channels="landingCtrl.channels[ category.id ]"
-					category="category"
-					more-link="/forums/category/development"
-					>
-				</gj-forums-channel-list>
-
+			<div class="page-header forum-list-heading">
+				<h2 class="sans-margin" id="category-{{ category.url }}">
+					{{ category.title }}
+				</h2>
 			</div>
+
+			<gj-forums-channel-list
+				channels="landingCtrl.channels[ category.id ]"
+				category="category"
+				>
+			</gj-forums-channel-list>
+
+		</div>
 
 	</div>
 </section>
-<!--</section>-->

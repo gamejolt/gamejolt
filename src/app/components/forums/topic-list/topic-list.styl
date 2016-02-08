@@ -1,0 +1,20 @@
+.forum-topic-list-item
+	margin-bottom: $line-height-computed
+
+	&-title
+		font-weight: bold
+		margin: 0
+
+		@media $media-xs
+			margin-bottom: 10px
+
+	&-author
+		font-size: $font-size-small
+		color: $text-muted
+
+		a
+			@extend .link-muted
+			font-weight: bold
+			
+			&:hover
+				text-decoration: underline

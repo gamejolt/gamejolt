@@ -1,30 +1,95 @@
-.topic-author
-	padding-right: 3px
-	
-.topic-author-avatar
-	position: absolute
-	left: -150px
-	width: 150px
-	background-color: $gray-lighter
-	border: 4px solid $gray-lightest
-	border-radius: 5px
-	overflow: hidden
-	
-	@media $media-sm
-		border-width: 3px
-		width: 80px
-		left: -80px
-	
-.topic-meta
-	margin-top: 1em
-	
-	@media $media-xs
-		margin-bottom: 1em
+header.forum-topic-header
+	position: relative
+	padding-bottom: $grid-gutter-width * 2
 
-.topic-main-post
-	font-size: 1.1em
-	padding: 1.5em 0
-	border-bottom: 2px solid $gray-lightest
-			
-	.topic-post-content
+	@media $media-xs
+		padding-bottom: $grid-gutter-width-xs * 2 + $line-height-computed
+
+	h1
+		text-align: center
+
+		@media $media-sm-up
+			text-align: left
+
+/**
+ * Author Avatar and Meta
+ */
+ $forum-topic-header-avatar-size = 100px
+
+.forum-topic-header-author
+	position: absolute
+	bottom: -($grid-gutter-width * 2) - $line-height-computed  // Pull it to the bottom of the header container.
+
+	@media $media-xs
+		bottom: -($grid-gutter-width-xs * 2 + $line-height-computed)
+
+	.user-avatar
+		position: absolute
+		width: $forum-topic-header-avatar-size
+		bottom: -(@width / 2)
+		left: -($forum-topic-header-avatar-size + $grid-gutter-width)
+
+		img
+			border: 5px solid $white
+			background-color: $white
+
+.forum-topic-header-author-meta
+	position: relative
+	top: -10px
+	left: 0
+	right: 0
+	font-size: $font-size-h4
+
+.forum-topic-header-time-ago
+.forum-topic-header-time-exact
+	font-size: $font-size-base
+	// margin-left: 10px
+
+.forum-topic-header-author-username
+	font-weight: bold
+
+	&:hover
+		text-decoration: underline
+
+@media $media-xs
+	.forum-topic-header
+		margin-bottom: ($forum-topic-header-avatar-size / 2) + 50px
+
+	.forum-topic-header-author
+		left: ($grid-gutter-width-xs / 4)
+		right: ($grid-gutter-width-xs / 4)
+
+		.user-avatar
+			left: 50%
+			margin-left: -($forum-topic-header-avatar-size / 2)
+
+	.forum-topic-header-author-meta
+		top: $forum-topic-header-avatar-size
+		text-align: center
+
+	.forum-topic-header-author-byline
+		display: block
+		text-overflow()
+
+	.forum-topic-header-time-ago
+		display: block
 		margin-left: 0
+		color: $gray-light
+		font-size: $font-size-small
+
+@media $media-sm-up
+	.forum-topic-header-author-meta
+	.forum-topic-header-author-username
+		&
+		&:hover
+			color: $white
+
+@media $media-sm
+	.forum-topic-header
+		margin-bottom: ($forum-topic-header-avatar-size / 2)
+
+	.forum-topic-header-author .user-avatar
+		left: 0
+
+	.forum-topic-header-author-meta
+		left: $forum-topic-header-avatar-size + $grid-gutter-width-xs

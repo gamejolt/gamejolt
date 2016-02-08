@@ -1,99 +1,235 @@
-<header class="section">
-	<div class="container forum-header">
-
-		<div class="forum-breadcrumbs">
-			<a ui-sref="forums.landing" class="link-unstyled">Forums</a>
-			/ <a ui-sref="forums.category( { url: viewCtrl.channel.category.url } )" class="link-unstyled">{{ viewCtrl.channel.category.title }}</a>
-			/ <a ui-sref="forums.channels.view( { name: viewCtrl.channel.name } )">#{{ viewCtrl.channel.name }}</a>
-		</div>
+<header class="section forum-topic-header">
+	<div class="container">
 
 		<div class="row">
-			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-				<img class="topic-author-avatar" src="https://b6d3e9q9.ssl.hwcdn.net/img/no-avatar-3.png" alt="User">
-				<h1>
+			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-8">
+
+				<gj-forums-breadcrumbs
+					channel="::viewCtrl.channel"
+					page="view-topic"
+					>
+				</gj-forums-breadcrumbs>
+
+				<span class="tag"
+					ng-if="viewCtrl.topic.is_locked"
+					gj-tooltip="This topic is locked and can no longer be replied to."
+					>
+					<span class="jolticon jolticon-exclamation-circle"></span> Locked
+				</span>
+
+				<h1 class="section-header">
 					{{ viewCtrl.topic.title }}
-					<!--<span class="forum-header-private tag tag-pink" gj-tooltip="This topic is locked and can no longer be replied to">
-						<span class="jolticon jolticon-exclamation-circle"></span> Locked
-					</span>-->
 				</h1>
-				<div class="forum-stats">
-					<div class="clearfix">
-						<div class="topic-meta">
-							<span class="topic-author">
-								by
-								<strong><a ui-sref="profile.overview( { slug: viewCtrl.topic.user.slug, id: viewCtrl.topic.user.id } )">
-									{{ viewCtrl.topic.user.display_name }}
-								</a></strong>
-							</span>
-							<span class="dot-separator hidden-sm hidden-xs"></span>
-							<br class="visible-sm visible-xs">
-							<span class="text-muted" am-time-ago="viewCtrl.topic.posted_on">2 days ago</span>
-							<span class="dot-separator"></span>
-							<span class="text-muted">25 Followers</span>
-							<span class="dot-separator"></span>
-							<span class="text-muted">14 Replies</span>
-						</div>
+
+				<div class="forum-topic-header-author">
+					<div gj-user-avatar="::viewCtrl.topic.user" class="avatar-circle"></div>
+
+					<div class="forum-topic-header-author-meta">
+						<span class="forum-topic-header-author-byline">
+							by
+							<a class="forum-topic-header-author-username" ui-sref="profile.overview( { slug: viewCtrl.topic.user.slug, id: viewCtrl.topic.user.id } )">{{ ::viewCtrl.topic.user.display_name }}</a>
+						</span>
+						<span class="forum-topic-header-time-ago">
+							<span class="dot-separator hidden-xs"></span>
+							<span title="{{ ::viewCtrl.topic.posted_on | date:'medium' }}" am-time-ago="::viewCtrl.topic.posted_on"></span>
+						</span>
 					</div>
 				</div>
+
 			</div>
 		</div>
-
-		<div class="text-right forum-header-buttons">
-			<br class="visible-sm">
-			<a href="#" class="btn btn-dark-variant btn-outline">
-				<span class="jolticon jolticon-add"></span> Add Reply
-			</a>
-			<a href="#" class="btn btn-dark-variant btn-outline" gj-tooltip="Keep track of replies in this topic">
-				<span class="jolticon jolticon-subscribe"></span> Follow
-			</a>
-            <a class="btn btn-sparse btn-dark-variant btn-outline" gj-popover-trigger="forum-topic-popover">
-                <span class="jolticon jolticon-ellipsis-h"></span>
-            </a>
-		</div>
-
-        <gj-popover popover-id="forum-topic-popover">
-            <div class="list-group thin">
-                <a href="#" class="list-group-item has-icon">
-                    <span class="jolticon jolticon-verified"></span>
-                    Sticky
-                </a>
-                <a href="#" class="list-group-item has-icon">
-                    <span class="jolticon jolticon-edit"></span>
-                    Edit
-                </a>
-                <a href="#" class="list-group-item has-icon">
-                    <span class="jolticon jolticon-remove"></span>
-                    Remove
-                </a>
-                <a href="#" class="list-group-item has-icon">
-                    <span class="jolticon jolticon-trophy"></span>
-                    Mod User
-                </a>
-                <a href="#" class="list-group-item has-icon">
-                    <span class="jolticon jolticon-friend-remove-1"></span>
-                    Mute User
-                </a>
-            </div>
-        </gj-popover>
 
 	</div>
 	<br>
 </header>
 
+<div class="well fill-lightest sans-margin" ng-if="App.user">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-8">
+
+				<a  class="btn btn-primary-outline"
+					href="#add-reply"
+					du-smooth-scroll
+					ng-if="!viewCtrl.topic.is_locked"
+					>
+					<span class="jolticon jolticon-add"></span>
+					Add Reply
+				</a>
+
+				<a class="btn btn-success-outline"
+					ng-if="!viewCtrl.isFollowing"
+					ng-click="viewCtrl.follow()"
+					gj-tooltip="Keep track of replies in this topic."
+					>
+					<span class="jolticon jolticon-subscribe"></span>
+					Follow
+				</a>
+				<a class="btn"
+					ng-class="!viewCtrl.unfollowHover ? 'btn-success' : 'btn-danger'"
+					ng-if="viewCtrl.isFollowing"
+					ng-click="viewCtrl.unfollow()"
+					ng-mouseenter="viewCtrl.unfollowHover = true"
+					ng-mouseleave="viewCtrl.unfollowHover = false"
+					gj-tooltip="Stop Following"
+					>
+					<span class="jolticon" ng-class="!viewCtrl.unfollowHover ? 'jolticon-subscribe' : 'jolticon-subscribed'"></span>
+					Following
+				</a>
+
+				<a class="btn btn-outline"
+					ng-if="viewCtrl.topic.user_id == App.user.id && !viewCtrl.topic.is_locked"
+					ng-click="viewCtrl.editTopic()"
+					ng-disabled="viewCtrl.isEditingTopic"
+					>
+					<span class="jolticon jolticon-edit"></span>
+					Edit
+				</a>
+
+				<!-- Mod Tools -->
+				<a class="btn btn-sparse btn-outline"
+					ng-if="::App.user.permission_level > 0"
+					gj-popover-trigger="forum-topic-popover"
+					>
+					<span class="jolticon jolticon-ellipsis-h"></span>
+				</a>
+
+				<gj-popover popover-id="forum-topic-popover" ng-if="::App.user.permission_level > 0">
+					<div class="list-group thin">
+						<a class="list-group-item">
+							Toggle Sticky
+						</a>
+						<a class="list-group-item"
+							ng-href="{{ ::Environment.baseUrl }}/moderate/forums/topics/toggle-lock/{{ ::viewCtrl.topic.id }}"
+							target="_blank"
+							>
+							Toggle Lock
+						</a>
+						<a href="#" class="list-group-item">
+							Edit Topic
+						</a>
+						<a class="list-group-item"
+							ng-href="{{ ::Environment.baseUrl }}/moderate/forums/topics/remove/{{ ::viewCtrl.topic.id }}"
+							target="_blank"
+							>
+							Remove Topic
+						</a>
+						<a class="list-group-item"
+							ng-href="{{ ::Environment.baseUrl }}/moderate/users/view/{{ ::viewCtrl.topic.user_id }}"
+							target="_blank"
+							>
+							Moderate User
+						</a>
+					</div>
+				</gj-popover>
+
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="section">
 	<div class="container">
 
-		<div class="topic-post topic-main-post row">
-			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-				<div class="topic-post-content" ng-bind-html="viewCtrl.topic.main_post.content_compiled"></div>
+		<div class="row">
+			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-8">
+
+				<!--
+					Hide the main post while it's being edited.
+				-->
+				<div ng-if="!viewCtrl.isEditingTopic">
+
+					<!--
+						We do a fade collapse for the main post after the first page.
+					-->
+					<div ng-if="viewCtrl.currentPage > 1">
+						<gj-fade-collapse
+							fade-collapse-height="200"
+							fade-collapse-is-open="viewCtrl.showFullDescription"
+							fade-collapse-is-required="viewCtrl.canToggleDescription"
+							>
+							<div class="forum-post-body" gj-widget-compiler-bind="viewCtrl.topic.main_post.content_compiled"></div>
+						</gj-fade-collapse>
+
+						<a class="hidden-text-expander"
+							ng-if="viewCtrl.canToggleDescription"
+							ng-click="viewCtrl.showFullDescription = !viewCtrl.showFullDescription"
+							gj-track-event="forum-topic:show-full-post"
+							></a>
+					</div>
+
+					<!--
+						No fade collapse on first page.
+					-->
+					<div ng-if="viewCtrl.currentPage <= 1">
+						<div class="forum-post-body" gj-widget-compiler-bind="viewCtrl.topic.main_post.content_compiled"></div>
+					</div>
+				</div>
+
+				<div ng-if="viewCtrl.isEditingTopic">
+					<h3 class="section-header">Edit Topic</h3>
+					<gj-form-forum-topic
+						channel="viewCtrl.channel"
+						gj-forum-topic="viewCtrl.topic"
+						gj-form-cancel-handler="viewCtrl.closeEditTopic()"
+						gj-form-submit-handler="viewCtrl.closeEditTopic()"
+						>
+					</gj-form-forum-topic>
+				</div>
+
+				<hr>
+
+				<p class="text-muted small" ng-if="viewCtrl.topic.replies_count > viewCtrl.perPage">
+					Page {{ viewCtrl.currentPage | number }} of {{ viewCtrl.topic.replies_count | number }} replies.
+				</p>
+
+				<gj-forums-post-list
+					id="forum-posts-list"
+					topic="viewCtrl.topic"
+					posts="viewCtrl.posts"
+					>
+				</gj-forums-post-list>
+
+				<br><br>
+
+				<gj-pagination
+					items-per-page="viewCtrl.perPage"
+					total-items="viewCtrl.topic.replies_count"
+					current-page="viewCtrl.currentPage"
+					on-page-change="viewCtrl.pageChange( $page )"
+					>
+				</gj-pagination>
+
+				<div ng-if="App.user">
+					<div ng-if="!viewCtrl.topic.is_locked">
+						<h3 id="add-reply">Add Reply</h3>
+
+						<gj-form-forum-post
+							topic="viewCtrl.topic"
+							gj-form-submit-handler="viewCtrl.onPostAdded( formModel, $response )"
+							>
+						</gj-form-forum-post>
+					</div>
+
+					<div class="alert alert-info" ng-if="viewCtrl.topic.is_locked">
+						<p>
+							<span class="jolticon jolticon-exclamation-circle middle"></span>
+							This topic is locked and can no longer be replied to.
+						</p>
+					</div>
+				</div>
+
+				<div class="alert alert-info" ng-if="!App.user">
+					<p>
+						<span class="jolticon jolticon-exclamation-circle middle"></span>
+						You must be <a ng-href="{{ ::viewCtrl.loginUrl }}" target="_self">logged in</a> to Game Jolt to post replies.
+					</p>
+				</div>
 			</div>
 		</div>
 
-		<gj-forums-post
-			ng-repeat="post in viewCtrl.posts track by post.id"
-			post="post"
-			>
-		</gj-forums-post>
-
 	</div>
 </div>
+
+<!-- Needed so inner state actually loads. -->
+<ui-view></ui-view>

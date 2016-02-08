@@ -5,7 +5,6 @@ angular.module( 'App.Forums.TopicList' ).directive( 'gjForumsTopicList', functio
 		templateUrl: '/app/components/forums/topic-list/topic-list.html',
 		scope: {
 			topics: '=',
-			moreLink: '@moreLink'
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',

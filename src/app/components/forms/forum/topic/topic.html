@@ -1,17 +1,17 @@
 <form gj-form="formModel" name="forumTopicForm">
 
-	<form-group name="title">
+	<form-group class="no-animate" name="title">
 		<input form-control="text" ng-maxlength="300">
 		<control-errors></control-errors>
 	</form-group>
 
 	<div oc-lazy-load="{ files: [ '/app/modules/codemirror.js' ] }">
-		<form-group name="content_markdown" label="Topic Content">
+		<form-group class="no-animate" name="content_markdown" label="Topic Content">
 
 			<div
 				form-markdown-editor
-				preview-class="chat-compiled-room-description"
-				markdown-preview-url="/web/chat/rooms/preview-description"
+				preview-class="forum-post-body"
+				markdown-preview-url="/web/forums/posts/preview"
 				>
 			</div>
 
@@ -24,6 +24,10 @@
 		<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
 		<span ng-if="method == 'add'">Add Topic</span>
 		<span ng-if="method == 'edit'">Save</span>
+	</button>
+
+	<button class="btn btn-danger-outline" ng-if="method == 'edit'" ng-click="onCancel()">
+		Cancel
 	</button>
 
 </form>

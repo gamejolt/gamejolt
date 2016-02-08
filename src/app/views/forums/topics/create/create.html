@@ -1,11 +1,12 @@
 <header class="section">
-	<div class="container forum-header">
-		<div class="forum-breadcrumbs">
-			<a ui-sref="forums.landing" class="link-unstyled">Forums</a>
-			/ <a ui-sref="forums.category( { url: createCtrl.channel.category.url } )" class="link-unstyled">{{ createCtrl.channel.category.title }}</a>
-			/ <a ui-sref="forums.channels.view( { name: createCtrl.channel.name } )">#{{ createCtrl.channel.name }}</a>
-			/ <a href="#">New Topic</a>
-		</div>
+	<div class="container">
+
+		<gj-forums-breadcrumbs
+			channel="createCtrl.channel"
+			page="add-topic"
+			>
+		</gj-forums-breadcrumbs>
+
 	</div>
 </header>
 
@@ -16,7 +17,7 @@
 
 			<gj-form-forum-topic
 				channel="createCtrl.channel"
-				gj-form-submit-handler="createCtrl.onCreate()"
+				gj-form-submit-handler="createCtrl.onCreate( formModel )"
 				>
 			</gj-form-forum-topic>
 

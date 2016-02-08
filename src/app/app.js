@@ -162,6 +162,8 @@ angular.module( 'App', [
 	'gj.Img.Crop',
 	'gj.Img.ImgResponsive',
 
+	'gj.WidgetCompiler',
+
 	// Components.
 	'App.SplitTest',
 	'App.Chat',
@@ -229,8 +231,8 @@ angular.module( 'App', [
 
 	'App.Forums.ChannelList',
 	'App.Forums.TopicList',
-	'App.Forums.Post',
-	'App.Forums.Reply',
+	'App.Forums.PostList',
+	'App.Forums.Breadcrumbs',
 
 	// Views.
 	'App.Views',

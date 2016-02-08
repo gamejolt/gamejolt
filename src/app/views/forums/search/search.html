@@ -1,38 +1,38 @@
 <header class="section">
 	<div class="container forum-header">
-		
+
 		<div class="forum-breadcrumbs">
 			<a ui-sref="forums.landing" class="link-unstyled">Forums</a> / <a href="#">Search</a>
 		</div>
-		
+
 		<div class="forum-search">
 			<span class="jolticon jolticon-search"></span>
 			<input type="text" class="form-control forum-search-input" placeholder="Search discussions...">
 		</div>
-		
+
 	</div>
 	<br>
 </header>
 
 <div class="section">
 	<div class="container">
-		
+
 		<div class="page-header forum-list-heading" style="border: 0">
 			<p class="text-muted">Showing results for</p>
 			<h1 class="sans-margin"><span class="text-muted">"</span>query<span class="text-muted">"</span></h1>
 		</div>
-		
+
 		<div class="page-header forum-list-heading">
 			<h2 class="sans-margin">Channels</h2>
 		</div>
-		
+
 		<gj-forums-channel-list items="[0, 1, 2, 3]"></gj-forums-channel-list>
-		
+
 		<div class="page-header forum-list-heading">
 			<h2 class="sans-margin">Topics</h2>
 		</div>
-		
+
 		<gj-forums-topic-list items="[0, 1, 2, 3]"></gj-forums-topic-list>
-		
+
 	</div>
 </div>

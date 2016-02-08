@@ -1,93 +1,77 @@
 <header class="section">
 	<div class="container forum-header">
 
-		<div class="forum-breadcrumbs">
-			<a ui-sref="forums.landing" class="link-unstyled">Forums</a>
-			/ <a ui-sref="forums.category( { url: viewCtrl.channel.category.url } )" class="link-unstyled">{{ viewCtrl.channel.category.title }}</a>
-			/ <a ui-sref="forums.channels.view( { name: viewCtrl.channel.name } )">#{{ viewCtrl.channel.name }}</a>
-		</div>
+		<gj-forums-breadcrumbs
+			channel="viewCtrl.channel"
+			>
+		</gj-forums-breadcrumbs>
 
 		<h1>
 			<span class="jolticon jolticon-number-sign big"></span>
 			{{ viewCtrl.channel.name }}
-			<!--<span class="forum-header-private tag tag-pink" gj-tooltip="A private channel is not visible to the public">
-				<span class="jolticon jolticon-exclamation-circle"></span> Private Channel
-			</span>-->
 		</h1>
 
 		<p>{{ viewCtrl.channel.description }}</p>
 
-		<div class="row">
+		<ul class="stat-list pull-right">
+			<li class="stat-big stat-big-smaller">
+				<div class="stat-big-label">
+					Topics
+				</div>
+				<div class="stat-big-digit">
+					{{ viewCtrl.channel.topics_count || 0 | number }}
+				</div>
+			</li>
+			<li class="stat-big stat-big-smaller">
+				<div class="stat-big-label">
+					Replies
+				</div>
+				<div class="stat-big-digit">
+					{{ viewCtrl.channel.replies_count || 0 | number }}
+				</div>
+			</li>
+		</ul>
 
-			<div class="col-sm-8 col-md-6 forum-stats">
-				13,000 Followers
-				<span class="dot-separator hidden-xs"></span>
-				<br class="visible-xs">
-				<span class="text-muted">25 Topics</span>
-				<span class="dot-separator"></span>
-				<span class="text-muted">2,123 Replies</span>
-				<br class="visible-xs">
-				&nbsp;
-			</div>
-
-			<div class="col-sm-4 col-md-6 text-right forum-header-buttons">
-				<a ui-sref="forums.topics.create( { channelName: viewCtrl.channel.name } )"
-					class="btn btn-dark-variant btn-outline"
-					ng-class="{ 'btn-sparse': Screen.isSm }"
-					gj-tooltip="Add a new topic for discussion"
-					>
-					<span class="jolticon jolticon-add"></span>
-					<span class="hidden-sm">Add Topic</span>
-				</a>
-				<a href="#"
-					class="btn btn-dark-variant btn-outline"
-					ng-class="{ 'btn-sparse': Screen.isSm }"
-					gj-tooltip="Keep track of topics in this channel"
-					>
-					<span class="jolticon jolticon-subscribe"></span>
-					<span class="hidden-sm">Follow</span>
-				</a>
-				<!--<a href="#"
-					class="btn btn-dark-variant btn-outline"
-					ng-class="{ 'btn-sparse': Screen.isSm }"
-					gj-tooltip="Join the community chatroom"
-					>
-					<span class="jolticon jolticon-comment"></span>
-					<span class="hidden-sm">Chat</span>
-				</a>-->
-				<a class="btn btn-sparse btn-dark-variant btn-outline"
-					gj-popover-trigger="forum-channel-popover"
-					>
-					<span class="jolticon jolticon-ellipsis-h"></span>
-				</a>
-				<gj-popover popover-id="forum-channel-popover">
-					<div class="list-group thin">
-						<a href="#" class="list-group-item has-icon">
-							<span class="jolticon jolticon-edit"></span>
-							Edit Description
-						</a>
-						<a href="#" class="list-group-item has-icon">
-							<span class="jolticon jolticon-claim"></span>
-							Make Private
-						</a>
-					</div>
-				</gj-popover>
-			</div>
-
-		</div>
+		<nav class="platform-list inline pull-left buttons" ng-if="App.user">
+			<ul>
+				<li>
+					<a ui-sref="forums.topics.create( { channelName: viewCtrl.channel.name } )">
+						<span class="jolticon jolticon-add"></span>
+						Add Topic
+					</a>
+				</li>
+			</ul>
+		</nav>
 
 	</div>
-	<br>
+
 </header>
 
 <div class="section">
-	<div class="container">
+	<div class="container" id="forum-topics-list">
 
-		<!--<div class="page-header forum-list-heading">
-			<h2 class="sans-margin">Recent Topics</h2>
-		</div>-->
+		<div ng-if="viewCtrl.stickyTopics.length">
+			<gj-forums-topic-list topics="viewCtrl.stickyTopics"></gj-forums-topic-list>
+			<hr>
+		</div>
+
+		<p class="text-muted small">
+			Page {{ viewCtrl.currentPage | number }} of {{ viewCtrl.channel.topics_count | number }} topics.
+		</p>
+		<br>
 
 		<gj-forums-topic-list topics="viewCtrl.topics"></gj-forums-topic-list>
 
+		<gj-pager
+			items-per-page="viewCtrl.perPage"
+			total-items="viewCtrl.channel.topics_count"
+			current-page="viewCtrl.currentPage"
+			on-page-change="Scroll.to( 'forum-topics-list', { animate: false } )"
+			>
+		</gj-pager>
+
 	</div>
 </div>
+
+<!-- Needed so the inner "page" state gets pulled in. -->
+<ui-view></ui-view>

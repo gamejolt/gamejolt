@@ -1,0 +1,146 @@
+<div class="forum-post-list-item-icon" ng-class="{ 'has-notification': !!ctrl.post.notification }">
+	<div gj-user-avatar="::ctrl.post.user" class="avatar-circle"></div>
+</div>
+
+<div class="forum-post-list-item-main" id="forum-post-{{ ::(ctrl.isReply ? ctrl.post.parent_post_id + '-' : '') + ctrl.post.id }}">
+	<div class="forum-post-content">
+
+		<div class="forum-post-meta">
+			<a class="forum-post-author link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.user.slug, id: ctrl.post.user.id } )">
+				{{ ::ctrl.post.user.display_name }}
+			</a>
+
+			<span ng-if="::ctrl.post.parent_post_id">
+				<span class="jolticon jolticon-reply text-muted"></span>
+				<a class="forum-post-reply-user link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.replied_to.slug, id: ctrl.post.replied_to.id } )">
+					<small>{{ ::ctrl.post.replied_to.display_name }}</small>
+				</a>
+			</span>
+
+			<div class="forum-post-controls">
+				<small class="text-muted" title="{{ ::ctrl.post.posted_on | date:'medium' }}" am-time-ago="::ctrl.post.posted_on"></small>
+				<span class="dot-separator"></span>
+				<a class="link-muted">
+					<span class="jolticon jolticon-link middle" gj-tooltip="Permalink"></span>
+				</a>
+				<a class="link-muted"
+					ng-if="ctrl.post.user_id == App.user.id && !ctrl.topic.is_locked && !ctrl.isEditing"
+					ng-click="ctrl.edit()"
+					>
+					<span class="jolticon jolticon-edit middle" gj-tooltip="Edit Post"></span>
+				</a>
+				<a class="link-muted"
+					ng-if="::App.user.permission_level > 0"
+					gj-popover-trigger="forum-post-popover-{{ ::ctrl.post.id }}"
+					gj-tooltip="Options"
+					>
+					<span class="jolticon jolticon-ellipsis-h middle"></span>
+				</a>
+			</div>
+		</div>
+
+		<gj-popover popover-id="forum-post-popover-{{ ::ctrl.post.id }}">
+			<div class="list-group thin">
+				<a class="list-group-item has-icon"
+					ng-click="ctrl.edit()"
+					>
+					<span class="jolticon jolticon-edit"></span>
+					Edit
+				</a>
+				<a class="list-group-item has-icon">
+					<span class="jolticon jolticon-remove"></span>
+					Remove
+				</a>
+				<a class="list-group-item has-icon">
+					Moderate User
+				</a>
+			</div>
+		</gj-popover>
+
+		<a class="forum-post-replied-to-btn"
+			ng-if="::!ctrl.isReply && ctrl.post.parent_post_id"
+			ng-click="ctrl.loadParentPost()"
+			>
+			<span class="jolticon middle" ng-class="'jolticon-chevron-' + (!ctrl.showingParent ? 'right' : 'down')"></span>
+			In response to <strong>{{ ::ctrl.post.replied_to.display_name }}</strong>
+		</a>
+
+		<div gj-expand-when="ctrl.showingParent && ctrl.parent">
+			<div class="forum-post-body forum-post-body-quoted" gj-widget-compiler-bind="::ctrl.parent.content_compiled"></div>
+			<hr>
+		</div>
+
+		<div ng-if="!ctrl.isEditing">
+			<div class="forum-post-body" gj-widget-compiler-bind="::ctrl.post.content_compiled"></div>
+		</div>
+
+		<div ng-if="ctrl.isEditing">
+			<gj-form-forum-post
+				topic="ctrl.topic"
+				gj-forum-post="ctrl.post"
+				gj-form-cancel-handler="ctrl.closeEdit()"
+				gj-form-submit-handler="ctrl.closeEdit()"
+				>
+			</gj-form-forum-post>
+			<br>
+		</div>
+
+		<p class="text-muted small" ng-if="ctrl.post.modified_by">
+			Last modified on
+			<span title="{{ ctrl.post.modified_on | date:'medium' }}">{{ ctrl.post.modified_on | date }}</span>
+			by
+			<a class="link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.modified_by_user.slug, id: ctrl.post.modified_by_user.id } )">
+				<strong>
+					{{ ctrl.post.modified_by_user.display_name }}
+				</strong>
+			</a>
+		</p>
+
+		<div class="forum-post-actions" ng-if="::!ctrl.isReply">
+
+			<a class="btn btn-outline btn-sm"
+				ng-if="!ctrl.topic.is_locked && App.user"
+				ng-disabled="ctrl.isEditing"
+				ng-click="ctrl.reply()"
+				>
+				<span class="jolticon jolticon-reply"></span>
+				Reply
+			</a>
+
+			<span ng-if="ctrl.post.replies_count">
+				<a class="btn btn-outline btn-sm"
+					ng-click="ctrl.toggleReplies()"
+					ng-disabled="ctrl.isEditing"
+					>
+					<span class="jolticon"
+						ng-class="{
+							'jolticon-chevron-right': !listCtrl.showingReplies[ ctrl.post.id ],
+							'jolticon-chevron-down': listCtrl.showingReplies[ ctrl.post.id ],
+						}"
+						>
+					</span>
+					<span ng-if="!listCtrl.showingReplies[ ctrl.post.id ]">Show Replies</span>
+					<span ng-if="listCtrl.showingReplies[ ctrl.post.id ]">Hide Replies</span>
+				</a>
+				<span class="blip light">
+					<span class="blip-caret"></span>
+					<span class="blip-count">{{ ctrl.post.replies_count || 0 | number }}</span>
+				</span>
+			</span>
+
+		</div>
+
+		<div ng-if="ctrl.isReplying">
+			<br>
+			<gj-form-forum-post
+				topic="ctrl.topic"
+				reply-to="ctrl.post"
+				gj-form-cancel-handler="ctrl.closeReply()"
+				gj-form-submit-handler="ctrl.onReplied( formModel )"
+				>
+			</gj-form-forum-post>
+			<br>
+		</div>
+
+	</div>
+</div>
