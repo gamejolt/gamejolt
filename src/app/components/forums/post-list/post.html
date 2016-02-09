@@ -3,9 +3,10 @@
 </div>
 
 <div class="forum-post-list-item-main"
-	id="forum-post-{{ ::(ctrl.isReply ? ctrl.post.parent_post_id + '-' : '') + ctrl.post.id }}"
+	id="forum-post-{{ ::ctrl.id }}"
 	in-view="ctrl.inViewChange( $inview )"
 	in-view-options="{ debounce: 1000 }"
+	ng-class="{ active: ctrl.isActive }"
 	>
 
 	<div class="forum-post-content">
@@ -24,19 +25,28 @@
 
 			<div class="forum-post-controls">
 				<small class="text-muted" title="{{ ::ctrl.post.posted_on | date:'medium' }}" am-time-ago="::ctrl.post.posted_on"></small>
+
 				<span class="dot-separator"></span>
-				<a class="link-muted">
-					<span class="jolticon jolticon-link middle" gj-tooltip="Permalink"></span>
+
+				<!-- Permalink -->
+				<a class="link-muted"
+					ng-click="ctrl.copyPermalink()"
+					gj-tooltip="Copy Link to Clipboard"
+					>
+					<span class="jolticon jolticon-link middle"></span>
 				</a>
+
 				<a class="link-muted"
 					ng-if="ctrl.post.user_id == App.user.id && !ctrl.topic.is_locked && !ctrl.isEditing"
 					ng-click="ctrl.edit()"
+					gj-tooltip="Edit Post"
 					>
-					<span class="jolticon jolticon-edit middle" gj-tooltip="Edit Post"></span>
+					<span class="jolticon jolticon-edit middle"></span>
 				</a>
+
 				<a class="link-muted"
 					ng-if="::App.user.permission_level > 0"
-					gj-popover-trigger="forum-post-popover-{{ ::ctrl.post.id }}"
+					gj-popover-trigger="forum-post-popover-{{ ::ctrl.id }}"
 					gj-tooltip="Options"
 					>
 					<span class="jolticon jolticon-ellipsis-h middle"></span>
@@ -44,7 +54,7 @@
 			</div>
 		</div>
 
-		<gj-popover popover-id="forum-post-popover-{{ ::ctrl.post.id }}">
+		<gj-popover popover-id="forum-post-popover-{{ ::ctrl.id }}">
 			<div class="list-group thin">
 				<a class="list-group-item has-icon"
 					ng-click="ctrl.edit()"

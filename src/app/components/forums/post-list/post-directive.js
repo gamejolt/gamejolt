@@ -10,18 +10,22 @@ angular.module( 'App.Forums.PostList' ).directive( 'gjForumsPostListPost', funct
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $scope, $state, $q, $location, App, Api, Popover, Forum_Post, Growls, AutoScroll )
+		controller: function( $element, $scope, $state, $q, $location, App, Api, Popover, Forum_Post, Growls, AutoScroll )
 		{
 			var _this = this;
 
 			$scope.App = App;
 			$scope.listCtrl = $scope.$parent.listCtrl;
 
+			this.id = (this.isReply ? this.post.parent_post_id + '-' : '') + this.post.id;
 			this.isEditing = false;
 			this.isReplying = false;
+			this.isActive = false;
 
 			this.showingParent = false;
 			this.parent = null;
+
+			checkPermalink();
 
 			this.toggleReplies = function()
 			{
@@ -122,6 +126,35 @@ angular.module( 'App.Forums.PostList' ).directive( 'gjForumsPostListPost', funct
 					this.post.notification = null;
 				}
 			};
+
+			this.copyPermalink = function()
+			{
+				// We have to add it into view, select, copy, then remove. Yeesh.
+				var permalinkElem = angular.element( '<input type="text" value="' + this.post.getPermalink() + '" id="forum-post-permalink-' + this.id + '">' );
+				$element.append( permalinkElem );
+				permalinkElem[0].select();
+
+				if ( document.execCommand( 'copy' ) ) {
+					Growls.success( 'Copied permalink to your clipboard.', 'Copied!' );
+				}
+				else {
+					Growls.error( 'Could not copy permalink to your clipboard. Dunno why. Sorry.', 'Copy Failed' );
+				}
+
+				permalinkElem.remove();
+			};
+
+			function checkPermalink()
+			{
+				var hash = $location.hash();
+				if ( !hash || hash.indexOf( 'forum-post-' ) !== 0 ) {
+					return;
+				}
+
+				if ( hash == 'forum-post-' + _this.id ) {
+					_this.isActive = true;
+				}
+			}
 		}
 	}
 } );
