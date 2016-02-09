@@ -1,8 +1,8 @@
-angular.module( 'App.Forums.PostList' ).directive( 'gjForumsPostListPost', function()
+angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/forums/post-list/post.html',
+		templateUrl: '/app/components/forum/post-list/post.html',
 		scope: {
 			topic: '=',
 			post: '=',
@@ -10,10 +10,11 @@ angular.module( 'App.Forums.PostList' ).directive( 'gjForumsPostListPost', funct
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $element, $scope, $state, $q, $location, App, Api, Popover, Forum_Post, Growls, AutoScroll )
+		controller: function( $element, $scope, $state, $q, $location, Environment, App, Api, Popover, Forum_Post, Growls, AutoScroll )
 		{
 			var _this = this;
 
+			$scope.Environment = Environment;
 			$scope.App = App;
 			$scope.listCtrl = $scope.$parent.listCtrl;
 

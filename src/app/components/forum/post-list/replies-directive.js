@@ -1,8 +1,8 @@
-angular.module( 'App.Forums.PostList' ).directive( 'gjForumsPostListReplies', function()
+angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListReplies', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/forums/post-list/replies.html',
+		templateUrl: '/app/components/forum/post-list/replies.html',
 		scope: {
 			topic: '=',
 			replies: '=',

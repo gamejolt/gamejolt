@@ -1,8 +1,8 @@
-angular.module( 'App.Forums.Breadcrumbs' ).directive( 'gjForumsBreadcrumbs', function()
+angular.module( 'App.Forum.Breadcrumbs' ).directive( 'gjForumBreadcrumbs', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/forums/breadcrumbs/breadcrumbs.html',
+		templateUrl: '/app/components/forum/breadcrumbs/breadcrumbs.html',
 		scope: {
 			channel: '=?',
 			page: '@?',

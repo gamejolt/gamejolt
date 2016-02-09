@@ -1,10 +1,10 @@
 <header class="section">
 	<div class="container forum-header">
 
-		<gj-forums-breadcrumbs
+		<gj-forum-breadcrumbs
 			channel="viewCtrl.channel"
 			>
-		</gj-forums-breadcrumbs>
+		</gj-forum-breadcrumbs>
 
 		<h1>
 			<span class="jolticon jolticon-number-sign big"></span>
@@ -17,7 +17,8 @@
 			<li class="stat-big stat-big-smaller">
 				<div class="stat-big-label">
 					Topics
-				</div>
+				</
+div>
 				<div class="stat-big-digit">
 					{{ viewCtrl.channel.topics_count || 0 | number }}
 				</div>
@@ -51,7 +52,7 @@
 	<div class="container" id="forum-topics-list">
 
 		<div ng-if="viewCtrl.stickyTopics.length">
-			<gj-forums-topic-list topics="viewCtrl.stickyTopics"></gj-forums-topic-list>
+			<gj-forum-topic-list topics="viewCtrl.stickyTopics"></gj-forum-topic-list>
 			<hr>
 		</div>
 
@@ -60,7 +61,7 @@
 		</p>
 		<br>
 
-		<gj-forums-topic-list topics="viewCtrl.topics"></gj-forums-topic-list>
+		<gj-forum-topic-list topics="viewCtrl.topics"></gj-forum-topic-list>
 
 		<gj-pager
 			items-per-page="viewCtrl.perPage"

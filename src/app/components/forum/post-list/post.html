@@ -55,18 +55,23 @@
 		</div>
 
 		<gj-popover popover-id="forum-post-popover-{{ ::ctrl.id }}">
-			<div class="list-group thin">
-				<a class="list-group-item has-icon"
-					ng-click="ctrl.edit()"
+			<div class="list-group list-group-dark thin">
+				<a class="list-group-item"
+					ng-href="{{ ::Environment.baseUrl }}/moderate/forums/posts/edit/{{ ::ctrl.post.id }}"
+					target="_blank"
 					>
-					<span class="jolticon jolticon-edit"></span>
 					Edit
 				</a>
-				<a class="list-group-item has-icon">
-					<span class="jolticon jolticon-remove"></span>
+				<a class="list-group-item"
+					ng-href="{{ ::Environment.baseUrl }}/moderate/forums/posts/remove/{{ ::ctrl.post.id }}"
+					target="_blank"
+					>
 					Remove
 				</a>
-				<a class="list-group-item has-icon">
+				<a class="list-group-item"
+					ng-href="{{ ::Environment.baseUrl }}/moderate/users/view/{{ ::ctrl.post.user_id }}"
+					target="_blank"
+					>
 					Moderate User
 				</a>
 			</div>

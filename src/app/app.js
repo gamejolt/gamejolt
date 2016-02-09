@@ -230,10 +230,11 @@ angular.module( 'App', [
 	'App.User.SetPasswordModal',
 	'App.User.FriendshipsHelper',
 
-	'App.Forums.ChannelList',
-	'App.Forums.TopicList',
-	'App.Forums.PostList',
-	'App.Forums.Breadcrumbs',
+	'App.Forum.ChannelList',
+	'App.Forum.TopicList',
+	'App.Forum.PostList',
+	'App.Forum.Breadcrumbs',
+	'App.Forum.Rules',
 
 	// Views.
 	'App.Views',

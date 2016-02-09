@@ -7,7 +7,11 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 			payload: function( Api, $stateParams )
 			{
 				return Api.sendRequest( '/web/forums/topics/' + $stateParams.id + '?page=' + ($stateParams.page || 1) );
-			}
+			},
+			tick: function( HistoryTick, $stateParams )
+			{
+				HistoryTick.sendBeacon( 'forum-topic', $stateParams.id );
+			},
 		}
 	} );
 } );

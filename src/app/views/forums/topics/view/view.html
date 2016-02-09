@@ -4,18 +4,20 @@
 		<div class="row">
 			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-8">
 
-				<gj-forums-breadcrumbs
+				<gj-forum-breadcrumbs
 					channel="::viewCtrl.channel"
 					page="view-topic"
 					>
-				</gj-forums-breadcrumbs>
+				</gj-forum-breadcrumbs>
 
-				<span class="tag"
-					ng-if="viewCtrl.topic.is_locked"
-					gj-tooltip="This topic is locked and can no longer be replied to."
-					>
-					<span class="jolticon jolticon-exclamation-circle"></span> Locked
-				</span>
+				<div ng-class="{ 'text-center': Screen.isXs }">
+					<span class="tag"
+						ng-if="viewCtrl.topic.is_locked"
+						gj-tooltip="This topic is locked and can no longer be replied to."
+						>
+						<span class="jolticon jolticon-exclamation-circle"></span> Locked
+					</span>
+				</div>
 
 				<h1 class="section-header">
 					{{ viewCtrl.topic.title }}
@@ -48,7 +50,8 @@
 		<div class="row">
 			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-8">
 
-				<a  class="btn btn-primary-outline"
+				<a class="btn btn-primary-outline"
+					ng-class="{ 'btn-block': Screen.isXs }"
 					href="#add-reply"
 					du-smooth-scroll
 					ng-if="!viewCtrl.topic.is_locked"
@@ -58,6 +61,7 @@
 				</a>
 
 				<a class="btn btn-success-outline"
+					ng-class="{ 'btn-block': Screen.isXs }"
 					ng-if="!viewCtrl.isFollowing"
 					ng-click="viewCtrl.follow()"
 					gj-tooltip="Keep track of replies in this topic."
@@ -66,7 +70,11 @@
 					Follow
 				</a>
 				<a class="btn"
-					ng-class="!viewCtrl.unfollowHover ? 'btn-success' : 'btn-danger'"
+					ng-class="{
+						'btn-block btn-success': Screen.isXs,
+						'btn-success': !Screen.isXs && !viewCtrl.unfollowHover,
+						'btn-danger': !Screen.isXs && viewCtrl.unfollowHover
+					}"
 					ng-if="viewCtrl.isFollowing"
 					ng-click="viewCtrl.unfollow()"
 					ng-mouseenter="viewCtrl.unfollowHover = true"
@@ -78,6 +86,7 @@
 				</a>
 
 				<a class="btn btn-outline"
+					ng-class="{ 'btn-block': Screen.isXs }"
 					ng-if="viewCtrl.topic.user_id == App.user.id && !viewCtrl.topic.is_locked"
 					ng-click="viewCtrl.editTopic()"
 					ng-disabled="viewCtrl.isEditingTopic"
@@ -88,6 +97,7 @@
 
 				<!-- Mod Tools -->
 				<a class="btn btn-sparse btn-outline"
+					ng-class="{ 'btn-block': Screen.isXs }"
 					ng-if="::App.user.permission_level > 0"
 					gj-popover-trigger="forum-topic-popover"
 					>
@@ -95,8 +105,11 @@
 				</a>
 
 				<gj-popover popover-id="forum-topic-popover" ng-if="::App.user.permission_level > 0">
-					<div class="list-group thin">
-						<a class="list-group-item">
+					<div class="list-group list-group-dark thin">
+						<a class="list-group-item"
+							ng-href="{{ ::Environment.baseUrl }}/moderate/forums/topics/toggle-sticky/{{ ::viewCtrl.topic.id }}"
+							target="_blank"
+							>
 							Toggle Sticky
 						</a>
 						<a class="list-group-item"
@@ -105,7 +118,10 @@
 							>
 							Toggle Lock
 						</a>
-						<a href="#" class="list-group-item">
+						<a href="#" class="list-group-item"
+							ng-href="{{ ::Environment.baseUrl }}/moderate/forums/topics/edit/{{ ::viewCtrl.topic.id }}"
+							target="_blank"
+							>
 							Edit Topic
 						</a>
 						<a class="list-group-item"
@@ -183,12 +199,12 @@
 					Page {{ viewCtrl.currentPage | number }} of {{ viewCtrl.topic.replies_count | number }} replies.
 				</p>
 
-				<gj-forums-post-list
+				<gj-forum-post-list
 					id="forum-posts-list"
 					topic="viewCtrl.topic"
 					posts="viewCtrl.posts"
 					>
-				</gj-forums-post-list>
+				</gj-forum-post-list>
 
 				<br><br>
 
@@ -202,7 +218,7 @@
 
 				<div ng-if="App.user">
 					<div ng-if="!viewCtrl.topic.is_locked">
-						<h3 id="add-reply">Add Reply</h3>
+						<h3 class="sans-margin-top" id="add-reply">Add Reply</h3>
 
 						<gj-form-forum-post
 							topic="viewCtrl.topic"
@@ -211,7 +227,7 @@
 						</gj-form-forum-post>
 					</div>
 
-					<div class="alert alert-info" ng-if="viewCtrl.topic.is_locked">
+					<div class="alert alert-info full-bleed-xs" ng-if="viewCtrl.topic.is_locked">
 						<p>
 							<span class="jolticon jolticon-exclamation-circle middle"></span>
 							This topic is locked and can no longer be replied to.
@@ -219,7 +235,7 @@
 					</div>
 				</div>
 
-				<div class="alert alert-info" ng-if="!App.user">
+				<div class="alert alert-info full-bleed-xs" ng-if="!App.user">
 					<p>
 						<span class="jolticon jolticon-exclamation-circle middle"></span>
 						You must be <a ng-href="{{ ::viewCtrl.loginUrl }}" target="_self">logged in</a> to Game Jolt to post replies.
