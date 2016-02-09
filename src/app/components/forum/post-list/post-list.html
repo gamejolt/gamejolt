@@ -1,0 +1,22 @@
+<div class="forum-post-list">
+	<div class="forum-post-list-item"
+		ng-repeat="post in listCtrl.posts track by post.id"
+		>
+
+		<gj-forum-post-list-post
+			topic="::listCtrl.topic"
+			post="post"
+			>
+		</gj-forum-post-list-post>
+
+		<div ng-if="listCtrl.showingReplies[ post.id ]">
+			<gj-forum-post-list-replies
+				topic="::listCtrl.topic"
+				replies="listCtrl.replies[ post.id ]"
+				replies-count="listCtrl.replyCounts[ post.id ]"
+				>
+			</gj-forum-post-list-replies>
+		</div>
+
+	</div>
+</div>

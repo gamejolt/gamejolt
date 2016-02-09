@@ -1,0 +1,22 @@
+<div class="topic-post-replies">
+	<div class="forum-post-list">
+		<div class="forum-post-list-item"
+			ng-repeat="post in ctrl.replies track by post.id"
+			>
+
+			<gj-forum-post-list-post
+				topic="::ctrl.topic"
+				post="post"
+				is-reply="true"
+				>
+			</gj-forum-post-list-post>
+
+		</div>
+
+		<div class="forum-post-list-clipped-replies"
+			ng-if="ctrl.repliesCount - ctrl.replies.length > 0"
+			>
+			<div>+{{ ctrl.repliesCount - ctrl.replies.length | number }} more hidden</div>
+		</div>
+	</div>
+</div>

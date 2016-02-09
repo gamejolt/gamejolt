@@ -1,0 +1,29 @@
+<header class="section">
+	<div class="container">
+
+		<gj-forum-breadcrumbs
+			channel="createCtrl.channel"
+			page="add-topic"
+			>
+		</gj-forum-breadcrumbs>
+
+	</div>
+</header>
+
+<div class="section">
+	<div class="container">
+
+		<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+
+			<gj-forum-rules></gj-forum-rules>
+
+			<gj-form-forum-topic
+				channel="createCtrl.channel"
+				gj-form-submit-handler="createCtrl.onCreate( formModel )"
+				>
+			</gj-form-forum-topic>
+
+		</div>
+
+	</div>
+</div>

@@ -14,7 +14,7 @@
     "decompress-zip": "^0.2.0",
     "glob-expand": "~0.0.2",
     "gulp": "~3.8.1",
-    "gulp-angular-embed-templates": "gamejolt/gulp-angular-embed-templates#filter-matches",
+    "gulp-angular-embed-templates": "^2.1.0",
     "gulp-angular-gettext": "^2.1.0",
     "gulp-autoprefixer": "~0.0.7",
     "gulp-clean": "~0.3.0",

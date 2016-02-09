@@ -1,0 +1,95 @@
+<header class="section">
+	<div class="container forum-header">
+
+		<gj-forum-breadcrumbs
+			channel="viewCtrl.channel"
+			>
+		</gj-forum-breadcrumbs>
+
+		<h1>
+			<span class="jolticon jolticon-number-sign big"></span>
+			{{ viewCtrl.channel.name }}
+		</h1>
+
+		<!-- Don't let it get too long! -->
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7">
+				<p>{{ viewCtrl.channel.description }}</p>
+			</div>
+		</div>
+
+		<ul class="stat-list pull-right">
+			<li class="stat-big stat-big-smaller">
+				<div class="stat-big-label">
+					Topics
+				</div>
+				<div class="stat-big-digit">
+					{{ viewCtrl.channel.topics_count || 0 | number }}
+				</div>
+			</li>
+			<li class="stat-big stat-big-smaller">
+				<div class="stat-big-label">
+					Replies
+				</div>
+				<div class="stat-big-digit">
+					{{ viewCtrl.channel.replies_count || 0 | number }}
+				</div>
+			</li>
+		</ul>
+
+		<nav class="platform-list inline pull-left buttons" ng-if="App.user">
+			<ul>
+				<li>
+					<a ui-sref="forums.topics.create( { channelName: viewCtrl.channel.name } )">
+						<span class="jolticon jolticon-add"></span>
+						Add Topic
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+	</div>
+
+</header>
+
+<div class="section">
+	<div class="container" id="forum-topics-list">
+
+		<div ng-if="viewCtrl.stickyTopics.length">
+			<gj-forum-topic-list topics="viewCtrl.stickyTopics"></gj-forum-topic-list>
+			<hr>
+		</div>
+
+		<div ng-if="viewCtrl.topics.length">
+			<p class="text-muted small">
+				Page {{ viewCtrl.currentPage | number }} of {{ viewCtrl.channel.topics_count | number }} topics.
+			</p>
+			<br>
+
+			<gj-forum-topic-list topics="viewCtrl.topics"></gj-forum-topic-list>
+
+			<gj-pager
+				items-per-page="viewCtrl.perPage"
+				total-items="viewCtrl.channel.topics_count"
+				current-page="viewCtrl.currentPage"
+				on-page-change="Scroll.to( 'forum-topics-list', { animate: false } )"
+				>
+			</gj-pager>
+		</div>
+
+		<div ng-if="!viewCtrl.topics.length" class="text-center">
+			<p class="lead">There aren't any topics here yet!</p>
+			<p>
+				<a class="btn btn-outline"
+					ui-sref="forums.topics.create( { channelName: viewCtrl.channel.name } )"
+					>
+					Add Topic
+				</a>
+			</p>
+		</div>
+
+	</div>
+</div>
+
+<!-- Needed so the inner "page" state gets pulled in. -->
+<ui-view></ui-view>

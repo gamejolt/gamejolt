@@ -14,6 +14,7 @@ angular.module( 'App', [
 	'ui.bootstrap.modal',
 	'ui.keypress',
 	'validation.match',
+	'angular-inview',
 
 	// GJ lib.
 	'gj.Translate',
@@ -152,12 +153,17 @@ angular.module( 'App', [
 	'gj.Fireside.Post',
 	'gj.Fireside.Post.Tag',
 
+	'App.Forms.Forum',  // TODO: Remove when forum is lazy loaded.
+	'gj.Forum.Category',
+	'gj.Forum.Channel',
 	'gj.Forum.Topic',
 	'gj.Forum.Post',
 
 	'gj.Img.Helper',
 	'gj.Img.Crop',
 	'gj.Img.ImgResponsive',
+
+	'gj.WidgetCompiler',
 
 	// Components.
 	'App.SplitTest',
@@ -223,6 +229,12 @@ angular.module( 'App', [
 	'App.User.TokenModal',
 	'App.User.SetPasswordModal',
 	'App.User.FriendshipsHelper',
+
+	'App.Forum.ChannelList',
+	'App.Forum.TopicList',
+	'App.Forum.PostList',
+	'App.Forum.Breadcrumbs',
+	'App.Forum.Rules',
 
 	// Views.
 	'App.Views',

@@ -1,0 +1,56 @@
+<div class="forum-topic-list">
+
+	<div class="forum-topic-list-item row" ng-repeat="topic in ctrl.topics track by topic.id">
+		<div class="col-sm-9 col-md-7">
+			<h4 class="forum-topic-list-item-title">
+
+				<!-- Notifications -->
+				<span class="tag tag-pink" ng-if="::!!topic.notifications.length">{{ topic.notifications.length | number }}</span>
+
+				<!-- Pinned -->
+				<span ng-if="::topic.is_sticky" tooltip="This topic is pinned.">
+					<span class="jolticon jolticon-verified active"></span>
+				</span>
+
+				<!-- Locked -->
+				<span ng-if="::topic.is_locked" tooltip="This topic is locked and can no longer be replied to.">
+					<span class="jolticon jolticon-exclamation-circle text-muted"></span>
+				</span>
+
+				<a class="link-unstyled" ui-sref="forums.topics.view.page( { slug: topic.slug, id: topic.id } )">
+					{{ ::topic.title }}
+				</a>
+			</h4>
+			<div class="forum-topic-list-item-author">
+				by
+				<a ui-sref="profile.overview( { slug: topic.user.slug, id: topic.user.id } )">
+					{{ ::topic.user.display_name }}
+				</a>
+			</div>
+		</div>
+
+		<div class="col-sm-3 col-md-2 text-muted small" ng-class="{ 'text-right': !Screen.isXs }">
+			<strong>{{ ::topic.replies_count || 0 | number }}</strong> Replies
+			<br class="hidden-xs">
+			<span class="hidden-sm hidden-md hidden-lg dot-separator"></span>
+			<strong>{{ ::topic.followers_count || 0 | number }}</strong> Followers
+		</div>
+
+		<div class="col-md-3 text-muted text-right small" ng-if="Screen.isDesktop">
+			<div class="forum-topic-list-item-latest-post">
+				<div class="forum-topic-list-item-latest-post-avatar">
+					<div gj-user-avatar="::topic.latest_post.user"></div>
+				</div>
+				<div class="forum-topic-list-item-latest-post-info">
+					<div class="forum-topic-list-item-latest-post-info-username">
+						<a ui-sref="profile.overview( { slug: topic.latest_post.user.slug, id: topic.latest_post.user.id } )">
+							{{ ::topic.latest_post.user.display_name }}
+						</a>
+					</div>
+					<span class="forum-topic-list-item-latest-post-info-date" title="{{ ::topic.latest_post.posted_on | date:'medium' }}" am-time-ago="::topic.latest_post.posted_on"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
