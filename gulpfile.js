@@ -27,6 +27,7 @@ var config = {
 				'ocLazyLoad',
 				'angular-ui-utils',
 				'favico.js',
+				'angular-inview',
 			]
 		},
 		'jquery.js': {

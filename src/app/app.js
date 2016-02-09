@@ -14,6 +14,7 @@ angular.module( 'App', [
 	'ui.bootstrap.modal',
 	'ui.keypress',
 	'validation.match',
+	'angular-inview',
 
 	// GJ lib.
 	'gj.Translate',

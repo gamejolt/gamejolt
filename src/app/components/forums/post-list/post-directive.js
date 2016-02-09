@@ -112,6 +112,16 @@ angular.module( 'App.Forums.PostList' ).directive( 'gjForumsPostListPost', funct
 			{
 				this.isEditing = false;
 			};
+
+			this.inViewChange = function( isInView )
+			{
+				if ( isInView && this.post.notification ) {
+
+					// Don't wait for success before updating the view.
+					this.post.notification.$read();
+					this.post.notification = null;
+				}
+			};
 		}
 	}
 } );

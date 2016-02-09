@@ -2,7 +2,12 @@
 	<div gj-user-avatar="::ctrl.post.user" class="avatar-circle"></div>
 </div>
 
-<div class="forum-post-list-item-main" id="forum-post-{{ ::(ctrl.isReply ? ctrl.post.parent_post_id + '-' : '') + ctrl.post.id }}">
+<div class="forum-post-list-item-main"
+	id="forum-post-{{ ::(ctrl.isReply ? ctrl.post.parent_post_id + '-' : '') + ctrl.post.id }}"
+	in-view="ctrl.inViewChange( $inview )"
+	in-view-options="{ debounce: 1000 }"
+	>
+
 	<div class="forum-post-content">
 
 		<div class="forum-post-meta">
@@ -11,7 +16,7 @@
 			</a>
 
 			<span ng-if="::ctrl.post.parent_post_id">
-				<span class="jolticon jolticon-reply text-muted"></span>
+				<span class="jolticon jolticon-share text-muted"></span>
 				<a class="forum-post-reply-user link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.replied_to.slug, id: ctrl.post.replied_to.id } )">
 					<small>{{ ::ctrl.post.replied_to.display_name }}</small>
 				</a>
