@@ -11,14 +11,18 @@
 			{{ viewCtrl.channel.name }}
 		</h1>
 
-		<p>{{ viewCtrl.channel.description }}</p>
+		<!-- Don't let it get too long! -->
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7">
+				<p>{{ viewCtrl.channel.description }}</p>
+			</div>
+		</div>
 
 		<ul class="stat-list pull-right">
 			<li class="stat-big stat-big-smaller">
 				<div class="stat-big-label">
 					Topics
-				</
-div>
+				</div>
 				<div class="stat-big-digit">
 					{{ viewCtrl.channel.topics_count || 0 | number }}
 				</div>
@@ -56,20 +60,33 @@ div>
 			<hr>
 		</div>
 
-		<p class="text-muted small">
-			Page {{ viewCtrl.currentPage | number }} of {{ viewCtrl.channel.topics_count | number }} topics.
-		</p>
-		<br>
+		<div ng-if="viewCtrl.topics.length">
+			<p class="text-muted small">
+				Page {{ viewCtrl.currentPage | number }} of {{ viewCtrl.channel.topics_count | number }} topics.
+			</p>
+			<br>
 
-		<gj-forum-topic-list topics="viewCtrl.topics"></gj-forum-topic-list>
+			<gj-forum-topic-list topics="viewCtrl.topics"></gj-forum-topic-list>
 
-		<gj-pager
-			items-per-page="viewCtrl.perPage"
-			total-items="viewCtrl.channel.topics_count"
-			current-page="viewCtrl.currentPage"
-			on-page-change="Scroll.to( 'forum-topics-list', { animate: false } )"
-			>
-		</gj-pager>
+			<gj-pager
+				items-per-page="viewCtrl.perPage"
+				total-items="viewCtrl.channel.topics_count"
+				current-page="viewCtrl.currentPage"
+				on-page-change="Scroll.to( 'forum-topics-list', { animate: false } )"
+				>
+			</gj-pager>
+		</div>
+
+		<div ng-if="!viewCtrl.topics.length" class="text-center">
+			<p class="lead">There aren't any topics here yet!</p>
+			<p>
+				<a class="btn btn-outline"
+					ui-sref="forums.topics.create( { channelName: viewCtrl.channel.name } )"
+					>
+					Add Topic
+				</a>
+			</p>
+		</div>
 
 	</div>
 </div>
