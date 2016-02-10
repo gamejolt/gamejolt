@@ -118,11 +118,17 @@
 							>
 							Toggle Lock
 						</a>
-						<a href="#" class="list-group-item"
+						<a class="list-group-item"
 							ng-href="{{ ::Environment.baseUrl }}/moderate/forums/topics/edit/{{ ::viewCtrl.topic.id }}"
 							target="_blank"
 							>
 							Edit Topic
+						</a>
+						<a class="list-group-item"
+							ng-href="{{ ::Environment.baseUrl }}/moderate/forums/topics/move/{{ ::viewCtrl.topic.id }}"
+							target="_blank"
+							>
+							Move Topic
 						</a>
 						<a class="list-group-item"
 							ng-href="{{ ::Environment.baseUrl }}/moderate/forums/topics/remove/{{ ::viewCtrl.topic.id }}"
