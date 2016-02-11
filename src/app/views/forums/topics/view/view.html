@@ -98,45 +98,57 @@
 				<!-- Mod Tools -->
 				<a class="btn btn-sparse btn-outline"
 					ng-class="{ 'btn-block': Screen.isXs }"
-					ng-if="::App.user.permission_level > 0"
+					ng-if="::App.user"
 					gj-popover-trigger="forum-topic-popover"
 					>
 					<span class="jolticon jolticon-ellipsis-h"></span>
 				</a>
 
-				<gj-popover popover-id="forum-topic-popover" ng-if="::App.user.permission_level > 0">
+				<gj-popover popover-id="forum-topic-popover" ng-if="::App.user">
 					<div class="list-group list-group-dark thin">
+						<a class="list-group-item has-icon"
+							ng-click="viewCtrl.report()"
+							>
+							<span class="jolticon jolticon-notice warning"></span>
+							Report Topic
+						</a>
 						<a class="list-group-item"
+							ng-if="::App.user.permission_level > 0"
 							ng-href="{{ ::Environment.baseUrl }}/moderate/forums/topics/toggle-sticky/{{ ::viewCtrl.topic.id }}"
 							target="_blank"
 							>
 							Toggle Sticky
 						</a>
 						<a class="list-group-item"
+							ng-if="::App.user.permission_level > 0"
 							ng-href="{{ ::Environment.baseUrl }}/moderate/forums/topics/toggle-lock/{{ ::viewCtrl.topic.id }}"
 							target="_blank"
 							>
 							Toggle Lock
 						</a>
 						<a class="list-group-item"
+							ng-if="::App.user.permission_level > 0"
 							ng-href="{{ ::Environment.baseUrl }}/moderate/forums/topics/edit/{{ ::viewCtrl.topic.id }}"
 							target="_blank"
 							>
 							Edit Topic
 						</a>
 						<a class="list-group-item"
+							ng-if="::App.user.permission_level > 0"
 							ng-href="{{ ::Environment.baseUrl }}/moderate/forums/topics/move/{{ ::viewCtrl.topic.id }}"
 							target="_blank"
 							>
 							Move Topic
 						</a>
 						<a class="list-group-item"
+							ng-if="::App.user.permission_level > 0"
 							ng-href="{{ ::Environment.baseUrl }}/moderate/forums/topics/remove/{{ ::viewCtrl.topic.id }}"
 							target="_blank"
 							>
 							Remove Topic
 						</a>
 						<a class="list-group-item"
+							ng-if="::App.user.permission_level > 0"
 							ng-href="{{ ::Environment.baseUrl }}/moderate/users/view/{{ ::viewCtrl.topic.user_id }}"
 							target="_blank"
 							>

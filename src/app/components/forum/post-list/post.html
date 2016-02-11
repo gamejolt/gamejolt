@@ -45,7 +45,7 @@
 				</a>
 
 				<a class="link-muted"
-					ng-if="::App.user.permission_level > 0"
+					ng-if="::App.user"
 					gj-popover-trigger="forum-post-popover-{{ ::ctrl.id }}"
 					gj-tooltip="Options"
 					>
@@ -56,19 +56,28 @@
 
 		<gj-popover popover-id="forum-post-popover-{{ ::ctrl.id }}">
 			<div class="list-group list-group-dark thin">
+				<a class="list-group-item has-icon"
+					ng-click="ctrl.report()"
+					>
+					<span class="jolticon jolticon-notice warning"></span>
+					Report Post
+				</a>
 				<a class="list-group-item"
+					ng-if="::App.user.permission_level > 0"
 					ng-href="{{ ::Environment.baseUrl }}/moderate/forums/posts/edit/{{ ::ctrl.post.id }}"
 					target="_blank"
 					>
 					Edit
 				</a>
 				<a class="list-group-item"
+					ng-if="::App.user.permission_level > 0"
 					ng-href="{{ ::Environment.baseUrl }}/moderate/forums/posts/remove/{{ ::ctrl.post.id }}"
 					target="_blank"
 					>
 					Remove
 				</a>
 				<a class="list-group-item"
+					ng-if="::App.user.permission_level > 0"
 					ng-href="{{ ::Environment.baseUrl }}/moderate/users/view/{{ ::ctrl.post.user_id }}"
 					target="_blank"
 					>

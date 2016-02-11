@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Forums.Topics.ViewCtrl', function( $state, $location, $timeout, $window, Environment, Forum_Post, Popover, Growls, AutoScroll, Scroll )
+angular.module( 'App.Views' ).controller( 'Forums.Topics.ViewCtrl', function( $state, $location, $timeout, $window, Environment, Forum_Post, Popover, Growls, AutoScroll, Scroll, Report_Modal )
 {
 	var _this = this;
 
@@ -66,5 +66,10 @@ angular.module( 'App.Views' ).controller( 'Forums.Topics.ViewCtrl', function( $s
 		{
 			Scroll.to( 'forum-posts-list', { animate: true } );
 		}, 200 );
+	};
+
+	this.report = function()
+	{
+		Report_Modal.show( this.topic );
 	};
 } );

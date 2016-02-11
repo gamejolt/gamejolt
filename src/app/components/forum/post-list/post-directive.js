@@ -10,7 +10,7 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $element, $scope, $state, $q, $location, Environment, App, Api, Popover, Forum_Post, Growls, AutoScroll )
+		controller: function( $element, $scope, $state, $q, $location, Environment, App, Api, Popover, Forum_Post, Growls, AutoScroll, Report_Modal )
 		{
 			var _this = this;
 
@@ -116,6 +116,11 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 			this.closeEdit = function()
 			{
 				this.isEditing = false;
+			};
+
+			this.report = function()
+			{
+				Report_Modal.show( this.post );
 			};
 
 			this.inViewChange = function( isInView )
