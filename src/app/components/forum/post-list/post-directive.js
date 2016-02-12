@@ -7,6 +7,7 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 			topic: '=',
 			post: '=',
 			isReply: '=?',
+			onReply: '=?',
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
@@ -86,7 +87,7 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 				this.isReplying = false;
 			};
 
-			this.onReplied = function( formModel )
+			this.onReplied = function( formModel, response )
 			{
 				// If their post was marked as spam, make sure they know.
 				if ( formModel.status == Forum_Post.STATUS_SPAM ) {
@@ -95,16 +96,16 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 
 				this.isReplying = false;
 
-				// This makes sure we load in any data that may have changed through this post on the overall page.
-				// For example, replies counts, or showing the post at the end of the post list.
-				AutoScroll.noScroll( true );
-				$state.reload( 'forums.topics.view.page' );
+				// If the replies list is open, we add it at the bottom of the replies list as well.
+				// Otherwise we let the caller of the post-list handle the new reply.
+				if ( $scope.listCtrl.showingReplies[ this.post.id ] ) {
+					this.loadReplies();
+				}
 
-				// We then also load in the replies so it shows at the bottom of the list of replies.
-				this.loadReplies().then( function()
-				{
-					$location.hash( 'forum-post-' + _this.post.id + '-' + formModel.id );
-				} );
+				// Hand it off to whatever called the post-list directive.
+				if ( this.onReply ) {
+					this.onReply( { formModel: formModel, $response: response } );
+				}
 			};
 
 			this.edit = function()

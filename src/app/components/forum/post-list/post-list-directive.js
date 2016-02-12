@@ -7,6 +7,7 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostList', function()
 			topic: '=',
 			posts: '=',
 			isReplies: '=?',
+			onReply: '&?',
 		},
 		bindToController: true,
 		controllerAs: 'listCtrl',
