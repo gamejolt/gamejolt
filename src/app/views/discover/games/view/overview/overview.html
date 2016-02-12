@@ -248,14 +248,12 @@
 				</div>
 
 				<div ng-if="::gameCtrl.game.comments_enabled">
-					<div oc-lazy-load="{ files: [ '/app/modules/codemirror.js' ] }">
-						<gj-comment-widget
-							current-page="overviewCtrl.currentCommentPage"
-							comment-resource="Game"
-							comment-resource-id="gameCtrl.game.id"
-							>
-						</gj-comment-widget>
-					</div>
+					<gj-comment-widget
+						current-page="overviewCtrl.currentCommentPage"
+						comment-resource="Game"
+						comment-resource-id="gameCtrl.game.id"
+						>
+					</gj-comment-widget>
 				</div>
 
 			</div>

@@ -91,23 +91,21 @@
 					<control-errors></control-errors>
 				</form-group>
 
-				<div oc-lazy-load="{ files: [ '/app/modules/codemirror.js' ] }">
-					<form-group name="description_markdown" label="{{ 'dash.games.form.description_label' | translate }}">
+				<form-group name="description_markdown" label="{{ 'dash.games.form.description_label' | translate }}">
 
-						<p class="help-block" translate>dash.games.form.description_help_html</p>
+					<p class="help-block" translate>dash.games.form.description_help_html</p>
 
-						<div
-							form-markdown-editor
-							preview-class="game-compiled-description"
-							markdown-preview-url="/web/dash/developer/games/preview-description"
-							markdown-mode="games"
-							>
-						</div>
+					<div
+						form-markdown-editor
+						preview-class="game-compiled-description"
+						markdown-preview-url="/web/dash/developer/games/preview-description"
+						markdown-mode="games"
+						>
+					</div>
 
-						<control-errors></control-errors>
+					<control-errors></control-errors>
 
-					</form-group>
-				</div>
+				</form-group>
 
 				<form-group name="status" label="{{ 'dash.games.form.status_label' | translate }}" ng-if="method == 'edit'">
 					<div ng-if="!checkIsPublishable()" class="alert alert-info" translate>dash.games.form.status_not_publishable_info_html</div>

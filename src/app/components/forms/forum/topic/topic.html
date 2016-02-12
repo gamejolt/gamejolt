@@ -5,20 +5,18 @@
 		<control-errors></control-errors>
 	</form-group>
 
-	<div oc-lazy-load="{ files: [ '/app/modules/codemirror.js' ] }">
-		<form-group class="no-animate" name="content_markdown" label="Topic Content">
+	<form-group class="no-animate" name="content_markdown" label="Topic Content">
 
-			<div
-				form-markdown-editor
-				preview-class="forum-post-body"
-				markdown-preview-url="/web/forums/posts/preview"
-				>
-			</div>
+		<div
+			form-markdown-editor
+			preview-class="forum-post-body"
+			markdown-preview-url="/web/forums/posts/preview"
+			>
+		</div>
 
-			<control-errors></control-errors>
+		<control-errors></control-errors>
 
-		</form-group>
-	</div>
+	</form-group>
 
 	<button gj-form-submit-button class="i-button" ng-disabled="!forumTopicForm.$valid" ng-click="onSubmit()">
 		<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>

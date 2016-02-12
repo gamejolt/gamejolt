@@ -9,25 +9,19 @@ var config = {
 			'src/collapse/collapse.js',
 			'src/modal/modal.js'
 		],
-		'codemirror': [
-			'addon/mode/overlay.js',
-			'addon/display/placeholder.js',
-			'mode/markdown/markdown.js',
-			'mode/gfm/gfm.js'
-		],
 	},
 	modules: {
 		'vendor-app.js': {
 			bower: [
 				'moment',
 				'humanize-duration',
-				// 'ui-router-extras',
 				'angular-moment',
 				'angular-hotkeys',
 				'ocLazyLoad',
 				'angular-ui-utils',
 				'favico.js',
 				'angular-inview',
+				'angular-elastic',
 			]
 		},
 		'jquery.js': {
@@ -39,12 +33,6 @@ var config = {
 			bower: [
 				'hammerjs',
 				'angular-hammer',
-			],
-		},
-		'codemirror.js': {
-			bower: [
-				'codemirror',
-				'angular-ui-codemirror',
 			],
 		},
 		'ua-parser.js': {

@@ -1,20 +1,18 @@
 <form gj-form="formModel" name="forumPostForm">
 
-	<div oc-lazy-load="{ files: [ '/app/modules/codemirror.js' ] }">
-		<form-group class="no-animate" name="content_markdown" label="Post Content" hide-label="true">
+	<form-group class="no-animate" name="content_markdown" label="Post Content" hide-label="true">
 
-			<div
-				form-markdown-editor
-				preview-class="forum-post-body"
-				markdown-preview-url="/web/forums/posts/preview"
-				markdown-mode="forums"
-				>
-			</div>
+		<div
+			form-markdown-editor
+			preview-class="forum-post-body"
+			markdown-preview-url="/web/forums/posts/preview"
+			markdown-mode="forums"
+			>
+		</div>
 
-			<control-errors></control-errors>
+		<control-errors></control-errors>
 
-		</form-group>
-	</div>
+	</form-group>
 
 	<button gj-form-submit-button class="btn" ng-disabled="!forumPostForm.$valid" ng-click="onSubmit()">
 		<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
