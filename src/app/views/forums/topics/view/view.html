@@ -15,7 +15,7 @@
 						ng-if="viewCtrl.topic.is_locked"
 						gj-tooltip="This topic is locked and can no longer be replied to."
 						>
-						<span class="jolticon jolticon-exclamation-circle"></span> Locked
+						<span class="jolticon jolticon-lock"></span> Locked
 					</span>
 				</div>
 
@@ -247,7 +247,7 @@
 
 					<div class="alert alert-info full-bleed-xs" ng-if="viewCtrl.topic.is_locked">
 						<p>
-							<span class="jolticon jolticon-exclamation-circle middle"></span>
+							<span class="jolticon jolticon-lock"></span>
 							This topic is locked and can no longer be replied to.
 						</p>
 					</div>
@@ -255,7 +255,7 @@
 
 				<div class="alert alert-info full-bleed-xs" ng-if="!App.user">
 					<p>
-						<span class="jolticon jolticon-exclamation-circle middle"></span>
+						<span class="jolticon jolticon-exclamation-circle"></span>
 						You must be <a ng-href="{{ ::viewCtrl.loginUrl }}" target="_self">logged in</a> to Game Jolt to post replies.
 					</p>
 				</div>
