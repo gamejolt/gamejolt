@@ -8,6 +8,10 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 			{
 				return Translate.loadSection( 'main' );
 			},
+			components: function( $ocLazyLoad )
+			{
+				return $ocLazyLoad.load( '/app/modules/forums.js' );
+			}
 		}
 	} );
 } );

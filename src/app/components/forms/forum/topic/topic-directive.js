@@ -1,4 +1,4 @@
-angular.module( 'App.Forms' ).directive( 'gjFormForumTopic', function( Form )
+angular.module( 'App.Forms.Forum' ).directive( 'gjFormForumTopic', function( Form )
 {
 	var form = new Form( {
 		model: 'Forum_Topic',

@@ -153,7 +153,6 @@ angular.module( 'App', [
 	'gj.Fireside.Post',
 	'gj.Fireside.Post.Tag',
 
-	'App.Forms.Forum',  // TODO: Remove when forum is lazy loaded.
 	'gj.Forum.Category',
 	'gj.Forum.Channel',
 	'gj.Forum.Topic',
@@ -229,12 +228,6 @@ angular.module( 'App', [
 	'App.User.TokenModal',
 	'App.User.SetPasswordModal',
 	'App.User.FriendshipsHelper',
-
-	'App.Forum.ChannelList',
-	'App.Forum.TopicList',
-	'App.Forum.PostList',
-	'App.Forum.Breadcrumbs',
-	'App.Forum.Rules',
 
 	// Views.
 	'App.Views',

@@ -81,6 +81,15 @@ var config = {
 			// 	'dashboard',
 			// ]
 		},
+		'forums.js': {
+			components: [
+				'forms/forum',
+				'forum',
+			],
+			views: [
+				'forums',
+			]
+		},
 
 		// For client.
 		'client.js': {
