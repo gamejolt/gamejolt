@@ -211,6 +211,17 @@
 					</gj-form-forum-topic>
 				</div>
 
+				<p class="text-muted small" ng-if="viewCtrl.topic.main_post.modified_by">
+					Last modified on
+					<span title="{{ viewCtrl.topic.main_post.modified_on | date:'medium' }}">{{ viewCtrl.topic.main_post.modified_on | date }}</span>
+					by
+					<a class="link-unstyled" ui-sref="profile.overview( { slug: viewCtrl.topic.main_post.modified_by_user.slug, id: viewCtrl.topic.main_post.modified_by_user.id } )">
+						<strong>
+							{{ viewCtrl.topic.main_post.modified_by_user.display_name }}
+						</strong>
+					</a>
+				</p>
+
 				<hr>
 
 				<p class="text-muted small" ng-if="viewCtrl.topic.replies_count > viewCtrl.perPage">
