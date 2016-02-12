@@ -77,9 +77,9 @@ var config = {
 			components: [
 				'forms/dashboard',
 			],
-			// views: [
-			// 	'dashboard',
-			// ]
+			views: [
+				'dashboard',
+			]
 		},
 		'forums.js': {
 			components: [
