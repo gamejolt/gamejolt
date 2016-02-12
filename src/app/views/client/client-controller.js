@@ -6,7 +6,7 @@ angular.module( 'App.Views' ).controller( 'ClientCtrl', function( $sce, $http, A
 
 	this.platform = Device.os();
 
-	var MANIFEST_URL = 'http://d.gamejolt.net/data/client/manifest.json';
+	var MANIFEST_URL = 'http://d.gamejolt.net/data/client/manifest-2.json';
 	this.download = function( platform )
 	{
 		if ( platform == 'windows' ) {

@@ -6,7 +6,7 @@
 	var Updater = require( 'nwjs-snappy-updater' ).Updater;
 	var path = require( 'path' );
 
-	var CHECK_ENDPOINT = 'http://d.gamejolt.net/data/client/manifest.json';
+	var CHECK_ENDPOINT = 'http://d.gamejolt.net/data/client/manifest-2.json';
 	var CHECK_INTERVAL = 15 * 60 * 1000; // 15min currently
 
 	function Client_Updater()
