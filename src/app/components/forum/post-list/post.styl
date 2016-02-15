@@ -61,6 +61,11 @@
 			padding-left: ($forum-post-list-icon-size / 2) + $forum-post-list-avatar-margin
 			margin-left: -@padding-left
 
+			.form-markdown-editor-preview&
+				// Reset the padding to what it is in scaffolding.styl
+				padding-left: (($line-height-computed - 1) / 2);
+				margin-left: 0
+
 		&-quoted
 			border-left: 3px solid $gray-lightest
 			padding-left: ($grid-gutter-width / 2)
