@@ -34,7 +34,4 @@ angular.module( 'App.Views' ).controller( 'Discover.HomeCtrl', function( $scope,
 	{
 		this.activeNewsTab = tab;
 	};
-
-
-	this.hasBetterHot = SplitTest.hasBetterHot( payload );
 } );
