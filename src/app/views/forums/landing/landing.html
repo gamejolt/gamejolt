@@ -1,45 +1,27 @@
 <header class="section">
-	<div class="container">
-		<div class="row forum-header-landing">
+	<div class="container forum-header-landing">
 
-			<div class="col-xs-12 col-sm-9 forum-header-landing-content">
-				<div>
-					<h1 ng-class="{ 'text-center': Screen.isXs }">Game Jolt Forums</h1>
-					<div ng-show="Screen.isXs" class="text-center">
-						<br>
-						<img src="/app/views/forums/landing/butterflies.png" width="218" height="146" alt="The Social Butterflies">
-					</div>
-				</div>
-			</div>
-
-			<div class="col-sm-3 hidden-xs">
-				<img src="/app/views/forums/landing/butterflies.png" width="218" height="146" alt="The Social Butterflies">
-			</div>
+		<div ng-class="{ 'text-center': Screen.isXs }">
+			<h1>Game Jolt Forums</h1>
+			<img class="forum-header-landing-mascot" src="/app/views/forums/landing/butterflies.png" width="218" height="146" alt="The Social Butterflies">
 		</div>
+
+		<nav class="platform-list inline">
+			<ul>
+				<li>
+					<a ui-sref="forums.landing.overview" ui-sref-active="active">
+						Overview
+					</a>
+				</li>
+				<li>
+					<a ui-sref="forums.landing.active" ui-sref-active="active">
+						Active Topics
+					</a>
+				</li>
+			</ul>
+		</nav>
 
 	</div>
 </header>
 
-<section class="section">
-	<div class="container">
-
-		<gj-forum-rules></gj-forum-rules>
-
-		<div ng-repeat="category in landingCtrl.categories track by category.id">
-
-			<div class="page-header forum-list-heading">
-				<h2 class="sans-margin" id="category-{{ category.url }}">
-					{{ category.title }}
-				</h2>
-			</div>
-
-			<gj-forum-channel-list
-				channels="landingCtrl.channels[ category.id ]"
-				category="category"
-				>
-			</gj-forum-channel-list>
-
-		</div>
-
-	</div>
-</section>
+<ui-view></ui-view>

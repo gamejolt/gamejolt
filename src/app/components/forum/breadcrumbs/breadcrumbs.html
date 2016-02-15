@@ -1,12 +1,12 @@
 <div class="forum-breadcrumbs">
-	<a class="forum-breadcrumbs-item" ui-sref="forums.landing">
+	<a class="forum-breadcrumbs-item" ui-sref="forums.landing.overview">
 		Forums
 	</a>
 
 	<span ng-if="ctrl.channel">
 		<span class="forum-breadcrumbs-separator">»</span>
 		<a class="forum-breadcrumbs-item"
-			ui-sref="forums.landing( { '#': 'category-' + ctrl.channel.category.url } )"
+			ui-sref="forums.landing.overview( { '#': 'category-' + ctrl.channel.category.url } )"
 			>
 			{{ ctrl.channel.category.title }}
 		</a>

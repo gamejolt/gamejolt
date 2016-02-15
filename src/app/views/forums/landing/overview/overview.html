@@ -1,0 +1,23 @@
+<section class="section">
+	<div class="container">
+
+		<gj-forum-rules></gj-forum-rules>
+
+		<div ng-repeat="category in overviewCtrl.categories track by category.id">
+
+			<div class="page-header forum-list-heading">
+				<h2 class="sans-margin" id="category-{{ category.url }}">
+					{{ category.title }}
+				</h2>
+			</div>
+
+			<gj-forum-channel-list
+				channels="overviewCtrl.channels[ category.id ]"
+				category="category"
+				>
+			</gj-forum-channel-list>
+
+		</div>
+
+	</div>
+</section>

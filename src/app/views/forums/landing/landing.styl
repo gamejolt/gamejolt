@@ -1,10 +1,13 @@
 .forum-header-landing
-	display: flex
-	align-items: stretch
+	position: relative
 
-	.forum-header-landing-content
-		display: flex
-		align-items: center
+	@media $media-xs
+		&-mascot
+			margin-top: $line-height-computed
+			display: inline-block
 
-		@media $media-xs
-			display: block
+	@media $media-sm-up
+		&-mascot
+			position: absolute
+			right: 0
+			bottom: 0
