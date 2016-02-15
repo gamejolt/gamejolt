@@ -296,3 +296,16 @@
 <section class="ad-section" ng-if="!Environment.isClient && !Screen.isXs">
 	<gj-ad ad-size="leaderboard"></gj-ad>
 </section>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "http://gamejolt.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "http://gamejolt.com/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
