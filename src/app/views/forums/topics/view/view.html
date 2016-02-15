@@ -228,6 +228,13 @@
 					Page {{ viewCtrl.currentPage | number }} of {{ viewCtrl.topic.replies_count | number }} replies.
 				</p>
 
+				<gj-pagination
+					items-per-page="viewCtrl.perPage"
+					total-items="viewCtrl.topic.replies_count"
+					current-page="viewCtrl.currentPage"
+					>
+				</gj-pagination>
+
 				<gj-forum-post-list
 					id="forum-posts-list"
 					topic="viewCtrl.topic"
