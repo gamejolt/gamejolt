@@ -47,16 +47,21 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 
 			this.loadReplies = function()
 			{
-				return Api.sendRequest( '/web/forums/posts/replies/' + this.post.id ).then( function( payload )
-				{
-					$scope.listCtrl.replies[ _this.post.id ] = Forum_Post.populate( payload.replies );
-					$scope.listCtrl.replyCounts[ _this.post.id ] = payload.repliesCount || 0;
-					$scope.listCtrl.userPostCounts = payload.userPostCounts || {};
+				return Api.sendRequest( '/web/forums/posts/replies/' + this.post.id, { noErrorRedirect: true } )
+					.then( function( payload )
+					{
+						$scope.listCtrl.replies[ _this.post.id ] = Forum_Post.populate( payload.replies );
+						$scope.listCtrl.replyCounts[ _this.post.id ] = payload.repliesCount || 0;
+						$scope.listCtrl.userPostCounts = payload.userPostCounts || {};
 
-					if ( !$scope.listCtrl.showingReplies[ _this.post.id ] ) {
-						$scope.listCtrl.showingReplies[ _this.post.id ] = true;
-					}
-				} );
+						if ( !$scope.listCtrl.showingReplies[ _this.post.id ] ) {
+							$scope.listCtrl.showingReplies[ _this.post.id ] = true;
+						}
+					} )
+					.catch( function()
+					{
+						Growls.error( 'Could not load in replies for some reason.', 'Loading Failed' );
+					} );
 			};
 
 			this.loadParentPost = function()
@@ -72,11 +77,18 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 					return $q.resolve();
 				}
 
-				return Api.sendRequest( '/web/forums/posts/parent/' + this.post.id ).then( function( payload )
-				{
-					_this.parent = new Forum_Post( payload.parent );
-					_this.showingParent = true;
-				} );
+				return Api.sendRequest( '/web/forums/posts/parent/' + this.post.id, { noErrorRedirect: true } )
+					.then( function( payload )
+					{
+						_this.parent = new Forum_Post( payload.parent );
+						_this.showingParent = true;
+					} )
+					.catch( function()
+					{
+						// The post was probably removed.
+						_this.parent = null;
+						_this.showingParent = true;
+					} );
 			};
 
 			this.reply = function()

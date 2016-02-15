@@ -100,8 +100,9 @@
 			In response to <strong>{{ ::ctrl.post.replied_to.display_name }}</strong>
 		</a>
 
-		<div gj-expand-when="ctrl.showingParent && ctrl.parent">
-			<div class="forum-post-body forum-post-body-quoted" gj-widget-compiler-bind="::ctrl.parent.content_compiled"></div>
+		<div gj-expand-when="ctrl.showingParent">
+			<div ng-if="::ctrl.parent" class="forum-post-body forum-post-body-quoted" gj-widget-compiler-bind="::ctrl.parent.content_compiled"></div>
+			<p ng-if="::!ctrl.parent"><strong>Post removed.</strong></p>
 			<hr>
 		</div>
 
