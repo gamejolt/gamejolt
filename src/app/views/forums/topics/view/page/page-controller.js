@@ -16,4 +16,5 @@ angular.module( 'App.Views' ).controller( 'Forums.Topics.View.PageCtrl', functio
 	viewCtrl.currentPage = payload.page || 1;
 	viewCtrl.isFollowing = payload.isFollowing || false;
 	viewCtrl.followerCount = payload.followerCount || 0;
+	viewCtrl.userPostCounts = payload.userPostCounts || {};
 } );

@@ -7,6 +7,7 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListReplies', func
 			topic: '=',
 			replies: '=',
 			repliesCount: '=',
+			userPostCounts: '=',
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',

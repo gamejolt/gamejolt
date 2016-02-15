@@ -12,16 +12,22 @@
 	<div class="forum-post-content">
 
 		<div class="forum-post-meta">
-			<a class="forum-post-author link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.user.slug, id: ctrl.post.user.id } )">
-				{{ ::ctrl.post.user.display_name }}
-			</a>
+			<small class="pull-right text-muted">
+				{{ ctrl.userPostCount | number }} posts
+			</small>
 
-			<span ng-if="::ctrl.post.parent_post_id">
-				<span class="jolticon jolticon-share text-muted"></span>
-				<a class="forum-post-reply-user link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.replied_to.slug, id: ctrl.post.replied_to.id } )">
-					<small>{{ ::ctrl.post.replied_to.display_name }}</small>
+			<div class="forum-post-users">
+				<a class="forum-post-author link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.user.slug, id: ctrl.post.user.id } )">
+					{{ ::ctrl.post.user.display_name }}
 				</a>
-			</span>
+
+				<span ng-if="::ctrl.post.parent_post_id" class="forum-post-replied-to">
+					<span class="jolticon jolticon-share text-muted"></span>
+					<a class="forum-post-reply-user link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.replied_to.slug, id: ctrl.post.replied_to.id } )">
+						<small>{{ ::ctrl.post.replied_to.display_name }}</small>
+					</a>
+				</span>
+			</div>
 
 			<div class="forum-post-controls">
 				<small class="text-muted" title="{{ ::ctrl.post.posted_on | date:'medium' }}" am-time-ago="::ctrl.post.posted_on"></small>

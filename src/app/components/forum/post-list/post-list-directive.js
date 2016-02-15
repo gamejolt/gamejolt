@@ -6,6 +6,7 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostList', function()
 		scope: {
 			topic: '=',
 			posts: '=',
+			userPostCounts: '=',
 			isReplies: '=?',
 			onReply: '&?',
 		},

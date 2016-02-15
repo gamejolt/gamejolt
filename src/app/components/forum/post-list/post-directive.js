@@ -8,6 +8,7 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 			post: '=',
 			isReply: '=?',
 			onReply: '=?',
+			userPostCount: '=',
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
@@ -50,6 +51,7 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 				{
 					$scope.listCtrl.replies[ _this.post.id ] = Forum_Post.populate( payload.replies );
 					$scope.listCtrl.replyCounts[ _this.post.id ] = payload.repliesCount || 0;
+					$scope.listCtrl.userPostCounts = payload.userPostCounts || {};
 
 					if ( !$scope.listCtrl.showingReplies[ _this.post.id ] ) {
 						$scope.listCtrl.showingReplies[ _this.post.id ] = true;
