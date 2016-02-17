@@ -171,11 +171,11 @@
 							</a>
 						</div>
 
-						<div ng-if="::msg.contentRaw.length < 500" class="chat-window-message-content-wrap">
+						<div ng-if="::!ctrl.shouldFadeCollapse( msg )" class="chat-window-message-content-wrap">
 							<div class="chat-window-message-content highlight" ng-bind-html="::msg.content"></div>
 						</div>
 
-						<div ng-if="::msg.contentRaw.length >= 500" class="chat-window-message-content-wrap">
+						<div ng-if="::ctrl.shouldFadeCollapse( msg )" class="chat-window-message-content-wrap">
 							<gj-fade-collapse
 								fade-collapse-height="138"
 								fade-collapse-is-open="msg._expanded"

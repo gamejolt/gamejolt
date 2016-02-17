@@ -86,6 +86,14 @@ angular.module( 'App.Chat' ).directive( 'gjChatWindow', function()
 			{
 				this.isShowingUsers = !this.isShowingUsers;
 			};
+
+			this.shouldFadeCollapse = function( msg )
+			{
+				if ( msg.contentRaw.split( "\n" ).length > 6 || msg.contentRaw.length >= 500 ) {
+					return true;
+				}
+				return false;
+			};
 		}
 	};
 } );
