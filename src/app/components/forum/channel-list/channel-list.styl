@@ -9,6 +9,15 @@
 			margin-bottom: 10px
 
 	&-latest-topic
-		&-title
-			text-overflow()
-			font-weight: bold
+		@extend .clearfix
+		font-size: $font-size-small
+
+		&-avatar
+			float: right
+			margin-left: 10px
+			width: 40px
+
+		&-info
+			&-title
+				text-overflow()
+				font-weight: bold

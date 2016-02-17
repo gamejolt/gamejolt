@@ -43,7 +43,13 @@
 				</div>
 				<div class="forum-topic-list-item-latest-post-info">
 					<div class="forum-topic-list-item-latest-post-info-username">
-						<a ui-sref="profile.overview( { slug: topic.latest_post.user.slug, id: topic.latest_post.user.id } )">
+						<a ui-sref="forums.topics.view.page( {
+								slug: topic.slug,
+								id: topic.id,
+								'#': 'forum-post-' + topic.latest_post.id,
+								page: ctrl.getPostPage( topic ),
+							} )"
+							>
 							{{ ::topic.latest_post.user.display_name }}
 						</a>
 					</div>

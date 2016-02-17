@@ -8,6 +8,7 @@ angular.module( 'App.Views' ).controller( 'Forums.Channels.View.PageCtrl', funct
 
 	viewCtrl.channel = new Forum_Channel( payload.channel );
 	viewCtrl.topics = Forum_Topic.populate( payload.topics );
+	viewCtrl.postCountPerPage = payload.postCountPerPage;
 
 	if ( payload.stickyTopics && payload.stickyTopics.length ) {
 		viewCtrl.stickyTopics = Forum_Topic.populate( payload.stickyTopics );

@@ -15,11 +15,41 @@
 			<strong>{{ ::channel.replies_count || 0 | number }}</strong> Replies
 		</div>
 		<div class="col-md-3" ng-if="Screen.isDesktop">
-			<div class="forum-channel-list-item-latest-topic-title">
-				<a ng-if="channel.latest_topic" ui-sref="forums.topics.view.page( { slug: channel.latest_topic.slug, id: channel.latest_topic.id } )">
-					{{ ::channel.latest_topic.title }}
-				</a>
-				<span ng-if="!channel.latest_topic">--</span>
+			<div class="forum-channel-list-item-latest-topic"
+				ng-repeat="latestPost in ::[ ctrl.latestPosts[ channel.id ] ] track by latestPost.id"
+				>
+				<div ng-if="::latestPost">
+
+					<div class="forum-channel-list-item-latest-topic-avatar">
+						<div gj-user-avatar="::latestPost.user"></div>
+					</div>
+
+					<div class="forum-channel-list-item-latest-topic-info">
+						<div class="forum-channel-list-item-latest-topic-info-title">
+							<a ui-sref="forums.topics.view.page( {
+									slug: latestPost.topic.slug,
+									id: latestPost.topic.id,
+									'#': 'forum-post-' + latestPost.id,
+									page: ctrl.getPostPage( latestPost ),
+								} )"
+								>
+								{{ ::latestPost.topic.title }}
+							</a>
+						</div>
+						<div class="forum-channel-list-item-latest-topic-topic-info-user text-muted">
+							by
+							<strong>
+								<a class="link-muted" ui-sref="profile.overview( { slug: latestPost.user.slug, id: latestPost.user.id } )">
+									{{ ::latestPost.user.display_name }}
+								</a>
+							</strong>
+							<br>
+							<span title="{{ ::latestPost.posted_on | date:'medium' }}" am-time-ago="::latestPost.posted_on"></span>
+						</div>
+					</div>
+
+				</div>
+				<span ng-if="::!latestPost">--</span>
 			</div>
 		</div>
 	</div>
