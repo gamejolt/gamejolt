@@ -20,7 +20,7 @@ angular.module( 'App.Views' ).controller( 'Forums.Topics.ViewCtrl', function( $s
 			AutoScroll.noScroll( true );
 			$state.reload( 'forums.topics.view.page' ).then( function()
 			{
-				$location.hash( 'forum-post-' + formModel.id );
+				$location.replace().hash( 'forum-post-' + formModel.id );
 			} );
 		}
 	};
