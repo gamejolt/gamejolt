@@ -190,6 +190,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 						resolve( unescape(y) );
 					}
 				}
+				resolve( null );
 			}
 		} );
 	}
