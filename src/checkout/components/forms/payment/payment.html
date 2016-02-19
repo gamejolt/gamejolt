@@ -1,0 +1,76 @@
+<form gj-form="formModel" name="paymentForm" ng-submit="onSubmit()">
+
+	<div class="card-list full-bleed-xs"
+		ng-if="cards.length"
+		>
+		<a class="card-list-item"
+			ng-repeat="card in cards track by card.id"
+			ng-class="{ active: formModel.selectedCard == card.id }"
+			ng-click="formModel.selectedCard = card.id"
+			>
+			<div class="pull-left" style="margin-right: 15px">
+				<input type="radio" ng-checked="formModel.selectedCard == card.id" name="same">
+			</div>
+			<div class="pull-left">
+				<strong>Card ending in {{ card.last4 }}</strong> <br>
+				<span class="small text-muted">Expires {{ card.exp_month }}/{{ card.exp_year }}</span>
+			</div>
+		</a>
+		<a class="card-list-item" ng-class="{ active: !formModel.selectedCard }" ng-click="formModel.selectedCard = 0">
+			<div class="pull-left" style="margin-right: 15px">
+				<input type="radio" ng-checked="formModel.selectedCard == 0" name="same">
+			</div>
+			<div class="pull-left">
+				<strong>Use a new card</strong>
+			</div>
+		</a>
+	</div>
+
+	<div gj-expand-when="!formModel.selectedCard || !cards.length">
+		<h4 class="section-header" ng-if="cards.length">New Card</h4>
+
+		<form-group name="card_number" label="Card Number" hide-label="true">
+			<span class="jolticon jolticon-credit-card"></span>
+			<input form-control="text"
+				placeholder="card number"
+				gj-focus-when
+				>
+			<control-errors></control-errors>
+		</form-group>
+
+		<div class="clearfix">
+			<div class="left-col">
+				<form-group name="exp" label="Expiry" hide-label="true">
+					<span class="jolticon jolticon-calendar"></span>
+					<input form-control="text"
+						placeholder="mm/yy"
+						>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+			<div class="right-col">
+				<form-group name="cvc" label="CVC" hide-label="true">
+					<span class="jolticon jolticon-token"></span>
+					<input form-control="text"
+						placeholder="cvc"
+						>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+		</div>
+
+		<form-group name="should_remember" label="Should Remember Card?" hide-label="true">
+			<label class="checkbox">
+				<input form-control="checkbox">
+				Remember this card for future purchases
+			</label>
+		</form-group>
+	</div>
+
+	<br>
+
+	<button gj-form-submit-button class="btn btn-block btn-success-outline btn-lg">
+		Pay {{ order.amount / 100 | currency:'$':2 }}
+	</button>
+
+</form>

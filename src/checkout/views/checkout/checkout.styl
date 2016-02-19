@@ -1,0 +1,25 @@
+a.card-list-item
+	@extend .clearfix
+	display: block
+	color: $black
+	padding: 15px
+	// background-color: $gray-lightest
+	margin-bottom: 10px
+	outline: 1px solid $gray-lighter
+
+	// border-bottom: 1px solid $gray-lightest
+
+	&:last-child
+		border-bottom: 0
+
+	&:hover
+		outline-color: $gray-lighter
+	// 	background-color: $gray-lighter
+
+	&.active
+		// color: $white
+		// background-color: $gray-lightest
+		outline-color: $gray
+
+h4
+	font-weight: 300

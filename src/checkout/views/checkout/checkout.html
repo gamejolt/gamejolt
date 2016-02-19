@@ -1,0 +1,33 @@
+<section class="container">
+
+	<div class="game-cover" ng-if="checkoutCtrl.bucket.game.img_header">
+		<img gj-img-responsive="{{ checkoutCtrl.bucket.game.img_header }}" alt="">
+	</div>
+
+	<div class="text-center">
+		<h1 class="sans-margin">
+			<a class="link-unstyled">
+				{{ checkoutCtrl.bucket.game.title }}
+			</a>
+		</h1>
+		<h4 class="text-muted sans-margin-top">
+			by
+			<a class="link-unstyled">
+				{{ checkoutCtrl.bucket.game.developer.display_name }}
+			</a>
+		</h4>
+	</div>
+	<br>
+
+	<div class="row">
+		<div class="col-sm-6 col-centered">
+			<gj-form-payment
+				cards="checkoutCtrl.cards"
+				order="checkoutCtrl.order"
+				>
+			</gj-form-payment>
+		</div>
+	</div>
+	<br>
+
+</section>

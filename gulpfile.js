@@ -115,12 +115,14 @@ var config = {
 		}
 	},
 	sections: [
-		'auth'
+		'auth',
+		'checkout',
 	],
 	translations: 'site-translations',
 	translationSections: [
 		'auth',
-		'dash'
+		'dash',
+		'checkout',
 	],
 };
 
