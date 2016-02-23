@@ -92,26 +92,26 @@
 					<div gj-lazy-placeholder="overviewCtrl.isLoaded">
 						<div class="lazy-placeholder" style="height: 135px"></div>
 
-					<div ng-if="::overviewCtrl.packages.length">
-						<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-							<gj-game-package-card
-								ng-repeat="package in overviewCtrl.packages"
-								game="::gameCtrl.game"
-								game-package="::package"
-								game-releases="::package._releases"
-								game-builds="::package._builds"
-								game-build-launch-options="::overviewCtrl.launchOptions"
-								>
-							</gj-game-package-card>
+						<div ng-if="::overviewCtrl.packages.length">
+							<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
+								<gj-game-package-card
+									ng-repeat="package in overviewCtrl.packages"
+									game="::gameCtrl.game"
+									game-package="::package"
+									game-releases="::package._releases"
+									game-builds="::package._builds"
+									game-build-launch-options="::overviewCtrl.launchOptions"
+									>
+								</gj-game-package-card>
+							</div>
 						</div>
-					</div>
 
-					<gj-game-soundtrack-card
-						ng-if="::overviewCtrl.songs.length"
-						game-soundtrack-card-game="::gameCtrl.game"
-						game-soundtrack-card-songs="::overviewCtrl.songs"
-						>
-					</gj-game-soundtrack-card>
+						<gj-game-soundtrack-card
+							ng-if="::overviewCtrl.songs.length"
+							game-soundtrack-card-game="::gameCtrl.game"
+							game-soundtrack-card-songs="::overviewCtrl.songs"
+							>
+						</gj-game-soundtrack-card>
 					</div>
 
 				</div>
@@ -129,19 +129,19 @@
 				</div>
 
 				<div ng-if="gameCtrl.game.description_compiled">
-				<gj-fade-collapse
-					fade-collapse-height="500"
-					fade-collapse-is-open="overviewCtrl.showFullDescription"
-					fade-collapse-is-required="overviewCtrl.canToggleDescription"
-					>
-					<div class="game-compiled-description" ng-bind-html="gameCtrl.game.description_compiled"></div>
-				</gj-fade-collapse>
+					<gj-fade-collapse
+						fade-collapse-height="500"
+						fade-collapse-is-open="overviewCtrl.showFullDescription"
+						fade-collapse-is-required="overviewCtrl.canToggleDescription"
+						>
+						<div class="game-compiled-description" ng-bind-html="gameCtrl.game.description_compiled"></div>
+					</gj-fade-collapse>
 
-				<a class="hidden-text-expander"
-					ng-if="overviewCtrl.canToggleDescription"
-					ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"
-					gj-track-event="game-profile:show-full-description"
-					></a>
+					<a class="hidden-text-expander"
+						ng-if="overviewCtrl.canToggleDescription"
+						ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"
+						gj-track-event="game-profile:show-full-description"
+						></a>
 				</div>
 
 			</div>
@@ -238,7 +238,7 @@
 		<div class="scrollable-grid-xs">
 			<div class="row">
 				<gj-game-thumbnail
-					class="scrollable-grid-item col-xs-10 col-sm-4 col-md-3 meter-dark"
+					class="scrollable-grid-item col-xs-8 col-sm-4 col-md-3 meter-dark"
 					ng-repeat="game in overviewCtrl.recommendedGames | limitTo:(Screen.isDesktop ? 4 : 3) track by game.id"
 					gj-game="::game"
 					gj-track-event="recommended-games:click:{{ $index }}"
