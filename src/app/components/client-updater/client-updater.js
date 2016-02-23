@@ -5,6 +5,7 @@
 {
 	var Updater = require( 'nwjs-snappy-updater' ).Updater;
 	var path = require( 'path' );
+	var Application = require( 'client-voodoo' ).Application;
 
 	var CHECK_ENDPOINT = 'http://d.gamejolt.net/data/client/manifest-2.json';
 	var CHECK_INTERVAL = 15 * 60 * 1000; // 15min currently
@@ -48,7 +49,11 @@
 			cwd: cwd,
 		} );
 
-		return updater.check()
+		return updater.cleanup()
+			.then( function()
+			{
+				return updater.check()
+			} )
 			.then( function( hasNew )
 			{
 				if ( !hasNew ) {
@@ -57,6 +62,10 @@
 				}
 
 				console.log( 'New version of client. Updating...' );
+
+				if ( process.platform === 'win32' ) {
+					Application.stop();
+				}
 
 				return updater.update()
 					.then( function()

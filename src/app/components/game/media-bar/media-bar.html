@@ -1,7 +1,15 @@
-<div section class="section fill-darker game-media-bar scrollable scrollable-x overlay-scrollbar">
+<div section class="section fill-darker game-media-bar scrollable scrollable-x overlay-scrollbar"
+	ng-class="{ 'is-loading': !ctrl.mediaItems }"
+	>
 	<div class="game-media-bar-items">
 
-		<gj-game-media-bar-item ng-repeat="item in ctrl.mediaItems track by item.id" item="item"></gj-game-media-bar-item>
+		<div class="loading-container" ng-if="!ctrl.mediaItems">
+			<gj-loading class="loading-centered" loading-no-color loading-stationary hide-label></gj-loading>
+		</div>
+
+		<div ng-if="ctrl.mediaItems">
+			<gj-game-media-bar-item ng-repeat="item in ctrl.mediaItems track by item.id" item="item"></gj-game-media-bar-item>
+		</div>
 
 	</div>
 </div>

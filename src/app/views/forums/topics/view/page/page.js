@@ -4,9 +4,9 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/f/:slug/:id?page',
 		controller: 'Forums.Topics.View.PageCtrl',
 		resolve: {
-			payload: function( Api, $stateParams )
+			payload: function( Api, $stateParams, History_Cache )
 			{
-				return Api.sendRequest( '/web/forums/topics/' + $stateParams.id + '?page=' + ($stateParams.page || 1) );
+				return History_Cache.cache( Api.sendRequest( '/web/forums/topics/' + $stateParams.id + '?page=' + ($stateParams.page || 1) ) );
 			},
 			tick: function( HistoryTick, $stateParams )
 			{
