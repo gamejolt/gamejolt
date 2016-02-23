@@ -9,9 +9,9 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 		controllerAs: 'overviewCtrl',
 		templateUrl: '/app/views/forums/landing/overview/overview.html',
 		resolve: {
-			payload: function( Api )
+			payload: function( Api, History_Cache )
 			{
-				return Api.sendRequest( '/web/forums' );
+				return History_Cache.cache( Api.sendRequest( '/web/forums' ) );
 			},
 		},
 	} );

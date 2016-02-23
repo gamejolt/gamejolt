@@ -12,9 +12,9 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 		url: '/f/:name?page',
 		controller: 'Forums.Channels.View.PageCtrl',
 		resolve: {
-			payload: function( $stateParams, Api )
+			payload: function( $stateParams, Api, History_Cache )
 			{
-				return Api.sendRequest( '/web/forums/channels/' + $stateParams.name + '?page=' + ($stateParams.page || 1) );
+				return History_Cache.cache( Api.sendRequest( '/web/forums/channels/' + $stateParams.name + '?page=' + ($stateParams.page || 1) ) );
 			}
 		}
 	} );

@@ -6,9 +6,9 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		controllerAs: 'activeCtrl',
 		templateUrl: '/app/views/forums/landing/active/active.html',
 		resolve: {
-			payload: function( Api )
+			payload: function( Api, History_Cache )
 			{
-				return Api.sendRequest( '/web/forums/active-topics' );
+				return History_Cache.cache( Api.sendRequest( '/web/forums/active-topics' ) );
 			},
 		},
 	} );
