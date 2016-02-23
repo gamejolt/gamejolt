@@ -67,6 +67,11 @@ angular.module( 'App', [
 	'gj.FadeCollapse',
 	'gj.Progress.Poller',
 	'gj.Alert.Dismissable',
+	'gj.Lazy.Placeholder',
+	'gj.Registry',
+
+	'gj.History',
+	'gj.History.Cache',
 
 	'gj.Report.Form',
 	'gj.Report.Modal',

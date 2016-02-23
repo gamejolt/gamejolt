@@ -4,7 +4,10 @@
 	<!--
 		Follower Count
 	-->
-	<li class="game-header-stats-followers stat-big stat-big-smaller" ng-class="Screen.isXs ? 'text-center' : 'text-right'">
+	<li class="game-header-stats-followers stat-big stat-big-smaller"
+		ng-class="Screen.isXs ? 'text-center' : 'text-right'"
+		ng-if="gameCtrl.isLoaded"
+		>
 		<div class="stat-big-label">Followers</div>
 		<div class="stat-big-digit">{{ gameCtrl.followerCount | number }}</div>
 	</li>
@@ -13,7 +16,9 @@
 		Voltage
 		We show the number as well as the meter.
 	-->
-	<li class="game-header-stats-voltage stat-big stat-big-smaller" ng-class="Screen.isXs ? 'text-center' : 'text-right'">
+	<li class="game-header-stats-voltage stat-big stat-big-smaller"
+		ng-class="Screen.isXs ? 'text-center' : 'text-right'"
+		>
 
 		<div class="game-header-stats-voltage-stat">
 			<div class="stat-big-label">
