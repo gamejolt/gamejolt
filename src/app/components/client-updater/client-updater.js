@@ -33,12 +33,9 @@
 		// The other OSes are just the root dir.
 		var cwd = path.dirname( process.execPath );
 		if ( os.type() == 'Darwin' ) {
-			cwd = path.resolve( cwd, '../../../../Resources' )
-			packageJson = require( path.join( cwd, 'app.nw', 'package.json' ) );
+			cwd = path.resolve( cwd, '../../../../Resources/app.nw' )
 		}
-		else {
-			packageJson = require( path.join( cwd, 'package.json' ) );
-		}
+		packageJson = require( path.join( cwd, 'package.json' ) );
 
 		if ( packageJson['no-auto-update'] === true ) {
 			console.log( 'Skip update. Package says not to auto-update.' );
@@ -46,7 +43,7 @@
 		}
 
 		var updater = new Updater( packageJson.version, CHECK_ENDPOINT, {
-			cwd: cwd,
+			execPath: process.execPath,
 		} );
 
 		return updater.cleanup()
@@ -68,8 +65,13 @@
 				}
 
 				return updater.update()
-					.then( function()
+					.then( function( wasUpdated )
 					{
+						if ( !wasUpdated ) {
+							console.log( 'Update aborted.' );
+							return;
+						}
+
 						console.log( 'Updated! Reloading...' );
 						var gui = require( 'nw.gui' );
 						var win = gui.Window.get();
