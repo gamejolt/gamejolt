@@ -31,21 +31,34 @@ gj-game-cover
 		.loading
 			margin-top: -20px
 
-.game-cover-img
-	display: none
-	position: relative
-	width: 100%
+	&-content
+		position: absolute
+		left: 0
+		right: 0
+		top: 0
+		bottom: 100px
+		display: flex
+		align-items: center
+		justify-content: center
 
-	@media $media-xs
-		width: 140%
-		margin-left: -20%
+		.btn
+			margin: 0 5px
 
-	> img
+	&-img
+		display: none
+		position: relative
 		width: 100%
-		height: auto
 
-// Loaded.
-.game-cover.loaded
-	&::before
-	.game-cover-img
-		display: block
+		@media $media-xs
+			width: 140%
+			margin-left: -20%
+
+		> img
+			width: 100%
+			height: auto
+
+	// Loaded.
+	&.loaded
+		&::before
+		.game-cover-img
+			display: block

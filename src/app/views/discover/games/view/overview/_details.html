@@ -1,55 +1,6 @@
 <div class="row">
 	<div class="col-xs-12 col-sm-6 col-md-12">
 
-		<div>
-			<strong>Genre:</strong>
-			<span gj-lazy-placeholder="gameCtrl.game.category_human">
-				<span class="lazy-placeholder" style="width: 60px"></span>
-				<a ui-sref="discover.games.list.section-category( { section: 'best', category: gameCtrl.game.category } )">
-					{{ ::gameCtrl.game.category_human }}
-				</a>
-			</span>
-		</div>
-
-		<div>
-			<strong>Status:</strong>
-			<span gj-lazy-placeholder="gameCtrl.game.development_status_human">
-				<span class="lazy-placeholder" style="width: 80px"></span>
-				<span>
-					{{ ::gameCtrl.game.development_status_human }}
-				</span>
-			</span>
-		</div>
-
-		<div>
-			<strong>Engine/Language:</strong>
-			<span gj-lazy-placeholder="gameCtrl.game.creation_tool_human">
-				<span class="lazy-placeholder" style="width: 100px"></span>
-				<span>
-					{{ ::gameCtrl.game.creation_tool_human }}
-				</span>
-			</span>
-		</div>
-
-		<div ng-if="gameCtrl.game.published_on">
-			<strong>Published On:</strong>
-			<span gj-lazy-placeholder="gameCtrl.game.category_human">
-				<span class="lazy-placeholder" style="width: 120px"></span>
-				<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )">
-					{{ ::gameCtrl.game.published_on | date:'longDate' }}
-				</a>
-			</span>
-		</div>
-
-		<br>
-
-		<ul class="list-unstyled" ng-if="gameCtrl.game.web_site">
-			<li>
-				<span class="jolticon jolticon-world"></span>
-				<a ng-href="{{ ::gameCtrl.game.web_site }}">Game Web Site</a>
-			</li>
-		</ul>
-
 		<!-- Game Stats -->
 		<ul class="stat-list">
 			<li class="stat-big stat-big-smaller">
@@ -132,7 +83,68 @@
 			</div>
 		</div>
 
+		<hr>
+
+		<div ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isDesktop">
+			<br>
+			<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+		</div>
+
+		<hr>
+
+		<h3 ng-class="{ 'section-header': !Screen.isSm }">Details</h3>
+
+		<div>
+			<strong>Genre:</strong>
+			<span gj-lazy-placeholder="gameCtrl.game.category_human">
+				<span class="lazy-placeholder" style="width: 60px"></span>
+				<a ui-sref="discover.games.list.section-category( { section: 'best', category: gameCtrl.game.category } )">
+					{{ ::gameCtrl.game.category_human }}
+				</a>
+			</span>
+		</div>
+
+		<div>
+			<strong>Status:</strong>
+			<span gj-lazy-placeholder="gameCtrl.game.development_status_human">
+				<span class="lazy-placeholder" style="width: 80px"></span>
+				<span>
+					{{ ::gameCtrl.game.development_status_human }}
+				</span>
+			</span>
+		</div>
+
+		<div>
+			<strong>Engine/Language:</strong>
+			<span gj-lazy-placeholder="gameCtrl.game.creation_tool_human">
+				<span class="lazy-placeholder" style="width: 100px"></span>
+				<span>
+					{{ ::gameCtrl.game.creation_tool_human }}
+				</span>
+			</span>
+		</div>
+
+		<div ng-if="gameCtrl.game.published_on">
+			<strong>Published On:</strong>
+			<span gj-lazy-placeholder="gameCtrl.game.category_human">
+				<span class="lazy-placeholder" style="width: 120px"></span>
+				<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )">
+					{{ ::gameCtrl.game.published_on | date:'longDate' }}
+				</a>
+			</span>
+		</div>
+
+		<br>
+
+		<ul class="list-unstyled" ng-if="gameCtrl.game.web_site">
+			<li>
+				<span class="jolticon jolticon-world"></span>
+				<a ng-href="{{ ::gameCtrl.game.web_site }}">Game Web Site</a>
+			</li>
+		</ul>
+
 		<div id="maturity-rating">
+			<hr>
 			<div gj-lazy-placeholder="overviewCtrl.isLoaded">
 				<div class="lazy-placeholder" style="height: 115px"></div>
 				<gj-game-ogrs gj-game="gameCtrl.game"></gj-game-ogrs>
@@ -143,7 +155,7 @@
 	<div class="col-xs-12 col-sm-6 col-md-12">
 
 		<!-- Developer Info -->
-		<div class="developer-info" ng-if="::gameCtrl.game.developer">
+		<!--<div class="developer-info" ng-if="::gameCtrl.game.developer">
 			<div gj-user-avatar="::gameCtrl.game.developer"></div>
 
 			<h4 class="sans-margin-bottom" ng-class="{ 'section-header': Screen.isSm || Screen.isXs }">
@@ -157,10 +169,10 @@
 			</p>
 
 			<p>
-				<span class="jolticon jolticon-game"></span>
+				<span class="jolticon jolticon-game middle"></span>
 				<span gj-lazy-placeholder="overviewCtrl.isLoaded">
 					<span class="lazy-placeholder" style="width: 30px"></span>
-					<a ui-sref="library.collection.developer( { slug: gameCtrl.game.developer.slug, id: gameCtrl.game.developer.id } )">
+					<a class="link-unstyled" ui-sref="library.collection.developer( { slug: gameCtrl.game.developer.slug, id: gameCtrl.game.developer.id } )">
 						{{ ::overviewCtrl.developerGamesCount | number }}
 						<ng-pluralize count="overviewCtrl.developerGamesCount" when="{ 'one': 'game', 'other': 'games' }"></ng-pluralize>
 					</a>
@@ -186,7 +198,7 @@
 					<span class="jolticon jolticon-world big"></span>
 				</a>
 			</p>
-		</div>
+		</div>-->
 
 	</div>
 </div>
