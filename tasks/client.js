@@ -191,6 +191,7 @@ module.exports = function( config )
 
 		// Copy the package.json file over into the build directory.
 		fs.writeFileSync( config.buildDir + '/package.json', JSON.stringify( clientJson ) );
+		fs.writeFileSync( config.buildDir + '/update-hook.js', fs.readFileSync( path.resolve( './src/update-hook.js' ) ) );
 	} );
 
 	var nodeModuletasks = [

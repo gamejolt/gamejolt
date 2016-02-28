@@ -58,6 +58,6 @@
   "dependencies": {
     "client-voodoo": "0.5.0",
     "lodash": "3.9.3",
-    "nwjs-snappy-updater": "0.0.9"
+    "nwjs-snappy-updater": "1.0.0"
   }
 }
