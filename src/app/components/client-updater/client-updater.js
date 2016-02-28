@@ -42,9 +42,7 @@
 			return;
 		}
 
-		var updater = new Updater( packageJson.version, CHECK_ENDPOINT, {
-			execPath: process.execPath,
-		} );
+		var updater = new Updater( packageJson.version, CHECK_ENDPOINT );
 
 		return updater.cleanup()
 			.then( function()
@@ -60,8 +58,13 @@
 
 				console.log( 'New version of client. Updating...' );
 
+				// If we're on windows, we need to make sure to release the mutex we have on it.
+				// This is so we can clean up the node_modules folder without the mutex binding being in use by the fs.
 				if ( process.platform === 'win32' ) {
-					Application.stop();
+					try {
+						Application.stop();
+					}
+					catch ( err ) {}
 				}
 
 				return updater.update()
