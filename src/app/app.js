@@ -16,6 +16,8 @@ angular.module( 'App', [
 	'validation.match',
 	'angular-inview',
 
+	'rzModule',
+
 	// GJ lib.
 	'gj.Translate',
 	'gj.Translate.LangSelector',
