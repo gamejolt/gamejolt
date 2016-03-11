@@ -1,11 +1,10 @@
 angular.module( 'App.Views' ).config( function( $stateProvider )
 {
-	$stateProvider.state( 'dashboard.developer.games.manage.packages.package', {
-		abstract: true,
+	$stateProvider.state( 'dashboard.developer.games.manage.packages.edit', {
 		url: '/{packageId:int}',
-		controller: 'Dashboard.Developer.Games.Manage.Packages.PackageCtrl',
-		controllerAs: 'packageCtrl',
-		templateUrl: '/app/views/dashboard/developer/games/manage/packages/package/package.html',
+		controller: 'Dashboard.Developer.Games.Manage.Packages.EditCtrl',
+		controllerAs: 'editCtrl',
+		templateUrl: '/app/views/dashboard/developer/games/manage/packages/edit/edit.html',
 		resolve: {
 			packagePayload: function( $stateParams, Api )
 			{

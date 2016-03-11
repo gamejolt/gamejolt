@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).controller( 'Forms_Dashboard_Game_Build_LaunchOptions_ArchiveFileSelectorCtrl', function( $scope, $modalInstance, Api, data )
+angular.module( 'App.Forms.Dashboard' ).controller( 'Forms_Dashboard_Game_Build_ArchiveFileSelectorCtrl', function( $scope, $modalInstance, Api, data )
 {
 	var _this = this;
 

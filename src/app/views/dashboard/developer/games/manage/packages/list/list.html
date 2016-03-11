@@ -1,0 +1,91 @@
+<section class="section">
+	<div class="container">
+
+		<h2 class="section-header">
+			{{ ::'dash.games.packages.heading' | translate }}
+		</h2>
+
+		<div class="row">
+			<div class="col-sm-4 pull-right">
+				<div class="page-help">
+					<div translate>dash.games.packages.page_help_html</div>
+					<p>
+						<a class="link-help" href="https://help.gamejolt.com/dev-packages" target="_blank">{{ ::'dash.games.packages.page_help_link' | translate }}</a>
+					</p>
+				</div>
+			</div>
+
+			<div class="col-sm-8 pull-left">
+
+				<div class="alert alert-warning" ng-if="!listCtrl.packages.length" translate>dash.games.packages.no_packages_html</div>
+
+				<div>
+					<a class="btn btn-success-outline btn-block" ui-sref="dashboard.developer.games.manage.packages.add">
+						<span class="jolticon jolticon-add"></span>
+						{{ ::'dash.games.packages.add_package_button' | translate }}
+					</a>
+				</div>
+				<br>
+
+				<div ng-if="listCtrl.packages.length">
+					<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
+
+						<gj-editable-accordion
+							active-item="listCtrl.activeItem"
+							is-adding="listCtrl.isAdding"
+							>
+
+							<div
+								ui-tree="{ dropped: listCtrl.onPackagesSorted }"
+								drag-enabled="listCtrl.packages.length > 1"
+								ui-tree-nodes
+								ng-model="listCtrl.packages"
+								>
+
+								<!-- track by ID was breaking -->
+								<gj-editable-accordion-item
+									ng-repeat="package in listCtrl.packages"
+									ui-tree-node
+									>
+
+									<gj-editable-accordion-item-heading>
+
+										<div class="pull-right">
+											<a class="link-muted pull-right" ng-click="listCtrl.removePackage( package )">
+												<span class="jolticon jolticon-remove middle"></span>
+											</a>
+										</div>
+
+										<h5 class="editable-accordion-item-heading-title">
+											<a class="link-unstyled" ui-sref="dashboard.developer.games.manage.packages.edit( { packageId: package.id } )">
+												<strong>{{ package.title || manageCtrl.game.title }}</strong>
+											</a>
+										</h5>
+
+										<p class="editable-accordion-item-heading-description" ng-if="package.description">
+											{{ package.description }}
+										</p>
+
+										<div>
+											<a class="btn btn-outline btn-sm" ui-sref="dashboard.developer.games.manage.packages.edit( { packageId: package.id } )">
+												<span class="jolticon jolticon-cog"></span>
+												Manage Package
+											</a>
+										</div>
+
+									</gj-editable-accordion-item-heading>
+
+								</gj-editable-accordion-item>
+
+							</div>
+
+						</gj-editable-accordion>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</section>

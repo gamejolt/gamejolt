@@ -1,189 +1,271 @@
-<form gj-form="formModel" name="buildForm" class="form-dash-game-build">
+<div class="editable-accordion-item not-expandable">
+	<div class="editable-accordion-item-heading">
 
-	<div ng-if="!isLoaded">
-		<gj-loading></gj-loading>
-	</div>
+		<div class="clearfix">
+			<div class="build-options">
+				<a class="link-muted" ng-click="remove()">
+					<span class="jolticon jolticon-remove middle"></span>
+				</a>
+			</div>
 
-	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
-		<div ng-if="isLoaded">
+			<div class="stats">
+				<div class="stat-big stat-big-smaller">
+					<div class="stat-big-label">{{ ::'dash.games.releases.builds.downloads_label' | translate }}</div>
+					<div class="stat-big-digit" ng-attr-title="{{ (buildDownloadCounts[ baseModel.id ] || 0) | number }}">
+						{{ (buildDownloadCounts[ baseModel.id ] || 0) | fuzzyNumber }}
+					</div>
+				</div>
+			</div>
 
-			<!--
-				Only allow changing types on an addition.
-			-->
-			<div ng-if="method == 'add'">
-				<nav class="platform-list inline nav-justified no-animate">
-					<ul>
-						<li>
-							<a ng-class="{ active: tab == 'downloadable' }" ng-click="changeTab( 'downloadable' )" translate>
-								dash.games.builds.form.downloadable_tab
-							</a>
-						</li>
-						<li>
-							<a ng-class="{ active: tab == 'browser' }" ng-click="changeTab( 'browser' )" translate>
-								dash.games.builds.form.browser_tab
-							</a>
-						</li>
-					</ul>
-				</nav>
+			<h5 class="editable-accordion-item-heading-title">
+				<strong>{{ baseModel.primary_file.filename }}</strong>
+				<small class="text-muted">({{ baseModel.primary_file.filesize | filesize }})</small>
+			</h5>
+
+			<div>
+
+				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_DOWNLOADABLE">
+					<span class="jolticon jolticon-download"></span>
+					Downloadable
+				</span>
+
+				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_HTML">
+					<span class="jolticon jolticon-html5"></span>
+					{{ ::'games.browser_html' | translate }}
+				</span>
+
+				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_FLASH">
+					<span class="jolticon jolticon-flash"></span>
+					{{ ::'games.browser_flash' | translate }}
+				</span>
+
+				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_UNITY">
+					<span class="jolticon jolticon-unity"></span>
+					{{ ::'games.browser_unity' | translate }}
+				</span>
+
+				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_SILVERLIGHT">
+					<span class="jolticon jolticon-silverlight"></span>
+					{{ ::'games.browser_silverlight' | translate }}
+				</span>
+
+				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_APPLET">
+					<span class="jolticon jolticon-java"></span>
+					{{ ::'games.browser_applet' | translate }}
+				</span>
+
+				<!--
+					Missing fields.
+				-->
+				<span class="tag tag-pink" ng-if="baseModel.hasError( Game_Build.ERROR_MISSING_FIELDS )">
+					<span class="jolticon jolticon-notice"></span>
+					Incomplete
+				</span>
+
+				<span ng-if="!baseModel.hasError( Game_Build.ERROR_MISSING_FIELDS )">
+					<span class="tag tag-blue" ng-if="baseModel.status == Game_Build.STATUS_ADDING">
+						Processing
+					</span>
+
+					<span class="tag tag-active" ng-if="baseModel.status == Game_Build.STATUS_ACTIVE">
+						<span class="jolticon jolticon-check"></span>
+						Active
+					</span>
+				</span>
+
+			</div>
+		</div>
+
+		<!--
+			Processing the build.
+		-->
+		<div gj-expand-when="!baseModel.errors && baseModel.status == Game_Build.STATUS_ADDING">
+			<div
+				gj-progress-poller="/web/dash/developer/games/builds/poll-progress/{{ game.id }}/{{ package.id }}/{{ release.id }}/{{ baseModel.id }}"
+				progress-poller-on-complete="onBuildProcessingComplete( $response )"
+				>
+
 				<br>
+				<div class="progress progress-thin progress-striped active">
+					<div class="progress-bar" style="width: 100%"></div>
+				</div>
 
-				<form-group name="type" label="{{ 'dash.games.builds.form.browser_label' | translate }}" ng-if="tab == 'browser'">
-					<div class="radio">
-						<label>
-							<input form-control="radio" ng-value="Game_Build.TYPE_HTML">
-							HTML <br>
-							<span class="help-inline" translate>dash.games.builds.form.html_help</span>
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input form-control="radio" ng-value="Game_Build.TYPE_UNITY">
-							Unity <br>
-							<span class="help-inline" translate>dash.games.builds.form.unity_help</span>
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input form-control="radio" ng-value="Game_Build.TYPE_FLASH">
-							Flash <br>
-							<span class="help-inline" translate>dash.games.builds.form.flash_help</span>
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input form-control="radio" ng-value="Game_Build.TYPE_SILVERLIGHT">
-							Silverlight <br>
-							<span class="help-inline" translate>dash.games.builds.form.silverlight_help</span>
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input form-control="radio" ng-value="Game_Build.TYPE_APPLET">
-							Java Applet <br>
-							<span class="help-inline" translate>dash.games.builds.form.applet_help</span>
-						</label>
-					</div>
+				<div class="text-center small" translate>dash.games.releases.builds.processing_message_html</div>
+			</div>
+		</div>
 
-					<control-errors></control-errors>
-				</form-group>
+	</div>
+</div>
+
+<div class="editable-accordion-item-edit active">
+	<div class="editable-accordion-item-edit-well well fill-lightest">
+
+		<div ng-if="!isLoaded">
+			<gj-loading></gj-loading>
+		</div>
+
+		<ng-form
+			gj-form="formModel"
+			name="buildForm"
+			class="form-horizontal"
+			ng-if="isLoaded"
+			>
+
+			<div class="game-build-form-spinner" ng-if="formState.isSettingPlatform">
+				<gj-loading hide-label="true"></gj-loading>
 			</div>
 
 			<!--
-				Can only add files. Can't edit builds anymore.
-				They need to release a new version to do that.
+				Platform Selector
 			-->
-			<form-group name="file" label="{{ 'dash.games.builds.form.file_label' | translate }}" ng-if="method == 'add'">
+			<div class="form-group downloadable-platforms"
+				ng-if="baseModel.type == Game_Build.TYPE_DOWNLOADABLE && !forceOther"
+				>
 
-				<p class="help-block" translate translate-scope="{ maxFilesize: maxFilesize / 1024 / 1024 }">dash.games.builds.form.file_help_html</p>
+				<!--
+					When this build is not able to launch on certain platforms.
+				-->
+				<div class="alert alert-info" ng-if="restrictedPlatforms.length">
+					This build is not launchable on certain platforms. They've been disabled below.
+				</div>
 
-				<p class="help-block" collapse="formModel.type != Game_Build.TYPE_HTML" translate>dash.games.builds.form.file_html_help_html</p>
+				<p class="help-block" translate>dash.games.builds.form.platforms_help_html</p>
 
-				<gj-form-upload-control
-					form-control="upload"
-					gj-max-filesize="maxFilesize"
-					accept="{{ getUploadAccept() }}"
+				<div class="clearfix">
+					<div ng-repeat="platform in platformOptions">
+						<form-group name="os_{{ platform.key }}" optional="true" hide-label="true">
+							<div class="checkbox" ng-class="{ 'disabled': isPlatformDisabled( platform.key ) }">
+								<label>
+									<input form-control="checkbox"
+										ng-disabled="isPlatformDisabled( platform.key )"
+										ng-change="platformChanged( platform.key )"
+										>
+									{{ platform.label }}
+								</label>
+							</div>
+						</form-group>
+					</div>
+				</div>
+
+				<div name="platformsValidate"
+					ng-model="formModel.platformsValidate"
+					gj-form-dashboard-game-build-platforms-validator="baseModel"
 					>
-				</gj-form-upload-control>
+					<div gj-expand-when="buildForm.platformsValidate.$error.noPlatforms">
+						<div class="alert alert-warning" translate>dash.games.builds.form.no_platforms_error</div>
+					</div>
+				</div>
 
-				<control-errors label="{{ 'dash.games.builds.form.file_error_label' | translate }}"></control-errors>
-			</form-group>
+			</div>
 
-			<!-- Downloadable Fields -->
-			<div gj-expand-when="formModel.type == Game_Build.TYPE_DOWNLOADABLE">
+			<!--
+				This happens when it's not a launchable file type.
+				In that case, it is forced as "other".
+			-->
+			<div class="alert alert-info" ng-if="forceOther">
+				This build is not launchable and has been marked as an "Other" downloadable.
+			</div>
 
-				<div class="form-group">
-					<label class="control-label" translate>dash.games.builds.form.platforms_label</label>
+			<!--
+				Launch Options
+			-->
+			<div ng-if="baseModel.type == Game_Build.TYPE_DOWNLOADABLE && !baseModel.os_other">
 
-					<p class="help-block" translate>dash.games.builds.form.platforms_help_html</p>
 
-					<div class="row" ng-repeat="_platformOptions in platformOptionsChunked">
-						<div class="col-xs-6" ng-class="$index == 0 ? 'col-sm-4' : 'col-sm-8'" ng-repeat="platform in _platformOptions">
+				<div ng-if="baseModel.primary_file.is_archive">
+					<form-group
+						ng-repeat="platform in platformOptions"
+						ng-if="baseModel[ 'os_' + platform.key ]"
+						name="launch_{{ platform.key }}"
+						label="{{ platform.label }}"
+						label-class="col-sm-3"
+						>
+						<div class="col-sm-9">
+							<input-group class="input-group-sm">
+								<input form-control ng-maxlength="500">
+								<input-group-addon>
+									<a class="link-unstyled"
+										gj-tooltip="{{ 'dash.games.releases.builds.launch_options.form.file_selector_tooltip' | translate }}"
+										ng-click="openFileSelector( platform.key )"
+										>
+										<span class="jolticon jolticon-ellipsis-h"></span>
+									</a>
+								</input-group-addon>
+							</input-group>
 
-							<form-group class="sans-margin-bottom" name="os_{{ platform.key }}" optional="true" hide-label="true">
-								<div class="checkbox" ng-class="{ 'disabled': isPlatformDisabled( platform.key ) }">
-									<label>
-										<input form-control="checkbox" ng-disabled="isPlatformDisabled( platform.key )" ng-change="formState.werePlatformsTouched = true">
-										<span class="jolticon" ng-class="'jolticon-' + platform.icon"></span>
-										{{ platform.label }}
-									</label>
-								</div>
-							</form-group>
-
+							<control-errors ignore-dirty="true" label="{{ 'dash.games.releases.builds.launch_options.form.file_error_label' | translate }}"></control-errors>
 						</div>
-					</div>
-
-					<div class="clearfix" gj-expand-when="formState.werePlatformsTouched && !checkPlatformChecked()">
-						<p class="help-block error" translate>dash.games.builds.form.no_platforms_error</p>
-					</div>
-
+					</form-group>
 				</div>
 
-			</div>
-
-			<!-- Browser-based fields -->
-			<div gj-expand-when="formModel.isBrowserBased()">
-
-				<p class="help-block" translate>dash.games.builds.form.dimensions_help_html</p>
-
-				<div class="row">
-					<div class="col-sm-6">
-						<form-group name="embed_width" label="{{ 'dash.games.builds.form.width_label' | translate }}">
-							<input form-control="number">
-							<control-errors></control-errors>
-						</form-group>
-					</div>
-					<div class="col-sm-6">
-						<form-group name="embed_height" label="{{ 'dash.games.builds.form.height_label' | translate }}">
-							<input form-control="number">
-							<control-errors></control-errors>
-						</form-group>
+				<div gj-expand-when="!baseModel.primary_file.is_archive && formModel.platformsValidate">
+					<div class="alert alert-info" translate>
+						dash.games.releases.builds.launch_options.standalone_info_html
 					</div>
 				</div>
-
 			</div>
 
-			<!-- Java Applet fields -->
-			<div gj-expand-when="formModel.type == Game_Build.TYPE_APPLET">
+			<!--
+				Browser Embed Dimensions
+			-->
+			<div class="form-group browser-dimensions"
+				ng-if="baseModel.isBrowserBased()"
+				>
+				<label class="control-label col-sm-3">Dimensions</label>
+				<div class="col-sm-7">
 
-				<form-group name="java_class_name" label="{{ 'dash.games.builds.form.class_name_label' | translate }}">
-					<input form-control="text" ng-maxlength="200">
-					<control-errors></control-errors>
-				</form-group>
+					<form-group name="embed_width"
+						label="{{ 'dash.games.builds.form.width_label' | translate }}"
+						hide-label="true"
+						>
+						<input class="input-sm" form-control="number" ng-attr-placeholder="{{ 'dash.games.builds.form.width_label' | translate }}">
+						<control-errors></control-errors>
+					</form-group>
+					x
+					<form-group name="embed_height"
+						label="{{ 'dash.games.builds.form.height_label' | translate }}"
+						hide-label="true"
+						>
+						<input class="input-sm" form-control="number" ng-attr-placeholder="{{ 'dash.games.builds.form.height_label' | translate }}">
+						<control-errors></control-errors>
+					</form-group>
 
+				</div>
 			</div>
 
-			<!-- Unity Fields -->
-			<div gj-expand-when="formModel.type == Game_Build.TYPE_UNITY">
-
-				<form-group name="browser_disable_right_click" label="{{ 'dash.games.builds.form.disable_right_click_label' | translate }}">
-					<p class="help-block" translate>dash.games.builds.form.disable_right_click_help</p>
+			<!--
+				Unity Right Click Menu
+			-->
+			<form-group
+				ng-if="baseModel.type == Game_Build.TYPE_UNITY"
+				name="browser_disable_right_click"
+				label="{{ 'dash.games.builds.form.disable_right_click_label' | translate }}"
+				label-class="col-sm-3"
+				>
+				<div class="col-sm-7">
 					<gj-toggle-switch
+						class="pull-left"
 						form-control="checkbox"
 						toggle-switch-on-text="{{ 'forms.yes' | translate }}"
 						toggle-switch-off-text="{{ 'forms.no' | translate }}"
 					></gj-toggle-switch>
-				</form-group>
+					<span class="jolticon jolticon-info-circle" tooltip="{{ 'dash.games.builds.form.disable_right_click_help' | translate }}"></span>
+				</div>
+			</form-group>
 
-			</div>
-
-			<div gj-expand-when="formModel.isBrowserBased()">
-				<div class="alert alert-warning">
-					<p translate>dash.games.builds.form.browser_ads_alert</p>
-					<p>
-						gamejolt.com <br>
-						*.gamejolt.com <br>
-						gamejolt.net <br>
-						*.gamejolt.net <br>
-					</p>
+			<div name="browserValidate"
+				ng-model="formModel.browserValidate"
+				gj-form-dashboard-game-build-browser-validator="formModel"
+				>
+				<div gj-expand-when="buildForm.browserValidate.$error.browser">
+					<div class="alert alert-warning">This build has more info to fill in before it will be available in this release.</div>
 				</div>
 			</div>
 
-			<button gj-form-submit-button class="i-button" ng-disabled="!buildForm.$valid || !checkPlatformChecked()" ng-click="onSubmit()">
-				<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
-				<span ng-if="::method == 'add'" translate>dash.games.builds.form.upload_build_button</span>
-				<span ng-if="::method == 'edit'" translate>dash.games.builds.form.save_build_button</span>
+			<button gj-form-submit-button class="i-button" ng-disabled="!buildForm.$valid" ng-click="onSubmit()">
+				yo
 			</button>
-		</div>
-	</div>
 
-</form>
+		</ng-form>
+	</div>
+</div>

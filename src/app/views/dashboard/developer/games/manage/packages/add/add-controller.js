@@ -6,7 +6,6 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 
 	function onPackageAdded( newPackage )
 	{
-		$scope.packagesCtrl.packages.push( newPackage );
-		$state.go( 'dashboard.developer.games.manage.packages.package.releases', { packageId: newPackage.id } );
+		$state.go( 'dashboard.developer.games.manage.packages.edit', { packageId: newPackage.id } );
 	}
 } );
