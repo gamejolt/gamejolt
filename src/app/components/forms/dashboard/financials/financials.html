@@ -1,0 +1,169 @@
+<form gj-form="formModel" name="financialsForm">
+
+	<form-group name="country">
+
+		<p class="help-block" ng-if="!account">
+			<span class="jolticon jolticon-notice"></span>
+			<strong>Note!</strong> You can't change the country for your account once it's set.
+		</p>
+
+		<select form-control="select" ng-if="!account">
+			<option ng-repeat="(code, country) in countries track by code" ng-value="code">{{ country }}</option>
+		</select>
+
+		<div class="form-static" ng-if="account">
+			{{ account.country_code }}
+		</div>
+
+		<control-errors></control-errors>
+	</form-group>
+
+	<form-group name="type" label="Business Type">
+		<div class="radio">
+			<label>
+				<input form-control="radio" value="individual">
+				Individual <br>
+				<span class="help-inline">HELP!</span>
+			</label>
+		</div>
+		<div class="radio">
+			<label>
+				<input form-control="radio" value="company">
+				Company <br>
+				<span class="help-inline">HELP!</span>
+			</label>
+		</div>
+		<control-errors></control-errors>
+	</form-group>
+
+	<fieldset ng-if="account">
+		<legend>Your Details</legend>
+
+		<!--<pre>{{ fields | json }}</pre>-->
+
+		<div class="row" ng-if="hasField( 'legal_entity.first_name' ) || hasField( 'legal_entity.last_name' )">
+			<div class="col-sm-6">
+				<form-group
+					ng-if="hasField( 'legal_entity.first_name' )"
+					name="legal_entity.first_name"
+					label="First Name"
+					>
+					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+			<div class="col-sm-6">
+				<form-group
+					ng-if="hasField( 'legal_entity.last_name' )"
+					name="legal_entity.last_name"
+					label="Last Name"
+					>
+					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+		</div>
+
+		<form-group
+			ng-if="hasField( 'legal_entity.address.line1' )"
+			name="legal_entity.address.line1"
+			label="Address"
+			>
+			<input form-control>
+			<control-errors></control-errors>
+		</form-group>
+
+		<div class="row" ng-if="hasField( 'legal_entity.address.city' )">
+			<div class="col-sm-4">
+				<form-group
+					ng-if="hasField( 'legal_entity.address.city' )"
+					name="legal_entity.address.city"
+					label="City"
+					>
+					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+			<div class="col-sm-4">
+				<form-group
+					ng-if="hasField( 'legal_entity.address.state' )"
+					name="legal_entity.address.state"
+					label="State"
+					>
+					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+			<div class="col-sm-4">
+				<form-group
+					ng-if="hasField( 'legal_entity.address.postal_code' )"
+					name="legal_entity.address.postal_code"
+					label="Zip Code"
+					>
+					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+		</div>
+
+		<div class="row" ng-if="hasField( 'legal_entity.personal_id_number' )">
+			<div class="col-sm-6">
+				<form-group
+					name="legal_entity.personal_id_number"
+					label="Social Security Number"
+					>
+					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+		</div>
+
+	</fieldset>
+
+	<fieldset ng-if="account">
+		<legend>Percentage Split</legend>
+
+		<p class="small">You're able to decide how much you think we deserve from your sales. <strong>We won't allow you to give us more than 10%.</strong></p>
+		<p class="small">If you feel like supporting Game Jolt, we'd rather you spend your revenue on buying games from other developers. We have a Wallet system to help in this!</p>
+
+		<div class="form-group">
+			<rzslider
+				rz-slider-model="formModel.percentageSplit"
+				rz-slider-options="sliderOptions"
+				>
+			</rzslider>
+		</div>
+
+	</fieldset>
+
+	<fieldset ng-if="account">
+		<legend>Wallet</legend>
+
+		<p class="small">We store up to a certain amount of money in your Wallet. You can use this money to buy other games on the site from other developers. Money goes directly to them when using Wallet funds. We never take a cut for game sales when you pay with your Wallet.</p>
+
+		 <form-group
+			name="wallet_max"
+			label="Max. Wallet Amount"
+			>
+			<p class="help-block">
+				You can store up to $300 USD in your Wallet. <br>
+				You can turn off the Wallet by setting it to $0.
+			</p>
+
+			<input-group>
+				<input-group-addon>
+					$
+				</input-group-addon>
+				<input form-control="number" ng-max="300">
+			</input-group>
+			<control-errors></control-errors>
+		</form-group>
+
+	</fieldset>
+
+	<button gj-form-submit-button class="btn" ng-disabled="!financialsForm.$valid" ng-click="onSubmit()">
+		<span class="jolticon jolticon-checkbox"></span>
+		Save
+	</button>
+
+</form>
