@@ -26,6 +26,18 @@
 	</div>
 
 	<div class="game-thumbnail-meta">
+
+		<div class="game-thumbnail-pricing">
+			<span class="game-thumbnail-pricing-amount">
+				<span class="game-thumbnail-pricing-currency">$</span>10.00
+				<span class="game-thumbnail-pricing-currency">USD</span>
+			</span>
+			<!--<span class="game-thumbnail-pricing-tag">name your price</span>-->
+			<!--<span class="game-thumbnail-pricing-amount">
+				FREE
+			</span>-->
+		</div>
+
 		<div class="game-thumbnail-meter" ng-if="::ctrl.game.ratings_enabled">
 			<span class="game-thumbnail-rating-count" tooltip="{{ ::'games.thumbnail.ratings' | translate:{ count: ctrl.game.rating_count || 0 } }}">
 				({{ ::ctrl.game.rating_count || 0 | number }})

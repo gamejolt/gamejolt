@@ -157,3 +157,33 @@ gj-game-thumbnail
 		color: $text-muted
 		font-size: $font-size-tiny
 		margin-right: 2px
+
+	&-pricing
+		@extend .fill-darkest
+		position: absolute
+		height: 34px
+		line-height: @height
+		top: -(@height)
+		right: 5px
+		padding: 0 10px
+		text-align: center
+		z-index: 2
+
+		&-amount
+			color: $white
+			font-size: $font-size-small
+
+		&-currency
+			color: $gray-lighter
+
+		&-decimal
+			font-size: $font-size-small
+
+		&-tag
+			color: $white
+			font-size: $font-size-tiny
+			font-weight: bold
+			text-transform: uppercase
+
+			&.muted
+				color: $gray-lighter
