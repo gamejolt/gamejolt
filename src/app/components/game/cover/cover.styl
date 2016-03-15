@@ -53,6 +53,17 @@ gj-game-cover
 			width: 140%
 			margin-left: -20%
 
+		@media $media-sm-up
+			&::after
+				content: ''
+				position: absolute
+				bottom: 0
+				left: 0
+				right: 0
+				height: 150px
+				background-image: linear-gradient( to bottom, transparent 0%, rgba( $black, 0.3 ) 100% )
+				z-index: 0
+
 		> img
 			width: 100%
 			height: auto
