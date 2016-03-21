@@ -1,5 +1,5 @@
 angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameRelease', function(
-	Form, Api, Game_Release, Game_Build, ModalConfirm, Growls, gettextCatalog )
+	$q, Form, Api, Game_Release, Game_Build, ModalConfirm, Growls, gettextCatalog )
 {
 	var form = new Form( {
 		model: 'Game_Release',
@@ -80,6 +80,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameRelease',
 
 		function save()
 		{
+			// Save all the managed build forms before saving the release.
 			var buildFormSavePromises = _.map( scope.ctrl.buildForms, function( buildForm )
 			{
 				return buildForm.scope.onSubmit();

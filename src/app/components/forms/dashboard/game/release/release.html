@@ -77,13 +77,13 @@
 				Publish Release
 			</button>
 
-			<button class="btn btn-outline" ng-click="saveDraft()">
+			<button class="btn btn-outline" ng-disabled="!packageForm.$valid || !builds.length" ng-click="saveDraft()">
 				Save Draft
 			</button>
 		</span>
 
 		<span ng-if="baseModel.status == Game_Release.STATUS_PUBLISHED">
-			<button class="btn" ng-click="onSubmit()">
+			<button class="btn" ng-disabled="!packageForm.$valid || !builds.length" ng-click="onSubmit()">
 				<span class="jolticon jolticon-edit"></span>
 				Save Release
 			</button>

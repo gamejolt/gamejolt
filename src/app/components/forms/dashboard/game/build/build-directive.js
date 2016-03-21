@@ -164,11 +164,13 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 			}
 
 			// Can't choose a platform chosen by another build in this package.
-			var search = {};
-			search[ 'os_' + platform ] = true;
-			var foundBuild = _.find( scope.packageBuilds, search );
-			if ( foundBuild && foundBuild.id != scope.baseModel.id ) {
-				return true;
+			if ( platform != 'other' ) {
+				var search = {};
+				search[ 'os_' + platform ] = true;
+				var foundBuild = _.find( scope.packageBuilds, search );
+				if ( foundBuild && foundBuild.id != scope.baseModel.id ) {
+					return true;
+				}
 			}
 
 			return false;

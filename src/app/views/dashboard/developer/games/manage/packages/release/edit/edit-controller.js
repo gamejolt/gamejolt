@@ -10,11 +10,11 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 	$scope.Game_Release = Game_Release;
 	$scope.Game_Build = Game_Build;
 
-	this.onEdited = onEdited;
+	this.onSaved = onSaved;
 	this.unpublishRelease = unpublishRelease;
 	this.removeRelease = removeRelease;
 
-	function onEdited()
+	function onSaved()
 	{
 		$state.go( 'dashboard.developer.games.manage.packages.edit', { packageId: $scope.releaseCtrl.package.id } );
 	}
