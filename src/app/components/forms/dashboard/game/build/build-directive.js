@@ -1,32 +1,57 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', function( $q, Form, Api, Game_Package, Game_Release, Game_Build, Game_Build_File, gettextCatalog )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', function( $q, $modal, Form, Api, Game_Package, Game_Release, Game_Build, Game_Build_File, Game_Build_LaunchOption, Growls, gettextCatalog, $timeout )
 {
 	var form = new Form( {
 		model: 'Game_Build',
 		template: '/app/components/forms/dashboard/game/build/build.html',
+		resetOnSubmit: true,
 	} );
 
 	form.scope.game = '=gjGame';
 	form.scope.package = '=gjGamePackage';
-	form.scope.release = '=?gjGameRelease';
+	form.scope.release = '=gjGameRelease';
+	form.scope._launchOptions = '=?gjGameLaunchOptions';
+	form.scope.onRemoveBuild = '&gjOnRemoveBuild';
+	form.scope.buildDownloadCounts = '=gjBuildDownloadCounts';
+	form.scope.packageBuilds = '=gjGamePackageBuilds';  // All builds for the package.
+
+	form.require = '^gjFormDashboardGameRelease';
+
+	// We store all the build forms into the game release form.
+	// This way when the release is saved, the builds can all be saved as well.
+	var oldPost = form.link.post;
+	form.link.post = function( scope, element, attrs, releaseForm )
+	{
+		releaseForm.buildForms[ scope.baseModel.id ] = {
+			form: form,
+			scope: scope,
+		};
+
+		scope.$on( '$destroy', function()
+		{
+			delete releaseForm.buildForms[ scope.baseModel.id ];
+		} );
+
+		// In case the Form API changes and uses a post link func.
+		if ( oldPost ) {
+			oldPost();
+		}
+	};
 
 	form.onInit = function( scope )
 	{
-		// Set the game ID on the form model from the game passed in.
-		scope.formModel.game_id = scope.game.id;
-		scope.formModel.game_package_id = scope.package.id;
-		scope.formModel.game_release_id = scope.release.id;
+		scope.Game_Build = Game_Build;
+
+		setupLaunchOptions( scope );
+		setupDownloadablePlatforms( scope );
+		setupStatusPolling( scope );
 
 		if ( !scope.isLoaded ) {
 			var params = [
-				scope.formModel.game_id,
-				scope.formModel.game_package_id,
-				scope.formModel.game_release_id
+				scope.game.id,
+				scope.package.id,
+				scope.release.id,
+				scope.baseModel.id,
 			];
-
-			// If we're editing, pass in the build ID as well.
-			if ( scope.baseModel ) {
-				params.push( scope.baseModel.id );
-			}
 
 			Api.sendRequest( '/web/dash/developer/games/builds/save/' + params.join( '/' ) ).then( function( payload )
 			{
@@ -35,7 +60,44 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 			} );
 		}
 
-		scope.formState.werePlatformsTouched = false;
+		scope.remove = function()
+		{
+			scope.onRemoveBuild( { $build: scope.baseModel } );
+		};
+	};
+
+	function setupDownloadablePlatforms( scope )
+	{
+		scope.platformsInfo = {
+			windows: {
+				icon: 'windows',
+				label: gettextCatalog.getString( 'dash.games.releases.builds.windows_tag' ),
+			},
+			windows_64: {
+				icon: 'windows',
+				label: gettextCatalog.getString( 'dash.games.releases.builds.windows_64_tag' ),
+			},
+			mac: {
+				icon: 'mac',
+				label: gettextCatalog.getString( 'dash.games.releases.builds.mac_tag' ),
+			},
+			mac_64: {
+				icon: 'mac',
+				label: gettextCatalog.getString( 'dash.games.releases.builds.mac_64_tag' ),
+			},
+			linux: {
+				icon: 'linux',
+				label: gettextCatalog.getString( 'dash.games.releases.builds.linux_tag' ),
+			},
+			linux_64: {
+				icon: 'linux',
+				label: gettextCatalog.getString( 'dash.games.releases.builds.linux_64_tag' ),
+			},
+			other: {
+				icon: 'other-os',
+				label: gettextCatalog.getString( 'dash.games.releases.builds.other_tag' ),
+			},
+		};
 
 		scope.platformOptions = [
 			{
@@ -75,87 +137,127 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 			}
 		];
 
-		scope.platformOptionsChunked = _.chunk( scope.platformOptions, 2 );
-
-		if ( scope.method == 'add' ) {
-			scope.formModel.type = Game_Build.TYPE_DOWNLOADABLE;
-			scope.formModel.arch = Game_Build.ARCH_32BIT;
-			scope.tab = 'downloadable';
-
-			scope.changeTab = function( tab )
-			{
-				scope.tab = tab;
-				if ( tab == 'downloadable' ) {
-					scope.formModel.type = Game_Build.TYPE_DOWNLOADABLE;
-				}
-				else {
-					scope.formModel.type = Game_Build.TYPE_HTML;
-				}
-			};
-
-			scope.getUploadAccept = function()
-			{
-				if ( scope.formModel.type == Game_Build.TYPE_HTML ) {
-					return '.zip';
-				}
-				else if ( scope.formModel.type == Game_Build.TYPE_FLASH ) {
-					return '.swf';
-				}
-				else if ( scope.formModel.type == Game_Build.TYPE_UNITY ) {
-					return '.unity3d';
-				}
-				else if ( scope.formModel.type == Game_Build.TYPE_SILVERLIGHT ) {
-					return '.xap';
-				}
-				else if ( scope.formModel.type == Game_Build.TYPE_APPLET ) {
-					return '.jar';
-				}
-
-				return undefined;
-			};
-		}
-
 		scope.isPlatformDisabled = function( platform )
 		{
-			if ( platform != 'other' && scope.formModel.os_other ) {
+			// Restricted by server.
+			if ( scope.restrictedPlatforms && angular.isArray( scope.restrictedPlatforms ) ) {
+				if ( scope.restrictedPlatforms.indexOf( platform ) != -1 ) {
+					return true;
+				}
+			}
+
+			// Can only be other OR a platform.
+			if ( platform != 'other' && scope.baseModel.os_other ) {
 				return true;
 			}
 			else if (
 				platform == 'other' && (
-					scope.formModel.os_windows
-					|| scope.formModel.os_mac
-					|| scope.formModel.os_linux
-					|| scope.formModel.os_windows_64
-					|| scope.formModel.os_mac_64
-					|| scope.formModel.os_linux_64
+					scope.baseModel.os_windows
+					|| scope.baseModel.os_mac
+					|| scope.baseModel.os_linux
+					|| scope.baseModel.os_windows_64
+					|| scope.baseModel.os_mac_64
+					|| scope.baseModel.os_linux_64
 				)
 			) {
 				return true;
 			}
 
-			if ( scope.reservedPlatforms.indexOf( platform ) !== -1 ) {
-				return true;
+			// Can't choose a platform chosen by another build in this package.
+			if ( platform != 'other' ) {
+				var search = {};
+				search[ 'os_' + platform ] = true;
+				var foundBuild = _.find( scope.packageBuilds, search );
+				if ( foundBuild && foundBuild.id != scope.baseModel.id ) {
+					return true;
+				}
 			}
 
 			return false;
 		};
 
-		scope.checkPlatformChecked = function()
+		scope.platformChanged = function( platform )
 		{
-			if ( scope.formModel.type != Game_Build.TYPE_DOWNLOADABLE ) {
-				return true;
-			}
+			scope.formState.isSettingPlatform = true;
 
-			return scope.formModel.os_windows
-				|| scope.formModel.os_mac
-				|| scope.formModel.os_linux
-				|| scope.formModel.os_windows_64
-				|| scope.formModel.os_mac_64
-				|| scope.formModel.os_linux_64
-				|| scope.formModel.os_other
-				;
+			var val = scope.formModel[ 'os_' + platform ] ? 1 : 0;
+			var params = [ scope.game.id, scope.package.id, scope.release.id, scope.baseModel.id, platform, val ];
+			return Api.sendRequest( '/web/dash/developer/games/builds/set-platform/' + params.join( '/' ), {}, { detach: true } )
+				.then( function( response )
+				{
+					scope.baseModel.assign( new Game_Build( response.gameBuild ) );
+
+					// Copy new platforms to the form model.
+					for ( var platform in scope.platformsInfo ) {
+						var key = 'os_' + platform;
+						scope.formModel[ key ] = scope.baseModel[ key ];
+					}
+
+					// Copy new launch options in.
+					scope._launchOptions = Game_Build_LaunchOption.populate( response.launchOptions );
+
+					scope.formState.isSettingPlatform = false;
+				} )
+				.catch( function()
+				{
+					Growls.error( 'Could not set the platform for some reason.' );
+					scope.formState.isSettingPlatform = false;
+				} );
 		};
-	};
+	}
+
+	function setupLaunchOptions( scope )
+	{
+		scope.$watchCollection( '_launchOptions', function( launchOptions )
+		{
+			scope.launchOptions = _.where( launchOptions, { game_build_id: scope.baseModel.id } );
+
+			launchOptions.forEach( function( launchOption )
+			{
+				scope.formModel[ 'launch_' + launchOption.os ] = launchOption.executable_path;
+			} );
+		} );
+
+		var platformToFill;
+		scope.openFileSelector = function( _platformToFill )
+		{
+			platformToFill = _platformToFill;
+
+			var modalInstance = $modal.open( {
+				size: 'md',
+				templateUrl: '/app/components/forms/dashboard/game/build/archive-file-selector.html',
+				controller: 'Forms_Dashboard_Game_Build_ArchiveFileSelectorCtrl',
+				controllerAs: 'modalCtrl',
+				resolve: {
+					data: function()
+					{
+						return {
+							game: scope.game,
+							package: scope.package,
+							release: scope.release,
+							build: scope.baseModel,
+							platform: platformToFill,
+						};
+					},
+				}
+			} );
+
+			modalInstance.result.then( function( selected )
+			{
+				scope.formModel[ platformToFill ] = selected;
+				platformToFill = null;
+			} );
+		};
+	}
+
+	function setupStatusPolling( scope )
+	{
+		scope.onBuildProcessingComplete = function( response )
+		{
+			// Just copy over the new build data into our current one.
+			scope.baseModel.assign( response.build );
+		};
+	}
 
 	return form;
 } );

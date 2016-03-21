@@ -23,11 +23,82 @@
 
 		</form-group>
 
-		<button gj-form-submit-button class="i-button" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">
-			<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
-			<span ng-if="method == 'add'">{{ ::'dash.games.releases.form.add_release_button' | translate }}</span>
-			<span ng-if="method == 'add'">{{ ::'dash.games.releases.form.save_release_button' | translate }}</span>
-		</button>
+		<fieldset>
+			<legend>Builds</legend>
+
+			<div class="alert alert-warning" ng-if="!builds.length">You don't have any builds in this release yet. You won't be able to publish until you put some in.</div>
+
+			<div ng-repeat="build in builds track by build.id" class="anim-fade-leave-enlarge anim-fade-enter">
+				<gj-form-dashboard-game-build
+					gj-game="game"
+					gj-game-package="package"
+					gj-game-release="baseModel"
+					gj-game-build="build"
+					gj-game-launch-options="launchOptions"
+					gj-game-package-builds="builds"
+					gj-build-download-counts="buildDownloadCounts"
+					gj-on-remove-build="removeBuild( $build )"
+					>
+				</gj-form-dashboard-game-build>
+			</div>
+
+			<br>
+
+			<div class="row">
+				<div class="col-xs-6">
+					<h5 class="sans-margin-top"><strong>Upload Downloadable Build</strong></h5>
+					<gj-form-dashboard-game-new-build
+						gj-build-type="downloadable"
+						gj-game="game"
+						gj-game-package="package"
+						gj-game-release="baseModel"
+						gj-form-submit-handler="onBuildAdded( formModel )"
+						>
+					</gj-form-dashboard-game-new-build>
+				</div>
+				<div class="col-xs-6">
+					<h5 class="sans-margin-top"><strong>Upload Browser Build</strong></h5>
+					<gj-form-dashboard-game-new-build
+						gj-build-type="browser"
+						gj-game="game"
+						gj-game-package="package"
+						gj-game-release="baseModel"
+						gj-form-submit-handler="onBuildAdded( formModel )"
+						>
+					</gj-form-dashboard-game-new-build>
+				</div>
+			</div>
+
+		</fieldset>
+
+		<span ng-if="baseModel.status != Game_Release.STATUS_PUBLISHED">
+			<button class="btn btn-success" ng-disabled="!packageForm.$valid || !builds.length" ng-click="savePublished()">
+				<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
+				Publish Release
+			</button>
+
+			<button class="btn btn-outline" ng-disabled="!packageForm.$valid || !builds.length" ng-click="saveDraft()">
+				Save Draft
+			</button>
+		</span>
+
+		<span ng-if="baseModel.status == Game_Release.STATUS_PUBLISHED">
+			<button class="btn" ng-disabled="!packageForm.$valid || !builds.length" ng-click="onSubmit()">
+				<span class="jolticon jolticon-edit"></span>
+				Save Release
+			</button>
+		</span>
+
+		<div class="pull-right">
+			<button class="btn btn-outline" ng-if="baseModel.status == Game_Release.STATUS_PUBLISHED" ng-click="unpublish()">
+				Unpublish Release
+			</button>
+
+			<button class="btn btn-danger-outline" ng-click="remove()">
+				Remove Release
+			</button>
+		</div>
+
 	</div>
 
 </form>

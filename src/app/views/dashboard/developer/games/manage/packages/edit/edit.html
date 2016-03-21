@@ -1,0 +1,166 @@
+<section class="section">
+	<div class="container">
+
+		<nav class="breadcrumb">
+			<ul>
+				<li>
+					<a ui-sref="dashboard.developer.games.manage.packages.list">
+						<span class="breadcrumb-tag">&nbsp;</span>
+						Packages
+					</a>
+					<span class="breadcrumb-separator jolticon jolticon-chevron-right"></span>
+				</li>
+				<li>
+					<span class="active">
+						<span class="breadcrumb-tag">{{ ::'dash.games.releases.manage.breadcrumb_package' | translate }}</span>
+						{{ editCtrl.package.title || manageCtrl.game.title }}
+					</span>
+				</li>
+			</ul>
+		</nav>
+
+		<div class="row">
+			<div class="col-sm-6">
+
+				<gj-form-dashboard-game-package
+					gj-game="manageCtrl.game"
+					gj-game-package="editCtrl.package"
+					gj-form-submit-handler="editCtrl.onEdited( formModel )"
+					>
+				</gj-form-dashboard-game-package>
+
+			</div>
+			<div class="col-sm-6">
+
+				<h3 class="section-header">Preview</h3>
+
+				<div class="small text-muted">
+					<p>This is how your package will look on your game's page.</p>
+				</div>
+
+				<div ng-if="editCtrl.isLoadingPreview">
+					<gj-loading></gj-loading>
+				</div>
+
+				<div ng-if="!editCtrl.isLoadingPreview">
+					<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
+						<gj-game-package-card
+							game="::manageCtrl.game"
+							game-package="editCtrl.package"
+							game-releases="editCtrl.previewPackage._releases"
+							game-builds="editCtrl.previewPackage._builds"
+							game-build-launch-options="editCtrl.previewData.launchOptions"
+							>
+						</gj-game-package-card>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<h3>{{ ::'dash.games.packages.manage.releases.heading' | translate }}</h3>
+
+		<div class="row">
+			<div class="col-sm-4 pull-right">
+				<div class="page-help">
+					<div translate>dash.games.packages.manage.releases.page_help_html</div>
+					<p>
+						<a class="link-help" href="https://help.gamejolt.com/dev-packages#releases" target="_blank">{{ ::'dash.games.packages.manage.releases.page_help_link' | translate }}</a>
+					</p>
+				</div>
+			</div>
+
+			<div class="col-sm-8 pull-left">
+
+				<div class="alert alert-warning" ng-if="!editCtrl.releases.length" translate>dash.games.packages.manage.releases.no_releases_html</div>
+
+				<div>
+					<a class="btn btn-success-outline btn-block"
+						ng-click="editCtrl.newRelease()"
+						ng-disabled="editCtrl.isAddingRelease"
+						>
+						<span class="jolticon jolticon-add"></span>
+						New Release
+					</a>
+				</div>
+				<br>
+
+				<div ng-if="editCtrl.releases.length">
+					<gj-editable-accordion>
+
+						<gj-editable-accordion-item
+							ng-repeat="release in editCtrl.releases track by release.id"
+							>
+
+							<gj-editable-accordion-item-heading>
+
+								<div class="pull-right">
+									<a class="link-muted pull-right" ng-click="editCtrl.removeRelease( release )">
+										<span class="jolticon jolticon-remove middle"></span>
+									</a>
+
+									<span class="tag"
+										ng-if="release.status == Game_Release.STATUS_HIDDEN"
+										tooltip="{{ ::'dash.games.packages.manage.releases.hidden_tooltip' | translate }}"
+										>
+										<span class="jolticon jolticon-inactive"></span>
+										{{ ::'dash.games.packages.manage.releases.hidden_tag' | translate }}
+									</span>
+
+									<span class="tag tag-active"
+										ng-if="release.status == Game_Release.STATUS_PUBLISHED"
+										tooltip="{{ ::'dash.games.packages.manage.releases.published_tooltip' | translate }}"
+										>
+										<span class="jolticon jolticon-active"></span>
+										{{ ::'dash.games.packages.manage.releases.published_tag' | translate }}
+									</span>
+								</div>
+
+								<h5 class="editable-accordion-item-heading-title">
+									<a class="link-unstyled" ui-sref="dashboard.developer.games.manage.packages.release.edit( { packageId: editCtrl.package.id, releaseId: release.id } )">
+										<strong>{{ ::release.version_number }}</strong>
+									</a>
+								</h5>
+
+								<div class="editable-accordion-item-heading-description">
+									<span ng-if="!release.build_count" translate>
+										dash.games.packages.manage.releases.builds_count_none
+									</span>
+
+									<span ng-if="release.build_count"
+										translate
+										translate-plural="dash.games.packages.manage.releases.build_count"
+										translate-n="release.build_count"
+										>
+										dash.games.packages.manage.releases.build_count
+									</span>
+								</div>
+
+								<p class="editable-accordion-item-heading-description" ng-if="package.description">
+									{{ package.description }}
+								</p>
+
+								<div>
+									<a class="btn btn-outline btn-sm" ui-sref="dashboard.developer.games.manage.packages.release.edit( { packageId: editCtrl.package.id, releaseId: release.id } )">
+										<span class="jolticon jolticon-edit"></span>
+										Edit Release
+									</a>
+
+									<a class="btn btn-outline btn-sm" ui-sref="dashboard.developer.games.manage.packages.release.stats( { packageId: editCtrl.package.id, releaseId: release.id } )">
+										<span class="jolticon jolticon-chart"></span>
+										Stats
+									</a>
+								</div>
+
+							</gj-editable-accordion-item-heading>
+
+						</gj-editable-accordion-item>
+
+					</gj-editable-accordion>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</section>
