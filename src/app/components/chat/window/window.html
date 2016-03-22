@@ -184,8 +184,8 @@
 								<div class="chat-window-message-content highlight" ng-bind-html="::msg.content"></div>
 							</gj-fade-collapse>
 
-							<p ng-if="msg._collapsable && !msg._expanded">
-								<a class="hidden-text-expander" ng-click="msg._expanded = true"></a>
+							<p ng-if="msg._collapsable">
+								<a class="hidden-text-expander" ng-click="msg._expanded = !msg._expanded"></a>
 							</p>
 						</div>
 					</div>
