@@ -25,7 +25,7 @@ angular.module( 'App.Game.RatingGrowl' ).service( 'Game_RatingGrowl', function( 
 					return;
 				}
 
-				Growls.success( {
+				Growls.info( {
 					sticky: true,
 					templateUrl: '/app/components/game/rating-growl/rating-growl.html',
 					controller: 'Game_RatingGrowlCtrl',
