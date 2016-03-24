@@ -16,7 +16,7 @@
 				<span class="jolticon jolticon-gamejolt"></span>
 				Home
 			</a>
-			<a class="list-group-item has-icon offline-disable" ui-sref="discover.games.list.section( { section: 'featured' } )"
+			<a class="list-group-item has-icon offline-disable" ui-sref="discover.games.list.section( { section: 'hot' } )"
 				ui-sref-opts="{ inherit: false }"
 				gj-track-event="discover-nav:hot"
 				>
@@ -101,14 +101,24 @@
 				title="Fireside - Indie gaming opinions, news, and reviews"
 				gj-track-event="discover-nav:fireside"
 				>
-				<img ng-src="/lib/gj-lib-client/components/site-selector/jolt-fireside.png" width="155" style="margin-top: -8px; margin-bottom: -2px" alt="Fireside">
+				<img src="/lib/gj-lib-client/components/site-selector/jolt-fireside.png" width="155" style="margin-top: -8px; margin-bottom: -2px" alt="Fireside">
 			</a>
 
 			<a class="list-group-item" ng-href="{{ ::Environment.jamsBaseUrl }}"
 				title="Game Jolt Jams"
-				gj-track-event="discover-nav:jams">
-				<img ng-src="/lib/gj-lib-client/components/site-selector/jolt.svg" alt="" style="margin-right: 6px;">
-				<img ng-src="/lib/gj-lib-client/components/site-selector/jams-logo.svg" alt="Game Jolt Jams">
+				gj-track-event="discover-nav:jams"
+				>
+				<img src="/lib/gj-lib-client/components/site-selector/jolt.svg" alt="" style="margin-right: 6px;">
+				<img src="/lib/gj-lib-client/components/site-selector/jams-logo.svg" alt="Game Jolt Jams">
+			</a>
+
+			<a class="list-group-item" href="/client"
+				ng-if="!Environment.isClient"
+				title="Game Jolt Client"
+				gj-track-event="discover-nav:client"
+				>
+				<img src="/lib/gj-lib-client/components/site-selector/jolt.svg" alt="" style="margin-right: 6px;">
+				<img src="/lib/gj-lib-client/components/site-selector/client-logo.svg" alt="Game Jolt Client">
 			</a>
 
 		</div>

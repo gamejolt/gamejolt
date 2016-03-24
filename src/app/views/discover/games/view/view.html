@@ -1,8 +1,45 @@
 <div ng-if="gameCtrl.game">
 
 	<!-- Game Header -->
-	<div ng-if="Game_ViewState.showCover">
-		<gj-game-cover gj-game="gameCtrl.game"></gj-game-cover>
+	<div ng-if="Game_ViewState.showExtendedHeader">
+		<gj-game-cover ng-if="Game_ViewState.showCover" gj-game="gameCtrl.game">
+
+			<div ng-if="gameCtrl.gameCoverButtonsVariation != 'original' && !Screen.isXs">
+				<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
+					<gj-game-cover-buttons
+						gj-game="gameCtrl.game"
+						gj-game-packages="gameCtrl.packages"
+						on-show-packages="gameCtrl.scrollToPackages()"
+						variation="gameCtrl.gameCoverButtonsVariation"
+						>
+					</gj-game-cover-buttons>
+				</div>
+			</div>
+
+		</gj-game-cover>
+
+		<!--
+			Use ng-show so it's actually able to load in the component to see if it should show or not.
+		-->
+		<section class="section fill-darker" ng-show="!Game_ViewState.showCover && gameCtrl.hasGameCoverButtons">
+			<div class="container text-center">
+
+				<div ng-if="gameCtrl.gameCoverButtonsVariation != 'original' && !Screen.isXs">
+					<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
+						<gj-game-cover-buttons
+							gj-game="gameCtrl.game"
+							gj-game-packages="gameCtrl.packages"
+							on-show-packages="gameCtrl.scrollToPackages()"
+							has-buttons="gameCtrl.hasGameCoverButtons"
+							variation="gameCtrl.gameCoverButtonsVariation"
+							>
+						</gj-game-cover-buttons>
+					</div>
+				</div>
+
+			</div>
+		</section>
+
 	</div>
 
 	<div class="alert alert-warning sans-margin-bottom" ng-if="Game_ViewState.showExtendedHeader && gameCtrl.notificationCounts.news">

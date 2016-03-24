@@ -1,3 +1,15 @@
+<div class="fill-dark footer-client-promo" ng-if="!Screen.isXs && !Environment.isClient">
+	<div class="container">
+		<a ui-sref="client" gj-track-event="footer:client-promo">
+			<img src="/app/img/game-jolt-client-logo.svg" alt="Game Jolt Client">
+		</a>
+		<span translate>footer.client_promo.message</span>
+		<a ui-sref="client" class="btn btn-sm btn-primary-outline" gj-track-event="footer:client-promo" translate>
+			footer.client_promo.learn_button
+		</a>
+	</div>
+</div>
+
 <footer id="footer" class="section">
 	<div class="container" ng-class="{ 'text-center': Screen.isXs }">
 		<div class="clearfix small">

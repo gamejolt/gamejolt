@@ -2,7 +2,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle,
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, Environment,
 	Jam,
-	Api, Game_ViewState )
+	Api, Game_ViewState, Analytics, SplitTest )
 {
 	var _this = this;
 
@@ -60,6 +60,11 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		{
 			_this.trophiesPayload = payload;
 		} );
+
+		// We set our state to skip tracking in the state definition.
+		// Track it manually here.
+		// This ensures that any experiments set in the payload get tracked as well.
+		Analytics.trackPageview();
 	} );
 
 	this.init = function( payload )
@@ -74,6 +79,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		$scope.gameCtrl.notificationCounts = payload.notificationCounts || {
 			news: 0,
 		};
+
+		$scope.gameCtrl.gameCoverButtonsVariation = SplitTest.getGameCoverButtons( payload );
 
 		this.downloadCount = payload.downloadCount;
 		this.profileCount = payload.profileCount;
@@ -99,6 +106,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 
 		var packageData = Game_Package.processPackagePayload( payload );
 		angular.extend( this, packageData );
+
+		// Need this for the game play buttons in header.
+		$scope.gameCtrl.packages = this.packages;
 
 		// The releases section exists if there are releases or songs.
 		this.hasReleasesSection = this.releases.length || this.songs.length;

@@ -1,4 +1,22 @@
-<div ng-if="!Environment.isClient">
+<style type="text/css">
+
+	.home-featured-jam-banner {
+		position: relative;
+		background-image: url(https://n3b6p5n5.ssl.hwcdn.net/data/fireside/posts/0/70/5570/media/background-5ifbhcnq.jpg);
+		background-size: cover;
+	}
+
+</style>
+
+<section class="section home-featured-jam-banner">
+	<div class="container">
+		<a href="http://jams.gamejolt.io/badboxart" target="_blank" gj-track-event="home:featured-jam:badboxart">
+			<img class="img-responsive" style="margin: 0 auto" src="https://n3b6p5n5.ssl.hwcdn.net/data/fireside/posts/0/70/5570/media/logotext-pft399ex.png" alt="BadBoxArt Challenge">
+		</a>
+	</div>
+</section>
+
+<!--<div ng-if="!Environment.isClient">
 	<style type="text/css">
 
 		.client-banner {
@@ -24,8 +42,8 @@
 					<div class="h2 section-header">Psst...</div>
 					<p>
 						<a href="http://gamejolt.com/client" gj-track-event="home:client-banner">
-							<img ng-if="Screen.isXs" src="/app/img/game-jolt-client-logo-2x.png" width="254" height="18" alt="Game Jolt Client">
-							<img ng-if="!Screen.isXs" src="/app/img/game-jolt-client-logo-4x.png" width="558" height="36" alt="Game Jolt Client">
+							<img ng-if="Screen.isXs" src="/app/img/game-jolt-client-logo.svg" width="254" height="18" alt="Game Jolt Client">
+							<img ng-if="!Screen.isXs" src="/app/img/game-jolt-client-logo.svg" width="558" height="36" alt="Game Jolt Client">
 						</a>
 					</p>
 					<p>We launched the Game Jolt Client. It's the whole site on your desktop&mdash;easiest, speediest way to install and play Game Jolt games.</p>
@@ -39,7 +57,7 @@
 			</div>
 		</div>
 	</section>
-</div>
+</div>-->
 
 <gj-discover-home-featured gj-items="homeCtrl.featuredItems"></gj-discover-home-featured>
 

@@ -1,0 +1,17 @@
+<a class="btn btn-primary-outline btn-overlay-variant"
+	ng-class="{ 'btn-lg': ctrl.variation == 'lg-buttons' }"
+	ng-if="ctrl.browserBuilds.length"
+	ng-click="ctrl.play()"
+	>
+	<span class="jolticon jolticon-play"></span>
+	Play Game
+</a>
+
+<a class="btn btn-success-outline btn-overlay-variant"
+	ng-class="{ 'btn-lg': ctrl.variation == 'lg-buttons' }"
+	ng-if="ctrl.installableBuilds.length"
+	ng-click="ctrl.download()"
+	>
+	<span class="jolticon jolticon-download"></span>
+	Download
+</a>

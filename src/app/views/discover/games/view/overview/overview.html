@@ -82,7 +82,12 @@
 				<!-- Builds / Soundtrack -->
 				<div ng-if="gameCtrl.game._has_packages || overviewCtrl.hasReleasesSection">
 
-					<h2 ng-class="{ 'section-header': (Screen.isXs && !overviewCtrl.detailsOpen) || !Screen.isXs }">Releases</h2>
+					<h2 id="game-releases" ng-class="{ 'section-header': (Screen.isXs && !overviewCtrl.detailsOpen) || !Screen.isXs }">Releases</h2>
+
+					<div ng-if="gameCtrl.showMultiplePackagesMessage" class="alert alert-info">
+						<span class="jolticon jolticon-notice"></span>
+						There are multiple packages for your device. Please choose one below.
+					</div>
 
 					<!-- TG: Thunder Gun widget -->
 					<div ng-if="::gameCtrl.game.id == 64527">
