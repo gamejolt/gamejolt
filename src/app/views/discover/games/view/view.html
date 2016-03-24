@@ -4,7 +4,7 @@
 	<div ng-if="Game_ViewState.showExtendedHeader">
 		<gj-game-cover ng-if="Game_ViewState.showCover" gj-game="gameCtrl.game">
 
-			<div ng-if="gameCtrl.gameCoverButtonsVariation != 'original'">
+			<div ng-if="gameCtrl.gameCoverButtonsVariation != 'original' && !Screen.isXs">
 				<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
 					<gj-game-cover-buttons
 						gj-game="gameCtrl.game"
@@ -24,7 +24,7 @@
 		<section class="section fill-darker" ng-show="!Game_ViewState.showCover && gameCtrl.hasGameCoverButtons">
 			<div class="container text-center">
 
-				<div ng-if="gameCtrl.gameCoverButtonsVariation != 'original'">
+				<div ng-if="gameCtrl.gameCoverButtonsVariation != 'original' && !Screen.isXs">
 					<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
 						<gj-game-cover-buttons
 							gj-game="gameCtrl.game"
