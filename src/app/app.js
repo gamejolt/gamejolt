@@ -117,6 +117,7 @@ angular.module( 'App', [
 	'gj.Game.ScoreTable',
 	'gj.Game.DataStore.Item',
 
+	'gj.Game.Downloader',
 	'gj.Game.Package.Card',
 	'gj.Game.PlayModal',
 
@@ -203,6 +204,7 @@ angular.module( 'App', [
 	'App.Game.Grid',
 	'App.Game.Filtering',
 	'App.Game.Cover',
+	'App.Game.Cover.Buttons',
 	'App.Game.MediaBar',
 	'App.Game.Ogrs',
 	'App.Game.RatingGrowl',
