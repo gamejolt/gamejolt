@@ -31,18 +31,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		} );
 
 		// If the game has a GA tracking ID, then we attach it to this scope so all page views within get tracked.
-		// Apply it async so that it always resolves after stateChangeSuccess.
-		// This way we can track the initial page view without double tracking.
-		$timeout( function()
-		{
 			if ( game.ga_tracking_id ) {
-
-				// We have to attach it and track the page view.
-				// We have to track the page view initially since we lazy loaded it in.
 				Analytics.attachAdditionalPageTracker( $scope, game.ga_tracking_id );
-				Analytics.trackPageview( null, game.ga_tracking_id );
 			}
-		}, 0, false );
 	} );
 
 	$scope.$on( '$destroy', function()
