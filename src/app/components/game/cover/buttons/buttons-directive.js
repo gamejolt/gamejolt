@@ -12,7 +12,7 @@ angular.module( 'App.Game.Cover.Buttons' ).directive( 'gjGameCoverButtons', func
 		templateUrl: '/app/components/game/cover/buttons/buttons.html',
 		controllerAs: 'ctrl',
 		bindToController: true,
-		controller: function( $scope, Game, Device, Game_Downloader, Game_PlayModal, Analytics )
+		controller: function( $scope, Game, Device, Game_Downloader, Game_PlayModal, Game_Build, Analytics )
 		{
 			var _this = this;
 
@@ -44,7 +44,7 @@ angular.module( 'App.Game.Cover.Buttons' ).directive( 'gjGameCoverButtons', func
 					if ( _.uniq( _.pluck( this.browserBuilds, 'game_package_id' ) ).length <= 1 ) {
 
 						// Prioritize HTML build.
-						var htmlBuild = _.where( this.browserBuilds, { type_html: 1 } );
+						var htmlBuild = _.find( this.browserBuilds, { type: Game_Build.TYPE_HTML } );
 						if ( htmlBuild ) {
 							this.browserBuilds = [ htmlBuild ];
 						}
