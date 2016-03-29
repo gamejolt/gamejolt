@@ -4,18 +4,21 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 		restrict: 'E',
 		templateUrl: '/app/components/client/game-buttons/game-buttons.html',
 		scope: {
-			game: '=game',
+			game: '=',
 			overlay: '=?overlayVariant',
 			small: '=?smallVariant',
-			onShowLaunchOptions: '&?onShowLaunchOptions',
-			onHideLaunchOptions: '&?onHideLaunchOptions',
-			onShowOptions: '&?onShowOptions',
-			onHideOptions: '&?onHideOptions',
+			large: '=?largeVariant',
+			onShowLaunchOptions: '&?',
+			onHideLaunchOptions: '&?',
+			onShowOptions: '&?',
+			onHideOptions: '&?',
 			label: '@?',
+			isPatching: '=?',
+			hasPackage: '=?',
 		},
 		controllerAs: 'ctrl',
 		bindToController: true,
-		controller: function( $q, $scope, Client_Library, Client_Launcher, Client_Installer, LocalDb_Package, Client_InstallPackageModal, Device, Api, Popover, Analytics,
+		controller: function( $q, $scope, $attrs, Client_Library, Client_Launcher, Client_Installer, LocalDb_Package, Client_InstallPackageModal, Device, Api, Popover, Analytics,
 			Game, Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption )
 		{
 			var _this = this;
@@ -50,6 +53,20 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 			{
 				_this.localPackage = localPackage;
 			} );
+
+			if ( !angular.isUndefined( $attrs.isPatching ) ) {
+				$scope.$watch( 'ctrl.localPackage.isPatching()', function( isPatching )
+				{
+					_this.isPatching = isPatching;
+				} );
+			}
+
+			if ( !angular.isUndefined( $attrs.hasPackage ) ) {
+				$scope.$watch( 'ctrl.localPackage', function( localPackage )
+				{
+					_this.hasPackage = !!localPackage;
+				} );
+			}
 
 			this.install = function()
 			{
