@@ -1,0 +1,28 @@
+<section class="section">
+	<div class="container">
+
+		<table class="table">
+			<!--<colgroup>
+				<col span="3">
+				<col style="text-align: right">
+			</colgroup>-->
+			<thead>
+				<tr>
+					<th>Order #</th>
+					<th>Item</th>
+					<th>Purchase Date</th>
+					<th class="text-right">Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="order in purchasesCtrl.orders track by order.id">
+					<td><strong>{{ ::order.id }}</strong></td>
+					<td>{{ ::order.items[0].sellable.title }}</td>
+					<td title="{{ ::order.completed_on | date:'medium' }}">{{ ::order.completed_on | date:'mediumDate' }}</td>
+					<td class="text-right">{{ ::order.amount / 100 | currency }}</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+</section>

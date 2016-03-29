@@ -29,6 +29,7 @@ angular.module( 'App.Views' ).controller( 'Library.OverviewCtrl', function( $sco
 
 	this.followedCollection = libraryPayload.followedCollection ? new GameCollection( libraryPayload.followedCollection ) : null;
 	this.developerCollection = libraryPayload.developerCollection ? new GameCollection( libraryPayload.developerCollection ) : null;
+	this.ownedCollection = libraryPayload.ownedCollection ? new GameCollection( libraryPayload.ownedCollection ) : null;
 
 	this.bundleCollections = GameCollection.populate( libraryPayload.bundleCollections );
 
@@ -40,6 +41,10 @@ angular.module( 'App.Views' ).controller( 'Library.OverviewCtrl', function( $sco
 
 	if ( this.developerCollection ) {
 		this.mainCollections.push( this.developerCollection );
+	}
+
+	if ( this.ownedCollection ) {
+		this.mainCollections.push( this.ownedCollection );
 	}
 
 	this.playlistCollections = [];

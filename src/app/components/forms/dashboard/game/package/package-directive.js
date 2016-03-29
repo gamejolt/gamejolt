@@ -15,9 +15,16 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 		scope.formState.showDescriptionInput = scope.formModel.description ? true : false;
 
 		if ( !scope.isLoaded ) {
-			Api.sendRequest( '/web/dash/developer/games/packages/save/' + scope.formModel.game_id ).then( function( payload )
+			var params = [ scope.formModel.game_id ];
+			if ( scope.method == 'edit' ) {
+				params.push( scope.formModel.id );
+			}
+
+			Api.sendRequest( '/web/dash/developer/games/packages/save/' + params.join( '/' ) ).then( function( payload )
 			{
 				scope.isLoaded = true;
+
+				scope.formModel.pricing_type = 'free';
 
 				if ( scope.method == 'add' ) {
 					if ( payload.hasDefaultPackage ) {
@@ -31,6 +38,13 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 					if ( !scope.formModel.title ) {
 						scope.formModel.title = scope.game.title;
 					}
+
+					if ( payload.sellable ) {
+						scope.formModel.pricing_type = payload.sellable.type;
+						scope.formModel.price = payload.sellable.pricings[0].amount / 100;
+
+						scope.formState.hasSuggestedPrice = !!scope.formModel.price;
+					}
 				}
 			} );
 		}
@@ -39,6 +53,13 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 				scope.formModel.title = scope.game.title;
 			}
 		}
+
+		scope.$watch( 'formState.hasSuggestedPrice', function( val )
+		{
+			if ( scope.formModel.pricing_type == 'pwyw' && !val ) {
+				scope.formModel.price = null;
+			}
+		} );
 	};
 
 	return form;

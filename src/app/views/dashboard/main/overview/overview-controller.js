@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.OverviewCtrl', function( $scope, $interval, $state, App, Game, Notification, Fireside_Post, gettextCatalog, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', function( $scope, $interval, $state, App, Game, Notification, Fireside_Post, gettextCatalog, payload )
 {
 	App.title = gettextCatalog.getString( 'dash.overview.page_title' );
 

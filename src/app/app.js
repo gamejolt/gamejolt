@@ -33,6 +33,7 @@ angular.module( 'App', [
 	'gj.Duration',
 	'gj.FuzzyNumber',
 	'gj.Fuzzysearch',
+	'gj.Currency',
 
 	'gj.Debug',
 	'gj.Debug.DebugBar',
@@ -114,13 +115,14 @@ angular.module( 'App', [
 	'gj.Game.Build.File',
 	'gj.Game.Build.Param',
 	'gj.Game.Build.LaunchOption',
+	'gj.Sellable',
 	'gj.Game.NewsArticle',
 	'gj.Game.Trophy',
 	'gj.Game.ScoreTable',
 	'gj.Game.DataStore.Item',
 
-	'gj.Game.Downloader',
 	'gj.Game.Package.Card',
+	'gj.Game.Downloader',
 	'gj.Game.PlayModal',
 
 	'gj.Jam',

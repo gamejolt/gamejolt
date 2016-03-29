@@ -161,13 +161,19 @@ gj-game-thumbnail
 	&-pricing
 		@extend .fill-darkest
 		position: absolute
-		height: 34px
+		height: 30px
 		line-height: @height
 		top: -(@height)
 		right: 5px
 		padding: 0 10px
 		text-align: center
 		z-index: 2
+
+		&-owned
+			@extend .fill-green
+
+			& ^[-1]-tag
+				color: inherit
 
 		&-amount
 			color: $white

@@ -1,19 +1,19 @@
 <section class="container">
 
-	<div class="game-cover" ng-if="checkoutCtrl.bucket.game.img_header">
-		<img gj-img-responsive="{{ checkoutCtrl.bucket.game.img_header }}" alt="">
+	<div class="game-cover" ng-if="checkoutCtrl.game.img_header">
+		<img gj-img-responsive="{{ checkoutCtrl.game.img_header }}" alt="">
 	</div>
 
 	<div class="text-center">
 		<h1 class="sans-margin">
 			<a class="link-unstyled">
-				{{ checkoutCtrl.bucket.game.title }}
+				{{ checkoutCtrl.game.title }}
 			</a>
 		</h1>
 		<h4 class="text-muted sans-margin-top">
 			by
 			<a class="link-unstyled">
-				{{ checkoutCtrl.bucket.game.developer.display_name }}
+				{{ checkoutCtrl.game.developer.display_name }}
 			</a>
 		</h4>
 	</div>

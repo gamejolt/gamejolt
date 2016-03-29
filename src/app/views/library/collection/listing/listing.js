@@ -24,6 +24,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		'playlist': '^/playlist/:slug/:id',
 		'followed': '^/profile/:slug/:id/followed',
 		'developer': '^/profile/:slug/:id/games',
+		'owned': '^/profile/:slug/:id/owned',
 		'bundle': '^/library/bundle/:slug/:id/games',
 		'tag': '^/tag/:id',
 	};

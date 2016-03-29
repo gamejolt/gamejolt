@@ -33,6 +33,72 @@
 			</div>
 		</form-group>
 
+		<form-group name="pricing_type" label="Pricing Type">
+			<p class="help-block">
+				<span class="jolticon jolticon-notice"></span>
+				You must set up your account's financial info before you can start accepting money.
+			</p>
+
+			<div class="radio">
+				<label>
+					<input form-control="radio" value="free">
+					<span>Free</span> &mdash;
+					<span class="help-inline">Completely free with no option to pay at all.</span>
+				</label>
+			</div>
+
+			<div class="radio">
+				<label>
+					<input form-control="radio" value="pwyw">
+					<span>Pay What You Want</span> &mdash;
+					<span class="help-inline">They will be able to pay $0 or more. They set the price.</span>
+				</label>
+			</div>
+
+			<div class="radio">
+				<label>
+					<input form-control="radio" value="paid">
+					<span>Fixed Minimum Price</span> &mdash;
+					<span class="help-inline">Charge a fixed price for your game with the ability for them to pay more as an optional tip.</span>
+				</label>
+			</div>
+		</form-group>
+
+		<form-group name="price" label="Suggested Price" ng-if="formModel.pricing_type == 'pwyw'" optional="true">
+			<p class="help-block">You're able to set a suggested amount for this package if you'd like. They will still be able to set it to $0 if they want.</p>
+
+			<div class="row">
+				<div class="col-sm-3">
+					<gj-toggle-switch type="checkbox" ng-model="formState.hasSuggestedPrice" toggle-switch-on-text="On" toggle-switch-off-text="Off"></gj-toggle-switch>
+					<br class="visible-xs">
+				</div>
+				<div class="col-sm-9">
+					<input-group>
+						<input-group-addon>$</input-group-addon>
+						<input form-control="number"
+							gj-form-currency-input
+							step="0.1"
+							min="1"
+							ng-disabled="!formState.hasSuggestedPrice"
+							>
+					</input-group>
+					<control-errors></control-errors>
+				</div>
+			</div>
+		</form-group>
+
+		<form-group name="price" lable="Price" ng-if="formModel.pricing_type == 'paid'">
+			<input-group>
+				<input-group-addon>$</input-group-addon>
+				<input form-control="number"
+					gj-form-currency-input
+					step="0.1"
+					min="1"
+					>
+			</input-group>
+			<control-errors></control-errors>
+		</form-group>
+
 		<button gj-form-submit-button class="btn" ng-show="method == 'add' || !packageForm.$pristine" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">
 			<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
 			<span ng-if="method == 'add'">{{ ::'dash.games.packages.form.add_package_button' | translate }}</span>

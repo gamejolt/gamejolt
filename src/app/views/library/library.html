@@ -23,6 +23,12 @@
 					{{ ::'library.nav.developer' | translate }}
 				</a>
 			</li>
+			<li ng-if="!Connection.isClientOffline">
+				<a ui-sref="{{ ::libraryCtrl.ownedCollection.getSref( true ) }}" ui-sref-active="active">
+					<span class="jolticon jolticon-heart"></span>
+					<span translate>Owned Games</span>
+				</a>
+			</li>
 		</ul>
 
 		<div ng-if="!Connection.isClientOffline">

@@ -27,15 +27,27 @@
 
 	<div class="game-thumbnail-meta">
 
-		<div class="game-thumbnail-pricing">
-			<span class="game-thumbnail-pricing-amount">
-				<span class="game-thumbnail-pricing-currency">$</span>10.00
-				<span class="game-thumbnail-pricing-currency">USD</span>
-			</span>
-			<!--<span class="game-thumbnail-pricing-tag">name your price</span>-->
-			<!--<span class="game-thumbnail-pricing-amount">
-				FREE
-			</span>-->
+		<div class="game-thumbnail-pricing"
+			ng-if="::ctrl.game._has_packages"
+			ng-class="::{ 'game-thumbnail-pricing-owned': ctrl.game.sellable.is_owned }"
+			>
+			<div ng-if="::!ctrl.game.sellable.is_owned" ng-switch="::ctrl.game.sellable.type">
+				<span class="game-thumbnail-pricing-amount" ng-switch-when="paid">
+					<span class="game-thumbnail-pricing-currency">$</span>{{ ::ctrl.game.sellable.pricings[0].amount | gjCurrency:'' }}
+					<!--<span class="game-thumbnail-pricing-currency">USD</span>-->
+				</span>
+				<span class="game-thumbnail-pricing-tag" ng-switch-when="pwyw">
+					name your price
+				</span>
+				<span class="game-thumbnail-pricing-tag" ng-switch-default>
+					Free
+				</span>
+			</div>
+			<div ng-if="::ctrl.game.sellable.is_owned">
+				<span class="game-thumbnail-pricing-tag">
+					Owned
+				</span>
+			</div>
 		</div>
 
 		<div class="game-thumbnail-meter" ng-if="::ctrl.game.ratings_enabled">

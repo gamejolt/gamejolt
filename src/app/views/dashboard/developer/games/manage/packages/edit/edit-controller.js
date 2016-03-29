@@ -19,6 +19,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 
 	this.newRelease = newRelease;
 	this.removeRelease = removeRelease;
+	this.onEdited = onEdited;
 
 	loadPreview();
 
@@ -32,6 +33,11 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 				_this.previewPackage = _.find( _this.previewData.packages, { id: _this.package.id } );
 				_this.isLoadingPreview = false;
 			} );
+	}
+
+	function onEdited()
+	{
+		loadPreview();
 	}
 
 	function newRelease()

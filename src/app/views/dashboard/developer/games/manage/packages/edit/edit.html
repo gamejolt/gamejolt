@@ -46,10 +46,10 @@
 					<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
 						<gj-game-package-card
 							game="::manageCtrl.game"
-							game-package="editCtrl.package"
-							game-releases="editCtrl.previewPackage._releases"
-							game-builds="editCtrl.previewPackage._builds"
-							game-build-launch-options="editCtrl.previewData.launchOptions"
+							game-package="::editCtrl.previewPackage"
+							game-releases="::editCtrl.previewPackage._releases"
+							game-builds="::editCtrl.previewPackage._builds"
+							game-build-launch-options="::editCtrl.previewData.launchOptions"
 							>
 						</gj-game-package-card>
 					</div>

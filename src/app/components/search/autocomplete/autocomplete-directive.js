@@ -62,7 +62,7 @@ angular.module( 'App.Search' ).directive( 'gjSearchAutocomplete', function( gett
 				},
 				{
 					keyword: ':dashboard',
-					state: 'dashboard.overview',
+					state: 'dashboard.main.overview',
 					authRequired: true,
 					description: gettext( 'commands.dashboard_description' ),
 				},

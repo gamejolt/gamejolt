@@ -31,15 +31,24 @@ angular.module( 'App', [
 	'gj.Scroll.AutoScroll',
 	'gj.ExpandWhen',
 	'gj.Form',
+	'gj.Registry',
+	'gj.History',
 
 	'gj.Img.Helper',
 	'gj.Img.ImgResponsive',
 
+
 	// 'gj.FadeCollapse',
 	'gj.SiteSelector',
+
+	'gj.Game',
+	'gj.MediaItem',
+
 	'gj.User',
 	'gj.User.UserBar',
 	'gj.User.UserAvatar',
+
+	'gj.Sellable',
 
 	// 'gj.Tooltip',
 	'gj.Popover',
