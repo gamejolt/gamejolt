@@ -1,15 +1,42 @@
-<h2 class="section-header">
-	{{ ::'dash.games.packages.add.heading' | translate }}
-</h2>
+<section class="section">
+	<div class="container">
 
-<div class="page-help">
-	<div translate>dash.games.packages.page_help_html</div>
-	<p>
-		<a class="link-help" href="https://help.gamejolt.com/dev-packages#packages" target="_blank">{{ ::'dash.games.packages.page_help_link' | translate }}</a>
-	</p>
-</div>
+		<nav class="breadcrumb">
+			<ul>
+				<li>
+					<a ui-sref="dashboard.developer.games.manage.packages.list">
+						<span class="breadcrumb-tag">&nbsp;</span>
+						<span translate>Packages</span>
+					</a>
+					<span class="breadcrumb-separator jolticon jolticon-chevron-right"></span>
+				</li>
+				<li>
+					<span class="active">
+						<span class="breadcrumb-tag">&nbsp;</span>
+						<span translate>Add Package</span>
+					</span>
+				</li>
+			</ul>
+		</nav>
 
-<gj-form-dashboard-game-package
-	gj-game="manageCtrl.game"
-	gj-form-submit-handler="addCtrl.onPackageAdded( formModel )">
-</gj-form-dashboard-game-package>
+		<div class="row">
+			<div class="hidden-xs col-sm-4 col-sm-push-8 col-md-4 col-md-push-8 col-lg-4 col-lg-push-8">
+				<div class="page-help">
+					<div translate>dash.games.packages.page_help_html</div>
+					<p>
+						<a class="link-help" href="https://help.gamejolt.com/dev-packages#packages" target="_blank">{{ ::'dash.games.packages.page_help_link' | translate }}</a>
+					</p>
+				</div>
+			</div>
+			<div class="col-sm-8 col-sm-pull-4 col-md-7 col-md-pull-4 col-lg-6 col-lg-pull-4">
+
+				<gj-form-dashboard-game-package
+					gj-game="manageCtrl.game"
+					gj-form-submit-handler="addCtrl.onPackageAdded( formModel )">
+				</gj-form-dashboard-game-package>
+
+			</div>
+		</div>
+
+	</div>
+</section>
