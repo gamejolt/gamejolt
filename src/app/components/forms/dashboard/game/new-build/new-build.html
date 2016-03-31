@@ -23,8 +23,12 @@
 
 				<control-errors label="{{ 'dash.games.builds.form.file_error_label' | translate }}"></control-errors>
 
-				<p class="help-block" ng-if="type == 'browser'" translate>
-					For HTML builds, upload a .zip archive containing all of your build's files and assets. There must be an index.html file in the root folder.
+				<!--
+					Stupid injection issues.
+					It was injecting 'index.html' no matter what I did.
+				-->
+				<p class="help-block" ng-if="type == 'browser'" translate translate-scope="{ filename: 'index' + '.html' }" translate-comment="{{ filename }} is index.html">
+					For HTML builds, upload a .zip archive containing all of your build's files and assets. There must be an {{ filename }} file in the root folder.
 				</p>
 			</form-group>
 
