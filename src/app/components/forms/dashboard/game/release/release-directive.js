@@ -15,11 +15,11 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameRelease',
 	form.scope.onRemoveRelease = '&gjOnRemoveRelease';
 	form.scope.areBuildsLockedByJam = '=?';
 
-	form.controller = function( $scope )
+	form.controller = [ '$scope', function( $scope )
 	{
 		this.buildForms = {};
 		$scope.ctrl = this;
-	};
+	} ];
 
 	form.onInit = function( scope )
 	{
