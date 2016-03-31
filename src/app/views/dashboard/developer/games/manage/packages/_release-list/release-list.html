@@ -1,9 +1,0 @@
-<div class="list-group">
-	<a class="list-group-item"
-		ng-repeat="release in ctrl.releases track by release.id"
-		ng-if="!ctrl.excludedRelease || release.id != ctrl.excludedRelease.id"
-		ui-sref="dashboard.developer.games.manage.packages.release.builds( { packageId: ctrl.package.id, releaseId: release.id } )"
-		>
-		<gj-dash-release-list-item gj-release="release"></gj-dash-release-list-item>
-	</a>
-</div>
