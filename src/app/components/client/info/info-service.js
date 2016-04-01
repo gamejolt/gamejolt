@@ -17,7 +17,7 @@ angular.module( 'App.Client.Info' ).service( 'Client_Info', function( Environmen
 	};
 
 	this.getVersion = function()
-    {
-        return '0.3.4';
-    };
+	{
+		return this.getPackageJson().version;
+	};
 } );
