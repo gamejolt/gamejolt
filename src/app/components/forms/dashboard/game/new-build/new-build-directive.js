@@ -38,6 +38,9 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewBuild'
 			'.zip': Game_Build.TYPE_HTML,
 			'.swf': Game_Build.TYPE_FLASH,
 			'.unity3d': Game_Build.TYPE_UNITY,
+			'.gba': Game_Build.TYPE_ROM,
+			'.gbc': Game_Build.TYPE_ROM,
+			'.gb': Game_Build.TYPE_ROM,
 		};
 
 		scope.getUploadAccept = function()

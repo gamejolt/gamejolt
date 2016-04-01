@@ -54,6 +54,11 @@
 					{{ ::'games.browser_applet' | translate }}
 				</span>
 
+				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_ROM">
+					<span class="jolticon jolticon-rom"></span>
+					<span translate>ROM</span>
+				</span>
+
 				<!--
 					Missing fields.
 				-->
@@ -295,6 +300,11 @@
 						We serve our own ads and share the revenue with developers. Domain names to block: gamejolt.com, *.gamejolt.com, gamejolt.net, *.gamejolt.net
 					</span>
 				</div>
+
+				<p class="sans-margin" ng-if="baseModel.type == Game_Build.TYPE_ROM">
+					<span class="jolticon jolticon-info-circle"></span>
+					<span translate translate-scope="{ platform: emulatorInfo[ baseModel.emulator_type ] }">We've detected this build is actually a {{ platform }} ROM. We will automatically emulate it in browser for you!</span>
+				</p>
 
 				<div name="browserValidate"
 					ng-model="formModel.browserValidate"

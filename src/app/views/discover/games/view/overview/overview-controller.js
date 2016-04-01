@@ -118,6 +118,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			if ( Environment.isClient ) {
 				$scope.gameCtrl.browserBuilds = _.where( $scope.gameCtrl.browserBuilds, { type: Game_Build.TYPE_HTML } );
 			}
+
+			// Pull in ROMs to the browser builds.
+			$scope.gameCtrl.browserBuilds = $scope.gameCtrl.browserBuilds.concat( Game.pluckRomBuilds( _this.packages || [] ) );
 		} );
 
 		// The releases section exists if there are releases or songs.

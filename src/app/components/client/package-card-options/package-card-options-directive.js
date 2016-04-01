@@ -36,9 +36,9 @@ angular.module( 'App.Client.PackageCardOptions' ).directive( 'gjClientPackageCar
 				} );
 			}
 
-			// If the browser build isn't an HTML build, then it can't be
+			// If the browser build isn't an HTML/ROM build, then it can't be
 			// quick played in their client.
-			if ( ctrl.browserBuild && ctrl.browserBuild.type != Game_Build.TYPE_HTML ) {
+			if ( ctrl.browserBuild && ctrl.browserBuild.type != Game_Build.TYPE_HTML && ctrl.browserBuild.type != Game_Build.TYPE_ROM ) {
 				build = ctrl.browserBuild;
 				ctrl.extraBuilds.unshift( {
 					type: build.type,

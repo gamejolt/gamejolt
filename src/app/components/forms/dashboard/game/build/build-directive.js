@@ -44,6 +44,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 
 		setupLaunchOptions( scope );
 		setupDownloadablePlatforms( scope );
+		setupEmulators( scope );
 		setupStatusPolling( scope );
 		setupChangedWatching( scope );
 
@@ -208,6 +209,14 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 					scope.formState.isSettingPlatform = false;
 				} );
 		};
+	}
+
+	function setupEmulators( scope )
+	{
+		scope.emulatorInfo = {};
+		scope.emulatorInfo[ Game_Build.EMULATOR_GB ] = gettextCatalog.getString( 'Game Boy' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_GBC ] = gettextCatalog.getString( 'Game Boy Color' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_GBA ] = gettextCatalog.getString( 'Game Boy Advance' );
 	}
 
 	function setupLaunchOptions( scope )
