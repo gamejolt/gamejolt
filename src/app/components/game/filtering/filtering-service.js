@@ -11,6 +11,7 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 				mac: gettextCatalog.getString( 'games.filtering.os_mac' ),
 				linux: gettextCatalog.getString( 'games.filtering.os_linux' ),
 				other: gettextCatalog.getString( 'games.filtering.os_other' ),
+				rom: gettextCatalog.getString( 'ROM' ),
 			}
 		},
 		browser: {
@@ -364,6 +365,13 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 
 		return params;
 	};
+
+	/*
+	// If HTML is checked, also include ROMs.
+	if ( isset( $search['distribution_types'] ) && in_array( Game_Build::TYPE_HTML, $search['distribution_types'] ) ) {
+		$search['distribution_types'][] = Game_Build::TYPE_ROM;
+	}
+	*/
 
 	return Game_Filtering_Container;
 } );
