@@ -9,7 +9,7 @@ angular.module( 'App.Client.Info' ).service( 'Client_Info', function( Environmen
 
 		// Slightly different path on dev and mac.
 		var packagePath = path.resolve( cwd, '..', 'package.json' );
-		if ( Environment.env == 'development' || os.type() == 'Darwin' ) {
+		if ( Environment.isDev || os.type() == 'Darwin' ) {
 			packagePath = path.resolve( cwd, 'package.json' );
 		}
 

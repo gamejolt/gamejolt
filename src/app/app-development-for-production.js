@@ -1,6 +1,6 @@
 angular.module( 'App' ).config( function( EnvironmentProvider, $compileProvider )
 {
-	EnvironmentProvider.env = 'development';
+	EnvironmentProvider.env = 'production';
 	EnvironmentProvider.isDev = true;
 	$compileProvider.debugInfoEnabled( true );
 } );
