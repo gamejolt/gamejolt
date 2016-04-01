@@ -2,7 +2,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle,
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, Environment,
 	Jam,
-	Api, Game_ViewState, Analytics, SplitTest, Device, $ocLazyLoad )
+	Api, Game_ViewState, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
 {
 	var _this = this;
 
@@ -80,8 +80,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			news: 0,
 		};
 
-		this.downloadCount = payload.downloadCount;
-		this.profileCount = payload.profileCount;
+		this.profileCount = payload.profileCount || 0;
+		this.downloadCount = payload.downloadCount || 0;
+		this.playCount = payload.playCount || 0;
 
 		this.developerGamesCount = payload.developerGamesCount;
 
@@ -151,13 +152,18 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		 * For game stats.
 		 */
 		this.playsTooltip = false;
-		this.showNaPlays = !this.packages.length && !(this.playCount + this.downloadCount);
-		if ( this.showNaPlays ) {
-			this.playsTooltip = 'games.view.stats.no_builds_tooltip';
-		}
-		// If they had plays from a previous build but no longer have builds.
-		else if ( !this.packages.length && (this.playCount + this.downloadCount) ) {
-			this.playsTooltip = 'games.view.stats.had_builds_tooltip';
+		this.showNaPlays = false;
+
+		if ( !this.packages.length ) {
+
+			// If they had plays from a previous build but no longer have builds.
+			if ( this.playCount + this.downloadCount ) {
+				this.playsTooltip = gettextCatalog.getString( 'This game used to have playable builds but they have been removed.' );
+			}
+			else {
+				this.showNaPlays = true;
+				this.playsTooltip = gettextCatalog.getString( 'This game has no playable builds yet.' );
+			}
 		}
 
 		/**

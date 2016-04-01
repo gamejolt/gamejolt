@@ -75,7 +75,7 @@
 							{{ ::'games.view.stats.na' | translate }}
 						</span>
 						<span ng-if="!overviewCtrl.showNaPlays">
-							{{ ::overviewCtrl.downloadCount | fuzzyNumber }}
+							{{ ::(overviewCtrl.downloadCount + overviewCtrl.playCount) | fuzzyNumber }}
 						</span>
 					</span>
 				</div>
