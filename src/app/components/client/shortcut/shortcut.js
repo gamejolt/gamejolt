@@ -2,7 +2,7 @@ angular.module( 'App.Client.Shortcut', [] ).run( function( Environment, Device )
 {
 	// We just make ".desktop" entries for linux at the moment.
 	// This way it's easier to launch them.
-	if ( Device.os() != 'linux' || Environment.env != 'production' ) {
+	if ( Device.os() != 'linux' || Environment.buildType == 'development' ) {
 		return;
 	}
 
