@@ -4,35 +4,35 @@
 	<div class="alert alert-info" ng-if="::ctrl.downloadableUnsupported">
 		<p>
 			<span class="jolticon jolticon-notice warning"></span>
-			This package can not be installed on your system.
+			<span translate>This package can not be installed on your system.</span>
 		</p>
 	</div>
 
 	<div class="alert alert-info" ng-if="::ctrl.downloadableUnsupportedHasQuickPlay">
 		<p>
 			<span class="jolticon jolticon-notice warning"></span>
-			This package can not be installed on your system, but can be quick played in the client.
+			<span translate>This package can not be installed on your system, but can be quick played in the client.</span>
 		</p>
 	</div>
 
 	<div class="alert alert-warning" ng-if="ctrl.localPackage.install_state == LocalDb_Package.DOWNLOAD_FAILED">
 		<p>
 			<span class="jolticon jolticon-notice"></span>
-			Oh no! We couldn't download this package. Perhaps check that you're still online?
+			<span translate>Oh no! We couldn't download this package. Perhaps check that you're still online?</span>
 		</p>
 	</div>
 
 	<div class="alert alert-warning" ng-if="ctrl.localPackage.install_state == LocalDb_Package.UNPACK_FAILED">
 		<p>
 			<span class="jolticon jolticon-notice"></span>
-			Oh no! We couldn't unpack this package after downloading it. Maybe try again?
+			<span translate>Oh no! We couldn't unpack this package after downloading it. Maybe try again?</span>
 		</p>
 	</div>
 
 	<div class="alert alert-success" ng-if="ctrl.localPackage.isRunning()">
 		<p>
 			<span class="jolticon jolticon-play"></span>
-			You are currently running this package. Some options have been disabled while it's open.
+			<span translate>You are currently running this package. Some options have been disabled while it's open.</span>
 		</p>
 	</div>
 
@@ -42,7 +42,7 @@
 		ng-click="ctrl.startInstall( ctrl.downloadableBuild )"
 		>
 		<span class="jolticon jolticon-download-box"></span>
-		Install
+		<span translate>Install</span>
 		<small>({{ ::ctrl.downloadableBuild.primary_file.filesize | filesize }})</small>
 	</button>
 
@@ -58,7 +58,7 @@
 			</div>
 
 			<span ng-if="ctrl.localPackage.isPatchQueued()">
-				<span class="tag tag-blue big">QUEUED</span>
+				<span class="tag tag-blue big" translate>QUEUED</span>
 			</span>
 
 			<span ng-if="!ctrl.localPackage.isPatchQueued()">
@@ -68,7 +68,7 @@
 					ng-click="ctrl.pauseInstall()"
 					>
 					<span class="jolticon jolticon-pause"></span>
-					Pause
+					<span translate>Pause</span>
 				</button>
 
 				<button class="btn btn-outline"
@@ -76,7 +76,7 @@
 					ng-click="ctrl.resumeInstall()"
 					>
 					<span class="jolticon jolticon-play-small"></span>
-					Resume
+					<span translate>Resume</span>
 				</button>
 			</span>
 		</span>
@@ -86,7 +86,7 @@
 			ng-if="ctrl.localPackage.didInstallFail()"
 			ng-click="ctrl.retryInstall()"
 			>
-			Retry Install
+			<span translate>Retry Install</span>
 		</button>
 
 		<!-- Game failed to update -->
@@ -94,7 +94,7 @@
 			ng-if="ctrl.localPackage.didUpdateFail()"
 			ng-click="ctrl.retryInstall()"
 			>
-			Retry Update
+			<span translate>Retry Update</span>
 		</button>
 
 		<!--
@@ -103,7 +103,7 @@
 		<button class="btn btn-danger-outline btn-sparse"
 			ng-if="ctrl.localPackage.install_state"
 			ng-click="ctrl.cancelInstall()"
-			gj-tooltip="Cancel Installation"
+			gj-tooltip="{{ 'Cancel Installation' | translate }}"
 			>
 			<span class="jolticon jolticon-remove"></span>
 		</button>
@@ -115,7 +115,7 @@
 			ng-disabled=""
 			>
 			<span class="jolticon jolticon-play"></span>
-			Launch
+			<span translate>Launch</span>
 		</button>
 
 	</span>
@@ -130,7 +130,7 @@
 			ng-click="ctrl.buildClick( ctrl.browserBuild )"
 			>
 			<span class="jolticon jolticon-play"></span>
-			Quick Play
+			<span translate>Quick Play</span>
 			<span class="jolticon-addon jolticon" ng-class="::'jolticon-' + ctrl.showcasedBrowserIcon"></span>
 		</button>
 	</span>
@@ -146,7 +146,7 @@
 		gj-track-event="game-package-card:more-options"
 		>
 		<span class="jolticon jolticon-ellipsis-h"></span>
-		options
+		<span translate>options</span>
 	</button>
 
 	<gj-popover popover-id="game-package-card-options-{{ ctrl.package.id }}">
@@ -161,7 +161,7 @@
 				ng-class="{ disabled: ctrl.localPackage.isRunning() }"
 				>
 				<span class="jolticon jolticon-remove warning"></span>
-				Uninstall
+				<span translate>Uninstall</span>
 			</a>
 
 			<!--
@@ -173,13 +173,13 @@
 				ng-click="ctrl.buildClick( ctrl.browserBuild )"
 				>
 				<span class="jolticon jolticon-html5"></span>
-				Quick Play
+				<span translate>Quick Play</span>
 				<small class="text-muted">({{ ::ctrl.browserBuild.primary_file.filesize | filesize }})</small>
 			</a>
 
 			<a class="list-group-item has-icon"
 				ng-repeat="extraBuild in ctrl.extraBuilds track by extraBuild.icon + '-' + extraBuild.build.id"
-				ng-click="ctrl.buildClick( extraBuild.build )"
+				ng-click="ctrl.buildClick( extraBuild.build, true )"
 				gj-track-event="game-package-card:more-options:click-option"
 				>
 				<span ng-class="::'jolticon jolticon-' + extraBuild.icon"></span>
@@ -187,12 +187,23 @@
 				<!--
 					We show the filename if it's an "Other" build.
 				-->
-				<span ng-if="::!extraBuild.build.os_other">
-					{{ ::extraBuild.type == Game_Build.TYPE_DOWNLOADABLE ? 'Download' : 'Play' }}
+				<span ng-if="::!extraBuild.build.os_other" ng-switch="::extraBuild.build.type">
+					<span ng-switch-when="downloadable" translate>
+						Download
+					</span>
+					<span ng-switch-when="rom" translate translate-scope="{ platform: ctrl.emulatorInfo[ extraBuild.build.emulator_type ] }" translate-comment="{{ platform }} will be the platform we are downloading for, such as Game Boy, NES, etc.">
+						Download {{ platform }} ROM
+					</span>
+					<span ng-switch-default translate>
+						Play
+					</span>
 				</span>
-				<span ng-if="::extraBuild.build.os_other">{{ ::extraBuild.build.primary_file.filename }}</span>
 
-				<small ng-if="::extraBuild.arch == '64'">64-bit</small>
+				<span ng-if="::extraBuild.build.os_other">
+					{{ ::extraBuild.build.primary_file.filename }}
+				</span>
+
+				<small ng-if="::extraBuild.arch == '64'" translate>64-bit</small>
 
 				<small class="text-muted">({{ ::extraBuild.build.primary_file.filesize | filesize }})</small>
 
@@ -205,7 +216,7 @@
 
 				<small class="text-muted" ng-if="extraBuild.type != 'html'">
 					<br>
-					<em>(will open in browser)</em>
+					<em translate>(will open in browser)</em>
 				</small>
 			</a>
 		</div>
