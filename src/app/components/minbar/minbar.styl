@@ -22,6 +22,11 @@ $minbar-border-width = 0
 		margin-right: ($minbar-spacing - ($minbar-border-width * 2))
 		margin-bottom: @margin-right
 
+		// Many times minbar items will come into view by clicking minimize on something.
+		// We want to give the view time to change and let the element animate out before
+		// sliding the minbar item up.
+		animation-delay: 300ms
+
 		&.active
 			@extend .fill-pink
 
