@@ -9,7 +9,13 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 			packagesPayload: function( $stateParams, Api )
 			{
 				return Api.sendRequest( '/web/dash/developer/games/packages/' + $stateParams.id );
-			}
+			},
+			checkRedirect: function( $state, $stateParams, packagesPayload )
+			{
+				if ( !packagesPayload.packages.length ) {
+					$state.go( 'dashboard.developer.games.manage.packages.add', $stateParams );
+				}
+			},
 		}
 	} );
 } );
