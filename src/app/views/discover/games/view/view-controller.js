@@ -51,7 +51,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		.catch( function( e )
 		{
 			Payload.handlePayloadError( e );
-		} );;
+		} );
 
 	this.init = function( payload )
 	{
