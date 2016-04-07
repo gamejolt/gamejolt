@@ -19,9 +19,9 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 
 	this.newRelease = newRelease;
 	this.removeRelease = removeRelease;
-	this.onEdited = onEdited;
+	this.loadPreview = loadPreview;
 
-	loadPreview();
+	this.loadPreview();
 
 	function loadPreview()
 	{
@@ -31,13 +31,9 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 			{
 				_this.previewData = Game_Package.processPackagePayload( response );
 				_this.previewPackage = _.find( _this.previewData.packages, { id: _this.package.id } );
+				_this.buildsProcessingCount = response.buildsProcessingCount || 0;
 				_this.isLoadingPreview = false;
 			} );
-	}
-
-	function onEdited()
-	{
-		loadPreview();
 	}
 
 	function newRelease()
@@ -51,7 +47,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 			} )
 			.catch( function()
 			{
-				Growls.error( 'Could not create new release.' );
+				Growls.error( gettextCatalog.getString( 'Could not create new release.' ) );
 				_this.isAddingRelease = false;
 			} );
 	}

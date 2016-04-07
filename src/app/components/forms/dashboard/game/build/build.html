@@ -26,7 +26,7 @@
 
 				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_DOWNLOADABLE">
 					<span class="jolticon jolticon-download"></span>
-					Downloadable
+					<span translate>Downloadable</span>
 				</span>
 
 				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_HTML">
@@ -54,22 +54,27 @@
 					{{ ::'games.browser_applet' | translate }}
 				</span>
 
+				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_ROM">
+					<span class="jolticon jolticon-rom"></span>
+					<span translate>ROM</span>
+				</span>
+
 				<!--
 					Missing fields.
 				-->
 				<span class="tag tag-pink" ng-if="baseModel.hasError( Game_Build.ERROR_MISSING_FIELDS )">
 					<span class="jolticon jolticon-notice"></span>
-					Incomplete
+					<span translate>Incomplete</span>
 				</span>
 
 				<span ng-if="!baseModel.hasError( Game_Build.ERROR_MISSING_FIELDS )">
 					<span class="tag tag-blue" ng-if="baseModel.status == Game_Build.STATUS_ADDING">
-						Processing
+						<span translate>Processing</span>
 					</span>
 
 					<span class="tag tag-active" ng-if="baseModel.status == Game_Build.STATUS_ACTIVE">
 						<span class="jolticon jolticon-check"></span>
-						Active
+						<span translate>Active</span>
 					</span>
 				</span>
 
@@ -107,13 +112,29 @@
 		<ng-form
 			gj-form="formModel"
 			name="buildForm"
-			class="form-horizontal"
+			ng-show="isLoaded"
 			>
+
+			<div ng-if="baseModel.type == Game_Build.TYPE_APPLET" class="alert alert-warning sans-margin">
+				<span class="jolticon jolticon-notice"></span>
+				<span translate>
+					<strong>Java Applets have been deprecated.</strong>
+					You can no longer edit your Java Applet builds, although gamers will still be able to play them if their browsers support them. You can add .jar files as downloadables and the Game Jolt Client will correctly launch them for users instead.
+				</span>
+			</div>
+
+			<div ng-if="baseModel.type == Game_Build.TYPE_SILVERLIGHT" class="alert alert-warning sans-margin">
+				<span class="jolticon jolticon-notice"></span>
+				<span translate>
+					<strong>Silverlight builds have been deprecated.</strong>
+					You can no longer edit your Silverlight builds, although gamers will still be able to play them if their browsers support them.
+				</span>
+			</div>
 
 			<!--
 				Don't attach to the ng-form above or the scope will be messed up and not able to submit the form.
 			-->
-			<div ng-if="isLoaded">
+			<div ng-if="isLoaded && !isDeprecated">
 
 				<div class="game-build-form-spinner" ng-if="formState.isSettingPlatform">
 					<gj-loading hide-label="true"></gj-loading>
@@ -122,7 +143,7 @@
 				<!--
 					Platform Selector
 				-->
-				<div class="form-group downloadable-platforms"
+				<div class="downloadable-platforms"
 					ng-if="baseModel.type == Game_Build.TYPE_DOWNLOADABLE && !forceOther"
 					>
 
@@ -131,7 +152,7 @@
 					-->
 					<p ng-if="restrictedPlatforms.length">
 						<span class="jolticon jolticon-info-circle"></span>
-						This build is not launchable on certain platforms. They've been disabled below.
+						<span translate>This build is not launchable on certain platforms. They've been disabled below.</span>
 					</p>
 
 					<p class="help-block" translate>dash.games.builds.form.platforms_help_html</p>
@@ -169,14 +190,17 @@
 				-->
 				<p class="sans-margin" ng-if="forceOther">
 					<span class="jolticon jolticon-info-circle"></span>
-					This build doesn't seem to be a Windows, Mac, or Linux build, so we've marked it as "Other" for you.
+					<span translate>This build doesn't seem to be a Windows, Mac, or Linux build, so we've marked it as "Other" for you.</span>
 				</p>
 
 				<!--
 					Launch Options
 				-->
-				<fieldset ng-if="formModel.platformsValidate && baseModel.type == Game_Build.TYPE_DOWNLOADABLE && !baseModel.os_other">
-					<legend>Launch Options</legend>
+				<fieldset
+					ng-if="formModel.platformsValidate && baseModel.type == Game_Build.TYPE_DOWNLOADABLE && !baseModel.os_other"
+					class="form-horizontal"
+					>
+					<legend translate>Launch Options</legend>
 
 					<div ng-if="baseModel.primary_file.is_archive">
 						<form-group
@@ -204,6 +228,13 @@
 						</form-group>
 					</div>
 
+					<div gj-expand-when="serverErrors.launchOptions">
+						<div class="alert alert-warning" translate>
+							<strong>The launch options you entered are invalid.</strong>
+							Make sure each selected file is in your build and that it works on the appropriate operating system.
+						</div>
+					</div>
+
 					<div gj-expand-when="!baseModel.primary_file.is_archive">
 						<div class="alert alert-info sans-margin-bottom" translate>
 							dash.games.releases.builds.launch_options.standalone_info_html
@@ -214,28 +245,22 @@
 				<!--
 					Browser Embed Dimensions
 				-->
-				<div class="form-group browser-dimensions"
-					ng-if="baseModel.isBrowserBased()"
-					>
-					<label class="control-label col-sm-3">Dimensions</label>
-					<div class="col-sm-7">
+				<div ng-if="baseModel.isBrowserBased()">
+					<p class="help-block" translate>dash.games.builds.form.dimensions_help_html</p>
 
-						<form-group name="embed_width"
-							label="{{ 'dash.games.builds.form.width_label' | translate }}"
-							hide-label="true"
-							>
-							<input class="input-sm" form-control="number" ng-attr-placeholder="{{ 'dash.games.builds.form.width_label' | translate }}">
-							<control-errors></control-errors>
-						</form-group>
-						x
-						<form-group name="embed_height"
-							label="{{ 'dash.games.builds.form.height_label' | translate }}"
-							hide-label="true"
-							>
-							<input class="input-sm" form-control="number" ng-attr-placeholder="{{ 'dash.games.builds.form.height_label' | translate }}">
-							<control-errors></control-errors>
-						</form-group>
-
+					<div class="row">
+						<div class="col-sm-6">
+							<form-group name="embed_width" label="{{ 'dash.games.builds.form.width_label' | translate }}">
+								<input class="input-sm" form-control="number">
+								<control-errors ignore-dirty="true"></control-errors>
+							</form-group>
+						</div>
+						<div class="col-sm-6">
+							<form-group name="embed_height" label="{{ 'dash.games.builds.form.height_label' | translate }}">
+								<input class="input-sm" form-control="number">
+								<control-errors ignore-dirty="true"></control-errors>
+							</form-group>
+						</div>
 					</div>
 				</div>
 
@@ -243,30 +268,62 @@
 					Unity Right Click Menu
 				-->
 				<form-group
-					ng-if="baseModel.type == Game_Build.TYPE_UNITY"
+					ng-if="formModel.type == Game_Build.TYPE_UNITY"
 					name="browser_disable_right_click"
 					label="{{ 'dash.games.builds.form.disable_right_click_label' | translate }}"
-					label-class="col-sm-3"
 					>
-					<div class="col-sm-7">
-						<gj-toggle-switch
-							class="pull-left"
-							form-control="checkbox"
-							toggle-switch-on-text="{{ 'forms.yes' | translate }}"
-							toggle-switch-off-text="{{ 'forms.no' | translate }}"
-						></gj-toggle-switch>
-						<span class="jolticon jolticon-info-circle" tooltip="{{ 'dash.games.builds.form.disable_right_click_help' | translate }}"></span>
-					</div>
+					<p class="help-block" translate>dash.games.builds.form.disable_right_click_help</p>
+					<gj-toggle-switch
+						form-control="checkbox"
+						toggle-switch-on-text="{{ 'forms.yes' | translate }}"
+						toggle-switch-off-text="{{ 'forms.no' | translate }}"
+					></gj-toggle-switch>
 				</form-group>
+
+				<div class="alert alert-warning"
+					ng-if="baseModel.type == Game_Build.TYPE_UNITY"
+					>
+					<span class="jolticon jolticon-notice"></span>
+					<span translate>
+						<strong>Most browsers have stopped supporting the Unity Web Player.</strong>
+						Please consider exporting to WebGL instead.
+					</span>
+				</div>
+
+				<div class="alert alert-info"
+					ng-if="baseModel.isBrowserBased()"
+					ng-class="{ 'sans-margin-bottom': !buildForm.browserValidate.$error.browser }"
+					>
+					<span class="jolticon jolticon-notice"></span>
+					<span translate>
+						<strong>Be sure to remove or block ads from showing in your browser games.</strong>
+						We serve our own ads and share the revenue with developers. Domain names to block: gamejolt.com, *.gamejolt.com, gamejolt.net, *.gamejolt.net
+					</span>
+				</div>
+
+				<p class="sans-margin" ng-if="baseModel.type == Game_Build.TYPE_ROM">
+					<span class="jolticon jolticon-info-circle"></span>
+					<span translate translate-scope="{ platform: emulatorInfo[ baseModel.emulator_type ] }">We've detected this build is actually a {{ platform }} ROM. We will automatically emulate it in browser for you!</span>
+				</p>
 
 				<div name="browserValidate"
 					ng-model="formModel.browserValidate"
 					gj-form-dashboard-game-build-browser-validator="formModel"
 					>
 					<div gj-expand-when="buildForm.browserValidate.$error.browser">
-						<div class="alert alert-warning">This build has more info to fill in before it will be available in this release.</div>
+						<div class="alert alert-warning sans-margin-bottom" translate>
+							This build has more info to fill in before it will be available in this release.
+						</div>
 					</div>
 				</div>
+
+				<button gj-form-submit-button
+					class="btn btn-success-outline game-build-form-submit-button"
+					ng-if="buildForm.$valid && wasChanged"
+					ng-click="onSubmit()"
+					>
+					<span translate>Save Build</span>
+				</button>
 
 			</div>
 		</ng-form>

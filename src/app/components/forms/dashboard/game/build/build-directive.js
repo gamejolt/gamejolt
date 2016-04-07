@@ -9,8 +9,9 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 	form.scope.game = '=gjGame';
 	form.scope.package = '=gjGamePackage';
 	form.scope.release = '=gjGameRelease';
-	form.scope._launchOptions = '=?gjGameLaunchOptions';
+	form.scope.releaseLaunchOptions = '=?gjGameLaunchOptions';
 	form.scope.onRemoveBuild = '&gjOnRemoveBuild';
+	form.scope.updateLaunchOptions = '&gjUpdateLaunchOptions';
 	form.scope.buildDownloadCounts = '=gjBuildDownloadCounts';
 	form.scope.packageBuilds = '=gjGamePackageBuilds';  // All builds for the package.
 
@@ -43,7 +44,11 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 
 		setupLaunchOptions( scope );
 		setupDownloadablePlatforms( scope );
+		setupEmulators( scope );
 		setupStatusPolling( scope );
+		setupChangedWatching( scope );
+
+		scope.isDeprecated = scope.baseModel.type == Game_Build.TYPE_APPLET || scope.baseModel.type == Game_Build.TYPE_SILVERLIGHT;
 
 		if ( !scope.isLoaded ) {
 			var params = [
@@ -194,28 +199,50 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 					}
 
 					// Copy new launch options in.
-					scope._launchOptions = Game_Build_LaunchOption.populate( response.launchOptions );
+					scope.updateLaunchOptions( { $build: scope.baseModel, $launchOptions: response.launchOptions } );
 
 					scope.formState.isSettingPlatform = false;
 				} )
 				.catch( function()
 				{
-					Growls.error( 'Could not set the platform for some reason.' );
+					Growls.error( gettextCatalog.getString( 'Could not set the platform for some reason.' ) );
 					scope.formState.isSettingPlatform = false;
 				} );
 		};
 	}
 
+	function setupEmulators( scope )
+	{
+		scope.emulatorInfo = {};
+		scope.emulatorInfo[ Game_Build.EMULATOR_GB ] = gettextCatalog.getString( 'Game Boy' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_GBC ] = gettextCatalog.getString( 'Game Boy Color' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_GBA ] = gettextCatalog.getString( 'Game Boy Advance' );
+	}
+
 	function setupLaunchOptions( scope )
 	{
-		scope.$watchCollection( '_launchOptions', function( launchOptions )
+		var prevCount = undefined;
+		scope.$watchCollection( 'releaseLaunchOptions', function( releaseLaunchOptions )
 		{
-			scope.launchOptions = _.where( launchOptions, { game_build_id: scope.baseModel.id } );
+			scope.buildLaunchOptions = _.where( releaseLaunchOptions, { game_build_id: scope.baseModel.id } );
 
-			launchOptions.forEach( function( launchOption )
+			if ( angular.isUndefined( prevCount ) ) {
+				prevCount = scope.buildLaunchOptions.length;
+			}
+
+			scope.buildLaunchOptions.forEach( function( launchOption )
 			{
 				scope.formModel[ 'launch_' + launchOption.os ] = launchOption.executable_path;
 			} );
+
+			// This will skip a single cycle of checking if the form fields have changed.
+			// This is so that we don't get the "save build" button when adding a new launch option in after selecting new platform.
+			// Only if we add, not if we remove.
+			if ( scope.buildLaunchOptions.length > prevCount ) {
+				scope.skipChangedWatch = true;
+			}
+
+			prevCount = scope.buildLaunchOptions.length;
 		} );
 
 		var platformToFill;
@@ -244,7 +271,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 
 			modalInstance.result.then( function( selected )
 			{
-				scope.formModel[ platformToFill ] = selected;
+				scope.formModel[ 'launch_' + platformToFill ] = selected;
 				platformToFill = null;
 			} );
 		};
@@ -257,6 +284,38 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 			// Just copy over the new build data into our current one.
 			scope.baseModel.assign( response.build );
 		};
+	}
+
+	function setupChangedWatching( scope )
+	{
+		scope.wasChanged = false;
+
+		// Fields that require a build save before they take affect.
+		var watchFields = [
+			'formModel.embed_width',
+			'formModel.embed_height',
+			'formModel.browser_disable_right_click',
+		];
+
+		Game_Build_LaunchOption.LAUNCHABLE_PLATFORMS.forEach( function( os )
+		{
+			watchFields.push( 'formModel.launch_' + os );
+		} );
+
+		scope.$watchGroup( watchFields, function( newVals, oldVals )
+		{
+			if ( scope.skipChangedWatch ) {
+				scope.skipChangedWatch = false;
+				return;
+			}
+
+			// Skip the initial watch.
+			if ( angular.equals( newVals, oldVals ) ) {
+				return;
+			}
+
+			scope.wasChanged = true;
+		} );
 	}
 
 	return form;

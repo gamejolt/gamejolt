@@ -2,15 +2,15 @@
 
 	<!-- Game Header -->
 	<div ng-if="Game_ViewState.showExtendedHeader">
-		<gj-game-cover ng-if="Game_ViewState.showCover" gj-game="gameCtrl.game">
+		<gj-game-cover ng-if="Game_ViewState.hasCover" gj-game="gameCtrl.game">
 
-			<div ng-if="gameCtrl.gameCoverButtonsVariation != 'original' && !Screen.isXs">
+			<div ng-if="!Screen.isXs && (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length)">
 				<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
 					<gj-game-cover-buttons
-						gj-game="gameCtrl.game"
-						gj-game-packages="gameCtrl.packages"
+						game="gameCtrl.game"
+						installable-builds="gameCtrl.installableBuilds"
+						browser-builds="gameCtrl.browserBuilds"
 						on-show-packages="gameCtrl.scrollToPackages()"
-						variation="gameCtrl.gameCoverButtonsVariation"
 						>
 					</gj-game-cover-buttons>
 				</div>
@@ -18,23 +18,17 @@
 
 		</gj-game-cover>
 
-		<!--
-			Use ng-show so it's actually able to load in the component to see if it should show or not.
-		-->
-		<section class="section fill-darker" ng-show="!Game_ViewState.showCover && gameCtrl.hasGameCoverButtons">
+		<section class="section fill-darker" ng-if="!Screen.isXs && !Game_ViewState.hasCover && (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length)">
 			<div class="container text-center">
 
-				<div ng-if="gameCtrl.gameCoverButtonsVariation != 'original' && !Screen.isXs">
-					<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-						<gj-game-cover-buttons
-							gj-game="gameCtrl.game"
-							gj-game-packages="gameCtrl.packages"
-							on-show-packages="gameCtrl.scrollToPackages()"
-							has-buttons="gameCtrl.hasGameCoverButtons"
-							variation="gameCtrl.gameCoverButtonsVariation"
-							>
-						</gj-game-cover-buttons>
-					</div>
+				<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
+					<gj-game-cover-buttons
+						game="gameCtrl.game"
+						installable-builds="gameCtrl.installableBuilds"
+						browser-builds="gameCtrl.browserBuilds"
+						on-show-packages="gameCtrl.scrollToPackages()"
+						>
+					</gj-game-cover-buttons>
 				</div>
 
 			</div>

@@ -2,14 +2,14 @@
 	<div class="container">
 
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col-md-9 col-lg-8">
 
 				<nav class="breadcrumb">
 					<ul>
 						<li>
 							<a ui-sref="dashboard.developer.games.manage.packages.list">
 								<span class="breadcrumb-tag">&nbsp;</span>
-								Packages
+								<span translate>Packages</span>
 							</a>
 							<span class="breadcrumb-separator jolticon jolticon-chevron-right"></span>
 						</li>
@@ -39,6 +39,7 @@
 					gj-form-submit-handler="editCtrl.onSaved( formModel )"
 					gj-on-remove-release="editCtrl.removeRelease( $release )"
 					gj-on-unpublish-release="editCtrl.unpublishRelease( $release )"
+					are-builds-locked-by-jam="releaseCtrl.areBuildsLockedByJam"
 					>
 				</gj-form-dashboard-game-release>
 

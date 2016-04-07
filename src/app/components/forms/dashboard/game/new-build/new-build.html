@@ -1,4 +1,4 @@
-<form gj-form="formModel" name="newBuildForm">
+<form gj-form="formModel" name="newBuildForm" class="game-new-build-form">
 
 	<div ng-if="!isLoaded">
 		<gj-loading></gj-loading>
@@ -22,6 +22,14 @@
 				</gj-form-upload-control>
 
 				<control-errors label="{{ 'dash.games.builds.form.file_error_label' | translate }}"></control-errors>
+
+				<!--
+					Stupid injection issues.
+					It was injecting 'index.html' no matter what I did.
+				-->
+				<p class="help-block" ng-if="type == 'browser'" translate translate-scope="{ filename: 'index' + '.html' }" translate-comment="{{ filename }} is index.html">
+					For HTML builds, upload a .zip archive containing all of your build's files and assets. There must be an {{ filename }} file in the root folder.
+				</p>
 			</form-group>
 
 		</div>

@@ -3,38 +3,25 @@ angular.module( 'App.Game.Cover.Buttons' ).directive( 'gjGameCoverButtons', func
 	return {
 		restrict: 'E',
 		scope: {
-			game: '=gjGame',
-			packages: '=gjGamePackages',
-			onShowPackages: '&onShowPackages',
-			hasButtons: '=hasButtons',
-			variation: '=variation',
+			game: '=',
+			installableBuilds: '=',
+			browserBuilds: '=',
+			onShowPackages: '&',
 		},
 		templateUrl: '/app/components/game/cover/buttons/buttons.html',
 		controllerAs: 'ctrl',
 		bindToController: true,
-		controller: function( $scope, Game, Device, Game_Downloader, Game_PlayModal, Analytics )
+		controller: function( $scope, Game, Device, Game_Downloader, Game_PlayModal, Game_Build, Analytics, Environment )
 		{
 			var _this = this;
+
+			$scope.Environment = Environment;
 
 			var os = Device.os();
 			var arch = Device.arch();
 
-			this.installableBuilds = [];
-			this.browserBuilds = [];
-
-			$scope.$watch( 'ctrl.packages', function( packages )
-			{
-				if ( !packages || !packages.length ) {
-					return;
-				}
-
-				_this.installableBuilds = Game.pluckInstallableBuilds( packages, os, arch );
-				_this.browserBuilds = Game.pluckBrowserBuilds( packages );
-
-				if ( _this.installableBuilds.length || _this.browserBuilds.length ) {
-					_this.hasButtons = true;
-				}
-			} );
+			this.isGamePatching = undefined;
+			this.hasLocalPackage = false;
 
 			this.play = function()
 			{
@@ -44,7 +31,7 @@ angular.module( 'App.Game.Cover.Buttons' ).directive( 'gjGameCoverButtons', func
 					if ( _.uniq( _.pluck( this.browserBuilds, 'game_package_id' ) ).length <= 1 ) {
 
 						// Prioritize HTML build.
-						var htmlBuild = _.where( this.browserBuilds, { type_html: 1 } );
+						var htmlBuild = _.find( this.browserBuilds, { type: Game_Build.TYPE_HTML } );
 						if ( htmlBuild ) {
 							this.browserBuilds = [ htmlBuild ];
 						}

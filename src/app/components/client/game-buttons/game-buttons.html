@@ -7,7 +7,7 @@
 
 	<button class="btn btn-success-outline"
 		ng-if="!ctrl.localPackage"
-		ng-class="{ disabled: !ctrl.canInstall, 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small }"
+		ng-class="{ disabled: !ctrl.canInstall, 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small, 'btn-lg': ctrl.large }"
 		ng-mousedown="$event.preventDefault()"
 		ng-click="$event.stopPropagation(); ctrl.install()"
 		gj-tooltip="{{ ctrl.installTooltip }}"
@@ -26,7 +26,7 @@
 					{{ ctrl.localPackage.didInstallFail() ? 'Installation' : 'Update' }} Failed
 				</span>
 				<button class="btn btn-outline"
-					ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small }"
+					ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small, 'btn-lg': ctrl.large }"
 					ng-mousedown="$event.preventDefault()"
 					ng-click="$event.stopPropagation(); ctrl.retryInstall()"
 					>
@@ -50,7 +50,7 @@
 
 					<span ng-if="!ctrl.localPackage.isPatchPaused()">
 						<button class="btn btn-outline"
-							ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm btn-sparse': ctrl.small }"
+							ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm btn-sparse': ctrl.small, 'btn-lg': ctrl.large }"
 							ng-mousedown="$event.preventDefault()"
 							ng-click="$event.stopPropagation(); ctrl.pause()"
 							>
@@ -61,7 +61,7 @@
 
 					<span ng-if="ctrl.localPackage.isPatchPaused()">
 						<button class="btn btn-outline"
-							ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm btn-sparse': ctrl.small }"
+							ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm btn-sparse': ctrl.small, 'btn-lg': ctrl.large }"
 							ng-mousedown="$event.preventDefault()"
 							ng-click="$event.stopPropagation(); ctrl.resume()"
 							>
@@ -74,7 +74,7 @@
 
 			<button class="btn btn-danger-outline btn-sparse"
 				ng-if="ctrl.localPackage.install_state"
-				ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small }"
+				ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small, 'btn-lg': ctrl.large }"
 				ng-mousedown="$event.preventDefault()"
 				ng-click="$event.stopPropagation(); ctrl.cancel()"
 				gj-tooltip="Cancel Installation"
@@ -90,7 +90,7 @@
 			-->
 			<span ng-if="Client_Library.packagesByGame[ ctrl.game.id ].length == 1">
 				<button class="btn btn-primary-outline"
-					ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small }"
+					ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small, 'btn-lg': ctrl.large }"
 					ng-if="!ctrl.localPackage.isRunning()"
 					ng-mousedown="$event.preventDefault()"
 					ng-click="$event.stopPropagation(); ctrl.launch( ctrl.localPackage )"
@@ -107,7 +107,7 @@
 			-->
 			<span ng-if="Client_Library.packagesByGame[ ctrl.game.id ].length > 1">
 				<button class="btn btn-primary-outline"
-					ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small }"
+					ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small, 'btn-lg': ctrl.large }"
 					ng-mousedown="$event.preventDefault()"
 					ng-click="$event.stopPropagation()"
 					gj-popover-trigger="game-buttons-launch-{{ ::ctrl.label }}-{{ ::ctrl.game.id }}"
@@ -120,7 +120,7 @@
 		</span>
 
 		<button class="btn btn-outline btn-sparse"
-			ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small }"
+			ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small, 'btn-lg': ctrl.large }"
 			ng-if="!ctrl.localPackage.install_state"
 			ng-mousedown="$event.preventDefault()"
 			ng-click="$event.stopPropagation()"

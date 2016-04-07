@@ -1,5 +1,5 @@
 angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameRelease', function(
-	$q, Form, Api, Game_Release, Game_Build, ModalConfirm, Growls, gettextCatalog )
+	$q, Form, Api, Screen, Game_Release, Game_Build, Game_Build_LaunchOption, ModalConfirm, Growls, gettextCatalog )
 {
 	var form = new Form( {
 		model: 'Game_Release',
@@ -13,15 +13,17 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameRelease',
 	form.scope.buildDownloadCounts = '=gjBuildDownloadCounts';
 	form.scope.onUnpublishRelease = '&gjOnUnpublishRelease';
 	form.scope.onRemoveRelease = '&gjOnRemoveRelease';
+	form.scope.areBuildsLockedByJam = '=?';
 
-	form.controller = function( $scope )
+	form.controller = [ '$scope', function( $scope )
 	{
 		this.buildForms = {};
 		$scope.ctrl = this;
-	};
+	} ];
 
 	form.onInit = function( scope )
 	{
+		scope.Screen = Screen;
 		scope.Game_Release = Game_Release;
 
 		scope.formModel.game_id = scope.game.id;
@@ -31,6 +33,8 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameRelease',
 		scope.Game_Build = Game_Build;
 
 		scope.onBuildAdded = onBuildAdded;
+		scope.updateBuildLaunchOptions = updateBuildLaunchOptions;
+		scope.onBuildEdited = onBuildEdited;
 		scope.removeBuild = removeBuild;
 		scope.onBuildProcessingComplete = onBuildProcessingComplete;
 		scope.savePublished = savePublished;
@@ -60,6 +64,32 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameRelease',
 			scope.builds.push( build );
 		}
 
+		/**
+		 * Launch options include launch options for alll builds in this release.
+		 * When launch options are modified for a build, we need to merge the changes back into
+		 * the global array of them.
+		 **/
+		function updateBuildLaunchOptions( build, launchOptions )
+		{
+			// Remove old ones for build.
+			if ( scope.launchOptions && scope.launchOptions.length ) {
+				_.remove( scope.launchOptions, { game_build_id: build.id } );
+			}
+
+			// If no new ones, skip.
+			if ( !launchOptions || !launchOptions.length ) {
+				return;
+			}
+
+			// Add the new ones into the global list.
+			scope.launchOptions = scope.launchOptions.concat( Game_Build_LaunchOption.populate( launchOptions ) );
+		}
+
+		function onBuildEdited( build, response )
+		{
+			updateBuildLaunchOptions( build, response.launchOptions );
+		}
+
 		function removeBuild( build )
 		{
 			ModalConfirm.show( gettextCatalog.getString( 'dash.games.releases.builds.remove_build_confirmation' ) )
@@ -81,10 +111,16 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameRelease',
 		function save()
 		{
 			// Save all the managed build forms before saving the release.
-			var buildFormSavePromises = _.map( scope.ctrl.buildForms, function( buildForm )
-			{
-				return buildForm.scope.onSubmit();
-			} );
+			var buildFormSavePromises = _( scope.ctrl.buildForms )
+				.filter( function( buildForm )
+				{
+					return !buildForm.scope.isDeprecated;
+				} )
+				.map( function( buildForm )
+				{
+					return buildForm.scope.onSubmit();
+				} )
+				.value();
 
 			return $q.all( buildFormSavePromises ).then( function()
 			{

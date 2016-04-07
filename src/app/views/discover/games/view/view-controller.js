@@ -12,7 +12,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	this.isLoaded = false;
 	this.game = Registry.find( 'Game', $stateParams.id );
 	this.isNavAffixed = false;
-	this.packages = undefined;
+	this.installableBuilds = [];
+	this.browserBuilds = [];
 
 	// Overview page will populate this.
 	// We only need it for the overview page, but we need to show it in the view of this controller.

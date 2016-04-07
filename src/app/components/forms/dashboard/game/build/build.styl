@@ -6,6 +6,9 @@ gj-form-dashboard-game-build
 		font-size: $font-size-small
 		margin-top: 0 !important
 
+	.form-group
+		@extend .no-animate
+
 	legend
 		font-size: $font-size-h4
 
@@ -37,7 +40,11 @@ gj-form-dashboard-game-build
 
 	.form-group
 	.help-block
-		margin-bottom: 5px
+	.alert
+		margin-bottom: ($line-height-computed / 2)
+
+	.game-build-form-submit-button
+		margin-top: ($line-height-computed / 2)
 
 	.downloadable-platforms
 
@@ -52,13 +59,4 @@ gj-form-dashboard-game-build
 			margin-right: 20px
 
 		.checkbox
-			padding-top: 0
-
-	.browser-dimensions
-		.form-group
-			display: inline-block
-			margin: 0
-			vertical-align: middle
-
-			input
-				width: 100px
+			margin-top: 0

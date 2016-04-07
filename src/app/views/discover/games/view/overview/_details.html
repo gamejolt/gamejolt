@@ -57,7 +57,7 @@
 				<div class="stat-big-digit">
 					<span gj-lazy-placeholder="overviewCtrl.isLoaded">
 						<span class="lazy-placeholder"></span>
-						<span>
+						<span title="{{ ::overviewCtrl.profileCount | number }}">
 							{{ ::overviewCtrl.profileCount | fuzzyNumber }}
 						</span>
 					</span>
@@ -74,8 +74,8 @@
 						<span ng-if="overviewCtrl.showNaPlays">
 							{{ ::'games.view.stats.na' | translate }}
 						</span>
-						<span ng-if="!overviewCtrl.showNaPlays">
-							{{ ::overviewCtrl.downloadCount | fuzzyNumber }}
+						<span ng-if="!overviewCtrl.showNaPlays" title="{{ ::(overviewCtrl.downloadCount + overviewCtrl.playCount) | number }}">
+							{{ ::(overviewCtrl.downloadCount + overviewCtrl.playCount) | fuzzyNumber }}
 						</span>
 					</span>
 				</div>
@@ -88,7 +88,7 @@
 				<div class="stat-big-digit">
 					<span gj-lazy-placeholder="gameCtrl.game">
 						<span class="lazy-placeholder"></span>
-						<span ng-if="gameCtrl.game.ratings_enabled">
+						<span ng-if="gameCtrl.game.ratings_enabled" title="{{ ::gameCtrl.game.rating_count || 0 | number }}">
 							{{ ::gameCtrl.game.rating_count || 0 | fuzzyNumber }}
 						</span>
 						<span ng-if="!gameCtrl.game.ratings_enabled">

@@ -11,6 +11,7 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 				mac: gettextCatalog.getString( 'games.filtering.os_mac' ),
 				linux: gettextCatalog.getString( 'games.filtering.os_linux' ),
 				other: gettextCatalog.getString( 'games.filtering.os_other' ),
+				rom: gettextCatalog.getString( 'ROM' ),
 			}
 		},
 		browser: {

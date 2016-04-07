@@ -10,6 +10,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewBuild'
 	form.scope.game = '=gjGame';
 	form.scope.package = '=gjGamePackage';
 	form.scope.release = '=gjGameRelease';
+	form.scope.packageBuilds = '=gjGamePackageBuilds';  // All builds for the package.
 
 	form.onInit = function( scope )
 	{
@@ -33,10 +34,26 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewBuild'
 			} );
 		}
 
+		var browserTypes = {
+			'.zip': Game_Build.TYPE_HTML,
+			'.swf': Game_Build.TYPE_FLASH,
+			'.unity3d': Game_Build.TYPE_UNITY,
+			'.gba': Game_Build.TYPE_ROM,
+			'.gbc': Game_Build.TYPE_ROM,
+			'.gb': Game_Build.TYPE_ROM,
+		};
+
 		scope.getUploadAccept = function()
 		{
 			if ( scope.type == 'browser' ) {
-				return '.zip,.swf,.unity3d';
+				var validTypes = [];
+				for ( ext in browserTypes ) {
+					if ( !_.find( scope.packageBuilds, { type: browserTypes[ ext ] } ) ) {
+						validTypes.push( ext );
+					}
+				}
+
+				return validTypes.join( ',' );
 			}
 
 			return undefined;

@@ -68,7 +68,7 @@ angular.module( 'App.Client.Tray' )
 			}
 		}
 
-		var packagePrefix = Environment.env == 'production' ? '/package' : '';
+		var packagePrefix = Environment.buildType == 'production' ? '/package' : '';
 		var tray = new gui.Tray( {
 			title: 'Game Jolt Client',
 
