@@ -20,6 +20,12 @@
 					<span ng-if="!collection.from_subscription && collection.id != App.user.id">{{ ::'library.playlists.followed_title' | translate }}</span>
 				</span>
 
+				<span ng-switch-when="owned">
+					<span ng-if="::collection.from_subscription" translate>Games Owned</span>
+					<span ng-if="!collection.from_subscription && collection.id == App.user.id" translate>Your Owned Games</span>
+					<span ng-if="!collection.from_subscription && collection.id != App.user.id" translate>Owned Games</span>
+				</span>
+
 				<span ng-switch-default>{{ ::collection.name }}</span>
 
 				<small ng-if="::collection.from_subscription">

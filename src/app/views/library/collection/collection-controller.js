@@ -99,12 +99,12 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 			user = new User( payload.user );
 			this.user = user;
 			this.isOwner = App.user && user.id == App.user.id;
-			// if ( this.isOwner ) {
-			// 	App.title = gettextCatalog.getString( 'library.collection.developer_owner_page_title', { user: user.display_name } );
-			// }
-			// else {
-			// 	App.title = gettextCatalog.getString( 'library.collection.developer_page_title', { user: user.display_name } );
-			// }
+			if ( this.isOwner ) {
+				App.title = gettextCatalog.getString( 'Your Owned Games', { user: user.display_name } );
+			}
+			else {
+				App.title = gettextCatalog.getString( 'Games Owned by {{ user }}', { user: user.display_name } );
+			}
 		}
 		else if ( this.type == 'bundle' ) {
 			bundle = new GameBundle( payload.bundle );
