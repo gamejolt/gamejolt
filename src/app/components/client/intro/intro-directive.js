@@ -8,7 +8,7 @@ angular.module( 'App.Client.Intro' ).directive( 'gjClientIntro', function()
 		templateUrl: '/app/components/client/intro/intro.html',
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $document, $scope, $q, $element, $transition, $timeout, App, Client )
+		controller: function( $document, $scope, $q, $element, $transition, $timeout, App, Client, Connection )
 		{
 			var _this = this;
 
@@ -71,9 +71,18 @@ angular.module( 'App.Client.Intro' ).directive( 'gjClientIntro', function()
 			var initialStateChange = $q.defer();
 			var loadingShowPromise = null;
 
+			// Whatever happens first.
+			// The page loaded or the connection is gone.
 			$scope.$on( '$stateChangeSuccess', function()
 			{
 				initialStateChange.resolve();
+			} );
+
+			$scope.$watch( function()
+			{
+				if ( !Connection.isOnline ) {
+					initialStateChange.resolve();
+				}
 			} );
 
 			$timeout( function()

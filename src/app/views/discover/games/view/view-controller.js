@@ -1,6 +1,6 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	$scope, $stateParams, $injector, $timeout,
-	Environment, Location, Api, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
+	Environment, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
 	Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable,
 	Registry, Scroll )
 {
@@ -43,10 +43,15 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		Game_ViewState.clear();
 	} );
 
-	Api.sendRequest( '/web/discover/games/' + $stateParams.id ).then( function( payload )
-	{
-		_this.init( payload );
-	} );
+	Api.sendRequest( '/web/discover/games/' + $stateParams.id )
+		.then( function( payload )
+		{
+			_this.init( payload );
+		} )
+		.catch( function( e )
+		{
+			Payload.handlePayloadError( e );
+		} );
 
 	this.init = function( payload )
 	{
