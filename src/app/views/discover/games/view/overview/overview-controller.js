@@ -2,7 +2,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle,
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, Environment,
 	Jam,
-	Api, Game_ViewState, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
+	Api, Payload, Game_ViewState, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
 {
 	var _this = this;
 
@@ -46,26 +46,31 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		Game_ViewState.hideExtended();
 	} );
 
-	Api.sendRequest( '/web/discover/games/overview/' + $stateParams.id ).then( function( payload )
-	{
-		_this.init( payload );
-
-		// Remove pressure from the game overview payload by doing these after.
-		Api.sendRequest( '/web/discover/games/scores/overview/' + $stateParams.id ).then( function( payload )
+	Api.sendRequest( '/web/discover/games/overview/' + $stateParams.id )
+		.then( function( payload )
 		{
-			_this.scoresPayload = payload;
-		} );
+			_this.init( payload );
 
-		Api.sendRequest( '/web/discover/games/trophies/overview/' + $stateParams.id ).then( function( payload )
+			// Remove pressure from the game overview payload by doing these after.
+			Api.sendRequest( '/web/discover/games/scores/overview/' + $stateParams.id, { detach: true } ).then( function( payload )
+			{
+				_this.scoresPayload = payload;
+			} );
+
+			Api.sendRequest( '/web/discover/games/trophies/overview/' + $stateParams.id, { detach: true } ).then( function( payload )
+			{
+				_this.trophiesPayload = payload;
+			} );
+
+			// We set our state to skip tracking in the state definition.
+			// Track it manually here.
+			// This ensures that any experiments set in the payload get tracked as well.
+			Analytics.trackPageview();
+		} )
+		.catch( function( e )
 		{
-			_this.trophiesPayload = payload;
+			Payload.handlePayloadError( e );
 		} );
-
-		// We set our state to skip tracking in the state definition.
-		// Track it manually here.
-		// This ensures that any experiments set in the payload get tracked as well.
-		Analytics.trackPageview();
-	} );
 
 	this.init = function( payload )
 	{
