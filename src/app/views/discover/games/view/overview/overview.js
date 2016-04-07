@@ -12,6 +12,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 			{
 				HistoryTick.sendBeacon( 'game-view', $stateParams.id );
 			}
-		}
+		},
+		skipTrackPageview: true,
 	} );
 } );

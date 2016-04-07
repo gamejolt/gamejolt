@@ -1,3 +1,47 @@
-<h3>{{ ::'dash.games.releases.stats.heading' | translate }}</h3>
+<section class="section">
+	<div class="container">
 
-<gj-graph-widget graph-widget-url="/web/dash/developer/games/graphs/release/{{ ::releaseCtrl.release.game_id }}/{{ ::releaseCtrl.release.game_package_id }}/{{ ::releaseCtrl.release.id }}"></gj-graph-widget>
+		<div class="row">
+			<div class="col-md-8">
+
+				<nav class="breadcrumb">
+					<ul>
+						<li>
+							<a ui-sref="dashboard.developer.games.manage.packages.list">
+								<span class="breadcrumb-tag">&nbsp;</span>
+								<span translate>Packages</span>
+							</a>
+							<span class="breadcrumb-separator jolticon jolticon-chevron-right"></span>
+						</li>
+						<li>
+							<a ui-sref="dashboard.developer.games.manage.packages.edit( { packageId: releaseCtrl.package.id } )">
+								<span class="breadcrumb-tag">{{ ::'dash.games.releases.manage.breadcrumb_package' | translate }}</span>
+								{{ releaseCtrl.package.title || manageCtrl.game.title }}
+							</a>
+							<span class="breadcrumb-separator jolticon jolticon-chevron-right"></span>
+						</li>
+						<li>
+							<a ui-sref="dashboard.developer.games.manage.packages.release.edit( { packageId: releaseCtrl.package.id, releaseId: releaseCtrl.release.id } )">
+								<span class="breadcrumb-tag">{{ ::'dash.games.releases.manage.breadcrumb_release' | translate }}</span>
+								{{ releaseCtrl.release.version_number }}
+							</a>
+							<span class="breadcrumb-separator jolticon jolticon-chevron-right"></span>
+						</li>
+						<li>
+							<span class="active">
+								<span class="breadcrumb-tag">&nbsp;</span>
+								<span translate>Stats</span>
+							</span>
+						</li>
+					</ul>
+				</nav>
+
+				<h3>{{ ::'dash.games.releases.stats.heading' | translate }}</h3>
+
+				<gj-graph-widget graph-widget-url="/web/dash/developer/games/graphs/release/{{ ::releaseCtrl.release.game_id }}/{{ ::releaseCtrl.release.game_package_id }}/{{ ::releaseCtrl.release.id }}"></gj-graph-widget>
+
+			</div>
+		</div>
+
+	</div>
+</section>

@@ -11,6 +11,8 @@ angular.module( 'App.Game.CompatIcons' ).directive( 'gjGameCompatIcons', functio
 		'type_unity': 'unity',
 		'type_applet': 'java',
 		'type_silverlight': 'silverlight',
+
+		'type_rom': 'rom',
 	};
 
 	var compatFields = _.keys( compatMapping );

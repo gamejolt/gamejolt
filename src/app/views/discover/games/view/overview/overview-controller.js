@@ -2,7 +2,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle,
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, Environment,
 	Jam,
-	Api, Payload, Game_ViewState )
+	Api, Payload, Game_ViewState, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
 {
 	var _this = this;
 
@@ -61,6 +61,11 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			{
 				_this.trophiesPayload = payload;
 			} );
+
+			// We set our state to skip tracking in the state definition.
+			// Track it manually here.
+			// This ensures that any experiments set in the payload get tracked as well.
+			Analytics.trackPageview();
 		} )
 		.catch( function( e )
 		{
@@ -80,8 +85,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			news: 0,
 		};
 
-		this.downloadCount = payload.downloadCount;
-		this.profileCount = payload.profileCount;
+		this.profileCount = payload.profileCount || 0;
+		this.downloadCount = payload.downloadCount || 0;
+		this.playCount = payload.playCount || 0;
 
 		this.developerGamesCount = payload.developerGamesCount;
 
@@ -104,6 +110,24 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 
 		var packageData = Game_Package.processPackagePayload( payload );
 		angular.extend( this, packageData );
+
+		// Need this for the game play buttons in header.
+		$ocLazyLoad.load( '/app/modules/ua-parser.js' ).then( function()
+		{
+			var os = Device.os();
+			var arch = Device.arch();
+
+			$scope.gameCtrl.installableBuilds = Game.pluckInstallableBuilds( _this.packages || [], os, arch );
+			$scope.gameCtrl.browserBuilds = Game.pluckBrowserBuilds( _this.packages || [] );
+
+			// On Client we only want to include HTML games.
+			if ( Environment.isClient ) {
+				$scope.gameCtrl.browserBuilds = _.where( $scope.gameCtrl.browserBuilds, { type: Game_Build.TYPE_HTML } );
+			}
+
+			// Pull in ROMs to the browser builds.
+			$scope.gameCtrl.browserBuilds = $scope.gameCtrl.browserBuilds.concat( Game.pluckRomBuilds( _this.packages || [] ) );
+		} );
 
 		// The releases section exists if there are releases or songs.
 		this.hasReleasesSection = this.releases.length || this.songs.length;
@@ -133,13 +157,18 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		 * For game stats.
 		 */
 		this.playsTooltip = false;
-		this.showNaPlays = !this.packages.length && !(this.playCount + this.downloadCount);
-		if ( this.showNaPlays ) {
-			this.playsTooltip = 'games.view.stats.no_builds_tooltip';
-		}
-		// If they had plays from a previous build but no longer have builds.
-		else if ( !this.packages.length && (this.playCount + this.downloadCount) ) {
-			this.playsTooltip = 'games.view.stats.had_builds_tooltip';
+		this.showNaPlays = false;
+
+		if ( !this.packages.length ) {
+
+			// If they had plays from a previous build but no longer have builds.
+			if ( this.playCount + this.downloadCount ) {
+				this.playsTooltip = gettextCatalog.getString( 'This game used to have playable builds but they have been removed.' );
+			}
+			else {
+				this.showNaPlays = true;
+				this.playsTooltip = gettextCatalog.getString( 'This game has no playable builds yet.' );
+			}
 		}
 
 		/**

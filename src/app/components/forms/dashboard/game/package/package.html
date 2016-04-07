@@ -8,34 +8,21 @@
 		<form-group name="title" label="{{ 'dash.games.packages.form.title_label' | translate }}">
 			<p class="help-block" translate>dash.games.packages.form.title_help_html</p>
 
-			<div ng-if="!formState.showTitleInput">
-				<div class="form-control-static">
-					<code>{{ formModel.title }}</code>
-				</div>
+			<input
+				form-control
+				ng-maxlength="150"
+				gj-form-validate-availability="/web/dash/developer/games/packages/check-field-availability/{{ game.id }}/title"
+				>
 
-				<a class="i-button light" ng-click="formState.showTitleInput = true">
-					<span class="jolticon jolticon-edit"></span>
-					{{ ::'dash.games.packages.form.title_change_button' | translate }}
-				</a>
-			</div>
-
-			<div ng-if="formState.showTitleInput">
-				<input
-					form-control="text"
-					ng-maxlength="150"
-					gj-form-validate-availability="/web/dash/developer/games/packages/check-field-availability/{{ game.id }}/title"
-					>
-
-				<control-errors></control-errors>
-			</div>
+			<control-errors></control-errors>
 		</form-group>
 
 		<form-group name="description" label="{{ 'dash.games.packages.form.description_label' | translate }}" optional="true">
 			<p class="help-block" translate>dash.games.packages.form.description_help_html</p>
 
 			<div ng-if="!formState.showDescriptionInput">
-				<a class="i-button light" ng-click="formState.showDescriptionInput = true">
-					<span class="jolticon jolticon-edit"></span>
+				<a class="btn btn-outline btn-sm" ng-click="formState.showDescriptionInput = true">
+					<span class="jolticon jolticon-add"></span>
 					{{ 'dash.games.packages.form.description_change_button' | translate }}
 				</a>
 			</div>
@@ -46,7 +33,7 @@
 			</div>
 		</form-group>
 
-		<button gj-form-submit-button class="i-button" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">
+		<button gj-form-submit-button class="btn" ng-show="method == 'add' || !packageForm.$pristine" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">
 			<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
 			<span ng-if="method == 'add'">{{ ::'dash.games.packages.form.add_package_button' | translate }}</span>
 			<span ng-if="method == 'edit'">{{ ::'dash.games.packages.form.save_package_button' | translate }}</span>

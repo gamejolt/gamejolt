@@ -6,7 +6,6 @@ angular.module( 'App.Chat' ).directive( 'gjChatUserList', function()
 			room: '=?chatUserListRoom',
 			showPm: '=?chatUserListShowPm',
 			showModTools: '=?chatUserListShowModTools',
-			focusFilter: '=?chatUserListFocusFilter'
 		},
 		templateUrl: '/app/components/chat/user-list/user-list.html',
 		bindToController: true,
