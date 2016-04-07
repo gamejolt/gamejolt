@@ -6,6 +6,10 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		controllerAs: 'clientCtrl',
 		templateUrl: '/app/views/client/client.html',
 		resolve: {
+			payload: function( Api )
+			{
+				return Api.sendRequest( '/web/client' );
+			},
 			uaParser: function( $ocLazyLoad )
 			{
 				return $ocLazyLoad.load( '/app/modules/ua-parser.js' );
@@ -14,11 +18,6 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 			{
 				return Translate.loadSection( 'main' );
 			},
-			touch: function( User )
-			{
-				// No need to wait on this.
-				User.touch();
-			}
 		}
 	} );
 } );
