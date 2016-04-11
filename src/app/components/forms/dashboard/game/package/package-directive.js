@@ -11,6 +11,8 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 	form.onInit = function( scope )
 	{
 		scope.formModel.game_id = scope.game.id;
+		scope.formModel.primary = false;
+		scope.formState.primaryFieldVisible = true;
 
 		scope.formState.showDescriptionInput = scope.formModel.description ? true : false;
 
@@ -25,6 +27,11 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 				scope.isLoaded = true;
 
 				scope.formModel.pricing_type = 'free';
+
+				if ( !payload.hasPrimarySellable ) {
+					scope.formModel.primary = true;
+					scope.formState.primaryFieldVisible = false;
+				}
 
 				if ( scope.method == 'add' ) {
 					if ( payload.hasDefaultPackage ) {
@@ -42,6 +49,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 					if ( payload.sellable ) {
 						scope.formModel.pricing_type = payload.sellable.type;
 						scope.formModel.price = payload.sellable.pricings[0].amount / 100;
+						scope.formModel.primary = payload.sellable.primary;
 
 						scope.formState.hasSuggestedPrice = !!scope.formModel.price;
 					}
@@ -59,6 +67,11 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 			if ( scope.formModel.pricing_type == 'pwyw' && !val ) {
 				scope.formModel.price = null;
 			}
+		} );
+
+		scope.$watch( 'formState.isPrimary', function( val )
+		{
+			scope.formModel.primary = val;
 		} );
 	};
 

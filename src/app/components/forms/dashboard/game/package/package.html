@@ -99,6 +99,15 @@
 			<control-errors></control-errors>
 		</form-group>
 
+		<form-group name="primary" label="Primary" ng-if="formState.primaryFieldVisible">
+			<p class="help-block">
+				<span class="jolticon jolticon-notice"></span>
+				The primary package is the one that is shown in the game listings and any thumbnails. There can only be one primary package per game.
+			</p>
+			<gj-toggle-switch type="checkbox" ng-model="formState.isPrimary" toggle-switch-on-text="Yes" toggle-switch-off-text="No"></gj-toggle-switch>
+			<br class="visible-xs">
+		</form-group>
+
 		<button gj-form-submit-button class="btn" ng-show="method == 'add' || !packageForm.$pristine" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">
 			<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
 			<span ng-if="method == 'add'">{{ ::'dash.games.packages.form.add_package_button' | translate }}</span>
