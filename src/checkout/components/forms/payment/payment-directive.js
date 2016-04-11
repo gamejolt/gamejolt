@@ -19,7 +19,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 		// scope.formModel.card_number = '4242424242424242';
 		// scope.formModel.exp = '12/16';
 		// scope.formModel.cvc = '123';
-		scope.formModel.should_remember = true;
+		scope.formModel.save_card = true;
 
 		console.log( scope.cards );
 	};
