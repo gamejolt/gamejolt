@@ -19,21 +19,26 @@
 	</form-group>
 
 	<form-group name="type" label="Business Type">
-		<div class="radio">
-			<label>
-				<input form-control="radio" value="individual">
-				Individual <br>
-				<span class="help-inline">HELP!</span>
-			</label>
+		<div ng-if="!account">
+			<div class="radio">
+				<label>
+					<input form-control="radio" value="individual">
+					Individual <br>
+					<span class="help-inline">HELP!</span>
+				</label>
+			</div>
+			<div class="radio">
+				<label>
+					<input form-control="radio" value="company">
+					Company <br>
+					<span class="help-inline">HELP!</span>
+				</label>
+			</div>
+			<control-errors></control-errors>
 		</div>
-		<div class="radio">
-			<label>
-				<input form-control="radio" value="company">
-				Company <br>
-				<span class="help-inline">HELP!</span>
-			</label>
+		<div class="form-static" ng-if="account">
+			{{ account.type | uppercase }}
 		</div>
-		<control-errors></control-errors>
 	</form-group>
 
 	<fieldset ng-if="account">
@@ -58,7 +63,40 @@
 					name="legal_entity.last_name"
 					label="Last Name"
 					>
+					<input form-control >
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+		</div>
+
+		<div class="row" ng-if="hasField( 'legal_entity.dob.day' ) || hasField( 'legal_entity.dob.month' ) || hasField( 'legal_entity.dob.year' ) ">
+			<div class="col-sm-4">
+				<form-group
+					ng-if="hasField( 'legal_entity.dob.day' )"
+					name="legal_entity.dob.day"
+					label="Birthday"
+					>
 					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+			<div class="col-sm-4">
+				<form-group
+					ng-if="hasField( 'legal_entity.dob.month' )"
+					name="legal_entity.dob.month"
+					label="Month"
+					>
+					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+			<div class="col-sm-4">
+				<form-group
+					ng-if="hasField( 'legal_entity.dob.year' )"
+					name="legal_entity.dob.year"
+					label="Year"
+					>
+					<input form-control >
 					<control-errors></control-errors>
 				</form-group>
 			</div>
@@ -69,7 +107,7 @@
 			name="legal_entity.address.line1"
 			label="Address"
 			>
-			<input form-control>
+			<input form-control >
 			<control-errors></control-errors>
 		</form-group>
 
@@ -120,6 +158,146 @@
 
 	</fieldset>
 
+	<fieldset ng-if="account.type=='company'">
+		<legend>Your Company</legend>
+
+		<div class="row">
+			<div class="col-sm-6">
+				<form-group
+					ng-if="hasField( 'legal_entity.business_name' )"
+					name="legal_entity.business_name"
+					label="Company Name"
+					>
+					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+			<div class="col-sm-6">
+				<form-group
+					ng-if="hasField( 'legal_entity.business_tax_id' )"
+					name="legal_entity.business_tax_id"
+					label="Company Tax Id"
+					>
+					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+		</div>
+	</fieldset>
+
+	<fieldset ng-if="account.type=='company'">
+		<legend>Additional Owners</legend>
+		<p class="small">The law in your jurisdiction dictates we have to collect information on any company shareholders with a 25% share or more. </p>
+
+		<!-- Foreach additional owner -->
+		<div ng-repeat="(key,value) in formModel['legal_entity.additional_owners']">
+			<legend>{{ value.first_name }} {{ value.last_name }}</legend>
+				
+			<div class="row">
+				<div class="col-sm-6">
+					<form-group
+						name="legal_entity.additional_owners.{{key}}.first_name"
+						label="First Name"
+						>
+						<input form-control ng-model="value.first_name">
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+				<div class="col-sm-6">
+					<form-group
+						name="legal_entity.additional_owners.{{key}}.last_name"
+						label="Last Name"
+						>
+						<input form-control ng-model="value.last_name">
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+			</div>
+
+			<div class="row" >
+				<div class="col-sm-4">
+					<form-group
+						name="legal_entity.additional_owners.{{key}}.dob.day"
+						label="Birthday"
+						>
+						<input form-control ng-model="value.dob.day">
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+				<div class="col-sm-4">
+					<form-group
+						name="legal_entity.additional_owners.{{key}}.dob.month"
+						label="Month"
+						>
+						<input form-control ng-model="value.dob.month">
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+				<div class="col-sm-4">
+					<form-group
+						name="legal_entity.additional_owners.{{key}}.dob.year"
+						label="Year"
+						>
+						<input form-control ng-model="value.dob.year">
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+			</div>
+
+			<form-group
+				name="legal_entity.additional_owners.{{key}}.address.line1"
+				label="Address"
+				>
+				<input form-control ng-model="value.address.line1">
+				<control-errors></control-errors>
+			</form-group>
+
+			<div class="row">
+				<div class="col-sm-4">
+					<form-group
+						name="legal_entity.additional_owners.{{key}}.address.city"
+						label="City"
+						>
+						<input form-control ng-model="value.address.city">
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+				<div class="col-sm-4">
+					<form-group
+						name="legal_entity.additional_owners.{{key}}.address.state"
+						label="State"
+						>
+						<input form-control ng-model="value.address.state">
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+				<div class="col-sm-4">
+					<form-group
+						name="legal_entity.additional_owners.{{key}}.address.postal_code"
+						label="Zip Code"
+						>
+						<input form-control ng-model="value.address.postal_code">
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+			</div>
+
+
+
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<button class="btn" ng-click="addAdditionalOwner()">
+					<span class="jolticon jolticon-chevron-right"></span>
+					Add
+				</button>
+			</div>
+		</div>
+
+	</fieldset>
+
+
 	<fieldset ng-if="account">
 		<legend>Percentage Split</legend>
 
@@ -128,7 +306,7 @@
 
 		<div class="form-group">
 			<rzslider
-				rz-slider-model="formModel.percentageSplit"
+				rz-slider-model="formModel.percentage_split"
 				rz-slider-options="sliderOptions"
 				>
 			</rzslider>
@@ -142,7 +320,7 @@
 		<p class="small">We store up to a certain amount of money in your Wallet. You can use this money to buy other games on the site from other developers. Money goes directly to them when using Wallet funds. We never take a cut for game sales when you pay with your Wallet.</p>
 
 		 <form-group
-			name="wallet_max"
+			name="wallet_maximum"
 			label="Max. Wallet Amount"
 			>
 			<p class="help-block">
@@ -160,6 +338,33 @@
 		</form-group>
 
 	</fieldset>
+
+
+	<fieldset ng-if="account">
+		<legend>Minimum Payout</legend>
+
+		<p class="small">Lorem ipsum.</p>
+
+		 <form-group
+			name="payout_minimum"
+			label="Min. Payout Amount"
+			>
+			<p class="help-block">
+				HELP<br>HELP
+			</p>
+
+			<input-group>
+				<input-group-addon>
+					$
+				</input-group-addon>
+				<input form-control="number" ng-min="0">
+			</input-group>
+			<control-errors></control-errors>
+		</form-group>
+
+	</fieldset>
+
+	<p>By registering your account, you agree to our <a href='#' target='new'>Terms of Service</a> and the <a href='https://stripe.com/connect/account-terms' target='new'>Stripe Connected Account Agreement</a>.</p>
 
 	<button gj-form-submit-button class="btn" ng-disabled="!financialsForm.$valid" ng-click="onSubmit()">
 		<span class="jolticon jolticon-checkbox"></span>
