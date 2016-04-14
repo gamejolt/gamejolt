@@ -2,8 +2,8 @@
 	popover-id="account-popover"
 	popover-append-to-body="true"
 	popover-position-by="position"
-	popover-on-focus="ctrl.isShown = true"
-	popover-on-blur="ctrl.isShown = false"
+	popover-on-focus="ctrl.onShow()"
+	popover-on-blur="ctrl.onHide()"
 	popover-hide-on-state-change="true"
 	>
 
@@ -60,13 +60,26 @@
 
 	<div class="account-popover-separator"></div>
 
-	<!--<div ng-if="::Environment.isClient">
-
-
-		<div class="account-popover-separator"></div>
-	</div>-->
-
 	<gj-shell-user-box></gj-shell-user-box>
+
+	<div ng-if="App.user && App.user.is_developer">
+		<div class="account-popover-separator"></div>
+
+		<div class="list-group">
+			<a class="list-group-item small" ui-sref="dashboard.withdraw-funds">
+				<span class="pull-right jolticon jolticon-help-circle" gj-tooltip="{{ 'These are your available funds to either buy games with or withdraw.' | translate }}"></span>
+
+				<span translate>Wallet Balance</span>
+				&mdash;
+				<span ng-if="ctrl.walletAmount === false" translate>
+					Loading...
+				</span>
+				<span class="account-popover-currency" ng-if="ctrl.walletAmount !== false">
+					{{ ctrl.walletAmount | gjCurrency }}
+				</span>
+			</a>
+		</div>
+	</div>
 
 	<!--
 		We do slightly different styling here whether we're in client or not.
