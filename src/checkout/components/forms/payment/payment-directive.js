@@ -1,4 +1,4 @@
-angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window, Api, Form )
+angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window, App, Api, Form )
 {
 	var form = new Form( {
 		template: '/checkout/components/forms/payment/payment.html'
@@ -54,10 +54,15 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 		.then( function( response )
 		{
 			console.log( response.id, scope.order );
-			return Api.sendRequest( '/web/checkout/charge/' + scope.order.id, {
+			var data = {
 				token: response.id,
 				amount: (scope.order.amount / 100),
-			} );
+			}
+			if ( App.user ) {
+				data.save_card = scope.formModel.save_card;
+			}
+
+			return Api.sendRequest( '/web/checkout/charge/' + scope.order.id, data );
 		} );
 	};
 
