@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Packages.ListCtrl', function(
-	$scope, $state, App, Game_Package, ModalConfirm, Growls, gettextCatalog, packagesPayload )
+	$scope, $state, App, Game_Package, Sellable, ModalConfirm, Growls, gettextCatalog, packagesPayload )
 {
 	var _this = this;
 	var manageCtrl = $scope.manageCtrl;
@@ -7,6 +7,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 	App.title = gettextCatalog.getString( 'dash.games.packages.page_title', { game: manageCtrl.game.title } );
 
 	this.packages = Game_Package.populate( packagesPayload.packages );
+	this.sellables = _.indexBy( Sellable.populate( packagesPayload.sellables ), 'game_package_id' );
 
 	this.isPackageActive = isPackageActive;
 	this.onPackagesSorted = onPackagesSorted;

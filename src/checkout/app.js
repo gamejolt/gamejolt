@@ -49,6 +49,7 @@ angular.module( 'App', [
 	'gj.User.UserAvatar',
 
 	'gj.Sellable',
+	'gj.Sellable.Pricing',
 
 	// 'gj.Tooltip',
 	'gj.Popover',
