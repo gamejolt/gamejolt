@@ -6,5 +6,11 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		controller: 'Discover.Games.ViewCtrl',
 		controllerAs: 'gameCtrl',
 		templateUrl: '/app/views/discover/games/view/view.html',
+		resolve: {
+			tickSource: function( $stateParams, HistoryTick )
+			{
+				HistoryTick.trackSource( 'Game', $stateParams.id );
+			}
+		}
 	} );
 } );
