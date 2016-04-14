@@ -121,6 +121,7 @@ angular.module( 'App.Client.Library' )
 	this.installPackage = function( _game, _package, _release, _build, _launchOptions )
 	{
 		HistoryTick.sendBeacon( 'game-build', _build.id, { sourceResource: 'Game', sourceResourceId: _game.id } );
+		HistoryTick.sendBeacon( 'game-build-install', _build.id, { sourceResource: 'Game', sourceResourceId: _game.id } );
 
 		var game = LocalDb_Game.fromGame( _game );
 		var localPackage = LocalDb_Package.createForInstall( _package, _release, _build, _launchOptions );
