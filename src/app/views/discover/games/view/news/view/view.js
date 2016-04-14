@@ -10,9 +10,9 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 			{
 				return Api.sendRequest( '/web/discover/games/news/' + $stateParams.id + '/' + $stateParams.articleId );
 			},
-			tick: function( HistoryTick, $stateParams )
+			tick: function( tickSource, HistoryTick, $stateParams )
 			{
-				HistoryTick.sendBeacon( 'game-news-article', $stateParams.articleId );
+				HistoryTick.sendBeacon( 'game-news-article', $stateParams.articleId, { sourceResource: 'Game', sourceResourceId: $stateParams.id } );
 			},
 		}
 	} );

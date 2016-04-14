@@ -10,9 +10,9 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 		controllerAs: 'soundtrackCtrl',
 		templateUrl: '/app/views/discover/games/view/download/soundtrack/soundtrack.html',
 		resolve: {
-			tick: function( HistoryTick, $stateParams )
+			tick: function( tickSource, HistoryTick, $stateParams )
 			{
-				HistoryTick.sendBeacon( 'game-soundtrack', $stateParams.id );
+				HistoryTick.sendBeacon( 'game-soundtrack', $stateParams.id, { sourceResource: 'Game', sourceResourceId: $stateParams.id } );
 			},
 		}
 	} );

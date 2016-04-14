@@ -59,6 +59,7 @@ angular.module( 'App', [
 	'gj.Scroll.AutoScroll',
 	'gj.Scroll.FixedResizer',
 	'gj.EditableAccordion',
+	'gj.Referrer',
 	'gj.HistoryTick',
 	'gj.Pagination',
 	'gj.Modal.Confirm',
