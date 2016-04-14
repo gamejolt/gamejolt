@@ -33,6 +33,11 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 				_this.previewPackage = _.find( _this.previewData.packages, { id: _this.package.id } );
 				_this.buildsProcessingCount = response.buildsProcessingCount || 0;
 				_this.isLoadingPreview = false;
+
+				// Clear out any "bought" status in the sellable so it always shows as if we haven't bought it yet.
+				if ( _this.previewPackage._sellable ) {
+					_this.previewPackage._sellable.is_owned = false;
+				}
 			} );
 	}
 
