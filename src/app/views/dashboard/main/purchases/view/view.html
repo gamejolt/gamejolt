@@ -1,0 +1,109 @@
+<section class="section">
+	<div class="container">
+
+		<h2 class="section-header" translate>Order Details</h2>
+
+		<p class="text-muted">
+			<span translate>Ordered on</span>
+			{{ viewCtrl.order.completed_on | date:'medium' }}
+
+			<span class="dot-separator"></span>
+
+			<span translate>Order #</span>
+			{{ viewCtrl.order.id }}
+		</p>
+
+		<hr>
+
+		<div class="row">
+			<div class="col-sm-4">
+				<h4 class="section-header" translate>Billing</h4>
+				<p>
+					Nothing Yet
+				</p>
+			</div>
+			<div class="col-sm-4">
+				<h4 class="section-header" translate>Payment</h4>
+				<div ng-repeat="payment in viewCtrl.order.payments track by payment.id">
+
+					<div ng-if="payment.method == Order_Payment.METHOD_CC_STRIPE">
+						<span class="tag">
+							{{ payment.stripe_payment_source.brand }}
+						</span>
+						****
+						{{ payment.stripe_payment_source.last4 }}
+					</div>
+
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<h4 class="section-header" translate>Summary</h4>
+
+				<table class="summary-table">
+					<tbody>
+						<tr>
+							<th translate>Subtotal</th>
+							<td>{{ viewCtrl.order.amount / 100 | currency }}</td>
+						</tr>
+						<tr>
+							<th translate>Tax</th>
+							<td>{{ 0 | currency }}</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th translate>Total</th>
+							<td>{{ viewCtrl.order.amount / 100 | currency }}</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+
+		<hr>
+
+		<div ng-repeat="item in ::viewCtrl.order.items track by item.id">
+			<h4>
+				{{ ::item.sellable.title }}
+				&mdash;
+				<small>{{ ::item.amount / 100 | currency }}</small>
+			</h4>
+
+			<div ng-repeat="firstPackage in ::[ viewCtrl.packagesBySellable[ item.sellable.id ][0] ] track by firstPackage.id">
+				<div class="row">
+					<div class="col-xs-2">
+						<a style="display: block" ui-sref="discover.games.view.overview( { slug: viewCtrl.games[ firstPackage.game_id ].slug, id: firstPackage.game_id } )">
+							<img gj-img-responsive="{{ ::viewCtrl.games[ firstPackage.game_id ].img_thumbnail }}" alt="">
+						</a>
+					</div>
+					<div class="col-xs-10">
+						<p>
+							<a ui-sref="discover.games.view.overview( { slug: viewCtrl.games[ firstPackage.game_id ].slug, id: firstPackage.game_id } )">
+								{{ ::viewCtrl.games[ firstPackage.game_id ].title }}
+							</a>
+							<br>
+							<span class="small">
+								<span translate>by</span>
+								<a ui-sref="profile.overview( { slug: viewCtrl.games[ firstPackage.game_id ].developer.slug, id: viewCtrl.games[ firstPackage.game_id ].developer.id } )">
+									{{ ::viewCtrl.games[ firstPackage.game_id ].developer.display_name }}
+								</a>
+							</span>
+						<p>
+
+						<h5 class="sans-margin" translate>Packages</h5>
+
+						<div class="small text-muted">
+							<div ng-repeat="package in ::viewCtrl.packagesBySellable[ item.sellable.id ] track by package.id">
+								- {{ ::package.title || viewCtrl.games[ package.game_id ].title }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<br>
+			</div>
+
+		</div>
+
+	</div>
+</section>
