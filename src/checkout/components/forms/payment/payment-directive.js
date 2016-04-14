@@ -13,7 +13,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 
 		scope.formModel.selectedCard = 0;
 		if ( scope.cards && scope.cards.length ) {
-			scope.formModel.selectedCard = scope.cards[0].id;
+			scope.formModel.selectFormedCard = scope.cards[0].id;
 		}
 
 		// scope.formModel.card_number = '4242424242424242';
@@ -27,43 +27,57 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 	form.onSubmit = function( scope )
 	{
 		console.log( 'try' );
-		var exp = scope.formModel.exp.split( '/' );
-		var formData = {
-			number: scope.formModel.card_number,
-			exp_month: exp[0],
-			exp_year: exp[1],
-			cvc: scope.formModel.cvc,
-		};
 
-		return $q( function( resolve, reject )
-		{
-			$window.Stripe.card.createToken( formData, function( status, response )
+		// New card
+		if ( scope.formModel.selectedCard == 0 ) {
+
+			var exp = scope.formModel.exp.split( '/' );
+			var formData = {
+				number: scope.formModel.card_number,
+				exp_month: exp[0],
+				exp_year: exp[1],
+				cvc: scope.formModel.cvc,
+			};
+
+			return $q( function( resolve, reject )
 			{
-				console.log( 'response' );
-				console.log( status, response );
+				$window.Stripe.card.createToken( formData, function( status, response )
+				{
+					console.log( 'response' );
+					console.log( status, response );
 
-				if ( response.error ) {
-					scope.formState.stripeError = response.error;
-					reject( response );
+					if ( response.error ) {
+						scope.formState.stripeError = response.error;
+						reject( response );
+					}
+					else {
+						resolve( response );
+					}
+				} );
+			} )
+			.then( function( response )
+			{
+				console.log( response.id, scope.order );
+				var data = {
+					token: response.id,
+					amount: (scope.order.amount / 100),
 				}
-				else {
-					resolve( response );
+				if ( App.user ) {
+					data.save_card = scope.formModel.save_card;
 				}
+
+				return Api.sendRequest( '/web/checkout/charge/' + scope.order.id, data );
 			} );
-		} )
-		.then( function( response )
-		{
-			console.log( response.id, scope.order );
-			var data = {
-				token: response.id,
-				amount: (scope.order.amount / 100),
-			}
-			if ( App.user ) {
-				data.save_card = scope.formModel.save_card;
-			}
 
+		}
+		// Existing/saved card
+		else {
+
+			var data = { payment_source: scope.formModel.selectedCard };
 			return Api.sendRequest( '/web/checkout/charge/' + scope.order.id, data );
-		} );
+		}
+
+
 	};
 
 	return form;
