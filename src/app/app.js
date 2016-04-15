@@ -127,6 +127,8 @@ angular.module( 'App', [
 	'gj.Game.Downloader',
 	'gj.Game.PlayModal',
 
+	'gj.Game.KeyPool',
+
 	'gj.Jam',
 	'gj.Jam.Game',
 	'gj.Jam.VotingCategory',
