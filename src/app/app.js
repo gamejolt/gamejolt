@@ -123,6 +123,10 @@ angular.module( 'App', [
 	'gj.Game.ScoreTable',
 	'gj.Game.DataStore.Item',
 
+	'gj.Order',
+	'gj.Order.Item',
+	'gj.Order.Payment',
+
 	'gj.Game.Package.Card',
 	'gj.Game.Downloader',
 	'gj.Game.PlayModal',

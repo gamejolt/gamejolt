@@ -2,10 +2,6 @@
 	<div class="container">
 
 		<table class="table">
-			<!--<colgroup>
-				<col span="3">
-				<col style="text-align: right">
-			</colgroup>-->
 			<thead>
 				<tr>
 					<th>Order #</th>
@@ -15,8 +11,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="order in purchasesCtrl.orders track by order.id">
-					<td><strong>{{ ::order.id }}</strong></td>
+				<tr ng-repeat="order in listCtrl.orders track by order.id">
+					<td>
+						<strong>
+							<a ui-sref="dashboard.main.purchases.view( { id: order.id } )">
+								{{ ::order.id }}
+							</a>
+						</strong>
+					</td>
 					<td>{{ ::order.items[0].sellable.title }}</td>
 					<td title="{{ ::order.completed_on | date:'medium' }}">{{ ::order.completed_on | date:'mediumDate' }}</td>
 					<td class="text-right">{{ ::order.amount / 100 | currency }}</td>
