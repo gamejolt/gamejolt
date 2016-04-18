@@ -99,13 +99,22 @@
 			<control-errors></control-errors>
 		</form-group>
 
-		<form-group name="primary" label="Primary" ng-if="formState.primaryFieldVisible">
-			<p class="help-block">
-				<span class="jolticon jolticon-notice"></span>
-				The primary package is the one that is shown in the game listings and any thumbnails. There can only be one primary package per game.
+		<form-group name="primary" label="Primary Package" optional="!startedPrimary && hasPrimarySellable" ng-if="formModel.pricing_type != 'free'">
+			<p class="help-block" translate>
+				We use the primary package to determine the price to show when browsing game listings. There can only be one primary package per game.
 			</p>
-			<gj-toggle-switch type="checkbox" ng-model="formState.isPrimary" toggle-switch-on-text="Yes" toggle-switch-off-text="No"></gj-toggle-switch>
-			<br class="visible-xs">
+			<div class="checkbox">
+				<label>
+					<input form-control="checkbox" ng-disabled="startedPrimary || !hasPrimarySellable">
+					<span ng-if="!hasPrimarySellable">
+						<strong translate>Since you don't have any packages for sale yet, we will mark this as your primary one.</strong>
+					</span>
+					<span ng-if="hasPrimarySellable">
+						<span ng-if="!startedPrimary" translate>Make this package the primary package</span>
+						<strong ng-if="startedPrimary" translate>This is currently the primary package</strong>
+					</span>
+				</label>
+			</div>
 		</form-group>
 
 		<button gj-form-submit-button class="btn" ng-show="method == 'add' || !packageForm.$pristine" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">

@@ -50,7 +50,8 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 					gettextCatalog.getString( 'dash.games.packages.manage.removed_growl_title' )
 				);
 
-				_.remove( _this.packages, { id: package.id } );
+				// We have to do a refresh since a new package may have been chosen as the primary sellable.
+				$state.reload( $state.current );
 			} );
 	}
 } );

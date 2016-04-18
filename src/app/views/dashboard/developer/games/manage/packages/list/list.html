@@ -67,19 +67,29 @@
 										</p>
 
 										<div class="small text-muted">
-											<div ng-switch="::listCtrl.sellables[ package.id ].type">
 
-												<div ng-switch-when="pwyw">
+											<span ng-if="::listCtrl.sellables[ package.id ].primary">
+												<span class="tag tag-blue" tooltip="{{ 'We use the primary package to determine the price to show when browsing game listings.' | translate }}" translate>Primary Sellable</span>
+											</span>
+
+											<span ng-switch="::listCtrl.sellables[ package.id ].type">
+
+												<span ng-switch-when="pwyw">
 													<span class="tag tag-blue" translate>Pay What You Want</span>
 													<span class="dot-separator"></span>
 													<span>
 														<strong translate>Suggested Price</strong>
 														&mdash;
-														{{ ::listCtrl.sellables[ package.id ].pricings[0].amount | gjCurrency }}
+														<span ng-if="listCtrl.sellables[ package.id ].pricings[0].amount">
+															{{ ::listCtrl.sellables[ package.id ].pricings[0].amount | gjCurrency }}
+														</span>
+														<span ng-if="!listCtrl.sellables[ package.id ].pricings[0].amount" translate>
+															None
+														</span>
 													</span>
-												</div>
+												</span>
 
-												<div ng-switch-when="paid">
+												<span ng-switch-when="paid">
 													<span class="tag tag-blue" translate>Fixed Price</span>
 													<span class="dot-separator"></span>
 													<span>
@@ -87,13 +97,13 @@
 														&mdash;
 														{{ ::listCtrl.sellables[ package.id ].pricings[0].amount | gjCurrency }}
 													</span>
-												</div>
+												</span>
 
-												<div ng-switch-default>
-													<span class="tag tag-blue" translates>Freeware</span>
-												</div>
+												<span ng-switch-default>
+													<span class="tag tag-blue" translates>Free</span>
+												</span>
 
-											</div>
+											</span>
 										</div>
 										<br>
 
