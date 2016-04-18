@@ -102,6 +102,7 @@
 								<gj-game-package-card
 									ng-repeat="package in overviewCtrl.packages"
 									game="::gameCtrl.game"
+									sellable="::package._sellable"
 									game-package="::package"
 									game-releases="::package._releases"
 									game-builds="::package._builds"
