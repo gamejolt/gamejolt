@@ -15,6 +15,7 @@ angular.module( 'App', [
 	'gj.Model',
 	'gj.Error',
 	'gj.Translate',
+	'gj.Geo',
 
 	// 'gj.Filesize',
 
