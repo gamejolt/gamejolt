@@ -1,5 +1,18 @@
 gj-form-payment
 
+	// The gj-expand-when directive adds an "overflow: hidden" around its content.
+	// We use outline for styling the form controls so that they properly overlap.
+	// The outline combined with overflow of hidden actually hides the outside outlines.
+	// We have to push it all in by 1px so this doesn't happen.
+	.form-payment-card
+		padding: 1px
+
+	fieldset
+		margin-top: $line-height-computed
+
+		> legend
+			font-size: $font-size-h4
+
 	.form-group
 		@extend .no-animate
 		position: relative
@@ -12,22 +25,23 @@ gj-form-payment
 			color: $text-muted
 			z-index: 3
 
+	// Change form styling to use outlines instead of borders.
+	// This will allow the outlines to overlap each other properly.
 	.form-control
 		position: relative
 		height: 40px
-		z-index: 1
-		padding-left: 33px
-		// border: 0
-		// border-bottom: 2px solid $gray-lighter
 		box-shadow: none
+		border: none !important
+		outline: 1px solid $input-border
+		z-index: 1
 
 		&:focus
+			outline: 1px solid $input-border-focus
+			outline-offset: 0  // Chrome adds an offset on focus for outlines.
 			z-index: 2
 
-	.left-col
-	.right-col
-		.form-control
-			top: -1px
+		&.has-icon
+			padding-left: 33px
 
 	.left-col
 		float: left
@@ -36,9 +50,6 @@ gj-form-payment
 	.right-col
 		float: right
 		width: 50%
-
-		.form-control
-			left: -1px
 
 	.checkbox
 		cursor: pointer

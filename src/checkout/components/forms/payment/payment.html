@@ -27,44 +27,107 @@
 	</div>
 
 	<div gj-expand-when="!formModel.selectedCard || !cards.length">
-		<h4 class="section-header" ng-if="cards.length">New Card</h4>
+		<div class="form-payment-card">
+			<h4 class="section-header" ng-if="cards.length">New Card</h4>
 
-		<form-group name="card_number" label="Card Number" hide-label="true">
-			<span class="jolticon jolticon-credit-card"></span>
-			<input form-control="text"
-				placeholder="card number"
-				gj-focus-when
-				>
-			<control-errors></control-errors>
-		</form-group>
+			<form-group name="card_number" label="Card Number" hide-label="true">
+				<span class="jolticon jolticon-credit-card"></span>
+				<input form-control="text"
+					class="has-icon"
+					placeholder="card number"
+					gj-focus-when
+					>
+				<control-errors></control-errors>
+			</form-group>
 
-		<div class="clearfix">
-			<div class="left-col">
-				<form-group name="exp" label="Expiry" hide-label="true">
-					<span class="jolticon jolticon-calendar"></span>
+			<div class="clearfix">
+				<div class="left-col">
+					<form-group name="exp" label="Expiry" hide-label="true">
+						<span class="jolticon jolticon-calendar"></span>
+						<input form-control="text"
+							class="has-icon"
+							placeholder="mm/yy"
+							>
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+				<div class="right-col">
+					<form-group name="cvc" label="CVC" hide-label="true">
+						<span class="jolticon jolticon-token"></span>
+						<input form-control="text"
+							class="has-icon"
+							placeholder="cvc"
+							>
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+			</div>
+
+			<fieldset>
+				<legend>Billing Address</legend>
+
+				<form-group name="country" label="{{ 'Country' | translate }}" hide-label="true">
+					<select form-control>
+						<option ng-repeat="country in ::formState.countries track by country.code" value="{{ ::country.code }}">
+							{{ country.name }}
+						</option>
+					</select>
+					<control-errors></control-errors>
+				</form-group>
+
+				<form-group name="street1" label="{{ 'Street Address' | translate }}" hide-label="true">
 					<input form-control="text"
-						placeholder="mm/yy"
+						placeholder="{{ 'street address' | translate }}"
 						>
 					<control-errors></control-errors>
 				</form-group>
-			</div>
-			<div class="right-col">
-				<form-group name="cvc" label="CVC" hide-label="true">
-					<span class="jolticon jolticon-token"></span>
-					<input form-control="text"
-						placeholder="cvc"
-						>
+
+				<!--<div class="clearfix">-->
+					<div class="left-col">
+						<form-group name="region" label="{{ 'State/Province/County' | translate }}" hide-label="true" class="">
+
+							<input form-control="text"
+								class="no-animate-leave"
+								ng-if="!formState.regions"
+								placeholder="{{ 'state/province' | translate }}"
+								>
+
+							<select class="no-animate-leave" form-control ng-if="formState.regions">
+								<option ng-repeat="region in ::formState.regions track by region.code" value="{{ ::region.code }}">
+									{{ region.name }}
+								</option>
+							</select>
+
+							<control-errors></control-errors>
+						</form-group>
+					</div>
+					<div class="right-col">
+						<form-group name="postcode" label="{{ 'Zip/Postal Code' | translate }}" hide-label="true">
+							<input form-control="text"
+								placeholder="{{ 'zip code' | translate }}"
+								>
+							<control-errors></control-errors>
+						</form-group>
+					</div>
+				<!--</div>-->
+				<div style="clear: both;"></div>
+
+				<form-group name="reside_in_country" label="Reside in Country?" hide-label="true" class="no-animate">
+					<label class="checkbox">
+						<input form-control="checkbox">
+						<span translate>I currently live in the country selected above</span>
+					</label>
 					<control-errors></control-errors>
 				</form-group>
-			</div>
+			</fieldset>
+
+			<form-group name="save_card" label="Should Remember Card?" hide-label="true" ng-if="App.user !== null">
+				<label class="checkbox">
+					<input form-control="checkbox">
+					Remember this card for future purchases
+				</label>
+			</form-group>
 		</div>
-
-		<form-group name="save_card" label="Should Remember Card?" hide-label="true" ng-if="App.user !== null">
-			<label class="checkbox">
-				<input form-control="checkbox">
-				Remember this card for future purchases
-			</label>
-		</form-group>
 	</div>
 
 	<br>

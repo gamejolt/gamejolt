@@ -1,4 +1,4 @@
-angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window, App, Api, Form )
+angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window, App, Api, Form, Geo )
 {
 	var form = new Form( {
 		template: '/checkout/components/forms/payment/payment.html'
@@ -10,7 +10,9 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 	form.onInit = function( scope )
 	{
 		scope.formState.stripeError = null;
+		scope.formState.countries = Geo.getCountries();
 
+		scope.formModel.country = 'US';
 		scope.formModel.selectedCard = 0;
 		if ( scope.cards && scope.cards.length ) {
 			scope.formModel.selectFormedCard = scope.cards[0].id;
@@ -22,12 +24,21 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 		scope.formModel.save_card = true;
 
 		console.log( scope.cards );
+
+		scope.$watch( 'formModel.country', function( country )
+		{
+			scope.formState.regions = Geo.getRegions( country );
+			if ( scope.formState.regions ) {
+				scope.formModel.region = scope.formState.regions[0].code;  // Default to first.
+			}
+			else {
+				scope.formModel.region = '';
+			}
+		} );
 	};
 
 	form.onSubmit = function( scope )
 	{
-		console.log( 'try' );
-
 		// New card
 		if ( scope.formModel.selectedCard == 0 ) {
 
