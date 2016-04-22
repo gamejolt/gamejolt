@@ -45,6 +45,13 @@
 						{{ payment.paypal_email_address }}
 					</div>
 
+					<div ng-if="payment.method == Order_Payment.METHOD_WALLET">
+						<span class="tag">
+							Wallet
+						</span>
+						{{ payment.amount / 100 | currency }}
+					</div>
+
 				</div>
 			</div>
 			<div class="col-sm-4">
