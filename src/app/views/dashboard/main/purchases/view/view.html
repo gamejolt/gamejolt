@@ -23,7 +23,7 @@
 				</p>
 			</div>
 			<div class="col-sm-4">
-				<h4 class="section-header" translate>Payment</h4>
+				<h4 ng-class="{ 'section-header': !Screen.isXs }" translate>Payment</h4>
 				<div ng-repeat="payment in viewCtrl.order.payments track by payment.id">
 
 					<div ng-if="payment.method == Order_Payment.METHOD_CC_STRIPE">
@@ -37,7 +37,7 @@
 				</div>
 			</div>
 			<div class="col-sm-4">
-				<h4 class="section-header" translate>Summary</h4>
+				<h4 ng-class="{ 'section-header': !Screen.isXs }" translate>Summary</h4>
 
 				<table class="summary-table">
 					<tbody>
