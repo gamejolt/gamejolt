@@ -4,10 +4,10 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th>Order #</th>
-					<th>Item</th>
-					<th>Purchase Date</th>
-					<th class="text-right">Amount</th>
+					<th translate>Order #</th>
+					<th translate>Item(s)</th>
+					<th translate>Purchase Date</th>
+					<th class="text-right" translate>Amount</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -19,9 +19,16 @@
 							</a>
 						</strong>
 					</td>
-					<td>{{ ::order.items[0].sellable.title }}</td>
-					<td title="{{ ::order.completed_on | date:'medium' }}">{{ ::order.completed_on | date:'mediumDate' }}</td>
-					<td class="text-right">{{ ::order.amount / 100 | currency }}</td>
+					<td>
+						{{ ::order.items[0].sellable.title }}
+					</td>
+					<td title="{{ ::order.completed_on | date:'medium' }}">
+						{{ ::order.completed_on | date:'mediumDate' }}
+					</td>
+					<td class="text-right">
+						<span class="tag tag-pink" ng-if="::order._is_refunded" translate>Refunded</span>
+						{{ ::order.amount / 100 | currency }}
+					</td>
 				</tr>
 			</tbody>
 		</table>

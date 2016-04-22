@@ -13,6 +13,10 @@
 			{{ viewCtrl.order.id }}
 		</p>
 
+		<div class="alert alert-warning" ng-if="viewCtrl.order._is_refunded" translate translate-scope="{ date: dateFilter( viewCtrl.firstRefund.created_on, 'medium' ) }">
+			This order was refunded on {{ date }}.
+		</div>
+
 		<hr>
 
 		<div class="row">
@@ -64,6 +68,7 @@
 
 		<div ng-repeat="item in ::viewCtrl.order.items track by item.id">
 			<h4>
+				<span class="tag tag-pink" ng-if="::item.is_refunded" translate>Refunded</span>
 				{{ ::item.sellable.title }}
 				&mdash;
 				<small>{{ ::item.amount / 100 | currency }}</small>
