@@ -38,6 +38,13 @@
 						{{ payment.stripe_payment_source.last4 }}
 					</div>
 
+					<div ng-if="payment.method == Order_Payment.METHOD_PAYPAL">
+						<span class="tag">
+							PayPal
+						</span>
+						{{ payment.paypal_email_address }}
+					</div>
+
 				</div>
 			</div>
 			<div class="col-sm-4">
