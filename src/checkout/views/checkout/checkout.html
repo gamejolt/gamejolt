@@ -5,13 +5,13 @@
 	</div>
 
 	<div class="text-center">
-		<h1 class="sans-margin">
+		<h1 class="h2 sans-margin">
 			<a class="link-unstyled">
 				{{ checkoutCtrl.game.title }}
 			</a>
 		</h1>
 		<h4 class="text-muted sans-margin-top">
-			by
+			<span translate>by</span>
 			<a class="link-unstyled">
 				{{ checkoutCtrl.game.developer.display_name }}
 			</a>
@@ -19,16 +19,11 @@
 	</div>
 	<br>
 
-	<div class="row">
-		<div class="col-sm-6 col-centered">
-			<gj-form-payment
-				cards="checkoutCtrl.cards"
-				order="checkoutCtrl.order"
-				gj-form-submit-handler="checkoutCtrl.onSubmit( $response )"
-				>
-			</gj-form-payment>
-		</div>
-	</div>
-	<br>
+	<gj-form-payment
+		cards="checkoutCtrl.cards"
+		order="checkoutCtrl.order"
+		gj-form-submit-handler="checkoutCtrl.onSubmit( $response )"
+		>
+	</gj-form-payment>
 
 </section>
