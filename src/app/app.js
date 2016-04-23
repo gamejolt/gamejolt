@@ -128,6 +128,7 @@ angular.module( 'App', [
 	'gj.Order.Item',
 	'gj.Order.Payment',
 	'gj.Order.Payment.Refund',
+	'gj.Order.Address',
 
 	'gj.Game.Package.Card',
 	'gj.Game.Downloader',

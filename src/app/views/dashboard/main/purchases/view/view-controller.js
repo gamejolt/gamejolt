@@ -1,5 +1,6 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Main.Purchases.ViewCtrl', function( $scope, App, Order, Order_Payment, Game, Game_Package, dateFilter, gettextCatalog, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.Main.Purchases.ViewCtrl', function( $scope, App, Order, Order_Payment, Game, Game_Package, Geo, dateFilter, gettextCatalog, payload )
 {
+	$scope.Geo = Geo;
 	$scope.Order_Payment = Order_Payment;
 	$scope.dateFilter = dateFilter;
 

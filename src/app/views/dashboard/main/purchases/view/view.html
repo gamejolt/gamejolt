@@ -22,9 +22,37 @@
 		<div class="row">
 			<div class="col-sm-4">
 				<h4 class="section-header" translate>Billing</h4>
-				<p>
-					Nothing Yet
-				</p>
+
+				<div ng-repeat="address in [ viewCtrl.order.billing_address ] track by $index">
+					<div ng-if="address.fullname">
+						<strong>{{ address.fullname }}</strong>
+					</div>
+
+					<div ng-if="address.street1">
+						{{ address.street1 }}
+					</div>
+
+					<div ng-if="address.street2">
+						{{ address.street2 }}
+					</div>
+
+					<div>
+						<span ng-if="address.city">
+							{{ address.city }}
+						</span>
+						<span ng-if="address.region">
+							{{ ::Geo.getRegionName( address.country, address.region ) || address.region }}
+						</span>
+						<span ng-if="address.postcode">
+							{{ address.postcode }}
+						</span>
+					</div>
+
+					<div ng-if="address.country">
+						{{ ::Geo.getCountryName( address.country ) }}
+					</div>
+				</div>
+				<br>
 			</div>
 			<div class="col-sm-4">
 				<h4 ng-class="{ 'section-header': !Screen.isXs }" translate>Payment</h4>
