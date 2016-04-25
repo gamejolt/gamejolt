@@ -76,6 +76,7 @@ var config = {
 		'dash.js': {
 			components: [
 				'forms/dashboard',
+				'site-analytics',
 			],
 			views: [
 				'dashboard',
