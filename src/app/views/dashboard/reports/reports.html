@@ -1,3 +1,5 @@
+<ui-view></ui-view>
+
 <header class="section">
 	<div class="container">
 
@@ -6,36 +8,49 @@
 
 		<div class="row">
 			<div class="col-sm-5 col-md-6">
-				<strong>Game</strong>
-				<br>
-				<em>Tea Time With Luap Sere...</em>
-			</div>
-			<div class="col-md-6 text-right">
-
-				<nav class="platform-list inline">
+				<nav class="platform-list inline pull-left">
 					<ul>
 						<li>
-							<a ng-class="{ active: reportsCtrl.period == 'monthly' }" ng-click="reportsCtrl.period = 'monthly'">
-								Monthly
-							</a>
-							<a ng-class="{ active: reportsCtrl.period == 'all' }" ng-click="reportsCtrl.period = 'all'">
+							<a
+								ui-sref="dashboard.reports.view( { period: 'all' } )"
+								ui-sref-active="active"
+								translate
+								>
 								All-Time
+							</a>
+							<a
+								ui-sref="dashboard.reports.view( { period: 'monthly' } )"
+								ui-sref-active="active"
+								translate
+								>
+								Monthly
 							</a>
 						</li>
 					</ul>
 				</nav>
 
-				<div class="reports-month-selector">
-					<a class="btn btn-outline btn-sparse">
+				<div class="pull-left">
+					<strong>Game</strong>
+					<br>
+					<em>Tea Time With Luap Sere...</em>
+				</div>
+			</div>
+			<div class="col-md-6 text-right">
+
+				<div class="reports-month-selector" ng-if="reportsCtrl.period == 'monthly'">
+					<a class="btn btn-outline btn-sparse"
+						ui-sref="dashboard.reports.view( { period: 'monthly', year: reportsCtrl.prevYear, month: reportsCtrl.prevMonth } )"
+						>
 						<span class="jolticon jolticon-chevron-left"></span>
 					</a>
 
 					<strong>
-						February 2016
-						<span class="jolticon jolticon-trans-down"></span>
+						{{ reportsCtrl.startTime | date:'MMMM yyyy' }}
 					</strong>
 
-					<a class="btn btn-outline btn-sparse">
+					<a class="btn btn-outline btn-sparse"
+						ui-sref="dashboard.reports.view( { period: 'monthly', year: reportsCtrl.nextYear, month: reportsCtrl.nextMonth } )"
+						>
 						<span class="jolticon jolticon-chevron-right"></span>
 					</a>
 				</div>
@@ -46,15 +61,16 @@
 	</div>
 </header>
 
-<div gj-expand-when="reportsCtrl.period == 'monthly'">
-	<gj-graph-widget
-		graph-widget-url="/web/dash/reports/graph/{{ reportsCtrl.resource }}/{{ reportsCtrl.eventType }}/{{ reportsCtrl.resourceId }}"
-		graph-widget-hide-table="true"
-		>
-	</gj-graph-widget>
-</div>
-
 <div oc-lazy-load="{ files: [ '/app/modules/graphs.js' ] }">
+
+	<div gj-expand-when="reportsCtrl.period == 'monthly'">
+		<gj-graph
+			ng-if="reportsCtrl[ reportsCtrl.eventType ].graph"
+			dataset="reportsCtrl[ reportsCtrl.eventType ].graph"
+			>
+		</gj-graph>
+	</div>
+
 	<section class="section section-thin">
 		<div class="container">
 
@@ -62,12 +78,12 @@
 				<div class="col-sm-4 col-md-3" ng-repeat="stat in reportsCtrl.stats track by stat.label">
 
 					<a class="stat-graph-overlay"
-						ng-class="{ active: reportsCtrl.eventType == stat.eventType }"
-						ng-click="reportsCtrl.changeReport( stat )"
+						ui-sref="dashboard.reports.view( { eventType: stat.eventType } )"
+						ui-sref-active="active"
 						>
 
 						<gj-graph
-							ng-if="reportsCtrl[ stat.eventType ] && reportsCtrl.period == 'monthly'"
+							ng-if="reportsCtrl.period == 'monthly' && reportsCtrl[ stat.eventType ]"
 							dataset="reportsCtrl[ stat.eventType ].graph"
 							background-variant
 							>
@@ -95,59 +111,87 @@
 		</div>
 	</section>
 
-	<hr>
+	<div ng-if="reportsCtrl.breakdownReports.length">
 
-	<section class="section">
-		<div class="container">
+		<hr>
 
-			<h2 class="section-header">Top Sources</h2>
+		<section class="section">
+			<div class="container">
 
-			<div class="row">
-				<div class="col-sm-6">
+				<div class="row">
+					<div class="col-md-3" ng-if="Screen.isDesktop">
 
-					<table class="table table-striped table-condensed">
-						<thead>
-							<tr>
-								<th>Source</th>
-								<th class="text-right">Views</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>gamejolt.com</td>
-								<td class="text-right">{{ 1232 | number }}</td>
-							</tr>
-							<tr>
-								<td>youtube.com</td>
-								<td class="text-right">{{ 1200 | number }}</td>
-							</tr>
-							<tr>
-								<td>twitter.com</td>
-								<td class="text-right">{{ 989 | number }}</td>
-							</tr>
-							<tr>
-								<td>reddit.com</td>
-								<td class="text-right">{{ 300 | number }}</td>
-							</tr>
-							<tr>
-								<td>Other</td>
-								<td class="text-right">{{ 1232 | number }}</td>
-							</tr>
-						</tbody>
-					</table>
+						<nav class="platform-list" gj-scroll-affix>
+							<ul>
+								<li ng-repeat="report in reportsCtrl.breakdownReports | orderBy:'index'">
+									<a ng-href="#report-{{ report.index }}" du-smooth-scroll du-scrollspy>{{ report.title }}</a>
+								</li>
+							</ul>
+						</nav>
 
+					</div>
+					<div class="col-md-9">
+
+						<div ng-repeat="report in reportsCtrl.breakdownReports | orderBy:'index' track by report.index" id="report-{{ report.index }}">
+
+							<h2 ng-class="{ 'section-header': $first }">{{ report.title }}</h2>
+
+							<div ng-if="report.type == 'top'">
+								<div class="row">
+									<div class="col-sm-8">
+
+										<table class="table table-striped table-condensed">
+											<thead>
+												<tr>
+													<th style="width: 20px"></th>
+													<th>
+														{{ report.fieldLabel }}
+													</th>
+													<th class="text-right">
+														{{ reportsCtrl.stats[ reportsCtrl.eventType ].label }}
+													</th>
+													<th style="width: 150px"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="( key, val ) in report.data track by key">
+													<td>
+														{{ $index + 1 | number }}.
+													</td>
+													<th>
+														{{ key }}
+													</th>
+													<td class="text-right">
+														{{ val | number }}
+													</td>
+													<td>
+														<div class="report-percentage" ng-style="{ width: val / report.total * 70 + 'px' }"></div>
+														<small>{{ val / report.total * 100 | number:2 }}%</small>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+
+									</div>
+									<div class="col-sm-4" ng-if="!Screen.isXs">
+
+										<gj-graph
+											type="doughnut"
+											dataset="report.graph"
+											>
+										</gj-graph>
+
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
 				</div>
-				<div class="col-sm-6">
 
-					<gj-graph
-						type="doughnut"
-						dataset="reportsCtrl.test"
-						>
-					</gj-graph>
-
-				</div>
 			</div>
+		</section>
 
-		</div>
-	</section>
+	</div>
 </div>
