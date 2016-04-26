@@ -13,7 +13,11 @@
 		<br>
 
 		<p>
-			<a ng-href="{{ manageCtrl.game.getUrl() }}" class="i-button big">
+			<a class="btn btn-outline hidden-xs" ui-sref="dashboard.reports.view( { resource: 'Game', resourceId: manageCtrl.game.id } )">
+				<span class="jolticon jolticon-chart"></span>
+				<span translate>View Analytics</span>
+			</a>
+			<a class="btn btn-outline" ng-href="{{ manageCtrl.game.getUrl() }}">
 				<span class="jolticon jolticon-share"></span>
 				<span translate>dash.games.view_page_button</span>
 			</a>

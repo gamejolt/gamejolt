@@ -1,9 +1,10 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $scope, App, Api, Graph, SiteAnalytics, Geo, gettextCatalog )
+angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $scope, $state, App, Api, Game, Graph, SiteAnalytics, Geo, gettextCatalog, payload )
 {
 	var _this = this;
 
 	App.title = gettextCatalog.getString( 'Reports' );
 
+	this.games = Game.populate( payload.games );
 	this.breakdownReports = [];
 
 	this.stats = [
@@ -17,11 +18,11 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 			label: gettextCatalog.getString( 'Downloads' ),
 			type: 'number',
 		},
-		{
-			eventType: 'install',
-			label: gettextCatalog.getString( 'Installs' ),
-			type: 'number',
-		},
+		// {
+		// 	eventType: 'install',
+		// 	label: gettextCatalog.getString( 'Installs' ),
+		// 	type: 'number',
+		// },
 		{
 			eventType: 'comment',
 			label: gettextCatalog.getString( 'Comments' ),
@@ -49,14 +50,33 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 		// },
 	];
 
+	var _allEventTypes = _.pluck( this.stats, 'eventType' );
+
 	this.stateChanged = function( $stateParams )
 	{
-		this.period = $stateParams.period;
-		this.eventType = $stateParams.eventType;
-		this.resource = $stateParams.resource;
-		this.resourceId = parseInt( $stateParams.resourceId, 10 );
+		this.period = $stateParams.period || 'all';
+		this.eventType = $stateParams.eventType || 'view';
+		this.resource = $stateParams.resource || 'Game';
+		this.resourceId = parseInt( $stateParams.resourceId, 10 ) || this.games[0].id;
 		this.stat = _.find( this.stats, { eventType: this.eventType } );
+		this.game = _.find( this.games, { id: this.resourceId } );
 
+		// If any of the parameters changed, refresh the state.
+		if (
+			this.period != $stateParams.period
+			|| this.eventType != $stateParams.eventType
+			|| this.resource != $stateParams.resource
+			|| this.resourceId != $stateParams.resourceId
+		) {
+			$state.go(
+				'dashboard.reports.view',
+				_.pick( this, [ 'period', 'eventType', 'resource', 'resourceId' ] ),
+				{ location: 'replace' }
+			);
+			return;
+		}
+
+		this.now = Date.now();
 		this.startTime = null;
 		this.endTime = null;
 
@@ -100,8 +120,13 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 	// Only the fields that can affect histograms.
 	$scope.$watchGroup( globalWatch, function()
 	{
-		if ( _this.period == 'monthly' && _this.resource && _this.resourceId ) {
-			_this.histograms();
+		if ( _this.resource && _this.resourceId ) {
+			if ( _this.period == 'all' ) {
+				_this.counts();
+			}
+			else if ( _this.period == 'monthly' ) {
+				_this.histograms();
+			}
 		}
 	} );
 
@@ -118,23 +143,40 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 
 	this.histograms = function()
 	{
-		var eventTypes = [ 'view', 'download', 'install', 'comment', 'rating', 'follow' ];
-		return SiteAnalytics.getHistogram( _this.resource, _this.resourceId, eventTypes, [ this.startTime, this.endTime ] )
+		return SiteAnalytics.getHistogram( _this.resource, _this.resourceId, _allEventTypes, [ this.startTime, this.endTime ] )
 			.then( function( data )
 			{
-				angular.forEach( data, function( eventData, eventType )
-				{
-					_this[ eventType ] = eventData;
-				} );
+				angular.extend( _this, data );
 			} );
 	};
 
-	var _reportIndex = 0;
+	this.counts = function()
+	{
+		return SiteAnalytics.getCount( _this.resource, _this.resourceId, _allEventTypes )
+			.then( function( data )
+			{
+				angular.extend( _this, data );
+			} );
+	};
+
 	this.getReport = function( field, title, fieldLabel )
 	{
-		++_reportIndex;
-		var ourReportIndex = _reportIndex;
+		var type = 'top';
+		if ( field == 'rating' ) {
+			type = 'rating-breakdown';
+		}
 
+		var report = {
+			type: type,
+			title: title,
+			field: field,
+			fieldLabel: fieldLabel,
+			isLoaded: false,
+		};
+
+		this.breakdownReports.push( report );
+
+		var date = new Date();
 		var request = {
 			top: {
 				target: _this.resource,
@@ -142,16 +184,18 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 				collection: this.eventType + 's',
 				analyzer: 'top-composition',
 				field: field,
-				from_date: (Date.now() - (86400 * 1000 * 30)) / 1000,
-				to_date: (Date.now() / 1000) + 86400,
+				from_date: this.startTime / 1000,
+				to_date: this.endTime / 1000,
+				timezone: date.getTimezoneOffset(),
 			}
 		};
 
-		Api.sendRequest( '/web/dash/developer/games/graphs/display', request, { detach: true, sanitizeComplexData: false } )
+		Api.sendRequest( '/web/dash/reports/display', request, { detach: true, sanitizeComplexData: false } )
 			.then( function( response )
 			{
 				var graph = [];
 
+				// country code => country name
 				if ( field == 'country' ) {
 					var data = {};
 					angular.forEach( response.top.result, function( val, key )
@@ -161,37 +205,37 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 					response.top.result = data;
 				}
 
-				// Pull the top 3 results so we can push into a pie chart if desired.
-				var i = 0, total = 0;
-				angular.forEach( response.top.result, function( val, key )
-				{
-					if ( i < 3 ) {
-						graph.push( {
-							label: key,
-							value: val,
-						} );
-						total += val;
-					}
-					++i;
-				} );
+				if ( field != 'rating' ) {
 
-				if ( response.top.total - total > 0 ) {
-					graph.push( {
-						label: 'Other',
-						value: (response.top.total - total),
+					// Pull the top 3 results so we can push into a pie chart if desired.
+					var i = 0, total = 0;
+					angular.forEach( response.top.result, function( val, key )
+					{
+						if ( i < 3 ) {
+							graph.push( {
+								label: key,
+								value: val,
+							} );
+							total += val;
+						}
+						++i;
 					} );
+
 				}
 
-				_this.breakdownReports.push( {
-					index: ourReportIndex,
-					type: 'top',
-					title: title,
-					field: field,
-					fieldLabel: fieldLabel,
-					data: response.top.result,
-					graph: graph,
-					total: response.top.total,
-				} );
+				if ( field == 'rating' ) {
+					var data = {};
+					[ 1, 2, 3, 4, 5 ].forEach( function( rating )
+					{
+						data[ rating ] = response.top.result[ rating ] || 0;
+					} );
+					response.top.result = data;
+				}
+
+				report.data = response.top.result;
+				report.graph = graph;
+				report.total = response.top.total;
+				report.isLoaded = true;
 			} );
 	};
 
@@ -222,19 +266,9 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 		if ( this.eventType == 'rating' ) {
 			this.getReport( 'rating', 'Rating Breakdown', 'Rating' );
 		}
-	};
 
-	this.getStatValue = function( stat )
-	{
-		if ( this[ stat.eventType ] ) {
-			if ( this.period == 'all' ) {
-				return this[ stat.eventType ].tableTotals[ stat.label ];
-			}
-			else {
-				return this[ stat.eventType ].colTotals[ stat.label ];
-			}
+		if ( this.eventType == 'follow' ) {
+			this.getReport( 'country', 'Countries', 'Country' );
 		}
-
-		return stat.value;
 	};
 } );
