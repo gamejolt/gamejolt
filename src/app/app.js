@@ -170,8 +170,6 @@ angular.module( 'App', [
 	'gj.Img.Crop',
 	'gj.Img.ImgResponsive',
 
-	'gj.WidgetCompiler',
-
 	// Components.
 	'App.SplitTest',
 	'App.Chat',
@@ -194,9 +192,10 @@ angular.module( 'App', [
 
 	'App.Genre.List',
 
-	'App.Fireside.Post.Thumbnail',
-	'App.Fireside.Post.List',
-	'App.Fireside.Post.Feed',
+	'App.Devlog.Feed',
+	'App.Devlog.Post.Text',
+	'App.Devlog.Post.Image',
+	'App.Devlog.Post.Video',
 
 	'App.Post.Grid',
 	'App.Post.List',
