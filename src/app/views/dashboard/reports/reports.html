@@ -13,6 +13,7 @@
 						<li>
 							<a
 								ui-sref="dashboard.reports.view( { period: 'all' } )"
+								ui-sref-opts="{ location: 'replace' }"
 								ui-sref-active="active"
 								translate
 								>
@@ -20,6 +21,7 @@
 							</a>
 							<a
 								ui-sref="dashboard.reports.view( { period: 'monthly' } )"
+								ui-sref-opts="{ location: 'replace' }"
 								ui-sref-active="active"
 								translate
 								>
@@ -30,9 +32,10 @@
 				</nav>
 
 				<div class="pull-left">
-					<strong>Game</strong>
-					<br>
-					<em>Tea Time With Luap Sere...</em>
+					<div class="game-selector">
+						<div class="game-selector-type">Game</div>
+						<div class="game-selector-title">{{ reportsCtrl.game.title }}</div>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-6 text-right">
@@ -40,6 +43,7 @@
 				<div class="reports-month-selector" ng-if="reportsCtrl.period == 'monthly'">
 					<a class="btn btn-outline btn-sparse"
 						ui-sref="dashboard.reports.view( { period: 'monthly', year: reportsCtrl.prevYear, month: reportsCtrl.prevMonth } )"
+						ui-sref-opts="{ location: 'replace' }"
 						>
 						<span class="jolticon jolticon-chevron-left"></span>
 					</a>
@@ -49,7 +53,9 @@
 					</strong>
 
 					<a class="btn btn-outline btn-sparse"
+						ng-if="reportsCtrl.now > reportsCtrl.endTime"
 						ui-sref="dashboard.reports.view( { period: 'monthly', year: reportsCtrl.nextYear, month: reportsCtrl.nextMonth } )"
+						ui-sref-opts="{ location: 'replace' }"
 						>
 						<span class="jolticon jolticon-chevron-right"></span>
 					</a>
@@ -63,7 +69,7 @@
 
 <div oc-lazy-load="{ files: [ '/app/modules/graphs.js' ] }">
 
-	<div gj-expand-when="reportsCtrl.period == 'monthly'">
+	<div gj-expand-when="reportsCtrl.period == 'monthly' && reportsCtrl[ reportsCtrl.eventType ].graph">
 		<gj-graph
 			ng-if="reportsCtrl[ reportsCtrl.eventType ].graph"
 			dataset="reportsCtrl[ reportsCtrl.eventType ].graph"
@@ -79,6 +85,7 @@
 
 					<a class="stat-graph-overlay"
 						ui-sref="dashboard.reports.view( { eventType: stat.eventType } )"
+						ui-sref-opts="{ location: 'replace' }"
 						ui-sref-active="active"
 						>
 
@@ -95,11 +102,11 @@
 							</div>
 							<div class="stat-big-digit" ng-switch="stat.type">
 								<span ng-switch-when="number">
-									{{ reportsCtrl.getStatValue( stat ) | number }}
+									{{ reportsCtrl[ stat.eventType ].total | number }}
 								</span>
 
 								<span ng-switch-when="currency">
-									{{ reportsCtrl.getStatValue( stat ) / 100 | currency }}
+									{{ reportsCtrl[ stat.eventType ].total / 100 | currency }}
 								</span>
 							</div>
 						</div>
@@ -123,8 +130,12 @@
 
 						<nav class="platform-list" gj-scroll-affix>
 							<ul>
-								<li ng-repeat="report in reportsCtrl.breakdownReports | orderBy:'index'">
-									<a ng-href="#report-{{ report.index }}" du-smooth-scroll du-scrollspy>{{ report.title }}</a>
+								<li ng-repeat="report in reportsCtrl.breakdownReports"
+									class="no-animate-leave"
+									>
+									<a ng-href="#report-{{ report.field }}" du-smooth-scroll du-scrollspy>
+										{{ report.title }}
+									</a>
 								</li>
 							</ul>
 						</nav>
@@ -132,11 +143,15 @@
 					</div>
 					<div class="col-md-9">
 
-						<div ng-repeat="report in reportsCtrl.breakdownReports | orderBy:'index' track by report.index" id="report-{{ report.index }}">
+						<div ng-repeat="report in reportsCtrl.breakdownReports track by report.field" id="report-{{ report.field }}">
 
-							<h2 ng-class="{ 'section-header': $first }">{{ report.title }}</h2>
+							<h2 ng-class="{ 'section-header': $first }">
+								{{ report.title }}
+							</h2>
 
-							<div ng-if="report.type == 'top'">
+							<gj-loading ng-if="!report.isLoaded"></gj-loading>
+
+							<div ng-if="report.isLoaded && report.type == 'top'">
 								<div class="row">
 									<div class="col-sm-8">
 
@@ -180,6 +195,42 @@
 											dataset="report.graph"
 											>
 										</gj-graph>
+
+									</div>
+								</div>
+							</div>
+
+							<div ng-if="report.isLoaded && report.type == 'rating-breakdown'">
+								<div class="row">
+									<div class="col-sm-8">
+
+										<table class="table table-striped table-condensed">
+											<thead>
+												<tr>
+													<th>
+														Rating Given
+													</th>
+													<th class="text-right">
+														Count
+													</th>
+													<th style="width: 150px"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="i in [ 5, 4, 3, 2, 1 ]">
+													<td>
+														{{ i }}
+													</td>
+													<td class="text-right">
+														{{ report.data[ i ] | number }}
+													</td>
+													<td>
+														<div class="report-percentage" ng-style="{ width: report.data[ i ] / report.total * 70 + 'px' }"></div>
+														<small>{{ report.data[ i ] / report.total * 100 | number:2 }}%</small>
+													</td>
+												</tr>
+											</tbody>
+										</table>
 
 									</div>
 								</div>

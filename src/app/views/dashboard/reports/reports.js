@@ -1,19 +1,11 @@
 angular.module( 'App.Views' ).config( function( $stateProvider )
 {
 	$stateProvider.state( 'dashboard.reports', {
+		abstract: true,
 		url: '/reports',
 		controller: 'Dashboard.ReportsCtrl',
 		controllerAs: 'reportsCtrl',
 		templateUrl: '/app/views/dashboard/reports/reports.html',
-		redirectTo: function()
-		{
-			this.go( 'dashboard.reports.view', {
-				period: 'all',
-				resource: 'Game',
-				resourceId: 1050,
-				eventType: 'view',
-			} );
-		},
 		resolve: {
 			payload: function( Api )
 			{
@@ -27,6 +19,24 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		controller: function( $scope, $stateParams )
 		{
 			$scope.reportsCtrl.stateChanged( $stateParams );
+		},
+		params: {
+			period: {
+				value: '',
+				squash: true,
+			},
+			resource: {
+				value: '',
+				squash: true,
+			},
+			resourceId: {
+				value: '',
+				squash: true,
+			},
+			eventType: {
+				value: '',
+				squash: true,
+			},
 		},
 	} );
 } );
