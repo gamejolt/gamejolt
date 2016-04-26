@@ -6,10 +6,16 @@
 				{{ ::'games.view.overview_tab' | translate }}
 			</a>
 		</li>
-		<li ng-if="gameCtrl.newsArticlesCount">
+		<!-- <li ng-if="gameCtrl.newsArticlesCount">
 			<a ui-sref=".news.list" ng-class="{ active: $state.includes( 'discover.games.view.news' ) }">
 				{{ ::'games.view.news_tab' | translate }}
 				<span class="badge">{{ gameCtrl.newsArticlesCount | number }}</span>
+			</a>
+		</li> -->
+		<li>
+			<a ui-sref=".devlog.list" ng-class="{ active: $state.includes( 'discover.games.view.devlog' ) }">
+				Devlog
+				<span class="badge">3</span>
 			</a>
 		</li>
 		<li ng-if="gameCtrl.hasScores">
