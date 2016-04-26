@@ -9,9 +9,16 @@
 	</a>
 
 	<div class="game-media-bar-lightbox-controls">
+		<a ng-href="{{ mediaBarCtrl.activeItem.media_item.img_url }}"
+			ng-if="mediaBarCtrl.activeItem.media_type == 'image'"
+			target="_blank"
+			>
+			<span class="jolticon jolticon-download big"></span>
+			<span translate>games.view.media.download</span>
+		</a>
 		<a ng-click="ctrl.close()">
 			<span class="jolticon jolticon-remove big"></span>
-			{{ ::'games.view.media.close' | translate }}
+			<span translate>games.view.media.close</span>
 		</a>
 	</div>
 

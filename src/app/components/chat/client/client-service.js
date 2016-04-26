@@ -97,7 +97,6 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 			// On any message...
 			_this.primus.on( 'data', function( msg )
 			{
-				console.log( msg );
 				// We want to make sure any changes in these function get digested.
 				$rootScope.$apply( function()
 				{
@@ -191,6 +190,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 						resolve( unescape(y) );
 					}
 				}
+				resolve( null );
 			}
 		} );
 	}
@@ -389,6 +389,14 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 			}
 
 			$rootScope.$emit( 'Chat.message', message );
+		}
+		else if ( msg.event === 'message-removed' ) {
+			var id = msg.data.id;
+			var roomId = msg.data.roomId;
+
+			if ( this.messages[ roomId ].length ) {
+				_.remove( this.messages[ roomId ], { id: id } );
+			}
 		}
 		else if ( msg.event === 'notification' ) {
 			var message = msg.data.message;
@@ -644,6 +652,11 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 	ChatClient.prototype.unmute = function( userId, roomId )
 	{
 		this.primus.write( { event: 'user-unmute', userId: userId, roomId: roomId } );
+	};
+
+	ChatClient.prototype.removeMessage = function( msgId, roomId )
+	{
+		this.primus.write( { event: 'message-remove', msgId: msgId, roomId: roomId } );
 	};
 
 	ChatClient.prototype._processNewOutput = function( messages, isPrimer )

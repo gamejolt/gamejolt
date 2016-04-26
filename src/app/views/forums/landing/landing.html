@@ -1,0 +1,27 @@
+<header class="section">
+	<div class="container forum-header-landing">
+
+		<div ng-class="{ 'text-center': Screen.isXs }">
+			<h1>Game Jolt Forums</h1>
+			<img class="forum-header-landing-mascot" src="/app/views/forums/landing/butterflies.png" width="218" height="146" alt="The Social Butterflies">
+		</div>
+
+		<nav class="platform-list inline">
+			<ul>
+				<li>
+					<a ui-sref="forums.landing.overview" ui-sref-active="active">
+						Overview
+					</a>
+				</li>
+				<li>
+					<a ui-sref="forums.landing.active" ui-sref-active="active">
+						Active Topics
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+	</div>
+</header>
+
+<ui-view></ui-view>

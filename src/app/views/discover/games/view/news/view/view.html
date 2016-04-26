@@ -64,14 +64,12 @@
 		<div class="row">
 			<div class="col-sm-9 col-md-8 col-lg-7">
 
-				<div oc-lazy-load="{ files: [ '/app/modules/codemirror.js' ] }">
-					<gj-comment-widget
-						current-page="viewCtrl.currentCommentPage"
-						comment-resource="Game_News"
-						comment-resource-id="viewCtrl.article.id"
-						>
-					</gj-comment-widget>
-				</div>
+				<gj-comment-widget
+					current-page="viewCtrl.currentCommentPage"
+					comment-resource="Game_News"
+					comment-resource-id="viewCtrl.article.id"
+					>
+				</gj-comment-widget>
 
 			</div>
 			<div class="col-sm-3 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isSm">

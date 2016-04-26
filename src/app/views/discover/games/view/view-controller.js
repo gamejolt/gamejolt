@@ -1,46 +1,103 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
-	$scope, Location, Api, SplitTest, Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable, Growls, Analytics, gettextCatalog, game, gamePayload )
+	$scope, $stateParams, $injector, $timeout,
+	Environment, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
+	Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable,
+	Registry, Scroll )
 {
 	var _this = this;
 
 	$scope.Game = Game;
 	$scope.Game_ViewState = Game_ViewState;
 
-	Location.enforce( {
-		slug: game.slug,
-	} );
-
-	this.testMediaBarPos = SplitTest.getMediaBarPos( gamePayload );
-
-	this.game = game;
-	this.followerCount = gamePayload.followerCount;
-	this.libraryGame = gamePayload.libraryGame ? new GameLibrary_Game( gamePayload.libraryGame ) : null;
-	this.newsArticlesCount = gamePayload.newsArticlesCount || 0;
-	this.trophiesCount = gamePayload.trophiesCount || 0;
-	this.hasScores = gamePayload.hasScores || false;
-	this.primaryScoreTable = gamePayload.primaryScoreTable ? new Game_ScoreTable( gamePayload.primaryScoreTable ) : null;
+	this.isLoaded = false;
+	this.game = Registry.find( 'Game', $stateParams.id );
+	this.isNavAffixed = false;
+	this.installableBuilds = [];
+	this.browserBuilds = [];
 
 	// Overview page will populate this.
 	// We only need it for the overview page, but we need to show it in the view of this controller.
 	this.mediaBarItems = [];
-
-	processRatingPayload( gamePayload );
-
 	this.notificationCounts = {};
 
-	this.isNavAffixed = false;
+	$scope.$watch( '::gameCtrl.game', function( game )
+	{
+		if ( angular.isUndefined( game ) ) {
+			return;
+		}
 
-	this.onFollowClick = onFollowClick;
-	this.refreshRatingInfo = refreshRatingInfo;
+		Game_ViewState.setGame( game );
 
-	// If the game has a GA tracking ID, then we attach it to this scope so all page views within get tracked.
-	if ( game.ga_tracking_id ) {
-		Analytics.attachAdditionalPageTracker( $scope, game.ga_tracking_id );
-	}
+		Location.enforce( {
+			slug: game.slug,
+		} );
 
-	// Any game rating change will broadcast this event.
-	// We catch it so we can update the page with the new rating! Yay!
-	$scope.$on( 'onGameRatingChange', onGameRatingChange );
+		// If the game has a GA tracking ID, then we attach it to this scope so all page views within get tracked.
+		if ( game.ga_tracking_id ) {
+			Analytics.attachAdditionalPageTracker( $scope, game.ga_tracking_id );
+		}
+	} );
+
+	$scope.$on( '$destroy', function()
+	{
+		Game_ViewState.clear();
+	} );
+
+	Api.sendRequest( '/web/discover/games/' + $stateParams.id )
+		.then( function( payload )
+		{
+			_this.init( payload );
+		} )
+		.catch( function( e )
+		{
+			Payload.handlePayloadError( e );
+		} );
+
+	this.init = function( payload )
+	{
+		this.isLoaded = true;
+
+		// Load in the full data that we have for the game.
+		var game = new Game( payload.game );
+		if ( this.game ) {
+			this.game.assign( game );
+		}
+		else {
+			this.game = game;
+		}
+
+		this.followerCount = payload.followerCount;
+		this.libraryGame = payload.libraryGame ? new GameLibrary_Game( payload.libraryGame ) : null;
+		this.newsArticlesCount = payload.newsArticlesCount || 0;
+		this.trophiesCount = payload.trophiesCount || 0;
+		this.hasScores = payload.hasScores || false;
+		this.primaryScoreTable = payload.primaryScoreTable ? new Game_ScoreTable( payload.primaryScoreTable ) : null;
+
+		processRatingPayload( payload );
+
+		// Don't hook up the events until we're primed.
+		this.onFollowClick = onFollowClick;
+		this.refreshRatingInfo = refreshRatingInfo;
+		this.report = report;
+		this.scrollToPackages = scrollToPackages;
+
+		// Any game rating change will broadcast this event.
+		// We catch it so we can update the page with the new rating! Yay!
+		$scope.$on( 'onGameRatingChange', onGameRatingChange );
+
+		// For syncing game data to client.
+		if ( Environment.isClient ) {
+
+			// Only sync if it's in library.
+			return $injector.get( 'LocalDb_Game' ).fetch( game.id )
+				.then( function( localGame )
+				{
+					if ( localGame ) {
+						return $injector.get( 'LocalDb_Sync' ).syncGame( game.id, game );
+					}
+				} );
+		}
+	};
 
 	function onFollowClick()
 	{
@@ -106,5 +163,16 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		if ( gameId == _this.game.id ) {
 			_this.refreshRatingInfo();
 		}
+	}
+
+	function report()
+	{
+		Report_Modal.show( _this.game );
+	}
+
+	function scrollToPackages()
+	{
+		_this.showMultiplePackagesMessage = true;
+		Scroll.to( 'game-releases' );
 	}
 } );

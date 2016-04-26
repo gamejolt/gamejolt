@@ -1,9 +1,9 @@
 angular.module( 'App.Views' ).controller( 'Library.InstalledCtrl', function(
-	$scope, $q, ModalConfirm, LocalDb_Game, LocalDb_Package, Client_Library )
+	$scope, $q, ModalConfirm, LocalDb_Game, LocalDb_Package, Client_Library, gettextCatalog )
 {
 	var _this = this;
 
-	$scope.App.title = 'Installed Games';
+	$scope.App.title = gettextCatalog.getString( 'library.installed.page_title' );
 
 	$scope.Client_Library = Client_Library;
 	$scope.LocalDb_Package = LocalDb_Package;

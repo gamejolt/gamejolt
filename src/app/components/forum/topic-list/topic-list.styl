@@ -1,0 +1,33 @@
+.forum-topic-list-item
+	margin-bottom: $line-height-computed
+
+	&-title
+		font-weight: bold
+		margin: 0
+
+		@media $media-xs
+			font-size: $font-size-base
+
+	&-author
+		font-size: $font-size-small
+		color: $text-muted
+
+		a
+			@extend .link-muted
+			font-weight: bold
+
+			&:hover
+				text-decoration: underline
+
+	&-latest-post
+		@extend .clearfix
+
+		&-avatar
+			float: right
+			margin-left: 10px
+			width: 40px
+
+		&-info
+			&-username
+				text-overflow()
+				font-weight: bold

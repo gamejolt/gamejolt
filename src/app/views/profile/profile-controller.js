@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'ProfileCtrl', function( $scope, Location, User, User_GameSession, User_Friendship, User_FriendshipsHelper, ModalConfirm, profilePayload )
+angular.module( 'App.Views' ).controller( 'ProfileCtrl', function( $scope, Location, User, User_GameSession, User_Friendship, User_FriendshipsHelper, ModalConfirm, Report_Modal, profilePayload )
 {
 	var _this = this;
 
@@ -56,5 +56,10 @@ angular.module( 'App.Views' ).controller( 'ProfileCtrl', function( $scope, Locat
 		{
 			_this.userFriendship = undefined;
 		} );
+	};
+
+	this.report = function()
+	{
+		Report_Modal.show( this.user );
 	};
 } );

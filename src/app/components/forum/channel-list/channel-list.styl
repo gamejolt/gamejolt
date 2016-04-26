@@ -1,0 +1,23 @@
+.forum-channel-list-item
+	margin-bottom: $font-size-base * 2
+
+	&-title
+		font-weight: bold
+		margin: 0
+
+		@media $media-xs
+			margin-bottom: 10px
+
+	&-latest-topic
+		@extend .clearfix
+		font-size: $font-size-small
+
+		&-avatar
+			float: right
+			margin-left: 10px
+			width: 40px
+
+		&-info
+			&-title
+				text-overflow()
+				font-weight: bold

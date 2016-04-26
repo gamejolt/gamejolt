@@ -2,7 +2,7 @@
 	<p class="lead anim-fade-in-enlarge" translate>auth.join.join_message_html</p>
 </div>
 
-<div class="auth-social-buttons" ng-if="::!Environment.isClient">
+<div class="auth-social-buttons">
 	<button class="i-button big block anim-fade-in-enlarge stagger"
 		ng-disabled="!Connection.isOnline"
 		ng-click="joinCtrl.linkedAccountLogin( 'facebook' )"
@@ -20,7 +20,7 @@
 	</button>
 </div>
 
-<p class="line-thru anim-fade-in" ng-if="::!Environment.isClient">
+<p class="line-thru anim-fade-in">
 	<span translate>auth.or</span>
 </p>
 

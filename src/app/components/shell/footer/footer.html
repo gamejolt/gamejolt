@@ -1,3 +1,15 @@
+<div class="fill-dark footer-client-promo" ng-if="!Screen.isXs && !Environment.isClient">
+	<div class="container">
+		<a ui-sref="client" gj-track-event="footer:client-promo">
+			<img src="/app/img/game-jolt-client-logo.svg" alt="Game Jolt Client">
+		</a>
+		<span translate>footer.client_promo.message</span>
+		<a ui-sref="client" class="btn btn-sm btn-primary-outline" gj-track-event="footer:client-promo" translate>
+			footer.client_promo.learn_button
+		</a>
+	</div>
+</div>
+
 <footer id="footer" class="section">
 	<div class="container" ng-class="{ 'text-center': Screen.isXs }">
 		<div class="clearfix small">
@@ -9,6 +21,10 @@
 					<br ng-if="Screen.isXs">
 					<gj-social-facebook-like url="https://facebook.com/gamejolt" show-share="false"></gj-social-facebook-like>
 				</div>
+
+				<p class="small text-muted" translate>footer.tagline</p>
+
+				<hr>
 
 				<div>
 					<gj-translate-lang-selector
@@ -23,17 +39,31 @@
 					<a href="https://poeditor.com/join/project/B4nWT6EgnD" translate>footer.translations_help</a>
 				</p>
 
-				<p class="small text-muted" translate>footer.tagline</p>
 			</div>
 			<div ng-class="{ 'pull-right text-right': !Screen.isXs }">
+
+				<hr class="visible-xs">
+
 				<p>
+					<a href="https://github.com/gamejolt" translate>footer.open_source</a>
+
+					<span class="dot-separator"></span>
 					<a href="/terms" translate>legal.terms</a>
+
 					<span class="dot-separator"></span>
 					<a href="/privacy" translate>legal.privacy</a>
+
 					<span class="dot-separator"></span>
 					<a href="mailto:contact@gamejolt.com" translate>footer.contact</a>
 				</p>
+
 				<p class="tiny">&copy; {{ ::ctrl.curDate | date:'y' }} Lucent Web Creative, LLC</p>
+
+				<p class="tiny text-muted" ng-if="Environment.isClient">
+					<a ng-click="ctrl.showSystemReport()" class="link-muted" translate>footer.send_system_report</a>
+					<span class="dot-separator"></span>
+					v{{ ::ctrl.clientVersion }}
+				</p>
 			</div>
 		</div>
 	</div>

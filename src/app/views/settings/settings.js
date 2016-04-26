@@ -10,6 +10,13 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 			{
 				return Translate.loadSection( 'main' );
 			},
-		}
+			payload: function( User )
+			{
+				return User.touch();
+			}
+		},
+		data: {
+			availableOffline: true,
+		},
 	} );
 } );

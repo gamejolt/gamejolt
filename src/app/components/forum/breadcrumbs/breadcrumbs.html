@@ -1,0 +1,41 @@
+<div class="forum-breadcrumbs">
+	<a class="forum-breadcrumbs-item" ui-sref="forums.landing.overview">
+		Forums
+	</a>
+
+	<span ng-if="ctrl.channel">
+		<span class="forum-breadcrumbs-separator">»</span>
+		<a class="forum-breadcrumbs-item"
+			ui-sref="forums.landing.overview( { '#': 'category-' + ctrl.channel.category.url } )"
+			>
+			{{ ctrl.channel.category.title }}
+		</a>
+	</span>
+
+	<span ng-if="ctrl.channel">
+		<span class="forum-breadcrumbs-separator">»</span>
+		<a class="forum-breadcrumbs-item"
+			ng-if="ctrl.page"
+			ui-sref="forums.channels.view.page( { name: ctrl.channel.name } )"
+			>
+			#{{ ctrl.channel.name }}
+		</a>
+		<strong class="forum-breadcrumbs-item"
+			ng-if="!ctrl.page"
+			>
+			#{{ ctrl.channel.name }}
+		</strong>
+	</span>
+
+	<span ng-if="ctrl.page">
+		<span class="forum-breadcrumbs-separator">»</span>
+		<span ng-switch="ctrl.page">
+			<strong ng-switch-when="add-topic">
+				New Topic
+			</strong>
+			<strong ng-switch-when="view-topic">
+				View Topic
+			</strong>
+		</span>
+	</span>
+</div>

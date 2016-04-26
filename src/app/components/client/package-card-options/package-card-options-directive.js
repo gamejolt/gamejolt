@@ -5,7 +5,7 @@ angular.module( 'App.Client.PackageCardOptions' ).directive( 'gjClientPackageCar
 		require: '^gjGamePackageCard',
 		scope: true,
 		templateUrl: '/app/components/client/package-card-options/package-card-options.html',
-		controller: function( $scope, Device, Analytics, Client_Library, Client_Installer, Client_Launcher, LocalDb_Package, Game, Game_Build, Popover, HistoryTick )
+		controller: function( $scope, Device, Analytics, Client_Library, Client_Installer, Client_Launcher, LocalDb_Package, Game, Game_Build, Popover )
 		{
 			// Parent scope controller.
 			var ctrl = $scope.ctrl;
@@ -36,9 +36,9 @@ angular.module( 'App.Client.PackageCardOptions' ).directive( 'gjClientPackageCar
 				} );
 			}
 
-			// If the browser build isn't an HTML build, then it can't be
+			// If the browser build isn't an HTML/ROM build, then it can't be
 			// quick played in their client.
-			if ( ctrl.browserBuild && ctrl.browserBuild.type != Game_Build.TYPE_HTML ) {
+			if ( ctrl.browserBuild && ctrl.browserBuild.type != Game_Build.TYPE_HTML && ctrl.browserBuild.type != Game_Build.TYPE_ROM ) {
 				build = ctrl.browserBuild;
 				ctrl.extraBuilds.unshift( {
 					type: build.type,
@@ -70,9 +70,7 @@ angular.module( 'App.Client.PackageCardOptions' ).directive( 'gjClientPackageCar
 
 			ctrl.startInstall = function( build )
 			{
-				// Be sure to log the build download.
 				Analytics.trackEvent( 'game-package-card', 'install' );
-				HistoryTick.sendBeacon( 'game-build', build.id );
 
 				Client_Library.installPackage(
 					ctrl.game,

@@ -1,0 +1,20 @@
+<section class="game-header-controls" ng-if="App.user">
+	<div class="container">
+		<div gj-partial="/app/views/discover/games/view/_header/_controls.html"></div>
+	</div>
+</section>
+
+<div class="game-header-nav" gj-scroll-affix is-affixed="gameCtrl.isNavAffixed" should-affix="Screen.height > 750">
+	<div class="container">
+
+		<div class="game-header-nav-addons no-animate-leave"
+			ng-if="Game_ViewState.showExtendedHeader"
+			ng-class="{ 'animate-affixed-on': gameCtrl.isNavAffixed, 'animate-affixed-off': !gameCtrl.isNavAffixed }"
+			>
+			<div gj-partial="/app/views/discover/games/view/_header/_rate.html"></div>
+			<div gj-partial="/app/views/discover/games/view/_header/_stats.html"></div>
+		</div>
+
+		<div gj-partial="/app/views/discover/games/view/_header/_nav.html"></div>
+	</div>
+</div>

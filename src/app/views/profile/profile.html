@@ -11,7 +11,7 @@
 	If this user is banned, we show very little.
 -->
 <div ng-if="!profileCtrl.user.status">
-	<div ng-include="'/app/views/profile/_banned.html'"></div>
+	<div gj-partial="/app/views/profile/_banned.html"></div>
 </div>
 
 <!--
@@ -142,7 +142,7 @@
 						{{ ::'profile.library_tab' | translate }}
 					</a>
 				</li>
-				<li ng-if="App.user && (App.user.permission_level > 0 || profileCtrl.userFriendship.state == User_Friendship.STATE_FRIENDS)">
+				<li ng-if="App.user && (App.user.permission_level > 0 || profileCtrl.userFriendship.state == User_Friendship.STATE_FRIENDS || profileCtrl.user.id != App.user.id)">
 					<a gj-popover-trigger="profile-more-options">
 						<span class="jolticon jolticon-ellipsis-h"></span>
 						{{ ::'options.more' | translate }}
@@ -154,21 +154,28 @@
 </header>
 
 <gj-popover popover-id="profile-more-options">
-	<div class="list-group">
+	<div class="list-group list-group-dark">
 		<a class="list-group-item has-icon"
-			ng-click="profileCtrl.removeFriend()"
-			ng-if="profileCtrl.userFriendship.state == User_Friendship.STATE_FRIENDS"
+			ng-if="App.user && profileCtrl.user.id != App.user.id"
+			ng-click="profileCtrl.report()"
 			>
-			<span class="jolticon jolticon-friend-remove-2"></span>
-			{{ ::'profile.remove_friend_button' | translate }}
+			<span class="jolticon jolticon-flag warning"></span>
+			<span translate>profile.report_user_button</span>
 		</a>
 		<a class="list-group-item has-icon"
+			ng-if="profileCtrl.userFriendship.state == User_Friendship.STATE_FRIENDS"
+			ng-click="profileCtrl.removeFriend()"
+			>
+			<span class="jolticon jolticon-friend-remove-2 warning"></span>
+			<span translate>profile.remove_friend_button</span>
+		</a>
+		<a class="list-group-item has-icon"
+			ng-if="App.user.permission_level > 0"
 			ng-href="{{ ::Environment.baseUrl }}/moderate/users/view/{{ ::profileCtrl.user.id }}"
 			target="_blank"
-			ng-if="App.user.permission_level > 0"
 			>
 			<span class="jolticon jolticon-cog"></span>
-			{{ ::'profile.moderate_user_button' | translate }}
+			<span translate>profile.moderate_user_button</span>
 		</a>
 	</div>
 </gj-popover>

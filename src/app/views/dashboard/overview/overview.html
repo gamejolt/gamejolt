@@ -110,9 +110,7 @@
 										<span class="jolticon jolticon-check"></span>
 										{{ ::'dash.integrate.done' | translate }}
 									</span>
-									<span ng-class="{ 'text-muted': overviewCtrl.integration[ key ].achieved }">
-										{{ ::overviewCtrl.integrationTranslations[ key ] }}
-									</span>
+									<span ng-class="{ 'text-muted': overviewCtrl.integration[ key ].achieved }" ng-bind-html="::overviewCtrl.integrationTranslations[ key ]"></span>
 								</td>
 							</tr>
 						</tbody>

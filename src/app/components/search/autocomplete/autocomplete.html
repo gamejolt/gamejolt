@@ -98,7 +98,7 @@
 				ng-click="ctrl.selectCommand( command )"
 				>
 				<span class="tag">{{ ::command.keyword }}</span>
-				<span class="small text-muted">{{ ::command.description }}</span>
+				<span class="small text-muted">{{ command.description | translate }}</span>
 			</a>
 		</div>
 

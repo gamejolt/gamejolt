@@ -1,0 +1,57 @@
+<div class="forum-channel-list">
+
+	<div class="forum-channel-list-item row" ng-repeat="channel in ctrl.channels track by channel.id">
+		<div class="col-sm-9 col-md-7">
+			<h4 class="forum-channel-list-item-title">
+				<span class="tag tag-pink" ng-if="::channel.notifications_count">{{ ::channel.notifications_count || 0 | number }}</span>
+				<a class="link-unstyled" ui-sref="forums.channels.view.page( { name: channel.name } )">#{{ ::channel.name }}</a>
+			</h4>
+			<div>{{ ::channel.description }}</div>
+		</div>
+		<div class="col-sm-3 col-md-2 text-muted small" ng-class="{ 'text-right': !Screen.isXs }">
+			<strong>{{ ::channel.topics_count || 0 | number }}</strong> Topics
+			<br class="hidden-xs">
+			<span class="hidden-sm hidden-md hidden-lg dot-separator"></span>
+			<strong>{{ ::channel.replies_count || 0 | number }}</strong> Replies
+		</div>
+		<div class="col-md-3" ng-if="Screen.isDesktop">
+			<div class="forum-channel-list-item-latest-topic"
+				ng-repeat="latestPost in ::[ ctrl.latestPosts[ channel.id ] ] track by latestPost.id"
+				>
+				<div ng-if="::latestPost">
+
+					<div class="forum-channel-list-item-latest-topic-avatar">
+						<div gj-user-avatar="::latestPost.user"></div>
+					</div>
+
+					<div class="forum-channel-list-item-latest-topic-info">
+						<div class="forum-channel-list-item-latest-topic-info-title">
+							<a ui-sref="forums.topics.view.page( {
+									slug: latestPost.topic.slug,
+									id: latestPost.topic.id,
+									'#': 'forum-post-' + latestPost.id,
+									page: ctrl.getPostPage( latestPost ),
+								} )"
+								>
+								{{ ::latestPost.topic.title }}
+							</a>
+						</div>
+						<div class="forum-channel-list-item-latest-topic-topic-info-user text-muted">
+							by
+							<strong>
+								<a class="link-muted" ui-sref="profile.overview( { slug: latestPost.user.slug, id: latestPost.user.id } )">
+									{{ ::latestPost.user.display_name }}
+								</a>
+							</strong>
+							<br>
+							<span title="{{ ::latestPost.posted_on | date:'medium' }}" am-time-ago="::latestPost.posted_on"></span>
+						</div>
+					</div>
+
+				</div>
+				<span ng-if="::!latestPost">--</span>
+			</div>
+		</div>
+	</div>
+
+</div>

@@ -43,6 +43,7 @@ load-module( 'site-selector' )
 load-module( 'social' )
 load-module( 'highlight' )
 load-module( 'translate/lang-selector' )
+load-module( 'lazy/placeholder' )
 
 load-module( 'user/user-avatar' )
 
@@ -63,8 +64,6 @@ load-module( 'img/crop' )
 
 load-module( 'graph/line' )
 
-@import '../bower-lib/codemirror/lib/codemirror.css'
-load-module( 'codemirror' )
 load-module( 'form/markdown-editor' )
 load-module( 'form/upload-control' )
 
@@ -77,6 +76,7 @@ load-module( 'form/upload-control' )
 @import './views/**/*.styl'
 
 // Styles/overrides.
+@import './styles/client'
 @import './styles/post'
 @import './styles/platform-list'
 @import './styles/popover'

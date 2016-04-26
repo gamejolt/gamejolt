@@ -1,16 +1,30 @@
 <header class="section">
 	<div class="container">
 
-		<h1>Installed Games</h1>
+		<h1 translate>library.installed.heading</h1>
 		<br><br>
 
 	</div>
 </header>
 
-<section class="section" ng-if="installedCtrl.games.length">
+<section class="section">
 	<div class="container">
 
-		<div class="row">
+		<div class="alert alert-warning" ng-if="!installedCtrl.games.length"
+			translate
+			translate-comment="The message shown when there are no games installed yet in their library."
+			>
+			library.installed.no_games_message
+		</div>
+
+		<gj-alert-dismissable alert-type="info" dismiss-key="library.install-location-msg">
+			<span class="jolticon jolticon-info-circle"></span>
+			<span translate translate-comment="Short message to remind them that they can change install location at any time in their settings.">
+				library.installed.change_location_message
+			</span>
+		</gj-alert-dismissable>
+
+		<div class="row" ng-if="installedCtrl.games.length">
 
 			<!--
 				We have to pull the z-index for any game that is showing options to be in front.
@@ -29,7 +43,7 @@
 				<!--
 					Try to reduce the # of watchers on page.
 				-->
-				<div class="client-installed-game-meta-outer anim-fade-leave"
+				<div class="client-installed-game-meta-outer"
 					ng-if="game._isHovering
 						|| game._isShowingOptions
 						|| game._isShowingLaunchOptions
@@ -55,8 +69,11 @@
 
 						<span
 							class="client-installed-game-version"
-							ng-if="Client_Library.packagesByGame[ game.id ].length > 1">
-							Multiple Packages
+							ng-if="Client_Library.packagesByGame[ game.id ].length > 1"
+							translate
+							translate-comment="This shows instead of a version number for a game on the installed games page if there are multiple packages installed for the game."
+							>
+							library.installed.multiple_packages
 						</span>
 					</div>
 				</div>
@@ -65,11 +82,5 @@
 
 		</div>
 
-	</div>
-</section>
-
-<section class="section fill-pink" ng-if="!installedCtrl.games.length">
-	<div class="container">
-		Your installed games show up here... that is, once you have some!
 	</div>
 </section>

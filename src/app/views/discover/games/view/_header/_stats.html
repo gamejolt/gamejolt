@@ -1,0 +1,49 @@
+<!-- Game Stats -->
+<ul class="game-header-stats stat-list">
+
+	<!--
+		Follower Count
+	-->
+	<li class="game-header-stats-followers stat-big stat-big-smaller"
+		ng-class="Screen.isXs ? 'text-center' : 'text-right'"
+		ng-if="gameCtrl.isLoaded"
+		>
+		<div class="stat-big-label">Followers</div>
+		<div class="stat-big-digit">{{ gameCtrl.followerCount | number }}</div>
+	</li>
+
+	<!--
+		Voltage
+		We show the number as well as the meter.
+	-->
+	<li class="game-header-stats-voltage stat-big stat-big-smaller"
+		ng-class="Screen.isXs ? 'text-center' : 'text-right'"
+		>
+
+		<div class="game-header-stats-voltage-stat">
+			<div class="stat-big-label">
+				Ratings
+			</div>
+			<div class="stat-big-digit" ng-if="gameCtrl.game.ratings_enabled">
+				{{ gameCtrl.game.rating_count || 0 | number }}
+			</div>
+			<div class="stat-big-digit" ng-if="!gameCtrl.game.ratings_enabled" tooltip="Ratings are disabled for this game.">
+				OFF
+			</div>
+		</div>
+
+		<!--
+			The ng-repeat makes sure that the widget gets updated any time the rating changes on the page.
+		-->
+		<gj-meter
+			class="meter-dark"
+			ng-repeat="_ in [ gameCtrl.game.avg_rating ]"
+			ng-if="::gameCtrl.game.ratings_enabled"
+			meter-rating="::gameCtrl.game.avg_rating"
+			meter-big="true"
+			>
+		</gj-meter>
+
+	</li>
+
+</ul>

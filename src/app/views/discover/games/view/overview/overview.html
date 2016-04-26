@@ -1,8 +1,38 @@
-<section class="ad-section" ng-class="::gameCtrl.mediaItems.length && gameCtrl.testMediaBarPos != 'above' ? 'dark' : ''" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
+<script type="application/ld+json" ng-bind="::overviewCtrl.microdata"></script>
+
+<!-- Media Bar -->
+<div ng-if="gameCtrl.game.media_count">
+	<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
+</div>
+
+<!-- Convenience Messaging -->
+<section class="alert alert-warning" style="margin-bottom: 0" ng-if="::overviewCtrl.convenienceMessage">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10 col-lg-8 col-centered" ng-class="{ 'text-center': Screen.isDesktop }" ng-switch="::overviewCtrl.convenienceMessage">
+
+				<div ng-switch-when="wip">
+					<p>This game is still <strong>In Development</strong> and is not currently playable.</p>
+				</div>
+
+				<div ng-switch-when="canceled-no-builds">
+					<p>This game has been <strong>canceled</strong> by the developer and is not currently playable.</p>
+				</div>
+
+				<div ng-switch-when="canceled-with-builds">
+					<p>This game was <strong>canceled</strong> by the developer, so the current version might be buggy or incomplete.</p>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="ad-section" ng-class="::gameCtrl.mediaItems.length ? 'dark' : ''" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
 	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 </section>
 
-<section class="section">
+<section class="section section-thin fill-darker" ng-if="::overviewCtrl.activeJam">
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-centered">
@@ -38,6 +68,7 @@
 
 <!--<section class="section">
 	<div class="container">
+
 		<div class="row">
 
 			<div ng-if="Screen.isXs" class="col-xs-12">
@@ -48,66 +79,193 @@
 				</h2>
 
 				<div collapse="!overviewCtrl.detailsOpen">
-					<div ng-include="'/app/views/discover/games/view/overview/_details.html'"></div>
+					<div gj-partial="/app/views/discover/games/view/overview/_details.html"></div>
 				</div>
 
 			</div>
 			<div class="col-xs-12 col-md-7 pull-left">
 
-				<div ng-if="::(overviewCtrl.hasReleasesSection)">
+				<!-- Builds / Soundtrack -->
+				<div ng-if="gameCtrl.game._has_packages || overviewCtrl.hasReleasesSection">
 
-					<h2 ng-class="{ 'section-header': (Screen.isXs && !overviewCtrl.detailsOpen) || !Screen.isXs }">Releases</h2>
+					<h2 id="game-releases" ng-class="{ 'section-header': (Screen.isXs && !overviewCtrl.detailsOpen) || !Screen.isXs }">Releases</h2>
 
-					<div ng-if="::overviewCtrl.packages.length">
-						<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-							<gj-game-package-card
-								ng-repeat="package in overviewCtrl.packages"
-								game="::gameCtrl.game"
-								game-package="::package"
-								game-releases="::package._releases"
-								game-builds="::package._builds"
-								game-build-launch-options="::overviewCtrl.launchOptions"
-								>
-							</gj-game-package-card>
-						</div>
+					<div ng-if="gameCtrl.showMultiplePackagesMessage" class="alert alert-info">
+						<span class="jolticon jolticon-notice"></span>
+						There are multiple packages for your device. Please choose one below.
 					</div>
 
-					<gj-game-soundtrack-card
-						ng-if="::overviewCtrl.songs.length"
-						game-soundtrack-card-game="::gameCtrl.game"
-						game-soundtrack-card-songs="::overviewCtrl.songs"
-						>
-					</gj-game-soundtrack-card>
+					<!-- TG: Thunder Gun widget -->
+					<div ng-if="::gameCtrl.game.id == 64527">
+						<iframe nwdisable nwfaketop style="height: 247px; width: 100%;" ng-src="https://gamejolt.com/widgets/game/sale/v1/emwsb5?theme=light" frameborder="0"></iframe>
+					</div>
+
+					<div gj-lazy-placeholder="overviewCtrl.isLoaded">
+						<div class="lazy-placeholder" style="height: 135px"></div>
+
+						<div ng-if="::overviewCtrl.packages.length">
+							<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
+								<gj-game-package-card
+									ng-repeat="package in overviewCtrl.packages"
+									game="::gameCtrl.game"
+									game-package="::package"
+									game-releases="::package._releases"
+									game-builds="::package._builds"
+									game-build-launch-options="::overviewCtrl.launchOptions"
+									>
+								</gj-game-package-card>
+							</div>
+						</div>
+
+						<gj-game-soundtrack-card
+							ng-if="::overviewCtrl.songs.length"
+							game-soundtrack-card-game="::gameCtrl.game"
+							game-soundtrack-card-songs="::overviewCtrl.songs"
+							>
+						</gj-game-soundtrack-card>
+					</div>
 
 				</div>
 
-				<h2 ng-class="{ 'section-header': (!Screen.isXs || !overviewCtrl.detailsOpen) && !overviewCtrl.hasReleasesSection }">
+				<!-- Game Description -->
+				<h2 ng-class="{ 'section-header': (!Screen.isXs || !overviewCtrl.detailsOpen) && !(gameCtrl.game._has_packages || overviewCtrl.hasReleasesSection) }">
 					Description
 				</h2>
 
-				<gj-fade-collapse
-					fade-collapse-height="500"
-					fade-collapse-is-open="overviewCtrl.showFullDescription"
-					fade-collapse-is-required="overviewCtrl.canToggleDescription"
-					>
-					<div class="game-compiled-description" ng-bind-html="gameCtrl.game.description_compiled"></div>
-				</gj-fade-collapse>
+				<div ng-if="!gameCtrl.game.description_compiled">
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder" style="width: 40%"></span>
+				</div>
 
-				<a class="hidden-text-expander"
-					ng-if="overviewCtrl.canToggleDescription"
-					ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"
-					gj-track-event="game-profile:show-full-description"
-					></a>
+				<div ng-if="gameCtrl.game.description_compiled">
+					<gj-fade-collapse
+						fade-collapse-height="500"
+						fade-collapse-is-open="overviewCtrl.showFullDescription"
+						fade-collapse-is-required="overviewCtrl.canToggleDescription"
+						>
+						<div class="game-compiled-description" ng-bind-html="gameCtrl.game.description_compiled"></div>
+					</gj-fade-collapse>
+
+					<a class="hidden-text-expander"
+						ng-if="overviewCtrl.canToggleDescription"
+						ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"
+						gj-track-event="game-profile:show-full-description"
+						></a>
+				</div>
 
 			</div>
 
 			<div class="col-xs-12 col-md-5 col-lg-4 pull-right">
 				<div ng-if="!Screen.isXs">
 					<h2 ng-class="{ 'section-header': !Screen.isSm }">Details</h2>
-					<div ng-include="'/app/views/discover/games/view/overview/_details.html'"></div>
+					<div gj-partial="/app/views/discover/games/view/overview/_details.html"></div>
 				</div>
 			</div>
 
 		</div>
+
 	</div>
 </section>-->
+
+<!-- Achievements -->
+<section class="section" ng-if="::(gameCtrl.hasScores || gameCtrl.trophiesCount)">
+	<div class="container">
+
+		<div class="row">
+
+			<!-- Scores -->
+			<div
+				ng-if="::gameCtrl.hasScores"
+				ng-class="::overviewCtrl.isAchievementsTwoCol ? 'col-md-7' : 'col-xs-12'">
+
+				<gj-score-overview
+					ng-if="::overviewCtrl.scoresPayload"
+					score-overview-game="::gameCtrl.game"
+					score-overview-payload="::overviewCtrl.scoresPayload"
+					score-overview-size="{{ ::(overviewCtrl.isAchievementsTwoCol ? 'small' : 'full') }}">
+				</gj-score-overview>
+
+			</div>
+
+			<!-- Trophies -->
+			<div
+				ng-if="::gameCtrl.trophiesCount"
+				ng-class="::overviewCtrl.isAchievementsTwoCol ? 'col-md-5 col-lg-4 col-lg-offset-1' : 'col-xs-12'">
+
+				<gj-trophy-overview
+					ng-if="::overviewCtrl.trophiesPayload"
+					trophy-overview-game="::gameCtrl.game"
+					trophy-overview-payload="::overviewCtrl.trophiesPayload"
+					trophy-overview-size="{{ ::(overviewCtrl.isAchievementsTwoCol ? 'small' : 'full') }}">
+				</gj-trophy-overview>
+
+			</div>
+
+		</div>
+
+	</div>
+</section>
+
+<!--
+	Recommended Games
+	Since it's a dark fill, we put meter-dark in there to show up better.
+-->
+<section class="section fill-dark recommended-games section-thin" ng-if="::overviewCtrl.recommendedGames.length">
+	<div class="container">
+
+		<h2 class="section-header">You May Also Like</h2>
+
+		<div class="scrollable-grid-xs">
+			<div class="row">
+				<gj-game-thumbnail
+					class="scrollable-grid-item col-xs-8 col-sm-4 col-md-3 meter-dark"
+					ng-repeat="game in overviewCtrl.recommendedGames | limitTo:(Screen.isDesktop ? 4 : 3) track by game.id"
+					gj-game="::game"
+					gj-track-event="recommended-games:click:{{ $index }}"
+					>
+				</gj-game-thumbnail>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
+	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+</section>
+
+<!-- Comments -->
+<section class="section" id="comments" ng-if="gameCtrl.isLoaded">
+	<div class="container">
+		<div class="row">
+
+			<div class="col-sm-10 col-md-8 col-lg-7">
+
+				<div ng-if="::!gameCtrl.game.comments_enabled">
+					<h2 class="section-header">Comments Disabled</h2>
+					<p class="text-muted">Comments have been disabled for this game.</p>
+				</div>
+
+				<div ng-if="::gameCtrl.game.comments_enabled">
+					<gj-comment-widget
+						current-page="overviewCtrl.currentCommentPage"
+						comment-resource="Game"
+						comment-resource-id="gameCtrl.game.id"
+						>
+					</gj-comment-widget>
+				</div>
+
+			</div>
+
+			<!--
+				Will overflow a little on md, but what can ya do, amirite?
+			-->
+			<div class="col-md-4 col-lg-offset-1 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isDesktop">
+				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+
+		</div>
+	</div>
+</section>

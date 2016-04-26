@@ -1,98 +1,110 @@
-<!-- Game Header -->
-<div ng-if="Game_ViewState.showCover">
-	<gj-game-cover gj-game="gameCtrl.game"></gj-game-cover>
-</div>
+<div ng-if="gameCtrl.game">
 
-<!-- Media Bar -->
-<!--<div ng-if="Game_ViewState.showExtendedHeader && gameCtrl.mediaItems.length">
-	<div ng-if="::gameCtrl.testMediaBarPos == 'above' || gameCtrl.testMediaBarPos == 'above-no-banner'">
-		<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
-	</div>
-</div>-->
+	<!-- Game Header -->
+	<div ng-if="Game_ViewState.showExtendedHeader">
+		<gj-game-cover ng-if="Game_ViewState.hasCover" gj-game="gameCtrl.game">
 
-<div class="alert alert-warning sans-margin-bottom" ng-if="Game_ViewState.showExtendedHeader && gameCtrl.notificationCounts.news">
-	<div class="container">
-		<h4 class="section-header" translate>games.view.notifications_heading</h4>
-		<ul>
-			<li ng-if="gameCtrl.notificationCounts.news">
-				<a ui-sref=".news.list"
-					translate
-					translate-n="gameCtrl.notificationCounts.news"
-					translate-plural="games.view.notifications_news"
-					>
-					games.view.notifications_news
-				</a>
-			</li>
-		</ul>
-	</div>
-</div>
-
-<header class="section game-header" ng-class="{ 'game-header-extended': Game_ViewState.showExtendedHeader }">
-
-	<div class="container">
-		<div class="clearfix">
-
-			<!-- Title / Byline / Date -->
-			<div class="game-header-meta">
-
-				<!--<div class="small text-muted">
-					DEVLOG
-				</div>-->
-
-				<div>
-					<span class="tag tag-blue">DEVLOG</span>
+			<div ng-if="!Screen.isXs && (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length)">
+				<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
+					<gj-game-cover-buttons
+						game="gameCtrl.game"
+						installable-builds="gameCtrl.installableBuilds"
+						browser-builds="gameCtrl.browserBuilds"
+						on-show-packages="gameCtrl.scrollToPackages()"
+						>
+					</gj-game-cover-buttons>
 				</div>
+			</div>
 
-				<!-- Game Title -->
-				<h1 class="section-header game-header-title">
-					<a class="link-unstyled" ui-sref=".overview">
-						{{ ::gameCtrl.game.title }}
-					</a>
-				</h1>
+		</gj-game-cover>
 
-				<!-- Developer -->
-				<div class="game-header-byline">
-					by
-					<a ng-href="{{ ::gameCtrl.game.developer.url }}">{{ ::gameCtrl.game.developer.display_name }}</a>
+		<section class="section fill-darker" ng-if="!Screen.isXs && !Game_ViewState.hasCover && (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length)">
+			<div class="container text-center">
 
-					<!--
-						Hide on mobile to keep it clean.
-						They can view in the game details.
-					-->
-					<!--<span class="game-header-time-ago" ng-if="!Screen.isXs && gameCtrl.game.published_on">
-						<span class="dot-separator"></span>
-						<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )"
-							am-time-ago="::gameCtrl.game.published_on"></a>
-					</span>
-
-					<span class="game-header-ogrs" ng-if="gameCtrl.game.tigrs_age">
-						<span class="dot-separator hidden-xs"></span>
-						<gj-game-ogrs-tag gj-game="gameCtrl.game"></gj-game-ogrs-tag>
-					</span>-->
+				<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
+					<gj-game-cover-buttons
+						game="gameCtrl.game"
+						installable-builds="gameCtrl.installableBuilds"
+						browser-builds="gameCtrl.browserBuilds"
+						on-show-packages="gameCtrl.scrollToPackages()"
+						>
+					</gj-game-cover-buttons>
 				</div>
 
 			</div>
+		</section>
 
+	</div>
+
+	<div class="alert alert-warning sans-margin-bottom" ng-if="Game_ViewState.showExtendedHeader && gameCtrl.notificationCounts.news">
+		<div class="container">
+			<h4 class="section-header" translate>games.view.notifications_heading</h4>
+			<ul>
+				<li ng-if="gameCtrl.notificationCounts.news">
+					<a ui-sref=".news.list"
+						translate
+						translate-n="gameCtrl.notificationCounts.news"
+						translate-plural="games.view.notifications_news"
+						>
+						games.view.notifications_news
+					</a>
+				</li>
+			</ul>
 		</div>
 	</div>
 
-	<div ng-if="Screen.isXs">
-		<div ng-include="'/app/views/discover/games/view/_header/header-xs.html'"></div>
-	</div>
-	<div ng-if="Screen.isSm">
-		<div ng-include="'/app/views/discover/games/view/_header/header-sm.html'"></div>
-	</div>
-	<div ng-if="Screen.isDesktop">
-		<div ng-include="'/app/views/discover/games/view/_header/header-desktop.html'"></div>
-	</div>
+	<header class="section game-header" ng-class="{ 'game-header-extended': Game_ViewState.showExtendedHeader }">
 
-</header>
+		<div class="container">
+			<div class="clearfix">
 
-<!-- Media Bar -->
-<div ng-if="Game_ViewState.showExtendedHeader && gameCtrl.mediaItems.length">
-	<div ng-if="::gameCtrl.testMediaBarPos != 'above' && gameCtrl.testMediaBarPos != 'above-no-banner'">
-		<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
-	</div>
+				<!-- Title / Byline / Date -->
+				<div class="game-header-meta">
+
+					<!-- Game Title -->
+					<h1 class="section-header game-header-title">
+						<a class="link-unstyled" ui-sref=".overview">
+							{{ ::gameCtrl.game.title }}
+						</a>
+					</h1>
+
+					<!-- Developer -->
+					<div class="game-header-byline">
+						by
+						<a ng-href="{{ ::gameCtrl.game.developer.url }}">{{ ::gameCtrl.game.developer.display_name }}</a>
+
+						<!--
+							Hide on mobile to keep it clean.
+							They can view in the game details.
+						-->
+						<span class="game-header-time-ago" ng-if="!Screen.isXs && gameCtrl.game.published_on">
+							<span class="dot-separator"></span>
+							<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )"
+								am-time-ago="::gameCtrl.game.published_on"></a>
+						</span>
+
+						<span class="game-header-ogrs" ng-if="gameCtrl.game.tigrs_age">
+							<span class="dot-separator hidden-xs"></span>
+							<gj-game-ogrs-tag gj-game="gameCtrl.game"></gj-game-ogrs-tag>
+						</span>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+
+		<div ng-if="Screen.isXs">
+			<div gj-partial="/app/views/discover/games/view/_header/_header-xs.html"></div>
+		</div>
+		<div ng-if="Screen.isSm">
+			<div gj-partial="/app/views/discover/games/view/_header/_header-sm.html"></div>
+		</div>
+		<div ng-if="Screen.isDesktop">
+			<div gj-partial="/app/views/discover/games/view/_header/_header-desktop.html"></div>
+		</div>
+
+	</header>
+
+	<ui-view></ui-view>
 </div>
-
-<ui-view></ui-view>

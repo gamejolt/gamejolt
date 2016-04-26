@@ -14,6 +14,7 @@ angular.module( 'App', [
 	'ui.bootstrap.modal',
 	'ui.keypress',
 	'validation.match',
+	'angular-inview',
 
 	// GJ lib.
 	'gj.Translate',
@@ -46,8 +47,8 @@ angular.module( 'App', [
 	'gj.Device',
 	'gj.Location',
 	'gj.Connection',
-	'gj.Connection.StatePermissions',
 
+	'gj.Partial',
 	'gj.Backdrop',
 	'gj.Tooltip',
 	'gj.Popover',
@@ -65,6 +66,15 @@ angular.module( 'App', [
 	'gj.Favicon',
 	'gj.FadeCollapse',
 	'gj.Progress.Poller',
+	'gj.Alert.Dismissable',
+	'gj.Lazy.Placeholder',
+	'gj.Registry',
+
+	'gj.History',
+	'gj.History.Cache',
+
+	'gj.Report.Form',
+	'gj.Report.Modal',
 
 	'gj.Primus',
 	'gj.Activity.Stream',
@@ -109,6 +119,7 @@ angular.module( 'App', [
 	'gj.Game.ScoreTable',
 	'gj.Game.DataStore.Item',
 
+	'gj.Game.Downloader',
 	'gj.Game.Package.Card',
 	'gj.Game.PlayModal',
 
@@ -118,6 +129,8 @@ angular.module( 'App', [
 	'gj.Jam.Game.Vote',
 	'gj.Jam.Game.Vote.Widget',
 	'gj.Jam.Award',
+
+	'gj.Translation',
 
 	'gj.Chat.Room',
 
@@ -148,12 +161,16 @@ angular.module( 'App', [
 	'gj.Fireside.Post',
 	'gj.Fireside.Post.Tag',
 
+	'gj.Forum.Category',
+	'gj.Forum.Channel',
 	'gj.Forum.Topic',
 	'gj.Forum.Post',
 
 	'gj.Img.Helper',
 	'gj.Img.Crop',
 	'gj.Img.ImgResponsive',
+
+	'gj.WidgetCompiler',
 
 	// Components.
 	'App.SplitTest',
@@ -166,6 +183,7 @@ angular.module( 'App', [
 	'App.Minbar',
 	'App.Invite',
 	'App.Sorting',
+	'App.Settings',
 
 	'App.Forms',
 
@@ -189,6 +207,7 @@ angular.module( 'App', [
 	'App.Game.Grid',
 	'App.Game.Filtering',
 	'App.Game.Cover',
+	'App.Game.Cover.Buttons',
 	'App.Game.MediaBar',
 	'App.Game.Ogrs',
 	'App.Game.RatingGrowl',
@@ -277,6 +296,7 @@ angular.module( 'App', [
 		main: {
 			'en': '/translations/en/main.json',
 			'en_US': '/translations/en_US/main.json',
+			'en_AU': '/translations/en_AU/main.json',
 			'nl': '/translations/nl/main.json',
 			'ro': '/translations/ro/main.json',
 			'de': '/translations/de/main.json',
@@ -285,13 +305,29 @@ angular.module( 'App', [
 			'ru': '/translations/ru/main.json',
 			'sv': '/translations/sv/main.json',
 			'tr': '/translations/tr/main.json',
+			'pt': '/translations/pt/main.json',
 			'pt_BR': '/translations/pt_BR/main.json',
 			'fi': '/translations/fi/main.json',
 			'nb': '/translations/nb/main.json',
+			'el': '/translations/el/main.json',
+			'ms': '/translations/ms/main.json',
+			'pl': '/translations/pl/main.json',
+			'uk': '/translations/uk/main.json',
+			'it': '/translations/it/main.json',
+			'bg': '/translations/bg/main.json',
+			'cs': '/translations/cs/main.json',
+			'es_419': '/translations/es_419/main.json',
+			'es_AR': '/translations/es_AR/main.json',
+			'es_CO': '/translations/es_CO/main.json',
+			'es_MX': '/translations/es_MX/main.json',
+			'hr': '/translations/hr/main.json',
+			'id': '/translations/id/main.json',
+			'zh_TW': '/translations/zh_TW/main.json',
 		},
 		dash: {
 			'en': '/translations/en/dash.json',
 			'en_US': '/translations/en_US/dash.json',
+			'en_AU': '/translations/en_AU/dash.json',
 			'nl': '/translations/nl/dash.json',
 			'ro': '/translations/ro/dash.json',
 			'de': '/translations/de/dash.json',
@@ -300,9 +336,24 @@ angular.module( 'App', [
 			'ru': '/translations/ru/dash.json',
 			'sv': '/translations/sv/dash.json',
 			'tr': '/translations/tr/dash.json',
+			'pt': '/translations/pt/dash.json',
 			'pt_BR': '/translations/pt_BR/dash.json',
 			'fi': '/translations/fi/dash.json',
 			'nb': '/translations/nb/dash.json',
+			'el': '/translations/el/dash.json',
+			'ms': '/translations/ms/dash.json',
+			'pl': '/translations/pl/dash.json',
+			'uk': '/translations/uk/dash.json',
+			'it': '/translations/it/dash.json',
+			'bg': '/translations/bg/dash.json',
+			'cs': '/translations/cs/dash.json',
+			'es_419': '/translations/es_419/dash.json',
+			'es_AR': '/translations/es_AR/dash.json',
+			'es_CO': '/translations/es_CO/dash.json',
+			'es_MX': '/translations/es_MX/dash.json',
+			'hr': '/translations/hr/dash.json',
+			'id': '/translations/id/dash.json',
+			'zh_TW': '/translations/zh_TW/dash.json',
 		},
 	};
 

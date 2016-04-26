@@ -48,13 +48,13 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlMatcherFacto
 			controllerAs: 'categoryCtrl',
 			templateUrl: '/app/views/discover/games/list/category/category.html',
 			resolve: {
-				payload: function( $stateParams, Api, filteringContainer )
+				payload: function( $stateParams, Api, History_Cache, filteringContainer )
 				{
 					return filteringContainer.init( 'discover.games.list.' + state, $stateParams )
 						.then( function()
 						{
-							return Api.sendRequest( buildQuery( $stateParams, filteringContainer ) );
-						} )
+							return History_Cache.cache( Api.sendRequest( buildQuery( $stateParams, filteringContainer ) ) );
+						} );
 				}
 			}
 		} );

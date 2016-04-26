@@ -5,26 +5,22 @@
 		<control-errors></control-errors>
 	</form-group>
 
-	<div oc-lazy-load="{ files: [ '/app/modules/codemirror.js' ] }">
+	<form-group name="content_markdown" label="{{ 'dash.games.news.form.content_label' | translate }}">
 
-		<form-group name="content_markdown" label="{{ 'dash.games.news.form.content_label' | translate }}">
+		<p class="help-block" translate>
+			dash.games.news.form.content_help
+		</p>
 
-			<p class="help-block" translate>
-				dash.games.news.form.content_help
-			</p>
+		<div
+			form-markdown-editor
+			preview-class="post-body"
+			markdown-preview-url="/web/dash/developer/games/news/preview"
+			>
+		</div>
 
-			<div
-				form-markdown-editor
-				preview-class="post-body"
-				markdown-preview-url="/web/dash/developer/games/news/preview"
-				>
-			</div>
+		<control-errors></control-errors>
 
-			<control-errors></control-errors>
-
-		</form-group>
-
-	</div>
+	</form-group>
 
 	<p class="help-block" ng-if="method == 'add'">{{ 'dash.games.news.form.add_follower_message' | translate }}</p>
 

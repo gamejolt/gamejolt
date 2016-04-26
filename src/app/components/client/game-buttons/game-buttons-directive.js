@@ -4,18 +4,21 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 		restrict: 'E',
 		templateUrl: '/app/components/client/game-buttons/game-buttons.html',
 		scope: {
-			game: '=game',
+			game: '=',
 			overlay: '=?overlayVariant',
 			small: '=?smallVariant',
-			onShowLaunchOptions: '&?onShowLaunchOptions',
-			onHideLaunchOptions: '&?onHideLaunchOptions',
-			onShowOptions: '&?onShowOptions',
-			onHideOptions: '&?onHideOptions',
+			large: '=?largeVariant',
+			onShowLaunchOptions: '&?',
+			onHideLaunchOptions: '&?',
+			onShowOptions: '&?',
+			onHideOptions: '&?',
 			label: '@?',
+			isPatching: '=?',
+			hasPackage: '=?',
 		},
 		controllerAs: 'ctrl',
 		bindToController: true,
-		controller: function( $q, $scope, Client_Library, Client_Launcher, Client_Installer, LocalDb_Package, Client_InstallPackageModal, Device, Api, Popover, Analytics,
+		controller: function( $q, $scope, $attrs, Client_Library, Client_Launcher, Client_Installer, LocalDb_Package, Client_InstallPackageModal, Device, Api, Popover, Analytics,
 			Game, Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption )
 		{
 			var _this = this;
@@ -51,6 +54,20 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 				_this.localPackage = localPackage;
 			} );
 
+			if ( !angular.isUndefined( $attrs.isPatching ) ) {
+				$scope.$watch( 'ctrl.localPackage.isPatching()', function( isPatching )
+				{
+					_this.isPatching = isPatching;
+				} );
+			}
+
+			if ( !angular.isUndefined( $attrs.hasPackage ) ) {
+				$scope.$watch( 'ctrl.localPackage', function( localPackage )
+				{
+					_this.hasPackage = !!localPackage;
+				} );
+			}
+
 			this.install = function()
 			{
 				Analytics.trackEvent( 'client-game-buttons', 'install' );
@@ -75,7 +92,7 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 							return;
 						}
 
-						var build = packageData.installableBuilds[0];
+						var build = Game.chooseBestBuild( packageData.installableBuilds, os, arch );
 						Client_Library.installPackage(
 							_this.game,
 							build._package,
@@ -120,6 +137,24 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 				Analytics.trackEvent( 'client-game-buttons', 'launch' );
 				Popover.hideAll();
 				Client_Launcher.launch( localPackage );
+			};
+
+			this.openFolder = function( localPackage )
+			{
+				var fs = require( 'fs' );
+				var path = require( 'path' );
+				var gui = require( 'nw.gui' );
+
+				fs.readdir( path.resolve( localPackage.install_dir ), function( err, files )
+				{
+					if ( err ) {
+						return;
+					}
+
+					// Just open the first file in the folder.
+					// This way we open within the package folder instead of the parent folder.
+					gui.Shell.showItemInFolder( path.resolve( localPackage.install_dir, files[0] ) );
+				} );
 			};
 
 			this.uninstallPackage = function( localPackage )

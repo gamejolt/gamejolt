@@ -6,9 +6,9 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		controllerAs: 'homeCtrl',
 		templateUrl: '/app/views/discover/home/home.html',
 		resolve: {
-			payload: function( Api )
+			payload: function( Api, History_Cache )
 			{
-				return Api.sendRequest( '/web/discover' );
+				return History_Cache.cache( Api.sendRequest( '/web/discover' ) );
 			}
 		}
 	} );

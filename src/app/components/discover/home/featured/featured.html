@@ -3,8 +3,8 @@
 	<div oc-lazy-load="{ files: [ '/app/modules/hammer.js' ] }">
 		<div class="discover-home-featured"
 			ng-click="ctrl.go()"
-			hm-swiperight="ctrl.prevSlide( $event, { swipe: true } )"
-			hm-swipeleft="ctrl.nextSlide( $event, { swipe: true } )"
+			hm-swiperight="ctrl.swipe( 'right', $event )"
+			hm-swipeleft="ctrl.swipe( 'left', $event )"
 			hm-recognizer-options='[{"type":"swipe","directions":"DIRECTION_HORIZONTAL"}]'
 			gj-track-event="home:featured:click:{{ ctrl.index }}"
 			>

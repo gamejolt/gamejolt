@@ -1,0 +1,38 @@
+<form gj-form="formModel" name="newBuildForm" class="game-new-build-form">
+
+	<div ng-if="!isLoaded">
+		<gj-loading></gj-loading>
+	</div>
+
+	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
+		<div ng-if="isLoaded">
+
+			<!--
+				Can only add files. Can't edit builds anymore.
+				They need to release a new version to do that.
+			-->
+			<form-group name="file" label="Upload File" hide-label="true" optional="true">
+
+				<gj-form-upload-control
+					form-control="upload"
+					gj-max-filesize="maxFilesize"
+					accept="{{ getUploadAccept() }}"
+					gj-file-select="onSubmit()"
+					>
+				</gj-form-upload-control>
+
+				<control-errors label="{{ 'dash.games.builds.form.file_error_label' | translate }}"></control-errors>
+
+				<!--
+					Stupid injection issues.
+					It was injecting 'index.html' no matter what I did.
+				-->
+				<p class="help-block" ng-if="type == 'browser'" translate translate-scope="{ filename: 'index' + '.html' }" translate-comment="{{ filename }} is index.html">
+					For HTML builds, upload a .zip archive containing all of your build's files and assets. There must be an {{ filename }} file in the root folder.
+				</p>
+			</form-group>
+
+		</div>
+	</div>
+
+</form>

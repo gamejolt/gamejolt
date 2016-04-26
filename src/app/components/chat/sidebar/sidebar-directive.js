@@ -17,21 +17,6 @@ angular.module( 'App.Chat' ).directive( 'gjChatSidebar', function()
 			var client = Chat.client;
 			$scope.client = client;
 
-			this.shouldFocusFriendsFilter = false;
-
-			$scope.$watch( 'Shell.isRightPaneVisible', function( isVisible )
-			{
-				if ( isVisible ) {
-					$timeout( function()
-					{
-						_this.shouldFocusFriendsFilter = true;
-					}, 100 );
-				}
-				else {
-					_this.shouldFocusFriendsFilter = false;
-				}
-			} );
-
 			/**
 			 * When they click on a public room.
 			 */

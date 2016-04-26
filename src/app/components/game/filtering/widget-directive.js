@@ -15,7 +15,7 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringWidget', funct
 			this.visiblePopovers = {};
 
 			this.orderedFilters = {
-				os: [ 'windows', 'mac', 'linux', 'other' ],
+				os: [ 'windows', 'mac', 'linux', 'other', 'rom' ],
 				browser: [ 'html', 'flash', 'unity', 'applet', 'silverlight' ],
 				maturity: [ 'everyone', 'teen', 'adult' ],
 				status: [ 'complete', 'wip', 'canceled' ]

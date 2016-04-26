@@ -34,28 +34,26 @@
 		<control-errors></control-errors>
 	</form-group>
 
-	<div oc-lazy-load="{ files: [ '/app/modules/codemirror.js' ] }">
-		<form-group name="description_markdown" label="Description">
+	<form-group name="description_markdown" label="Description">
 
-			<p class="help-block">
-				Use this to let others know what the room is about.
-				<br>
-				For public rooms, this is a great place to put in rules and code of conduct.
-				<br>
-				You can update it at any time.
-			</p>
+		<p class="help-block">
+			Use this to let others know what the room is about.
+			<br>
+			For public rooms, this is a great place to put in rules and code of conduct.
+			<br>
+			You can update it at any time.
+		</p>
 
-			<div
-				form-markdown-editor
-				preview-class="chat-compiled-room-description"
-				markdown-preview-url="/web/chat/rooms/preview-description"
-				>
-			</div>
+		<div
+			form-markdown-editor
+			preview-class="chat-compiled-room-description"
+			markdown-preview-url="/web/chat/rooms/preview-description"
+			>
+		</div>
 
-			<control-errors></control-errors>
+		<control-errors></control-errors>
 
-		</form-group>
-	</div>
+	</form-group>
 
 	<!--<form-group name="description" label="Description">
 		<p class="help-block">Use this to let others know what the room is about. You can update it at any time.</p>

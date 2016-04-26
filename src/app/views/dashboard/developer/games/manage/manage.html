@@ -3,10 +3,10 @@
 
 		<h1 class="section-header">
 			{{ manageCtrl.game.title }}
-			<span class="tag tag-pink" ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN">{{ ::'dash.games.hidden_tag' | translate }}</span>
+			<span class="tag tag-pink" ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" translate>dash.games.hidden_tag</span>
 		</h1>
 		<p class="text-muted small sans-margin-bottom" ng-if="manageCtrl.game.status == Game.STATUS_VISIBLE">
-			<span class="tag tag-active">{{ ::'dash.games.published_tag' | translate }}</span>
+			<span class="tag tag-active" translate>dash.games.published_tag</span>
 			<span class="dot-separator"></span>
 			<span am-time-ago="manageCtrl.game.published_on"></span>
 		</p>
@@ -15,46 +15,46 @@
 		<p>
 			<a ng-href="{{ manageCtrl.game.getUrl() }}" class="i-button big">
 				<span class="jolticon jolticon-share"></span>
-				{{ ::'dash.games.view_page_button' | translate }}
+				<span translate>dash.games.view_page_button</span>
 			</a>
 		</p>
 
 		<nav class="platform-list inline">
 			<ul>
 				<li>
-					<a ui-sref=".game.overview" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.game' ) }">
-						{{ ::'dash.games.overview_tab' | translate }}
+					<a ui-sref=".game.overview" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.game' ) }" translate>
+						dash.games.overview_tab
 					</a>
 				</li>
 				<li gj-tooltip="{{ 'dash.games.media_tooltip' | translate }}" tooltip-placement="bottom">
-					<a ui-sref=".media.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.media' ) }">
-						{{ ::'dash.games.media_tab' | translate }}
+					<a ui-sref=".media.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.media' ) }" translate>
+						dash.games.media_tab
 					</a>
 				</li>
 				<li gj-tooltip="{{ 'dash.games.packages_tooltip' | translate }}" tooltip-placement="bottom">
-					<a ui-sref=".packages" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.packages' ) }">
-						{{ ::'dash.games.packages_tab' | translate }}
+					<a ui-sref=".packages.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.packages' ) }" translate>
+						dash.games.packages_tab
 					</a>
 				</li>
 				<li gj-tooltip="{{ 'dash.games.news_tooltip' | translate }}" tooltip-placement="bottom">
-					<a ui-sref=".news.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.news' ) }">
-						{{ ::'dash.games.news_tab' | translate }}
+					<a ui-sref=".news.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.news' ) }" translate>
+						dash.games.news_tab
 					</a>
 				</li>
 				<li gj-tooltip="{{ 'dash.games.music_tooltip' | translate }}" tooltip-placement="bottom">
-					<a ui-sref=".music" ui-sref-active="active">
-						{{ ::'dash.games.music_tab' | translate }}
+					<a ui-sref=".music" ui-sref-active="active" translate>
+						dash.games.music_tab
 					</a>
 				</li>
 				<li gj-tooltip="{{ 'dash.games.api_tooltip' | translate }}" tooltip-placement="bottom">
-					<a ui-sref=".api.overview" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.api' ) }">
-						{{ ::'dash.games.api_tab' | translate }}
+					<a ui-sref=".api.overview" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.api' ) }" translate>
+						dash.games.api_tab
 					</a>
 				</li>
 				<li>
 					<a gj-popover-trigger="game-header-more-options">
 						<span class="jolticon jolticon-ellipsis-h"></span>
-						{{ ::'options.more' | translate }}
+						<span translate>options.more</span>
 					</a>
 				</li>
 			</ul>
@@ -64,7 +64,7 @@
 			<div class="list-group">
 				<a class="list-group-item has-icon" ng-click="manageCtrl.removeGame()">
 					<span class="jolticon jolticon-remove"></span>
-					{{ ::'dash.games.remove_game_button' | translate }}
+					<span translate>dash.games.remove_game_button</span>
 				</a>
 			</div>
 		</gj-popover>

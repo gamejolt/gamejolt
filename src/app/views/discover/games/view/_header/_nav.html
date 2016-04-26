@@ -1,0 +1,61 @@
+<!-- Game Nav -->
+<nav class="platform-list inline">
+	<ul>
+		<li>
+			<a ui-sref=".overview" ui-sref-active="active">
+				{{ ::'games.view.overview_tab' | translate }}
+			</a>
+		</li>
+		<li ng-if="gameCtrl.newsArticlesCount">
+			<a ui-sref=".news.list" ng-class="{ active: $state.includes( 'discover.games.view.news' ) }">
+				{{ ::'games.view.news_tab' | translate }}
+				<span class="badge">{{ gameCtrl.newsArticlesCount | number }}</span>
+			</a>
+		</li>
+		<li ng-if="gameCtrl.hasScores">
+			<a ui-sref=".scores.list( { type: 'best', tableId: gameCtrl.primaryScoreTable.id } )"
+				ng-class="{ active: $state.includes( 'discover.games.view.scores' ) }">
+				{{ ::'games.view.scores_tab' | translate }}
+			</a>
+		</li>
+		<li ng-if="gameCtrl.trophiesCount">
+			<a ui-sref=".trophies.list" ng-class="{ active: $state.includes( 'discover.games.view.trophies' ) }">
+				{{ ::'games.view.trophies_tab' | translate }}
+				<span class="badge">{{ gameCtrl.trophiesCount | number }}</span>
+			</a>
+		</li>
+		<li ng-if="App.user">
+			<a gj-popover-trigger="game-more-options">
+				<span class="jolticon jolticon-ellipsis-h"></span>
+				{{ ::'options.more' | translate }}
+			</a>
+		</li>
+	</ul>
+</nav>
+
+<gj-popover popover-id="game-more-options">
+	<div class="list-group list-group-dark">
+		<a class="list-group-item has-icon"
+			ng-if="App.user && App.user.id != gameCtrl.game.developer.id"
+			ng-click="gameCtrl.report()"
+			>
+			<span class="jolticon jolticon-flag warning"></span>
+			<span translate>games.view.report_game_button</span>
+		</a>
+		<a class="list-group-item has-icon"
+			ng-if="App.user.id == gameCtrl.game.developer.id"
+			ui-sref="dashboard.developer.games.manage.game.overview( { id: gameCtrl.game.id } )"
+			>
+			<span class="jolticon jolticon-cog"></span>
+			<span translate>games.view.manage_game_button</span>
+		</a>
+		<a class="list-group-item has-icon"
+			ng-if="App.user.permission_level > 0"
+			ng-href="{{ ::Environment.baseUrl }}/moderate/games/view/{{ ::gameCtrl.game.id }}"
+			target="_blank"
+			>
+			<span class="jolticon jolticon-cog"></span>
+			<span translate>games.view.moderate_game_button</span>
+		</a>
+	</div>
+</gj-popover>
