@@ -1,0 +1,26 @@
+.devlog-feed
+	margin-left: -90px
+
+	.devlog-post
+		margin-left: 25px
+		padding-left: 65px
+		border-left: 2px solid $gray-lightest
+		padding-bottom: 4em
+		position: relative
+		@extend .clearfix
+			
+		.devlog-post-spot
+			position: absolute
+			left: -15px
+			top: -15px
+			width: 30px
+			height: 30px
+			overflow: hidden
+			display: block
+			border-radius: 50%
+			background-color: $gray-lightest
+			transition: background-color 0.3s
+			
+		&:hover
+			.devlog-post-spot
+				background-color: $gray-lighter
