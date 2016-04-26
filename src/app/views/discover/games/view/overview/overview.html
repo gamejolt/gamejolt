@@ -34,43 +34,37 @@
 
 <section class="section section-thin fill-darker" ng-if="::overviewCtrl.activeJam">
 	<div class="container">
-		<div class="row">
-			<div class="col-lg-8 col-centered">
-				<gj-fade-collapse
-					fade-collapse-height="500"
-					fade-collapse-is-open="overviewCtrl.showFullDescription"
-					fade-collapse-is-required="overviewCtrl.canToggleDescription"
-					>
-					<div class="game-compiled-description" ng-bind-html="gameCtrl.game.description_compiled"></div>
-				</gj-fade-collapse>
 
-				<a class="hidden-text-expander"
-					ng-if="overviewCtrl.canToggleDescription"
-					ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"
-					gj-track-event="game-profile:show-full-description"
-					></a>
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-centered">
+
+				<h2 class="section-header">{{ ::overviewCtrl.activeJam.name }} Voting</h2>
+
+				<p>This game is part of the <strong><a ng-href="{{ ::overviewCtrl.activeJam.fullUrl }}">{{ ::overviewCtrl.activeJam.name }}</a></strong> game jam. <strong>Voting for the jam is separate from ratings on Game Jolt.</strong> If you'd like to vote on this game for the jam, you may cast your vote below.</p>
+
+				<hr>
+
+				<gj-jam-game-vote-widget
+					gj-jam="overviewCtrl.activeJam"
+					gj-game="gameCtrl.game"
+					>
+				</gj-jam-game-vote-widget>
+
 			</div>
 		</div>
+
 	</div>
 </section>
 
 <section class="section">
-	<!--<div class="container">-->
-		<!--<div class="row">-->
-			<!--<div class="col-lg-8 col-centered">-->
-
-				<gj-fireside-post-feed gj-posts="overviewCtrl.latestPosts"></gj-fireside-post-feed>
-
-			<!--</div>-->
-		<!--</div>-->
-	<!--</div>-->
-</section>
-
-<!--<section class="section">
 	<div class="container">
 
 		<div class="row">
 
+			<!--
+				Game Details
+				Mobile shows it first.
+			-->
 			<div ng-if="Screen.isXs" class="col-xs-12">
 
 				<h2 class="section-header" ng-click="overviewCtrl.detailsOpen = !overviewCtrl.detailsOpen">
@@ -157,6 +151,10 @@
 
 			</div>
 
+			<!--
+				Game Details
+				Non-mobile shows here.
+			-->
 			<div class="col-xs-12 col-md-5 col-lg-4 pull-right">
 				<div ng-if="!Screen.isXs">
 					<h2 ng-class="{ 'section-header': !Screen.isSm }">Details</h2>
@@ -164,10 +162,35 @@
 				</div>
 			</div>
 
+			<div class="col-xs-12 col-md-7 pull-left">
+				<div ng-if="overviewCtrl.latestArticles.length">
+					<h2>Latest News Updates</h2>
+
+					<gj-post-grid
+						post-grid-items="overviewCtrl.latestArticles"
+						post-grid-hide-thumb="true"
+						post-grid-size="small"
+						>
+					</gj-post-grid>
+
+					<a class="i-button big"
+						ng-if="gameCtrl.newsArticlesCount > 2"
+						ng-class="{ block: Screen.isXs }"
+						ui-sref="^.news.list"
+						>
+						<span class="jolticon jolticon-blog-article"></span>
+						View +{{ gameCtrl.newsArticlesCount - 2 | number }} More
+						<span ng-if="gameCtrl.newsArticlesCount == 3">Update</span>
+						<span ng-if="gameCtrl.newsArticlesCount > 3">Updates</span>
+					</a>
+					<br class="visible-xs">
+				</div>
+
+			</div>
 		</div>
 
 	</div>
-</section>-->
+</section>
 
 <!-- Achievements -->
 <section class="section" ng-if="::(gameCtrl.hasScores || gameCtrl.trophiesCount)">
