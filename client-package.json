@@ -1,6 +1,5 @@
 {
   "name": "game-jolt-client",
-  "manifestUrl": "https://dl.dropboxusercontent.com/u/71978/wttf-builds/package.json",
   "main": "app://game-jolt-client/index.html#!/",
   "window": {
     "show": false,

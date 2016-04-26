@@ -62,6 +62,10 @@
 					<span class="jolticon jolticon-mac text-muted"></span>
 					<span class="jolticon jolticon-linux text-muted"></span>
 				</p>
+
+				<p>
+					<a href="#news" class="link-unstyled" du-smooth-scroll>What's new?</a>
+				</p>
 				<br>
 			</div>
 		</div>
@@ -235,6 +239,30 @@
 		</section>
 	</div>
 
+	<div class="container">
+		<hr>
+	</div>
+
+	<section class="section" id="news">
+		<div class="container">
+
+			<h2 class="section-header">Latest Client News</h2>
+
+			<div ng-if="Screen.isXs" class="full-bleed-xs">
+				<gj-fireside-post-list fireside-posts="clientCtrl.firesidePosts"></gj-fireside-post-list>
+			</div>
+
+			<div class="row" ng-if="!Screen.isXs">
+				<div class="col-sm-6 col-md-4"
+					ng-repeat="post in clientCtrl.firesidePosts | limitTo:3 track by post.id"
+					>
+					<gj-fireside-post-thumbnail fireside-post="post"></gj-fireside-post-thumbnail>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
 	<section class="download-footer" id="all-downloads">
 		<div class="container text-center">
 			<div class="row">
@@ -290,7 +318,6 @@
 	<section class="section fill-dark">
 		<div class="container text-center">
 			<div class="row">
-				<p><strong>Questions or feedback?</strong> Check out <a href="http://fireside.gamejolt.com/post/game-jolt-client-now-brxhie4f">the blog post</a>!</p>
 				<p><strong>Found a bug?</strong> Post it in the <a href="https://github.com/gamejolt/issue-tracker/issues">issue tracker</a>.</p>
 			</div>
 		</div>

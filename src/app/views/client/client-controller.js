@@ -1,10 +1,11 @@
-angular.module( 'App.Views' ).controller( 'ClientCtrl', function( $sce, $http, App, Device, Growls )
+angular.module( 'App.Views' ).controller( 'ClientCtrl', function( $sce, $http, App, Device, Growls, Fireside_Post, payload )
 {
 	var _this = this;
 
 	App.title = 'Game Jolt Client'
 
 	this.platform = Device.os();
+	this.firesidePosts = Fireside_Post.populate( payload.firesidePosts );
 
 	var MANIFEST_URL = 'http://d.gamejolt.net/data/client/manifest-2.json';
 	this.download = function( platform )
