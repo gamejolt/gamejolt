@@ -9,12 +9,19 @@
 		</div>
 	</div>
 	<div class="devlog-post-content">
-		<gj-fade-collapse fade-collapse-height="250">
+		<gj-fade-collapse
+			fade-collapse-height="250"
+			fade-collapse-is-open="postCtrl.showFullContent"
+			fade-collapse-is-required="postCtrl.canToggleContent"
+		>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit eos quo accusamus quas veniam modi facere soluta, nesciunt illum repellendus? Laboriosam ipsam ratione cumque quidem totam doloribus blanditiis laborum expedita.</p>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure vero quaerat, maxime, necessitatibus distinctio voluptatum? Maiores minus, minima itaque reiciendis temporibus harum perspiciatis sit ex deleniti voluptate, omnis tempora explicabo.</p>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod omnis id voluptas quasi odio iusto, eveniet repellendus praesentium dolorum sapiente. Eius, animi quos mollitia molestiae, libero ratione laboriosam dolores veniam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt ullam incidunt deserunt iure maxime optio temporibus blanditiis vero corporis adipisci dicta commodi expedita, ad obcaecati hic minima voluptates amet vel!</p>
 		</gj-fade-collapse>
-		<a class="hidden-text-expander"></a>
+		<a class="hidden-text-expander"
+			ng-if="postCtrl.canToggleContent"
+			ng-click="postCtrl.showFullContent = !postCtrl.showFullContent"
+			></a>
 	</div>
 	<div class="devlog-post-controls">
 		<a href="#" class="link-muted" gj-tooltip="Comment">
