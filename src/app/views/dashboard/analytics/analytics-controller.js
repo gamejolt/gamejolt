@@ -134,7 +134,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 			}
 
 			this.startTime = (new Date( year, month, 1 )).getTime();
-			this.endTime = (new Date( year, month + 1, 0 )).getTime();
+			this.endTime = (new Date( year, month + 1, 1 )).getTime() - 1;
 
 			this.prevMonth = (new Date( year, month - 1, 1 )).getMonth();
 			this.prevYear = (new Date( year, month - 1, 1 )).getFullYear();
