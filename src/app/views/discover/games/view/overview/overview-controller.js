@@ -108,6 +108,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		this.latestArticles = Game_NewsArticle.populate( payload.latestArticles );
 		this.recommendedGames = Game.populate( payload.recommendedGames );
 
+		this.supporters = payload.supporters || [];
+
 		var packageData = Game_Package.processPackagePayload( payload );
 		angular.extend( this, packageData );
 
