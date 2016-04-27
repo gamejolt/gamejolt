@@ -19,6 +19,7 @@ angular.module( 'App', [
 	// GJ lib.
 	'gj.Translate',
 	'gj.Translate.LangSelector',
+	'gj.Geo',
 	'gj.Environment',
 	'gj.Api',
 	'gj.Payload',
