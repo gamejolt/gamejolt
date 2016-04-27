@@ -79,8 +79,6 @@ angular.module( 'App', [
 	'gj.Primus',
 	'gj.Activity.Stream',
 
-	'gj.WidgetCompiler',
-
 	'gj.Graph',
 	'gj.Graph.Table',
 	'gj.Graph.Widget',
@@ -169,6 +167,8 @@ angular.module( 'App', [
 	'gj.Img.Helper',
 	'gj.Img.Crop',
 	'gj.Img.ImgResponsive',
+
+	'gj.WidgetCompiler',
 
 	// Components.
 	'App.SplitTest',
