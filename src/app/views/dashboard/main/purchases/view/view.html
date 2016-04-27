@@ -93,13 +93,13 @@
 						</tr>
 						<tr>
 							<th translate>Tax</th>
-							<td>{{ 0 | currency }}</td>
+							<td>{{ viewCtrl.order.tax_amount / 100 | currency }}</td>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
 							<th translate>Total</th>
-							<td>{{ viewCtrl.order.amount / 100 | currency }}</td>
+							<td>{{ (viewCtrl.order.amount + viewCtrl.order.tax_amount) / 100 | currency }}</td>
 						</tr>
 					</tfoot>
 				</table>
