@@ -1,25 +1,98 @@
 .devlog-post-text
 	
+	.devlog-post-info
+		margin-left: 0
+		font-size: 0.8em
+		@extend .clearfix
+			
+		@media $media-md-up
+			font-size: 1em
+			margin-top: -12px
+			margin-left: 30px
+		
+		@media $media-lg
+			margin-left: -35px
+	
 	.devlog-post-header
-		margin-left: -65px
-		margin-bottom: 1em
+		margin-bottom: 2em
 		background-repeat: no-repeat
 		background-size: cover
 		background-position: center center
+		overflow: hidden
+		
+		@media $media-lg
+			margin-left: -65px
 		
 		.devlog-post-header-filter
-			padding: 30px 0px
+			padding: 40px 20px
 			background-color: rgba($black, 0.3)
+			
+			@media $media-lg
+				padding: 40px 0
 	
-	.devlog-post-title, .devlog-post-date
+	.devlog-post-title, .devlog-post-meta
 		margin: 0
-		margin-left: 65px
 		color: white
-		text-shadow: 1px 1px 1px rgba($black, 0.5)
+		text-shadow: 1px 1px 1px rgba($black, 0.4)
+		display: block
+		
+		@media $media-lg
+			margin-left: 65px
+		
+	.devlog-post-title
+		font-weight: bold
+		position: relative
+		top: 0
+		margin-bottom: 10px
+		
+		@media $media-md-up
+			margin-bottom: 0
+			top: 15px
+			transition: top 0.3s
+		
+	.devlog-post-meta
+		opacity: 1
+		
+		a
+			color: white
+				
+		.devlog-post-meta-author
+			margin-right: 5px
+			font-size: 1.1em
+				
+		@media $media-md-up
+			opacity: 0
+			transition: opacity 0.3s
+		
+	.devlog-post-content
+		padding: 0 20px
+		
+		@media $media-lg
+			padding: 0
+		
+		@media $media-xs
+			padding: 0
+		
+		p, ul, li, ol
+			font-family: $font-family-serif
+			
+		>:first-child
+			margin-top: 0
+	
+	.hidden-text-expander
+		margin-left: 20px
+		margin-top: 10px
+		
+		@media $media-lg
+			margin-left: 0
 		
 	.devlog-post-controls
 		text-align: right
 		a
 			margin-right: 10px
+			
+			&.active
+				color: $gj-pink
+			
 			&:last-child
 				margin-right: 0

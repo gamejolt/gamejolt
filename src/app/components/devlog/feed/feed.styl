@@ -1,26 +1,49 @@
 .devlog-feed
-	margin-left: -90px
+	
+	@media $media-lg
+		margin-left: -90px
 
 	.devlog-post
-		margin-left: 25px
-		padding-left: 65px
-		border-left: 2px solid $gray-lightest
+		margin: 0
+		padding: 0
 		padding-bottom: 4em
 		position: relative
 		@extend .clearfix
 			
+		@media $media-md-up
+			border-left: 2px solid $gray-lightest
+			
+		@media $media-lg
+			margin-left: 25px
+			padding-left: 65px
+			
 		.devlog-post-spot
-			position: absolute
-			left: -15px
-			top: -15px
-			width: 30px
-			height: 30px
-			overflow: hidden
-			display: block
-			border-radius: 50%
-			background-color: $gray-lightest
-			transition: background-color 0.3s
+			display: none
+			
+			@media $media-md-up
+				position: absolute
+				left: -15px
+				top: -15px
+				width: 30px
+				height: 30px
+				overflow: hidden
+				display: block
+				border-radius: 50%
+				background-color: $gray-lightest
+				transition: 0.3s
 			
 		&:hover
 			.devlog-post-spot
-				background-color: $gray-lighter
+				width: 40px
+				height: 40px
+				left: -20px
+				top: -20px
+				
+			.devlog-post-title
+				top: 0
+				
+			.devlog-post-meta
+				opacity: 1
+		
+			
+				
