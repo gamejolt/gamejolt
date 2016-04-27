@@ -1,65 +1,91 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $scope, $state, App, Api, Game, Graph, SiteAnalytics, Geo, gettextCatalog, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
+	$scope, $state, App, Api, Payload, Game, Game_Package, Game_Release, Graph, SiteAnalytics, Geo, gettextCatalog, payload )
 {
 	var _this = this;
 
-	App.title = gettextCatalog.getString( 'Reports' );
+	/**
+	 * When the page first loads we check the state params to make sure they are all filled in.
+	 * If they weren't, we change the URL. When this happens it'll replace the previous URL
+	 * unless we skip the replacement. After our initial params are bootstrapped it's fine to
+	 * replace the URL from there on out.
+	 */
+	var paramsBootstrapped = false;
+
+	App.title = gettextCatalog.getString( 'Analytics' );
 
 	this.games = Game.populate( payload.games );
 	this.breakdownReports = [];
 
-	this.stats = [
-		{
+	this.stats = {
+		view: {
 			eventType: 'view',
 			label: gettextCatalog.getString( 'Views' ),
 			type: 'number',
 		},
-		{
+		download: {
 			eventType: 'download',
 			label: gettextCatalog.getString( 'Downloads' ),
 			type: 'number',
 		},
-		// {
+		// install: {
 		// 	eventType: 'install',
 		// 	label: gettextCatalog.getString( 'Installs' ),
 		// 	type: 'number',
 		// },
-		{
+		comment: {
 			eventType: 'comment',
 			label: gettextCatalog.getString( 'Comments' ),
 			type: 'number',
 		},
-		{
+		rating: {
 			eventType: 'rating',
 			label: gettextCatalog.getString( 'Ratings' ),
 			type: 'number',
 		},
-		{
+		follow: {
 			eventType: 'follow',
 			label: gettextCatalog.getString( 'Follows' ),
 			type: 'number',
 		},
-		// {
+		// sale: {
 		// 	eventType: 'sale',
 		// 	label: gettextCatalog.getString( 'Sales' ),
 		// 	type: 'number',
 		// },
-		// {
-		// 	eventType: 'sale',
+		// revenue: {
+		// 	eventType: 'revenue',
 		// 	label: gettextCatalog.getString( 'Revenue' ),
 		// 	type: 'currency',
 		// },
-	];
+	};
 
-	var _allEventTypes = _.pluck( this.stats, 'eventType' );
+	var _gameEventTypes = Object.keys( this.stats );
+	var _packageEventTypes = [ 'download' ];
+	var _releaseEventTypes = [ 'download' ];
 
 	this.stateChanged = function( $stateParams )
 	{
-		this.period = $stateParams.period || 'all';
-		this.eventType = $stateParams.eventType || 'view';
+		this.period = $stateParams.period || 'monthly';
 		this.resource = $stateParams.resource || 'Game';
 		this.resourceId = parseInt( $stateParams.resourceId, 10 ) || this.games[0].id;
-		this.stat = _.find( this.stats, { eventType: this.eventType } );
-		this.game = _.find( this.games, { id: this.resourceId } );
+
+		if ( this.resource == 'Game' ) {
+			this.eventTypes = _gameEventTypes;
+			this.eventType = $stateParams.eventType || 'view';
+		}
+		else if ( this.resource == 'Game_Package' ) {
+			this.eventTypes = _packageEventTypes;
+			this.eventType = $stateParams.eventType || 'download';
+		}
+		else if ( this.resource == 'Game_Release' ) {
+			this.eventTypes = _releaseEventTypes;
+			this.eventType = $stateParams.eventType || 'download';
+		}
+		else {
+			throw new Error( 'Invalid resource.' );
+		}
+
+		this.stat = this.stats[ this.eventType ];
 
 		// If any of the parameters changed, refresh the state.
 		if (
@@ -68,13 +94,22 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 			|| this.resource != $stateParams.resource
 			|| this.resourceId != $stateParams.resourceId
 		) {
+			var options = {};
+			if ( paramsBootstrapped ) {
+				options = { location: 'replace' };
+			}
+
 			$state.go(
-				'dashboard.reports.view',
+				'dashboard.analytics.view',
 				_.pick( this, [ 'period', 'eventType', 'resource', 'resourceId' ] ),
-				{ location: 'replace' }
+				options
 			);
+
+			paramsBootstrapped = true;
 			return;
 		}
+
+		paramsBootstrapped = true;
 
 		this.now = Date.now();
 		this.startTime = null;
@@ -110,12 +145,23 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 	};
 
 	var globalWatch = [
-		'reportsCtrl.period',
-		'reportsCtrl.resource',
-		'reportsCtrl.resourceId',
-		'reportsCtrl.startTime',
-		'reportsCtrl.endTime',
+		'analyticsCtrl.period',
+		'analyticsCtrl.resource',
+		'analyticsCtrl.resourceId',
+		'analyticsCtrl.startTime',
+		'analyticsCtrl.endTime',
 	];
+
+	$scope.$watchGroup( [ 'analyticsCtrl.resource', 'analyticsCtrl.resourceId' ], function()
+	{
+		Api.sendRequest( '/web/dash/analytics/get-resource/' + _this.resource + '/' + _this.resourceId )
+			.then( function( _payload )
+			{
+				_this.game = _payload.game ? new Game( _payload.game ) : null;
+				_this.package = _payload.package ? new Game_Package( _payload.package ) : null;
+				_this.release = _payload.release ? new Game_Release( _payload.release ) : null;
+			} );
+	} );
 
 	// Only the fields that can affect histograms.
 	$scope.$watchGroup( globalWatch, function()
@@ -132,7 +178,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 
 	// Only the fields that can affect report breakdowns.
 	$scope.$watchGroup( globalWatch.concat( [
-		'reportsCtrl.eventType',
+		'analyticsCtrl.eventType',
 	] ),
 	function()
 	{
@@ -143,7 +189,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 
 	this.histograms = function()
 	{
-		return SiteAnalytics.getHistogram( _this.resource, _this.resourceId, _allEventTypes, [ this.startTime, this.endTime ] )
+		return SiteAnalytics.getHistogram( _this.resource, _this.resourceId, this.eventTypes, [ this.startTime, this.endTime ] )
 			.then( function( data )
 			{
 				angular.extend( _this, data );
@@ -152,14 +198,14 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 
 	this.counts = function()
 	{
-		return SiteAnalytics.getCount( _this.resource, _this.resourceId, _allEventTypes )
+		return SiteAnalytics.getCount( _this.resource, _this.resourceId, this.eventTypes )
 			.then( function( data )
 			{
 				angular.extend( _this, data );
 			} );
 	};
 
-	this.getReport = function( field, title, fieldLabel )
+	this.getReport = function( field, title, fieldLabel, extraRequestData )
 	{
 		var type = 'top';
 		if ( field == 'rating' ) {
@@ -187,25 +233,36 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 				from_date: this.startTime / 1000,
 				to_date: this.endTime / 1000,
 				timezone: date.getTimezoneOffset(),
-			}
+			},
 		};
 
-		Api.sendRequest( '/web/dash/reports/display', request, { detach: true, sanitizeComplexData: false } )
+		if ( extraRequestData ) {
+			angular.extend( request.top, extraRequestData );
+		}
+
+		Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
 			.then( function( response )
 			{
-				var graph = [];
+				var graph = null;
 
 				// country code => country name
 				if ( field == 'country' ) {
 					var data = {};
 					angular.forEach( response.top.result, function( val, key )
 					{
-						data[ Geo.getCountryName( key ) || key ] = val;
+						if ( key == 'other' ) {
+							data[ gettextCatalog.getString( 'Unknown' ) ] = val;
+						}
+						else {
+							data[ Geo.getCountryName( key ) || key ] = val;
+						}
 					} );
 					response.top.result = data;
 				}
 
-				if ( field != 'rating' ) {
+				if ( field != 'rating' && field != 'source_url' ) {
+
+					graph = [];
 
 					// Pull the top 3 results so we can push into a pie chart if desired.
 					var i = 0, total = 0;
@@ -236,6 +293,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 				report.graph = graph;
 				report.total = response.top.total;
 				report.isLoaded = true;
+				report.hasData = report.data && Object.keys( report.data ).length > 0;
 			} );
 	};
 
@@ -249,8 +307,8 @@ angular.module( 'App.Views' ).controller( 'Dashboard.ReportsCtrl', function( $sc
 		}
 
 		if ( this.eventType == 'view' || this.eventType == 'download' ) {
-			// this.getReport( 'domain', 'Sources', 'Domain' );
-			this.getReport( 'source', 'Referring Pages', 'Page' );
+			this.getReport( 'source', 'Top Sources', 'Domain', { conditions: [ 'source-gamejolt' ] } );
+			this.getReport( 'source_url', 'Referring Pages', 'Page' );
 			this.getReport( 'country', 'Countries', 'Country' );
 		}
 

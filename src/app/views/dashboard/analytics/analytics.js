@@ -1,24 +1,24 @@
 angular.module( 'App.Views' ).config( function( $stateProvider )
 {
-	$stateProvider.state( 'dashboard.reports', {
+	$stateProvider.state( 'dashboard.analytics', {
 		abstract: true,
-		url: '/reports',
-		controller: 'Dashboard.ReportsCtrl',
-		controllerAs: 'reportsCtrl',
-		templateUrl: '/app/views/dashboard/reports/reports.html',
+		url: '/analytics',
+		controller: 'Dashboard.AnalyticsCtrl',
+		controllerAs: 'analyticsCtrl',
+		templateUrl: '/app/views/dashboard/analytics/analytics.html',
 		resolve: {
 			payload: function( Api )
 			{
-				return Api.sendRequest( '/web/dash/reports' );
+				return Api.sendRequest( '/web/dash/analytics' );
 			}
 		},
 	} );
 
-	$stateProvider.state( 'dashboard.reports.view', {
+	$stateProvider.state( 'dashboard.analytics.view', {
 		url: '/:period/:resource/:resourceId/:eventType?year&month',
 		controller: function( $scope, $stateParams )
 		{
-			$scope.reportsCtrl.stateChanged( $stateParams );
+			$scope.analyticsCtrl.stateChanged( $stateParams );
 		},
 		params: {
 			period: {
