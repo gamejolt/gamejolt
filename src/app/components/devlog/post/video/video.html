@@ -1,1 +1,48 @@
-Devlog video post
+<div class="devlog-post devlog-post-video">
+	
+	<!-- Post info -->
+	<p class="devlog-post-info text-muted">
+		<span class="jolticon jolticon-video"></span>
+		New video for <a href="#">Low Poly Adventure</a> <span class="pull-right">3 days ago</span>
+	</p>
+	<span class="devlog-post-spot"></span>
+	
+	<!-- Post content -->
+	<div class="devlog-post-main">
+		<iframe width="100%" height="400" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0"></iframe>
+	</div>
+	<div class="devlog-post-content">
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non esse inventore ducimus, aut laboriosam, consequuntur voluptatem tempore dolore ullam odio, optio expedita molestias vel! Molestias explicabo vero nisi architecto fugit.</p>
+	</div>
+		
+	<!-- Post controls -->
+	<div class="devlog-post-controls">
+		<a class="link-muted"
+			gj-tooltip="Leave a Comment"
+			ng-if="postCtrl.canToggleComments[postCtrl.id]"
+			ng-click="postCtrl.showFullComments[postCtrl.id] = !postCtrl.showFullComments[postCtrl.id]"
+			>
+			<span class="jolticon jolticon-comment middle"></span>
+			<small>4</small>
+		</a>
+		<a href="#" class="link-muted" gj-tooltip="Like This Post" ng-click="postCtrl.liked = !postCtrl.liked" ng-class="{'active': postCtrl.liked}">
+			<span class="jolticon jolticon-heart middle"></span>
+			<small>29</small>
+		</a>
+	</div>
+
+	<!-- Post comments -->
+	<gj-fade-collapse
+		fade-collapse-height="0"
+		fade-collapse-is-open="postCtrl.showFullComments[postCtrl.id]"
+		fade-collapse-is-required="postCtrl.canToggleComments[postCtrl.id]"
+		>
+		<gj-comment-widget
+			current-page="overviewCtrl.currentCommentPage"
+			comment-resource="Game"
+			comment-resource-id="0"
+			>
+		</gj-comment-widget>
+	</gj-fade-collapse>
+	
+</div>

@@ -2,6 +2,12 @@ angular.module( 'App.Devlog.Post.Video' ).directive( 'gjDevlogPostVideo', functi
 {
 	return {
 		restrict: 'AE',
-		templateUrl: '/app/components/devlog/post/video/video.html'
+		templateUrl: '/app/components/devlog/post/video/video.html',
+		scope: {
+			id: '=',
+		},
+		bindToController: true,
+		controllerAs: 'postCtrl',
+		controller: function() {}
 	};
 } );

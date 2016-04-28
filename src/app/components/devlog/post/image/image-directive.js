@@ -2,6 +2,12 @@ angular.module( 'App.Devlog.Post.Image' ).directive( 'gjDevlogPostImage', functi
 {
 	return {
 		restrict: 'AE',
-		templateUrl: '/app/components/devlog/post/image/image.html'
+		templateUrl: '/app/components/devlog/post/image/image.html',
+		scope: {
+			id: '=',
+		},
+		bindToController: true,
+		controllerAs: 'postCtrl',
+		controller: function() {}
 	};
 } );

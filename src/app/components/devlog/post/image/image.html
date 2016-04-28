@@ -1,1 +1,48 @@
-Devlog image post
+<div class="devlog-post devlog-post-image">
+	
+	<!-- Post info -->
+	<p class="devlog-post-info text-muted">
+		<span class="jolticon jolticon-screenshot"></span>
+		New image for <a href="#">Low Poly Adventure</a> <span class="pull-right">3 days ago</span>
+	</p>
+	<span class="devlog-post-spot"></span>
+	
+	<!-- Post content -->
+	<div class="devlog-post-main">
+		<img src="http://i.imgur.com/MdCWeiC.jpg" alt="Image" width="100%">
+	</div>
+	<div class="devlog-post-content">
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste quos ipsa, maiores ab culpa sint repellat deserunt nobis iusto, voluptate eveniet maxime dolorem porro odit voluptas officia animi. Ab, eius.</p>
+	</div>
+		
+	<!-- Post controls -->
+	<div class="devlog-post-controls">
+		<a class="link-muted"
+			gj-tooltip="Leave a Comment"
+			ng-if="postCtrl.canToggleComments[postCtrl.id]"
+			ng-click="postCtrl.showFullComments[postCtrl.id] = !postCtrl.showFullComments[postCtrl.id]"
+			>
+			<span class="jolticon jolticon-comment middle"></span>
+			<small>4</small>
+		</a>
+		<a href="#" class="link-muted" gj-tooltip="Like This Post" ng-click="postCtrl.liked = !postCtrl.liked" ng-class="{'active': postCtrl.liked}">
+			<span class="jolticon jolticon-heart middle"></span>
+			<small>29</small>
+		</a>
+	</div>
+
+	<!-- Post comments -->
+	<gj-fade-collapse
+		fade-collapse-height="0"
+		fade-collapse-is-open="postCtrl.showFullComments[postCtrl.id]"
+		fade-collapse-is-required="postCtrl.canToggleComments[postCtrl.id]"
+		>
+		<gj-comment-widget
+			current-page="overviewCtrl.currentCommentPage"
+			comment-resource="Game"
+			comment-resource-id="0"
+			>
+		</gj-comment-widget>
+	</gj-fade-collapse>
+	
+</div>

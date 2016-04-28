@@ -17,6 +17,19 @@
 			margin-left: 25px
 			padding-left: 65px
 			
+		.devlog-post-info
+			margin-left: 0
+			font-size: 0.8em
+			@extend .clearfix
+				
+			@media $media-md-up
+				font-size: 1em
+				margin-top: -12px
+				margin-left: 30px
+			
+			@media $media-lg
+				margin-left: -35px
+			
 		.devlog-post-spot
 			display: none
 			
@@ -31,6 +44,33 @@
 				border-radius: 50%
 				background-color: $gray-lightest
 				transition: 0.3s
+					
+		.devlog-post-main
+			margin-bottom: 2em
+			
+			@media $media-lg
+				margin-left: -65px
+			
+		.devlog-post-content
+			padding: 0 20px
+			
+			@media $media-lg
+				padding: 0
+			
+			@media $media-xs
+				padding: 0
+	
+		.devlog-post-controls
+			text-align: right
+			
+			a
+				margin-right: 10px
+				
+				&.active
+					color: $gj-pink
+				
+				&:last-child
+					margin-right: 0
 			
 		&:hover
 			.devlog-post-spot
@@ -39,11 +79,12 @@
 				left: -20px
 				top: -20px
 				
-			.devlog-post-title
-				top: 0
-				
-			.devlog-post-meta
-				opacity: 1
+			&.devlog-post-text
+				.devlog-post-title
+					top: 0
+					
+				.devlog-post-meta
+					opacity: 1
 		
 			
 				
