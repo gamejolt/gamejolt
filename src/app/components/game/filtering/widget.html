@@ -47,10 +47,22 @@
 			ng-repeat="option in options track by option"
 			ng-class="filter == 'os' || filter == 'browser' ? 'has-icon' : ''"
 			ng-click="ctrl.toggleFilterOption( filter, option )"
+			ng-mouseover="ctrl.hovered[ filter ] = option"
+			ng-mouseout="ctrl.hovered[ filter ] = null"
 			>
 
-			<div class="list-group-item-addon">
+			<!--
+				Array types get checboxes.
+			-->
+			<div class="list-group-item-addon" ng-if="Game_Filtering_Container.filterDefinitions[ filter ].type == 'array'">
 				<span class="jolticon" ng-class="ctrl.filteringContainer.isFilterOptionSet( filter, option ) ? 'jolticon-checkbox' : 'jolticon-box-empty text-muted'"></span>
+			</div>
+
+			<!--
+				Radio types get radio button things.
+			-->
+			<div class="list-group-item-addon" ng-if="Game_Filtering_Container.filterDefinitions[ filter ].type == 'radio'">
+				<span class="jolticon" ng-class="ctrl.filteringContainer.isFilterOptionSet( filter, option ) ? (ctrl.hovered[ filter ] == option ? 'jolticon-remove' : 'jolticon-radio-circle-filled') : 'jolticon-radio-circle text-muted'"></span>
 			</div>
 
 			<span class="jolticon"

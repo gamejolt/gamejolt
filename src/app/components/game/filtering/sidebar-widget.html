@@ -4,8 +4,22 @@
 
 		<h6 class="sans-margin-top">
 			<strong>
-			{{ ::Game_Filtering_Container.filterDefinitions[ filter ].label }}
-			<span class="tag tag-pink pull-right" ng-show="ctrl.filteringContainer.filters[ filter ].length">{{ ctrl.filteringContainer.filters[ filter ].length | number }}</span>
+				{{ ::Game_Filtering_Container.filterDefinitions[ filter ].label }}
+
+				<span class="tag tag-pink pull-right"
+					ng-if="::Game_Filtering_Container.filterDefinitions[ filter ].type == 'array'"
+					ng-show="ctrl.filteringContainer.filters[ filter ].length"
+					>
+					{{ ctrl.filteringContainer.filters[ filter ].length | number }}
+				</span>
+
+				<span class="tag tag-pink pull-right"
+					ng-if="::Game_Filtering_Container.filterDefinitions[ filter ].type == 'radio'"
+					ng-show="ctrl.filteringContainer.filters[ filter ].length"
+					>
+					<span class="jolticon jolticon-check"></span>
+				</span>
+
 			</strong>
 		</h6>
 
@@ -14,11 +28,20 @@
 				ng-repeat="option in options track by option"
 				ng-click="ctrl.toggleFilterOption( filter, option )"
 				ng-class="::filter == 'os' || filter == 'browser' ? 'has-icon' : ''"
+				ng-mouseover="ctrl.hovered[ filter ] = option"
+				ng-mouseout="ctrl.hovered[ filter ] = null"
 				>
+
 				<div class="list-group-item-addon">
-					<span class="jolticon jolticon-check"
-						ng-show="ctrl.filteringContainer.isFilterOptionSet( filter, option )"
-						>
+					<span ng-if="ctrl.filteringContainer.isFilterOptionSet( filter, option )">
+						<span class="jolticon jolticon-check"
+							ng-if="ctrl.hovered[ filter ] != option"
+							>
+						</span>
+						<span class="jolticon jolticon-remove"
+							ng-if="ctrl.hovered[ filter ] == option"
+							>
+						</span>
 					</span>
 				</div>
 
