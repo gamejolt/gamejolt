@@ -1,6 +1,15 @@
 <nav class="game-filtering-widget-list platform-list inline">
 	<ul>
 		<li>
+			<a gj-popover-trigger="games-filter-price" gj-track-event="game-filtering:tab-price">
+				<span translate>Price</span>
+				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.price">
+					1
+				</span>
+				<span class="jolticon jolticon-chevron-down"></span>
+			</a>
+		</li>
+		<li>
 			<a gj-popover-trigger="games-filter-os" gj-track-event="game-filtering:tab-os">
 				{{ ::'games.filtering.os_label' | translate }}
 				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.os.length">{{ ctrl.filteringContainer.filters.os.length | number }}</span>

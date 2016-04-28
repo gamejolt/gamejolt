@@ -2,7 +2,20 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 {
 	var STORAGE_KEY = 'game-filtering:filters';
 
+	// Make sure you add to the state params in games/list/category/category.js as well!
+	// If you don't, it won't resolve the route correctly and won't give an error.
 	Game_Filtering_Container.filterDefinitions = {
+		price: {
+			label: gettextCatalog.getString( 'Price' ),
+			type: 'radio',
+			options: {
+				free: gettextCatalog.getString( 'Free / Name Your Price' ),
+				paid: gettextCatalog.getString( 'Paid' ),
+				'5-less': gettextCatalog.getString( '$5 or less' ),
+				'15-less': gettextCatalog.getString( '$15 or less' ),
+				'30-less': gettextCatalog.getString( '$30 or less' ),
+			}
+		},
 		os: {
 			label: gettextCatalog.getString( 'games.filtering.os' ),
 			type: 'array',
