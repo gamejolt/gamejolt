@@ -1,9 +1,13 @@
 <div class="devlog-post devlog-post-text">
+	
+	<!-- Post info -->
 	<p class="devlog-post-info text-muted">
 		<span class="jolticon jolticon-pencil-box"></span>
 		New post about <a href="#">Low Poly Adventure</a> <span class="pull-right">3 days ago</span>
 	</p>
 	<span class="devlog-post-spot"></span>
+	
+	<!-- Post header -->
 	<div class="devlog-post-header" style="background-image: url('http://cdn.pastemagazine.com/www/system/images/photo_albums/low-poly/large/12-jr-schmidt.jpg')">
 		<div class="devlog-post-header-filter">
 			<h1 class="devlog-post-title">New Trees, Bushes and Rivers</a></h1>
@@ -14,6 +18,8 @@
 			</span>
 		</div>
 	</div>
+	
+	<!-- Post content -->
 	<gj-fade-collapse
 		fade-collapse-height="200"
 		fade-collapse-is-open="postCtrl.showFullContent[postCtrl.id]"
@@ -36,6 +42,8 @@
 		ng-if="postCtrl.canToggleContent[postCtrl.id]"
 		ng-click="postCtrl.showFullContent[postCtrl.id] = !postCtrl.showFullContent[postCtrl.id]"
 		></a>
+		
+	<!-- Post controls -->
 	<div class="devlog-post-controls">
 		<a class="link-muted"
 			gj-tooltip="Leave a Comment"
@@ -50,6 +58,8 @@
 			<small>29</small>
 		</a>
 	</div>
+	
+	<!-- Post comments -->
 	<gj-fade-collapse
 		fade-collapse-height="0"
 		fade-collapse-is-open="postCtrl.showFullComments[postCtrl.id]"
@@ -62,4 +72,5 @@
 			>
 		</gj-comment-widget>
 	</gj-fade-collapse>
+	
 </div>
