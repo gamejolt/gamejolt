@@ -53,8 +53,13 @@
 							<input form-control="text"
 								class="has-icon"
 								placeholder="{{ 'card number' | translate }}"
+								cc-number
+								cc-format
+								ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 1000 } }"
 								>
-							<control-errors></control-errors>
+							<control-errors>
+								<control-error when="ccNumber">Please enter a valid card number.</control-error>
+							</control-errors>
 						</form-group>
 
 						<div class="clearfix">
@@ -64,8 +69,14 @@
 									<input form-control="text"
 										class="has-icon"
 										placeholder="mm/yy"
+										ui-mask="99/99"
+										gj-form-cc-exp
+										ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 1000 } }"
 										>
-									<control-errors></control-errors>
+									<control-errors>
+										<control-error when="ccExpInvalid">Please enter a valid expiration.</control-error>
+										<control-error when="ccExpExpired">This card has expired.</control-error>
+									</control-errors>
 								</form-group>
 							</div>
 							<div class="right-col">
@@ -74,8 +85,12 @@
 									<input form-control="text"
 										class="has-icon"
 										placeholder="cvc"
+										cc-cvc
+										ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 1000 } }"
 										>
-									<control-errors></control-errors>
+									<control-errors>
+										<control-error when="ccCvc">Please enter a valid cvc.</control-error>
+									</control-errors>
 								</form-group>
 							</div>
 						</div>

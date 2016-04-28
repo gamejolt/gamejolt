@@ -7,6 +7,8 @@ angular.module( 'App', [
 	'ui.bootstrap.collapse',
 	'ui.bootstrap.modal',
 	'ui.bootstrap.position',
+	'credit-cards',
+	'ui.mask',
 
 	// GJ lib.
 	'gj.Environment',

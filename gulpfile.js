@@ -24,6 +24,12 @@ var config = {
 				'angular-elastic',
 			]
 		},
+		'vendor-checkout.js': {
+			bower: [
+				'angular-credit-cards',
+				'angular-ui-mask',
+			],
+		},
 		'jquery.js': {
 			bower: [
 				'jquery',
