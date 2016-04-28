@@ -152,9 +152,17 @@
 						The kind people that helped support {{ developer }} by paying more than the minimum. Sorted by amount contributed.
 					</p>
 
+					<!--
+						TODO: Get the styling into the stylesheet.
+					-->
 					<div class="clearfix" style="margin-left: -5px; margin-right: -5px">
-						<div style="float: left; width: 25px; margin: 0 5px" ng-repeat="user in overviewCtrl.supporters">
-							<a class="user-avatar ng-scope" ng-href="{{ ::user.url }}" title="{{ ::user.display_name }}">
+						<div style="float: left; width: 25px; margin: 0 5px"
+							ng-repeat="user in overviewCtrl.supporters track by user.id"
+							>
+							<a class="user-avatar ng-scope"
+								ng-href="{{ ::user.url }}"
+								gj-tooltip="{{ ::user.display_name }}"
+								>
 								<img class="img-responsive" alt="" src="{{ ::user.img_avatar }}">
 							</a>
 						</div>
