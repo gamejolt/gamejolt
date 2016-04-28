@@ -19,6 +19,7 @@ angular.module( 'App', [
 	// GJ lib.
 	'gj.Translate',
 	'gj.Translate.LangSelector',
+	'gj.Geo',
 	'gj.Environment',
 	'gj.Api',
 	'gj.Payload',
@@ -59,6 +60,7 @@ angular.module( 'App', [
 	'gj.Scroll.AutoScroll',
 	'gj.Scroll.FixedResizer',
 	'gj.EditableAccordion',
+	'gj.Referrer',
 	'gj.HistoryTick',
 	'gj.Pagination',
 	'gj.Modal.Confirm',
