@@ -13,6 +13,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 		scope.formModel.game_id = scope.game.id;
 
 		scope.formState.showDescriptionInput = scope.formModel.description ? true : false;
+		scope.formState.hasSales = false;
 
 		if ( !scope.isLoaded ) {
 			var params = [ scope.formModel.game_id ];
@@ -26,6 +27,8 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 
 				scope.startedPrimary = payload.sellable && payload.sellable.primary;
 				scope.hasPrimarySellable = payload.hasPrimarySellable;
+
+				scope.formState.hasSales = payload.hasSales;
 
 				// If there is no primary sellable yet, let's mark this as the primary sellable.
 				// This will only be used if they set the pricing type to something other than free.
