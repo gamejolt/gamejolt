@@ -34,6 +34,26 @@
 
 								<div class="discover-home-featured-meta">
 									<gj-game-compat-icons gj-game="::featuredItem.game"></gj-game-compat-icons>
+
+									<span
+										ng-if="::featuredItem.game._has_packages"
+										class="discover-home-featured-pricing"
+										>
+										<span ng-if="::!featuredItem.game.sellable.is_owned" ng-switch="::featuredItem.game.sellable.type">
+											<span ng-switch-when="paid">
+												${{ ::featuredItem.game.sellable.pricings[0].amount | gjCurrency:'' }}
+											</span>
+											<span ng-switch-when="pwyw" translate>
+												Name Your Price
+											</span>
+											<span ng-switch-default translate>
+												Free
+											</span>
+										</span>
+										<span ng-if="::featuredItem.game.sellable.is_owned" class="tag tag-active" translate>
+											Owned
+										</span>
+									</span>
 								</div>
 							</div>
 
