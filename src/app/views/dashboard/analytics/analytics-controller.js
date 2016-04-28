@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
-	$scope, $state, App, Api, Payload, Game, Game_Package, Game_Release, Graph, SiteAnalytics, Geo, gettextCatalog, payload )
+	$scope, $state, App, Api, Payload, Game, Game_Package, Game_Release, Graph, SiteAnalytics, gettextCatalog, payload )
 {
 	var _this = this;
 
@@ -207,94 +207,15 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 
 	this.getReport = function( field, title, fieldLabel, extraRequestData )
 	{
-		var type = 'top';
-		if ( field == 'rating' ) {
-			type = 'rating-breakdown';
-		}
-
-		var report = {
-			type: type,
-			title: title,
-			field: field,
-			fieldLabel: fieldLabel,
-			isLoaded: false,
-		};
+		var report = SiteAnalytics.getReport( field, title, fieldLabel, {
+			resource: this.resource,
+			resourceId: this.resourceId,
+			eventType: this.eventType,
+			startTime: this.startTime,
+			endTime: this.endTime,
+		} );
 
 		this.breakdownReports.push( report );
-
-		var date = new Date();
-		var request = {
-			top: {
-				target: _this.resource,
-				target_id: this.resourceId,
-				collection: this.eventType + 's',
-				analyzer: 'top-composition',
-				field: field,
-				from_date: this.startTime / 1000,
-				to_date: this.endTime / 1000,
-				timezone: date.getTimezoneOffset(),
-			},
-		};
-
-		if ( extraRequestData ) {
-			angular.extend( request.top, extraRequestData );
-		}
-
-		Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
-			.then( function( response )
-			{
-				var graph = null;
-
-				// country code => country name
-				if ( field == 'country' ) {
-					var data = {};
-					angular.forEach( response.top.result, function( val, key )
-					{
-						if ( key == 'other' ) {
-							data[ gettextCatalog.getString( 'Unknown' ) ] = val;
-						}
-						else {
-							data[ Geo.getCountryName( key ) || key ] = val;
-						}
-					} );
-					response.top.result = data;
-				}
-
-				if ( field != 'rating' && field != 'source_url' ) {
-
-					graph = [];
-
-					// Pull the top 3 results so we can push into a pie chart if desired.
-					var i = 0, total = 0;
-					angular.forEach( response.top.result, function( val, key )
-					{
-						if ( i < 3 ) {
-							graph.push( {
-								label: key,
-								value: val,
-							} );
-							total += val;
-						}
-						++i;
-					} );
-
-				}
-
-				if ( field == 'rating' ) {
-					var data = {};
-					[ 1, 2, 3, 4, 5 ].forEach( function( rating )
-					{
-						data[ rating ] = response.top.result[ rating ] || 0;
-					} );
-					response.top.result = data;
-				}
-
-				report.data = response.top.result;
-				report.graph = graph;
-				report.total = response.top.total;
-				report.isLoaded = true;
-				report.hasData = report.data && Object.keys( report.data ).length > 0;
-			} );
 	};
 
 	this.changeReport = function( stat )
@@ -307,7 +228,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 		}
 
 		if ( this.eventType == 'view' || this.eventType == 'download' ) {
-			this.getReport( 'source', 'Top Sources', 'Domain', { conditions: [ 'source-gamejolt' ] } );
+			this.getReport( 'source', 'Top Sources', 'Domain' );
 			this.getReport( 'source_url', 'Referring Pages', 'Page' );
 			this.getReport( 'country', 'Countries', 'Country' );
 		}
