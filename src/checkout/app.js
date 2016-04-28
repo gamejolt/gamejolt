@@ -19,13 +19,10 @@ angular.module( 'App', [
 	'gj.Translate',
 	'gj.Geo',
 
-	// 'gj.Filesize',
-
 	'gj.Debug',
 	'gj.Debug.DebugBar',
 	'gj.Ruler',
 	'gj.Screen',
-	// 'gj.Device',
 	'gj.BodyClasses',
 	'gj.Analytics',
 	'gj.Loading',
@@ -40,8 +37,6 @@ angular.module( 'App', [
 	'gj.Img.Helper',
 	'gj.Img.ImgResponsive',
 
-
-	// 'gj.FadeCollapse',
 	'gj.SiteSelector',
 
 	'gj.Game',
@@ -54,10 +49,7 @@ angular.module( 'App', [
 	'gj.Sellable',
 	'gj.Sellable.Pricing',
 
-	// 'gj.Tooltip',
 	'gj.Popover',
-	// 'gj.Growls',
-	// 'gj.Modal.Confirm',
 
 	'App.Forms',
 
