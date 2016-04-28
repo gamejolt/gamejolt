@@ -21,7 +21,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlMatcherFacto
 		return '/web/discover/games' + query;
 	}
 
-	var queryParams = '?os&browser&maturity&status&page&query';
+	var queryParams = '?price&os&browser&maturity&status&page&query';
 
 	$urlMatcherFactoryProvider.type( 'gamesSection', {
 		pattern: /featured|new|fresh|hot|best|by\-date/

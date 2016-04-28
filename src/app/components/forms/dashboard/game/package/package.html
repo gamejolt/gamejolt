@@ -78,7 +78,7 @@
 						<input form-control="number"
 							gj-form-currency-input
 							step="0.1"
-							min="1"
+							ng-min="minPrice / 100"
 							ng-disabled="!formState.hasSuggestedPrice"
 							>
 					</input-group>
@@ -93,7 +93,7 @@
 				<input form-control="number"
 					gj-form-currency-input
 					step="0.1"
-					min="1"
+					ng-min="minPrice / 100"
 					>
 			</input-group>
 			<control-errors></control-errors>

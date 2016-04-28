@@ -2,7 +2,20 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 {
 	var STORAGE_KEY = 'game-filtering:filters';
 
+	// Make sure you add to the state params in games/list/category/category.js as well!
+	// If you don't, it won't resolve the route correctly and won't give an error.
 	Game_Filtering_Container.filterDefinitions = {
+		price: {
+			label: gettextCatalog.getString( 'Price' ),
+			type: 'radio',
+			options: {
+				free: gettextCatalog.getString( 'Free / Name Your Price' ),
+				paid: gettextCatalog.getString( 'Paid' ),
+				'5-less': gettextCatalog.getString( '$5 or less' ),
+				'15-less': gettextCatalog.getString( '$15 or less' ),
+				'30-less': gettextCatalog.getString( '$30 or less' ),
+			}
+		},
 		os: {
 			label: gettextCatalog.getString( 'games.filtering.os' ),
 			type: 'array',
@@ -64,6 +77,9 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 			if ( definition.type == 'array' && value.length ) {
 				isEmpty = false;
 			}
+			else if ( definition.type == 'radio' && value ) {
+				isEmpty = false;
+			}
 			else if ( !options.skipQuery && definition.type == 'string' && value.trim() ) {
 				isEmpty = false;
 			}
@@ -91,6 +107,9 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 			}
 			else if ( definition.type == 'string' ) {
 				this.filters[ key ] = '';
+			}
+			else if ( definition.type == 'radio' ) {
+				this.filters[ key ] = null;
 			}
 		}, this );
 
@@ -143,6 +162,9 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 							else if ( definition.type == 'string' ) {
 								_this.filters[ filter ] = stateParams[ filter ];
 							}
+							else if ( definition.type == 'radio' ) {
+								_this.filters[ filter ] = stateParams[ filter ];
+							}
 						}
 						else {
 							if ( definition.type == 'array' ) {
@@ -150,6 +172,9 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 							}
 							else if ( definition.type == 'string' ) {
 								_this.filters[ filter ] = '';
+							}
+							else if ( definition.type == 'radio' ) {
+								_this.filters[ filter ] = null;
 							}
 						}
 					} );
@@ -162,7 +187,7 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 					if ( filters && !isEmpty( filters ) ) {
 
 						// Never resolve so we don't switch routes.
-						var _filters = _this.getStateParams( filters )
+						var _filters = _this.getStateParams( filters );
 						updateUrl( state, stateParams, _filters );
 						return;
 					}
@@ -212,16 +237,25 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 	Game_Filtering_Container.prototype.toggleFilterOption = function( filter, option )
 	{
 		if ( !Game_Filtering_Container.filterDefinitions[ filter ] || Game_Filtering_Container.filterDefinitions[ filter ].type == 'string' ) {
-			return null;
+			return;
+		}
+
+		// If a radio type, we want to unset any previously set ones.
+		if ( Game_Filtering_Container.filterDefinitions[ filter ].type == 'radio' ) {
+			if ( this.filters[ filter ] == option ) {
+				this.unsetFilter( filter, option );
+			}
+			else {
+				this.setFilter( filter, option );
+			}
+			return;
 		}
 
 		if ( this.filters[ filter ].indexOf( option ) !== -1 ) {
 			this.unsetFilter( filter, option );
-			return false;
 		}
 		else {
 			this.setFilter( filter, option );
-			return true;
 		}
 	};
 
@@ -235,7 +269,7 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 		if ( definition.type == 'array' ) {
 			this.filters[ filter ].push( value );
 		}
-		else if ( definition.type == 'string' ) {
+		else if ( definition.type == 'string' || definition.type == 'radio' ) {
 			this.filters[ filter ] = value;
 		}
 
@@ -256,6 +290,9 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 		else if ( definition.type == 'string' ) {
 			this.filters[ filter ] = '';
 		}
+		else if ( definition.type == 'radio' ) {
+			this.filters[ filter ] = null;
+		}
 
 		this._syncTagFiltersEmpty();
 		this._saveFilters();
@@ -265,6 +302,10 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 	{
 		if ( !Game_Filtering_Container.filterDefinitions[ filter ] || Game_Filtering_Container.filterDefinitions[ filter ].type == 'string' ) {
 			return null;
+		}
+
+		if ( Game_Filtering_Container.filterDefinitions[ filter ].type == 'radio' ) {
+			return this.filters[ filter ] == option;
 		}
 
 		return this.filters[ filter ].indexOf( option ) !== -1;
@@ -322,6 +363,13 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 
 				queryPieces.push( filter + '=' + value );
 			}
+			else if ( definition.type == 'radio' ) {
+				if ( !value ) {
+					return;
+				}
+
+				queryPieces.push( 'f_' + filter + '=' + value );
+			}
 		}, this );
 
 		return queryPieces.join( '&' );
@@ -356,6 +404,13 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 			}
 			else if ( definition.type == 'string' ) {
 				if ( !value.trim() ) {
+					return;
+				}
+
+				params[ filter ] = value;
+			}
+			else if ( definition.type == 'radio' ) {
+				if ( !value ) {
 					return;
 				}
 

@@ -28,7 +28,7 @@ angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( Api, G
 	{
 		var request = _generateRequestData( resource, resourceId, eventTypes, 'histogram', dates );
 
-		return Api.sendRequest( '/web/dash/reports/display', request, { detach: true, sanitizeComplexData: false } )
+		return Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
 			.then( function( response )
 			{
 				var data = {};
@@ -45,7 +45,7 @@ angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( Api, G
 	{
 		var request = _generateRequestData( resource, resourceId, eventTypes, 'count', dates );
 
-		return Api.sendRequest( '/web/dash/reports/display', request, { detach: true, sanitizeComplexData: false } )
+		return Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
 			.then( function( response )
 			{
 				var data = {};

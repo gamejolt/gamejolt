@@ -27,11 +27,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 
 		// Wait for the game before showing extended info.
 		Game_ViewState.showExtended();
-
-		// TG: Thunder Gun widget
-		if ( game.id == 64527 ) {
-			_this.hasReleasesSection = true;
-		}
 	} );
 
 	$scope.$watch( 'gameCtrl.hasScores && gameCtrl.trophiesCount', function( val )

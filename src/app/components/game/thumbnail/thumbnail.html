@@ -34,17 +34,16 @@
 			<div ng-if="::!ctrl.game.sellable.is_owned" ng-switch="::ctrl.game.sellable.type">
 				<span class="game-thumbnail-pricing-amount" ng-switch-when="paid">
 					<span class="game-thumbnail-pricing-currency">$</span>{{ ::ctrl.game.sellable.pricings[0].amount | gjCurrency:'' }}
-					<!--<span class="game-thumbnail-pricing-currency">USD</span>-->
 				</span>
-				<span class="game-thumbnail-pricing-tag" ng-switch-when="pwyw">
+				<span class="game-thumbnail-pricing-tag" ng-switch-when="pwyw" translate>
 					name your price
 				</span>
-				<span class="game-thumbnail-pricing-tag" ng-switch-default>
+				<span class="game-thumbnail-pricing-tag" ng-switch-default translate>
 					Free
 				</span>
 			</div>
 			<div ng-if="::ctrl.game.sellable.is_owned">
-				<span class="game-thumbnail-pricing-tag">
+				<span class="game-thumbnail-pricing-tag" translate>
 					Owned
 				</span>
 			</div>

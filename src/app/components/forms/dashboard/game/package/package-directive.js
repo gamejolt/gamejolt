@@ -27,6 +27,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 
 				scope.startedPrimary = payload.sellable && payload.sellable.primary;
 				scope.hasPrimarySellable = payload.hasPrimarySellable;
+				scope.minPrice = payload.minPrice || 50;
 
 				scope.formState.hasSales = payload.hasSales;
 
