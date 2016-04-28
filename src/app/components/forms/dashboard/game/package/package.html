@@ -39,7 +39,7 @@
 				You must set up your account's financial info before you can start accepting money.
 			</p>
 
-			<div class="radio">
+			<div class="radio" ng-if="!formState.hasSales">
 				<label>
 					<input form-control="radio" value="free">
 					<span>Free</span> &mdash;

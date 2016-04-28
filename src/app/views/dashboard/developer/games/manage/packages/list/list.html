@@ -50,7 +50,7 @@
 
 									<gj-editable-accordion-item-heading>
 
-										<div class="pull-right">
+										<div class="pull-right" ng-if="!package.has_sales">
 											<a class="link-muted pull-right" ng-click="listCtrl.removePackage( package )">
 												<span class="jolticon jolticon-remove middle"></span>
 											</a>
