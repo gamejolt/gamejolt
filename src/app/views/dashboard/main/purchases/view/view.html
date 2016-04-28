@@ -91,7 +91,7 @@
 							<th translate>Subtotal</th>
 							<td>{{ viewCtrl.order.amount / 100 | currency }}</td>
 						</tr>
-						<tr>
+						<tr ng-if="viewCtrl.order.tax_amount">
 							<th translate>Tax</th>
 							<td>{{ viewCtrl.order.tax_amount / 100 | currency }}</td>
 						</tr>
