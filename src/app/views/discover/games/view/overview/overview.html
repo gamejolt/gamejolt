@@ -146,14 +146,16 @@
 				</div>
 
 				<div ng-if="overviewCtrl.supporters.length > 0">
-					<h5><strong>Supporters</strong></h5>
+					<h5><strong translate>Supporters</strong></h5>
 
-					<p class="small text-muted">The kind people that helped support {{ gameCtrl.game.developer.display_name }} by paying more than the minimum. Sorted by amount contributed.</p>
+					<p class="small text-muted" translate translate-scope="{ developer: gameCtrl.game.developer.display_name }">
+						The kind people that helped support {{ developer }} by paying more than the minimum. Sorted by amount contributed.
+					</p>
 
 					<div class="clearfix" style="margin-left: -5px; margin-right: -5px">
-						<div style="float: left; width: 25px; margin: 0 5px" ng-repeat="u in overviewCtrl.supporters">
-							<a class="user-avatar ng-scope" href="{{ u.url }}" title="{{ u.display_name }}">
-								<img class="img-responsive" alt="" src="{{ u.img_avatar }}">
+						<div style="float: left; width: 25px; margin: 0 5px" ng-repeat="user in overviewCtrl.supporters">
+							<a class="user-avatar ng-scope" ng-href="{{ ::user.url }}" title="{{ ::user.display_name }}">
+								<img class="img-responsive" alt="" src="{{ ::user.img_avatar }}">
 							</a>
 						</div>
 					</div>
