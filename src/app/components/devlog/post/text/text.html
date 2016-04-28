@@ -18,7 +18,7 @@
 		fade-collapse-height="200"
 		fade-collapse-is-open="postCtrl.showFullContent[postCtrl.id]"
 		fade-collapse-is-required="postCtrl.canToggleContent[postCtrl.id]"
-	>
+		>
 		<div class="devlog-post-content">
 			<h3>Introduction</h3>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit eos quo accusamus quas veniam modi facere soluta, nesciunt illum repellendus? Laboriosam ipsam ratione cumque quidem totam doloribus blanditiis laborum expedita.</p>
@@ -37,7 +37,11 @@
 		ng-click="postCtrl.showFullContent[postCtrl.id] = !postCtrl.showFullContent[postCtrl.id]"
 		></a>
 	<div class="devlog-post-controls">
-		<a href="#" class="link-muted" gj-tooltip="Leave a Comment">
+		<a class="link-muted"
+			gj-tooltip="Leave a Comment"
+			ng-if="postCtrl.canToggleComments[postCtrl.id]"
+			ng-click="postCtrl.showFullComments[postCtrl.id] = !postCtrl.showFullComments[postCtrl.id]"
+			>
 			<span class="jolticon jolticon-comment middle"></span>
 			<small>4</small>
 		</a>
@@ -46,4 +50,16 @@
 			<small>29</small>
 		</a>
 	</div>
+	<gj-fade-collapse
+		fade-collapse-height="0"
+		fade-collapse-is-open="postCtrl.showFullComments[postCtrl.id]"
+		fade-collapse-is-required="postCtrl.canToggleComments[postCtrl.id]"
+		>
+		<gj-comment-widget
+			current-page="overviewCtrl.currentCommentPage"
+			comment-resource="Game"
+			comment-resource-id="0"
+			>
+		</gj-comment-widget>
+	</gj-fade-collapse>
 </div>
