@@ -11,12 +11,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormJoin', function( $q, Api, Form, 
 
 	form.onSubmit = function( scope )
 	{
-		return Api.sendRequest( '/web/auth/join', scope.formModel ).then( function( response )
-		{
-			if ( !response.success ) {
-				return $q.reject( response );
-			}
-		} );
+		return Api.sendRequest( '/web/auth/join', scope.formModel );
 	};
 
 	return form;

@@ -20,13 +20,12 @@ angular.module( 'App.Forms' ).directive( 'gjFormRetrieveLogin', function( $q, Ap
 		return Api.sendRequest( '/web/auth/retrieve', scope.formModel ).then( function( response )
 		{
 			if ( !response.success ) {
-
 				if ( response.reason && response.reason == 'invalid-email' ) {
 					scope.formState.invalidEmail = true;
 				}
-
-				return $q.reject( response );
 			}
+			
+			return response;
 		} );
 	};
 

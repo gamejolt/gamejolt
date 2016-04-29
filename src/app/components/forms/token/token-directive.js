@@ -15,11 +15,11 @@ angular.module( 'App.Forms' ).directive( 'gjFormToken', function( $q, Form, Api 
 	{
 		return Api.sendRequest( '/web/dash/token/save', { token: scope.formModel.token } ).then( function( response )
 		{
-			if ( !response.success ) {
-				return $q.reject( response );
+			if ( response.success ) {
+				scope.formModel.token = response.token;
 			}
 
-			scope.formModel.token = response.token;
+			return response;
 		} );
 	};
 

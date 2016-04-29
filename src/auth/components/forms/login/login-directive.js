@@ -20,13 +20,12 @@ angular.module( 'App.Forms' ).directive( 'gjFormLogin', function( $q, Api, Form,
 		return Api.sendRequest( '/web/auth/login', scope.formModel ).then( function( response )
 		{
 			if ( !response.success ) {
-
 				if ( response.reason && response.reason == 'invalid-login' ) {
 					scope.formState.invalidLogin = true;
 				}
-
-				return $q.reject( response );
 			}
+
+			return response;
 		} );
 	};
 

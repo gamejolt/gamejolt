@@ -16,14 +16,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardWithdrawFunds
 
 	form.onSubmit = function( scope )
 	{
-		return Api.sendRequest( '/web/dash/funds/withdraw', scope.formModel ).then( function( response )
-		{
-			if ( !response.success ) {
-				return $q.reject( response );
-			}
-
-			return response;
-		} );
+		return Api.sendRequest( '/web/dash/funds/withdraw', scope.formModel );
 	};
 
 	return form;
