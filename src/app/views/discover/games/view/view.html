@@ -5,32 +5,26 @@
 		<gj-game-cover ng-if="Game_ViewState.hasCover" gj-game="gameCtrl.game">
 
 			<div ng-if="!Screen.isXs && (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length)">
-				<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-					<gj-game-cover-buttons
-						game="gameCtrl.game"
-						installable-builds="gameCtrl.installableBuilds"
-						browser-builds="gameCtrl.browserBuilds"
-						on-show-packages="gameCtrl.scrollToPackages()"
-						>
-					</gj-game-cover-buttons>
-				</div>
+				<gj-game-cover-buttons
+					game="gameCtrl.game"
+					installable-builds="gameCtrl.installableBuilds"
+					browser-builds="gameCtrl.browserBuilds"
+					on-show-packages="gameCtrl.scrollToPackages()"
+					>
+				</gj-game-cover-buttons>
 			</div>
 
 		</gj-game-cover>
 
 		<section class="section fill-darker" ng-if="!Screen.isXs && !Game_ViewState.hasCover && (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length)">
 			<div class="container text-center">
-
-				<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-					<gj-game-cover-buttons
-						game="gameCtrl.game"
-						installable-builds="gameCtrl.installableBuilds"
-						browser-builds="gameCtrl.browserBuilds"
-						on-show-packages="gameCtrl.scrollToPackages()"
-						>
-					</gj-game-cover-buttons>
-				</div>
-
+				<gj-game-cover-buttons
+					game="gameCtrl.game"
+					installable-builds="gameCtrl.installableBuilds"
+					browser-builds="gameCtrl.browserBuilds"
+					on-show-packages="gameCtrl.scrollToPackages()"
+					>
+				</gj-game-cover-buttons>
 			</div>
 		</section>
 

@@ -29,9 +29,7 @@
 				>
 
 				<div ng-if="Environment.isClient" class="pull-right">
-					<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-						<gj-client-game-buttons label="installed" game="libraryGame._game" small-variant="true"></gj-client-game-buttons>
-					</div>
+					<gj-client-game-buttons label="installed" game="libraryGame._game" small-variant="true"></gj-client-game-buttons>
 				</div>
 
 				<span class="search-game-thumbnail">
@@ -55,9 +53,7 @@
 				>
 
 				<div ng-if="Environment.isClient" class="pull-right">
-					<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-						<gj-client-game-buttons label="not-installed" game="game" small-variant="true"></gj-client-game-buttons>
-					</div>
+					<gj-client-game-buttons label="not-installed" game="game" small-variant="true"></gj-client-game-buttons>
 				</div>
 
 				<div class="pull-right">

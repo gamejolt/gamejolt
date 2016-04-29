@@ -93,18 +93,16 @@
 						<div class="lazy-placeholder" style="height: 135px"></div>
 
 						<div ng-if="::overviewCtrl.packages.length">
-							<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-								<gj-game-package-card
-									ng-repeat="package in overviewCtrl.packages"
-									game="::gameCtrl.game"
-									sellable="::package._sellable"
-									game-package="::package"
-									game-releases="::package._releases"
-									game-builds="::package._builds"
-									game-build-launch-options="::overviewCtrl.launchOptions"
-									>
-								</gj-game-package-card>
-							</div>
+							<gj-game-package-card
+								ng-repeat="package in overviewCtrl.packages"
+								game="::gameCtrl.game"
+								sellable="::package._sellable"
+								game-package="::package"
+								game-releases="::package._releases"
+								game-builds="::package._builds"
+								game-build-launch-options="::overviewCtrl.launchOptions"
+								>
+							</gj-game-package-card>
 						</div>
 
 						<gj-game-soundtrack-card

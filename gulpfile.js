@@ -22,6 +22,7 @@ var config = {
 				'favico.js',
 				'angular-inview',
 				'angular-elastic',
+				'ua-parser-js',
 			]
 		},
 		'vendor-checkout.js': {
@@ -39,11 +40,6 @@ var config = {
 			bower: [
 				'hammerjs',
 				'angular-hammer',
-			],
-		},
-		'ua-parser.js': {
-			bower: [
-				'ua-parser-js',
 			],
 		},
 		'jcrop.js': {
