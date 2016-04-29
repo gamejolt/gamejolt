@@ -1,4 +1,25 @@
-<div ng-if="!Environment.isClient">
+<style type="text/css">
+	.home-featured-jam-banner {
+		position: relative;
+		background-color: #3fb2ef;
+		/*background-image: url(https://n3b6p5n5.ssl.hwcdn.net/data/fireside/posts/0/70/5570/media/background-5ifbhcnq.jpg);*/
+		/*background-size: cover;*/
+	}
+</style>
+
+<div class="home-featured-jam-banner" ng-if="!Environment.isClient">
+	<div class="container">
+		<a href="http://jams.gamejolt.io/adventurejam2016" target="_blank" gj-track-event="home:featured-jam:adventurejam2016">
+			<img class="img-responsive"
+				style="margin: 0 auto; max-width: 700px;"
+				src="https://n3b6p5n5.ssl.hwcdn.net/data/fireside/posts/0/70/5570/media/adventure-jam-header-hdjukzdj.jpg"
+				alt="AdventureJam 2016"
+				>
+		</a>
+	</div>
+</div>
+
+<!--<div ng-if="!Environment.isClient">
 	<style type="text/css">
 
 		.client-banner {
@@ -39,7 +60,7 @@
 			</div>
 		</div>
 	</section>
-</div>
+</div>-->
 
 <gj-discover-home-featured gj-items="homeCtrl.featuredItems"></gj-discover-home-featured>
 
