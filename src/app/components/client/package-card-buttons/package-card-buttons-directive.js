@@ -1,10 +1,10 @@
-angular.module( 'App.Client.PackageCardOptions' ).directive( 'gjClientPackageCardOptions', function()
+angular.module( 'App.Client.PackageCardButtons' ).directive( 'gjClientPackageCardButtons', function()
 {
 	return {
 		restrict: 'E',
 		require: '^gjGamePackageCard',
 		scope: true,
-		templateUrl: '/app/components/client/package-card-options/package-card-options.html',
+		templateUrl: '/app/components/client/package-card-buttons/package-card-buttons.html',
 		controller: function( $scope, Device, Analytics, Client_Library, Client_Installer, Client_Launcher, LocalDb_Package, Game, Game_Build, Popover )
 		{
 			// Parent scope controller.
