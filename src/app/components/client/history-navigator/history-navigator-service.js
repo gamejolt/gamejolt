@@ -1,4 +1,4 @@
-angular.module( 'App.Shell' ).service( 'HistoryNavigator', function( $window )
+angular.module( 'App.Client.HistoryNavigator' ).service( 'HistoryNavigator', function( $window )
 {
 	this.canGoForward = true;
 	this.canGoBack = true;
@@ -12,6 +12,4 @@ angular.module( 'App.Shell' ).service( 'HistoryNavigator', function( $window )
 	{
 		$window.history.forward();
 	};
-
-
 } );

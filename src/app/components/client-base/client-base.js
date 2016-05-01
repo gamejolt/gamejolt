@@ -6,4 +6,5 @@ angular.module( 'App.ClientBase', [
 	'App.Client.ExternalLink',
 	'App.Client.Hidpi',
 	'App.Client.Info',
+	'App.Client.HistoryNavigator',
 ] );

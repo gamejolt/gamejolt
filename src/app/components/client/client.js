@@ -24,6 +24,7 @@ angular.module( 'App.Client', [
 	'App.Client.Logger',
 	'App.Client.SystemReportModal',
 	'App.Client.Info',
+	'App.Client.HistoryNavigator',
 ] )
 .config( function( $httpProvider )
 {
