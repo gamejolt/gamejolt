@@ -6,13 +6,13 @@
 
 	<div class="text-center">
 		<h1 class="h2 sans-margin">
-			<a class="link-unstyled">
+			<a class="link-unstyled" ng-href="{{ ::Environment.wttfBaseUrl }}/games/{{ checkoutCtrl.game.slug }}/{{ checkoutCtrl.game.id }}">
 				{{ checkoutCtrl.game.title }}
 			</a>
 		</h1>
 		<h4 class="text-muted sans-margin-top">
 			<span translate>by</span>
-			<a class="link-unstyled">
+			<a class="link-unstyled" ng-href="{{ ::Environment.wttfBaseUrl }}/profile/{{ checkoutCtrl.game.developer.slug }}/{{ checkoutCtrl.game.developer.id }}">
 				{{ checkoutCtrl.game.developer.display_name }}
 			</a>
 		</h4>
