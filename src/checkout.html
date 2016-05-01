@@ -1,6 +1,7 @@
 <!doctype html>
 
 <html lang="en" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/" ng-app="App" ng-controller="AppCtrl">
+
 	<head>
 
 		<meta charset="utf-8">
@@ -47,7 +48,8 @@
 
 	</head>
 
-	<body gj-body-classes gj-auto-scroll>
+	<!-- Add an empty class so we can hook into it when building and add classes for client, app, etc. -->
+	<body class="" gj-body-classes gj-auto-scroll>
 
 		<div id="shell">
 
@@ -88,7 +90,7 @@
 
 		<script src="/app/modules/error-tracking.js" crossorigin="anonymous"></script>
 
-		<script async src="//www.google-analytics.com/analytics.js"></script>
+		<script async src="https://www.google-analytics.com/analytics.js"></script>
 		<script>
 			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 			ga('create', 'UA-6742777-1', 'auto');
@@ -99,6 +101,7 @@
 
 		<script src="/app/vendor.js"></script>
 		<script src="/app/modules/vendor-checkout.js"></script>
+		<!-- inject client:base:modules -->
 		<script src="/checkout/app.js"></script>
 
 	</body>

@@ -52,7 +52,7 @@ angular.module( 'App', [
 	'App.Views',
 
 	// Client.
-	/* inject client:auth:modules */
+	/* inject client:base:modules */
 ] )
 .config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $sceDelegateProvider, TranslateProvider )
 {

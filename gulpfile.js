@@ -110,10 +110,10 @@ var config = {
 			],
 		},
 
-		// For client auth section.
-		'client-auth.js': {
+		// For client sections.
+		'client-base.js': {
 			components: [
-				'client-auth',
+				'client-base',
 			]
 		}
 	},

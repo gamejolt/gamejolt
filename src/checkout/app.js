@@ -33,6 +33,7 @@ angular.module( 'App', [
 	'gj.Form',
 	'gj.Registry',
 	'gj.History',
+	'gj.Growls',
 
 	'gj.Img.Helper',
 	'gj.Img.ImgResponsive',
@@ -55,6 +56,9 @@ angular.module( 'App', [
 
 	// Views.
 	'App.Views',
+
+	// Client.
+	/* inject client:base:modules */
 ] )
 .config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $sceDelegateProvider )
 {
@@ -71,4 +75,27 @@ angular.module( 'App', [
 
 	// We are on WTTF!
 	EnvironmentProvider.isWttf = true;
+
+	// Desktop client.
+	if ( EnvironmentProvider.isClient ) {
+
+		// Some libraries attach onto global instead of window for node-webkit
+		// because they think they're in nodejs context. Just pull back over to window.
+		if ( typeof window._ == 'undefined' ) {
+			window._ = global._;
+		}
+
+		if ( typeof window.moment == 'undefined' ) {
+			window.moment = global.moment;
+		}
+
+		// Can't use push/popstate URLs for node-webkit.
+		// Must be accessed like a local file with index.html at the root.
+		$locationProvider.html5Mode( false );
+
+		// Since we're using the "app://" protocol, we have to change the sanitization whitelist
+		// to include the app protocol as well. Otherwise we get "unsafe:" prefixed onto certain URLs.
+		$compileProvider.aHrefSanitizationWhitelist( /^\s*(https?|ftp|mailto|tel|file|app):/ );
+		$compileProvider.imgSrcSanitizationWhitelist( /^\s*((https?|ftp|file|blob|app):|data:image\/)/ );
+	}
 } );

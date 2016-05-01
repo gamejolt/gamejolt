@@ -1,5 +1,5 @@
-// Just include the client modules we want for auth as well.
-angular.module( 'App.ClientAuth', [
+// Just include the client modules we want for other sections as well.
+angular.module( 'App.ClientBase', [
 	'gj.Device',
 	'App.Client.Control',
 	'App.Client.Tray',

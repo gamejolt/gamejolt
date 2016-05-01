@@ -20,7 +20,7 @@ angular.module( 'App.Client', [
 	'App.Client.InstallProgress',
 	'App.Client.GameButtons',
 	'App.Client.InstallPackageModal',
-	'App.Client.PackageCardOptions',
+	'App.Client.PackageCardButtons',
 	'App.Client.Logger',
 	'App.Client.SystemReportModal',
 	'App.Client.Info',
