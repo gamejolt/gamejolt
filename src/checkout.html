@@ -54,7 +54,14 @@
 		<div id="shell">
 
 			<div id="header">
-				<div gj-user-bar="App.user" gj-current-site="main" ng-cloak></div>
+				<div gj-user-bar="App.user" gj-current-site="main" hide-site-selector="Environment.isClient" ng-cloak>
+
+					<a class="btn btn-outline btn-dark-variant" ng-click="HistoryNavigator.back()">
+						<span class="jolticon jolticon-chevron-left"></span>
+						Back to Game
+					</a>
+
+				</div>
 			</div>
 
 			<!-- Content -->
