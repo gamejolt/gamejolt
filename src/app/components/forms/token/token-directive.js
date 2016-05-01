@@ -15,7 +15,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormToken', function( $q, Form, Api 
 	{
 		return Api.sendRequest( '/web/dash/token/save', { token: scope.formModel.token } ).then( function( response )
 		{
-			if ( response.success ) {
+			if ( response.success !== false ) {
 				scope.formModel.token = response.token;
 			}
 

@@ -16,20 +16,20 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 			for ( var key in obj ) {
 				var value = obj[ key ];
 				var newKey = (current ? current + "." + key : key );  // joined key with dot
-				if ( ( 
-						newKey.substr(0,'legal_entity'.length) != 'legal_entity' && 
+				if ( (
+						newKey.substr(0,'legal_entity'.length) != 'legal_entity' &&
 					 	newKey.substr(0,'business_'.length) != 'business_'
-					 ) || ( 
+					 ) || (
 					 	newKey == 'legal_entity.verification' || newKey == 'legal_entity.business_tax_id_provided'
 					 ) ) {
 
 				}
 				else if ( value && typeof value == "array" ) {
 					res[ newKey ] = value;  // it's not an object, so set the property
-				} 
+				}
 				else if ( value && typeof value == "object" ) {
 					dotflatten( res, value, newKey );  // it's a nested object, so do it again
-				} 
+				}
 				else {
 					res[ newKey ] = value;  // it's not an object, so set the property
 				}
@@ -44,7 +44,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 		else {
 			scope.formModel.type = scope.account.type;
 			promise = Api.sendRequest( '/web/dash/financials/save', null, { detach: true } );
-		} 
+		}
 
 		promise.then( function( payload )
 		{
@@ -75,10 +75,10 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 				return undefined;
 			}
 			return scope.stripeMeta.minimum.indexOf( field ) != -1 || scope.stripeMeta.additional.indexOf( field ) != -1;
-		}; 
+		};
 
 		scope.sliderOptions = {
-			floor: 0, 
+			floor: 0,
 			ceil: 100,
 			translate: function( v )
 			{
@@ -111,7 +111,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 					day: null,
 					month: null,
 					year: null,
-				}, 
+				},
 				verification: {
 
 				}
@@ -123,7 +123,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 		}
 
 	};
- 
+
 	form.onSubmit = function( scope )
 	{
 		var promise;
@@ -136,11 +136,9 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 
 		return promise.then( function( response )
 		{
-			if ( !response.success ) {
-				return $q.reject( response );
+			if ( response.success !== false ) {
+				angular.extend( scope, response );
 			}
-
-			angular.extend( scope, response );
 
 			return response;
 		} );
