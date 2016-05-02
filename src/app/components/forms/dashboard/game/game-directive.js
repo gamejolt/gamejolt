@@ -70,7 +70,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGame', functi
 			return true;
 		};
 
-		scope.$watchCollection( 'serverErrors["autotag-fnaf"]', function( isFnafDetected )
+		scope.$watchCollection( 'formState.serverErrors["autotag-fnaf"]', function( isFnafDetected )
 		{
 			// This will make it so they can't edit the form and force them to choose if they want to tag or not.
 			if ( isFnafDetected ) {
