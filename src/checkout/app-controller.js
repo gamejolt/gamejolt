@@ -1,8 +1,11 @@
-angular.module( 'App' ).controller( 'AppCtrl', function( $scope, $state, App, Screen, Environment, HistoryNavigator )
+angular.module( 'App' ).controller( 'AppCtrl', function( $scope, $state, $injector, App, Screen, Environment )
 {
 	$scope.$state = $state;
 	$scope.App = App;
 	$scope.Screen = Screen;
 	$scope.Environment = Environment;
-	$scope.HistoryNavigator = HistoryNavigator;
+
+	if ( Environment.isClient ) {
+		$scope.HistoryNavigator = $injector.get( 'HistoryNavigator' );
+	}
 } );
