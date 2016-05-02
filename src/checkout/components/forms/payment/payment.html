@@ -158,9 +158,24 @@
 
 	<br>
 
+	<div gj-expand-when="formState.stripeError">
+		<div class="alert alert-warning">{{ formState.stripeError }}</div>
+	</div>
 
-	<button gj-form-submit-button class="btn btn-block btn-success-outline btn-lg">
+	<button gj-form-submit-button
+		ng-if="!formState.isProcessing"
+		class="btn btn-block btn-success-outline btn-lg"
+		ng-disabled="!paymentForm.$valid"
+		ng-click="onSubmit()"
+		>
 		Pay {{ order.amount / 100 | currency:'$':2 }}
 	</button>
+
+	<gj-loading
+		ng-if="formState.isProcessing"
+		class="loading-centered"
+		label="Processing..."
+		>
+	</gj-loading>
 
 </form>

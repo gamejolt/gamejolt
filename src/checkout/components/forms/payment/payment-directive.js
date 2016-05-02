@@ -46,6 +46,8 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 
 	form.onSubmit = function( scope )
 	{
+		scope.formState.stripeError = null;
+
 		// New card
 		if ( scope.formModel.selectedCard == 0 ) {
 
@@ -68,7 +70,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 				$window.Stripe.card.createToken( formData, function( status, response )
 				{
 					if ( response.error ) {
-						scope.formState.stripeError = response.error;
+						scope.formState.stripeError = response.error.message;
 						reject( response );
 					}
 					else {
@@ -88,6 +90,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 					street1: scope.formModel.street1,
 					postcode: scope.formModel.postcode,
 				}
+
 				if ( App.user ) {
 					data.save_card = scope.formModel.save_card;
 				}
