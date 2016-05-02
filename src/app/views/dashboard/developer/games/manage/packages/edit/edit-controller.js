@@ -7,6 +7,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 	$scope.Game_Release = Game_Release;
 
 	this.package = new Game_Package( packagePayload.package );
+	this.sellable = new Sellable( packagePayload.sellable );
 	this.releases = Game_Release.populate( packagePayload.releases );
 
 	this.previewData = null;
@@ -30,6 +31,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 		Api.sendRequest( '/web/dash/developer/games/packages/preview/' + _this.package.game_id + '/' + _this.package.id, null, { detach: true } )
 			.then( function( response )
 			{
+				// We pull all new stuff for the preview so that we don't step on the form.
 				_this.previewData = Game_Package.processPackagePayload( response );
 				_this.previewSellable = response.sellable ? new Sellable( response.sellable ) : null;
 				_this.previewPackage = _.find( _this.previewData.packages, { id: _this.package.id } );

@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage', function( Form, Api, Game_Package )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage', function( Form, Api, Game_Package, Sellable )
 {
 	var form = new Form( {
 		model: 'Game_Package',
@@ -7,6 +7,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 	} );
 
 	form.scope.game = '=gjGame';
+	form.scope.sellable = '=gjSellable';
 
 	form.onInit = function( scope )
 	{
@@ -25,7 +26,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 			{
 				scope.isLoaded = true;
 
-				scope.startedPrimary = payload.sellable && payload.sellable.primary;
+				scope.startedPrimary = scope.sellable && scope.sellable.primary;
 				scope.hasPrimarySellable = payload.hasPrimarySellable;
 				scope.minPrice = payload.minPrice || 50;
 
@@ -53,10 +54,10 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 						scope.formModel.title = scope.game.title;
 					}
 
-					if ( payload.sellable && payload.sellable.type != 'free' ) {
-						scope.formModel.pricing_type = payload.sellable.type;
-						scope.formModel.price = payload.sellable.pricings ? payload.sellable.pricings[0].amount / 100 : 0;
-						scope.formModel.primary = payload.sellable.primary;
+					if ( scope.sellable && scope.sellable.type != 'free' ) {
+						scope.formModel.pricing_type = scope.sellable.type;
+						scope.formModel.price = scope.sellable.pricings ? scope.sellable.pricings[0].amount / 100 : 0;
+						scope.formModel.primary = scope.sellable.primary;
 
 						scope.formState.hasSuggestedPrice = !!scope.formModel.price;
 					}
@@ -82,6 +83,21 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 				scope.formModel.price = null;
 			}
 		} );
+	};
+
+	form.onSubmit = function( scope )
+	{
+		// We need to do this custom so we can pull the new sellable info.
+		return scope.formModel.$save()
+			.then( function( response )
+			{
+				if ( response.success !== false ) {
+					scope.baseModel.assign( scope.formModel );
+					scope.sellable.assign( response.sellable );
+				}
+
+				return response;
+			} );
 	};
 
 	return form;

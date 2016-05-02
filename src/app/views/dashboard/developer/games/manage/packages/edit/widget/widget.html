@@ -1,0 +1,29 @@
+<div class="row">
+	<div class="col-sm-10 col-md-5 col-lg-6">
+
+		<div class="page-help">
+			<p>
+				<strong translate>You can use the Sale Widget to sell your Game Jolt packages directly on your site!</strong>
+			</p>
+
+			<p translate>
+				Users and guests can purchase through the Sale Widget. When guests buy your package, they will be emailed a key page that they can use to download. Any time you release updates to your package, the key page will update as well. For users that buy this package, they will gain access to this game in their game library.
+			</p>
+		</div>
+
+		<h3 translate>
+			Embed Code
+		</h3>
+
+		<textarea class="form-control" rows="3">{{ widgetCtrl.widgetCode }}</textarea>
+	</div>
+	<div class="col-sm-10 col-md-7 col-lg-6">
+		<h3 ng-class="{ 'section-header': Screen.isDesktop }" translate>
+			Widget Preview
+		</h3>
+
+		<div class="full-bleed-xs">
+			<iframe ng-src="{{ widgetCtrl.widgetUrl }}" frameborder="0" style="width: 100%" height="245"></iframe>
+		</div>
+	</div>
+</div>
