@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( Api, Graph )
-=======
 angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( Api, Graph, Geo, gettextCatalog )
->>>>>>> master
 {
 	function _generateRequestData( resource, resourceId, eventTypes, analyzer, dates )
 	{
@@ -19,15 +15,9 @@ angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( Api, G
 
 			if ( dates ) {
 				var date = new Date();
-<<<<<<< HEAD
-				request[ eventType ]['from_date'] = dates[0] / 1000;
-				request[ eventType ]['to_date'] = dates[1] / 1000;
-				request[ eventType ]['timezone'] = date.getTimezoneOffset();
-=======
 				request[ eventType ].from_date = dates[0] / 1000;
 				request[ eventType ].to_date = dates[1] / 1000;
 				request[ eventType ].timezone = date.getTimezoneOffset();
->>>>>>> master
 			}
 		} );
 
@@ -68,8 +58,6 @@ angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( Api, G
 				return data;
 			} );
 	};
-<<<<<<< HEAD
-=======
 
 	this.getReport = function( field, title, fieldLabel, requestData )
 	{
@@ -187,5 +175,4 @@ angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( Api, G
 
 		return response;
 	}
->>>>>>> master
 } );
