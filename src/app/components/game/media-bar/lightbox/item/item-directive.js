@@ -5,8 +5,6 @@ angular.module( 'App.Game.MediaBar' ).directive( 'gjGameMediaBarLightboxItem', f
 		require: '^^gjGameMediaBarLightbox',
 		scope: {
 			item: '=',
-			maxHeight: '=',
-			maxWidth: '=',
 			itemIndex: '=',
 			activeIndex: '=',
 			mediaBarCtrl: '=mediaBar',
