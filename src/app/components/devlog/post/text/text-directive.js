@@ -7,7 +7,7 @@ angular.module( 'App.Devlog.Post.Text' ).directive( 'gjDevlogPostText', function
 			id: '=',
 		},
 		bindToController: true,
-		controllerAs: 'postCtrl',
+		controllerAs: 'ctrl',
 		controller: function() {}
 	};
 } );

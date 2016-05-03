@@ -7,7 +7,7 @@ angular.module( 'App.Devlog.Post.Image' ).directive( 'gjDevlogPostImage', functi
 			id: '=',
 		},
 		bindToController: true,
-		controllerAs: 'postCtrl',
+		controllerAs: 'ctrl',
 		controller: function() {}
 	};
 } );

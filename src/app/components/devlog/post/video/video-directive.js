@@ -7,7 +7,7 @@ angular.module( 'App.Devlog.Post.Video' ).directive( 'gjDevlogPostVideo', functi
 			id: '=',
 		},
 		bindToController: true,
-		controllerAs: 'postCtrl',
+		controllerAs: 'ctrl',
 		controller: function() {}
 	};
 } );

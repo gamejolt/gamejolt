@@ -22,8 +22,8 @@
 	<!-- Post content -->
 	<gj-fade-collapse
 		fade-collapse-height="200"
-		fade-collapse-is-open="postCtrl.showFullContent[postCtrl.id]"
-		fade-collapse-is-required="postCtrl.canToggleContent[postCtrl.id]"
+		fade-collapse-is-open="ctrl.showFullContent[ctrl.id]"
+		fade-collapse-is-required="ctrl.canToggleContent[ctrl.id]"
 		>
 		<div class="devlog-post-content">
 			<h3>Introduction</h3>
@@ -39,11 +39,11 @@
 		</div>
 	</gj-fade-collapse>
 	<a class="hidden-text-expander"
-		ng-if="postCtrl.canToggleContent[postCtrl.id]"
-		ng-click="postCtrl.showFullContent[postCtrl.id] = !postCtrl.showFullContent[postCtrl.id]"
+		ng-if="ctrl.canToggleContent[ctrl.id]"
+		ng-click="ctrl.showFullContent[ctrl.id] = !ctrl.showFullContent[ctrl.id]"
 		></a>
 		
 	<!-- Post controls -->
-	<gj-devlog-post-controls></gj-devlog-post-controls>
+	<gj-devlog-post-controls id="ctrl.id"></gj-devlog-post-controls>
 	
 </div>

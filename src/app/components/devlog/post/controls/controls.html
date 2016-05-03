@@ -1,7 +1,15 @@
 <!-- Buttons -->
 <div class="devlog-post-controls">
-	<a class="link-muted" gj-tooltip="Share This Post">
-		<span class="jolticon jolticon-share middle"></span>
+	<!-- <a class="link-muted"
+		gj-tooltip="Edit Post"
+		>
+		<span class="jolticon jolticon-edit middle"></span>
+	</a> -->
+	<a class="link-muted"
+		gj-popover-trigger="devlog-post-control-popover-{{ ctrl.id }}"
+		gj-tooltip="Options"
+		>
+		<span class="jolticon jolticon-ellipsis-h middle"></span>
 	</a>
 	<a class="link-muted"
 		gj-tooltip="Leave a Comment"
@@ -11,11 +19,27 @@
 		<span class="jolticon jolticon-comment middle"></span>
 		<small>4</small>
 	</a>
-	<a href="#" class="link-muted" gj-tooltip="Like This Post" ng-click="ctrl.liked = !ctrl.liked" ng-class="{'active': ctrl.liked}">
+	<a href="#" class="link-muted" gj-tooltip="Like Post" ng-click="ctrl.liked = !ctrl.liked" ng-class="{'active': ctrl.liked}">
 		<span class="jolticon jolticon-heart middle"></span>
 		<small>29</small>
 	</a>
 </div>
+
+<!-- Options -->
+<gj-popover popover-id="devlog-post-control-popover-{{ ctrl.id }}">
+	<div class="list-group list-group-dark thin">
+		<a class="list-group-item has-icon">
+			<span class="jolticon jolticon-flag warning"></span>
+			Report Post
+		</a>
+		<a class="list-group-item">
+			Edit
+		</a>
+		<a class="list-group-item">
+			Remove
+		</a>
+	</div>
+</gj-popover>
 
 <!-- Comments -->
 <gj-fade-collapse
