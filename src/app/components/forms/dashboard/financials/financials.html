@@ -1,5 +1,7 @@
 <form gj-form="formModel" name="financialsForm">
 
+    <div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
+
 	<form-group name="country">
 
 		<p class="help-block" ng-if="!account">
@@ -102,6 +104,153 @@
 			</div>
 		</div>
 
+		<div ng-if="account.type == 'individual'">
+			<form-group
+				ng-if="hasField( 'legal_entity.address.line1' )"
+				name="legal_entity.address.line1"
+				label="Address"
+				>
+				<input form-control >
+				<control-errors></control-errors>
+			</form-group>
+
+			<div class="row" ng-if="hasField( 'legal_entity.address.city' )">
+				<div class="col-sm-4">
+					<form-group
+						ng-if="hasField( 'legal_entity.address.city' )"
+						name="legal_entity.address.city"
+						label="City"
+						>
+						<input form-control>
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+				<div class="col-sm-4">
+					<form-group
+						ng-if="hasField( 'legal_entity.address.state' )"
+						name="legal_entity.address.state"
+						label="State"
+						>
+						<input form-control>
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+				<div class="col-sm-4">
+					<form-group
+						ng-if="hasField( 'legal_entity.address.postal_code' )"
+						name="legal_entity.address.postal_code"
+						label="Zip Code"
+						>
+						<input form-control>
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+			</div>
+
+
+
+		</div>
+
+		<div ng-if="account.type=='company'">
+			<form-group
+				ng-if="hasField( 'legal_entity.personal_address.line1' )"
+				name="legal_entity.personal_address.line1"
+				label="Address"
+				>
+				<input form-control >
+				<control-errors></control-errors>
+			</form-group>
+
+			<div class="row" ng-if="hasField( 'legal_entity.personal_address.city' )">
+				<div class="col-sm-4">
+					<form-group
+						ng-if="hasField( 'legal_entity.personal_address.city' )"
+						name="legal_entity.personal_address.city"
+						label="City"
+						>
+						<input form-control>
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+				<div class="col-sm-4">
+					<form-group
+						ng-if="hasField( 'legal_entity.personal_address.state' )"
+						name="legal_entity.personal_address.state"
+						label="State"
+						>
+						<input form-control>
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+				<div class="col-sm-4">
+					<form-group
+						ng-if="hasField( 'legal_entity.personal_address.postal_code' )"
+						name="legal_entity.personal_address.postal_code"
+						label="Zip Code"
+						>
+						<input form-control>
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+			</div>
+
+
+			<form-group name="verification_document_0" label="Personal ID Document">
+				<p class="help-block">This should be a scan of passport, driving licence, or other government supplied identification.</p>
+				<!-- gj-max-filesize="maxFilesize"
+					gj-max-img-width="maxWidth"
+					gj-max-img-height="maxHeight" -->
+				<gj-form-upload-control
+					form-control="upload"
+					accept=".png,.jpg,.jpeg,.gif"
+					>
+				</gj-form-upload-control>
+				<control-errors ></control-errors>
+			</form-group>
+
+
+		</div>
+
+		<div class="row" ng-if="hasField( 'legal_entity.personal_id_number' )">
+			<div class="col-sm-6">
+				<form-group
+					name="legal_entity.personal_id_number"
+					label="Social Security Number"
+					>
+					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+		</div>
+
+	</fieldset>
+
+	<fieldset ng-if="account.type=='company'">
+		<legend>Your Company</legend>
+
+		<div class="row">
+			<div class="col-sm-6">
+				<form-group
+					ng-if="hasField( 'legal_entity.business_name' )"
+					name="legal_entity.business_name"
+					label="Company Name"
+					>
+					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+			<div class="col-sm-6">
+				<form-group
+					ng-if="hasField( 'legal_entity.business_tax_id' )"
+					name="legal_entity.business_tax_id"
+					label="Company Tax Id"
+					>
+					<input form-control>
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+		</div>
+
 		<form-group
 			ng-if="hasField( 'legal_entity.address.line1' )"
 			name="legal_entity.address.line1"
@@ -144,45 +293,6 @@
 			</div>
 		</div>
 
-		<div class="row" ng-if="hasField( 'legal_entity.personal_id_number' )">
-			<div class="col-sm-6">
-				<form-group
-					name="legal_entity.personal_id_number"
-					label="Social Security Number"
-					>
-					<input form-control>
-					<control-errors></control-errors>
-				</form-group>
-			</div>
-		</div>
-
-	</fieldset>
-
-	<fieldset ng-if="account.type=='company'">
-		<legend>Your Company</legend>
-
-		<div class="row">
-			<div class="col-sm-6">
-				<form-group
-					ng-if="hasField( 'legal_entity.business_name' )"
-					name="legal_entity.business_name"
-					label="Company Name"
-					>
-					<input form-control>
-					<control-errors></control-errors>
-				</form-group>
-			</div>
-			<div class="col-sm-6">
-				<form-group
-					ng-if="hasField( 'legal_entity.business_tax_id' )"
-					name="legal_entity.business_tax_id"
-					label="Company Tax Id"
-					>
-					<input form-control>
-					<control-errors></control-errors>
-				</form-group>
-			</div>
-		</div>
 	</fieldset>
 
 	<fieldset ng-if="account.type=='company'">
@@ -366,7 +476,11 @@
 
 	<p>By registering your account, you agree to our <a href='#' target='new'>Terms of Service</a> and the <a href='https://stripe.com/connect/account-terms' target='new'>Stripe Connected Account Agreement</a>.</p>
 
-	<button gj-form-submit-button class="btn" ng-disabled="!financialsForm.$valid" ng-click="onSubmit()">
+	<button
+		gj-form-submit-button class="btn"
+		ng-disabled="!financialsForm.$valid"
+		ng-click="onSubmit()"
+		>
 		<span class="jolticon jolticon-checkbox"></span>
 		Save
 	</button>
