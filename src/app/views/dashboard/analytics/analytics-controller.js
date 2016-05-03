@@ -27,11 +27,11 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 			label: gettextCatalog.getString( 'Downloads' ),
 			type: 'number',
 		},
-		// install: {
-		// 	eventType: 'install',
-		// 	label: gettextCatalog.getString( 'Installs' ),
-		// 	type: 'number',
-		// },
+		install: {
+			eventType: 'install',
+			label: gettextCatalog.getString( 'Installs' ),
+			type: 'number',
+		},
 		comment: {
 			eventType: 'comment',
 			label: gettextCatalog.getString( 'Comments' ),
@@ -47,13 +47,13 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 			label: gettextCatalog.getString( 'Follows' ),
 			type: 'number',
 		},
-		// sale: {
-		// 	eventType: 'sale',
-		// 	label: gettextCatalog.getString( 'Sales' ),
-		// 	type: 'number',
-		// },
+		sale: {
+			eventType: 'sale',
+			label: gettextCatalog.getString( 'Sales' ),
+			type: 'number',
+		},
 		// revenue: {
-		// 	eventType: 'revenue',
+		// 	eventType: 'sale',
 		// 	label: gettextCatalog.getString( 'Revenue' ),
 		// 	type: 'currency',
 		// },
@@ -205,9 +205,14 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 			} );
 	};
 
-	this.getReport = function( field, title, fieldLabel, extraRequestData )
+	this.getReport = function( title )
 	{
-		var report = SiteAnalytics.getReport( field, title, fieldLabel, {
+		var rows = [];
+		for ( var i = 1; i < arguments.length; ++i ) {
+			rows.push( arguments[ i ] );
+		}
+
+		var report = SiteAnalytics.getReport( title, rows, {
 			resource: this.resource,
 			resourceId: this.resourceId,
 			eventType: this.eventType,
@@ -223,31 +228,98 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 		this.eventType = stat.eventType;
 		this.breakdownReports = [];
 
-		if ( this.eventType == 'download' ) {
-			this.getReport( 'os', 'Operating Systems', 'OS' );
-		}
+		// Common report types.
+		var TYPE_SOURCE = {
+			type: 'top-composition',
+			field: 'source',
+			fieldLabel: 'Domain',
+		};
 
-		if ( this.eventType == 'view' || this.eventType == 'download' ) {
-			this.getReport( 'source', 'Top Sources', 'Domain' );
-			this.getReport( 'source_url', 'Referring Pages', 'Page' );
-			this.getReport( 'country', 'Countries', 'Country' );
-		}
+		var TYPE_REFERRERS = {
+			type: 'top-composition',
+			field: 'source_url',
+			fieldLabel: 'Page',
+		};
 
-		if ( this.eventType == 'install' ) {
-			this.getReport( 'os', 'Operating Systems', 'OS' );
-			this.getReport( 'country', 'Countries', 'Country' );
-		}
+		var TYPE_COUNTRIES = {
+			type: 'top-composition',
+			field: 'country',
+			fieldLabel: 'Country',
+		};
 
-		if ( this.eventType == 'comment' ) {
-			this.getReport( 'comment_language', 'Languages', 'Language' );
-		}
+		var TYPE_OS = {
+			type: 'top-composition',
+			field: 'os',
+			fieldLabel: 'OS',
+		};
 
-		if ( this.eventType == 'rating' ) {
-			this.getReport( 'rating', 'Rating Breakdown', 'Rating' );
-		}
+		switch ( this.eventType ) {
+			case 'view': {
+				this.getReport( 'Top Sources', TYPE_SOURCE );
+				this.getReport( 'Referring Pages', TYPE_REFERRERS );
+				this.getReport( 'Countries', TYPE_COUNTRIES );
+				break;
+			}
 
-		if ( this.eventType == 'follow' ) {
-			this.getReport( 'country', 'Countries', 'Country' );
+			case 'download': {
+				this.getReport( 'Operating Systems', TYPE_OS );
+				this.getReport( 'Top Sources', TYPE_SOURCE );
+				this.getReport( 'Referring Pages', TYPE_REFERRERS );
+				this.getReport( 'Countries', TYPE_COUNTRIES );
+				break;
+			}
+
+			case 'install': {
+				this.getReport( 'Operating Systems', TYPE_OS );
+				this.getReport( 'Countries', TYPE_COUNTRIES );
+				break;
+			}
+
+			case 'comment': {
+				this.getReport( 'Languages', {
+					type: 'top-composition',
+					field: 'comment_language',
+					fieldLabel: 'Language',
+				} );
+				break;
+			}
+
+			case 'rating': {
+				this.getReport( 'Rating Breakdown', {
+					type: 'rating-breakdown',
+					field: 'rating',
+					fieldLabel: 'Rating',
+				} );
+				break;
+			}
+
+			case 'follow': {
+				this.getReport( 'Countries', TYPE_COUNTRIES );
+				break;
+			}
+
+			case 'sale': {
+				this.getReport( 'Revenue Stats',
+					{
+						type: 'sum',
+						field: 'revenue',
+						fieldLabel: 'Total Revenue',
+						fieldType: 'currency',
+					},
+					{
+						type: 'average',
+						field: 'donation',
+						fieldLabel: 'Average Support',
+						fieldType: 'currency',
+					}
+				);
+
+				this.getReport( 'Top Sources', TYPE_SOURCE );
+				this.getReport( 'Referring Pages', TYPE_REFERRERS );
+				this.getReport( 'Countries', TYPE_COUNTRIES );
+				this.getReport( 'Operating Systems', TYPE_OS );
+				break;
+			}
 		}
 	};
 } );

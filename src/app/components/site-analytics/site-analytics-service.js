@@ -1,4 +1,4 @@
-angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( Api, Graph, Geo, gettextCatalog )
+angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( $q, Api, Graph, Geo, gettextCatalog )
 {
 	function _generateRequestData( resource, resourceId, eventTypes, analyzer, dates )
 	{
@@ -59,63 +59,77 @@ angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( Api, G
 			} );
 	};
 
-	this.getReport = function( field, title, fieldLabel, requestData )
+	this.getReport = function( title, rows, requestData )
 	{
-		var type = 'top';
-		if ( field == 'rating' ) {
-			type = 'rating-breakdown';
-		}
-
 		var report = {
-			type: type,
 			title: title,
-			field: field,
-			fieldLabel: fieldLabel,
 			isLoaded: false,
+			rows: rows,
 		};
 
-		var conditions = null;
+		promises = report.rows.map( function( row )
+		{
+			var conditions = null;
 
-		if ( field == 'source_url' ) {
-			conditions = [ 'source-external' ];
-		}
+			if ( row.field == 'source_url' ) {
+				conditions = [ 'source-external' ];
+			}
 
-		var request = _sendReportRequest( field, requestData, conditions )
-			.then( function( response )
+			return _sendReportRequest( row.type, row.field, requestData, conditions );
+		} );
+
+		$q.all( promises ).then( function( rowResponses )
+		{
+			report.isLoaded = true;
+
+			report.rows.forEach( function( row, i )
 			{
-				response = _processReportRequest( field, response.top );
+				response = _processReportRequest( row.field, rowResponses[ i ].data );
 
-				report.data = response.result;
-				report.graph = response.graph;
-				report.total = response.total;
-				report.isLoaded = true;
-				report.hasData = report.data && Object.keys( report.data ).length > 0;
+				row.data = response.result;
+				row.graph = response.graph;
+				row.total = response.total;
+
+				if ( row.type == 'sum' || row.type == 'average' ) {
+					row.hasData = angular.isDefined( row.data ) && row.data !== null;
+				}
+				else {
+					row.hasData = row.data && Object.keys( row.data ).length > 0;
+				}
+
+				console.log( report );
 			} );
+		} );
 
 		return report;
 	};
 
-	function _sendReportRequest( field, requestData, conditions )
+	function _sendReportRequest( type, field, requestData, conditions )
 	{
+		var analyzer = type;
+		if ( type == 'rating-breakdown' ) {
+			analyzer = 'top-composition';
+		}
+
 		var request = {
-			top: {
+			data: {
 				target: requestData.resource,
 				target_id: requestData.resourceId,
 				collection: requestData.eventType + 's',
-				analyzer: 'top-composition',
+				analyzer: analyzer,
 				field: field,
 			},
 		};
 
 		if ( requestData.startTime && requestData.endTime ) {
 			var date = new Date();
-			request.top.from_date = requestData.startTime / 1000;
-			request.top.to_date = requestData.endTime / 1000;
-			request.top.timezone = date.getTimezoneOffset();
+			request.data.from_date = requestData.startTime / 1000;
+			request.data.to_date = requestData.endTime / 1000;
+			request.data.timezone = date.getTimezoneOffset();
 		}
 
 		if ( conditions ) {
-			request.top.conditions = conditions;
+			request.data.conditions = conditions;
 		}
 
 		return Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } );

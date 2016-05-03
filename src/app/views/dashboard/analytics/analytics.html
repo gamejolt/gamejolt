@@ -42,6 +42,7 @@
 				</li>
 			</ul>
 		</nav>
+		<br>
 
 		<div class="row">
 			<div class="col-md-6 col-md-push-6" ng-class="{ 'text-right': !Screen.isXs }">
@@ -160,10 +161,10 @@
 
 						<nav class="platform-list" gj-scroll-affix>
 							<ul>
-								<li ng-repeat="report in analyticsCtrl.breakdownReports"
+								<li ng-repeat="report in analyticsCtrl.breakdownReports track by $index"
 									class="no-animate-leave"
 									>
-									<a ng-href="#report-{{ report.field }}" du-smooth-scroll du-scrollspy>
+									<a ng-href="#report-{{ $index }}" du-smooth-scroll du-scrollspy>
 										{{ report.title }}
 									</a>
 								</li>
@@ -173,7 +174,7 @@
 					</div>
 					<div class="col-md-9">
 
-						<div ng-repeat="report in analyticsCtrl.breakdownReports track by report.field" id="report-{{ report.field }}">
+						<div ng-repeat="report in analyticsCtrl.breakdownReports track by $index" id="report-{{ $index }}">
 
 							<h2 ng-class="{ 'section-header': $first }">
 								{{ report.title }}
@@ -181,96 +182,27 @@
 
 							<gj-loading ng-if="!report.isLoaded"></gj-loading>
 
-							<div ng-if="report.isLoaded && report.type == 'top'">
+							<div ng-if="report.isLoaded" class="row">
+								<div ng-repeat="row in report.rows track by $index">
 
-								<!--
-									If graph data is null, then don't show the graph and give more space for the table.'
-								-->
-								<div class="row">
-									<div ng-class="report.graph !== null ? 'col-sm-8' : 'col-xs-12'">
+									<gj-analytics-report-simple-stat
+										ng-if="row.type == 'sum' || row.type == 'average'"
+										report-data="row"
+										>
+									</gj-analytics-report-simple-stat>
 
-										<div class="alert alert-info" ng-if="!report.hasData" translate>
-											No data yet.
-										</div>
+									<gj-analytics-report-top-composition
+										ng-if="row.type == 'top-composition'"
+										report-data="row"
+										>
+									</gj-analytics-report-top-composition>
 
-										<table class="table table-striped table-condensed" ng-if="report.hasData">
-											<thead>
-												<tr>
-													<th style="width: 20px"></th>
-													<th>
-														{{ report.fieldLabel }}
-													</th>
-													<th class="text-right">
-														{{ analyticsCtrl.stats[ analyticsCtrl.eventType ].label }}
-													</th>
-													<th style="width: 150px"></th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="( key, val ) in report.data track by key">
-													<td>
-														{{ $index + 1 | number }}.
-													</td>
-													<th>
-														{{ key }}
-													</th>
-													<td class="text-right">
-														{{ val | number }}
-													</td>
-													<td>
-														<div class="report-percentage" ng-style="{ width: val / report.total * 70 + 'px' }"></div>
-														<small>{{ val / report.total * 100 | number:2 }}%</small>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+									<gj-analytics-report-rating-breakdown
+										ng-if="row.type == 'rating-breakdown'"
+										report-data="row"
+										>
+									</gj-analytics-report-rating-breakdown>
 
-									</div>
-									<div class="col-sm-4" ng-if="!Screen.isXs && report.hasData && report.graph !== null">
-
-										<gj-graph
-											type="doughnut"
-											dataset="report.graph"
-											>
-										</gj-graph>
-
-									</div>
-								</div>
-							</div>
-
-							<div ng-if="report.isLoaded && report.type == 'rating-breakdown'">
-								<div class="row">
-									<div class="col-sm-8">
-
-										<table class="table table-striped table-condensed">
-											<thead>
-												<tr>
-													<th>
-														Rating Given
-													</th>
-													<th class="text-right">
-														Count
-													</th>
-													<th style="width: 150px"></th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="i in [ 5, 4, 3, 2, 1 ]">
-													<td>
-														{{ i }}
-													</td>
-													<td class="text-right">
-														{{ report.data[ i ] | number }}
-													</td>
-													<td>
-														<div class="report-percentage" ng-style="{ width: report.data[ i ] / report.total * 70 + 'px' }"></div>
-														<small>{{ report.data[ i ] / report.total * 100 | number:2 }}%</small>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-
-									</div>
 								</div>
 							</div>
 

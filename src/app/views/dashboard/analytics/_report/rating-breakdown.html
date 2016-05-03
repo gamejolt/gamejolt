@@ -1,0 +1,31 @@
+<div class="col-sm-8">
+
+	<table class="table table-striped table-condensed">
+		<thead>
+			<tr>
+				<th>
+					Rating Given
+				</th>
+				<th class="text-right">
+					Count
+				</th>
+				<th style="width: 150px"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="i in [ 5, 4, 3, 2, 1 ]">
+				<td>
+					{{ i }}
+				</td>
+				<td class="text-right">
+					{{ $ctrl.reportData.data[ i ] | number }}
+				</td>
+				<td>
+					<div class="report-percentage" ng-style="{ width: $ctrl.reportData.data[ i ] / $ctrl.reportData.total * 70 + 'px' }"></div>
+					<small>{{ $ctrl.reportData.data[ i ] / $ctrl.reportData.total * 100 | number:2 }}%</small>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>
