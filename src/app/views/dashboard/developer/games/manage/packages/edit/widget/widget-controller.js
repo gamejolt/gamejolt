@@ -4,8 +4,16 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 	var _this = this;
 
 	this.sellable = widgetPayload.sellable ? new Sellable( widgetPayload.sellable ) : null;
+	this.theme = '';  // Default to dark.
 
-	var widgetUrl = Environment.widgetHost + '/?key=' + this.sellable.key;
-	this.widgetUrl = $sce.trustAsResourceUrl( widgetUrl );
-	this.widgetCode = '<iframe src="' + widgetUrl + '" frameborder="0" width="500" height="245"></iframe>';
+	$scope.$watch( 'widgetCtrl.theme', function()
+	{
+		var widgetUrl = Environment.widgetHost + '/?key=' + _this.sellable.key;
+		if ( _this.theme == 'light' ) {
+			widgetUrl += '&theme=light';
+		}
+
+		_this.widgetUrl = $sce.trustAsResourceUrl( widgetUrl );
+		_this.widgetCode = '<iframe src="' + widgetUrl + '" frameborder="0" width="500" height="245"></iframe>';
+	} );
 } );
