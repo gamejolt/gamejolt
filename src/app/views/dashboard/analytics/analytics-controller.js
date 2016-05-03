@@ -1,5 +1,9 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
+<<<<<<< HEAD
 	$scope, $state, App, Api, Payload, Game, Game_Package, Game_Release, Graph, SiteAnalytics, Geo, gettextCatalog, payload )
+=======
+	$scope, $state, App, Api, Payload, Game, Game_Package, Game_Release, Graph, SiteAnalytics, gettextCatalog, payload )
+>>>>>>> master
 {
 	var _this = this;
 
@@ -134,7 +138,11 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 			}
 
 			this.startTime = (new Date( year, month, 1 )).getTime();
+<<<<<<< HEAD
 			this.endTime = (new Date( year, month + 1, 0 )).getTime();
+=======
+			this.endTime = (new Date( year, month + 1, 1 )).getTime() - 1;
+>>>>>>> master
 
 			this.prevMonth = (new Date( year, month - 1, 1 )).getMonth();
 			this.prevYear = (new Date( year, month - 1, 1 )).getFullYear();
@@ -207,6 +215,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 
 	this.getReport = function( field, title, fieldLabel, extraRequestData )
 	{
+<<<<<<< HEAD
 		var type = 'top';
 		if ( field == 'rating' ) {
 			type = 'rating-breakdown';
@@ -295,6 +304,17 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 				report.isLoaded = true;
 				report.hasData = report.data && Object.keys( report.data ).length > 0;
 			} );
+=======
+		var report = SiteAnalytics.getReport( field, title, fieldLabel, {
+			resource: this.resource,
+			resourceId: this.resourceId,
+			eventType: this.eventType,
+			startTime: this.startTime,
+			endTime: this.endTime,
+		} );
+
+		this.breakdownReports.push( report );
+>>>>>>> master
 	};
 
 	this.changeReport = function( stat )
@@ -307,7 +327,11 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 		}
 
 		if ( this.eventType == 'view' || this.eventType == 'download' ) {
+<<<<<<< HEAD
 			this.getReport( 'source', 'Top Sources', 'Domain', { conditions: [ 'source-gamejolt' ] } );
+=======
+			this.getReport( 'source', 'Top Sources', 'Domain' );
+>>>>>>> master
 			this.getReport( 'source_url', 'Referring Pages', 'Page' );
 			this.getReport( 'country', 'Countries', 'Country' );
 		}
