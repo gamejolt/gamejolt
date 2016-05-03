@@ -196,6 +196,7 @@ angular.module( 'App', [
 	'App.Devlog.Post.Text',
 	'App.Devlog.Post.Image',
 	'App.Devlog.Post.Video',
+	'App.Devlog.Post.Controls',
 
 	'App.Post.Grid',
 	'App.Post.List',

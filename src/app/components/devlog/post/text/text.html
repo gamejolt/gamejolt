@@ -44,33 +44,6 @@
 		></a>
 		
 	<!-- Post controls -->
-	<div class="devlog-post-controls">
-		<a class="link-muted"
-			gj-tooltip="Leave a Comment"
-			ng-if="postCtrl.canToggleComments[postCtrl.id]"
-			ng-click="postCtrl.showFullComments[postCtrl.id] = !postCtrl.showFullComments[postCtrl.id]"
-			>
-			<span class="jolticon jolticon-comment middle"></span>
-			<small>4</small>
-		</a>
-		<a href="#" class="link-muted" gj-tooltip="Like This Post" ng-click="postCtrl.liked = !postCtrl.liked" ng-class="{'active': postCtrl.liked}">
-			<span class="jolticon jolticon-heart middle"></span>
-			<small>29</small>
-		</a>
-	</div>
-	
-	<!-- Post comments -->
-	<gj-fade-collapse
-		fade-collapse-height="0"
-		fade-collapse-is-open="postCtrl.showFullComments[postCtrl.id]"
-		fade-collapse-is-required="postCtrl.canToggleComments[postCtrl.id]"
-		>
-		<gj-comment-widget
-			current-page="overviewCtrl.currentCommentPage"
-			comment-resource="Game"
-			comment-resource-id="0"
-			>
-		</gj-comment-widget>
-	</gj-fade-collapse>
+	<gj-devlog-post-controls></gj-devlog-post-controls>
 	
 </div>

@@ -1,0 +1,32 @@
+<!-- Buttons -->
+<div class="devlog-post-controls">
+	<a class="link-muted" gj-tooltip="Share This Post">
+		<span class="jolticon jolticon-share middle"></span>
+	</a>
+	<a class="link-muted"
+		gj-tooltip="Leave a Comment"
+		ng-if="ctrl.canToggleComments[ctrl.id]"
+		ng-click="ctrl.showFullComments[ctrl.id] = !ctrl.showFullComments[ctrl.id]"
+		>
+		<span class="jolticon jolticon-comment middle"></span>
+		<small>4</small>
+	</a>
+	<a href="#" class="link-muted" gj-tooltip="Like This Post" ng-click="ctrl.liked = !ctrl.liked" ng-class="{'active': ctrl.liked}">
+		<span class="jolticon jolticon-heart middle"></span>
+		<small>29</small>
+	</a>
+</div>
+
+<!-- Comments -->
+<gj-fade-collapse
+	fade-collapse-height="0"
+	fade-collapse-is-open="ctrl.showFullComments[ctrl.id]"
+	fade-collapse-is-required="ctrl.canToggleComments[ctrl.id]"
+	>
+	<gj-comment-widget
+		current-page="ctrl.currentCommentPage"
+		comment-resource="Game"
+		comment-resource-id="0"
+		>
+	</gj-comment-widget>
+</gj-fade-collapse>
