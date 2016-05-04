@@ -15,4 +15,5 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 
 	// If the game was entered into a jam that locks its builds.
 	this.areBuildsLockedByJam = payload.areBuildsLockedByJam || false;
+	this.areWebBuildsLockedBySellable = ( payload.package.is_in_paid_sellable || payload.package.has_sales ) || false;
 } );
