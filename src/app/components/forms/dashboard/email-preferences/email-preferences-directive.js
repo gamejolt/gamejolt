@@ -49,6 +49,11 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardEmailPreferen
 				label: gettextCatalog.getString( 'dash.email_prefs.notify_game_follows_label' ),
 				help: gettextCatalog.getString( 'dash.email_prefs.notify_game_follows_help' ),
 			},
+			{
+				key: 'notify_sales',
+				label: gettextCatalog.getString( 'Sales' ),
+				help: gettextCatalog.getString( 'Get emails when someone buys your games.' ),
+			},
 		];
 	};
 
