@@ -34,6 +34,7 @@ angular.module( 'App', [
 	'gj.Registry',
 	'gj.History',
 	'gj.Growls',
+	'gj.Tooltip',
 
 	'gj.Img.Helper',
 	'gj.Img.ImgResponsive',
