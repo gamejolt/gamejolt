@@ -1,6 +1,11 @@
 <!-- User -->
 <strong ng-if="notification.is_user_based">
-	{{ notification.subject_model.display_name }}
+	<span ng-if="notification.subject_id">
+		{{ notification.subject_model.display_name }}
+	</span>
+	<span ng-if="!notification.subject_id" translate>
+		Someone
+	</span>
 </strong>
 
 <!-- Game -->
