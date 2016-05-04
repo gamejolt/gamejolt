@@ -92,8 +92,13 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 			.then( function( response )
 			{
 				if ( response.success !== false ) {
+					if ( scope.baseModel ) {
 					scope.baseModel.assign( scope.formModel );
+					}
+
+					if ( scope.sellable ) {
 					scope.sellable.assign( response.sellable );
+					}
 				}
 
 				return response;
