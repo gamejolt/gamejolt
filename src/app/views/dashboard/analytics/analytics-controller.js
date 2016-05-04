@@ -47,17 +47,21 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 			label: gettextCatalog.getString( 'Follows' ),
 			type: 'number',
 		},
-		sale: {
+	};
+
+	if ( App.user.has_marketplace_access ) {
+		this.stats.sale = {
 			eventType: 'sale',
 			label: gettextCatalog.getString( 'Sales' ),
 			type: 'number',
-		},
-		// revenue: {
+		};
+
+		// this.stats.revenue = {
 		// 	eventType: 'sale',
 		// 	label: gettextCatalog.getString( 'Revenue' ),
 		// 	type: 'currency',
-		// },
-	};
+		// };
+	}
 
 	var _gameEventTypes = Object.keys( this.stats );
 	var _packageEventTypes = [ 'download' ];

@@ -1,7 +1,7 @@
 <div ng-if="Screen.isXs" class="well fill-darker sans-margin-bottom">
 	<a class="i-button block big" ui-sref="dashboard.account-mobile-nav">
 		<span class="jolticon jolticon-chevron-left"></span>
-		Back to Account
+		<span translate>Back to Account</span>
 	</a>
 </div>
 
@@ -26,22 +26,34 @@
 				<nav class="platform-list">
 					<ul>
 						<li>
-							<a ui-sref="dashboard.account.edit" ui-sref-active="active">Profile</a>
+							<a ui-sref="dashboard.account.edit" ui-sref-active="active" translate>
+								Profile
+							</a>
 						</li>
 						<li>
-							<a ui-sref="dashboard.account.avatar" ui-sref-active="active">Avatar</a>
+							<a ui-sref="dashboard.account.avatar" ui-sref-active="active" translate>
+								Avatar
+							</a>
 						</li>
 						<li>
-							<a ui-sref="dashboard.account.linked-accounts" ui-sref-active="active">Linked Accounts</a>
+							<a ui-sref="dashboard.account.linked-accounts" ui-sref-active="active" translate>
+								Linked Accounts
+							</a>
 						</li>
 						<li>
-							<a ui-sref="dashboard.account.email-preferences" ui-sref-active="active">Email Preferences</a>
+							<a ui-sref="dashboard.account.email-preferences" ui-sref-active="active" translate>
+								Email Preferences
+							</a>
 						</li>
 						<li>
-							<a ui-sref="dashboard.account.change-password" ui-sref-active="active">Password</a>
+							<a ui-sref="dashboard.account.change-password" ui-sref-active="active" translate>
+								Password
+							</a>
 						</li>
-						<li>
-							<a ui-sref="dashboard.account.financials" ui-sref-active="active">Payment Setup</a>
+						<li ng-if="App.user.is_developer && App.user.has_marketplace_access">
+							<a ui-sref="dashboard.account.financials" ui-sref-active="active" translate>
+								Payments/Financials
+							</a>
 						</li>
 					</ul>
 				</nav>

@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage', function( Form, Api, Game_Package, Sellable )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage', function( Form, App, Api, Game_Package, Sellable )
 {
 	var form = new Form( {
 		model: 'Game_Package',
@@ -11,10 +11,10 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 
 	form.onInit = function( scope )
 	{
+		scope.App = App;
 		scope.formModel.game_id = scope.game.id;
 
 		scope.formState.showDescriptionInput = scope.formModel.description ? true : false;
-		scope.formState.hasSales = false;
 
 		if ( !scope.isLoaded ) {
 			var params = [ scope.formModel.game_id ];
@@ -29,8 +29,6 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 				scope.startedPrimary = scope.sellable && scope.sellable.primary;
 				scope.hasPrimarySellable = payload.hasPrimarySellable;
 				scope.minPrice = payload.minPrice || 50;
-
-				scope.formState.hasSales = payload.hasSales;
 
 				// If there is no primary sellable yet, let's mark this as the primary sellable.
 				// This will only be used if they set the pricing type to something other than free.
@@ -93,11 +91,11 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 			{
 				if ( response.success !== false ) {
 					if ( scope.baseModel ) {
-					scope.baseModel.assign( scope.formModel );
+						scope.baseModel.assign( scope.formModel );
 					}
 
 					if ( scope.sellable ) {
-					scope.sellable.assign( response.sellable );
+						scope.sellable.assign( response.sellable );
 					}
 				}
 

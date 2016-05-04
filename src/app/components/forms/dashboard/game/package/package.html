@@ -33,89 +33,96 @@
 			</div>
 		</form-group>
 
-		<form-group name="pricing_type" label="Pricing Type">
-			<p class="help-block">
-				<span class="jolticon jolticon-notice"></span>
-				You must set up your account's financial info before you can start accepting money.
-			</p>
+		<!--
+			Restrict package selling to only certain people for now.
+		-->
+		<div ng-if="App.user.has_marketplace_access">
 
-			<div class="radio" ng-if="!formState.hasSales">
-				<label>
-					<input form-control="radio" value="free">
-					<span>Free</span> &mdash;
-					<span class="help-inline">Completely free with no option to pay at all.</span>
-				</label>
-			</div>
+			<form-group name="pricing_type" label="Pricing Type">
+				<p class="help-block">
+					<span class="jolticon jolticon-notice"></span>
+					You must set up your account's financial info before you can start accepting money.
+				</p>
 
-			<div class="radio">
-				<label>
-					<input form-control="radio" value="pwyw">
-					<span>Pay What You Want</span> &mdash;
-					<span class="help-inline">They will be able to pay $0 or more. They set the price.</span>
-				</label>
-			</div>
-
-			<div class="radio">
-				<label>
-					<input form-control="radio" value="paid">
-					<span>Fixed Minimum Price</span> &mdash;
-					<span class="help-inline">Charge a fixed price for your game with the ability for them to pay more as an optional tip.</span>
-				</label>
-			</div>
-		</form-group>
-
-		<form-group name="price" label="Suggested Price" ng-if="formModel.pricing_type == 'pwyw'" optional="true">
-			<p class="help-block">You're able to set a suggested amount for this package if you'd like. They will still be able to set it to $0 if they want.</p>
-
-			<div class="row">
-				<div class="col-sm-3">
-					<gj-toggle-switch type="checkbox" ng-model="formState.hasSuggestedPrice" toggle-switch-on-text="On" toggle-switch-off-text="Off"></gj-toggle-switch>
-					<br class="visible-xs">
+				<div class="radio">
+					<label>
+						<input form-control="radio" value="free">
+						<span>Free</span> &mdash;
+						<span class="help-inline">Completely free with no option to pay at all.</span>
+					</label>
 				</div>
-				<div class="col-sm-9">
-					<input-group>
-						<input-group-addon>$</input-group-addon>
-						<input form-control="number"
-							gj-form-currency-input
-							step="0.1"
-							ng-min="minPrice / 100"
-							ng-disabled="!formState.hasSuggestedPrice"
-							>
-					</input-group>
-					<control-errors></control-errors>
+
+				<div class="radio">
+					<label>
+						<input form-control="radio" value="pwyw">
+						<span>Pay What You Want</span> &mdash;
+						<span class="help-inline">They will be able to pay $0 or more. They set the price.</span>
+					</label>
 				</div>
-			</div>
-		</form-group>
 
-		<form-group name="price" lable="Price" ng-if="formModel.pricing_type == 'paid'">
-			<input-group>
-				<input-group-addon>$</input-group-addon>
-				<input form-control="number"
-					gj-form-currency-input
-					step="0.1"
-					ng-min="minPrice / 100"
-					>
-			</input-group>
-			<control-errors></control-errors>
-		</form-group>
+				<div class="radio">
+					<label>
+						<input form-control="radio" value="paid">
+						<span>Fixed Minimum Price</span> &mdash;
+						<span class="help-inline">Charge a fixed price for your game with the ability for them to pay more as an optional tip.</span>
+					</label>
+				</div>
+			</form-group>
 
-		<form-group name="primary" label="Primary Package" optional="!startedPrimary && hasPrimarySellable" ng-if="formModel.pricing_type != 'free'">
-			<p class="help-block" translate>
-				We use the primary package to determine the price to show when browsing game listings. There can only be one primary package per game.
-			</p>
-			<div class="checkbox">
-				<label>
-					<input form-control="checkbox" ng-disabled="startedPrimary || !hasPrimarySellable">
-					<span ng-if="!hasPrimarySellable">
-						<strong translate>Since you don't have any packages for sale yet, we will mark this as your primary one.</strong>
-					</span>
-					<span ng-if="hasPrimarySellable">
-						<span ng-if="!startedPrimary" translate>Make this package the primary package</span>
-						<strong ng-if="startedPrimary" translate>This is currently the primary package</strong>
-					</span>
-				</label>
-			</div>
-		</form-group>
+			<form-group name="price" label="Suggested Price" ng-if="formModel.pricing_type == 'pwyw'" optional="true">
+				<p class="help-block">You're able to set a suggested amount for this package if you'd like. They will still be able to set it to $0 if they want.</p>
+
+				<div class="row">
+					<div class="col-sm-3">
+						<gj-toggle-switch type="checkbox" ng-model="formState.hasSuggestedPrice" toggle-switch-on-text="On" toggle-switch-off-text="Off"></gj-toggle-switch>
+						<br class="visible-xs">
+					</div>
+					<div class="col-sm-9">
+						<input-group>
+							<input-group-addon>$</input-group-addon>
+							<input form-control="number"
+								gj-form-currency-input
+								step="0.1"
+								ng-min="minPrice / 100"
+								ng-disabled="!formState.hasSuggestedPrice"
+								>
+						</input-group>
+						<control-errors></control-errors>
+					</div>
+				</div>
+			</form-group>
+
+			<form-group name="price" lable="Price" ng-if="formModel.pricing_type == 'paid'">
+				<input-group>
+					<input-group-addon>$</input-group-addon>
+					<input form-control="number"
+						gj-form-currency-input
+						step="0.1"
+						ng-min="minPrice / 100"
+						>
+				</input-group>
+				<control-errors></control-errors>
+			</form-group>
+
+			<form-group name="primary" label="Primary Package" optional="!startedPrimary && hasPrimarySellable" ng-if="formModel.pricing_type != 'free'">
+				<p class="help-block" translate>
+					We use the primary package to determine the price to show when browsing game listings. There can only be one primary package per game.
+				</p>
+				<div class="checkbox">
+					<label>
+						<input form-control="checkbox" ng-disabled="startedPrimary || !hasPrimarySellable">
+						<span ng-if="!hasPrimarySellable">
+							<strong translate>Since you don't have any packages for sale yet, we will mark this as your primary one.</strong>
+						</span>
+						<span ng-if="hasPrimarySellable">
+							<span ng-if="!startedPrimary" translate>Make this package the primary package</span>
+							<strong ng-if="startedPrimary" translate>This is currently the primary package</strong>
+						</span>
+					</label>
+				</div>
+			</form-group>
+
+		</div>
 
 		<button gj-form-submit-button class="btn" ng-show="method == 'add' || !packageForm.$pristine" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">
 			<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
