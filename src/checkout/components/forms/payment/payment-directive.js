@@ -13,6 +13,8 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 
 		scope.formState.stripeError = null;
 		scope.formState.countries = Geo.getCountries();
+		scope.formState.calculatedTax = false;
+		scope.formState.taxAmount = 0;
 
 		scope.formModel.country = 'us';
 		scope.formModel.selectedCard = 0;
@@ -42,6 +44,29 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 				scope.formModel.region = '';
 			}
 		} );
+
+		scope.$watchGroup( [ 'formModel.country', 'formModel.region' ], getTax );
+
+		function getTax()
+		{
+			scope.formState.calculatedTax = false;
+			if ( !scope.formModel.country || !scope.formModel.region ) {
+				return;
+			}
+
+			var data = {
+				amount: scope.order.amount,
+				country: scope.formModel.country,
+				region: scope.formModel.region,
+			};
+
+			return Api.sendRequest( '/web/checkout/taxes', data, { detach: true } )
+				.then( function( response )
+				{
+					scope.formState.calculatedTax = true;
+					scope.formState.taxAmount = response.amount;
+				} );
+		}
 	};
 
 	form.onSubmit = function( scope )
