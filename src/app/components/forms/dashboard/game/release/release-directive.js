@@ -14,6 +14,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameRelease',
 	form.scope.onUnpublishRelease = '&gjOnUnpublishRelease';
 	form.scope.onRemoveRelease = '&gjOnRemoveRelease';
 	form.scope.areBuildsLockedByJam = '=?';
+	form.scope.areWebBuildsLockedBySellable = '=?';
 
 	form.controller = [ '$scope', function( $scope )
 	{

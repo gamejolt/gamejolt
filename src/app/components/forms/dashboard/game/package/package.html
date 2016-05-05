@@ -61,7 +61,14 @@
 				</div>
 
 				<div class="radio">
-					<label>
+
+					<label ng-if="package.has_browser_builds">
+						<input form-control="radio" value="paid" disabled>
+						<span>Fixed Minimum Price</span> &mdash;
+						<span class="help-inline" ><span class="jolticon jolticon-notice"></span>DISABLED. Packages with browser builds cannot be sold at the moment. </span>
+					</label>
+
+					<label ng-if="!package.has_browser_builds">
 						<input form-control="radio" value="paid">
 						<span>Fixed Minimum Price</span> &mdash;
 						<span class="help-inline">Charge a fixed price for your game with the ability for them to pay more as an optional tip.</span>

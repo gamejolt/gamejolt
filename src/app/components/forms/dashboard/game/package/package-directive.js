@@ -8,6 +8,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 
 	form.scope.game = '=gjGame';
 	form.scope.sellable = '=gjSellable';
+	form.scope.package = '=gjGamePackage';
 
 	form.onInit = function( scope )
 	{
