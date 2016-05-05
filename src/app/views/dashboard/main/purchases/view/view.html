@@ -99,7 +99,7 @@
 					<tfoot>
 						<tr>
 							<th translate>Total</th>
-							<td>{{ (viewCtrl.order.amount + viewCtrl.order.tax_amount) / 100 | currency }}</td>
+							<td>{{ viewCtrl.order.total_amount / 100 | currency }}</td>
 						</tr>
 					</tfoot>
 				</table>
