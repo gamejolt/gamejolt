@@ -27,7 +27,7 @@
 					</td>
 					<td class="text-right">
 						<span class="tag tag-pink" ng-if="::order._is_refunded" translate>Refunded</span>
-						{{ ::order.amount / 100 | currency }}
+						{{ ::order.total_amount / 100 | currency }}
 					</td>
 				</tr>
 			</tbody>
