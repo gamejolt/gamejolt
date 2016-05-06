@@ -27,7 +27,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 		if ( Environment.env == 'development' ) {
 			scope.formModel.fullname = 'Vash the Stampede';
 			scope.formModel.card_number = '4242424242424242';
-			scope.formModel.exp = '12/16';
+			scope.formModel.exp = '1216';
 			scope.formModel.cvc = '123';
 			scope.formModel.street1 = "No-man's Land";
 			scope.formModel.postcode = '11111';
@@ -75,12 +75,11 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 
 		// New card
 		if ( scope.formModel.selectedCard == 0 ) {
-
-			var exp = scope.formModel.exp.split( '/' );
+			
 			var formData = {
 				number: scope.formModel.card_number,
-				exp_month: exp[0],
-				exp_year: exp[1],
+				exp_month: scope.formModel.exp.substr( 0, 2 ),
+				exp_year: scope.formModel.exp.substr( 2, 2 ),
 				cvc: scope.formModel.cvc,
 
 				name: scope.formModel.fullname,
