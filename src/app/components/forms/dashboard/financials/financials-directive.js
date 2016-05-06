@@ -11,6 +11,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 		scope.formModel.percentage_split = 10;
 		scope.stripeMeta = null;
 		scope.isLoaded = false;
+		scope.tos_signed = false;
 		scope.additionalOwnerIndex = 0;
 
 		function dotflatten(res, obj, current) {
@@ -144,10 +145,51 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 			scope.additionalOwnerIndex++;
 		}
 
+		scope.onSubmitPaypal = function(  )
+		{
+			console.log( scope.paypal.authUrl );
+			window.location = scope.paypal.authUrl;
+		}
+		scope.onSubmitTOS = function()
+		{
+			var promise = Api.sendRequest( '/web/dash/financials/agree' );
+			return promise.then( function( response )
+			{
+				if ( response.success !== false ) {
+					angular.extend( scope, response );
+				}
+				return response;
+			} );
+		}
+
+		scope.onSubmitTemp = function( )
+		{
+			var promise;
+			if ( !scope.account ) {
+				promise = Api.sendRequest( '/web/dash/financials/setup', scope.formModel );
+			}
+			else {
+				promise = Api.sendRequest( '/web/dash/financials/save', scope.formModel );
+			}
+
+			return promise.then( function( response )
+			{
+				if ( response.success !== false ) {
+					angular.extend( scope, response );
+					angular.extend( scope, { isLoaded: true } );
+				}
+
+				return response;
+			} );
+		};
+
 	};
 
-	form.onSubmit = function( scope )
+
+	// I don't know how to work this. ^AG
+	/*form.onSubmit = function( scope )
 	{
+
 		var promise;
 		if ( !scope.account ) {
 			promise = Api.sendRequest( '/web/dash/financials/setup', scope.formModel );
@@ -160,11 +202,12 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 		{
 			if ( response.success !== false ) {
 				angular.extend( scope, response );
+				angular.extend( scope, { isLoaded: true } );
 			}
 
 			return response;
 		} );
-	};
+	};*/
 
 	return form;
 } );
