@@ -30,6 +30,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 				scope.startedPrimary = scope.sellable && scope.sellable.primary;
 				scope.hasPrimarySellable = payload.hasPrimarySellable;
 				scope.minPrice = payload.minPrice || 50;
+				scope.isUserVerified = payload.isUserVerified;
 
 				// If there is no primary sellable yet, let's mark this as the primary sellable.
 				// This will only be used if they set the pricing type to something other than free.

@@ -39,9 +39,9 @@
 		<div ng-if="App.user.has_marketplace_access">
 
 			<form-group name="pricing_type" label="Pricing Type">
-				<p class="help-block">
+				<p class="help-block" ng-if="!isUserVerified">
 					<span class="jolticon jolticon-notice"></span>
-					You must set up your account's financial info before you can start accepting money.
+					You must <a ui-sref="dashboard.account.financials" ui-sref-active="active">set up your account's financial info</a> before you can start accepting money.
 				</p>
 
 				<div class="radio">
@@ -52,28 +52,33 @@
 					</label>
 				</div>
 
-				<div class="radio">
-					<label>
-						<input form-control="radio" value="pwyw">
-						<span>Pay What You Want</span> &mdash;
-						<span class="help-inline">They will be able to pay $0 or more. They set the price.</span>
-					</label>
+				<div ng-if="isUserVerified">
+
+					<div class="radio">
+						<label>
+							<input form-control="radio" value="pwyw">
+							<span>Pay What You Want</span> &mdash;
+							<span class="help-inline">They will be able to pay $0 or more. They set the price.</span>
+						</label>
+					</div>
+
+					<div class="radio">
+
+						<label ng-if="package.has_browser_builds">
+							<input form-control="radio" value="paid" disabled>
+							<span>Fixed Minimum Price</span> &mdash;
+							<span class="help-inline" ><span class="jolticon jolticon-notice"></span>DISABLED. Packages with browser builds cannot be sold at the moment. </span>
+						</label>
+
+						<label ng-if="!package.has_browser_builds">
+							<input form-control="radio" value="paid">
+							<span>Fixed Minimum Price</span> &mdash;
+							<span class="help-inline">Charge a fixed price for your game with the ability for them to pay more as an optional tip.</span>
+						</label>
+					</div>
+
 				</div>
 
-				<div class="radio">
-
-					<label ng-if="package.has_browser_builds">
-						<input form-control="radio" value="paid" disabled>
-						<span>Fixed Minimum Price</span> &mdash;
-						<span class="help-inline" ><span class="jolticon jolticon-notice"></span>DISABLED. Packages with browser builds cannot be sold at the moment. </span>
-					</label>
-
-					<label ng-if="!package.has_browser_builds">
-						<input form-control="radio" value="paid">
-						<span>Fixed Minimum Price</span> &mdash;
-						<span class="help-inline">Charge a fixed price for your game with the ability for them to pay more as an optional tip.</span>
-					</label>
-				</div>
 			</form-group>
 
 			<form-group name="price" label="Suggested Price" ng-if="formModel.pricing_type == 'pwyw'" optional="true">
