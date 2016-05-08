@@ -4,12 +4,22 @@
 
 	<div ng-if="formState.isLoaded">
 
+		<div class="alert alert-info" ng-if="!account.is_verified" translate>
+			Before you can start selling your games, we'll need to gather some details from you. This will ensure that your account is completely set up and ready to run smoothly on the Game Jolt Marketplace.
+		</div>
+
+		<div class="alert alert-success" ng-if="account.is_verified">
+			<span class="jolticon jolticon-check"></span>
+			<span translate>Your account is ready to sell games on Game Jolt! You can set additional options below.</span>
+		</div>
+		<br>
+
 		<!--
 			First step is to sign the distribution agreement.
 		-->
 		<fieldset>
 			<legend>
-				<span ng-if="account" class="pull-right done-icon" tooltip="You have completed this section.">
+				<span ng-if="account" class="pull-right done-icon" tooltip="{{ 'You have completed this section.' | translate }}">
 					<span class="jolticon jolticon-check big"></span>
 				</span>
 				Distribution Agreement
@@ -22,7 +32,7 @@
 
 					<p>Please read this whole agreement, as it contains the terms of your relationship with Game Jolt and your use of the Game Jolt Marketplace to sell games and other goods.</p>
 
-					<p>By agreeing to this, you’re also agreeing to our Terms of Service and Privacy Policy, which are incorporated into this agreement.</p>
+					<p>By agreeing to this, you're also agreeing to our Terms of Service and Privacy Policy, which are incorporated into this agreement.</p>
 				</div>
 				<br>
 
@@ -46,21 +56,18 @@
 
 		<fieldset ng-if="account">
 			<legend>
-				<span ng-if="user.paypal_id" class="pull-right done-icon" tooltip="You have completed this section.">
+				<span ng-if="user.paypal_id" class="pull-right done-icon" tooltip="{{ 'You have completed this section.' | translate }}">
 					<span class="jolticon jolticon-check big"></span>
 				</span>
-				PayPal Account
+				<span translate>PayPal Account</span>
 			</legend>
 
 			<div class="form-group">
 
-				<div ng-if="!user.paypal_id">
-					<p class="small">You'll need to link your PayPal account to receive payments from Game Jolt.</p>
-				</div>
+				<p class="small" translate>We currently use PayPal for automatic monthly deposits. You will also be able to withdraw your funds at any time through this linked account.</p>
 
 				<div ng-if="user.paypal_id">
-					<p class="small">You can change the PayPal account that we use for automatic withdrawals at any time.</p>
-					<label class="control-label">Current PayPal Account</label>
+					<label class="control-label" translate>Current PayPal Account</label>
 					<div class="form-static">{{ user.paypal_email_address }}</div>
 					<br>
 				</div>
@@ -69,18 +76,18 @@
 					class="btn btn-primary-outline"
 					ng-click="linkPayPal()"
 					>
-					<span ng-if="!user.paypal_id">Link PayPal Account</span>
-					<span ng-if="user.paypal_id">Change PayPal Account</span>
+					<span ng-if="!user.paypal_id" translate>Link PayPal Account</span>
+					<span ng-if="user.paypal_id" translate>Change PayPal Account</span>
 				</button>
 			</div>
 		</fieldset>
 
 		<fieldset ng-if="account.is_verified">
-			<legend>Percentage Split</legend>
+			<legend translate>Percentage Split</legend>
 
-			<p class="small">You're able to decide how much you think we deserve from your sales. <strong>We won't allow you to give us more than 10%.</strong></p>
-
-			<p class="small">If you feel like supporting Game Jolt, we'd rather you spend your revenue on buying games from other developers. We have a Wallet system to help in this!</p>
+			<p class="small" translate>
+				You decide what percentage of your sale revenue to give to Game Jolt. <strong>We won't let you give us more than 10%</strong> because we'd rather have you support other indie developers by buying their games.
+			</p>
 
 			<div class="form-group">
 				<rzslider
@@ -93,19 +100,20 @@
 		</fieldset>
 
 		<fieldset ng-if="account.is_verified">
-			<legend>Wallet</legend>
+			<legend translate>Wallet</legend>
 
-			<p class="small">We store up to a certain amount of money in your Wallet. You can use this money to buy other games on the site from other developers.</p>
+			<p class="small" translate>Your Wallet is where your earnings will be stored for you to buy games on Game Jolt or withdraw into your PayPal account.</p>
 
-			<p class="small">When you buy using your Wallet, money goes directly to the developer. We never take a cut for sales when you pay with your Wallet, and there are no payment processing fees.</p>
+			<p class="small" translate>We never take a cut for sales when you pay with your Wallet, and there are no payment processing fees. The money goes directly to the seller.</p>
 
 			<form-group
 				name="wallet_maximum"
-				label="Max. Wallet Amount"
+				label="{{ 'Set an amount you'd like to keep in your wallet' | translate }}"
 				>
 				<p class="help-block">
-					You can store up to {{ maxWallet / 100 | currency:'$' }} USD in your Wallet. <br>
-					You can turn off the Wallet by setting it to $0.
+					<span translate>We'll keep this amount in your Wallet when doing automatic pay outs. This way you always have some money to buy other games on the site.</span>
+					<br>
+					<span translate>You can choose not to keep money in your Wallet by setting it $0.</span>
 				</p>
 
 				<input-group>
@@ -126,17 +134,20 @@
 		</fieldset>
 
 		<fieldset ng-if="account.is_verified">
-			<legend>Minimum Payout</legend>
+			<legend translate>Minimum Payout</legend>
 
-			<p class="small">Lorem ipsum.</p>
+			<p class="small" translate>If you'd like, you can set an amount below, and we will not make monthly deposits into your PayPal account until your revenue reaches this amount.</p>
 
 			<form-group
 				name="payout_minimum"
 				label="Min. Payout Amount"
 				>
 				<p class="help-block">
-					The max you can set this to is {{ maxPayout / 100 | currency:'$' }} USD. <br>
-					You can turn this off by setting it to $0, but note that we won't be able to send you money unless you have more than {{ minWithdraw / 100 | currency:'$' }} in your account.
+					<span translate translate-scope="{ max: currencyFilter( maxPayout / 100, '$' ) }">
+						The max you can set this to is {{ max }} USD.
+					</span>
+					<br>
+					<span translate>You can turn this off by setting it to $0.</span>
 				</p>
 
 				<input-group>
@@ -163,7 +174,7 @@
 			ng-click="onSubmit()"
 			>
 			<span class="jolticon jolticon-edit"></span>
-			Save
+			<span translate>Save</span>
 		</button>
 	</div>
 

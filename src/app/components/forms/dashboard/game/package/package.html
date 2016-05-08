@@ -41,42 +41,42 @@
 			<form-group name="pricing_type" label="Pricing Type">
 				<p class="help-block" ng-if="!isUserVerified">
 					<span class="jolticon jolticon-notice"></span>
-					You must <a ui-sref="dashboard.account.financials" ui-sref-active="active">set up your account's financial info</a> before you can start accepting money.
+					<span translate translate-scope="{ url: $state.href( 'dashboard.account.financials' ) }">
+						You must <a href="{{ url }}">set up your financial information</a> before you can start accepting money.
+					</span>
 				</p>
 
-				<div class="alert alert-warning" ng-if="isUserVerified && package.has_browser_builds">
+				<div class="alert alert-warning" ng-if="isUserVerified && package.has_browser_builds" translate>
 					Packages with browser builds cannot be sold at this time.
 				</div>
 
 				<div class="radio">
 					<label>
 						<input form-control="radio" value="free">
-						<span>Free</span> &mdash;
-						<span class="help-inline">Completely free with no option to pay at all.</span>
+						<span translate>Free</span> &mdash;
+						<span class="help-inline" translate>Completely free with no option to pay at all.</span>
 					</label>
 				</div>
 
 				<div class="radio" ng-class="{ disabled: !isUserVerified }">
 					<label>
 						<input form-control="radio" value="pwyw" ng-disabled="!isUserVerified">
-						<span>Pay What You Want</span> &mdash;
-						<span class="help-inline">They will be able to pay $0 or more. They set the price.</span>
+						<span translate>Pay What You Want</span> &mdash;
+						<span class="help-inline" translate>They will be able to pay $0 or more. They set the price.</span>
 					</label>
 				</div>
 
 				<div class="radio" ng-class="{ disabled: !isUserVerified || package.has_browser_builds }">
 					<label>
 						<input form-control="radio" value="paid" ng-disabled="!isUserVerified || package.has_browser_builds">
-						<span>Fixed Minimum Price</span> &mdash;
-						<span class="help-inline">Charge a fixed price for your game with the ability for them to pay more as an optional tip.</span>
+						<span translate>Paid</span> &mdash;
+						<span class="help-inline" translate>Charge a specific price with the ability for them to pay more.</span>
 					</label>
 				</div>
 
 			</form-group>
 
 			<form-group name="price" label="Suggested Price" ng-if="formModel.pricing_type == 'pwyw'" optional="true">
-				<p class="help-block">You're able to set a suggested amount for this package if you'd like. They will still be able to set it to $0 if they want.</p>
-
 				<div class="row">
 					<div class="col-sm-3">
 						<gj-toggle-switch type="checkbox" ng-model="formState.hasSuggestedPrice" toggle-switch-on-text="On" toggle-switch-off-text="Off"></gj-toggle-switch>
@@ -111,7 +111,7 @@
 
 			<form-group name="primary" label="Primary Package" optional="!startedPrimary && hasPrimarySellable">
 				<p class="help-block" translate>
-					We use the primary package to determine the price to show when browsing game listings. There can only be one primary package per game.
+					We use the primary package to determine the price to show on game listings. You can only have one primary package for your game.
 				</p>
 				<div class="checkbox">
 					<label>

@@ -3,12 +3,12 @@
 
 		<div class="page-help">
 			<p>
-				<strong translate>You can use the Sale Widget to sell your Game Jolt packages directly on your site!</strong>
+				<strong translate>You can use our Sale Widget to sell games directly from your own site!</strong>
 			</p>
 
-			<p translate>
-				Users and guests can purchase through the Sale Widget. When guests buy your package, they will be emailed a key page that they can use to download. Any time you release updates to your package, the key page will update as well. For users that buy this package, they will gain access to this game in their game library.
-			</p>
+			<p translate>For purchases made by Game Jolt members, your game will automatically appear in their Game Library.</p>
+
+			<p translate>Purchases made by folks who aren't members or signed into Game Jolt will be emailed a link to a game key page; all future updates you make to your games will be retrievable through this same page.</p>
 		</div>
 
 		<h3 translate>
@@ -17,18 +17,18 @@
 
 		<div class="form-horizontal">
 			<div class="form-group">
-				<label class="control-label col-xs-3">Theme</label>
+				<label class="control-label col-xs-3" translate>Theme</label>
 				<div class="col-xs-9">
 					<div class="radio">
 						<label>
 							<input type="radio" ng-model="widgetCtrl.theme" value="">
-							Dark
+							<span translate>Dark</span>
 						</label>
 					</div>
 					<div class="radio">
 						<label>
 							<input type="radio" ng-model="widgetCtrl.theme" value="light">
-							Light
+							<span translate>Light</span>
 						</label>
 					</div>
 				</div>

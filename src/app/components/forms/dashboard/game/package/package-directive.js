@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage', function( Form, App, Api, Game_Package, Sellable )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage', function( $state, Form, App, Api, Game_Package, Sellable )
 {
 	var form = new Form( {
 		model: 'Game_Package',
@@ -12,6 +12,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 
 	form.onInit = function( scope )
 	{
+		scope.$state = $state;
 		scope.App = App;
 		scope.formModel.game_id = scope.game.id;
 

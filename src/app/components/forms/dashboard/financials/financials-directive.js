@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', function( $q, $window, Form, Api, Growls, Environment )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', function( $q, $window, Form, Api, Growls, Environment, currencyFilter )
 {
 	var form = new Form( {
 		template: '/app/components/forms/dashboard/financials/financials.html',
@@ -7,6 +7,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 
 	form.onInit = function( scope )
 	{
+		scope.currencyFilter = currencyFilter;
 		scope.formState.isLoaded = false;
 
 		Api.sendRequest( '/web/dash/financials/save' )
