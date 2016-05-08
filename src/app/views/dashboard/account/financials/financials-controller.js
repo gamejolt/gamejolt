@@ -1,8 +1,6 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Account.FinancialsCtrl', function( $scope, App, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.Account.FinancialsCtrl', function( $scope, App, gettextCatalog, payload )
 {
-	App.title = 'Set Up Financials'
-	$scope.accountCtrl.heading = 'Your Financial Info';
+	App.title = gettextCatalog.getString( 'Set Up Financials' );
 
-	this.account = payload.account;
-	console.log( payload );
+	$scope.accountCtrl.heading = gettextCatalog.getString( 'Your Financial Info' );
 } );
