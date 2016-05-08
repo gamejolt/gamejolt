@@ -32,7 +32,7 @@
 						<div class="col-xs-6 col-sm-4">
 							<div class="stat-big stat-big-smaller">
 								<div class="stat-big-label" translate>Revenue To Date</div>
-								<div class="stat-big-digit">{{ ::overviewCtrl.revenueTotal | currency:'$' }}</div>
+								<div class="stat-big-digit">{{ ::overviewCtrl.revenueTotal || 0 | currency:'$' }}</div>
 							</div>
 						</div>
 						<div class="col-xs-6 col-sm-4">
@@ -41,7 +41,7 @@
 									<span translate>Pending Revenue</span>
 								</div>
 								<div class="stat-big-digit">
-									{{ ::overviewCtrl.revenuePendingActivation | currency:'$' }}
+									{{ ::overviewCtrl.revenuePendingActivation || 0 | currency:'$' }}
 									<span class="jolticon jolticon-help-circle text-muted" tooltip="To account for refunds, chargebacks, and fraud, we hold on to sales revenue for 7 days."></span>
 								</div>
 							</div>
@@ -49,7 +49,7 @@
 						<div class="col-xs-6 col-sm-4">
 							<div class="stat-big stat-big-smaller">
 								<div class="stat-big-label" translate>Wallet Balance</div>
-								<div class="stat-big-digit">{{ ::overviewCtrl.walletBalance | currency:'$' }}</div>
+								<div class="stat-big-digit">{{ ::overviewCtrl.walletBalance || 0 | currency:'$' }}</div>
 							</div>
 						</div>
 					</div>
