@@ -1,7 +1,7 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	$scope, $stateParams, $injector, $timeout,
 	Environment, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
-	Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable,
+	Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable, Comment,
 	Registry, Scroll )
 {
 	var _this = this;
@@ -80,6 +80,13 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		this.refreshRatingInfo = refreshRatingInfo;
 		this.report = report;
 		this.scrollToPackages = scrollToPackages;
+		
+		// Load comment count
+		Comment.fetch( 'Game', this.game.id, 1 ).then( function( commentPayload )
+		{
+			console.log('COMMENT FETCH, MAH BOI', commentPayload);
+			_this.commentsCount = commentPayload.count || 0;
+		} );
 
 		// Any game rating change will broadcast this event.
 		// We catch it so we can update the page with the new rating! Yay!
