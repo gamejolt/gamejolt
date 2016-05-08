@@ -65,6 +65,11 @@
 							<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )"
 								am-time-ago="::gameCtrl.game.published_on"></a>
 						</span>
+						
+						<span class="game-header-status" ng-if="Game_ViewState.isDevlog">
+							<span class="dot-separator"></span>
+							<span class="tag tag-active" ng-if="Game_ViewState.isDevlog" gj-tooltip="This game is still in development">Devlog</span>
+						</span>
 
 						<span class="game-header-ogrs" ng-if="gameCtrl.game.tigrs_age">
 							<span class="dot-separator hidden-xs"></span>
