@@ -84,7 +84,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		// Load comment count
 		Comment.fetch( 'Game', this.game.id, 1 ).then( function( commentPayload )
 		{
-			console.log('COMMENT FETCH, MAH BOI', commentPayload);
 			_this.commentsCount = commentPayload.count || 0;
 		} );
 
