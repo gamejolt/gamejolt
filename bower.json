@@ -32,7 +32,7 @@
     "humanize-duration": "3.0.0",
     "angular-inview": "1.5.6",
     "angular-elastic": "2.5.1",
-    "angularjs-slider": "2.9.0",
+    "angularjs-slider": "2.13.0",
     "angular-credit-cards": "3.0.0",
     "angular-ui-mask": "1.8.3"
   },
