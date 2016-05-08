@@ -6,7 +6,7 @@
 				{{ ::'games.view.overview_tab' | translate }}
 			</a>
 		</li>
-		<li>
+		<li ng-if="!Game_ViewState.isDevlog">
 			<a ui-sref=".devlog.list" ng-class="{ active: $state.includes( 'discover.games.view.devlog' ) }">
 				Devlog
 				<span class="badge">3</span>

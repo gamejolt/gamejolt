@@ -1,6 +1,8 @@
 <div class="row">
 	<div class="col-xs-12 col-sm-6 col-md-12">
 
+		<hr ng-if="Game_ViewState.isDevlog">
+
 		<!-- Game Stats -->
 		<ul class="stat-list">
 			<li class="stat-big stat-big-smaller">
@@ -34,22 +36,23 @@
 			<li class="stat-big stat-big-smaller">
 				<div class="stat-big-label">
 					{{ ::'games.view.stats.ratings_label' | translate }}
-					<span ng-if="!gameCtrl.game.ratings_enabled" class="jolticon jolticon-help-circle text-muted" tooltip="Ratings are disabled for this game."></span>
+					<span ng-if="!gameCtrl.game.ratings_enabled && !Game_ViewState.isDevlog" class="jolticon jolticon-help-circle text-muted" tooltip="Ratings are disabled for this game."></span>
+					<span ng-if="gameCtrl.game.ratings_enabled && Game_ViewState.isDevlog" class="jolticon jolticon-help-circle text-muted" tooltip="Ratings are disabled for Devlogs."></span>
 				</div>
 				<div class="stat-big-digit">
 					<span gj-lazy-placeholder="gameCtrl.game">
 						<span class="lazy-placeholder"></span>
-						<span ng-if="gameCtrl.game.ratings_enabled" title="{{ ::gameCtrl.game.rating_count || 0 | number }}">
+						<span ng-if="gameCtrl.game.ratings_enabled && !Game_ViewState.isDevlog" title="{{ ::gameCtrl.game.rating_count || 0 | number }}">
 							{{ ::gameCtrl.game.rating_count || 0 | fuzzyNumber }}
 						</span>
-						<span ng-if="!gameCtrl.game.ratings_enabled">
-							OFF
+						<span ng-if="!gameCtrl.game.ratings_enabled || Game_ViewState.isDevlog">
+							{{ ::'games.view.stats.na' | translate }}
 						</span>
 					</span>
 				</div>
 			</li>
 
-			<li ng-if="::gameCtrl.game.ratings_enabled">
+			<li ng-if="::gameCtrl.game.ratings_enabled && !Game_ViewState.isDevlog">
 				<a
 					style="display: inline-block"
 					ng-class="{ active: overviewCtrl.isShowingRatingBreakdown }"
@@ -61,7 +64,7 @@
 			</li>
 		</ul>
 
-		<div ng-if="::gameCtrl.game.ratings_enabled">
+		<div ng-if="::gameCtrl.game.ratings_enabled && !Game_ViewState.isDevlog">
 			<div gj-expand-when="overviewCtrl.isShowingRatingBreakdown">
 				<div class="rating-breakdown well fill-lightest">
 					<table class="table">
