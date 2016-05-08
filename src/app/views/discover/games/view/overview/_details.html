@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-xs-12 col-sm-6 col-md-12" ng-if="!Game_ViewState.isDevlog">
+	<div class="col-xs-12 col-sm-6 col-md-12">
 
 		<div>
 			<strong>Genre:</strong>
@@ -140,13 +140,13 @@
 		</div>
 
 	</div>
-	<div class="col-xs-12 col-md-12" ng-class="{'col-sm-6': !Game_ViewState.isDevlog}">
+	<div class="col-xs-12 col-sm-6 col-md-12">
 
 		<!-- Developer Info -->
 		<div class="developer-info" ng-if="::gameCtrl.game.developer">
 			<div gj-user-avatar="::gameCtrl.game.developer"></div>
 
-			<h4 class="sans-margin-bottom" ng-class="{ 'section-header': Screen.isSm || Screen.isXs, 'sans-margin-top': Game_ViewState.isDevlog }">
+			<h4 class="sans-margin-bottom" ng-class="{ 'section-header': Screen.isSm || Screen.isXs }">
 				<a class="link-unstyled" ui-sref="profile.overview( { slug: gameCtrl.game.developer.slug, id: gameCtrl.game.developer.id } )">
 					{{ ::gameCtrl.game.developer.display_name }}
 				</a>

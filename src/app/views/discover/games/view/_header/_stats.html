@@ -18,7 +18,6 @@
 	-->
 	<li class="game-header-stats-voltage stat-big stat-big-smaller"
 		ng-class="Screen.isXs ? 'text-center' : 'text-right'"
-		ng-if="!Game_ViewState.isDevlog"
 		>
 
 		<div class="game-header-stats-voltage-stat">
@@ -39,7 +38,7 @@
 		<gj-meter
 			class="meter-dark"
 			ng-repeat="_ in [ gameCtrl.game.avg_rating ]"
-			ng-if="::gameCtrl.game.ratings_enabled && !Game_ViewState.isDevlog"
+			ng-if="::gameCtrl.game.ratings_enabled"
 			meter-rating="::gameCtrl.game.avg_rating"
 			meter-big="true"
 			>
