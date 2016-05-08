@@ -68,6 +68,15 @@ angular.module( 'App.Client.PackageCardButtons' ).directive( 'gjClientPackageCar
 				ctrl.localPackage = localPackage;
 			} );
 
+			ctrl.installClick = function( build )
+			{
+				if ( ctrl.showPayment( build ) ) {
+					return;
+				}
+
+				ctrl.startInstall( build );
+			};
+
 			ctrl.startInstall = function( build )
 			{
 				Analytics.trackEvent( 'game-package-card', 'install' );
@@ -79,6 +88,8 @@ angular.module( 'App.Client.PackageCardButtons' ).directive( 'gjClientPackageCar
 					build,
 					build._launch_options
 				);
+
+				ctrl.isPaymentOpen = false;
 			};
 
 			ctrl.pauseInstall = function()

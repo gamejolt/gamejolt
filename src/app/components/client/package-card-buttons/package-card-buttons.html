@@ -39,7 +39,7 @@
 	<!-- Able to install game -->
 	<button class="btn btn-success-outline"
 		ng-if="ctrl.canInstall && !ctrl.localPackage"
-		ng-click="ctrl.startInstall( ctrl.downloadableBuild )"
+		ng-click="ctrl.installClick( ctrl.downloadableBuild )"
 		>
 		<span class="jolticon jolticon-download-box"></span>
 		<span translate>Install</span>

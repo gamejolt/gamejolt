@@ -110,6 +110,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		var os = Device.os();
 		var arch = Device.arch();
 
+		$scope.gameCtrl.packages = this.packages || [];
 		$scope.gameCtrl.installableBuilds = Game.pluckInstallableBuilds( this.packages || [], os, arch );
 		$scope.gameCtrl.browserBuilds = Game.pluckBrowserBuilds( this.packages || [] );
 

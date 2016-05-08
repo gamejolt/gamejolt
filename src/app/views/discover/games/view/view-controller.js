@@ -79,7 +79,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		this.onFollowClick = onFollowClick;
 		this.refreshRatingInfo = refreshRatingInfo;
 		this.report = report;
-		this.scrollToPackages = scrollToPackages;
+		this.scrollToMultiplePackages = scrollToMultiplePackages;
+		this.scrollToPackagePayment = scrollToPackagePayment;
 
 		// Any game rating change will broadcast this event.
 		// We catch it so we can update the page with the new rating! Yay!
@@ -170,9 +171,15 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		Report_Modal.show( _this.game );
 	}
 
-	function scrollToPackages()
+	function scrollToMultiplePackages()
 	{
 		_this.showMultiplePackagesMessage = true;
 		Scroll.to( 'game-releases' );
+	}
+
+	function scrollToPackagePayment( package )
+	{
+		Scroll.to( 'game-package-card-' + package.id );
+		$scope.$broadcast( 'Game_Package_Card.showPaymentOptions', package );
 	}
 } );
