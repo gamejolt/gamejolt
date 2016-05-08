@@ -142,10 +142,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			}
 
 			_this.convenienceMessage = undefined;
-			if ( status == Game.DEVELOPMENT_STATUS_WIP && !_this.packages.length ) {
-				_this.convenienceMessage = 'wip';
-			}
-			else if ( status == Game.DEVELOPMENT_STATUS_CANCELED && !_this.packages.length ) {
+			if ( status == Game.DEVELOPMENT_STATUS_CANCELED && !_this.packages.length ) {
 				_this.convenienceMessage = 'canceled-no-builds';
 			}
 			else if ( status == Game.DEVELOPMENT_STATUS_CANCELED && _this.packages.length ) {
