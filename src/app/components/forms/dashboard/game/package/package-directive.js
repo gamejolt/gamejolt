@@ -54,10 +54,11 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 						scope.formModel.title = scope.game.title;
 					}
 
-					if ( scope.sellable && scope.sellable.type != 'free' ) {
+					scope.formModel.primary = scope.sellable.primary;
+
+					if ( scope.sellable.type != 'free' ) {
 						scope.formModel.pricing_type = scope.sellable.type;
 						scope.formModel.price = scope.sellable.pricings ? scope.sellable.pricings[0].amount / 100 : 0;
-						scope.formModel.primary = scope.sellable.primary;
 
 						scope.formState.hasSuggestedPrice = !!scope.formModel.price;
 					}

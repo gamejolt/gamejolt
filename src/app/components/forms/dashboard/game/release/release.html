@@ -73,16 +73,16 @@
 					<br class="visible-xs">
 					<h5 class="sans-margin-top"><strong translate>Upload Browser Build</strong></h5>
 					<gj-form-dashboard-game-new-build
+						ng-if="!areWebBuildsLockedBySellable"
 						gj-build-type="browser"
 						gj-game="game"
 						gj-game-package="package"
 						gj-game-release="baseModel"
 						gj-game-package-builds="builds"
 						gj-form-submit-handler="onBuildAdded( formModel )"
-						ng-if="!areWebBuildsLockedBySellable"
 						>
 					</gj-form-dashboard-game-new-build>
-					<div class="alert alert-info" ng-if="areWebBuildsLockedBySellable" translate>Browser builds cannot currently be uploaded to games that are for sale.</div>
+					<div class="alert alert-info" ng-if="areWebBuildsLockedBySellable" translate>Browser builds can not currently be uploaded to games that are for sale.</div>
 				</div>
 			</div>
 
