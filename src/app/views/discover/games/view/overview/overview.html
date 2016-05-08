@@ -1,7 +1,7 @@
 <script type="application/ld+json" ng-bind="::overviewCtrl.microdata"></script>
 
 <!-- Media Bar -->
-<div ng-if="gameCtrl.game.media_count">
+<div ng-if="gameCtrl.game.media_count && !Game_ViewState.isDevlog">
 	<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
 </div>
 
@@ -56,7 +56,8 @@
 	</div>
 </section>
 
-<section class="section">
+<!-- Standard Game Details -->
+<section class="section" ng-if="!Game_ViewState.isDevlog">
 	<div class="container">
 
 		<div class="row">
@@ -161,34 +162,60 @@
 					<div gj-partial="/app/views/discover/games/view/overview/_details.html"></div>
 				</div>
 			</div>
-
-			<div class="col-xs-12 col-md-7 pull-left">
-				<div ng-if="overviewCtrl.latestArticles.length">
-					<h2>Latest News Updates</h2>
-
-					<gj-post-grid
-						post-grid-items="overviewCtrl.latestArticles"
-						post-grid-hide-thumb="true"
-						post-grid-size="small"
-						>
-					</gj-post-grid>
-
-					<a class="i-button big"
-						ng-if="gameCtrl.newsArticlesCount > 2"
-						ng-class="{ block: Screen.isXs }"
-						ui-sref="^.news.list"
-						>
-						<span class="jolticon jolticon-blog-article"></span>
-						View +{{ gameCtrl.newsArticlesCount - 2 | number }} More
-						<span ng-if="gameCtrl.newsArticlesCount == 3">Update</span>
-						<span ng-if="gameCtrl.newsArticlesCount > 3">Updates</span>
-					</a>
-					<br class="visible-xs">
-				</div>
-
-			</div>
+			
 		</div>
 
+	</div>
+</section>
+
+<!-- Devlog Game Details -->
+<section class="section" ng-if="Game_ViewState.isDevlog">
+	<div class="container">
+		
+		<div class="row clearfix">
+			
+			<!-- Game Description -->
+			<div class="col-lg-9 col-md-8 pull-left">
+
+				<div ng-if="!gameCtrl.game.description_compiled">
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder" style="width: 40%"></span>
+				</div>
+
+				<div ng-if="gameCtrl.game.description_compiled">
+					<gj-fade-collapse
+						fade-collapse-height="500"
+						fade-collapse-is-open="overviewCtrl.showFullDescription"
+						fade-collapse-is-required="overviewCtrl.canToggleDescription"
+						>
+						<div class="game-compiled-description" ng-bind-html="gameCtrl.game.description_compiled"></div>
+					</gj-fade-collapse>
+
+					<a class="hidden-text-expander"
+						ng-if="overviewCtrl.canToggleDescription"
+						ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"
+						gj-track-event="game-profile:show-full-description"
+						></a>
+				</div>
+				
+			</div>
+
+			<!-- Game Details -->
+			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 pull-right">
+				<div gj-partial="/app/views/discover/games/view/overview/_details.html"></div>
+			</div>
+			
+		</div>
+		
+		<!-- Devlog -->
+		<div class="row">
+			<div class="col-lg-8 col-lg-offset-1">
+				<gj-devlog-feed></gj-devlog-feed>
+			</div>
+		</div>
+		
 	</div>
 </section>
 
@@ -260,7 +287,7 @@
 </section>
 
 <!-- Comments -->
-<section class="section" id="comments" ng-if="gameCtrl.isLoaded">
+<section class="section" id="comments" ng-if="gameCtrl.isLoaded && !Game_ViewState.isDevlog">
 	<div class="container">
 		<div class="row">
 
