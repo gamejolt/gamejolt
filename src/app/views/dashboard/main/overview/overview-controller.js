@@ -6,8 +6,11 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', functio
 	// This will ensure that if they aren't an account with revenue, it won't show the revenue widget.
 	this.revenueTotal = payload.revenueTotal / 100;
 	this.revenueWithdrawn = payload.revenueWithdrawn / 100;
+	this.revenueSpent = payload.revenueSpent / 100;
 	this.revenueCurrent = payload.revenueCurrent / 100;
-	this.revenuePending = payload.revenuePending / 100;
+	this.revenuePendingWithdraw = payload.revenuePendingWithdraw / 100;
+	this.revenuePendingActivation = payload.revenuePendingActivation / 100;
+	this.walletBalance = payload.walletBalance / 100;
 
 	this.games = Game.populate( payload.games );
 

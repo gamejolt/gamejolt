@@ -28,28 +28,43 @@
 						<span class="jolticon jolticon-help-circle text-muted big" tooltip="{{ ::'dash.overview.revenue_tooltip' | translate }}"></span>
 					</h2>
 
-					<ul class="stat-list">
-						<li class="stat-big stat-big-smaller">
-							<div class="stat-big-label">{{ ::'dash.overview.revenue_total' | translate }}</div>
-							<div class="stat-big-digit">{{ ::overviewCtrl.revenueTotal | currency:'$' }}</div>
-						</li>
-						<li class="stat-big stat-big-smaller">
-							<div class="stat-big-label">{{ ::'dash.overview.revenue_withdrawn' | translate }}</div>
-							<div class="stat-big-digit">{{ ::overviewCtrl.revenueWithdrawn | currency:'$' }}</div>
-						</li>
-						<li class="stat-big stat-big-smaller">
-							<div class="stat-big-label">{{ ::'dash.overview.revenue_balance' | translate }}</div>
-							<div class="stat-big-digit">{{ ::overviewCtrl.revenueCurrent | currency:'$' }}</div>
-						</li>
-					</ul>
+					<div class="row">
+						<div class="col-xs-6 col-sm-4">
+							<div class="stat-big stat-big-smaller">
+								<div class="stat-big-label" translate>Total Revenue</div>
+								<div class="stat-big-digit">{{ ::overviewCtrl.revenueTotal | currency:'$' }}</div>
+							</div>
+						</div>
+						<div class="col-xs-6 col-sm-4">
+							<div class="stat-big stat-big-smaller">
+								<div class="stat-big-label">
+									<span translate>Pending Activation</span>
+								</div>
+								<div class="stat-big-digit">
+									{{ ::overviewCtrl.revenuePendingActivation | currency:'$' }}
+									<span class="jolticon jolticon-help-circle text-muted" tooltip="To account for refunds, chargebacks, and fraud, we hold on to sales revenue for 7 days."></span>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-6 col-sm-4">
+							<div class="stat-big stat-big-smaller">
+								<div class="stat-big-label" translate>Wallet Balance</div>
+								<div class="stat-big-digit">{{ ::overviewCtrl.walletBalance | currency:'$' }}</div>
+							</div>
+						</div>
+					</div>
 					<br>
+
+					<div ng-if="overviewCtrl.revenuePendingWithdraw > 0" class="alert alert-info" translate>
+						You have pending withdrawals amounting to {{ ::overviewCtrl.revenuePendingWithdraw | currency:'$' }}.
+					</div>
 
 					<div class="alert alert-info" ng-if="::overviewCtrl.revenuePending" translate translate-scope="{ amount: overviewCtrl.revenuePending }">
 						dash.overview.revenue_pending_message_html
 					</div>
 
 					<div>
-						<a class="i-button big block" ui-sref="dashboard.withdraw-funds">
+						<a class="btn btn-outline btn-block" ui-sref="dashboard.withdraw-funds">
 							<span class="jolticon jolticon-chevron-right needs-icon"></span>
 							{{ ::'dash.overview.revenue_withdraw_button' | translate }}
 						</a>
@@ -119,7 +134,7 @@
 
 				<div class="alert alert-info" ng-if="!overviewCtrl.activityNotifications.length" translate>dash.overview.activity_no_activity_html</div>
 
-				<a class="i-button big block" ui-sref="dashboard.activity.list( { tab: 'all' } )" gj-track-event="dash:overview:all-activity">
+				<a class="btn btn-outline btn-block" ui-sref="dashboard.activity.list( { tab: 'all' } )" gj-track-event="dash:overview:all-activity">
 					<span class="jolticon jolticon-notifications"></span>
 					{{ ::'dash.overview.activity_view_all_button' | translate }}
 				</a>
@@ -137,7 +152,7 @@
 					</h2>
 
 					<div>
-						<a class="i-button big block" ui-sref="dashboard.developer.games.add" gj-track-event="dash:overview:quick-add-game">
+						<a class="btn btn-success-outline btn-block" ui-sref="dashboard.developer.games.add" gj-track-event="dash:overview:quick-add-game">
 							<span class="jolticon jolticon-add"></span>
 							{{ ::'dash.overview.developer_games_add_button' | translate }}
 						</a>
