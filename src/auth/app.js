@@ -33,6 +33,7 @@ angular.module( 'App', [
 	'gj.Tooltip',
 	'gj.Popover',
 	'gj.Growls',
+	'gj.History',
 	'gj.Scroll.AutoScroll',
 
 	'gj.Form',
