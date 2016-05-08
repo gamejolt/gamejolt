@@ -1,26 +1,19 @@
 <div ng-if="gameCtrl.game">
 
 	<!-- Game Header -->
-	<div ng-if="Game_ViewState.showCover">
-		<gj-game-cover gj-game="gameCtrl.game">
-
-			<a class="btn btn-primary-outline btn-overlay-variant">
-				<span class="jolticon jolticon-play"></span>
-				Play Game
-			</a>
-
-			<!--<a class="btn btn-success-outline btn-overlay-variant">
-				<span class="jolticon jolticon-download"></span>
-				Download
-			</a>-->
-
-			<a class="btn btn-success-outline btn-overlay-variant">
-				<span class="jolticon jolticon-download-box"></span>
-				Install
-			</a>
-
-		</gj-game-cover>
-	</div>
+	<gj-game-cover gj-game="gameCtrl.game">
+		<div ng-if="!Screen.isXs && (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length)"> 
+			<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }"> 
+				<gj-game-cover-buttons 
+					game="gameCtrl.game" 
+					installable-builds="gameCtrl.installableBuilds" 
+					browser-builds="gameCtrl.browserBuilds" 
+					on-show-packages="gameCtrl.scrollToPackages()" 
+					> 
+				</gj-game-cover-buttons> 
+			</div> 
+		</div>
+	</gj-game-cover>
 
 	<div class="alert alert-warning sans-margin-bottom" ng-if="Game_ViewState.showExtendedHeader && gameCtrl.notificationCounts.news">
 		<div class="container">
