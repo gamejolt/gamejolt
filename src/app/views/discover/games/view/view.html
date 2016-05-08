@@ -1,39 +1,25 @@
 <div ng-if="gameCtrl.game">
 
 	<!-- Game Header -->
-	<div ng-if="Game_ViewState.showExtendedHeader">
-		<gj-game-cover ng-if="Game_ViewState.hasCover" gj-game="gameCtrl.game">
+	<div ng-if="Game_ViewState.showCover">
+		<gj-game-cover gj-game="gameCtrl.game">
 
-			<div ng-if="!Screen.isXs && (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length)">
-				<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-					<gj-game-cover-buttons
-						game="gameCtrl.game"
-						installable-builds="gameCtrl.installableBuilds"
-						browser-builds="gameCtrl.browserBuilds"
-						on-show-packages="gameCtrl.scrollToPackages()"
-						>
-					</gj-game-cover-buttons>
-				</div>
-			</div>
+			<a class="btn btn-primary-outline btn-overlay-variant">
+				<span class="jolticon jolticon-play"></span>
+				Play Game
+			</a>
+
+			<!--<a class="btn btn-success-outline btn-overlay-variant">
+				<span class="jolticon jolticon-download"></span>
+				Download
+			</a>-->
+
+			<a class="btn btn-success-outline btn-overlay-variant">
+				<span class="jolticon jolticon-download-box"></span>
+				Install
+			</a>
 
 		</gj-game-cover>
-
-		<section class="section fill-darker" ng-if="!Screen.isXs && !Game_ViewState.hasCover && (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length)">
-			<div class="container text-center">
-
-				<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-					<gj-game-cover-buttons
-						game="gameCtrl.game"
-						installable-builds="gameCtrl.installableBuilds"
-						browser-builds="gameCtrl.browserBuilds"
-						on-show-packages="gameCtrl.scrollToPackages()"
-						>
-					</gj-game-cover-buttons>
-				</div>
-
-			</div>
-		</section>
-
 	</div>
 
 	<div class="alert alert-warning sans-margin-bottom" ng-if="Game_ViewState.showExtendedHeader && gameCtrl.notificationCounts.news">
@@ -58,11 +44,15 @@
 		<div class="container">
 			<div class="clearfix">
 
+				<div class="game-header-avatar">
+					<div class="avatar-circle" gj-user-avatar="gameCtrl.game.developer"></div>
+				</div>
+
 				<!-- Title / Byline / Date -->
 				<div class="game-header-meta">
 
 					<!-- Game Title -->
-					<h1 class="section-header game-header-title">
+					<h1 class="h2 section-header game-header-title">
 						<a class="link-unstyled" ui-sref=".overview">
 							{{ ::gameCtrl.game.title }}
 						</a>

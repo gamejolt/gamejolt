@@ -1,20 +1,55 @@
-<section class="game-header-controls" ng-if="App.user">
+<!--<section class="game-header-controls" ng-if="App.user">
 	<div class="container">
 		<div gj-partial="/app/views/discover/games/view/_header/_controls.html"></div>
 	</div>
-</section>
+</section>-->
 
 <div class="game-header-nav" gj-scroll-affix is-affixed="gameCtrl.isNavAffixed" should-affix="Screen.height > 750">
 	<div class="container">
 
-		<div class="game-header-nav-addons no-animate-leave"
-			ng-if="Game_ViewState.showExtendedHeader"
-			ng-class="{ 'animate-affixed-on': gameCtrl.isNavAffixed, 'animate-affixed-off': !gameCtrl.isNavAffixed }"
-			>
-			<div gj-partial="/app/views/discover/games/view/_header/_rate.html"></div>
-			<div gj-partial="/app/views/discover/games/view/_header/_stats.html"></div>
+		<div class="row">
+			<div class="col-lg-8">
+
+				<!--<div class="game-header-nav-addons no-animate-leave"
+					ng-if="Game_ViewState.showExtendedHeader"
+					ng-class="{ 'animate-affixed-on': gameCtrl.isNavAffixed, 'animate-affixed-off': !gameCtrl.isNavAffixed }"
+					>
+					<div gj-partial="/app/views/discover/games/view/_header/_rate.html"></div>
+					<div gj-partial="/app/views/discover/games/view/_header/_stats.html"></div>
+				</div>-->
+
+				<div gj-partial="/app/views/discover/games/view/_header/_nav.html"></div>
+			</div>
+			<div class="col-lg-4">
+
+				<div style="margin-top: 8px">
+					<a class="big"
+						ng-if="!gameCtrl.libraryGame"
+						ng-click="gameCtrl.onFollowClick()"
+						ng-class="{ 'cake-button': Screen.isXs, 'btn btn-success-outline btn-block': !Screen.isXs }"
+						gj-tooltip="{{ 'library.followed.follow_game_button_tooltip' | translate }}"
+						>
+						<span class="jolticon jolticon-subscribe" ng-class="{ big: Screen.isXs }"></span>
+						{{ 'library.followed.follow_game_button' | translate }}
+					</a>
+
+					<a class="big active"
+						ng-if="gameCtrl.libraryGame"
+						ng-click="gameCtrl.onFollowClick()"
+						ng-class="{ 'cake-button': Screen.isXs, 'btn btn-success-outline active btn-block': !Screen.isXs }"
+						gj-tooltip="{{ 'library.followed.unfollow_game_button_tooltip' | translate }}"
+						>
+						<span class="jolticon jolticon-subscribed" ng-class="{ big: Screen.isXs }"></span>
+						{{ 'library.followed.unfollow_game_button' | translate }}
+					</a>
+				</div>
+
+			</div>
 		</div>
 
-		<div gj-partial="/app/views/discover/games/view/_header/_nav.html"></div>
+		<!--<div class="game-header-controls">-->
+			<!--<div gj-partial="/app/views/discover/games/view/_header/_controls.html"></div>-->
+		<!--</div>-->
+
 	</div>
 </div>
