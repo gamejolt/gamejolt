@@ -112,7 +112,7 @@ module.exports = function( config )
 
 	if ( config.production ) {
 		appScripts.push( '<script src="/app/modules/client-updater.js"></script>' );
-		authScripts.push( '<script src="/app/modules/client-updater.js"></script>' );
+		baseScripts.push( '<script src="/app/modules/client-updater.js"></script>' );
 	}
 
 	// Injections to modify App for client build.
