@@ -8,7 +8,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 
 	$scope.$watch( 'widgetCtrl.theme', function()
 	{
-		var widgetUrl = Environment.widgetHost + '/?key=' + _this.sellable.key;
+		var widgetUrl = Environment.widgetHost + '/sale/v1?key=' + _this.sellable.key;
 		if ( _this.theme == 'light' ) {
 			widgetUrl += '&theme=light';
 		}
