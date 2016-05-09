@@ -28,21 +28,23 @@
 			<div ng-if="!account">
 
 				<div class="tos-scroller overlay-scrollbar overlay-scrollbar-light">
-					<p>This is a binding agreement between Lucent Web Creative LLC, a Pennsylvania limited liability company (dba Game Jolt) (“Us” or “Game Jolt”), and you, the Account holder that accepts this Agreement (“You” or “Developer”).</p>
-
-					<p>Please read this whole agreement, as it contains the terms of your relationship with Game Jolt and your use of the Game Jolt Marketplace to sell games and other goods.</p>
-
-					<p>By agreeing to this, you're also agreeing to our Terms of Service and Privacy Policy, which are incorporated into this agreement.</p>
+					<div ng-include="'/app/components/forms/dashboard/financials/_distribution-agreement.html'"></div>
 				</div>
 				<br>
 
-				<p class="help-block">By clicking "I Agree", you are agreeing to the Distribution Agreement terms set forth above.</p>
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" ng-model="formState.distributionAgreement">
+						By checking this box and clicking the button below marked "I Agree," I agree that I have read, understand, and agree to be bound by the terms of this agreement.
+					</label>
+				</div>
+				<br>
 
 				<button
 					class="btn btn-success-outline"
+					ng-disabled="!formState.distributionAgreement"
 					ng-click="onSubmit()"
 					>
-					<span class="jolticon jolticon-checkbox"></span>
 					I Agree
 				</button>
 
