@@ -19,7 +19,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 		scope.formModel.country = 'us';
 		scope.formModel.selectedCard = 0;
 		if ( scope.cards && scope.cards.length ) {
-			scope.formModel.selectFormedCard = scope.cards[0].id;
+			scope.formModel.selectedCard = scope.cards[0].id;
 		}
 
 		scope.formModel.save_card = true;
@@ -75,7 +75,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 
 		// New card
 		if ( scope.formModel.selectedCard == 0 ) {
-			
+
 			var formData = {
 				number: scope.formModel.card_number,
 				exp_month: scope.formModel.exp.substr( 0, 2 ),
