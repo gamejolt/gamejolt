@@ -10,12 +10,11 @@ angular.module( 'App.Views' ).controller( 'Discover.HomeCtrl', function( $scope,
 
 	this.featuredItems = FeaturedItem.populate( payload.featuredGames );
 
-	this.weeksGames = Game.populate( payload.weeksGames );
 	this.hotGames = Game.populate( payload.hotGames );
 	this.bestGames = Game.populate( payload.bestGames );
 
 	this.hotArticles = Game_NewsArticle.populate( payload.hotArticles );
-	this.followedArticles = payload.followedArticles ? Game_NewsArticle.populate( payload.followedArticles ) : null;
+	this.followedArticles = payload.followedArticles ? Game_NewsArticle.populate( payload.followedArticles ) : [];
 
 	this.firesidePosts = Fireside_Post.populate( payload.firesidePosts );
 
@@ -23,10 +22,6 @@ angular.module( 'App.Views' ).controller( 'Discover.HomeCtrl', function( $scope,
 		hot: this.hotArticles,
 		followed: this.followedArticles,
 	};
-
-	var weekDateStart = $window.moment().subtract( 7, 'days' ).startOf( 'day' ).format( 'YYYY-MM-DD' );
-	var weekDateEnd = $window.moment().add( 1, 'days' ).startOf( 'day' ).format( 'YYYY-MM-DD' );
-	this.weekDateRange = weekDateStart + ':' + weekDateEnd;
 
 	this.activeNewsTab = 'hot';
 
