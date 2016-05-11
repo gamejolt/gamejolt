@@ -16,10 +16,20 @@
 
 	&-item
 		display: inline-block
-		margin-left: ($grid-gutter-width / 2)
-		margin-right: ($grid-gutter-width / 2)
-		width: 300px
 		text-align: left
+		margin-left: ($grid-gutter-width-xs / 2)
+		margin-right: ($grid-gutter-width-xs / 2)
+		width: $percentage-10
+
+		@media $media-sm-up
+			margin-left: ($grid-gutter-width / 2)
+			margin-right: ($grid-gutter-width / 2)
+
+		@media $media-sm
+			width: 250px
+
+		@media $media-md-up
+			width: 300px
 
 		.game-thumbnail
 			margin-bottom: 0

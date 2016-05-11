@@ -18,21 +18,18 @@
 		position: absolute
 		bottom: 20px
 		left: 20px
-		right: 0
+		right: 20px
 		z-index: 4
 
 		@media $media-md
 			bottom: 40px
 			left: 40px
+			right: 40px
 
 		@media $media-lg
 			bottom: 60px
 			left: 60px
-
-		.tag
-			background-color: $gray-dark
-			color: $white
-			margin-bottom: 7px
+			right: 60px
 
 	&-byline
 		color: $white
@@ -41,11 +38,13 @@
 
 	&-title
 		@extend .h2
+		text-overflow()
 		display: block
 		margin: 0
 		color: $white
 		font-weight: 300
 		line-height: 1.1
+		width: 99%
 
 	&-copy
 		color: $white
