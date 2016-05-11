@@ -144,17 +144,14 @@
 				</div>
 
 				<div ng-if="overviewCtrl.supporters.length > 0">
-					<h5><strong translate>Supporters</strong></h5>
+					<h2 translate>Supporters</h2>
 
 					<p class="small text-muted" translate translate-scope="{ developer: gameCtrl.game.developer.display_name }">
 						The kind people that helped support {{ developer }} by paying more than the minimum. Sorted by amount contributed.
 					</p>
 
-					<!--
-						TODO: Get the styling into the stylesheet.
-					-->
-					<div class="clearfix" style="margin-left: -5px; margin-right: -5px">
-						<div style="float: left; width: 25px; margin: 0 5px"
+					<div class="game-supporters">
+						<div class="game-supporter"
 							ng-repeat="user in overviewCtrl.supporters track by user.id"
 							>
 							<a class="user-avatar ng-scope"
