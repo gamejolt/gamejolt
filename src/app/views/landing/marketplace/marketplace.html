@@ -6,9 +6,9 @@
 		<p class="text-center">
 			<a class="link-help" href="#news" du-smooth-scroll>What's new?</a>
 		</p>
-		<br>
 
-		<div class="social-widgets text-center">
+		<div class="social-widgets text-center" ng-if="!Environment.isClient">
+			<br>
 			<gj-social-twitter-share content="Game Jolt will soon allow you to sell your games via a new kind of marketplace!"></gj-social-twitter-share>
 			<span class="dot-separator hidden-xs"></span>
 			<gj-social-facebook-share></gj-social-facebook-share>
