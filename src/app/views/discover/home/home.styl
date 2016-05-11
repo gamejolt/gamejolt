@@ -33,3 +33,33 @@
 		color: $text-muted
 		font-size: $font-size-small
 		margin-right: 10px
+
+	.marketplace-section
+		position: relative
+		overflow: hidden
+
+		.jolticon-heart
+			color: $gj-pink
+
+		.section-header
+		p
+			text-align: center
+
+		&-inner
+			max-width: 1700px
+			margin: 0 auto
+			padding-left: $grid-gutter-width-xs
+			padding-right: $grid-gutter-width-xs
+
+			@media $media-sm-up
+				padding-left: $grid-gutter-width
+				padding-right: $grid-gutter-width
+
+	.marketplace-mascot
+		position: relative
+		bottom: -45px
+		margin-top: @bottom
+		width: (480px / 2)
+		height: (550px / 2)
+		left: 50%
+		margin-left: -(@width / 2)
