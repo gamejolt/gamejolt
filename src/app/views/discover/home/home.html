@@ -90,7 +90,7 @@
 				<gj-game-thumbnail
 					class="col-xs-11 col-sm-4 col-md-3 meter-dark"
 					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
-					ng-repeat="game in homeCtrl.bestGames | limitTo:(Screen.isSm ? 6 : 8 ) track by game.id"
+					ng-repeat="game in homeCtrl.paidGames | limitTo:(Screen.isSm ? 6 : 8 ) track by game.id"
 					gj-game="game"
 					autoplay="true"
 					gj-track-event="home:paid:game:{{ $index }}"

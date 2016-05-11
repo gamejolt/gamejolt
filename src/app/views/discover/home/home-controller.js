@@ -13,6 +13,7 @@ angular.module( 'App.Views' ).controller( 'Discover.HomeCtrl', function( $scope,
 	this.featuredItems = FeaturedItem.populate( payload.featuredGames );
 
 	this.hotGames = Game.populate( payload.hotGames );
+	this.paidGames = Game.populate( payload.paidGames );
 	this.bestGames = Game.populate( payload.bestGames );
 
 	this.hotArticles = Game_NewsArticle.populate( payload.hotArticles );
