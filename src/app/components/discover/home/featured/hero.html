@@ -1,0 +1,62 @@
+<a class="discover-home-featured-hero" ui-sref="discover.games.view.overview( { id: $ctrl.game.id, slug: $ctrl.game.slug } )">
+
+	<div class="discover-home-featured-hero-shade"></div>
+
+	<div class="discover-home-featured-hero-content">
+		<div class="anim-fade-in-down">
+
+			<div class="discover-home-featured-hero-copy">
+				<div class="discover-home-featured-hero-title">
+					{{ ::$ctrl.game.title }}
+				</div>
+				<div class="discover-home-featured-hero-byline">
+					<span translate>by</span>
+					{{ ::$ctrl.game.developer.display_name }}
+				</div>
+				<p>{{ ::$ctrl.item.content }}</p>
+			</div>
+
+			<div class="discover-home-featured-hero-meta">
+				<gj-game-compat-icons gj-game="::$ctrl.game"></gj-game-compat-icons>
+
+				<span
+					ng-if="::$ctrl.game._has_packages"
+					class="discover-home-featured-hero-pricing"
+					>
+					<span ng-if="::!$ctrl.game.sellable.is_owned" ng-switch="::$ctrl.game.sellable.type">
+						<span ng-switch-when="paid">
+							${{ ::$ctrl.game.sellable.pricings[0].amount | gjCurrency:'' }}
+						</span>
+						<span ng-switch-when="pwyw" translate>
+							Name Your Price
+						</span>
+						<span ng-switch-default translate>
+							Free
+						</span>
+					</span>
+					<span ng-if="::$ctrl.game.sellable.is_owned" class="tag tag-active" translate>
+						Owned
+					</span>
+				</span>
+			</div>
+
+		</div>
+
+		<div class="btn btn-primary-outline btn-overlay-variant bgn-sm anim-fade-in-enlarge"
+			ng-class="{ 'btn-block': Screen.isXs }"
+			ui-sref="{{ ::$ctrl.game.getSref( null, true ) }}"
+			gj-track-event="home:featured:button"
+			>
+			<span class="jolticon jolticon-chevron-right"></span>
+			<span translate>View Game</span>
+		</div>
+	</div>
+
+	<img gj-img-responsive="{{ ::$ctrl.game.img_thumbnail }}" alt="">
+
+	<video ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.Screen.isDesktop" preload loop autoplay ng-attr-poster="{{ ::$ctrl.game.img_thumbnail }}">
+		<source ng-src="{{ ::$ctrl.webm }}" type="video/webm">
+		<source ng-src="{{ ::$ctrl.mp4 }}" type="video/mp4">
+	</video>
+
+</a>
