@@ -1,4 +1,7 @@
-<a class="discover-home-featured-hero" ui-sref="discover.games.view.overview( { id: $ctrl.game.id, slug: $ctrl.game.slug } )">
+<a class="discover-home-featured-hero"
+	ui-sref="discover.games.view.overview( { id: $ctrl.game.id, slug: $ctrl.game.slug } )"
+	gj-track-event="home:featured:click"
+	>
 
 	<div class="discover-home-featured-hero-shade"></div>
 
@@ -45,7 +48,6 @@
 		<div class="btn btn-primary-outline btn-overlay-variant bgn-sm anim-fade-in-enlarge"
 			ng-class="{ 'btn-block': Screen.isXs }"
 			ui-sref="{{ ::$ctrl.game.getSref( null, true ) }}"
-			gj-track-event="home:featured:button"
 			>
 			<span class="jolticon jolticon-chevron-right"></span>
 			<span translate>View Game</span>

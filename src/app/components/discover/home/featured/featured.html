@@ -29,7 +29,7 @@
 				ng-repeat="item in ($ctrl.Screen.isXs ? $ctrl.items : $ctrl.itemsSmUp) track by item.id"
 				gj-game="item.game"
 				autoplay="true"
-				gj-track-event="home:slider:game:{{ $index }}"
+				gj-track-event="home:featured:game:{{ $index }}"
 				>
 			</gj-game-thumbnail>
 		</div>
