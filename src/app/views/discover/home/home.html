@@ -83,10 +83,10 @@
 			</div>
 		</div>
 
-		<div ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
-			<div class="row">
+		<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
+			<div ng-class="{ 'row': !Screen.isXs }">
 				<gj-game-thumbnail
-					class="col-xs-10 col-sm-4 col-md-3"
+					class="col-xs-11 col-sm-4 col-md-3"
 					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
 					ng-repeat="game in homeCtrl.bestGames | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
 					gj-game="game"
@@ -99,7 +99,7 @@
 		<div class="text-right">
 			<a class="btn btn-primary-outline" ng-class="{ 'btn-block': Screen.isXs }" ui-sref="discover.games.list.section( { section: 'best' } )" gj-track-event="home:more-btn:best">
 				<span class="jolticon jolticon-chevron-right"></span>
-				More Games
+				Load More
 			</a>
 		</div>
 
@@ -126,10 +126,10 @@
 			</div>
 		</div>
 
-		<div ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
-			<div class="row">
+		<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
+			<div ng-class="{ 'row': !Screen.isXs }">
 				<gj-game-thumbnail
-					class="col-xs-10 col-sm-4"
+					class="col-xs-11 col-sm-4"
 					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
 					ng-repeat="game in homeCtrl.hotGames | limitTo:(Screen.isMobile ? 6 : 9 ) track by game.id"
 					gj-game="game"
@@ -142,7 +142,7 @@
 		<div class="text-right">
 			<a class="btn btn-primary-outline" ng-class="{ 'btn-block': Screen.isXs }" ui-sref="discover.games.list.section( { section: 'hot' } )" gj-track-event="home:more-btn:hot">
 				<span class="jolticon jolticon-chevron-right"></span>
-				More Games
+				Load More
 			</a>
 		</div>
 
