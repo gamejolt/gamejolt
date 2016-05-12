@@ -16,6 +16,9 @@ angular.module( 'App.Search' ).directive( 'gjSearchInput', function( Search )
 				var modelCtrl = ctrls[0];
 				scope.searchCtrl = ctrls[1];
 
+				// Obviouisly don't want browser autocomplete popping over.
+				element[0].autocomplete = 'off';
+
 				// Sync from the global search query to our input.
 				scope.$watch( function()
 				{
