@@ -35,16 +35,19 @@
 			</div>
 
 			<div
-				ng-if="(collection.type == 'followed' || collection.type == 'developer') && collection.id != App.user.id"
+				ng-if="(collection.type == 'followed' || collection.type == 'developer' || collection.type == 'owned') && collection.id != App.user.id"
 				ng-switch="::collection.type"
 				>
 				<p class="game-collection-desc" ng-switch-when="followed">
-					<span ng-if="::!collection.from_subscription">{{ ::'library.playlists.followed_description' | translate }}</span>
-					<span ng-if="::collection.from_subscription">{{ ::'library.playlists.subscription_followed_description' | translate:{ user: collection.owner.display_name } }}</span>
+					<span ng-if="::!collection.from_subscription" translate>library.playlists.followed_description</span>
+					<span ng-if="::collection.from_subscription" translate translate-scope="{ user: collection.owner.display_name }">library.playlists.subscription_followed_description</span>
 				</p>
 				<p class="game-collection-desc" ng-switch-when="developer">
-					<span ng-if="::!collection.from_subscription">{{ ::'library.playlists.developer_description' | translate }}</span>
-					<span ng-if="::collection.from_subscription">{{ ::'library.playlists.subscription_developer_description' | translate:{ user: collection.owner.display_name } }}</span>
+					<span ng-if="::!collection.from_subscription" translate>library.playlists.developer_description</span>
+					<span ng-if="::collection.from_subscription" translate translate-scope="{ user: collection.owner.display_name }">library.playlists.subscription_developer_description }}</span>
+				</p>
+				<p class="game-collection-desc" ng-switch-when="owned">
+					<span ng-if="::!collection.from_subscription" translate>Here are the games this person owns.</span>
 				</p>
 			</div>
 		</a>
