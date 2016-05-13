@@ -1,0 +1,118 @@
+<!doctype html>
+
+<html lang="en" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/" ng-app="App" ng-controller="AppCtrl">
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+		<!-- Base tag required -->
+		<base href="/">
+
+		<!-- Keep it from being crawled -->
+		<meta name="robots" content="noindex, nofollow">
+
+		<!-- http://docs.angularjs.org/guide/dev_guide.services.$location#hashbang-and-html5-modes_hashbang-mode_crawling-your-app -->
+		<!-- https://prerender.io/getting-started#test-it -->
+		<meta name="fragment" content="!">
+
+		<!-- https://github.com/ftlabs/fastclick#when-it-isnt-needed -->
+		<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="HandheldFriendly" content="True">
+		<meta name="apple-mobile-web-app-status-bar-style" content="white">
+
+		<!-- http://blogs.windows.com/windows_phone/b/wpdev/archive/2012/11/15/adapting-your-webkit-optimized-site-for-internet-explorer-10.aspx#step5 -->
+		<meta name="msapplication-tap-highlight" content="no">
+
+		<script type="text/javascript">
+
+			if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+				var msViewportStyle = document.createElement("style");
+				msViewportStyle.appendChild(
+					document.createTextNode(
+						"@-ms-viewport{width:auto!important}"
+					)
+				);
+				document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+			}
+
+		</script>
+
+		<link rel="stylesheet" href="/checkout/main.css">
+		<link rel="shortcut icon" href="/app/img/favicon.png">
+
+		<title ng-bind-html="(App.title ? App.title + ' | ' : '') + 'Game Jolt'">Game Jolt</title>
+
+	</head>
+
+	<!-- Add an empty class so we can hook into it when building and add classes for client, app, etc. -->
+	<body class="" gj-body-classes gj-auto-scroll>
+
+		<div id="shell">
+
+			<div id="header">
+				<div gj-user-bar="App.user" gj-current-site="main" hide-site-selector="Environment.isClient" ng-cloak>
+
+					<a class="btn btn-outline btn-dark-variant"
+						ng-if="Environment.isClient"
+						ng-click="HistoryNavigator.back()"
+						>
+						<span class="jolticon jolticon-chevron-left"></span>
+						Back to Game
+					</a>
+
+				</div>
+			</div>
+
+			<!-- Content -->
+			<div gj-loading-page-transition ng-animate-children>
+				<ui-view id="content" ng-cloak></ui-view>
+				<gj-growls></gj-growls>
+			</div>
+
+		</div>
+
+		<footer id="footer" ng-cloak>
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-6">
+						<p class="footer-links">
+							<a href="mailto:contact@gamejolt.com">Contact Game Jolt</a>
+							&nbsp;|&nbsp;
+							<a href="http://gamejolt.com/terms">Terms</a>
+							&nbsp;|&nbsp;
+							<a href="http://gamejolt.com/privacy">Privacy Policy</a>
+						</p>
+					</div>
+					<div class="col-sm-6">
+						<p class="footer-copyright">
+							&copy; {{ App.currentDate | date:'yyyy' }} Lucent Web Creative, LLC
+						</p>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+		<div gj-debug-bar></div>
+
+		<script src="/app/modules/error-tracking.js" crossorigin="anonymous"></script>
+
+		<script async src="https://www.google-analytics.com/analytics.js"></script>
+		<script>
+			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+			ga('create', 'UA-6742777-1', 'auto');
+			ga('require', 'linkid', 'linkid.js');
+		</script>
+
+		<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+		<script src="/app/vendor.js"></script>
+		<script src="/app/modules/vendor-checkout.js"></script>
+		<!-- inject client:base:modules -->
+		<script src="/checkout/app.js"></script>
+
+	</body>
+</html>

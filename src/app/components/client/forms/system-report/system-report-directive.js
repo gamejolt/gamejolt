@@ -18,12 +18,7 @@ angular.module( 'App.Client.Forms' ).directive( 'gjClientFormSystemReport', func
 			os_info: log.osInfo,
 		};
 
-		return Api.sendRequest( '/web/client/logs/submit', data, { allowComplexData: [ 'os_info' ] } ).then( function( response )
-		{
-			if ( !response.success ) {
-				return $q.reject( response );
-			}
-		} );
+		return Api.sendRequest( '/web/client/logs/submit', data, { allowComplexData: [ 'os_info' ] } );
 	};
 
 	return form;

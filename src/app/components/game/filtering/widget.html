@@ -1,6 +1,15 @@
 <nav class="game-filtering-widget-list platform-list inline">
 	<ul>
 		<li>
+			<a gj-popover-trigger="games-filter-price" gj-track-event="game-filtering:tab-price">
+				<span translate>Price</span>
+				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.price">
+					1
+				</span>
+				<span class="jolticon jolticon-chevron-down"></span>
+			</a>
+		</li>
+		<li>
 			<a gj-popover-trigger="games-filter-os" gj-track-event="game-filtering:tab-os">
 				{{ ::'games.filtering.os_label' | translate }}
 				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.os.length">{{ ctrl.filteringContainer.filters.os.length | number }}</span>
@@ -41,16 +50,28 @@
 	popover-on-blur="ctrl.onPopoverHidden( filter )"
 	>
 
-	<div class="game-filtering-widget-list-group list-group">
+	<div class="game-filtering-widget-list-group list-group list-group-dark">
 
 		<a class="list-group-item has-addon"
 			ng-repeat="option in options track by option"
 			ng-class="filter == 'os' || filter == 'browser' ? 'has-icon' : ''"
 			ng-click="ctrl.toggleFilterOption( filter, option )"
+			ng-mouseover="ctrl.hovered[ filter ] = option"
+			ng-mouseout="ctrl.hovered[ filter ] = null"
 			>
 
-			<div class="list-group-item-addon">
+			<!--
+				Array types get checboxes.
+			-->
+			<div class="list-group-item-addon" ng-if="Game_Filtering_Container.filterDefinitions[ filter ].type == 'array'">
 				<span class="jolticon" ng-class="ctrl.filteringContainer.isFilterOptionSet( filter, option ) ? 'jolticon-checkbox' : 'jolticon-box-empty text-muted'"></span>
+			</div>
+
+			<!--
+				Radio types get radio button things.
+			-->
+			<div class="list-group-item-addon" ng-if="Game_Filtering_Container.filterDefinitions[ filter ].type == 'radio'">
+				<span class="jolticon" ng-class="ctrl.filteringContainer.isFilterOptionSet( filter, option ) ? (ctrl.hovered[ filter ] == option ? 'jolticon-remove' : 'jolticon-radio-circle-filled') : 'jolticon-radio-circle text-muted'"></span>
 			</div>
 
 			<span class="jolticon"

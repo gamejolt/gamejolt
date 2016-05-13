@@ -2,6 +2,7 @@ angular.module( 'App.Notifications.Popover' ).directive( 'gjNotificationsPopover
 {
 	var COUNT_INTERVAL = (5 * 60 * 1000);  // 5 minutes.
 	var NOTIFICATIONS_LIMIT = 20;
+	var INITIAL_LAG = 3000;
 
 	return {
 		restrict: 'E',
@@ -12,7 +13,7 @@ angular.module( 'App.Notifications.Popover' ).directive( 'gjNotificationsPopover
 			isShown: '=?',
 		},
 		controllerAs: 'ctrl',
-		controller: function( $scope, $interval, $location, App, Notification, Popover, ModalConfirm, gettextCatalog )
+		controller: function( $scope, $interval, $timeout, $location, App, Notification, Popover, ModalConfirm, gettextCatalog )
 		{
 			var _this = this;
 
@@ -113,7 +114,10 @@ angular.module( 'App.Notifications.Popover' ).directive( 'gjNotificationsPopover
 			};
 
 			// Fetch count right away.
-			this.fetchCount();
+			$timeout( function()
+			{
+				_this.fetchCount();
+			}, INITIAL_LAG );
 
 			// Fetch counts every X minutes afterwards.
 			var countInterval = $interval( function()

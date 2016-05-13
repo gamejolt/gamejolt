@@ -1,6 +1,7 @@
 angular.module( 'App.Friends.RequestsPopover' ).directive( 'gjFriendsRequestsPopover', function()
 {
 	var COUNT_INTERVAL = (5 * 60 * 1000);  // 5 minutes.
+	var INITIAL_LAG = 3000;
 
 	return {
 		restrict: 'E',
@@ -11,7 +12,7 @@ angular.module( 'App.Friends.RequestsPopover' ).directive( 'gjFriendsRequestsPop
 		},
 		controllerAs: 'ctrl',
 		bindToController: true,
-		controller: function( $scope, $interval, App, User_Friendship, User_FriendshipsHelper, ModalConfirm, Growls, Popover )
+		controller: function( $scope, $interval, $timeout, App, User_Friendship, User_FriendshipsHelper, ModalConfirm, Growls, Popover )
 		{
 			var _this = this;
 
@@ -87,7 +88,10 @@ angular.module( 'App.Friends.RequestsPopover' ).directive( 'gjFriendsRequestsPop
 			};
 
 			// Fetch count right away.
-			this.fetchCount();
+			$timeout( function()
+			{
+				_this.fetchCount();
+			}, INITIAL_LAG );
 
 			// Fetch counts every X minutes afterwards.
 			var countInterval = $interval( function()

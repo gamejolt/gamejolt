@@ -43,7 +43,7 @@
 				<!--
 					Try to reduce the # of watchers on page.
 				-->
-				<div class="client-installed-game-meta-outer anim-fade-leave"
+				<div class="client-installed-game-meta-outer"
 					ng-if="game._isHovering
 						|| game._isShowingOptions
 						|| game._isShowingLaunchOptions
@@ -58,6 +58,9 @@
 							on-hide-options="game._isShowingOptions = false"
 							on-show-launch-options="game._isShowingLaunchOptions = true"
 							on-hide-launch-options="game._isShowingLaunchOptions = false"
+
+							has-installable-builds="true"
+							can-install="true"
 							>
 						</gj-client-game-buttons>
 

@@ -1,25 +1,38 @@
 <div class="game-filtering-tags" ng-if="!ctrl.filteringContainer.areTagFiltersEmpty || ctrl.genre">
 
-	<span class="anim-fade-enter no-animate-leave" ng-if="ctrl.genre">
-		<a class="tag tag-pink" ng-click="ctrl.clearGenre()">
+	<span ng-if="ctrl.genre">
+		<a class="ani-fade-in tag tag-pink" ng-click="ctrl.clearGenre()">
 			<strong>{{ ::'games.filtering.genre_label' | translate }}:</strong>
 			{{ 'discover.categories.' + ctrl.genre.replace( '-', '_' ) | translate }}
 			<span class="jolticon jolticon-remove"></span>
 		</a>
 	</span>
 
-	<span ng-repeat="(filter, options) in ctrl.filteringContainer.filters track by filter"
-		ng-if="::Game_Filtering_Container.filterDefinitions[ filter ].type == 'array'">
+	<span ng-repeat="(filter, value) in ctrl.filteringContainer.filters track by filter"
+		ng-if="::Game_Filtering_Container.filterDefinitions[ filter ].type != 'string' && value"
+		>
 
-		<span class="anim-fade-enter no-animate-leave"
-			ng-repeat="option in options track by option">
-
-			<a class="tag tag-pink" ng-click="ctrl.removeFilterOption( filter, option )">
+		<!-- Array type -->
+		<span
+			ng-if="::Game_Filtering_Container.filterDefinitions[ filter ].type == 'array'"
+			ng-repeat="option in value track by option"
+			>
+			<a class="anim-fade-in tag tag-pink" ng-click="ctrl.removeFilterOption( filter, option )">
 				<strong>{{ ::Game_Filtering_Container.filterDefinitions[ filter ].label }}:</strong>
 				{{ ::Game_Filtering_Container.filterDefinitions[ filter ].options[ option ] }}
 				<span class="jolticon jolticon-remove"></span>
 			</a>
+		</span>
 
+		<!-- Radio type -->
+		<span
+			ng-if="::Game_Filtering_Container.filterDefinitions[ filter ].type == 'radio'"
+			>
+			<a class="anim-fade-in tag tag-pink" ng-click="ctrl.removeFilterOption( filter, value )">
+				<strong>{{ ::Game_Filtering_Container.filterDefinitions[ filter ].label }}:</strong>
+				{{ Game_Filtering_Container.filterDefinitions[ filter ].options[ value ] }}
+				<span class="jolticon jolticon-remove"></span>
+			</a>
 		</span>
 
 	</span>

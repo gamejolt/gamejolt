@@ -25,14 +25,13 @@ angular.module( 'App.Views' ).directive( 'gjFormTwitterEmail', function( $q, Api
 	{
 		return Api.sendRequest( '/web/auth/twitter/create-account?state=' + scope.state, scope.formModel ).then( function( response )
 		{
-			if ( !response.success ) {
-
+			if ( response.success === false ) {
 				if ( response.reason && response.reason == 'duplicate-email' ) {
 					scope.formState.duplicateEmail = true;
 				}
-
-				return $q.reject( response );
 			}
+
+			return response;
 		} );
 	};
 

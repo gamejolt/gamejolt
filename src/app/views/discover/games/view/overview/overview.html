@@ -28,7 +28,7 @@
 	</div>
 </section>-->
 
-<!--<section class="ad-section" ng-class="::gameCtrl.mediaItems.length ? 'dark' : ''" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
+<!--<section class="ad-section" ng-class="::gameCtrl.mediaItems.length ? 'dark' : ''" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && !Screen.isXs">
 	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 </section>-->
 
@@ -82,28 +82,27 @@
 				<!-- Builds / Soundtrack -->
 				<div ng-if="gameCtrl.game._has_packages || overviewCtrl.hasReleasesSection">
 
-					<h3 ng-class="{ 'section-header': (Screen.isXs && !overviewCtrl.detailsOpen) || !Screen.isXs }">Releases</h3>
+					<h2 id="game-releases" ng-class="{ 'section-header': (Screen.isXs && !overviewCtrl.detailsOpen) || !Screen.isXs }">Releases</h2>
 
-					<!-- TG: Thunder Gun widget -->
-					<div ng-if="::gameCtrl.game.id == 64527">
-						<iframe nwdisable nwfaketop style="height: 247px; width: 100%;" ng-src="https://gamejolt.com/widgets/game/sale/v1/emwsb5?theme=light" frameborder="0"></iframe>
+					<div ng-if="gameCtrl.showMultiplePackagesMessage" class="alert alert-info">
+						<span class="jolticon jolticon-notice"></span>
+						There are multiple packages for your device. Please choose one below.
 					</div>
 
 					<div gj-lazy-placeholder="overviewCtrl.isLoaded">
 						<div class="lazy-placeholder" style="height: 135px"></div>
 
 						<div ng-if="::overviewCtrl.packages.length">
-							<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-								<gj-game-package-card
-									ng-repeat="package in overviewCtrl.packages"
-									game="::gameCtrl.game"
-									game-package="::package"
-									game-releases="::package._releases"
-									game-builds="::package._builds"
-									game-build-launch-options="::overviewCtrl.launchOptions"
-									>
-								</gj-game-package-card>
-							</div>
+							<gj-game-package-card
+								ng-repeat="package in overviewCtrl.packages"
+								game="::gameCtrl.game"
+								sellable="::package._sellable"
+								game-package="::package"
+								game-releases="::package._releases"
+								game-builds="::package._builds"
+								game-build-launch-options="::overviewCtrl.launchOptions"
+								>
+							</gj-game-package-card>
 						</div>
 
 						<gj-game-soundtrack-card
@@ -142,6 +141,27 @@
 						ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"
 						gj-track-event="game-profile:show-full-description"
 						></a>
+				</div>
+
+				<div ng-if="overviewCtrl.supporters.length > 0">
+					<h2 translate>Supporters</h2>
+
+					<p class="small text-muted" translate translate-scope="{ developer: gameCtrl.game.developer.display_name }">
+						The kind people that helped support {{ developer }} by paying more than the minimum. Sorted by amount contributed.
+					</p>
+
+					<div class="game-supporters">
+						<div class="game-supporter"
+							ng-repeat="user in overviewCtrl.supporters track by user.id"
+							>
+							<a class="user-avatar ng-scope"
+								ng-href="{{ ::user.url }}"
+								gj-tooltip="{{ ::user.display_name }}"
+								>
+								<img class="img-responsive" alt="" src="{{ ::user.img_avatar }}">
+							</a>
+						</div>
+					</div>
 				</div>
 
 			</div>
@@ -249,7 +269,7 @@
 	</div>
 </section>
 
-<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
+<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && !Screen.isXs">
 	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 </section>
 
@@ -279,7 +299,7 @@
 			<!--
 				Will overflow a little on md, but what can ya do, amirite?
 			-->
-			<div class="col-md-4 col-lg-offset-1 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isDesktop">
+			<div class="col-md-4 col-lg-offset-1 text-right" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
 				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 			</div>
 

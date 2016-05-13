@@ -68,7 +68,7 @@ angular.module( 'App.Client.Tray' )
 			}
 		}
 
-		var packagePrefix = Environment.env == 'production' ? '/package' : '';
+		var packagePrefix = Environment.buildType == 'production' ? '/package' : '';
 		var tray = new gui.Tray( {
 			title: 'Game Jolt Client',
 
@@ -107,7 +107,7 @@ angular.module( 'App.Client.Tray' )
 				label: 'Dashboard',
 				click: function()
 				{
-					$state.go( 'dashboard.overview' );
+					$state.go( 'dashboard.main.overview' );
 					Client.show();
 				}
 			} ) );

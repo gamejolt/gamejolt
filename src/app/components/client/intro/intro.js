@@ -1,1 +1,1 @@
-angular.module( 'App.Client.Intro', [] );
+angular.module( 'App.Client.Intro', [ 'gj.Connection' ] );

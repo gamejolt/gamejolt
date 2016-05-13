@@ -16,9 +16,12 @@ angular.module( 'App', [
 	'validation.match',
 	'angular-inview',
 
+	'rzModule',
+
 	// GJ lib.
 	'gj.Translate',
 	'gj.Translate.LangSelector',
+	'gj.Geo',
 	'gj.Environment',
 	'gj.Api',
 	'gj.Payload',
@@ -31,6 +34,7 @@ angular.module( 'App', [
 	'gj.Duration',
 	'gj.FuzzyNumber',
 	'gj.Fuzzysearch',
+	'gj.Currency',
 
 	'gj.Debug',
 	'gj.Debug.DebugBar',
@@ -59,6 +63,7 @@ angular.module( 'App', [
 	'gj.Scroll.AutoScroll',
 	'gj.Scroll.FixedResizer',
 	'gj.EditableAccordion',
+	'gj.Referrer',
 	'gj.HistoryTick',
 	'gj.Pagination',
 	'gj.Modal.Confirm',
@@ -112,13 +117,24 @@ angular.module( 'App', [
 	'gj.Game.Build.File',
 	'gj.Game.Build.Param',
 	'gj.Game.Build.LaunchOption',
+	'gj.Sellable',
+	'gj.Sellable.Pricing',
 	'gj.Game.NewsArticle',
 	'gj.Game.Trophy',
 	'gj.Game.ScoreTable',
 	'gj.Game.DataStore.Item',
 
+	'gj.Order',
+	'gj.Order.Item',
+	'gj.Order.Payment',
+	'gj.Order.Payment.Refund',
+	'gj.Order.Address',
+
 	'gj.Game.Package.Card',
+	'gj.Game.Downloader',
 	'gj.Game.PlayModal',
+
+	'gj.Game.KeyPool',
 
 	'gj.Jam',
 	'gj.Jam.Game',
@@ -203,6 +219,7 @@ angular.module( 'App', [
 	'App.Game.Grid',
 	'App.Game.Filtering',
 	'App.Game.Cover',
+	'App.Game.Cover.Buttons',
 	'App.Game.MediaBar',
 	'App.Game.Ogrs',
 	'App.Game.RatingGrowl',

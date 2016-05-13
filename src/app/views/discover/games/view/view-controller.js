@@ -1,8 +1,8 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	$scope, $stateParams, $injector, $timeout,
-	Environment, Location, Api, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
+	Environment, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
 	Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable,
-	Registry )
+	Registry, Scroll )
 {
 	var _this = this;
 
@@ -12,6 +12,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	this.isLoaded = false;
 	this.game = Registry.find( 'Game', $stateParams.id );
 	this.isNavAffixed = false;
+	this.installableBuilds = [];
+	this.browserBuilds = [];
 
 	// Overview page will populate this.
 	// We only need it for the overview page, but we need to show it in the view of this controller.
@@ -31,18 +33,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		} );
 
 		// If the game has a GA tracking ID, then we attach it to this scope so all page views within get tracked.
-		// Apply it async so that it always resolves after stateChangeSuccess.
-		// This way we can track the initial page view without double tracking.
-		$timeout( function()
-		{
-			if ( game.ga_tracking_id ) {
-
-				// We have to attach it and track the page view.
-				// We have to track the page view initially since we lazy loaded it in.
-				Analytics.attachAdditionalPageTracker( $scope, game.ga_tracking_id );
-				Analytics.trackPageview( null, game.ga_tracking_id );
-			}
-		}, 0, false );
+		if ( game.ga_tracking_id ) {
+			Analytics.attachAdditionalPageTracker( $scope, game.ga_tracking_id );
+		}
 	} );
 
 	$scope.$on( '$destroy', function()
@@ -50,10 +43,15 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		Game_ViewState.clear();
 	} );
 
-	Api.sendRequest( '/web/discover/games/' + $stateParams.id ).then( function( payload )
-	{
-		_this.init( payload );
-	} );
+	Api.sendRequest( '/web/discover/games/' + $stateParams.id )
+		.then( function( payload )
+		{
+			_this.init( payload );
+		} )
+		.catch( function( e )
+		{
+			Payload.handlePayloadError( e );
+		} );
 
 	this.init = function( payload )
 	{
@@ -81,6 +79,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		this.onFollowClick = onFollowClick;
 		this.refreshRatingInfo = refreshRatingInfo;
 		this.report = report;
+		this.scrollToMultiplePackages = scrollToMultiplePackages;
+		this.scrollToPackagePayment = scrollToPackagePayment;
 
 		// Any game rating change will broadcast this event.
 		// We catch it so we can update the page with the new rating! Yay!
@@ -169,5 +169,17 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	function report()
 	{
 		Report_Modal.show( _this.game );
+	}
+
+	function scrollToMultiplePackages()
+	{
+		_this.showMultiplePackagesMessage = true;
+		Scroll.to( 'game-releases' );
+	}
+
+	function scrollToPackagePayment( package )
+	{
+		Scroll.to( 'game-package-card-' + package.id );
+		$scope.$broadcast( 'Game_Package_Card.showPaymentOptions', package );
 	}
 } );

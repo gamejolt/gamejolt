@@ -1,41 +1,64 @@
-<a class="game-thumbnail" ng-href="{{ ::ctrl.url }}">
+<a class="game-thumbnail" ng-href="{{ ::$ctrl.url }}">
 
-	<div class="game-thumbnail-controls" ng-if="::ctrl.showControl">
-		<button class="i-button big sparse" tooltip="{{ ::ctrl.controlLabel }}" ng-click="ctrl.onControlClicked( $event )">
-			<span class="jolticon" ng-class="::'jolticon-' + ctrl.controlType"></span>
+	<div class="game-thumbnail-controls" ng-if="::$ctrl.showControl">
+		<button class="i-button big sparse" tooltip="{{ ::$ctrl.controlLabel }}" ng-click="$ctrl.onControlClick( $event )">
+			<span class="jolticon" ng-class="::'jolticon-' + $ctrl.controlType"></span>
 		</button>
 	</div>
 
 	<div class="game-thumbnail-thumb">
 		<span class="jolticon jolticon-game"></span>
 
-		<span class="tag tag-pink game-thumbnail-notifications" ng-if="::ctrl.game.notification_count">{{ ::ctrl.game.notification_count | number }}</span>
+		<span class="tag tag-pink game-thumbnail-notifications" ng-if="::$ctrl.game.notification_count">{{ ::$ctrl.game.notification_count | number }}</span>
 
-		<span class="game-thumbnail-tags" ng-if="::ctrl.game.has_animated_thumbnail && Screen.isDesktop">
+		<span class="game-thumbnail-tags" ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.Screen.isDesktop">
 			<span class="game-thumbnail-tag">
 				<span class="jolticon jolticon-stream"></span>
 			</span>
 		</span>
 
-		<img gj-img-responsive="{{ ::ctrl.game.img_thumbnail }}" alt="{{ ::ctrl.game.title }}">
+		<img gj-img-responsive="{{ ::$ctrl.game.img_thumbnail }}" alt="{{ ::$ctrl.game.title }}">
 
-		<video ng-if="::ctrl.game.has_animated_thumbnail && Screen.isDesktop" preload loop ng-attr-poster="{{ ::ctrl.game.img_thumbnail }}">
-			<source ng-src="{{ ::ctrl.webm }}" type="video/webm">
-			<source ng-src="{{ ::ctrl.mp4 }}" type="video/mp4">
+		<video ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.Screen.isDesktop" preload loop ng-attr-poster="{{ ::$ctrl.game.img_thumbnail }}">
+			<source ng-src="{{ ::$ctrl.webm }}" type="video/webm">
+			<source ng-src="{{ ::$ctrl.mp4 }}" type="video/mp4">
 		</video>
 	</div>
 
 	<div class="game-thumbnail-meta">
-		<div class="game-thumbnail-meter" ng-if="::ctrl.game.ratings_enabled">
-			<span class="game-thumbnail-rating-count" tooltip="{{ ::'games.thumbnail.ratings' | translate:{ count: ctrl.game.rating_count || 0 } }}">
-				({{ ::ctrl.game.rating_count || 0 | number }})
+
+		<div class="game-thumbnail-pricing"
+			ng-if="::$ctrl.game._has_packages"
+			ng-class="::{ 'game-thumbnail-pricing-owned': $ctrl.game.sellable.is_owned }"
+			>
+			<div ng-if="::!$ctrl.game.sellable.is_owned" ng-switch="::$ctrl.game.sellable.type">
+				<span class="game-thumbnail-pricing-amount" ng-switch-when="paid">
+					<span class="game-thumbnail-pricing-currency">$</span>{{ ::$ctrl.game.sellable.pricings[0].amount | gjCurrency:'' }}
+				</span>
+				<span class="game-thumbnail-pricing-tag" ng-switch-when="pwyw" translate>
+					name your price
+				</span>
+				<span class="game-thumbnail-pricing-tag" ng-switch-default translate>
+					Free
+				</span>
+			</div>
+			<div ng-if="::$ctrl.game.sellable.is_owned">
+				<span class="game-thumbnail-pricing-tag" translate>
+					Owned
+				</span>
+			</div>
+		</div>
+
+		<div class="game-thumbnail-meter" ng-if="::$ctrl.game.ratings_enabled">
+			<span class="game-thumbnail-rating-count" tooltip="{{ ::'games.thumbnail.ratings' | translate:{ count: $ctrl.game.rating_count || 0 } }}">
+				({{ ::$ctrl.game.rating_count || 0 | number }})
 			</span>
-			<gj-meter meter-rating="::ctrl.game.avg_rating"></gj-meter>
+			<gj-meter meter-rating="::$ctrl.game.avg_rating"></gj-meter>
 		</div>
 		<div class="game-thumbnail-os">
-			<gj-game-compat-icons gj-game="::ctrl.game"></gj-game-compat-icons>
+			<gj-game-compat-icons gj-game="::$ctrl.game"></gj-game-compat-icons>
 		</div>
-		<div class="game-thumbnail-dev" title="{{ ::ctrl.game.developer.display_name }}">{{ ::ctrl.game.developer.display_name }}</div>
-		<div class="game-thumbnail-title" title="{{ ::ctrl.game.title }}">{{ ::ctrl.game.title }}</div>
+		<div class="game-thumbnail-dev" title="{{ ::$ctrl.game.developer.display_name }}">{{ ::$ctrl.game.developer.display_name }}</div>
+		<div class="game-thumbnail-title" title="{{ ::$ctrl.game.title }}">{{ ::$ctrl.game.title }}</div>
 	</div>
 </a>

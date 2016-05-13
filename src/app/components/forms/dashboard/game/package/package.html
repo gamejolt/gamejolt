@@ -8,34 +8,21 @@
 		<form-group name="title" label="{{ 'dash.games.packages.form.title_label' | translate }}">
 			<p class="help-block" translate>dash.games.packages.form.title_help_html</p>
 
-			<div ng-if="!formState.showTitleInput">
-				<div class="form-control-static">
-					<code>{{ formModel.title }}</code>
-				</div>
+			<input
+				form-control
+				ng-maxlength="150"
+				gj-form-validate-availability="/web/dash/developer/games/packages/check-field-availability/{{ game.id }}/title"
+				>
 
-				<a class="i-button light" ng-click="formState.showTitleInput = true">
-					<span class="jolticon jolticon-edit"></span>
-					{{ ::'dash.games.packages.form.title_change_button' | translate }}
-				</a>
-			</div>
-
-			<div ng-if="formState.showTitleInput">
-				<input
-					form-control="text"
-					ng-maxlength="150"
-					gj-form-validate-availability="/web/dash/developer/games/packages/check-field-availability/{{ game.id }}/title"
-					>
-
-				<control-errors></control-errors>
-			</div>
+			<control-errors></control-errors>
 		</form-group>
 
 		<form-group name="description" label="{{ 'dash.games.packages.form.description_label' | translate }}" optional="true">
 			<p class="help-block" translate>dash.games.packages.form.description_help_html</p>
 
 			<div ng-if="!formState.showDescriptionInput">
-				<a class="i-button light" ng-click="formState.showDescriptionInput = true">
-					<span class="jolticon jolticon-edit"></span>
+				<a class="btn btn-outline btn-sm" ng-click="formState.showDescriptionInput = true">
+					<span class="jolticon jolticon-add"></span>
 					{{ 'dash.games.packages.form.description_change_button' | translate }}
 				</a>
 			</div>
@@ -46,7 +33,103 @@
 			</div>
 		</form-group>
 
-		<button gj-form-submit-button class="i-button" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">
+		<!--
+			Restrict package selling to only certain people for now.
+		-->
+		<div ng-if="App.user.has_marketplace_access">
+
+			<form-group name="pricing_type" label="Pricing Type">
+				<p class="help-block" ng-if="!isUserVerified">
+					<span class="jolticon jolticon-notice"></span>
+					<span translate translate-scope="{ url: $state.href( 'dashboard.account.financials' ) }">
+						You must <a href="{{ url }}">set up your financial information</a> before you can start accepting money.
+					</span>
+				</p>
+
+				<div class="alert alert-warning" ng-if="isUserVerified && package.has_browser_builds" translate>
+					Packages with browser builds cannot be sold at this time.
+				</div>
+
+				<div class="radio">
+					<label>
+						<input form-control="radio" value="free">
+						<span translate>Free</span> &mdash;
+						<span class="help-inline" translate>Completely free with no option to pay at all.</span>
+					</label>
+				</div>
+
+				<div class="radio" ng-class="{ disabled: !isUserVerified }">
+					<label>
+						<input form-control="radio" value="pwyw" ng-disabled="!isUserVerified">
+						<span translate>Pay What You Want</span> &mdash;
+						<span class="help-inline" translate>They will be able to pay $0 or more. They set the price.</span>
+					</label>
+				</div>
+
+				<div class="radio" ng-class="{ disabled: !isUserVerified || package.has_browser_builds }">
+					<label>
+						<input form-control="radio" value="paid" ng-disabled="!isUserVerified || package.has_browser_builds">
+						<span translate>Paid</span> &mdash;
+						<span class="help-inline" translate>Charge a specific price with the ability for them to pay more.</span>
+					</label>
+				</div>
+
+			</form-group>
+
+			<form-group name="price" label="Suggested Price" ng-if="formModel.pricing_type == 'pwyw'" optional="true">
+				<div class="row">
+					<div class="col-sm-3">
+						<gj-toggle-switch type="checkbox" ng-model="formState.hasSuggestedPrice" toggle-switch-on-text="On" toggle-switch-off-text="Off"></gj-toggle-switch>
+						<br class="visible-xs">
+					</div>
+					<div class="col-sm-9">
+						<input-group>
+							<input-group-addon>$</input-group-addon>
+							<input form-control="number"
+								gj-form-currency-input
+								step="0.1"
+								ng-min="minPrice / 100"
+								ng-disabled="!formState.hasSuggestedPrice"
+								>
+						</input-group>
+						<control-errors></control-errors>
+					</div>
+				</div>
+			</form-group>
+
+			<form-group name="price" lable="Price" ng-if="formModel.pricing_type == 'paid'">
+				<input-group>
+					<input-group-addon>$</input-group-addon>
+					<input form-control="number"
+						gj-form-currency-input
+						step="0.1"
+						ng-min="minPrice / 100"
+						>
+				</input-group>
+				<control-errors></control-errors>
+			</form-group>
+
+			<form-group name="primary" label="Primary Package" optional="!startedPrimary && hasPrimarySellable">
+				<p class="help-block" translate>
+					We use the primary package to determine the price to show on game listings. You can only have one primary package for your game.
+				</p>
+				<div class="checkbox">
+					<label>
+						<input form-control="checkbox" ng-disabled="startedPrimary || !hasPrimarySellable">
+						<span ng-if="!hasPrimarySellable">
+							<strong translate>Since you don't have any packages yet, we'll mark this as your primary one.</strong>
+						</span>
+						<span ng-if="hasPrimarySellable">
+							<span ng-if="!startedPrimary" translate>Make this package the primary package</span>
+							<strong ng-if="startedPrimary" translate>This is currently the primary package</strong>
+						</span>
+					</label>
+				</div>
+			</form-group>
+
+		</div>
+
+		<button gj-form-submit-button class="btn" ng-show="method == 'add' || !packageForm.$pristine" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">
 			<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
 			<span ng-if="method == 'add'">{{ ::'dash.games.packages.form.add_package_button' | translate }}</span>
 			<span ng-if="method == 'edit'">{{ ::'dash.games.packages.form.save_package_button' | translate }}</span>

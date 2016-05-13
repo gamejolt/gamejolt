@@ -21,7 +21,7 @@
 		</gj-shell-menu-popover>
 
 		<!-- History Navigator (for desktop client) -->
-		<gj-shell-history-navigator ng-if="Environment.isClient"></gj-shell-history-navigator>
+		<gj-client-history-navigator ng-if="Environment.isClient"></gj-client-history-navigator>
 
 		<a class="navbar-item" ui-sref="discover.home" ng-if="!Screen.isXs">
 			<img ng-if="!Screen.isMobile" src="/lib/gj-lib-client/components/site-selector/game-jolt-logo.svg" alt="Game Jolt">

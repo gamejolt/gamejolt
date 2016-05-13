@@ -9,29 +9,48 @@
 		<control-errors></control-errors>
 	</form-group>
 
-	<form-group name="newsletter" label="{{ 'dash.email_prefs.newsletter_label' | translate }}">
-		<p class="help-block" translate>dash.email_prefs.newsletter_help</p>
-		<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="Yes" toggle-switch-off-text="No"></gj-toggle-switch>
-	</form-group>
+	<div class="form-horizontal">
+
+		<form-group
+			name="newsletter"
+			label="{{ 'dash.email_prefs.newsletter_label' | translate }}"
+			label-class="col-sm-4"
+			>
+			<div class="col-sm-8">
+				<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="Yes" toggle-switch-off-text="No"></gj-toggle-switch>
+				<p class="help-block" translate>dash.email_prefs.newsletter_help</p>
+			</div>
+		</form-group>
+
+	</div>
 
 	<fieldset>
 		<legend translate>dash.email_prefs.notifications_heading</legend>
 
 		<div class="alert alert-info" translate>dash.email_prefs.notifications_description</div>
 
-		<form-group
-			ng-repeat="notificationType in ::notificationTypes track by notificationType.key"
-			name="{{ ::notificationType.key }}"
-			label="{{ ::notificationType.label }}"
-			>
-			<p class="help-block" ng-if="::notificationType.help">{{ ::notificationType.help }}</p>
-			<gj-toggle-switch form-control="checkbox"></gj-toggle-switch>
-		</form-group>
+		<div class="form-horizontal">
+			<form-group
+				ng-repeat="notificationType in ::notificationTypes track by notificationType.key"
+				name="{{ ::notificationType.key }}"
+				label="{{ ::notificationType.label }}"
+				label-class="col-sm-4"
+				>
+				<div class="col-sm-8">
+					<gj-toggle-switch form-control="checkbox"></gj-toggle-switch>
+					<p class="help-block" ng-if="::notificationType.help">{{ ::notificationType.help }}</p>
+				</div>
+			</form-group>
+		</div>
 	</fieldset>
 
-	<button gj-form-submit-button class="i-button" ng-disabled="!emailPreferencesForm.$valid" ng-click="onSubmit()">
-		<span class="jolticon jolticon-edit"></span>
-		<span translate>dash.email_prefs.submit_button</span>
-	</button>
+	<div class="row">
+		<div class="col-sm-8 col-sm-offset-4">
+			<button gj-form-submit-button class="i-button" ng-disabled="!emailPreferencesForm.$valid" ng-click="onSubmit()">
+				<span class="jolticon jolticon-edit"></span>
+				<span translate>dash.email_prefs.submit_button</span>
+			</button>
+		</div>
+	</div>
 
 </form>

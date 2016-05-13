@@ -1,0 +1,64 @@
+<div class="game-cover-buttons"
+	ng-class="{ 'game-cover-buttons-patching': $ctrl.isGamePatching }"
+	>
+
+	<!--
+		If the primary is for sale and they don't own it yet, the only button
+		we should show is the buy button.
+	-->
+	<a class="btn btn-lg btn-success-outline btn-overlay-variant"
+		ng-if="$ctrl.game._can_buy_primary_sellable"
+		ng-click="$ctrl.buy()"
+		>
+		<span class="jolticon jolticon-heart"></span>
+		<span translate>Buy Game</span>
+	</a>
+
+	<!--
+		If the game is not for sale, or if they own the game, then show the
+		normal buttons.
+	-->
+	<span ng-if="!$ctrl.game._can_buy_primary_sellable">
+
+		<!--
+			For Client we hide this once they start installing a package or if they have something installed.
+		-->
+		<a class="btn btn-lg btn-primary-outline btn-overlay-variant"
+			ng-if="$ctrl.browserBuilds.length && !$ctrl.hasLocalPackage"
+			ng-click="$ctrl.play()"
+			>
+			<span class="jolticon jolticon-play"></span>
+			<span ng-if="!$ctrl.Environment.isClient" translate>Play Game</span>
+			<span ng-if="$ctrl.Environment.isClient" translate>Quick Play</span>
+		</a>
+
+		<!--
+			We don't show this in Client. Instead we let the client-game-buttons component handle it.
+		-->
+		<a class="btn btn-lg btn-success-outline btn-overlay-variant"
+			ng-if="$ctrl.installableBuilds.length && !$ctrl.Environment.isClient"
+			ng-click="$ctrl.download()"
+			>
+			<span class="jolticon jolticon-download"></span>
+			<span translate>Download</span>
+		</a>
+
+		<span ng-if="$ctrl.Environment.isClient">
+			<gj-client-game-buttons
+				label="game-cover"
+				game="$ctrl.game"
+				large-variant="true"
+				overlay-variant="true"
+				is-patching="$ctrl.isGamePatching"
+				has-package="$ctrl.hasLocalPackage"
+				on-show-multiple-packages="$ctrl.onShowMultiplePackages( { $package: $package } )"
+				on-show-package-payment="$ctrl.onShowPackagePayment( { $package: $package } )"
+
+				has-installable-builds="!!$ctrl.installableBuilds.length"
+				can-install="!!$ctrl.installableBuilds.length"
+				>
+			</gj-client-game-buttons>
+		</span>
+	</span>
+
+</div>

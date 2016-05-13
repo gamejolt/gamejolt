@@ -33,21 +33,16 @@
 		// The other OSes are just the root dir.
 		var cwd = path.dirname( process.execPath );
 		if ( os.type() == 'Darwin' ) {
-			cwd = path.resolve( cwd, '../../../../Resources' )
-			packageJson = require( path.join( cwd, 'app.nw', 'package.json' ) );
+			cwd = path.resolve( cwd, '../../../../Resources/app.nw' )
 		}
-		else {
-			packageJson = require( path.join( cwd, 'package.json' ) );
-		}
+		packageJson = require( path.join( cwd, 'package.json' ) );
 
 		if ( packageJson['no-auto-update'] === true ) {
 			console.log( 'Skip update. Package says not to auto-update.' );
 			return;
 		}
 
-		var updater = new Updater( packageJson.version, CHECK_ENDPOINT, {
-			cwd: cwd,
-		} );
+		var updater = new Updater( packageJson.version, CHECK_ENDPOINT );
 
 		return updater.cleanup()
 			.then( function()
@@ -63,13 +58,23 @@
 
 				console.log( 'New version of client. Updating...' );
 
+				// If we're on windows, we need to make sure to release the mutex we have on it.
+				// This is so we can clean up the node_modules folder without the mutex binding being in use by the fs.
 				if ( process.platform === 'win32' ) {
-					Application.stop();
+					try {
+						Application.stop();
+					}
+					catch ( err ) {}
 				}
 
 				return updater.update()
-					.then( function()
+					.then( function( wasUpdated )
 					{
+						if ( !wasUpdated ) {
+							console.log( 'Update aborted.' );
+							return;
+						}
+
 						console.log( 'Updated! Reloading...' );
 						var gui = require( 'nw.gui' );
 						var win = gui.Window.get();

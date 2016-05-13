@@ -1,8 +1,8 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', function(
 	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle,
-	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, Environment,
+	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, User, Environment,
 	Jam,
-	Api, Game_ViewState )
+	Api, Payload, Game_ViewState, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
 {
 	var _this = this;
 
@@ -27,11 +27,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 
 		// Wait for the game before showing extended info.
 		Game_ViewState.showExtended();
-
-		// TG: Thunder Gun widget
-		if ( game.id == 64527 ) {
-			_this.hasReleasesSection = true;
-		}
 	} );
 
 	$scope.$watch( 'gameCtrl.hasScores && gameCtrl.trophiesCount', function( val )
@@ -46,21 +41,31 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		Game_ViewState.hideExtended();
 	} );
 
-	Api.sendRequest( '/web/discover/games/overview/' + $stateParams.id ).then( function( payload )
-	{
-		_this.init( payload );
-
-		// Remove pressure from the game overview payload by doing these after.
-		Api.sendRequest( '/web/discover/games/scores/overview/' + $stateParams.id ).then( function( payload )
+	Api.sendRequest( '/web/discover/games/overview/' + $stateParams.id )
+		.then( function( payload )
 		{
-			_this.scoresPayload = payload;
-		} );
+			_this.init( payload );
 
-		Api.sendRequest( '/web/discover/games/trophies/overview/' + $stateParams.id ).then( function( payload )
+			// Remove pressure from the game overview payload by doing these after.
+			Api.sendRequest( '/web/discover/games/scores/overview/' + $stateParams.id, { detach: true } ).then( function( payload )
+			{
+				_this.scoresPayload = payload;
+			} );
+
+			Api.sendRequest( '/web/discover/games/trophies/overview/' + $stateParams.id, { detach: true } ).then( function( payload )
+			{
+				_this.trophiesPayload = payload;
+			} );
+
+			// We set our state to skip tracking in the state definition.
+			// Track it manually here.
+			// This ensures that any experiments set in the payload get tracked as well.
+			Analytics.trackPageview();
+		} )
+		.catch( function( e )
 		{
-			_this.trophiesPayload = payload;
+			Payload.handlePayloadError( e );
 		} );
-	} );
 
 	this.init = function( payload )
 	{
@@ -75,8 +80,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			news: 0,
 		};
 
-		this.downloadCount = payload.downloadCount;
-		this.profileCount = payload.profileCount;
+		this.profileCount = payload.profileCount || 0;
+		this.downloadCount = payload.downloadCount || 0;
+		this.playCount = payload.playCount || 0;
 
 		this.developerGamesCount = payload.developerGamesCount;
 
@@ -96,9 +102,25 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		this.songs = Game_Song.populate( payload.songs );
 		this.latestArticles = Game_NewsArticle.populate( payload.latestArticles );
 		this.recommendedGames = Game.populate( payload.recommendedGames );
+		this.supporters = User.populate( payload.supporters ) || [];
 
 		var packageData = Game_Package.processPackagePayload( payload );
 		angular.extend( this, packageData );
+
+		var os = Device.os();
+		var arch = Device.arch();
+
+		$scope.gameCtrl.packages = this.packages || [];
+		$scope.gameCtrl.installableBuilds = Game.pluckInstallableBuilds( this.packages || [], os, arch );
+		$scope.gameCtrl.browserBuilds = Game.pluckBrowserBuilds( this.packages || [] );
+
+		// On Client we only want to include HTML games.
+		if ( Environment.isClient ) {
+			$scope.gameCtrl.browserBuilds = _.where( $scope.gameCtrl.browserBuilds, { type: Game_Build.TYPE_HTML } );
+		}
+
+		// Pull in ROMs to the browser builds.
+		$scope.gameCtrl.browserBuilds = $scope.gameCtrl.browserBuilds.concat( Game.pluckRomBuilds( _this.packages || [] ) );
 
 		// The releases section exists if there are releases or songs.
 		this.hasReleasesSection = this.releases.length || this.songs.length;
@@ -128,13 +150,18 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		 * For game stats.
 		 */
 		this.playsTooltip = false;
-		this.showNaPlays = !this.packages.length && !(this.playCount + this.downloadCount);
-		if ( this.showNaPlays ) {
-			this.playsTooltip = 'games.view.stats.no_builds_tooltip';
-		}
-		// If they had plays from a previous build but no longer have builds.
-		else if ( !this.packages.length && (this.playCount + this.downloadCount) ) {
-			this.playsTooltip = 'games.view.stats.had_builds_tooltip';
+		this.showNaPlays = false;
+
+		if ( !this.packages.length ) {
+
+			// If they had plays from a previous build but no longer have builds.
+			if ( this.playCount + this.downloadCount ) {
+				this.playsTooltip = gettextCatalog.getString( 'This game used to have playable builds but they have been removed.' );
+			}
+			else {
+				this.showNaPlays = true;
+				this.playsTooltip = gettextCatalog.getString( 'This game has no playable builds yet.' );
+			}
 		}
 
 		/**

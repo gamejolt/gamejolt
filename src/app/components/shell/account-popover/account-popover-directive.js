@@ -1,4 +1,4 @@
-angular.module( 'App.Shell' ).directive( 'gjShellAccountPopover', function( $injector, App, Screen, Popover, User_TokenModal, Connection, Environment )
+angular.module( 'App.Shell' ).directive( 'gjShellAccountPopover', function( $injector, App, Api, Screen, Popover, User_TokenModal, Connection, Environment )
 {
 	return {
 		restrict: 'E',
@@ -10,6 +10,8 @@ angular.module( 'App.Shell' ).directive( 'gjShellAccountPopover', function( $inj
 		bindToController: true,
 		controller: function( $scope )
 		{
+			var _this = this;
+
 			$scope.App = App;
 			$scope.Screen = Screen;
 			$scope.Popover = Popover;
@@ -20,6 +22,20 @@ angular.module( 'App.Shell' ).directive( 'gjShellAccountPopover', function( $inj
 				$scope.Client = $injector.get( 'Client' );
 			}
 
+			this.isShown = false;
+			this.walletAmount = false;
+
+			this.onShow = function()
+			{
+				this.isShown = true;
+				this.getWallet();
+			};
+
+			this.onHide = function()
+			{
+				this.isShown = false;
+			};
+
 			this.logout = function()
 			{
 				App.logout();
@@ -28,6 +44,15 @@ angular.module( 'App.Shell' ).directive( 'gjShellAccountPopover', function( $inj
 			this.showToken = function()
 			{
 				User_TokenModal.show();
+			};
+
+			this.getWallet = function()
+			{
+				Api.sendRequest( '/web/dash/funds/wallet', { detach: true } )
+					.then( function( response )
+					{
+						_this.walletAmount = response.amount;
+					} );
 			};
 		}
 	};

@@ -8,7 +8,7 @@ We wanted to make it open source so everyone can get visibility into what we are
 
 Translations are done by the community. If you want to participate, feel free to join at https://poeditor.com/join/project/B4nWT6EgnD.
 
-### Building 
+### Building
 
 Will work on better build instructions really really soon!
 
@@ -31,3 +31,4 @@ When you make code changes it should live-reload the site for you.
 **Client build instructions coming soon. It's a bit more involved, with different instructions per OS.**
 
 I know, I know. Everything is _soon_.
+

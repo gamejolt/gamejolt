@@ -4,18 +4,27 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 		restrict: 'E',
 		templateUrl: '/app/components/client/game-buttons/game-buttons.html',
 		scope: {
-			game: '=game',
-			overlay: '=?overlayVariant',
-			small: '=?smallVariant',
-			onShowLaunchOptions: '&?onShowLaunchOptions',
-			onHideLaunchOptions: '&?onHideLaunchOptions',
-			onShowOptions: '&?onShowOptions',
-			onHideOptions: '&?onHideOptions',
+			game: '<',
+			overlay: '<?overlayVariant',
+			small: '<?smallVariant',
+			large: '<?largeVariant',
+			onShowLaunchOptions: '&?',
+			onHideLaunchOptions: '&?',
+			onShowOptions: '&?',
+			onHideOptions: '&?',
+			onShowMultiplePackages: '&',
+			onShowPackagePayment: '&',
 			label: '@?',
+			isPatching: '=?',
+			hasPackage: '=?',
+
+			// TODO: Get this working without needing this passed to it.
+			hasInstallableBuilds: '<?',
+			canInstall: '<?',
 		},
 		controllerAs: 'ctrl',
 		bindToController: true,
-		controller: function( $q, $scope, Client_Library, Client_Launcher, Client_Installer, LocalDb_Package, Client_InstallPackageModal, Device, Api, Popover, Analytics,
+		controller: function( $q, $scope, $attrs, Client_Library, Client_Launcher, Client_Installer, LocalDb_Package, Client_InstallPackageModal, Device, Api, Popover, Analytics,
 			Game, Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption )
 		{
 			var _this = this;
@@ -25,8 +34,13 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 			$scope.Client_Library = Client_Library;
 			$scope.LocalDb_Package = LocalDb_Package;
 
-			this.hasInstallableBuilds = this.game.hasDesktopSupport();
-			this.canInstall = this.game.canInstall( os, arch );
+			if ( angular.isUndefined( this.hasInstallableBuilds ) ) {
+				this.hasInstallableBuilds = true;
+			}
+
+			if ( angular.isUndefined( this.canInstall ) ) {
+				this.canInstall = true;
+			}
 
 			this.localPackage = null;
 			this.isLoadingPackageData = false;
@@ -51,6 +65,20 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 				_this.localPackage = localPackage;
 			} );
 
+			if ( !angular.isUndefined( $attrs.isPatching ) ) {
+				$scope.$watch( 'ctrl.localPackage.isPatching()', function( isPatching )
+				{
+					_this.isPatching = isPatching;
+				} );
+			}
+
+			if ( !angular.isUndefined( $attrs.hasPackage ) ) {
+				$scope.$watch( 'ctrl.localPackage', function( localPackage )
+				{
+					_this.hasPackage = !!localPackage;
+				} );
+			}
+
 			this.install = function()
 			{
 				Analytics.trackEvent( 'client-game-buttons', 'install' );
@@ -71,11 +99,22 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 					{
 						// If more than one package for their OS, then we have to show an install package modal.
 						if ( _.size( _.groupBy( packageData.installableBuilds, 'game_package_id' ) ) > 1 ) {
-							Client_InstallPackageModal.show( _this.game );
+
+							// TODO: Get some sort of something working again so we can use this when not on game page.
+							// Client_InstallPackageModal.show( _this.game );
+							_this.onShowMultiplePackages();
 							return;
 						}
 
 						var build = Game.chooseBestBuild( packageData.installableBuilds, os, arch );
+
+						// If the build belongs to a pwyw package, open up the package
+						// payment form.
+						if ( build._package.shouldShowNamePrice() ) {
+							_this.onShowPackagePayment( { $package: build._package } );
+							return;
+						}
+
 						Client_Library.installPackage(
 							_this.game,
 							build._package,

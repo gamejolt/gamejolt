@@ -11,9 +11,9 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 			{
 				return Api.sendRequest( '/web/discover/games/builds/download-page/' + $stateParams.id + '/' + $stateParams.buildId );
 			},
-			tick: function( HistoryTick, $stateParams )
+			tick: function( tickSource, HistoryTick, $stateParams )
 			{
-				HistoryTick.sendBeacon( 'game-build', $stateParams.buildId );
+				HistoryTick.sendBeacon( 'game-build', $stateParams.buildId, { sourceResource: 'Game', sourceResourceId: $stateParams.id } );
 			},
 		}
 	} );

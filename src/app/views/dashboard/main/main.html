@@ -1,0 +1,36 @@
+<header class="section">
+	<div class="container">
+
+		<h1>{{ ::'dash.overview.heading' | translate }}</h1>
+
+		<h3 class="header-user">
+			<span gj-user-avatar="App.user"></span>
+			{{ App.user.display_name }}
+		</h3>
+
+		<div>
+			<a class="btn btn-outline" ui-sref="profile.overview( { slug: App.user.slug, id: App.user.id } )" gj-track-event="dash:overview:view-profile">
+				<span class="jolticon jolticon-user"></span>
+				{{ ::'dash.overview.view_profile_button' | translate }}
+			</a>
+		</div>
+
+		<nav class="platform-list inline">
+			<ul>
+				<li>
+					<a ui-sref="dashboard.main.overview" ui-sref-active="active" translate>
+						Overview
+					</a>
+				</li>
+				<li>
+					<a ui-sref="dashboard.main.purchases.list" ng-class="{ active: $state.includes( 'dashboard.main.purchases') }" translate>
+						Purchases
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+	</div>
+</header>
+
+<ui-view></ui-view>

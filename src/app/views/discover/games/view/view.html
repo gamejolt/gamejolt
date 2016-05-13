@@ -1,25 +1,35 @@
 <div ng-if="gameCtrl.game">
 
-	<!-- Game Header -->
-	<div ng-if="Game_ViewState.showCover">
-		<gj-game-cover gj-game="gameCtrl.game">
+	<div ng-if="Game_ViewState.showExtendedHeader">
+		<gj-game-cover ng-if="Game_ViewState.hasCover" gj-game="gameCtrl.game">
 
-			<a class="btn btn-primary-outline btn-overlay-variant">
-				<span class="jolticon jolticon-play"></span>
-				Play Game
-			</a>
-
-			<!--<a class="btn btn-success-outline btn-overlay-variant">
-				<span class="jolticon jolticon-download"></span>
-				Download
-			</a>-->
-
-			<a class="btn btn-success-outline btn-overlay-variant">
-				<span class="jolticon jolticon-download-box"></span>
-				Install
-			</a>
+			<div ng-if="!Screen.isXs && (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length || gameCtrl.game._can_buy_primary_sellable)">
+				<gj-game-cover-buttons
+					game="gameCtrl.game"
+					packages="gameCtrl.packages"
+					installable-builds="gameCtrl.installableBuilds"
+					browser-builds="gameCtrl.browserBuilds"
+					on-show-multiple-packages="gameCtrl.scrollToMultiplePackages()"
+					on-show-package-payment="gameCtrl.scrollToPackagePayment( $package )"
+					>
+				</gj-game-cover-buttons>
+			</div>
 
 		</gj-game-cover>
+
+		<section class="section fill-darker" ng-if="!Screen.isXs && !Game_ViewState.hasCover && (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length || gameCtrl.game._can_buy_primary_sellable)">
+			<div class="container text-center">
+				<gj-game-cover-buttons
+					game="gameCtrl.game"
+					packages="gameCtrl.packages"
+					installable-builds="gameCtrl.installableBuilds"
+					browser-builds="gameCtrl.browserBuilds"
+					on-show-multiple-packages="gameCtrl.scrollToMultiplePackages()"
+					on-show-package-payment="gameCtrl.scrollToPackagePayment( $package )"
+					>
+				</gj-game-cover-buttons>
+			</div>
+		</section>
 	</div>
 
 	<div class="alert alert-warning sans-margin-bottom" ng-if="Game_ViewState.showExtendedHeader && gameCtrl.notificationCounts.news">

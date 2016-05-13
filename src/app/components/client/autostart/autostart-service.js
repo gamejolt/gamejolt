@@ -10,7 +10,7 @@ angular.module( 'App.Client.Autostart' )
 
 	this.canAutostart = function()
 	{
-		if ( Environment.env != 'production' || Device.os() != 'windows' ) {
+		if ( Environment.buildType == 'development' || Device.os() != 'windows' ) {
 			return false;
 		}
 		return true;

@@ -22,7 +22,14 @@ var config = {
 				'favico.js',
 				'angular-inview',
 				'angular-elastic',
+				'ua-parser-js',
 			]
+		},
+		'vendor-checkout.js': {
+			bower: [
+				'angular-credit-cards',
+				'angular-ui-mask',
+			],
 		},
 		'jquery.js': {
 			bower: [
@@ -33,11 +40,6 @@ var config = {
 			bower: [
 				'hammerjs',
 				'angular-hammer',
-			],
-		},
-		'ua-parser.js': {
-			bower: [
-				'ua-parser-js',
 			],
 		},
 		'jcrop.js': {
@@ -76,6 +78,7 @@ var config = {
 		'dash.js': {
 			components: [
 				'forms/dashboard',
+				'site-analytics',
 			],
 			views: [
 				'dashboard',
@@ -107,20 +110,22 @@ var config = {
 			],
 		},
 
-		// For client auth section.
-		'client-auth.js': {
+		// For client sections.
+		'client-base.js': {
 			components: [
-				'client-auth',
+				'client-base',
 			]
 		}
 	},
 	sections: [
-		'auth'
+		'auth',
+		'checkout',
 	],
 	translations: 'site-translations',
 	translationSections: [
 		'auth',
-		'dash'
+		'dash',
+		'checkout',
 	],
 };
 

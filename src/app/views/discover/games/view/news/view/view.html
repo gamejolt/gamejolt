@@ -34,12 +34,12 @@
 				<div class="post-body" ng-bind-html="::viewCtrl.article.content_compiled"></div>
 			</div>
 
-			<div class="col-md-4 col-lg-5 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isDesktop">
+			<div class="col-md-4 col-lg-5 text-right" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
 				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 			</div>
 		</div>
 
-		<div ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isSm">
+		<div ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isSm">
 			<br>
 			<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 		</div>
@@ -72,10 +72,10 @@
 				</gj-comment-widget>
 
 			</div>
-			<div class="col-sm-3 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isSm">
+			<div class="col-sm-3 text-right" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isSm">
 				<gj-ad ad-size="skyscraper" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 			</div>
-			<div class="col-md-4 col-lg-5 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isDesktop">
+			<div class="col-md-4 col-lg-5 text-right" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
 				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 			</div>
 		</div>

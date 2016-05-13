@@ -1,4 +1,4 @@
-<gj-popover class="search-autocomplete-popover popover-dark"
+<gj-popover class="search-autocomplete-popover popover-dark shell-popover"
 	popover-id="search-autocomplete"
 	popover-trigger-manually="true"
 	popover-append-to-body="true"
@@ -28,11 +28,10 @@
 				ng-click="ctrl.selectLibraryGame( libraryGame )"
 				>
 
-				<div ng-if="Environment.isClient" class="pull-right">
-					<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-						<gj-client-game-buttons label="installed" game="libraryGame._game" small-variant="true"></gj-client-game-buttons>
-					</div>
-				</div>
+				<!-- TODO: Get this working again. -->
+				<!--<div ng-if="Environment.isClient" class="pull-right">
+					<gj-client-game-buttons label="installed" game="libraryGame._game" small-variant="true"></gj-client-game-buttons>
+				</div>-->
 
 				<span class="search-game-thumbnail">
 					<img gj-img-responsive="{{ ::libraryGame.img_thumbnail }}" alt="{{ ::libraryGame.title }}">
@@ -54,11 +53,10 @@
 				ng-click="ctrl.selectGame( game )"
 				>
 
-				<div ng-if="Environment.isClient" class="pull-right">
-					<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }">
-						<gj-client-game-buttons label="not-installed" game="game" small-variant="true"></gj-client-game-buttons>
-					</div>
-				</div>
+				<!-- TODO: Get this working again. -->
+				<!--<div ng-if="Environment.isClient" class="pull-right">
+					<gj-client-game-buttons label="not-installed" game="game" small-variant="true"></gj-client-game-buttons>
+				</div>-->
 
 				<div class="pull-right">
 					<gj-game-compat-icons gj-game="game"></gj-game-compat-icons>

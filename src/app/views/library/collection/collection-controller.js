@@ -95,6 +95,17 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 				App.title = gettextCatalog.getString( 'library.collection.developer_page_title', { user: user.display_name } );
 			}
 		}
+		else if ( this.type == 'owned' ) {
+			user = new User( payload.user );
+			this.user = user;
+			this.isOwner = App.user && user.id == App.user.id;
+			if ( this.isOwner ) {
+				App.title = gettextCatalog.getString( 'Your Owned Games', { user: user.display_name } );
+			}
+			else {
+				App.title = gettextCatalog.getString( 'Games Owned by {{ user }}', { user: user.display_name } );
+			}
+		}
 		else if ( this.type == 'bundle' ) {
 			bundle = new GameBundle( payload.bundle );
 			this.bundle = bundle;
@@ -135,6 +146,7 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 		var ctrl = $scope.libraryCtrl;
 
 		if ( (ctrl.followedCollection && _this.collection._id == ctrl.followedCollection._id)
+			|| (ctrl.ownedCollection && _this.collection._id == ctrl.ownedCollection._id)
 			|| (ctrl.developerCollection && _this.collection._id == ctrl.developerCollection._id)
 			|| _.find( (ctrl.collections || []), { _id: _this.collection._id } )
 			|| _.find( (ctrl.bundleCollections || []), { _id: _this.collection._id } )

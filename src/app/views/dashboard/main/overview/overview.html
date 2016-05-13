@@ -1,0 +1,179 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-md-5" ng-class="{ 'pull-right': Screen.isDesktop }">
+
+				<!--
+					Broadcast
+				-->
+				<div ng-if="::overviewCtrl.latestBroadcast">
+					<a class="broadcast" ng-href="{{ ::overviewCtrl.latestBroadcast.url }}" gj-track-event="dash:overview:broadcast-view">
+						<span class="jolticon jolticon-broadcast big"></span>
+						<h4 class="broadcast-heading">{{ ::overviewCtrl.latestBroadcast.title }}</h4>
+						<div class="broadcast-lead">{{ ::overviewCtrl.latestBroadcast.lead }}</div>
+					</a>
+
+					<div class="text-right">
+						<a class="link-muted small" ng-href="{{ ::Environment.firesideBaseUrl }}/tag/gjbroadcast" gj-track-event="dash:overview:broadcast-all">{{ ::'dash.overview.broadcast_view_all' | translate }}</a>
+					</div>
+				</div>
+
+				<!--
+					Revenue
+				-->
+				<div ng-if="::overviewCtrl.revenueTotal !== undefined">
+					<h2>
+						{{ ::'dash.overview.revenue_heading' | translate }}
+						<span class="jolticon jolticon-help-circle text-muted big" tooltip="{{ ::'dash.overview.revenue_tooltip' | translate }}"></span>
+					</h2>
+
+					<div class="row">
+						<div class="col-xs-6 col-sm-4">
+							<div class="stat-big stat-big-smaller">
+								<div class="stat-big-label" translate>Revenue To Date</div>
+								<div class="stat-big-digit">{{ ::overviewCtrl.revenueTotal || 0 | currency:'$' }}</div>
+							</div>
+						</div>
+						<div class="col-xs-6 col-sm-4">
+							<div class="stat-big stat-big-smaller">
+								<div class="stat-big-label">
+									<span translate>Pending Revenue</span>
+								</div>
+								<div class="stat-big-digit">
+									{{ ::overviewCtrl.revenuePendingActivation || 0 | currency:'$' }}
+									<span class="jolticon jolticon-help-circle text-muted" tooltip="To account for refunds, chargebacks, and fraud, we hold on to sales revenue for 7 days."></span>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-6 col-sm-4">
+							<div class="stat-big stat-big-smaller">
+								<div class="stat-big-label" translate>Wallet Balance</div>
+								<div class="stat-big-digit">{{ ::overviewCtrl.walletBalance || 0 | currency:'$' }}</div>
+							</div>
+						</div>
+					</div>
+					<br>
+
+					<div ng-if="overviewCtrl.revenuePendingWithdraw > 0" class="alert alert-info" translate>
+						You have pending withdrawals amounting to {{ ::overviewCtrl.revenuePendingWithdraw | currency:'$' }}.
+					</div>
+
+					<div class="alert alert-info" ng-if="::overviewCtrl.revenuePending" translate translate-scope="{ amount: overviewCtrl.revenuePending }">
+						dash.overview.revenue_pending_message_html
+					</div>
+
+					<div>
+						<a class="btn btn-outline btn-block" ui-sref="dashboard.withdraw-funds">
+							<span class="jolticon jolticon-chevron-right needs-icon"></span>
+							{{ ::'dash.overview.revenue_withdraw_button' | translate }}
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-7 col-lg-6" ng-class="{ 'pull-left': Screen.isDesktop }">
+
+				<!--
+					Integrate
+				-->
+				<div ng-if="::!overviewCtrl.isFullyIntegrated">
+					<h2 ng-class="{ 'section-header': Screen.isDesktop }">
+						{{ ::'dash.integrate.heading' | translate }}
+					</h2>
+
+					<p>{{ ::'dash.integrate.lead' | translate }}</p>
+
+					<table class="table">
+						<tbody>
+							<tr
+								ng-repeat="key in overviewCtrl.integrationKeys"
+								ng-if="overviewCtrl.integration[ key ]"
+								>
+								<td style="width: 1px">
+									<span class="jolticon jolticon-check" ng-class="overviewCtrl.integration[ key ].achieved ? 'active' : 'text-muted'"></span>
+								</td>
+								<td>
+									<span class="jolticon jolticon-exp text-muted"></span>
+									<strong>
+										{{ overviewCtrl.integration[ key ].exp | number }}
+										{{ ::'leveling.exp' | translate }}
+									</strong>
+								</td>
+								<td>
+									<span ng-if="overviewCtrl.integration[ key ].achieved" class="tag tag-active pull-right">
+										<span class="jolticon jolticon-check"></span>
+										{{ ::'dash.integrate.done' | translate }}
+									</span>
+									<span ng-class="{ 'text-muted': overviewCtrl.integration[ key ].achieved }" ng-bind-html="::overviewCtrl.integrationTranslations[ key ]"></span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<br ng-if="overviewCtrl.isFullyIntegrated && Screen.isMobile">
+
+				<div class="alert alert-info">
+					<h4>{{ ::'dash.integrate.exp_help_heading' | translate }}</h4>
+					<div translate>dash.integrate.exp_help_body_html</div>
+				</div>
+
+				<!--
+					Activity Feed
+				-->
+				<h2>
+					<a class="link-unstyled" ui-sref="dashboard.activity.list( { tab: 'all' } )">{{ ::'dash.overview.activity_heading' | translate }}</a>
+				</h2>
+
+				<gj-activity-feed
+					ng-if="overviewCtrl.activityNotifications.length"
+					activity-feed-notifications="overviewCtrl.activityNotifications"
+					>
+				</gj-activity-feed>
+
+				<div class="alert alert-info" ng-if="!overviewCtrl.activityNotifications.length" translate>dash.overview.activity_no_activity_html</div>
+
+				<a class="btn btn-outline btn-block" ui-sref="dashboard.activity.list( { tab: 'all' } )" gj-track-event="dash:overview:all-activity">
+					<span class="jolticon jolticon-notifications"></span>
+					{{ ::'dash.overview.activity_view_all_button' | translate }}
+				</a>
+
+			</div>
+			<div class="col-md-5" ng-class="{ 'pull-right': Screen.isDesktop }" style="clear: right">
+
+				<!--
+					Manage Games
+				-->
+				<div ng-if="::App.user.is_developer">
+					<h2>
+						{{ ::'dash.overview.developer_games_heading' | translate }}
+						<small>({{ overviewCtrl.games.length | number }})</small>
+					</h2>
+
+					<div>
+						<a class="btn btn-success-outline btn-block" ui-sref="dashboard.developer.games.add" gj-track-event="dash:overview:quick-add-game">
+							<span class="jolticon jolticon-add"></span>
+							{{ ::'dash.overview.developer_games_add_button' | translate }}
+						</a>
+					</div>
+					<br>
+
+					<div class="list-group" ng-if="overviewCtrl.games.length">
+						<a class="list-group-item has-icon"
+							ng-repeat="game in overviewCtrl.games | orderBy:'posted_on':true track by game.id"
+							ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
+							gj-track-event="dash:overview:quick-game"
+							>
+							<span class="jolticon jolticon-chevron-right"></span>
+							{{ ::game.title }}
+						</a>
+					</div>
+
+					<div class="alert alert-warning full-bleed-xs" ng-if="!overviewCtrl.games.length" translate>dash.overview.developer_games_no_games_html</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>

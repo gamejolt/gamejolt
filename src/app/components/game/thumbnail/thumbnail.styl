@@ -89,6 +89,11 @@ gj-game-thumbnail
 		overflow: hidden
 		background-color: $gray-lightest
 
+		.fill-dark &
+		.fill-darker &
+		.fill-darkest &
+			background-color: $black
+
 		> .jolticon
 			position: absolute
 			font-size: 16px * 4
@@ -127,7 +132,7 @@ gj-game-thumbnail
 		text-overflow()
 		margin: 2px 0
 		color: $gray-light
-		line-height: 1.4  // Cuts off `g` on ff if any lower.
+		line-height: 1.5  // Cuts off `g` on ff if any lower.
 		font-weight: 300
 
 	&-title
@@ -140,6 +145,8 @@ gj-game-thumbnail
 		color: $gray-darker
 
 		.fill-dark &
+		.fill-darker &
+		.fill-darkest &
 			color: $gray-lightest
 
 	&-os
@@ -157,3 +164,39 @@ gj-game-thumbnail
 		color: $text-muted
 		font-size: $font-size-tiny
 		margin-right: 2px
+
+	&-pricing
+		@extend .fill-darkest
+		position: absolute
+		height: 30px
+		line-height: @height
+		top: -(@height)
+		right: 5px
+		padding: 0 10px
+		text-align: center
+		z-index: 2
+
+		&-owned
+			@extend .fill-green
+
+			& ^[-1]-tag
+				color: inherit
+
+		&-amount
+			color: $white
+			font-size: $font-size-small
+
+		&-currency
+			color: $gray-lighter
+
+		&-decimal
+			font-size: $font-size-small
+
+		&-tag
+			color: $white
+			font-size: $font-size-tiny
+			font-weight: bold
+			text-transform: uppercase
+
+			&.muted
+				color: $gray-lighter

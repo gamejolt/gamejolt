@@ -1,4 +1,4 @@
-<div ng-if="!Environment.isClient">
+<!--<div ng-if="!Environment.isClient">
 	<style type="text/css">
 
 		.client-banner {
@@ -24,8 +24,8 @@
 					<div class="h2 section-header">Psst...</div>
 					<p>
 						<a href="http://gamejolt.com/client" gj-track-event="home:client-banner">
-							<img ng-if="Screen.isXs" src="/app/img/game-jolt-client-logo-2x.png" width="254" height="18" alt="Game Jolt Client">
-							<img ng-if="!Screen.isXs" src="/app/img/game-jolt-client-logo-4x.png" width="558" height="36" alt="Game Jolt Client">
+							<img ng-if="Screen.isXs" src="/app/img/game-jolt-client-logo.svg" width="254" height="18" alt="Game Jolt Client">
+							<img ng-if="!Screen.isXs" src="/app/img/game-jolt-client-logo.svg" width="558" height="36" alt="Game Jolt Client">
 						</a>
 					</p>
 					<p>We launched the Game Jolt Client. It's the whole site on your desktop&mdash;easiest, speediest way to install and play Game Jolt games.</p>
@@ -39,13 +39,13 @@
 			</div>
 		</div>
 	</section>
-</div>
+</div>-->
 
-<gj-discover-home-featured gj-items="homeCtrl.featuredItems"></gj-discover-home-featured>
+<gj-discover-home-featured featured-items="homeCtrl.featuredItems"></gj-discover-home-featured>
 
-<section class="ad-section" ng-if="!Environment.isClient && !Screen.isXs">
+<!--<section class="ad-section" ng-if="!Environment.isClient && !Screen.isXs">
 	<gj-ad ad-size="leaderboard"></gj-ad>
-</section>
+</section>-->
 
 <div class="container" ng-if="::!Environment.isClient">
 	<div class="social-widgets">
@@ -59,10 +59,62 @@
 	</div>
 </div>
 
-<section class="section" style="padding-bottom: 0">
+<section class="section">
 	<div class="container">
-		<h3 class="section-header">Browse by Genre</h3>
+		<h3 class="section-header" translate>Browse by Genre</h3>
 		<gj-genre-list></gj-genre-list>
+	</div>
+</section>
+
+<section class="section fill-darker marketplace-section" ng-if="homeCtrl.isMarketplace">
+	<div class="marketplace-section-inner">
+
+		<h1 class="section-header sans-margin-bottom">
+			<a class="link-unstyled" ui-sref="discover.games.list.section( { section: 'best', price: 'paid' } )" gj-track-event="home:row-heading:paid">
+				<span class="jolticon jolticon-heart big"></span>
+				<span translate>Paid Games</span>
+			</a>
+		</h1>
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+				<p class="text-muted" translate>
+					You can now support your favorite indie devs by buying their games directly on Game Jolt!
+				</p>
+			</div>
+		</div>
+		<br>
+
+		<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
+			<div ng-class="{ 'row': !Screen.isXs }">
+				<gj-game-thumbnail
+					class="col-xs-11 col-sm-4 col-md-3 meter-dark"
+					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
+					ng-repeat="game in homeCtrl.paidGames | limitTo:(Screen.isSm ? 6 : 8 ) track by game.id"
+					gj-game="game"
+					autoplay="true"
+					gj-track-event="home:paid:game:{{ $index }}"
+					>
+				</gj-game-thumbnail>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+				<a class="btn btn-primary-outline btn-block"
+					ui-sref="discover.games.list.section( { section: 'best', price: 'paid' } )"
+					gj-track-event="home:more-btn:paid"
+					>
+					<span translate>Load More</span>
+				</a>
+			</div>
+		</div>
+		<br><br>
+
+		<a ui-sref="landing.marketplace" gj-track-event="home:marketplace-landing">
+			<img class="marketplace-mascot" src="/app/views/discover/home/marketplace-mascots.png" alt="">
+		</a>
+
 	</div>
 </section>
 
@@ -83,10 +135,10 @@
 			</div>
 		</div>
 
-		<div ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
-			<div class="row">
+		<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
+			<div ng-class="{ 'row': !Screen.isXs }">
 				<gj-game-thumbnail
-					class="col-xs-10 col-sm-4 col-md-3"
+					class="col-xs-11 col-sm-4 col-md-3"
 					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
 					ng-repeat="game in homeCtrl.bestGames | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
 					gj-game="game"
@@ -99,7 +151,7 @@
 		<div class="text-right">
 			<a class="btn btn-primary-outline" ng-class="{ 'btn-block': Screen.isXs }" ui-sref="discover.games.list.section( { section: 'best' } )" gj-track-event="home:more-btn:best">
 				<span class="jolticon jolticon-chevron-right"></span>
-				More Games
+				Load More
 			</a>
 		</div>
 
@@ -126,10 +178,10 @@
 			</div>
 		</div>
 
-		<div ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
-			<div class="row">
+		<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
+			<div ng-class="{ 'row': !Screen.isXs }">
 				<gj-game-thumbnail
-					class="col-xs-10 col-sm-4"
+					class="col-xs-11 col-sm-4"
 					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
 					ng-repeat="game in homeCtrl.hotGames | limitTo:(Screen.isMobile ? 6 : 9 ) track by game.id"
 					gj-game="game"
@@ -142,7 +194,7 @@
 		<div class="text-right">
 			<a class="btn btn-primary-outline" ng-class="{ 'btn-block': Screen.isXs }" ui-sref="discover.games.list.section( { section: 'hot' } )" gj-track-event="home:more-btn:hot">
 				<span class="jolticon jolticon-chevron-right"></span>
-				More Games
+				Load More
 			</a>
 		</div>
 
@@ -255,9 +307,9 @@
 	</div>
 </section>
 
-<section class="ad-section" ng-if="!Environment.isClient && !Screen.isXs">
+<!--<section class="ad-section" ng-if="!Environment.isClient && !Screen.isXs">
 	<gj-ad ad-size="leaderboard"></gj-ad>
-</section>
+</section>-->
 
 <script type="application/ld+json">
 {

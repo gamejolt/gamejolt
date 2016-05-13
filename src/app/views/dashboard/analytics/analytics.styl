@@ -1,0 +1,43 @@
+.ctrl-dashboard-analytics
+
+	header.section
+
+		nav.platform-list
+			display: inline-block
+			margin-top: 0
+			margin-right: $grid-gutter-width
+			vertical-align: middle
+
+		nav.breadcrumb
+			> ul > li > span
+			> ul > li > a
+				text-overflow()
+				max-width: 200px
+				color $text-muted
+
+				&.active
+					color: $white
+
+			// On XS hide all except the last.
+			@media $media-xs
+				> ul > li
+					display: none
+
+					&:last-child
+						display: inline-block
+
+	.report-percentage
+		display: inline-block
+		vertical-align: middle
+		height: 15px
+		background-color: $gj-blue
+
+.analytics-month-selector
+	display: inline-block
+
+	strong
+		margin: 0 15px
+
+	@media $media-xs
+		display: block
+		margin-bottom: $line-height-computed

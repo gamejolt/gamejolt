@@ -1,0 +1,45 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row" ng-if="!listCtrl.orders.length">
+			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+				<div class="alert alert-info" translate>
+					You haven't bought any games on the site yet. Once you do, you'll be able to see all of your orders here and the details for each order.
+				</div>
+			</div>
+		</div>
+
+		<table class="table" ng-if="listCtrl.orders.length">
+			<thead>
+				<tr>
+					<th translate>Order #</th>
+					<th translate>Item(s)</th>
+					<th translate>Purchase Date</th>
+					<th class="text-right" translate>Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="order in listCtrl.orders track by order.id">
+					<td>
+						<strong>
+							<a ui-sref="dashboard.main.purchases.view( { id: order.id } )">
+								{{ ::order.id }}
+							</a>
+						</strong>
+					</td>
+					<td>
+						{{ ::order.items[0].sellable.title }}
+					</td>
+					<td title="{{ ::order.completed_on | date:'medium' }}">
+						{{ ::order.completed_on | date:'mediumDate' }}
+					</td>
+					<td class="text-right">
+						<span class="tag tag-pink" ng-if="::order._is_refunded" translate>Refunded</span>
+						{{ ::order.total_amount / 100 | currency }}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+</section>

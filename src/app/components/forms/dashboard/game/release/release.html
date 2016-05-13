@@ -1,4 +1,4 @@
-<form gj-form="formModel" name="packageForm">
+<form gj-form="formModel" name="releaseForm" class="game-release-form">
 
 	<div ng-if="!isLoaded">
 		<gj-loading></gj-loading>
@@ -23,11 +23,104 @@
 
 		</form-group>
 
-		<button gj-form-submit-button class="i-button" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">
-			<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
-			<span ng-if="method == 'add'">{{ ::'dash.games.releases.form.add_release_button' | translate }}</span>
-			<span ng-if="method == 'add'">{{ ::'dash.games.releases.form.save_release_button' | translate }}</span>
-		</button>
+		<fieldset>
+			<legend translate>Builds</legend>
+
+			<div class="alert alert-warning" ng-if="!builds.length" translate>
+				You don't have any builds in this release yet. You won't be able to publish until you put some in.
+			</div>
+
+			<div ng-repeat="build in builds track by build.id" class="anim-fade-leave-enlarge anim-fade-enter">
+				<gj-form-dashboard-game-build
+					gj-game="game"
+					gj-game-package="package"
+					gj-game-release="baseModel"
+					gj-game-build="build"
+					gj-game-launch-options="launchOptions"
+					gj-game-package-builds="builds"
+					gj-build-download-counts="buildDownloadCounts"
+					gj-update-launch-options="updateBuildLaunchOptions( $build, $launchOptions )"
+					gj-on-remove-build="removeBuild( $build )"
+					gj-form-submit-handler="onBuildEdited( build, $response )"
+					>
+				</gj-form-dashboard-game-build>
+			</div>
+
+			<br>
+
+			<div class="alert alert-warning sans-margin" ng-if="areBuildsLockedByJam">
+				<span class="jolticon jolticon-notice"></span>
+				<span translate>
+					<strong>Your game is part of a jam that locks builds during voting.</strong>
+					You will not be able to add new builds until the voting period ends.
+				</span>
+			</div>
+
+			<div class="row" ng-if="!areBuildsLockedByJam">
+				<div class="col-sm-6">
+					<h5 class="sans-margin-top"><strong translate>Upload Downloadable Build</strong></h5>
+					<gj-form-dashboard-game-new-build
+						gj-build-type="downloadable"
+						gj-game="game"
+						gj-game-package="package"
+						gj-game-release="baseModel"
+						gj-game-package-builds="builds"
+						gj-form-submit-handler="onBuildAdded( formModel )"
+						>
+					</gj-form-dashboard-game-new-build>
+				</div>
+				<div class="col-sm-6">
+					<br class="visible-xs">
+					<h5 class="sans-margin-top"><strong translate>Upload Browser Build</strong></h5>
+					<gj-form-dashboard-game-new-build
+						ng-if="!areWebBuildsLockedBySellable"
+						gj-build-type="browser"
+						gj-game="game"
+						gj-game-package="package"
+						gj-game-release="baseModel"
+						gj-game-package-builds="builds"
+						gj-form-submit-handler="onBuildAdded( formModel )"
+						>
+					</gj-form-dashboard-game-new-build>
+					<div class="alert alert-info" ng-if="areWebBuildsLockedBySellable" translate>Browser builds can not currently be uploaded to games that are for sale.</div>
+				</div>
+			</div>
+
+		</fieldset>
+
+		<hr>
+
+		<span ng-if="baseModel.status != Game_Release.STATUS_PUBLISHED">
+			<button class="btn btn-success" ng-disabled="!releaseForm.$valid || !builds.length" ng-click="savePublished()">
+				<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
+				<span translate>Publish Release</span>
+			</button>
+
+			<button class="btn btn-outline" ng-disabled="!releaseForm.$valid || !builds.length" ng-click="saveDraft()">
+				<span translate>Save Draft</span>
+			</button>
+		</span>
+
+		<span ng-if="baseModel.status == Game_Release.STATUS_PUBLISHED">
+			<button class="btn" ng-disabled="!releaseForm.$valid || !builds.length" ng-click="onSubmit()">
+				<span class="jolticon jolticon-edit"></span>
+				<span translate>Save Release</span>
+			</button>
+		</span>
+
+
+		<div ng-class="{ 'pull-right': !Screen.isXs }">
+			<br class="visible-xs">
+
+			<button class="btn btn-outline" ng-if="baseModel.status == Game_Release.STATUS_PUBLISHED" ng-click="unpublish()">
+				<span translate>Unpublish Release</span>
+			</button>
+
+			<button class="btn btn-danger-outline" ng-click="remove()">
+				<span translate>Remove Release</span>
+			</button>
+		</div>
+
 	</div>
 
 </form>

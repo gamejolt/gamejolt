@@ -73,6 +73,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.List.CategoryCtrl', fu
 			App.title = gettextCatalog.getString( 'games.list.date_range_page_title', { dateStart: listCtrl.dateRange[0], dateEnd: listCtrl.dateRange[1] } );
 		}
 	}
+	else if ( section == 'worst' ) {
+		App.title = 'Ṣ̢̖͇͈͙̹̦Y̱͍͉S̺̳̞͠Y̸̱͚̙͕̺̺ͅS͎̘̲͕̹̀ͅT͉͕̺̲ͅE͓̱̥̠̰̱͚M̪̙̪̥̹ͅ ͏̼̲̫̰E͇̺̩̼R͏̗͙Ŕ͖̦͕Ơ̰̱͖̗̯̞R҉̻̯̠͚';
+	}
 	else {
 		var sectionTranslationKey = 'games.list.section_' + section;
 		var sectionHuman = gettextCatalog.getString( sectionTranslationKey );

@@ -17,12 +17,6 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardChangePasswor
 		return Api.sendRequest( '/web/dash/account/set-password', {
 			old_password: scope.formModel.old_password,
 			password: scope.formModel.password,
-		} )
-		.then( function( response )
-		{
-			if ( !response.success ) {
-				return $q.reject( response );
-			}
 		} );
 	};
 

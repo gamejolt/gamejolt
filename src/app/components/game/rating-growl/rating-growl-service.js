@@ -8,7 +8,7 @@ angular.module( 'App.Game.RatingGrowl' ).service( 'Game_RatingGrowl', function( 
 		}
 
 		// Don't show if ratings are disabled for the game.
-		if ( !game.ratings_enabled ) {
+		if ( !game.ratings_enabled || !game.can_user_rate ) {
 			return;
 		}
 
@@ -25,7 +25,7 @@ angular.module( 'App.Game.RatingGrowl' ).service( 'Game_RatingGrowl', function( 
 					return;
 				}
 
-				Growls.success( {
+				Growls.info( {
 					sticky: true,
 					templateUrl: '/app/components/game/rating-growl/rating-growl.html',
 					controller: 'Game_RatingGrowlCtrl',
