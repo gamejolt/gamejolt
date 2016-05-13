@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 	var _this = this;
 	var manageCtrl = $scope.manageCtrl;
 
-	App.title = gettextCatalog.getString( 'dash.games.packages.page_title', { game: manageCtrl.game.title } );
+	App.title = gettextCatalog.getString( 'Manage Packages for {{ game }}', { game: manageCtrl.game.title } );
 
 	this.packages = Game_Package.populate( packagesPayload.packages );
 	this.sellables = _.indexBy( Sellable.populate( packagesPayload.sellables ), 'game_package_id' );
