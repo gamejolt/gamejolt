@@ -1,30 +1,41 @@
-.add-to-playlist-popover-playlists
+.add-to-playlist-popover
 
-	.jolticon
-		display: none
+	.loading
+		margin-top: $line-height-computed
 
-	.list-group-item
+	.list-group
+		margin-bottom: 0 !important
 
-		&.playlist-no-game
-			.jolticon-playlist
-				display: inline-block
+	&-playlists
 
-			&:hover
+		.jolticon
+			display: none
+
+		.list-group-item
+
+			&.playlist-no-game
 				.jolticon-playlist
-					display: none
-
-				.jolticon-add
 					display: inline-block
 
-		&.playlist-has-game
-			.jolticon-check
-				display: inline-block
+				&:hover
+					.jolticon-playlist
+						display: none
 
-			&:hover
+					.jolticon-add
+						display: inline-block
+						color: $gj-green
+
+			&.playlist-has-game
 				.jolticon-check
-					display: none
-
-				.jolticon-remove
 					display: inline-block
+					color: $gj-green
+
+				&:hover
+					.jolticon-check
+						display: none
+
+					.jolticon-remove
+						display: inline-block
+						color: $gj-pink
 
 
