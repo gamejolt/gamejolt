@@ -2,6 +2,7 @@
 
 	<div ng-if="::(ctrl.achieved > 0)">
 		<p translate translate-scope="{ achieved: ctrl.achieved, total: ctrl.total }">trophies.completion.lead_html</p>
+		<br>
 
 		<div class="progress progress-darker progress-thin">
 			<div class="progress-bar" ng-style="::{ width: ctrl.completionRate + '%' }"></div>
