@@ -1,4 +1,4 @@
-<div class="game-ogrs" ng-if="ctrl.imgTag" ng-class="{ 'has-descriptors': !ctrl.hideDescriptors && ctrl.descriptors.length, 'hide-tag': ctrl.hideTag }">
+<div class="game-ogrs" ng-if="ctrl.imgTag" ng-class="{ 'has-descriptors': !ctrl.hideDescriptors && ctrl.descriptors.length, 'no-descriptors': !ctrl.descriptors.length, 'hide-tag': ctrl.hideTag }">
 	<div class="game-ogrs-inner">
 		<div class="game-ogrs-tag" ng-if="!ctrl.hideTag">
 			<img class="game-ogrs-rating-img" ng-src="{{ ctrl.imgTagUrl }}" width="80" height="100" alt="{{ ctrl.imgTag }}">
