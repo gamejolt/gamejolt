@@ -4,7 +4,7 @@ angular.module( 'App.Game.MaturityBlock' ).component( 'gjGameMaturityBlock', {
 		game: '<',
 	},
 	templateUrl: '/app/components/game/maturity-block/maturity-block.html',
-	controller: function( $scope, $document, Environment, Settings )
+	controller: function( $scope, $document, App, Environment, Settings )
 	{
 		var _this = this;
 
@@ -33,6 +33,10 @@ angular.module( 'App.Game.MaturityBlock' ).component( 'gjGameMaturityBlock', {
 		{
 			if ( angular.isDefined( val ) ) {
 				_this.isLoaded = true;
+
+				if ( App.user && App.user.id == _this.game.developer.id ) {
+					_this.shouldProceed = true;
+				}
 			}
 		} );
 	}
