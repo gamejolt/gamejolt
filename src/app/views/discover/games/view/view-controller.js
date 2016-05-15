@@ -123,15 +123,14 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 				_this.libraryGame = newLibraryGame;
 				_this.followerCount = response.followers;
 				Growls.success(
-					gettextCatalog.getString( 'library.followed.add_game_success_growl', { game: _this.game.title } ),
-					gettextCatalog.getString( 'library.followed.add_game_success_growl_title', { game: _this.game.title } )
+					gettextCatalog.getString( "You are now following {{ game }}. You'll be notified of news updates as long as it's in your library.", { game: _this.game.title } ),
+					gettextCatalog.getString( 'Game Followed' )
 				);
 			} )
 			.catch( function()
 			{
 				Growls.success(
-					gettextCatalog.getString( 'library.followed.add_game_error_growl' ),
-					gettextCatalog.getString( 'library.followed.add_game_error_growl_title' )
+					gettextCatalog.getString( 'Something has prevented you from following this game' )
 				);
 			} );
 
