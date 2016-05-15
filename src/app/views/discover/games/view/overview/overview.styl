@@ -4,18 +4,29 @@
 		margin: 10px 0
 
 	.game-stats
+		margin-bottom: $line-height-computed
+
 		.stat-big
 			margin-bottom: 0
 
-	@media $media-sm
-		#maturity-rating
-			margin-top: 60px
+			a
+				text-decoration: none
+				border-bottom: 3px solid $gray-lighter
+				color: $black
+
+				&:hover
+					border-color: $black
+
 
 	// Match the styling of .stat-big labels.
 	.rating-widget-label
-		color: $text-muted
-		font-size: $font-size-small
-		margin-bottom: 3px
+		margin-top: 0
+
+		@media $media-mobile
+			font-family: $font-family-base
+			color: $text-muted
+			font-size: $font-size-small
+			margin-bottom: 5px
 
 	.rating-breakdown
 		margin-bottom: 0
@@ -58,8 +69,17 @@
 
 	// Collapse spacing between headers a bit on really small screens.
 	@media $media-xs
+
 		h2
 			margin-top: $line-height-computed
 
 			&.section-header
 				margin-top: 0
+
+	@media $media-sm
+
+		#maturity-rating
+			margin-top: 60px
+
+		.game-stats
+			margin-bottom: 0
