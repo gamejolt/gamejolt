@@ -1,135 +1,138 @@
 <div ng-if="gameCtrl.game">
+	<gj-game-maturity-block game="gameCtrl.game">
 
-	<section class="section fill-darker game-header-cover"
-		ng-class="gameCtrl.game._has_cover ? 'has-image' : 'no-image'"
-		>
-
-		<gj-game-cover
-			ng-if="gameCtrl.game._has_cover"
-			gj-game="gameCtrl.game"
+		<section class="section fill-darker game-header-cover"
+			ng-class="gameCtrl.game._has_cover ? 'has-image' : 'no-image'"
 			>
-		</gj-game-cover>
 
-		<div class="game-header-cover-buttons"
-			ng-if="
-				!Screen.isXs
-				&& $state.is( 'discover.games.view.overview' )
-				&& (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length || gameCtrl.game._can_buy_primary_sellable)
-			"
-			>
-			<gj-game-cover-buttons
-				game="gameCtrl.game"
-				packages="gameCtrl.packages"
-				installable-builds="gameCtrl.installableBuilds"
-				browser-builds="gameCtrl.browserBuilds"
-				on-show-multiple-packages="gameCtrl.scrollToMultiplePackages()"
-				on-show-package-payment="gameCtrl.scrollToPackagePayment( $package )"
+			<gj-game-cover
+				ng-if="gameCtrl.game._has_cover"
+				gj-game="gameCtrl.game"
 				>
-			</gj-game-cover-buttons>
-		</div>
+			</gj-game-cover>
 
-		<div class="game-header-meta">
-			<div class="container">
-				<div class="game-header-meta-wrap">
+			<div class="game-header-cover-buttons"
+				ng-if="
+					!Screen.isXs
+					&& $state.is( 'discover.games.view.overview' )
+					&& (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length || gameCtrl.game._can_buy_primary_sellable)
+				"
+				>
+				<gj-game-cover-buttons
+					game="gameCtrl.game"
+					packages="gameCtrl.packages"
+					installable-builds="gameCtrl.installableBuilds"
+					browser-builds="gameCtrl.browserBuilds"
+					on-show-multiple-packages="gameCtrl.scrollToMultiplePackages()"
+					on-show-package-payment="gameCtrl.scrollToPackagePayment( $package )"
+					>
+				</gj-game-cover-buttons>
+			</div>
 
-					<!-- Game Title -->
-					<h1 class="h2 section-header game-header-title">
-						<a ui-sref=".overview">
-							{{ ::gameCtrl.game.title }}
-						</a>
-					</h1>
+			<div class="game-header-meta">
+				<div class="container">
+					<div class="game-header-meta-wrap">
 
-					<!-- Developer -->
-					<div class="game-header-byline">
-						<span translate>by</span>
-						<a ng-href="{{ ::gameCtrl.game.developer.url }}">
-							{{ ::gameCtrl.game.developer.display_name }}
-						</a>
+						<!-- Game Title -->
+						<h1 class="h2 section-header game-header-title">
+							<a ui-sref=".overview">
+								{{ ::gameCtrl.game.title }}
+							</a>
+						</h1>
 
-						<!--
-							Hide on mobile to keep it clean.
-							They can view in the game details.
-						-->
-						<span class="game-header-time-ago" ng-if="!Screen.isXs && gameCtrl.game.published_on">
-							<span class="dot-separator"></span>
-							<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )"
-								am-time-ago="::gameCtrl.game.published_on"></a>
-						</span>
-
-						<span ng-if="gameCtrl.game.tigrs_age || gameCtrl.game.ratings_enabled">
-							<span class="dot-separator hidden-xs"></span>
-							<br class="visible-xs">
-							<br class="visible-xs">
-
-							<span class="game-header-ogrs" ng-if="gameCtrl.game.tigrs_age">
-								<gj-game-ogrs-tag gj-game="gameCtrl.game"></gj-game-ogrs-tag>
-							</span>
+						<!-- Developer -->
+						<div class="game-header-byline">
+							<span translate>by</span>
+							<a ng-href="{{ ::gameCtrl.game.developer.url }}">
+								{{ ::gameCtrl.game.developer.display_name }}
+							</a>
 
 							<!--
-								The ng-repeat makes sure that the widget gets updated any time the rating changes
-								on the page while still doing a bind once.
+								Hide on mobile to keep it clean.
+								They can view in the game details.
 							-->
-							<span ng-if="::gameCtrl.game.ratings_enabled">
+							<span class="game-header-time-ago" ng-if="!Screen.isXs && gameCtrl.game.published_on">
 								<span class="dot-separator"></span>
-								<gj-meter
-									class="meter-dark meter-big"
-									ng-repeat="_ in [ gameCtrl.game.avg_rating ]"
-									meter-rating="::gameCtrl.game.avg_rating"
-									tooltip="{{ ::gameCtrl.game.rating_count || 0 | number }} rating(s), avg: {{ ::gameCtrl.game.avg_rating }}"
-									>
-								</gj-meter>
+								<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )"
+									am-time-ago="::gameCtrl.game.published_on"></a>
 							</span>
 
-							<span ng-if="gameCtrl.notificationCounts.news">
-								<span class="dot-separator"></span>
-								<a class="tag tag-pink"
-									ui-sref="discover.games.view.news.list"
-									>
-									{{ gameCtrl.notificationCounts.news }}
-									<span translate>New</span>
-								</a>
+							<span ng-if="gameCtrl.game.tigrs_age || gameCtrl.game.ratings_enabled">
+								<span class="dot-separator hidden-xs"></span>
+								<br class="visible-xs">
+								<br class="visible-xs">
+
+								<span class="game-header-ogrs" ng-if="gameCtrl.game.tigrs_age">
+									<gj-game-ogrs-tag gj-game="gameCtrl.game"></gj-game-ogrs-tag>
+								</span>
+
+								<!--
+									The ng-repeat makes sure that the widget gets updated any time the rating changes
+									on the page while still doing a bind once.
+								-->
+								<span ng-if="::gameCtrl.game.ratings_enabled">
+									<span class="dot-separator"></span>
+									<gj-meter
+										class="meter-dark meter-big"
+										ng-repeat="_ in [ gameCtrl.game.avg_rating ]"
+										meter-rating="::gameCtrl.game.avg_rating"
+										tooltip="{{ ::gameCtrl.game.rating_count || 0 | number }} rating(s), avg: {{ ::gameCtrl.game.avg_rating }}"
+										>
+									</gj-meter>
+								</span>
+
+								<span ng-if="gameCtrl.notificationCounts.news">
+									<span class="dot-separator"></span>
+									<a class="tag tag-pink"
+										ui-sref="discover.games.view.news.list"
+										>
+										{{ gameCtrl.notificationCounts.news }}
+										<span translate>New</span>
+									</a>
+								</span>
 							</span>
-						</span>
+						</div>
+
 					</div>
-
 				</div>
 			</div>
-		</div>
 
-	</section>
+		</section>
 
-	<header class="section game-header" gj-auto-scroll-anchor>
+		<header class="section game-header" gj-auto-scroll-anchor>
 
-		<div class="container">
-			<div class="game-header-avatar">
-				<div class="avatar-circle" gj-user-avatar="gameCtrl.game.developer"></div>
-			</div>
-		</div>
-
-		<div class="game-header-nav"
-			gj-scroll-affix
-			is-affixed="gameCtrl.isNavAffixed"
-			should-affix="Screen.isLg && Screen.height > 750"
-			>
 			<div class="container">
-
-				<div class="row">
-					<div class="col-md-4 col-md-push-8 ">
-						<div class="game-header-controls-container">
-							<div gj-partial="/app/views/discover/games/view/_header/_controls.html"></div>
-						</div>
-					</div>
-					<div class="col-md-8 col-md-pull-4">
-						<div class="game-header-nav-container">
-							<div gj-partial="/app/views/discover/games/view/_header/_nav.html"></div>
-						</div>
-					</div>
+				<div class="game-header-avatar">
+					<div class="avatar-circle" gj-user-avatar="gameCtrl.game.developer"></div>
 				</div>
-
 			</div>
-		</div>
 
-	</header>
+			<div class="game-header-nav"
+				gj-scroll-affix
+				is-affixed="gameCtrl.isNavAffixed"
+				should-affix="Screen.isLg && Screen.height > 750"
+				>
+				<div class="container">
 
-	<ui-view></ui-view>
+					<div class="row">
+						<div class="col-md-4 col-md-push-8 ">
+							<div class="game-header-controls-container">
+								<div gj-partial="/app/views/discover/games/view/_header/_controls.html"></div>
+							</div>
+						</div>
+						<div class="col-md-8 col-md-pull-4">
+							<div class="game-header-nav-container">
+								<div gj-partial="/app/views/discover/games/view/_header/_nav.html"></div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</header>
+
+		<ui-view></ui-view>
+
+	</gj-game-maturity-block>
 </div>
