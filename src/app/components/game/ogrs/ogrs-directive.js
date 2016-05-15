@@ -5,6 +5,7 @@ angular.module( 'App.Game.Ogrs' ).directive( 'gjGameOgrs', function()
 		scope: {
 			game: '=gjGame',
 			hideDescriptors: '=?gjHideDescriptors',
+			hideTag: '=gjHideTag',
 		},
 		templateUrl: '/app/components/game/ogrs/ogrs.html',
 		controllerAs: 'ctrl',
