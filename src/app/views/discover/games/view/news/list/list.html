@@ -4,15 +4,15 @@
 		<div class="row">
 			<div class="col-sm-9 col-md-8 col-lg-6">
 
-				<h2 class="section-header sans-margin-bottom">
+				<h2 class="section-header sans-margin-bottom" translate>
 					News Updates
 				</h2>
 
 				<p class="small text-muted">
 					<span class="jolticon jolticon-rss"></span>
-					<a target="_blank" ng-href="{{ listCtrl.atomFeedUrl }}" class="link-unstyled">RSS</a>
+					<a target="_blank" ng-href="{{ listCtrl.atomFeedUrl }}" class="link-unstyled" translate>RSS</a>
 					|
-					<a target="_blank" href="{{ listCtrl.atomFeedUrl }}" class="link-unstyled">Atom</a>
+					<a target="_blank" href="{{ listCtrl.atomFeedUrl }}" class="link-unstyled" translate>Atom</a>
 				</p>
 
 				<br>
@@ -28,7 +28,7 @@
 					ng-repeat="article in listCtrl.newsArticles track by article.id"
 					>
 					<h5 ng-class="{ 'section-header': $first }">
-						<span class="tag tag-pink" ng-if="::!!article.notification">New</span>
+						<span class="tag tag-pink" ng-if="::!!article.notification" translate>New</span>
 						<strong>
 							<a class="link-unstyled" ui-sref="^.view( { articleSlug: article.slug, articleId: article.id } )">{{ ::article.title }}</a>
 						</strong>
