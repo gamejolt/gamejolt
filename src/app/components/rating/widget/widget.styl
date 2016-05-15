@@ -42,10 +42,7 @@
 	&-icon
 		float: left
 		cursor: pointer
-		margin: 0 15px 0 0 !important
-
-		@media $media-sm-up
-			margin: 0 !important
+		margin: 0 !important
 
 		&
 		.rating-widget-icons:hover &
@@ -55,20 +52,14 @@
 				color: $gray-lightest
 
 		&.hover
-			color: $gj-dark-green !important
+			color: $gj-blue !important
 
 			.rating-widget-dark &
 				color: $gj-green !important
 
 		&.selected
-			color: $gj-dark-green
+			color: $gj-blue
 
 			.rating-widget-dark &
 				color: $gj-green
-
-		&-bounce
-			@extend .stagger
-			animation-name: bounce
-			animation-duration: 300ms
-			animation-timing-function: $ease-out
 
