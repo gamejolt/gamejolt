@@ -1,192 +1,48 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-6 col-md-12">
-
-		<div>
-			<strong>Genre:</strong>
-			<span gj-lazy-placeholder="gameCtrl.game.category_human">
-				<span class="lazy-placeholder" style="width: 60px"></span>
-				<a ui-sref="discover.games.list.section-category( { section: 'best', category: gameCtrl.game.category } )">
-					{{ ::gameCtrl.game.category_human }}
-				</a>
-			</span>
-		</div>
-
-		<div>
-			<strong>Status:</strong>
-			<span gj-lazy-placeholder="gameCtrl.game.development_status_human">
-				<span class="lazy-placeholder" style="width: 80px"></span>
-				<span>
-					{{ ::gameCtrl.game.development_status_human }}
-				</span>
-			</span>
-		</div>
-
-		<div>
-			<strong>Engine/Language:</strong>
-			<span gj-lazy-placeholder="gameCtrl.game.creation_tool_human">
-				<span class="lazy-placeholder" style="width: 100px"></span>
-				<span>
-					{{ ::gameCtrl.game.creation_tool_human }}
-				</span>
-			</span>
-		</div>
-
-		<div ng-if="gameCtrl.game.published_on">
-			<strong>Published On:</strong>
-			<span gj-lazy-placeholder="gameCtrl.game.category_human">
-				<span class="lazy-placeholder" style="width: 120px"></span>
-				<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )">
-					{{ ::gameCtrl.game.published_on | date:'longDate' }}
-				</a>
-			</span>
-		</div>
-
-		<br>
-
-		<ul class="list-unstyled" ng-if="gameCtrl.game.web_site">
-			<li>
-				<span class="jolticon jolticon-world"></span>
-				<a ng-href="{{ ::gameCtrl.game.web_site }}">Game Web Site</a>
-			</li>
-		</ul>
-
-		<!-- Game Stats -->
-		<ul class="stat-list">
-			<li class="stat-big stat-big-smaller">
-				<div class="stat-big-label">{{ ::'games.view.stats.views_label' | translate }}</div>
-				<div class="stat-big-digit">
-					<span gj-lazy-placeholder="overviewCtrl.isLoaded">
-						<span class="lazy-placeholder"></span>
-						<span title="{{ ::overviewCtrl.profileCount | number }}">
-							{{ ::overviewCtrl.profileCount | fuzzyNumber }}
-						</span>
-					</span>
-				</div>
-			</li>
-			<li class="stat-big stat-big-smaller" ng-if="gameCtrl.game.sellable.type != 'paid'">
-				<div class="stat-big-label">
-					{{ ::'games.view.stats.downloads_plays_label' | translate }}
-					<span ng-if="overviewCtrl.playsTooltip" class="jolticon jolticon-help-circle text-muted" tooltip="{{ ::overviewCtrl.playsTooltip | translate }}"></span>
-				</div>
-				<div class="stat-big-digit">
-					<span gj-lazy-placeholder="overviewCtrl.isLoaded">
-						<span class="lazy-placeholder"></span>
-						<span ng-if="overviewCtrl.showNaPlays">
-							{{ ::'games.view.stats.na' | translate }}
-						</span>
-						<span ng-if="!overviewCtrl.showNaPlays" title="{{ ::(overviewCtrl.downloadCount + overviewCtrl.playCount) | number }}">
-							{{ ::(overviewCtrl.downloadCount + overviewCtrl.playCount) | fuzzyNumber }}
-						</span>
-					</span>
-				</div>
-			</li>
-			<li class="stat-big stat-big-smaller">
-				<div class="stat-big-label">
-					{{ ::'games.view.stats.ratings_label' | translate }}
-					<span ng-if="!gameCtrl.game.ratings_enabled" class="jolticon jolticon-help-circle text-muted" tooltip="Ratings are disabled for this game."></span>
-				</div>
-				<div class="stat-big-digit">
-					<span gj-lazy-placeholder="gameCtrl.game">
-						<span class="lazy-placeholder"></span>
-						<span ng-if="gameCtrl.game.ratings_enabled" title="{{ ::gameCtrl.game.rating_count || 0 | number }}">
-							{{ ::gameCtrl.game.rating_count || 0 | fuzzyNumber }}
-						</span>
-						<span ng-if="!gameCtrl.game.ratings_enabled">
-							OFF
-						</span>
-					</span>
-				</div>
-			</li>
-
-			<li ng-if="::gameCtrl.game.ratings_enabled">
-				<a
-					style="display: inline-block"
-					ng-class="{ active: overviewCtrl.isShowingRatingBreakdown }"
-					gj-tooltip="{{ 'games.view.stats.rating_breakdown_tooltip' | translate }}"
-					ng-click="overviewCtrl.isShowingRatingBreakdown = !overviewCtrl.isShowingRatingBreakdown"
-					>
-					<span class="jolticon jolticon-chart big text-muted" ng-class="{ active: overviewCtrl.isShowingRatingBreakdown }"></span>
-				</a>
-			</li>
-		</ul>
-
-		<div ng-if="::gameCtrl.game.ratings_enabled">
-			<div gj-expand-when="overviewCtrl.isShowingRatingBreakdown">
-				<div class="rating-breakdown well fill-lightest">
-					<table class="table">
-						<tbody>
-							<tr ng-repeat="ratingString in [ 'five', 'four', 'three', 'two', 'one' ]">
-								<th class="rating-breakdown-label">{{ ::'rating.' + ratingString | translate }}</th>
-								<td class="rating-breakdown-progress" style="vertical-align: middle">
-									<div class="progress progress-thin progress-darker">
-										<div class="progress-bar" ng-style="{ width: gameCtrl.ratingBreakdown[ (5 - $index) ] / gameCtrl.game.rating_count * 100 + '%' }"></div>
-									</div>
-								</td>
-								<td class="rating-breakdown-count">
-									({{ (gameCtrl.ratingBreakdown[ (5 - $index) ] || 0) | fuzzyNumber }})
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-
-		<div id="maturity-rating">
-			<div gj-lazy-placeholder="overviewCtrl.isLoaded">
-				<div class="lazy-placeholder" style="height: 115px"></div>
-				<gj-game-ogrs gj-game="gameCtrl.game"></gj-game-ogrs>
-			</div>
-		</div>
-
-	</div>
-	<div class="col-xs-12 col-sm-6 col-md-12">
-
-		<!-- Developer Info -->
-		<div class="developer-info" ng-if="::gameCtrl.game.developer">
-			<div gj-user-avatar="::gameCtrl.game.developer"></div>
-
-			<h4 class="sans-margin-bottom" ng-class="{ 'section-header': Screen.isSm || Screen.isXs }">
-				<a class="link-unstyled" ui-sref="profile.overview( { slug: gameCtrl.game.developer.slug, id: gameCtrl.game.developer.id } )">
-					{{ ::gameCtrl.game.developer.display_name }}
-				</a>
-			</h4>
-
-			<p class="text-muted small">
-				Joined <span am-time-ago="::gameCtrl.game.developer.created_on"></span>
-			</p>
-
-			<p>
-				<span class="jolticon jolticon-game"></span>
-				<span gj-lazy-placeholder="overviewCtrl.isLoaded">
-					<span class="lazy-placeholder" style="width: 30px"></span>
-					<a ui-sref="library.collection.developer( { slug: gameCtrl.game.developer.slug, id: gameCtrl.game.developer.id } )">
-						{{ ::overviewCtrl.developerGamesCount | number }}
-						<ng-pluralize count="overviewCtrl.developerGamesCount" when="{ 'one': 'game', 'other': 'games' }"></ng-pluralize>
-					</a>
-				</span>
-			</p>
-
-			<p class="developer-info-icons">
-				<a
-					ng-if="::gameCtrl.game.developer.twitter_id"
-					ng-href="http://twitter.com/{{ ::gameCtrl.game.developer.twitter_screenname }}"
-					gj-tooltip="@{{ ::gameCtrl.game.developer.twitter_screenname }}"
-					target="_blank">
-
-					<span class="jolticon jolticon-twitter-bird big"></span>
-				</a>
-
-				<a
-					ng-if="::gameCtrl.game.developer.web_site"
-					ng-href="{{ ::gameCtrl.game.developer.web_site }}"
-					gj-tooltip="Visit Developer's Site"
-					target="_blank">
-
-					<span class="jolticon jolticon-world big"></span>
-				</a>
-			</p>
-		</div>
-
-	</div>
+<div>
+	<strong>Genre:</strong>
+	<span gj-lazy-placeholder="gameCtrl.game.category_human">
+		<span class="lazy-placeholder" style="width: 60px"></span>
+		<a ui-sref="discover.games.list.section-category( { section: 'best', category: gameCtrl.game.category } )">
+			{{ ::gameCtrl.game.category_human }}
+		</a>
+	</span>
 </div>
+
+<div>
+	<strong>Status:</strong>
+	<span gj-lazy-placeholder="gameCtrl.game.development_status_human">
+		<span class="lazy-placeholder" style="width: 80px"></span>
+		<span>
+			{{ ::gameCtrl.game.development_status_human }}
+		</span>
+	</span>
+</div>
+
+<div>
+	<strong>Engine/Language:</strong>
+	<span gj-lazy-placeholder="gameCtrl.game.creation_tool_human">
+		<span class="lazy-placeholder" style="width: 100px"></span>
+		<span>
+			{{ ::gameCtrl.game.creation_tool_human }}
+		</span>
+	</span>
+</div>
+
+<div ng-if="gameCtrl.game.published_on">
+	<strong>Published On:</strong>
+	<span gj-lazy-placeholder="gameCtrl.game.category_human">
+		<span class="lazy-placeholder" style="width: 120px"></span>
+		<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )">
+			{{ ::gameCtrl.game.published_on | date:'longDate' }}
+		</a>
+	</span>
+</div>
+
+<br>
+
+<ul class="list-unstyled" ng-if="gameCtrl.game.web_site">
+	<li>
+		<span class="jolticon jolticon-world"></span>
+		<a ng-href="{{ ::gameCtrl.game.web_site }}">Game Web Site</a>
+	</li>
+</ul>

@@ -1,0 +1,64 @@
+<div class="row">
+	<!--
+		Can't rate your own games! Remember that.
+	-->
+	<div class="col-xs-8" ng-if="App.user && gameCtrl.game.developer.id != App.user.id && gameCtrl.game.ratings_enabled && gameCtrl.game.can_user_rate">
+		<div class="rating-widget-label">
+			{{ gameCtrl.userRating ? 'Your Rating' : 'Rate Game' }}
+		</div>
+
+		<gj-rating-widget
+			rating-widget-game="gameCtrl.game"
+			rating-widget-rating="gameCtrl.userRating"
+			rating-widget-big="Screen.isSm || Screen.isLg"
+			>
+		</gj-rating-widget>
+	</div>
+	<div class="col-xs-4">
+		<div class="stat-big stat-big-smaller">
+			<div class="stat-big-label">
+				{{ ::'games.view.stats.ratings_label' | translate }}
+				<span ng-if="!gameCtrl.game.ratings_enabled" class="jolticon jolticon-help-circle text-muted" tooltip="Ratings are disabled for this game."></span>
+			</div>
+			<div class="stat-big-digit">
+				<a
+					class="link-unstyled"
+					ng-click="overviewCtrl.isShowingRatingBreakdown = !overviewCtrl.isShowingRatingBreakdown"
+					gj-tooltip="{{ 'games.view.stats.rating_breakdown_tooltip' | translate }}"
+					>
+					<span gj-lazy-placeholder="gameCtrl.game">
+						<span class="lazy-placeholder"></span>
+						<span ng-if="gameCtrl.game.ratings_enabled" title="{{ gameCtrl.game.rating_count || 0 | number }}">
+							{{ gameCtrl.game.rating_count || 0 | fuzzyNumber }}
+						</span>
+						<span ng-if="!gameCtrl.game.ratings_enabled">
+							OFF
+						</span>
+					</span>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div ng-if="::gameCtrl.game.ratings_enabled">
+	<div gj-expand-when="overviewCtrl.isShowingRatingBreakdown">
+		<div class="rating-breakdown well fill-lightest">
+			<table class="table">
+				<tbody>
+					<tr ng-repeat="ratingString in [ 'five', 'four', 'three', 'two', 'one' ]">
+						<th class="rating-breakdown-label">{{ ::'rating.' + ratingString | translate }}</th>
+						<td class="rating-breakdown-progress" style="vertical-align: middle">
+							<div class="progress progress-thin progress-darker">
+								<div class="progress-bar" ng-style="{ width: gameCtrl.ratingBreakdown[ (5 - $index) ] / gameCtrl.game.rating_count * 100 + '%' }"></div>
+							</div>
+						</td>
+						<td class="rating-breakdown-count">
+							({{ (gameCtrl.ratingBreakdown[ (5 - $index) ] || 0) | fuzzyNumber }})
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

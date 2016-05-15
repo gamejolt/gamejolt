@@ -224,7 +224,6 @@ angular.module( 'App', [
 	'App.Game.Ogrs',
 	'App.Game.RatingGrowl',
 	'App.Game.Video.Embed',
-	'App.Game.ViewState',
 
 	'App.Game.Collection',
 	'App.Game.Collection.Thumbnail',

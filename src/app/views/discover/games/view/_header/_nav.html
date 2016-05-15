@@ -2,24 +2,31 @@
 <nav class="platform-list inline">
 	<ul>
 		<li>
-			<a ui-sref=".overview" ui-sref-active="active">
+			<a ui-sref=".overview"
+				ui-sref-active="active"
+				>
 				{{ ::'games.view.overview_tab' | translate }}
 			</a>
 		</li>
 		<li ng-if="gameCtrl.newsArticlesCount">
-			<a ui-sref=".news.list" ng-class="{ active: $state.includes( 'discover.games.view.news' ) }">
+			<a ui-sref=".news.list"
+				ng-class="{ active: $state.includes( 'discover.games.view.news' ) }"
+				>
 				{{ ::'games.view.news_tab' | translate }}
 				<span class="badge">{{ gameCtrl.newsArticlesCount | number }}</span>
 			</a>
 		</li>
 		<li ng-if="gameCtrl.hasScores">
 			<a ui-sref=".scores.list( { type: 'best', tableId: gameCtrl.primaryScoreTable.id } )"
-				ng-class="{ active: $state.includes( 'discover.games.view.scores' ) }">
+				ng-class="{ active: $state.includes( 'discover.games.view.scores' ) }"
+				>
 				{{ ::'games.view.scores_tab' | translate }}
 			</a>
 		</li>
 		<li ng-if="gameCtrl.trophiesCount">
-			<a ui-sref=".trophies.list" ng-class="{ active: $state.includes( 'discover.games.view.trophies' ) }">
+			<a ui-sref=".trophies.list"
+				ng-class="{ active: $state.includes( 'discover.games.view.trophies' ) }"
+				>
 				{{ ::'games.view.trophies_tab' | translate }}
 				<span class="badge">{{ gameCtrl.trophiesCount | number }}</span>
 			</a>
