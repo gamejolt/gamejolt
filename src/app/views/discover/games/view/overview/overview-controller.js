@@ -2,7 +2,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle,
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, User, Environment,
 	Jam,
-	Api, Payload, Game_ViewState, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
+	Api, Payload, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
 {
 	var _this = this;
 
@@ -11,9 +11,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	this.isLoaded = false;
 	this.currentCommentPage = $stateParams.comment_page;
 
-	// Kind of hacky, but if we're prerendering, then we need to make sure that the details are open for the game.
-	// Otherwise by default they're closed.
-	this.detailsOpen = Environment.isPrerender ? true : false;
 	this.isShowingRatingBreakdown = false;
 
 	$scope.$watch( '::gameCtrl.game', function( game )
@@ -24,9 +21,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 
 		_this.game = game;
 		App.title = game.title + ' by ' + game.developer.display_name;
-
-		// Wait for the game before showing extended info.
-		Game_ViewState.showExtended();
 	} );
 
 	$scope.$watch( 'gameCtrl.hasScores && gameCtrl.trophiesCount', function( val )
@@ -34,11 +28,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		// Whether or now the achievements row should be two columns.
 		// When there is both scores and trophies, we split them in half.
 		_this.isAchievementsTwoCol = val;
-	} );
-
-	$scope.$on( '$destroy', function()
-	{
-		Game_ViewState.hideExtended();
 	} );
 
 	Api.sendRequest( '/web/discover/games/overview/' + $stateParams.id )

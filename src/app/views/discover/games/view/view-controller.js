@@ -1,13 +1,12 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
-	$scope, $stateParams, $injector, $timeout,
+	$scope, $stateParams, $injector, $timeout, $document, $position,
 	Environment, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
-	Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable,
+	Game, GameLibrary_Game, Game_Rating, Game_ScoreTable,
 	Registry, Scroll )
 {
 	var _this = this;
 
 	$scope.Game = Game;
-	$scope.Game_ViewState = Game_ViewState;
 
 	this.isLoaded = false;
 	this.game = Registry.find( 'Game', $stateParams.id );
@@ -26,8 +25,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 			return;
 		}
 
-		Game_ViewState.setGame( game );
-
 		Location.enforce( {
 			slug: game.slug,
 		} );
@@ -36,11 +33,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		if ( game.ga_tracking_id ) {
 			Analytics.attachAdditionalPageTracker( $scope, game.ga_tracking_id );
 		}
-	} );
-
-	$scope.$on( '$destroy', function()
-	{
-		Game_ViewState.clear();
 	} );
 
 	Api.sendRequest( '/web/discover/games/' + $stateParams.id )
@@ -72,6 +64,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		this.trophiesCount = payload.trophiesCount || 0;
 		this.hasScores = payload.hasScores || false;
 		this.primaryScoreTable = payload.primaryScoreTable ? new Game_ScoreTable( payload.primaryScoreTable ) : null;
+		this.twitterShareMessage = payload.twitterShareMessage || 'Check out this game!';
 
 		processRatingPayload( payload );
 

@@ -1,29 +1,21 @@
 .ctrl-discover-games-view-overview-page
 
-	#maturity-rating
-		margin-top: $line-height-computed
+	hr
+		margin: 10px 0
 
-	.developer-info
-		margin-top: $line-height-computed
-
-		@media $media-sm-up
-			margin-top: 0
-
-		.user-avatar
-			float: right
-			width: 100px
-			margin-left: 15px
-
-	.developer-info-icons
-		> a
-			display: inline-block
-			color: $gray-dark
-			&:hover
-				color: $black
-
-	.recommended-games
-		.game-thumbnail
+	.game-stats
+		.stat-big
 			margin-bottom: 0
+
+	@media $media-sm
+		#maturity-rating
+			margin-top: 60px
+
+	// Match the styling of .stat-big labels.
+	.rating-widget-label
+		color: $text-muted
+		font-size: $font-size-small
+		margin-bottom: 3px
 
 	.rating-breakdown
 		margin-bottom: 0
@@ -59,6 +51,10 @@
 		float: left
 		width: 50px
 		margin: 0 5px
+
+	.recommended-games
+		.game-thumbnail
+			margin-bottom: 0
 
 	// Collapse spacing between headers a bit on really small screens.
 	@media $media-xs

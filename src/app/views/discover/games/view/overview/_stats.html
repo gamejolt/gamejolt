@@ -1,0 +1,41 @@
+<div class="row game-stats">
+	<div class="col-xs-4 stat-big stat-big-smaller">
+		<div class="stat-big-label">{{ ::'games.view.stats.views_label' | translate }}</div>
+		<div class="stat-big-digit">
+			<span gj-lazy-placeholder="overviewCtrl.isLoaded">
+				<span class="lazy-placeholder"></span>
+				<span title="{{ ::overviewCtrl.profileCount | number }}">
+					{{ ::overviewCtrl.profileCount | fuzzyNumber }}
+				</span>
+			</span>
+		</div>
+	</div>
+	<div class="col-xs-4 stat-big stat-big-smaller">
+		<div class="stat-big-label">
+			{{ ::'games.view.stats.downloads_plays_label' | translate }}
+			<span ng-if="overviewCtrl.playsTooltip" class="jolticon jolticon-help-circle text-muted" tooltip="{{ ::overviewCtrl.playsTooltip | translate }}"></span>
+		</div>
+		<div class="stat-big-digit">
+			<span gj-lazy-placeholder="overviewCtrl.isLoaded">
+				<span class="lazy-placeholder"></span>
+				<span ng-if="overviewCtrl.showNaPlays">
+					{{ ::'games.view.stats.na' | translate }}
+				</span>
+				<span ng-if="!overviewCtrl.showNaPlays" title="{{ ::(overviewCtrl.downloadCount + overviewCtrl.playCount) | number }}">
+					{{ ::(overviewCtrl.downloadCount + overviewCtrl.playCount) | fuzzyNumber }}
+				</span>
+			</span>
+		</div>
+	</div>
+	<div class="col-xs-4 stat-big stat-big-smaller">
+		<div class="stat-big-label" translate>Followers</div>
+		<div class="stat-big-digit">
+			<span gj-lazy-placeholder="overviewCtrl.isLoaded">
+				<span class="lazy-placeholder"></span>
+				<span title="{{ gameCtrl.followerCount | number }}">
+					{{ gameCtrl.followerCount | fuzzyNumber }}
+				</span>
+			</span>
+		</div>
+	</div>
+</div>

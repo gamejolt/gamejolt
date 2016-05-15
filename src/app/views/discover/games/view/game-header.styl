@@ -1,217 +1,92 @@
-.cake-button
-	display: inline-block
-	text-align: center
-	font-size: $font-size-tiny
-	color: $gray-lighter !important
-	user-select: none
-	cursor: pointer
-	white-space: nowrap
-	width: 75px
-
-	@media $media-sm-up
-		font-size: $font-size-small
-
-	> .jolticon
-		display: block
-		color: $white
-		margin-bottom: 5px
-
-	&.active
-		color: $gj-green !important
-		> .jolticon
-			color: $gj-green
-
-.cake-button + .cake-button
-	margin-left: ($grid-gutter-width-xs / 2)
-
-.cake-button-group
-	position: relative
-	display: table
-	width: 100%
-	table-layout: fixed
-	border-collapse: separate
-	vertical-align: middle
-
-	> .cake-button
-		position: relative
-		display: table-cell
-		width: 100%
-
-	> .cake-button + .cake-button
-		margin-left: -1px
-
 /**
  * Game Header Meta
  */
 .game-header
-	padding-top: 10px
-
-.game-header-meta
-	text-align: center
-
-	@media $media-sm-up
-		text-align: left
-
-.game-header-byline
-	font-family: $font-family-heading
-	margin-bottom: 20px
-
-	.user-avatar
-		position: relative
-		top: 11px
-		display: inline-block
-		margin-right: 5px
-		width: 30px
-
-	a
-		color: $gray-lighter !important
-
-		&:hover
-			color: $white !important
-
-.game-header-time-ago
-	display: block
-	font-size: $font-size-small
-	margin-top: $font-size-base  // For XS.
-
-	@media $media-sm-up
-		display: inline
-
-/**
- * Game Header Stats
- */
-.game-header-stats
-	text-align: center
-
-	@media $media-xs
-		margin-left: 0
-		margin-right: 0
-
-	@media $media-sm-up
-		text-align: left
-
-// Make it so the meter will inline with the big stat.
-.game-header-stats-voltage .meter
-.game-header-stats-voltage-stat
-	display: inline-block
-
-.game-header-stats-voltage .meter
-	margin-left: 30px
-
-.game-header-rate-label
-	@extend .text-muted
-	font-size: $font-size-small
-	margin-bottom: 5px
-
-.game-header-controls
-	margin-bottom: ($line-height-computed * 1.5)
-
-.game-header-nav
-	@extend .clearfix
-	position: relative
-	z-index: $zindex-nav-scroll-affixed
+	padding: 0
 
 	> .container
 		position: relative
 
-@media $media-xs
-
-	.game-header-ogrs
-		display: block
-		margin-top: 10px
-
-	.game-header-controls
-		padding: 15px 0
-		margin-bottom: 0
-		text-align: center
-
-	.game-header-stats
-		margin-top: 15px
-
-@media $media-sm
-
-	.game-header-byline
-		margin-bottom: 15px
-
-	.game-header-controls
-		margin-bottom: 20px
-
-	.game-header-nav-addons
-		padding-top: 10px
-		padding-bottom: 10px
-
-	.game-header-stats
-		float: right
-
-	.game-header-nav .platform-list
-		margin-top: 10px
-
-@media $media-md-up
-
-	.game-header-byline
-		margin-bottom: 15px
-
-	.game-header-controls
-		margin-bottom: 15px
-
-	.game-header-nav
-		height: 65px
-
-		// Force on to GPU.
-		// For some reason Chrome wasn't repainting when it would disappear.
-		// This fixes the Chrome bug. Odd.
-		transform: translate3d( 0, 0, 0 )
-
-		.platform-list
-			float: left
-			margin-top: 11px !important
-
-	.game-header-nav-addons
-		@extend .clearfix
-		position: absolute
-		bottom: 5px
-		right: 0
-
-		> div
-			float: left
-
-	/**
-	 * Affixed Nav
-	 */
-	.game-header-nav.gj-scroll-affixed
-		position: fixed
-		background-color: $gray-dark
-		margin-top: $shell-top-nav-height !important
-		border-bottom: 2px solid $gray
-
-		.game-header-rate-label
-			font-size: $font-size-small
-			margin-bottom: 8px
-
-		.stat-list .stat-big:first-child
-			padding-left: 5px
-
-		.rating-widget
-			margin-right: 15px
-
-
-
-
-.game-header
-
-	.container
+	&-cover
 		position: relative
+		padding-bottom: 20px
+
+		.container
+			position: relative
+
+		@media $media-xs
+			.game-header-meta
+				padding-top: 15px
+				padding-bottom: $grid-gutter-width-xs
+
+		&.has-image
+			padding: 0
+
+			@media $media-sm-up
+				.game-header-meta-wrap
+					position: absolute
+					bottom: 10px
+
+			.game-header-cover-buttons
+				position: absolute
+				left: 0
+				right: 0
+				top: 0
+				bottom: 60px
+				display: flex
+				align-items: center
+				justify-content: center
+
+				.btn
+					margin: 0 5px
+
+		&.no-image
+
+			.game-header-cover-buttons
+				margin-bottom: $grid-gutter-width
+				text-align: center
+
+	&-title
+		margin-bottom: 0
 
 	&-meta
-		position: absolute
-		top: -100px
-		// margin-left: 100px + ($grid-gutter-width / 2)
+		text-align: center
+
+		@media $media-sm-up
+			text-align: left
+
+		a
+			color: $white !important
+
+			&:hover
+				color: $white !important
+				text-decoration: underline
+
+		.meter
+			display: inline-block
+			vertical-align: middle
+
+	&-byline
+		font-family: $font-family-heading
+		color: $text-muted
+
+		@media $media-sm-up
+			color: $white
+
+	&-time-ago
+		display: block
+		font-size: $font-size-small
+		margin-top: $font-size-base  // For XS.
+
+		@media $media-sm-up
+			display: inline
 
 	&-avatar
 		position: absolute
 		width: 100px
 		top: -((@width / 2) + 5px)
 		left: -(@width + ($grid-gutter-width / 2))
+		z-index: 2
 
 		img
 			border: 5px solid $white
@@ -219,3 +94,69 @@
 			width: 100px
 			height: 100px
 
+	&-controls
+		margin-top: 14px
+
+	&-follow-container
+		position: relative
+		margin-right: 38px + 10px
+
+	&-add
+		float: right
+
+	&-nav
+		@extend .clearfix
+		position: relative
+		z-index: 1
+
+		> .container
+			position: relative
+
+		@media $media-md-up
+			height: 65px
+
+			// Force on to GPU.
+			// For some reason Chrome wasn't repainting when it would disappear.
+			// This fixes the Chrome bug. Odd.
+			transform: translate3d( 0, 0, 0 )
+
+			.platform-list
+				float: left
+				margin-top: 11px !important
+
+			/**
+			* Affixed Nav
+			*/
+			&.gj-scroll-affixed
+				position: fixed
+				background-color: $gray-dark
+				margin-top: $shell-top-nav-height !important
+				border-bottom: 2px solid $gray
+				z-index: $zindex-nav-scroll-affixed
+
+				nav
+					margin-left: 0
+
+	@media $media-sm
+
+		&-controls-container
+			@extend .clearfix
+			margin-left: 100px + ($grid-gutter-width / 2)
+
+		&-controls
+			float: left
+
+		&-nav nav
+			margin-left: 0 !important
+
+	$header-avatar-breakpoint = media( min: $screen-sm-min, max: 1450px )
+	@media $header-avatar-breakpoint
+
+		&-avatar
+			left: 0
+
+		&-nav nav
+			margin-left: 100px + ($grid-gutter-width / 2)
+
+		&-meta-wrap
+			padding-left: 100px + ($grid-gutter-width / 2)

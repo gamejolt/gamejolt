@@ -1,35 +1,57 @@
-<!-- Buttons / Controls -->
-<a class="big"
-	ng-if="!gameCtrl.libraryGame"
-	ng-click="gameCtrl.onFollowClick()"
-	ng-class="{ 'cake-button': Screen.isXs, 'i-button': !Screen.isXs }"
-	gj-tooltip="{{ 'library.followed.follow_game_button_tooltip' | translate }}"
-	>
-	<span class="jolticon jolticon-subscribe" ng-class="{ big: Screen.isXs }"></span>
-	{{ 'library.followed.follow_game_button' | translate }}
-</a>
+<div class="game-header-controls">
 
-<a class="big active"
-	ng-if="gameCtrl.libraryGame"
-	ng-click="gameCtrl.onFollowClick()"
-	ng-class="{ 'cake-button': Screen.isXs, 'i-button': !Screen.isXs }"
-	gj-tooltip="{{ 'library.followed.unfollow_game_button_tooltip' | translate }}"
-	>
-	<span class="jolticon jolticon-subscribed" ng-class="{ big: Screen.isXs }"></span>
-	{{ 'library.followed.unfollow_game_button' | translate }}
-</a>
+	<!--
+		Playlists
+		Can only add visible games to playlists.
+	-->
+	<a
+		ng-if="gameCtrl.game.status == Game.STATUS_VISIBLE"
+		class="game-header-add btn btn-outline btn-sparse"
+		gj-popover-trigger="add-to-playlist"
+		gj-tooltip="Add to Playlist"
+		tooltip-placement="bottom"
+		gj-track-event="game-profile:add-playlist"
+		>
+		<span class="jolticon jolticon-add"></span>
+	</a>
 
-<!--
-	Playlists
-	Can only add visible games to playlists.
--->
-<a class="big"
-	ng-if="gameCtrl.game.status == Game.STATUS_VISIBLE"
-	ng-class="{ 'cake-button': Screen.isXs, 'i-button': !Screen.isXs }"
-	gj-popover-trigger="add-to-playlist">
+	<gj-game-playlist-add-to-popover gj-game="gameCtrl.game"></gj-game-playlist-add-to-popover>
 
-	<span class="jolticon jolticon-add" ng-class="{ big: Screen.isXs }"></span>
-	{{ ::'library.playlists.add_to.button' | translate }}
-</a>
+	<!-- Buttons / Controls -->
+	<div class="game-header-follow-container" ng-switch="!!gameCtrl.libraryGame">
+		<a
+			ng-switch-when="false"
+			ng-click="gameCtrl.onFollowClick()"
+			class="game-header-follow btn btn-block btn-outline"
+			gj-tooltip="{{ 'library.followed.follow_game_button_tooltip' | translate }}"
+			tooltip-placement="bottom"
+			gj-track-event="game-profile:follow"
+			>
+			<span class="jolticon jolticon-subscribe"></span>
+			<span translate>Follow Game</span>
+		</a>
 
-<gj-game-playlist-add-to-popover gj-game="gameCtrl.game"></gj-game-playlist-add-to-popover>
+		<a
+			ng-switch-when="true"
+			ng-if="gameCtrl.libraryGame"
+			ng-click="gameCtrl.onFollowClick()"
+			ng-mouseover="gameCtrl.isHoveringFollow = true"
+			ng-mouseout="gameCtrl.isHoveringFollow = false"
+			class="game-header-follow btn btn-block"
+			ng-class="{
+				'btn-success active': !gameCtrl.isHoveringFollow,
+				'btn-danger active': gameCtrl.isHoveringFollow,
+			}"
+			gj-tooltip="{{ 'library.followed.unfollow_game_button_tooltip' | translate }}"
+			tooltip-placement="bottom"
+			gj-track-event="game-profile:unfollow"
+			>
+			<span class="jolticon jolticon-subscribed"></span>
+			<span ng-switch="gameCtrl.isHoveringFollow">
+				<span ng-switch-default translate>Following</span>
+				<span ng-switch-when="true" translate>Stop Following</span>
+			</span>
+		</a>
+	</div>
+
+</div>
