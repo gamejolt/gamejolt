@@ -44,7 +44,7 @@
 				</p>
 				<p class="game-collection-desc" ng-switch-when="developer">
 					<span ng-if="::!collection.from_subscription" translate>library.playlists.developer_description</span>
-					<span ng-if="::collection.from_subscription" translate translate-scope="{ user: collection.owner.display_name }">library.playlists.subscription_developer_description }}</span>
+					<span ng-if="::collection.from_subscription" translate translate-scope="{ user: collection.owner.display_name }">library.playlists.subscription_developer_description</span>
 				</p>
 				<p class="game-collection-desc" ng-switch-when="owned">
 					<span ng-if="::!collection.from_subscription" translate>Here are the games this person owns.</span>
