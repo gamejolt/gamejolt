@@ -20,36 +20,24 @@
 	<!-- Buttons / Controls -->
 	<div class="game-header-follow-container" ng-switch="!!gameCtrl.libraryGame">
 		<a
-			ng-switch-when="false"
 			ng-click="gameCtrl.onFollowClick()"
-			class="game-header-follow btn btn-block btn-outline"
-			gj-tooltip="{{ 'library.followed.follow_game_button_tooltip' | translate }}"
-			tooltip-placement="bottom"
-			gj-track-event="game-profile:follow"
-			>
-			<span class="jolticon jolticon-subscribe"></span>
-			<span translate>Follow Game</span>
-		</a>
-
-		<a
-			ng-switch-when="true"
-			ng-if="gameCtrl.libraryGame"
-			ng-click="gameCtrl.onFollowClick()"
-			ng-mouseover="gameCtrl.isHoveringFollow = true"
-			ng-mouseout="gameCtrl.isHoveringFollow = false"
 			class="game-header-follow btn btn-block"
-			ng-class="{
-				'btn-success active': !gameCtrl.isHoveringFollow,
-				'btn-danger active': gameCtrl.isHoveringFollow,
-			}"
-			gj-tooltip="{{ 'library.followed.unfollow_game_button_tooltip' | translate }}"
+			ng-class="!gameCtrl.libraryGame ? 'btn-outline' : 'btn-success active'"
+			gj-tooltip="{{ !gameCtrl.libraryGame ? gameCtrl.followTooltip : gameCtrl.unfollowTooltip }}"
 			tooltip-placement="bottom"
-			gj-track-event="game-profile:unfollow"
+			gj-track-event="game-profile:{{ !gameCtrl.libraryGame ? 'follow' : 'unfollow' }}"
+			ng-switch="!!gameCtrl.libraryGame"
 			>
-			<span class="jolticon jolticon-subscribed"></span>
-			<span ng-switch="gameCtrl.isHoveringFollow">
-				<span ng-switch-default translate>Following</span>
-				<span ng-switch-when="true" translate>Stop Following</span>
+			<span ng-switch-when="false">
+				<span class="jolticon jolticon-subscribe"></span>
+				<span translate>Follow Game</span>
+			</span>
+			<span ng-switch-when="true">
+				<span class="jolticon jolticon-subscribed"></span>
+				<span translate>Following</span>
+			</span>
+			<span class="game-header-follow-count">
+				{{ gameCtrl.followerCount | number }}
 			</span>
 		</a>
 	</div>

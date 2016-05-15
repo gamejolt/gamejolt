@@ -14,6 +14,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	this.installableBuilds = [];
 	this.browserBuilds = [];
 
+	this.followTooltip = gettextCatalog.getString( 'library.followed.follow_game_button_tooltip' );
+	this.unfollowTooltip = gettextCatalog.getString( 'library.followed.unfollow_game_button_tooltip' );
+
 	// Overview page will populate this.
 	// We only need it for the overview page, but we need to show it in the view of this controller.
 	this.mediaBarItems = [];
