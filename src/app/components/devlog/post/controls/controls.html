@@ -5,22 +5,24 @@
 		>
 		<span class="jolticon jolticon-edit middle"></span>
 	</a> -->
-	<a class="link-muted"
+	<!--<a class="link-muted"
 		gj-popover-trigger="devlog-post-control-popover-{{ ctrl.id }}"
 		gj-tooltip="Options"
 		>
 		<span class="jolticon jolticon-ellipsis-h middle"></span>
-	</a>
-	<a class="link-muted"
+	</a>-->
+	<a class="btn btn-outline"
 		gj-tooltip="Leave a Comment"
 		ng-if="ctrl.canToggleComments[ctrl.id]"
 		ng-click="ctrl.showFullComments[ctrl.id] = !ctrl.showFullComments[ctrl.id]"
 		>
 		<span class="jolticon jolticon-comment middle"></span>
+		Comments
 		<small>4</small>
 	</a>
-	<a href="#" class="link-muted" gj-tooltip="Like Post" ng-click="ctrl.liked = !ctrl.liked" ng-class="{'active': ctrl.liked}">
+	<a href="#" class="btn btn-outline" gj-tooltip="Like Post" ng-click="ctrl.liked = !ctrl.liked" ng-class="{'active': ctrl.liked}">
 		<span class="jolticon jolticon-heart middle"></span>
+		Like
 		<small>29</small>
 	</a>
 </div>

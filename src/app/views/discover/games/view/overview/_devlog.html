@@ -1,0 +1,76 @@
+<section class="section" style="padding-bottom: 0">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-lg-2 text-right">
+				<h4 class="section-header">Comments</h4>
+				<p class="text-muted small">Leave a comment on the devlog project.</p>
+			</div>
+			<div class="col-lg-10">
+
+				<gj-comment-avatar-list
+					comment-resource="Game"
+					comment-resource-id="gameCtrl.game.id"
+					>
+				</gj-comment-avatar-list>
+
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<section class="section" style="padding-bottom: 0">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<h4 class="section-header text-right">Description</h4>
+			</div>
+			<div class="col-lg-7">
+
+				<div ng-if="!gameCtrl.game.description_compiled">
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder" style="width: 40%"></span>
+				</div>
+
+				<div ng-if="gameCtrl.game.description_compiled">
+					<gj-fade-collapse
+						fade-collapse-height="400"
+						fade-collapse-is-open="overviewCtrl.showFullDescription"
+						fade-collapse-is-required="overviewCtrl.canToggleDescription"
+						>
+						<div class="game-compiled-description" ng-bind-html="gameCtrl.game.description_compiled"></div>
+					</gj-fade-collapse>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="devlog-description-cut"
+	ng-if="overviewCtrl.canToggleDescription"
+	>
+	<button class="btn btn-outline"
+		ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"
+		gj-track-event="game-profile:show-full-description"
+		ng-switch="!!overviewCtrl.showFullDescription"
+		>
+		<span ng-switch-when="false" translate>Show Full Description</span>
+		<span ng-switch-when="true" translate>Hide</span>
+	</button>
+</div>
+
+<section class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2">
+
+				<gj-devlog-feed></gj-devlog-feed>
+
+			</div>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,60 @@
+.comment-avatar-list
+	@extend .clearfix
+	margin-left: -5px
+	margin-right: -5px
+	// text-align: center
+
+	&-item
+	&-add
+		display: inline-block
+		width: 50px
+		height: 50px
+		margin: 0 5px 5px 5px
+		vertical-align: middle
+
+	&-add
+		color: $black
+		border: 2px solid $black
+		border-radius: 50%
+		height: 50px
+		line-height: @height - 4px  // Take into account the border
+		text-align: center
+
+		> .jolticon
+			vertical-align: middle
+			margin: 0
+
+		&:hover
+			background-color: $gray
+			color: $gj-green
+			border-color: $gray
+
+	&-comment
+
+		&-title
+			@extend .h5
+			margin-top: 0
+			margin-bottom: $font-size-base * 0.5
+			font-weight: bold
+
+			a
+				color: $text-color
+
+				&:hover
+					text-decoration: underline
+
+		&-time
+			display: inline-block
+			margin-left: 5px
+			font-family: $font-family-tiny
+			color: $gray-light
+			font-size: $font-size-tiny
+			font-weight: normal
+			vertical-align: middle
+
+		&-owner
+			margin-left: 5px
+			margin-top: -2px
+
+		&-content
+			font-size: $font-size-small

@@ -1,15 +1,7 @@
 .devlog-feed
-	
+
 	@media $media-lg
 		margin-left: -90px
-		
-	.devlog-fader
-		z-index: 1
-		background: linear-gradient(to bottom, rgba($white, 0), $white)
-		width: 100%
-		height: 4em
-		position: absolute
-		bottom: 0
 
 	.devlog-post
 		margin: 0
@@ -17,26 +9,26 @@
 		padding-bottom: 4em
 		position: relative
 		@extend .clearfix
-			
+
 		@media $media-md-up
 			border-left: 2px solid $gray-lightest
-			
+
 		@media $media-lg
 			margin-left: 25px
 			padding-left: 65px
-			
+
 		.devlog-post-info
 			margin-left: 0
 			font-size: 0.8em
 			@extend .clearfix
-				
+
 			@media $media-md-up
 				font-size: 1em
 				margin-top: -12px
-			
+
 		.devlog-post-spot
 			display: none
-			
+
 			@media $media-md-up
 				position: absolute
 				left: -15px
@@ -48,47 +40,47 @@
 				border-radius: 50%
 				background-color: $gray-lightest
 				transition: 0.3s
-					
+
 		.devlog-post-main
 			margin-bottom: 1em
-			
+
 			@media $media-lg
 				margin-left: -65px
-			
+
 		.devlog-post-content
 			padding: 0 20px
-			
+
 			@media $media-lg
 				padding: 0
-			
+
 			@media $media-xs
 				padding: 0
-	
+
 		.devlog-post-controls
 			text-align: right
-			
+
 			a
 				margin-right: 10px
-				
+
 				&.active
 					color: $gj-pink
-				
+
 				&:last-child
 					margin-right: 0
-			
+
 		&:hover
 			.devlog-post-spot
 				width: 40px
 				height: 40px
 				left: -20px
 				top: -20px
-				
+
 			&.devlog-post-text
 				.devlog-post-title
 					top: 0
-					
+
 				.devlog-post-meta
 					opacity: 1
-		
-			
-				
+
+
+
