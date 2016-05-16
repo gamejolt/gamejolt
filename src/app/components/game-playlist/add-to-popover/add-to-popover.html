@@ -10,7 +10,7 @@
 		</div>
 
 		<div ng-if="!ctrl.isLoading">
-			<div class="list-group">
+			<div class="list-group list-group-dark">
 				<a class="list-group-item has-icon" ng-click="ctrl.newPlaylist()">
 					<span class="jolticon jolticon-add"></span>
 					{{ ::'library.playlists.add_to.new_playlist_button' | translate }}
@@ -26,7 +26,7 @@
 						>
 				</div>
 			</div>
-			<div class="list-group thin add-to-playlist-popover-playlists" ng-if="ctrl.playlists.length">
+			<div class="list-group list-group-dark thin add-to-playlist-popover-playlists" ng-if="ctrl.playlists.length">
 				<a class="list-group-item has-icon"
 					ng-class="ctrl.playlistsWithGame.indexOf( playlist.id ) === -1 ? 'playlist-no-game' : 'playlist-has-game'"
 					ng-repeat="playlist in ctrl.playlists | filter:ctrl.filterQuery:'name' | orderBy:'name' track by playlist.id"

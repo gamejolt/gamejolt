@@ -1,0 +1,218 @@
+<ui-view></ui-view>
+
+<header class="section">
+	<div class="container">
+
+		<h1 translate>Analytics</h1>
+		<br>
+
+		<nav class="breadcrumb">
+			<ul>
+				<li ng-if="analyticsCtrl.game">
+					<a
+						ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: analyticsCtrl.game.id } )"
+						ui-sref-opts="{ location: 'replace' }"
+						ui-sref-active="active"
+						>
+						<span class="breadcrumb-tag" translate>Game</span>
+						{{ analyticsCtrl.game.title }}
+					</a>
+					<span class="breadcrumb-separator jolticon jolticon-chevron-right" ng-if="analyticsCtrl.package"></span>
+				</li>
+				<li ng-if="analyticsCtrl.package">
+					<a
+						ui-sref="dashboard.analytics.view( { resource: 'Game_Package', resourceId: analyticsCtrl.package.id } )"
+						ui-sref-opts="{ location: 'replace' }"
+						ui-sref-active="active"
+						>
+						<span class="breadcrumb-tag" translate>Package</span>
+						{{ analyticsCtrl.package.title || analyticsCtrl.game.title }}
+					</a>
+					<span class="breadcrumb-separator jolticon jolticon-chevron-right" ng-if="analyticsCtrl.release"></span>
+				</li>
+				<li ng-if="analyticsCtrl.release">
+					<a
+						ui-sref="dashboard.analytics.view( { resource: 'Game_Release', resourceId: analyticsCtrl.release.id } )"
+						ui-sref-opts="{ location: 'replace' }"
+						ui-sref-active="active"
+						>
+						<span class="breadcrumb-tag" translate>Release</span>
+						{{ analyticsCtrl.release.version_number }}
+					</a>
+				</li>
+			</ul>
+		</nav>
+		<br>
+
+		<div class="row">
+			<div class="col-md-6 col-md-push-6" ng-class="{ 'text-right': !Screen.isXs }">
+
+				<div class="analytics-month-selector" ng-if="analyticsCtrl.period == 'monthly'">
+					<a class="btn btn-outline btn-sparse"
+						ui-sref="dashboard.analytics.view( { period: 'monthly', year: analyticsCtrl.prevYear, month: analyticsCtrl.prevMonth } )"
+						ui-sref-opts="{ location: 'replace' }"
+						>
+						<span class="jolticon jolticon-chevron-left"></span>
+					</a>
+
+					<strong>
+						{{ analyticsCtrl.startTime | date:'MMMM yyyy' }}
+					</strong>
+
+					<a class="btn btn-outline btn-sparse"
+						ng-if="analyticsCtrl.now > analyticsCtrl.endTime"
+						ui-sref="dashboard.analytics.view( { period: 'monthly', year: analyticsCtrl.nextYear, month: analyticsCtrl.nextMonth } )"
+						ui-sref-opts="{ location: 'replace' }"
+						>
+						<span class="jolticon jolticon-chevron-right"></span>
+					</a>
+				</div>
+
+			</div>
+			<div class="col-md-6 col-md-pull-6">
+				<nav class="platform-list inline">
+					<ul>
+						<li>
+							<a
+								ui-sref="dashboard.analytics.view( { period: 'all' } )"
+								ui-sref-opts="{ location: 'replace' }"
+								ui-sref-active="active"
+								translate
+								>
+								All-Time
+							</a>
+							<a
+								ui-sref="dashboard.analytics.view( { period: 'monthly' } )"
+								ui-sref-opts="{ location: 'replace' }"
+								ui-sref-active="active"
+								translate
+								>
+								Monthly
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+
+	</div>
+</header>
+
+<div oc-lazy-load="{ files: [ '/app/modules/graphs.js' ] }">
+
+	<div gj-expand-when="analyticsCtrl.period == 'monthly' && analyticsCtrl[ analyticsCtrl.eventType ].graph">
+		<gj-graph
+			ng-if="analyticsCtrl[ analyticsCtrl.eventType ].graph"
+			dataset="analyticsCtrl[ analyticsCtrl.eventType ].graph"
+			>
+		</gj-graph>
+	</div>
+
+	<section class="section section-thin">
+		<div class="container">
+
+			<div class="row">
+				<div class="col-sm-4 col-md-3" ng-repeat="eventType in analyticsCtrl.eventTypes track by eventType">
+
+					<a class="stat-graph-overlay"
+						ui-sref="dashboard.analytics.view( { eventType: eventType } )"
+						ui-sref-opts="{ location: 'replace' }"
+						ui-sref-active="active"
+						>
+
+						<gj-graph
+							ng-if="analyticsCtrl.period == 'monthly' && analyticsCtrl[ eventType ]"
+							dataset="analyticsCtrl[ eventType ].graph"
+							background-variant
+							>
+						</gj-graph>
+
+						<div class="stat-big">
+							<div class="stat-big-label">
+								{{ analyticsCtrl.stats[ eventType ].label }}
+							</div>
+							<div class="stat-big-digit" ng-switch="analyticsCtrl.stats[ eventType ].type">
+								<span ng-switch-when="number">
+									{{ analyticsCtrl[ eventType ].total | number }}
+								</span>
+
+								<span ng-switch-when="currency">
+									{{ analyticsCtrl[ eventType ].total / 100 | currency }}
+								</span>
+							</div>
+						</div>
+					</a>
+
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<div ng-if="analyticsCtrl.breakdownReports.length">
+
+		<hr>
+
+		<section class="section">
+			<div class="container">
+
+				<div class="row">
+					<div class="col-md-3" ng-if="Screen.isDesktop">
+
+						<nav class="platform-list" gj-scroll-affix>
+							<ul>
+								<li ng-repeat="report in analyticsCtrl.breakdownReports track by $index"
+									class="no-animate-leave"
+									>
+									<a ng-href="#report-{{ $index }}" du-smooth-scroll du-scrollspy>
+										{{ report.title }}
+									</a>
+								</li>
+							</ul>
+						</nav>
+
+					</div>
+					<div class="col-md-9">
+
+						<div ng-repeat="report in analyticsCtrl.breakdownReports track by $index" id="report-{{ $index }}">
+
+							<h2 ng-class="{ 'section-header': $first }">
+								{{ report.title }}
+							</h2>
+
+							<gj-loading ng-if="!report.isLoaded"></gj-loading>
+
+							<div ng-if="report.isLoaded" class="row">
+								<div ng-repeat="row in report.rows track by $index">
+
+									<gj-analytics-report-simple-stat
+										ng-if="row.type == 'sum' || row.type == 'average'"
+										report-data="row"
+										>
+									</gj-analytics-report-simple-stat>
+
+									<gj-analytics-report-top-composition
+										ng-if="row.type == 'top-composition'"
+										report-data="row"
+										>
+									</gj-analytics-report-top-composition>
+
+									<gj-analytics-report-rating-breakdown
+										ng-if="row.type == 'rating-breakdown'"
+										report-data="row"
+										>
+									</gj-analytics-report-rating-breakdown>
+
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+	</div>
+</div>

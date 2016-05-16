@@ -9,17 +9,11 @@
 
 		<div class="row">
 
-			<div class="col-sm-9 col-md-8 col-lg-6" ng-class="{ 'pull-left': !Screen.isXs }" translate>dash.funds.withdraw.page_help_html</div>
-
 			<div class="col-sm-3 col-md-4 col-lg-6" ng-class="{ 'pull-right': !Screen.isXs }">
 
 				<div ng-class="{ 'well fill-lightest text-center': Screen.isXs }">
 					<ul ng-class="Screen.isXs ? 'stat-list' : 'list-unstyled'">
-						<li class="stat-big" ng-class="{ 'stat-big-smaller': Screen.isXs }">
-							<div class="stat-big-label">{{ ::'dash.overview.revenue_balance' | translate }}</div>
-							<div class="stat-big-digit">{{ ::withdrawCtrl.revenueCurrent | currency:'$' }}</div>
-						</li>
-						<li class="stat-big" ng-class="{ 'stat-big-smaller': Screen.isXs }">
+						<li ng-if="withdrawCtrl.revenuePending > 0" class="stat-big" ng-class="{ 'stat-big-smaller': Screen.isXs }">
 							<div class="stat-big-label">{{ ::'dash.funds.withdraw.revenue_pending' | translate }}</div>
 							<div class="stat-big-digit">{{ ::withdrawCtrl.revenuePending | currency:'$' }}</div>
 						</li>
@@ -33,7 +27,10 @@
 			</div>
 
 			<div class="col-sm-9 col-md-8 col-lg-6" ng-class="{ 'pull-left': !Screen.isXs }">
+				<div translate>dash.funds.withdraw.page_help_html</div>
+
 				<gj-form-dashboard-withdraw-funds
+					user="withdrawCtrl.user"
 					paypal-email="withdrawCtrl.email"
 					min-amount="withdrawCtrl.minAmount"
 					withdrawable-amount="withdrawCtrl.revenueWithdrawable"

@@ -56,7 +56,7 @@
 		<link rel="stylesheet" href="/app/main.css">
 		<link rel="shortcut icon" href="/app/img/favicon.png">
 
-		<title ng-bind-html="Environment.isClient ? (App.title ? App.title + ' - Game Jolt' : 'Game Jolt') : (App.title ? App.title + ' on Game Jolt' : 'Game Jolt - Free Indie Games')">Game Jolt</title>
+		<title ng-bind-html="Environment.isClient ? (App.title ? App.title + ' - Game Jolt' : 'Game Jolt') : (App.title ? App.title + ' on Game Jolt' : 'Game Jolt - Indie Games for the Love of It')">Game Jolt</title>
 
 		<meta name="description" ng-if="Meta.description" ng-attr-content="{{ Meta.description }}" content="Discover the largest community for indie games and the people that make and play them.">
 
@@ -68,7 +68,7 @@
 		<meta property="fb:app_id" content="410666682312265">
 		<meta property="og:site_name" content="Game Jolt">
 		<meta property="fb:admins" content="1070315546">
-		<meta property="og:title" ng-if="Meta.fb.title" ng-attr-content="{{ Meta.fb.title }}" content="Game Jolt - Free Indie Games">
+		<meta property="og:title" ng-if="Meta.fb.title" ng-attr-content="{{ Meta.fb.title }}" content="Game Jolt - Indie Games for the Love of It">
 		<meta property="og:description" ng-if="Meta.fb.description" ng-attr-content="{{ Meta.fb.description }}" content="Discover the largest community for indie games and the people that make and play them.">
 		<meta property="og:url" ng-if="Meta.fb.url" ng-attr-content="{{ Meta.fb.url }}">
 		<meta property="og:type" ng-if="Meta.fb.type" ng-attr-content="{{ Meta.fb.type }}">
@@ -78,7 +78,7 @@
 		<!-- Twitter -->
 		<meta name="twitter:site" content="@gamejolt">
 		<meta name="twitter:card" ng-if="Meta.twitter.card" ng-attr-content="{{ Meta.twitter.card }}">
-		<meta name="twitter:title" ng-if="Meta.twitter.title" ng-attr-content="{{ Meta.twitter.title }}" content="Game Jolt - Free Indie Games">
+		<meta name="twitter:title" ng-if="Meta.twitter.title" ng-attr-content="{{ Meta.twitter.title }}" content="Game Jolt - Indie Games for the Love of It">
 		<meta name="twitter:description" ng-if="Meta.twitter.description" ng-attr-content="{{ Meta.twitter.description }}" content="Discover the largest community for indie games and the people that make and play them.">
 		<meta name="twitter:image" ng-if="Meta.twitter.image" ng-attr-content="{{ Meta.twitter.image }}">
 		<meta name="twitter:url" ng-if="Meta.twitter.url" ng-attr-content="{{ Meta.twitter.url }}">
@@ -115,6 +115,8 @@
 
 		 <div gj-debug-bar></div>
 
+		<script src="/app/modules/error-tracking.js" crossorigin="anonymous"></script>
+
 		<script async src="https://www.google-analytics.com/analytics.js"></script>
 		<script>
 			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
@@ -122,7 +124,6 @@
 			ga('require', 'linkid', 'linkid.js');
 		</script>
 
-		<script src="/app/modules/error-tracking.js" crossorigin="anonymous"></script>
 		<script src="/app/vendor.js"></script>
 		<script src="/app/modules/vendor-app.js"></script>
 		<!-- inject client:modules -->

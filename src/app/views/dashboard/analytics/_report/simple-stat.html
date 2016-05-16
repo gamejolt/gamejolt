@@ -1,0 +1,21 @@
+<div class="col-sm-6 col-sm-3">
+
+	<div class="alert alert-info" ng-if="!$ctrl.reportData.hasData" translate>
+		No data yet.
+	</div>
+
+	<div class="stat-big" ng-if="$ctrl.reportData.hasData">
+		<div class="stat-big-label">
+			{{ $ctrl.reportData.fieldLabel }}
+		</div>
+		<div class="stat-big-digit" ng-switch="$ctrl.reportData.fieldType">
+			<span ng-switch-when="number">
+				{{ $ctrl.reportData.data | number }}
+			</span>
+			<span ng-switch-when="currency">
+				{{ $ctrl.reportData.data / 100 | currency }}
+			</span>
+		</div>
+	</div>
+
+</div>

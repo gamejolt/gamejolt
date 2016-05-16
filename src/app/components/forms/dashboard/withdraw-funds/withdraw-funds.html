@@ -2,11 +2,19 @@
 
 	<div class="alert alert-info" translate>dash.funds.withdraw.form_help_html</div>
 
-	<form-group name="email_address" label="{{ ::'dash.funds.withdraw.email_label' | translate }}">
+	<form-group ng-if="!user.paypal_id" name="email_address" label="{{ ::'dash.funds.withdraw.email_label' | translate }}">
 		<p class="help-block above">{{ ::'dash.funds.withdraw.email_help' | translate }}</p>
 		<input form-control="email">
 		<control-errors></control-errors>
 	</form-group>
+
+	<div ng-if="user.paypal_id" class="form-group">
+		<label class="control-label" translate>Current PayPal Account</label>
+		<div class="form-static">{{ user.paypal_email_address }}</div>
+		<p class="help-block" translate translate-scope="{ url: $state.href( 'dashboard.account.financials' ) }">
+			You can link a different PayPal account in your <a href="{{ url }}">payment setup</a>.
+		</p>
+	</div>
 
 	<form-group name="amount" label="{{ ::'dash.funds.withdraw.amount_label' | translate }}">
 		<p class="help-block above">{{ ::'dash.funds.withdraw.amount_help' | translate:{ amount: minAmount } }}</p>
@@ -22,7 +30,7 @@
 		<control-errors></control-errors>
 	</form-group>
 
-	<button gj-form-submit-button class="i-button" ng-disabled="!withdrawFundsForm.$valid" ng-click="onSubmit()">
+	<button gj-form-submit-button class="btn" ng-disabled="!withdrawFundsForm.$valid" ng-click="onSubmit()">
 		<span class="jolticon jolticon-chevron-right needs-icon"></span>
 		{{ ::'dash.funds.withdraw.submit_button' | translate }}
 	</button>

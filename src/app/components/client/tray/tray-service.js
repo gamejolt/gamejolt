@@ -107,7 +107,7 @@ angular.module( 'App.Client.Tray' )
 				label: 'Dashboard',
 				click: function()
 				{
-					$state.go( 'dashboard.overview' );
+					$state.go( 'dashboard.main.overview' );
 					Client.show();
 				}
 			} ) );

@@ -1,19 +1,21 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
-	$scope, $stateParams, $injector, $timeout,
+	$scope, $stateParams, $injector, $timeout, $document, $position,
 	Environment, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
-	Game, Game_ViewState, GameLibrary_Game, Game_Rating, Game_ScoreTable, Comment,
+	Game, GameLibrary_Game, Game_Rating, Game_ScoreTable, Comment,
 	Registry, Scroll )
 {
 	var _this = this;
 
 	$scope.Game = Game;
-	$scope.Game_ViewState = Game_ViewState;
 
 	this.isLoaded = false;
 	this.game = Registry.find( 'Game', $stateParams.id );
 	this.isNavAffixed = false;
 	this.installableBuilds = [];
 	this.browserBuilds = [];
+
+	this.followTooltip = gettextCatalog.getString( 'library.followed.follow_game_button_tooltip' );
+	this.unfollowTooltip = gettextCatalog.getString( 'library.followed.unfollow_game_button_tooltip' );
 
 	// Overview page will populate this.
 	// We only need it for the overview page, but we need to show it in the view of this controller.
@@ -26,8 +28,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 			return;
 		}
 
-		Game_ViewState.setGame( game );
-
 		Location.enforce( {
 			slug: game.slug,
 		} );
@@ -36,11 +36,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		if ( game.ga_tracking_id ) {
 			Analytics.attachAdditionalPageTracker( $scope, game.ga_tracking_id );
 		}
-	} );
-
-	$scope.$on( '$destroy', function()
-	{
-		Game_ViewState.clear();
 	} );
 
 	Api.sendRequest( '/web/discover/games/' + $stateParams.id )
@@ -72,6 +67,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		this.trophiesCount = payload.trophiesCount || 0;
 		this.hasScores = payload.hasScores || false;
 		this.primaryScoreTable = payload.primaryScoreTable ? new Game_ScoreTable( payload.primaryScoreTable ) : null;
+		this.twitterShareMessage = payload.twitterShareMessage || 'Check out this game!';
 
 		processRatingPayload( payload );
 
@@ -79,8 +75,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		this.onFollowClick = onFollowClick;
 		this.refreshRatingInfo = refreshRatingInfo;
 		this.report = report;
-		this.scrollToPackages = scrollToPackages;
-		
+		this.scrollToMultiplePackages = scrollToMultiplePackages;
+		this.scrollToPackagePayment = scrollToPackagePayment;
+
 		// Load comment count
 		Comment.fetch( 'Game', this.game.id, 1 ).then( function( commentPayload )
 		{
@@ -135,15 +132,14 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 				_this.libraryGame = newLibraryGame;
 				_this.followerCount = response.followers;
 				Growls.success(
-					gettextCatalog.getString( 'library.followed.add_game_success_growl', { game: _this.game.title } ),
-					gettextCatalog.getString( 'library.followed.add_game_success_growl_title', { game: _this.game.title } )
+					gettextCatalog.getString( "You are now following {{ game }}. You'll be notified of news updates as long as it's in your library.", { game: _this.game.title } ),
+					gettextCatalog.getString( 'Game Followed' )
 				);
 			} )
 			.catch( function()
 			{
 				Growls.success(
-					gettextCatalog.getString( 'library.followed.add_game_error_growl' ),
-					gettextCatalog.getString( 'library.followed.add_game_error_growl_title' )
+					gettextCatalog.getString( 'Something has prevented you from following this game' )
 				);
 			} );
 
@@ -176,9 +172,15 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		Report_Modal.show( _this.game );
 	}
 
-	function scrollToPackages()
+	function scrollToMultiplePackages()
 	{
 		_this.showMultiplePackagesMessage = true;
 		Scroll.to( 'game-releases' );
+	}
+
+	function scrollToPackagePayment( package )
+	{
+		Scroll.to( 'game-package-card-' + package.id );
+		$scope.$broadcast( 'Game_Package_Card.showPaymentOptions', package );
 	}
 } );

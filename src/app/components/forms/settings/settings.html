@@ -22,7 +22,7 @@
 		</form-group>
 
 		<form-group ng-class="{ 'sans-margin-bottom': formModel.limit_downloads }" name="limit_downloads" label="{{ 'settings.limit_downloads_label' | translate }}">
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
+			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
 		</form-group>
 		<br ng-if="formModel.limit_downloads">
 
@@ -34,7 +34,7 @@
 
 		<form-group ng-class="{ 'sans-margin-bottom': formModel.limit_downloads }" name="limit_extractions" label="{{ 'settings.limit_extractions_label' | translate }}">
 			<p class="help-block" translate>settings.limit_extractions_help</p>
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
+			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
 		</form-group>
 		<br ng-if="formModel.limit_downloads">
 
@@ -46,11 +46,11 @@
 
 		<form-group name="queue_when_playing" label="{{ 'settings.queue_when_playing_label' | translate }}">
 			<p class="help-block" translate>settings.queue_when_playing_help</p>
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
+			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
 		</form-group>
 
 		<form-group name="autostart_client" label="{{ 'settings.autostart_client_label' | translate }}" ng-if="::Client_Autostart.canAutostart()">
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
+			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
 		</form-group>
 
 	</fieldset>
@@ -59,7 +59,18 @@
 		<legend>{{ 'settings.chat' | translate }}</legend>
 
 		<form-group name="chat_notify_friends_online" label="{{ 'settings.chat_notify_friends_online_label' | translate }}">
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
+			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
+		</form-group>
+	</fieldset>
+
+	<fieldset id="settings-restricted-browsing">
+		<legend translate>Restrictions</legend>
+
+		<form-group name="restricted_browsing" label="{{ 'Restrict browsing?' | translate }}">
+			<p class="help-block" translate>
+				This will block games that have a maturity rating of "Mature" and ask if you'd like to continue before showing the full page.
+			</p>
+			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
 		</form-group>
 	</fieldset>
 

@@ -69,6 +69,26 @@
 					</div>
 				</div>
 
+				<!-- Owned Games -->
+				<div ng-switch-when="owned">
+					<div ng-if="::collectionCtrl.isOwner">
+						<h1 translate>Your Owned Games</h1>
+						<p class="text-muted small" translate>These are all the games you own.</p>
+					</div>
+					<div ng-if="::!collectionCtrl.isOwner">
+						<h1 translate>Games Owned</h1>
+						<h4>
+							<span translate>by</span>
+							<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.user.slug, id: collectionCtrl.user.id } )">
+								{{ ::collectionCtrl.user.display_name }}
+							</a>
+						</h4>
+						<p class="text-muted small" translate translate-scope="{ user: collectionCtrl.user.display_name }">
+							These are all the games owned by {{ user }}.
+						</p>
+					</div>
+				</div>
+
 				<!-- Playlist -->
 				<!-- Don't bind once name since they can edit it. -->
 				<div ng-switch-when="playlist">

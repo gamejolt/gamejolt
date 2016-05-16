@@ -43,7 +43,11 @@ angular.module( 'App.Settings' ).service( 'Settings', function( Environment )
 					return 0;
 				}
 			},
-		}
+		},
+		'restricted-browsing': {
+			type: 'boolean',
+			val: 1,
+		},
 	};
 
 	this.getDefault = function( setting )

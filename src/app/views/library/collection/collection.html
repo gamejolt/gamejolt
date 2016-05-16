@@ -1,7 +1,7 @@
 <div ng-if="Screen.isMobile && libraryCtrl.shouldShowSidebar" class="well fill-darker sans-margin-bottom">
 	<a class="btn btn-outline btn-block" ui-sref="^.overview">
 		<span class="jolticon jolticon-chevron-left"></span>
-		Back to Game Library
+		<span translate>Back to Game Library</span>
 	</a>
 </div>
 
@@ -116,7 +116,7 @@
 
 <!-- No Games Match Filters -->
 <section class="section fill-pink anim-fade-in no-animate-leave" ng-if="collectionCtrl.totalGamesCount && !collectionCtrl.gamesCount">
-	<div class="container" translate>library.collection.no_games_html</div>
+	<div class="container" translate>No games match your filters. <b>Zoinks!</b></div>
 </section>
 
 <!-- No Games -->
@@ -127,5 +127,6 @@
 		<div ng-switch-when="followed" translate>library.collection.no_games_followed_html</div>
 		<div ng-switch-when="bundle" translate>library.collection.no_games_bundle_html</div>
 		<div ng-switch-when="tag" translate>library.collection.no_games_tag_html</div>
+		<div ng-switch-when="owned" translate>You don't own any games yet. Go buy some!</div>
 	</div>
 </section>

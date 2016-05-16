@@ -1,0 +1,48 @@
+<div ng-if="$ctrl.isLoaded">
+
+	<section class="section fill-darker" ng-if="$ctrl.game.tigrs_age == 3 && !$ctrl.shouldProceed">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+					<div class="game-maturity-block">
+
+						<h4 translate>This game is tagged for mature audiences.</h4>
+						<p translate>It could contain content you may not want to view.</p>
+						<br>
+
+						<gj-game-ogrs gj-game="$ctrl.game"></gj-game-ogrs>
+						<br>
+
+						<p>
+							<button class="btn btn-danger-outline btn-block"
+								ng-click="$ctrl.proceed()"
+								translate>
+								Proceed to Game
+							</button>
+						</p>
+						<br>
+
+						<p>
+							<a class="link-muted"
+								ng-click="$ctrl.removeRestriction()"
+								translate
+								>
+								Don't ask me again, geez...
+							</a>
+						</p>
+
+						<p class="small text-muted" translate>
+							This setting will apply to this browser/device only.
+						</p>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<div ng-if="$ctrl.game.tigrs_age != 3 || $ctrl.shouldProceed">
+		<div ng-transclude></div>
+	</div>
+
+</div>

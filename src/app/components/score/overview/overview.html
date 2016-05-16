@@ -90,9 +90,9 @@
 						<br>
 
 						<div>
-							<span gj-tooltip="{{ 'scores.overview.user_best_exp_tooltip' | translate:{ experience: ctrl.userScoreExperience } }}">
+							<span gj-tooltip="{{ 'scores.overview.user_best_exp_tooltip' | translate:{ experience: ctrl.userScoreExperience || 0 } }}">
 								<span class="jolticon jolticon-exp text-muted" style="vertical-align: middle"></span>
-								{{ ::ctrl.userScoreExperience | number }}
+								{{ ::(ctrl.userScoreExperience || 0) | number }}
 								<span class="initialism">{{ ::'leveling.exp' | translate }}</span>
 							</span>
 						</div>
@@ -165,7 +165,7 @@
 		ng-if="ctrl.scores.length">
 
 		<div class="score-overview-feed">
-			<h4>Latest Scores</h4>
+			<h4 translate>Latest Scores</h4>
 
 			<div class="scrollable-grid-xs">
 				<gj-score-feed score-feed-score-table="ctrl.scoreTable"></gj-score-feed>

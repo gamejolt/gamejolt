@@ -1,98 +1,138 @@
 <div ng-if="gameCtrl.game">
+	<gj-game-maturity-block game="gameCtrl.game">
 
-	<!-- Game Header -->
-	<gj-game-cover gj-game="gameCtrl.game">
-		<div ng-if="!Screen.isXs && (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length)"> 
-			<div oc-lazy-load="{ files: [ '/app/modules/ua-parser.js' ] }"> 
-				<gj-game-cover-buttons 
-					game="gameCtrl.game" 
-					installable-builds="gameCtrl.installableBuilds" 
-					browser-builds="gameCtrl.browserBuilds" 
-					on-show-packages="gameCtrl.scrollToPackages()" 
-					> 
-				</gj-game-cover-buttons> 
-			</div> 
-		</div>
-	</gj-game-cover>
+		<section class="section fill-darker game-header-cover"
+			ng-class="gameCtrl.game._has_cover ? 'has-image' : 'no-image'"
+			>
 
-	<div class="alert alert-warning sans-margin-bottom" ng-if="Game_ViewState.showExtendedHeader && gameCtrl.notificationCounts.news">
-		<div class="container">
-			<h4 class="section-header" translate>games.view.notifications_heading</h4>
-			<ul>
-				<li ng-if="gameCtrl.notificationCounts.news">
-					<a ui-sref=".news.list"
-						translate
-						translate-n="gameCtrl.notificationCounts.news"
-						translate-plural="games.view.notifications_news"
-						>
-						games.view.notifications_news
-					</a>
-				</li>
-			</ul>
-		</div>
-	</div>
+			<gj-game-cover
+				ng-if="gameCtrl.game._has_cover"
+				gj-game="gameCtrl.game"
+				>
+			</gj-game-cover>
 
-	<header class="section game-header" ng-class="{ 'game-header-extended': Game_ViewState.showExtendedHeader }">
+			<div class="game-header-cover-buttons"
+				ng-if="
+					!Screen.isXs
+					&& $state.is( 'discover.games.view.overview' )
+					&& (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length || gameCtrl.game._can_buy_primary_sellable)
+				"
+				>
+				<gj-game-cover-buttons
+					game="gameCtrl.game"
+					packages="gameCtrl.packages"
+					installable-builds="gameCtrl.installableBuilds"
+					browser-builds="gameCtrl.browserBuilds"
+					on-show-multiple-packages="gameCtrl.scrollToMultiplePackages()"
+					on-show-package-payment="gameCtrl.scrollToPackagePayment( $package )"
+					>
+				</gj-game-cover-buttons>
+			</div>
 
-		<div class="container">
-			<div class="clearfix">
+			<div class="game-header-meta">
+				<div class="container">
+					<div class="game-header-meta-wrap">
 
+						<!-- Game Title -->
+						<h1 class="h2 section-header game-header-title">
+							<a ui-sref=".overview">
+								{{ ::gameCtrl.game.title }}
+							</a>
+						</h1>
+
+						<!-- Developer -->
+						<div class="game-header-byline">
+							<span translate>by</span>
+							<a ng-href="{{ ::gameCtrl.game.developer.url }}">
+								{{ ::gameCtrl.game.developer.display_name }}
+							</a>
+
+							<!--
+								Hide on mobile to keep it clean.
+								They can view in the game details.
+							-->
+							<span class="game-header-time-ago" ng-if="!Screen.isXs && gameCtrl.game.published_on">
+								<span class="dot-separator"></span>
+								<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )"
+									am-time-ago="::gameCtrl.game.published_on"></a>
+							</span>
+
+							<span ng-if="gameCtrl.game.tigrs_age || gameCtrl.game.ratings_enabled">
+								<span class="dot-separator hidden-xs"></span>
+								<br class="visible-xs">
+								<br class="visible-xs">
+
+								<span class="game-header-ogrs" ng-if="gameCtrl.game.tigrs_age">
+									<gj-game-ogrs-tag gj-game="gameCtrl.game"></gj-game-ogrs-tag>
+								</span>
+
+								<!--
+									The ng-repeat makes sure that the widget gets updated any time the rating changes
+									on the page while still doing a bind once.
+								-->
+								<span ng-if="::gameCtrl.game.ratings_enabled">
+									<span class="dot-separator"></span>
+									<gj-meter
+										class="meter-dark meter-big"
+										ng-repeat="_ in [ gameCtrl.game.avg_rating ]"
+										meter-rating="::gameCtrl.game.avg_rating"
+										tooltip="{{ ::gameCtrl.game.rating_count || 0 | number }} rating(s), avg: {{ ::gameCtrl.game.avg_rating }}"
+										>
+									</gj-meter>
+								</span>
+
+								<span ng-if="gameCtrl.notificationCounts.news">
+									<span class="dot-separator"></span>
+									<a class="tag tag-pink"
+										ui-sref="discover.games.view.news.list"
+										>
+										{{ gameCtrl.notificationCounts.news }}
+										<span translate>New</span>
+									</a>
+								</span>
+							</span>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</section>
+
+		<header class="section game-header" gj-auto-scroll-anchor>
+
+			<div class="container">
 				<div class="game-header-avatar">
 					<div class="avatar-circle" gj-user-avatar="gameCtrl.game.developer"></div>
 				</div>
+			</div>
 
-				<!-- Title / Byline / Date -->
-				<div class="game-header-meta">
+			<div class="game-header-nav"
+				gj-scroll-affix
+				is-affixed="gameCtrl.isNavAffixed"
+				should-affix="Screen.isLg && Screen.height > 750"
+				>
+				<div class="container">
 
-					<!-- Game Title -->
-					<h1 class="h2 section-header game-header-title">
-						<a class="link-unstyled" ui-sref=".overview">
-							{{ ::gameCtrl.game.title }}
-						</a>
-					</h1>
-
-					<!-- Developer -->
-					<div class="game-header-byline">
-						by
-						<a ng-href="{{ ::gameCtrl.game.developer.url }}">{{ ::gameCtrl.game.developer.display_name }}</a>
-
-						<!--
-							Hide on mobile to keep it clean.
-							They can view in the game details.
-						-->
-						<span class="game-header-time-ago" ng-if="!Screen.isXs && gameCtrl.game.published_on">
-							<span class="dot-separator"></span>
-							<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )"
-								am-time-ago="::gameCtrl.game.published_on"></a>
-						</span>
-						
-						<span class="game-header-status" ng-if="Game_ViewState.isDevlog">
-							<span class="dot-separator"></span>
-							<span class="tag tag-active" ng-if="Game_ViewState.isDevlog" gj-tooltip="This game is still in development">Devlog</span>
-						</span>
-
-						<span class="game-header-ogrs" ng-if="gameCtrl.game.tigrs_age">
-							<span class="dot-separator hidden-xs"></span>
-							<gj-game-ogrs-tag gj-game="gameCtrl.game"></gj-game-ogrs-tag>
-						</span>
+					<div class="row">
+						<div class="col-md-4 col-md-push-8 ">
+							<div class="game-header-controls-container">
+								<div gj-partial="/app/views/discover/games/view/_header/_controls.html"></div>
+							</div>
+						</div>
+						<div class="col-md-8 col-md-pull-4">
+							<div class="game-header-nav-container">
+								<div gj-partial="/app/views/discover/games/view/_header/_nav.html"></div>
+							</div>
+						</div>
 					</div>
 
 				</div>
-
 			</div>
-		</div>
 
-		<div ng-if="Screen.isXs">
-			<div gj-partial="/app/views/discover/games/view/_header/_header-xs.html"></div>
-		</div>
-		<div ng-if="Screen.isSm">
-			<div gj-partial="/app/views/discover/games/view/_header/_header-sm.html"></div>
-		</div>
-		<div ng-if="Screen.isDesktop">
-			<div gj-partial="/app/views/discover/games/view/_header/_header-desktop.html"></div>
-		</div>
+		</header>
 
-	</header>
+		<ui-view></ui-view>
 
-	<ui-view></ui-view>
+	</gj-game-maturity-block>
 </div>

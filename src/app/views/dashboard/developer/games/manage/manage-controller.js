@@ -21,7 +21,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.ManageCtrl'
 					gettextCatalog.getString( 'dash.games.removed_growl' ),
 					gettextCatalog.getString( 'dash.games.removed_growl_title' )
 				);
-				$state.go( 'dashboard.overview' );
+				$state.go( 'dashboard.main.overview' );
 			} );
 	};
 } );

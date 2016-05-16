@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Packages.EditCtrl', function(
-	$scope, $state, Api, App, Game_Package, Game_Release, ModalConfirm, Growls, gettextCatalog, packagePayload, $timeout )
+	$scope, $state, Api, App, Game_Package, Game_Release, Sellable, ModalConfirm, Growls, gettextCatalog, packagePayload, $timeout )
 {
 	var _this = this;
 
@@ -7,6 +7,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 	$scope.Game_Release = Game_Release;
 
 	this.package = new Game_Package( packagePayload.package );
+	this.sellable = new Sellable( packagePayload.sellable );
 	this.releases = Game_Release.populate( packagePayload.releases );
 
 	this.previewData = null;
@@ -20,6 +21,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 	this.newRelease = newRelease;
 	this.removeRelease = removeRelease;
 	this.loadPreview = loadPreview;
+	this.onEdited = onEdited;
 
 	this.loadPreview();
 
@@ -29,11 +31,23 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 		Api.sendRequest( '/web/dash/developer/games/packages/preview/' + _this.package.game_id + '/' + _this.package.id, null, { detach: true } )
 			.then( function( response )
 			{
+				// We pull all new stuff for the preview so that we don't step on the form.
 				_this.previewData = Game_Package.processPackagePayload( response );
+				_this.previewSellable = response.sellable ? new Sellable( response.sellable ) : null;
 				_this.previewPackage = _.find( _this.previewData.packages, { id: _this.package.id } );
 				_this.buildsProcessingCount = response.buildsProcessingCount || 0;
 				_this.isLoadingPreview = false;
+
+				// Clear out any "bought" status in the sellable so it always shows as if we haven't bought it yet.
+				if ( _this.previewSellable ) {
+					_this.previewSellable.is_owned = false;
+				}
 			} );
+	}
+
+	function onEdited( formModel )
+	{
+		this.loadPreview();
 	}
 
 	function newRelease()

@@ -20,12 +20,6 @@ angular.module( 'App.Forms' ).directive( 'gjFormResetPassword', function( $q, Fo
 		return Api.sendRequest( '/web/auth/reset-password/' + scope.userId, {
 			key: scope.key,
 			password: scope.formModel.password
-		} )
-		.then( function( response )
-		{
-			if ( !response.success ) {
-				return $q.reject( response );
-			}
 		} );
 	};
 

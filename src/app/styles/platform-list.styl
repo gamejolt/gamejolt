@@ -2,12 +2,17 @@
  * Nav platform lists in headers should be scrollable horizontally and not wrap.
  */
 @media $media-xs
-	header nav.platform-list.inline > ul
-	nav.platform-list.inline.scrollable-xs > ul
-		scrollable-x()
-		white-space: nowrap
+	header nav.platform-list.inline
+	nav.platform-list.inline.scrollable-xs
+		@extend .full-bleed-xs
 
-		li
-			float: none
-			display: inline-block
+		> ul
+			scrollable-x()
+			white-space: nowrap
+			padding-left: ($grid-gutter-width-xs / 2)
+			padding-right: ($grid-gutter-width-xs / 2)
+
+			li
+				float: none
+				display: inline-block
 

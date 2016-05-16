@@ -8,9 +8,9 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 		controllerAs: 'overviewCtrl',
 		templateUrl: '/app/views/discover/games/view/overview/overview.html',
 		resolve: {
-			tick: function( HistoryTick, $stateParams )
+			tick: function( tickSource, HistoryTick, $stateParams )
 			{
-				HistoryTick.sendBeacon( 'game-view', $stateParams.id );
+				HistoryTick.sendBeacon( 'game-view', $stateParams.id, { sourceResource: 'Game', sourceResourceId: $stateParams.id } );
 			}
 		},
 		skipTrackPageview: true,

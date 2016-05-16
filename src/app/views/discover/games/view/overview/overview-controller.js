@@ -1,8 +1,8 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', function(
 	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle,
-	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, Environment,
+	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, User, Environment,
 	Jam,
-	Api, Payload, Game_ViewState, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
+	Api, Payload, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
 {
 	var _this = this;
 
@@ -11,9 +11,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	this.isLoaded = false;
 	this.currentCommentPage = $stateParams.comment_page;
 
-	// Kind of hacky, but if we're prerendering, then we need to make sure that the details are open for the game.
-	// Otherwise by default they're closed.
-	this.detailsOpen = Environment.isPrerender ? true : false;
 	this.isShowingRatingBreakdown = false;
 
 	$scope.$watch( '::gameCtrl.game', function( game )
@@ -24,14 +21,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 
 		_this.game = game;
 		App.title = game.title + ' by ' + game.developer.display_name;
-
-		// Wait for the game before showing extended info.
-		Game_ViewState.showExtended();
-
-		// TG: Thunder Gun widget
-		if ( game.id == 64527 ) {
-			_this.hasReleasesSection = true;
-		}
 	} );
 
 	$scope.$watch( 'gameCtrl.hasScores && gameCtrl.trophiesCount', function( val )
@@ -39,11 +28,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		// Whether or now the achievements row should be two columns.
 		// When there is both scores and trophies, we split them in half.
 		_this.isAchievementsTwoCol = val;
-	} );
-
-	$scope.$on( '$destroy', function()
-	{
-		Game_ViewState.hideExtended();
 	} );
 
 	Api.sendRequest( '/web/discover/games/overview/' + $stateParams.id )
@@ -107,27 +91,25 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		this.songs = Game_Song.populate( payload.songs );
 		this.latestArticles = Game_NewsArticle.populate( payload.latestArticles );
 		this.recommendedGames = Game.populate( payload.recommendedGames );
+		this.supporters = User.populate( payload.supporters ) || [];
 
 		var packageData = Game_Package.processPackagePayload( payload );
 		angular.extend( this, packageData );
 
-		// Need this for the game play buttons in header.
-		$ocLazyLoad.load( '/app/modules/ua-parser.js' ).then( function()
-		{
-			var os = Device.os();
-			var arch = Device.arch();
+		var os = Device.os();
+		var arch = Device.arch();
 
-			$scope.gameCtrl.installableBuilds = Game.pluckInstallableBuilds( _this.packages || [], os, arch );
-			$scope.gameCtrl.browserBuilds = Game.pluckBrowserBuilds( _this.packages || [] );
+		$scope.gameCtrl.packages = this.packages || [];
+		$scope.gameCtrl.installableBuilds = Game.pluckInstallableBuilds( this.packages || [], os, arch );
+		$scope.gameCtrl.browserBuilds = Game.pluckBrowserBuilds( this.packages || [] );
 
-			// On Client we only want to include HTML games.
-			if ( Environment.isClient ) {
-				$scope.gameCtrl.browserBuilds = _.where( $scope.gameCtrl.browserBuilds, { type: Game_Build.TYPE_HTML } );
-			}
+		// On Client we only want to include HTML games.
+		if ( Environment.isClient ) {
+			$scope.gameCtrl.browserBuilds = _.where( $scope.gameCtrl.browserBuilds, { type: Game_Build.TYPE_HTML } );
+		}
 
-			// Pull in ROMs to the browser builds.
-			$scope.gameCtrl.browserBuilds = $scope.gameCtrl.browserBuilds.concat( Game.pluckRomBuilds( _this.packages || [] ) );
-		} );
+		// Pull in ROMs to the browser builds.
+		$scope.gameCtrl.browserBuilds = $scope.gameCtrl.browserBuilds.concat( Game.pluckRomBuilds( _this.packages || [] ) );
 
 		// The releases section exists if there are releases or songs.
 		this.hasReleasesSection = this.releases.length || this.songs.length;

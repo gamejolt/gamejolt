@@ -48,6 +48,10 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Activity.ListCtrl', functio
 			key: Notification.TYPE_GAME_FOLLOW,
 			label: gettextCatalog.getString( 'notifications.game_follows_label' ),
 		},
+		{
+			key: Notification.TYPE_SELLABLE_SELL,
+			label: gettextCatalog.getString( 'Sales' ),
+		},
 	];
 
 	this.currentNotificationType = _.find( this.notificationTypes, { key: this.filter } );

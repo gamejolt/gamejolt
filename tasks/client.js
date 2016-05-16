@@ -105,14 +105,14 @@ module.exports = function( config )
 		'<script src="/app/modules/client.js"></script>',
 	];
 
-	var authScripts = [
+	var baseScripts = [
 		'<script src="/app/modules/client.js"></script>',
-		'<script src="/app/modules/client-auth.js"></script>',
+		'<script src="/app/modules/client-base.js"></script>',
 	];
 
 	if ( config.production ) {
 		appScripts.push( '<script src="/app/modules/client-updater.js"></script>' );
-		authScripts.push( '<script src="/app/modules/client-updater.js"></script>' );
+		baseScripts.push( '<script src="/app/modules/client-updater.js"></script>' );
 	}
 
 	// Injections to modify App for client build.
@@ -120,10 +120,10 @@ module.exports = function( config )
 		'/* inject client:modules */': "'App.Client',",
 		'<!-- inject client:modules -->': appScripts.join( ' ' ),
 
-		// For auth section we load the whole client JS but only load the angular modules we want
-		// through the auth-client.js module.
-		'/* inject client:auth:modules */': "'App.ClientAuth',",
-		'<!-- inject client:auth:modules -->': authScripts.join( ' ' ),
+		// For other sections we load the whole client JS but only load the angular modules we want
+		// through the base-client.js module.
+		'/* inject client:base:modules */': "'App.ClientBase',",
+		'<!-- inject client:base:modules -->': baseScripts.join( ' ' ),
 
 		// Attach a class to say that we're in client.
 		// Makes it easy to target client before angular has loaded in completely with CSS.

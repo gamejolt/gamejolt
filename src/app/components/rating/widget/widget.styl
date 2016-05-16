@@ -3,53 +3,63 @@
 	position: relative
 	display: inline-block
 
-.rating-widget-icons
-	display: inline-block
-	margin-right: 20px
+	&-icons
+		display: inline-block
+		margin-right: 20px
 
-	.rating-widget-big &
-		margin-right: 40px
+		.rating-widget-big &
+			margin-right: 40px
 
-.rating-widget-clear
-	position: absolute
-	bottom: 4px
-	right: 0
-	width: 20px
-	text-align: center
-	color: $gray-lightest
-	cursor: pointer
-
-	.rating-widget-big &
-		width: 40px
-		right: 5px
-
-	> .jolticon
-		display: none
+	&-clear
+		position: absolute
+		bottom: 4px
+		right: 0
+		width: 20px
+		text-align: center
+		color: $gray-light
 		cursor: pointer
 
-		&:hover
-			color: $gj-pink
+		.rating-widget-dark &
+			color: $gray-lightest
 
-		.rating-widget:hover &
-			display: block
+		.rating-widget-big &
+			width: 40px
+			right: 5px
 
-.rating-widget-icon
-	float: left
-	margin: 0 !important
-	cursor: pointer
+		> .jolticon
+			display: none
+			cursor: pointer
 
-	&
-	.rating-widget-icons:hover &
-		color: $gray-lightest
+			@media $media-mobile
+				display: block
 
-	&.hover
-		color: $gj-green !important
+			&:hover
+				color: $gj-pink
 
-	&.selected
-		color: $gj-green
+			.rating-widget:hover &
+				display: block
 
-.rating-widget-icon-bounce
-	@extend .stagger
-	animation-name: bounce
-	animation-duration: 300ms
-	animation-timing-function: $ease-out
+	&-icon
+		float: left
+		cursor: pointer
+		margin: 0 !important
+
+		&
+		.rating-widget-icons:hover &
+			color: $gray-lighter
+
+			.rating-widget-dark &
+				color: $gray-lightest
+
+		&.hover
+			color: $gj-blue !important
+
+			.rating-widget-dark &
+				color: $gj-green !important
+
+		&.selected
+			color: $gj-blue
+
+			.rating-widget-dark &
+				color: $gj-green
+

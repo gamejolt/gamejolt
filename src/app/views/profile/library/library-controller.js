@@ -6,7 +6,9 @@ angular.module( 'App.Views' ).controller( 'Profile.LibraryCtrl', function( $scop
 
 	this.followedCollection = payload.followedCollection ? new GameCollection( payload.followedCollection ) : null;
 	this.developerCollection = payload.developerCollection ? new GameCollection( payload.developerCollection ) : null;
+	this.ownedCollection = payload.ownedCollection ? new GameCollection( payload.ownedCollection ) : null;
 
+	this.collections.unshift( this.ownedCollection );
 	this.collections.unshift( this.followedCollection );
 
 	if ( this.developerCollection ) {

@@ -1,4 +1,4 @@
-angular.module( 'App.Notifications.DescriptiveAction' ).directive( 'gjNotificationsDescriptiveAction', function( Notification, gettext, gettextCatalog )
+angular.module( 'App.Notifications.DescriptiveAction' ).directive( 'gjNotificationsDescriptiveAction', function( Notification, gettext, gettextCatalog, currencyFilter )
 {
 	var translationKeys = {};
 	translationKeys[ Notification.TYPE_COMMENT_ADD_OBJECT_OWNER ] = gettext( 'notifications.new_comment_title_html' );
@@ -9,6 +9,7 @@ angular.module( 'App.Notifications.DescriptiveAction' ).directive( 'gjNotificati
 	translationKeys[ Notification.TYPE_GAME_RATING_ADD ] = gettext( 'notifications.rating_title_html' );
 	translationKeys[ Notification.TYPE_GAME_FOLLOW ] = gettext( 'notifications.game_follow_title_html' );
 	translationKeys[ Notification.TYPE_GAME_NEWS_ADD ] = gettext( 'notifications.game_news_title_html' );
+	translationKeys[ Notification.TYPE_SELLABLE_SELL ] = gettext( 'bought a package in <strong>{{ object }}</strong> for <strong>{{ amount }}</strong>.' );
 
 	return {
 		restrict: 'A',
@@ -44,6 +45,12 @@ angular.module( 'App.Notifications.DescriptiveAction' ).directive( 'gjNotificati
 
 				translationValues = {
 					title: scope.notification.action_model.title,
+				};
+			}
+			else if ( scope.notification.type == Notification.TYPE_SELLABLE_SELL ) {
+				translationValues = {
+					object: scope.notification.object_model.title,
+					amount: currencyFilter( scope.notification.action_model.amount / 100, '$' ),
 				};
 			}
 			else {

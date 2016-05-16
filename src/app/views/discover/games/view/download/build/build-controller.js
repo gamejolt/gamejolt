@@ -11,8 +11,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.BuildCtr
 	this.developerGames = Game.populate( payload.developerGames ) || [];
 	this.recommendedGames = Game.populate( payload.recommendedGames ) || [];
 
-	this.twitterShareMessage = payload.twitterShareMessage || 'Check out this game!';
-
 	// If they click away from the page before the download starts, then cancel the download redirect.
 	var shouldDownload = true;
 	var downloadPromise = this.build.getDownloadUrl()

@@ -1,12 +1,13 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Packages.ListCtrl', function(
-	$scope, $state, App, Game_Package, ModalConfirm, Growls, gettextCatalog, packagesPayload )
+	$scope, $state, App, Game_Package, Sellable, ModalConfirm, Growls, gettextCatalog, packagesPayload )
 {
 	var _this = this;
 	var manageCtrl = $scope.manageCtrl;
 
-	App.title = gettextCatalog.getString( 'dash.games.packages.page_title', { game: manageCtrl.game.title } );
+	App.title = gettextCatalog.getString( 'Manage Packages for {{ game }}', { game: manageCtrl.game.title } );
 
 	this.packages = Game_Package.populate( packagesPayload.packages );
+	this.sellables = _.indexBy( Sellable.populate( packagesPayload.sellables ), 'game_package_id' );
 
 	this.isPackageActive = isPackageActive;
 	this.onPackagesSorted = onPackagesSorted;
@@ -49,7 +50,8 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 					gettextCatalog.getString( 'dash.games.packages.manage.removed_growl_title' )
 				);
 
-				_.remove( _this.packages, { id: package.id } );
+				// We have to do a refresh since a new package may have been chosen as the primary sellable.
+				$state.reload( $state.current );
 			} );
 	}
 } );

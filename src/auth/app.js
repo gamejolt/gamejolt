@@ -33,6 +33,7 @@ angular.module( 'App', [
 	'gj.Tooltip',
 	'gj.Popover',
 	'gj.Growls',
+	'gj.History',
 	'gj.Scroll.AutoScroll',
 
 	'gj.Form',
@@ -52,7 +53,7 @@ angular.module( 'App', [
 	'App.Views',
 
 	// Client.
-	/* inject client:auth:modules */
+	/* inject client:base:modules */
 ] )
 .config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $sceDelegateProvider, TranslateProvider )
 {

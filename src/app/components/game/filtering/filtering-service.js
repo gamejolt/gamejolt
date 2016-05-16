@@ -2,7 +2,20 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 {
 	var STORAGE_KEY = 'game-filtering:filters';
 
+	// Make sure you add to the state params in games/list/category/category.js as well!
+	// If you don't, it won't resolve the route correctly and won't give an error.
 	Game_Filtering_Container.filterDefinitions = {
+		price: {
+			label: gettextCatalog.getString( 'Price' ),
+			type: 'radio',
+			options: {
+				free: gettextCatalog.getString( 'Free / Name Your Price' ),
+				paid: gettextCatalog.getString( 'Paid' ),
+				'5-less': gettextCatalog.getString( '$5 or less' ),
+				'15-less': gettextCatalog.getString( '$15 or less' ),
+				'30-less': gettextCatalog.getString( '$30 or less' ),
+			}
+		},
 		os: {
 			label: gettextCatalog.getString( 'games.filtering.os' ),
 			type: 'array',
@@ -64,6 +77,9 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 			if ( definition.type == 'array' && value.length ) {
 				isEmpty = false;
 			}
+			else if ( definition.type == 'radio' && value ) {
+				isEmpty = false;
+			}
 			else if ( !options.skipQuery && definition.type == 'string' && value.trim() ) {
 				isEmpty = false;
 			}
@@ -92,6 +108,9 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 			else if ( definition.type == 'string' ) {
 				this.filters[ key ] = '';
 			}
+			else if ( definition.type == 'radio' ) {
+				this.filters[ key ] = null;
+			}
 		}, this );
 
 		// This is whether or not the filters are empty that we need for tags.
@@ -109,119 +128,130 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 	{
 		var _this = this;
 
-		// Gotta load ua-parser before referencing Device.
-		return $ocLazyLoad.load( '/app/modules/ua-parser.js' ).then( function()
+		/**
+		 * We basically don't resolve if we're switching the URL.
+		 * This prevents any API calls from going out.
+		 * We do resolve when we're just pulling the filters from the URL or if there
+		 * are no filters to set.
+		 */
+		return $q( function( resolve, reject )
 		{
-			/**
-			 * We basically don't resolve if we're switching the URL.
-			 * This prevents any API calls from going out.
-			 * We do resolve when we're just pulling the filters from the URL or if there
-			 * are no filters to set.
-			 */
-			return $q( function( resolve, reject )
+			var paramFiltersFound = false;
+			angular.forEach( stateParams, function( value, param )
 			{
-				var paramFiltersFound = false;
-				angular.forEach( stateParams, function( value, param )
+				if ( Game_Filtering_Container.filterDefinitions[ param ] && value ) {
+					paramFiltersFound = true;
+				}
+			} );
+
+			if ( paramFiltersFound ) {
+				// console.log( 'from url' );
+
+				// We don't save the filters if we pull from the URL.
+				// We only save when they explicitly set/change them.
+				// This ensures that they can view a shared URL with them without overwriting their filters.
+				angular.forEach( Game_Filtering_Container.filterDefinitions, function( definition, filter )
 				{
-					if ( Game_Filtering_Container.filterDefinitions[ param ] && value ) {
-						paramFiltersFound = true;
+					if ( stateParams[ filter ] ) {
+						if ( definition.type == 'array' ) {
+							_this.filters[ filter ] = stateParams[ filter ].split( ',' );
+						}
+						else if ( definition.type == 'string' ) {
+							_this.filters[ filter ] = stateParams[ filter ];
+						}
+						else if ( definition.type == 'radio' ) {
+							_this.filters[ filter ] = stateParams[ filter ];
+						}
+					}
+					else {
+						if ( definition.type == 'array' ) {
+							_this.filters[ filter ] = [];
+						}
+						else if ( definition.type == 'string' ) {
+							_this.filters[ filter ] = '';
+						}
+						else if ( definition.type == 'radio' ) {
+							_this.filters[ filter ] = null;
+						}
 					}
 				} );
+			}
+			// Only if this is a persistent filtering container.
+			else if ( _this.isPersistent && $window.localStorage[ STORAGE_KEY ] ) {
+				// console.log( 'from storage' );
 
-				if ( paramFiltersFound ) {
-					// console.log( 'from url' );
+				var filters = JSON.parse( $window.localStorage[ STORAGE_KEY ] );
+				if ( filters && !isEmpty( filters ) ) {
 
-					// We don't save the filters if we pull from the URL.
-					// We only save when they explicitly set/change them.
-					// This ensures that they can view a shared URL with them without overwriting their filters.
-					angular.forEach( Game_Filtering_Container.filterDefinitions, function( definition, filter )
-					{
-						if ( stateParams[ filter ] ) {
-							if ( definition.type == 'array' ) {
-								_this.filters[ filter ] = stateParams[ filter ].split( ',' );
-							}
-							else if ( definition.type == 'string' ) {
-								_this.filters[ filter ] = stateParams[ filter ];
-							}
-						}
-						else {
-							if ( definition.type == 'array' ) {
-								_this.filters[ filter ] = [];
-							}
-							else if ( definition.type == 'string' ) {
-								_this.filters[ filter ] = '';
-							}
-						}
-					} );
+					// Never resolve so we don't switch routes.
+					var _filters = _this.getStateParams( filters );
+					updateUrl( state, stateParams, _filters );
+					return;
 				}
-				// Only if this is a persistent filtering container.
-				else if ( _this.isPersistent && $window.localStorage[ STORAGE_KEY ] ) {
-					// console.log( 'from storage' );
+			}
+			// Don't auto detect any filters if we are prerendering.
+			else if ( _this.shouldDetect && !Environment.isPrerender ) {
+				// console.log( 'from device' );
 
-					var filters = JSON.parse( $window.localStorage[ STORAGE_KEY ] );
-					if ( filters && !isEmpty( filters ) ) {
+				var os = $injector.get( 'Device' ).os();
+				var filters = undefined;
 
-						// Never resolve so we don't switch routes.
-						var _filters = _this.getStateParams( filters )
-						updateUrl( state, stateParams, _filters );
-						return;
-					}
+				if ( os == 'windows' ) {
+					filters = { os: [ 'windows' ] };
 				}
-				// Don't auto detect any filters if we are prerendering.
-				else if ( _this.shouldDetect && !Environment.isPrerender ) {
-					// console.log( 'from device' );
-
-					var os = $injector.get( 'Device' ).os();
-					var filters = undefined;
-
-					if ( os == 'windows' ) {
-						filters = { os: [ 'windows' ] };
-					}
-					else if ( os == 'mac' ) {
-						filters = { os: [ 'mac' ] };
-					}
-					else if ( os == 'linux' ) {
-						filters = { os: [ 'linux' ] };
-					}
-
-					if ( filters ) {
-
-						// Always add in all browser types if we auto-detected.
-						// TODO: Would be nice to not have to manually add every single one in, but rather just a single filter for all browser types.
-						if ( !Environment.isClient ) {
-							filters.browser = Object.keys( Game_Filtering_Container.filterDefinitions.browser.options );
-						}
-						// On client we only do HTML for now.
-						else {
-							filters.browser = [ 'html' ];
-						}
-
-						// Never resolve so we don't switch routes.
-						var _filters = _this.getStateParams( filters );
-						updateUrl( state, stateParams, _filters );
-						return;
-					}
+				else if ( os == 'mac' ) {
+					filters = { os: [ 'mac' ] };
+				}
+				else if ( os == 'linux' ) {
+					filters = { os: [ 'linux' ] };
 				}
 
-				_this._syncTagFiltersEmpty();
-				resolve();
-			} );
+				if ( filters ) {
+
+					// Always add in all browser types if we auto-detected.
+					// TODO: Would be nice to not have to manually add every single one in, but rather just a single filter for all browser types.
+					if ( !Environment.isClient ) {
+						filters.browser = Object.keys( Game_Filtering_Container.filterDefinitions.browser.options );
+					}
+					// On client we only do HTML for now.
+					else {
+						filters.browser = [ 'html' ];
+					}
+
+					// Never resolve so we don't switch routes.
+					var _filters = _this.getStateParams( filters );
+					updateUrl( state, stateParams, _filters );
+					return;
+				}
+			}
+
+			_this._syncTagFiltersEmpty();
+			resolve();
 		} );
 	};
 
 	Game_Filtering_Container.prototype.toggleFilterOption = function( filter, option )
 	{
 		if ( !Game_Filtering_Container.filterDefinitions[ filter ] || Game_Filtering_Container.filterDefinitions[ filter ].type == 'string' ) {
-			return null;
+			return;
+		}
+
+		// If a radio type, we want to unset any previously set ones.
+		if ( Game_Filtering_Container.filterDefinitions[ filter ].type == 'radio' ) {
+			if ( this.filters[ filter ] == option ) {
+				this.unsetFilter( filter, option );
+			}
+			else {
+				this.setFilter( filter, option );
+			}
+			return;
 		}
 
 		if ( this.filters[ filter ].indexOf( option ) !== -1 ) {
 			this.unsetFilter( filter, option );
-			return false;
 		}
 		else {
 			this.setFilter( filter, option );
-			return true;
 		}
 	};
 
@@ -235,7 +265,7 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 		if ( definition.type == 'array' ) {
 			this.filters[ filter ].push( value );
 		}
-		else if ( definition.type == 'string' ) {
+		else if ( definition.type == 'string' || definition.type == 'radio' ) {
 			this.filters[ filter ] = value;
 		}
 
@@ -256,6 +286,9 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 		else if ( definition.type == 'string' ) {
 			this.filters[ filter ] = '';
 		}
+		else if ( definition.type == 'radio' ) {
+			this.filters[ filter ] = null;
+		}
 
 		this._syncTagFiltersEmpty();
 		this._saveFilters();
@@ -265,6 +298,10 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 	{
 		if ( !Game_Filtering_Container.filterDefinitions[ filter ] || Game_Filtering_Container.filterDefinitions[ filter ].type == 'string' ) {
 			return null;
+		}
+
+		if ( Game_Filtering_Container.filterDefinitions[ filter ].type == 'radio' ) {
+			return this.filters[ filter ] == option;
 		}
 
 		return this.filters[ filter ].indexOf( option ) !== -1;
@@ -322,6 +359,13 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 
 				queryPieces.push( filter + '=' + value );
 			}
+			else if ( definition.type == 'radio' ) {
+				if ( !value ) {
+					return;
+				}
+
+				queryPieces.push( 'f_' + filter + '=' + value );
+			}
 		}, this );
 
 		return queryPieces.join( '&' );
@@ -356,6 +400,13 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 			}
 			else if ( definition.type == 'string' ) {
 				if ( !value.trim() ) {
+					return;
+				}
+
+				params[ filter ] = value;
+			}
+			else if ( definition.type == 'radio' ) {
+				if ( !value ) {
 					return;
 				}
 

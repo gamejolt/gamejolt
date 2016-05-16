@@ -8,7 +8,7 @@
 </a>
 
 <gj-popover
-	class="search-history-popover popover-dark"
+	class="search-history-popover"
 	popover-id="search-history-popover"
 	popover-on-focus="ctrl.onShow()"
 	popover-on-blur="ctrl.onHide()"
@@ -22,7 +22,7 @@
 
 	<div ng-if="ctrl.isVisible && ctrl.recentSearches.length">
 
-		<div class="list-group thin">
+		<div class="list-group list-group-dark thin">
 			<a class="list-group-item"
 				ng-repeat="query in ctrl.recentSearches"
 				ng-click="ctrl.go( query )"
@@ -32,7 +32,7 @@
 			</a>
 		</div>
 
-		<div class="list-group thin">
+		<div class="list-group list-group-dark thin">
 			<a class="list-group-item has-icon"
 				ng-click="ctrl.clear()"
 				gj-track-event="search:history:clear"

@@ -1,6 +1,6 @@
 <iframe nwdisable nwfaketop id="download-frame" class="hidden" ng-if="buildCtrl.src" ng-src="{{ buildCtrl.src }}"></iframe>
 
-<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
+<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && !Screen.isXs">
 	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 </section>
 
@@ -21,7 +21,7 @@
 					<div class="social-widgets">
 						<gj-social-twitter-share
 							url="{{ ::Environment.baseUrl }}{{ ::gameCtrl.game.getUrl() }}"
-							content="{{ ::buildCtrl.twitterShareMessage }}"
+							content="{{ ::gameCtrl.twitterShareMessage }}"
 							>
 						</gj-social-twitter-share>
 
@@ -34,7 +34,8 @@
 				<!--
 					Rating widget
 				-->
-				<div class="well fill-dark" ng-if="App.user && App.user.id != gameCtrl.game.developer.id && gameCtrl.game.ratings_enabled">
+				<div ng-if="App.user && App.user.id != gameCtrl.game.developer.id && gameCtrl.game.ratings_enabled && gameCtrl.game.can_user_rate">
+					<br>
 					<p class="small" translate>game.download.game.rate_html</p>
 
 					<gj-rating-widget
@@ -91,11 +92,11 @@
 			<!--
 				Will overflow a little on sm/md, but what can ya do, amirite?
 			-->
-			<div class="col-sm-3 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isSm">
+			<div class="col-sm-3 text-right" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isSm">
 				<gj-ad ad-size="skyscraper" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 			</div>
 
-			<div class="col-md-4 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isDesktop">
+			<div class="col-md-4 text-right" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
 				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 				<br>
 				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
@@ -105,6 +106,6 @@
 	</div>
 </section>
 
-<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && !Screen.isXs">
+<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && !Screen.isXs">
 	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 </section>

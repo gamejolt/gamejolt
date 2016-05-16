@@ -1,0 +1,197 @@
+<form gj-form="formModel" name="paymentForm" ng-submit="onSubmit()">
+
+	<div class="row">
+		<div class="col-sm-6 col-centered">
+
+			<div class="card-list full-bleed-xs"
+				ng-if="cards.length"
+				>
+				<a class="card-list-item"
+					ng-repeat="card in cards track by card.id"
+					ng-class="{ active: formModel.selectedCard == card.id }"
+					ng-click="formModel.selectedCard = card.id"
+					>
+					<div class="pull-left" style="margin-right: 15px">
+						<input type="radio" ng-checked="formModel.selectedCard == card.id" name="same">
+					</div>
+					<div class="pull-left">
+						<strong>Card ending in {{ card.last4 }}</strong> <br>
+						<span class="small text-muted">Expires {{ card.exp_month }}/{{ card.exp_year }}</span>
+					</div>
+				</a>
+				<a class="card-list-item" ng-class="{ active: !formModel.selectedCard }" ng-click="formModel.selectedCard = 0">
+					<div class="pull-left" style="margin-right: 15px">
+						<input type="radio" ng-checked="formModel.selectedCard == 0" name="same">
+					</div>
+					<div class="pull-left">
+						<strong>Use a new card</strong>
+					</div>
+				</a>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="new-card-expander" ng-class="{ 'has-cards': cards.length }" gj-expand-when="!formModel.selectedCard || !cards.length">
+		<div class="well fill-lightest">
+			<div class="row">
+				<div class="col-sm-6 col-centered">
+					<div class="form-payment-card">
+
+						<form-group name="fullname" label="{{ 'name on card' | translate }}">
+							<span class="jolticon jolticon-user"></span>
+							<input form-control="text"
+								class="has-icon"
+								placeholder="{{ 'name on card' | translate }}"
+								gj-focus-when
+								>
+							<control-errors></control-errors>
+						</form-group>
+
+						<form-group name="card_number" label="{{ 'card number' | translate }}">
+							<span class="jolticon jolticon-credit-card"></span>
+							<input form-control="text"
+								class="has-icon"
+								placeholder="{{ 'card number' | translate }}"
+								cc-number
+								cc-format
+								ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 1000 } }"
+								>
+							<control-errors>
+								<control-error when="ccNumber">Please enter a valid card number.</control-error>
+							</control-errors>
+						</form-group>
+
+						<div class="clearfix">
+							<div class="left-col">
+								<form-group name="exp" label="{{ 'card expiration' | translate }}">
+									<span class="jolticon jolticon-calendar"></span>
+									<input form-control="text"
+										class="has-icon"
+										placeholder="mm/yy"
+										ui-mask="99/99"
+										gj-form-cc-exp
+										ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 1000 } }"
+										>
+									<control-errors>
+										<control-error when="ccExpInvalid">Please enter a valid expiration.</control-error>
+										<control-error when="ccExpExpired">This card has expired.</control-error>
+									</control-errors>
+								</form-group>
+							</div>
+							<div class="right-col">
+								<form-group name="cvc" label="CVC">
+									<span class="jolticon jolticon-token"></span>
+									<input form-control="text"
+										class="has-icon"
+										placeholder="cvc"
+										cc-cvc
+										ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 1000 } }"
+										>
+									<control-errors>
+										<control-error when="ccCvc">Please enter a valid cvc.</control-error>
+									</control-errors>
+								</form-group>
+							</div>
+						</div>
+
+						<form-group name="save_card" label="{{ 'Remember card?' | translate }}" ng-if="App.user">
+							<label class="checkbox">
+								<input form-control="checkbox">
+								Remember this card for future purchases
+							</label>
+						</form-group>
+
+						<fieldset>
+							<legend>Billing Address</legend>
+
+							<form-group name="country" label="{{ 'country' | translate }}">
+								<select form-control>
+									<option ng-repeat="country in ::formState.countries track by country.code" value="{{ ::country.code }}">
+										{{ country.name }}
+									</option>
+								</select>
+								<control-errors></control-errors>
+							</form-group>
+
+							<form-group name="street1" label="{{ 'street address' | translate }}">
+								<input form-control="text"
+									placeholder="{{ 'street address' | translate }}"
+									>
+								<control-errors></control-errors>
+							</form-group>
+
+							<div class="clearfix">
+								<div class="left-col">
+									<form-group name="region" label="{{ 'state/province' | translate }}" class="">
+
+										<input form-control="text"
+											class="no-animate-leave"
+											ng-if="!formState.regions"
+											placeholder="{{ 'state/province' | translate }}"
+											ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 1000 } }"
+											>
+
+										<select class="no-animate-leave" form-control ng-if="formState.regions">
+											<option ng-repeat="region in ::formState.regions track by region.code" value="{{ ::region.code }}">
+												{{ region.name }}
+											</option>
+										</select>
+
+										<control-errors></control-errors>
+									</form-group>
+								</div>
+								<div class="right-col">
+									<form-group name="postcode" label="{{ 'zip code' | translate }}">
+										<input form-control="text"
+											placeholder="{{ 'zip code' | translate }}"
+											>
+										<control-errors></control-errors>
+									</form-group>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<br>
+
+	<gj-loading
+		ng-if="!formState.calculatedTax && paymentForm.$valid"
+		class="loading-centered"
+		label="Calculating tax..."
+		>
+	</gj-loading>
+
+	<div class="anim-fade-in no-animate-leave text-center" ng-if="formState.calculatedTax && formState.taxAmount > 0">
+		+{{ formState.taxAmount / 100 | currency:'$' }} taxes
+		<span tooltip="We are required to collect taxes on orders for certain regions.">
+			<span class="jolticon jolticon-help-circle text-muted"></span>
+		</span>
+	</div>
+	<br>
+
+	<div gj-expand-when="formState.stripeError">
+		<div class="alert alert-warning">{{ formState.stripeError }}</div>
+	</div>
+
+	<button gj-form-submit-button
+		ng-if="!paymentForm.$valid || (formState.calculatedTax && !formState.isProcessing)"
+		class="btn btn-block btn-success-outline btn-lg"
+		ng-disabled="!paymentForm.$valid"
+		ng-click="onSubmit()"
+		>
+		Pay {{ (order.amount + formState.taxAmount) / 100 | currency:'$':2 }}
+	</button>
+
+	<gj-loading
+		ng-if="formState.isProcessing"
+		class="loading-centered"
+		label="Processing..."
+		>
+	</gj-loading>
+
+</form>

@@ -1,0 +1,37 @@
+.ctrl-landing-marketplace
+
+	.mascots
+		display: block
+		margin: 60px auto
+		width: (781px / 4)
+		height: (666px / 4)
+
+		@media $media-sm-up
+			width: (781px / 2)
+			height: (666px / 2)
+
+	h2
+		font-weight: 100
+
+	p.lead
+		font-size: 1.2em
+		line-height: 1.6
+		font-family: $font-family-heading
+		font-weight: 100
+		color: $gray-lightest
+
+	blockquote
+		font-size: $font-size-base
+		border-color: rgba( $white, 0.2 )
+		border-color: $gj-pink
+
+		@media $media-xs
+			border-width: 2px
+			margin-left: -($grid-gutter-width-xs / 2)
+			padding-left: ($grid-gutter-width-xs / 2) - @border-width
+
+		@media $media-sm-up
+			margin-left: -($line-height-computed + 5px)
+
+	.jolticon-heart
+		color: $gj-pink

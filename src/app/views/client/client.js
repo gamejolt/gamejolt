@@ -10,10 +10,6 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 			{
 				return Api.sendRequest( '/web/client' );
 			},
-			uaParser: function( $ocLazyLoad )
-			{
-				return $ocLazyLoad.load( '/app/modules/ua-parser.js' );
-			},
 			init: function( Translate )
 			{
 				return Translate.loadSection( 'main' );
