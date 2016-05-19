@@ -1,4 +1,4 @@
-angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', function( $ocLazyLoad, $q, $window, $state, $location, $injector, Environment, gettextCatalog )
+angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', function( $ocLazyLoad, $q, $window, $state, $location, $injector, Environment, AutoScroll, gettextCatalog )
 {
 	var STORAGE_KEY = 'game-filtering:filters';
 
@@ -415,6 +415,20 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 		}, this );
 
 		return params;
+	};
+
+	/**
+	 * When the filters change in any widget.
+	 * We want to refresh the page with the new filtering params.
+	 */
+	Game_Filtering_Container.prototype.onChanged = function()
+	{
+		AutoScroll.noScroll( true );
+
+		var params = this.getStateParams();
+		params.page = undefined;  // Reset to first page.
+
+		$state.go( $state.current, params, { location: 'replace' } );
 	};
 
 	return Game_Filtering_Container;
