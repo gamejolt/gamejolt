@@ -126,6 +126,33 @@
 </section>
 
 <!--
+	Channels
+-->
+<section class="section">
+	<div class="container">
+
+		<h3 class="section-header" translate>
+			Featured Channels
+		</h3>
+
+		<div class="channel-thumbnails">
+			<a class="channel-thumbnail"
+				ng-repeat="channel in [ 'multiplayer', 'horror', 'fangame', 'fnaf' ]"
+				ui-sref="discover.channels.channel.overview( { channel: channel } )"
+				>
+				<div class="channel-thumbnail-image">
+					<img  src="/app/img/categories/best.png" alt="">
+				</div>
+				<div class="channel-thumbnail-label">
+					#{{ channel }}
+				</div>
+			</a>
+		</div>
+
+	</div>
+</section>
+
+<!--
 	Best Games
 -->
 <section class="section">

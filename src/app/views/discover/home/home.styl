@@ -63,3 +63,37 @@
 		height: (550px / 2)
 		left: 50%
 		margin-left: -(@width / 2)
+
+.channel-thumbnails
+	@extend .clearfix
+	margin: 0 -10px
+
+.channel-thumbnail
+	float: left
+	display: block
+	margin: 0 10px 10px 10px
+	text-align: center
+
+.channel-thumbnail-image
+	display: flex
+	width: 120px
+	height: 120px
+	background-color: $gray-darker
+	align-items: center
+	justify-content: center
+
+	> img
+		width: 60px
+		height: 60px
+
+.channel-thumbnail-label
+	padding: 8px
+	color: $white
+	font-weight: bold
+	font-size: $font-size-small
+	background-color: $gray-dark
+
+	a:hover &
+		background-color: $gj-dark-green
+		color: $gj-green
+		text-decoration: none
