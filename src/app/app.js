@@ -197,6 +197,8 @@ angular.module( 'App', [
 	'App.Invite',
 	'App.Sorting',
 	'App.Settings',
+	'App.MediaItem.Cover',
+	'App.PageHeader',
 
 	'App.Forms',
 
