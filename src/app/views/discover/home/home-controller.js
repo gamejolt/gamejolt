@@ -8,8 +8,6 @@ angular.module( 'App.Views' ).controller( 'Discover.HomeCtrl', function( $scope,
 	Meta.fb.image = Meta.twitter.image = '/app/img/social/social-share-header.png';
 	Meta.fb.url = Meta.twitter.url = Environment.baseUrl;
 
-	this.isMarketplace = payload.isMarketplace || false;
-
 	this.featuredItems = FeaturedItem.populate( payload.featuredGames );
 
 	this.hotGames = Game.populate( payload.hotGames );
