@@ -24,8 +24,26 @@ gj-page-header-controls
 		> .container
 			position: relative
 
+		&-buttons
+			margin-bottom: $grid-gutter-width
+			text-align: center
+
 		&.has-cover-image
 			padding: 0
+
+			.page-header-cover-buttons
+				position: absolute
+				margin-bottom: 0
+				left: 0
+				right: 0
+				top: 0
+				bottom: 60px
+				display: flex
+				align-items: center
+				justify-content: center
+
+				.btn
+					margin: 0 5px
 
 			.page-header-content
 				text-shadow: 1px 1px 1px rgba( $black, 0.5 )

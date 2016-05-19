@@ -1,7 +1,7 @@
 angular.module( 'App.PageHeader' ).component( 'gjPageHeader', {
 	templateUrl: '/app/components/page-header/page-header.html',
 	transclude: {
-		test: '?gjPageHeaderCover',
+		coverButtons: '?gjPageHeaderCoverButtons',
 		content: 'gjPageHeaderContent',
 		spotlight: '?gjPageHeaderSpotlight',
 		nav: '?gjPageHeaderNav',
