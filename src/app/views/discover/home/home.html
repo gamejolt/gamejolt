@@ -59,6 +59,9 @@
 	</div>
 </div>
 
+<!--
+	Genres
+-->
 <section class="section">
 	<div class="container">
 		<h3 class="section-header" translate>Browse by Genre</h3>
@@ -66,7 +69,10 @@
 	</div>
 </section>
 
-<section class="section fill-darker marketplace-section" ng-if="homeCtrl.isMarketplace">
+<!--
+	Paid Games
+-->
+<section class="section fill-darker marketplace-section">
 	<div class="marketplace-section-inner">
 
 		<h1 class="section-header sans-margin-bottom">
@@ -104,8 +110,9 @@
 				<a class="btn btn-primary-outline btn-block"
 					ui-sref="discover.games.list.section( { section: 'best', price: 'paid' } )"
 					gj-track-event="home:more-btn:paid"
+					translate
 					>
-					<span translate>Load More</span>
+					Load More
 				</a>
 			</div>
 		</div>
@@ -118,6 +125,9 @@
 	</div>
 </section>
 
+<!--
+	Best Games
+-->
 <section class="section">
 	<div class="container">
 
@@ -149,8 +159,7 @@
 		</div>
 
 		<div class="text-right">
-			<a class="btn btn-primary-outline" ng-class="{ 'btn-block': Screen.isXs }" ui-sref="discover.games.list.section( { section: 'best' } )" gj-track-event="home:more-btn:best">
-				<span class="jolticon jolticon-chevron-right"></span>
+			<a class="btn btn-primary-outline" ng-class="{ 'btn-block': Screen.isXs }" ui-sref="discover.games.list.section( { section: 'best' } )" gj-track-event="home:more-btn:best" translate>
 				Load More
 			</a>
 		</div>
@@ -158,6 +167,9 @@
 	</div>
 </section>
 
+<!--
+	Hot Games
+-->
 <section class="section">
 	<div class="container">
 
@@ -192,8 +204,7 @@
 		</div>
 
 		<div class="text-right">
-			<a class="btn btn-primary-outline" ng-class="{ 'btn-block': Screen.isXs }" ui-sref="discover.games.list.section( { section: 'hot' } )" gj-track-event="home:more-btn:hot">
-				<span class="jolticon jolticon-chevron-right"></span>
+			<a class="btn btn-primary-outline" ng-class="{ 'btn-block': Screen.isXs }" ui-sref="discover.games.list.section( { section: 'hot' } )" gj-track-event="home:more-btn:hot" translate>
 				Load More
 			</a>
 		</div>
@@ -201,6 +212,9 @@
 	</div>
 </section>
 
+<!--
+	Game News
+-->
 <section class="section fill-lightest">
 	<div class="container">
 
@@ -267,6 +281,9 @@
 	</div>
 </section>
 
+<!--
+	Fireside
+-->
 <section class="section">
 	<div class="container">
 
@@ -298,18 +315,13 @@
 		</div>
 
 		<div class="text-right">
-			<a class="btn btn-primary-outline" ng-class="{ 'btn-block': Screen.isXs }" href="http://fireside.gamejolt.com" gj-track-event="home:more-btn:fireside">
-				<span class="jolticon jolticon-chevron-right"></span>
+			<a class="btn btn-primary-outline" ng-class="{ 'btn-block': Screen.isXs }" href="http://fireside.gamejolt.com" gj-track-event="home:more-btn:fireside" translate>
 				More Fireside
 			</a>
 		</div>
 
 	</div>
 </section>
-
-<!--<section class="ad-section" ng-if="!Environment.isClient && !Screen.isXs">
-	<gj-ad ad-size="leaderboard"></gj-ad>
-</section>-->
 
 <script type="application/ld+json">
 {
