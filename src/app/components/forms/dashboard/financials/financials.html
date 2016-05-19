@@ -97,14 +97,17 @@
 					<span translate>Marketplace Account</span>
 				</legend>
 
-				<div ng-if='stripe.current.verification.fields_needed' style='border:3px solid #ff0066;margin-bottom:20px;padding:20px;'>
-					Your Marketplace Account is not yet verified.
+				<div ng-if='stripe.current.verification.fields_needed.length > 0' style='border:3px solid #ff0066;margin-bottom:20px;padding:20px;'>
+					Your Marketplace Account setup is not yet completed.
 					<ul style='margin-top:30px;'>
 						<li ng-if="stripe.current.verification.fields_needed.indexOf('legal_entity.verification.document') > -1">You must upload an id document.</li>
 						<li ng-if="stripe.current.verification.fields_needed.indexOf('external_account') > -1">You must add a bank account.</li>
 						<li ng-if="stripe.current.verification.fields_needed.indexOf('tos_acceptance.ip') > -1">You must agree to the ToS. </li>
 						<li ng-if="stripe.current.verification.due_by">You must do this by {{ stripe.current.verification.due_by }}. </li>
 					</ul>
+				</div>
+				<div ng-if="stripe.current.legal_entity.verification.status == 'pending'" style='border:3px solid #0066ff;margin-bottom:20px;padding:20px;'>
+					Your Marketplace Account is under review.
 				</div>
 
 				<form-group name='country_code' ng-if='!account.country_code'>
@@ -226,6 +229,7 @@
 									ng-if="hasField( 'legal_entity.address.state' )"
 									name="legal_entity.address.state"
 									label="State"
+									optional="true"
 									>
 									<input form-control>
 									<control-errors></control-errors>
@@ -305,8 +309,9 @@
 							<control-errors></control-errors>
 						</form-group>
 					</div>
-					<div ng-if="stripe.current.verification.fields_needed.indexOf('legal_entity.verification.document') == -1">
-						<p><strong>Document provided.</strong></p>
+					<div ng-if="stripe.current.verification.fields_needed.indexOf('legal_entity.verification.document') == -1 && stripe.current.legal_entity.verification.document != null" class='form-group'>
+						<p><strong>Personal ID Document</strong></p>
+						<p>Provided. :-)</p>
 					</div>
 				</div>
 
@@ -348,7 +353,8 @@
 						</div>
 						<div class="col-sm-6" ng-if="stripe.current.legal_entity.business_tax_id_provided">
 							<p><strong>Company Tax Id</strong><br/>
-								<small>This has been provided.<br/><a href='#'>Click here to change it.</a></small></p>
+								<small>This has been provided.<br/>
+								<!-- <a href='#'>Click here to change it.</a>--> </small></p>
 						</div>
 					</div>
 
@@ -401,7 +407,13 @@
 
 					<!-- Foreach additional owner -->
 					<div ng-repeat="(key,value) in formModel['legal_entity.additional_owners']" style='margin-left:20px;'>
-						<legend>{{ value.first_name }} {{ value.last_name }}</legend>
+						<legend>
+							<span>{{ value.first_name }} {{ value.last_name }}</span>
+
+							<span href='#' ng-click="removeAdditionalOwner(key)" class="pull-right done-icon" tooltip="{{ 'Remove?' | translate }}">
+								<span class="jolticon jolticon-remove big"></span>
+							</span>
+						</legend>
 
 						<div class="row">
 							<div class="col-sm-6">
@@ -491,10 +503,29 @@
 							</div>
 						</div>
 
+						<div ng-if="stripe.current.verification.fields_needed.indexOf('legal_entity.additional_owners.' + key + '.verification.document') > -1">
+							<form-group
+								name="legal_entity.additional_owners.{{key}}.verification.document"
+								label="Personal ID Document"
+								>
+								<p class="help-block">This should be a scan of passport, driving licence, or other government supplied identification.</p>
+								<gj-form-upload-control
+									form-control="upload"
+									accept=".png,.jpg,.jpeg,.gif"
+									>
+								</gj-form-upload-control>
+								<control-errors></control-errors>
+							</form-group>
+						</div>
+						<div ng-if="stripe.current.verification.fields_needed.indexOf('legal_entity.additional_owners.' + key + '.verification.document') == -1 && stripe.current.legal_entity.additional_owners[key].verification.document != null" class='form-group'>
+							<p><strong>Personal ID Document</strong></p>
+							<p>Provided. :-)</p>
+						</div>
+
 					</div>
 
 					<!-- Add additional owner -->
-					<div class="row">
+					<div class="row" ng-if="scope.additionalOwnerIndex <= 2">
 						<div class="col-sm-offset-9 col-sm-3">
 							<button class="btn" ng-click="addAdditionalOwner()">
 								<span class="jolticon jolticon-chevron-right"></span>

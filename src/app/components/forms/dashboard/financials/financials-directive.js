@@ -60,6 +60,9 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 					for (var i = 0; i < scope.additionalOwnerIndex; i++) {
 						delete scope.formModel['legal_entity.additional_owners'][i].verification.details;
 						delete scope.formModel['legal_entity.additional_owners'][i].verification.details_code;
+						delete scope.formModel['legal_entity.additional_owners'][i].verification.document;
+						delete scope.formModel['legal_entity.additional_owners'][i].verification.status;
+						delete scope.formModel['legal_entity.additional_owners'][i].verification;
 					}
 				}
 
@@ -156,7 +159,8 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 			// & scope.formModel.type
 		}
 
-		scope.addAdditionalOwner = function() {
+		scope.addAdditionalOwner = function()
+		{
 			console.log('add additional owner');
 			if ( scope.formModel['legal_entity.additional_owners'] == null ) {
 				scope.formModel['legal_entity.additional_owners'] = [];
@@ -165,7 +169,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 			scope.formModel['legal_entity.additional_owners'][""+scope.additionalOwnerIndex] = {};
 			console.log( scope.formModel['legal_entity.additional_owners'] );
 
-			angular.merge( scope.formModel['legal_entity.additional_owners'][""+scope.additionalOwnerIndex], {
+			angular.merge( scope.formModel['legal_entity.additional_owners'][scope.additionalOwnerIndex], {
 				first_name: null,
 				last_name: null,
 				address: {
@@ -177,18 +181,37 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 					day: null,
 					month: null,
 					year: null,
-				}/*,
-				/*verification: {
-					details: null,
-					details_code: null,
-					document: null,
-					status: 'unverified'
-				}*/
+				}
 			} );
 
 			console.log( scope.formModel );
 
 			scope.additionalOwnerIndex++;
+		}
+
+		scope.removeAdditionalOwner = function(index)
+		{
+			console.log('remove owner ' + index);
+
+			delete scope.formModel['legal_entity.additional_owners'][""+index];
+
+			// reindex the others...
+			var newOwners = {};
+			var c = 0;
+			for( var key in scope.formModel['legal_entity.additional_owners'] ) {
+				newOwners[""+c] = scope.formModel['legal_entity.additional_owners'][key];
+				c++;
+			}
+			delete scope.formModel['legal_entity.additional_owners'];
+			scope.formModel['legal_entity.additional_owners'] = newOwners;
+
+			if ( scope.formModel['legal_entity.additional_owners'].length == 0 ) {
+				scope.formModel['legal_entity.additional_owners'] = null;
+			}
+
+			console.log( scope.formModel );
+
+			scope.additionalOwnerIndex--;
 		}
 
 		scope.updateCurrencies = function( )
@@ -206,23 +229,35 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 			delete data.bankAccount_accountHolderName;
 			delete data.bankAccount_accountHolderType;
 
-			var files = {};
+			var options = {
+				allowComplexData: [ 'legal_entity.additional_owners' ]
+			};
+
 			console.log( 'document' );
 			console.log( scope.formModel['legal_entity.verification.document'] );
+			console.log( scope.formModel );
+
 			if ( scope.formModel['legal_entity.verification.document'] ) {
 				console.log( 'include files' );
-				files = {
-					file: scope.formModel['legal_entity.verification.document'] //,
-					//allowComplexData: ['legal_entity.additional_owners']
+				options.file = {
+					'legal_entity_verification_document': scope.formModel['legal_entity.verification.document'],
+					//file_other: file2
 				};
 			}
 
-			return Api.sendRequest( '/web/dash/financials/save', data, files )
+			return Api.sendRequest( '/web/dash/financials/save', data, options )
 				.then( function( response )
 				{
 					if ( response.success !== false ) {
 						angular.extend( scope, response );
+						Growls.success( 'Saved!' );
 					}
+
+					// Scroll to top if we just got verified? Dunno. Don't want to scroll up every time.
+					//if ( response.account.is_verified ) {
+					//	$window.scrollTo(0, 0);
+					//}
+
 
 					return response;
 				} )
