@@ -1,6 +1,8 @@
-angular.module( 'App.Views' ).controller( 'Discover.HomeCtrl', function( $scope, $window, App, Environment, Meta, Game, FeaturedItem, Fireside_Post, Game_NewsArticle, SplitTest, payload )
+angular.module( 'App.Views' ).controller( 'Discover.HomeCtrl', function( $scope, $window, App, Environment, Meta, Game, FeaturedItem, Fireside_Post, Game_NewsArticle, SplitTest, Channels, payload )
 {
 	App.title = null;
+
+	$scope.Channels = Channels;
 
 	Meta.description = payload.metaDescription;
 	Meta.fb = payload.fb;

@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Discover.Channels.Channel.GamesCtrl', function( filteringContainer )
+angular.module( 'App.Views' ).controller( 'Discover.Channels.Channel.GamesCtrl', function( Channels_ViewHelper, filteringContainer )
 {
 	this.filteringContainer = filteringContainer;
 
@@ -13,5 +13,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Channels.Channel.GamesCtrl',
 		this.perPage = payload.perPage;
 		this.currentPage = $stateParams.page || 1;
 		this.section = $stateParams.section;
+
+		Channels_ViewHelper.setDefaultMetaData( $stateParams.channel );
 	};
 } );

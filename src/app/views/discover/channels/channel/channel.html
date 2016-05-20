@@ -2,8 +2,12 @@
 
 	<gj-page-header-content>
 		<h1 translate translate-scope="{ channel: channelCtrl.channel }">
-			#{{ channel }} Channel
+			<b>#{{ channel }}</b> Channel
 		</h1>
+		<div class="small text-muted">
+			{{ ::Meta.description }}
+		</div>
+		<br>
 		<div>
 			<span translate translate-n="channelCtrl.totalGamesCount" translate-plural="<b>{{ $count | number }}</b> Games">
 				<b>{{ $count | number }}</b> Game
@@ -12,7 +16,7 @@
 	</gj-page-header-content>
 
 	<gj-page-header-spotlight>
-		<img ng-src="/app/img/channels/{{ ::channelCtrl.channel }}.png" width="58" height="58" alt="">
+		<img ng-src="{{ ::Channels.images[ channelCtrl.channel ] }}" width="58" height="58" alt="">
 	</gj-page-header-spotlight>
 
 	<gj-page-header-nav>

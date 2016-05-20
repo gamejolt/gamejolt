@@ -227,6 +227,8 @@ angular.module( 'App', [
 	'App.Game.Video.Embed',
 	'App.Game.MaturityBlock',
 
+	'App.Channels',
+
 	'App.Game.Collection',
 	'App.Game.Collection.Thumbnail',
 	'App.Game.Collection.Grid',
