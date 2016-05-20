@@ -102,15 +102,17 @@ gj-page-header-controls
 	&-spotlight
 		position: absolute
 		width: 100px
+		height: @width
 		bottom: -((@width / 2) + 5px)
 		left: -(@width + ($grid-gutter-width / 2))
 		border: 5px solid $white
+		border-radius: 50%
 		background-color: $white
 		z-index: 2
-
-		&
-		img
-			border-radius: 50%
+		display: flex
+		align-items: center
+		justify-content: center
+		overflow: hidden
 
 	&-nav
 		position: relative
