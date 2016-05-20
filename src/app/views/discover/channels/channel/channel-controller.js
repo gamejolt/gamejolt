@@ -2,4 +2,5 @@ angular.module( 'App.Views' ).controller( 'Discover.Channels.ChannelCtrl', funct
 {
 	this.channel = payload.channel;
 	this.totalGamesCount = payload.totalGamesCount;
+	this.shouldShowAds = payload.shouldShowAds || false;
 } );
