@@ -14,6 +14,8 @@ angular.module( 'App.Views' ).controller( 'Discover.HomeCtrl', function( $scope,
 	this.paidGames = Game.populate( payload.paidGames );
 	this.bestGames = Game.populate( payload.bestGames );
 
+	this.channels = payload.channels;
+
 	this.hotArticles = Game_NewsArticle.populate( payload.hotArticles );
 	this.followedArticles = payload.followedArticles ? Game_NewsArticle.populate( payload.followedArticles ) : [];
 

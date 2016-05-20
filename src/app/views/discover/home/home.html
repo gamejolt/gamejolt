@@ -131,22 +131,35 @@
 <section class="section">
 	<div class="container">
 
-		<h3 class="section-header" translate>
+		<h3 class="section-header sans-margin-bottom" translate>
 			Featured Channels
 		</h3>
 
-		<div class="channel-thumbnails">
-			<a class="channel-thumbnail"
-				ng-repeat="channel in [ 'multiplayer', 'horror', 'fangame', 'fnaf' ]"
-				ui-sref="discover.channels.channel.overview( { channel: channel } )"
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-6">
+				<p class="text-muted small" translate>
+					Channels are like mini Game Jolts. Find and discover games around specific themes.
+				</p>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-6 col-sm-3 col-md-2"
+				ng-repeat="channel in ::homeCtrl.channels"
 				>
-				<div class="channel-thumbnail-image">
-					<img  src="/app/img/categories/best.png" alt="">
-				</div>
-				<div class="channel-thumbnail-label">
-					#{{ channel }}
-				</div>
-			</a>
+				<a class="channel-thumbnail"
+					ui-sref="discover.channels.channel.overview( { channel: channel } )"
+					>
+					<div class="channel-thumbnail-image-spacer">
+						<div class="channel-thumbnail-image">
+							<img ng-src="/app/img/channels/{{ ::channel }}.png" alt="">
+						</div>
+					</div>
+					<div class="channel-thumbnail-label">
+						#{{ ::channel }}
+					</div>
+				</a>
+			</div>
 		</div>
 
 	</div>
