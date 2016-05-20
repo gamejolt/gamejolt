@@ -30,7 +30,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlMatcherFacto
 		resolve: {
 			payload: function( $state, $stateParams, Api, filteringContainer )
 			{
-				return filteringContainer.init( 'discover.cahnnels.channel.games._fetch', $stateParams )
+				return filteringContainer.init( 'discover.channels.channel.games._fetch', $stateParams )
 					.then( function()
 					{
 						var query = getQueryString( $stateParams, filteringContainer );
