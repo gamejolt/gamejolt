@@ -185,20 +185,3 @@
 		<span translate>View Game Analytics</span>
 	</a>
 </div>
-
-<div class="row">
-	<div class="col-lg-8">
-		<h2>{{ ::'dash.games.overview.activity_heading' | translate }}</h2>
-
-		<div ng-if="!overviewCtrl.notifications.length">
-			<p class="small text-muted" translate>dash.games.overview.activity_none_html</p>
-		</div>
-
-		<div ng-if="overviewCtrl.notifications.length">
-			<gj-activity-feed
-				activity-feed-notifications="overviewCtrl.notifications"
-				>
-			</gj-activity-feed>
-		</div>
-	</div>
-</div>
