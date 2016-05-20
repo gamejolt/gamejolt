@@ -7,16 +7,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ListCtrl', function( $
 	this.perPage = 10;
 	this.currentPage = 1;
 
-	this.onFiltersChanged = function()
-	{
-		AutoScroll.noScroll( true );
-
-		var params = this.filteringContainer.getStateParams();
-		params.page = undefined;  // Reset to first page.
-
-		$state.go( $state.current, params, { location: 'replace' } );
-	};
-
 	this.getSectionUrl = function( section )
 	{
 		var state = 'discover.games.list.section';

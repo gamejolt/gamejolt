@@ -3,7 +3,6 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringTags', functio
 	return {
 		scope: {
 			filteringContainer: '=gjFilteringContainer',
-			onChanged: '&?gjFiltersChanged'
 		},
 		templateUrl: '/app/components/game/filtering/tags.html',
 		bindToController: true,
@@ -22,10 +21,7 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringTags', functio
 				Analytics.trackEvent( 'game-filtering', 'remove', filter + '-' + option );
 
 				this.filteringContainer.unsetFilter( filter, option );
-
-				if ( this.onChanged ) {
-					this.onChanged( {} );
-				}
+				this.filteringContainer.onChanged();
 			};
 
 			function getGenre()

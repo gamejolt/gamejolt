@@ -1,0 +1,9 @@
+<div class="row">
+	<gj-game-thumbnail
+		class="col-xs-12 col-sm-6 col-lg-4 game-thumbnail-anim"
+		ng-repeat="game in $ctrl.games track by game.id"
+		gj-game="game"
+		gj-track-event="game-list:click:{{ $index }}"
+		>
+	</gj-game-thumbnail>
+</div>

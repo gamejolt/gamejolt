@@ -1,4 +1,4 @@
-angular.module( 'App.Game.Cover.Buttons' ).component( 'gjGameCoverButtons', {
+angular.module( 'App.Game.CoverButtons' ).component( 'gjGameCoverButtons', {
 	bindings: {
 		game: '<',
 		packages: '<',
@@ -7,7 +7,7 @@ angular.module( 'App.Game.Cover.Buttons' ).component( 'gjGameCoverButtons', {
 		onShowMultiplePackages: '&',
 		onShowPackagePayment: '&',
 	},
-	templateUrl: '/app/components/game/cover/buttons/buttons.html',
+	templateUrl: '/app/components/game/cover-buttons/cover-buttons.html',
 	controller: function( Game, Device, Game_Downloader, Game_PlayModal, Game_Build, Analytics, Environment )
 	{
 		var _this = this;
