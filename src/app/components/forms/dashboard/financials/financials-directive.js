@@ -52,18 +52,18 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
  				angular.extend( scope.formModel, flatObj );
 
  				if ( payload.stripe.current.legal_entity.additional_owners ) {
-					scope.formModel['legal_entity.additional_owners'] = {};
-					angular.extend( scope.formModel['legal_entity.additional_owners'], payload.stripe.current.legal_entity.additional_owners );
+					scope.formModel['legal_entity-additional_owners'] = {};
+					angular.extend( scope.formModel['legal_entity-additional_owners'], payload.stripe.current.legal_entity.additional_owners );
 
 					scope.additionalOwnerIndex = payload.stripe.current.legal_entity.additional_owners.length;
 
-					for (var i = 0; i < scope.additionalOwnerIndex; i++) {
-						delete scope.formModel['legal_entity.additional_owners'][i].verification.details;
-						delete scope.formModel['legal_entity.additional_owners'][i].verification.details_code;
-						delete scope.formModel['legal_entity.additional_owners'][i].verification.document;
-						delete scope.formModel['legal_entity.additional_owners'][i].verification.status;
-						delete scope.formModel['legal_entity.additional_owners'][i].verification;
-					}
+					//for (var i = 0; i < scope.additionalOwnerIndex; i++) {
+						//delete scope.formModel['legal_entity.additional_owners'][i].verification.details;
+						//delete scope.formModel['legal_entity.additional_owners'][i].verification.details_code;
+						//delete scope.formModel['legal_entity.additional_owners'][i].verification.document;
+						//delete scope.formModel['legal_entity.additional_owners'][i].verification.status;
+						//delete scope.formModel['legal_entity.additional_owners'][i].verification;
+					//}
 				}
 
 				scope.formState.isLoaded = true;
@@ -109,16 +109,16 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 		function dotflatten(res, obj, current) {
 			for ( var key in obj ) {
 				var value = obj[ key ];
-				var newKey = (current ? current + "." + key : key );  // joined key with dot
+				var newKey = (current ? current + "-" + key : key );  // joined key with hyphen
 				if ( (
 						newKey.substr(0,'legal_entity'.length) != 'legal_entity' &&
 					 	newKey.substr(0,'business_'.length) != 'business_'
 					 ) || (
-					 	newKey == 'legal_entity.verification' || newKey == 'legal_entity.business_tax_id_provided' || newKey == 'legal_entity.additional_owners'
+					 	newKey == 'legal_entity-verification' || newKey == 'legal_entity-business_tax_id_provided' || newKey == 'legal_entity-additional_owners'
 					 ) ) {
 
 				}
-				else if (newKey == 'legal_entity.additional_owners') {
+				else if (newKey == 'legal_entity-additional_owners') {
 
 				}
 				else if ( value && typeof value == "array" ) {
@@ -162,14 +162,14 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 		scope.addAdditionalOwner = function()
 		{
 			console.log('add additional owner');
-			if ( scope.formModel['legal_entity.additional_owners'] == null ) {
-				scope.formModel['legal_entity.additional_owners'] = [];
+			if ( scope.formModel['legal_entity-additional_owners'] == null ) {
+				scope.formModel['legal_entity-additional_owners'] = [];
 			}
 
-			scope.formModel['legal_entity.additional_owners'][""+scope.additionalOwnerIndex] = {};
-			console.log( scope.formModel['legal_entity.additional_owners'] );
+			scope.formModel['legal_entity-additional_owners'][""+scope.additionalOwnerIndex] = {};
+			console.log( scope.formModel['legal_entity-additional_owners'] );
 
-			angular.merge( scope.formModel['legal_entity.additional_owners'][scope.additionalOwnerIndex], {
+			angular.merge( scope.formModel['legal_entity-additional_owners'][scope.additionalOwnerIndex], {
 				first_name: null,
 				last_name: null,
 				address: {
@@ -181,6 +181,12 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 					day: null,
 					month: null,
 					year: null,
+				},
+				verification: {
+					//details: null,
+					//details_code: null,
+					document: null,
+					status: 'unverified',
 				}
 			} );
 
@@ -230,19 +236,30 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 			delete data.bankAccount_accountHolderType;
 
 			var options = {
-				allowComplexData: [ 'legal_entity.additional_owners' ]
+				allowComplexData: [ 'legal_entity-additional_owners' ]
 			};
 
 			console.log( 'document' );
-			console.log( scope.formModel['legal_entity.verification.document'] );
+			console.log( scope.formModel['legal_entity-verification-document'] );
 			console.log( scope.formModel );
 
-			if ( scope.formModel['legal_entity.verification.document'] ) {
+			if ( scope.formModel['legal_entity-verification-document'] && scope.formModel['legal_entity-verification-status'] != 'verified' ) {
 				console.log( 'include files' );
 				options.file = {
-					'legal_entity_verification_document': scope.formModel['legal_entity.verification.document'],
+					'legal_entity-verification-document': scope.formModel['legal_entity-verification-document'],
 					//file_other: file2
 				};
+			}
+			// Additional files
+			for (var i = 0; i < 4; i++) {
+				if ( scope.formModel['legal_entity-additional_owners-'+ i +'-verification-document'] ) {
+					console.log( 'include additional file ' + i );
+
+					if (typeof options.file == 'undefined') {
+						options.file = {};
+					}
+					options.file['legal_entity-additional_owners-'+ i +'-verification-document'] = scope.formModel['legal_entity-additional_owners-'+ i +'-verification-document'];
+				}
 			}
 
 			return Api.sendRequest( '/web/dash/financials/save', data, options )

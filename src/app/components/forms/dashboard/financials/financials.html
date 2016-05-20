@@ -152,7 +152,7 @@
 						<div class="col-sm-6">
 							<form-group
 								ng-if="hasField( 'legal_entity.first_name' )"
-								name="legal_entity.first_name"
+								name="legal_entity-first_name"
 								label="First Name"
 								>
 								<input form-control>
@@ -162,7 +162,7 @@
 						<div class="col-sm-6">
 							<form-group
 								ng-if="hasField( 'legal_entity.last_name' )"
-								name="legal_entity.last_name"
+								name="legal_entity-last_name"
 								label="Last Name"
 								>
 								<input form-control>
@@ -175,7 +175,7 @@
 						<div class="col-sm-4">
 							<form-group
 								ng-if="hasField( 'legal_entity.dob.day' )"
-								name="legal_entity.dob.day"
+								name="legal_entity-dob-day"
 								label="Birthday"
 								>
 								<input form-control>
@@ -185,7 +185,7 @@
 						<div class="col-sm-4">
 							<form-group
 								ng-if="hasField( 'legal_entity.dob.month' )"
-								name="legal_entity.dob.month"
+								name="legal_entity-dob-month"
 								label="Month"
 								>
 								<input form-control>
@@ -195,7 +195,7 @@
 						<div class="col-sm-4">
 							<form-group
 								ng-if="hasField( 'legal_entity.dob.year' )"
-								name="legal_entity.dob.year"
+								name="legal_entity-dob-year"
 								label="Year"
 								>
 								<input form-control >
@@ -207,7 +207,7 @@
 					<div ng-if="account.type == 'individual'">
 						<form-group
 							ng-if="hasField( 'legal_entity.address.line1' )"
-							name="legal_entity.address.line1"
+							name="legal_entity-address-line1"
 							label="Address"
 						>
 							<input form-control>
@@ -217,7 +217,7 @@
 							<div class="col-sm-4">
 								<form-group
 									ng-if="hasField( 'legal_entity.address.city' )"
-									name="legal_entity.address.city"
+									name="legal_entity-address-city"
 									label="City"
 									>
 									<input form-control>
@@ -227,7 +227,7 @@
 							<div class="col-sm-4">
 								<form-group
 									ng-if="hasField( 'legal_entity.address.state' )"
-									name="legal_entity.address.state"
+									name="legal_entity-address-state"
 									label="State"
 									optional="true"
 									>
@@ -238,7 +238,7 @@
 							<div class="col-sm-4">
 								<form-group
 									ng-if="hasField( 'legal_entity.address.postal_code' )"
-									name="legal_entity.address.postal_code"
+									name="legal_entity-address-postal_code"
 									label="Zip Code"
 									>
 									<input form-control>
@@ -252,7 +252,7 @@
 				<div ng-if="account.type=='company'">
 					<form-group
 						ng-if="hasField( 'legal_entity.personal_address.line1' )"
-						name="legal_entity.personal_address.line1"
+						name="legal_entity-personal_address-line1"
 						label="Address"
 						>
 						<input form-control >
@@ -263,7 +263,7 @@
 						<div class="col-sm-4">
 							<form-group
 								ng-if="hasField( 'legal_entity.personal_address.city' )"
-								name="legal_entity.personal_address.city"
+								name="legal_entity-personal_address-city"
 								label="City"
 								>
 								<input form-control>
@@ -273,7 +273,7 @@
 						<div class="col-sm-4">
 							<form-group
 								ng-if="hasField( 'legal_entity.personal_address.state' )"
-								name="legal_entity.personal_address.state"
+								name="legal_entity-personal_address-state"
 								label="State"
 								>
 								<input form-control>
@@ -283,7 +283,7 @@
 						<div class="col-sm-4">
 							<form-group
 								ng-if="hasField( 'legal_entity.personal_address.postal_code' )"
-								name="legal_entity.personal_address.postal_code"
+								name="legal_entity-personal_address-postal_code"
 								label="Zip Code"
 								>
 								<input form-control>
@@ -297,7 +297,7 @@
 							gj-max-img-height="maxHeight" -->
 					<div ng-if="stripe.current.verification.fields_needed.indexOf('legal_entity.verification.document') > -1">
 						<form-group
-							name="legal_entity.verification.document"
+							name="legal_entity-verification-document"
 							label="Personal ID Document"
 							>
 							<p class="help-block">This should be a scan of passport, driving licence, or other government supplied identification.</p>
@@ -318,7 +318,7 @@
 				<div class="row" ng-if="hasField( 'legal_entity.personal_id_number' )">
 					<div class="col-sm-6">
 						<form-group
-							name="legal_entity.personal_id_number"
+							name="legal_entity-personal_id_number"
 							label="Social Security Number"
 							>
 							<input form-control>
@@ -334,7 +334,7 @@
 						<div class="col-sm-6">
 							<form-group
 								ng-if="hasField( 'legal_entity.business_name' )"
-								name="legal_entity.business_name"
+								name="legal_entity-business_name"
 								label="Company Name"
 								>
 								<input form-control>
@@ -344,7 +344,7 @@
 						<div class="col-sm-6" ng-if="!stripe.current.legal_entity.business_tax_id_provided">
 							<form-group
 								ng-if="hasField( 'legal_entity.business_tax_id' )"
-								name="legal_entity.business_tax_id"
+								name="legal_entity-business_tax_id"
 								label="Company Tax Id"
 								>
 								<input form-control>
@@ -360,7 +360,7 @@
 
 					<form-group
 						ng-if="hasField( 'legal_entity.address.line1' )"
-						name="legal_entity.address.line1"
+						name="legal_entity-address-line1"
 						label="Address"
 						>
 						<input form-control >
@@ -371,7 +371,7 @@
 						<div class="col-sm-4">
 							<form-group
 								ng-if="hasField( 'legal_entity.address.city' )"
-								name="legal_entity.address.city"
+								name="legal_entity-address-city"
 								label="City"
 								>
 								<input form-control>
@@ -381,7 +381,7 @@
 						<div class="col-sm-4">
 							<form-group
 								ng-if="hasField( 'legal_entity.address.state' )"
-								name="legal_entity.address.state"
+								name="legal_entity-address-state"
 								label="State"
 								>
 								<input form-control>
@@ -391,7 +391,7 @@
 						<div class="col-sm-4">
 							<form-group
 								ng-if="hasField( 'legal_entity.address.postal_code' )"
-								name="legal_entity.address.postal_code"
+								name="legal_entity-address-postal_code"
 								label="Zip Code"
 								>
 								<input form-control>
@@ -406,11 +406,12 @@
 					<p class="help-block">The law in your jurisdiction dictates we have to collect information on any company shareholders with a 25% share or more. </p>
 
 					<!-- Foreach additional owner -->
-					<div ng-repeat="(key,value) in formModel['legal_entity.additional_owners']" style='margin-left:20px;'>
+					<div ng-repeat="(key,value) in formModel['legal_entity-additional_owners']" style='margin-left:20px;'>
 						<legend>
 							<span>{{ value.first_name }} {{ value.last_name }}</span>
+							<span ng-if=" value.first_name == null && value.last_name == null "> &nbsp; </span>
 
-							<span href='#' ng-click="removeAdditionalOwner(key)" class="pull-right done-icon" tooltip="{{ 'Remove?' | translate }}">
+							<span ng-if="value.verification.status != 'verified'" href='#' ng-click="removeAdditionalOwner(key)" class="pull-right done-icon" tooltip="{{ 'Remove?' | translate }}">
 								<span class="jolticon jolticon-remove big"></span>
 							</span>
 						</legend>
@@ -418,7 +419,7 @@
 						<div class="row">
 							<div class="col-sm-6">
 								<form-group
-									name="legal_entity.additional_owners.{{key}}.first_name"
+									name="legal_entity-additional_owners-{{key}}-first_name"
 									label="First Name"
 									>
 									<input form-control ng-model="value.first_name">
@@ -427,7 +428,7 @@
 							</div>
 							<div class="col-sm-6">
 								<form-group
-									name="legal_entity.additional_owners.{{key}}.last_name"
+									name="legal_entity-additional_owners-{{key}}-last_name"
 									label="Last Name"
 									>
 									<input form-control ng-model="value.last_name">
@@ -439,7 +440,7 @@
 						<div class="row" >
 							<div class="col-sm-4">
 								<form-group
-									name="legal_entity.additional_owners.{{key}}.dob.day"
+									name="legal_entity-additional_owners-{{key}}-dob-day"
 									label="Birthday"
 									>
 									<input form-control ng-model="value.dob.day">
@@ -448,7 +449,7 @@
 							</div>
 							<div class="col-sm-4">
 								<form-group
-									name="legal_entity.additional_owners.{{key}}.dob.month"
+									name="legal_entity-additional_owners-{{key}}-dob-month"
 									label="Month"
 									>
 									<input form-control ng-model="value.dob.month">
@@ -457,7 +458,7 @@
 							</div>
 							<div class="col-sm-4">
 								<form-group
-									name="legal_entity.additional_owners.{{key}}.dob.year"
+									name="legal_entity-additional_owners-{{key}}-dob-year"
 									label="Year"
 									>
 									<input form-control ng-model="value.dob.year">
@@ -467,7 +468,7 @@
 						</div>
 
 						<form-group
-							name="legal_entity.additional_owners.{{key}}.address.line1"
+							name="legal_entity-additional_owners-{{key}}-address-line1"
 							label="Address">
 							<input form-control ng-model="value.address.line1">
 							<control-errors></control-errors>
@@ -476,7 +477,7 @@
 						<div class="row">
 							<div class="col-sm-4">
 								<form-group
-									name="legal_entity.additional_owners.{{key}}.address.city"
+									name="legal_entity-additional_owners-{{key}}-address-city"
 									label="City"
 									>
 									<input form-control ng-model="value.address.city">
@@ -485,7 +486,7 @@
 							</div>
 							<div class="col-sm-4">
 								<form-group
-									name="legal_entity.additional_owners.{{key}}.address.state"
+									name="legal_entity-additional_owners-{{key}}-address-state"
 									label="State"
 									>
 									<input form-control ng-model="value.address.state">
@@ -494,7 +495,7 @@
 							</div>
 							<div class="col-sm-4">
 								<form-group
-									name="legal_entity.additional_owners.{{key}}.address.postal_code"
+									name="legal_entity-additional_owners-{{key}}-address-postal_code"
 									label="Zip Code"
 									>
 									<input form-control ng-model="value.address.postal_code">
@@ -503,9 +504,9 @@
 							</div>
 						</div>
 
-						<div ng-if="stripe.current.verification.fields_needed.indexOf('legal_entity.additional_owners.' + key + '.verification.document') > -1">
+						<div ng-if="stripe.current.verification.fields_needed.indexOf('legal_entity.additional_owners.' + key + '.verification.document') > -1 || true">
 							<form-group
-								name="legal_entity.additional_owners.{{key}}.verification.document"
+								name="legal_entity-additional_owners-{{key}}-verification-document"
 								label="Personal ID Document"
 								>
 								<p class="help-block">This should be a scan of passport, driving licence, or other government supplied identification.</p>
@@ -525,7 +526,7 @@
 					</div>
 
 					<!-- Add additional owner -->
-					<div class="row" ng-if="scope.additionalOwnerIndex <= 2">
+					<div class="row" ng-if="additionalOwnerIndex <= 3">
 						<div class="col-sm-offset-9 col-sm-3">
 							<button class="btn" ng-click="addAdditionalOwner()">
 								<span class="jolticon jolticon-chevron-right"></span>
