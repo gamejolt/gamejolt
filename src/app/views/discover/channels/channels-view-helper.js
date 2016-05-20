@@ -55,10 +55,10 @@ angular.module( 'App.Views' ).service( 'Channels_ViewHelper', function( App, Met
 		Meta.twitter.description = Meta.description;
 
 		if ( image ) {
-			Meta.twitter.image = Environment.baseUrl + image;
+			Meta.twitter.image = image;
 			Meta.twitter.card = 'summary';
 
-			Meta.fb.image = Environment.baseUrl + image;
+			Meta.fb.image = image;
 		}
 	};
 } );
