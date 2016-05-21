@@ -117,13 +117,19 @@ gj-page-header-controls
 	&-nav
 		position: relative
 		padding: 0
-		z-index: 1
 
 		nav
 			margin-top: 11px !important
 
+		@media $media-sm-up
+			// On bigger sizes we need to put it above the media bar, otherwise it's below.
+			// If we do this in XS as well, any of the popovers in it will get covered by the
+			// full-page shade that shows.
+			z-index: 1
+
 		@media $media-md-up
 			height: 65px
+
 
 			// Force on to GPU.
 			// For some reason Chrome wasn't repainting when it would disappear.
@@ -131,7 +137,6 @@ gj-page-header-controls
 			transform: translate3d( 0, 0, 0 )
 
 			.platform-list
-				// float: left
 				margin-top: 11px !important
 
 			&.gj-scroll-affixed
@@ -154,12 +159,8 @@ gj-page-header-controls
 
 	@media $media-sm
 
-		// &-controls
-		// 	@extend .clearfix
-
 		&-controls
 			margin-left: 100px + ($grid-gutter-width / 2)
-			// float: left
 
 		&-nav nav
 			margin-left: 0 !important
