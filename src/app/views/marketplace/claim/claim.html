@@ -1,0 +1,33 @@
+<section class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+
+				<h1>Marketplace Invite</h1>
+
+				<p><b>{{ $ctrl.key.inviter.display_name }}</b> has invited you to join the Game Jolt Marketplace!</p>
+
+				<p>blah blah blah</p>
+
+				<p ng-if="!$ctrl.key.is_claimed">
+					<button class="btn btn-success-outline" ng-click="$ctrl.claim()">
+						Join Marketplace
+					</button>
+				</p>
+
+				<div gj-expand-when="$ctrl.key.is_claimed">
+					<div class="alert alert-info">
+						<p><strong>Welcome to Marketplace!</strong></p>
+
+						<p>blah blah</p>
+
+						<p>
+							<a ui-sref="dashboard.account.financials">To get going, set up your account's financials</a>
+						</p>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
