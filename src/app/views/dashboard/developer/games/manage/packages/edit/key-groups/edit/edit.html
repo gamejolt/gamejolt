@@ -1,0 +1,22 @@
+<div class="row">
+	<div class="col-sm-10 col-md-5 col-lg-6">
+
+		<h2 class="section-header">
+			Edit Key Group
+		</h2>
+		<gj-form-dashboard-sellable-key-group
+			gj-sellable="editKeyGroupsCtrl.sellable"
+			gj-sellable-key-group="editKeyGroupsCtrl.keyGroup"
+			>
+		</gj-form-dashboard-sellable-key-group>
+		<br>
+
+		<h2 class="section-header">
+			Key List
+		</h2>
+		<ul>
+			<li ng-repeat="(id, key) in editKeyGroupsCtrl.keys">{{ key.id }} - {{ key.key }}</li>
+		</ul>
+
+	</div>
+</div>

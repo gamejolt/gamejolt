@@ -119,6 +119,7 @@ angular.module( 'App', [
 	'gj.Game.Build.LaunchOption',
 	'gj.Sellable',
 	'gj.Sellable.Pricing',
+	'gj.Sellable.KeyGroup',
 	'gj.Game.NewsArticle',
 	'gj.Game.Trophy',
 	'gj.Game.ScoreTable',

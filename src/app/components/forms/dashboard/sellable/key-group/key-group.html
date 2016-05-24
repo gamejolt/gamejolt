@@ -1,0 +1,51 @@
+<form gj-form="formModel" name="sellableKeyGroupForm">
+
+	<div ng-if="!isLoaded">
+		<gj-loading></gj-loading>
+	</div>
+
+	<div ng-if="isLoaded">
+		<form-group name="name" label="Name">
+			<p class="help-block" translate></p>
+			<input
+				form-control
+				ng-maxlength="150"
+				>
+			<control-errors></control-errors>
+		</form-group>
+
+		<form-group name="message" label="Message" >
+			<p class="help-block" translate>You can write a custom message for the key/claim page here. A nice greeting, instructions for testers, etc.</p>
+			<div>
+				<textarea form-control rows="2" ng-maxlength="750"></textarea>
+				<control-errors></control-errors>
+			</div>
+		</form-group>
+
+		<form-group name="email_addresses" label="Email Addresses" ng-if="method == 'add'" optional="true">
+			<p class="help-block" translate>Paste one email address per line here and we'll get them invited! </p>
+			<div>
+				<textarea form-control rows="2" ng-maxlength="750" ng-disabled="formModel.amount"></textarea>
+				<control-errors></control-errors>
+			</div>
+		</form-group>
+
+		<form-group name="amount" label="Amount" ng-if="method == 'add'" optional="true">
+			<p class="help-block" translate>Insert an amount if you're not using e-mail addresses.</p>
+			<input
+				form-control="number"
+				step="1"
+				ng-min="1"
+				ng-disabled="formModel.email_addresses != ''"
+				>
+			<control-errors></control-errors>
+		</form-group>
+
+		<button gj-form-submit-button class="btn" ng-show="!sellableKeyGroupForm.$pristine" ng-disabled="!sellableKeyGroupForm.$valid" ng-click="onSubmit()">
+			<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
+			<span ng-if="method == 'add'">Add</span>
+			<span ng-if="method == 'edit'">Save</span>
+		</button>
+	</div>
+
+</form>

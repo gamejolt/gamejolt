@@ -1,0 +1,38 @@
+<div class="row">
+	<div class="col-sm-10 col-md-5 col-lg-6">
+		<h2 class="section-header">
+			Key Groups
+		</h2>
+
+		<div class="row">
+			<div class="col-sm-4 col-sm-push-8">
+				<div class="page-help">
+					<p>Organise your keys into groups.</p>
+					<p>Alpha/beta testers, friends, press, YouTubers, streamers, etc.</p>
+				</div>
+			</div>
+
+			<div class="col-sm-8 col-sm-pull-4">
+
+				<ul ng-if="listKeyGroupsCtrl.keyGroups.length">
+
+					<li ng-repeat="keyGroup in listKeyGroupsCtrl.keyGroups">
+						<a ui-sref="dashboard.developer.games.manage.packages.edit.keygroups.edit( { sellableId: listKeyGroupsCtrl.sellable.id, keyGroupId: keyGroup.id } )">{{ keyGroup.name }}</a>
+					</li>
+
+				</ul>
+				<br>
+
+				<div class="alert alert-warning" ng-if="!listKeyGroupsCtrl.keyGroups.length" translate>You haven't created any keys yet!</div>
+
+				<div>
+					<a class="btn btn-success-outline btn-block" ui-sref="dashboard.developer.games.manage.packages.edit.keygroups.add( { sellableId: listKeyGroupsCtrl.sellable.id } )">
+						<span class="jolticon jolticon-add"></span>
+						Add Key Group
+					</a>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
