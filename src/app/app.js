@@ -198,6 +198,8 @@ angular.module( 'App', [
 	'App.Invite',
 	'App.Sorting',
 	'App.Settings',
+	'App.MediaItem.Cover',
+	'App.PageHeader',
 
 	'App.Forms',
 
@@ -219,13 +221,14 @@ angular.module( 'App', [
 	'App.Game.CompatIcons',
 	'App.Game.Grid',
 	'App.Game.Filtering',
-	'App.Game.Cover',
-	'App.Game.Cover.Buttons',
+	'App.Game.CoverButtons',
 	'App.Game.MediaBar',
 	'App.Game.Ogrs',
 	'App.Game.RatingGrowl',
 	'App.Game.Video.Embed',
 	'App.Game.MaturityBlock',
+
+	'App.Channels',
 
 	'App.Game.Collection',
 	'App.Game.Collection.Thumbnail',

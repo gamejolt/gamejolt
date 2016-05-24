@@ -3,7 +3,6 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringInput', functi
 	return {
 		scope: {
 			filteringContainer: '=gjFilteringContainer',
-			onChanged: '&?gjFiltersChanged'
 		},
 		templateUrl: '/app/components/game/filtering/input.html',
 		bindToController: true,
@@ -16,9 +15,7 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringInput', functi
 			{
 				this.query = '';
 				this.filteringContainer.unsetFilter( 'query' );
-				if ( this.onChanged ) {
-					this.onChanged( {} );
-				}
+				this.filteringContainer.onChanged();
 
 				Analytics.trackEvent( 'game-filtering', 'query-clear' );
 			};
@@ -26,9 +23,7 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringInput', functi
 			this.onQueryChanged = function()
 			{
 				this.filteringContainer.setFilter( 'query', this.query );
-				if ( this.onChanged ) {
-					this.onChanged( {} );
-				}
+				this.filteringContainer.onChanged();
 
 				if ( this.query ) {
 					Analytics.trackEvent( 'game-filtering', 'query-change', this.query );
