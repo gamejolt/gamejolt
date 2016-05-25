@@ -15,7 +15,7 @@
 			Key List
 		</h2>
 		<ul>
-			<li ng-repeat="(id, key) in editKeyGroupsCtrl.keys">{{ key.id }} - {{ key.key }} - <a ng-click="editKeyGroupsCtrl.removeKey(key)">X</a></li>
+			<li ng-repeat="(id, key) in editKeyGroupsCtrl.keys">{{ key.id }} - {{ key.key }} - <a ng-click="editKeyGroupsCtrl.removeKey(key)">X</a> - <a href='{{ key.url() }}' target='_blank'>claim page</a> <span ng-if="key.viewed_on">- viewed!</span></li>
 		</ul>
 
 	</div>
