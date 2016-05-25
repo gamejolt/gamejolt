@@ -186,6 +186,7 @@ angular.module( 'App', [
 	'gj.WidgetCompiler',
 
 	// Components.
+	'App.Secure',
 	'App.SplitTest',
 	'App.Chat',
 	'App.Shell',
