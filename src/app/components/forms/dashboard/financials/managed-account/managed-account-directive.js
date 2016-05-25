@@ -88,6 +88,12 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 			}
 
 			return scope.stripeMeta.minimum.indexOf( field ) != -1
+				// We special case personal_id_number.
+				// We need it for taxes, so we collect it if it's just in "additional".
+				|| (
+					field == 'legal_entity.personal_id_number'
+					&& scope.stripeMeta.additional.indexOf( field ) != -1
+				)
 				|| (
 					scope.stripe.current
 					&& scope.stripe.current.verification
