@@ -13,7 +13,7 @@ angular.module( 'App.ProtocolWatcher' ).provider( 'ProtocolWatcher', function()
 		var ProtocolWatcher = {};
 		ProtocolWatcher.registerSecure = provider.registerSecure;
 
-		function switchProtocol( protocol, state, stateParams )
+		function switchProtocol( protocol, state, stateParams, event )
 		{
 			var toUrl = protocol + '://' + $window.location.host + $state.href( state, stateParams );
 			if ( Environment.env == 'production' ) {
