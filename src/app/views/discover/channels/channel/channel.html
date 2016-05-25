@@ -1,0 +1,41 @@
+<gj-page-header>
+
+	<gj-page-header-content>
+		<h1 translate translate-scope="{ channel: channelCtrl.channel }">
+			<b>#{{ channel }}</b> Channel
+		</h1>
+		<div class="small text-muted">
+			{{ ::Meta.description }}
+		</div>
+		<br>
+		<div>
+			<span translate translate-n="channelCtrl.totalGamesCount" translate-plural="<b>{{ $count | number }}</b> Games">
+				<b>{{ $count | number }}</b> Game
+			</span>
+		</div>
+	</gj-page-header-content>
+
+	<gj-page-header-spotlight>
+		<img ng-src="{{ ::Channels.images[ channelCtrl.channel ] }}" width="58" height="58" alt="">
+	</gj-page-header-spotlight>
+
+	<gj-page-header-nav>
+		<nav class="platform-list inline">
+			<ul>
+				<li>
+					<a ui-sref="discover.channels.channel.overview" ui-sref-active="active">
+						<span translate>Overview</span>
+					</a>
+				</li>
+				<li>
+					<a ui-sref="discover.channels.channel.games._fetch" ui-sref-active="active">
+						<span translate>Games</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+	</gj-page-header-nav>
+
+</gj-page-header>
+
+<ui-view></ui-view>

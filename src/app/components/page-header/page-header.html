@@ -1,0 +1,41 @@
+<header class="section page-header">
+
+	<section class="section page-header-cover"
+		ng-class="{ 'has-cover-image': !!$ctrl.coverMediaItem }"
+		>
+
+		<gj-media-item-cover
+			ng-if="!!$ctrl.coverMediaItem"
+			media-item="$ctrl.coverMediaItem"
+			>
+		</gj-media-item-cover>
+
+		<div class="page-header-cover-buttons" ng-transclude="coverButtons"></div>
+
+		<div class="container">
+
+			<div class="page-header-content" ng-transclude="content"></div>
+			<div class="page-header-spotlight" ng-transclude="spotlight"></div>
+
+		</div>
+	</section>
+
+	<section class="section page-header-nav"
+		gj-scroll-affix
+		should-affix="$ctrl.shouldAffixNav && Screen.isLg && Screen.height > 750"
+		>
+		<div class="container">
+
+			<div class="row">
+				<div class="col-md-4 col-md-push-8 ">
+					<div class="page-header-controls" ng-transclude="controls"></div>
+				</div>
+				<div class="col-md-8 col-md-pull-4">
+					<div ng-transclude="nav"></div>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+</header>

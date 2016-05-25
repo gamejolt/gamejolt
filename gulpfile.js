@@ -93,6 +93,11 @@ var config = {
 				'forums',
 			]
 		},
+		'channels.js': {
+			views: [
+				'discover/channels',
+			]
+		},
 
 		// For client.
 		'client.js': {

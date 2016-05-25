@@ -1,117 +1,12 @@
-/**
- * Game Header Meta
- */
-.game-header
-	padding: 0
+.ctrl-discover-games-view
 
-	> .container
-		position: relative
-
-	&-cover
-		position: relative
-		padding-bottom: 20px
-
-		.container
-			position: relative
-
-		@media $media-xs
-			.game-header-meta
-				padding-top: 15px
-				padding-bottom: $grid-gutter-width-xs
-
-		&.has-image
-			padding: 0
-
-			@media $media-sm-up
-				.game-header-meta-wrap
-					position: absolute
-					bottom: 10px
-
-			.game-header-cover-buttons
-				position: absolute
-				left: 0
-				right: 0
-				top: 0
-				bottom: 60px
-				display: flex
-				align-items: center
-				justify-content: center
-
-				.btn
-					margin: 0 5px
-
-			.game-header-meta
-				text-shadow: 1px 1px 1px rgba( $black, 0.5 )
-
-			.meter-blip
-				background-color: rgba( $white, 0.5 )
-				box-shadow: 1px 1px 1px rgba( $black, 0.3 )
-
-			.meter-low .meter-blip-filled
-				background-color: $gj-pink
-
-			.meter-mid .meter-blip-filled
-				background-color: $white
-
-			.meter-high .meter-blip-filled
-				background-color: $gj-green
-
-		&.no-image
-
-			.game-header-cover-buttons
-				margin-bottom: $grid-gutter-width
-				text-align: center
-
-	&-title
-		margin-bottom: 0
-
-	&-meta
+	.page-header-content
 		text-align: center
 
 		@media $media-sm-up
 			text-align: left
 
-		a
-			color: $white !important
-
-			&:hover
-				color: $white !important
-				text-decoration: underline
-
-		.meter
-			display: inline-block
-			vertical-align: middle
-
-	&-byline
-		font-family: $font-family-heading
-		color: $text-muted
-
-		@media $media-sm-up
-			color: $white
-
-	&-time-ago
-		display: block
-		font-size: $font-size-small
-		margin-top: $font-size-base  // For XS.
-
-		@media $media-sm-up
-			display: inline
-
-	&-avatar
-		position: absolute
-		width: 100px
-		top: -((@width / 2) + 5px)
-		left: -(@width + ($grid-gutter-width / 2))
-		z-index: 2
-
-		img
-			border: 5px solid $white
-			background-color: $white
-			width: 100px
-			height: 100px
-
-	&-controls
-		margin-top: 14px
+.game-header
 
 	&-follow-container
 		position: relative
@@ -132,59 +27,9 @@
 	&-add
 		float: right
 
-	&-nav
-		@extend .clearfix
-		position: relative
-		z-index: 1
-
-		> .container
-			position: relative
-
-		@media $media-md-up
-			height: 65px
-
-			// Force on to GPU.
-			// For some reason Chrome wasn't repainting when it would disappear.
-			// This fixes the Chrome bug. Odd.
-			transform: translate3d( 0, 0, 0 )
-
-			.platform-list
-				float: left
-				margin-top: 11px !important
-
-			/**
-			* Affixed Nav
-			*/
-			&.gj-scroll-affixed
-				position: fixed
-				background-color: $gray-dark
-				margin-top: $shell-top-nav-height !important
-				border-bottom: 2px solid $gray
-				z-index: $zindex-nav-scroll-affixed
-
-				nav
-					margin-left: 0
-
 	@media $media-sm
-
-		&-controls-container
-			@extend .clearfix
-			margin-left: 100px + ($grid-gutter-width / 2)
 
 		&-controls
 			float: left
 
-		&-nav nav
-			margin-left: 0 !important
 
-	$header-avatar-breakpoint = media( min: $screen-sm-min, max: 1450px )
-	@media $header-avatar-breakpoint
-
-		&-avatar
-			left: 0
-
-		&-nav nav
-			margin-left: 100px + ($grid-gutter-width / 2)
-
-		&-meta-wrap
-			padding-left: 100px + ($grid-gutter-width / 2)

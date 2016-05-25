@@ -163,16 +163,6 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 		$scope.libraryCtrl.shouldShowSidebar = true;
 	} );
 
-	this.onFiltersChanged = function()
-	{
-		AutoScroll.noScroll( true );
-
-		var params = this.filteringContainer.getStateParams();
-		params.page = undefined;  // Reset to first page.
-
-		$state.go( $state.current, params, { location: 'replace' } );
-	};
-
 	this.shouldShowFollow = function()
 	{
 		if ( !App.user ) {

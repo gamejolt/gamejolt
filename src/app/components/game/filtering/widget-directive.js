@@ -3,7 +3,6 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringWidget', funct
 	return {
 		scope: {
 			filteringContainer: '=gjFilteringContainer',
-			onChanged: '&?gjFiltersChanged'
 		},
 		templateUrl: '/app/components/game/filtering/widget.html',
 		bindToController: true,
@@ -43,10 +42,7 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringWidget', funct
 				}
 
 				this.filteringContainer.toggleFilterOption( filter, option );
-
-				if ( this.onChanged ) {
-					this.onChanged( {} );
-				}
+				this.filteringContainer.onChanged();
 			};
 
 			this.getJolticon = function( filter, option )
