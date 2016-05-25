@@ -21,12 +21,19 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardSellableKeyGr
 
 		if ( !scope.isLoaded ) {
 
-			Api.sendRequest( '/web/dash/developer/sellables/key-groups/save/' + scope.formState.sellable_id + '/' + scope.formState.keyGroup_id ).then( function( payload )
-			{
+			if ( scope.method == 'edit' ) {
+
+				Api.sendRequest( '/web/dash/developer/sellables/key-groups/save/' + scope.formState.sellable_id + '/' + scope.formState.keyGroup_id ).then( function( payload )
+				{
+					scope.isLoaded = true;
+					console.log( payload );
+					angular.extend( scope.formModel, payload );
+				} );
+
+			}
+			else {
 				scope.isLoaded = true;
-				console.log( payload );
-				angular.extend( scope.formModel, payload );
-			} );
+			}
 		}
 
 	};
