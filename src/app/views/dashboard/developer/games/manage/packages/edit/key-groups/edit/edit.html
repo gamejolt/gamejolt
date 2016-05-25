@@ -15,7 +15,7 @@
 			Key List
 		</h2>
 		<ul>
-			<li ng-repeat="(id, key) in editKeyGroupsCtrl.keys">{{ key.id }} - {{ key.key }}</li>
+			<li ng-repeat="(id, key) in editKeyGroupsCtrl.keys">{{ key.id }} - {{ key.key }} - <a ng-click="editKeyGroupsCtrl.removeKey(key)">X</a></li>
 		</ul>
 
 	</div>

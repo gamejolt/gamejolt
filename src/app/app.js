@@ -144,6 +144,9 @@ angular.module( 'App', [
 	'gj.Jam.Game.Vote.Widget',
 	'gj.Jam.Award',
 
+	'gj.Key',
+	'gj.LinkedKey',
+
 	'gj.Translation',
 
 	'gj.Chat.Room',
