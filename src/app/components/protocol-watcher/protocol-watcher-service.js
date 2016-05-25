@@ -27,12 +27,17 @@ angular.module( 'App.ProtocolWatcher' ).provider( 'ProtocolWatcher', function()
 
 		ProtocolWatcher.init = function()
 		{
+			// We never switch protocols on Client.
+			if ( Environment.isClient ) {
+				return;
+			}
+
 			$rootScope.$on( '$stateChangeStart', function( event, to, toParams )
 			{
 				// If not secure but we are moving to a secure location.
 				if ( !Environment.isSecure ) {
 					for ( var i = 0; i < _secureSections.length; ++i ) {
-						if ( to.controller.indexOf( _secureSections[i] + '.' ) === 0 ) {
+						if ( to.name.indexOf( _secureSections[i] ) === 0 ) {
 							switchProtocol( 'https', to, toParams, event );
 							break;
 						}
@@ -42,7 +47,7 @@ angular.module( 'App.ProtocolWatcher' ).provider( 'ProtocolWatcher', function()
 				else if ( Environment.isSecure ) {
 					var found = false;
 					for ( var i = 0; i < _secureSections.length; ++i ) {
-						if ( to.controller.indexOf( _secureSections[i] + '.' ) === 0 ) {
+						if ( to.name.indexOf( _secureSections[i] ) === 0 ) {
 							found = true;
 							break;
 						}
