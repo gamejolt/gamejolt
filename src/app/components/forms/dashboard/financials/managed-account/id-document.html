@@ -1,11 +1,13 @@
 <div ng-if="helpers.requiresField( $ctrl.namePrefixDotted + '.document' )">
 
 	<div ng-if="!helpers.getStripeField( $ctrl.namePrefixDotted + '.document' )">
+		<hr>
+
 		<form-group
 			name="{{ $ctrl.namePrefix }}-document"
 			label="ID Document"
 			>
-			<p class="help-block">This should be a scan of a passport, driver's license, ID card, or other government supplied identification.</p>
+			<p class="help-block">This should be a scan of an ID card, driver's license, passport, or other government supplied identification.</p>
 			<gj-form-upload-control
 				form-control="upload"
 				gj-max-filesize="10 * 1024 * 1024"

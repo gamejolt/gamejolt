@@ -128,6 +128,22 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 			return obj[ field ];
 		};
 
+		// This is only needed after the initial submission in some instances.
+		scope.helpers.requiresVerificationDocument = function()
+		{
+			return scope.helpers.requiresField( 'legal_entity.verification.document' );
+		};
+
+		scope.helpers.isVerificationPending = function()
+		{
+			// If they're in pending state and we don't require more info from them.
+			if ( scope.account.status == 'pending' && !scope.helpers.requiresVerificationDocument() ) {
+				return true;
+			}
+
+			return false;
+		};
+
 		scope.helpers.addAdditionalOwner = function()
 		{
 			++scope.formModel.additional_owners_count;

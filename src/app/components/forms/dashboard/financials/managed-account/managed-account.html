@@ -46,8 +46,12 @@
 
 		<div ng-if="account.is_stripe_initialized">
 
-			<div class="alert alert-warning" ng-if="account.status == 'pending'">
-				<p><b>We're in the process of verifying your account.</b> This can take anywhere from a few minutes to a few days. We'll contact you when the verification process is complete. Hang tight!</p>
+			<div class="alert alert-warning" ng-if="helpers.isVerificationPending()">
+				<p><b>Stripe is in the process of verifying your details.</b> This can take anywhere from a few minutes to a few days. We'll contact you when the verification process is complete and if Stripe requires additional supporting documents (such as a photo ID) in order to identify you. Hang tight!</p>
+			</div>
+
+			<div class="alert alert-warning" ng-if="helpers.requiresVerificationDocument()">
+				<p><b>Stripe needs additional identification documents in order to verify your account.</b> Please enter them below.</p>
 			</div>
 
 			<div class="form-horizontal">
@@ -162,10 +166,10 @@
 			<!--
 				Personal ID Verification
 			-->
-			<!--<gj-form-dashboard-financials-managed-account-id-document
+			<gj-form-dashboard-financials-managed-account-id-document
 				name-prefix="legal_entity-verification"
 				>
-			</gj-form-dashboard-financials-managed-account-id-document>-->
+			</gj-form-dashboard-financials-managed-account-id-document>
 
 			<!--
 				Additional Owners (for Europe)
@@ -319,7 +323,7 @@
 		</div>
 
 		<button
-			ng-if="!formState.isComplete && account.status != 'pending'"
+			ng-if="!formState.isComplete && !helpers.isVerificationPending()"
 			gj-form-submit-button
 			class="btn btn-success-outline"
 			ng-disabled="!managedAccountForm.$valid"
