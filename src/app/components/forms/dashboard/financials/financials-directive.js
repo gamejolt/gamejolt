@@ -1,8 +1,7 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', function( $q, $window, Form, Api, Growls, Environment, currencyFilter )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', function( $q, $ocLazyLoad, $window, Form, Api, Growls, Environment, currencyFilter )
 {
 	var form = new Form( {
 		template: '/app/components/forms/dashboard/financials/financials.html',
-		reloadOnSubmit: true,
 	} );
 
 	form.onInit = function( scope )

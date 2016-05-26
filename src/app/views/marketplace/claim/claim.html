@@ -1,0 +1,31 @@
+<section class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+
+				<h1>Marketplace Invite</h1>
+
+				<p><b>{{ $ctrl.key.inviter.display_name }}</b> has invited you to join the <a href="http://gamejolt.com/marketplace">Game Jolt Marketplace</a>!</p>
+
+				<p>We're still working on new features and improvements before we're ready to do a full launch of Marketplace. With your feedback and suggestions, we're hoping to turn it into the best platform for indies by indies!</p>
+
+				<p>Don't hesitate to email <a href="yaprak@gamejolt.com">yaprak@gamejolt.com</a> with any questions or comments you may have. We're here to help!</p>
+
+				<p ng-if="!$ctrl.key.is_claimed">
+					<button class="btn btn-success-outline" ng-click="$ctrl.claim()">
+						Join Marketplace
+					</button>
+				</p>
+
+				<div gj-expand-when="$ctrl.key.is_claimed">
+					<div class="alert alert-info">
+						<p><strong>Welcome to Marketplace!</strong></p>
+
+						<p>To get started, <a href="https://gamejolt.com/dashboard/financials">set up your Marketplace Account</a>.</p>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>

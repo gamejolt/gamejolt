@@ -1,5 +1,7 @@
-angular.module( 'App.Views' ).config( function( $stateProvider )
+angular.module( 'App.Views' ).config( function( $stateProvider, ProtocolWatcherProvider )
 {
+	ProtocolWatcherProvider.registerSecure( 'dashboard.account.financials' );
+
 	$stateProvider.state( 'dashboard.account.financials', {
 		url: '/financials',
 		controller: 'Dashboard.Account.FinancialsCtrl',

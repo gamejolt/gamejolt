@@ -51,7 +51,7 @@
 			</div>
 
 			<div class="form-group" ng-if="account.tos_signed">
-				<p class="small">You have agreed to our <a href="">Distribution Agreement</a> on {{ account.tos_signed_timestamp | date:'medium' }}.<p>
+				<p class="small">You have agreed to our <b>Distribution Agreement</b> on {{ account.tos_signed_timestamp | date:'medium' }}.</p>
 			</div>
 
 		</fieldset>
@@ -82,6 +82,21 @@
 					<span ng-if="user.paypal_id" translate>Change PayPal Account</span>
 				</button>
 			</div>
+
+		</fieldset>
+
+		<!--
+			They need to have PayPal linked before they can do this.
+		-->
+		<fieldset ng-if="account && user.paypal_id">
+			<legend>
+				<span ng-if="account.is_verified" class="pull-right done-icon" tooltip="{{ 'You have completed this section.' | translate }}">
+					<span class="jolticon jolticon-check big"></span>
+				</span>
+				<span translate>Marketplace Account</span>
+			</legend>
+
+			<gj-form-dashboard-financials-managed-account></gj-form-dashboard-financials-managed-account>
 		</fieldset>
 
 		<fieldset ng-if="account.is_verified">
