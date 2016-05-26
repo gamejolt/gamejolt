@@ -12,6 +12,14 @@
 	p:empty
 		display: none
 
+	// Responsive images.
+	img
+		@extend .img-responsive
+
+		// Center it if too small.
+		margin-left: auto
+		margin-right: auto
+
 	// Removes the added spacing after iframes since they aren't block elements.
 	// They basically by default add their line spacing to the bottom.
 	iframe

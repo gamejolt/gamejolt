@@ -1,0 +1,32 @@
+<div class="row" ng-if="!helpers.getStripeField( $ctrl.namePrefixDotted + '.first_name' )">
+	<div class="col-sm-6" ng-if="helpers.requiresField( $ctrl.namePrefixDotted + '.first_name' ) || $ctrl.isForceRequired">
+		<form-group
+			name="{{ $ctrl.namePrefix }}-first_name"
+			label="First Name"
+			>
+			<input form-control>
+			<control-errors></control-errors>
+		</form-group>
+	</div>
+	<div class="col-sm-6" ng-if="helpers.requiresField( $ctrl.namePrefixDotted + '.last_name' ) || $ctrl.isForceRequired">
+		<form-group
+			name="{{ $ctrl.namePrefix }}-last_name"
+			label="Last Name"
+			>
+			<input form-control>
+			<control-errors></control-errors>
+		</form-group>
+	</div>
+</div>
+
+<div class="form-horizontal" ng-if="helpers.getStripeField( $ctrl.namePrefixDotted + '.first_name' )">
+	<div class="form-group">
+		<label class="control-label col-sm-4">
+			Name
+		</label>
+		<div class="form-static col-sm-8">
+			{{ helpers.getStripeField( $ctrl.namePrefixDotted + '.first_name' ) }}
+			{{ helpers.getStripeField( $ctrl.namePrefixDotted + '.last_name' ) }}
+		</div>
+	</div>
+</div>

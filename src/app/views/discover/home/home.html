@@ -69,7 +69,7 @@
 	Paid Games
 -->
 <section class="section fill-darker marketplace-section">
-	<div class="marketplace-section-inner">
+	<div class="container">
 
 		<h1 class="section-header sans-margin-bottom">
 			<a class="link-unstyled" ui-sref="discover.games.list.section( { section: 'best', price: 'paid' } )" gj-track-event="home:row-heading:paid">
@@ -90,9 +90,9 @@
 		<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
 			<div ng-class="{ 'row': !Screen.isXs }">
 				<gj-game-thumbnail
-					class="col-xs-11 col-sm-4 col-md-3 meter-dark"
+					class="col-xs-11 col-sm-4 meter-dark"
 					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
-					ng-repeat="game in homeCtrl.paidGames | limitTo:(Screen.isSm ? 6 : 8 ) track by game.id"
+					ng-repeat="game in homeCtrl.paidGames | limitTo:(Screen.isMobile ? 6 : 9 ) track by game.id"
 					gj-game="game"
 					autoplay="true"
 					gj-track-event="home:paid:game:{{ $index }}"
