@@ -85,7 +85,10 @@
 
 		</fieldset>
 
-		<fieldset ng-if="account">
+		<!--
+			They need to have PayPal linked before they can do this.
+		-->
+		<fieldset ng-if="account && user.paypal_id">
 			<legend>
 				<span ng-if="account.is_verified" class="pull-right done-icon" tooltip="{{ 'You have completed this section.' | translate }}">
 					<span class="jolticon jolticon-check big"></span>

@@ -46,6 +46,13 @@
 
 		<div ng-if="account.is_stripe_initialized">
 
+			<div class="alert alert-info">
+				<p>
+					This information is needed for tax purposes as well as account verification. We use Stripe to store and verify this data.
+					<a href="https://help.gamejolt.com/why-tax-forms" class="link-help">Learn more</a>
+				</p>
+			</div>
+
 			<div class="alert alert-warning" ng-if="helpers.isVerificationPending()">
 				<p><b>Stripe is in the process of verifying your details.</b> This can take anywhere from a few minutes to a few days. We'll contact you when the verification process is complete and if Stripe requires additional supporting documents (such as a photo ID) in order to identify you. Hang tight!</p>
 			</div>
@@ -80,10 +87,6 @@
 			<!--<pre>{{ stripeMeta | json }}</pre>-->
 			<!--<pre>{{ stripe.current.verification | json }}</pre>-->
 			<!--<pre>{{ formModel | json }}</pre>-->
-
-			<div class="alert alert-info" ng-if="account.status == 'unverified'">
-				<p>This information is needed for tax purposes as well as account verification. We use Stripe to store and verify this data.</p>
-			</div>
 
 			<!--
 				Company Info
