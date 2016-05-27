@@ -1,11 +1,27 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Packages.Edit.KeyGroups.EditCtrl', function(
-	$scope, $sce, $state, Environment, Sellable, Sellable_KeyGroup, Key, ModalConfirm, Growls, gettextCatalog, keyGroupPayload )
+angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyGroups.EditCtrl', function(
+	$scope, $state, $stateParams, Api, KeyGroup, Game_Package, Key, ModalConfirm, Growls, gettextCatalog, payload )
 {
 	var _this = this;
 
-	this.sellable = keyGroupPayload.sellable ? new Sellable( keyGroupPayload.sellable ) : null;
-	this.keyGroup = keyGroupPayload.keyGroup ? new Sellable_KeyGroup( keyGroupPayload.keyGroup ) : null;
-	this.keys = keyGroupPayload.keys ? Key.populate( keyGroupPayload.keys ) : [];
+	$scope.KeyGroup = KeyGroup;
+
+	this.keyGroup = payload.keyGroup ? new KeyGroup( payload.keyGroup ) : null;
+	this.packages = Game_Package.populate( payload.packages );
+	this.keys = Key.populate( payload.keys );
+
+	this.search = {
+		filter: '',
+		state: 'all',
+	};
+
+	this.searchKeys = function()
+	{
+		Api.sendRequest( '/web/dash/developer/games/key-groups/search-keys/' + $stateParams.id + '/' + $stateParams.keyGroupId, this.search )
+			.then( function( response )
+			{
+				_this.keys = Key.populate( response.keys );
+			} );
+	};
 
 	this.onKeyGroupSaved = function( model )
 	{
@@ -28,7 +44,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 					'Removed', //gettextCatalog.getString( 'dash.games.removed_growl' ),
 					'Removed' //gettextCatalog.getString( 'dash.games.removed_growl_title' )
 				);
-				$state.go( 'dashboard.developer.games.manage.packages.edit.keygroups.list' );
+				$state.go( 'dashboard.developer.games.manage.keygroups.list' );
 			} );
 	}
 
