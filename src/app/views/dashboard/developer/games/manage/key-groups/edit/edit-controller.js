@@ -23,13 +23,11 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyG
 			} );
 	};
 
-	// this.onKeyGroupSaved = function( model )
-	// {
-	// 	Growls.success(
-	// 					'Saved',
-	// 					'Success'
-	// 				);
-	// };
+	this.onNewKeysAdded = function()
+	{
+		// Only reload this single state.
+		$state.reload( 'dashboard.developer.games.manage.key-groups.edit' );
+	};
 
 	this.removeGroup = function( keyGroup, disableKeys )
 	{

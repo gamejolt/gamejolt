@@ -4,11 +4,11 @@
 		<h2 class="section-header">
 			Edit Key Group
 		</h2>
+
 		<gj-form-dashboard-game-key-group
 			game="manageCtrl.game"
 			packages="editCtrl.packages"
 			gj-key-group="editCtrl.keyGroup"
-			gj-form-submit-handler="editCtrl.onKeyGroupSaved( formModel )"
 			>
 		</gj-form-dashboard-game-key-group>
 
@@ -40,28 +40,53 @@
 </div>
 
 <h2 translate>
+	<div class="section-header-controls">
+		<button class="btn btn-success-outline" ng-click="editCtrl.isShowingAddKeys = !editCtrl.isShowingAddKeys">
+			<span class="jolticon jolticon-add"></span>
+			Add Keys
+		</button>
+	</div>
+
 	Keys
 </h2>
 
-<div class="well fill-lightest form-inline">
+<div gj-expand-when="editCtrl.isShowingAddKeys">
+	<div class="well fill-lightest">
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 
-	<div class="form-group">
-		<input type="text" class="form-control" placeholder="Filter" ng-model="editCtrl.search.filter">
+				<gj-form-dashboard-game-key-group-add-keys
+					key-group="editCtrl.keyGroup"
+					gj-form-submit-handler="editCtrl.onNewKeysAdded()"
+					>
+				</gj-form-dashboard-game-key-group-add-keys>
+
+			</div>
+		</div>
 	</div>
+</div>
 
-	<div class="form-group">
-		<select class="form-control" ng-model="editCtrl.search.state">
-			<option value="all">All</option>
-			<option value="claimed">Claimed</option>
-			<option value="not-claimed">Not Claimed</option>
-			<option value="viewed">Viewed</option>
-			<option value="not-viewed">Not Viewed</option>
-		</select>
-	</div>
+<div class="well fill-lightest">
 
-	<button class="btn btn-outline" ng-click="editCtrl.searchKeys()">
-		Submit
-	</button>
+	<form class="form-inline">
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Filter" ng-model="editCtrl.search.filter">
+		</div>
+
+		<div class="form-group">
+			<select class="form-control" ng-model="editCtrl.search.state">
+				<option value="all">All</option>
+				<option value="claimed">Claimed</option>
+				<option value="not-claimed">Not Claimed</option>
+				<option value="viewed">Viewed</option>
+				<option value="not-viewed">Not Viewed</option>
+			</select>
+		</div>
+
+		<button class="btn btn-outline" ng-click="editCtrl.searchKeys()">
+			Submit
+		</button>
+	</form>
 
 </div>
 
