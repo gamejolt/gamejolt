@@ -30,7 +30,7 @@
 		<hr>
 
 		<div>
-			<a class="btn btn-danger-outline btn-block" ng-click="editCtrl.removeGroup(editCtrl.keyGroup, false)">
+			<a class="btn btn-danger-outline btn-block" ng-click="editCtrl.removeGroup( editCtrl.keyGroup )">
 				<span class="jolticon jolticon-remove"></span>
 				Remove Key Group
 			</a>
@@ -97,7 +97,9 @@
 				<span ng-switch-when="false">-</span>
 			</td>
 			<td style="text-align: right">
-				<a class="btn btn-danger-outline btn-sm btn-sparse">
+				<a class="btn btn-danger-outline btn-sm btn-sparse"
+					ng-click="editCtrl.removeKey( key )"
+					>
 					<span class="jolticon jolticon-remove"></span>
 				</a>
 			</td>

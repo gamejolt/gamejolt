@@ -23,34 +23,44 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyG
 			} );
 	};
 
-	this.onKeyGroupSaved = function( model )
-	{
-		Growls.success(
-						'Saved',
-						'Success'
-					);
-	};
+	// this.onKeyGroupSaved = function( model )
+	// {
+	// 	Growls.success(
+	// 					'Saved',
+	// 					'Success'
+	// 				);
+	// };
 
 	this.removeGroup = function( keyGroup, disableKeys )
 	{
-		ModalConfirm.show( 'Remove Key Group?' )//gettextCatalog.getString( 'dash.games.remove_confirmation' ) )
+		ModalConfirm.show(
+			gettextCatalog.getString( "Are you sure you want to remove this key group? All keys within this key group will be invalidated. Any access that users may have gained from these keys will be revoked. This can not be reversed." ),
+			gettextCatalog.getString( 'Remove key group?' )
+		)
 			.then( function()
 			{
-				return keyGroup.$remove( disableKeys );
+				return keyGroup.$remove();
 			} )
 			.then( function()
 			{
 				Growls.success(
-					'Removed', //gettextCatalog.getString( 'dash.games.removed_growl' ),
-					'Removed' //gettextCatalog.getString( 'dash.games.removed_growl_title' )
+					gettextCatalog.getString( 'The key group has been removed.' ),
+					gettextCatalog.getString( 'Removed Key Group' )
 				);
-				$state.go( 'dashboard.developer.games.manage.keygroups.list' );
+				$state.go( 'dashboard.developer.games.manage.key-groups.list' );
+			} )
+			.catch( function()
+			{
+				Growls.error( 'Could not remove key group for some reason.' );
 			} );
 	}
 
 	this.removeKey = function( key )
 	{
-		ModalConfirm.show( 'Remove Key?' )//gettextCatalog.getString( 'dash.games.remove_confirmation' ) )
+		ModalConfirm.show(
+			gettextCatalog.getString( "Are you sure you want to remove this key? This will revoke this key's access, or anyone that has claimed this key. This can not be reversed." ),
+			gettextCatalog.getString( 'Remove key?' )
+		)
 			.then( function()
 			{
 				return key.$remove();
@@ -58,10 +68,14 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyG
 			.then( function()
 			{
 				Growls.success(
-					'Removed', //gettextCatalog.getString( 'dash.games.removed_growl' ),
-					'Removed' //gettextCatalog.getString( 'dash.games.removed_growl_title' )
+					gettextCatalog.getString( 'The key has been removed.' ),
+					gettextCatalog.getString( 'Removed Key' )
 				);
 				_.remove( _this.keys, { id: key.id } );
+			} )
+			.catch( function()
+			{
+				Growls.error( 'Could not remove key for some reason.' );
 			} );
 	};
 } );
