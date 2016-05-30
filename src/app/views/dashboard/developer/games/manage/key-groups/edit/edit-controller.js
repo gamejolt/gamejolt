@@ -37,7 +37,11 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyG
 		)
 			.then( function()
 			{
-				return keyGroup.$remove();
+				return keyGroup.$remove()
+					.catch( function()
+					{
+						Growls.error( 'Could not remove key group for some reason.' );
+					} );
 			} )
 			.then( function()
 			{
@@ -46,10 +50,6 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyG
 					gettextCatalog.getString( 'Removed Key Group' )
 				);
 				$state.go( 'dashboard.developer.games.manage.key-groups.list' );
-			} )
-			.catch( function()
-			{
-				Growls.error( 'Could not remove key group for some reason.' );
 			} );
 	}
 
@@ -61,7 +61,11 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyG
 		)
 			.then( function()
 			{
-				return key.$remove();
+				return key.$remove()
+					.catch( function()
+					{
+						Growls.error( 'Could not remove key for some reason.' );
+					} );
 			} )
 			.then( function()
 			{
@@ -70,10 +74,6 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyG
 					gettextCatalog.getString( 'Removed Key' )
 				);
 				_.remove( _this.keys, { id: key.id } );
-			} )
-			.catch( function()
-			{
-				Growls.error( 'Could not remove key for some reason.' );
 			} );
 	};
 } );

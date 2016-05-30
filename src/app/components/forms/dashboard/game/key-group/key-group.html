@@ -49,7 +49,8 @@
 		<control-errors></control-errors>
 	</form-group>
 
-	<form-group name="message"
+	<!-- Turning off for now -->
+	<!--<form-group name="message"
 		label="Message" optional="true"
 		ng-if="!!formModel.type"
 		>
@@ -58,7 +59,7 @@
 		</p>
 		<textarea form-control rows="2" ng-maxlength="750"></textarea>
 		<control-errors></control-errors>
-	</form-group>
+	</form-group>-->
 
 	<form-group name="amount"
 		label="# of Keys to Generate"
@@ -67,7 +68,8 @@
 		<input
 			form-control="number"
 			step="1"
-			ng-min="1"
+			min="1"
+			max="5000"
 			>
 		<control-errors></control-errors>
 	</form-group>
