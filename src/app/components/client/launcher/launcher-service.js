@@ -6,7 +6,7 @@ angular.module( 'App.Client.Launcher' )
 		Client_Launcher.init();
 	} );
 } )
-.service( 'Client_Launcher', function( $q, $rootScope, Client_Library, Device, Growls )
+.service( 'Client_Launcher', function( $q, $rootScope, Client_Library, Api, Device, Growls )
 {
 	var _this = this;
 
@@ -14,13 +14,38 @@ angular.module( 'App.Client.Launcher' )
 
 	this.init = function()
 	{
-		// Reattach all running games after a restart.
-		_.forEach( Client_Library.packages, function( localPackage )
-		{
-			if ( localPackage.isRunning() ) {
-				_this.reattach( localPackage );
-			}
-		} );
+		var gui = require( 'nw.gui' );
+		var Application = require( 'client-voodoo' ).Application;
+		var path = require( 'path' );
+		var pidDir = path.resolve( gui.App.dataPath, 'game-pids' );
+		Application.setPidDir( pidDir );
+
+		$q.when( Application.ensurePidDir() )
+			.then( function()
+			{
+				// Get all running packages by looking at the game pid directory.
+				var runningPackageIds = require( 'fs' ).readdirSync( pidDir ).map( function( filename )
+				{
+					// Pid files are named after the package ids they are currently running.
+					try {
+						return parseInt( path.basename( filename ) );
+					}
+					catch ( err ) {
+						return false;
+					}
+				} ).filter( function( packageId ) { return !!packageId } );
+
+				// Reattach all running games after a restart.
+				_.forEach( Client_Library.packages, function( localPackage )
+				{
+					if ( runningPackageIds.indexOf( localPackage.id ) !== -1 || localPackage.isRunning() ) {
+						localPackage.$setRunningPid( {
+							wrapperId: localPackage.id.toString(),
+						} );
+						_this.reattach( localPackage );
+					}
+				} );
+			} );
 	};
 
 	this.launch = function( localPackage )
@@ -29,7 +54,12 @@ angular.module( 'App.Client.Launcher' )
 		var os = Device.os();
 		var arch = Device.arch();
 
-		return $q.when( Launcher.launch( localPackage, os, arch ).promise )
+		return $q.when( Api.sendRequest( '/web/dash/token/get_for_game', { game_id: localPackage.game_id } ) )
+			.then( function( credentials )
+			{
+				credentials = { username: credentials.username, user_token: credentials.token };
+				return Launcher.launch( localPackage, os, arch, credentials ).promise;
+			} )
 			.then( function( launchInstance )
 			{
 				return _this.attach( localPackage, launchInstance );
@@ -60,11 +90,6 @@ angular.module( 'App.Client.Launcher' )
 	this.attach = function( localPackage, launchInstance )
 	{
 		this.currentlyPlaying.push( localPackage );
-
-		launchInstance.on( 'pid', function()
-		{
-			localPackage.$setRunningPid( launchInstance.pid )
-		} );
 
 		launchInstance.on( 'end', function()
 		{
