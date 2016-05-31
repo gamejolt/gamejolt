@@ -6,6 +6,7 @@ Disallow: /tick/
 Disallow: /logout
 Disallow: /auth/facebook/
 Disallow: /auth/twitter/
+Disallow: /auth/google/
 Disallow: /authorize/
 
 Disallow: /auth/social-login/
