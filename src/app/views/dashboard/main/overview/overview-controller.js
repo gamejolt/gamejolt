@@ -28,6 +28,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', functio
 		'has_friend',
 		'has_facebook',
 		'has_twitter',
+		'has_google',
 	];
 
 	this.isFullyIntegrated = true;
@@ -46,5 +47,6 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', functio
 		'has_friend': gettextCatalog.getString( 'dash.integrate.has_friend_html' ),
 		'has_facebook': gettextCatalog.getString( 'dash.integrate.has_facebook_html' ),
 		'has_twitter': gettextCatalog.getString( 'dash.integrate.has_twitter_html' ),
+		'has_google': gettextCatalog.getString( 'dash.integrate.has_google_html' ),
 	};
 } );

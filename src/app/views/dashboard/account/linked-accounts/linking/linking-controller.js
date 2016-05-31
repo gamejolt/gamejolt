@@ -13,6 +13,9 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccounts.Link
 		else if ( response.provider == 'twitter' ) {
 			$state.go( 'dashboard.account.linked-accounts.link-callback', { provider: 'twitter', oauth_verifier: response['oauth-verifier'], state: this.token } );
 		}
+		if ( response.provider == 'google' ) {
+			$state.go( 'dashboard.account.linked-accounts.link-callback', { provider: 'google', code: response.code, state: this.token } );
+		}
 
 		// Focus back to the Client.
 		Client.show();
