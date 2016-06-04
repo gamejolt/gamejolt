@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', function(
-	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle,
+	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle, Fireside_Post,
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, User, Environment,
 	Jam,
 	Api, Payload, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
@@ -88,8 +88,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			} );
 		}
 
+		this.posts = Fireside_Post.populate( payload.posts ) || [];
 		this.songs = Game_Song.populate( payload.songs );
-		this.latestArticles = Game_NewsArticle.populate( payload.latestArticles );
+		// this.latestArticles = Game_NewsArticle.populate( payload.latestArticles );
 		this.recommendedGames = Game.populate( payload.recommendedGames );
 		this.supporters = User.populate( payload.supporters ) || [];
 

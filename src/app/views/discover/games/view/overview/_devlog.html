@@ -50,25 +50,28 @@
 	</div>
 </section>
 
-<div class="devlog-description-cut"
-	ng-if="overviewCtrl.canToggleDescription"
-	>
-	<button class="btn btn-outline"
-		ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"
-		gj-track-event="game-profile:show-full-description"
-		ng-switch="!!overviewCtrl.showFullDescription"
-		>
-		<span ng-switch-when="false" translate>Show Full Description</span>
-		<span ng-switch-when="true" translate>Hide</span>
-	</button>
+<div class="devlog-description-cut">
+	<div ng-if="overviewCtrl.canToggleDescription">
+		<button class="btn btn-outline"
+			ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"
+			gj-track-event="game-profile:show-full-description"
+			ng-switch="!!overviewCtrl.showFullDescription"
+			>
+			<span ng-switch-when="false" translate>Show Full Description</span>
+			<span ng-switch-when="true" translate>Less</span>
+		</button>
+	</div>
 </div>
 
 <section class="section">
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-8 col-lg-offset-2">
+			<div class="col-lg-7 col-lg-offset-2">
 
-				<gj-devlog-feed></gj-devlog-feed>
+				<gj-devlog-feed
+					devlog-posts="overviewCtrl.posts"
+					>
+				</gj-devlog-feed>
 
 			</div>
 		</div>
