@@ -2,8 +2,13 @@
 	<div class="container">
 
 		<h1 class="section-header">
+			<div>
+				<span class="tag" ng-if="manageCtrl.game.type == Game.TYPE_DEVLOG" translate>
+					Devlog
+				</span>
+				<span class="tag tag-pink" ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" translate>dash.games.hidden_tag</span>
+			</div>
 			{{ manageCtrl.game.title }}
-			<span class="tag tag-pink" ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" translate>dash.games.hidden_tag</span>
 		</h1>
 		<p class="text-muted small sans-margin-bottom" ng-if="manageCtrl.game.status == Game.STATUS_VISIBLE">
 			<span class="tag tag-active" translate>dash.games.published_tag</span>
@@ -30,19 +35,19 @@
 						dash.games.overview_tab
 					</a>
 				</li>
-				<li gj-tooltip="{{ 'dash.games.media_tooltip' | translate }}" tooltip-placement="bottom">
+				<li ng-if="manageCtrl.game.type != Game.TYPE_DEVLOG" gj-tooltip="{{ 'dash.games.media_tooltip' | translate }}" tooltip-placement="bottom">
 					<a ui-sref=".media.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.media' ) }" translate>
 						dash.games.media_tab
 					</a>
 				</li>
-				<li gj-tooltip="{{ 'dash.games.packages_tooltip' | translate }}" tooltip-placement="bottom">
+				<li ng-if="manageCtrl.game.type != Game.TYPE_DEVLOG" gj-tooltip="{{ 'dash.games.packages_tooltip' | translate }}" tooltip-placement="bottom">
 					<a ui-sref=".packages.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.packages' ) }" translate>
 						dash.games.packages_tab
 					</a>
 				</li>
 				<li gj-tooltip="{{ 'dash.games.news_tooltip' | translate }}" tooltip-placement="bottom">
 					<a ui-sref=".news.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.news' ) }" translate>
-						dash.games.news_tab
+						Devlog Posts
 					</a>
 				</li>
 				<li gj-tooltip="{{ 'dash.games.music_tooltip' | translate }}" tooltip-placement="bottom">
@@ -50,7 +55,7 @@
 						dash.games.music_tab
 					</a>
 				</li>
-				<li gj-tooltip="{{ 'dash.games.api_tooltip' | translate }}" tooltip-placement="bottom">
+				<li ng-if="manageCtrl.game.type != Game.TYPE_DEVLOG" gj-tooltip="{{ 'dash.games.api_tooltip' | translate }}" tooltip-placement="bottom">
 					<a ui-sref=".api.overview" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.api' ) }" translate>
 						dash.games.api_tab
 					</a>

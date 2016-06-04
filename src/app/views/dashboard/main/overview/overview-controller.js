@@ -1,5 +1,7 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', function( $scope, $interval, $state, App, Game, Notification, Fireside_Post, gettextCatalog, payload )
 {
+	$scope.Game = Game;
+
 	App.title = gettextCatalog.getString( 'dash.overview.page_title' );
 
 	// Keep them undefined if not on the payload.

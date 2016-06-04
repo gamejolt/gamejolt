@@ -1,4 +1,4 @@
-<section class="alert alert-warning sans-margin-bottom" ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN">
+<section class="alert alert-warning sans-margin-bottom" ng-if="manageCtrl.game.type != Game.TYPE_DEVLOG && manageCtrl.game.status == Game.STATUS_HIDDEN">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-10 col-lg-8 col-centered" ng-class="{ 'text-center': Screen.isDesktop }">
