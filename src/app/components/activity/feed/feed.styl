@@ -12,6 +12,10 @@
 	@media $media-sm-up
 		margin-left: 0
 
+	&.full-bleed
+		@media $media-sm-up
+			margin-left: -($icon-size + $avatar-margin)
+
 	&-item
 		position: relative
 		display: block
@@ -62,6 +66,37 @@
 			strong
 			b
 				color: $black
+
+		&-header
+			position: relative
+			background-color: $gray-darker
+			margin-left: -(($icon-size / 2) + $avatar-margin)
+			margin-bottom: $line-height-computed
+
+			&-img
+				opacity: 0.7
+
+				> img
+					display: block
+					width: 100%
+					height: auto
+
+			&-content
+				position: absolute
+				bottom: ($grid-gutter-width / 2)
+				left: ($icon-size / 2) + $avatar-margin
+				text-shadow: 1px 1px 1px rgba( $black, 0.5 )
+
+				& .timeline-list-item-time
+					color: $white
+
+				& .timeline-list-item-title
+					font-size: $font-size-h2
+
+					&
+					strong
+					b
+						color: $white
 
 		&-details
 			margin-top: 5px
