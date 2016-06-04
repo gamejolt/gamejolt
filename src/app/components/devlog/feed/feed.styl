@@ -3,84 +3,87 @@
 	@media $media-lg
 		margin-left: -90px
 
-	.devlog-post
-		margin: 0
-		padding: 0
-		padding-bottom: 4em
-		position: relative
-		@extend .clearfix
+.devlog-post
 
-		@media $media-md-up
-			border-left: 2px solid $gray-lightest
+	&-controls
+		text-align: right
 
-		@media $media-lg
-			margin-left: 25px
-			padding-left: 65px
+		// a
+		// 	margin-right: 10px
 
-		.devlog-post-info
-			margin-left: 0
-			font-size: 0.8em
-			@extend .clearfix
+		// 	&.active
+		// 		color: $gj-pink
 
-			@media $media-md-up
-				font-size: 1em
-				margin-top: -12px
+		// 	&:last-child
+		// 		margin-right: 0
 
-		.devlog-post-spot
-			display: none
+// 		margin: 0
+// 		padding: 0
+// 		padding-bottom: 4em
+// 		position: relative
+// 		@extend .clearfix
 
-			@media $media-md-up
-				position: absolute
-				left: -15px
-				top: -15px
-				width: 30px
-				height: 30px
-				overflow: hidden
-				display: block
-				border-radius: 50%
-				background-color: $gray-lightest
-				transition: 0.3s
+// 		@media $media-md-up
+// 			border-left: 2px solid $gray-lightest
 
-		.devlog-post-main
-			margin-bottom: 1em
+// 		@media $media-lg
+// 			margin-left: 25px
+// 			padding-left: 65px
 
-			@media $media-lg
-				margin-left: -65px
+// 		.devlog-post-info
+// 			margin-left: 0
+// 			font-size: 0.8em
+// 			@extend .clearfix
 
-		.devlog-post-content
-			padding: 0 20px
+// 			@media $media-md-up
+// 				font-size: 1em
+// 				margin-top: -12px
 
-			@media $media-lg
-				padding: 0
+// 		.devlog-post-spot
+// 			display: none
 
-			@media $media-xs
-				padding: 0
+// 			@media $media-md-up
+// 				position: absolute
+// 				left: -15px
+// 				top: -15px
+// 				width: 30px
+// 				height: 30px
+// 				overflow: hidden
+// 				display: block
+// 				border-radius: 50%
+// 				background-color: $gray-lightest
+// 				transition: 0.3s
 
-		.devlog-post-controls
-			text-align: right
+// 		.devlog-post-main
+// 			margin-bottom: 1em
 
-			a
-				margin-right: 10px
+// 			@media $media-lg
+// 				margin-left: -65px
 
-				&.active
-					color: $gj-pink
+// 		.devlog-post-content
+// 			padding: 0 20px
 
-				&:last-child
-					margin-right: 0
+// 			@media $media-lg
+// 				padding: 0
 
-		&:hover
-			.devlog-post-spot
-				width: 40px
-				height: 40px
-				left: -20px
-				top: -20px
+// 			@media $media-xs
+// 				padding: 0
 
-			&.devlog-post-text
-				.devlog-post-title
-					top: 0
 
-				.devlog-post-meta
-					opacity: 1
+
+// 		&:hover
+// 			.devlog-post-spot
+// 				width: 40px
+// 				height: 40px
+// 				left: -20px
+// 				top: -20px
+
+// 			&.devlog-post-text
+// 				.devlog-post-title
+// 					top: 0
+
+// 				.devlog-post-meta
+// 					opacity: 1
 
 
 

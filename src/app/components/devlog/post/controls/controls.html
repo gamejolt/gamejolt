@@ -1,34 +1,42 @@
 <!-- Buttons -->
 <div class="devlog-post-controls">
+
 	<!-- <a class="link-muted"
 		gj-tooltip="Edit Post"
 		>
-		<span class="jolticon jolticon-edit middle"></span>
+		<span class="jolticon jolticon-edit"></span>
 	</a> -->
+
 	<!--<a class="link-muted"
-		gj-popover-trigger="devlog-post-control-popover-{{ ctrl.id }}"
+		gj-popover-trigger="devlog-post-control-popover-{{ $ctrl.post.id }}"
 		gj-tooltip="Options"
 		>
-		<span class="jolticon jolticon-ellipsis-h middle"></span>
+		<span class="jolticon jolticon-ellipsis-h"></span>
 	</a>-->
+
 	<a class="btn btn-outline"
 		gj-tooltip="Leave a Comment"
-		ng-if="ctrl.canToggleComments[ctrl.id]"
-		ng-click="ctrl.showFullComments[ctrl.id] = !ctrl.showFullComments[ctrl.id]"
+		ng-click="$ctrl.isShowingComments = !$ctrl.isShowingComments"
 		>
-		<span class="jolticon jolticon-comment middle"></span>
+		<span class="jolticon jolticon-comment"></span>
 		Comments
 		<small>4</small>
 	</a>
-	<a href="#" class="btn btn-outline" gj-tooltip="Like Post" ng-click="ctrl.liked = !ctrl.liked" ng-class="{'active': ctrl.liked}">
-		<span class="jolticon jolticon-heart middle"></span>
+
+	<a class="btn btn-outline"
+		gj-tooltip="Like Post"
+		ng-click="$ctrl.liked = !$ctrl.liked"
+		ng-class="{'active': $ctrl.liked}"
+		>
+		<span class="jolticon jolticon-heart"></span>
 		Like
 		<small>29</small>
 	</a>
+
 </div>
 
 <!-- Options -->
-<gj-popover popover-id="devlog-post-control-popover-{{ ctrl.id }}">
+<gj-popover popover-id="devlog-post-control-popover-{{ $ctrl.post.id }}">
 	<div class="list-group list-group-dark thin">
 		<a class="list-group-item has-icon">
 			<span class="jolticon jolticon-flag warning"></span>
@@ -44,15 +52,11 @@
 </gj-popover>
 
 <!-- Comments -->
-<gj-fade-collapse
-	fade-collapse-height="0"
-	fade-collapse-is-open="ctrl.showFullComments[ctrl.id]"
-	fade-collapse-is-required="ctrl.canToggleComments[ctrl.id]"
-	>
+<div gj-expand-when="$ctrl.isShowingComments">
+		<!--current-page="$ctrl.currentCommentPage"-->
 	<gj-comment-widget
-		current-page="ctrl.currentCommentPage"
-		comment-resource="Game"
-		comment-resource-id="0"
+		comment-resource="Fireside_Post"
+		comment-resource-id="::$ctrl.post.id"
 		>
 	</gj-comment-widget>
-</gj-fade-collapse>
+</div>

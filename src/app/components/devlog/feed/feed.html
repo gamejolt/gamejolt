@@ -1,6 +1,16 @@
-<div class="devlog-feed">
-	<gj-devlog-post-text id="0"></gj-devlog-post-text>
-	<gj-devlog-post-image id="1"></gj-devlog-post-image>
-	<gj-devlog-post-video id="2"></gj-devlog-post-video>
-	<gj-devlog-post-milestone></gj-devlog-post-milestone>
+<div class="devlog-feed timeline-list full-bleed">
+	<div class="devlog-feed-item timeline-list-item anim-fade-in-right no-animate-leave stagger"
+		ng-repeat="post in $ctrl.posts track by post.id"
+		>
+
+		<gj-devlog-post-text
+			post="post"
+			>
+		</gj-devlog-post-text>
+
+	</div>
+	<!--<gj-devlog-post-text id="0"></gj-devlog-post-text>-->
+	<!--<gj-devlog-post-image id="1"></gj-devlog-post-image>-->
+	<!--<gj-devlog-post-video id="2"></gj-devlog-post-video>-->
+	<!--<gj-devlog-post-milestone></gj-devlog-post-milestone>-->
 </div>

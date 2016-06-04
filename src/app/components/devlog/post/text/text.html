@@ -1,49 +1,75 @@
 <div class="devlog-post devlog-post-text">
-	
-	<!-- Post info -->
-	<p class="devlog-post-info text-muted">
+
+	<div class="timeline-list-item-icon">
 		<span class="jolticon jolticon-pencil-box"></span>
-		New post for <a href="#">Low Poly Adventure</a> <span class="pull-right">3 days ago</span>
-	</p>
-	<span class="devlog-post-spot"></span>
-	
-	<!-- Post header -->
-	<div class="devlog-post-main" style="background-image: url('http://cdn.pastemagazine.com/www/system/images/photo_albums/low-poly/large/12-jr-schmidt.jpg')">
-		<div class="devlog-post-fill">
-			<h2 class="devlog-post-title">New Trees, Bushes and Rivers</a></h2>
-			<span class="devlog-post-meta text-muted">
-				<small>April 27th, 2016</small>
-				<span class="dot-separator"></span>
-				<small>3 days ago</small>
-			</span>
-		</div>
 	</div>
-	
-	<!-- Post content -->
-	<gj-fade-collapse
-		fade-collapse-height="200"
-		fade-collapse-is-open="ctrl.showFullContent[ctrl.id]"
-		fade-collapse-is-required="ctrl.canToggleContent[ctrl.id]"
-		>
-		<div class="devlog-post-content">
-			<h3>Introduction</h3>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit eos quo accusamus quas veniam modi facere soluta, nesciunt illum repellendus? Laboriosam ipsam ratione cumque quidem totam doloribus blanditiis laborum expedita.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure vero quaerat, maxime, necessitatibus distinctio voluptatum? Maiores minus, minima itaque reiciendis temporibus harum perspiciatis sit ex deleniti voluptate, omnis tempora explicabo.</p>
-			<ul>
-				<li>Point 1</li>
-				<li>Point 2</li>
-				<li>Point 3</li>
-			</ul>
-			<blockquote>To be or not to be</blockquote>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod omnis id voluptas quasi odio iusto, eveniet repellendus praesentium dolorum sapiente. Eius, animi quos mollitia molestiae, libero ratione laboriosam dolores veniam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt ullam incidunt deserunt iure maxime optio temporibus blanditiis vero corporis adipisci dicta commodi expedita, ad obcaecati hic minima voluptates amet vel!</p>
+
+	<div class="timeline-list-item-main">
+
+		<div class="timeline-list-item-header">
+			<div class="timeline-list-item-header-img">
+				<img ng-src="{{ ::$ctrl.post.header.img_url }}" alt="">
+			</div>
+
+			<div class="timeline-list-item-header-content">
+				<div class="timeline-list-item-time">
+					<span am-time-ago="::$ctrl.post.published_on"></span>
+				</div>
+
+				<div class="timeline-list-item-title">
+					{{ ::$ctrl.post.title }}
+				</div>
+			</div>
 		</div>
-	</gj-fade-collapse>
-	<a class="hidden-text-expander"
-		ng-if="ctrl.canToggleContent[ctrl.id]"
-		ng-click="ctrl.showFullContent[ctrl.id] = !ctrl.showFullContent[ctrl.id]"
-		></a>
-		
-	<!-- Post controls -->
-	<gj-devlog-post-controls id="ctrl.id"></gj-devlog-post-controls>
-	
+
+		<div class="timeline-list-item-details">
+
+			<!-- Post content -->
+			<gj-fade-collapse
+				fade-collapse-height="500"
+				fade-collapse-is-open="$ctrl.showFullContent"
+				fade-collapse-is-required="::$ctrl.canToggleContent"
+				>
+				<div class="fireside-post-body">
+					<div gj-widget-compiler-bind="::$ctrl.post.compiled_content"></div>
+				</div>
+			</gj-fade-collapse>
+
+			<a class="hidden-text-expander"
+				ng-if="::$ctrl.canToggleContent"
+				ng-click="$ctrl.showFullContent = !$ctrl.showFullContent"
+				></a>
+
+			<!-- Post controls -->
+			<gj-devlog-post-controls
+				post="$ctrl.post"
+				>
+			</gj-devlog-post-controls>
+
+		</div>
+
+	</div>
+
+	<!-- Post info -->
+	<!--<p class="devlog-post-info text-muted">
+		New post for
+		<a href="#">
+			{{ ::$ctrl.post.game.title }}
+		</a>
+		<span class="pull-right" am-time-ago="::$ctrl.post.published_on"></span>
+	</p>-->
+
+	<!--<span class="devlog-post-spot"></span>-->
+
+	<!-- Post header -->
+	<!--<div class="devlog-post-main"
+		ng-style="::{ 'background-image': 'url(\'' + $ctrl.post.header.img_url + '\')' }"
+		>
+		<div class="devlog-post-fill">
+			<h2 class="devlog-post-title">
+				{{ ::$ctrl.post.title }}
+			</h2>
+		</div>
+	</div>-->
+
 </div>

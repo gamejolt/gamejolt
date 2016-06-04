@@ -1,59 +1,129 @@
 .devlog-post-text
-	
+
 	.devlog-post-main
 		background-repeat: no-repeat
 		background-size: cover
 		background-position: center center
 		overflow: hidden
 		margin-bottom: 2em !important
-		
+
 		.devlog-post-fill
 			padding: 40px 20px
 			background-color: rgba($black, 0.3)
-			
+
 			@media $media-lg
 				padding: 40px 0
-	
+
 	.devlog-post-title, .devlog-post-meta
 		margin: 0
 		color: white
 		text-shadow: 1px 1px 1px rgba($black, 0.4)
 		display: block
-		
+
 		@media $media-lg
 			margin-left: 65px
-		
+
 	.devlog-post-title
 		font-weight: bold
 		position: relative
 		top: 0
 		margin-bottom: 10px
-		
+
 		@media $media-md-up
 			margin-bottom: 0
 			top: 15px
 			transition: top 0.3s
-		
+
 	.devlog-post-meta
 		opacity: 1
-		
+
 		a
 			color: white
-				
+
 		@media $media-md-up
 			opacity: 0
 			transition: opacity 0.3s
-				
-	.devlog-post-content
-		p, ul, li, ol
-			font-family: $font-family-serif
-			
-		>:first-child
-			margin-top: 0
-	
+
+	// .devlog-post-content
+	// 	p, ul, li, ol
+	// 		font-family: $font-family-serif
+
+	// 	>:first-child
+	// 		margin-top: 0
+
 	.hidden-text-expander
 		margin-left: 20px
 		margin-top: 10px
-		
+
 		@media $media-lg
 			margin-left: 0
+
+
+$fireside-post-font-family = $font-family-serif
+$fireside-post-font-size = $font-size-base
+$fireside-post-line-height = 1.7
+$fireside-post-line-height-computed = floor( $fireside-post-font-size * $fireside-post-line-height )
+
+.fireside-post-body
+	font-family: $fireside-post-font-family
+	font-size: $fireside-post-font-size
+	line-height: $fireside-post-line-height
+	letter-spacing: 0
+
+	img
+		@extend .img-responsive
+
+		// Center it if too small.
+		margin-left: auto
+		margin-right: auto
+
+		// Since images end with a hard line and no extra line spacing padding...
+		// We basically find the line-height padding in bettwen a line and cut it by half and add
+		// that much extra spacing.
+		margin-bottom: $fireside-post-font-size + (($fireside-post-line-height-computed - $fireside-post-font-size) / 2)
+
+	// Notice we put margin at the top when inside a P tag.
+	// This is to catch those instances that they put images inline with their text, the P
+	// tag never closes so we don't get the margin from the P to give it spacing.
+	p > img
+		margin-top: $fireside-post-font-size + (($fireside-post-line-height-computed - $fireside-post-font-size) / 2)
+
+	hr
+		margin-top: $fireside-post-line-height-computed
+		margin-bottom: $fireside-post-line-height-computed
+
+	h1, h2, h3, h4, h5, h6
+		&:first-child
+			margin-top: 0
+
+	p
+		margin-bottom: $fireside-post-font-size
+		letter-spacing: 0
+
+		// Widgets some times create empty P tags.
+		// This hides them so they don't add extra spacing to the page.
+		&:empty
+			display: none
+
+	a
+		link-underlines( $text-color, $white, $gray-lighter )
+
+	table
+		@extend .table
+
+	blockquote
+		font-family: $font-family-base
+		font-style: italic
+		line-height: $line-height-base
+
+		&, p
+			letter-spacing: 0.01em
+
+	.spoiler
+		font-style: normal
+
+	// Removes the added spacing after iframes since they aren't block elements.
+	// They basically by default add their line spacing to the bottom.
+	iframe
+		display: block
+
