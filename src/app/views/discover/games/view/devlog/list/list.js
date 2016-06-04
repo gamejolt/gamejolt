@@ -1,6 +1,5 @@
-angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvider )
+angular.module( 'App.Views' ).config( function( $stateProvider )
 {
-	// $urlRouterProvider.when( '/games/{slug:string}/devlog/{id:int}', '/games/:slug/:id/devlog' );
 	$stateProvider.state( 'discover.games.view.devlog.list', {
 		url: '',
 		controller: 'Discover.Games.View.Devlog.ListCtrl',
