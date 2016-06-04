@@ -51,6 +51,7 @@ angular.module( 'App', [
 	'gj.Device',
 	'gj.Location',
 	'gj.Connection',
+	'gj.Permalink',
 
 	'gj.Partial',
 	'gj.Backdrop',
