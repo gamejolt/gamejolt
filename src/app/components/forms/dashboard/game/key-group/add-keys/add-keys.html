@@ -1,0 +1,47 @@
+<form gj-form="formModel" name="addKeys">
+
+	<form-group name="amount"
+		label="# of Keys to Generate"
+		ng-if="(keyGroup.type == KeyGroup.TYPE_ANONYMOUS || keyGroup.type == KeyGroup.TYPE_ANONYMOUS_CLAIM)"
+		>
+		<input
+			form-control="number"
+			step="1"
+			min="1"
+			ng-max="5000 - keyGroup.key_count"
+			>
+		<control-errors></control-errors>
+	</form-group>
+
+	<form-group name="emails"
+		label="Email Addresses"
+		ng-if="keyGroup.type == KeyGroup.TYPE_EMAIL"
+		>
+		<p class="help-block" translate>
+			Paste one email address per line, or separate them by commas.
+		</p>
+		<textarea form-control rows="10" ng-maxlength="750"></textarea>
+		<control-errors></control-errors>
+	</form-group>
+
+	<form-group name="users"
+		label="Usernames"
+		ng-if="keyGroup.type == KeyGroup.TYPE_USER"
+		>
+		<p class="help-block" translate>
+			Paste one username per line, or separate them by commas.
+		</p>
+		<textarea form-control rows="10" ng-maxlength="750"></textarea>
+		<control-errors></control-errors>
+	</form-group>
+
+	<button gj-form-submit-button
+		class="btn btn-success-outline"
+		ng-disabled="!addKeys.$valid"
+		ng-click="onSubmit()"
+		>
+		<span class="jolticon jolticon-add"></span>
+		<span translate>Add</span>
+	</button>
+
+</form>

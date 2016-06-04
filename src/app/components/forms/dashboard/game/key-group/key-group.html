@@ -1,0 +1,128 @@
+<form gj-form="formModel" name="keyGroupForm">
+
+	<form-group name="type"
+		label="Key Type"
+		ng-if="method == 'add'"
+		>
+		<div class="radio">
+			<label>
+				<input form-control="radio" ng-value="KeyGroup.TYPE_ANONYMOUS">
+				Anonymous &mdash;
+				<span class="help-inline">Can be accessed by anyone with the URL. Users can claim the key in order to assign their account to it. Useful for press keys, bundles, or any time you need to anonymously give out keys.</span>
+			</label>
+		</div>
+		<div class="radio">
+			<label>
+				<input form-control="radio" ng-value="KeyGroup.TYPE_ANONYMOUS_CLAIM">
+				Anonymous (must claim) &mdash;
+				<span class="help-inline">Anyone can claim the key, but they can't access the game until it's claimed. Only one account is able to claim it. This is useful for key giveaways where you'd like only one person to be able to claim per key, but you don't care who claims.</span>
+			</label>
+		</div>
+		<div class="radio">
+			<label>
+				<input form-control="radio" ng-value="KeyGroup.TYPE_EMAIL">
+				Email &mdash;
+				<span class="help-inline">Can be accessed by anyone with the URL. Each one has an associated email address attached to it. This allows them to retrieve their key page with their email address. Useful for Kickstarter rewards.</span>
+			</label>
+		</div>
+		<div class="radio">
+			<label>
+				<input form-control="radio" ng-value="KeyGroup.TYPE_USER">
+				User &mdash;
+				<span class="help-inline">Only the specific users entered will be able to claim your game. This is useful for testers, friends, etc. They won't be able to share their key page with others.</span>
+			</label>
+		</div>
+		<control-errors></control-errors>
+	</form-group>
+
+	<form-group name="name"
+		label="Label"
+		ng-if="!!formModel.type"
+		>
+		<p class="help-block" translate>
+			We need a way to label your groups. Help us out here, geez.
+		</p>
+		<input
+			form-control
+			ng-maxlength="150"
+			>
+		<control-errors></control-errors>
+	</form-group>
+
+	<!-- Turning off for now -->
+	<!--<form-group name="message"
+		label="Message" optional="true"
+		ng-if="!!formModel.type"
+		>
+		<p class="help-block" translate>
+			You can write a custom message for the key/claim page here. A nice greeting, instructions for testers, etc.
+		</p>
+		<textarea form-control rows="2" ng-maxlength="750"></textarea>
+		<control-errors></control-errors>
+	</form-group>-->
+
+	<form-group name="amount"
+		label="# of Keys to Generate"
+		ng-if="!!formModel.type && method == 'add' && (formModel.type == KeyGroup.TYPE_ANONYMOUS || formModel.type == KeyGroup.TYPE_ANONYMOUS_CLAIM)"
+		>
+		<input
+			form-control="number"
+			step="1"
+			min="1"
+			max="5000"
+			>
+		<control-errors></control-errors>
+	</form-group>
+
+	<form-group name="emails"
+		label="Email Addresses"
+		ng-if="!!formModel.type && method == 'add' && formModel.type == KeyGroup.TYPE_EMAIL"
+		>
+		<p class="help-block" translate>
+			Paste one email address per line, or separate them by commas.
+		</p>
+		<textarea form-control rows="10" ng-maxlength="750"></textarea>
+		<control-errors></control-errors>
+	</form-group>
+
+	<form-group name="users"
+		label="Usernames"
+		ng-if="!!formModel.type && method == 'add' && formModel.type == KeyGroup.TYPE_USER"
+		>
+		<p class="help-block" translate>
+			Paste one username per line, or separate them by commas.
+		</p>
+		<textarea form-control rows="10" ng-maxlength="750"></textarea>
+		<control-errors></control-errors>
+	</form-group>
+
+	<div class="form-group"
+		ng-if="!!formModel.type"
+		>
+		<label class="control-label">
+			Access Permissions
+		</label>
+
+		<p class="help-block" translate>
+			The packages for your game that this key group will give access to.
+		</p>
+
+		<div class="checkbox" ng-repeat="package in packages track by package.id">
+			<label>
+				<input type="checkbox" ng-model="formModel.packages[ package.id ]">
+				{{ package.title || game.title }}
+			</label>
+		</div>
+	</div>
+
+	<button gj-form-submit-button
+		class="btn btn-success-outline"
+		ng-if="!!formModel.type && !keyGroupForm.$pristine"
+		ng-disabled="!keyGroupForm.$valid || !arePackagesChosen()"
+		ng-click="onSubmit()"
+		>
+		<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
+		<span translate>Save Key Group</span>
+	</button>
+
+</form>
