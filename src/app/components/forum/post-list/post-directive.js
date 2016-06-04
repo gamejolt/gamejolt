@@ -12,7 +12,7 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $element, $scope, $state, $q, $location, Environment, App, Api, Popover, Forum_Post, Growls, AutoScroll, Report_Modal )
+		controller: function( $element, $scope, $state, $q, $location, Environment, App, Api, Popover, Forum_Post, Growls, AutoScroll, Report_Modal, Permalink )
 		{
 			var _this = this;
 
@@ -150,19 +150,7 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 
 			this.copyPermalink = function()
 			{
-				// We have to add it into view, select, copy, then remove. Yeesh.
-				var permalinkElem = angular.element( '<input type="text" value="' + this.post.getPermalink() + '" id="forum-post-permalink-' + this.id + '">' );
-				$element.append( permalinkElem );
-				permalinkElem[0].select();
-
-				if ( document.execCommand( 'copy' ) ) {
-					Growls.success( 'Copied permalink to your clipboard.', 'Copied!' );
-				}
-				else {
-					Growls.error( 'Could not copy permalink to your clipboard. Dunno why. Sorry.', 'Copy Failed' );
-				}
-
-				permalinkElem.remove();
+				Permalink.copy( this.post.getPermalink() );
 			};
 
 			function checkPermalink()
