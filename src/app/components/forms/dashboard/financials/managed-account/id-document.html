@@ -6,14 +6,14 @@
 	<div
 		ng-if="
 			!helpers.getStripeField( $ctrl.namePrefixDotted + '.document' )
-			|| helpers.getStripeField( $ctrl.namePrefixDotted + '.document' ).details_code
+			|| helpers.getStripeField( $ctrl.namePrefixDotted + '.details_code' )
 		"
 		>
 		<hr>
 
-		<div class="alert alert-info" ng-if="helpers.getStripeField( $ctrl.namePrefixDotted + '.document' ).details">
+		<div class="alert alert-info" ng-if="helpers.getStripeField( $ctrl.namePrefixDotted + '.details' )">
 			<span class="jolticon jolticon-notice"></span>
-			{{ helpers.getStripeField( $ctrl.namePrefixDotted + '.document' ).details }}
+			{{ helpers.getStripeField( $ctrl.namePrefixDotted + '.details' ) }}
 		</div>
 
 		<form-group
@@ -34,7 +34,7 @@
 	<div
 		ng-if="
 			helpers.getStripeField( $ctrl.namePrefixDotted + '.document' )
-			&& !helpers.getStripeField( $ctrl.namePrefixDotted + '.document' ).details_code
+			&& !helpers.getStripeField( $ctrl.namePrefixDotted + '.details_code' )
 		"
 		class="form-horizontal"
 		>
