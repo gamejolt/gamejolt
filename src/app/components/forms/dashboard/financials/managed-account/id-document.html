@@ -1,6 +1,6 @@
 <div ng-if="helpers.requiresField( $ctrl.namePrefixDotted + '.document' )">
 
-	<div ng-if="!helpers.getStripeField( $ctrl.namePrefixDotted + '.document' )">
+	<div ng-if="helpers.getStripeField( $ctrl.namePrefixDotted + '.document' ).status != 'verified'">
 		<hr>
 
 		<form-group
@@ -18,7 +18,7 @@
 		</form-group>
 	</div>
 
-	<div ng-if="helpers.getStripeField( $ctrl.namePrefixDotted + '.document' )" class="form-horizontal">
+	<div ng-if="helpers.getStripeField( $ctrl.namePrefixDotted + '.document' ).status == 'verified'" class="form-horizontal">
 		<div class="form-group">
 			<label class="control-label col-sm-4">
 				ID Document
