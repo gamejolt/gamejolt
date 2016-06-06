@@ -130,6 +130,26 @@
 
 			<div class="col-md-7 col-lg-6" ng-class="{ 'pull-left': Screen.isDesktop }">
 
+				<div ng-if="App.user.has_marketplace_access">
+					<br class="visible-xs visible-sm">
+					<div class="alert alert-info">
+
+						<div translate>
+							<p>
+								<strong>Help us grow the Game Jolt Marketplace!</strong>
+								We have always let the community curate, so it only makes sense for you to pick the next round of sellers on the Game Jolt Marketplace.
+							</p>
+
+							<p><em>You get to shape the type of games the marketplace will be known for.</em></p>
+						</div>
+
+						<a class="btn btn-outline" href="/marketplace/keys" translate>
+							Access your marketplace invite keys
+						</a>
+
+					</div>
+				</div>
+
 				<!--
 					Integrate
 				-->
