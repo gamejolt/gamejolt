@@ -1,7 +1,20 @@
 <div ng-if="helpers.requiresField( $ctrl.namePrefixDotted + '.document' )">
 
-	<div ng-if="helpers.getStripeField( $ctrl.namePrefixDotted + '.document' ).status != 'verified'">
+	<!--
+		It only has a details_code if it failed to verify.
+	-->
+	<div
+		ng-if="
+			!helpers.getStripeField( $ctrl.namePrefixDotted + '.document' )
+			|| helpers.getStripeField( $ctrl.namePrefixDotted + '.document' ).details_code
+		"
+		>
 		<hr>
+
+		<div class="alert alert-info" ng-if="helpers.getStripeField( $ctrl.namePrefixDotted + '.document' ).details">
+			<span class="jolticon jolticon-notice"></span>
+			{{ helpers.getStripeField( $ctrl.namePrefixDotted + '.document' ).details }}
+		</div>
 
 		<form-group
 			name="{{ $ctrl.namePrefix }}-document"
@@ -18,7 +31,13 @@
 		</form-group>
 	</div>
 
-	<div ng-if="helpers.getStripeField( $ctrl.namePrefixDotted + '.document' ).status == 'verified'" class="form-horizontal">
+	<div
+		ng-if="
+			helpers.getStripeField( $ctrl.namePrefixDotted + '.document' )
+			&& !helpers.getStripeField( $ctrl.namePrefixDotted + '.document' ).details_code
+		"
+		class="form-horizontal"
+		>
 		<div class="form-group">
 			<label class="control-label col-sm-4">
 				ID Document
