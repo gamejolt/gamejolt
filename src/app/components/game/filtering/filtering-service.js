@@ -60,6 +60,14 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 			label: 'Filter',
 			type: 'string',
 		},
+		referals: {
+			label: gettextCatalog.getString( 'Referals' ),
+			type: 'radio',
+			options: {
+				enabled: gettextCatalog.getString( 'Enabled' ),
+				disabled: gettextCatalog.getString( 'Disabled' ),
+			}
+		}
 	};
 
 	function isEmpty( filters, options )
