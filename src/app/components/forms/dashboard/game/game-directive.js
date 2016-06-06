@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGame', function( Form, Api, Game, Scroll )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGame', function( Form, Api, Game, Scroll, App )
 {
 	var form = new Form( {
 		model: 'Game',
@@ -12,6 +12,8 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGame', functi
 
 	form.onInit = function( scope )
 	{
+		scope.App = App;
+
 		// Reset values.
 		scope.hasActiveBuilds = false;
 
