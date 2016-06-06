@@ -55,9 +55,15 @@ angular.module( 'App.Client.Launcher' )
 		var arch = Device.arch();
 
 		return $q.when( Api.sendRequest( '/web/dash/token/get_for_game', { game_id: localPackage.game_id } ) )
+			.catch( function( e )
+			{
+				console.log( 'Could not get game token to launch with - launching anyways' );
+				console.error( e );
+				return null;
+			} )
 			.then( function( credentials )
 			{
-				credentials = { username: credentials.username, user_token: credentials.token };
+				credentials = ( credentials && credentials.username && credentials.token ) ? { username: credentials.username, user_token: credentials.token } : null;
 				return Launcher.launch( localPackage, os, arch, credentials ).promise;
 			} )
 			.then( function( launchInstance )
