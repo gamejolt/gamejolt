@@ -96,7 +96,16 @@
 				<span translate>Marketplace Account</span>
 			</legend>
 
-			<gj-form-dashboard-financials-managed-account></gj-form-dashboard-financials-managed-account>
+			<gj-form-dashboard-financials-managed-account
+				ng-if="!account.skip_stripe"
+				>
+			</gj-form-dashboard-financials-managed-account>
+
+			<div class="alert alert-info" ng-if="account.skip_stripe">
+				<p translate>
+					You've been manually approved for the Marketplace.
+				</p>
+			</div>
 		</fieldset>
 
 		<fieldset ng-if="account.is_verified">
