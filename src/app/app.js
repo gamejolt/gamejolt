@@ -259,6 +259,8 @@ angular.module( 'App', [
 	'App.User.SetPasswordModal',
 	'App.User.FriendshipsHelper',
 
+	'App.Terms.ChangeAlert',
+
 	// Views.
 	'App.Views',
 
