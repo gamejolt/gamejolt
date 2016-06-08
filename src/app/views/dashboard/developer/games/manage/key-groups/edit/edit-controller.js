@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyGroups.EditCtrl', function(
-	$scope, $state, $stateParams, Api, KeyGroup, Game_Package, Key, ModalConfirm, Growls, gettextCatalog, payload )
+	$scope, $state, $stateParams, App, Api, KeyGroup, Game_Package, Key, Clipboard, ModalConfirm, Growls, Environment, gettextCatalog, payload )
 {
 	var _this = this;
 
@@ -14,6 +14,8 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyG
 		state: 'all',
 	};
 
+	App.title = gettextCatalog.getString( 'Edit Key Group: {{ name }}', { name: this.keyGroup.name } );
+
 	this.searchKeys = function()
 	{
 		Api.sendRequest( '/web/dash/developer/games/key-groups/search-keys/' + $stateParams.id + '/' + $stateParams.keyGroupId, this.search )
@@ -21,6 +23,11 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyG
 			{
 				_this.keys = Key.populate( response.keys );
 			} );
+	};
+
+	this.copyKeyLink = function( key )
+	{
+		Clipboard.copy( Environment.secureBaseUrl + '/claim/' + key.key );
 	};
 
 	this.onNewKeysAdded = function()
@@ -40,7 +47,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyG
 				return keyGroup.$remove()
 					.catch( function()
 					{
-						Growls.error( 'Could not remove key group for some reason.' );
+						Growls.error( gettextCatalog.getString( 'Could not remove key group for some reason.' ) );
 					} );
 			} )
 			.then( function()
@@ -64,7 +71,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyG
 				return key.$remove()
 					.catch( function()
 					{
-						Growls.error( 'Could not remove key for some reason.' );
+						Growls.error( gettextCatalog.getString( 'Could not remove key for some reason.' ) );
 					} );
 			} )
 			.then( function()
