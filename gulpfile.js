@@ -127,11 +127,19 @@ var config = {
 		'checkout',
 	],
 	translations: 'site-translations',
-	translationSections: [
-		'auth',
-		'dash',
-		'checkout',
-	],
+	translationSections: {
+		auth: [
+			'auth/',
+		],
+		dash: [
+			'app/components/forms/dashboard',
+			'app/components/forms/site\-analytics',
+			'app/views/dashboard',
+		],
+		checkout: [
+			'checkout/',
+		],
+	},
 };
 
 require( './src/lib/gj-lib-client/gulp/tasks/common.js' )( config );
