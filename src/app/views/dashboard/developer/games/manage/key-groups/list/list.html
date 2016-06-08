@@ -1,11 +1,13 @@
 <h2 class="section-header" translate>
-	Key Groups
+	Access Keys
 </h2>
 
 <div class="row">
 	<div class="col-md-4 col-md-push-7">
-		<div class="page-help">
-			<p>Organise your keys into groups. Alpha/beta testers, friends, press, YouTubers, streamers, etc.</p>
+		<div class="page-help" translate>
+			<p>Manage access keys for your game through key groups.</p>
+			<p>You can create different groups for different types of access, e.g. testers, friends, press, let's players, etc.</p>
+			<p>They will be able to access your game's builds through the provided keys.</p>
 		</div>
 	</div>
 
@@ -18,7 +20,7 @@
 
 					<div class="key-groups-progress hidden-xs">
 						<div>
-							<strong>Viewed</strong>
+							<strong translate>Viewed</strong>
 							{{ group.viewed_count || 0 | number }} / {{ group.key_count || 0 | number }}
 							({{ group.viewed_count / group.key_count * 100 | number:2 }}%)
 						</div>
@@ -28,7 +30,7 @@
 						<br>
 
 						<div>
-							<strong>Claimed</strong>
+							<strong translate>Claimed</strong>
 							{{ group.claimed_count || 0 | number }} / {{ group.key_count || 0 | number }}
 							({{ group.claimed_count / group.key_count * 100 | number:2 }}%)
 						</div>
@@ -46,13 +48,13 @@
 					<div>
 						<span class="tag tag-blue">
 							<span ng-if="group.type == KeyGroup.TYPE_ANONYMOUS" translate>
-								Anonymous
+								Unrestricted (Anonymous)
 							</span>
 							<span ng-if="group.type == KeyGroup.TYPE_ANONYMOUS_CLAIM" translate>
-								Anonymous (must claim)
+								Claim-Only
 							</span>
 							<span ng-if="group.type == KeyGroup.TYPE_EMAIL" translate>
-								Email
+								Unrestricted (Email)
 							</span>
 							<span ng-if="group.type == KeyGroup.TYPE_USER" translate>
 								User
@@ -64,7 +66,7 @@
 					<div>
 						<a class="btn btn-outline btn-sm" ui-sref="dashboard.developer.games.manage.key-groups.edit( { keyGroupId: group.id } )">
 							<span class="jolticon jolticon-cog"></span>
-							Edit
+							<span translate>Edit</span>
 						</a>
 					</div>
 

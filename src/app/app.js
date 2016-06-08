@@ -74,6 +74,7 @@ angular.module( 'App', [
 	'gj.Alert.Dismissable',
 	'gj.Lazy.Placeholder',
 	'gj.Registry',
+	'gj.Clipboard',
 
 	'gj.History',
 	'gj.History.Cache',

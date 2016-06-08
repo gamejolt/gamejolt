@@ -1,46 +1,46 @@
 <form gj-form="formModel" name="keyGroupForm">
 
 	<form-group name="type"
-		label="Key Type"
+		label="{{ 'Key Type' | translate }}"
 		ng-if="method == 'add'"
 		>
 		<div class="radio">
 			<label>
-				<input form-control="radio" ng-value="KeyGroup.TYPE_ANONYMOUS">
-				Anonymous &mdash;
-				<span class="help-inline">Can be accessed by anyone with the URL. Users can claim the key in order to assign their account to it. Useful for press keys, bundles, or any time you need to anonymously give out keys.</span>
+				<input form-control="radio" ng-value="KeyGroup.TYPE_USER">
+				<span translate>User</span> &mdash;
+				<span class="help-inline" translate>Only the Game Jolt users you specify will be able to access and claim your game. Useful for testers, friends, etc.</span>
 			</label>
 		</div>
 		<div class="radio">
 			<label>
 				<input form-control="radio" ng-value="KeyGroup.TYPE_ANONYMOUS_CLAIM">
-				Anonymous (must claim) &mdash;
-				<span class="help-inline">Anyone can claim the key, but they can't access the game until it's claimed. Only one account is able to claim it. This is useful for key giveaways where you'd like only one person to be able to claim per key, but you don't care who claims.</span>
+				<span translate>Claim-Only</span> &mdash;
+				<span class="help-inline" translate>Game can only be accessed once the key is claimed by a Game Jolt user. Useful for key giveaways where you'd like only one person to be able to claim per key, but you don't care who claims it.</span>
+			</label>
+		</div>
+		<div class="radio">
+			<label>
+				<input form-control="radio" ng-value="KeyGroup.TYPE_ANONYMOUS">
+				<span translate>Unrestricted (Anonymous)</span> &mdash;
+				<span class="help-inline" translate>Anyone can access the game through the key page until the key has been claimed by a Game Jolt user. Useful for press keys, bundles, or any time you need to anonymously give out keys and see which have been claimed.</span>
 			</label>
 		</div>
 		<div class="radio">
 			<label>
 				<input form-control="radio" ng-value="KeyGroup.TYPE_EMAIL">
-				Email &mdash;
-				<span class="help-inline">Can be accessed by anyone with the URL. Each one has an associated email address attached to it. This allows them to retrieve their key page with their email address. Useful for Kickstarter rewards.</span>
-			</label>
-		</div>
-		<div class="radio">
-			<label>
-				<input form-control="radio" ng-value="KeyGroup.TYPE_USER">
-				User &mdash;
-				<span class="help-inline">Only the specific users entered will be able to claim your game. This is useful for testers, friends, etc. They won't be able to share their key page with others.</span>
+				<span translate>Unrestricted (Email)</span> &mdash;
+				<span class="help-inline" translate>Behaves exactly like Unrestricted keys, except they can be retrieved at any time through a retrieval page by entering their email address. Useful for assigning keys for Kickstarter rewards, etc</span>
 			</label>
 		</div>
 		<control-errors></control-errors>
 	</form-group>
 
 	<form-group name="name"
-		label="Label"
+		label="{{ 'Label' | translate }}"
 		ng-if="!!formModel.type"
 		>
 		<p class="help-block" translate>
-			We need a way to label your groups. Help us out here, geez.
+			This is just so you can keep track of your groups. It won't be shown to users.
 		</p>
 		<input
 			form-control
@@ -51,7 +51,7 @@
 
 	<!-- Turning off for now -->
 	<!--<form-group name="message"
-		label="Message" optional="true"
+		label="{{ 'Message' | translate }}" optional="true"
 		ng-if="!!formModel.type"
 		>
 		<p class="help-block" translate>
@@ -62,20 +62,20 @@
 	</form-group>-->
 
 	<form-group name="amount"
-		label="# of Keys to Generate"
+		label="{{ '# of Keys to Generate' | translate }}"
 		ng-if="!!formModel.type && method == 'add' && (formModel.type == KeyGroup.TYPE_ANONYMOUS || formModel.type == KeyGroup.TYPE_ANONYMOUS_CLAIM)"
 		>
 		<input
 			form-control="number"
 			step="1"
 			min="1"
-			max="5000"
+			max="20000"
 			>
 		<control-errors></control-errors>
 	</form-group>
 
 	<form-group name="emails"
-		label="Email Addresses"
+		label="{{ 'Email Addresses' | translate }}"
 		ng-if="!!formModel.type && method == 'add' && formModel.type == KeyGroup.TYPE_EMAIL"
 		>
 		<p class="help-block" translate>
@@ -86,7 +86,7 @@
 	</form-group>
 
 	<form-group name="users"
-		label="Usernames"
+		label="{{ 'Usernames' | translate }}"
 		ng-if="!!formModel.type && method == 'add' && formModel.type == KeyGroup.TYPE_USER"
 		>
 		<p class="help-block" translate>
@@ -99,7 +99,7 @@
 	<div class="form-group"
 		ng-if="!!formModel.type"
 		>
-		<label class="control-label">
+		<label class="control-label" translate>
 			Access Permissions
 		</label>
 
@@ -112,6 +112,12 @@
 				<input type="checkbox" ng-model="formModel.packages[ package.id ]">
 				{{ package.title || game.title }}
 			</label>
+		</div>
+	</div>
+
+	<div gj-expand-when="formState.serverErrors['num-keys']">
+		<div class="alert alert-warning" translate>
+			You can only have a max of {{ 20000 | number }} keys in a single key group.
 		</div>
 	</div>
 
