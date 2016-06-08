@@ -1,57 +1,61 @@
 angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( $q, Api, Graph, Geo, gettextCatalog )
 {
-	function _generateRequestData( resource, resourceId, eventTypes, analyzer, dates )
+	function _generateRequestData( resource, resourceId, metrics, analyzer, dates )
 	{
 		var request = {};
 
-		eventTypes.forEach( function( eventType )
+		angular.forEach( metrics, function( metric )
 		{
-			request[ eventType ] = {
+			if ( metric.type == 'currency' ) {
+				analyzer = analyzer + '-sum';
+			}
+
+			request[ metric.key ] = {
 				target: resource,
 				target_id: resourceId,
-				collection: eventType + 's',
+				collection: metric.collection,
 				analyzer: analyzer,
 			};
 
 			if ( dates ) {
 				var date = new Date();
-				request[ eventType ].from_date = dates[0] / 1000;
-				request[ eventType ].to_date = dates[1] / 1000;
-				request[ eventType ].timezone = date.getTimezoneOffset();
+				request[ metric.key ].from_date = dates[0] / 1000;
+				request[ metric.key ].to_date = dates[1] / 1000;
+				request[ metric.key ].timezone = date.getTimezoneOffset();
 			}
 		} );
 
 		return request;
 	}
 
-	this.getHistogram = function( resource, resourceId, eventTypes, dates )
+	this.getHistogram = function( resource, resourceId, metrics, dates )
 	{
-		var request = _generateRequestData( resource, resourceId, eventTypes, 'histogram', dates );
+		var request = _generateRequestData( resource, resourceId, metrics, 'histogram', dates );
 
 		return Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
 			.then( function( response )
 			{
 				var data = {};
-				angular.forEach( response, function( eventData, eventType )
+				angular.forEach( response, function( eventData, metricKey )
 				{
-					data[ eventType ] = Graph.createGraphData( eventData.result );
-					data[ eventType ].total = eventData.total;
+					data[ metricKey ] = Graph.createGraphData( eventData.result );
+					data[ metricKey ].total = eventData.total;
 				} );
 				return data;
 			} );
 	};
 
-	this.getCount = function( resource, resourceId, eventTypes, dates )
+	this.getCount = function( resource, resourceId, metrics, dates )
 	{
-		var request = _generateRequestData( resource, resourceId, eventTypes, 'count', dates );
+		var request = _generateRequestData( resource, resourceId, metrics, 'count', dates );
 
 		return Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
 			.then( function( response )
 			{
 				var data = {};
-				angular.forEach( response, function( eventData, eventType )
+				angular.forEach( response, function( eventData, metricKey )
 				{
-					data[ eventType ] = {
+					data[ metricKey ] = {
 						total: eventData.total,
 					};
 				} );
@@ -96,8 +100,6 @@ angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( $q, Ap
 				else {
 					row.hasData = row.data && Object.keys( row.data ).length > 0;
 				}
-
-				console.log( report );
 			} );
 		} );
 
@@ -115,7 +117,7 @@ angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( $q, Ap
 			data: {
 				target: requestData.resource,
 				target_id: requestData.resourceId,
-				collection: requestData.eventType + 's',
+				collection: requestData.metric.collection,
 				analyzer: analyzer,
 				field: field,
 			},

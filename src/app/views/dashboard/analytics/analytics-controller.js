@@ -16,56 +16,65 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 	this.games = Game.populate( payload.games );
 	this.breakdownReports = [];
 
-	this.stats = {
-		view: {
-			eventType: 'view',
+	var metrics = [
+		{
+			key: 'view',
+			collection: 'views',
 			label: gettextCatalog.getString( 'Views' ),
 			type: 'number',
 		},
-		download: {
-			eventType: 'download',
+		{
+			key: 'download',
+			collection: 'downloads',
 			label: gettextCatalog.getString( 'Downloads' ),
 			type: 'number',
 		},
-		install: {
-			eventType: 'install',
+		{
+			key: 'install',
+			collection: 'installs',
 			label: gettextCatalog.getString( 'Installs' ),
 			type: 'number',
 		},
-		comment: {
-			eventType: 'comment',
+		{
+			key: 'comment',
+			collection: 'comments',
 			label: gettextCatalog.getString( 'Comments' ),
 			type: 'number',
 		},
-		rating: {
-			eventType: 'rating',
+		{
+			key: 'rating',
+			collection: 'ratings',
 			label: gettextCatalog.getString( 'Ratings' ),
 			type: 'number',
 		},
-		follow: {
-			eventType: 'follow',
+		{
+			key: 'follow',
+			collection: 'follows',
 			label: gettextCatalog.getString( 'Follows' ),
 			type: 'number',
 		},
-	};
+	];
 
 	if ( App.user.has_marketplace_access ) {
-		this.stats.sale = {
-			eventType: 'sale',
+		metrics.push( {
+			key: 'sale',
+			collection: 'sales',
 			label: gettextCatalog.getString( 'Sales' ),
 			type: 'number',
-		};
+		} );
 
-		// this.stats.revenue = {
-		// 	eventType: 'sale',
-		// 	label: gettextCatalog.getString( 'Revenue' ),
-		// 	type: 'currency',
-		// };
+		metrics.push( {
+			key: 'revenue',
+			collection: 'sales',
+			label: gettextCatalog.getString( 'Revenue' ),
+			type: 'currency',
+		} );
 	}
 
-	var _gameEventTypes = Object.keys( this.stats );
-	var _packageEventTypes = [ 'download' ];
-	var _releaseEventTypes = [ 'download' ];
+	this.allMetrics = _.indexBy( metrics, 'key' );
+	var _gameMetrics = this.allMetrics;
+	var _packageMetrics = _( this.allMetrics ).pick( [ 'download' ] ).value();
+	var _releaseMetrics = _( this.allMetrics ).pick( [ 'download' ] ).value();
 
 	this.stateChanged = function( $stateParams )
 	{
@@ -74,27 +83,25 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 		this.resourceId = parseInt( $stateParams.resourceId, 10 ) || this.games[0].id;
 
 		if ( this.resource == 'Game' ) {
-			this.eventTypes = _gameEventTypes;
-			this.eventType = $stateParams.eventType || 'view';
+			this.availableMetrics = _gameMetrics;
+			this.metric = this.availableMetrics[ $stateParams.metricKey || 'view' ];
 		}
 		else if ( this.resource == 'Game_Package' ) {
-			this.eventTypes = _packageEventTypes;
-			this.eventType = $stateParams.eventType || 'download';
+			this.availableMetrics = _packageMetrics;
+			this.metric = this.availableMetrics[ $stateParams.metricKey || 'download' ];
 		}
 		else if ( this.resource == 'Game_Release' ) {
-			this.eventTypes = _releaseEventTypes;
-			this.eventType = $stateParams.eventType || 'download';
+			this.availableMetrics = _releaseMetrics;
+			this.metric = this.availableMetrics[ $stateParams.metricKey || 'download' ];
 		}
 		else {
 			throw new Error( 'Invalid resource.' );
 		}
 
-		this.stat = this.stats[ this.eventType ];
-
 		// If any of the parameters changed, refresh the state.
 		if (
 			this.period != $stateParams.period
-			|| this.eventType != $stateParams.eventType
+			|| this.metric.key != $stateParams.metricKey
 			|| this.resource != $stateParams.resource
 			|| this.resourceId != $stateParams.resourceId
 		) {
@@ -103,9 +110,12 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 				options = { location: 'replace' };
 			}
 
+			var stateParams = _.pick( this, [ 'period', 'resource', 'resourceId' ] );
+			stateParams.metricKey = this.metric.key;
+
 			$state.go(
 				'dashboard.analytics.view',
-				_.pick( this, [ 'period', 'eventType', 'resource', 'resourceId' ] ),
+				stateParams,
 				options
 			);
 
@@ -182,18 +192,18 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 
 	// Only the fields that can affect report breakdowns.
 	$scope.$watchGroup( globalWatch.concat( [
-		'analyticsCtrl.eventType',
+		'analyticsCtrl.metric.key',
 	] ),
 	function()
 	{
-		if ( _this.period && _this.resource && _this.resourceId && _this.eventType ) {
-			_this.changeReport( _this.stat );
+		if ( _this.period && _this.resource && _this.resourceId && _this.metric ) {
+			_this._reportChanged( _this.metric );
 		}
 	} );
 
 	this.histograms = function()
 	{
-		return SiteAnalytics.getHistogram( _this.resource, _this.resourceId, this.eventTypes, [ this.startTime, this.endTime ] )
+		return SiteAnalytics.getHistogram( _this.resource, _this.resourceId, this.availableMetrics, [ this.startTime, this.endTime ] )
 			.then( function( data )
 			{
 				angular.extend( _this, data );
@@ -202,7 +212,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 
 	this.counts = function()
 	{
-		return SiteAnalytics.getCount( _this.resource, _this.resourceId, this.eventTypes )
+		return SiteAnalytics.getCount( _this.resource, _this.resourceId, this.availableMetrics )
 			.then( function( data )
 			{
 				angular.extend( _this, data );
@@ -219,7 +229,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 		var report = SiteAnalytics.getReport( title, rows, {
 			resource: this.resource,
 			resourceId: this.resourceId,
-			eventType: this.eventType,
+			metric: this.metric,
 			startTime: this.startTime,
 			endTime: this.endTime,
 		} );
@@ -227,9 +237,8 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 		this.breakdownReports.push( report );
 	};
 
-	this.changeReport = function( stat )
+	this._reportChanged = function()
 	{
-		this.eventType = stat.eventType;
 		this.breakdownReports = [];
 
 		// Common report types.
@@ -257,7 +266,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 			fieldLabel: 'OS',
 		};
 
-		switch ( this.eventType ) {
+		switch ( this.metric.key ) {
 			case 'view': {
 				this.getReport( 'Top Sources', TYPE_SOURCE );
 				this.getReport( 'Referring Pages', TYPE_REFERRERS );
@@ -303,6 +312,14 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 			}
 
 			case 'sale': {
+				this.getReport( 'Top Sources', TYPE_SOURCE );
+				this.getReport( 'Referring Pages', TYPE_REFERRERS );
+				this.getReport( 'Countries', TYPE_COUNTRIES );
+				this.getReport( 'Operating Systems', TYPE_OS );
+				break;
+			}
+
+			case 'revenue': {
 				this.getReport( 'Revenue Stats',
 					{
 						type: 'sum',
@@ -317,12 +334,6 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 						fieldType: 'currency',
 					}
 				);
-
-				this.getReport( 'Top Sources', TYPE_SOURCE );
-				this.getReport( 'Referring Pages', TYPE_REFERRERS );
-				this.getReport( 'Countries', TYPE_COUNTRIES );
-				this.getReport( 'Operating Systems', TYPE_OS );
-				break;
 			}
 		}
 	};
