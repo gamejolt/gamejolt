@@ -1,9 +1,19 @@
-angular.module( 'App.Views' ).config( function( $stateProvider )
+import overviewMod from './overview/overview';
+
+import { ChannelCtrl } from './channel-controller';
+
+const MODULE = 'App.Views.Channels.Channel';
+export default MODULE;
+
+angular.module( MODULE, [
+	overviewMod,
+] )
+.config( function( $stateProvider )
 {
 	$stateProvider.state( 'discover.channels.channel', {
 		url: '/:channel',
 		abstract: true,
-		controller: 'Discover.Channels.ChannelCtrl',
+		controller: ChannelCtrl,
 		controllerAs: 'channelCtrl',
 		templateUrl: '/app/views/discover/channels/channel/channel.html',
 		resolve: {

@@ -1,3 +1,57 @@
+// import 'rxjs/Rx';
+// import { UpgradeAdapter } from '@angular/upgrade';
+
+// // import { bootstrap } from '@angular/platform-browser-dynamic';
+// import { Component, Input, OnInit } from '@angular/core';
+
+// const upgradeAdapter = new UpgradeAdapter();
+
+// @Component({
+// 	selector: 'gj-meter',
+// 	template: `
+// 	<div class="meter"
+// 		[class.big]="isBig"
+// 		[class.meter-low]="level <= 5"
+// 		[class.meter-mid]="level > 5 && level < 8"
+// 		[class.meter-high]="level >= 8"
+// 		>
+
+// 		<div class="meter-blip"
+// 			*ngFor="let i of [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]"
+// 			[class.meter-blip-filled]="level >= i - 0.1"
+// 			>
+// 		</div>
+
+// 		<!--
+// 			Since the last bar is special cased to 9.5 instead of 10.
+// 		-->
+// 		<div class="meter-blip" [class.meter-blip-filled]="level >= 9.5"></div>
+
+// 	</div>
+// 	`,
+// })
+// class MeterComponent implements OnInit
+// {
+// 	@Input( 'meterRating' ) rating: number;
+// 	@Input( 'meterIsBig' ) isBig: boolean;
+
+// 	level: number;
+
+// 	ngOnInit()
+// 	{
+// 		console.log( 'yo' );
+// 		this.level = (this.rating || 0) * 2;
+// 	}
+// }
+
+// ///////
+
+import viewsMod from './views/views';
+import formsMod from './components/forms/forms';
+
+import { AppCtrl } from './app-controller';
+import { App } from './app-service';
+
 angular.module( 'App', [
 	// Libs.
 	'ngSanitize',
@@ -53,10 +107,10 @@ angular.module( 'App', [
 
 	'gj.Popover',
 
-	'App.Forms',
+	formsMod,
 
 	// Views.
-	'App.Views',
+	viewsMod,
 
 	// Client.
 	/* inject client:base:modules */
@@ -99,4 +153,14 @@ angular.module( 'App', [
 		$compileProvider.aHrefSanitizationWhitelist( /^\s*(https?|ftp|mailto|tel|file|app):/ );
 		$compileProvider.imgSrcSanitizationWhitelist( /^\s*((https?|ftp|file|blob|app):|data:image\/)/ );
 	}
-} );
+} )
+.service( 'App', App )
+.controller( 'AppCtrl', AppCtrl )
+// .directive( 'yoMeter', <angular.IDirectiveFactory>upgradeAdapter.downgradeNg2Component( MeterComponent ) );
+;
+
+setTimeout( function()
+{
+	// upgradeAdapter.bootstrap( document, [ 'App' ] );
+	angular.bootstrap( document, [ 'App' ] );
+}, 0 );

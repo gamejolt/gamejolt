@@ -1,4 +1,9 @@
-angular.module( 'App.Views' ).config( function( $stateProvider )
+import channelMod from './channel/channel';
+
+angular.module( 'App.Views.Channels', [
+	channelMod,
+] )
+.config( function( $stateProvider )
 {
 	$stateProvider.state( 'discover.channels', {
 		url: '/channels',
@@ -7,7 +12,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		resolve: {
 
 			// Channel controllers are lazy loaded.
-			components: function( $ocLazyLoad )
+			components: ( $ocLazyLoad ) =>
 			{
 				return $ocLazyLoad.load( '/app/modules/channels.js' );
 			},
