@@ -5,5 +5,11 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		templateUrl: '/app/views/dashboard/account/account.html',
 		controllerAs: 'accountCtrl',
 		controller: angular.noop,
+		resolve: {
+			payload: function( Api )
+			{
+				return Api.sendRequest( '/web/touch' );
+			}
+		}
 	} );
 } );
