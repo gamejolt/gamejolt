@@ -56,10 +56,10 @@ module.exports = function( config )
 	}
 
 	var gypTasks = [
-		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
+		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.14.6 --target_arch=' + config.gypArch,
 	];
 	if ( config.platform == 'win' ) {
-		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
+		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.14.6 --arch=' + config.gypArch );
 	}
 
 	gulp.task( 'client:gyp', shell.task( gypTasks ) );
@@ -177,11 +177,6 @@ module.exports = function( config )
 		// Gotta pull the node_modules that we need.
 		clientJson.dependencies = packageJson.dependencies;
 
-		// If we're in dev, then add the toolbar for debugging.
-		if ( !config.production ) {
-			clientJson.window.toolbar = true;
-		}
-
 		if ( !config.watching && os.type() != 'Darwin' ) {
 
 			// We set the base directory to use the "package" folder.
@@ -196,12 +191,12 @@ module.exports = function( config )
 
 	var nodeModuletasks = [
 		'cd ' + config.buildDir + ' && npm install --production',
-		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
+		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.14.6 --target_arch=' + config.gypArch,
 	];
 
 	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
-		nodeModuletasks.push( 'cd ' + path.resolve( config.buildDir, windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
+		nodeModuletasks.push( 'cd ' + path.resolve( config.buildDir, windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.14.6 --arch=' + config.gypArch );
 		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' );
 		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, windowsMutexPath, 'build/Release/CreateMutex.node' ) + ' nw.exe GameJoltClient.exe' );
 	}
@@ -263,7 +258,7 @@ module.exports = function( config )
 		}
 
 		var nw = new NwBuilder( {
-			version: '0.12.3',
+			version: '0.14.6',
 			files: config.buildDir + '/**/*',
 			buildDir: config.clientBuildDir,
 			cacheDir: config.clientBuildCacheDir,
