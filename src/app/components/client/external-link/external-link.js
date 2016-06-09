@@ -58,7 +58,7 @@ angular.module( 'App.Client.ExternalLink', [] ).run( function( $window, Environm
 			event.preventDefault();
 		}
 		// Do nothing if it's a local relative or absolute link
-		else if ( link.startsWith( '#!' ) || link.startsWith( 'app://' ) ) {
+		else if ( link.startsWith( '#!' ) || link.startsWith( 'chrome-extension://' ) ) {
 		}
 		else {
 			gui.Shell.openExternal ( link );
