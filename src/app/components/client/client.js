@@ -10,7 +10,6 @@ angular.module( 'App.Client', [
 	'App.Client.Tray',
 	'App.Client.MacAppMenu',
 	'App.Client.Forms',
-	'App.Client.Hidpi',
 	'App.Client.Library',
 	'App.Client.Installer',
 	'App.Client.Launcher',
