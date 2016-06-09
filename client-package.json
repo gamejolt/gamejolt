@@ -1,6 +1,7 @@
 {
   "name": "game-jolt-client",
-  "main": "app://game-jolt-client/index.html#!/",
+  "domain": "game-jolt-client",
+  "main": "index.html#!/",
   "window": {
     "show": false,
     "width": 1250,
@@ -8,7 +9,6 @@
     "min_height": 400,
     "min_width": 400,
     "position": "center",
-    "toolbar": false,
     "frame": true,
     "icon": "app/img/client/icon-256x256.png"
   },
