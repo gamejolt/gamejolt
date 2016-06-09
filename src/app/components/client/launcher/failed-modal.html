@@ -1,0 +1,24 @@
+<div class="modal-body">
+	<h2 class="modal-title" translate>Failed to Launch</h2>
+	<p translate>This package failed to launch. You can read some diagnostic info below to see why it may have failed.</p>
+
+	<h4 translate>System Details</h4>
+	<p>
+		<strong translate>Operating System:</strong> {{ $ctrl.os }} <br>
+		<strong translate>Architecture:</strong> {{ $ctrl.arch }}
+	</p>
+
+	<h4 translate>Launch Options</h4>
+	<pre>{{ $ctrl.package.launch_options }}</pre>
+
+	<h4 translate>Output Log</h4>
+	<pre>something</pre>
+
+</div>
+
+<div class="modal-footer">
+	<button class="i-button warning" ng-click="$ctrl.close()">
+		<span class="jolticon jolticon-remove"></span>
+		<span translate>Close</span>
+	</button>
+</div>

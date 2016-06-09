@@ -6,7 +6,7 @@ angular.module( 'App.Client.Launcher' )
 		Client_Launcher.init();
 	} );
 } )
-.service( 'Client_Launcher', function( $q, $rootScope, Client_Library, Device, Growls )
+.service( 'Client_Launcher', function( $q, $rootScope, Client_Library, Device, Growls, Client_Launcher_FailedModal )
 {
 	var _this = this;
 
@@ -39,6 +39,7 @@ angular.module( 'App.Client.Launcher' )
 				_this.clear( localPackage );
 				console.error( e );
 				Growls.error( 'Could not launch game.' );
+				Client_Launcher_FailedModal.show( localPackage );
 			} );
 	};
 
