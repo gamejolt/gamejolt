@@ -165,7 +165,6 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 			{
 				var fs = require( 'fs' );
 				var path = require( 'path' );
-				var gui = require( 'nw.gui' );
 
 				fs.readdir( path.resolve( localPackage.install_dir ), function( err, files )
 				{
@@ -175,7 +174,7 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 
 					// Just open the first file in the folder.
 					// This way we open within the package folder instead of the parent folder.
-					gui.Shell.showItemInFolder( path.resolve( localPackage.install_dir, files[0] ) );
+					nw.Shell.showItemInFolder( path.resolve( localPackage.install_dir, files[0] ) );
 				} );
 			};
 

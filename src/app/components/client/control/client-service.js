@@ -2,9 +2,8 @@ angular.module( 'App.Client.Control' ).service( 'Client', function( $log )
 {
 	var _this = this;
 
-	var gui = require( 'nw.gui' );
-	var app = gui.App;
-	var win = gui.Window.get();
+	var app = nw.App;
+	var win = nw.Window.get();
 
 	// Whether or not we started "hidden".
 	this.startedSilently = false;

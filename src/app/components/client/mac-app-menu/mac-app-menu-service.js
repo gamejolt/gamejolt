@@ -7,12 +7,10 @@ angular.module( 'App.Client.MacAppMenu' )
 } )
 .service( 'MacAppMenu', function( $state, Screen, Client, App, User_TokenModal )
 {
-	var gui = require( 'nw.gui' );
-
 	this.init = function( section )
 	{
-		var win = gui.Window.get();
-		var menu = new gui.Menu( { type: 'menubar' } );
+		var win = nw.Window.get();
+		var menu = new nw.Menu( { type: 'menubar' } );
 
 		menu.createMacBuiltin( 'Game Jolt Client', {
 			// hideEdit: false,
@@ -35,7 +33,7 @@ angular.module( 'App.Client.MacAppMenu' )
 
 		// reopen is Mac specific
 		// When they click the dock, we need to show it in case they hid it with the close.
-		gui.App.on( 'reopen', function()
+		nw.App.on( 'reopen', function()
 		{
 			win.show();
 		} );

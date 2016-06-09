@@ -165,8 +165,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 		{
 			// Within Client we have to access it this way.
 			if ( Environment.isClient ) {
-				var gui = require( 'nw.gui' );
-				var win = gui.Window.get();
+				var win = nw.Window.get();
 				win.cookies.get( {
 					url: 'game-jolt-client',
 					name: name,
