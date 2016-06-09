@@ -9,7 +9,7 @@ angular.module( 'App.Client.Tray' )
 	// TRAY IS WINDOWS ONLY AT THIS TIME
 	// We should turn this on for Linux when this bug is fixed:
 	// https://github.com/nwjs/nw.js/issues/2771
-	if ( Device.os() == 'windows' ) {
+	if ( Device.os() == 'windows' || Device.os() == 'linux' ) {
 		Client_Tray.init( section );
 	}
 } )
