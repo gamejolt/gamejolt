@@ -68,6 +68,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 			collection: 'sales',
 			label: gettextCatalog.getString( 'Revenue' ),
 			type: 'currency',
+			field: 'revenue',
 		} );
 	}
 
@@ -334,6 +335,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 						fieldType: 'currency',
 					}
 				);
+				break;
 			}
 		}
 	};
