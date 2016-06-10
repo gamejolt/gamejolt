@@ -75,6 +75,15 @@
 							</a>
 
 							<a
+								ng-if="::profileCtrl.user.google_id"
+								class="link-muted"
+								target="_blank"
+								ng-href="https://plus.google.com/{{ ::profileCtrl.user.google_id }}"
+								>
+								<span class="jolticon jolticon-google-plus big" gj-tooltip="{{ profileCtrl.user.google_nickname }}"></span>
+							</a>
+
+							<a
 								ng-if="::profileCtrl.user.web_site"
 								class="link-muted"
 								target="_blank"
