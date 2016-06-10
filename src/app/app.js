@@ -74,6 +74,7 @@ angular.module( 'App', [
 	'gj.Alert.Dismissable',
 	'gj.Lazy.Placeholder',
 	'gj.Registry',
+	'gj.Clipboard',
 
 	'gj.History',
 	'gj.History.Cache',
@@ -119,6 +120,7 @@ angular.module( 'App', [
 	'gj.Game.Build.LaunchOption',
 	'gj.Sellable',
 	'gj.Sellable.Pricing',
+	'gj.KeyGroup',
 	'gj.Game.NewsArticle',
 	'gj.Game.Trophy',
 	'gj.Game.ScoreTable',
@@ -142,6 +144,9 @@ angular.module( 'App', [
 	'gj.Jam.Game.Vote',
 	'gj.Jam.Game.Vote.Widget',
 	'gj.Jam.Award',
+
+	'gj.Key',
+	'gj.LinkedKey',
 
 	'gj.Translation',
 
@@ -254,6 +259,8 @@ angular.module( 'App', [
 	'App.User.TokenModal',
 	'App.User.SetPasswordModal',
 	'App.User.FriendshipsHelper',
+
+	'App.Terms.ChangeAlert',
 
 	// Views.
 	'App.Views',

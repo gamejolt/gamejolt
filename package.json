@@ -1,6 +1,6 @@
 {
   "name": "game-jolt",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "scripts": {
     "client": "nw build/client/dev/source",
     "client-build-win": "gulp --production --client --arch=32",
@@ -46,6 +46,7 @@
     "minimist": "~0.2.0",
     "mv": "^2.1.1",
     "nw-builder": "gamejolt/nw-builder#skip-merge-app",
+    "pofile": "^1.0.2",
     "run-sequence": "~0.3.6",
     "sanitize-html": "^1.11.3",
     "streamqueue": "~0.1.1",
