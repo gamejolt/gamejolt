@@ -1,20 +1,20 @@
 <form gj-form="formModel" name="addKeys">
 
 	<form-group name="amount"
-		label="# of Keys to Generate"
+		label="{{ '# of Keys to Generate' | translate }}"
 		ng-if="(keyGroup.type == KeyGroup.TYPE_ANONYMOUS || keyGroup.type == KeyGroup.TYPE_ANONYMOUS_CLAIM)"
 		>
 		<input
 			form-control="number"
 			step="1"
 			min="1"
-			ng-max="5000 - keyGroup.key_count"
+			ng-max="20000 - keyGroup.key_count"
 			>
 		<control-errors></control-errors>
 	</form-group>
 
 	<form-group name="emails"
-		label="Email Addresses"
+		label="{{ 'Email Addresses' | translate }"
 		ng-if="keyGroup.type == KeyGroup.TYPE_EMAIL"
 		>
 		<p class="help-block" translate>
@@ -25,7 +25,7 @@
 	</form-group>
 
 	<form-group name="users"
-		label="Usernames"
+		label="{{ 'Usernames' | translate }}"
 		ng-if="keyGroup.type == KeyGroup.TYPE_USER"
 		>
 		<p class="help-block" translate>
@@ -34,6 +34,12 @@
 		<textarea form-control rows="10" ng-maxlength="750"></textarea>
 		<control-errors></control-errors>
 	</form-group>
+
+	<div gj-expand-when="formState.serverErrors['num-keys']">
+		<div class="alert alert-warning" translate>
+			You can only have a max of {{ 20000 | number }} keys in a single key group.
+		</div>
+	</div>
 
 	<button gj-form-submit-button
 		class="btn btn-success-outline"
