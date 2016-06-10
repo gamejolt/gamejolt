@@ -55,22 +55,20 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 		},
 	];
 
-	if ( App.user.has_marketplace_access ) {
-		metrics.push( {
-			key: 'sale',
-			collection: 'sales',
-			label: gettextCatalog.getString( 'Sales' ),
-			type: 'number',
-		} );
+	metrics.push( {
+		key: 'sale',
+		collection: 'sales',
+		label: gettextCatalog.getString( 'Sales' ),
+		type: 'number',
+	} );
 
-		metrics.push( {
-			key: 'revenue',
-			collection: 'sales',
-			label: gettextCatalog.getString( 'Revenue' ),
-			type: 'currency',
-			field: 'revenue',
-		} );
-	}
+	metrics.push( {
+		key: 'revenue',
+		collection: 'sales',
+		label: gettextCatalog.getString( 'Revenue' ),
+		type: 'currency',
+		field: 'revenue',
+	} );
 
 	this.allMetrics = _.indexBy( metrics, 'key' );
 	var _gameMetrics = this.allMetrics;
