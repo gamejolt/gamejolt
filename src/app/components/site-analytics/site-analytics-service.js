@@ -54,7 +54,6 @@ angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( $q, Ap
 						label = request[ metricKey ].collection;
 						label = label.charAt( 0 ).toUpperCase() + label.slice( 1 );
 					}
-					console.log( 'Displaying graph for ' + metricKey + ', label ' + label );
 					data[ metricKey ] = Graph.createGraphData( eventData.result, label );
 					data[ metricKey ].total = label ? data[ metricKey ].colTotals[ label ] : eventData.total;
 				} );
