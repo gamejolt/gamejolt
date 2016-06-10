@@ -6,16 +6,27 @@ angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( $q, Ap
 
 		angular.forEach( metrics, function( metric )
 		{
+			var _analyzer = analyzer;
+
 			if ( metric.type == 'currency' ) {
-				analyzer = analyzer + '-sum';
+				if ( _analyzer == 'histogram' ) {
+					_analyzer = 'histogram-sum';
+				}
+				else if ( _analyzer == 'count' ) {
+					_analyzer = 'sum';
+				}
 			}
 
 			request[ metric.key ] = {
 				target: resource,
 				target_id: resourceId,
 				collection: metric.collection,
-				analyzer: analyzer,
+				analyzer: _analyzer,
 			};
+
+			if ( metric.field ) {
+				request[ metric.key ].field = metric.field;
+			}
 
 			if ( dates ) {
 				var date = new Date();
@@ -38,8 +49,14 @@ angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( $q, Ap
 				var data = {};
 				angular.forEach( response, function( eventData, metricKey )
 				{
-					data[ metricKey ] = Graph.createGraphData( eventData.result );
-					data[ metricKey ].total = eventData.total;
+					var label = false;
+					if ( request[ metricKey ].analyzer == 'histogram-sum' ) {
+						label = request[ metricKey ].collection;
+						label = label.charAt( 0 ).toUpperCase() + label.slice( 1 );
+					}
+					console.log( 'Displaying graph for ' + metricKey + ', label ' + label );
+					data[ metricKey ] = Graph.createGraphData( eventData.result, label );
+					data[ metricKey ].total = label ? data[ metricKey ].colTotals[ label ] : eventData.total;
 				} );
 				return data;
 			} );
@@ -55,8 +72,13 @@ angular.module( 'App.SiteAnalytics' ).service( 'SiteAnalytics', function( $q, Ap
 				var data = {};
 				angular.forEach( response, function( eventData, metricKey )
 				{
+					var amount = eventData.total;
+					if ( request[ metricKey ].analyzer == 'sum' ) {
+						amount = eventData.result;
+					}
+
 					data[ metricKey ] = {
-						total: eventData.total,
+						total: amount,
 					};
 				} );
 				return data;
