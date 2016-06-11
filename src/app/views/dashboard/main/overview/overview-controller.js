@@ -26,9 +26,6 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', functio
 		'got_trophy',
 		'got_score',
 		'has_friend',
-		'has_facebook',
-		'has_twitter',
-		'has_google',
 	];
 
 	this.isFullyIntegrated = true;
@@ -45,8 +42,5 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', functio
 		'got_trophy': gettextCatalog.getString( 'dash.integrate.got_trophy_html' ),
 		'got_score': gettextCatalog.getString( 'dash.integrate.got_score_html' ),
 		'has_friend': gettextCatalog.getString( 'dash.integrate.has_friend_html' ),
-		'has_facebook': gettextCatalog.getString( 'dash.integrate.has_facebook_html' ),
-		'has_twitter': gettextCatalog.getString( 'dash.integrate.has_twitter_html' ),
-		'has_google': gettextCatalog.getString( 'dash.integrate.has_google_html' ),
 	};
 } );
