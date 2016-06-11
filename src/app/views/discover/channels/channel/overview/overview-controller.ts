@@ -3,6 +3,7 @@ export class OverviewCtrl
 	bestGames: any[];
 	hotGames: any[];
 
+	/*@ngInject*/
 	constructor( $stateParams, Game, Channels_ViewHelper, payload )
 	{
 		this.bestGames = Game.populate( payload.bestGames );

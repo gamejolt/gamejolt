@@ -7,6 +7,7 @@ export class GamesCtrl
 	currentPage = 1;
 	section = 'hot';
 
+	/*@ngInject*/
 	constructor( private Channels_ViewHelper: Channels_ViewHelper, public filteringContainer )
 	{
 	}

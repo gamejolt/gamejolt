@@ -5,6 +5,7 @@ export class CheckoutCtrl
 	order: any;
 	game: any;
 
+	/*@ngInject*/
 	constructor( private $window, App, private Environment, Sellable, Game, private Growls, payload )
 	{
 		this.cards = payload.cards || [];

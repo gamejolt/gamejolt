@@ -4,6 +4,7 @@ export class ChannelCtrl
 	totalGamesCount = 0;
 	shouldShowAds = false;
 
+	/*@ngInject*/
 	constructor( $scope, Meta, Channels, payload )
 	{
 		$scope.Meta = Meta;
