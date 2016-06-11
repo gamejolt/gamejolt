@@ -73,7 +73,7 @@
     "streamqueue": "~0.1.1",
     "stylus": "0.53.0",
     "through2": "~0.5.1",
-    "typescript": "^1.9.0-dev.20160607-1.0",
+    "typescript": "^1.9.0-dev.20160611-1.0",
     "zone.js": "^0.6.12"
   },
   "optionalDependencies": {
