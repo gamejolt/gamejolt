@@ -1,0 +1,11 @@
+{
+  "name": "game-jolt",
+  "version": false,
+  "dependencies": {},
+  "ambientDependencies": {
+    "angular": "registry:dt/angular#1.5.0+20160602160139"
+  },
+  "globalDependencies": {
+    "angular": "registry:dt/angular#1.5.0+20160602160139"
+  }
+}

@@ -94,6 +94,7 @@ var config = {
 			]
 		},
 		'channels.js': {
+			main: '/views/discover/channels/channels.ts',
 			views: [
 				'discover/channels',
 			]

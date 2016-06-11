@@ -1,6 +1,6 @@
-angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window, App, Api, Form, Geo, Environment )
+export function PaymentFormFactory( $q, $window, App, Api, Form, Geo, Environment )
 {
-	var form = new Form( {
+	const form = new Form( {
 		template: '/checkout/components/forms/payment/payment.html'
 	} );
 
@@ -34,7 +34,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 			scope.formModel.save_card = false;
 		}
 
-		scope.$watch( 'formModel.country', function( country )
+		scope.$watch( 'formModel.country', ( country ) =>
 		{
 			scope.formState.regions = Geo.getRegions( country );
 			if ( scope.formState.regions ) {
@@ -54,14 +54,14 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 				return;
 			}
 
-			var data = {
+			const data = {
 				amount: scope.order.amount,
 				country: scope.formModel.country,
 				region: scope.formModel.region,
 			};
 
 			return Api.sendRequest( '/web/checkout/taxes', data, { detach: true } )
-				.then( function( response )
+				.then( ( response ) =>
 				{
 					scope.formState.calculatedTax = true;
 					scope.formState.taxAmount = response.amount;
@@ -76,7 +76,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 		// New card
 		if ( scope.formModel.selectedCard == 0 ) {
 
-			var formData = {
+			const formData = {
 				number: scope.formModel.card_number,
 				exp_month: scope.formModel.exp.substr( 0, 2 ),
 				exp_year: scope.formModel.exp.substr( 2, 2 ),
@@ -89,9 +89,9 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 				address_zip: scope.formModel.postcode,
 			};
 
-			return $q( function( resolve, reject )
+			return $q( ( resolve, reject ) =>
 			{
-				$window.Stripe.card.createToken( formData, function( status, response )
+				$window.Stripe.card.createToken( formData, ( status, response ) =>
 				{
 					if ( response.error ) {
 						scope.formState.stripeError = response.error.message;
@@ -102,9 +102,10 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 					}
 				} );
 			} )
-			.then( function( response )
+			.then( ( response ) =>
 			{
-				var data = {
+				const data = {
+					save_card: false,
 					token: response.id,
 					amount: (scope.order.amount / 100),
 
@@ -126,10 +127,10 @@ angular.module( 'App.Forms' ).directive( 'gjFormPayment', function( $q, $window,
 		// Existing/saved card
 		else {
 
-			var data = { payment_source: scope.formModel.selectedCard };
+			const data = { payment_source: scope.formModel.selectedCard };
 			return Api.sendRequest( '/web/checkout/charge/' + scope.order.id, data );
 		}
 	};
 
 	return form;
-} );
+}

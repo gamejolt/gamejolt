@@ -1,3 +1,9 @@
+import './views/views';
+import './components/forms/forms';
+
+import { AppCtrl } from './app-controller';
+import { App } from './app-service';
+
 angular.module( 'App', [
 	// Libs.
 	'ngSanitize',
@@ -99,4 +105,12 @@ angular.module( 'App', [
 		$compileProvider.aHrefSanitizationWhitelist( /^\s*(https?|ftp|mailto|tel|file|app):/ );
 		$compileProvider.imgSrcSanitizationWhitelist( /^\s*((https?|ftp|file|blob|app):|data:image\/)/ );
 	}
-} );
+} )
+.service( 'App', App )
+.controller( 'AppCtrl', AppCtrl )
+;
+
+setTimeout( function()
+{
+	angular.bootstrap( document, [ 'App' ] );
+}, 0 );

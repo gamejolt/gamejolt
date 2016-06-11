@@ -1,4 +1,5 @@
-angular.module( 'App.Views', [] ).config( function( $stateProvider )
+angular.module( 'App.Views' )
+.config( function( $stateProvider )
 {
 	$stateProvider.state( 'checkout', {
 		url: '/checkout/:orderId',

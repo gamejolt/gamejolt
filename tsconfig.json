@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "removeComments": false,
+        "noImplicitAny": false,
+        "allowJs": true
+	},
+    "exclude": [
+        "build",
+        "node_modules",
+        "src/bower-lib"
+    ]
+}

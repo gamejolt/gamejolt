@@ -33,6 +33,7 @@
     "gulp-rename": "~1.2.0",
     "gulp-replace": "^0.5.1",
     "gulp-rev-all": "gamejolt/gulp-rev-all#master",
+    "gulp-rollup": "^1.9.0",
     "gulp-shell": "^0.2.10",
     "gulp-size": "^1.2.0",
     "gulp-sourcemaps": "~1.5.2",
@@ -43,15 +44,20 @@
     "gulp-util": "~3.0.0",
     "gulp-wrapper": "^0.1.5",
     "gulp-zip": "2.0.2",
+    "merge-stream": "^1.0.0",
     "minimist": "~0.2.0",
     "mv": "^2.1.1",
     "nw-builder": "gamejolt/nw-builder#skip-merge-app",
+    "rollup-plugin-commonjs": "^2.2.1",
+    "rollup-plugin-node-resolve": "^1.5.0",
+    "rollup-plugin-typescript": "^0.7.5",
     "pofile": "^1.0.2",
     "run-sequence": "~0.3.6",
     "sanitize-html": "^1.11.3",
     "streamqueue": "~0.1.1",
     "stylus": "0.53.0",
-    "through2": "~0.5.1"
+    "through2": "~0.5.1",
+    "typescript": "^1.9.0-dev.20160611-1.0"
   },
   "optionalDependencies": {
     "appdmg": "^0.3.5"
