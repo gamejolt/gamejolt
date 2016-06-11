@@ -1,8 +1,5 @@
-import paymentMod from './payment/payment-directive';
+import { PaymentFormFactory } from './payment/payment-directive.ts';
 
-const MODULE = 'App.Forms';
-export default MODULE;
-
-angular.module( MODULE, [
-	paymentMod,
-] );
+angular.module( 'App.Forms', [] )
+.directive( 'gjFormPayment', PaymentFormFactory )
+;

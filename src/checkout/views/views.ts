@@ -1,8 +1,4 @@
-import checkoutMod from './checkout/checkout';
+import { lazyModule } from './../../lib/gj-lib-client/util/ng1-helpers';
+import './checkout/checkout';
 
-const MODULE = 'App.Views';
-export default MODULE;
-
-angular.module( MODULE, [
-	checkoutMod,
-] );
+lazyModule( 'App.Views' );
