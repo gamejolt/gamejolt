@@ -18,6 +18,14 @@
 		<span class="jolticon jolticon-twitter"></span>
 		<span translate>auth.join.twitter_button</span>
 	</button>
+
+	<button class="i-button big block anim-fade-in-enlarge stagger"
+		ng-disabled="!Connection.isOnline"
+		ng-click="joinCtrl.linkedAccountLogin( 'google' )"
+		>
+		<span class="jolticon jolticon-google-plus"></span>
+		<span translate>Sign Up with Google+</span>
+	</button>
 </div>
 
 <p class="line-thru anim-fade-in">

@@ -100,10 +100,10 @@
 
 <div oc-lazy-load="{ files: [ '/app/modules/graphs.js' ] }">
 
-	<div gj-expand-when="analyticsCtrl.period == 'monthly' && analyticsCtrl[ analyticsCtrl.eventType ].graph">
+	<div gj-expand-when="analyticsCtrl.period == 'monthly' && analyticsCtrl[ analyticsCtrl.metric.key ].graph">
 		<gj-graph
-			ng-if="analyticsCtrl[ analyticsCtrl.eventType ].graph"
-			dataset="analyticsCtrl[ analyticsCtrl.eventType ].graph"
+			ng-if="analyticsCtrl[ analyticsCtrl.metric.key ].graph"
+			dataset="analyticsCtrl[ analyticsCtrl.metric.key ].graph"
 			>
 		</gj-graph>
 	</div>
@@ -112,32 +112,32 @@
 		<div class="container">
 
 			<div class="row">
-				<div class="col-sm-4 col-md-3" ng-repeat="eventType in analyticsCtrl.eventTypes track by eventType">
+				<div class="col-sm-4 col-md-3" ng-repeat="metric in analyticsCtrl.availableMetrics track by metric.key">
 
 					<a class="stat-graph-overlay"
-						ui-sref="dashboard.analytics.view( { eventType: eventType } )"
+						ui-sref="dashboard.analytics.view( { metricKey: metric.key } )"
 						ui-sref-opts="{ location: 'replace' }"
 						ui-sref-active="active"
 						>
 
 						<gj-graph
-							ng-if="analyticsCtrl.period == 'monthly' && analyticsCtrl[ eventType ]"
-							dataset="analyticsCtrl[ eventType ].graph"
+							ng-if="analyticsCtrl.period == 'monthly' && analyticsCtrl[ metric.key ]"
+							dataset="analyticsCtrl[ metric.key ].graph"
 							background-variant
 							>
 						</gj-graph>
 
 						<div class="stat-big">
 							<div class="stat-big-label">
-								{{ analyticsCtrl.stats[ eventType ].label }}
+								{{ metric.label }}
 							</div>
-							<div class="stat-big-digit" ng-switch="analyticsCtrl.stats[ eventType ].type">
+							<div class="stat-big-digit" ng-switch="metric.type">
 								<span ng-switch-when="number">
-									{{ analyticsCtrl[ eventType ].total | number }}
+									{{ analyticsCtrl[ metric.key ].total | number }}
 								</span>
 
 								<span ng-switch-when="currency">
-									{{ analyticsCtrl[ eventType ].total / 100 | currency }}
+									{{ analyticsCtrl[ metric.key ].total / 100 | currency }}
 								</span>
 							</div>
 						</div>
