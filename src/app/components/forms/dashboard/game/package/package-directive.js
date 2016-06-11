@@ -14,6 +14,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 	{
 		scope.$state = $state;
 		scope.App = App;
+		scope.Game_Package = Game_Package;
 		scope.formModel.game_id = scope.game.id;
 
 		scope.formState.showDescriptionInput = scope.formModel.description ? true : false;

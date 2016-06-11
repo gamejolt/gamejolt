@@ -72,6 +72,14 @@
 												<span class="tag tag-blue" tooltip="{{ 'We use the primary package to determine the price to show on game listings.' | translate }}" translate>Primary Package</span>
 											</span>
 
+											<span ng-if="::package.visibility == Game_Package.VISIBILITY_PRIVATE"
+												class="tag tag-pink"
+												tooltip="{{ 'This package will only be available to you and any keys that have access.' | translate }}"
+												translate
+												>
+												Private
+											</span>
+
 											<span ng-switch="::listCtrl.sellables[ package.id ].type">
 
 												<span ng-switch-when="pwyw">
