@@ -82,7 +82,6 @@
 
 			<gj-game-filtering-widget
 				gj-filtering-container="listCtrl.filteringContainer"
-				gj-filters-changed="listCtrl.onFiltersChanged()"
 				>
 			</gj-game-filtering-widget>
 
@@ -111,14 +110,12 @@
 				<gj-game-filtering-input
 					ng-if="!Screen.isXs || listCtrl.filteringContainer.filters.query"
 					gj-filtering-container="listCtrl.filteringContainer"
-					gj-filters-changed="listCtrl.onFiltersChanged()"
 					>
 				</gj-game-filtering-input>
 			</div>
 			<div class="col-md-8">
 				<gj-game-filtering-tags
 					gj-filtering-container="listCtrl.filteringContainer"
-					gj-filters-changed="listCtrl.onFiltersChanged()"
 					>
 				</gj-game-filtering-tags>
 			</div>

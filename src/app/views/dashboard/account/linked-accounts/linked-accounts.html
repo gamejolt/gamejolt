@@ -1,37 +1,59 @@
 <div ui-view="main-content">
 	<div class="row linked-accounts-list">
 
-		<div class="col-md-6 col-lg-4" ng-repeat="provider in [ 'facebook', 'twitter' ] track by $index">
+		<div class="col-md-6 col-lg-4" ng-repeat="provider in [ 'facebook', 'twitter', 'google' ] track by $index">
 
 			<div class="linked-accounts-list-icon">
-				<span class="jolticon big" ng-class="::{ 'jolticon-facebook': provider == 'facebook', 'jolticon-twitter-bird': provider == 'twitter' }"></span>
+				<span class="jolticon big" ng-class="::{
+					'jolticon-facebook': provider == 'facebook',
+					'jolticon-twitter-bird': provider == 'twitter',
+					'jolticon-google-plus': provider == 'google'
+				}"></span>
 			</div>
 
 			<div class="linked-accounts-list-body">
-				<h5 ng-if="::provider == 'facebook'">Facebook</h5>
-				<h5 ng-if="::provider == 'twitter'">Twitter</h5>
+				<h5 ng-switch="::provider">
+					<span ng-switch-when="facebook" translate>Facebook</span>
+					<span ng-switch-when="twitter" translate>Twitter</span>
+					<span ng-switch-when="google" translate>Google+</span>
+				</h5>
 
-				<div ng-if="provider == 'facebook' && !App.user.facebook_id || provider == 'twitter' && !App.user.twitter_id">
+				<div ng-if="(provider == 'facebook' && !App.user.facebook_id) || (provider == 'twitter' && !App.user.twitter_id) || (provider == 'google' && !App.user.google_id)">
 					<p>
-						<small class="text-muted">Not linked.</small>
+						<small class="text-muted" translate>Not linked.</small>
 					</p>
 					<a class="btn btn-sm btn-success-outline" ng-click="linkedAccountsCtrl.link( provider )">
 						<span class="jolticon jolticon-link"></span>
-						Link Now
+						<span translate>Link Now</span>
 					</a>
 				</div>
 
-				<div ng-if="provider == 'facebook' && App.user.facebook_id || provider == 'twitter' && App.user.twitter_id">
-					<p ng-if="::provider == 'facebook'"><strong><a ng-href="http://facebook.com/{{ App.user.facebook_id }}">{{ App.user.facebook_name }}</a></strong></p>
-					<p ng-if="::provider == 'twitter'"><strong><a ng-href="http://twitter.com/{{ App.user.twitter_screenname }}">@{{ App.user.twitter_screenname }}</a></strong></p>
+				<div ng-if="(provider == 'facebook' && App.user.facebook_id) || (provider == 'twitter' && App.user.twitter_id) || (provider == 'google' && App.user.google_id)">
+					<p ng-switch="::provider">
+						<strong ng-switch-when="facebook">
+							<a ng-href="https://facebook.com/{{ App.user.facebook_id }}">
+								{{ App.user.facebook_name }}
+							</a>
+						</strong>
+						<strong ng-switch-when="twitter">
+							<a ng-href="https://twitter.com/{{ App.user.twitter_screenname }}">
+								@{{ App.user.twitter_screenname }}
+							</a>
+						</strong>
+						<strong ng-switch-when="google">
+							<a ng-href="https://plus.google.com/{{ App.user.google_id }}">
+								{{ App.user.google_nickname }}
+							</a>
+						</strong>
+					</p>
 
 					<a class="btn btn-sm btn-outline" ng-click="linkedAccountsCtrl.link( provider )">
 						<span class="jolticon jolticon-retweet need-icon"></span>
-						Synchronize
+						<span translate>Synchronize</span>
 					</a>
 					<a class="btn btn-sm btn-danger-outline" ng-click="linkedAccountsCtrl.unlink( provider )">
 						<span class="jolticon jolticon-remove"></span>
-						Unlink
+						<span translate>Unlink</span>
 					</a>
 				</div>
 			</div>

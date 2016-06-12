@@ -32,7 +32,11 @@
 						<div class="col-xs-6 col-sm-4">
 							<div class="stat-big stat-big-smaller">
 								<div class="stat-big-label" translate>Revenue To Date</div>
-								<div class="stat-big-digit">{{ ::overviewCtrl.revenueTotal || 0 | currency:'$' }}</div>
+								<div class="stat-big-digit">
+									<a ng-click="overviewCtrl.isShowingRevenueBreakdown = !overviewCtrl.isShowingRevenueBreakdown">
+										{{ ::overviewCtrl.revenueTotal || 0 | currency:'$' }}
+									</a>
+								</div>
 							</div>
 						</div>
 						<div class="col-xs-6 col-sm-4">
@@ -54,6 +58,58 @@
 						</div>
 					</div>
 					<br>
+
+					<div gj-expand-when="overviewCtrl.isShowingRevenueBreakdown">
+						<div class="well fill-lightest">
+
+							<table class="table table-condensed">
+								<tbody>
+									<tr>
+										<th translate>Revenue To Date</th>
+										<td class="text-right">{{ overviewCtrl.revenueTotal || 0 | currency:'$' }}</td>
+									</tr>
+									<tr>
+										<th translate>Pending Revenue</th>
+										<td class="text-right">{{ overviewCtrl.revenuePendingActivation || 0 | currency:'$' }}
+										</td>
+									</tr>
+									<tr>
+										<th translate>Total Revenue</th>
+										<td class="text-right">{{ (overviewCtrl.revenueTotal + overviewCtrl.revenuePendingActivation) | currency:'$' }}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<table class="table table-condensed">
+								<tbody>
+									<tr>
+										<th translate>Withdrawals Processing</th>
+										<td class="text-right">{{ overviewCtrl.revenuePendingWithdraw || 0 | currency:'$' }}
+										</td>
+									</tr>
+									<tr>
+										<th translate>Withdrawn To Date</th>
+										<td class="text-right">{{ overviewCtrl.revenueWithdrawn || 0 | currency:'$' }}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table class="table table-condensed sans-margin-bottom">
+								<tbody>
+									<tr>
+										<th translate>Wallet Purchases</th>
+										<td class="text-right">{{ overviewCtrl.revenueSpent || 0 | currency:'$' }}</td>
+									</tr>
+									<tr>
+										<th translate>Wallet Balance</th>
+										<td class="text-right">{{ overviewCtrl.walletBalance || 0 | currency:'$' }}</td>
+									</tr>
+								</tbody>
+							</table>
+
+						</div>
+					</div>
 
 					<div ng-if="overviewCtrl.revenuePendingWithdraw > 0" class="alert alert-info" translate>
 						You have pending withdrawals amounting to {{ ::overviewCtrl.revenuePendingWithdraw | currency:'$' }}.

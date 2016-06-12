@@ -1,6 +1,8 @@
-angular.module( 'App.Views' ).controller( 'Discover.HomeCtrl', function( $scope, $window, App, Environment, Meta, Game, FeaturedItem, Fireside_Post, Game_NewsArticle, SplitTest, payload )
+angular.module( 'App.Views' ).controller( 'Discover.HomeCtrl', function( $scope, $window, App, Environment, Meta, Game, FeaturedItem, Fireside_Post, Game_NewsArticle, SplitTest, Channels, payload )
 {
 	App.title = null;
+
+	$scope.Channels = Channels;
 
 	Meta.description = payload.metaDescription;
 	Meta.fb = payload.fb;
@@ -8,13 +10,13 @@ angular.module( 'App.Views' ).controller( 'Discover.HomeCtrl', function( $scope,
 	Meta.fb.image = Meta.twitter.image = '/app/img/social/social-share-header.png';
 	Meta.fb.url = Meta.twitter.url = Environment.baseUrl;
 
-	this.isMarketplace = payload.isMarketplace || false;
-
 	this.featuredItems = FeaturedItem.populate( payload.featuredGames );
 
 	this.hotGames = Game.populate( payload.hotGames );
 	this.paidGames = Game.populate( payload.paidGames );
 	this.bestGames = Game.populate( payload.bestGames );
+
+	this.channels = payload.channels;
 
 	this.hotArticles = Game_NewsArticle.populate( payload.hotArticles );
 	this.followedArticles = payload.followedArticles ? Game_NewsArticle.populate( payload.followedArticles ) : [];
