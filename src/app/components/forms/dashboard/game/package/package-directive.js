@@ -14,6 +14,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 	{
 		scope.$state = $state;
 		scope.App = App;
+		scope.Game_Package = Game_Package;
 		scope.formModel.game_id = scope.game.id;
 
 		scope.formState.showDescriptionInput = scope.formModel.description ? true : false;
@@ -43,6 +44,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 				scope.formModel.pricing_type = 'free';
 
 				if ( scope.method == 'add' ) {
+					scope.formModel.visibility = Game_Package.VISIBILITY_PUBLIC;
 					if ( payload.hasDefaultPackage ) {
 						scope.formModel.title = '';
 					}

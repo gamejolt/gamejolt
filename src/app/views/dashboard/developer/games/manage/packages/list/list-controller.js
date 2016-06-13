@@ -4,6 +4,8 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Pack
 	var _this = this;
 	var manageCtrl = $scope.manageCtrl;
 
+	$scope.Game_Package = Game_Package;
+
 	App.title = gettextCatalog.getString( 'Manage Packages for {{ game }}', { game: manageCtrl.game.title } );
 
 	this.packages = Game_Package.populate( packagesPayload.packages );

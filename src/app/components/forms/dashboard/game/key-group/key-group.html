@@ -110,6 +110,13 @@
 		<div class="checkbox" ng-repeat="package in packages track by package.id">
 			<label>
 				<input type="checkbox" ng-model="formModel.packages[ package.id ]">
+				<span ng-if="package.visibility == Game_Package.VISIBILITY_PRIVATE"
+					class="tag tag-pink"
+					tooltip="This package is private, but will be accessible in this key group if you assign it."
+					translate
+					>
+					Private
+				</span>
 				{{ package.title || game.title }}
 			</label>
 		</div>
