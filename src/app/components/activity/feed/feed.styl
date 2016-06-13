@@ -68,6 +68,7 @@
 				color: $black
 
 		&-header
+			display: block
 			position: relative
 			background-color: $gray-darker
 			margin-left: -(($icon-size / 2) + $avatar-margin)
@@ -81,11 +82,18 @@
 					width: 100%
 					height: auto
 
+
 			&-content
-				position: absolute
-				bottom: ($grid-gutter-width / 2)
-				left: ($icon-size / 2) + $avatar-margin
-				text-shadow: 1px 1px 1px rgba( $black, 0.5 )
+				padding-top: ($grid-gutter-width / 2)
+				padding-bottom: @padding-top
+				padding-left: ($icon-size / 2) + $avatar-margin
+				padding-right: @padding-top
+
+				.timeline-list-item-header.has-header-img &
+					position: absolute
+					bottom: 0
+					left: 0
+					text-shadow: 1px 1px 1px rgba( $black, 0.5 )
 
 				& .timeline-list-item-time
 					color: $white

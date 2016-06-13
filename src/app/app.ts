@@ -1,4 +1,23 @@
-angular.module( 'App', [
+import 'reflect-metadata';
+import { bootstrap } from 'ng-metadata/platform';
+
+import { AppCtrl } from './app-controller';
+import { App } from './app-service';
+
+import './views/views';
+
+import { ModelModule } from './../lib/gj-lib-client/components/model/model';
+
+import { FiresidePostModule } from './../lib/gj-lib-client/components/fireside/post/post';
+import { FiresidePostTagModule } from './../lib/gj-lib-client/components/fireside/post/tag/tag';
+import { FiresidePostLikeModule } from './../lib/gj-lib-client/components/fireside/post/like/like';
+import { FiresidePostLikeWidgetModule } from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
+
+import { DevlogFeedModule } from './components/devlog/feed/feed';
+import { DevlogPostTextModule } from './components/devlog/post/text/text';
+import { DevlogPostControlsModule } from './components/devlog/post/controls/controls';
+
+const AppModule = angular.module( 'App', [
 	// Set the event tracking up first.
 	'gj.ErrorTracking',
 
@@ -25,7 +44,7 @@ angular.module( 'App', [
 	'gj.Environment',
 	'gj.Api',
 	'gj.Payload',
-	'gj.Model',
+	ModelModule,
 	'gj.Error',
 	'gj.Meta',
 
@@ -177,8 +196,10 @@ angular.module( 'App', [
 
 	'gj.GameBundle',
 
-	'gj.Fireside.Post',
-	'gj.Fireside.Post.Tag',
+	FiresidePostModule,
+	FiresidePostTagModule,
+	FiresidePostLikeModule,
+	FiresidePostLikeWidgetModule,
 
 	'gj.Forum.Category',
 	'gj.Forum.Channel',
@@ -216,12 +237,9 @@ angular.module( 'App', [
 
 	'App.Genre.List',
 
-	'App.Devlog.Feed',
-	'App.Devlog.Post.Text',
-	'App.Devlog.Post.Image',
-	'App.Devlog.Post.Video',
-	'App.Devlog.Post.Milestone',
-	'App.Devlog.Post.Controls',
+	DevlogFeedModule,
+	DevlogPostTextModule,
+	DevlogPostControlsModule,
 
 	'App.Post.Grid',
 	'App.Post.List',
@@ -275,6 +293,8 @@ angular.module( 'App', [
 	// Client.
 	/* inject client:modules */
 ] )
+.service( 'App', App )
+.controller( 'AppCtrl', AppCtrl )
 .config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $ocLazyLoadProvider, $sceDelegateProvider, amTimeAgoConfig, TranslateProvider )
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
@@ -417,4 +437,11 @@ angular.module( 'App', [
 	var ms = Date.now() - window._gjStartTime;
 	Analytics.trackTiming( 'shell', 'angular-start', ms );
 } )
+.name
 ;
+
+setTimeout( function()
+{
+	bootstrap( AppModule );
+	// angular.bootstrap( document, [ 'App' ] );
+}, 0 );
