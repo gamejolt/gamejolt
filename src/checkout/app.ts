@@ -1,8 +1,13 @@
+import 'reflect-metadata';
+import { bootstrap } from 'ng-metadata/platform';
+
 import './views/views';
 import './components/forms/forms';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
+
+import { ModelModule } from './../lib/gj-lib-client/components/model/model';
 
 angular.module( 'App', [
 	// Libs.
@@ -20,7 +25,7 @@ angular.module( 'App', [
 	'gj.Environment',
 	'gj.Api',
 	'gj.Payload',
-	'gj.Model',
+	ModelModule,
 	'gj.Error',
 	'gj.Translate',
 	'gj.Geo',
@@ -67,6 +72,8 @@ angular.module( 'App', [
 	// Client.
 	/* inject client:base:modules */
 ] )
+.service( 'App', App )
+.controller( 'AppCtrl', AppCtrl )
 .config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $sceDelegateProvider )
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
@@ -106,11 +113,9 @@ angular.module( 'App', [
 		$compileProvider.imgSrcSanitizationWhitelist( /^\s*((https?|ftp|file|blob|app):|data:image\/)/ );
 	}
 } )
-.service( 'App', App )
-.controller( 'AppCtrl', AppCtrl )
 ;
 
 setTimeout( function()
 {
-	angular.bootstrap( document, [ 'App' ] );
+	bootstrap( 'App' );
 }, 0 );
