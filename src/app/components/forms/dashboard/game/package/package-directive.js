@@ -44,6 +44,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 				scope.formModel.pricing_type = 'free';
 
 				if ( scope.method == 'add' ) {
+					scope.formModel.visibility = Game_Package.VISIBILITY_PUBLIC;
 					if ( payload.hasDefaultPackage ) {
 						scope.formModel.title = '';
 					}
