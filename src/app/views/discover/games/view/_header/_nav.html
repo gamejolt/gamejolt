@@ -5,7 +5,8 @@
 			<a ui-sref=".overview"
 				ui-sref-active="active"
 				>
-				{{ ::'games.view.overview_tab' | translate }}
+				<span ng-if="gameCtrl.game.type == Game.TYPE_GAME">{{ ::'games.view.overview_tab' | translate }}</span>
+				<span ng-if="gameCtrl.game.type == Game.TYPE_DEVLOG" translate>Devlog</span>
 			</a>
 		</li>
 		<li ng-if="gameCtrl.game.type == Game.TYPE_DEVLOG && gameCtrl.game.comments_enabled">
