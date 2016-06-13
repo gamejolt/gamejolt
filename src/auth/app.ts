@@ -1,3 +1,8 @@
+import 'reflect-metadata';
+import { bootstrap } from 'ng-metadata/platform';
+
+import { ModelModule } from './../lib/gj-lib-client/components/model/model';
+
 angular.module( 'App', [
 	// Set the event tracking up first.
 	'gj.ErrorTracking',
@@ -15,7 +20,7 @@ angular.module( 'App', [
 	'gj.Environment',
 	'gj.Api',
 	'gj.Payload',
-	'gj.Model',
+	ModelModule,
 	'gj.Error',
 
 	'gj.Debug',
@@ -131,3 +136,8 @@ angular.module( 'App', [
 
 	TranslateProvider.addLanguageUrls( languages );
 } );
+
+setTimeout( function()
+{
+	bootstrap( 'App' );
+}, 0 );
