@@ -3,6 +3,7 @@
   "version": false,
   "globalDependencies": {
     "angular": "registry:dt/angular#1.5.0+20160602160139",
+    "angular-ui-router": "registry:dt/angular-ui-router#1.1.5+20160521151413",
     "lodash": "registry:dt/lodash#3.10.0+20160330154726"
   }
 }
