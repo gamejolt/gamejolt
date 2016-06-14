@@ -12,9 +12,14 @@
 	@media $media-sm-up
 		margin-left: 0
 
+	// For making the timeline list full bleed.
 	&.full-bleed
 		@media $media-sm-up
 			margin-left: -($icon-size + $avatar-margin)
+
+	// For doing a full-bleed within the content.
+	&-full-bleed
+		margin-left: -(($icon-size / 2) + $avatar-margin)
 
 	&-item
 		position: relative
@@ -91,7 +96,7 @@
 
 				.timeline-list-item-header.has-header-img &
 					position: absolute
-					bottom: 0
+					top: 0
 					left: 0
 					text-shadow: 1px 1px 1px rgba( $black, 0.5 )
 

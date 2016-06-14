@@ -3,7 +3,7 @@ import { bootstrap } from 'ng-metadata/platform';
 
 import { ModelModule } from './../lib/gj-lib-client/components/model/model';
 
-angular.module( 'App', [
+const AppModule = angular.module( 'App', [
 	// Set the event tracking up first.
 	'gj.ErrorTracking',
 
@@ -135,9 +135,11 @@ angular.module( 'App', [
 	};
 
 	TranslateProvider.addLanguageUrls( languages );
-} );
+} )
+.name
+;
 
 setTimeout( function()
 {
-	bootstrap( 'App' );
+	bootstrap( AppModule );
 }, 0 );

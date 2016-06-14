@@ -76,6 +76,7 @@ var config = {
 
 		// Sections of the site.
 		'dash.js': {
+			main: '/views/dashboard/dashboard.ts',
 			components: [
 				'forms/dashboard',
 				'site-analytics',

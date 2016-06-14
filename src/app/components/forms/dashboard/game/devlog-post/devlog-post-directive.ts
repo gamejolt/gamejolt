@@ -1,6 +1,6 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameDevlogPost', function( Form, Fireside_Post )
+export function DevlogPostFormFactory( Form, Fireside_Post )
 {
-	var form = new Form( {
+	const form = new Form( {
 		model: 'Fireside_Post',
 		template: '/app/components/forms/dashboard/game/devlog-post/devlog-post.html'
 	} );
@@ -13,10 +13,20 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameDevlogPos
 		scope.Fireside_Post = Fireside_Post;
 
 		scope.formModel.game_id = scope.game.id;
-		scope.formModel.type = scope.postType;
 
 		scope.formModel.status = Fireside_Post.STATUS_ACTIVE;
+
+		scope.$watch( 'postType', function()
+		{
+			console.log( 'hi' );
+		} );
+
+		// scope.$watch( __ => scope.postType, __ =>
+		// {
+		// 	console.log( 'yooooo', scope.postType );
+		// 	scope.formModel.type = scope.postType;
+		// } );
 	};
 
 	return form;
-} );
+}

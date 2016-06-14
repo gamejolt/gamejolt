@@ -1,21 +1,34 @@
 <div class="devlog-post devlog-post-image">
-	
-	<!-- Post info -->
-	<p class="devlog-post-info text-muted">
+
+	<div class="timeline-list-item-icon">
 		<span class="jolticon jolticon-screenshot"></span>
-		New image for <a href="#">Low Poly Adventure</a> <span class="pull-right">3 days ago</span>
-	</p>
-	<span class="devlog-post-spot"></span>
-	
-	<!-- Post content -->
-	<div class="devlog-post-main">
-		<img src="http://i.imgur.com/MdCWeiC.jpg" alt="Image" width="100%">
 	</div>
-	<div class="devlog-post-content">
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste quos ipsa, maiores ab culpa sint repellat deserunt nobis iusto, voluptate eveniet maxime dolorem porro odit voluptas officia animi. Ab, eius.</p>
+
+	<div class="timeline-list-item-main">
+
+		<div class="timeline-list-item-header"
+			ui-sref="discover.games.view.devlog.view( { postSlug: $ctrl.post.slug } )"
+			>
+			<div class="timeline-list-item-header-content">
+				<div class="timeline-list-item-time">
+					<span am-time-ago="::$ctrl.post.published_on"></span>
+				</div>
+
+				<div class="timeline-list-item-title">
+					{{ ::$ctrl.post.title }}
+				</div>
+			</div>
+		</div>
+
+		<div class="timeline-list-full-bleed">
+			<img class="img-responsive" src="http://i.imgur.com/MdCWeiC.jpg" alt="">
+		</div>
+
+		<gj-devlog-post-controls
+			post="$ctrl.post"
+			>
+		</gj-devlog-post-controls>
+
 	</div>
-	
-	<!-- Post controls -->
-	<gj-devlog-post-controls id="ctrl.id"></gj-devlog-post-controls>
-	
+
 </div>

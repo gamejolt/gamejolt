@@ -14,16 +14,48 @@
 		<span class="jolticon jolticon-ellipsis-h"></span>
 	</a>-->
 
+	<!--<p>
+		<span ng-if="$ctrl.post.like_count"
+			translate
+			translate-n="4"
+			translate-plural="<b>{{ $count | number }}</b> comments"
+			>
+			<b>1</b> comment
+		</span>
+
+		<span ng-if="!$ctrl.post.like_count" translate>
+			No comments yet
+		</span>
+
+		<span class="dot-separator"></span>
+
+		<span ng-if="$ctrl.post.like_count"
+			translate
+			translate-n="$ctrl.post.like_count"
+			translate-plural="<b>{{ $count | number }}</b> likes"
+			>
+			<b>1</b> like
+		</span>
+
+		<span ng-if="!$ctrl.post.like_count" translate>
+			No likes yet
+		</span>
+	</p>-->
+
 	<a class="btn btn-outline"
-		gj-tooltip="Leave a Comment"
 		ng-click="$ctrl.isShowingComments = !$ctrl.isShowingComments"
 		>
 		<span class="jolticon jolticon-comment"></span>
-		Comments
-		<small>4</small>
+		Comment
 	</a>
 
-	<a class="btn btn-outline"
+	<gj-fireside-post-like-widget
+		fireside-post="$ctrl.post"
+		no-avatars="true"
+		>
+	</gj-fireside-post-like-widget>
+
+	<!--<a class="btn btn-outline"
 		gj-tooltip="Like Post"
 		ng-click="$ctrl.liked = !$ctrl.liked"
 		ng-class="{'active': $ctrl.liked}"
@@ -31,12 +63,12 @@
 		<span class="jolticon jolticon-heart"></span>
 		Like
 		<small>29</small>
-	</a>
+	</a>-->
 
 </div>
 
 <!-- Options -->
-<gj-popover popover-id="devlog-post-control-popover-{{ $ctrl.post.id }}">
+<!--<gj-popover popover-id="devlog-post-control-popover-{{ $ctrl.post.id }}">
 	<div class="list-group list-group-dark thin">
 		<a class="list-group-item has-icon">
 			<span class="jolticon jolticon-flag warning"></span>
@@ -49,10 +81,13 @@
 			Remove
 		</a>
 	</div>
-</gj-popover>
+</gj-popover>-->
 
 <!-- Comments -->
 <div gj-expand-when="$ctrl.isShowingComments">
+	<br>
+	<br>
+
 		<!--current-page="$ctrl.currentCommentPage"-->
 	<gj-comment-widget
 		comment-resource="Fireside_Post"

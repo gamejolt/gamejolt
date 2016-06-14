@@ -4,6 +4,7 @@ import { bootstrap } from 'ng-metadata/platform';
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
 
+import { FormsModule } from './components/forms/forms';
 import './views/views';
 
 import { ModelModule } from './../lib/gj-lib-client/components/model/model';
@@ -15,6 +16,7 @@ import { FiresidePostLikeWidgetModule } from './../lib/gj-lib-client/components/
 
 import { DevlogFeedModule } from './components/devlog/feed/feed';
 import { DevlogPostTextModule } from './components/devlog/post/text/text';
+import { DevlogPostImageModule } from './components/devlog/post/image/image';
 import { DevlogPostControlsModule } from './components/devlog/post/controls/controls';
 
 const AppModule = angular.module( 'App', [
@@ -228,7 +230,7 @@ const AppModule = angular.module( 'App', [
 	'App.MediaItem.Cover',
 	'App.PageHeader',
 
-	'App.Forms',
+	FormsModule,
 
 	'App.FeaturedItem',
 
@@ -239,6 +241,7 @@ const AppModule = angular.module( 'App', [
 
 	DevlogFeedModule,
 	DevlogPostTextModule,
+	DevlogPostImageModule,
 	DevlogPostControlsModule,
 
 	'App.Post.Grid',
@@ -443,5 +446,4 @@ const AppModule = angular.module( 'App', [
 setTimeout( function()
 {
 	bootstrap( AppModule );
-	// angular.bootstrap( document, [ 'App' ] );
 }, 0 );

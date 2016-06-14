@@ -4,9 +4,6 @@ import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fir
 @Component({
 	selector: 'gj-devlog-post-text',
 	templateUrl: '/app/components/devlog/post/text/text.html',
-	legacy: {
-		controllerAs: '$ctrl',
-	},
 })
 export class DevlogPostText
 {

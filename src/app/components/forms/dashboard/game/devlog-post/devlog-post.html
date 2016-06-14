@@ -1,48 +1,82 @@
 <form gj-form="formModel" name="devlogPostForm">
 	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
 
-		<form-group name="file" label="{{ 'Header Image' | translate }}" optional="true" ng-if="formModel.type == Fireside_Post.TYPE_TEXT">
+	<pre>{{ postType }}</pre>
+	<pre>{{ formModel.type }}</pre>
 
-			<!--<p class="help-block" translate translate-scope="{ maxFilesize: maxFilesize / 1024 / 1024 }">dash.games.builds.form.file_help_html</p>-->
-			<!--<p class="help-block" collapse="formModel.type != Game_Build.TYPE_HTML" translate>dash.games.builds.form.file_html_help_html</p>-->
+		<div ng-switch="postType">
 
-			<p class="help-block" translate>dash.forms.image_filetype_help_html</p>
+			<div ng-switch-when="text">
+				<form-group name="file"
+					label="{{ 'Header Image' | translate }}"
+					optional="true"
+					>
 
-				<!--gj-max-filesize="maxFilesize"
-				gj-max-img-width="maxWidth"
-				gj-max-img-height="maxHeight"-->
-			<gj-form-upload-control
-				form-control="upload"
-				accept=".png,.jpg,.jpeg,.gif"
-				>
-			</gj-form-upload-control>
+					<p class="help-block" translate>dash.forms.image_filetype_help_html</p>
 
-			<control-errors></control-errors>
-		</form-group>
+						<!--gj-max-filesize="maxFilesize"
+						gj-max-img-width="maxWidth"
+						gj-max-img-height="maxHeight"-->
+					<gj-form-upload-control
+						form-control="upload"
+						accept=".png,.jpg,.jpeg,.gif"
+						>
+					</gj-form-upload-control>
 
-		<form-group name="title" label="{{ 'Post Title' | translate }}">
-			<input form-control="text" ng-maxlength="250">
-			<control-errors></control-errors>
-		</form-group>
+					<control-errors></control-errors>
+				</form-group>
 
-		<form-group name="content" label="{{ 'Post Content' | translate }}">
+				<form-group name="title"
+					label="{{ 'Post Title' | translate }}"
+					>
+					<input form-control="text" ng-maxlength="250">
+					<control-errors></control-errors>
+				</form-group>
 
-			<p class="help-block" translate>
-				dash.games.news.form.content_help
-			</p>
+				<form-group name="content"
+					label="{{ 'Post Content' | translate }}"
+					>
 
-			<div
-				form-markdown-editor
-				preview-class="fireside-post-body"
-				markdown-preview-url="/web/dash/developer/games/devlog/preview"
-				>
+					<div
+						form-markdown-editor
+						preview-class="fireside-post-body"
+						markdown-preview-url="/web/dash/developer/games/devlog/preview"
+						>
+					</div>
+
+					<control-errors></control-errors>
+
+				</form-group>
 			</div>
 
-			<control-errors></control-errors>
+			<div ng-switch-when="image">
+				<form-group name="file"
+					label="{{ 'Upload Image' | translate }}"
+					>
 
-		</form-group>
+					<p class="help-block" translate>dash.forms.image_filetype_help_html</p>
 
-		<!--<p class="help-block" ng-if="method == 'add'">{{ 'dash.games.news.form.add_follower_message' | translate }}</p>-->
+						<!--gj-max-filesize="maxFilesize"
+						gj-max-img-width="maxWidth"
+						gj-max-img-height="maxHeight"-->
+					<gj-form-upload-control
+						form-control="upload"
+						accept=".png,.jpg,.jpeg,.gif"
+						>
+					</gj-form-upload-control>
+
+					<control-errors></control-errors>
+				</form-group>
+
+				<form-group name="title"
+					label="{{ 'Caption' | translate }}"
+					>
+					<input form-control="text" ng-maxlength="250">
+					<control-errors></control-errors>
+				</form-group>
+			</div>
+
+		</div>
 
 		<button gj-form-submit-button class="btn btn-success" ng-disabled="!devlogPostForm.$valid" ng-click="onSubmit()">
 			<span ng-if="method == 'add'">
