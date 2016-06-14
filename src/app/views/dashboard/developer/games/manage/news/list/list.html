@@ -29,7 +29,16 @@
 						<h5 class="list-group-item-heading">
 							<strong>{{ article.title }}</strong>
 						</h5>
+
 						<div class="list-group-item-text clearfix">
+							<div ng-if="article.key_groups.length">
+								<div>
+									<span class="tag" ng-repeat="keyGroup in article.key_groups track by keyGroup.id">
+										{{ keyGroup.name }}
+									</span>
+								</div>
+								<br>
+							</div>
 							<div class="news-list-item-date">
 								{{ ::'dash.games.news.posted_on' | translate:{ date: article.posted_on } }}
 							</div>

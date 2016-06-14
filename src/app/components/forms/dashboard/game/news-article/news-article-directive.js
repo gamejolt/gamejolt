@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewsArticle', function( Form )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewsArticle', function( Form, KeyGroup )
 {
 	var form = new Form( {
 		model: 'Game_NewsArticle',
@@ -10,6 +10,11 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewsArtic
 	form.onInit = function( scope )
 	{
 		scope.formModel.game_id = scope.game.id;
+
+		scope.onLoaded = function( payload )
+		{
+			scope.keyGroups = KeyGroup.populate( payload.keyGroups );
+		};
 	};
 
 	return form;
