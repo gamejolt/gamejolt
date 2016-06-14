@@ -28,7 +28,7 @@
 			gj-track-event="game-profile:{{ !gameCtrl.libraryGame ? 'follow' : 'unfollow' }}"
 			ng-switch="!!gameCtrl.libraryGame"
 			>
-			<span class="game-header-follow-count">
+			<span class="btn-badge">
 				{{ gameCtrl.followerCount | number }}
 			</span>
 			<span ng-switch-when="false">
