@@ -33,17 +33,21 @@
 				Access Permissions
 			</label>
 
-			<p class="help-block" translate>
-				You can restrict access to only the users within a specific key group. This is useful to send news updates out to testers instead of everyone, and gather feedback as you develop. Only User-type key groups can be selected.
-			</p>
-
-			<div ng-if="!keyGroups.length">
-				<div class="alert alert-info" translate translate-scope="{ url: $state.href( 'dashboard.developer.games.manage.key-groups.list', { id: game.id } ) }">
-					You don't have any key groups yet. If you want to create key groups to send news out to only certain users, you can do so in your <a href="{{ url }}">Keys/Access</a> page.
-				</div>
+			<div class="alert alert-info"
+				ng-if="!keyGroups.length"
+				translate
+				translate-scope="{ url: $state.href( 'dashboard.developer.games.manage.key-groups.list', { id: game.id } ) }"
+				>
+				You can make this news post available to only the users within a key group. For example, this is useful for sending news updates to testers. You can create a user key group through the <a href="{{ url }}">Keys/Access</a> page.
 			</div>
 
 			<div ng-if="keyGroups.length">
+				<p class="help-block"
+					translate
+					>
+					You can make this news post available to only the users within a key group. For example, this is useful for sending news updates to testers. Only User-type key groups can be selected.
+				</p>
+
 				<div class="checkbox" ng-repeat="keyGroup in keyGroups track by keyGroup.id">
 					<label>
 						<input type="checkbox" ng-model="formModel.keyGroups[ keyGroup.id ]">
