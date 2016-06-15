@@ -143,7 +143,7 @@
 				</div>
 
 				<!-- Game Description -->
-				<h2 ng-class="{ 'section-header': !Screen.isMobile && !(gameCtrl.game._has_packages || overviewCtrl.hasReleasesSection) }" translate>
+				<h2 ng-class="{ 'section-header': !Screen.isMobile && !((gameCtrl.game._has_packages && !overviewCtrl.isLoaded) || overviewCtrl.hasReleasesSection) }" translate>
 					Description
 				</h2>
 
