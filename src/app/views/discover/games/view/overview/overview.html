@@ -96,8 +96,16 @@
 
 			<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
 
-				<!-- Builds / Soundtrack -->
-				<div ng-if="gameCtrl.game._has_packages || overviewCtrl.hasReleasesSection">
+				<!--
+					Builds / Soundtrack
+					This is a bit tricky. _has_packages doesn't yet take into account private packages.
+					If the game has only private packages, this will still be set to true.
+					We only use it to figure out if we should show the releases section while loading before
+					we actually have the package data. Because of that, we only use it to figure out what to
+					show while we're loading the section. After it's loaded in, we decide if it should show
+					through the "hasReleasesSection" variable which has the correct data.
+				-->
+				<div ng-if="(gameCtrl.game._has_packages && !overviewCtrl.isLoaded) || overviewCtrl.hasReleasesSection">
 
 					<h2 id="game-releases" ng-class="{ 'section-header': !Screen.isMobile }" translate>
 						Releases
