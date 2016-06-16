@@ -6,8 +6,12 @@ import { ModelModule } from './../lib/gj-lib-client/components/model/model';
 import CommentModule from './../lib/gj-lib-client/components/comment/comment';
 import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
 import CommentVideoModule from './../lib/gj-lib-client/components/comment/video/video';
+
 import YoutubeSdkModule from './../lib/gj-lib-client/components/social/youtube/sdk/sdk';
 import YoutubeSubscribeModule from './../lib/gj-lib-client/components/social/youtube/subscribe/subscribe';
+
+import CommentVideoLightboxModule from './../lib/gj-lib-client/components/comment/video/lightbox/lightbox';
+import CommentVideoThumbnailModule from './../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 
 import PageHeaderModule from './components/page-header/page-header';
 
@@ -120,8 +124,8 @@ const AppModule = angular.module( 'App', [
 	CommentVoteModule,
 	CommentVideoModule,
 	'gj.Comment.Widget',
-	'gj.Comment.Video.Thumbnail',
-	'gj.Comment.Video.Lightbox',
+	CommentVideoThumbnailModule,
+	CommentVideoLightboxModule,
 	'gj.Subscription',
 	'gj.Ad',
 	'gj.Ad.Video',
