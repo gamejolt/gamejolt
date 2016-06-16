@@ -1,5 +1,7 @@
+import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../app-service.ts';
 
+@Injectable()
 export class LibraryCtrl
 {
 	collections: any[];
@@ -7,13 +9,11 @@ export class LibraryCtrl
 	developerCollection: any;
 	ownedCollection: any;
 
-	static $inject = [ '$scope', 'App', 'GameCollection', 'payload' ];
-
 	constructor(
-		$scope: any,
-		app: App,
-		gameCollection: any,
-		payload: any
+		@Inject( '$scope' ) $scope: any,
+		@Inject( 'App' ) app: App,
+		@Inject( 'GameCollection' ) gameCollection: any,
+		@Inject( 'payload' ) payload: any
 	)
 	{
 		app.title = 'Library of ' + $scope.profileCtrl.user.display_name;

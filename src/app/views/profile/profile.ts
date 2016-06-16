@@ -1,3 +1,4 @@
+import { provide } from 'ng-metadata/core';
 import Library from './library/library';
 import Overview from './overview/overview';
 import Videos from './videos/videos';
@@ -9,5 +10,5 @@ export default angular.module( 'App.Views.Profile', [
 	Overview,
 	Videos,
 ] )
-.controller( 'ProfileCtrl', ProfileCtrl )
+.controller( ...provide( 'ProfileCtrl', { useClass: ProfileCtrl } ) )
 .name;

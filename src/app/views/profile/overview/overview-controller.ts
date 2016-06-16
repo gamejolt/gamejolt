@@ -1,20 +1,20 @@
 import { App } from './../../../app-service';
+import { Injectable, Inject } from 'ng-metadata/core';
 import { Comment_Video } from './../../../../lib/gj-lib-client/components/comment/video/video-model';
 
+@Injectable()
 export class OverviewCtrl
 {
 	developerGames: any[];
 	videoComments: any[];
 
-	static $inject = [ '$scope', 'App', 'Meta', 'Game', 'Comment_Video', 'payload' ];
-
 	constructor(
-		$scope,
-		app: App,
-		meta: any,
-		game: any,
-		commentVideo: typeof Comment_Video,
-		payload: any
+		@Inject( '$scope' ) $scope: any,
+		@Inject( 'App' ) app: App,
+		@Inject( 'Meta' ) meta: any,
+		@Inject( 'Game' ) game: any,
+		@Inject( 'Comment_Video' ) commentVideo: typeof Comment_Video,
+		@Inject( 'payload' ) payload: any
 	)
 	{
 		app.title = $scope.profileCtrl.user.display_name + ' - ';

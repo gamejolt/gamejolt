@@ -1,3 +1,6 @@
+import { Injectable, Inject } from 'ng-metadata/core';
+
+@Injectable()
 export class ProfileCtrl
 {
 	user: any;
@@ -8,18 +11,16 @@ export class ProfileCtrl
 	activeGameSession: any;
 	userFriendship: any;
 
-	static $inject = [ '$scope', 'Location', 'user', 'User_GameSession', 'User_Friendship', 'User_FriendshipsHelper', 'Report_Modal', 'MediaItem', 'profilePayload' ];
-
 	constructor(
-		$scope: any,
-		location: any,
-		user: any,
-		userGameSession: any,
-		userFriendship: any,
-		private userFriendshipsHelper: any,
-		private reportModal: any,
-		mediaItem: any,
-		profilePayload: any
+		@Inject( '$scope' ) $scope: any,
+		@Inject( 'Location' ) location: any,
+		@Inject( 'User' ) user: any,
+		@Inject( 'User_GameSession' ) userGameSession: any,
+		@Inject( 'User_Friendship' ) userFriendship: any,
+		@Inject( 'User_FriendshipsHelper' ) private userFriendshipsHelper: any,
+		@Inject( 'Report_Modal' ) private reportModal: any,
+		@Inject( 'MediaItem' ) mediaItem: any,
+		@Inject( 'profilePayload' ) profilePayload: any
 	)
 	{
 		$scope.User = user;
