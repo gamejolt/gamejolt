@@ -3,6 +3,10 @@ import { bootstrap } from 'ng-metadata/platform';
 
 import { ModelModule } from './../lib/gj-lib-client/components/model/model';
 
+import CommentModule from './../lib/gj-lib-client/components/comment/comment';
+import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
+import CommentVideoModule from './../lib/gj-lib-client/components/comment/video/video';
+
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
 import ViewsModule from './views/views';
@@ -108,9 +112,9 @@ const AppModule = angular.module( 'App', [
 	'gj.User.Friendship',
 	'gj.User.Message',
 	'gj.Notification',
-	'gj.Comment',
-	'gj.Comment.Vote',
-	'gj.Comment.Video',
+	CommentModule,
+	CommentVoteModule,
+	CommentVideoModule,
 	'gj.Comment.Widget',
 	'gj.Comment.Video.Thumbnail',
 	'gj.Comment.Video.Lightbox',
