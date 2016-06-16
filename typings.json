@@ -4,6 +4,7 @@
   "globalDependencies": {
     "angular": "registry:dt/angular#1.5.0+20160602160139",
     "angular-gettext": "registry:dt/angular-gettext#0.0.0+20160317120654",
+    "angular-hotkeys": "registry:dt/angular-hotkeys#0.0.0+20160317120654",
     "angular-ui-router": "registry:dt/angular-ui-router#1.1.5+20160521151413",
     "lodash": "registry:dt/lodash#3.10.0+20160330154726"
   }
