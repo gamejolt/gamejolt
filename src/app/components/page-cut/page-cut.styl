@@ -1,0 +1,23 @@
+.page-cut
+	position: relative
+	text-align: center
+	margin-bottom: $grid-gutter-width
+
+	&::before
+		content: ''
+		position: absolute
+		top: 18px
+		left: 0
+		right: 0
+		height: 2px
+		line-height: 2px
+		overflow: hidden
+		background-color: $gray-lighter
+
+	.btn
+		position: relative
+		background-color: $white
+		z-index: 2
+
+		&:hover
+			background-color: $black
