@@ -3,7 +3,7 @@ import template from './page-header.html';
 
 @Component({
 	selector: 'gj-page-header',
-	templateUrl: template,
+	template,
 	legacy: {
 		transclude: {
 			coverButtons: '?gjPageHeaderCoverButtons',
