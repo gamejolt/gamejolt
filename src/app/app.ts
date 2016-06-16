@@ -1,4 +1,14 @@
-angular.module( 'App', [
+import 'reflect-metadata';
+import { bootstrap } from 'ng-metadata/platform';
+
+import { AppCtrl } from './app-controller';
+import { App } from './app-service';
+
+import './views/views';
+
+import { ModelModule } from './../lib/gj-lib-client/components/model/model';
+
+const AppModule = angular.module( 'App', [
 	// Set the event tracking up first.
 	'gj.ErrorTracking',
 
@@ -25,7 +35,7 @@ angular.module( 'App', [
 	'gj.Environment',
 	'gj.Api',
 	'gj.Payload',
-	'gj.Model',
+	ModelModule,
 	'gj.Error',
 	'gj.Meta',
 
@@ -273,6 +283,8 @@ angular.module( 'App', [
 	// Client.
 	/* inject client:modules */
 ] )
+.service( 'App', App )
+.controller( 'AppCtrl', AppCtrl )
 .config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $ocLazyLoadProvider, $sceDelegateProvider, amTimeAgoConfig, TranslateProvider )
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
@@ -415,4 +427,10 @@ angular.module( 'App', [
 	var ms = Date.now() - window._gjStartTime;
 	Analytics.trackTiming( 'shell', 'angular-start', ms );
 } )
+.name
 ;
+
+setTimeout( function()
+{
+	bootstrap( AppModule );
+}, 0 );
