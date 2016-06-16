@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'ProfileCtrl', function( $scope, Location, User, User_GameSession, User_Friendship, User_FriendshipsHelper, ModalConfirm, Report_Modal, profilePayload )
+angular.module( 'App.Views' ).controller( 'ProfileCtrl', function( $scope, Location, User, User_GameSession, User_Friendship, User_FriendshipsHelper, ModalConfirm, Report_Modal, MediaItem, profilePayload )
 {
 	var _this = this;
 
@@ -11,9 +11,9 @@ angular.module( 'App.Views' ).controller( 'ProfileCtrl', function( $scope, Locat
 		slug: this.user.slug,
 	} );
 
+	this.headerMediaItem = profilePayload.headerMediaItem ? new MediaItem( profilePayload.headerMediaItem ) : null;
 	this.gamesCount = profilePayload.gamesCount;
 	this.isOnline = profilePayload.isOnline;
-	this.headerImg = profilePayload.headerImg;
 	this.libraryGamesCount = profilePayload.libraryGamesCount;
 	this.activeGameSession = profilePayload.activeGameSession ? new User_GameSession( profilePayload.activeGameSession ) : null;
 
