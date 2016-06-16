@@ -1,12 +1,11 @@
 import 'reflect-metadata';
 import { bootstrap } from 'ng-metadata/platform';
 
+import { ModelModule } from './../lib/gj-lib-client/components/model/model';
+
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
-
-import './views/views';
-
-import { ModelModule } from './../lib/gj-lib-client/components/model/model';
+import ViewsModule from './views/views';
 
 const AppModule = angular.module( 'App', [
 	// Set the event tracking up first.
@@ -278,7 +277,7 @@ const AppModule = angular.module( 'App', [
 	'App.Terms.ChangeAlert',
 
 	// Views.
-	'App.Views',
+	ViewsModule,
 
 	// Client.
 	/* inject client:modules */

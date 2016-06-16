@@ -1,3 +1,6 @@
-import { lazyModule } from './../../lib/gj-lib-client/util/ng1-helpers';
+import Profile from './profile/profile';
 
-lazyModule( 'App.Views' );
+export default angular.module( 'App.Views', [
+	Profile,
+] )
+.name;
