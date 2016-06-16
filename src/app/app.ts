@@ -13,6 +13,8 @@ import YoutubeSubscribeModule from './../lib/gj-lib-client/components/social/you
 import CommentVideoLightboxModule from './../lib/gj-lib-client/components/comment/video/lightbox/lightbox';
 import CommentVideoThumbnailModule from './../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 
+import VideoEmbedModule from './../lib/gj-lib-client/components/video-embed/video-embed';
+
 import PageHeaderModule from './components/page-header/page-header';
 
 import { AppCtrl } from './app-controller';
@@ -215,7 +217,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Img.ImgResponsive',
 
 	'gj.WidgetCompiler',
-	'gj.VideoEmbed',
+	VideoEmbedModule,
 
 	// Components.
 	'App.ProtocolWatcher',
