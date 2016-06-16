@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Profile.OverviewCtrl', function( $scope, App, Meta, Game, payload )
+angular.module( 'App.Views' ).controller( 'Profile.OverviewCtrl', function( $scope, App, Meta, Game, Comment_Video, payload )
 {
 	App.title = $scope.profileCtrl.user.display_name + ' - ';
 
@@ -15,5 +15,6 @@ angular.module( 'App.Views' ).controller( 'Profile.OverviewCtrl', function( $sco
 	Meta.twitter = payload.twitter || {};
 	Meta.twitter.title = App.title;
 
-	this.developerGames = payload.developerGamesTeaser ? Game.populate( payload.developerGamesTeaser ) : [];
+	this.developerGames = Game.populate( payload.developerGamesTeaser );
+	this.videoComments = Comment_Video.populate( payload.videoComments );
 } );
