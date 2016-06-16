@@ -194,6 +194,7 @@ angular.module( 'App', [
 	'gj.Img.ImgResponsive',
 
 	'gj.WidgetCompiler',
+	'gj.VideoEmbed',
 
 	// Components.
 	'App.ProtocolWatcher',
@@ -236,8 +237,6 @@ angular.module( 'App', [
 	'App.Game.Ogrs',
 	'App.Game.RatingGrowl',
 	'App.Game.MaturityBlock',
-
-	'App.VideoEmbed',
 
 	'App.Channels',
 
