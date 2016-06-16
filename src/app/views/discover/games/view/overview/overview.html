@@ -329,6 +329,30 @@
 	</div>
 </section>
 
+<!-- Video Comments -->
+
+<section class="section">
+	<div class="container">
+
+		<h2 class="section-header" translate>
+			Video Comments
+		</h2>
+
+		<div class="row">
+			<gj-comment-video-thumbnail
+				class="scrollable-grid-item col-xs-9 col-sm-4 col-md-3"
+				ng-repeat="video in ::overviewCtrl.videoComments track by video.id"
+				video="::video"
+				show-user="true"
+				>
+				<!--on-select="selectVideo( video )"
+				is-active="commentState.selectedVideo === video"-->
+			</gj-comment-video-thumbnail>
+		</div>
+
+	</div>
+</section>
+
 <!-- Comments -->
 <section class="section" id="comments" ng-if="gameCtrl.isLoaded">
 	<div class="container">

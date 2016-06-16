@@ -2,6 +2,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle,
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, User, Environment,
 	Jam,
+	Comment_Video,
 	Api, Payload, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
 {
 	var _this = this;
@@ -91,7 +92,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		this.songs = Game_Song.populate( payload.songs );
 		this.latestArticles = Game_NewsArticle.populate( payload.latestArticles );
 		this.recommendedGames = Game.populate( payload.recommendedGames );
-		this.supporters = User.populate( payload.supporters ) || [];
+		this.supporters = User.populate( payload.supporters );
+		this.videoComments = Comment_Video.populate( payload.videoComments );
 
 		var packageData = Game_Package.processPackagePayload( payload );
 		angular.extend( this, packageData );
