@@ -7,20 +7,22 @@ export class LibraryCtrl
 	developerCollection: any;
 	ownedCollection: any;
 
+	static $inject = [ '$scope', 'App', 'GameCollection', 'payload' ];
+
 	constructor(
-		$scope,
-		App: App,
-		GameCollection,
-		payload
+		$scope: any,
+		app: App,
+		gameCollection: any,
+		payload: any
 	)
 	{
-		App.title = 'Library of ' + $scope.profileCtrl.user.display_name;
+		app.title = 'Library of ' + $scope.profileCtrl.user.display_name;
 
-		this.collections = GameCollection.populate( payload.collections );
+		this.collections = gameCollection.populate( payload.collections );
 
-		this.followedCollection = payload.followedCollection ? new GameCollection( payload.followedCollection ) : null;
-		this.developerCollection = payload.developerCollection ? new GameCollection( payload.developerCollection ) : null;
-		this.ownedCollection = payload.ownedCollection ? new GameCollection( payload.ownedCollection ) : null;
+		this.followedCollection = payload.followedCollection ? new gameCollection( payload.followedCollection ) : null;
+		this.developerCollection = payload.developerCollection ? new gameCollection( payload.developerCollection ) : null;
+		this.ownedCollection = payload.ownedCollection ? new gameCollection( payload.ownedCollection ) : null;
 
 		this.collections.unshift( this.ownedCollection );
 		this.collections.unshift( this.followedCollection );

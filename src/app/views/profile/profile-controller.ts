@@ -8,46 +8,48 @@ export class ProfileCtrl
 	activeGameSession: any;
 	userFriendship: any;
 
+	static $inject = [ '$scope', 'Location', 'user', 'User_GameSession', 'User_Friendship', 'User_FriendshipsHelper', 'Report_Modal', 'MediaItem', 'profilePayload' ];
+
 	constructor(
-		$scope,
-		Location,
-		User,
-		User_GameSession,
-		User_Friendship,
-		private User_FriendshipsHelper,
-		private Report_Modal,
-		MediaItem,
-		profilePayload
+		$scope: any,
+		location: any,
+		user: any,
+		userGameSession: any,
+		userFriendship: any,
+		private userFriendshipsHelper: any,
+		private reportModal: any,
+		mediaItem: any,
+		profilePayload: any
 	)
 	{
-		$scope.User = User;
-		$scope.User_Friendship = User_Friendship;
+		$scope.User = user;
+		$scope.User_Friendship = userFriendship;
 
-		this.user = new User( profilePayload.user );
+		this.user = new user( profilePayload.user );
 
-		Location.enforce( {
+		location.enforce( {
 			slug: this.user.slug,
 		} );
 
-		this.headerMediaItem = profilePayload.headerMediaItem ? new MediaItem( profilePayload.headerMediaItem ) : null;
+		this.headerMediaItem = profilePayload.headerMediaItem ? new mediaItem( profilePayload.headerMediaItem ) : null;
 		this.gamesCount = profilePayload.gamesCount;
 		this.isOnline = profilePayload.isOnline;
 		this.libraryGamesCount = profilePayload.libraryGamesCount;
-		this.activeGameSession = profilePayload.activeGameSession ? new User_GameSession( profilePayload.activeGameSession ) : null;
+		this.activeGameSession = profilePayload.activeGameSession ? new userGameSession( profilePayload.activeGameSession ) : null;
 
 		if ( profilePayload.userFriendship ) {
-			this.userFriendship = new User_Friendship( profilePayload.userFriendship );
+			this.userFriendship = new userFriendship( profilePayload.userFriendship );
 		}
 	}
 
 	acceptFriendRequest()
 	{
-		this.User_FriendshipsHelper.acceptRequest( this.userFriendship );
+		this.userFriendshipsHelper.acceptRequest( this.userFriendship );
 	}
 
 	sendFriendRequest()
 	{
-		this.User_FriendshipsHelper.sendRequest( this.user )
+		this.userFriendshipsHelper.sendRequest( this.user )
 			.then( ( request ) =>
 			{
 				this.userFriendship = request;
@@ -56,7 +58,7 @@ export class ProfileCtrl
 
 	cancelFriendRequest()
 	{
-		this.User_FriendshipsHelper.cancelRequest( this.userFriendship )
+		this.userFriendshipsHelper.cancelRequest( this.userFriendship )
 			.then( () =>
 			{
 				this.userFriendship = undefined;
@@ -65,7 +67,7 @@ export class ProfileCtrl
 
 	rejectFriendRequest()
 	{
-		this.User_FriendshipsHelper.rejectRequest( this.userFriendship )
+		this.userFriendshipsHelper.rejectRequest( this.userFriendship )
 			.then( () =>
 			{
 				this.userFriendship = undefined;
@@ -74,7 +76,7 @@ export class ProfileCtrl
 
 	removeFriend()
 	{
-		this.User_FriendshipsHelper.removeFriend( this.userFriendship )
+		this.userFriendshipsHelper.removeFriend( this.userFriendship )
 			.then( () =>
 			{
 				this.userFriendship = undefined;
@@ -83,6 +85,6 @@ export class ProfileCtrl
 
 	report()
 	{
-		this.Report_Modal.show( this.user );
+		this.reportModal.show( this.user );
 	}
 }
