@@ -1,4 +1,5 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
+import { Screen } from './../../../lib/gj-lib-client/components/screen/screen-service';
 import template from './page-header.html';
 
 @Component({
@@ -20,7 +21,7 @@ export class PageHeaderComponent
 	@Input( '<?' ) shouldAffixNav: boolean;
 
 	constructor(
-		@Inject( 'Screen' ) private screen: any
+		@Inject( 'Screen' ) private screen: Screen
 	)
 	{
 	}
