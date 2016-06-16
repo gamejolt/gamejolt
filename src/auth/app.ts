@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { bootstrap } from 'ng-metadata/platform';
 
-import { ModelModule } from './../lib/gj-lib-client/components/model/model';
+import ModelModule from './../lib/gj-lib-client/components/model/model';
+import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 
 angular.module( 'App', [
 	// Set the event tracking up first.
@@ -25,7 +26,7 @@ angular.module( 'App', [
 
 	'gj.Debug',
 	'gj.Debug.DebugBar',
-	'gj.Ruler',
+	RulerModule,
 	'gj.Screen',
 	'gj.BodyClasses',
 	'gj.Analytics',

@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { bootstrap } from 'ng-metadata/platform';
 
-import { ModelModule } from './../lib/gj-lib-client/components/model/model';
+import ModelModule from './../lib/gj-lib-client/components/model/model';
+import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 
 import CommentModule from './../lib/gj-lib-client/components/comment/comment';
 import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
@@ -61,7 +62,7 @@ const AppModule = angular.module( 'App', [
 
 	'gj.Debug',
 	'gj.Debug.DebugBar',
-	'gj.Ruler',
+	RulerModule,
 	'gj.Screen',
 	'gj.BodyClasses',
 	'gj.Analytics',

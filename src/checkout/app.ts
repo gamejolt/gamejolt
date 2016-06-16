@@ -7,7 +7,8 @@ import './components/forms/forms';
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
 
-import { ModelModule } from './../lib/gj-lib-client/components/model/model';
+import ModelModule from './../lib/gj-lib-client/components/model/model';
+import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 
 angular.module( 'App', [
 	// Libs.
@@ -32,7 +33,7 @@ angular.module( 'App', [
 
 	'gj.Debug',
 	'gj.Debug.DebugBar',
-	'gj.Ruler',
+	RulerModule,
 	'gj.Screen',
 	'gj.BodyClasses',
 	'gj.Analytics',
