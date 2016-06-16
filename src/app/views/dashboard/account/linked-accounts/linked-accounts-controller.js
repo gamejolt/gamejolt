@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccountsCtrl', function( $scope, App, Growls, User_LinkedAccounts, User_SetPasswordModal )
+angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccountsCtrl', function( $scope, App, Growls, User_LinkedAccounts, User_SetPasswordModal, ModalConfirm, gettextCatalog )
 {
 	var _this = this;
 
@@ -25,5 +25,13 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccountsCtrl'
 				} );
 			}
 		} );
+	};
+
+	this.unlinkYoutube = function( channel )
+	{
+		ModalConfirm.show( gettextCatalog.getString( 'Are you you want to unlink this channel? Any videos you may have done as part of this channel will be removed from Game Jolt.' ) )
+			.then( function()
+			{
+			} );
 	};
 } );
