@@ -1,0 +1,23 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<gj-comment-video-thumbnail
+				class="col-xs-6 col-sm-4 col-md-3"
+				ng-repeat="video in videosCtrl.videos track by video.id"
+				video="video"
+				show-game="true"
+				>
+			</gj-comment-video-thumbnail>
+		</div>
+
+		<div class="page-cut">
+			<a class="btn btn-outline"
+				translate
+				>
+				Load More
+			</a>
+		</div>
+
+	</div>
+</section>

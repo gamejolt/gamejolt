@@ -68,19 +68,24 @@
 		<nav class="platform-list inline">
 			<ul>
 				<li>
-					<a ui-sref=".overview" ui-sref-active="active">
-						{{ ::'profile.overview_tab' | translate }}
+					<a ui-sref="profile.overview" ui-sref-active="active" translate>
+						profile.overview_tab
 					</a>
 				</li>
 				<li>
-					<a ui-sref=".library" ui-sref-active="active">
-						{{ ::'profile.library_tab' | translate }}
+					<a ui-sref="profile.videos" ui-sref-active="active" translate>
+						Videos
+					</a>
+				</li>
+				<li>
+					<a ui-sref="profile.library" ui-sref-active="active" translate>
+						profile.library_tab
 					</a>
 				</li>
 				<li ng-if="App.user && (App.user.permission_level > 0 || profileCtrl.userFriendship.state == User_Friendship.STATE_FRIENDS || profileCtrl.user.id != App.user.id)">
 					<a gj-popover-trigger="profile-more-options">
 						<span class="jolticon jolticon-ellipsis-h"></span>
-						{{ ::'options.more' | translate }}
+						<span translate>options.more</span>
 					</a>
 				</li>
 			</ul>
