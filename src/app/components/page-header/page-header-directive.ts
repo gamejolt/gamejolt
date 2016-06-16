@@ -1,8 +1,9 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
+import template from './page-header.html';
 
 @Component({
 	selector: 'gj-page-header',
-	templateUrl: '/app/components/page-header/page-header.html',
+	templateUrl: template,
 	legacy: {
 		transclude: {
 			coverButtons: '?gjPageHeaderCoverButtons',
