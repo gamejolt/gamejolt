@@ -101,7 +101,10 @@ angular.module( 'App', [
 	'gj.Notification',
 	'gj.Comment',
 	'gj.Comment.Vote',
+	'gj.Comment.Video',
 	'gj.Comment.Widget',
+	'gj.Comment.Video.Thumbnail',
+	'gj.Comment.Video.Lightbox',
 	'gj.Subscription',
 	'gj.Ad',
 	'gj.Ad.Video',
@@ -159,6 +162,8 @@ angular.module( 'App', [
 	'gj.Social.Facebook.Like',
 	'gj.Social.Facebook.Share',
 	'gj.Social.Facebook.Send',
+	'gj.Social.Youtube.Sdk',
+	'gj.Social.Youtube.Subscribe',
 
 	'gj.GameLibrary.Game',
 
@@ -230,8 +235,9 @@ angular.module( 'App', [
 	'App.Game.MediaBar',
 	'App.Game.Ogrs',
 	'App.Game.RatingGrowl',
-	'App.Game.Video.Embed',
 	'App.Game.MaturityBlock',
+
+	'App.VideoEmbed',
 
 	'App.Channels',
 
