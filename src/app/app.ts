@@ -6,6 +6,8 @@ import { ModelModule } from './../lib/gj-lib-client/components/model/model';
 import CommentModule from './../lib/gj-lib-client/components/comment/comment';
 import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
 import CommentVideoModule from './../lib/gj-lib-client/components/comment/video/video';
+import YoutubeSdkModule from './../lib/gj-lib-client/components/social/youtube/sdk/sdk';
+import YoutubeSubscribeModule from './../lib/gj-lib-client/components/social/youtube/subscribe/subscribe';
 
 import PageHeaderModule from './components/page-header/page-header';
 
@@ -177,8 +179,8 @@ const AppModule = angular.module( 'App', [
 	'gj.Social.Facebook.Like',
 	'gj.Social.Facebook.Share',
 	'gj.Social.Facebook.Send',
-	'gj.Social.Youtube.Sdk',
-	'gj.Social.Youtube.Subscribe',
+	YoutubeSdkModule,
+	YoutubeSubscribeModule,
 
 	'gj.GameLibrary.Game',
 
