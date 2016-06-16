@@ -3,6 +3,7 @@ import { bootstrap } from 'ng-metadata/platform';
 
 import ModelModule from './../lib/gj-lib-client/components/model/model';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
+import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 
 import CommentModule from './../lib/gj-lib-client/components/comment/comment';
 import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
@@ -63,7 +64,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Debug',
 	'gj.Debug.DebugBar',
 	RulerModule,
-	'gj.Screen',
+	ScreenModule,
 	'gj.BodyClasses',
 	'gj.Analytics',
 	'gj.Loading',

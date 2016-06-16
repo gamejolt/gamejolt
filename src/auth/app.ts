@@ -3,6 +3,7 @@ import { bootstrap } from 'ng-metadata/platform';
 
 import ModelModule from './../lib/gj-lib-client/components/model/model';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
+import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 
 angular.module( 'App', [
 	// Set the event tracking up first.
@@ -27,7 +28,7 @@ angular.module( 'App', [
 	'gj.Debug',
 	'gj.Debug.DebugBar',
 	RulerModule,
-	'gj.Screen',
+	ScreenModule,
 	'gj.BodyClasses',
 	'gj.Analytics',
 	'gj.Loading',
