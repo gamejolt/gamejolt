@@ -7,6 +7,8 @@ import CommentModule from './../lib/gj-lib-client/components/comment/comment';
 import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
 import CommentVideoModule from './../lib/gj-lib-client/components/comment/video/video';
 
+import PageHeaderModule from './components/page-header/page-header';
+
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
 import ViewsModule from './views/views';
@@ -223,7 +225,7 @@ const AppModule = angular.module( 'App', [
 	'App.Sorting',
 	'App.Settings',
 	'App.MediaItem.Cover',
-	'App.PageHeader',
+	PageHeaderModule,
 
 	'App.Forms',
 
