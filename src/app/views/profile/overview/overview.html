@@ -73,7 +73,10 @@
 				<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
 					<div class="row">
 						<div class="col-sm-6 col-md-12">
-							<div class="text-right" ng-if="::(
+							<gj-user-level-widget gj-user="::profileCtrl.user"></gj-user-level-widget>
+						</div>
+						<div class="col-sm-6 col-md-12">
+							<div ng-if="::(
 								profileCtrl.user.facebook_id
 								|| profileCtrl.user.twitter_id
 								|| profileCtrl.user.google_id
@@ -126,9 +129,6 @@
 
 								<br>
 							</div>
-						</div>
-						<div class="col-sm-6 col-md-12">
-							<div gj-partial="/app/views/profile/overview/_level-widget.html"></div>
 						</div>
 					</div>
 				</div>
