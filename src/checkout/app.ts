@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { bootstrap } from 'ng-metadata/platform';
 
 import './views/views';

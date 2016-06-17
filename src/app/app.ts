@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { bootstrap } from 'ng-metadata/platform';
 
 import ModelModule from './../lib/gj-lib-client/components/model/model';

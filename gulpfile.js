@@ -10,6 +10,15 @@ var config = {
 			'src/modal/modal.js'
 		],
 	},
+	rollup: {
+		// external: [
+		// 	'ng-metadata/core',
+		// ],
+		vendor: {
+			'ng-metadata/core': 'vendor.ngMetadata_core',
+			'ng-metadata/platform': 'vendor.ngMetadata_platform',
+		},
+	},
 	modules: {
 		'vendor-app.js': {
 			bower: [
