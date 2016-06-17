@@ -11,6 +11,7 @@ import CommentVideoModule from './../lib/gj-lib-client/components/comment/video/
 
 import YoutubeSdkModule from './../lib/gj-lib-client/components/social/youtube/sdk/sdk';
 import YoutubeSubscribeModule from './../lib/gj-lib-client/components/social/youtube/subscribe/subscribe';
+import YoutubeChannelModule from './../lib/gj-lib-client/components/youtube/channel/channel';
 
 import CommentVideoLightboxModule from './../lib/gj-lib-client/components/comment/video/lightbox/lightbox';
 import CommentVideoThumbnailModule from './../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
@@ -134,7 +135,6 @@ const AppModule = angular.module( 'App', [
 	'gj.Comment.Widget',
 	CommentVideoThumbnailModule,
 	CommentVideoLightboxModule,
-	'gj.Youtube.Channel',
 	'gj.Subscription',
 	'gj.Ad',
 	'gj.Ad.Video',
@@ -194,6 +194,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Social.Facebook.Send',
 	YoutubeSdkModule,
 	YoutubeSubscribeModule,
+	YoutubeChannelModule,
 
 	'gj.GameLibrary.Game',
 
