@@ -6,7 +6,7 @@ import { Comment_Video } from './../../../../lib/gj-lib-client/components/commen
 export class OverviewCtrl
 {
 	developerGames: any[];
-	videoComments: any[];
+	videos: Comment_Video[];
 
 	constructor(
 		@Inject( '$scope' ) $scope: any,
@@ -33,6 +33,6 @@ export class OverviewCtrl
 		meta.twitter.title = app.title;
 
 		this.developerGames = game.populate( payload.developerGamesTeaser );
-		this.videoComments = commentVideo.populate( payload.videoComments );
+		this.videos = commentVideo.populate( payload.videos );
 	}
 }

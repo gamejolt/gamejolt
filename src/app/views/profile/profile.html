@@ -72,7 +72,7 @@
 						profile.overview_tab
 					</a>
 				</li>
-				<li>
+				<li ng-if="profileCtrl.videosCount > 0">
 					<a ui-sref="profile.videos" ui-sref-active="active" translate>
 						Videos
 					</a>

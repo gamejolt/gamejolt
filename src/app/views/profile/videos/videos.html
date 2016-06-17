@@ -4,15 +4,16 @@
 		<div class="row">
 			<gj-comment-video-thumbnail
 				class="col-xs-6 col-sm-4 col-md-3"
-				ng-repeat="video in videosCtrl.videos track by video.id"
+				ng-repeat="video in videosCtrl.videos track by $index"
 				video="video"
 				show-game="true"
 				>
 			</gj-comment-video-thumbnail>
 		</div>
 
-		<div class="page-cut">
+		<div class="page-cut" ng-if="videosCtrl.videos.length < profileCtrl.videosCount">
 			<a class="btn btn-outline"
+				ng-click="videosCtrl.loadMore()"
 				translate
 				>
 				Load More

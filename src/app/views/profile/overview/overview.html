@@ -152,18 +152,20 @@
 		</div>
 	</section>
 
-	<section class="section">
+	<section class="section" ng-if="profileCtrl.videosCount > 0">
 		<div class="container">
 
 			<h2 class="section-header">
-				Video Comments
+				<a class="link-unstyled" ui-sref="profile.videos" translate>
+					Video Comments
+				</a>
 			</h2>
 
 			<div class="scrollable-grid-xs">
 				<div class="row">
 					<gj-comment-video-thumbnail
 						class="scrollable-grid-item col-xs-10 col-sm-4 col-md-3"
-						ng-repeat="video in overviewCtrl.videoComments | limitTo:8 track by video.id"
+						ng-repeat="video in overviewCtrl.videos | limitTo:8 track by video.id"
 						video="video"
 						show-game="true"
 						>
@@ -174,9 +176,11 @@
 			<div class="page-cut">
 				<a class="btn btn-outline"
 					ui-sref="profile.videos"
-					translate
 					>
-					Show More
+					<span class="btn-badge">
+						{{ profileCtrl.videosCount | number }}
+					</span>
+					<span translate>View All</span>
 				</a>
 			</div>
 
@@ -209,11 +213,11 @@
 				<div class="page-cut">
 					<a class="btn btn-outline"
 						ui-sref="library.collection.developer( { slug: profileCtrl.user.slug, id: profileCtrl.user.id } )"
-						translate>
+						>
 						<span class="btn-badge">
 							{{ profileCtrl.gamesCount | number }}
 						</span>
-						View All
+						<span translate>View All</span>
 					</a>
 				</div>
 			</div>

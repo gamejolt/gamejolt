@@ -10,6 +10,7 @@ export class ProfileCtrl
 	libraryGamesCount: number;
 	activeGameSession: any;
 	userFriendship: any;
+	videosCount: number;
 
 	constructor(
 		@Inject( '$scope' ) $scope: any,
@@ -37,6 +38,7 @@ export class ProfileCtrl
 		this.isOnline = profilePayload.isOnline;
 		this.libraryGamesCount = profilePayload.libraryGamesCount;
 		this.activeGameSession = profilePayload.activeGameSession ? new userGameSession( profilePayload.activeGameSession ) : null;
+		this.videosCount = profilePayload.videosCount || 0;
 
 		if ( profilePayload.userFriendship ) {
 			this.userFriendship = new userFriendship( profilePayload.userFriendship );

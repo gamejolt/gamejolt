@@ -5,12 +5,15 @@ import { Comment_Video } from '../../../../lib/gj-lib-client/components/comment/
 @Injectable()
 export class VideosCtrl
 {
-	videos: any[];
+	videos: Comment_Video[];
+	page = 0;
 
 	constructor(
-		@Inject( '$scope' ) $scope,
+		@Inject( '$scope' ) $scope: any,
+		@Inject( '$stateParams' ) private $stateParams: ng.ui.IStateParamsService,
 		@Inject( 'App' ) app: App,
-		@Inject( 'Comment_Video' ) commentVideo: typeof Comment_Video,
+		@Inject( 'Api' ) private api: any,
+		@Inject( 'Comment_Video' ) private commentVideo: typeof Comment_Video,
 		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
 	)
@@ -18,5 +21,15 @@ export class VideosCtrl
 		app.title = gettextCatalog.getString( 'Videos from {{ user }}', { user: $scope.profileCtrl.user.display_name } );
 
 		this.videos = commentVideo.populate( payload.videos );
+	}
+
+	loadMore()
+	{
+		++this.page;
+		this.api.sendRequest( `/web/profile/videos/${this.$stateParams['id']}?page=${this.page}` )
+			.then( response =>
+			{
+				this.videos = this.videos.concat( this.commentVideo.populate( response.videos ) );
+			} );
 	}
 }
