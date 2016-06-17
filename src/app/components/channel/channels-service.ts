@@ -1,6 +1,9 @@
-angular.module( 'App.Channels' ).service( 'Channels', function( App, Meta, Environment, gettextCatalog )
+import { Injectable } from 'ng-metadata/core';
+
+@Injectable()
+export class Channels
 {
-	this.images = {
+	images = {
 		fnaf: '/app/components/channel/fnaf.png',
 		horror: '/app/components/channel/horror.png',
 		fangame: '/app/components/channel/fangame.png',
@@ -8,4 +11,4 @@ angular.module( 'App.Channels' ).service( 'Channels', function( App, Meta, Envir
 		multiplayer: '/app/components/channel/multiplayer.png',
 		vr: '/app/components/channel/vr.png',
 	};
-} );
+}

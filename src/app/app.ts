@@ -17,6 +17,7 @@ import CommentVideoThumbnailModule from './../lib/gj-lib-client/components/comme
 import VideoEmbedModule from './../lib/gj-lib-client/components/video-embed/video-embed';
 
 import PageHeaderModule from './components/page-header/page-header';
+import ChannelsModule from './components/channel/channels';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -262,7 +263,7 @@ const AppModule = angular.module( 'App', [
 	'App.Game.RatingGrowl',
 	'App.Game.MaturityBlock',
 
-	'App.Channels',
+	ChannelsModule,
 
 	'App.Game.Collection',
 	'App.Game.Collection.Thumbnail',
