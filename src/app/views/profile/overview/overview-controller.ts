@@ -1,11 +1,13 @@
 import { App } from './../../../app-service';
 import { Injectable, Inject } from 'ng-metadata/core';
 import { Comment_Video } from './../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { Youtube_Channel } from './../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
 
 @Injectable()
 export class OverviewCtrl
 {
 	developerGames: any[];
+	youtubeChannels: Youtube_Channel[];
 	videos: Comment_Video[];
 
 	constructor(
@@ -14,6 +16,7 @@ export class OverviewCtrl
 		@Inject( 'Meta' ) meta: any,
 		@Inject( 'Game' ) game: any,
 		@Inject( 'Comment_Video' ) commentVideo: typeof Comment_Video,
+		@Inject( 'Youtube_Channel' ) youtubeChannel: typeof Youtube_Channel,
 		@Inject( 'payload' ) payload: any
 	)
 	{
@@ -33,6 +36,7 @@ export class OverviewCtrl
 		meta.twitter.title = app.title;
 
 		this.developerGames = game.populate( payload.developerGamesTeaser );
+		this.youtubeChannels = youtubeChannel.populate( payload.youtubeChannels );
 		this.videos = commentVideo.populate( payload.videos );
 	}
 }

@@ -129,6 +129,18 @@
 
 								<br>
 							</div>
+							<div ng-if="overviewCtrl.youtubeChannels.length">
+								<div ng-repeat="channel in overviewCtrl.youtubeChannels track by channel.id">
+									<a
+										class="link-unstyled"
+										target="_blank"
+										ng-href="https://www.youtube.com/channel/{{ channel.channel_id }}"
+										>
+										<span class="jolticon jolticon-youtube"></span>
+										{{ channel.title }}
+									</a>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
