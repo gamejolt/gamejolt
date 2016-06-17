@@ -11,6 +11,7 @@ import {
 	Component,
 	Input,
 	Output,
+	enableProdMode,
 } from 'ng-metadata/core';
 import { bootstrap } from 'ng-metadata/platform';
 
@@ -21,6 +22,7 @@ const ngMetadata_core = {
 	Component,
 	Input,
 	Output,
+	enableProdMode,
 };
 
 const ngMetadata_platform = {
