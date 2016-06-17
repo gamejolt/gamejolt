@@ -19,6 +19,7 @@ import VideoEmbedModule from './../lib/gj-lib-client/components/video-embed/vide
 
 import MediaItemCoverModule from './components/media-item/cover/cover';
 import PageHeaderModule from './components/page-header/page-header';
+import GameMediaBarModule from './components/game/media-bar/media-bar';
 import ChannelsModule from './components/channel/channels';
 
 import { AppCtrl } from './app-controller';
@@ -260,7 +261,7 @@ const AppModule = angular.module( 'App', [
 	'App.Game.Grid',
 	'App.Game.Filtering',
 	'App.Game.CoverButtons',
-	'App.Game.MediaBar',
+	GameMediaBarModule,
 	'App.Game.Ogrs',
 	'App.Game.RatingGrowl',
 	'App.Game.MaturityBlock',
