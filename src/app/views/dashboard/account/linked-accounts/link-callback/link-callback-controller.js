@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccounts.LinkCallbackCtrl', function( $scope, $stateParams, App, Growls, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccounts.LinkCallbackCtrl', function( $scope, $state, $stateParams, App, Growls, payload )
 {
 	if ( $stateParams.provider == 'twitter' ) {
 		if ( !payload.success ) {
@@ -56,4 +56,6 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccounts.Link
 			$scope.linkedAccountsCtrl.youtubeChannelLinked( payload.channel );
 		}
 	}
+
+	$state.go( 'dashboard.account.linked-accounts' );
 } );
