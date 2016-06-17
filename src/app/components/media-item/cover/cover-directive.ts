@@ -11,6 +11,7 @@ export class CoverComponent
 {
 	@Input( '<' ) mediaItem: any;
 	@Input( '<?' ) shouldParallax: boolean;
+	@Input( '<?' ) maxHeight: number;
 
 	// isLoaded gets set the first time it loads and stays set
 	// isMediaItemLoaded gets changed every time a new size loads in
@@ -57,6 +58,10 @@ export class CoverComponent
 			// This makes sure that we also calculate the height larger.
 			if ( this.screen.isXs ) {
 				newDimensions.height *= 1.4;
+			}
+
+			if ( this.maxHeight && newDimensions.height > this.maxHeight ) {
+				newDimensions.height = this.maxHeight;
 			}
 
 			this._elem.style.height = `${newDimensions.height}px`;
