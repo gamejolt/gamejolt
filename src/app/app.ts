@@ -19,6 +19,7 @@ import VideoEmbedModule from './../lib/gj-lib-client/components/video-embed/vide
 
 import MediaItemCoverModule from './components/media-item/cover/cover';
 import PageHeaderModule from './components/page-header/page-header';
+import GenreListModule from './components/genre/list/list';
 import GameMediaBarModule from './components/game/media-bar/media-bar';
 import ChannelsModule from './components/channel/channels';
 
@@ -247,7 +248,7 @@ const AppModule = angular.module( 'App', [
 	'App.Activity.Feed',
 	'App.Notifications.DescriptiveAction',
 
-	'App.Genre.List',
+	GenreListModule,
 
 	'App.Fireside.Post.Thumbnail',
 	'App.Fireside.Post.List',
