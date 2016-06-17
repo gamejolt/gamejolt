@@ -6,6 +6,9 @@ import template from './cover.html';
 @Component({
 	selector: 'gj-media-item-cover',
 	template,
+	legacy: {
+		transclude: true,
+	},
 })
 export class CoverComponent
 {
