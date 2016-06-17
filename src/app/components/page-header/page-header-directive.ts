@@ -18,6 +18,7 @@ import template from './page-header.html';
 export class PageHeaderComponent
 {
 	@Input( '<?' ) coverMediaItem: any;
+	@Input( '<?' ) coverMaxHeight: number;
 	@Input( '<?' ) shouldAffixNav: boolean;
 
 	constructor(
