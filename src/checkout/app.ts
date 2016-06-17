@@ -7,7 +7,7 @@ import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
-import './components/forms/forms';
+import FormsModule from './components/forms/forms';
 import ViewsModule from './views/views';
 
 angular.module( 'App', [
@@ -65,7 +65,7 @@ angular.module( 'App', [
 
 	'gj.Popover',
 
-	'App.Forms',
+	FormsModule,
 
 	// Views.
 	ViewsModule,
