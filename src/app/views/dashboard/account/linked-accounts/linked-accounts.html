@@ -73,7 +73,7 @@
 				You can link your YouTube channels in order to post video comments on games.
 			</p>
 
-			<div class="list-group">
+			<div class="list-group" ng-if="linkedAccountsCtrl.channels.length > 0">
 				<div class="list-group-item clearfix" ng-repeat="channel in linkedAccountsCtrl.channels track by channel.id">
 					<div class="pull-right">
 						<button class="btn btn-danger-outline btn-sm"
@@ -84,7 +84,7 @@
 						</button>
 					</div>
 					<strong>
-						<a href="" target="_blank">
+						<a ng-href="https://www.youtube.com/channel/{{ channel.channel_id }}" target="_blank">
 							{{ channel.title }}
 						</a>
 					</strong>

@@ -8,7 +8,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		resolve: {
 			payload: function( Api )
 			{
-				return Api.sendRequest( '/web/dash/linked-accounts/' );
+				return Api.sendRequest( '/web/dash/linked-accounts' );
 			}
 		}
 	} );
