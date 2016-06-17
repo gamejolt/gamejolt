@@ -4,6 +4,7 @@ interface Window {
 	_: _.LoDashStatic;
 	moment: moment.MomentStatic;
 	_gjStartTime: number;
+	Stripe: StripeStatic;
 }
 
 declare var global: any;
