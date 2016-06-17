@@ -1,15 +1,14 @@
 import { bootstrap } from 'ng-metadata/platform';
 import { enableProdMode } from 'ng-metadata/core';
 
-import './views/views';
-import './components/forms/forms';
-
-import { AppCtrl } from './app-controller';
-import { App } from './app-service';
-
 import ModelModule from './../lib/gj-lib-client/components/model/model';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
+
+import { AppCtrl } from './app-controller';
+import { App } from './app-service';
+import './components/forms/forms';
+import ViewsModule from './views/views';
 
 angular.module( 'App', [
 	// Libs.
@@ -69,7 +68,7 @@ angular.module( 'App', [
 	'App.Forms',
 
 	// Views.
-	'App.Views',
+	ViewsModule,
 
 	// Client.
 	/* inject client:base:modules */
