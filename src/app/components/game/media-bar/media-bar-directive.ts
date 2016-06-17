@@ -116,17 +116,3 @@ export class MediaBarComponent implements OnChanges
 		}
 	}
 }
-
-// angular.module( 'App.Game.MediaBar' ).directive( 'gjGameMediaBar', function()
-// {
-// 	return {
-// 		restrict: 'E',
-// 		scope: {
-// 			mediaItems: '=gjMediaBarItems'
-// 		},
-// 		templateUrl: '/app/components/game/media-bar/media-bar.html',
-// 		bindToController: true,
-// 		controllerAs: 'ctrl',
-// 		controller:
-// 	};
-// } );
