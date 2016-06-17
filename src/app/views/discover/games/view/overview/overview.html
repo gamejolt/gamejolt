@@ -340,14 +340,21 @@
 
 		<div class="row">
 			<gj-comment-video-thumbnail
-				class="scrollable-grid-item col-xs-9 col-sm-4 col-md-3"
-				ng-repeat="video in ::overviewCtrl.videoComments track by video.id"
+				class="col-xs-6 col-sm-3"
+				ng-repeat="video in overviewCtrl.videoComments track by video.id"
 				video="::video"
 				show-user="true"
 				>
-				<!--on-select="selectVideo( video )"
-				is-active="commentState.selectedVideo === video"-->
 			</gj-comment-video-thumbnail>
+		</div>
+
+		<div class="page-cut" ng-if="overviewCtrl.videoComments.length < overviewCtrl.videoCommentsCount">
+			<a class="btn btn-outline"
+				ng-click="overviewCtrl.loadMoreVideoComments()"
+				translate
+				>
+				Load More
+			</a>
 		</div>
 
 	</div>

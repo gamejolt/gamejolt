@@ -161,16 +161,14 @@
 				</a>
 			</h2>
 
-			<div class="scrollable-grid-xs">
-				<div class="row">
-					<gj-comment-video-thumbnail
-						class="scrollable-grid-item col-xs-10 col-sm-4 col-md-3"
-						ng-repeat="video in overviewCtrl.videos | limitTo:8 track by video.id"
-						video="video"
-						show-game="true"
-						>
-					</gj-comment-video-thumbnail>
-				</div>
+			<div class="row">
+				<gj-comment-video-thumbnail
+					class="col-xs-6 col-sm-3"
+					ng-repeat="video in overviewCtrl.videos | limitTo:8 track by video.id"
+					video="video"
+					show-game="true"
+					>
+				</gj-comment-video-thumbnail>
 			</div>
 
 			<div class="page-cut">

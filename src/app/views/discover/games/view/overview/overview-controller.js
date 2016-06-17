@@ -11,6 +11,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 
 	this.isLoaded = false;
 	this.currentCommentPage = $stateParams.comment_page;
+	this.videoCommentsPage = 0;
 
 	this.isShowingRatingBreakdown = false;
 
@@ -94,6 +95,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		this.recommendedGames = Game.populate( payload.recommendedGames );
 		this.supporters = User.populate( payload.supporters );
 		this.videoComments = Comment_Video.populate( payload.videoComments );
+		this.videoCommentsCount = payload.videoCommentsCount || 0;
 
 		var packageData = Game_Package.processPackagePayload( payload );
 		angular.extend( this, packageData );
@@ -161,5 +163,16 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		if ( payload.activeJam ) {
 			this.activeJam = new Jam( payload.activeJam );
 		}
+	};
+
+	this.loadMoreVideoComments = function()
+	{
+		var _this = this;
+		++this.videoCommentsPage;
+		Api.sendRequest( '/web/discover/games/videos/' + $stateParams.id + '?page=' + this.videoCommentsPage )
+			.then( function( response )
+			{
+				_this.videoComments = _this.videoComments.concat( Comment_Video.populate( response.videos ) );
+			} );
 	};
 } );
