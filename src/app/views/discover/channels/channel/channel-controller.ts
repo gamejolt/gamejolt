@@ -11,7 +11,7 @@ export class ChannelCtrl
 	constructor(
 		@Inject( '$scope' ) $scope: any,
 		@Inject( 'Meta' ) meta: any,
-		@Inject( 'Channels' ) channels: Channels,
+		channels: Channels,
 		@Inject( 'payload' ) payload: any
 	)
 	{
