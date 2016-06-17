@@ -16,6 +16,7 @@ import CommentVideoThumbnailModule from './../lib/gj-lib-client/components/comme
 
 import VideoEmbedModule from './../lib/gj-lib-client/components/video-embed/video-embed';
 
+import MediaItemCoverModule from './components/media-item/cover/cover';
 import PageHeaderModule from './components/page-header/page-header';
 import ChannelsModule from './components/channel/channels';
 
@@ -234,7 +235,7 @@ const AppModule = angular.module( 'App', [
 	'App.Invite',
 	'App.Sorting',
 	'App.Settings',
-	'App.MediaItem.Cover',
+	MediaItemCoverModule,
 	PageHeaderModule,
 
 	'App.Forms',
