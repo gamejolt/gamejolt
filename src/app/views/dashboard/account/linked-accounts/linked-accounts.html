@@ -74,12 +74,8 @@
 			</p>
 
 			<div class="list-group">
-				<div class="list-group-item clearfix">
+				<div class="list-group-item clearfix" ng-repeat="channel in linkedAccountsCtrl.channels track by channel.id">
 					<div class="pull-right">
-						<button class="btn btn-outline btn-sm">
-							<span class="jolticon jolticon-retweet need-icon"></span>
-							<span translate>Sync</span>
-						</button>
 						<button class="btn btn-danger-outline btn-sm"
 							ng-click="linkedAccountsCtrl.unlinkYoutube( channel )"
 							>
@@ -89,14 +85,14 @@
 					</div>
 					<strong>
 						<a href="" target="_blank">
-							Channel Name
+							{{ channel.title }}
 						</a>
 					</strong>
 				</div>
 			</div>
 
 			<div>
-				<a class="btn btn-success-outline">
+				<a class="btn btn-success-outline" ng-click="linkedAccountsCtrl.link( 'youtube-channel' )">
 					<span class="jolticon jolticon-add"></span>
 					<span translate>Link YouTube Channel</span>
 				</a>

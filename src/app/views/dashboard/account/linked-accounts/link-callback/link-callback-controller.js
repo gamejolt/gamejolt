@@ -39,6 +39,22 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccounts.Link
 			Growls.success( 'Your Google+ account (' + App.user.google_nickname + ') has been linked.', 'Account Linked' );
 		}
 	}
+	else if ( $stateParams.provider == 'youtube-channel' ) {
+		if ( !payload.success ) {
+			if ( !payload.reason ) {
+				Growls.error( 'Unable to link your YouTube channel.' );
+			}
+			else if ( payload.reason == 'channel-taken' ) {
+				Growls.error( 'This YouTube channel is already linked to another Game Jolt account.' );
+			}
+			else if ( payload.reason == 'not-public' ) {
+				Growls.error( 'This YouTube channel is not public.' );
+			}
+		}
+		else {
+			Growls.success( 'Your YouTube channel has been linked.', 'YouTube Channel Linked' );
+		}
+	}
 
-	$state.go( 'dashboard.account.linked-accounts' );
+	$state.go( 'dashboard.account.linked-accounts', {}, { reload: 'dashboard.account.linked-accounts' } );
 } );

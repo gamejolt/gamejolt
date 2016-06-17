@@ -134,6 +134,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Comment.Widget',
 	CommentVideoThumbnailModule,
 	CommentVideoLightboxModule,
+	'gj.Youtube.Channel',
 	'gj.Subscription',
 	'gj.Ad',
 	'gj.Ad.Video',
