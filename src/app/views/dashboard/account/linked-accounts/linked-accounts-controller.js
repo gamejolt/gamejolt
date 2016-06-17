@@ -38,7 +38,12 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccountsCtrl'
 			} )
 			.then( function()
 			{
-				$state.reload('');
+				_.remove( _this.channels, { id: channel.id } );
 			} );
+	};
+
+	this.youtubeChannelLinked = function( channel )
+	{
+		this.channels.push( new Youtube_Channel( channel ) );
 	};
 } );
