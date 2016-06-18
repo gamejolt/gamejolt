@@ -4,6 +4,7 @@ import { enableProdMode } from 'ng-metadata/core';
 import ModelModule from './../lib/gj-lib-client/components/model/model';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
+import HistoryTickModule from './../lib/gj-lib-client/components/history-tick/history-tick';
 
 import CommentModule from './../lib/gj-lib-client/components/comment/comment';
 import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
@@ -94,7 +95,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Scroll.FixedResizer',
 	'gj.EditableAccordion',
 	'gj.Referrer',
-	'gj.HistoryTick',
+	HistoryTickModule,
 	'gj.Pagination',
 	'gj.Modal.Confirm',
 	'gj.SiteSelector',
