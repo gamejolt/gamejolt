@@ -11,13 +11,18 @@
 	<div ng-if="user.paypal_id" class="form-group">
 		<label class="control-label" translate>Current PayPal Account</label>
 		<div class="form-static">{{ user.paypal_email_address }}</div>
-		<p class="help-block" translate translate-scope="{ url: $state.href( 'dashboard.account.financials' ) }">
+		<p class="help-block" translate translate-params-url="$state.href( 'dashboard.account.financials' )">
 			You can link a different PayPal account in your <a href="{{ url }}">payment setup</a>.
 		</p>
 	</div>
 
 	<form-group name="amount" label="{{ ::'dash.funds.withdraw.amount_label' | translate }}">
-		<p class="help-block above">{{ ::'dash.funds.withdraw.amount_help' | translate:{ amount: minAmount } }}</p>
+		<p class="help-block above"
+			translate
+			translate-params-amount="minAmount"
+			>
+			dash.funds.withdraw.amount_help
+		</p>
 		<input-group>
 			<input-group-addon>$</input-group-addon>
 			<input form-control="number"

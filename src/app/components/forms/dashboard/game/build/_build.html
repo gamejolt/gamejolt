@@ -74,7 +74,7 @@
 			-->
 			<form-group name="file" label="{{ 'dash.games.builds.form.file_label' | translate }}" ng-if="method == 'add'">
 
-				<p class="help-block" translate translate-scope="{ maxFilesize: maxFilesize / 1024 / 1024 }">dash.games.builds.form.file_help_html</p>
+				<p class="help-block" translate translate-params-max-filesize="maxFilesize / 1024 / 1024">dash.games.builds.form.file_help_html</p>
 
 				<p class="help-block" collapse="formModel.type != Game_Build.TYPE_HTML" translate>dash.games.builds.form.file_html_help_html</p>
 

@@ -39,8 +39,8 @@
 								</div>
 								<br>
 							</div>
-							<div class="news-list-item-date">
-								{{ ::'dash.games.news.posted_on' | translate:{ date: article.posted_on } }}
+							<div class="news-list-item-date" translate translate-params-date="article.posted_on">
+								dash.games.news.posted_on
 							</div>
 							<div class="news-list-item-meta">
 								{{ ::'dash.games.news.views' | translate }}

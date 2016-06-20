@@ -36,7 +36,7 @@
 			<div class="alert alert-info"
 				ng-if="!keyGroups.length"
 				translate
-				translate-scope="{ url: $state.href( 'dashboard.developer.games.manage.key-groups.list', { id: game.id } ) }"
+				translate-params-url="$state.href( 'dashboard.developer.games.manage.key-groups.list', { id: game.id } )"
 				>
 				You can make this news post available to only the users within a key group. For example, this is useful for sending news updates to testers. You can create a user key group through the <a href="{{ url }}">Keys/Access</a> page.
 			</div>
