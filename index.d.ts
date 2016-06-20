@@ -5,6 +5,7 @@ interface Window {
 	moment: moment.MomentStatic;
 	_gjStartTime: number;
 	Stripe: StripeStatic;
+	gapi: any;
 }
 
 declare var global: any;
