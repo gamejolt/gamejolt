@@ -20,7 +20,7 @@
     "ua-parser-js": "0.7.3",
     "jcrop": "0.9.12",
     "ocLazyLoad": "1.0.9",
-    "angular-gettext": "https://github.com/gamejolt/angular-gettext.git#master",
+    "angular-gettext": "2.3.3",
     "angular-ui-utils": "bower-keypress",
     "angular-validation-match": "1.4.0",
     "angular-hammer": "https://github.com/gamejolt/angular-hammer.git#master",
