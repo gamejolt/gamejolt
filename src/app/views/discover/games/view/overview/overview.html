@@ -329,6 +329,38 @@
 	</div>
 </section>
 
+<!-- Video Comments -->
+
+<section class="section" ng-if="overviewCtrl.videoComments.length">
+	<div class="container">
+
+		<h2 class="section-header" translate>
+			Video Comments
+		</h2>
+
+		<div class="row">
+			<gj-comment-video-thumbnail
+				class="col-xs-6 col-sm-3"
+				ng-repeat="video in overviewCtrl.videoComments track by video.id"
+				video="::video"
+				show-user="true"
+				>
+			</gj-comment-video-thumbnail>
+		</div>
+
+		<div class="page-cut" ng-if="overviewCtrl.videoComments.length < overviewCtrl.videoCommentsCount">
+			<a class="btn btn-outline"
+				ng-click="overviewCtrl.loadMoreVideoComments()"
+				translate
+				gj-track-event="game-profile:video-comment:more"
+				>
+				Load More
+			</a>
+		</div>
+
+	</div>
+</section>
+
 <!-- Comments -->
 <section class="section" id="comments" ng-if="gameCtrl.isLoaded">
 	<div class="container">

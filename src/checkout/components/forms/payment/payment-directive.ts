@@ -1,4 +1,4 @@
-export function PaymentFormFactory( $q, $window, App, Api, Form, Geo, Environment )
+export function PaymentComponent( $q, $window, App, Api, Form, Geo, Environment )
 {
 	const form = new Form( {
 		template: '/checkout/components/forms/payment/payment.html'

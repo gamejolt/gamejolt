@@ -1,9 +1,11 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccountsCtrl', function( $scope, App, Growls, User_LinkedAccounts, User_SetPasswordModal )
+angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccountsCtrl', function( $scope, $state, App, Growls, User_LinkedAccounts, Youtube_Channel, User_SetPasswordModal, ModalConfirm, gettextCatalog, payload )
 {
 	var _this = this;
 
 	$scope.App.title = 'Linked Accounts';
 	$scope.accountCtrl.heading = 'Linked Accounts';
+
+	this.channels = Youtube_Channel.populate( payload.channels );
 
 	this.link = function( provider )
 	{
@@ -25,5 +27,23 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccountsCtrl'
 				} );
 			}
 		} );
+	};
+
+	this.unlinkYoutube = function( channel )
+	{
+		ModalConfirm.show( gettextCatalog.getString( 'Are you you want to unlink this channel? Any videos you may have done as part of this channel will be removed from Game Jolt.' ) )
+			.then( function()
+			{
+				return channel.$remove();
+			} )
+			.then( function()
+			{
+				_.remove( _this.channels, { id: channel.id } );
+			} );
+	};
+
+	this.youtubeChannelLinked = function( channel )
+	{
+		this.channels.push( new Youtube_Channel( channel ) );
 	};
 } );

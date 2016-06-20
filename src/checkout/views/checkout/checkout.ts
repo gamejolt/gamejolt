@@ -1,4 +1,6 @@
-import { lazyModule } from './../../../lib/gj-lib-client/util/ng1-helpers';
+import { provide } from 'ng-metadata/core';
 import { CheckoutCtrl } from './checkout-controller';
 
-lazyModule( 'App.Views' ).controller( 'CheckoutCtrl', CheckoutCtrl );
+export default angular.module( 'App.Views.Checkout', [] )
+.controller( ...provide( 'CheckoutCtrl', { useClass: CheckoutCtrl } ) )
+.name;

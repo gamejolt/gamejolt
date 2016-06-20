@@ -1,5 +1,7 @@
+import { Injectable, Inject } from 'ng-metadata/core';
 import { Channels_ViewHelper } from '../../channels-view-helper';
 
+@Injectable()
 export class GamesCtrl
 {
 	gamesCount = 0;
@@ -7,8 +9,10 @@ export class GamesCtrl
 	currentPage = 1;
 	section = 'hot';
 
-	/*@ngInject*/
-	constructor( private Channels_ViewHelper: Channels_ViewHelper, public filteringContainer )
+	constructor(
+		private viewHelper: Channels_ViewHelper,
+		@Inject( 'filteringContainer' ) public filteringContainer: any
+	)
 	{
 	}
 
@@ -19,6 +23,6 @@ export class GamesCtrl
 		this.currentPage = $stateParams.page || 1;
 		this.section = $stateParams.section;
 
-		this.Channels_ViewHelper.setDefaultMetaData( $stateParams.channel );
+		this.viewHelper.setDefaultMetaData( $stateParams.channel );
 	}
 }

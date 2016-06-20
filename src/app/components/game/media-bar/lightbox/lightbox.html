@@ -9,15 +9,15 @@
 	</a>
 
 	<div class="game-media-bar-lightbox-controls">
-		<a ng-href="{{ mediaBarCtrl.activeItem.media_item.img_url }}"
+		<a class="btn btn-outline btn-overlay-variant" ng-href="{{ mediaBarCtrl.activeItem.media_item.img_url }}"
 			ng-if="mediaBarCtrl.activeItem.media_type == 'image'"
 			target="_blank"
 			>
-			<span class="jolticon jolticon-download big"></span>
+			<span class="jolticon jolticon-download"></span>
 			<span translate>games.view.media.download</span>
 		</a>
-		<a ng-click="ctrl.close()">
-			<span class="jolticon jolticon-remove big"></span>
+		<a class="btn btn-danger-outline btn-overlay-variant" ng-click="ctrl.close()">
+			<span class="jolticon jolticon-remove"></span>
 			<span translate>games.view.media.close</span>
 		</a>
 	</div>

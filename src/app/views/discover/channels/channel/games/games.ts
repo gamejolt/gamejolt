@@ -1,5 +1,10 @@
-import { lazyModule } from './../../../../../../lib/gj-lib-client/util/ng1-helpers.ts';
-import './_fetch/_fetch';
+import { provide } from 'ng-metadata/core';
+import Fetch from './_fetch/_fetch';
 import { GamesCtrl } from './games-controller';
 
-lazyModule( 'App.Views' ).controller( 'Discover.Channels.Channel.GamesCtrl', GamesCtrl );
+export default angular.module( 'App.Views.Discover.Channels.Channel.Games', [
+	Fetch,
+] )
+.controller( ...provide( 'Discover.Channels.Channel.GamesCtrl', { useClass: GamesCtrl } ) )
+.name
+;

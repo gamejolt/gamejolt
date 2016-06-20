@@ -1,14 +1,14 @@
 <div section class="section fill-darker game-media-bar scrollable scrollable-x overlay-scrollbar"
-	ng-class="{ 'is-loading': !ctrl.mediaItems }"
+	ng-class="{ 'is-loading': !$ctrl.mediaItems }"
 	>
 	<div class="game-media-bar-items">
 
-		<div class="loading-container" ng-if="!ctrl.mediaItems">
+		<div class="loading-container" ng-if="!$ctrl.mediaItems">
 			<gj-loading class="loading-centered" loading-no-color loading-stationary hide-label></gj-loading>
 		</div>
 
-		<div ng-if="ctrl.mediaItems">
-			<gj-game-media-bar-item ng-repeat="item in ctrl.mediaItems track by item.id" item="item"></gj-game-media-bar-item>
+		<div ng-if="$ctrl.mediaItems">
+			<gj-game-media-bar-item ng-repeat="item in $ctrl.mediaItems track by item.id" item="item"></gj-game-media-bar-item>
 		</div>
 
 	</div>
@@ -20,7 +20,7 @@
 -->
 <div oc-lazy-load="{ files: [ '/app/modules/hammer.js' ] }">
 	<gj-game-media-bar-lightbox
-		ng-if="ctrl.activeItem && !Screen.isXs"
+		ng-if="$ctrl.activeItem && !$ctrl.screen.isXs"
 		>
 	</gj-game-media-bar-lightbox>
 </div>

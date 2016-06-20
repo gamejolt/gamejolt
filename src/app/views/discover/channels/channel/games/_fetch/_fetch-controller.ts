@@ -1,13 +1,23 @@
+import { Injectable, Inject } from 'ng-metadata/core';
+import { GamesCtrl } from '../games-controller';
+
+interface Scope extends ng.IScope {
+	gamesCtrl: GamesCtrl;
+}
+
+@Injectable()
 export class FetchCtrl
 {
 	games: any[];
 
-	/*@ngInject*/
-	constructor( $scope, $stateParams, Game, payload )
+	constructor(
+		@Inject( '$scope' ) $scope: Scope,
+		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
+		@Inject( 'Game' ) game: any,
+		@Inject( 'payload' ) payload: any
+	)
 	{
-		var gamesCtrl = $scope.gamesCtrl;
-
-		this.games = Game.populate( payload.games );
-		gamesCtrl.processPayload( $stateParams, payload );
+		this.games = game.populate( payload.games );
+		$scope.gamesCtrl.processPayload( $stateParams, payload );
 	}
 }
