@@ -13,7 +13,7 @@
 			{{ viewCtrl.order.id }}
 		</p>
 
-		<div class="alert alert-warning" ng-if="viewCtrl.order._is_refunded" translate translate-scope="{ date: dateFilter( viewCtrl.firstRefund.created_on, 'medium' ) }">
+		<div class="alert alert-warning" ng-if="viewCtrl.order._is_refunded" translate translate-params-date="viewCtrl.firstRefund.created_on | date:'medium'">
 			This order was refunded on {{ date }}.
 		</div>
 

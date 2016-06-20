@@ -20,7 +20,7 @@
 		<div class="form-group" ng-if="usernameTimeLeft">
 			<label class="control-label">{{ ::'dash.profile.edit.username_label' | translate }}</label>
 			<p class="form-control-static">{{ ::formModel.username }}</p>
-			<p class="help-block" translate translate-scope="{ duration: usernameDuration }">dash.profile.edit.username_time_left_html</p>
+			<p class="help-block" translate translate-params-duration="usernameDuration">dash.profile.edit.username_time_left_html</p>
 		</div>
 
 		<!-- Display Name -->
@@ -36,7 +36,7 @@
 		<div class="form-group" ng-if="formModel.is_developer && nameTimeLeft">
 			<label class="control-label">{{ ::'dash.profile.edit.display_name_label' | translate }}</label>
 			<p class="form-control-static">{{ ::formModel.name }}</p>
-			<p class="help-block" translate translate-scope="{ duration: nameDuration }">dash.profile.edit.display_name_time_left_html</p>
+			<p class="help-block" translate translate-params-duration="nameDuration">dash.profile.edit.display_name_time_left_html</p>
 		</div>
 
 		<!-- Web Site -->

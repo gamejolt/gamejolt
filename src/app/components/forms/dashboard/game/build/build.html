@@ -303,7 +303,7 @@
 
 				<p class="sans-margin" ng-if="baseModel.type == Game_Build.TYPE_ROM">
 					<span class="jolticon jolticon-info-circle"></span>
-					<span translate translate-scope="{ platform: emulatorInfo[ baseModel.emulator_type ] }">We've detected this build is actually a {{ platform }} ROM. We will automatically emulate it in browser for you!</span>
+					<span translate translate-params-platform="emulatorInfo[ baseModel.emulator_type ]">We've detected this build is actually a {{ platform }} ROM. We will automatically emulate it in browser for you!</span>
 				</p>
 
 				<div name="browserValidate"

@@ -2,7 +2,7 @@
 	<div class="col-lg-8">
 		<h2 class="section-header">{{ ::'dash.games.overview.todo_heading' | translate }}</h2>
 
-		<p class="small" translate translate-scope="{ completion: overviewCtrl.todoPercentage }">dash.games.overview.todo_lead_html</p>
+		<p class="small" translate translate-params-completion="overviewCtrl.todoPercentage">dash.games.overview.todo_lead_html</p>
 
 		<div class="progress progress-thin">
 			<div class="progress-bar"
@@ -56,17 +56,23 @@
 
 			<!-- Game isn't ready to publish yet. -->
 			<div class="alert alert-warning" ng-if="!overviewCtrl.isPublishable">
-				<p ng-if="manageCtrl.game.development_status == Game.DEVELOPMENT_STATUS_WIP" translate translate-scope="{
-					thumbnailUrl: $state.href( '^.thumbnail' ),
-					maturityUrl: $state.href( '^.maturity' ),
-					buildsUrl: $state.href( '^.^.packages' ),
-				}">dash.games.overview.todo_info_wip_html</p>
+				<p ng-if="manageCtrl.game.development_status == Game.DEVELOPMENT_STATUS_WIP"
+					translate
+					translate-params-thumbnail-url="$state.href( '^.thumbnail' )"
+					translate-params-maturity-url="$state.href( '^.maturity' )"
+					translate-params-builds-url="$state.href( '^.^.packages' )"
+					>
+					dash.games.overview.todo_info_wip_html
+				</p>
 
-				<p ng-if="manageCtrl.game.development_status != Game.DEVELOPMENT_STATUS_WIP" translate translate-scope="{
-					thumbnailUrl: $state.href( '^.thumbnail' ),
-					maturityUrl: $state.href( '^.maturity' ),
-					buildsUrl: $state.href( '^.^.packages' ),
-				}">dash.games.overview.todo_info_html</p>
+				<p ng-if="manageCtrl.game.development_status != Game.DEVELOPMENT_STATUS_WIP"
+					translate
+					translate-params-thumbnail-url="$state.href( '^.thumbnail' )"
+					translate-params-maturity-url="$state.href( '^.maturity' )"
+					translate-params-builds-url="$state.href( '^.^.packages' )"
+					>
+					dash.games.overview.todo_info_html
+				</p>
 			</div>
 
 			<!-- Ready to publish! -->

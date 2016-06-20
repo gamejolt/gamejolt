@@ -47,7 +47,12 @@
 					-->
 					<div gj-expand-when="profileCtrl.userFriendship && profileCtrl.userFriendship.state == User_Friendship.STATE_REQUEST_SENT">
 						<div class="alert alert-info">
-							<p>{{ ::'profile.friend_request_sent_pending' | translate:{ user: profileCtrl.userFriendship.target_user.display_name } }}</p>
+							<p
+								translate
+								translate-params-user="profileCtrl.userFriendship.target_user.display_name"
+								>
+								profile.friend_request_sent_pending
+							</p>
 							<a class="i-button warning" ng-click="profileCtrl.cancelFriendRequest()">
 								<span class="jolticon jolticon-remove"></span>
 								{{ ::'profile.friend_request_cancel' | translate }}
@@ -57,7 +62,12 @@
 
 					<div gj-expand-when="profileCtrl.userFriendship && profileCtrl.userFriendship.state == User_Friendship.STATE_REQUEST_RECEIVED">
 						<div class="alert alert-info">
-							<p>{{ ::'profile.friend_request_received_pending' | translate:{ user: profileCtrl.userFriendship.user.display_name } }}</p>
+							<p
+								translate
+								translate-params-user="profileCtrl.userFriendship.user.display_name"
+								>
+								profile.friend_request_received_pending
+							</p>
 							<a class="i-button big" ng-click="profileCtrl.acceptFriendRequest()">
 								<span class="jolticon jolticon-friend-add-2"></span>
 								{{ ::'profile.friend_request_accept' | translate }}

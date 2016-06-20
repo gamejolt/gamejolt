@@ -10,7 +10,7 @@
 				ui-sref="discover.channels.channel.games._fetch( { section: 'best' } )"
 				gj-track-event="channel:row-heading:best"
 				translate
-				translate-scope="{ channel: channelCtrl.channel }"
+				translate-params-channel="channelCtrl.channel"
 				>
 				Top <b>#{{ channel }}</b>
 			</a>
@@ -52,7 +52,7 @@
 				ui-sref="discover.channels.channel.games._fetch( { section: 'hot' } )"
 				gj-track-event="channel:row-heading:hot"
 				translate
-				translate-scope="{ channel: channelCtrl.channel }"
+				translate-params-channel="channelCtrl.channel"
 				>
 				Hot <b>#{{ channel }}</b>
 			</a>

@@ -14,10 +14,20 @@
 
 		<div ng-repeat="difficulty in Game_Trophy.difficulties track by $index">
 
-			<h4>{{ ::'dash.games.trophies.section_heading' | translate:{ difficulty: listCtrl.trophyLabels[ difficulty ] } }}</h4>
+			<h4
+				translate
+				translate-params-difficulty="listCtrl.trophyLabels[ difficulty ]"
+				>
+				dash.games.trophies.section_heading
+			</h4>
 
 			<div ng-if="!listCtrl.groupedTrophies[ difficulty ].length">
-				<p class="text-muted small">{{ ::'dash.games.trophies.no_trophies' | translate:{ difficulty: listCtrl.trophyLabels[ difficulty ] } }}</p>
+				<p class="text-muted small"
+					translate
+					translate-params-difficulty="listCtrl.trophyLabels[ difficulty ]"
+					>
+					dash.games.trophies.no_trophies
+				</p>
 			</div>
 
 			<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
@@ -88,7 +98,7 @@
 
 					</div>
 
-					<gj-editable-accordion-add add-label="{{ ::'dash.games.trophies.add_button' | translate:{ difficulty: listCtrl.trophyLabels[ difficulty ] } }}">
+					<gj-editable-accordion-add add-label="{{ 'New Trophy' | translate }}">
 
 						<gj-form-dashboard-game-trophy
 							gj-game="manageCtrl.game"

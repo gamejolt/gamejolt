@@ -51,8 +51,12 @@
 			</div>
 
 			<p ng-if="ctrl.extraCount">
-				<a class="link-muted small" ui-sref="discover.games.view.trophies.list( { slug: ctrl.game.slug, id: ctrl.game.id } )">
-					{{ 'trophies.overview.more_link' | translate:{ extraCount: ctrl.extraCount } }}
+				<a class="link-muted small"
+					ui-sref="discover.games.view.trophies.list( { slug: ctrl.game.slug, id: ctrl.game.id } )"
+					translate
+					translate-params-extra-count="ctrl.extraCount"
+					>
+					trophies.overview.more_link
 				</a>
 			</p>
 
