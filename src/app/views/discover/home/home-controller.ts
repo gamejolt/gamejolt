@@ -36,7 +36,7 @@ export class HomeCtrl
 		@Inject( 'Fireside_Post' ) Fireside_Post: any,
 		@Inject( 'Game_NewsArticle' ) Game_NewsArticle: any,
 		@Inject( 'SplitTest' ) SplitTest: any,
-		channels: Channels,
+		@Inject( 'Channels' ) channels: Channels,
 		@Inject( 'payload' ) payload: any
 	)
 	{

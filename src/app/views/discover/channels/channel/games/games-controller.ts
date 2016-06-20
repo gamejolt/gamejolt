@@ -10,7 +10,7 @@ export class GamesCtrl
 	section = 'hot';
 
 	constructor(
-		private viewHelper: Channels_ViewHelper,
+		@Inject( 'Channels_ViewHelper' ) private viewHelper: Channels_ViewHelper,
 		@Inject( 'filteringContainer' ) public filteringContainer: any
 	)
 	{

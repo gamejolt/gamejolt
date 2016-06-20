@@ -10,7 +10,7 @@ export class OverviewCtrl
 	constructor(
 		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
 		@Inject( 'Game' ) Game: any,
-		Channels_ViewHelper: Channels_ViewHelper,
+		@Inject( 'Channels_ViewHelper' )Channels_ViewHelper: Channels_ViewHelper,
 		@Inject( 'payload' ) payload: any
 	)
 	{
