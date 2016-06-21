@@ -9,9 +9,11 @@ import {
 	Injectable,
 	provide,
 	Component,
+	Directive,
 	Input,
 	Output,
 	enableProdMode,
+	HostListener,
 } from 'ng-metadata/core';
 import { bootstrap } from 'ng-metadata/platform';
 
@@ -20,9 +22,11 @@ const ngMetadata_core = {
 	Injectable,
 	provide,
 	Component,
+	Directive,
 	Input,
 	Output,
 	enableProdMode,
+	HostListener,
 };
 
 const ngMetadata_platform = {
