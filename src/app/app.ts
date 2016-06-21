@@ -4,6 +4,7 @@ import { enableProdMode } from 'ng-metadata/core';
 import ModelModule from './../lib/gj-lib-client/components/model/model';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
+import LoadModule from './../lib/gj-lib-client/components/load/load';
 import HistoryTickModule from './../lib/gj-lib-client/components/history-tick/history-tick';
 
 import CommentModule from './../lib/gj-lib-client/components/comment/comment';
@@ -71,6 +72,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Debug.DebugBar',
 	RulerModule,
 	ScreenModule,
+	LoadModule,
 	'gj.BodyClasses',
 	'gj.Analytics',
 	'gj.Loading',
