@@ -11,6 +11,8 @@ import CommentModule from './../lib/gj-lib-client/components/comment/comment';
 import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
 import CommentVideoModule from './../lib/gj-lib-client/components/comment/video/video';
 
+import GamePlayModalModule from './../lib/gj-lib-client/components/game/play-modal/play-modal';
+
 import YoutubeSdkModule from './../lib/gj-lib-client/components/social/youtube/sdk/sdk';
 import YoutubeSubscribeModule from './../lib/gj-lib-client/components/social/youtube/subscribe/subscribe';
 import YoutubeChannelModule from './../lib/gj-lib-client/components/youtube/channel/channel';
@@ -170,7 +172,7 @@ const AppModule = angular.module( 'App', [
 
 	'gj.Game.Package.Card',
 	'gj.Game.Downloader',
-	'gj.Game.PlayModal',
+	GamePlayModalModule,
 
 	'gj.Game.KeyPool',
 
