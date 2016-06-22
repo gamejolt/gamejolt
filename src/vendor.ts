@@ -14,6 +14,10 @@ import {
 	Output,
 	enableProdMode,
 	HostListener,
+	Host,
+	Optional,
+	Self,
+	SkipSelf,
 } from 'ng-metadata/core';
 import { bootstrap } from 'ng-metadata/platform';
 
@@ -27,6 +31,10 @@ const ngMetadata_core = {
 	Output,
 	enableProdMode,
 	HostListener,
+	Host,
+	Optional,
+	Self,
+	SkipSelf,
 };
 
 const ngMetadata_platform = {
