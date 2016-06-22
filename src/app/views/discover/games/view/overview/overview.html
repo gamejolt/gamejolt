@@ -330,13 +330,19 @@
 </section>
 
 <!-- Video Comments -->
-
 <section class="section" ng-if="overviewCtrl.videoComments.length && gameCtrl.game.comments_enabled">
 	<div class="container">
 
-		<h2 class="section-header" translate>
+		<h2 class="section-header sans-margin-bottom" translate>
 			Video Comments
 		</h2>
+
+		<p class="page-help">
+			<span translate>Video comments are sorted by most liked.</span>
+			<a class="link-help" href="https://help.gamejolt.com/video-comments" target="_blank" translate>
+				How do I add my video?
+			</a>
+		</p>
 
 		<div class="row">
 			<gj-comment-video-thumbnail
@@ -351,8 +357,8 @@
 		<div class="page-cut" ng-if="overviewCtrl.videoComments.length < overviewCtrl.videoCommentsCount">
 			<a class="btn btn-outline"
 				ng-click="overviewCtrl.loadMoreVideoComments()"
-				translate
 				gj-track-event="game-profile:video-comment:more"
+				translate
 				>
 				Load More
 			</a>
