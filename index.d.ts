@@ -1,4 +1,5 @@
 /// <reference path="./typings/index.d.ts" />
+/// <reference path="./node_modules/ng-metadata/manual_typings/globals.d.ts" />
 
 interface Window {
 	_: _.LoDashStatic;
