@@ -47,6 +47,7 @@
     "merge-stream": "^1.0.0",
     "minimist": "~0.2.0",
     "mv": "^2.1.1",
+    "ng-metadata": "gamejolt/ng-metadata#6cbaa679d2aa0bcfaa7c7b03cfe1991d279ac7b1",
     "nw-builder": "gamejolt/nw-builder#skip-merge-app",
     "pofile": "^1.0.2",
     "reflect-metadata": "^0.1.3",
