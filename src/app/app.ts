@@ -21,7 +21,7 @@ import CommentVideoLightboxModule from './../lib/gj-lib-client/components/commen
 import CommentVideoThumbnailModule from './../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 
 import VideoEmbedModule from './../lib/gj-lib-client/components/video-embed/video-embed';
-
+import SearchModule from './components/search/search';
 import MediaItemCoverModule from './components/media-item/cover/cover';
 import PageHeaderModule from './components/page-header/page-header';
 import GenreListModule from './components/genre/list/list';
@@ -238,7 +238,7 @@ const AppModule = angular.module( 'App', [
 	'App.Chat',
 	'App.Shell',
 	'App.Offline.Alert',
-	'App.Search',
+	SearchModule,
 	'App.Friends',
 	'App.Notifications',
 	'App.Minbar',
