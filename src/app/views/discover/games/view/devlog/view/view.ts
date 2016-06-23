@@ -1,4 +1,7 @@
-import { lazyModule } from './../../../../../../../lib/gj-lib-client/util/ng1-helpers.ts';
+import { provide } from 'ng-metadata/core';
 import { ViewCtrl } from './view-controller';
 
-lazyModule( 'App.Views' ).controller( 'Discover.Games.View.Devlog.ViewCtrl', ViewCtrl );
+export default angular.module( 'App.Views.Discover.Games.View.Devlog.View', [
+] )
+.controller( ...provide( 'Discover.Games.View.Devlog.ViewCtrl', { useClass: ViewCtrl } ) )
+.name;

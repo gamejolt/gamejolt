@@ -115,7 +115,7 @@
 						You have pending withdrawals amounting to {{ ::overviewCtrl.revenuePendingWithdraw | currency:'$' }}.
 					</div>
 
-					<div class="alert alert-info" ng-if="::overviewCtrl.revenuePending" translate translate-scope="{ amount: overviewCtrl.revenuePending }">
+					<div class="alert alert-info" ng-if="::overviewCtrl.revenuePending" translate translate-params-amount="overviewCtrl.revenuePending">
 						dash.overview.revenue_pending_message_html
 					</div>
 

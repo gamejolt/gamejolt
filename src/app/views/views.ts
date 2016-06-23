@@ -1,4 +1,8 @@
-import { lazyModule } from './../../lib/gj-lib-client/util/ng1-helpers';
-import './discover/games/view/devlog/devlog';
+import Profile from './profile/profile';
+import Discover from './discover/discover';
 
-lazyModule( 'App.Views' );
+export default angular.module( 'App.Views', [
+	Discover,
+	Profile,
+] )
+.name;

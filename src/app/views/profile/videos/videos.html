@@ -1,0 +1,25 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<gj-comment-video-thumbnail
+				class="col-xs-6 col-sm-3"
+				ng-repeat="video in videosCtrl.videos track by $index"
+				video="video"
+				show-game="true"
+				>
+			</gj-comment-video-thumbnail>
+		</div>
+
+		<div class="page-cut" ng-if="videosCtrl.videos.length < profileCtrl.videosCount">
+			<a class="btn btn-outline"
+				ng-click="videosCtrl.loadMore()"
+				translate
+				gj-track-event="profile-videos:more"
+				>
+				Load More
+			</a>
+		</div>
+
+	</div>
+</section>

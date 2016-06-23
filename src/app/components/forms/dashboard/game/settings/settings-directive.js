@@ -8,7 +8,10 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameSettings'
 
 	form.onInit = function( scope )
 	{
-
+		scope.onLoaded = function( payload )
+		{
+			scope.hasPackagesForSale = payload.hasPackagesForSale;
+		};
 	};
 
 	return form;

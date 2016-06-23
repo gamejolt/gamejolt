@@ -1,13 +1,32 @@
-import 'reflect-metadata';
 import { bootstrap } from 'ng-metadata/platform';
+import { enableProdMode } from 'ng-metadata/core';
 
-import { AppCtrl } from './app-controller';
-import { App } from './app-service';
+import ModelModule from './../lib/gj-lib-client/components/model/model';
+import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
+import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
+import LoadModule from './../lib/gj-lib-client/components/load/load';
+import HistoryTickModule from './../lib/gj-lib-client/components/history-tick/history-tick';
 
-import { FormsModule } from './components/forms/forms';
-import './views/views';
+import CommentModule from './../lib/gj-lib-client/components/comment/comment';
+import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
+import CommentVideoModule from './../lib/gj-lib-client/components/comment/video/video';
 
-import { ModelModule } from './../lib/gj-lib-client/components/model/model';
+import GamePlayModalModule from './../lib/gj-lib-client/components/game/play-modal/play-modal';
+
+import YoutubeSdkModule from './../lib/gj-lib-client/components/social/youtube/sdk/sdk';
+import YoutubeSubscribeModule from './../lib/gj-lib-client/components/social/youtube/subscribe/subscribe';
+import YoutubeChannelModule from './../lib/gj-lib-client/components/youtube/channel/channel';
+
+import CommentVideoLightboxModule from './../lib/gj-lib-client/components/comment/video/lightbox/lightbox';
+import CommentVideoThumbnailModule from './../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
+
+import VideoEmbedModule from './../lib/gj-lib-client/components/video-embed/video-embed';
+import SearchModule from './components/search/search';
+import MediaItemCoverModule from './components/media-item/cover/cover';
+import PageHeaderModule from './components/page-header/page-header';
+import GenreListModule from './components/genre/list/list';
+import GameMediaBarModule from './components/game/media-bar/media-bar';
+import ChannelsModule from './components/channel/channels';
 
 import { FiresidePostModule } from './../lib/gj-lib-client/components/fireside/post/post';
 import { FiresidePostTagModule } from './../lib/gj-lib-client/components/fireside/post/tag/tag';
@@ -18,6 +37,11 @@ import { DevlogFeedModule } from './components/devlog/feed/feed';
 import { DevlogPostTextModule } from './components/devlog/post/text/text';
 import { DevlogPostImageModule } from './components/devlog/post/image/image';
 import { DevlogPostControlsModule } from './components/devlog/post/controls/controls';
+
+import { AppCtrl } from './app-controller';
+import { App } from './app-service';
+import FormsModule from './components/forms/forms';
+import ViewsModule from './views/views';
 
 const AppModule = angular.module( 'App', [
 	// Set the event tracking up first.
@@ -59,8 +83,9 @@ const AppModule = angular.module( 'App', [
 
 	'gj.Debug',
 	'gj.Debug.DebugBar',
-	'gj.Ruler',
-	'gj.Screen',
+	RulerModule,
+	ScreenModule,
+	LoadModule,
 	'gj.BodyClasses',
 	'gj.Analytics',
 	'gj.Loading',
@@ -86,7 +111,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Scroll.FixedResizer',
 	'gj.EditableAccordion',
 	'gj.Referrer',
-	'gj.HistoryTick',
+	HistoryTickModule,
 	'gj.Pagination',
 	'gj.Modal.Confirm',
 	'gj.SiteSelector',
@@ -121,9 +146,12 @@ const AppModule = angular.module( 'App', [
 	'gj.User.Friendship',
 	'gj.User.Message',
 	'gj.Notification',
-	'gj.Comment',
-	'gj.Comment.Vote',
+	CommentModule,
+	CommentVoteModule,
+	CommentVideoModule,
 	'gj.Comment.Widget',
+	CommentVideoThumbnailModule,
+	CommentVideoLightboxModule,
 	'gj.Subscription',
 	'gj.Ad',
 	'gj.Ad.Video',
@@ -156,7 +184,7 @@ const AppModule = angular.module( 'App', [
 
 	'gj.Game.Package.Card',
 	'gj.Game.Downloader',
-	'gj.Game.PlayModal',
+	GamePlayModalModule,
 
 	'gj.Game.KeyPool',
 
@@ -181,6 +209,9 @@ const AppModule = angular.module( 'App', [
 	'gj.Social.Facebook.Like',
 	'gj.Social.Facebook.Share',
 	'gj.Social.Facebook.Send',
+	YoutubeSdkModule,
+	YoutubeSubscribeModule,
+	YoutubeChannelModule,
 
 	'gj.GameLibrary.Game',
 
@@ -213,6 +244,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Img.ImgResponsive',
 
 	'gj.WidgetCompiler',
+	VideoEmbedModule,
 
 	// Components.
 	'App.ProtocolWatcher',
@@ -220,15 +252,15 @@ const AppModule = angular.module( 'App', [
 	'App.Chat',
 	'App.Shell',
 	'App.Offline.Alert',
-	'App.Search',
+	SearchModule,
 	'App.Friends',
 	'App.Notifications',
 	'App.Minbar',
 	'App.Invite',
 	'App.Sorting',
 	'App.Settings',
-	'App.MediaItem.Cover',
-	'App.PageHeader',
+	MediaItemCoverModule,
+	PageHeaderModule,
 
 	FormsModule,
 
@@ -237,7 +269,7 @@ const AppModule = angular.module( 'App', [
 	'App.Activity.Feed',
 	'App.Notifications.DescriptiveAction',
 
-	'App.Genre.List',
+	GenreListModule,
 
 	DevlogFeedModule,
 	DevlogPostTextModule,
@@ -253,15 +285,14 @@ const AppModule = angular.module( 'App', [
 	'App.Game.Grid',
 	'App.Game.Filtering',
 	'App.Game.CoverButtons',
-	'App.Game.MediaBar',
+	GameMediaBarModule,
 	'App.Game.Ogrs',
 	'App.Game.RatingGrowl',
-	'App.Game.Video.Embed',
 	'App.Game.MaturityBlock',
 
 	'App.Comment.AvatarList',
 
-	'App.Channels',
+	ChannelsModule,
 
 	'App.Game.Collection',
 	'App.Game.Collection.Thumbnail',
@@ -291,7 +322,7 @@ const AppModule = angular.module( 'App', [
 	'App.Terms.ChangeAlert',
 
 	// Views.
-	'App.Views',
+	ViewsModule,
 
 	// Client.
 	/* inject client:modules */
@@ -308,8 +339,16 @@ const AppModule = angular.module( 'App', [
 	$locationProvider.html5Mode( true ).hashPrefix( '!' );
 	$uiViewScrollProvider.useAnchorScroll();
 
-	$compileProvider.debugInfoEnabled( false );
-	$httpProvider.useApplyAsync( true );
+	if ( GJ_ENVIRONMENT == 'development' ) {
+		EnvironmentProvider.env = 'development';
+	}
+
+	if ( GJ_BUILD_TYPE == 'production' ) {
+		enableProdMode();
+	}
+	else if ( GJ_BUILD_TYPE == 'development' ) {
+		EnvironmentProvider.buildType = 'development';
+	}
 
 	$ocLazyLoadProvider.config( {
 		loadedModules: [ 'App' ]  // Hardcoded so it doesn't have to search DOM for it.
@@ -440,8 +479,7 @@ const AppModule = angular.module( 'App', [
 	var ms = Date.now() - window._gjStartTime;
 	Analytics.trackTiming( 'shell', 'angular-start', ms );
 } )
-.name
-;
+.name;
 
 setTimeout( function()
 {

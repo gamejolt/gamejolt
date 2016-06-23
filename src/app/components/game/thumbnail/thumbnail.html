@@ -50,7 +50,7 @@
 		</div>
 
 		<div class="game-thumbnail-meter" ng-if="::$ctrl.game.ratings_enabled">
-			<span class="game-thumbnail-rating-count" tooltip="{{ ::'games.thumbnail.ratings' | translate:{ count: $ctrl.game.rating_count || 0 } }}">
+			<span class="game-thumbnail-rating-count">
 				({{ ::$ctrl.game.rating_count || 0 | number }})
 			</span>
 			<gj-meter meter-rating="::$ctrl.game.avg_rating"></gj-meter>

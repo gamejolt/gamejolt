@@ -1,3 +1,3 @@
-export const FormsModule = angular.module( 'App.Forms', [] )
+export default angular.module( 'App.Forms', [] )
 .name
 ;

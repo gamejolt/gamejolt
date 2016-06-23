@@ -46,14 +46,15 @@
 				</div>
 
 				<div ng-if="ctrl.mediaBarCtrl.isPlaying == ctrl.itemIndex">
-					<gj-game-video-embed
+					<gj-video-embed
 						class="game-media-bar-lightbox-item-embed"
-						gj-game-video="ctrl.item"
-						gj-max-video-width="{{ ctrl.maxWidth }}"
-						gj-max-video-height="{{ ctrl.maxHeight }}"
+						video-provider="{{ ctrl.item.type }}"
+						video-id="ctrl.item.url"
+						max-video-width="ctrl.maxWidth"
+						max-video-height="ctrl.maxHeight"
 						autoplay="true"
 						>
-					</gj-game-video-embed>
+					</gj-video-embed>
 				</div>
 			</div>
 

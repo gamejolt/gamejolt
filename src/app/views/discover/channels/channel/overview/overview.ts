@@ -1,4 +1,6 @@
-import { lazyModule } from './../../../../../../lib/gj-lib-client/util/ng1-helpers.ts';
+import { provide } from 'ng-metadata/core';
 import { OverviewCtrl } from './overview-controller';
 
-lazyModule( 'App.Views' ).controller( 'Discover.Channels.Channel.OverviewCtrl', OverviewCtrl );
+export default angular.module( 'App.Views.Discover.Channels.Channel.Overview', [] )
+.controller( ...provide( 'Discover.Channels.Channel.OverviewCtrl', { useClass: OverviewCtrl } ) )
+.name;

@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameKeyGroup', function( Form, KeyGroup )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameKeyGroup', function( Form, KeyGroup, Game_Package )
 {
 	var form = new Form( {
 		model: 'KeyGroup',
@@ -12,12 +12,13 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameKeyGroup'
 	form.onInit = function( scope )
 	{
 		scope.KeyGroup = KeyGroup;
+		scope.Game_Package = Game_Package;
 		scope.formModel.game_id = scope.game.id;
 
 		scope.formModel.packages = {};
 		if ( scope.method == 'add' ) {
 		}
-		if ( scope.method == 'edit' ) {
+		else if ( scope.method == 'edit' ) {
 			angular.forEach( scope.baseModel.packages, function( package )
 			{
 				scope.formModel.packages[ package.id ] = true;

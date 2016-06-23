@@ -3,33 +3,33 @@
 	popover-trigger-manually="true"
 	popover-append-to-body="true"
 	popover-position-by="position"
-	popover-track-element-width="#search-input-{{ searchCtrl.id }}"
+	popover-track-element-width="#search-input-{{ $ctrl.searchCtrl.id }}"
 	>
 
 	<!-- Regular Search -->
-	<div ng-if="ctrl.mode == 'search'">
+	<div ng-if="$ctrl.mode == 'search'">
 
 		<!-- View All -->
 		<div class="list-group">
-			<a class="list-group-item" ng-class="{ active: ctrl.selected === 0 }" ng-click="ctrl.viewAll()" translate>
+			<a class="list-group-item" ng-class="{ active: $ctrl.selected === 0 }" ng-click="$ctrl.viewAll()" translate>
 				search.autocomplete.show_all
 			</a>
 		</div>
 
 		<!-- Installed Games -->
-		<div class="popover-heading" ng-if="ctrl.libraryGames.length">
+		<div class="popover-heading" ng-if="$ctrl.libraryGames.length">
 			<span class="jolticon jolticon-download-box"></span>
 			<span translate>search.autocomplete.installed_heading</span>
 		</div>
-		<div class="list-group thin" ng-if="ctrl.libraryGames.length">
+		<div class="list-group thin" ng-if="$ctrl.libraryGames.length">
 			<a class="list-group-item"
-				ng-repeat="libraryGame in ctrl.libraryGames track by libraryGame.id"
-				ng-class="{ active: ctrl.items[ ctrl.selected - 1 ] === libraryGame }"
-				ng-click="ctrl.selectLibraryGame( libraryGame )"
+				ng-repeat="libraryGame in $ctrl.libraryGames track by libraryGame.id"
+				ng-class="{ active: $ctrl.items[ $ctrl.selected - 1 ] === libraryGame }"
+				ng-click="$ctrl.selectLibraryGame( libraryGame )"
 				>
 
 				<!-- TODO: Get this working again. -->
-				<!--<div ng-if="Environment.isClient" class="pull-right">
+				<!--<div ng-if="$ctrl.environment.isClient" class="pull-right">
 					<gj-client-game-buttons label="installed" game="libraryGame._game" small-variant="true"></gj-client-game-buttons>
 				</div>-->
 
@@ -42,19 +42,19 @@
 		</div>
 
 		<!-- Games -->
-		<div class="popover-heading" ng-if="ctrl.games.length">
+		<div class="popover-heading" ng-if="$ctrl.games.length">
 			<span class="jolticon jolticon-game"></span>
 			<span translate>search.autocomplete.games_heading</span>
 		</div>
-		<div class="list-group thin" ng-if="ctrl.games.length">
+		<div class="list-group thin" ng-if="$ctrl.games.length">
 			<a class="list-group-item"
-				ng-repeat="game in ctrl.games track by game.id"
-				ng-class="{ active: ctrl.items[ ctrl.selected - 1 ] === game }"
-				ng-click="ctrl.selectGame( game )"
+				ng-repeat="game in $ctrl.games track by game.id"
+				ng-class="{ active: $ctrl.items[ $ctrl.selected - 1 ] === game }"
+				ng-click="$ctrl.selectGame( game )"
 				>
 
 				<!-- TODO: Get this working again. -->
-				<!--<div ng-if="Environment.isClient" class="pull-right">
+				<!--<div ng-if="$ctrl.environment.isClient" class="pull-right">
 					<gj-client-game-buttons label="not-installed" game="game" small-variant="true"></gj-client-game-buttons>
 				</div>-->
 
@@ -71,15 +71,15 @@
 		</div>
 
 		<!-- Users -->
-		<div class="popover-heading" ng-if="ctrl.users.length">
+		<div class="popover-heading" ng-if="$ctrl.users.length">
 			<span class="jolticon jolticon-user"></span>
 			<span translate>search.autocomplete.users_heading</span>
 		</div>
-		<div class="list-group thin" ng-if="ctrl.users.length">
+		<div class="list-group thin" ng-if="$ctrl.users.length">
 			<a class="list-group-item"
-				ng-repeat="user in ctrl.users track by user.id"
-				ng-class="{ active: ctrl.items[ ctrl.selected - 1 ] === user }"
-				ng-click="ctrl.selectUser( user )"
+				ng-repeat="user in $ctrl.users track by user.id"
+				ng-class="{ active: $ctrl.items[ $ctrl.selected - 1 ] === user }"
+				ng-click="$ctrl.selectUser( user )"
 				>
 				<img ng-src="{{ ::user.img_avatar }}" class="search-user-avatar" alt="Avatar for {{ ::user.display_name }}">
 				{{ ::user.display_name }}
@@ -88,19 +88,19 @@
 	</div>
 
 	<!-- Commands -->
-	<div ng-if="ctrl.mode == 'command'">
-		<div class="list-group thin" ng-if="ctrl.filteredCommands.length">
+	<div ng-if="$ctrl.mode == 'command'">
+		<div class="list-group thin" ng-if="$ctrl.filteredCommands.length">
 			<a class="list-group-item"
-				ng-repeat="command in ctrl.filteredCommands track by command.keyword"
-				ng-class="{ active: ctrl.selected === $index }"
-				ng-click="ctrl.selectCommand( command )"
+				ng-repeat="command in $ctrl.filteredCommands track by command.keyword"
+				ng-class="{ active: $ctrl.selected === $index }"
+				ng-click="$ctrl.selectCommand( command )"
 				>
 				<span class="tag">{{ ::command.keyword }}</span>
 				<span class="small text-muted">{{ command.description | translate }}</span>
 			</a>
 		</div>
 
-		<div class="alert alert-warning" ng-if="!ctrl.filteredCommands.length" translate>
+		<div class="alert alert-warning" ng-if="!$ctrl.filteredCommands.length" translate>
 			search.autocomplete.no_commands
 		</div>
 	</div>

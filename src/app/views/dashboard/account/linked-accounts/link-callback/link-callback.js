@@ -20,6 +20,10 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 					return Api.sendRequest( '/web/dash/linked-accounts/link-callback/' + $stateParams.provider
 						+ '?code=' + $stateParams.code + '&state=' + $stateParams.state, {} );
 				}
+				else if ( $stateParams.provider == 'youtube-channel' ) {
+					return Api.sendRequest( '/web/dash/linked-accounts/link-callback/' + $stateParams.provider
+						+ '?code=' + $stateParams.code + '&state=' + $stateParams.state, {} );
+				}
 			}
 		}
 	} );

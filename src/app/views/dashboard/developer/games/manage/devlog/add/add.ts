@@ -1,26 +1,7 @@
-import { lazyModule } from './../../../../../../../../lib/gj-lib-client/util/ng1-helpers';
+import { provide } from 'ng-metadata/core';
+import { AddCtrl } from './add-controller';
 
-class AddCtrl
-{
-	/*@ngInject*/
-	constructor(
-		private $state: angular.ui.IStateService,
-		App,
-		private Growls,
-		gettextCatalog
-	)
-	{
-		App.title = gettextCatalog.getString( 'Add Devlog Post' );
-	}
-
-	onSubmitted()
-	{
-		this.Growls.success(
-			// gettextCatalog.getString( 'dash.games.news.add.added_growl' ),
-			// gettextCatalog.getString( 'dash.games.news.add.added_growl_title' )
-		);
-		this.$state.go( '^.list' );
-	}
-}
-
-lazyModule( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Devlog.AddCtrl', AddCtrl );
+export default angular.module( 'App.Views.Dashboard.Developer.Games.Manage.Devlog.Add', [
+] )
+.controller( ...provide( 'Dashboard.Developer.Games.Manage.Devlog.AddCtrl', { useClass: AddCtrl } ) )
+.name;

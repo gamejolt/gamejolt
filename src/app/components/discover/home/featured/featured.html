@@ -1,6 +1,6 @@
 <div>
 
-	<div class="discover-home-featured" ng-if="!$ctrl.Screen.isXs">
+	<div class="discover-home-featured" ng-if="!$ctrl.screen.isXs">
 
 		<div class="discover-home-featured-hero-wrap">
 			<gj-discover-home-featured-hero item="$ctrl.items[0]"></gj-discover-home-featured-hero>
@@ -12,7 +12,7 @@
 
 	</div>
 
-	<section class="fill-darkest" ng-if="$ctrl.Screen.isXs">
+	<section class="fill-darkest" ng-if="$ctrl.screen.isXs">
 		<div class="container">
 			<br>
 			<h1 class="section-header">
@@ -25,8 +25,8 @@
 		<div class="discover-home-featured-items-wrap">
 			<gj-game-thumbnail
 				class="discover-home-featured-item meter-dark"
-				ng-class="{ 'scrollable-grid-item': Screen.isXs }"
-				ng-repeat="item in ($ctrl.Screen.isXs ? $ctrl.items : $ctrl.itemsSmUp) track by item.id"
+				ng-class="{ 'scrollable-grid-item': $sctrl.screen.isXs }"
+				ng-repeat="item in ($ctrl.screen.isXs ? $ctrl.items : $ctrl.itemsSmUp) track by item.id"
 				gj-game="item.game"
 				autoplay="true"
 				gj-track-event="home:featured:game:{{ $index }}"

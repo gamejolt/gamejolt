@@ -1,17 +1,23 @@
-import { Fireside_Post } from './../../../../../../../lib/gj-lib-client/components/fireside/post/post';
+import { Injectable, Inject } from 'ng-metadata/core';
+import { Fireside_Post } from './../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { App } from './../../../../../../app-service';
 
+@Injectable()
 export class ViewCtrl
 {
 	post: Fireside_Post = null;
 
-	static $inject = [ '$scope', 'App', 'Fireside_Post', 'payload' ];
-
-	constructor( $scope, App, _Fireside_Post: typeof Fireside_Post, payload )
+	constructor(
+		@Inject( '$scope' ) $scope: ng.IScope,
+		@Inject( 'App' ) App: App,
+		@Inject( 'Fireside_Post' ) firesidePost: typeof Fireside_Post,
+		@Inject( 'payload' ) payload: any
+	)
 	{
 		// Meta.description = 'View all the latest devlog posts for ' + $scope.gameCtrl.game.title + ' on Game Jolt';
 
-		this.post = new _Fireside_Post( payload.post );
+		this.post = new firesidePost( payload.post );
 
-		$scope.App.title = this.post.title;
+		App.title = this.post.title;
 	}
 }

@@ -10,7 +10,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 
 	this.isLoaded = false;
 	this.game = Registry.find( 'Game', $stateParams.id );
-	this.isNavAffixed = false;
 	this.installableBuilds = [];
 	this.browserBuilds = [];
 

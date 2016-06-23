@@ -41,7 +41,7 @@
 								{{ ::collectionCtrl.user.display_name }}
 							</a>
 						</h4>
-						<p class="text-muted small" translate translate-scope="{ user: collectionCtrl.user.display_name }">
+						<p class="text-muted small" translate translate-params-user="collectionCtrl.user.display_name">
 							library.collection.followed_descriptive_html
 						</p>
 					</div>
@@ -63,7 +63,7 @@
 								{{ ::collectionCtrl.user.display_name }}
 							</a>
 						</h4>
-						<p class="text-muted small" translate translate-scope="{ user: collectionCtrl.user.display_name }">
+						<p class="text-muted small" translate translate-params-user="collectionCtrl.user.display_name">
 							library.collection.developer_descriptive_html
 						</p>
 					</div>
@@ -83,7 +83,7 @@
 								{{ ::collectionCtrl.user.display_name }}
 							</a>
 						</h4>
-						<p class="text-muted small" translate translate-scope="{ user: collectionCtrl.user.display_name }">
+						<p class="text-muted small" translate translate-params-user="collectionCtrl.user.display_name">
 							These are all the games owned by {{ user }}.
 						</p>
 					</div>
@@ -92,8 +92,11 @@
 				<!-- Playlist -->
 				<!-- Don't bind once name since they can edit it. -->
 				<div ng-switch-when="playlist">
-					<h1>
-						{{ 'library.collection.playlist_heading' | translate:{ playlist: collectionCtrl.playlist.name } }}
+					<h1
+						translate
+						translate-params-playlist="collectionCtrl.playlist.name"
+						>
+						library.collection.playlist_heading
 					</h1>
 					<h4 ng-if="::!collectionCtrl.isOwner">
 						{{ ::'library.by' | translate }}
@@ -105,7 +108,12 @@
 
 				<!-- Bundle -->
 				<div ng-switch-when="bundle">
-					<h1>{{ ::'library.collection.bundle_heading' | translate:{ bundle: collectionCtrl.bundle.title } }}</h1>
+					<h1
+						translate
+						translate-params-bundle="collectionCtrl.bundle.title"
+						>
+						library.collection.bundle_heading
+					</h1>
 					<p class="text-muted small">{{ ::collectionCtrl.bundle.description }}</p>
 				</div>
 

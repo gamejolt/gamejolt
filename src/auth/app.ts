@@ -1,7 +1,9 @@
-import 'reflect-metadata';
 import { bootstrap } from 'ng-metadata/platform';
+import { enableProdMode } from 'ng-metadata/core';
 
-import { ModelModule } from './../lib/gj-lib-client/components/model/model';
+import ModelModule from './../lib/gj-lib-client/components/model/model';
+import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
+import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 
 const AppModule = angular.module( 'App', [
 	// Set the event tracking up first.
@@ -25,8 +27,8 @@ const AppModule = angular.module( 'App', [
 
 	'gj.Debug',
 	'gj.Debug.DebugBar',
-	'gj.Ruler',
-	'gj.Screen',
+	RulerModule,
+	ScreenModule,
 	'gj.BodyClasses',
 	'gj.Analytics',
 	'gj.Loading',
@@ -70,8 +72,16 @@ const AppModule = angular.module( 'App', [
 	$locationProvider.html5Mode( true ).hashPrefix( '!' );
 	$uiViewScrollProvider.useAnchorScroll();
 
-	$compileProvider.debugInfoEnabled( false );
-	$httpProvider.useApplyAsync( true );
+	if ( GJ_ENVIRONMENT == 'development' ) {
+		EnvironmentProvider.env = 'development';
+	}
+
+	if ( GJ_BUILD_TYPE == 'production' ) {
+		enableProdMode();
+	}
+	else if ( GJ_BUILD_TYPE == 'development' ) {
+		EnvironmentProvider.buildType = 'development';
+	}
 
 	// We are on WTTF!
 	EnvironmentProvider.isWttf = true;
@@ -136,8 +146,7 @@ const AppModule = angular.module( 'App', [
 
 	TranslateProvider.addLanguageUrls( languages );
 } )
-.name
-;
+.name;
 
 setTimeout( function()
 {

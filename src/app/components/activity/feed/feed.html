@@ -47,9 +47,8 @@
 						<div ng-switch-when="comment-add" ng-bind-html="::notification.action_model.comment_compiled"></div>
 						<div ng-switch-when="comment-add-object-owner" ng-bind-html="::notification.action_model.comment_compiled"></div>
 						<div ng-switch-when="game-rating-add"
-							ng-attr-title="{{ 'notifications.rating_details_title' | translate:{ rating: notification.action_model.rating } }}"
 							translate
-							translate-scope="::{ rating: notification.action_model.rating }"
+							translate-params-rating="notification.action_model.rating"
 							>
 							notifications.rating_details_html
 						</div>

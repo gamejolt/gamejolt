@@ -1,6 +1,7 @@
-import { DevlogPostFormFactory } from './game/devlog-post/devlog-post-directive';
+import DevlogPost from './game/devlog-post/devlog-post';
 
-export const FormsModule = angular.module( 'App.Forms.Dashboard', [] )
-.directive( 'gjFormDashboardGameDevlogPost', DevlogPostFormFactory )
+export default angular.module( 'App.Forms.Dashboard', [
+	DevlogPost,
+] )
 .name
 ;

@@ -1,5 +1,6 @@
-import { PaymentFormFactory } from './payment/payment-directive';
+import Payment from './payment/payment';
 
-angular.module( 'App.Forms', [] )
-.directive( 'gjFormPayment', PaymentFormFactory )
-;
+export default angular.module( 'App.Forms', [
+	Payment,
+] )
+.name;
