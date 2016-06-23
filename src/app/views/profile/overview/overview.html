@@ -174,39 +174,6 @@
 		</div>
 	</section>
 
-	<section class="section" ng-if="profileCtrl.videosCount > 0">
-		<div class="container">
-
-			<h2 class="section-header">
-				<a class="link-unstyled" ui-sref="profile.videos" translate>
-					Video Comments
-				</a>
-			</h2>
-
-			<div class="row">
-				<gj-comment-video-thumbnail
-					class="col-xs-6 col-sm-3"
-					ng-repeat="video in overviewCtrl.videos | limitTo:8 track by video.id"
-					video="video"
-					show-game="true"
-					>
-				</gj-comment-video-thumbnail>
-			</div>
-
-			<div class="page-cut">
-				<a class="btn btn-outline"
-					ui-sref="profile.videos"
-					>
-					<span class="btn-badge">
-						{{ profileCtrl.videosCount | number }}
-					</span>
-					<span translate>View All</span>
-				</a>
-			</div>
-
-		</div>
-	</section>
-
 	<section class="section" ng-if="profileCtrl.user.type == User.TYPE_DEVELOPER">
 		<div class="container">
 
@@ -240,6 +207,39 @@
 						<span translate>View All</span>
 					</a>
 				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<section class="section" ng-if="profileCtrl.videosCount > 0">
+		<div class="container">
+
+			<h2 class="section-header">
+				<a class="link-unstyled" ui-sref="profile.videos" translate>
+					Video Comments
+				</a>
+			</h2>
+
+			<div class="row">
+				<gj-comment-video-thumbnail
+					class="col-xs-6 col-sm-3"
+					ng-repeat="video in overviewCtrl.videos | limitTo:8 track by video.id"
+					video="video"
+					show-game="true"
+					>
+				</gj-comment-video-thumbnail>
+			</div>
+
+			<div class="page-cut">
+				<a class="btn btn-outline"
+					ui-sref="profile.videos"
+					>
+					<span class="btn-badge">
+						{{ profileCtrl.videosCount | number }}
+					</span>
+					<span translate>View All</span>
+				</a>
 			</div>
 
 		</div>
