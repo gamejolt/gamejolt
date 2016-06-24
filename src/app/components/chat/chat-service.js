@@ -2,6 +2,7 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 {
 	var _this = this;
 
+	this.client = null;
 	this._documentTitle = $window.document.title;
 
 	this.visible = true;
@@ -78,6 +79,9 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 		// We'll start incrementing the room notifications count since
 		// we're not "seeing" the messages right now.
 		_this.windowFocused = false;
+
+		// Notify the client that we are unfocused, so it should start accumulating notifications for the current room.
+		_this.client.setFocused( false );
 	} );
 
 	/**
@@ -89,6 +93,9 @@ angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $r
 		// The user has now "seen" the messages.
 		_this.windowFocused = true;
 		_this.unfocusedNotifications = 0;
+
+		// Notify the client that we aren't unfocused anymore.
+		_this.client.setFocused( true );
 
 		// Keep the title count up to date.
 		updateNotifications();
