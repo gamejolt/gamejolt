@@ -36,6 +36,9 @@ const AppModule = angular.module( 'App', [
 	// Set the event tracking up first.
 	'gj.ErrorTracking',
 
+	// Client.
+	/* inject client:modules */
+
 	// Libs.
 	'ngSanitize',
 	'ngAnimate',
@@ -305,9 +308,6 @@ const AppModule = angular.module( 'App', [
 
 	// Views.
 	ViewsModule,
-
-	// Client.
-	/* inject client:modules */
 ] )
 .service( 'App', App )
 .controller( 'AppCtrl', AppCtrl )

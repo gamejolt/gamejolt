@@ -9,6 +9,9 @@ angular.module( 'App', [
 	// Set the event tracking up first.
 	'gj.ErrorTracking',
 
+	// Client.
+	/* inject client:base:modules */
+
 	// Libs.
 	'ngSanitize',
 	'ngAnimate',
@@ -58,9 +61,6 @@ angular.module( 'App', [
 
 	// Views.
 	'App.Views',
-
-	// Client.
-	/* inject client:base:modules */
 ] )
 .config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $sceDelegateProvider, TranslateProvider )
 {

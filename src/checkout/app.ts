@@ -11,6 +11,9 @@ import FormsModule from './components/forms/forms';
 import ViewsModule from './views/views';
 
 angular.module( 'App', [
+	// Client.
+	/* inject client:base:modules */
+
 	// Libs.
 	'ngSanitize',
 	'ngAnimate',
@@ -69,9 +72,6 @@ angular.module( 'App', [
 
 	// Views.
 	ViewsModule,
-
-	// Client.
-	/* inject client:base:modules */
 ] )
 .service( 'App', App )
 .controller( 'AppCtrl', AppCtrl )
