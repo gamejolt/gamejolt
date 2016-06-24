@@ -217,6 +217,15 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 		scope.emulatorInfo[ Game_Build.EMULATOR_GB ] = gettextCatalog.getString( 'Game Boy' );
 		scope.emulatorInfo[ Game_Build.EMULATOR_GBC ] = gettextCatalog.getString( 'Game Boy Color' );
 		scope.emulatorInfo[ Game_Build.EMULATOR_GBA ] = gettextCatalog.getString( 'Game Boy Advance' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_NES ] = gettextCatalog.getString( 'NES' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_SNES ] = gettextCatalog.getString( 'SNES' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_VBOY ] = gettextCatalog.getString( 'Virtual Boy' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_GENESIS ] = gettextCatalog.getString( 'Genesis/Mega Drive' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_ATARI2600 ] = gettextCatalog.getString( 'Atari 2600' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_ZX ] = gettextCatalog.getString( 'ZX Spectrum' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_C64 ] = gettextCatalog.getString( 'Commodore 64' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_CPC ] = gettextCatalog.getString( 'Amstrad CPC' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_MSX ] = gettextCatalog.getString( 'MSX' );
 	}
 
 	function setupLaunchOptions( scope )
