@@ -38,6 +38,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 		this.notifications = {};
 		this.openRooms = {};
 		this.pmUsers = {};
+		this.isFocused = true;
 
 		this.messageQueue = [];
 		this.sendingMessage = false;
@@ -144,7 +145,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 
 	ChatClient.prototype.newNotification = function( roomId )
 	{
-		if ( this.room && this.room.id == roomId ) {
+		if ( this.room && this.room.id == roomId && this.isFocused ) {
 
 		}
 		else {
@@ -295,13 +296,8 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 				}
 			}
 
-			if ( this.room && this.room.id == roomId) {
-
-			}
-			else {
-				if ( !this.isPrivateRoom( this.openRooms[ roomId ] ) && !isPrimer ) {
-					this.newNotification( roomId );
-				}
+			if ( !this.isPrivateRoom( this.openRooms[ roomId ] ) && !isPrimer ) {
+				this.newNotification( roomId );
 			}
 
 			// Push it into the room's message list.
@@ -808,6 +804,21 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 		}
 
 		return room.isMutedGlobal || room.isMutedRoom;
+	};
+
+	ChatClient.prototype.setFocused = function ( focused )
+	{
+		this.isFocused = focused;
+
+		if ( this.room && this.currentUser ) {
+			if ( this.isFocused ) {
+				this.primus.write( { event: 'room-focus', roomId: this.room.id } );
+			} else {
+				this.primus.write( { event: 'room-unfocus', roomId: this.room.id } );
+			}
+
+			this.friendsList.touchRoom( this.room.id );
+		}
 	};
 
 	ChatClient.prototype.isPMRoom = function( room )
