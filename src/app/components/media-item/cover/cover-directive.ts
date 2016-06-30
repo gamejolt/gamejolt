@@ -45,7 +45,7 @@ export class CoverComponent
 			if ( isLoaded ) {
 				this.setDimensions();
 
-				if ( !this.isLoaded ) {
+				if ( !this.isLoaded && this.onLoaded ) {
 					this.onLoaded();
 				}
 
