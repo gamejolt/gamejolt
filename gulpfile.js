@@ -11,9 +11,6 @@ var config = {
 		],
 	},
 	rollup: {
-		// external: [
-		// 	'ng-metadata/core',
-		// ],
 		vendor: {
 			'ng-metadata/core': 'vendor.ngMetadata_core',
 			'ng-metadata/platform': 'vendor.ngMetadata_platform',
