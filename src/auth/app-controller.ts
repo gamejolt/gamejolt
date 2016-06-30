@@ -1,0 +1,11 @@
+export class AppCtrl
+{
+	constructor( $scope, $state, App, Screen, Environment, Connection )
+	{
+		$scope.$state = $state;
+		$scope.App = App;
+		$scope.Screen = Screen;
+		$scope.Environment = Environment;
+		$scope.Connection = Connection;
+	}
+}

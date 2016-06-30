@@ -1,9 +1,13 @@
 import { bootstrap } from 'ng-metadata/platform';
-import { enableProdMode } from 'ng-metadata/core';
+import { enableProdMode, provide } from 'ng-metadata/core';
 
 import ModelModule from './../lib/gj-lib-client/components/model/model';
+import MetaModule from './../lib/gj-lib-client/components/meta/meta';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
+
+import { AppCtrl } from './app-controller';
+import { App } from './app-service';
 
 const AppModule = angular.module( 'App', [
 	// Set the event tracking up first.
@@ -23,6 +27,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Api',
 	'gj.Payload',
 	ModelModule,
+	MetaModule,
 	'gj.Error',
 
 	'gj.Debug',
@@ -147,6 +152,10 @@ const AppModule = angular.module( 'App', [
 	TranslateProvider.addLanguageUrls( languages );
 } )
 .name;
+
+angular.module( AppModule )
+.controller( 'AppCtrl', AppCtrl )
+.service( ...provide( 'App', { useClass: App } ) );
 
 setTimeout( function()
 {

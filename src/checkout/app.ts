@@ -1,7 +1,8 @@
 import { bootstrap } from 'ng-metadata/platform';
-import { enableProdMode } from 'ng-metadata/core';
+import { enableProdMode, provide } from 'ng-metadata/core';
 
 import ModelModule from './../lib/gj-lib-client/components/model/model';
+import MetaModule from './../lib/gj-lib-client/components/meta/meta';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 
@@ -27,6 +28,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Api',
 	'gj.Payload',
 	ModelModule,
+	MetaModule,
 	'gj.Error',
 	'gj.Translate',
 	'gj.Geo',
@@ -73,8 +75,6 @@ const AppModule = angular.module( 'App', [
 	// Client.
 	/* inject client:base:modules */
 ] )
-.service( 'App', App )
-.controller( 'AppCtrl', AppCtrl )
 .config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $sceDelegateProvider )
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
@@ -123,6 +123,10 @@ const AppModule = angular.module( 'App', [
 	}
 } )
 .name;
+
+angular.module( AppModule )
+.controller( 'AppCtrl', AppCtrl )
+.service( ...provide( 'App', { useClass: App } ) );
 
 setTimeout( function()
 {
