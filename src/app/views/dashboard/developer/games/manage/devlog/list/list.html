@@ -1,0 +1,59 @@
+<div class="container">
+	<div class="row">
+		<div class="col-lg-7">
+
+			<section class="section">
+
+				<h2 class="section-header" translate>
+					New Post
+				</h2>
+
+				<div>
+					<button class="btn btn-outline" ng-click="listCtrl.showNewPost = 'text'">
+						Text Post
+					</button>
+
+					<button class="btn btn-outline" ng-click="listCtrl.showNewPost = 'media'">
+						Media Post
+					</button>
+
+					<div gj-expand-when="!!listCtrl.showNewPost">
+
+						<div class="well fill-lightest">
+
+							<gj-form-dashboard-game-devlog-post
+								gj-game="manageCtrl.game"
+								post-type="listCtrl.showNewPost"
+								gj-form-submit-handler="listCtrl.onNewPost( formModel )"
+								>
+							</gj-form-dashboard-game-devlog-post>
+
+						</div>
+
+					</div>
+				</div>
+
+			</section>
+			<section class="section">
+
+				<nav class="platform-list inline">
+					<ul>
+						<li>
+							<a class="active">Feed</a>
+						</li>
+						<li>
+							<a>Draft Posts</a>
+						</li>
+					</ul>
+				</nav>
+				<br>
+
+				<gj-devlog-feed
+					devlog-posts="listCtrl.posts"
+					>
+				</gj-devlog-feed>
+
+			</section>
+		</div>
+	</div>
+</div>

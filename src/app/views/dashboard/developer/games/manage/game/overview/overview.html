@@ -1,40 +1,6 @@
 <div class="row">
 	<div class="col-lg-8">
 
-		<h2 class="section-header" translate>
-			Quick Post
-		</h2>
-
-		<button class="btn btn-outline" ng-click="overviewCtrl.showQuickPost = 'text'">
-			Text Post
-		</button>
-
-		<button class="btn btn-outline" ng-click="overviewCtrl.showQuickPost = 'image'">
-			Image
-		</button>
-
-		<button class="btn btn-outline" ng-click="overviewCtrl.showQuickPost = 'video'">
-			Video
-		</button>
-
-		<button class="btn btn-outline" ng-click="overviewCtrl.showQuickPost = 'gif'">
-			GIF
-		</button>
-
-		<div gj-expand-when="!!overviewCtrl.showQuickPost">
-
-			<div class="well fill-lightest">
-
-				<gj-form-dashboard-game-devlog-post
-					gj-game="manageCtrl.game"
-					post-type="overviewCtrl.showQuickPost"
-					>
-				</gj-form-dashboard-game-devlog-post>
-
-			</div>
-
-		</div>
-
 		<h2>{{ ::'dash.games.overview.todo_heading' | translate }}</h2>
 
 		<p class="small" translate translate-params-completion="overviewCtrl.todoPercentage">dash.games.overview.todo_lead_html</p>
@@ -91,7 +57,7 @@
 
 			<!-- Game isn't ready to publish yet. -->
 			<div class="alert alert-warning" ng-if="!overviewCtrl.isPublishable">
-				<p ng-if="manageCtrl.game.development_status == Game.DEVELOPMENT_STATUS_WIP"
+				<p ng-if="manageCtrl.game._is_wip"
 					translate
 					translate-params-thumbnail-url="$state.href( '^.thumbnail' )"
 					translate-params-maturity-url="$state.href( '^.maturity' )"
@@ -100,7 +66,7 @@
 					dash.games.overview.todo_info_wip_html
 				</p>
 
-				<p ng-if="manageCtrl.game.development_status != Game.DEVELOPMENT_STATUS_WIP"
+				<p ng-if="!manageCtrl.game._is_wip"
 					translate
 					translate-params-thumbnail-url="$state.href( '^.thumbnail' )"
 					translate-params-maturity-url="$state.href( '^.maturity' )"

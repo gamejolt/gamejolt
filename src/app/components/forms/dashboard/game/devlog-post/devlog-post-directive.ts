@@ -5,8 +5,8 @@ export function DevlogPostFormFactory( Form, Fireside_Post )
 		template: '/app/components/forms/dashboard/game/devlog-post/devlog-post.html'
 	} );
 
-	form.scope.game = '=gjGame';
-	form.scope.postType = '=';
+	form.scope.game = '<gjGame';
+	form.scope.postType = '<?';
 
 	form.onInit = function( scope )
 	{
@@ -14,18 +14,22 @@ export function DevlogPostFormFactory( Form, Fireside_Post )
 
 		scope.formModel.game_id = scope.game.id;
 
-		scope.formModel.status = Fireside_Post.STATUS_ACTIVE;
+		if ( scope.method == 'add' ) {
+			scope.formModel.status = Fireside_Post.STATUS_DRAFT;
 
-		scope.$watch( 'postType', function()
+			scope.$watch( _ => scope.postType, _ =>
+			{
+				if ( scope.postType ) {
+					scope.formModel.type = scope.postType;
+				}
+			} );
+		}
+
+		scope.onDraftSubmit = _ =>
 		{
-			console.log( 'hi' );
-		} );
-
-		// scope.$watch( __ => scope.postType, __ =>
-		// {
-		// 	console.log( 'yooooo', scope.postType );
-		// 	scope.formModel.type = scope.postType;
-		// } );
+			scope.formModel.status = Fireside_Post.STATUS_DRAFT;
+			scope.onSubmit();
+		};
 	};
 
 	return form;

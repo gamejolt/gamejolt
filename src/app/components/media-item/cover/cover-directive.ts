@@ -1,4 +1,4 @@
-import { Component, Input, Inject } from 'ng-metadata/core';
+import { Component, Input, Output, Inject } from 'ng-metadata/core';
 import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Ruler } from './../../../../lib/gj-lib-client/components/ruler/ruler-service';
 import template from './cover.html';
@@ -15,6 +15,8 @@ export class CoverComponent
 	@Input( '<' ) mediaItem: any;
 	@Input( '<?' ) shouldParallax: boolean;
 	@Input( '<?' ) maxHeight: number;
+
+	@Output() onLoaded: Function;
 
 	// isLoaded gets set the first time it loads and stays set
 	// isMediaItemLoaded gets changed every time a new size loads in
@@ -38,10 +40,15 @@ export class CoverComponent
 		this.setDimensions();
 
 		// We watch for when a new media item loads in.
-		$scope.$watch( '$ctrl.isMediaItemLoaded', ( isLoaded ) =>
+		$scope.$watch( '$ctrl.isMediaItemLoaded', isLoaded =>
 		{
 			if ( isLoaded ) {
 				this.setDimensions();
+
+				if ( !this.isLoaded ) {
+					this.onLoaded();
+				}
+
 				this.isLoaded = true;
 			}
 		} );

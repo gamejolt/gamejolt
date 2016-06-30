@@ -1,5 +1,3 @@
-<h2 class="section-header">{{ ::'dash.games.maturity.heading' | translate }}</h2>
-
 <!--
 	On mobile we put the maturity rating widget at the top.
 -->
@@ -28,6 +26,7 @@
 		<gj-form-dashboard-game-maturity
 			gj-game="manageCtrl.game"
 			gj-form-model="maturityCtrl.formModel"
+			is-wizard="manageCtrl.isWizard"
 			gj-form-submit-handler="maturityCtrl.onSaved()"
 			>
 		</gj-form-dashboard-game-maturity>

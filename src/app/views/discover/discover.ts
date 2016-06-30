@@ -1,8 +1,10 @@
 import Home from './home/home';
-import Devlog from './games/view/devlog/devlog';
+import Devlogs from './devlogs/devlogs';
+import GameDevlog from './games/view/devlog/devlog';
 
 export default angular.module( 'App.Views.Discover', [
 	Home,
-	Devlog,
+	Devlogs,
+	GameDevlog,
 ] )
 .name;

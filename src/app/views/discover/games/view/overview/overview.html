@@ -1,4 +1,4 @@
 <script type="application/ld+json" ng-bind="::overviewCtrl.microdata"></script>
 
-<div ng-if="gameCtrl.game.type == Game.TYPE_GAME" gj-partial="/app/views/discover/games/view/overview/_game.html"></div>
-<div ng-if="gameCtrl.game.type == Game.TYPE_DEVLOG" gj-partial="/app/views/discover/games/view/overview/_devlog.html"></div>
+<div ng-if="!gameCtrl.game._is_devlog" gj-partial="/app/views/discover/games/view/overview/_game.html"></div>
+<div ng-if="gameCtrl.game._is_devlog" gj-partial="/app/views/discover/games/view/overview/_devlog.html"></div>

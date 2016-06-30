@@ -4,8 +4,8 @@
 		<gj-loading></gj-loading>
 	</div>
 
-	<div ng-if="isLoaded">
-		<div ng-if="isShowingRules">
+	<div ng-if="isLoaded" ng-switch="stage()">
+		<div ng-switch-when="rules">
 
 			<h3 class="section-header" translate>dash.games.add.rules_heading</h3>
 
@@ -33,7 +33,50 @@
 
 		</div>
 
-		<div ng-if="!isShowingRules">
+		<div ng-switch-when="type">
+			<form-group name="development_status" label="{{ 'dash.games.form.dev_status_label' | translate }}">
+				<div ng-if="!checkIsCompleteAllowed()" class="alert alert-info" translate>dash.games.form.dev_status_not_completable_info_html</div>
+
+				<div class="radio" ng-class="{ disabled: !checkIsCompleteAllowed() }">
+					<label>
+						<input form-control="radio" ng-value="Game.DEVELOPMENT_STATUS_FINISHED" ng-disabled="!checkIsCompleteAllowed()">
+						<strong translate>Complete/Stable</strong> <br>
+						<span class="help-inline" translate>
+							Your game is complete. It's in a stable state and you only plan on making bug fixes or performance optimizations.
+						</span>
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input form-control="radio" ng-value="Game.DEVELOPMENT_STATUS_WIP">
+						<strong translate>Early Access</strong> <br>
+						<span class="help-inline" translate>
+							Your game has early playable builds, but it's not finished yet. You're still actively developing it and will continue to release new builds periodically.
+						</span>
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input form-control="radio" ng-value="Game.DEVELOPMENT_STATUS_DEVLOG">
+						<strong translate>Devlog-Only/No Builds</strong> <br>
+						<span class="help-inline" translate>
+							You don't have anything playable yet, but you're actively developing your game and have stuff to show off. Your game page will be more focused on your Devlog as its primary purpose.
+						</span>
+					</label>
+				</div>
+				<!--<div class="radio" ng-class="{ disabled: !checkIsCompleteAllowed() }">
+					<label>
+						<input form-control="radio" ng-value="Game.DEVELOPMENT_STATUS_CANCELED" ng-disabled="!checkIsCompleteAllowed()">
+						<span translate>dash.games.form.dev_status_canceled</span> <br>
+						<span class="help-inline" translate>dash.games.form.dev_status_canceled_help</span>
+					</label>
+				</div>-->
+
+				<control-errors></control-errors>
+			</form-group>
+		</div>
+
+		<div ng-switch-when="details">
 
 			<fieldset ng-class="{ 'game-form-disabled': isDisabled }" ng-disabled="isDisabled">
 
@@ -75,7 +118,7 @@
 					</form-group>
 				</div>
 
-				<form-group name="development_status" label="{{ 'dash.games.form.dev_status_label' | translate }}">
+				<!--<form-group name="development_status" label="{{ 'dash.games.form.dev_status_label' | translate }}">
 					<div ng-if="!checkIsCompleteAllowed()" class="alert alert-info" translate>dash.games.form.dev_status_not_completable_info_html</div>
 
 					<div class="radio" ng-class="{ disabled: !checkIsCompleteAllowed() }">
@@ -101,25 +144,9 @@
 					</div>
 
 					<control-errors></control-errors>
-				</form-group>
+				</form-group>-->
 
-				<form-group name="description_markdown" label="{{ 'dash.games.form.description_label' | translate }}">
-
-					<p class="help-block" translate>dash.games.form.description_help_html</p>
-
-					<div
-						form-markdown-editor
-						preview-class="game-compiled-description"
-						markdown-preview-url="/web/dash/developer/games/preview-description"
-						markdown-mode="games"
-						>
-					</div>
-
-					<control-errors></control-errors>
-
-				</form-group>
-
-				<form-group name="status" label="{{ 'dash.games.form.status_label' | translate }}" ng-if="method == 'edit'">
+				<!--<form-group name="status" label="{{ 'dash.games.form.status_label' | translate }}" ng-if="method == 'edit'">
 					<div ng-if="!checkIsPublishable()" class="alert alert-info" translate>dash.games.form.status_not_publishable_info_html</div>
 
 					<div class="radio" ng-class="{ disabled: !checkIsPublishable() }">
@@ -144,9 +171,9 @@
 					<div class="alert alert-warning" translate>
 						dash.games.overview.publish_confirmation
 					</div>
-				</div>
+				</div>-->
 
-				<div ng-if="!isDisabled">
+				<!--<div ng-if="!isDisabled">
 					<button gj-form-submit-button class="i-button" ng-disabled="!gameForm.$valid" ng-click="onSubmit()">
 						<span ng-if="method == 'add'">
 							<span class="jolticon jolticon-add"></span>
@@ -157,29 +184,18 @@
 							<span translate>dash.games.form.edit_button</span>
 						</span>
 					</button>
-				</div>
+				</div>-->
 
 			</fieldset>
 
-			<div gj-expand-when="isFnafDetected">
-				<div class="alert alert-warning">
-					<div translate>dash.games.add.fnaf_autotag_message_html</div>
-
-					<div class="alert-actions">
-						<button gj-form-submit-button class="i-button" ng-click="addAutotag( 'fnaf' )">
-							<span class="jolticon jolticon-tag"></span>
-							<span translate>dash.games.add.fnaf_autotag_accept</span>
-						</button>
-
-						<button gj-form-submit-button class="i-button trans" ng-click="skipAutotag()">
-							<span class="jolticon jolticon-remove"></span>
-							<span translate>dash.games.add.fnaf_autotag_reject</span>
-						</button>
-					</div>
-				</div>
-			</div>
-
 		</div>
+	</div>
+
+	<div ng-if="isWizard">
+		<gj-form-dashboard-game-wizard-controls
+			on-next="onSubmit()"
+			>
+		</gj-form-dashboard-game-wizard-controls>
 	</div>
 
 </form>

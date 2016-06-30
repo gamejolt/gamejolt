@@ -1,6 +1,14 @@
 <section class="section">
 	<div class="container">
 
+		<div class="row" ng-if="manageCtrl.game._is_devlog">
+			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+				<div class="alert alert-info">
+					You are only able to create private packages for testers while your game page is only a devlog. Once you publish your game page into early access or as a finished game, they will show.
+				</div>
+			</div>
+		</div>
+
 		<h2 class="section-header">
 			{{ ::'dash.games.packages.heading' | translate }}
 		</h2>

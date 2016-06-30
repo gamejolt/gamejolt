@@ -8,7 +8,7 @@
 
 		<a class="timeline-list-item-header"
 			ng-class="::{ 'has-header-img': !!$ctrl.post.header }"
-			ui-sref="discover.games.view.devlog.view( { postSlug: $ctrl.post.slug } )"
+			ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
 			>
 			<div class="timeline-list-item-header-img" ng-if="::$ctrl.post.header">
 				<img ng-src="{{ ::$ctrl.post.header.img_url }}" alt="">

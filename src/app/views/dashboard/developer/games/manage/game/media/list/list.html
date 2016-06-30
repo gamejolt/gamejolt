@@ -1,0 +1,73 @@
+<div class="page-help" translate>dash.games.media.page_help_html</div>
+
+<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
+	<div class="media-item-list"
+		ui-tree="{ dropped: listCtrl.onMediaSorted }"
+		ui-tree-nodes
+		gj-ui-tree-placeholder="col-xs-6 col-md-4 col-lg-3"
+		ng-model="listCtrl.mediaItems"
+		>
+
+		<div class="row">
+
+			<div class="col-sm-6 col-md-4 anim-fade-in">
+				<a class="media-item-list-item hidden-xs" ui-sref="^.add">
+					<div class="media-item-list-item-add">
+						<span class="jolticon jolticon-add big"></span>
+						<span class="inner" translate>dash.games.media.add_button_html</span>
+					</div>
+				</a>
+
+				<div class="visible-xs">
+					<p>
+						<a class="i-button big block" ui-sref="^.add">
+							<span class="jolticon jolticon-add"></span>
+							{{ ::'dash.games.media.add_button_mobile' | translate }}
+						</a>
+					</p>
+				</div>
+			</div>
+
+			<div class="col-xs-6 col-md-4 anim-fade-enter-up stagger-enter anim-fade-leave-shrink no-animate-xs"
+				ng-repeat="item in listCtrl.mediaItems"
+				ui-tree-node
+				>
+
+				<!-- Image -->
+				<div class="media-item-list-item">
+					<div class="media-item-list-item-inner">
+							<!--<span ng-if="item.media_type == 'image'" class="media-item-list-item-type" tooltip="{{ 'dash.games.media.image_label' | translate }}">
+								<span class="jolticon jolticon-screenshot"></span>
+							</span>
+
+							<span ng-if="item.media_type == 'video'" class="media-item-list-item-type" tooltip="{{ 'dash.games.media.video_label' | translate }}">
+								<span class="jolticon jolticon-video"></span>
+							</span>-->
+						<div class="media-item-list-item-controls">
+
+							<a class="btn btn-sparse"
+								ui-sref="^.{{ item.media_type }}( { {{ item.media_type + 'Id' }}: item.id } )"
+								gj-tooltip="{{ ::listCtrl.getEditTooltip( item ) | translate }}"
+								>
+								<span class="jolticon jolticon-edit"></span>
+							</a>
+
+							<a class="btn btn-sparse btn-danger"
+								ng-click="listCtrl.removeItem( item )"
+								gj-tooltip="{{ ::listCtrl.getRemoveTooltip( item ) | translate }}"
+								>
+								<span class="jolticon jolticon-remove"></span>
+							</a>
+						</div>
+
+						<span class="media-item-list-item-img"
+							ui-tree-handle
+							ng-style="{ 'background-image': 'url(\'' + item.img_thumbnail_med + '\')' }">
+						</span>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

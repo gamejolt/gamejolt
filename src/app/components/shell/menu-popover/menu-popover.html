@@ -10,7 +10,7 @@
 	<div style="min-width: 300px">
 
 		<div class="list-group thin">
-			<a ng-if="Screen.isXs" class="list-group-item has-icon offline-disable" ui-sref="discover.home"
+			<a class="list-group-item has-icon offline-disable" ui-sref="discover.home"
 				gj-track-event="discover-nav:home"
 				>
 				<span class="jolticon jolticon-gamejolt"></span>
@@ -21,14 +21,14 @@
 				gj-track-event="discover-nav:hot"
 				>
 				<span class="jolticon jolticon-game"></span>
-				Browse Games
+				Games
 			</a>
-			<a class="list-group-item has-icon offline-disable" ui-sref="discover.news.list"
+			<a class="list-group-item has-icon offline-disable" ui-sref="discover.devlogs.overview"
 				ui-sref-opts="{ inherit: false }"
-				gj-track-event="discover-nav:news"
+				gj-track-event="discover-nav:devlogs"
 				>
 				<span class="jolticon jolticon-blog-article"></span>
-				Game News
+				Devlogs
 			</a>
 			<a ng-if="Screen.isXs" class="list-group-item has-icon offline-disable" ui-sref="search.results"
 				ui-sref-opts="{ inherit: false }"

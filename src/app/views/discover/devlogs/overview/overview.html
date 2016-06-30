@@ -1,0 +1,70 @@
+<section class="section">
+	<div class="container">
+
+		<h2 class="section-header">
+			<a class="link-unstyled"
+				gj-track-event="channel:row-heading:best"
+				translate
+				>
+				Featured Devlogs
+			</a>
+		</h2>
+
+		<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
+			<div ng-class="{ 'row': !Screen.isXs }">
+				<gj-game-thumbnail
+					class="col-xs-11 col-sm-4 col-md-3"
+					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
+					ng-repeat="game in overviewCtrl.games | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
+					gj-game="game"
+					gj-track-event="channel:slider:game:{{ $index }}"
+					>
+				</gj-game-thumbnail>
+			</div>
+		</div>
+
+		<div class="page-cut">
+			<a class="btn btn-outline"
+				gj-track-event="channel:more-btn:best"
+				translate
+				>
+				Load More
+			</a>
+		</div>
+
+	</div>
+</section>
+
+<section class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-7 col-lg-offset-2">
+
+				<h2 class="section-header">
+					<a class="link-unstyled"
+						gj-track-event="channel:row-heading:hot"
+						translate
+						>
+						Hot Posts
+					</a>
+				</h2>
+
+				<gj-devlog-feed
+					devlog-posts="overviewCtrl.posts"
+					>
+				</gj-devlog-feed>
+
+			</div>
+		</div>
+
+		<div class="page-cut">
+			<a class="btn btn-outline"
+				gj-track-event="channel:more-btn:best"
+				translate
+				>
+				Load More
+			</a>
+		</div>
+
+	</div>
+</section>

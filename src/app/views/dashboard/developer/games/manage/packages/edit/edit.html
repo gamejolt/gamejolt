@@ -62,6 +62,13 @@
 				</div>
 				<div class="col-md-6">
 
+					<div class="alert alert-info"
+						ng-if="manageCtrl.game._is_devlog && editCtrl.package.visibility == Game_Package.VISIBILITY_PUBLIC"
+						translate
+						>
+						This package won't show up on your game page since your game is currently a devlog. Once you publish your game page into early access or as a finished game, it will show.
+					</div>
+
 					<h3 class="section-header" translate>Preview</h3>
 
 					<div ng-if="editCtrl.isLoadingPreview">

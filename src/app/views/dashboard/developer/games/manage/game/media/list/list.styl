@@ -1,0 +1,102 @@
+.media-item-list
+
+	&-item
+		display: block
+		margin-bottom: $grid-gutter-width
+		position: relative
+		height: 0
+		padding-top: 80%
+		background-color: $gray-darkest
+
+		@media $media-xs
+			margin-bottom: $grid-gutter-width-xs
+
+	&-item-inner
+		position: absolute
+		top: 5px
+		right: 5px
+		bottom: 5px
+		left: 5px
+
+	&-item-controls
+		position: absolute
+		top: -5px
+		right: 5px
+		z-index: 1
+
+	// &-item-type
+	// &-item-edit
+	// &-item-remove
+	// 	position: absolute
+	// 	top: -5px
+	// 	width: 35px
+	// 	height: 35px
+	// 	line-height: @height
+	// 	text-align: center
+	// 	background-color: $gray-dark
+	// 	z-index: 1
+	// 	color: $white
+
+	// 	.jolticon
+	// 		margin: 0
+	// 		position: relative
+	// 		top: -1px
+	// 		vertical-align: middle
+
+	// &-item-type
+	// 	left: 5px
+	// 	color: $gj-blue
+
+	// &-item-edit
+	// 	right: 35px + 5px + 5px
+
+	// 	&:hover
+	// 		background-color: $gj-dark-green
+	// 		color: $gj-green
+
+	// &-item-remove
+	// 	right: 5px
+	// 	color: $gj-pink
+
+	// 	&:hover
+	// 		background-color: $gj-pink
+	// 		color: $white
+
+	&-item-img
+	&-item-add
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+
+	&-item-img
+		background-repeat: no-repeat
+		background-position: center center
+		background-size: cover
+
+		// This is also the drag handle.
+		ui-tree-handle.&
+			cursor: move
+
+	&-item-add
+		top: 5px
+		right: 5px
+		bottom: 5px
+		left: 5px
+		text-align: center
+		color: $gray-lighter
+		padding-top: 30px
+		background-color: $gray
+
+		&:hover
+			background-color: $gray-dark
+
+			.jolticon
+				color: $gj-green
+
+		.jolticon
+			display: block
+			margin-bottom: 20px
+			font-size: 16px * 3
+			color: $white

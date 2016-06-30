@@ -2,22 +2,28 @@
 	<div class="container">
 
 		<h1 class="section-header">
-			<div>
-				<span class="tag" ng-if="manageCtrl.game.type == Game.TYPE_DEVLOG" translate>
-					Devlog
-				</span>
-				<span class="tag tag-pink" ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" translate>dash.games.hidden_tag</span>
-			</div>
 			{{ manageCtrl.game.title }}
 		</h1>
-		<p class="text-muted small sans-margin-bottom" ng-if="manageCtrl.game.status == Game.STATUS_VISIBLE">
-			<span class="tag tag-active" translate>dash.games.published_tag</span>
-			<span class="dot-separator"></span>
-			<span am-time-ago="manageCtrl.game.published_on"></span>
+
+		<p class="text-muted small sans-margin-bottom">
+			<span class="tag tag-blue" ng-if="manageCtrl.game._is_wip" translate>
+				Early Access
+			</span>
+			<span class="tag tag-blue" ng-if="manageCtrl.game._is_devlog" translate>
+				Devlog
+			</span>
+
+			<span class="tag tag-pink" ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" translate>dash.games.hidden_tag</span>
+
+			<span ng-if="manageCtrl.game.status == Game.STATUS_VISIBLE">
+				<span class="tag tag-active" translate>dash.games.published_tag</span>
+				<span class="dot-separator"></span>
+				<span am-time-ago="manageCtrl.game.published_on"></span>
+			</span>
 		</p>
 		<br>
 
-		<p>
+		<p ng-if="!manageCtrl.isWizard">
 			<a class="btn btn-outline hidden-xs" ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: manageCtrl.game.id } )">
 				<span class="jolticon jolticon-chart"></span>
 				<span translate>View Analytics</span>
@@ -28,21 +34,11 @@
 			</a>
 		</p>
 
-		<nav class="platform-list inline">
+		<nav class="platform-list inline" ng-if="!manageCtrl.isWizard">
 			<ul>
 				<li>
 					<a ui-sref=".game.overview" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.game' ) }" translate>
 						dash.games.overview_tab
-					</a>
-				</li>
-				<li ng-if="manageCtrl.game.type != Game.TYPE_DEVLOG" gj-tooltip="{{ 'dash.games.media_tooltip' | translate }}" tooltip-placement="bottom">
-					<a ui-sref=".media.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.media' ) }" translate>
-						dash.games.media_tab
-					</a>
-				</li>
-				<li ng-if="manageCtrl.game.type != Game.TYPE_DEVLOG" gj-tooltip="{{ 'dash.games.packages_tooltip' | translate }}" tooltip-placement="bottom">
-					<a ui-sref=".packages.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.packages' ) }" translate>
-						dash.games.packages_tab
 					</a>
 				</li>
 				<li gj-tooltip="{{ 'dash.games.news_tooltip' | translate }}" tooltip-placement="bottom">
@@ -50,17 +46,17 @@
 						Devlog
 					</a>
 				</li>
-				<li gj-tooltip="{{ 'dash.games.music_tooltip' | translate }}" tooltip-placement="bottom">
-					<a ui-sref=".music" ui-sref-active="active" translate>
-						dash.games.music_tab
+				<li gj-tooltip="{{ 'dash.games.packages_tooltip' | translate }}" tooltip-placement="bottom">
+					<a ui-sref=".packages.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.packages' ) }" translate>
+						dash.games.packages_tab
 					</a>
 				</li>
-				<li ng-if="manageCtrl.game.type != Game.TYPE_DEVLOG" gj-tooltip="{{ 'dash.games.api_tooltip' | translate }}" tooltip-placement="bottom">
+				<li gj-tooltip="{{ 'dash.games.api_tooltip' | translate }}" tooltip-placement="bottom">
 					<a ui-sref=".api.overview" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.api' ) }" translate>
 						dash.games.api_tab
 					</a>
 				</li>
-				<li  ng-if="manageCtrl.game.type != Game.TYPE_DEVLOG" gj-tooltip="{{ 'Manage your game keys and give access to users.' | translate }}" tooltip-placement="bottom">
+				<li gj-tooltip="{{ 'Manage your game keys and give access to users.' | translate }}" tooltip-placement="bottom">
 					<a ui-sref=".key-groups.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.key-groups' ) }" translate>
 						Keys/Access
 					</a>

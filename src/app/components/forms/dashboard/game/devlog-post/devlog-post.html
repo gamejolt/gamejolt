@@ -1,31 +1,9 @@
 <form gj-form="formModel" name="devlogPostForm">
 	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
 
-	<pre>{{ postType }}</pre>
-	<pre>{{ formModel.type }}</pre>
-
-		<div ng-switch="postType">
+		<div ng-switch="formModel.type">
 
 			<div ng-switch-when="text">
-				<form-group name="file"
-					label="{{ 'Header Image' | translate }}"
-					optional="true"
-					>
-
-					<p class="help-block" translate>dash.forms.image_filetype_help_html</p>
-
-						<!--gj-max-filesize="maxFilesize"
-						gj-max-img-width="maxWidth"
-						gj-max-img-height="maxHeight"-->
-					<gj-form-upload-control
-						form-control="upload"
-						accept=".png,.jpg,.jpeg,.gif"
-						>
-					</gj-form-upload-control>
-
-					<control-errors></control-errors>
-				</form-group>
-
 				<form-group name="title"
 					label="{{ 'Post Title' | translate }}"
 					>
@@ -49,7 +27,7 @@
 				</form-group>
 			</div>
 
-			<div ng-switch-when="image">
+			<div ng-switch-when="media">
 				<form-group name="file"
 					label="{{ 'Upload Image' | translate }}"
 					>
@@ -78,18 +56,18 @@
 
 		</div>
 
-		<button gj-form-submit-button class="btn btn-success" ng-disabled="!devlogPostForm.$valid" ng-click="onSubmit()">
-			<span ng-if="method == 'add'">
+		<button class="btn btn-success" ng-disabled="!devlogPostForm.$valid" ng-click="onSubmit()">
+			<span ng-if="formModel.status != Fireside_Post.STATUS_ACTIVE">
 				<span class="jolticon jolticon-add"></span>
-				<span translate>Add</span>
+				<span translate>Publish</span>
 			</span>
-			<span ng-if="method == 'edit'">
+			<span ng-if="formModel.status == Fireside_Post.STATUS_ACTIVE">
 				<span class="jolticon jolticon-edit"></span>
-				<span translate>Edit</span>
+				<span translate>Save</span>
 			</span>
 		</button>
 
-		<button gj-form-submit-button class="btn btn-outline" ng-disabled="!devlogPostForm.$valid" ng-click="onSubmit()">
+		<button class="btn btn-outline" ng-disabled="!devlogPostForm.$valid" ng-click="onDraftSubmit()">
 			<span translate>Save as Draft</span>
 		</button>
 

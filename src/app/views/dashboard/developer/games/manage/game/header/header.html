@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-md-10">
 
-		<h2 class="section-header">
+		<!--<h2 class="section-header">
 			<div class="section-header-controls">
 				<a class="i-button big sparse" gj-popover-trigger="header-more" ng-if="manageCtrl.game.header_media_item">
 					<span class="jolticon jolticon-ellipsis-h"></span>
@@ -9,7 +9,7 @@
 			</div>
 
 			{{ ::'dash.games.header.heading' | translate }}
-		</h2>
+		</h2>-->
 
 		<gj-popover popover-id="header-more">
 			<div class="list-group nowrap">
@@ -29,9 +29,15 @@
 
 		<gj-form-dashboard-game-header
 			gj-game="manageCtrl.game"
+			is-wizard="manageCtrl.isWizard"
 			gj-form-submit-handler="headerCtrl.onSaved()"
 			>
 		</gj-form-dashboard-game-header>
+
+		<div ng-if="manageCtrl.isWizard">
+			<gj-form-dashboard-game-wizard-controls>
+			</gj-form-dashboard-game-wizard-controls>
+		</div>
 
 	</div>
 </div>

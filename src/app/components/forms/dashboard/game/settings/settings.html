@@ -58,10 +58,23 @@
 			</gj-toggle-switch>
 		</form-group>
 
-		<button gj-form-submit-button class="btn btn-outline" ng-disabled="!settingsForm.$valid" ng-click="onSubmit()">
+		<button
+			ng-if="!isWizard"
+			gj-form-submit-button
+			class="btn btn-outline"
+			ng-disabled="!settingsForm.$valid"
+			ng-click="onSubmit()"
+			>
 			<span class="jolticon jolticon-edit"></span>
 			{{ 'dash.games.settings.save_button' | translate }}
 		</button>
+
+		<div ng-if="isWizard">
+			<gj-form-dashboard-game-wizard-controls
+				on-next="onSubmit()"
+				>
+			</gj-form-dashboard-game-wizard-controls>
+		</div>
 
 	</gj-form-loader>
 </form>

@@ -1,7 +1,7 @@
 <form gj-form="formModel" name="gameMaturityForm">
 
 	<form-group name="tigrs_age" label="{{ 'dash.games.maturity.age_label' | translate }}">
-		<p class="help-block" ng-if="baseModel.development_status == Game.DEVELOPMENT_STATUS_WIP" translate>
+		<p class="help-block" ng-if="baseModel._is_wip" translate>
 			dash.games.maturity.wip_help
 		</p>
 
@@ -178,9 +178,22 @@
 
 	</div>
 
-	<button gj-form-submit-button class="i-button" ng-disabled="!gameMaturityForm.$valid || !formModel.tigrs_age" ng-click="onSubmit()">
+	<button
+		ng-if="!isWizard"
+		gj-form-submit-button
+		class="btn btn-outline"
+		ng-disabled="!gameMaturityForm.$valid || !formModel.tigrs_age"
+		ng-click="onSubmit()"
+		>
 		<span class="jolticon jolticon-edit"></span>
 		<span translate>dash.games.maturity.save_button</span>
 	</button>
+
+	<div ng-if="isWizard">
+		<gj-form-dashboard-game-wizard-controls
+			on-next="onSubmit()"
+			>
+		</gj-form-dashboard-game-wizard-controls>
+	</div>
 
 </form>
