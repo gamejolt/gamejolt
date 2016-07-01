@@ -1,19 +1,23 @@
 <div class="devlog-feed timeline-list full-bleed">
+
+	<!--
+		Note that our ng-repeat track by includes updated on.
+		This way it will update the whole div when the post changes.
+		This allows us to bind-once within the post, and still update during changes.
+	-->
 	<div class="devlog-feed-item timeline-list-item anim-fade-in-right no-animate-leave stagger"
-		ng-repeat="post in $ctrl.posts track by post.id"
+		ng-repeat="post in $ctrl._posts track by post.id + '-' + post.updated_on"
 		>
 
 		<gj-devlog-post-text
 			ng-if="::post.type == $ctrl.firesidePost.TYPE_TEXT"
 			post="post"
-			on-post-removed="$ctrl.onPostRemoved"
 			>
 		</gj-devlog-post-text>
 
 		<gj-devlog-post-image
 			ng-if="::post.type == $ctrl.firesidePost.TYPE_MEDIA"
 			post="post"
-			on-post-removed="$ctrl.onPostRemoved"
 			>
 		</gj-devlog-post-image>
 

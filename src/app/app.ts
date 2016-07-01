@@ -39,7 +39,8 @@ import DevlogFeedModule from './components/devlog/feed/feed';
 import DevlogPostTextModule from './components/devlog/post/text/text';
 import DevlogPostImageModule from './components/devlog/post/image/image';
 import DevlogPostControlsModule from './components/devlog/post/controls/controls';
-import DevlogAddPost from './components/devlog/add-post/add-post';
+import DevlogPostAddModule from './components/devlog/post/add/add';
+import DevlogPostEditModule from './components/devlog/post/edit/edit';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -278,7 +279,8 @@ const AppModule = angular.module( 'App', [
 	DevlogPostTextModule,
 	DevlogPostImageModule,
 	DevlogPostControlsModule,
-	DevlogAddPost,
+	DevlogPostAddModule,
+	DevlogPostEditModule,
 
 	'App.Post.Grid',
 	'App.Post.List',

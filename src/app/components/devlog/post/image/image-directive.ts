@@ -5,9 +5,8 @@ import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fir
 	selector: 'gj-devlog-post-image',
 	templateUrl: '/app/components/devlog/post/image/image.html',
 })
-export class DevlogPostImage
+export class ImageComponent
 {
 	@Input( '<' ) post: Fireside_Post;
-	@Input( '<' ) onPostRemoved: Function;
 }
 

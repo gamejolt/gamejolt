@@ -2,11 +2,11 @@
 <div class="devlog-post-controls">
 
 	<div class="pull-left">
-		<a class="btn btn-outline btn-sparse"
+		<button class="btn btn-outline btn-sparse"
 			ng-click="$ctrl.isShowingComments = !$ctrl.isShowingComments"
 			>
 			<span class="jolticon jolticon-comment"></span>
-		</a>
+		</button>
 
 		<gj-fireside-post-like-widget
 			fireside-post="$ctrl.post"
@@ -16,17 +16,17 @@
 	</div>
 
 	<div class="pull-right" ng-if="::$ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
-		<a class="btn btn-success-outline" ng-if="$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT">
+		<button class="btn btn-success-outline" ng-if="$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT">
 			<span class="jolticon jolticon-add"></span>
 			Publish
-		</a>
-		<a class="btn btn-outline" ui-sref="dashboard.developer.games.manage.devlog.edit( { id: $ctrl.post.game.id, postId: $ctrl.post.id } )">
+		</button>
+		<button class="btn btn-outline" ng-click="$ctrl.showEdit()">
 			<span class="jolticon jolticon-edit"></span>
 			Edit
-		</a>
-		<a class="btn btn-outline btn-sparse" gj-popover-trigger="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
+		</button>
+		<button class="btn btn-outline btn-sparse" gj-popover-trigger="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
 			<span class="jolticon jolticon-ellipsis-h"></span>
-		</a>
+		</button>
 	</div>
 
 </div>

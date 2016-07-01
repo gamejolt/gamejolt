@@ -69,7 +69,11 @@
 			</span>
 		</button>
 
-		<button class="btn btn-outline" ng-disabled="!devlogPostForm.$valid" ng-click="onDraftSubmit()">
+		<button class="btn btn-outline"
+			ng-if="baseModel.status != Fireside_Post.STATUS_ACTIVE"
+			ng-disabled="!devlogPostForm.$valid"
+			ng-click="onDraftSubmit()"
+			>
 			<span translate>Save as Draft</span>
 		</button>
 

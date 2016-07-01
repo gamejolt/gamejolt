@@ -1,7 +1,7 @@
 import { provide } from 'ng-metadata/core';
-import { DevlogPostControls } from './controls-directive';
+import { ControlsComponent } from './controls-directive';
 
 export default angular.module( 'App.Devlog.Post.Controls', [] )
-.directive( ...provide( DevlogPostControls ) )
+.directive( ...provide( ControlsComponent ) )
 .name
 ;
