@@ -1,4 +1,4 @@
-import { Component, Input, Inject } from 'ng-metadata/core';
+import { Component, Input, Output, Inject } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
 
 @Component({
@@ -8,11 +8,11 @@ import { Fireside_Post } from './../../../../lib/gj-lib-client/components/firesi
 export class DevlogFeed
 {
 	@Input( '<devlogPosts' ) posts: Fireside_Post[];
+	@Output() onPostRemoved: Function;
 
 	constructor(
 		@Inject( 'Fireside_Post' ) private firesidePost: typeof Fireside_Post
 	)
 	{
-
 	}
 }

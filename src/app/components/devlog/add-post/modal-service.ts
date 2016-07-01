@@ -17,7 +17,6 @@ export class DevlogAddPostModal
 			template,
 			controller: 'Devlog.AddPost.ModalCtrl',
 			controllerAs: '$ctrl',
-			// size: 'sm',
 			resolve: {
 				type: () => type,
 				game: () => game,

@@ -34,7 +34,9 @@
 <!-- Options -->
 <gj-popover popover-id="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
 	<div class="list-group list-group-dark">
-		<a class="list-group-item">
+		<a class="list-group-item"
+			ng-click="$ctrl.removePost()"
+			>
 			Remove Post
 		</a>
 	</div>

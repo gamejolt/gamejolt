@@ -9,11 +9,22 @@ import { App } from './../../../../app-service';
 export class DevlogPostControls
 {
 	@Input( '<' ) post: Fireside_Post;
+	@Input( '<' ) onPostRemoved: Function;
 
 	constructor(
 		@Inject( 'App' ) private app: App,
 		@Inject( 'Fireside_Post' ) private firesidePostModel: typeof Fireside_Post
 	)
 	{
+	}
+
+	removePost()
+	{
+		this.post.remove().then( _ =>
+		{
+			if ( this.onPostRemoved ) {
+				this.onPostRemoved( { $post: this.post } );
+			}
+		} );
 	}
 }

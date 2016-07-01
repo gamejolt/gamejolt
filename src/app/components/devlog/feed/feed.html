@@ -6,12 +6,14 @@
 		<gj-devlog-post-text
 			ng-if="::post.type == $ctrl.firesidePost.TYPE_TEXT"
 			post="post"
+			on-post-removed="$ctrl.onPostRemoved"
 			>
 		</gj-devlog-post-text>
 
 		<gj-devlog-post-image
 			ng-if="::post.type == $ctrl.firesidePost.TYPE_MEDIA"
 			post="post"
+			on-post-removed="$ctrl.onPostRemoved"
 			>
 		</gj-devlog-post-image>
 

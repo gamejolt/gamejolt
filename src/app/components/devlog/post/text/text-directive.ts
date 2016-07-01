@@ -8,4 +8,5 @@ import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fir
 export class DevlogPostText
 {
 	@Input( '<' ) post: Fireside_Post;
+	@Input( '<' ) onPostRemoved: Function;
 }

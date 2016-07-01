@@ -20,22 +20,17 @@ export class ListCtrl
 		app.title = gettextCatalog.getString( 'Manage Devlog' );
 
 		this.posts = firesidePost.populate( payload.posts );
-
-		// this.currentPage = $stateParams['page'] || 1;
-		// this.perPage = payload.perPage || 0;
-		// this.totalCount = payload.newsArticlesCount || 0;
-
-		// this.commentCounts = payload.commentCounts || {};
-		// this.viewCounts = payload.viewCounts || {};
-
-		// this.newsArticles = newsArticle.populate( payload.newsArticles );
 	}
 
-	onNewPost( post: Fireside_Post )
+	onPostAdded( post: Fireside_Post )
 	{
 		if ( post.status == this.firesidePost.STATUS_ACTIVE ) {
-			this.posts.push( post );
+			this.posts.unshift( post );
 		}
-		this.showNewPost = null;
+	}
+
+	onPostRemoved( post: Fireside_Post )
+	{
+		window._.remove( this.posts, { id: post.id } );
 	}
 }

@@ -1,5 +1,6 @@
-import { Component, Inject, Input } from 'ng-metadata/core';
+import { Component, Inject, Input, Output } from 'ng-metadata/core';
 import { DevlogAddPostModal } from './modal-service';
+import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import template from './add-post.html';
 
 @Component({
@@ -9,6 +10,7 @@ import template from './add-post.html';
 export class AddPostComponent
 {
 	@Input( '<' ) game: any;
+	@Output() onAdded: Function;
 
 	constructor(
 		@Inject( 'DevlogAddPostModal' ) private modal: DevlogAddPostModal
@@ -18,6 +20,12 @@ export class AddPostComponent
 
 	showAddModal( type: string )
 	{
-		this.modal.show( this.game, type );
+		this.modal.show( this.game, type )
+			.then( ( post: Fireside_Post ) =>
+			{
+				if ( this.onAdded ) {
+					this.onAdded( { $post: post } );
+				}
+			} );
 	}
 }

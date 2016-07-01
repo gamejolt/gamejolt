@@ -1,35 +1,39 @@
+<section class="section section-has-nav fill-lightest">
+	<div class="container">
+
+		<h4 class="section-header" translate>
+			Add Post
+		</h4>
+
+		<gj-devlog-add-post
+			game="manageCtrl.game"
+			on-added="listCtrl.onPostAdded( $post )"
+			>
+		</gj-devlog-add-post>
+
+		<nav class="platform-list inline section-nav">
+			<ul>
+				<li>
+					<a class="active" translate>Posts</a>
+				</li>
+				<li>
+					<a translate>Draft Posts</a>
+				</li>
+			</ul>
+		</nav>
+
+	</div>
+</section>
+
 <div class="container">
 	<div class="row">
 		<div class="col-lg-7">
 
 			<section class="section">
 
-				<h2 class="section-header" translate>
-					New Post
-				</h2>
-
-				<gj-devlog-add-post
-					game="manageCtrl.game"
-					>
-				</gj-devlog-add-post>
-
-			</section>
-			<section class="section">
-
-				<nav class="platform-list inline">
-					<ul>
-						<li>
-							<a class="active">Feed</a>
-						</li>
-						<li>
-							<a>Draft Posts</a>
-						</li>
-					</ul>
-				</nav>
-				<br>
-
 				<gj-devlog-feed
 					devlog-posts="listCtrl.posts"
+					on-post-removed="listCtrl.onPostRemoved( $post )"
 					>
 				</gj-devlog-feed>
 
