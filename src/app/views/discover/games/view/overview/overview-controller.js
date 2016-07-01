@@ -173,4 +173,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 				_this.videoComments = _this.videoComments.concat( Comment_Video.populate( response.videos ) );
 			} );
 	};
+
+	this.onPostRemoved = function( post )
+	{
+		window._.remove( this.posts, { id: post.id } );
+	};
 } );
