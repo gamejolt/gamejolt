@@ -1,6 +1,24 @@
 <div ng-if="gameCtrl.game">
 	<gj-game-maturity-block game="gameCtrl.game">
 
+		<section class="section section-thin fill-dark"
+			ng-if="App.user.id == gameCtrl.game.developer.id"
+			>
+			<div class="container text-center">
+
+				<a class="btn btn-outline hidden-xs" ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: gameCtrl.game.id } )">
+					<span class="jolticon jolticon-chart"></span>
+					<span translate>View Analytics</span>
+				</a>
+
+				<a class="btn btn-outline" ui-sref="dashboard.developer.games.manage.game.overview( { id: gameCtrl.game.id } )">
+					<span class="jolticon jolticon-cog"></span>
+					<span translate>Manage Game</span>
+				</a>
+
+			</div>
+		</section>
+
 		<gj-page-header
 			cover-media-item="gameCtrl.game.header_media_item"
 			should-affix-nav="true"
