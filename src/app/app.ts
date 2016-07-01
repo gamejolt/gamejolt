@@ -7,6 +7,7 @@ import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 import LoadModule from './../lib/gj-lib-client/components/load/load';
 import HistoryTickModule from './../lib/gj-lib-client/components/history-tick/history-tick';
+import ModalConfirmModule from './../lib/gj-lib-client/components/modal/confirm/confirm';
 
 import CommentModule from './../lib/gj-lib-client/components/comment/comment';
 import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
@@ -115,7 +116,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Referrer',
 	HistoryTickModule,
 	'gj.Pagination',
-	'gj.Modal.Confirm',
+	ModalConfirmModule,
 	'gj.SiteSelector',
 	'gj.Favicon',
 	'gj.FadeCollapse',
