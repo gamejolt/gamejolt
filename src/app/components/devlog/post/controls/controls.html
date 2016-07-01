@@ -1,11 +1,22 @@
 <!-- Buttons -->
 <div class="devlog-post-controls">
+	<hr>
+
+	<p ng-if="$ctrl.post.comment_count">
+		<a class="link-muted"
+			translate
+			translate-n="$ctrl.post.comment_count"
+			translate-plural="{{ $count | number }} comments"
+			>
+			1 comment
+		</a>
+	</p>
 
 	<div class="pull-left">
 		<button class="btn btn-outline btn-sparse"
 			ng-click="$ctrl.isShowingComments = !$ctrl.isShowingComments"
 			>
-			<span class="jolticon jolticon-comment"></span>
+			<span class="jolticon jolticon-reply"></span>
 		</button>
 
 		<gj-fireside-post-like-widget
@@ -43,7 +54,7 @@
 </gj-popover>
 
 <!-- Comments -->
-<div gj-expand-when="$ctrl.isShowingComments">
+<div ng-if="$ctrl.isShowingComments">
 	<br>
 	<br>
 
