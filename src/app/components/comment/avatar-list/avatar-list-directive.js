@@ -18,7 +18,6 @@ angular.module( 'App.Comment.AvatarList' ).component( 'gjCommentAvatarList', {
 
 		function showPopover( $event, commentId )
 		{
-			console.log( $event );
 			// Popover.hideAll( { skip: popoverCtrl } );
 			var popover = Popover.getPopover( 'comment-avatar-list-item-' + commentId );
 			popover.trigger( angular.element( $event.target ) );
@@ -41,7 +40,6 @@ angular.module( 'App.Comment.AvatarList' ).component( 'gjCommentAvatarList', {
 			Comment.fetch( this.resource, this.resourceId, this.currentPage )
 				.then( function( payload )
 				{
-					console.log( payload );
 					// Check the hash in the URL to see if we should autoscroll to a comment.
 					// checkAutoScroll();
 

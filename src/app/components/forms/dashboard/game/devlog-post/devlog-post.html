@@ -19,6 +19,8 @@
 						form-markdown-editor
 						preview-class="fireside-post-body"
 						markdown-preview-url="/web/dash/developer/games/devlog/preview"
+						show-media-items="true"
+						media-item-type="fireside-post-image"
 						>
 					</div>
 
@@ -57,11 +59,11 @@
 		</div>
 
 		<button class="btn btn-success" ng-disabled="!devlogPostForm.$valid" ng-click="onSubmit()">
-			<span ng-if="formModel.status != Fireside_Post.STATUS_ACTIVE">
+			<span ng-if="baseModel.status != Fireside_Post.STATUS_ACTIVE">
 				<span class="jolticon jolticon-add"></span>
 				<span translate>Publish</span>
 			</span>
-			<span ng-if="formModel.status == Fireside_Post.STATUS_ACTIVE">
+			<span ng-if="baseModel.status == Fireside_Post.STATUS_ACTIVE">
 				<span class="jolticon jolticon-edit"></span>
 				<span translate>Save</span>
 			</span>

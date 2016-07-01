@@ -29,15 +29,16 @@ import GenreListModule from './components/genre/list/list';
 import GameMediaBarModule from './components/game/media-bar/media-bar';
 import ChannelsModule from './components/channel/channels';
 
-import { FiresidePostModule } from './../lib/gj-lib-client/components/fireside/post/post';
-import { FiresidePostTagModule } from './../lib/gj-lib-client/components/fireside/post/tag/tag';
-import { FiresidePostLikeModule } from './../lib/gj-lib-client/components/fireside/post/like/like';
-import { FiresidePostLikeWidgetModule } from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
+import FiresidePostModule from './../lib/gj-lib-client/components/fireside/post/post';
+import FiresidePostTagModule from './../lib/gj-lib-client/components/fireside/post/tag/tag';
+import FiresidePostLikeModule from './../lib/gj-lib-client/components/fireside/post/like/like';
+import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 
-import { DevlogFeedModule } from './components/devlog/feed/feed';
-import { DevlogPostTextModule } from './components/devlog/post/text/text';
-import { DevlogPostImageModule } from './components/devlog/post/image/image';
-import { DevlogPostControlsModule } from './components/devlog/post/controls/controls';
+import DevlogFeedModule from './components/devlog/feed/feed';
+import DevlogPostTextModule from './components/devlog/post/text/text';
+import DevlogPostImageModule from './components/devlog/post/image/image';
+import DevlogPostControlsModule from './components/devlog/post/controls/controls';
+import DevlogAddPost from './components/devlog/add-post/add-post';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -276,6 +277,7 @@ const AppModule = angular.module( 'App', [
 	DevlogPostTextModule,
 	DevlogPostImageModule,
 	DevlogPostControlsModule,
+	DevlogAddPost,
 
 	'App.Post.Grid',
 	'App.Post.List',

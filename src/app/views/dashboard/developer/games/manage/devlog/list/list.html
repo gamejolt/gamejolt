@@ -8,30 +8,10 @@
 					New Post
 				</h2>
 
-				<div>
-					<button class="btn btn-outline" ng-click="listCtrl.showNewPost = 'text'">
-						Text Post
-					</button>
-
-					<button class="btn btn-outline" ng-click="listCtrl.showNewPost = 'media'">
-						Media Post
-					</button>
-
-					<div gj-expand-when="!!listCtrl.showNewPost">
-
-						<div class="well fill-lightest">
-
-							<gj-form-dashboard-game-devlog-post
-								gj-game="manageCtrl.game"
-								post-type="listCtrl.showNewPost"
-								gj-form-submit-handler="listCtrl.onNewPost( formModel )"
-								>
-							</gj-form-dashboard-game-devlog-post>
-
-						</div>
-
-					</div>
-				</div>
+				<gj-devlog-add-post
+					game="manageCtrl.game"
+					>
+				</gj-devlog-add-post>
 
 			</section>
 			<section class="section">

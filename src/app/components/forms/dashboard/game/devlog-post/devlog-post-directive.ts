@@ -5,7 +5,7 @@ export function DevlogPostFormFactory( Form, Fireside_Post )
 		template: '/app/components/forms/dashboard/game/devlog-post/devlog-post.html'
 	} );
 
-	form.scope.game = '<gjGame';
+	form.scope.game = '<';
 	form.scope.postType = '<?';
 
 	form.onInit = function( scope )
@@ -13,17 +13,7 @@ export function DevlogPostFormFactory( Form, Fireside_Post )
 		scope.Fireside_Post = Fireside_Post;
 
 		scope.formModel.game_id = scope.game.id;
-
-		if ( scope.method == 'add' ) {
-			scope.formModel.status = Fireside_Post.STATUS_DRAFT;
-
-			scope.$watch( _ => scope.postType, _ =>
-			{
-				if ( scope.postType ) {
-					scope.formModel.type = scope.postType;
-				}
-			} );
-		}
+		scope.formModel.status = Fireside_Post.STATUS_ACTIVE;
 
 		scope.onDraftSubmit = _ =>
 		{
