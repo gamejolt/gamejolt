@@ -1,0 +1,49 @@
+<div class="devlog-post devlog-post-media">
+
+	<div class="timeline-list-item-icon">
+		<span class="jolticon jolticon-screenshot"></span>
+	</div>
+
+	<div class="timeline-list-item-main">
+
+		<div class="timeline-list-item-header has-header-img">
+
+			<a class="devlog-post-media-prev" ng-show="$ctrl.page > 1" ng-click="$ctrl.prev()">
+				<span class="jolticon jolticon-chevron-left"></span>
+			</a>
+
+			<a class="devlog-post-media-next" ng-show="$ctrl.page < $ctrl.post.media.length" ng-click="$ctrl.next()">
+				<span class="jolticon jolticon-chevron-right"></span>
+			</a>
+
+			<a class="timeline-list-item-header-img"
+				ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
+				>
+				<div ng-style="{ transform: 'translateX( ' + (($ctrl.page - 1) * -100) + '% )' }">
+					<img
+						ng-repeat="item in ::$ctrl.post.media track by item.id"
+						ng-src="{{ ::item.img_url }}"
+						alt=""
+						>
+				</div>
+			</a>
+
+			<div class="timeline-list-item-header-content">
+				<div class="timeline-list-item-time">
+					<span am-time-ago="::$ctrl.post.published_on"></span>
+				</div>
+
+				<div class="timeline-list-item-title">
+					{{ ::$ctrl.post.title }}
+				</div>
+			</div>
+		</div>
+
+		<gj-devlog-post-controls
+			post="$ctrl.post"
+			>
+		</gj-devlog-post-controls>
+
+	</div>
+
+</div>

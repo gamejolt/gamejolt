@@ -37,7 +37,7 @@ import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fire
 
 import DevlogFeedModule from './components/devlog/feed/feed';
 import DevlogPostTextModule from './components/devlog/post/text/text';
-import DevlogPostImageModule from './components/devlog/post/image/image';
+import DevlogPostMediaModule from './components/devlog/post/media/media';
 import DevlogPostControlsModule from './components/devlog/post/controls/controls';
 import DevlogPostAddModule from './components/devlog/post/add/add';
 import DevlogPostEditModule from './components/devlog/post/edit/edit';
@@ -277,7 +277,7 @@ const AppModule = angular.module( 'App', [
 
 	DevlogFeedModule,
 	DevlogPostTextModule,
-	DevlogPostImageModule,
+	DevlogPostMediaModule,
 	DevlogPostControlsModule,
 	DevlogPostAddModule,
 	DevlogPostEditModule,

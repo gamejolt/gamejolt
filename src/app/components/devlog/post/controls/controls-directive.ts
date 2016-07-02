@@ -3,10 +3,11 @@ import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fir
 import { App } from './../../../../app-service';
 import { DevlogPostEdit } from './../edit/edit-service';
 import { FeedComponent } from './../../feed/feed-directive';
+import template from './controls.html';
 
 @Component({
 	selector: 'gj-devlog-post-controls',
-	templateUrl: '/app/components/devlog/post/controls/controls.html',
+	template,
 })
 export class ControlsComponent
 {

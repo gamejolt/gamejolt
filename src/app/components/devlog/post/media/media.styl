@@ -1,0 +1,52 @@
+.devlog-post-media
+
+	&-prev
+	&-next
+		display: none
+		position: absolute
+		top: 50%
+		height: 50px
+		width: @height
+		line-height: 50px
+		margin-top: -25px
+		color: $white
+		text-align: center
+		background-color: $gray-darker
+		z-index: 2
+		user-select: none
+
+		&:hover
+			color: $gj-green
+
+	&-prev
+		left: 0
+
+	&-next
+		right: 0
+
+	.timeline-list-item-header-content
+	.timeline-list-item-header-img
+		transition: opacity 400ms
+
+	.timeline-list-item-header-img
+		white-space: nowrap
+
+		> div
+			transition: transform 300ms $strong-ease-out
+
+		img
+			display: inline-block
+			vertical-align: top
+			border-left: 1px solid $white
+			broder-right: 1px solid $white
+
+	.timeline-list-item-header:hover
+		.timeline-list-item-header-content
+			opacity: 0
+
+		.timeline-list-item-header-img
+			opacity: 1
+
+		.devlog-post-media-prev
+		.devlog-post-media-next
+			display: block

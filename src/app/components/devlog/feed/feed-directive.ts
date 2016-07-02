@@ -24,7 +24,7 @@ export class FeedComponent
 		// Keep our post list in sync with parent.
 		$scope.$watchCollection( _ => this.posts, _ =>
 		{
-			this._posts = this.posts.map( item => item );
+			this._posts = (this.posts || []).map( item => item );
 		} );
 	}
 

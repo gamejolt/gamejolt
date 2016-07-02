@@ -1,9 +1,10 @@
 import { Component, Input } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import template from './text.html';
 
 @Component({
 	selector: 'gj-devlog-post-text',
-	templateUrl: '/app/components/devlog/post/text/text.html',
+	template,
 })
 export class TextComponent
 {

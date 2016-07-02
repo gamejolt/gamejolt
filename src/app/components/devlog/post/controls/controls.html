@@ -12,32 +12,34 @@
 		</a>
 	</p>
 
-	<div class="pull-left">
-		<button class="btn btn-outline btn-sparse"
-			ng-click="$ctrl.isShowingComments = !$ctrl.isShowingComments"
-			>
-			<span class="jolticon jolticon-reply"></span>
-		</button>
+	<div class="clearfix">
+		<div class="pull-left">
+			<button class="btn btn-outline btn-sparse"
+				ng-click="$ctrl.isShowingComments = !$ctrl.isShowingComments"
+				>
+				<span class="jolticon jolticon-reply"></span>
+			</button>
 
-		<gj-fireside-post-like-widget
-			fireside-post="$ctrl.post"
-			no-avatars="true"
-			>
-		</gj-fireside-post-like-widget>
-	</div>
+			<gj-fireside-post-like-widget
+				fireside-post="$ctrl.post"
+				no-avatars="true"
+				>
+			</gj-fireside-post-like-widget>
+		</div>
 
-	<div class="pull-right" ng-if="::$ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
-		<button class="btn btn-success-outline" ng-if="$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT">
-			<span class="jolticon jolticon-add"></span>
-			Publish
-		</button>
-		<button class="btn btn-outline" ng-click="$ctrl.showEdit()">
-			<span class="jolticon jolticon-edit"></span>
-			Edit
-		</button>
-		<button class="btn btn-outline btn-sparse" gj-popover-trigger="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
-			<span class="jolticon jolticon-ellipsis-h"></span>
-		</button>
+		<div class="pull-right" ng-if="::$ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
+			<button class="btn btn-success-outline" ng-if="$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT">
+				<span class="jolticon jolticon-add"></span>
+				Publish
+			</button>
+			<button class="btn btn-outline" ng-click="$ctrl.showEdit()">
+				<span class="jolticon jolticon-edit"></span>
+				Edit
+			</button>
+			<button class="btn btn-outline btn-sparse" gj-popover-trigger="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
+				<span class="jolticon jolticon-ellipsis-h"></span>
+			</button>
+		</div>
 	</div>
 
 </div>

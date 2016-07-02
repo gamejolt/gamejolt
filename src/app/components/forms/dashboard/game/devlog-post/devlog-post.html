@@ -31,7 +31,7 @@
 
 			<div ng-switch-when="media">
 				<form-group name="file"
-					label="{{ 'Upload Image' | translate }}"
+					label="{{ 'Upload Media' | translate }}"
 					>
 
 					<p class="help-block" translate>dash.forms.image_filetype_help_html</p>
@@ -42,6 +42,7 @@
 					<gj-form-upload-control
 						form-control="upload"
 						accept=".png,.jpg,.jpeg,.gif"
+						multiple
 						>
 					</gj-form-upload-control>
 
