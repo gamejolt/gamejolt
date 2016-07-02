@@ -3,9 +3,11 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, User, Environment,
 	Jam,
 	Comment_Video,
+	DevlogFeedService, History,
 	Api, Payload, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
 {
 	var _this = this;
+	var wasHistoricalView = History.inHistorical;
 
 	$scope.Game = Game;
 
@@ -90,9 +92,14 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			} );
 		}
 
-		this.posts = Fireside_Post.populate( payload.posts ) || [];
+		if ( wasHistoricalView ) {
+			this.posts = DevlogFeedService.fetch();
+		}
+		else {
+			this.posts = DevlogFeedService.bootstrap( Fireside_Post.populate( payload.posts ) );
+		}
+
 		this.songs = Game_Song.populate( payload.songs );
-		// this.latestArticles = Game_NewsArticle.populate( payload.latestArticles );
 		this.recommendedGames = Game.populate( payload.recommendedGames );
 		this.supporters = User.populate( payload.supporters );
 		this.videoComments = Comment_Video.populate( payload.videoComments );
@@ -171,6 +178,18 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			.then( function( response )
 			{
 				_this.videoComments = _this.videoComments.concat( Comment_Video.populate( response.videos ) );
+			} );
+	};
+
+	this.loadMorePosts = function()
+	{
+		var _this = this;
+		var lastPost = this.posts[ this.posts.length - 1 ];
+		Api.sendRequest( '/web/discover/games/posts/' + $stateParams.id + '/' + lastPost.id )
+			.then( function( response )
+			{
+				_this.posts = _this.posts.concat( Fireside_Post.populate( response.posts ) );
+				DevlogFeedService.store( _this.posts );
 			} );
 	};
 

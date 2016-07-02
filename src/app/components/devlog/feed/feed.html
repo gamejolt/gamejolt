@@ -7,6 +7,8 @@
 	-->
 	<div class="devlog-feed-item timeline-list-item anim-fade-in-right no-animate-leave stagger"
 		ng-repeat="post in $ctrl._posts track by post.id + '-' + post.updated_on"
+		id="devlog-feed-post-{{ ::post.id }}"
+		in-view="$ctrl.onPostInViewChange( $inview, post )"
 		>
 
 		<gj-devlog-post-text

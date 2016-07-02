@@ -18,6 +18,7 @@
 
 			<a class="timeline-list-item-header-img"
 				ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
+				ng-click="$ctrl.onPostClick()"
 				>
 				<div ng-style="{ transform: 'translateX( ' + (($ctrl.page - 1) * -100) + '% )' }">
 					<img

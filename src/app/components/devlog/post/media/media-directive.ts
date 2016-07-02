@@ -1,5 +1,6 @@
-import { Component, Input } from 'ng-metadata/core';
+import { Component, Input, Inject } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { DevlogFeedService } from './../../feed/feed-service';
 import template from './media.html'
 
 @Component({
@@ -12,6 +13,12 @@ export class MediaComponent
 
 	@Input( '<' ) post: Fireside_Post;
 
+	constructor(
+		@Inject( 'DevlogFeedService' ) private feedService: DevlogFeedService
+	)
+	{
+	}
+
 	next()
 	{
 		++this.page;
@@ -20,6 +27,11 @@ export class MediaComponent
 	prev()
 	{
 		--this.page;
+	}
+
+	onPostClick()
+	{
+		this.feedService.setActive( this.post.id );
 	}
 }
 

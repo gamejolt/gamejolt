@@ -8,6 +8,7 @@
 
 		<a class="timeline-list-item-header"
 			ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
+			ng-click="$ctrl.onPostClick()"
 			>
 			<div class="timeline-list-item-header-content">
 				<div class="timeline-list-item-time">
