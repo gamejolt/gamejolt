@@ -14,10 +14,21 @@
 		<nav class="platform-list inline section-nav">
 			<ul>
 				<li>
-					<a class="active" translate>Posts</a>
+					<a ng-click="listCtrl.tab = 'active'"
+						ng-class="{ active: listCtrl.tab == 'active' }"
+						translate
+						>
+						Posts
+					</a>
 				</li>
 				<li>
-					<a translate>Draft Posts</a>
+					<a ng-click="listCtrl.tab = 'draft'"
+						ng-class="{ active: listCtrl.tab == 'draft' }"
+						translate
+						>
+						Draft Posts
+						<span class="badge">{{ listCtrl.draftPosts.length || 0 | number }}</span>
+					</a>
 				</li>
 			</ul>
 		</nav>
@@ -31,7 +42,8 @@
 			<div class="col-lg-7">
 
 				<gj-devlog-feed
-					devlog-posts="listCtrl.posts"
+					devlog-posts="listCtrl.tab == 'active' ? listCtrl.posts : listCtrl.draftPosts"
+					on-post-published="listCtrl.onPostPublished( $post )"
 					on-post-removed="listCtrl.onPostRemoved( $post )"
 					>
 				</gj-devlog-feed>

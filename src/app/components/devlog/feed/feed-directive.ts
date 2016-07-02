@@ -15,6 +15,7 @@ export class FeedComponent
 
 	@Output( '?onPostRemoved' ) private _onPostRemoved: Function;
 	@Output( '?onPostEdited' ) private _onPostEdited: Function;
+	@Output( '?onPostPublished' ) private _onPostPublished: Function;
 
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
@@ -39,6 +40,13 @@ export class FeedComponent
 
 		if ( this._onPostEdited ) {
 			this._onPostEdited( { $post: post } );
+		}
+	}
+
+	onPostPublished( post: Fireside_Post )
+	{
+		if ( this._onPostPublished ) {
+			this._onPostPublished( { $post: post } );
 		}
 	}
 

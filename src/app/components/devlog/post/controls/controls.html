@@ -2,18 +2,20 @@
 <div class="devlog-post-controls">
 	<hr>
 
-	<p ng-if="$ctrl.post.comment_count">
-		<a class="link-muted"
-			translate
-			translate-n="$ctrl.post.comment_count"
-			translate-plural="{{ $count | number }} comments"
-			>
-			1 comment
-		</a>
-	</p>
+	<div ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_ACTIVE">
+		<p ng-if="$ctrl.post.comment_count">
+			<a class="link-muted"
+				translate
+				translate-n="$ctrl.post.comment_count"
+				translate-plural="{{ $count | number }} comments"
+				>
+				1 comment
+			</a>
+		</p>
+	</div>
 
 	<div class="clearfix">
-		<div class="pull-left">
+		<div class="pull-left" ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_ACTIVE">
 			<button class="btn btn-outline btn-sparse"
 				ng-click="$ctrl.isShowingComments = !$ctrl.isShowingComments"
 				>
@@ -28,13 +30,13 @@
 		</div>
 
 		<div class="pull-right" ng-if="::$ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
-			<button class="btn btn-success-outline" ng-if="$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT">
-				<span class="jolticon jolticon-add"></span>
-				Publish
+			<button class="btn btn-success-outline" ng-if="$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT" ng-click="$ctrl.publishPost()">
+				<span class="jolticon jolticon-check"></span>
+				<span translate>Publish</span>
 			</button>
 			<button class="btn btn-outline" ng-click="$ctrl.showEdit()">
 				<span class="jolticon jolticon-edit"></span>
-				Edit
+				<span translate>Edit</span>
 			</button>
 			<button class="btn btn-outline btn-sparse" gj-popover-trigger="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
 				<span class="jolticon jolticon-ellipsis-h"></span>
@@ -47,10 +49,11 @@
 <!-- Options -->
 <gj-popover popover-id="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
 	<div class="list-group list-group-dark">
-		<a class="list-group-item"
+		<a class="list-group-item danger"
 			ng-click="$ctrl.removePost()"
 			>
-			Remove Post
+			<span class="jolticon jolticon-remove"></span>
+			<span translate>Remove Post</span>
 		</a>
 	</div>
 </gj-popover>

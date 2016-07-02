@@ -30,6 +30,14 @@ export class ControlsComponent
 		} );
 	}
 
+	publishPost()
+	{
+		this.post.$publish().then( _ =>
+		{
+			this.feed.onPostPublished( this.post );
+		} );
+	}
+
 	removePost()
 	{
 		this.post.remove().then( _ =>
