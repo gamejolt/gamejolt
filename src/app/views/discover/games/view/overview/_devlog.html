@@ -1,3 +1,13 @@
+<section class="section section-thin" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-7 col-lg-offset-2">
+				<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+		</div>
+	</div>
+</section>
+
 <section class="section" style="padding-bottom: 0">
 	<div class="container">
 
@@ -17,6 +27,45 @@
 			</div>
 		</div>
 
+	</div>
+</section>
+
+<section class="section" style="padding-bottom: 0"
+	ng-if="(gameCtrl.game._has_packages && !overviewCtrl.isLoaded) || overviewCtrl.hasReleasesSection"
+	>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<h4 class="section-header text-right">Releases</h4>
+			</div>
+			<div class="col-lg-7">
+
+				<div gj-lazy-placeholder="overviewCtrl.isLoaded">
+					<div class="lazy-placeholder" style="height: 135px"></div>
+
+					<div ng-if="::overviewCtrl.packages.length">
+						<gj-game-package-card
+							ng-repeat="package in overviewCtrl.packages"
+							game="::gameCtrl.game"
+							sellable="::package._sellable"
+							game-package="::package"
+							game-releases="::package._releases"
+							game-builds="::package._builds"
+							game-build-launch-options="::overviewCtrl.launchOptions"
+							>
+						</gj-game-package-card>
+					</div>
+
+					<gj-game-soundtrack-card
+						ng-if="::overviewCtrl.songs.length"
+						game-soundtrack-card-game="::gameCtrl.game"
+						game-soundtrack-card-songs="::overviewCtrl.songs"
+						>
+					</gj-game-soundtrack-card>
+				</div>
+
+			</div>
+		</div>
 	</div>
 </section>
 
@@ -50,7 +99,7 @@
 	</div>
 </section>
 
-<div class="devlog-description-cut">
+<div class="page-cut">
 	<div ng-if="overviewCtrl.canToggleDescription">
 		<button class="btn btn-outline"
 			ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"
@@ -62,6 +111,16 @@
 		</button>
 	</div>
 </div>
+
+<section class="section section-thin" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-7 col-lg-offset-2">
+				<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+		</div>
+	</div>
+</section>
 
 <section class="section" style="overflow: hidden">
 	<div class="container">
