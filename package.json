@@ -44,6 +44,7 @@
     "gulp-util": "~3.0.0",
     "gulp-wrapper": "^0.1.5",
     "gulp-zip": "2.0.2",
+    "lodash-es": "^4.13.1",
     "merge-stream": "^1.0.0",
     "minimist": "~0.2.0",
     "mv": "^2.1.1",
