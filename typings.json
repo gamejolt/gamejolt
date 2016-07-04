@@ -13,8 +13,5 @@
     "moment-node": "registry:dt/moment-node#2.11.1+20160511043338",
     "oclazyload": "registry:dt/oclazyload#0.0.0+20160317120654",
     "stripe": "registry:dt/stripe#0.0.0+20160417145414"
-  },
-  "dependencies": {
-    "lodash": "registry:npm/lodash#4.0.0+20160416211519"
   }
 }
