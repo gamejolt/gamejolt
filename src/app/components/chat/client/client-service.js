@@ -685,7 +685,11 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 		}
 
 		if ( this.checkRoomMutedState( this.room.id ) ) {
-			this.sendRoboJolt( this.room.id, '*Beep boop bop.* You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. *Bzzzzzzzzt.*' );
+			this.sendRoboJolt(
+				this.room.id,
+				'*Beep boop bop.* You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. *Bzzzzzzzzt.*',
+				'<p><em>Beep boop bop.</em> You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. <em>Bzzzzzzzzt.</em></p>'
+			);
 			this.sendingMessage = false;
 			return;
 		}
@@ -694,7 +698,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 		this.primus.write( { event: 'message', content: message, roomId: this.room.id } );
 	}
 
-	ChatClient.prototype.sendRoboJolt = function( roomId, messageContent )
+	ChatClient.prototype.sendRoboJolt = function( roomId, contentRaw, content )
 	{
 		var message = {
 			id: Math.random(),
@@ -707,7 +711,8 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 				imgAvatar: 'https://secure.gravatar.com/avatar/eff6eb6a79a34774e8f94400931ce6c9?s=200&r=pg&d=https%3A%2F%2Fb6d3e9q9.ssl.hwcdn.net%2Fimg%2Fno-avatar-3.png',
 			},
 			roomId: roomId,
-			content: messageContent,
+			contentRaw: contentRaw,
+			content: content,
 			loggedOn: Date.now(),
 		};
 
