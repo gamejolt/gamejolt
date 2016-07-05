@@ -18,6 +18,8 @@ export class DevlogPostEdit
 			controller: 'Devlog.Post.EditModalCtrl',
 			controllerAs: '$ctrl',
 			resolve: {
+				// They may load this on the game page without having dash stuff loaded in yet.
+				init: [ '$ocLazyLoad', $ocLazyLoad => $ocLazyLoad.load( '/app/modules/dash.js' ) ],
 				post: () => post,
 			},
 		} );
