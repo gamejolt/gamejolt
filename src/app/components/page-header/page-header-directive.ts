@@ -21,9 +21,19 @@ export class PageHeaderComponent
 	@Input( '<?' ) coverMaxHeight: number;
 	@Input( '<?' ) shouldAffixNav: boolean;
 
+	hasCoverButtons = false;
+	hasSpotlight = false;
+	hasNav = false;
+	hasControls = false;
+
 	constructor(
+		@Inject( '$transclude' ) $transclude: any,
 		@Inject( 'Screen' ) private screen: Screen
 	)
 	{
+		this.hasCoverButtons = $transclude.isSlotFilled( 'coverButtons' );
+		this.hasSpotlight = $transclude.isSlotFilled( 'spotlight' );
+		this.hasNav = $transclude.isSlotFilled( 'nav' );
+		this.hasControls = $transclude.isSlotFilled( 'controls' );
 	}
 }

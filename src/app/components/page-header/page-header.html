@@ -11,28 +11,37 @@
 			>
 		</gj-media-item-cover>
 
-		<div class="page-header-cover-buttons" ng-transclude="coverButtons"></div>
+		<div class="page-header-cover-buttons"
+			ng-if=":$ctrl.hasCoverButtons"
+			ng-transclude="coverButtons"
+			>
+		</div>
 
 		<div class="container">
 
 			<div class="page-header-content" ng-transclude="content"></div>
-			<div class="page-header-spotlight" ng-transclude="spotlight"></div>
+
+			<div class="page-header-spotlight"
+				ng-if="::$ctrl.hasSpotlight"
+				ng-transclude="spotlight"
+				>
+			</div>
 
 		</div>
 	</section>
 
-	<div gj-auto-scroll-anchor>
+	<div ng-if="::$ctrl.hasNav" gj-auto-scroll-anchor>
 		<section class="section page-header-nav"
 			gj-scroll-affix
-			should-affix="$ctrl.shouldAffixNav && Screen.isLg && Screen.height > 750"
+			should-affix="$ctrl.shouldAffixNav && $ctrl.screen.isLg && $ctrl.screen.height > 750"
 			>
 			<div class="container">
 
 				<div class="row">
-					<div class="col-md-4 col-md-push-8 ">
+					<div ng-if="::$ctrl.hasControls" class="col-md-4 col-md-push-8">
 						<div class="page-header-controls" ng-transclude="controls"></div>
 					</div>
-					<div class="col-md-8 col-md-pull-4">
+					<div ng-class="::{ 'col-md-8 col-md-pull-4': $ctrl.hasControls, 'col-xs-12': !$ctrl.hasControls }">
 						<div ng-transclude="nav"></div>
 					</div>
 				</div>
