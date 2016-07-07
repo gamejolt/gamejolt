@@ -46,52 +46,66 @@
 						<gj-editable-accordion-item
 							ng-repeat="trophy in listCtrl.groupedTrophies[ difficulty ]"
 							id="trophy-container-{{ trophy.id }}"
-							ng-class="{ inactive: !trophy.visible }"
+							is-inactive="!trophy.visible"
 							ui-tree-node
 							>
 
 							<gj-editable-accordion-item-heading>
 
-								<!--
-									Since the trophy thumbnail directive bind-onces, we do this so that it refreshes the DOM
-									when the trophy thumbnail changes.
-								-->
-								<div ng-repeat="_trophyRefresh in [ trophy.img_thumbnail ]">
-									<gj-trophy-thumbnail trophy-thumbnail-trophy="trophy"></gj-trophy-thumbnail>
-								</div>
+								<div class="row">
+									<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
 
-								<div class="stats">
-									<div class="stat-big">
-										<div class="stat-big-label">{{ ::'dash.games.trophies.trophy_id_label' | translate }}</div>
-										<div class="stat-big-digit">{{ trophy.id }}</div>
+										<!--
+											Since the trophy thumbnail directive bind-onces, we do this so that it refreshes the DOM
+											when the trophy thumbnail changes.
+										-->
+										<div ng-repeat="_trophyRefresh in [ trophy.img_thumbnail ]">
+											<gj-trophy-thumbnail trophy-thumbnail-trophy="trophy"></gj-trophy-thumbnail>
+										</div>
+
+										<br class="visible-xs">
+
 									</div>
-								</div>
 
-								<div class="trophy-list-body">
-									<h5 class="editable-accordion-item-heading-title">{{ trophy.title }}</h5>
-									<p class="editable-accordion-item-heading-description">{{ trophy.description }}</p>
+									<div class="col-xs-12 col-sm-10">
 
-									<div class="trophy-list-tags" ng-if="!trophy.visible || trophy.secret">
-										<span ng-if="!trophy.visible" class="tag tag-pink" tooltip="{{ 'dash.games.trophies.hidden_tooltip' | translate }}">{{ ::'dash.games.trophies.hidden_tag' | translate }}</span>
-										<span ng-if="trophy.secret" class="tag" tooltip="{{ 'dash.games.trophies.secret_tooltip' | translate }}">{{ ::'dash.games.trophies.secret_tag' | translate }}</span>
+										<a class="card-remove" ng-click="listCtrl.removeTrophy( trophy ); $event.stopPropagation()">
+											<span class="jolticon jolticon-remove"></span>
+										</a>
+
+										<div class="card-stats">
+											<div class="stat-big">
+												<div class="stat-big-label">{{ ::'dash.games.trophies.trophy_id_label' | translate }}</div>
+												<div class="stat-big-digit">{{ trophy.id }}</div>
+											</div>
+										</div>
+
+										<div class="card-title">
+											<h5>{{ trophy.title }}</h5>
+										</div>
+
+										<div class="card-content">
+											{{ trophy.description }}
+										</div>
+
+										<div class="card-meta" ng-if="!trophy.visible || trophy.secret">
+											<span ng-if="!trophy.visible" class="tag tag-pink" tooltip="{{ 'dash.games.trophies.hidden_tooltip' | translate }}">{{ ::'dash.games.trophies.hidden_tag' | translate }}</span>
+											<span ng-if="trophy.secret" class="tag" tooltip="{{ 'dash.games.trophies.secret_tooltip' | translate }}">{{ ::'dash.games.trophies.secret_tag' | translate }}</span>
+										</div>
+
 									</div>
 								</div>
 
 							</gj-editable-accordion-item-heading>
 
 							<gj-editable-accordion-item-body>
-								<div class="buttons clearfix">
-									<a class="i-button big warning pull-right" ng-click="listCtrl.removeTrophy( trophy )">
-										<span class="jolticon jolticon-remove"></span>
-										{{ ::'dash.games.trophies.remove_button' | translate }}
-									</a>
-								</div>
 
 								<gj-form-dashboard-game-trophy
 									gj-game="manageCtrl.game"
 									gj-game-trophy="trophy"
 									gj-form-submit-handler="listCtrl.onTrophyEdited( formModel )">
 								</gj-form-dashboard-game-trophy>
+
 							</gj-editable-accordion-item-body>
 
 						</gj-editable-accordion-item>

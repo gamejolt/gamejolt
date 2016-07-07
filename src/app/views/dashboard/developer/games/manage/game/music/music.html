@@ -10,7 +10,8 @@
 		<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
 			<gj-editable-accordion
 				is-adding="musicCtrl.isAdding"
-				active-item="musicCtrl.activeItem">
+				active-item="musicCtrl.activeItem"
+				>
 
 				<div ui-tree="{ dropped: musicCtrl.onSongsSorted }"
 					ui-tree-nodes
@@ -20,25 +21,32 @@
 					<!-- track by ID was breaking -->
 					<gj-editable-accordion-item
 						ng-repeat="song in musicCtrl.songs"
-						ui-tree-node>
+						ui-tree-node
+						>
 
 						<gj-editable-accordion-item-heading>
-							{{ song.title }}
+
+							<a class="card-remove" ng-click="musicCtrl.removeSong( song ); $event.stopPropagation()">
+								<span class="jolticon jolticon-remove"></span>
+							</a>
+
+							<div class="card-title">
+								<h5>
+									{{ song.title }}
+								</h5>
+							</div>
+
 						</gj-editable-accordion-item-heading>
 
 						<gj-editable-accordion-item-body>
-							<div class="buttons clearfix">
-								<a class="btn btn-danger-outline pull-right" ng-click="musicCtrl.removeSong( song )">
-									<span class="jolticon jolticon-remove"></span>
-									{{ ::'dash.games.music.remove_button' | translate }}
-								</a>
-							</div>
 
 							<gj-form-dashboard-game-song
 								gj-game="manageCtrl.game"
 								gj-game-song="song"
-								gj-form-submit-handler="musicCtrl.onSongEdited( formModel )">
+								gj-form-submit-handler="musicCtrl.onSongEdited( formModel )"
+								>
 							</gj-form-dashboard-game-song>
+
 						</gj-editable-accordion-item-body>
 
 					</gj-editable-accordion-item>

@@ -35,7 +35,7 @@
 					>
 
 					<!-- track by ID was breaking -->
-					<gj-card class="card-list-item-anim"
+					<gj-card
 						ng-repeat="package in listCtrl.packages"
 						is-draggable="listCtrl.packages.length > 1"
 						ui-tree-node
@@ -50,7 +50,7 @@
 
 						<div class="card-title">
 							<h4>
-								<a class="link-unstyled" ui-sref="dashboard.developer.games.manage.game.packages.edit( { packageId: package.id } )">
+								<a ui-sref="dashboard.developer.games.manage.game.packages.edit( { packageId: package.id } )">
 									{{ package.title || manageCtrl.game.title }}
 								</a>
 							</h4>

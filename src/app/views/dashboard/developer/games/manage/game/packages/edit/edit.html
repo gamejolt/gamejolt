@@ -121,10 +121,7 @@
 
 			<div ng-if="editCtrl.releases.length">
 
-				<gj-card
-					class="card-list-item-anim"
-					ng-repeat="release in editCtrl.releases track by release.id"
-					>
+				<gj-card ng-repeat="release in editCtrl.releases track by release.id">
 
 					<a class="card-remove" ng-click="editCtrl.removeRelease( release )">
 						<span class="jolticon jolticon-remove"></span>
@@ -132,7 +129,7 @@
 
 					<div class="card-title">
 						<h4>
-							<a class="link-unstyled" ui-sref="dashboard.developer.games.manage.game.packages.release.edit( { packageId: editCtrl.package.id, releaseId: release.id } )">
+							<a ui-sref="dashboard.developer.games.manage.game.packages.release.edit( { packageId: editCtrl.package.id, releaseId: release.id } )">
 								{{ ::release.version_number }}
 							</a>
 						</h4>
