@@ -1,5 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { Meta } from './../lib/gj-lib-client/components/meta/meta-service';
+import { ModalConfirm } from './../lib/gj-lib-client/components/modal/confirm/confirm-service';
 
 @Injectable()
 export class App
@@ -14,9 +15,9 @@ export class App
 		@Inject( '$injector' ) private $injector: any,
 		@Inject( '$q' ) private $q: ng.IQService,
 		@Inject( '$document' ) private $document: ng.IDocumentService,
-		@Inject( 'Chat' ) private Chat: any,
-		@Inject( 'ModalConfirm' ) private ModalConfirm: any,
-		@Inject( 'Growls' ) private Growls: any,
+		@Inject( 'Chat' ) private chat: any,
+		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
+		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'Meta' ) private meta: Meta
 	)
 	{
@@ -31,7 +32,7 @@ export class App
 		} );
 
 		// Connect to chat.
-		Chat.connect();
+		chat.connect();
 	}
 
 	get title() { return this.meta.title; }
@@ -41,26 +42,27 @@ export class App
 	{
 		return this.$q( ( resolve, reject ) =>
 		{
-			this.ModalConfirm.show( 'Are you seriously going to leave us?', 'Really?', 'yes' ).then( _ =>
+			this.modalConfirm.show( 'Are you seriously going to leave us?', 'Really?', 'yes' ).then( _ =>
 			{
 				// Must send POST.
-				this.$injector.get( 'Api' ).sendRequest( '/web/dash/account/logout', {} ).then( _ =>
-				{
-					// We go to the homepage currently just in case they're in a view they shouldn't be.
-					this.$state.go( 'discover.home' );
+				this.$injector.get( 'Api' ).sendRequest( '/web/dash/account/logout', {} )
+					.then( _ =>
+					{
+						// We go to the homepage currently just in case they're in a view they shouldn't be.
+						this.$state.go( 'discover.home' );
 
-					// Log out of chat. This will notify other tabs to disconnect from the server too.
-					this.Chat.client.logOut();
+						// Log out of chat. This will notify other tabs to disconnect from the server too.
+						this.chat.client.logOut();
 
-					this.Growls.success( 'You are now logged out.', 'Goodbye!' );
-					resolve();
-				} )
-				.catch( err =>
-				{
-					console.error( err );
-					this.Growls.error( 'Could not log you out.' );
-					reject();
-				} );
+						this.growls.success( 'You are now logged out.', 'Goodbye!' );
+						resolve();
+					} )
+					.catch( err =>
+					{
+						console.error( err );
+						this.growls.error( 'Could not log you out.' );
+						reject();
+					} );
 			} );
 		} );
 	}

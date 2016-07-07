@@ -1,58 +1,6 @@
 <div class="row">
 	<div class="col-lg-8">
 
-		<h2>{{ ::'dash.games.overview.todo_heading' | translate }}</h2>
-
-		<p class="small" translate translate-params-completion="overviewCtrl.todoPercentage">dash.games.overview.todo_lead_html</p>
-
-		<div class="progress progress-thin">
-			<div class="progress-bar"
-				ng-repeat="todoItem in overviewCtrl.todoItems"
-				ng-style="{ width: todoItem.percentage + '%' }"
-				ng-if="todoItem.status"
-				tooltip="{{ todoItem.progressLabel }}"></div>
-		</div>
-
-		<!--
-			We only show todo steps if they didn't finish them all.
-		-->
-		<div ng-if="todoPercentage != 100">
-
-			<div class="alert alert-info" ng-if="manageCtrl.game.is_published" translate>dash.games.overview.todo_additional_html</div>
-
-			<table class="table">
-				<tbody>
-					<tr
-						ng-repeat="todoItem in overviewCtrl.todoItems"
-						ng-if="(!manageCtrl.game.is_published && todoItem.level != 'additional') || (manageCtrl.game.is_published && !todoItem.status)"
-						>
-						<td style="width: 1px">
-							<span class="jolticon jolticon-check" ng-class="todoItem.status ? 'active' : 'text-muted'"></span>
-						</td>
-						<td>
-							<span ng-if="todoItem.status" class="tag tag-active pull-right">
-								<span class="jolticon jolticon-check"></span>
-								{{ ::'dash.games.overview.todo_done' | translate }}
-							</span>
-							<span ng-if="todoItem.level && !todoItem.status && todoItem.level != 'additional'" class="tag pull-right" ng-class="{ 'tag-pink': todoItem.level == 'required' }">
-								<span ng-if="todoItem.level == 'required'">{{ ::'dash.games.overview.todo_required' | translate }}</span>
-								<span ng-if="todoItem.level == 'recommended' && !manageCtrl.game.is_published">{{ ::'dash.games.overview.todo_recommended' | translate }}</span>
-								<span ng-if="todoItem.level == 'recommended' && manageCtrl.game.is_published">{{ ::'dash.games.overview.todo_highly_recommended' | translate }}</span>
-							</span>
-							<a class="link-unstyled" ng-href="{{ todoItem.href }}">
-								{{ todoItem.title }}
-							</a>
-							<span ng-if="todoItem.meta">
-								<br>
-								<span class="small text-muted">{{ todoItem.meta }}</span>
-							</span>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-
-		</div>
-
 		<div gj-expand-when="!manageCtrl.game.is_published">
 
 			<!-- Game isn't ready to publish yet. -->

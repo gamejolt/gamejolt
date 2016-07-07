@@ -22,8 +22,8 @@ angular.module( 'App.Client.LocalDb' )
 			'id',
 			'title',
 			'slug',
-			'img_thumbnail',
-			'img_header',
+			'thumbnail_media_item',
+			'header_media_item',
 			'compatibility',
 			'modified_on',
 		] );

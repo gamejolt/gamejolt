@@ -1,13 +1,14 @@
 <div class="row">
-	<div class="col-md-10">
-
+	<div class="col-sm-4 col-sm-push-8">
 		<div class="page-help">
 			<div translate>dash.games.thumbnail.page_help_html</div>
 			<p>
 				<a class="link-help" href="https://help.gamejolt.com/dev-thumbnails" target="_blank">{{ ::'dash.games.thumbnail.page_help_link' | translate }}</a>
 			</p>
 		</div>
+	</div>
 
+	<div class="col-sm-8 col-sm-pull-4">
 		<gj-form-dashboard-game-thumbnail
 			gj-game="manageCtrl.game"
 			is-wizard="manageCtrl.isWizard"
@@ -16,9 +17,10 @@
 		</gj-form-dashboard-game-thumbnail>
 
 		<div ng-if="manageCtrl.isWizard">
-			<gj-form-dashboard-game-wizard-controls>
+			<gj-form-dashboard-game-wizard-controls
+				can-proceed="!!manageCtrl.game.thumbnail_media_item"
+				>
 			</gj-form-dashboard-game-wizard-controls>
 		</div>
-
 	</div>
 </div>

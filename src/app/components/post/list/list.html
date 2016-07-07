@@ -5,7 +5,7 @@
 
 		<div class="col-sm-3 col-lg-4 post-item-thumb">
 			<a class="full-bleed-xs" ui-sref="discover.games.view.news.view( { id: post.game_id, slug: post.game.slug, articleSlug: post.slug, articleId: post.id } )">
-				<img gj-img-responsive="{{ ::post.game.img_thumbnail }}" alt="">
+				<img gj-img-responsive="{{ ::post.game.thumbnail_media_item.mediaserver_url }}" alt="">
 			</a>
 		</div>
 		<div class="col-sm-9 col-lg-8">

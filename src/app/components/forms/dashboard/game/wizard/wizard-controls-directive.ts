@@ -1,4 +1,4 @@
-import { Component, Output, Inject, SkipSelf, Optional } from 'ng-metadata/core';
+import { Component, Input, Output, Inject, SkipSelf, Optional } from 'ng-metadata/core';
 import { FormDashboardGameWizard } from './wizard-service';
 import template from './wizard-controls.html';
 
@@ -8,6 +8,7 @@ import template from './wizard-controls.html';
 })
 export class WizardControlsComponent
 {
+	@Input( '<' ) canProceed: boolean;
 	@Output() onNext: Function;
 
 	inForm: boolean;

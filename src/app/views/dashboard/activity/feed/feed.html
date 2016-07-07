@@ -1,0 +1,66 @@
+<section class="section" style="overflow: hidden">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-7 col-lg-offset-2">
+
+				<gj-activity-feed
+					notifications="feedCtrl.notifications"
+					>
+				</gj-activity-feed>
+
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<!--<div class="clearfix">
+
+	<div ng-class="{ 'pull-right': !Screen.isXs }">
+
+		<a class="i-button big sparse" gj-popover-trigger="filter-activity" ng-if="!Screen.isDesktop">
+			<span class="jolticon jolticon-filter"></span>
+			<span translate>dash.activity.filter_button</span>
+		</a>
+
+		&nbsp;
+
+		<gj-popover
+			popover-id="filter-activity"
+			ng-if="!Screen.isDesktop"
+			>
+			<div gj-partial="/app/views/dashboard/activity/feed/_type-selector.html"></div>
+		</gj-popover>
+
+		<a class="i-button big sparse pull-right anim-fade-in"
+			ng-if="feedCtrl.unreadCounts[ feedCtrl.currentNotificationType.key ]"
+			ng-click="feedCtrl.markAllRead()"
+			>
+			<span class="jolticon jolticon-check"></span>
+			<span translate>dash.activity.dismiss_all_button</span>
+		</a>
+	</div>
+	<br>
+</div>
+
+<div class="alert alert-info full-bleed-xs text-center visible-xs visible-sm"
+	ng-if="feedCtrl.currentNotificationType.key"
+	translate
+	translate-comment="{{feedCtrl.currentNotificationType.label}} expands to the type of notification"
+	>
+	dash.activity.current_filter
+</div>
+
+<p class="text-muted small"
+	ng-if="feedCtrl.notifications.length"
+	translate
+	translate-n="feedCtrl.notificationsCount"
+	translate-plural="dash.activity.pages"
+	translate-params-page="feedCtrl.page"
+	translate-comment="{{ page }} expands to the page number"
+	>
+	dash.activity.pages
+</p>
+
+<div class="alert alert-warning" ng-if="!feedCtrl.notifications.length" translate>dash.activity.no_activity</div>-->
+

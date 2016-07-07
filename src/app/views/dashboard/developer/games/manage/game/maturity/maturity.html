@@ -1,17 +1,12 @@
-<!--
-	On mobile we put the maturity rating widget at the top.
--->
-<div class="row" ng-if="Screen.isMobile">
-	<div class="col-sm-7">
-		<gj-game-ogrs
-			gj-game="maturityCtrl.formModel"
-			ng-if="maturityCtrl.formModel.tigrs_age">
-		</gj-game-ogrs>
-	</div>
-</div>
-
 <div class="row">
-	<div class="col-md-7">
+	<div class="col-sm-5 col-sm-push-7">
+		<div gj-scroll-affix should-affix="Screen.isDesktop" scroll-offset="-15">
+			<div class="anim-fade-enter anim-fade-leave"
+				ng-if="maturityCtrl.formModel.tigrs_age"
+				>
+				<gj-game-ogrs gj-game="maturityCtrl.formModel"></gj-game-ogrs>
+			</div>
+		</div>
 
 		<div class="page-help">
 			<div translate>dash.games.maturity.page_help_html</div>
@@ -19,7 +14,9 @@
 				<a class="link-help" href="https://help.gamejolt.com/dev-maturity-ratings" target="_blank">{{ ::'dash.games.maturity.page_help_link' | translate }}</a>
 			</p>
 		</div>
+	</div>
 
+	<div class="col-sm-7 col-sm-pull-5">
 		<!--
 			We pull the form model so that we can show the changes as they modify.
 		-->
@@ -30,21 +27,5 @@
 			gj-form-submit-handler="maturityCtrl.onSaved()"
 			>
 		</gj-form-dashboard-game-maturity>
-
-	</div>
-	<div class="col-md-5">
-
-		<!--
-			On desktop we put the maturity rating widget to the right.
-			We also affix it so it's always visible.
-		-->
-		<div ng-if="Screen.isDesktop" gj-scroll-affix scroll-offset="-15">
-			<div class="anim-fade-enter anim-fade-leave"
-				ng-if="maturityCtrl.formModel.tigrs_age"
-				>
-				<gj-game-ogrs gj-game="maturityCtrl.formModel"></gj-game-ogrs>
-			</div>
-		</div>
-
 	</div>
 </div>

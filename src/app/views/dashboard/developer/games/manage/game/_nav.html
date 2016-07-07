@@ -34,8 +34,14 @@
 		</a>
 	</li>
 	<li>
-		<a ui-sref=".media.list" ui-sref-active="active">
+		<a ui-sref=".media" ui-sref-active="active">
 			<span translate>Media</span>
+		</a>
+	</li>
+	<li>
+		<a ui-sref=".packages.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.game.packages' ) }">
+			<gj-nav-required-step-icon ng-if="!manageCtrl.game._is_devlog" is-complete="manageCtrl.game.has_active_builds"></gj-nav-required-step-icon>
+			<span translate>Packages</span>
 		</a>
 	</li>
 	<li>

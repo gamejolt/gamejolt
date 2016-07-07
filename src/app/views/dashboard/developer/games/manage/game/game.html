@@ -18,6 +18,10 @@
 	</gj-media-item-cover>
 </div>
 
+<div gj-expand-when="$state.is( 'dashboard.developer.games.manage.game.media' ) && manageCtrl.mediaItems.length">
+	<gj-game-media-bar gj-media-bar-items="manageCtrl.mediaItems"></gj-game-media-bar>
+</div>
+
 <section class="section fill-lightest section-thin" ng-if="Screen.isMobile">
 	<div class="container">
 		<nav class="pills" gj-partial="/app/views/dashboard/developer/games/manage/game/_nav.html"></nav>

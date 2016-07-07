@@ -1,6 +1,5 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../../../../../app-service';
-import { FormDashboardGameWizard } from './../../../../../../../components/forms/dashboard/game/wizard/wizard-service';
 
 @Injectable()
 export class HeaderCtrl
@@ -11,7 +10,6 @@ export class HeaderCtrl
 		@Inject( 'Popover' ) private popover: any,
 		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'Growls' ) private growls: any,
-		@Inject( 'FormDashboardGameWizard' ) private wizard: FormDashboardGameWizard,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
 	)
 	{

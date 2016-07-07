@@ -1,106 +1,106 @@
-<div class="editable-accordion-item not-expandable">
-	<div class="editable-accordion-item-heading">
+<gj-card>
 
-		<div class="clearfix">
-			<div class="build-options">
-				<a class="link-muted" ng-click="remove()">
-					<span class="jolticon jolticon-remove middle"></span>
-				</a>
-			</div>
+	<!--<div class="build-options">
+		<a class="link-muted" ng-click="remove()">
+			<span class="jolticon jolticon-remove middle"></span>
+		</a>
+	</div>-->
 
-			<div class="stats">
-				<div class="stat-big stat-big-smaller">
-					<div class="stat-big-label">{{ ::'dash.games.releases.builds.downloads_label' | translate }}</div>
-					<div class="stat-big-digit" ng-attr-title="{{ (buildDownloadCounts[ baseModel.id ] || 0) | number }}">
-						{{ (buildDownloadCounts[ baseModel.id ] || 0) | fuzzyNumber }}
-					</div>
-				</div>
-			</div>
-
-			<h5 class="editable-accordion-item-heading-title">
-				<strong>{{ baseModel.primary_file.filename }}</strong>
-				<small class="text-muted">({{ baseModel.primary_file.filesize | filesize }})</small>
-			</h5>
-
-			<div>
-
-				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_DOWNLOADABLE">
-					<span class="jolticon jolticon-download"></span>
-					<span translate>Downloadable</span>
-				</span>
-
-				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_HTML">
-					<span class="jolticon jolticon-html5"></span>
-					{{ ::'games.browser_html' | translate }}
-				</span>
-
-				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_FLASH">
-					<span class="jolticon jolticon-flash"></span>
-					{{ ::'games.browser_flash' | translate }}
-				</span>
-
-				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_UNITY">
-					<span class="jolticon jolticon-unity"></span>
-					{{ ::'games.browser_unity' | translate }}
-				</span>
-
-				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_SILVERLIGHT">
-					<span class="jolticon jolticon-silverlight"></span>
-					{{ ::'games.browser_silverlight' | translate }}
-				</span>
-
-				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_APPLET">
-					<span class="jolticon jolticon-java"></span>
-					{{ ::'games.browser_applet' | translate }}
-				</span>
-
-				<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_ROM">
-					<span class="jolticon jolticon-rom"></span>
-					<span translate>ROM</span>
-				</span>
-
-				<!--
-					Missing fields.
-				-->
-				<span class="tag tag-pink" ng-if="baseModel.hasError( Game_Build.ERROR_MISSING_FIELDS )">
-					<span class="jolticon jolticon-notice"></span>
-					<span translate>Incomplete</span>
-				</span>
-
-				<span ng-if="!baseModel.hasError( Game_Build.ERROR_MISSING_FIELDS )">
-					<span class="tag tag-blue" ng-if="baseModel.status == Game_Build.STATUS_ADDING">
-						<span translate>Processing</span>
-					</span>
-
-					<span class="tag tag-active" ng-if="baseModel.status == Game_Build.STATUS_ACTIVE">
-						<span class="jolticon jolticon-check"></span>
-						<span translate>Active</span>
-					</span>
-				</span>
-
+	<!--<div class="stats">
+		<div class="stat-big stat-big-smaller">
+			<div class="stat-big-label">{{ ::'dash.games.releases.builds.downloads_label' | translate }}</div>
+			<div class="stat-big-digit" ng-attr-title="{{ (buildDownloadCounts[ baseModel.id ] || 0) | number }}">
+				{{ (buildDownloadCounts[ baseModel.id ] || 0) | fuzzyNumber }}
 			</div>
 		</div>
+	</div>-->
+
+	<div class="card-title">
+		<h5>
+			{{ baseModel.primary_file.filename }}
+			<small class="text-muted">({{ baseModel.primary_file.filesize | filesize }})</small>
+		</h5>
+	</div>
+
+	<div class="card-meta">
+
+		<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_DOWNLOADABLE">
+			<span class="jolticon jolticon-download"></span>
+			<span translate>Downloadable</span>
+		</span>
+
+		<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_HTML">
+			<span class="jolticon jolticon-html5"></span>
+			{{ ::'games.browser_html' | translate }}
+		</span>
+
+		<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_FLASH">
+			<span class="jolticon jolticon-flash"></span>
+			{{ ::'games.browser_flash' | translate }}
+		</span>
+
+		<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_UNITY">
+			<span class="jolticon jolticon-unity"></span>
+			{{ ::'games.browser_unity' | translate }}
+		</span>
+
+		<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_SILVERLIGHT">
+			<span class="jolticon jolticon-silverlight"></span>
+			{{ ::'games.browser_silverlight' | translate }}
+		</span>
+
+		<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_APPLET">
+			<span class="jolticon jolticon-java"></span>
+			{{ ::'games.browser_applet' | translate }}
+		</span>
+
+		<span class="tag" ng-if="baseModel.type == Game_Build.TYPE_ROM">
+			<span class="jolticon jolticon-rom"></span>
+			<span translate>ROM</span>
+		</span>
 
 		<!--
-			Processing the build.
+			Missing fields.
 		-->
-		<div gj-expand-when="!baseModel.errors && baseModel.status == Game_Build.STATUS_ADDING">
-			<div
-				gj-progress-poller="/web/dash/developer/games/builds/poll-progress/{{ game.id }}/{{ package.id }}/{{ release.id }}/{{ baseModel.id }}"
-				progress-poller-on-complete="onBuildProcessingComplete( $response )"
-				>
+		<span class="tag tag-pink" ng-if="baseModel.hasError( Game_Build.ERROR_MISSING_FIELDS )">
+			<span class="jolticon jolticon-notice"></span>
+			<span translate>Incomplete</span>
+		</span>
 
-				<br>
-				<div class="progress progress-thin progress-striped active">
-					<div class="progress-bar" style="width: 100%"></div>
-				</div>
+		<span ng-if="!baseModel.hasError( Game_Build.ERROR_MISSING_FIELDS )">
+			<span class="tag tag-blue" ng-if="baseModel.status == Game_Build.STATUS_ADDING">
+				<span translate>Processing</span>
+			</span>
 
-				<div class="text-center small" translate>dash.games.releases.builds.processing_message_html</div>
-			</div>
-		</div>
+			<span class="tag tag-active" ng-if="baseModel.status == Game_Build.STATUS_ACTIVE">
+				<span class="jolticon jolticon-check"></span>
+				<span translate>Active</span>
+			</span>
+		</span>
 
 	</div>
-</div>
+
+	<!--
+		Processing the build.
+	-->
+	<div gj-expand-when="!baseModel.errors && baseModel.status == Game_Build.STATUS_ADDING">
+		<div
+			gj-progress-poller="/web/dash/developer/games/builds/poll-progress/{{ game.id }}/{{ package.id }}/{{ release.id }}/{{ baseModel.id }}"
+			progress-poller-on-complete="onBuildProcessingComplete( $response )"
+			>
+
+			<br>
+			<div class="progress progress-thin progress-striped active">
+				<div class="progress-bar" style="width: 100%"></div>
+			</div>
+
+			<div class="text-center small" translate>
+				dash.games.releases.builds.processing_message_html
+			</div>
+		</div>
+	</div>
+
+</gj-card>
 
 <div class="editable-accordion-item-edit active">
 	<div class="editable-accordion-item-edit-well well fill-lightest">

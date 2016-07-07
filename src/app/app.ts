@@ -6,6 +6,8 @@ import MetaModule from './../lib/gj-lib-client/components/meta/meta';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 import LoadModule from './../lib/gj-lib-client/components/load/load';
+import PermalinkModule from './../lib/gj-lib-client/components/permalink/permalink';
+import CardModule from './../lib/gj-lib-client/components/card/card';
 import HistoryTickModule from './../lib/gj-lib-client/components/history-tick/history-tick';
 import ModalConfirmModule from './../lib/gj-lib-client/components/modal/confirm/confirm';
 
@@ -24,6 +26,9 @@ import CommentVideoThumbnailModule from './../lib/gj-lib-client/components/comme
 
 import VideoEmbedModule from './../lib/gj-lib-client/components/video-embed/video-embed';
 import SearchModule from './components/search/search';
+import FriendModule from './components/friend/friend';
+import ActivityModule from './components/activity/activity';
+import NotificationModule from './components/notification/notification';
 import MediaItemCoverModule from './components/media-item/cover/cover';
 import PageHeaderModule from './components/page-header/page-header';
 import GenreListModule from './components/genre/list/list';
@@ -101,7 +106,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Device',
 	'gj.Location',
 	'gj.Connection',
-	'gj.Permalink',
+	PermalinkModule,
 
 	'gj.Partial',
 	'gj.Backdrop',
@@ -115,6 +120,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Scroll.FixedResizer',
 	'gj.EditableAccordion',
 	'gj.Referrer',
+	CardModule,
 	HistoryTickModule,
 	'gj.Pagination',
 	ModalConfirmModule,
@@ -257,8 +263,9 @@ const AppModule = angular.module( 'App', [
 	'App.Shell',
 	'App.Offline.Alert',
 	SearchModule,
-	'App.Friends',
-	'App.Notifications',
+	FriendModule,
+	ActivityModule,
+	NotificationModule,
 	'App.Minbar',
 	'App.Invite',
 	'App.Sorting',
@@ -269,9 +276,6 @@ const AppModule = angular.module( 'App', [
 	FormsModule,
 
 	'App.FeaturedItem',
-
-	'App.Activity.Feed',
-	'App.Notifications.DescriptiveAction',
 
 	GenreListModule,
 

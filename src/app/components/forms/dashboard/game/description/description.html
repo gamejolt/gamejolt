@@ -1,14 +1,14 @@
-<form gj-form="formModel" name="devlogPostForm">
+<form gj-form="formModel" name="descriptionForm">
 
-	<form-group name="description_markdown" label="{{ 'dash.games.form.description_label' | translate }}">
-
-		<p class="help-block" translate>dash.games.form.description_help_html</p>
+	<form-group name="description_markdown" label="{{ 'dash.games.form.description_label' | translate }}" hide-label="true">
 
 		<div
 			form-markdown-editor
 			preview-class="game-compiled-description"
 			markdown-preview-url="/web/dash/developer/games/preview-description"
 			markdown-mode="games"
+			show-media-items="true"
+			media-item-type="game-description"
 			>
 		</div>
 
@@ -36,6 +36,7 @@
 
 	<div ng-if="isWizard">
 		<gj-form-dashboard-game-wizard-controls
+			can-proceed="descriptionForm.$valid"
 			on-next="onSubmit()"
 			>
 		</gj-form-dashboard-game-wizard-controls>

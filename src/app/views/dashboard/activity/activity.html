@@ -1,0 +1,61 @@
+<gj-page-header>
+
+	<gj-page-header-content>
+		<h1 translate>Activity Feed</h1>
+	</gj-page-header-content>
+
+	<gj-page-header-nav>
+		<nav class="platform-list inline">
+			<ul>
+				<li>
+					<a translate>
+						Feed
+					</a>
+				</li>
+				<li>
+					<a translate>
+						Notifications
+					</a>
+				</li>
+			</ul>
+		</nav>
+	</gj-page-header-nav>
+
+</gj-page-header>
+
+<!--<header class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-md-8 col-md-offset-3 col-lg-7 col-lg-offset-3">
+				<h1 class="section-header" id="activity-feed" translate>dash.activity.heading</h1>
+
+				<nav class="platform-list inline">
+					<ul>
+						<li>
+							<a ng-class="{ active: listCtrl.tab == 'all' }"
+								ui-sref="^.list( { tab: 'all', page: undefined } )"
+								gj-no-auto-scroll
+								translate
+								>
+								dash.activity.all_tab
+							</a>
+						</li>
+						<li ng-if="listCtrl.unreadCounts[ listCtrl.currentNotificationType.key ]">
+							<a ng-class="{ active: listCtrl.tab == 'unread' }"
+								ui-sref="^.list( { tab: 'unread', page: undefined } )"
+								gj-no-auto-scroll
+								>
+								<span translate>dash.activity.unread_tab</span>
+								<span class="tag tag-pink">{{ listCtrl.unreadCounts[ listCtrl.currentNotificationType.key ] | number }}</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+
+	</div>
+</header>-->
+
+<ui-view></ui-view>

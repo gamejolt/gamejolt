@@ -7,7 +7,7 @@
 
 			<div class="post-item-thumb" ng-if="!ctrl.hideThumb">
 				<a ui-sref="discover.games.view.news.view( { id: post.game_id, slug: post.game.slug, articleSlug: post.slug, articleId: post.id } )">
-					<img gj-img-responsive="{{ ::post.game.img_thumbnail }}" alt="">
+					<img gj-img-responsive="{{ ::post.game.thumbnail_media_item.mediaserver_url }}" alt="">
 				</a>
 			</div>
 

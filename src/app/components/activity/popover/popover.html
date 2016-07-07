@@ -1,0 +1,136 @@
+<gj-popover
+	class="shell-popover shell-card-popover popover-no-collapse"
+	popover-id="activity"
+	popover-append-to-body="true"
+	popover-position-by="position"
+	popover-on-focus="$ctrl.onFocus()"
+	popover-on-blur="$ctrl.onBlur()"
+	>
+
+	<div class="shell-card-popover-well">
+
+		<a class="btn btn-outline btn-block"
+			ui-sref="dashboard.activity.list( { tab: 'all' } )"
+			ng-click="$ctrl.close()"
+			>
+			<span class="jolticon jolticon-notifications"></span>
+			<span translate>notifications.popover.view_all_button</span>
+		</a>
+
+		<div ng-if="$ctrl.isLoading && $ctrl.isShown">
+			<br>
+			<gj-loading class="loading-centered" loading-stationary="true"></gj-loading>
+		</div>
+
+		<div ng-if="!$ctrl.isLoading">
+
+			<div class="alert alert-warning" ng-if="!$ctrl.notifications.length" translate>
+				notifications.popover.no_notifications
+			</div>
+
+			<div class="shell-card-popover-controls"
+				ng-if="$ctrl.notifications.length"
+				>
+				<a class="link-muted" ng-click="$ctrl.dismissAll()">
+					(<span translate>notifications.popover.dismiss_all</span>)
+				</a>
+			</div>
+
+			<a>
+				<gj-card>
+
+					<div class="shell-card-popover-card-media">
+						<div
+							class="card-thumb"
+							ng-style="{ 'background-image': 'url( \'http://m.gjcdn.net/game-thumbnail/600/16352-bi7pmjiy.jpg\' )' }"
+							>
+						</div>
+					</div>
+					<div class="shell-card-popover-card-body">
+						<span class="card-remove" ng-click="$ctrl.dismiss( $event, notification )">
+							<span class="jolticon jolticon-remove"></span>
+						</span>
+
+						<div class="card-title">
+							<span class="shell-card-popover-card-time" am-time-ago="notification.added_on"></span>
+							<h5>4 new posts</h5>
+						</div>
+
+						<div class="card-content">
+							Blind Redux
+						</div>
+					</div>
+
+				</gj-card>
+			</a>
+
+			<div
+				ng-if="$ctrl.notifications.length"
+				>
+
+				<!--
+					For some reason the page was reloading from the href, so now we have the ng-click hack.
+				-->
+				<a
+					ng-repeat="notification in $ctrl.notifications track by notification.id"
+					ng-href="{{ notification.url }}"
+					ng-click="$ctrl.go( $event, notification )"
+					>
+					<gj-card>
+
+						<div class="shell-card-popover-card-media">
+							<div
+								class="card-thumb"
+								ng-if="notification.is_user_based"
+								ng-style="{ 'background-image': 'url( \'' + notification.from_model.img_avatar + '\' )' }"
+								>
+							</div>
+
+							<div
+								class="card-thumb"
+								ng-if="notification.is_game_based"
+								ng-style="{ 'background-image': 'url( \'' + notification.to_model.thumbnail_media_item.mediaserver_url + '\' )' }"
+								>
+							</div>
+						</div>
+						<div class="shell-card-popover-card-body">
+							<span class="card-remove" ng-click="$ctrl.dismiss( $event, notification )">
+								<span class="jolticon jolticon-remove"></span>
+							</span>
+
+							<div class="card-title">
+								<span class="shell-card-popover-card-time" am-time-ago="notification.added_on"></span>
+								<h5>{{ notification.action_label }}</h5>
+							</div>
+
+							<div class="card-content">
+								<gj-notification-descriptive-action
+									notification="notification"
+									in-popover="true"
+									>
+								</gj-notification-descriptive-action>
+							</div>
+						</div>
+
+					</gj-card>
+				</a>
+			</div>
+
+			<a class="btn btn-outline btn-block"
+				ng-if="$ctrl.leftoverCount"
+				ui-sref="dashboard.activity.list( { tab: 'unread' } )"
+				ng-click="$ctrl.close()"
+				>
+				<span class="jolticon jolticon-notifications"></span>
+				<span translate
+					translate-n="$ctrl.leftoverCount"
+					translate-plural="notifications.popover.more_notifications_button"
+					>
+					notifications.popover.more_notifications_button
+				</span>
+			</a>
+		</div>
+
+	</div>
+
+</gj-popover>

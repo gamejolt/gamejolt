@@ -1,0 +1,73 @@
+.shell-card-popover
+	$icon-size = 40px
+	$media-width = 50px
+	$gutter-width = 20px
+
+	@media $media-sm-up
+		min-width: 360px
+
+	&.popover
+		position: fixed
+
+	&-well
+		@extend .fill-dark
+		padding: 10px
+
+	.card
+		margin-bottom: 5px
+
+		&-meta
+			margin: 0
+			font-size: $font-size-tiny
+
+		&-remove
+			display: none
+
+		&:hover
+			.card-remove
+				display: block
+
+			.shell-card-popover-card-time
+				display: none
+
+	&-controls
+		margin: 10px 0
+		text-align: right
+		font-size: $font-size-small
+
+	&-card
+
+		&-time
+			float: right
+			font-size: $font-size-tiny
+			color: $text-muted
+			line-height: $line-height-computed
+			margin-left: 10px
+
+		&-media
+			float: left
+			width: $media-width
+			text-align: center
+
+		&-body
+			margin-left: $media-width + $gutter-width
+
+		&-icon
+			display: inline-block
+			width: $icon-size
+			height: $icon-size
+			line-height: $icon-size
+			background-color: $gj-pink
+			color: $white
+			border-radius: 50%
+			text-align: center
+
+			> .jolticon
+				position: relative
+				top: -1px
+				margin: 0
+				vertical-align: middle
+
+		&-controls
+			float: right
+			margin-left: 20px

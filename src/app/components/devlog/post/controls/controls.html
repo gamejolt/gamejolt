@@ -2,29 +2,51 @@
 <div class="devlog-post-controls">
 	<hr>
 
-	<div ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_ACTIVE">
-		<p ng-if="$ctrl.post.comment_count">
-			<a class="link-muted"
+	<p>
+		<a class="link-muted"
+			ng-click="$ctrl.isShowingComments = !$ctrl.isShowingComments"
+			ng-switch="$ctrl.post.comment_count > 0"
+			>
+			<span
+				ng-switch-when="true"
 				translate
 				translate-n="$ctrl.post.comment_count"
 				translate-plural="{{ $count | number }} comments"
 				>
 				1 comment
+			</span>
+			<span
+				ng-switch-when="false"
+				translate
+				>
+				Leave a comment
+			</span>
+		</a>
+
+		<span ng-if="$ctrl.post.like_count">
+			<span class="dot-separator"></span>
+			<a class="link-muted"
+				translate
+				translate-n="$ctrl.post.like_count"
+				translate-plural="{{ $count | number }} likes"
+				>
+				1 like
 			</a>
-		</p>
-	</div>
+		</span>
+	</p>
 
 	<div class="clearfix">
 		<div class="pull-left" ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_ACTIVE">
 			<button class="btn btn-outline btn-sparse"
 				ng-click="$ctrl.isShowingComments = !$ctrl.isShowingComments"
+				gj-tooltip="Comment on This Post"
 				>
 				<span class="jolticon jolticon-reply"></span>
 			</button>
 
 			<gj-fireside-post-like-widget
 				fireside-post="$ctrl.post"
-				no-avatars="true"
+				sparse="true"
 				>
 			</gj-fireside-post-like-widget>
 		</div>

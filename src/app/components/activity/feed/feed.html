@@ -1,66 +1,27 @@
-<div class="timeline-list" ng-if="ctrl.notifications.length">
-	<a
-		class="timeline-list-item anim-fade-in-enlarge no-animate-leave stagger"
-		ng-repeat="notification in ctrl.notifications track by notification.id"
-		ng-href="{{ notification.url }}"
-		ng-click="ctrl.go( $event, notification );"
+<div class="devlog-feed timeline-list full-bleed">
+
+	<!--
+		Note that our ng-repeat track by includes updated on.
+		This way it will update the whole div when the post changes.
+		This allows us to bind-once within the post, and still update during changes.
+	-->
+	<div class="devlog-feed-item timeline-list-item anim-fade-in-right no-animate-leave stagger"
+		ng-repeat="notification in $ctrl.notifications track by notification.id"
+		id="devlog-feed-post-{{ ::notification.id }}"
 		>
+		<!--in-view="$ctrl.onPostInViewChange( $inview, post )"-->
 
-		<div class="timeline-list-item-icon" ng-class="{ active: !notification.viewed_on }">
-			<span class="jolticon" ng-class="notification.jolticon"></span>
-		</div>
+		<gj-devlog-post-text
+			ng-if="::notification.action_model.type == $ctrl.firesidePostModel.TYPE_TEXT"
+			post="notification.action_model"
+			>
+		</gj-devlog-post-text>
 
-		<div class="timeline-list-item-main">
+		<gj-devlog-post-media
+			ng-if="::notification.action_model.type == $ctrl.firesidePostModel.TYPE_MEDIA"
+			post="notification.action_model"
+			>
+		</gj-devlog-post-media>
 
-			<div class="timeline-list-item-mark anim-fade-leave-shrink" ng-if="!notification.viewed_on">
-				<button class="i-button big sparse" ng-click="ctrl.markRead( $event, notification )">
-					<span class="jolticon jolticon-check"></span>
-				</button>
-			</div>
-
-			<div class="timeline-list-item-time">
-				<span am-time-ago="notification.added_on"></span>
-			</div>
-
-			<div class="timeline-list-item-title">
-				<span gj-notifications-descriptive-action="notification"></span>
-			</div>
-
-			<div class="timeline-list-item-details"
-				ng-if="::[ Notification.TYPE_COMMENT_ADD, Notification.TYPE_COMMENT_ADD_OBJECT_OWNER, Notification.TYPE_GAME_RATING_ADD, Notification.TYPE_GAME_NEWS_ADD ].indexOf( notification.type ) !== -1"
-				>
-
-				<img ng-if="notification.is_user_based && !Screen.isXs"
-					class="timeline-list-item-avatar"
-					ng-src="{{ notification.subject_model.img_avatar }}"
-					alt=""
-					>
-
-				<div ng-if="notification.is_game_based && !Screen.isXs"
-					class="timeline-list-item-thumb"
-					ng-style="{ 'background-image': 'url( \'' + notification.object_model.img_thumbnail + '\' )' }"
-					>
-				</div>
-
-				<gj-fade-collapse fade-collapse-height="80">
-					<div class="timeline-list-item-content" ng-switch="::notification.type">
-						<div ng-switch-when="comment-add" ng-bind-html="::notification.action_model.comment_compiled"></div>
-						<div ng-switch-when="comment-add-object-owner" ng-bind-html="::notification.action_model.comment_compiled"></div>
-						<div ng-switch-when="game-rating-add"
-							translate
-							translate-params-rating="notification.action_model.rating"
-							>
-							notifications.rating_details_html
-						</div>
-						<div ng-switch-when="game-news-add">
-							<p><strong>{{ ::notification.action_model.title }}</strong></p>
-							{{ ::notification.action_model.excerpt }}
-						</div>
-					</div>
-				</gj-fade-collapse>
-			</div>
-
-		</div>
-
-	</a>
+	</div>
 </div>

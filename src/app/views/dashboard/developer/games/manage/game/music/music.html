@@ -1,7 +1,9 @@
 <div class="row">
-	<div class="col-sm-10 col-md-8">
-
+	<div class="col-sm-4 col-sm-push-8">
 		<div class="page-help" translate>dash.games.music.page_help_html</div>
+	</div>
+
+	<div class="col-sm-8 col-sm-pull-4">
 
 		<div class="alert alert-warning" ng-if="!musicCtrl.songs.length" translate>dash.games.music.no_music_html</div>
 
@@ -55,14 +57,11 @@
 			</gj-editable-accordion>
 		</div>
 
-	</div>
-	<div class="col-sm-10 col-md-4">
-
-		<div ng-if="musicCtrl.songs.length" class="alert alert-info">
-			<p>{{ ::'dash.games.music.direct_link_help' | translate }}</p>
-			<p>
-				<input type="text" class="form-control" gj-select-on-focus ng-value="::Environment.baseUrl + manageCtrl.game.getUrl( 'soundtrack' )">
-			</p>
+		<div ng-if="manageCtrl.isWizard">
+			<gj-form-dashboard-game-wizard-controls
+				can-proceed="true"
+				>
+			</gj-form-dashboard-game-wizard-controls>
 		</div>
 
 	</div>

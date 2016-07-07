@@ -17,9 +17,9 @@
 			</span>
 		</span>
 
-		<img gj-img-responsive="{{ ::$ctrl.game.img_thumbnail }}" alt="{{ ::$ctrl.game.title }}">
+		<img gj-img-responsive="{{ ::$ctrl.game.thumbnail_media_item.mediaserver_url }}" alt="{{ ::$ctrl.game.title }}">
 
-		<video ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.Screen.isDesktop" preload loop ng-attr-poster="{{ ::$ctrl.game.img_thumbnail }}">
+		<video ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.Screen.isDesktop" preload loop ng-attr-poster="{{ ::$ctrl.game.thumbnail_media_item.mediaserver_url }}">
 			<source ng-src="{{ ::$ctrl.webm }}" type="video/webm">
 			<source ng-src="{{ ::$ctrl.mp4 }}" type="video/mp4">
 		</video>
