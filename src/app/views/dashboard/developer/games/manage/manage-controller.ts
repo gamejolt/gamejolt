@@ -46,11 +46,11 @@ export class ManageCtrl
 	removeGame()
 	{
 		this.modalConfirm.show( this.gettextCatalog.getString( 'dash.games.remove_confirmation' ) )
-			.then( _ =>
+			.then( () =>
 			{
 				return this.game.$remove();
 			} )
-			.then( _ =>
+			.then( () =>
 			{
 				this.growls.success(
 					this.gettextCatalog.getString( 'dash.games.removed_growl' ),

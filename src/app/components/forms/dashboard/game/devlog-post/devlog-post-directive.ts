@@ -11,7 +11,7 @@ export function DevlogPostFormFactory( Form, Fireside_Post )
 
 		scope.formModel.status = Fireside_Post.STATUS_ACTIVE;
 
-		scope.onDraftSubmit = _ =>
+		scope.onDraftSubmit = () =>
 		{
 			scope.formModel.status = Fireside_Post.STATUS_DRAFT;
 			scope.onSubmit();

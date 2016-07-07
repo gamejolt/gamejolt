@@ -24,7 +24,7 @@ export class App
 		// Payload emits this every time the user is processed.
 		// We want to store whether or not we've bootstrapped the user yet so we can hide things
 		// that depend on the user being loaded in.
-		$rootScope.$on( 'Payload.userProcessed', _ =>
+		$rootScope.$on( 'Payload.userProcessed', () =>
 		{
 			if ( !this.userBootstrapped ) {
 				this.userBootstrapped = true;
@@ -42,11 +42,11 @@ export class App
 	{
 		return this.$q( ( resolve, reject ) =>
 		{
-			this.modalConfirm.show( 'Are you seriously going to leave us?', 'Really?', 'yes' ).then( _ =>
+			this.modalConfirm.show( 'Are you seriously going to leave us?', 'Really?', 'yes' ).then( () =>
 			{
 				// Must send POST.
 				this.$injector.get( 'Api' ).sendRequest( '/web/dash/account/logout', {} )
-					.then( _ =>
+					.then( () =>
 					{
 						// We go to the homepage currently just in case they're in a view they shouldn't be.
 						this.$state.go( 'discover.home' );

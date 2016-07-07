@@ -34,23 +34,23 @@ export class InputDirective implements OnInit
 		this.$element[0].autocomplete = 'off';
 
 		// Sync from the global search query to our input.
-		this.$scope.$watch( _ => this.search.query, _ =>
+		this.$scope.$watch( () => this.search.query, () =>
 		{
 			this.ngModel.$setViewValue( this.search.query );
 			this.ngModel.$render();
 		} );
 
-		this.$element.on( 'focus', _ =>
+		this.$element.on( 'focus', () =>
 		{
-			this.$scope.$applyAsync( _ =>
+			this.$scope.$applyAsync( () =>
 			{
 				this.searchCtrl.isFocused = true;
 			} );
 		} );
 
-		this.$element.on( 'blur', _ =>
+		this.$element.on( 'blur', () =>
 		{
-			this.$scope.$applyAsync( _ =>
+			this.$scope.$applyAsync( () =>
 			{
 				this.searchCtrl.isFocused = false;
 			} );
@@ -58,7 +58,7 @@ export class InputDirective implements OnInit
 
 		this.$element.on( 'keydown', ( event: KeyboardEvent ) =>
 		{
-			this.$scope.$applyAsync( _ =>
+			this.$scope.$applyAsync( () =>
 			{
 				// This stops the default behavior from happening when we press up/down
 				// or enter (we don't want to submit form).

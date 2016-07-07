@@ -92,13 +92,13 @@ export class MediaCtrl
 		const message = this.gettextCatalog.getString( 'dash.games.media.remove_confirmation', { type: typeLabel } );
 
 		this.confirm.show( message )
-			.then( _ =>
+			.then( () =>
 			{
 				return item.$remove();
 			} )
-			.then( _ =>
+			.then( () =>
 			{
-				window._.remove( this.$manageCtrl.mediaItems, { id: item.id } );
+				_.remove( this.$manageCtrl.mediaItems, { id: item.id } );
 				this.updateSort();
 			} );
 	};

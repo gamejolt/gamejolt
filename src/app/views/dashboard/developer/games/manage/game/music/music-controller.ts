@@ -38,7 +38,7 @@ export class MusicCtrl
 
 	onSongsSorted()
 	{
-		var newSort = window._.pluck( this.songs, 'id' );
+		var newSort = _.pluck( this.songs, 'id' );
 
 		// Make sure that the sorting has changed.
 		if ( !angular.equals( newSort, this.currentSort ) ) {
@@ -52,19 +52,19 @@ export class MusicCtrl
 	removeSong( song )
 	{
 		this.modalConfirm.show( this.gettextCatalog.getString( 'dash.games.music.remove_confirmation' ) )
-			.then( _ =>
+			.then( () =>
 			{
 				return song.$remove();
 			} )
-			.then( _ =>
+			.then( () =>
 			{
-				window._.remove( this.songs, { id: song.id } );
+				_.remove( this.songs, { id: song.id } );
 				this.updateSort();
 			} );
 	}
 
 	updateSort()
 	{
-		this.currentSort = window._.pluck( this.songs, 'id' );
+		this.currentSort = _.pluck( this.songs, 'id' );
 	}
 }

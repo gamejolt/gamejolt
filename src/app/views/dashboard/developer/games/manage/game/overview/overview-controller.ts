@@ -48,7 +48,7 @@ export class OverviewCtrl
 	publish()
 	{
 		this.modalConfirm.show( this.gettextCatalog.getString( 'dash.games.overview.publish_confirmation' ) )
-			.then( _ =>
+			.then( () =>
 			{
 				return this.$scope['manageCtrl'].game.$setStatus( this.gameModel.STATUS_VISIBLE );
 			} )

@@ -30,7 +30,7 @@ export class FeedComponent
 	)
 	{
 		// Keep our post list in sync with parent.
-		$scope.$watchCollection( _ => this.posts, ( newVal, oldVal ) =>
+		$scope.$watchCollection( () => this.posts, ( newVal, oldVal ) =>
 		{
 			this._posts = (this.posts || []).map( item => item );
 
@@ -45,7 +45,7 @@ export class FeedComponent
 	{
 		const active = this.feedService.getActive();
 		if ( active ) {
-			this.$timeout( _ =>
+			this.$timeout( () =>
 			{
 				const id = `devlog-feed-post-${active}`;
 				if ( this.$document[0].getElementById( id ) ) {

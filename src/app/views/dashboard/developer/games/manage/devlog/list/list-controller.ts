@@ -38,13 +38,13 @@ export class ListCtrl
 	onPostPublished( post: Fireside_Post )
 	{
 		this.posts.unshift( post );
-		window._.remove( this.draftPosts, { id: post.id } );
+		_.remove( this.draftPosts, { id: post.id } );
 		this.tab = 'active';
 	}
 
 	onPostRemoved( post: Fireside_Post )
 	{
-		window._.remove( this.posts, { id: post.id } );
-		window._.remove( this.draftPosts, { id: post.id } );
+		_.remove( this.posts, { id: post.id } );
+		_.remove( this.draftPosts, { id: post.id } );
 	}
 }

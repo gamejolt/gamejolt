@@ -26,7 +26,7 @@ export function GameFormFactory( Form, Api, Game, Scroll, App )
 
 		scope.acceptedRules = scope.method != 'add';
 
-		scope.stage = _ =>
+		scope.stage = () =>
 		{
 			if ( !scope.acceptedRules ) {
 				return 'rules';
@@ -37,13 +37,13 @@ export function GameFormFactory( Form, Api, Game, Scroll, App )
 			return 'details';
 		};
 
-		scope.acceptRules = _ =>
+		scope.acceptRules = () =>
 		{
 			scope.acceptedRules = true;
 			Scroll.to( 0, { animate: false } );
 		};
 
-		scope.checkIsCompleteAllowed = _ =>
+		scope.checkIsCompleteAllowed = () =>
 		{
 			// If the form loaded in with the game published, but there are no builds yet, then they shouldn't be able to select Complete or Canceled.
 			if ( scope.method == 'edit' && scope.baseModel.is_published && !scope.hasActiveBuilds ) {
@@ -59,7 +59,7 @@ export function GameFormFactory( Form, Api, Game, Scroll, App )
 			return true;
 		};
 
-		scope.checkIsPublishable = _ =>
+		scope.checkIsPublishable = () =>
 		{
 			// If the game is published already, then allow it to stay published.
 			if ( scope.method == 'edit' && scope.baseModel.is_published ) {
@@ -96,7 +96,7 @@ export function GameFormFactory( Form, Api, Game, Scroll, App )
 			scope.onSubmit();
 		};
 
-		scope.skipAutotag = _ =>
+		scope.skipAutotag = () =>
 		{
 			scope.formModel.autotag_skip = true;
 			scope.onSubmit();

@@ -32,7 +32,7 @@ export class ControlsComponent
 
 	publishPost()
 	{
-		this.post.$publish().then( _ =>
+		this.post.$publish().then( () =>
 		{
 			this.feed.onPostPublished( this.post );
 		} );
@@ -40,7 +40,7 @@ export class ControlsComponent
 
 	removePost()
 	{
-		this.post.remove().then( _ =>
+		this.post.remove().then( () =>
 		{
 			this.feed.onPostRemoved( this.post );
 		} );

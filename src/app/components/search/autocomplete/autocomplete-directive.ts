@@ -203,7 +203,7 @@ export class AutocompleteComponent implements OnInit
 			}
 		} );
 
-		this.$scope.$watch( _ => this.searchCtrl.query, _ =>
+		this.$scope.$watch( () => this.searchCtrl.query, () =>
 		{
 			this.onChange();
 		} );
@@ -216,7 +216,7 @@ export class AutocompleteComponent implements OnInit
 				callback: ( event: Event ) =>
 				{
 					// Get around stupid scope already in progress.
-					this.$timeout( _ =>
+					this.$timeout( () =>
 					{
 						event.preventDefault();
 						this.searchCtrl.query = ':';
