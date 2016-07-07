@@ -120,77 +120,74 @@
 			<br>
 
 			<div ng-if="editCtrl.releases.length">
-				<gj-editable-accordion>
 
-					<gj-editable-accordion-item
-						ng-repeat="release in editCtrl.releases track by release.id"
-						>
+				<gj-card
+					class="card-list-item-anim"
+					ng-repeat="release in editCtrl.releases track by release.id"
+					>
 
-						<gj-editable-accordion-item-heading>
+					<a class="card-remove" ng-click="editCtrl.removeRelease( release )">
+						<span class="jolticon jolticon-remove"></span>
+					</a>
 
-							<div class="pull-right">
-								<a class="link-muted pull-right" ng-click="editCtrl.removeRelease( release )">
-									<span class="jolticon jolticon-remove middle"></span>
-								</a>
+					<div class="card-title">
+						<h4>
+							<a class="link-unstyled" ui-sref="dashboard.developer.games.manage.game.packages.release.edit( { packageId: editCtrl.package.id, releaseId: release.id } )">
+								{{ ::release.version_number }}
+							</a>
+						</h4>
+					</div>
 
-								<span class="tag"
-									ng-if="release.status == Game_Release.STATUS_HIDDEN"
-									tooltip="{{ ::'dash.games.packages.manage.releases.hidden_tooltip' | translate }}"
-									>
-									<span class="jolticon jolticon-inactive"></span>
-									{{ ::'dash.games.packages.manage.releases.hidden_tag' | translate }}
-								</span>
+					<div class="card-meta">
+						<span class="tag"
+							ng-if="release.status == Game_Release.STATUS_HIDDEN"
+							tooltip="{{ ::'dash.games.packages.manage.releases.hidden_tooltip' | translate }}"
+							>
+							<span class="jolticon jolticon-inactive"></span>
+							{{ ::'dash.games.packages.manage.releases.hidden_tag' | translate }}
+						</span>
 
-								<span class="tag tag-active"
-									ng-if="release.status == Game_Release.STATUS_PUBLISHED"
-									tooltip="{{ ::'dash.games.packages.manage.releases.published_tooltip' | translate }}"
-									>
-									<span class="jolticon jolticon-active"></span>
-									{{ ::'dash.games.packages.manage.releases.published_tag' | translate }}
-								</span>
-							</div>
+						<span class="tag tag-active"
+							ng-if="release.status == Game_Release.STATUS_PUBLISHED"
+							tooltip="{{ ::'dash.games.packages.manage.releases.published_tooltip' | translate }}"
+							>
+							<span class="jolticon jolticon-active"></span>
+							{{ ::'dash.games.packages.manage.releases.published_tag' | translate }}
+						</span>
 
-							<h5 class="editable-accordion-item-heading-title">
-								<a class="link-unstyled" ui-sref="dashboard.developer.games.manage.game.packages.release.edit( { packageId: editCtrl.package.id, releaseId: release.id } )">
-									<strong>{{ ::release.version_number }}</strong>
-								</a>
-							</h5>
+						<span class="dot-separator"></span>
 
-							<div class="editable-accordion-item-heading-description">
-								<span ng-if="!release.build_count" translate>
-									dash.games.packages.manage.releases.builds_count_none
-								</span>
+						<span ng-if="!release.build_count" translate>
+							dash.games.packages.manage.releases.builds_count_none
+						</span>
 
-								<span ng-if="release.build_count"
-									translate
-									translate-plural="dash.games.packages.manage.releases.build_count"
-									translate-n="release.build_count"
-									>
-									dash.games.packages.manage.releases.build_count
-								</span>
-							</div>
+						<span ng-if="release.build_count"
+							translate
+							translate-plural="dash.games.packages.manage.releases.build_count"
+							translate-n="release.build_count"
+							>
+							dash.games.packages.manage.releases.build_count
+						</span>
+					</div>
 
-							<p class="editable-accordion-item-heading-description" ng-if="package.description">
-								{{ package.description }}
-							</p>
+					<div class="card-content" ng-if="package.description">
+						{{ package.description }}
+					</div>
 
-							<div>
-								<a class="btn btn-outline btn-sm" ui-sref="dashboard.developer.games.manage.game.packages.release.edit( { packageId: editCtrl.package.id, releaseId: release.id } )">
-									<span class="jolticon jolticon-edit"></span>
-									<span translate>Edit Release</span>
-								</a>
+					<div class="card-controls">
+						<a class="btn btn-outline" ui-sref="dashboard.developer.games.manage.game.packages.release.edit( { packageId: editCtrl.package.id, releaseId: release.id } )">
+							<span class="jolticon jolticon-edit"></span>
+							<span translate>Edit Release</span>
+						</a>
 
-								<a class="btn btn-outline btn-sm" ui-sref="dashboard.analytics.view( { resource: 'Game_Release', resourceId: release.id } )">
-									<span class="jolticon jolticon-chart"></span>
-									<span translate>Analytics</span>
-								</a>
-							</div>
+						<a class="btn btn-outline" ui-sref="dashboard.analytics.view( { resource: 'Game_Release', resourceId: release.id } )">
+							<span class="jolticon jolticon-chart"></span>
+							<span translate>Analytics</span>
+						</a>
+					</div>
 
-						</gj-editable-accordion-item-heading>
+				</gj-card>
 
-					</gj-editable-accordion-item>
-
-				</gj-editable-accordion>
 			</div>
 
 			<div ng-if="manageCtrl.isWizard">

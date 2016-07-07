@@ -1,19 +1,17 @@
 <gj-card>
 
-	<!--<div class="build-options">
-		<a class="link-muted" ng-click="remove()">
-			<span class="jolticon jolticon-remove middle"></span>
-		</a>
-	</div>-->
+	<a class="card-remove" ng-click="remove()">
+		<span class="jolticon jolticon-remove"></span>
+	</a>
 
-	<!--<div class="stats">
+	<div class="card-stats">
 		<div class="stat-big stat-big-smaller">
 			<div class="stat-big-label">{{ ::'dash.games.releases.builds.downloads_label' | translate }}</div>
 			<div class="stat-big-digit" ng-attr-title="{{ (buildDownloadCounts[ baseModel.id ] || 0) | number }}">
 				{{ (buildDownloadCounts[ baseModel.id ] || 0) | fuzzyNumber }}
 			</div>
 		</div>
-	</div>-->
+	</div>
 
 	<div class="card-title">
 		<h5>
