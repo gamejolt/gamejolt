@@ -135,7 +135,7 @@ export class AutocompleteComponent implements OnInit
 			},
 			{
 				keyword: ':activity',
-				state: 'dashboard.activity.list',
+				state: 'dashboard.activity.feed',
 				authRequired: true,
 				description: gettext( 'commands.activity_description' ),
 			},

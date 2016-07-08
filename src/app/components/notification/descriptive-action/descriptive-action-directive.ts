@@ -1,4 +1,5 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
+import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
 import template from './descriptive-action.html';
 
 @Component({
@@ -15,7 +16,7 @@ export class DescriptiveActionComponent
 
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( 'Notification' ) notificationModel: any,
+		@Inject( 'Notification' ) notificationModel: typeof Notification,
 		@Inject( 'gettext' ) gettext: ng.gettext.gettextFunction,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'currencyFilter' ) currencyFilter: ng.IFilterCurrency
@@ -29,7 +30,6 @@ export class DescriptiveActionComponent
 			[ notificationModel.TYPE_FRIENDSHIP_ACCEPT ]: gettext( 'notifications.friendship_accepted_title_html' ),
 			[ notificationModel.TYPE_GAME_RATING_ADD ]: gettext( 'notifications.rating_title_html' ),
 			[ notificationModel.TYPE_GAME_FOLLOW ]: gettext( 'notifications.game_follow_title_html' ),
-			[ notificationModel.TYPE_GAME_NEWS_ADD ]: gettext( 'notifications.game_news_title_html' ),
 			[ notificationModel.TYPE_SELLABLE_SELL ]: gettext( 'bought a package in <strong>{{ object }}</strong> for <strong>{{ amount }}</strong>.' ),
 		};
 
@@ -40,15 +40,6 @@ export class DescriptiveActionComponent
 			if ( this.inPopover ) {
 				this.translationKey = gettext( 'notifications.rating_title_popover_html' );
 			}
-		}
-		else if ( this.notification.type == notificationModel.TYPE_GAME_NEWS_ADD ) {
-			if ( this.inPopover ) {
-				this.translationKey = gettext( 'notifications.game_news_title_popover_html' );
-			}
-
-			this.translationValues = {
-				title: this.notification.action_model.title,
-			};
 		}
 		else if ( this.notification.type == notificationModel.TYPE_SELLABLE_SELL ) {
 			this.translationValues = {

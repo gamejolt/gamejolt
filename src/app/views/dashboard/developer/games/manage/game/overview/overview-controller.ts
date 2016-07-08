@@ -1,6 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../../../../../app-service';
 import { ModalConfirm } from './../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Notification } from './../../../../../../../../lib/gj-lib-client/components/notification/notification-model';
 
 @Injectable()
 export class OverviewCtrl
@@ -21,7 +22,7 @@ export class OverviewCtrl
 		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( '$state' ) $state: ng.ui.IStateService,
 		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
-		@Inject( 'Notification' ) notificationModel: any,
+		@Inject( 'Notification' ) notificationModel: typeof Notification,
 		@Inject( 'Game' ) private gameModel: any,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,

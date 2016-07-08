@@ -11,6 +11,7 @@ import CardModule from './../lib/gj-lib-client/components/card/card';
 import HistoryTickModule from './../lib/gj-lib-client/components/history-tick/history-tick';
 import ModalConfirmModule from './../lib/gj-lib-client/components/modal/confirm/confirm';
 
+import gjNotificationModule from './../lib/gj-lib-client/components/notification/notification';
 import CommentModule from './../lib/gj-lib-client/components/comment/comment';
 import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
 import CommentVideoModule from './../lib/gj-lib-client/components/comment/video/video';
@@ -40,7 +41,6 @@ import FiresidePostTagModule from './../lib/gj-lib-client/components/fireside/po
 import FiresidePostLikeModule from './../lib/gj-lib-client/components/fireside/post/like/like';
 import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 
-import DevlogFeedModule from './components/devlog/feed/feed';
 import DevlogPostTextModule from './components/devlog/post/text/text';
 import DevlogPostMediaModule from './components/devlog/post/media/media';
 import DevlogPostControlsModule from './components/devlog/post/controls/controls';
@@ -100,7 +100,6 @@ const AppModule = angular.module( 'App', [
 	'gj.Loading',
 	'gj.Loading.LoadingPageTransition',
 	'gj.Scroll',
-	'gj.Typography',
 	'gj.ExpandWhen',
 	'gj.UiTree.Placeholder',
 	'gj.Device',
@@ -155,7 +154,7 @@ const AppModule = angular.module( 'App', [
 	'gj.User.LinkedAccounts',
 	'gj.User.Friendship',
 	'gj.User.Message',
-	'gj.Notification',
+	gjNotificationModule,
 	CommentModule,
 	CommentVoteModule,
 	CommentVideoModule,
@@ -279,7 +278,6 @@ const AppModule = angular.module( 'App', [
 
 	GenreListModule,
 
-	DevlogFeedModule,
 	DevlogPostTextModule,
 	DevlogPostMediaModule,
 	DevlogPostControlsModule,

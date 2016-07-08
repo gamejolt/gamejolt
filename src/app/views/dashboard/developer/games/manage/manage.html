@@ -1,6 +1,6 @@
-<header class="section">
-	<div class="container">
+<gj-page-header>
 
+	<gj-page-header-content>
 		<h1 class="section-header">
 			{{ manageCtrl.game.title }}
 		</h1>
@@ -33,8 +33,10 @@
 				<span translate>dash.games.view_page_button</span>
 			</a>
 		</p>
+	</gj-page-header-content>
 
-		<nav class="platform-list inline" ng-if="!manageCtrl.isWizard">
+	<gj-page-header-nav ng-if="!manageCtrl.isWizard">
+		<nav class="platform-list inline">
 			<ul>
 				<li>
 					<a ui-sref=".game.overview" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.game' ) }" translate>
@@ -73,7 +75,8 @@
 				</a>
 			</div>
 		</gj-popover>
-	</div>
-</header>
+	</gj-page-header-nav>
+
+</gj-page-header>
 
 <ui-view></ui-view>

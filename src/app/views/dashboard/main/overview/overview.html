@@ -189,7 +189,7 @@
 					Activity Feed
 				-->
 				<h2>
-					<a class="link-unstyled" ui-sref="dashboard.activity.list( { tab: 'all' } )">{{ ::'dash.overview.activity_heading' | translate }}</a>
+					<a class="link-unstyled" ui-sref="dashboard.activity.feed( { tab: 'all' } )">{{ ::'dash.overview.activity_heading' | translate }}</a>
 				</h2>
 
 				<gj-activity-feed
@@ -200,7 +200,7 @@
 
 				<div class="alert alert-info" ng-if="!overviewCtrl.activityNotifications.length" translate>dash.overview.activity_no_activity_html</div>
 
-				<a class="btn btn-outline btn-block" ui-sref="dashboard.activity.list( { tab: 'all' } )" gj-track-event="dash:overview:all-activity">
+				<a class="btn btn-outline btn-block" ui-sref="dashboard.activity.feed( { tab: 'all' } )" gj-track-event="dash:overview:all-activity">
 					<span class="jolticon jolticon-notifications"></span>
 					{{ ::'dash.overview.activity_view_all_button' | translate }}
 				</a>

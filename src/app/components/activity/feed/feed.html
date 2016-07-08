@@ -1,27 +1,17 @@
-<div class="devlog-feed timeline-list full-bleed">
+<div class="activity-feed timeline-list full-bleed">
 
 	<!--
 		Note that our ng-repeat track by includes updated on.
 		This way it will update the whole div when the post changes.
 		This allows us to bind-once within the post, and still update during changes.
 	-->
-	<div class="devlog-feed-item timeline-list-item anim-fade-in-right no-animate-leave stagger"
-		ng-repeat="notification in $ctrl.notifications track by notification.id"
-		id="devlog-feed-post-{{ ::notification.id }}"
+	<div class="timeline-list-item anim-fade-in-right no-animate-leave stagger"
+		ng-repeat="item in $ctrl._items track by item.id"
+		id="activity-feed-item-{{ ::item.id }}"
+		in-view="$ctrl.onItemInViewChange( $inview, item )"
 		>
-		<!--in-view="$ctrl.onPostInViewChange( $inview, post )"-->
 
-		<gj-devlog-post-text
-			ng-if="::notification.action_model.type == $ctrl.firesidePostModel.TYPE_TEXT"
-			post="notification.action_model"
-			>
-		</gj-devlog-post-text>
-
-		<gj-devlog-post-media
-			ng-if="::notification.action_model.type == $ctrl.firesidePostModel.TYPE_MEDIA"
-			post="notification.action_model"
-			>
-		</gj-devlog-post-media>
+		<gj-activity-feed-item item="item"></gj-activity-feed-item>
 
 	</div>
 </div>

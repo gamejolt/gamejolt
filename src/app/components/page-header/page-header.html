@@ -12,14 +12,20 @@
 		</gj-media-item-cover>
 
 		<div class="page-header-cover-buttons"
-			ng-if=":$ctrl.hasCoverButtons"
+			ng-if="::$ctrl.hasCoverButtons"
 			ng-transclude="coverButtons"
 			>
 		</div>
 
 		<div class="container">
 
-			<div class="page-header-content" ng-transclude="content"></div>
+			<div class="row">
+				<div ng-class="$ctrl.colClasses ? $ctrl.colClasses : 'col-xs-12'">
+
+					<div class="page-header-content" ng-transclude="content"></div>
+
+				</div>
+			</div>
 
 			<div class="page-header-spotlight"
 				ng-if="::$ctrl.hasSpotlight"
@@ -38,11 +44,17 @@
 			<div class="container">
 
 				<div class="row">
-					<div ng-if="::$ctrl.hasControls" class="col-md-4 col-md-push-8">
-						<div class="page-header-controls" ng-transclude="controls"></div>
-					</div>
-					<div ng-class="::{ 'col-md-8 col-md-pull-4': $ctrl.hasControls, 'col-xs-12': !$ctrl.hasControls }">
-						<div ng-transclude="nav"></div>
+					<div ng-class="$ctrl.colClasses ? $ctrl.colClasses : 'col-xs-12'">
+
+						<div class="row">
+							<div ng-if="::$ctrl.hasControls" class="col-md-4 col-md-push-8">
+								<div class="page-header-controls" ng-transclude="controls"></div>
+							</div>
+							<div ng-class="::{ 'col-md-8 col-md-pull-4': $ctrl.hasControls, 'col-xs-12': !$ctrl.hasControls }">
+								<div ng-transclude="nav"></div>
+							</div>
+						</div>
+
 					</div>
 				</div>
 

@@ -1,0 +1,19 @@
+<div ng-switch="::$ctrl.itemType">
+	<gj-devlog-post-text
+		ng-switch-when="text"
+		post="$ctrl.item"
+		>
+	</gj-devlog-post-text>
+
+	<gj-devlog-post-media
+		ng-switch-when="media"
+		post="$ctrl.item"
+		>
+	</gj-devlog-post-media>
+
+	<gj-activity-feed-notification
+		ng-switch-when="notification"
+		notification="$ctrl.item"
+		>
+	</gj-activity-feed-notification>
+</div>

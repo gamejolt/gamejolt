@@ -20,6 +20,7 @@ export class PageHeaderComponent
 	@Input( '<?' ) coverMediaItem: any;
 	@Input( '<?' ) coverMaxHeight: number;
 	@Input( '<?' ) shouldAffixNav: boolean;
+	@Input( '@?' ) colClasses: string;
 
 	hasCoverButtons = false;
 	hasSpotlight = false;

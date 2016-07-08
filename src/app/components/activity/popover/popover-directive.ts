@@ -1,6 +1,7 @@
 import { Component, Inject, Output } from 'ng-metadata/core';
 import { App } from './../../../app-service';
 import { ModalConfirm } from './../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
 import template from './popover.html';
 
 const COUNT_INTERVAL = (5 * 60 * 1000);  // 5 minutes.
@@ -19,7 +20,7 @@ export class PopoverComponent
 
 	private notificationsCount = 0;
 	private leftoverCount = 0;
-	private notifications = [];
+	private notifications: Notification[] = [];
 
 	private isShown = false;
 	private isLoading = true;
@@ -30,7 +31,7 @@ export class PopoverComponent
 		@Inject( '$timeout' ) $timeout: ng.ITimeoutService,
 		@Inject( '$location' ) $location: ng.ILocationService,
 		@Inject( 'App' ) app: App,
-		@Inject( 'Notification' ) private notificationModel: any,
+		@Inject( 'Notification' ) private notificationModel: typeof Notification,
 		@Inject( 'Popover' ) private popover: any,
 		@Inject( 'ModalConfirm' ) private confirm: ModalConfirm,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog

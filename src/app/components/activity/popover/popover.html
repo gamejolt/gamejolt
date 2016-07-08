@@ -10,7 +10,7 @@
 	<div class="shell-card-popover-well">
 
 		<a class="btn btn-outline btn-block"
-			ui-sref="dashboard.activity.list( { tab: 'all' } )"
+			ui-sref="dashboard.activity.feed( { tab: 'all' } )"
 			ng-click="$ctrl.close()"
 			>
 			<span class="jolticon jolticon-notifications"></span>
@@ -35,34 +35,6 @@
 					(<span translate>notifications.popover.dismiss_all</span>)
 				</a>
 			</div>
-
-			<a>
-				<gj-card>
-
-					<div class="shell-card-popover-card-media">
-						<div
-							class="card-thumb"
-							ng-style="{ 'background-image': 'url( \'http://m.gjcdn.net/game-thumbnail/600/16352-bi7pmjiy.jpg\' )' }"
-							>
-						</div>
-					</div>
-					<div class="shell-card-popover-card-body">
-						<span class="card-remove" ng-click="$ctrl.dismiss( $event, notification )">
-							<span class="jolticon jolticon-remove"></span>
-						</span>
-
-						<div class="card-title">
-							<span class="shell-card-popover-card-time" am-time-ago="notification.added_on"></span>
-							<h5>4 new posts</h5>
-						</div>
-
-						<div class="card-content">
-							Blind Redux
-						</div>
-					</div>
-
-				</gj-card>
-			</a>
 
 			<div
 				ng-if="$ctrl.notifications.length"
@@ -118,7 +90,7 @@
 
 			<a class="btn btn-outline btn-block"
 				ng-if="$ctrl.leftoverCount"
-				ui-sref="dashboard.activity.list( { tab: 'unread' } )"
+				ui-sref="dashboard.activity.feed( { tab: 'unread' } )"
 				ng-click="$ctrl.close()"
 				>
 				<span class="jolticon jolticon-notifications"></span>

@@ -1,6 +1,6 @@
-import { Component, Input, Inject } from 'ng-metadata/core';
+import { Component, Input, Inject, SkipSelf, Optional } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { DevlogFeedService } from './../../feed/feed-service';
+import { FeedComponent } from './../../../activity/feed/feed-directive';
 import template from './text.html';
 
 @Component({
@@ -12,13 +12,13 @@ export class TextComponent
 	@Input( '<' ) post: Fireside_Post;
 
 	constructor(
-		@Inject( 'DevlogFeedService' ) private feedService: DevlogFeedService
+		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() private feed: FeedComponent
 	)
 	{
 	}
 
 	onPostClick()
 	{
-		this.feedService.setActive( this.post.id );
+		this.feed.setActive( this.post.id );
 	}
 }

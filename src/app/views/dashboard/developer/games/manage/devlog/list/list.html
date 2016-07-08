@@ -41,12 +41,12 @@
 		<div class="row">
 			<div class="col-lg-7">
 
-				<gj-devlog-feed
-					devlog-posts="listCtrl.tab == 'active' ? listCtrl.posts : listCtrl.draftPosts"
+				<gj-activity-feed
+					items="listCtrl.tab == 'active' ? listCtrl.posts : listCtrl.draftPosts"
 					on-post-published="listCtrl.onPostPublished( $post )"
 					on-post-removed="listCtrl.onPostRemoved( $post )"
 					>
-				</gj-devlog-feed>
+				</gj-activity-feed>
 
 			</div>
 		</div>
