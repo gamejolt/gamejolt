@@ -1,7 +1,8 @@
 import { Component, Inject, Input, Output } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
-import { ActivityFeedService, ActivityFeedModels } from './feed-service';
+import { ActivityFeedService } from './feed-service';
+import { ActivityFeedItem, ActivityFeedModels } from './item-service';
 import template from './feed.html';
 
 @Component({
@@ -12,8 +13,8 @@ export class FeedComponent
 {
 	// Store our own items so that we can update within this component
 	// without modifying the outside.
-	private _items: ActivityFeedModels[];
-	private _inView: number[] = [];
+	private _items: ActivityFeedItem[];
+	private _inView: string[] = [];
 
 	@Input( '<' ) items: ActivityFeedModels[];
 
@@ -28,13 +29,14 @@ export class FeedComponent
 		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
 		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'ActivityFeedService' ) private feedService: ActivityFeedService,
-		@Inject( 'Fireside_Post' ) private firesidePost: typeof Fireside_Post
+		@Inject( 'Fireside_Post' ) private firesidePost: typeof Fireside_Post,
+		@Inject( 'ActivityFeedItem' ) private activityFeedItem: typeof ActivityFeedItem
 	)
 	{
 		// Keep our post list in sync with parent.
 		$scope.$watchCollection( () => this.items, ( newVal, oldVal ) =>
 		{
-			this._items = (this.items || []).map( item => item );
+			this._items = (this.items || []).map( item => new this.activityFeedItem( item ) );
 
 			// First time getting items in.
 			// Let's try scolling to a possible active one.
@@ -48,6 +50,7 @@ export class FeedComponent
 	private _scrollActive()
 	{
 		const active = this.feedService.getActive();
+		console.log( 'got active', active );
 		if ( active ) {
 			this.$timeout( () =>
 			{
@@ -59,18 +62,24 @@ export class FeedComponent
 		}
 	}
 
-	setActive( active: number )
+	setActive( item: ActivityFeedItem )
 	{
-		this.feedService.setActive( active );
+		this.feedService.setActive( item.id );
 	}
 
 	onPostEdited( post: Fireside_Post )
 	{
 		// This should let our ng-repeat know that the post was modified.
 		// It shouldn't actually change the post since we're just filling the same values.
-		const index = _.findIndex( this._items, { id: post.id } );
+		const index = _.findIndex( this._items, {
+			type: post.type,
+			feedItem: {
+				id: post.id,
+			},
+		} );
+
 		if ( index >= 0 ) {
-			this._items[ index ] = new this.firesidePost( post );
+			this._items[ index ] = new this.activityFeedItem( post );
 		}
 
 		if ( this._onPostEdited ) {
@@ -92,7 +101,7 @@ export class FeedComponent
 		}
 	}
 
-	onItemInViewChange( visible: boolean, item: ActivityFeedModels )
+	onItemInViewChange( visible: boolean, item: ActivityFeedItem )
 	{
 		if ( visible ) {
 			this._inView.push( item.id );

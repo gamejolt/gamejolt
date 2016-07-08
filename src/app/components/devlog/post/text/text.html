@@ -8,7 +8,7 @@
 
 		<a class="timeline-list-item-header"
 			ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
-			ng-click="$ctrl.onPostClick()"
+			ng-click="$ctrl.onClick()"
 			>
 			<div class="timeline-list-item-header-content">
 				<div class="timeline-list-item-time">
@@ -30,7 +30,7 @@
 				fade-collapse-is-required="::$ctrl.canToggleContent"
 				>
 				<div class="fireside-post-body">
-					<div gj-widget-compiler-bind="::$ctrl.post.compiled_content"></div>
+					<div gj-widget-compiler-bind="::$ctrl.post.content_compiled"></div>
 				</div>
 			</gj-fade-collapse>
 

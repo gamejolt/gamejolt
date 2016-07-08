@@ -1,23 +1,22 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
-
-export type ActivityFeedModels = Notification | Fireside_Post;
+import { ActivityFeedItem } from './item-service';
 
 @Injectable()
 export class ActivityFeedService
 {
-	private _items: ActivityFeedModels[] = [];
-	private _activeId: number = null;
+	private _items: ActivityFeedItem[] = [];
+	private _activeId: string = null;
 
-	bootstrap( posts: ActivityFeedModels[] )
+	bootstrap( posts: ActivityFeedItem[] )
 	{
 		this.store( posts );
 		this._activeId = null;
 		return this._items;
 	}
 
-	store( posts: ActivityFeedModels[] )
+	store( posts: ActivityFeedItem[] )
 	{
 		this._items = posts;
 	}
@@ -27,7 +26,7 @@ export class ActivityFeedService
 		return this._items;
 	}
 
-	setActive( active: number )
+	setActive( active: string )
 	{
 		this._activeId = active;
 	}

@@ -11,7 +11,30 @@
 		in-view="$ctrl.onItemInViewChange( $inview, item )"
 		>
 
-		<gj-activity-feed-item item="item"></gj-activity-feed-item>
+		<div ng-switch="::item.type">
+			<div ng-switch-when="devlog-post" ng-switch="::item.feedItem.type">
+				<gj-devlog-post-text
+					ng-switch-when="text"
+					post="item.feedItem"
+					on-click="$ctrl.setActive( item )"
+					>
+				</gj-devlog-post-text>
+
+				<gj-devlog-post-media
+					ng-switch-when="media"
+					post="item.feedItem"
+					on-click="$ctrl.setActive( item )"
+					>
+				</gj-devlog-post-media>
+			</div>
+
+			<gj-activity-feed-notification
+				ng-switch-when="notification"
+				notification="item.feedItem"
+				on-click="$ctrl.setActive( item )"
+				>
+			</gj-activity-feed-notification>
+		</div>
 
 	</div>
 </div>

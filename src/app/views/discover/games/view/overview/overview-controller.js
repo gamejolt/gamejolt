@@ -3,7 +3,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, User, Environment,
 	Jam,
 	Comment_Video,
-	DevlogFeedService, History,
+	ActivityFeedService, History,
 	Api, Payload, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
 {
 	var _this = this;
@@ -93,10 +93,10 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		}
 
 		if ( wasHistoricalView ) {
-			this.posts = DevlogFeedService.fetch();
+			this.posts = ActivityFeedService.fetch();
 		}
 		else {
-			this.posts = DevlogFeedService.bootstrap( Fireside_Post.populate( payload.posts ) );
+			this.posts = ActivityFeedService.bootstrap( Fireside_Post.populate( payload.posts ) );
 		}
 
 		this.songs = Game_Song.populate( payload.songs );
@@ -189,7 +189,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			.then( function( response )
 			{
 				_this.posts = _this.posts.concat( Fireside_Post.populate( response.posts ) );
-				DevlogFeedService.store( _this.posts );
+				ActivityFeedService.store( _this.posts );
 			} );
 	};
 
