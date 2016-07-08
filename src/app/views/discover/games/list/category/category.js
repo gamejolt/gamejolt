@@ -53,7 +53,10 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlMatcherFacto
 					return filteringContainer.init( 'discover.games.list.' + state, $stateParams )
 						.then( function()
 						{
-							return History_Cache.cache( Api.sendRequest( buildQuery( $stateParams, filteringContainer ) ) );
+							return History_Cache.cache( function()
+							{
+								return Api.sendRequest( buildQuery( $stateParams, filteringContainer ) );
+							} );
 						} );
 				}
 			}

@@ -49,6 +49,5 @@ export class ActivityFeedItem
 		}
 
 		this.id = `${this.type}-${this.feedItem.id}-${dateVal}`;
-		console.log( this.id );
 	}
 }

@@ -1,6 +1,4 @@
-import { Injectable, Inject } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
+import { Injectable } from 'ng-metadata/core';
 import { ActivityFeedItem } from './item-service';
 
 @Injectable()

@@ -6,9 +6,12 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		controller: 'Dashboard.Activity.FeedCtrl',
 		controllerAs: 'feedCtrl',
 		resolve: {
-			payload: function( $stateParams, Api )
+			payload: function( $stateParams, Api, History_Cache )
 			{
-				return Api.sendRequest( '/web/dash/activity/' + $stateParams['tab'] );
+				return History_Cache.cache( function()
+				{
+					return Api.sendRequest( '/web/dash/activity/' + $stateParams['tab'] );
+				} );
 			}
 		}
 	} );
