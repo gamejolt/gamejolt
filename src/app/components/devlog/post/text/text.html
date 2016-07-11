@@ -11,8 +11,16 @@
 			ng-click="$ctrl.onClick()"
 			>
 			<div class="timeline-list-item-header-content">
-				<div class="timeline-list-item-time">
+				<div class="devlog-post-text-game" ng-if="::$ctrl.feed.showGameInfo && !$ctrl.screen.isXs">
+					<gj-game-thumbnail-img game="::$ctrl.post.game"></gj-game-thumbnail-img>
+				</div>
+
+				<div class="timeline-list-item-meta">
 					<span am-time-ago="::$ctrl.post.published_on"></span>
+					<span ng-if="::$ctrl.feed.showGameInfo">
+						<span class="dot-separator"></span>
+						<span>{{ ::$ctrl.post.game.title }}</span>
+					</span>
 				</div>
 
 				<div class="timeline-list-item-title">
@@ -36,11 +44,12 @@
 
 			<a class="hidden-text-expander"
 				ng-if="::$ctrl.canToggleContent"
-				ng-click="$ctrl.showFullContent = !$ctrl.showFullContent"
+				ng-click="$ctrl.toggleFull()"
 				></a>
 
 			<gj-devlog-post-controls
-				post="$ctrl.post"
+				post="::$ctrl.post"
+				on-expand="$ctrl.onExpand()"
 				>
 			</gj-devlog-post-controls>
 

@@ -1,9 +1,19 @@
 import { Component, Inject, Input, Output } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
-import { ActivityFeedService } from './feed-service';
-import { ActivityFeedItem, ActivityFeedModels } from './item-service';
+import { ActivityFeedItem } from './item-service';
+import { ActivityFeedContainer } from './feed-container-service';
 import template from './feed.html';
+
+/**
+ * The number of items from the bottom that we should hit before loading more.
+ */
+const LOAD_MORE_FROM_BOTTOM = 2;
+
+/**
+ * The number of times we should do an auto-load of items before stopping
+ * and requiring them to do it manually.
+ */
+const LOAD_MORE_TIMES = 3;
 
 @Component({
 	selector: 'gj-activity-feed',
@@ -11,37 +21,46 @@ import template from './feed.html';
 })
 export class FeedComponent
 {
-	// Store our own items so that we can update within this component
-	// without modifying the outside.
-	private _items: ActivityFeedItem[];
-	private _inView: string[] = [];
+	@Input( '<items' ) feed: ActivityFeedContainer;
+	@Input( '<' ) hasMore = true;
+	@Input( '<?' ) showEditControls = false;
+	@Input( '<?' ) showGameInfo = false;
 
-	@Input( '<' ) items: ActivityFeedModels[];
-
+	@Output( 'onLoadMore' ) private _onLoadMore: Function;
 	@Output( '?onPostRemoved' ) private _onPostRemoved: Function;
 	@Output( '?onPostEdited' ) private _onPostEdited: Function;
 	@Output( '?onPostPublished' ) private _onPostPublished: Function;
+
+	private _inView: string[] = [];
+
+	private _timesLoaded = 0;
+	private _isLoadingMore = false;
+
+	/**
+	 * Whether or not this feed was bootstrapped with previous data.
+	 * This happens when you click the back button into a feed.
+	 */
+	wasHistorical: boolean;
 
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( '$location' ) private $location: ng.ILocationService,
 		@Inject( '$document' ) private $document: ng.IDocumentService,
 		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
-		@Inject( 'Scroll' ) private scroll: any,
-		@Inject( 'ActivityFeedService' ) private feedService: ActivityFeedService,
-		@Inject( 'Fireside_Post' ) private firesidePost: typeof Fireside_Post,
-		@Inject( 'ActivityFeedItem' ) private activityFeedItem: typeof ActivityFeedItem
+		@Inject( 'Scroll' ) private scroll: any
 	)
 	{
+		this.wasHistorical = !!this.feed.getActive();
+
 		// Keep our post list in sync with parent.
-		$scope.$watchCollection( () => this.items, ( newVal, oldVal ) =>
+		$scope.$watchCollection( () => this.feed.items || [], ( newVal, oldVal ) =>
 		{
-			this._items = (this.items || []).map( item => new this.activityFeedItem( item ) );
+			this._isLoadingMore = false;
 
 			// First time getting items in.
-			// Let's try scolling to a possible active one.
+			// Let's try scrolling to a possible active one.
 			// This will happen if they click away and back to the feed.
-			if ( this._items.length && typeof oldVal === 'undefined' ) {
+			if ( newVal.length && newVal === oldVal ) {
 				this._scrollActive();
 			}
 		} );
@@ -49,14 +68,15 @@ export class FeedComponent
 
 	private _scrollActive()
 	{
-		const active = this.feedService.getActive();
-		console.log( 'got active', active );
+		const active = this.feed.getActive();
 		if ( active ) {
 			this.$timeout( () =>
 			{
 				const id = `activity-feed-item-${active}`;
-				if ( this.$document[0].getElementById( id ) ) {
+				const elem: HTMLElement = this.$document[0].getElementById( id );
+				if ( elem ) {
 					this.scroll.to( id );
+					elem.classList.add( 'active' );
 				}
 			}, 200, false );
 		}
@@ -64,24 +84,12 @@ export class FeedComponent
 
 	setActive( item: ActivityFeedItem )
 	{
-		this.feedService.setActive( item.id );
+		this.feed.setActive( item.id );
 	}
 
 	onPostEdited( post: Fireside_Post )
 	{
-		// This should let our ng-repeat know that the post was modified.
-		// It shouldn't actually change the post since we're just filling the same values.
-		const index = _.findIndex( this._items, {
-			type: post.type,
-			feedItem: {
-				id: post.id,
-			},
-		} );
-
-		if ( index >= 0 ) {
-			this._items[ index ] = new this.activityFeedItem( post );
-		}
-
+		this.feed.update( post );
 		if ( this._onPostEdited ) {
 			this._onPostEdited( { $post: post } );
 		}
@@ -96,8 +104,23 @@ export class FeedComponent
 
 	onPostRemoved( post: Fireside_Post )
 	{
+		this.feed.remove( post );
 		if ( this._onPostRemoved ) {
 			this._onPostRemoved( { $post: post } );
+		}
+	}
+
+	loadMore()
+	{
+		if ( this._isLoadingMore || !this.hasMore ) {
+			return;
+		}
+
+		this._isLoadingMore = true;
+		++this._timesLoaded;
+
+		if ( this._onLoadMore ) {
+			this._onLoadMore();
 		}
 	}
 
@@ -106,14 +129,28 @@ export class FeedComponent
 		if ( visible ) {
 			this._inView.push( item.id );
 			this._inView = _.uniq( this._inView );
-			this.feedService.setActive( item.id );
+			this.feed.setActive( item.id );
+			this.feed.viewed( item );
+
+			// Auto-loading while scrolling.
+			if ( !this._isLoadingMore && this.hasMore && this._timesLoaded < LOAD_MORE_TIMES ) {
+				const index = _.findIndex( this.feed.items, { id: item.id } );
+				if ( index >= this.feed.items.length - LOAD_MORE_FROM_BOTTOM ) {
+					this.loadMore();
+				}
+			}
 		}
 		else {
 			_.pull( this._inView, item.id );
 		}
 
 		if ( !this._inView.length ) {
-			this.feedService.setActive( null );
+			this.feed.setActive( null );
 		}
+	}
+
+	onItemExpanded( item: ActivityFeedItem )
+	{
+		this.feed.expanded( item );
 	}
 }

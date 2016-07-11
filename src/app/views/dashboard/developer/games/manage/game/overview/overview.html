@@ -3,27 +3,6 @@
 
 		<div gj-expand-when="!manageCtrl.game.is_published">
 
-			<!-- Game isn't ready to publish yet. -->
-			<div class="alert alert-warning" ng-if="!overviewCtrl.isPublishable">
-				<p ng-if="manageCtrl.game._is_wip"
-					translate
-					translate-params-thumbnail-url="$state.href( '^.thumbnail' )"
-					translate-params-maturity-url="$state.href( '^.maturity' )"
-					translate-params-builds-url="$state.href( '^.^.packages' )"
-					>
-					dash.games.overview.todo_info_wip_html
-				</p>
-
-				<p ng-if="!manageCtrl.game._is_wip"
-					translate
-					translate-params-thumbnail-url="$state.href( '^.thumbnail' )"
-					translate-params-maturity-url="$state.href( '^.maturity' )"
-					translate-params-builds-url="$state.href( '^.^.packages' )"
-					>
-					dash.games.overview.todo_info_html
-				</p>
-			</div>
-
 			<!-- Ready to publish! -->
 			<div ng-if="overviewCtrl.isPublishable">
 				<div class="alert alert-success" ng-if="!overviewCtrl.hasBuildsProcessing">

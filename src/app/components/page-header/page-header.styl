@@ -160,22 +160,24 @@ gj-page-header-controls
 		@media $media-md-up
 			margin-bottom: 0
 
-	@media $media-sm
+	&.has-controls &
 
-		&-controls
-			margin-left: 100px + ($grid-gutter-width / 2)
+		@media $media-sm
 
-		&-nav nav
-			margin-left: 0 !important
+			&-controls
+				margin-left: 100px + ($grid-gutter-width / 2)
 
-	// For when the page gets too small to float the spotlight off the left edge.
-	@media $page-header-spotlight-breakpoint
+			&-nav nav
+				margin-left: 0 !important
 
-		&-spotlight
-			left: 0
+		// For when the page gets too small to float the spotlight off the left edge.
+		@media $page-header-spotlight-breakpoint
 
-		&-content
-			padding-left: 100px + ($grid-gutter-width / 2)
+			&-spotlight
+				left: 0
 
-		&-nav nav
-			margin-left: 100px + ($grid-gutter-width / 2)
+			&-content
+				padding-left: 100px + ($grid-gutter-width / 2)
+
+			&-nav nav
+				margin-left: 100px + ($grid-gutter-width / 2)

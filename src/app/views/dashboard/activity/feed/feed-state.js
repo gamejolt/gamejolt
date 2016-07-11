@@ -12,7 +12,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 				{
 					return Api.sendRequest( '/web/dash/activity/' + $stateParams['tab'] );
 				} );
-			}
+			},
 		}
 	} );
 } );

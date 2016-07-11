@@ -6,7 +6,7 @@ import MetaModule from './../lib/gj-lib-client/components/meta/meta';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 import LoadModule from './../lib/gj-lib-client/components/load/load';
-import PermalinkModule from './../lib/gj-lib-client/components/permalink/permalink';
+import ClipboardModule from './../lib/gj-lib-client/components/clipboard/clipboard';
 import CardModule from './../lib/gj-lib-client/components/card/card';
 import HistoryTickModule from './../lib/gj-lib-client/components/history-tick/history-tick';
 import ModalConfirmModule from './../lib/gj-lib-client/components/modal/confirm/confirm';
@@ -24,8 +24,15 @@ import YoutubeChannelModule from './../lib/gj-lib-client/components/youtube/chan
 
 import CommentVideoLightboxModule from './../lib/gj-lib-client/components/comment/video/lightbox/lightbox';
 import CommentVideoThumbnailModule from './../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
-
+import GameThumbnailImgModule from './../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
+import ImgHelperModule from './../lib/gj-lib-client/components/img/helper/helper';
+import ImgResponsiveModule from './../lib/gj-lib-client/components/img/responsive/responsive';
 import VideoEmbedModule from './../lib/gj-lib-client/components/video-embed/video-embed';
+import FiresidePostModule from './../lib/gj-lib-client/components/fireside/post/post';
+import FiresidePostTagModule from './../lib/gj-lib-client/components/fireside/post/tag/tag';
+import FiresidePostLikeModule from './../lib/gj-lib-client/components/fireside/post/like/like';
+import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
+
 import SearchModule from './components/search/search';
 import FriendModule from './components/friend/friend';
 import ActivityModule from './components/activity/activity';
@@ -34,18 +41,15 @@ import MediaItemCoverModule from './components/media-item/cover/cover';
 import PageHeaderModule from './components/page-header/page-header';
 import GenreListModule from './components/genre/list/list';
 import GameMediaBarModule from './components/game/media-bar/media-bar';
+import CommentAvatarListModule from './components/comment/avatar-list/avatar-list';
 import ChannelsModule from './components/channel/channels';
-
-import FiresidePostModule from './../lib/gj-lib-client/components/fireside/post/post';
-import FiresidePostTagModule from './../lib/gj-lib-client/components/fireside/post/tag/tag';
-import FiresidePostLikeModule from './../lib/gj-lib-client/components/fireside/post/like/like';
-import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
-
 import DevlogPostTextModule from './components/devlog/post/text/text';
 import DevlogPostMediaModule from './components/devlog/post/media/media';
 import DevlogPostControlsModule from './components/devlog/post/controls/controls';
 import DevlogPostAddModule from './components/devlog/post/add/add';
 import DevlogPostEditModule from './components/devlog/post/edit/edit';
+
+import GameThumbnailModule from './components/game/thumbnail/thumbnail';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -105,7 +109,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Device',
 	'gj.Location',
 	'gj.Connection',
-	PermalinkModule,
+	ClipboardModule,
 
 	'gj.Partial',
 	'gj.Backdrop',
@@ -184,6 +188,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Game.Trophy',
 	'gj.Game.ScoreTable',
 	'gj.Game.DataStore.Item',
+	GameThumbnailImgModule,
 
 	'gj.Order',
 	'gj.Order.Item',
@@ -248,9 +253,9 @@ const AppModule = angular.module( 'App', [
 	'gj.Forum.Topic',
 	'gj.Forum.Post',
 
-	'gj.Img.Helper',
+	ImgHelperModule,
 	'gj.Img.Crop',
-	'gj.Img.ImgResponsive',
+	ImgResponsiveModule,
 
 	'gj.WidgetCompiler',
 	VideoEmbedModule,
@@ -287,7 +292,7 @@ const AppModule = angular.module( 'App', [
 	'App.Post.Grid',
 	'App.Post.List',
 
-	'App.Game.Thumbnail',
+	GameThumbnailModule,
 	'App.Meter',
 	'App.Game.CompatIcons',
 	'App.Game.Grid',
@@ -298,7 +303,7 @@ const AppModule = angular.module( 'App', [
 	'App.Game.RatingGrowl',
 	'App.Game.MaturityBlock',
 
-	'App.Comment.AvatarList',
+	CommentAvatarListModule,
 
 	ChannelsModule,
 

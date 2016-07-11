@@ -2,9 +2,9 @@
 <div class="devlog-post-controls">
 	<hr>
 
-	<p>
+	<div class="devlog-post-controls-links">
 		<a class="link-muted"
-			ng-click="$ctrl.isShowingComments = !$ctrl.isShowingComments"
+			ng-click="$ctrl.toggleComments()"
 			ng-switch="$ctrl.post.comment_count > 0"
 			>
 			<span
@@ -33,12 +33,22 @@
 				1 like
 			</a>
 		</span>
-	</p>
+
+		<span ng-if="::$ctrl.feed.showGameInfo">
+			<span class="dot-separator"></span>
+			<a class="link-muted"
+				ui-sref="discover.games.view.overview( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id } )"
+				translate
+				>
+				View game
+			</a>
+		</span>
+	</div>
 
 	<div class="clearfix">
 		<div class="pull-left" ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_ACTIVE">
 			<button class="btn btn-outline btn-sparse"
-				ng-click="$ctrl.isShowingComments = !$ctrl.isShowingComments"
+				ng-click="$ctrl.toggleComments()"
 				gj-tooltip="Comment on This Post"
 				>
 				<span class="jolticon jolticon-reply"></span>
@@ -49,9 +59,16 @@
 				sparse="true"
 				>
 			</gj-fireside-post-like-widget>
+
+			<button class="btn btn-success-outline"
+				ng-if="::$ctrl.feed.showGameInfo && $ctrl.app.user && $ctrl.post.user.id != $ctrl.app.user.id"
+				>
+				<span class="jolticon jolticon-subscribe"></span>
+				<span translate>Follow Game</span>
+			</button>
 		</div>
 
-		<div class="pull-right" ng-if="::$ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
+		<div class="pull-right" ng-if="::$ctrl.feed.showEditControls && $ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
 			<button class="btn btn-success-outline" ng-if="$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT" ng-click="$ctrl.publishPost()">
 				<span class="jolticon jolticon-check"></span>
 				<span translate>Publish</span>
@@ -68,7 +85,6 @@
 
 </div>
 
-<!-- Options -->
 <gj-popover popover-id="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
 	<div class="list-group list-group-dark">
 		<a class="list-group-item has-icon"
@@ -80,15 +96,12 @@
 	</div>
 </gj-popover>
 
-<!-- Comments -->
-<div ng-if="$ctrl.isShowingComments">
-	<br>
-	<br>
+<div class="devlog-post-controls-well" ng-if="$ctrl.isShowingComments">
 
-		<!--current-page="$ctrl.currentCommentPage"-->
 	<gj-comment-widget
 		comment-resource="Fireside_Post"
 		comment-resource-id="::$ctrl.post.id"
+		no-intro="true"
 		>
 	</gj-comment-widget>
 </div>

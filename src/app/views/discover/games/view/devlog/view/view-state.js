@@ -9,8 +9,8 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 			payload: function( $stateParams, Api, Fireside_Post )
 			{
 				var postHash = Fireside_Post.pullHashFromUrl( $stateParams.postSlug );
-				return Api.sendRequest( '/fireside/posts/' + postHash );
-			}
+				return Api.sendRequest( '/web/discover/games/devlog/' + $stateParams['id'] + '/' + postHash );
+			},
 		}
 	} );
 } );

@@ -13,8 +13,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	this.installableBuilds = [];
 	this.browserBuilds = [];
 
-	this.followTooltip = gettextCatalog.getString( 'library.followed.follow_game_button_tooltip' );
-	this.unfollowTooltip = gettextCatalog.getString( 'library.followed.unfollow_game_button_tooltip' );
+	this.followTooltip = gettextCatalog.getString( 'Follow this game to add it to your Library and be notified when new posts are added.' );
 
 	// Overview page will populate this.
 	// We only need it for the overview page, but we need to show it in the view of this controller.
@@ -62,7 +61,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 
 		this.followerCount = payload.followerCount;
 		this.libraryGame = payload.libraryGame ? new GameLibrary_Game( payload.libraryGame ) : null;
-		this.newsArticlesCount = payload.newsArticlesCount || 0;
+		this.postCount = payload.postCount || 0;
 		this.trophiesCount = payload.trophiesCount || 0;
 		this.hasScores = payload.hasScores || false;
 		this.primaryScoreTable = payload.primaryScoreTable ? new Game_ScoreTable( payload.primaryScoreTable ) : null;
@@ -108,10 +107,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 			{
 				_this.libraryGame = null;
 				_this.followerCount = response.followers;
-				Growls.success(
-					gettextCatalog.getString( 'library.followed.remove_game_success_growl', { game: _this.game.title } ),
-					gettextCatalog.getString( 'library.followed.remove_game_success_growl_title', { game: _this.game.title } )
-				);
 			} )
 			.catch( function()
 			{
@@ -130,15 +125,11 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 			{
 				_this.libraryGame = newLibraryGame;
 				_this.followerCount = response.followers;
-				Growls.success(
-					gettextCatalog.getString( "You are now following {{ game }}. You'll be notified of news updates as long as it's in your library.", { game: _this.game.title } ),
-					gettextCatalog.getString( 'Game Followed' )
-				);
 			} )
 			.catch( function()
 			{
 				Growls.success(
-					gettextCatalog.getString( 'Something has prevented you from following this game' )
+					gettextCatalog.getString( 'Something has prevented you from following this game.' )
 				);
 			} );
 

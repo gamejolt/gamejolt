@@ -54,7 +54,7 @@
 		</div>
 	</div>
 
-	<img gj-img-responsive="{{ ::$ctrl.game.thumbnail_media_item.mediaserver_url }}" alt="">
+	<gj-game-thumbnail-img game="$ctrl.game"></gj-game-thumbnail-img>
 
 	<video ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop" preload loop autoplay ng-attr-poster="{{ ::$ctrl.game.thumbnail_media_item.mediaserver_url }}">
 		<source ng-src="{{ ::$ctrl.webm }}" type="video/webm">

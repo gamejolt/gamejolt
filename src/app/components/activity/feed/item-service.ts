@@ -2,7 +2,7 @@ import { Injectable } from 'ng-metadata/core';
 import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
 
-export type ActivityFeedModels = Notification | Fireside_Post;
+export type ActivityFeedInput = Notification | Fireside_Post;
 
 export function ActivityFeedItemFactory( Notification, Fireside_Post )
 {
@@ -19,9 +19,9 @@ export class ActivityFeedItem
 
 	id: string;
 	type: 'devlog-post' | 'notification';
-	feedItem: ActivityFeedModels;
+	feedItem: ActivityFeedInput;
 
-	constructor( private _item: ActivityFeedModels )
+	constructor( private _item: ActivityFeedInput )
 	{
 		if ( _item instanceof ActivityFeedItem.Notification && _item.type == ActivityFeedItem.Notification.TYPE_DEVLOG_POST_ADD ) {
 			this.feedItem = _item.action_model;
@@ -45,7 +45,7 @@ export class ActivityFeedItem
 			dateVal = item.added_on;
 		}
 		else if ( item instanceof ActivityFeedItem.Fireside_Post ) {
-			dateVal = item.updated_on;
+			dateVal = item.updated_on || item.added_on;
 		}
 
 		this.id = `${this.type}-${this.feedItem.id}-${dateVal}`;

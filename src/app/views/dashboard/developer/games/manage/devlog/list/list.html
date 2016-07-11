@@ -27,7 +27,7 @@
 						translate
 						>
 						Draft Posts
-						<span class="badge">{{ listCtrl.draftPosts.length || 0 | number }}</span>
+						<span class="badge">{{ listCtrl.draftPosts.items.length || 0 | number }}</span>
 					</a>
 				</li>
 			</ul>
@@ -43,8 +43,9 @@
 
 				<gj-activity-feed
 					items="listCtrl.tab == 'active' ? listCtrl.posts : listCtrl.draftPosts"
+					has-more="listCtrl.tab == 'active' ? true : true"
+					show-edit-controls="true"
 					on-post-published="listCtrl.onPostPublished( $post )"
-					on-post-removed="listCtrl.onPostRemoved( $post )"
 					>
 				</gj-activity-feed>
 

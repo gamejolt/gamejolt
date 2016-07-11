@@ -1,2 +1,20 @@
 .devlog-post-controls
 	margin-bottom: $line-height-computed
+
+	&-links
+		margin-bottom: $line-height-computed
+
+		@media $media-xs
+			font-size: $font-size-small
+
+	&-well
+		position: relative
+		margin-top: $line-height-computed + 10px
+		padding-top: $line-height-computed
+		border-top: 1px solid $gray-lightest
+
+		&::before
+			caret( color: $gray-lightest, direction: 'up', size: 10px )
+			display: block
+			content: ''
+

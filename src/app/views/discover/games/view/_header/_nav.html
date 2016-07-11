@@ -1,17 +1,28 @@
 <!-- Game Nav -->
 <nav class="platform-list inline">
 	<ul>
-		<li>
+		<li ng-if="!gameCtrl.game._is_devlog">
+			<a ui-sref=".overview" ui-sref-active="active">
+				{{ ::'games.view.overview_tab' | translate }}
+			</a>
+		</li>
+		<li ng-if="gameCtrl.game._is_devlog">
 			<a ui-sref=".overview"
-				ui-sref-active="active"
+				ng-class="{ active: $state.is( 'discover.games.view.overview' ) || $state.includes( 'discover.games.view.devlog' ) }"
 				>
-				<span ng-if="!gameCtrl.game._is_devlog">{{ ::'games.view.overview_tab' | translate }}</span>
-				<span ng-if="gameCtrl.game._is_devlog" translate>Devlog</span>
+				<span translate>Devlog</span>
+				<span class="badge">{{ gameCtrl.postCount | number }}</span>
+			</a>
+		</li>
+		<li ng-if="!gameCtrl.game._is_devlog && gameCtrl.postCount > 0">
+			<a ui-sref=".devlog.list" ng-class="{ active: $state.includes( 'discover.games.view.devlog' ) }">
+				<span translate>Devlog</span>
+				<span class="badge">{{ gameCtrl.postCount | number }}</span>
 			</a>
 		</li>
 		<li ng-if="gameCtrl.game._is_devlog && gameCtrl.game.comments_enabled">
-			<a ui-sref=".comments.list" ng-class="{ active: $state.includes( 'discover.games.view.comments' ) }">
-				Comments
+			<a ui-sref=".comments" ui-sref-active="active">
+				<span translate>Comments</span>
 				<span class="badge">{{ gameCtrl.commentsCount | number }}</span>
 			</a>
 		</li>

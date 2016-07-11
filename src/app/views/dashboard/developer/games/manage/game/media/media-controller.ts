@@ -1,7 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../../../../../app-service';
 import { ModalConfirm } from './../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Permalink } from './../../../../../../../../lib/gj-lib-client/components/permalink/permalink-service';
+import { Clipboard } from './../../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 
 @Injectable()
 export class MediaCtrl
@@ -19,7 +19,7 @@ export class MediaCtrl
 		@Inject( 'Game_Screenshot' ) private gameScreenshotModel: any,
 		@Inject( 'Game_Video' ) private gameVideoModel: any,
 		@Inject( 'ModalConfirm' ) private confirm: ModalConfirm,
-		@Inject( 'Permalink' ) private permalink: Permalink,
+		@Inject( 'Clipboard' ) private clipboard: Clipboard,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
 	)

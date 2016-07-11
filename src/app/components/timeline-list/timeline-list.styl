@@ -6,12 +6,6 @@
 
 	margin-bottom: $line-height-computed
 
-	// We pull the list to the left on mobile so that we have more room.
-	// This cuts off the icon bubbles a bit.
-	margin-left: -20px
-	@media $media-sm-up
-		margin-left: 0
-
 	// For making the timeline list full bleed.
 	&.full-bleed
 		@media $media-sm-up
@@ -26,6 +20,9 @@
 		display: block
 		color: $gray-dark
 
+		@media $media-xs
+			margin-bottom: $line-height-computed
+
 		&-icon
 			position: absolute
 			left: 0
@@ -38,6 +35,9 @@
 			text-align: center
 			z-index: 1
 			color: $gray-light
+
+			@media $media-xs
+				display: none
 
 			.timeline-list-item:hover &
 				background-color: $gj-dark-green
@@ -55,12 +55,21 @@
 
 		&-main
 			@extend .clearfix
-			margin-left: ($icon-size / 2)
-			padding-left: ($icon-size / 2) + $avatar-margin
 			padding-bottom: ($line-height-computed * 1.5)
-			border-left: 2px solid $gray-lightest
 
-		&-time
+			@media $media-xs
+				padding-left: ($grid-gutter-width-xs / 2)
+				padding-right: @padding-left
+
+			@media $media-sm-up
+				border-left: 2px solid $gray-lightest
+				margin-left: ($icon-size / 2)
+				padding-left: ($icon-size / 2) + $avatar-margin
+
+			.timeline-list-item.active &
+				border-color: $gj-blue
+
+		&-meta
 			color: $text-muted
 			font-size: $font-size-tiny
 
@@ -76,8 +85,14 @@
 			display: block
 			position: relative
 			background-color: $gray-darker
-			margin-left: -(($icon-size / 2) + $avatar-margin)
 			margin-bottom: $line-height-computed
+
+			@media $media-xs
+				margin-left: -($grid-gutter-width-xs / 2)
+				margin-right: @margin-left
+
+			@media $media-sm-up
+				margin-left: -(($icon-size / 2) + $avatar-margin)
 
 			&-img
 				display: block
@@ -89,22 +104,30 @@
 					height: auto
 
 			&-content
-				padding-top: ($grid-gutter-width / 2)
-				padding-bottom: @padding-top
-				padding-left: ($icon-size / 2) + $avatar-margin
-				padding-right: @padding-top
+				@extend .clearfix
+				padding: ($grid-gutter-width-xs / 2)
+
+				@media $media-sm-up
+					padding-top: ($grid-gutter-width / 2)
+					padding-bottom: @padding-top
+					padding-left: ($icon-size / 2) + $avatar-margin
+					padding-right: @padding-top
 
 				.timeline-list-item-header.has-header-img &
 					position: absolute
 					top: 0
 					left: 0
+					right: 0
 					text-shadow: 1px 1px 1px rgba( $black, 0.5 )
 
-				& .timeline-list-item-time
+				.timeline-list-item-meta
 					color: $white
 
-				& .timeline-list-item-title
-					font-size: $font-size-h2
+				.timeline-list-item-title
+					font-size: $font-size-h4
+
+					@media $media-sm-up
+						font-size: $font-size-h2
 
 					&
 					strong
@@ -115,7 +138,6 @@
 			margin-top: 5px
 
 		&-content
-			font-size: $font-size-small
 			color: $gray-dark
 
 			p:last-child

@@ -92,12 +92,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			} );
 		}
 
-		if ( wasHistoricalView ) {
-			this.posts = ActivityFeedService.fetch();
-		}
-		else {
-			this.posts = ActivityFeedService.bootstrap( Fireside_Post.populate( payload.posts ) );
-		}
+		this.posts = ActivityFeedService.bootstrap( Fireside_Post.populate( payload.posts ), { inHistorical: wasHistoricalView } );
+		this.hasMorePosts = true;
 
 		this.songs = Game_Song.populate( payload.songs );
 		this.recommendedGames = Game.populate( payload.recommendedGames );
@@ -184,17 +180,16 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	this.loadMorePosts = function()
 	{
 		var _this = this;
-		var lastPost = this.posts[ this.posts.length - 1 ];
-		Api.sendRequest( '/web/discover/games/posts/' + $stateParams.id + '/' + lastPost.id )
+		var lastPost = this.posts.items[ this.posts.items.length - 1 ];
+		Api.sendRequest( '/web/discover/games/devlog/posts/' + $stateParams.id + '/' + lastPost.feedItem.id )
 			.then( function( response )
 			{
-				_this.posts = _this.posts.concat( Fireside_Post.populate( response.posts ) );
-				ActivityFeedService.store( _this.posts );
-			} );
-	};
+				if ( !response.posts || !response.posts.length ) {
+					_this.hasMorePosts = false;
+					return;
+				}
 
-	this.onPostRemoved = function( post )
-	{
-		window._.remove( this.posts, { id: post.id } );
+				_this.posts.append( Fireside_Post.populate( response.posts ) );
+			} );
 	};
 } );

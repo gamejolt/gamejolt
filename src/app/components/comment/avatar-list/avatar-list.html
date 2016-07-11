@@ -1,23 +1,29 @@
 <div class="comment-avatar-list">
 
-	<a class="comment-avatar-list-add">
-		<span class="jolticon jolticon-add big"></span>
+	<a class="btn btn-outline btn-lg btn-sparse"
+		ui-sref="discover.games.view.comments"
+		>
+		<span class="jolticon jolticon-add"></span>
 	</a>
 
 	<div class="comment-avatar-list-item"
-		ng-repeat="comment in $ctrl.comments"
+		ng-repeat="comment in $ctrl.comments | limitTo:6"
 		gj-popover-trigger="comment-avatar-list-item-{{ ::comment.id }}"
 		popover-trigger-event="hover"
 		>
-		<a
-			>
-			<img class="img-circle img-responsive" ng-src="{{ ::comment.user.img_avatar }}" alt="">
+		<a ui-sref="discover.games.view.comments( { '#': 'comment-' + comment.id } )">
+			<img class="img-responsive" ng-src="{{ ::comment.user.img_avatar }}" alt="">
 		</a>
 
-		<gj-popover popover-id="comment-avatar-list-item-{{ ::comment.id }}" class="popover-dark">
+		<gj-popover
+			class="popover-dark"
+			popover-id="comment-avatar-list-item-{{ ::comment.id }}"
+			popover-on-focus="$ctrl.onFocus( comment.id )"
+			popover-on-blur="$ctrl.onBlur( comment.id )"
+			>
 			<div class="comment-avatar-list-comment well fill-white sans-margin">
 
-				<div class="comment-avatar-list-comment-body">
+				<div class="comment-avatar-list-comment-body" ng-if="$ctrl.isFocused[ comment.id ]">
 
 					<div class="comment-avatar-list-comment-title">
 						<span ng-if="::isOwner" class="comment-avatar-list-comment-owner tag visible-xs pull-right"
@@ -26,7 +32,7 @@
 							>
 							Owner
 						</span>
-						<a ng-href="{{ ::profileUrl }}">{{ ::comment.user.display_name }}</a>
+						{{ ::comment.user.display_name }}
 						<span class="comment-avatar-list-comment-time" am-time-ago="comment.posted_on"></span>
 						<span ng-if="::isOwner" class="comment-avatar-list-comment-owner tag hidden-xs" translate>Owner</span>
 					</div>
@@ -37,47 +43,6 @@
 							>
 						</div>
 					</gj-fade-collapse>
-
-					<div class="comment-avatar-list-comment-meta">
-
-						<!--<a class="comment-avatar-list-comment-voting"
-							ng-if="::canVote"
-							gj-tooltip="{{ votingTooltip }}"
-							ng-click="onVoteClick()"
-							gj-track-event="comment-widget:vote-click"
-							>
-							<span ng-class="{ 'i-button sparse active': ctrl.userVotes[comment.id] }">
-								<span class="jolticon jolticon-thumbs-up"></span>
-							</span>
-
-							<span class="blip light" ng-class="{ filled: comment.votes || comment.votes != '0' }">
-								<span class="blip-caret"></span>
-								<span class="blip-count">{{ comment.votes }}</span>
-							</span>
-						</a>
-
-						<span class="blip light no-caret"
-							ng-if="::!canVote"
-							ng-class="{ filled: comment.votes || comment.votes != '0' }"
-							gj-tooltip="{{ votingTooltip }}"
-							gj-track-event="comment-widget:vote-click-notallowed"
-							>
-
-							<span class="blip-count">{{ comment.votes }}</span>
-						</span>-->
-
-						<!--<span ng-if="::App.user && (App.user.id != comment.user || App.user.permissionLevel >= 3)">
-							<span class="dot-separator"></span>
-
-							<a
-								gj-tooltip="{{ 'More Options' | translate }}"
-								gj-popover-trigger="comment-more-options-{{ ::comment.id }}"
-								>
-								<span class="jolticon jolticon-ellipsis-h"></span>
-							</a>
-						</span>-->
-
-					</div>
 
 				</div>
 

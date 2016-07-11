@@ -1,4 +1,4 @@
-import { Component, Input, Inject, SkipSelf, Optional } from 'ng-metadata/core';
+import { Component, Input, Output, Inject, SkipSelf, Optional } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { App } from './../../../../app-service';
 import { DevlogPostEdit } from './../edit/edit-service';
@@ -13,6 +13,10 @@ export class ControlsComponent
 {
 	@Input( '<' ) post: Fireside_Post;
 
+	@Output() onExpand: Function;
+
+	isShowingComments = false;
+
 	constructor(
 		@Inject( 'App' ) private app: App,
 		@Inject( 'Fireside_Post' ) private firesidePostModel: typeof Fireside_Post,
@@ -20,6 +24,12 @@ export class ControlsComponent
 		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() private feed: FeedComponent
 	)
 	{
+	}
+
+	toggleComments()
+	{
+		this.isShowingComments = !this.isShowingComments;
+		this.onExpand();
 	}
 
 	showEdit()

@@ -12,7 +12,7 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 		},
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $element, $scope, $state, $q, $location, Environment, App, Api, Popover, Forum_Post, Growls, AutoScroll, Report_Modal, Permalink )
+		controller: function( $element, $scope, $state, $q, $location, Environment, App, Api, Popover, Forum_Post, Growls, AutoScroll, Report_Modal, Clipboard )
 		{
 			var _this = this;
 
@@ -150,7 +150,7 @@ angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', functio
 
 			this.copyPermalink = function()
 			{
-				Permalink.copy( this.post.getPermalink() );
+				Clipboard.copy( this.post.getPermalink() );
 			};
 
 			function checkPermalink()

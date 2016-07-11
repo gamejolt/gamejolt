@@ -5,6 +5,7 @@ import ModelModule from './../lib/gj-lib-client/components/model/model';
 import MetaModule from './../lib/gj-lib-client/components/meta/meta';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
+import ImgHelperModule from './../lib/gj-lib-client/components/img/helper/helper';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -55,7 +56,7 @@ const AppModule = angular.module( 'App', [
 	'gj.User.LinkedAccounts',
 	'gj.MediaItem',
 
-	'gj.Img.Helper',
+	ImgHelperModule,
 
 	'App.Forms',
 

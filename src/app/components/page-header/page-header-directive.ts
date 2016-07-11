@@ -29,7 +29,8 @@ export class PageHeaderComponent
 
 	constructor(
 		@Inject( '$transclude' ) $transclude: any,
-		@Inject( 'Screen' ) private screen: Screen
+		@Inject( 'Screen' ) private screen: Screen,
+		@Inject( 'Scroll' ) private scroll: any
 	)
 	{
 		this.hasCoverButtons = $transclude.isSlotFilled( 'coverButtons' );

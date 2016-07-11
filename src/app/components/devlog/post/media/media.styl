@@ -24,6 +24,11 @@
 	&-next
 		right: 0
 
+	&-game
+		float: right
+		width: 120px
+		border: 2px solid $white
+
 	.timeline-list-item-header-content
 		pointer-events: none
 
@@ -44,12 +49,14 @@
 			broder-right: 1px solid $white
 
 	.timeline-list-item-header:hover
+	&.has-dragged .timeline-list-item-header
 		.timeline-list-item-header-content
 			opacity: 0
 
 		.timeline-list-item-header-img
 			opacity: 1
 
-		.devlog-post-media-prev
-		.devlog-post-media-next
-			display: block
+		@media $media-sm-up
+			.devlog-post-media-prev
+			.devlog-post-media-next
+				display: block

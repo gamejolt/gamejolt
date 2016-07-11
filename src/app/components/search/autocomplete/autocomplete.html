@@ -34,7 +34,7 @@
 				</div>-->
 
 				<span class="search-game-thumbnail">
-					<img gj-img-responsive="{{ ::libraryGame.thumbnail_media_item.mediaserver_url || libraryGame.img_thumbnail }}" alt="{{ ::libraryGame.title }}">
+					<gj-game-thumbnail-img game="::libraryGame"></gj-game-thumbnail-img>
 				</span>
 
 				{{ ::libraryGame.title }}
@@ -63,7 +63,7 @@
 				</div>
 
 				<span class="search-game-thumbnail">
-					<img gj-img-responsive="{{ ::game.thumbnail_media_item.mediaserver_url }}" alt="{{ ::game.title }}">
+					<gj-game-thumbnail-img game="::game"></gj-game-thumbnail-img>
 				</span>
 
 				{{ ::game.title }}

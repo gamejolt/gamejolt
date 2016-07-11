@@ -1,37 +1,50 @@
-<gj-page-header
-	cover-media-item="viewCtrl.post.header"
-	>
+<div gj-scroll-when></div>
 
-	<gj-page-header-content>
-		<h2>
-			{{ viewCtrl.post.title }}
-		</h2>
-	</gj-page-header-content>
-
-	<!--<gj-page-header-spotlight>
-		<div gj-user-avatar="gameCtrl.game.developer"></div>
-	</gj-page-header-spotlight>-->
-
-	<!--<gj-page-header-nav>
-		<div gj-partial="/app/views/discover/games/view/_header/_nav.html"></div>
-	</gj-page-header-nav>-->
-
-	<!--<gj-page-header-controls>
-		<div gj-partial="/app/views/discover/games/view/_header/_controls.html"></div>
-	</gj-page-header-controls>-->
-
-</gj-page-header>
+<section class="section section-thin" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-7 col-lg-offset-2">
+				<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+		</div>
+	</div>
+</section>
 
 <div class="container">
 	<div class="row">
 		<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 
 			<section class="section">
-				<div class="fireside-post-body">
-					<div gj-widget-compiler-bind="::viewCtrl.post.content_compiled"></div>
+				<div class="tiny text-muted">
+					<span am-time-ago="::viewCtrl.post.published_on"></span>
+				</div>
+
+				<h2 class="section-header">
+					{{ viewCtrl.post.title }}
+				</h2>
+
+				<div ng-switch="viewCtrl.post.type">
+
+					<div ng-switch-when="text" class="fireside-post-body">
+						<div gj-widget-compiler-bind="::viewCtrl.post.content_compiled"></div>
+					</div>
+
+					<div ng-switch-when="media" class="full-bleed-xs">
+
+						<p ng-repeat="item in viewCtrl.post.media track by item.id">
+							<img
+								class="img-responsive"
+								ng-src="{{ ::item.img_url }}"
+								alt=""
+								>
+						</p>
+
+					</div>
+
 				</div>
 
 				<div class="text-center">
+					<br>
 					<gj-fireside-post-like-widget
 						fireside-post="viewCtrl.post"
 						>

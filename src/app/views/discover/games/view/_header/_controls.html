@@ -23,7 +23,7 @@
 			ng-click="gameCtrl.onFollowClick()"
 			class="game-header-follow btn btn-block"
 			ng-class="!gameCtrl.libraryGame ? 'btn-outline' : 'btn-success active'"
-			gj-tooltip="{{ !gameCtrl.libraryGame ? gameCtrl.followTooltip : gameCtrl.unfollowTooltip }}"
+			gj-tooltip="{{ !gameCtrl.libraryGame ? gameCtrl.followTooltip : undefined }}"
 			tooltip-placement="bottom"
 			gj-track-event="game-profile:{{ !gameCtrl.libraryGame ? 'follow' : 'unfollow' }}"
 			ng-switch="!!gameCtrl.libraryGame"
