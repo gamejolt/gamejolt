@@ -5,7 +5,7 @@ import { ModalConfirm } from './../lib/gj-lib-client/components/modal/confirm/co
 @Injectable()
 export class App
 {
-	ver: number = null;
+	ver: number | null = null;
 	user: any = null;
 	userBootstrapped = false;
 
@@ -14,7 +14,6 @@ export class App
 		@Inject( '$state' ) private $state: ng.ui.IStateService,
 		@Inject( '$injector' ) private $injector: any,
 		@Inject( '$q' ) private $q: ng.IQService,
-		@Inject( '$document' ) private $document: ng.IDocumentService,
 		@Inject( 'Chat' ) private chat: any,
 		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
 		@Inject( 'Growls' ) private growls: any,
@@ -36,7 +35,7 @@ export class App
 	}
 
 	get title() { return this.meta.title; }
-	set title( title: string ) { this.meta.title = title; }
+	set title( title: string | null ) { this.meta.title = title; }
 
 	logout()
 	{
@@ -57,7 +56,7 @@ export class App
 						this.growls.success( 'You are now logged out.', 'Goodbye!' );
 						resolve();
 					} )
-					.catch( err =>
+					.catch( ( err: any ) =>
 					{
 						console.error( err );
 						this.growls.error( 'Could not log you out.' );

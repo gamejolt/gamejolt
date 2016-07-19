@@ -1,5 +1,5 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { ActivityFeedItem, ActivityFeedInput } from './item-service';
+import { ActivityFeedInput } from './item-service';
 import { ActivityFeedContainer } from './feed-container-service';
 
 export interface BootstrapOptions
@@ -25,9 +25,9 @@ export class ActivityFeedService
 
 	constructor(
 		@Inject( 'History' ) private history: any,
-		@Inject( 'ActivityFeedContainer' ) private containerModel: typeof ActivityFeedContainer,
 		@Inject( '$state' ) private $state: ng.ui.IStateService,
-		@Inject( '$stateParams' ) private $stateParams: ng.ui.IStateParamsService
+		@Inject( '$stateParams' ) private $stateParams: ng.ui.IStateParamsService,
+		@Inject( 'ActivityFeedContainer' ) private containerModel: typeof ActivityFeedContainer,
 	)
 	{
 	}
@@ -57,7 +57,7 @@ export class ActivityFeedService
 		_.remove( this._states, { url } );
 		this._currentState = {
 			url,
-			container: new ActivityFeedContainer( items ),
+			container: new this.containerModel( items ),
 		};
 		this._states.push( this._currentState );
 

@@ -18,8 +18,8 @@ export class TextComponent
 	showFullContent = false;
 
 	constructor(
-		@Inject( 'Screen' ) private screen: Screen,
-		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() private feed: FeedComponent
+		@Inject( 'Screen' ) public screen: Screen,
+		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: FeedComponent
 	)
 	{
 	}

@@ -68,7 +68,14 @@ const AppModule = angular.module( 'App', [
 	// Client.
 	/* inject client:base:modules */
 ] )
-.config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $sceDelegateProvider, TranslateProvider )
+.config( function(
+	$locationProvider: ng.ILocationProvider,
+	$uiViewScrollProvider: ng.ui.IUiViewScrollProvider,
+	$compileProvider: ng.ICompileProvider,
+	EnvironmentProvider: any,
+	$sceDelegateProvider: ng.ISCEDelegateProvider,
+	TranslateProvider: any,
+)
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
 		'self',

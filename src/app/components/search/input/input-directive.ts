@@ -30,8 +30,9 @@ export class InputDirective implements OnInit
 	{
 		this.searchCtrl.inputElem = this.$element;
 
-		// Obviouisly don't want browser autocomplete popping over.
-		this.$element[0].autocomplete = 'off';
+		// Obviously don't want browser autocomplete popping over.
+		const element = this.$element[0] as HTMLInputElement;
+		element.autocomplete = 'off';
 
 		// Sync from the global search query to our input.
 		this.$scope.$watch( () => this.search.query, () =>
@@ -56,7 +57,7 @@ export class InputDirective implements OnInit
 			} );
 		} );
 
-		this.$element.on( 'keydown', ( event: KeyboardEvent ) =>
+		this.$element.on( 'keydown', ( event: JQueryEventObject ) =>
 		{
 			this.$scope.$applyAsync( () =>
 			{

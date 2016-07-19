@@ -4,7 +4,7 @@ import { Meta } from './../lib/gj-lib-client/components/meta/meta-service';
 @Injectable()
 export class App
 {
-	ver: number = null;
+	ver: number | null = null;
 	user: any = null;
 	shouldShowCoverImage = true;
 
@@ -18,11 +18,10 @@ export class App
 		@Inject( 'Environment' ) private environment: any
 	)
 	{
-		'ngNoInject';
 	}
 
 	get title() { return this.meta.title; }
-	set title( title: string ) { this.meta.title = title; }
+	set title( title: string | null ) { this.meta.title = title; }
 
 	redirectDashboard()
 	{

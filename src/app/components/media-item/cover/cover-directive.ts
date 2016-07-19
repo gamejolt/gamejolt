@@ -13,8 +13,8 @@ import template from 'html!./cover.html';
 export class CoverComponent
 {
 	@Input( '<' ) mediaItem: any;
-	@Input( '<?' ) shouldParallax: boolean;
-	@Input( '<?' ) maxHeight: number;
+	@Input( '<?' ) shouldParallax = false;
+	@Input( '<?' ) maxHeight?: number;
 
 	@Output() onLoaded: Function;
 

@@ -340,7 +340,15 @@ const AppModule = angular.module( 'App', [
 	// Client.
 	/* inject client:modules */
 ] )
-.config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $ocLazyLoadProvider, $sceDelegateProvider, amTimeAgoConfig, TranslateProvider )
+.config( function(
+	$locationProvider: ng.ILocationProvider,
+	$uiViewScrollProvider: ng.ui.IUiViewScrollProvider,
+	$compileProvider: ng.ICompileProvider,
+	EnvironmentProvider: any,
+	$sceDelegateProvider: ng.ISCEDelegateProvider,
+	amTimeAgoConfig: any,
+	TranslateProvider: any,
+)
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
 		'self',
@@ -360,10 +368,6 @@ const AppModule = angular.module( 'App', [
 	else if ( GJ_BUILD_TYPE == 'development' ) {
 		EnvironmentProvider.buildType = 'development';
 	}
-
-	$ocLazyLoadProvider.config( {
-		loadedModules: [ 'App' ]  // Hardcoded so it doesn't have to search DOM for it.
-	} );
 
 	amTimeAgoConfig.fullDateThreshold = 30;
 	amTimeAgoConfig.fullDateFormat = 'll';
@@ -468,11 +472,11 @@ const AppModule = angular.module( 'App', [
  * This is really handy to redirect from a parent to child state.
  * Can remove once they close out: https://github.com/angular-ui/ui-router/issues/27
  */
-.run( function( $rootScope, $state )
+.run( function( $rootScope: ng.IRootScopeService, $state: ng.ui.IStateService )
 {
 	$rootScope.$on( '$stateChangeStart', function( event, toState )
 	{
-		var redirect = toState.redirectTo;
+		const redirect = toState.redirectTo;
 		if ( redirect ) {
 			event.preventDefault();
 			if ( angular.isFunction( redirect ) ) {
@@ -485,7 +489,7 @@ const AppModule = angular.module( 'App', [
 	} );
 } )
 // Track time till Angular runs.
-.run( function( Analytics )
+.run( function( Analytics: any )
 {
 	var ms = Date.now() - window._gjStartTime;
 	Analytics.trackTiming( 'shell', 'angular-start', ms );

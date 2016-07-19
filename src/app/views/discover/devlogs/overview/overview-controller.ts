@@ -1,5 +1,4 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { App } from './../../../../app-service';
 import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedContainer } from './../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from './../../../../components/activity/feed/feed-service';
@@ -11,8 +10,6 @@ export class OverviewCtrl
 	posts: ActivityFeedContainer;
 
 	constructor(
-		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
-		@Inject( 'App' ) app: App,
 		@Inject( 'Game' ) game: any,
 		@Inject( 'Fireside_Post' ) firesidePostModel: typeof Fireside_Post,
 		@Inject( 'ActivityFeedService' ) feedService: ActivityFeedService,

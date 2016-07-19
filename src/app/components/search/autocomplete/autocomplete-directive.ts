@@ -25,7 +25,7 @@ interface Command
 	options?: CommandOptions;
 }
 
-function setCaretPosition( el: HTMLInputElement, caretPos: number )
+function setCaretPosition( el: any, caretPos: number )
 {
 	// This is used to not only get "focus", but
 	// to make sure we don't have it everything -selected-
@@ -72,7 +72,7 @@ export class AutocompleteComponent implements OnInit
 		@Inject( '$state' ) private $state: ng.ui.IStateService,
 		@Inject( '$injector' ) $injector: any,
 		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
-		@Inject( 'orderByFilter' ) private orderByFilter: ng.IFilterOrderBy,
+		@Inject( 'orderByFilter' ) orderByFilter: ng.IFilterOrderBy,
 		@Inject( 'hotkeys' ) private hotkeys: ng.hotkeys.HotkeysProvider,
 		@Inject( 'gettext' ) gettext: ng.gettext.gettextFunction,
 		@Inject( 'Environment' ) private environment: any,
@@ -156,7 +156,7 @@ export class AutocompleteComponent implements OnInit
 
 	ngOnInit()
 	{
-		this.searchCtrl.setKeydownSpy( event =>
+		this.searchCtrl.setKeydownSpy( ( event: KeyboardEvent ) =>
 		{
 			let min = 0;
 			let max = 0;
@@ -223,7 +223,9 @@ export class AutocompleteComponent implements OnInit
 
 						// We push their cursor after the ":".
 						// This will also focus it.
-						setCaretPosition( this.searchCtrl.inputElem[0], 1 );
+						if ( this.searchCtrl.inputElem ) {
+							setCaretPosition( this.searchCtrl.inputElem[0], 1 );
+						}
 					} );
 				}
 			} );
@@ -279,7 +281,7 @@ export class AutocompleteComponent implements OnInit
 
 				// All items so we can calculate global selection indexes easily.
 				// This needs to be in the order that they will show in the results list.
-				this.items = []
+				this.items = ([] as any[])
 					.concat( this.libraryGames )
 					.concat( this.games )
 					.concat( this.users )
@@ -328,19 +330,19 @@ export class AutocompleteComponent implements OnInit
 		this.analytics.trackEvent( 'search', 'autocomplete', 'go-all' );
 	}
 
-	selectGame( game )
+	selectGame( game: any )
 	{
 		this.$state.go( 'discover.games.view.overview', { slug: game.slug, id: game.id } );
 		this.analytics.trackEvent( 'search', 'autocomplete', 'go-game' );
 	}
 
-	selectUser( user )
+	selectUser( user: any )
 	{
 		this.$state.go( 'profile.overview', { slug: user.slug, id: user.id } );
 		this.analytics.trackEvent( 'search', 'autocomplete', 'go-user' );
 	}
 
-	selectLibraryGame( localGame )
+	selectLibraryGame( localGame: any )
 	{
 		this.$state.go( 'discover.games.view.overview', { slug: localGame.slug, id: localGame.id } );
 		this.analytics.trackEvent( 'search', 'autocomplete', 'go-library-game' );

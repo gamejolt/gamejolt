@@ -2,7 +2,7 @@ import { Injectable, Inject } from 'ng-metadata/core';
 
 const STATE_PREFIX = 'dashboard.developer.games.manage.game.';
 
-const TRANSITION_MAP = {
+const TRANSITION_MAP: any = {
 	'details': 'description',
 	'description': 'maturity',
 	'maturity': 'thumbnail',

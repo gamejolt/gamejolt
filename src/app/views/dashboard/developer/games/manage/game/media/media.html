@@ -101,7 +101,7 @@
 									<div class="card-meta">
 										<div class="tag" translate>Image</div>
 										<a class="btn btn-sm btn-outline"
-											ng-click="mediaCtrl.permalink.copy( Environment.baseUrl + item.getUrl( manageCtrl.game ) ); $event.stopPropagation()"
+											ng-click="mediaCtrl.clipboard.copy( Environment.baseUrl + item.getUrl( manageCtrl.game ) ); $event.stopPropagation()"
 											gj-tooltip="{{ 'Copy the direct link to view this image on your game page.' | translate }}"
 											translate
 											>
@@ -117,7 +117,7 @@
 									<div class="card-meta">
 										<div class="tag" translate>Video</div>
 										<a class="btn btn-sm btn-outline"
-											ng-click="mediaCtrl.permalink.copy( Environment.baseUrl + item.getUrl( manageCtrl.game ) ); $event.stopPropagation()"
+											ng-click="mediaCtrl.clipboard.copy( Environment.baseUrl + item.getUrl( manageCtrl.game ) ); $event.stopPropagation()"
 											gj-tooltip="{{ 'Copy the direct link to view this video on your game page.' | translate }}"
 											translate
 											>

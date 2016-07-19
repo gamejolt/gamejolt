@@ -27,7 +27,7 @@ export class VideosCtrl
 	{
 		++this.page;
 		this.api.sendRequest( `/web/profile/videos/${this.$stateParams['id']}?page=${this.page}` )
-			.then( response =>
+			.then( ( response: any ) =>
 			{
 				this.videos = this.videos.concat( this.commentVideo.populate( response.videos ) );
 			} );

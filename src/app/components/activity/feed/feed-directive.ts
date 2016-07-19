@@ -27,9 +27,9 @@ export class FeedComponent
 	@Input( '<?' ) showGameInfo = false;
 
 	@Output( 'onLoadMore' ) private _onLoadMore: Function;
-	@Output( '?onPostRemoved' ) private _onPostRemoved: Function;
-	@Output( '?onPostEdited' ) private _onPostEdited: Function;
-	@Output( '?onPostPublished' ) private _onPostPublished: Function;
+	@Output( '?onPostRemoved' ) private _onPostRemoved?: Function;
+	@Output( '?onPostEdited' ) private _onPostEdited?: Function;
+	@Output( '?onPostPublished' ) private _onPostPublished?: Function;
 
 	private _inView: string[] = [];
 
@@ -44,7 +44,6 @@ export class FeedComponent
 
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( '$location' ) private $location: ng.ILocationService,
 		@Inject( '$document' ) private $document: ng.IDocumentService,
 		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
 		@Inject( 'Scroll' ) private scroll: any
@@ -73,7 +72,7 @@ export class FeedComponent
 			this.$timeout( () =>
 			{
 				const id = `activity-feed-item-${active}`;
-				const elem: HTMLElement = this.$document[0].getElementById( id );
+				const elem = this.$document[0].getElementById( id );
 				if ( elem ) {
 					this.scroll.to( id );
 					elem.classList.add( 'active' );

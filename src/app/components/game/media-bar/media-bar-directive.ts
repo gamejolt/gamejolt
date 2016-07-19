@@ -12,16 +12,14 @@ export class MediaBarComponent implements OnChanges
 
 	private _urlChecked = false;
 
-	activeItem: any;
-	activeIndex: number;
-	isPlaying: number;
+	activeItem: any | null = null;
+	activeIndex: number | null = null;
+	isPlaying: number | null = null;
 
 	constructor(
-		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( '$location' ) private $location: ng.ILocationService,
-		@Inject( '$timeout' ) $timeout: ng.ITimeoutService,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
-		@Inject( 'Screen' ) private screen: Screen,
+		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'Analytics' ) private analytics: any
 	)
@@ -67,9 +65,9 @@ export class MediaBarComponent implements OnChanges
 
 	clearActiveItem()
 	{
-		this.activeItem = undefined;
-		this.activeIndex = undefined;
-		this.isPlaying = undefined;
+		this.activeItem = null;
+		this.activeIndex = null;
+		this.isPlaying = null;
 		this.analytics.trackEvent( 'media-bar', 'close' );
 	}
 
@@ -78,10 +76,10 @@ export class MediaBarComponent implements OnChanges
 		this._urlChecked = true;
 
 		// If there is a hash in the URL, let's try to load it in.
-		let id;
+		let id: number | undefined;
 		const hash = this.$location.hash();
 		if ( hash ) {
-			let type;
+			let type: string | undefined;
 			if ( hash.indexOf( 'screenshot-' ) !== -1 ) {
 				id = parseInt( hash.substring( 'screenshot-'.length ) );
 				type = 'image';
@@ -91,7 +89,7 @@ export class MediaBarComponent implements OnChanges
 				type = 'video';
 			}
 
-			if ( id ) {
+			if ( id && type ) {
 				const item = _.find( this.mediaItems, { id: id } );
 				if ( item ) {
 					this.setActiveItem( item );

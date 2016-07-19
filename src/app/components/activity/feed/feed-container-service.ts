@@ -3,7 +3,7 @@ import { ActivityFeedItem, ActivityFeedInput } from './item-service';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { App } from './../../../app-service';
 
-export function ActivityFeedContainerFactory( ActivityFeedItem, HistoryTick, App )
+export function ActivityFeedContainerFactory( ActivityFeedItem: any, App: any )
 {
 	ActivityFeedContainer.itemModel = ActivityFeedItem;
 	ActivityFeedContainer.app = App;
@@ -17,7 +17,7 @@ export class ActivityFeedContainer
 	static app: App;
 
 	items: ActivityFeedItem[] = [];
-	activeId: string = null;
+	activeId: string | null = null;
 	viewedItems: string[] = [];
 	expandedItems: string[] = [];
 
@@ -64,7 +64,7 @@ export class ActivityFeedContainer
 		} );
 	}
 
-	setActive( active: string )
+	setActive( active: string | null )
 	{
 		this.activeId = active;
 	}

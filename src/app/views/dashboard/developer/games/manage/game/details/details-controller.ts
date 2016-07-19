@@ -8,7 +8,6 @@ export class DetailsCtrl
 	constructor(
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'FormDashboardGameWizard' ) private wizard: FormDashboardGameWizard,

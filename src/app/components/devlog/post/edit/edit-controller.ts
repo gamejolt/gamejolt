@@ -6,7 +6,7 @@ export class ModalCtrl
 {
 	constructor(
 		@Inject( '$modalInstance' ) private $modalInstance: any,
-		@Inject( 'post' ) private post: Fireside_Post
+		@Inject( 'post' ) public post: Fireside_Post
 	)
 	{
 	}

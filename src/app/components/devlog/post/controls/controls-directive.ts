@@ -18,8 +18,8 @@ export class ControlsComponent
 	isShowingComments = false;
 
 	constructor(
-		@Inject( 'App' ) private app: App,
-		@Inject( 'Fireside_Post' ) private firesidePostModel: typeof Fireside_Post,
+		@Inject( 'App' ) public app: App,
+		@Inject( 'Fireside_Post' ) public firesidePostModel: typeof Fireside_Post,
 		@Inject( 'DevlogPostEdit' ) private editService: DevlogPostEdit,
 		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() private feed: FeedComponent
 	)
@@ -35,7 +35,7 @@ export class ControlsComponent
 	showEdit()
 	{
 		this.editService.show( this.post )
-			.then( post => this.feed.onPostEdited( post ) );
+			.then( ( post: Fireside_Post ) => this.feed.onPostEdited( post ) );
 	}
 
 	publishPost()

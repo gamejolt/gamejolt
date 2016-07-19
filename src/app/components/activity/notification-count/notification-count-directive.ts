@@ -1,4 +1,4 @@
-import { Directive, Inject, Input, Output } from 'ng-metadata/core';
+import { Directive, Inject, Output } from 'ng-metadata/core';
 import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
 
 const COUNT_INTERVAL = (5 * 60 * 1000);  // 5 minutes.
@@ -27,6 +27,6 @@ export class NotificationCountComponent
 	fetchCount()
 	{
 		this.notificationModel.fetchNotificationsCount()
-			.then( response => this.onNotificationsCount( { $count: response.notificationsCount } ) );
+			.then( ( response: any ) => this.onNotificationsCount( { $count: response.notificationsCount } ) );
 	}
 }

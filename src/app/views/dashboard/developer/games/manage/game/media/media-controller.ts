@@ -10,7 +10,7 @@ export class MediaCtrl
 	$manageCtrl: any = null;
 	addTab: 'image' | 'video' = 'image';
 	activeItem: any = null;
-	currentSort: string[] = null;
+	currentSort: string[] = [];
 
 	constructor(
 		@Inject( 'App' ) app: App,
@@ -19,7 +19,7 @@ export class MediaCtrl
 		@Inject( 'Game_Screenshot' ) private gameScreenshotModel: any,
 		@Inject( 'Game_Video' ) private gameVideoModel: any,
 		@Inject( 'ModalConfirm' ) private confirm: ModalConfirm,
-		@Inject( 'Clipboard' ) private clipboard: Clipboard,
+		@Inject( 'Clipboard' ) public clipboard: Clipboard,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
 	)
@@ -30,11 +30,11 @@ export class MediaCtrl
 
 		this.$manageCtrl.mediaItems = [];
 		if ( payload.mediaItems && payload.mediaItems.length ) {
-			payload.mediaItems.forEach( item => this.$manageCtrl.mediaItems.push( this._instantiateMediaItem( item ) ) );
+			payload.mediaItems.forEach( ( item: any ) => this.$manageCtrl.mediaItems.push( this._instantiateMediaItem( item ) ) );
 		}
 	}
 
-	private _instantiateMediaItem( item )
+	private _instantiateMediaItem( item: any )
 	{
 		if ( item.media_type == 'image' ) {
 			return new this.gameScreenshotModel( item );
@@ -44,16 +44,16 @@ export class MediaCtrl
 		}
 	}
 
-	onVideoAdded( video )
+	onVideoAdded( video: any )
 	{
 		this.$manageCtrl.mediaItems.unshift( this._instantiateMediaItem( video ) );
 		this.updateSort();
 		this.addTab = 'image';
 	}
 
-	onImagesAdded( response )
+	onImagesAdded( response: any )
 	{
-		response.screenshots.forEach( image => this.$manageCtrl.mediaItems.unshift( this._instantiateMediaItem( image ) ) );
+		response.screenshots.forEach( ( image: any ) => this.$manageCtrl.mediaItems.unshift( this._instantiateMediaItem( image ) ) );
 		this.updateSort();
 	}
 
@@ -78,9 +78,9 @@ export class MediaCtrl
 		}
 	}
 
-	removeItem( item )
+	removeItem( item: any )
 	{
-		let typeLabel;
+		let typeLabel: string = '';
 		if ( item.media_type == 'image' ) {
 			typeLabel = this.gettextCatalog.getString( 'dash.games.media.image_label' ).toLowerCase();
 		}
@@ -105,7 +105,7 @@ export class MediaCtrl
 
 	getSort()
 	{
-		return this.$manageCtrl.mediaItems.map( item =>
+		return this.$manageCtrl.mediaItems.map( ( item: any ) =>
 		{
 			if ( item.media_type == 'image' ) {
 				return 'screenshot-' + item.id;

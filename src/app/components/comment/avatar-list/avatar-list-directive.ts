@@ -15,13 +15,12 @@ export class AvatarListComponent
 	isFocused: { [k: number]: boolean } = {};
 
 	constructor(
-		@Inject( 'Comment' ) private commentModel: typeof Comment,
-		@Inject( 'Popover' ) private popover: any
+		@Inject( 'Comment' ) commentModel: typeof Comment,
 	)
 	{
 		// Pull in new comments, huzzah!
 		commentModel.fetch( this.resource, this.resourceId, 1 )
-			.then( payload => this.comments = commentModel.populate( payload.comments ) );
+			.then( ( payload: any ) => this.comments = commentModel.populate( payload.comments ) );
 	}
 
 	onFocus( commentId: number )

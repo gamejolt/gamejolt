@@ -1,4 +1,14 @@
-export function PaymentComponent( $q, $window, App, Api, Form, Geo, Environment )
+import { App } from './../../../app-service';
+
+export function PaymentComponent(
+	$q: ng.IQService,
+	$window: ng.IWindowService,
+	App: App,
+	Api: any,
+	Form: any,
+	Geo: any,
+	Environment: any,
+)
 {
 	const form = new Form( {
 		template: '/checkout/components/forms/payment/payment.html'
@@ -7,7 +17,7 @@ export function PaymentComponent( $q, $window, App, Api, Form, Geo, Environment 
 	form.scope.cards = '=';
 	form.scope.order = '=';
 
-	form.onInit = function( scope )
+	form.onInit = function( scope: any )
 	{
 		scope.App = App;
 
@@ -34,7 +44,7 @@ export function PaymentComponent( $q, $window, App, Api, Form, Geo, Environment 
 			scope.formModel.save_card = false;
 		}
 
-		scope.$watch( 'formModel.country', ( country ) =>
+		scope.$watch( 'formModel.country', ( country: string ) =>
 		{
 			scope.formState.regions = Geo.getRegions( country );
 			if ( scope.formState.regions ) {
@@ -61,7 +71,7 @@ export function PaymentComponent( $q, $window, App, Api, Form, Geo, Environment 
 			};
 
 			return Api.sendRequest( '/web/checkout/taxes', data, { detach: true } )
-				.then( ( response ) =>
+				.then( ( response: any ) =>
 				{
 					scope.formState.calculatedTax = true;
 					scope.formState.taxAmount = response.amount;
@@ -69,7 +79,7 @@ export function PaymentComponent( $q, $window, App, Api, Form, Geo, Environment 
 		}
 	};
 
-	form.onSubmit = function( scope )
+	form.onSubmit = function( scope: any )
 	{
 		scope.formState.stripeError = null;
 
@@ -93,6 +103,8 @@ export function PaymentComponent( $q, $window, App, Api, Form, Geo, Environment 
 			{
 				$window.Stripe.card.createToken( formData, ( status, response ) =>
 				{
+					if ( status ) {}
+
 					if ( response.error ) {
 						scope.formState.stripeError = response.error.message;
 						reject( response );
@@ -102,7 +114,7 @@ export function PaymentComponent( $q, $window, App, Api, Form, Geo, Environment 
 					}
 				} );
 			} )
-			.then( ( response ) =>
+			.then( ( response: StripeTokenResponse ) =>
 			{
 				const data = {
 					save_card: false,

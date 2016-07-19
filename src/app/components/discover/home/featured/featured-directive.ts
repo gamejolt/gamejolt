@@ -13,7 +13,7 @@ export class FeaturedComponent
 	itemsSmUp: any[];
 
 	constructor(
-		@Inject( 'Screen' ) private screen: Screen
+		@Inject( 'Screen' ) public screen: Screen
 	)
 	{
 		this.itemsSmUp = this.items.slice( 2 );

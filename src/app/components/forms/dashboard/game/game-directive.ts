@@ -1,4 +1,12 @@
-export function GameFormFactory( Form, Api, Game, Scroll, App )
+import { App } from './../../../../app-service';
+
+export function GameFormFactory(
+	Form: any,
+	Api: any,
+	Game: any,
+	Scroll: any,
+	App: App
+)
 {
 	const form = new Form( {
 		model: 'Game',
@@ -10,7 +18,7 @@ export function GameFormFactory( Form, Api, Game, Scroll, App )
 
 	form.scope.isWizard = '<';
 
-	form.onInit = function( scope )
+	form.onInit = function( scope: any )
 	{
 		scope.App = App;
 
@@ -18,7 +26,7 @@ export function GameFormFactory( Form, Api, Game, Scroll, App )
 		scope.hasActiveBuilds = false;
 
 		Api.sendRequest( '/web/dash/developer/games/save' + (scope.method == 'edit' ? '/' + scope.baseModel.id : '') )
-			.then( payload =>
+			.then( ( payload: any ) =>
 			{
 				scope.isLoaded = true;
 				angular.extend( scope, payload );
@@ -81,7 +89,7 @@ export function GameFormFactory( Form, Api, Game, Scroll, App )
 			return true;
 		};
 
-		scope.$watchCollection( 'formState.serverErrors["autotag-fnaf"]', isFnafDetected =>
+		scope.$watchCollection( 'formState.serverErrors["autotag-fnaf"]', ( isFnafDetected: boolean ) =>
 		{
 			// This will make it so they can't edit the form and force them to choose if they want to tag or not.
 			if ( isFnafDetected ) {
@@ -90,7 +98,7 @@ export function GameFormFactory( Form, Api, Game, Scroll, App )
 			}
 		} );
 
-		scope.addAutotag = tag =>
+		scope.addAutotag = ( tag: string ) =>
 		{
 			scope.formModel.autotag = tag;
 			scope.onSubmit();

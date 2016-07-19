@@ -19,7 +19,7 @@ export class DevlogPostEdit
 			controllerAs: '$ctrl',
 			resolve: {
 				// They may load this on the game page without having dash stuff loaded in yet.
-				init: [ '$ocLazyLoad', $ocLazyLoad => $ocLazyLoad.load( '/app/modules/dash.js' ) ],
+				init: [ '$ocLazyLoad', ( $ocLazyLoad: oc.ILazyLoad ) => $ocLazyLoad.load( '/app/modules/dash.js' ) ],
 				post: () => post,
 			},
 		} );

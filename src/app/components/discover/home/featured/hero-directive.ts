@@ -16,7 +16,7 @@ export class HeroComponent
 
 	constructor(
 		@Inject( '$sce' ) $sce: ng.ISCEService,
-		@Inject( 'Screen' ) private screen: Screen
+		@Inject( 'Screen' ) public screen: Screen
 	)
 	{
 		this.game = this.item.game;

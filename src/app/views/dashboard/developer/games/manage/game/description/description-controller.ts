@@ -8,17 +8,14 @@ export class DescriptionCtrl
 	constructor(
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
-		@Inject( 'Growls' ) private growls: any,
-		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'FormDashboardGameWizard' ) private wizard: FormDashboardGameWizard,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
+		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog
 	)
 	{
 		app.title = gettextCatalog.getString( 'Edit Description for {{ game }}', { game: $scope['manageCtrl'].game.title } );
 	}
 
-	onSaved( response: any )
+	onSaved( /*response: any*/ )
 	{
 		if ( this.$scope['manageCtrl'].isWizard ) {
 			this.wizard.goNext();

@@ -5,7 +5,7 @@ import { App } from './../../../../../../app-service';
 @Injectable()
 export class ViewCtrl
 {
-	post: Fireside_Post = null;
+	post: Fireside_Post;
 
 	constructor(
 		@Inject( 'App' ) app: App,

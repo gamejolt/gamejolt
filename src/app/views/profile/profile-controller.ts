@@ -53,7 +53,7 @@ export class ProfileCtrl
 	sendFriendRequest()
 	{
 		this.userFriendshipsHelper.sendRequest( this.user )
-			.then( ( request ) =>
+			.then( ( request: any ) =>
 			{
 				this.userFriendship = request;
 			} );

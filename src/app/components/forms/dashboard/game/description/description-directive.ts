@@ -1,4 +1,4 @@
-export function GameDescriptionFormFactory( Form )
+export function GameDescriptionFormFactory( Form: any )
 {
 	const form = new Form( {
 		model: 'Game',
@@ -7,7 +7,7 @@ export function GameDescriptionFormFactory( Form )
 
 	form.scope.isWizard = '<';
 
-	form.onInit = function( scope )
+	form.onInit = function()
 	{
 	};
 

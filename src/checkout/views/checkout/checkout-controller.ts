@@ -29,9 +29,9 @@ export class CheckoutCtrl
 		$window.Stripe.setPublishableKey( payload.stripePublishableKey );
 	}
 
-	onSubmit( $response )
+	onSubmit( $response: any )
 	{
-		var redirect = null;
+		let redirect: string | null = null;
 
 		// For client, the orders are always done as a user.
 		// We will always go back to game page in those cases.

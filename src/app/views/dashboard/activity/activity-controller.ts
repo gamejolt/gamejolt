@@ -1,5 +1,4 @@
-import { Injectable, Inject } from 'ng-metadata/core';
-import { App } from './../../../app-service';
+import { Injectable } from 'ng-metadata/core';
 
 @Injectable()
 export class ActivityCtrl

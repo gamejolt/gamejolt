@@ -5,6 +5,8 @@ import template from 'html!./request-popover.html';
 const COUNT_INTERVAL = (5 * 60 * 1000);  // 5 minutes.
 const INITIAL_LAG = 3000;
 
+type Tab = 'requests' | 'pending';
+
 @Component({
 	selector: 'gj-friend-request-popover',
 	template,
@@ -18,7 +20,7 @@ export class RequestPopoverComponent
 	private isShown = false;
 	private isLoading = true;
 
-	private activeTab: 'requests' | 'pending' = 'requests';
+	private activeTab: Tab = 'requests';
 	private requests: any[] = [];
 	private requestsCount = 0;
 	private pending: any[] = [];
@@ -80,7 +82,7 @@ export class RequestPopoverComponent
 	fetchCount()
 	{
 		this.userFriendshipModel.fetchCount()
-			.then( response =>
+			.then( ( response: any ) =>
 			{
 				this._setCount( response.requestCount );
 			} );
@@ -89,7 +91,7 @@ export class RequestPopoverComponent
 	fetchRequests()
 	{
 		this.userFriendshipModel.fetchRequests()
-			.then( response =>
+			.then( ( response: any ) =>
 			{
 				this.requests = response.requests;
 				this._setCount( this.requests.length );
@@ -98,12 +100,12 @@ export class RequestPopoverComponent
 			} );
 	}
 
-	setActiveTab( tab )
+	setActiveTab( tab: Tab )
 	{
 		this.activeTab = tab;
 	}
 
-	acceptRequest( request )
+	acceptRequest( request: any )
 	{
 		this.userFriendshipsHelper.acceptRequest( request )
 			.then( () =>
@@ -113,7 +115,7 @@ export class RequestPopoverComponent
 			} );
 	}
 
-	rejectRequest( request )
+	rejectRequest( request: any )
 	{
 		this.userFriendshipsHelper.rejectRequest( request )
 			.then( () =>
@@ -123,7 +125,7 @@ export class RequestPopoverComponent
 			} );
 	}
 
-	cancelRequest( request )
+	cancelRequest( request: any )
 	{
 		this.userFriendshipsHelper.cancelRequest( request )
 			.then( () =>

@@ -21,7 +21,7 @@ export class ActivityFeedItem
 	type: 'devlog-post' | 'notification';
 	feedItem: ActivityFeedInput;
 
-	constructor( private item: ActivityFeedInput )
+	constructor( item: ActivityFeedInput )
 	{
 		if ( item instanceof ActivityFeedItem.Notification && item.type == ActivityFeedItem.Notification.TYPE_DEVLOG_POST_ADD ) {
 			this.feedItem = item.action_model;
@@ -30,7 +30,7 @@ export class ActivityFeedItem
 			this.feedItem = item;
 		}
 
-		let dateVal: number;
+		let dateVal = 0;
 		if ( this.feedItem instanceof ActivityFeedItem.Fireside_Post ) {
 			this.type = 'devlog-post';
 			dateVal = this.feedItem.updated_on || this.feedItem.added_on;

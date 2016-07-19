@@ -27,20 +27,18 @@ export class HomeCtrl
 
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( '$window' ) $window: ng.IWindowService,
-		@Inject( 'App' ) App: App,
+		@Inject( 'App' ) app: App,
 		@Inject( 'Environment' ) Environment: any,
 		@Inject( 'Meta' ) Meta: any,
 		@Inject( 'Game' ) Game: any,
 		@Inject( 'FeaturedItem' ) FeaturedItem: any,
 		@Inject( 'Fireside_Post' ) Fireside_Post: any,
 		@Inject( 'Game_NewsArticle' ) Game_NewsArticle: any,
-		@Inject( 'SplitTest' ) SplitTest: any,
 		@Inject( 'Channels' ) channels: Channels,
 		@Inject( 'payload' ) payload: any
 	)
 	{
-		App.title = null;
+		app.title = null;
 
 		$scope['Channels'] = channels;
 

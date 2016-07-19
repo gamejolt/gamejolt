@@ -93,7 +93,7 @@ export class Search
 
 	private _searchInstalledGames( query: string ): ng.IPromise<any>
 	{
-		let games = [];
+		let games: any[] = [];
 
 		for ( const game of this.Client_Library.games ) {
 			if ( this.fuzzysearch( query.toLowerCase(), game.title.toLowerCase() ) ) {

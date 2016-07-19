@@ -1,7 +1,6 @@
 import { Component, Inject, Input, Output } from 'ng-metadata/core';
 import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
-import { FeedComponent } from './feed-directive';
 import template from 'html!./notification.html';
 
 @Component({
@@ -14,16 +13,18 @@ export class NotificationComponent
 	@Output() onClick: Function;
 
 	constructor(
-		@Inject( 'Notification' ) private notificationModel: typeof Notification,
-		@Inject( 'Screen' ) private screen: Screen
+		@Inject( 'Notification' ) public notificationModel: typeof Notification,
+		@Inject( 'Screen' ) public screen: Screen
 	)
 	{
 	}
 
 	go( $event: ng.IAngularEvent )
 	{
-		$event.stopPropagation();
-		$event.preventDefault();
+		if ( $event.stopPropagation ) {
+			$event.stopPropagation();
+			$event.preventDefault();
+		}
 
 		this.notification.go();
 		this.onClick();

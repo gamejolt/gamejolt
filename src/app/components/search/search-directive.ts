@@ -14,11 +14,11 @@ export class SearchComponent
 
 	query: string;
 	isFocused = false;
-	inputElem: ng.IAugmentedJQuery = null;
+	inputElem: ng.IAugmentedJQuery | undefined;
 	searchElem: ng.IAugmentedJQuery;
 	keydownSpies: Function[] = [];
 
-	@Input( '<?gjSearchAutocompleteDisable' ) autocompleteDisabled: boolean = false;
+	@Input( '<?gjSearchAutocompleteDisable' ) autocompleteDisabled = false;
 
 	constructor(
 		@Inject( 'Search' ) search: Search,
@@ -50,22 +50,22 @@ export class SearchComponent
 
 	focus()
 	{
-		if ( this.inputElem ) {
-			this.$timeout( () =>
-			{
+		this.$timeout( () =>
+		{
+			if ( this.inputElem ) {
 				this.inputElem[0].focus();
-			} );
-		}
+			}
+		} );
 	}
 
 	blur()
 	{
-		if ( this.inputElem ) {
-			this.$timeout( () =>
-			{
+		this.$timeout( () =>
+		{
+			if ( this.inputElem ) {
 				this.inputElem[0].blur();
-			} );
-		}
+			}
+		} );
 	}
 
 	/**

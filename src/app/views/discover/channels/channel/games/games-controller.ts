@@ -16,13 +16,13 @@ export class GamesCtrl
 	{
 	}
 
-	processPayload( $stateParams, payload )
+	processPayload( $stateParams: ng.ui.IStateParamsService, payload: any )
 	{
 		this.gamesCount = payload.gamesCount;
 		this.perPage = payload.perPage;
-		this.currentPage = $stateParams.page || 1;
-		this.section = $stateParams.section;
+		this.currentPage = $stateParams['page'] || 1;
+		this.section = $stateParams['section'];
 
-		this.viewHelper.setDefaultMetaData( $stateParams.channel );
+		this.viewHelper.setDefaultMetaData( $stateParams['channel'] );
 	}
 }

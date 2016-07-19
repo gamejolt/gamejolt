@@ -17,10 +17,10 @@ import template from 'html!./page-header.html';
 })
 export class PageHeaderComponent
 {
-	@Input( '<?' ) coverMediaItem: any;
-	@Input( '<?' ) coverMaxHeight: number;
-	@Input( '<?' ) shouldAffixNav: boolean;
-	@Input( '@?' ) colClasses: string;
+	@Input( '<?' ) coverMediaItem?: any;
+	@Input( '<?' ) coverMaxHeight?: number;
+	@Input( '<?' ) shouldAffixNav = false;
+	@Input( '@?' ) colClasses?: string;
 
 	hasCoverButtons = false;
 	hasSpotlight = false;
@@ -29,8 +29,7 @@ export class PageHeaderComponent
 
 	constructor(
 		@Inject( '$transclude' ) $transclude: any,
-		@Inject( 'Screen' ) private screen: Screen,
-		@Inject( 'Scroll' ) private scroll: any
+		@Inject( 'Screen' ) public screen: Screen,
 	)
 	{
 		this.hasCoverButtons = $transclude.isSlotFilled( 'coverButtons' );

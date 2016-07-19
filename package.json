@@ -9,6 +9,15 @@
     "client-build-linux64": "gulp --production --client --arch=64"
   },
   "devDependencies": {
+    "@types/angular": "^1.5.7",
+    "@types/angular-gettext": "^2.1.29",
+    "@types/angular-hotkeys": "0.0.30",
+    "@types/angular-ui-router": "^1.1.30",
+    "@types/hammerjs": "^2.0.28",
+    "@types/lodash": "0.0.27",
+    "@types/moment": "^2.11.28",
+    "@types/oclazyload": "0.0.30",
+    "@types/stripe": "0.0.27",
     "concat-with-sourcemaps": "~1.0.2",
     "connect-history-api-fallback": "0.0.4",
     "decompress-zip": "^0.2.0",

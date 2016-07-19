@@ -9,12 +9,10 @@ export class ListCtrl
 {
 	posts: ActivityFeedContainer;
 	draftPosts: ActivityFeedContainer;
-	showNewPost: string = null;
+	showNewPost: string | null = null;
 	tab: 'active' | 'draft' = 'active';
 
 	constructor(
-		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
 		@Inject( 'App' ) app: App,
 		@Inject( 'Fireside_Post' ) private firesidePostModel: typeof Fireside_Post,
 		@Inject( 'ActivityFeedService' ) feedService: ActivityFeedService,

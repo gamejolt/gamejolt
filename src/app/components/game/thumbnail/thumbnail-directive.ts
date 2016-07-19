@@ -9,12 +9,12 @@ import template from 'html!./thumbnail.html';
 export class ThumbnailComponent implements AfterViewInit
 {
 	@Input( '<gjGame' ) game: any;
-	@Input( '@?gjLinkTo' ) linkTo: string;
-	@Input( '@?gameThumbnailShowControl' ) controlType: string;
-	@Input( '@?gameThumbnailControlLabel' ) controlLabel: string;
-	@Input( '<?autoplay' ) autoplay: boolean;
+	@Input( '@?gjLinkTo' ) linkTo?: string;
+	@Input( '@?gameThumbnailShowControl' ) controlType?: string;
+	@Input( '@?gameThumbnailControlLabel' ) controlLabel?: string;
+	@Input( '<?autoplay' ) autoplay = false;
 
-	@Output( '&?gameThumbnailOnControlClick' ) _onControlClick: Function;
+	@Output( '?gameThumbnailOnControlClick' ) _onControlClick?: Function;
 
 	element: HTMLElement;
 	url: string;
@@ -82,8 +82,10 @@ export class ThumbnailComponent implements AfterViewInit
 		if ( this.showControl ) {
 
 			// Since the button is technically in an A tag.
-			$event.stopPropagation();
-			$event.preventDefault();
+			if ( $event.stopPropagation ) {
+				$event.stopPropagation();
+				$event.preventDefault();
+			}
 
 			if ( this._onControlClick ) {
 				this._onControlClick();

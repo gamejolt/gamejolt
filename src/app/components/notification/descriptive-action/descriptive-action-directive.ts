@@ -12,10 +12,9 @@ export class DescriptiveActionComponent
 	@Input( '<' ) inPopover = false;
 
 	translationKey: string;
-	translationValues: Object;
+	translationValues: Object | null;
 
 	constructor(
-		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'Notification' ) notificationModel: typeof Notification,
 		@Inject( 'gettext' ) gettext: ng.gettext.gettextFunction,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,

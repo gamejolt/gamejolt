@@ -8,7 +8,7 @@ export class MusicCtrl
 	songs: any[];
 	isAdding = false;
 	activeItem: any = null;
-	currentSort: number[] = null;
+	currentSort: number[] = [];
 
 	constructor(
 		@Inject( 'App' ) app: App,
@@ -29,7 +29,7 @@ export class MusicCtrl
 		this.activeItem = null;
 	}
 
-	onSongAdded( formModel )
+	onSongAdded( formModel: any )
 	{
 		this.songs.push( new this.gameSongModel( formModel ) );
 		this.isAdding = false;
@@ -49,7 +49,7 @@ export class MusicCtrl
 		}
 	}
 
-	removeSong( song )
+	removeSong( song: any )
 	{
 		this.modalConfirm.show( this.gettextCatalog.getString( 'dash.games.music.remove_confirmation' ) )
 			.then( () =>
