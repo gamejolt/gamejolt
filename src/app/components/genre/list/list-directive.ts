@@ -61,8 +61,8 @@ export class ListComponent
 	];
 
 	constructor(
-		@Inject( '$state' ) private $state: angular.ui.IStateService,
-		@Inject( '$stateParams' ) private $stateParams: angular.ui.IStateParamsService
+		@Inject( '$state' ) private $state: ng.ui.IStateService,
+		@Inject( '$stateParams' ) private $stateParams: ng.ui.IStateParamsService
 	)
 	{
 	}

@@ -14,18 +14,18 @@ export class SearchComponent
 
 	query: string;
 	isFocused = false;
-	inputElem: angular.IAugmentedJQuery = null;
-	searchElem: angular.IAugmentedJQuery;
+	inputElem: ng.IAugmentedJQuery = null;
+	searchElem: ng.IAugmentedJQuery;
 	keydownSpies: Function[] = [];
 
 	@Input( '<?gjSearchAutocompleteDisable' ) autocompleteDisabled: boolean = false;
 
 	constructor(
 		@Inject( 'Search' ) search: Search,
-		@Inject( '$scope' ) $scope: angular.IScope,
-		@Inject( '$timeout' ) private $timeout: angular.ITimeoutService,
-		@Inject( '$element' ) $element: angular.IAugmentedJQuery,
-		@Inject( 'hotkeys' ) hotkeys: angular.hotkeys.HotkeysProvider
+		@Inject( '$scope' ) $scope: ng.IScope,
+		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
+		@Inject( '$element' ) $element: ng.IAugmentedJQuery,
+		@Inject( 'hotkeys' ) hotkeys: ng.hotkeys.HotkeysProvider
 	)
 	{
 		this.query = search.query;

@@ -7,11 +7,11 @@ export class MaturityCtrl
 {
 	constructor(
 		@Inject( 'App' ) app: App,
-		@Inject( '$scope' ) private $scope: angular.IScope,
+		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'FormDashboardGameWizard' ) private wizard: FormDashboardGameWizard,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: angular.gettext.gettextCatalog
+		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
 	)
 	{
 		app.title = gettextCatalog.getString( 'dash.games.maturity.page_title', { game: $scope['manageCtrl'].game.title } );

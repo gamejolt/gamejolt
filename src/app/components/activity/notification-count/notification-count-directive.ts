@@ -12,9 +12,9 @@ export class NotificationCountComponent
 	@Output( 'gjActivityNotificationCount' ) onNotificationsCount: Function;
 
 	constructor(
-		@Inject( '$scope' ) $scope: angular.IScope,
-		@Inject( '$interval' ) $interval: angular.IIntervalService,
-		@Inject( '$timeout' ) $timeout: angular.ITimeoutService,
+		@Inject( '$scope' ) $scope: ng.IScope,
+		@Inject( '$interval' ) $interval: ng.IIntervalService,
+		@Inject( '$timeout' ) $timeout: ng.ITimeoutService,
 		@Inject( 'Notification' ) private notificationModel: typeof Notification
 	)
 	{

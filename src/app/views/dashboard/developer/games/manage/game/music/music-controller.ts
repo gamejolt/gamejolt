@@ -12,10 +12,10 @@ export class MusicCtrl
 
 	constructor(
 		@Inject( 'App' ) app: App,
-		@Inject( '$scope' ) private $scope: angular.IScope,
+		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( 'Game_Song' ) private gameSongModel: any,
 		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: angular.gettext.gettextCatalog,
+		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
 	)
 	{

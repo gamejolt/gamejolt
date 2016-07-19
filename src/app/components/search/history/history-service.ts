@@ -6,7 +6,7 @@ const STORAGE_KEY = 'search-history';
 export class Search_History
 {
 	constructor(
-		@Inject( '$window' ) private $window: angular.IWindowService
+		@Inject( '$window' ) private $window: ng.IWindowService
 	)
 	{
 	}

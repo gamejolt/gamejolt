@@ -14,13 +14,13 @@ export class MediaCtrl
 
 	constructor(
 		@Inject( 'App' ) app: App,
-		@Inject( '$scope' ) private $scope: angular.IScope,
+		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( 'Api' ) private api: any,
 		@Inject( 'Game_Screenshot' ) private gameScreenshotModel: any,
 		@Inject( 'Game_Video' ) private gameVideoModel: any,
 		@Inject( 'ModalConfirm' ) private confirm: ModalConfirm,
 		@Inject( 'Clipboard' ) private clipboard: Clipboard,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: angular.gettext.gettextCatalog,
+		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
 	)
 	{

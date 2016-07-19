@@ -17,7 +17,7 @@ const TRANSITION_MAP = {
 export class FormDashboardGameWizard
 {
 	constructor(
-		@Inject( '$state' ) private $state: angular.ui.IStateService
+		@Inject( '$state' ) private $state: ng.ui.IStateService
 	)
 	{
 	}

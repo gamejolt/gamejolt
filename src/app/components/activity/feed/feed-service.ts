@@ -26,8 +26,8 @@ export class ActivityFeedService
 	constructor(
 		@Inject( 'History' ) private history: any,
 		@Inject( 'ActivityFeedContainer' ) private containerModel: typeof ActivityFeedContainer,
-		@Inject( '$state' ) private $state: angular.ui.IStateService,
-		@Inject( '$stateParams' ) private $stateParams: angular.ui.IStateParamsService
+		@Inject( '$state' ) private $state: ng.ui.IStateService,
+		@Inject( '$stateParams' ) private $stateParams: ng.ui.IStateParamsService
 	)
 	{
 	}

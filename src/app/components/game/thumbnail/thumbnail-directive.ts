@@ -23,9 +23,9 @@ export class ThumbnailComponent implements AfterViewInit
 	showControl = false;
 
 	constructor(
-		@Inject( '$scope' ) private $scope: angular.IScope,
-		@Inject( '$element' ) $element: angular.IAugmentedJQuery,
-		@Inject( '$sce' ) $sce: angular.ISCEService,
+		@Inject( '$scope' ) private $scope: ng.IScope,
+		@Inject( '$element' ) $element: ng.IAugmentedJQuery,
+		@Inject( '$sce' ) $sce: ng.ISCEService,
 		@Inject( 'Screen' ) private screen: Screen
 	)
 	{
@@ -77,7 +77,7 @@ export class ThumbnailComponent implements AfterViewInit
 		videoElem.pause();
 	}
 
-	onControlClick( $event: angular.IAngularEvent )
+	onControlClick( $event: ng.IAngularEvent )
 	{
 		if ( this.showControl ) {
 

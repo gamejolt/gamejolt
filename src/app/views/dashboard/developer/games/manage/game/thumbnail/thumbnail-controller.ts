@@ -6,10 +6,10 @@ export class ThumbnailCtrl
 {
 	constructor(
 		@Inject( 'App' ) app: App,
-		@Inject( '$scope' ) $scope: angular.IScope,
+		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'Growls' ) private growls: any,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: angular.gettext.gettextCatalog
+		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
 	)
 	{
 		app.title = gettextCatalog.getString( 'dash.games.thumbnail.page_title', { game: $scope['manageCtrl'].game.title } );

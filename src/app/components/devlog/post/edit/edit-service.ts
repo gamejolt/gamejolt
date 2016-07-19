@@ -11,7 +11,7 @@ export class DevlogPostEdit
 	{
 	}
 
-	show( post: Fireside_Post ): angular.IPromise<Fireside_Post>
+	show( post: Fireside_Post ): ng.IPromise<Fireside_Post>
 	{
 		const modalInstance = this.$modal.open( {
 			template,

@@ -10,7 +10,7 @@ export class CheckoutCtrl
 	game: any;
 
 	constructor(
-		@Inject( '$window' ) private $window: angular.IWindowService,
+		@Inject( '$window' ) private $window: ng.IWindowService,
 		@Inject( 'App' ) app: App,
 		@Inject( 'Environment' ) private environment: any,
 		@Inject( 'Sellable' ) sellable: any,

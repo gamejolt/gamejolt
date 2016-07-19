@@ -10,11 +10,11 @@ export class VideosCtrl
 
 	constructor(
 		@Inject( '$scope' ) $scope: any,
-		@Inject( '$stateParams' ) private $stateParams: angular.ui.IStateParamsService,
+		@Inject( '$stateParams' ) private $stateParams: ng.ui.IStateParamsService,
 		@Inject( 'App' ) app: App,
 		@Inject( 'Api' ) private api: any,
 		@Inject( 'Comment_Video' ) private commentVideo: typeof Comment_Video,
-		@Inject( 'gettextCatalog' ) gettextCatalog: angular.gettext.gettextCatalog,
+		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
 	)
 	{

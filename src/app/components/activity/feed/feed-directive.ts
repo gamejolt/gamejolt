@@ -43,10 +43,10 @@ export class FeedComponent
 	wasHistorical: boolean;
 
 	constructor(
-		@Inject( '$scope' ) $scope: angular.IScope,
-		@Inject( '$location' ) private $location: angular.ILocationService,
-		@Inject( '$document' ) private $document: angular.IDocumentService,
-		@Inject( '$timeout' ) private $timeout: angular.ITimeoutService,
+		@Inject( '$scope' ) $scope: ng.IScope,
+		@Inject( '$location' ) private $location: ng.ILocationService,
+		@Inject( '$document' ) private $document: ng.IDocumentService,
+		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
 		@Inject( 'Scroll' ) private scroll: any
 	)
 	{

@@ -19,13 +19,13 @@ export class OverviewCtrl
 
 	constructor(
 		@Inject( 'App' ) app: App,
-		@Inject( '$scope' ) private $scope: angular.IScope,
-		@Inject( '$state' ) $state: angular.ui.IStateService,
+		@Inject( '$scope' ) private $scope: ng.IScope,
+		@Inject( '$state' ) $state: ng.ui.IStateService,
 		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
 		@Inject( 'Notification' ) notificationModel: typeof Notification,
 		@Inject( 'Game' ) private gameModel: any,
 		@Inject( 'Growls' ) private growls: any,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: angular.gettext.gettextCatalog,
+		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
 	)
 	{

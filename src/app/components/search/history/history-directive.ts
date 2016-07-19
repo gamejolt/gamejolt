@@ -12,8 +12,8 @@ export class HistoryComponent
 	recentSearches: string[] = [];
 
 	constructor(
-		@Inject( '$timeout' ) private $timeout: angular.ITimeoutService,
-		@Inject( '$state' ) private $state: angular.ui.IStateService,
+		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
+		@Inject( '$state' ) private $state: ng.ui.IStateService,
 		@Inject( 'Search_History' ) private searchHistory: Search_History,
 		@Inject( 'Popover' ) private popover: any
 	)

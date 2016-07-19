@@ -20,7 +20,7 @@ export class NotificationComponent
 	{
 	}
 
-	go( $event: angular.IAngularEvent )
+	go( $event: ng.IAngularEvent )
 	{
 		$event.stopPropagation();
 		$event.preventDefault();

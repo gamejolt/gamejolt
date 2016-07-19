@@ -26,8 +26,8 @@ export class HomeCtrl
 	activeNewsTab = 'hot';
 
 	constructor(
-		@Inject( '$scope' ) $scope: angular.IScope,
-		@Inject( '$window' ) $window: angular.IWindowService,
+		@Inject( '$scope' ) $scope: ng.IScope,
+		@Inject( '$window' ) $window: ng.IWindowService,
 		@Inject( 'App' ) App: App,
 		@Inject( 'Environment' ) Environment: any,
 		@Inject( 'Meta' ) Meta: any,

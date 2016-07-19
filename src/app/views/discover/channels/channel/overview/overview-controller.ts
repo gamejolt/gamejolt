@@ -8,7 +8,7 @@ export class OverviewCtrl
 	hotGames: any[];
 
 	constructor(
-		@Inject( '$stateParams' ) $stateParams: angular.ui.IStateParamsService,
+		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
 		@Inject( 'Game' ) Game: any,
 		@Inject( 'Channels_ViewHelper' )Channels_ViewHelper: Channels_ViewHelper,
 		@Inject( 'payload' ) payload: any

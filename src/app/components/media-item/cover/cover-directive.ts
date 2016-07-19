@@ -25,8 +25,8 @@ export class CoverComponent
 	private _elem: HTMLElement;
 
 	constructor(
-		@Inject( '$scope' ) $scope: angular.IScope,
-		@Inject( '$element' ) $element: angular.IRootElementService,
+		@Inject( '$scope' ) $scope: ng.IScope,
+		@Inject( '$element' ) $element: ng.IRootElementService,
 		@Inject( 'Screen' ) private screen: Screen,
 		@Inject( 'Ruler' ) private ruler: Ruler
 	)
