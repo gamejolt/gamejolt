@@ -32,20 +32,15 @@ export class ActivityFeedItem
 
 		// For proper type guards below.
 		const item = this.feedItem;
-
-		if ( this.feedItem instanceof ActivityFeedItem.Fireside_Post ) {
-			this.type = 'devlog-post';
-		}
-		else if ( this.feedItem instanceof ActivityFeedItem.Notification ) {
-			this.type = 'notification';
-		}
-
 		let dateVal;
-		if ( item instanceof ActivityFeedItem.Notification ) {
-			dateVal = item.added_on;
-		}
-		else if ( item instanceof ActivityFeedItem.Fireside_Post ) {
+
+		if ( item instanceof ActivityFeedItem.Fireside_Post ) {
+			this.type = 'devlog-post';
 			dateVal = item.updated_on || item.added_on;
+		}
+		else if ( item instanceof ActivityFeedItem.Notification ) {
+			this.type = 'notification';
+			dateVal = item.added_on;
 		}
 
 		this.id = `${this.type}-${this.feedItem.id}-${dateVal}`;
