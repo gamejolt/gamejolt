@@ -1,6 +1,11 @@
 /// <reference path="./typings/index.d.ts" />
 /// <reference path="./node_modules/ng-metadata/manual_typings/globals.d.ts" />
 
+declare module "html!*" {
+	const content: string;
+	export default content;
+}
+
 interface Window {
 	_: _.LoDashStatic;
 	moment: moment.MomentStatic;
