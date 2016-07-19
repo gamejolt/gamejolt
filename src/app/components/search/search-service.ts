@@ -15,8 +15,8 @@ export class Search
 
 	constructor(
 		@Inject( '$injector' ) $injector: any,
-		@Inject( '$q' ) private $q: ng.IQService,
-		@Inject( 'orderByFilter' ) private orderByFilter: ng.IFilterOrderBy,
+		@Inject( '$q' ) private $q: angular.IQService,
+		@Inject( 'orderByFilter' ) private orderByFilter: angular.IFilterOrderBy,
 		@Inject( 'Environment' ) environment: any,
 		@Inject( 'Api' ) private api: any,
 		@Inject( 'Fuzzysearch' ) private fuzzysearch: any,
@@ -37,7 +37,7 @@ export class Search
 
 	search( query: string, options: SearchOptions = { type: 'all' } )
 	{
-		let searchPromises: ng.IPromise<any>[] = [];
+		let searchPromises: angular.IPromise<any>[] = [];
 		searchPromises.push( this._searchSite( query, options ) );
 
 		// If we're in client, let's try to search their installed games.
@@ -59,7 +59,7 @@ export class Search
 			} );
 	}
 
-	private _searchSite( query: string, options: SearchOptions = { type: 'all' } ): ng.IPromise<any>
+	private _searchSite( query: string, options: SearchOptions = { type: 'all' } ): angular.IPromise<any>
 	{
 		let requestOptions: any = {};
 
@@ -91,7 +91,7 @@ export class Search
 			} );
 	}
 
-	private _searchInstalledGames( query: string ): ng.IPromise<any>
+	private _searchInstalledGames( query: string ): angular.IPromise<any>
 	{
 		let games = [];
 

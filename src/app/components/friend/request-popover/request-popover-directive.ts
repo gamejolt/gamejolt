@@ -24,9 +24,9 @@ export class RequestPopoverComponent
 	private pending: any[] = [];
 
 	constructor(
-		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( '$interval' ) $interval: ng.IIntervalService,
-		@Inject( '$timeout' ) $timeout: ng.ITimeoutService,
+		@Inject( '$scope' ) $scope: angular.IScope,
+		@Inject( '$interval' ) $interval: angular.IIntervalService,
+		@Inject( '$timeout' ) $timeout: angular.ITimeoutService,
 		@Inject( 'App' ) app: App,
 		@Inject( 'User_Friendship' ) private userFriendshipModel: any,
 		@Inject( 'User_FriendshipsHelper' ) private userFriendshipsHelper: any

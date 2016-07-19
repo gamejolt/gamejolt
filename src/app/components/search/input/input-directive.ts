@@ -14,14 +14,14 @@ const KEYCODE_ESC = 27;
 export class InputDirective implements OnInit
 {
 	constructor(
-		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( '$element' ) private $element: ng.IAugmentedJQuery,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
+		@Inject( '$scope' ) private $scope: angular.IScope,
+		@Inject( '$element' ) private $element: angular.IAugmentedJQuery,
+		@Inject( '$state' ) private $state: angular.ui.IStateService,
 		@Inject( 'Search' ) private search: Search,
 		@Inject( 'Search_History' ) private searchHistory: Search_History,
 
 		@Inject( SearchComponent ) @SkipSelf() private searchCtrl: SearchComponent,
-		@Inject( 'ngModel' ) @Self() private ngModel: ng.INgModelController
+		@Inject( 'ngModel' ) @Self() private ngModel: angular.INgModelController
 	)
 	{
 	}

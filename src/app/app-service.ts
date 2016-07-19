@@ -10,11 +10,11 @@ export class App
 	userBootstrapped = false;
 
 	constructor(
-		@Inject( '$rootScope' ) $rootScope: ng.IRootScopeService,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
+		@Inject( '$rootScope' ) $rootScope: angular.IRootScopeService,
+		@Inject( '$state' ) private $state: angular.ui.IStateService,
 		@Inject( '$injector' ) private $injector: any,
-		@Inject( '$q' ) private $q: ng.IQService,
-		@Inject( '$document' ) private $document: ng.IDocumentService,
+		@Inject( '$q' ) private $q: angular.IQService,
+		@Inject( '$document' ) private $document: angular.IDocumentService,
 		@Inject( 'Chat' ) private chat: any,
 		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
 		@Inject( 'Growls' ) private growls: any,
@@ -57,7 +57,7 @@ export class App
 						this.growls.success( 'You are now logged out.', 'Goodbye!' );
 						resolve();
 					} )
-					.catch( err =>
+					.catch( ( err: any ) =>
 					{
 						console.error( err );
 						this.growls.error( 'Could not log you out.' );

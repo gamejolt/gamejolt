@@ -9,13 +9,13 @@ export class ManageCtrl
 	mediaItems: any[] = [];
 
 	constructor(
-		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
-		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
+		@Inject( '$scope' ) $scope: angular.IScope,
+		@Inject( '$state' ) private $state: angular.ui.IStateService,
+		@Inject( '$stateParams' ) $stateParams: angular.ui.IStateParamsService,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
 		@Inject( 'Game' ) gameModel: any,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject( 'gettextCatalog' ) private gettextCatalog: angular.gettext.gettextCatalog,
 		@Inject( 'managePayload' ) managePayload: any
 	)
 	{

@@ -15,7 +15,7 @@ export class HeroComponent
 	mp4: string;
 
 	constructor(
-		@Inject( '$sce' ) $sce: ng.ISCEService,
+		@Inject( '$sce' ) $sce: angular.ISCEService,
 		@Inject( 'Screen' ) private screen: Screen
 	)
 	{

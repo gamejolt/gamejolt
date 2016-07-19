@@ -10,10 +10,10 @@ export class ListCtrl
 	posts: ActivityFeedContainer;
 
 	constructor(
-		@Inject( '$scope' ) $scope: ng.IScope,
+		@Inject( '$scope' ) $scope: angular.IScope,
 		@Inject( 'App' ) app: App,
 		@Inject( 'Fireside_Post' ) firesidePostModel: typeof Fireside_Post,
-		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject( 'gettextCatalog' ) gettextCatalog: angular.gettext.gettextCatalog,
 		@Inject( 'ActivityFeedService' ) feedService: ActivityFeedService,
 		@Inject( 'payload' ) payload: any
 	)

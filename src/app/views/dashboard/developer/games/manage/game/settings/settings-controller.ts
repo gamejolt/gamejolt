@@ -7,11 +7,11 @@ export class SettingsCtrl
 {
 	constructor(
 		@Inject( 'App' ) app: App,
-		@Inject( '$scope' ) private $scope: ng.IScope,
+		@Inject( '$scope' ) private $scope: angular.IScope,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'FormDashboardGameWizard' ) private wizard: FormDashboardGameWizard,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
+		@Inject( 'gettextCatalog' ) private gettextCatalog: angular.gettext.gettextCatalog
 	)
 	{
 		app.title = gettextCatalog.getString( 'dash.games.settings.page_title', { game: $scope['manageCtrl'].game.title } );

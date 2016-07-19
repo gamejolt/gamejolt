@@ -7,12 +7,12 @@ export class DetailsCtrl
 {
 	constructor(
 		@Inject( 'App' ) app: App,
-		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
+		@Inject( '$scope' ) private $scope: angular.IScope,
+		@Inject( '$state' ) private $state: angular.ui.IStateService,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'FormDashboardGameWizard' ) private wizard: FormDashboardGameWizard,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
+		@Inject( 'gettextCatalog' ) private gettextCatalog: angular.gettext.gettextCatalog
 	)
 	{
 		app.title = gettextCatalog.getString( 'dash.games.edit.page_title', { game: $scope['manageCtrl'].game.title } );

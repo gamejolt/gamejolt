@@ -3,7 +3,7 @@ import { ActivityFeedItem, ActivityFeedInput } from './item-service';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { App } from './../../../app-service';
 
-export function ActivityFeedContainerFactory( ActivityFeedItem, HistoryTick, App )
+export function ActivityFeedContainerFactory( ActivityFeedItem: any, HistoryTick: any, App: any )
 {
 	ActivityFeedContainer.itemModel = ActivityFeedItem;
 	ActivityFeedContainer.app = App;

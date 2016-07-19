@@ -15,11 +15,11 @@ export class DescriptiveActionComponent
 	translationValues: Object;
 
 	constructor(
-		@Inject( '$scope' ) $scope: ng.IScope,
+		@Inject( '$scope' ) $scope: angular.IScope,
 		@Inject( 'Notification' ) notificationModel: typeof Notification,
-		@Inject( 'gettext' ) gettext: ng.gettext.gettextFunction,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
-		@Inject( 'currencyFilter' ) currencyFilter: ng.IFilterCurrency
+		@Inject( 'gettext' ) gettext: angular.gettext.gettextFunction,
+		@Inject( 'gettextCatalog' ) private gettextCatalog: angular.gettext.gettextCatalog,
+		@Inject( 'currencyFilter' ) currencyFilter: angular.IFilterCurrency
 	)
 	{
 		const translationKeys = {

@@ -1,7 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { GamesCtrl } from '../games-controller';
 
-interface Scope extends ng.IScope {
+interface Scope extends angular.IScope {
 	gamesCtrl: GamesCtrl;
 }
 
@@ -12,7 +12,7 @@ export class FetchCtrl
 
 	constructor(
 		@Inject( '$scope' ) $scope: Scope,
-		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
+		@Inject( '$stateParams' ) $stateParams: angular.ui.IStateParamsService,
 		@Inject( 'Game' ) game: any,
 		@Inject( 'payload' ) payload: any
 	)

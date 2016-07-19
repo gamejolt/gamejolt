@@ -23,9 +23,9 @@ export class MediaComponent implements AfterViewInit
 	sliderElem: HTMLElement;
 
 	constructor(
-		@Inject( '$element' ) private $element: ng.IAugmentedJQuery,
-		@Inject( '$window' ) private $window: ng.IWindowService,
-		@Inject( '$scope' ) private $scope: ng.IScope,
+		@Inject( '$element' ) private $element: angular.IAugmentedJQuery,
+		@Inject( '$window' ) private $window: angular.IWindowService,
+		@Inject( '$scope' ) private $scope: angular.IScope,
 		@Inject( 'Screen' ) private screen: Screen,
 		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() private feed: FeedComponent
 	)
@@ -63,7 +63,7 @@ export class MediaComponent implements AfterViewInit
 		this.sliderElem.style.transform = `translate3d( ${pagePx + extraOffsetPx}px, 0, 0 )`;
 	}
 
-	panStart( $event: ng.IAngularEvent )
+	panStart( $event: angular.IAngularEvent )
 	{
 		this.$scope.$apply( () =>
 		{
@@ -72,7 +72,7 @@ export class MediaComponent implements AfterViewInit
 		} );
 	};
 
-	pan( $event: ng.IAngularEvent )
+	pan( $event: angular.IAngularEvent )
 	{
 		if ( !this.isWaitingForFrame ) {
 			this.isWaitingForFrame = true;
@@ -80,7 +80,7 @@ export class MediaComponent implements AfterViewInit
 		}
 	};
 
-	private _panTick( $event: ng.IAngularEvent )
+	private _panTick( $event: angular.IAngularEvent )
 	{
 		this.isWaitingForFrame = false;
 
@@ -92,7 +92,7 @@ export class MediaComponent implements AfterViewInit
 		this._updateSliderOffset( $event['deltaX'] );
 	}
 
-	panEnd( $event: ng.IAngularEvent )
+	panEnd( $event: angular.IAngularEvent )
 	{
 		this.isDragging = false;
 

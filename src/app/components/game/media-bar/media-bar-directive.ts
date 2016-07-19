@@ -17,10 +17,10 @@ export class MediaBarComponent implements OnChanges
 	isPlaying: number;
 
 	constructor(
-		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( '$location' ) private $location: ng.ILocationService,
-		@Inject( '$timeout' ) $timeout: ng.ITimeoutService,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject( '$scope' ) $scope: angular.IScope,
+		@Inject( '$location' ) private $location: angular.ILocationService,
+		@Inject( '$timeout' ) $timeout: angular.ITimeoutService,
+		@Inject( 'gettextCatalog' ) private gettextCatalog: angular.gettext.gettextCatalog,
 		@Inject( 'Screen' ) private screen: Screen,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'Analytics' ) private analytics: any

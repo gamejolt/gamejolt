@@ -13,12 +13,12 @@ export class ListCtrl
 	tab: 'active' | 'draft' = 'active';
 
 	constructor(
-		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
+		@Inject( '$scope' ) $scope: angular.IScope,
+		@Inject( '$stateParams' ) $stateParams: angular.ui.IStateParamsService,
 		@Inject( 'App' ) app: App,
 		@Inject( 'Fireside_Post' ) private firesidePostModel: typeof Fireside_Post,
 		@Inject( 'ActivityFeedService' ) feedService: ActivityFeedService,
-		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject( 'gettextCatalog' ) gettextCatalog: angular.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
 	)
 	{

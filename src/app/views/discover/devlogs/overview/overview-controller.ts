@@ -11,7 +11,7 @@ export class OverviewCtrl
 	posts: ActivityFeedContainer;
 
 	constructor(
-		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
+		@Inject( '$stateParams' ) $stateParams: angular.ui.IStateParamsService,
 		@Inject( 'App' ) app: App,
 		@Inject( 'Game' ) game: any,
 		@Inject( 'Fireside_Post' ) firesidePostModel: typeof Fireside_Post,

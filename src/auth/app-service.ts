@@ -13,7 +13,7 @@ export class App
 	credentials = {};
 
 	constructor(
-		@Inject( '$window' ) private $window: ng.IWindowService,
+		@Inject( '$window' ) private $window: angular.IWindowService,
 		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( 'Environment' ) private environment: any
 	)

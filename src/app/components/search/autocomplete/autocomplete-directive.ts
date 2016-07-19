@@ -68,13 +68,13 @@ export class AutocompleteComponent implements OnInit
 	@Input( '<?searchAutocompleteModes' ) modes: string[] = [ 'search', 'command' ];
 
 	constructor(
-		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
+		@Inject( '$scope' ) private $scope: angular.IScope,
+		@Inject( '$state' ) private $state: angular.ui.IStateService,
 		@Inject( '$injector' ) $injector: any,
-		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
-		@Inject( 'orderByFilter' ) private orderByFilter: ng.IFilterOrderBy,
-		@Inject( 'hotkeys' ) private hotkeys: ng.hotkeys.HotkeysProvider,
-		@Inject( 'gettext' ) gettext: ng.gettext.gettextFunction,
+		@Inject( '$timeout' ) private $timeout: angular.ITimeoutService,
+		@Inject( 'orderByFilter' ) private orderByFilter: angular.IFilterOrderBy,
+		@Inject( 'hotkeys' ) private hotkeys: angular.hotkeys.HotkeysProvider,
+		@Inject( 'gettext' ) gettext: angular.gettext.gettextFunction,
 		@Inject( 'Environment' ) private environment: any,
 		@Inject( 'App' ) private app: App,
 		@Inject( 'Analytics' ) private analytics: any,
@@ -234,7 +234,7 @@ export class AutocompleteComponent implements OnInit
 		return this.popover.getPopover( 'search-autocomplete' );
 	}
 
-	showAutocomplete( element: ng.IAugmentedJQuery )
+	showAutocomplete( element: angular.IAugmentedJQuery )
 	{
 		if ( !this.isVisible && !this.searchCtrl.isEmpty() && this.inAvailableMode() ) {
 			this.isVisible = true;

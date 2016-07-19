@@ -7,7 +7,7 @@ export class Channels_ViewHelper
 	constructor(
 		@Inject( 'App' ) private app: App,
 		@Inject( 'Meta' ) private meta: any,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
+		@Inject( 'gettextCatalog' ) private gettextCatalog: angular.gettext.gettextCatalog
 	)
 	{
 
