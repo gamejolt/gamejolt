@@ -2,7 +2,7 @@ import { Component, Inject, Input, Output } from 'ng-metadata/core';
 import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
 import { FeedComponent } from './feed-directive';
-import template from './notification.html';
+import template from 'html!./notification.html';
 
 @Component({
 	selector: 'gj-activity-feed-notification',

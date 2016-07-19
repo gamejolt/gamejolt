@@ -1,6 +1,6 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
 import { Screen } from './../../../lib/gj-lib-client/components/screen/screen-service';
-import template from './page-header.html';
+import template from 'html!./page-header.html';
 
 @Component({
 	selector: 'gj-page-header',

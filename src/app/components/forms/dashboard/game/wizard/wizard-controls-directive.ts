@@ -1,6 +1,6 @@
 import { Component, Input, Output, Inject, SkipSelf, Optional } from 'ng-metadata/core';
 import { FormDashboardGameWizard } from './wizard-service';
-import template from './wizard-controls.html';
+import template from 'html!./wizard-controls.html';
 
 @Component({
 	selector: 'gj-form-dashboard-game-wizard-controls',

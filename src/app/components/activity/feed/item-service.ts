@@ -4,7 +4,7 @@ import { Fireside_Post } from './../../../../lib/gj-lib-client/components/firesi
 
 export type ActivityFeedInput = Notification | Fireside_Post;
 
-export function ActivityFeedItemFactory( Notification, Fireside_Post )
+export function ActivityFeedItemFactory( Notification: any, Fireside_Post: any )
 {
 	ActivityFeedItem.Notification = Notification;
 	ActivityFeedItem.Fireside_Post = Fireside_Post;
@@ -21,26 +21,23 @@ export class ActivityFeedItem
 	type: 'devlog-post' | 'notification';
 	feedItem: ActivityFeedInput;
 
-	constructor( private _item: ActivityFeedInput )
+	constructor( private item: ActivityFeedInput )
 	{
-		if ( _item instanceof ActivityFeedItem.Notification && _item.type == ActivityFeedItem.Notification.TYPE_DEVLOG_POST_ADD ) {
-			this.feedItem = _item.action_model;
+		if ( item instanceof ActivityFeedItem.Notification && item.type == ActivityFeedItem.Notification.TYPE_DEVLOG_POST_ADD ) {
+			this.feedItem = item.action_model;
 		}
 		else {
-			this.feedItem = _item;
+			this.feedItem = item;
 		}
 
-		// For proper type guards below.
-		const item = this.feedItem;
-		let dateVal;
-
-		if ( item instanceof ActivityFeedItem.Fireside_Post ) {
+		let dateVal: number;
+		if ( this.feedItem instanceof ActivityFeedItem.Fireside_Post ) {
 			this.type = 'devlog-post';
-			dateVal = item.updated_on || item.added_on;
+			dateVal = this.feedItem.updated_on || this.feedItem.added_on;
 		}
-		else if ( item instanceof ActivityFeedItem.Notification ) {
+		else if ( this.feedItem instanceof ActivityFeedItem.Notification ) {
 			this.type = 'notification';
-			dateVal = item.added_on;
+			dateVal = this.feedItem.added_on;
 		}
 
 		this.id = `${this.type}-${this.feedItem.id}-${dateVal}`;

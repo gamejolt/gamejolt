@@ -1,6 +1,6 @@
 import { Component, Inject, Input, Output, AfterViewInit } from 'ng-metadata/core';
 import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
-import template from './thumbnail.html';
+import template from 'html!./thumbnail.html';
 
 @Component({
 	selector: 'gj-game-thumbnail',

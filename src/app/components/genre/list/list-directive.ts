@@ -1,5 +1,5 @@
 import { Component, Inject } from 'ng-metadata/core';
-import template from './list.html';
+import template from 'html!./list.html';
 
 @Component({
 	selector: 'gj-genre-list',

@@ -1,6 +1,6 @@
 import { Component, Inject, Output } from 'ng-metadata/core';
 import { App } from './../../../app-service';
-import template from './request-popover.html';
+import template from 'html!./request-popover.html';
 
 const COUNT_INTERVAL = (5 * 60 * 1000);  // 5 minutes.
 const INITIAL_LAG = 3000;

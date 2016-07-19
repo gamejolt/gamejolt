@@ -2,7 +2,7 @@ import { Component, Inject, Input, Output, AfterViewInit, SkipSelf, Optional } f
 import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Screen } from './../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { FeedComponent } from './../../../activity/feed/feed-directive';
-import template from './media.html';
+import template from 'html!./media.html';
 
 @Component({
 	selector: 'gj-devlog-post-media',

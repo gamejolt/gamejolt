@@ -1,6 +1,6 @@
 import { Component, Inject, Input, OnChanges, SimpleChanges } from 'ng-metadata/core';
 import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
-import template from './media-bar.html';
+import template from 'html!./media-bar.html';
 
 @Component({
 	selector: 'gj-game-media-bar',

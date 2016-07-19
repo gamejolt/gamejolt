@@ -1,6 +1,6 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
 import { Search } from './search-service';
-import template from './search.html';
+import template from 'html!./search.html';
 
 @Component({
 	selector: 'gj-search',

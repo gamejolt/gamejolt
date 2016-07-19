@@ -2,7 +2,7 @@ import { Component, Inject, Input, Output, SkipSelf, Optional } from 'ng-metadat
 import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Screen } from './../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { FeedComponent } from './../../../activity/feed/feed-directive';
-import template from './text.html';
+import template from 'html!./text.html';
 
 @Component({
 	selector: 'gj-devlog-post-text',

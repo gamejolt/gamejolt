@@ -1,7 +1,7 @@
 import { Component, Inject, Input, Output } from 'ng-metadata/core';
 import { DevlogPostEdit } from '../edit/edit-service';
 import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import template from './add.html';
+import template from 'html!./add.html';
 
 @Component({
 	selector: 'gj-devlog-post-add',
@@ -22,7 +22,7 @@ export class AddComponent
 	showAddModal( type: string )
 	{
 		this.api.sendRequest( `/web/dash/developer/games/devlog/new-post/${this.game.id}/${type}` )
-			.then( response =>
+			.then( ( response: any ) =>
 			{
 				return new Fireside_Post( response.post );
 			} )

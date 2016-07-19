@@ -3,7 +3,7 @@ import { App } from './../../../app-service';
 import { Search } from './../search-service';
 import { SearchComponent } from './../search-directive';
 import { Search_History } from './../history/history-service';
-import template from './autocomplete.html';
+import template from 'html!./autocomplete.html';
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;

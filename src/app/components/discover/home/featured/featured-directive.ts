@@ -1,6 +1,6 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
 import { Screen } from './../../../../../lib/gj-lib-client/components/screen/screen-service';
-import template from './featured.html';
+import template from 'html!./featured.html';
 
 @Component({
 	selector: 'gj-discover-home-featured',

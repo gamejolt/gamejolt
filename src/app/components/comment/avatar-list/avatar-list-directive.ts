@@ -1,6 +1,6 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
 import { Comment } from './../../../../lib/gj-lib-client/components/comment/comment-model';
-import template from './avatar-list.html';
+import template from 'html!./avatar-list.html';
 
 @Component({
 	selector: 'gj-comment-avatar-list',

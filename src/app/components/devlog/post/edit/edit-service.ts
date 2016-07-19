@@ -1,6 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import template from './edit.html';
+import template from 'html!./edit.html';
 
 @Injectable()
 export class DevlogPostEdit

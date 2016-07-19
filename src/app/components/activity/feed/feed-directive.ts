@@ -2,7 +2,7 @@ import { Component, Inject, Input, Output } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedItem } from './item-service';
 import { ActivityFeedContainer } from './feed-container-service';
-import template from './feed.html';
+import template from 'html!./feed.html';
 
 /**
  * The number of items from the bottom that we should hit before loading more.

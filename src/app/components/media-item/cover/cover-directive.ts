@@ -1,7 +1,7 @@
 import { Component, Input, Output, Inject } from 'ng-metadata/core';
 import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Ruler } from './../../../../lib/gj-lib-client/components/ruler/ruler-service';
-import template from './cover.html';
+import template from 'html!./cover.html';
 
 @Component({
 	selector: 'gj-media-item-cover',
