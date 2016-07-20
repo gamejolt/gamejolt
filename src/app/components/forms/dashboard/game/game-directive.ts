@@ -1,11 +1,9 @@
-import { App } from './../../../../app-service';
-
 export function GameFormFactory(
 	Form: any,
 	Api: any,
 	Game: any,
 	Scroll: any,
-	App: App
+	App: any
 )
 {
 	const form = new Form( {

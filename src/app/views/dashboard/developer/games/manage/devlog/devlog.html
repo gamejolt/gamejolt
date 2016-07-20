@@ -7,27 +7,28 @@
 
 		<gj-devlog-post-add
 			game="manageCtrl.game"
-			on-added="listCtrl.onPostAdded( $post )"
+			on-added="devlogCtrl.onPostAdded( $post )"
 			>
 		</gj-devlog-post-add>
 
 		<nav class="platform-list inline section-nav">
 			<ul>
 				<li>
-					<a ng-click="listCtrl.tab = 'active'"
-						ng-class="{ active: listCtrl.tab == 'active' }"
+					<a
+						ui-sref="dashboard.developer.games.manage.devlog.feed( { tab: 'active' } )"
+						ui-sref-active="active"
 						translate
 						>
 						Posts
 					</a>
 				</li>
 				<li>
-					<a ng-click="listCtrl.tab = 'draft'"
-						ng-class="{ active: listCtrl.tab == 'draft' }"
+					<a
+						ui-sref="dashboard.developer.games.manage.devlog.feed( { tab: 'draft' } )"
+						ui-sref-active="active"
 						translate
 						>
 						Draft Posts
-						<span class="badge">{{ listCtrl.draftPosts.items.length || 0 | number }}</span>
 					</a>
 				</li>
 			</ul>
@@ -41,13 +42,7 @@
 		<div class="row">
 			<div class="col-lg-7">
 
-				<gj-activity-feed
-					items="listCtrl.tab == 'active' ? listCtrl.posts : listCtrl.draftPosts"
-					has-more="listCtrl.tab == 'active' ? true : true"
-					show-edit-controls="true"
-					on-post-published="listCtrl.onPostPublished( $post )"
-					>
-				</gj-activity-feed>
+				<ui-view></ui-view>
 
 			</div>
 		</div>

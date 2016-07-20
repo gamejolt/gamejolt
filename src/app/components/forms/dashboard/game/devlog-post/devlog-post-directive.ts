@@ -1,6 +1,4 @@
-import { Fireside_Post } from './../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-
-export function DevlogPostFormFactory( Form: any, firesidePostModel: typeof Fireside_Post )
+export function DevlogPostFormFactory( Form: any, Fireside_Post: any )
 {
 	const form = new Form( {
 		model: 'Fireside_Post',
@@ -9,13 +7,13 @@ export function DevlogPostFormFactory( Form: any, firesidePostModel: typeof Fire
 
 	form.onInit = function( scope: any )
 	{
-		scope.Fireside_Post = firesidePostModel;
+		scope.Fireside_Post = Fireside_Post;
 
-		scope.formModel.status = firesidePostModel.STATUS_ACTIVE;
+		scope.formModel.status = Fireside_Post.STATUS_ACTIVE;
 
 		scope.onDraftSubmit = () =>
 		{
-			scope.formModel.status = firesidePostModel.STATUS_DRAFT;
+			scope.formModel.status = Fireside_Post.STATUS_DRAFT;
 			scope.onSubmit();
 		};
 	};
