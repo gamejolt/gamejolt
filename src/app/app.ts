@@ -290,9 +290,6 @@ const AppModule = angular.module( 'App', [
 	DevlogPostAddModule,
 	DevlogPostEditModule,
 
-	'App.Post.Grid',
-	'App.Post.List',
-
 	GameThumbnailModule,
 	'App.Meter',
 	'App.Game.CompatIcons',

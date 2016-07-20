@@ -308,9 +308,6 @@
 
 		</div>
 
-		<gj-post-list ng-if="Screen.isMobile" post-list-items="homeCtrl.articles[ homeCtrl.activeNewsTab ]"></gj-post-list>
-		<gj-post-grid ng-if="Screen.isDesktop" post-grid-items="homeCtrl.articles[ homeCtrl.activeNewsTab ]"></gj-post-grid>
-
 		<div class="page-cut" ng-switch="homeCtrl.activeNewsTab">
 			<a class="btn btn-outline"
 				ng-switch-when="hot"
