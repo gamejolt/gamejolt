@@ -60,12 +60,11 @@
 				>
 			</gj-fireside-post-like-widget>
 
-			<button class="btn btn-success-outline"
+			<gj-game-follow-widget
 				ng-if="::$ctrl.feed.showGameInfo && $ctrl.app.user && $ctrl.post.user.id != $ctrl.app.user.id"
+				game="$ctrl.post.game"
 				>
-				<span class="jolticon jolticon-subscribe"></span>
-				<span translate>Follow Game</span>
-			</button>
+			</gj-game-follow-widget>
 		</div>
 
 		<div class="pull-right" ng-if="::$ctrl.feed.showEditControls && $ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
