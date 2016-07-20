@@ -18,28 +18,8 @@
 	<gj-game-playlist-add-to-popover gj-game="gameCtrl.game"></gj-game-playlist-add-to-popover>
 
 	<!-- Buttons / Controls -->
-	<div class="game-header-follow-container" ng-switch="!!gameCtrl.libraryGame">
-		<a
-			ng-click="gameCtrl.onFollowClick()"
-			class="game-header-follow btn btn-block"
-			ng-class="!gameCtrl.libraryGame ? 'btn-outline' : 'btn-success active'"
-			gj-tooltip="{{ !gameCtrl.libraryGame ? gameCtrl.followTooltip : undefined }}"
-			tooltip-placement="bottom"
-			gj-track-event="game-profile:{{ !gameCtrl.libraryGame ? 'follow' : 'unfollow' }}"
-			ng-switch="!!gameCtrl.libraryGame"
-			>
-			<span class="btn-badge">
-				{{ gameCtrl.followerCount | number }}
-			</span>
-			<span ng-switch-when="false">
-				<span class="jolticon jolticon-subscribe"></span>
-				<span translate>Follow Game</span>
-			</span>
-			<span ng-switch-when="true">
-				<span class="jolticon jolticon-subscribed"></span>
-				<span translate>Following</span>
-			</span>
-		</a>
+	<div class="game-header-follow-container">
+		<gj-game-follow-widget game="gameCtrl.game"></gj-game-follow-widget>
 	</div>
 
 </div>

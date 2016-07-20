@@ -9,7 +9,6 @@ export class OverviewCtrl
 	viewCount: number;
 	downloadCount: number;
 	playCount: number;
-	followerCount: number;
 	commentCount: number;
 
 	isPublishable: boolean;
@@ -35,7 +34,6 @@ export class OverviewCtrl
 		this.viewCount = payload.viewCount || 0;
 		this.downloadCount = payload.downloadCount || 0;
 		this.playCount = payload.playCount || 0;
-		this.followerCount = payload.followerCount || 0;
 		this.commentCount = payload.commentCount || 0;
 
 		this.isPublishable = payload.isPublishable || false;
