@@ -51,6 +51,7 @@ import DevlogPostAddModule from './components/devlog/post/add/add';
 import DevlogPostEditModule from './components/devlog/post/edit/edit';
 
 import GameThumbnailModule from './components/game/thumbnail/thumbnail';
+import GameFollowWidgetModule from './components/game/follow-widget/follow-widget';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -291,6 +292,7 @@ const AppModule = angular.module( 'App', [
 	DevlogPostEditModule,
 
 	GameThumbnailModule,
+	GameFollowWidgetModule,
 	'App.Meter',
 	'App.Game.CompatIcons',
 	'App.Game.Grid',

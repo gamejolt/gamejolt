@@ -1,0 +1,21 @@
+<a
+	ng-click="$ctrl.follow()"
+	class="game-follow-widget btn"
+	ng-class="!$ctrl.game.is_following ? 'btn-outline' : 'btn-success active'"
+	gj-tooltip="{{ !$ctrl.game.is_following ? $ctrl.followTooltip : undefined }}"
+	tooltip-placement="bottom"
+	gj-track-event="game-follow:{{ !$ctrl.game.is_following ? 'follow' : 'unfollow' }}"
+	ng-switch="!!$ctrl.game.is_following"
+	>
+	<span class="btn-badge">
+		{{ $ctrl.game.follower_count | number }}
+	</span>
+	<span ng-switch-when="false">
+		<span class="jolticon jolticon-subscribe"></span>
+		<span translate>Follow Game</span>
+	</span>
+	<span ng-switch-when="true">
+		<span class="jolticon jolticon-subscribed"></span>
+		<span translate>Following</span>
+	</span>
+</a>
