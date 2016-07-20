@@ -74,7 +74,7 @@ export class FeedComponent
 				const id = `activity-feed-item-${active}`;
 				const elem = this.$document[0].getElementById( id );
 				if ( elem ) {
-					this.scroll.to( id );
+					this.scroll.to( id, { animate: false } );
 					elem.classList.add( 'active' );
 				}
 			}, 200, false );
