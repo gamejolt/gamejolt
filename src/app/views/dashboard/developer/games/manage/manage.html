@@ -38,7 +38,7 @@
 	<gj-page-header-nav ng-if="!manageCtrl.isWizard">
 		<nav class="platform-list inline">
 			<ul>
-				<li>
+				<li gj-tooltip="{{ 'Set up your game page and manage its builds.' | translate }}" tooltip-placement="bottom">
 					<a ui-sref=".game.overview" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.game' ) }" translate>
 						Overview/Setup
 					</a>

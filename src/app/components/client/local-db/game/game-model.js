@@ -22,7 +22,7 @@ angular.module( 'App.Client.LocalDb' )
 			'id',
 			'title',
 			'slug',
-			'thumbnail_media_item',
+			'img_thumbnail',
 			'header_media_item',
 			'compatibility',
 			'modified_on',
