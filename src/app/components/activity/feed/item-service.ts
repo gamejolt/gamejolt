@@ -20,6 +20,7 @@ export class ActivityFeedItem
 	id: string;
 	type: 'devlog-post' | 'notification';
 	feedItem: ActivityFeedInput;
+	scrollId: number;
 
 	constructor( item: ActivityFeedInput )
 	{
@@ -41,5 +42,6 @@ export class ActivityFeedItem
 		}
 
 		this.id = `${this.type}-${this.feedItem.id}-${dateVal}`;
+		this.scrollId = <number>this.feedItem.scroll_id;
 	}
 }

@@ -29,21 +29,4 @@ export class FeedCtrl
 		this.notificationsCount = payload.notificationsCount || 0;
 		this.notifications = feedService.bootstrap( notificationModel.populate( payload.notifications ) );
 	}
-
-	// this.loadMorePosts = function()
-	// {
-	// 	var _this = this;
-	// 	var lastPost = this.posts[ this.posts.length - 1 ];
-	// 	Api.sendRequest( '/web/discover/games/posts/' + $stateParams.id + '/' + lastPost.id )
-	// 		.then( function( response )
-	// 		{
-	// 			_this.posts = _this.posts.concat( Fireside_Post.populate( response.posts ) );
-	// 			ActivityFeedService.store( _this.posts );
-	// 		} );
-	// };
-
-	// onPostRemoved( post )
-	// {
-	// 	_.remove( this.posts, { id: post.id } );
-	// }
 }

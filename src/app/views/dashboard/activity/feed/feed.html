@@ -4,7 +4,9 @@
 			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
 
 				<gj-activity-feed
+					type="Notification"
 					items="feedCtrl.notifications"
+					load-more-url="/web/dash/activity/more/{{ feedCtrl.tab }}"
 					show-game-info="true"
 					>
 				</gj-activity-feed>

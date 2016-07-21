@@ -185,26 +185,6 @@
 					<div translate>dash.integrate.exp_help_body_html</div>
 				</div>
 
-				<!--
-					Activity Feed
-				-->
-				<h2>
-					<a class="link-unstyled" ui-sref="dashboard.activity.feed( { tab: 'all' } )">{{ ::'dash.overview.activity_heading' | translate }}</a>
-				</h2>
-
-				<gj-activity-feed
-					ng-if="overviewCtrl.activityNotifications.length"
-					activity-feed-notifications="overviewCtrl.activityNotifications"
-					>
-				</gj-activity-feed>
-
-				<div class="alert alert-info" ng-if="!overviewCtrl.activityNotifications.length" translate>dash.overview.activity_no_activity_html</div>
-
-				<a class="btn btn-outline btn-block" ui-sref="dashboard.activity.feed( { tab: 'all' } )" gj-track-event="dash:overview:all-activity">
-					<span class="jolticon jolticon-notifications"></span>
-					{{ ::'dash.overview.activity_view_all_button' | translate }}
-				</a>
-
 			</div>
 			<div class="col-md-5" ng-class="{ 'pull-right': Screen.isDesktop }" style="clear: right">
 

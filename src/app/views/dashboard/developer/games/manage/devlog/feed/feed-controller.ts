@@ -6,6 +6,7 @@ import { ActivityFeedContainer } from './../../../../../../../components/activit
 @Injectable()
 export class FeedCtrl
 {
+	tab: 'draft' | 'active';
 	posts: ActivityFeedContainer;
 
 	constructor(
@@ -17,6 +18,7 @@ export class FeedCtrl
 		@Inject( 'payload' ) payload: any,
 	)
 	{
+		this.tab = $stateParams['tab'];
 		this.posts = feedService.bootstrap( firesidePostModel.populate( payload.posts ) );
 
 		$scope.$on( 'Devlog.postAdd', ( _event: ng.IAngularEvent, post: Fireside_Post ) => this.onPostAdded( post ) );

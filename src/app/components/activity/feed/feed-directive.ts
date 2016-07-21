@@ -1,4 +1,5 @@
 import { Component, Inject, Input, Output } from 'ng-metadata/core';
+import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedItem } from './item-service';
 import { ActivityFeedContainer } from './feed-container-service';
@@ -21,15 +22,17 @@ const LOAD_MORE_TIMES = 3;
 })
 export class FeedComponent
 {
+	@Input( '@' ) type: 'Notification' | 'Fireside_Post';
 	@Input( '<items' ) feed: ActivityFeedContainer;
-	@Input( '<' ) hasMore = true;
+	@Input( '@' ) loadMoreUrl: string;
 	@Input( '<?' ) showEditControls = false;
 	@Input( '<?' ) showGameInfo = false;
 
-	@Output( 'onLoadMore' ) private _onLoadMore: Function;
 	@Output( '?onPostRemoved' ) private _onPostRemoved?: Function;
 	@Output( '?onPostEdited' ) private _onPostEdited?: Function;
 	@Output( '?onPostPublished' ) private _onPostPublished?: Function;
+
+	hasMore = true;
 
 	private _inView: string[] = [];
 
@@ -46,7 +49,10 @@ export class FeedComponent
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( '$document' ) private $document: ng.IDocumentService,
 		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
-		@Inject( 'Scroll' ) private scroll: any
+		@Inject( 'Scroll' ) private scroll: any,
+		@Inject( 'Api' ) private api: any,
+		@Inject( 'Notification' ) private notificationModel: typeof Notification,
+		@Inject( 'Fireside_Post' ) private firesidePostModel: typeof Fireside_Post,
 	)
 	{
 		this.wasHistorical = !!this.feed.getActive();
@@ -118,9 +124,23 @@ export class FeedComponent
 		this._isLoadingMore = true;
 		++this._timesLoaded;
 
-		if ( this._onLoadMore ) {
-			this._onLoadMore();
-		}
+		const lastPost = this.feed.items[ this.feed.items.length - 1 ];
+
+		this.api.sendRequest( this.loadMoreUrl, { scrollId: lastPost.scrollId } )
+			.then( ( response: any ) =>
+			{
+				if ( !response.items || !response.items.length ) {
+					this.hasMore = false;
+					return;
+				}
+
+				if ( this.type == 'Notification' ) {
+					this.feed.append( this.notificationModel.populate( response.items ) );
+				}
+				else if ( this.type == 'Fireside_Post' ) {
+					this.feed.append( this.firesidePostModel.populate( response.items ) );
+				}
+			} );
 	}
 
 	onItemInViewChange( visible: boolean, item: ActivityFeedItem )

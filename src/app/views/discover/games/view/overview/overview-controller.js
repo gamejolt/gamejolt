@@ -93,8 +93,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		}
 
 		this.posts = ActivityFeedService.bootstrap( Fireside_Post.populate( payload.posts ), { inHistorical: wasHistoricalView } );
-		this.hasMorePosts = true;
-
 		this.songs = Game_Song.populate( payload.songs );
 		this.recommendedGames = Game.populate( payload.recommendedGames );
 		this.supporters = User.populate( payload.supporters );
@@ -174,22 +172,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			.then( function( response )
 			{
 				_this.videoComments = _this.videoComments.concat( Comment_Video.populate( response.videos ) );
-			} );
-	};
-
-	this.loadMorePosts = function()
-	{
-		var _this = this;
-		var lastPost = this.posts.items[ this.posts.items.length - 1 ];
-		Api.sendRequest( '/web/discover/games/devlog/posts/' + $stateParams.id + '/' + lastPost.feedItem.id )
-			.then( function( response )
-			{
-				if ( !response.posts || !response.posts.length ) {
-					_this.hasMorePosts = false;
-					return;
-				}
-
-				_this.posts.append( Fireside_Post.populate( response.posts ) );
 			} );
 	};
 } );

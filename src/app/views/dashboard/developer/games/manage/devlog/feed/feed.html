@@ -1,7 +1,9 @@
 <gj-activity-feed
+	type="Fireside_Post"
 	items="feedCtrl.posts"
-	has-more="true"
+	load-more-url="/web/dash/developer/games/devlog/posts/{{ manageCtrl.game.id }}/{{ feedCtrl.tab }}"
 	show-edit-controls="true"
 	on-post-published="feedCtrl.onPostPublished( $post )"
 	>
 </gj-activity-feed>
+
