@@ -21,11 +21,16 @@ export class FeedCtrl
 		@Inject( 'payload' ) payload: any
 	)
 	{
-		app.title = gettextCatalog.getString( 'dash.activity.page_title' );
-
 		$scope['Notification'] = notificationModel;
-
 		this.tab = $stateParams['tab'];
+
+		if ( this.tab == 'activity' ) {
+			app.title = gettextCatalog.getString( 'Your activity feed' );
+		}
+		else {
+			app.title = gettextCatalog.getString( 'Your notifications' );
+		}
+
 		this.notificationsCount = payload.notificationsCount || 0;
 		this.notifications = feedService.bootstrap( notificationModel.populate( payload.notifications ) );
 	}
