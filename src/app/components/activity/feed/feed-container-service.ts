@@ -20,10 +20,15 @@ export class ActivityFeedContainer
 	activeId: string | null = null;
 	viewedItems: string[] = [];
 	expandedItems: string[] = [];
+	notificationWatermark?: number;  // Timestamp.
 
-	constructor( items: ActivityFeedInput[] )
+	constructor( items: ActivityFeedInput[], notificationWatermark?: number )
 	{
 		this.append( items );
+
+		if ( notificationWatermark ) {
+			this.notificationWatermark = notificationWatermark;
+		}
 	}
 
 	prepend( _items: ActivityFeedInput[] )

@@ -11,6 +11,7 @@ import template from 'html!./text.html';
 export class TextComponent
 {
 	@Input( '<' ) post: Fireside_Post;
+	@Input( '<' ) isNew = false;
 
 	@Output() onClick: Function;
 	@Output() onExpand: Function;

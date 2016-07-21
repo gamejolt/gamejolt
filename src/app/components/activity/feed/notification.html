@@ -3,7 +3,7 @@
 	ng-click="$ctrl.go( $event );"
 	>
 
-	<div class="timeline-list-item-icon" ng-class="{ active: !$ctrl.notification.viewed_on }">
+	<div class="timeline-list-item-icon" ng-class="{ active: $ctrl.isNew }">
 		<span class="jolticon" ng-class="$ctrl.notification.jolticon"></span>
 	</div>
 

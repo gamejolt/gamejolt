@@ -87,6 +87,16 @@ export class FeedComponent
 		}
 	}
 
+	isItemUnread( item: ActivityFeedItem )
+	{
+		// Only makes sense for notification feeds.
+		if ( this.type != 'Notification' || !this.feed.notificationWatermark || !(item.sourceItem instanceof Notification) ) {
+			return false;
+		}
+
+		return item.feedItem.added_on > this.feed.notificationWatermark;
+	}
+
 	setActive( item: ActivityFeedItem )
 	{
 		this.feed.setActive( item.id );

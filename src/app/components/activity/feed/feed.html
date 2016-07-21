@@ -18,6 +18,7 @@
 					<gj-devlog-post-text
 						ng-switch-when="text"
 						post="::item.feedItem"
+						is-new="::$ctrl.isItemUnread( item )"
 						on-click="$ctrl.setActive( item )"
 						on-expand="$ctrl.onItemExpanded( item )"
 						>
@@ -26,6 +27,7 @@
 					<gj-devlog-post-media
 						ng-switch-when="media"
 						post="::item.feedItem"
+						is-new="::$ctrl.isItemUnread( item )"
 						on-click="$ctrl.setActive( item )"
 						on-expand="$ctrl.onItemExpanded( item )"
 						>
@@ -35,6 +37,7 @@
 				<gj-activity-feed-notification
 					ng-switch-when="notification"
 					notification="::item.feedItem"
+					is-new="::$ctrl.isItemUnread( item )"
 					on-click="$ctrl.setActive( item )"
 					>
 				</gj-activity-feed-notification>

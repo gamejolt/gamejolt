@@ -9,6 +9,11 @@ export interface BootstrapOptions
 	 * Useful if you are lazy loading the page.
 	 */
 	inHistorical?: boolean;
+
+	/**
+	 * A timestamp of when the notifications in this feed were last viewed.
+	 */
+	notificationWatermark?: number;
 }
 
 interface ActivityFeedState
@@ -57,7 +62,7 @@ export class ActivityFeedService
 		_.remove( this._states, { url } );
 		this._currentState = {
 			url,
-			container: new this.containerModel( items ),
+			container: new this.containerModel( items, options.notificationWatermark ),
 		};
 		this._states.push( this._currentState );
 

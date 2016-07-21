@@ -10,6 +10,8 @@ import template from 'html!./notification.html';
 export class NotificationComponent
 {
 	@Input( '<' ) notification: Notification;
+	@Input( '<' ) isNew = false;
+
 	@Output() onClick: Function;
 
 	constructor(

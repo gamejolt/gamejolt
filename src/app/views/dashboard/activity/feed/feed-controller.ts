@@ -32,6 +32,9 @@ export class FeedCtrl
 		}
 
 		this.notificationsCount = payload.notificationsCount || 0;
-		this.notifications = feedService.bootstrap( notificationModel.populate( payload.notifications ) );
+		this.notifications = feedService.bootstrap( notificationModel.populate( payload.notifications ), {
+			// TODO: Update with real value from backend.
+			notificationWatermark: Date.now() - (86400 * 1000 * 20),
+		} );
 	}
 }

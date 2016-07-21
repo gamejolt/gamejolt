@@ -11,6 +11,7 @@ import template from 'html!./media.html';
 export class MediaComponent implements AfterViewInit
 {
 	@Input( '<' ) post: Fireside_Post;
+	@Input( '<' ) isNew = false;
 
 	@Output() onClick: Function;
 	@Output() onExpand: Function;

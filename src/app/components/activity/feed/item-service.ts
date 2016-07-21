@@ -1,6 +1,7 @@
 import { Injectable } from 'ng-metadata/core';
 import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { ActivityFeedContainer } from './feed-container-service';
 
 export type ActivityFeedInput = Notification | Fireside_Post;
 
@@ -22,13 +23,13 @@ export class ActivityFeedItem
 	feedItem: ActivityFeedInput;
 	scrollId: number;
 
-	constructor( item: ActivityFeedInput )
+	constructor( public sourceItem: ActivityFeedInput )
 	{
-		if ( item instanceof ActivityFeedItem.Notification && item.type == ActivityFeedItem.Notification.TYPE_DEVLOG_POST_ADD ) {
-			this.feedItem = item.action_model;
+		if ( sourceItem instanceof ActivityFeedItem.Notification && sourceItem.type == ActivityFeedItem.Notification.TYPE_DEVLOG_POST_ADD ) {
+			this.feedItem = sourceItem.action_model;
 		}
 		else {
-			this.feedItem = item;
+			this.feedItem = sourceItem;
 		}
 
 		let dateVal = 0;
