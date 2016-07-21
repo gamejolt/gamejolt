@@ -1,0 +1,18 @@
+<div class="fireside-post-thumbnail">
+	<a ng-href="{{ ::$ctrl.post.url }}" class="fireside-post-thumbnail-img" ng-style="::{
+		'background-image': 'url(\'' + ($ctrl.post.header.img_url || '/app/components/fireside/post/thumbnail/no-thumb.png') + '\')' }"
+	></a>
+
+	<h5 class="fireside-post-thumbnail-heading">
+		<a ng-href="{{ ::$ctrl.post.url }}">
+			{{ ::$ctrl.post.title }}
+		</a>
+	</h5>
+
+	<div class="fireside-post-thumbnail-byline">
+		<span class="hidden-xs">By</span>
+		<a class="link-unstyled" ng-href="{{ ::($ctrl.environment.firesideBaseUrl + '/@' + $ctrl.post.user.username) }}">@{{ ::$ctrl.post.user.username }}</a>
+		<span class="dot-separator"></span>
+		<em am-time-ago="$ctrl.post.published_on"></em>
+	</div>
+</div>

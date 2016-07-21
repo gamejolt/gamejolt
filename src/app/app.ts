@@ -52,6 +52,8 @@ import DevlogPostEditModule from './components/devlog/post/edit/edit';
 
 import GameThumbnailModule from './components/game/thumbnail/thumbnail';
 import GameFollowWidgetModule from './components/game/follow-widget/follow-widget';
+import FiresidePostThumbnailModule from './components/fireside/post/thumbnail/thumbnail';
+import FiresidePostListModule from './components/fireside/post/list/list';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -290,6 +292,9 @@ const AppModule = angular.module( 'App', [
 	DevlogPostControlsModule,
 	DevlogPostAddModule,
 	DevlogPostEditModule,
+
+	FiresidePostListModule,
+	FiresidePostThumbnailModule,
 
 	GameThumbnailModule,
 	GameFollowWidgetModule,
