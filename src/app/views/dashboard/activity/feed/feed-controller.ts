@@ -3,12 +3,12 @@ import { Notification } from './../../../../../lib/gj-lib-client/components/noti
 import { ActivityFeedContainer } from './../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from './../../../../components/activity/feed/feed-service';
 import { App } from './../../../../app-service';
+import { ActivityCtrl } from '../activity-controller';
 
 @Injectable()
 export class FeedCtrl
 {
 	tab: 'activity' | 'notifications' = 'activity';
-	notificationsCount: number;
 	notifications: ActivityFeedContainer;
 
 	constructor(
@@ -22,6 +22,8 @@ export class FeedCtrl
 	)
 	{
 		$scope['Notification'] = notificationModel;
+		const activityCtrl: ActivityCtrl = $scope['activityCtrl'];
+
 		this.tab = $stateParams['tab'];
 
 		if ( this.tab == 'activity' ) {
@@ -31,10 +33,11 @@ export class FeedCtrl
 			app.title = gettextCatalog.getString( 'Your notifications' );
 		}
 
-		this.notificationsCount = payload.notificationsCount || 0;
 		this.notifications = feedService.bootstrap( notificationModel.populate( payload.notifications ), {
-			// TODO: Update with real value from backend.
-			notificationWatermark: Date.now() - (86400 * 1000 * 20),
+			notificationWatermark: payload.unreadWatermark,
 		} );
+
+		activityCtrl.activityUnreadCount = payload.activityUnreadCount || 0;
+		activityCtrl.notificationsUnreadCount = payload.notificationsUnreadCount || 0;
 	}
 }

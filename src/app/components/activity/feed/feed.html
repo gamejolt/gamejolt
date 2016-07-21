@@ -45,7 +45,7 @@
 
 		</div>
 
-		<div class="page-cut" ng-if="$ctrl.hasMore">
+		<div class="page-cut" ng-if="!$ctrl.feed.reachedEnd">
 			<button class="btn btn-outline" ng-click="$ctrl.loadMore()">
 				<span translate>Load More</span>
 			</button>

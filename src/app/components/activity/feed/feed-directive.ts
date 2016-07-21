@@ -32,8 +32,6 @@ export class FeedComponent
 	@Output( '?onPostEdited' ) private _onPostEdited?: Function;
 	@Output( '?onPostPublished' ) private _onPostPublished?: Function;
 
-	hasMore = true;
-
 	private _inView: string[] = [];
 
 	private _timesLoaded = 0;
@@ -90,7 +88,7 @@ export class FeedComponent
 	isItemUnread( item: ActivityFeedItem )
 	{
 		// Only makes sense for notification feeds.
-		if ( this.type != 'Notification' || !this.feed.notificationWatermark || !(item.sourceItem instanceof Notification) ) {
+		if ( this.type != 'Notification' || typeof this.feed.notificationWatermark === 'undefined' || !(item.sourceItem instanceof Notification) ) {
 			return false;
 		}
 
@@ -127,7 +125,7 @@ export class FeedComponent
 
 	loadMore()
 	{
-		if ( this._isLoadingMore || !this.hasMore ) {
+		if ( this._isLoadingMore || this.feed.reachedEnd ) {
 			return;
 		}
 
@@ -140,7 +138,7 @@ export class FeedComponent
 			.then( ( response: any ) =>
 			{
 				if ( !response.items || !response.items.length ) {
-					this.hasMore = false;
+					this.feed.reachedEnd = true;
 					return;
 				}
 
@@ -162,7 +160,7 @@ export class FeedComponent
 			this.feed.viewed( item );
 
 			// Auto-loading while scrolling.
-			if ( !this._isLoadingMore && this.hasMore && this._timesLoaded < LOAD_MORE_TIMES ) {
+			if ( !this._isLoadingMore && !this.feed.reachedEnd && this._timesLoaded < LOAD_MORE_TIMES ) {
 				const index = _.findIndex( this.feed.items, { id: item.id } );
 				if ( index >= this.feed.items.length - LOAD_MORE_FROM_BOTTOM ) {
 					this.loadMore();

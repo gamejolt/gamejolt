@@ -21,12 +21,13 @@ export class ActivityFeedContainer
 	viewedItems: string[] = [];
 	expandedItems: string[] = [];
 	notificationWatermark?: number;  // Timestamp.
+	reachedEnd = false;
 
 	constructor( items: ActivityFeedInput[], notificationWatermark?: number )
 	{
 		this.append( items );
 
-		if ( notificationWatermark ) {
+		if ( typeof notificationWatermark !== 'undefined' ) {
 			this.notificationWatermark = notificationWatermark;
 		}
 	}

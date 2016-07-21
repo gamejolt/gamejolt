@@ -15,12 +15,14 @@
 					<a ui-sref="dashboard.activity.feed( { tab: 'activity' } )" ui-sref-active="active">
 						<span class="jolticon jolticon-feed hidden-xs"></span>
 						<span translate>Feed</span>
+						<span class="tag tag-pink" ng-if="activityCtrl.activityUnreadCount">{{ activityCtrl.activityUnreadCount }}</span>
 					</a>
 				</li>
 				<li>
 					<a ui-sref="dashboard.activity.feed( { tab: 'notifications' } )" ui-sref-active="active">
 						<span class="jolticon jolticon-notifications hidden-xs"></span>
 						<span translate>Notifications</span>
+						<span class="tag tag-pink" ng-if="activityCtrl.notificationsUnreadCount">{{ activityCtrl.notificationsUnreadCount }}</span>
 					</a>
 				</li>
 			</ul>
