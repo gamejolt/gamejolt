@@ -23,9 +23,10 @@
 			</span>
 		</a>
 
-		<span ng-if="$ctrl.post.like_count">
+		<span ng-if="$ctrl.post.like_count > 0">
 			<span class="dot-separator"></span>
 			<a class="link-muted"
+				ng-click="$ctrl.toggleLikes()"
 				translate
 				translate-n="$ctrl.post.like_count"
 				translate-plural="{{ $count | number }} likes"
@@ -96,11 +97,34 @@
 </gj-popover>
 
 <div class="devlog-post-controls-well" ng-if="$ctrl.isShowingComments">
-
 	<gj-comment-widget
 		comment-resource="Fireside_Post"
 		comment-resource-id="::$ctrl.post.id"
 		no-intro="true"
 		>
 	</gj-comment-widget>
+</div>
+
+<div class="devlog-post-controls-well" ng-if="$ctrl.isShowingLikes">
+
+	<gj-loading ng-if="!$ctrl.hasLoadedLikes"></gj-loading>
+
+	<div ng-if="$ctrl.hasLoadedLikes">
+		<a
+			ng-repeat="like in $ctrl.likes track by like.id"
+			ui-sref="profile.overview( { slug: like.user.slug, id: like.user.id } )"
+			>
+			<gj-card>
+				<div style="width: 40px; float: left">
+					<div class="friend-request-popover-avatar" gj-user-avatar="::like.user"></div>
+				</div>
+				<div style="margin-left: 55px;">
+					<div class="card-title">
+						<h5>{{ ::like.user.display_name }}</h5>
+					</div>
+				</div>
+			</gj-card>
+		</a>
+	</div>
+
 </div>

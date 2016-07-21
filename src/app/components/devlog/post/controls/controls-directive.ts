@@ -1,5 +1,6 @@
 import { Component, Input, Output, Inject, SkipSelf, Optional } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Fireside_Post_Like } from './../../../../../lib/gj-lib-client/components/fireside/post/like/like-model';
 import { App } from './../../../../app-service';
 import { DevlogPostEdit } from './../edit/edit-service';
 import { FeedComponent } from './../../../activity/feed/feed-directive';
@@ -16,6 +17,9 @@ export class ControlsComponent
 	@Output() onExpand: Function;
 
 	isShowingComments = false;
+	isShowingLikes = false;
+	hasLoadedLikes = false;
+	likes: Fireside_Post_Like[] = [];
 
 	constructor(
 		@Inject( 'App' ) public app: App,
@@ -29,7 +33,29 @@ export class ControlsComponent
 	toggleComments()
 	{
 		this.isShowingComments = !this.isShowingComments;
+		this.isShowingLikes = false;
 		this.onExpand();
+	}
+
+	toggleLikes()
+	{
+		this.isShowingLikes = !this.isShowingLikes;
+		this.isShowingComments = false;
+		this.onExpand();
+
+		if ( this.isShowingLikes ) {
+			this.loadLikes();
+		}
+	}
+
+	loadLikes()
+	{
+		this.post.fetchLikes()
+			.then( ( likes ) =>
+			{
+				this.likes = likes;
+				this.hasLoadedLikes = true;
+			} );
 	}
 
 	showEdit()
