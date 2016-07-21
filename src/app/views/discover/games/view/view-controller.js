@@ -16,7 +16,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	// Overview page will populate this.
 	// We only need it for the overview page, but we need to show it in the view of this controller.
 	this.mediaBarItems = [];
-	this.notificationCounts = {};
 
 	$scope.$watch( '::gameCtrl.game', function( game )
 	{

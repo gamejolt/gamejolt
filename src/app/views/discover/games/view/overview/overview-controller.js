@@ -69,10 +69,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		Meta.twitter = payload.twitter;
 		this.microdata = payload.microdata ? JSON.stringify( payload.microdata ) : '{}';
 
-		$scope.gameCtrl.notificationCounts = payload.notificationCounts || {
-			news: 0,
-		};
-
 		this.profileCount = payload.profileCount || 0;
 		this.downloadCount = payload.downloadCount || 0;
 		this.playCount = payload.playCount || 0;
