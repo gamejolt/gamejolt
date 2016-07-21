@@ -13,17 +13,7 @@ export class HomeCtrl
 
 	channels: any[];
 
-	hotArticles: any[];
-	followedArticles: any[];
-
 	firesidePosts: any[];
-
-	articles: {
-		hot: any[];
-		followed: any[],
-	};
-
-	activeNewsTab = 'hot';
 
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
@@ -33,7 +23,6 @@ export class HomeCtrl
 		@Inject( 'Game' ) Game: any,
 		@Inject( 'FeaturedItem' ) FeaturedItem: any,
 		@Inject( 'Fireside_Post' ) Fireside_Post: any,
-		@Inject( 'Game_NewsArticle' ) Game_NewsArticle: any,
 		@Inject( 'Channels' ) channels: Channels,
 		@Inject( 'payload' ) payload: any
 	)
@@ -56,20 +45,6 @@ export class HomeCtrl
 
 		this.channels = payload.channels;
 
-		this.hotArticles = Game_NewsArticle.populate( payload.hotArticles );
-		this.followedArticles = payload.followedArticles ? Game_NewsArticle.populate( payload.followedArticles ) : [];
-
 		this.firesidePosts = Fireside_Post.populate( payload.firesidePosts );
-
-		this.articles = {
-			hot: this.hotArticles,
-			followed: this.followedArticles,
-		};
-	}
-
-	changeNewsTab( tab: string )
-	{
-		this.activeNewsTab = tab;
 	}
 }
-// angular.module( 'App.Views' ).controller( 'Discover.HomeCtrl',  );
