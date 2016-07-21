@@ -22,6 +22,9 @@ export class NotificationCountComponent
 
 		const countInterval = $interval( () => this.fetchCount(), COUNT_INTERVAL );
 		$scope.$on( '$destroy', () => $interval.cancel( countInterval ) );
+
+		// Can emit this to refresh the notification counts when they've changed.
+		$scope.$on( 'NotificationCount.refresh', () => this.fetchCount() );
 	}
 
 	fetchCount()

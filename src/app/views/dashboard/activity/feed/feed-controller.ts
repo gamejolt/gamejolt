@@ -13,6 +13,7 @@ export class FeedCtrl
 
 	constructor(
 		@Inject( 'App' ) app: App,
+		@Inject( '$rootScope' ) $rootScope: ng.IRootScopeService,
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
 		@Inject( 'Notification' ) notificationModel: typeof Notification,
@@ -39,5 +40,8 @@ export class FeedCtrl
 
 		activityCtrl.activityUnreadCount = payload.activityUnreadCount || 0;
 		activityCtrl.notificationsUnreadCount = payload.notificationsUnreadCount || 0;
+
+		// Update the notification count directive to show the new unread count.
+		$rootScope.$broadcast( 'NotificationCount.refresh' );
 	}
 }
