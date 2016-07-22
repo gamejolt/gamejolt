@@ -60,103 +60,105 @@
 			</div>
 		</div>
 
-		<hr>
+		<div ng-if="manageCtrl.mediaItems.length > 0 ">
+			<hr>
 
-		<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
-			<gj-editable-accordion active-item="mediaCtrl.activeItem">
+			<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
+				<gj-editable-accordion active-item="mediaCtrl.activeItem">
 
-				<div ui-tree="{ dropped: mediaCtrl._onMediaSorted }"
-					ui-tree-nodes
-					ng-model="manageCtrl.mediaItems"
-					>
-
-					<!-- track by ID was breaking -->
-					<gj-editable-accordion-item
-						ng-repeat="item in manageCtrl.mediaItems"
-						ui-tree-node
+					<div ui-tree="{ dropped: mediaCtrl._onMediaSorted }"
+						ui-tree-nodes
+						ng-model="manageCtrl.mediaItems"
 						>
 
-						<gj-editable-accordion-item-heading>
+						<!-- track by ID was breaking -->
+						<gj-editable-accordion-item
+							ng-repeat="item in manageCtrl.mediaItems"
+							ui-tree-node
+							>
 
-							<div class="media-card-thumb"
-								ng-style="{ 'background-image': 'url(\'' + item.img_thumbnail_med + '\')' }"
-								>
-							</div>
+							<gj-editable-accordion-item-heading>
 
-							<div class="media-card-content" ng-switch="item.media_type">
-
-								<a class="card-remove"
-									ng-click="mediaCtrl.removeItem( item ); $event.stopPropagation()"
+								<div class="media-card-thumb"
+									ng-style="{ 'background-image': 'url(\'' + item.img_thumbnail_med + '\')' }"
 									>
-									<span class="jolticon jolticon-remove middle"></span>
-								</a>
-
-								<div ng-switch-when="image">
-									<div class="card-title">
-										<h5 ng-if="item.caption">{{ item.caption }}</h5>
-										<h5 ng-if="!item.caption">
-											<em translate>(no caption)</em>
-										</h5>
-									</div>
-									<div class="card-meta">
-										<div class="tag" translate>Image</div>
-										<a class="btn btn-sm btn-outline"
-											ng-click="mediaCtrl.clipboard.copy( Environment.baseUrl + item.getUrl( manageCtrl.game ) ); $event.stopPropagation()"
-											gj-tooltip="{{ 'Copy the direct link to view this image on your game page.' | translate }}"
-											translate
-											>
-											Copy Permalink
-										</a>
-									</div>
 								</div>
 
-								<div ng-switch-when="video">
-									<div class="card-title" >
-										<h5>{{ item.title }}</h5>
+								<div class="media-card-content" ng-switch="item.media_type">
+
+									<a class="card-remove"
+										ng-click="mediaCtrl.removeItem( item ); $event.stopPropagation()"
+										>
+										<span class="jolticon jolticon-remove middle"></span>
+									</a>
+
+									<div ng-switch-when="image">
+										<div class="card-title">
+											<h5 ng-if="item.caption">{{ item.caption }}</h5>
+											<h5 ng-if="!item.caption">
+												<em translate>(no caption)</em>
+											</h5>
+										</div>
+										<div class="card-meta">
+											<div class="tag" translate>Image</div>
+											<a class="btn btn-sm btn-outline"
+												ng-click="mediaCtrl.clipboard.copy( Environment.baseUrl + item.getUrl( manageCtrl.game ) ); $event.stopPropagation()"
+												gj-tooltip="{{ 'Copy the direct link to view this image on your game page.' | translate }}"
+												translate
+												>
+												Copy Permalink
+											</a>
+										</div>
 									</div>
-									<div class="card-meta">
-										<div class="tag" translate>Video</div>
-										<a class="btn btn-sm btn-outline"
-											ng-click="mediaCtrl.clipboard.copy( Environment.baseUrl + item.getUrl( manageCtrl.game ) ); $event.stopPropagation()"
-											gj-tooltip="{{ 'Copy the direct link to view this video on your game page.' | translate }}"
-											translate
-											>
-											Copy Permalink
-										</a>
+
+									<div ng-switch-when="video">
+										<div class="card-title" >
+											<h5>{{ item.title }}</h5>
+										</div>
+										<div class="card-meta">
+											<div class="tag" translate>Video</div>
+											<a class="btn btn-sm btn-outline"
+												ng-click="mediaCtrl.clipboard.copy( Environment.baseUrl + item.getUrl( manageCtrl.game ) ); $event.stopPropagation()"
+												gj-tooltip="{{ 'Copy the direct link to view this video on your game page.' | translate }}"
+												translate
+												>
+												Copy Permalink
+											</a>
+										</div>
 									</div>
+
 								</div>
 
-							</div>
+							</gj-editable-accordion-item-heading>
 
-						</gj-editable-accordion-item-heading>
+							<gj-editable-accordion-item-body>
 
-						<gj-editable-accordion-item-body>
+								<div ng-switch="item.media_type">
+									<gj-form-dashboard-game-image
+										ng-switch-when="image"
+										gj-game="manageCtrl.game"
+										gj-game-screenshot="item"
+										gj-form-submit-handler="mediaCtrl.onMediaEdited( formModel )"
+										>
+									</gj-form-dashboard-game-image>
 
-							<div ng-switch="item.media_type">
-								<gj-form-dashboard-game-image
-									ng-switch-when="image"
-									gj-game="manageCtrl.game"
-									gj-game-screenshot="item"
-									gj-form-submit-handler="mediaCtrl.onMediaEdited( formModel )"
-									>
-								</gj-form-dashboard-game-image>
+									<gj-form-dashboard-game-video
+										ng-switch-when="video"
+										gj-game="manageCtrl.game"
+										gj-game-video="item"
+										gj-form-submit-handler="mediaCtrl.onMediaEdited( formModel )"
+										>
+									</gj-form-dashboard-game-video>
+								</div>
 
-								<gj-form-dashboard-game-video
-									ng-switch-when="video"
-									gj-game="manageCtrl.game"
-									gj-game-video="item"
-									gj-form-submit-handler="mediaCtrl.onMediaEdited( formModel )"
-									>
-								</gj-form-dashboard-game-video>
-							</div>
+							</gj-editable-accordion-item-body>
 
-						</gj-editable-accordion-item-body>
+						</gj-editable-accordion-item>
 
-					</gj-editable-accordion-item>
+					</div>
 
-				</div>
-
-			</gj-editable-accordion>
+				</gj-editable-accordion>
+			</div>
 		</div>
 
 		<div ng-if="manageCtrl.isWizard">

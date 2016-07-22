@@ -9,32 +9,25 @@ export class DescriptionCtrl
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( 'FormDashboardGameWizard' ) private wizard: FormDashboardGameWizard,
-		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog
+		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject( 'Growls' ) private growls: any,
+		@Inject( 'Scroll' ) private scroll: any,
 	)
 	{
 		app.title = gettextCatalog.getString( 'Edit Description for {{ game }}', { game: $scope['manageCtrl'].game.title } );
 	}
 
-	onSaved( /*response: any*/ )
+	onSaved()
 	{
 		if ( this.$scope['manageCtrl'].isWizard ) {
 			this.wizard.goNext();
 			return;
 		}
 
-		// if ( response.wasPublished ) {
-		// 	this.growls.success(
-		// 		this.gettextCatalog.getString( 'dash.games.overview.published_growl' ),
-		// 		this.gettextCatalog.getString( 'dash.games.overview.published_growl_title' )
-		// 	);
-		// }
-		// else {
-		// 	this.growls.success(
-		// 		this.gettextCatalog.getString( 'dash.games.edit.save_growl' ),
-		// 		this.gettextCatalog.getString( 'dash.games.edit.save_growl_title' )
-		// 	);
-		// }
-
-		// this.scroll.to( 0 );
+		this.growls.success(
+			this.gettextCatalog.getString( 'Your game description has been saved.' ),
+			this.gettextCatalog.getString( 'Description Saved' )
+		);
+		this.scroll.to( 0 );
 	}
 }

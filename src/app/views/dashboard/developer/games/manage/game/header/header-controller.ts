@@ -1,5 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../../../../../app-service';
+import { ModalConfirm } from './../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 
 @Injectable()
 export class HeaderCtrl
@@ -10,7 +11,8 @@ export class HeaderCtrl
 		@Inject( 'Popover' ) private popover: any,
 		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'Growls' ) private growls: any,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
+		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject( 'ModalConfirm' ) private confirm: ModalConfirm,
 	)
 	{
 		app.title = gettextCatalog.getString( 'dash.games.header.page_title', { game: $scope['manageCtrl'].game.title } );
@@ -19,7 +21,8 @@ export class HeaderCtrl
 	clearHeader()
 	{
 		this.popover.hideAll();
-		this.$scope['manageCtrl'].game.$clearHeader();
+		this.confirm.show( this.gettextCatalog.getString( 'Are you sure you want to remove your game header?' ), undefined, 'yes' )
+			.then( () => this.$scope['manageCtrl'].game.$clearHeader() );
 	}
 
 	onSaved()

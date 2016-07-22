@@ -1,6 +1,5 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../../../../../app-service';
-import { ModalConfirm } from './../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Notification } from './../../../../../../../../lib/gj-lib-client/components/notification/notification-model';
 
 @Injectable()
@@ -18,11 +17,9 @@ export class OverviewCtrl
 
 	constructor(
 		@Inject( 'App' ) app: App,
-		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
+		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'Notification' ) notificationModel: typeof Notification,
-		@Inject( 'Game' ) private gameModel: any,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
 	)
 	{
@@ -40,22 +37,6 @@ export class OverviewCtrl
 		this.hasBuildsProcessing = payload.hasBuildsProcessing || false;
 
 		this.notifications = payload.notifications ? notificationModel.populate( payload.notifications ) : [];
-	}
-
-	publish()
-	{
-		this.modalConfirm.show( this.gettextCatalog.getString( 'dash.games.overview.publish_confirmation' ) )
-			.then( () =>
-			{
-				return this.$scope['manageCtrl'].game.$setStatus( this.gameModel.STATUS_VISIBLE );
-			} )
-			.then( function()
-			{
-				this.Growls.success(
-					this.gettextCatalog.getString( 'dash.games.overview.published_growl' ),
-					this.gettextCatalog.getString( 'dash.games.overview.published_growl_title' )
-				);
-			} );
 	}
 
 	// This is called if they loaded up the page and had builds in a processing state

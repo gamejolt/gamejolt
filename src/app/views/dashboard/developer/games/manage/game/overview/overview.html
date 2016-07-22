@@ -1,34 +1,39 @@
 <div class="row">
 	<div class="col-lg-8">
 
-		<div gj-expand-when="!manageCtrl.game.is_published">
+		<!-- Show a little message if they still have builds being processed. -->
+		<div class="alert alert-info" ng-if="overviewCtrl.hasBuildsProcessing"
+			gj-progress-poller="/web/dash/developer/games/poll-build-progress/{{ manageCtrl.game.id }}"
+			progress-poller-on-complete="overviewCtrl.onAllBuildsProcessed()"
+			>
+			<div class="progress progress-thin progress-striped active">
+				<div class="progress-bar" style="width: 100%"></div>
+			</div>
+			<p>
+				<span class="jolticon jolticon-notice"></span>
+				<span translate>dash.games.overview.todo_info_builds_processing_html</span>
+			</p>
+		</div>
 
-			<!-- Ready to publish! -->
-			<div ng-if="overviewCtrl.isPublishable">
-				<div class="alert alert-success" ng-if="!overviewCtrl.hasBuildsProcessing">
-					<p translate>dash.games.overview.todo_info_ready_html</p>
+		<!-- Ready to publish! -->
+		<div gj-expand-when="!manageCtrl.game.is_published && overviewCtrl.isPublishable">
+			<div class="alert alert-success">
+				<p translate>
+					Your game page is ready to publish to the site for all to see!
+				</p>
+
+				<div class="alert-actions">
+					<button class="btn btn-success-outline btn-block btn-dark-variant"
+						gj-tooltip="{{ 'dash.games.overview.todo_info_publish_button_tooltip' | translate }}"
+						ng-click="manageCtrl.publish()"
+						>
+						<span class="jolticon jolticon-active"></span>
+						{{ ::'dash.games.overview.todo_info_publish_button' | translate }}
+					</button>
 				</div>
-
-				<!-- Show a little message if they still have builds being processed. -->
-				<div class="alert alert-info" ng-if="overviewCtrl.hasBuildsProcessing"
-					gj-progress-poller="/web/dash/developer/games/poll-build-progress/{{ manageCtrl.game.id }}"
-					progress-poller-on-complete="overviewCtrl.onAllBuildsProcessed()"
-					>
-					<div class="progress progress-thin progress-striped active">
-						<div class="progress-bar" style="width: 100%"></div>
-					</div>
-					<p>
-						<span class="jolticon jolticon-notice"></span>
-						<span translate>dash.games.overview.todo_info_builds_processing_html</span>
-					</p>
-				</div>
-
-				<button class="i-button block" gj-tooltip="{{ 'dash.games.overview.todo_info_publish_button_tooltip' | translate }}" ng-click="overviewCtrl.publish()">
-					<span class="jolticon jolticon-active"></span>
-					{{ ::'dash.games.overview.todo_info_publish_button' | translate }}
-				</button>
 			</div>
 		</div>
+
 	</div>
 </div>
 
@@ -119,3 +124,44 @@
 		<span translate>View Game Analytics</span>
 	</a>
 </div>
+
+<!--<h2>Development Stage</h2>
+
+<div class="row">
+	<div class="col-xs-4">
+		<a>
+			<gj-card>
+				<div class="card-title">
+					<h4 translate>Devlog-Only/No Builds</h4>
+				</div>
+				<div class="card-content" translate>
+					You don't have anything playable yet, but you're actively developing your game and have stuff to show off. Your game page will be more focused on your Devlog as its primary purpose.
+				</div>
+			</gj-card>
+		</a>
+	</div>
+	<div class="col-xs-4">
+		<a>
+			<gj-card>
+				<div class="card-title">
+					<h4 translate>Early Access</h4>
+				</div>
+				<div class="card-content" translate>
+					Your game has early playable builds, but it's not finished yet. You're still actively developing it and will continue to release new builds periodically.
+				</div>
+			</gj-card>
+		</a>
+	</div>
+	<div class="col-xs-4">
+		<a>
+			<gj-card>
+				<div class="card-title">
+					<h4 translate>Complete/Stable</h4>
+				</div>
+				<div class="card-content" translate>
+					Your game is complete. It's in a stable state and you only plan on making bug fixes or performance optimizations.
+				</div>
+			</gj-card>
+		</a>
+	</div>
+</div>-->

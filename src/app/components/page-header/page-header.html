@@ -39,7 +39,7 @@
 		</div>
 	</section>
 
-	<div ng-if="::$ctrl.hasNav" gj-auto-scroll-anchor>
+	<div ng-if="$ctrl.hasNav && !$ctrl.hideNav" gj-auto-scroll-anchor>
 		<section class="section page-header-nav"
 			gj-scroll-affix
 			should-affix="$ctrl.shouldAffixNav && $ctrl.screen.isLg && $ctrl.screen.height > 750"

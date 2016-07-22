@@ -17,25 +17,17 @@ export class DetailsCtrl
 		app.title = gettextCatalog.getString( 'dash.games.edit.page_title', { game: $scope['manageCtrl'].game.title } );
 	}
 
-	onSaved( response: any )
+	onSaved()
 	{
 		if ( this.$scope['manageCtrl'].isWizard ) {
 			this.wizard.goNext();
 			return;
 		}
 
-		if ( response.wasPublished ) {
-			this.growls.success(
-				this.gettextCatalog.getString( 'dash.games.overview.published_growl' ),
-				this.gettextCatalog.getString( 'dash.games.overview.published_growl_title' )
-			);
-		}
-		else {
-			this.growls.success(
-				this.gettextCatalog.getString( 'dash.games.edit.save_growl' ),
-				this.gettextCatalog.getString( 'dash.games.edit.save_growl_title' )
-			);
-		}
+		this.growls.success(
+			this.gettextCatalog.getString( 'dash.games.edit.save_growl' ),
+			this.gettextCatalog.getString( 'dash.games.edit.save_growl_title' )
+		);
 
 		this.scroll.to( 0 );
 	}

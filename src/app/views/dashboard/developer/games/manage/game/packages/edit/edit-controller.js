@@ -12,6 +12,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Game
 
 	this.previewData = null;
 	this.previewPackage = null;
+	this.isShowingPackageEdit = false;
 
 	App.title = gettextCatalog.getString( 'dash.games.packages.edit.page_title', {
 		game: $scope.manageCtrl.game.title,

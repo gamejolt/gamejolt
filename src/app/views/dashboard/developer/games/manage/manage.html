@@ -1,9 +1,23 @@
-<gj-page-header>
+<gj-page-header
+	hide-nav="manageCtrl.isWizard"
+	>
 
 	<gj-page-header-content>
-		<h1 class="section-header">
-			{{ manageCtrl.game.title }}
-		</h1>
+
+		<div ng-if="manageCtrl.isWizard">
+			<h1 class="section-header" translate>
+				Add Game
+			</h1>
+			<h4 class="section-header">
+				{{ manageCtrl.game.title }}
+			</h4>
+		</div>
+
+		<div ng-if="!manageCtrl.isWizard">
+			<h1 class="section-header">
+				{{ manageCtrl.game.title }}
+			</h1>
+		</div>
 
 		<p class="text-muted small sans-margin-bottom">
 			<span class="tag tag-blue" ng-if="manageCtrl.game._is_wip" translate>
@@ -13,12 +27,14 @@
 				Devlog
 			</span>
 
-			<span class="tag tag-pink" ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" translate>dash.games.hidden_tag</span>
+			<span ng-if="!manageCtrl.isWizard">
+				<span class="tag tag-pink" ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" translate>dash.games.hidden_tag</span>
 
-			<span ng-if="manageCtrl.game.status == Game.STATUS_VISIBLE">
-				<span class="tag tag-active" translate>dash.games.published_tag</span>
-				<span class="dot-separator"></span>
-				<span am-time-ago="manageCtrl.game.published_on"></span>
+				<span ng-if="manageCtrl.game.status == Game.STATUS_VISIBLE">
+					<span class="tag tag-active" translate>dash.games.published_tag</span>
+					<span class="dot-separator"></span>
+					<span am-time-ago="manageCtrl.game.published_on"></span>
+				</span>
 			</span>
 		</p>
 		<br>
@@ -35,7 +51,7 @@
 		</p>
 	</gj-page-header-content>
 
-	<gj-page-header-nav ng-if="!manageCtrl.isWizard">
+	<gj-page-header-nav>
 		<nav class="platform-list inline">
 			<ul>
 				<li gj-tooltip="{{ 'Set up your game page and manage its builds.' | translate }}" tooltip-placement="bottom">

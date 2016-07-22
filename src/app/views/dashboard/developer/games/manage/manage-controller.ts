@@ -14,7 +14,7 @@ export class ManageCtrl
 		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
-		@Inject( 'Game' ) gameModel: any,
+		@Inject( 'Game' ) private gameModel: any,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'managePayload' ) managePayload: any
 	)
@@ -41,6 +41,25 @@ export class ManageCtrl
 		}
 
 		return true;
+	}
+
+	publish()
+	{
+		this.modalConfirm.show( this.gettextCatalog.getString( 'dash.games.overview.publish_confirmation' ) )
+			.then( () => this.game.$setStatus( this.gameModel.STATUS_VISIBLE ) )
+			.then( () =>
+			{
+				this.growls.success(
+					this.gettextCatalog.getString( 'dash.games.overview.published_growl' ),
+					this.gettextCatalog.getString( 'dash.games.overview.published_growl_title' )
+				);
+			} );
+	}
+
+	saveDraft()
+	{
+		// Simply go to the overview and pull out of the wizard!
+		this.$state.go( 'dashboard.developer.games.manage.game.overview', { wizard: null } );
 	}
 
 	removeGame()

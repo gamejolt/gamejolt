@@ -19,6 +19,7 @@ export class PageHeaderComponent
 {
 	@Input( '<?' ) coverMediaItem?: any;
 	@Input( '<?' ) coverMaxHeight?: number;
+	@Input( '<?' ) hideNav = false;
 	@Input( '<?' ) shouldAffixNav = false;
 	@Input( '@?' ) colClasses?: string;
 

@@ -79,15 +79,26 @@
 					</div>
 				</div>
 			</div>
-			<br>
 
-			<gj-form-dashboard-game-package
-				gj-game="manageCtrl.game"
-				gj-sellable="editCtrl.sellable"
-				gj-game-package="editCtrl.package"
-				gj-form-submit-handler="editCtrl.onEdited( formModel )"
+			<a class="btn btn-outline btn-block"
+				ng-click="editCtrl.isShowingPackageEdit = !editCtrl.isShowingPackageEdit"
+				ng-switch="!!editCtrl.isShowingPackageEdit"
 				>
-			</gj-form-dashboard-game-package>
+				<span class="jolticon jolticon-edit"></span>
+				<span ng-switch-when="false" translate>Edit Package Details</span>
+				<span ng-switch-when="true" translate>Hide Package Details</span>
+			</a>
+
+			<div collapse="!editCtrl.isShowingPackageEdit">
+				<br>
+				<gj-form-dashboard-game-package
+					gj-game="manageCtrl.game"
+					gj-sellable="editCtrl.sellable"
+					gj-game-package="editCtrl.package"
+					gj-form-submit-handler="editCtrl.onEdited( formModel )"
+					>
+				</gj-form-dashboard-game-package>
+			</div>
 
 		</div>
 	</div>
@@ -106,7 +117,10 @@
 
 		<div class="col-sm-8 col-sm-pull-4">
 
-			<div class="alert alert-warning" ng-if="!editCtrl.releases.length" translate>dash.games.packages.manage.releases.no_releases_html</div>
+			<div class="alert alert-warning" ng-if="!editCtrl.releases.length" translate>
+				<p>There are no releases in this package yet.</p>
+				<p>Add a release to this package in order to upload builds/files to it.</p>
+			</div>
 
 			<div>
 				<a class="btn btn-success-outline btn-block"
@@ -121,7 +135,10 @@
 
 			<div ng-if="editCtrl.releases.length">
 
-				<gj-card ng-repeat="release in editCtrl.releases track by release.id">
+				<gj-card
+					ng-repeat="release in editCtrl.releases track by release.id"
+					is-inactive="release.status == Game_Release.STATUS_HIDDEN"
+					>
 
 					<a class="card-remove" ng-click="editCtrl.removeRelease( release )">
 						<span class="jolticon jolticon-remove"></span>
