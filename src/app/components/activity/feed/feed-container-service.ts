@@ -17,6 +17,7 @@ export class ActivityFeedContainer
 	static app: App;
 
 	items: ActivityFeedItem[] = [];
+	hasItems = false;
 	activeItem: ActivityFeedItem | undefined;
 	viewedItems: string[] = [];
 	expandedItems: string[] = [];
@@ -36,12 +37,14 @@ export class ActivityFeedContainer
 	{
 		const items = _items.map( item => new ActivityFeedContainer.itemModel( item ) );
 		this.items = items.concat( this.items );
+		this.hasItems = this.items.length > 0;
 	}
 
 	append( _items: ActivityFeedInput[] )
 	{
 		const items = _items.map( item => new ActivityFeedContainer.itemModel( item ) );
 		this.items = this.items.concat( items );
+		this.hasItems = this.items.length > 0;
 	}
 
 	update( _item: ActivityFeedInput )
@@ -68,6 +71,7 @@ export class ActivityFeedContainer
 				id: item.feedItem.id,
 			}
 		} );
+		this.hasItems = this.items.length > 0;
 	}
 
 	setActive( active: ActivityFeedItem | undefined )

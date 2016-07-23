@@ -1,7 +1,7 @@
-<section class="section section-thin" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
+<section class="section section-thin text-left" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 col-md-offset-2">
+			<div class="col-sm-10 col-md-offset-2">
 				<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 			</div>
 		</div>
@@ -112,29 +112,43 @@
 	</div>
 </div>
 
-<section class="section section-thin" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1">
-				<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+<div ng-if="overviewCtrl.posts.hasItems">
+	<section class="section section-thin text-left" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-md-offset-2">
+					<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+				</div>
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<section ng-if="::overviewCtrl.posts" class="section" style="overflow: hidden">
+	<section class="section" style="overflow: hidden">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
+
+					<gj-activity-feed
+						type="Fireside_Post"
+						items="overviewCtrl.posts"
+						load-more-url="/web/discover/games/devlog/posts/{{ gameCtrl.game.id }}"
+						show-edit-controls="true"
+						>
+					</gj-activity-feed>
+
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+
+<section class="section" ng-if="!overviewCtrl.posts.hasItems">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
-
-				<gj-activity-feed
-					type="Fireside_Post"
-					items="overviewCtrl.posts"
-					load-more-url="/web/discover/games/devlog/posts/{{ gameCtrl.game.id }}"
-					show-edit-controls="true"
-					>
-				</gj-activity-feed>
-
+				<div class="alert alert-info" translate>
+					This devlog doesn't have any posts yet.
+				</div>
 			</div>
 		</div>
 	</div>

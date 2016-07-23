@@ -4,12 +4,25 @@
 			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
 
 				<gj-activity-feed
+					ng-if="feedCtrl.notifications.hasItems"
 					type="Notification"
 					items="feedCtrl.notifications"
 					load-more-url="/web/dash/activity/more/{{ feedCtrl.tab }}"
 					show-game-info="true"
 					>
 				</gj-activity-feed>
+
+				<div class="alert alert-info"
+					ng-if="!feedCtrl.notifications.hasItems"
+					ng-switch="feedCtrl.tab"
+					>
+					<div ng-switch-when="activity" translate>
+						<p>You don't have any activity yet. Follow games to stay up to date on their latest development!</p>
+					</div>
+					<div ng-switch-when="notifications" translate>
+						<p>You don't have any notifications yet.</p>
+					</div>
+				</div>
 
 			</div>
 		</div>
