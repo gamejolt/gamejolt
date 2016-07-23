@@ -15,28 +15,28 @@
 
 			<div ng-switch="::item.type">
 				<div ng-switch-when="devlog-post" ng-switch="::item.feedItem.type">
-					<gj-devlog-post-text
+					<gj-activity-feed-devlog-post-text
 						ng-switch-when="text"
-						post="::item.feedItem"
+						item="::item"
 						is-new="::$ctrl.isItemUnread( item )"
 						on-click="$ctrl.setActive( item )"
 						on-expand="$ctrl.onItemExpanded( item )"
 						>
-					</gj-devlog-post-text>
+					</gj-activity-feed-devlog-post-text>
 
-					<gj-devlog-post-media
+					<gj-activity-feed-devlog-post-media
 						ng-switch-when="media"
-						post="::item.feedItem"
+						item="::item"
 						is-new="::$ctrl.isItemUnread( item )"
 						on-click="$ctrl.setActive( item )"
 						on-expand="$ctrl.onItemExpanded( item )"
 						>
-					</gj-devlog-post-media>
+					</gj-activity-feed-devlog-post-media>
 				</div>
 
 				<gj-activity-feed-notification
 					ng-switch-when="notification"
-					notification="::item.feedItem"
+					item="::item"
 					is-new="::$ctrl.isItemUnread( item )"
 					on-click="$ctrl.setActive( item )"
 					>

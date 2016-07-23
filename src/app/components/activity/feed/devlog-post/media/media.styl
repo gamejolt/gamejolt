@@ -39,14 +39,16 @@
 	.timeline-list-item-header-img
 		white-space: nowrap
 
-		> div
+		.devlog-post-media-slider
 			transition: transform 300ms $strong-ease-out
 
-		img
-			display: inline-block
-			vertical-align: top
-			border-left: 1px solid $white
-			broder-right: 1px solid $white
+			&-item
+				display: inline-block
+				vertical-align: top
+
+			video
+				width: 100%
+				display: block
 
 	.timeline-list-item-header:hover
 	&.has-dragged .timeline-list-item-header

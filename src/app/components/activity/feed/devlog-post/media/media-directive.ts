@@ -1,22 +1,26 @@
 import { Component, Inject, Input, Output, AfterViewInit, SkipSelf, Optional } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Screen } from './../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { FeedComponent } from './../../../activity/feed/feed-directive';
+import { Fireside_Post } from './../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Screen } from './../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { FeedComponent } from './../../feed-directive';
+import { ActivityFeedItem } from './../../item-service';
 import template from 'html!./media.html';
 
 @Component({
-	selector: 'gj-devlog-post-media',
+	selector: 'gj-activity-feed-devlog-post-media',
 	template,
 })
 export class MediaComponent implements AfterViewInit
 {
-	@Input( '<' ) post: Fireside_Post;
+	@Input( '<' ) item: ActivityFeedItem;
 	@Input( '<' ) isNew = false;
 
 	@Output() onClick: Function;
 	@Output() onExpand: Function;
 
+	post: Fireside_Post;
+
 	page = 1;
+	activeMediaItem: any;
 
 	isDragging = false;
 	hasDragged = false;
@@ -28,9 +32,11 @@ export class MediaComponent implements AfterViewInit
 		@Inject( '$window' ) private $window: ng.IWindowService,
 		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( 'Screen' ) public screen: Screen,
-		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: FeedComponent
+		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: FeedComponent,
 	)
 	{
+		this.post = this.item.feedItem as Fireside_Post;
+		this.activeMediaItem = this.post.media[0];
 		screen.setResizeSpy( $scope, () => this._updateSliderOffset() );
 	}
 
@@ -39,9 +45,16 @@ export class MediaComponent implements AfterViewInit
 		this.sliderElem = this.$element[0].querySelector( '.devlog-post-media-slider' ) as HTMLElement;
 	}
 
+	shouldVideoPlay( mediaItem: any )
+	{
+		// Must be the active media item and also this post must be in view in the feed.
+		return this.activeMediaItem === mediaItem && this.feed.isItemInView( this.item );
+	}
+
 	next()
 	{
 		this.page = Math.min( this.page + 1, this.post.media.length );
+		this.activeMediaItem = this.post.media[ this.page - 1 ];
 		this._updateSliderOffset();
 		if ( this.onExpand ) {
 			this.onExpand();
@@ -51,6 +64,7 @@ export class MediaComponent implements AfterViewInit
 	prev()
 	{
 		this.page = Math.max( this.page - 1, 1 );
+		this.activeMediaItem = this.post.media[ this.page - 1 ];
 		this._updateSliderOffset();
 		if ( this.onExpand ) {
 			this.onExpand();

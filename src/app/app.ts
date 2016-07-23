@@ -44,9 +44,6 @@ import GenreListModule from './components/genre/list/list';
 import GameMediaBarModule from './components/game/media-bar/media-bar';
 import CommentAvatarListModule from './components/comment/avatar-list/avatar-list';
 import ChannelsModule from './components/channel/channels';
-import DevlogPostTextModule from './components/devlog/post/text/text';
-import DevlogPostMediaModule from './components/devlog/post/media/media';
-import DevlogPostControlsModule from './components/devlog/post/controls/controls';
 import DevlogPostAddModule from './components/devlog/post/add/add';
 import DevlogPostEditModule from './components/devlog/post/edit/edit';
 
@@ -287,9 +284,6 @@ const AppModule = angular.module( 'App', [
 
 	GenreListModule,
 
-	DevlogPostTextModule,
-	DevlogPostMediaModule,
-	DevlogPostControlsModule,
 	DevlogPostAddModule,
 	DevlogPostEditModule,
 

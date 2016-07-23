@@ -17,7 +17,7 @@ export class ActivityFeedContainer
 	static app: App;
 
 	items: ActivityFeedItem[] = [];
-	activeId: string | null = null;
+	activeItem: ActivityFeedItem | undefined;
 	viewedItems: string[] = [];
 	expandedItems: string[] = [];
 	notificationWatermark?: number;  // Timestamp.
@@ -70,14 +70,14 @@ export class ActivityFeedContainer
 		} );
 	}
 
-	setActive( active: string | null )
+	setActive( active: ActivityFeedItem | undefined )
 	{
-		this.activeId = active;
+		this.activeItem = active;
 	}
 
 	getActive()
 	{
-		return this.activeId;
+		return this.activeItem;
 	}
 
 	viewed( item: ActivityFeedItem )

@@ -32,7 +32,7 @@ export class FeedComponent
 	@Output( '?onPostEdited' ) private _onPostEdited?: Function;
 	@Output( '?onPostPublished' ) private _onPostPublished?: Function;
 
-	private _inView: string[] = [];
+	private _inView: { [k: string]: ActivityFeedItem } = {};
 
 	private _timesLoaded = 0;
 	private _isLoadingMore = false;
@@ -75,7 +75,7 @@ export class FeedComponent
 		if ( active ) {
 			this.$timeout( () =>
 			{
-				const id = `activity-feed-item-${active}`;
+				const id = `activity-feed-item-${active.id}`;
 				const elem = this.$document[0].getElementById( id );
 				if ( elem ) {
 					this.scroll.to( id, { animate: false } );
@@ -95,9 +95,14 @@ export class FeedComponent
 		return item.feedItem.added_on > this.feed.notificationWatermark;
 	}
 
+	isItemInView( item: ActivityFeedItem )
+	{
+		return !!this._inView[ item.id ];
+	}
+
 	setActive( item: ActivityFeedItem )
 	{
-		this.feed.setActive( item.id );
+		this.feed.setActive( item );
 	}
 
 	onPostEdited( post: Fireside_Post )
@@ -154,9 +159,9 @@ export class FeedComponent
 	onItemInViewChange( visible: boolean, item: ActivityFeedItem )
 	{
 		if ( visible ) {
-			this._inView.push( item.id );
-			this._inView = _.uniq( this._inView );
-			this.feed.setActive( item.id );
+			this._inView[ item.id ] = item;
+
+			this.feed.setActive( item );
 			this.feed.viewed( item );
 
 			// Auto-loading while scrolling.
@@ -168,11 +173,11 @@ export class FeedComponent
 			}
 		}
 		else {
-			_.pull( this._inView, item.id );
+			delete this._inView[ item.id ];
 		}
 
-		if ( !this._inView.length ) {
-			this.feed.setActive( null );
+		if ( !_.size( this._inView ) ) {
+			this.feed.setActive( undefined );
 		}
 	}
 

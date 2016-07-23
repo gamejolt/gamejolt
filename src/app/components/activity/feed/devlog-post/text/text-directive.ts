@@ -1,21 +1,23 @@
 import { Component, Inject, Input, Output, SkipSelf, Optional } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Screen } from './../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { FeedComponent } from './../../../activity/feed/feed-directive';
+import { Fireside_Post } from './../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Screen } from './../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { FeedComponent } from './../../feed-directive';
+import { ActivityFeedItem } from './../../item-service';
 import template from 'html!./text.html';
 
 @Component({
-	selector: 'gj-devlog-post-text',
+	selector: 'gj-activity-feed-devlog-post-text',
 	template,
 })
 export class TextComponent
 {
-	@Input( '<' ) post: Fireside_Post;
+	@Input( '<' ) item: ActivityFeedItem;
 	@Input( '<' ) isNew = false;
 
 	@Output() onClick: Function;
 	@Output() onExpand: Function;
 
+	post: Fireside_Post;
 	showFullContent = false;
 
 	constructor(
@@ -23,6 +25,7 @@ export class TextComponent
 		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: FeedComponent
 	)
 	{
+		this.post = this.item.feedItem as Fireside_Post;
 	}
 
 	toggleFull()

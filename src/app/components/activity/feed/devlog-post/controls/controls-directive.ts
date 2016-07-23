@@ -1,13 +1,13 @@
 import { Component, Input, Output, Inject, SkipSelf, Optional } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Fireside_Post_Like } from './../../../../../lib/gj-lib-client/components/fireside/post/like/like-model';
-import { App } from './../../../../app-service';
-import { DevlogPostEdit } from './../edit/edit-service';
-import { FeedComponent } from './../../../activity/feed/feed-directive';
+import { Fireside_Post } from './../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Fireside_Post_Like } from './../../../../../../lib/gj-lib-client/components/fireside/post/like/like-model';
+import { App } from './../../../../../app-service';
+import { DevlogPostEdit } from './../../../../devlog/post/edit/edit-service';
+import { FeedComponent } from './../../feed-directive';
 import template from 'html!./controls.html';
 
 @Component({
-	selector: 'gj-devlog-post-controls',
+	selector: 'gj-activity-feed-devlog-post-controls',
 	template,
 })
 export class ControlsComponent

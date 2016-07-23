@@ -27,15 +27,26 @@
 				ng-click="$ctrl.onClick()"
 				>
 				<div class="devlog-post-media-slider">
-					<img
+					<div class="devlog-post-media-slider-item"
 						ng-repeat="item in ::$ctrl.post.media track by item.id"
-						gj-img-responsive="{{ ::item.img_url }}"
-						img-responsive-no-mediaserver="true"
-						img-responsive-width="::item.width"
-						img-responsive-height="::item.height"
-						alt=""
-						ondragstart="return false"
 						>
+							<!--gj-img-responsive="{{ ::item.img_url }}"
+							img-responsive-no-mediaserver="true"
+							img-responsive-width="::item.width"
+							img-responsive-height="::item.height"-->
+						<img
+							ng-if="::!item.is_animated"
+							ng-src="{{ ::item.img_url }}"
+							alt=""
+							ondragstart="return false"
+							>
+
+						<gj-activity-feed-devlog-post-media-video
+							media-item="::item"
+							should-play="$ctrl.shouldVideoPlay( item )"
+							>
+						</gj-activity-feed-devlog-post-media-video>
+					</div>
 				</div>
 			</a>
 
@@ -59,11 +70,11 @@
 			</div>
 		</div>
 
-		<gj-devlog-post-controls
+		<gj-activity-feed-devlog-post-controls
 			post="::$ctrl.post"
 			on-expand="$ctrl.onExpand()"
 			>
-		</gj-devlog-post-controls>
+		</gj-activity-feed-devlog-post-controls>
 
 	</div>
 
