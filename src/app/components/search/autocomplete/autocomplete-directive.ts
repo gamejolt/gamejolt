@@ -105,9 +105,9 @@ export class AutocompleteComponent implements OnInit
 				description: gettext( 'commands.games_description' ),
 			},
 			{
-				keyword: ':news',
-				state: 'discover.news.list',
-				description: gettext( 'commands.news_description' ),
+				keyword: ':devlogs',
+				state: 'discover.devlogs.overview',
+				description: gettext( 'Browse devlogs.' ),
 			},
 			{
 				keyword: ':dashboard',
