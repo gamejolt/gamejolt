@@ -28,6 +28,7 @@ import CommentVideoThumbnailModule from './../lib/gj-lib-client/components/comme
 import GameThumbnailImgModule from './../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import ImgHelperModule from './../lib/gj-lib-client/components/img/helper/helper';
 import ImgResponsiveModule from './../lib/gj-lib-client/components/img/responsive/responsive';
+import ResponsiveDimensionsModule from './../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
 import VideoEmbedModule from './../lib/gj-lib-client/components/video-embed/video-embed';
 import FiresidePostModule from './../lib/gj-lib-client/components/fireside/post/post';
 import FiresidePostTagModule from './../lib/gj-lib-client/components/fireside/post/tag/tag';
@@ -257,6 +258,7 @@ const AppModule = angular.module( 'App', [
 	ImgHelperModule,
 	'gj.Img.Crop',
 	ImgResponsiveModule,
+	ResponsiveDimensionsModule,
 
 	'gj.WidgetCompiler',
 	VideoEmbedModule,
