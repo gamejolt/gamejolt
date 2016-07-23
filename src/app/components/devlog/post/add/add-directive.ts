@@ -10,6 +10,7 @@ import template from 'html!./add.html';
 export class AddComponent
 {
 	@Input( '<' ) game: any;
+
 	@Output() onAdded: Function;
 
 	constructor(

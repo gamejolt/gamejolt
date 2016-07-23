@@ -21,7 +21,7 @@ export class FeedCtrl
 		this.tab = $stateParams['tab'];
 		this.posts = feedService.bootstrap( firesidePostModel.populate( payload.posts ) );
 
-		$scope.$on( 'Devlog.postAdd', ( _event: ng.IAngularEvent, post: Fireside_Post ) => this.onPostAdded( post ) );
+		$scope.$on( 'Devlog.postAdded', ( _event: ng.IAngularEvent, post: Fireside_Post ) => this.onPostAdded( post ) );
 	}
 
 	onPostAdded( post: Fireside_Post )
