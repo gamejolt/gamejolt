@@ -60,26 +60,28 @@
 				sparse="true"
 				>
 			</gj-fireside-post-like-widget>
+		</div>
 
+		<div class="pull-right">
 			<gj-game-follow-widget
 				ng-if="::$ctrl.feed.showGameInfo && $ctrl.app.user && $ctrl.post.user.id != $ctrl.app.user.id"
 				game="$ctrl.post.game"
 				>
 			</gj-game-follow-widget>
-		</div>
 
-		<div class="pull-right" ng-if="::$ctrl.feed.showEditControls && $ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
-			<button class="btn btn-success-outline" ng-if="$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT" ng-click="$ctrl.publishPost()">
-				<span class="jolticon jolticon-check"></span>
-				<span translate>Publish</span>
-			</button>
-			<button class="btn btn-outline" ng-click="$ctrl.showEdit()">
-				<span class="jolticon jolticon-edit"></span>
-				<span translate>Edit</span>
-			</button>
-			<button class="btn btn-outline btn-sparse" gj-popover-trigger="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
-				<span class="jolticon jolticon-ellipsis-h"></span>
-			</button>
+			<div ng-if="::$ctrl.feed.showEditControls && $ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
+				<button class="btn btn-success-outline" ng-if="$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT" ng-click="$ctrl.publishPost()">
+					<span class="jolticon jolticon-check"></span>
+					<span translate>Publish</span>
+				</button>
+				<button class="btn btn-outline" ng-click="$ctrl.showEdit()">
+					<span class="jolticon jolticon-edit"></span>
+					<span translate>Edit</span>
+				</button>
+				<button class="btn btn-outline btn-sparse" gj-popover-trigger="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
+					<span class="jolticon jolticon-ellipsis-h"></span>
+				</button>
+			</div>
 		</div>
 	</div>
 

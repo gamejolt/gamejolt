@@ -42,6 +42,7 @@
 							>
 
 						<gj-activity-feed-devlog-post-media-video
+							ng-if="::item.is_animated"
 							media-item="::item"
 							should-play="$ctrl.shouldVideoPlay( item )"
 							>
