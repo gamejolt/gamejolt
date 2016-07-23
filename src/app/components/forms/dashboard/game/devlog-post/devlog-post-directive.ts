@@ -1,4 +1,4 @@
-export function DevlogPostFormFactory( Form: any, Fireside_Post: any )
+export function DevlogPostFormFactory( Form: any, Fireside_Post: any, KeyGroup: any )
 {
 	const form = new Form( {
 		model: 'Fireside_Post',
@@ -10,6 +10,38 @@ export function DevlogPostFormFactory( Form: any, Fireside_Post: any )
 		scope.Fireside_Post = Fireside_Post;
 
 		scope.formModel.status = Fireside_Post.STATUS_ACTIVE;
+
+		// For editing, we should pull the currently selected key groups into the form.
+		scope.formModel.keyGroups = {};
+		if ( scope.baseModel.key_groups && scope.baseModel.key_groups.length ) {
+			for ( const keyGroup of scope.baseModel.key_groups ) {
+				scope.formModel.keyGroups[ keyGroup.id ] = true;
+			}
+		}
+
+		scope.onLoaded = ( payload: any ) =>
+		{
+			scope.keyGroups = KeyGroup.populate( payload.keyGroups );
+			scope.hasMediaItems = payload.hasMediaItems;
+			scope.maxFilesize = payload.maxFilesize;
+			scope.maxWidth = payload.maxWidth;
+			scope.maxHeight = payload.maxHeight;
+		};
+
+		scope.areKeyGroupsChosen = () =>
+		{
+			if ( !scope.formModel.keyGroups ) {
+				return false;
+			}
+
+			for ( const val of scope.formModel.keyGroups ) {
+				if ( val ) {
+					return true;
+				}
+			}
+
+			return false;
+		};
 
 		scope.onDraftSubmit = () =>
 		{
