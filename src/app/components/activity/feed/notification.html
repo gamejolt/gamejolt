@@ -1,20 +1,20 @@
 <a
-	ng-href="{{ $ctrl.$ctrl.notification.url }}"
+	ng-href="{{ ::$ctrl.$ctrl.notification.url }}"
 	ng-click="$ctrl.go( $event );"
 	>
 
-	<div class="timeline-list-item-icon" ng-class="{ active: $ctrl.isNew }">
-		<span class="jolticon" ng-class="$ctrl.notification.jolticon"></span>
+	<div class="timeline-list-item-icon" ng-class="::{ active: $ctrl.isNew }">
+		<span class="jolticon" ng-class="::$ctrl.notification.jolticon"></span>
 	</div>
 
 	<div class="timeline-list-item-main">
 
 		<div class="timeline-list-item-meta">
-			<span am-time-ago="$ctrl.notification.added_on"></span>
+			<span am-time-ago="::$ctrl.notification.added_on"></span>
 		</div>
 
 		<div class="timeline-list-item-title">
-			<gj-notification-descriptive-action notification="$ctrl.notification"></gj-notification-descriptive-action>
+			<gj-notification-descriptive-action notification="::$ctrl.notification"></gj-notification-descriptive-action>
 		</div>
 
 		<div class="timeline-list-item-details"
@@ -27,13 +27,13 @@
 
 			<img ng-if="$ctrl.notification.is_user_based && !$ctrl.screen.isXs"
 				class="timeline-list-item-avatar"
-				ng-src="{{ $ctrl.notification.from_model.img_avatar }}"
+				ng-src="{{ ::$ctrl.notification.from_model.img_avatar }}"
 				alt=""
 				>
 
 			<div ng-if="$ctrl.notification.is_game_based && !$ctrl.screen.isXs"
 				class="timeline-list-item-thumb"
-				ng-style="{ 'background-image': 'url( \'' + $ctrl.notification.to_model.img_thumbnail + '\' )' }"
+				ng-style="::{ 'background-image': 'url( \'' + $ctrl.notification.to_model.img_thumbnail + '\' )' }"
 				>
 			</div>
 
