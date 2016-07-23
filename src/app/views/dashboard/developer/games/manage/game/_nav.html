@@ -57,14 +57,14 @@
 </ul>
 
 <div ng-if="!$state.is( 'dashboard.developer.games.manage.game.wizard-finish' )">
-	<button ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" class="btn btn-success-outline btn-block anim-fade-in stagger"
+	<button ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" class="btn btn-success-outline btn-block"
 		ng-disabled="!manageCtrl.canPublish"
 		ng-click="manageCtrl.publish()"
 		>
 		<span translate>Publish</span>
 	</button>
 
-	<button ng-if="manageCtrl.isWizard" class="btn btn-outline btn-block anim-fade-in stagger"
+	<button ng-if="manageCtrl.isWizard" class="btn btn-outline btn-block"
 		ng-click="manageCtrl.saveDraft()"
 		>
 		<span translate>Save Draft</span>
