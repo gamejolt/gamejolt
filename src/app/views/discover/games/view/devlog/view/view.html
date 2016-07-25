@@ -31,13 +31,27 @@
 
 					<div ng-switch-when="media" class="full-bleed-xs">
 
-						<p ng-repeat="item in viewCtrl.post.media track by item.id">
+						<div
+							ng-repeat="item in ::viewCtrl.post.media track by item.id"
+							gj-responsive-dimensions
+							responsive-dimensions-ratio="::item.width / item.height"
+							>
+
 							<img
-								class="img-responsive"
+								ng-if="::!item.is_animated"
 								ng-src="{{ ::item.img_url }}"
 								alt=""
 								>
-						</p>
+
+							<gj-devlog-post-media-video-embed
+								ng-if="::item.is_animated"
+								media-item="::item"
+								should-play="true"
+								>
+							</gj-devlog-post-media-video-embed>
+						</div>
+
+						<br>
 
 					</div>
 

@@ -1,8 +1,8 @@
 import { Component, Inject, Input, OnChanges, SimpleChanges } from 'ng-metadata/core';
-import template from 'html!./video.html';
+import template from 'html!./video-embed.html';
 
 @Component({
-	selector: 'gj-activity-feed-devlog-post-media-video',
+	selector: 'gj-devlog-post-media-video-embed',
 	template,
 })
 export class VideoComponent implements OnChanges

@@ -47,6 +47,7 @@ import CommentAvatarListModule from './components/comment/avatar-list/avatar-lis
 import ChannelsModule from './components/channel/channels';
 import DevlogPostAddModule from './components/devlog/post/add/add';
 import DevlogPostEditModule from './components/devlog/post/edit/edit';
+import DevlogPostMediaModule from './components/devlog/post/media/media';
 
 import GameThumbnailModule from './components/game/thumbnail/thumbnail';
 import GameFollowWidgetModule from './components/game/follow-widget/follow-widget';
@@ -288,6 +289,7 @@ const AppModule = angular.module( 'App', [
 
 	DevlogPostAddModule,
 	DevlogPostEditModule,
+	DevlogPostMediaModule,
 
 	FiresidePostListModule,
 	FiresidePostThumbnailModule,
