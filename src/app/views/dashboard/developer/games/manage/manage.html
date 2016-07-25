@@ -49,6 +49,12 @@
 				<span translate>dash.games.view_page_button</span>
 			</a>
 		</p>
+
+		<div gj-expand-when="manageCtrl.game.status == Game.STATUS_VISIBLE && !manageCtrl.game.is_listable">
+			<div class="alert alert-warning" translate>
+				<b>Your game page is no longer visible in game listings!</b> It must have active game builds for it to show.
+			</div>
+		</div>
 	</gj-page-header-content>
 
 	<gj-page-header-nav>
