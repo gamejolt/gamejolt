@@ -18,6 +18,7 @@
 
 		<div ng-if="manageCtrl.isWizard">
 			<gj-form-dashboard-game-wizard-controls
+				game="manageCtrl.game"
 				can-proceed="!!manageCtrl.game.thumbnail_media_item"
 				>
 			</gj-form-dashboard-game-wizard-controls>

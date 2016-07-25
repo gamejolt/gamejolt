@@ -47,6 +47,7 @@
 
 	<div ng-if="isWizard && !isFnafDetected">
 		<gj-form-dashboard-game-wizard-controls
+			game="formModel"
 			can-proceed="descriptionForm.$valid"
 			on-next="onSubmit()"
 			>

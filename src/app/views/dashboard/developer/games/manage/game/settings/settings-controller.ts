@@ -20,7 +20,7 @@ export class SettingsCtrl
 	onSaved()
 	{
 		if ( this.$scope['manageCtrl'].isWizard ) {
-			this.wizard.goNext();
+			this.wizard.goNext( this.$scope['manageCtrl'].game );
 			return;
 		}
 

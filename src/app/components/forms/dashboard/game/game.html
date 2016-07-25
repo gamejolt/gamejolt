@@ -129,6 +129,7 @@
 
 				<div ng-if="method == 'add' || isWizard">
 					<gj-form-dashboard-game-wizard-controls
+						game="formModel"
 						can-proceed="gameForm.$valid"
 						on-next="onSubmit()"
 						>

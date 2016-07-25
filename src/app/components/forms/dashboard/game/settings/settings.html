@@ -71,6 +71,7 @@
 
 		<div ng-if="isWizard">
 			<gj-form-dashboard-game-wizard-controls
+				game="formModel"
 				can-proceed="settingsForm.$valid"
 				on-next="onSubmit()"
 				>

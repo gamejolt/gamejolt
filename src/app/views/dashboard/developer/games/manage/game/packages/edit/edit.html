@@ -206,6 +206,7 @@
 
 			<div ng-if="manageCtrl.isWizard">
 				<gj-form-dashboard-game-wizard-controls
+					game="manageCtrl.game"
 					can-proceed="!manageCtrl.game._is_devlog || manageCtrl.game.has_active_builds"
 					>
 				</gj-form-dashboard-game-wizard-controls>

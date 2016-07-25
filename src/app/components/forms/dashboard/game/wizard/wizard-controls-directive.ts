@@ -9,6 +9,8 @@ import template from 'html!./wizard-controls.html';
 export class WizardControlsComponent
 {
 	@Input( '<' ) canProceed: boolean;
+	@Input( '<' ) game: any;
+
 	@Output() onNext: Function;
 
 	inForm: boolean;
@@ -26,7 +28,7 @@ export class WizardControlsComponent
 		// Can only automatically do it if no need to submit the form.
 		// Otherwise we need to tell the form to submit and the controller has to handle.
 		if ( !this.inForm ) {
-			this.wizard.goNext();
+			this.wizard.goNext( this.game );
 		}
 		else {
 			this.onNext();

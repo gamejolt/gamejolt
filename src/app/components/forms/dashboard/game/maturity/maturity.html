@@ -191,6 +191,7 @@
 
 	<div ng-if="isWizard">
 		<gj-form-dashboard-game-wizard-controls
+			game="formModel"
 			can-proceed="gameMaturityForm.$valid && formModel.tigrs_age"
 			on-next="onSubmit()"
 			>
