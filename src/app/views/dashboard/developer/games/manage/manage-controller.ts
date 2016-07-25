@@ -53,7 +53,14 @@ export class ManageCtrl
 					this.gettextCatalog.getString( 'dash.games.overview.published_growl' ),
 					this.gettextCatalog.getString( 'dash.games.overview.published_growl_title' )
 				);
+				this.$state.go( 'dashboard.developer.games.manage.game.overview', { wizard: null } );
 			} );
+	}
+
+	saveDraft()
+	{
+		// Simply go to the overview and pull out of the wizard!
+		this.$state.go( 'dashboard.developer.games.manage.game.overview', { wizard: null } );
 	}
 
 	hide()
@@ -93,12 +100,6 @@ export class ManageCtrl
 					this.gettextCatalog.getString( 'Game Uncanceled' )
 				);
 			} );
-	}
-
-	saveDraft()
-	{
-		// Simply go to the overview and pull out of the wizard!
-		this.$state.go( 'dashboard.developer.games.manage.game.overview', { wizard: null } );
 	}
 
 	removeGame()

@@ -24,7 +24,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Game
 		ModalConfirm.show( gettextCatalog.getString( 'dash.games.releases.manage.unpublish_release_confirmation' ) )
 			.then( function()
 			{
-				return release.$unpublish();
+				return release.$unpublish( $scope.manageCtrl['game'] );
 			} )
 			.then( function()
 			{
@@ -40,7 +40,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Game
 		ModalConfirm.show( gettextCatalog.getString( 'dash.games.releases.manage.remove_release_confirmation' ) )
 			.then( function()
 			{
-				return release.$remove();
+				return release.$remove( $scope.manageCtrl['game'] );
 			} )
 			.then( function()
 			{

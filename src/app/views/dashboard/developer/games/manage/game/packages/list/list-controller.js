@@ -31,7 +31,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Game
 		ModalConfirm.show( gettextCatalog.getString( 'Are you sure you want to remove this package? All of the releases and builds it contains will be removed as well.' ) )
 			.then( function()
 			{
-				return package.$remove();
+				return package.$remove( $scope.manageCtrl['game'] );
 			} )
 			.then( function()
 			{

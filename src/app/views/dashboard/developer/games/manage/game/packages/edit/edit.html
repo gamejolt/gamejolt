@@ -71,7 +71,7 @@
 				<div
 					ng-if="::editCtrl.buildsProcessingCount > 0"
 					gj-progress-poller="/web/dash/developer/games/packages/poll-processing-builds/{{ ::manageCtrl.game.id }}/{{ ::editCtrl.package.id }}/{{ ::editCtrl.buildsProcessingCount }}"
-					progress-poller-on-complete="editCtrl.loadPreview()"
+					progress-poller-on-complete="editCtrl.onBuildsProcessed( $response )"
 					>
 					<div class="alert alert-info">
 						<span class="jolticon jolticon-notice"></span>

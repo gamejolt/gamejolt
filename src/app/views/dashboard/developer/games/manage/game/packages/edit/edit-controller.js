@@ -23,6 +23,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Game
 	this.removeRelease = removeRelease;
 	this.loadPreview = loadPreview;
 	this.onEdited = onEdited;
+	this.onBuildsProcessed = onBuildsProcessed;
 
 	this.loadPreview();
 
@@ -44,6 +45,15 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Game
 					_this.previewSellable.is_owned = false;
 				}
 			} );
+	}
+
+	function onBuildsProcessed( response )
+	{
+		this.loadPreview();
+
+		if ( response.game ) {
+			$scope['manageCtrl'].game.assign( response.game );
+		}
 	}
 
 	function onEdited( formModel )
@@ -72,7 +82,7 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Game
 		ModalConfirm.show( gettextCatalog.getString( 'dash.games.releases.manage.remove_release_confirmation' ) )
 			.then( function()
 			{
-				return release.$remove();
+				return release.$remove( $scope.manageCtrl['game'] );
 			} )
 			.then( function()
 			{
