@@ -10,7 +10,6 @@ export class OverviewCtrl
 	playCount: number;
 	commentCount: number;
 
-	isPublishable: boolean;
 	hasBuildsProcessing: boolean;
 
 	notifications: any[];
@@ -33,7 +32,6 @@ export class OverviewCtrl
 		this.playCount = payload.playCount || 0;
 		this.commentCount = payload.commentCount || 0;
 
-		this.isPublishable = payload.isPublishable || false;
 		this.hasBuildsProcessing = payload.hasBuildsProcessing || false;
 
 		this.notifications = payload.notifications ? notificationModel.populate( payload.notifications ) : [];
