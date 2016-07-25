@@ -18,11 +18,13 @@ export class ActivityFeedContainer
 
 	items: ActivityFeedItem[] = [];
 	hasItems = false;
-	activeItem: ActivityFeedItem | undefined;
 	viewedItems: string[] = [];
 	expandedItems: string[] = [];
 	notificationWatermark?: number;  // Timestamp.
 	reachedEnd = false;
+
+	private _activeItem: ActivityFeedItem | undefined;
+	private _scroll = 0;
 
 	constructor( items: ActivityFeedInput[], notificationWatermark?: number )
 	{
@@ -76,12 +78,22 @@ export class ActivityFeedContainer
 
 	setActive( active: ActivityFeedItem | undefined )
 	{
-		this.activeItem = active;
+		this._activeItem = active;
 	}
 
 	getActive()
 	{
-		return this.activeItem;
+		return this._activeItem;
+	}
+
+	setScroll( scroll: number )
+	{
+		this._scroll = scroll;
+	}
+
+	getScroll()
+	{
+		return this._scroll;
 	}
 
 	viewed( item: ActivityFeedItem )

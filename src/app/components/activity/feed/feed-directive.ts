@@ -1,4 +1,4 @@
-import { Component, Inject, Input, Output } from 'ng-metadata/core';
+import { Component, Inject, Input, Output, OnDestroy, AfterViewInit } from 'ng-metadata/core';
 import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedItem } from './item-service';
@@ -20,7 +20,7 @@ const LOAD_MORE_TIMES = 3;
 	selector: 'gj-activity-feed',
 	template,
 })
-export class FeedComponent
+export class FeedComponent implements OnDestroy, AfterViewInit
 {
 	@Input( '@' ) type: 'Notification' | 'Fireside_Post';
 	@Input( '<items' ) feed: ActivityFeedContainer;
@@ -44,7 +44,7 @@ export class FeedComponent
 	wasHistorical: boolean;
 
 	constructor(
-		@Inject( '$scope' ) $scope: ng.IScope,
+		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( '$document' ) private $document: ng.IDocumentService,
 		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
 		@Inject( 'Scroll' ) private scroll: any,
@@ -54,34 +54,50 @@ export class FeedComponent
 	)
 	{
 		this.wasHistorical = !!this.feed.getActive();
+	}
 
+	ngAfterViewInit()
+	{
 		// Keep our post list in sync with parent.
-		$scope.$watchCollection( () => this.feed.items || [], ( newVal, oldVal ) =>
+		this.$scope.$watchCollection( () => this.feed.items || [], ( newVal, oldVal ) =>
 		{
-			this._isLoadingMore = false;
+			this.$timeout( () =>
+			{
+				this._isLoadingMore = false;
 
-			// First time getting items in.
-			// Let's try scrolling to a possible active one.
-			// This will happen if they click away and back to the feed.
-			if ( newVal.length && newVal === oldVal ) {
-				this._scrollActive();
-			}
+				// First time getting items in.
+				// Let's try scrolling to a possible active one.
+				// This will happen if they click away and back to the feed.
+				if ( newVal.length && newVal === oldVal ) {
+					this._initScroll();
+					this._initActive();
+				}
+			}, 200, false );
 		} );
 	}
 
-	private _scrollActive()
+	ngOnDestroy()
+	{
+		this.feed.setScroll( this.scroll.context.duScrollTop() );
+	}
+
+	private _initScroll()
+	{
+		const scroll = this.feed.getScroll();
+		if ( scroll ) {
+			this.scroll.to( scroll, { animate: false } );
+		}
+	}
+
+	private _initActive()
 	{
 		const active = this.feed.getActive();
 		if ( active ) {
-			this.$timeout( () =>
-			{
-				const id = `activity-feed-item-${active.id}`;
-				const elem = this.$document[0].getElementById( id );
-				if ( elem ) {
-					this.scroll.to( id, { animate: false } );
-					elem.classList.add( 'active' );
-				}
-			}, 200, false );
+			const id = `activity-feed-item-${active.id}`;
+			const elem = this.$document[0].getElementById( id );
+			if ( elem ) {
+				elem.classList.add( 'active' );
+			}
 		}
 	}
 
@@ -160,8 +176,6 @@ export class FeedComponent
 	{
 		if ( visible ) {
 			this._inView[ item.id ] = item;
-
-			this.feed.setActive( item );
 			this.feed.viewed( item );
 
 			// Auto-loading while scrolling.
@@ -174,10 +188,6 @@ export class FeedComponent
 		}
 		else {
 			delete this._inView[ item.id ];
-		}
-
-		if ( !_.size( this._inView ) ) {
-			this.feed.setActive( undefined );
 		}
 	}
 
