@@ -1,9 +1,9 @@
-angular.module( 'App.Chat' ).directive( 'gjChatTabs', function( Screen, Chat, Shell )
+angular.module( 'App.Chat' ).directive( 'gjChatBubbles', function( Screen, Chat, Shell )
 {
 	return {
 		restrict: 'E',
 		scope: {},
-		templateUrl: '/app/components/chat/tabs/tabs.html',
+		templateUrl: '/app/components/chat/bubbles/bubbles.html',
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function( $scope )
@@ -41,21 +41,9 @@ angular.module( 'App.Chat' ).directive( 'gjChatTabs', function( Screen, Chat, Sh
 				Chat.client.leaveRoom( roomId );
 			};
 
-			$scope.$watch( 'Chat.client.hasOpenRooms() && !Screen.isXs', function( isShowing )
+			$scope.$watch( '!Screen.isXs', function( isShowing )
 			{
 				_this.isShowing = isShowing;
-
-				if ( isShowing ) {
-					window.document.body.classList.add( 'chat-tabs-visible' );
-				}
-				else {
-					window.document.body.classList.remove( 'chat-tabs-visible' );
-				}
-			} );
-
-			$scope.$on( '$destroy', function()
-			{
-				window.document.body.classList.remove( 'chat-tabs-visible' );
 			} );
 		}
 	};
