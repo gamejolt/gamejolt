@@ -56,6 +56,45 @@ export class ManageCtrl
 			} );
 	}
 
+	hide()
+	{
+		this.modalConfirm.show( this.gettextCatalog.getString( 'Are you sure you want to hide your game page?' ) )
+			.then( () => this.game.$setStatus( this.gameModel.STATUS_HIDDEN ) )
+			.then( () =>
+			{
+				this.growls.info(
+					this.gettextCatalog.getString( 'Your game page is now hidden.' ),
+					this.gettextCatalog.getString( 'Game Hidden' )
+				);
+			} );
+	}
+
+	cancel()
+	{
+		this.modalConfirm.show( this.gettextCatalog.getString( 'Are you sure you want to cancel your game?' ) )
+			.then( () => this.game.$setCanceled( true ) )
+			.then( () =>
+			{
+				this.growls.info(
+					this.gettextCatalog.getString( 'Your game is now canceled.' ),
+					this.gettextCatalog.getString( 'Game Canceled' )
+				);
+			} );
+	}
+
+	uncancel()
+	{
+		this.modalConfirm.show( this.gettextCatalog.getString( 'Are you sure you want to uncancel your game? It will show again in game listings and be visible to everyone.' ) )
+			.then( () => this.game.$setCanceled( false ) )
+			.then( () =>
+			{
+				this.growls.info(
+					this.gettextCatalog.getString( 'Your game is no longer canceled.' ),
+					this.gettextCatalog.getString( 'Game Uncanceled' )
+				);
+			} );
+	}
+
 	saveDraft()
 	{
 		// Simply go to the overview and pull out of the wizard!
@@ -65,13 +104,10 @@ export class ManageCtrl
 	removeGame()
 	{
 		this.modalConfirm.show( this.gettextCatalog.getString( 'dash.games.remove_confirmation' ) )
+			.then( () => this.game.$remove() )
 			.then( () =>
 			{
-				return this.game.$remove();
-			} )
-			.then( () =>
-			{
-				this.growls.success(
+				this.growls.info(
 					this.gettextCatalog.getString( 'dash.games.removed_growl' ),
 					this.gettextCatalog.getString( 'dash.games.removed_growl_title' )
 				);

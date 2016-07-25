@@ -1,0 +1,43 @@
+<div class="row">
+	<div class="col-xs-12"
+		ng-repeat="stage in [
+			$ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG,
+			$ctrl.gameModel.DEVELOPMENT_STATUS_WIP,
+			$ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED,
+		]"
+		>
+		<a ng-click="$ctrl.select( stage )">
+			<gj-card is-inactive="$ctrl.game.development_status != stage">
+				<div class="card-title">
+					<h4>
+						<span class="jolticon"
+							ng-class="$ctrl.game.development_status == stage ? 'jolticon-radio-circle-filled' : 'jolticon-radio-circle'"
+						></span>
+						<span ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG" translate>Devlog-Only</span>
+						<span ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_WIP" translate>Early Access</span>
+						<span ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED" translate>Complete/Stable</span>
+					</h4>
+				</div>
+				<div class="card-content">
+					<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG">
+						<div translate>
+							You don't have anything playable yet, but you're actively developing your game and have stuff to show off. Your game page will be more focused on your Devlog as its primary purpose.
+						</div>
+					</div>
+
+					<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_WIP">
+						<div translate>
+							Your game has early playable builds, but it's not finished yet. You're still actively developing it and will continue to release new builds periodically.
+						</div>
+					</div>
+
+					<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED">
+						<div translate>
+							Your game is complete. It's in a stable state and you only plan on making bug fixes or performance optimizations.
+						</div>
+					</div>
+				</div>
+			</gj-card>
+		</a>
+	</div>
+</div>

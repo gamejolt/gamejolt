@@ -28,7 +28,25 @@
 						ng-click="manageCtrl.publish()"
 						>
 						<span class="jolticon jolticon-active"></span>
-						{{ ::'dash.games.overview.todo_info_publish_button' | translate }}
+						<span translate>dash.games.overview.todo_info_publish_button</span>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div gj-expand-when="manageCtrl.game.canceled">
+			<div class="alert alert-info">
+				<p translate>
+					Your game is set as being a canceled game. You can transition back to a normal game page at any time!
+				</p>
+
+				<div class="alert-actions">
+					<button class="btn btn-success-outline btn-block btn-dark-variant"
+						gj-tooltip="{{ 'This will make your game active again.' | translate }}"
+						ng-click="manageCtrl.uncancel()"
+						>
+						<span class="jolticon jolticon-active"></span>
+						<span translate>Uncancel Game</span>
 					</button>
 				</div>
 			</div>
@@ -125,43 +143,67 @@
 	</a>
 </div>
 
-<!--<h2>Development Stage</h2>
 
 <div class="row">
-	<div class="col-xs-4">
-		<a>
-			<gj-card>
-				<div class="card-title">
-					<h4 translate>Devlog-Only/No Builds</h4>
-				</div>
-				<div class="card-content" translate>
-					You don't have anything playable yet, but you're actively developing your game and have stuff to show off. Your game page will be more focused on your Devlog as its primary purpose.
-				</div>
-			</gj-card>
-		</a>
+	<div class="col-lg-8">
+
+		<h2 translate>Development Stage</h2>
+
+		<gj-form-dashboard-game-dev-stage-selector
+			game="manageCtrl.game"
+			>
+		</gj-form-dashboard-game-dev-stage-selector>
+
+		<h2>
+			<span translate>Danger Zone</span>
+			<span class="jolticon jolticon-notice big warning"></span>
+		</h2>
+
+		<div gj-expand-when="manageCtrl.game.status != Game.STATUS_HIDDEN">
+			<h4>Hide Game</h4>
+
+			<div class="page-help" translate>
+				<p>Your game page is currently published and active. You can hide it to remove it from the game listings. People with the link will still be able to view it.</p>
+			</div>
+
+			<button class="btn btn-danger-outline"
+				ng-click="manageCtrl.hide()"
+				>
+				Hide Game
+			</button>
+		</div>
+
+		<div gj-expand-when="!manageCtrl.game.canceled">
+			<h4>Cancel Game</h4>
+
+			<div class="page-help" translate>
+				<p>You can mark your game as a canceled game. This will signal to everyone that you're no longer working on it. People will still be able to view its game page, but it will no longer show in the public game listings.</p>
+				<p>You should only use this if you stopped developing the game completely. If you transitioned development off of Game Jolt, you must remove your game page instead.</p>
+			</div>
+
+			<button class="btn btn-danger-outline"
+				ng-click="manageCtrl.cancel()"
+				>
+				Cancel Game
+			</button>
+		</div>
+
+		<h4>Remove Game</h4>
+
+		<div class="page-help" translate>
+			<p>Removing your game page will remove it from the site completely. <b>This is permanent!</b></p>
+		</div>
+
+		<div class="alert alert-info" ng-if="manageCtrl.game.has_sales">
+			You can't remove games with active sales at this time.
+		</div>
+
+		<button class="btn btn-danger-outline"
+			ng-click="manageCtrl.removeGame()"
+			ng-disabled="manageCtrl.game.has_sales"
+			>
+			Remove Game
+		</button>
+
 	</div>
-	<div class="col-xs-4">
-		<a>
-			<gj-card>
-				<div class="card-title">
-					<h4 translate>Early Access</h4>
-				</div>
-				<div class="card-content" translate>
-					Your game has early playable builds, but it's not finished yet. You're still actively developing it and will continue to release new builds periodically.
-				</div>
-			</gj-card>
-		</a>
-	</div>
-	<div class="col-xs-4">
-		<a>
-			<gj-card>
-				<div class="card-title">
-					<h4 translate>Complete/Stable</h4>
-				</div>
-				<div class="card-content" translate>
-					Your game is complete. It's in a stable state and you only plan on making bug fixes or performance optimizations.
-				</div>
-			</gj-card>
-		</a>
-	</div>
-</div>-->
+</div>

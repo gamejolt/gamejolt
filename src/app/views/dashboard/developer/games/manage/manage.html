@@ -74,23 +74,8 @@
 						Keys/Access
 					</a>
 				</li>
-				<li ng-if="!manageCtrl.game.has_sales">
-					<a gj-popover-trigger="game-header-more-options">
-						<span class="jolticon jolticon-ellipsis-h"></span>
-						<span translate>options.more</span>
-					</a>
-				</li>
 			</ul>
 		</nav>
-
-		<gj-popover popover-id="game-header-more-options">
-			<div class="list-group">
-				<a class="list-group-item has-icon" ng-click="manageCtrl.removeGame()">
-					<span class="jolticon jolticon-remove"></span>
-					<span translate>dash.games.remove_game_button</span>
-				</a>
-			</div>
-		</gj-popover>
 	</gj-page-header-nav>
 
 </gj-page-header>

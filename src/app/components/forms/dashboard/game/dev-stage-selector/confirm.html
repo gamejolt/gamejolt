@@ -1,0 +1,63 @@
+<div class="modal-body">
+	<h2 class="modal-title" translate>Are you sure?</h2>
+
+	<p translate>
+		When switching your game page from a {{ $ctrl.from }} page to a {{ $ctrl.to }} page, the follow changes will occur:
+	</p>
+
+	<ul>
+
+		<!-- Ratings -->
+		<li ng-if="$ctrl.from == 'devlog'" translate>
+			People will now be able to rate your game (unless you turn it off in your Settings).
+		</li>
+		<li ng-if="$ctrl.action == 'wip:finished'" translate>
+			Your ratings will reset and we will show a new rating average for your finished game page. Your early access ratings will be archived.
+		</li>
+		<li ng-if="$ctrl.action == 'finished:wip'" translate>
+			Your game rating will be reset to your early access rating. Your current ratings will be archived for when you want to transition back to a completed game page.
+		</li>
+		<li ng-if="$ctrl.to == 'devlog'" translate>
+			Ratings will be disabled for your game. Any ratings you currently have will be archived until you transition back to an early access or completed game page.
+		</li>
+
+		<!-- Builds -->
+		<li ng-if="$ctrl.from == 'devlog'" translate>
+			Public packages/builds for your game will now be visible to everyone.
+		</li>
+		<li ng-if="$ctrl.to == 'devlog'" translate>
+			Any public packages/builds for your game will be hidden while your game page is devlog-only.
+		</li>
+
+		<!-- Media -->
+		<li ng-if="$ctrl.from == 'devlog'" translate>
+			Your game media will now be visible.
+		</li>
+		<li ng-if="$ctrl.to == 'devlog'" translate>
+			Your game media will be hidden.
+		</li>
+
+		<!-- Devlog Tab -->
+		<li ng-if="$ctrl.from == 'devlog'" translate>
+			Your game's devlog feed will be switched into its own tab, and you can continue posting devlog posts!
+		</li>
+		<li ng-if="$ctrl.to == 'devlog'" translate>
+			Your game's devlog feed will move back to your game's main page. There will be no separate devlog tab.
+		</li>
+
+		<!-- Published Date -->
+		<li ng-if="$ctrl.action == 'devlog:wip' || $ctrl.action == 'devlog:finished' || $ctrl.action == 'wip:finished'" translate>
+			Your game will show again at the top of "new" listings.
+		</li>
+	</ul>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-success-outline" ng-click="$ctrl.proceed()">
+		<span class="jolticon jolticon-check"></span>
+		<span translate>Proceed</span>
+	</button>
+	<button class="btn btn-danger-outline" ng-click="$ctrl.cancel()">
+		<span class="jolticon jolticon-remove"></span>
+		<span translate>Cancel</span>
+	</button>
+</div>
