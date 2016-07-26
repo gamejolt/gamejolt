@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', function( $scope, $interval, $state, App, Game, Notification, Fireside_Post, gettextCatalog, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', function( $scope, $interval, $state, App, Game, Notification, Fireside_Post, Comment_Video, Jam, gettextCatalog, payload )
 {
 	$scope.Game = Game;
 
@@ -17,9 +17,15 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', functio
 	}
 
 	this.games = Game.populate( payload.games );
+	this.videos = Comment_Video.populate( payload.videos );
+	this.videosCount = payload.videosCount || 0;
+	this.jams = Jam.populate( payload.jams );
 
 	this.activityNotifications = Notification.populate( payload.activityNotifications );
 	this.latestBroadcast = payload.latestBroadcast ? new Fireside_Post( payload.latestBroadcast ) : null;
+
+	this.gamesExpanded = false;
+	this.jamsExpanded = false;
 
 	this.integration = payload.integration || {};
 	this.integrationKeys = [
