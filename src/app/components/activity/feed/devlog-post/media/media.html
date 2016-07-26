@@ -26,7 +26,6 @@
 				ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
 				ng-click="$ctrl.onClick()"
 				>
-					<!--gj-responsive-dimensions-context-->
 				<div class="devlog-post-media-slider"
 					>
 					<div class="devlog-post-media-slider-item"
@@ -60,6 +59,11 @@
 
 				<div class="timeline-list-item-meta">
 					<span am-time-ago="::$ctrl.post.published_on"></span>
+
+					<span class="dot-separator"></span>
+					<span class="jolticon jolticon-screenshot middle"></span>
+					{{ ::$ctrl.post.media.length | number }}
+
 					<span ng-if="::$ctrl.feed.showGameInfo">
 						<span class="dot-separator"></span>
 						<span>{{ ::$ctrl.post.game.title }}</span>

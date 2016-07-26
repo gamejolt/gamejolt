@@ -42,7 +42,7 @@
 						</div>
 
 						<div class="devlog-post-video-embed-thumb"
-							ng-style="{ 'background-image': 'url(\'' + $ctrl.video.thumbnail_url + '\')' }"
+							ng-style="::{ 'background-image': 'url(\'' + $ctrl.video.thumbnail_url + '\')' }"
 							>
 						</div>
 					</a>
@@ -50,28 +50,12 @@
 					<gj-video-embed
 						ng-if="$ctrl.isShowingVideo"
 						video-provider="youtube"
-						video-id="$ctrl.video.video_id"
+						video-id="::$ctrl.video.video_id"
 						autoplay="true"
 						>
 					</gj-video-embed>
 				</div>
 			</div>
-
-			<!-- Post content -->
-			<!--<gj-fade-collapse
-				fade-collapse-height="500"
-				fade-collapse-is-open="$ctrl.showFullContent"
-				fade-collapse-is-required="::$ctrl.canToggleContent"
-				>
-				<div class="fireside-post-body">
-					<div gj-widget-compiler-bind="::$ctrl.post.content_compiled"></div>
-				</div>
-			</gj-fade-collapse>-->
-
-			<!--<a class="hidden-text-expander"
-				ng-if="::$ctrl.canToggleContent"
-				ng-click="$ctrl.toggleFull()"
-				></a>-->
 
 			<gj-activity-feed-devlog-post-controls
 				post="::$ctrl.post"
