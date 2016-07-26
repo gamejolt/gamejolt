@@ -13,8 +13,13 @@
 
 	// For doing a full-bleed within the content.
 	&-full-bleed
-		margin-left: -(($icon-size / 2) + $avatar-margin)
-		margin-right: @margin-left
+
+		@media $media-xs
+			margin-left: -($grid-gutter-width-xs / 2)
+			margin-right: @margin-left
+
+		@media $media-sm-up
+			margin-left: -(($icon-size / 2) + $avatar-margin)
 
 	&-item
 		position: relative
