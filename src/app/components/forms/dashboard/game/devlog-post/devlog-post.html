@@ -63,6 +63,29 @@
 					</form-group>
 				</div>
 
+				<div ng-switch-when="video">
+					<form-group name="video_url"
+						ng-if="!wasPublished"
+						label="{{ 'Video URL' | translate }}"
+						>
+
+						<p class="help-block" translate>
+							Currently only YouTube videos are supported.
+						</p>
+
+						<input form-control="text" ng-pattern="Game_Video.REGEX.YOUTUBE">
+
+						<control-errors></control-errors>
+					</form-group>
+
+					<form-group name="title"
+						label="{{ 'Title' | translate }}"
+						>
+						<input form-control="text" ng-maxlength="250">
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+
 			</div>
 
 			<!--

@@ -32,6 +32,15 @@
 						on-expand="$ctrl.onItemExpanded( item )"
 						>
 					</gj-activity-feed-devlog-post-media>
+
+					<gj-activity-feed-devlog-post-video
+						ng-switch-when="video"
+						item="::item"
+						is-new="::$ctrl.isItemUnread( item )"
+						on-click="$ctrl.setActive( item )"
+						on-expand="$ctrl.onItemExpanded( item )"
+						>
+					</gj-activity-feed-devlog-post-video>
 				</div>
 
 				<gj-activity-feed-notification

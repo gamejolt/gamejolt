@@ -7,6 +7,7 @@ import { ActivityFeedContainerFactory } from './feed-container-service';
 import { ControlsComponent } from './devlog-post/controls/controls-directive';
 import { MediaComponent } from './devlog-post/media/media-directive';
 import { TextComponent } from './devlog-post/text/text-directive';
+import { VideoComponent } from './devlog-post/video/video-directive';
 
 export default angular.module( 'App.Activity.Feed', [] )
 .factory( 'ActivityFeedItem', ActivityFeedItemFactory )
@@ -16,5 +17,6 @@ export default angular.module( 'App.Activity.Feed', [] )
 .directive( ...provide( ControlsComponent ) )
 .directive( ...provide( MediaComponent ) )
 .directive( ...provide( TextComponent ) )
+.directive( ...provide( VideoComponent ) )
 .service( ...provide( 'ActivityFeedService', { useClass: ActivityFeedService } ) )
 .name;

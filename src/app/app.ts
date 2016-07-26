@@ -32,6 +32,7 @@ import ResponsiveDimensionsModule from './../lib/gj-lib-client/components/respon
 import VideoEmbedModule from './../lib/gj-lib-client/components/video-embed/video-embed';
 import FiresidePostModule from './../lib/gj-lib-client/components/fireside/post/post';
 import FiresidePostTagModule from './../lib/gj-lib-client/components/fireside/post/tag/tag';
+import FiresidePostVideoModule from './../lib/gj-lib-client/components/fireside/post/video/video';
 import FiresidePostLikeModule from './../lib/gj-lib-client/components/fireside/post/like/like';
 import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 
@@ -248,6 +249,7 @@ const AppModule = angular.module( 'App', [
 
 	FiresidePostModule,
 	FiresidePostTagModule,
+	FiresidePostVideoModule,
 	FiresidePostLikeModule,
 	FiresidePostLikeWidgetModule,
 

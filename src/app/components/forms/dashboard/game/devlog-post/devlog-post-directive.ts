@@ -1,4 +1,4 @@
-export function DevlogPostFormFactory( Form: any, Fireside_Post: any, KeyGroup: any )
+export function DevlogPostFormFactory( Form: any, Fireside_Post: any, KeyGroup: any, Game_Video: any )
 {
 	const form = new Form( {
 		model: 'Fireside_Post',
@@ -8,6 +8,7 @@ export function DevlogPostFormFactory( Form: any, Fireside_Post: any, KeyGroup: 
 	form.onInit = function( scope: any )
 	{
 		scope.Fireside_Post = Fireside_Post;
+		scope.Game_Video = Game_Video;
 
 		scope.formModel.status = Fireside_Post.STATUS_ACTIVE;
 
@@ -23,6 +24,7 @@ export function DevlogPostFormFactory( Form: any, Fireside_Post: any, KeyGroup: 
 		{
 			scope.keyGroups = KeyGroup.populate( payload.keyGroups );
 			scope.hasMediaItems = payload.hasMediaItems;
+			scope.wasPublished = payload.wasPublished;
 			scope.maxFilesize = payload.maxFilesize;
 			scope.maxWidth = payload.maxWidth;
 			scope.maxHeight = payload.maxHeight;

@@ -55,6 +55,15 @@
 
 					</div>
 
+					<div ng-switch-when="video">
+						<gj-video-embed
+							video-provider="youtube"
+							video-id="::viewCtrl.post.videos[0].video_id"
+							autoplay="true"
+							>
+						</gj-video-embed>
+					</div>
+
 				</div>
 
 				<div class="text-center">

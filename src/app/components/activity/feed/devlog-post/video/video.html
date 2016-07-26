@@ -1,0 +1,86 @@
+<div class="devlog-post devlog-post-video">
+
+	<div class="timeline-list-item-icon" ng-class="{ active: $ctrl.isNew }">
+		<span class="jolticon jolticon-video"></span>
+	</div>
+
+	<div class="timeline-list-item-main">
+
+		<a class="timeline-list-item-header"
+			ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
+			ng-click="$ctrl.onClick()"
+			>
+			<div class="timeline-list-item-header-content">
+				<div class="devlog-post-text-game" ng-if="::$ctrl.feed.showGameInfo && !$ctrl.screen.isXs">
+					<gj-game-thumbnail-img game="::$ctrl.post.game"></gj-game-thumbnail-img>
+				</div>
+
+				<div class="timeline-list-item-meta">
+					<span am-time-ago="::$ctrl.post.published_on"></span>
+					<span ng-if="::$ctrl.feed.showGameInfo">
+						<span class="dot-separator"></span>
+						<span>{{ ::$ctrl.post.game.title }}</span>
+					</span>
+				</div>
+
+				<div class="timeline-list-item-title">
+					{{ ::$ctrl.post.title }}
+				</div>
+			</div>
+		</a>
+
+		<div class="timeline-list-item-details">
+
+			<div class="devlog-post-video-embed timeline-list-full-bleed">
+				<div gj-responsive-dimensions responsive-dimensions-ratio="16 / 9">
+					<a
+						ng-if="!$ctrl.isShowingVideo"
+						ng-click="$ctrl.play()"
+						>
+						<div class="play-button-overlay">
+							<span class="jolticon jolticon-play"></span>
+						</div>
+
+						<div class="devlog-post-video-embed-thumb"
+							ng-style="{ 'background-image': 'url(\'' + $ctrl.video.thumbnail_url + '\')' }"
+							>
+						</div>
+					</a>
+
+					<gj-video-embed
+						ng-if="$ctrl.isShowingVideo"
+						video-provider="youtube"
+						video-id="$ctrl.video.video_id"
+						autoplay="true"
+						>
+					</gj-video-embed>
+				</div>
+			</div>
+
+			<!-- Post content -->
+			<!--<gj-fade-collapse
+				fade-collapse-height="500"
+				fade-collapse-is-open="$ctrl.showFullContent"
+				fade-collapse-is-required="::$ctrl.canToggleContent"
+				>
+				<div class="fireside-post-body">
+					<div gj-widget-compiler-bind="::$ctrl.post.content_compiled"></div>
+				</div>
+			</gj-fade-collapse>-->
+
+			<!--<a class="hidden-text-expander"
+				ng-if="::$ctrl.canToggleContent"
+				ng-click="$ctrl.toggleFull()"
+				></a>-->
+
+			<gj-activity-feed-devlog-post-controls
+				post="::$ctrl.post"
+				on-expand="$ctrl.onExpand()"
+				>
+			</gj-activity-feed-devlog-post-controls>
+
+		</div>
+
+	</div>
+
+</div>
