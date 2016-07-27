@@ -12,7 +12,9 @@ export class DevStageSelectorComponent
 
 	constructor(
 		@Inject( 'Game' ) public gameModel: any,
-		@Inject( 'FormDashboardGameDevStageSelectorConfirm' ) private confirm: FormDashboardGameDevStageSelectorConfirm
+		@Inject( 'FormDashboardGameDevStageSelectorConfirm' ) private confirm: FormDashboardGameDevStageSelectorConfirm,
+		@Inject( 'Growls' ) private growls: any,
+		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 	)
 	{
 	}
@@ -24,9 +26,13 @@ export class DevStageSelectorComponent
 		}
 
 		this.confirm.show( this.game, stage )
+			.then( () => this.game.$setDevStage( stage ) )
 			.then( () =>
 			{
-				this.game.$setDevStage( stage );
+				this.growls.success(
+					this.gettextCatalog.getString( "Your game's development stage has been changed!" ),
+					this.gettextCatalog.getString( 'Stage Changed' ),
+				);
 			} );
 	}
 
