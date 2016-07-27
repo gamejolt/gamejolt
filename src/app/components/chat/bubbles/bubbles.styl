@@ -10,13 +10,14 @@
 
 .chat-bubble
 	user-select: none
+	transform: scale(0.9, 0.9)
 	transition: transform 0.2s ease-in-out
 
 	&:not(:last-child)
-		margin-bottom: 8px
+		margin-bottom: 4px
 
 	&:hover
-		transform: scale(1.1, 1.1)
+		transform: scale(1.0, 1.0)
 
 .chat-bubble-inner
 	position: relative
@@ -48,8 +49,8 @@
 			border: 2px solid $gj-pink
 
 	.chat-bubble-image
-		width: 38px
-		height: 38px
+		width: 40px
+		height: 40px
 		border-radius: 100%
 		border: 2px solid $gray-dark
 		background-color: $gray-darker
@@ -57,8 +58,8 @@
 		transition: border 0.2s $weak-ease-out
 
 	.chat-bubble-letter
-		width: 38px
-		height: 38px
+		width: 40px
+		height: 40px
 		line-height: 34px
 		border-radius: 100%
 		border: 2px solid $gray-dark
