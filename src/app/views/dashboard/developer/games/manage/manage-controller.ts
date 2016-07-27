@@ -91,7 +91,7 @@ export class ManageCtrl
 
 	uncancel()
 	{
-		this.modalConfirm.show( this.gettextCatalog.getString( 'Are you sure you want to uncancel your game? It will show again in game listings and be visible to everyone.' ) )
+		this.modalConfirm.show( this.gettextCatalog.getString( 'Are you sure you want to uncancel your game?' ) )
 			.then( () => this.game.$setCanceled( false ) )
 			.then( () =>
 			{

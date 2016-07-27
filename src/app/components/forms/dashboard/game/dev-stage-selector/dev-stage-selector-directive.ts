@@ -19,10 +19,22 @@ export class DevStageSelectorComponent
 
 	select( stage: number )
 	{
+		if ( !this.isEnabled( stage ) || stage == this.game.development_status ) {
+			return;
+		}
+
 		this.confirm.show( this.game, stage )
 			.then( () =>
 			{
 				this.game.$setDevStage( stage );
 			} );
+	}
+
+	isEnabled( stage: number )
+	{
+		if ( (stage == this.gameModel.DEVELOPMENT_STATUS_WIP || stage == this.gameModel.DEVELOPMENT_STATUS_FINISHED) && !this.game.has_active_builds ) {
+			return false;
+		}
+		return true;
 	}
 }

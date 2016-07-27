@@ -34,7 +34,7 @@
 			<div ng-switch-when="dev-status">
 
 				<p class="page-help" translate>
-					Please choose the stage of development that your game is currently in. Your game page changes as you work on and stabilize your game. Feel free to add games early on, even if they're just concepts with prototype art and mechanics.
+					Choose the stage of development that your game is currently in. You are able to change your development stage at any point.
 				</p>
 
 				<a ng-click="formModel.development_status = Game.DEVELOPMENT_STATUS_FINISHED">
@@ -43,7 +43,7 @@
 							<h4 translate>Complete/Stable</h4>
 						</div>
 						<div class="card-content" translate>
-							Your game is complete. It's in a stable state and you only plan on making bug fixes or performance optimizations.
+							Your game is complete. It's in a stable state and you only plan on making bug fixes, performance optimizations, or small improvements.
 						</div>
 					</gj-card>
 				</a>
@@ -54,7 +54,7 @@
 							<h4 translate>Early Access</h4>
 						</div>
 						<div class="card-content" translate>
-							Your game has early playable builds, but it's not finished yet. You're still actively developing it and will continue to release new builds periodically.
+							Your game has playable builds, but you're still actively developing it.
 						</div>
 					</gj-card>
 				</a>
@@ -62,10 +62,10 @@
 				<a ng-click="formModel.development_status = Game.DEVELOPMENT_STATUS_DEVLOG">
 					<gj-card>
 						<div class="card-title">
-							<h4 translate>Devlog-Only/No Builds</h4>
+							<h4 translate>Devlog-Only</h4>
 						</div>
 						<div class="card-content" translate>
-							You don't have anything playable yet, but you're actively developing your game and have stuff to show off. Your game page will be more focused on your Devlog as its primary purpose.
+							You don't have anything playable yet, but would like to share active game development in the form of images, videos, posts and more. Your game page will use the new Devlog format.
 						</div>
 					</gj-card>
 				</a>

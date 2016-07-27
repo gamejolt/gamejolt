@@ -48,6 +48,12 @@
 		</form-group>
 
 		<form-group name="ratings_enabled" label="{{ 'dash.games.settings.ratings_label' | translate }}">
+
+			<div class="alert alert-info" ng-if="baseModel._is_devlog">
+				<span class="jolticon jolticon-notice warning"></span>
+				<span class="translate"><b>Users can't rate devlog-only games.</b> Enable or disable ratings for when you're ready to transition to early access or a finished game.</span>
+			</div>
+
 			<div class="help-block" translate>dash.games.settings.ratings_help_html</div>
 
 			<gj-toggle-switch

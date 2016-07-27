@@ -1,7 +1,7 @@
 <div class="modal-body">
 	<h2 class="modal-title" translate>Are you sure?</h2>
 
-	<p translate>
+	<p>
 		When switching your game page from a {{ $ctrl.from }} page to a {{ $ctrl.to }} page, the follow changes will occur:
 	</p>
 
@@ -12,13 +12,13 @@
 			People will now be able to rate your game (unless you turn it off in your Settings).
 		</li>
 		<li ng-if="$ctrl.action == 'wip:finished'" translate>
-			Your ratings will reset and we will show a new rating average for your finished game page. Your early access ratings will be archived.
+			Your early access ratings will be archived and we will show a separate rating average for your finished game page.
 		</li>
 		<li ng-if="$ctrl.action == 'finished:wip'" translate>
-			Your game rating will be reset to your early access rating. Your current ratings will be archived for when you want to transition back to a completed game page.
+			Your finished game ratings will be archived and we will show a separate rating average for your early access game page.
 		</li>
 		<li ng-if="$ctrl.to == 'devlog'" translate>
-			Ratings will be disabled for your game. Any ratings you currently have will be archived until you transition back to an early access or completed game page.
+			Ratings will be disabled for your game. Any ratings you currently have will be archived until you transition back to an early access or finished game page.
 		</li>
 
 		<!-- Builds -->
@@ -39,15 +39,15 @@
 
 		<!-- Devlog Tab -->
 		<li ng-if="$ctrl.from == 'devlog'" translate>
-			Your game's devlog feed will be switched into its own tab, and you can continue posting devlog posts!
+			Your game's devlog feed will be moved into its own tab. You can continue posting devlog posts for your game.
 		</li>
 		<li ng-if="$ctrl.to == 'devlog'" translate>
-			Your game's devlog feed will move back to your game's main page. There will be no separate devlog tab.
+			Your game's devlog feed will move back to your game's main page.
 		</li>
 
 		<!-- Published Date -->
 		<li ng-if="$ctrl.action == 'devlog:wip' || $ctrl.action == 'devlog:finished' || $ctrl.action == 'wip:finished'" translate>
-			Your game will show again at the top of "new" listings.
+			Your game will be added to the top of the "new game" list.
 		</li>
 	</ul>
 </div>

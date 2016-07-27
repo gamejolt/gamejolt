@@ -46,11 +46,16 @@
 	<div class="row">
 		<div class="col-sm-8">
 
-			<div class="alert alert-info"
+			<div class="alert alert-warning"
 				ng-if="manageCtrl.game._is_devlog && editCtrl.package.visibility == Game_Package.VISIBILITY_PUBLIC"
-				translate
 				>
-				This package won't show up on your game page since your game is currently a devlog. Once you publish your game page into early access or as a finished game, it will show.
+				<span class="jolticon jolticon-notice"></span>
+				<span
+					translate
+					translate-params-url="$state.href( 'dashboard.developer.games.manage.game.overview' )"
+					>
+					<b>This package won't show up on your devlog-only game page.</b> Switch your game page to early access or finished from the <a href="{{ url }}">Overview/Setup</a> page for it to show.
+				</span>
 			</div>
 
 			<div ng-if="editCtrl.isLoadingPreview">

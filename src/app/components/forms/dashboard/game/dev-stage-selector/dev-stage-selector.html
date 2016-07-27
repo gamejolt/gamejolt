@@ -7,7 +7,7 @@
 		]"
 		>
 		<a ng-click="$ctrl.select( stage )">
-			<gj-card is-inactive="$ctrl.game.development_status != stage">
+			<gj-card is-disabled="!$ctrl.isEnabled( stage )">
 				<div class="card-title">
 					<h4>
 						<span class="jolticon"
@@ -21,20 +21,27 @@
 				<div class="card-content">
 					<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG">
 						<div translate>
-							You don't have anything playable yet, but you're actively developing your game and have stuff to show off. Your game page will be more focused on your Devlog as its primary purpose.
+							You don't have anything playable yet, but would like to share active game development in the form of images, videos, posts and more. Your game page will use the new Devlog format.
 						</div>
 					</div>
 
 					<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_WIP">
 						<div translate>
-							Your game has early playable builds, but it's not finished yet. You're still actively developing it and will continue to release new builds periodically.
+							Your game has playable builds, but you're still actively developing it.
 						</div>
 					</div>
 
 					<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED">
 						<div translate>
-							Your game is complete. It's in a stable state and you only plan on making bug fixes or performance optimizations.
+							Your game is complete. It's in a stable state and you only plan on making bug fixes, performance optimizations, or small improvements.
 						</div>
+					</div>
+				</div>
+				<div ng-if="!$ctrl.isEnabled( stage )">
+					<br>
+					<div class="alert alert-info sans-margin">
+						<span class="jolticon jolticon-notice"></span>
+						<span translate>You must have active published packages to transition to this stage.</span>
 					</div>
 				</div>
 			</gj-card>
