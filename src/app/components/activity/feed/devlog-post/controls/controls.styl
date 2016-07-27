@@ -7,6 +7,16 @@
 		@media $media-xs
 			font-size: $font-size-small
 
+	&-stats
+		@extend .text-muted
+		font-size: $font-size-small
+
+		@media $media-xs
+			margin-bottom: $line-height-computed
+
+		@media $media-sm-up
+			float: right
+
 	&-well
 		position: relative
 		margin-top: $line-height-computed + 10px

@@ -44,6 +44,32 @@
 				View game
 			</a>
 		</span>
+
+		<div class="devlog-post-controls-stats">
+
+			<span
+				translate
+				translate-n="$ctrl.post.view_count || 0"
+				translate-plural="{{ $count | number }} views"
+				>
+				1 view
+			</span>
+
+			<span class="dot-separator"></span>
+
+			<span
+				translate
+				translate-n="$ctrl.post.expand_count || 0"
+				translate-plural="{{ $count | number }} expands"
+				>
+				1 expand
+			</span>
+
+			<span tooltip="{{ 'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.' | translate }}">
+				<span class="jolticon jolticon-help-circle"></span>
+			</span>
+
+		</div>
 	</div>
 
 	<div class="clearfix">
