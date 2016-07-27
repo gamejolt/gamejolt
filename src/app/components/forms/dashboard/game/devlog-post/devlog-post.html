@@ -5,16 +5,16 @@
 			on-loaded="onLoaded( $payload )"
 			>
 
+			<form-group name="title"
+				label="{{ 'Title' | translate }}"
+				>
+				<input form-control="text" ng-maxlength="250">
+				<control-errors></control-errors>
+			</form-group>
+
 			<div ng-switch="formModel.type">
 
 				<div ng-switch-when="text">
-					<form-group name="title"
-						label="{{ 'Post Title' | translate }}"
-						>
-						<input form-control="text" ng-maxlength="250">
-						<control-errors></control-errors>
-					</form-group>
-
 					<form-group name="content_markdown"
 						label="{{ 'Post Content' | translate }}"
 						>
@@ -54,13 +54,6 @@
 
 						<control-errors></control-errors>
 					</form-group>
-
-					<form-group name="title"
-						label="{{ 'Caption' | translate }}"
-						>
-						<input form-control="text" ng-maxlength="250">
-						<control-errors></control-errors>
-					</form-group>
 				</div>
 
 				<div ng-switch-when="video">
@@ -75,13 +68,6 @@
 
 						<input form-control="text" ng-pattern="Game_Video.REGEX.YOUTUBE">
 
-						<control-errors></control-errors>
-					</form-group>
-
-					<form-group name="title"
-						label="{{ 'Title' | translate }}"
-						>
-						<input form-control="text" ng-maxlength="250">
 						<control-errors></control-errors>
 					</form-group>
 				</div>
