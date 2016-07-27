@@ -1,9 +1,7 @@
-import { Component, Inject, Input, Output, SkipSelf, Optional } from 'ng-metadata/core';
+import { Component, Input, Output } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Fireside_Post_Video } from './../../../../../../lib/gj-lib-client/components/fireside/post/video/video-model';
-import { Screen } from './../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { FeedComponent } from './../../feed-directive';
-import { ActivityFeedItem } from './../../item-service';
+// import { ActivityFeedItem } from './../../item-service';
 import template from 'html!./video.html';
 
 @Component({
@@ -12,23 +10,15 @@ import template from 'html!./video.html';
 })
 export class VideoComponent
 {
-	@Input( '<' ) item: ActivityFeedItem;
-	@Input( '<' ) isNew = false;
+	@Input( '<' ) post: Fireside_Post;
 
-	@Output() onClick: Function;
 	@Output() onExpand: Function;
 
-	post: Fireside_Post;
 	video: Fireside_Post_Video;
-
 	isShowingVideo = false;
 
-	constructor(
-		@Inject( 'Screen' ) public screen: Screen,
-		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: FeedComponent
-	)
+	constructor()
 	{
-		this.post = this.item.feedItem as Fireside_Post;
 		this.video = this.post.videos[0];
 	}
 

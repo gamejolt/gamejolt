@@ -100,15 +100,6 @@
 			@media $media-sm-up
 				margin-left: -(($icon-size / 2) + $avatar-margin)
 
-			&-img
-				display: block
-				opacity: 0.7
-
-				img
-					display: block
-					width: 100%
-					height: auto
-
 			&-content
 				@extend .clearfix
 				padding: ($grid-gutter-width-xs / 2)
@@ -119,13 +110,6 @@
 					padding-left: ($icon-size / 2) + $avatar-margin
 					padding-right: @padding-top
 
-				.timeline-list-item-header.has-header-img &
-					position: absolute
-					top: 0
-					left: 0
-					right: 0
-					text-shadow: 1px 1px 1px rgba( $black, 0.5 )
-
 				.timeline-list-item-meta
 					color: $white
 
@@ -133,7 +117,7 @@
 					font-size: $font-size-h4
 
 					@media $media-sm-up
-						font-size: $font-size-h2
+						font-size: $font-size-h3
 
 					&
 					strong

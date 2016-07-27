@@ -30,29 +30,31 @@
 					</div>
 
 					<div ng-switch-when="media" class="full-bleed-xs">
+						<div ng-repeat="item in ::viewCtrl.post.media track by item.id">
 
-						<div
-							ng-repeat="item in ::viewCtrl.post.media track by item.id"
-							gj-responsive-dimensions
-							responsive-dimensions-ratio="::item.width / item.height"
-							>
-
-							<img
-								ng-if="::!item.is_animated"
-								ng-src="{{ ::item.img_url }}"
-								alt=""
+							<div
+								gj-responsive-dimensions
+								responsive-dimensions-ratio="::item.width / item.height"
 								>
 
-							<gj-devlog-post-media-video-embed
-								ng-if="::item.is_animated"
-								media-item="::item"
-								should-play="true"
-								>
-							</gj-devlog-post-media-video-embed>
+								<img
+									ng-if="::!item.is_animated"
+									class="img-responsive"
+									ng-src="{{ ::item.img_url }}"
+									alt=""
+									>
+
+								<gj-devlog-post-media-video-embed
+									ng-if="::item.is_animated"
+									media-item="::item"
+									should-play="true"
+									>
+								</gj-devlog-post-media-video-embed>
+							</div>
+
+							<br>
+
 						</div>
-
-						<br>
-
 					</div>
 
 					<div ng-switch-when="video">

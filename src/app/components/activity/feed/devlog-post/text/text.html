@@ -1,60 +1,14 @@
-<div class="devlog-post devlog-post-text">
-
-	<div class="timeline-list-item-icon" ng-class="{ active: $ctrl.isNew }">
-		<span class="jolticon jolticon-pencil-box"></span>
+<gj-fade-collapse
+	fade-collapse-height="500"
+	fade-collapse-is-open="$ctrl.showFullContent"
+	fade-collapse-is-required="::$ctrl.canToggleContent"
+	>
+	<div class="fireside-post-body">
+		<div gj-widget-compiler-bind="::$ctrl.post.content_compiled"></div>
 	</div>
+</gj-fade-collapse>
 
-	<div class="timeline-list-item-main">
-
-		<a class="timeline-list-item-header"
-			ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
-			ng-click="$ctrl.onClick()"
-			>
-			<div class="timeline-list-item-header-content">
-				<div class="devlog-post-text-game" ng-if="::$ctrl.feed.showGameInfo && !$ctrl.screen.isXs">
-					<gj-game-thumbnail-img game="::$ctrl.post.game"></gj-game-thumbnail-img>
-				</div>
-
-				<div class="timeline-list-item-meta">
-					<span am-time-ago="::$ctrl.post.published_on"></span>
-					<span ng-if="::$ctrl.feed.showGameInfo">
-						<span class="dot-separator"></span>
-						<span>{{ ::$ctrl.post.game.title }}</span>
-					</span>
-				</div>
-
-				<div class="timeline-list-item-title">
-					{{ ::$ctrl.post.title }}
-				</div>
-			</div>
-		</a>
-
-		<div class="timeline-list-item-details">
-
-			<!-- Post content -->
-			<gj-fade-collapse
-				fade-collapse-height="500"
-				fade-collapse-is-open="$ctrl.showFullContent"
-				fade-collapse-is-required="::$ctrl.canToggleContent"
-				>
-				<div class="fireside-post-body">
-					<div gj-widget-compiler-bind="::$ctrl.post.content_compiled"></div>
-				</div>
-			</gj-fade-collapse>
-
-			<a class="hidden-text-expander"
-				ng-if="::$ctrl.canToggleContent"
-				ng-click="$ctrl.toggleFull()"
-				></a>
-
-			<gj-activity-feed-devlog-post-controls
-				post="::$ctrl.post"
-				on-expand="$ctrl.onExpand()"
-				>
-			</gj-activity-feed-devlog-post-controls>
-
-		</div>
-
-	</div>
-
-</div>
+<a class="hidden-text-expander"
+	ng-if="::$ctrl.canToggleContent"
+	ng-click="$ctrl.toggleFull()"
+	></a>

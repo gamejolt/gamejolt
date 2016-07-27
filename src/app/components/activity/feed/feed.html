@@ -14,34 +14,13 @@
 			>
 
 			<div ng-switch="::item.type">
-				<div ng-switch-when="devlog-post" ng-switch="::item.feedItem.type">
-					<gj-activity-feed-devlog-post-text
-						ng-switch-when="text"
-						item="::item"
-						is-new="::$ctrl.isItemUnread( item )"
-						on-click="$ctrl.setActive( item )"
-						on-expand="$ctrl.onItemExpanded( item )"
-						>
-					</gj-activity-feed-devlog-post-text>
-
-					<gj-activity-feed-devlog-post-media
-						ng-switch-when="media"
-						item="::item"
-						is-new="::$ctrl.isItemUnread( item )"
-						on-click="$ctrl.setActive( item )"
-						on-expand="$ctrl.onItemExpanded( item )"
-						>
-					</gj-activity-feed-devlog-post-media>
-
-					<gj-activity-feed-devlog-post-video
-						ng-switch-when="video"
-						item="::item"
-						is-new="::$ctrl.isItemUnread( item )"
-						on-click="$ctrl.setActive( item )"
-						on-expand="$ctrl.onItemExpanded( item )"
-						>
-					</gj-activity-feed-devlog-post-video>
-				</div>
+				<gj-activity-feed-devlog-post
+					item="::item"
+					is-new="::$ctrl.isItemUnread( item )"
+					on-click="$ctrl.setActive( item )"
+					on-expand="$ctrl.onItemExpanded( item )"
+					>
+				</gj-activity-feed-devlog-post>
 
 				<gj-activity-feed-notification
 					ng-switch-when="notification"

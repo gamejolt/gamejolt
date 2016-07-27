@@ -23,7 +23,6 @@ export class MediaComponent implements AfterViewInit
 	activeMediaItem: any;
 
 	isDragging = false;
-	hasDragged = false;
 	isWaitingForFrame = false;
 	sliderElem: HTMLElement;
 
@@ -80,11 +79,7 @@ export class MediaComponent implements AfterViewInit
 
 	panStart()
 	{
-		this.$scope.$apply( () =>
-		{
-			this.isDragging = true;
-			this.hasDragged = true;
-		} );
+		this.isDragging = true;
 	};
 
 	pan( $event: ng.IAngularEvent )

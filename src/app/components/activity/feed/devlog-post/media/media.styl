@@ -1,5 +1,32 @@
 .devlog-post-media
 
+	.timeline-list-item-header
+		margin-bottom: 0
+
+	.timeline-list-item-details
+		margin-top: 0
+
+	&-embed
+		position: relative
+		background-color: $gray-darker
+
+		&-img
+			display: block
+
+	&-slider
+		white-space: nowrap
+		transition: transform 300ms $strong-ease-out
+
+		&-item
+			display: inline-block
+			vertical-align: middle
+			width: 100%
+
+			img
+				display: block
+				width: 100%
+				height: auto
+
 	&-prev
 	&-next
 		display: none
@@ -14,48 +41,20 @@
 		background-color: $gray-darker
 		z-index: 2
 		user-select: none
+		border: 1px solid rgba( $white, 0.1 )
 
 		&:hover
 			color: $gj-green
 
 	&-prev
 		left: 0
+		border-left: 0
 
 	&-next
 		right: 0
+		border-right: 0
 
-	&-game
-		float: right
-		width: 120px
-		border: 2px solid $white
-
-	.timeline-list-item-header-content
-		pointer-events: none
-
-	.timeline-list-item-header-content
-	.timeline-list-item-header-img
-		transition: opacity 400ms
-
-	.timeline-list-item-header-img
-		white-space: nowrap
-
-		.devlog-post-media-slider
-			transition: transform 300ms $strong-ease-out
-
-			&-item
-				display: inline-block
-				vertical-align: top
-				width: 100%
-
-	.timeline-list-item-header:hover
-	&.has-dragged .timeline-list-item-header
-		.timeline-list-item-header-content
-			opacity: 0
-
-		.timeline-list-item-header-img
-			opacity: 1
-
-		@media $media-sm-up
-			.devlog-post-media-prev
-			.devlog-post-media-next
-				display: block
+	&-embed:hover
+		.devlog-post-media-prev
+		.devlog-post-media-next
+			display: block

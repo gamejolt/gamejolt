@@ -1,87 +1,44 @@
-<div class="devlog-post devlog-post-media"
-	ng-class="{ 'has-dragged': $ctrl.hasDragged }"
+<div class="devlog-post-media-embed timeline-list-full-bleed"
+	hm-panstart="$ctrl.panStart( $event )"
+	hm-pan="$ctrl.pan( $event )"
+	hm-panend="$ctrl.panEnd( $event )"
 	>
 
-	<div class="timeline-list-item-icon" ng-class="{ active: $ctrl.isNew }">
-		<span class="jolticon jolticon-screenshot"></span>
-	</div>
+	<a class="devlog-post-media-prev" ng-show="$ctrl.page > 1" ng-click="$ctrl.prev()">
+		<span class="jolticon jolticon-chevron-left"></span>
+	</a>
 
-	<div class="timeline-list-item-main">
+	<a class="devlog-post-media-next" ng-show="$ctrl.page < $ctrl.post.media.length" ng-click="$ctrl.next()">
+		<span class="jolticon jolticon-chevron-right"></span>
+	</a>
 
-		<div class="timeline-list-item-header has-header-img"
-			hm-panstart="$ctrl.panStart( $event )"
-			hm-pan="$ctrl.pan( $event )"
-			hm-panend="$ctrl.panEnd( $event )"
+	<a class="devlog-post-media-embed-img"
+		ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
+		ng-click="$ctrl.onClick()"
+		>
+		<div class="devlog-post-media-slider"
 			>
-
-			<a class="devlog-post-media-prev" ng-show="$ctrl.page > 1" ng-click="$ctrl.prev()">
-				<span class="jolticon jolticon-chevron-left"></span>
-			</a>
-
-			<a class="devlog-post-media-next" ng-show="$ctrl.page < $ctrl.post.media.length" ng-click="$ctrl.next()">
-				<span class="jolticon jolticon-chevron-right"></span>
-			</a>
-
-			<a class="timeline-list-item-header-img"
-				ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
-				ng-click="$ctrl.onClick()"
+			<div class="devlog-post-media-slider-item"
+				ng-repeat="item in ::$ctrl.post.media track by item.id"
+				gj-responsive-dimensions
+				responsive-dimensions-ratio="::item.width / item.height"
 				>
-				<div class="devlog-post-media-slider"
+
+				<img
+					ng-if="::!item.is_animated"
+					ng-src="{{ ::item.img_url }}"
+					alt=""
+					ondragstart="return false"
 					>
-					<div class="devlog-post-media-slider-item"
-						ng-repeat="item in ::$ctrl.post.media track by item.id"
-						gj-responsive-dimensions
-						responsive-dimensions-ratio="::item.width / item.height"
-						>
 
-						<img
-							ng-if="::!item.is_animated"
-							ng-src="{{ ::item.img_url }}"
-							alt=""
-							ondragstart="return false"
-							>
-
-						<gj-devlog-post-media-video-embed
-							ng-if="::item.is_animated"
-							media-item="::item"
-							should-play="$ctrl.shouldVideoPlay( item )"
-							>
-						</gj-devlog-post-media-video-embed>
-					</div>
-				</div>
-			</a>
-
-			<div class="timeline-list-item-header-content">
-
-				<div class="devlog-post-media-game" ng-if="::$ctrl.feed.showGameInfo && !$ctrl.screen.isXs">
-					<gj-game-thumbnail-img game="::$ctrl.post.game"></gj-game-thumbnail-img>
-				</div>
-
-				<div class="timeline-list-item-meta">
-					<span am-time-ago="::$ctrl.post.published_on"></span>
-
-					<span class="dot-separator"></span>
-					<span class="jolticon jolticon-screenshot middle"></span>
-					{{ ::$ctrl.post.media.length | number }}
-
-					<span ng-if="::$ctrl.feed.showGameInfo">
-						<span class="dot-separator"></span>
-						<span>{{ ::$ctrl.post.game.title }}</span>
-					</span>
-				</div>
-
-				<div class="timeline-list-item-title">
-					{{ ::$ctrl.post.title }}
-				</div>
+				<gj-devlog-post-media-video-embed
+					ng-if="::item.is_animated"
+					media-item="::item"
+					should-play="$ctrl.shouldVideoPlay( item )"
+					>
+				</gj-devlog-post-media-video-embed>
 			</div>
 		</div>
-
-		<gj-activity-feed-devlog-post-controls
-			post="::$ctrl.post"
-			on-expand="$ctrl.onExpand()"
-			>
-		</gj-activity-feed-devlog-post-controls>
-
-	</div>
+	</a>
 
 </div>

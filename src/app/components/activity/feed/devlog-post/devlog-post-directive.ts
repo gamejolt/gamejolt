@@ -1,0 +1,40 @@
+import { Component, Inject, Input, Output, SkipSelf, Optional } from 'ng-metadata/core';
+import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Screen } from './../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { FeedComponent } from './../feed-directive';
+import { ActivityFeedItem } from './../item-service';
+import template from 'html!./devlog-post.html';
+
+@Component({
+	selector: 'gj-activity-feed-devlog-post',
+	template,
+})
+export class DevlogPostComponent
+{
+	@Input( '<' ) item: ActivityFeedItem;
+	@Input( '<' ) isNew = false;
+
+	@Output() onClick: Function;
+	@Output() onExpand: Function;
+
+	post: Fireside_Post;
+	icon: string;
+
+	constructor(
+		@Inject( 'Screen' ) public screen: Screen,
+		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: FeedComponent
+	)
+	{
+		this.post = this.item.feedItem as Fireside_Post;
+
+		if ( this.post.type == 'text' ) {
+			this.icon = 'blog-article';
+		}
+		else if ( this.post.type == 'media' ) {
+			this.icon = 'screenshot';
+		}
+		else if ( this.post.type == 'video' ) {
+			this.icon = 'video';
+		}
+	}
+}
