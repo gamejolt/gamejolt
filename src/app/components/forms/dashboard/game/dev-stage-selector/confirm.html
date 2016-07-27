@@ -1,8 +1,12 @@
 <div class="modal-body">
 	<h2 class="modal-title" translate>Are you sure?</h2>
 
-	<p>
-		When switching your game page from a {{ $ctrl.from }} page to a {{ $ctrl.to }} page, the follow changes will occur:
+	<p
+		translate
+		translate-params-from="$ctrl.fromTranslated"
+		translate-params-to="$ctrl.toTranslated"
+		>
+		When switching your game page from a {{ from }} page to a {{ to }} page, the follow changes will occur:
 	</p>
 
 	<ul>
@@ -11,14 +15,14 @@
 		<li ng-if="$ctrl.from == 'devlog'" translate>
 			People will now be able to rate your game (unless you turn it off in your Settings).
 		</li>
-		<li ng-if="$ctrl.action == 'wip:finished'" translate>
-			Your early access ratings will be archived and we will show a separate rating average for your finished game page.
+		<li ng-if="$ctrl.action == 'wip:complete'" translate>
+			Your early access ratings will be archived and we will show a separate rating average for your complete game page.
 		</li>
-		<li ng-if="$ctrl.action == 'finished:wip'" translate>
-			Your finished game ratings will be archived and we will show a separate rating average for your early access game page.
+		<li ng-if="$ctrl.action == 'complete:wip'" translate>
+			Your complete game ratings will be archived and we will show a separate rating average for your early access game page.
 		</li>
 		<li ng-if="$ctrl.to == 'devlog'" translate>
-			Ratings will be disabled for your game. Any ratings you currently have will be archived until you transition back to an early access or finished game page.
+			Ratings will be disabled for your game. Any ratings you currently have will be archived until you transition back to an early access or complete game page.
 		</li>
 
 		<!-- Builds -->
@@ -46,7 +50,7 @@
 		</li>
 
 		<!-- Published Date -->
-		<li ng-if="$ctrl.action == 'devlog:wip' || $ctrl.action == 'devlog:finished' || $ctrl.action == 'wip:finished'" translate>
+		<li ng-if="$ctrl.action == 'devlog:wip' || $ctrl.action == 'devlog:complete' || $ctrl.action == 'wip:complete'" translate>
 			Your game will be added to the top of the "new game" list.
 		</li>
 	</ul>
