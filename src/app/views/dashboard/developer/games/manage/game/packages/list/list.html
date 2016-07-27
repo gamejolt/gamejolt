@@ -10,8 +10,9 @@
 
 	<div class="col-sm-8 col-sm-pull-4">
 
-		<div class="alert alert-info" ng-if="manageCtrl.game._is_devlog" translate>
-			You are only able to create private packages for testers while your game page is only a devlog. Once you publish your game page into early access or as a finished game, they will show.
+		<div class="alert alert-info" ng-if="manageCtrl.game._is_devlog">
+			<span class="jolticon jolticon-notice"></span>
+			<span class="translate"><b>Public packages do not show on devlog-only game pages.</b> You are only able to create private packages for testers while your game page is only a devlog. Once you publish your game page into early access or as a finished game, your public packages will show.</span>
 		</div>
 
 		<div class="alert alert-warning" ng-if="!listCtrl.packages.length" translate>dash.games.packages.no_packages_html</div>

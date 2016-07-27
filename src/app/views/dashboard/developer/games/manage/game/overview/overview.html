@@ -1,6 +1,11 @@
 <div class="row">
 	<div class="col-lg-8">
 
+		<div class="alert alert-success" ng-if="manageCtrl.game.is_published">
+			<span class="jolticon jolticon-check"></span>
+			<span translate>This game page is published to the site.</span>
+		</div>
+
 		<!-- Show a little message if they still have builds being processed. -->
 		<div class="alert alert-info" ng-if="overviewCtrl.hasBuildsProcessing"
 			gj-progress-poller="/web/dash/developer/games/poll-build-progress/{{ manageCtrl.game.id }}"
