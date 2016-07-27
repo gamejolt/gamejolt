@@ -18,6 +18,9 @@
 	&:hover
 		transform: scale(1.1, 1.1)
 
+	&.active
+		transform: scale(1.25, 1.25)
+
 .chat-bubble-inner
 	position: relative
 	color: $white
@@ -39,6 +42,10 @@
 	font-size: 20px
 	padding-left: 4px
 
+	&.chat-bubble-active
+		.chat-bubble-image, .chat-bubble-letter
+			border: 2px solid $gj-green
+
 	&.chat-bubble-notification
 		.chat-bubble-image, .chat-bubble-letter
 			border: 2px solid $gj-pink
@@ -50,6 +57,8 @@
 		border: 2px solid $gray-dark
 		background-color: $gray-darker
 
+		transition: border 0.2s $weak-ease-out
+
 	.chat-bubble-letter
 		width: 38px
 		height: 38px
@@ -57,3 +66,5 @@
 		border-radius: 100%
 		border: 2px solid $gray-dark
 		background-color: $gray-darker
+
+		transition: border 0.2s $weak-ease-out

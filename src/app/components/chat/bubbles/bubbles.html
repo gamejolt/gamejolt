@@ -1,10 +1,12 @@
 <div ng-if="ctrl.isShowing">
 	<nav class="chat-bubbles">
 
-		<div class="chat-bubble" ng-repeat="room in Chat.client.openRooms track by room.id">
-			<div class="chat-bubble-inner" ng-class="{ active: Chat.client.room === room && Shell.isRightPaneVisible }" ng-click="ctrl.activateRoom( room.id )">
+		<div class="chat-bubble" ng-repeat="room in Chat.client.openRooms track by room.id" ng-class="{ active: Chat.client.room === room && Shell.isRightPaneVisible }">
+			<div class="chat-bubble-inner" ng-click="ctrl.activateRoom( room.id )">
 				<div gj-tooltip="{{ Chat.client.isPMRoom( room ) ? room.user.displayName : '#' + room.title }}" tooltip-placement="left"
-				     ng-class="{ 'chat-bubble-icon': true, 'chat-bubble-notification': Chat.client.notifications[ room.id ] && Chat.client.notifications[ room.id ] > 0 }" >
+				     ng-class="{ 'chat-bubble-icon': true,
+					 			 'chat-bubble-notification': Chat.client.notifications[ room.id ] && Chat.client.notifications[ room.id ] > 0,
+								 'chat-bubble-active': Chat.client.room === room && Shell.isRightPaneVisible }">
 					<img class="chat-bubble-image" ng-src="{{ room.user.imgAvatar }}" ng-if="::Chat.client.isPMRoom( room )"/>
 					<div class="chat-bubble-letter" ng-if="::Chat.client.isGroupRoom( room )">{{ room.title.toUpperCase().charAt(0) }}</div>
 				</div>
