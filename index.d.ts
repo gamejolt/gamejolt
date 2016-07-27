@@ -21,6 +21,13 @@ declare var global: any;
 declare var GJ_ENVIRONMENT: 'development' | 'production';
 declare var GJ_BUILD_TYPE: 'development' | 'production';
 
+//  getString: function (string, scope, context) {
+declare namespace angular.gettext {
+	interface gettextCatalog {
+		getString( string: string, scope: any, context: string ): string;
+	}
+}
+
 // Have to add this in for the moment.
 declare module angular {
 	interface IModule {
