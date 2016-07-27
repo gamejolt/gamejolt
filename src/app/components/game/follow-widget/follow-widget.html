@@ -1,7 +1,8 @@
-<a
-	ng-click="$ctrl.follow()"
+<button
+	ng-click="$ctrl.onClick()"
 	class="game-follow-widget btn"
 	ng-class="!$ctrl.game.is_following ? 'btn-outline' : 'btn-success active'"
+	ng-disabled="$ctrl.isProcessing"
 	gj-tooltip="{{ !$ctrl.game.is_following ? $ctrl.followTooltip : undefined }}"
 	tooltip-placement="bottom"
 	gj-track-event="game-follow:{{ !$ctrl.game.is_following ? 'follow' : 'unfollow' }}"
@@ -18,4 +19,4 @@
 		<span class="jolticon jolticon-subscribed"></span>
 		<span translate>Following</span>
 	</span>
-</a>
+</button>
