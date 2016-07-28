@@ -12,6 +12,7 @@
 
 		&-img
 			display: block
+			overflow: hidden
 
 	&-slider
 		white-space: nowrap
@@ -29,32 +30,23 @@
 
 	&-prev
 	&-next
-		display: none
 		position: absolute
 		top: 50%
-		height: 50px
-		width: @height
-		line-height: 50px
-		margin-top: -25px
+		height: 80px
+		width: 50px
+		line-height: @height
+		margin-top: -(@height / 2)
 		color: $white
 		text-align: center
 		background-color: $gray-darker
 		z-index: 2
 		user-select: none
-		border: 1px solid rgba( $white, 0.1 )
 
 		&:hover
 			color: $gj-green
 
 	&-prev
-		left: 0
-		border-left: 0
+		left: -50px
 
 	&-next
-		right: 0
-		border-right: 0
-
-	&-embed:hover
-		.devlog-post-media-prev
-		.devlog-post-media-next
-			display: block
+		right: -50px
