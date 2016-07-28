@@ -47,12 +47,6 @@
 			</div>
 		</div>
 
-		<div class="game-thumbnail-meter" ng-if="::$ctrl.game.ratings_enabled">
-			<span class="game-thumbnail-rating-count">
-				({{ ::$ctrl.game.rating_count || 0 | number }})
-			</span>
-			<gj-meter meter-rating="::$ctrl.game.avg_rating"></gj-meter>
-		</div>
 		<div class="game-thumbnail-os">
 			<gj-game-compat-icons gj-game="::$ctrl.game"></gj-game-compat-icons>
 		</div>
