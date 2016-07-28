@@ -9,10 +9,12 @@
 	<div class="game-thumbnail-thumb">
 		<span class="jolticon jolticon-game"></span>
 
-		<span class="game-thumbnail-tag" ng-switch="::$ctrl.game.development_status">
-			<!--<span ng-switch-when="1" translate>Complete/Stable</span>-->
-			<span ng-switch-when="2" translate>Early Access</span>
-			<span ng-switch-when="4" translate>Devlog-Only</span>
+		<span class="game-thumbnail-tag" ng-if="::$ctrl.game.development_status == 2" translate>
+			Early Access
+		</span>
+
+		<span class="game-thumbnail-tag" ng-if="::$ctrl.game.development_status == 4" translate>
+			Devlog-Only
 		</span>
 
 		<span class="game-thumbnail-video-tag" ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop">
