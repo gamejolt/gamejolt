@@ -45,7 +45,9 @@
 			</a>
 		</span>
 
-		<div class="devlog-post-controls-stats">
+		<div class="devlog-post-controls-stats"
+			ng-if="::$ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id"
+			>
 
 			<span
 				translate
@@ -65,7 +67,7 @@
 				1 expand
 			</span>
 
-			<span tooltip="{{ 'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.' | translate }}">
+			<span tooltip="{{ ::'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.' | translate }}">
 				<span class="jolticon jolticon-help-circle"></span>
 			</span>
 
@@ -91,12 +93,12 @@
 		<div class="pull-right">
 			<gj-game-follow-widget
 				ng-if="::$ctrl.feed.showGameInfo && $ctrl.app.user && $ctrl.post.user.id != $ctrl.app.user.id"
-				game="$ctrl.post.game"
+				game="::$ctrl.post.game"
 				>
 			</gj-game-follow-widget>
 
 			<div ng-if="::$ctrl.feed.showEditControls && $ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
-				<button class="btn btn-success-outline" ng-if="$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT" ng-click="$ctrl.publishPost()">
+				<button class="btn btn-success-outline" ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT" ng-click="$ctrl.publishPost()">
 					<span class="jolticon jolticon-check"></span>
 					<span translate>Publish</span>
 				</button>

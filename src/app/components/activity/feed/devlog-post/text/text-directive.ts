@@ -12,7 +12,9 @@ export class TextComponent
 
 	@Output() onExpand: Function;
 
-	canToggleContent: boolean | undefined;
+	// We bind-once canToggleContent. It needs to be undefined so that it
+	// doesn't bind until we know if the content can be toggled.
+	canToggleContent: boolean | undefined = undefined;
 	showFullContent = false;
 
 	toggleFull()
