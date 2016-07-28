@@ -15,6 +15,7 @@
 
 			<div ng-switch="::item.type">
 				<gj-activity-feed-devlog-post
+					ng-switch-when="devlog-post"
 					item="::item"
 					is-new="::$ctrl.isItemUnread( item )"
 					on-click="$ctrl.setActive( item )"

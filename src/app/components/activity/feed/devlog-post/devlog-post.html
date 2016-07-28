@@ -38,7 +38,7 @@
 
 		<div class="timeline-list-item-details">
 
-			<div ng-switch-when="devlog-post" ng-switch="::$ctrl.post.type">
+			<div ng-switch="::$ctrl.post.type">
 				<gj-activity-feed-devlog-post-text
 					ng-switch-when="text"
 					post="::$ctrl.post"
