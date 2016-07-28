@@ -1,23 +1,5 @@
 angular.module( 'App.Views' ).config( function( $stateProvider )
 {
-	function getQueryString( $stateParams, filteringContainer )
-	{
-		var searchParams = [];
-
-		if ( $stateParams.page > 1 ) {
-			searchParams.push( 'page=' + $stateParams.page );
-		}
-
-		if ( $stateParams.sort ) {
-			searchParams.push( 'sort=' + $stateParams.sort );
-		}
-
-		searchParams.push( filteringContainer.getQueryString() );
-		var query = searchParams.join( '&' );
-
-		return query;
-	}
-
 	var queryParams = '?price&sort&os&browser&maturity&status&query&page';
 
 	var subStates = {
@@ -45,7 +27,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 					return filteringContainer.init( 'library.collection.' + state, $stateParams )
 						.then( function()
 						{
-							var query = getQueryString( $stateParams, filteringContainer );
+							var query = filteringContainer.getQueryString( $stateParams );
 							return Api.sendRequest( '/web/library/games/' + state + '/' + $stateParams.id + '?' + query );
 						} );
 				}

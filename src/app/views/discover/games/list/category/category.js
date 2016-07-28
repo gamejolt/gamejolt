@@ -1,28 +1,5 @@
 angular.module( 'App.Views' ).config( function( $stateProvider, $urlMatcherFactoryProvider, $urlRouterProvider )
 {
-	function buildQuery( $stateParams, filteringContainer )
-	{
-		var query = '?section=' + $stateParams.section;
-
-		if ( $stateParams.category ) {
-			query += '&category=' + $stateParams.category;
-		}
-
-		if ( $stateParams.date ) {
-			query += '&date=' + $stateParams.date;
-		}
-
-		if ( $stateParams.page > 1 ) {
-			query += '&page=' + $stateParams.page;
-		}
-
-		query += '&' + filteringContainer.getQueryString();
-
-		return '/web/discover/games' + query;
-	}
-
-	var queryParams = '?price&os&browser&maturity&status&page&query';
-
 	$urlMatcherFactoryProvider.type( 'gamesSection', {
 		pattern: /featured|new|fresh|hot|best|worst|by\-date/
 	} );
@@ -43,7 +20,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlMatcherFacto
 	angular.forEach( subStates, function( url, state )
 	{
 		$stateProvider.state( 'discover.games.list.' + state, {
-			url: url + queryParams,
+			url: url + '?price&os&browser&maturity&status&page&query',
 			controller: 'Discover.Games.List.CategoryCtrl',
 			controllerAs: 'categoryCtrl',
 			templateUrl: '/app/views/discover/games/list/category/category.html',
@@ -55,7 +32,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlMatcherFacto
 						{
 							return History_Cache.cache( function()
 							{
-								return Api.sendRequest( buildQuery( $stateParams, filteringContainer ) );
+								return Api.sendRequest( '/web/discover/games?' + filteringContainer.getQueryString( $stateParams ) );
 							} );
 						} );
 				}

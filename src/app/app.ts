@@ -45,6 +45,7 @@ import PageHeaderModule from './components/page-header/page-header';
 import GenreListModule from './components/genre/list/list';
 import GameMediaBarModule from './components/game/media-bar/media-bar';
 import CommentAvatarListModule from './components/comment/avatar-list/avatar-list';
+import GameListingModule from './components/game/listing/listing';
 import ChannelsModule from './components/channel/channels';
 import DevlogPostAddModule from './components/devlog/post/add/add';
 import DevlogPostEditModule from './components/devlog/post/edit/edit';
@@ -287,6 +288,7 @@ const AppModule = angular.module( 'App', [
 
 	'App.FeaturedItem',
 
+	GameListingModule,
 	GenreListModule,
 
 	DevlogPostAddModule,

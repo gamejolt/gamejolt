@@ -1,10 +1,10 @@
 angular.module( 'App.Views' ).config( function( $stateProvider )
 {
-	$stateProvider.state( 'discover.channels.channel.games', {
+	$stateProvider.state( 'discover.channels.channel.devlogs', {
 		abstract: true,
-		controller: 'Discover.Channels.Channel.GamesCtrl',
+		controller: 'Discover.Channels.Channel.DevlogsCtrl',
 		controllerAs: '$ctrl',
-		templateUrl: '/app/views/discover/channels/channel/games/games.html',
+		templateUrl: '/app/views/discover/channels/channel/devlogs/devlogs.html',
 		resolve: {
 
 			// We need translations loaded in for the filtering container, so we wait for "init".
