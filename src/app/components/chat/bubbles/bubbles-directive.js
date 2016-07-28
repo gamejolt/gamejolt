@@ -14,8 +14,6 @@ angular.module( 'App.Chat' ).directive( 'gjChatBubbles', function( Screen, Chat,
 			$scope.Chat = Chat;
 			$scope.Shell = Shell;
 
-			this.isShowing = false;
-
 			this.activateRoom = function( roomId )
 			{
 				if ( !Shell.isRightPaneVisible ) {
@@ -40,11 +38,6 @@ angular.module( 'App.Chat' ).directive( 'gjChatBubbles', function( Screen, Chat,
 				event.stopPropagation();
 				Chat.client.leaveRoom( roomId );
 			};
-
-			$scope.$watch( '!Screen.isXs', function( isShowing )
-			{
-				_this.isShowing = isShowing;
-			} );
 		}
 	};
 } );

@@ -4,9 +4,13 @@
 	right: 10px
 	z-index: $zindex-chat-bubbles
 	transition: transform 450ms $strong-ease-out
+	display: none
 
 	#shell.right-pane-visible &
 		transform: translate( -($shell-pane-width), 0 )
+
+	@media $media-sm-up
+		display: block
 
 .chat-bubble
 	user-select: none
