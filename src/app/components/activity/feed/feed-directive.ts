@@ -8,7 +8,7 @@ import template from 'html!./feed.html';
 /**
  * The number of items from the bottom that we should hit before loading more.
  */
-const LOAD_MORE_FROM_BOTTOM = 2;
+const LOAD_MORE_FROM_BOTTOM = 5;
 
 /**
  * The number of times we should do an auto-load of items before stopping
@@ -32,10 +32,10 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 	@Output( '?onPostEdited' ) private _onPostEdited?: Function;
 	@Output( '?onPostPublished' ) private _onPostPublished?: Function;
 
-	private _inView: { [k: string]: ActivityFeedItem } = {};
+	isLoadingMore = false;
 
+	private _inView: { [k: string]: ActivityFeedItem } = {};
 	private _timesLoaded = 0;
-	private _isLoadingMore = false;
 
 	/**
 	 * Whether or not this feed was bootstrapped with previous data.
@@ -63,7 +63,7 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 		{
 			this.$timeout( () =>
 			{
-				this._isLoadingMore = false;
+				this.isLoadingMore = false;
 
 				// First time getting items in.
 				// Let's try scrolling to a possible active one.
@@ -146,11 +146,11 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 
 	loadMore()
 	{
-		if ( this._isLoadingMore || this.feed.reachedEnd ) {
+		if ( this.isLoadingMore || this.feed.reachedEnd ) {
 			return;
 		}
 
-		this._isLoadingMore = true;
+		this.isLoadingMore = true;
 		++this._timesLoaded;
 
 		const lastPost = this.feed.items[ this.feed.items.length - 1 ];
@@ -158,6 +158,8 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 		this.api.sendRequest( this.loadMoreUrl, { scrollId: lastPost.scrollId } )
 			.then( ( response: any ) =>
 			{
+				this.isLoadingMore = false;
+
 				if ( !response.items || !response.items.length ) {
 					this.feed.reachedEnd = true;
 					return;
@@ -179,7 +181,7 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 			this.feed.viewed( item );
 
 			// Auto-loading while scrolling.
-			if ( !this._isLoadingMore && !this.feed.reachedEnd && this._timesLoaded < LOAD_MORE_TIMES ) {
+			if ( !this.isLoadingMore && !this.feed.reachedEnd && this._timesLoaded < LOAD_MORE_TIMES ) {
 				const index = _.findIndex( this.feed.items, { id: item.id } );
 				if ( index >= this.feed.items.length - LOAD_MORE_FROM_BOTTOM ) {
 					this.loadMore();
