@@ -30,6 +30,7 @@
 
 	&-prev
 	&-next
+		display: none
 		position: absolute
 		top: 50%
 		height: 80px
@@ -44,6 +45,9 @@
 
 		&:hover
 			color: $gj-green
+
+		@media $media-sm-up
+			display: block
 
 	&-prev
 		left: -50px
