@@ -15,7 +15,7 @@ gj-game-thumbnail
 
 	&.show-video
 		.game-thumbnail-thumb > img
-		.game-thumbnail-tags
+		.game-thumbnail-video-tag
 			display: none
 
 		.game-thumbnail-thumb > video
@@ -29,42 +29,43 @@ gj-game-thumbnail
 	@media $media-sm-up
 		margin-bottom: $grid-gutter-width
 
-	&-tags
-	&-buttons
-		@extend .clearfix
-		position: absolute
-		bottom: 0
-		z-index: 2
+	// &-tags
+	// &-buttons
+	// 	@extend .clearfix
+	// 	position: absolute
+	// 	bottom: 0
+	// 	z-index: 2
 
-	&-tag
-	&-button
-		float: left
-		padding: 5px
-		padding-bottom: 3px
-		background-color: rgba( $black, 0.8 )
+	// &-tag
+	// &-button
+	// 	float: left
+	// 	padding: 5px
+	// 	padding-bottom: 3px
+	// 	background-color: rgba( $black, 0.8 )
 
-	&-tags
-		left: 5px
+	// &-tags
+	// 	left: 5px
 
-	&-tag
-		color: $gj-blue
+	// &-tag
+	// 	color: $gj-blue
 
-	&-buttons
-		right: 5px
-		display: none
+	// &-buttons
+	// 	right: 5px
+	// 	display: none
 
-	&-button
-		color: $white
+	// &-button
+	// 	color: $white
 
-		&:hover
-			color: $gj-blue
+	// 	&:hover
+	// 		color: $gj-blue
 
-		& + &
-			margin-left: 5px
+	// 	& + &
+	// 		margin-left: 5px
 
 	&:hover
-		.game-thumbnail-buttons
-			display: block
+		.game-thumbnail-pricing
+		.game-thumbnail-tag
+			display: none
 
 	&-controls
 		position: absolute
@@ -157,6 +158,25 @@ gj-game-thumbnail
 		color: $text-muted
 		font-size: $font-size-tiny
 		margin-right: 2px
+
+	&-video-tag
+		position: absolute
+		bottom: 0
+		left: 5px
+		padding: 5px
+		padding-bottom: 3px
+		color: $gj-blue
+		background-color: rgba( $black, 0.8 )
+		z-index: 2
+
+	&-tag
+		@extend .tag
+		position: absolute
+		left: 0
+		top: 10px
+		z-index: 2
+		color: $gj-blue
+		background-color: $gray-darkest
 
 	&-pricing
 		@extend .fill-darkest
