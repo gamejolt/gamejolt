@@ -18,6 +18,7 @@ import {
 	Optional,
 	Self,
 	SkipSelf,
+	ViewChild,
 } from 'ng-metadata/core';
 import { bootstrap } from 'ng-metadata/platform';
 
@@ -35,6 +36,7 @@ const ngMetadata_core = {
 	Optional,
 	Self,
 	SkipSelf,
+	ViewChild,
 };
 
 const ngMetadata_platform = {
