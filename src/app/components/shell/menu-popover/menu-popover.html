@@ -14,35 +14,35 @@
 				gj-track-event="discover-nav:home"
 				>
 				<span class="jolticon jolticon-gamejolt"></span>
-				Home
+				<span translate>Home</span>
 			</a>
 			<a class="list-group-item has-icon offline-disable" ui-sref="discover.games.list.section( { section: 'hot' } )"
 				ui-sref-opts="{ inherit: false }"
 				gj-track-event="discover-nav:hot"
 				>
 				<span class="jolticon jolticon-game"></span>
-				Games
+				<span translate>Games</span>
 			</a>
 			<a class="list-group-item has-icon offline-disable" ui-sref="discover.devlogs.overview"
 				ui-sref-opts="{ inherit: false }"
 				gj-track-event="discover-nav:devlogs"
 				>
 				<span class="jolticon jolticon-blog-article"></span>
-				Devlogs
+				<span translate>Devlogs</span>
 			</a>
 			<a ng-if="Screen.isXs" class="list-group-item has-icon offline-disable" ui-sref="search.results"
 				ui-sref-opts="{ inherit: false }"
 				gj-track-event="discover-nav:search"
 				>
 				<span class="jolticon jolticon-search"></span>
-				Search
+				<span translate>Search</span>
 			</a>
 			<a class="list-group-item has-icon offline-disable"
 				ui-sref="forums.landing.overview"
 				gj-track-event="discover-nav:forums"
 				>
 				<span class="jolticon jolticon-users"></span>
-				Forums
+				<span translate>Forums</span>
 			</a>
 		</div>
 
@@ -56,13 +56,19 @@
 					gj-track-event="discover-nav:library"
 					>
 					<span class="jolticon jolticon-books"></span>
-					Game Library
+					<span translate>Game Library</span>
+				</a>
+				<a class="list-group-item has-icon" ui-sref="dashboard.activity.feed( { tab: 'activity' } )"
+					gj-track-event="discover-nav:activity"
+					>
+					<span class="jolticon jolticon-feed"></span>
+					<span translate>Activity Feed</span>
 				</a>
 				<a class="list-group-item has-icon offline-disable" ui-sref="dashboard.main.overview"
 					gj-track-event="discover-nav:dashboard"
 					>
 					<span class="jolticon jolticon-dashboard"></span>
-					Dashboard
+					<span translate>Dashboard</span>
 				</a>
 			</div>
 		</div>
