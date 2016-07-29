@@ -1,5 +1,5 @@
 <form gj-form="formModel" name="devlogPostForm">
-	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
+	<div oc-lazy-load="{ files: [ '/app/modules/upload.js', '/app/modules/ui-tree.js' ] }">
 		<gj-form-loader
 			url="/web/dash/developer/games/devlog/save/{{ baseModel.game.id }}/{{ baseModel.id }}"
 			on-loaded="onLoaded( $payload )"
@@ -41,7 +41,10 @@
 						label="{{ 'Upload Media' | translate }}"
 						>
 
-						<p class="help-block" translate>dash.forms.image_filetype_help_html</p>
+						<p class="help-block" translate>
+							Your image must be a PNG, JPG, or GIF. <br>
+							<b>Animated GIFs are supported.</b>
+						</p>
 
 						<gj-form-upload-control
 							form-control="upload"
@@ -50,6 +53,7 @@
 							gj-max-img-height="maxHeight"
 							accept=".png,.jpg,.jpeg,.gif"
 							multiple
+							is-sortable="true"
 							>
 						</gj-form-upload-control>
 

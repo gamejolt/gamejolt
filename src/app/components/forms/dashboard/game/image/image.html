@@ -4,7 +4,7 @@
 		<gj-loading></gj-loading>
 	</div>
 
-	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
+	<div oc-lazy-load="{ files: [ '/app/modules/upload.js', '/app/modules/ui-tree.js' ] }">
 		<div ng-if="isLoaded">
 			<form-group name="file" label="{{ 'dash.games.media.image.form.image_label' | translate }}" hide-label="true" ng-if="method == 'add'">
 
@@ -17,6 +17,7 @@
 					gj-max-img-height="maxHeight"
 					accept=".png,.jpg,.jpeg,.gif"
 					multiple="true"
+					is-sortable="true"
 					>
 				</gj-form-upload-control>
 
