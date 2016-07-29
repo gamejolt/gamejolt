@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from 'ng-metadata/core';
+import { Component, Inject, Input, Output } from 'ng-metadata/core';
 import { FormDashboardGameDevStageSelectorConfirm } from './confirm-service';
 import template from 'html!./dev-stage-selector.html';
 
@@ -8,7 +8,9 @@ import template from 'html!./dev-stage-selector.html';
 })
 export class DevStageSelectorComponent
 {
-	@Input( '<' ) game: any;
+	@Input( '<?' ) game?: any;
+
+	@Output( '?' ) onSelect?: Function;
 
 	constructor(
 		@Inject( 'Game' ) public gameModel: any,
@@ -21,6 +23,10 @@ export class DevStageSelectorComponent
 
 	select( stage: number )
 	{
+		if ( this.onSelect ) {
+			this.onSelect( { $stage: stage } );
+		}
+
 		if ( !this.isEnabled( stage ) || stage == this.game.development_status ) {
 			return;
 		}
@@ -38,6 +44,10 @@ export class DevStageSelectorComponent
 
 	isEnabled( stage: number )
 	{
+		if ( !this.game ) {
+			return true;
+		}
+
 		if ( (stage == this.gameModel.DEVELOPMENT_STATUS_WIP || stage == this.gameModel.DEVELOPMENT_STATUS_FINISHED) && !this.game.has_active_builds ) {
 			return false;
 		}

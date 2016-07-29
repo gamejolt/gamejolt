@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row dev-stage-selector">
 	<div class="col-xs-12"
 		ng-repeat="stage in [
 			$ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG,
@@ -8,41 +8,75 @@
 		>
 		<a ng-click="$ctrl.select( stage )">
 			<gj-card is-disabled="!$ctrl.isEnabled( stage )">
-				<div class="card-title">
-					<h4>
-						<span class="jolticon"
-							ng-class="$ctrl.game.development_status == stage ? 'jolticon-radio-circle-filled' : 'jolticon-radio-circle'"
-						></span>
-						<span ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG" translate>Devlog-Only</span>
-						<span ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_WIP" translate>Early Access</span>
-						<span ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED" translate>Complete/Stable</span>
-					</h4>
-				</div>
-				<div class="card-content">
-					<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG">
-						<div translate>
-							You don't have anything playable yet, but would like to share active game development in the form of images, videos, posts and more. Your game page will use the new Devlog format.
+				<div class="dev-stage-selector-content">
+
+					<div class="card-title">
+						<h4>
+							<span class="jolticon"
+								ng-class="$ctrl.game.development_status == stage ? 'jolticon-radio-circle-filled' : 'jolticon-radio-circle'"
+							></span>
+							<span ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG" translate>Devlog-Only</span>
+							<span ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_WIP" translate>Early Access</span>
+							<span ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED" translate>Complete/Stable</span>
+						</h4>
+					</div>
+
+					<div class="card-content">
+						<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG">
+							<div translate>
+								You don't have anything playable yet, but would like to share active game development in the form of images, videos, posts and more. Your game page will use the new Devlog format.
+							</div>
+						</div>
+
+						<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_WIP">
+							<div translate>
+								Your game has playable builds, but you're still actively developing it.
+							</div>
+						</div>
+
+						<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED">
+							<div translate>
+								Your game is complete. It's in a stable state and you only plan on making bug fixes, performance optimizations, or small improvements.
+							</div>
 						</div>
 					</div>
 
-					<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_WIP">
-						<div translate>
-							Your game has playable builds, but you're still actively developing it.
+					<div ng-if="!$ctrl.isEnabled( stage )">
+						<br>
+						<div class="alert alert-info sans-margin">
+							<span class="jolticon jolticon-notice"></span>
+							<span translate>You must have active published packages to transition to this stage.</span>
 						</div>
 					</div>
 
-					<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED">
-						<div translate>
-							Your game is complete. It's in a stable state and you only plan on making bug fixes, performance optimizations, or small improvements.
-						</div>
-					</div>
 				</div>
-				<div ng-if="!$ctrl.isEnabled( stage )">
-					<br>
-					<div class="alert alert-info sans-margin">
-						<span class="jolticon jolticon-notice"></span>
-						<span translate>You must have active published packages to transition to this stage.</span>
-					</div>
+
+				<div class="dev-stage-selector-mascot">
+
+					<img
+						ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG"
+						src="/app/components/forms/dashboard/game/dev-stage-selector/mascot-devlog.png"
+						width="68"
+						height="68"
+						alt=""
+						>
+
+					<img
+						ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_WIP"
+						src="/app/components/forms/dashboard/game/dev-stage-selector/mascot-early-access.png"
+						width="48"
+						height="46"
+						alt=""
+						>
+
+					<img
+						ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED"
+						src="/app/components/forms/dashboard/game/dev-stage-selector/mascot-complete.png"
+						width="52"
+						height="54"
+						alt=""
+						>
+
 				</div>
 			</gj-card>
 		</a>
