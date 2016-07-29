@@ -68,17 +68,12 @@
 
 				</div>
 
-				<div class="text-center">
-					<br>
-					<gj-fireside-post-like-widget
-						fireside-post="viewCtrl.post"
-						>
-					</gj-fireside-post-like-widget>
-				</div>
-			</section>
+				<gj-activity-feed-devlog-post-controls post="viewCtrl.post"></gj-activity-feed-devlog-post-controls>
 
-			<section class="section">
+				<br>
+
 				<gj-comment-widget
+					id="comments"
 					comment-resource="Fireside_Post"
 					comment-resource-id="::viewCtrl.post.id"
 					>

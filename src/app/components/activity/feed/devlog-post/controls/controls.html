@@ -120,6 +120,7 @@
 	<div class="clearfix">
 		<div class="pull-left" ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_ACTIVE">
 			<button class="btn btn-outline btn-sparse"
+				ng-if="::$ctrl.feed"
 				ng-click="$ctrl.toggleComments()"
 				gj-tooltip="Comment on This Post"
 				>
@@ -135,12 +136,12 @@
 
 		<div class="pull-right">
 			<gj-game-follow-widget
-				ng-if="::$ctrl.feed.showGameInfo && $ctrl.app.user && $ctrl.post.user.id != $ctrl.app.user.id"
+				ng-if="::$ctrl.feed && $ctrl.feed.showGameInfo && $ctrl.app.user && $ctrl.post.user.id != $ctrl.app.user.id"
 				game="::$ctrl.post.game"
 				>
 			</gj-game-follow-widget>
 
-			<div ng-if="::$ctrl.feed.showEditControls && $ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
+			<div ng-if="::$ctrl.feed && $ctrl.feed.showEditControls && $ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
 				<button class="btn btn-success-outline" ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT" ng-click="$ctrl.publishPost()">
 					<span class="jolticon jolticon-check"></span>
 					<span translate>Publish</span>
@@ -158,25 +159,27 @@
 
 </div>
 
-<gj-popover popover-id="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
-	<div class="list-group list-group-dark">
-		<a class="list-group-item has-icon"
-			ng-click="$ctrl.removePost()"
-			>
-			<span class="jolticon jolticon-remove warning"></span>
-			<span translate>Remove Post</span>
-		</a>
-	</div>
-</gj-popover>
+<div ng-if="::$ctrl.feed">
+	<gj-popover popover-id="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
+		<div class="list-group list-group-dark">
+			<a class="list-group-item has-icon"
+				ng-click="$ctrl.removePost()"
+				>
+				<span class="jolticon jolticon-remove warning"></span>
+				<span translate>Remove Post</span>
+			</a>
+		</div>
+	</gj-popover>
 
-<div class="devlog-post-controls-well" ng-if="$ctrl.isShowingComments">
-	<gj-comment-widget
-		comment-resource="Fireside_Post"
-		comment-resource-id="::$ctrl.post.id"
-		no-intro="true"
-		on-comment-count="$ctrl.post.comment_count = $count"
-		>
-	</gj-comment-widget>
+	<div class="devlog-post-controls-well" ng-if="$ctrl.isShowingComments">
+		<gj-comment-widget
+			comment-resource="Fireside_Post"
+			comment-resource-id="::$ctrl.post.id"
+			no-intro="true"
+			on-comment-count="$ctrl.post.comment_count = $count"
+			>
+		</gj-comment-widget>
+	</div>
 </div>
 
 <div class="devlog-post-controls-well" ng-if="$ctrl.isShowingLikes">

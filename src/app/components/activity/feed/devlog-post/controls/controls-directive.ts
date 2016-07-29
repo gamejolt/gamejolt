@@ -15,7 +15,7 @@ export class ControlsComponent
 {
 	@Input( '<' ) post: Fireside_Post;
 
-	@Output() onExpand: Function;
+	@Output() onExpand?: Function;
 
 	isShowingComments = false;
 	isShowingLikes = false;
@@ -30,9 +30,10 @@ export class ControlsComponent
 		@Inject( 'App' ) public app: App,
 		@Inject( 'Environment' ) env: any,
 		@Inject( 'Clipboard' ) private clipboard: Clipboard,
+		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'Fireside_Post' ) public firesidePostModel: typeof Fireside_Post,
 		@Inject( 'DevlogPostEdit' ) private editService: DevlogPostEdit,
-		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() private feed: FeedComponent
+		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() private feed: FeedComponent | undefined
 	)
 	{
 		this.shareUrl = env.baseUrl + $state.href( 'discover.games.view.devlog.view', {
@@ -44,16 +45,26 @@ export class ControlsComponent
 
 	toggleComments()
 	{
+		// If we aren't in the feed, then don't toggle comments out.
+		// We just scroll to the comments.
+		this.scroll.to( 'comments' );
+
 		this.isShowingComments = !this.isShowingComments;
 		this.isShowingLikes = false;
-		this.onExpand();
+
+		if ( this.onExpand ) {
+			this.onExpand();
+		}
 	}
 
 	toggleLikes()
 	{
 		this.isShowingLikes = !this.isShowingLikes;
 		this.isShowingComments = false;
-		this.onExpand();
+
+		if ( this.onExpand ) {
+			this.onExpand();
+		}
 
 		if ( this.isShowingLikes ) {
 			this.loadLikes();
@@ -78,18 +89,33 @@ export class ControlsComponent
 	showEdit()
 	{
 		this.editService.show( this.post )
-			.then( ( post: Fireside_Post ) => this.feed.onPostEdited( post ) );
+			.then( ( post: Fireside_Post ) =>
+			{
+				if ( this.feed ) {
+					this.feed.onPostEdited( post );
+				}
+			} );
 	}
 
 	publishPost()
 	{
 		this.post.$publish()
-			.then( () => this.feed.onPostPublished( this.post ) );
+			.then( () =>
+			{
+				if ( this.feed ) {
+					this.feed.onPostPublished( this.post );
+				}
+			} );
 	}
 
 	removePost()
 	{
 		this.post.remove()
-			.then( () => this.feed.onPostRemoved( this.post ) );
+			.then( () =>
+			{
+				if ( this.feed ) {
+					this.feed.onPostRemoved( this.post );
+				}
+			} );
 	}
 }
