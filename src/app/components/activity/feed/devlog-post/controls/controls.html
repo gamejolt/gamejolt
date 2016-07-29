@@ -45,6 +45,46 @@
 			</a>
 		</span>
 
+		<span class="dot-separator"></span>
+		<a class="link-muted" gj-popover-trigger="activity-feed-devlog-post-share-{{ ::$ctrl.post.id }}">
+			<span class="jolticon jolticon-share"></span>
+			<span translate>Share</span>
+		</a>
+
+		<gj-popover
+			class="popover-dark"
+			popover-id="activity-feed-devlog-post-share-{{ ::$ctrl.post.id }}"
+			popover-append-to-body="true"
+			popover-on-focus="$ctrl.isShowingShare = true"
+			popover-on-blur="$ctrl.isShowingShare = false"
+			>
+
+			<div class="well sans-margin">
+				<div class="social-widgets"
+					ng-if="$ctrl.isShowingShare"
+					>
+					<gj-social-twitter-share
+						url="{{ ::$ctrl.shareUrl }}"
+						content="{{ ::$ctrl.post.title }}"
+						>
+					</gj-social-twitter-share>
+					<span class="dot-separator"></span>
+					<gj-social-facebook-like
+						url="{{ ::$ctrl.shareUrl }}"
+						>
+					</gj-social-facebook-like>
+				</div>
+
+				<button class="btn btn-outline btn-block"
+					ng-click="$ctrl.copyShareUrl()"
+					translate
+					>
+					Copy Permalink
+				</button>
+			</div>
+
+		</gj-popover>
+
 		<div class="devlog-post-controls-stats"
 			ng-if="::$ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id"
 			>
