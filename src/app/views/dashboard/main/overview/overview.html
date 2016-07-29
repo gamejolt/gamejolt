@@ -223,12 +223,6 @@
 											ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
 											gj-track-event="dash:overview:quick-game"
 											>
-											<span class="tag" ng-if="game._is_devlog" translate>
-												Devlog
-											</span>
-											<span class="tag tag-blue" ng-if="game._is_wip" translate>
-												Early Access
-											</span>
 											{{ ::game.title }}
 										</a>
 									</h4>
