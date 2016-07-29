@@ -230,37 +230,37 @@
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
-				<div ng-if="overviewCtrl.posts.length">
-					<h2 translate>Latest News Updates</h2>
+	</div>
+</section>
 
-					<!--<gj-post-grid
-						post-grid-items="overviewCtrl.posts"
-						post-grid-hide-thumb="true"
-						post-grid-size="small"
-						>
-					</gj-post-grid>-->
+<section class="section devlog-section" ng-if="gameCtrl.game._is_wip && gameCtrl.isLoaded && overviewCtrl.posts.hasItems">
 
-					<a class="i-button big"
-						ng-if="gameCtrl.newsArticlesCount > 2"
-						ng-class="{ block: Screen.isXs }"
-						ui-sref="^.news.list"
-						>
-						<span class="jolticon jolticon-blog-article"></span>
-						<span translate
-							translate-n="gameCtrl.newsArticlesCount - 2"
-							translate-plural="View +{{ $count | number }} More Updates"
-							>
-							View +1 More Update
-						</span>
-					</a>
-					<br class="visible-xs">
-				</div>
+	<div class="devlog-section-highlight"></div>
+
+	<a class="devlog-section-overlay" ui-sref="discover.games.view.devlog.list">
+		<div class="btn btn-primary-outline btn-overlay-variant btn-lg">
+			View Devlog
+		</div>
+	</a>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+
+				<!--<h2 class="section-header text-center">Devlog Feed</h2>-->
+
+				<gj-activity-feed
+					type="Fireside_Post"
+					items="overviewCtrl.posts"
+					load-more-url="/web/discover/games/devlog/posts/{{ gameCtrl.game.id }}"
+					show-edit-controls="true"
+					>
+				</gj-activity-feed>
 
 			</div>
 		</div>
-
 	</div>
 </section>
 
