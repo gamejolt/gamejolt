@@ -2,6 +2,12 @@ import { Injectable, Inject } from 'ng-metadata/core';
 import { ActivityFeedInput } from './item-service';
 import { ActivityFeedContainer } from './feed-container-service';
 
+/**
+ * Number of states we will keep cached.
+ * We will purge others out of the cache.
+ */
+const MAX_CACHED_COUNT = 3;
+
 export interface BootstrapOptions
 {
 	/**
@@ -64,7 +70,8 @@ export class ActivityFeedService
 			url,
 			container: new this.containerModel( items, options.notificationWatermark ),
 		};
-		this._states.push( this._currentState );
+		this._states.unshift( this._currentState );
+		this._states = this._states.slice( 0, MAX_CACHED_COUNT );
 
 		return this._currentState.container;
 	}
