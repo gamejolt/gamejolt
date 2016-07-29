@@ -1,20 +1,24 @@
-import { Component, Inject, Input, OnChanges, SimpleChanges } from 'ng-metadata/core';
+import { Component, Inject, Input, OnChanges, SimpleChanges, ViewChild, AfterViewInit } from 'ng-metadata/core';
 import template from 'html!./video-embed.html';
 
 @Component({
 	selector: 'gj-devlog-post-media-video-embed',
 	template,
 })
-export class VideoComponent implements OnChanges
+export class VideoComponent implements OnChanges, AfterViewInit
 {
 	@Input( '<' ) mediaItem: any;
 	@Input( '<' ) shouldPlay: boolean;
+
+	@ViewChild( 'video' ) private $video: ng.IAugmentedJQuery;
+	private video: HTMLVideoElement;
+
+	isLoaded = false;
 
 	webm: string;
 	mp4: string;
 
 	constructor(
-		@Inject( '$element' ) private $element: ng.IAugmentedJQuery,
 		@Inject( '$sce' ) $sce: ng.ISCEService,
 	)
 	{
@@ -29,21 +33,43 @@ export class VideoComponent implements OnChanges
 				this.stop();
 			}
 			else {
-				this.play();
+				this.tryPlay();
 			}
 		}
 	}
 
-	play()
+	ngAfterViewInit()
 	{
-		const videoElem = this.$element[0].querySelector( 'video' ) as HTMLVideoElement;
-		videoElem.play();
+		if ( !this.video ) {
+			// https://developer.mozilla.org/en-US/docs/Web/Events/canplaythrough
+			this.video = this.$video[0] as HTMLVideoElement;
+			this.$video.on( 'canplaythrough', () =>
+			{
+				this.isLoaded = true;
+				this.tryPlay();
+			} );
+		}
 	}
 
-	stop()
+	tryPlay()
 	{
-		const videoElem = this.$element[0].querySelector( 'video' ) as HTMLVideoElement;
-		videoElem.currentTime = 0;
-		videoElem.pause();
+		if ( this.shouldPlay && this.isLoaded ) {
+			this.play();
+		}
+	}
+
+	private play()
+	{
+		if ( this.video ) {
+			this.video.play();
+		}
+	}
+
+	private stop()
+	{
+		if ( this.video ) {
+			this.video.currentTime = 0;
+			this.video.pause();
+		}
 	}
 }
