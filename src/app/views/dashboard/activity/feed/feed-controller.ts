@@ -1,5 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { Notification } from './../../../../../lib/gj-lib-client/components/notification/notification-model';
+import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedContainer } from './../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from './../../../../components/activity/feed/feed-service';
 import { App } from './../../../../app-service';
@@ -9,7 +10,7 @@ import { ActivityCtrl } from '../activity-controller';
 export class FeedCtrl
 {
 	tab: 'activity' | 'notifications' = 'activity';
-	notifications: ActivityFeedContainer;
+	feed: ActivityFeedContainer;
 
 	constructor(
 		@Inject( 'App' ) app: App,
@@ -17,6 +18,7 @@ export class FeedCtrl
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
 		@Inject( 'Notification' ) notificationModel: typeof Notification,
+		@Inject( 'Fireside_Post' ) postModel: typeof Fireside_Post,
 		@Inject( 'ActivityFeedService' ) feedService: ActivityFeedService,
 		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
@@ -29,14 +31,16 @@ export class FeedCtrl
 
 		if ( this.tab == 'activity' ) {
 			app.title = gettextCatalog.getString( 'Your activity feed' );
+			this.feed = feedService.bootstrap( postModel.populate( payload.items ), {
+				notificationWatermark: payload.unreadWatermark,
+			} );
 		}
 		else {
 			app.title = gettextCatalog.getString( 'Your notifications' );
+			this.feed = feedService.bootstrap( notificationModel.populate( payload.items ), {
+				notificationWatermark: payload.unreadWatermark,
+			} );
 		}
-
-		this.notifications = feedService.bootstrap( notificationModel.populate( payload.notifications ), {
-			notificationWatermark: payload.unreadWatermark,
-		} );
 
 		activityCtrl.activityUnreadCount = payload.activityUnreadCount || 0;
 		activityCtrl.notificationsUnreadCount = payload.notificationsUnreadCount || 0;
