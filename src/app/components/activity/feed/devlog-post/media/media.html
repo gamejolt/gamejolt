@@ -2,6 +2,7 @@
 	hm-panstart="$ctrl.panStart( $event )"
 	hm-pan="$ctrl.pan( $event )"
 	hm-panend="$ctrl.panEnd( $event )"
+	hm-recognizer-options='{ "threshold": 20, invokeApply: false, directions: "DIRECTION_HORIZONTAL" }'
 	>
 
 	<a class="devlog-post-media-prev" ng-show="$ctrl.page > 1" ng-click="$ctrl.prev()">
