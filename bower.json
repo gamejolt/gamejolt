@@ -23,7 +23,7 @@
     "angular-gettext": "2.3.3",
     "angular-ui-utils": "bower-keypress",
     "angular-validation-match": "1.4.0",
-    "angular-hammer": "https://github.com/gamejolt/angular-hammer.git#master",
+    "angular-hammer": "https://github.com/RyanMullins/angular-hammer.git#e42f429093",
     "hammerjs": "2.0.4",
     "dexie": "1.2.0",
     "Chart.js": "1.0.2",
