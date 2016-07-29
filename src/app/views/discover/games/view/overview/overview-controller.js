@@ -117,24 +117,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		this.hasReleasesSection = this.releases.length || this.songs.length;
 
 		/**
-		 * Convenience messaging.
-		 */
-		$scope.$watch( '::gameCtrl.game.development_status', function( status )
-		{
-			if ( angular.isUndefined( status ) ) {
-				return;
-			}
-
-			_this.convenienceMessage = undefined;
-			if ( status == Game.DEVELOPMENT_STATUS_CANCELED && !_this.packages.length ) {
-				_this.convenienceMessage = 'canceled-no-builds';
-			}
-			else if ( status == Game.DEVELOPMENT_STATUS_CANCELED && _this.packages.length ) {
-				_this.convenienceMessage = 'canceled-with-builds';
-			}
-		} );
-
-		/**
 		 * For game stats.
 		 */
 		this.playsTooltip = false;
