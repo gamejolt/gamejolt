@@ -14,7 +14,6 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		resolve: {
 			payload: function( Api, $stateParams )
 			{
-				console.log( $stateParams['tab'] );
 				return Api.sendRequest( '/web/dash/developer/games/devlog/posts/' + $stateParams['id'] + '/' + $stateParams['tab'] );
 			}
 		}
