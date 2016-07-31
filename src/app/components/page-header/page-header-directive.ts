@@ -21,6 +21,7 @@ export class PageHeaderComponent
 	@Input( '<?' ) coverMaxHeight?: number;
 	@Input( '<?' ) hideNav = false;
 	@Input( '<?' ) shouldAffixNav = false;
+	@Input( '<?' ) spotlightDark = false;
 	@Input( '@?' ) colClasses?: string;
 
 	hasCoverButtons = false;
