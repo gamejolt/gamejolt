@@ -1,0 +1,129 @@
+<section class="section fill-darker">
+	<div class="container">
+
+		<img class="mascots" src="/app/views/landing/marketplace/mascots.png" alt="Introducing Game Jolt Marketplace">
+
+		<p class="text-center">
+			<a class="link-help" href="#news" du-smooth-scroll>What's new?</a>
+		</p>
+
+		<div class="social-widgets text-center" ng-if="!Environment.isClient">
+			<br>
+			<gj-social-twitter-share content="Game Jolt now allows you to sell your games via a new kind of marketplace!"></gj-social-twitter-share>
+			<span class="dot-separator hidden-xs"></span>
+			<gj-social-facebook-share></gj-social-facebook-share>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+
+				<h2>A new kind of marketplace for indies!</h2>
+
+				<p class="lead">Game Jolt has been one of the largest communities focused solely on indie games since 2008.</p>
+
+				<blockquote>
+					<p class="lead">We set out to create a new kind of marketplace, one that is focused on community, where we all care about each other's success.</p>
+				</blockquote>
+
+				<p class="lead">This is how it works...</p>
+
+				<h2>Revenue Split</h2>
+
+				<p>As a developer, you set the percentage you'd like to give to Game Jolt, <strong>as long as it's less than 10%</strong>. It's up to you. We will never guilt you into giving us more&mdash;in fact, you can't!</p>
+
+				<p>We will take care of taxes (including VAT) so you don't have to! Withdraw your earnings whenever you'd like or keep them in your Game Jolt Wallet to buy games from other indies.</p>
+
+				<h2>Game Jolt Wallet</h2>
+
+				<p>Your earnings accumulate in your Wallet. Developers have the option of supporting one another by using funds from their Wallet to buy games without paying any payment processing fees.</p>
+
+				<p>Additionally, when using your Wallet to buy games, we won't take a cut from the sale! Feel free to buy games from other developers with your Wallet knowing that all the money is going to them.</p>
+
+				<h2>Selling Options</h2>
+
+				<p>Sell your game, artpack, levels, soundtrack; we've got you covered! You can assign an individual price to each item on your game page or choose the pay-what-you-want model.</p>
+
+				<h2>Flexible Key Management</h2>
+
+				<p>Control who has access to your game's packages through keys. Assign testers to your game, allowing them to get auto-updates through the <a href="/client">Game Jolt Client</a>. Track press keys, and see when they view your games. Generate keys for prizes, bundles, etc.</p>
+
+				<h2>Game API</h2>
+
+				<p>Create unique experiences for gamers by incorporating highscores, achievements, game session logging, user verification, and cloud data storage through the Game Jolt Game API. As an indie you shouldn't be missing out on these features.</p>
+
+				<h2>Completely Free</h2>
+
+				<p>Game Jolt is for everyone! Marketplace is completely free and open to use, allowing developers to do what they love without having to "sell their souls" to publishers, or waste their time and emotions waiting on certain platforms to deem their hard work worthy of success.</p>
+
+				<h2>Powerful Analytics</h2>
+
+				<p>View detailed analytics for your game's sales, views, downloads, and even installs done through the Client. Find out what operating systems/devices your games are being downloaded on, geographical details of your audience, and which referring sites your sales are coming from.</p>
+
+				<h2>Supporter Focused</h2>
+
+				<p>As a reminder that we're all in this together, when people choose to buy your games for more than the asking price, they will show up as Supporters on your game pages!</p>
+
+				<h2>Now available to everyone!</h2>
+
+				<p>Simply <a ui-sref="dashboard.developer.games.add">add a game</a> to the site, fill in your <a ui-sref="dashboard.account.financials">account's financial details</a>, and assign prices to your games!</p>
+
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<section class="section fill-darkest">
+	<div class="container">
+
+		<h2 class="section-header text-center">
+			<span class="jolticon jolticon-heart big"></span>
+			Featured Paid Games
+		</h2>
+		<br>
+
+		<div class="row">
+			<gj-game-thumbnail
+				class="col-sm-4 col-md-3 meter-dark"
+				ng-class="{ 'scrollable-grid-item': Screen.isXs }"
+				ng-repeat="game in $ctrl.games | limitTo:(Screen.isSm ? 3 : 4) track by game.id"
+				gj-game="game"
+				autoplay="true"
+				gj-track-event="marketplace:game:{{ $index }}"
+				>
+			</gj-game-thumbnail>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6 col-centered">
+				<a class="btn btn-primary-outline btn-block"
+					ui-sref="discover.games.list.section( { section: 'best', price: 'paid' } )"
+					>
+					Load More
+				</a>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<section class="section fill-darker" id="news">
+	<div class="container">
+
+		<h2 class="section-header text-center">Latest Marketplace News</h2>
+		<br>
+
+		<div ng-if="Screen.isXs" class="full-bleed-xs">
+			<gj-fireside-post-list fireside-posts="$ctrl.firesidePosts"></gj-fireside-post-list>
+		</div>
+
+		<div class="row" ng-if="!Screen.isXs">
+			<div class="col-sm-6 col-md-4"
+				ng-repeat="post in $ctrl.firesidePosts | limitTo:3 track by post.id"
+				>
+				<gj-fireside-post-thumbnail fireside-post="post"></gj-fireside-post-thumbnail>
+			</div>
+		</div>
+
+	</div>
+</section>

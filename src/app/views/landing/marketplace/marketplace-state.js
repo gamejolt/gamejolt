@@ -2,7 +2,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 {
 	$stateProvider.state( 'landing.marketplace', {
 		url: '/marketplace',
-		controller: 'MarketplaceCtrl',
+		controller: 'Landing.MarketplaceCtrl',
 		controllerAs: '$ctrl',
 		templateUrl: '/app/views/landing/marketplace/marketplace.html',
 		resolve: {
