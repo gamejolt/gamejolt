@@ -21,7 +21,15 @@ export class OverviewCtrl
 	)
 	{
 		app.title = 'Indie game devlogs';
-		meta.description = 'Discover the best indie games in development. Follow along and stay up to date!';
+		meta.description = 'Find the latest and greatest games in development and follow their devlog feeds!';
+
+		meta.fb.title = app.title;
+		meta.twitter.title = app.title;
+
+		meta.fb.description = meta.description;
+		meta.twitter.description = meta.description;
+
+		meta.twitter.image = '/app/views/discover/devlogs/social.png';
 
 		this.games = game.populate( payload.games );
 		this.posts = feedService.bootstrap( firesidePostModel.populate( payload.posts ) );
