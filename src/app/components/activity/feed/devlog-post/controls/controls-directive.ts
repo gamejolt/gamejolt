@@ -28,7 +28,7 @@ export class ControlsComponent
 	constructor(
 		@Inject( '$state' ) $state: ng.ui.IStateService,
 		@Inject( 'App' ) public app: App,
-		@Inject( 'Environment' ) env: any,
+		@Inject( 'Environment' ) public env: any,
 		@Inject( 'Clipboard' ) private clipboard: Clipboard,
 		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'Fireside_Post' ) public firesidePostModel: typeof Fireside_Post,

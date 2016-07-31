@@ -64,7 +64,7 @@
 
 			<div class="well sans-margin">
 				<div class="social-widgets"
-					ng-if="$ctrl.isShowingShare"
+					ng-if="$ctrl.isShowingShare && !$ctrl.env.isClient"
 					>
 					<gj-social-twitter-share
 						url="{{ ::$ctrl.shareUrl }}"
