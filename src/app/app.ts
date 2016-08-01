@@ -50,6 +50,8 @@ import ChannelsModule from './components/channel/channels';
 import DevlogPostAddModule from './components/devlog/post/add/add';
 import DevlogPostEditModule from './components/devlog/post/edit/edit';
 import DevlogPostMediaModule from './components/devlog/post/media/media';
+import DevlogPostViewModule from './components/devlog/post/view/view';
+import DevlogPostViewModalModule from './components/devlog/post/view-modal/view-modal';
 
 import GameThumbnailModule from './components/game/thumbnail/thumbnail';
 import GameFollowWidgetModule from './components/game/follow-widget/follow-widget';
@@ -294,6 +296,8 @@ const AppModule = angular.module( 'App', [
 	DevlogPostAddModule,
 	DevlogPostEditModule,
 	DevlogPostMediaModule,
+	DevlogPostViewModule,
+	DevlogPostViewModalModule,
 
 	FiresidePostListModule,
 	FiresidePostThumbnailModule,

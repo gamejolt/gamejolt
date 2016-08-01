@@ -1,39 +1,46 @@
-import { Component, Input, Output, Inject, SkipSelf, Optional } from 'ng-metadata/core';
+import { Component, Input, Output, Inject, OnInit } from 'ng-metadata/core';
 import { Fireside_Post } from './../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Fireside_Post_Like } from './../../../../../../lib/gj-lib-client/components/fireside/post/like/like-model';
 import { App } from './../../../../../app-service';
 import { DevlogPostEdit } from './../../../../devlog/post/edit/edit-service';
-import { FeedComponent } from './../../feed-directive';
 import { Clipboard } from './../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
+import { Screen } from './../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import template from 'html!./controls.html';
 
 @Component({
 	selector: 'gj-activity-feed-devlog-post-controls',
 	template,
 })
-export class ControlsComponent
+export class ControlsComponent implements OnInit
 {
 	@Input( '<' ) post: Fireside_Post;
+	@Input( '<?' ) showGameInfo = false;
+	@Input( '<?' ) showEditControls = false;
+	@Input( '<?' ) showExtraInfo = true;
+	@Input( '<?' ) requireTabs = false;
+	@Input( '<?' ) inModal = false;
 
-	@Output() onExpand?: Function;
+	@Output( '?' ) onExpand?: Function;
+	@Output( '?' ) onPostEdit?: Function;
+	@Output( '?' ) onPostPublish?: Function;
+	@Output( '?' ) onPostRemove?: Function;
 
-	isShowingComments = false;
-	isShowingLikes = false;
+	tab: 'comments' | 'likes' | undefined;
 	hasLoadedLikes = false;
 	likes: Fireside_Post_Like[] = [];
 
 	isShowingShare = false;
 	shareUrl: string;
+	sharePopoverId: string;
 
 	constructor(
 		@Inject( '$state' ) $state: ng.ui.IStateService,
 		@Inject( 'App' ) public app: App,
 		@Inject( 'Environment' ) public env: any,
 		@Inject( 'Clipboard' ) private clipboard: Clipboard,
-		@Inject( 'Scroll' ) private scroll: any,
+		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'Fireside_Post' ) public firesidePostModel: typeof Fireside_Post,
 		@Inject( 'DevlogPostEdit' ) private editService: DevlogPostEdit,
-		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() private feed: FeedComponent | undefined
 	)
 	{
 		this.shareUrl = env.baseUrl + $state.href( 'discover.games.view.devlog.view', {
@@ -43,14 +50,27 @@ export class ControlsComponent
 		} );
 	}
 
+	ngOnInit()
+	{
+		if ( this.requireTabs ) {
+			this.tab = 'comments';
+		}
+
+		this.sharePopoverId = `activity-feed-devlog-post-share-${ this.inModal ? 'modal' : 'no-modal' }-${ this.post.id }`;
+	}
+
 	toggleComments()
 	{
 		// If we aren't in the feed, then don't toggle comments out.
 		// We just scroll to the comments.
-		this.scroll.to( 'comments' );
+		// this.scroll.to( 'comments' );
 
-		this.isShowingComments = !this.isShowingComments;
-		this.isShowingLikes = false;
+		if ( this.tab == 'comments' && !this.requireTabs ) {
+			this.tab = undefined;
+		}
+		else {
+			this.tab = 'comments';
+		}
 
 		if ( this.onExpand ) {
 			this.onExpand();
@@ -59,14 +79,18 @@ export class ControlsComponent
 
 	toggleLikes()
 	{
-		this.isShowingLikes = !this.isShowingLikes;
-		this.isShowingComments = false;
+		if ( this.tab == 'likes' && !this.requireTabs ) {
+			this.tab = undefined;
+		}
+		else {
+			this.tab = 'likes';
+		}
 
 		if ( this.onExpand ) {
 			this.onExpand();
 		}
 
-		if ( this.isShowingLikes ) {
+		if ( this.tab == 'likes' ) {
 			this.loadLikes();
 		}
 	}
@@ -89,10 +113,10 @@ export class ControlsComponent
 	showEdit()
 	{
 		this.editService.show( this.post )
-			.then( ( post: Fireside_Post ) =>
+			.then( () =>
 			{
-				if ( this.feed ) {
-					this.feed.onPostEdited( post );
+				if ( this.onPostEdit ) {
+					this.onPostEdit();
 				}
 			} );
 	}
@@ -102,8 +126,8 @@ export class ControlsComponent
 		this.post.$publish()
 			.then( () =>
 			{
-				if ( this.feed ) {
-					this.feed.onPostPublished( this.post );
+				if ( this.onPostPublish ) {
+					this.onPostPublish();
 				}
 			} );
 	}
@@ -113,8 +137,8 @@ export class ControlsComponent
 		this.post.remove()
 			.then( () =>
 			{
-				if ( this.feed ) {
-					this.feed.onPostRemoved( this.post );
+				if ( this.onPostRemove ) {
+					this.onPostRemove( this.post );
 				}
 			} );
 	}

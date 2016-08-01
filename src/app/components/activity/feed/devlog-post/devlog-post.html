@@ -8,7 +8,7 @@
 
 		<a class="timeline-list-item-header"
 			ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
-			ng-click="$ctrl.onClick()"
+			ng-click="$ctrl._onClick( $event )"
 			>
 			<div class="timeline-list-item-header-content">
 				<div class="devlog-post-game" ng-if="::$ctrl.feed.showGameInfo && !$ctrl.screen.isXs">
@@ -59,7 +59,7 @@
 				<gj-activity-feed-devlog-post-media
 					ng-switch-when="media"
 					item="::$ctrl.item"
-					on-click="$ctrl.onClick()"
+					on-click="$ctrl._onClick( $event )"
 					on-expand="$ctrl.onExpand()"
 					>
 				</gj-activity-feed-devlog-post-media>
@@ -67,7 +67,13 @@
 
 			<gj-activity-feed-devlog-post-controls
 				post="::$ctrl.post"
+				show-game-info="::$ctrl.feed.showGameInfo"
+				show-edit-controls="::$ctrl.feed.showEditControls"
+				show-extra-info="::!$ctrl.screen.isXs"
 				on-expand="$ctrl.onExpand()"
+				on-post-edit="$ctrl.feed.onPostEdited( $ctrl.post )"
+				on-post-publish="$ctrl.feed.onPostPublished( $ctrl.post )"
+				on-post-remove="$ctrl.feed.onPostRemoved( $ctrl.post )"
 				>
 			</gj-activity-feed-devlog-post-controls>
 

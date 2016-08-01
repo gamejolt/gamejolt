@@ -1,92 +1,103 @@
 <!-- Buttons -->
 <div class="devlog-post-controls">
-	<hr>
+	<!--<hr>-->
 
-	<div class="devlog-post-controls-links">
-		<a class="link-muted"
-			ng-click="$ctrl.toggleComments()"
-			ng-switch="$ctrl.post.comment_count > 0"
-			>
-			<span
-				ng-switch-when="true"
-				translate
-				translate-n="$ctrl.post.comment_count"
-				translate-plural="{{ $count | number }} comments"
+	<div class="devlog-post-controls-controls">
+		<div class="pull-left" ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_ACTIVE">
+
+			<!--
+				If we require tabs, then there is no reason to show the reply button.
+			-->
+			<button class="btn btn-outline btn-sparse"
+				ng-if="::!$ctrl.requireTabs"
+				ng-click="$ctrl.toggleComments()"
+				gj-tooltip="{{ 'Comment on This Post' | translate }}"
 				>
-				1 comment
-			</span>
-			<span
-				ng-switch-when="false"
-				translate
+				<span class="jolticon jolticon-comment"></span>
+			</button>
+
+			<gj-fireside-post-like-widget
+				fireside-post="$ctrl.post"
+				sparse="true"
 				>
-				Leave a comment
-			</span>
-		</a>
+			</gj-fireside-post-like-widget>
 
-		<span ng-if="$ctrl.post.like_count > 0">
-			<span class="dot-separator"></span>
-			<a class="link-muted"
-				ng-click="$ctrl.toggleLikes()"
-				translate
-				translate-n="$ctrl.post.like_count"
-				translate-plural="{{ $count | number }} likes"
+			<button class="btn btn-outline btn-sparse" gj-popover-trigger="{{ ::$ctrl.sharePopoverId }}" gj-tooltip="{{ 'Share' | translate }}">
+				<span class="jolticon jolticon-share"></span>
+			</button>
+
+			<gj-popover
+				class="popover-dark"
+				popover-id="{{ ::$ctrl.sharePopoverId }}"
+				popover-append-to-body="::!$ctrl.inModal"
+				popover-on-focus="$ctrl.isShowingShare = true"
+				popover-on-blur="$ctrl.isShowingShare = false"
 				>
-				1 like
-			</a>
-		</span>
 
-		<span ng-if="::$ctrl.feed.showGameInfo">
-			<span class="dot-separator"></span>
-			<a class="link-muted"
-				ui-sref="discover.games.view.overview( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id } )"
-				translate
-				>
-				View game
-			</a>
-		</span>
+				<div class="well sans-margin" ng-if="$ctrl.isShowingShare">
+					<div class="social-widgets" ng-if="::!$ctrl.env.isClient">
+						<gj-social-twitter-share
+							url="{{ ::$ctrl.shareUrl }}"
+							content="{{ ::$ctrl.post.title }}"
+							>
+						</gj-social-twitter-share>
+						<span class="dot-separator"></span>
+						<gj-social-facebook-like
+							url="{{ ::$ctrl.shareUrl }}"
+							>
+						</gj-social-facebook-like>
+					</div>
 
-		<span class="dot-separator hidden-xs"></span>
-		<br class="visible-xs">
-		<br class="visible-xs">
-
-		<a class="link-muted" gj-popover-trigger="activity-feed-devlog-post-share-{{ ::$ctrl.post.id }}">
-			<span class="jolticon jolticon-share"></span>
-			<span translate>Share</span>
-		</a>
-
-		<gj-popover
-			class="popover-dark"
-			popover-id="activity-feed-devlog-post-share-{{ ::$ctrl.post.id }}"
-			popover-append-to-body="true"
-			popover-on-focus="$ctrl.isShowingShare = true"
-			popover-on-blur="$ctrl.isShowingShare = false"
-			>
-
-			<div class="well sans-margin">
-				<div class="social-widgets"
-					ng-if="$ctrl.isShowingShare && !$ctrl.env.isClient"
-					>
-					<gj-social-twitter-share
-						url="{{ ::$ctrl.shareUrl }}"
-						content="{{ ::$ctrl.post.title }}"
+					<button class="btn btn-outline btn-block"
+						ng-click="$ctrl.copyShareUrl()"
+						translate
 						>
-					</gj-social-twitter-share>
-					<span class="dot-separator"></span>
-					<gj-social-facebook-like
-						url="{{ ::$ctrl.shareUrl }}"
-						>
-					</gj-social-facebook-like>
+						Copy Permalink
+					</button>
 				</div>
 
-				<button class="btn btn-outline btn-block"
-					ng-click="$ctrl.copyShareUrl()"
-					translate
-					>
-					Copy Permalink
-				</button>
-			</div>
+			</gj-popover>
+		</div>
 
-		</gj-popover>
+		<div class="pull-right">
+			<gj-game-follow-widget
+				ng-if="::$ctrl.showGameInfo && $ctrl.app.user && $ctrl.post.user.id != $ctrl.app.user.id"
+				game="::$ctrl.post.game"
+				sparse="true"
+				>
+			</gj-game-follow-widget>
+
+			<div ng-if="::$ctrl.showEditControls && $ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
+				<button class="btn btn-success-outline" ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT" ng-click="$ctrl.publishPost()">
+					<span class="jolticon jolticon-check"></span>
+					<span translate>Publish</span>
+				</button>
+				<button class="btn btn-outline" ng-click="$ctrl.showEdit()">
+					<span class="jolticon jolticon-edit"></span>
+					<span translate>Edit</span>
+				</button>
+				<button class="btn btn-outline btn-sparse" gj-popover-trigger="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
+					<span class="jolticon jolticon-ellipsis-h"></span>
+				</button>
+
+				<gj-popover popover-id="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
+					<div class="list-group list-group-dark">
+						<a class="list-group-item has-icon"
+							ng-click="$ctrl.removePost()"
+							>
+							<span class="jolticon jolticon-remove warning"></span>
+							<span translate>Remove Post</span>
+						</a>
+					</div>
+				</gj-popover>
+			</div>
+		</div>
+	</div>
+
+	<!--
+		We don't show this in the feed on mobile.
+	-->
+	<div class="devlog-post-controls-links" ng-if="::$ctrl.showExtraInfo">
 
 		<div class="devlog-post-controls-stats"
 			ng-if="::$ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id"
@@ -115,93 +126,71 @@
 			</span>
 
 		</div>
-	</div>
 
-	<div class="clearfix">
-		<div class="pull-left" ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_ACTIVE">
-			<button class="btn btn-outline btn-sparse"
-				ng-if="::$ctrl.feed"
-				ng-click="$ctrl.toggleComments()"
-				gj-tooltip="Comment on This Post"
-				>
-				<span class="jolticon jolticon-reply"></span>
-			</button>
+		<a class="devlog-post-controls-link"
+			ng-if="$ctrl.post.comment_count > 0"
+			ng-class="{ active: $ctrl.tab == 'comments' }"
+			ng-click="$ctrl.toggleComments()"
+			translate
+			translate-n="$ctrl.post.comment_count"
+			translate-plural="<b>{{ $count | number }}</b> comments"
+			>
+			<b>1</b> comment
+		</a>
 
-			<gj-fireside-post-like-widget
-				fireside-post="$ctrl.post"
-				sparse="true"
-				>
-			</gj-fireside-post-like-widget>
-		</div>
+		<a class="devlog-post-controls-link"
+			ng-if="$ctrl.post.like_count > 0"
+			ng-class="{ active: $ctrl.tab == 'likes' }"
+			ng-click="$ctrl.toggleLikes()"
+			translate
+			translate-n="$ctrl.post.like_count"
+			translate-plural="<b>{{ $count | number }}</b> likes"
+			>
+			<b>1</b> like
+		</a>
 
-		<div class="pull-right">
-			<gj-game-follow-widget
-				ng-if="::$ctrl.feed && $ctrl.feed.showGameInfo && $ctrl.app.user && $ctrl.post.user.id != $ctrl.app.user.id"
-				game="::$ctrl.post.game"
-				>
-			</gj-game-follow-widget>
-
-			<div ng-if="::$ctrl.feed && $ctrl.feed.showEditControls && $ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id">
-				<button class="btn btn-success-outline" ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_DRAFT" ng-click="$ctrl.publishPost()">
-					<span class="jolticon jolticon-check"></span>
-					<span translate>Publish</span>
-				</button>
-				<button class="btn btn-outline" ng-click="$ctrl.showEdit()">
-					<span class="jolticon jolticon-edit"></span>
-					<span translate>Edit</span>
-				</button>
-				<button class="btn btn-outline btn-sparse" gj-popover-trigger="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
-					<span class="jolticon jolticon-ellipsis-h"></span>
-				</button>
-			</div>
-		</div>
+		<a class="devlog-post-controls-link"
+			ng-if="::$ctrl.showGameInfo"
+			ui-sref="discover.games.view.overview( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id } )"
+			translate
+			>
+			View game
+		</a>
 	</div>
 
 </div>
 
-<div ng-if="::$ctrl.feed">
-	<gj-popover popover-id="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
-		<div class="list-group list-group-dark">
-			<a class="list-group-item has-icon"
-				ng-click="$ctrl.removePost()"
+<div class="devlog-post-controls-well" ng-if="$ctrl.tab" ng-switch="$ctrl.tab">
+
+	<gj-comment-widget
+		ng-switch-when="comments"
+		comment-resource="Fireside_Post"
+		comment-resource-id="::$ctrl.post.id"
+		no-intro="true"
+		on-comment-count="$ctrl.post.comment_count = $count"
+		>
+	</gj-comment-widget>
+
+	<div ng-switch-when="likes">
+		<gj-loading ng-if="!$ctrl.hasLoadedLikes"></gj-loading>
+
+		<div ng-if="$ctrl.hasLoadedLikes">
+			<a
+				ng-repeat="like in $ctrl.likes track by like.id"
+				ui-sref="profile.overview( { slug: like.user.slug, id: like.user.id } )"
 				>
-				<span class="jolticon jolticon-remove warning"></span>
-				<span translate>Remove Post</span>
+				<gj-card>
+					<div style="width: 40px; height: 40px; float: left">
+						<div class="friend-request-popover-avatar" gj-user-avatar="::like.user"></div>
+					</div>
+					<div style="margin-left: 55px;">
+						<div class="card-title">
+							<h5>{{ ::like.user.display_name }}</h5>
+						</div>
+					</div>
+				</gj-card>
 			</a>
 		</div>
-	</gj-popover>
-
-	<div class="devlog-post-controls-well" ng-if="$ctrl.isShowingComments">
-		<gj-comment-widget
-			comment-resource="Fireside_Post"
-			comment-resource-id="::$ctrl.post.id"
-			no-intro="true"
-			on-comment-count="$ctrl.post.comment_count = $count"
-			>
-		</gj-comment-widget>
-	</div>
-</div>
-
-<div class="devlog-post-controls-well" ng-if="$ctrl.isShowingLikes">
-
-	<gj-loading ng-if="!$ctrl.hasLoadedLikes"></gj-loading>
-
-	<div ng-if="$ctrl.hasLoadedLikes">
-		<a
-			ng-repeat="like in $ctrl.likes track by like.id"
-			ui-sref="profile.overview( { slug: like.user.slug, id: like.user.id } )"
-			>
-			<gj-card>
-				<div style="width: 40px; height: 40px; float: left">
-					<div class="friend-request-popover-avatar" gj-user-avatar="::like.user"></div>
-				</div>
-				<div style="margin-left: 55px;">
-					<div class="card-title">
-						<h5>{{ ::like.user.display_name }}</h5>
-					</div>
-				</div>
-			</gj-card>
-		</a>
 	</div>
 
 </div>

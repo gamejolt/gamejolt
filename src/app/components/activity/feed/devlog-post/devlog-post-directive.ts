@@ -3,6 +3,7 @@ import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fir
 import { Screen } from './../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { FeedComponent } from './../feed-directive';
 import { ActivityFeedItem } from './../item-service';
+import { DevlogPostViewModal } from './../../../devlog/post/view-modal/view-modal-service';
 import template from 'html!./devlog-post.html';
 
 @Component({
@@ -22,7 +23,8 @@ export class DevlogPostComponent
 
 	constructor(
 		@Inject( 'Screen' ) public screen: Screen,
-		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: FeedComponent
+		@Inject( 'DevlogPostViewModal' ) private viewModal: DevlogPostViewModal,
+		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: FeedComponent,
 	)
 	{
 		this.post = this.item.feedItem as Fireside_Post;
@@ -35,6 +37,14 @@ export class DevlogPostComponent
 		}
 		else if ( this.post.type == 'video' ) {
 			this.icon = 'video';
+		}
+	}
+
+	_onClick( $event: ng.IAngularEvent )
+	{
+		if ( this.screen.isXs ) {
+			this.viewModal.show( this.post );
+			$event.preventDefault();
 		}
 	}
 }

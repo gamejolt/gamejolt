@@ -7,6 +7,23 @@
 		@media $media-xs
 			font-size: $font-size-small
 
+	&-link
+		@extend .link-muted
+
+		& + &
+			&::before
+				@extend .dot-separator
+				content: ''
+
+		&.active
+			font-weight: bold
+			color: $black
+
+	&-controls
+		@extend .clearfix
+		margin-top: $line-height-computed
+		margin-bottom: $line-height-computed
+
 	&-stats
 		@extend .text-muted
 		font-size: $font-size-small

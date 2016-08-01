@@ -15,68 +15,10 @@
 		<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 
 			<section class="section">
-				<div class="tiny text-muted">
-					<span am-time-ago="::viewCtrl.post.published_on"></span>
-				</div>
-
-				<h2 class="section-header">
-					{{ viewCtrl.post.title }}
-				</h2>
-
-				<div ng-switch="viewCtrl.post.type">
-
-					<div ng-switch-when="text" class="fireside-post-body">
-						<div gj-widget-compiler-bind="::viewCtrl.post.content_compiled"></div>
-					</div>
-
-					<div ng-switch-when="media" class="full-bleed-xs">
-						<div ng-repeat="item in ::viewCtrl.post.media track by item.id">
-
-							<div
-								gj-responsive-dimensions
-								responsive-dimensions-ratio="::item.width / item.height"
-								>
-
-								<img
-									ng-if="::!item.is_animated"
-									gj-img-responsive="{{ ::item.mediaserver_url }}"
-									alt=""
-									>
-
-								<gj-devlog-post-media-video-embed
-									ng-if="::item.is_animated"
-									media-item="::item"
-									should-play="true"
-									>
-								</gj-devlog-post-media-video-embed>
-							</div>
-
-							<br>
-
-						</div>
-					</div>
-
-					<div ng-switch-when="video">
-						<gj-video-embed
-							video-provider="youtube"
-							video-id="::viewCtrl.post.videos[0].video_id"
-							autoplay="true"
-							>
-						</gj-video-embed>
-					</div>
-
-				</div>
-
-				<gj-activity-feed-devlog-post-controls post="viewCtrl.post"></gj-activity-feed-devlog-post-controls>
-
-				<br>
-
-				<gj-comment-widget
-					id="comments"
-					comment-resource="Fireside_Post"
-					comment-resource-id="::viewCtrl.post.id"
+				<gj-devlog-post-view
+					post="viewCtrl.post"
 					>
-				</gj-comment-widget>
+				</gj-devlog-post-view>
 			</section>
 
 		</div>

@@ -7,7 +7,6 @@
 			This allows us to bind-once within the post, and still update during changes.
 		-->
 		<div class="timeline-list-item"
-			ng-class="::{ 'anim-fade-in-right no-animate-leave stagger': !$ctrl.wasHistorical }"
 			ng-repeat="item in $ctrl.feed.items track by item.id"
 			id="activity-feed-item-{{ ::item.id }}"
 			in-view="$ctrl.onItemInViewChange( $inview, item )"
