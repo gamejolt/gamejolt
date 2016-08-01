@@ -33,9 +33,8 @@
 					>
 
 				<gj-devlog-post-media-video-embed
-					ng-if="::item.is_animated"
+					ng-if="item.is_animated && $ctrl.shouldVideoPlay( item )"
 					media-item="::item"
-					should-play="$ctrl.shouldVideoPlay( item )"
 					>
 				</gj-devlog-post-media-video-embed>
 			</div>

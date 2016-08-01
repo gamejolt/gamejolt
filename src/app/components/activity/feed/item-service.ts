@@ -1,7 +1,6 @@
 import { Injectable } from 'ng-metadata/core';
 import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { ActivityFeedContainer } from './feed-container-service';
 
 export type ActivityFeedInput = Notification | Fireside_Post;
 
