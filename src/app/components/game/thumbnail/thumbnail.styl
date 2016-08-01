@@ -13,14 +13,6 @@
 gj-game-thumbnail
 	display: block
 
-	&.show-video
-		.game-thumbnail-thumb > img
-		.game-thumbnail-video-tag
-			display: none
-
-		.game-thumbnail-thumb > video
-			display: block
-
 .game-thumbnail
 	position: relative
 	display: block
@@ -29,42 +21,10 @@ gj-game-thumbnail
 	@media $media-sm-up
 		margin-bottom: $grid-gutter-width
 
-	// &-tags
-	// &-buttons
-	// 	@extend .clearfix
-	// 	position: absolute
-	// 	bottom: 0
-	// 	z-index: 2
-
-	// &-tag
-	// &-button
-	// 	float: left
-	// 	padding: 5px
-	// 	padding-bottom: 3px
-	// 	background-color: rgba( $black, 0.8 )
-
-	// &-tags
-	// 	left: 5px
-
-	// &-tag
-	// 	color: $gj-blue
-
-	// &-buttons
-	// 	right: 5px
-	// 	display: none
-
-	// &-button
-	// 	color: $white
-
-	// 	&:hover
-	// 		color: $gj-blue
-
-	// 	& + &
-	// 		margin-left: 5px
-
 	&:hover
 		.game-thumbnail-pricing
 		.game-thumbnail-tag
+		.game-thumbnail-video-tag
 			display: none
 
 	&-controls
@@ -98,6 +58,8 @@ gj-game-thumbnail
 			color: $gray-lighter
 
 		img
+		video
+		gj-video
 			display: block
 			position: absolute
 			left: 0
@@ -107,15 +69,11 @@ gj-game-thumbnail
 			width: 100%
 			height: 100%
 
-		> video
-			display: none
-			position: absolute
-			left: 0
-			right: 0
-			top: 0
-			bottom: 0
-			width: 100%
-			height: 100%
+		img
+			z-index: 1
+
+		video
+			z-index: 2
 
 	&-meta
 		position: relative

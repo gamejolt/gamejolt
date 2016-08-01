@@ -32,11 +32,14 @@
 					ondragstart="return false"
 					>
 
-				<gj-devlog-post-media-video-embed
+				<gj-video
 					ng-if="item.is_animated && $ctrl.shouldVideoPlay( item )"
-					media-item="::item"
+					poster="{{ ::item.mediaserver_url }}"
+					webm="{{ ::item.mediaserver_url_webm }}"
+					mp4="{{ ::item.mediaserver_url_mp4 }}"
+					show-loading="true"
 					>
-				</gj-devlog-post-media-video-embed>
+				</gj-video>
 			</div>
 		</div>
 	</a>

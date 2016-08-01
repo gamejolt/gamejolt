@@ -1,4 +1,8 @@
-<a class="game-thumbnail" ng-href="{{ ::$ctrl.url }}">
+<a class="game-thumbnail"
+	ng-href="{{ ::$ctrl.url }}"
+	ng-mouseenter="$ctrl.isHovered = true"
+	ng-mouseleave="$ctrl.isHovered = false"
+	>
 
 	<div class="game-thumbnail-controls" ng-if="::$ctrl.showControl">
 		<button class="i-button big sparse" tooltip="{{ ::$ctrl.controlLabel }}" ng-click="$ctrl.onControlClick( $event )">
@@ -23,10 +27,13 @@
 
 		<gj-game-thumbnail-img game="::$ctrl.game"></gj-game-thumbnail-img>
 
-		<video ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop" preload loop ng-attr-poster="{{ ::$ctrl.game.img_thumbnail }}">
-			<source ng-src="{{ ::$ctrl.webm }}" type="video/webm">
-			<source ng-src="{{ ::$ctrl.mp4 }}" type="video/mp4">
-		</video>
+		<gj-video
+			ng-if="$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop && $ctrl.isHovered"
+			poster="{{ ::$ctrl.game.img_thumbnail }}"
+			webm="{{ ::$ctrl.game.img_thumbnail_webm }}"
+			mp4="{{ ::$ctrl.game.img_thumbnail_mp4 }}"
+			>
+		</gj-video>
 	</div>
 
 	<div class="game-thumbnail-meta">

@@ -1,4 +1,4 @@
-import { Component, Inject, Input, Output, AfterViewInit } from 'ng-metadata/core';
+import { Component, Inject, Input, Output } from 'ng-metadata/core';
 import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
 import template from 'html!./thumbnail.html';
 
@@ -6,7 +6,7 @@ import template from 'html!./thumbnail.html';
 	selector: 'gj-game-thumbnail',
 	template,
 })
-export class ThumbnailComponent implements AfterViewInit
+export class ThumbnailComponent
 {
 	@Input( '<gjGame' ) game: any;
 	@Input( '@?gjLinkTo' ) linkTo?: string;
@@ -18,15 +18,12 @@ export class ThumbnailComponent implements AfterViewInit
 
 	element: HTMLElement;
 	url: string;
-	webm: string;
-	mp4: string;
 	showControl = false;
+	isHovered = false;
 
 	constructor(
-		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( '$element' ) $element: ng.IAugmentedJQuery,
-		@Inject( '$sce' ) $sce: ng.ISCEService,
-		@Inject( 'Screen' ) private screen: Screen
+		@Inject( 'Screen' ) public screen: Screen
 	)
 	{
 		this.element = $element[0];
@@ -41,40 +38,6 @@ export class ThumbnailComponent implements AfterViewInit
 		if ( this.controlType ) {
 			this.showControl = true;
 		}
-
-		if ( this.game.has_animated_thumbnail ) {
-			this.webm = $sce.trustAsResourceUrl( this.game.img_thumbnail_webm );
-			this.mp4 = $sce.trustAsResourceUrl( this.game.img_thumbnail_mp4 );
-		}
-	}
-
-	ngAfterViewInit()
-	{
-		if ( this.game.has_animated_thumbnail ) {
-			if ( !this.autoplay || this.screen.isXs ) {
-				const $thumb = angular.element( this.element.querySelector( '.game-thumbnail' ) );
-				$thumb.on( 'mouseenter', () => this.playThumbnail() );
-				$thumb.on( 'mouseleave', () => this.stopThumbnail() );
-			}
-			else {
-				this.$scope.$applyAsync( () => this.playThumbnail() );
-			}
-		}
-	}
-
-	playThumbnail()
-	{
-		const videoElem = this.element.querySelector( 'video' ) as HTMLVideoElement;
-		this.element.classList.add( 'show-video' );
-		videoElem.play();
-	}
-
-	stopThumbnail()
-	{
-		const videoElem = this.element.querySelector( 'video' ) as HTMLVideoElement;
-		this.element.classList.remove( 'show-video' );
-		videoElem.currentTime = 0;
-		videoElem.pause();
 	}
 
 	onControlClick( $event: ng.IAngularEvent )
