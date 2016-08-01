@@ -8,6 +8,7 @@ import template from 'html!./follow-widget.html';
 export class FollowWidgetComponent
 {
 	@Input( '<' ) game: any;
+	@Input( '<?' ) sparse = false;
 
 	followTooltip: string;
 	isProcessing = false;
