@@ -36,6 +36,10 @@
 				</div>
 
 				<div ng-switch-when="media">
+					<div class="alert alert-info" translate>
+						Note that at this time we don't allow you to modify the media after you save the post. Make sure it's lookin' good before you save.
+					</div>
+
 					<form-group name="file"
 						ng-if="!hasMediaItems"
 						label="{{ 'Upload Media' | translate }}"
