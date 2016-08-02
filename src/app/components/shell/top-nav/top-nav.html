@@ -69,15 +69,11 @@
 					gj-track-event="top-nav:activity:toggle"
 					gj-activity-notification-count="notificationsCount = $count"
 					>
-					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="notificationsCount">{{ notificationsCount }}</span>
+					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="notificationsCount > 0">
+						{{ notificationsCount < 100 ? notificationsCount : '99+' }}
+					</span>
 					<span class="jolticon jolticon-notifications"></span>
 				</a>
-				<!--<gj-activity-popover
-					on-notifications-count="notificationsCount = $count"
-					on-focus="activityShowing = true"
-					on-blur="activityShowing = false"
-					>
-				</gj-activity-popover>-->
 			</li>
 
 			<!-- Friend Requests -->
