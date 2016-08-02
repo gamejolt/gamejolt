@@ -11,6 +11,8 @@ export class OverviewCtrl
 	games: any[];
 	posts: ActivityFeedContainer;
 
+	isLearnMoreExpanded = false;
+
 	constructor(
 		@Inject( 'App' ) app: App,
 		@Inject( 'Meta' ) meta: Meta,

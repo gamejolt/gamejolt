@@ -61,9 +61,12 @@
 						<span translate>View Devlogs</span>
 					</a>
 
-					<a href="http://gamejolt.com/client" class="btn btn-sm btn-outline" gj-track-event="home:devlogs-banner:learn">
+					<button class="btn btn-sm btn-outline"
+						ng-click="homeCtrl.isDevlogsExpanded = !homeCtrl.isDevlogsExpanded"
+						gj-track-event="home:devlogs-banner:learn"
+						>
 						<span translate>Learn More</span>
-					</a>
+					</button>
 
 					<a class="devlogs-banner-mascot hidden-xs" ui-sref="discover.devlogs.overview" gj-track-event="home:devlogs-banner:devlogs">
 						<img src="/app/views/discover/home/banner-tadpole.png" width="68" height="68" alt="">
@@ -73,6 +76,43 @@
 		</div>
 	</div>
 </section>
+
+<div gj-expand-when="homeCtrl.isDevlogsExpanded">
+	<section class="section section-thin fill-darkest">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 col-centered">
+
+					<div class="full-bleed-xs">
+						<gj-video-embed video-provider="youtube" video-id="'aAk_PEghHXk'" autoplay="true"></gj-video-embed>
+					</div>
+
+					<br><br>
+
+					<p class="text-center">
+						<a class="btn btn-primary-outline"
+							ng-class="{ 'btn-block': Screen.isXs }"
+							ui-sref="discover.devlogs.overview"
+							gj-track-event="home:devlogs-banner:video-devlogs"
+							>
+							<span class="jolticon jolticon-chevron-right"></span>
+							View Devlogs
+						</a>
+						<a class="btn btn-success-outline"
+							ng-class="{ 'btn-block': Screen.isXs }"
+							href="/dashboard/games/add"
+							gj-track-event="home:devlogs-banner:video-add"
+							>
+							<span class="jolticon jolticon-add"></span>
+							Add Devlog
+						</a>
+					</p>
+
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
 
 <gj-discover-home-featured featured-items="homeCtrl.featuredItems"></gj-discover-home-featured>
 

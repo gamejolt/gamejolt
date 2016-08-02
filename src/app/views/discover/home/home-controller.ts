@@ -15,6 +15,8 @@ export class HomeCtrl
 
 	firesidePosts: any[];
 
+	isDevlogsExpanded = false;
+
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'App' ) app: App,
