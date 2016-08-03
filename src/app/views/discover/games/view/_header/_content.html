@@ -33,7 +33,7 @@
 			The ng-repeat makes sure that the widget gets updated any time the rating changes
 			on the page while still doing a bind once.
 		-->
-		<span ng-if="::gameCtrl.game.ratings_enabled">
+		<span ng-if="::!gameCtrl.game._is_devlog && gameCtrl.game.ratings_enabled">
 			<span class="dot-separator"></span>
 			<gj-meter
 				class="meter-dark meter-big"
