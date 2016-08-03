@@ -114,7 +114,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 			var field = pieces.pop();
 			var obj = scope.stripe.current;
 
-			for ( var i in pieces ) {
+			for ( var i = 0; i < pieces.length; ++i ) {
 				if ( !obj[ pieces[ i ] ] ) {
 					return undefined;
 				}

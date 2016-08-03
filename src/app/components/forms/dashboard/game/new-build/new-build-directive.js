@@ -34,7 +34,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewBuild'
 
 				// ROM types can change, so we pull from server.
 				if ( payload.romTypes ) {
-					for ( var i in payload.romTypes ) {
+					for ( var i = 0; i < payload.romTypes.length; ++i ) {
 						var ext = payload.romTypes[ i ];
 						browserTypes[ ext ] = Game_Build.TYPE_ROM;
 					}
