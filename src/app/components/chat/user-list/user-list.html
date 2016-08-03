@@ -3,7 +3,7 @@
 	<div class="nav-controls">
 		<input text="search"
 			class="form-control"
-			placeholder="Filter..."
+			placeholder="{{ 'Filter...' | translate }}"
 			ng-model="ctrl.filterQuery"
 			>
 	</div>
@@ -58,10 +58,10 @@
 
 				<!-- Only show tags in room user lists -->
 				<span ng-if="::ctrl.room">
-					<span class="chat-user-role tag tag-active" ng-if="::user.isMod == 'owner'" tooltip="Room Admin">A</span>
-					<span class="chat-user-role tag tag-active" ng-if="::user.isMod == 'moderator'" tooltip="Room Moderator">M</span>
-					<span class="chat-user-role tag tag-active" ng-if="::user.permissionLevel >= ChatConfig.SITE_MOD_PERMISSION" tooltip="Site Moderator">S</span>
-					<span class="chat-user-role tag tag-pink" ng-if="::ctrl.showModTools && (user.isMutedRoom || user.isMutedGlobal)" tooltip="Muted">
+					<span class="chat-user-role tag tag-active" ng-if="::user.isMod == 'owner'" tooltip="{{ 'Room Admin' | translate }}">A</span>
+					<span class="chat-user-role tag tag-active" ng-if="::user.isMod == 'moderator'" tooltip="{{ 'Room Moderator' | translate }}">M</span>
+					<span class="chat-user-role tag tag-active" ng-if="::user.permissionLevel >= ChatConfig.SITE_MOD_PERMISSION" tooltip="{{ 'Site Moderator' | translate }}">S</span>
+					<span class="chat-user-role tag tag-pink" ng-if="::ctrl.showModTools && (user.isMutedRoom || user.isMutedGlobal)" tooltip="{{ 'Muted' | translate }}">
 						&#x274C;
 					</span>
 				</span>
@@ -90,6 +90,7 @@
 					<span class="btn btn-sm btn-outline"
 						ng-if="::!user.isMutedRoom && Chat.client.canModerate( ctrl.room, user, 'mute' )"
 						ng-click="ctrl.mute( ctrl.moderatingUser )"
+						translate
 						>
 						Mute
 					</span>
@@ -97,6 +98,7 @@
 					<span class="btn btn-sm btn-outline"
 						ng-if="::user.isMutedRoom && Chat.client.canModerate( ctrl.room, user, 'mute' )"
 						ng-click="ctrl.unmute( ctrl.moderatingUser )"
+						translate
 						>
 						Unmute
 					</span>
@@ -104,6 +106,7 @@
 					<span class="btn btn-sm btn-outline"
 						ng-if="::!user.isMod && Chat.client.canModerate( ctrl.room, user, 'mod' )"
 						ng-click="ctrl.mod( ctrl.moderatingUser )"
+						translate
 						>
 						Mod
 					</span>
@@ -111,12 +114,13 @@
 					<span class="btn btn-sm btn-outline"
 						ng-if="::!!user.isMod && Chat.client.canModerate( ctrl.room, user, 'mod' )"
 						ng-click="ctrl.demod( ctrl.moderatingUser )"
+						translate
 						>
 						Demod
 					</span>
 				</div>
 
-				<div ng-if="::!ctrl.canModerate( ctrl.moderatingUser )">
+				<div ng-if="::!ctrl.canModerate( ctrl.moderatingUser )" translate>
 					You don't have the correct permissions to moderate this user.
 				</div>
 			</div>
