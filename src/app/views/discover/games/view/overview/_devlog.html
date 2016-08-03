@@ -1,3 +1,8 @@
+<!-- Media Bar -->
+<div ng-if="gameCtrl.game.media_count">
+	<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
+</div>
+
 <section class="section section-thin text-left" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
 	<div class="container">
 		<div class="row">
