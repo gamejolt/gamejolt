@@ -1,6 +1,11 @@
 import { Injectable } from 'ng-metadata/core';
 
-export function SearchPayloadFactory( $injector, Environment, User, Game )
+export function SearchPayloadFactory(
+	$injector: any,
+	Environment: any,
+	User: any,
+	Game: any,
+)
 {
 	SearchPayload.$injector = $injector;
 	SearchPayload.Environment = Environment;
@@ -21,7 +26,7 @@ export class SearchPayload
 	games: any[];
 	libraryGames: any[];
 
-	constructor( private type: string, data: any )
+	constructor( public type: string, data: any )
 	{
 		if ( data ) {
 			angular.extend( this, data );

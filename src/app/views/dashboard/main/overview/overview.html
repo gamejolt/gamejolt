@@ -8,14 +8,24 @@
 					Broadcast
 				-->
 				<div ng-if="::overviewCtrl.latestBroadcast">
-					<a class="broadcast" ng-href="{{ ::overviewCtrl.latestBroadcast.url }}" gj-track-event="dash:overview:broadcast-view">
-						<span class="jolticon jolticon-broadcast big"></span>
-						<h4 class="broadcast-heading">{{ ::overviewCtrl.latestBroadcast.title }}</h4>
-						<div class="broadcast-lead">{{ ::overviewCtrl.latestBroadcast.lead }}</div>
+					<a ng-href="{{ ::overviewCtrl.latestBroadcast.url }}" gj-track-event="dash:overview:broadcast-view">
+						<gj-card>
+							<div class="row">
+								<div class="col-xs-10">
+									<div class="card-title">
+										<h4>{{ ::overviewCtrl.latestBroadcast.title }}</h4>
+									</div>
+									<div class="card-content">Testing this out now okay{{ ::overviewCtrl.latestBroadcast.lead }}</div>
+								</div>
+								<div class="col-xs-2 text-center">
+									<span class="jolticon jolticon-broadcast big"></span>
+								</div>
+							</div>
+						</gj-card>
 					</a>
 
-					<div class="text-right">
-						<a class="link-muted small" ng-href="{{ ::Environment.firesideBaseUrl }}/tag/gjbroadcast" gj-track-event="dash:overview:broadcast-all">{{ ::'dash.overview.broadcast_view_all' | translate }}</a>
+					<div class="text-right small">
+						<a class="link-muted" ng-href="{{ ::Environment.firesideBaseUrl }}/tag/gjbroadcast" gj-track-event="dash:overview:broadcast-all">{{ ::'dash.overview.broadcast_view_all' | translate }}</a>
 					</div>
 				</div>
 
@@ -176,57 +186,212 @@
 				</div>
 
 				<!--
-					Activity Feed
-				-->
-				<h2>
-					<a class="link-unstyled" ui-sref="dashboard.activity.list( { tab: 'all' } )">{{ ::'dash.overview.activity_heading' | translate }}</a>
-				</h2>
-
-				<gj-activity-feed
-					ng-if="overviewCtrl.activityNotifications.length"
-					activity-feed-notifications="overviewCtrl.activityNotifications"
-					>
-				</gj-activity-feed>
-
-				<div class="alert alert-info" ng-if="!overviewCtrl.activityNotifications.length" translate>dash.overview.activity_no_activity_html</div>
-
-				<a class="btn btn-outline btn-block" ui-sref="dashboard.activity.list( { tab: 'all' } )" gj-track-event="dash:overview:all-activity">
-					<span class="jolticon jolticon-notifications"></span>
-					{{ ::'dash.overview.activity_view_all_button' | translate }}
-				</a>
-
-			</div>
-			<div class="col-md-5" ng-class="{ 'pull-right': Screen.isDesktop }" style="clear: right">
-
-				<!--
 					Manage Games
 				-->
-				<div ng-if="::App.user.is_developer">
-					<h2>
-						{{ ::'dash.overview.developer_games_heading' | translate }}
-						<small>({{ overviewCtrl.games.length | number }})</small>
-					</h2>
+				<h2 translate>
+					Your Games
+				</h2>
 
-					<div>
-						<a class="btn btn-success-outline btn-block" ui-sref="dashboard.developer.games.add" gj-track-event="dash:overview:quick-add-game">
-							<span class="jolticon jolticon-add"></span>
-							{{ ::'dash.overview.developer_games_add_button' | translate }}
-						</a>
+				<div ng-if="!overviewCtrl.games.length">
+					<div class="page-help">
+						<p translate>Are you a developer? Add your free or commercial game to the site!</p>
 					</div>
+				</div>
+
+				<div>
+					<a class="btn btn-success-outline"
+						ui-sref="dashboard.developer.games.add"
+						gj-track-event="dash:overview:quick-add-game"
+						>
+						<span class="jolticon jolticon-add"></span>
+						<span translate>Add Game</span>
+					</a>
+				</div>
+
+				<div ng-if="overviewCtrl.games.length > 0">
 					<br>
 
-					<div class="list-group" ng-if="overviewCtrl.games.length">
-						<a class="list-group-item has-icon"
-							ng-repeat="game in overviewCtrl.games | orderBy:'posted_on':true track by game.id"
-							ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
-							gj-track-event="dash:overview:quick-game"
-							>
-							<span class="jolticon jolticon-chevron-right"></span>
-							{{ ::game.title }}
-						</a>
+					<gj-card ng-repeat="game in overviewCtrl.games | orderBy:'posted_on':true | limitTo:(overviewCtrl.gamesExpanded ? undefined : 5) track by game.id">
+						<div class="row">
+							<div class="col-xs-3">
+								<gj-game-thumbnail-img game="::game"></gj-game-thumbnail-img>
+							</div>
+							<div class="col-xs-9">
+								<div class="card-title">
+									<h4>
+										<a
+											ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
+											gj-track-event="dash:overview:quick-game"
+											>
+											{{ ::game.title }}
+										</a>
+									</h4>
+								</div>
+								<div class="card-controls">
+									<a class="btn btn-outline btn-sm"
+										ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
+										gj-track-event="dash:overview:quick-game"
+										>
+										<span class="jolticon jolticon-cog"></span>
+										<span translate>Manage Game</span>
+									</a>
+									<a class="btn btn-outline btn-sm"
+										gj-track-event="dash:overview:quick-game-analytics"
+										ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: game.id } )"
+										>
+										<span class="jolticon jolticon-chart"></span>
+										<span translate>View Analytics</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</gj-card>
+
+					<div class="page-cut" ng-if="!overviewCtrl.gamesExpanded && overviewCtrl.games.length > 5">
+						<button class="btn btn-outline" ng-click="overviewCtrl.gamesExpanded = true" gj-track-event="dash:overview:expand-games">
+							<span class="btn-badge">
+								{{ overviewCtrl.games.length | number }}
+							</span>
+							<span translate>Expand All</span>
+						</button>
+					</div>
+				</div>
+
+
+				<!--
+					Video Comments
+				-->
+				<h2 translate>Your Video Comments</h2>
+
+				<div ng-if="!overviewCtrl.videos.length">
+					<div class="page-help">
+						<p translate>Are you a let's player? Add your YouTube videos through video comments!</p>
 					</div>
 
-					<div class="alert alert-warning full-bleed-xs" ng-if="!overviewCtrl.games.length" translate>dash.overview.developer_games_no_games_html</div>
+					<div>
+						<a class="btn btn-outline" href="https://help.gamejolt.com/video-comments" target="_blank">
+							<span translate>Learn More</span>
+						</a>
+					</div>
+				</div>
+
+				<div ng-if="overviewCtrl.videos.length > 0">
+					<div class="row">
+						<gj-comment-video-thumbnail
+							class="col-xs-6"
+							ng-repeat="video in overviewCtrl.videos | limitTo:4 track by video.id"
+							video="video"
+							>
+						</gj-comment-video-thumbnail>
+					</div>
+
+					<div class="page-cut">
+						<a class="btn btn-outline"
+							ui-sref="profile.videos( { slug: App.user.slug, id: App.user.id } )"
+							gj-track-event="dash:overview:expand-videos"
+							>
+							<span class="btn-badge">
+								{{ overviewCtrl.videosCount | number }}
+							</span>
+							<span translate>View All</span>
+						</a>
+					</div>
+				</div>
+
+				<!--
+					Game Jams
+				-->
+				<h2 translate>Your Game Jams</h2>
+
+				<div ng-if="!overviewCtrl.jams.length">
+					<div class="page-help">
+						<p translate>Got an idea for a game jam? You're already almost done. Simple and powerful, host your jam through Game Jolt!</p>
+					</div>
+				</div>
+
+				<div>
+					<a class="btn btn-success-outline" href="http://jams.gamejolt.com/manage/jams/add" target="_blank">
+						<span class="jolticon jolticon-add"></span>
+						<span translate>Create Jam</span>
+					</a>
+					<a ng-if="!overviewCtrl.jams.length" class="btn btn-outline" href="http://jams.gamejolt.com" target="_blank">
+						<span translate>Learn More</span>
+					</a>
+				</div>
+
+				<div ng-if="overviewCtrl.jams.length > 0">
+					<br>
+
+					<gj-card ng-repeat="jam in overviewCtrl.jams | limitTo:(overviewCtrl.jamsExpanded ? undefined : 5) track by jam.id">
+						<div class="card-title">
+							<h4>
+								<a
+									ng-href="{{ jam.manageUrl }}"
+									gj-track-event="dash:overview:quick-jam"
+									>
+									{{ ::jam.name }}
+								</a>
+							</h4>
+						</div>
+						<div class="card-controls">
+							<a class="btn btn-outline btn-sm"
+								ng-href="{{ jam.manageUrl }}"
+								gj-track-event="dash:overview:quick-jam"
+								>
+								<span class="jolticon jolticon-cog"></span>
+								<span translate>Manage Jam</span>
+							</a>
+							<a class="btn btn-outline btn-sm"
+								ng-href="{{ jam.fullUrl }}"
+								gj-track-event="dash:overview:quick-jam-view"
+								>
+								<span class="jolticon jolticon-share"></span>
+								<span translate>View Jam</span>
+							</a>
+						</div>
+					</gj-card>
+
+					<div class="page-cut" ng-if="!overviewCtrl.jamsExpanded && overviewCtrl.jams.length > 5">
+						<button class="btn btn-outline" ng-click="overviewCtrl.jamsExpanded = true" gj-track-event="dash:overview:expand-jams">
+							<span class="btn-badge">
+								{{ overviewCtrl.jams.length | number }}
+							</span>
+							<span translate>Expand All</span>
+						</button>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="col-md-5" ng-class="{ 'pull-right': Screen.isDesktop }" style="clear: right">
+
+				<h2>
+					<a ui-sref="dashboard.account.edit" class="link-unstyled">
+						<span translate>Edit Account</span>
+					</a>
+				</h2>
+
+				<div class="list-group">
+					<a class="list-group-item has-icon" ui-sref="dashboard.account.edit">
+						<span class="jolticon jolticon-edit"></span>
+						<span translate>Edit Profile</span>
+					</a>
+					<a class="list-group-item has-icon" ui-sref="dashboard.account.avatar">
+						<span class="jolticon jolticon-user"></span>
+						<span translate>Change Avatar</span>
+					</a>
+					<a class="list-group-item has-icon" ui-sref="dashboard.account.linked-accounts">
+						<span class="jolticon jolticon-link"></span>
+						<span translate>Linked Accounts</span>
+					</a>
+					<a class="list-group-item has-icon" ui-sref="dashboard.account.email-preferences">
+						<span class="jolticon jolticon-email"></span>
+						<span translate>Email Preferences</span>
+					</a>
+					<a class="list-group-item has-icon" ui-sref="dashboard.account.change-password">
+						<span class="jolticon jolticon-key-diagonal"></span>
+						<span translate>Change Password</span>
+					</a>
 				</div>
 
 			</div>

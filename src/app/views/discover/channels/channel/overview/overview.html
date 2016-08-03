@@ -29,16 +29,14 @@
 			</div>
 		</div>
 
-		<div class="row">
-			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-				<a class="btn btn-primary-outline btn-block"
-					ui-sref="discover.channels.channel.games._fetch( { section: 'best' } )"
-					gj-track-event="channel:more-btn:best"
-					translate
-					>
-					Load More
-				</a>
-			</div>
+		<div class="page-cut">
+			<a class="btn btn-outline"
+				ui-sref="discover.channels.channel.games._fetch( { section: 'best' } )"
+				gj-track-event="channel:more-btn:best"
+				translate
+				>
+				Load More
+			</a>
 		</div>
 
 	</div>
@@ -71,15 +69,41 @@
 			</div>
 		</div>
 
+		<div class="page-cut">
+			<a class="btn btn-outline"
+				ui-sref="discover.channels.channel.games._fetch( { section: 'hot' } )"
+				gj-track-event="channel:more-btn:hot"
+				translate
+				>
+				Load More
+			</a>
+		</div>
+
+	</div>
+</section>
+
+<section class="section">
+	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-				<a class="btn btn-primary-outline btn-block"
-					ui-sref="discover.channels.channel.games._fetch( { section: 'hot' } )"
-					gj-track-event="channel:more-btn:hot"
-					translate
+			<div class="col-lg-7 col-centered">
+
+				<h2 class="section-header" translate>
+					Hot Posts
+				</h2>
+
+				<gj-activity-feed
+					ng-if="overviewCtrl.posts.hasItems"
+					type="Fireside_Post"
+					items="overviewCtrl.posts"
+					load-more-url="/web/discover/channels/posts/{{ channelCtrl.channel }}"
+					show-game-info="true"
 					>
-					Load More
-				</a>
+				</gj-activity-feed>
+
+				<div class="alert alert-info" ng-if="!overviewCtrl.posts.hasItems" translate>
+					This channel doesn't have any posts yet.
+				</div>
+
 			</div>
 		</div>
 

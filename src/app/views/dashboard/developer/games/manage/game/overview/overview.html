@@ -1,106 +1,62 @@
 <div class="row">
 	<div class="col-lg-8">
-		<h2 class="section-header">{{ ::'dash.games.overview.todo_heading' | translate }}</h2>
 
-		<p class="small" translate translate-params-completion="overviewCtrl.todoPercentage">dash.games.overview.todo_lead_html</p>
-
-		<div class="progress progress-thin">
-			<div class="progress-bar"
-				ng-repeat="todoItem in overviewCtrl.todoItems"
-				ng-style="{ width: todoItem.percentage + '%' }"
-				ng-if="todoItem.status"
-				tooltip="{{ todoItem.progressLabel }}"></div>
+		<div class="alert alert-success" ng-if="manageCtrl.game.is_published">
+			<span class="jolticon jolticon-check"></span>
+			<span translate>This game page is published to the site.</span>
 		</div>
 
-		<!--
-			We only show todo steps if they didn't finish them all.
-		-->
-		<div ng-if="todoPercentage != 100">
+		<!-- Show a little message if they still have builds being processed. -->
+		<div class="alert alert-info" ng-if="overviewCtrl.hasBuildsProcessing"
+			gj-progress-poller="/web/dash/developer/games/poll-build-progress/{{ manageCtrl.game.id }}"
+			progress-poller-on-complete="overviewCtrl.onAllBuildsProcessed()"
+			>
+			<div class="progress progress-thin progress-striped active">
+				<div class="progress-bar" style="width: 100%"></div>
+			</div>
+			<p>
+				<span class="jolticon jolticon-notice"></span>
+				<span translate>dash.games.overview.todo_info_builds_processing_html</span>
+			</p>
+		</div>
 
-			<div class="alert alert-info" ng-if="manageCtrl.game.is_published" translate>dash.games.overview.todo_additional_html</div>
+		<!-- Ready to publish! -->
+		<div gj-expand-when="!manageCtrl.game.is_published && manageCtrl.canPublish">
+			<div class="alert alert-success">
+				<p translate>
+					Your game page is ready to publish to the site for all to see!
+				</p>
 
-			<table class="table">
-				<tbody>
-					<tr
-						ng-repeat="todoItem in overviewCtrl.todoItems"
-						ng-if="(!manageCtrl.game.is_published && todoItem.level != 'additional') || (manageCtrl.game.is_published && !todoItem.status)"
+				<div class="alert-actions">
+					<button class="btn btn-success-outline btn-block btn-dark-variant"
+						gj-tooltip="{{ 'dash.games.overview.todo_info_publish_button_tooltip' | translate }}"
+						ng-click="manageCtrl.publish()"
 						>
-						<td style="width: 1px">
-							<span class="jolticon jolticon-check" ng-class="todoItem.status ? 'active' : 'text-muted'"></span>
-						</td>
-						<td>
-							<span ng-if="todoItem.status" class="tag tag-active pull-right">
-								<span class="jolticon jolticon-check"></span>
-								{{ ::'dash.games.overview.todo_done' | translate }}
-							</span>
-							<span ng-if="todoItem.level && !todoItem.status && todoItem.level != 'additional'" class="tag pull-right" ng-class="{ 'tag-pink': todoItem.level == 'required' }">
-								<span ng-if="todoItem.level == 'required'">{{ ::'dash.games.overview.todo_required' | translate }}</span>
-								<span ng-if="todoItem.level == 'recommended' && !manageCtrl.game.is_published">{{ ::'dash.games.overview.todo_recommended' | translate }}</span>
-								<span ng-if="todoItem.level == 'recommended' && manageCtrl.game.is_published">{{ ::'dash.games.overview.todo_highly_recommended' | translate }}</span>
-							</span>
-							<a class="link-unstyled" ng-href="{{ todoItem.href }}">
-								{{ todoItem.title }}
-							</a>
-							<span ng-if="todoItem.meta">
-								<br>
-								<span class="small text-muted">{{ todoItem.meta }}</span>
-							</span>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-
-		</div>
-
-		<div gj-expand-when="!manageCtrl.game.is_published">
-
-			<!-- Game isn't ready to publish yet. -->
-			<div class="alert alert-warning" ng-if="!overviewCtrl.isPublishable">
-				<p ng-if="manageCtrl.game.development_status == Game.DEVELOPMENT_STATUS_WIP"
-					translate
-					translate-params-thumbnail-url="$state.href( '^.thumbnail' )"
-					translate-params-maturity-url="$state.href( '^.maturity' )"
-					translate-params-builds-url="$state.href( '^.^.packages' )"
-					>
-					dash.games.overview.todo_info_wip_html
-				</p>
-
-				<p ng-if="manageCtrl.game.development_status != Game.DEVELOPMENT_STATUS_WIP"
-					translate
-					translate-params-thumbnail-url="$state.href( '^.thumbnail' )"
-					translate-params-maturity-url="$state.href( '^.maturity' )"
-					translate-params-builds-url="$state.href( '^.^.packages' )"
-					>
-					dash.games.overview.todo_info_html
-				</p>
-			</div>
-
-			<!-- Ready to publish! -->
-			<div ng-if="overviewCtrl.isPublishable">
-				<div class="alert alert-success" ng-if="!overviewCtrl.hasBuildsProcessing">
-					<p translate>dash.games.overview.todo_info_ready_html</p>
+						<span class="jolticon jolticon-active"></span>
+						<span translate>dash.games.overview.todo_info_publish_button</span>
+					</button>
 				</div>
-
-				<!-- Show a little message if they still have builds being processed. -->
-				<div class="alert alert-info" ng-if="overviewCtrl.hasBuildsProcessing"
-					gj-progress-poller="/web/dash/developer/games/poll-build-progress/{{ manageCtrl.game.id }}"
-					progress-poller-on-complete="overviewCtrl.onAllBuildsProcessed()"
-					>
-					<div class="progress progress-thin progress-striped active">
-						<div class="progress-bar" style="width: 100%"></div>
-					</div>
-					<p>
-						<span class="jolticon jolticon-notice"></span>
-						<span translate>dash.games.overview.todo_info_builds_processing_html</span>
-					</p>
-				</div>
-
-				<button class="i-button block" gj-tooltip="{{ 'dash.games.overview.todo_info_publish_button_tooltip' | translate }}" ng-click="overviewCtrl.publish()">
-					<span class="jolticon jolticon-active"></span>
-					{{ ::'dash.games.overview.todo_info_publish_button' | translate }}
-				</button>
 			</div>
 		</div>
+
+		<div gj-expand-when="manageCtrl.game.canceled">
+			<div class="alert alert-info">
+				<p translate>
+					Your game is set as being a canceled game. You can transition back to a normal game page at any time!
+				</p>
+
+				<div class="alert-actions">
+					<button class="btn btn-success-outline btn-block btn-dark-variant"
+						gj-tooltip="{{ 'This will make your game active again.' | translate }}"
+						ng-click="manageCtrl.uncancel()"
+						>
+						<span class="jolticon jolticon-active"></span>
+						<span translate>Uncancel Game</span>
+					</button>
+				</div>
+			</div>
+		</div>
+
 	</div>
 </div>
 
@@ -177,7 +133,7 @@
 						{{ ::'dash.games.overview.stats_followers' | translate }}
 					</div>
 					<div class="stat-big-digit">
-						{{ overviewCtrl.followerCount | number }}
+						{{ manageCtrl.game.follower_count | number }}
 					</div>
 				</div>
 			</div>
@@ -190,4 +146,69 @@
 		<span class="jolticon jolticon-chart"></span>
 		<span translate>View Game Analytics</span>
 	</a>
+</div>
+
+
+<div class="row">
+	<div class="col-lg-8">
+
+		<h2 translate>Development Stage</h2>
+
+		<gj-form-dashboard-game-dev-stage-selector
+			game="manageCtrl.game"
+			>
+		</gj-form-dashboard-game-dev-stage-selector>
+
+		<h2>
+			<span translate>Danger Zone</span>
+			<span class="jolticon jolticon-notice big warning"></span>
+		</h2>
+
+		<div gj-expand-when="manageCtrl.game.status != Game.STATUS_HIDDEN">
+			<h4>Hide Game</h4>
+
+			<div class="page-help" translate>
+				<p>Your game page is currently published and active. You can hide it to remove it from the game listings. People with the link will still be able to view it.</p>
+			</div>
+
+			<button class="btn btn-danger-outline"
+				ng-click="manageCtrl.hide()"
+				>
+				Hide Game
+			</button>
+		</div>
+
+		<div gj-expand-when="!manageCtrl.game.canceled">
+			<h4>Cancel Game</h4>
+
+			<div class="page-help" translate>
+				<p>Canceling your game will signal to everyone that you're no longer working on it. People will still be able to view the game page and access your published packages, but it will not show in game listings.</p>
+				<p>If you've transitioned development off of Game Jolt, you must remove your game instead.</p>
+			</div>
+
+			<button class="btn btn-danger-outline"
+				ng-click="manageCtrl.cancel()"
+				>
+				Cancel Game
+			</button>
+		</div>
+
+		<h4>Remove Game</h4>
+
+		<div class="page-help" translate>
+			<p>Removing your game page will remove it from the site completely. <b>This is permanent!</b></p>
+		</div>
+
+		<div class="alert alert-info" ng-if="manageCtrl.game.has_sales">
+			You can't remove games with active sales at this time.
+		</div>
+
+		<button class="btn btn-danger-outline"
+			ng-click="manageCtrl.removeGame()"
+			ng-disabled="manageCtrl.game.has_sales"
+			>
+			Remove Game
+		</button>
+
+	</div>
 </div>

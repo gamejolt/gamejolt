@@ -2,7 +2,8 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameImage', f
 {
 	var form = new Form( {
 		model: 'Game_Screenshot',
-		template: '/app/components/forms/dashboard/game/image/image.html'
+		template: '/app/components/forms/dashboard/game/image/image.html',
+		resetOnSubmit: true,
 	} );
 
 	form.scope.game = '=gjGame';
@@ -15,11 +16,12 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameImage', f
 		// Only on adding can they send in the file.
 		if ( scope.method == 'add' ) {
 			if ( !scope.isLoaded ) {
-				Api.sendRequest( '/web/dash/developer/games/media/save/image/' + scope.formModel.game_id ).then( function( payload )
-				{
-					scope.isLoaded = true;
-					angular.extend( scope, payload );
-				} );
+				Api.sendRequest( '/web/dash/developer/games/media/save/image/' + scope.formModel.game_id )
+					.then( function( payload )
+					{
+						scope.isLoaded = true;
+						angular.extend( scope, payload );
+					} );
 			}
 		}
 		else {

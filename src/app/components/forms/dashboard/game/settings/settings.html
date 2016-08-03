@@ -48,6 +48,12 @@
 		</form-group>
 
 		<form-group name="ratings_enabled" label="{{ 'dash.games.settings.ratings_label' | translate }}">
+
+			<div class="alert alert-info" ng-if="baseModel._is_devlog">
+				<span class="jolticon jolticon-notice warning"></span>
+				<span class="translate"><b>Users can't rate devlog-only games.</b> Enable or disable ratings for when you're ready to transition to early access or a complete game.</span>
+			</div>
+
 			<div class="help-block" translate>dash.games.settings.ratings_help_html</div>
 
 			<gj-toggle-switch
@@ -58,10 +64,25 @@
 			</gj-toggle-switch>
 		</form-group>
 
-		<button gj-form-submit-button class="btn btn-outline" ng-disabled="!settingsForm.$valid" ng-click="onSubmit()">
+		<button
+			ng-if="!isWizard"
+			gj-form-submit-button
+			class="btn btn-outline"
+			ng-disabled="!settingsForm.$valid"
+			ng-click="onSubmit()"
+			>
 			<span class="jolticon jolticon-edit"></span>
-			{{ 'dash.games.settings.save_button' | translate }}
+			<span translate>dash.games.settings.save_button</span>
 		</button>
+
+		<div ng-if="isWizard">
+			<gj-form-dashboard-game-wizard-controls
+				game="formModel"
+				can-proceed="settingsForm.$valid"
+				on-next="onSubmit()"
+				>
+			</gj-form-dashboard-game-wizard-controls>
+		</div>
 
 	</gj-form-loader>
 </form>

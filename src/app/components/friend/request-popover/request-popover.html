@@ -1,0 +1,128 @@
+<gj-popover
+	class="shell-popover shell-card-popover popover-dark"
+	popover-id="friend-requests"
+	popover-append-to-body="true"
+	popover-position-by="position"
+	popover-on-focus="$ctrl.onFocus()"
+	popover-on-blur="$ctrl.onBlur()"
+	popover-hide-on-state-change="true"
+	>
+
+	<div class="shell-card-popover-well">
+
+		<nav class="platform-list inline nav-justified no-animate">
+			<ul>
+				<li>
+					<a ng-class="{ active: $ctrl.activeTab == 'requests' }"
+						ng-click="$ctrl.setActiveTab( 'requests' )"
+						translate
+						>
+						Friend Requests
+						<span class="badge">{{ $ctrl.requestsCount }}</span>
+					</a>
+				</li>
+				<li ng-if="$ctrl.pending.length">
+					<a ng-class="{ active: $ctrl.activeTab == 'pending' }"
+						ng-click="$ctrl.setActiveTab( 'pending' )"
+						translate
+						>
+						Sent Requests
+						<span class="badge">{{ $ctrl.pending.length }}</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+		<div ng-if="$ctrl.isLoading && $ctrl.isShown">
+			<br>
+			<gj-loading class="loading-centered"></gj-loading>
+		</div>
+
+		<!-- Requests -->
+		<div ng-if="!$ctrl.isLoading && $ctrl.activeTab == 'requests'">
+
+			<div ng-if="$ctrl.isShown && $ctrl.requests.length">
+
+				<a
+					ng-repeat="request in $ctrl.requests track by request.id"
+					ng-href="{{ ::request.getThem( App.user ).url }}"
+					>
+					<gj-card>
+						<div class="shell-card-popover-card-media">
+							<div class="friend-request-popover-avatar" gj-user-avatar="::request.getThem( App.user )"></div>
+						</div>
+						<div class="shell-card-popover-card-body">
+
+							<div class="shell-card-popover-card-controls">
+								<span class="btn btn-success-outline btn-sparse"
+									gj-tooltip="{{ 'Add Friend' | translate }}"
+									ng-click="$ctrl.acceptRequest( request )"
+									>
+									<span class="jolticon jolticon-friend-add-2"></span>
+								</span>
+								<span class="btn btn-danger-outline btn-sparse"
+									gj-tooltip="{{ 'Dismiss request. Sender will not be notified.' | translate }}"
+									ng-click="$ctrl.rejectRequest( request )"
+									>
+									<span class="jolticon jolticon-friend-remove-2"></span>
+								</span>
+							</div>
+
+							<div class="card-title">
+								<h5>{{ ::request.getThem( App.user ).display_name }}</h5>
+							</div>
+
+							<div class="card-meta">
+								<span am-time-ago="request.created_on"></span>
+							</div>
+						</div>
+					</gj-card>
+				</a>
+
+			</div>
+
+			<div class="list-group" ng-if="!$ctrl.requests.length">
+				<div class="list-group-item small disabled" translate>
+					No friend requests right now.
+				</div>
+			</div>
+		</div>
+
+		<!-- Pending -->
+		<div ng-if="!$ctrl.isLoading && $ctrl.activeTab == 'pending' && $ctrl.pending.length">
+
+			<a
+				ng-repeat="request in $ctrl.pending track by request.id"
+				ng-href="{{ ::request.getThem( App.user ).url }}"
+				>
+				<gj-card>
+					<div class="shell-card-popover-card-media">
+						<div class="friend-request-popover-avatar" gj-user-avatar="::request.getThem( App.user )"></div>
+					</div>
+					<div class="shell-card-popover-card-body">
+
+						<div class="shell-card-popover-card-controls">
+							<span class="btn btn-danger-outline btn-sparse"
+								gj-tooltip="{{ 'Cancel' | translate }}"
+								ng-click="$ctrl.cancelRequest( request )"
+								>
+								<span class="jolticon jolticon-friend-remove-2"></span>
+							</span>
+						</div>
+
+						<div class="card-title">
+							<h5>{{ ::request.getThem( App.user ).display_name }}</h5>
+						</div>
+
+						<div class="card-meta">
+							<span am-time-ago="request.created_on"></span>
+						</div>
+					</div>
+				</gj-card>
+			</a>
+
+		</div>
+
+	</div>
+
+</gj-popover>

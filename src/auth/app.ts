@@ -1,11 +1,16 @@
 import { bootstrap } from 'ng-metadata/platform';
-import { enableProdMode } from 'ng-metadata/core';
+import { enableProdMode, provide } from 'ng-metadata/core';
 
 import ModelModule from './../lib/gj-lib-client/components/model/model';
+import MetaModule from './../lib/gj-lib-client/components/meta/meta';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
+import ImgHelperModule from './../lib/gj-lib-client/components/img/helper/helper';
 
-angular.module( 'App', [
+import { AppCtrl } from './app-controller';
+import { App } from './app-service';
+
+const AppModule = angular.module( 'App', [
 	// Set the event tracking up first.
 	'gj.ErrorTracking',
 
@@ -26,6 +31,7 @@ angular.module( 'App', [
 	'gj.Api',
 	'gj.Payload',
 	ModelModule,
+	MetaModule,
 	'gj.Error',
 
 	'gj.Debug',
@@ -53,7 +59,7 @@ angular.module( 'App', [
 	'gj.User.LinkedAccounts',
 	'gj.MediaItem',
 
-	'gj.Img.Helper',
+	ImgHelperModule,
 
 	'App.Forms',
 
@@ -62,7 +68,14 @@ angular.module( 'App', [
 	// Views.
 	'App.Views',
 ] )
-.config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $sceDelegateProvider, TranslateProvider )
+.config( function(
+	$locationProvider: ng.ILocationProvider,
+	$uiViewScrollProvider: ng.ui.IUiViewScrollProvider,
+	$compileProvider: ng.ICompileProvider,
+	EnvironmentProvider: any,
+	$sceDelegateProvider: ng.ISCEDelegateProvider,
+	TranslateProvider: any,
+)
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
 		'self',
@@ -145,9 +158,14 @@ angular.module( 'App', [
 	};
 
 	TranslateProvider.addLanguageUrls( languages );
-} );
+} )
+.name;
+
+angular.module( AppModule )
+.controller( 'AppCtrl', AppCtrl )
+.service( ...provide( 'App', { useClass: App } ) );
 
 setTimeout( function()
 {
-	bootstrap( 'App' );
+	bootstrap( AppModule );
 }, 0 );

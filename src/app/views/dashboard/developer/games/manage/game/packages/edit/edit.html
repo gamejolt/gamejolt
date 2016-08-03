@@ -1,0 +1,222 @@
+<nav class="breadcrumb">
+	<ul>
+		<li>
+			<a ui-sref="dashboard.developer.games.manage.game.packages.list">
+				<span class="breadcrumb-tag">&nbsp;</span>
+				<span translate>Packages</span>
+			</a>
+			<span class="breadcrumb-separator jolticon jolticon-chevron-right"></span>
+		</li>
+		<li>
+			<span class="active">
+				<span class="breadcrumb-tag">{{ ::'dash.games.releases.manage.breadcrumb_package' | translate }}</span>
+				{{ editCtrl.package.title || manageCtrl.game.title }}
+			</span>
+		</li>
+	</ul>
+</nav>
+
+<hr>
+
+<div gj-expand-when="editCtrl.sellable.type != 'free'">
+	<nav class="platform-list inline">
+		<ul>
+			<li>
+				<a ui-sref="dashboard.developer.games.manage.game.packages.edit"
+					ui-sref-active-eq="active"
+					translate
+					>
+					Edit Package
+				</a>
+			</li>
+			<li>
+				<a ui-sref="dashboard.developer.games.manage.game.packages.edit.widget"
+					ui-sref-active="active"
+					translate
+					>
+					Sale Widget
+				</a>
+			</li>
+		</ul>
+	</nav>
+	<br>
+</div>
+
+<ui-view>
+	<div class="row">
+		<div class="col-sm-8">
+
+			<div class="alert alert-warning"
+				ng-if="manageCtrl.game._is_devlog && editCtrl.package.visibility == Game_Package.VISIBILITY_PUBLIC"
+				>
+				<span class="jolticon jolticon-notice"></span>
+				<span
+					translate
+					translate-params-url="$state.href( 'dashboard.developer.games.manage.game.overview' )"
+					>
+					<b>This package won't show up on your devlog-only game page.</b> Switch your game page to early access or complete from the <a href="{{ url }}">Overview/Setup</a> page for it to show.
+				</span>
+			</div>
+
+			<div ng-if="editCtrl.isLoadingPreview">
+				<gj-loading></gj-loading>
+			</div>
+
+			<div ng-if="!editCtrl.isLoadingPreview">
+				<gj-game-package-card
+					game="::manageCtrl.game"
+					sellable="editCtrl.previewSellable"
+					game-package="editCtrl.package"
+					game-releases="editCtrl.previewPackage._releases"
+					game-builds="editCtrl.previewPackage._builds"
+					game-build-launch-options="editCtrl.previewData.launchOptions"
+					>
+				</gj-game-package-card>
+
+				<div
+					ng-if="::editCtrl.buildsProcessingCount > 0"
+					gj-progress-poller="/web/dash/developer/games/packages/poll-processing-builds/{{ ::manageCtrl.game.id }}/{{ ::editCtrl.package.id }}/{{ ::editCtrl.buildsProcessingCount }}"
+					progress-poller-on-complete="editCtrl.onBuildsProcessed( $response )"
+					>
+					<div class="alert alert-info">
+						<span class="jolticon jolticon-notice"></span>
+						<span translate>This package has builds that are still processing. They will become available in the package as soon as they're finished processing.</span>
+					</div>
+				</div>
+			</div>
+
+			<a class="btn btn-outline btn-block"
+				ng-click="editCtrl.isShowingPackageEdit = !editCtrl.isShowingPackageEdit"
+				ng-switch="!!editCtrl.isShowingPackageEdit"
+				>
+				<span class="jolticon jolticon-edit"></span>
+				<span ng-switch-when="false" translate>Edit Package Details</span>
+				<span ng-switch-when="true" translate>Hide Package Details</span>
+			</a>
+
+			<div collapse="!editCtrl.isShowingPackageEdit">
+				<br>
+				<gj-form-dashboard-game-package
+					gj-game="manageCtrl.game"
+					gj-sellable="editCtrl.sellable"
+					gj-game-package="editCtrl.package"
+					gj-form-submit-handler="editCtrl.onEdited( formModel )"
+					>
+				</gj-form-dashboard-game-package>
+			</div>
+
+		</div>
+	</div>
+
+	<h3>{{ ::'dash.games.packages.manage.releases.heading' | translate }}</h3>
+
+	<div class="row">
+		<div class="col-sm-4 col-sm-push-8">
+			<div class="page-help">
+				<div translate>dash.games.packages.manage.releases.page_help_html</div>
+				<p>
+					<a class="link-help" href="https://help.gamejolt.com/dev-packages#releases" target="_blank">{{ ::'dash.games.packages.manage.releases.page_help_link' | translate }}</a>
+				</p>
+			</div>
+		</div>
+
+		<div class="col-sm-8 col-sm-pull-4">
+
+			<div class="alert alert-warning" ng-if="!editCtrl.releases.length" translate>
+				<p>There are no releases in this package yet.</p>
+				<p>Add a release to this package in order to upload builds/files to it.</p>
+			</div>
+
+			<div>
+				<a class="btn btn-success-outline btn-block"
+					ng-click="editCtrl.newRelease()"
+					ng-disabled="editCtrl.isAddingRelease"
+					>
+					<span class="jolticon jolticon-add"></span>
+					<span translate>New Release</span>
+				</a>
+			</div>
+			<br>
+
+			<div ng-if="editCtrl.releases.length">
+
+				<gj-card
+					ng-repeat="release in editCtrl.releases track by release.id"
+					is-inactive="release.status == Game_Release.STATUS_HIDDEN"
+					>
+
+					<a class="card-remove" ng-click="editCtrl.removeRelease( release )">
+						<span class="jolticon jolticon-remove"></span>
+					</a>
+
+					<div class="card-title">
+						<h4>
+							<a ui-sref="dashboard.developer.games.manage.game.packages.release.edit( { packageId: editCtrl.package.id, releaseId: release.id } )">
+								{{ ::release.version_number }}
+							</a>
+						</h4>
+					</div>
+
+					<div class="card-meta">
+						<span class="tag"
+							ng-if="release.status == Game_Release.STATUS_HIDDEN"
+							tooltip="{{ ::'dash.games.packages.manage.releases.hidden_tooltip' | translate }}"
+							>
+							<span class="jolticon jolticon-inactive"></span>
+							{{ ::'dash.games.packages.manage.releases.hidden_tag' | translate }}
+						</span>
+
+						<span class="tag tag-active"
+							ng-if="release.status == Game_Release.STATUS_PUBLISHED"
+							tooltip="{{ ::'dash.games.packages.manage.releases.published_tooltip' | translate }}"
+							>
+							<span class="jolticon jolticon-active"></span>
+							{{ ::'dash.games.packages.manage.releases.published_tag' | translate }}
+						</span>
+
+						<span class="dot-separator"></span>
+
+						<span ng-if="!release.build_count" translate>
+							dash.games.packages.manage.releases.builds_count_none
+						</span>
+
+						<span ng-if="release.build_count"
+							translate
+							translate-plural="dash.games.packages.manage.releases.build_count"
+							translate-n="release.build_count"
+							>
+							dash.games.packages.manage.releases.build_count
+						</span>
+					</div>
+
+					<div class="card-content" ng-if="package.description">
+						{{ package.description }}
+					</div>
+
+					<div class="card-controls">
+						<a class="btn btn-outline" ui-sref="dashboard.developer.games.manage.game.packages.release.edit( { packageId: editCtrl.package.id, releaseId: release.id } )">
+							<span class="jolticon jolticon-edit"></span>
+							<span translate>Edit Release</span>
+						</a>
+
+						<a class="btn btn-outline" ui-sref="dashboard.analytics.view( { resource: 'Game_Release', resourceId: release.id } )">
+							<span class="jolticon jolticon-chart"></span>
+							<span translate>Analytics</span>
+						</a>
+					</div>
+
+				</gj-card>
+
+			</div>
+
+			<div ng-if="manageCtrl.isWizard">
+				<gj-form-dashboard-game-wizard-controls
+					game="manageCtrl.game"
+					can-proceed="!manageCtrl.game._is_devlog || manageCtrl.game.has_active_builds"
+					>
+				</gj-form-dashboard-game-wizard-controls>
+			</div>
+
+		</div>
+	</div>
+</ui-view>

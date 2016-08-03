@@ -191,6 +191,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 				.then( function( response )
 				{
 					scope.baseModel.assign( new Game_Build( response.gameBuild ) );
+					scope.game.assign( response.game );
 
 					// Copy new platforms to the form model.
 					for ( var platform in scope.platformsInfo ) {
@@ -292,6 +293,9 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 		{
 			// Just copy over the new build data into our current one.
 			scope.baseModel.assign( response.build );
+			if ( response.game ) {
+				scope.game.assign( response.game );
+			}
 		};
 	}
 
@@ -326,6 +330,13 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 			scope.wasChanged = true;
 		} );
 	}
+
+	form.onSubmitSuccess = function( scope, response )
+	{
+		if ( scope.game ) {
+			scope.game.assign( response.game );
+		}
+	};
 
 	return form;
 } );

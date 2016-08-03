@@ -1,5 +1,5 @@
 import { Component, Inject } from 'ng-metadata/core';
-import template from './list.html';
+import template from 'html!./list.html';
 
 @Component({
 	selector: 'gj-genre-list',
@@ -61,8 +61,8 @@ export class ListComponent
 	];
 
 	constructor(
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
-		@Inject( '$stateParams' ) private $stateParams: ng.ui.IStateParamsService
+		@Inject( '$state' ) public $state: ng.ui.IStateService,
+		@Inject( '$stateParams' ) public $stateParams: ng.ui.IStateParamsService
 	)
 	{
 	}

@@ -30,35 +30,36 @@ export class InputDirective implements OnInit
 	{
 		this.searchCtrl.inputElem = this.$element;
 
-		// Obviouisly don't want browser autocomplete popping over.
-		this.$element[0].autocomplete = 'off';
+		// Obviously don't want browser autocomplete popping over.
+		const element = this.$element[0] as HTMLInputElement;
+		element.autocomplete = 'off';
 
 		// Sync from the global search query to our input.
-		this.$scope.$watch( _ => this.search.query, _ =>
+		this.$scope.$watch( () => this.search.query, () =>
 		{
 			this.ngModel.$setViewValue( this.search.query );
 			this.ngModel.$render();
 		} );
 
-		this.$element.on( 'focus', _ =>
+		this.$element.on( 'focus', () =>
 		{
-			this.$scope.$applyAsync( _ =>
+			this.$scope.$applyAsync( () =>
 			{
 				this.searchCtrl.isFocused = true;
 			} );
 		} );
 
-		this.$element.on( 'blur', _ =>
+		this.$element.on( 'blur', () =>
 		{
-			this.$scope.$applyAsync( _ =>
+			this.$scope.$applyAsync( () =>
 			{
 				this.searchCtrl.isFocused = false;
 			} );
 		} );
 
-		this.$element.on( 'keydown', ( event: KeyboardEvent ) =>
+		this.$element.on( 'keydown', ( event: JQueryEventObject ) =>
 		{
-			this.$scope.$applyAsync( _ =>
+			this.$scope.$applyAsync( () =>
 			{
 				// This stops the default behavior from happening when we press up/down
 				// or enter (we don't want to submit form).

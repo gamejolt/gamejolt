@@ -15,7 +15,7 @@ export class Channels_ViewHelper
 
 	setDefaultMetaData( channel: string )
 	{
-		var image;
+		var image: string | undefined;
 
 		switch ( channel ) {
 			case 'fnaf': {

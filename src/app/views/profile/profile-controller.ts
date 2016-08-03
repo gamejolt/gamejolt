@@ -1,4 +1,5 @@
 import { Injectable, Inject } from 'ng-metadata/core';
+import { Location } from './../../../lib/gj-lib-client/components/location/location-service';
 
 @Injectable()
 export class ProfileCtrl
@@ -14,7 +15,7 @@ export class ProfileCtrl
 
 	constructor(
 		@Inject( '$scope' ) $scope: any,
-		@Inject( 'Location' ) location: any,
+		@Inject( 'Location' ) location: Location,
 		@Inject( 'User' ) user: any,
 		@Inject( 'User_GameSession' ) userGameSession: any,
 		@Inject( 'User_Friendship' ) userFriendship: any,
@@ -53,7 +54,7 @@ export class ProfileCtrl
 	sendFriendRequest()
 	{
 		this.userFriendshipsHelper.sendRequest( this.user )
-			.then( ( request ) =>
+			.then( ( request: any ) =>
 			{
 				this.userFriendship = request;
 			} );

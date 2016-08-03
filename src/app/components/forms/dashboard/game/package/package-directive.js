@@ -90,24 +90,15 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 		} );
 	};
 
-	form.onSubmit = function( scope )
+	form.onSubmitSuccess = function( scope, response )
 	{
-		// We need to do this custom so we can pull the new sellable info.
-		return scope.formModel.$save()
-			.then( function( response )
-			{
-				if ( response.success !== false ) {
-					if ( scope.baseModel ) {
-						scope.baseModel.assign( scope.formModel );
-					}
+		if ( scope.sellable ) {
+			scope.sellable.assign( response.sellable );
+		}
 
-					if ( scope.sellable ) {
-						scope.sellable.assign( response.sellable );
-					}
-				}
-
-				return response;
-			} );
+		if ( scope.game ) {
+			scope.game.assign( response.game );
+		}
 	};
 
 	return form;

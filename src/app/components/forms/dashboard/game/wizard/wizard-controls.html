@@ -1,0 +1,17 @@
+<div>
+	<hr>
+
+	<div class="pull-right">
+		<button class="btn btn-outline"
+			ng-disabled="!$ctrl.canProceed"
+			ng-click="$ctrl.next()"
+			>
+			<span ng-if="$ctrl.inForm" translate>
+				Save & Next
+			</span>
+			<span ng-if="!$ctrl.inForm" translate>
+				Next Step
+			</span>
+		</button>
+	</div>
+</div>

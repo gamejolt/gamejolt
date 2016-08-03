@@ -41,6 +41,79 @@
 	</section>
 </div>-->
 
+<section class="section fill-darker devlogs-banner">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-9 col-md-8 col-lg-6 col-centered">
+				<div class="devlogs-banner-well well fill-darkest">
+
+					<div class="h5 section-header sans-margin" translate>Introducing...</div>
+					<div class="h1 section-header">
+						<a class="link-unstyled" ui-sref="discover.devlogs.overview" gj-track-event="home:devlogs-banner:devlogs">
+							Devlogs
+						</a>
+					</div>
+
+					<p class="small" translate>Find the latest and greatest games in development and follow their devlog feeds!</p>
+
+					<a ui-sref="discover.devlogs.overview" class="btn btn-sm btn-primary-outline" gj-track-event="home:devlogs-banner:devlogs">
+						<span class="jolticon jolticon-chevron-right"></span>
+						<span translate>View Devlogs</span>
+					</a>
+
+					<button class="btn btn-sm btn-outline"
+						ng-click="homeCtrl.isDevlogsExpanded = !homeCtrl.isDevlogsExpanded"
+						gj-track-event="home:devlogs-banner:learn"
+						>
+						<span translate>Learn More</span>
+					</button>
+
+					<a class="devlogs-banner-mascot hidden-xs" ui-sref="discover.devlogs.overview" gj-track-event="home:devlogs-banner:devlogs">
+						<img src="/app/views/discover/home/banner-tadpole.png" width="68" height="68" alt="">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div gj-expand-when="homeCtrl.isDevlogsExpanded">
+	<section class="section section-thin fill-darkest">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 col-centered">
+
+					<div class="full-bleed-xs">
+						<gj-video-embed video-provider="youtube" video-id="'aAk_PEghHXk'" autoplay="true"></gj-video-embed>
+					</div>
+
+					<br><br>
+
+					<p class="text-center">
+						<a class="btn btn-primary-outline"
+							ng-class="{ 'btn-block': Screen.isXs }"
+							ui-sref="discover.devlogs.overview"
+							gj-track-event="home:devlogs-banner:video-devlogs"
+							>
+							<span class="jolticon jolticon-chevron-right"></span>
+							View Devlogs
+						</a>
+						<a class="btn btn-success-outline"
+							ng-class="{ 'btn-block': Screen.isXs }"
+							href="/dashboard/games/add"
+							gj-track-event="home:devlogs-banner:video-add"
+							>
+							<span class="jolticon jolticon-add"></span>
+							Add Devlog
+						</a>
+					</p>
+
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+
 <gj-discover-home-featured featured-items="homeCtrl.featuredItems"></gj-discover-home-featured>
 
 <div class="container" ng-if="::!Environment.isClient">
@@ -111,31 +184,34 @@
 <section class="section fill-darker marketplace-section">
 	<div class="container">
 
-		<h1 class="section-header sans-margin-bottom">
-			<a class="link-unstyled" ui-sref="discover.games.list.section( { section: 'best', price: 'paid' } )" gj-track-event="home:row-heading:paid">
-				<span class="jolticon jolticon-heart big"></span>
-				<span translate>Paid Games</span>
-			</a>
-		</h1>
-
 		<div class="row">
-			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-				<p class="text-muted" translate>
+			<div class="col-sm-8">
+				<h1 class="section-header sans-margin-bottom">
+					<a class="link-unstyled" ui-sref="discover.games.list.section( { section: 'best', price: 'paid' } )" gj-track-event="home:row-heading:paid">
+						<span class="jolticon jolticon-heart big"></span>
+						<span translate>Paid Games</span>
+					</a>
+				</h1>
+				<p class="text-muted small" translate>
 					You can now support your favorite indie devs by buying their games directly on Game Jolt!
 				</p>
 			</div>
+			<div class="col-sm-4 text-right hidden-xs">
+				<a class="btn btn-outline" ui-sref="landing.marketplace" gj-track-event="home:marketplace-landing">
+					<span class="jolticon jolticon-info-circle"></span>
+					<span translate>Learn More</span>
+				</a>
+			</div>
 		</div>
-		<br>
 
 		<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
 			<div ng-class="{ 'row': !Screen.isXs }">
 				<gj-game-thumbnail
-					class="col-xs-11 col-sm-4 meter-dark"
+					class="col-xs-11 col-sm-4 col-md-3"
 					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
-					ng-repeat="game in homeCtrl.paidGames | limitTo:(Screen.isMobile ? 6 : 9 ) track by game.id"
+					ng-repeat="game in homeCtrl.paidGames | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
 					gj-game="game"
-					autoplay="true"
-					gj-track-event="home:paid:game:{{ $index }}"
+					gj-track-event="home:slider:game:{{ $index }}"
 					>
 				</gj-game-thumbnail>
 			</div>
@@ -152,11 +228,6 @@
 				</a>
 			</div>
 		</div>
-		<br><br>
-
-		<a ui-sref="landing.marketplace" gj-track-event="home:marketplace-landing">
-			<img class="marketplace-mascot" src="/app/views/discover/home/marketplace-mascots.png" alt="">
-		</a>
 
 	</div>
 </section>
@@ -247,83 +318,6 @@
 			<a class="btn btn-outline"
 				ui-sref="discover.games.list.section( { section: 'hot' } )"
 				gj-track-event="home:more-btn:hot"
-				translate
-				>
-				Load More
-			</a>
-		</div>
-
-	</div>
-</section>
-
-<!--
-	Game News
--->
-<section class="section">
-	<div class="container">
-
-		<div class="clearfix">
-
-			<div ng-class="!Screen.isXs ? 'pull-right' : ''">
-				<nav class="platform-list inline" ng-class="{ 'nav-justified': Screen.isXs }">
-					<ul>
-						<li>
-							<a ng-class="{ active: homeCtrl.activeNewsTab == 'hot' }" ng-click="homeCtrl.changeNewsTab( 'hot' )" gj-track-event="home:news-tab:hot">
-								{{ ::'discover.home.hot_news_tab' | translate }}
-							</a>
-						</li>
-						<li ng-if="homeCtrl.followedArticles.length">
-							<a ng-class="{ active: homeCtrl.activeNewsTab == 'followed' }" ng-click="homeCtrl.changeNewsTab( 'followed' )" gj-track-event="home:news-tab:followed">
-								{{ ::'discover.home.followed_news_tab' | translate }}
-							</a>
-						</li>
-					</ul>
-				</nav>
-			</div>
-
-			<h2 class="section-header sans-margin-bottom" ng-switch="homeCtrl.activeNewsTab">
-				<a class="link-unstyled"
-					ui-sref="discover.news.list"
-					ng-switch-when="hot"
-					gj-track-event="home:row-heading:news-hot"
-					>
-					{{ ::'discover.home.hot_news_heading' | translate }}
-				</a>
-
-				<a class="link-unstyled"
-					ui-sref="discover.news.list-section( { section: 'followed' } )"
-					ng-switch-when="followed"
-					gj-track-event="home:row-heading:news-followed"
-					>
-					{{ ::'discover.home.followed_news_heading' | translate }}
-				</a>
-			</h2>
-
-			<div class="row">
-				<div class="col-sm-10 col-md-8 col-lg-6" ng-switch="homeCtrl.activeNewsTab">
-					<p class="text-muted small" ng-switch-when="hot">{{ ::'discover.home.hot_news_help' | translate }}</p>
-					<p class="text-muted small" ng-switch-when="followed">{{ ::'discover.home.followed_news_help' | translate }}</p>
-				</div>
-			</div>
-
-		</div>
-
-		<gj-post-list ng-if="Screen.isMobile" post-list-items="homeCtrl.articles[ homeCtrl.activeNewsTab ]"></gj-post-list>
-		<gj-post-grid ng-if="Screen.isDesktop" post-grid-items="homeCtrl.articles[ homeCtrl.activeNewsTab ]"></gj-post-grid>
-
-		<div class="page-cut" ng-switch="homeCtrl.activeNewsTab">
-			<a class="btn btn-outline"
-				ng-switch-when="hot"
-				ui-sref="discover.news.list"
-				gj-track-event="home:news-more"
-				translate
-				>
-				Load More
-			</a>
-			<a class="btn btn-outline"
-				ng-switch-when="followed"
-				ui-sref="discover.news.list-section( { section: 'followed' } )"
-				gj-track-event="home:news-more"
 				translate
 				>
 				Load More

@@ -7,7 +7,7 @@
 			<li>
 				<a ng-class="{ active: isMainMenuActive }"
 					gj-popover-trigger="main-menu"
-					gj-tooltip="Menu" tooltip-placement="right"
+					gj-tooltip="{{ 'Menu' | translate }}" tooltip-placement="right"
 					gj-track-event="top-nav:main-menu:toggle"
 					>
 					<span class="jolticon jolticon-menu"></span>
@@ -51,7 +51,7 @@
 				<a
 					ui-sref="{{ ::Environment.isClient ? 'library.installed' : 'library.overview' }}"
 					ng-class="{ active: $state.includes( 'library' ) }"
-					gj-tooltip="Your Game Library"
+					gj-tooltip="{{ 'Your Game Library' | translate }}"
 					tooltip-placement="bottom"
 					gj-track-event="top-nav:library"
 					>
@@ -59,23 +59,21 @@
 				</a>
 			</li>
 
-			<!-- Notifications -->
+			<!-- Activity -->
 			<li ng-if="!Connection.isClientOffline">
 				<a
-					gj-popover-trigger="notifications"
-					ng-class="{ active: notificationsShowing }"
-					gj-tooltip="Notifications"
+					ui-sref="dashboard.activity.feed( { tab: 'activity' } )"
+					ng-class="{ active: $state.includes( 'dashboard.activity' ) }"
+					gj-tooltip="{{ 'Activity' | translate }}"
 					tooltip-placement="bottom"
-					gj-track-event="top-nav:notifications:toggle"
+					gj-track-event="top-nav:activity:toggle"
+					gj-activity-notification-count="notificationsCount = $count"
 					>
-					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="notificationsCount">{{ notificationsCount }}</span>
+					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="notificationsCount > 0">
+						{{ notificationsCount < 100 ? notificationsCount : '99+' }}
+					</span>
 					<span class="jolticon jolticon-notifications"></span>
 				</a>
-				<gj-notifications-popover
-					notifications-count="notificationsCount"
-					is-shown="notificationsShowing"
-					>
-				</gj-notifications-popover>
 			</li>
 
 			<!-- Friend Requests -->
@@ -83,18 +81,19 @@
 				<a
 					gj-popover-trigger="friend-requests"
 					ng-class="{ active: friendRequestsShowing }"
-					gj-tooltip="Friend Requests"
+					gj-tooltip="{{ 'Friend Requests' | translate }}"
 					tooltip-placement="bottom"
 					gj-track-event="top-nav:friend-requests:toggle"
 					>
 					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="friendRequestCount">{{ friendRequestCount }}</span>
 					<span class="jolticon jolticon-friend-requests"></span>
 				</a>
-				<gj-friends-requests-popover
-					friend-request-count="friendRequestCount"
-					is-shown="friendRequestsShowing"
+				<gj-friend-request-popover
+					on-requests-count="friendRequestCount = $count"
+					on-focus="friendRequestsShowing = true"
+					on-blur="friendRequestsShowing = false"
 					>
-				</gj-friends-requests-popover>
+				</gj-friend-request-popover>
 			</li>
 
 			<!-- User Menu -->

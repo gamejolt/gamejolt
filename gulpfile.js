@@ -11,9 +11,6 @@ var config = {
 		],
 	},
 	rollup: {
-		// external: [
-		// 	'ng-metadata/core',
-		// ],
 		vendor: {
 			'ng-metadata/core': 'vendor.ngMetadata_core',
 			'ng-metadata/platform': 'vendor.ngMetadata_platform',
@@ -85,6 +82,7 @@ var config = {
 
 		// Sections of the site.
 		'dash.js': {
+			main: '/views/dashboard/dashboard.ts',
 			components: [
 				'forms/dashboard',
 				'site-analytics',

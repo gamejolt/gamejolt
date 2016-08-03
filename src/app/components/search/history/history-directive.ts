@@ -1,6 +1,6 @@
-import { Component, Inject, SkipSelf } from 'ng-metadata/core';
+import { Component, Inject } from 'ng-metadata/core';
 import { Search_History } from './history-service';
-import template from './history.html';
+import template from 'html!./history.html';
 
 @Component({
 	selector: 'gj-search-history',

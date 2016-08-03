@@ -1,12 +1,18 @@
 import { bootstrap } from 'ng-metadata/platform';
-import { enableProdMode } from 'ng-metadata/core';
+import { enableProdMode, provide } from 'ng-metadata/core';
 
 import ModelModule from './../lib/gj-lib-client/components/model/model';
+import MetaModule from './../lib/gj-lib-client/components/meta/meta';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 import LoadModule from './../lib/gj-lib-client/components/load/load';
+import LocationModule from './../lib/gj-lib-client/components/location/location';
+import ClipboardModule from './../lib/gj-lib-client/components/clipboard/clipboard';
+import CardModule from './../lib/gj-lib-client/components/card/card';
 import HistoryTickModule from './../lib/gj-lib-client/components/history-tick/history-tick';
+import ModalConfirmModule from './../lib/gj-lib-client/components/modal/confirm/confirm';
 
+import gjNotificationModule from './../lib/gj-lib-client/components/notification/notification';
 import CommentModule from './../lib/gj-lib-client/components/comment/comment';
 import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
 import CommentVideoModule from './../lib/gj-lib-client/components/comment/video/video';
@@ -19,17 +25,43 @@ import YoutubeChannelModule from './../lib/gj-lib-client/components/youtube/chan
 
 import CommentVideoLightboxModule from './../lib/gj-lib-client/components/comment/video/lightbox/lightbox';
 import CommentVideoThumbnailModule from './../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
+import GameThumbnailImgModule from './../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
+import ImgHelperModule from './../lib/gj-lib-client/components/img/helper/helper';
+import ImgResponsiveModule from './../lib/gj-lib-client/components/img/responsive/responsive';
+import ResponsiveDimensionsModule from './../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
+import VideoModule from './../lib/gj-lib-client/components/video/video';
+import VideoEmbedModule from './../lib/gj-lib-client/components/video/embed/embed';
+import FiresidePostModule from './../lib/gj-lib-client/components/fireside/post/post';
+import FiresidePostTagModule from './../lib/gj-lib-client/components/fireside/post/tag/tag';
+import FiresidePostVideoModule from './../lib/gj-lib-client/components/fireside/post/video/video';
+import FiresidePostLikeModule from './../lib/gj-lib-client/components/fireside/post/like/like';
+import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 
-import VideoEmbedModule from './../lib/gj-lib-client/components/video-embed/video-embed';
 import SearchModule from './components/search/search';
+import FriendModule from './components/friend/friend';
+import ActivityModule from './components/activity/activity';
+import NotificationModule from './components/notification/notification';
 import MediaItemCoverModule from './components/media-item/cover/cover';
 import PageHeaderModule from './components/page-header/page-header';
 import GenreListModule from './components/genre/list/list';
 import GameMediaBarModule from './components/game/media-bar/media-bar';
+import CommentAvatarListModule from './components/comment/avatar-list/avatar-list';
+import GameListingModule from './components/game/listing/listing';
 import ChannelsModule from './components/channel/channels';
+import DevlogPostAddModule from './components/devlog/post/add/add';
+import DevlogPostEditModule from './components/devlog/post/edit/edit';
+import DevlogPostMediaModule from './components/devlog/post/media/media';
+import DevlogPostViewModule from './components/devlog/post/view/view';
+import DevlogPostViewModalModule from './components/devlog/post/view-modal/view-modal';
+
+import GameThumbnailModule from './components/game/thumbnail/thumbnail';
+import GameFollowWidgetModule from './components/game/follow-widget/follow-widget';
+import FiresidePostThumbnailModule from './components/fireside/post/thumbnail/thumbnail';
+import FiresidePostListModule from './components/fireside/post/list/list';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
+import FormsModule from './components/forms/forms';
 import ViewsModule from './views/views';
 
 const AppModule = angular.module( 'App', [
@@ -64,7 +96,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Payload',
 	ModelModule,
 	'gj.Error',
-	'gj.Meta',
+	MetaModule,
 
 	'gj.Filesize',
 	'gj.Time',
@@ -83,12 +115,12 @@ const AppModule = angular.module( 'App', [
 	'gj.Loading',
 	'gj.Loading.LoadingPageTransition',
 	'gj.Scroll',
-	'gj.Typography',
 	'gj.ExpandWhen',
 	'gj.UiTree.Placeholder',
 	'gj.Device',
-	'gj.Location',
+	LocationModule,
 	'gj.Connection',
+	ClipboardModule,
 
 	'gj.Partial',
 	'gj.Backdrop',
@@ -102,9 +134,10 @@ const AppModule = angular.module( 'App', [
 	'gj.Scroll.FixedResizer',
 	'gj.EditableAccordion',
 	'gj.Referrer',
+	CardModule,
 	HistoryTickModule,
 	'gj.Pagination',
-	'gj.Modal.Confirm',
+	ModalConfirmModule,
 	'gj.SiteSelector',
 	'gj.Favicon',
 	'gj.FadeCollapse',
@@ -136,7 +169,7 @@ const AppModule = angular.module( 'App', [
 	'gj.User.LinkedAccounts',
 	'gj.User.Friendship',
 	'gj.User.Message',
-	'gj.Notification',
+	gjNotificationModule,
 	CommentModule,
 	CommentVoteModule,
 	CommentVideoModule,
@@ -166,6 +199,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Game.Trophy',
 	'gj.Game.ScoreTable',
 	'gj.Game.DataStore.Item',
+	GameThumbnailImgModule,
 
 	'gj.Order',
 	'gj.Order.Item',
@@ -220,19 +254,25 @@ const AppModule = angular.module( 'App', [
 
 	'gj.GameBundle',
 
-	'gj.Fireside.Post',
-	'gj.Fireside.Post.Tag',
+	FiresidePostModule,
+	FiresidePostTagModule,
+	FiresidePostVideoModule,
+	FiresidePostLikeModule,
+	FiresidePostLikeWidgetModule,
 
 	'gj.Forum.Category',
 	'gj.Forum.Channel',
 	'gj.Forum.Topic',
 	'gj.Forum.Post',
 
-	'gj.Img.Helper',
+	ImgHelperModule,
 	'gj.Img.Crop',
-	'gj.Img.ImgResponsive',
+	ImgResponsiveModule,
+	ResponsiveDimensionsModule,
 
 	'gj.WidgetCompiler',
+
+	VideoModule,
 	VideoEmbedModule,
 
 	// Components.
@@ -242,8 +282,9 @@ const AppModule = angular.module( 'App', [
 	'App.Shell',
 	'App.Offline.Alert',
 	SearchModule,
-	'App.Friends',
-	'App.Notifications',
+	FriendModule,
+	ActivityModule,
+	NotificationModule,
 	'App.Minbar',
 	'App.Invite',
 	'App.Sorting',
@@ -251,22 +292,24 @@ const AppModule = angular.module( 'App', [
 	MediaItemCoverModule,
 	PageHeaderModule,
 
-	'App.Forms',
+	FormsModule,
 
 	'App.FeaturedItem',
 
-	'App.Activity.Feed',
-	'App.Notifications.DescriptiveAction',
-
+	GameListingModule,
 	GenreListModule,
 
-	'App.Fireside.Post.Thumbnail',
-	'App.Fireside.Post.List',
+	DevlogPostAddModule,
+	DevlogPostEditModule,
+	DevlogPostMediaModule,
+	DevlogPostViewModule,
+	DevlogPostViewModalModule,
 
-	'App.Post.Grid',
-	'App.Post.List',
+	FiresidePostListModule,
+	FiresidePostThumbnailModule,
 
-	'App.Game.Thumbnail',
+	GameThumbnailModule,
+	GameFollowWidgetModule,
 	'App.Meter',
 	'App.Game.CompatIcons',
 	'App.Game.Grid',
@@ -276,6 +319,8 @@ const AppModule = angular.module( 'App', [
 	'App.Game.Ogrs',
 	'App.Game.RatingGrowl',
 	'App.Game.MaturityBlock',
+
+	CommentAvatarListModule,
 
 	ChannelsModule,
 
@@ -309,9 +354,15 @@ const AppModule = angular.module( 'App', [
 	// Views.
 	ViewsModule,
 ] )
-.service( 'App', App )
-.controller( 'AppCtrl', AppCtrl )
-.config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $ocLazyLoadProvider, $sceDelegateProvider, amTimeAgoConfig, TranslateProvider )
+.config( function(
+	$locationProvider: ng.ILocationProvider,
+	$uiViewScrollProvider: ng.ui.IUiViewScrollProvider,
+	$compileProvider: ng.ICompileProvider,
+	EnvironmentProvider: any,
+	$sceDelegateProvider: ng.ISCEDelegateProvider,
+	amTimeAgoConfig: any,
+	TranslateProvider: any,
+)
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
 		'self',
@@ -331,10 +382,6 @@ const AppModule = angular.module( 'App', [
 	else if ( GJ_BUILD_TYPE == 'development' ) {
 		EnvironmentProvider.buildType = 'development';
 	}
-
-	$ocLazyLoadProvider.config( {
-		loadedModules: [ 'App' ]  // Hardcoded so it doesn't have to search DOM for it.
-	} );
 
 	amTimeAgoConfig.fullDateThreshold = 30;
 	amTimeAgoConfig.fullDateFormat = 'll';
@@ -439,11 +486,11 @@ const AppModule = angular.module( 'App', [
  * This is really handy to redirect from a parent to child state.
  * Can remove once they close out: https://github.com/angular-ui/ui-router/issues/27
  */
-.run( function( $rootScope, $state )
+.run( function( $rootScope: ng.IRootScopeService, $state: ng.ui.IStateService )
 {
 	$rootScope.$on( '$stateChangeStart', function( event, toState )
 	{
-		var redirect = toState.redirectTo;
+		const redirect = toState.redirectTo;
 		if ( redirect ) {
 			event.preventDefault();
 			if ( angular.isFunction( redirect ) ) {
@@ -456,13 +503,16 @@ const AppModule = angular.module( 'App', [
 	} );
 } )
 // Track time till Angular runs.
-.run( function( Analytics )
+.run( function( Analytics: any )
 {
 	var ms = Date.now() - window._gjStartTime;
 	Analytics.trackTiming( 'shell', 'angular-start', ms );
 } )
-.name
-;
+.name;
+
+angular.module( AppModule )
+.controller( 'AppCtrl', AppCtrl )
+.service( ...provide( 'App', { useClass: App } ) );
 
 setTimeout( function()
 {

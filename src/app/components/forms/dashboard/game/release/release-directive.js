@@ -96,7 +96,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameRelease',
 			ModalConfirm.show( gettextCatalog.getString( 'dash.games.releases.builds.remove_build_confirmation' ) )
 				.then( function()
 				{
-					return build.$remove();
+					return build.$remove( scope.game );
 				} )
 				.then( function()
 				{
@@ -160,6 +160,13 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameRelease',
 		function remove()
 		{
 			scope.onRemoveRelease( { $release: scope.baseModel } );
+		}
+	};
+
+	form.onSubmitSuccess = function( scope, response )
+	{
+		if ( scope.game ) {
+			scope.game.assign( response.game );
 		}
 	};
 

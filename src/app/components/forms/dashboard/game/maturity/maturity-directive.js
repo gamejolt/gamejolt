@@ -6,6 +6,8 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameMaturity'
 		template: '/app/components/forms/dashboard/game/maturity/maturity.html',
 	} );
 
+	form.scope.isWizard = '<';
+
 	form.onInit = function( scope )
 	{
 		scope.age = [

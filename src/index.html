@@ -56,32 +56,16 @@
 		<link rel="stylesheet" href="/app/main.css">
 		<link rel="shortcut icon" href="/app/img/favicon.png">
 
-		<title ng-bind-html="Environment.isClient ? (App.title ? App.title + ' - Game Jolt' : 'Game Jolt') : (App.title ? App.title + ' on Game Jolt' : 'Game Jolt - Indie Games for the Love of It')">Game Jolt</title>
-
-		<meta name="description" ng-if="Meta.description" ng-attr-content="{{ Meta.description }}" content="Discover the largest community for indie games and the people that make and play them.">
-
-		<!-- Prerender Status -->
-		<meta name="prerender-status-code" ng-if="Meta.responseCode" ng-attr-content="{{ Meta.responseCode }}">
-		<meta name="prerender-header" ng-if="Meta.redirect" ng-attr-content="Location: {{ Meta.redirect }}">
+		<title>Game Jolt - Indie Games for the Love of It</title>
 
 		<!-- FB -->
 		<meta property="fb:app_id" content="410666682312265">
 		<meta property="og:site_name" content="Game Jolt">
 		<meta property="fb:admins" content="1070315546">
-		<meta property="og:title" ng-if="Meta.fb.title" ng-attr-content="{{ Meta.fb.title }}" content="Game Jolt - Indie Games for the Love of It">
-		<meta property="og:description" ng-if="Meta.fb.description" ng-attr-content="{{ Meta.fb.description }}" content="Discover the largest community for indie games and the people that make and play them.">
-		<meta property="og:url" ng-if="Meta.fb.url" ng-attr-content="{{ Meta.fb.url }}">
-		<meta property="og:type" ng-if="Meta.fb.type" ng-attr-content="{{ Meta.fb.type }}">
-		<meta property="og:image" ng-attr-content="{{ Meta.fb.image || '/app/img/meta-default-image.png' }}">
-		<meta property="og:profile_id" ng-if="Meta.fb.profileId" ng-attr-content="{{ Meta.fb.profileId }}">
+		<meta property="og:image" content="/app/img/meta-default-image.png">
 
 		<!-- Twitter -->
 		<meta name="twitter:site" content="@gamejolt">
-		<meta name="twitter:card" ng-if="Meta.twitter.card" ng-attr-content="{{ Meta.twitter.card }}">
-		<meta name="twitter:title" ng-if="Meta.twitter.title" ng-attr-content="{{ Meta.twitter.title }}" content="Game Jolt - Indie Games for the Love of It">
-		<meta name="twitter:description" ng-if="Meta.twitter.description" ng-attr-content="{{ Meta.twitter.description }}" content="Discover the largest community for indie games and the people that make and play them.">
-		<meta name="twitter:image" ng-if="Meta.twitter.image" ng-attr-content="{{ Meta.twitter.image }}">
-		<meta name="twitter:url" ng-if="Meta.twitter.url" ng-attr-content="{{ Meta.twitter.url }}">
 
 	</head>
 
@@ -97,7 +81,7 @@
 			<gj-offline-alert></gj-offline-alert>
 
 			<gj-shell-body>
-				<gj-terms-change-alert></gj-terms-change-alert>
+				<!--<gj-terms-change-alert></gj-terms-change-alert>-->
 				<ui-view id="content" ng-cloak></ui-view>
 			</gj-shell-body>
 
@@ -115,7 +99,7 @@
 
 		</gj-shell>
 
-		 <div gj-debug-bar></div>
+		<div gj-debug-bar></div>
 
 		<script src="/app/modules/error-tracking.js" crossorigin="anonymous"></script>
 

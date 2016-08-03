@@ -24,9 +24,9 @@
 				<control-errors label="{{ 'dash.games.music.form.file_error_label' | translate }}"></control-errors>
 			</form-group>
 
-			<button gj-form-submit-button class="i-button" ng-disabled="!songForm.$valid" ng-click="onSubmit()">
+			<button gj-form-submit-button class="btn btn-outline" ng-disabled="!songForm.$valid" ng-click="onSubmit()">
 				<span class="jolticon" ng-class="'jolticon-' + method"></span>
-				{{ 'dash.games.music.form.submit_button' | translate }}
+				<span translate>dash.games.music.form.submit_button</span>
 			</button>
 		</div>
 	</div>

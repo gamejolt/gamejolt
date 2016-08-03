@@ -6,6 +6,8 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameSettings'
 		template: '/app/components/forms/dashboard/game/settings/settings.html'
 	} );
 
+	form.scope.isWizard = '<';
+
 	form.onInit = function( scope )
 	{
 		scope.onLoaded = function( payload )

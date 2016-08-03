@@ -1,4 +1,7 @@
-<gj-page-header>
+<gj-page-header
+	should-affix-nav="true"
+	spotlight-dark="true"
+	>
 
 	<gj-page-header-content>
 		<h1 translate translate-params-channel="channelCtrl.channel">
@@ -30,6 +33,11 @@
 				<li>
 					<a ui-sref="discover.channels.channel.games._fetch" ui-sref-active="active">
 						<span translate>Games</span>
+					</a>
+				</li>
+				<li>
+					<a ui-sref="discover.channels.channel.devlogs._fetch" ui-sref-active="active">
+						<span translate>Devlogs</span>
 					</a>
 				</li>
 			</ul>

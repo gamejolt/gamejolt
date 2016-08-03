@@ -1,0 +1,25 @@
+<div class="devlog-post-video-embed timeline-list-full-bleed">
+	<div gj-responsive-dimensions responsive-dimensions-ratio="16 / 9">
+		<a
+			ng-if="!$ctrl.isShowingVideo"
+			ng-click="$ctrl.play()"
+			>
+			<div class="play-button-overlay">
+				<span class="jolticon jolticon-play"></span>
+			</div>
+
+			<div class="devlog-post-video-embed-thumb"
+				ng-style="::{ 'background-image': 'url(\'' + $ctrl.video.thumbnail_url + '\')' }"
+				>
+			</div>
+		</a>
+
+		<gj-video-embed
+			ng-if="$ctrl.isShowingVideo"
+			video-provider="youtube"
+			video-id="::$ctrl.video.video_id"
+			autoplay="true"
+			>
+		</gj-video-embed>
+	</div>
+</div>

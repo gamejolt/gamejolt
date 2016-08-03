@@ -36,5 +36,12 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameKeyGroup'
 		};
 	};
 
+	form.onSubmitSuccess = function( scope, response )
+	{
+		if ( scope.game ) {
+			scope.game.assign( response.game );
+		}
+	};
+
 	return form;
 } );

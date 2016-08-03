@@ -3,7 +3,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 	$stateProvider.state( 'discover.channels.channel.games', {
 		abstract: true,
 		controller: 'Discover.Channels.Channel.GamesCtrl',
-		controllerAs: 'gamesCtrl',
+		controllerAs: '$ctrl',
 		templateUrl: '/app/views/discover/channels/channel/games/games.html',
 		resolve: {
 

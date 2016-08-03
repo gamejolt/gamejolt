@@ -16,9 +16,5 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameKeyPool',
 		scope.formModel.provider = 'steam';
 	};
 
-	//form.scope.onSubmit = function() {
-	//	console.log('blah');
-	//}
-
 	return form;
 } );

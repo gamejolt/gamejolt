@@ -1,32 +1,72 @@
 <ul class="sans-margin">
-	<li>
+	<li ng-if="!manageCtrl.isWizard">
 		<a ui-sref=".overview" ui-sref-active="active">
-			Overview
+			<span translate>Overview</span>
 		</a>
 	</li>
 	<li>
-		<a ui-sref=".edit" ui-sref-active="active">
-			Edit Details
+		<a ui-sref=".details" ui-sref-active="active">
+			<gj-nav-required-step-icon is-complete="true"></gj-nav-required-step-icon>
+			<span translate>Details</span>
 		</a>
 	</li>
 	<li>
-		<a ui-sref=".thumbnail" ui-sref-active="active">
-			Thumbnail
-		</a>
-	</li>
-	<li>
-		<a ui-sref=".header" ui-sref-active="active">
-			Page Header
+		<a ui-sref=".description" ui-sref-active="active">
+			<gj-nav-required-step-icon is-complete="!!manageCtrl.game.description_markdown"></gj-nav-required-step-icon>
+			<span translate>Description</span>
 		</a>
 	</li>
 	<li>
 		<a ui-sref=".maturity" ui-sref-active="active">
-			Maturity Rating
+			<gj-nav-required-step-icon is-complete="!!manageCtrl.game.tigrs_age"></gj-nav-required-step-icon>
+			<span translate>Maturity</span>
+		</a>
+	</li>
+	<li>
+		<a ui-sref=".thumbnail" ui-sref-active="active">
+			<gj-nav-required-step-icon is-complete="!!manageCtrl.game.thumbnail_media_item"></gj-nav-required-step-icon>
+			<span translate>Thumbnail</span>
+		</a>
+	</li>
+	<li>
+		<a ui-sref=".header" ui-sref-active="active">
+			<span translate>Header</span>
+		</a>
+	</li>
+	<li ng-if="!manageCtrl.isWizard || !manageCtrl.game._is_devlog">
+		<a ui-sref=".media" ui-sref-active="active">
+			<span translate>Media</span>
+		</a>
+	</li>
+	<li ng-if="!manageCtrl.isWizard || !manageCtrl.game._is_devlog">
+		<a ui-sref=".packages.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.game.packages' ) }">
+			<gj-nav-required-step-icon ng-if="!manageCtrl.game._is_devlog" is-complete="manageCtrl.game.has_active_builds"></gj-nav-required-step-icon>
+			<span translate>Packages</span>
+		</a>
+	</li>
+	<li ng-if="!manageCtrl.isWizard || !manageCtrl.game._is_devlog">
+		<a ui-sref=".music" ui-sref-active="active">
+			<span translate>Music</span>
 		</a>
 	</li>
 	<li>
 		<a ui-sref=".settings" ui-sref-active="active">
-			Settings
+			<span translate>Settings</span>
 		</a>
 	</li>
 </ul>
+
+<div ng-if="!$state.is( 'dashboard.developer.games.manage.game.wizard-finish' )">
+	<button ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" class="btn btn-success-outline btn-block"
+		ng-disabled="!manageCtrl.canPublish"
+		ng-click="manageCtrl.publish()"
+		>
+		<span translate>Publish</span>
+	</button>
+
+	<button ng-if="manageCtrl.isWizard" class="btn btn-outline btn-block"
+		ng-click="manageCtrl.saveDraft()"
+		>
+		<span translate>Save Draft</span>
+	</button>
+</div>

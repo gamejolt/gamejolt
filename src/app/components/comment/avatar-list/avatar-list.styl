@@ -1,0 +1,39 @@
+.comment-avatar-list
+	@extend .clearfix
+	margin-left: -10px
+	margin-right: -10px
+
+	.btn
+		vertical-align: top
+		margin: 0 10px 10px 10px
+
+	&-item
+		display: inline-block
+		width: 56px
+		height: 56px
+		margin: 0 10px 10px 10px
+		vertical-align: middle
+
+	&-comment
+
+		&-title
+			@extend .h5
+			margin-top: 0
+			margin-bottom: $font-size-base * 0.5
+			font-weight: bold
+
+		&-time
+			display: inline-block
+			margin-left: 5px
+			font-family: $font-family-tiny
+			color: $gray-light
+			font-size: $font-size-tiny
+			font-weight: normal
+			vertical-align: middle
+
+		&-owner
+			margin-left: 5px
+			margin-top: -2px
+
+		&-content
+			font-size: $font-size-small

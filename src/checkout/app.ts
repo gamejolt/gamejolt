@@ -1,7 +1,8 @@
 import { bootstrap } from 'ng-metadata/platform';
-import { enableProdMode } from 'ng-metadata/core';
+import { enableProdMode, provide } from 'ng-metadata/core';
 
 import ModelModule from './../lib/gj-lib-client/components/model/model';
+import MetaModule from './../lib/gj-lib-client/components/meta/meta';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 
@@ -10,7 +11,7 @@ import { App } from './app-service';
 import FormsModule from './components/forms/forms';
 import ViewsModule from './views/views';
 
-angular.module( 'App', [
+const AppModule = angular.module( 'App', [
 	// Client.
 	/* inject client:base:modules */
 
@@ -30,6 +31,7 @@ angular.module( 'App', [
 	'gj.Api',
 	'gj.Payload',
 	ModelModule,
+	MetaModule,
 	'gj.Error',
 	'gj.Translate',
 	'gj.Geo',
@@ -73,9 +75,13 @@ angular.module( 'App', [
 	// Views.
 	ViewsModule,
 ] )
-.service( 'App', App )
-.controller( 'AppCtrl', AppCtrl )
-.config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $sceDelegateProvider )
+.config( function(
+	$locationProvider: ng.ILocationProvider,
+	$uiViewScrollProvider: ng.ui.IUiViewScrollProvider,
+	$compileProvider: ng.ICompileProvider,
+	EnvironmentProvider: any,
+	$sceDelegateProvider: ng.ISCEDelegateProvider,
+)
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
 		'self',
@@ -122,9 +128,13 @@ angular.module( 'App', [
 		$compileProvider.imgSrcSanitizationWhitelist( /^\s*((https?|ftp|file|blob|app):|data:image\/)/ );
 	}
 } )
-;
+.name;
+
+angular.module( AppModule )
+.controller( 'AppCtrl', AppCtrl )
+.service( ...provide( 'App', { useClass: App } ) );
 
 setTimeout( function()
 {
-	bootstrap( 'App' );
+	bootstrap( AppModule );
 }, 0 );
