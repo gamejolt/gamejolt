@@ -1,3 +1,5 @@
+$chat-bubble-size = 60px
+
 .chat-bubbles
 	position: fixed
 	bottom: 10px
@@ -16,57 +18,53 @@
 	user-select: none
 	transform: scale(0.9, 0.9)
 	transition: transform 0.2s ease-in-out
+	margin-bottom: 4px
 
-	&:not(:last-child)
-		margin-bottom: 4px
+	&:last-child
+		margin-bottom: 0
 
 	&:hover
 		transform: scale(1.0, 1.0)
 
-.chat-bubble-inner
-	position: relative
-	color: $white
-	cursor: pointer
+	&-inner
+		position: relative
+		color: $white
+		cursor: pointer
 
-.chat-bubble-notification-icon
-	position: absolute
-	bottom: 1px
-	right: 1px
-	width: 12px
-	height: 12px
-	background-color: $gj-pink
-	border: 2px solid $gray-dark
-	border-radius: 100%
-
-.chat-bubble-icon
-	color: $white !important
-	text-align: center
-	font-size: 20px
-	padding-left: 4px
-
-	&.chat-bubble-active
-		.chat-bubble-image, .chat-bubble-letter
-			border: 2px solid $gj-green
-
-	&.chat-bubble-notification
-		.chat-bubble-image, .chat-bubble-letter
-			border: 2px solid $gj-pink
-
-	.chat-bubble-image
-		width: 40px
-		height: 40px
+	&-notification-icon
+		position: absolute
+		bottom: 1px
+		right: 1px
+		width: 12px
+		height: 12px
+		background-color: $gj-pink
+		border: 2px solid $white
 		border-radius: 100%
-		border: 2px solid $gray-dark
-		background-color: $gray-darker
 
+	&-icon
+		color: $white !important
+		text-align: center
+		font-size: 20px
+		padding-left: 4px
+
+		&.chat-bubble-active
+			.chat-bubble-image
+			.chat-bubble-letter
+				border-color: $gj-green
+
+		&.chat-bubble-notification
+			.chat-bubble-image
+			.chat-bubble-letter
+				border-color: $gj-pink
+
+	&-image
+	&-letter
+		width: $chat-bubble-size
+		height: $chat-bubble-size
+		border-radius: 100%
+		border: 3px solid $white
+		background-color: $gray-darker
 		transition: border 0.2s $weak-ease-out
 
-	.chat-bubble-letter
-		width: 40px
-		height: 40px
-		line-height: 34px
-		border-radius: 100%
-		border: 2px solid $gray-dark
-		background-color: $gray-darker
-
-		transition: border 0.2s $weak-ease-out
+	&-letter
+		line-height: $chat-bubble-size
