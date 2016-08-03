@@ -31,6 +31,14 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewBuild'
 			{
 				scope.isLoaded = true;
 				angular.extend( scope, payload );
+
+				// ROM types can change, so we pull from server.
+				if ( payload.romTypes ) {
+					for ( var i in payload.romTypes ) {
+						var ext = payload.romTypes[ i ];
+						browserTypes[ ext ] = Game_Build.TYPE_ROM;
+					}
+				}
 			} );
 		}
 
@@ -38,9 +46,6 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewBuild'
 			'.zip': Game_Build.TYPE_HTML,
 			'.swf': Game_Build.TYPE_FLASH,
 			'.unity3d': Game_Build.TYPE_UNITY,
-			'.gba': Game_Build.TYPE_ROM,
-			'.gbc': Game_Build.TYPE_ROM,
-			'.gb': Game_Build.TYPE_ROM,
 		};
 
 		scope.getUploadAccept = function()
