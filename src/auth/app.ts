@@ -10,6 +10,10 @@ import ImgHelperModule from './../lib/gj-lib-client/components/img/helper/helper
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
 
+if ( GJ_BUILD_TYPE == 'production' ) {
+	enableProdMode();
+}
+
 const AppModule = angular.module( 'App', [
 	// Set the event tracking up first.
 	'gj.ErrorTracking',
@@ -89,10 +93,7 @@ const AppModule = angular.module( 'App', [
 		EnvironmentProvider.env = 'development';
 	}
 
-	if ( GJ_BUILD_TYPE == 'production' ) {
-		enableProdMode();
-	}
-	else if ( GJ_BUILD_TYPE == 'development' ) {
+	if ( GJ_BUILD_TYPE == 'development' ) {
 		EnvironmentProvider.buildType = 'development';
 	}
 

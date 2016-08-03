@@ -11,6 +11,10 @@ import { App } from './app-service';
 import FormsModule from './components/forms/forms';
 import ViewsModule from './views/views';
 
+if ( GJ_BUILD_TYPE == 'production' ) {
+	enableProdMode();
+}
+
 const AppModule = angular.module( 'App', [
 	// Client.
 	/* inject client:base:modules */
@@ -95,10 +99,7 @@ const AppModule = angular.module( 'App', [
 		EnvironmentProvider.env = 'development';
 	}
 
-	if ( GJ_BUILD_TYPE == 'production' ) {
-		enableProdMode();
-	}
-	else if ( GJ_BUILD_TYPE == 'development' ) {
+	if ( GJ_BUILD_TYPE == 'development' ) {
 		EnvironmentProvider.buildType = 'development';
 	}
 
