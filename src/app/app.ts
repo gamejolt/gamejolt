@@ -56,6 +56,7 @@ import DevlogPostViewModalModule from './components/devlog/post/view-modal/view-
 
 import GameThumbnailModule from './components/game/thumbnail/thumbnail';
 import GameFollowWidgetModule from './components/game/follow-widget/follow-widget';
+import GameGridModule from './components/game/grid/grid';
 import FiresidePostThumbnailModule from './components/fireside/post/thumbnail/thumbnail';
 import FiresidePostListModule from './components/fireside/post/list/list';
 
@@ -316,7 +317,7 @@ const AppModule = angular.module( 'App', [
 	GameFollowWidgetModule,
 	'App.Meter',
 	'App.Game.CompatIcons',
-	'App.Game.Grid',
+	GameGridModule,
 	'App.Game.Filtering',
 	'App.Game.CoverButtons',
 	GameMediaBarModule,
