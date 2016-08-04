@@ -24,6 +24,7 @@ export class SearchPayload
 
 	users: any[];
 	games: any[];
+	devlogs: any[];
 	libraryGames: any[];
 
 	constructor( public type: string, data: any )
@@ -34,6 +35,7 @@ export class SearchPayload
 
 		this.users = SearchPayload.User.populate( data.users );
 		this.games = SearchPayload.Game.populate( data.games );
+		this.devlogs = SearchPayload.Game.populate( data.devlogs );
 		this.libraryGames = SearchPayload.Environment.isClient && data.libraryGames
 		? SearchPayload.$injector.get( 'LocalDb_Game' ).populate( data.libraryGames )
 		: [];

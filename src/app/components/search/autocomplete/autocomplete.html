@@ -70,6 +70,26 @@
 			</a>
 		</div>
 
+		<!-- Devlogs -->
+		<div class="popover-heading" ng-if="$ctrl.devlogs.length">
+			<span class="jolticon jolticon-blog-article"></span>
+			<span translate>Devlogs</span>
+		</div>
+		<div class="list-group thin" ng-if="$ctrl.devlogs.length">
+			<a class="list-group-item"
+				ng-repeat="game in $ctrl.devlogs track by game.id"
+				ng-class="{ active: $ctrl.items[ $ctrl.selected - 1 ] === game }"
+				ng-click="$ctrl.selectGame( game )"
+				>
+
+				<span class="search-game-thumbnail">
+					<gj-game-thumbnail-img game="::game"></gj-game-thumbnail-img>
+				</span>
+
+				{{ ::game.title }}
+			</a>
+		</div>
+
 		<!-- Users -->
 		<div class="popover-heading" ng-if="$ctrl.users.length">
 			<span class="jolticon jolticon-user"></span>

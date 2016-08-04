@@ -3,7 +3,7 @@ import { SearchPayload } from './payload-service';
 
 export interface SearchOptions
 {
-	type: 'all' | 'user' | 'game' | 'typeahead';
+	type: 'all' | 'user' | 'game' | 'devlog' | 'typeahead';
 	page?: number;
 }
 
@@ -69,6 +69,9 @@ export class Search
 		}
 		else if ( options.type == 'game' ) {
 			endpoint += '/games';
+		}
+		else if ( options.type == 'devlog' ) {
+			endpoint += '/devlogs';
 		}
 		else if ( options.type == 'typeahead' ) {
 			endpoint += '/typeahead';

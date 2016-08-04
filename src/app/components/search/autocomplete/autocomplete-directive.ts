@@ -61,6 +61,7 @@ export class AutocompleteComponent implements OnInit
 
 	selected = 0;
 	games: any[] = [];
+	devlogs: any[] = [];
 	users: any[] = [];
 	libraryGames: any[] = [];
 	items: any[] = [];
@@ -89,8 +90,6 @@ export class AutocompleteComponent implements OnInit
 	)
 	{
 		this.LocalDb_Game = environment.isClient ? $injector.get( 'LocalDb_Game' ) : null;
-
-		// this.modes = this.modes || ;
 
 		this.commands = [
 			{
@@ -276,6 +275,7 @@ export class AutocompleteComponent implements OnInit
 			// Payloads may not come back sequentially.
 			if ( this.searchCtrl.query === thisQuery ) {
 				this.games = payload.games;
+				this.devlogs = payload.devlogs;
 				this.users = payload.users;
 				this.libraryGames = payload.libraryGames;
 
@@ -284,6 +284,7 @@ export class AutocompleteComponent implements OnInit
 				this.items = ([] as any[])
 					.concat( this.libraryGames )
 					.concat( this.games )
+					.concat( this.devlogs )
 					.concat( this.users )
 					;
 			}

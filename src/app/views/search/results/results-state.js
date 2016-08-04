@@ -6,9 +6,12 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		controllerAs: 'resultsCtrl',
 		templateUrl: '/app/views/search/results/results.html',
 		resolve: {
-			payload: function( $stateParams, Search )
+			payload: function( $stateParams, Search, History_Cache )
 			{
-				return Search.search( $stateParams.q );
+				return History_Cache.cache( function()
+				{
+					return Search.search( $stateParams.q );
+				} );
 			}
 		}
 	} );

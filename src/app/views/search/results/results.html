@@ -26,8 +26,8 @@
 
 			<div class="search-media-list row">
 				<div class="search-media-list-item col-xs-3 col-sm-2 col-lg-1 anim-back-in stagger no-animate-xs"
-					ng-repeat="user in searchCtrl.payload.users | limitTo:(Screen.isXs ? 8 : 12) track by user.id">
-
+					ng-repeat="user in searchCtrl.payload.users | limitTo:(Screen.isXs ? 8 : 12) track by user.id"
+					>
 					<div gj-user-avatar="user" avatar-show-name="true"></div>
 				</div>
 			</div>
@@ -35,22 +35,50 @@
 		</div>
 	</section>
 
-	<!-- Games -->
-	<section class="section" ng-if="searchCtrl.payload.games.length">
+	<section class="section">
 		<div class="container">
 
-			<div class="clearfix">
-				<a class="link-muted pull-right" ui-sref="search.games( { q: searchCtrl.query } )">
-					{{ ::'search.results.view_all_link' | translate }}
-				</a>
-				<h4 class="section-header">
-					{{ ::'search.results.games_heading' | translate }}
-					<small>({{ searchCtrl.payload.gamesCount }})</small>
-				</h4>
+			<!-- Devlogs -->
+			<div ng-if="searchCtrl.payload.devlogs.length">
+				<div class="clearfix">
+					<a class="link-muted pull-right" ui-sref="search.devlogs( { q: searchCtrl.query } )">
+						{{ ::'search.results.view_all_link' | translate }}
+					</a>
+					<h4 class="section-header">
+						<span translate>Devlogs</span>
+						<small>({{ searchCtrl.payload.devlogsCount }})</small>
+					</h4>
+				</div>
+
+				<gj-game-grid
+					size="sm"
+					games="searchCtrl.payload.devlogs | limitTo:(Screen.isMobile ? 6 : 8 )"
+					games-count="searchCtrl.payload.devlogsCount"
+					>
+				</gj-game-grid>
 			</div>
 
-			<gj-game-grid gj-games="searchCtrl.payload.games" gj-games-count="searchCtrl.payload.gamesCount"></gj-game-grid>
+			<!-- Games -->
+			<div ng-if="searchCtrl.payload.games.length">
+				<div class="clearfix">
+					<a class="link-muted pull-right" ui-sref="search.games( { q: searchCtrl.query } )">
+						{{ ::'search.results.view_all_link' | translate }}
+					</a>
+					<h4 class="section-header">
+						{{ ::'search.results.games_heading' | translate }}
+						<small>({{ searchCtrl.payload.gamesCount }})</small>
+					</h4>
+				</div>
+
+				<gj-game-grid
+					games="searchCtrl.payload.games"
+					games-count="searchCtrl.payload.gamesCount"
+					>
+				</gj-game-grid>
+
+			</div>
 
 		</div>
 	</section>
+
 </div>
