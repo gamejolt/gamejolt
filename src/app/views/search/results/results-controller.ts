@@ -48,5 +48,11 @@ export class ResultsCtrl
 		if ( !payload.gamesCount && !payload.usersCount && !payload.devlogsCount ) {
 			searchCtrl.noResults = true;
 		}
+		else {
+			if ( payload.devlogsCount > 0 ) {
+				searchCtrl.payload.devlogsMobile = payload.devlogs.slice( 0, 3 );
+				searchCtrl.payload.devlogsDesktop = payload.devlogs.slice( 0, 4 );
+			}
+		}
 	}
 }
