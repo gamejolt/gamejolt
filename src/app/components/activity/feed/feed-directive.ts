@@ -103,12 +103,17 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 
 	isItemUnread( item: ActivityFeedItem )
 	{
-		// Only makes sense for notification feeds.
-		if ( this.type != 'Notification' || typeof this.feed.notificationWatermark === 'undefined' || !(item.sourceItem instanceof Notification) ) {
+		// Only care if there is a watermark.
+		if ( typeof this.feed.notificationWatermark === 'undefined' ) {
 			return false;
 		}
 
-		return item.feedItem.added_on > this.feed.notificationWatermark;
+		if ( item.feedItem instanceof this.notificationModel ) {
+			return item.feedItem.added_on > this.feed.notificationWatermark;
+		}
+		else if ( item.feedItem instanceof this.firesidePostModel ) {
+			return item.feedItem.published_on > this.feed.notificationWatermark;
+		}
 	}
 
 	isItemInView( item: ActivityFeedItem )
