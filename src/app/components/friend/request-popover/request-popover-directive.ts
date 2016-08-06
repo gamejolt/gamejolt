@@ -105,8 +105,13 @@ export class RequestPopoverComponent
 		this.activeTab = tab;
 	}
 
-	acceptRequest( request: any )
+	acceptRequest( $event: ng.IAngularEvent, request: any )
 	{
+		if ( $event.stopPropagation ) {
+			$event.stopPropagation();
+			$event.preventDefault();
+		}
+
 		this.userFriendshipsHelper.acceptRequest( request )
 			.then( () =>
 			{
@@ -115,8 +120,13 @@ export class RequestPopoverComponent
 			} );
 	}
 
-	rejectRequest( request: any )
+	rejectRequest( $event: ng.IAngularEvent, request: any )
 	{
+		if ( $event.stopPropagation ) {
+			$event.stopPropagation();
+			$event.preventDefault();
+		}
+
 		this.userFriendshipsHelper.rejectRequest( request )
 			.then( () =>
 			{
@@ -125,8 +135,13 @@ export class RequestPopoverComponent
 			} );
 	}
 
-	cancelRequest( request: any )
+	cancelRequest( $event: ng.IAngularEvent, request: any )
 	{
+		if ( $event.stopPropagation ) {
+			$event.stopPropagation();
+			$event.preventDefault();
+		}
+
 		this.userFriendshipsHelper.cancelRequest( request )
 			.then( () =>
 			{

@@ -56,13 +56,13 @@
 							<div class="shell-card-popover-card-controls">
 								<span class="btn btn-success-outline btn-sparse"
 									gj-tooltip="{{ 'Add Friend' | translate }}"
-									ng-click="$ctrl.acceptRequest( request )"
+									ng-click="$ctrl.acceptRequest( $event, request )"
 									>
 									<span class="jolticon jolticon-friend-add-2"></span>
 								</span>
 								<span class="btn btn-danger-outline btn-sparse"
 									gj-tooltip="{{ 'Dismiss request. Sender will not be notified.' | translate }}"
-									ng-click="$ctrl.rejectRequest( request )"
+									ng-click="$ctrl.rejectRequest( $event, request )"
 									>
 									<span class="jolticon jolticon-friend-remove-2"></span>
 								</span>
@@ -104,7 +104,7 @@
 						<div class="shell-card-popover-card-controls">
 							<span class="btn btn-danger-outline btn-sparse"
 								gj-tooltip="{{ 'Cancel' | translate }}"
-								ng-click="$ctrl.cancelRequest( request )"
+								ng-click="$ctrl.cancelRequest( $event, request )"
 								>
 								<span class="jolticon jolticon-friend-remove-2"></span>
 							</span>
