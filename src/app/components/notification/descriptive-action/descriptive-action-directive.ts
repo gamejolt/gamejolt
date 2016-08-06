@@ -9,7 +9,6 @@ import template from 'html!./descriptive-action.html';
 export class DescriptiveActionComponent
 {
 	@Input( '<' ) notification: any;
-	@Input( '<' ) inPopover = false;
 
 	translationKey: string;
 	translationValues: Object | null;
@@ -35,12 +34,7 @@ export class DescriptiveActionComponent
 		this.translationKey = translationKeys[ this.notification.type ];
 		this.translationValues = null;
 
-		if ( this.notification.type == notificationModel.TYPE_GAME_RATING_ADD ) {
-			if ( this.inPopover ) {
-				this.translationKey = gettext( 'notifications.rating_title_popover_html' );
-			}
-		}
-		else if ( this.notification.type == notificationModel.TYPE_SELLABLE_SELL ) {
+		if ( this.notification.type == notificationModel.TYPE_SELLABLE_SELL ) {
 			this.translationValues = {
 				object: this.notification.to_model.title,
 				amount: currencyFilter( this.notification.action_model.amount / 100, '$' ),

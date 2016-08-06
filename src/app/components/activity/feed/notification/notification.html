@@ -41,7 +41,7 @@
 				<div class="timeline-list-item-content" ng-switch="::$ctrl.notification.type">
 					<div ng-switch-when="comment-add" ng-bind-html="::$ctrl.notification.action_model.comment_compiled"></div>
 					<div ng-switch-when="comment-add-object-owner" ng-bind-html="::$ctrl.notification.action_model.comment_compiled"></div>
-					<div ng-switch-when="game-rating-add" translate>
+					<div ng-switch-when="game-rating-add" translate translate-params-rating="::$ctrl.notification.action_model.rating">
 						notifications.rating_details_html
 					</div>
 				</div>
