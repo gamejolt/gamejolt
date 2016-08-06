@@ -10,11 +10,6 @@ const KEYCODE_DOWN = 40;
 const KEYCODE_ENTER = 13;
 const KEYCODE_ESC = 27;
 
-interface CommandOptions
-{
-	section: string;
-}
-
 interface Command
 {
 	keyword: string;
@@ -22,7 +17,7 @@ interface Command
 	description: string;
 	authRequired?: boolean;
 	clientRequired?: boolean;
-	options?: CommandOptions;
+	options?: Object;
 }
 
 function setCaretPosition( el: any, caretPos: number )
@@ -135,8 +130,16 @@ export class AutocompleteComponent implements OnInit
 			{
 				keyword: ':activity',
 				state: 'dashboard.activity.feed',
+				options: { tab: 'activity' },
 				authRequired: true,
 				description: gettext( 'commands.activity_description' ),
+			},
+			{
+				keyword: ':notifications',
+				state: 'dashboard.activity.feed',
+				options: { tab: 'notifications' },
+				authRequired: true,
+				description: gettext( 'View your notifications.' ),
 			},
 			{
 				keyword: ':settings',
