@@ -17,6 +17,11 @@ export class NotificationComponent
 
 	notification: Notification;
 
+	// We bind-once canToggleContent. It needs to be undefined so that it
+	// doesn't bind until we know if the content can be toggled.
+	canToggleContent: boolean | undefined = undefined;
+	showFullContent = false;
+
 	constructor(
 		@Inject( 'Notification' ) public notificationModel: typeof Notification,
 		@Inject( 'Screen' ) public screen: Screen
@@ -34,5 +39,10 @@ export class NotificationComponent
 
 		this.notification.go();
 		this.onClick();
+	}
+
+	toggleFull()
+	{
+		this.showFullContent = !this.showFullContent;
 	}
 }

@@ -37,15 +37,40 @@
 				>
 			</div>
 
-			<gj-fade-collapse fade-collapse-height="80">
-				<div class="timeline-list-item-content" ng-switch="::$ctrl.notification.type">
-					<div ng-switch-when="comment-add" ng-bind-html="::$ctrl.notification.action_model.comment_compiled"></div>
-					<div ng-switch-when="comment-add-object-owner" ng-bind-html="::$ctrl.notification.action_model.comment_compiled"></div>
-					<div ng-switch-when="game-rating-add" translate translate-params-rating="::$ctrl.notification.action_model.rating">
+			<div class="timeline-list-item-content" ng-switch="::$ctrl.notification.type">
+				<gj-fade-collapse
+					fade-collapse-height="80"
+					fade-collapse-is-open="$ctrl.showFullContent"
+					fade-collapse-is-required="::$ctrl.canToggleContent"
+					>
+					<div
+						ng-switch-when="comment-add"
+						class="comment-widget-comment-content"
+						ng-bind-html="::$ctrl.notification.action_model.comment_compiled"
+						>
+					</div>
+					<div
+						ng-switch-when="comment-add-object-owner"
+						class="comment-widget-comment-content"
+						ng-bind-html="::$ctrl.notification.action_model.comment_compiled"
+						>
+					</div>
+					<div
+						ng-switch-when="game-rating-add"
+						translate
+						translate-params-rating="::$ctrl.notification.action_model.rating"
+						>
 						notifications.rating_details_html
 					</div>
+				</gj-fade-collapse>
+
+				<div ng-if="::$ctrl.canToggleContent">
+					<br>
+					<span class="hidden-text-expander"
+						ng-click="$ctrl.toggleFull(); $event.stopPropagation(); $event.preventDefault();"
+						></span>
 				</div>
-			</gj-fade-collapse>
+			</div>
 		</div>
 
 	</div>
