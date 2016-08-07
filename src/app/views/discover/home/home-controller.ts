@@ -10,6 +10,7 @@ export class HomeCtrl
 	hotGames: any[];
 	paidGames: any[];
 	bestGames: any[];
+	hotDevlogs: any[];
 
 	channels: any[];
 
@@ -44,6 +45,7 @@ export class HomeCtrl
 		this.hotGames = Game.populate( payload.hotGames );
 		this.paidGames = Game.populate( payload.paidGames );
 		this.bestGames = Game.populate( payload.bestGames );
+		this.hotDevlogs = Game.populate( payload.hotDevlogs );
 
 		this.channels = payload.channels;
 
