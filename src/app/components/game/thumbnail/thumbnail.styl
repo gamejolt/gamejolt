@@ -14,6 +14,12 @@ gj-game-thumbnail
 	display: block
 
 .game-thumbnail
+
+	$zindex-img = 1
+	$zindex-video = 2
+	$zindex-tags = 3
+	$zindex-controls = 3
+
 	position: relative
 	display: block
 	margin-bottom: $grid-gutter-width-xs
@@ -31,7 +37,7 @@ gj-game-thumbnail
 		position: absolute
 		top: 0
 		right: 0
-		z-index: 2
+		z-index: $zindex-controls
 		border-left: 3px solid $white
 		border-bottom: 3px solid $white
 		background-color: $white
@@ -70,10 +76,10 @@ gj-game-thumbnail
 			height: 100%
 
 		img
-			z-index: 1
+			z-index: $zindex-img
 
 		video
-			z-index: 2
+			z-index: $zindex-video
 
 	&-meta
 		position: relative
@@ -125,14 +131,14 @@ gj-game-thumbnail
 		padding-bottom: 3px
 		color: $gj-blue
 		background-color: rgba( $black, 0.8 )
-		z-index: 2
+		z-index: $zindex-tags
 
 	&-tag
 		@extend .tag
 		position: absolute
 		left: 0
 		top: 10px
-		z-index: 2
+		z-index: $zindex-tags
 		color: $gj-blue
 		background-color: $gray-darkest
 
@@ -145,7 +151,7 @@ gj-game-thumbnail
 		right: 5px
 		padding: 0 10px
 		text-align: center
-		z-index: 2
+		z-index: $zindex-tags
 
 		&-owned
 			@extend .fill-green
