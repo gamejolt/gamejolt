@@ -1,6 +1,8 @@
 import { bootstrap } from 'ng-metadata/platform';
 import { enableProdMode, provide } from 'ng-metadata/core';
 
+import ConnectionModule from './../lib/gj-lib-client/components/connection/connection';
+import ConnectionStatePermissionsModule from './../lib/gj-lib-client/components/connection/state-permissions/state-permissions';
 import ModelModule from './../lib/gj-lib-client/components/model/model';
 import MetaModule from './../lib/gj-lib-client/components/meta/meta';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
@@ -73,6 +75,8 @@ const AppModule = angular.module( 'App', [
 	// Set the event tracking up first.
 	'gj.ErrorTracking',
 
+	ConnectionStatePermissionsModule,
+
 	// Client.
 	/* inject client:modules */
 
@@ -124,7 +128,7 @@ const AppModule = angular.module( 'App', [
 	'gj.UiTree.Placeholder',
 	'gj.Device',
 	LocationModule,
-	'gj.Connection',
+	ConnectionModule,
 	ClipboardModule,
 
 	'gj.Partial',
