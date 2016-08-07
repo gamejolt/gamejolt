@@ -1,18 +1,17 @@
 .devlog-post
 
-	// This is hardcoded.
-	// If any spacing is changed, this may be invalid. =\
-	$devlog-post-game-thumb-width = 120px
-
 	&-game
 		position: absolute
 		right: 10px
 		top: 10px
-		width: $devlog-post-game-thumb-width
 		border: 2px solid $gray-light
+
+		// This is hardcoded.
+		// If any spacing is changed, this may be invalid. =\
+		width: 120px
 
 		&:hover
 			border-color: $white
 
 	.devlog-post-header-content
-		padding-right: $devlog-post-game-thumb-width + 20px
+		padding-right: 120px + 20px
