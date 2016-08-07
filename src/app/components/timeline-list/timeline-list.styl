@@ -29,6 +29,9 @@
 		@media $media-xs
 			margin-bottom: $line-height-computed
 
+			&.new
+				border-left: 3px solid $gj-pink
+
 		&-icon
 			position: absolute
 			left: 0
@@ -49,7 +52,7 @@
 				background-color: $gj-dark-green
 				color: $gj-green
 
-			&.active
+			.timeline-list-item.new &
 				background-color: $gj-pink
 				color: $white
 

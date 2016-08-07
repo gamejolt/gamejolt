@@ -9,6 +9,7 @@
 		<div class="timeline-list-item"
 			ng-repeat="item in $ctrl.feed.items track by item.id"
 			id="activity-feed-item-{{ ::item.id }}"
+			ng-class="::{ new: $ctrl.isItemUnread( item ) }"
 			in-view="$ctrl.onItemInViewChange( $inview, item )"
 			>
 
@@ -16,7 +17,6 @@
 				<gj-activity-feed-devlog-post
 					ng-switch-when="devlog-post"
 					item="::item"
-					is-new="::$ctrl.isItemUnread( item )"
 					on-click="$ctrl.setActive( item )"
 					on-expand="$ctrl.onItemExpanded( item )"
 					>
@@ -25,7 +25,6 @@
 				<gj-activity-feed-notification
 					ng-switch-when="notification"
 					item="::item"
-					is-new="::$ctrl.isItemUnread( item )"
 					on-click="$ctrl.setActive( item )"
 					>
 				</gj-activity-feed-notification>

@@ -13,7 +13,6 @@ import template from 'html!./devlog-post.html';
 export class DevlogPostComponent
 {
 	@Input( '<' ) item: ActivityFeedItem;
-	@Input( '<' ) isNew = false;
 
 	@Output() onClick: Function;
 	@Output() onExpand: Function;
