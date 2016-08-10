@@ -5,14 +5,19 @@
 	$devlog-post-game-thumb-width = 120px
 
 	&-game
+		display: none
 		position: absolute
 		right: 10px
 		top: 10px
 		width: $devlog-post-game-thumb-width
 		border: 2px solid $gray-light
 
+		@media $media-sm-up
+			display: block
+
 		&:hover
 			border-color: $white
 
-	.devlog-post-header-content
-		padding-right: $devlog-post-game-thumb-width + 20px
+	@media $screen-sm-up
+		.devlog-post-header-content
+			padding-right: $devlog-post-game-thumb-width + 20px
