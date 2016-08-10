@@ -85,11 +85,12 @@
 				<ui-view id="content" ng-cloak></ui-view>
 			</gj-shell-body>
 
-			<gj-shell-chat-pane></gj-shell-chat-pane>
+			<div ng-if="App.chat">
+				<gj-shell-chat-pane></gj-shell-chat-pane>
+				<gj-chat-bubbles></gj-chat-bubbles>
+				<gj-chat-windows></gj-chat-windows>
+			</div>
 
-			<gj-chat-bubbles></gj-chat-bubbles>
-
-			<gj-chat-windows></gj-chat-windows>
 			<gj-growls></gj-growls>
 
 			<gj-shell-hot-bottom>

@@ -287,7 +287,6 @@ const AppModule = angular.module( 'App', [
 	// Components.
 	'App.ProtocolWatcher',
 	'App.SplitTest',
-	'App.Chat',
 	'App.Shell',
 	'App.Offline.Alert',
 	SearchModule,

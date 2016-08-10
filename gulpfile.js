@@ -69,6 +69,11 @@ var config = {
 				'angular-ui-tree',
 			],
 		},
+		'chat.js': {
+			components: [
+				'chat',
+			],
+		},
 		'primus.js': {
 			componentVendor: [
 				'primus',

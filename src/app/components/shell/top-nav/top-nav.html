@@ -128,7 +128,7 @@
 			</li>
 		</ul>
 
-		<div class="navbar-separator"></div>
+		<div class="navbar-separator" ng-if="App.chat || !Connection.isOnline"></div>
 
 		<!-- Connection Status -->
 		<span ng-if="!Connection.isOnline">
@@ -138,7 +138,7 @@
 		</span>
 
 		<!-- Chat -->
-		<ul class="navbar-items">
+		<ul class="navbar-items" ng-if="App.chat">
 			<li>
 				<a
 					ng-class="{ active: Shell.isRightPaneVisible }"
@@ -146,7 +146,7 @@
 					gj-tooltip="{{ App.user ? 'Chat and Friends List (c)' : 'Chat (c)' }}" tooltip-placement="left"
 					gj-track-event="top-nav:chat:toggle"
 					>
-					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="Chat.friendNotifications">{{ Chat.friendNotifications }}</span>
+					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="App.chat.friendNotifications">{{ App.chat.friendNotifications }}</span>
 					<span class="jolticon jolticon-user-messages"></span>
 				</a>
 			</li>
