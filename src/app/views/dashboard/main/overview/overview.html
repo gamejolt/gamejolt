@@ -214,7 +214,11 @@
 					<gj-card ng-repeat="game in overviewCtrl.games | orderBy:'posted_on':true | limitTo:(overviewCtrl.gamesExpanded ? undefined : 5) track by game.id">
 						<div class="row">
 							<div class="col-xs-3">
-								<gj-game-thumbnail-img game="::game"></gj-game-thumbnail-img>
+								<gj-game-thumbnail-img
+									ng-if="game.thumbnail_media_item"
+									game="::game"
+									>
+								</gj-game-thumbnail-img>
 							</div>
 							<div class="col-xs-9">
 								<div class="card-title">
