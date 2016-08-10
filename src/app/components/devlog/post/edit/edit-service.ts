@@ -14,6 +14,8 @@ export class DevlogPostEdit
 	show( post: Fireside_Post ): ng.IPromise<Fireside_Post>
 	{
 		const modalInstance = this.$modal.open( {
+			keyboard: false,
+			backdrop: 'static',
 			template,
 			controller: 'Devlog.Post.EditModalCtrl',
 			controllerAs: '$ctrl',
