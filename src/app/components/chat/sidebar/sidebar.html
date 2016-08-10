@@ -7,11 +7,6 @@
 			Public Chat Rooms
 		</div>
 
-		<div class="nav-well chat-sidebar-total-online">
-			<span translate>People Online: </span>
-			<span class="highlighted-count">{{ client.allCount | number }}</span>
-		</div>
-
 		<ul class="shell-nav thin">
 			<li class="no-animate" ng-repeat="room in client.publicRooms track by room.id">
 				<a ng-click="ctrl.onPublicRoomClicked( room.id )"
