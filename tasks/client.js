@@ -180,7 +180,7 @@ module.exports = function( config )
 		if ( !config.watching && os.type() != 'Darwin' ) {
 
 			// We set the base directory to use the "package" folder.
-			clientJson.main = 'app://game-jolt-client/package/index.html#!/';
+			clientJson.main = 'chrome-extension://game-jolt-client/package/index.html#!/';
 			clientJson.window.icon = 'package/' + clientJson.window.icon;
 		}
 
@@ -213,7 +213,7 @@ module.exports = function( config )
 		}
 
 		var revAll = new plugins.revAll( {
-			prefix: 'app://game-jolt-client/package',
+			prefix: 'chrome-extension://game-jolt-client/package',
 			dontGlobal: [
 				/^\/node_modules\/.*$/,
 				/^\/tmp\/.*$/,

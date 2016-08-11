@@ -51,7 +51,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 					}
 
 					if ( Environment.isClient ) {
-						require( 'nw.gui' ).Shell.openExternal( response.authUrl );
+						nw.Shell.openExternal( response.authUrl );
 					}
 					else {
 						$window.location = response.authUrl;
