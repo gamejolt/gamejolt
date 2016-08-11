@@ -1,4 +1,4 @@
-angular.module( 'App.Game.Thumbnail' ).directive( 'gjGameCollectionThumbnail', function()
+angular.module( 'App.Game.Collection.Thumbnail' ).directive( 'gjGameCollectionThumbnail', function()
 {
 	return {
 		restrict: 'E',

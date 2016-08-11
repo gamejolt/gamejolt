@@ -1,15 +1,19 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', function(
-	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle,
+	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle, Fireside_Post,
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, User, Environment,
 	Jam,
+	Comment_Video,
+	ActivityFeedService, History,
 	Api, Payload, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
 {
 	var _this = this;
+	var wasHistoricalView = History.inHistorical;
 
 	$scope.Game = Game;
 
 	this.isLoaded = false;
 	this.currentCommentPage = $stateParams.comment_page;
+	this.videoCommentsPage = 0;
 
 	this.isShowingRatingBreakdown = false;
 
@@ -65,10 +69,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		Meta.twitter = payload.twitter;
 		this.microdata = payload.microdata ? JSON.stringify( payload.microdata ) : '{}';
 
-		$scope.gameCtrl.notificationCounts = payload.notificationCounts || {
-			news: 0,
-		};
-
 		this.profileCount = payload.profileCount || 0;
 		this.downloadCount = payload.downloadCount || 0;
 		this.playCount = payload.playCount || 0;
@@ -88,10 +88,12 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			} );
 		}
 
+		this.posts = ActivityFeedService.bootstrap( Fireside_Post.populate( payload.posts ), { inHistorical: wasHistoricalView } );
 		this.songs = Game_Song.populate( payload.songs );
-		this.latestArticles = Game_NewsArticle.populate( payload.latestArticles );
 		this.recommendedGames = Game.populate( payload.recommendedGames );
-		this.supporters = User.populate( payload.supporters ) || [];
+		this.supporters = User.populate( payload.supporters );
+		this.videoComments = Comment_Video.populate( payload.videoComments );
+		this.videoCommentsCount = payload.videoCommentsCount || 0;
 
 		var packageData = Game_Package.processPackagePayload( payload );
 		angular.extend( this, packageData );
@@ -113,27 +115,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 
 		// The releases section exists if there are releases or songs.
 		this.hasReleasesSection = this.releases.length || this.songs.length;
-
-		/**
-		 * Convenience messaging.
-		 */
-		$scope.$watch( '::gameCtrl.game.development_status', function( status )
-		{
-			if ( angular.isUndefined( status ) ) {
-				return;
-			}
-
-			_this.convenienceMessage = undefined;
-			if ( status == Game.DEVELOPMENT_STATUS_WIP && !_this.packages.length ) {
-				_this.convenienceMessage = 'wip';
-			}
-			else if ( status == Game.DEVELOPMENT_STATUS_CANCELED && !_this.packages.length ) {
-				_this.convenienceMessage = 'canceled-no-builds';
-			}
-			else if ( status == Game.DEVELOPMENT_STATUS_CANCELED && _this.packages.length ) {
-				_this.convenienceMessage = 'canceled-with-builds';
-			}
-		} );
 
 		/**
 		 * For game stats.
@@ -159,5 +140,16 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		if ( payload.activeJam ) {
 			this.activeJam = new Jam( payload.activeJam );
 		}
+	};
+
+	this.loadMoreVideoComments = function()
+	{
+		var _this = this;
+		++this.videoCommentsPage;
+		Api.sendRequest( '/web/discover/games/videos/' + $stateParams.id + '?page=' + this.videoCommentsPage )
+			.then( function( response )
+			{
+				_this.videoComments = _this.videoComments.concat( Comment_Video.populate( response.videos ) );
+			} );
 	};
 } );

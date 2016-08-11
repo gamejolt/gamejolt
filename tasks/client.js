@@ -120,7 +120,7 @@ module.exports = function( config )
 		'/* inject client:modules */': "'App.Client',",
 		'<!-- inject client:modules -->': appScripts.join( ' ' ),
 
-		// For other sections we load the whole client JS but only load the angular modules we want
+		// For other sections we don't load the whole client JS but only load the angular modules we want
 		// through the base-client.js module.
 		'/* inject client:base:modules */': "'App.ClientBase',",
 		'<!-- inject client:base:modules -->': baseScripts.join( ' ' ),

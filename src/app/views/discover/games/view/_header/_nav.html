@@ -1,19 +1,29 @@
 <!-- Game Nav -->
 <nav class="platform-list inline">
 	<ul>
-		<li>
-			<a ui-sref=".overview"
-				ui-sref-active="active"
-				>
+		<li ng-if="!gameCtrl.game._is_devlog">
+			<a ui-sref=".overview" ui-sref-active="active">
 				{{ ::'games.view.overview_tab' | translate }}
 			</a>
 		</li>
-		<li ng-if="gameCtrl.newsArticlesCount">
-			<a ui-sref=".news.list"
-				ng-class="{ active: $state.includes( 'discover.games.view.news' ) }"
+		<li ng-if="gameCtrl.game._is_devlog">
+			<a ui-sref=".overview"
+				ng-class="{ active: $state.is( 'discover.games.view.overview' ) || $state.includes( 'discover.games.view.devlog' ) }"
 				>
-				{{ ::'games.view.news_tab' | translate }}
-				<span class="badge">{{ gameCtrl.newsArticlesCount | number }}</span>
+				<span translate>Devlog</span>
+				<span class="badge">{{ gameCtrl.postCount | number }}</span>
+			</a>
+		</li>
+		<li ng-if="!gameCtrl.game._is_devlog && gameCtrl.postCount > 0">
+			<a ui-sref=".devlog.list" ng-class="{ active: $state.includes( 'discover.games.view.devlog' ) }">
+				<span translate>Devlog</span>
+				<span class="badge">{{ gameCtrl.postCount | number }}</span>
+			</a>
+		</li>
+		<li ng-if="gameCtrl.game._is_devlog && gameCtrl.game.comments_enabled">
+			<a ui-sref=".comments" ui-sref-active="active">
+				<span translate>Comments</span>
+				<span class="badge">{{ gameCtrl.commentsCount | number }}</span>
 			</a>
 		</li>
 		<li ng-if="gameCtrl.hasScores">
@@ -31,7 +41,7 @@
 				<span class="badge">{{ gameCtrl.trophiesCount | number }}</span>
 			</a>
 		</li>
-		<li ng-if="App.user">
+		<li ng-if="App.user && App.user.id != gameCtrl.game.developer.id">
 			<a gj-popover-trigger="game-more-options">
 				<span class="jolticon jolticon-ellipsis-h"></span>
 				{{ ::'options.more' | translate }}
@@ -48,13 +58,6 @@
 			>
 			<span class="jolticon jolticon-flag warning"></span>
 			<span translate>games.view.report_game_button</span>
-		</a>
-		<a class="list-group-item has-icon"
-			ng-if="App.user.id == gameCtrl.game.developer.id"
-			ui-sref="dashboard.developer.games.manage.game.overview( { id: gameCtrl.game.id } )"
-			>
-			<span class="jolticon jolticon-cog"></span>
-			<span translate>games.view.manage_game_button</span>
 		</a>
 		<a class="list-group-item has-icon"
 			ng-if="App.user.permission_level > 0"

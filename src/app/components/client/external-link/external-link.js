@@ -41,7 +41,7 @@ angular.module( 'App.Client.ExternalLink', [] ).run( function( $window, Environm
 
 		// Check for paths that can't be opened in client.
 		// We will have to open them externally.
-		for ( var i in relativeBlacklist ) {
+		for ( var i = 0; i < relativeBlacklist.length; ++i ) {
 			var regex = relativeBlacklist[ i ];
 			if ( regex.test( link ) ) {
 				nw.Shell.openExternal( Environment.baseUrl + link );

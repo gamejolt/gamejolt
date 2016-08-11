@@ -1,0 +1,63 @@
+<div class="tiny text-muted">
+	<span am-time-ago="::$ctrl.post.published_on"></span>
+</div>
+
+<h2 class="section-header">
+	{{ $ctrl.post.title }}
+</h2>
+
+<div ng-switch="$ctrl.post.type">
+
+	<div ng-switch-when="text" class="fireside-post-body">
+		<div gj-widget-compiler-bind="::$ctrl.post.content_compiled"></div>
+	</div>
+
+	<div ng-switch-when="media" class="full-bleed-xs">
+		<div ng-repeat="item in ::$ctrl.post.media track by item.id">
+
+			<div
+				gj-responsive-dimensions
+				responsive-dimensions-ratio="::item.width / item.height"
+				>
+
+				<img
+					ng-if="::!item.is_animated"
+					gj-img-responsive="{{ ::item.mediaserver_url }}"
+					alt=""
+					>
+
+				<gj-video
+					ng-if="::item.is_animated"
+					poster="{{ ::item.mediaserver_url }}"
+					webm="{{ ::item.mediaserver_url_webm }}"
+					mp4="{{ ::item.mediaserver_url_mp4 }}"
+					show-loading="true"
+					>
+				</gj-video>
+			</div>
+
+			<br>
+
+		</div>
+	</div>
+
+	<div ng-switch-when="video" class="full-bleed-xs">
+		<gj-video-embed
+			video-provider="youtube"
+			video-id="::$ctrl.post.videos[0].video_id"
+			autoplay="true"
+			>
+		</gj-video-embed>
+	</div>
+
+</div>
+
+<hr>
+
+<gj-activity-feed-devlog-post-controls
+	post="$ctrl.post"
+	show-game-info="$ctrl.showGameInfo"
+	in-modal="$ctrl.inModal"
+	require-tabs="true"
+	>
+</gj-activity-feed-devlog-post-controls>

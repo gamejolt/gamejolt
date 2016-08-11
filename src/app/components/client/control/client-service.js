@@ -54,7 +54,7 @@ angular.module( 'App.Client.Control' ).service( 'Client', function( $log )
 	};
 
 	if ( app.argv.length ) {
-		for ( var i in app.argv ) {
+		for ( var i = 0; i < app.argv.length; ++i ) {
 			if ( app.argv[ i ] == '--silent-start' ) {
 				$log.info( 'Started silently.' );
 				this.startedSilently = true;

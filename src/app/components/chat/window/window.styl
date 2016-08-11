@@ -11,17 +11,15 @@ $chat-room-window-padding = 15px
 	justify-content: center
 	align-items: flex-start
 	z-index: $zindex-chat-window
+	padding-right: 70px
 
 	@media $media-sm-up
 		top: $shell-top-nav-height + 10px
 		left: 0
 		right: $shell-pane-width + 10px
 
-		// When things in the hot bottom are active, we need to move up the bottom of the window.
-		bottom: $chat-tabs-height + 10px
-
 		body.chat-tabs-visible.status-bar-visible &
-			bottom: $chat-tabs-height + $status-bar-height + 10px
+			bottom: $status-bar-height + 10px
 
 .chat-window-back-close
 	position: absolute

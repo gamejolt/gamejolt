@@ -1,0 +1,19 @@
+<div class="row">
+	<div class="col-sm-4 col-sm-push-8">
+		<div class="page-help" translate>
+			<p>You can edit your description whenever you want and add to it over time. A good description generally contains things like a gameplay summary, control overview, story, and credits.</p>
+			<p>Upload images and use the markdown embeds in your description as in-context shots for your game or for stylized headings.</p>
+		</div>
+	</div>
+
+	<div class="col-sm-8 col-sm-pull-4">
+
+		<gj-form-dashboard-game-description
+			gj-game="manageCtrl.game"
+			is-wizard="manageCtrl.isWizard"
+			gj-form-submit-handler="descriptionCtrl.onSaved( $response )"
+			>
+		</gj-form-dashboard-game-description>
+
+	</div>
+</div>

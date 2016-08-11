@@ -15,7 +15,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 	} );
 
 	$stateProvider.state( 'dashboard.analytics.view', {
-		url: '/:period/:resource/:resourceId/:eventType?year&month',
+		url: '/:period/:resource/:resourceId/:metricKey?year&month',
 		controller: function( $scope, $stateParams )
 		{
 			$scope.analyticsCtrl.stateChanged( $stateParams );
@@ -33,7 +33,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 				value: '',
 				squash: true,
 			},
-			eventType: {
+			metricKey: {
 				value: '',
 				squash: true,
 			},

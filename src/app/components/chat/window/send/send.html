@@ -3,7 +3,7 @@
 
 	<div class="chat-window-send-multi-line-notice anim-fade-in no-animate-leave" ng-if="ctrl.multiLineMode">
 		<span class="jolticon jolticon-notice"></span>
-		You are in multi-line editing mode. Press <code>ctrl+enter</code> to send.
+		<span translate>You are in multi-line editing mode. Press <code>ctrl+enter</code> to send.</span>
 	</div>
 
 	<div class="row">
@@ -14,7 +14,7 @@
 			-->
 			<textarea
 				class="form-control"
-				placeholder="Enter message..."
+				placeholder="{{ 'Enter message...' | translate }}"
 				rows="2"
 				ng-model="ctrl.message"
 				ng-change="ctrl.onChange()"
@@ -33,7 +33,7 @@
 
 			<button class="i-button big block sparse" ng-click="ctrl.sendMessage( $event )">
 				<span class="jolticon jolticon-add-comment visible-xs"></span>
-				<span class="hidden-xs">Send</span>
+				<span class="hidden-xs" translate>Send</span>
 			</button>
 
 		</div>

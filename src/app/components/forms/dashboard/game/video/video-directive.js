@@ -2,7 +2,8 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameVideo', f
 {
 	var form = new Form( {
 		model: 'Game_Video',
-		template: '/app/components/forms/dashboard/game/video/video.html'
+		template: '/app/components/forms/dashboard/game/video/video.html',
+		resetOnSubmit: true,
 	} );
 
 	form.scope.game = '=gjGame';

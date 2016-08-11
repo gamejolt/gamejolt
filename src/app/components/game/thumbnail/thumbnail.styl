@@ -13,15 +13,13 @@
 gj-game-thumbnail
 	display: block
 
-	&.show-video
-		.game-thumbnail-thumb > img
-		.game-thumbnail-tags
-			display: none
-
-		.game-thumbnail-thumb > video
-			display: block
-
 .game-thumbnail
+
+	$zindex-img = 1
+	$zindex-video = 2
+	$zindex-tags = 3
+	$zindex-controls = 3
+
 	position: relative
 	display: block
 	margin-bottom: $grid-gutter-width-xs
@@ -29,55 +27,17 @@ gj-game-thumbnail
 	@media $media-sm-up
 		margin-bottom: $grid-gutter-width
 
-	&-tags
-	&-buttons
-		@extend .clearfix
-		position: absolute
-		bottom: 0
-		z-index: 2
-
-	&-tag
-	&-button
-		float: left
-		padding: 5px
-		padding-bottom: 3px
-		background-color: rgba( $black, 0.8 )
-
-	&-tags
-		left: 5px
-
-	&-tag
-		color: $gj-blue
-
-	&-buttons
-		right: 5px
-		display: none
-
-	&-button
-		color: $white
-
-		&:hover
-			color: $gj-blue
-
-		& + &
-			margin-left: 5px
-
 	&:hover
-		.game-thumbnail-buttons
-			display: block
-
-	&-notifications
-		position: absolute
-		top: 0
-		left: 0
-		z-index: 2
-		padding: 3px 7px
+		.game-thumbnail-pricing
+		.game-thumbnail-tag
+		.game-thumbnail-video-tag
+			display: none
 
 	&-controls
 		position: absolute
 		top: 0
 		right: 0
-		z-index: 2
+		z-index: $zindex-controls
 		border-left: 3px solid $white
 		border-bottom: 3px solid $white
 		background-color: $white
@@ -103,7 +63,9 @@ gj-game-thumbnail
 			margin-top: @margin-left
 			color: $gray-lighter
 
-		> img
+		img
+		video
+		gj-video
 			display: block
 			position: absolute
 			left: 0
@@ -113,15 +75,11 @@ gj-game-thumbnail
 			width: 100%
 			height: 100%
 
-		> video
-			display: none
-			position: absolute
-			left: 0
-			right: 0
-			top: 0
-			bottom: 0
-			width: 100%
-			height: 100%
+		img
+			z-index: $zindex-img
+
+		video
+			z-index: $zindex-video
 
 	&-meta
 		position: relative
@@ -165,6 +123,25 @@ gj-game-thumbnail
 		font-size: $font-size-tiny
 		margin-right: 2px
 
+	&-video-tag
+		position: absolute
+		bottom: 0
+		left: 5px
+		padding: 5px
+		padding-bottom: 3px
+		color: $gj-blue
+		background-color: rgba( $black, 0.8 )
+		z-index: $zindex-tags
+
+	&-tag
+		@extend .tag
+		position: absolute
+		left: 0
+		top: 10px
+		z-index: $zindex-tags
+		color: $gj-blue
+		background-color: $gray-darkest
+
 	&-pricing
 		@extend .fill-darkest
 		position: absolute
@@ -174,7 +151,7 @@ gj-game-thumbnail
 		right: 5px
 		padding: 0 10px
 		text-align: center
-		z-index: 2
+		z-index: $zindex-tags
 
 		&-owned
 			@extend .fill-green

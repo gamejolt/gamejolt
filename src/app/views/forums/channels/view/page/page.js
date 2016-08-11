@@ -14,7 +14,10 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 		resolve: {
 			payload: function( $stateParams, Api, History_Cache )
 			{
-				return History_Cache.cache( Api.sendRequest( '/web/forums/channels/' + $stateParams.name + '?page=' + ($stateParams.page || 1) ) );
+				return History_Cache.cache( function()
+				{
+					return Api.sendRequest( '/web/forums/channels/' + $stateParams.name + '?page=' + ($stateParams.page || 1) );
+				} );
 			}
 		}
 	} );

@@ -1,6 +1,9 @@
 .client-installed-game
 	position: relative
 
+	.game-thumbnail-pricing
+		display: none
+
 	img
 		transition: all 1s
 		filter: grayscale( 0 )
@@ -27,6 +30,7 @@
 		align-items: center
 		display: flex
 		text-align: center
+		z-index: 10  // Go over thumbnail controls stuff
 
 	gj-client-game-buttons
 		display: block

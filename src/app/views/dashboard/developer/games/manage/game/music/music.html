@@ -1,0 +1,77 @@
+<div class="row">
+	<div class="col-sm-4 col-sm-push-8">
+		<div class="page-help" translate>dash.games.music.page_help_html</div>
+	</div>
+
+	<div class="col-sm-8 col-sm-pull-4">
+
+		<div class="alert alert-warning" ng-if="!musicCtrl.songs.length" translate>dash.games.music.no_music_html</div>
+
+		<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
+			<gj-editable-accordion
+				is-adding="musicCtrl.isAdding"
+				active-item="musicCtrl.activeItem"
+				>
+
+				<div ui-tree="{ dropped: musicCtrl.onSongsSorted }"
+					ui-tree-nodes
+					ng-model="musicCtrl.songs"
+					>
+
+					<!-- track by ID was breaking -->
+					<gj-editable-accordion-item
+						ng-repeat="song in musicCtrl.songs"
+						ui-tree-node
+						>
+
+						<gj-editable-accordion-item-heading>
+
+							<a class="card-remove" ng-click="musicCtrl.removeSong( song ); $event.stopPropagation()">
+								<span class="jolticon jolticon-remove"></span>
+							</a>
+
+							<div class="card-title">
+								<h5>
+									{{ song.title }}
+								</h5>
+							</div>
+
+						</gj-editable-accordion-item-heading>
+
+						<gj-editable-accordion-item-body>
+
+							<gj-form-dashboard-game-song
+								gj-game="manageCtrl.game"
+								gj-game-song="song"
+								gj-form-submit-handler="musicCtrl.onSongEdited( formModel )"
+								>
+							</gj-form-dashboard-game-song>
+
+						</gj-editable-accordion-item-body>
+
+					</gj-editable-accordion-item>
+
+				</div>
+
+				<gj-editable-accordion-add add-label="{{ ::'dash.games.music.add_button' | translate }}">
+
+					<gj-form-dashboard-game-song
+						gj-game="manageCtrl.game"
+						gj-form-submit-handler="musicCtrl.onSongAdded( formModel )">
+					</gj-form-dashboard-game-song>
+
+				</gj-editable-accordion-add>
+
+			</gj-editable-accordion>
+		</div>
+
+		<div ng-if="manageCtrl.isWizard">
+			<gj-form-dashboard-game-wizard-controls
+				game="manageCtrl.game"
+				can-proceed="true"
+				>
+			</gj-form-dashboard-game-wizard-controls>
+		</div>
+
+	</div>
+</div>

@@ -13,7 +13,7 @@
 			gj-track-event="account-popover:profile"
 			>
 			<h4 class="account-popover-heading">{{ App.user.display_name }}</h4>
-			<small>View Profile</small>
+			<small translate>View Profile</small>
 		</a>
 	</div>
 
@@ -23,38 +23,42 @@
 		<a class="list-group-item"
 			ui-sref="{{ ::Environment.isClient ? 'library.installed' : 'library.overview' }}"
 			gj-track-event="account-popover:library"
+			translate
 			>
 			Game Library
 		</a>
 		<a class="list-group-item offline-disable"
 			ui-sref="dashboard.main.overview"
 			gj-track-event="account-popover:dashboard"
+			translate
 			>
 			Dashboard
 		</a>
 		<a class="list-group-item offline-disable"
 			ui-sref="{{ Screen.isXs ? 'dashboard.account-mobile-nav' : 'dashboard.account.edit' }}"
 			gj-track-event="account-popover:account"
+			translate
 			>
 			Edit Account
 		</a>
 		<a class="list-group-item offline-disable"
 			ng-click="ctrl.showToken()"
 			gj-track-event="account-popover:token"
+			translate
 			>
 			Game Token
 		</a>
-		<a class="list-group-item" ui-sref="settings">
+		<a class="list-group-item" ui-sref="settings" translate>
 			Settings
 		</a>
 	</div>
 
 	<div class="account-popover-button offline-disable">
-		<a class="i-button big block" ui-sref="dashboard.developer.games.add"
+		<a class="btn btn-outline btn-block" ui-sref="dashboard.developer.games.add"
 			gj-track-event="account-popover:add-game"
 			>
 			<span class="jolticon jolticon-add"></span>
-			Add Game
+			<span translate>Add Game</span>
 		</a>
 	</div>
 
@@ -62,7 +66,7 @@
 
 	<gj-shell-user-box></gj-shell-user-box>
 
-	<div ng-if="App.user && App.user.is_developer && App.user.has_marketplace_access">
+	<div ng-if="App.user.is_developer">
 		<div class="account-popover-separator"></div>
 
 		<div class="list-group">
@@ -93,7 +97,7 @@
 				gj-track-event="account-popover:logout"
 				>
 				<span class="jolticon jolticon-logout warning"></span>
-				Logout
+				<span translate>Logout</span>
 			</a>
 		</div>
 	</div>
@@ -109,7 +113,7 @@
 						gj-track-event="account-popover:logout"
 						>
 						<span class="jolticon jolticon-logout warning"></span>
-						Logout
+						<span translate>Logout</span>
 					</a>
 				</div>
 
@@ -119,7 +123,7 @@
 				<div class="list-group">
 					<a class="list-group-item" ng-click="Client.quit()">
 						<span class="jolticon jolticon-remove warning"></span>
-						Quit
+						<span translate>Quit</span>
 					</a>
 				</div>
 

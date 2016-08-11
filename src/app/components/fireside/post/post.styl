@@ -1,0 +1,67 @@
+$fireside-post-font-family = "Merriweather", Georgia, "Times New Roman", Times, serif
+$fireside-post-font-size = $font-size-base
+$fireside-post-line-height = 1.7
+$fireside-post-line-height-computed = floor( $fireside-post-font-size * $fireside-post-line-height )
+
+.fireside-post-body
+	font-family: $fireside-post-font-family
+	font-size: $fireside-post-font-size
+	line-height: $fireside-post-line-height
+	letter-spacing: 0
+
+	img
+		@extend .img-responsive
+
+		// Center it if too small.
+		margin-left: auto
+		margin-right: auto
+
+		// Since images end with a hard line and no extra line spacing padding...
+		// We basically find the line-height padding in bettwen a line and cut it by half and add
+		// that much extra spacing.
+		margin-bottom: $fireside-post-font-size + (($fireside-post-line-height-computed - $fireside-post-font-size) / 2)
+
+	// Notice we put margin at the top when inside a P tag.
+	// This is to catch those instances that they put images inline with their text, the P
+	// tag never closes so we don't get the margin from the P to give it spacing.
+	p > img
+		margin-top: $fireside-post-font-size + (($fireside-post-line-height-computed - $fireside-post-font-size) / 2)
+
+	hr
+		margin-top: $fireside-post-line-height-computed
+		margin-bottom: $fireside-post-line-height-computed
+
+	h1, h2, h3, h4, h5, h6
+		&:first-child
+			margin-top: 0
+
+	p
+		margin-bottom: $fireside-post-font-size
+		letter-spacing: 0
+
+		// Widgets some times create empty P tags.
+		// This hides them so they don't add extra spacing to the page.
+		&:empty
+			display: none
+
+	a
+		link-underlines( $text-color, $white, $gray-lighter )
+
+	table
+		@extend .table
+
+	blockquote
+		font-family: $font-family-base
+		font-style: italic
+		line-height: $line-height-base
+
+		&, p
+			letter-spacing: 0.01em
+
+	.spoiler
+		font-style: normal
+
+	// Removes the added spacing after iframes since they aren't block elements.
+	// They basically by default add their line spacing to the bottom.
+	iframe
+		display: block

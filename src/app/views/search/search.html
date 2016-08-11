@@ -1,47 +1,60 @@
-<section class="section fill-darker" ng-if="Screen.isXs">
-	<div class="container">
-		<gj-search
-			gj-search-autocomplete-disable="true"
-			>
-		</gj-search>
-	</div>
-</section>
+<gj-page-header
+	should-affix-nav="true"
+	hide-nav="!Search.query"
+	>
 
-<header class="section" ng-class="{ 'nav-only': Screen.isXs }" ng-if="Search.query">
-	<div class="container">
+	<gj-page-header-content>
 
-		<div class="visible-lg">
-			<p class="text-muted sans-margin">
-				{{ ::'search.showing_label' | translate }}
-			</p>
-
-			<h2 class="sans-margin">{{ searchCtrl.query }}</h2>
+		<div ng-if="Screen.isXs">
+			<gj-search
+				gj-search-autocomplete-disable="true"
+				>
+			</gj-search>
 		</div>
 
+		<div ng-if="!Screen.isXs">
+			<p class="text-muted sans-margin" translate>
+				search.showing_label
+			</p>
+
+			<h2 class="sans-margin">
+				{{ searchCtrl.query }}
+			</h2>
+		</div>
+
+	</gj-page-header-content>
+
+	<gj-page-header-nav>
 		<nav class="platform-list inline">
 			<ul>
 				<li>
-					<a ui-sref="search.results( { q: searchCtrl.query } )" ng-class="{ active: $state.includes( 'search.results' ) }">
-						{{ ::'search.results.overview_tab' | translate }}
+					<a ui-sref="search.results( { q: searchCtrl.query } )" ui-sref-active="active">
+						<span translate>search.results.overview_tab</span>
 					</a>
 				</li>
 				<li ng-if="searchCtrl.payload.usersCount">
-					<a ui-sref="search.users( { q: searchCtrl.query } )" ng-class="{ active: $state.includes( 'search.users' ) }">
-						{{ ::'search.results.users_tab' | translate }}
+					<a ui-sref="search.users( { q: searchCtrl.query } )" ui-sref-active="active">
+						<span translate>search.results.users_tab</span>
 						<span class="badge">{{ searchCtrl.payload.usersCount }}</span>
 					</a>
 				</li>
 				<li ng-if="searchCtrl.payload.gamesCount">
-					<a ui-sref="search.games( { q: searchCtrl.query } )" ng-class="{ active: $state.includes( 'search.games' ) }">
-						{{ ::'search.results.games_tab' | translate }}
+					<a ui-sref="search.games( { q: searchCtrl.query } )" ui-sref-active="active">
+						<span translate>search.results.games_tab</span>
 						<span class="badge">{{ searchCtrl.payload.gamesCount }}</span>
+					</a>
+				</li>
+				<li ng-if="searchCtrl.payload.devlogsCount">
+					<a ui-sref="search.devlogs( { q: searchCtrl.query } )" ui-sref-active="active">
+						<span translate>Devlogs</span>
+						<span class="badge">{{ searchCtrl.payload.devlogsCount }}</span>
 					</a>
 				</li>
 			</ul>
 		</nav>
+	</gj-page-header-nav>
 
-	</div>
-</header>
+</gj-page-header>
 
 <div gj-expand-when="searchCtrl.noResults">
 	<section class="section fill-pink">

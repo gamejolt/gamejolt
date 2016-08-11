@@ -1,6 +1,4 @@
 angular.module( 'App.Client', [
-	'gj.Connection.StatePermissions',
-
 	'App.Client.Control',
 	'App.Client.Shortcut',
 	'App.Client.Autostart',

@@ -1,4 +1,7 @@
 .ctrl-discover-home-page #content
+	.page-cut
+		margin-bottom: 0
+
 	.home-game-rows
 
 		h1, h2, h3
@@ -33,24 +36,8 @@
 		margin-right: 10px
 
 	.marketplace-section
-		position: relative
-		overflow: hidden
-
 		.jolticon-heart
 			color: $gj-pink
-
-		.section-header
-		p
-			text-align: center
-
-	.marketplace-mascot
-		position: relative
-		bottom: -45px
-		margin-top: @bottom
-		width: (480px / 2)
-		height: (550px / 2)
-		left: 50%
-		margin-left: -(@width / 2)
 
 .channel-thumbnail
 	display: block
@@ -89,3 +76,36 @@
 		background-color: $gj-dark-green
 		color: $gj-green
 		text-decoration: none
+
+.devlogs-banner
+	border-bottom: 2px solid $gray
+	background: url('/app/views/discover/home/banner-bg.png') repeat-x
+	background-color: $gray-darker
+
+	.section-header
+		font-weight: 100
+
+	&-well
+		margin-bottom: 0
+		position: relative
+
+		@media $media-sm-up
+			left: -60px
+
+		&::before
+			caret( color: $gray-darkest, direction: 'right', size: 15px )
+			display: none
+			content: ''
+
+			@media $media-sm-up
+				display: block
+
+	&-mascot
+		position: absolute
+		top: 0
+		bottom: 0
+		right: -120px
+		width: 100px
+		display: flex
+		align-items: center
+		justify-content: center

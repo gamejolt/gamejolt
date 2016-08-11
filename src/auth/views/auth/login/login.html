@@ -14,6 +14,14 @@
 		<span class="jolticon jolticon-twitter"></span>
 		<span translate>auth.login.twitter_button</span>
 	</button>
+
+	<button class="i-button big block anim-fade-in-enlarge stagger"
+		ng-disabled="!Connection.isOnline"
+		ng-click="loginCtrl.linkedAccountLogin( 'google' )"
+		>
+		<span class="jolticon jolticon-google-plus"></span>
+		<span translate>Log In with Google+</span>
+	</button>
 </div>
 
 <p class="line-thru anim-fade-in">
@@ -32,8 +40,7 @@
 	</div>
 	<div class="auth-page-link">
 		<a class="link-unstyled" ui-sref="auth.forgot">
-			<!--<span>{{ 'auth.forgot_link' | translate:{ username: 'Username', password: 'Pass' } }}</span>-->
-			<span translate translate-scope="{ username: 'Username', password: 'Pass' }">auth.forgot_link</span>
+			<span translate translate-params-username="Username" translate-params-password="Pass">auth.forgot_link</span>
 			<span class="jolticon jolticon-help-circle"></span>
 		</a>
 	</div>

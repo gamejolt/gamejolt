@@ -30,17 +30,30 @@
 
 						<gj-editable-accordion-item-heading>
 
-							<div class="stats">
+							<!--
+								Can only remove if there is more than one score table left.
+							-->
+							<a class="card-remove"
+								ng-if="listCtrl.scoreTables.length > 1"
+								ng-click="listCtrl.removeTable( scoreTable ); $event.stopPropagation()"
+								>
+								<span class="jolticon jolticon-remove"></span>
+							</a>
+
+							<div class="card-stats">
 								<div class="stat-big">
 									<div class="stat-big-label" translate>dash.games.scoreboards.table_id_label</div>
 									<div class="stat-big-digit">{{ scoreTable.id }}</div>
 								</div>
 							</div>
 
-							<h5 class="editable-accordion-item-heading-title">{{ scoreTable.name }}</h5>
-							<p class="editable-accordion-item-heading-description">{{ scoreTable.description }}</p>
+							<div class="card-title">
+								<h4>
+									{{ scoreTable.name }}
+								</h4>
+							</div>
 
-							<p class="tags">
+							<div class="card-meta">
 								<span class="tag tag-active"
 									tooltip="{{ 'dash.games.scoreboards.primary_tooltip' | translate }}"
 									ng-if="$index == 0"
@@ -48,61 +61,62 @@
 									>
 									dash.games.scoreboards.primary_tag
 								</span>
-								<span class="tag tag-blue"
+								<span class="tag"
 									tooltip="{{ 'dash.games.scoreboards.guest_tooltip' | translate }}"
 									ng-if="scoreTable.allow_guest_scores"
 									translate
 									>
 									dash.games.scoreboards.guest_tag
 								</span>
-								<span class="tag tag-blue"
+								<span class="tag"
 									tooltip="{{ 'dash.games.scoreboards.unique_tooltip' | translate }}"
 									ng-if="scoreTable.unique_scores"
 									translate
 									>
 									dash.games.scoreboards.unique_tag
 								</span>
-								<span class="tag tag-blue"
+								<span class="tag"
 									tooltip="{{ 'dash.games.scoreboards.asc_tooltip' | translate }}"
 									ng-if="scoreTable.scores_sorting_direction == Game_ScoreTable.SORTING_DIRECTION_ASC"
 									translate
 									>
 									dash.games.scoreboards.asc_tag
 								</span>
-								<span class="tag tag-blue"
+								<span class="tag"
 									tooltip="{{ 'dash.games.scoreboards.desc_tooltip' | translate }}"
 									ng-if="scoreTable.scores_sorting_direction == Game_ScoreTable.SORTING_DIRECTION_DESC"
 									translate
 									>
 									dash.games.scoreboards.desc_tag
 								</span>
-							</p>
+							</div>
 
-							<!-- Don't propagate the click so that it doesn't open the accordion item. -->
-							<a class="i-button big pull-left" ui-sref="^.scores.list( { table: scoreTable.id } )" ng-click="$event.stopPropagation()">
-								<span class="jolticon jolticon-chevron-right"></span>
-								<span translate>dash.games.scoreboards.scores_button</span>
-							</a>
+							<div class="card-content">
+								{{ scoreTable.description }}
+							</div>
+
+							<div class="card-controls">
+
+								<!-- Don't propagate the click so that it doesn't open the accordion item. -->
+								<a class="btn btn-outline" ui-sref="^.scores.list( { table: scoreTable.id } )" ng-click="$event.stopPropagation()">
+									<span class="jolticon jolticon-chevron-right"></span>
+									<span translate>dash.games.scoreboards.scores_button</span>
+								</a>
+
+							</div>
+
 
 						</gj-editable-accordion-item-heading>
 
 						<gj-editable-accordion-item-body>
 
-							<!--
-								Can only remove if there is more than one score table left.
-							-->
-							<div class="buttons clearfix" ng-if="listCtrl.scoreTables.length > 1">
-								<a class="i-button big warning pull-right" ng-click="listCtrl.removeTable( scoreTable )">
-									<span class="jolticon jolticon-remove"></span>
-									<span translate>dash.games.scoreboards.remove_button</span>
-								</a>
-							</div>
-
 							<gj-form-dashboard-game-score-table
 								gj-game="manageCtrl.game"
 								gj-game-score-table="scoreTable"
-								gj-form-submit-handler="listCtrl.onTableEdited( formModel )">
+								gj-form-submit-handler="listCtrl.onTableEdited( formModel )"
+								>
 							</gj-form-dashboard-game-score-table>
+
 						</gj-editable-accordion-item-body>
 
 					</gj-editable-accordion-item>

@@ -12,7 +12,6 @@
 			</li>
 			<li ng-if="!Connection.isClientOffline">
 				<a ui-sref="{{ ::libraryCtrl.followedCollection.getSref( true ) }}" ui-sref-active="active">
-					<span class="tag tag-pink" ng-show="libraryCtrl.followedNotificationCount">{{ libraryCtrl.followedNotificationCount | number }}</span>
 					<span class="jolticon jolticon-subscribe"></span>
 					{{ ::'library.nav.followed' | translate }}
 				</a>

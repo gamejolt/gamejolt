@@ -1,6 +1,6 @@
 <a class="search-history-icon"
 	gj-popover-trigger="search-history-popover"
-	ng-class="{ active: ctrl.isVisible }"
+	ng-class="{ active: $ctrl.isVisible }"
 	gj-track-event="search:history:open"
 	>
 	<span class="jolticon jolticon-search"></span>
@@ -8,24 +8,24 @@
 </a>
 
 <gj-popover
-	class="search-history-popover"
+	class="search-history-popover popover-dark"
 	popover-id="search-history-popover"
-	popover-on-focus="ctrl.onShow()"
-	popover-on-blur="ctrl.onHide()"
+	popover-on-focus="$ctrl.onShow()"
+	popover-on-blur="$ctrl.onHide()"
 	>
 
 	<div class="popover-heading" translate>search.recent.popover_heading</div>
 
-	<div class="alert alert-warning" ng-if="!ctrl.recentSearches.length" translate>
+	<div class="alert alert-warning" ng-if="!$ctrl.recentSearches.length" translate>
 		search.recent.none
 	</div>
 
-	<div ng-if="ctrl.isVisible && ctrl.recentSearches.length">
+	<div ng-if="$ctrl.isVisible && $ctrl.recentSearches.length">
 
 		<div class="list-group list-group-dark thin">
 			<a class="list-group-item"
-				ng-repeat="query in ctrl.recentSearches"
-				ng-click="ctrl.go( query )"
+				ng-repeat="query in $ctrl.recentSearches"
+				ng-click="$ctrl.go( query )"
 				gj-track-event="search:history:go"
 				>
 				{{ query }}
@@ -34,7 +34,7 @@
 
 		<div class="list-group list-group-dark thin">
 			<a class="list-group-item has-icon"
-				ng-click="ctrl.clear()"
+				ng-click="$ctrl.clear()"
 				gj-track-event="search:history:clear"
 				>
 				<span class="jolticon jolticon-remove"></span>

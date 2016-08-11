@@ -1,5 +1,7 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', function( $scope, $interval, $state, App, Game, Notification, Fireside_Post, gettextCatalog, payload )
+angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', function( $scope, $interval, $state, App, Game, Notification, Fireside_Post, Comment_Video, Jam, gettextCatalog, payload )
 {
+	$scope.Game = Game;
+
 	App.title = gettextCatalog.getString( 'dash.overview.page_title' );
 
 	// Keep them undefined if not on the payload.
@@ -15,9 +17,15 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', functio
 	}
 
 	this.games = Game.populate( payload.games );
+	this.videos = Comment_Video.populate( payload.videos );
+	this.videosCount = payload.videosCount || 0;
+	this.jams = Jam.populate( payload.jams );
 
 	this.activityNotifications = Notification.populate( payload.activityNotifications );
 	this.latestBroadcast = payload.latestBroadcast ? new Fireside_Post( payload.latestBroadcast ) : null;
+
+	this.gamesExpanded = false;
+	this.jamsExpanded = false;
 
 	this.integration = payload.integration || {};
 	this.integrationKeys = [
@@ -26,8 +34,6 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', functio
 		'got_trophy',
 		'got_score',
 		'has_friend',
-		'has_facebook',
-		'has_twitter',
 	];
 
 	this.isFullyIntegrated = true;
@@ -44,7 +50,5 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', functio
 		'got_trophy': gettextCatalog.getString( 'dash.integrate.got_trophy_html' ),
 		'got_score': gettextCatalog.getString( 'dash.integrate.got_score_html' ),
 		'has_friend': gettextCatalog.getString( 'dash.integrate.has_friend_html' ),
-		'has_facebook': gettextCatalog.getString( 'dash.integrate.has_facebook_html' ),
-		'has_twitter': gettextCatalog.getString( 'dash.integrate.has_twitter_html' ),
 	};
 } );
