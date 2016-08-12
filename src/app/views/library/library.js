@@ -4,11 +4,15 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		abstract: true,
 		controller: 'LibraryCtrl',
 		controllerAs: 'libraryCtrl',
-		template: '<ui-view></ui-view>',
+		templateUrl: '/app/views/library/library.html',
 		resolve: {
 			init: function( Translate )
 			{
 				return Translate.loadSection( 'main' );
+			},
+			libraryPayload: function( Api )
+			{
+				return Api.sendRequest( '/web/library' );
 			},
 		}
 	} );
