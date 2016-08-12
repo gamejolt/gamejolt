@@ -43,9 +43,7 @@ export class SplitTest
 		// Generate their variation.
 		// Only supports half and half currently.
 		variation = 1;
-		let val = Math.random();
-		console.log( val );
-		if ( val > 0.5 ) {
+		if ( Math.random() > 0.5 ) {
 			variation = 2;
 		}
 

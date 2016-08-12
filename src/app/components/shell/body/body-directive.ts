@@ -29,8 +29,8 @@ export class BodyComponent
 		],
 		() =>
 		{
-			if ( app.userBootstrapped ) {
-				if ( !app.user && splitTest.hasSideNav() ) {
+			if ( app.userBootstrapped && !app.user ) {
+				if ( splitTest.hasSideNav() ) {
 					analytics.trackEvent( 'split-side-nav', 'shown' );
 					this.shouldShowSideNav = true;
 				}
@@ -38,6 +38,9 @@ export class BodyComponent
 					this.shouldShowSideNav = false;
 					analytics.trackEvent( 'split-side-nav', 'not-shown' );
 				}
+			}
+			else {
+				this.shouldShowSideNav = false;
 			}
 		} );
 	}
