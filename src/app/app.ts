@@ -39,6 +39,7 @@ import FiresidePostVideoModule from './../lib/gj-lib-client/components/fireside/
 import FiresidePostLikeModule from './../lib/gj-lib-client/components/fireside/post/like/like';
 import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 
+import SplitTestModule from './components/split-test/split-test';
 import ShellModule from './components/shell/shell';
 import SearchModule from './components/search/search';
 import FriendModule from './components/friend/friend';
@@ -287,7 +288,7 @@ const AppModule = angular.module( 'App', [
 
 	// Components.
 	'App.ProtocolWatcher',
-	'App.SplitTest',
+	SplitTestModule,
 	ShellModule,
 	'App.Offline.Alert',
 	SearchModule,

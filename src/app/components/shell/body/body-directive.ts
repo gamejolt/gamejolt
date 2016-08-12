@@ -1,6 +1,7 @@
 import { Component, Inject } from 'ng-metadata/core';
 import { App } from './../../../app-service';
-import { Connection } from './../../../../lib/gj-lib-client/components/connection/connection-service';
+import { SplitTest } from './../../split-test/split-test-service';
+import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
 import template from 'html!./body.html';
 
 @Component({
@@ -12,80 +13,32 @@ import template from 'html!./body.html';
 })
 export class BodyComponent
 {
-	collections: any[];
-	followedCollection: any;
-	developerCollection: any;
-	ownedCollection: any;
-	bundleCollections: any[];
-
-	playlistFilterQuery = '';
-	playlistFilterComparator: ( item: any ) => boolean;
+	shouldShowSideNav = false;
 
 	constructor(
-		@Inject( '$state' ) public $state: ng.ui.IStateService,
-		@Inject( '$window' ) $window: ng.IWindowService,
-		@Inject( '$timeout' ) $timeout: ng.ITimeoutService,
+		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'App' ) public app: App,
-		@Inject( 'Environment' ) public env: any,
-		@Inject( 'Connection' ) public connection: Connection,
-		@Inject( 'Scroll' ) scroll: any,
-		@Inject( 'Api' ) api: any,
-		@Inject( 'GameCollection' ) private collectionModel: any,
-		@Inject( 'GamePlaylist_SaveModal' ) private playlistSaveModal: any,
+		@Inject( 'Screen' ) public screen: Screen,
+		@Inject( 'SplitTest' ) splitTest: SplitTest,
+		@Inject( 'Analytics' ) analytics: any,
 	)
 	{
-		$timeout( () =>
+		$scope.$watchGroup( [
+			'$ctrl.app.userBootstrapped',
+			'!!$ctrl.app.user',
+		],
+		() =>
 		{
-			// We have to set the scroll offset so that it knows that we have a fixed navbar.
-			const elem = $window.document.getElementById( 'shell-body' );
-			if ( elem ) {
-				scroll.setOffsetTop( parseInt( $window.getComputedStyle( elem ).marginTop || '', 10 ) );
-			}
-		} );
-
-		api.sendRequest( '/web/library' )
-			.then( ( response: any ) =>
-			{
-				this.collections = collectionModel.populate( response.collections );
-				this.followedCollection = response.followedCollection ? new collectionModel( response.followedCollection ) : null;
-				this.developerCollection = response.developerCollection ? new collectionModel( response.developerCollection ) : null;
-				this.ownedCollection = response.ownedCollection ? new collectionModel( response.ownedCollection ) : null;
-				this.bundleCollections = collectionModel.populate( response.bundleCollections );
-			} );
-
-		/**
-		 * We compare the collection's name or owner's name if it's a subscription.
-		 * This way they can search for "cros" and get cros's games if they're following.
-		 */
-		this.playlistFilterComparator = ( item: any ) =>
-		{
-			let actual: string;
-			const expected = this.playlistFilterQuery.toLowerCase();
-
-			actual = item.name.toLowerCase();
-			if ( actual.indexOf( expected ) !== -1 ) {
-				return true;
-			}
-
-			if ( item.from_subscription ) {
-				actual = item.owner.display_name.toLowerCase();
-				if ( actual.indexOf( expected ) !== -1 ) {
-					return true;
+			if ( app.userBootstrapped ) {
+				if ( !app.user && splitTest.hasSideNav() ) {
+					analytics.trackEvent( 'split-side-nav', 'shown' );
+					this.shouldShowSideNav = true;
+				}
+				else {
+					this.shouldShowSideNav = false;
+					analytics.trackEvent( 'split-side-nav', 'not-shown' );
 				}
 			}
-
-			return false;
-		};
-	}
-
-	showAddPlaylistModal()
-	{
-		this.playlistSaveModal.show().then( ( response: any ) =>
-		{
-			const collection = new this.collectionModel( response.gameCollection );
-			this.collections.push( collection );
-
-			this.$state.go( collection.getSref(), collection.getSrefParams() );
 		} );
 	}
 }
