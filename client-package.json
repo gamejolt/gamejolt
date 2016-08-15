@@ -3,7 +3,7 @@
   "domain": "game-jolt-client",
   "main": "index.html#!/",
   "window": {
-    "show": false,
+    "show": true,
     "width": 1250,
     "height": 700,
     "min_height": 400,

@@ -32,6 +32,24 @@ module.exports = function( config )
 			throw new Error( 'Can not build client on your OS type.' );
 	}
 
+	if ( config.platform == 'win' ) {
+		// Need to hotfix something in node gyp, which must be installed globally.
+		// Instead of hunting for where it's located we assume its installed through NVM on node ver 5.11.1
+		if ( !process.env.NVM_HOME ) {
+			throw new Error( 'Must use nvm with node v5.11.1 and node-gyp@3.3.1 installed globally to build client' );
+		}
+		var nvmWinDelayLoadHookPath = path.join( process.env.NVM_HOME, 'v5.11.1', 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
+		var vendorWinDelayLoadHookPath = path.join( 'tasks', 'vendor', 'win_delay_load_hook.c' );
+		try {
+			fs.statSync( nvmWinDelayLoadHookPath );
+		}
+		catch ( e ) {
+			throw new Error( 'Must use nvm with node v5.11.1 and node-gyp@3.3.1 installed globally to build client' );
+		}
+
+		fs.writeFileSync( nvmWinDelayLoadHookPath, fs.readFileSync( vendorWinDelayLoadHookPath ) );
+	}
+
 	// On Windows builds we have to use npm3. For other OSes it's faster to do npm2.
 	// npm3 does a flat directory structure in node_modules, so the path is different.
 	// We have to find where the lzma-native path is so we can compile it.
@@ -56,10 +74,10 @@ module.exports = function( config )
 	}
 
 	var gypTasks = [
-		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.14.6 --target_arch=' + config.gypArch,
+		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node --target=5.11.1 --target_arch=' + config.gypArch + ' --build-from-source',
 	];
 	if ( config.platform == 'win' ) {
-		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.14.6 --arch=' + config.gypArch );
+		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && npm run install' );
 	}
 
 	gulp.task( 'client:gyp', shell.task( gypTasks ) );
