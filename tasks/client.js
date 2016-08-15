@@ -39,11 +39,18 @@ module.exports = function( config )
 		var winDelayLoadHookPath, npmWinDelayLoadHookPath;
 		try {
 			winDelayLoadHookPath = cp.execSync( 'npm config get prefix' ).toString().trim();
-			npmWinDelayLoadHookPath = path.join( winDelayLoadHookPath, 'node_modules', 'npm', 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
 			winDelayLoadHookPath = path.join( winDelayLoadHookPath, 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
 		}
 		catch ( e ) {
 			throw new Error( 'Failed to get the npm global modules dir: ' + e.message );
+		}
+
+		try {
+			var npmExecutable = cp.execSync( 'where npm' ).toString().split( "\n" )[0].trim();
+			npmWinDelayLoadHookPath = path.join( path.dirname( npmExecutable ), 'node_modules', 'npm', 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
+		}
+		catch ( e ) {
+			throw new Error( 'Failed to get the npm source modules dir: ' + e.message );
 		}
 
 		try {
