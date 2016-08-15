@@ -59,7 +59,7 @@
     "mv": "^2.1.1",
     "ng-metadata": "gamejolt/ng-metadata#6cbaa679d2aa0bcfaa7c7b03cfe1991d279ac7b1",
     "nw": "^0.14.6-sdk",
-    "nw-builder": "2.2.0",
+    "nw-builder": "2.2.7",
     "pofile": "^1.0.2",
     "reflect-metadata": "^0.1.3",
     "rollup": "0.33.0",
@@ -79,7 +79,7 @@
     "appdmg": "^0.3.5"
   },
   "dependencies": {
-    "client-voodoo": "1.0.5",
+    "client-voodoo": "1.0.4",
     "lodash": "3.9.3",
     "node-notifier": "^4.6.0",
     "nwjs-snappy-updater": "1.0.0"

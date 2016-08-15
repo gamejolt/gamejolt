@@ -249,14 +249,15 @@ module.exports = function( config )
 
 	var nodeModuletasks = [
 		'cd ' + config.buildDir + ' && npm install --production',
+		'dir ' + path.join( config.buildDir, 'node_modules' ),
 		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node --target=5.12.0 --target_arch=' + config.gypArch + ' --build-from-source',
 	];
 
 	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
 		nodeModuletasks.push( 'cd ' + path.resolve( config.buildDir, windowsMutexPath ) + ' && npm run install' );
-		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' node.exe GameJoltClient.exe' );
-		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, windowsMutexPath, 'build/Release/CreateMutex.node' ) + ' node.exe GameJoltClient.exe' );
+		// nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' node.exe GameJoltClient.exe' );
+		// nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, windowsMutexPath, 'build/Release/CreateMutex.node' ) + ' node.exe GameJoltClient.exe' );
 	}
 
 	gulp.task( 'client:node-modules', shell.task( nodeModuletasks ) );
@@ -316,7 +317,7 @@ module.exports = function( config )
 		}
 
 		var nw = new NwBuilder( {
-			version: '0.14.6',
+			version: '0.14.7',
 			files: config.buildDir + '/**/*',
 			buildDir: config.clientBuildDir,
 			cacheDir: config.clientBuildCacheDir,
