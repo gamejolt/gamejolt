@@ -34,20 +34,32 @@ module.exports = function( config )
 
 	if ( config.platform == 'win' ) {
 		// Need to hotfix something in node gyp, which must be installed globally.
-		// Instead of hunting for where it's located we assume its installed through NVM on node ver 5.11.1
-		if ( !process.env.NVM_HOME ) {
-			throw new Error( 'Must use nvm with node v5.11.1 and node-gyp@3.3.1 installed globally to build client' );
+		// Instead of hunting for where it's located we assume its installed through NVM or Nodist on node ver 5.11.1
+		var winDelayLoadHookPath;
+		if ( process.env.NVM_HOME ) {
+			winDelayLoadHookPath = path.join( process.env.NVM_HOME, 'v5.11.1', 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
+			try {
+				fs.statSync( winDelayLoadHookPath );
+			}
+			catch ( e ) {
+				throw new Error( 'Must use nvm with node v5.11.1 and node-gyp@3.3.1 installed globally to build client' );
+			}
 		}
-		var nvmWinDelayLoadHookPath = path.join( process.env.NVM_HOME, 'v5.11.1', 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
-		var vendorWinDelayLoadHookPath = path.join( 'tasks', 'vendor', 'win_delay_load_hook.c' );
-		try {
-			fs.statSync( nvmWinDelayLoadHookPath );
+		else if ( process.env.NODIST_PREFIX ) {
+			winDelayLoadHookPath = path.join( process.env.NODIST_PREFIX, 'bin', 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
+			try {
+				fs.statSync( winDelayLoadHookPath );
+			}
+			catch ( e ) {
+				throw new Error( 'Must use nvm with node v5.11.1 and node-gyp@3.3.1 installed globally to build client' );
+			}
 		}
-		catch ( e ) {
-			throw new Error( 'Must use nvm with node v5.11.1 and node-gyp@3.3.1 installed globally to build client' );
+		else {
+			throw new Error( 'Must use either nvm or nodist with node v5.11.1 and node-gyp@3.3.1 install globally to build client' );
 		}
 
-		fs.writeFileSync( nvmWinDelayLoadHookPath, fs.readFileSync( vendorWinDelayLoadHookPath ) );
+		var vendorWinDelayLoadHookPath = path.join( 'tasks', 'vendor', 'win_delay_load_hook.c' );
+		fs.writeFileSync( winDelayLoadHookPath, fs.readFileSync( vendorWinDelayLoadHookPath ) );
 	}
 
 	// On Windows builds we have to use npm3. For other OSes it's faster to do npm2.

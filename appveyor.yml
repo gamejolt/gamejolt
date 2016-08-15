@@ -2,7 +2,8 @@ platform:
   - x86
 
 install:
-  - ps: Install-Product node 5.11.1 x86 # We need npm@3 for windows builds
+  - choco install -y nodist
+  - set NODIST_X64=0
   - npm install -g gulp bower node-pre-gyp node-gyp@3.3.1
   - git submodule update --init --recursive
   - choco install -y InnoSetup
