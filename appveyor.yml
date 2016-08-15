@@ -2,6 +2,7 @@ platform:
   - x86
 
 install:
+  - where node
   - ps: Start-FileDownload 'https://github.com/coreybutler/nvm-windows/releases/download/1.1.1/nvm-noinstall.zip'
   - ps: Expand-Archive nvm-noinstall.zip -dest "$env:APPDATA\nvm"
   - ps: "$(\"root: $env:APPDATA\\nvm`r`npath: $env:PROGRAMFILES\\nodejs`r`narch: 32`r`nproxy: none\") | Out-File $env:APPDATA\\nvm\\settings.txt"
@@ -11,6 +12,8 @@ install:
   - set NVM_HOME="%APPDATA%\nvm"
   - set NVM_SYMLINK="%PROGRAMFILES%\nodejs"
   - set PATH="C:\Program Files (x86)\Inno Setup 5";%NVM_HOME%;%NVM_SYMLINK%;%PATH%
+  - nvm install 5.11.1 32
+  - nvm use 5.11.1 32
   - npm install -g gulp bower node-pre-gyp node-gyp@3.3.1
 
 build_script:
