@@ -47,7 +47,9 @@ module.exports = function( config )
 		}
 
 		try {
+			console.log( 'Verifying ' + winDelayLoadHookPath + ' exists' );
 			fs.statSync( winDelayLoadHookPath );
+			console.log( 'Verifying ' + npmWinDelayLoadHookPath + ' exists' );
 			fs.statSync( npmWinDelayLoadHookPath );
 		}
 		catch ( e ) {
