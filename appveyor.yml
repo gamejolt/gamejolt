@@ -2,7 +2,8 @@ platform:
   - x86
 
 install:
-  - choco install -y nodist
+  - ps: Start-FileDownload 'https://github.com/marcelklehr/nodist/releases/download/v0.8.4/NodistSetup-v0.8.4.exe'
+  - start /wait NodistSetup-v0.8.4.exe /S
   - set NODIST_X64=0
   - npm install -g gulp bower node-pre-gyp node-gyp@3.3.1
   - git submodule update --init --recursive
