@@ -4,7 +4,8 @@ platform:
 install:
   - ps: Start-FileDownload 'https://github.com/coreybutler/nvm-windows/releases/download/1.1.1/nvm-noinstall.zip'
   - ps: Expand-Archive nvm-noinstall.zip -dest "$env:APPDATA\nvm"
-  - ps: $("root: $env:APPDATA\nvm`r`npath: $env:PROGRAMFILES\nodejs`r`narch: 32`r`nproxy: none") | Out-File $env:APPDATA\nvm\settings.txt
+  - ps: "$(\"root: $env:APPDATA\\nvm`r`npath: $env:PROGRAMFILES\\nodejs`r`narch: 32`r`nproxy: none\") | Out-File $env:APPDATA\\nvm\\settings.txt"
+  - type %APPDATA%\nvm\settings.txt
   - git submodule update --init --recursive
   - choco install -y InnoSetup
   - set NVM_HOME="%APPDATA%\nvm"
