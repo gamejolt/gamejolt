@@ -33,63 +33,6 @@ module.exports = function( config )
 			throw new Error( 'Can not build client on your OS type.' );
 	}
 
-	if ( config.platform == 'win' ) {
-		// Need to hotfix something in node gyp, which must be installed globally.
-		// Instead of hunting for where it's located we assume its installed through NVM or Nodist on node ver 5.11.1
-		var winDelayLoadHookPath, npmWinDelayLoadHookPath;
-		try {
-			winDelayLoadHookPath = cp.execSync( 'npm config get prefix' ).toString().trim();
-			winDelayLoadHookPath = path.join( winDelayLoadHookPath, 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
-		}
-		catch ( e ) {
-			throw new Error( 'Failed to get the npm global modules dir: ' + e.message );
-		}
-
-		try {
-			var npmExecutable = cp.execSync( 'where npm' ).toString().split( "\n" )[0].trim();
-			npmWinDelayLoadHookPath = path.join( path.dirname( npmExecutable ), 'node_modules', 'npm', 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
-		}
-		catch ( e ) {
-			throw new Error( 'Failed to get the npm source modules dir: ' + e.message );
-		}
-
-		try {
-			console.log( 'Verifying ' + winDelayLoadHookPath + ' exists' );
-			fs.statSync( winDelayLoadHookPath );
-			console.log( 'Verifying ' + npmWinDelayLoadHookPath + ' exists' );
-			fs.statSync( npmWinDelayLoadHookPath );
-		}
-		catch ( e ) {
-			throw new Error( 'node-gyp@3.3.1 must be installed globally to build client' );
-		}
-
-		// if ( process.env.NVM_HOME ) {
-		// 	winDelayLoadHookPath = path.join( process.env.NVM_HOME, 'v5.11.1', 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
-		// 	try {
-		// 		fs.statSync( winDelayLoadHookPath );
-		// 	}
-		// 	catch ( e ) {
-		// 		throw new Error( 'Must use nvm with node v5.11.1 and node-gyp@3.3.1 installed globally to build client' );
-		// 	}
-		// }
-		// else if ( process.env.NODIST_PREFIX ) {
-		// 	winDelayLoadHookPath = path.join( process.env.NODIST_PREFIX, 'bin', 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
-		// 	try {
-		// 		fs.statSync( winDelayLoadHookPath );
-		// 	}
-		// 	catch ( e ) {
-		// 		throw new Error( 'Must use nvm with node v5.11.1 and node-gyp@3.3.1 installed globally to build client' );
-		// 	}
-		// }
-		// else {
-		// 	throw new Error( 'Must use either nvm or nodist with node v5.11.1 and node-gyp@3.3.1 install globally to build client' );
-		// }
-
-		var vendorWinDelayLoadHookPath = path.join( 'tasks', 'vendor', 'win_delay_load_hook.c' );
-		fs.writeFileSync( winDelayLoadHookPath, fs.readFileSync( vendorWinDelayLoadHookPath ) );
-		fs.writeFileSync( npmWinDelayLoadHookPath, fs.readFileSync( vendorWinDelayLoadHookPath ) );
-	}
-
 	// On Windows builds we have to use npm3. For other OSes it's faster to do npm2.
 	// npm3 does a flat directory structure in node_modules, so the path is different.
 	// We have to find where the lzma-native path is so we can compile it.
@@ -120,7 +63,49 @@ module.exports = function( config )
 		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && npm run install' );
 	}
 
-	gulp.task( 'client:gyp', shell.task( gypTasks ) );
+	gulp.task( 'client:gyp-modules', shell.task( gypTasks ) );
+
+	gulp.task( 'client:gyp-prepare', function()
+	{
+		if ( config.platform == 'win' ) {
+			// Need to hotfix something in node gyp, which must be installed globally.
+			var winDelayLoadHookPath, npmWinDelayLoadHookPath;
+			try {
+				winDelayLoadHookPath = cp.execSync( 'npm config get prefix' ).toString().trim();
+				winDelayLoadHookPath = path.join( winDelayLoadHookPath, 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
+			}
+			catch ( e ) {
+				throw new Error( 'Failed to get the npm global modules dir: ' + e.message );
+			}
+
+			try {
+				var npmExecutable = cp.execSync( 'where npm' ).toString().split( "\n" )[0].trim();
+				npmWinDelayLoadHookPath = path.join( path.dirname( npmExecutable ), 'node_modules', 'npm', 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
+			}
+			catch ( e ) {
+				throw new Error( 'Failed to get the npm source modules dir: ' + e.message );
+			}
+
+			try {
+				console.log( 'Verifying ' + winDelayLoadHookPath + ' exists' );
+				fs.statSync( winDelayLoadHookPath );
+				console.log( 'Verifying ' + npmWinDelayLoadHookPath + ' exists' );
+				fs.statSync( npmWinDelayLoadHookPath );
+			}
+			catch ( e ) {
+				throw new Error( 'node-gyp@3.3.1 must be installed globally to build client' );
+			}
+
+			var vendorWinDelayLoadHookPath = path.join( 'tasks', 'vendor', 'win_delay_load_hook.c' );
+			fs.writeFileSync( winDelayLoadHookPath, fs.readFileSync( vendorWinDelayLoadHookPath ) );
+			fs.writeFileSync( npmWinDelayLoadHookPath, fs.readFileSync( vendorWinDelayLoadHookPath ) );
+		}
+	} );
+
+	gulp.task( 'client:gyp', function( cb )
+	{
+		return sequence( 'client:gyp-prepare', 'client:gyp-modules', cb );
+	} );
 
 	// For releasing to S3.
 	// We have to gather all the builds into the versioned folder before pushing.

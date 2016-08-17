@@ -2,21 +2,16 @@ platform:
   - x86
 
 install:
-  - which npm
   - ps: Install-Product node 5.12.0
   - git submodule update --init --recursive
   - choco install -y InnoSetup
   - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
   - npm install -g gulp bower node-pre-gyp node-gyp@3.3.1
-  - which npm
-  - npm --version
-  - npm config list -l
-  - dir C:\Users\appveyor\AppData\Roaming\npm
-  - dir C:\Users\appveyor\AppData\Roaming\npm\node_modules
-  - echo %PATH%
 
 build_script:
   - bower i
+  - npm i --only=dev
+  - gulp client:gyp-prepare
   - npm i
   - npm run client-build-win
 
