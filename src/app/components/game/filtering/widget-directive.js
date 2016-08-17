@@ -19,7 +19,7 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringWidget', funct
 				browser: [ 'html', 'flash', 'unity', 'applet', 'silverlight' ],
 				maturity: [ 'everyone', 'teen', 'adult' ],
 				status: [ 'complete', 'wip', 'canceled' ],
-				referals: [ 'enabled', 'disabled' ],
+				referrals: [ 'enabled', 'disabled' ],
 			}
 
 			this.onPopoverShown = function( filter )

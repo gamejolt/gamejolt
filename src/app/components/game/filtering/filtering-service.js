@@ -56,8 +56,8 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 				canceled: gettextCatalog.getString( 'games.filtering.status_canceled' ),
 			}
 		},
-		referals: {
-			label: gettextCatalog.getString( 'Referals' ),
+		referrals: {
+			label: gettextCatalog.getString( 'Referrals' ),
 			type: 'radio',
 			options: {
 				enabled: gettextCatalog.getString( 'Enabled' ),

@@ -17,7 +17,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlMatcherFacto
 	}
 
 	$stateProvider.state( 'discover.channels.channel.games._fetch', {
-		url: '/games/:section?price&sort&os&browser&maturity&status&referals&query&page',
+		url: '/games/:section?price&sort&os&browser&maturity&status&referrals&query&page',
 		params: {
 			section: {
 				value: 'hot',

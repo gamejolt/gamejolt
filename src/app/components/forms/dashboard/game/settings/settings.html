@@ -36,10 +36,10 @@
 			</div>
 		</div>
 
-		<form-group ng-if="hasPackagesForSale" name="referals_enabled" label="{{ 'Referals Enabled' | translate }}">
+		<form-group ng-if="hasPackagesForSale" name="referrals_enabled" label="{{ 'Referrals Enabled' | translate }}">
 			<div class="help-block" translate>
-				<p><strong>Turning this on will enable referal system for this game</strong></p>
-				<p>Referal system encourages youtubers to refer viewers to your game by sharing a split of the sales with them when someone purchases your game through their referal code.</p>
+				<p><strong>Turning this on will enable referral system for this game</strong></p>
+				<p>Referral system encourages youtubers to refer viewers to your game by sharing a split of the sales with them when someone purchases your game through their referral code.</p>
 			</div>
 
 			<gj-toggle-switch
@@ -52,10 +52,10 @@
 
 		<div ng-if="!hasPackagesForSale" class="form-group">
 			<label class="control-label" translate>
-				Referals Enabled
+				Referrals Enabled
 			</label>
 			<div class="alert alert-info" translate>
-				Referal system cannot be activated on free game pages.
+				Referral system cannot be activated on free game pages.
 			</div>
 		</div>
 
