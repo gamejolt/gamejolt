@@ -1,7 +1,13 @@
 <div class="trophy-completion alert" ng-class="::(ctrl.achieved > 0 ? 'alert-info' : 'alert-warning')">
 
 	<div ng-if="::(ctrl.achieved > 0)">
-		<p translate translate-scope="{ achieved: ctrl.achieved, total: ctrl.total }">trophies.completion.lead_html</p>
+		<p
+			translate
+			translate-params-achieved="ctrl.achieved"
+			translate-params-total="ctrl.total"
+			>
+			trophies.completion.lead_html
+		</p>
 		<br>
 
 		<div class="progress progress-darker progress-thin">

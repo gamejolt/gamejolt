@@ -1,6 +1,13 @@
-import { lazyModule } from './../../../../../lib/gj-lib-client/util/ng1-helpers.ts';
-import './overview/overview';
-import './games/games';
+import { provide } from 'ng-metadata/core';
 import { ChannelCtrl } from './channel-controller';
+import Overview from './overview/overview';
+import Games from './games/games';
+import Devlogs from './devlogs/devlogs'
 
-lazyModule( 'App.Views' ).controller( 'Discover.Channels.ChannelCtrl', ChannelCtrl );
+export default angular.module( 'App.Views.Discover.Channels.Channel', [
+	Overview,
+	Games,
+	Devlogs,
+] )
+.controller( ...provide( 'Discover.Channels.ChannelCtrl', { useClass: ChannelCtrl } ) )
+.name;

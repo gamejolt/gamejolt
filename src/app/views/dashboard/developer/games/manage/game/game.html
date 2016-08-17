@@ -1,4 +1,4 @@
-<section class="alert alert-warning sans-margin-bottom" ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN">
+<section class="alert alert-warning sans-margin-bottom" ng-if="false && manageCtrl.game.status == Game.STATUS_HIDDEN">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-10 col-lg-8 col-centered" ng-class="{ 'text-center': Screen.isDesktop }">
@@ -9,8 +9,17 @@
 	</div>
 </section>
 
-<div collapse="!manageCtrl.shouldShowGameCover">
-	<gj-media-item-cover media-item="manageCtrl.game.header_media_item" should-parallax="false"></gj-media-item-cover>
+<div collapse="!($state.is( 'dashboard.developer.games.manage.game.header' ) && gameCtrl.coverIsLoaded)">
+	<gj-media-item-cover
+		media-item="manageCtrl.game.header_media_item"
+		should-parallax="false"
+		on-loaded="gameCtrl.coverIsLoaded = true"
+		>
+	</gj-media-item-cover>
+</div>
+
+<div gj-expand-when="$state.is( 'dashboard.developer.games.manage.game.media' ) && manageCtrl.mediaItems.length">
+	<gj-game-media-bar gj-media-bar-items="manageCtrl.mediaItems"></gj-game-media-bar>
 </div>
 
 <section class="section fill-lightest section-thin" ng-if="Screen.isMobile">

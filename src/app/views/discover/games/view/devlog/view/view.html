@@ -1,0 +1,26 @@
+<div gj-scroll-when></div>
+
+<section class="section section-thin" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-7 col-lg-offset-2">
+				<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+
+			<section class="section">
+				<gj-devlog-post-view
+					post="viewCtrl.post"
+					>
+				</gj-devlog-post-view>
+			</section>
+
+		</div>
+	</div>
+</div>

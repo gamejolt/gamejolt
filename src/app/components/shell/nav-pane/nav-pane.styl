@@ -1,3 +1,17 @@
+.nav-pane-join-component
+
+	&-buttons
+		margin: $line-height-computed 0
+		text-align: center
+
+	.alert::before
+		caret( color: $gray-dark, direction: 'down', size: 7px )
+		content: ''
+
+	img
+		display: block
+		margin: 5px auto 0 auto
+
 #shell-nav-pane
 
 	/**
@@ -11,7 +25,7 @@
 /**
  * Nav menu items.
  */
-$shell-nav-item-spacing = 8px
+$shell-nav-item-spacing = 6px
 
 ul.shell-nav
 	@extend .list-unstyled
@@ -29,9 +43,9 @@ ul.shell-nav
 		vertical-align: text-top
 		color: $gray-light
 
-		// Have to override any on-hover colors.
-		&.active
-			color: $gj-green !important
+		// // Have to override any on-hover colors.
+		// &.active
+		// 	color: $white !important
 
 	// Firefox has a bug if you have a left floated, right floated, and then text-overflow ellipsis content in the middle
 	// it will push the right float down. We can get around it by putting the right float first, but then the content is on top
@@ -53,7 +67,7 @@ ul.shell-nav
 			text-overflow()
 			position: relative
 			display: block
-			color: $gray-lightest
+			color: $gray-light
 			user-select: none
 			padding: $shell-nav-item-spacing 7px
 
@@ -72,8 +86,8 @@ ul.shell-nav
 				color: $white
 				background-color: $gray-darker
 
-				.jolticon
-					color: $gray-lightest
+				// .jolticon
+				// 	color: $gray-lightest
 
 			&.no-icon
 				padding-left: 15px
@@ -87,7 +101,7 @@ ul.shell-nav
 						transform: translate( 0, 0 )
 
 					.jolticon
-						color: $gj-green
+						color: $white
 
 					.tag
 						@extend .tag-pink

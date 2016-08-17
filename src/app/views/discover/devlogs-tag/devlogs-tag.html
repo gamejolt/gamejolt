@@ -1,0 +1,39 @@
+<gj-page-header
+	hide-nav="true"
+	col-classes="col-lg-7 col-centered"
+	>
+
+	<gj-page-header-content>
+		<h1>
+			<span translate>Devlog Entries</span>
+			<small translate translate-params-tag="tagCtrl.tag">
+				for #{{ tag }}
+			</small>
+		</h1>
+		<div class="small text-muted" translate translate-params-tag="tagCtrl.tag">
+			Follow along on the latest development for #{{ tag }}!
+		</div>
+		<br>
+
+	</gj-page-header-content>
+
+</gj-page-header>
+
+<section class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-7 col-centered">
+
+				<gj-activity-feed
+					type="Fireside_Post"
+					items="tagCtrl.items"
+					load-more-url="/web/discover/devlogs-tag/posts/{{ tagCtrl.tag }}"
+					show-game-info="true"
+					>
+				</gj-activity-feed>
+
+			</div>
+		</div>
+
+	</div>
+</section>

@@ -1,8 +1,5 @@
 .ctrl-discover-games-view-overview-page
 
-	hr
-		margin: 10px 0
-
 	.game-stats
 		margin-bottom: $line-height-computed
 
@@ -75,3 +72,50 @@
 
 		.game-stats
 			margin-bottom: 0
+
+	.devlog-section
+		position: relative
+		overflow: hidden
+		border-top: 2px solid $gray-light
+		border-bottom: 2px solid $gray-light
+		cursor: pointer
+
+		max-height: 300px
+
+		@media $media-sm-up
+			max-height: 600px
+
+		&::after
+		&-overlay
+			position: absolute
+			top: 0
+			right: 0
+			bottom: 0
+			left: 0
+			content: ''
+
+		// The Shadow on bottom
+		&::after
+			top: auto
+			height: 80px
+			transition: opacity 500ms, transform 1000ms
+			pointer-events: none
+			background-image: linear-gradient( to bottom, rgba( $gj-blue, 0 ) 0%, rgba( $gj-blue, 0.2 ) 100% )
+			transform: translateY( 130px )
+			z-index: 3
+
+		&-overlay
+			background-color: rgba( $black, 0.4 )
+			z-index: 2
+			display: flex
+			justify-content: center
+			align-items: center
+			transition: background-color 500ms
+
+			&:hover
+				background-color: rgba( $black, 0.6 )
+
+		&:hover
+			&::after
+				transform: translateY( 0 )
+

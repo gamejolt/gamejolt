@@ -10,6 +10,7 @@ install:
 
 build_script:
   - bower i
+  - SET CL=-DDELAYIMP_INSECURE_WRITABLE_HOOKS
   - npm i
   - npm run client-build-win
 

@@ -29,7 +29,7 @@
 				</div>
 				<div class="col-xs-4 col-sm-2 col-sm-pull-10">
 					<a class="link-block" ng-href="{{ ::profileCtrl.activeGameSession.game.getUrl() }}">
-						<img gj-img-responsive="{{ ::profileCtrl.activeGameSession.game.img_thumbnail }}" alt="">
+						<gj-game-thumbnail-img game="::profileCtrl.activeGameSession.game"></gj-game-thumbnail-img>
 					</a>
 				</div>
 			</div>
@@ -39,14 +39,20 @@
 	<section class="section">
 		<div class="container">
 			<div class="row">
-				<div class="col-xs-12 col-md-8 col-lg-6">
+
+				<div class="col-xs-12 col-md-8 col-lg-6 pull-left" style="clear: left">
 
 					<!--
 						Friend Requests
 					-->
 					<div gj-expand-when="profileCtrl.userFriendship && profileCtrl.userFriendship.state == User_Friendship.STATE_REQUEST_SENT">
 						<div class="alert alert-info">
-							<p>{{ ::'profile.friend_request_sent_pending' | translate:{ user: profileCtrl.userFriendship.target_user.display_name } }}</p>
+							<p
+								translate
+								translate-params-user="profileCtrl.userFriendship.target_user.display_name"
+								>
+								profile.friend_request_sent_pending
+							</p>
 							<a class="i-button warning" ng-click="profileCtrl.cancelFriendRequest()">
 								<span class="jolticon jolticon-remove"></span>
 								{{ ::'profile.friend_request_cancel' | translate }}
@@ -56,7 +62,12 @@
 
 					<div gj-expand-when="profileCtrl.userFriendship && profileCtrl.userFriendship.state == User_Friendship.STATE_REQUEST_RECEIVED">
 						<div class="alert alert-info">
-							<p>{{ ::'profile.friend_request_received_pending' | translate:{ user: profileCtrl.userFriendship.user.display_name } }}</p>
+							<p
+								translate
+								translate-params-user="profileCtrl.userFriendship.user.display_name"
+								>
+								profile.friend_request_received_pending
+							</p>
 							<a class="i-button big" ng-click="profileCtrl.acceptFriendRequest()">
 								<span class="jolticon jolticon-friend-add-2"></span>
 								{{ ::'profile.friend_request_accept' | translate }}
@@ -68,11 +79,82 @@
 						</div>
 					</div>
 
-					<div class="row" ng-if="Screen.isMobile">
-						<div class="col-sm-6">
-							<div gj-partial="/app/views/profile/overview/_level-widget.html"></div>
+				</div>
+				<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
+					<div class="row">
+						<div class="col-sm-6 col-md-12">
+							<gj-user-level-widget gj-user="::profileCtrl.user"></gj-user-level-widget>
+						</div>
+						<div class="col-sm-6 col-md-12">
+							<div ng-if="::(
+								profileCtrl.user.facebook_id
+								|| profileCtrl.user.twitter_id
+								|| profileCtrl.user.google_id
+								|| profileCtrl.user.web_site
+								)"
+								>
+								<div ng-if="::profileCtrl.user.facebook_id">
+									<a
+										class="link-unstyled"
+										target="_blank"
+										ng-href="http://facebook.com/{{ ::profileCtrl.user.facebook_id }}"
+										>
+										<span class="jolticon jolticon-facebook"></span>
+										{{ profileCtrl.user.facebook_name }}
+									</a>
+								</div>
+
+								<div ng-if="::profileCtrl.user.twitter_id">
+									<a
+										class="link-unstyled"
+										target="_blank"
+										ng-href="http://twitter.com/{{ ::profileCtrl.user.twitter_screenname }}"
+										>
+										<span class="jolticon jolticon-twitter-bird"></span>
+										@{{ profileCtrl.user.twitter_screenname }}
+									</a>
+								</div>
+
+								<div ng-if="::profileCtrl.user.google_id">
+									<a
+										class="link-unstyled"
+										target="_blank"
+										ng-href="https://plus.google.com/{{ ::profileCtrl.user.google_id }}"
+										>
+										<span class="jolticon jolticon-google-plus"></span>
+										{{ profileCtrl.user.google_nickname }}
+									</a>
+								</div>
+
+								<div ng-if="::profileCtrl.user.web_site">
+									<a
+										class="link-unstyled"
+										target="_blank"
+										ng-href="{{ ::profileCtrl.user.web_site }}"
+										>
+										<span class="jolticon jolticon-world"></span>
+										<span translate>Developer's Web Site</span>
+									</a>
+								</div>
+
+								<br>
+							</div>
+							<div ng-if="overviewCtrl.youtubeChannels.length">
+								<div ng-repeat="channel in overviewCtrl.youtubeChannels track by channel.id">
+									<a
+										class="link-unstyled"
+										target="_blank"
+										ng-href="https://www.youtube.com/channel/{{ channel.channel_id }}"
+										>
+										<span class="jolticon jolticon-youtube"></span>
+										{{ channel.title }}
+									</a>
+								</div>
+							</div>
 						</div>
 					</div>
+				</div>
+				<div class="col-xs-12 col-md-8 col-lg-6 pull-left" style="clear: left">
 
 					<gj-fade-collapse
 						fade-collapse-height="500"
@@ -88,18 +170,11 @@
 						ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"></a>
 
 				</div>
-				<div class="col-xs-12 col-md-4 col-lg-offset-2">
-
-					<div ng-if="Screen.isDesktop">
-						<div gj-partial="/app/views/profile/overview/_level-widget.html"></div>
-					</div>
-
-				</div>
 			</div>
 		</div>
 	</section>
 
-	<section class="section fill-lightest" ng-if="profileCtrl.user.type == User.TYPE_DEVELOPER">
+	<section class="section" ng-if="profileCtrl.user.type == User.TYPE_DEVELOPER">
 		<div class="container">
 
 			<div ng-if="!profileCtrl.gamesCount" translate>profile.no_developer_games_html</div>
@@ -122,9 +197,48 @@
 					</div>
 				</div>
 
-				<a class="i-button big" ng-class="{ block: Screen.isXs }" ui-sref="library.collection.developer( { slug: profileCtrl.user.slug, id: profileCtrl.user.id } )">
-					<span class="jolticon jolticon-game"></span>
-					{{ ::'profile.developer_games_teaser_button' | translate:{ gamesCount: profileCtrl.gamesCount } }}
+				<div class="page-cut">
+					<a class="btn btn-outline"
+						ui-sref="library.collection.developer( { slug: profileCtrl.user.slug, id: profileCtrl.user.id } )"
+						>
+						<span class="btn-badge">
+							{{ profileCtrl.gamesCount | number }}
+						</span>
+						<span translate>View All</span>
+					</a>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<section class="section" ng-if="profileCtrl.videosCount > 0">
+		<div class="container">
+
+			<h2 class="section-header">
+				<a class="link-unstyled" ui-sref="profile.videos" translate>
+					Video Comments
+				</a>
+			</h2>
+
+			<div class="row">
+				<gj-comment-video-thumbnail
+					class="col-xs-6 col-sm-3"
+					ng-repeat="video in overviewCtrl.videos | limitTo:8 track by video.id"
+					video="video"
+					show-game="true"
+					>
+				</gj-comment-video-thumbnail>
+			</div>
+
+			<div class="page-cut">
+				<a class="btn btn-outline"
+					ui-sref="profile.videos"
+					>
+					<span class="btn-badge">
+						{{ profileCtrl.videosCount | number }}
+					</span>
+					<span translate>View All</span>
 				</a>
 			</div>
 

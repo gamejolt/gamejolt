@@ -1,0 +1,173 @@
+<div class="row">
+	<div class="col-sm-4 col-sm-push-8">
+		<div class="page-help" translate>dash.games.media.page_help_html</div>
+	</div>
+
+	<div class="col-sm-8 col-sm-pull-4">
+
+		<h3 class="section-header" translate>Add Media</h3>
+
+		<nav class="platform-list inline nav-justified">
+			<ul>
+				<li>
+					<a ng-click="mediaCtrl.addTab = 'image'" ng-class="{ active: mediaCtrl.addTab == 'image' }">
+						<span class="jolticon jolticon-screenshot"></span>
+						<span translate>Images</span>
+					</a>
+				</li>
+				<li>
+					<a ng-click="mediaCtrl.addTab = 'video'" ng-class="{ active: mediaCtrl.addTab == 'video' }">
+						<span class="jolticon jolticon-video"></span>
+						<span translate>dash.games.media.video_label</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+		<br>
+
+		<div ng-switch="mediaCtrl.addTab">
+
+			<div ng-switch-when="image">
+				<div class="alert alert-info full-bleed-xs">
+					<div translate>dash.games.media.add.image.page_help_html</div>
+					<br>
+					<div>
+						<a class="link-help" href="https://help.gamejolt.com/dev-media-images" target="_blank">{{ ::'dash.games.media.add.image.page_help_link' | translate }}</a>
+					</div>
+				</div>
+
+				<gj-form-dashboard-game-image
+					gj-game="manageCtrl.game"
+					gj-form-submit-handler="mediaCtrl.onImagesAdded( $response )"
+					>
+				</gj-form-dashboard-game-image>
+			</div>
+
+			<div ng-switch-when="video">
+				<div class="alert alert-info full-bleed-xs">
+					<div translate>dash.games.media.add.video.page_help_html</div>
+					<br>
+					<div>
+						<a class="link-help" href="https://help.gamejolt.com/dev-media-videos" target="_blank">{{ ::'dash.games.media.add.video.page_help_link' | translate }}</a>
+					</div>
+				</div>
+
+				<gj-form-dashboard-game-video
+					gj-game="manageCtrl.game"
+					gj-form-submit-handler="mediaCtrl.onVideoAdded( formModel )"
+					>
+				</gj-form-dashboard-game-video>
+			</div>
+		</div>
+
+		<div ng-if="manageCtrl.mediaItems.length > 0 ">
+			<hr>
+
+			<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
+				<gj-editable-accordion active-item="mediaCtrl.activeItem">
+
+					<div ui-tree="{ dropped: mediaCtrl._onMediaSorted }"
+						ui-tree-nodes
+						ng-model="manageCtrl.mediaItems"
+						>
+
+						<!-- track by ID was breaking -->
+						<gj-editable-accordion-item
+							ng-repeat="item in manageCtrl.mediaItems"
+							ui-tree-node
+							>
+
+							<gj-editable-accordion-item-heading>
+
+								<div class="media-card-thumb"
+									ng-style="{ 'background-image': 'url(\'' + item.img_thumbnail_med + '\')' }"
+									>
+								</div>
+
+								<div class="media-card-content" ng-switch="item.media_type">
+
+									<a class="card-remove"
+										ng-click="mediaCtrl.removeItem( item ); $event.stopPropagation()"
+										>
+										<span class="jolticon jolticon-remove middle"></span>
+									</a>
+
+									<div ng-switch-when="image">
+										<div class="card-title">
+											<h5 ng-if="item.caption">{{ item.caption }}</h5>
+											<h5 ng-if="!item.caption">
+												<em translate>(no caption)</em>
+											</h5>
+										</div>
+										<div class="card-meta">
+											<div class="tag" translate>Image</div>
+											<a class="btn btn-sm btn-outline"
+												ng-click="mediaCtrl.clipboard.copy( Environment.baseUrl + item.getUrl( manageCtrl.game ) ); $event.stopPropagation()"
+												gj-tooltip="{{ 'Copy the direct link to view this image on your game page.' | translate }}"
+												translate
+												>
+												Copy Permalink
+											</a>
+										</div>
+									</div>
+
+									<div ng-switch-when="video">
+										<div class="card-title" >
+											<h5>{{ item.title }}</h5>
+										</div>
+										<div class="card-meta">
+											<div class="tag" translate>Video</div>
+											<a class="btn btn-sm btn-outline"
+												ng-click="mediaCtrl.clipboard.copy( Environment.baseUrl + item.getUrl( manageCtrl.game ) ); $event.stopPropagation()"
+												gj-tooltip="{{ 'Copy the direct link to view this video on your game page.' | translate }}"
+												translate
+												>
+												Copy Permalink
+											</a>
+										</div>
+									</div>
+
+								</div>
+
+							</gj-editable-accordion-item-heading>
+
+							<gj-editable-accordion-item-body>
+
+								<div ng-switch="item.media_type">
+									<gj-form-dashboard-game-image
+										ng-switch-when="image"
+										gj-game="manageCtrl.game"
+										gj-game-screenshot="item"
+										gj-form-submit-handler="mediaCtrl.onMediaEdited( formModel )"
+										>
+									</gj-form-dashboard-game-image>
+
+									<gj-form-dashboard-game-video
+										ng-switch-when="video"
+										gj-game="manageCtrl.game"
+										gj-game-video="item"
+										gj-form-submit-handler="mediaCtrl.onMediaEdited( formModel )"
+										>
+									</gj-form-dashboard-game-video>
+								</div>
+
+							</gj-editable-accordion-item-body>
+
+						</gj-editable-accordion-item>
+
+					</div>
+
+				</gj-editable-accordion>
+			</div>
+		</div>
+
+		<div ng-if="manageCtrl.isWizard">
+			<gj-form-dashboard-game-wizard-controls
+				game="manageCtrl.game"
+				can-proceed="true"
+				>
+			</gj-form-dashboard-game-wizard-controls>
+		</div>
+
+	</div>
+</div>

@@ -59,6 +59,9 @@ angular.module( 'App.Client.Library' )
 				{
 					var localPackage = _this[ watchInfo.key ][ key ];
 					for ( var i in mods ) {
+						if ( !mods.hasOwnProperty( i ) ) {
+							continue;
+						}
 						localPackage[ i ] = mods[ i ];
 					}
 				} );
@@ -85,7 +88,7 @@ angular.module( 'App.Client.Library' )
 		return $q.all( fetchers )
 			.then( function( data )
 			{
-				for ( var i in watchThese ) {
+				for ( var i = 0; i < watchThese.length; ++i ) {
 					_this[ watchThese[ i ].key ] = _.indexBy( data[ i ], 'id' );
 				}
 
@@ -109,7 +112,7 @@ angular.module( 'App.Client.Library' )
 			return null;
 		}
 
-		for ( var i in packages ) {
+		for ( var i = 0; i < packages.length; ++i ) {
 			if ( packages[ i ].install_state ) {
 				return packages[ i ];
 			}

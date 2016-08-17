@@ -13,7 +13,6 @@ angular.module( 'App.Views' ).controller( 'LibraryCtrl', function( $scope, $stat
 	this.shouldShowSidebar = true;
 
 	this.collections = GameCollection.populate( libraryPayload.collections );
-	this.followedNotificationCount = libraryPayload.followedNotificationCount || 0;
 	this.followedCollection = libraryPayload.followedCollection ? new GameCollection( libraryPayload.followedCollection ) : null;
 	this.developerCollection = libraryPayload.developerCollection ? new GameCollection( libraryPayload.developerCollection ) : null;
 	this.ownedCollection = libraryPayload.ownedCollection ? new GameCollection( libraryPayload.ownedCollection ) : null;

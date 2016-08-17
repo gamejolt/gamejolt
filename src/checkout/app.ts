@@ -1,10 +1,24 @@
-import './views/views';
-import './components/forms/forms';
+import { bootstrap } from 'ng-metadata/platform';
+import { enableProdMode, provide } from 'ng-metadata/core';
+
+import ModelModule from './../lib/gj-lib-client/components/model/model';
+import MetaModule from './../lib/gj-lib-client/components/meta/meta';
+import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
+import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
+import FormsModule from './components/forms/forms';
+import ViewsModule from './views/views';
 
-angular.module( 'App', [
+if ( GJ_BUILD_TYPE == 'production' ) {
+	enableProdMode();
+}
+
+const AppModule = angular.module( 'App', [
+	// Client.
+	/* inject client:base:modules */
+
 	// Libs.
 	'ngSanitize',
 	'ngAnimate',
@@ -20,15 +34,16 @@ angular.module( 'App', [
 	'gj.Environment',
 	'gj.Api',
 	'gj.Payload',
-	'gj.Model',
+	ModelModule,
+	MetaModule,
 	'gj.Error',
 	'gj.Translate',
 	'gj.Geo',
 
 	'gj.Debug',
 	'gj.Debug.DebugBar',
-	'gj.Ruler',
-	'gj.Screen',
+	RulerModule,
+	ScreenModule,
 	'gj.BodyClasses',
 	'gj.Analytics',
 	'gj.Loading',
@@ -59,15 +74,18 @@ angular.module( 'App', [
 
 	'gj.Popover',
 
-	'App.Forms',
+	FormsModule,
 
 	// Views.
-	'App.Views',
-
-	// Client.
-	/* inject client:base:modules */
+	ViewsModule,
 ] )
-.config( function( $locationProvider, $uiViewScrollProvider, $compileProvider, $httpProvider, EnvironmentProvider, $sceDelegateProvider )
+.config( function(
+	$locationProvider: ng.ILocationProvider,
+	$uiViewScrollProvider: ng.ui.IUiViewScrollProvider,
+	$compileProvider: ng.ICompileProvider,
+	EnvironmentProvider: any,
+	$sceDelegateProvider: ng.ISCEDelegateProvider,
+)
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
 		'self',
@@ -77,8 +95,13 @@ angular.module( 'App', [
 	$locationProvider.html5Mode( true ).hashPrefix( '!' );
 	$uiViewScrollProvider.useAnchorScroll();
 
-	$compileProvider.debugInfoEnabled( false );
-	$httpProvider.useApplyAsync( true );
+	if ( GJ_ENVIRONMENT == 'development' ) {
+		EnvironmentProvider.env = 'development';
+	}
+
+	if ( GJ_BUILD_TYPE == 'development' ) {
+		EnvironmentProvider.buildType = 'development';
+	}
 
 	// We are on WTTF!
 	EnvironmentProvider.isWttf = true;
@@ -106,11 +129,13 @@ angular.module( 'App', [
 		$compileProvider.imgSrcSanitizationWhitelist( /^\s*((https?|ftp|file|blob|app):|data:image\/)/ );
 	}
 } )
-.service( 'App', App )
+.name;
+
+angular.module( AppModule )
 .controller( 'AppCtrl', AppCtrl )
-;
+.service( ...provide( 'App', { useClass: App } ) );
 
 setTimeout( function()
 {
-	angular.bootstrap( document, [ 'App' ] );
+	bootstrap( AppModule );
 }, 0 );

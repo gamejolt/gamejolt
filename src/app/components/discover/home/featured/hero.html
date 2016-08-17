@@ -46,7 +46,7 @@
 		</div>
 
 		<div class="btn btn-primary-outline btn-overlay-variant bgn-sm anim-fade-in-enlarge"
-			ng-class="{ 'btn-block': Screen.isXs }"
+			ng-class="{ 'btn-block': $sctrl.screen.isXs }"
 			ui-sref="{{ ::$ctrl.game.getSref( null, true ) }}"
 			>
 			<span class="jolticon jolticon-chevron-right"></span>
@@ -54,9 +54,9 @@
 		</div>
 	</div>
 
-	<img gj-img-responsive="{{ ::$ctrl.game.img_thumbnail }}" alt="">
+	<gj-game-thumbnail-img game="$ctrl.game"></gj-game-thumbnail-img>
 
-	<video ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.Screen.isDesktop" preload loop autoplay ng-attr-poster="{{ ::$ctrl.game.img_thumbnail }}">
+	<video ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop" preload loop autoplay ng-attr-poster="{{ ::$ctrl.game.img_thumbnail }}">
 		<source ng-src="{{ ::$ctrl.webm }}" type="video/webm">
 		<source ng-src="{{ ::$ctrl.mp4 }}" type="video/mp4">
 	</video>

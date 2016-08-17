@@ -1,16 +1,22 @@
 {
-	"compilerOptions": {
-		"target": "es5",
-        "moduleResolution": "node",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "removeComments": false,
-        "noImplicitAny": false,
-        "allowJs": true
-	},
-    "exclude": [
-        "build",
-        "node_modules",
-        "src/bower-lib"
-    ]
+  "compilerOptions": {
+    "target": "es5",
+    "moduleResolution": "node",
+    // Doesn't work with lazy loading and rollup.
+    // Can only turn it on when angular2 is in place.
+    // "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "allowJs": true,
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "build",
+    "node_modules",
+    "src/bower-lib"
+  ]
 }

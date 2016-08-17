@@ -2,7 +2,7 @@
 
 	<img
 		gj-img-responsive="{{ ::ctrl.item.img_thumbnail }}"
-		is-loaded="ctrl.loaded"
+		on-loaded-change="ctrl.loaded = $loaded"
 		title="{{ ::ctrl.item.media_type == 'image' ? ctrl.item.caption : ctrl.item.title }}"
 		alt="{{ ::ctrl.item.media_type == 'image' ? ctrl.item.caption : ctrl.item.title }}">
 

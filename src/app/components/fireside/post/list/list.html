@@ -1,5 +1,5 @@
 <ul class="fireside-post-list">
-	<li ng-repeat="post in ctrl.posts">
+	<li ng-repeat="post in $ctrl.posts track by post.id">
 
 		<a class="fireside-post-list-item" ng-href="{{ ::post.url }}">
 

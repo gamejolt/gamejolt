@@ -40,8 +40,7 @@
 	</div>
 	<div class="auth-page-link">
 		<a class="link-unstyled" ui-sref="auth.forgot">
-			<!--<span>{{ 'auth.forgot_link' | translate:{ username: 'Username', password: 'Pass' } }}</span>-->
-			<span translate translate-scope="{ username: 'Username', password: 'Pass' }">auth.forgot_link</span>
+			<span translate translate-params-username="Username" translate-params-password="Pass">auth.forgot_link</span>
 			<span class="jolticon jolticon-help-circle"></span>
 		</a>
 	</div>

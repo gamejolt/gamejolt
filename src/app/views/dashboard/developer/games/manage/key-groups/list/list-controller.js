@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyGroups.ListCtrl', function(
-	$scope, App, KeyGroup, Game_Package, gettextCatalog, payload )
+	$scope, $state, App, KeyGroup, Game_Package, gettextCatalog, payload )
 {
 	var _this = this;
 	var manageCtrl = $scope.manageCtrl;
@@ -13,7 +13,6 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyG
 
 	this.onKeyGroupAdded = function( keyGroup )
 	{
-		this.keyGroups.push( keyGroup );
-		this.isAdding = false;
+		$state.go( 'dashboard.developer.games.manage.key-groups.edit', { keyGroupId: keyGroup.id } );
 	};
 } );

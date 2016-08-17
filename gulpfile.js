@@ -10,6 +10,12 @@ var config = {
 			'src/modal/modal.js'
 		],
 	},
+	rollup: {
+		vendor: {
+			'ng-metadata/core': 'vendor.ngMetadata_core',
+			'ng-metadata/platform': 'vendor.ngMetadata_platform',
+		},
+	},
 	modules: {
 		'vendor-app.js': {
 			bower: [
@@ -63,6 +69,11 @@ var config = {
 				'angular-ui-tree',
 			],
 		},
+		'chat.js': {
+			components: [
+				'chat',
+			],
+		},
 		'primus.js': {
 			componentVendor: [
 				'primus',
@@ -76,6 +87,7 @@ var config = {
 
 		// Sections of the site.
 		'dash.js': {
+			main: '/views/dashboard/dashboard.ts',
 			components: [
 				'forms/dashboard',
 				'site-analytics',

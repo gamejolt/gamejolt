@@ -169,11 +169,11 @@
 				label="Min. Payout Amount"
 				>
 				<p class="help-block">
-					<span translate translate-scope="{ max: currencyFilter( maxPayout / 100, '$' ) }">
+					<span translate translate-params-max="maxPayout / 100 | currency:'$'">
 						The max you can set this to is {{ max }} USD.
 					</span>
 					<br>
-					<span translate>You can turn this off by setting it to $0.</span>
+					<span translate>You can decide to have no minimum by setting it to $0.</span>
 				</p>
 
 				<input-group>
