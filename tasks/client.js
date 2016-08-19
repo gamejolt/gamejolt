@@ -284,10 +284,11 @@ module.exports = function( config )
 	/**
 	 * Does the actual building into an NW executable.
 	 */
-	gulp.task( 'client:nw', function()
+	gulp.task( 'client:nw', function( cb )
 	{
 		var clientJson = require( '../client-package.json' );
 		var NwBuilder = require( 'nw-builder' );
+		var NWB = require( 'nwjs-builder' );
 
 		// We want the name to be:
 		// 'game-jolt-client' on linux - because kebabs rock
@@ -301,30 +302,26 @@ module.exports = function( config )
 			appName = 'Game Jolt Client';
 		}
 
-		var nw = new NwBuilder( {
-			version: '0.14.7',
-			files: config.buildDir + '/**/*',
-			buildDir: config.clientBuildDir,
-			cacheDir: config.clientBuildCacheDir,
-			platforms: [ config.platformArch ],
-			appName: appName,
-			buildType: function()
-			{
-				// return 'v' + this.appVersion;
-				return 'build';
-			},
-			appVersion: clientJson.version,
-			macZip: false,  // Use a app.nw folder instead of ZIP file
+		NWB.commands.nwbuild( config.buildDir, {
+			version: config.production ? '0.14.7' : '0.14.7-sdk',
+			platforms: config.platformArch,
+			outputName: config.platformArch,
+			outputDir: getReleaseDir(),
+			executableName: appName,
+			withFFmpeg: true,
+			sideBySide: true,
+			sideBySideZip: path.join( getReleaseDir(), config.platformArch, 'package.nw' ), // Simulate what nw-builder does with side-by-side
+			production: false, // We don't want nwjs builder to redo the node modules because we already did that in client:node-modules
 			macIcns: 'src/app/img/client/mac.icns',
 			winIco: 'src/app/img/client/winico.ico',
+		}, function( err )
+		{
+			if ( err ) {
+				throw err;
+			}
 
-			// Tells it not to merge the app zip into the executable. Easier updating this way.
-			mergeApp: false,
+			cb();
 		} );
-
-		nw.on( 'log', console.log );
-
-		return nw.build();
 	} );
 
 	// We have to load paths only when we're actually running the gulp task.
