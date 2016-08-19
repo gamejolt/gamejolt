@@ -287,7 +287,6 @@ module.exports = function( config )
 	gulp.task( 'client:nw', function( cb )
 	{
 		var clientJson = require( '../client-package.json' );
-		var NwBuilder = require( 'nw-builder' );
 		var NWB = require( 'nwjs-builder' );
 
 		// We want the name to be:
