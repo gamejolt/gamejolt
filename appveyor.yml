@@ -10,7 +10,7 @@ install:
 
 build_script:
   - bower i
-  - npm i --dev
+  - npm i --only=dev lodash@3.9.3
   - gulp client:gyp-prepare
   - npm i
   - npm run client-build-win
