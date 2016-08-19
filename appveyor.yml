@@ -10,7 +10,7 @@ install:
 
 build_script:
   - bower i
-  - npm i --only=dev
+  - npm i --dev
   - gulp client:gyp-prepare
   - npm i
   - npm run client-build-win
