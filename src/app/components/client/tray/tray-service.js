@@ -9,14 +9,12 @@ angular.module( 'App.Client.Tray' )
 	// TRAY IS WINDOWS ONLY AT THIS TIME
 	// We should turn this on for Linux when this bug is fixed:
 	// https://github.com/nwjs/nw.js/issues/2771
-	if ( Device.os() == 'windows' ) {
+	if ( Device.os() == 'windows' || Device.os() == 'linux' ) {
 		Client_Tray.init( section );
 	}
 } )
 .service( 'Client_Tray', function( $injector, $state, Screen, Client, App, Environment )
 {
-	var gui = require( 'nw.gui' );
-
 	this.init = function( section )
 	{
 		// This will happen if switching between sections.
@@ -32,7 +30,7 @@ angular.module( 'App.Client.Tray' )
 			isClientGreedy = false;
 		}
 
-		var win = gui.Window.get();
+		var win = nw.Window.get();
 		var isMinimized = false;
 		var isClosed = false;
 		var isFocused = false;
@@ -69,7 +67,7 @@ angular.module( 'App.Client.Tray' )
 		}
 
 		var packagePrefix = Environment.buildType == 'production' ? '/package' : '';
-		var tray = new gui.Tray( {
+		var tray = new nw.Tray( {
 			title: 'Game Jolt Client',
 
 			// We split this up so that it doesn't get injected.
@@ -80,10 +78,10 @@ angular.module( 'App.Client.Tray' )
 
 		tray.tooltip = 'Game Jolt Client';
 
-		var menu = new gui.Menu();
+		var menu = new nw.Menu();
 
 		if ( section != 'auth' ) {
-			menu.append( new gui.MenuItem( {
+			menu.append( new nw.MenuItem( {
 				label: 'Browse Games',
 				click: function()
 				{
@@ -92,9 +90,9 @@ angular.module( 'App.Client.Tray' )
 				}
 			} ) );
 
-			menu.append( new gui.MenuItem( { type: 'separator' } ) );
+			menu.append( new nw.MenuItem( { type: 'separator' } ) );
 
-			menu.append( new gui.MenuItem( {
+			menu.append( new nw.MenuItem( {
 				label: 'Game Library',
 				click: function()
 				{
@@ -103,7 +101,7 @@ angular.module( 'App.Client.Tray' )
 				}
 			} ) );
 
-			menu.append( new gui.MenuItem( {
+			menu.append( new nw.MenuItem( {
 				label: 'Dashboard',
 				click: function()
 				{
@@ -112,7 +110,7 @@ angular.module( 'App.Client.Tray' )
 				}
 			} ) );
 
-			menu.append( new gui.MenuItem( {
+			menu.append( new nw.MenuItem( {
 				label: 'Edit Account',
 				click: function()
 				{
@@ -121,7 +119,7 @@ angular.module( 'App.Client.Tray' )
 				}
 			} ) );
 
-			menu.append( new gui.MenuItem( {
+			menu.append( new nw.MenuItem( {
 				label: 'Your Profile',
 				click: function()
 				{
@@ -130,7 +128,7 @@ angular.module( 'App.Client.Tray' )
 				}
 			} ) );
 
-			menu.append( new gui.MenuItem( {
+			menu.append( new nw.MenuItem( {
 				label: 'Your Game Token',
 				click: function()
 				{
@@ -139,7 +137,7 @@ angular.module( 'App.Client.Tray' )
 				}
 			} ) );
 
-			menu.append( new gui.MenuItem( {
+			menu.append( new nw.MenuItem( {
 				label: 'Settings',
 				click: function()
 				{
@@ -148,9 +146,9 @@ angular.module( 'App.Client.Tray' )
 				}
 			} ) );
 
-			menu.append( new gui.MenuItem( { type: 'separator' } ) );
+			menu.append( new nw.MenuItem( { type: 'separator' } ) );
 
-			menu.append( new gui.MenuItem( {
+			menu.append( new nw.MenuItem( {
 				label: 'Logout',
 				click: function()
 				{
@@ -160,7 +158,7 @@ angular.module( 'App.Client.Tray' )
 			} ) );
 		}
 
-		menu.append( new gui.MenuItem( {
+		menu.append( new nw.MenuItem( {
 			label: 'Quit',
 			click: function()
 			{

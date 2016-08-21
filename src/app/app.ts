@@ -413,10 +413,10 @@ const AppModule = angular.module( 'App', [
 		// Must be accessed like a local file with index.html at the root.
 		$locationProvider.html5Mode( false );
 
-		// Since we're using the "app://" protocol, we have to change the sanitization whitelist
-		// to include the app protocol as well. Otherwise we get "unsafe:" prefixed onto certain URLs.
-		$compileProvider.aHrefSanitizationWhitelist( /^\s*(https?|ftp|mailto|tel|file|app):/ );
-		$compileProvider.imgSrcSanitizationWhitelist( /^\s*((https?|ftp|file|blob|app):|data:image\/)/ );
+		// Since we're using the "chrome-extension://" protocol, we have to change the sanitization whitelist
+		// to include the chrome-extension protocol as well. Otherwise we get "unsafe:" prefixed onto certain URLs.
+		$compileProvider.aHrefSanitizationWhitelist( /^\s*(https?|ftp|mailto|tel|file|chrome-extension):/ );
+		$compileProvider.imgSrcSanitizationWhitelist( /^\s*((https?|ftp|file|blob|chrome-extension):|data:image\/)/ );
 	}
 
 	// Can't include in a foreach. Have to list out so that the revisioner for filenames will pull it.

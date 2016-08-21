@@ -16,6 +16,7 @@
     "@types/hammerjs": "^2.0.28",
     "@types/lodash": "0.0.27",
     "@types/moment": "^2.11.28",
+    "@types/node-notifier": "0.0.27",
     "@types/oclazyload": "0.0.30",
     "@types/stripe": "0.0.27",
     "concat-with-sourcemaps": "~1.0.2",
@@ -53,11 +54,13 @@
     "gulp-util": "~3.0.0",
     "gulp-wrapper": "^0.1.5",
     "gulp-zip": "2.0.2",
+    "lodash": "^3.9.3",
     "merge-stream": "^1.0.0",
     "minimist": "~0.2.0",
     "mv": "^2.1.1",
     "ng-metadata": "gamejolt/ng-metadata#6cbaa679d2aa0bcfaa7c7b03cfe1991d279ac7b1",
-    "nw-builder": "gamejolt/nw-builder#skip-merge-app",
+    "nw": "^0.14.7",
+    "nwjs-builder": "gamejolt/nwjs-builder",
     "pofile": "^1.0.2",
     "reflect-metadata": "^0.1.3",
     "rollup": "0.33.0",
@@ -79,6 +82,7 @@
   "dependencies": {
     "client-voodoo": "1.0.4",
     "lodash": "3.9.3",
+    "node-notifier": "^4.6.0",
     "nwjs-snappy-updater": "1.0.0"
   }
 }

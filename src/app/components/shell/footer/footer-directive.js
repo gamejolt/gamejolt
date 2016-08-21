@@ -19,7 +19,7 @@ angular.module( 'App.Shell' ).directive( 'gjShellFooter', function( $window, $in
 					$window.location.reload();
 				}
 				else {
-					require( 'nw.gui' ).Window.get().reloadDev();
+					nw.Window.get().reloadDev();
 				}
 			};
 

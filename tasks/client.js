@@ -9,6 +9,7 @@ var _ = require( 'lodash' );
 var shell = require( 'gulp-shell' );
 var path = require( 'path' );
 var mv = require( 'mv' );
+var cp = require( 'child_process' );
 
 module.exports = function( config )
 {
@@ -56,10 +57,10 @@ module.exports = function( config )
 	}
 
 	var gypTasks = [
-		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
+		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.14.7 --target_arch=' + config.gypArch + ' --build-from-source --msvs_version=2015',
 	];
 	if ( config.platform == 'win' ) {
-		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
+		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.14.7 --arch=' + config.gypArch + ' --msvs_version=2015' );
 	}
 
 	gulp.task( 'client:gyp', shell.task( gypTasks ) );
@@ -177,15 +178,10 @@ module.exports = function( config )
 		// Gotta pull the node_modules that we need.
 		clientJson.dependencies = packageJson.dependencies;
 
-		// If we're in dev, then add the toolbar for debugging.
-		if ( !config.production ) {
-			clientJson.window.toolbar = true;
-		}
-
 		if ( !config.watching && os.type() != 'Darwin' ) {
 
 			// We set the base directory to use the "package" folder.
-			clientJson.main = 'app://game-jolt-client/package/index.html#!/';
+			clientJson.main = 'chrome-extension://game-jolt-client/package/index.html#!/';
 			clientJson.window.icon = 'package/' + clientJson.window.icon;
 		}
 
@@ -196,14 +192,15 @@ module.exports = function( config )
 
 	var nodeModuletasks = [
 		'cd ' + config.buildDir + ' && npm install --production',
-		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' + config.gypArch,
+		'dir ' + path.join( config.buildDir, 'node_modules' ),
+		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.14.7 --target_arch=' + config.gypArch + ' --build-from-source --msvs_version=2015',
 	];
 
 	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
-		nodeModuletasks.push( 'cd ' + path.resolve( config.buildDir, windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.12.3 --arch=' + config.gypArch );
-		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' nw.exe GameJoltClient.exe' );
-		nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, windowsMutexPath, 'build/Release/CreateMutex.node' ) + ' nw.exe GameJoltClient.exe' );
+		nodeModuletasks.push( 'cd ' + path.resolve( config.buildDir, windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.14.7 --arch=' + config.gypArch + ' --msvs_version=2015' );
+		// nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' node.exe GameJoltClient.exe' );
+		// nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, windowsMutexPath, 'build/Release/CreateMutex.node' ) + ' node.exe GameJoltClient.exe' );
 	}
 
 	gulp.task( 'client:node-modules', shell.task( nodeModuletasks ) );
@@ -218,7 +215,7 @@ module.exports = function( config )
 		}
 
 		var revAll = new plugins.revAll( {
-			prefix: 'app://game-jolt-client/package',
+			prefix: 'chrome-extension://game-jolt-client/package',
 			dontGlobal: [
 				/^\/node_modules\/.*$/,
 				/^\/tmp\/.*$/,
@@ -245,10 +242,10 @@ module.exports = function( config )
 	/**
 	 * Does the actual building into an NW executable.
 	 */
-	gulp.task( 'client:nw', function()
+	gulp.task( 'client:nw', function( cb )
 	{
 		var clientJson = require( '../client-package.json' );
-		var NwBuilder = require( 'nw-builder' );
+		var NWB = require( 'nwjs-builder' );
 
 		// We want the name to be:
 		// 'game-jolt-client' on linux - because kebabs rock
@@ -262,30 +259,26 @@ module.exports = function( config )
 			appName = 'Game Jolt Client';
 		}
 
-		var nw = new NwBuilder( {
-			version: '0.12.3',
-			files: config.buildDir + '/**/*',
-			buildDir: config.clientBuildDir,
-			cacheDir: config.clientBuildCacheDir,
-			platforms: [ config.platformArch ],
-			appName: appName,
-			buildType: function()
-			{
-				// return 'v' + this.appVersion;
-				return 'build';
-			},
-			appVersion: clientJson.version,
-			macZip: false,  // Use a app.nw folder instead of ZIP file
+		NWB.commands.nwbuild( config.buildDir, {
+			version: config.production ? '0.14.7' : '0.14.7-sdk',
+			platforms: config.platformArch,
+			outputName: config.platformArch,
+			outputDir: getReleaseDir(),
+			executableName: appName,
+			withFFmpeg: true,
+			sideBySide: true,
+			sideBySideZip: path.join( getReleaseDir(), config.platformArch + '-package.zip' ), // Simulate what nw-builder does with side-by-side
+			production: false, // We don't want nwjs builder to redo the node modules because we already did that in client:node-modules
 			macIcns: 'src/app/img/client/mac.icns',
 			winIco: 'src/app/img/client/winico.ico',
+		}, function( err )
+		{
+			if ( err ) {
+				throw err;
+			}
 
-			// Tells it not to merge the app zip into the executable. Easier updating this way.
-			mergeApp: false,
+			setTimeout( cb, 1000 ); // Delay finishing the task because for some reason file isn't fully flushed when this returns.
 		} );
-
-		nw.on( 'log', console.log );
-
-		return nw.build();
 	} );
 
 	// We have to load paths only when we're actually running the gulp task.
@@ -309,7 +302,6 @@ module.exports = function( config )
 		var packagePath = path.join( releaseDir, config.platformArch + '-package.zip' )
 
 		if ( config.platform != 'osx' ) {
-			fs.renameSync( path.join( base, 'package.nw' ), packagePath );
 
 			var DecompressZip = require( 'decompress-zip' );
 			var unzipper = new DecompressZip( packagePath );
@@ -390,7 +382,7 @@ module.exports = function( config )
 			var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
 
 			var InnoSetup = require( './inno-setup' );
-			var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
+			var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'gamejolt.com.pfx' );
 			var certPw = config.production ? process.env['GJ_CERT_PASS'] : 'GJ123456';
 			var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw.trim() );
 			return builder.build();

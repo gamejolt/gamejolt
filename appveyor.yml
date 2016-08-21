@@ -2,11 +2,11 @@ platform:
   - x86
 
 install:
-  - ps: Install-Product node 5.5.0 x86 # We need npm@3 for windows builds
-  - npm install -g gulp bower node-pre-gyp nw-gyp
+  - ps: Install-Product node 5.12.0
   - git submodule update --init --recursive
   - choco install -y InnoSetup
   - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
+  - npm install -g gulp bower node-pre-gyp nw-gyp
 
 build_script:
   - bower i

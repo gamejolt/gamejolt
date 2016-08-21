@@ -34,7 +34,7 @@ angular.module( 'App.Chat' )
 					title: message.user.displayName,
 					message: message.contentRaw,  // Use the raw message so we don't show compiled markdown.
 					icon: message.user.imgAvatar,
-					onclick: function( e )
+					onclick: function()
 					{
 						Chat.client.enterRoom( message.roomId, true );
 					},
@@ -54,7 +54,7 @@ angular.module( 'App.Chat' )
 					title: friend.displayName + ' Online',
 					message: friend.displayName + ' just got online.',
 					icon: friend.imgAvatar,
-					onclick: function( e )
+					onclick: function()
 					{
 						Chat.client.enterRoom( friend.roomId, true );
 					},
@@ -74,7 +74,7 @@ angular.module( 'App.Chat' )
 					title: friend.displayName + ' Offline',
 					message: friend.displayName + ' just went offline.',
 					icon: friend.imgAvatar,
-					onclick: function( e )
+					onclick: function()
 					{
 						Chat.client.enterRoom( friend.roomId, true );
 					},

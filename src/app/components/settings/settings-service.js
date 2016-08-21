@@ -7,9 +7,8 @@ angular.module( 'App.Settings' ).service( 'Settings', function( Environment )
 			type: 'string',
 			val: function()
 			{
-				var gui = require( 'nw.gui' );
 				var path = require( 'path' );
-				var dataPath = gui.App.dataPath;
+				var dataPath = nw.App.dataPath;
 
 				return path.join( dataPath, 'Games' );
 			},

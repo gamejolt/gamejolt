@@ -13,8 +13,6 @@ angular.module( 'App.Client.ExternalLink', [] ).run( function( $window, Environm
 		/^\/community\/contests\//
 	];
 
-	var gui = require( 'nw.gui' );
-
 	// Attach a click handler on the whole window so we can track all clicks.
 	$window.addEventListener( 'click', function( event )
 	{
@@ -46,7 +44,7 @@ angular.module( 'App.Client.ExternalLink', [] ).run( function( $window, Environm
 		for ( var i = 0; i < relativeBlacklist.length; ++i ) {
 			var regex = relativeBlacklist[ i ];
 			if ( regex.test( link ) ) {
-				gui.Shell.openExternal( Environment.baseUrl + link );
+				nw.Shell.openExternal( Environment.baseUrl + link );
 				event.preventDefault();
 				return;
 			}
@@ -58,10 +56,10 @@ angular.module( 'App.Client.ExternalLink', [] ).run( function( $window, Environm
 			event.preventDefault();
 		}
 		// Do nothing if it's a local relative or absolute link
-		else if ( link.startsWith( '#!' ) || link.startsWith( 'app://' ) ) {
+		else if ( link.startsWith( '#!' ) || link.startsWith( 'chrome-extension://' ) ) {
 		}
 		else {
-			gui.Shell.openExternal ( link );
+			nw.Shell.openExternal( link );
 			event.preventDefault();
 		}
 	}
