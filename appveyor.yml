@@ -10,9 +10,7 @@ install:
 
 build_script:
   - bower i
-  - npm i lodash@3.9.3
-  - npm i --only=dev
-  - gulp client:gyp-prepare
+  - SET CL=-DDELAYIMP_INSECURE_WRITABLE_HOOKS
   - npm i
   - npm run client-build-win
 

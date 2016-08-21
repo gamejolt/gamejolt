@@ -57,55 +57,13 @@ module.exports = function( config )
 	}
 
 	var gypTasks = [
-		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node --target=5.12.0 --target_arch=' + config.gypArch + ' --build-from-source',
+		'cd ' + path.resolve( lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.14.7 --target_arch=' + config.gypArch + ' --build-from-source --msvs_version=2015',
 	];
 	if ( config.platform == 'win' ) {
-		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && npm run install' );
+		gypTasks.push( 'cd ' + path.resolve( windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.14.7 --arch=' + config.gypArch + ' --msvs_version=2015' );
 	}
 
-	gulp.task( 'client:gyp-modules', shell.task( gypTasks ) );
-
-	gulp.task( 'client:gyp-prepare', function()
-	{
-		if ( config.platform == 'win' ) {
-			// Need to hotfix something in node gyp, which must be installed globally.
-			var winDelayLoadHookPath, npmWinDelayLoadHookPath;
-			try {
-				winDelayLoadHookPath = cp.execSync( 'npm config get prefix' ).toString().trim();
-				winDelayLoadHookPath = path.join( winDelayLoadHookPath, 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
-			}
-			catch ( e ) {
-				throw new Error( 'Failed to get the npm global modules dir: ' + e.message );
-			}
-
-			try {
-				var npmExecutable = cp.execSync( 'where npm' ).toString().split( "\n" )[0].trim();
-				npmWinDelayLoadHookPath = path.join( path.dirname( npmExecutable ), 'node_modules', 'npm', 'node_modules', 'node-gyp', 'src', 'win_delay_load_hook.c' );
-			}
-			catch ( e ) {
-				throw new Error( 'Failed to get the npm source modules dir: ' + e.message );
-			}
-
-			try {
-				console.log( 'Verifying ' + winDelayLoadHookPath + ' exists' );
-				fs.statSync( winDelayLoadHookPath );
-				console.log( 'Verifying ' + npmWinDelayLoadHookPath + ' exists' );
-				fs.statSync( npmWinDelayLoadHookPath );
-			}
-			catch ( e ) {
-				throw new Error( 'node-gyp@3.3.1 must be installed globally to build client' );
-			}
-
-			var vendorWinDelayLoadHookPath = path.join( 'tasks', 'vendor', 'win_delay_load_hook.c' );
-			fs.writeFileSync( winDelayLoadHookPath, fs.readFileSync( vendorWinDelayLoadHookPath ) );
-			fs.writeFileSync( npmWinDelayLoadHookPath, fs.readFileSync( vendorWinDelayLoadHookPath ) );
-		}
-	} );
-
-	gulp.task( 'client:gyp', function( cb )
-	{
-		return sequence( 'client:gyp-prepare', 'client:gyp-modules', cb );
-	} );
+	gulp.task( 'client:gyp', shell.task( gypTasks ) );
 
 	// For releasing to S3.
 	// We have to gather all the builds into the versioned folder before pushing.
@@ -235,12 +193,12 @@ module.exports = function( config )
 	var nodeModuletasks = [
 		'cd ' + config.buildDir + ' && npm install --production',
 		'dir ' + path.join( config.buildDir, 'node_modules' ),
-		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node --target=5.12.0 --target_arch=' + config.gypArch + ' --build-from-source',
+		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.14.7 --target_arch=' + config.gypArch + ' --build-from-source --msvs_version=2015',
 	];
 
 	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
-		nodeModuletasks.push( 'cd ' + path.resolve( config.buildDir, windowsMutexPath ) + ' && npm run install' );
+		nodeModuletasks.push( 'cd ' + path.resolve( config.buildDir, windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.14.7 --arch=' + config.gypArch + ' --msvs_version=2015' );
 		// nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' node.exe GameJoltClient.exe' );
 		// nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, windowsMutexPath, 'build/Release/CreateMutex.node' ) + ' node.exe GameJoltClient.exe' );
 	}
@@ -309,7 +267,7 @@ module.exports = function( config )
 			executableName: appName,
 			withFFmpeg: true,
 			sideBySide: true,
-			sideBySideZip: path.join( getReleaseDir(), config.platformArch, 'package.nw' ), // Simulate what nw-builder does with side-by-side
+			sideBySideZip: path.join( getReleaseDir(), config.platformArch + '-package.zip' ), // Simulate what nw-builder does with side-by-side
 			production: false, // We don't want nwjs builder to redo the node modules because we already did that in client:node-modules
 			macIcns: 'src/app/img/client/mac.icns',
 			winIco: 'src/app/img/client/winico.ico',
@@ -319,7 +277,7 @@ module.exports = function( config )
 				throw err;
 			}
 
-			cb();
+			setTimeout( cb, 1000 ); // Delay finishing the task because for some reason file isn't fully flushed when this returns.
 		} );
 	} );
 
@@ -344,7 +302,6 @@ module.exports = function( config )
 		var packagePath = path.join( releaseDir, config.platformArch + '-package.zip' )
 
 		if ( config.platform != 'osx' ) {
-			fs.renameSync( path.join( base, 'package.nw' ), packagePath );
 
 			var DecompressZip = require( 'decompress-zip' );
 			var unzipper = new DecompressZip( packagePath );
@@ -425,7 +382,7 @@ module.exports = function( config )
 			var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
 
 			var InnoSetup = require( './inno-setup' );
-			var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'cert.pfx' );
+			var certFile = config.production ? path.resolve( __dirname, 'certs', 'cert.pfx' ) : path.resolve( 'tasks', 'vendor', 'gamejolt.com.pfx' );
 			var certPw = config.production ? process.env['GJ_CERT_PASS'] : 'GJ123456';
 			var builder = new InnoSetup( path.resolve( releaseDir, config.platformArch ), path.resolve( releaseDir ), packageJson.version, certFile, certPw.trim() );
 			return builder.build();
