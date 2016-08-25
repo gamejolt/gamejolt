@@ -2,6 +2,7 @@ import { App } from './../../../app-service';
 import { Injectable, Inject } from 'ng-metadata/core';
 import { Comment_Video } from './../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Youtube_Channel } from './../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
+import { Meta } from './../../../../lib/gj-lib-client/components/meta/meta-service';
 
 @Injectable()
 export class OverviewCtrl
@@ -13,7 +14,7 @@ export class OverviewCtrl
 	constructor(
 		@Inject( '$scope' ) $scope: any,
 		@Inject( 'App' ) app: App,
-		@Inject( 'Meta' ) meta: any,
+		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'Game' ) game: any,
 		@Inject( 'Comment_Video' ) commentVideo: typeof Comment_Video,
 		@Inject( 'Youtube_Channel' ) youtubeChannel: typeof Youtube_Channel,

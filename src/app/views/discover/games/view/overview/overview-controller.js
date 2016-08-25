@@ -67,7 +67,10 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		Meta.description = payload.metaDescription;
 		Meta.fb = payload.fb;
 		Meta.twitter = payload.twitter;
-		this.microdata = payload.microdata ? JSON.stringify( payload.microdata ) : '{}';
+
+		if ( payload.microdata ) {
+			Meta.microdata = payload.microdata;
+		}
 
 		this.profileCount = payload.profileCount || 0;
 		this.downloadCount = payload.downloadCount || 0;

@@ -1,6 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../app-service';
 import { Channels } from './../../../components/channel/channels-service';
+import { Meta } from './../../../../lib/gj-lib-client/components/meta/meta-service';
 
 @Injectable()
 export class HomeCtrl
@@ -22,7 +23,7 @@ export class HomeCtrl
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'App' ) app: App,
 		@Inject( 'Environment' ) Environment: any,
-		@Inject( 'Meta' ) Meta: any,
+		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'Game' ) Game: any,
 		@Inject( 'FeaturedItem' ) FeaturedItem: any,
 		@Inject( 'Fireside_Post' ) Fireside_Post: any,
@@ -34,11 +35,23 @@ export class HomeCtrl
 
 		$scope['Channels'] = channels;
 
-		Meta.description = payload.metaDescription;
-		Meta.fb = payload.fb;
-		Meta.twitter = payload.twitter;
-		Meta.fb.image = Meta.twitter.image = '/app/img/social/social-share-header.png';
-		Meta.fb.url = Meta.twitter.url = Environment.baseUrl;
+		meta.description = payload.metaDescription;
+		meta.fb = payload.fb;
+		meta.twitter = payload.twitter;
+		meta.fb.image = meta.twitter.image = '/app/img/social/social-share-header.png';
+		meta.fb.url = meta.twitter.url = Environment.baseUrl;
+
+		meta.microdata = {
+			'@context': 'http://schema.org',
+			'@type': 'WebSite',
+			'url': 'http://gamejolt.com/',
+			'name': 'Game Jolt',
+			'potentialAction': {
+				'@type': 'SearchAction',
+				'target': 'http://gamejolt.com/search?q={search_term_string}',
+				'query-input': 'required name=search_term_string'
+			},
+		};
 
 		this.featuredItems = FeaturedItem.populate( payload.featuredGames );
 
