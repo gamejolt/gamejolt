@@ -29,13 +29,13 @@ export class ModalCtrl
 	private _getStatusTranslated( stage: number )
 	{
 		if ( stage == this.gameModel.DEVELOPMENT_STATUS_DEVLOG ) {
-			return this.gettextCatalog.getString( 'devlog-only', {}, 'development status' )
+			return this.gettextCatalog.getString( 'devlog-only', {}, 'development status' );
 		}
 		else if ( stage == this.gameModel.DEVELOPMENT_STATUS_WIP ) {
-			return this.gettextCatalog.getString( 'early access', {}, 'development status' )
+			return this.gettextCatalog.getString( 'early access', {}, 'development status' );
 		}
 
-		return this.gettextCatalog.getString( 'complete', {}, 'development status' )
+		return this.gettextCatalog.getString( 'complete', {}, 'development status' );
 	}
 
 	private _getStatusString( stage: number )
