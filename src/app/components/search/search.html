@@ -1,6 +1,9 @@
 <gj-search-history></gj-search-history>
 
-<form class="search-input-form navbar-form" role="search">
+<!--
+	Put the action/method stuff so that crawlers can see how to submit the form.
+-->
+<form class="search-input-form navbar-form" action="/search" method="GET" role="search" onsubmit="return false">
 	<div class="form-group no-animate">
 
 		<label for="search-input-{{ $ctrl.id }}" class="sr-only" translate>search.input.placeholder</label>
@@ -9,6 +12,7 @@
 
 			<input type="search" class="search-input form-control"
 				id="search-input-{{ $ctrl.id }}"
+				name="q"
 				ng-attr-placeholder="{{ 'search.input.placeholder' | translate }}"
 				gj-search-input
 				ng-model="$ctrl.query"
