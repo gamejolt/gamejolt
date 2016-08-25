@@ -17,7 +17,12 @@
 		<div class="forum-post-list-clipped-replies"
 			ng-if="ctrl.repliesCount - ctrl.replies.length > 0"
 			>
-			<div>+{{ ctrl.repliesCount - ctrl.replies.length | number }} more hidden</div>
+			<div
+				translate
+				translate-params-count="ctrl.repliesCount - ctrl.replies.length"
+				>
+				+{{ count | number }} more hidden
+			</div>
 		</div>
 	</div>
 </div>

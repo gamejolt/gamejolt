@@ -1,5 +1,5 @@
 <div class="forum-breadcrumbs">
-	<a class="forum-breadcrumbs-item" ui-sref="forums.landing.overview">
+	<a class="forum-breadcrumbs-item" ui-sref="forums.landing.overview" translate>
 		Forums
 	</a>
 
@@ -30,10 +30,10 @@
 	<span ng-if="ctrl.page">
 		<span class="forum-breadcrumbs-separator">»</span>
 		<span ng-switch="ctrl.page">
-			<strong ng-switch-when="add-topic">
+			<strong ng-switch-when="add-topic" translate>
 				New Topic
 			</strong>
-			<strong ng-switch-when="view-topic">
+			<strong ng-switch-when="view-topic" translate>
 				View Topic
 			</strong>
 		</span>

@@ -5,15 +5,17 @@
 			<h4 class="forum-topic-list-item-title">
 
 				<!-- Notifications -->
-				<span class="tag tag-pink" ng-if="::!!topic.notifications.length">{{ topic.notifications.length | number }}</span>
+				<span class="tag tag-pink" ng-if="::!!topic.notifications.length">
+					{{ topic.notifications.length | number }}
+				</span>
 
 				<!-- Pinned -->
-				<span ng-if="::topic.is_sticky" tooltip="This topic is pinned.">
+				<span ng-if="::topic.is_sticky" tooltip="{{ 'This topic is pinned.' | translate }}">
 					<span class="jolticon jolticon-thumbtack active"></span>
 				</span>
 
 				<!-- Locked -->
-				<span ng-if="::topic.is_locked" tooltip="This topic is locked and can no longer be replied to.">
+				<span ng-if="::topic.is_locked" tooltip="{{ 'This topic is locked and can no longer be replied to.' | translate }}">
 					<span class="jolticon jolticon-lock text-muted"></span>
 				</span>
 
@@ -22,7 +24,7 @@
 				</a>
 			</h4>
 			<div class="forum-topic-list-item-author">
-				by
+				<span translate>by</span>
 				<a ui-sref="profile.overview( { slug: topic.user.slug, id: topic.user.id } )">
 					{{ ::topic.user.display_name }}
 				</a>
@@ -30,10 +32,22 @@
 		</div>
 
 		<div class="col-sm-3 col-md-2 text-muted small" ng-class="{ 'text-right': !Screen.isXs }">
-			<strong>{{ ::topic.replies_count || 0 | number }}</strong> Replies
+			<span
+				translate
+				translate-n="::topic.replies_count || 0"
+				translate-plural="<b>{{ $count | number }}</b> Replies"
+				>
+				<b>1</b> Reply
+			</span>
 			<br class="hidden-xs">
 			<span class="hidden-sm hidden-md hidden-lg dot-separator"></span>
-			<strong>{{ ::topic.followers_count || 0 | number }}</strong> Followers
+			<span
+				translate
+				translate-n="::topic.followers_count || 0"
+				translate-plural="<b>{{ $count | number }}</b> Followers"
+				>
+				<b>1</b> Follower
+			</span>
 		</div>
 
 		<div class="col-md-3 text-muted text-right small" ng-if="Screen.isDesktop">
