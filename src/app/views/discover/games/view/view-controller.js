@@ -1,6 +1,6 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	$scope, $stateParams, $injector, $timeout, $document, $position,
-	Environment, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
+	Environment, App, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
 	Game, Game_Rating, Game_ScoreTable, Comment,
 	Registry, Scroll )
 {
@@ -25,6 +25,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 
 		Location.enforce( {
 			slug: game.slug,
+			ref: App.user && App.user.partner_referral_key ? App.user.partner_referral_key.referral_key : undefined,
 		} );
 
 		// If the game has a GA tracking ID, then we attach it to this scope so all page views within get tracked.
