@@ -83,6 +83,7 @@
     "client-voodoo": "1.0.4",
     "lodash": "3.9.3",
     "node-notifier": "^4.6.0",
-    "nwjs-snappy-updater": "1.0.0"
+    "nwjs-snappy-updater": "1.0.0",
+    "moment": "2.9.0"
   }
 }
