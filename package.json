@@ -60,7 +60,7 @@
     "mv": "^2.1.1",
     "ng-metadata": "gamejolt/ng-metadata#6cbaa679d2aa0bcfaa7c7b03cfe1991d279ac7b1",
     "nw": "^0.14.7",
-    "nwjs-builder": "gamejolt/nwjs-builder",
+    "nwjs-builder": "gamejolt/nwjs-builder#f8dae7ff180de3e746bccffc452a45026f879d2d",
     "pofile": "^1.0.2",
     "reflect-metadata": "^0.1.3",
     "rollup": "0.33.0",
