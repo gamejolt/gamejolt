@@ -196,7 +196,6 @@ module.exports = function( config )
 		'cd ' + path.resolve( config.buildDir, lzmaPath ) + ' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.14.7 --target_arch=' + config.gypArch + ' --build-from-source --msvs_version=2015',
 	];
 
-	// http://developers.ironsrc.com/rename-import-dll/
 	if ( config.platform == 'win' ) {
 		nodeModuletasks.push( 'cd ' + path.resolve( config.buildDir, windowsMutexPath ) + ' && nw-gyp clean configure build --target=0.14.7 --arch=' + config.gypArch + ' --msvs_version=2015' );
 		// nodeModuletasks.push( path.resolve( 'tasks/rid.exe' ) + ' ' + path.resolve( config.buildDir, lzmaPath, 'binding/lzma_native.node' ) + ' node.exe GameJoltClient.exe' );
@@ -260,18 +259,20 @@ module.exports = function( config )
 		}
 
 		NWB.commands.nwbuild( config.buildDir, {
-			version: config.production ? '0.14.7' : '0.14.7-sdk',
+			// version: config.production ? '0.14.7' : '0.14.7-sdk',
+			version: '0.14.7',
 			platforms: config.platformArch,
 			outputName: config.platformArch,
 			outputDir: getReleaseDir(),
 			executableName: appName,
 			withFFmpeg: true,
 			sideBySide: true,
-			sideBySideZip: path.join( getReleaseDir(), config.platformArch + '-package.zip' ), // Simulate what nw-builder does with side-by-side
+			sideBySideZip: false,
 			production: false, // We don't want nwjs builder to redo the node modules because we already did that in client:node-modules
 			macIcns: 'src/app/img/client/mac.icns',
 			winIco: 'src/app/img/client/winico.ico',
-		}, function( err )
+		},
+		function( err )
 		{
 			if ( err ) {
 				throw err;
@@ -303,37 +304,29 @@ module.exports = function( config )
 
 		if ( config.platform != 'osx' ) {
 
-			var DecompressZip = require( 'decompress-zip' );
-			var unzipper = new DecompressZip( packagePath );
+			var stream = gulp.src( base + '/package/**/*' )
+				.pipe( plugins.tar( config.platformArch + '-package.tar' ) )
+				.pipe( plugins.gzip() )
+				.pipe( gulp.dest( releaseDir ) );
 
-			unzipper.on( 'error', cb );
-			unzipper.on( 'extract', function()
+			stream.on( 'error', cb );
+			stream.on( 'end', function()
 			{
-				var stream = gulp.src( base + '/package/**/*' )
-					.pipe( plugins.tar( config.platformArch + '-package.tar' ) )
-					.pipe( plugins.gzip() )
-					.pipe( gulp.dest( releaseDir ) );
-
-				stream.on( 'error', cb );
-				stream.on( 'end', function()
+				mv( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ), function( err )
 				{
-					mv( path.join( base, 'package', 'node_modules' ), path.join( base, 'node_modules' ), function( err )
+					if ( err ) {
+						throw err;
+					}
+
+					mv( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ), function( err )
 					{
 						if ( err ) {
 							throw err;
 						}
-						mv( path.join( base, 'package', 'package.json' ), path.join( base, 'package.json' ), function( err )
-						{
-							if ( err ) {
-								throw err;
-							}
-							cb();
-						} );
+						cb();
 					} );
 				} );
 			} );
-
-			unzipper.extract( { path: path.join( base, 'package' ) } );
 		}
 		else {
 			var stream = gulp.src( base + '/Game Jolt Client.app/Contents/Resources/app.nw/**/*' )
