@@ -5,6 +5,13 @@ os:
   - linux
   - osx
 
+cache:
+  directories:
+    - node_modules
+    - src/bower-lib
+    - $HOME/.npm
+    - $HOME/.cache/bower
+
 addons:
   apt:
     sources:
