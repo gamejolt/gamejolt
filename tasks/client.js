@@ -259,8 +259,7 @@ module.exports = function( config )
 		}
 
 		NWB.commands.nwbuild( config.buildDir, {
-			// version: config.production ? '0.14.7' : '0.14.7-sdk',
-			version: '0.14.7',
+			version: config.production ? '0.14.7' : '0.14.7-sdk',
 			platforms: config.platformArch,
 			outputName: config.platformArch,
 			outputDir: getReleaseDir(),
