@@ -7,9 +7,10 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		controllerAs: 'gameCtrl',
 		templateUrl: '/app/views/discover/games/view/view.html',
 		resolve: {
-			tickSource: function( $stateParams, HistoryTick )
+			tickSource: function( $stateParams, HistoryTick, PartnerReferral )
 			{
 				HistoryTick.trackSource( 'Game', $stateParams.id );
+				PartnerReferral.trackReferrer( 'Game', $stateParams.id );
 			}
 		}
 	} );
