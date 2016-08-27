@@ -1,6 +1,11 @@
 platform:
   - x86
 
+cache:
+  - node_modules
+  - src/bower-lib
+  - '%APPDATA%\npm-cache'
+
 install:
   - ps: Install-Product node 5.12.0
   - git submodule update --init --recursive
