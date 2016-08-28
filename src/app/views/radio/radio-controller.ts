@@ -11,6 +11,7 @@ export class RadioCtrl
 	currentSongDuration: number;
 
 	constructor(
+		@Inject( 'Environment' ) env: any,
 		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( 'Api' ) private api: any,
 		@Inject( 'Game_Song' ) private songModel: any,
@@ -19,7 +20,12 @@ export class RadioCtrl
 	)
 	{
 		meta.title = 'Indie Game Radio';
-		this.getNextSong();
+		meta.description = 'Discover new game songs through the Game Jolt radio!';
+
+		// Starting the next song will actually change the title.
+		if ( !env.isPrerender ) {
+			this.getNextSong();
+		}
 	}
 
 	getNextSong()
