@@ -111,6 +111,12 @@ var config = {
 				'discover/channels',
 			]
 		},
+		'radio.js': {
+			main: '/views/radio/radio.ts',
+			views: [
+				'radio',
+			]
+		},
 
 		// For client.
 		'client.js': {
