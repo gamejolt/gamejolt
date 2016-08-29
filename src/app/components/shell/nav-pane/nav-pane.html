@@ -40,6 +40,15 @@
 			</a>
 		</li>
 		<li>
+			<a ui-sref="fireside.home"
+				ng-class="{ active: $ctrl.$state.includes( 'fireside' ) }"
+				gj-track-event="discover-nav:fireside"
+				>
+				<span class="jolticon jolticon-blog-article"></span>
+				<span translate>Fireside</span>
+			</a>
+		</li>
+		<li>
 			<a ui-sref="forums.landing.overview"
 				ng-class="{ active: $ctrl.$state.includes( 'forums' ) }"
 				gj-track-event="discover-nav:forums"

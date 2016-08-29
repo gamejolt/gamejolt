@@ -1,0 +1,9 @@
+<span class="fireside-post-tags-list" ng-if="$ctrl.tags.length">
+	<span class="jolticon jolticon-tags"></span>
+	<a class="fireside-post-tags-list-tag"
+		ng-repeat="tag in $ctrl.tags track by tag.id"
+		ui-sref="{{ tag.getSref( '', true ) }}"
+			>
+			#{{ ::tag.tag }}
+		</a>
+</span>

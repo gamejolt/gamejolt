@@ -1,0 +1,44 @@
+<div class="fireside-post-feed">
+
+	<div class="fireside-post-feed-item anim-fade-in stagger"
+		ng-repeat="post in $ctrl.posts track by post.id"
+		>
+
+		<a class="fireside-post-feed-item-img full-bleed-xs"
+			ng-if="::post.header"
+			ui-sref="fireside.post( { slug: post.slug } )"
+			>
+			<img class="img-responsive" ng-src="{{ ::post.header.mediaserver_url }}" alt="Post Header">
+		</a>
+
+		<!-- Non-mobile avatar position -->
+		<div gj-user-avatar="::post.user" class="avatar-circle hidden-xs"></div>
+
+		<div class="fireside-post-feed-item-title">
+			<a ui-sref="fireside.post( { slug: post.slug } )">
+				{{ ::post.title }}
+			</a>
+		</div>
+
+		<div class="fireside-post-feed-item-subline">
+			<p>{{ ::post.subline }}</p>
+		</div>
+
+		<!-- Mobile avatar position -->
+		<div gj-user-avatar="::post.user" class="avatar-circle visible-xs"></div>
+
+		<div class="fireside-post-feed-item-by">
+			<span class="hidden-xs" translate>By</span>
+			<a ui-sref="profile.overview( { slug: post.user.slug, id: post.user.id } )">
+				{{ ::post.user.username }}
+			</a>
+
+			<span class="dot-separator"></span>
+			<em class="fireside-post-feed-item-time" am-time-ago="post.published_on"></em>
+
+			<gj-fireside-post-tags-list tags="post.tags"></gj-fireside-post-tags-list>
+		</div>
+
+	</div>
+
+</div>

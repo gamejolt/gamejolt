@@ -1,0 +1,106 @@
+.fireside-post-feed-item
+	padding-bottom: ($line-height-computed * 3)
+
+	.fireside-post-feed &:last-child
+		margin-bottom: 0
+		border-bottom: 0
+		padding-bottom: 0
+
+	@media $media-xs
+
+		// Mobile has the user avatar inline with the byline.
+		.user-avatar
+			float: left
+			margin-right: 10px
+			width: 20px
+			height: @width
+
+	@media $media-sm-up
+
+		// On larger than mobile displays let's show a border between posts.
+		// I'd like to get rid of this but for now it seems to need the help separating.
+		// I think this is because of the user avatar, honestly. It makes it so your eye
+		// anchors past the article header image.
+		margin-bottom: ($line-height-computed * 2)
+		padding-bottom: @margin-bottom
+		border-bottom: 1px solid $gray-lightest
+
+		// We show the user avatar next to the title of the post on anything other than mobile.
+		.user-avatar
+			position: relative
+			top: -5px
+			left: (-50px - ($grid-gutter-width / 2))
+			overflow: visible  // Make sure it's visible.
+
+			// We set the outer height to 0 so it takes up no room.
+			// The img itself has the correct width and height.
+			height: 0
+
+			> img
+				width: 50px
+				height: @width
+
+.fireside-post-feed-item-title
+	@extend .h3
+	font-weight: bold
+	margin-top: 0
+	margin-bottom: $font-size-base
+
+	> a
+		color: $text-color
+
+		&:hover
+			text-decoration: underline
+
+.fireside-post-feed-item-by
+	position: relative
+	margin-bottom: 0
+	font-size: $font-size-small
+	color: $gray
+
+	.fireside-post-tags-list
+		margin-left: 10px
+
+		@media $media-xs
+			display: block
+			margin-top: $font-size-base
+			margin-left: 0
+
+	.user-avatar
+		position: absolute
+		width: 50px
+		left: -70px
+		top: -15px
+
+.fireside-post-feed-item-img
+	position: relative
+	display: block
+	margin-bottom: $line-height-computed
+	opacity: 0.8
+
+	> img
+		width: 100%
+
+	&:before
+		overlay-img()
+		background-image: linear-gradient( to right, rgba( $black, 0.3 ) 0%, rgba( $black, 0 ) 25% )
+		transition: background 300ms
+
+	&:after
+		overlay-img()
+		background-image: linear-gradient( to right, rgba( $black, 0 ) 75%, rgba( $black, 0.3 ) 100% )
+		transition: background 300ms
+
+	&:hover
+		opacity: 1
+
+		&:before
+			background-image: linear-gradient( to right, rgba( $gj-pink, 0.2 ) 0%, rgba( $gj-pink, 0 ) 25% )
+
+		&:after
+			background-image: linear-gradient( to right, rgba( $gj-blue, 0 ) 75%, rgba( $gj-blue, 0.2 ) 100% )
+
+.fireside-post-feed-item-subline
+	position: relative
+	max-height: 400px
+	overflow: hidden

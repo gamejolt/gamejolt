@@ -16,6 +16,13 @@
 				<span class="jolticon jolticon-gamejolt"></span>
 				<span translate>Home</span>
 			</a>
+			<a ng-if="Screen.isXs" class="list-group-item has-icon offline-disable" ui-sref="search.results"
+				ui-sref-opts="{ inherit: false }"
+				gj-track-event="discover-nav:search"
+				>
+				<span class="jolticon jolticon-search"></span>
+				<span translate>Search</span>
+			</a>
 			<a class="list-group-item has-icon offline-disable" ui-sref="discover.games.list.section( { section: 'hot' } )"
 				ui-sref-opts="{ inherit: false }"
 				gj-track-event="discover-nav:hot"
@@ -30,12 +37,11 @@
 				<span class="jolticon jolticon-blog-article"></span>
 				<span translate>Devlogs</span>
 			</a>
-			<a ng-if="Screen.isXs" class="list-group-item has-icon offline-disable" ui-sref="search.results"
-				ui-sref-opts="{ inherit: false }"
-				gj-track-event="discover-nav:search"
+			<a class="list-group-item has-icon offline-disable" ui-sref="fireside.home"
+				gj-track-event="discover-nav:fireside"
 				>
-				<span class="jolticon jolticon-search"></span>
-				<span translate>Search</span>
+				<span class="jolticon jolticon-blog-article"></span>
+				<span translate>Fireside</span>
 			</a>
 			<a class="list-group-item has-icon offline-disable"
 				ui-sref="forums.landing.overview"

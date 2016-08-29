@@ -1,0 +1,117 @@
+<!-- Post Owner Section -->
+<section class="section section-thin fill-dark" ng-if="::(App.user.id == postCtrl.post.user.id)">
+	<div class="container text-center">
+
+		<a class="i-button big" ui-sref="dash.posts.edit( { postId: postCtrl.post.id } )">
+			<span class="jolticon jolticon-edit"></span>
+			Edit Post
+		</a>
+
+	</div>
+</section>
+
+<gj-page-header
+	class="fireside-post-header"
+	hide-nav="true"
+	col-classes="col-lg-7 col-centered"
+	cover-media-item="postCtrl.post.header"
+	cover-max-height="600"
+	>
+
+	<gj-page-header-content>
+
+		<h1 class="section-header">
+			{{ postCtrl.post.title }}
+		</h1>
+
+		<p class="lead" ng-if="postCtrl.post.lead">
+			{{ postCtrl.post.lead }}
+		</p>
+
+		<gj-fireside-post-tags-list tags="postCtrl.post.tags"></gj-fireside-post-tags-list>
+
+		<div class="fireside-post-header-author">
+			<span class="fireside-post-header-author-byline">
+				<span translate>by</span>
+				<a class="fireside-post-header-author-username"
+					ui-sref="profile.overview( { slug: postCtrl.post.user.slug, id: postCtrl.post.user.id } )"
+					title="{{ postCtrl.post.user.username }}"
+					>
+					@{{ postCtrl.post.user.username }}
+				</a>
+			</span>
+			<span class="fireside-post-header-time" ng-if="postCtrl.post.published_on">
+				<span class="dot-separator"></span>
+				<span am-time-ago="postCtrl.post.published_on"></span>
+			</span>
+		</div>
+
+	</gj-page-header-content>
+
+	<gj-page-header-spotlight>
+		<div gj-user-avatar="postCtrl.post.user"></div>
+	</gj-page-header-spotlight>
+
+</gj-page-header>
+
+<section class="section post-section">
+	<div class="container">
+
+		<gj-ad ad-size="leaderboard" ad-resource="Fireside_Post" ad-resource-id="::postCtrl.post.id" ng-if="Screen.isDesktop"></gj-ad>
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+
+				<!--
+					One time bind the source content.
+					It can be pretty massive.
+				-->
+				<div class="fireside-post-body">
+					<div gj-widget-compiler-bind="::postCtrl.post.content_compiled"></div>
+				</div>
+
+				<div class="post-bottom-controls">
+					<div gj-post-like-widget="postCtrl.post"
+						post-like-widget-likes="postCtrl.likes"
+						post-like-widget-likes-count="postCtrl.likesCount"
+						post-like-widget-user-like="postCtrl.userLike">
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<section class="section fill-lightest" ng-if="::postCtrl.post.user.fireside_about">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+				<div class="about-author">
+
+					<div gj-user-avatar="postCtrl.post.user" class="avatar-circle" avatar-link="fireside"></div>
+					<h2 class="section-header">About the Author</h2>
+					<div ng-bind-html="::postCtrl.post.user.compiled_fireside_about"></div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<section class="section fill-white comments-section">
+	<div class="container">
+
+		<gj-ad ad-size="leaderboard" ad-resource="Fireside_Post" ad-resource-id="::postCtrl.post.id" ng-if="Screen.isDesktop"></gj-ad>
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+				<gj-comment-widget class="avatar-circle" comment-resource="Fireside_Post" comment-resource-id="postCtrl.post.id"></gj-comment-widget>
+			</div>
+		</div>
+
+	</div>
+</section>

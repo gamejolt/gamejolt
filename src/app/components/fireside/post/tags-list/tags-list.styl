@@ -1,0 +1,18 @@
+.fireside-post-tags-list
+	display: inline
+
+	> .jolticon
+		color: $gray-lighter
+		vertical-align: middle
+
+	&-tag
+		display: inline-block
+		margin-right: 5px
+		color: $gray-light
+
+		// Doing it this way helps with multi-line tag lists.
+		&:first-child
+			margin-left: 5px
+
+		&:last-child
+			margin-right: 0
