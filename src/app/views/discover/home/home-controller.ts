@@ -2,6 +2,8 @@ import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../app-service';
 import { Channels } from './../../../components/channel/channels-service';
 import { Meta } from './../../../../lib/gj-lib-client/components/meta/meta-service';
+import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { SplitTest } from './../../../components/split-test/split-test-service';
 
 @Injectable()
 export class HomeCtrl
@@ -19,16 +21,18 @@ export class HomeCtrl
 	firesidePosts: any[];
 
 	isDevlogsExpanded = false;
+	shouldShowRecs = false;
 
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'App' ) app: App,
 		@Inject( 'Environment' ) Environment: any,
 		@Inject( 'Meta' ) meta: Meta,
-		@Inject( 'Game' ) Game: any,
-		@Inject( 'FeaturedItem' ) FeaturedItem: any,
-		@Inject( 'Fireside_Post' ) Fireside_Post: any,
+		@Inject( 'Game' ) gameModel: any,
+		@Inject( 'FeaturedItem' ) featuredItemModel: any,
+		@Inject( 'Fireside_Post' ) firesidePostModel: typeof Fireside_Post,
 		@Inject( 'Channels' ) channels: Channels,
+		@Inject( 'SplitTest' ) splitTest: SplitTest,
 		@Inject( 'payload' ) payload: any
 	)
 	{
@@ -54,16 +58,18 @@ export class HomeCtrl
 			},
 		};
 
-		this.featuredItems = FeaturedItem.populate( payload.featuredGames );
+		this.featuredItems = featuredItemModel.populate( payload.featuredGames );
 
-		this.hotGames = Game.populate( payload.hotGames );
-		this.paidGames = Game.populate( payload.paidGames );
-		this.bestGames = Game.populate( payload.bestGames );
-		this.recommendedGames = Game.populate( payload.recommendedGames );
-		this.hotDevlogs = Game.populate( payload.hotDevlogs );
+		this.hotGames = gameModel.populate( payload.hotGames );
+		this.paidGames = gameModel.populate( payload.paidGames );
+		this.bestGames = gameModel.populate( payload.bestGames );
+		this.recommendedGames = gameModel.populate( payload.recommendedGames );
+		this.hotDevlogs = gameModel.populate( payload.hotDevlogs );
 
 		this.channels = payload.channels;
 
-		this.firesidePosts = Fireside_Post.populate( payload.firesidePosts );
+		this.firesidePosts = firesidePostModel.populate( payload.firesidePosts );
+
+		this.shouldShowRecs = splitTest.hasHomeRecommendations( payload );
 	}
 }
