@@ -1,0 +1,39 @@
+.channel-thumbnail
+	display: block
+	margin-bottom: $line-height-computed
+
+	&-image-spacer
+		position: relative
+		height: 0
+		padding-top: 100%  // Makes it same height as width.
+		overflow: hidden
+
+	&-image
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+		display: flex
+		align-items: center
+		justify-content: center
+		background-color: $gray-darker
+
+		> img
+			width: 116px * 0.5
+			height: 116px * 0.5
+
+	&-info
+		padding: 8px 14px
+		color: $white
+		font-size: $font-size-small
+		background-color: $gray-dark
+
+	&-label
+		font-weight: bold
+
+		a:hover &
+			text-decoration: underline
+
+	&-games-count
+		color: $gray-lighter

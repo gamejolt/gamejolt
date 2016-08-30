@@ -40,6 +40,15 @@
 			</a>
 		</li>
 		<li>
+			<a ui-sref="discover.channels.list"
+				ng-class="{ active: $ctrl.$state.includes( 'discover.channels' ) }"
+				gj-track-event="discover-nav:channels"
+				>
+				<span class="jolticon jolticon-tag"></span>
+				<span translate>Channels</span>
+			</a>
+		</li>
+		<li>
 			<a ui-sref="forums.landing.overview"
 				ng-class="{ active: $ctrl.$state.includes( 'forums' ) }"
 				gj-track-event="discover-nav:forums"

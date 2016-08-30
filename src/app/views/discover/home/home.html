@@ -71,8 +71,10 @@
 <section class="section">
 	<div class="container">
 
-		<h2 class="section-header sans-margin-bottom" translate>
-			Featured Channels
+		<h2 class="section-header sans-margin-bottom">
+			<a class="link-unstyled" ui-sref="discover.channels.list" gj-track-event="home:row-heading:channels">
+				<span translate>Featured Channels</span>
+			</a>
 		</h2>
 
 		<div class="row">
@@ -87,20 +89,18 @@
 			<div class="col-xs-6 col-sm-3 col-md-2"
 				ng-repeat="channel in ::homeCtrl.channels"
 				>
-				<a class="channel-thumbnail"
-					ui-sref="discover.channels.channel.overview( { channel: channel } )"
-					gj-track-event="channel-list:{{ ::channel }}:home"
-					>
-					<div class="channel-thumbnail-image-spacer">
-						<div class="channel-thumbnail-image">
-							<img ng-src="{{ ::Channels.images[ channel ] }}" alt="">
-						</div>
-					</div>
-					<div class="channel-thumbnail-label">
-						#{{ ::channel }}
-					</div>
-				</a>
+				<gj-channel-thumbnail channel="{{ ::channel }}"></gj-channel-thumbnail>
 			</div>
+		</div>
+
+		<div class="page-cut">
+			<a class="btn btn-outline"
+				ui-sref="discover.channels.list"
+				gj-track-event="home:more-btn:channels"
+				translate
+				>
+				View All Channels
+			</a>
 		</div>
 
 	</div>

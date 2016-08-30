@@ -1,6 +1,5 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../app-service';
-import { Channels } from './../../../components/channel/channels-service';
 import { Meta } from './../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { SplitTest } from './../../../components/split-test/split-test-service';
@@ -24,21 +23,17 @@ export class HomeCtrl
 	shouldShowRecs = false;
 
 	constructor(
-		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'App' ) app: App,
 		@Inject( 'Environment' ) Environment: any,
 		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'Game' ) gameModel: any,
 		@Inject( 'FeaturedItem' ) featuredItemModel: any,
 		@Inject( 'Fireside_Post' ) firesidePostModel: typeof Fireside_Post,
-		@Inject( 'Channels' ) channels: Channels,
 		@Inject( 'SplitTest' ) splitTest: SplitTest,
 		@Inject( 'payload' ) payload: any
 	)
 	{
 		app.title = null;
-
-		$scope['Channels'] = channels;
 
 		meta.description = payload.metaDescription;
 		meta.fb = payload.fb;
