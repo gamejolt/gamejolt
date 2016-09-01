@@ -18,7 +18,7 @@ import gjNotificationModule from './../lib/gj-lib-client/components/notification
 import CommentModule from './../lib/gj-lib-client/components/comment/comment';
 import CommentVoteModule from './../lib/gj-lib-client/components/comment/vote/vote';
 import CommentVideoModule from './../lib/gj-lib-client/components/comment/video/video';
-
+import CommentWidgetModule from './../lib/gj-lib-client/components/comment/widget/widget';
 import GamePlayModalModule from './../lib/gj-lib-client/components/game/play-modal/play-modal';
 
 import YoutubeSdkModule from './../lib/gj-lib-client/components/social/youtube/sdk/sdk';
@@ -185,7 +185,7 @@ const AppModule = angular.module( 'App', [
 	CommentModule,
 	CommentVoteModule,
 	CommentVideoModule,
-	'gj.Comment.Widget',
+	CommentWidgetModule,
 	CommentVideoThumbnailModule,
 	CommentVideoLightboxModule,
 	'gj.Subscription',

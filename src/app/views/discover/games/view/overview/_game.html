@@ -372,9 +372,9 @@
 
 				<div ng-if="::gameCtrl.game.comments_enabled">
 					<gj-comment-widget
-						current-page="overviewCtrl.currentCommentPage"
-						comment-resource="Game"
-						comment-resource-id="gameCtrl.game.id"
+						initial-page="::overviewCtrl.currentCommentPage"
+						resource="Game"
+						resource-id="gameCtrl.game.id"
 						>
 					</gj-comment-widget>
 				</div>
