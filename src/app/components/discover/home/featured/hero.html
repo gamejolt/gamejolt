@@ -3,42 +3,52 @@
 	gj-track-event="home:featured:click"
 	>
 
-	<div class="discover-home-featured-hero-shade"></div>
-
 	<div class="discover-home-featured-hero-content">
 		<div class="anim-fade-in-down">
 
 			<div class="discover-home-featured-hero-copy">
 				<div class="discover-home-featured-hero-title">
-					{{ ::$ctrl.game.title }}
+					<span class="discover-home-featured-hero-outline">
+						{{ ::$ctrl.game.title }}
+					</span>
 				</div>
 				<div class="discover-home-featured-hero-byline">
-					<span translate>by</span>
-					{{ ::$ctrl.game.developer.display_name }}
+					<span class="discover-home-featured-hero-outline">
+						<span translate>by</span>
+						{{ ::$ctrl.game.developer.display_name }}
+					</span>
 				</div>
-				<p>{{ ::$ctrl.item.content }}</p>
+				<p>
+					<span class="discover-home-featured-hero-outline">
+						{{ ::$ctrl.item.content }}
+					</span>
+				</p>
 			</div>
 
 			<div class="discover-home-featured-hero-meta">
-				<gj-game-compat-icons gj-game="::$ctrl.game"></gj-game-compat-icons>
+				<span class="discover-home-featured-hero-outline">
+					<gj-game-compat-icons gj-game="::$ctrl.game"></gj-game-compat-icons>
+				</span>
 
-				<span
-					ng-if="::$ctrl.game._has_packages"
-					class="discover-home-featured-hero-pricing"
-					>
-					<span ng-if="::!$ctrl.game.sellable.is_owned" ng-switch="::$ctrl.game.sellable.type">
-						<span ng-switch-when="paid">
-							${{ ::$ctrl.game.sellable.pricings[0].amount | gjCurrency:'' }}
+				<span class="discover-home-featured-hero-outline">
+					<span
+						ng-if="::$ctrl.game._has_packages"
+						class="discover-home-featured-hero-pricing"
+						>
+						<span ng-if="::!$ctrl.game.sellable.is_owned" ng-switch="::$ctrl.game.sellable.type">
+							<span ng-switch-when="paid">
+								${{ ::$ctrl.game.sellable.pricings[0].amount | gjCurrency:'' }}
+							</span>
+							<span ng-switch-when="pwyw" translate>
+								Name Your Price
+							</span>
+							<span ng-switch-default translate>
+								Free
+							</span>
 						</span>
-						<span ng-switch-when="pwyw" translate>
-							Name Your Price
+						<span ng-if="::$ctrl.game.sellable.is_owned" class="tag tag-green" translate>
+							Owned
 						</span>
-						<span ng-switch-default translate>
-							Free
-						</span>
-					</span>
-					<span ng-if="::$ctrl.game.sellable.is_owned" class="tag tag-green" translate>
-						Owned
 					</span>
 				</span>
 			</div>

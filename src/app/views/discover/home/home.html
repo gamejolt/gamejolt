@@ -41,79 +41,6 @@
 	</section>
 </div>-->
 
-<section class="section fill-darker devlogs-banner">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-9 col-md-8 col-lg-6 col-centered">
-				<div class="devlogs-banner-well well fill-darkest">
-
-					<div class="h5 section-header sans-margin" translate>Introducing...</div>
-					<div class="h1 section-header">
-						<a class="link-unstyled" ui-sref="discover.devlogs.overview" gj-track-event="home:devlogs-banner:devlogs">
-							Devlogs
-						</a>
-					</div>
-
-					<p class="small" translate>Find the latest and greatest games in development and follow their devlog feeds!</p>
-
-					<a ui-sref="discover.devlogs.overview" class="btn btn-sm btn-primary-outline" gj-track-event="home:devlogs-banner:devlogs">
-						<span class="jolticon jolticon-chevron-right"></span>
-						<span translate>View Devlogs</span>
-					</a>
-
-					<button class="btn btn-sm btn-outline"
-						ng-click="homeCtrl.isDevlogsExpanded = !homeCtrl.isDevlogsExpanded"
-						gj-track-event="home:devlogs-banner:learn"
-						>
-						<span translate>Learn More</span>
-					</button>
-
-					<a class="devlogs-banner-mascot hidden-xs" ui-sref="discover.devlogs.overview" gj-track-event="home:devlogs-banner:devlogs">
-						<img src="/app/views/discover/home/banner-tadpole.png" width="68" height="68" alt="">
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-<div gj-expand-when="homeCtrl.isDevlogsExpanded">
-	<section class="section section-thin fill-darkest">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-10 col-centered">
-
-					<div class="full-bleed-xs">
-						<gj-video-embed video-provider="youtube" video-id="'aAk_PEghHXk'" autoplay="true"></gj-video-embed>
-					</div>
-
-					<br><br>
-
-					<p class="text-center">
-						<a class="btn btn-primary-outline"
-							ng-class="{ 'btn-block': Screen.isXs }"
-							ui-sref="discover.devlogs.overview"
-							gj-track-event="home:devlogs-banner:video-devlogs"
-							>
-							<span class="jolticon jolticon-chevron-right"></span>
-							View Devlogs
-						</a>
-						<a class="btn btn-success-outline"
-							ng-class="{ 'btn-block': Screen.isXs }"
-							href="/dashboard/games/add"
-							gj-track-event="home:devlogs-banner:video-add"
-							>
-							<span class="jolticon jolticon-add"></span>
-							Add Devlog
-						</a>
-					</p>
-
-				</div>
-			</div>
-		</div>
-	</section>
-</div>
-
 <gj-discover-home-featured featured-items="homeCtrl.featuredItems"></gj-discover-home-featured>
 
 <div class="container" ng-if="::!Environment.isClient">
@@ -144,8 +71,10 @@
 <section class="section">
 	<div class="container">
 
-		<h2 class="section-header sans-margin-bottom" translate>
-			Featured Channels
+		<h2 class="section-header sans-margin-bottom">
+			<a class="link-unstyled" ui-sref="discover.channels.list" gj-track-event="home:row-heading:channels">
+				<span translate>Featured Channels</span>
+			</a>
 		</h2>
 
 		<div class="row">
@@ -160,20 +89,18 @@
 			<div class="col-xs-6 col-sm-3 col-md-2"
 				ng-repeat="channel in ::homeCtrl.channels"
 				>
-				<a class="channel-thumbnail"
-					ui-sref="discover.channels.channel.overview( { channel: channel } )"
-					gj-track-event="channel-list:{{ ::channel }}:home"
-					>
-					<div class="channel-thumbnail-image-spacer">
-						<div class="channel-thumbnail-image">
-							<img ng-src="{{ ::Channels.images[ channel ] }}" alt="">
-						</div>
-					</div>
-					<div class="channel-thumbnail-label">
-						#{{ ::channel }}
-					</div>
-				</a>
+				<gj-channel-thumbnail channel="{{ ::channel }}"></gj-channel-thumbnail>
 			</div>
+		</div>
+
+		<div class="page-cut">
+			<a class="btn btn-outline"
+				ui-sref="discover.channels.list"
+				gj-track-event="home:more-btn:channels"
+				translate
+				>
+				View All Channels
+			</a>
 		</div>
 
 	</div>
@@ -233,57 +160,100 @@
 	</div>
 </section>
 
-<!--
-	Best Games
--->
 <section class="section">
 	<div class="container">
 
-		<h2 class="section-header sans-margin-bottom">
-			<a class="link-unstyled" ui-sref="discover.games.list.section( { section: 'best' } )" gj-track-event="home:row-heading:best">
-				{{ ::'discover.home.best_heading' | translate }}
-			</a>
-		</h2>
+		<!--
+			Best Games
+			We only show this to people not logged in.
+		-->
 
-		<div class="row">
-			<div class="col-sm-10 col-md-8 col-lg-6">
-				<p class="text-muted small">
-					{{ ::'discover.home.best_help' | translate }}
-				</p>
+		<div ng-if="::!homeCtrl.shouldShowRecs || !App.user">
+			<h2 class="section-header sans-margin-bottom">
+				<a class="link-unstyled" ui-sref="discover.games.list.section( { section: 'best' } )" gj-track-event="home:row-heading:best">
+					{{ ::'discover.home.best_heading' | translate }}
+				</a>
+			</h2>
+
+			<div class="row">
+				<div class="col-sm-10 col-md-8 col-lg-6">
+					<p class="text-muted small">
+						{{ ::'discover.home.best_help' | translate }}
+					</p>
+				</div>
 			</div>
-		</div>
 
-		<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
-			<div ng-class="{ 'row': !Screen.isXs }">
-				<gj-game-thumbnail
-					class="col-xs-11 col-sm-4 col-md-3"
-					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
-					ng-repeat="game in homeCtrl.bestGames | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
-					gj-game="game"
-					gj-track-event="home:slider:game:{{ $index }}"
+			<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
+				<div ng-class="{ 'row': !Screen.isXs }">
+					<gj-game-thumbnail
+						class="col-xs-11 col-sm-4 col-md-3"
+						ng-class="{ 'scrollable-grid-item': Screen.isXs }"
+						ng-repeat="game in homeCtrl.bestGames | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
+						gj-game="game"
+						gj-track-event="home:slider:game:{{ $index }}"
+						>
+					</gj-game-thumbnail>
+				</div>
+			</div>
+
+			<div class="page-cut">
+				<a class="btn btn-outline"
+					ui-sref="discover.games.list.section( { section: 'best' } )"
+					gj-track-event="home:more-btn:best"
+					translate
 					>
-				</gj-game-thumbnail>
+					Load More
+				</a>
 			</div>
 		</div>
 
-		<div class="page-cut">
-			<a class="btn btn-outline"
-				ui-sref="discover.games.list.section( { section: 'best' } )"
-				gj-track-event="home:more-btn:best"
-				translate
-				>
-				Load More
-			</a>
+		<!--
+			Recommended Games
+			We only show this to people logged in.
+		-->
+
+		<div ng-if="::homeCtrl.shouldShowRecs && App.user">
+			<h2 class="section-header sans-margin-bottom" translate>
+				Recommended Games
+			</h2>
+
+			<div class="row">
+				<div class="col-sm-10 col-md-8 col-lg-6">
+					<p class="text-muted small">
+						<span translate>Every day we pick a handful of games that we think you may like!</span>
+						<span class="text-muted" tooltip="{{ 'Rating and following games will allow us to give you better recommendations!' | translate }}">
+							<span class="jolticon jolticon-help-circle"></span>
+						</span>
+					</p>
+				</div>
+			</div>
+
+			<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }" ng-if="homeCtrl.recommendedGames.length">
+				<div ng-class="{ 'row': !Screen.isXs }">
+					<gj-game-thumbnail
+						class="col-xs-11 col-sm-4 col-md-3"
+						ng-class="{ 'scrollable-grid-item': Screen.isXs }"
+						ng-repeat="game in homeCtrl.recommendedGames | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
+						gj-game="game"
+						gj-track-event="home:slider:game:{{ $index }}"
+						>
+					</gj-game-thumbnail>
+				</div>
+			</div>
+
+			<div ng-if="!homeCtrl.recommendedGames.length">
+				<div class="alert alert-info" translate>
+					Sadly, we don't have enough data about what you like and don't like to give you accurate recommendations! Be sure to rate games truthfully to let us know what you think of them. Once we have some data, we'll start spewing out amazing games for you to try.
+				</div>
+			</div>
+
+			<div class="page-cut"></div>
+			<br>
 		</div>
 
-	</div>
-</section>
-
-<!--
-	Hot Games
--->
-<section class="section">
-	<div class="container">
+		<!--
+			Hot Games
+		-->
 
 		<h2 class="section-header sans-margin-bottom">
 			<a class="link-unstyled" ui-sref="discover.games.list.section( { section: 'hot' } )" gj-track-event="home:row-heading:hot">
@@ -295,9 +265,9 @@
 			<div class="col-sm-10 col-md-8 col-lg-6">
 				<p class="text-muted small">
 					{{ ::'discover.home.hot_help' | translate }}
-					<a class="link-muted" tooltip="{{ ::'games.list.hotness_tooltip' | translate }}">
+					<span class="text-muted" tooltip="{{ ::'games.list.hotness_tooltip' | translate }}">
 						<span class="jolticon jolticon-help-circle"></span>
-					</a>
+					</span>
 				</p>
 			</div>
 		</div>
@@ -325,14 +295,9 @@
 			</a>
 		</div>
 
-	</div>
-</section>
-
-<!--
-	Hot Devlogs
--->
-<section class="section">
-	<div class="container">
+		<!--
+			Hot Devlogs
+		-->
 
 		<h2 class="section-header sans-margin-bottom">
 			<a class="link-unstyled" ui-sref="discover.devlogs.overview" gj-track-event="home:row-heading:hot-devlogs" translate>
@@ -371,14 +336,9 @@
 			</a>
 		</div>
 
-	</div>
-</section>
-
-<!--
-	Fireside
--->
-<section class="section">
-	<div class="container">
+		<!--
+			Fireside
+		-->
 
 		<h2 class="section-header sans-margin-bottom">
 			<a class="link-unstyled" href="http://fireside.gamejolt.com" gj-track-event="home:row-heading:fireside">

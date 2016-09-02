@@ -16,7 +16,7 @@
 				gj-track-event="discover-nav:home"
 				>
 				<span class="jolticon jolticon-gamejolt"></span>
-				Home
+				<span translate>Home</span>
 			</a>
 		</li>
 		<li>
@@ -26,7 +26,7 @@
 				gj-track-event="discover-nav:hot"
 				>
 				<span class="jolticon jolticon-game"></span>
-				Games
+				<span translate>Games</span>
 			</a>
 		</li>
 		<li>
@@ -36,7 +36,16 @@
 				gj-track-event="discover-nav:devlogs"
 				>
 				<span class="jolticon jolticon-blog-article"></span>
-				Devlogs
+				<span translate>Devlogs</span>
+			</a>
+		</li>
+		<li>
+			<a ui-sref="discover.channels.list"
+				ng-class="{ active: $ctrl.$state.includes( 'discover.channels' ) }"
+				gj-track-event="discover-nav:channels"
+				>
+				<span class="jolticon jolticon-tag"></span>
+				<span translate>Channels</span>
 			</a>
 		</li>
 		<li>
@@ -45,7 +54,16 @@
 				gj-track-event="discover-nav:forums"
 				>
 				<span class="jolticon jolticon-users"></span>
-				Forums
+				<span translate>Forums</span>
+			</a>
+		</li>
+		<li>
+			<a ui-sref="radio"
+				ui-sref-active="active"
+				gj-track-event="discover-nav:radio"
+				>
+				<span class="jolticon jolticon-musical-note"></span>
+				<span translate>Radio</span>
 			</a>
 		</li>
 	</ul>

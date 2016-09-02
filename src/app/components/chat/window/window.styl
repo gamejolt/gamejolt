@@ -134,7 +134,7 @@ $chat-room-window-padding = 15px
 .chat-window-output
 	flex: 1 1 auto
 	overflow-y: auto
-	overflow-x: hidde
+	overflow-x: hidden
 	padding: $chat-room-window-padding
 	font-size: $font-size-small
 	background-color: $white
@@ -143,6 +143,8 @@ $chat-room-window-padding = 15px
 	position: relative
 	margin-bottom: 3px
 	word-wrap: break-word
+	word-break: break-all
+	hyphens: auto
 	line-height: $font-size-small * 1.25
 
 	&-avatar

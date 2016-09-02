@@ -1,0 +1,30 @@
+<gj-page-header
+	hide-nav="true"
+	>
+
+	<gj-page-header-content>
+		<h1 translate>
+			Channels
+		</h1>
+		<p class="small text-muted" translate>Channels are like mini Game Jolts. Find and discover games around specific interests.</p>
+	</gj-page-header-content>
+
+</gj-page-header>
+
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-xs-6 col-sm-3 col-md-2"
+				ng-repeat="channel in ::listCtrl.channels"
+				>
+				<gj-channel-thumbnail
+					channel="{{ ::channel }}"
+					games-count="::listCtrl.gameCounts[ channel ]"
+					>
+				</gj-channel-thumbnail>
+			</div>
+		</div>
+
+	</div>
+</section>
