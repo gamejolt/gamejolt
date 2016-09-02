@@ -26,6 +26,19 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccounts.Link
 			Growls.success( 'Your Facebook account (' + App.user.facebook_name + ') has been linked.', 'Account Linked' );
 		}
 	}
+	else if ( $stateParams.provider == 'twitch' ) {
+		if ( !payload.success ) {
+			if ( payload.reason && payload.reason == 'account-taken' ) {
+				Growls.error( 'This Twitch account is already linked to another Game Jolt account.' );
+			}
+			else {
+				Growls.error( 'Unable to link your Twitch account.' );
+			}
+		}
+		else {
+			Growls.success( 'Your Twitch account (' + App.user.twitch_name + ') has been linked.', 'Account Linked' );
+		}
+	}
 	else if ( $stateParams.provider == 'google' ) {
 		if ( !payload.success ) {
 			if ( payload.reason && payload.reason == 'account-taken' ) {
