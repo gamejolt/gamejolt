@@ -168,7 +168,7 @@
 			We only show this to people not logged in.
 		-->
 
-		<div ng-if="::!homeCtrl.shouldShowRecs || !App.user">
+		<div ng-if="::!App.user">
 			<h2 class="section-header sans-margin-bottom">
 				<a class="link-unstyled" ui-sref="discover.games.list.section( { section: 'best' } )" gj-track-event="home:row-heading:best">
 					{{ ::'discover.home.best_heading' | translate }}
@@ -212,9 +212,15 @@
 			We only show this to people logged in.
 		-->
 
-		<div ng-if="::homeCtrl.shouldShowRecs && App.user">
-			<h2 class="section-header sans-margin-bottom" translate>
-				Recommended Games
+		<div ng-if="::App.user">
+			<h2 class="section-header sans-margin-bottom">
+				<a class="link-unstyled"
+					ui-sref="library.collection.recommended( { slug: App.user.slug, id: App.user.id } )"
+					gj-track-event="home:row-heading:recommended"
+					translate
+					>
+					Recommended Games
+				</a>
 			</h2>
 
 			<div class="row">
@@ -247,7 +253,15 @@
 				</div>
 			</div>
 
-			<div class="page-cut"></div>
+			<div class="page-cut">
+				<a class="btn btn-outline"
+					ui-sref="library.collection.recommended( { slug: App.user.slug, id: App.user.id } )"
+					gj-track-event="home:more-btn:recommended"
+					translate
+					>
+					View All
+				</a>
+			</div>
 			<br>
 		</div>
 

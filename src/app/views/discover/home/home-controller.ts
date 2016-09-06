@@ -2,7 +2,6 @@ import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../app-service';
 import { Meta } from './../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { SplitTest } from './../../../components/split-test/split-test-service';
 
 @Injectable()
 export class HomeCtrl
@@ -20,7 +19,6 @@ export class HomeCtrl
 	firesidePosts: any[];
 
 	isDevlogsExpanded = false;
-	shouldShowRecs = false;
 
 	constructor(
 		@Inject( 'App' ) app: App,
@@ -29,7 +27,6 @@ export class HomeCtrl
 		@Inject( 'Game' ) gameModel: any,
 		@Inject( 'FeaturedItem' ) featuredItemModel: any,
 		@Inject( 'Fireside_Post' ) firesidePostModel: typeof Fireside_Post,
-		@Inject( 'SplitTest' ) splitTest: SplitTest,
 		@Inject( 'payload' ) payload: any
 	)
 	{
@@ -64,7 +61,5 @@ export class HomeCtrl
 		this.channels = payload.channels;
 
 		this.firesidePosts = firesidePostModel.populate( payload.firesidePosts );
-
-		this.shouldShowRecs = splitTest.hasHomeRecommendations( payload );
 	}
 }
