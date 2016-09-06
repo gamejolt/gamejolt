@@ -8,6 +8,7 @@ export class LibraryCtrl
 	followedCollection: any;
 	developerCollection: any;
 	ownedCollection: any;
+	recommendedCollection: any;
 
 	constructor(
 		@Inject( '$scope' ) $scope: any,
@@ -23,7 +24,9 @@ export class LibraryCtrl
 		this.followedCollection = payload.followedCollection ? new gameCollection( payload.followedCollection ) : null;
 		this.developerCollection = payload.developerCollection ? new gameCollection( payload.developerCollection ) : null;
 		this.ownedCollection = payload.ownedCollection ? new gameCollection( payload.ownedCollection ) : null;
+		this.recommendedCollection = payload.recommendedCollection ? new gameCollection( payload.recommendedCollection ) : null;
 
+		this.collections.unshift( this.recommendedCollection );
 		this.collections.unshift( this.ownedCollection );
 		this.collections.unshift( this.followedCollection );
 

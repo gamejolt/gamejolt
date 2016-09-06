@@ -9,46 +9,62 @@
 
 			<div class="game-collection-title" ng-switch="::collection.type">
 				<span ng-switch-when="developer">
-					<span ng-if="::collection.from_subscription">{{ ::'library.playlists.subscription_developer_title' | translate }}</span>
-					<span ng-if="!collection.from_subscription && collection.id == App.user.id">{{ ::'library.playlists.owner_developer_title' | translate }}</span>
-					<span ng-if="!collection.from_subscription && collection.id != App.user.id">{{ ::'library.playlists.developer_title' | translate }}</span>
+					<span ng-if="::collection.from_subscription || collection.id != App.user.id"
+						translate
+						translate-params-developer="::collection.owner.display_name"
+						>
+						Games Made <small>by {{ developer }}</small>
+					</span>
+					<span ng-if="!collection.from_subscription && collection.id == App.user.id"
+						translate
+						>
+						Your Games
+					</span>
 				</span>
 
 				<span ng-switch-when="followed">
-					<span ng-if="::collection.from_subscription">{{ ::'library.playlists.subscription_followed_title' | translate }}</span>
-					<span ng-if="!collection.from_subscription && collection.id == App.user.id">{{ ::'library.playlists.owner_followed_title' | translate }}</span>
-					<span ng-if="!collection.from_subscription && collection.id != App.user.id">{{ ::'library.playlists.followed_title' | translate }}</span>
+					<span ng-if="::collection.from_subscription || collection.id != App.user.id"
+						translate
+						translate-params-user="::collection.owner.display_name"
+						>
+						Games Followed <small>by {{ user }}</small>
+					</span>
+					<span ng-if="!collection.from_subscription && collection.id == App.user.id"
+						translate
+						>
+						Your Followed Games
+					</span>
 				</span>
 
 				<span ng-switch-when="owned">
-					<span ng-if="::collection.from_subscription" translate>Games Owned</span>
-					<span ng-if="!collection.from_subscription && collection.id == App.user.id" translate>Your Owned Games</span>
-					<span ng-if="!collection.from_subscription && collection.id != App.user.id" translate>Owned Games</span>
+					<span ng-if="::collection.from_subscription || collection.id != App.user.id"
+						translate
+						translate-params-user="::collection.owner.display_name"
+						>
+						Games Owned <small>by {{ user }}</small>
+					</span>
+					<span ng-if="!collection.from_subscription && collection.id == App.user.id"
+						translate
+						>
+						Your Owned Games
+					</span>
+				</span>
+
+				<span ng-switch-when="recommended">
+					<span ng-if="::collection.from_subscription || collection.id != App.user.id"
+						translate
+						translate-params-user="::collection.owner.display_name"
+						>
+						Game Recommendations <small>for {{ user }}</small>
+					</span>
+					<span ng-if="!collection.from_subscription && collection.id == App.user.id"
+						translate
+						>
+						Your Recommended Games
+					</span>
 				</span>
 
 				<span ng-switch-default>{{ ::collection.name }}</span>
-
-				<small ng-if="::collection.from_subscription">
-					{{ ::'library.by' | translate }}
-					{{ ::collection.owner.display_name }}
-				</small>
-			</div>
-
-			<div
-				ng-if="(collection.type == 'followed' || collection.type == 'developer' || collection.type == 'owned') && collection.id != App.user.id"
-				ng-switch="::collection.type"
-				>
-				<p class="game-collection-desc" ng-switch-when="followed">
-					<span ng-if="::!collection.from_subscription" translate>library.playlists.followed_description</span>
-					<span ng-if="::collection.from_subscription" translate translate-params-user="collection.owner.display_name">library.playlists.subscription_followed_description</span>
-				</p>
-				<p class="game-collection-desc" ng-switch-when="developer">
-					<span ng-if="::!collection.from_subscription" translate>library.playlists.developer_description</span>
-					<span ng-if="::collection.from_subscription" translate translate-params-user="collection.owner.display_name">library.playlists.subscription_developer_description</span>
-				</p>
-				<p class="game-collection-desc" ng-switch-when="owned">
-					<span ng-if="::!collection.from_subscription" translate>Here are the games this person owns.</span>
-				</p>
 			</div>
 		</a>
 	</div>

@@ -16,6 +16,7 @@ angular.module( 'App.Views' ).controller( 'LibraryCtrl', function( $scope, $stat
 	this.followedCollection = libraryPayload.followedCollection ? new GameCollection( libraryPayload.followedCollection ) : null;
 	this.developerCollection = libraryPayload.developerCollection ? new GameCollection( libraryPayload.developerCollection ) : null;
 	this.ownedCollection = libraryPayload.ownedCollection ? new GameCollection( libraryPayload.ownedCollection ) : null;
+	this.recommendedCollection = libraryPayload.recommendedCollection ? new GameCollection( libraryPayload.recommendedCollection ) : null;
 	this.bundleCollections = GameCollection.populate( libraryPayload.bundleCollections );
 
 	this.showAddPlaylistModal = showAddPlaylistModal;

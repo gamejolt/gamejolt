@@ -7,6 +7,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		'followed': '^/profile/:slug/:id/followed',
 		'developer': '^/profile/:slug/:id/games',
 		'owned': '^/profile/:slug/:id/owned',
+		'recommended': '^/profile/:slug/:id/recommended',
 		'bundle': '^/library/bundle/:slug/:id/games',
 		'tag': '^/tag/:id',
 	};
