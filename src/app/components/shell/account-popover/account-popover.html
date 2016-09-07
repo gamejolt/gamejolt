@@ -9,7 +9,7 @@
 
 	<div class="list-group">
 		<a class="list-group-item offline-disable"
-			ui-sref="profile.overview( { username: App.user.username } )"
+			ui-sref="profile.overview( { slug: App.user.slug, id: App.user.id } )"
 			gj-track-event="account-popover:profile"
 			>
 			<h4 class="account-popover-heading">{{ App.user.display_name }}</h4>

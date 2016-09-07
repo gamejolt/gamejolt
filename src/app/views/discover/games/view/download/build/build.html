@@ -52,7 +52,7 @@
 				<div ng-if="buildCtrl.developerGames.length">
 
 					<h2>
-						<a class="link-unstyled" ui-sref="library.collection.developer( { id: gameCtrl.game.developer.username } )">
+						<a class="link-unstyled" ui-sref="library.collection.developer( { slug: gameCtrl.game.developer.slug, id: gameCtrl.game.developer.id } )">
 							{{ ::'game.download.game.developer_games_heading' | translate }}
 						</a>
 						<small>{{ ::'game.download.game.developer_games_heading_small' | translate }}</small>

@@ -15,9 +15,6 @@
 	<gj-page-header-content>
 		<h1>
 			{{ ::profileCtrl.user.display_name }}
-			<small>
-				@{{ ::profileCtrl.user.username }}
-			</small>
 			<span ng-if="profileCtrl.user.is_verified" class="verified-account-tag jolticon jolticon-verified big" tooltip="{{ ::'profile.verified_tooltip' | translate }}"></span>
 		</h1>
 		<div class="small text-muted">

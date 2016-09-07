@@ -37,7 +37,7 @@
 						</h1>
 						<h4>
 							{{ ::'library.by' | translate }}
-							<a class="link-unstyled" ui-sref="profile.overview( { username: collectionCtrl.user.username } )">
+							<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.user.slug, id: collectionCtrl.user.id } )">
 								{{ ::collectionCtrl.user.display_name }}
 							</a>
 						</h4>
@@ -59,7 +59,7 @@
 						</h1>
 						<h4>
 							{{ ::'library.by' | translate }}
-							<a class="link-unstyled" ui-sref="profile.overview( { username: collectionCtrl.user.username } )">
+							<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.user.slug, id: collectionCtrl.user.id } )">
 								{{ ::collectionCtrl.user.display_name }}
 							</a>
 						</h4>
@@ -79,7 +79,7 @@
 						<h1 translate>Games Owned</h1>
 						<h4>
 							<span translate>by</span>
-							<a class="link-unstyled" ui-sref="profile.overview( { username: collectionCtrl.user.username } )">
+							<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.user.slug, id: collectionCtrl.user.id } )">
 								{{ ::collectionCtrl.user.display_name }}
 							</a>
 						</h4>
@@ -99,7 +99,7 @@
 						<h1 translate>Game Recommendations</h1>
 						<h4>
 							<span translate>for</span>
-							<a class="link-unstyled" ui-sref="profile.overview( { username: collectionCtrl.user.username } )">
+							<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.user.slug, id: collectionCtrl.user.id } )">
 								{{ ::collectionCtrl.user.display_name }}
 							</a>
 						</h4>
@@ -117,7 +117,7 @@
 					</h1>
 					<h4 ng-if="::!collectionCtrl.isOwner">
 						{{ ::'library.by' | translate }}
-						<a class="link-unstyled" ui-sref="profile.overview( { username: collectionCtrl.playlist.user.username } )">
+						<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.playlist.user.slug, id: collectionCtrl.playlist.user.id } )">
 							{{ ::collectionCtrl.playlist.user.display_name }}
 						</a>
 					</h4>

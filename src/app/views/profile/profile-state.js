@@ -2,7 +2,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 {
 	$stateProvider.state( 'profile', {
 		abstract: true,
-		url: '/@:username',
+		url: '/profile/:slug/:id',
 		controller: 'ProfileCtrl',
 		controllerAs: 'profileCtrl',
 		templateUrl: '/app/views/profile/profile.html',
@@ -13,7 +13,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 			},
 			profilePayload: function( Api, $stateParams )
 			{
-				return Api.sendRequest( '/web/profile/@' + $stateParams.username );
+				return Api.sendRequest( '/web/profile/' + $stateParams.id );
 			}
 		}
 	} );

@@ -16,21 +16,6 @@ angular.module( 'App.Game.Collection' ).factory( 'GameCollection', function( Mod
 		}
 	}
 
-	GameCollection.TYPE_FOLLOWED = 'followed';
-	GameCollection.TYPE_DEVELOPER = 'developer';
-	GameCollection.TYPE_OWNED = 'owned';
-	GameCollection.TYPE_RECOMMENDED = 'recommended';
-	GameCollection.TYPE_PLAYLIST = 'playlist';
-	GameCollection.TYPE_BUNDLE = 'bundle';
-	GameCollection.TYPE_TAG = 'tag';
-
-	GameCollection.USER_TYPES = [
-		GameCollection.TYPE_FOLLOWED,
-		GameCollection.TYPE_DEVELOPER,
-		GameCollection.TYPE_OWNED,
-		GameCollection.TYPE_RECOMMENDED,
-	];
-
 	GameCollection.prototype.getTitle = function()
 	{
 		var title = this.name;
@@ -53,14 +38,9 @@ angular.module( 'App.Game.Collection' ).factory( 'GameCollection', function( Mod
 
 	GameCollection.prototype.getSrefParams = function()
 	{
-		var id = this.id;
-		if ( id[0] == '@' ) {
-			id = id.substring( 1 );
-		}
-
 		return {
 			slug: this.slug,
-			id: id,
+			id: this.id,
 		};
 	};
 

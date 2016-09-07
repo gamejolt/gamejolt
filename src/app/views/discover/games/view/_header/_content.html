@@ -6,7 +6,7 @@
 
 <div>
 	<span translate>by</span>
-	<a ui-sref="profile.overview( { username: gameCtrl.game.developer.username } )">
+	<a ng-href="{{ ::gameCtrl.game.developer.url }}">
 		{{ ::gameCtrl.game.developer.display_name }}
 	</a>
 

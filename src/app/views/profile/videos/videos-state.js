@@ -8,7 +8,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		resolve: {
 			payload: function( Api, $stateParams )
 			{
-				return Api.sendRequest( '/web/profile/videos/@' + $stateParams.username );
+				return Api.sendRequest( '/web/profile/videos/' + $stateParams.id );
 			}
 		}
 	} );

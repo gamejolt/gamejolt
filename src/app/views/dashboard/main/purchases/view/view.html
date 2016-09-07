@@ -131,7 +131,7 @@
 							<br>
 							<span class="small">
 								<span translate>by</span>
-								<a ui-sref="profile.overview( { username: viewCtrl.games[ firstPackage.game_id ].developer.username } )">
+								<a ui-sref="profile.overview( { slug: viewCtrl.games[ firstPackage.game_id ].developer.slug, id: viewCtrl.games[ firstPackage.game_id ].developer.id } )">
 									{{ ::viewCtrl.games[ firstPackage.game_id ].developer.display_name }}
 								</a>
 							</span>

@@ -215,7 +215,7 @@
 		<div ng-if="::App.user">
 			<h2 class="section-header sans-margin-bottom">
 				<a class="link-unstyled"
-					ui-sref="library.collection.recommended( { id: App.user.username } )"
+					ui-sref="library.collection.recommended( { slug: App.user.slug, id: App.user.id } )"
 					gj-track-event="home:row-heading:recommended"
 					translate
 					>
@@ -255,7 +255,7 @@
 
 			<div class="page-cut">
 				<a class="btn btn-outline"
-					ui-sref="library.collection.recommended( { id: App.user.username } )"
+					ui-sref="library.collection.recommended( { slug: App.user.slug, id: App.user.id } )"
 					gj-track-event="home:more-btn:recommended"
 					translate
 					>

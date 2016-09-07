@@ -181,7 +181,7 @@
 
 			<div ng-if="profileCtrl.gamesCount">
 				<h2 class="section-header">
-					<a class="link-unstyled" ui-sref="library.collection.developer( { id: profileCtrl.user.username } )">
+					<a class="link-unstyled" ui-sref="library.collection.developer( { slug: profileCtrl.user.slug, id: profileCtrl.user.id } )">
 						{{ ::'profile.developer_games_teaser_heading' | translate }}
 					</a>
 					<small>{{ ::'profile.developer_games_teaser_heading_small' | translate }}</small>
@@ -199,7 +199,7 @@
 
 				<div class="page-cut">
 					<a class="btn btn-outline"
-						ui-sref="library.collection.developer( { id: profileCtrl.user.username } )"
+						ui-sref="library.collection.developer( { slug: profileCtrl.user.slug, id: profileCtrl.user.id } )"
 						>
 						<span class="btn-badge">
 							{{ profileCtrl.gamesCount | number }}
