@@ -125,7 +125,7 @@ angular.module( 'App.Client.Tray' )
 				label: 'Your Profile',
 				click: function()
 				{
-					$state.go( 'profile.overview', { id: App.user.id, slug: App.user.slug } );
+					$state.go( 'profile.overview', { username: App.user.username } );
 					Client.show();
 				}
 			} ) );
