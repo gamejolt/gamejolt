@@ -35,7 +35,7 @@ angular.module( 'App.Game.Collection' ).factory( 'GameCollection', function( Mod
 	{
 		var title = this.name;
 		if ( this.from_subscription ) {
-			title += ' - ' + this.owner.display_name;
+			title += ' - @' + this.owner.username;
 		}
 		return title;
 	};

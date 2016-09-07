@@ -11,7 +11,7 @@
 				<span ng-switch-when="developer">
 					<span ng-if="::collection.from_subscription || collection.id != App.user.id"
 						translate
-						translate-params-developer="::collection.owner.display_name"
+						translate-params-developer="::'@' + collection.owner.username"
 						>
 						Games Made <small>by {{ developer }}</small>
 					</span>
@@ -25,7 +25,7 @@
 				<span ng-switch-when="followed">
 					<span ng-if="::collection.from_subscription || collection.id != App.user.id"
 						translate
-						translate-params-user="::collection.owner.display_name"
+						translate-params-user="::'@' + collection.owner.username"
 						>
 						Games Followed <small>by {{ user }}</small>
 					</span>
@@ -39,7 +39,7 @@
 				<span ng-switch-when="owned">
 					<span ng-if="::collection.from_subscription || collection.id != App.user.id"
 						translate
-						translate-params-user="::collection.owner.display_name"
+						translate-params-user="::'@' + collection.owner.username"
 						>
 						Games Owned <small>by {{ user }}</small>
 					</span>
@@ -53,7 +53,7 @@
 				<span ng-switch-when="recommended">
 					<span ng-if="::collection.from_subscription || collection.id != App.user.id"
 						translate
-						translate-params-user="::collection.owner.display_name"
+						translate-params-user="::'@' + collection.owner.username"
 						>
 						Game Recommendations <small>for {{ user }}</small>
 					</span>

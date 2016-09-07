@@ -12,8 +12,10 @@
 			ui-sref="profile.overview( { username: App.user.username } )"
 			gj-track-event="account-popover:profile"
 			>
-			<h4 class="account-popover-heading">{{ App.user.display_name }}</h4>
-			<small translate>View Profile</small>
+			<h4 class="account-popover-heading" title="{{ 'View Profile' | translate }}">
+				{{ App.user.display_name }}
+			</h4>
+			<small>@{{ App.user.username }}</small>
 		</a>
 	</div>
 

@@ -8,6 +8,7 @@
 	<span translate>by</span>
 	<a ui-sref="profile.overview( { username: gameCtrl.game.developer.username } )">
 		{{ ::gameCtrl.game.developer.display_name }}
+		<small>@{{ ::gameCtrl.game.developer.username }}</small>
 	</a>
 
 	<!--

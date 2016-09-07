@@ -14,11 +14,10 @@ export class VideosCtrl
 		@Inject( 'App' ) app: App,
 		@Inject( 'Api' ) private api: any,
 		@Inject( 'Comment_Video' ) private commentVideo: typeof Comment_Video,
-		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
 	)
 	{
-		app.title = gettextCatalog.getString( 'Videos from {{ user }}', { user: $scope.profileCtrl.user.display_name } );
+		app.title = `Videos from ${$scope.profileCtrl.user.display_name} (@${$scope.profileCtrl.user.username})`;
 
 		this.videos = commentVideo.populate( payload.videos );
 	}

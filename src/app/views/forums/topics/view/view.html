@@ -30,6 +30,7 @@
 						<span class="forum-topic-header-author-byline">
 							by
 							<a class="forum-topic-header-author-username" ui-sref="profile.overview( { username: viewCtrl.topic.user.username } )">{{ ::viewCtrl.topic.user.display_name }}</a>
+							<small>@{{ ::viewCtrl.topic.user.username }}</small>
 						</span>
 						<span class="forum-topic-header-time-ago">
 							<span class="dot-separator hidden-xs"></span>
@@ -220,6 +221,7 @@
 							{{ viewCtrl.topic.main_post.modified_by_user.display_name }}
 						</strong>
 					</a>
+					<small>@{{ viewCtrl.topic.main_post.modified_by_user.username }}</small>
 				</p>
 
 				<hr>

@@ -185,7 +185,10 @@
 					</div>
 					<div style="margin-left: 55px;">
 						<div class="card-title">
-							<h5>{{ ::like.user.display_name }}</h5>
+							<h5>
+								{{ ::like.user.display_name }}
+								<small>@{{ ::like.user.username }}</small>
+							</h5>
 						</div>
 					</div>
 				</gj-card>

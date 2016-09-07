@@ -67,10 +67,10 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 			this.user = user;
 			this.isOwner = App.user && user.id == App.user.id;
 			if ( this.isOwner ) {
-				App.title = gettextCatalog.getString( 'library.collection.followed_owner_page_title', { user: user.display_name } );
+				App.title = gettextCatalog.getString( 'library.collection.followed_owner_page_title', { user: '@' + user.username } );
 			}
 			else {
-				App.title = gettextCatalog.getString( 'library.collection.followed_page_title', { user: user.display_name } );
+				App.title = gettextCatalog.getString( 'library.collection.followed_page_title', { user: '@' + user.username } );
 			}
 		}
 		else if ( this.type == 'playlist' ) {
@@ -78,10 +78,10 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 			this.playlist = playlist;
 			this.isOwner = App.user && playlist.user.id == App.user.id;
 			if ( this.isOwner ) {
-				App.title = gettextCatalog.getString( 'library.collection.playlist_owner_page_title', { playlist: playlist.name, user: playlist.user.display_name } );
+				App.title = gettextCatalog.getString( 'library.collection.playlist_owner_page_title', { playlist: playlist.name, user: '@' + playlist.user.username } );
 			}
 			else {
-				App.title = gettextCatalog.getString( 'library.collection.playlist_page_title', { playlist: playlist.name, user: playlist.user.display_name } );
+				App.title = gettextCatalog.getString( 'library.collection.playlist_page_title', { playlist: playlist.name, user: '@' + playlist.user.username } );
 			}
 		}
 		else if ( this.type == 'developer' ) {
@@ -89,10 +89,10 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 			this.user = user;
 			this.isOwner = App.user && user.id == App.user.id;
 			if ( this.isOwner ) {
-				App.title = gettextCatalog.getString( 'library.collection.developer_owner_page_title', { user: user.display_name } );
+				App.title = gettextCatalog.getString( 'library.collection.developer_owner_page_title', { user: '@' + user.username } );
 			}
 			else {
-				App.title = gettextCatalog.getString( 'library.collection.developer_page_title', { user: user.display_name } );
+				App.title = gettextCatalog.getString( 'library.collection.developer_page_title', { user: '@' + user.username } );
 			}
 		}
 		else if ( this.type == 'owned' ) {
@@ -100,10 +100,10 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 			this.user = user;
 			this.isOwner = App.user && user.id == App.user.id;
 			if ( this.isOwner ) {
-				App.title = gettextCatalog.getString( 'Your Owned Games', { user: user.display_name } );
+				App.title = gettextCatalog.getString( 'Your Owned Games' );
 			}
 			else {
-				App.title = gettextCatalog.getString( 'Games Owned by {{ user }}', { user: user.display_name } );
+				App.title = gettextCatalog.getString( 'Games Owned by {{ user }}', { user: '@' + user.username } );
 			}
 		}
 		else if ( this.type == 'recommended' ) {
@@ -111,10 +111,10 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 			this.user = user;
 			this.isOwner = App.user && user.id == App.user.id;
 			if ( this.isOwner ) {
-				App.title = gettextCatalog.getString( 'Your Recommended Games', { user: user.display_name } );
+				App.title = gettextCatalog.getString( 'Your Recommended Games' );
 			}
 			else {
-				App.title = gettextCatalog.getString( 'Game Recommendations for {{ user }}', { user: user.display_name } );
+				App.title = gettextCatalog.getString( 'Game Recommendations for {{ user }}', { user: '@' + user.username } );
 			}
 		}
 		else if ( this.type == 'bundle' ) {

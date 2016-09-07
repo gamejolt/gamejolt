@@ -91,12 +91,14 @@
 
 						<h3 ng-if="room.type != Chat_Room.TYPE_PM" class="anim-fade-in-right no-animate-xs">{{ ::ctrl.room.title }}</h3>
 
-						<h3 ng-if="room.type == Chat_Room.TYPE_PM" class="anim-fade-in-right no-animate-xs" title="{{ ::ctrl.room.user.displayName }}">
+						<h3 ng-if="room.type == Chat_Room.TYPE_PM" class="anim-fade-in-right no-animate-xs" title="{{ ::ctrl.room.user.displayName }} (@{{ ::ctrl.room.user.username }})">
 							<a class="link-unstyled"
 								ui-sref="profile.overview( { username: ctrl.room.user.username } )"
 								>
 								{{ ::ctrl.room.user.displayName }}
 							</a>
+							<br>
+							<small>@{{ ::ctrl.room.user.username }}</small>
 						</h3>
 
 						<div ng-if="ctrl.room.type != Chat_Room.TYPE_PM" style="clear: both;">
@@ -160,6 +162,11 @@
 							>
 							{{ ::msg.user.displayName }}
 						</a>
+						<span class="chat-window-message-username"
+							ng-if="::!msg.combine"
+							>
+							@{{ ::msg.user.username }}
+						</span>
 						<span class="chat-window-message-time"
 							ng-if="::!msg.combine"
 							>

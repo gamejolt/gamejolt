@@ -24,7 +24,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		}
 
 		_this.game = game;
-		App.title = game.title + ' by ' + game.developer.display_name;
+		App.title = game.title + ' by ' + game.developer.display_name + ' (@' + game.developer.username + ')';
 	} );
 
 	$scope.$watch( 'gameCtrl.hasScores && gameCtrl.trophiesCount', function( val )

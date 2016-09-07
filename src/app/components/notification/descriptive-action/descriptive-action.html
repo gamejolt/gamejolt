@@ -8,6 +8,10 @@
 	</span>
 </strong>
 
+<small ng-if="::$ctrl.notification.is_user_based && $ctrl.notification.from_model">
+	(@{{ ::$ctrl.notification.from_model.username }})
+</small>
+
 <!-- Game -->
 <strong ng-if="::$ctrl.notification.is_game_based">
 	{{ ::$ctrl.notification.to_model.title }}
