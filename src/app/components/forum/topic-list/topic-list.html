@@ -25,7 +25,7 @@
 			</h4>
 			<div class="forum-topic-list-item-author">
 				<span translate>by</span>
-				<a ui-sref="profile.overview( { slug: topic.user.slug, id: topic.user.id } )">
+				<a ui-sref="profile.overview( { username: topic.user.username } )">
 					{{ ::topic.user.display_name }}
 				</a>
 			</div>

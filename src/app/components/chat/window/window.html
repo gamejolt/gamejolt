@@ -84,7 +84,7 @@
 
 						<a class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
 							ng-if="room.type == Chat_Room.TYPE_PM"
-							ui-sref="profile.overview( { slug: ctrl.room.user.username, id: ctrl.room.user.id } )"
+							ui-sref="profile.overview( { username: ctrl.room.user.username } )"
 							>
 							<img ng-src="{{ ::ctrl.room.user.imgAvatar }}" alt="">
 						</a>
@@ -93,7 +93,7 @@
 
 						<h3 ng-if="room.type == Chat_Room.TYPE_PM" class="anim-fade-in-right no-animate-xs" title="{{ ::ctrl.room.user.displayName }}">
 							<a class="link-unstyled"
-								ui-sref="profile.overview( { slug: ctrl.room.user.username, id: ctrl.room.user.id } )"
+								ui-sref="profile.overview( { username: ctrl.room.user.username } )"
 								>
 								{{ ::ctrl.room.user.displayName }}
 							</a>
@@ -148,7 +148,7 @@
 
 					<a class="chat-window-message-avatar"
 						ng-if="::!msg.combine"
-						ui-sref="profile.overview( { slug: msg.user.username, id: msg.userId } )"
+						ui-sref="profile.overview( { username: msg.user.username } )"
 						>
 						<img ng-src="{{ ::msg.user.imgAvatar }}" alt="">
 					</a>
@@ -156,7 +156,7 @@
 					<div class="chat-window-message-container">
 						<a class="chat-window-message-user link-unstyled"
 							ng-if="::!msg.combine"
-							ui-sref="profile.overview( { slug: msg.user.username, id: msg.userId } )"
+							ui-sref="profile.overview( { username: msg.user.username } )"
 							>
 							{{ ::msg.user.displayName }}
 						</a>
