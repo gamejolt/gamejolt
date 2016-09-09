@@ -1,7 +1,7 @@
-<div ng-if="false">
+<div ng-if="homeCtrl.hasNoFeaturedSplit">
 	<div gj-partial="/app/views/discover/home/_home-no-featured.html"></div>
 </div>
 
-<div ng-if="true">
+<div ng-if="!homeCtrl.hasNoFeaturedSplit">
 	<div gj-partial="/app/views/discover/home/_home-original.html"></div>
 </div>

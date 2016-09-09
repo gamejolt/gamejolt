@@ -2,6 +2,7 @@ import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../app-service';
 import { Meta } from './../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { SplitTest } from '../../../components/split-test/split-test-service';
 
 @Injectable()
 export class HomeCtrl
@@ -20,6 +21,8 @@ export class HomeCtrl
 
 	isDevlogsExpanded = false;
 
+	hasNoFeaturedSplit = false;
+
 	constructor(
 		@Inject( 'App' ) app: App,
 		@Inject( 'Environment' ) Environment: any,
@@ -27,9 +30,12 @@ export class HomeCtrl
 		@Inject( 'Game' ) gameModel: any,
 		@Inject( 'FeaturedItem' ) featuredItemModel: any,
 		@Inject( 'Fireside_Post' ) firesidePostModel: typeof Fireside_Post,
-		@Inject( 'payload' ) payload: any
+		@Inject( 'SplitTest' ) splitTest: SplitTest,
+		@Inject( 'payload' ) payload: any,
 	)
 	{
+		this.hasNoFeaturedSplit = splitTest.hasHomeNoFeatured( payload );
+
 		app.title = null;
 
 		meta.description = payload.metaDescription;

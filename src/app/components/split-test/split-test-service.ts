@@ -20,7 +20,7 @@ export class SplitTest
 
 	hasHomeNoFeatured( payload: any )
 	{
-		return this.getPayloadVariation( payload, EXPERIMENT_HOME_NO_FEATURED );
+		return this.getPayloadVariation( payload, EXPERIMENT_HOME_NO_FEATURED ) === 1;
 	}
 
 	getPayloadVariation( payload: any, experiment: string ): number
