@@ -48,7 +48,7 @@ angular.module( 'App.Views' ).controller( 'LibraryCtrl', function( $scope, $stat
 		}
 
 		if ( item.from_subscription ) {
-			actual = item.owner.display_name.toLowerCase();
+			actual = item.owner.username.toLowerCase();
 			if ( actual.indexOf( expected ) !== -1 ) {
 				return true;
 			}

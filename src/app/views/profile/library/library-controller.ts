@@ -17,7 +17,7 @@ export class LibraryCtrl
 		@Inject( 'payload' ) payload: any
 	)
 	{
-		app.title = 'Library of ' + $scope.profileCtrl.user.display_name;
+		app.title = 'Library of @' + $scope.profileCtrl.user.username;
 
 		this.collections = gameCollection.populate( payload.collections );
 

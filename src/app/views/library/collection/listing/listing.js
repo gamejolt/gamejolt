@@ -4,10 +4,10 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 
 	var subStates = {
 		'playlist': '^/playlist/:slug/:id',
-		'followed': '^/profile/:slug/:id/followed',
-		'developer': '^/profile/:slug/:id/games',
-		'owned': '^/profile/:slug/:id/owned',
-		'recommended': '^/profile/:slug/:id/recommended',
+		'followed': '^/@:id/followed',
+		'developer': '^/@:id/games',
+		'owned': '^/@:id/owned',
+		'recommended': '^/@:id/recommended',
 		'bundle': '^/library/bundle/:slug/:id/games',
 		'tag': '^/tag/:id',
 	};
@@ -23,13 +23,21 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 				collectionType: state,
 			},
 			resolve: {
-				payload: function( $state, $stateParams, Api, filteringContainer )
+				payload: function( $state, $stateParams, Api, GameCollection, filteringContainer )
 				{
 					return filteringContainer.init( 'library.collection.' + state, $stateParams )
 						.then( function()
 						{
 							var query = filteringContainer.getQueryString( $stateParams );
-							return Api.sendRequest( '/web/library/games/' + state + '/' + $stateParams.id + '?' + query );
+
+							// We needed to take it out for the state params so we can pattern match better.
+							// We add it back in when submitting to API.
+							var id = $stateParams.id;
+							if ( GameCollection.USER_TYPES.indexOf( state ) !== -1 ) {
+								id = '@' + id;
+							}
+
+							return Api.sendRequest( '/web/library/games/' + state + '/' + id + '?' + query );
 						} );
 				}
 			}

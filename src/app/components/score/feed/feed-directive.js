@@ -3,7 +3,7 @@ angular.module( 'App.Score.Feed' ).directive( 'gjScoreFeed', function( $state, A
 	function processUser( user )
 	{
 		// #! gets added in Client/App but we never want it.
-		user.url = $state.href( 'profile.overview', { slug: 'user', id: user.id } ).replace( '#!', '' );
+		user.url = $state.href( 'profile.overview', { username: user.username } ).replace( '#!', '' );
 
 		var noAvatar = 'https://gamejolt.com/img/no-avatar-3.png';
 		user.img_avatar = 'https://secure.gravatar.com/avatar/' + user.email_hash + '?s=200&r=pg&d=' + encodeURIComponent( noAvatar );

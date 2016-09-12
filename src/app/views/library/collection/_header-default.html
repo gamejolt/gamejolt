@@ -37,9 +37,10 @@
 						</h1>
 						<h4>
 							{{ ::'library.by' | translate }}
-							<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.user.slug, id: collectionCtrl.user.id } )">
+							<a class="link-unstyled" ui-sref="profile.overview( { username: collectionCtrl.user.username } )">
 								{{ ::collectionCtrl.user.display_name }}
 							</a>
+							<small>@{{ ::collectionCtrl.user.username }}</small>
 						</h4>
 						<p class="text-muted small" translate translate-params-user="collectionCtrl.user.display_name">
 							library.collection.followed_descriptive_html
@@ -59,9 +60,10 @@
 						</h1>
 						<h4>
 							{{ ::'library.by' | translate }}
-							<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.user.slug, id: collectionCtrl.user.id } )">
+							<a class="link-unstyled" ui-sref="profile.overview( { username: collectionCtrl.user.username } )">
 								{{ ::collectionCtrl.user.display_name }}
 							</a>
+							<small>@{{ ::collectionCtrl.user.username }}</small>
 						</h4>
 						<p class="text-muted small" translate translate-params-user="collectionCtrl.user.display_name">
 							library.collection.developer_descriptive_html
@@ -79,9 +81,10 @@
 						<h1 translate>Games Owned</h1>
 						<h4>
 							<span translate>by</span>
-							<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.user.slug, id: collectionCtrl.user.id } )">
+							<a class="link-unstyled" ui-sref="profile.overview( { username: collectionCtrl.user.username } )">
 								{{ ::collectionCtrl.user.display_name }}
 							</a>
+							<small>@{{ ::collectionCtrl.user.username }}</small>
 						</h4>
 						<p class="text-muted small" translate translate-params-user="collectionCtrl.user.display_name">
 							These are all the games owned by {{ user }}.
@@ -99,9 +102,10 @@
 						<h1 translate>Game Recommendations</h1>
 						<h4>
 							<span translate>for</span>
-							<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.user.slug, id: collectionCtrl.user.id } )">
+							<a class="link-unstyled" ui-sref="profile.overview( { username: collectionCtrl.user.username } )">
 								{{ ::collectionCtrl.user.display_name }}
 							</a>
+							<small>@{{ ::collectionCtrl.user.username }}</small>
 						</h4>
 					</div>
 				</div>
@@ -109,17 +113,16 @@
 				<!-- Playlist -->
 				<!-- Don't bind once name since they can edit it. -->
 				<div ng-switch-when="playlist">
-					<h1
-						translate
-						translate-params-playlist="collectionCtrl.playlist.name"
-						>
-						library.collection.playlist_heading
+					<h1>
+						{{ collectionCtrl.playlist.name }}
 					</h1>
+
 					<h4 ng-if="::!collectionCtrl.isOwner">
 						{{ ::'library.by' | translate }}
-						<a class="link-unstyled" ui-sref="profile.overview( { slug: collectionCtrl.playlist.user.slug, id: collectionCtrl.playlist.user.id } )">
+						<a class="link-unstyled" ui-sref="profile.overview( { username: collectionCtrl.playlist.user.username } )">
 							{{ ::collectionCtrl.playlist.user.display_name }}
 						</a>
+						<small>@{{ ::collectionCtrl.playlist.user.username }}</small>
 					</h4>
 				</div>
 
