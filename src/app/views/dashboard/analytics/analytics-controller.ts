@@ -1,97 +1,142 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
-	$scope, $state, App, Api, Payload, Game, Game_Package, Game_Release, Graph, SiteAnalytics, gettextCatalog, payload )
-{
-	var _this = this;
+import { Injectable, Inject } from 'ng-metadata/core';
+import { App } from '../../../app-service';
 
+interface Metric
+{
+	key: string;
+	collection: string;
+	label: string;
+	type: 'number' | 'currency';
+	field?: string;
+}
+
+type MetricMap = { [k: string]: Metric };
+
+@Injectable()
+export class AnalyticsCtrl
+{
 	/**
 	 * When the page first loads we check the state params to make sure they are all filled in.
 	 * If they weren't, we change the URL. When this happens it'll replace the previous URL
 	 * unless we skip the replacement. After our initial params are bootstrapped it's fine to
 	 * replace the URL from there on out.
 	 */
-	var paramsBootstrapped = false;
+	private paramsBootstrapped = false;
 
-	App.title = gettextCatalog.getString( 'Analytics' );
+	static allMetrics: MetricMap = {};
+	static gameMetrics: MetricMap = {};
+	static packageMetrics: MetricMap = {};
+	static releaseMetrics: MetricMap = {};
 
-	this.games = Game.populate( payload.games );
-	this.breakdownReports = [];
+	games: any[];
+	breakdownReports: any[] = [];
 
-	var metrics = [
-		{
-			key: 'view',
-			collection: 'views',
-			label: gettextCatalog.getString( 'Views' ),
-			type: 'number',
-		},
-		{
-			key: 'download',
-			collection: 'downloads',
-			label: gettextCatalog.getString( 'Downloads' ),
-			type: 'number',
-		},
-		{
-			key: 'install',
-			collection: 'installs',
-			label: gettextCatalog.getString( 'Installs' ),
-			type: 'number',
-		},
-		{
-			key: 'comment',
-			collection: 'comments',
-			label: gettextCatalog.getString( 'Comments' ),
-			type: 'number',
-		},
-		{
-			key: 'rating',
-			collection: 'ratings',
-			label: gettextCatalog.getString( 'Ratings' ),
-			type: 'number',
-		},
-		{
-			key: 'follow',
-			collection: 'follows',
-			label: gettextCatalog.getString( 'Follows' ),
-			type: 'number',
-		},
-	];
+	period: 'all' | 'monthly';
+	resource: 'Game' | 'Game_Package' | 'Game_Release';
+	resourceId: number;
+	availableMetrics: MetricMap;
+	metric: Metric;
 
-	metrics.push( {
-		key: 'sale',
-		collection: 'sales',
-		label: gettextCatalog.getString( 'Sales' ),
-		type: 'number',
-	} );
-
-	metrics.push( {
-		key: 'revenue',
-		collection: 'sales',
-		label: gettextCatalog.getString( 'Revenue' ),
-		type: 'currency',
-		field: 'revenue',
-	} );
-
-	this.allMetrics = _.indexBy( metrics, 'key' );
-	var _gameMetrics = this.allMetrics;
-	var _packageMetrics = _( this.allMetrics ).pick( [ 'download' ] ).value();
-	var _releaseMetrics = _( this.allMetrics ).pick( [ 'download' ] ).value();
-
-	this.stateChanged = function( $stateParams )
+	constructor(
+		@Inject( 'App' ) app: App,
+		@Inject( '$scope' ) $scope: ng.IScope,
+		@Inject( '$state' ) $state: ng.ui.IStateService,
+		@Inject( 'Api' ) Api: any,
+		@Inject( 'Payload' ) Payload: any,
+		@Inject( 'Game' ) Game: any,
+		@Inject( 'Game_Package' ) Game_Package: any,
+		@Inject( 'Game_Release' ) Game_Release: any,
+		@Inject( 'Graph' ) Graph: any,
+		@Inject( 'SiteAnalytics' ) SiteAnalytics: any,
+		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject( 'payload' ) payload: any,
+	)
 	{
-		this.period = $stateParams.period || 'monthly';
-		this.resource = $stateParams.resource || 'Game';
-		this.resourceId = parseInt( $stateParams.resourceId, 10 ) || this.games[0].id;
+		app.title = gettextCatalog.getString( 'Analytics' );
+
+		this.games = Game.populate( payload.games );
+		this._init();
+	}
+
+	_init()
+	{
+		let metrics: Metric[] = [
+			{
+				key: 'view',
+				collection: 'views',
+				label: this.gettextCatalog.getString( 'Views' ),
+				type: 'number',
+			},
+			{
+				key: 'download',
+				collection: 'downloads',
+				label: this.gettextCatalog.getString( 'Downloads' ),
+				type: 'number',
+			},
+			{
+				key: 'install',
+				collection: 'installs',
+				label: this.gettextCatalog.getString( 'Installs' ),
+				type: 'number',
+			},
+			{
+				key: 'comment',
+				collection: 'comments',
+				label: this.gettextCatalog.getString( 'Comments' ),
+				type: 'number',
+			},
+			{
+				key: 'rating',
+				collection: 'ratings',
+				label: this.gettextCatalog.getString( 'Ratings' ),
+				type: 'number',
+			},
+			{
+				key: 'follow',
+				collection: 'follows',
+				label: this.gettextCatalog.getString( 'Follows' ),
+				type: 'number',
+			},
+		];
+
+		metrics.push( {
+			key: 'sale',
+			collection: 'sales',
+			label: this.gettextCatalog.getString( 'Sales' ),
+			type: 'number',
+		} );
+
+		metrics.push( {
+			key: 'revenue',
+			collection: 'sales',
+			label: this.gettextCatalog.getString( 'Revenue' ),
+			type: 'currency',
+			field: 'revenue',
+		} );
+
+		AnalyticsCtrl.allMetrics = _.indexBy( metrics, 'key' );
+		AnalyticsCtrl.gameMetrics = AnalyticsCtrl.allMetrics;
+		AnalyticsCtrl.packageMetrics = <MetricMap>_.pick( AnalyticsCtrl.allMetrics, 'download' );
+		AnalyticsCtrl.releaseMetrics = <MetricMap>_.pick( AnalyticsCtrl.allMetrics, 'download' );
+	}
+
+	stateChanged( $stateParams: ng.ui.IStateParamsService )
+	{
+		this.period = $stateParams['period'] || 'monthly';
+		this.resource = $stateParams['resource'] || 'Game';
+		this.resourceId = parseInt( $stateParams['resourceId'], 10 ) || this.games[0].id;
 
 		if ( this.resource == 'Game' ) {
-			this.availableMetrics = _gameMetrics;
-			this.metric = this.availableMetrics[ $stateParams.metricKey || 'view' ];
+			this.availableMetrics = AnalyticsCtrl.gameMetrics;
+			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'view' ];
 		}
 		else if ( this.resource == 'Game_Package' ) {
-			this.availableMetrics = _packageMetrics;
-			this.metric = this.availableMetrics[ $stateParams.metricKey || 'download' ];
+			this.availableMetrics = AnalyticsCtrl.packageMetrics;
+			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'download' ];
 		}
 		else if ( this.resource == 'Game_Release' ) {
-			this.availableMetrics = _releaseMetrics;
-			this.metric = this.availableMetrics[ $stateParams.metricKey || 'download' ];
+			this.availableMetrics = AnalyticsCtrl.releaseMetrics;
+			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'download' ];
 		}
 		else {
 			throw new Error( 'Invalid resource.' );
@@ -99,10 +144,10 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 
 		// If any of the parameters changed, refresh the state.
 		if (
-			this.period != $stateParams.period
-			|| this.metric.key != $stateParams.metricKey
-			|| this.resource != $stateParams.resource
-			|| this.resourceId != $stateParams.resourceId
+			this.period != $stateParams['period']
+			|| this.metric.key != $stateParams['metricKey']
+			|| this.resource != $stateParams['resource']
+			|| this.resourceId != $stateParams['resourceId']
 		) {
 			var options = {};
 			if ( paramsBootstrapped ) {
@@ -155,7 +200,16 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 			this.nextMonth = (new Date( year, month + 1, 1 )).getMonth();
 			this.nextYear = (new Date( year, month + 1, 1 )).getFullYear();
 		}
-	};
+	}
+}
+
+
+angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
+	$scope, $state, App, Api, Payload, Game, Game_Package, Game_Release, Graph, SiteAnalytics, gettextCatalog, payload )
+{
+
+
+
 
 	var globalWatch = [
 		'analyticsCtrl.period',
