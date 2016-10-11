@@ -133,7 +133,7 @@
 											>
 
 										<select class="no-animate-leave" form-control ng-if="formState.regions">
-											<option ng-repeat="region in ::formState.regions track by region.code" value="{{ ::region.code }}">
+											<option ng-repeat="region in formState.regions track by region.code" value="{{ ::region.code }}">
 												{{ region.name }}
 											</option>
 										</select>
