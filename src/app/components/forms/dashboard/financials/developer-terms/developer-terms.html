@@ -1,0 +1,63 @@
+<fieldset>
+
+	<legend>
+		<span ng-if="$ctrl.hasSignedDeveloperAgreement()" class="pull-right done-icon" tooltip="{{ 'You have completed this section.' | translate }}">
+			<span class="jolticon jolticon-check big"></span>
+		</span>
+		Developer Distribution Agreement
+	</legend>
+
+	<div ng-if="!$ctrl.hasSignedDeveloperAgreement()">
+
+		<!--
+			If they accepted a different agreement, then show that they can accept this one too.
+		-->
+		<div class="form-group" ng-if="$ctrl.hasSignedSomeAgreement() && !$ctrl.showAgreement">
+			<div class="small">
+				<div translate>If you would like to sell games on the Marketplace, you must accept the Distribution Agreement.</div>
+				<div>
+					<a class="link-help" ui-sref="landing.marketplace" translate>
+						Learn more
+					</a>
+				</div>
+			</div>
+			<br>
+
+			<button
+				class="btn btn-primary-outline"
+				ng-click="$ctrl.showAgreement = true"
+				>
+				Show Developer Distribution Agreement
+			</button>
+		</div>
+
+		<div class="form-group" ng-if="!$ctrl.hasSignedSomeAgreement() || $ctrl.showAgreement">
+			<div class="tos-scroller overlay-scrollbar overlay-scrollbar-light">
+				<div ng-include="'/app/components/forms/dashboard/financials/developer-terms/_distribution-agreement.html'"></div>
+			</div>
+			<br>
+
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" ng-model="$ctrl.checked">
+					By checking this box and clicking the button below marked "I Agree," I agree that I have read, understand, and agree to be bound by the terms of this agreement.
+				</label>
+			</div>
+			<br>
+
+			<button
+				class="btn btn-success-outline"
+				ng-disabled="!$ctrl.checked"
+				ng-click="$ctrl.accepted()"
+				>
+				I Agree
+			</button>
+		</div>
+
+	</div>
+
+	<div class="form-group" ng-if="$ctrl.hasSignedDeveloperAgreement()">
+		<p class="small">You have agreed to our <b>Distribution Agreement</b> on {{ $ctrl.account.tos_signed_developer_timestamp | date:'medium' }}.</p>
+	</div>
+
+</fieldset>
