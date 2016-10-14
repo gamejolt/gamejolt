@@ -24,7 +24,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		}
 
 		_this.game = game;
-		App.title = game.title + ' by ' + game.developer.display_name;
+		App.title = game.title + ' by ' + game.developer.display_name + ' (@' + game.developer.username + ')';
 	} );
 
 	$scope.$watch( 'gameCtrl.hasScores && gameCtrl.trophiesCount', function( val )
@@ -73,7 +73,10 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		Meta.description = payload.metaDescription;
 		Meta.fb = payload.fb;
 		Meta.twitter = payload.twitter;
-		this.microdata = payload.microdata ? JSON.stringify( payload.microdata ) : '{}';
+
+		if ( payload.microdata ) {
+			Meta.microdata = payload.microdata;
+		}
 
 		this.profileCount = payload.profileCount || 0;
 		this.downloadCount = payload.downloadCount || 0;

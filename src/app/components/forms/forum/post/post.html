@@ -1,6 +1,6 @@
 <form gj-form="formModel" name="forumPostForm">
 
-	<form-group class="no-animate" name="content_markdown" label="Post Content" hide-label="true">
+	<form-group class="no-animate" name="content_markdown" label="{{ 'Post Content' | translate }}" hide-label="true">
 
 		<div
 			form-markdown-editor
@@ -14,13 +14,13 @@
 
 	</form-group>
 
-	<button gj-form-submit-button class="btn" ng-disabled="!forumPostForm.$valid" ng-click="onSubmit()">
+	<button gj-form-submit-button class="btn btn-outline" ng-disabled="!forumPostForm.$valid" ng-click="onSubmit()">
 		<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
-		<span ng-if="method == 'add'">Add Reply</span>
-		<span ng-if="method == 'edit'">Save</span>
+		<span ng-if="method == 'add'" translate>Add Reply</span>
+		<span ng-if="method == 'edit'" translate>Save</span>
 	</button>
 
-	<button class="btn btn-danger-outline" ng-if="method == 'edit' || replyTo" ng-click="onCancel()">
+	<button class="btn btn-danger-outline" ng-if="method == 'edit' || replyTo" ng-click="onCancel()" translate>
 		Cancel
 	</button>
 

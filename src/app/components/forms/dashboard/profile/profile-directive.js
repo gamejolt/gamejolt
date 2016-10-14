@@ -1,4 +1,4 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardProfile', function( $window, Form, Api )
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardProfile', function( $window, Form, Api, Environment )
 {
 	var form = new Form( {
 		model: 'User',
@@ -10,6 +10,8 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardProfile', fun
 
 	form.onInit = function( scope )
 	{
+		scope.Environment = Environment;
+		
 		Api.sendRequest( '/web/dash/profile/save' ).then( function( payload )
 		{
 			scope.isLoaded = true;

@@ -2,6 +2,7 @@ import { App } from './../../../app-service';
 import { Injectable, Inject } from 'ng-metadata/core';
 import { Comment_Video } from './../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Youtube_Channel } from './../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
+import { Meta } from './../../../../lib/gj-lib-client/components/meta/meta-service';
 
 @Injectable()
 export class OverviewCtrl
@@ -13,21 +14,23 @@ export class OverviewCtrl
 	constructor(
 		@Inject( '$scope' ) $scope: any,
 		@Inject( 'App' ) app: App,
-		@Inject( 'Meta' ) meta: any,
+		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'Game' ) game: any,
 		@Inject( 'Comment_Video' ) commentVideo: typeof Comment_Video,
 		@Inject( 'Youtube_Channel' ) youtubeChannel: typeof Youtube_Channel,
 		@Inject( 'payload' ) payload: any
 	)
 	{
-		app.title = $scope.profileCtrl.user.display_name + ' - ';
+		let title = `${$scope.profileCtrl.user.display_name} (@${$scope.profileCtrl.user.username}) - `;
 
 		if ( $scope.profileCtrl.user.is_gamer ) {
-			app.title += 'An indie gamer';
+			title += 'An indie gamer';
 		}
 		else if ( $scope.profileCtrl.user.is_developer ) {
-			app.title += 'An indie game developer';
+			title += 'An indie game developer';
 		}
+
+		app.title = title;
 
 		meta.description = payload.metaDescription;
 		meta.fb = payload.fb || {};

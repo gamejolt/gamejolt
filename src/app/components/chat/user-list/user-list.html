@@ -23,6 +23,7 @@
 			<a ng-href="{{ ::ctrl.getUserProfileUrl( user ) }}"
 				ng-click="ctrl.onUserClick( user, $event )"
 				ng-class="::{ active: ctrl.showPm && Chat.client.room.id == user.roomId }"
+				title="{{ ::user.displayName }} (@{{ ::user.username }})"
 				>
 
 				<!--
@@ -70,6 +71,7 @@
 				<!--{{ user._trackId }}-->
 
 				<span>{{ ::user.displayName }}</span>
+				<span class="tiny">@{{ ::user.username }}</span>
 
 				<div class="chat-user-list-meta">
 

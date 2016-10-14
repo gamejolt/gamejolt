@@ -1,9 +1,11 @@
 import { provide } from 'ng-metadata/core';
+import List from './list/list';
 import Channel from './channel/channel';
-import { Channels_ViewHelper } from './channels-view-helper';
+import { ChannelsViewHelper } from './channels-view-helper';
 
 angular.module( 'App.Views.Channels', [
+	List,
 	Channel,
 ] )
-.service( ...provide( 'Channels_ViewHelper', { useClass: Channels_ViewHelper } ) )
+.service( ...provide( 'ChannelsViewHelper', { useClass: ChannelsViewHelper } ) )
 .name;

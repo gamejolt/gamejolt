@@ -53,6 +53,7 @@ import GameMediaBarModule from './components/game/media-bar/media-bar';
 import CommentAvatarListModule from './components/comment/avatar-list/avatar-list';
 import GameListingModule from './components/game/listing/listing';
 import ChannelsModule from './components/channel/channels';
+import ChannelThumbnailModule from './components/channel/thumbnail/thumbnail';
 import DevlogPostAddModule from './components/devlog/post/add/add';
 import DevlogPostEditModule from './components/devlog/post/edit/edit';
 import DevlogPostMediaModule from './components/devlog/post/media/media';
@@ -336,6 +337,7 @@ const AppModule = angular.module( 'App', [
 	CommentAvatarListModule,
 
 	ChannelsModule,
+	ChannelThumbnailModule,
 
 	'App.Game.Collection',
 	'App.Game.Collection.Thumbnail',

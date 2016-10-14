@@ -101,8 +101,9 @@
 				ng-class="{ active: $ctrl.items[ $ctrl.selected - 1 ] === user }"
 				ng-click="$ctrl.selectUser( user )"
 				>
-				<img ng-src="{{ ::user.img_avatar }}" class="search-user-avatar" alt="Avatar for {{ ::user.display_name }}">
+				<img ng-src="{{ ::user.img_avatar }}" class="search-user-avatar" alt="">
 				{{ ::user.display_name }}
+				<span class="tiny text-muted">@{{ ::user.username }}</span>
 			</a>
 		</div>
 	</div>

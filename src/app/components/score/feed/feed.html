@@ -6,10 +6,19 @@
 			<div gj-user-avatar="::(score.user.id ? score.user : null)"></div>
 		</div>
 		<div class="score-feed-content">
-			<div class="score-feed-title" title="{{ ::score.content.score }}">{{ ::score.content.score }}</div>
+			<div class="score-feed-title" title="{{ ::score.content.score }}">
+				{{ ::score.content.score }}
+			</div>
 			<div class="score-feed-user">
-				<a ng-if="::score.user.id" ng-href="{{ ::score.user.url }}">{{ ::score.user.display_name }}</a>
-				<span ng-if="::score.content.guest">{{ ::score.content.guest }}</span>
+				<span ng-if="::score.user.id">
+					<a ng-href="{{ ::score.user.url }}">
+						{{ ::score.user.display_name }}
+					</a>
+					@{{ ::score.user.username }}
+				</span>
+				<span ng-if="::score.content.guest">
+					{{ ::score.content.guest }}
+				</span>
 			</div>
 			<div class="score-feed-time" am-time-ago="::score.time"></div>
 		</div>

@@ -126,9 +126,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		Scroll.to( 'game-releases' );
 	}
 
-	function scrollToPackagePayment( package )
+	function scrollToPackagePayment( _package )
 	{
-		Scroll.to( 'game-package-card-' + package.id );
-		$scope.$broadcast( 'Game_Package_Card.showPaymentOptions', package );
+		Scroll.to( 'game-package-card-' + _package.id );
+		$scope.$broadcast( 'Game_Package_Card.showPaymentOptions', _package );
 	}
 } );
