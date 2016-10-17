@@ -177,7 +177,7 @@
 		<div ng-if="$ctrl.hasLoadedLikes">
 			<a
 				ng-repeat="like in $ctrl.likes track by like.id"
-				ui-sref="profile.overview( { slug: like.user.slug, id: like.user.id } )"
+				ui-sref="profile.overview( { username, like.user.username } )"
 				>
 				<gj-card>
 					<div style="width: 40px; height: 40px; float: left">
@@ -185,7 +185,10 @@
 					</div>
 					<div style="margin-left: 55px;">
 						<div class="card-title">
-							<h5>{{ ::like.user.display_name }}</h5>
+							<h5>
+								{{ ::like.user.display_name }}
+								<small>@{{ ::like.user.username }}</small>
+							</h5>
 						</div>
 					</div>
 				</gj-card>

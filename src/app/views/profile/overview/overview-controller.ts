@@ -21,14 +21,16 @@ export class OverviewCtrl
 		@Inject( 'payload' ) payload: any
 	)
 	{
-		app.title = $scope.profileCtrl.user.display_name + ' - ';
+		let title = `${$scope.profileCtrl.user.display_name} (@${$scope.profileCtrl.user.username}) - `;
 
 		if ( $scope.profileCtrl.user.is_gamer ) {
-			app.title += 'An indie gamer';
+			title += 'An indie gamer';
 		}
 		else if ( $scope.profileCtrl.user.is_developer ) {
-			app.title += 'An indie game developer';
+			title += 'An indie game developer';
 		}
+
+		app.title = title;
 
 		meta.description = payload.metaDescription;
 		meta.fb = payload.fb || {};

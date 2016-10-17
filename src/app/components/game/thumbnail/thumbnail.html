@@ -63,7 +63,11 @@
 		<div class="game-thumbnail-os">
 			<gj-game-compat-icons gj-game="::$ctrl.game"></gj-game-compat-icons>
 		</div>
-		<div class="game-thumbnail-dev" title="{{ ::$ctrl.game.developer.display_name }}">{{ ::$ctrl.game.developer.display_name }}</div>
-		<div class="game-thumbnail-title" title="{{ ::$ctrl.game.title }}">{{ ::$ctrl.game.title }}</div>
+		<div class="game-thumbnail-dev" title="{{ ::$ctrl.game.developer.display_name }} (@{{ ::$ctrl.game.developer.username }})">
+			{{ ::$ctrl.game.developer.display_name }}
+		</div>
+		<div class="game-thumbnail-title" title="{{ ::$ctrl.game.title }}">
+			{{ ::$ctrl.game.title }}
+		</div>
 	</div>
 </a>

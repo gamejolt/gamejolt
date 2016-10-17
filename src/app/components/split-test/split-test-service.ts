@@ -1,7 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 
 const EXPERIMENT_SIDE_NAV = 'split-side-nav';
-const EXPERIMENT_HOME_RECOMMENDATIONS = 'zZnhjH1MQYC6lOWaxPiSyA';
+const EXPERIMENT_HOME_NO_FEATURED = 'uGDFB84qSpGczkNb1Q_v0w';
 
 @Injectable()
 export class SplitTest
@@ -18,9 +18,9 @@ export class SplitTest
 		return this.getClientSideVariation( EXPERIMENT_SIDE_NAV ) == 1;
 	}
 
-	hasHomeRecommendations( payload: any )
+	hasHomeNoFeatured( payload: any )
 	{
-		return this.getPayloadVariation( payload, EXPERIMENT_HOME_RECOMMENDATIONS ) === 1;
+		return this.getPayloadVariation( payload, EXPERIMENT_HOME_NO_FEATURED ) === 1;
 	}
 
 	getPayloadVariation( payload: any, experiment: string ): number

@@ -6,7 +6,7 @@ angular.module( 'App.User.FriendshipsHelper' ).service( 'User_FriendshipsHelper'
 
 		return request.$save().then( function()
 		{
-			Growls.success( 'A friend request has been sent to ' + request.target_user.display_name + '. You\'ll be notified when they accept.', 'Request Sent' );
+			Growls.success( 'A friend request has been sent to @' + request.target_user.username + '. You\'ll be notified when they accept.', 'Request Sent' );
 			return $q.when( request );
 		} )
 		.catch( function()
@@ -19,7 +19,7 @@ angular.module( 'App.User.FriendshipsHelper' ).service( 'User_FriendshipsHelper'
 	{
 		return request.$accept().then( function()
 		{
-			Growls.success( 'You are now friends with ' + request.user.display_name + '!', 'Request Accepted' );
+			Growls.success( 'You are now friends with @' + request.user.username + '!', 'Request Accepted' );
 		} )
 		.catch( function()
 		{
@@ -31,11 +31,11 @@ angular.module( 'App.User.FriendshipsHelper' ).service( 'User_FriendshipsHelper'
 	{
 		return $q( function( resolve, reject )
 		{
-			ModalConfirm.show( 'Cancel the friend request you sent to ' + request.target_user.display_name + '?', null, 'yes' ).then( function()
+			ModalConfirm.show( 'Cancel the friend request you sent to @' + request.target_user.username + '?', null, 'yes' ).then( function()
 			{
 				request.$remove().then( function( response )
 				{
-					Growls.success( 'Your friend request to ' + request.target_user.display_name + ' was canceled.', 'Request Canceled' );
+					Growls.success( 'Your friend request to @' + request.target_user.username + ' was canceled.', 'Request Canceled' );
 					resolve( response );
 				} )
 				.catch( function( response )
@@ -56,11 +56,11 @@ angular.module( 'App.User.FriendshipsHelper' ).service( 'User_FriendshipsHelper'
 	{
 		return $q( function( resolve, reject )
 		{
-			ModalConfirm.show( 'Dismiss the friend request from ' + request.user.display_name + '?' ).then( function()
+			ModalConfirm.show( 'Dismiss the friend request from @' + request.user.username + '?' ).then( function()
 			{
 				request.$remove().then( function( response )
 				{
-					Growls.success( 'You have dismissed the friend request from ' + request.user.display_name + '.', 'Request Dismissed' );
+					Growls.success( 'You have dismissed the friend request from @' + request.user.username + '.', 'Request Dismissed' );
 					resolve( response );
 				} )
 				.catch( function( response )
@@ -83,11 +83,11 @@ angular.module( 'App.User.FriendshipsHelper' ).service( 'User_FriendshipsHelper'
 		{
 			var them = friendship.getThem( App.user );
 
-			ModalConfirm.show( 'Remove ' + them.display_name + ' as a friend?' ).then( function()
+			ModalConfirm.show( 'Remove @' + them.username + ' as a friend?' ).then( function()
 			{
 				friendship.$remove().then( function( response )
 				{
-					Growls.success( them.display_name + ' is no longer your friend.', 'Friend Removed' );
+					Growls.success( '@' + them.username + ' is no longer your friend.', 'Friend Removed' );
 					resolve( response );
 				} )
 				.catch( function( response )

@@ -50,7 +50,7 @@ angular.module( 'App.Chat' ).directive( 'gjChatUserList', function()
 			// We do it this way we can reduce watches and freeze the URL for the user.
 			this.getUserProfileUrl = function( user )
 			{
-				return $state.href( 'profile.overview', { slug: user.username, id: user.id } )
+				return $state.href( 'profile.overview', { username: user.username } )
 			};
 
 			this.onUserClick = function( user, $event )

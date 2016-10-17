@@ -12,10 +12,21 @@
 				ng-minlength="3"
 				ng-maxlength="30"
 				gj-pattern="username"
-				gj-form-validate-availability="/web/dash/profile/check-field-availability/username">
-
+				gj-form-validate-availability="/web/dash/profile/check-field-availability/username"
+				>
 			<control-errors></control-errors>
+
+			<p class="help-block">
+				{{ ::Environment.baseUrl }}/@{{ formModel.username }}
+			</p>
+
+			<div gj-expand-when="formModel.username != baseModel.username">
+				<div class="alert alert-info" translate>
+					Changing your username will change your public profile URL. Any current links to your old profile URL will not automatically redirect to your new profile URL.
+				</div>
+			</div>
 		</form-group>
+
 
 		<div class="form-group" ng-if="usernameTimeLeft">
 			<label class="control-label">{{ ::'dash.profile.edit.username_label' | translate }}</label>
@@ -24,23 +35,25 @@
 		</div>
 
 		<!-- Display Name -->
-		<form-group name="name"  label="{{ ::'dash.profile.edit.display_name_label' | translate }}" optional="true" ng-if="formModel.is_developer && !nameTimeLeft">
+		<form-group name="name"  label="{{ ::'dash.profile.edit.display_name_label' | translate }}" optional="true" ng-if="!nameTimeLeft">
 			<input form-control="text"
 				ng-maxlength="100"
-				gj-form-validate-availability="/web/dash/profile/check-field-availability/name">
-
+				gj-form-validate-availability="/web/dash/profile/check-field-availability/name"
+				>
 			<control-errors></control-errors>
-			<p class="help-block" translate>dash.profile.edit.display_name_help</p>
+			<p class="help-block" translate>
+				Your display name is an optional personal identifier (such as a company name or real name). Unlike usernames, display names can contain spaces and special characters.
+			</p>
 		</form-group>
 
-		<div class="form-group" ng-if="formModel.is_developer && nameTimeLeft">
+		<div class="form-group" ng-if="nameTimeLeft">
 			<label class="control-label">{{ ::'dash.profile.edit.display_name_label' | translate }}</label>
 			<p class="form-control-static">{{ ::formModel.name }}</p>
 			<p class="help-block" translate translate-params-duration="nameDuration">dash.profile.edit.display_name_time_left_html</p>
 		</div>
 
 		<!-- Web Site -->
-		<form-group name="web_site" label="{{ ::'dash.profile.edit.website_label' | translate }}" optional="true" ng-if="formModel.is_developer">
+		<form-group name="web_site" label="{{ ::'dash.profile.edit.website_label' | translate }}" optional="true">
 			<input form-control="url" ng-maxlength="250">
 			<control-errors></control-errors>
 		</form-group>

@@ -10,16 +10,22 @@
 					Installed Games
 				</a>
 			</li>
+			<li ng-if="!Connection.isClientOffline && libraryCtrl.developerCollection">
+				<a ui-sref="{{ ::libraryCtrl.developerCollection.getSref( true ) }}" ui-sref-active="active">
+					<span class="jolticon jolticon-user"></span>
+					{{ ::'library.nav.developer' | translate }}
+				</a>
+			</li>
 			<li ng-if="!Connection.isClientOffline">
 				<a ui-sref="{{ ::libraryCtrl.followedCollection.getSref( true ) }}" ui-sref-active="active">
 					<span class="jolticon jolticon-subscribe"></span>
 					{{ ::'library.nav.followed' | translate }}
 				</a>
 			</li>
-			<li ng-if="!Connection.isClientOffline && libraryCtrl.developerCollection">
-				<a ui-sref="{{ ::libraryCtrl.developerCollection.getSref( true ) }}" ui-sref-active="active">
-					<span class="jolticon jolticon-user"></span>
-					{{ ::'library.nav.developer' | translate }}
+			<li ng-if="!Connection.isClientOffline">
+				<a ui-sref="{{ ::libraryCtrl.recommendedCollection.getSref( true ) }}" ui-sref-active="active">
+					<span class="jolticon jolticon-pedestals-numbers"></span>
+					<span translate>Recommended Games</span>
 				</a>
 			</li>
 			<li ng-if="!Connection.isClientOffline">
@@ -98,7 +104,7 @@
 						<!-- Owner never changes, so bind once -->
 						<small ng-if="::collection.from_subscription">
 							{{ ::'library.by' | translate }}
-							{{ ::collection.owner.display_name }}
+							@{{ ::collection.owner.username }}
 						</small>
 					</a>
 				</li>

@@ -25,9 +25,10 @@
 			</h4>
 			<div class="forum-topic-list-item-author">
 				<span translate>by</span>
-				<a ui-sref="profile.overview( { slug: topic.user.slug, id: topic.user.id } )">
+				<a ui-sref="profile.overview( { username: topic.user.username } )">
 					{{ ::topic.user.display_name }}
 				</a>
+				<span class="tiny">@{{ ::topic.user.username }}</span>
 			</div>
 		</div>
 
@@ -50,7 +51,7 @@
 			</span>
 		</div>
 
-		<div class="col-md-3 text-muted text-right small" ng-if="Screen.isDesktop">
+		<div class="col-md-3 text-muted small" ng-if="Screen.isDesktop">
 			<div class="forum-topic-list-item-latest-post">
 				<div class="forum-topic-list-item-latest-post-avatar">
 					<div gj-user-avatar="::topic.latest_post.user"></div>
@@ -66,6 +67,9 @@
 							>
 							{{ ::topic.latest_post.user.display_name }}
 						</a>
+					</div>
+					<div class="text-muted">
+						@{{ ::topic.latest_post.user.username }}
 					</div>
 					<span class="forum-topic-list-item-latest-post-info-date" title="{{ ::topic.latest_post.posted_on | date:'medium' }}" am-time-ago="::topic.latest_post.posted_on"></span>
 				</div>

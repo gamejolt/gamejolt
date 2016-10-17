@@ -342,7 +342,7 @@ export class AutocompleteComponent implements OnInit
 
 	selectUser( user: any )
 	{
-		this.$state.go( 'profile.overview', { slug: user.slug, id: user.id } );
+		this.$state.go( 'profile.overview', { username: user.username } );
 		this.analytics.trackEvent( 'search', 'autocomplete', 'go-user' );
 	}
 
