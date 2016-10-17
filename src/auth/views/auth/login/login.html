@@ -9,6 +9,14 @@
 
 	<button class="i-button big block anim-fade-in-enlarge stagger"
 		ng-disabled="!Connection.isOnline"
+		ng-click="loginCtrl.linkedAccountLogin( 'google' )"
+		>
+		<span class="jolticon jolticon-google-plus"></span>
+		<span translate>Log In with Google+</span>
+	</button>
+
+	<button class="i-button big block anim-fade-in-enlarge stagger"
+		ng-disabled="!Connection.isOnline"
 		ng-click="loginCtrl.linkedAccountLogin( 'twitter' )"
 		>
 		<span class="jolticon jolticon-twitter"></span>
@@ -20,15 +28,7 @@
 		ng-click="loginCtrl.linkedAccountLogin( 'twitch' )"
 		>
 		<span class="jolticon jolticon-twitch"></span>
-		<span translate>auth.login.twitch_button</span>
-	</button>
-
-	<button class="i-button big block anim-fade-in-enlarge stagger"
-		ng-disabled="!Connection.isOnline"
-		ng-click="loginCtrl.linkedAccountLogin( 'google' )"
-		>
-		<span class="jolticon jolticon-google-plus"></span>
-		<span translate>Log In with Google+</span>
+		<span translate>Log In with Twitch</span>
 	</button>
 </div>
 
