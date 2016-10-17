@@ -7,22 +7,22 @@ angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Twitch.CallbackCtr
 
 		if ( payload.reason && payload.reason == 'no-email' ) {
 			Growls.error(
-				gettextCatalog.getString( 'auth.linked_account.twitch.no_email_growl' ),
-				gettextCatalog.getString( 'auth.linked_account.twitch.no_email_growl_title' )
+				gettextCatalog.getString( 'Your Twitch account did not return an email address. Make sure you have verified it with Twitch.' ),
+				gettextCatalog.getString( 'Oh no!' )
 			);
 			$state.go( 'auth.join' );
 		}
 		else if ( payload.reason && payload.reason == 'duplicate-email' ) {
 			Growls.error(
-				gettextCatalog.getString( 'auth.linked_account.twitch.duplicate_email_growl' ),
-				gettextCatalog.getString( 'auth.linked_account.twitch.duplicate_email_growl_title' )
+				gettextCatalog.getString( 'The email address on this Twitch account is already in use. Perhaps you already have an account?' ),
+				gettextCatalog.getString( 'Oh no!' )
 			);
 			$state.go( 'auth.login' );  // Go to login page instead.
 		}
 		else {
 			Growls.error(
-				gettextCatalog.getString( 'auth.linked_account.twitch.failed_growl' ),
-				gettextCatalog.getString( 'auth.linked_account.twitch.failed_growl_title' )
+				gettextCatalog.getString( 'Unable to log in with Twitch.' ),
+				gettextCatalog.getString( 'Login Failed' )
 			);
 			$state.go( 'auth.join' );
 		}
@@ -32,8 +32,8 @@ angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Twitch.CallbackCtr
 	// If a new account was created as part of the login.
 	if ( payload.accountCreated ) {
 		Growls.success(
-			gettextCatalog.getString( 'auth.linked_account.twitch.created_growl' ),
-			gettextCatalog.getString( 'auth.linked_account.twitch.created_growl_title' )
+			gettextCatalog.getString( "Your account has been created. It's smooth sailing from here on out!" ),
+			gettextCatalog.getString( 'Account Created' )
 		);
 	}
 

@@ -7,22 +7,22 @@ angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Google.CallbackCtr
 
 		if ( payload.reason && payload.reason == 'no-email' ) {
 			Growls.error(
-				gettextCatalog.getString( 'auth.linked_account.google.no_email_growl' ),
-				gettextCatalog.getString( 'auth.linked_account.google.no_email_growl_title' )
+				gettextCatalog.getString( 'Your Google+ account did not return an email address. Make sure you have verified it with Google.' ),
+				gettextCatalog.getString( 'Oh no!' )
 			);
 			$state.go( 'auth.join' );
 		}
 		else if ( payload.reason && payload.reason == 'duplicate-email' ) {
 			Growls.error(
-				gettextCatalog.getString( 'auth.linked_account.google.duplicate_email_growl' ),
-				gettextCatalog.getString( 'auth.linked_account.google.duplicate_email_growl_title' )
+				gettextCatalog.getString( 'The email address on this Google+ account is already in use. Perhaps you already have an account?' ),
+				gettextCatalog.getString( 'Oh no!' )
 			);
 			$state.go( 'auth.login' );  // Go to login page instead.
 		}
 		else {
 			Growls.error(
-				gettextCatalog.getString( 'auth.linked_account.google.failed_growl' ),
-				gettextCatalog.getString( 'auth.linked_account.google.failed_growl_title' )
+				gettextCatalog.getString( 'Unable to log in with Google+.' ),
+				gettextCatalog.getString( 'Login Failed' )
 			);
 			$state.go( 'auth.join' );
 		}
@@ -32,8 +32,8 @@ angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Google.CallbackCtr
 	// If a new account was created as part of the login.
 	if ( payload.accountCreated ) {
 		Growls.success(
-			gettextCatalog.getString( 'auth.linked_account.google.created_growl' ),
-			gettextCatalog.getString( 'auth.linked_account.google.created_growl_title' )
+			gettextCatalog.getString( "Your account has been created. It's smooth sailing from here on out!" ),
+			gettextCatalog.getString( 'Account Created' )
 		);
 	}
 
