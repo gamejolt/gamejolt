@@ -88,6 +88,7 @@
 						<div class="col-sm-6 col-md-12">
 							<div ng-if="::(
 								profileCtrl.user.facebook_id
+								|| profileCtrl.user.twitch_id
 								|| profileCtrl.user.twitter_id
 								|| profileCtrl.user.google_id
 								|| profileCtrl.user.web_site
@@ -123,6 +124,17 @@
 										>
 										<span class="jolticon jolticon-google-plus"></span>
 										{{ profileCtrl.user.google_nickname }}
+									</a>
+								</div>
+
+								<div ng-if="::profileCtrl.user.twitch_id">
+									<a
+										class="link-unstyled"
+										target="_blank"
+										ng-href="https://twitch.tv/{{ ::profileCtrl.user.twitch_name }}"
+										>
+										<span class="jolticon jolticon-twitch"></span>
+										{{ profileCtrl.user.twitch_name }}
 									</a>
 								</div>
 

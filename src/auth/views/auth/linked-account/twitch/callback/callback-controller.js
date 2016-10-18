@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Google.CallbackCtrl', function( $state, $window, App, Growls, gettextCatalog, payload )
+angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Twitch.CallbackCtrl', function( $state, $window, App, Growls, gettextCatalog, payload )
 {
 	/**
 	 * We do this in the controller so that we can show a processing message, just in case it takes a little bit.
@@ -7,21 +7,21 @@ angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.Google.CallbackCtr
 
 		if ( payload.reason && payload.reason == 'no-email' ) {
 			Growls.error(
-				gettextCatalog.getString( 'Your Google+ account did not return an email address. Make sure you have verified it with Google.' ),
+				gettextCatalog.getString( 'Your Twitch account did not return an email address. Make sure you have verified it with Twitch.' ),
 				gettextCatalog.getString( 'Oh no!' )
 			);
 			$state.go( 'auth.join' );
 		}
 		else if ( payload.reason && payload.reason == 'duplicate-email' ) {
 			Growls.error(
-				gettextCatalog.getString( 'The email address on this Google+ account is already in use. Perhaps you already have an account?' ),
+				gettextCatalog.getString( 'The email address on this Twitch account is already in use. Perhaps you already have an account?' ),
 				gettextCatalog.getString( 'Oh no!' )
 			);
 			$state.go( 'auth.login' );  // Go to login page instead.
 		}
 		else {
 			Growls.error(
-				gettextCatalog.getString( 'Unable to log in with Google+.' ),
+				gettextCatalog.getString( 'Unable to log in with Twitch.' ),
 				gettextCatalog.getString( 'Login Failed' )
 			);
 			$state.go( 'auth.join' );
