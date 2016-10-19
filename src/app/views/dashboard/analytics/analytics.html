@@ -149,7 +149,7 @@
 		</div>
 	</section>
 
-	<div ng-if="analyticsCtrl.breakdownReports.length">
+	<div ng-if="analyticsCtrl.pageReports.length">
 
 		<hr>
 
@@ -161,7 +161,7 @@
 
 						<nav class="platform-list" gj-scroll-affix>
 							<ul>
-								<li ng-repeat="report in analyticsCtrl.breakdownReports track by $index"
+								<li ng-repeat="report in analyticsCtrl.pageReports track by $index"
 									class="no-animate-leave"
 									>
 									<a ng-href="#report-{{ $index }}" du-smooth-scroll du-scrollspy>
@@ -174,7 +174,7 @@
 					</div>
 					<div class="col-md-9">
 
-						<div ng-repeat="report in analyticsCtrl.breakdownReports track by $index" id="report-{{ $index }}">
+						<div ng-repeat="report in analyticsCtrl.pageReports track by $index" id="report-{{ $index }}">
 
 							<h2 ng-class="{ 'section-header': $first }">
 								{{ report.title }}
@@ -183,23 +183,23 @@
 							<gj-loading ng-if="!report.isLoaded"></gj-loading>
 
 							<div ng-if="report.isLoaded" class="row">
-								<div ng-repeat="row in report.rows track by $index">
+								<div ng-repeat="component in report.components track by $index">
 
 									<gj-analytics-report-simple-stat
-										ng-if="row.type == 'sum' || row.type == 'average'"
-										report-data="row"
+										ng-if="component.type == 'sum' || component.type == 'average'"
+										report-data="component"
 										>
 									</gj-analytics-report-simple-stat>
 
 									<gj-analytics-report-top-composition
-										ng-if="row.type == 'top-composition'"
-										report-data="row"
+										ng-if="component.type == 'top-composition'"
+										report-data="component"
 										>
 									</gj-analytics-report-top-composition>
 
 									<gj-analytics-report-rating-breakdown
-										ng-if="row.type == 'rating-breakdown'"
-										report-data="row"
+										ng-if="component.type == 'rating-breakdown'"
+										report-data="component"
 										>
 									</gj-analytics-report-rating-breakdown>
 

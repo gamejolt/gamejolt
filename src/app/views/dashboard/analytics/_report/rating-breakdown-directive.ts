@@ -1,6 +1,11 @@
-angular.module( 'App.Views' ).component( 'gjAnalyticsReportRatingBreakdown', {
-	templateUrl: '/app/views/dashboard/analytics/_report/rating-breakdown.html',
-	bindings: {
-		reportData: '<',
-	},
-} );
+import { Component, Input } from 'ng-metadata/core';
+import template from 'html!./rating-breakdown.html';
+
+@Component({
+	selector: 'gj-analytics-report-rating-breakdown',
+	template,
+})
+export class RatingBreakdownComponent
+{
+	@Input( '<' ) reportData: any;
+}

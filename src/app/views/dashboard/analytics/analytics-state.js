@@ -23,7 +23,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		params: {
 			period: {
 				value: '',
-				squash: true,
+				// squash: true,
 			},
 			resource: {
 				value: '',

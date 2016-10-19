@@ -1,6 +1,11 @@
-angular.module( 'App.Views' ).component( 'gjAnalyticsReportTopComposition', {
-	templateUrl: '/app/views/dashboard/analytics/_report/top-composition.html',
-	bindings: {
-		reportData: '<',
-	},
-} );
+import { Component, Input } from 'ng-metadata/core';
+import template from 'html!./top-composition.html';
+
+@Component({
+	selector: 'gj-analytics-report-top-composition',
+	template,
+})
+export class TopCompositionComponent
+{
+	@Input( '<' ) reportData: any;
+}

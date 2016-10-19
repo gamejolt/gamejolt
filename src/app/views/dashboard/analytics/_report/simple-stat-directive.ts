@@ -1,6 +1,11 @@
-angular.module( 'App.Views' ).component( 'gjAnalyticsReportSimpleStat', {
-	templateUrl: '/app/views/dashboard/analytics/_report/simple-stat.html',
-	bindings: {
-		reportData: '<',
-	},
-} );
+import { Component, Input } from 'ng-metadata/core';
+import template from 'html!./simple-stat.html';
+
+@Component({
+	selector: 'gj-analytics-report-simple-stat',
+	template,
+})
+export class SimpleStatComponent
+{
+	@Input( '<' ) reportData: any;
+}

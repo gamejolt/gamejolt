@@ -1,16 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from '../../../app-service';
-
-interface Metric
-{
-	key: string;
-	collection: string;
-	label: string;
-	type: 'number' | 'currency';
-	field?: string;
-}
-
-type MetricMap = { [k: string]: Metric };
+import { MetricMap, Metric, SiteAnalytics, ResourceName, ReportComponent, ReportTopSources, ReportReferringPages, ReportCountries, ReportOs, ReportCommentLanguages, ReportRatingBreakdown, ReportDevRevenue } from '../../../components/site-analytics/site-analytics-service';
+import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
 
 @Injectable()
 export class AnalyticsCtrl
@@ -23,101 +14,91 @@ export class AnalyticsCtrl
 	 */
 	private paramsBootstrapped = false;
 
-	static allMetrics: MetricMap = {};
-	static gameMetrics: MetricMap = {};
-	static packageMetrics: MetricMap = {};
-	static releaseMetrics: MetricMap = {};
-
 	games: any[];
-	breakdownReports: any[] = [];
+	game?: any;
+	package?: any;
+	release?: any;
+
+	pageReports: SiteAnalyticsReport[] = [];
 
 	period: 'all' | 'monthly';
-	resource: 'Game' | 'Game_Package' | 'Game_Release';
+	resource: ResourceName;
 	resourceId: number;
 	availableMetrics: MetricMap;
 	metric: Metric;
 
+	now: number;
+	startTime?: number;
+	endTime?: number;
+	prevMonth?: number;
+	prevYear?: number;
+	nextMonth?: number;
+	nextYear?: number;
+
 	constructor(
 		@Inject( 'App' ) app: App,
-		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( '$state' ) $state: ng.ui.IStateService,
-		@Inject( 'Api' ) Api: any,
-		@Inject( 'Payload' ) Payload: any,
-		@Inject( 'Game' ) Game: any,
-		@Inject( 'Game_Package' ) Game_Package: any,
-		@Inject( 'Game_Release' ) Game_Release: any,
-		@Inject( 'Graph' ) Graph: any,
-		@Inject( 'SiteAnalytics' ) SiteAnalytics: any,
+		@Inject( '$scope' ) private $scope: ng.IScope,
+		@Inject( '$state' ) private $state: ng.ui.IStateService,
+		@Inject( 'Api' ) private Api: any,
+		@Inject( 'Game' ) private Game: any,
+		@Inject( 'Game_Package' ) private Game_Package: any,
+		@Inject( 'Game_Release' ) private Game_Release: any,
+		@Inject( 'SiteAnalytics' ) private analytics: SiteAnalytics,
+		@Inject( 'SiteAnalyticsReport' ) private reportModel: typeof SiteAnalyticsReport,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any,
 	)
 	{
 		app.title = gettextCatalog.getString( 'Analytics' );
-
 		this.games = Game.populate( payload.games );
 		this._init();
 	}
 
 	_init()
 	{
-		let metrics: Metric[] = [
-			{
-				key: 'view',
-				collection: 'views',
-				label: this.gettextCatalog.getString( 'Views' ),
-				type: 'number',
-			},
-			{
-				key: 'download',
-				collection: 'downloads',
-				label: this.gettextCatalog.getString( 'Downloads' ),
-				type: 'number',
-			},
-			{
-				key: 'install',
-				collection: 'installs',
-				label: this.gettextCatalog.getString( 'Installs' ),
-				type: 'number',
-			},
-			{
-				key: 'comment',
-				collection: 'comments',
-				label: this.gettextCatalog.getString( 'Comments' ),
-				type: 'number',
-			},
-			{
-				key: 'rating',
-				collection: 'ratings',
-				label: this.gettextCatalog.getString( 'Ratings' ),
-				type: 'number',
-			},
-			{
-				key: 'follow',
-				collection: 'follows',
-				label: this.gettextCatalog.getString( 'Follows' ),
-				type: 'number',
-			},
+		// When resource changes.
+		this.$scope.$watchGroup( [ 'analyticsCtrl.resource', 'analyticsCtrl.resourceId' ], () =>
+		{
+			this.Api.sendRequest( '/web/dash/analytics/get-resource/' + this.resource + '/' + this.resourceId )
+				.then( ( payload: any ) =>
+				{
+					this.game = payload.game ? new this.Game( payload.game ) : null;
+					this.package = payload.package ? new this.Game_Package( payload.package ) : null;
+					this.release = payload.release ? new this.Game_Release( payload.release ) : null;
+				} );
+		} );
+
+		// Only the fields that can affect histograms.
+		const globalWatch = [
+			'analyticsCtrl.period',
+			'analyticsCtrl.resource',
+			'analyticsCtrl.resourceId',
+			'analyticsCtrl.startTime',
+			'analyticsCtrl.endTime',
 		];
 
-		metrics.push( {
-			key: 'sale',
-			collection: 'sales',
-			label: this.gettextCatalog.getString( 'Sales' ),
-			type: 'number',
+		this.$scope.$watchGroup( globalWatch, () =>
+		{
+			if ( this.resource && this.resourceId ) {
+				if ( this.period == 'all' ) {
+					this.counts();
+				}
+				else if ( this.period == 'monthly' ) {
+					this.histograms();
+				}
+			}
 		} );
 
-		metrics.push( {
-			key: 'revenue',
-			collection: 'sales',
-			label: this.gettextCatalog.getString( 'Revenue' ),
-			type: 'currency',
-			field: 'revenue',
+		// Only the fields that can affect report breakdowns.
+		this.$scope.$watchGroup( globalWatch.concat( [
+			'analyticsCtrl.metric.key',
+		] ),
+		() =>
+		{
+			if ( this.period && this.resource && this.resourceId && this.metric ) {
+				this.reportChanged();
+			}
 		} );
-
-		AnalyticsCtrl.allMetrics = _.indexBy( metrics, 'key' );
-		AnalyticsCtrl.gameMetrics = AnalyticsCtrl.allMetrics;
-		AnalyticsCtrl.packageMetrics = <MetricMap>_.pick( AnalyticsCtrl.allMetrics, 'download' );
-		AnalyticsCtrl.releaseMetrics = <MetricMap>_.pick( AnalyticsCtrl.allMetrics, 'download' );
 	}
 
 	stateChanged( $stateParams: ng.ui.IStateParamsService )
@@ -127,15 +108,15 @@ export class AnalyticsCtrl
 		this.resourceId = parseInt( $stateParams['resourceId'], 10 ) || this.games[0].id;
 
 		if ( this.resource == 'Game' ) {
-			this.availableMetrics = AnalyticsCtrl.gameMetrics;
+			this.availableMetrics = this.analytics.gameMetrics;
 			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'view' ];
 		}
 		else if ( this.resource == 'Game_Package' ) {
-			this.availableMetrics = AnalyticsCtrl.packageMetrics;
+			this.availableMetrics = this.analytics.packageMetrics;
 			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'download' ];
 		}
 		else if ( this.resource == 'Game_Release' ) {
-			this.availableMetrics = AnalyticsCtrl.releaseMetrics;
+			this.availableMetrics = this.analytics.releaseMetrics;
 			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'download' ];
 		}
 		else {
@@ -149,46 +130,46 @@ export class AnalyticsCtrl
 			|| this.resource != $stateParams['resource']
 			|| this.resourceId != $stateParams['resourceId']
 		) {
-			var options = {};
-			if ( paramsBootstrapped ) {
+			let options = {};
+			if ( this.paramsBootstrapped ) {
 				options = { location: 'replace' };
 			}
 
-			var stateParams = _.pick( this, [ 'period', 'resource', 'resourceId' ] );
+			let stateParams: any = _.pick( this, [ 'period', 'resource', 'resourceId' ] );
 			stateParams.metricKey = this.metric.key;
 
-			$state.go(
+			this.$state.go(
 				'dashboard.analytics.view',
 				stateParams,
-				options
+				options,
 			);
 
-			paramsBootstrapped = true;
+			this.paramsBootstrapped = true;
 			return;
 		}
 
-		paramsBootstrapped = true;
+		this.paramsBootstrapped = true;
 
 		this.now = Date.now();
-		this.startTime = null;
-		this.endTime = null;
+		this.startTime = undefined;
+		this.endTime = undefined;
 
-		this.prevMonth = null;
-		this.prevYear = null;
+		this.prevMonth = undefined;
+		this.prevYear = undefined;
 
-		this.nextMonth = null;
-		this.nextYear = null;
+		this.nextMonth = undefined;
+		this.nextYear = undefined;
 		if ( this.period == 'monthly' ) {
 
-			var date = new Date();
-			var year, month;
-			if ( !$stateParams.year || !$stateParams.month ) {
+			const date = new Date();
+			let year: number, month: number;
+			if ( !$stateParams['year'] || !$stateParams['month'] ) {
 				year = date.getFullYear();
 				month = date.getMonth();
 			}
 			else {
-				year = parseInt( $stateParams.year, 10 );
-				month = parseInt( $stateParams.month, 10 );
+				year = parseInt( $stateParams['year'], 10 );
+				month = parseInt( $stateParams['month'], 10 );
 			}
 
 			this.startTime = (new Date( year, month, 1 )).getTime();
@@ -201,85 +182,26 @@ export class AnalyticsCtrl
 			this.nextYear = (new Date( year, month + 1, 1 )).getFullYear();
 		}
 	}
-}
 
-
-angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
-	$scope, $state, App, Api, Payload, Game, Game_Package, Game_Release, Graph, SiteAnalytics, gettextCatalog, payload )
-{
-
-
-
-
-	var globalWatch = [
-		'analyticsCtrl.period',
-		'analyticsCtrl.resource',
-		'analyticsCtrl.resourceId',
-		'analyticsCtrl.startTime',
-		'analyticsCtrl.endTime',
-	];
-
-	$scope.$watchGroup( [ 'analyticsCtrl.resource', 'analyticsCtrl.resourceId' ], function()
+	histograms()
 	{
-		Api.sendRequest( '/web/dash/analytics/get-resource/' + _this.resource + '/' + _this.resourceId )
-			.then( function( _payload )
-			{
-				_this.game = _payload.game ? new Game( _payload.game ) : null;
-				_this.package = _payload.package ? new Game_Package( _payload.package ) : null;
-				_this.release = _payload.release ? new Game_Release( _payload.release ) : null;
-			} );
-	} );
-
-	// Only the fields that can affect histograms.
-	$scope.$watchGroup( globalWatch, function()
-	{
-		if ( _this.resource && _this.resourceId ) {
-			if ( _this.period == 'all' ) {
-				_this.counts();
-			}
-			else if ( _this.period == 'monthly' ) {
-				_this.histograms();
-			}
-		}
-	} );
-
-	// Only the fields that can affect report breakdowns.
-	$scope.$watchGroup( globalWatch.concat( [
-		'analyticsCtrl.metric.key',
-	] ),
-	function()
-	{
-		if ( _this.period && _this.resource && _this.resourceId && _this.metric ) {
-			_this._reportChanged( _this.metric );
-		}
-	} );
-
-	this.histograms = function()
-	{
-		return SiteAnalytics.getHistogram( _this.resource, _this.resourceId, this.availableMetrics, [ this.startTime, this.endTime ] )
-			.then( function( data )
-			{
-				angular.extend( _this, data );
-			} );
-	};
-
-	this.counts = function()
-	{
-		return SiteAnalytics.getCount( _this.resource, _this.resourceId, this.availableMetrics )
-			.then( function( data )
-			{
-				angular.extend( _this, data );
-			} );
-	};
-
-	this.getReport = function( title )
-	{
-		var rows = [];
-		for ( var i = 1; i < arguments.length; ++i ) {
-			rows.push( arguments[ i ] );
+		if ( !this.startTime || !this.endTime ) {
+			throw new Error( 'Dates required to get histograms.' );
 		}
 
-		var report = SiteAnalytics.getReport( title, rows, {
+		return this.analytics.getHistogram( this.resource, this.resourceId, this.availableMetrics, [ this.startTime, this.endTime ] )
+			.then( ( data: any ) => angular.extend( this, data ) );
+	}
+
+	counts()
+	{
+		return this.analytics.getCount( this.resource, this.resourceId, this.availableMetrics )
+			.then( ( data: any ) => angular.extend( this, data ) );
+	}
+
+	getReport( title: string, ...components: ReportComponent[] )
+	{
+		const report = new this.reportModel( title, components, {
 			resource: this.resource,
 			resourceId: this.resourceId,
 			metric: this.metric,
@@ -287,108 +209,62 @@ angular.module( 'App.Views' ).controller( 'Dashboard.AnalyticsCtrl', function(
 			endTime: this.endTime,
 		} );
 
-		this.breakdownReports.push( report );
-	};
+		this.pageReports.push( report );
+	}
 
-	this._reportChanged = function()
+	private reportChanged()
 	{
-		this.breakdownReports = [];
-
-		// Common report types.
-		var TYPE_SOURCE = {
-			type: 'top-composition',
-			field: 'source',
-			fieldLabel: 'Domain',
-		};
-
-		var TYPE_REFERRERS = {
-			type: 'top-composition',
-			field: 'source_url',
-			fieldLabel: 'Page',
-		};
-
-		var TYPE_COUNTRIES = {
-			type: 'top-composition',
-			field: 'country',
-			fieldLabel: 'Country',
-		};
-
-		var TYPE_OS = {
-			type: 'top-composition',
-			field: 'os',
-			fieldLabel: 'OS',
-		};
+		this.pageReports = [];
 
 		switch ( this.metric.key ) {
 			case 'view': {
-				this.getReport( 'Top Sources', TYPE_SOURCE );
-				this.getReport( 'Referring Pages', TYPE_REFERRERS );
-				this.getReport( 'Countries', TYPE_COUNTRIES );
+				this.getReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
+				this.getReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
+				this.getReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 				break;
 			}
 
 			case 'download': {
-				this.getReport( 'Operating Systems', TYPE_OS );
-				this.getReport( 'Top Sources', TYPE_SOURCE );
-				this.getReport( 'Referring Pages', TYPE_REFERRERS );
-				this.getReport( 'Countries', TYPE_COUNTRIES );
+				this.getReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+				this.getReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
+				this.getReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
+				this.getReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 				break;
 			}
 
 			case 'install': {
-				this.getReport( 'Operating Systems', TYPE_OS );
-				this.getReport( 'Countries', TYPE_COUNTRIES );
+				this.getReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+				this.getReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 				break;
 			}
 
 			case 'comment': {
-				this.getReport( 'Languages', {
-					type: 'top-composition',
-					field: 'comment_language',
-					fieldLabel: 'Language',
-				} );
+				this.getReport( this.gettextCatalog.getString( 'Languages' ), ...ReportCommentLanguages );
 				break;
 			}
 
 			case 'rating': {
-				this.getReport( 'Rating Breakdown', {
-					type: 'rating-breakdown',
-					field: 'rating',
-					fieldLabel: 'Rating',
-				} );
+				this.getReport( this.gettextCatalog.getString( 'Rating Breakdown' ), ...ReportRatingBreakdown );
 				break;
 			}
 
 			case 'follow': {
-				this.getReport( 'Countries', TYPE_COUNTRIES );
+				this.getReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 				break;
 			}
 
 			case 'sale': {
-				this.getReport( 'Top Sources', TYPE_SOURCE );
-				this.getReport( 'Referring Pages', TYPE_REFERRERS );
-				this.getReport( 'Countries', TYPE_COUNTRIES );
-				this.getReport( 'Operating Systems', TYPE_OS );
+				this.getReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
+				this.getReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
+				this.getReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+				this.getReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
 				break;
 			}
 
 			case 'revenue': {
-				this.getReport( 'Revenue Stats',
-					{
-						type: 'sum',
-						field: 'revenue',
-						fieldLabel: 'Total Revenue',
-						fieldType: 'currency',
-					},
-					{
-						type: 'average',
-						field: 'donation',
-						fieldLabel: 'Average Support',
-						fieldType: 'currency',
-					}
-				);
+				this.getReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
 				break;
 			}
 		}
-	};
-} );
+	}
+}
