@@ -96,7 +96,7 @@ export class AnalyticsCtrl
 		() =>
 		{
 			if ( this.period && this.resource && this.resourceId && this.metric ) {
-				this.reportChanged();
+				this.metricChanged();
 			}
 		} );
 	}
@@ -199,7 +199,7 @@ export class AnalyticsCtrl
 			.then( ( data: any ) => angular.extend( this, data ) );
 	}
 
-	getReport( title: string, ...components: ReportComponent[] )
+	pullReport( title: string, ...components: ReportComponent[] )
 	{
 		const report = new this.reportModel( title, components, {
 			resource: this.resource,
@@ -212,57 +212,57 @@ export class AnalyticsCtrl
 		this.pageReports.push( report );
 	}
 
-	private reportChanged()
+	private metricChanged()
 	{
 		this.pageReports = [];
 
 		switch ( this.metric.key ) {
 			case 'view': {
-				this.getReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
-				this.getReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
-				this.getReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+				this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
+				this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
+				this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 				break;
 			}
 
 			case 'download': {
-				this.getReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
-				this.getReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
-				this.getReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
-				this.getReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+				this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+				this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
+				this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
+				this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 				break;
 			}
 
 			case 'install': {
-				this.getReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
-				this.getReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+				this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+				this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 				break;
 			}
 
 			case 'comment': {
-				this.getReport( this.gettextCatalog.getString( 'Languages' ), ...ReportCommentLanguages );
+				this.pullReport( this.gettextCatalog.getString( 'Languages' ), ...ReportCommentLanguages );
 				break;
 			}
 
 			case 'rating': {
-				this.getReport( this.gettextCatalog.getString( 'Rating Breakdown' ), ...ReportRatingBreakdown );
+				this.pullReport( this.gettextCatalog.getString( 'Rating Breakdown' ), ...ReportRatingBreakdown );
 				break;
 			}
 
 			case 'follow': {
-				this.getReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+				this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 				break;
 			}
 
 			case 'sale': {
-				this.getReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
-				this.getReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
-				this.getReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-				this.getReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+				this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
+				this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
+				this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+				this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
 				break;
 			}
 
 			case 'revenue': {
-				this.getReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
+				this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
 				break;
 			}
 		}
