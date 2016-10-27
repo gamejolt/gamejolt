@@ -1,5 +1,5 @@
 import { Injectable } from 'ng-metadata/core';
-import { ReportComponent, ReportAnalyzer, Request } from './site-analytics-service';
+import { ReportComponent, Request, ResourceName, Analyzer, Collection, Field, Condition, FetchField, ResourceFields } from './site-analytics-service';
 
 export function ReportFactory( $q: any, Api: any, Geo: any, gettextCatalog: any )
 {
@@ -21,16 +21,21 @@ export class SiteAnalyticsReport
 	static Geo: any;
 	static gettextCatalog: ng.gettext.gettextCatalog;
 
-	constructor( public title: string, public components: ReportComponent[], requestData: any )
+	constructor( public title: string, public components: ReportComponent[], resource: ResourceName, resourceId: number, collection: Collection, startTime: number | undefined, endTime: number | undefined )
 	{
 		const promises = this.components.map( ( component ) =>
 		{
-			let conditions: string[] | undefined;
+			let analyzer = component.type;
+			if ( analyzer == 'rating-breakdown' ) {
+				analyzer = 'top-composition';
+			}
+
+			let conditions: Condition[] | undefined;
 			if ( component.field == 'source_url' ) {
 				conditions = [ 'source-external' ];
 			}
 
-			return this.sendComponentRequest( component.type, component.field, requestData, conditions );
+			return this.sendComponentRequest( resource, resourceId, collection, analyzer, component.field, conditions, component.fetchFields, component.resourceFields, startTime, endTime );
 		} );
 
 		SiteAnalyticsReport.$q.all( promises )
@@ -40,7 +45,7 @@ export class SiteAnalyticsReport
 
 				this.components.forEach( ( component, i ) =>
 				{
-					let response = this.processComponentResponse( component.field, componentResponses[ i ].data );
+					let response = this.processComponentResponse( component, componentResponses[ i ].data, componentResponses[ i ].gathers );
 
 					component.data = response.result;
 					component.graph = response.graph;
@@ -56,88 +61,126 @@ export class SiteAnalyticsReport
 			} );
 	}
 
-	private sendComponentRequest( type: ReportAnalyzer, field: string, requestData: any, conditions?: string[] )
+	private sendComponentRequest( resource: ResourceName, resourceId: number, collection: Collection, analyzer: Analyzer, field: Field, conditions: Condition[] | undefined, fetchFields: FetchField[] | undefined, resourceFields: ResourceFields | undefined, startTime: number | undefined, endTime: number | undefined )
 	{
-		let analyzer = type;
-		if ( type == 'rating-breakdown' ) {
-			analyzer = 'top-composition';
-		}
-
-		let request: { data: Request } = {
-			data: {
-				target: requestData.resource,
-				target_id: requestData.resourceId,
-				collection: requestData.metric.collection,
-				analyzer: analyzer,
-				field: field,
-			},
+		const request: Request = {
+			target: resource,
+			target_id: resourceId,
+			collection: collection,
+			analyzer: analyzer,
+			field: field,
 		};
 
-		if ( requestData.startTime && requestData.endTime ) {
-			const date = new Date();
-			request.data.from_date = requestData.startTime / 1000;
-			request.data.to_date = requestData.endTime / 1000;
-			request.data.timezone = date.getTimezoneOffset();
-		}
-
 		if ( conditions ) {
-			request.data.conditions = conditions;
+			request.conditions = conditions;
 		}
 
-		return SiteAnalyticsReport.Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } );
+		if ( fetchFields ) {
+			request.fetch_fields = fetchFields;
+		}
+
+		if ( resourceFields ) {
+			// Resource fields has different string union types as values, and typescript can't infer it as a merged string union yet.
+			const a: any = _.flatten( _.values( resourceFields ) );
+			request.resource_fields = a;
+		}
+
+		if ( startTime && endTime ) {
+			const date = new Date();
+			request.from_date = startTime / 1000;
+			request.to_date = endTime / 1000;
+			request.timezone = date.getTimezoneOffset();
+		}
+
+		return SiteAnalyticsReport.Api.sendRequest( '/web/dash/analytics/display', { data: request }, { sanitizeComplexData: false } );
 	}
 
-	private processComponentResponse( field: string, _response: any )
+	private processComponentResponse( component: ReportComponent, _response: any, gathers?: any )
 	{
+		const field = component.field, analyzer = component.type, displayField = component.displayField;
+
 		let response: any = angular.copy( _response );
 		let graph: any = null;
 		let data: any = {};
 
-		// country code => country name
-		if ( field == 'country' ) {
-			data = {};
-			angular.forEach( response.result, ( val, key ) =>
-			{
-				if ( key == 'other' ) {
-					data[ SiteAnalyticsReport.gettextCatalog.getString( 'Unknown' ) ] = val;
-				}
-				else {
-					data[ SiteAnalyticsReport.Geo.getCountryName( key ) || key ] = val;
-				}
-			} );
-			response.result = data;
+		// We return "simple" single value analyzations as is.
+		if ( analyzer == 'sum' || analyzer == 'average' ) {
+			return response;
 		}
 
-		if ( field != 'rating' && field != 'source_url' ) {
+		// For top compositions we convert the { key: value } to [ { label: key, value: value } ]
+		if ( analyzer == 'top-composition' || analyzer == 'top-composition-sum' || analyzer == 'top-composition-avg' ) {
+			// Rating is a special case of top composition. We want to keep processing it as { key: value } and not convert it.
+			if ( field != 'rating' ) {
+				data = [];
+				angular.forEach( response.result, ( val, key ) =>
+				{
+					switch ( analyzer ) {
+						case 'top-composition-sum':
+							val = val.sum;
+							break;
 
-			graph = [];
+						case 'top-composition-avg':
+							val = val.avg;
+							break;
+					}
 
-			// Pull the top 3 results so we can push into a pie chart if desired.
-			var i = 0, total = 0;
-			angular.forEach( response.result, ( val, key ) =>
-			{
-				if ( i < 3 ) {
-					graph.push( {
+					data.push( {
 						label: key,
 						value: val,
 					} );
-					total += val;
+				} );
+				response.result = data;
+			}
+			else {
+				// Make sure all the rating values are filled in, and in the correct order
+				data = {};
+				[ 1, 2, 3, 4, 5 ].forEach( ( rating ) =>
+				{
+					data[ rating ] = response.result[ rating ] || 0;
+				} );
+				response.result = data;
+			}
+
+			// Top composition fields may refer to gathered fields. In this case replace them in now.
+			if ( gathers && displayField ) {
+				for ( let dataEntry of response.result ) {
+					const resourceInfo: string[] = dataEntry.label.split('-');
+					const resourceName = resourceInfo[0], resourceId = parseInt( resourceInfo[1] );
+					dataEntry.label = {
+						resource: resourceName[0].toUpperCase() + resourceName.substr( 1 ),
+						resourceId: resourceId,
+						value: gathers[resourceName][resourceId][displayField],
+					};
 				}
-				++i;
-			} );
+			}
 
+			// country code => country name
+			if ( field == 'country' ) {
+				angular.forEach( response.result, ( val ) =>
+				{
+					if ( val.label == 'other' ) {
+						val.label = SiteAnalyticsReport.gettextCatalog.getString( 'Unknown' );
+					}
+					else {
+						val.label = SiteAnalyticsReport.Geo.getCountryName( val.label ) || val.label;
+					}
+				} );
+			}
+
+			// All fields except 'rating' and 'source_url' expect to also display the graph (doughnut piechart)
+			if ( field != 'rating' && field != 'source_url' ) {
+				graph = [];
+				for ( let i = 0; i < Math.min( response.result.length, 3 ); i++ ) {
+					const dataEntry = response.result[i];
+					graph.push( {
+						label: typeof dataEntry.label == 'object' ? dataEntry.label.value : dataEntry.label,
+						value: dataEntry.value,
+					} );
+				}
+				response.graph = graph;
+			}
 		}
-
-		if ( field == 'rating' ) {
-			data = {};
-			[ 1, 2, 3, 4, 5 ].forEach( ( rating ) =>
-			{
-				data[ rating ] = response.result[ rating ] || 0;
-			} );
-			response.result = data;
-		}
-
-		response.graph = graph;
 
 		return response;
 	}

@@ -1,14 +1,49 @@
 import { Inject, Injectable } from 'ng-metadata/core';
 
-export type ResourceName = 'Game' | 'Game_Package' | 'Game_Release';
+export type ResourceName = 'Referrer' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
+
+// TODO: Figure this out.const ORDERED_ASC = 'ordered-asc';
+export type Analyzer =
+	'count' | 'sum' | 'average' | 'top-composition' | 'top-composition-sum' | 'top-composition-avg' | 'rating-breakdown' |
+	'histogram' | 'histogram-sum' | 'histogram-avg' | 'ordered-asc' | 'ordered-desc';
+
+export type Collection =
+	'views' | 'expands' | 'downloads' | 'installs' | 'comments' | 'ratings' | 'follows' | 'sales';
+
+export type Condition =
+	'time' | 'source-gamejolt' | 'source-external' | 'users-only' | 'guests-only' | 'followers-only' |
+	'promotional-only' | 'non-promotional-only' | 'has-donations' | 'no-donations' |
+	'has-referrer' | 'no-referrer' | 'referrer';
+
+export type Field =
+	'country' | 'source_url' | 'source' | 'os' | 'comment_language' | 'comment_votes' | 'comment_replies' |
+	'rating' | 'game' | 'package' | 'is_promotional' | 'donation' | 'revenue' | 'gj_revenue' |
+	'referral_revenue' | 'referral_user' | 'logged_on';
+
+export type FetchField =
+	'country' | 'source' | 'os' | 'comment_language' | 'comment_votes' | 'comment_replies' |
+	'rating' | 'game' | 'package' | 'is_promotional' | 'donation' | 'revenue' | 'gj_revenue' |
+	'referral_revenue' | 'referral_user' | 'logged_on';
+
+export type GameField = 'game_name';
+export type UserField = 'user_display_name';
+export interface ResourceFields
+{
+	game?: GameField[];
+	user?: UserField[];
+}
+
+
+export type MetricKey =
+	'view' | 'download' | 'install' | 'comment' | 'rating' | 'follow' | 'sale' | 'revenue';
 
 export interface Metric
 {
-	key: string;
-	collection: string;
+	key: MetricKey;
+	collection: Collection;
 	label: string;
 	type: 'number' | 'currency';
-	field?: string;
+	field?: Field;
 }
 
 /**
@@ -21,9 +56,6 @@ export type MetricMap = { [k: string]: Metric };
  */
 type DateRange = [ number, number ];
 
-// TODO: Figure this out.
-type Analyzer = 'histogram' | 'histogram-sum' | 'count' | 'sum' | 'top-composition' | 'rating-breakdown' | 'sum' | 'average';
-
 /**
  * What gets sent to the server to request analytics.
  * We may send multiple requests in one request body.
@@ -31,10 +63,12 @@ type Analyzer = 'histogram' | 'histogram-sum' | 'count' | 'sum' | 'top-compositi
 export interface Request {
 	target: ResourceName;
 	target_id: number;
-	collection: string;
+	collection: Collection;
 	analyzer: Analyzer;
-	field?: string;
-	conditions?: string[];
+	field?: Field;
+	conditions?: Condition[];
+	fetch_fields?: FetchField[];
+	resource_fields?: ( GameField | UserField )[];
 
 	// Date info is Optional.
 	from_date?: number; // In seconds.
@@ -43,10 +77,13 @@ export interface Request {
 };
 
 export interface ReportComponent {
-	type: ReportAnalyzer;
-	field: string;
+	type: Analyzer;
+	field: Field;
 	fieldLabel: string;
 	fieldType?: 'currency';
+	fetchFields?: FetchField[];
+	resourceFields?: ResourceFields;
+	displayField?: Field | FetchField | GameField | UserField;
 
 	// These are only filled out for report component responses.
 	data?: any;
@@ -54,8 +91,6 @@ export interface ReportComponent {
 	total?: any;
 	hasData?: boolean;
 };
-
-export type ReportAnalyzer = 'top-composition' | 'rating-breakdown' | 'sum' | 'average';
 
 export const ReportTopSources: ReportComponent[] = [ {
 	type: 'top-composition',
@@ -106,6 +141,38 @@ export const ReportDevRevenue: ReportComponent[] = [ {
 	fieldType: 'currency',
 } ];
 
+export const ReportTopGames: ReportComponent[] = [ {
+	type: 'top-composition',
+	field: 'game',
+	fieldLabel: 'Game',
+	resourceFields: {
+		game: ['game_name'],
+	},
+	displayField: 'game_name',
+} ];
+
+export const ReportTopGameRevenue: ReportComponent[] = [ {
+	type: 'top-composition-sum',
+	field: 'game',
+	fetchFields: [ 'revenue' ],
+	resourceFields: {
+		game: ['game_name'],
+	},
+	fieldLabel: 'Revenue by Game',
+	fieldType: 'currency',
+	displayField: 'game_name',
+}, {
+	type: 'top-composition-avg',
+	field: 'game',
+	fetchFields: [ 'donation' ],
+	resourceFields: {
+		game: ['game_name'],
+	},
+	fieldLabel: 'Average Support by Game',
+	fieldType: 'currency',
+	displayField: 'game_name',
+} ];
+
 @Injectable()
 export class SiteAnalytics
 {
@@ -152,22 +219,20 @@ export class SiteAnalytics
 				label: this.gettextCatalog.getString( 'Follows' ),
 				type: 'number',
 			},
+			{
+				key: 'sale',
+				collection: 'sales',
+				label: this.gettextCatalog.getString( 'Sales' ),
+				type: 'number',
+			},
+			{
+				key: 'revenue',
+				collection: 'sales',
+				label: this.gettextCatalog.getString( 'Revenue' ),
+				type: 'currency',
+				field: 'revenue',
+			},
 		];
-
-		this._metrics.push( {
-			key: 'sale',
-			collection: 'sales',
-			label: this.gettextCatalog.getString( 'Sales' ),
-			type: 'number',
-		} );
-
-		this._metrics.push( {
-			key: 'revenue',
-			collection: 'sales',
-			label: this.gettextCatalog.getString( 'Revenue' ),
-			type: 'currency',
-			field: 'revenue',
-		} );
 	}
 
 	private _metrics: Metric[];
@@ -183,7 +248,13 @@ export class SiteAnalytics
 		return this._allMetrics;
 	}
 
-	// Currently all metrics work for games.
+	// Currently all metrics work for users and games.
+	// Changes between the reports loaded is in the analytics controller at time of switching metric.
+	get userMetrics()
+	{
+		return this.allMetrics;
+	}
+
 	get gameMetrics()
 	{
 		return this.allMetrics;
@@ -192,7 +263,8 @@ export class SiteAnalytics
 	get packageMetrics()
 	{
 		if ( !this._packageMetrics ) {
-			this._packageMetrics = <MetricMap>_.pick( this.allMetrics, 'download' );
+			const possibleMetrics: MetricKey[] = [ 'download' ];
+			this._packageMetrics = <MetricMap>_.pick( this.allMetrics, possibleMetrics );
 		}
 
 		return this._packageMetrics;

@@ -1,6 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from '../../../app-service';
-import { MetricMap, Metric, SiteAnalytics, ResourceName, ReportComponent, ReportTopSources, ReportReferringPages, ReportCountries, ReportOs, ReportCommentLanguages, ReportRatingBreakdown, ReportDevRevenue } from '../../../components/site-analytics/site-analytics-service';
+import { MetricMap, Metric, SiteAnalytics, ResourceName, ReportComponent, ReportTopSources, ReportReferringPages, ReportCountries, ReportOs, ReportCommentLanguages, ReportRatingBreakdown, ReportDevRevenue, ReportTopGames, ReportTopGameRevenue } from '../../../components/site-analytics/site-analytics-service';
 import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
 
 @Injectable()
@@ -92,6 +92,7 @@ export class AnalyticsCtrl
 		// Only the fields that can affect report breakdowns.
 		this.$scope.$watchGroup( globalWatch.concat( [
 			'analyticsCtrl.metric.key',
+			'analyticsCtrl.resource',
 		] ),
 		() =>
 		{
@@ -107,7 +108,11 @@ export class AnalyticsCtrl
 		this.resource = $stateParams['resource'] || 'Game';
 		this.resourceId = parseInt( $stateParams['resourceId'], 10 ) || this.games[0].id;
 
-		if ( this.resource == 'Game' ) {
+		if ( this.resource == 'User' ) {
+			this.availableMetrics = this.analytics.userMetrics;
+			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'user-view' ];
+		}
+		else if ( this.resource == 'Game' ) {
 			this.availableMetrics = this.analytics.gameMetrics;
 			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'view' ];
 		}
@@ -201,13 +206,7 @@ export class AnalyticsCtrl
 
 	pullReport( title: string, ...components: ReportComponent[] )
 	{
-		const report = new this.reportModel( title, components, {
-			resource: this.resource,
-			resourceId: this.resourceId,
-			metric: this.metric,
-			startTime: this.startTime,
-			endTime: this.endTime,
-		} );
+		const report = new this.reportModel( title, components, this.resource, this.resourceId, this.metric.collection, this.startTime, this.endTime );
 
 		this.pageReports.push( report );
 	}
@@ -216,54 +215,113 @@ export class AnalyticsCtrl
 	{
 		this.pageReports = [];
 
-		switch ( this.metric.key ) {
-			case 'view': {
-				this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
-				this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
-				this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-				break;
-			}
+		if ( this.resource != 'User' ) {
+			switch ( this.metric.key ) {
+				case 'view': {
+					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
+					this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
+					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					break;
+				}
 
-			case 'download': {
-				this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
-				this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
-				this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
-				this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-				break;
-			}
+				case 'download': {
+					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
+					this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
+					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					break;
+				}
 
-			case 'install': {
-				this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
-				this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-				break;
-			}
+				case 'install': {
+					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					break;
+				}
 
-			case 'comment': {
-				this.pullReport( this.gettextCatalog.getString( 'Languages' ), ...ReportCommentLanguages );
-				break;
-			}
+				case 'comment': {
+					this.pullReport( this.gettextCatalog.getString( 'Languages' ), ...ReportCommentLanguages );
+					break;
+				}
 
-			case 'rating': {
-				this.pullReport( this.gettextCatalog.getString( 'Rating Breakdown' ), ...ReportRatingBreakdown );
-				break;
-			}
+				case 'rating': {
+					this.pullReport( this.gettextCatalog.getString( 'Rating Breakdown' ), ...ReportRatingBreakdown );
+					break;
+				}
 
-			case 'follow': {
-				this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-				break;
-			}
+				case 'follow': {
+					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					break;
+				}
 
-			case 'sale': {
-				this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
-				this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
-				this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-				this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
-				break;
-			}
+				case 'sale': {
+					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
+					this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
+					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+					break;
+				}
 
-			case 'revenue': {
-				this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
-				break;
+				case 'revenue': {
+					this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
+					break;
+				}
+			}
+		}
+		else {
+			switch ( this.metric.key ) {
+				case 'view': {
+					this.pullReport( this.gettextCatalog.getString( 'Top Games' ), ...ReportTopGames );
+					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
+					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					break;
+				}
+
+				case 'download': {
+					this.pullReport( this.gettextCatalog.getString( 'Top Games' ), ...ReportTopGames );
+					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
+					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					break;
+				}
+
+				case 'install': {
+					this.pullReport( this.gettextCatalog.getString( 'Top Games' ), ...ReportTopGames );
+					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					break;
+				}
+
+				case 'comment': {
+					this.pullReport( this.gettextCatalog.getString( 'Top Games' ), ...ReportTopGames );
+					this.pullReport( this.gettextCatalog.getString( 'Languages' ), ...ReportCommentLanguages );
+					break;
+				}
+
+				case 'rating': {
+					this.pullReport( this.gettextCatalog.getString( 'Top Games' ), ...ReportTopGames );
+					this.pullReport( this.gettextCatalog.getString( 'Rating Breakdown' ), ...ReportRatingBreakdown );
+					break;
+				}
+
+				case 'follow': {
+					this.pullReport( this.gettextCatalog.getString( 'Top Games' ), ...ReportTopGames );
+					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					break;
+				}
+
+				case 'sale': {
+					this.pullReport( this.gettextCatalog.getString( 'Top Games' ), ...ReportTopGames );
+					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
+					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+					break;
+				}
+
+				case 'revenue': {
+					this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
+					this.pullReport( this.gettextCatalog.getString( 'Most Profitable' ), ...ReportTopGameRevenue );
+					break;
+				}
 			}
 		}
 	}

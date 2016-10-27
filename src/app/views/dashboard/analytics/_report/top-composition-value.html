@@ -17,7 +17,6 @@ If graph data is null, then don't show the graph and give more space for the tab
 				<th class="text-right">
 					<!--{{ analyticsCtrl.stats[ analyticsCtrl.eventType ].label }}-->
 				</th>
-				<th style="width: 150px"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -34,23 +33,17 @@ If graph data is null, then don't show the graph and give more space for the tab
 					</a>
 				</th>
 				<td class="text-right">
-					{{ val.value | number }}
-				</td>
-				<td>
-					<div class="report-percentage" ng-style="{ width: val / $ctrl.reportData.total * 70 + 'px' }"></div>
-					<small>{{ val.value / $ctrl.reportData.total * 100 | number:2 }}%</small>
+					<div ng-switch="$ctrl.reportData.fieldType">
+						<span ng-switch-when="number">
+							{{ val.value | number }}
+						</span>
+						<span ng-switch-when="currency">
+							{{ val.value / 100 | currency }}
+						</span>
+					</div>
 				</td>
 			</tr>
 		</tbody>
 	</table>
-
-</div>
-<div class="col-sm-4" ng-if="!Screen.isXs && $ctrl.reportData.hasData && $ctrl.reportData.graph !== null">
-
-	<gj-graph
-		type="doughnut"
-		dataset="$ctrl.reportData.graph"
-		>
-	</gj-graph>
 
 </div>

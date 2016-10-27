@@ -1,11 +1,11 @@
 import { Component, Input } from 'ng-metadata/core';
-import template from 'html!./top-composition.html';
+import template from 'html!./top-composition-value.html';
 
 @Component({
-	selector: 'gj-analytics-report-top-composition',
+	selector: 'gj-analytics-report-top-composition-value',
 	template,
 })
-export class TopCompositionComponent
+export class TopCompositionValueComponent
 {
 	@Input( '<' ) reportData: any;
 

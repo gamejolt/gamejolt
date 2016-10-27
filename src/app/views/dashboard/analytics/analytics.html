@@ -8,6 +8,17 @@
 
 		<nav class="breadcrumb">
 			<ul>
+				<li>
+					<a
+						ui-sref="dashboard.analytics.view( { resource: 'User', resourceId: App.user.id } )"
+						ui-sref-opts="{ location: 'replace' }"
+						ui-sref-active="active"
+						>
+						<span class="breadcrumb-tag" translate>User</span>
+						@{{ App.user.username }}
+					</a>
+					<span class="breadcrumb-separator jolticon jolticon-chevron-right" ng-if="analyticsCtrl.game"></span>
+				</li>
 				<li ng-if="analyticsCtrl.game">
 					<a
 						ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: analyticsCtrl.game.id } )"
@@ -196,6 +207,12 @@
 										report-data="component"
 										>
 									</gj-analytics-report-top-composition>
+
+									<gj-analytics-report-top-composition-value
+										ng-if="component.type == 'top-composition-sum' || component.type == 'top-composition-avg'"
+										report-data="component"
+										>
+									</gj-analytics-report-top-composition-value>
 
 									<gj-analytics-report-rating-breakdown
 										ng-if="component.type == 'rating-breakdown'"
