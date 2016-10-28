@@ -1,5 +1,5 @@
 import { Injectable } from 'ng-metadata/core';
-import { ReportComponent, Request, ResourceName, Analyzer, Collection, Field, Condition, FetchField, ResourceFields } from './site-analytics-service';
+import { ReportComponent, Request, ResourceName, Analyzer, Collection, Field, Condition, ResourceFields } from './site-analytics-service';
 
 export function ReportFactory( $q: any, Api: any, Geo: any, gettextCatalog: any )
 {
@@ -30,12 +30,42 @@ export class SiteAnalyticsReport
 				analyzer = 'top-composition';
 			}
 
-			let conditions: Condition[] | undefined;
-			if ( component.field == 'source_url' ) {
-				conditions = [ 'source-external' ];
+			let conditions: Condition[] = [];
+			let field = component.field, fetchFields = component.fetchFields;
+
+			// Conditions are added based on the fields that we're searching on in either the component.field or component.fetchFields fields.
+			let conditionFields = [ field ];
+			if ( fetchFields ) {
+				conditionFields = conditionFields.concat( fetchFields );
 			}
 
-			return this.sendComponentRequest( resource, resourceId, collection, analyzer, component.field, conditions, component.fetchFields, component.resourceFields, startTime, endTime );
+			if ( conditionFields.indexOf( 'source_url' ) != -1 ) {
+				conditions.push( 'source-external' );
+			}
+			if ( conditionFields.indexOf( 'donation' ) != -1 ) {
+				conditions.push( 'has-donations' );
+			}
+			if ( conditionFields.indexOf( 'partner' ) != -1 ) {
+				conditions.push( 'has-partner' );
+			}
+			if ( conditionFields.indexOf( 'partner_donation' ) != -1 ) {
+				conditions.push( 'has-donations', 'has-partner' );
+			}
+			conditions = _.uniq( conditions );
+
+			// Replace the pseudo fields by their normal fields
+			if ( field == 'partner_donation' ) {
+				field = 'donation';
+			}
+			if ( fetchFields ) {
+				fetchFields = fetchFields.map( ( fetchField ) =>
+				{
+					const result: Field = fetchField == 'partner_donation' ? 'donation' : fetchField;
+					return result;
+				} );
+			}
+
+			return this.sendComponentRequest( resource, resourceId, collection, analyzer, field, conditions, fetchFields, component.resourceFields, startTime, endTime );
 		} );
 
 		SiteAnalyticsReport.$q.all( promises )
@@ -61,7 +91,7 @@ export class SiteAnalyticsReport
 			} );
 	}
 
-	private sendComponentRequest( resource: ResourceName, resourceId: number, collection: Collection, analyzer: Analyzer, field: Field, conditions: Condition[] | undefined, fetchFields: FetchField[] | undefined, resourceFields: ResourceFields | undefined, startTime: number | undefined, endTime: number | undefined )
+	private sendComponentRequest( resource: ResourceName, resourceId: number, collection: Collection, analyzer: Analyzer, field: Field, conditions: Condition[] | undefined, fetchFields: Field[] | undefined, resourceFields: ResourceFields | undefined, startTime: number | undefined, endTime: number | undefined )
 	{
 		const request: Request = {
 			target: resource,
@@ -105,6 +135,7 @@ export class SiteAnalyticsReport
 
 		// We return "simple" single value analyzations as is.
 		if ( analyzer == 'sum' || analyzer == 'average' ) {
+			response.result = response.result || 0;
 			return response;
 		}
 
@@ -147,11 +178,29 @@ export class SiteAnalyticsReport
 				for ( let dataEntry of response.result ) {
 					const resourceInfo: string[] = dataEntry.label.split('-');
 					const resourceName = resourceInfo[0], resourceId = parseInt( resourceInfo[1] );
-					dataEntry.label = {
-						resource: resourceName[0].toUpperCase() + resourceName.substr( 1 ),
-						resourceId: resourceId,
-						value: gathers[resourceName][resourceId][displayField],
-					};
+					const displayValue = gathers[resourceName][resourceId][displayField];
+
+					switch ( resourceName ) {
+						case 'game':
+							dataEntry.label = {
+								resource: 'Game',
+								resourceId: resourceId,
+								value: displayValue,
+							};
+							break;
+
+						case 'user':
+							dataEntry.label = {
+								resource: 'User',
+								resourceId: resourceId,
+								value: displayValue,
+							};
+							break;
+
+						case 'partner':
+							dataEntry.label = displayValue;
+							break;
+					}
 				}
 			}
 

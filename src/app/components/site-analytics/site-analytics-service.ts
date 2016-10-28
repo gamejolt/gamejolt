@@ -1,6 +1,6 @@
 import { Inject, Injectable } from 'ng-metadata/core';
 
-export type ResourceName = 'Referrer' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
+export type ResourceName = 'Partner' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
 
 // TODO: Figure this out.const ORDERED_ASC = 'ordered-asc';
 export type Analyzer =
@@ -13,17 +13,15 @@ export type Collection =
 export type Condition =
 	'time' | 'source-gamejolt' | 'source-external' | 'users-only' | 'guests-only' | 'followers-only' |
 	'promotional-only' | 'non-promotional-only' | 'has-donations' | 'no-donations' |
-	'has-referrer' | 'no-referrer' | 'referrer';
+	'has-partner' | 'no-partner' | 'partner';
 
-export type Field =
+export type PseudoField =
+	'partner_donation'; // Translates to donation field with conditions has partner and has donation
+
+export type Field = PseudoField |
 	'country' | 'source_url' | 'source' | 'os' | 'comment_language' | 'comment_votes' | 'comment_replies' |
 	'rating' | 'game' | 'package' | 'is_promotional' | 'donation' | 'revenue' | 'gj_revenue' |
-	'referral_revenue' | 'referral_user' | 'logged_on';
-
-export type FetchField =
-	'country' | 'source' | 'os' | 'comment_language' | 'comment_votes' | 'comment_replies' |
-	'rating' | 'game' | 'package' | 'is_promotional' | 'donation' | 'revenue' | 'gj_revenue' |
-	'referral_revenue' | 'referral_user' | 'logged_on';
+	'user' | 'partner_revenue' | 'partner' | 'logged_on';
 
 export type GameField = 'game_name';
 export type UserField = 'user_display_name';
@@ -31,6 +29,7 @@ export interface ResourceFields
 {
 	game?: GameField[];
 	user?: UserField[];
+	partner?: UserField[];
 }
 
 
@@ -67,7 +66,7 @@ export interface Request {
 	analyzer: Analyzer;
 	field?: Field;
 	conditions?: Condition[];
-	fetch_fields?: FetchField[];
+	fetch_fields?: Field[];
 	resource_fields?: ( GameField | UserField )[];
 
 	// Date info is Optional.
@@ -81,9 +80,9 @@ export interface ReportComponent {
 	field: Field;
 	fieldLabel: string;
 	fieldType?: 'currency';
-	fetchFields?: FetchField[];
+	fetchFields?: Field[];
 	resourceFields?: ResourceFields;
-	displayField?: Field | FetchField | GameField | UserField;
+	displayField?: Field | GameField | UserField;
 
 	// These are only filled out for report component responses.
 	data?: any;
@@ -171,6 +170,51 @@ export const ReportTopGameRevenue: ReportComponent[] = [ {
 	fieldLabel: 'Average Support by Game',
 	fieldType: 'currency',
 	displayField: 'game_name',
+} ];
+
+export const ReportTopPartners: ReportComponent[] = [ {
+	type: 'top-composition',
+	field: 'partner',
+	fieldLabel: 'Partner',
+	resourceFields: {
+		partner: ['user_display_name'],
+	},
+	displayField: 'user_display_name',
+} ];
+
+export const ReportPartnerRevenue: ReportComponent[] = [ {
+	type: 'sum',
+	field: 'partner_revenue',
+	fieldLabel: 'Total Revenue',
+	fieldType: 'currency',
+},
+{
+	type: 'average',
+	field: 'partner_donation',
+	fieldLabel: 'Average Support',
+	fieldType: 'currency',
+} ];
+
+export const ReportTopPartnerRevenue: ReportComponent[] = [ {
+	type: 'top-composition-sum',
+	field: 'partner',
+	fetchFields: [ 'partner_revenue' ],
+	resourceFields: {
+		partner: ['user_display_name'],
+	},
+	fieldLabel: 'Revenue by Partner',
+	fieldType: 'currency',
+	displayField: 'user_display_name',
+}, {
+	type: 'top-composition-avg',
+	field: 'partner',
+	fetchFields: [ 'donation' ],
+	resourceFields: {
+		partner: ['user_display_name'],
+	},
+	fieldLabel: 'Average Support by Partner',
+	fieldType: 'currency',
+	displayField: 'user_display_name',
 } ];
 
 @Injectable()

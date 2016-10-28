@@ -1,6 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from '../../../app-service';
-import { MetricMap, Metric, SiteAnalytics, ResourceName, ReportComponent, ReportTopSources, ReportReferringPages, ReportCountries, ReportOs, ReportCommentLanguages, ReportRatingBreakdown, ReportDevRevenue, ReportTopGames, ReportTopGameRevenue } from '../../../components/site-analytics/site-analytics-service';
+import { MetricMap, Metric, SiteAnalytics, ResourceName, ReportComponent, ReportTopSources, ReportReferringPages, ReportCountries, ReportOs, ReportCommentLanguages, ReportRatingBreakdown, ReportDevRevenue, ReportTopGames, ReportTopGameRevenue, ReportTopPartners, ReportPartnerRevenue, ReportTopPartnerRevenue } from '../../../components/site-analytics/site-analytics-service';
 import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
 
 @Injectable()
@@ -221,6 +221,7 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
 					break;
 				}
 
@@ -229,6 +230,7 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
 					break;
 				}
 
@@ -258,11 +260,14 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+					this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
 					break;
 				}
 
 				case 'revenue': {
 					this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
+					this.pullReport( this.gettextCatalog.getString( 'Partner Generated' ), ...ReportPartnerRevenue );
+					this.pullReport( this.gettextCatalog.getString( 'Most Profitable Partners' ), ...ReportTopPartnerRevenue );
 					break;
 				}
 			}
@@ -273,6 +278,7 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Top Games' ), ...ReportTopGames );
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
 					break;
 				}
 
@@ -281,6 +287,7 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
+					this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
 					break;
 				}
 
@@ -314,12 +321,15 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
+					this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
 					break;
 				}
 
 				case 'revenue': {
 					this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
-					this.pullReport( this.gettextCatalog.getString( 'Most Profitable' ), ...ReportTopGameRevenue );
+					this.pullReport( this.gettextCatalog.getString( 'Most Profitable Games' ), ...ReportTopGameRevenue );
+					this.pullReport( this.gettextCatalog.getString( 'Partner Generated' ), ...ReportPartnerRevenue );
+					this.pullReport( this.gettextCatalog.getString( 'Most Profitable Partners' ), ...ReportTopPartnerRevenue );
 					break;
 				}
 			}
