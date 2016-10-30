@@ -1,23 +1,25 @@
 #footer
 	position: relative
 	z-index: $zindex-footer
+	background: transparent !important
+
+	@media $media-xs
+		text-align: center
 
 	hr
-		width: 50px
 		border-color: $gray-dark
 
-		@media $media-sm-up
-			margin-left: 0
-			margin-right: 0
+.footer-link-list
+	font-size: $font-size-tiny
 
-.footer-client-promo
-	padding: 10px 0
-	color: $white
-	font-size: $font-size-small
-	text-align: center
+	@media $media-sm-up
+		font-size: $font-size-small
 
-	img
-		margin-right: 10px
+	> li > a
+		color: $text-muted
+		&:hover
+			color: $white
 
-	.btn
-		margin-left: 10px
+.footer-translations
+	@media $media-sm-up
+		text-align: right

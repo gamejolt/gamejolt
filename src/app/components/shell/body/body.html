@@ -1,12 +1,4 @@
 <div id="shell-body">
-
-	<gj-shell-nav-pane
-		ng-if="$ctrl.screen.isDesktop && $ctrl.shouldShowSideNav"
-		>
-	</gj-shell-nav-pane>
-
-	<div ng-class="{ 'page-sidebar-main': $ctrl.screen.isDesktop && $ctrl.shouldShowSideNav }">
-		<div ng-transclude></div>
-		<gj-shell-footer></gj-shell-footer>
-	</div>
+	<div ng-transclude></div>
+	<gj-shell-footer></gj-shell-footer>
 </div>
