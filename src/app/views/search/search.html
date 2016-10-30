@@ -13,13 +13,15 @@
 		</div>
 
 		<div ng-if="!Screen.isXs">
-			<p class="text-muted sans-margin" translate>
+			<div class="small text-upper text-muted" translate>
 				search.showing_label
-			</p>
+			</div>
 
-			<h2 class="sans-margin">
+			<h2 class="sans-margin-top">
 				{{ searchCtrl.query }}
 			</h2>
+
+			<br>
 		</div>
 
 	</gj-page-header-content>
@@ -35,19 +37,19 @@
 				<li ng-if="searchCtrl.payload.usersCount">
 					<a ui-sref="search.users( { q: searchCtrl.query } )" ui-sref-active="active">
 						<span translate>search.results.users_tab</span>
-						<span class="badge">{{ searchCtrl.payload.usersCount }}</span>
+						<span class="badge">{{ searchCtrl.payload.usersCount | number }}</span>
 					</a>
 				</li>
 				<li ng-if="searchCtrl.payload.gamesCount">
 					<a ui-sref="search.games( { q: searchCtrl.query } )" ui-sref-active="active">
 						<span translate>search.results.games_tab</span>
-						<span class="badge">{{ searchCtrl.payload.gamesCount }}</span>
+						<span class="badge">{{ searchCtrl.payload.gamesCount | number }}</span>
 					</a>
 				</li>
 				<li ng-if="searchCtrl.payload.devlogsCount">
 					<a ui-sref="search.devlogs( { q: searchCtrl.query } )" ui-sref-active="active">
 						<span translate>Devlogs</span>
-						<span class="badge">{{ searchCtrl.payload.devlogsCount }}</span>
+						<span class="badge">{{ searchCtrl.payload.devlogsCount | number }}</span>
 					</a>
 				</li>
 			</ul>

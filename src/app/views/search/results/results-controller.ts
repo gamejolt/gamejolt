@@ -33,7 +33,7 @@ export class ResultsCtrl
 			return;
 		}
 
-		app.title = gettextCatalog.getString( 'search.results.page_title', { query: $stateParams['q'] } );
+		app.title = gettextCatalog.getString( 'Search results for {{ query }}', { query: $stateParams['q'] } );
 
 		searchCtrl.query = $stateParams['q'];
 
@@ -50,8 +50,7 @@ export class ResultsCtrl
 		}
 		else {
 			if ( payload.devlogsCount > 0 ) {
-				searchCtrl.payload.devlogsMobile = payload.devlogs.slice( 0, 3 );
-				searchCtrl.payload.devlogsDesktop = payload.devlogs.slice( 0, 4 );
+				searchCtrl.payload.devlogsTrimmed = payload.devlogs.slice( 0, 4 );
 			}
 		}
 	}

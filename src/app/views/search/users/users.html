@@ -1,14 +1,5 @@
 <section class="section">
-	<div class="container" ng-if="Search.query">
-
-		<gj-pagination
-			id="users-pagination"
-			ng-if="searchCtrl.showPagination && searchCtrl.payload.perPage && searchCtrl.payload.count"
-			items-per-page="searchCtrl.payload.perPage"
-			total-items="searchCtrl.payload.count"
-			current-page="searchCtrl.payload.page"
-			>
-		</gj-pagination>
+	<div class="container" ng-if="Search.query" id="users-pagination">
 
 		<div class="search-media-list row">
 			<div class="search-media-list-item search-media-list-user col-xs-3 col-sm-2 anim-fade-in-up no-animate-xs"
@@ -18,7 +9,10 @@
 			</div>
 		</div>
 
+		<br>
+
 		<gj-pagination
+			class="text-center"
 			ng-if="searchCtrl.showPagination && searchCtrl.payload.perPage && searchCtrl.payload.count"
 			items-per-page="searchCtrl.payload.perPage"
 			total-items="searchCtrl.payload.count"
