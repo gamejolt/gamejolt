@@ -101,12 +101,16 @@
 			</div>
 		</div>
 
+	</div>
+	<div class="container-lg">
+
 		<div ng-show="$ctrl.listing.gamesCount">
 
 			<!-- This is where the games will show. -->
 			<ng-transclude></ng-transclude>
 
 			<gj-pagination
+				class="text-center"
 				items-per-page="$ctrl.listing.perPage"
 				total-items="$ctrl.listing.gamesCount"
 				current-page="$ctrl.listing.currentPage"
@@ -115,13 +119,13 @@
 			</gj-pagination>
 
 		</div>
-
+	</div>
+	<div class="container">
 		<div ng-if="!$ctrl.listing.gamesCount" class="alert alert-warning anim-fade-in no-animate-leave">
 			<div class="container">
 				<p translate>No games match your filters. <b>Zoinks!</b></p>
 			</div>
 		</div>
-
 	</div>
 </section>
 
