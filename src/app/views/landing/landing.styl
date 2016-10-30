@@ -1,0 +1,54 @@
+.landing-header
+	@extend .fill-darkest
+	background-image: url('/app/views/discover/home/banner-bg.png')
+	background-repeat: repeat
+
+	&.has-nav
+		padding-bottom: 0
+
+	h1
+		font-weight: 300
+		font-size: 60px
+		letter-spacing: 2px
+		text-transform: none
+
+		sup
+			font-size: $font-size-small
+			font-weight: normal
+
+			@media $media-sm-up
+				top: -25px
+
+	.lead
+		font-weight: bold
+		color: $white
+		font-size: $font-size-h1
+
+	.platform-list
+		margin-bottom: 0
+		margin-top: $line-height-computed * 2
+
+.landing-break-lg
+	display: none
+
+	@media $media-lg
+		display: block
+		clear: both
+		height: $grid-gutter-width
+
+.landing-graphic
+	text-align: center
+	margin-top: 0
+	border-top: 3px solid $gray-light
+	width: 50px
+	margin-left: 0
+	margin-right: 0
+	display: none
+
+	@media $media-sm-up
+		display: block
+
+	> img
+		display: inline-block
+		width: 100%
+		max-width: 180px
