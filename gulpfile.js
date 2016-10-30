@@ -164,3 +164,8 @@ var config = {
 require( './src/lib/gj-lib-client/gulp/tasks/common.js' )( config );
 require( './tasks/client.js' )( config );
 require( './tasks/app.js' )( config );
+require( './tasks/game-api-doc.js' )( config );
+
+var gulp = require( 'gulp' );
+
+gulp.task( 'pre', [ 'game-api-doc:nav', 'game-api-doc:compile' ] );
