@@ -1,12 +1,13 @@
-import { Component, Inject, Input, Output } from 'ng-metadata/core';
-import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Component, Inject, Input, Output, OnInit, HostBinding, HostListener } from 'ng-metadata/core';
 import template from 'html!./thumbnail.html';
+
+import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
 
 @Component({
 	selector: 'gj-game-thumbnail',
 	template,
 })
-export class ThumbnailComponent
+export class ThumbnailComponent implements OnInit
 {
 	@Input( '<gjGame' ) game: any;
 	@Input( '@?gjLinkTo' ) linkTo?: string;
@@ -27,7 +28,10 @@ export class ThumbnailComponent
 	)
 	{
 		this.element = $element[0];
+	}
 
+	ngOnInit()
+	{
 		if ( this.linkTo == 'dashboard' ) {
 			this.url = this.game.getUrl( 'dashboard' );
 		}
@@ -38,6 +42,24 @@ export class ThumbnailComponent
 		if ( this.controlType ) {
 			this.showControl = true;
 		}
+	}
+
+	@HostBinding( 'class.active' )
+	get isActive()
+	{
+		return this.isHovered || this.autoplay;
+	}
+
+	@HostListener( 'mouseenter' )
+	onMouseEnter()
+	{
+		this.isHovered = true;
+	}
+
+	@HostListener( 'mouseleave' )
+	onMouseLeave()
+	{
+		this.isHovered = false;
 	}
 
 	onControlClick( $event: ng.IAngularEvent )

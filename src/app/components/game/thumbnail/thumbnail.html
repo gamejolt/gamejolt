@@ -1,7 +1,5 @@
 <a class="game-thumbnail"
 	ng-href="{{ ::$ctrl.url }}"
-	ng-mouseenter="$ctrl.isHovered = true"
-	ng-mouseleave="$ctrl.isHovered = false"
 	>
 
 	<div class="game-thumbnail-controls" ng-if="::$ctrl.showControl">
@@ -28,7 +26,7 @@
 		<gj-game-thumbnail-img game="::$ctrl.game"></gj-game-thumbnail-img>
 
 		<gj-video
-			ng-if="$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop && $ctrl.isHovered"
+			ng-if="$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop && $ctrl.isActive"
 			poster="{{ ::$ctrl.game.img_thumbnail }}"
 			webm="{{ ::$ctrl.game.img_thumbnail_webm }}"
 			mp4="{{ ::$ctrl.game.img_thumbnail_mp4 }}"
