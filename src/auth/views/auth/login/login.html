@@ -1,42 +1,4 @@
-<div class="auth-social-buttons">
-	<button class="i-button big block anim-fade-in-enlarge stagger"
-		ng-disabled="!Connection.isOnline"
-		ng-click="loginCtrl.linkedAccountLogin( 'facebook' )"
-		>
-		<span class="jolticon jolticon-facebook"></span>
-		<span translate>auth.login.facebook_button</span>
-	</button>
-
-	<button class="i-button big block anim-fade-in-enlarge stagger"
-		ng-disabled="!Connection.isOnline"
-		ng-click="loginCtrl.linkedAccountLogin( 'google' )"
-		>
-		<span class="jolticon jolticon-google-plus"></span>
-		<span translate>Log In with Google+</span>
-	</button>
-
-	<button class="i-button big block anim-fade-in-enlarge stagger"
-		ng-disabled="!Connection.isOnline"
-		ng-click="loginCtrl.linkedAccountLogin( 'twitter' )"
-		>
-		<span class="jolticon jolticon-twitter"></span>
-		<span translate>auth.login.twitter_button</span>
-	</button>
-
-	<button class="i-button big block anim-fade-in-enlarge stagger"
-		ng-disabled="!Connection.isOnline"
-		ng-click="loginCtrl.linkedAccountLogin( 'twitch' )"
-		>
-		<span class="jolticon jolticon-twitch"></span>
-		<span translate>Log In with Twitch</span>
-	</button>
-</div>
-
-<p class="line-thru anim-fade-in">
-	<span translate>auth.or</span>
-</p>
-
-<gj-form-login gj-form-submit-handler="loginCtrl.onLoggedIn( formModel )"></gj-form-login>
+<gj-auth-login dark-variant="true"></gj-auth-login>
 
 <div class="auth-page-links text-right anim-fade-in">
 	<div class="auth-page-link">

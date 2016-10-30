@@ -1,5 +1,6 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
 import template from 'html!./follow-widget.html';
+import { App } from '../../../../app/app-service';
 
 @Component({
 	selector: 'gj-game-follow-widget',
@@ -14,6 +15,7 @@ export class FollowWidgetComponent
 	isProcessing = false;
 
 	constructor(
+		@Inject( 'App' ) private app: App,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'Growls' ) private Growls: any,
 	)
@@ -23,7 +25,7 @@ export class FollowWidgetComponent
 
 	onClick()
 	{
-		if ( this.isProcessing ) {
+		if ( !this.app.user || this.isProcessing ) {
 			return;
 		}
 

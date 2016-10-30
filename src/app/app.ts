@@ -40,6 +40,8 @@ import FiresidePostTagModule from './../lib/gj-lib-client/components/fireside/po
 import FiresidePostVideoModule from './../lib/gj-lib-client/components/fireside/post/video/video';
 import FiresidePostLikeModule from './../lib/gj-lib-client/components/fireside/post/like/like';
 import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
+import AuthModule from '../lib/gj-lib-client/components/auth/auth';
+import AuthJoinModule from '../lib/gj-lib-client/components/auth/join/join';
 
 import SplitTestModule from './components/split-test/split-test';
 import ShellModule from './components/shell/shell';
@@ -288,6 +290,9 @@ const AppModule = angular.module( 'App', [
 
 	VideoModule,
 	VideoEmbedModule,
+
+	AuthModule,
+	AuthJoinModule,
 
 	// Components.
 	'App.ProtocolWatcher',
