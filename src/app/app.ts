@@ -13,6 +13,7 @@ import ClipboardModule from './../lib/gj-lib-client/components/clipboard/clipboa
 import PopoverModule from '../lib/gj-lib-client/components/popover/popover';
 import CardModule from './../lib/gj-lib-client/components/card/card';
 import HistoryTickModule from './../lib/gj-lib-client/components/history-tick/history-tick';
+import PaginationModule from '../lib/gj-lib-client/components/pagination/pagination';
 import ModalConfirmModule from './../lib/gj-lib-client/components/modal/confirm/confirm';
 
 import gjNotificationModule from './../lib/gj-lib-client/components/notification/notification';
@@ -149,7 +150,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Referrer',
 	CardModule,
 	HistoryTickModule,
-	'gj.Pagination',
+	PaginationModule,
 	ModalConfirmModule,
 	'gj.SiteSelector',
 	'gj.Favicon',
