@@ -5,12 +5,5 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		controller: 'Legal_PrivacyCtrl',
 		controllerAs: 'privacyCtrl',
 		templateUrl: '/app/views/legal/privacy/privacy.html',
-		resolve: {
-			payload: function( User )
-			{
-				// No need to wait on this.
-				User.touch();
-			}
-		}
 	} );
 } );
