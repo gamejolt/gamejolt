@@ -10,6 +10,7 @@ import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 import LoadModule from './../lib/gj-lib-client/components/load/load';
 import LocationModule from './../lib/gj-lib-client/components/location/location';
 import ClipboardModule from './../lib/gj-lib-client/components/clipboard/clipboard';
+import PopoverModule from '../lib/gj-lib-client/components/popover/popover';
 import CardModule from './../lib/gj-lib-client/components/card/card';
 import HistoryTickModule from './../lib/gj-lib-client/components/history-tick/history-tick';
 import ModalConfirmModule from './../lib/gj-lib-client/components/modal/confirm/confirm';
@@ -137,7 +138,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Partial',
 	'gj.Backdrop',
 	'gj.Tooltip',
-	'gj.Popover',
+	PopoverModule,
 	'gj.ToggleSwitch',
 	'gj.Growls',
 	'gj.Scroll.Parallax',

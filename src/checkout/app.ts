@@ -7,6 +7,7 @@ import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 import ImgHelperModule from './../lib/gj-lib-client/components/img/helper/helper';
 import ImgResponsiveModule from './../lib/gj-lib-client/components/img/responsive/responsive';
+import PopoverModule from '../lib/gj-lib-client/components/popover/popover';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -74,7 +75,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Sellable',
 	'gj.Sellable.Pricing',
 
-	'gj.Popover',
+	PopoverModule,
 
 	FormsModule,
 
