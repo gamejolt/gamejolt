@@ -1,12 +1,13 @@
 <div class="trophy-overview">
 
 	<h2 ng-class="{ 'section-header': Screen.isDesktop || ctrl.size == 'full' }">
-		<span class="jolticon jolticon-trophy big"></span>
 		<a class="link-unstyled" ui-sref="discover.games.view.trophies.list( { slug: ctrl.game.slug, id: ctrl.game.id } )">
 			{{ ::'trophies.overview.heading' | translate }}
 		</a>
 		<small>({{ ::ctrl.trophies.length | number }})</small>
 	</h2>
+
+	<hr class="underbar">
 
 	<!--
 		If a user is logged in, then we show the completion widget.

@@ -267,7 +267,10 @@
 </section>
 
 <!-- Achievements -->
-<section class="section" ng-if="::(gameCtrl.hasScores || gameCtrl.trophiesCount)">
+<div ng-if="::(gameCtrl.hasScores || gameCtrl.trophiesCount)">
+	<hr>
+
+	<section class="section">
 	<div class="container">
 
 		<div class="row">
@@ -304,6 +307,7 @@
 
 	</div>
 </section>
+</div>
 
 <!--
 	Recommended Games

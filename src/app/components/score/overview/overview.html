@@ -5,13 +5,13 @@
 
 	<div class="col-xs-12" ng-class="::(ctrl.size == 'full' ? 'col-md-6' : '')">
 		<h2 class="section-header sans-margin">
-			<span class="jolticon jolticon-pedestals-numbers big"></span>
-
 			<a class="link-unstyled" ui-sref="discover.games.view.scores.list( { slug: ctrl.game.slug, id: ctrl.game.id, tableId: ctrl.scoreTable.id, type: 'best' } )">
 				{{ ::'scores.overview.heading' | translate }}
 			</a>
 			<small ng-show="::(ctrl.scoreTables.length > 1)">({{ ::ctrl.scoreTables.length | number }})</small>
 		</h2>
+
+		<hr class="underbar">
 	</div>
 
 	<div class="col-xs-12" ng-class="::(ctrl.size == 'full' ? 'col-md-6' : '')">
