@@ -4,8 +4,7 @@
 			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 				<p class="lead">Find the indie games you <span class="jolticon jolticon-heart big gj-pink"></span> and directly support the developers that make them</p>
 
-				<a class="btn btn-primary-outline"
-					ng-class="{ 'btn-block': Screen.isXs }"
+				<a class="btn btn-primary-outline btn-block-xs"
 					ui-sref="discover.games.list._fetch( { section: 'best' } )"
 					translate
 					>
@@ -20,8 +19,7 @@
 
 				<br class="visible-xs">
 
-				<a class="btn btn-outline"
-					ng-class="{ 'btn-block': Screen.isXs }"
+				<a class="btn btn-outline btn-block-xs"
 					gj-auth-required
 					ui-sref="dashboard.developer.games.add"
 					ng-click="!App.user ? $event.preventDefault() : ''"
@@ -150,10 +148,10 @@
 
 
 		<div class="text-center">
-			<a class="btn btn-outline"
+			<a class="btn btn-outline btn-block-xs"
 				ng-repeat="( i, section ) in homeCtrl.discoverSections track by $index"
 				ng-click="homeCtrl.changeSection( i )"
-				ng-class="{ active: homeCtrl.chosenSection === section, 'btn-block': Screen.isXs }"
+				ng-class="{ active: homeCtrl.chosenSection === section }"
 				translate
 				>
 				{{ section.title }}
