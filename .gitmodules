@@ -6,4 +6,4 @@
 	url = https://github.com/gamejolt/translations.git
 [submodule "src/lib/doc-game-api"]
 	path = src/lib/doc-game-api
-	url = git@github.com:gamejolt/doc-game-api.git
+	url = https://github.com/gamejolt/doc-game-api.git
