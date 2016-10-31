@@ -39,17 +39,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		{
 			_this.init( payload );
 
-			// Remove pressure from the game overview payload by doing these after.
-			Api.sendRequest( '/web/discover/games/scores/overview/' + $stateParams.id, { detach: true } ).then( function( payload )
-			{
-				_this.scoresPayload = payload;
-			} );
-
-			Api.sendRequest( '/web/discover/games/trophies/overview/' + $stateParams.id, { detach: true } ).then( function( payload )
-			{
-				_this.trophiesPayload = payload;
-			} );
-
 			// We set our state to skip tracking in the state definition.
 			// Track it manually here.
 			// This ensures that any experiments set in the payload get tracked as well.
@@ -90,6 +79,22 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 				}
 			} );
 		}
+
+		this.scoresPayload = _.pick( payload, [
+			'scoreTables',
+			'scoreTable',
+			'scores',
+			'scoresUserBestScore',
+			'scoresUserScorePlacement',
+			'scoresUserScoreExperience',
+		] );
+
+		this.trophiesPayload = _.pick( payload, [
+			'trophies',
+			'trophiesAchieved',
+			'trophiesExperienceAchieved',
+			'trophiesShowInvisibleTrophyMessage',
+		] );
 
 		this.posts = ActivityFeedService.bootstrap( Fireside_Post.populate( payload.posts ), { inHistorical: wasHistoricalView } );
 		this.songs = Game_Song.populate( payload.songs );

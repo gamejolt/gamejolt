@@ -26,9 +26,9 @@ angular.module( 'App.Score.Overview' ).directive( 'gjScoreOverview', function()
 				this.scoreTables = payload.scoreTables ? Game_ScoreTable.populate( payload.scoreTables ) : [];
 				this.scoreTable = payload.scoreTable ? new Game_ScoreTable( payload.scoreTable ) : undefined;
 				this.scores = payload.scores ? User_GameScore.populate( payload.scores ) : [];
-				this.userBestScore = payload.userBestScore ? new User_GameScore( payload.userBestScore ) : undefined;
-				this.userScorePlacement = payload.userScorePlacement || undefined;
-				this.userScoreExperience = payload.userScoreExperience || undefined;
+				this.userBestScore = payload.scoresUserBestScore ? new User_GameScore( payload.scoresUserBestScore ) : undefined;
+				this.userScorePlacement = payload.scoresUserScorePlacement || undefined;
+				this.userScoreExperience = payload.scoresUserScoreExperience || undefined;
 
 				this.scoresLeft = [];
 				this.scoresRight = [];
