@@ -1,2 +1,2 @@
-<div gj-partial="/app/views/discover/home/_home-original.html"></div>
-<!--<div gj-partial="/app/views/discover/home/_home-simple.html"></div>-->
+<div ng-if="!homeCtrl.hasSimpleHome" gj-partial="/app/views/discover/home/_home-original.html"></div>
+<div ng-if="homeCtrl.hasSimpleHome" gj-partial="/app/views/discover/home/_home-simple.html"></div>

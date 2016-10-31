@@ -29,7 +29,7 @@ export class HomeCtrl
 
 	isDevlogsExpanded = false;
 
-	hasNoFeaturedSplit = false;
+	hasSimpleHome = false;
 
 	discoverSections: DiscoverSection[];
 	chosenSection: DiscoverSection;
@@ -47,7 +47,7 @@ export class HomeCtrl
 		@Inject( 'payload' ) payload: any,
 	)
 	{
-		this.hasNoFeaturedSplit = splitTest.hasHomeNoFeatured( payload );
+		this.hasSimpleHome = splitTest.hasSimpleHome( payload );
 
 		app.title = null;
 
@@ -96,14 +96,14 @@ export class HomeCtrl
 			items: this.hotGames,
 		};
 
-		const recommendedSection = {
-			title: gettextCatalog.getString( 'Recommended Games' ),
-			url: $state.href( 'library.collection.recommended', { id: app.user.username } ),
-			eventLabel: 'recommended-games',
-			items: this.recommendedGames,
-		};
-
 		if ( app.user ) {
+			const recommendedSection = {
+				title: gettextCatalog.getString( 'Recommended Games' ),
+				url: $state.href( 'library.collection.recommended', { id: app.user.username } ),
+				eventLabel: 'recommended-games',
+				items: this.recommendedGames,
+			};
+
 			this.discoverSections = [ hotSection, recommendedSection, bestSection ];
 		}
 		else {
