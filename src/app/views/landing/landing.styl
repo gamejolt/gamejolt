@@ -8,16 +8,28 @@
 
 	h1
 		font-weight: 300
-		font-size: 60px
 		letter-spacing: 2px
 		text-transform: none
 
+		@media $media-sm-up
+			font-size: 60px
+
 		sup
-			font-size: $font-size-small
+			top: -10px
+			font-size: $font-size-tiny
 			font-weight: normal
 
 			@media $media-sm-up
 				top: -25px
+				font-size: $font-size-small
+
+		.bolt
+			width: 17px * 2
+			height: 17px * 2
+
+			@media $media-sm-up
+				width: 17px * 3
+				height: 17px * 3
 
 	.lead
 		font-weight: bold
@@ -30,6 +42,32 @@
 	.platform-list
 		margin-bottom: 0
 		margin-top: $line-height-computed * 2
+
+.landing-body
+
+	a
+		link-underlines( $black, $white, $white )
+		font-weight: bold
+
+	a.btn
+		background-image: none !important
+		text-shadow: none !important
+
+	.fill-pink
+
+		a
+			link-underlines( $white, $gj-pink, $gj-pink )
+
+	.section
+		position: relative
+
+	.fill-black
+
+		h1, h2, h3
+			color: $gj-pink
+
+	p
+		line-height: 1.6
 
 .landing-break-lg
 	display: none
