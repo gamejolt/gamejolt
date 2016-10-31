@@ -105,22 +105,21 @@
 					<!--
 						Partner Controls
 					-->
-					<div ng-if="overviewCtrl.game.referrals_enabled && App.user.partner_referral_key && overviewCtrl.packages.length">
+					<div ng-if="overviewCtrl.game.referrals_enabled && gameCtrl.userPartnerKey && overviewCtrl.packages.length">
 						<gj-card>
 							<div class="card-content">
-								<p>Yo yo yo, homie! Let's make some money.</p>
-								<input class="form-control" value="{{ Environment.baseUrl + $state.href( 'discover.games.view.overview', {
-									id: overviewCtrl.game.id,
-									slug: overviewCtrl.game.slug,
-									ref: App.user.partner_referral_key.referral_key
-								} ) }}">
+								<p>
+									<strong translate>This game is part of the Partner system!</strong>
+									<span translate>You can use this link for sharing the game.</span>
+								</p>
+								<input class="form-control" value="{{ ::gameCtrl.partnerLink }}">
 							</div>
 							<div class="card-controls">
-								<a class="btn btn-outline">
+								<button class="btn btn-outline" ng-click="gameCtrl.copyPartnerLink()">
 									<span class="jolticon jolticon-link"></span>
 									<span translate>Copy Partner Link</span>
-								</a>
-								<a class="btn btn-outline">
+								</button>
+								<a class="btn btn-outline" ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: gameCtrl.game.id } )">
 									<span class="jolticon jolticon-chart"></span>
 									<span translate>View Analytics</span>
 								</a>

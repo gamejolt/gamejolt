@@ -145,12 +145,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		if ( payload.activeJam ) {
 			this.activeJam = new Jam( payload.activeJam );
 		}
-
-		// Partner referral system.
-		if ( payload.partnerReferralKey && payload.partnerReferralUser ) {
-			this.partnerReferralKey = payload.partnerReferralKey;
-			this.partnerReferralUser = new User( payload.partnerReferralUser );
-		}
 	};
 
 	this.loadMoreVideoComments = function()
