@@ -11,19 +11,19 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlMatcherFacto
 	// Redirect old category URLs to new.
 	$urlRouterProvider.when( '/games/{category:gamesCategory}', '/games/best/:category' );
 
+	// TODO: Fix states that referenced old.
 	var subStates = {
-		'section': '/{section:gamesSection}',
-		'section-category': '/{section:gamesSection}/{category:gamesCategory}',
-		'section-date': '/{section:gamesSection}/{date}',
+		'_fetch': '/{section:gamesSection}',
+		'_fetch-category': '/{section:gamesSection}/{category:gamesCategory}',
+		'_fetch-date': '/{section:gamesSection}/{date}',
 	};
 
 	angular.forEach( subStates, function( url, state )
 	{
 		$stateProvider.state( 'discover.games.list.' + state, {
 			url: url + '?price&os&browser&maturity&status&page&query',
-			controller: 'Discover.Games.List.CategoryCtrl',
-			controllerAs: 'categoryCtrl',
-			templateUrl: '/app/views/discover/games/list/category/category.html',
+			controller: 'Discover.Games.List._FetchCtrl',
+			templateUrl: '/app/views/discover/games/list/_fetch.html',
 			resolve: {
 				payload: function( $stateParams, Api, History_Cache, filteringContainer )
 				{

@@ -17,7 +17,7 @@
 	-->
 	<span class="small" ng-if="!Screen.isXs && gameCtrl.game.published_on">
 		<span class="dot-separator"></span>
-		<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )"
+		<a ui-sref="discover.games.list._fetch-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )"
 			am-time-ago="::gameCtrl.game.published_on"></a>
 	</span>
 

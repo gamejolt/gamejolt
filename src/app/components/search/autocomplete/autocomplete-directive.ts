@@ -96,7 +96,7 @@ export class AutocompleteComponent implements OnInit
 			},
 			{
 				keyword: ':games',
-				state: 'discover.games.list.section',
+				state: 'discover.games.list._fetch',
 				options: { section: 'featured' },
 				description: gettext( 'commands.games_description' ),
 			},

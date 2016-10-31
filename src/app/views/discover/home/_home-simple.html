@@ -1,0 +1,209 @@
+<section class="section landing-header text-center">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+				<p class="lead">Find the indie games you <span class="jolticon jolticon-heart big gj-pink"></span> and directly support the developers that make them</p>
+
+				<a class="btn btn-primary-outline"
+					ng-class="{ 'btn-block': Screen.isXs }"
+					ui-sref="discover.games.list._fetch( { section: 'best' } )"
+					translate
+					>
+					Browse Games
+				</a>
+
+				<span class="hidden-xs">
+					&nbsp;&nbsp;&nbsp;
+					<em translate>or</em>
+					&nbsp;&nbsp;&nbsp;
+				</span>
+
+				<br class="visible-xs">
+
+				<a class="btn btn-outline"
+					ng-class="{ 'btn-block': Screen.isXs }"
+					gj-auth-required
+					ui-sref="dashboard.developer.games.add"
+					ng-click="!App.user ? $event.preventDefault() : ''"
+					translate
+					>
+					Add Your Game
+				</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="section">
+	<div class="container-lg">
+
+		<br>
+
+		<h1 class="section-header text-center">
+			<a class="link-unstyled"
+				ui-sref="discover.games.list._fetch( { section: 'featured' } )"
+				gj-track-event="home:row-heading:featured"
+				translate
+				>
+				Featured Games
+			</a>
+		</h1>
+
+		<hr class="underbar underbar-center">
+
+		<gj-game-grid
+			games="homeCtrl.featuredGames"
+			truncate-to-fit="true"
+			scrollable="true"
+			event-label="home-featured-games"
+			>
+		</gj-game-grid>
+
+		<div class="text-center">
+			<a class="btn btn-outline"
+				ui-sref="discover.games.list._fetch( { section: 'featured' } )"
+				gj-track-event="home:more-btn:featured"
+				translate
+				>
+				Explore All Featured
+			</a>
+		</div>
+
+	</div>
+</section>
+
+<div class="page-cut"></div>
+
+<section class="section">
+	<div class="container">
+
+		<!--
+			Channels
+		-->
+
+		<div class="row text-center">
+			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+
+				<h1 class="section-header sans-margin-bottom">
+					<a class="link-unstyled"
+						ui-sref="discover.channels.list"
+						gj-track-event="home:row-heading:channels"
+						translate
+						>
+						<span translate>Browse Channels</span>
+					</a>
+				</h1>
+
+				<p class="text-muted small" translate>
+					Channels are like mini Game Jolts. Find and discover games around specific interests.
+				</p>
+			</div>
+		</div>
+
+		<hr class="underbar underbar-center">
+
+		<div class="row">
+			<div class="col-xs-6 col-sm-3 col-md-2"
+				ng-repeat="channel in ::homeCtrl.channels"
+				>
+				<gj-channel-thumbnail channel="{{ ::channel }}"></gj-channel-thumbnail>
+			</div>
+		</div>
+
+		<div class="text-center">
+			<a class="btn btn-outline"
+				ui-sref="discover.channels.list"
+				gj-track-event="home:more-btn:channels"
+				translate
+				>
+				View All Channels
+			</a>
+		</div>
+
+	</div>
+</section>
+
+<div class="page-cut"></div>
+
+<section class="section">
+	<div class="container-lg">
+
+		<!--
+			Game Listings
+		-->
+
+		<div class="row text-center">
+			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+
+				<h1 class="section-header">
+					<a class="link-unstyled"
+						ui-sref="discover.channels.list"
+						gj-track-event="home:row-heading:channels"
+						translate
+						>
+						Discover Games
+					</a>
+				</h1>
+
+			</div>
+		</div>
+
+
+		<div class="text-center">
+			<a class="btn btn-outline"
+				ng-repeat="( i, section ) in homeCtrl.discoverSections track by $index"
+				ng-click="homeCtrl.changeSection( i )"
+				ng-class="{ active: homeCtrl.chosenSection === section, 'btn-block': Screen.isXs }"
+				translate
+				>
+				{{ section.title }}
+			</a>
+		</div>
+		<br>
+
+		<hr class="underbar underbar-center">
+
+		<gj-game-grid
+			games="homeCtrl.chosenSection.items"
+			truncate-to-fit="true"
+			event-label="home-{{ homeCtrl.chosenSection.eventLabel }}"
+			>
+		</gj-game-grid>
+
+		<div class="text-center">
+			<a class="btn btn-outline"
+				ng-href="{{ homeCtrl.chosenSection.url }}"
+				gj-track-event="home:more-btn:{{ homeCtrl.chosenSection.eventLabel }}"
+				translate
+				>
+				Load More
+			</a>
+		</div>
+
+	</div>
+</section>
+
+<section class="section fill-lightest" ng-if="!App.user">
+	<div class="container">
+
+		<h1 class="section-header text-center" translate>
+			Join Game Jolt
+		</h1>
+
+		<div class="text-center">
+			<p class="lead" translate>Do you love indie games as much as we do?</p>
+		</div>
+
+		<hr class="underbar underbar-center">
+		<br>
+
+		<div class="row">
+			<div class="col-sm-6 col-md-5 col-lg-4 col-centered">
+
+				<gj-auth-join></gj-auth-join>
+
+			</div>
+		</div>
+
+	</div>
+</section>

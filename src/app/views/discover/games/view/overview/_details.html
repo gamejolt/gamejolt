@@ -31,7 +31,7 @@
 	<strong translate>Published On:</strong>
 	<span gj-lazy-placeholder="gameCtrl.game.category_human">
 		<span class="lazy-placeholder" style="width: 120px"></span>
-		<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )">
+		<a ui-sref="discover.games.list._fetch-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )">
 			{{ ::gameCtrl.game.published_on | date:'longDate' }}
 		</a>
 	</span>

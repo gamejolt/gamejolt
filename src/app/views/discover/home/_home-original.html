@@ -1,46 +1,3 @@
-<!--<div ng-if="!Environment.isClient">
-	<style type="text/css">
-
-		.client-banner {
-			position: relative
-		}
-
-		.client-banner .section-header {
-			font-weight: 100;
-		}
-
-		.client-banner-mascot {
-			position: absolute;
-			bottom: -40px;
-			right: -202px;
-		}
-
-	</style>
-
-	<section class="section fill-darker">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-9 col-md-8 col-md-offset-1 col-lg-6 col-lg-offset-2 client-banner">
-					<div class="h2 section-header">Psst...</div>
-					<p>
-						<a href="http://gamejolt.com/client" gj-track-event="home:client-banner">
-							<img ng-if="Screen.isXs" src="/app/img/game-jolt-client-logo.svg" width="254" height="18" alt="Game Jolt Client">
-							<img ng-if="!Screen.isXs" src="/app/img/game-jolt-client-logo.svg" width="558" height="36" alt="Game Jolt Client">
-						</a>
-					</p>
-					<p>We launched the Game Jolt Client. It's the whole site on your desktop&mdash;easiest, speediest way to install and play Game Jolt games.</p>
-					<a href="http://gamejolt.com/client" class="btn btn-sm btn-primary-outline" gj-track-event="home:client-banner">
-						Learn More
-					</a>
-					<a class="client-banner-mascot hidden-xs" href="http://gamejolt.com/client" gj-track-event="home:client-banner">
-						<img src="/app/views/discover/home/banner-clyde.png" width="182" height="207" alt="">
-					</a>
-				</div>
-			</div>
-		</div>
-	</section>
-</div>-->
-
 <gj-discover-home-featured featured-items="homeCtrl.featuredItems"></gj-discover-home-featured>
 
 <div class="container" ng-if="::!Environment.isClient">
@@ -61,7 +18,9 @@
 <section class="section">
 	<div class="container">
 		<h2 class="section-header" translate>Browse by Genre</h2>
-		<gj-genre-list></gj-genre-list>
+		<div class="well fill-darker">
+			<gj-genre-list></gj-genre-list>
+		</div>
 	</div>
 </section>
 
@@ -115,7 +74,7 @@
 		<div class="row">
 			<div class="col-sm-8">
 				<h1 class="section-header sans-margin-bottom">
-					<a class="link-unstyled" ui-sref="discover.games.list.section( { section: 'best', price: 'paid' } )" gj-track-event="home:row-heading:paid">
+					<a class="link-unstyled" ui-sref="discover.games.list._fetch( { section: 'best', price: 'paid' } )" gj-track-event="home:row-heading:paid">
 						<span class="jolticon jolticon-heart big"></span>
 						<span translate>Paid Games</span>
 					</a>
@@ -139,7 +98,7 @@
 					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
 					ng-repeat="game in homeCtrl.paidGames | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
 					gj-game="game"
-					gj-track-event="home:slider:game:{{ $index }}"
+					gj-track-event="game-grid:click:home-paid-games"
 					>
 				</gj-game-thumbnail>
 			</div>
@@ -148,7 +107,7 @@
 		<div class="row">
 			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 				<a class="btn btn-primary-outline btn-block"
-					ui-sref="discover.games.list.section( { section: 'best', price: 'paid' } )"
+					ui-sref="discover.games.list._fetch( { section: 'best', price: 'paid' } )"
 					gj-track-event="home:more-btn:paid"
 					translate
 					>
@@ -170,7 +129,7 @@
 
 		<div ng-if="::!App.user">
 			<h2 class="section-header sans-margin-bottom">
-				<a class="link-unstyled" ui-sref="discover.games.list.section( { section: 'best' } )" gj-track-event="home:row-heading:best">
+				<a class="link-unstyled" ui-sref="discover.games.list._fetch( { section: 'best' } )" gj-track-event="home:row-heading:best">
 					{{ ::'discover.home.best_heading' | translate }}
 				</a>
 			</h2>
@@ -190,7 +149,7 @@
 						ng-class="{ 'scrollable-grid-item': Screen.isXs }"
 						ng-repeat="game in homeCtrl.bestGames | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
 						gj-game="game"
-						gj-track-event="home:slider:game:{{ $index }}"
+						gj-track-event="game-grid:click:home-best-games"
 						>
 					</gj-game-thumbnail>
 				</div>
@@ -198,7 +157,7 @@
 
 			<div class="page-cut">
 				<a class="btn btn-outline"
-					ui-sref="discover.games.list.section( { section: 'best' } )"
+					ui-sref="discover.games.list._fetch( { section: 'best' } )"
 					gj-track-event="home:more-btn:best"
 					translate
 					>
@@ -241,7 +200,7 @@
 						ng-class="{ 'scrollable-grid-item': Screen.isXs }"
 						ng-repeat="game in homeCtrl.recommendedGames | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
 						gj-game="game"
-						gj-track-event="home:slider:game:{{ $index }}"
+						gj-track-event="game-grid:click:home-recommended-games"
 						>
 					</gj-game-thumbnail>
 				</div>
@@ -270,7 +229,7 @@
 		-->
 
 		<h2 class="section-header sans-margin-bottom">
-			<a class="link-unstyled" ui-sref="discover.games.list.section( { section: 'hot' } )" gj-track-event="home:row-heading:hot">
+			<a class="link-unstyled" ui-sref="discover.games.list._fetch( { section: 'hot' } )" gj-track-event="home:row-heading:hot">
 				{{ ::'discover.home.hot_heading' | translate }}
 			</a>
 		</h2>
@@ -293,7 +252,7 @@
 					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
 					ng-repeat="game in homeCtrl.hotGames | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
 					gj-game="game"
-					gj-track-event="home:slider:game:{{ $index }}"
+					gj-track-event="game-grid:click:home-hot-games"
 					>
 				</gj-game-thumbnail>
 			</div>
@@ -301,7 +260,7 @@
 
 		<div class="page-cut">
 			<a class="btn btn-outline"
-				ui-sref="discover.games.list.section( { section: 'hot' } )"
+				ui-sref="discover.games.list._fetch( { section: 'hot' } )"
 				gj-track-event="home:more-btn:hot"
 				translate
 				>
@@ -334,7 +293,7 @@
 					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
 					ng-repeat="game in homeCtrl.hotDevlogs | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
 					gj-game="game"
-					gj-track-event="home:slider:game:{{ $index }}"
+					gj-track-event="game-grid:click:home-hot-devlogs"
 					>
 				</gj-game-thumbnail>
 			</div>
