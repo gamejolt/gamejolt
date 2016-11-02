@@ -215,6 +215,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 			var xhr = new XMLHttpRequest();
 			xhr.open( 'POST', StripeFileUploadUrl );
 			xhr.setRequestHeader( 'Authorization', 'Bearer ' + stripePublishableKey );
+			xhr.setRequestHeader( 'Accept', 'application/json' );  // Makes sure it doesn't return as JSONP.
 			xhr.send( formData );
 
 			xhr.onreadystatechange = function()
