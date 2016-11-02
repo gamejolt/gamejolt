@@ -38,7 +38,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancials', 
 				if ( scope.formModel.percentage_split > 10 ) {
 					scope.formModel.percentage_split = 10;
 				}
-            }
+			}
 		};
 
 		scope.linkPayPal = function()

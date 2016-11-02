@@ -20,11 +20,14 @@
 			name="{{ $ctrl.namePrefix }}-document"
 			label="ID Document"
 			>
-			<p class="help-block">This should be a scan of an ID card, driver's license, passport, or other government supplied identification.</p>
+			<p class="help-block">
+				This should be a scan of an ID card, driver's license, passport, or other government supplied identification. <em>Only .png or .jpg is accepted and it must be smaller than 8MB.</em>
+			</p>
 			<gj-form-upload-control
+				ng-attr-id="{{ $ctrl.namePrefix }}-document-input"
 				form-control="upload"
-				gj-max-filesize="10 * 1024 * 1024"
-				accept=".png,.jpg,.jpeg,.gif"
+				gj-max-filesize="8 * 1024 * 1024"
+				accept=".png,.jpg,.jpeg"
 				>
 			</gj-form-upload-control>
 			<control-errors></control-errors>

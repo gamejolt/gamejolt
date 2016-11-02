@@ -17,7 +17,7 @@
     "@types/lodash": "0.0.27",
     "@types/moment": "^2.11.28",
     "@types/oclazyload": "0.0.30",
-    "@types/stripe": "0.0.27",
+    "@types/stripe": "0.0.31",
     "concat-with-sourcemaps": "~1.0.2",
     "connect-history-api-fallback": "0.0.4",
     "decompress-zip": "^0.2.0",
