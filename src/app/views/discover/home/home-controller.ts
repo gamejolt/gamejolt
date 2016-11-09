@@ -2,7 +2,6 @@ import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../app-service';
 import { Meta } from './../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { SplitTest } from '../../../components/split-test/split-test-service';
 
 interface DiscoverSection {
 	title: string;
@@ -29,8 +28,6 @@ export class HomeCtrl
 
 	isDevlogsExpanded = false;
 
-	hasSimpleHome = false;
-
 	discoverSections: DiscoverSection[];
 	chosenSection: DiscoverSection;
 
@@ -43,12 +40,9 @@ export class HomeCtrl
 		@Inject( 'Game' ) gameModel: any,
 		@Inject( 'FeaturedItem' ) featuredItemModel: any,
 		@Inject( 'Fireside_Post' ) firesidePostModel: typeof Fireside_Post,
-		@Inject( 'SplitTest' ) splitTest: SplitTest,
 		@Inject( 'payload' ) payload: any,
 	)
 	{
-		this.hasSimpleHome = splitTest.hasSimpleHome( payload );
-
 		app.title = null;
 
 		meta.description = payload.metaDescription;
