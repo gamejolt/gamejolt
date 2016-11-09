@@ -2,10 +2,30 @@
 	ng-href="{{ ::$ctrl.url }}"
 	>
 
-	<div class="game-thumbnail-controls" ng-if="::$ctrl.showControl">
-		<button class="i-button big sparse" tooltip="{{ ::$ctrl.controlLabel }}" ng-click="$ctrl.onControlClick( $event )">
+	<div class="game-thumbnail-controls"
+		ng-if="::$ctrl.showControl || $ctrl.showModTools"
+		>
+		<button class="btn btn-sparse"
+			ng-if="::$ctrl.showControl"
+			tooltip="{{ ::$ctrl.controlLabel }}"
+			ng-click="$ctrl.onControlClick( $event )"
+			>
 			<span class="jolticon" ng-class="::'jolticon-' + $ctrl.controlType"></span>
 		</button>
+		<span ng-if="::$ctrl.showModTools">
+			<button class="btn btn-sparse"
+				gj-popover-trigger="game-mod-tools-{{ ::$ctrl.game.id }}"
+				ng-click="$event.preventDefault()"
+				>
+				<span class="jolticon jolticon-cog"></span>
+			</button>
+			<gj-popover
+				popover-id="game-mod-tools-{{ ::$ctrl.game.id }}"
+				popover-append-to-body="true"
+				>
+				<gj-game-mod-links game="::$ctrl.game"></gj-game-mod-links>
+			</gj-popover>
+		</span>
 	</div>
 
 	<div class="game-thumbnail-thumb">

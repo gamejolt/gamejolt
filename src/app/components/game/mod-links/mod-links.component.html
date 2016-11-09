@@ -1,0 +1,23 @@
+<div class="list-group list-group-dark">
+	<a class="list-group-item has-icon"
+		ng-click="$ctrl.tag( 'fnaf' )"
+		target="_blank"
+		>
+		<span class="jolticon jolticon-tag"></span>
+		<span>Tag: #fnaf</span>
+	</a>
+	<a class="list-group-item has-icon"
+		ng-click="$ctrl.tag( 'fangame' )"
+		target="_blank"
+		>
+		<span class="jolticon jolticon-tag"></span>
+		<span>Tag: #fangame</span>
+	</a>
+	<a class="list-group-item has-icon"
+		ng-href="{{ ::$ctrl.env.baseUrl }}/moderate/games/view/{{ ::$ctrl.game.id }}"
+		target="_blank"
+		>
+		<span class="jolticon jolticon-cog"></span>
+		<span>Moderate Game</span>
+	</a>
+</div>

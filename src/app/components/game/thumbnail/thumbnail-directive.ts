@@ -2,6 +2,7 @@ import { Component, Inject, Input, Output, OnInit, HostBinding, HostListener } f
 import template from 'html!./thumbnail.html';
 
 import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
+import { App } from '../../../app-service';
 
 @Component({
 	selector: 'gj-game-thumbnail',
@@ -20,11 +21,13 @@ export class ThumbnailComponent implements OnInit
 	element: HTMLElement;
 	url: string;
 	showControl = false;
+	showModTools = false;
 	isHovered = false;
 
 	constructor(
 		@Inject( '$element' ) $element: ng.IAugmentedJQuery,
-		@Inject( 'Screen' ) public screen: Screen
+		@Inject( 'Screen' ) public screen: Screen,
+		@Inject( 'App' ) public app: App,
 	)
 	{
 		this.element = $element[0];
@@ -41,6 +44,10 @@ export class ThumbnailComponent implements OnInit
 
 		if ( this.controlType ) {
 			this.showControl = true;
+		}
+
+		if ( this.app.user && this.app.user.permission_level >= 3 ) {
+			this.showModTools = true;
 		}
 	}
 

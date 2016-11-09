@@ -68,6 +68,7 @@ import GameFollowWidgetModule from './components/game/follow-widget/follow-widge
 import GameGridModule from './components/game/grid/grid';
 import FiresidePostThumbnailModule from './components/fireside/post/thumbnail/thumbnail';
 import FiresidePostListModule from './components/fireside/post/list/list';
+import GameModLinksModule from './components/game/mod-links/mod-links';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -369,6 +370,8 @@ const AppModule = angular.module( 'App', [
 	'App.User.FriendshipsHelper',
 
 	'App.Terms.ChangeAlert',
+
+	GameModLinksModule,
 
 	// Views.
 	ViewsModule,
