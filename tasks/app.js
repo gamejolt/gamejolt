@@ -1,7 +1,6 @@
 var gulp = require( 'gulp' );
 var gutil = require( 'gulp-util' );
 var plugins = require( 'gulp-load-plugins' )();
-var sequence = require( 'run-sequence' );
 var fs = require( 'fs' );
 
 module.exports = function( config )
@@ -48,18 +47,10 @@ module.exports = function( config )
 		return 'app:modify:' + section;
 	} );
 
-	gulp.task( 'app:modify', modifySections );
+	gulp.task( 'app:modify', gulp.parallel( modifySections ) );
 
 	/**
 	 * This will actual start the app build process.
 	 */
-	gulp.task( 'app', function( callback )
-	{
-		return sequence(
-			'app:config',
-			'default',
-			'app:modify',
-			callback
-		);
-	} );
+	gulp.task( 'app', gulp.series( 'app:config', 'default', 'app:modify' ) );
 };

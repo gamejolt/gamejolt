@@ -1,7 +1,6 @@
 var gulp = require( 'gulp' );
 var gutil = require( 'gulp-util' );
 var plugins = require( 'gulp-load-plugins' )();
-var sequence = require( 'run-sequence' );
 var fs = require( 'fs' );
 
 module.exports = function( config )

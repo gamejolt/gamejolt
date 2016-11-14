@@ -168,4 +168,4 @@ require( './tasks/client.js' )( config );
 require( './tasks/app.js' )( config );
 require( './tasks/game-api-doc.js' )( config );
 
-gulp.task( 'pre', [ 'game-api-doc:nav', 'game-api-doc:compile' ] );
+gulp.task( 'pre', gulp.parallel( 'game-api-doc:nav', 'game-api-doc:compile' ) );
