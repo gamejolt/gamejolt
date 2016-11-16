@@ -16,38 +16,6 @@
 
 	<section class="section">
 		<div class="container">
-			<div class="row text-center">
-				<div class="col-lg-3"></div>
-				<div class="col-lg-2">
-					<div class="stat-big">
-						<div class="stat-big-digit">
-							13,644,647
-						</div>
-						<div class="stat-big-label">Scores Logged</div>
-					</div>
-				</div>
-				<div class="col-lg-2">
-					<div class="stat-big">
-						<div class="stat-big-digit">
-							1,264,897
-						</div>
-						<div class="stat-big-label">Trophies Achieved</div>
-					</div>
-				</div>
-				<div class="col-lg-2">
-					<div class="stat-big">
-						<div class="stat-big-digit">
-							608,881
-						</div>
-						<div class="stat-big-label">Hours Logged</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="container">
 
 			<h1 class="section-header text-center">
 				Game Jolt Loves
@@ -58,47 +26,41 @@
 
 			<div class="row">
 
-				<div class="col-lg-4">
+				<div class="col-sm-6 col-md-4">
 
 					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/leaderboards.svg" alt="Leaderboards">
+						<img src="/app/views/landing/learn/gamers.svg" alt="">
 					</div>
 
 					<h4 class="text-center">Gamers</h4>
 
-					<p>With over 70k games, millions of gamers every month, and completely free to use, you'll be playing non-stop. Literally. Like, forever.</p>
+					<p>Millions of gamers visit to play over 70k (and counting) games! Game Jolt is completely free to use so you'll be playing non-stop. Literally. Like, forever.</p>
 
 				</div>
 
-				<div class="col-lg-4">
+				<div class="col-sm-6 col-md-4">
 
 					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/trophies.svg" alt="Trophies">
+						<img src="/app/views/landing/learn/lpers.svg" alt="">
 					</div>
 
 					<h4 class="text-center">Let's Players</h4>
 
-					<p>Let's players and indie content creators have been a massive help in getting indie games discovered and known! With a nearly non-stop catalog of games from people just like you.</p>
-
-					<p>
-						<a>Learn more</a>
-					</p>
+					<p>Let's players and streamers have been a massive help in getting indie games discovered! Link your channel to Game Jolt and post video comments.</p>
 
 				</div>
 
-				<div class="col-lg-4">
+				<div class="landing-break-sm"></div>
+
+				<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 
 					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/trophies.svg" alt="Trophies">
+						<img src="/app/views/landing/learn/developers.svg" alt="">
 					</div>
 
 					<h4 class="text-center">Indie Developers</h4>
 
-					<p>The goal of Game Jolt since it started in 2003 has always been to grow indie gaming. We give you the tools to distribute you game, and manage your base of players.</p>
-
-					<p>
-						<a>Learn more</a>
-					</p>
+					<p>Since starting in 2002, the goal of Game Jolt has always been to grow indie gaming. We give you the tools to build an audience, distribute your games, and manage your base of players.</p>
 
 				</div>
 
@@ -107,25 +69,39 @@
 		</div>
 	</section>
 
-	<hr>
-
-	<section class="section">
+	<section class="section fill-lightest">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-2"></div>
-				<div class="col-lg-5">
+				<div class="col-lg-1"></div>
+				<div class="col-sm-7 col-md-6 col-lg-5">
 
 					<h2 class="section-header">Discover</h2>
+					<hr class="underbar">
 
-					<p><b>Browse</b> game listings to discover new and old gems created by independent developers! Once you've play and rate a few, we'll start giving you <b>personalized game recommendations</b>!</p>
+					<br>
+					<h4 class="sans-margin-top">Find New Games</h4>
+					<p>Browse game listings to discover new and old gems created by independent developers!</p>
 
-					<p>Get started now and check our <a href="">Featured</a>, <a href="">Hot</a>, <a href="">Devlogs</a>, <a href="">Early Access</a> and <a href="">Marketplace</a> games!</p>
+					<p>
+						Get started now by browsing
+						<a ui-sref="discover.games.list._fetch( { section: 'featured' } )">Featured</a>,
+						<a ui-sref="discover.games.list._fetch( { section: 'hot' } )">Hot</a>,
+						<a ui-sref="discover.devlogs.overview">Devlogs</a>,
+						<a ui-sref="discover.games.list._fetch( { section: 'best', 'status': 'wip' } )">Early Access</a>
+						or <a ui-sref="discover.games.list._fetch( { section: 'best', price: 'paid' } )">Paid</a>
+						games!
+					</p>
+
+					<br>
+					<h4 class="sans-margin-top">Recommendations</h4>
+					<p>Once you play, follow, and rate some games we'll start giving you personalized game recommendations.</p>
 
 				</div>
-				<div class="col-lg-3">
+				<div class="col-md-1"></div>
+				<div class="col-sm-5">
 
-					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/leaderboards.svg" alt="Leaderboards">
+					<div class="landing-graphic-full hidden-xs">
+						<img src="/app/views/landing/learn/discover.svg" alt="">
 					</div>
 
 				</div>
@@ -136,46 +112,60 @@
 	<section class="section">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-2"></div>
-				<div class="col-lg-3">
+				<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 
-					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/leaderboards.svg" alt="Leaderboards">
+					<div class="landing-graphic-full hidden-xs">
+						<img src="/app/views/landing/learn/interact.svg" alt="">
 					</div>
 
 				</div>
-				<div class="col-lg-5">
+				<div class="col-md-1"></div>
+				<div class="col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-0 col-lg-5">
 
 					<h2 class="section-header">Interact</h2>
+					<hr class="underbar">
 
-					<p><b>Provide feedback</b>, ask questions, and discuss with the developers directly by commenting on game pages.</p>
+					<br>
+					<h4 class="sans-margin-top">Discuss</h4>
+					<p>Ask questions, provide feedback, and discuss directly with developers by commenting on their game pages.</p>
 
-					<p>You're in control of what becomes popular on Game Jolt and for all we know--the gaming industry. <b>Rate games</b> you love onto Game Jolt's home page and top of game listings.</p>
+					<br>
+					<h4 class="sans-margin-top">Rate games</h4>
+					<p>You're in control of what becomes popular on Game Jolt and&mdash;for all we know&mdash;the gaming industry. Rate games you love onto Game Jolt's home page and the top of game listings.</p>
 
-					<p>If you're a <b>Let's Player</b>, link your YouTube channel and post video comments to the game page! <a>Learn more</a></p>
+					<br>
+					<h4 class="sans-margin-top">Let's Players</h4>
+					<p>If you're a Let's Player, link your YouTube or Twitch channel and post video comments to the game page.</p>
 
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<section class="section">
+	<section class="section fill-lightest">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-2"></div>
-				<div class="col-lg-5">
+				<div class="col-lg-1"></div>
+				<div class="col-sm-7 col-md-6 col-lg-5">
 
-					<h2 class="section-header">Support indie games</h2>
+					<h2 class="section-header">Support Indie Developers</h2>
+					<hr class="underbar">
 
+					<br>
+					<h4 class="sans-margin-top">Indie-Friendly</h4>
 					<p>Be confident that the money you spend goes to the developer. We let developers decide the percentage to give to Game Jolt! Every little bit counts!</p>
+
+					<br>
+					<h4 class="sans-margin-top">Be a Supporter</h4>
 
 					<p>We'll post your avatar as a supporter on the game's page when you pay more than the developer's asking price. Lead by example and show your support!</p>
 
 				</div>
-				<div class="col-lg-3">
+				<div class="col-md-1"></div>
+				<div class="col-sm-5">
 
-					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/leaderboards.svg" alt="Leaderboards">
+					<div class="landing-graphic-full hidden-xs">
+						<img src="/app/views/landing/learn/support.svg" alt="">
 					</div>
 
 				</div>
@@ -188,25 +178,95 @@
 		<div class="container">
 
 			<div class="row">
-				<div class="col-lg-2"></div>
-				<div class="col-lg-3">
+				<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 
-					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/leaderboards.svg" alt="Leaderboards">
+					<div class="landing-graphic-full hidden-xs">
+						<img src="/app/views/landing/learn/feeds.svg" alt="">
 					</div>
 
 				</div>
-				<div class="col-lg-5">
+				<div class="col-md-1"></div>
+				<div class="col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-0 col-lg-5">
 
 					<h2 class="section-header">Devlogs</h2>
+					<hr class="underbar">
 
-					<p>Every game on Game Jolt gets a devlog where developers can post the latest news and development for their games.</p>
+					<br>
+					<h4 class="sans-margin-top">Early Access and In-Development</h4>
+					<p>Discover your future favorite game from its early devlog stage or keep up to date with early access games. Gain access before the rest of the world!</p>
 
-					<p>Discover your future favorite game from its early devlog stage or keep up to date with complete games. Be the first to know about new characters, releases, canceled games and anything else devs want to share with the world!</p>
+					<br>
+					<h4 class="sans-margin-top">Stay Updated</h4>
+					<p>Be the first to know about new mechanics, concept art, releases and anything else devs want to share with the world! Follow games to get notified when new posts are added.</p>
 
-					<p><b>Follow</b> games to get notified when new devlog posts are released.</p>
+					<p>
+						Browse
+						<a ui-sref="discover.devlogs.overview">Devlogs</a>
+						and
+						<a ui-sref="discover.games.list._fetch( { section: 'best', 'status': 'wip' } )">Early Access</a>
+						games.
+					</p>
 
-					<p>Browse <a>Devlogs</a> and <a>Early Access</a> games.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section fill-lightest">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-1"></div>
+				<div class="col-sm-7 col-md-6 col-lg-5">
+
+					<h2 class="section-header">Organize</h2>
+					<hr class="underbar">
+
+					<br>
+					<h4 class="sans-margin-top">Playlists</h4>
+					<p>Organize the way you follow games, devlogs and developers with ease! Others can discover, follow, and share your playlists.</p>
+
+					<br>
+					<h4 class="sans-margin-top">Activity Feed</h4>
+					<p>Any game you follow will show up in your Activity Feed. Keep track of what matters to you, and stay updated with your slice of the indie world!</p>
+
+				</div>
+				<div class="col-md-1"></div>
+				<div class="col-sm-5">
+
+					<div class="landing-graphic-full hidden-xs">
+						<img src="/app/views/landing/learn/organize.svg" alt="">
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container">
+
+			<div class="row">
+				<div class="col-sm-5 col-sm-push-7 col-md-push-0">
+
+					<div class="landing-graphic-full hidden-xs">
+						<img src="/app/views/landing/learn/achievements.svg" alt="">
+					</div>
+
+				</div>
+				<div class="col-md-1"></div>
+				<div class="col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-0 col-lg-5">
+
+					<h2 class="section-header">Achievements</h2>
+					<hr class="underbar">
+
+					<br>
+					<h4 class="sans-margin-top">Trophies</h4>
+					<p>Hunt for trophies in games that implement the Game Jolt Game API. Gotta get to 100% completion, eh?</p>
+
+					<br>
+					<h4 class="sans-margin-top">Scores</h4>
+					<p>Battle to get the top scores in games. Never give up. Never let us down. Never run around or desert us.</p>
 
 				</div>
 			</div>
@@ -214,59 +274,6 @@
 	</section>
 
 	<section class="section fill-black">
-		<div class="container">
-
-			<h1 class="section-header text-center">
-				Organize
-			</h1>
-
-			<hr class="underbar underbar-center">
-			<br>
-
-			<div class="row">
-
-				<div class="col-lg-4">
-
-					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/leaderboards.svg" alt="Leaderboards">
-					</div>
-
-					<h4 class="text-center">Playlists</h4>
-
-					<p>Implement leaderboards in your game to allow anyone to battle it out for the top spots. You create the leaderboards, you control the scoring. You can even allow guests to score without a Game Jolt account.</p>
-
-				</div>
-
-				<div class="col-lg-4">
-
-					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/trophies.svg" alt="Trophies">
-					</div>
-
-					<h4 class="text-center">Follow Everything</h4>
-
-					<p>Feed into your player base's hunger for trophy hunting. Trophies will sync to their Game Jolt profile for all to see as badges of honor.</p>
-
-				</div>
-
-				<div class="col-lg-4">
-
-					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/trophies.svg" alt="Trophies">
-					</div>
-
-					<h4 class="text-center">Client</h4>
-
-					<p>Feed into your player base's hunger for trophy hunting. Trophies will sync to their Game Jolt profile for all to see as badges of honor.</p>
-
-				</div>
-
-			</div>
-
-		</div>
-	</section>
-
-	<section class="section">
 		<div class="container">
 
 			<h1 class="section-header text-center">
@@ -278,39 +285,41 @@
 
 			<div class="row">
 
-				<div class="col-lg-4">
+				<div class="col-sm-6 col-md-4">
 
 					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/leaderboards.svg" alt="Leaderboards">
+						<img src="/app/views/landing/learn/friends.svg" alt="">
 					</div>
 
 					<h4 class="text-center">Friends</h4>
 
-					<p>Implement leaderboards in your game to allow anyone to battle it out for the top spots. You create the leaderboards, you control the scoring. You can even allow guests to score without a Game Jolt account.</p>
+					<p>Become indie friends on Game Jolt and get notified when your friends are online, when they're playing games, or send them game recommendations.</p>
 
 				</div>
 
-				<div class="col-lg-4">
+				<div class="col-sm-6 col-md-4">
 
 					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/trophies.svg" alt="Trophies">
+						<img src="/app/views/landing/learn/chat.svg" alt="">
 					</div>
 
 					<h4 class="text-center">Chat</h4>
 
-					<p>Feed into your player base's hunger for trophy hunting. Trophies will sync to their Game Jolt profile for all to see as badges of honor.</p>
+					<p>Meet other indies, network and get help through private messaging and available chat rooms.</p>
 
 				</div>
 
-				<div class="col-lg-4">
+				<div class="landing-break-sm"></div>
+
+				<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 
 					<div class="landing-graphic">
-						<img src="/app/views/landing/game-api/trophies.svg" alt="Trophies">
+						<img src="/app/views/landing/learn/forums.svg" alt="">
 					</div>
 
 					<h4 class="text-center">Forums</h4>
 
-					<p>Feed into your player base's hunger for trophy hunting. Trophies will sync to their Game Jolt profile for all to see as badges of honor.</p>
+					<p>Find developers looking for testers, discuss the industry, participate in existing conversations with let's players and devs, or start your own topic! Haikus are encouraged!</p>
 
 				</div>
 
@@ -335,19 +344,24 @@
 			<hr class="underbar underbar-center">
 			<br>
 
-			<img src="http://s.jams.gjcdn.net/app/views/home/mobile-ready-large-1.31f728b2.png" alt="">
+			<div class="landing-graphic-full">
+				<img class="visible-lg" src="/app/views/landing/learn/device-montage.jpg" alt="" style="margin: 0 auto; max-width: none; width: 912px; height: 484px">
+				<img class="visible-md" src="/app/views/landing/learn/device-montage.jpg" alt="" style="margin: 0 auto; max-width: none; width: 912px; height: 484px">
+				<img class="visible-sm" src="/app/views/landing/learn/device-montage.jpg" alt="" style="margin: 0 auto; max-width: none; width: 684px; height: 363px">
+				<img class="visible-xs" src="/app/views/landing/learn/device-montage.jpg" alt="" style="margin: 0 auto; max-width: none; width: 228px; height: 121px">
+			</div>
 
 			<br><br><br>
 
-			<a class="btn btn-outline active" ui-sref="client">Get Desktop Client</a>
+			<a class="btn btn-outline active" ui-sref="client" translate>Get Desktop Client</a>
 
 		</div>
 	</section>
 
-	<section class="section">
+	<section class="section" ng-if="!App.user">
 		<div class="container">
 
-			<h1 class="section-header text-center">
+			<h1 class="section-header text-center" translate>
 				Join
 			</h1>
 
