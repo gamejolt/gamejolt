@@ -45,13 +45,28 @@
 
 .landing-body
 
+	h1, h2, h3, h4, h5, h6
+		text-transform: uppercase
+
+	@media $media-xs
+		h3, h4, h5, h6
+			margin-top: $line-height-computed
+
 	a
 		link-underlines( $black, $white, $white )
 		font-weight: bold
 
+	.section
+		padding: 60px 0
+
 	a.btn
 		background-image: none !important
 		text-shadow: none !important
+
+	.fill-lightest
+
+		a
+			link-underlines( $text-color, $gray-lightest, $gray-lightest )
 
 	.fill-pink
 
@@ -69,18 +84,43 @@
 	p
 		line-height: 1.6
 
+	.stat-big-digit
+		font-size: $font-size-h1 * 1.2
+
 .landing-break-lg
+.landing-break-md
+.landing-break-sm
 	display: none
 
-	@media $media-lg
+@media $media-sm
+	.landing-break-sm
+		display: block
+		clear: both
+		height: $grid-gutter-width
+
+@media $media-md
+	.landing-break-md
+		display: block
+		clear: both
+		height: $grid-gutter-width
+
+@media $media-lg
+	.landing-break-lg
 		display: block
 		clear: both
 		height: $grid-gutter-width
 
 .landing-graphic
+.landing-graphic-full
 	text-align: center
 
 	> img
 		display: inline-block
 		width: 100%
 		max-width: 180px
+
+	@media $media-xs
+		margin-top: $grid-gutter-width-xs
+
+.landing-graphic-full > img
+	max-width: none
