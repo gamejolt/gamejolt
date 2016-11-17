@@ -16,7 +16,8 @@ export type Condition =
 	'has-partner' | 'no-partner' | 'partner';
 
 export type PseudoField =
-	'partner_donation'; // Translates to donation field with conditions has partner and has donation
+	'partner_generated_revenue' | // Translates to revenue field with conditions has partner
+	'partner_generated_donation'; // Translates to donation field with conditions has partner
 
 export type Field = PseudoField |
 	'country' | 'source_url' | 'source' | 'os' | 'comment_language' | 'comment_votes' | 'comment_replies' |
@@ -184,13 +185,13 @@ export const ReportTopPartners: ReportComponent[] = [ {
 
 export const ReportPartnerRevenue: ReportComponent[] = [ {
 	type: 'sum',
-	field: 'partner_revenue',
+	field: 'partner_generated_revenue',
 	fieldLabel: 'Total Revenue',
 	fieldType: 'currency',
 },
 {
 	type: 'average',
-	field: 'partner_donation',
+	field: 'partner_generated_donation',
 	fieldLabel: 'Average Support',
 	fieldType: 'currency',
 } ];
@@ -198,7 +199,7 @@ export const ReportPartnerRevenue: ReportComponent[] = [ {
 export const ReportTopPartnerRevenue: ReportComponent[] = [ {
 	type: 'top-composition-sum',
 	field: 'partner',
-	fetchFields: [ 'partner_revenue' ],
+	fetchFields: [ 'revenue' ],
 	resourceFields: {
 		partner: ['user_display_name'],
 	},
@@ -320,9 +321,9 @@ export class SiteAnalytics
 		return this.packageMetrics;
 	}
 
-	getHistogram( resource: ResourceName, resourceId: number, metrics: MetricMap, dates: DateRange )
+	getHistogram( resource: ResourceName, resourceId: number, metrics: MetricMap, partnerMode: boolean, dates: DateRange )
 	{
-		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'histogram', dates );
+		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'histogram', partnerMode, dates );
 
 		return this.api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
 			.then( ( response: any ) =>
@@ -342,9 +343,9 @@ export class SiteAnalytics
 			} );
 	}
 
-	getCount( resource: ResourceName, resourceId: number, metrics: MetricMap, dates?: DateRange )
+	getCount( resource: ResourceName, resourceId: number, metrics: MetricMap, partnerMode: boolean, dates?: DateRange )
 	{
-		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'count', dates );
+		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'count', partnerMode, dates );
 
 		return this.api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
 			.then( ( response: any ) =>
@@ -368,7 +369,7 @@ export class SiteAnalytics
 	/**
 	 * Generate count/histogram requests.
 	 */
-	private generateAggregationRequest( resource: ResourceName, resourceId: number, metrics: MetricMap, analyzer: Analyzer, dates?: DateRange )
+	private generateAggregationRequest( resource: ResourceName, resourceId: number, metrics: MetricMap, analyzer: Analyzer, partnerMode: boolean, dates?: DateRange )
 	{
 		let request: { [k: string]: Request } = {};
 
@@ -394,6 +395,10 @@ export class SiteAnalytics
 
 			if ( metric.field ) {
 				request[ metric.key ].field = metric.field;
+			}
+
+			if ( partnerMode ) {
+				request[ metric.key ].conditions = [ 'partner' ];
 			}
 
 			if ( dates ) {
