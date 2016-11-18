@@ -9,9 +9,16 @@
 			<div class="score-list-rank">
 				<span class="score-list-rank-sign">#</span>{{ ::(ctrl.startRank || 1) + (ctrl.step ? $index * ctrl.step : $index) | number }}
 			</div>
-			<div class="score-list-title" title="{{ ::score.score }}">{{ ::score.score }}</div>
+			<div class="score-list-title" title="{{ ::score.score }}">
+				{{ ::score.score }}
+			</div>
 			<div class="score-list-user">
-				<a ng-if="::score.user" ng-href="{{ ::score.user.url }}">{{ ::score.user.display_name }}</a>
+				<span ng-if="::score.user">
+					<a ng-href="{{ ::score.user.url }}">
+						{{ ::score.user.display_name }}
+					</a>
+					<small class="text-muted">@{{ ::score.user.username }}</small>
+				</span>
 				<span ng-if="::!score.user">
 					{{ ::score.guest }}
 					<em class="text-muted small">({{ ::'scores.guest' | translate }})</em>

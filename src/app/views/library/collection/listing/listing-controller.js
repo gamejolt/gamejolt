@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Library.Collection.ListingCtrl', function(
-	$scope, $state, $stateParams, App, Game, GameLibrary_Game, ModalConfirm, Growls, gettextCatalog, payload )
+	$scope, $state, $stateParams, App, Game, ModalConfirm, Growls, gettextCatalog, payload )
 {
 	var _this = this;
 
@@ -54,13 +54,10 @@ angular.module( 'App.Views' ).controller( 'Library.Collection.ListingCtrl', func
 
 	this.removeFromLibrary = function( game )
 	{
-		var libraryGame = new GameLibrary_Game();
-		libraryGame.game_id = game.id;
-
 		ModalConfirm.show( gettextCatalog.getString( 'library.followed.remove_game_confirmation', { game: game.title } ) )
 			.then( function()
 			{
-				libraryGame.$remove().then( function()
+				game.$unfollow().then( function()
 				{
 					Growls.success(
 						gettextCatalog.getString( 'library.followed.remove_game_success_growl', { game: game.title } ),

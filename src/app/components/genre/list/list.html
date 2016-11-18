@@ -1,9 +1,9 @@
 <div class="genre-list clearfix full-bleed-xs">
 	<a class="genre-list-genre"
-		ng-repeat="genre in ::ctrl.categories"
-		ng-class="{ active: $state.includes( 'discover.games.list.section-category', { category: genre.url } ) }"
-		ui-sref="discover.games.list.section-category( { section: $stateParams.section || 'best', category: genre.url, page: undefined } )"
-		gj-track-event="genre-list:{{ genre.url }}:{{ $stateParams.section || 'home' }}"
+		ng-repeat="genre in ::$ctrl.categories"
+		ng-class="{ active: $ctrl.$state.includes( 'discover.games.list._fetch-category', { category: genre.url } ) }"
+		ui-sref="discover.games.list._fetch-category( { section: $ctrl.$stateParams.section || 'best', category: genre.url, page: undefined } )"
+		gj-track-event="genre-list:{{ genre.url }}:{{ $ctrl.$stateParams.section || 'home' }}"
 		gj-no-auto-scroll
 		>
 		<img ng-src="{{ ::genre.img }}" ng-attr-alt="{{ ::genre.label }}">

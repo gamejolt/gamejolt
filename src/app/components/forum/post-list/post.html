@@ -12,21 +12,22 @@
 	<div class="forum-post-content">
 
 		<div class="forum-post-meta">
-			<small class="pull-right text-muted">
-				{{ ctrl.userPostCount | number }} posts
+			<small class="pull-right text-muted"
+				translate
+				translate-n="::ctrl.userPostCount"
+				translate-plural="{{ $count | number }} posts"
+				>
+				1 post
 			</small>
 
 			<div class="forum-post-users">
-				<a class="forum-post-author link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.user.slug, id: ctrl.post.user.id } )">
+				<a class="forum-post-author link-unstyled" ui-sref="profile.overview( { username: ctrl.post.user.username } )">
 					{{ ::ctrl.post.user.display_name }}
 				</a>
 
-				<span ng-if="::ctrl.post.parent_post_id" class="forum-post-replied-to">
-					<span class="jolticon jolticon-share text-muted"></span>
-					<a class="forum-post-reply-user link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.replied_to.slug, id: ctrl.post.replied_to.id } )">
-						<small>{{ ::ctrl.post.replied_to.display_name }}</small>
-					</a>
-				</span>
+				<small class="text-muted">
+					@{{ ::ctrl.post.user.username }}
+				</small>
 			</div>
 
 			<div class="forum-post-controls">
@@ -37,7 +38,7 @@
 				<!-- Permalink -->
 				<a class="link-muted"
 					ng-click="ctrl.copyPermalink()"
-					gj-tooltip="Copy Link to Clipboard"
+					gj-tooltip="{{ 'Copy Link to Clipboard' | translate }}"
 					>
 					<span class="jolticon jolticon-link middle"></span>
 				</a>
@@ -45,7 +46,7 @@
 				<a class="link-muted"
 					ng-if="ctrl.post.user_id == App.user.id && !ctrl.topic.is_locked && !ctrl.isEditing"
 					ng-click="ctrl.edit()"
-					gj-tooltip="Edit Post"
+					gj-tooltip="{{ 'Edit Post' | translate }}"
 					>
 					<span class="jolticon jolticon-edit middle"></span>
 				</a>
@@ -53,7 +54,7 @@
 				<a class="link-muted"
 					ng-if="::App.user"
 					gj-popover-trigger="forum-post-popover-{{ ::ctrl.id }}"
-					gj-tooltip="Options"
+					gj-tooltip="{{ 'Options' | translate }}"
 					>
 					<span class="jolticon jolticon-ellipsis-h middle"></span>
 				</a>
@@ -66,28 +67,28 @@
 					ng-click="ctrl.report()"
 					>
 					<span class="jolticon jolticon-flag warning"></span>
-					Report Post
+					<span translate>Report Post</span>
 				</a>
 				<a class="list-group-item"
 					ng-if="::App.user.permission_level > 0"
 					ng-href="{{ ::Environment.baseUrl }}/moderate/forums/posts/edit/{{ ::ctrl.post.id }}"
 					target="_blank"
 					>
-					Edit
+					<span translate>Edit</span>
 				</a>
 				<a class="list-group-item"
 					ng-if="::App.user.permission_level > 0"
 					ng-href="{{ ::Environment.baseUrl }}/moderate/forums/posts/remove/{{ ::ctrl.post.id }}"
 					target="_blank"
 					>
-					Remove
+					<span translate>Remove</span>
 				</a>
 				<a class="list-group-item"
 					ng-if="::App.user.permission_level > 0"
 					ng-href="{{ ::Environment.baseUrl }}/moderate/users/view/{{ ::ctrl.post.user_id }}"
 					target="_blank"
 					>
-					Moderate User
+					<span translate>Moderate User</span>
 				</a>
 			</div>
 		</gj-popover>
@@ -97,12 +98,15 @@
 			ng-click="ctrl.loadParentPost()"
 			>
 			<span class="jolticon middle" ng-class="'jolticon-chevron-' + (!ctrl.showingParent ? 'right' : 'down')"></span>
-			In response to <strong>{{ ::ctrl.post.replied_to.display_name }}</strong>
+			<span translate translate-params-user="::ctrl.post.replied_to.display_name">
+				In response to <b>{{ user }}</b>
+			</span>
+			<small>@{{ ::ctrl.post.replied_to.username }}</small>
 		</a>
 
 		<div gj-expand-when="ctrl.showingParent">
 			<div ng-if="::ctrl.parent" class="forum-post-body forum-post-body-quoted" gj-widget-compiler-bind="::ctrl.parent.content_compiled"></div>
-			<p ng-if="::!ctrl.parent"><strong>Post removed.</strong></p>
+			<p ng-if="::!ctrl.parent"><strong translate>Post removed.</strong></p>
 			<hr>
 		</div>
 
@@ -122,14 +126,15 @@
 		</div>
 
 		<p class="text-muted small" ng-if="ctrl.post.modified_by">
-			Last modified on
+			<span translate>Last modified on</span>
 			<span title="{{ ctrl.post.modified_on | date:'medium' }}">{{ ctrl.post.modified_on | date }}</span>
-			by
-			<a class="link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.modified_by_user.slug, id: ctrl.post.modified_by_user.id } )">
+			<span translate>by</span>
+			<a class="link-unstyled" ui-sref="profile.overview( { username: ctrl.post.modified_by.username } )">
 				<strong>
 					{{ ctrl.post.modified_by_user.display_name }}
 				</strong>
 			</a>
+			<small>@{{ ctrl.post.modified_by_user.username }}</small>
 		</p>
 
 		<div class="forum-post-actions" ng-if="::!ctrl.isReply">
@@ -140,7 +145,7 @@
 				ng-click="ctrl.reply()"
 				>
 				<span class="jolticon jolticon-reply"></span>
-				Reply
+				<span translate>Reply</span>
 			</a>
 
 			<span ng-if="ctrl.post.replies_count">
@@ -155,8 +160,8 @@
 						}"
 						>
 					</span>
-					<span ng-if="!listCtrl.showingReplies[ ctrl.post.id ]">Show Replies</span>
-					<span ng-if="listCtrl.showingReplies[ ctrl.post.id ]">Hide Replies</span>
+					<span ng-if="!listCtrl.showingReplies[ ctrl.post.id ]" translate>Show Replies</span>
+					<span ng-if="listCtrl.showingReplies[ ctrl.post.id ]" translate>Hide Replies</span>
 				</a>
 				<span class="blip light">
 					<span class="blip-caret"></span>

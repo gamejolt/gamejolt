@@ -18,55 +18,67 @@
 			<gj-editable-accordion-item ng-repeat="group in listCtrl.keyGroups track by group.id">
 				<gj-editable-accordion-item-heading>
 
-					<div class="key-groups-progress hidden-xs">
-						<div>
-							<strong translate>Viewed</strong>
-							{{ group.viewed_count || 0 | number }} / {{ group.key_count || 0 | number }}
-							({{ group.viewed_count / group.key_count * 100 | number:2 }}%)
-						</div>
-						<div class="progress progress-thin">
-							<div class="progress-bar" ng-style="{ width: (group.viewed_count / group.key_count * 100) + '%' }"></div>
-						</div>
-						<br>
+					<div class="row">
+						<div class="col-sm-8">
 
-						<div>
-							<strong translate>Claimed</strong>
-							{{ group.claimed_count || 0 | number }} / {{ group.key_count || 0 | number }}
-							({{ group.claimed_count / group.key_count * 100 | number:2 }}%)
+							<div class="card-title">
+								<h4>
+									<a ui-sref="dashboard.developer.games.manage.key-groups.edit( { keyGroupId: group.id } )">
+										{{ group.name }}
+									</a>
+								</h4>
+							</div>
+
+							<div class="card-meta">
+								<span class="tag tag-blue">
+									<span ng-if="group.type == KeyGroup.TYPE_ANONYMOUS" translate>
+										Unrestricted (Anonymous)
+									</span>
+									<span ng-if="group.type == KeyGroup.TYPE_ANONYMOUS_CLAIM" translate>
+										Claim-Only
+									</span>
+									<span ng-if="group.type == KeyGroup.TYPE_EMAIL" translate>
+										Unrestricted (Email)
+									</span>
+									<span ng-if="group.type == KeyGroup.TYPE_USER" translate>
+										User
+									</span>
+								</span>
+							</div>
+
 						</div>
-						<div class="progress progress-thin">
-							<div class="progress-bar" ng-style="{ width: (group.claimed_count / group.key_count * 100) + '%' }"></div>
+						<div class="col-sm-4">
+
+							<hr class="visible-xs">
+
+							<div class="key-groups-progress">
+								<div>
+									<strong translate>Viewed</strong>
+									{{ group.viewed_count || 0 | number }} / {{ group.key_count || 0 | number }}
+									({{ group.viewed_count / group.key_count * 100 | number:2 }}%)
+								</div>
+								<div class="progress progress-thin">
+									<div class="progress-bar" ng-style="{ width: (group.viewed_count / group.key_count * 100) + '%' }"></div>
+								</div>
+								<br>
+
+								<div>
+									<strong translate>Claimed</strong>
+									{{ group.claimed_count || 0 | number }} / {{ group.key_count || 0 | number }}
+									({{ group.claimed_count / group.key_count * 100 | number:2 }}%)
+								</div>
+								<div class="progress progress-thin">
+									<div class="progress-bar" ng-style="{ width: (group.claimed_count / group.key_count * 100) + '%' }"></div>
+								</div>
+							</div>
+
 						</div>
 					</div>
 
-					<h5 class="editable-accordion-item-heading-title">
-						<a class="link-unstyled" ui-sref="dashboard.developer.games.manage.key-groups.edit( { keyGroupId: group.id } )">
-							<strong>{{ group.name }}</strong>
-						</a>
-					</h5>
-
-					<div>
-						<span class="tag tag-blue">
-							<span ng-if="group.type == KeyGroup.TYPE_ANONYMOUS" translate>
-								Unrestricted (Anonymous)
-							</span>
-							<span ng-if="group.type == KeyGroup.TYPE_ANONYMOUS_CLAIM" translate>
-								Claim-Only
-							</span>
-							<span ng-if="group.type == KeyGroup.TYPE_EMAIL" translate>
-								Unrestricted (Email)
-							</span>
-							<span ng-if="group.type == KeyGroup.TYPE_USER" translate>
-								User
-							</span>
-						</span>
-					</div>
-					<br>
-
-					<div>
-						<a class="btn btn-outline btn-sm" ui-sref="dashboard.developer.games.manage.key-groups.edit( { keyGroupId: group.id } )">
+					<div class="card-controls">
+						<a class="btn btn-outline" ui-sref="dashboard.developer.games.manage.key-groups.edit( { keyGroupId: group.id } )">
 							<span class="jolticon jolticon-cog"></span>
-							<span translate>Edit</span>
+							<span translate>Manage</span>
 						</a>
 					</div>
 

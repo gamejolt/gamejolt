@@ -24,14 +24,11 @@
 		display: block
 
 	// When things in the hot bottom are active, we need to move up the pane bottoms.
-	body.chat-tabs-visible &
-		bottom: $chat-tabs-height
-
 	body.status-bar-visible &
 		bottom: $status-bar-height
 
-	body.chat-tabs-visible.status-bar-visible &
-		bottom: $chat-tabs-height + $status-bar-height
+	body.status-bar-visible &
+		bottom: $status-bar-height
 
 .shell-pane-right
 	left: auto

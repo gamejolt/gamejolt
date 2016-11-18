@@ -1,10 +1,12 @@
 <section class="section">
-	<div class="container" ng-if="Search.query">
+	<div class="container-lg" ng-if="Search.query">
 
 		<gj-game-grid
-			gj-games="searchCtrl.payload.games"
-			gj-games-count="searchCtrl.payload.gamesCount"
-			gj-per-page="searchCtrl.payload.perPage">
+			games="searchCtrl.payload.games"
+			games-count="searchCtrl.payload.gamesCount"
+			per-page="searchCtrl.payload.perPage"
+			event-label="search-games"
+			>
 		</gj-game-grid>
 
 	</div>

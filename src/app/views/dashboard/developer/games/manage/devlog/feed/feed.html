@@ -1,0 +1,21 @@
+<gj-activity-feed
+	ng-if="feedCtrl.posts.hasItems"
+	type="Fireside_Post"
+	items="feedCtrl.posts"
+	load-more-url="/web/dash/developer/games/devlog/posts/{{ manageCtrl.game.id }}/{{ feedCtrl.tab }}"
+	show-edit-controls="true"
+	on-post-published="feedCtrl.onPostPublished( $post )"
+	>
+</gj-activity-feed>
+
+<div class="alert alert-info"
+	ng-if="!feedCtrl.posts.hasItems"
+	ng-switch="feedCtrl.tab"
+	>
+	<div ng-switch-when="active" translate>
+		<p>You haven't published any posts yet.</p>
+	</div>
+	<div ng-switch-when="draft" translate>
+		<p>You don't have any draft posts.</p>
+	</div>
+</div>

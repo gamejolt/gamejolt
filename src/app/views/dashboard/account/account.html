@@ -1,5 +1,5 @@
 <div ng-if="Screen.isXs" class="well fill-darker sans-margin-bottom">
-	<a class="i-button block big" ui-sref="dashboard.account-mobile-nav">
+	<a class="btn btn-outline btn-block" ui-sref="dashboard.account-mobile-nav">
 		<span class="jolticon jolticon-chevron-left"></span>
 		<span translate>Back to Account</span>
 	</a>
@@ -50,7 +50,7 @@
 								Password
 							</a>
 						</li>
-						<li ng-if="App.user.is_developer && App.user.has_marketplace_access">
+						<li ng-if="App.user.is_developer">
 							<a ui-sref="dashboard.account.financials" ui-sref-active="active" translate>
 								Marketplace Account Setup
 							</a>

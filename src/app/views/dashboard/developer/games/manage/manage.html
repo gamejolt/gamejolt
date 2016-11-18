@@ -1,18 +1,57 @@
-<header class="section">
+<section class="section section-thin fill-pink" ng-if="::manageCtrl.game.is_locked">
 	<div class="container">
+		<div class="col-sm-10 col-md-8 col-lg-6 col-centered text-center">
+			<p>
+				<span class="jolticon jolticon-notice big"></span>
+			</p>
+			<p><b translate>This game was removed from the site.</b></p>
+			<p translate>We have received a DMCA takedown notice and were required to remove it from the site. Only you are able to view it.</p>
+		</div>
+	</div>
+</section>
 
-		<h1 class="section-header">
-			{{ manageCtrl.game.title }}
-			<span class="tag tag-pink" ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" translate>dash.games.hidden_tag</span>
-		</h1>
-		<p class="text-muted small sans-margin-bottom" ng-if="manageCtrl.game.status == Game.STATUS_VISIBLE">
-			<span class="tag tag-active" translate>dash.games.published_tag</span>
-			<span class="dot-separator"></span>
-			<span am-time-ago="manageCtrl.game.published_on"></span>
+<gj-page-header
+	hide-nav="manageCtrl.isWizard"
+	>
+
+	<gj-page-header-content>
+
+		<div ng-if="manageCtrl.isWizard">
+			<h1 class="section-header" translate>
+				Add Game
+			</h1>
+			<h4 class="section-header">
+				{{ manageCtrl.game.title }}
+			</h4>
+		</div>
+
+		<div ng-if="!manageCtrl.isWizard">
+			<h1 class="section-header">
+				{{ manageCtrl.game.title }}
+			</h1>
+		</div>
+
+		<p class="text-muted small sans-margin-bottom">
+			<span class="tag tag-blue" ng-if="manageCtrl.game._is_wip" translate>
+				Early Access
+			</span>
+			<span class="tag tag-blue" ng-if="manageCtrl.game._is_devlog" translate>
+				Devlog
+			</span>
+
+			<span ng-if="!manageCtrl.isWizard">
+				<span class="tag tag-pink" ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" translate>dash.games.hidden_tag</span>
+
+				<span ng-if="manageCtrl.game.status == Game.STATUS_VISIBLE">
+					<span class="tag tag-active" translate>dash.games.published_tag</span>
+					<span class="dot-separator"></span>
+					<span am-time-ago="manageCtrl.game.published_on"></span>
+				</span>
+			</span>
 		</p>
 		<br>
 
-		<p>
+		<p ng-if="!manageCtrl.isWizard">
 			<a class="btn btn-outline hidden-xs" ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: manageCtrl.game.id } )">
 				<span class="jolticon jolticon-chart"></span>
 				<span translate>View Analytics</span>
@@ -23,31 +62,24 @@
 			</a>
 		</p>
 
+		<div gj-expand-when="manageCtrl.game.status == Game.STATUS_VISIBLE && !manageCtrl.game.is_listable">
+			<div class="alert alert-warning" translate>
+				<b>Your game page is no longer visible in game listings!</b> It must have active game builds for it to show.
+			</div>
+		</div>
+	</gj-page-header-content>
+
+	<gj-page-header-nav>
 		<nav class="platform-list inline">
 			<ul>
-				<li>
+				<li gj-tooltip="{{ 'Set up your game page and manage its builds.' | translate }}" tooltip-placement="bottom">
 					<a ui-sref=".game.overview" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.game' ) }" translate>
-						dash.games.overview_tab
-					</a>
-				</li>
-				<li gj-tooltip="{{ 'dash.games.media_tooltip' | translate }}" tooltip-placement="bottom">
-					<a ui-sref=".media.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.media' ) }" translate>
-						dash.games.media_tab
-					</a>
-				</li>
-				<li gj-tooltip="{{ 'dash.games.packages_tooltip' | translate }}" tooltip-placement="bottom">
-					<a ui-sref=".packages.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.packages' ) }" translate>
-						dash.games.packages_tab
+						Overview/Setup
 					</a>
 				</li>
 				<li gj-tooltip="{{ 'dash.games.news_tooltip' | translate }}" tooltip-placement="bottom">
-					<a ui-sref=".news.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.news' ) }" translate>
-						dash.games.news_tab
-					</a>
-				</li>
-				<li gj-tooltip="{{ 'dash.games.music_tooltip' | translate }}" tooltip-placement="bottom">
-					<a ui-sref=".music" ui-sref-active="active" translate>
-						dash.games.music_tab
+					<a ui-sref=".devlog.feed" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.devlog' ) }" translate>
+						Devlog
 					</a>
 				</li>
 				<li gj-tooltip="{{ 'dash.games.api_tooltip' | translate }}" tooltip-placement="bottom">
@@ -60,24 +92,10 @@
 						Keys/Access
 					</a>
 				</li>
-				<li ng-if="!manageCtrl.game.has_sales">
-					<a gj-popover-trigger="game-header-more-options">
-						<span class="jolticon jolticon-ellipsis-h"></span>
-						<span translate>options.more</span>
-					</a>
-				</li>
 			</ul>
 		</nav>
+	</gj-page-header-nav>
 
-		<gj-popover popover-id="game-header-more-options">
-			<div class="list-group">
-				<a class="list-group-item has-icon" ng-click="manageCtrl.removeGame()">
-					<span class="jolticon jolticon-remove"></span>
-					<span translate>dash.games.remove_game_button</span>
-				</a>
-			</div>
-		</gj-popover>
-	</div>
-</header>
+</gj-page-header>
 
 <ui-view></ui-view>

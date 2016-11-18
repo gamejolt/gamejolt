@@ -1,4 +1,11 @@
 .ctrl-discover-home-page #content
+
+	.gj-pink
+		color: $gj-pink
+
+	.page-cut
+		margin-bottom: 0
+
 	.home-game-rows
 
 		h1, h2, h3
@@ -33,59 +40,5 @@
 		margin-right: 10px
 
 	.marketplace-section
-		position: relative
-		overflow: hidden
-
 		.jolticon-heart
 			color: $gj-pink
-
-		.section-header
-		p
-			text-align: center
-
-	.marketplace-mascot
-		position: relative
-		bottom: -45px
-		margin-top: @bottom
-		width: (480px / 2)
-		height: (550px / 2)
-		left: 50%
-		margin-left: -(@width / 2)
-
-.channel-thumbnail
-	display: block
-	text-align: center
-	margin-bottom: $line-height-computed
-
-.channel-thumbnail-image-spacer
-	position: relative
-	height: 0
-	padding-top: 100%  // Makes it same height as width.
-	overflow: hidden
-
-.channel-thumbnail-image
-	position: absolute
-	top: 0
-	right: 0
-	bottom: 0
-	left: 0
-	display: flex
-	align-items: center
-	justify-content: center
-	background-color: $gray-darker
-
-	> img
-		width: 116px * 0.5
-		height: 116px * 0.5
-
-.channel-thumbnail-label
-	padding: 8px
-	color: $white
-	font-weight: bold
-	font-size: $font-size-small
-	background-color: $gray-dark
-
-	a:hover &
-		background-color: $gj-dark-green
-		color: $gj-green
-		text-decoration: none

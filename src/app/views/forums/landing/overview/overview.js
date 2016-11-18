@@ -11,7 +11,10 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 		resolve: {
 			payload: function( Api, History_Cache )
 			{
-				return History_Cache.cache( Api.sendRequest( '/web/forums' ) );
+				return History_Cache.cache( function()
+				{
+					return Api.sendRequest( '/web/forums' );
+				} );
 			},
 		},
 	} );

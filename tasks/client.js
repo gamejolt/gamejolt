@@ -2,7 +2,6 @@ var argv = require( 'minimist' )( process.argv );
 var gulp = require( 'gulp' );
 var gutil = require( 'gulp-util' );
 var plugins = require( 'gulp-load-plugins' )();
-var sequence = require( 'run-sequence' );
 var fs = require( 'fs' );
 var os = require( 'os' );
 var _ = require( 'lodash' );
@@ -120,7 +119,7 @@ module.exports = function( config )
 		'/* inject client:modules */': "'App.Client',",
 		'<!-- inject client:modules -->': appScripts.join( ' ' ),
 
-		// For other sections we load the whole client JS but only load the angular modules we want
+		// For other sections we don't load the whole client JS but only load the angular modules we want
 		// through the base-client.js module.
 		'/* inject client:base:modules */': "'App.ClientBase',",
 		'<!-- inject client:base:modules -->': baseScripts.join( ' ' ),
@@ -163,7 +162,7 @@ module.exports = function( config )
 	} );
 
 	// Set it up as a post-html build task.
-	gulp.task( 'html:post', modifySections );
+	gulp.task( 'html:post', gulp.parallel( modifySections ) );
 
 	gulp.task( 'client:prepare', function()
 	{
@@ -211,9 +210,10 @@ module.exports = function( config )
 	/**
 	 * This should rewrite all file references to have the correct packaged folder prefix.
 	 */
-	gulp.task( 'client:modify-urls', function()
+	gulp.task( 'client:modify-urls', function( cb )
 	{
 		if ( os.type() == 'Darwin' ) {
+			cb();
 			return;
 		}
 
@@ -384,7 +384,7 @@ module.exports = function( config )
 		} );
 	}
 	else if ( config.platform == 'win' ) {
-		gulp.task( 'client:package', function( cb )
+		gulp.task( 'client:package', function()
 		{
 			var releaseDir = getReleaseDir();
 			var packageJson = require( path.resolve( __dirname, '..', 'package.json' ) );
@@ -397,27 +397,30 @@ module.exports = function( config )
 		} );
 	}
 	else {
-		gulp.task( 'client:package', function()
+		gulp.task( 'client:package', function( cb )
 		{
 			var releaseDir = getReleaseDir();
 
-			if ( config.production ) {
-				return gulp.src( releaseDir + '/' + config.platformArch + '/**/*' )
-					.pipe( plugins.tar( config.platformArch + '.tar' ) )
-					.pipe( plugins.gzip() )
-					.pipe( gulp.dest( releaseDir ) );
+			if ( !config.production ) {
+				cb();
+				return;
 			}
+
+			return gulp.src( releaseDir + '/' + config.platformArch + '/**/*' )
+				.pipe( plugins.tar( config.platformArch + '.tar' ) )
+				.pipe( plugins.gzip() )
+				.pipe( gulp.dest( releaseDir ) );
 		} );
 	}
 
 	if ( config.client ) {
-		gulp.task( 'post', function( cb )
+		gulp.task( 'post', function()
 		{
 			if ( config.watching ) {
-				return sequence( 'client:prepare', cb );
+				return gulp.series( 'client:prepare' );
 			}
 
-			return sequence( 'client:prepare', 'client:node-modules', 'client:modify-urls', 'client:nw', 'client:nw-unpackage', 'client:package', cb );
+			return gulp.series( 'client:prepare', 'client:node-modules', 'client:modify-urls', 'client:nw', 'client:nw-unpackage', 'client:package' );
 		} );
 	}
 };

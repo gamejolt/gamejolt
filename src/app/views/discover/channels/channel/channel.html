@@ -1,7 +1,10 @@
-<gj-page-header>
+<gj-page-header
+	should-affix-nav="true"
+	spotlight-dark="true"
+	>
 
 	<gj-page-header-content>
-		<h1 translate translate-scope="{ channel: channelCtrl.channel }">
+		<h1 translate translate-params-channel="channelCtrl.channel">
 			<b>#{{ channel }}</b> Channel
 		</h1>
 		<div class="small text-muted">
@@ -30,6 +33,11 @@
 				<li>
 					<a ui-sref="discover.channels.channel.games._fetch" ui-sref-active="active">
 						<span translate>Games</span>
+					</a>
+				</li>
+				<li>
+					<a ui-sref="discover.channels.channel.devlogs._fetch" ui-sref-active="active">
+						<span translate>Devlogs</span>
 					</a>
 				</li>
 			</ul>

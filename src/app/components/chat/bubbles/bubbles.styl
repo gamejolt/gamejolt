@@ -1,0 +1,68 @@
+.chat-bubbles
+	position: fixed
+	bottom: 10px
+	right: 10px
+	z-index: $zindex-chat-bubbles
+	transition: transform 450ms $strong-ease-out
+	display: none
+
+	#shell.right-pane-visible &
+		transform: translate( -($shell-pane-width), 0 )
+
+	@media $media-sm-up
+		display: block
+
+.chat-bubble
+	user-select: none
+	transform: scale(0.9, 0.9)
+	transition: transform 0.2s ease-in-out
+	margin-bottom: 4px
+
+	&:last-child
+		margin-bottom: 0
+
+	&:hover
+		transform: scale(1.0, 1.0)
+
+	&-inner
+		position: relative
+		color: $white
+		cursor: pointer
+
+	&-notification-icon
+		position: absolute
+		bottom: 1px
+		right: 1px
+		width: 12px
+		height: 12px
+		background-color: $gj-pink
+		border: 2px solid $white
+		border-radius: 100%
+
+	&-icon
+		color: $white !important
+		text-align: center
+		font-size: 20px
+		padding-left: 4px
+
+		&.chat-bubble-active
+			.chat-bubble-image
+			.chat-bubble-letter
+				border-color: $gj-green
+
+		&.chat-bubble-notification
+			.chat-bubble-image
+			.chat-bubble-letter
+				border-color: $gj-pink
+
+	&-image
+	&-letter
+		width: $chat-bubble-size
+		height: $chat-bubble-size
+		border-radius: 100%
+		border: 3px solid $white
+		background-color: $gray-darker
+		transition: border 0.2s $weak-ease-out
+
+	&-letter
+		line-height: $chat-bubble-size

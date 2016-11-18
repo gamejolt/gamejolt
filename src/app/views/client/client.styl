@@ -1,15 +1,6 @@
 .ctrl-client
 	overflow-x: hidden
 
-	h1 sup
-		font-size: $font-size-small
-
-		@media $media-sm-up
-			top: -18px
-
-	h2
-		font-weight: 100
-
 	.highlight-rows
 
 		@media $media-sm-up
@@ -22,8 +13,7 @@
 		p
 			font-size: 1.2em
 			line-height: 1.6
-			font-family: $font-family-heading
-			font-weight: 100
+			font-weight: 300
 			color: $gray-lightest
 
 		img
@@ -38,7 +28,7 @@
 	.client-presentation-mascot
 		display: block
 		position: absolute
-		top: 0
+		top: 20px
 		right: 40px
 		margin-top: -(130px)
 		z-index: 2
@@ -51,10 +41,10 @@
 			content: ''
 			display: block
 			position: absolute
-			top: -500px
+			top: 0
 			left: -30%
 			width: 160%
-			height: 900px
+			height: 400px
 			background-color: $gray-dark
 			z-index: 0
 			transform: rotate( -8deg )
@@ -63,6 +53,7 @@
 			z-index: 1
 
 		img
+			margin-top: 20px
 			border: 2px solid $gray
 
 	section.features-stripe

@@ -1,0 +1,58 @@
+<form gj-form="formModel" name="descriptionForm">
+
+	<form-group name="description_markdown" label="{{ 'dash.games.form.description_label' | translate }}" hide-label="true">
+
+		<div
+			form-markdown-editor
+			preview-class="game-compiled-description"
+			markdown-preview-url="/web/dash/developer/games/description/preview"
+			markdown-mode="games"
+			show-media-items="true"
+			media-item-type="game-description"
+			placeholder="{{ 'Write your game description here...' | translate }}"
+			>
+		</div>
+
+		<control-errors></control-errors>
+
+	</form-group>
+
+	<div gj-expand-when="isFnafDetected">
+		<div class="alert alert-warning">
+			<div translate>dash.games.add.fnaf_autotag_message_html</div>
+
+			<div class="alert-actions">
+				<button gj-form-submit-button class="btn btn-success-outline" ng-click="addAutotag( 'fnaf' )">
+					<span class="jolticon jolticon-tag"></span>
+					<span translate>dash.games.add.fnaf_autotag_accept</span>
+				</button>
+
+				<button gj-form-submit-button class="btn btn-outline" ng-click="skipAutotag()">
+					<span class="jolticon jolticon-remove"></span>
+					<span translate>dash.games.add.fnaf_autotag_reject</span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<button
+		ng-if="!isWizard && !isFnafDetected"
+		gj-form-submit-button
+		class="btn btn-outline"
+		ng-disabled="!descriptionForm.$valid"
+		ng-click="onSubmit()"
+		>
+		<span class="jolticon jolticon-edit"></span>
+		<span translate>Save Description</span>
+	</button>
+
+	<div ng-if="isWizard && !isFnafDetected">
+		<gj-form-dashboard-game-wizard-controls
+			game="formModel"
+			can-proceed="descriptionForm.$valid"
+			on-next="onSubmit()"
+			>
+		</gj-form-dashboard-game-wizard-controls>
+	</div>
+
+</form>

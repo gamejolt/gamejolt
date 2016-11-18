@@ -3,16 +3,34 @@
 	<div class="forum-channel-list-item row" ng-repeat="channel in ctrl.channels track by channel.id">
 		<div class="col-sm-9 col-md-7">
 			<h4 class="forum-channel-list-item-title">
-				<span class="tag tag-pink" ng-if="::channel.notifications_count">{{ ::channel.notifications_count || 0 | number }}</span>
-				<a class="link-unstyled" ui-sref="forums.channels.view.page( { name: channel.name } )">#{{ ::channel.name }}</a>
+				<span class="tag tag-pink" ng-if="::channel.notifications_count">
+					{{ ::channel.notifications_count || 0 | number }}
+				</span>
+				<a class="link-unstyled" ui-sref="forums.channels.view.page( { name: channel.name } )">
+					#{{ ::channel.name }}
+				</a>
 			</h4>
-			<div>{{ ::channel.description }}</div>
+			<div>
+				{{ ::channel.description }}
+			</div>
 		</div>
 		<div class="col-sm-3 col-md-2 text-muted small" ng-class="{ 'text-right': !Screen.isXs }">
-			<strong>{{ ::channel.topics_count || 0 | number }}</strong> Topics
+			<span
+				translate
+				translate-n="::channel.topics_count || 0"
+				translate-plural="<b>{{ $count | number }}</b> Topics"
+				>
+				<b>1</b> Topic
+			</span>
 			<br class="hidden-xs">
 			<span class="hidden-sm hidden-md hidden-lg dot-separator"></span>
-			<strong>{{ ::channel.replies_count || 0 | number }}</strong> Replies
+			<span
+				translate
+				translate-n="::channel.replies_count || 0"
+				translate-plural="<b>{{ $count | number }}</b> Replies"
+				>
+				<b>1</b> Reply
+			</span>
 		</div>
 		<div class="col-md-3" ng-if="Screen.isDesktop">
 			<div class="forum-channel-list-item-latest-topic"
@@ -36,14 +54,16 @@
 								{{ ::latestPost.topic.title }}
 							</a>
 						</div>
-						<div class="forum-channel-list-item-latest-topic-topic-info-user text-muted">
-							by
+						<div class="forum-channel-list-item-latest-topic-info-user">
+							<span translate>by</span>
 							<strong>
-								<a class="link-muted" ui-sref="profile.overview( { slug: latestPost.user.slug, id: latestPost.user.id } )">
+								<a class="link-muted" ui-sref="profile.overview( { username: latestPost.user.username } )">
 									{{ ::latestPost.user.display_name }}
 								</a>
 							</strong>
-							<br>
+							<span class="tiny">@{{ ::latestPost.user.username }}</span>
+						</div>
+						<div class="forum-channel-list-item-latest-topic-info-date">
 							<span title="{{ ::latestPost.posted_on | date:'medium' }}" am-time-ago="::latestPost.posted_on"></span>
 						</div>
 					</div>

@@ -29,7 +29,8 @@
 					<div class="forum-topic-header-author-meta">
 						<span class="forum-topic-header-author-byline">
 							by
-							<a class="forum-topic-header-author-username" ui-sref="profile.overview( { slug: viewCtrl.topic.user.slug, id: viewCtrl.topic.user.id } )">{{ ::viewCtrl.topic.user.display_name }}</a>
+							<a class="forum-topic-header-author-username" ui-sref="profile.overview( { username: viewCtrl.topic.user.username } )">{{ ::viewCtrl.topic.user.display_name }}</a>
+							<small>@{{ ::viewCtrl.topic.user.username }}</small>
 						</span>
 						<span class="forum-topic-header-time-ago">
 							<span class="dot-separator hidden-xs"></span>
@@ -50,8 +51,7 @@
 		<div class="row">
 			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-8">
 
-				<a class="btn btn-primary-outline"
-					ng-class="{ 'btn-block': Screen.isXs }"
+				<a class="btn btn-primary-outline btn-block-xs"
 					href="#add-reply"
 					du-smooth-scroll
 					ng-if="!viewCtrl.topic.is_locked"
@@ -60,8 +60,7 @@
 					Add Reply
 				</a>
 
-				<a class="btn btn-success-outline"
-					ng-class="{ 'btn-block': Screen.isXs }"
+				<a class="btn btn-success-outline btn-block-xs"
 					ng-if="!viewCtrl.isFollowing"
 					ng-click="viewCtrl.follow()"
 					gj-tooltip="Keep track of replies in this topic."
@@ -85,8 +84,7 @@
 					Following
 				</a>
 
-				<a class="btn btn-outline"
-					ng-class="{ 'btn-block': Screen.isXs }"
+				<a class="btn btn-outline btn-block-xs"
 					ng-if="viewCtrl.topic.user_id == App.user.id && !viewCtrl.topic.is_locked"
 					ng-click="viewCtrl.editTopic()"
 					ng-disabled="viewCtrl.isEditingTopic"
@@ -96,8 +94,7 @@
 				</a>
 
 				<!-- Mod Tools -->
-				<a class="btn btn-sparse btn-outline"
-					ng-class="{ 'btn-block': Screen.isXs }"
+				<a class="btn btn-sparse btn-outline btn-block-xs"
 					ng-if="::App.user"
 					gj-popover-trigger="forum-topic-popover"
 					>
@@ -215,11 +212,12 @@
 					Last modified on
 					<span title="{{ viewCtrl.topic.main_post.modified_on | date:'medium' }}">{{ viewCtrl.topic.main_post.modified_on | date }}</span>
 					by
-					<a class="link-unstyled" ui-sref="profile.overview( { slug: viewCtrl.topic.main_post.modified_by_user.slug, id: viewCtrl.topic.main_post.modified_by_user.id } )">
+					<a class="link-unstyled" ui-sref="profile.overview( { username: viewCtrl.topic.main_post.modified_by_user.username } )">
 						<strong>
 							{{ viewCtrl.topic.main_post.modified_by_user.display_name }}
 						</strong>
 					</a>
+					<small>@{{ viewCtrl.topic.main_post.modified_by_user.username }}</small>
 				</p>
 
 				<hr>

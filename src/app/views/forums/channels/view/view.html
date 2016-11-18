@@ -76,13 +76,14 @@
 				>
 			</gj-forum-topic-list>
 
-			<gj-pager
+			<gj-pagination
+				pager="true"
 				items-per-page="viewCtrl.perPage"
 				total-items="viewCtrl.channel.topics_count"
 				current-page="viewCtrl.currentPage"
 				on-page-change="Scroll.to( 'forum-topics-list', { animate: false } )"
 				>
-			</gj-pager>
+			</gj-pagination>
 		</div>
 
 		<div ng-if="!viewCtrl.topics.length" class="text-center">

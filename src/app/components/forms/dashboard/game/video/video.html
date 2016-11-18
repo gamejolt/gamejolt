@@ -16,9 +16,15 @@
 		<control-errors></control-errors>
 	</form-group>
 
-	<button gj-form-submit-button class="i-button" ng-disabled="!mediaForm.$valid" ng-click="onSubmit()">
+	<button gj-form-submit-button
+		ng-if="!mediaForm.$pristine"
+		class="btn btn-outline"
+		ng-disabled="!mediaForm.$valid"
+		ng-click="onSubmit()"
+		>
 		<span class="jolticon" ng-class="'jolticon-' + method"></span>
-		{{ ::'dash.games.media.video.form.submit_button' | translate }}
+		<span ng-if="method == 'add'" translate>Add</span>
+		<span ng-if="method == 'edit'" translate>Save</span>
 	</button>
 
 </form>

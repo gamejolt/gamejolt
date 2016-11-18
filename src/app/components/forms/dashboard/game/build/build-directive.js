@@ -191,6 +191,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 				.then( function( response )
 				{
 					scope.baseModel.assign( new Game_Build( response.gameBuild ) );
+					scope.game.assign( response.game );
 
 					// Copy new platforms to the form model.
 					for ( var platform in scope.platformsInfo ) {
@@ -217,6 +218,15 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 		scope.emulatorInfo[ Game_Build.EMULATOR_GB ] = gettextCatalog.getString( 'Game Boy' );
 		scope.emulatorInfo[ Game_Build.EMULATOR_GBC ] = gettextCatalog.getString( 'Game Boy Color' );
 		scope.emulatorInfo[ Game_Build.EMULATOR_GBA ] = gettextCatalog.getString( 'Game Boy Advance' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_NES ] = gettextCatalog.getString( 'NES' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_SNES ] = gettextCatalog.getString( 'SNES' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_VBOY ] = gettextCatalog.getString( 'Virtual Boy' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_GENESIS ] = gettextCatalog.getString( 'Genesis/Mega Drive' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_ATARI2600 ] = gettextCatalog.getString( 'Atari 2600' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_ZX ] = gettextCatalog.getString( 'ZX Spectrum' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_C64 ] = gettextCatalog.getString( 'Commodore 64' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_CPC ] = gettextCatalog.getString( 'Amstrad CPC' );
+		scope.emulatorInfo[ Game_Build.EMULATOR_MSX ] = gettextCatalog.getString( 'MSX' );
 	}
 
 	function setupLaunchOptions( scope )
@@ -283,6 +293,9 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 		{
 			// Just copy over the new build data into our current one.
 			scope.baseModel.assign( response.build );
+			if ( response.game ) {
+				scope.game.assign( response.game );
+			}
 		};
 	}
 
@@ -317,6 +330,13 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 			scope.wasChanged = true;
 		} );
 	}
+
+	form.onSubmitSuccess = function( scope, response )
+	{
+		if ( scope.game ) {
+			scope.game.assign( response.game );
+		}
+	};
 
 	return form;
 } );

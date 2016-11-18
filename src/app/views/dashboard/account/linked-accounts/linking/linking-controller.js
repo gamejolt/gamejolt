@@ -10,8 +10,19 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccounts.Link
 		if ( response.provider == 'facebook' ) {
 			$state.go( 'dashboard.account.linked-accounts.link-callback', { provider: 'facebook', code: response.code, state: this.token } );
 		}
+		else if ( response.provider == 'twitch' ) {
+			$state.go( 'dashboard.account.linked-accounts.link-callback', { provider: 'twitch', code: response.code, state: this.token } );
+		}
 		else if ( response.provider == 'twitter' ) {
 			$state.go( 'dashboard.account.linked-accounts.link-callback', { provider: 'twitter', oauth_verifier: response['oauth-verifier'], state: this.token } );
+		}
+		else if ( response.provider == 'google' ) {
+			$state.go( 'dashboard.account.linked-accounts.link-callback', { provider: 'google', code: response.code, state: this.token } );
+		}
+		else if ( response.provider == 'youtube-channel' ) {
+			$state.go( 'dashboard.account.linked-accounts.link-callback', { provider: 'youtube-channel', code: response.code, state: this.token,
+				channelTitle: response.channel ? response.channel.title : null,
+			} );
 		}
 
 		// Focus back to the Client.
