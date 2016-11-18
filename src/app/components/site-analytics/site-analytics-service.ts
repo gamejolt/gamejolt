@@ -321,6 +321,12 @@ export class SiteAnalytics
 		return this.packageMetrics;
 	}
 
+	pickPartnerMetrics( metrics: MetricMap )
+	{
+		const possibleMetrics: MetricKey[] = [ 'view', 'sale', 'revenue' ];
+		return <MetricMap>_.pick( metrics, possibleMetrics );
+	}
+
 	getHistogram( resource: ResourceName, resourceId: number, metrics: MetricMap, partnerMode: boolean, dates: DateRange )
 	{
 		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'histogram', partnerMode, dates );

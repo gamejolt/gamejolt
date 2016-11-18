@@ -14,8 +14,6 @@ export class AnalyticsCtrl
 	 */
 	private paramsBootstrapped = false;
 
-	games: any[];
-	userId: number;
 	user?: any;
 	game?: any;
 	package?: any;
@@ -29,7 +27,6 @@ export class AnalyticsCtrl
 	partnerMode: boolean;
 	availableMetrics: MetricMap;
 	metric: Metric;
-	refreshTrigger: number;
 
 	now: number;
 	startTime?: number;
@@ -43,7 +40,7 @@ export class AnalyticsCtrl
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( '$state' ) private $state: ng.ui.IStateService,
-		@Inject( 'Api' ) private Api: any,
+		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
 		@Inject( 'User' ) private User: any,
 		@Inject( 'Game' ) private Game: any,
 		@Inject( 'Game_Package' ) private Game_Package: any,
@@ -55,66 +52,48 @@ export class AnalyticsCtrl
 	)
 	{
 		app.title = gettextCatalog.getString( 'Analytics' );
-		this.games = Game.populate( payload.games );
-		this.userId = app.user.id;
-		this.refreshTrigger = 0;
+		this.resource = $stateParams['resource'];
+		this.resourceId = parseInt( $stateParams['resourceId'], 10 );
+
+		this.user = payload.user ? new this.User( payload.user ) : null;
+		this.game = payload.game ? new this.Game( payload.game ) : null;
+		this.package = payload.package ? new this.Game_Package( payload.package ) : null;
+		this.release = payload.release ? new this.Game_Release( payload.release ) : null;
+		this.partnerMode = !this.user || this.user.id != app.user.id;
+
+		if ( this.partnerMode ) {
+			this.availableMetrics = this.analytics.pickPartnerMetrics( this.availableMetrics );
+		}
+
 		this._init();
 	}
 
 	_init()
 	{
-		// When resource changes.
-		this.$scope.$watchGroup( [ 'analyticsCtrl.resource', 'analyticsCtrl.resourceId' ], () =>
-		{
-			this.Api.sendRequest( '/web/dash/analytics/get-resource/' + this.resource + '/' + this.resourceId )
-				.then( ( payload: any ) =>
-				{
-					this.user = payload.user ? new this.User( payload.user ) : null;
-					this.game = payload.game ? new this.Game( payload.game ) : null;
-					this.package = payload.package ? new this.Game_Package( payload.package ) : null;
-					this.release = payload.release ? new this.Game_Release( payload.release ) : null;
-
-					this.partnerMode = !this.user || this.user.id != this.userId;
-					this.refreshTrigger = Math.random();
-				} );
-		} );
-
 		// Only the fields that can affect histograms.
 		const globalWatch = [
 			'analyticsCtrl.period',
-
-			// We can't pull reports right after detecting the resource / resourceId changed,
-			// because we need to first know if the resource belongs to us so we can send the correct report requests.
-			// Partners need to send their requests with the "partner" condition set.
-			// We watch analyticsCtl.refreshTrigger which changes after the get-resource request returns.
-			// 'analyticsCtrl.resource',
-			// 'analyticsCtrl.resourceId',
-			'analyticsCtrl.refreshTrigger',
-
 			'analyticsCtrl.startTime',
 			'analyticsCtrl.endTime',
 		];
 
 		this.$scope.$watchGroup( globalWatch, () =>
 		{
-			if ( this.resource && this.resourceId ) {
-				if ( this.period == 'all' ) {
-					this.counts();
-				}
-				else if ( this.period == 'monthly' ) {
-					this.histograms();
-				}
+			if ( this.period == 'all' ) {
+				this.counts();
+			}
+			else if ( this.period == 'monthly' ) {
+				this.histograms();
 			}
 		} );
 
 		// Only the fields that can affect report breakdowns.
 		this.$scope.$watchGroup( globalWatch.concat( [
 			'analyticsCtrl.metric.key',
-			'analyticsCtrl.resource',
 		] ),
 		() =>
 		{
-			if ( this.period && this.resource && this.resourceId && this.metric ) {
+			if ( this.period && this.metric ) {
 				this.metricChanged();
 			}
 		} );
@@ -123,27 +102,42 @@ export class AnalyticsCtrl
 	stateChanged( $stateParams: ng.ui.IStateParamsService )
 	{
 		this.period = $stateParams['period'] || 'monthly';
-		this.resource = $stateParams['resource'] || 'Game';
-		this.resourceId = parseInt( $stateParams['resourceId'], 10 ) || this.games[0].id;
+		this.resource = $stateParams['resource'];
+		this.resourceId = parseInt( $stateParams['resourceId'], 10 );
 
-		if ( this.resource == 'User' ) {
-			this.availableMetrics = this.analytics.userMetrics;
-			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'user-view' ];
+		switch ( this.resource ) {
+			case 'User':
+				this.availableMetrics = this.analytics.userMetrics;
+				this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'user-view' ]
+				break;
+
+			case 'Game':
+				this.availableMetrics = this.analytics.gameMetrics;
+				this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'view' ];
+				break;
+
+			case 'Game_Package':
+				if ( this.partnerMode ) {
+					throw new Error( 'Invalid resource.' );
+				}
+				this.availableMetrics = this.analytics.packageMetrics;
+				this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'download' ];
+				break;
+
+			case 'Game_Release':
+				if ( this.partnerMode ) {
+					throw new Error( 'Invalid resource.' );
+				}
+				this.availableMetrics = this.analytics.releaseMetrics;
+				this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'download' ];
+				break;
+
+			default:
+				throw new Error( 'Invalid resource.' );
 		}
-		else if ( this.resource == 'Game' ) {
-			this.availableMetrics = this.analytics.gameMetrics;
-			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'view' ];
-		}
-		else if ( this.resource == 'Game_Package' ) {
-			this.availableMetrics = this.analytics.packageMetrics;
-			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'download' ];
-		}
-		else if ( this.resource == 'Game_Release' ) {
-			this.availableMetrics = this.analytics.releaseMetrics;
-			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'download' ];
-		}
-		else {
-			throw new Error( 'Invalid resource.' );
+
+		if ( this.partnerMode ) {
+			this.availableMetrics = this.analytics.pickPartnerMetrics( this.availableMetrics );
 		}
 
 		// If any of the parameters changed, refresh the state.
