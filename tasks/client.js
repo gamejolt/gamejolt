@@ -164,7 +164,7 @@ module.exports = function( config )
 	// Set it up as a post-html build task.
 	gulp.task( 'html:post', gulp.parallel( modifySections ) );
 
-	gulp.task( 'client:prepare', function()
+	gulp.task( 'client:prepare', function( cb )
 	{
 		// Load in the client package.
 		var packageJson = require( '../package.json' );
@@ -191,6 +191,8 @@ module.exports = function( config )
 		// Copy the package.json file over into the build directory.
 		fs.writeFileSync( config.buildDir + '/package.json', JSON.stringify( clientJson ) );
 		fs.writeFileSync( config.buildDir + '/update-hook.js', fs.readFileSync( path.resolve( './src/update-hook.js' ) ) );
+
+		cb();
 	} );
 
 	var nodeModuletasks = [
@@ -414,13 +416,11 @@ module.exports = function( config )
 	}
 
 	if ( config.client ) {
-		gulp.task( 'post', function()
-		{
 			if ( config.watching ) {
-				return gulp.series( 'client:prepare' );
+			gulp.task( 'post', gulp.series( 'client:prepare' ) );
+		}
+		else {
+			gulp.task( 'post', gulp.series( 'client:prepare', 'client:node-modules', 'client:modify-urls', 'client:nw', 'client:nw-unpackage', 'client:package' ) );
 			}
-
-			return gulp.series( 'client:prepare', 'client:node-modules', 'client:modify-urls', 'client:nw', 'client:nw-unpackage', 'client:package' );
-		} );
 	}
 };
