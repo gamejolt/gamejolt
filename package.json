@@ -71,7 +71,8 @@
     "streamqueue": "~0.1.1",
     "stylus": "0.53.0",
     "through2": "~0.5.1",
-    "typescript": "^2.0.0"
+    "typescript": "^2.0.0",
+    "undertaker-forward-reference": "^1.0.1"
   },
   "optionalDependencies": {
     "appdmg": "^0.3.5"
