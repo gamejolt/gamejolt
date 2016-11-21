@@ -1,6 +1,6 @@
 <a class="discover-home-featured-hero"
 	ui-sref="discover.games.view.overview( { id: $ctrl.game.id, slug: $ctrl.game.slug } )"
-	gj-track-event="home:slider:game"
+	gj-track-event="game-grid:click:home-featured-games"
 	>
 
 	<div class="discover-home-featured-hero-content">
@@ -25,7 +25,13 @@
 				</p>
 			</div>
 
-			<div class="discover-home-featured-hero-meta">
+			<div class="discover-home-featured-hero-meta" ng-if="::$ctrl.game._is_devlog">
+				<span class="discover-home-featured-hero-outline discover-home-featured-hero-pricing" translate>
+					Devlog
+				</span>
+			</div>
+
+			<div class="discover-home-featured-hero-meta" ng-if="::!$ctrl.game._is_devlog">
 				<span class="discover-home-featured-hero-outline">
 					<gj-game-compat-icons gj-game="::$ctrl.game"></gj-game-compat-icons>
 				</span>
@@ -55,8 +61,7 @@
 
 		</div>
 
-		<div class="btn btn-primary-outline btn-overlay-variant bgn-sm anim-fade-in-enlarge"
-			ng-class="{ 'btn-block': $sctrl.screen.isXs }"
+		<div class="btn btn-primary-outline btn-overlay-variant btn-block-xs anim-fade-in-enlarge"
 			ui-sref="{{ ::$ctrl.game.getSref( null, true ) }}"
 			>
 			<span class="jolticon jolticon-chevron-right"></span>

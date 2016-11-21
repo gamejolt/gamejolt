@@ -55,19 +55,31 @@ export function PaymentComponent(
 			}
 		} );
 
-		scope.$watchGroup( [ 'formModel.country', 'formModel.region' ], getTax );
+		scope.$watchGroup( [ 'formModel.selectedCard', 'formModel.country', 'formModel.region' ], getTax );
 
 		function getTax()
 		{
+			let address: any = {};
+			if ( scope.formModel.selectedCard !== 0 ) {
+				const card: any = _.find( scope.cards, { id: scope.formModel.selectedCard } );
+				if ( !card ) {
+					return;
+				}
+				address = card.user_address;
+			}
+			else {
+				address = scope.formModel;
+			}
+
 			scope.formState.calculatedTax = false;
-			if ( !scope.formModel.country || !scope.formModel.region ) {
+			if ( !address.country || !address.region ) {
 				return;
 			}
 
 			const data = {
 				amount: scope.order.amount,
-				country: scope.formModel.country,
-				region: scope.formModel.region,
+				country: address.country,
+				region: address.region,
 			};
 
 			return Api.sendRequest( '/web/checkout/taxes', data, { detach: true } )

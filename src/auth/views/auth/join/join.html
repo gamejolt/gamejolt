@@ -2,45 +2,7 @@
 	<p class="lead anim-fade-in-enlarge" translate>auth.join.join_message_html</p>
 </div>
 
-<div class="auth-social-buttons">
-	<button class="i-button big block anim-fade-in-enlarge stagger"
-		ng-disabled="!Connection.isOnline"
-		ng-click="joinCtrl.linkedAccountLogin( 'facebook' )"
-		>
-		<span class="jolticon jolticon-facebook"></span>
-		<span translate>auth.join.facebook_button</span>
-	</button>
-
-	<button class="i-button big block anim-fade-in-enlarge stagger"
-		ng-disabled="!Connection.isOnline"
-		ng-click="joinCtrl.linkedAccountLogin( 'google' )"
-		>
-		<span class="jolticon jolticon-google-plus"></span>
-		<span translate>Sign Up with Google+</span>
-	</button>
-
-	<button class="i-button big block anim-fade-in-enlarge stagger"
-		ng-disabled="!Connection.isOnline"
-		ng-click="joinCtrl.linkedAccountLogin( 'twitter' )"
-		>
-		<span class="jolticon jolticon-twitter"></span>
-		<span translate>auth.join.twitter_button</span>
-	</button>
-
-	<button class="i-button big block anim-fade-in-enlarge stagger"
-		ng-disabled="!Connection.isOnline"
-		ng-click="joinCtrl.linkedAccountLogin( 'twitch' )"
-		>
-		<span class="jolticon jolticon-twitch"></span>
-		<span translate>Sign Up with Twitch</span>
-	</button>
-</div>
-
-<p class="line-thru anim-fade-in">
-	<span translate>auth.or</span>
-</p>
-
-<gj-form-join gj-form-submit-handler="joinCtrl.onJoined( formModel )"></gj-form-join>
+<gj-auth-join dark-variant="true"></gj-auth-join>
 
 <div class="auth-page-links text-right anim-fade-in">
 	<div class="auth-page-link">

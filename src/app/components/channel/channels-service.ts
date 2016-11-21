@@ -17,5 +17,15 @@ export class Channels
 		scifi: '/app/components/channel/scifi.png',
 		survival: '/app/components/channel/survival.png',
 		textadventure: '/app/components/channel/textadventure.png',
+		action: '/app/components/channel/action.png',
+		adventure: '/app/components/channel/adventure.png',
+		arcade: '/app/components/channel/arcade.png',
+		platformer: '/app/components/channel/platformer.png',
+		puzzle: '/app/components/channel/puzzle.png',
+		rpg: '/app/components/channel/rpg.png',
+		shooter: '/app/components/channel/shooter.png',
+		sports: '/app/components/channel/sports.png',
+		strategysim: '/app/components/channel/strategysim.png',
+		other: '/app/components/channel/other.png',
 	};
 }

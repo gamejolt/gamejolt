@@ -5,29 +5,24 @@
 <section class="section">
 	<div class="container">
 
-		<h3 class="section-header">
+		<h2 class="section-header">
 			<a class="link-unstyled"
 				ui-sref="discover.channels.channel.games._fetch( { section: 'best' } )"
 				gj-track-event="channel:row-heading:best"
 				translate
 				translate-params-channel="channelCtrl.channel"
 				>
-				Top <b>#{{ channel }}</b>
+				Best <b>#{{ channel }}</b>
 			</a>
-		</h3>
+		</h2>
 
-		<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
-			<div ng-class="{ 'row': !Screen.isXs }">
-				<gj-game-thumbnail
-					class="col-xs-11 col-sm-4 col-md-3"
-					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
-					ng-repeat="game in overviewCtrl.bestGames | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
-					gj-game="game"
-					gj-track-event="channel:slider:game:{{ $index }}"
-					>
-				</gj-game-thumbnail>
-			</div>
-		</div>
+		<gj-game-grid
+			games="overviewCtrl.bestGames"
+			truncate-to-fit="true"
+			scrollable="true"
+			event-label="channel-overview-best-games"
+			>
+		</gj-game-grid>
 
 		<div class="page-cut">
 			<a class="btn btn-outline"
@@ -39,7 +34,7 @@
 			</a>
 		</div>
 
-		<h3 class="section-header">
+		<h2 class="section-header">
 			<a class="link-unstyled"
 				ui-sref="discover.channels.channel.games._fetch( { section: 'hot' } )"
 				gj-track-event="channel:row-heading:hot"
@@ -48,20 +43,15 @@
 				>
 				Hot <b>#{{ channel }}</b>
 			</a>
-		</h3>
+		</h2>
 
-		<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
-			<div ng-class="{ 'row': !Screen.isXs }">
-				<gj-game-thumbnail
-					class="col-xs-11 col-sm-4"
-					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
-					ng-repeat="game in overviewCtrl.hotGames | limitTo:(Screen.isMobile ? 6 : 9 ) track by game.id"
-					gj-game="game"
-					gj-track-event="channel:slider:game:{{ $index }}"
-					>
-				</gj-game-thumbnail>
-			</div>
-		</div>
+		<gj-game-grid
+			games="overviewCtrl.hotGames"
+			truncate-to-fit="true"
+			scrollable="true"
+			event-label="channel-overview-hot-games"
+			>
+		</gj-game-grid>
 
 		<div class="page-cut">
 			<a class="btn btn-outline"
@@ -74,11 +64,14 @@
 		</div>
 
 		<div class="row">
-			<div class="col-lg-7 col-centered">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 
-				<h2 class="section-header" translate>
-					Hot Posts
+				<h2 class="text-center" translate>
+					Hot Devlog Posts
 				</h2>
+
+				<hr class="underbar underbar-center">
+				<br>
 
 				<gj-activity-feed
 					ng-if="overviewCtrl.posts.hasItems"

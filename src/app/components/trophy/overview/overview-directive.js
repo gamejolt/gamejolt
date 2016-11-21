@@ -40,10 +40,10 @@ angular.module( 'App.Trophy.Overview' ).directive( 'gjTrophyOverview', function(
 			function processPayload( payload )
 			{
 				_this.trophies = Game_Trophy.populate( payload.trophies );
-				_this.showInvisibleTrophyMessage = payload.showInvisibleTrophyMessage || false;
-				_this.experience = payload.experienceAchieved || 0;
+				_this.showInvisibleTrophyMessage = payload.trophiesShowInvisibleTrophyMessage || false;
+				_this.experience = payload.trophiesExperienceAchieved || 0;
 
-				_this.achieved = payload.achievedTrophies ? User_GameTrophy.populate( payload.achievedTrophies ) : [];
+				_this.achieved = payload.trophiesAchieved ? User_GameTrophy.populate( payload.trophiesAchieved ) : [];
 				_this.achievedIndexed = Game_Trophy.indexAchieved( _this.achieved );
 			};
 

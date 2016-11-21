@@ -27,6 +27,7 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 	@Input( '@' ) loadMoreUrl: string;
 	@Input( '<?' ) showEditControls = false;
 	@Input( '<?' ) showGameInfo = false;
+	@Input( '<?' ) disableAutoload = false;
 
 	@Output( '?onPostRemoved' ) private _onPostRemoved?: Function;
 	@Output( '?onPostEdited' ) private _onPostEdited?: Function;
@@ -186,7 +187,7 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 			this.feed.viewed( item );
 
 			// Auto-loading while scrolling.
-			if ( !this.isLoadingMore && !this.feed.reachedEnd && this._timesLoaded < LOAD_MORE_TIMES ) {
+			if ( !this.disableAutoload && !this.isLoadingMore && !this.feed.reachedEnd && this._timesLoaded < LOAD_MORE_TIMES ) {
 				const index = _.findIndex( this.feed.items, { id: item.id } );
 				if ( index >= this.feed.items.length - LOAD_MORE_FROM_BOTTOM ) {
 					this.loadMore();

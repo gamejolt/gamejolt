@@ -2,13 +2,20 @@ import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../app-service';
 import { Meta } from './../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { SplitTest } from '../../../components/split-test/split-test-service';
+
+interface DiscoverSection {
+	title: string;
+	url: string;
+	eventLabel: string;
+	items: any[];
+};
 
 @Injectable()
 export class HomeCtrl
 {
-	featuredItems: any;
+	featuredItems: any[];
 
+	featuredGames: any[];
 	hotGames: any[];
 	paidGames: any[];
 	bestGames: any[];
@@ -21,21 +28,21 @@ export class HomeCtrl
 
 	isDevlogsExpanded = false;
 
-	hasNoFeaturedSplit = false;
+	discoverSections: DiscoverSection[];
+	chosenSection: DiscoverSection;
 
 	constructor(
+		@Inject( '$state' ) $state: ng.ui.IStateService,
+		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'App' ) app: App,
 		@Inject( 'Environment' ) Environment: any,
 		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'Game' ) gameModel: any,
 		@Inject( 'FeaturedItem' ) featuredItemModel: any,
 		@Inject( 'Fireside_Post' ) firesidePostModel: typeof Fireside_Post,
-		@Inject( 'SplitTest' ) splitTest: SplitTest,
 		@Inject( 'payload' ) payload: any,
 	)
 	{
-		this.hasNoFeaturedSplit = splitTest.hasHomeNoFeatured( payload );
-
 		app.title = null;
 
 		meta.description = payload.metaDescription;
@@ -57,6 +64,7 @@ export class HomeCtrl
 		};
 
 		this.featuredItems = featuredItemModel.populate( payload.featuredGames );
+		this.featuredGames = _.pluck( this.featuredItems, 'game' );
 
 		this.hotGames = gameModel.populate( payload.hotGames );
 		this.paidGames = gameModel.populate( payload.paidGames );
@@ -67,5 +75,40 @@ export class HomeCtrl
 		this.channels = payload.channels;
 
 		this.firesidePosts = firesidePostModel.populate( payload.firesidePosts );
+
+		const bestSection = {
+			title: gettextCatalog.getString( 'Best Games' ),
+			url: $state.href( 'discover.games.list._fetch', { section: 'featured' } ),
+			eventLabel: 'best-games',
+			items: this.bestGames,
+		};
+
+		const hotSection = {
+			title: gettextCatalog.getString( 'Hot Games' ),
+			url: $state.href( 'discover.games.list._fetch', { section: 'hot' } ),
+			eventLabel: 'hot-games',
+			items: this.hotGames,
+		};
+
+		if ( app.user ) {
+			const recommendedSection = {
+				title: gettextCatalog.getString( 'Recommended Games' ),
+				url: $state.href( 'library.collection.recommended', { id: app.user.username } ),
+				eventLabel: 'recommended-games',
+				items: this.recommendedGames,
+			};
+
+			this.discoverSections = [ hotSection, recommendedSection, bestSection ];
+		}
+		else {
+			this.discoverSections = [ bestSection, hotSection ];
+		}
+
+		this.chosenSection = this.discoverSections[0];
+	}
+
+	changeSection( sectionIndex: number )
+	{
+		this.chosenSection = this.discoverSections[ sectionIndex ];
 	}
 }

@@ -245,10 +245,10 @@
 						>
 					</gj-form-dashboard-financials-managed-account-address>
 
-					<!--<gj-form-dashboard-financials-managed-account-id-document
+					<gj-form-dashboard-financials-managed-account-id-document
 						name-prefix="legal_entity-additional_owners-{{ i }}-verification"
 						>
-					</gj-form-dashboard-financials-managed-account-id-document>-->
+					</gj-form-dashboard-financials-managed-account-id-document>
 
 				</div>
 
@@ -337,11 +337,13 @@
 			</div>
 		</div>
 
+		<gj-loading ng-if="formState.isProcessing" label="{{ 'Processing...' | translate }}"></gj-loading>
+
 		<button
 			ng-if="!formState.isComplete && !helpers.isVerificationPending()"
 			gj-form-submit-button
 			class="btn btn-success-outline"
-			ng-disabled="!managedAccountForm.$valid"
+			ng-disabled="!managedAccountForm.$valid || formState.isProcessing"
 			ng-click="onSubmit()"
 			>
 			<span class="jolticon jolticon-chevron-right"></span>

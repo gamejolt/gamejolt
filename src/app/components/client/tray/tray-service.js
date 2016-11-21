@@ -87,7 +87,7 @@ angular.module( 'App.Client.Tray' )
 				label: 'Browse Games',
 				click: function()
 				{
-					$state.go( 'discover.games.list.section', { section: 'featured' }, { inherit: false } );
+					$state.go( 'discover.games.list._fetch', { section: 'featured' }, { inherit: false } );
 					Client.show();
 				}
 			} ) );

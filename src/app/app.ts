@@ -10,8 +10,10 @@ import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 import LoadModule from './../lib/gj-lib-client/components/load/load';
 import LocationModule from './../lib/gj-lib-client/components/location/location';
 import ClipboardModule from './../lib/gj-lib-client/components/clipboard/clipboard';
+import PopoverModule from '../lib/gj-lib-client/components/popover/popover';
 import CardModule from './../lib/gj-lib-client/components/card/card';
 import HistoryTickModule from './../lib/gj-lib-client/components/history-tick/history-tick';
+import PaginationModule from '../lib/gj-lib-client/components/pagination/pagination';
 import ModalConfirmModule from './../lib/gj-lib-client/components/modal/confirm/confirm';
 
 import gjNotificationModule from './../lib/gj-lib-client/components/notification/notification';
@@ -38,7 +40,12 @@ import FiresidePostTagModule from './../lib/gj-lib-client/components/fireside/po
 import FiresidePostVideoModule from './../lib/gj-lib-client/components/fireside/post/video/video';
 import FiresidePostLikeModule from './../lib/gj-lib-client/components/fireside/post/like/like';
 import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
+<<<<<<< HEAD
 import PartnerReferralModule from './../lib/gj-lib-client/components/partner-referral/partner-referral';
+=======
+import AuthModule from '../lib/gj-lib-client/components/auth/auth';
+import AuthJoinModule from '../lib/gj-lib-client/components/auth/join/join';
+>>>>>>> master
 
 import SplitTestModule from './components/split-test/split-test';
 import ShellModule from './components/shell/shell';
@@ -65,6 +72,7 @@ import GameFollowWidgetModule from './components/game/follow-widget/follow-widge
 import GameGridModule from './components/game/grid/grid';
 import FiresidePostThumbnailModule from './components/fireside/post/thumbnail/thumbnail';
 import FiresidePostListModule from './components/fireside/post/list/list';
+import GameModLinksModule from './components/game/mod-links/mod-links';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -138,7 +146,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Partial',
 	'gj.Backdrop',
 	'gj.Tooltip',
-	'gj.Popover',
+	PopoverModule,
 	'gj.ToggleSwitch',
 	'gj.Growls',
 	'gj.Scroll.Parallax',
@@ -149,7 +157,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Referrer',
 	CardModule,
 	HistoryTickModule,
-	'gj.Pagination',
+	PaginationModule,
 	ModalConfirmModule,
 	'gj.SiteSelector',
 	'gj.Favicon',
@@ -288,7 +296,12 @@ const AppModule = angular.module( 'App', [
 	VideoModule,
 	VideoEmbedModule,
 
+<<<<<<< HEAD
 	PartnerReferralModule,
+=======
+	AuthModule,
+	AuthJoinModule,
+>>>>>>> master
 
 	// Components.
 	'App.ProtocolWatcher',
@@ -365,6 +378,8 @@ const AppModule = angular.module( 'App', [
 	'App.User.FriendshipsHelper',
 
 	'App.Terms.ChangeAlert',
+
+	GameModLinksModule,
 
 	// Views.
 	ViewsModule,

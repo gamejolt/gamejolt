@@ -1,0 +1,131 @@
+.landing-header
+	@extend .fill-darkest
+	background-image: url('/app/components/shell/shell-bg.png')
+	background-repeat: repeat
+
+	&.has-nav
+		padding-bottom: 0
+
+	h1
+		font-weight: 300
+		letter-spacing: 2px
+		text-transform: none
+
+		@media $media-sm-up
+			font-size: 60px
+
+		sup
+			top: -10px
+			font-size: $font-size-tiny
+			font-weight: normal
+
+			@media $media-sm-up
+				top: -25px
+				font-size: $font-size-small
+
+		.bolt
+			width: 17px * 2
+			height: 17px * 2
+
+			@media $media-sm-up
+				width: 17px * 3
+				height: 17px * 3
+
+	.lead
+		font-weight: bold
+		color: $white
+		font-size: $font-size-h4
+
+		@media $media-sm-up
+			font-size: $font-size-h1
+
+	.platform-list
+		margin-bottom: 0
+		margin-top: $line-height-computed * 2
+
+.landing-body
+
+	h1, h2, h3, h4, h5, h6
+		text-transform: uppercase
+
+	@media $media-xs
+		h3, h4, h5, h6
+			margin-top: $line-height-computed
+
+	a
+		link-underlines( $black, $white, $white )
+		font-weight: bold
+
+	.section
+		padding: 60px 0
+
+	a.btn
+		background-image: none !important
+		text-shadow: none !important
+
+	.fill-lightest
+		a
+			link-underlines( $text-color, $gray-lightest, $gray-lightest )
+
+	.fill-darkest
+		a
+			link-underlines( $gj-green, $gray-darkest, $gray-darkest )
+
+		.game-thumbnail
+			background: none
+
+	.fill-pink
+		a
+			link-underlines( $white, $gj-pink, $gj-pink )
+
+	.section
+		position: relative
+
+	.fill-black
+
+		h1, h2, h3
+			color: $gj-pink
+
+	p
+		line-height: 1.6
+
+	.stat-big-digit
+		font-size: $font-size-h1 * 1.2
+
+.landing-break-lg
+.landing-break-md
+.landing-break-sm
+	display: none
+
+@media $media-sm
+	.landing-break-sm
+		display: block
+		clear: both
+		height: $grid-gutter-width * 1.5
+
+@media $media-md
+	.landing-break-md
+		display: block
+		clear: both
+		height: $grid-gutter-width * 1.5
+
+@media $media-lg
+	.landing-break-lg
+		display: block
+		clear: both
+		height: $grid-gutter-width * 1.5
+
+.landing-graphic
+.landing-graphic-full
+	text-align: center
+
+	> img
+		display: inline-block
+		width: 100%
+		max-width: 180px
+
+	@media $media-xs
+		margin-top: $grid-gutter-width-xs
+
+.landing-graphic-full > img
+	max-width: none

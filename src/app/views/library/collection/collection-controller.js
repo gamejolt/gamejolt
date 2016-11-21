@@ -173,10 +173,6 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 
 	this.shouldShowFollow = function()
 	{
-		if ( !App.user ) {
-			return false;
-		}
-
 		return !this.isOwner;
 	}
 

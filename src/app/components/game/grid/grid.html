@@ -1,37 +1,35 @@
-<gj-pagination
-	id="grid-pagination"
-	ng-if="$ctrl.perPage && $ctrl.gamesCount"
-	items-per-page="$ctrl.perPage"
-	total-items="$ctrl.gamesCount"
-	current-page="$ctrl.currentPage"
-	>
-</gj-pagination>
+<div ng-attr-id="grid-pagination-{{ ::$ctrl.id }}">
+	<p class="text-muted small"
+		ng-if="$ctrl.gamesCount"
+		translate
+		translate-n="$ctrl.gamesCount"
+		translate-plural="games.list.games_count"
+		translate-params-page="$ctrl.currentPage"
+		translate-comment="{{ page }} expands to the current page of games"
+		>
+		games.list.games_count
+	</p>
 
-<p class="text-muted small"
-	translate
-	translate-n="$ctrl.gamesCount"
-	translate-plural="games.list.games_count"
-	translate-params-page="$ctrl.currentPage"
-	translate-comment="{{ page }} expands to the current page of games"
-	>
-	games.list.games_count
-</p>
+	<div ng-class="{ 'scrollable-grid-xs full-bleed-xs': $ctrl.scrollable && $ctrl.screen.isXs }">
+		<div ng-class="{ 'row': !($ctrl.scrollable && $ctrl.screen.isXs) }">
+			<gj-game-thumbnail
+				class="col-sm-6 col-md-4 col-lg-3 game-thumbnail-anim"
+				ng-class="{ 'scrollable-grid-item col-xs-11': $ctrl.scrollable && $ctrl.screen.isXs }"
+				ng-repeat="game in $ctrl.processedGames track by game.id"
+				gj-game="game"
+				gj-track-event="{{ $ctrl.eventLabel ? 'game-grid:click:' + $ctrl.eventLabel : undefined }}"
+				>
+			</gj-game-thumbnail>
+		</div>
+	</div>
 
-<div class="row">
-	<gj-game-thumbnail
-		class="col-xs-12 game-thumbnail-anim"
-		ng-class="{ 'col-sm-6 col-lg-4': $ctrl.size == 'md', 'col-sm-4 col-md-3': $ctrl.size == 'sm' }"
-		ng-repeat="game in $ctrl.games track by game.id"
-		gj-game="game"
-		gj-link-to="{{ $ctrl.linkTo }}">
-	</gj-game-thumbnail>
+	<gj-pagination
+		class="text-center"
+		ng-if="$ctrl.perPage && $ctrl.gamesCount"
+		items-per-page="$ctrl.perPage"
+		total-items="$ctrl.gamesCount"
+		current-page="$ctrl.currentPage"
+		on-page-change="$ctrl.scroll.to( 'grid-pagination-' + $ctrl.id, { animate: false } )"
+		>
+	</gj-pagination>
 </div>
-
-<gj-pagination
-	ng-if="$ctrl.perPage && $ctrl.gamesCount"
-	items-per-page="$ctrl.perPage"
-	total-items="$ctrl.gamesCount"
-	current-page="$ctrl.currentPage"
-	on-page-change="$ctrl.scroll.to( 'grid-pagination', { animate: false } )"
-	>
-</gj-pagination>

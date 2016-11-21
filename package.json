@@ -1,6 +1,6 @@
 {
   "name": "game-jolt",
-  "version": "0.8.2",
+  "version": "0.10.1",
   "scripts": {
     "client": "nw build/client/dev/source",
     "client-build-win": "gulp --production --client --arch=32",
@@ -17,12 +17,12 @@
     "@types/lodash": "0.0.27",
     "@types/moment": "^2.11.28",
     "@types/oclazyload": "0.0.30",
-    "@types/stripe": "0.0.27",
+    "@types/stripe": "0.0.31",
     "concat-with-sourcemaps": "~1.0.2",
     "connect-history-api-fallback": "0.0.4",
     "decompress-zip": "^0.2.0",
     "glob-expand": "~0.0.2",
-    "gulp": "~3.8.1",
+    "gulp": "gulpjs/gulp#4.0",
     "gulp-angular-embed-templates": "^2.1.0",
     "gulp-angular-gettext": "^2.1.0",
     "gulp-autoprefixer": "~0.0.7",
@@ -34,6 +34,7 @@
     "gulp-inject": "~0.4.1",
     "gulp-livereload": "~2.1.0",
     "gulp-load-plugins": "~0.5.1",
+    "gulp-markdown": "^1.2.0",
     "gulp-minify-css": "~0.3.4",
     "gulp-newer": "^0.5.0",
     "gulp-ng-annotate": "~1.1.0",
@@ -66,12 +67,12 @@
     "rollup-plugin-replace": "^1.1.0",
     "rollup-plugin-string": "^2.0.0",
     "rollup-plugin-typescript": "^0.7.5",
-    "run-sequence": "~0.3.6",
     "sanitize-html": "^1.11.3",
     "streamqueue": "~0.1.1",
     "stylus": "0.53.0",
     "through2": "~0.5.1",
-    "typescript": "^2.0.0"
+    "typescript": "^2.0.0",
+    "undertaker-forward-reference": "^1.0.1"
   },
   "optionalDependencies": {
     "appdmg": "^0.3.5"

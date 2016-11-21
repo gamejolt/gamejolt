@@ -52,6 +52,8 @@
 								</span>
 							</h2>
 
+							<hr class="underbar">
+
 							<gj-rating-widget
 								rating-widget-game="gameCtrl.game"
 								rating-widget-rating="gameCtrl.userRating"
@@ -102,6 +104,7 @@
 						Releases
 					</h2>
 
+<<<<<<< HEAD
 					<!--
 						Partner Controls
 					-->
@@ -126,6 +129,9 @@
 							</div>
 						</gj-card>
 					</div>
+=======
+					<hr class="underbar">
+>>>>>>> master
 
 					<div ng-if="gameCtrl.showMultiplePackagesMessage" class="alert alert-info">
 						<span class="jolticon jolticon-notice"></span>
@@ -164,6 +170,8 @@
 				<h2 ng-class="{ 'section-header': !Screen.isMobile && !((gameCtrl.game._has_packages && !overviewCtrl.isLoaded) || overviewCtrl.hasReleasesSection) }" translate>
 					Description
 				</h2>
+
+				<hr class="underbar">
 
 				<div ng-if="!gameCtrl.game.description_compiled">
 					<span class="lazy-placeholder"></span>
@@ -210,6 +218,8 @@
 						The kind people that helped support {{ developer }} by paying more than the minimum. Sorted by amount contributed.
 					</p>
 
+					<hr class="underbar">
+
 					<div class="game-supporters">
 						<div class="game-supporter"
 							ng-repeat="user in overviewCtrl.supporters track by user.id"
@@ -241,6 +251,7 @@
 					<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
 						<br>
 						<h2 class="section-header" translate>Details</h2>
+						<hr class="underbar">
 						<div gj-partial="/app/views/discover/games/view/overview/_details.html"></div>
 
 						<div ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
@@ -255,73 +266,78 @@
 	</div>
 </section>
 
-<section class="section devlog-section" ng-if="gameCtrl.game._is_wip && gameCtrl.isLoaded && overviewCtrl.posts.hasItems">
+<div ng-if="gameCtrl.isLoaded && overviewCtrl.posts.hasItems">
+	<hr>
 
-	<div class="devlog-section-highlight"></div>
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 
-	<a class="devlog-section-overlay" ui-sref="discover.games.view.devlog.list">
-		<div class="btn btn-primary-outline btn-overlay-variant btn-lg">
-			View Devlog
-		</div>
-	</a>
+					<h2 class="section-header text-center" translate>
+						Project Devlog
+					</h2>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+					<hr class="underbar underbar-center">
+					<br>
 
-				<!--<h2 class="section-header text-center">Devlog Feed</h2>-->
+					<gj-activity-feed
+						type="Fireside_Post"
+						items="overviewCtrl.posts"
+						load-more-url="/web/discover/games/devlog/posts/{{ gameCtrl.game.id }}"
+						show-edit-controls="true"
+						disable-autoload="true"
+						>
+					</gj-activity-feed>
 
-				<gj-activity-feed
-					type="Fireside_Post"
-					items="overviewCtrl.posts"
-					load-more-url="/web/discover/games/devlog/posts/{{ gameCtrl.game.id }}"
-					show-edit-controls="true"
-					>
-				</gj-activity-feed>
-
+				</div>
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
+</div>
 
 <!-- Achievements -->
-<section class="section" ng-if="::(gameCtrl.hasScores || gameCtrl.trophiesCount)">
-	<div class="container">
+<div ng-if="::(gameCtrl.hasScores || gameCtrl.trophiesCount)">
+	<hr>
 
-		<div class="row">
+	<section class="section">
+		<div class="container">
 
-			<!-- Scores -->
-			<div
-				ng-if="::gameCtrl.hasScores"
-				ng-class="::overviewCtrl.isAchievementsTwoCol ? 'col-md-7' : 'col-xs-12'">
+			<div class="row">
 
-				<gj-score-overview
-					ng-if="::overviewCtrl.scoresPayload"
-					score-overview-game="::gameCtrl.game"
-					score-overview-payload="::overviewCtrl.scoresPayload"
-					score-overview-size="{{ ::(overviewCtrl.isAchievementsTwoCol ? 'small' : 'full') }}">
-				</gj-score-overview>
+				<!-- Scores -->
+				<div
+					ng-if="::gameCtrl.hasScores"
+					ng-class="::overviewCtrl.isAchievementsTwoCol ? 'col-md-7' : 'col-xs-12'">
 
-			</div>
+					<gj-score-overview
+						ng-if="::overviewCtrl.scoresPayload"
+						score-overview-game="::gameCtrl.game"
+						score-overview-payload="::overviewCtrl.scoresPayload"
+						score-overview-size="{{ ::(overviewCtrl.isAchievementsTwoCol ? 'small' : 'full') }}">
+					</gj-score-overview>
 
-			<!-- Trophies -->
-			<div
-				ng-if="::gameCtrl.trophiesCount"
-				ng-class="::overviewCtrl.isAchievementsTwoCol ? 'col-md-5 col-lg-4 col-lg-offset-1' : 'col-xs-12'">
+				</div>
 
-				<gj-trophy-overview
-					ng-if="::overviewCtrl.trophiesPayload"
-					trophy-overview-game="::gameCtrl.game"
-					trophy-overview-payload="::overviewCtrl.trophiesPayload"
-					trophy-overview-size="{{ ::(overviewCtrl.isAchievementsTwoCol ? 'small' : 'full') }}">
-				</gj-trophy-overview>
+				<!-- Trophies -->
+				<div
+					ng-if="::gameCtrl.trophiesCount"
+					ng-class="::overviewCtrl.isAchievementsTwoCol ? 'col-md-5 col-lg-4 col-lg-offset-1' : 'col-xs-12'">
+
+					<gj-trophy-overview
+						ng-if="::overviewCtrl.trophiesPayload"
+						trophy-overview-game="::gameCtrl.game"
+						trophy-overview-payload="::overviewCtrl.trophiesPayload"
+						trophy-overview-size="{{ ::(overviewCtrl.isAchievementsTwoCol ? 'small' : 'full') }}">
+					</gj-trophy-overview>
+
+				</div>
 
 			</div>
 
 		</div>
-
-	</div>
-</section>
+	</section>
+</div>
 
 <!--
 	Recommended Games
@@ -331,6 +347,8 @@
 	<div class="container">
 
 		<h2 class="section-header" translate>You May Also Like</h2>
+
+		<hr class="underbar">
 
 		<div class="full-bleed-xs scrollable-grid-xs">
 			<div ng-class="{ 'row': !Screen.isXs }">
@@ -347,74 +365,80 @@
 	</div>
 </section>
 
-<!-- Video Comments -->
-<section class="section" ng-if="overviewCtrl.videoComments.length && gameCtrl.game.comments_enabled">
+<section class="section">
 	<div class="container">
 
-		<h2 class="section-header sans-margin-bottom" translate>
-			Video Comments
-		</h2>
+		<!-- Video Comments -->
+		<div ng-if="overviewCtrl.videoComments.length && gameCtrl.game.comments_enabled">
+			<h2 class="section-header sans-margin-bottom" translate>
+				Video Comments
+			</h2>
 
-		<p class="page-help">
-			<span translate>Video comments are sorted by most liked.</span>
-			<a class="link-help" href="https://help.gamejolt.com/video-comments" target="_blank" translate>
-				How do I add my video?
-			</a>
-		</p>
+			<p class="page-help">
+				<span translate>Video comments are sorted by most liked.</span>
+				<a class="link-help" href="https://help.gamejolt.com/video-comments" target="_blank" translate>
+					How do I add my video?
+				</a>
+			</p>
 
-		<div class="row">
-			<gj-comment-video-thumbnail
-				class="col-xs-6 col-sm-3"
-				ng-repeat="video in overviewCtrl.videoComments track by video.id"
-				video="::video"
-				show-user="true"
-				>
-			</gj-comment-video-thumbnail>
+			<hr class="underbar">
+
+			<div class="row">
+				<gj-comment-video-thumbnail
+					class="col-xs-6 col-sm-3"
+					ng-repeat="video in overviewCtrl.videoComments track by video.id"
+					video="::video"
+					show-user="true"
+					>
+				</gj-comment-video-thumbnail>
+			</div>
+
+			<div class="page-cut" ng-if="overviewCtrl.videoComments.length < overviewCtrl.videoCommentsCount">
+				<a class="btn btn-outline"
+					ng-click="overviewCtrl.loadMoreVideoComments()"
+					gj-track-event="game-profile:video-comment:more"
+					translate
+					>
+					Load More
+				</a>
+			</div>
 		</div>
 
-		<div class="page-cut" ng-if="overviewCtrl.videoComments.length < overviewCtrl.videoCommentsCount">
-			<a class="btn btn-outline"
-				ng-click="overviewCtrl.loadMoreVideoComments()"
-				gj-track-event="game-profile:video-comment:more"
-				translate
-				>
-				Load More
-			</a>
-		</div>
+		<!-- Comments -->
+		<div id="comments" ng-if="gameCtrl.isLoaded">
+			<div class="row">
 
-	</div>
-</section>
+				<div class="col-sm-10 col-md-8 col-lg-7">
 
-<!-- Comments -->
-<section class="section" id="comments" ng-if="gameCtrl.isLoaded">
-	<div class="container">
-		<div class="row">
+					<div ng-if="::!gameCtrl.game.comments_enabled">
+						<h2 class="section-header" translate>Comments Disabled</h2>
+						<hr class="underbar">
+						<p class="text-muted" translate>Comments have been disabled for this game.</p>
+					</div>
 
-			<div class="col-sm-10 col-md-8 col-lg-7">
+					<div ng-if="::gameCtrl.game.comments_enabled">
+						<h2 class="section-header" translate>Comments</h2>
+						<hr class="underbar">
 
-				<div ng-if="::!gameCtrl.game.comments_enabled">
-					<h2 class="section-header" translate>Comments Disabled</h2>
-					<p class="text-muted" translate>Comments have been disabled for this game.</p>
+						<gj-comment-widget
+							current-page="overviewCtrl.currentCommentPage"
+							comment-resource="Game"
+							comment-resource-id="gameCtrl.game.id"
+							>
+						</gj-comment-widget>
+					</div>
+
 				</div>
 
-				<div ng-if="::gameCtrl.game.comments_enabled">
-					<gj-comment-widget
-						current-page="overviewCtrl.currentCommentPage"
-						comment-resource="Game"
-						comment-resource-id="gameCtrl.game.id"
-						>
-					</gj-comment-widget>
+				<!--
+					Will overflow a little on md, but what can ya do, amirite?
+				-->
+				<div class="col-md-4 col-lg-offset-1" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
+					<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
 				</div>
 
 			</div>
-
-			<!--
-				Will overflow a little on md, but what can ya do, amirite?
-			-->
-			<div class="col-md-4 col-lg-offset-1" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
-				<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
-			</div>
-
 		</div>
+
 	</div>
 </section>

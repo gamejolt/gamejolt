@@ -8,6 +8,10 @@ import MetaModule from './../lib/gj-lib-client/components/meta/meta';
 import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
 import ImgHelperModule from './../lib/gj-lib-client/components/img/helper/helper';
+import PopoverModule from '../lib/gj-lib-client/components/popover/popover';
+import AuthModule from '../lib/gj-lib-client/components/auth/auth';
+import AuthJoinModule from '../lib/gj-lib-client/components/auth/join/join';
+import AuthLoginModule from '../lib/gj-lib-client/components/auth/login/login';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -55,7 +59,7 @@ const AppModule = angular.module( 'App', [
 	'gj.ExpandWhen',
 
 	'gj.Tooltip',
-	'gj.Popover',
+	PopoverModule,
 	'gj.Growls',
 	'gj.History',
 	'gj.Scroll.AutoScroll',
@@ -72,6 +76,10 @@ const AppModule = angular.module( 'App', [
 	'App.Forms',
 
 	'App.CoverImg',
+
+	AuthModule,
+	AuthJoinModule,
+	AuthLoginModule,
 
 	// Views.
 	'App.Views',

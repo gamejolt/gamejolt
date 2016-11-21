@@ -13,6 +13,11 @@
 gj-game-thumbnail
 	display: block
 
+	// If a video is active, hide the tag.
+	&.active
+		.game-thumbnail-video-tag
+			display: none
+
 .game-thumbnail
 
 	$zindex-img = 1
@@ -27,6 +32,7 @@ gj-game-thumbnail
 	@media $media-sm-up
 		margin-bottom: $grid-gutter-width
 
+	// Hide these when hovered so there's more info to view the image.'
 	&:hover
 		.game-thumbnail-pricing
 		.game-thumbnail-tag

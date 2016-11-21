@@ -10,52 +10,52 @@ export class ListComponent
 	categories = [
 		{
 			label: 'Action',
-			img: '/app/img/categories/action.png',
+			img: '/app/components/channel/action.png',
 			url: 'action',
 		},
 		{
 			label: 'Adventure',
-			img: '/app/img/categories/adventure.png',
+			img: '/app/components/channel/adventure.png',
 			url: 'adventure',
 		},
 		{
 			label: 'Arcade',
-			img: '/app/img/categories/arcade.png',
+			img: '/app/components/channel/arcade.png',
 			url: 'arcade',
 		},
 		{
 			label: 'Platformer',
-			img: '/app/img/categories/platformer.png',
+			img: '/app/components/channel/platformer.png',
 			url: 'platformer',
 		},
 		{
 			label: 'Puzzle',
-			img: '/app/img/categories/puzzle.png',
+			img: '/app/components/channel/puzzle.png',
 			url: 'puzzle',
 		},
 		{
 			label: 'RPGs',
-			img: '/app/img/categories/rpg.png',
+			img: '/app/components/channel/rpg.png',
 			url: 'rpg',
 		},
 		{
 			label: 'Shooter',
-			img: '/app/img/categories/shooter.png',
+			img: '/app/components/channel/shooter.png',
 			url: 'shooter',
 		},
 		{
 			label: 'Sports',
-			img: '/app/img/categories/sports.png',
+			img: '/app/components/channel/sports.png',
 			url: 'sports',
 		},
 		{
 			label: 'Strategy/Sim',
-			img: '/app/img/categories/strategy-sim.png',
+			img: '/app/components/channel/strategysim.png',
 			url: 'strategy-sim',
 		},
 		{
 			label: 'Other',
-			img: '/app/img/categories/other-1.png',
+			img: '/app/components/channel/other.png',
 			url: 'other',
 		},
 	];
