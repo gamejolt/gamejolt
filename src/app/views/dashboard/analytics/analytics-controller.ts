@@ -14,7 +14,7 @@ export class AnalyticsCtrl
 	 */
 	private paramsBootstrapped = false;
 
-	games: any[];
+	user?: any;
 	game?: any;
 	package?: any;
 	release?: any;
@@ -24,6 +24,7 @@ export class AnalyticsCtrl
 	period: 'all' | 'monthly';
 	resource: ResourceName;
 	resourceId: number;
+	partnerMode: boolean;
 	availableMetrics: MetricMap;
 	metric: Metric;
 
@@ -39,7 +40,8 @@ export class AnalyticsCtrl
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( '$state' ) private $state: ng.ui.IStateService,
-		@Inject( 'Api' ) private Api: any,
+		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
+		@Inject( 'User' ) private User: any,
 		@Inject( 'Game' ) private Game: any,
 		@Inject( 'Game_Package' ) private Game_Package: any,
 		@Inject( 'Game_Release' ) private Game_Release: any,
@@ -50,53 +52,48 @@ export class AnalyticsCtrl
 	)
 	{
 		app.title = gettextCatalog.getString( 'Analytics' );
-		this.games = Game.populate( payload.games );
+		this.resource = $stateParams['resource'];
+		this.resourceId = parseInt( $stateParams['resourceId'], 10 );
+
+		this.user = payload.user ? new this.User( payload.user ) : null;
+		this.game = payload.game ? new this.Game( payload.game ) : null;
+		this.package = payload.package ? new this.Game_Package( payload.package ) : null;
+		this.release = payload.release ? new this.Game_Release( payload.release ) : null;
+		this.partnerMode = !this.user || this.user.id != app.user.id;
+
+		if ( this.partnerMode ) {
+			this.availableMetrics = this.analytics.pickPartnerMetrics( this.availableMetrics );
+		}
+
 		this._init();
 	}
 
 	_init()
 	{
-		// When resource changes.
-		this.$scope.$watchGroup( [ 'analyticsCtrl.resource', 'analyticsCtrl.resourceId' ], () =>
-		{
-			this.Api.sendRequest( '/web/dash/analytics/get-resource/' + this.resource + '/' + this.resourceId )
-				.then( ( payload: any ) =>
-				{
-					this.game = payload.game ? new this.Game( payload.game ) : null;
-					this.package = payload.package ? new this.Game_Package( payload.package ) : null;
-					this.release = payload.release ? new this.Game_Release( payload.release ) : null;
-				} );
-		} );
-
 		// Only the fields that can affect histograms.
 		const globalWatch = [
 			'analyticsCtrl.period',
-			'analyticsCtrl.resource',
-			'analyticsCtrl.resourceId',
 			'analyticsCtrl.startTime',
 			'analyticsCtrl.endTime',
 		];
 
 		this.$scope.$watchGroup( globalWatch, () =>
 		{
-			if ( this.resource && this.resourceId ) {
-				if ( this.period == 'all' ) {
-					this.counts();
-				}
-				else if ( this.period == 'monthly' ) {
-					this.histograms();
-				}
+			if ( this.period == 'all' ) {
+				this.counts();
+			}
+			else if ( this.period == 'monthly' ) {
+				this.histograms();
 			}
 		} );
 
 		// Only the fields that can affect report breakdowns.
 		this.$scope.$watchGroup( globalWatch.concat( [
 			'analyticsCtrl.metric.key',
-			'analyticsCtrl.resource',
 		] ),
 		() =>
 		{
-			if ( this.period && this.resource && this.resourceId && this.metric ) {
+			if ( this.period && this.metric ) {
 				this.metricChanged();
 			}
 		} );
@@ -105,27 +102,42 @@ export class AnalyticsCtrl
 	stateChanged( $stateParams: ng.ui.IStateParamsService )
 	{
 		this.period = $stateParams['period'] || 'monthly';
-		this.resource = $stateParams['resource'] || 'Game';
-		this.resourceId = parseInt( $stateParams['resourceId'], 10 ) || this.games[0].id;
+		this.resource = $stateParams['resource'];
+		this.resourceId = parseInt( $stateParams['resourceId'], 10 );
 
-		if ( this.resource == 'User' ) {
-			this.availableMetrics = this.analytics.userMetrics;
-			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'user-view' ];
+		switch ( this.resource ) {
+			case 'User':
+				this.availableMetrics = this.analytics.userMetrics;
+				this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'user-view' ]
+				break;
+
+			case 'Game':
+				this.availableMetrics = this.analytics.gameMetrics;
+				this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'view' ];
+				break;
+
+			case 'Game_Package':
+				if ( this.partnerMode ) {
+					throw new Error( 'Invalid resource.' );
+				}
+				this.availableMetrics = this.analytics.packageMetrics;
+				this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'download' ];
+				break;
+
+			case 'Game_Release':
+				if ( this.partnerMode ) {
+					throw new Error( 'Invalid resource.' );
+				}
+				this.availableMetrics = this.analytics.releaseMetrics;
+				this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'download' ];
+				break;
+
+			default:
+				throw new Error( 'Invalid resource.' );
 		}
-		else if ( this.resource == 'Game' ) {
-			this.availableMetrics = this.analytics.gameMetrics;
-			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'view' ];
-		}
-		else if ( this.resource == 'Game_Package' ) {
-			this.availableMetrics = this.analytics.packageMetrics;
-			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'download' ];
-		}
-		else if ( this.resource == 'Game_Release' ) {
-			this.availableMetrics = this.analytics.releaseMetrics;
-			this.metric = this.availableMetrics[ $stateParams['metricKey'] || 'download' ];
-		}
-		else {
-			throw new Error( 'Invalid resource.' );
+
+		if ( this.partnerMode ) {
+			this.availableMetrics = this.analytics.pickPartnerMetrics( this.availableMetrics );
 		}
 
 		// If any of the parameters changed, refresh the state.
@@ -194,19 +206,19 @@ export class AnalyticsCtrl
 			throw new Error( 'Dates required to get histograms.' );
 		}
 
-		return this.analytics.getHistogram( this.resource, this.resourceId, this.availableMetrics, [ this.startTime, this.endTime ] )
+		return this.analytics.getHistogram( this.resource, this.resourceId, this.availableMetrics, this.partnerMode, [ this.startTime, this.endTime ] )
 			.then( ( data: any ) => angular.extend( this, data ) );
 	}
 
 	counts()
 	{
-		return this.analytics.getCount( this.resource, this.resourceId, this.availableMetrics )
+		return this.analytics.getCount( this.resource, this.resourceId, this.availableMetrics, this.partnerMode )
 			.then( ( data: any ) => angular.extend( this, data ) );
 	}
 
 	pullReport( title: string, ...components: ReportComponent[] )
 	{
-		const report = new this.reportModel( title, components, this.resource, this.resourceId, this.metric.collection, this.startTime, this.endTime );
+		const report = new this.reportModel( title, components, this.resource, this.resourceId, this.metric.collection, this.partnerMode, this.startTime, this.endTime );
 
 		this.pageReports.push( report );
 	}
@@ -221,7 +233,9 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-					this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					}
 					break;
 				}
 
@@ -230,7 +244,9 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-					this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					}
 					break;
 				}
 
@@ -260,14 +276,18 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
-					this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					}
 					break;
 				}
 
 				case 'revenue': {
 					this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
-					this.pullReport( this.gettextCatalog.getString( 'Partner Generated' ), ...ReportPartnerRevenue );
-					this.pullReport( this.gettextCatalog.getString( 'Most Profitable Partners' ), ...ReportTopPartnerRevenue );
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Revenue from Partners' ), ...ReportPartnerRevenue );
+						this.pullReport( this.gettextCatalog.getString( 'Top Profitable Partners' ), ...ReportTopPartnerRevenue );
+					}
 					break;
 				}
 			}
@@ -278,7 +298,9 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Top Games' ), ...ReportTopGames );
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-					this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					}
 					break;
 				}
 
@@ -287,7 +309,9 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-					this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					}
 					break;
 				}
 
@@ -321,15 +345,19 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
-					this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					}
 					break;
 				}
 
 				case 'revenue': {
 					this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
-					this.pullReport( this.gettextCatalog.getString( 'Most Profitable Games' ), ...ReportTopGameRevenue );
-					this.pullReport( this.gettextCatalog.getString( 'Partner Generated' ), ...ReportPartnerRevenue );
-					this.pullReport( this.gettextCatalog.getString( 'Most Profitable Partners' ), ...ReportTopPartnerRevenue );
+					this.pullReport( this.gettextCatalog.getString( 'Top Profitable Games' ), ...ReportTopGameRevenue );
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Revenue from Partners' ), ...ReportPartnerRevenue );
+						this.pullReport( this.gettextCatalog.getString( 'Top Profitable Partners' ), ...ReportTopPartnerRevenue );
+					}
 					break;
 				}
 			}

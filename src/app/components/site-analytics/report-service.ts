@@ -21,7 +21,7 @@ export class SiteAnalyticsReport
 	static Geo: any;
 	static gettextCatalog: ng.gettext.gettextCatalog;
 
-	constructor( public title: string, public components: ReportComponent[], resource: ResourceName, resourceId: number, collection: Collection, startTime: number | undefined, endTime: number | undefined )
+	constructor( public title: string, public components: ReportComponent[], resource: ResourceName, resourceId: number, collection: Collection, partnerMode: boolean, startTime: number | undefined, endTime: number | undefined )
 	{
 		const promises = this.components.map( ( component ) =>
 		{
@@ -48,19 +48,38 @@ export class SiteAnalyticsReport
 			if ( conditionFields.indexOf( 'partner' ) != -1 ) {
 				conditions.push( 'has-partner' );
 			}
-			if ( conditionFields.indexOf( 'partner_donation' ) != -1 ) {
+			if ( conditionFields.indexOf( 'partner_generated_revenue' ) != -1 ) {
 				conditions.push( 'has-donations', 'has-partner' );
+			}
+			if ( conditionFields.indexOf( 'partner_generated_donation' ) != -1 ) {
+				conditions.push( 'has-donations', 'has-partner' );
+			}
+			if ( partnerMode ) {
+				conditions.push( 'partner' );
 			}
 			conditions = _.uniq( conditions );
 
 			// Replace the pseudo fields by their normal fields
-			if ( field == 'partner_donation' ) {
+			if ( field == 'partner_generated_revenue' ) {
+				field = 'revenue';
+			}
+			else if ( field == 'partner_generated_donation' ) {
 				field = 'donation';
 			}
+
 			if ( fetchFields ) {
 				fetchFields = fetchFields.map( ( fetchField ) =>
 				{
-					const result: Field = fetchField == 'partner_donation' ? 'donation' : fetchField;
+					let result: Field;
+					if ( fetchField == 'partner_generated_revenue' ) {
+						result = 'revenue';
+					}
+					else if ( fetchField == 'partner_generated_donation' ) {
+						result = 'donation';
+					}
+					else {
+						result = fetchField;
+					}
 					return result;
 				} );
 			}

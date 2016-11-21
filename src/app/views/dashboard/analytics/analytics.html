@@ -3,19 +3,19 @@
 <header class="section">
 	<div class="container">
 
-		<h1 translate>Analytics</h1>
+		<h1 translate>Analytics <small ng-if="analyticsCtrl.partnerMode">as partner</small></h1>
 		<br>
 
 		<nav class="breadcrumb">
 			<ul>
 				<li>
 					<a
-						ui-sref="dashboard.analytics.view( { resource: 'User', resourceId: App.user.id } )"
+						ui-sref="dashboard.analytics.view( { resource: 'User', resourceId: analyticsCtrl.user.id } )"
 						ui-sref-opts="{ location: 'replace' }"
 						ui-sref-active="active"
 						>
 						<span class="breadcrumb-tag" translate>User</span>
-						@{{ App.user.username }}
+						@{{ analyticsCtrl.user.username }}
 					</a>
 					<span class="breadcrumb-separator jolticon jolticon-chevron-right" ng-if="analyticsCtrl.game"></span>
 				</li>
