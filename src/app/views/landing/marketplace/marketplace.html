@@ -48,7 +48,7 @@
 
 					<h4 class="text-center">Revenue Split</h4>
 
-					<p>As a developer, you set the percentage you'd like to give to Game Jolt, as long as it's less than 10%. It's up to you. We will never guilt you into giving us more&mdash;in fact, you can't!</p>
+					<p>As a developer, you set the percentage you'd like to give to Game Jolt, as long as it's <strong>less than 10%</strong>. It's up to you. We will never guilt you into giving us more&mdash;in fact, you can't!</p>
 
 				</div>
 
@@ -64,7 +64,9 @@
 
 				</div>
 
-				<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
+				<div class="landing-break-sm"></div>
+
+				<div class="col-sm-6 col-md-4">
 
 					<div class="landing-graphic">
 						<img src="/app/views/landing/marketplace/payouts.svg" alt="">
@@ -126,7 +128,9 @@
 
 				</div>
 
-				<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
+				<div class="landing-break-sm"></div>
+
+				<div class="col-sm-6 col-md-4">
 
 					<div class="landing-graphic">
 						<img src="/app/views/landing/marketplace/early-access.svg" alt="">
@@ -151,6 +155,8 @@
 					<p>View detailed analytics for your game's sales, views, downloads, and even installs done through the Client. Find out what operating systems/devices your games are being downloaded on, geographical details of your audience, and which referring sites your sales are coming from.</p>
 
 				</div>
+
+				<div class="landing-break-sm"></div>
 
 				<div class="col-sm-6 col-md-4">
 
@@ -259,16 +265,23 @@
 
 					<div ng-if="!App.user">
 						<gj-auth-join></gj-auth-join>
+						<br>
 					</div>
 
 					<div ng-if="App.user" class="text-center">
 						<p>
 							Get started at
 						</p>
-						<a class="btn btn-success" ui-sref="dashboard.account.financials">
-							Marketplace Account Setup
-						</a>
+						<p>
+							<a class="btn btn-success" ui-sref="dashboard.account.financials">
+								Marketplace Account Setup
+							</a>
+						</p>
 					</div>
+
+					<p class="text-muted text-center">
+						Or <a href="mailto:contact@gamejolt.com">contact us</a> if you have questions!
+					</p>
 
 				</div>
 			</div>
