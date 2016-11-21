@@ -21,16 +21,9 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlMatcherFacto
 	angular.forEach( subStates, function( url, state )
 	{
 		$stateProvider.state( 'discover.games.list.' + state, {
-<<<<<<< HEAD:src/app/views/discover/games/list/category/category.js
 			url: url + '?price&os&browser&maturity&status&referrals&page&query',
-			controller: 'Discover.Games.List.CategoryCtrl',
-			controllerAs: 'categoryCtrl',
-			templateUrl: '/app/views/discover/games/list/category/category.html',
-=======
-			url: url + '?price&os&browser&maturity&status&page&query',
 			controller: 'Discover.Games.List._FetchCtrl',
 			templateUrl: '/app/views/discover/games/list/_fetch.html',
->>>>>>> master:src/app/views/discover/games/list/_fetch-state.js
 			resolve: {
 				payload: function( $stateParams, Api, History_Cache, filteringContainer )
 				{
