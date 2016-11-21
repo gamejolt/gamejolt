@@ -1,7 +1,7 @@
 <footer id="footer" class="section">
 	<div class="container">
 
-		<div class="hidden-xs">
+		<div class="hidden-xs" ng-if="!Environment.isClient">
 			<div class="text-center">
 				<p>
 					<a ui-sref="client" gj-track-event="footer:client-promo">
