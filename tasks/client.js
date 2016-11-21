@@ -416,7 +416,7 @@ module.exports = function( config )
 	}
 
 	if ( config.client ) {
-			if ( config.watching ) {
+		if ( config.watching ) {
 			gulp.task( 'post', gulp.series( 'client:prepare' ) );
 		}
 		else {
