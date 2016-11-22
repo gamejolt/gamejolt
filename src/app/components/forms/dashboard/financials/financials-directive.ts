@@ -23,6 +23,7 @@ export function FinancialsFormFactory(
 			{
 				scope.account = payload.account;
 				scope.user = payload.user;
+				scope.partner = payload.partner;
 
 				scope.maxWallet = payload.maxWallet;
 				scope.maxPayout = payload.maxPayout;
@@ -41,6 +42,11 @@ export function FinancialsFormFactory(
 					else if ( scope.account.tos_signed_partner ) {
 						scope.formState.whichAgreement = 'partner';
 					}
+				}
+
+				// We don't show them the partner agreement if they can't be a partner.
+				if ( !scope.partner && !scope.formState.whichAgreement ) {
+					scope.formState.whichAgreement = 'developer';
 				}
 			} );
 

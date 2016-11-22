@@ -12,7 +12,7 @@
 			<!--
 				If they haven't accepted any terms yet.
 			-->
-			<fieldset ng-if="!hasSignedAgreement()">
+			<fieldset ng-if="!hasSignedAgreement() && partner">
 				<legend translate>To start, which type of account would you like to set up?</legend>
 
 				<div class="row">
@@ -31,14 +31,8 @@
 							ng-click="formState.whichAgreement = 'partner'"
 							translate
 							>
-							I'd like to be a partner
+							I'm a partner
 						</button>
-						<div class="text-center">
-							<br>
-							<a class="link-help small" ui-sref="landing.partner" translate>
-								What's this?
-							</a>
-						</div>
 					</div>
 				</div>
 			</fieldset>
@@ -63,7 +57,7 @@
 			</gj-form-dashboard-financials-developer-terms>
 
 			<gj-form-dashboard-financials-partner-terms
-				ng-if="formState.whichAgreement == 'partner' || hasSignedAgreement()"
+				ng-if="partner && (formState.whichAgreement == 'partner' || hasSignedAgreement())"
 				account="account"
 				accepted="acceptTerms( 'partner' )"
 				>
