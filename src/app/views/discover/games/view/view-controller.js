@@ -82,7 +82,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		// This will only get through if the user is a partner.
 		Location.enforce( {
 			slug: game.slug,
-			ref: this.userPartnerKey || undefined,
+			ref: this.userPartnerKey || $location.search().ref || undefined,
 		} );
 
 		// Load comment count
