@@ -209,7 +209,6 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 		{
 			var formData = new FormData();
 			formData.append( 'purpose', 'identity_document' );
-			console.log( inputId );
 			formData.append( 'file', document.getElementById( inputId ).querySelector( "input[type='file']" ).files[0] );
 
 			var xhr = new XMLHttpRequest();
