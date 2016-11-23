@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
-	$scope, $state, $stateParams, $injector, $timeout, $document, $position,
+	$scope, $state, $stateParams, $injector, $timeout, $document, $position, $location,
 	Environment, App, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
 	Game, Game_Rating, Game_ScoreTable, Comment,
 	Registry, Scroll, Clipboard )
