@@ -34,6 +34,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		_this.isAchievementsTwoCol = val;
 	} );
 
+	// If we have a tracked partner "ref" in the URL, we want to pass that along
+	// when gathering the payload.
 	var apiOverviewUrl = '/web/discover/games/overview/' + $stateParams.id;
 	var ref = PartnerReferral.getReferrer( 'Game', $stateParams.id );
 	if ( ref ) {
@@ -149,6 +151,12 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		// Active jams it may be in.
 		if ( payload.activeJam ) {
 			this.activeJam = new Jam( payload.activeJam );
+		}
+
+		// Partner referral system.
+		if ( payload.partnerReferredKey && payload.partnerReferredBy ) {
+			this.partnerReferredKey = payload.partnerReferredKey;
+			this.partnerReferredBy = new User( payload.partnerReferredBy );
 		}
 	};
 
