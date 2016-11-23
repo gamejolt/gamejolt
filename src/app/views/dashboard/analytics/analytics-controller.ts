@@ -283,7 +283,7 @@ export class AnalyticsCtrl
 				}
 
 				case 'revenue': {
-					// this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
+					this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
 					// if ( !this.partnerMode ) {
 					// 	this.pullReport( this.gettextCatalog.getString( 'Revenue from Partners' ), ...ReportPartnerRevenue );
 					// 	this.pullReport( this.gettextCatalog.getString( 'Top Profitable Partners' ), ...ReportTopPartnerRevenue );
