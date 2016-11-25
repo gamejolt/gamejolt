@@ -1,6 +1,10 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from '../../../app-service';
-import { MetricMap, Metric, SiteAnalytics, ResourceName, ReportComponent, ReportTopSources, ReportReferringPages, ReportCountries, ReportOs, ReportCommentLanguages, ReportRatingBreakdown, ReportDevRevenue, ReportTopGames, ReportTopGameRevenue, ReportTopPartners, ReportPartnerRevenue, ReportTopPartnerRevenue } from '../../../components/site-analytics/site-analytics-service';
+import { MetricMap, Metric, SiteAnalytics, ResourceName,
+	ReportComponent, ReportTopSources, ReportReferringPages, ReportCountries,
+	ReportOs, ReportCommentLanguages, ReportRatingBreakdown, ReportDevRevenue,
+	ReportTopGames, ReportTopGameRevenue, ReportTopGamePartnerRevenue, ReportTopPartners, ReportPartnerRevenue,
+	ReportPartnerGeneratedRevenue, ReportTopPartnerRevenue } from '../../../components/site-analytics/site-analytics-service';
 import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
 
 @Injectable()
@@ -59,7 +63,7 @@ export class AnalyticsCtrl
 		this.game = payload.game ? new this.Game( payload.game ) : null;
 		this.package = payload.package ? new this.Game_Package( payload.package ) : null;
 		this.release = payload.release ? new this.Game_Release( payload.release ) : null;
-		this.partnerMode = !this.user || this.user.id != app.user.id;
+		this.partnerMode = false; // !this.user || this.user.id != app.user.id;
 
 		if ( this.partnerMode ) {
 			this.availableMetrics = this.analytics.pickPartnerMetrics( this.availableMetrics );
@@ -283,11 +287,14 @@ export class AnalyticsCtrl
 				}
 
 				case 'revenue': {
-					this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
-					// if ( !this.partnerMode ) {
-					// 	this.pullReport( this.gettextCatalog.getString( 'Revenue from Partners' ), ...ReportPartnerRevenue );
-					// 	this.pullReport( this.gettextCatalog.getString( 'Top Profitable Partners' ), ...ReportTopPartnerRevenue );
-					// }
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
+						// this.pullReport( this.gettextCatalog.getString( 'Revenue from Partners' ), ...ReportPartnerGeneratedRevenue );
+						// this.pullReport( this.gettextCatalog.getString( 'Top Profitable Partners' ), ...ReportTopPartnerRevenue );
+					}
+					else {
+						this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportPartnerRevenue );
+					}
 					break;
 				}
 			}
@@ -352,12 +359,16 @@ export class AnalyticsCtrl
 				}
 
 				case 'revenue': {
-					this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
-					this.pullReport( this.gettextCatalog.getString( 'Top Profitable Games' ), ...ReportTopGameRevenue );
-					// if ( !this.partnerMode ) {
-					// 	this.pullReport( this.gettextCatalog.getString( 'Revenue from Partners' ), ...ReportPartnerRevenue );
-					// 	this.pullReport( this.gettextCatalog.getString( 'Top Profitable Partners' ), ...ReportTopPartnerRevenue );
-					// }
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
+						this.pullReport( this.gettextCatalog.getString( 'Top Profitable Games' ), ...ReportTopGameRevenue );
+						// this.pullReport( this.gettextCatalog.getString( 'Revenue from Partners' ), ...ReportPartnerGeneratedRevenue );
+						// this.pullReport( this.gettextCatalog.getString( 'Top Profitable Partners' ), ...ReportTopPartnerRevenue );
+					}
+					else  {
+						this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportPartnerRevenue );
+						this.pullReport( this.gettextCatalog.getString( 'Top Profitable Games' ), ...ReportTopGamePartnerRevenue );
+					}
 					break;
 				}
 			}

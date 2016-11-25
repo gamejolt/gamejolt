@@ -173,6 +173,18 @@ export const ReportTopGameRevenue: ReportComponent[] = [ {
 	displayField: 'game_name',
 } ];
 
+export const ReportTopGamePartnerRevenue: ReportComponent[] = [ {
+	type: 'top-composition-sum',
+	field: 'game',
+	fetchFields: [ 'partner_revenue' ],
+	resourceFields: {
+		game: ['game_name'],
+	},
+	fieldLabel: 'Revenue by Game',
+	fieldType: 'currency',
+	displayField: 'game_name',
+} ];
+
 export const ReportTopPartners: ReportComponent[] = [ {
 	type: 'top-composition',
 	field: 'partner',
@@ -183,7 +195,7 @@ export const ReportTopPartners: ReportComponent[] = [ {
 	displayField: 'user_display_name',
 } ];
 
-export const ReportPartnerRevenue: ReportComponent[] = [ {
+export const ReportPartnerGeneratedRevenue: ReportComponent[] = [ {
 	type: 'sum',
 	field: 'partner_generated_revenue',
 	fieldLabel: 'Total Revenue',
@@ -193,6 +205,13 @@ export const ReportPartnerRevenue: ReportComponent[] = [ {
 	type: 'average',
 	field: 'partner_generated_donation',
 	fieldLabel: 'Average Support',
+	fieldType: 'currency',
+} ];
+
+export const ReportPartnerRevenue: ReportComponent[] = [ {
+	type: 'sum',
+	field: 'partner_revenue',
+	fieldLabel: 'Total Revenue',
 	fieldType: 'currency',
 } ];
 
@@ -339,10 +358,12 @@ export class SiteAnalytics
 				{
 					let label: string | undefined = undefined;
 					if ( request[ metricKey ].analyzer == 'histogram-sum' ) {
-						label = request[ metricKey ].collection;
-						label = label.charAt( 0 ).toUpperCase() + label.slice( 1 );
+						label = 'Sum';
 					}
-					data[ metricKey ] = this.graph.createGraphData( eventData.result, label );
+					else if ( request[ metricKey ].analyzer == 'histogram-avg' ) {
+						label = 'Average';
+					}
+					data[ metricKey ] = this.graph.createGraphData( eventData.result );
 					data[ metricKey ].total = label ? data[ metricKey ].colTotals[ label ] : eventData.total;
 				} );
 				return data;
@@ -404,6 +425,9 @@ export class SiteAnalytics
 			}
 
 			if ( partnerMode ) {
+				if ( request[ metric.key ].field == 'revenue' ) {
+					request[ metric.key ].field = 'partner_revenue';
+				}
 				request[ metric.key ].conditions = [ 'partner' ];
 			}
 

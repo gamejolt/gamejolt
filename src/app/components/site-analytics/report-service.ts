@@ -49,7 +49,7 @@ export class SiteAnalyticsReport
 				conditions.push( 'has-partner' );
 			}
 			if ( conditionFields.indexOf( 'partner_generated_revenue' ) != -1 ) {
-				conditions.push( 'has-donations', 'has-partner' );
+				conditions.push( 'has-partner' );
 			}
 			if ( conditionFields.indexOf( 'partner_generated_donation' ) != -1 ) {
 				conditions.push( 'has-donations', 'has-partner' );
