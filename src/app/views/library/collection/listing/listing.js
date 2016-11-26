@@ -1,6 +1,6 @@
 angular.module( 'App.Views' ).config( function( $stateProvider )
 {
-	var queryParams = '?price&sort&os&browser&maturity&status&query&page';
+	var queryParams = '?price&sort&os&browser&maturity&status&referrals&query&page';
 
 	var subStates = {
 		'playlist': '^/playlist/:slug/:id',
