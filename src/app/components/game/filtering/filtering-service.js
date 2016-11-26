@@ -55,6 +55,14 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 				wip: gettextCatalog.getString( 'Early Access' ),
 			}
 		},
+		referrals: {
+			label: gettextCatalog.getString( 'Referrals' ),
+			type: 'radio',
+			options: {
+				enabled: gettextCatalog.getString( 'Enabled' ),
+				disabled: gettextCatalog.getString( 'Disabled' ),
+			}
+		},
 		query: {
 			label: 'Filter',
 			type: 'string',

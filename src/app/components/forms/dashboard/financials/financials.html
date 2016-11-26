@@ -4,86 +4,75 @@
 
 	<div ng-if="formState.isLoaded">
 
-		<div class="alert alert-info" ng-if="!account.is_verified" translate>
-			Before you can start selling your games, we'll need to gather some details from you. This will ensure that your account is completely set up and ready to run smoothly on the Game Jolt Marketplace.
+		<div ng-if="!account.is_verified">
+			<div class="alert alert-info" translate>
+				Before you can use the Marketplace, we'll need to gather some details from you. This will ensure that your account is completely set up and ready to run smoothly on the Game Jolt Marketplace.
+			</div>
+
+			<!--
+				If they haven't accepted any terms yet.
+			-->
+			<fieldset ng-if="!hasSignedAgreement() && partner">
+				<legend translate>To start, which type of account would you like to set up?</legend>
+
+				<div class="row">
+					<div class="col-xs-6">
+						<button class="btn btn-block"
+							ng-class="formState.whichAgreement == 'developer' ? 'btn-success' : 'btn-outline'"
+							ng-click="formState.whichAgreement = 'developer'"
+							translate
+							>
+							I'm a game developer
+						</button>
+					</div>
+					<div class="col-xs-6">
+						<button class="btn btn-block"
+							ng-class="formState.whichAgreement == 'partner' ? 'btn-success' : 'btn-outline'"
+							ng-click="formState.whichAgreement = 'partner'"
+							translate
+							>
+							I'm a partner
+						</button>
+					</div>
+				</div>
+			</fieldset>
 		</div>
 
 		<div class="alert alert-success" ng-if="account.is_verified">
 			<span class="jolticon jolticon-check"></span>
-			<span translate>Your account is ready to sell games on Game Jolt! You can set additional options below.</span>
+			<span translate>Your account is ready for the Game Jolt Marketplace! You can set additional options below.</span>
 		</div>
 		<br>
 
 		<!--
-			First step is to sign the distribution agreement.
+			First step is to sign an agreement.
 		-->
-		<fieldset>
-			<legend>
-				<span ng-if="account" class="pull-right done-icon" tooltip="{{ 'You have completed this section.' | translate }}">
-					<span class="jolticon jolticon-check big"></span>
-				</span>
-				Distribution Agreement
-			</legend>
+		<div gj-expand-when="formState.whichAgreement || hasSignedAgreement()">
 
-			<div ng-if="!account">
+			<gj-form-dashboard-financials-developer-terms
+				ng-if="formState.whichAgreement == 'developer' || hasSignedAgreement()"
+				account="account"
+				accepted="acceptTerms( 'developer' )"
+				>
+			</gj-form-dashboard-financials-developer-terms>
 
-				<div class="tos-scroller overlay-scrollbar overlay-scrollbar-light">
-					<div ng-include="'/app/components/forms/dashboard/financials/_distribution-agreement.html'"></div>
-				</div>
-				<br>
+			<gj-form-dashboard-financials-partner-terms
+				ng-if="partner && (formState.whichAgreement == 'partner' || hasSignedAgreement())"
+				account="account"
+				accepted="acceptTerms( 'partner' )"
+				>
+			</gj-form-dashboard-financials-partner-terms>
 
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" ng-model="formState.distributionAgreement">
-						By checking this box and clicking the button below marked "I Agree," I agree that I have read, understand, and agree to be bound by the terms of this agreement.
-					</label>
-				</div>
-				<br>
+		</div>
 
-				<button
-					class="btn btn-success-outline"
-					ng-disabled="!formState.distributionAgreement"
-					ng-click="onSubmit()"
-					>
-					I Agree
-				</button>
-
-			</div>
-
-			<div class="form-group" ng-if="account.tos_signed">
-				<p class="small">You have agreed to our <b>Distribution Agreement</b> on {{ account.tos_signed_timestamp | date:'medium' }}.</p>
-			</div>
-
-		</fieldset>
-
-		<fieldset ng-if="account">
-			<legend>
-				<span ng-if="user.paypal_id" class="pull-right done-icon" tooltip="{{ 'You have completed this section.' | translate }}">
-					<span class="jolticon jolticon-check big"></span>
-				</span>
-				<span translate>PayPal Account</span>
-			</legend>
-
-			<div class="form-group">
-
-				<p class="small" translate>We currently use PayPal for automatic monthly deposits. You will also be able to withdraw your funds at any time through this linked account.</p>
-
-				<div ng-if="user.paypal_id">
-					<label class="control-label" translate>Current PayPal Account</label>
-					<div class="form-static">{{ user.paypal_email_address }}</div>
-					<br>
-				</div>
-
-				<button
-					class="btn btn-primary-outline"
-					ng-click="linkPayPal()"
-					>
-					<span ng-if="!user.paypal_id" translate>Link PayPal Account</span>
-					<span ng-if="user.paypal_id" translate>Change PayPal Account</span>
-				</button>
-			</div>
-
-		</fieldset>
+		<!--
+			PayPal is required.
+		-->
+		<gj-form-dashboard-financials-paypal
+			ng-if="account"
+			user="user"
+			>
+		</gj-form-dashboard-financials-paypal>
 
 		<!--
 			They need to have PayPal linked before they can do this.
@@ -108,7 +97,10 @@
 			</div>
 		</fieldset>
 
-		<fieldset ng-if="account.is_verified">
+		<!--
+			Only allow them to change percentage split if they are signed up as a dev.
+		-->
+		<fieldset ng-if="account.is_verified && account.tos_signed_developer">
 			<legend translate>Percentage Split</legend>
 
 			<p class="small" translate>
@@ -130,16 +122,16 @@
 
 			<p class="small" translate>Your Wallet is where your earnings will be stored for you to buy games on Game Jolt or withdraw into your PayPal account.</p>
 
-			<p class="small" translate>We never take a cut for sales when you pay with your Wallet, and there are no payment processing fees. The money goes directly to the seller.</p>
+			<p class="small" translate>We never take a cut of games you buy when you pay with your Wallet, and there are no payment processing fees. The money goes directly to the developer.</p>
 
 			<form-group
 				name="wallet_maximum"
 				label="{{ 'Set an amount you would like to keep in your wallet' | translate }}"
 				>
 				<p class="help-block">
-					<span translate>We'll keep this amount in your Wallet when doing automatic pay outs. This way you always have some money to buy other games on the site.</span>
+					<span translate>We'll keep this amount in your Wallet when doing automatic pay outs. This way you always have some money to buy other games on the site through your Wallet.</span>
 					<br>
-					<span translate>You can choose not to keep money in your Wallet by setting it $0.</span>
+					<span translate>To send all your money when doing automatic pay outs set this to $0.</span>
 				</p>
 
 				<input-group>
@@ -162,7 +154,7 @@
 		<fieldset ng-if="account.is_verified">
 			<legend translate>Minimum Payout</legend>
 
-			<p class="small" translate>If you'd like, you can set an amount below, and we will not make monthly deposits into your PayPal account until your revenue reaches this amount.</p>
+			<p class="small" translate>If you'd like, you can set an amount below, and we will not make monthly deposits into your PayPal account until your revenue reaches this amount. This can help to maintain cleaner accounting on your end.</p>
 
 			<form-group
 				name="payout_minimum"
@@ -173,7 +165,7 @@
 						The max you can set this to is {{ max }} USD.
 					</span>
 					<br>
-					<span translate>You can decide to have no minimum by setting it to $0.</span>
+					<span translate>For no minimum, set this to $0.</span>
 				</p>
 
 				<input-group>

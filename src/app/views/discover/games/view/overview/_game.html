@@ -106,6 +106,31 @@
 
 					<hr class="underbar">
 
+					<!--
+						Partner Controls
+					-->
+					<div ng-if="overviewCtrl.game.referrals_enabled && gameCtrl.userPartnerKey && overviewCtrl.packages.length">
+						<gj-card>
+							<div class="card-content">
+								<p>
+									<strong translate>This game is part of the Partner system!</strong>
+									<span translate>You can use this link for sharing the game.</span>
+								</p>
+								<input class="form-control" value="{{ ::gameCtrl.partnerLink }}">
+							</div>
+							<div class="card-controls">
+								<button class="btn btn-outline" ng-click="gameCtrl.copyPartnerLink()">
+									<span class="jolticon jolticon-link"></span>
+									<span translate>Copy Partner Link</span>
+								</button>
+								<a class="btn btn-outline" ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: gameCtrl.game.id } )">
+									<span class="jolticon jolticon-chart"></span>
+									<span translate>View Analytics</span>
+								</a>
+							</div>
+						</gj-card>
+					</div>
+
 					<div ng-if="gameCtrl.showMultiplePackagesMessage" class="alert alert-info">
 						<span class="jolticon jolticon-notice"></span>
 						<span translate>There are multiple packages for your device. Please choose one below.</span>
@@ -123,6 +148,9 @@
 								game-releases="::package._releases"
 								game-builds="::package._builds"
 								game-build-launch-options="::overviewCtrl.launchOptions"
+								is-partner="::!!gameCtrl.userPartnerKey"
+								partner-referred-key="::overviewCtrl.partnerReferredKey"
+								partner-referred-by="::overviewCtrl.partnerReferredBy"
 								>
 							</gj-game-package-card>
 						</div>

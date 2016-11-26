@@ -40,6 +40,7 @@ import FiresidePostTagModule from './../lib/gj-lib-client/components/fireside/po
 import FiresidePostVideoModule from './../lib/gj-lib-client/components/fireside/post/video/video';
 import FiresidePostLikeModule from './../lib/gj-lib-client/components/fireside/post/like/like';
 import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
+import PartnerReferralModule from './../lib/gj-lib-client/components/partner-referral/partner-referral';
 import AuthModule from '../lib/gj-lib-client/components/auth/auth';
 import AuthJoinModule from '../lib/gj-lib-client/components/auth/join/join';
 
@@ -291,6 +292,8 @@ const AppModule = angular.module( 'App', [
 
 	VideoModule,
 	VideoEmbedModule,
+
+	PartnerReferralModule,
 
 	AuthModule,
 	AuthJoinModule,

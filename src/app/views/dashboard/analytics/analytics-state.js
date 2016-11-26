@@ -2,37 +2,25 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 {
 	$stateProvider.state( 'dashboard.analytics', {
 		abstract: true,
-		url: '/analytics',
+		url: '/analytics/:resource/:resourceId',
 		controller: 'Dashboard.AnalyticsCtrl',
 		controllerAs: 'analyticsCtrl',
 		templateUrl: '/app/views/dashboard/analytics/analytics.html',
 		resolve: {
-			payload: function( Api )
-			{
-				return Api.sendRequest( '/web/dash/analytics' );
-			}
-		},
+            payload: function( Api, $stateParams )
+            {
+                return Api.sendRequest( '/web/dash/analytics/' + $stateParams.resource + '/' + $stateParams.resourceId );
+            }
+        },
 	} );
 
 	$stateProvider.state( 'dashboard.analytics.view', {
-		url: '/:period/:resource/:resourceId/:metricKey?year&month',
+		url: '/:period/:metricKey?year&month',
 		controller: function( $scope, $stateParams )
 		{
 			$scope.analyticsCtrl.stateChanged( $stateParams );
 		},
 		params: {
-			period: {
-				value: '',
-				squash: true,
-			},
-			resource: {
-				value: '',
-				squash: true,
-			},
-			resourceId: {
-				value: '',
-				squash: true,
-			},
 			metricKey: {
 				value: '',
 				squash: true,

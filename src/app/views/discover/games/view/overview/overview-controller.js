@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	Jam,
 	Comment_Video,
 	ActivityFeedService, History,
-	Api, Payload, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
+	Api, Payload, Analytics, SplitTest, Device, PartnerReferral, $ocLazyLoad, gettextCatalog )
 {
 	var _this = this;
 	var wasHistoricalView = History.inHistorical;
@@ -34,7 +34,15 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		_this.isAchievementsTwoCol = val;
 	} );
 
-	Api.sendRequest( '/web/discover/games/overview/' + $stateParams.id )
+	// If we have a tracked partner "ref" in the URL, we want to pass that along
+	// when gathering the payload.
+	var apiOverviewUrl = '/web/discover/games/overview/' + $stateParams.id;
+	var ref = PartnerReferral.getReferrer( 'Game', $stateParams.id );
+	if ( ref ) {
+		apiOverviewUrl += '?ref=' + ref;
+	}
+
+	Api.sendRequest( apiOverviewUrl )
 		.then( function( payload )
 		{
 			_this.init( payload );
@@ -124,9 +132,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		// The releases section exists if there are releases or songs.
 		this.hasReleasesSection = this.releases.length || this.songs.length;
 
-		/**
-		 * For game stats.
-		 */
+		// For game stats.
 		this.playsTooltip = false;
 		this.showNaPlays = false;
 
@@ -142,11 +148,15 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			}
 		}
 
-		/**
-		 * Any active jams this game is in.
-		 */
+		// Active jams it may be in.
 		if ( payload.activeJam ) {
 			this.activeJam = new Jam( payload.activeJam );
+		}
+
+		// Partner referral system.
+		if ( payload.partnerReferredKey && payload.partnerReferredBy ) {
+			this.partnerReferredKey = payload.partnerReferredKey;
+			this.partnerReferredBy = new User( payload.partnerReferredBy );
 		}
 	};
 
