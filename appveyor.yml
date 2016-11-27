@@ -2,7 +2,7 @@ platform:
   - x86
 
 install:
-  - ps: Install-Product node 5.5.0 x86 # We need npm@3 for windows builds
+  - ps: Install-Product node 6.9.0 x86 # We need npm@3 for windows builds
   - npm install -g gulp-cli bower node-pre-gyp nw-gyp
   - git submodule update --init --recursive
   - choco install -y InnoSetup
