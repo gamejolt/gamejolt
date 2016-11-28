@@ -4,6 +4,6 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/privacy',
 		controller: 'Legal_PrivacyCtrl',
 		controllerAs: 'privacyCtrl',
-		templateUrl: '/app/views/legal/privacy/privacy.html',
+		templateUrl: '/terms/privacy/global.html',
 	} );
 } );

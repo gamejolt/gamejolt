@@ -7,3 +7,6 @@
 [submodule "src/lib/doc-game-api"]
 	path = src/lib/doc-game-api
 	url = https://github.com/gamejolt/doc-game-api.git
+[submodule "src/lib/terms"]
+	path = src/lib/terms
+	url = https://github.com/gamejolt/terms.git
