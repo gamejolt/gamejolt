@@ -2,7 +2,7 @@ import { Component, Inject, Input } from 'ng-metadata/core';
 import template from 'html!./paypal.html';
 
 @Component({
-	selector: 'gj-forms-dashboard-financials-paypal',
+	selector: 'gj-form-dashboard-financials-paypal',
 	template,
 })
 export class PaypalComponent
