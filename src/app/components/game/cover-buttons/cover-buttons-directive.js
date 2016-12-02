@@ -35,7 +35,7 @@ angular.module( 'App.Game.CoverButtons' ).component( 'gjGameCoverButtons', {
 					// Otherwise we just fall through below and choose first.
 				}
 				else {
-					this.onShowPackages();
+					this.onShowMultiplePackages();
 					return;
 				}
 			}
@@ -57,7 +57,7 @@ angular.module( 'App.Game.CoverButtons' ).component( 'gjGameCoverButtons', {
 					this.installableBuilds = [ Game.chooseBestBuild( this.installableBuilds, os, arch ) ];
 				}
 				else {
-					this.onShowPackages();
+					this.onShowMultiplePackages();
 					return;
 				}
 			}
