@@ -157,4 +157,3 @@ var config = {
 
 require( './src/lib/gj-lib-client/gulp/tasks/common.js' )( config );
 require( './tasks/client.js' )( config );
-require( './tasks/app.js' )( config );

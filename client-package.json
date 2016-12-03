@@ -15,6 +15,6 @@
   "webkit": {
     "plugin": true
   },
-  "chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+  "chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit",
   "user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
 }
