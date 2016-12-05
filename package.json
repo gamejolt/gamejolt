@@ -1,6 +1,6 @@
 {
   "name": "game-jolt",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "scripts": {
     "client": "nw build/client/dev/source",
     "client-build-win": "gulp --production --client --arch=32",
@@ -20,7 +20,7 @@
     "@types/stripe": "0.0.31",
     "concat-with-sourcemaps": "~1.0.2",
     "connect-history-api-fallback": "0.0.4",
-    "decompress-zip": "0.2.0",
+    "decompress-zip": "^0.2.0",
     "glob-expand": "~0.0.2",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-angular-embed-templates": "^2.1.0",
@@ -29,7 +29,7 @@
     "gulp-clean": "~0.3.0",
     "gulp-concat": "~2.6.0",
     "gulp-connect": "^2.0.5",
-    "gulp-gzip": "1.4.0",
+    "gulp-gzip": "0.0.8",
     "gulp-imagemin": "2.4.0",
     "gulp-inject": "~0.4.1",
     "gulp-livereload": "~2.1.0",
@@ -49,11 +49,11 @@
     "gulp-sourcemaps": "~1.5.2",
     "gulp-stylus": "2.0.5",
     "gulp-svgmin": "~0.4.6",
-    "gulp-tar": "1.9.0",
+    "gulp-tar": "1.8.0",
     "gulp-uglify": "~1.2.0",
     "gulp-util": "~3.0.0",
     "gulp-wrapper": "^0.1.5",
-    "gulp-zip": "3.2.0",
+    "gulp-zip": "2.0.2",
     "merge-stream": "^1.0.0",
     "minimist": "~0.2.0",
     "mv": "^2.1.1",
@@ -70,7 +70,7 @@
     "sanitize-html": "^1.11.3",
     "streamqueue": "~0.1.1",
     "stylus": "0.53.0",
-    "through2": "2.0.1",
+    "through2": "~0.5.1",
     "typescript": "^2.0.0",
     "undertaker-forward-reference": "^1.0.1"
   },
@@ -78,7 +78,7 @@
     "appdmg": "^0.3.5"
   },
   "dependencies": {
-    "client-voodoo": "1.0.4",
+    "client-voodoo": "1.0.6",
     "lodash": "3.9.3",
     "nwjs-snappy-updater": "1.0.0"
   }
