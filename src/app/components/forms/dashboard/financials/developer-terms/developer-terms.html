@@ -55,6 +55,13 @@
 			>
 			Show New Distribution Agreement
 		</button>
+
+		<!--
+			Show a diff between the terms.
+		-->
+		<div class="alert alert-info" ng-if="$ctrl.showAgreement">
+			<p>We publicly track and version all of our terms. <a href="https://github.com/gamejolt/terms/commit/6306eabf457f19ae6a642af23e561b3e675aed55?diff=unified&amp;short_path=884d38f#diff-884d38fc8fdab64ff118865dab13fa74" target="_blank">See the "diff" between the version you signed previously and the current version.</a></p>
+		</div>
 	</div>
 
 	<div class="form-group" ng-if="$ctrl.shouldShowAgreement()">
