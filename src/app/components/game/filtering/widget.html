@@ -45,7 +45,7 @@
 				<span class="jolticon jolticon-chevron-down"></span>
 			</a>
 		</li>
-		<li>
+		<li ng-if="App.user.is_partner">
 			<a gj-popover-trigger="games-filter-partners" gj-track-event="game-filtering:tab-partners">
 				<span translate>Partners</span>
 				<span class="tag tag-active" translate>New</span>

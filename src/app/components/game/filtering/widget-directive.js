@@ -7,9 +7,10 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringWidget', funct
 		templateUrl: '/app/components/game/filtering/widget.html',
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $scope, Analytics )
+		controller: function( $scope, Analytics, User )
 		{
 			$scope.Game_Filtering_Container = Game_Filtering_Container;
+			$scope.User = User;
 
 			this.visiblePopovers = {};
 
