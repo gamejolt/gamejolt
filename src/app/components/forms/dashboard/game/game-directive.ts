@@ -23,6 +23,10 @@ export function GameFormFactory(
 
 		scope.onLoaded = ( payload: any ) => angular.extend( scope, payload );
 
+		if ( scope.method == 'add' ) {
+			scope.formModel.referrals_enabled = 1;
+		}
+
 		scope.stage = () =>
 		{
 			if ( !scope.acceptedRules ) {
