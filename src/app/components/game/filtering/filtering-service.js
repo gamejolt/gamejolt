@@ -1,4 +1,4 @@
-angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', function( $ocLazyLoad, $q, $window, $state, $location, $injector, Environment, AutoScroll, App, gettextCatalog )
+angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', function( $ocLazyLoad, $q, $window, $state, $location, $injector, Environment, AutoScroll, gettextCatalog )
 {
 	var STORAGE_KEY = 'game-filtering:filters';
 
@@ -67,10 +67,6 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 			type: 'string',
 		},
 	};
-
-	if ( !App.user || !App.user.is_partner ) {
-		delete Game_Filtering_Container.filterDefinitions.partners;
-	}
 
 	function isEmpty( filters, options )
 	{
