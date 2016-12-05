@@ -55,14 +55,13 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 				wip: gettextCatalog.getString( 'Early Access' ),
 			}
 		},
-		// referrals: {
-		// 	label: gettextCatalog.getString( 'Referrals' ),
-		// 	type: 'radio',
-		// 	options: {
-		// 		enabled: gettextCatalog.getString( 'Enabled' ),
-		// 		disabled: gettextCatalog.getString( 'Disabled' ),
-		// 	}
-		// },
+		partners: {
+			label: gettextCatalog.getString( 'Partners' ),
+			type: 'array',
+			options: {
+				partners: gettextCatalog.getString( 'Show Partner Games' ),
+			}
+		},
 		query: {
 			label: 'Filter',
 			type: 'string',
