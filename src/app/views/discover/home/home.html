@@ -7,6 +7,7 @@
 				<p>
 					<a class="btn btn-outline btn-sm"
 						ui-sref="landing.learn"
+						gj-track-event="home:header-learn-more"
 						translate
 						>
 						Learn More
@@ -16,6 +17,7 @@
 
 				<a class="btn btn-primary-outline btn-block-xs"
 					ui-sref="discover.games.list._fetch( { section: 'best' } )"
+					gj-track-event="home:header-browse-games"
 					translate
 					>
 					Browse Games
@@ -33,6 +35,7 @@
 					gj-auth-required
 					ui-sref="dashboard.developer.games.add"
 					ng-click="!App.user ? $event.preventDefault() : ''"
+					gj-track-event="home:header-add-game"
 					translate
 					>
 					Add Your Game
