@@ -63,7 +63,7 @@ export class AnalyticsCtrl
 		this.game = payload.game ? new this.Game( payload.game ) : null;
 		this.package = payload.package ? new this.Game_Package( payload.package ) : null;
 		this.release = payload.release ? new this.Game_Release( payload.release ) : null;
-		this.partnerMode = false; // !this.user || this.user.id != app.user.id;
+		this.partnerMode = !this.user || this.user.id != app.user.id;
 
 		if ( this.partnerMode ) {
 			this.availableMetrics = this.analytics.pickPartnerMetrics( this.availableMetrics );
@@ -237,9 +237,9 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-					// if ( !this.partnerMode ) {
-					// 	this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
-					// }
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					}
 					break;
 				}
 
@@ -248,9 +248,9 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-					// if ( !this.partnerMode ) {
-					// 	this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
-					// }
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					}
 					break;
 				}
 
@@ -280,17 +280,17 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Referring Pages' ), ...ReportReferringPages );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
-					// if ( !this.partnerMode ) {
-					// 	this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
-					// }
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					}
 					break;
 				}
 
 				case 'revenue': {
 					if ( !this.partnerMode ) {
 						this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
-						// this.pullReport( this.gettextCatalog.getString( 'Revenue from Partners' ), ...ReportPartnerGeneratedRevenue );
-						// this.pullReport( this.gettextCatalog.getString( 'Top Profitable Partners' ), ...ReportTopPartnerRevenue );
+						this.pullReport( this.gettextCatalog.getString( 'Revenue from Partners' ), ...ReportPartnerGeneratedRevenue );
+						this.pullReport( this.gettextCatalog.getString( 'Top Profitable Partners' ), ...ReportTopPartnerRevenue );
 					}
 					else {
 						this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportPartnerRevenue );
@@ -305,9 +305,9 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Top Games' ), ...ReportTopGames );
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-					// if ( !this.partnerMode ) {
-					// 	this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
-					// }
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					}
 					break;
 				}
 
@@ -316,9 +316,9 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
-					// if ( !this.partnerMode ) {
-					// 	this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
-					// }
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					}
 					break;
 				}
 
@@ -352,9 +352,9 @@ export class AnalyticsCtrl
 					this.pullReport( this.gettextCatalog.getString( 'Top Sources' ), ...ReportTopSources );
 					this.pullReport( this.gettextCatalog.getString( 'Countries' ), ...ReportCountries );
 					this.pullReport( this.gettextCatalog.getString( 'Operating Systems' ), ...ReportOs );
-					// if ( !this.partnerMode ) {
-					// 	this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
-					// }
+					if ( !this.partnerMode ) {
+						this.pullReport( this.gettextCatalog.getString( 'Partners' ), ...ReportTopPartners );
+					}
 					break;
 				}
 
@@ -362,8 +362,8 @@ export class AnalyticsCtrl
 					if ( !this.partnerMode ) {
 						this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportDevRevenue );
 						this.pullReport( this.gettextCatalog.getString( 'Top Profitable Games' ), ...ReportTopGameRevenue );
-						// this.pullReport( this.gettextCatalog.getString( 'Revenue from Partners' ), ...ReportPartnerGeneratedRevenue );
-						// this.pullReport( this.gettextCatalog.getString( 'Top Profitable Partners' ), ...ReportTopPartnerRevenue );
+						this.pullReport( this.gettextCatalog.getString( 'Revenue from Partners' ), ...ReportPartnerGeneratedRevenue );
+						this.pullReport( this.gettextCatalog.getString( 'Top Profitable Partners' ), ...ReportTopPartnerRevenue );
 					}
 					else  {
 						this.pullReport( this.gettextCatalog.getString( 'Revenue Stats' ), ...ReportPartnerRevenue );
