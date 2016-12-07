@@ -2,14 +2,19 @@ angular.module( 'App.Views' ).controller( 'Auth.Join.AlmostCtrl', function( $sta
 {
 	App.title = gettextCatalog.getString( 'auth.join.almost.page_title' );
 
+	this.credentials = {
+		username: sessionStorage.getItem( 'auth-user' ),
+		password: sessionStorage.getItem( 'auth-pass' ),
+	};
+
 	this.onAuthorized = function()
 	{
-		if ( !App.credentials.username || !App.credentials.password ) {
+		if ( !this.credentials.username || !this.credentials.password ) {
 			return;
 		}
 
 		// Now that they're authorized, we try to log them in with the credentials they used to sign up.
-		Api.sendRequest( '/web/auth/login', App.credentials ).then( function( response )
+		Api.sendRequest( '/web/auth/login', this.credentials ).then( function( response )
 		{
 			if ( !response.success ) {
 				return;

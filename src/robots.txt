@@ -5,6 +5,7 @@ Disallow: /tick/
 
 Disallow: /logout
 Disallow: /auth/facebook/
+Disallow: /auth/twitch/
 Disallow: /auth/twitter/
 Disallow: /auth/google/
 Disallow: /authorize/

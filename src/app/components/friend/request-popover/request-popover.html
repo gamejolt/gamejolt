@@ -69,7 +69,11 @@
 							</div>
 
 							<div class="card-title">
-								<h5>{{ ::request.getThem( App.user ).display_name }}</h5>
+								<h5>
+									{{ ::request.getThem( App.user ).display_name }}
+									<br>
+									<small>@{{ ::request.getThem( App.user ).username }}</small>
+								</h5>
 							</div>
 
 							<div class="card-meta">
@@ -111,7 +115,11 @@
 						</div>
 
 						<div class="card-title">
-							<h5>{{ ::request.getThem( App.user ).display_name }}</h5>
+							<h5>
+								{{ ::request.getThem( App.user ).display_name }}
+								<br>
+								<small>@{{ ::request.getThem( App.user ).username }}</small>
+							</h5>
 						</div>
 
 						<div class="card-meta">

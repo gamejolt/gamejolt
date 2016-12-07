@@ -1,9 +1,11 @@
 import { Component, Inject, Input, SkipSelf, OnInit } from 'ng-metadata/core';
+import template from 'html!./autocomplete.html';
+
 import { App } from './../../../app-service';
 import { Search } from './../search-service';
 import { SearchComponent } from './../search-directive';
 import { Search_History } from './../history/history-service';
-import template from 'html!./autocomplete.html';
+import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -77,7 +79,7 @@ export class AutocompleteComponent implements OnInit
 		@Inject( 'Search' ) private Search: Search,
 		@Inject( 'Search_History' ) private searchHistory: Search_History,
 		@Inject( 'Fuzzysearch' ) private fuzzysearch: any,
-		@Inject( 'Popover' ) private popover: any,
+		@Inject( 'Popover' ) private popover: Popover,
 		@Inject( 'User' ) private user: any,
 		@Inject( 'Game' ) private game: any,
 
@@ -94,7 +96,7 @@ export class AutocompleteComponent implements OnInit
 			},
 			{
 				keyword: ':games',
-				state: 'discover.games.list.section',
+				state: 'discover.games.list._fetch',
 				options: { section: 'featured' },
 				description: gettext( 'commands.games_description' ),
 			},
@@ -342,7 +344,7 @@ export class AutocompleteComponent implements OnInit
 
 	selectUser( user: any )
 	{
-		this.$state.go( 'profile.overview', { slug: user.slug, id: user.id } );
+		this.$state.go( 'profile.overview', { username: user.username } );
 		this.analytics.trackEvent( 'search', 'autocomplete', 'go-user' );
 	}
 

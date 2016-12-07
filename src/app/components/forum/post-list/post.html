@@ -21,16 +21,13 @@
 			</small>
 
 			<div class="forum-post-users">
-				<a class="forum-post-author link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.user.slug, id: ctrl.post.user.id } )">
+				<a class="forum-post-author link-unstyled" ui-sref="profile.overview( { username: ctrl.post.user.username } )">
 					{{ ::ctrl.post.user.display_name }}
 				</a>
 
-				<span ng-if="::ctrl.post.parent_post_id" class="forum-post-replied-to">
-					<span class="jolticon jolticon-share text-muted"></span>
-					<a class="forum-post-reply-user link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.replied_to.slug, id: ctrl.post.replied_to.id } )">
-						<small>{{ ::ctrl.post.replied_to.display_name }}</small>
-					</a>
-				</span>
+				<small class="text-muted">
+					@{{ ::ctrl.post.user.username }}
+				</small>
 			</div>
 
 			<div class="forum-post-controls">
@@ -104,6 +101,7 @@
 			<span translate translate-params-user="::ctrl.post.replied_to.display_name">
 				In response to <b>{{ user }}</b>
 			</span>
+			<small>@{{ ::ctrl.post.replied_to.username }}</small>
 		</a>
 
 		<div gj-expand-when="ctrl.showingParent">
@@ -131,11 +129,12 @@
 			<span translate>Last modified on</span>
 			<span title="{{ ctrl.post.modified_on | date:'medium' }}">{{ ctrl.post.modified_on | date }}</span>
 			<span translate>by</span>
-			<a class="link-unstyled" ui-sref="profile.overview( { slug: ctrl.post.modified_by_user.slug, id: ctrl.post.modified_by_user.id } )">
+			<a class="link-unstyled" ui-sref="profile.overview( { username: ctrl.post.modified_by.username } )">
 				<strong>
 					{{ ctrl.post.modified_by_user.display_name }}
 				</strong>
 			</a>
+			<small>@{{ ctrl.post.modified_by_user.username }}</small>
 		</p>
 
 		<div class="forum-post-actions" ng-if="::!ctrl.isReply">

@@ -32,7 +32,7 @@
 
 		</div>
 
-		<div class="page-cut" ng-if="!$ctrl.feed.reachedEnd && !$ctrl.isLoadingMore">
+		<div class="page-cut" ng-if="($ctrl.autoloadDisbled || !$ctrl.feed.reachedEnd) && !$ctrl.isLoadingMore">
 			<button class="btn btn-outline" ng-click="$ctrl.loadMore()">
 				<span translate>Load More</span>
 			</button>

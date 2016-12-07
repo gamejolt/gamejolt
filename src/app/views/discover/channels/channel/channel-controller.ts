@@ -1,5 +1,5 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Channels_ViewHelper } from '../channels-view-helper';
+import { ChannelsViewHelper } from '../channels-view-helper';
 import { Channels } from './../../../../components/channel/channels-service';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class ChannelCtrl
 		@Inject( '$scope' ) $scope: any,
 		@Inject( 'Meta' ) meta: any,
 		@Inject( 'Channels' ) channels: Channels,
-		@Inject( 'Channels_ViewHelper' ) viewHelper: Channels_ViewHelper,
+		@Inject( 'ChannelsViewHelper' ) viewHelper: ChannelsViewHelper,
 		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
 		@Inject( 'payload' ) payload: any
 	)

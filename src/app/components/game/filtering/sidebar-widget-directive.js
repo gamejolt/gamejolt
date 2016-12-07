@@ -19,8 +19,9 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringSidebarWidget'
 				os: [ 'windows', 'mac', 'linux', 'other', 'rom' ],
 				browser: [ 'html', 'flash', 'unity', 'applet', 'silverlight' ],
 				maturity: [ 'everyone', 'teen', 'adult' ],
-				status: [ 'complete', 'wip' ]
-			}
+				status: [ 'complete', 'wip' ],
+				partners: [ 'partners' ],
+			};
 
 			this.onPopoverShown = function( filter )
 			{

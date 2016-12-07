@@ -10,6 +10,9 @@ angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccounts.Link
 		if ( response.provider == 'facebook' ) {
 			$state.go( 'dashboard.account.linked-accounts.link-callback', { provider: 'facebook', code: response.code, state: this.token } );
 		}
+		else if ( response.provider == 'twitch' ) {
+			$state.go( 'dashboard.account.linked-accounts.link-callback', { provider: 'twitch', code: response.code, state: this.token } );
+		}
 		else if ( response.provider == 'twitter' ) {
 			$state.go( 'dashboard.account.linked-accounts.link-callback', { provider: 'twitter', oauth_verifier: response['oauth-verifier'], state: this.token } );
 		}

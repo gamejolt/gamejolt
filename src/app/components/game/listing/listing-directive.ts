@@ -1,5 +1,5 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
-import { GameListingContainer } from './listing-container-service.ts';
+import { GameListingContainer } from './listing-container-service';
 import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
 import template from 'html!./listing.html';
 
@@ -15,6 +15,8 @@ export class ListingComponent
 	@Input( '<' ) listing: GameListingContainer;
 	@Input( '<?' ) showAds = false;
 	@Input( '<?' ) hideFilters = false;
+	@Input( '<?' ) hideSectionNav = false;
+	@Input( '<?' ) includeFeaturedSection = false;
 
 	state: string;
 

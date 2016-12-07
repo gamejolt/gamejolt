@@ -87,7 +87,7 @@ angular.module( 'App.Client.Tray' )
 				label: 'Browse Games',
 				click: function()
 				{
-					$state.go( 'discover.games.list.section', { section: 'featured' }, { inherit: false } );
+					$state.go( 'discover.games.list._fetch', { section: 'featured' }, { inherit: false } );
 					Client.show();
 				}
 			} ) );
@@ -125,7 +125,7 @@ angular.module( 'App.Client.Tray' )
 				label: 'Your Profile',
 				click: function()
 				{
-					$state.go( 'profile.overview', { id: App.user.id, slug: App.user.slug } );
+					$state.go( 'profile.overview', { username: App.user.username } );
 					Client.show();
 				}
 			} ) );

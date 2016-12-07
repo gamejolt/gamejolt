@@ -7,9 +7,10 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringWidget', funct
 		templateUrl: '/app/components/game/filtering/widget.html',
 		bindToController: true,
 		controllerAs: 'ctrl',
-		controller: function( $scope, Analytics )
+		controller: function( $scope, Analytics, App )
 		{
 			$scope.Game_Filtering_Container = Game_Filtering_Container;
+			$scope.App = App;
 
 			this.visiblePopovers = {};
 
@@ -18,8 +19,9 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringWidget', funct
 				os: [ 'windows', 'mac', 'linux', 'other', 'rom' ],
 				browser: [ 'html', 'flash', 'unity', 'applet', 'silverlight' ],
 				maturity: [ 'everyone', 'teen', 'adult' ],
-				status: [ 'complete', 'wip' ]
-			}
+				status: [ 'complete', 'wip' ],
+				partners: [ 'partners' ],
+			};
 
 			this.onPopoverShown = function( filter )
 			{

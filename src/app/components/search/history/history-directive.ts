@@ -1,6 +1,8 @@
 import { Component, Inject } from 'ng-metadata/core';
-import { Search_History } from './history-service';
 import template from 'html!./history.html';
+
+import { Search_History } from './history-service';
+import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 
 @Component({
 	selector: 'gj-search-history',
@@ -15,7 +17,7 @@ export class HistoryComponent
 		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
 		@Inject( '$state' ) private $state: ng.ui.IStateService,
 		@Inject( 'Search_History' ) private searchHistory: Search_History,
-		@Inject( 'Popover' ) private popover: any
+		@Inject( 'Popover' ) private popover: Popover,
 	)
 	{
 	}

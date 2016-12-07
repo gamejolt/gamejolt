@@ -55,6 +55,13 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 				wip: gettextCatalog.getString( 'Early Access' ),
 			}
 		},
+		partners: {
+			label: gettextCatalog.getString( 'Partners' ),
+			type: 'array',
+			options: {
+				partners: gettextCatalog.getString( 'Show Partner Games' ),
+			}
+		},
 		query: {
 			label: 'Filter',
 			type: 'string',

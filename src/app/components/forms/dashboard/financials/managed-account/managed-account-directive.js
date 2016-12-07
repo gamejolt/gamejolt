@@ -6,6 +6,9 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 		resetOnSubmit: true,
 	} );
 
+	var StripeFileUploadUrl = 'https://uploads.stripe.com/v1/files';
+	var stripePublishableKey;
+
 	form.onInit = function( scope )
 	{
 		scope.Geo = Geo;
@@ -34,6 +37,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 			} )
 			.then( function( payload )
 			{
+				stripePublishableKey = payload.stripe.publishableKey;
 				Stripe.setPublishableKey( payload.stripe.publishableKey );
 
 				angular.extend( scope, payload );
@@ -131,7 +135,12 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 		// This is only needed after the initial submission in some instances.
 		scope.helpers.requiresVerificationDocument = function()
 		{
-			return scope.helpers.requiresField( 'legal_entity.verification.document' );
+			return scope.helpers.requiresField( 'legal_entity.verification.document' )
+				|| scope.helpers.requiresField( 'legal_entity.additional_owners.0.verification.document' )
+				|| scope.helpers.requiresField( 'legal_entity.additional_owners.1.verification.document' )
+				|| scope.helpers.requiresField( 'legal_entity.additional_owners.2.verification.document' )
+				|| scope.helpers.requiresField( 'legal_entity.additional_owners.3.verification.document' )
+				;
 		};
 
 		scope.helpers.isVerificationPending = function()
@@ -194,6 +203,34 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 		// }
 	};
 
+	function uploadIdDocument( inputId )
+	{
+		return $q( function( resolve, reject )
+		{
+			var formData = new FormData();
+			formData.append( 'purpose', 'identity_document' );
+			formData.append( 'file', document.getElementById( inputId ).querySelector( "input[type='file']" ).files[0] );
+
+			var xhr = new XMLHttpRequest();
+			xhr.open( 'POST', StripeFileUploadUrl );
+			xhr.setRequestHeader( 'Authorization', 'Bearer ' + stripePublishableKey );
+			xhr.setRequestHeader( 'Accept', 'application/json' );  // Makes sure it doesn't return as JSONP.
+			xhr.send( formData );
+
+			xhr.onreadystatechange = function()
+			{
+				if ( xhr.readyState == 4 ) {
+					if ( xhr.status == 200 ) {
+						resolve( JSON.parse( xhr.responseText ) );
+					}
+					else {
+						reject( JSON.parse( xhr.responseText ).error );
+					}
+				}
+			};
+		} );
+	}
+
 	function createPiiToken( data )
 	{
 		return $q( function( resolve, reject )
@@ -223,32 +260,51 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 		// We don't want to send the sensitive data to GJ.
 		var data = angular.copy( scope.formModel );
 
-		var options = {};
+		var requestPromise = $q.when( data );
 
 		if ( scope.formModel['legal_entity-verification-document'] && scope.formModel['legal_entity-verification-status'] != 'verified' ) {
-			options.file = {
-				'legal_entity-verification-document': scope.formModel['legal_entity-verification-document'],
-			};
+			requestPromise = requestPromise
+				.then( function()
+				{
+					return uploadIdDocument( 'legal_entity-verification-document-input' );
+				} )
+				.then( function( response )
+				{
+					data['legal_entity-verification-document'] = response.id;
+				} );
 		}
 
 		// Additional files
 		for ( var i = 0; i < 4; i++ ) {
 			if ( scope.formModel['legal_entity-additional_owners-' + i + '-verification-document'] ) {
-				if ( typeof options.file == 'undefined' ) {
-					options.file = {};
-				}
-				options.file['legal_entity-additional_owners-' + i + '-verification-document'] = scope.formModel['legal_entity-additional_owners-' + i + '-verification-document'];
+				var curIndex = i;
+				requestPromise = requestPromise
+					.then( function()
+					{
+						return uploadIdDocument( 'legal_entity-additional_owners-' + curIndex + '-verification-document-input' );
+					} )
+					.then( function( response )
+					{
+						data['legal_entity-additional_owners-' + curIndex + '-verification-document'] = response.id;
+					} );
 			}
 		}
 
 		scope.formState.genericError = false;
 
-		return createPiiToken( data )
+		return requestPromise
+			.then( function()
+			{
+				return createPiiToken( data );
+			} )
 			.catch( function( error )
 			{
 				// Error from Stripe.
 				console.error( error );
 				scope.formState.genericError = error.message;
+
+				// Rethrow to make sure that no "then" blocks below go through.
+				throw error;
 			} )
 			.then( function( id )
 			{
@@ -258,7 +314,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 					data['legal_entity-personal_id_number'] = id;
 				}
 
-				return Api.sendRequest( '/web/dash/financials/account', data, options );
+				return Api.sendRequest( '/web/dash/financials/account', data );
 			} )
 			.then( function( response )
 			{

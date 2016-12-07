@@ -53,18 +53,13 @@
 			</a>
 		</h2>
 
-		<div class="full-bleed-xs" ng-class="{ 'scrollable-grid-xs': Screen.isXs }">
-			<div ng-class="{ 'row': !Screen.isXs }">
-				<gj-game-thumbnail
-					class="col-xs-11 col-sm-4 col-md-3"
-					ng-class="{ 'scrollable-grid-item': Screen.isXs }"
-					ng-repeat="game in overviewCtrl.games | limitTo:(Screen.isMobile ? 6 : 8 ) track by game.id"
-					gj-game="game"
-					gj-track-event="channel:slider:game:{{ $index }}"
-					>
-				</gj-game-thumbnail>
-			</div>
-		</div>
+		<gj-game-grid
+			games="overviewCtrl.games"
+			truncate-to-fit="true"
+			scrollable="true"
+			event-label="devlogs-overview-featured-devlogs"
+			>
+		</gj-game-grid>
 
 		<div class="page-cut">
 			<a class="btn btn-outline"
@@ -76,17 +71,15 @@
 			</a>
 		</div>
 
-	</div>
-</section>
-
-<section class="section">
-	<div class="container">
 		<div class="row">
-			<div class="col-lg-7 col-centered">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 
-				<h2 class="section-header" translate>
-					Hot Posts
+				<h2 class="text-center" translate>
+					Hot Devlog Posts
 				</h2>
+
+				<hr class="underbar underbar-center">
+				<br>
 
 				<gj-activity-feed
 					type="Fireside_Post"

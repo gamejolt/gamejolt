@@ -19,9 +19,9 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameKeyGroup'
 		if ( scope.method == 'add' ) {
 		}
 		else if ( scope.method == 'edit' ) {
-			angular.forEach( scope.baseModel.packages, function( package )
+			angular.forEach( scope.baseModel.packages, function( _package )
 			{
-				scope.formModel.packages[ package.id ] = true;
+				scope.formModel.packages[ _package.id ] = true;
 			} );
 		}
 

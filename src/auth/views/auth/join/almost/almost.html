@@ -10,7 +10,8 @@
 		When it does, we can log them in.
 	-->
 	<div
-		gj-progress-poller="/web/auth/poll-authorized/{{ App.credentials.username }}"
+		ng-if="almostCtrl.credentials.username && almostCtrl.credentials.password"
+		gj-progress-poller="/web/auth/poll-authorized/{{ almostCtrl.credentials.username }}"
 		progress-poller-on-complete="almostCtrl.onAuthorized()"
 		>
 	</div>

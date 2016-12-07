@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 	Jam,
 	Comment_Video,
 	ActivityFeedService, History,
-	Api, Payload, Analytics, SplitTest, Device, $ocLazyLoad, gettextCatalog )
+	Api, Payload, Analytics, SplitTest, Device, PartnerReferral, $ocLazyLoad, gettextCatalog )
 {
 	var _this = this;
 	var wasHistoricalView = History.inHistorical;
@@ -24,7 +24,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		}
 
 		_this.game = game;
-		App.title = game.title + ' by ' + game.developer.display_name;
+		App.title = game.title + ' by ' + game.developer.display_name + ' (@' + game.developer.username + ')';
 	} );
 
 	$scope.$watch( 'gameCtrl.hasScores && gameCtrl.trophiesCount', function( val )
@@ -34,21 +34,18 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		_this.isAchievementsTwoCol = val;
 	} );
 
-	Api.sendRequest( '/web/discover/games/overview/' + $stateParams.id )
+	// If we have a tracked partner "ref" in the URL, we want to pass that along
+	// when gathering the payload.
+	var apiOverviewUrl = '/web/discover/games/overview/' + $stateParams.id;
+	var ref = PartnerReferral.getReferrer( 'Game', $stateParams.id );
+	if ( ref ) {
+		apiOverviewUrl += '?ref=' + ref;
+	}
+
+	Api.sendRequest( apiOverviewUrl )
 		.then( function( payload )
 		{
 			_this.init( payload );
-
-			// Remove pressure from the game overview payload by doing these after.
-			Api.sendRequest( '/web/discover/games/scores/overview/' + $stateParams.id, { detach: true } ).then( function( payload )
-			{
-				_this.scoresPayload = payload;
-			} );
-
-			Api.sendRequest( '/web/discover/games/trophies/overview/' + $stateParams.id, { detach: true } ).then( function( payload )
-			{
-				_this.trophiesPayload = payload;
-			} );
 
 			// We set our state to skip tracking in the state definition.
 			// Track it manually here.
@@ -91,6 +88,22 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			} );
 		}
 
+		this.scoresPayload = _.pick( payload, [
+			'scoreTables',
+			'scoreTable',
+			'scores',
+			'scoresUserBestScore',
+			'scoresUserScorePlacement',
+			'scoresUserScoreExperience',
+		] );
+
+		this.trophiesPayload = _.pick( payload, [
+			'trophies',
+			'trophiesAchieved',
+			'trophiesExperienceAchieved',
+			'trophiesShowInvisibleTrophyMessage',
+		] );
+
 		this.posts = ActivityFeedService.bootstrap( Fireside_Post.populate( payload.posts ), { inHistorical: wasHistoricalView } );
 		this.songs = Game_Song.populate( payload.songs );
 		this.recommendedGames = Game.populate( payload.recommendedGames );
@@ -119,9 +132,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		// The releases section exists if there are releases or songs.
 		this.hasReleasesSection = this.releases.length || this.songs.length;
 
-		/**
-		 * For game stats.
-		 */
+		// For game stats.
 		this.playsTooltip = false;
 		this.showNaPlays = false;
 
@@ -137,11 +148,15 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 			}
 		}
 
-		/**
-		 * Any active jams this game is in.
-		 */
+		// Active jams it may be in.
 		if ( payload.activeJam ) {
 			this.activeJam = new Jam( payload.activeJam );
+		}
+
+		// Partner referral system.
+		if ( payload.partnerReferredKey && payload.partnerReferredBy ) {
+			this.partnerReferredKey = payload.partnerReferredKey;
+			this.partnerReferredBy = new User( payload.partnerReferredBy );
 		}
 	};
 

@@ -11,6 +11,9 @@ angular.module( 'App.Views' ).controller( 'Auth.LinkedAccount.PollCtrl', functio
 		if ( response.provider == 'facebook' ) {
 			$state.go( 'auth.linked-account.facebook.callback', { code: response.code, state: this.token } );
 		}
+		else if ( response.provider == 'twitch' ) {
+			$state.go( 'auth.linked-account.twitch.callback', { code: response.code, state: this.token } );
+		}
 		else if ( response.provider == 'twitter' ) {
 			$state.go( 'auth.linked-account.twitter.callback', { oauth_verifier: response['oauth-verifier'], state: this.token } );
 		}

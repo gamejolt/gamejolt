@@ -25,9 +25,10 @@ before_install:
   - git submodule update --init --recursive
   - git clone https://github.com/creationix/nvm.git ./.nvm
   - source ./.nvm/nvm.sh
-  - nvm install 4.2.6
-  - nvm use 4.2.6
-  - npm install -g gulp bower node-pre-gyp nw-gyp
+  - nvm install 6.9.0
+  - nvm use 6.9.0
+  - $CXX --version
+  - npm install -g gulp-cli bower node-pre-gyp nw-gyp
 
 install:
   - bower i
@@ -35,5 +36,5 @@ install:
 
 script:
   - echo $TRAVIS_OS_NAME
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then npm run client-build-linux64; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export CXX=g++-4.9; $CXX --version; npm run client-build-linux64; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then npm run client-build-osx; fi

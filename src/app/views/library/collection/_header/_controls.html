@@ -1,16 +1,17 @@
 <div ng-if="collectionCtrl.type != 'bundle' && collectionCtrl.type != 'tag'">
 
 	<!-- Following -->
-	<a class="i-button big anim-fade-in no-animate-leave stagger"
+	<a class="btn btn-success-outline anim-fade-in no-animate-leave stagger"
 		ng-if="collectionCtrl.shouldShowFollow() && !collectionCtrl.isFollowing"
 		gj-tooltip="{{ 'library.collection.follow_button_tooltip' | translate }}"
+		gj-auth-required
 		ng-click="collectionCtrl.toggleFollow()"
 		>
 		<span class="jolticon jolticon-subscribe"></span>
 		{{ 'library.collection.follow_button' | translate }}
 	</a>
 
-	<a class="i-button big anim-fade-in no-animate-leave stagger"
+	<a class="btn btn-success-outline anim-fade-in no-animate-leave stagger"
 		ng-if="collectionCtrl.shouldShowFollow() && collectionCtrl.isFollowing"
 		gj-tooltip="{{ 'library.collection.unfollow_button_tooltip' | translate }}"
 		ng-click="collectionCtrl.toggleFollow()"
@@ -20,7 +21,7 @@
 	</a>
 
 	<!-- Editing Playlist -->
-	<a class="i-button big anim-fade-in no-animate-leave stagger"
+	<a class="btn btn-outline anim-fade-in no-animate-leave stagger"
 		ng-if="collectionCtrl.type == 'playlist' && collectionCtrl.isOwner"
 		ng-click="collectionCtrl.showEditPlaylist()"
 		>
@@ -29,7 +30,7 @@
 	</a>
 
 	<!-- More options -->
-	<a class="i-button big sparse anim-fade-in no-animate-leave stagger"
+	<a class="btn btn-outline sparse anim-fade-in no-animate-leave stagger"
 		gj-popover-trigger="collection-options"
 		ng-if="collectionCtrl.type == 'playlist' && collectionCtrl.isOwner"
 		>

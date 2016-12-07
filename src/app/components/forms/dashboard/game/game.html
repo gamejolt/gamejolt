@@ -86,6 +86,40 @@
 						</form-group>
 					</div>
 
+					<form-group name="referrals_enabled" label="{{ 'Add to partner system?' | translate }}">
+						<gj-toggle-switch
+							form-control="checkbox"
+							toggle-switch-on-text="{{ 'forms.on' | translate }}"
+							toggle-switch-off-text="{{ 'forms.off' | translate }}"
+							>
+						</gj-toggle-switch>
+
+						<div class="help-block" translate>
+							<div>
+								<span translate>This will allow Game Jolt Partners to be able to download the game for free, and will give them a 10% cut of the sale.</span>
+								<a ui-sref="landing.partners" class="link-help" target="_blank" translate>
+									What is a Game Jolt Partner?
+								</a>
+							</div>
+							<br>
+
+							<div><em translate><b>Note</b>: This will only be enabled for paid or name your price games.</em></div>
+
+							<!--
+								We only show this message to devs that have signed v1 of the distribution agreement.
+								That's because they've approved themselves to be part of the marketplace, but
+								haven't yet signed the terms for partners.
+							-->
+							<div ng-if="account.tos_signed_developer === 1">
+								<br>
+								<div class="alert alert-warning">
+									<span translate>You must sign the new Distribution Agreement which covers the terms for the Partner Program before your games will become available in the Partner Program.</span>
+									<a ui-sref="dashboard.account.financials" translate>Click here to view the new Distribution Agreement</a>
+								</div>
+							</div>
+						</div>
+					</form-group>
+
 				</fieldset>
 
 				<button

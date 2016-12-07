@@ -21,19 +21,24 @@ If graph data is null, then don't show the graph and give more space for the tab
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="( key, val ) in $ctrl.reportData.data track by key">
+			<tr ng-repeat="val in $ctrl.reportData.data track by $index">
 				<td>
 					{{ $index + 1 | number }}.
 				</td>
 				<th>
-					{{ key }}
+					<span ng-if="$ctrl.getTypeof( val.label ) !== 'object'">
+						{{ val.label }}
+					</span>
+					<a ng-if="$ctrl.getTypeof( val.label ) === 'object'" ui-sref="dashboard.analytics.view({ resource: val.label.resource, resourceId: val.label.resourceId })">
+						{{ val.label.value }}
+					</a>
 				</th>
 				<td class="text-right">
-					{{ val | number }}
+					{{ val.value | number }}
 				</td>
 				<td>
 					<div class="report-percentage" ng-style="{ width: val / $ctrl.reportData.total * 70 + 'px' }"></div>
-					<small>{{ val / $ctrl.reportData.total * 100 | number:2 }}%</small>
+					<small>{{ val.value / $ctrl.reportData.total * 100 | number:2 }}%</small>
 				</td>
 			</tr>
 		</tbody>

@@ -12,28 +12,46 @@
 		<li>
 			<a gj-popover-trigger="games-filter-os" gj-track-event="game-filtering:tab-os">
 				{{ ::'games.filtering.os_label' | translate }}
-				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.os.length">{{ ctrl.filteringContainer.filters.os.length | number }}</span>
+				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.os.length">
+					{{ ctrl.filteringContainer.filters.os.length | number }}
+				</span>
 				<span class="jolticon jolticon-chevron-down"></span>
 			</a>
 		</li>
 		<li>
 			<a gj-popover-trigger="games-filter-browser" gj-track-event="game-filtering:tab-browser">
 				{{ ::'games.filtering.browser_label' | translate }}
-				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.browser.length">{{ ctrl.filteringContainer.filters.browser.length | number }}</span>
+				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.browser.length">
+					{{ ctrl.filteringContainer.filters.browser.length | number }}
+				</span>
 				<span class="jolticon jolticon-chevron-down"></span>
 			</a>
 		</li>
 		<li>
 			<a gj-popover-trigger="games-filter-maturity" gj-track-event="game-filtering:tab-maturity">
 				{{ ::'games.filtering.maturity_label' | translate }}
-				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.maturity.length">{{ ctrl.filteringContainer.filters.maturity.length | number }}</span>
+				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.maturity.length">
+					{{ ctrl.filteringContainer.filters.maturity.length | number }}
+				</span>
 				<span class="jolticon jolticon-chevron-down"></span>
 			</a>
 		</li>
 		<li>
 			<a gj-popover-trigger="games-filter-status" gj-track-event="game-filtering:tab-status">
 				{{ ::'games.filtering.status_label' | translate }}
-				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.status.length">{{ ctrl.filteringContainer.filters.status.length | number }}</span>
+				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.status.length">
+					{{ ctrl.filteringContainer.filters.status.length | number }}
+				</span>
+				<span class="jolticon jolticon-chevron-down"></span>
+			</a>
+		</li>
+		<li ng-if="App.user.is_partner">
+			<a gj-popover-trigger="games-filter-partners" gj-track-event="game-filtering:tab-partners">
+				<span translate>Partners</span>
+				<span class="tag tag-active" translate>New</span>
+				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.partners.length">
+					{{ ctrl.filteringContainer.filters.partners.length | number }}
+				</span>
 				<span class="jolticon jolticon-chevron-down"></span>
 			</a>
 		</li>

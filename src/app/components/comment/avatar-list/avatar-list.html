@@ -33,6 +33,7 @@
 							Owner
 						</span>
 						{{ ::comment.user.display_name }}
+						<small>@{{ ::comment.user.username }}</small>
 						<span class="comment-avatar-list-comment-time" am-time-ago="comment.posted_on"></span>
 						<span ng-if="::isOwner" class="comment-avatar-list-comment-owner tag hidden-xs" translate>Owner</span>
 					</div>

@@ -39,32 +39,6 @@
 	.loading
 		color: $white
 
-	.line-thru
-		display: block
-		position: relative
-		text-align: center
-		width: 100%
-
-		&::before
-		&::after
-			content: ''
-			position: absolute
-			top: 50%
-			margin-top: 1px
-			height: 1px
-			line-height: 1px
-			border-bottom: 1px solid rgba( $white, 0.2 )
-
-		&::before
-			left: 0
-			right: 50%
-			margin-right: 40px
-
-		&::after
-			left: 50%
-			right: 0
-			margin-left: 40px
-
 .auth-scroll-container
 	@extend .scrollable
 	position: relative

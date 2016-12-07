@@ -7,7 +7,9 @@
 	<a
 		ng-if="gameCtrl.game.status == Game.STATUS_VISIBLE"
 		class="game-header-add btn btn-outline btn-sparse"
+		gj-auth-required
 		gj-popover-trigger="add-to-playlist"
+		popover-trigger-disabled="!App.user"
 		gj-tooltip="Add to Playlist"
 		tooltip-placement="bottom"
 		gj-track-event="game-profile:add-playlist"

@@ -2,7 +2,7 @@
 	<div class="container">
 		<p class="text-center text-muted">
 			<span class="jolticon jolticon-chevron-up"></span>
-			{{ ::'search.results_placeholder' | translate }}
+			<span translate>search.results_placeholder</span>
 			<span class="jolticon jolticon-chevron-up"></span>
 		</p>
 	</div>
@@ -11,17 +11,19 @@
 <div ng-if="Search.query">
 
 	<!-- Users -->
-	<section class="section fill-lightest" ng-if="searchCtrl.payload.users.length">
-		<div class="container">
+	<section class="section" ng-if="searchCtrl.payload.users.length">
+		<div class="container-lg">
 
 			<div class="clearfix">
-				<a class="link-muted pull-right" ui-sref="search.users( { q: searchCtrl.query } )">
-					{{ ::'search.results.view_all_link' | translate }}
+				<a class="btn btn-outline pull-right" ui-sref="search.users( { q: searchCtrl.query } )" translate>
+					search.results.view_all_link
 				</a>
-				<h4 class="section-header">
-					{{ ::'search.results.users_heading' | translate }}
-					<small>({{ searchCtrl.payload.usersCount }})</small>
-				</h4>
+				<h3 class="section-header">
+					<a class="link-unstyled" ui-sref="search.users( { q: searchCtrl.query } )" translate>
+						search.results.users_heading
+					</a>
+					<small>({{ searchCtrl.payload.usersCount | number }})</small>
+				</h3>
 			</div>
 
 			<div class="search-media-list row">
@@ -36,43 +38,55 @@
 	</section>
 
 	<section class="section">
-		<div class="container">
+		<div class="container-lg">
 
 			<!-- Devlogs -->
 			<div ng-if="searchCtrl.payload.devlogs.length">
 				<div class="clearfix">
-					<a class="link-muted pull-right" ui-sref="search.devlogs( { q: searchCtrl.query } )">
-						{{ ::'search.results.view_all_link' | translate }}
+					<a class="btn btn-outline pull-right" ui-sref="search.devlogs( { q: searchCtrl.query } )" translate>
+						search.results.view_all_link
 					</a>
-					<h4 class="section-header">
-						<span translate>Devlogs</span>
-						<small>({{ searchCtrl.payload.devlogsCount }})</small>
-					</h4>
+					<h3 class="section-header">
+						<a class="link-unstyled" ui-sref="search.devlogs( { q: searchCtrl.query } )" translate>
+							Devlogs
+						</a>
+						<small>({{ searchCtrl.payload.devlogsCount | number }})</small>
+					</h3>
 				</div>
 
 				<gj-game-grid
-					size="sm"
-					games="Screen.isMobile ? searchCtrl.payload.devlogsMobile : searchCtrl.payload.devlogsDesktop"
-					games-count="searchCtrl.payload.devlogsCount"
+					games="searchCtrl.payload.devlogsTrimmed"
+					truncate-to-fit="true"
+					scrollable="true"
+					event-label="search-overview-devlogs"
 					>
 				</gj-game-grid>
 			</div>
 
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container-lg">
+
 			<!-- Games -->
 			<div ng-if="searchCtrl.payload.games.length">
 				<div class="clearfix">
-					<a class="link-muted pull-right" ui-sref="search.games( { q: searchCtrl.query } )">
-						{{ ::'search.results.view_all_link' | translate }}
+					<a class="btn btn-outline pull-right" ui-sref="search.games( { q: searchCtrl.query } )" translate>
+						search.results.view_all_link
 					</a>
-					<h4 class="section-header">
-						{{ ::'search.results.games_heading' | translate }}
-						<small>({{ searchCtrl.payload.gamesCount }})</small>
-					</h4>
+					<h3 class="section-header">
+						<a class="link-unstyled" ui-sref="search.games( { q: searchCtrl.query } )" translate>
+							search.results.games_heading
+						</a>
+						<small>({{ searchCtrl.payload.gamesCount | number }})</small>
+					</h3>
 				</div>
 
 				<gj-game-grid
 					games="searchCtrl.payload.games"
-					games-count="searchCtrl.payload.gamesCount"
+					truncate-to-fit="true"
+					event-label="search-overview-games"
 					>
 				</gj-game-grid>
 

@@ -1,6 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 
-const EXPERIMENT_SIDE_NAV = 'split-side-nav';
+// const EXPERIMENT_SIDE_NAV = 'split-side-nav';
 
 @Injectable()
 export class SplitTest
@@ -12,10 +12,10 @@ export class SplitTest
 	{
 	}
 
-	hasSideNav()
-	{
-		return this.getClientSideVariation( EXPERIMENT_SIDE_NAV ) == 1;
-	}
+	// hasSideNav()
+	// {
+	// 	return this.getClientSideVariation( EXPERIMENT_SIDE_NAV ) == 1;
+	// }
 
 	getPayloadVariation( payload: any, experiment: string ): number
 	{

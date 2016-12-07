@@ -1,0 +1,23 @@
+<a class="channel-thumbnail"
+	ui-sref="discover.channels.channel.overview( { channel: $ctrl.channel } )"
+	gj-track-event="channel-list:{{ ::$ctrl.channel }}"
+	>
+	<div class="channel-thumbnail-image-spacer">
+		<div class="channel-thumbnail-image">
+			<img ng-src="{{ ::$ctrl.channelsInfo.images[ $ctrl.channel ] }}" alt="">
+		</div>
+	</div>
+	<div class="channel-thumbnail-info">
+		<div class="channel-thumbnail-label">
+			#{{ ::$ctrl.channel }}
+		</div>
+		<div class="channel-thumbnail-games-count"
+			ng-if="::$ctrl.gamesCount"
+			translate
+			translate-n="::$ctrl.gamesCount"
+			translate-plural="{{ $count | number }} games"
+			>
+			1 game
+		</div>
+	</div>
+</a>

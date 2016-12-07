@@ -291,7 +291,7 @@
 
 					<div class="page-cut">
 						<a class="btn btn-outline"
-							ui-sref="profile.videos( { slug: App.user.slug, id: App.user.id } )"
+							ui-sref="profile.videos( { username: App.user.username } )"
 							gj-track-event="dash:overview:expand-videos"
 							>
 							<span class="btn-badge">
@@ -391,6 +391,10 @@
 					<a class="list-group-item has-icon" ui-sref="dashboard.account.email-preferences">
 						<span class="jolticon jolticon-email"></span>
 						<span translate>Email Preferences</span>
+					</a>
+					<a class="list-group-item has-icon" ui-sref="dashboard.account.financials">
+						<span class="jolticon jolticon-cog"></span>
+						<span translate>Marketplace Account Setup</span>
 					</a>
 					<a class="list-group-item has-icon" ui-sref="dashboard.account.change-password">
 						<span class="jolticon jolticon-key-diagonal"></span>

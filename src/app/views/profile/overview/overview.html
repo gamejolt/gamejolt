@@ -49,7 +49,7 @@
 						<div class="alert alert-info">
 							<p
 								translate
-								translate-params-user="profileCtrl.userFriendship.target_user.display_name"
+								translate-params-user="'@' + profileCtrl.userFriendship.target_user.username"
 								>
 								profile.friend_request_sent_pending
 							</p>
@@ -64,7 +64,7 @@
 						<div class="alert alert-info">
 							<p
 								translate
-								translate-params-user="profileCtrl.userFriendship.user.display_name"
+								translate-params-user="'@' + profileCtrl.userFriendship.user.username"
 								>
 								profile.friend_request_received_pending
 							</p>
@@ -88,6 +88,7 @@
 						<div class="col-sm-6 col-md-12">
 							<div ng-if="::(
 								profileCtrl.user.facebook_id
+								|| profileCtrl.user.twitch_id
 								|| profileCtrl.user.twitter_id
 								|| profileCtrl.user.google_id
 								|| profileCtrl.user.web_site
@@ -126,6 +127,17 @@
 									</a>
 								</div>
 
+								<div ng-if="::profileCtrl.user.twitch_id">
+									<a
+										class="link-unstyled"
+										target="_blank"
+										ng-href="https://twitch.tv/{{ ::profileCtrl.user.twitch_name }}"
+										>
+										<span class="jolticon jolticon-twitch"></span>
+										{{ profileCtrl.user.twitch_name }}
+									</a>
+								</div>
+
 								<div ng-if="::profileCtrl.user.web_site">
 									<a
 										class="link-unstyled"
@@ -133,7 +145,7 @@
 										ng-href="{{ ::profileCtrl.user.web_site }}"
 										>
 										<span class="jolticon jolticon-world"></span>
-										<span translate>Developer's Web Site</span>
+										<span translate>Website</span>
 									</a>
 								</div>
 
@@ -181,7 +193,7 @@
 
 			<div ng-if="profileCtrl.gamesCount">
 				<h2 class="section-header">
-					<a class="link-unstyled" ui-sref="library.collection.developer( { slug: profileCtrl.user.slug, id: profileCtrl.user.id } )">
+					<a class="link-unstyled" ui-sref="library.collection.developer( { id: profileCtrl.user.username } )">
 						{{ ::'profile.developer_games_teaser_heading' | translate }}
 					</a>
 					<small>{{ ::'profile.developer_games_teaser_heading_small' | translate }}</small>
@@ -199,7 +211,7 @@
 
 				<div class="page-cut">
 					<a class="btn btn-outline"
-						ui-sref="library.collection.developer( { slug: profileCtrl.user.slug, id: profileCtrl.user.id } )"
+						ui-sref="library.collection.developer( { id: profileCtrl.user.username } )"
 						>
 						<span class="btn-badge">
 							{{ profileCtrl.gamesCount | number }}
