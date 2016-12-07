@@ -86,9 +86,10 @@
 
 		<!--
 			Mobile is slow to compile really long friend lists.
-			We split out online/offline friends on mobile so that it's fast to display/compile.'
+			We split out online/offline friends on mobile so that it's fast to display/compile.
+			Will also do it if they have more than 50 friends to keep the site fast.
 		-->
-		<div ng-if="Screen.isXs">
+		<div ng-if="Screen.isXs || client.friendsList.collection.length > 50">
 			<div ng-if="client.friendsList.onlineCount">
 				<div class="nav-heading">
 					<span class="badge badge-active" ng-if="client.friendsList.onlineCount > 0">{{ client.friendsList.onlineCount | number }}</span>
@@ -118,11 +119,7 @@
 			</div>
 		</div>
 
-		<!--
-			For desktop show the whole friend list.
-			Offline friends get grouped to the end.
-		-->
-		<div ng-if="!Screen.isXs">
+		<div ng-if="!Screen.isXs && client.friendsList.collection.length <= 50">
 			<div ng-if="client.friendsList.collection.length">
 				<div class="nav-heading">
 					<span class="badge">{{ client.friendsList.collection.length | number }}</span>
