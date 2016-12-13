@@ -1,5 +1,5 @@
 import { Component } from 'ng-metadata/core';
-import template from 'html!./body.html';
+import template from 'html!./body.component.html';
 
 @Component({
 	selector: 'gj-shell-body',
@@ -8,7 +8,7 @@ import template from 'html!./body.html';
 		transclude: true,
 	},
 })
-export class BodyComponent
+export class ShellBodyComponent
 {
 	constructor(
 	)
