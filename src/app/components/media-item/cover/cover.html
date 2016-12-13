@@ -2,14 +2,15 @@
 	ng-class="{ loaded: $ctrl.isLoaded }"
 	>
 
-	<div class="media-item-cover-img">
+	<div class="media-item-cover-img"
+		gj-parallax-scroll="::$ctrl.shouldParallax"
+		scroll-drag="0.4"
+		scroll-dim="0.8"
+		>
 		<img
 			gj-img-responsive="{{ $ctrl.mediaItem.mediaserver_url }}"
 			on-loaded-change="$ctrl.isMediaItemLoaded = $loaded"
 			alt=""
-			gj-parallax-scroll="::$ctrl.shouldParallax"
-			scroll-drag="0.4"
-			scroll-dim="0.8"
 			>
 	</div>
 

@@ -35,6 +35,8 @@ gj-media-item-cover
 		display: none
 		position: relative
 		width: 100%
+		height: 100%
+		overflow: hidden
 
 		@media $media-xs
 			width: 140%
@@ -48,7 +50,8 @@ gj-media-item-cover
 	&.loaded
 		&::before
 		.media-item-cover-img
-			display: block
+			display: flex
+			align-items: center
 
 		@media $media-sm-up
 			&::after
