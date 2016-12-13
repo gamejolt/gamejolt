@@ -23,14 +23,16 @@
 
 				<hr>
 
-				<gj-pager
+				<gj-pagination
+					pager="true"
 					items-per-page="homeCtrl.pagination.perPage"
 					total-items="homeCtrl.pagination.count"
 					current-page="homeCtrl.pagination.page"
 					previous-text="&laquo; Newer"
 					next-text="Older &raquo;"
-					on-page-change="Scroll.to( 'latest-posts' )">
-				</gj-pager>
+					on-page-change="Scroll.to( 'latest-posts' )"
+					>
+				</gj-pagination>
 
 			</div>
 		</div>

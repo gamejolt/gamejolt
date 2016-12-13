@@ -1,0 +1,72 @@
+.dash-post-list
+	padding-left: 0
+	list-style: none
+
+	> li
+		@extend .clearfix
+		margin-bottom: $line-height-computed
+
+.dash-post-list-title
+	@extend .h4
+	text-overflow()
+	margin: 0
+
+.dash-post-list-likes
+	float: left
+	width: 60px
+	height: 60px
+	margin-right: $line-height-computed
+	border: 3px solid $gj-pink
+	border-radius: 50%
+	text-align: center
+	color: $gray-lighter
+
+	&.has-likes
+		color: $black
+
+	> .number
+		margin-top: 5px
+		display: block
+		font-weight: bold
+
+/**
+ * The new post widget.
+ */
+.new-post-widget
+	height: 80px
+	background-color: $gray-lightest
+	margin-bottom: $line-height-computed
+
+	&.is-adding
+		padding-top: 15px
+		background-color: $gray-darker
+
+.new-post-widget-button
+	@extend .h4
+	display: block
+	margin: 0
+	padding-left: 30px
+	line-height: 80px
+	color: $gray
+
+	&:hover
+		background-color: $gray-lighter
+		color: $black
+
+.new-post-widget-input
+	margin-left: 15px
+	padding-left: 15px
+	margin-top: 2px
+	border-left: 3px solid $gray-lightest
+	height: 50px
+
+	> input
+		@extend .h4
+		margin: 0
+		margin-top: 7px
+		width: 100%
+		padding-right: 30px
+		background: none
+		outline: 0
+		border: 0
+		color: $gray-lightest

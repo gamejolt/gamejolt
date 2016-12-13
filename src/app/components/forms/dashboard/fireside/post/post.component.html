@@ -1,0 +1,50 @@
+<form gj-form="formModel" name="postForm">
+
+	<form-group name="title" label="Post Title">
+		<input form-control="text" ng-maxlength="200">
+		<control-errors label="title"></control-errors>
+	</form-group>
+
+	<form-group name="lead" label="Lead Text" optional="true">
+		<textarea form-control rows="2" ng-maxlength="200"></textarea>
+		<control-errors></control-errors>
+		<p class="help-block">
+			Optional text to go under the title in the post's page header. Should be kept short and sweet.
+		</p>
+	</form-group>
+
+	<form-group name="content_markdown" label="Post Content">
+		<div form-markdown-editor
+			preview-class="fireside-post-body"
+			markdown-preview-url="/fireside/dash/posts/preview"
+			markdown-mode="fireside"
+			show-media-items="true"
+			media-item-type="fireside-post-image"
+			placeholder="{{ 'Write your post here...' | translate }}"
+			>
+		</div>
+		<control-errors label="post body"></control-errors>
+	</form-group>
+
+	<form-group name="status" label="Visibility" ng-if="method == 'edit'">
+		<div class="radio">
+			<label>
+				<input form-control="radio" ng-value="Fireside_Post.STATUS_ACTIVE">
+				Published - <span class="help-inline">Viewable by everyone. Shows up in the post listings.</span>
+			</label>
+		</div>
+		<div class="radio">
+			<label>
+				<input form-control="radio" ng-value="Fireside_Post.STATUS_DRAFT">
+				Draft - <span class="help-inline">Only viewable by you (and by whoever has the URL).</span>
+			</label>
+		</div>
+	</form-group>
+
+	<button gj-form-submit-button class="btn" ng-disabled="!postForm.$valid" ng-click="onSubmit()">
+		<span ng-if="method == 'add'" class="jolticon jolticon-add"></span>
+		<span ng-if="method == 'edit'" class="jolticon jolticon-edit"></span>
+		{{ (method == 'add' ? 'Add Post' : 'Save Post') }}
+	</button>
+
+</form>

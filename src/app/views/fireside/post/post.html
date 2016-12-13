@@ -1,10 +1,11 @@
-<!-- Post Owner Section -->
-<section class="section section-thin fill-dark" ng-if="::(App.user.id == postCtrl.post.user.id)">
+<section class="section section-thin fill-darkest"
+	ng-if="::(App.user.id == postCtrl.post.user.id)"
+	>
 	<div class="container text-center">
 
-		<a class="i-button big" ui-sref="dash.posts.edit( { postId: postCtrl.post.id } )">
-			<span class="jolticon jolticon-edit"></span>
-			Edit Post
+		<a class="btn btn-outline" ui-sref="dashboard.main.fireside.posts.edit( { postId: postCtrl.post.id } )">
+			<span class="jolticon jolticon-cog"></span>
+			<span translate>Edit Post</span>
 		</a>
 
 	</div>
@@ -34,7 +35,7 @@
 			<span class="fireside-post-header-author-byline">
 				<span translate>by</span>
 				<a class="fireside-post-header-author-username"
-					ui-sref="profile.overview( { slug: postCtrl.post.user.slug, id: postCtrl.post.user.id } )"
+					ui-sref="profile.overview( { username: postCtrl.post.user.username } )"
 					title="{{ postCtrl.post.user.username }}"
 					>
 					@{{ postCtrl.post.user.username }}
@@ -70,12 +71,13 @@
 					<div gj-widget-compiler-bind="::postCtrl.post.content_compiled"></div>
 				</div>
 
-				<div class="post-bottom-controls">
-					<div gj-post-like-widget="postCtrl.post"
-						post-like-widget-likes="postCtrl.likes"
-						post-like-widget-likes-count="postCtrl.likesCount"
-						post-like-widget-user-like="postCtrl.userLike">
-					</div>
+				<br>
+
+				<div class="text-center">
+					<gj-fireside-post-like-widget
+						fireside-post="postCtrl.post"
+						>
+					</gj-fireside-post-like-widget>
 				</div>
 
 			</div>

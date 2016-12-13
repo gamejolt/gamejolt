@@ -1,10 +1,10 @@
 angular.module( 'App.Views' ).config( function( $stateProvider )
 {
-	$stateProvider.state( 'tags.view', {
+	$stateProvider.state( 'fireside.tags.view', {
 		url: '/tag/:tag',
-		controller: 'Tags.ViewCtrl',
+		controller: 'Fireside.Tags.ViewCtrl',
 		controllerAs: 'viewCtrl',
-		templateUrl: '/app/views/tags/view/view.html',
+		templateUrl: '/app/views/fireside/tags/view/view.html',
 		resolve: {
 			payload: function( Api, $stateParams )
 			{
