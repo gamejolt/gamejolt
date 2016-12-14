@@ -157,6 +157,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		if ( payload.partnerReferredKey && payload.partnerReferredBy ) {
 			this.partnerReferredKey = payload.partnerReferredKey;
 			this.partnerReferredBy = new User( payload.partnerReferredBy );
+			this.partnerNoCut = payload.partnerNoCut || false;
 		}
 	};
 
