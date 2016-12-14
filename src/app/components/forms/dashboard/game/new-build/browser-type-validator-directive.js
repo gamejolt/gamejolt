@@ -18,7 +18,13 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewBuildB
 					return true;
 				}
 
+				// Will be undefined if this is attached to a downloadable
+				// rather than browser upload.
 				var validTypes = validTypesParsed( scope );
+				if ( typeof validTypes === 'undefined' ) {
+					return true;
+				}
+
 				var fileType = file.name.slice( file.name.lastIndexOf( '.' ) );
 				return validTypes.indexOf( fileType ) !== -1;
 			};

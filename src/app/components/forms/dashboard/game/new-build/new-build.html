@@ -16,7 +16,7 @@
 				<gj-form-upload-control
 					form-control="upload"
 					gj-max-filesize="maxFilesize"
-					gj-form-dashboard-game-new-build-browser-type-validator="getValidBrowserTypes()"
+					gj-form-dashboard-game-new-build-browser-type-validator="type == 'browser' ? getValidBrowserTypes() : undefined"
 					accept="{{ getUploadAccept() }}"
 					gj-file-select="onSubmit()"
 					>
