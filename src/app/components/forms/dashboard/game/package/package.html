@@ -5,158 +5,312 @@
 	</div>
 
 	<div ng-if="isLoaded">
-		<form-group name="title" label="{{ 'dash.games.packages.form.title_label' | translate }}">
-			<p class="help-block" translate>dash.games.packages.form.title_help_html</p>
+		<gj-loading-fade is-loading="isProcessing || formState.isProcessing">
 
-			<input
-				form-control
-				ng-maxlength="150"
-				gj-form-validate-availability="/web/dash/developer/games/packages/check-field-availability/{{ game.id }}/title"
-				>
+			<form-group name="title" label="{{ 'dash.games.packages.form.title_label' | translate }}">
+				<p class="help-block" translate>dash.games.packages.form.title_help_html</p>
 
-			<control-errors></control-errors>
-		</form-group>
+				<input
+					form-control
+					ng-maxlength="150"
+					gj-form-validate-availability="/web/dash/developer/games/packages/check-field-availability/{{ game.id }}/title"
+					>
 
-		<form-group name="description" label="{{ 'dash.games.packages.form.description_label' | translate }}" optional="true">
-			<p class="help-block" translate>dash.games.packages.form.description_help_html</p>
-
-			<div ng-if="!formState.showDescriptionInput">
-				<a class="btn btn-outline btn-sm" ng-click="formState.showDescriptionInput = true">
-					<span class="jolticon jolticon-add"></span>
-					{{ 'dash.games.packages.form.description_change_button' | translate }}
-				</a>
-			</div>
-
-			<div ng-if="formState.showDescriptionInput">
-				<textarea form-control rows="2" ng-maxlength="750"></textarea>
 				<control-errors></control-errors>
-			</div>
-		</form-group>
+			</form-group>
 
-		<form-group name="visibility" label="Visibility">
-			<div class="radio">
-				<label>
-					<input form-control="radio" ng-value="Game_Package.VISIBILITY_PUBLIC">
-					<span translate>Public</span> &mdash;
-					<span class="help-inline" translate>Anyone can access this package.</span>
-				</label>
-			</div>
+			<form-group name="description" label="{{ 'dash.games.packages.form.description_label' | translate }}" optional="true">
+				<p class="help-block" translate>dash.games.packages.form.description_help_html</p>
 
-			<div class="radio">
-				<label>
-					<input form-control="radio" ng-value="Game_Package.VISIBILITY_PRIVATE">
-					<span translate>Private</span> &mdash;
-					<span class="help-inline" translate>
-						Only you can access this package, as well as any keys you assign. You can assign keys in your <strong>Keys/Access</strong> page.
-					</span>
-				</label>
-			</div>
-
-			<div class="alert alert-info" translate>
-				Note that regardless of this setting, your package will only be visible on your game's page if it has published releases in it.
-			</div>
-		</form-group>
-
-		<form-group name="pricing_type" label="Pricing Type">
-
-			<div class="alert alert-warning" ng-if="isFangame" translate>
-				Accepting payments for fangames is illegal and against our terms. If you sell fangames, we will remove your account and block you from the Marketplace.
-			</div>
-
-			<div ng-if="!isFangame">
-				<p class="help-block" ng-if="!isUserVerified">
-					<span class="jolticon jolticon-notice"></span>
-					<span translate translate-params-url="$state.href( 'dashboard.account.financials' )">
-						You must <a href="{{ url }}">set up your financial information</a> before you can start accepting money.
-					</span>
-				</p>
-
-				<div class="alert alert-warning" ng-if="isUserVerified && package.has_browser_builds" translate>
-					Packages with browser builds cannot be sold at this time.
+				<div ng-if="!formState.showDescriptionInput">
+					<a class="btn btn-outline btn-sm" ng-click="formState.showDescriptionInput = true">
+						<span class="jolticon jolticon-add"></span>
+						{{ 'dash.games.packages.form.description_change_button' | translate }}
+					</a>
 				</div>
-			</div>
 
-			<div class="radio">
-				<label>
-					<input form-control="radio" value="free">
-					<span translate>Free</span> &mdash;
-					<span class="help-inline" translate>Completely free with no option to pay at all.</span>
-				</label>
-			</div>
-
-			<div class="radio" ng-class="{ disabled: !isUserVerified || isFangame }">
-				<label>
-					<input form-control="radio" value="pwyw" ng-disabled="!isUserVerified || isFangame">
-					<span translate>Pay What You Want</span> &mdash;
-					<span class="help-inline" translate>They will be able to pay $0 or more. They set the price.</span>
-				</label>
-			</div>
-
-			<div class="radio" ng-class="{ disabled: !isUserVerified || package.has_browser_builds || isFangame }">
-				<label>
-					<input form-control="radio" value="paid" ng-disabled="!isUserVerified || package.has_browser_builds || isFangame">
-					<span translate>Paid</span> &mdash;
-					<span class="help-inline" translate>Charge a specific price with the ability for them to pay more.</span>
-				</label>
-			</div>
-		</form-group>
-
-		<form-group name="price" label="Suggested Price" ng-if="formModel.pricing_type == 'pwyw'" optional="true">
-			<div class="row">
-				<div class="col-sm-3">
-					<gj-toggle-switch type="checkbox" ng-model="formState.hasSuggestedPrice" toggle-switch-on-text="On" toggle-switch-off-text="Off"></gj-toggle-switch>
-					<br class="visible-xs">
-				</div>
-				<div class="col-sm-9">
-					<input-group>
-						<input-group-addon>$</input-group-addon>
-						<input form-control="number"
-							gj-form-currency-input
-							step="0.1"
-							ng-min="minPrice / 100"
-							ng-disabled="!formState.hasSuggestedPrice"
-							>
-					</input-group>
+				<div ng-if="formState.showDescriptionInput">
+					<textarea form-control rows="2" ng-maxlength="750"></textarea>
 					<control-errors></control-errors>
 				</div>
+			</form-group>
+
+			<form-group name="visibility" label="{{ 'Visibility' | translate }}">
+				<div class="radio">
+					<label>
+						<input form-control="radio" ng-value="Game_Package.VISIBILITY_PUBLIC">
+						<span translate>Public</span> &mdash;
+						<span class="help-inline" translate>Anyone can access this package.</span>
+					</label>
+				</div>
+
+				<div class="radio">
+					<label>
+						<input form-control="radio" ng-value="Game_Package.VISIBILITY_PRIVATE">
+						<span translate>Private</span> &mdash;
+						<span class="help-inline" translate>
+							Only you can access this package, as well as any keys you assign. You can assign keys in your <strong>Keys/Access</strong> page.
+						</span>
+					</label>
+				</div>
+
+				<div class="alert alert-info" translate>
+					Note that regardless of this setting, your package will only be visible on your game's page if it has published releases in it.
+				</div>
+			</form-group>
+
+			<form-group name="pricing_type" label="{{ 'Pricing Type' | translate }}">
+
+				<div class="alert alert-warning" ng-if="isFangame" translate>
+					Accepting payments for fangames is illegal and against our terms. If you sell fangames, we will remove your account and block you from the Marketplace.
+				</div>
+
+				<div ng-if="!isFangame">
+					<p class="help-block" ng-if="!isUserVerified">
+						<span class="jolticon jolticon-notice"></span>
+						<span translate translate-params-url="$state.href( 'dashboard.account.financials' )">
+							You must <a href="{{ url }}">set up your financial information</a> before you can start accepting money.
+						</span>
+					</p>
+
+					<div class="alert alert-warning" ng-if="isUserVerified && package.has_browser_builds" translate>
+						Packages with browser builds cannot be sold at this time.
+					</div>
+				</div>
+
+				<div class="radio">
+					<label>
+						<input form-control="radio" value="free">
+						<span translate>Free</span> &mdash;
+						<span class="help-inline" translate>Completely free with no option to pay at all.</span>
+					</label>
+				</div>
+
+				<div class="radio" ng-class="{ disabled: !isUserVerified || isFangame }">
+					<label>
+						<input form-control="radio" value="pwyw" ng-disabled="!isUserVerified || isFangame">
+						<span translate>Pay What You Want</span> &mdash;
+						<span class="help-inline" translate>They will be able to pay $0 or more. They set the price.</span>
+					</label>
+				</div>
+
+				<div class="radio" ng-class="{ disabled: !isUserVerified || package.has_browser_builds || isFangame }">
+					<label>
+						<input form-control="radio" value="paid" ng-disabled="!isUserVerified || package.has_browser_builds || isFangame">
+						<span translate>Paid</span> &mdash;
+						<span class="help-inline" translate>Charge a specific price with the ability for them to pay more.</span>
+					</label>
+				</div>
+			</form-group>
+
+			<form-group name="price" label="{{ 'Suggested Price' | translate }}" ng-if="formModel.pricing_type == 'pwyw'" optional="true">
+				<div class="row">
+					<div class="col-sm-3">
+						<gj-toggle-switch type="checkbox" ng-model="formState.hasSuggestedPrice" toggle-switch-on-text="On" toggle-switch-off-text="Off"></gj-toggle-switch>
+						<br class="visible-xs">
+					</div>
+					<div class="col-sm-9">
+						<input-group>
+							<input-group-addon>$</input-group-addon>
+							<input form-control="number"
+								gj-form-currency-input
+								step="0.1"
+								ng-min="minPrice / 100"
+								ng-disabled="!formState.hasSuggestedPrice"
+								>
+						</input-group>
+						<control-errors></control-errors>
+					</div>
+				</div>
+			</form-group>
+
+			<form-group name="price" label="{{ 'Price' | translate }}" ng-if="formModel.pricing_type == 'paid'">
+				<input-group>
+					<input-group-addon>$</input-group-addon>
+					<input form-control="number"
+						gj-form-currency-input
+						step="0.1"
+						ng-min="minPrice / 100"
+						>
+				</input-group>
+				<control-errors></control-errors>
+			</form-group>
+
+			<div ng-if="formModel.pricing_type == 'paid'">
+				<div class="form-group">
+
+					<label class="control-label" translate>
+						Run a Sale
+					</label>
+
+					<div ng-if="promotionalPricing">
+						<div class="alert alert-info" ng-if="promotionalPricing.start > now" translate>A sale is currently scheduled.</div>
+						<div class="alert alert-success" ng-if="promotionalPricing.start <= now" translate>Your sale is currently running.</div>
+
+						<div class="table-responsive" ng-if="promotionalPricing">
+							<table class="table sans-margin-bottom">
+								<colgroup>
+									<col class="col-xs-4 col-sm-4 col-md-3">
+								</colgroup>
+								<tr>
+									<th translate>Timezone</th>
+									<td>
+										{{ promotionalPricing.timezone }}
+										<div class="text-muted small" translate>
+											All times are based off this timezone.
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th translate>Start</th>
+									<td>
+										{{ saleStartLocal | amDateFormat:'lll' }}
+										<div class="text-muted small" am-time-ago="promotionalPricing.start"></div>
+									</td>
+								</tr>
+								<tr>
+									<th translate>End</th>
+									<td>
+										{{ saleEndLocal | amDateFormat:'lll' }}
+										<div class="text-muted small" am-time-ago="promotionalPricing.end"></div>
+									</td>
+								</tr>
+								<tr>
+									<th translate>Price</th>
+									<td>
+										{{ promotionalPricing.amount | gjCurrency }}
+										<div class="text-muted small">
+											{{ ((originalPricing.amount - promotionalPricing.amount) / originalPricing.amount * 100).toFixed( 0 ) }}% off
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+
+						<div>
+							<a class="btn btn-outline btn-sm" ng-click="formState.isShowingSaleForm = true" ng-if="!formState.isShowingSaleForm">
+								<span class="jolticon jolticon-edit"></span>
+								<span translate>Edit Sale</span>
+							</a>
+							<a class="btn btn-danger-outline btn-sm" ng-click="cancelSale()">
+								<span class="jolticon jolticon-remove"></span>
+								<span translate>Cancel Sale</span>
+							</a>
+						</div>
+					</div>
+
+					<div ng-if="!promotionalPricing">
+						<a class="btn btn-outline btn-sm" ng-click="formState.isShowingSaleForm = true" ng-if="!formState.isShowingSaleForm">
+							<span class="jolticon jolticon-add"></span>
+							<span translate>Setup Sale</span>
+						</a>
+					</div>
+				</div>
+
+				<div ng-if="formState.isShowingSaleForm">
+					<form-group name="sale_timezone" label="{{ 'Timezone' | translate }}">
+
+						<p class="help-block" translate>
+							All time selection below will use this timezone.
+						</p>
+
+						<p class="help-block">
+							<strong translate>Should auto-detect, but if it doesn't, choose your closest city.</strong>
+						</p>
+
+						<select form-control ng-options="timezone.i as timezone.label group by timezone.r for timezone in timezones"></select>
+
+						<control-errors></control-errors>
+
+					</form-group>
+
+					<div class="form-group">
+						<label class="control-label" translate>
+							Start
+						</label>
+
+						<!--
+							Can only set this when first setting up a sale.
+						-->
+						<form-group name="sale_start_now" hide-label="true" ng-if="!promotionalPricing">
+							<div class="checkbox">
+								<label>
+									<input form-control="checkbox">
+									<span translate>Start immediately?</span>
+								</label>
+							</div>
+						</form-group>
+
+						<form-group name="sale_start" hide-label="true" ng-if="!formModel.sale_start_now || promotionalPricing">
+							<gj-datetime-picker
+								name="sale_start"
+								date-model="formModel.sale_start"
+								date-server-errors="formState.serverErrors"
+								timezone="formModel.sale_timezone"
+								min-date="now"
+								>
+							</gj-datetime-picker>
+							<control-errors label="start time"></control-errors>
+						</form-group>
+					</div>
+
+					<form-group name="sale_end" label="{{ 'End' | translate }}">
+						<gj-datetime-picker
+							name="sale_end"
+							date-model="formModel.sale_end"
+							date-server-errors="formState.serverErrors"
+							timezone="formModel.sale_timezone"
+							min-date="formModel.sale_start"
+							>
+						</gj-datetime-picker>
+						<control-errors label="end time"></control-errors>
+					</form-group>
+
+					<form-group name="sale_price" label="{{ 'Sale Price' | translate }}">
+						<input-group>
+							<input-group-addon>$</input-group-addon>
+							<input form-control="number"
+								gj-form-currency-input
+								step="0.1"
+								ng-min="minPrice / 100"
+								ng-max="formModel.price - 0.01"
+								>
+						</input-group>
+
+						<p class="help-block" ng-if="formModel.price && formModel.sale_price">
+							{{ ((formModel.price - formModel.sale_price) / formModel.price * 100).toFixed( 0 ) }}% off
+						</p>
+
+						<control-errors></control-errors>
+					</form-group>
+				</div>
 			</div>
-		</form-group>
 
-		<form-group name="price" lable="Price" ng-if="formModel.pricing_type == 'paid'">
-			<input-group>
-				<input-group-addon>$</input-group-addon>
-				<input form-control="number"
-					gj-form-currency-input
-					step="0.1"
-					ng-min="minPrice / 100"
-					>
-			</input-group>
-			<control-errors></control-errors>
-		</form-group>
+			<form-group name="primary" label="{{ 'Primary Package' | translate }}" optional="!startedPrimary && hasPrimarySellable">
+				<p class="help-block" translate>
+					We use the primary package to determine the price to show on game listings. You can only have one primary package for your game.
+				</p>
+				<div class="checkbox">
+					<label>
+						<input form-control="checkbox" ng-disabled="startedPrimary || !hasPrimarySellable">
+						<span ng-if="!hasPrimarySellable">
+							<strong translate>Since you don't have any packages yet, we'll mark this as your primary one.</strong>
+						</span>
+						<span ng-if="hasPrimarySellable">
+							<span ng-if="!startedPrimary" translate>Make this package the primary package</span>
+							<strong ng-if="startedPrimary" translate>This is currently the primary package</strong>
+						</span>
+					</label>
+				</div>
+			</form-group>
 
-		<form-group name="primary" label="Primary Package" optional="!startedPrimary && hasPrimarySellable">
-			<p class="help-block" translate>
-				We use the primary package to determine the price to show on game listings. You can only have one primary package for your game.
-			</p>
-			<div class="checkbox">
-				<label>
-					<input form-control="checkbox" ng-disabled="startedPrimary || !hasPrimarySellable">
-					<span ng-if="!hasPrimarySellable">
-						<strong translate>Since you don't have any packages yet, we'll mark this as your primary one.</strong>
-					</span>
-					<span ng-if="hasPrimarySellable">
-						<span ng-if="!startedPrimary" translate>Make this package the primary package</span>
-						<strong ng-if="startedPrimary" translate>This is currently the primary package</strong>
-					</span>
-				</label>
-			</div>
-		</form-group>
+			<button gj-form-submit-button class="btn" ng-show="method == 'add' || !packageForm.$pristine" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">
+				<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
+				<span ng-if="method == 'add'">{{ ::'dash.games.packages.form.add_package_button' | translate }}</span>
+				<span ng-if="method == 'edit'">{{ ::'dash.games.packages.form.save_package_button' | translate }}</span>
+			</button>
 
-		<button gj-form-submit-button class="btn" ng-show="method == 'add' || !packageForm.$pristine" ng-disabled="!packageForm.$valid" ng-click="onSubmit()">
-			<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
-			<span ng-if="method == 'add'">{{ ::'dash.games.packages.form.add_package_button' | translate }}</span>
-			<span ng-if="method == 'edit'">{{ ::'dash.games.packages.form.save_package_button' | translate }}</span>
-		</button>
+		</gj-loading-fade>
 	</div>
 
 </form>

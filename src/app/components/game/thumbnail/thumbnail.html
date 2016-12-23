@@ -58,14 +58,28 @@
 
 		<div class="game-thumbnail-pricing"
 			ng-if="::$ctrl.game._has_packages"
-			ng-class="::{ 'game-thumbnail-pricing-owned': $ctrl.game.sellable.is_owned }"
+			ng-class="::{ 'game-thumbnail-pricing-owned': $ctrl.game.sellable.is_owned, 'game-thumbnail-pricing-sale': $ctrl.sale }"
 			>
 			<div ng-if="::!$ctrl.game.sellable.is_owned" ng-switch="::$ctrl.game.sellable.type">
-				<span class="game-thumbnail-pricing-amount" ng-switch-when="paid">
-					<span class="game-thumbnail-pricing-currency">$</span>{{ ::$ctrl.game.sellable.pricings[0].amount | gjCurrency:'' }}
-				</span>
+				<div ng-switch-when="paid">
+					<div class="game-thumbnail-pricing-sale-percentage"
+						ng-if="::$ctrl.sale"
+						>
+						-{{ ::$ctrl.salePercentageOff }}%
+					</div>
+					<div class="game-thumbnail-pricing-container">
+						<div class="game-thumbnail-pricing-amount-old"
+							ng-if="::$ctrl.sale"
+							>
+							${{ ::$ctrl.saleOldPricing.amount | gjCurrency:'' }}
+						</div>
+						<div class="game-thumbnail-pricing-amount">
+							<span class="game-thumbnail-pricing-currency">$</span>{{ ::$ctrl.pricing.amount | gjCurrency:'' }}
+						</div>
+					</div>
+				</div>
 				<span class="game-thumbnail-pricing-tag" ng-switch-when="pwyw" translate>
-					name your price
+					Name Your Price
 				</span>
 				<span class="game-thumbnail-pricing-tag" ng-switch-default translate>
 					Free

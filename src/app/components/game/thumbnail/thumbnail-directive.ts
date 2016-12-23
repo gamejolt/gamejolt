@@ -24,6 +24,11 @@ export class ThumbnailComponent implements OnInit
 	showModTools = false;
 	isHovered = false;
 
+	pricing: any;
+	sale: boolean;
+	salePercentageOff: string;
+	saleOldPricing: any;
+
 	constructor(
 		@Inject( '$element' ) $element: ng.IAugmentedJQuery,
 		@Inject( 'Screen' ) public screen: Screen,
@@ -48,6 +53,16 @@ export class ThumbnailComponent implements OnInit
 
 		if ( this.app.user && this.app.user.permission_level >= 3 ) {
 			this.showModTools = true;
+		}
+
+		// Pricing info.
+		if ( this.game.sellable && Array.isArray( this.game.sellable.pricings ) ) {
+			this.pricing = this.game.sellable.pricings[0];
+			if ( this.pricing.promotional ) {
+				this.saleOldPricing = this.game.sellable.pricings[1];
+				this.sale = true;
+				this.salePercentageOff = ((this.saleOldPricing.amount - this.pricing.amount) / this.saleOldPricing.amount * 100).toFixed( 0 );
+			}
 		}
 	}
 

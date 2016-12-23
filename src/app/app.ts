@@ -70,6 +70,8 @@ import GameGridModule from './components/game/grid/grid';
 import FiresidePostThumbnailModule from './components/fireside/post/thumbnail/thumbnail';
 import FiresidePostListModule from './components/fireside/post/list/list';
 import GameModLinksModule from './components/game/mod-links/mod-links';
+import CountdownModule from '../lib/gj-lib-client/components/countdown/countdown';
+import LoadingFadeModule from '../lib/gj-lib-client/components/loading/fade/fade';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -375,6 +377,8 @@ const AppModule = angular.module( 'App', [
 	'App.Terms.ChangeAlert',
 
 	GameModLinksModule,
+	CountdownModule,
+	LoadingFadeModule,
 
 	// Views.
 	ViewsModule,

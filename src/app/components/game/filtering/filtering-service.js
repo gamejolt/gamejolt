@@ -10,6 +10,7 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 			type: 'radio',
 			options: {
 				free: gettextCatalog.getString( 'Free / Name Your Price' ),
+				sale: gettextCatalog.getString( 'On Sale' ),
 				paid: gettextCatalog.getString( 'Paid' ),
 				'5-less': gettextCatalog.getString( '$5 or less' ),
 				'15-less': gettextCatalog.getString( '$15 or less' ),
