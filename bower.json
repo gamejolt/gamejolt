@@ -36,8 +36,7 @@
     "angularjs-slider": "2.13.0",
     "angular-credit-cards": "3.0.0",
     "angular-ui-mask": "1.8.3",
-    "ngTimezone": "*",
-    "spectrum": "1.3.3"
+    "ngTimezone": "*"
   },
   "resolutions": {
     "moment": "2.9.0",
