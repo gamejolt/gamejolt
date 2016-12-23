@@ -183,3 +183,42 @@ gj-game-thumbnail
 
 			&.muted
 				color: $gray-lighter
+
+
+		// This is way too complex.
+		&-sale
+			height: 36px
+			line-height: @height
+			top: -(@height)
+
+			.game-thumbnail-pricing
+
+				&-sale-percentage
+					display: inline-block
+					vertical-align: top
+					margin-left: -10px
+					margin-right: 10px
+					padding-left: 10px
+					padding-right: 10px
+					height: 36px
+					line-height: @height
+					font-weight: bold
+					background-color: $gj-green
+					color: $black
+
+				&-container
+					display: inline-block
+					height: 36px
+					padding-top: 3px
+					padding-bottom: 3px
+					vertical-align: top
+
+				&-amount
+					line-height: 20px
+
+				&-amount-old
+					color: $gray-lighter
+					text-decoration: line-through
+					font-size: $font-size-tiny
+					line-height: 10px
+					vertical-align: text-bottom

@@ -9,7 +9,10 @@ var config = {
 			'src/bindHtml/bindHtml.js',
 			'src/tooltip/tooltip.js',
 			'src/collapse/collapse.js',
-			'src/modal/modal.js'
+			'src/modal/modal.js',
+			'src/dateparser/dateparser.js',
+			'src/datepicker/datepicker.js',
+			'src/timepicker/timepicker.js',
 		],
 	},
 	rollup: {
@@ -94,8 +97,15 @@ var config = {
 				'forms/dashboard',
 				'site-analytics',
 			],
+			libComponents: [
+				'timezone',
+			],
 			views: [
 				'dashboard',
+			],
+			bower: [
+				'moment-timezone',
+				'ngTimezone',
 			]
 		},
 		'forums.js': {
