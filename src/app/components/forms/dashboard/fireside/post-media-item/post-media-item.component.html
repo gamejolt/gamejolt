@@ -1,0 +1,25 @@
+<form gj-form="formModel" name="mediaItemForm">
+	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
+
+		<form-group name="image" hide-label="true">
+
+			<p class="help-block" ng-show="type != 'header' ? 'form-group': ''">
+				Your image must be a PNG, JPG, or GIF. <br>
+				<strong>PNGs are recommended.</strong>
+			</p>
+
+			<gj-form-upload-control
+				name="image"
+				ng-model="formModel.file"
+				gj-upload-progress-handler="formState.progress"
+				gj-file-select="onSubmit()"
+				accept=".png,.jpg,.jpeg,.gif"
+				>
+			</gj-form-upload-control>
+
+			<control-errors></control-errors>
+
+		</form-group>
+
+	</div>
+</form>

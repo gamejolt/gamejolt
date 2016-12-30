@@ -129,6 +129,16 @@ var config = {
 				'radio',
 			]
 		},
+		'fireside.js': {
+			main: '/views/fireside/fireside.ts',
+			views: [
+				'fireside',
+			],
+			components: [
+				'fireside/post/feed',
+				'fireside/post/tags-list',
+			],
+		},
 
 		// For client.
 		'client.js': {

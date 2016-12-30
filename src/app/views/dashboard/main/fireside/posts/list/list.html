@@ -1,0 +1,49 @@
+<section class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+
+				<h1 class="section-header sr-only">
+					Your Posts
+				</h1>
+
+				<div class="new-post-widget" ng-class="{ 'is-adding': listCtrl.isShowingAddInput }">
+
+					<a class="new-post-widget-button"
+						ng-show="!listCtrl.isShowingAddInput"
+						ng-click="listCtrl.isShowingAddInput = true">
+						New Post...
+					</a>
+
+					<div class="new-post-widget-input" ng-show="listCtrl.isShowingAddInput">
+						<input type="text"
+							ng-model="listCtrl.newPostTitle"
+							ng-keyup="listCtrl.onNewPostKeypress( $event )"
+							gj-focus-when="listCtrl.isShowingAddInput"
+							placeholder="Enter post title..."
+							>
+					</div>
+				</div>
+
+				<ul class="dash-post-list">
+
+					<li ng-repeat="post in listCtrl.posts track by post.id">
+						<a ui-sref="dashboard.main.fireside.posts.edit( { postId: post.id } )">
+							<div class="dash-post-list-likes" ng-class="::{ 'has-likes': post.like_count > 0 }">
+								<span class="number">{{ ::post.like_count | number }}</span>
+								<span class="jolticon jolticon-heart"></span>
+							</div>
+							<div class="dash-post-list-title">{{ ::post.title }}</div>
+							<div class="dash-post-list-tags">
+								<span class="tag" ng-show="::(post.status == listCtrl.postModel.STATUS_DRAFT)">DRAFT</span>
+								<span class="tag tag-active" ng-show="::(post.status == listCtrl.postModel.STATUS_ACTIVE)">PUBLISHED</span>
+							</div>
+						</a>
+					</li>
+
+				</ul>
+
+			</div>
+		</div>
+	</div>
+</section>

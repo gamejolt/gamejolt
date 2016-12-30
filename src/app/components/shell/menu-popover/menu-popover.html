@@ -36,6 +36,12 @@
 				<span class="jolticon jolticon-tag"></span>
 				<span translate>Channels</span>
 			</a>
+			<a class="list-group-item has-icon offline-disable" ui-sref="fireside.home"
+				gj-track-event="discover-nav:fireside"
+				>
+				<span class="jolticon jolticon-blog-article"></span>
+				<span translate>Fireside</span>
+			</a>
 			<a ng-if="Screen.isXs" class="list-group-item has-icon offline-disable" ui-sref="search.results"
 				ui-sref-opts="{ inherit: false }"
 				gj-track-event="discover-nav:search"
@@ -89,13 +95,6 @@
 		<div class="menu-popover-separator"></div>
 
 		<div class="list-group">
-
-			<a class="list-group-item" ng-href="{{ ::Environment.firesideBaseUrl }}"
-				title="Fireside - Indie gaming opinions, news, and reviews"
-				gj-track-event="discover-nav:fireside"
-				>
-				<img src="/lib/gj-lib-client/components/site-selector/jolt-fireside.png" width="155" style="margin-top: -8px; margin-bottom: -2px" alt="Fireside">
-			</a>
 
 			<a class="list-group-item" ng-href="{{ ::Environment.jamsBaseUrl }}"
 				title="Game Jolt Jams"

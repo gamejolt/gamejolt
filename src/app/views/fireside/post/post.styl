@@ -1,0 +1,65 @@
+.ctrl-fireside-post-page
+
+	.fireside-post-header
+
+		.media-item-cover img
+			opacity: 0.7
+
+		h1
+			font-weight: bold
+			line-height: 1.2
+
+		.lead
+			@extend h4
+			margin: 0
+			margin-top: $font-size-base
+			color: $white
+			font-weight: 300
+
+		.fireside-post-tags-list
+			display: block
+			margin-top: $font-size-base
+
+			> .jolticon
+				color: $white
+				opacity: 0.5
+
+			.fireside-post-tags-list-tag
+				color: $white
+				opacity: 0.7
+				transition: opacity 400ms
+
+				&:hover
+					opacity: 1
+					transition: none
+
+		&-author
+			margin-top: $grid-gutter-width
+
+		&-time
+			font-size: $font-size-small
+
+		&-author-username
+			font-weight: bold
+
+			&:hover
+				text-decoration: underline
+
+	.about-author
+
+		.user-avatar
+			float: right
+			width: 100px
+			margin-left: $grid-gutter-width
+			margin-bottom: @margin-left
+
+			// There was a bug where the about the author heading was overlapping the user avatar.
+			// This makes sure that it goes over the heading.
+			position: relative
+			z-index: 1
+
+	// Copy the amount of margin of a heading.
+	// This way if the post doesn't have a heading, the ad still has the correct spacing underneath it.
+	.post-section .ad
+	.comments-section .ad
+		margin-bottom: ($line-height-computed * 2.5)

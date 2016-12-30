@@ -21,6 +21,12 @@
 					</a>
 				</li>
 				<li>
+					<a ui-sref="dashboard.main.fireside.posts.list" ng-class="{ active: $state.includes( 'dashboard.main.fireside') }">
+						<span translate>Fireside</span>
+						<span class="tag tag-active" translate>New!</span>
+					</a>
+				</li>
+				<li>
 					<a ui-sref="dashboard.main.purchases.list" ng-class="{ active: $state.includes( 'dashboard.main.purchases') }" translate>
 						Purchases
 					</a>

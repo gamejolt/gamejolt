@@ -1,0 +1,41 @@
+<!--<section class="section fill-lightest">
+	<div class="container">
+		<p class="text-center">
+			<img src="/app/img/logo-large.png" style="width: 400px; max-width: 100%" alt="Fireside">
+		</p>
+		<p class="lead text-center text-muted">
+			Why not be utterly consumed in the Fire?
+		</p>
+	</div>
+</section>-->
+
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+
+				<gj-post-feed
+					id="latest-posts"
+					posts="homeCtrl.latestPosts"
+					>
+				</gj-post-feed>
+
+				<hr>
+
+				<gj-pagination
+					pager="true"
+					items-per-page="homeCtrl.pagination.perPage"
+					total-items="homeCtrl.pagination.count"
+					current-page="homeCtrl.pagination.page"
+					previous-text="&laquo; Newer"
+					next-text="Older &raquo;"
+					on-page-change="Scroll.to( 'latest-posts' )"
+					>
+				</gj-pagination>
+
+			</div>
+		</div>
+
+	</div>
+</section>

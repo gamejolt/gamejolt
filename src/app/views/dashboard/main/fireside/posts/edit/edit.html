@@ -1,0 +1,103 @@
+<gj-page-header
+	class="fireside-post-header"
+	hide-nav="true"
+	col-classes="col-lg-7 col-centered"
+	cover-media-item="editCtrl.post.header"
+	cover-max-height="500"
+	>
+
+	<gj-page-header-content>
+
+		<div class="well fill-darker">
+
+			<h4 class="section-header">
+				Upload Header Image
+				<small>(<a ng-href="{{ ::editCtrl.env.helpBaseUrl }}/fireside-headers" target="_blank">what is this?</a>)</small>
+			</h4>
+
+			<gj-form-dashboard-fireside-post-media-item
+				gj-post="editCtrl.post"
+				gj-media-item-type="header"
+				gj-form-submit-handler="editCtrl.onHeaderChanged( formModel )"
+				>
+			</gj-form-dashboard-fireside-post-media-item>
+
+			<a class="btn btn-danger-outline"
+				ng-if="editCtrl.post.header"
+				ng-click="editCtrl.clearHeader()"
+				ng-class="{ 'btn-block': Screen.isXs }"
+				>
+				<span class="jolticon jolticon-remove"></span>
+				<span translate>Clear Header</span>
+			</a>
+
+		</div>
+
+	</gj-page-header-content>
+
+</gj-page-header>
+
+<section class="section fill-lightest">
+	<div class="container">
+
+		<div class="pull-left">
+			<p>
+				<span class="tag big" ng-if="editCtrl.post.status == 'draft'" translate>Draft</span>
+				<span class="tag tag-active big" ng-if="editCtrl.post.status == 'active'" translate>Published</span>
+			</p>
+
+			<p class="small">
+				<strong translate>Views</strong>:
+				{{ editCtrl.post.view_count || 0 | number }}
+				<br>
+
+				<strong translate>Likes</strong>:
+				{{ editCtrl.post.like_count || 0 | number }}
+				<br>
+
+				<span ng-if="editCtrl.post.published_on">
+					<strong translate>Posted On</strong>:
+					{{ editCtrl.post.published_on | date:'medium' }}
+					<em>(<span am-time-ago="editCtrl.post.published_on"></span>)</em>
+				</span>
+			</p>
+		</div>
+
+		<div class="pull-right">
+			<p>
+				<a class="btn" ui-sref="fireside.post( { username: editCtrl.post.user.username, slug: editCtrl.post.slug } )">
+					<span class="jolticon jolticon-share"></span>
+					View Post
+				</a>
+
+				<a class="btn btn-danger-outline" ng-click="editCtrl.removePost()">
+					<span class="jolticon jolticon-remove"></span>
+					Remove Post
+				</a>
+			</p>
+		</div>
+
+	</div>
+</section>
+
+<section class="section">
+	<div class="container">
+
+		<h1 class="section-header" translate>
+			Edit Post
+		</h1>
+
+		<div class="row">
+			<div class="col-md-10 col-lg-7">
+
+				<gj-form-dashboard-fireside-post
+					gj-fireside-post="editCtrl.post"
+					gj-form-submit-handler="editCtrl.onPostEdited()"
+					>
+				</gj-form-dashboard-fireside-post>
+
+			</div>
+		</div>
+
+	</div>
+</section>
