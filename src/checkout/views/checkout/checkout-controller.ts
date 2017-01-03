@@ -1,5 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../app-service';
+import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 
 @Injectable()
 export class CheckoutCtrl
@@ -12,7 +13,7 @@ export class CheckoutCtrl
 	constructor(
 		@Inject( '$window' ) private $window: ng.IWindowService,
 		@Inject( 'App' ) app: App,
-		@Inject( 'Environment' ) private environment: any,
+		@Inject( 'Environment' ) private environment: Environment,
 		@Inject( 'Sellable' ) sellable: any,
 		@Inject( 'Game' ) game: any,
 		@Inject( 'Growls' ) private growls: any,

@@ -1,6 +1,9 @@
 import { bootstrap } from 'ng-metadata/platform';
 import { enableProdMode, provide } from 'ng-metadata/core';
 
+import { isClient } from '../lib/gj-lib-client/components/environment/environment.service';
+
+import EnvironmentModule from '../lib/gj-lib-client/components/environment/environment';
 import ConnectionModule from './../lib/gj-lib-client/components/connection/connection';
 import ConnectionStatePermissionsModule from './../lib/gj-lib-client/components/connection/state-permissions/state-permissions';
 import ModelModule from './../lib/gj-lib-client/components/model/model';
@@ -39,15 +42,13 @@ const AppModule = angular.module( 'App', [
 	// GJ lib.
 	'gj.Translate',
 	'gj.Translate.LangSelector',
-	'gj.Environment',
+	EnvironmentModule,
 	'gj.Api',
 	'gj.Payload',
 	ModelModule,
 	MetaModule,
 	'gj.Error',
 
-	'gj.Debug',
-	'gj.Debug.DebugBar',
 	RulerModule,
 	ScreenModule,
 	'gj.BodyClasses',
@@ -88,7 +89,6 @@ const AppModule = angular.module( 'App', [
 	$locationProvider: ng.ILocationProvider,
 	$uiViewScrollProvider: ng.ui.IUiViewScrollProvider,
 	$compileProvider: ng.ICompileProvider,
-	EnvironmentProvider: any,
 	$sceDelegateProvider: ng.ISCEDelegateProvider,
 	TranslateProvider: any,
 )
@@ -101,19 +101,8 @@ const AppModule = angular.module( 'App', [
 	$locationProvider.html5Mode( true ).hashPrefix( '!' );
 	$uiViewScrollProvider.useAnchorScroll();
 
-	if ( GJ_ENVIRONMENT == 'development' ) {
-		EnvironmentProvider.env = 'development';
-	}
-
-	if ( GJ_BUILD_TYPE == 'development' ) {
-		EnvironmentProvider.buildType = 'development';
-	}
-
-	// We are on WTTF!
-	EnvironmentProvider.isWttf = true;
-
 	// Desktop client.
-	if ( EnvironmentProvider.isClient ) {
+	if ( isClient ) {
 
 		// Some libraries attach onto global instead of window for node-webkit
 		// because they think they're in nodejs context. Just pull back over to window.

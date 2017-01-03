@@ -1,6 +1,8 @@
 import { bootstrap } from 'ng-metadata/platform';
 import { enableProdMode, provide } from 'ng-metadata/core';
 
+import { isClient } from '../lib/gj-lib-client/components/environment/environment.service';
+
 import ConnectionModule from './../lib/gj-lib-client/components/connection/connection';
 import ConnectionStatePermissionsModule from './../lib/gj-lib-client/components/connection/state-permissions/state-permissions';
 import ModelModule from './../lib/gj-lib-client/components/model/model';
@@ -15,6 +17,7 @@ import CardModule from './../lib/gj-lib-client/components/card/card';
 import HistoryTickModule from './../lib/gj-lib-client/components/history-tick/history-tick';
 import PaginationModule from '../lib/gj-lib-client/components/pagination/pagination';
 import ModalConfirmModule from './../lib/gj-lib-client/components/modal/confirm/confirm';
+import EnvironmentModule from '../lib/gj-lib-client/components/environment/environment';
 
 import gjNotificationModule from './../lib/gj-lib-client/components/notification/notification';
 import CommentModule from './../lib/gj-lib-client/components/comment/comment';
@@ -111,7 +114,7 @@ const AppModule = angular.module( 'App', [
 	'gj.Translate',
 	'gj.Translate.LangSelector',
 	'gj.Geo',
-	'gj.Environment',
+	EnvironmentModule,
 	'gj.Api',
 	'gj.Payload',
 	ModelModule,
@@ -385,7 +388,6 @@ const AppModule = angular.module( 'App', [
 	$locationProvider: ng.ILocationProvider,
 	$uiViewScrollProvider: ng.ui.IUiViewScrollProvider,
 	$compileProvider: ng.ICompileProvider,
-	EnvironmentProvider: any,
 	$sceDelegateProvider: ng.ISCEDelegateProvider,
 	amTimeAgoConfig: any,
 	TranslateProvider: any,
@@ -399,22 +401,11 @@ const AppModule = angular.module( 'App', [
 	$locationProvider.html5Mode( true ).hashPrefix( '!' );
 	$uiViewScrollProvider.useAnchorScroll();
 
-	if ( GJ_ENVIRONMENT == 'development' ) {
-		EnvironmentProvider.env = 'development';
-	}
-
-	if ( GJ_BUILD_TYPE == 'development' ) {
-		EnvironmentProvider.buildType = 'development';
-	}
-
 	amTimeAgoConfig.fullDateThreshold = 30;
 	amTimeAgoConfig.fullDateFormat = 'll';
 
-	// We are on WTTF!
-	EnvironmentProvider.isWttf = true;
-
 	// Desktop client.
-	if ( EnvironmentProvider.isClient ) {
+	if ( isClient ) {
 
 		// Some libraries attach onto global instead of window for node-webkit
 		// because they think they're in nodejs context. Just pull back over to window.
