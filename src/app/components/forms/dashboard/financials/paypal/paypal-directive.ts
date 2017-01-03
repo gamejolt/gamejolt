@@ -1,4 +1,5 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
+import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import template from 'html!./paypal.html';
 
 @Component({
@@ -14,7 +15,7 @@ export class PaypalComponent
 		@Inject( '$window' ) private $window: ng.IWindowService,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'Api' ) private api: any,
-		@Inject( 'Environment' ) private env: any,
+		@Inject( 'Environment' ) private env: Environment,
 		@Inject( 'Growls' ) private growls: any,
 	)
 	{

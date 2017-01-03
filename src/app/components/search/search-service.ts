@@ -1,5 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { SearchPayload } from './payload-service';
+import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 
 export interface SearchOptions
 {
@@ -17,7 +18,7 @@ export class Search
 		@Inject( '$injector' ) $injector: any,
 		@Inject( '$q' ) private $q: ng.IQService,
 		@Inject( 'orderByFilter' ) private orderByFilter: ng.IFilterOrderBy,
-		@Inject( 'Environment' ) environment: any,
+		@Inject( 'Environment' ) environment: Environment,
 		@Inject( 'Api' ) private api: any,
 		@Inject( 'Fuzzysearch' ) private fuzzysearch: any,
 		@Inject( 'SearchPayload' ) private searchPayload: typeof SearchPayload

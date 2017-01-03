@@ -1,5 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { Meta } from './../lib/gj-lib-client/components/meta/meta-service';
+import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 
 @Injectable()
 export class App
@@ -15,7 +16,7 @@ export class App
 	constructor(
 		@Inject( '$window' ) private $window: ng.IWindowService,
 		@Inject( 'Meta' ) private meta: Meta,
-		@Inject( 'Environment' ) private environment: any
+		@Inject( 'Environment' ) private environment: Environment,
 	)
 	{
 	}

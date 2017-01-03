@@ -1,5 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { Meta } from './../../../lib/gj-lib-client/components/meta/meta-service';
+import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 
 @Injectable()
 export class RadioCtrl
@@ -11,7 +12,7 @@ export class RadioCtrl
 	currentSongDuration: number;
 
 	constructor(
-		@Inject( 'Environment' ) env: any,
+		@Inject( 'Environment' ) env: Environment,
 		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( 'Api' ) private api: any,
 		@Inject( 'Game_Song' ) private songModel: any,

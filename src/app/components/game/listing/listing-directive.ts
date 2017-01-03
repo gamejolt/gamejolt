@@ -1,6 +1,7 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
 import { GameListingContainer } from './listing-container-service';
 import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import template from 'html!./listing.html';
 
 @Component({
@@ -23,7 +24,7 @@ export class ListingComponent
 	constructor(
 		@Inject( '$state' ) $state: ng.ui.IStateService,
 		@Inject( 'Screen' ) public screen: Screen,
-		@Inject( 'Environment' ) public env: any,
+		@Inject( 'Environment' ) public env: Environment,
 		@Inject( 'Scroll' ) public scroll: any,
 	)
 	{

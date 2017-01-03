@@ -5,6 +5,7 @@ import { App } from './../../../../../app-service';
 import { DevlogPostEdit } from './../../../../devlog/post/edit/edit-service';
 import { Clipboard } from './../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { Screen } from './../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import template from 'html!./controls.html';
 
 @Component({
@@ -36,7 +37,7 @@ export class ControlsComponent implements OnInit
 	constructor(
 		@Inject( '$state' ) $state: ng.ui.IStateService,
 		@Inject( 'App' ) public app: App,
-		@Inject( 'Environment' ) public env: any,
+		@Inject( 'Environment' ) public env: Environment,
 		@Inject( 'Clipboard' ) private clipboard: Clipboard,
 		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'Fireside_Post' ) public firesidePostModel: typeof Fireside_Post,

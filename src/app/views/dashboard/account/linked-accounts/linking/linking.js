@@ -1,9 +1,5 @@
-angular.module( 'App.Views' ).config( function( $stateProvider, EnvironmentProvider )
+angular.module( 'App.Views' ).config( function( $stateProvider )
 {
-	if ( !EnvironmentProvider.isClient ) {
-		return;
-	}
-
 	$stateProvider.state( 'dashboard.account.linked-accounts.linking', {
 		url: '/linking?token',
 		views: {

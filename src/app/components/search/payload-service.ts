@@ -1,4 +1,5 @@
 import { Injectable } from 'ng-metadata/core';
+import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 
 export function SearchPayloadFactory(
 	$injector: any,
@@ -18,7 +19,7 @@ export function SearchPayloadFactory(
 export class SearchPayload
 {
 	static $injector: any;
-	static Environment: any;
+	static Environment: Environment;
 	static User: any;
 	static Game: any;
 

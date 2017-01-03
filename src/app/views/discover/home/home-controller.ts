@@ -2,6 +2,7 @@ import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../app-service';
 import { Meta } from './../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 
 interface DiscoverSection {
 	title: string;
@@ -35,7 +36,7 @@ export class HomeCtrl
 		@Inject( '$state' ) $state: ng.ui.IStateService,
 		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'App' ) app: App,
-		@Inject( 'Environment' ) Environment: any,
+		@Inject( 'Environment' ) env: Environment,
 		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'Game' ) gameModel: any,
 		@Inject( 'FeaturedItem' ) featuredItemModel: any,
@@ -49,7 +50,7 @@ export class HomeCtrl
 		meta.fb = payload.fb;
 		meta.twitter = payload.twitter;
 		meta.fb.image = meta.twitter.image = '/app/img/social/social-share-header.png';
-		meta.fb.url = meta.twitter.url = Environment.baseUrl;
+		meta.fb.url = meta.twitter.url = env.baseUrl;
 
 		meta.microdata = {
 			'@context': 'http://schema.org',

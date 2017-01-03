@@ -6,6 +6,7 @@ import { Search } from './../search-service';
 import { SearchComponent } from './../search-directive';
 import { Search_History } from './../history/history-service';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
+import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -73,7 +74,7 @@ export class AutocompleteComponent implements OnInit
 		@Inject( 'orderByFilter' ) orderByFilter: ng.IFilterOrderBy,
 		@Inject( 'hotkeys' ) private hotkeys: ng.hotkeys.HotkeysProvider,
 		@Inject( 'gettext' ) gettext: ng.gettext.gettextFunction,
-		@Inject( 'Environment' ) private environment: any,
+		@Inject( 'Environment' ) private environment: Environment,
 		@Inject( 'App' ) private app: App,
 		@Inject( 'Analytics' ) private analytics: any,
 		@Inject( 'Search' ) private Search: Search,

@@ -1,4 +1,5 @@
 import { Component, Input, Inject } from 'ng-metadata/core';
+import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import template from 'html!./mod-links.component.html';
 
 @Component({
@@ -10,7 +11,7 @@ export class GameModLinksComponent
 	@Input( '<' ) game: any;
 
 	constructor(
-		@Inject( 'Environment' ) public env: any,
+		@Inject( 'Environment' ) public env: Environment,
 		@Inject( 'Api' ) private api: any,
 		@Inject( 'Growls' ) public growls: any,
 	)
