@@ -79,7 +79,7 @@ export class HomeCtrl
 
 		const bestSection = {
 			title: gettextCatalog.getString( 'Best Games' ),
-			url: $state.href( 'discover.games.list._fetch', { section: 'featured' } ),
+			url: $state.href( 'discover.games.list._fetch', { section: 'best' } ),
 			eventLabel: 'best-games',
 			items: this.bestGames,
 		};
