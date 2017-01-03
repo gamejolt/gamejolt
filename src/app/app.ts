@@ -125,8 +125,6 @@ const AppModule = angular.module( 'App', [
 	'gj.Fuzzysearch',
 	'gj.Currency',
 
-	'gj.Debug',
-	'gj.Debug.DebugBar',
 	RulerModule,
 	ScreenModule,
 	LoadModule,
