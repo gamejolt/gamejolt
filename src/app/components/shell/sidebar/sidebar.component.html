@@ -211,6 +211,7 @@
 					popover-trigger-event="hover"
 					popover-trigger-disabled="!$ctrl.shell.isLeftPaneVisible || $ctrl.screen.isMobile"
 					>
+					<span class="shell-nav-chevron jolticon jolticon-chevron-right hidden-xs hidden-sm"></span>
 					<span class="shell-nav-icon"
 						gj-popover-trigger="shell-sidebar-games"
 						popover-trigger-event="hover"
@@ -218,7 +219,6 @@
 						>
 						<span class="jolticon jolticon-game"></span>
 					</span>
-					<span class="shell-nav-chevron jolticon jolticon-chevron-right hidden-xs hidden-sm"></span>
 					<span class="shell-nav-label" translate>
 						Browse Games
 					</span>
@@ -269,6 +269,7 @@
 					popover-trigger-event="{{ $ctrl.screen.isMobile ? 'click' : 'hover' }}"
 					popover-trigger-disabled="!$ctrl.shell.isLeftPaneVisible"
 					>
+					<span class="shell-nav-chevron jolticon jolticon-chevron-right"></span>
 					<span class="shell-nav-icon"
 						gj-popover-trigger="shell-sidebar-more"
 						popover-trigger-event="hover"
@@ -276,7 +277,6 @@
 						>
 						<span class="jolticon jolticon-ellipsis-h"></span>
 					</span>
-					<span class="shell-nav-chevron jolticon jolticon-chevron-right"></span>
 					<span class="shell-nav-label" translate>
 						More
 					</span>
@@ -300,16 +300,16 @@
 						gj-track-event="sidebar:activity"
 						gj-activity-notification-count="$ctrl.notificationsCount = $count"
 						>
+						<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
+							ng-if="$ctrl.notificationsCount > 0"
+							>
+							{{ $ctrl.notificationsCount < 100 ? $ctrl.notificationsCount : '99+' }}
+						</span>
 						<span class="shell-nav-icon"
 							gj-tooltip="{{ !$ctrl.shell.isLeftPaneVisible ? 'Activity Feed' : '' }}"
 							tooltip-placement="right"
 							>
 							<span class="jolticon jolticon-feed"></span>
-						</span>
-						<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
-							ng-if="$ctrl.notificationsCount > 0"
-							>
-							{{ $ctrl.notificationsCount < 100 ? $ctrl.notificationsCount : '99+' }}
 						</span>
 						<span class="shell-nav-label" translate>
 							Activity Feed

@@ -16,7 +16,8 @@ ul.shell-nav
 		margin-left: 5px
 
 	.shell-nav-icon
-		display: inline-block
+		display: block
+		float: left
 		width: $shell-nav-item-height
 		line-height: $shell-nav-item-height
 		color: $shell-nav-item-color
@@ -24,6 +25,10 @@ ul.shell-nav
 
 		.jolticon
 			vertical-align: middle
+
+	.shell-nav-label
+		text-overflow()
+		display: block
 
 	.user-avatar
 		display: inline-block
@@ -54,7 +59,7 @@ ul.shell-nav
 		margin-bottom: 0
 
 		> a
-			text-overflow()
+			@extend .clearfix
 			position: relative
 			display: block
 			color: $shell-nav-item-color

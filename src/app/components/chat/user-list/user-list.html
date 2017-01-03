@@ -46,44 +46,49 @@
 					</span>
 				</div>
 
-				<div class="chat-user-avatar">
-					<img ng-src="{{ ::user.imgAvatar }}" />
+				<div class="shell-nav-icon">
+					<div class="user-avatar">
+						<img ng-src="{{ ::user.imgAvatar }}" />
 
-					<span class="chat-user-status"
-						ng-if="::user.isOnline !== undefined"
-						ng-class="::{
-							'offline': !user.isOnline,
-							'online active': user.isOnline,
-						}"
-						>
-					</span>
+						<span class="chat-user-status"
+							ng-if="::user.isOnline !== undefined"
+							ng-class="::{
+								'offline': !user.isOnline,
+								'online active': user.isOnline,
+							}"
+							>
+						</span>
+					</div>
 				</div>
 
-				<!-- Only show tags in room user lists -->
-				<span ng-if="::ctrl.room">
-					<span class="chat-user-role tag tag-active" ng-if="::user.isMod == 'owner'" tooltip="{{ 'Room Admin' | translate }}">A</span>
-					<span class="chat-user-role tag tag-active" ng-if="::user.isMod == 'moderator'" tooltip="{{ 'Room Moderator' | translate }}">M</span>
-					<span class="chat-user-role tag tag-active" ng-if="::user.permissionLevel >= ChatConfig.SITE_MOD_PERMISSION" tooltip="{{ 'Site Moderator' | translate }}">S</span>
-					<span class="chat-user-role tag tag-pink" ng-if="::ctrl.showModTools && (user.isMutedRoom || user.isMutedGlobal)" tooltip="{{ 'Muted' | translate }}">
-						&#x274C;
+				<div class="shell-nav-label">
+
+					<!-- Only show tags in room user lists -->
+					<span ng-if="::ctrl.room">
+						<span class="chat-user-role tag tag-active" ng-if="::user.isMod == 'owner'" tooltip="{{ 'Room Admin' | translate }}">A</span>
+						<span class="chat-user-role tag tag-active" ng-if="::user.isMod == 'moderator'" tooltip="{{ 'Room Moderator' | translate }}">M</span>
+						<span class="chat-user-role tag tag-active" ng-if="::user.permissionLevel >= ChatConfig.SITE_MOD_PERMISSION" tooltip="{{ 'Site Moderator' | translate }}">S</span>
+						<span class="chat-user-role tag tag-pink" ng-if="::ctrl.showModTools && (user.isMutedRoom || user.isMutedGlobal)" tooltip="{{ 'Muted' | translate }}">
+							&#x274C;
+						</span>
 					</span>
-				</span>
 
-				<!-- Useful for debugging. -->
-				<!--{{ user._trackId }}-->
+					<!-- Useful for debugging. -->
+					<!--{{ user._trackId }}-->
 
-				<span>{{ ::user.displayName }}</span>
-				<span class="tiny">@{{ ::user.username }}</span>
+					<span>{{ ::user.displayName }}</span>
+					<span class="tiny">@{{ ::user.username }}</span>
 
-				<div class="chat-user-list-meta">
+					<div class="chat-user-list-meta">
 
-					<!--
-						We have to make sure that it doesn't return undefined' if there is none, or it won't bind once.
-						Angular waits until the thing it's watching is undefined to bind once.
-					-->
-					<!-- <span ng-if="::user.currently_playing !== undefined && user.currently_playing">
-						Playing <em>{{ ::user.currently_playing.game }}</em>
-					</span> -->
+						<!--
+							We have to make sure that it doesn't return undefined' if there is none, or it won't bind once.
+							Angular waits until the thing it's watching is undefined to bind once.
+						-->
+						<!-- <span ng-if="::user.currently_playing !== undefined && user.currently_playing">
+							Playing <em>{{ ::user.currently_playing.game }}</em>
+						</span> -->
+					</div>
 				</div>
 
 			</a>

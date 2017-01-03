@@ -14,10 +14,10 @@
 					ng-class="{ active: client.room.id == room.id }"
 					title="{{ ::room.title }}"
 					>
+					<span class="tag tag-pink notifications-tag" ng-if="client.roomId == room.id && Chat.roomNotifications">{{ Chat.roomNotifications | number }}</span>
 					<span class="shell-nav-icon">
 						<span class="jolticon jolticon-number-sign"></span>
 					</span>
-					<span class="tag tag-pink notifications-tag" ng-if="client.roomId == room.id && Chat.roomNotifications">{{ Chat.roomNotifications | number }}</span>
 					<span class="shell-nav-label">
 						{{ ::room.title }}
 					</span>
