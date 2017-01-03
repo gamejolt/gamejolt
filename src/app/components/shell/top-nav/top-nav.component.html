@@ -5,9 +5,11 @@
 		<!-- Mobile Menu Toggle -->
 		<ul class="navbar-items">
 			<li>
-				<a ng-class="{ active: isMainMenuActive }"
+				<a
+					ng-class="{ active: $ctrl.shell.isLeftPaneVisible }"
+					ng-click="$ctrl.shell.toggleLeftPane()"
 					gj-popover-trigger="main-menu"
-					gj-tooltip="{{ 'Menu' | translate }}" tooltip-placement="right"
+					gj-tooltip="{{ 'Menu (m)' | translate }}" tooltip-placement="right"
 					gj-track-event="top-nav:main-menu:toggle"
 					>
 					<span class="jolticon jolticon-menu"></span>
@@ -15,17 +17,12 @@
 			</li>
 		</ul>
 
-		<gj-shell-menu-popover
-			is-shown="isMainMenuActive"
-			>
-		</gj-shell-menu-popover>
-
 		<!-- History Navigator (for desktop client) -->
-		<gj-client-history-navigator ng-if="Environment.isClient"></gj-client-history-navigator>
+		<gj-client-history-navigator ng-if="$ctrl.env.isClient"></gj-client-history-navigator>
 
-		<a class="navbar-item" ui-sref="discover.home" ng-if="!Screen.isXs">
-			<img ng-if="!Screen.isMobile" src="/lib/gj-lib-client/components/site-selector/game-jolt-logo.svg" alt="Game Jolt">
-			<img ng-if="Screen.isSm" src="/lib/gj-lib-client/components/site-selector/jolt.svg" alt="Game Jolt">
+		<a class="navbar-item" ui-sref="discover.home">
+			<img ng-if="!$ctrl.screen.isMobile" src="/lib/gj-lib-client/components/site-selector/game-jolt-logo.svg" alt="Game Jolt">
+			<img ng-if="$ctrl.screen.isMobile" src="/lib/gj-lib-client/components/site-selector/jolt.svg" alt="Game Jolt">
 		</a>
 
 		<div class="navbar-separator hidden-xs"></div>
@@ -35,7 +32,7 @@
 	<div class="navbar-center">
 
 		<!-- Search Input -->
-		<gj-search ng-if="!Screen.isXs"></gj-search>
+		<gj-search ng-if="!$ctrl.screen.isXs"></gj-search>
 
 	</div>
 
@@ -43,14 +40,14 @@
 		Cloak this so that it doesn't flash wrong things before we load the user.
 		Fixes: https://github.com/gamejolt/issue-tracker/issues/382
 	-->
-	<div class="navbar-right" ng-if="App.userBootstrapped">
+	<div class="navbar-right" ng-if="$ctrl.app.userBootstrapped">
 
-		<ul class="navbar-items" ng-if="App.user">
+		<ul class="navbar-items" ng-if="$ctrl.app.user">
 
 			<li class="hidden-xs">
 				<a
-					ui-sref="{{ ::Environment.isClient ? 'library.installed' : 'library.overview' }}"
-					ng-class="{ active: $state.includes( 'library' ) }"
+					ui-sref="{{ ::$ctrl.env.isClient ? 'library.installed' : 'library.overview' }}"
+					ng-class="{ active: $ctrl.$state.includes( 'library' ) }"
 					gj-tooltip="{{ 'Your Game Library' | translate }}"
 					tooltip-placement="bottom"
 					gj-track-event="top-nav:library"
@@ -60,10 +57,10 @@
 			</li>
 
 			<!-- Activity -->
-			<li ng-if="!Connection.isClientOffline">
+			<li ng-if="!$ctrl.conn.isClientOffline">
 				<a
 					ui-sref="dashboard.activity.feed( { tab: 'activity' } )"
-					ng-class="{ active: $state.includes( 'dashboard.activity' ) }"
+					ng-class="{ active: $ctrl.$state.includes( 'dashboard.activity' ) }"
 					gj-tooltip="{{ 'Activity' | translate }}"
 					tooltip-placement="bottom"
 					gj-track-event="top-nav:activity:toggle"
@@ -77,7 +74,7 @@
 			</li>
 
 			<!-- Friend Requests -->
-			<li ng-if="!Connection.isClientOffline">
+			<li ng-if="!$ctrl.conn.isClientOffline">
 				<a
 					gj-popover-trigger="friend-requests"
 					ng-class="{ active: friendRequestsShowing }"
@@ -103,7 +100,7 @@
 					gj-popover-trigger="account-popover"
 					gj-track-event="top-nav:user-menu:toggle"
 					>
-					<div class="avatar-circle" gj-user-avatar="App.user"></div>
+					<div class="avatar-circle" gj-user-avatar="$ctrl.app.user"></div>
 				</a>
 				<gj-shell-account-popover
 					is-shown="userMenuShowing"
@@ -113,40 +110,40 @@
 		</ul>
 
 		<!-- Login/Join Buttons -->
-		<ul class="navbar-items" ng-if="!App.user">
+		<ul class="navbar-items" ng-if="!$ctrl.app.user">
 			<li>
-				<a ng-href="{{ ::Environment.authBaseUrl }}/login" target="_self" gj-track-event="top-nav:login:click">
-					<span class="jolticon jolticon-sign-in"></span>
+				<a ng-href="{{ ::$ctrl.env.authBaseUrl }}/login" target="_self" gj-track-event="top-nav:login:click">
+					<span class="jolticon jolticon-sign-in hidden-xs"></span>
 					<span translate>nav.login</span>
 				</a>
 			</li>
 			<li>
-				<a ng-href="{{ ::Environment.authBaseUrl }}/join" target="_self" gj-track-event="top-nav:join:click">
-					<span class="jolticon jolticon-friends"></span>
+				<a ng-href="{{ ::$ctrl.env.authBaseUrl }}/join" target="_self" gj-track-event="top-nav:join:click">
+					<span class="jolticon jolticon-friends hidden-xs"></span>
 					<span translate>nav.join</span>
 				</a>
 			</li>
 		</ul>
 
-		<div class="navbar-separator" ng-if="App.chat || !Connection.isOnline"></div>
+		<div class="navbar-separator" ng-if="$ctrl.shell.chat || !$ctrl.conn.isOnline"></div>
 
 		<!-- Connection Status -->
-		<span ng-if="!Connection.isOnline">
+		<span ng-if="!$ctrl.conn.isOnline">
 			<span class="navbar-item disconnected-icon" tooltip="We're having trouble connecting to Game Jolt." tooltip-placement="left">
 				<span class="jolticon jolticon-offline"></span>
 			</span>
 		</span>
 
 		<!-- Chat -->
-		<ul class="navbar-items" ng-if="App.chat">
+		<ul class="navbar-items" ng-if="$ctrl.shell.chat">
 			<li>
 				<a
-					ng-class="{ active: Shell.isRightPaneVisible }"
-					ng-click="Shell.toggleRightPane()"
-					gj-tooltip="{{ App.user ? 'Chat and Friends List (c)' : 'Chat (c)' }}" tooltip-placement="left"
+					ng-class="{ active: $ctrl.shell.isRightPaneVisible }"
+					ng-click="$ctrl.shell.toggleRightPane()"
+					gj-tooltip="{{ $ctrl.app.user ? 'Chat and Friends List (c)' : 'Chat (c)' }}" tooltip-placement="left"
 					gj-track-event="top-nav:chat:toggle"
 					>
-					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="App.chat.friendNotifications">{{ App.chat.friendNotifications }}</span>
+					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="$ctrl.shell.chat.friendNotifications">{{ $ctrl.shell.chat.friendNotifications }}</span>
 					<span class="jolticon jolticon-user-messages"></span>
 				</a>
 			</li>

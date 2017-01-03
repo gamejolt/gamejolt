@@ -48,6 +48,10 @@ angular.module( 'App.Settings' ).service( 'Settings', function( Environment )
 			type: 'boolean',
 			val: 1,
 		},
+		'sidebar': {
+			type: 'boolean',
+			val: 1,
+		},
 	};
 
 	this.getDefault = function( setting )

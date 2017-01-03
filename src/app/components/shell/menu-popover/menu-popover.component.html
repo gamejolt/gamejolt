@@ -2,8 +2,8 @@
 	popover-id="main-menu"
 	popover-append-to-body="true"
 	popover-position-by="position"
-	popover-on-focus="ctrl.isShown = true"
-	popover-on-blur="ctrl.isShown = false"
+	popover-on-focus="$ctrl.isShown = true"
+	popover-on-blur="$ctrl.isShown = false"
 	popover-hide-on-state-change="true"
 	>
 
@@ -36,7 +36,7 @@
 				<span class="jolticon jolticon-tag"></span>
 				<span translate>Channels</span>
 			</a>
-			<a ng-if="Screen.isXs" class="list-group-item has-icon offline-disable" ui-sref="search.results"
+			<a ng-if="$ctrl.screen.isXs" class="list-group-item has-icon offline-disable" ui-sref="search.results"
 				ui-sref-opts="{ inherit: false }"
 				gj-track-event="discover-nav:search"
 				>
@@ -59,13 +59,13 @@
 			</a>
 		</div>
 
-		<div ng-if="App.user">
+		<div ng-if="$ctrl.app.user">
 			<div class="nav-heading">
-				@{{ App.user.username }}
+				@{{ $ctrl.app.user.username }}
 			</div>
 
 			<div class="list-group thin">
-				<a class="list-group-item has-icon" ui-sref="{{ ::Environment.isClient ? 'library.installed' : 'library.overview' }}"
+				<a class="list-group-item has-icon" ui-sref="{{ ::$ctrl.env.isClient ? 'library.installed' : 'library.overview' }}"
 					gj-track-event="discover-nav:library"
 					>
 					<span class="jolticon jolticon-books"></span>
@@ -90,14 +90,14 @@
 
 		<div class="list-group">
 
-			<a class="list-group-item" ng-href="{{ ::Environment.firesideBaseUrl }}"
+			<a class="list-group-item" ng-href="{{ ::$ctrl.env.firesideBaseUrl }}"
 				title="Fireside - Indie gaming opinions, news, and reviews"
 				gj-track-event="discover-nav:fireside"
 				>
 				<img src="/lib/gj-lib-client/components/site-selector/jolt-fireside.png" width="155" style="margin-top: -8px; margin-bottom: -2px" alt="Fireside">
 			</a>
 
-			<a class="list-group-item" ng-href="{{ ::Environment.jamsBaseUrl }}"
+			<a class="list-group-item" ng-href="{{ ::$ctrl.env.jamsBaseUrl }}"
 				title="Game Jolt Jams"
 				gj-track-event="discover-nav:jams"
 				>
@@ -106,7 +106,7 @@
 			</a>
 
 			<a class="list-group-item" href="/client"
-				ng-if="!Environment.isClient"
+				ng-if="!$ctrl.env.isClient"
 				title="Game Jolt Client"
 				gj-track-event="discover-nav:client"
 				>

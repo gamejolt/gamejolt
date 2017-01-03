@@ -1,6 +1,7 @@
 angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 	$scope, $state, Location, App, Meta, AutoScroll, ModalConfirm, Growls, GamePlaylist_SaveModal,
 	GameCollection, GamePlaylist, GameBundle, User,
+	Shell,
 	gettextCatalog, filteringContainer )
 {
 	var _this = this;
@@ -33,7 +34,7 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 		// We try pulling a populated collection from the registry.
 		// This will be the case if it's in their library.
 		// When they don't have it registered in their library, we just make an instance of a new one.
-		this.collection = _.find( $scope.libraryCtrl.collections, { type: payload.collection.type, id: payload.collection.id } );
+		this.collection = _.find( Shell.collections, { type: payload.collection.type, id: payload.collection.id } );
 		if ( !this.collection ) {
 			this.collection = new GameCollection( payload.collection );
 		}
@@ -144,32 +145,7 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 			Meta.twitter = payload.twitter;
 			Meta.twitter.title = App.title;
 		}
-
-		checkShouldShowSidebar();
 	};
-
-	function checkShouldShowSidebar()
-	{
-		if ( !App.user ) {
-			return;
-		}
-
-		var ctrl = $scope.libraryCtrl;
-
-		ctrl.shouldShowSidebar =
-			(ctrl.followedCollection && _this.collection._id == ctrl.followedCollection._id)
-			|| (ctrl.ownedCollection && _this.collection._id == ctrl.ownedCollection._id)
-			|| (ctrl.developerCollection && _this.collection._id == ctrl.developerCollection._id)
-			|| (ctrl.recommendedCollection && _this.collection._id == ctrl.recommendedCollection._id)
-			|| _.find( (ctrl.collections || []), { _id: _this.collection._id } )
-			|| _.find( (ctrl.bundleCollections || []), { _id: _this.collection._id } )
-			;
-	}
-
-	$scope.$on( '$destroy', function()
-	{
-		$scope.libraryCtrl.shouldShowSidebar = true;
-	} );
 
 	this.shouldShowFollow = function()
 	{
@@ -191,8 +167,7 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 		this.collection.$follow().then( function()
 		{
 			_this.isFollowing = true;
-			$scope.libraryCtrl.collections.push( _this.collection );
-			checkShouldShowSidebar();
+			Shell.collections.push( _this.collection );
 		} );
 	};
 
@@ -201,8 +176,7 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 		this.collection.$unfollow().then( function()
 		{
 			_this.isFollowing = false;
-			_.remove( $scope.libraryCtrl.collections, { type: _this.collection.type, id: _this.collection.id } );
-			checkShouldShowSidebar();
+			_.remove( Shell.collections, { type: _this.collection.type, id: _this.collection.id } );
 		} );
 	};
 
@@ -227,7 +201,7 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 			{
 				_this.playlist.$remove().then( function()
 				{
-					_.remove( $scope.libraryCtrl.collections, { type: _this.collection.type, id: _this.collection.id } );
+					_.remove( Shell.collections, { type: _this.collection.type, id: _this.collection.id } );
 					$state.go( 'library.overview' );
 					Growls.success(
 						gettextCatalog.getString( 'library.playlists.remove_playlist_success_growl', { playlist: _this.playlist.name } ),

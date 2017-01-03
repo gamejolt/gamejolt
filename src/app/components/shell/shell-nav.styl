@@ -1,27 +1,41 @@
 /**
  * Nav menu items.
  */
-$shell-nav-item-spacing = 6px
+$shell-nav-item-spacing = 12px
+$shell-nav-item-height = 50px
+$shell-nav-item-color = $gray-lightest
 
 ul.shell-nav
 	@extend .list-unstyled
-	font-size: $font-size-small
-	margin-bottom: $font-size-base
+	font-size: 15px  // Stupid custom size!
+	margin-bottom: 0
 
 	.tag
 	.badge
 		float: right
 		margin-left: 5px
 
-	.jolticon
-		margin-left: 10px
-		margin-right: 10px
-		vertical-align: text-top
-		color: $gray-light
+	.shell-nav-icon
+		display: inline-block
+		width: $shell-nav-item-height
+		line-height: $shell-nav-item-height
+		color: $shell-nav-item-color
+		text-align: center
 
-		// // Have to override any on-hover colors.
-		// &.active
-		// 	color: $white !important
+		.jolticon
+			vertical-align: middle
+
+	.user-avatar
+		display: inline-block
+		width: 25px
+		vertical-align: middle
+
+	.shell-nav-chevron
+		float: right
+		line-height: $shell-nav-item-height
+
+		.jolticon
+			vertical-align: middle
 
 	// Firefox has a bug if you have a left floated, right floated, and then text-overflow ellipsis content in the middle
 	// it will push the right float down. We can get around it by putting the right float first, but then the content is on top
@@ -43,9 +57,11 @@ ul.shell-nav
 			text-overflow()
 			position: relative
 			display: block
-			color: $gray-light
+			color: $shell-nav-item-color
 			user-select: none
-			padding: $shell-nav-item-spacing 7px
+			padding: 0 7px
+			padding-left: 0
+			line-height: $shell-nav-item-height
 
 			&::before
 				position: absolute
@@ -62,28 +78,29 @@ ul.shell-nav
 				color: $white
 				background-color: $gray-darker
 
-				// .jolticon
-				// 	color: $gray-lightest
-
 			&.no-icon
 				padding-left: 15px
 
 			&.active
 				&
 				&:hover
-					color: $white
+					color: $gj-green
 
 					&::before
 						transform: translate( 0, 0 )
 
 					.jolticon
-						color: $white
+						color: $gj-green
 
 					.tag
 						@extend .tag-pink
 
 					.badge
 						@extend .badge-active
+
+			// On press of it.
+			&:active
+				transform: translateY(2px)
 
 // Nested ULs
 ul.shell-nav ul

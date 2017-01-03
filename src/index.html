@@ -80,12 +80,14 @@
 
 			<gj-offline-alert></gj-offline-alert>
 
+			<gj-shell-sidebar></gj-shell-sidebar>
+
 			<gj-shell-body>
 				<!--<gj-terms-change-alert></gj-terms-change-alert>-->
 				<ui-view id="content" ng-cloak></ui-view>
 			</gj-shell-body>
 
-			<div ng-if="App.chat">
+			<div ng-if="Shell.chat">
 				<gj-shell-chat-pane></gj-shell-chat-pane>
 				<gj-chat-bubbles></gj-chat-bubbles>
 				<gj-chat-windows></gj-chat-windows>

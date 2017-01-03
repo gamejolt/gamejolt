@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Library.OverviewCtrl', function( $scope, $timeout, App, GameCollection, gettextCatalog, libraryPayload )
+angular.module( 'App.Views' ).controller( 'Library.OverviewCtrl', function( $scope, $timeout, App, GameCollection, Shell, gettextCatalog, payload )
 {
 	var _this = this;
 
@@ -27,12 +27,12 @@ angular.module( 'App.Views' ).controller( 'Library.OverviewCtrl', function( $sco
 		}
 	];
 
-	this.followedCollection = libraryPayload.followedCollection ? new GameCollection( libraryPayload.followedCollection ) : null;
-	this.developerCollection = libraryPayload.developerCollection ? new GameCollection( libraryPayload.developerCollection ) : null;
-	this.ownedCollection = libraryPayload.ownedCollection ? new GameCollection( libraryPayload.ownedCollection ) : null;
-	this.recommendedCollection = libraryPayload.recommendedCollection ? new GameCollection( libraryPayload.recommendedCollection ) : null;
+	this.followedCollection = payload.followedCollection ? new GameCollection( payload.followedCollection ) : null;
+	this.developerCollection = payload.developerCollection ? new GameCollection( payload.developerCollection ) : null;
+	this.ownedCollection = payload.ownedCollection ? new GameCollection( payload.ownedCollection ) : null;
+	this.recommendedCollection = payload.recommendedCollection ? new GameCollection( payload.recommendedCollection ) : null;
 
-	this.bundleCollections = GameCollection.populate( libraryPayload.bundleCollections );
+	this.bundleCollections = GameCollection.populate( payload.bundleCollections );
 
 	// Main collections that belong to the user get chunked out.
 	this.mainCollections = [];
@@ -56,7 +56,7 @@ angular.module( 'App.Views' ).controller( 'Library.OverviewCtrl', function( $sco
 	this.followedCollections = [];
 	$scope.$watchCollection( function()
 	{
-		return $scope.libraryCtrl.collections;
+		return Shell.collections;
 	},
 	function( collections )
 	{

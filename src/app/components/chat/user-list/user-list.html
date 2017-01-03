@@ -15,12 +15,14 @@
 			This is set on the user when pulling in new friends/users.
 			It only updates when any of the users information has changed from last pull.
 		-->
-		<li class="no-animate chat-user"
+		<li
+			class="chat-user"
 			ng-repeat="user in ctrl.users track by user._trackId"
 			ng-show="!ctrl.filterQuery || user.displayName.toLowerCase().indexOf( ctrl.filterQuery.toLowerCase() ) != -1"
 			>
 
-			<a ng-href="{{ ::ctrl.getUserProfileUrl( user ) }}"
+			<a
+				ng-href="{{ ::ctrl.getUserProfileUrl( user ) }}"
 				ng-click="ctrl.onUserClick( user, $event )"
 				ng-class="::{ active: ctrl.showPm && Chat.client.room.id == user.roomId }"
 				title="{{ ::user.displayName }} (@{{ ::user.username }})"

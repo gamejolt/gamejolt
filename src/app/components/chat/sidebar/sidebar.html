@@ -7,68 +7,24 @@
 			Public Chat Rooms
 		</div>
 
-		<ul class="shell-nav thin">
-			<li class="no-animate" ng-repeat="room in client.publicRooms track by room.id">
-				<a ng-click="ctrl.onPublicRoomClicked( room.id )"
+		<ul class="shell-nav">
+			<li ng-repeat="room in client.publicRooms track by room.id">
+				<a
+					ng-click="ctrl.onPublicRoomClicked( room.id )"
 					ng-class="{ active: client.room.id == room.id }"
 					title="{{ ::room.title }}"
 					>
-					<!--
-						Notification tag has to go first to resolve a stupid bug:
-						https://github.com/gamejolt/next-issue-tracker/issues/96
-					-->
+					<span class="shell-nav-icon">
+						<span class="jolticon jolticon-number-sign"></span>
+					</span>
 					<span class="tag tag-pink notifications-tag" ng-if="client.roomId == room.id && Chat.roomNotifications">{{ Chat.roomNotifications | number }}</span>
-
-					<span class="jolticon jolticon-number-sign"></span>
-					{{ ::room.title }}
-				</a>
-			</li>
-		</ul>
-
-		<!--<div class="nav-controls">
-			<a class="btn btn-block btn-outline" ui-sref="chat">
-				Discover More
-			</a>
-		</div>-->
-	</div>
-
-	<script> /*
-	<div class="chat-friends-list" ng-if="client.currentUser">
-		<div class="nav-heading">
-			<a class="pull-right" gj-tooltip="Create a Room" tooltip-placement="left" ng-click="ctrl.showCreateRoomModal()">
-				<span class="jolticon jolticon-add"></span>
-			</a>
-			My Rooms
-		</div>
-
-		<div ng-if="!client.activeRooms.length">
-			<div class="alert alert-warning">
-				You don't have any rooms yet.
-			</div>
-
-			<div class="alert fill-dark">Use rooms to chat with your friends in a group, or to grow the community by making new public rooms.</div>
-		</div>
-
-		<ul class="shell-nav thin" ng-if="client.activeRooms.length">
-			<li class="no-animate" ng-repeat="room in client.activeRooms track by room.id">
-				<a ng-click="ctrl.onPublicRoomClicked( room.id )"
-					title="{{ ::room.title }}"
-					>
-					<!--
-						Notification tag has to go first to resolve a stupid bug:
-						https://github.com/gamejolt/next-issue-tracker/issues/96
-					-->
-					<!--<span class="tag tag-pink notifications-tag" ng-if="client.roomId == room.id && Chat.roomNotifications">{{ Chat.roomNotifications | number }}</span>-->
-
-					<span class="jolticon" ng-class="::{ 'jolticon-number-sign': room.type == Chat_Room.TYPE_OPEN_GROUP, 'jolticon-users': room.type == Chat_Room.TYPE_CLOSED_GROUP || room.type == Chat_Room.TYPE_VIRAL_GROUP }"></span>
-
-					{{ ::room.title }}
-					<!-- <small>({{ room.userCount }})</small> -->
+					<span class="shell-nav-label">
+						{{ ::room.title }}
+					</span>
 				</a>
 			</li>
 		</ul>
 	</div>
-	*/</script>
 
 	<!-- Friends List -->
 	<!-- Only include if not a guest -->

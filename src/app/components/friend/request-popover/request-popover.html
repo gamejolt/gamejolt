@@ -2,7 +2,7 @@
 	class="shell-popover shell-card-popover popover-dark"
 	popover-id="friend-requests"
 	popover-append-to-body="true"
-	popover-position-by="position"
+	popover-position-by="fixed"
 	popover-on-focus="$ctrl.onFocus()"
 	popover-on-blur="$ctrl.onBlur()"
 	popover-hide-on-state-change="true"
@@ -15,18 +15,16 @@
 				<li>
 					<a ng-class="{ active: $ctrl.activeTab == 'requests' }"
 						ng-click="$ctrl.setActiveTab( 'requests' )"
-						translate
 						>
-						Friend Requests
+						<span translate>Friend Requests</span>
 						<span class="badge">{{ $ctrl.requestsCount }}</span>
 					</a>
 				</li>
 				<li ng-if="$ctrl.pending.length">
 					<a ng-class="{ active: $ctrl.activeTab == 'pending' }"
 						ng-click="$ctrl.setActiveTab( 'pending' )"
-						translate
 						>
-						Sent Requests
+						<span translate>Sent Requests</span>
 						<span class="badge">{{ $ctrl.pending.length }}</span>
 					</a>
 				</li>

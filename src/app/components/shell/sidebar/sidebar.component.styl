@@ -1,0 +1,48 @@
+.shell-sidebar
+	position: fixed
+	top: $shell-top-nav-height
+	bottom: 0
+	left: 0
+	width: $shell-top-nav-height
+	z-index: $zindex-page-sidebar
+
+	hr
+		margin: $line-height-computed 15px
+		border-color: $gray-dark
+
+	.shell-nav-label
+		display: none
+
+	.shell-nav-chevron
+		display: none
+
+	.tag
+		position: absolute !important
+		right: 0
+		top: 0
+		margin-top: 0 !important
+
+	.left-pane-visible &
+		width: $shell-sidebar-width
+
+		.shell-nav-label
+			display: inline-block
+
+		.shell-nav-chevron
+			display: inline-block
+
+		.tag
+			position: relative !important
+			margin-top: 15px !important
+
+	.right-pane-visible &
+		display: none
+
+.shell-sidebar-content
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	padding: $line-height-computed 0
+	overflow-y: auto

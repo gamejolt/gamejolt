@@ -9,8 +9,6 @@ export class App
 	user: any = null;
 	userBootstrapped = false;
 
-	chat?: any;
-
 	constructor(
 		@Inject( '$rootScope' ) $rootScope: ng.IRootScopeService,
 		@Inject( '$state' ) private $state: ng.ui.IStateService,
@@ -19,9 +17,6 @@ export class App
 		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'Meta' ) private meta: Meta,
-		@Inject( 'Shell' ) private shell: any,
-		@Inject( '$ocLazyLoad' ) $ocLazyLoad: oc.ILazyLoad,
-		@Inject( 'hotkeys' ) private hotkeys: ng.hotkeys.HotkeysProvider,
 	)
 	{
 		// Payload emits this every time the user is processed.
@@ -31,21 +26,6 @@ export class App
 		{
 			if ( !this.userBootstrapped ) {
 				this.userBootstrapped = true;
-
-				if ( this.user ) {
-					$ocLazyLoad.load( '/app/modules/chat.js' ).then( () =>
-					{
-						// Connect to chat.
-						this.chat = $injector.get( 'Chat' );
-						this.chat.connect();
-
-						hotkeys.add( {
-							combo: 'c',
-							description: 'Toggle the chat.',
-							callback: () => this.shell.toggleRightPane(),
-						} );
-					} );
-				}
 			}
 		} );
 	}
@@ -65,16 +45,6 @@ export class App
 					{
 						// We go to the homepage currently just in case they're in a view they shouldn't be.
 						this.$state.go( 'discover.home' );
-
-						// Log out of chat. This will notify other tabs to disconnect from the server too.
-						if ( this.chat ) {
-							if ( this.chat.client ) {
-								this.chat.client.logOut();
-							}
-							this.hotkeys.del( 'c' );
-						}
-
-						this.chat = undefined;
 
 						this.growls.success( 'You are now logged out.', 'Goodbye!' );
 						resolve();

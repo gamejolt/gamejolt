@@ -2,17 +2,16 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 {
 	$stateProvider.state( 'library', {
 		abstract: true,
-		controller: 'LibraryCtrl',
-		controllerAs: 'libraryCtrl',
-		templateUrl: '/app/views/library/library.html',
+		url: '/library',
+		template: '<ui-view></ui-view>',
 		resolve: {
-			init: function( Translate )
+			init: function( Translate, Shell )
 			{
-				return Translate.loadSection( 'main' );
-			},
-			libraryPayload: function( Api )
-			{
-				return Api.sendRequest( '/web/library' );
+				return Translate.loadSection( 'main' )
+					.then( function()
+					{
+						return Shell.bootstrapPomise;
+					} );
 			},
 		}
 	} );
