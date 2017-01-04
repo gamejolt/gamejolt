@@ -5,6 +5,13 @@
 			on-loaded="onLoaded( $payload )"
 			>
 
+			<div ng-if="formModel.type == 'sketchfab'" class="alert alert-info" translate>
+				<p translate>With Sketchfab you can embed 3D models in the browser and VR.</p>
+				<p>
+					<a href="https://sketchfab.com/" class="link-help" target="_blank" translate>Learn more about Sketchfab</a>
+				</p>
+			</div>
+
 			<form-group name="title"
 				label="{{ 'Title' | translate }}"
 				>
@@ -76,6 +83,24 @@
 						</p>
 
 						<input form-control="text" ng-pattern="Game_Video.REGEX.YOUTUBE">
+
+						<control-errors></control-errors>
+					</form-group>
+				</div>
+
+				<div ng-switch-when="sketchfab">
+					<form-group
+						name="sketchfab_id"
+						ng-if="!wasPublished"
+						label="{{ 'Sketchfab ID' | translate }}"
+						>
+
+						<p class="help-block">
+							<span translate>This is the ID in your model's URL. For example:</span>
+							<code>https://sketchfab.com/models/<strong>ID</strong></code>
+						</p>
+
+						<input form-control="text">
 
 						<control-errors></control-errors>
 					</form-group>

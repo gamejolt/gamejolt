@@ -12,6 +12,17 @@ export function DevlogPostFormFactory( Form: any, Fireside_Post: any, KeyGroup: 
 
 		scope.formModel.status = Fireside_Post.STATUS_ACTIVE;
 
+		if ( scope.baseModel.type == Fireside_Post.TYPE_VIDEO ) {
+			if ( scope.baseModel.videos.length ) {
+				scope.formModel.video_url = 'https://www.youtube.com/watch?v=' + scope.baseModel.videos[0].video_id;
+			}
+		}
+		else if ( scope.baseModel.type == Fireside_Post.TYPE_SKETCHFAB ) {
+			if ( scope.baseModel.sketchfabs.length ) {
+				scope.formModel.sketchfab_id = scope.baseModel.sketchfabs[0].sketchfab_id;
+			}
+		}
+
 		// For editing, we should pull the currently selected key groups into the form.
 		scope.formModel.keyGroups = {};
 		if ( scope.baseModel.key_groups && scope.baseModel.key_groups.length ) {

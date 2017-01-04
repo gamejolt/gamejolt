@@ -9,6 +9,7 @@ import { DevlogPostComponent } from './devlog-post/devlog-post-directive';
 import { MediaComponent } from './devlog-post/media/media-directive';
 import { TextComponent } from './devlog-post/text/text-directive';
 import { VideoComponent } from './devlog-post/video/video-directive';
+import { ActivityFeedDevlogPostSketchfabComponent } from './devlog-post/sketchfab/sketchfab.component';
 
 export default angular.module( 'App.Activity.Feed', [] )
 .factory( 'ActivityFeedItem', ActivityFeedItemFactory )
@@ -19,6 +20,7 @@ export default angular.module( 'App.Activity.Feed', [] )
 .directive( ...provide( MediaComponent ) )
 .directive( ...provide( TextComponent ) )
 .directive( ...provide( VideoComponent ) )
+.directive( ...provide( ActivityFeedDevlogPostSketchfabComponent ) )
 .directive( ...provide( ControlsComponent ) )
 .service( ...provide( 'ActivityFeedService', { useClass: ActivityFeedService } ) )
 .name;

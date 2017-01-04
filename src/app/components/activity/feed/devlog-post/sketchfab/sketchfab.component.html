@@ -1,0 +1,25 @@
+<div class="devlog-post-sketchfab-embed timeline-list-full-bleed">
+	<div gj-responsive-dimensions responsive-dimensions-ratio="16 / 9">
+
+		<a
+			ng-if="!$ctrl.isShowing"
+			ng-click="$ctrl.play()"
+			>
+			<div class="play-button-overlay">
+				<span class="jolticon jolticon-play"></span>
+			</div>
+
+			<div class="devlog-post-sketchfab-embed-thumb"
+				ng-style="::{ 'background-image': 'url(\'' + $ctrl.sketchfab.thumbnail_url + '\')' }"
+				>
+			</div>
+		</a>
+
+		<gj-sketchfab-embed
+			ng-if="$ctrl.isShowing"
+			sketchfab-id="::$ctrl.sketchfab.sketchfab_id"
+			autoplay="true"
+			>
+		</gj-sketchfab-embed>
+	</div>
+</div>

@@ -41,6 +41,7 @@ import VideoEmbedModule from './../lib/gj-lib-client/components/video/embed/embe
 import FiresidePostModule from './../lib/gj-lib-client/components/fireside/post/post';
 import FiresidePostTagModule from './../lib/gj-lib-client/components/fireside/post/tag/tag';
 import FiresidePostVideoModule from './../lib/gj-lib-client/components/fireside/post/video/video';
+import FiresidePostSketchfabModule from './../lib/gj-lib-client/components/fireside/post/sketchfab/sketchfab';
 import FiresidePostLikeModule from './../lib/gj-lib-client/components/fireside/post/like/like';
 import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 import PartnerReferralModule from './../lib/gj-lib-client/components/partner-referral/partner-referral';
@@ -75,6 +76,7 @@ import FiresidePostListModule from './components/fireside/post/list/list';
 import GameModLinksModule from './components/game/mod-links/mod-links';
 import CountdownModule from '../lib/gj-lib-client/components/countdown/countdown';
 import LoadingFadeModule from '../lib/gj-lib-client/components/loading/fade/fade';
+import SketchfabEmbedModule from '../lib/gj-lib-client/components/sketchfab/embed/embed';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -278,6 +280,7 @@ const AppModule = angular.module( 'App', [
 	FiresidePostModule,
 	FiresidePostTagModule,
 	FiresidePostVideoModule,
+	FiresidePostSketchfabModule,
 	FiresidePostLikeModule,
 	FiresidePostLikeWidgetModule,
 
@@ -295,6 +298,8 @@ const AppModule = angular.module( 'App', [
 
 	VideoModule,
 	VideoEmbedModule,
+
+	SketchfabEmbedModule,
 
 	PartnerReferralModule,
 
