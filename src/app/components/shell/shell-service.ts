@@ -1,5 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
+import { BroadcastModal } from '../broadcast-modal/broadcast-modal.service';
 
 @Injectable()
 export class Shell
@@ -30,6 +31,7 @@ export class Shell
 		@Inject( 'Api' ) private api: any,
 		@Inject( 'GameCollection' ) private collectionModel: any,
 		@Inject( 'Settings' ) private settings: any,
+		@Inject( 'BroadcastModal' ) private broadcastModal: BroadcastModal,
 		@Inject( 'hotkeys' ) private hotkeys: ng.hotkeys.HotkeysProvider,
 		@Inject( '$ocLazyLoad' ) $ocLazyLoad: oc.ILazyLoad,
 		@Inject( '$q' ) $q: ng.IQService,
@@ -192,6 +194,8 @@ export class Shell
 				this.isBootstrapped = true;
 				this.bootstrapPromiseResolve();
 			} );
+
+		this.broadcastModal.check();
 	}
 
 	private clear()

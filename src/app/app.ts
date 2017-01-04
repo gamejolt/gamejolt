@@ -47,6 +47,7 @@ import FiresidePostLikeWidgetModule from './../lib/gj-lib-client/components/fire
 import PartnerReferralModule from './../lib/gj-lib-client/components/partner-referral/partner-referral';
 import AuthModule from '../lib/gj-lib-client/components/auth/auth';
 import AuthJoinModule from '../lib/gj-lib-client/components/auth/join/join';
+import BroadcastModalModule from './components/broadcast-modal/broadcast-modal';
 
 import SplitTestModule from './components/split-test/split-test';
 import ShellModule from './components/shell/shell';
@@ -385,6 +386,7 @@ const AppModule = angular.module( 'App', [
 	GameModLinksModule,
 	CountdownModule,
 	LoadingFadeModule,
+	BroadcastModalModule,
 
 	// Views.
 	ViewsModule,

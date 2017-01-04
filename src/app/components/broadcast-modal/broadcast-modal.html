@@ -1,0 +1,89 @@
+<div class="modal-controls">
+	<button class="btn btn-danger-outline" ng-click="$ctrl.close()">
+		<span class="jolticon jolticon-remove"></span>
+		<span translate>Close</span>
+	</button>
+</div>
+
+<div class="modal-header">
+	<h1 class="text-center section-header" translate>
+		We've built some new stuff!
+	</h1>
+
+	<p class="small text-center" translate>
+		Constantly improving for your enjoyment. Be enjoyed!
+	</p>
+</div>
+
+<hr>
+
+<div class="modal-body">
+
+	<div ng-if="$ctrl.screen.isXs && $ctrl.post">
+		<a class="btn btn-outline btn-block" ng-click="$ctrl.post = undefined">
+			<span class="jolticon jolticon-chevron-left"></span>
+			<span translate>Back to Changelog</span>
+		</a>
+		<br>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-4 col-sm-push-8" ng-if="!$ctrl.screen.isXs || !$ctrl.post">
+
+			<div class="list-group">
+				<a class="list-group-item"
+					ng-class="{ 'has-icon': !$ctrl.screen.isXs }"
+					ng-repeat="post in $ctrl.posts track by post.id"
+					ng-click="$ctrl.post = post"
+					>
+					<h5 class="list-group-item-heading">
+						<span
+							ng-if="$ctrl.post.id == post.id && !$ctrl.screen.isXs"
+							class="jolticon jolticon-chevron-right"></span>
+
+						{{ post.title }}
+
+						<div class="tiny text-muted">
+							<span am-time-ago="::post.published_on"></span>
+						</div>
+					</h5>
+					<p class="list-group-item-text">
+						{{ post.lead }}
+					</p>
+				</a>
+			</div>
+			<br>
+
+			<div>
+				<a class="btn btn-outline btn-block"
+					ng-href="{{ ::$ctrl.env.firesideBaseUrl }}/tag/gjbroadcast"
+					target="_blank"
+					translate
+					>
+					View Full Changelog
+				</a>
+			</div>
+
+		</div>
+		<div class="col-sm-8 col-sm-pull-4" ng-if="!$ctrl.screen.isXs || $ctrl.post">
+
+			<h2 class="section-header">
+				<a class="link-unstyled" ng-href="{{ $ctrl.post.url }}" target="_blank">
+					{{ $ctrl.post.title }}
+				</a>
+			</h2>
+
+			<p class="lead">
+				{{ $ctrl.post.lead }}
+			</p>
+
+			<hr class="underbar">
+
+			<div class="fireside-post-body">
+				<div gj-widget-compiler-bind="$ctrl.post.content_compiled"></div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
