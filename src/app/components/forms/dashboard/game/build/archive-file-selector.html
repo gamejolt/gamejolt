@@ -1,6 +1,15 @@
-<div class="modal-body">
-	<h2 class="modal-title" translate>dash.games.releases.builds.launch_options.file_selector.heading</h2>
+<div class="modal-controls">
+	<button class="btn btn-danger-outline" ng-click="modalCtrl.close()">
+		<span class="jolticon jolticon-remove"></span>
+		<span translate>dash.games.releases.builds.launch_options.file_selector.cancel_button</span>
+	</button>
+</div>
 
+<div class="modal-header">
+	<h2 class="modal-title" translate>dash.games.releases.builds.launch_options.file_selector.heading</h2>
+</div>
+
+<div class="modal-body">
 	<gj-loading ng-if="modalCtrl.isLoading" loading-big="true" class="loading-centered"></gj-loading>
 
 	<div ng-if="!modalCtrl.isLoading && modalCtrl.files.length">
@@ -20,11 +29,4 @@
 
 	<div class="alert alert-warning" ng-if="!modalCtrl.isLoading && !modalCtrl.files.length" translate>dash.games.releases.builds.launch_options.file_selector.no_files_html</div>
 
-</div>
-
-<div class="modal-footer">
-	<button class="i-button warning" ng-click="modalCtrl.close()">
-		<span class="jolticon jolticon-remove"></span>
-		<span translate>dash.games.releases.builds.launch_options.file_selector.cancel_button</span>
-	</button>
 </div>

@@ -1,22 +1,16 @@
-<div class="row">
-	<div class="col-md-8 col-centered">
+<div class="modal-controls">
+	<button class="btn btn-danger-outline" ng-click="$ctrl.close()">
+		<span class="jolticon jolticon-remove"></span>
+		<span translate>Close</span>
+	</button>
+</div>
 
-		<div class="modal-body">
-			<gj-form-dashboard-game-devlog-post
-				game="$ctrl.game"
-				post-type="$ctrl.type"
-				gj-fireside-post="$ctrl.post"
-				gj-form-submit-handler="$ctrl.onSubmitted( formModel )"
-				>
-			</gj-form-dashboard-game-devlog-post>
-		</div>
-
-		<div class="modal-footer">
-			<button class="btn btn-danger-outline" ng-click="$ctrl.close()">
-				<span class="jolticon jolticon-remove"></span>
-				<span translate>Close</span>
-			</button>
-		</div>
-
-	</div>
+<div class="modal-body">
+	<gj-form-dashboard-game-devlog-post
+		game="$ctrl.game"
+		post-type="$ctrl.type"
+		gj-fireside-post="$ctrl.post"
+		gj-form-submit-handler="$ctrl.onSubmitted( formModel )"
+		>
+	</gj-form-dashboard-game-devlog-post>
 </div>

@@ -1,6 +1,15 @@
-<div class="modal-body">
-	<h2 class="modal-title" translate>system_report.send.heading</h2>
+<div class="modal-controls">
+	<button class="btn btn-danger-outline" ng-click="modalCtrl.close()">
+		<span class="jolticon jolticon-remove"></span>
+		<span translate>system_report.send.close</span>
+	</button>
+</div>
 
+<div class="modal-header">
+	<h2 class="modal-title" translate>system_report.send.heading</h2>
+</div>
+
+<div class="modal-body">
 	<p class="help-block" translate>
 		system_report.send.help
 	</p>
@@ -12,11 +21,4 @@
 	<gj-client-form-system-report
 		gj-form-submit-handler="modalCtrl.onSubmit()">
 	</gj-client-form-system-report>
-</div>
-
-<div class="modal-footer">
-	<button class="i-button warning" ng-click="modalCtrl.close()">
-		<span class="jolticon jolticon-remove"></span>
-		<span translate>system_report.send.close</span>
-	</button>
 </div>

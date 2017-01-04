@@ -6,6 +6,7 @@ angular.module( 'App.Client.InstallPackageModal' ).service( 'Client_InstallPacka
 			templateUrl: '/app/components/client/install-package-modal/install-package-modal.html',
 			controller: 'Client_InstallPackageModalCtrl',
 			controllerAs: 'modalCtrl',
+			size: 'sm',
 			resolve: {
 				game: function()
 				{

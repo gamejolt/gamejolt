@@ -1,4 +1,11 @@
-<div class="modal-body">
+<div class="modal-controls">
+	<button class="btn btn-danger-outline" ng-click="modalCtrl.close()">
+		<span class="jolticon jolticon-remove"></span>
+		Close
+	</button>
+</div>
+
+<div class="modal-header">
 	<h2 class="modal-title" ng-if="!modalCtrl.isChanging">
 		<span class="jolticon jolticon-token big"></span>
 		Your Game Token
@@ -7,7 +14,9 @@
 	<h2 class="modal-title" ng-if="modalCtrl.isChanging">
 		Change Game Token
 	</h2>
+</div>
 
+<div class="modal-body">
 	<p class="text-muted small">
 		Your game token is like a special password you use to log into games that support high scores and achievements.
 		[ <a href="https://help.gamejolt.com/tokens" target="_blank" class="link-help">more info</a> ]
@@ -44,12 +53,8 @@
 </div>
 
 <div class="modal-footer">
-	<button class="i-button anim-fade-enter anim-fade-leave" ng-click="modalCtrl.showChangeForm()" ng-if="!modalCtrl.isChanging">
+	<button class="btn btn-outline anim-fade-enter anim-fade-leave" ng-click="modalCtrl.showChangeForm()" ng-if="!modalCtrl.isChanging">
 		<span class="jolticon jolticon-edit"></span>
 		Change Game Token
-	</button>
-	<button class="i-button warning" ng-click="modalCtrl.close()">
-		<span class="jolticon jolticon-remove"></span>
-		Close
 	</button>
 </div>

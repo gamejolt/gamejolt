@@ -5,7 +5,7 @@
 		<control-errors></control-errors>
 	</form-group>
 
-	<button gj-form-submit-button class="i-button" ng-disabled="!playlistForm.$valid" ng-click="onSubmit()">
+	<button gj-form-submit-button class="btn btn-success-outline" ng-disabled="!playlistForm.$valid" ng-click="onSubmit()">
 		<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
 		<span ng-if="method == 'add'">{{ ::'library.playlists.form.add_submit_button' | translate }}</span>
 		<span ng-if="method == 'edit'">{{ ::'library.playlists.form.edit_submit_button' | translate }}</span>

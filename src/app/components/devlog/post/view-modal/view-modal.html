@@ -1,12 +1,11 @@
+<p class="modal-controls">
+	<button class="btn btn-danger-outline" ng-click="$ctrl.close()">
+		<span class="jolticon jolticon-remove"></span>
+		<span translate>Close</span>
+	</button>
+</p>
+
 <div class="modal-body">
-
-	<p class="text-right">
-		<button class="btn btn-danger-outline" ng-click="$ctrl.close()">
-			<span class="jolticon jolticon-remove"></span>
-			<span translate>Close</span>
-		</button>
-	</p>
-
 	<gj-devlog-post-view
 		post="$ctrl.post"
 		show-game-info="true"
