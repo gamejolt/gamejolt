@@ -75,7 +75,7 @@ export class GridComponent implements OnInit, OnChanges
 			rowSize = this.games.length;
 		}
 
-		let chunkSize = Math.floor( this.games.length / rowSize ) * rowSize;
+		let chunkSize = Math.max( 1, Math.floor( this.games.length / rowSize ) ) * rowSize;
 		this.processedGames = this.games.slice( 0, chunkSize );
 	}
 }
