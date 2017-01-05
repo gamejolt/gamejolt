@@ -43,20 +43,20 @@ angular.module( 'App.ProtocolWatcher' ).provider( 'ProtocolWatcher', function()
 						}
 					}
 				}
-				// Redirect away from secure if not moving to a secure location.
-				else if ( Environment.isSecure ) {
-					var found = false;
-					for ( var i = 0; i < _secureSections.length; ++i ) {
-						if ( to.name.indexOf( _secureSections[i] ) === 0 ) {
-							found = true;
-							break;
-						}
-					}
+				// // Redirect away from secure if not moving to a secure location.
+				// else if ( Environment.isSecure ) {
+				// 	var found = false;
+				// 	for ( var i = 0; i < _secureSections.length; ++i ) {
+				// 		if ( to.name.indexOf( _secureSections[i] ) === 0 ) {
+				// 			found = true;
+				// 			break;
+				// 		}
+				// 	}
 
-					if ( !found ) {
-						switchProtocol( 'http', to, toParams, event );
-					}
-				}
+				// 	if ( !found ) {
+				// 		switchProtocol( 'http', to, toParams, event );
+				// 	}
+				// }
 			} );
 		};
 
