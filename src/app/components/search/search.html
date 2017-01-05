@@ -16,8 +16,7 @@
 				ng-attr-placeholder="{{ 'search.input.placeholder' | translate }}"
 				gj-search-input
 				ng-model="$ctrl.query"
-				ng-focus="$ctrl.isFocused = true"
-				ng-blur="$ctrl.isFocused = false"
+				gj-popover-trigger="search-autocomplete"
 				>
 		</div>
 

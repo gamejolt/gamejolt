@@ -53,7 +53,6 @@ export class AutocompleteComponent implements OnInit
 	LocalDb_Game: any;
 
 	mode: 'search' | 'command' = 'search';
-	isVisible = false;
 	commands: Command[];
 	filteredCommands: Command[];
 
@@ -65,6 +64,11 @@ export class AutocompleteComponent implements OnInit
 	items: any[] = [];
 
 	@Input( '<?searchAutocompleteModes' ) modes: string[] = [ 'search', 'command' ];
+
+	get isHidden()
+	{
+		return this.searchCtrl.isEmpty();
+	}
 
 	constructor(
 		@Inject( '$scope' ) private $scope: ng.IScope,
@@ -191,23 +195,6 @@ export class AutocompleteComponent implements OnInit
 			}
 		} );
 
-		this.$scope.$watchGroup( [
-			'$ctrl.searchCtrl.isFocused',
-			'$ctrl.searchCtrl.isEmpty()',
-		],
-		vals =>
-		{
-			const isFocused = vals[0];
-			const isEmpty = vals[1];
-
-			if ( isFocused && !isEmpty ) {
-				this.showAutocomplete( this.searchCtrl.searchElem );
-			}
-			else {
-				this.hideAutocomplete();
-			}
-		} );
-
 		this.$scope.$watch( () => this.searchCtrl.query, () =>
 		{
 			this.onChange();
@@ -239,22 +226,6 @@ export class AutocompleteComponent implements OnInit
 	getPopover()
 	{
 		return this.popover.getPopover( 'search-autocomplete' );
-	}
-
-	showAutocomplete( element: ng.IAugmentedJQuery )
-	{
-		if ( !this.isVisible && !this.searchCtrl.isEmpty() && this.inAvailableMode() ) {
-			this.isVisible = true;
-			this.getPopover().show( element );
-		}
-	}
-
-	hideAutocomplete()
-	{
-		if ( this.isVisible ) {
-			this.isVisible = false;
-			this.getPopover().hide();
-		}
 	}
 
 	inAvailableMode()
