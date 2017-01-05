@@ -1,5 +1,5 @@
 <span ng-if="ctrl.score.user_id">
-	<a class="text-muted" style="margin-right: 5px" gj-popover-trigger="score-user-options-{{ ctrl.score.id }}">
+	<a class="text-muted" style="margin-right: 5px" gj-popover-trigger="score-user-options-{{ ctrl.score.id }}" ng-click="$event.stopPropagation()">
 		<span class="jolticon jolticon-ellipsis-h"></span>
 	</a>
 

@@ -41,7 +41,7 @@
 					{{ score.logged_on | date:'medium' }}
 				</td>
 				<td class="text-right">
-					<a class="text-muted" gj-popover-trigger="scores-options-{{ score.id }}">
+					<a class="text-muted" gj-popover-trigger="scores-options-{{ score.id }}" ng-click="$event.stopPropagation()">
 						<span class="jolticon jolticon-ellipsis-h"></span>
 						<span translate>options.options</span>
 					</a>

@@ -34,7 +34,7 @@
 					{{ item.posted_on | date:'medium' }}
 				</td>
 				<td class="text-right">
-					<a class="text-muted" gj-popover-trigger="data-storage-item-options-{{ item.id }}">
+					<a class="text-muted" gj-popover-trigger="data-storage-item-options-{{ item.id }}" ng-click="$event.stopPropagation()">
 						<span class="jolticon jolticon-ellipsis-h"></span>
 						<span translate>options.options</span>
 					</a>
