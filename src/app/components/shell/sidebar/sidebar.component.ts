@@ -25,6 +25,7 @@ export class ShellSidebarComponent implements OnInit
 
 	genres = {
 		'action': 'Action',
+		'adventure': 'Adventure',
 		'arcade': 'Arcade',
 		'platformer': 'Platformer',
 		'puzzle': 'Puzzle',
