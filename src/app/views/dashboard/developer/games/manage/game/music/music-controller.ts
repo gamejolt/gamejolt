@@ -36,6 +36,9 @@ export class MusicCtrl
 		this.updateSort();
 	}
 
+	// Needed for the closure since ui-tree ruins the "this" context.
+	_onSongsSorted = () => this.onSongsSorted();
+
 	onSongsSorted()
 	{
 		var newSort = _.pluck( this.songs, 'id' );
