@@ -48,6 +48,7 @@ export class BroadcastModal
 			controller: BroadcastModalCtrl,
 			controllerAs: '$ctrl',
 			template,
+			backdrop: 'static',
 			resolve: {
 				posts: () =>
 				{
