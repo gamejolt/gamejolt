@@ -1,6 +1,5 @@
 .shell-pane
 	@extend .clearfix
-	// display: none
 	position: fixed
 	left: 0
 	top: $shell-top-nav-height
@@ -11,17 +10,6 @@
 
 	@media $media-sm-up
 		width: $shell-pane-width
-
-	// // When we make this pane visible, we show it.
-	// &.visible
-	// 	display: block
-
-	// When we are hiding the pane and showing the content again, we want to also
-	// keep it visible during this time.
-	// To do that, we hook into the main shell removal animation.
-	// #shell.left-pane-visible-remove &
-	// #shell.right-pane-visible-remove &
-	// 	display: block
 
 	// When things in the hot bottom are active, we need to move up the pane bottoms.
 	body.status-bar-visible &
@@ -34,10 +22,31 @@
 	left: auto
 	right: 0
 
+// When we are hiding the pane and showing the content again, we want to also
+// keep it visible during this time.
+// To do that, we hook into the main shell removal animation.
+#shell.left-pane-visible-remove .shell-pane
+#shell.right-pane-visible-remove .shell-pane
+	display: block
+
 @media $media-xs
 
-	.left-pane-visible .shell-pane-right
+	// On mobile, always hide the pane until it's visible.
+	.shell-pane
 		display: none
 
-	.right-pane-visible .shell-pane-left
+	.left-pane-visible .shell-pane-left
+		display: block
+
+	.right-pane-visible .shell-pane-right
+		display: block
+
+@media $media-sm-up
+
+	// One sm-up, we always want to hide the chat sidebar until it shows.
+	// The left sidebar will still show a bit, so we don't want to hide it completely.
+	.shell-pane-right
 		display: none
+
+		.right-pane-visible &
+			display: block

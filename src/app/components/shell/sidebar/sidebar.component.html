@@ -1,7 +1,7 @@
 <div id="shell-sidebar"
 	ng-class="{
-		'shell-sidebar': $ctrl.screen.isDesktop,
-		'shell-pane shell-pane-left': $ctrl.screen.isMobile,
+		'shell-sidebar': !$ctrl.screen.isXs,
+		'shell-pane shell-pane-left': $ctrl.screen.isXs,
 		'visible': $ctrl.screen.isMobile && $ctrl.shell.isLeftPaneVisible,
 	}"
 	>
@@ -271,7 +271,7 @@
 					<span class="shell-nav-chevron jolticon jolticon-chevron-right"></span>
 					<span class="shell-nav-icon"
 						gj-popover-trigger="shell-sidebar-more"
-						popover-trigger-event="hover"
+						popover-trigger-event="{{ $ctrl.screen.isMobile ? 'click' : 'hover' }}"
 						popover-trigger-disabled="$ctrl.shell.isLeftPaneVisible || $ctrl.screen.isXs"
 						>
 						<span class="jolticon jolticon-ellipsis-h"></span>
