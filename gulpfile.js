@@ -1,7 +1,7 @@
 var gulp = require( 'gulp' );
 
 var config = {
-	staticCdn: 'https://b6d3e9q9.ssl.hwcdn.net',
+	staticCdn: 'https://s.gjcdn.net',
 	extraBower: {
 		'angular-bootstrap': [
 			'src/transition/transition.js',
