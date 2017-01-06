@@ -402,7 +402,7 @@ const AppModule = angular.module( 'App', [
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
 		'self',
-		'https://s.gjcdn.net/**',
+		'https://b6d3e9q9.ssl.hwcdn.net/**',
 	] );
 
 	$locationProvider.html5Mode( true ).hashPrefix( '!' );

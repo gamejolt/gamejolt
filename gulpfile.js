@@ -1,7 +1,7 @@
 var gulp = require( 'gulp' );
 
 var config = {
-	staticCdn: 'https://s.gjcdn.net',
+	staticCdn: 'https://b6d3e9q9.ssl.hwcdn.net',
 	extraBower: {
 		'angular-bootstrap': [
 			'src/transition/transition.js',
@@ -89,6 +89,11 @@ var config = {
 				'error-tracking',
 			],
 		},
+		'theme-editor.js': {
+			bower: [
+				'spectrum',
+			],
+		},
 
 		// Sections of the site.
 		'dash.js': {
@@ -96,9 +101,18 @@ var config = {
 			components: [
 				'forms/dashboard',
 				'site-analytics',
+				'site-editor-modal',
 			],
 			libComponents: [
+				'model',
 				'timezone',
+				'colorpicker',
+				'theme',
+				'content-block/editor',
+				'site',
+				'site/theme',
+				'site/template',
+				'site/content-block',
 			],
 			views: [
 				'dashboard',
