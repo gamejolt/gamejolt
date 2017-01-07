@@ -147,53 +147,67 @@
 			<ul class="shell-nav">
 				<li>
 					<a
-						class="no-icon"
 						ui-sref="forums.landing.overview"
 						gj-track-event="sidebar:forums"
 						translate
 						>
+						<span class="shell-nav-icon">
+							<span class="jolticon jolticon-forums"></span>
+						</span>
 						Forums
 					</a>
 				</li>
 				<li>
 					<a
-						class="no-icon"
 						ui-sref="radio"
 						gj-track-event="sidebar:radio"
 						translate
 						>
+						<span class="shell-nav-icon">
+							<span class="jolticon jolticon-radio"></span>
+						</span>
 						Radio
 					</a>
 				</li>
+				<li>
+					<a
+						ng-href="{{ ::$ctrl.env.firesideBaseUrl }}"
+						target="_blank"
+						gj-track-event="sidebar:fireside"
+						translate
+						>
+						<span class="shell-nav-icon">
+							<span class="jolticon jolticon-fireside"></span>
+						</span>
+						Fireside
+					</a>
+				</li>
+				<li>
+					<a
+						ng-href="{{ ::$ctrl.env.jamsBaseUrl }}"
+						target="_blank"
+						gj-track-event="sidebar:jams"
+						translate
+						>
+						<span class="shell-nav-icon">
+							<span class="jolticon jolticon-jams"></span>
+						</span>
+						Jams
+					</a>
+				</li>
+				<li>
+					<a
+						ui-sref="client"
+						gj-track-event="sidebar:client"
+						translate
+						>
+						<span class="shell-nav-icon">
+							<span class="jolticon jolticon-client"></span>
+						</span>
+						Client
+					</a>
+				</li>
 			</ul>
-
-			<div class="list-group list-group-dark">
-
-				<a class="list-group-item" ng-href="{{ ::$ctrl.env.firesideBaseUrl }}"
-					title="Fireside - Indie gaming opinions, news, and reviews"
-					gj-track-event="sidebar:fireside"
-					>
-					<img src="/lib/gj-lib-client/components/site-selector/jolt-fireside.png" width="155" style="margin-top: -8px; margin-bottom: -2px" alt="Fireside">
-				</a>
-
-				<a class="list-group-item" ng-href="{{ ::$ctrl.env.jamsBaseUrl }}"
-					title="Game Jolt Jams"
-					gj-track-event="sidebar:jams"
-					>
-					<img src="/lib/gj-lib-client/components/site-selector/jolt.svg" alt="" style="margin-right: 6px;">
-					<img src="/lib/gj-lib-client/components/site-selector/jams-logo.svg" alt="Game Jolt Jams">
-				</a>
-
-				<a class="list-group-item" ui-sref="client"
-					ng-if="!$ctrl.env.isClient"
-					title="Game Jolt Client"
-					gj-track-event="sidebar:client"
-					>
-					<img src="/lib/gj-lib-client/components/site-selector/jolt.svg" alt="" style="margin-right: 6px;">
-					<img src="/lib/gj-lib-client/components/site-selector/client-logo.svg" alt="Game Jolt Client">
-				</a>
-
-			</div>
 		</div>
 	</gj-popover>
 
@@ -235,7 +249,7 @@
 						gj-tooltip="{{ !$ctrl.shell.isLeftPaneVisible ? 'Devlogs' : '' }}"
 						tooltip-placement="right"
 						>
-						<span class="jolticon jolticon-blog-article"></span>
+						<span class="jolticon jolticon-devlogs"></span>
 					</span>
 					<span class="shell-nav-label" translate>
 						Devlogs
