@@ -22,8 +22,13 @@ angular.module( 'App.Game.MediaBar' ).directive( 'gjGameMediaBarItem', function(
 				elem.style.width = dimensions.width + 'px';
 				elem.style.height = dimensions.height + 'px';
 			}
+			else if ( this.item.media_type == 'sketchfab' ) {
+				// Sketchfab thumbnails are hardcoded to this width.
+				elem.style.height = '150px';
+				elem.style.width = 150 / 0.5625 + 'px';
+			}
 			else {
-				// Video/sketchfab thumbnails are hardcoded to this width.
+				// Video thumbnails are hardcoded to this width.
 				elem.style.width = '200px';
 			}
 
