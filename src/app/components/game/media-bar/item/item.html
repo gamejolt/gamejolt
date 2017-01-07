@@ -6,8 +6,12 @@
 		title="{{ ::ctrl.item.media_type == 'image' ? ctrl.item.caption : ctrl.item.title }}"
 		alt="{{ ::ctrl.item.media_type == 'image' ? ctrl.item.caption : ctrl.item.title }}">
 
-	<span class="play-button-overlay" ng-if="ctrl.item.media_type == 'video'">
+	<span class="play-button-overlay play-button-overlay-small" ng-if="ctrl.item.media_type == 'video'">
 		<span class="jolticon jolticon-play"></span>
+	</span>
+
+	<span class="play-button-overlay play-button-overlay-small" ng-if="ctrl.item.media_type == 'sketchfab'">
+		<span class="jolticon jolticon-sketchfab"></span>
 	</span>
 
 </a>

@@ -1,0 +1,23 @@
+<form gj-form="formModel" name="mediaForm">
+
+	<form-group name="sketchfab_id" label="{{ 'Sketchfab Model ID' | translate }}">
+		<p class="help-block">
+			<span translate>This is the ID in your model's URL. For example:</span>
+			<code>https://sketchfab.com/models/<strong>ID</strong></code>
+		</p>
+		<input form-control="text">
+		<control-errors></control-errors>
+	</form-group>
+
+	<button gj-form-submit-button
+		ng-if="!mediaForm.$pristine"
+		class="btn btn-outline"
+		ng-disabled="!mediaForm.$valid"
+		ng-click="onSubmit()"
+		>
+		<span class="jolticon" ng-class="'jolticon-' + method"></span>
+		<span ng-if="method == 'add'" translate>Add</span>
+		<span ng-if="method == 'edit'" translate>Save</span>
+	</button>
+
+</form>

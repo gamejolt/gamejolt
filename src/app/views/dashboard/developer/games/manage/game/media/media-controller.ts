@@ -2,13 +2,13 @@ import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from './../../../../../../../app-service';
 import { ModalConfirm } from './../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Clipboard } from './../../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
+import { GameSketchfab } from '../../../../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
 
 @Injectable()
 export class MediaCtrl
 {
-	// mediaItems: any[] = [];
 	$manageCtrl: any = null;
-	addTab: 'image' | 'video' = 'image';
+	addTab: 'image' | 'video' | 'sketchfab' = 'image';
 	activeItem: any = null;
 	currentSort: string[] = [];
 
@@ -18,6 +18,7 @@ export class MediaCtrl
 		@Inject( 'Api' ) private api: any,
 		@Inject( 'Game_Screenshot' ) private gameScreenshotModel: any,
 		@Inject( 'Game_Video' ) private gameVideoModel: any,
+		@Inject( 'GameSketchfab' ) private sketchfabModel: typeof GameSketchfab,
 		@Inject( 'ModalConfirm' ) private confirm: ModalConfirm,
 		@Inject( 'Clipboard' ) public clipboard: Clipboard,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
@@ -42,6 +43,9 @@ export class MediaCtrl
 		else if ( item.media_type == 'video' ) {
 			return new this.gameVideoModel( item );
 		}
+		else if ( item.media_type == 'sketchfab' ) {
+			return new this.sketchfabModel( item );
+		}
 	}
 
 	onVideoAdded( video: any )
@@ -49,6 +53,12 @@ export class MediaCtrl
 		this.$manageCtrl.mediaItems.unshift( this._instantiateMediaItem( video ) );
 		this.updateSort();
 		this.addTab = 'image';
+	}
+
+	onSketchfabAdded( sketchfab: any )
+	{
+		this.$manageCtrl.mediaItems.unshift( this._instantiateMediaItem( sketchfab ) );
+		this.updateSort();
 	}
 
 	onImagesAdded( response: any )
@@ -80,15 +90,18 @@ export class MediaCtrl
 
 	removeItem( item: any )
 	{
-		let typeLabel: string = '';
+		let typeLabel = '';
 		if ( item.media_type == 'image' ) {
 			typeLabel = this.gettextCatalog.getString( 'dash.games.media.image_label' ).toLowerCase();
 		}
 		else if ( item.media_type == 'video' ) {
 			typeLabel = this.gettextCatalog.getString( 'dash.games.media.video_label' ).toLowerCase();
 		}
+		else if ( item.media_type == 'sketchfab' ) {
+			typeLabel = this.gettextCatalog.getString( 'sketchfab model' ).toLowerCase();
+		}
 
-		/// {{ type }} contains the translated media item type (image/video)
+		/// {{ type }} contains the translated media item type (image/video/sketchfab)
 		const message = this.gettextCatalog.getString( 'dash.games.media.remove_confirmation', { type: typeLabel } );
 
 		this.confirm.show( message )
@@ -112,6 +125,9 @@ export class MediaCtrl
 			}
 			else if ( item.media_type == 'video' ) {
 				return 'video-' + item.id;
+			}
+			else if ( item.media_type == 'sketchfab' ) {
+				return 'sketchfab-' + item.id;
 			}
 		} );
 	}

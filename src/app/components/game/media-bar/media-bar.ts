@@ -3,7 +3,8 @@ import { MediaBarComponent } from './media-bar-directive';
 
 export default angular.module( 'App.Game.MediaBar', [
 	'gj.Game.Screenshot',
-	'gj.Game.Video'
+	'gj.Game.Video',
+	'gj.Game.Sketchfab'
 ] )
 .directive( ...provide( MediaBarComponent ) )
 .name;

@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', function(
-	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, Game_NewsArticle, Fireside_Post,
+	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, GameSketchfab, Game_NewsArticle, Fireside_Post,
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, User, Environment,
 	Jam,
 	Comment_Video,
@@ -84,6 +84,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 				}
 				else if ( item.media_type == 'video' ) {
 					$scope.gameCtrl.mediaItems.push( new Game_Video( item ) );
+				}
+				else if ( item.media_type == 'sketchfab' ) {
+					$scope.gameCtrl.mediaItems.push( new GameSketchfab( item ) );
 				}
 			} );
 		}

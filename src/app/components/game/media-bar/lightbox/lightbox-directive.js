@@ -60,6 +60,9 @@ angular.module( 'App.Game.MediaBar' ).directive( 'gjGameMediaBarLightbox', funct
 					else if ( $scope.mediaBarCtrl.activeItem.media_type == 'video' ) {
 						hash = 'video-';
 					}
+					else if ( $scope.mediaBarCtrl.activeItem.media_type == 'sketchfab' ) {
+						hash = 'sketchfab-';
+					}
 					hash += $scope.mediaBarCtrl.activeItem.id;
 				}
 				else {

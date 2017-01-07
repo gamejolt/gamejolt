@@ -62,5 +62,39 @@
 			</div>
 		</div>
 
+		<!-- Sketchfab -->
+		<div ng-switch-when="sketchfab">
+			<div class="game-media-bar-lightbox-item-embed"
+				ng-if="ctrl.maxWidth && ctrl.maxHeight"
+				>
+				<div ng-if="ctrl.mediaBarCtrl.isPlaying != ctrl.itemIndex ">
+
+					<!--
+						Since we don't have the original width/height for videos, we have to just set max dimensions for the thumbnail.
+					-->
+					<img
+						ng-src="{{ ctrl.item.img_thumbnail }}"
+						alt=""
+						ng-style="{ 'max-height': ctrl.maxHeight + 'px', 'max-width': ctrl.maxWidth + 'px' }"
+						>
+
+					<span class="play-button-overlay" ng-click="ctrl.play()">
+						<span class="jolticon jolticon-play"></span>
+					</span>
+				</div>
+
+				<div ng-if="ctrl.mediaBarCtrl.isPlaying == ctrl.itemIndex">
+					<gj-sketchfab-embed
+						class="game-media-bar-lightbox-item-embed"
+						sketchfab-id="ctrl.item.sketchfab_id"
+						max-width="ctrl.maxWidth"
+						max-height="ctrl.maxHeight"
+						autoplay="true"
+						>
+					</gj-sketchfab-embed>
+				</div>
+			</div>
+		</div>
+
 	</div>
 </div>

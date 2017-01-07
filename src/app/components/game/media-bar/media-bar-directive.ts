@@ -88,6 +88,10 @@ export class MediaBarComponent implements OnChanges
 				id = parseInt( hash.substring( 'video-'.length ) );
 				type = 'video';
 			}
+			else if ( hash.indexOf( 'sketchfab-' ) !== -1 ) {
+				id = parseInt( hash.substring( 'sketchfab-'.length ) );
+				type = 'sketchfab';
+			}
 
 			if ( id && type ) {
 				const item = _.find( this.mediaItems, { id: id } );
@@ -106,6 +110,12 @@ export class MediaBarComponent implements OnChanges
 						this.growls.error(
 							this.gettextCatalog.getString( 'games.view.media.invalid_video_growl' ),
 							this.gettextCatalog.getString( 'games.view.media.invalid_video_growl_title' )
+						);
+					}
+					else if ( type == 'sketchfab' ) {
+						this.growls.error(
+							this.gettextCatalog.getString( `Couldn't find that sketchfab model! Maybe it's been removed.` ),
+							this.gettextCatalog.getString( 'Invalid Sketchfab URL' )
 						);
 					}
 					this.analytics.trackEvent( 'media-bar', 'permalink-invalid' );

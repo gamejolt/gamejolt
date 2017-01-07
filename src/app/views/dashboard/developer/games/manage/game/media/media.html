@@ -11,14 +11,17 @@
 			<ul>
 				<li>
 					<a ng-click="mediaCtrl.addTab = 'image'" ng-class="{ active: mediaCtrl.addTab == 'image' }">
-						<span class="jolticon jolticon-screenshot"></span>
 						<span translate>Images</span>
 					</a>
 				</li>
 				<li>
 					<a ng-click="mediaCtrl.addTab = 'video'" ng-class="{ active: mediaCtrl.addTab == 'video' }">
-						<span class="jolticon jolticon-video"></span>
 						<span translate>dash.games.media.video_label</span>
+					</a>
+				</li>
+				<li>
+					<a ng-click="mediaCtrl.addTab = 'sketchfab'" ng-class="{ active: mediaCtrl.addTab == 'sketchfab' }">
+						<span>Sketchfab</span>
 					</a>
 				</li>
 			</ul>
@@ -57,6 +60,21 @@
 					gj-form-submit-handler="mediaCtrl.onVideoAdded( formModel )"
 					>
 				</gj-form-dashboard-game-video>
+			</div>
+
+			<div ng-switch-when="sketchfab">
+				<div class="alert alert-info full-bleed-xs">
+					<p translate>With Sketchfab you can embed 3D content from your game in the browser. You can also view that content from any Virtual Reality headset. AMAZING!</p>
+					<p>
+						<a class="link-help" href="https://sketchfab.com/" target="_blank" translate>Learn more about Sketchfab...</a>
+					</p>
+				</div>
+
+				<gj-form-dashboard-game-sketchfab
+					gj-game="manageCtrl.game"
+					gj-form-submit-handler="mediaCtrl.onSketchfabAdded( formModel )"
+					>
+				</gj-form-dashboard-game-sketchfab>
 			</div>
 		</div>
 
@@ -127,6 +145,19 @@
 										</div>
 									</div>
 
+									<div ng-switch-when="sketchfab">
+										<div class="card-meta">
+											<div class="tag">Sketchfab</div>
+											<a class="btn btn-sm btn-outline"
+												ng-click="mediaCtrl.clipboard.copy( Environment.baseUrl + item.getUrl( manageCtrl.game ) ); $event.stopPropagation()"
+												gj-tooltip="{{ 'Copy the direct link to view this sketchfab model on your game page.' | translate }}"
+												translate
+												>
+												Copy Permalink
+											</a>
+										</div>
+									</div>
+
 								</div>
 
 							</gj-editable-accordion-item-heading>
@@ -149,6 +180,14 @@
 										gj-form-submit-handler="mediaCtrl.onMediaEdited( formModel )"
 										>
 									</gj-form-dashboard-game-video>
+
+									<gj-form-dashboard-game-sketchfab
+										ng-switch-when="sketchfab"
+										gj-game="manageCtrl.game"
+										gj-game-sketchfab="item"
+										gj-form-submit-handler="mediaCtrl.onMediaEdited( formModel )"
+										>
+									</gj-form-dashboard-game-sketchfab>
 								</div>
 
 							</gj-editable-accordion-item-body>

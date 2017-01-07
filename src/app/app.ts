@@ -78,6 +78,7 @@ import GameModLinksModule from './components/game/mod-links/mod-links';
 import CountdownModule from '../lib/gj-lib-client/components/countdown/countdown';
 import LoadingFadeModule from '../lib/gj-lib-client/components/loading/fade/fade';
 import SketchfabEmbedModule from '../lib/gj-lib-client/components/sketchfab/embed/embed';
+import GameSketchfabModule from '../lib/gj-lib-client/components/game/sketchfab/sketchfab';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -387,6 +388,7 @@ const AppModule = angular.module( 'App', [
 	CountdownModule,
 	LoadingFadeModule,
 	BroadcastModalModule,
+	GameSketchfabModule,
 
 	// Views.
 	ViewsModule,

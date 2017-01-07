@@ -23,7 +23,7 @@ angular.module( 'App.Game.MediaBar' ).directive( 'gjGameMediaBarItem', function(
 				elem.style.height = dimensions.height + 'px';
 			}
 			else {
-				// Video thumbnails are hardcoded to this width.
+				// Video/sketchfab thumbnails are hardcoded to this width.
 				elem.style.width = '200px';
 			}
 
