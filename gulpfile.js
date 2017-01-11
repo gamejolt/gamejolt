@@ -19,6 +19,7 @@ var config = {
 	rollup: {
 		vendor: {
 			'ng-metadata/core': 'vendor.ngMetadata_core',
+			'ng-metadata/common': 'vendor.ngMetadata_common',
 			'ng-metadata/platform': 'vendor.ngMetadata_platform',
 		},
 	},
@@ -90,6 +91,11 @@ var config = {
 				'error-tracking',
 			],
 		},
+		'theme-editor.js': {
+			bower: [
+				'spectrum',
+			],
+		},
 
 		// Sections of the site.
 		'dash.js': {
@@ -97,9 +103,18 @@ var config = {
 			components: [
 				'forms/dashboard',
 				'site-analytics',
+				'site-editor-modal',
 			],
 			libComponents: [
+				'model',
 				'timezone',
+				'colorpicker',
+				'theme',
+				'content-block/editor',
+				'site',
+				'site/theme',
+				'site/template',
+				'site/content-block',
 			],
 			views: [
 				'dashboard',

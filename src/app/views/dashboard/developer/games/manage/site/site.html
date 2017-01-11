@@ -1,0 +1,44 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-md-4 col-md-push-7">
+				<div class="page-help" translate>
+					<p>Manage access keys for your game through key groups.</p>
+					<p>You can create different groups for different types of access, e.g. testers, friends, press, let's players, etc.</p>
+					<p>They will be able to access your game's builds through the provided keys.</p>
+				</div>
+			</div>
+
+			<div class="col-md-7 col-md-pull-4">
+
+				<div class="form-group no-animate">
+					<label class="control-label" translate>
+						Activate site?
+					</label>
+					<gj-toggle-switch
+						type="checkbox"
+						ng-model="manageCtrl.game.sites_enabled"
+						ng-change="siteCtrl.toggled()"
+						toggle-switch-on-text="{{ 'On' | translate }}"
+						toggle-switch-off-text="{{ 'Off' | translate }}"
+						>
+					</gj-toggle-switch>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label" translate>
+						Edit/customize site
+					</label>
+					<div>
+						<button class="btn" ng-click="siteCtrl.showEditor()" translate>
+							Open Editor
+						</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</section>
