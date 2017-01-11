@@ -24,6 +24,7 @@ export class SiteEditorModalComponent
 	tab: 'theme' | 'content' = 'theme';
 
 	constructor(
+		@Inject( '$sce' ) private $sce: ng.ISCEService,
 		@Inject( 'Api' ) private api: any,
 		@Inject( 'Site' ) private siteModel: typeof Site,
 		@Inject( 'SiteTemplate' ) private templateModel: typeof SiteTemplate,
@@ -43,6 +44,11 @@ export class SiteEditorModalComponent
 					this.theme = this.site.theme;
 				}
 			} );
+	}
+
+	get siteUrl()
+	{
+		return this.$sce.trustAsResourceUrl( this.site.url );
 	}
 
 	themeEdited( $theme: any )
