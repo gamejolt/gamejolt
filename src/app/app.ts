@@ -79,6 +79,7 @@ import CountdownModule from '../lib/gj-lib-client/components/countdown/countdown
 import LoadingFadeModule from '../lib/gj-lib-client/components/loading/fade/fade';
 import SketchfabEmbedModule from '../lib/gj-lib-client/components/sketchfab/embed/embed';
 import GameSketchfabModule from '../lib/gj-lib-client/components/game/sketchfab/sketchfab';
+import WidgetCompilerModule from '../lib/gj-lib-client/components/widget-compiler/widget-compiler';
 
 import { AppCtrl } from './app-controller';
 import { App } from './app-service';
@@ -296,7 +297,7 @@ const AppModule = angular.module( 'App', [
 	ImgResponsiveModule,
 	ResponsiveDimensionsModule,
 
-	'gj.WidgetCompiler',
+	WidgetCompilerModule,
 
 	VideoModule,
 	VideoEmbedModule,
