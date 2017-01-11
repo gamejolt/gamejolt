@@ -4,6 +4,7 @@
 // so that we can keep this in cache.
 
 import 'reflect-metadata';
+
 import {
 	Inject,
 	Injectable,
@@ -21,6 +22,11 @@ import {
 	SkipSelf,
 	ViewChild,
 } from 'ng-metadata/core';
+
+import {
+	NgModel,
+} from 'ng-metadata/common';
+
 import { bootstrap } from 'ng-metadata/platform';
 
 const ngMetadata_core = {
@@ -41,11 +47,16 @@ const ngMetadata_core = {
 	ViewChild,
 };
 
+const ngMetadata_common = {
+	NgModel,
+};
+
 const ngMetadata_platform = {
 	bootstrap,
 };
 
 export default {
 	ngMetadata_core,
+	ngMetadata_common,
 	ngMetadata_platform,
 };

@@ -1,0 +1,98 @@
+<div class="site-editor-modal-backdrop anim-fade-in"></div>
+
+<div class="site-editor-modal" ng-class="'site-editor-modal-tab-' + $ctrl.tab">
+	<div class="site-editor-modal-body">
+
+		<gj-loading ng-if="!$ctrl.isLoaded"></gj-loading>
+
+		<div ng-if="$ctrl.isLoaded">
+
+			<div class="site-editor-modal-nav">
+
+				<nav class="navbar">
+					<div class="navbar-left">
+						<ul class="navbar-items">
+							<li>
+								<a ng-class="{ active: $ctrl.tab == 'theme' }" ng-click="$ctrl.tab = 'theme'">
+									Customize Theme
+								</a>
+							</li>
+							<li>
+								<a ng-class="{ active: $ctrl.tab == 'content' }" ng-click="$ctrl.tab = 'content'">
+									Edit Content
+								</a>
+							</li>
+						</ul>
+					</div>
+
+					<div class="navbar-center">
+
+					</div>
+
+					<div class="navbar-right">
+
+						<button class="btn btn-success-outline" ng-click="$ctrl.save()">
+							<span translate>Save</span>
+						</button>
+
+						<button class="btn btn-danger-outline" ng-click="$ctrl.close()">
+							<span translate>Close</span>
+						</button>
+
+					</div>
+				</nav>
+
+			</div>
+
+			<div class="site-editor-modal-sidebar scrollable overlay-scrollbar anim-fade-enter-left anim-fade-leave-left" ng-if="$ctrl.tab == 'theme'">
+				<div class="well">
+
+					<h3 class="sans-margin-top" translate>Select a Theme</h3>
+
+					<p class="small text-muted" translate>Themes decide the layout and general styling of your page.</p>
+
+					<gj-theme-selector
+						templates="$ctrl.templates"
+						current-template="$ctrl.currentTemplateId"
+						changed="$ctrl.currentTemplateId = $template"
+						>
+					</gj-theme-selector>
+
+					<div ng-if="$ctrl.currentTemplateId">
+						<h3 translate>Customize Theme</h3>
+
+						<div ng-repeat="templateId in [ $ctrl.currentTemplateId ]">
+							<gj-theme-editor
+								window-id="site-editor-modal-iframe"
+								resource-id="$ctrl.site.id"
+								template="templateId"
+								theme="$ctrl.theme.data"
+								changed="$ctrl.themeEdited( $theme )"
+								>
+							</gj-theme-editor>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="site-editor-modal-bottom scrollable overlay-scrollbar anim-fade-enter-up anim-fade-leave-down" ng-if="$ctrl.tab == 'content'">
+				<div class="well">
+
+					<gj-content-block-editor
+						window-id="site-editor-modal-iframe"
+						content-block="$ctrl.site.content_blocks[0]"
+						compiled="$ctrl.contentCompiled( $compiled )"
+						>
+					</gj-content-block-editor>
+
+				</div>
+			</div>
+
+			<div class="site-editor-modal-content">
+				<iframe id="site-editor-modal-iframe" src="http://localhost:8080/blind-redux"></iframe>
+			</div>
+
+		</div>
+	</div>
+</div>
