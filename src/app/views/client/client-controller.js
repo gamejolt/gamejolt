@@ -7,7 +7,7 @@ angular.module( 'App.Views' ).controller( 'ClientCtrl', function( $sce, $http, A
 	this.platform = Device.os();
 	this.firesidePosts = Fireside_Post.populate( payload.firesidePosts );
 
-	var MANIFEST_URL = 'http://d.gamejolt.net/data/client/manifest-2.json';
+	var MANIFEST_URL = 'https://d.gamejolt.net/data/client/manifest-2.json';
 	this.download = function( platform )
 	{
 		if ( platform == 'windows' ) {
