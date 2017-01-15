@@ -115,6 +115,7 @@ var config = {
 				'site/theme',
 				'site/template',
 				'site/content-block',
+				'site/build',
 			],
 			views: [
 				'dashboard',

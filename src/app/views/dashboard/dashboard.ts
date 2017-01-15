@@ -6,6 +6,7 @@ import SiteModule from '../../../lib/gj-lib-client/components/site/site';
 import SiteThemeModule from '../../../lib/gj-lib-client/components/site/theme/theme';
 import SiteTemplateModule from '../../../lib/gj-lib-client/components/site/template/template';
 import SiteContentBlockModule from '../../../lib/gj-lib-client/components/site/content-block/content-block';
+import SiteBuildModule from '../../../lib/gj-lib-client/components/site/build/build';
 import TimezoneModule from '../../../lib/gj-lib-client/components/timezone/timezone';
 import ColorpickerModule from '../../../lib/gj-lib-client/components/colorpicker/colorpicker';
 import ThemeEditorModule from '../../../lib/gj-lib-client/components/theme/theme-editor/theme-editor';
@@ -26,6 +27,7 @@ angular.module( 'App.Views.Dashboard', [
 	SiteThemeModule,
 	SiteTemplateModule,
 	SiteContentBlockModule,
+	SiteBuildModule,
 	TimezoneModule,
 	ColorpickerModule,
 	ThemeEditorModule,

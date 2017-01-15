@@ -37,6 +37,41 @@
 					</div>
 				</div>
 
+				<div ng-if="siteCtrl.builds.length">
+
+					<gj-card ng-repeat="build in siteCtrl.builds track by build.id">
+
+						<a class="card-remove"
+							ng-click="siteCtrl.removeBuild( build )"
+							>
+							<span class="jolticon jolticon-remove"></span>
+						</a>
+
+						<div class="card-title">
+							<h5>
+								{{ build.added_on | date:'medium' }}
+							</h5>
+						</div>
+
+						<div class="card-controls" ng-if="build.status === siteCtrl.buildModel.STATUS_INACTIVE">
+							<a class="btn btn-outline"
+								ng-click="siteCtrl.activateBuild( build )"
+								>
+								<span translate>Activate</span>
+							</a>
+						</div>
+
+					</gj-card>
+
+				</div>
+
+				<gj-form-dashboard-site-build
+					ng-if="siteCtrl.site"
+					site="siteCtrl.site"
+					gj-form-submit-handler="siteCtrl.onBuildAdded( formModel )"
+					>
+				</gj-form-dashboard-site-build>
+
 			</div>
 		</div>
 
