@@ -1,6 +1,7 @@
 import { makeState } from '../../../lib/gj-lib-client/utils/angular-facade';
 
 makeState( 'dashboard', {
+	abstract: true,
 	url: '/dashboard',
 	lazyLoad: () => $import( './dashboard.module' ),
 	resolve: {
