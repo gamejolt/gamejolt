@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyGroups.ListCtrl', function(
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.KeyGroups.ListCtrl', function(
 	$scope, $state, App, KeyGroup, Game_Package, gettextCatalog, payload )
 {
 	var _this = this;

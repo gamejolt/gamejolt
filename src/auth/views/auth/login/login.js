@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '^/login?redirect',
 		controller: 'Auth.LoginCtrl',
 		controllerAs: 'loginCtrl',
-		templateUrl: '/auth/views/auth/login/login.html',
+		templateUrl: require( './login.html' ),
 		resolve: {
 
 			// Requiring authPayload waits for the auth resolve.

@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Forums.Topics.View.PageCtrl', function( $scope, App, Forum_Channel, Forum_Topic, Forum_Post, Location, payload )
+angular.module( 'App.Views.Forums' ).controller( 'Forums.Topics.View.PageCtrl', function( $scope, App, Forum_Channel, Forum_Topic, Forum_Post, Location, payload )
 {
 	var viewCtrl = $scope.viewCtrl;
 

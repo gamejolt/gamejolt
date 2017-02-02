@@ -1,23 +1,30 @@
-export function DevlogPostFormFactory( Form: any, Fireside_Post: any, KeyGroup: any, Game_Video: any )
+import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Loader } from '../../../../../../lib/gj-lib-client/components/loader/loader.service';
+
+DevlogPostFormFactory.$inject = [ 'Form', 'KeyGroup', 'Game_Video' ];
+export function DevlogPostFormFactory( Form: any, KeyGroup: any, Game_Video: any )
 {
 	const form = new Form( {
 		model: 'Fireside_Post',
-		template: '/app/components/forms/dashboard/game/devlog-post/devlog-post.html'
+		template: require( './devlog-post.html' )
 	} );
 
 	form.onInit = function( scope: any )
 	{
-		scope.Fireside_Post = Fireside_Post;
+		scope.Fireside_Post = FiresidePost;
 		scope.Game_Video = Game_Video;
 
-		scope.formModel.status = Fireside_Post.STATUS_ACTIVE;
+		scope.Loader = Loader;
+		Loader.load( 'upload' );
 
-		if ( scope.baseModel.type == Fireside_Post.TYPE_VIDEO ) {
+		scope.formModel.status = FiresidePost.STATUS_ACTIVE;
+
+		if ( scope.baseModel.type == FiresidePost.TYPE_VIDEO ) {
 			if ( scope.baseModel.videos.length ) {
 				scope.formModel.video_url = 'https://www.youtube.com/watch?v=' + scope.baseModel.videos[0].video_id;
 			}
 		}
-		else if ( scope.baseModel.type == Fireside_Post.TYPE_SKETCHFAB ) {
+		else if ( scope.baseModel.type == FiresidePost.TYPE_SKETCHFAB ) {
 			if ( scope.baseModel.sketchfabs.length ) {
 				scope.formModel.sketchfab_id = scope.baseModel.sketchfabs[0].sketchfab_id;
 			}
@@ -58,7 +65,7 @@ export function DevlogPostFormFactory( Form: any, Fireside_Post: any, KeyGroup: 
 
 		scope.onDraftSubmit = () =>
 		{
-			scope.formModel.status = Fireside_Post.STATUS_DRAFT;
+			scope.formModel.status = FiresidePost.STATUS_DRAFT;
 			scope.onSubmit();
 		};
 	};

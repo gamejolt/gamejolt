@@ -2,7 +2,7 @@ angular.module( 'App.Forms.Forum' ).directive( 'gjFormForumTopic', function( For
 {
 	var form = new Form( {
 		model: 'Forum_Topic',
-		template: '/app/components/forms/forum/topic/topic.html'
+		template: require( './topic.html' )
 	} );
 
 	form.scope.channel = '=';

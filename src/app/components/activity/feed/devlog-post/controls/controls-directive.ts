@@ -1,50 +1,53 @@
-import { Component, Input, Output, Inject, OnInit } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Fireside_Post_Like } from './../../../../../../lib/gj-lib-client/components/fireside/post/like/like-model';
-import { App } from './../../../../../app-service';
-import { DevlogPostEdit } from './../../../../devlog/post/edit/edit-service';
-import { Clipboard } from './../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
-import { Screen } from './../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Component, Input, Output, Inject, OnInit, EventEmitter } from 'ng-metadata/core';
+import { StateService } from 'angular-ui-router';
+import * as template from '!html-loader!./controls.html';
+
+import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { FiresidePostLike } from '../../../../../../lib/gj-lib-client/components/fireside/post/like/like-model';
+import { App } from '../../../../../app-service';
+import { DevlogPostEdit } from '../../../../devlog/post/edit/edit-service';
+import { Clipboard } from '../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
+import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import template from 'html!./controls.html';
 
 @Component({
 	selector: 'gj-activity-feed-devlog-post-controls',
 	template,
 })
-export class ControlsComponent implements OnInit
+export class ActivityFeedDevlogPostControlsComponent implements OnInit
 {
-	@Input( '<' ) post: Fireside_Post;
-	@Input( '<?' ) showGameInfo = false;
-	@Input( '<?' ) showEditControls = false;
-	@Input( '<?' ) showExtraInfo = true;
-	@Input( '<?' ) requireTabs = false;
-	@Input( '<?' ) inModal = false;
+	@Input( '<' ) post: FiresidePost;
+	@Input( '<' ) showGameInfo = false;
+	@Input( '<' ) showEditControls = false;
+	@Input( '<' ) showExtraInfo = true;
+	@Input( '<' ) requireTabs = false;
+	@Input( '<' ) inModal = false;
 
-	@Output( '?' ) onExpand?: Function;
-	@Output( '?' ) onPostEdit?: Function;
-	@Output( '?' ) onPostPublish?: Function;
-	@Output( '?' ) onPostRemove?: Function;
+	@Output() private onExpand = new EventEmitter<void>();
+	@Output() private onPostEdit = new EventEmitter<void>();
+	@Output() private onPostPublish = new EventEmitter<void>();
+	@Output() private onPostRemove = new EventEmitter<void>();
 
 	tab: 'comments' | 'likes' | undefined;
 	hasLoadedLikes = false;
-	likes: Fireside_Post_Like[] = [];
+	likes: FiresidePostLike[] = [];
 
 	isShowingShare = false;
 	shareUrl: string;
 	sharePopoverId: string;
 
+	env = Environment;
+	firesidePostModel = FiresidePost;
+
 	constructor(
-		@Inject( '$state' ) $state: ng.ui.IStateService,
+		@Inject( '$state' ) $state: StateService,
 		@Inject( 'App' ) public app: App,
-		@Inject( 'Environment' ) public env: Environment,
 		@Inject( 'Clipboard' ) private clipboard: Clipboard,
 		@Inject( 'Screen' ) public screen: Screen,
-		@Inject( 'Fireside_Post' ) public firesidePostModel: typeof Fireside_Post,
 		@Inject( 'DevlogPostEdit' ) private editService: DevlogPostEdit,
 	)
 	{
-		this.shareUrl = env.baseUrl + $state.href( 'discover.games.view.devlog.view', {
+		this.shareUrl = Environment.baseUrl + $state.href( 'discover.games.view.devlog.view', {
 			slug: this.post.game.slug,
 			id: this.post.game.id,
 			postSlug: this.post.slug,
@@ -74,7 +77,7 @@ export class ControlsComponent implements OnInit
 		}
 
 		if ( this.onExpand ) {
-			this.onExpand();
+			this.onExpand.emit( undefined );
 		}
 	}
 
@@ -88,7 +91,7 @@ export class ControlsComponent implements OnInit
 		}
 
 		if ( this.onExpand ) {
-			this.onExpand();
+			this.onExpand.emit( undefined );
 		}
 
 		if ( this.tab == 'likes' ) {
@@ -96,14 +99,11 @@ export class ControlsComponent implements OnInit
 		}
 	}
 
-	loadLikes()
+	async loadLikes()
 	{
-		this.post.fetchLikes()
-			.then( ( likes ) =>
-			{
-				this.likes = likes;
-				this.hasLoadedLikes = true;
-			} );
+		const likes = await this.post.fetchLikes();
+		this.likes = likes;
+		this.hasLoadedLikes = true;
 	}
 
 	copyShareUrl()
@@ -111,36 +111,30 @@ export class ControlsComponent implements OnInit
 		this.clipboard.copy( this.shareUrl );
 	}
 
-	showEdit()
+	async showEdit()
 	{
-		this.editService.show( this.post )
-			.then( () =>
-			{
-				if ( this.onPostEdit ) {
-					this.onPostEdit();
-				}
-			} );
+		await this.editService.show( this.post );
+
+		if ( this.onPostEdit ) {
+			this.onPostEdit.emit( undefined );
+		}
 	}
 
-	publishPost()
+	async publishPost()
 	{
-		this.post.$publish()
-			.then( () =>
-			{
-				if ( this.onPostPublish ) {
-					this.onPostPublish();
-				}
-			} );
+		await this.post.$publish();
+
+		if ( this.onPostPublish ) {
+			this.onPostPublish.emit( undefined );
+		}
 	}
 
-	removePost()
+	async removePost()
 	{
-		this.post.remove()
-			.then( () =>
-			{
-				if ( this.onPostRemove ) {
-					this.onPostRemove( this.post );
-				}
-			} );
+		await this.post.remove();
+
+		if ( this.onPostRemove ) {
+			this.onPostRemove.emit( undefined );
+		}
 	}
 }

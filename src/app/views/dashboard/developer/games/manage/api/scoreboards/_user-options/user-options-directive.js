@@ -1,8 +1,8 @@
-angular.module( 'App.Views' ).directive( 'gjDashScoreUserOptionsDeveloper', function()
+angular.module( 'App.Views.Dashboard' ).directive( 'gjDashScoreUserOptionsDeveloper', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/views/dashboard/developer/games/manage/api/scoreboards/_user-options/user-options.html',
+		template: require( '!html-loader!./user-options.html' ),
 		scope: {},
 		bindToController: {
 			scoreTable: '=gjScoreTable',

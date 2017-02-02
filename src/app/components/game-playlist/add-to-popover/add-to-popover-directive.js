@@ -2,7 +2,7 @@ angular.module( 'App.GamePlaylist.AddToPopover' ).directive( 'gjGamePlaylistAddT
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/game-playlist/add-to-popover/add-to-popover.html',
+		template: require( '!html-loader!./add-to-popover.html' ),
 		scope: {
 			game: '=gjGame',
 		},

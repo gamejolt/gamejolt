@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccounts.LinkingCtrl', function( $stateParams, $state, App, Growls, Client )
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Account.LinkedAccounts.LinkingCtrl', function( $stateParams, $state, App, Growls, Client )
 {
 	App.title = 'Waiting for Link';
 

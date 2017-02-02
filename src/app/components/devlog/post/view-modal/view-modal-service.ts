@@ -1,8 +1,8 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import template from 'html!./view-modal.html';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import * as template from '!html-loader!./view-modal.html';
 
-@Injectable()
+@Injectable( 'DevlogPostViewModal' )
 export class DevlogPostViewModal
 {
 	constructor(
@@ -11,7 +11,7 @@ export class DevlogPostViewModal
 	{
 	}
 
-	show( post: Fireside_Post ): ng.IPromise<Fireside_Post>
+	show( post: FiresidePost ): Promise<FiresidePost>
 	{
 		const modalInstance = this.$modal.open( {
 			template,

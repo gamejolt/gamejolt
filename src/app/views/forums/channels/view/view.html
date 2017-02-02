@@ -81,7 +81,7 @@
 				items-per-page="viewCtrl.perPage"
 				total-items="viewCtrl.channel.topics_count"
 				current-page="viewCtrl.currentPage"
-				on-page-change="Scroll.to( 'forum-topics-list', { animate: false } )"
+				(on-page-change)="Scroll.to( 'forum-topics-list', { animate: false } )"
 				>
 			</gj-pagination>
 		</div>

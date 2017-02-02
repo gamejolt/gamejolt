@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/site',
 		controller: 'Dashboard.Developer.Games.Manage.SiteCtrl',
 		controllerAs: 'siteCtrl',
-		templateUrl: '/app/views/dashboard/developer/games/manage/site/site.html',
+		templateUrl: require( './site.html' ),
 		resolve: {
 			payload: function( Api, $stateParams )
 			{

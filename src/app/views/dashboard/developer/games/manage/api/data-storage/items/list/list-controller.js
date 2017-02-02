@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.DataStorage.Items.ListCtrl', function(
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.Api.DataStorage.Items.ListCtrl', function(
 	$scope, App, Game_DataStore_Item, ModalConfirm, gettextCatalog, payload )
 {
 	var _this = this;

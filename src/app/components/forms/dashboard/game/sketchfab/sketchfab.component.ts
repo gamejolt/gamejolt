@@ -1,10 +1,11 @@
+GameSketchfabFormFactory.$inject = [ 'Form' ];
 export function GameSketchfabFormFactory(
 	Form: any,
 )
 {
 	const form = new Form( {
 		model: 'GameSketchfab',
-		template: '/app/components/forms/dashboard/game/sketchfab/sketchfab.component.html',
+		template: require( './sketchfab.component.html' ),
 		resetOnSubmit: true,
 	} );
 

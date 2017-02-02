@@ -19,7 +19,7 @@ angular.module( 'App.Game.CompatIcons' ).directive( 'gjGameCompatIcons', functio
 
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/game/compat-icons/compat-icons.html',
+		template: require( '!html-loader!./compat-icons.html' ),
 		scope: {},
 		bindToController: {
 			game: '=gjGame',

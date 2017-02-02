@@ -1,6 +1,6 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
 import { Search } from './search-service';
-import template from 'html!./search.html';
+import * as template from '!html-loader!./search.html';
 
 @Component({
 	selector: 'gj-search',
@@ -18,7 +18,7 @@ export class SearchComponent
 	searchElem: ng.IAugmentedJQuery;
 	keydownSpies: Function[] = [];
 
-	@Input( '<?gjSearchAutocompleteDisable' ) autocompleteDisabled = false;
+	@Input( 'disableAutocomplete' ) autocompleteDisabled = false;
 
 	constructor(
 		@Inject( 'Search' ) search: Search,

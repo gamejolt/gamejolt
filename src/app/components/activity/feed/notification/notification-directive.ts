@@ -1,18 +1,18 @@
-import { Component, Inject, Input, Output } from 'ng-metadata/core';
-import { Screen } from './../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Notification } from './../../../../../lib/gj-lib-client/components/notification/notification-model';
-import { ActivityFeedItem } from './../item-service';
-import template from 'html!./notification.html';
+import { Component, Inject, Input, Output, EventEmitter } from 'ng-metadata/core';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
+import { ActivityFeedItem } from '../item-service';
+import * as template from '!html-loader!./notification.html';
 
 @Component({
 	selector: 'gj-activity-feed-notification',
 	template,
 })
-export class NotificationComponent
+export class ActivityFeedNotificationComponent
 {
 	@Input( '<' ) item: ActivityFeedItem;
 
-	@Output() onClick: Function;
+	@Output() private onClick = new EventEmitter<void>();
 
 	notification: Notification;
 
@@ -37,7 +37,7 @@ export class NotificationComponent
 		}
 
 		this.notification.go();
-		this.onClick();
+		this.onClick.emit( undefined );
 	}
 
 	toggleFull()

@@ -1,7 +1,7 @@
 angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameKeyGroupAddKeys', function( Form, KeyGroup, Api )
 {
 	var form = new Form( {
-		template: '/app/components/forms/dashboard/game/key-group/add-keys/add-keys.html',
+		template: require( './add-keys.html' ),
 	} );
 
 	form.scope.keyGroup = '=';

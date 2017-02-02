@@ -5,7 +5,7 @@ angular.module( 'App.User.LevelWidget' ).directive( 'gjUserLevelWidget', functio
 		scope: {
 			user: '=gjUser',
 		},
-		templateUrl: '/app/components/user/level-widget/level-widget.html',
+		template: require( '!html-loader!./level-widget.html' ),
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: angular.noop,

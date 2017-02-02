@@ -1,6 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
+import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 
-@Injectable()
+@Injectable( 'ModalCtrl' )
 export class ModalCtrl
 {
 	from: string;
@@ -12,7 +13,6 @@ export class ModalCtrl
 
 	constructor(
 		@Inject( '$modalInstance' ) private $modalInstance: any,
-		@Inject( 'Game' ) private gameModel: any,
 		@Inject( 'game' ) public game: any,
 		@Inject( 'stage' ) public stage: number,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
@@ -28,10 +28,10 @@ export class ModalCtrl
 
 	private _getStatusTranslated( stage: number )
 	{
-		if ( stage == this.gameModel.DEVELOPMENT_STATUS_DEVLOG ) {
+		if ( stage == Game.DEVELOPMENT_STATUS_DEVLOG ) {
 			return this.gettextCatalog.getString( 'devlog-only', {}, 'development status' );
 		}
-		else if ( stage == this.gameModel.DEVELOPMENT_STATUS_WIP ) {
+		else if ( stage == Game.DEVELOPMENT_STATUS_WIP ) {
 			return this.gettextCatalog.getString( 'early access', {}, 'development status' );
 		}
 
@@ -40,10 +40,10 @@ export class ModalCtrl
 
 	private _getStatusString( stage: number )
 	{
-		if ( stage == this.gameModel.DEVELOPMENT_STATUS_DEVLOG ) {
+		if ( stage == Game.DEVELOPMENT_STATUS_DEVLOG ) {
 			return 'devlog';
 		}
-		else if ( stage == this.gameModel.DEVELOPMENT_STATUS_WIP ) {
+		else if ( stage == Game.DEVELOPMENT_STATUS_WIP ) {
 			return 'wip';
 		}
 

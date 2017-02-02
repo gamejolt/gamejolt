@@ -1,9 +1,10 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { App } from './../../../../app-service';
-import { Meta } from './../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { ActivityFeedContainer } from './../../../../components/activity/feed/feed-container-service';
-import { ActivityFeedService } from './../../../../components/activity/feed/feed-service';
+import { App } from '../../../../app-service';
+import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
+import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 
 @Injectable()
 export class OverviewCtrl
@@ -16,9 +17,6 @@ export class OverviewCtrl
 	constructor(
 		@Inject( 'App' ) app: App,
 		@Inject( 'Meta' ) meta: Meta,
-		@Inject( 'Game' ) game: any,
-		@Inject( 'Fireside_Post' ) firesidePostModel: typeof Fireside_Post,
-		@Inject( 'ActivityFeedService' ) feedService: ActivityFeedService,
 		@Inject( 'payload' ) payload: any
 	)
 	{
@@ -31,9 +29,9 @@ export class OverviewCtrl
 		meta.fb.description = meta.description;
 		meta.twitter.description = meta.description;
 
-		meta.twitter.image = '/app/views/discover/devlogs/social.png';
+		meta.twitter.image = require( '../social.png' );
 
-		this.games = game.populate( payload.games );
-		this.posts = feedService.bootstrap( firesidePostModel.populate( payload.posts ) );
+		this.games = Game.populate( payload.games );
+		this.posts = ActivityFeedService.bootstrap( FiresidePost.populate( payload.posts ) );
 	}
 }

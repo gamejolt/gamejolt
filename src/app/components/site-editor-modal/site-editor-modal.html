@@ -54,7 +54,7 @@
 					<gj-theme-selector
 						templates="$ctrl.templates"
 						current-template="$ctrl.currentTemplateId"
-						changed="$ctrl.currentTemplateId = $template"
+						(changed)="$ctrl.currentTemplateId = $event"
 						>
 					</gj-theme-selector>
 
@@ -67,7 +67,7 @@
 								resource-id="$ctrl.site.id"
 								template="templateId"
 								theme="$ctrl.theme.data"
-								changed="$ctrl.themeEdited( $theme )"
+								(changed)="$ctrl.themeEdited( $event )"
 								>
 							</gj-theme-editor>
 						</div>

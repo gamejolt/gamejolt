@@ -1,9 +1,12 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
+import * as template from '!html-loader!./account-popover.component.html';
+
 import { App } from '../../../app-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import template from 'html!./account-popover.component.html';
+import { getProvider } from '../../../../lib/gj-lib-client/utils/utils';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 
 @Component({
 	selector: 'gj-shell-account-popover',
@@ -16,19 +19,17 @@ export class ShellAccountPopoverComponent
 	walletAmount: number | false = false;
 
 	Client?: any;
+	env = Environment;
 
 	constructor(
-		@Inject( '$injector' ) $injector: any,
 		@Inject( 'App' ) public app: App,
-		@Inject( 'Api' ) private api: any,
 		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'User_TokenModal' ) private User_TokenModal: any,
 		@Inject( 'Connection' ) public conn: Connection,
-		@Inject( 'Environment' ) public env: Environment,
 	)
 	{
-		if ( env.isClient ) {
-			this.Client = $injector.get( 'Client' );
+		if ( GJ_IS_CLIENT ) {
+			this.Client = getProvider<any>( 'Client' );
 		}
 	}
 
@@ -55,7 +56,7 @@ export class ShellAccountPopoverComponent
 
 	getWallet()
 	{
-		this.api.sendRequest( '/web/dash/funds/wallet', { detach: true } )
+		Api.sendRequest( '/web/dash/funds/wallet', { detach: true } )
 			.then( ( response: any ) =>
 			{
 				this.walletAmount = response.amount;

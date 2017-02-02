@@ -6,7 +6,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 		url: '/music',
 		controller: 'Dashboard.Developer.Games.Manage.Game.MusicCtrl',
 		controllerAs: 'musicCtrl',
-		templateUrl: '/app/views/dashboard/developer/games/manage/game/music/music.html',
+		templateUrl: require( './music.html' ),
 		resolve: {
 			payload: function( Api, $stateParams )
 			{

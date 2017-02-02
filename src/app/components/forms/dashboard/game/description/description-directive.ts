@@ -1,9 +1,10 @@
+GameDescriptionFormFactory.$inject = [ 'Form' ];
 export function GameDescriptionFormFactory( Form: any )
 {
 	const form = new Form( {
 		model: 'Game',
 		saveMethod: '$saveDescription',
-		template: '/app/components/forms/dashboard/game/description/description.html'
+		template: require( './description.html' )
 	} );
 
 	form.scope.isWizard = '<';

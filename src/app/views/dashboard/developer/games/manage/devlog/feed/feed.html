@@ -4,7 +4,7 @@
 	items="feedCtrl.posts"
 	load-more-url="/web/dash/developer/games/devlog/posts/{{ manageCtrl.game.id }}/{{ feedCtrl.tab }}"
 	show-edit-controls="true"
-	on-post-published="feedCtrl.onPostPublished( $post )"
+	(on-post-published)="feedCtrl.onPostPublished( $event )"
 	>
 </gj-activity-feed>
 

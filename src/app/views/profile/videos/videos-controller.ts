@@ -1,34 +1,35 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { App } from './../../../app-service.ts';
-import { Comment_Video } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { StateParams } from 'angular-ui-router';
+
+import { App } from '../../../app-service';
+import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 
 @Injectable()
 export class VideosCtrl
 {
-	videos: Comment_Video[];
+	videos: CommentVideo[];
 	page = 0;
 
 	constructor(
 		@Inject( '$scope' ) $scope: any,
-		@Inject( '$stateParams' ) private $stateParams: ng.ui.IStateParamsService,
+		@Inject( '$stateParams' ) private $stateParams: StateParams,
 		@Inject( 'App' ) app: App,
-		@Inject( 'Api' ) private api: any,
-		@Inject( 'Comment_Video' ) private commentVideo: typeof Comment_Video,
 		@Inject( 'payload' ) payload: any
 	)
 	{
 		app.title = `Videos from ${$scope.profileCtrl.user.display_name} (@${$scope.profileCtrl.user.username})`;
 
-		this.videos = commentVideo.populate( payload.videos );
+		this.videos = CommentVideo.populate( payload.videos );
 	}
 
 	loadMore()
 	{
 		++this.page;
-		this.api.sendRequest( `/web/profile/videos/${this.$stateParams['id']}?page=${this.page}` )
+		Api.sendRequest( `/web/profile/videos/${this.$stateParams['id']}?page=${this.page}` )
 			.then( ( response: any ) =>
 			{
-				this.videos = this.videos.concat( this.commentVideo.populate( response.videos ) );
+				this.videos = this.videos.concat( CommentVideo.populate( response.videos ) );
 			} );
 	}
 }

@@ -47,21 +47,21 @@
 				<gj-activity-feed-devlog-post-text
 					ng-switch-when="text"
 					post="::$ctrl.post"
-					on-expand="$ctrl.onExpand()"
+					on-expand="$ctrl.expanded()"
 					>
 				</gj-activity-feed-devlog-post-text>
 
 				<gj-activity-feed-devlog-post-video
 					ng-switch-when="video"
 					post="::$ctrl.post"
-					on-expand="$ctrl.onExpand()"
+					on-expand="$ctrl.expanded()"
 					>
 				</gj-activity-feed-devlog-post-video>
 
 				<gj-activity-feed-devlog-post-sketchfab
 					ng-switch-when="sketchfab"
 					post="::$ctrl.post"
-					on-expand="$ctrl.onExpand()"
+					on-expand="$ctrl.expanded()"
 					>
 				</gj-activity-feed-devlog-post-sketchfab>
 
@@ -72,7 +72,7 @@
 					ng-switch-when="media"
 					item="::$ctrl.item"
 					on-click="$ctrl._onClick( $event )"
-					on-expand="$ctrl.onExpand()"
+					on-expand="$ctrl.expanded()"
 					>
 				</gj-activity-feed-devlog-post-media>
 			</div>
@@ -82,7 +82,7 @@
 				show-game-info="::$ctrl.feed.showGameInfo"
 				show-edit-controls="::$ctrl.feed.showEditControls"
 				show-extra-info="::!$ctrl.screen.isXs"
-				on-expand="$ctrl.onExpand()"
+				on-expand="$ctrl.expanded()"
 				on-post-edit="$ctrl.feed.onPostEdited( $ctrl.post )"
 				on-post-publish="$ctrl.feed.onPostPublished( $ctrl.post )"
 				on-post-remove="$ctrl.feed.onPostRemoved( $ctrl.post )"

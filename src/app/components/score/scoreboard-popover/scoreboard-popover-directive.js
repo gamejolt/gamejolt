@@ -7,7 +7,7 @@ angular.module( 'App.Score.ScoreboardPopover' ).directive( 'gjScoreboardPopover'
 			tables: '=scoreboardPopoverTables',
 			onSelectTable: '&scoreboardPopoverOnSelect',
 		},
-		templateUrl: '/app/components/score/scoreboard-popover/scoreboard-popover.html',
+		template: require( '!html-loader!./scoreboard-popover.html' ),
 		controllerAs: 'ctrl',
 		bindToController: true,
 		controller: function()

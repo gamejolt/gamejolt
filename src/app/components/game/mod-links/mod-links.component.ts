@@ -1,6 +1,8 @@
 import { Component, Input, Inject } from 'ng-metadata/core';
+import * as template from '!html-loader!./mod-links.component.html';
+
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import template from 'html!./mod-links.component.html';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 
 @Component({
 	selector: 'gj-game-mod-links',
@@ -10,9 +12,9 @@ export class GameModLinksComponent
 {
 	@Input( '<' ) game: any;
 
+	env = Environment;
+
 	constructor(
-		@Inject( 'Environment' ) public env: Environment,
-		@Inject( 'Api' ) private api: any,
 		@Inject( 'Growls' ) public growls: any,
 	)
 	{
@@ -21,7 +23,7 @@ export class GameModLinksComponent
 	tag( tag: string )
 	{
 		// It won't return what site api expects for output, so gotta catch.
-		this.api.sendRequest( `/games/tags/tag/${this.game.id}/${tag}`, null, { apiPath: '/moderate', processPayload: false } )
+		Api.sendRequest( `/games/tags/tag/${this.game.id}/${tag}`, null, { apiPath: '/moderate', processPayload: false } )
 			.catch( () =>
 			{
 				this.growls.success( 'Tagged the game.' );

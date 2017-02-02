@@ -2,7 +2,7 @@ angular.module( 'App.CoverImg' ).directive( 'gjCoverImg', function( ImgHelper )
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/auth/components/cover-img/cover-img.html',
+		template: require( '!html-loader!./cover-img.html' ),
 		scope: {
 			imgUrl: '@coverImgUrl',
 		},

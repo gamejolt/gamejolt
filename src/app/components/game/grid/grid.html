@@ -29,7 +29,7 @@
 		items-per-page="$ctrl.perPage"
 		total-items="$ctrl.gamesCount"
 		current-page="$ctrl.currentPage"
-		on-page-change="$ctrl.scroll.to( 'grid-pagination-' + $ctrl.id, { animate: false } )"
+		(on-page-change)="$ctrl.scroll.to( 'grid-pagination-' + $ctrl.id, { animate: false } )"
 		>
 	</gj-pagination>
 </div>

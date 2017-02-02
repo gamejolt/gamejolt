@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Game.Packages.Edit.WidgetCtrl', function(
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.Game.Packages.Edit.WidgetCtrl', function(
 	$scope, $sce, $state, Environment, Sellable, widgetPayload )
 {
 	var _this = this;

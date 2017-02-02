@@ -3,7 +3,7 @@ angular.module( 'App.Chat' ).service( 'Chat_RoomDetailsModal', function( $modal 
 	this.show = function( room )
 	{
 		var modalInstance = $modal.open( {
-			templateUrl: '/app/components/chat/room-details-modal/room-details-modal.html',
+			template: require( '!html-loader!./room-details-modal.html' ),
 			controller: 'Chat_RoomDetailsModalCtrl',
 			controllerAs: 'modalCtrl',
 			resolve: {

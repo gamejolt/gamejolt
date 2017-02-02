@@ -5,7 +5,7 @@ angular.module( 'App.Views', [] ).config( function( $stateProvider )
 		url: '/auth',
 		controller: 'AuthCtrl',
 		controllerAs: 'authCtrl',
-		templateUrl: '/auth/views/auth/auth.html',
+		templateUrl: require( './auth.html' ),
 		resolve: {
 			init: function( Translate )
 			{

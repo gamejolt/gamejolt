@@ -1,5 +1,5 @@
 import { Component } from 'ng-metadata/core';
-import template from 'html!./hot-bottom.component.html';
+import * as template from '!html-loader!./hot-bottom.component.html';
 
 @Component({
 	selector: 'gj-shell-hot-bottom',

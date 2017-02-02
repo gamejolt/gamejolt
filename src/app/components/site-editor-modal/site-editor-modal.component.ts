@@ -1,9 +1,10 @@
-import { Component, Output, Inject, Input } from 'ng-metadata/core';
-import template from 'html!./site-editor-modal.html';
+import { Component, Output, Inject, Input, EventEmitter } from 'ng-metadata/core';
+import * as template from '!html-loader!./site-editor-modal.html';
 
 import { SiteTheme } from '../../../lib/gj-lib-client/components/site/theme/theme-model';
 import { Site } from '../../../lib/gj-lib-client/components/site/site-model';
 import { SiteTemplate } from '../../../lib/gj-lib-client/components/site/template/template-model';
+import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 
 @Component({
 	selector: 'gj-site-editor-modal',
@@ -13,7 +14,7 @@ export class SiteEditorModalComponent
 {
 	@Input( '<' ) siteId: number;
 
-	@Output( 'close' ) _close: Function;
+	@Output( 'close' ) private _close = new EventEmitter<void>();
 
 	site: Site;
 	templates: SiteTemplate[] = [];
@@ -25,19 +26,16 @@ export class SiteEditorModalComponent
 
 	constructor(
 		@Inject( '$sce' ) private $sce: ng.ISCEService,
-		@Inject( 'Api' ) private api: any,
-		@Inject( 'Site' ) private siteModel: typeof Site,
-		@Inject( 'SiteTemplate' ) private templateModel: typeof SiteTemplate,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 	)
 	{
-		this.api.sendRequest( `/web/dash/sites/editor/${this.siteId}` )
+		Api.sendRequest( `/web/dash/sites/editor/${this.siteId}` )
 			.then( ( response: any ) =>
 			{
 				this.isLoaded = true;
-				this.site = new this.siteModel( response.site );
-				this.templates = this.templateModel.populate( response.templates );
+				this.site = new Site( response.site );
+				this.templates = SiteTemplate.populate( response.templates );
 
 				if ( this.site.theme ) {
 					this.currentTemplateId = this.site.theme.template.id;
@@ -64,7 +62,7 @@ export class SiteEditorModalComponent
 			content_blocks: this.site.content_blocks,
 		};
 
-		this.api.sendRequest( `/web/dash/sites/editor-save/${this.siteId}`, data, { sanitizeComplexData: false } )
+		Api.sendRequest( `/web/dash/sites/editor-save/${this.siteId}`, data, { sanitizeComplexData: false } )
 			.then( ( _response: any ) =>
 			{
 				this.growls.success(
@@ -77,6 +75,6 @@ export class SiteEditorModalComponent
 	// TODO: If changes, make sure they want to.
 	close()
 	{
-		this._close();
+		this._close.emit( undefined );
 	}
 }

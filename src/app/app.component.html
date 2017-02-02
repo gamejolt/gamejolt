@@ -1,0 +1,31 @@
+<gj-client-intro client-intro-done="App.isClientIntroDone = true" ng-if="!App.isClientIntroDone"></gj-client-intro>
+
+<gj-shell>
+
+	<gj-shell-top-nav></gj-shell-top-nav>
+
+	<gj-offline-alert></gj-offline-alert>
+
+	<gj-shell-sidebar></gj-shell-sidebar>
+
+	<gj-shell-body>
+		<!--<gj-terms-change-alert></gj-terms-change-alert>-->
+		<ui-view id="content" ng-cloak></ui-view>
+	</gj-shell-body>
+
+	<div ng-if="Shell.chat">
+		<gj-shell-chat-pane></gj-shell-chat-pane>
+		<gj-chat-bubbles></gj-chat-bubbles>
+		<gj-chat-windows></gj-chat-windows>
+	</div>
+
+	<gj-growls></gj-growls>
+
+	<gj-shell-hot-bottom>
+		<gj-minbar></gj-minbar>
+		<gj-client-status-bar></gj-client-status-bar>
+	</gj-shell-hot-bottom>
+
+</gj-shell>
+
+<div gj-debug-bar></div>

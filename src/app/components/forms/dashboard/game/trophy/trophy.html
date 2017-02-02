@@ -4,7 +4,7 @@
 		<gj-loading></gj-loading>
 	</div>
 
-	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
+	<div ng-if="Loader.ready( 'upload' )">
 		<div ng-if="isLoaded">
 
 			<!--

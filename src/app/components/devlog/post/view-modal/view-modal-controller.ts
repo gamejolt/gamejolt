@@ -1,13 +1,13 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 
-@Injectable()
+@Injectable( 'ModalCtrl' )
 export class ModalCtrl
 {
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( '$modalInstance' ) private $modalInstance: any,
-		@Inject( 'post' ) public post: Fireside_Post,
+		@Inject( 'post' ) public post: FiresidePost,
 	)
 	{
 		$scope.$on( '$stateChangeStart', () =>

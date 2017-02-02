@@ -2,7 +2,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormSaveRoom', function( $rootScope,
 {
 	var form = new Form( {
 		model: 'Chat_Room',
-		template: '/app/components/forms/chat/save-room/save-room.html',
+		template: require( './save-room.html' ),
 	} );
 
 	form.onInit = function( scope )

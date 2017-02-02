@@ -4,7 +4,7 @@ angular.module( 'App.Client.PackageCardButtons' ).directive( 'gjClientPackageCar
 		restrict: 'E',
 		require: '^gjGamePackageCard',
 		scope: true,
-		templateUrl: '/app/components/client/package-card-buttons/package-card-buttons.html',
+		template: require( '!html-loader!./package-card-buttons.html' ),
 		controller: function( $scope, Device, Analytics, Client_Library, Client_Installer, Client_Launcher, LocalDb_Package, Game, Game_Build, Popover )
 		{
 			// Parent scope controller.

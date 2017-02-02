@@ -1,16 +1,14 @@
 import { bootstrap } from 'ng-metadata/platform';
 import { enableProdMode, provide } from 'ng-metadata/core';
 
-import { isClient } from '../lib/gj-lib-client/components/environment/environment.service';
-
 import EnvironmentModule from '../lib/gj-lib-client/components/environment/environment';
-import ConnectionModule from './../lib/gj-lib-client/components/connection/connection';
-import ConnectionStatePermissionsModule from './../lib/gj-lib-client/components/connection/state-permissions/state-permissions';
-import ModelModule from './../lib/gj-lib-client/components/model/model';
-import MetaModule from './../lib/gj-lib-client/components/meta/meta';
-import RulerModule from './../lib/gj-lib-client/components/ruler/ruler';
-import ScreenModule from './../lib/gj-lib-client/components/screen/screen';
-import ImgHelperModule from './../lib/gj-lib-client/components/img/helper/helper';
+import ConnectionModule from '../lib/gj-lib-client/components/connection/connection';
+import ConnectionStatePermissionsModule from '../lib/gj-lib-client/components/connection/state-permissions/state-permissions';
+import ModelModule from '../lib/gj-lib-client/components/model/model';
+import MetaModule from '../lib/gj-lib-client/components/meta/meta';
+import RulerModule from '../lib/gj-lib-client/components/ruler/ruler';
+import ScreenModule from '../lib/gj-lib-client/components/screen/screen';
+import ImgHelperModule from '../lib/gj-lib-client/components/img/helper/helper';
 import PopoverModule from '../lib/gj-lib-client/components/popover/popover';
 import AuthModule from '../lib/gj-lib-client/components/auth/auth';
 import AuthJoinModule from '../lib/gj-lib-client/components/auth/join/join';
@@ -87,7 +85,7 @@ const AppModule = angular.module( 'App', [
 ] )
 .config( function(
 	$locationProvider: ng.ILocationProvider,
-	$uiViewScrollProvider: ng.ui.IUiViewScrollProvider,
+	$uiViewScrollProvider: any,
 	$compileProvider: ng.ICompileProvider,
 	$sceDelegateProvider: ng.ISCEDelegateProvider,
 	TranslateProvider: any,
@@ -102,16 +100,12 @@ const AppModule = angular.module( 'App', [
 	$uiViewScrollProvider.useAnchorScroll();
 
 	// Desktop client.
-	if ( isClient ) {
+	if ( GJ_IS_CLIENT ) {
 
 		// Some libraries attach onto global instead of window for node-webkit
 		// because they think they're in nodejs context. Just pull back over to window.
 		if ( typeof window._ == 'undefined' ) {
 			window._ = global._;
-		}
-
-		if ( typeof window.moment == 'undefined' ) {
-			window.moment = global.moment;
 		}
 
 		// Can't use push/popstate URLs for node-webkit.

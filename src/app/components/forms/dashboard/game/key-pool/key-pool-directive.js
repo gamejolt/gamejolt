@@ -3,7 +3,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameKeyPool',
 	var form = new Form( {
 		model: 'Game_KeyPool',
 		saveMethod: '$import',
-		template: '/app/components/forms/dashboard/game/key-pool/key-pool.html'
+		template: require( './key-pool.html' )
 	} );
 
 	form.scope.game = '=gjGame';

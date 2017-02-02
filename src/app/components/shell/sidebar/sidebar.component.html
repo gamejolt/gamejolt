@@ -311,7 +311,7 @@
 						ui-sref="dashboard.activity.feed( { tab: 'activity' } )"
 						ng-class="{ active: $ctrl.$state.includes( 'dashboard.activity' ) }"
 						gj-track-event="sidebar:activity"
-						gj-activity-notification-count="$ctrl.notificationsCount = $count"
+						gj-activity-notification-count="$ctrl.notificationsCount = $event"
 						>
 						<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
 							ng-if="$ctrl.notificationsCount > 0"

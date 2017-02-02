@@ -1,22 +1,22 @@
 import { Component, Inject } from 'ng-metadata/core';
-import template from 'html!./history.html';
+import { StateService } from 'angular-ui-router';
+import * as template from '!html-loader!./history.html';
 
-import { Search_History } from './history-service';
+import { SearchHistory } from './history-service';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 
 @Component({
 	selector: 'gj-search-history',
 	template,
 })
-export class HistoryComponent
+export class SearchHistoryComponent
 {
 	isVisible = false;
 	recentSearches: string[] = [];
 
 	constructor(
-		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
-		@Inject( 'Search_History' ) private searchHistory: Search_History,
+		@Inject( '$state' ) private $state: StateService,
+		@Inject( 'SearchHistory' ) private searchHistory: SearchHistory,
 		@Inject( 'Popover' ) private popover: Popover,
 	)
 	{
@@ -31,9 +31,6 @@ export class HistoryComponent
 	{
 		this.isVisible = true;
 		this.refresh();
-
-		// Give us time to render ourselves before showing.
-		return this.$timeout( angular.noop );
 	}
 
 	onHide()

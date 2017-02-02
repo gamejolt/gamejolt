@@ -1,6 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { SearchPayload } from './payload-service';
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
+import { getProvider } from '../../../lib/gj-lib-client/utils/utils';
+import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 
 export interface SearchOptions
 {
@@ -8,37 +9,32 @@ export interface SearchOptions
 	page?: number;
 }
 
-@Injectable()
+@Injectable( 'Search' )
 export class Search
 {
 	Client_Library: any;
 	query = '';
 
 	constructor(
-		@Inject( '$injector' ) $injector: any,
-		@Inject( '$q' ) private $q: ng.IQService,
 		@Inject( 'orderByFilter' ) private orderByFilter: ng.IFilterOrderBy,
-		@Inject( 'Environment' ) environment: Environment,
-		@Inject( 'Api' ) private api: any,
 		@Inject( 'Fuzzysearch' ) private fuzzysearch: any,
-		@Inject( 'SearchPayload' ) private searchPayload: typeof SearchPayload
 	)
 	{
-		this.Client_Library = environment.isClient ? $injector.get( 'Client_Library' ) : null;
+		this.Client_Library = GJ_IS_CLIENT ? getProvider( 'Client_Library' ) : undefined;
 	}
 
 	globalQuery( query: string )
 	{
-		if ( angular.isUndefined( query ) ) {
+		if ( typeof query === 'undefined' ) {
 			return this.query;
 		}
 
 		this.query = query;
 	}
 
-	search( query: string, options: SearchOptions = { type: 'all' } )
+	async search( query: string, options: SearchOptions = { type: 'all' } )
 	{
-		let searchPromises: ng.IPromise<any>[] = [];
+		let searchPromises: Promise<any>[] = [];
 		searchPromises.push( this._searchSite( query, options ) );
 
 		// If we're in client, let's try to search their installed games.
@@ -46,21 +42,17 @@ export class Search
 			searchPromises.push( this._searchInstalledGames( query ) );
 		}
 
-		return this.$q.all( searchPromises )
-			.then( _payload =>
-			{
-				const searchPayload = _payload[0];
-				const libraryPayload = _payload.length > 1 ? _payload[1] : null;
+		const _payload = await Promise.all( searchPromises );
 
-				const payload = angular.merge( searchPayload, {
-					libraryGames: libraryPayload || [],
-				} );
+		let searchPayload = _payload[0];
+		const libraryPayload = _payload.length > 1 ? _payload[1] : null;
 
-				return new this.searchPayload( options.type, payload );
-			} );
+		searchPayload.libraryGames = libraryPayload || [];
+
+		return new SearchPayload( options.type, searchPayload );
 	}
 
-	private _searchSite( query: string, options: SearchOptions = { type: 'all' } ): ng.IPromise<any>
+	private async _searchSite( query: string, options: SearchOptions = { type: 'all' } ): Promise<any>
 	{
 		let requestOptions: any = {};
 
@@ -87,15 +79,16 @@ export class Search
 			searchParams.push( 'page=' + options.page );
 		}
 
-		return this.api.sendRequest( endpoint + '?' + searchParams.join( '&' ), null, requestOptions )
-			.catch( () =>
-			{
-				// Catch failures and return an empty success instead.
-				return this.$q.resolve( {} );
-			} );
+		// Catch failures and return an empty success instead.
+		try {
+			return await Api.sendRequest( endpoint + '?' + searchParams.join( '&' ), null, requestOptions );
+		}
+		catch ( _e ) {
+			return Promise.resolve( {} );
+		}
 	}
 
-	private _searchInstalledGames( query: string ): ng.IPromise<any>
+	private _searchInstalledGames( query: string ): Promise<any>
 	{
 		let games: any[] = [];
 
@@ -110,6 +103,6 @@ export class Search
 			games = _.take( games, 3 );  // Only return top 3.
 		}
 
-		return this.$q.resolve( games );
+		return Promise.resolve( games );
 	}
 }

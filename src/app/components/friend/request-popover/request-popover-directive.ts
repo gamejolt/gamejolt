@@ -1,6 +1,6 @@
-import { Component, Inject, Output } from 'ng-metadata/core';
-import { App } from './../../../app-service';
-import template from 'html!./request-popover.html';
+import { Component, Inject, Output, EventEmitter } from 'ng-metadata/core';
+import { App } from '../../../app-service';
+import * as template from '!html-loader!./request-popover.html';
 
 const COUNT_INTERVAL = (5 * 60 * 1000);  // 5 minutes.
 const INITIAL_LAG = 3000;
@@ -11,11 +11,11 @@ type Tab = 'requests' | 'pending';
 	selector: 'gj-friend-request-popover',
 	template,
 })
-export class RequestPopoverComponent
+export class FriendRequestPopoverComponent
 {
-	@Output( 'onFocus' ) _onFocus: Function;
-	@Output( 'onBlur' ) _onBlur: Function;
-	@Output( 'onRequestsCount' ) _onRequestsCount: Function;
+	@Output( 'onFocus' ) private _onFocus = new EventEmitter<void>();
+	@Output( 'onBlur' ) private _onBlur = new EventEmitter<void>();
+	@Output( 'onRequestsCount' ) private _onRequestsCount = new EventEmitter<number>();
 
 	private isShown = false;
 	private isLoading = true;
@@ -58,24 +58,20 @@ export class RequestPopoverComponent
 	{
 		this.isShown = true;
 		this.fetchRequests();
-		if ( this._onFocus ) {
-			this._onFocus();
-		}
+		this._onFocus.emit( undefined );
 	}
 
 	onBlur()
 	{
 		this.isShown = false;
-		if ( this._onBlur ) {
-			this._onBlur();
-		}
+		this._onBlur.emit( undefined );
 	}
 
 	private _setCount( count: number )
 	{
 		this.requestsCount = count;
 		if ( this._onRequestsCount ) {
-			this._onRequestsCount( { $count: this.requestsCount } );
+			this._onRequestsCount.emit( this.requestsCount );
 		}
 	}
 

@@ -2,7 +2,7 @@ angular.module( 'App.Score.Overview' ).directive( 'gjScoreOverview', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/score/overview/overview.html',
+		template: require( '!html-loader!./overview.html' ),
 		scope: {
 			game: '=scoreOverviewGame',
 			initialPayload: '=?scoreOverviewPayload',

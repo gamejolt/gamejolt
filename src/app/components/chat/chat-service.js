@@ -1,4 +1,4 @@
-angular.module( 'App.Chat' ).service( 'Chat', function( $ocLazyLoad, $window, $rootScope, $interval, $injector, ChatConfig, ChatClient, Favicon, Environment, Screen )
+angular.module( 'App.Chat' ).service( 'Chat', function( $window, $rootScope, $interval, $injector, ChatConfig, ChatClient, Favicon, Environment, Screen )
 {
 	var _this = this;
 

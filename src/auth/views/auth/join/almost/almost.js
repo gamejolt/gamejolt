@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/almost',
 		views: {
 			'@auth': {
-				templateUrl: '/auth/views/auth/join/almost/almost.html',
+				templateUrl: require( './almost.html' ),
 				controllerAs: 'almostCtrl',
 				controller: 'Auth.Join.AlmostCtrl',
 			}

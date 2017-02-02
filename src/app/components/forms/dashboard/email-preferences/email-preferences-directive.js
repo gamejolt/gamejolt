@@ -3,7 +3,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardEmailPreferen
 	var form = new Form( {
 		model: 'User',
 		saveMethod: '$saveEmailPreferences',
-		template: '/app/components/forms/dashboard/email-preferences/email-preferences.html'
+		template: require( './email-preferences.html' )
 	} );
 
 	form.onInit = function( scope )

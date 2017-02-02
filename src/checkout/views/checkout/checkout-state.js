@@ -5,7 +5,7 @@ angular.module( 'App.Views' )
 		url: '/checkout/:orderId',
 		controller: 'CheckoutCtrl',
 		controllerAs: 'checkoutCtrl',
-		templateUrl: '/checkout/views/checkout/checkout.html',
+		templateUrl: require( './checkout.html' ),
 		resolve: {
 			// init: function( Translate )
 			// {

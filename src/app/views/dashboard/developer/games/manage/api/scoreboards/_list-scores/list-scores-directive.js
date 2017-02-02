@@ -1,8 +1,8 @@
-angular.module( 'App.Views' ).directive( 'gjDashListScoresDeveloper', function()
+angular.module( 'App.Views.Dashboard' ).directive( 'gjDashListScoresDeveloper', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/views/dashboard/developer/games/manage/api/scoreboards/_list-scores/list-scores.html',
+		template: require( '!html-loader!./list-scores.html' ),
 		scope: {},
 		bindToController: {
 			scoreTable: '=gjScoreTable',

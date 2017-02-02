@@ -1,7 +1,9 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Fireside_Post } from '../../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { ActivityFeedService } from './../../../../../../../components/activity/feed/feed-service';
-import { ActivityFeedContainer } from './../../../../../../../components/activity/feed/feed-container-service';
+import { StateService, StateParams } from 'angular-ui-router';
+
+import { FiresidePost } from '../../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { ActivityFeedService } from '../../../../../../../components/activity/feed/feed-service';
+import { ActivityFeedContainer } from '../../../../../../../components/activity/feed/feed-container-service';
 
 @Injectable()
 export class FeedCtrl
@@ -11,20 +13,18 @@ export class FeedCtrl
 
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
-		@Inject( '$stateParams' ) private $stateParams: ng.ui.IStateParamsService,
-		@Inject( 'Fireside_Post' ) firesidePostModel: typeof Fireside_Post,
-		@Inject( 'ActivityFeedService' ) feedService: ActivityFeedService,
+		@Inject( '$state' ) private $state: StateService,
+		@Inject( '$stateParams' ) private $stateParams: StateParams,
 		@Inject( 'payload' ) payload: any,
 	)
 	{
 		this.tab = $stateParams['tab'];
-		this.posts = feedService.bootstrap( firesidePostModel.populate( payload.posts ) );
+		this.posts = ActivityFeedService.bootstrap( FiresidePost.populate( payload.posts ) );
 
-		$scope.$on( 'Devlog.postAdded', ( _event: ng.IAngularEvent, post: Fireside_Post ) => this.onPostAdded( post ) );
+		$scope.$on( 'Devlog.postAdded', ( _event: ng.IAngularEvent, post: FiresidePost ) => this.onPostAdded( post ) );
 	}
 
-	onPostAdded( post: Fireside_Post )
+	onPostAdded( post: FiresidePost )
 	{
 		// If they added into a different status, then switch tabs.
 		if ( this.$stateParams['tab'] != post.status ) {
@@ -35,7 +35,7 @@ export class FeedCtrl
 		this.posts.prepend( [ post ] );
 	}
 
-	onPostPublished( post: Fireside_Post )
+	onPostPublished( post: FiresidePost )
 	{
 		this.$state.go( this.$state.current, { tab: post.status } );
 	}

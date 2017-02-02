@@ -10,6 +10,11 @@
 
 		<div class="navbar-form-control" ng-class="{ active: $ctrl.isFocused }">
 
+			<!--
+				We use the 'click-show' trigger event.
+				This will make sure that the autocomplete popover doesn't disappear when
+				clicking the search input again.'
+			-->
 			<input type="search" class="search-input form-control"
 				id="search-input-{{ $ctrl.id }}"
 				name="q"
@@ -17,6 +22,7 @@
 				gj-search-input
 				ng-model="$ctrl.query"
 				gj-popover-trigger="search-autocomplete"
+				popover-trigger-event="click-show"
 				>
 		</div>
 

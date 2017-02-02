@@ -5,7 +5,7 @@ angular.module( 'App.Chat' ).service( 'Chat_SaveRoomModal', function( $modal )
 		room = room || null;
 
 		var modalInstance = $modal.open( {
-			templateUrl: '/app/components/chat/save-room-modal/save-room-modal.html',
+			template: require( '!html-loader!./save-room-modal.html' ),
 			controller: 'Chat_SaveRoomModalCtrl',
 			controllerAs: 'modalCtrl',
 			resolve: {

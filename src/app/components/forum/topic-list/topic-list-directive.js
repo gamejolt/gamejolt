@@ -2,7 +2,7 @@ angular.module( 'App.Forum.TopicList' ).directive( 'gjForumTopicList', function(
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/forum/topic-list/topic-list.html',
+		template: require( '!html-loader!./topic-list.html' ),
 		scope: {
 			topics: '=',
 			postCountPerPage: '=',

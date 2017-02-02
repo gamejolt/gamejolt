@@ -1,7 +1,9 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { App } from './../../../app-service';
-import { Search } from './../../../components/search/search-service';
-import { Search_History } from './../../../components/search/history/history-service';
+import { StateParams } from 'angular-ui-router';
+
+import { App } from '../../../app-service';
+import { Search } from '../../../components/search/search-service';
+import { SearchHistory } from '../../../components/search/history/history-service';
 import { SearchCtrl } from '../search-controller';
 
 interface Scope extends ng.IScope {
@@ -15,9 +17,9 @@ export class ResultsCtrl
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) $scope: Scope,
 		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
-		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
+		@Inject( '$stateParams' ) $stateParams: StateParams,
 		@Inject( 'Search' ) search: Search,
-		@Inject( 'Search_History' ) history: Search_History,
+		@Inject( 'SearchHistory' ) history: SearchHistory,
 		@Inject( 'payload' ) payload: any,
 	)
 	{

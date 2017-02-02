@@ -1,21 +1,8 @@
-import { Injectable } from 'ng-metadata/core';
 import { ActivityFeedItem, ActivityFeedInput } from './item-service';
-import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { App } from './../../../app-service';
+import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 
-export function ActivityFeedContainerFactory( ActivityFeedItem: any, App: any )
-{
-	ActivityFeedContainer.itemModel = ActivityFeedItem;
-	ActivityFeedContainer.app = App;
-	return ActivityFeedContainer;
-}
-
-@Injectable()
 export class ActivityFeedContainer
 {
-	static itemModel: typeof ActivityFeedItem;
-	static app: App;
-
 	items: ActivityFeedItem[] = [];
 	games: { [k: string]: any } = {};
 
@@ -39,7 +26,7 @@ export class ActivityFeedContainer
 
 	prepend( _items: ActivityFeedInput[] )
 	{
-		const items = _items.map( item => new ActivityFeedContainer.itemModel( item ) );
+		const items = _items.map( item => new ActivityFeedItem( item ) );
 		this.items = items.concat( this.items );
 		this.hasItems = this.items.length > 0;
 		this._processGames();
@@ -47,7 +34,7 @@ export class ActivityFeedContainer
 
 	append( _items: ActivityFeedInput[] )
 	{
-		const items = _items.map( item => new ActivityFeedContainer.itemModel( item ) );
+		const items = _items.map( item => new ActivityFeedItem( item ) );
 		this.items = this.items.concat( items );
 		this.hasItems = this.items.length > 0;
 		this._processGames();
@@ -55,7 +42,7 @@ export class ActivityFeedContainer
 
 	update( _item: ActivityFeedInput )
 	{
-		const item = new ActivityFeedContainer.itemModel( _item );
+		const item = new ActivityFeedItem( _item );
 		const index = _.findIndex( this.items, {
 			type: item.type,
 			feedItem: {
@@ -72,7 +59,7 @@ export class ActivityFeedContainer
 
 	remove( _item: ActivityFeedInput )
 	{
-		const item = new ActivityFeedContainer.itemModel( _item );
+		const item = new ActivityFeedItem( _item );
 		_.remove( this.items, {
 			type: item.type,
 			feedItem: {
@@ -112,7 +99,7 @@ export class ActivityFeedContainer
 		this.viewedItems.push( item.id );
 
 		if ( item.type == 'devlog-post' ) {
-			const feedItem = <Fireside_Post>item.feedItem;
+			const feedItem = <FiresidePost>item.feedItem;
 			feedItem.$viewed();
 		}
 	}
@@ -126,7 +113,7 @@ export class ActivityFeedContainer
 		this.expandedItems.push( item.id );
 
 		if ( item.type == 'devlog-post' ) {
-			const feedItem = <Fireside_Post>item.feedItem;
+			const feedItem = <FiresidePost>item.feedItem;
 			feedItem.$expanded();
 		}
 	}
@@ -139,7 +126,7 @@ export class ActivityFeedContainer
 	private _processGames()
 	{
 		for ( const item of this.items ) {
-			if ( item.feedItem instanceof Fireside_Post ) {
+			if ( item.feedItem instanceof FiresidePost ) {
 				if ( !this.games[ item.feedItem.game.id ] ) {
 					this.games[ item.feedItem.game.id ] = item.feedItem.game;
 				}

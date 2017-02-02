@@ -2,7 +2,7 @@ angular.module( 'App.Offline.Alert' ).directive( 'gjOfflineAlert', function( Con
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/offline/alert/alert.html',
+		template: require( '!html-loader!./alert.html' ),
 		scope: {},
 		controllerAs: 'ctrl',
 		controller: function( $scope )

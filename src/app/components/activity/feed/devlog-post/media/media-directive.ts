@@ -1,26 +1,28 @@
-import { Component, Inject, Input, Output, AfterViewInit, SkipSelf, Optional } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Screen } from './../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { FeedComponent } from './../../feed-directive';
-import { ActivityFeedItem } from './../../item-service';
-import template from 'html!./media.html';
+import { Component, Inject, Input, Output, AfterViewInit, SkipSelf, Optional, EventEmitter } from 'ng-metadata/core';
+import * as template from '!html-loader!./media.html';
+
+import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { ActivityFeedComponent } from '../../feed-directive';
+import { ActivityFeedItem } from '../../item-service';
+import { MediaItem } from '../../../../../../lib/gj-lib-client/components/media-item/media-item-model';
 
 @Component({
 	selector: 'gj-activity-feed-devlog-post-media',
 	template,
 })
-export class MediaComponent implements AfterViewInit
+export class ActivityFeedDevlogPostMediaComponent implements AfterViewInit
 {
 	@Input( '<' ) item: ActivityFeedItem;
 	@Input( '<' ) isNew = false;
 
-	@Output() onClick: Function;
-	@Output() onExpand: Function;
+	@Output() private onClick = new EventEmitter<void>();
+	@Output() private onExpand = new EventEmitter<void>();
 
-	post: Fireside_Post;
+	post: FiresidePost;
 
 	page = 1;
-	activeMediaItem: any;
+	activeMediaItem: MediaItem;
 
 	isDragging = false;
 	isWaitingForFrame = false;
@@ -31,10 +33,10 @@ export class MediaComponent implements AfterViewInit
 		@Inject( '$window' ) private $window: ng.IWindowService,
 		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( 'Screen' ) public screen: Screen,
-		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: FeedComponent,
+		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: ActivityFeedComponent,
 	)
 	{
-		this.post = this.item.feedItem as Fireside_Post;
+		this.post = this.item.feedItem as FiresidePost;
 		this.activeMediaItem = this.post.media[0];
 		screen.setResizeSpy( $scope, () => this._updateSliderOffset() );
 	}
@@ -50,13 +52,18 @@ export class MediaComponent implements AfterViewInit
 		return this.activeMediaItem === mediaItem && this.feed.isItemInView( this.item );
 	}
 
+	clicked()
+	{
+		this.onClick.emit( undefined );
+	}
+
 	next()
 	{
 		this.page = Math.min( this.page + 1, this.post.media.length );
 		this.activeMediaItem = this.post.media[ this.page - 1 ];
 		this._updateSliderOffset();
 		if ( this.onExpand ) {
-			this.onExpand();
+			this.onExpand.emit( undefined );
 		}
 	}
 
@@ -66,7 +73,7 @@ export class MediaComponent implements AfterViewInit
 		this.activeMediaItem = this.post.media[ this.page - 1 ];
 		this._updateSliderOffset();
 		if ( this.onExpand ) {
-			this.onExpand();
+			this.onExpand.emit( undefined );
 		}
 	}
 
@@ -80,7 +87,7 @@ export class MediaComponent implements AfterViewInit
 	panStart()
 	{
 		this.isDragging = true;
-	};
+	}
 
 	pan( $event: ng.IAngularEvent )
 	{
@@ -88,7 +95,7 @@ export class MediaComponent implements AfterViewInit
 			this.isWaitingForFrame = true;
 			this.$window.requestAnimationFrame( () => this._panTick( $event ) );
 		}
-	};
+	}
 
 	private _panTick( $event: any )
 	{
@@ -122,6 +129,6 @@ export class MediaComponent implements AfterViewInit
 
 			this._updateSliderOffset();
 		} );
-	};
+	}
 }
 

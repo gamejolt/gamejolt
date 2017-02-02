@@ -5,7 +5,7 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringSidebarWidget'
 			filteringContainer: '=gjFilteringContainer',
 			onChanged: '&?gjFiltersChanged'
 		},
-		templateUrl: '/app/components/game/filtering/sidebar-widget.html',
+		template: require( '!html-loader!./sidebar-widget.html' ),
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function( $scope, Analytics )

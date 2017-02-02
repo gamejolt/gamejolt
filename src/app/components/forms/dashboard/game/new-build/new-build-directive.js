@@ -1,8 +1,10 @@
+var Loader = require( '../../../../../../lib/gj-lib-client/components/loader/loader.service' ).Loader;
+
 angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewBuild', function( $q, Form, Api, Game_Package, Game_Release, Game_Build, Game_Build_File, gettextCatalog )
 {
 	var form = new Form( {
 		model: 'Game_Build',
-		template: '/app/components/forms/dashboard/game/new-build/new-build.html',
+		template: require( './new-build.html' ),
 		resetOnSubmit: true,
 	} );
 
@@ -22,6 +24,9 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewBuild'
 
 	form.onInit = function( scope )
 	{
+		scope.Loader = Loader;
+		Loader.load( 'upload' );
+
 		// Set the game ID on the form model from the game passed in.
 		scope.formModel.type = scope.type;
 		scope.formModel.game_id = scope.game.id;

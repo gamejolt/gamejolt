@@ -4,6 +4,6 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/header',
 		controller: 'Dashboard.Developer.Games.Manage.Game.HeaderCtrl',
 		controllerAs: 'headerCtrl',
-		templateUrl: '/app/views/dashboard/developer/games/manage/game/header/header.html',
+		templateUrl: require( './header.html' ),
 	} );
 } );

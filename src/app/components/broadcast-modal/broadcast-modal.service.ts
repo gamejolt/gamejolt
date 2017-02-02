@@ -1,29 +1,33 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { BroadcastModalCtrl } from './broadcast-modal.controller';
-import template from 'html!./broadcast-modal.html';
+import * as template from '!html-loader!./broadcast-modal.html';
 import { App } from '../../app-service';
+import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 
 const STORAGE_KEY_PREFIX = 'broadcast-modal:date:';
 
-@Injectable()
+@Injectable( 'BroadcastModal' )
 export class BroadcastModal
 {
 	constructor(
 		@Inject( '$window' ) private $window: ng.IWindowService,
 		@Inject( '$modal' ) private $modal: any,
 		@Inject( 'App' ) private app: App,
-		@Inject( 'Api' ) private api: any,
 	)
 	{
 	}
 
 	private _key()
 	{
-		return STORAGE_KEY_PREFIX + this.app.user.id;
+		return STORAGE_KEY_PREFIX + this.app.user!.id;
 	}
 
-	check()
+	async check()
 	{
+		if ( !this.app.user ) {
+			return;
+		}
+
 		// Bootstrap it from when this feature was launched.
 		if ( !this.$window.localStorage[ this._key() ] && this.app.user.created_on < 1483566930963 ) {
 
@@ -31,13 +35,11 @@ export class BroadcastModal
 			this.$window.localStorage[ this._key() ] = 1464739200000;
 		}
 
-		this.api.sendRequest( '/web/broadcasts', { from: this.$window.localStorage[ this._key() ] } )
-			.then( ( payload: any ) =>
-			{
-				if ( payload.broadcasts.length ) {
-					this.show( payload.broadcasts );
-				}
-			} );
+		const payload = await Api.sendRequest( '/web/broadcasts', { from: this.$window.localStorage[ this._key() ] } );
+
+		if ( payload.broadcasts.length ) {
+			this.show( payload.broadcasts );
+		}
 
 		this.$window.localStorage[ this._key() ] = Date.now();
 	}

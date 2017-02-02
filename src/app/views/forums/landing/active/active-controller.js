@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Forums.Landing.ActiveCtrl', function( App, Forum_Topic, payload )
+angular.module( 'App.Views.Forums' ).controller( 'Forums.Landing.ActiveCtrl', function( App, Forum_Topic, payload )
 {
 	App.title = 'Active Topics in All Forums';
 

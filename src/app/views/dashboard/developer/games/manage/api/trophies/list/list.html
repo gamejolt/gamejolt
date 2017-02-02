@@ -30,7 +30,7 @@
 				</p>
 			</div>
 
-			<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
+			<div ng-if="Loader.ready( 'ui-tree' )">
 				<gj-editable-accordion
 					active-item="listCtrl.activeItem[ difficulty ]"
 					is-adding="listCtrl.isAdding[ difficulty ]"

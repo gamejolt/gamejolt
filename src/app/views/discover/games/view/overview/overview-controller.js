@@ -1,10 +1,10 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', function(
-	$scope, $stateParams, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, GameSketchfab, Game_NewsArticle, Fireside_Post,
+	$scope, $stateParams, $transition$, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, GameSketchfab, Game_NewsArticle, Fireside_Post,
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, User, Environment,
 	Jam,
 	Comment_Video,
 	ActivityFeedService, History,
-	Api, Payload, Analytics, SplitTest, Device, PartnerReferral, $ocLazyLoad, gettextCatalog )
+	Api, Payload, Analytics, SplitTest, Device, PartnerReferral, gettextCatalog )
 {
 	var _this = this;
 	var wasHistoricalView = History.inHistorical;
@@ -54,7 +54,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		} )
 		.catch( function( e )
 		{
-			Payload.handlePayloadError( e );
+			Payload.handlePayloadError( $transition$, e );
 		} );
 
 	this.init = function( payload )

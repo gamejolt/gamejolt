@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/callback?oauth_verifier&state',
 		controller: 'Auth.LinkedAccount.Twitter.CallbackCtrl',
 		controllerAs: 'callbackCtrl',
-		templateUrl: '/auth/views/auth/linked-account/_processing.html',
+		templateUrl: require( './_processing.html' ),
 		resolve: {
 			payload: function( Api, $stateParams )
 			{

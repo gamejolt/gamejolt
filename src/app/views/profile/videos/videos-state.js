@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/videos',
 		controller: 'Profile.VideosCtrl',
 		controllerAs: 'videosCtrl',
-		templateUrl: '/app/views/profile/videos/videos.html',
+		templateUrl: require( './videos.html' ),
 		resolve: {
 			payload: function( Api, $stateParams )
 			{

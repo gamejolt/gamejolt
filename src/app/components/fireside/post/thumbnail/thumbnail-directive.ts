@@ -1,7 +1,7 @@
-import { Component, Inject, Input } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Component, Input } from 'ng-metadata/core';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
-import template from 'html!./thumbnail.html';
+import * as template from '!html-loader!./thumbnail.html';
 
 @Component({
 	selector: 'gj-fireside-post-thumbnail',
@@ -9,11 +9,8 @@ import template from 'html!./thumbnail.html';
 })
 export class ThumbnailComponent
 {
-	@Input( '<firesidePost' ) post: Fireside_Post;
+	@Input( '<firesidePost' ) post: FiresidePost;
 
-	constructor(
-		@Inject( 'Environment' ) public environment: Environment,
-	)
-	{
-	}
+	env = Environment;
+	noThumb: string = require( './no-thumb.png' );
 }

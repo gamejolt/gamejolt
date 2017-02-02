@@ -1,7 +1,7 @@
 angular.module( 'App.Forms' ).directive( 'gjFormJoin', function( $q, Api, Form, Connection )
 {
 	var form = new Form( {
-		template: '/auth/components/forms/join/join.html'
+		template: require( './join.html' )
 	} );
 
 	form.onInit = function( scope )

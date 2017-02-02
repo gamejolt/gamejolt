@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/sent',
 		views: {
 			'@auth': {
-				templateUrl: '/auth/views/auth/forgot/sent/sent.html',
+				templateUrl: require( './sent.html' ),
 				controller: function( App, gettextCatalog )
 				{
 					App.title = gettextCatalog.getString( 'auth.forgot.sent.page_title' );

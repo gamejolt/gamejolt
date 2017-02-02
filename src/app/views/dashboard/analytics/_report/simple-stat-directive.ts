@@ -1,5 +1,5 @@
 import { Component, Input } from 'ng-metadata/core';
-import template from 'html!./simple-stat.html';
+import * as template from '!html-loader!./simple-stat.html';
 
 @Component({
 	selector: 'gj-analytics-report-simple-stat',

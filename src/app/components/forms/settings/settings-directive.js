@@ -1,7 +1,7 @@
 angular.module( 'App.Forms' ).directive( 'gjFormSettings', function( $injector, Form, Environment, Settings )
 {
 	var form = new Form( {
-		template: '/app/components/forms/settings/settings.html'
+		template: require( './settings.html' )
 	} );
 
 	if ( Environment.isClient ) {

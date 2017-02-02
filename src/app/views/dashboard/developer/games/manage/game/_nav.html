@@ -1,5 +1,5 @@
 <ul class="sans-margin">
-	<li ng-if="!manageCtrl.isWizard">
+	<li ng-if="!$ctrl.isWizard">
 		<a ui-sref=".overview" ui-sref-active="active">
 			<span translate>Overview</span>
 		</a>
@@ -12,19 +12,19 @@
 	</li>
 	<li>
 		<a ui-sref=".description" ui-sref-active="active">
-			<gj-nav-required-step-icon is-complete="!!manageCtrl.game.description_markdown"></gj-nav-required-step-icon>
+			<gj-nav-required-step-icon is-complete="!!$ctrl.game.description_markdown"></gj-nav-required-step-icon>
 			<span translate>Description</span>
 		</a>
 	</li>
 	<li>
 		<a ui-sref=".maturity" ui-sref-active="active">
-			<gj-nav-required-step-icon is-complete="!!manageCtrl.game.tigrs_age"></gj-nav-required-step-icon>
+			<gj-nav-required-step-icon is-complete="!!$ctrl.game.tigrs_age"></gj-nav-required-step-icon>
 			<span translate>Maturity</span>
 		</a>
 	</li>
 	<li>
 		<a ui-sref=".thumbnail" ui-sref-active="active">
-			<gj-nav-required-step-icon is-complete="!!manageCtrl.game.thumbnail_media_item"></gj-nav-required-step-icon>
+			<gj-nav-required-step-icon is-complete="!!$ctrl.game.thumbnail_media_item"></gj-nav-required-step-icon>
 			<span translate>Thumbnail</span>
 		</a>
 	</li>
@@ -33,18 +33,18 @@
 			<span translate>Header</span>
 		</a>
 	</li>
-	<li ng-if="!manageCtrl.isWizard || !manageCtrl.game._is_devlog">
+	<li ng-if="!$ctrl.isWizard || !$ctrl.game._is_devlog">
 		<a ui-sref=".media" ui-sref-active="active">
 			<span translate>Media</span>
 		</a>
 	</li>
-	<li ng-if="!manageCtrl.isWizard || !manageCtrl.game._is_devlog">
-		<a ui-sref=".packages.list" ng-class="{ active: $state.includes( 'dashboard.developer.games.manage.game.packages' ) }">
-			<gj-nav-required-step-icon ng-if="!manageCtrl.game._is_devlog" is-complete="manageCtrl.game.has_active_builds"></gj-nav-required-step-icon>
+	<li ng-if="!$ctrl.isWizard || !$ctrl.game._is_devlog">
+		<a ui-sref=".packages.list" ng-class="{ active: $ctrl.$state.includes( 'dashboard.developer.games.manage.game.packages' ) }">
+			<gj-nav-required-step-icon ng-if="!$ctrl.game._is_devlog" is-complete="$ctrl.game.has_active_builds"></gj-nav-required-step-icon>
 			<span translate>Packages</span>
 		</a>
 	</li>
-	<li ng-if="!manageCtrl.isWizard || !manageCtrl.game._is_devlog">
+	<li ng-if="!$ctrl.isWizard || !$ctrl.game._is_devlog">
 		<a ui-sref=".music" ui-sref-active="active">
 			<span translate>Music</span>
 		</a>
@@ -56,16 +56,16 @@
 	</li>
 </ul>
 
-<div ng-if="!$state.is( 'dashboard.developer.games.manage.game.wizard-finish' )">
-	<button ng-if="manageCtrl.game.status == Game.STATUS_HIDDEN" class="btn btn-success-outline btn-block"
-		ng-disabled="!manageCtrl.canPublish"
-		ng-click="manageCtrl.publish()"
+<div ng-if="!$ctrl.$state.is( 'dashboard.developer.games.manage.game.wizard-finish' )">
+	<button ng-if="$ctrl.game.status == $ctrl.Game.STATUS_HIDDEN" class="btn btn-success-outline btn-block"
+		ng-disabled="!$ctrl.canPublish"
+		ng-click="$ctrl.publish()"
 		>
 		<span translate>Publish</span>
 	</button>
 
-	<button ng-if="manageCtrl.isWizard" class="btn btn-outline btn-block"
-		ng-click="manageCtrl.saveDraft()"
+	<button ng-if="$ctrl.isWizard" class="btn btn-outline btn-block"
+		ng-click="$ctrl.saveDraft()"
 		>
 		<span translate>Save Draft</span>
 	</button>

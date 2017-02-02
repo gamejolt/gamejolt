@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '^/join',
 		controller: 'Auth.JoinCtrl',
 		controllerAs: 'joinCtrl',
-		templateUrl: '/auth/views/auth/join/join.html',
+		templateUrl: require( './join.html' ),
 		resolve: {
 
 			// Requiring authPayload waits for the auth resolve.

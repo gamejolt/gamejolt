@@ -1,8 +1,10 @@
+var Loader = require( '../../../../../../lib/gj-lib-client/components/loader/loader.service' ).Loader;
+
 angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameImage', function( Form, Api )
 {
 	var form = new Form( {
 		model: 'Game_Screenshot',
-		template: '/app/components/forms/dashboard/game/image/image.html',
+		template: require( './image.html' ),
 		resetOnSubmit: true,
 	} );
 
@@ -10,6 +12,10 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameImage', f
 
 	form.onInit = function( scope )
 	{
+		scope.Loader = Loader;
+		Loader.load( 'upload' );
+		Loader.load( 'ui-tree' );
+
 		// Set the game ID on the screenshot form model from the game passed in.
 		scope.formModel.game_id = scope.game.id;
 

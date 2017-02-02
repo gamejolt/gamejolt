@@ -4,44 +4,42 @@
 		<gj-loading></gj-loading>
 	</div>
 
-	<div oc-lazy-load="{ files: [ '/app/modules/upload.js', '/app/modules/ui-tree.js' ] }">
-		<div ng-if="isLoaded">
-			<form-group name="file" label="{{ 'dash.games.media.image.form.image_label' | translate }}" hide-label="true" ng-if="method == 'add'">
+	<div ng-if="isLoaded && Loader.ready( 'upload' ) && Loader.ready( 'ui-tree' )">
+		<form-group name="file" label="{{ 'dash.games.media.image.form.image_label' | translate }}" hide-label="true" ng-if="method == 'add'">
 
-				<p class="help-block" translate>dash.forms.image_filetype_help_html</p>
+			<p class="help-block" translate>dash.forms.image_filetype_help_html</p>
 
-				<gj-form-upload-control
-					form-control="upload"
-					gj-max-filesize="maxFilesize"
-					gj-max-img-width="maxWidth"
-					gj-max-img-height="maxHeight"
-					accept=".png,.jpg,.jpeg,.gif"
-					multiple="true"
-					is-sortable="true"
-					>
-				</gj-form-upload-control>
-
-				<control-errors label="{{ 'selection of images' | translate }}"></control-errors>
-
-			</form-group>
-
-			<form-group ng-if="method != 'add'" name="caption" label="{{ 'dash.games.media.image.form.caption_label' | translate }}" optional="true">
-				<input form-control="text" ng-maxlength="200">
-				<control-errors></control-errors>
-				<p class="help-block" translate>dash.games.media.image.form.caption_help</p>
-			</form-group>
-
-			<button gj-form-submit-button
-				ng-if="!mediaForm.$pristine"
-				class="btn btn-outline"
-				ng-disabled="!mediaForm.$valid"
-				ng-click="onSubmit()"
+			<gj-form-upload-control
+				form-control="upload"
+				gj-max-filesize="maxFilesize"
+				gj-max-img-width="maxWidth"
+				gj-max-img-height="maxHeight"
+				accept=".png,.jpg,.jpeg,.gif"
+				multiple="true"
+				is-sortable="true"
 				>
-				<span class="jolticon" ng-class="'jolticon-' + method"></span>
-				<span ng-if="method == 'add'" translate>Add</span>
-				<span ng-if="method == 'edit'" translate>Save</span>
-			</button>
-		</div>
+			</gj-form-upload-control>
+
+			<control-errors label="{{ 'selection of images' | translate }}"></control-errors>
+
+		</form-group>
+
+		<form-group ng-if="method != 'add'" name="caption" label="{{ 'dash.games.media.image.form.caption_label' | translate }}" optional="true">
+			<input form-control="text" ng-maxlength="200">
+			<control-errors></control-errors>
+			<p class="help-block" translate>dash.games.media.image.form.caption_help</p>
+		</form-group>
+
+		<button gj-form-submit-button
+			ng-if="!mediaForm.$pristine"
+			class="btn btn-outline"
+			ng-disabled="!mediaForm.$valid"
+			ng-click="onSubmit()"
+			>
+			<span class="jolticon" ng-class="'jolticon-' + method"></span>
+			<span ng-if="method == 'add'" translate>Add</span>
+			<span ng-if="method == 'edit'" translate>Save</span>
+		</button>
 	</div>
 
 </form>

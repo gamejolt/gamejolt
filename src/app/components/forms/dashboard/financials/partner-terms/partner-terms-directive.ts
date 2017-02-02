@@ -1,5 +1,5 @@
-import { Component, Input, Output } from 'ng-metadata/core';
-import template from 'html!./partner-terms.html';
+import { Component, Input, Output, EventEmitter } from 'ng-metadata/core';
+import * as template from '!html-loader!./partner-terms.html';
 
 @Component({
 	selector: 'gj-form-dashboard-financials-partner-terms',
@@ -8,7 +8,7 @@ import template from 'html!./partner-terms.html';
 export class PartnerTermsComponent
 {
 	@Input( '<' ) account?: any;
-	@Output() accepted: Function;
+	@Output() private accepted = new EventEmitter<void>();
 
 	checked = false;
 	showAgreement = false;
@@ -21,5 +21,10 @@ export class PartnerTermsComponent
 	hasSignedSomeAgreement()
 	{
 		return this.account && (this.account.tos_signed_developer || this.account.tos_signed_partner);
+	}
+
+	onAccept()
+	{
+		this.accepted.emit( undefined );
 	}
 }

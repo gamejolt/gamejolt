@@ -1,25 +1,10 @@
-import { Injectable } from 'ng-metadata/core';
 import { ReportComponent, Request, ResourceName, Analyzer, Collection, Field, Condition, ResourceFields } from './site-analytics-service';
+import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
+import { getProvider } from '../../../lib/gj-lib-client/utils/utils';
 
-export function ReportFactory( $q: any, Api: any, Geo: any, gettextCatalog: any )
-{
-	SiteAnalyticsReport.$q = $q;
-	SiteAnalyticsReport.Api = Api;
-	SiteAnalyticsReport.Geo = Geo;
-	SiteAnalyticsReport.gettextCatalog = gettextCatalog;
-
-	return SiteAnalyticsReport;
-}
-
-@Injectable()
 export class SiteAnalyticsReport
 {
 	isLoaded = false;
-
-	static $q: ng.IQService;
-	static Api: any;
-	static Geo: any;
-	static gettextCatalog: ng.gettext.gettextCatalog;
 
 	constructor( public title: string, public components: ReportComponent[], resource: ResourceName, resourceId: number, collection: Collection, partnerMode: boolean, startTime: number | undefined, endTime: number | undefined )
 	{
@@ -87,7 +72,7 @@ export class SiteAnalyticsReport
 			return this.sendComponentRequest( resource, resourceId, collection, analyzer, field, conditions, fetchFields, component.resourceFields, startTime, endTime );
 		} );
 
-		SiteAnalyticsReport.$q.all( promises )
+		Promise.all( promises )
 			.then( ( componentResponses: any ) =>
 			{
 				this.isLoaded = true;
@@ -101,7 +86,7 @@ export class SiteAnalyticsReport
 					component.total = response.total;
 
 					if ( component.type == 'sum' || component.type == 'average' ) {
-						component.hasData = angular.isDefined( component.data ) && component.data !== null;
+						component.hasData = typeof component.data !== 'undefined' && component.data !== null;
 					}
 					else {
 						component.hasData = component.data && Object.keys( component.data ).length > 0;
@@ -141,11 +126,14 @@ export class SiteAnalyticsReport
 			request.timezone = date.getTimezoneOffset();
 		}
 
-		return SiteAnalyticsReport.Api.sendRequest( '/web/dash/analytics/display', { data: request }, { sanitizeComplexData: false } );
+		return Api.sendRequest( '/web/dash/analytics/display', { data: request }, { sanitizeComplexData: false } );
 	}
 
 	private processComponentResponse( component: ReportComponent, _response: any, gathers?: any )
 	{
+		const Geo = getProvider<any>( 'Geo' );
+		const gettextCatalog = getProvider<ng.gettext.gettextCatalog>( 'gettextCatalog' );
+
 		const field = component.field, analyzer = component.type, displayField = component.displayField;
 
 		let response: any = angular.copy( _response );
@@ -228,10 +216,10 @@ export class SiteAnalyticsReport
 				angular.forEach( response.result, ( val ) =>
 				{
 					if ( val.label == 'other' ) {
-						val.label = SiteAnalyticsReport.gettextCatalog.getString( 'Unknown' );
+						val.label = gettextCatalog.getString( 'Unknown' );
 					}
 					else {
-						val.label = SiteAnalyticsReport.Geo.getCountryName( val.label ) || val.label;
+						val.label = Geo.getCountryName( val.label ) || val.label;
 					}
 				} );
 			}

@@ -2,7 +2,7 @@ angular.module( 'App.Meter' ).directive( 'gjMeter', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/meter/meter.html',
+		template: require( '!html-loader!./meter.html' ),
 		scope: {
 			rating: '=meterRating',
 			isBig: '=?meterBig',

@@ -1,9 +1,9 @@
 <div class="row dev-stage-selector">
 	<div class="col-xs-12"
 		ng-repeat="stage in [
-			$ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG,
-			$ctrl.gameModel.DEVELOPMENT_STATUS_WIP,
-			$ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED,
+			$ctrl.Game.DEVELOPMENT_STATUS_DEVLOG,
+			$ctrl.Game.DEVELOPMENT_STATUS_WIP,
+			$ctrl.Game.DEVELOPMENT_STATUS_FINISHED,
 		]"
 		>
 		<a ng-click="$ctrl.select( stage )">
@@ -15,26 +15,26 @@
 							<span class="jolticon"
 								ng-class="$ctrl.game.development_status == stage ? 'jolticon-radio-circle-filled' : 'jolticon-radio-circle'"
 							></span>
-							<span ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG" translate>Devlog-Only</span>
-							<span ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_WIP" translate>Early Access</span>
-							<span ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED" translate>Complete/Stable</span>
+							<span ng-if="::stage == $ctrl.Game.DEVELOPMENT_STATUS_DEVLOG" translate>Devlog-Only</span>
+							<span ng-if="::stage == $ctrl.Game.DEVELOPMENT_STATUS_WIP" translate>Early Access</span>
+							<span ng-if="::stage == $ctrl.Game.DEVELOPMENT_STATUS_FINISHED" translate>Complete/Stable</span>
 						</h4>
 					</div>
 
 					<div class="card-content">
-						<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG">
+						<div ng-if="::stage == $ctrl.Game.DEVELOPMENT_STATUS_DEVLOG">
 							<div translate>
 								You don't have anything playable yet, but would like to share active game development in the form of images, videos, posts and more. Your game page will use the new Devlog format.
 							</div>
 						</div>
 
-						<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_WIP">
+						<div ng-if="::stage == $ctrl.Game.DEVELOPMENT_STATUS_WIP">
 							<div translate>
 								Your game has playable builds, but you're still actively developing it.
 							</div>
 						</div>
 
-						<div ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED">
+						<div ng-if="::stage == $ctrl.Game.DEVELOPMENT_STATUS_FINISHED">
 							<div translate>
 								Your game is complete. It's in a stable state and you only plan on making bug fixes, performance optimizations, or small improvements.
 							</div>
@@ -54,24 +54,24 @@
 				<div class="dev-stage-selector-mascot">
 
 					<img
-						ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_DEVLOG"
-						src="/app/components/forms/dashboard/game/dev-stage-selector/mascot-devlog.png"
+						ng-if="::stage == $ctrl.Game.DEVELOPMENT_STATUS_DEVLOG"
+						src="./mascot-devlog.png"
 						width="68"
 						height="68"
 						alt=""
 						>
 
 					<img
-						ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_WIP"
-						src="/app/components/forms/dashboard/game/dev-stage-selector/mascot-early-access.png"
+						ng-if="::stage == $ctrl.Game.DEVELOPMENT_STATUS_WIP"
+						src="./mascot-early-access.png"
 						width="48"
 						height="46"
 						alt=""
 						>
 
 					<img
-						ng-if="::stage == $ctrl.gameModel.DEVELOPMENT_STATUS_FINISHED"
-						src="/app/components/forms/dashboard/game/dev-stage-selector/mascot-complete.png"
+						ng-if="::stage == $ctrl.Game.DEVELOPMENT_STATUS_FINISHED"
+						src="./mascot-complete.png"
 						width="52"
 						height="54"
 						alt=""

@@ -1,5 +1,6 @@
 import { Component, Inject } from 'ng-metadata/core';
-import template from 'html!./list.html';
+import { StateService, StateParams } from 'angular-ui-router';
+import * as template from '!html-loader!./list.html';
 
 @Component({
 	selector: 'gj-genre-list',
@@ -10,59 +11,59 @@ export class ListComponent
 	categories = [
 		{
 			label: 'Action',
-			img: '/app/components/channel/action.png',
+			img: require( '../../channel/action.png' ),
 			url: 'action',
 		},
 		{
 			label: 'Adventure',
-			img: '/app/components/channel/adventure.png',
+			img: require( '../../channel/adventure.png' ),
 			url: 'adventure',
 		},
 		{
 			label: 'Arcade',
-			img: '/app/components/channel/arcade.png',
+			img: require( '../../channel/arcade.png' ),
 			url: 'arcade',
 		},
 		{
 			label: 'Platformer',
-			img: '/app/components/channel/platformer.png',
+			img: require( '../../channel/platformer.png' ),
 			url: 'platformer',
 		},
 		{
 			label: 'Puzzle',
-			img: '/app/components/channel/puzzle.png',
+			img: require( '../../channel/puzzle.png' ),
 			url: 'puzzle',
 		},
 		{
 			label: 'RPGs',
-			img: '/app/components/channel/rpg.png',
+			img: require( '../../channel/rpg.png' ),
 			url: 'rpg',
 		},
 		{
 			label: 'Shooter',
-			img: '/app/components/channel/shooter.png',
+			img: require( '../../channel/shooter.png' ),
 			url: 'shooter',
 		},
 		{
 			label: 'Sports',
-			img: '/app/components/channel/sports.png',
+			img: require( '../../channel/sports.png' ),
 			url: 'sports',
 		},
 		{
 			label: 'Strategy/Sim',
-			img: '/app/components/channel/strategysim.png',
+			img: require( '../../channel/strategysim.png' ),
 			url: 'strategy-sim',
 		},
 		{
 			label: 'Other',
-			img: '/app/components/channel/other.png',
+			img: require( '../../channel/other.png' ),
 			url: 'other',
 		},
 	];
 
 	constructor(
-		@Inject( '$state' ) public $state: ng.ui.IStateService,
-		@Inject( '$stateParams' ) public $stateParams: ng.ui.IStateParamsService
+		@Inject( '$state' ) public $state: StateService,
+		@Inject( '$stateParams' ) public $stateParams: StateParams,
 	)
 	{
 	}

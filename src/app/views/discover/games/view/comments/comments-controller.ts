@@ -1,5 +1,5 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { App } from './../../../../../app-service';
+import { App } from '../../../../../app-service';
 
 @Injectable()
 export class CommentsCtrl

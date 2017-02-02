@@ -2,7 +2,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameScoreTabl
 {
 	var form = new Form( {
 		model: 'Game_ScoreTable',
-		template: '/app/components/forms/dashboard/game/score-table/score-table.html'
+		template: require( './score-table.html' )
 	} );
 
 	form.scope.game = '=gjGame';

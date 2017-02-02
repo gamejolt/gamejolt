@@ -1,48 +1,46 @@
-<div class="activity-feed timeline-list full-bleed">
-	<div oc-lazy-load="{ files: [ '/app/modules/hammer.js' ] }">
+<div class="activity-feed timeline-list full-bleed" ng-if="$ctrl.Loader.ready( 'hammer' )">
 
-		<!--
-			Note that our ng-repeat track by includes updated on.
-			This way it will update the whole div when the post changes.
-			This allows us to bind-once within the post, and still update during changes.
-		-->
-		<div class="timeline-list-item"
-			ng-repeat="item in $ctrl.feed.items track by item.id"
-			id="activity-feed-item-{{ ::item.id }}"
-			ng-class="::{ new: $ctrl.isItemUnread( item ) }"
-			in-view="$ctrl.onItemInViewChange( $inview, item )"
-			>
+	<!--
+		Note that our ng-repeat track by includes updated on.
+		This way it will update the whole div when the post changes.
+		This allows us to bind-once within the post, and still update during changes.
+	-->
+	<div class="timeline-list-item"
+		ng-repeat="item in $ctrl.feed.items track by item.id"
+		id="activity-feed-item-{{ ::item.id }}"
+		ng-class="::{ new: $ctrl.isItemUnread( item ) }"
+		in-view="$ctrl.onItemInViewChange( $inview, item )"
+		>
 
-			<div ng-switch="::item.type">
-				<gj-activity-feed-devlog-post
-					ng-switch-when="devlog-post"
-					item="::item"
-					on-click="$ctrl.setActive( item )"
-					on-expand="$ctrl.onItemExpanded( item )"
-					>
-				</gj-activity-feed-devlog-post>
+		<div ng-switch="::item.type">
+			<gj-activity-feed-devlog-post
+				ng-switch-when="devlog-post"
+				item="::item"
+				on-click="$ctrl.setActive( item )"
+				on-expand="$ctrl.onItemExpanded( item )"
+				>
+			</gj-activity-feed-devlog-post>
 
-				<gj-activity-feed-notification
-					ng-switch-when="notification"
-					item="::item"
-					on-click="$ctrl.setActive( item )"
-					>
-				</gj-activity-feed-notification>
-			</div>
-
-		</div>
-
-		<div class="page-cut" ng-if="($ctrl.autoloadDisbled || !$ctrl.feed.reachedEnd) && !$ctrl.isLoadingMore">
-			<button class="btn btn-outline" ng-click="$ctrl.loadMore()">
-				<span translate>Load More</span>
-			</button>
-		</div>
-
-		<gj-loading ng-if="$ctrl.isLoadingMore" class="loading-centered"></gj-loading>
-
-		<div class="alert alert-info" ng-if="$ctrl.feed.reachedEnd" translate>
-			A wild Snorlax blocks your path. Looks like it's the end of this feed.
+			<gj-activity-feed-notification
+				ng-switch-when="notification"
+				item="::item"
+				on-click="$ctrl.setActive( item )"
+				>
+			</gj-activity-feed-notification>
 		</div>
 
 	</div>
+
+	<div class="page-cut" ng-if="($ctrl.autoloadDisbled || !$ctrl.feed.reachedEnd) && !$ctrl.isLoadingMore">
+		<button class="btn btn-outline" ng-click="$ctrl.loadMore()">
+			<span translate>Load More</span>
+		</button>
+	</div>
+
+	<gj-loading ng-if="$ctrl.isLoadingMore" class="loading-centered"></gj-loading>
+
+	<div class="alert alert-info" ng-if="$ctrl.feed.reachedEnd" translate>
+		A wild Snorlax blocks your path. Looks like it's the end of this feed.
+	</div>
+
 </div>

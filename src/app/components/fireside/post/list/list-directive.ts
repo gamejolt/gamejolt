@@ -1,6 +1,6 @@
 import { Component, Input } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import template from 'html!./list.html';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import * as template from '!html-loader!./list.html';
 
 @Component({
 	selector: 'gj-fireside-post-list',
@@ -8,9 +8,7 @@ import template from 'html!./list.html';
 })
 export class ListComponent
 {
-	@Input( '<firesidePosts' ) posts: Fireside_Post[];
+	@Input( '<firesidePosts' ) posts: FiresidePost[];
 
-	constructor()
-	{
-	}
+	noThumb: string = require( '../thumbnail/no-thumb.png' );
 }

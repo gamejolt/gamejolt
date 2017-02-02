@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Account.EditCtrl', function( $scope, App, Api, Growls, Scroll, gettextCatalog )
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Account.EditCtrl', function( $scope, App, Api, Growls, Scroll, gettextCatalog )
 {
 	App.title = gettextCatalog.getString( 'dash.profile.edit.page_title' );
 	$scope.accountCtrl.heading = gettextCatalog.getString( 'dash.profile.edit.heading' );

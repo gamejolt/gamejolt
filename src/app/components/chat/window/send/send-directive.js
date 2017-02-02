@@ -2,7 +2,7 @@ angular.module( 'App.Chat' ).directive( 'gjChatWindowSend', function( $rootScope
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/chat/window/send/send.html',
+		template: require( '!html-loader!./send.html' ),
 		scope: true,
 		controllerAs: 'ctrl',
 		controller: function( $element, Chat )

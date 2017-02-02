@@ -3,7 +3,7 @@ angular.module( 'App.Client.StatusBar' ).directive( 'gjClientStatusBar', functio
 	return {
 		restrict: 'E',
 		scope: {},
-		templateUrl: '/app/components/client/status-bar/status-bar.html',
+		template: require( '!html-loader!./status-bar.html' ),
 		controllerAs: 'ctrl',
 		controller: function( $scope, Client_Library, Client_Launcher, Client_Installer, LocalDb_Package )
 		{

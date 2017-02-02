@@ -1,7 +1,7 @@
 angular.module( 'App.Views' ).directive( 'gjFormTwitterEmail', function( $q, Api, Form )
 {
 	var form = new Form( {
-		template: '/auth/views/auth/linked-account/twitter/finalize/twitter-email-form.html'
+		template: require( './twitter-email-form.html' )
 	} );
 
 	form.scope.state = '=';

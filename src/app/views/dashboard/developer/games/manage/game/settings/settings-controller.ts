@@ -1,6 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { App } from './../../../../../../../app-service';
-import { FormDashboardGameWizard } from './../../../../../../../components/forms/dashboard/game/wizard/wizard-service';
+import { App } from '../../../../../../../app-service';
+import { FormDashboardGameWizard } from '../../../../../../../components/forms/dashboard/game/wizard/wizard-service';
 
 @Injectable()
 export class SettingsCtrl

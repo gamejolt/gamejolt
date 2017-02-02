@@ -1,7 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Meta } from './../lib/gj-lib-client/components/meta/meta-service';
+import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 
-@Injectable()
+@Injectable( 'App' )
 export class App
 {
 	ver: number | null = null;

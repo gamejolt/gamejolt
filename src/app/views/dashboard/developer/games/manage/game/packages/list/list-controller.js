@@ -1,10 +1,15 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Game.Packages.ListCtrl', function(
+var Loader = require( '../../../../../../../../../lib/gj-lib-client/components/loader/loader.service' ).Loader;
+
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.Game.Packages.ListCtrl', function(
 	$scope, $state, App, Game_Package, Sellable, ModalConfirm, Growls, gettextCatalog, packagesPayload )
 {
 	var _this = this;
 	var manageCtrl = $scope.manageCtrl;
 
 	$scope.Game_Package = Game_Package;
+	$scope.Loader = Loader;
+
+	Loader.load( 'ui-tree' );
 
 	App.title = gettextCatalog.getString( 'Manage Packages for {{ game }}', { game: manageCtrl.game.title } );
 

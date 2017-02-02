@@ -1,5 +1,5 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
-import template from 'html!./follow-widget.html';
+import * as template from '!html-loader!./follow-widget.html';
 import { App } from '../../../../app/app-service';
 
 @Component({
@@ -9,7 +9,7 @@ import { App } from '../../../../app/app-service';
 export class FollowWidgetComponent
 {
 	@Input( '<' ) game: any;
-	@Input( '<?' ) sparse = false;
+	@Input( '<' ) sparse = false;
 
 	followTooltip: string;
 	isProcessing = false;
@@ -30,7 +30,7 @@ export class FollowWidgetComponent
 		}
 
 		this.isProcessing = true;
-		let promise: ng.IPromise<any>;
+		let promise: Promise<any>;
 
 		if ( !this.game.is_following ) {
 			promise = this.game.$follow()

@@ -1,17 +1,17 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 
-@Injectable()
+@Injectable( 'ModalCtrl' )
 export class ModalCtrl
 {
 	constructor(
 		@Inject( '$modalInstance' ) private $modalInstance: any,
-		@Inject( 'post' ) public post: Fireside_Post
+		@Inject( 'post' ) public post: FiresidePost
 	)
 	{
 	}
 
-	onSubmitted( post: Fireside_Post )
+	onSubmitted( post: FiresidePost )
 	{
 		this.$modalInstance.close( post );
 	}

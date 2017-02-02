@@ -1,8 +1,10 @@
+var Loader = require( '../../../../../../lib/gj-lib-client/components/loader/loader.service' ).Loader;
+
 angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsManagedAccount', function(
 	$q, $ocLazyLoad, $window, Form, Api, Growls, Environment, Geo, currencyFilter )
 {
 	var form = new Form( {
-		template: '/app/components/forms/dashboard/financials/managed-account/managed-account.html',
+		template: require( './managed-account.html' ),
 		resetOnSubmit: true,
 	} );
 
@@ -30,7 +32,11 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 		// }
 
 		// Gotta load in the Stripe JS API as well.
-		$ocLazyLoad.load( [ '/app/modules/upload.js', { type: 'js', path: 'https://js.stripe.com/v2/' } ] )
+		Loader.load( 'upload' )
+			.then( function()
+			{
+				return $ocLazyLoad.load( [ { type: 'js', path: 'https://js.stripe.com/v2/' } ] );
+			} )
 			.then( function()
 			{
 				return Api.sendRequest( '/web/dash/financials/account' );

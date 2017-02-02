@@ -1,12 +1,14 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Notification } from './../../../../../lib/gj-lib-client/components/notification/notification-model';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { ActivityFeedContainer } from './../../../../components/activity/feed/feed-container-service';
-import { ActivityFeedService } from './../../../../components/activity/feed/feed-service';
-import { App } from './../../../../app-service';
+import { StateParams } from 'angular-ui-router';
+
+import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
+import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
+import { App } from '../../../../app-service';
 import { ActivityCtrl } from '../activity-controller';
 
-@Injectable()
+@Injectable( 'Dashboard.Activity.FeedCtrl' )
 export class FeedCtrl
 {
 	tab: 'activity' | 'notifications' = 'activity';
@@ -16,28 +18,25 @@ export class FeedCtrl
 		@Inject( 'App' ) app: App,
 		@Inject( '$rootScope' ) $rootScope: ng.IRootScopeService,
 		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
-		@Inject( 'Notification' ) notificationModel: typeof Notification,
-		@Inject( 'Fireside_Post' ) postModel: typeof Fireside_Post,
-		@Inject( 'ActivityFeedService' ) feedService: ActivityFeedService,
+		@Inject( '$stateParams' ) $stateParams: StateParams,
 		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
 	)
 	{
-		$scope['Notification'] = notificationModel;
+		$scope['Notification'] = Notification;
 		const activityCtrl: ActivityCtrl = $scope['activityCtrl'];
 
 		this.tab = $stateParams['tab'];
 
 		if ( this.tab == 'activity' ) {
 			app.title = gettextCatalog.getString( 'Your activity feed' );
-			this.feed = feedService.bootstrap( postModel.populate( payload.items ), {
+			this.feed = ActivityFeedService.bootstrap( FiresidePost.populate( payload.items ), {
 				notificationWatermark: payload.unreadWatermark,
 			} );
 		}
 		else {
 			app.title = gettextCatalog.getString( 'Your notifications' );
-			this.feed = feedService.bootstrap( notificationModel.populate( payload.items ), {
+			this.feed = ActivityFeedService.bootstrap( Notification.populate( payload.items ), {
 				notificationWatermark: payload.unreadWatermark,
 			} );
 		}

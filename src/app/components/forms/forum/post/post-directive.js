@@ -2,7 +2,7 @@ angular.module( 'App.Forms.Forum' ).directive( 'gjFormForumPost', function( Form
 {
 	var form = new Form( {
 		model: 'Forum_Post',
-		template: '/app/components/forms/forum/post/post.html',
+		template: require( './post.html' ),
 		resetOnSubmit: true,
 	} );
 

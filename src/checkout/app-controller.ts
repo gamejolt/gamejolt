@@ -1,9 +1,10 @@
+import { getProvider } from '../lib/gj-lib-client/utils/utils';
+
 export class AppCtrl
 {
 	constructor(
 		$scope: any,
 		$state: any,
-		$injector: any,
 		App: any,
 		Screen: any,
 		Environment: any,
@@ -14,8 +15,8 @@ export class AppCtrl
 		$scope.Screen = Screen;
 		$scope.Environment = Environment;
 
-		if ( Environment.isClient ) {
-			$scope.HistoryNavigator = $injector.get( 'HistoryNavigator' );
+		if ( GJ_IS_CLIENT ) {
+			$scope.HistoryNavigator = getProvider<any>( 'HistoryNavigator' );
 		}
 	}
 }

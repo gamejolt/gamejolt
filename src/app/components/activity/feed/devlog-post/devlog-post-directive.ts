@@ -1,32 +1,31 @@
-import { Component, Inject, Input, Output, SkipSelf, Optional } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Screen } from './../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { FeedComponent } from './../feed-directive';
-import { ActivityFeedItem } from './../item-service';
-import { DevlogPostViewModal } from './../../../devlog/post/view-modal/view-modal-service';
-import template from 'html!./devlog-post.html';
+import { Component, Inject, Input, Output, SkipSelf, Optional, EventEmitter } from 'ng-metadata/core';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { ActivityFeedComponent } from '../feed-directive';
+import { ActivityFeedItem } from '../item-service';
+import { DevlogPostViewModal } from '../../../devlog/post/view-modal/view-modal-service';
+import * as template from '!html-loader!./devlog-post.html';
 
 @Component({
 	selector: 'gj-activity-feed-devlog-post',
 	template,
 })
-export class DevlogPostComponent
+export class ActivityFeedDevlogPostComponent
 {
 	@Input( '<' ) item: ActivityFeedItem;
 
-	@Output() onClick: Function;
-	@Output() onExpand: Function;
+	@Output() private onExpand = new EventEmitter<void>();
 
-	post: Fireside_Post;
+	post: FiresidePost;
 	icon: string;
 
 	constructor(
 		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'DevlogPostViewModal' ) private viewModal: DevlogPostViewModal,
-		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: FeedComponent,
+		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: ActivityFeedComponent,
 	)
 	{
-		this.post = this.item.feedItem as Fireside_Post;
+		this.post = this.item.feedItem as FiresidePost;
 
 		if ( this.post.type == 'text' ) {
 			this.icon = 'blog-article';
@@ -37,6 +36,11 @@ export class DevlogPostComponent
 		else if ( this.post.type == 'video' ) {
 			this.icon = 'video';
 		}
+	}
+
+	expanded()
+	{
+		this.onExpand.emit( undefined );
 	}
 
 	_onClick( $event: ng.IAngularEvent )

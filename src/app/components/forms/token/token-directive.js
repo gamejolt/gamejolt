@@ -1,7 +1,7 @@
 angular.module( 'App.Forms' ).directive( 'gjFormToken', function( $q, Form, Api )
 {
 	var form = new Form( {
-		template: '/app/components/forms/token/token.html'
+		template: require( './token.html' )
 	} );
 
 	form.scope.token = '=gjToken';

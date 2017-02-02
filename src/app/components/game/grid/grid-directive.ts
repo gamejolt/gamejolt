@@ -1,5 +1,6 @@
 import { Component, Inject, Input, OnInit, OnChanges, SimpleChanges } from 'ng-metadata/core';
-import template from 'html!./grid.html';
+import { StateParams } from 'angular-ui-router';
+import * as template from '!html-loader!./grid.html';
 
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 
@@ -14,11 +15,11 @@ const RowSizeLg = 4;
 export class GridComponent implements OnInit, OnChanges
 {
 	@Input( '<' ) games: any[];
-	@Input( '<?' ) gamesCount?: number;
-	@Input( '<?' ) perPage?: number;
-	@Input( '<?' ) truncateToFit = false;
-	@Input( '<?' ) scrollable = false;
-	@Input( '@?' ) eventLabel?: string;
+	@Input( '<' ) gamesCount?: number;
+	@Input( '<' ) perPage?: number;
+	@Input( '<' ) truncateToFit = false;
+	@Input( '<' ) scrollable = false;
+	@Input( '@' ) eventLabel?: string;
 
 	currentPage: number;
 	processedGames: any[];
@@ -30,7 +31,7 @@ export class GridComponent implements OnInit, OnChanges
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'Scroll' ) public scroll: any,
 		@Inject( 'Screen' ) public screen: Screen,
-		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
+		@Inject( '$stateParams' ) $stateParams: StateParams,
 	)
 	{
 		this.currentPage = $stateParams['page'] || 1;

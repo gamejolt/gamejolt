@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Main.OverviewCtrl', function( $scope, $interval, $state, App, Game, Notification, Fireside_Post, Comment_Video, Jam, gettextCatalog, payload )
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Main.OverviewCtrl', function( $scope, $interval, $state, App, Game, Notification, Fireside_Post, Comment_Video, Jam, gettextCatalog, payload )
 {
 	$scope.Game = Game;
 

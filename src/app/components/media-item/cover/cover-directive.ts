@@ -1,7 +1,7 @@
-import { Component, Input, Output, Inject } from 'ng-metadata/core';
-import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Ruler } from './../../../../lib/gj-lib-client/components/ruler/ruler-service';
-import template from 'html!./cover.html';
+import { Component, Input, Output, Inject, EventEmitter } from 'ng-metadata/core';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
+import * as template from '!html-loader!./cover.html';
 
 @Component({
 	selector: 'gj-media-item-cover',
@@ -13,10 +13,10 @@ import template from 'html!./cover.html';
 export class CoverComponent
 {
 	@Input( '<' ) mediaItem: any;
-	@Input( '<?' ) shouldParallax = false;
-	@Input( '<?' ) maxHeight?: number;
+	@Input( '<' ) shouldParallax = false;
+	@Input( '<' ) maxHeight?: number;
 
-	@Output() onLoaded: Function;
+	@Output() private onLoaded = new EventEmitter<void>();
 
 	// isLoaded gets set the first time it loads and stays set
 	// isMediaItemLoaded gets changed every time a new size loads in
@@ -33,7 +33,7 @@ export class CoverComponent
 	{
 		this._elem = $element[0];
 
-		if ( angular.isUndefined( this.shouldParallax ) ) {
+		if ( typeof this.shouldParallax === 'undefined' ) {
 			this.shouldParallax = true;
 		}
 
@@ -45,8 +45,8 @@ export class CoverComponent
 			if ( isLoaded ) {
 				this.setDimensions();
 
-				if ( !this.isLoaded && this.onLoaded ) {
-					this.onLoaded();
+				if ( !this.isLoaded ) {
+					this.onLoaded.emit( undefined );
 				}
 
 				this.isLoaded = true;

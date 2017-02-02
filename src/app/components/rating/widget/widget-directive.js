@@ -2,7 +2,7 @@ angular.module( 'App.Rating.Widget' ).directive( 'gjRatingWidget', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/rating/widget/widget.html',
+		template: require( '!html-loader!./widget.html' ),
 		scope: {
 			game: '=ratingWidgetGame',
 			gameRating: '=?ratingWidgetRating',

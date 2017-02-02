@@ -2,7 +2,7 @@ import { Injectable, Inject } from 'ng-metadata/core';
 
 // const EXPERIMENT_SIDE_NAV = 'split-side-nav';
 
-@Injectable()
+@Injectable( 'SplitTest' )
 export class SplitTest
 {
 	constructor(

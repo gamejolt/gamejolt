@@ -5,7 +5,7 @@ angular.module( 'App.Client.Intro' ).directive( 'gjClientIntro', function()
 		scope: {
 			clientIntroDone: '&?',
 		},
-		templateUrl: '/app/components/client/intro/intro.html',
+		template: require( '!html-loader!./intro.html' ),
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function( $document, $scope, $q, $element, $transition, $timeout, App, Client, Connection )
@@ -34,7 +34,7 @@ angular.module( 'App.Client.Intro' ).directive( 'gjClientIntro', function()
 			function showLogo()
 			{
 				var img = new Image( 328, 36 );
-				img.src = '/app/components/client/intro/intro.gif';
+				img.src = require( './intro.gif' );
 				img.className = 'client-intro-logo';
 
 				var $wrapper = angular.element( $element[0].getElementsByClassName( 'client-intro-wrap' )[0] );
@@ -116,7 +116,7 @@ angular.module( 'App.Client.Intro' ).directive( 'gjClientIntro', function()
 				$q.resolve()
 					.then( function()
 					{
-						return playSound( '/app/components/client/intro/intro.ogg' );
+						return playSound( require( './intro.ogg' ) );
 					} )
 					.then( function()
 					{

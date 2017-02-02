@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.KeyGroups.EditCtrl', function(
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.KeyGroups.EditCtrl', function(
 	$scope, $state, $stateParams, App, Api, KeyGroup, Game_Package, Key, Clipboard, ModalConfirm, Growls, Environment, gettextCatalog, payload )
 {
 	var _this = this;

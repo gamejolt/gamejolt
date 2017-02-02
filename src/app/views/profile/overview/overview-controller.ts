@@ -1,23 +1,21 @@
-import { App } from './../../../app-service';
+import { App } from '../../../app-service';
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Comment_Video } from './../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { Youtube_Channel } from './../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
-import { Meta } from './../../../../lib/gj-lib-client/components/meta/meta-service';
+import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
+import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 @Injectable()
 export class OverviewCtrl
 {
 	developerGames: any[];
-	youtubeChannels: Youtube_Channel[];
-	videos: Comment_Video[];
+	youtubeChannels: YoutubeChannel[];
+	videos: CommentVideo[];
 
 	constructor(
 		@Inject( '$scope' ) $scope: any,
 		@Inject( 'App' ) app: App,
 		@Inject( 'Meta' ) meta: Meta,
-		@Inject( 'Game' ) game: any,
-		@Inject( 'Comment_Video' ) commentVideo: typeof Comment_Video,
-		@Inject( 'Youtube_Channel' ) youtubeChannel: typeof Youtube_Channel,
 		@Inject( 'payload' ) payload: any
 	)
 	{
@@ -38,8 +36,8 @@ export class OverviewCtrl
 		meta.twitter = payload.twitter || {};
 		meta.twitter.title = app.title;
 
-		this.developerGames = game.populate( payload.developerGamesTeaser );
-		this.youtubeChannels = youtubeChannel.populate( payload.youtubeChannels );
-		this.videos = commentVideo.populate( payload.videos );
+		this.developerGames = Game.populate( payload.developerGamesTeaser );
+		this.youtubeChannels = YoutubeChannel.populate( payload.youtubeChannels );
+		this.videos = CommentVideo.populate( payload.videos );
 	}
 }

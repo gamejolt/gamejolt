@@ -1,6 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { ModalConfirm } from './../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { App } from './../../../../../../../app-service';
+import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { App } from '../../../../../../../app-service';
+import { Loader } from '../../../../../../../../lib/gj-lib-client/components/loader/loader.service';
 
 @Injectable()
 export class MusicCtrl
@@ -9,6 +10,8 @@ export class MusicCtrl
 	isAdding = false;
 	activeItem: any = null;
 	currentSort: number[] = [];
+
+	Loader = Loader;
 
 	constructor(
 		@Inject( 'App' ) app: App,
@@ -19,6 +22,8 @@ export class MusicCtrl
 		@Inject( 'payload' ) payload: any
 	)
 	{
+		Loader.load( 'ui-tree' );
+
 		app.title = gettextCatalog.getString( 'dash.games.music.page_title', { game: $scope['manageCtrl'].game.title } );
 
 		this.songs = gameSongModel.populate( payload.songs );

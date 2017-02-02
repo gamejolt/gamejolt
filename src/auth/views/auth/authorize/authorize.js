@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 
 	$stateProvider.state( 'auth.authorize', {
 		url: '^/authorize/:userId/:code/:type',
-		templateUrl: '/auth/views/auth/authorize/authorize.html',
+		templateUrl: require( './authorize.html' ),
 		controller: function( App, gettextCatalog )
 		{
 			/// The title for the page when their authorization fails.

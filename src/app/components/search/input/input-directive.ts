@@ -1,7 +1,9 @@
 import { Directive, Inject, SkipSelf, Self, OnInit, HostListener } from 'ng-metadata/core';
-import { Search } from './../search-service';
-import { Search_History } from './../history/history-service';
-import { SearchComponent } from './../search-directive';
+import { StateService } from 'angular-ui-router';
+
+import { Search } from '../search-service';
+import { SearchHistory } from '../history/history-service';
+import { SearchComponent } from '../search-directive';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 
 const KEYCODE_UP = 38;
@@ -12,16 +14,15 @@ const KEYCODE_ESC = 27;
 @Directive({
 	selector: '[gj-search-input]',
 })
-export class InputDirective implements OnInit
+export class SearchInputDirective implements OnInit
 {
 	constructor(
 		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( '$element' ) private $element: ng.IAugmentedJQuery,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
+		@Inject( '$state' ) private $state: StateService,
 		@Inject( 'Search' ) private search: Search,
-		@Inject( 'Search_History' ) private searchHistory: Search_History,
+		@Inject( 'SearchHistory' ) private searchHistory: SearchHistory,
 		@Inject( 'Popover' ) private popoverService: Popover,
-
 		@Inject( SearchComponent ) @SkipSelf() private searchCtrl: SearchComponent,
 		@Inject( 'ngModel' ) @Self() private ngModel: ng.INgModelController
 	)

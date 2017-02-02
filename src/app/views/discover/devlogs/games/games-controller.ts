@@ -1,5 +1,5 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { GameListingContainer } from './../../../../components/game/listing/listing-container-service';
+import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
 
 @Injectable()
 export class GamesCtrl
@@ -8,9 +8,8 @@ export class GamesCtrl
 
 	constructor(
 		@Inject( 'filteringContainer' ) public filteringContainer: any,
-		@Inject( 'GameListingContainer' ) listingContainer: typeof GameListingContainer,
 	)
 	{
-		this.listing = new listingContainer( filteringContainer );
+		this.listing = new GameListingContainer( filteringContainer );
 	}
 }

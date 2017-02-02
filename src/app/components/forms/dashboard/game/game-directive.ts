@@ -1,12 +1,13 @@
+GameFormFactory.$inject = [ 'Form', 'Scroll', 'App' ];
 export function GameFormFactory(
 	Form: any,
 	Scroll: any,
-	App: any
+	App: any,
 )
 {
 	const form = new Form( {
 		model: 'Game',
-		template: '/app/components/forms/dashboard/game/game.html',
+		template: require( './game.html' ),
 
 		// We need this to reset all the "is published", "has builds" stuff.
 		resetOnSubmit: true,

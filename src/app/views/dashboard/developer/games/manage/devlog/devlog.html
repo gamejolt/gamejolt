@@ -24,7 +24,7 @@
 
 		<gj-devlog-post-add
 			game="manageCtrl.game"
-			on-added="devlogCtrl.onPostAdded( $post )"
+			(on-added)="devlogCtrl.onPostAdded( $event )"
 			>
 		</gj-devlog-post-add>
 

@@ -1,7 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import template from 'html!./confirm.html';
+import * as template from '!html-loader!./confirm.html';
 
-@Injectable()
+@Injectable( 'FormDashboardGameDevStageSelectorConfirm' )
 export class FormDashboardGameDevStageSelectorConfirm
 {
 	constructor(
@@ -10,7 +10,7 @@ export class FormDashboardGameDevStageSelectorConfirm
 	{
 	}
 
-	show( game: any, stage: number ): ng.IPromise<void>
+	show( game: any, stage: number ): Promise<void>
 	{
 		const modalInstance = this.$modal.open( {
 			template,

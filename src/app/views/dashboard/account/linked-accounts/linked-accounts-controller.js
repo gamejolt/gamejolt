@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccountsCtrl', function( $scope, $state, App, Growls, User_LinkedAccounts, Youtube_Channel, User_SetPasswordModal, ModalConfirm, gettextCatalog, payload )
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Account.LinkedAccountsCtrl', function( $scope, $state, App, Growls, User_LinkedAccounts, Youtube_Channel, User_SetPasswordModal, ModalConfirm, gettextCatalog, payload )
 {
 	var _this = this;
 

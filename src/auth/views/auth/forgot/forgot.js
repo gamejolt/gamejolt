@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '^/forgot',
 		controller: 'Auth.ForgotCtrl',
 		controllerAs: 'forgotCtrl',
-		templateUrl: '/auth/views/auth/forgot/forgot.html',
+		templateUrl: require( './forgot.html' ),
 		onEnter: function( App )
 		{
 			App.shouldShowCoverImage = false;

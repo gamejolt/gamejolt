@@ -4,6 +4,6 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/settings',
 		controller: 'Dashboard.Developer.Games.Manage.Game.SettingsCtrl',
 		controllerAs: 'settingsCtrl',
-		templateUrl: '/app/views/dashboard/developer/games/manage/game/settings/settings.html',
+		templateUrl: require( './settings.html' ),
 	} );
 } );

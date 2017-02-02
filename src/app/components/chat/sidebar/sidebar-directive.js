@@ -2,7 +2,7 @@ angular.module( 'App.Chat' ).directive( 'gjChatSidebar', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/chat/sidebar/sidebar.html',
+		template: require( '!html-loader!./sidebar.html' ),
 		scope: {},
 		controllerAs: 'ctrl',
 		controller: function( $scope, $timeout, Screen, Shell, Chat, Chat_SaveRoomModal, Chat_Room )

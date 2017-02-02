@@ -1,7 +1,7 @@
 angular.module( 'App.Sorting' ).directive( 'gjSorting', function()
 {
 	return {
-		templateUrl: '/app/components/sorting/sorting.html',
+		template: require( '!html-loader!./sorting.html' ),
 		scope: {},
 		bindToController: {
 			options: '=sortingOptions',

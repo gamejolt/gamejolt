@@ -6,7 +6,7 @@ angular.module( 'App.Game.Collection.List' ).directive( 'gjGameCollectionList', 
 			collections: '=gjGameCollections',
 			eventLabel: '@?gjEventLabel',
 		},
-		templateUrl: '/app/components/game/collection/list/list.html',
+		template: require( '!html-loader!./list.html' ),
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function( $scope, App )

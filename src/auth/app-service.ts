@@ -1,8 +1,8 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Meta } from './../lib/gj-lib-client/components/meta/meta-service';
+import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 
-@Injectable()
+@Injectable( 'App' )
 export class App
 {
 	ver: number | null = null;
@@ -14,9 +14,7 @@ export class App
 	credentials = {};
 
 	constructor(
-		@Inject( '$window' ) private $window: ng.IWindowService,
 		@Inject( 'Meta' ) private meta: Meta,
-		@Inject( 'Environment' ) private environment: Environment,
 	)
 	{
 	}
@@ -28,7 +26,7 @@ export class App
 	{
 		// This is mainly for client.
 		// It tells the intro animation that it should play the intro even if it can't find a user.
-		this.$window.sessionStorage.setItem( 'client-intro-login-play', 'play' );
-		this.$window.location.href = this.environment.wttfBaseUrl + '/dashboard';
+		window.sessionStorage.setItem( 'client-intro-login-play', 'play' );
+		window.location.href = Environment.wttfBaseUrl + '/dashboard';
 	}
 }

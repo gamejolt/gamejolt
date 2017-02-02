@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.WithdrawFundsCtrl', function( $state, Growls, App, User, gettextCatalog, payload )
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.WithdrawFundsCtrl', function( $state, Growls, App, User, gettextCatalog, payload )
 {
 	App.title = gettextCatalog.getString( 'dash.funds.withdraw.page_title' );
 

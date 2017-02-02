@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '^/reset-password/:userId/:key',
 		controller: 'Auth.ResetPasswordCtrl',
 		controllerAs: 'resetPasswordCtrl',
-		templateUrl: '/auth/views/auth/reset-password/reset-password.html',
+		templateUrl: require( './reset-password.html' ),
 		resolve: {
 			payload: function( $stateParams, Api )
 			{

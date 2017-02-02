@@ -1,13 +1,13 @@
 import { Injectable } from 'ng-metadata/core';
-import { Fireside_Post } from '../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { FiresidePost } from '../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 
-@Injectable()
+@Injectable( 'BroadcastModalCtrl' )
 export class BroadcastModalCtrl
 {
-	post: Fireside_Post;
-	posts: Fireside_Post[];
+	post: FiresidePost;
+	posts: FiresidePost[];
 
 	screen: Screen;
 	env: Environment;

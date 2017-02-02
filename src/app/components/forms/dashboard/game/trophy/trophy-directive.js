@@ -1,3 +1,5 @@
+var Loader = require( '../../../../../../lib/gj-lib-client/components/loader/loader.service' ).Loader;
+
 angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameTrophy', function( Form, Api, Game_Trophy, ModalConfirm, gettext, gettextCatalog )
 {
 	// Required for the upload label.
@@ -6,7 +8,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameTrophy', 
 
 	var form = new Form( {
 		model: 'Game_Trophy',
-		template: '/app/components/forms/dashboard/game/trophy/trophy.html',
+		template: require( './trophy.html' ),
 		resetOnSubmit: true,
 	} );
 
@@ -16,6 +18,9 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameTrophy', 
 
 	form.onInit = function( scope )
 	{
+		scope.Loader = Loader;
+		Loader.load( 'upload' );
+
 		// Set the game ID on the form model from the game passed in.
 		scope.formModel.game_id = scope.game.id;
 		scope.formModel.file = undefined;

@@ -2,7 +2,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardFinancialsMan
 {
 	return {
 		scope: true,
-		templateUrl: '/app/components/forms/dashboard/financials/managed-account/business.html',
+		template: require( '!html-loader!./business.html' ),
 		controllerAs: '$ctrl',
 		controller: function( $scope, $attrs )
 		{

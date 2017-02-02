@@ -3,7 +3,7 @@ angular.module( 'App.Minbar' ).directive( 'gjMinbar', function( Minbar, Screen )
 	return {
 		restrict: 'E',
 		scope: {},
-		templateUrl: '/app/components/minbar/minbar.html',
+		template: require( '!html-loader!./minbar.html' ),
 		controllerAs: 'ctrl',
 		bindToController: true,
 		controller: function( $scope )

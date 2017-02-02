@@ -1,6 +1,7 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
-import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import template from 'html!./paypal.html';
+import * as template from '!html-loader!./paypal.html';
+
+import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 
 @Component({
 	selector: 'gj-form-dashboard-financials-paypal',
@@ -11,11 +12,7 @@ export class PaypalComponent
 	@Input( '<' ) user: any;
 
 	constructor(
-		@Inject( '$q' ) private $q: ng.IQService,
-		@Inject( '$window' ) private $window: ng.IWindowService,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
-		@Inject( 'Api' ) private api: any,
-		@Inject( 'Environment' ) private env: Environment,
 		@Inject( 'Growls' ) private growls: any,
 	)
 	{
@@ -23,18 +20,18 @@ export class PaypalComponent
 
 	linkPayPal()
 	{
-		this.api.sendRequest( '/web/dash/financials/get-paypal-auth', null, { detach: true } )
+		Api.sendRequest( '/web/dash/financials/get-paypal-auth', null, { detach: true } )
 			.then( ( response: any ) =>
 			{
 				if ( !response || !response.authUrl ) {
-					return this.$q.reject();
+					return Promise.reject( undefined );
 				}
 
-				if ( this.env.isClient ) {
+				if ( GJ_IS_CLIENT ) {
 					require( 'nw.gui' ).Shell.openExternal( response.authUrl );
 				}
 				else {
-					this.$window.location.href = response.authUrl;
+					window.location.href = response.authUrl;
 				}
 			} )
 			.catch( () =>

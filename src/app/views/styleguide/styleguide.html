@@ -20,10 +20,11 @@
 			</nav>
 		</div>
 		<div class="col-sm-9 col-sm-pull-3 col-lg-10 col-lg-pull-2">
-			<div ng-include="'/lib/gj-lib-client/components/button/button-styleguide.html'"></div>
-			<div ng-include="'/lib/gj-lib-client/components/list-group/list-group-styleguide.html'"></div>
-			<div ng-include="'/lib/gj-lib-client/components/progress/bar/bar-styleguide.html'"></div>
-			<div ng-include="'/lib/gj-lib-client/components/jolticons/jolticons-styleguide.html'"></div>
+			<div
+				ng-repeat="template in templates"
+				ng-include="template"
+				>
+			</div>
 		</div>
 	</div>
 </div>

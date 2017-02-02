@@ -248,7 +248,7 @@
 					items-per-page="viewCtrl.perPage"
 					total-items="viewCtrl.topic.replies_count"
 					current-page="viewCtrl.currentPage"
-					on-page-change="viewCtrl.pageChange( $page )"
+					(on-page-change)="viewCtrl.pageChange( $event.page )"
 					>
 				</gj-pagination>
 

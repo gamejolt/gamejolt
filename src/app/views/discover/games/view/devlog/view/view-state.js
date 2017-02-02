@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/:postSlug',
 		controller: 'Discover.Games.View.Devlog.ViewCtrl',
 		controllerAs: 'viewCtrl',
-		templateUrl: '/app/views/discover/games/view/devlog/view/view.html',
+		templateUrl: require( './view.html' ),
 		resolve: {
 			payload: function( $stateParams, Api, Fireside_Post )
 			{

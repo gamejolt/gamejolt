@@ -2,7 +2,7 @@ angular.module( 'App.Chat' ).directive( 'gjChatWindow', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/chat/window/window.html',
+		template: require( '!html-loader!./window.html' ),
 		scope: {
 			room: '=chatWindowRoom',
 			users: '=?chatWindowUsers',

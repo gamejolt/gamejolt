@@ -6,7 +6,7 @@ angular.module( 'App.Game.Collection.Grid' ).directive( 'gjGameCollectionGrid', 
 			collections: '=gjGameCollections',
 			eventLabel: '@?gjEventLabel',
 		},
-		templateUrl: '/app/components/game/collection/grid/grid.html',
+		template: require( '!html-loader!./grid.html' ),
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function( $scope, App )

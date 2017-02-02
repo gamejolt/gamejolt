@@ -1,6 +1,8 @@
-import { Injectable, Inject } from 'ng-metadata/core';
+import { StateService, StateParams } from 'angular-ui-router';
+
 import { ActivityFeedInput } from './item-service';
 import { ActivityFeedContainer } from './feed-container-service';
+import { getProvider } from '../../../../lib/gj-lib-client/utils/utils';
 
 /**
  * Number of states we will keep cached.
@@ -28,28 +30,22 @@ interface ActivityFeedState
 	container: ActivityFeedContainer;
 }
 
-@Injectable()
 export class ActivityFeedService
 {
-	private _states: ActivityFeedState[] = [];
-	private _currentState: ActivityFeedState;
+	private static _states: ActivityFeedState[] = [];
+	private static _currentState: ActivityFeedState;
 
-	constructor(
-		@Inject( 'History' ) private history: any,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
-		@Inject( '$stateParams' ) private $stateParams: ng.ui.IStateParamsService,
-		@Inject( 'ActivityFeedContainer' ) private containerModel: typeof ActivityFeedContainer,
-	)
+	static bootstrap( items: ActivityFeedInput[], options: BootstrapOptions = {} )
 	{
-	}
+		const History = getProvider<any>( 'History' );
+		const $state = getProvider<StateService>( '$state' );
+		const $stateParams = getProvider<StateParams>( '$stateParams' );
 
-	bootstrap( items: ActivityFeedInput[], options: BootstrapOptions = {} )
-	{
-		const url = this.history.futureState
-			? this.$state.href( this.history.futureState[0], this.history.futureState[1] )
-			: this.$state.href( this.$state.current, this.$stateParams );
+		const url = History.futureState
+			? $state.href( History.futureState[0], History.futureState[1] )
+			: $state.href( $state.current, $stateParams );
 
-		const inHistorical = options.inHistorical || this.history.inHistorical;
+		const inHistorical = options.inHistorical || History.inHistorical;
 
 		// If we're bootstrapping in historical, just return what we had.
 		// We only do this if we are going back to the latest state that we have
@@ -68,7 +64,7 @@ export class ActivityFeedService
 		_.remove( this._states, { url } );
 		this._currentState = {
 			url,
-			container: new this.containerModel( items, options.notificationWatermark ),
+			container: new ActivityFeedContainer( items, options.notificationWatermark ),
 		};
 		this._states.unshift( this._currentState );
 		this._states = this._states.slice( 0, MAX_CACHED_COUNT );

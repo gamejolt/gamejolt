@@ -5,16 +5,16 @@ angular.module( 'App.Game.Ogrs' ).directive( 'gjGameOgrsTag', function()
 		scope: {
 			game: '=gjGame',
 		},
-		templateUrl: '/app/components/game/ogrs/tag.html',
+		template: require( '!html-loader!./tag.html' ),
 		controllerAs: 'ctrl',
 		bindToController: true,
 		controller: function( $scope )
 		{
 			// List them out so they get revisioned.
 			var imgPaths = {
-				'all-ages': '/app/components/game/ogrs/all-ages-tag.png',
-				'teen': '/app/components/game/ogrs/teen-tag.png',
-				'mature': '/app/components/game/ogrs/mature-tag.png',
+				'all-ages': require( './all-ages-tag.png' ),
+				'teen': require( './teen-tag.png' ),
+				'mature': require( './mature-tag.png' ),
 			};
 
 			this.imgTag = undefined;
