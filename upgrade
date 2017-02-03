@@ -1,12 +1,13 @@
-[ ] Fix all sections (auth/checkout)
+[ ] Webpack config for multiple projects
 [ ] Check to make sure progress polling works for upload promises
-[ ] Do a check of all TS (with tsc) to find any errors
 [ ] Autoprefix
 	https://github.com/webpack-contrib/css-loader/issues/281
 [ ] Game api docs
 [ ] Including jquery twice in prod build
-[ ] Lazy loading of dashboard doesn't work if you hit: http://localhost:8080/dashboard
-[ ] Make sure all stuff like Screen/App is in all the component routes
+[ ] Look into redirectTo of new ui-router
+[ ] Go through all package.json modules
+[ ] Check game play modal minbar `this`
+[ ] Finish out the gameserver, or it will break when pushed
 
 Client
 [ ] Client shortcut
@@ -18,11 +19,19 @@ Eventually
 [ ] Get rid of calls to lodash in TS code.
 [ ] Get rid of $stateParams -> $transition$.params()
 [ ] Convert $stateChange events to transition hooks
-[ ] Look into redirectTo of new ui-router
 [ ] urlMatcherFactory deprecated
 [ ] urlRouter deprecated
 [ ] Upgrade chartjs
 
+[x] Get rid of i-button finally
+[x] Remove all console.log
+[x] Order form input-group-addon
+[x] Error: [$injector:strictdi] AuthModalCtrl is not using explicit annotation and cannot be invoked in strict mode
+	http://errors.angularjs.org/1.5.8/$injector/strictdi?p0=AuthModalCtrl
+[x] Do a check of all TS (with tsc) to find any errors
+[x] Make sure all stuff like Screen/App is in all the component routes
+[x] Fix all sections (auth/checkout)
+[x] Lazy loading of dashboard doesn't work if you hit: http://localhost:8080/dashboard
 [x] Disable animations when prerendering (used to be in Environment)
 [x] Convert Payload to TS
 [x] Convert all Game models to TS

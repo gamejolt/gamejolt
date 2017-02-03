@@ -5,6 +5,19 @@ import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { ModalConfirm } from '../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { User } from '../lib/gj-lib-client/components/user/user.model';
 import { Api } from '../lib/gj-lib-client/components/api/api.service';
+import { getProvider } from '../lib/gj-lib-client/utils/utils';
+
+export function attachProvidersApp( $scope: ng.IScope )
+{
+	$scope['$state'] = getProvider<any>( '$state' );
+	$scope['App'] = getProvider<any>( 'App' );
+	$scope['Meta'] = getProvider<any>( 'Meta' );
+	$scope['Screen'] = getProvider<any>( 'Screen' );
+	$scope['Environment'] = getProvider<any>( 'Environment' );
+	$scope['Scroll'] = getProvider<any>( 'Scroll' );
+	$scope['Shell'] = getProvider<any>( 'Shell' );
+	$scope['Connection'] = getProvider<any>( 'Connection' );
+}
 
 @Injectable( 'App' )
 export class App

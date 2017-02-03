@@ -53,7 +53,7 @@
 								>
 								profile.friend_request_sent_pending
 							</p>
-							<a class="i-button warning" ng-click="profileCtrl.cancelFriendRequest()">
+							<a class="btn btn-danger" ng-click="profileCtrl.cancelFriendRequest()">
 								<span class="jolticon jolticon-remove"></span>
 								{{ ::'profile.friend_request_cancel' | translate }}
 							</a>
@@ -68,11 +68,11 @@
 								>
 								profile.friend_request_received_pending
 							</p>
-							<a class="i-button big" ng-click="profileCtrl.acceptFriendRequest()">
+							<a class="btn" ng-click="profileCtrl.acceptFriendRequest()">
 								<span class="jolticon jolticon-friend-add-2"></span>
 								{{ ::'profile.friend_request_accept' | translate }}
 							</a>
-							<a class="i-button big warning" ng-click="profileCtrl.rejectFriendRequest()" gj-tooltip="{{ 'profile.friend_request_decline_tooltip' | translate }}">
+							<a class="btn btn-danger" ng-click="profileCtrl.rejectFriendRequest()" gj-tooltip="{{ 'profile.friend_request_decline_tooltip' | translate }}">
 								<span class="jolticon jolticon-remove"></span>
 								{{ ::'profile.friend_request_decline' | translate }}
 							</a>

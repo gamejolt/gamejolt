@@ -12,7 +12,6 @@ import ConnectionModule from '../lib/gj-lib-client/components/connection/connect
 import ConnectionStatePermissionsModule from '../lib/gj-lib-client/components/connection/state-permissions/state-permissions';
 import { ModelModule } from '../lib/gj-lib-client/components/model/model.module';
 import MetaModule from '../lib/gj-lib-client/components/meta/meta';
-import RulerModule from '../lib/gj-lib-client/components/ruler/ruler';
 import ScreenModule from '../lib/gj-lib-client/components/screen/screen';
 import LoadModule from '../lib/gj-lib-client/components/load/load';
 import LocationModule from '../lib/gj-lib-client/components/location/location';
@@ -95,6 +94,7 @@ import { PrimusModule } from '../lib/gj-lib-client/components/primus/primus.modu
 import { ActivityModule } from './components/activity/activity.module';
 import { MediaBarModule } from '../lib/gj-lib-client/components/media-bar/media-bar.module';
 import { RegistryModule } from '../lib/gj-lib-client/components/registry/registry.module';
+import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module';
 
 @NgModule({
 	imports: [

@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html lang="en" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/" ng-controller="AppCtrl">
+<html lang="en" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/">
 
 	<head>
 
@@ -38,23 +38,14 @@
 
 		</script>
 
-		<link rel="stylesheet" href="/auth/main.css">
-		<link rel="shortcut icon" href="~img/favicon.png">
-
-		<title>Game Jolt</title>
+		<title>Game Jolt - Indie games for the love of it</title>
 
 	</head>
 
 	<!-- Add an empty class so we can hook into it when building and add classes for client, app, etc. -->
-	<body class="" gj-body-classes gj-auto-scroll="!Screen.isWindowDesktop">
+	<body class="" gj-auto-scroll="!Screen.isWindowDesktop">
 
-		<ui-view id="content" ng-cloak ng-animate-children></ui-view>
-
-		<gj-growls></gj-growls>
-
-		<div gj-debug-bar></div>
-
-		<!--<script src="/app/modules/error-tracking.js" crossorigin="anonymous"></script>-->
+		<gj-app gj-body-classes></gj-app>
 
 		<script async src="https://www.google-analytics.com/analytics.js"></script>
 		<script>

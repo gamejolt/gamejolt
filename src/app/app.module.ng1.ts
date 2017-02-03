@@ -138,7 +138,7 @@ import './components/user/level-widget/level-widget-module';
 import './components/user/set-password-modal/set-password-modal-module';
 import './components/user/token-modal/token-modal-module';
 
-export const AppModuleNg1 = angular.module( 'AppNg1', [
+export const AppModuleNg1 = angular.module( 'App', [
 
 	// Set the event tracking up first.
 	// 'gj.ErrorTracking',

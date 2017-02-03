@@ -1,6 +1,6 @@
 <div id="auth-container" ng-class="{ 'has-cover-img': App.shouldShowCoverImage && authCtrl.coverImgUrl }">
 
-	<gj-cover-img cover-img-url="{{ authCtrl.coverImgUrl }}" ng-if="App.shouldShowCoverImage" class="anim-fade-leave"></gj-cover-img>
+	<gj-cover-img [img-url]="authCtrl.coverImgUrl" ng-if="App.shouldShowCoverImage" class="anim-fade-leave"></gj-cover-img>
 
 	<div class="auth-scroll-container">
 

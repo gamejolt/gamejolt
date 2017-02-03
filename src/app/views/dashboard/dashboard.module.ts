@@ -62,3 +62,6 @@ importContext( require.context( './', true, /\.state\.ts$/ ) );
 
 // Old style views.
 importContext( require.context( './', true, /\-(controller)\.js$/ ) );
+
+// Directives for this section.
+importContext( require.context( './', true, /\-(directive)\.js$/ ) );

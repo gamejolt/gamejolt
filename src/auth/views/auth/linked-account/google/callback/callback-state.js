@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/callback?code&state',
 		controller: 'Auth.LinkedAccount.Google.CallbackCtrl',
 		controllerAs: 'callbackCtrl',
-		templateUrl: require( './_processing.html' ),
+		templateUrl: require( '../../_processing.html' ),
 		resolve: {
 			payload: function( Api, $stateParams )
 			{

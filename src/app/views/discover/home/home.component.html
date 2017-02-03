@@ -57,7 +57,7 @@
 				<a class="btn btn-outline btn-block-xs"
 					gj-auth-required
 					ui-sref="dashboard.developer.games.add"
-					ng-click="!App.user ? $event.preventDefault() : ''"
+					ng-click="!$ctrl.app.user ? $event.preventDefault() : ''"
 					gj-track-event="home:header-add-game"
 					translate
 					>

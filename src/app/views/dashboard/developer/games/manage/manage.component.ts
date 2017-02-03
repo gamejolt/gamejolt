@@ -5,6 +5,7 @@ import * as template from '!html-loader!./manage.component.html';
 import { ModalConfirm } from '../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import { MediaItem } from '../../../../../../lib/gj-lib-client/components/media-item/media-item-model';
+import { attachProvidersApp } from '../../../../../app-service';
 
 @Component({
 	selector: 'route-dash-dev-games-manage',
@@ -31,12 +32,11 @@ export class RouteManageComponent implements OnInit
 	{
 		// For back-compat.
 		$scope['manageCtrl'] = this;
+		attachProvidersApp( $scope );
 	}
 
 	ngOnInit()
 	{
-		console.log( 'managectrl transition', this.$transition$ );
-
 		this.game = new Game( this.managePayload.game );
 		this.isWizard = !!this.$transition$.params()['wizard'];
 	}

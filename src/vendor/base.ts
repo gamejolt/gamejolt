@@ -12,10 +12,6 @@ import 'angular-animate';
 import 'angular-ui-router/lib/legacy/stateEvents.js';
 import 'lodash';
 
-// Pull into checkout vendor.ts
-// import '../bower-lib/angular-credit-cards/release/angular-credit-cards';
-// import '../bower-lib/angular-ui-mask/dist/mask.min';
-
 // Pull into client.
 // import '../bower-lib/dexie/dist/latest/Dexie.min';
 

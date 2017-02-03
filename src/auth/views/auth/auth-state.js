@@ -1,4 +1,4 @@
-angular.module( 'App.Views', [] ).config( function( $stateProvider )
+angular.module( 'App.Views' ).config( function( $stateProvider )
 {
 	$stateProvider.state( 'auth', {
 		abstract: true,
@@ -9,7 +9,10 @@ angular.module( 'App.Views', [] ).config( function( $stateProvider )
 		resolve: {
 			init: function( Translate )
 			{
-				return Translate.loadSection( 'auth' );
+				return Promise.all( [
+					// Translate.loadSection( 'main' ),
+					Translate.loadSection( 'auth' ),
+				] );
 			},
 			authPayload: function( Api )
 			{

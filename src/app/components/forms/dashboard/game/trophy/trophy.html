@@ -17,7 +17,7 @@
 				<br>
 
 				<div>
-					<a class="i-button big warning" ng-click="clearImage()">
+					<a class="btn btn-danger" ng-click="clearImage()">
 						<span class="jolticon jolticon-remove"></span>
 						Clear Image
 					</a>
@@ -76,7 +76,7 @@
 				<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'forms.yes' | translate }}" toggle-switch-off-text="{{ 'forms.no' | translate }}"></gj-toggle-switch>
 			</form-group>
 
-			<button gj-form-submit-button class="i-button" ng-disabled="!trophyForm.$valid" ng-click="onSubmit()">
+			<button gj-form-submit-button class="btn" ng-disabled="!trophyForm.$valid" ng-click="onSubmit()">
 				<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
 				<span translate>dash.games.trophies.form.save_button</span>
 			</button>

@@ -1,7 +1,8 @@
 import { Component, Input, Output, Inject, EventEmitter } from 'ng-metadata/core';
+import * as template from '!html-loader!./cover.html';
+
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
-import * as template from '!html-loader!./cover.html';
 
 @Component({
 	selector: 'gj-media-item-cover',
@@ -28,7 +29,6 @@ export class CoverComponent
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( '$element' ) $element: ng.IRootElementService,
 		@Inject( 'Screen' ) private screen: Screen,
-		@Inject( 'Ruler' ) private ruler: Ruler
 	)
 	{
 		this._elem = $element[0];
@@ -62,7 +62,7 @@ export class CoverComponent
 	setDimensions()
 	{
 		if ( this.mediaItem ) {
-			const newDimensions = this.mediaItem.getDimensions( this.ruler.width( this._elem ), null, { force: true } );
+			const newDimensions = this.mediaItem.getDimensions( Ruler.width( this._elem ), null, { force: true } );
 
 			// We extend the header to the right and left by 20% on XS since the screen is so small.
 			// This makes sure that we also calculate the height larger.

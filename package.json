@@ -2,7 +2,7 @@
   "name": "game-jolt",
   "version": "0.10.4",
   "scripts": {
-    "dev": "webpack-dashboard -- gulp watch",
+    "dev": "gulp watch",
     "build": "gulp --production",
     "client": "nw build/client/dev/source",
     "client-build-win": "gulp --production --client --arch=32",

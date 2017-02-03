@@ -25,8 +25,6 @@ export class RouteGameComponent
 		@Inject( 'Screen' ) public Screen: Screen,
 	)
 	{
-		console.log( 'game scope', this );
-
 		// For back-compat.
 		$scope['manageCtrl'] = $scope.$parent['manageCtrl'];
 		$scope['gameCtrl'] = this;

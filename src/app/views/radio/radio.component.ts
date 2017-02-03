@@ -30,8 +30,6 @@ export class RouteRadioComponent implements OnInit
 
 	ngOnInit()
 	{
-		console.log( this.payload );
-
 		this.meta.title = 'Indie Game Radio';
 		this.meta.description = 'Discover new game songs through the Game Jolt radio!';
 
