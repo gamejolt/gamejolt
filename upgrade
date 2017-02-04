@@ -1,12 +1,7 @@
-[ ] Webpack config for multiple projects
 [ ] Check to make sure progress polling works for upload promises
-[ ] Autoprefix
-	https://github.com/webpack-contrib/css-loader/issues/281
 [ ] Game api docs
 [ ] Including jquery twice in prod build
 [ ] Look into redirectTo of new ui-router
-[ ] Go through all package.json modules
-[ ] Check game play modal minbar `this`
 [ ] Finish out the gameserver, or it will break when pushed
 
 Client
@@ -23,6 +18,10 @@ Eventually
 [ ] urlRouter deprecated
 [ ] Upgrade chartjs
 
+[x] Webpack config for multiple projects
+[x] Check game play modal minbar `this`
+[x] Autoprefix
+[x] Go through all package.json modules
 [x] Get rid of i-button finally
 [x] Remove all console.log
 [x] Order form input-group-addon
