@@ -13,5 +13,3 @@ declare interface Window {
 	gapi: any;
 	jQuery: JQueryStatic;
 }
-
-declare function $import<T>( path: string ): Promise<T>;
