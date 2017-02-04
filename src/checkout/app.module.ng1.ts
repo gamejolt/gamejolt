@@ -4,12 +4,12 @@ import { TransitionService } from 'angular-ui-router';
 import { bootstrapFacade } from '../lib/gj-lib-client/utils/angular-facade';
 import { Payload } from '../lib/gj-lib-client/components/payload/payload-service';
 import { App } from './app-service';
+import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 
 import '../lib/gj-lib-client/components/translate/translate';
 import '../lib/gj-lib-client/components/error/error-module';
 import '../lib/gj-lib-client/components/geo/geo-module';
 import '../lib/gj-lib-client/components/body-classes/body-classes';
-import '../lib/gj-lib-client/components/analytics/analytics-module';
 import '../lib/gj-lib-client/components/loading/loading';
 import '../lib/gj-lib-client/components/loading/loading-page-transition/loading-page-transition';
 import '../lib/gj-lib-client/components/scroll/scroll';
@@ -41,7 +41,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Translate',
 	'gj.Geo',
 	'gj.BodyClasses',
-	'gj.Analytics',
 	'gj.Loading',
 	'gj.Loading.LoadingPageTransition',
 	'gj.Scroll',
@@ -133,10 +132,12 @@ export const AppModuleNg1 = angular.module( 'App', [
 	$q: ng.IQService,
 	$animate: ng.animate.IAnimateService,
 	$transitions: TransitionService,
+	$rootScope: ng.IRootScopeService,
 	App: App,
 ) =>
 {
 	bootstrapFacade( $q, $animate );
 	Payload.initAngular( App, $transitions );
+	Analytics.initAngular( $rootScope );
 } )
 .name;

@@ -5,6 +5,7 @@ import { bootstrapFacade } from '../lib/gj-lib-client/utils/angular-facade';
 import { Payload } from '../lib/gj-lib-client/components/payload/payload-service';
 import { App } from './app-service';
 import { Registry } from '../lib/gj-lib-client/components/registry/registry.service';
+import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 
 import '../lib/gj-lib-client/components/translate/translate';
 import '../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
@@ -17,7 +18,6 @@ import '../lib/gj-lib-client/components/fuzzy-number/fuzzy-number';
 import '../lib/gj-lib-client/components/fuzzysearch/fuzzysearch';
 import '../lib/gj-lib-client/components/currency/currency';
 import '../lib/gj-lib-client/components/body-classes/body-classes';
-import '../lib/gj-lib-client/components/analytics/analytics-module';
 import '../lib/gj-lib-client/components/loading/loading';
 import '../lib/gj-lib-client/components/loading/loading-page-transition/loading-page-transition';
 import '../lib/gj-lib-client/components/scroll/scroll';
@@ -52,7 +52,6 @@ import '../lib/gj-lib-client/components/user/friendship/friendship';
 import '../lib/gj-lib-client/components/user/message/message';
 import '../lib/gj-lib-client/components/comment/widget/widget';
 import '../lib/gj-lib-client/components/subscription/subscription';
-import '../lib/gj-lib-client/components/ad/ad-module';
 import '../lib/gj-lib-client/components/game/rating/rating';
 import '../lib/gj-lib-client/components/game/screenshot/screenshot';
 import '../lib/gj-lib-client/components/game/video/video';
@@ -169,7 +168,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Fuzzysearch',
 	'gj.Currency',
 	'gj.BodyClasses',
-	'gj.Analytics',
 	'gj.Loading',
 	'gj.Loading.LoadingPageTransition',
 	'gj.Scroll',
@@ -204,7 +202,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.User.Message',
 	'gj.Comment.Widget',
 	'gj.Subscription',
-	'gj.Ad',
 	'gj.Game.Rating',
 	'gj.Game.Screenshot',
 	'gj.Game.Video',
@@ -404,11 +401,13 @@ export const AppModuleNg1 = angular.module( 'App', [
 	$q: ng.IQService,
 	$animate: ng.animate.IAnimateService,
 	$transitions: TransitionService,
+	$rootScope: ng.IRootScopeService,
 	App: App,
 ) =>
 {
 	bootstrapFacade( $q, $animate );
 	Payload.initAngular( App, $transitions );
+	Analytics.initAngular( $rootScope );
 
 	Registry.setConfig( 'Game', {
 		maxItems: 100,
@@ -439,9 +438,13 @@ export const AppModuleNg1 = angular.module( 'App', [
 } )
 // Track time till Angular runs.
 /*@ngInject*/
-.run( ( Analytics: any ) =>
+.run( () =>
 {
-	var ms = Date.now() - window._gjStartTime;
-	Analytics.trackTiming( 'shell', 'angular-start', ms );
+	// Gotta wait for things to render out so we have an injector.
+	window.setTimeout( () =>
+	{
+		const ms = Date.now() - window._gjStartTime;
+		Analytics.trackTiming( 'shell', 'angular-start', ms );
+	} );
 } )
 .name;

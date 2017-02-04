@@ -24,6 +24,7 @@ import { PayloadModule } from '../lib/gj-lib-client/components/payload/payload.m
 import { UserModule } from '../lib/gj-lib-client/components/user/user.module';
 import { CoverImgComponent } from './components/cover-img/cover-img.component';
 import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module';
+import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analytics.module';
 
 @NgModule({
 	imports: [
@@ -36,6 +37,7 @@ import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module'
 		ApiModule,
 		PayloadModule,
 		ModelModule,
+		AnalyticsModule,
 		PopoverModule,
 		MediaItemModule,
 		MetaModule,

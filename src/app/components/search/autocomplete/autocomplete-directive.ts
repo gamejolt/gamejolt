@@ -10,6 +10,7 @@ import { Popover } from '../../../../lib/gj-lib-client/components/popover/popove
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { getProvider } from '../../../../lib/gj-lib-client/utils/utils';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -81,7 +82,6 @@ export class AutocompleteComponent implements OnInit
 		@Inject( 'hotkeys' ) private hotkeys: ng.hotkeys.HotkeysProvider,
 		@Inject( 'gettext' ) gettext: ng.gettext.gettextFunction,
 		@Inject( 'App' ) private app: App,
-		@Inject( 'Analytics' ) private analytics: any,
 		@Inject( 'Search' ) private Search: Search,
 		@Inject( 'SearchHistory' ) private searchHistory: SearchHistory,
 		@Inject( 'Fuzzysearch' ) private fuzzysearch: any,
@@ -303,25 +303,25 @@ export class AutocompleteComponent implements OnInit
 	viewAll()
 	{
 		this.$state.go( 'search.results', { q: this.searchCtrl.query } );
-		this.analytics.trackEvent( 'search', 'autocomplete', 'go-all' );
+		Analytics.trackEvent( 'search', 'autocomplete', 'go-all' );
 	}
 
 	selectGame( game: any )
 	{
 		this.$state.go( 'discover.games.view.overview', { slug: game.slug, id: game.id } );
-		this.analytics.trackEvent( 'search', 'autocomplete', 'go-game' );
+		Analytics.trackEvent( 'search', 'autocomplete', 'go-game' );
 	}
 
 	selectUser( user: any )
 	{
 		this.$state.go( 'profile.overview', { username: user.username } );
-		this.analytics.trackEvent( 'search', 'autocomplete', 'go-user' );
+		Analytics.trackEvent( 'search', 'autocomplete', 'go-user' );
 	}
 
 	selectLibraryGame( localGame: any )
 	{
 		this.$state.go( 'discover.games.view.overview', { slug: localGame.slug, id: localGame.id } );
-		this.analytics.trackEvent( 'search', 'autocomplete', 'go-library-game' );
+		Analytics.trackEvent( 'search', 'autocomplete', 'go-library-game' );
 	}
 
 	selectCommand( command: Command )
@@ -329,7 +329,7 @@ export class AutocompleteComponent implements OnInit
 		if ( command && command.state ) {
 			this.searchCtrl.query = '';  // Set it as blank.
 			this.$state.go( command.state, command.options || {} );
-			this.analytics.trackEvent( 'search', 'autocomplete', 'go-command' );
+			Analytics.trackEvent( 'search', 'autocomplete', 'go-command' );
 		}
 	}
 

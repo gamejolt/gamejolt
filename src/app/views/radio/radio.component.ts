@@ -5,6 +5,7 @@ import { Environment } from '../../../lib/gj-lib-client/components/environment/e
 import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
+import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
 
 @Component( {
 	selector: 'route-radio',
@@ -23,7 +24,6 @@ export class RouteRadioComponent implements OnInit
 	constructor(
 		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( 'Game_Song' ) private songModel: any,
-		@Inject( 'Analytics' ) private analytics: any,
 	)
 	{
 	}
@@ -46,6 +46,6 @@ export class RouteRadioComponent implements OnInit
 		this.song = new this.songModel( payload.song );
 		this.game = new Game( payload.game );
 		this.meta.title = this.song.title;
-		this.analytics.trackEvent( 'radio', 'load-song' );
+		Analytics.trackEvent( 'radio', 'load-song' );
 	}
 }

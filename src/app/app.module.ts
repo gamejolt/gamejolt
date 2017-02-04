@@ -95,6 +95,8 @@ import { ActivityModule } from './components/activity/activity.module';
 import { MediaBarModule } from '../lib/gj-lib-client/components/media-bar/media-bar.module';
 import { RegistryModule } from '../lib/gj-lib-client/components/registry/registry.module';
 import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module';
+import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analytics.module';
+import { AdModule } from '../lib/gj-lib-client/components/ad/ad.module';
 
 @NgModule({
 	imports: [
@@ -107,6 +109,7 @@ import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module'
 		ApiModule,
 		PayloadModule,
 		ModelModule,
+		AnalyticsModule,
 		RegistryModule,
 		PopoverModule,
 		SearchModule,
@@ -192,6 +195,7 @@ import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module'
 		SellableModule,
 		SellablePricingModule,
 		PrimusModule,
+		AdModule,
 		AppModuleNg1,
 	],
 	declarations: [

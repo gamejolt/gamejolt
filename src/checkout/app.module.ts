@@ -23,6 +23,7 @@ import ImgResponsiveModule from '../lib/gj-lib-client/components/img/responsive/
 import { SellableModule } from '../lib/gj-lib-client/components/sellable/sellable.module';
 import { SellablePricingModule } from '../lib/gj-lib-client/components/sellable/pricing/pricing.module';
 import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module';
+import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analytics.module';
 
 @NgModule({
 	imports: [
@@ -35,6 +36,7 @@ import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module'
 		ApiModule,
 		PayloadModule,
 		ModelModule,
+		AnalyticsModule,
 		MetaModule,
 		RulerModule,
 		ScreenModule,
