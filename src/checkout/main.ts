@@ -1,4 +1,3 @@
-import './main.styl';
 import '../vendor/base';
 
 import '../bower-lib/angular-credit-cards/release/angular-credit-cards';

@@ -1,4 +1,3 @@
-import './main.styl';
 import '../vendor/base';
 
 import { platformBrowserDynamic } from 'ng-metadata/platform-browser-dynamic';
