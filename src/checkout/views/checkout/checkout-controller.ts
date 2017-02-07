@@ -1,8 +1,8 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { App } from '../../app-service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { Sellable } from '../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
+import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 
 @Injectable()
 export class CheckoutCtrl
@@ -14,7 +14,7 @@ export class CheckoutCtrl
 
 	constructor(
 		@Inject( '$window' ) private $window: ng.IWindowService,
-		@Inject( 'App' ) app: App,
+		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'payload' ) payload: any
 	)
@@ -24,7 +24,7 @@ export class CheckoutCtrl
 		this.order = payload.order;
 		this.game = new Game( payload.game );
 
-		app.title = 'Buy ' + this.sellable.title;
+		meta.title = 'Buy ' + this.sellable.title;
 
 		$window.Stripe.setPublishableKey( payload.stripePublishableKey );
 	}
