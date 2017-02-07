@@ -1,33 +1,64 @@
 {
   "rules": {
-    "no-inferrable-types": true,
     "class-name": true,
     "comment-format": [
       true,
       "check-space"
     ],
+    "curly": true,
+    "eofline": true,
     "indent": [
       true,
       "tabs"
     ],
-    "eofline": true,
-    "no-duplicate-variable": true,
-    "no-eval": true,
+    "label-position": true,
+    "max-line-length": [
+      true,
+      140
+    ],
+    "member-access": false,
+    "member-ordering": [
+      true,
+      "variables-before-functions"
+    ],
     "no-arg": true,
-    "no-internal-module": true,
-    "no-trailing-whitespace": true,
     "no-bitwise": true,
+    "no-console": [
+      true,
+      "debug",
+      "time",
+      "timeEnd",
+      "trace"
+    ],
+    "no-construct": true,
+    "no-debugger": true,
+    "no-duplicate-variable": true,
+    "no-empty": false,
+    "no-eval": true,
+    "no-inferrable-types": true,
     "no-shadowed-variable": true,
+    "no-string-literal": false,
+    "no-switch-case-fall-through": true,
+    "no-trailing-whitespace": true,
     "no-unused-expression": true,
-    "no-unused-variable": true,
-
+    "no-use-before-declare": true,
+    "no-var-keyword": true,
+    "object-literal-sort-keys": false,
+    "one-line": [
+      true,
+      "check-whitespace"
+    ],
     "quotemark": [
       true,
-      "single",
-      "avoid-escape"
+      "single"
     ],
+    "radix": true,
     "semicolon": [
-        "always"
+      "always"
+    ],
+    "triple-equals": [
+      true,
+      "allow-null-check"
     ],
     "typedef-whitespace": [
       true,
@@ -39,14 +70,7 @@
         "variable-declaration": "nospace"
       }
     ],
-    "curly": true,
-    "variable-name": [
-      false,
-      "ban-keywords",
-      "check-format",
-      "allow-trailing-underscore",
-      "allow-leading-underscore"
-    ],
+    "variable-name": false,
     "whitespace": [
       true,
       "check-branch",
