@@ -11,7 +11,6 @@ import '../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
 import '../lib/gj-lib-client/components/error/error-module';
 import '../lib/gj-lib-client/components/body-classes/body-classes';
 import '../lib/gj-lib-client/components/loading/loading';
-import '../lib/gj-lib-client/components/loading/loading-page-transition/loading-page-transition';
 import '../lib/gj-lib-client/components/scroll/scroll';
 import '../lib/gj-lib-client/components/scroll/auto-scroll/auto-scroll';
 import '../lib/gj-lib-client/components/expand-when/expand-when';
@@ -43,7 +42,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 
 	'gj.BodyClasses',
 	'gj.Loading',
-	'gj.Loading.LoadingPageTransition',
 	'gj.Scroll',
 	'gj.ExpandWhen',
 

@@ -1,7 +1,5 @@
-$gj-app-styles-folder ?= '../../../../auth'
-
-@import './styles/variables'
-@import './styles/layers'
+@import '~styles/variables'
+@import '~styles/layers'
 @import '../lib/gj-lib-client/stylus/common'
 
 @import '../lib/gj-lib-client/components/well/well'
@@ -20,8 +18,8 @@ $gj-app-styles-folder ?= '../../../../auth'
 @import '../lib/gj-lib-client/components/auth/auth'
 
 // Styles/overrides.
-@import './styles/scaffolding'
-@import './styles/client'
+@import '~styles/scaffolding'
+@import '~styles/client'
 
 // Components.
 @import './components/**/*.styl'

@@ -5,7 +5,6 @@ import { Environment } from '../lib/gj-lib-client/components/environment/environ
 @Injectable( 'App' )
 export class App
 {
-	ver: number | null = null;
 	user: any = null;
 	shouldShowCoverImage = true;
 
