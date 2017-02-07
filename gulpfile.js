@@ -173,6 +173,7 @@ var config = {
 	sections: [
 		'auth',
 		'checkout',
+		'claim',
 	],
 	translations: 'site-translations',
 	translationSections: {
@@ -186,6 +187,9 @@ var config = {
 		],
 		checkout: [
 			'checkout/',
+		],
+		claim: [
+			'claim/',
 		],
 	},
 };

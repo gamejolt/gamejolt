@@ -15,6 +15,7 @@ export class ThumbnailComponent implements OnInit
 	@Input( '@gameThumbnailShowControl' ) controlType?: string;
 	@Input( '@gameThumbnailControlLabel' ) controlLabel?: string;
 	@Input( '<autoplay' ) autoplay = false;
+	@Input( '<' ) hidePricing = false;
 
 	@Output( 'gameThumbnailOnControlClick' ) private _onControlClick = new EventEmitter<void>();
 
@@ -40,8 +41,11 @@ export class ThumbnailComponent implements OnInit
 
 	ngOnInit()
 	{
-		if ( this.linkTo == 'dashboard' ) {
+		if ( this.linkTo === 'dashboard' ) {
 			this.url = this.game.getUrl( 'dashboard' );
+		}
+		else if ( this.linkTo ) {
+			this.url = this.linkTo;
 		}
 		else {
 			this.url = this.game.getUrl();

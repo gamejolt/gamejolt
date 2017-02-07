@@ -1,0 +1,17 @@
+<form gj-form="formModel" name="retrieveForm">
+
+	<form-group name="email" label="Email Address">
+		<input form-control="email"
+			ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 250 } }"
+			>
+		<control-errors>
+			<control-error when="server">That email address doesn't seem to be correct. Please check that you entered it correctly.</control-error>
+		</control-errors>
+	</form-group>
+
+	<button gj-form-submit-button class="btn btn-outline" ng-disabled="!retrieveForm.$valid" ng-click="onSubmit()">
+		<span class="jolticon jolticon-key-diagonal"></span>
+		Retrieve
+	</button>
+
+</form>

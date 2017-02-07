@@ -57,7 +57,7 @@
 	<div class="game-thumbnail-meta">
 
 		<div class="game-thumbnail-pricing"
-			ng-if="::$ctrl.game._has_packages"
+			ng-if="::$ctrl.game._has_packages && !$ctrl.hidePricing"
 			ng-class="::{ 'game-thumbnail-pricing-owned': $ctrl.game.sellable.is_owned, 'game-thumbnail-pricing-sale': $ctrl.sale }"
 			>
 			<div ng-if="::!$ctrl.game.sellable.is_owned" ng-switch="::$ctrl.game.sellable.type">

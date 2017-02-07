@@ -1,0 +1,29 @@
+<div class="alert alert-info full-bleed full-bleed-xs" ng-if="!$ctrl.app.user">
+	<p><a ng-href="{{ $ctrl.loginUrl }}">Sign in to Game Jolt</a> to be able to claim this game into your Library.</p>
+</div>
+
+<p ng-if="$ctrl.app.user">
+	<button class="btn btn-success-outline btn-block"
+		ng-click="$ctrl._claim( $ctrl.bundle )"
+		>
+		<span class="jolticon jolticon-key-diagonal"></span>
+		Claim Bundle into Library
+	</button>
+</p>
+
+<h1 class="section-header">{{ $ctrl.bundle.title }}</h1>
+<p>{{ $ctrl.bundle.description }}</p>
+
+<h3>Games in Bundle</h3>
+
+<div class="row">
+	<gj-game-thumbnail
+		class="col-sm-6 game-thumbnail-anim"
+		ng-repeat="game in $ctrl.games track by game.id"
+		gj-game="game"
+		gj-link-to="{{ $ctrl.$state.href( 'key.game', { key: $ctrl.key, bundleGameId: game.id } ) }}"
+		autoplay="true"
+		hide-pricing="true"
+		>
+	</gj-game-thumbnail>
+</div>
