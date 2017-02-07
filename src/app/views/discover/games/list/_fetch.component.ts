@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Inject } from 'ng-metadata/core';
 import { StateService, StateParams } from 'angular-ui-router';
 import * as template from '!html-loader!./_fetch.component.html';
 
-import { App } from '../../../../../checkout/app-service';
+import { App } from '../../../../app-service';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteListComponent } from './list.component';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
