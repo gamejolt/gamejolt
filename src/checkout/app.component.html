@@ -1,0 +1,45 @@
+<div>
+
+	<div id="shell">
+
+		<div id="header">
+			<div gj-user-bar="App.user" gj-current-site="main" hide-site-selector="Environment.isClient" ng-cloak>
+
+				<a class="btn btn-outline btn-dark-variant"
+					ng-if="Environment.isClient"
+					ng-click="HistoryNavigator.back()"
+					>
+					<span class="jolticon jolticon-chevron-left"></span>
+					Back to Game
+				</a>
+
+			</div>
+		</div>
+
+		<ui-view id="content" ng-cloak></ui-view>
+		<gj-growls></gj-growls>
+
+	</div>
+
+	<footer id="footer" ng-cloak>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6">
+					<p class="footer-links">
+						<a href="mailto:contact@gamejolt.com">Contact Game Jolt</a>
+						&nbsp;|&nbsp;
+						<a href="http://gamejolt.com/terms">Terms</a>
+						&nbsp;|&nbsp;
+						<a href="http://gamejolt.com/privacy">Privacy Policy</a>
+					</p>
+				</div>
+				<div class="col-sm-6">
+					<p class="footer-copyright">
+						&copy; {{ App.currentDate | date:'yyyy' }} Lucent Web Creative, LLC
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+</div>

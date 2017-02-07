@@ -1,6 +1,6 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
-import { Channels } from './../channels-service';
-import template from 'html!./thumbnail.html';
+import { Channels } from '../channels-service';
+import * as template from '!html-loader!./thumbnail.html';
 
 @Component({
 	selector: 'gj-channel-thumbnail',
@@ -9,7 +9,7 @@ import template from 'html!./thumbnail.html';
 export class ThumbnailComponent
 {
 	@Input( '@' ) channel: string;
-	@Input( '<?' ) gamesCount?: number;
+	@Input( '<' ) gamesCount?: number;
 
 	constructor(
 		@Inject( 'Channels' ) public channelsInfo: Channels,

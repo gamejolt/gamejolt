@@ -1,7 +1,7 @@
-import { Component, Inject, Input, Output, OnInit, HostBinding, HostListener } from 'ng-metadata/core';
-import template from 'html!./thumbnail.html';
+import { Component, Inject, Input, Output, OnInit, HostBinding, HostListener, EventEmitter } from 'ng-metadata/core';
+import * as template from '!html-loader!./thumbnail.html';
 
-import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { App } from '../../../app-service';
 
 @Component({
@@ -11,12 +11,13 @@ import { App } from '../../../app-service';
 export class ThumbnailComponent implements OnInit
 {
 	@Input( '<gjGame' ) game: any;
-	@Input( '@?gjLinkTo' ) linkTo?: string;
-	@Input( '@?gameThumbnailShowControl' ) controlType?: string;
-	@Input( '@?gameThumbnailControlLabel' ) controlLabel?: string;
-	@Input( '<?autoplay' ) autoplay = false;
+	@Input( '@gjLinkTo' ) linkTo?: string;
+	@Input( '@gameThumbnailShowControl' ) controlType?: string;
+	@Input( '@gameThumbnailControlLabel' ) controlLabel?: string;
+	@Input( '<autoplay' ) autoplay = false;
+	@Input( '<' ) hidePricing = false;
 
-	@Output( '?gameThumbnailOnControlClick' ) _onControlClick?: Function;
+	@Output( 'gameThumbnailOnControlClick' ) private _onControlClick = new EventEmitter<void>();
 
 	element: HTMLElement;
 	url: string;
@@ -40,8 +41,11 @@ export class ThumbnailComponent implements OnInit
 
 	ngOnInit()
 	{
-		if ( this.linkTo == 'dashboard' ) {
+		if ( this.linkTo === 'dashboard' ) {
 			this.url = this.game.getUrl( 'dashboard' );
+		}
+		else if ( this.linkTo ) {
+			this.url = this.linkTo;
 		}
 		else {
 			this.url = this.game.getUrl();
@@ -95,7 +99,7 @@ export class ThumbnailComponent implements OnInit
 			}
 
 			if ( this._onControlClick ) {
-				this._onControlClick();
+				this._onControlClick.emit( undefined );
 			}
 		}
 	}

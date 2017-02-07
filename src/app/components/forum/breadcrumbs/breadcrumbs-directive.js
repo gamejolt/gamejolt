@@ -2,7 +2,7 @@ angular.module( 'App.Forum.Breadcrumbs' ).directive( 'gjForumBreadcrumbs', funct
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/forum/breadcrumbs/breadcrumbs.html',
+		template: require( '!html-loader!./breadcrumbs.html' ),
 		scope: {
 			channel: '=?',
 			page: '@?',

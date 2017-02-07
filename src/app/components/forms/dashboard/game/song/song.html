@@ -4,7 +4,7 @@
 		<gj-loading></gj-loading>
 	</div>
 
-	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
+	<div ng-if="Loader.ready( 'upload' )">
 		<div ng-if="isLoaded">
 			<form-group name="title" label="{{ 'dash.games.music.form.title_label' | translate }}">
 				<input form-control="text" ng-maxlength="150">

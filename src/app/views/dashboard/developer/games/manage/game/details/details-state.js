@@ -6,6 +6,6 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 		url: '/details',
 		controller: 'Dashboard.Developer.Games.Manage.Game.DetailsCtrl',
 		controllerAs: 'detailsCtrl',
-		templateUrl: '/app/views/dashboard/developer/games/manage/game/details/details.html',
+		templateUrl: require( './details.html' ),
 	} );
 } );

@@ -2,7 +2,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameKeyGroup'
 {
 	var form = new Form( {
 		model: 'KeyGroup',
-		template: '/app/components/forms/dashboard/game/key-group/key-group.html',
+		template: require( './key-group.html' ),
 		resetOnSubmit: true,
 	} );
 

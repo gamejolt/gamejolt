@@ -4,7 +4,7 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringInput', functi
 		scope: {
 			filteringContainer: '=gjFilteringContainer',
 		},
-		templateUrl: '/app/components/game/filtering/input.html',
+		template: require( '!html-loader!./input.html' ),
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function( $scope, $element, hotkeys, Analytics )

@@ -5,7 +5,7 @@
 	<div class="media-item-cover-img">
 		<img
 			gj-img-responsive="{{ $ctrl.mediaItem.mediaserver_url }}"
-			on-loaded-change="$ctrl.isMediaItemLoaded = $loaded"
+			(on-loaded-change)="$ctrl.isMediaItemLoaded = $event"
 			alt=""
 			gj-parallax-scroll="::$ctrl.shouldParallax"
 			scroll-drag="0.4"

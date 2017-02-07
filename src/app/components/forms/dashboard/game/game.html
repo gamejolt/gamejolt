@@ -38,7 +38,7 @@
 				</p>
 
 				<gj-form-dashboard-game-dev-stage-selector
-					on-select="formModel.development_status = $stage"
+					(on-select)="formModel.development_status = $event"
 					>
 				</gj-form-dashboard-game-dev-stage-selector>
 

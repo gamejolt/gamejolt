@@ -1,40 +1,41 @@
-import { Component, Inject, Input, Output } from 'ng-metadata/core';
+import { Component, Inject, Input, Output, EventEmitter } from 'ng-metadata/core';
+import * as template from '!html-loader!./add.html';
+
 import { DevlogPostEdit } from '../edit/edit-service';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import template from 'html!./add.html';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 
 @Component({
 	selector: 'gj-devlog-post-add',
 	template,
 })
-export class AddComponent
+export class DevlogPostAddComponent
 {
 	@Input( '<' ) game: any;
 
-	@Output() onAdded: Function;
+	@Output() private onAdded = new EventEmitter<FiresidePost>();
 
 	constructor(
 		@Inject( 'DevlogPostEdit' ) private editModal: DevlogPostEdit,
-		@Inject( 'Api' ) private api: any
 	)
 	{
 	}
 
 	showAddModal( type: string )
 	{
-		this.api.sendRequest( `/web/dash/developer/games/devlog/new-post/${this.game.id}/${type}` )
+		Api.sendRequest( `/web/dash/developer/games/devlog/new-post/${this.game.id}/${type}` )
 			.then( ( response: any ) =>
 			{
-				return new Fireside_Post( response.post );
+				return new FiresidePost( response.post );
 			} )
-			.then( ( post: Fireside_Post ) =>
+			.then( ( post: FiresidePost ) =>
 			{
 				return this.editModal.show( post );
 			} )
-			.then( ( post: Fireside_Post ) =>
+			.then( ( post: FiresidePost ) =>
 			{
 				if ( this.onAdded ) {
-					this.onAdded( { $post: post } );
+					this.onAdded.emit( post );
 				}
 			} );
 	}

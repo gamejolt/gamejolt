@@ -1,0 +1,290 @@
+<section class="section landing-header text-center">
+	<div class="container">
+
+		<h1 class="anim-fade-in-enlarge stagger">
+			<img src="~img/jolt.svg" alt="Game Jolt"
+				ng-attr-width="{{ $ctrl.screen.isXs ? 164 : 164 * 3 }}"
+				ng-attr-height="{{ $ctrl.screen.isXs ? 18 : 18 * 3 }}"
+				>
+		</h1>
+
+		<br>
+
+		<div class="row anim-fade-in-up stagger">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+				<p class="lead">Millions of gamers, let's players, and indie developers visit Game Jolt each month to get their indie gaming fix.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="landing-body">
+
+	<section class="section">
+		<div class="container">
+
+			<h1 class="section-header text-center">
+				A Love of Games
+			</h1>
+
+			<hr class="underbar underbar-center">
+			<br>
+
+			<div class="row">
+				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+
+					<p>Game Jolt is run by me, David DeCarmine, and my wife Yaprak, plus the help of the millions of indie developers and gamers on Game Jolt. Together, our mission is to grow indie gaming!</p>
+
+					<p>In 2002, at the age of 14, I came up with the idea of a platform for indies&mdash;for hobbyists that were creating games for the love of it. Something more personal, more collaborative, and more indie. Where anyone can create a game, show it off, and build an audience. It was kind of crazy. This was way before the existence of current platforms, and before indie gaming became as big as it has.</p>
+
+					<p>Game Jolt has come a long way since then. After I revamped the site in 2008 it became one of the biggest indie gaming platforms in existence. Today, millions of gamers, let's players, and indie developers visit Game Jolt each month to get their indie gaming fix, and to explore over 70,000 games.</p>
+
+					<p>I believe there's power in community. Gamers, let's players, developers, reviewers, journalists: let’s grow this amazing and weird thing that is indie gaming, and celebrate making games for the love of it.</p>
+
+				</div>
+			</div>
+
+			<h1 class="text-center">
+				Contact
+			</h1>
+
+			<hr class="underbar underbar-center">
+			<br>
+
+			<div class="row">
+				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+
+					<p><strong>For support</strong>, check out the <a ui-sref="forums.landing.overview">forums</a> or email us at <a href="mailto:contact@gamejolt.com">contact@gamejolt.com</a>.</p>
+
+					<p><strong>Press/business inquiries</strong> email Yaprak DeCarmine at <a href="mailto:yaprak@gamejolt.com">yaprak@gamejolt.com</a>.</p>
+
+				</div>
+			</div>
+
+			<h1 class="text-center">
+				Logo
+			</h1>
+
+			<hr class="underbar underbar-center">
+			<br>
+
+			<div class="row">
+				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+
+					<p>Please do not modify, recolor, or distort our logo. When resizing please attempt to use multiples: 2x, 4x, etc. Do not use filtering while resizing. Retain the crisp pixel look. It's a pain, we know.</p>
+
+					<div class="well fill-darkest">
+						<h5 class="section-header">
+							Dark Backgrounds
+						</h5>
+
+						<br>
+
+						<div class="visible-xs text-center">
+							<img src="./gamejolt-logo-dark-1x.png" alt="Game Jolt Logo Dark">
+						</div>
+						<div class="hidden-xs text-center">
+							<img src="./gamejolt-logo-dark-2x.png" alt="Game Jolt Logo Dark">
+						</div>
+
+						<br>
+
+						<div class="text-right">
+							<span ng-repeat="size in [ '1x', '2x', '3x', '4x' ]">
+								<a ng-href="{{ ::$ctrl.assetUrls[ './gamejolt-logo-dark-' + size + '.png' ] }}" target="_blank">
+									{{ ::size }}
+								</a>
+								<span ng-hide="::$last" class="dot-separator"></span>
+							</span>
+						</div>
+					</div>
+
+					<div class="well fill-lightest">
+						<h5 class="section-header">
+							Light Backgrounds
+						</h5>
+
+						<br>
+
+						<div class="visible-xs text-center">
+							<img src="./gamejolt-logo-light-1x.png" alt="Game Jolt Logo Light">
+						</div>
+						<div class="hidden-xs text-center">
+							<img src="./gamejolt-logo-light-2x.png" alt="Game Jolt Logo Light">
+						</div>
+
+						<br>
+
+						<div class="text-right">
+							<span ng-repeat="size in [ '1x', '2x', '3x', '4x' ]">
+								<a ng-href="{{ ::$ctrl.assetUrls[ './gamejolt-logo-light-' + size + '.png' ] }}" target="_blank">
+									{{ ::size }}
+								</a>
+								<span ng-hide="::$last" class="dot-separator"></span>
+							</span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-6">
+
+							<div class="well fill-darkest">
+								<h5 class="section-header">
+									Bolt - Dark Backgrounds
+								</h5>
+
+								<br>
+
+								<div class="text-center">
+									<img src="./gamejolt-bolt-dark-2x.png" alt="Game Jolt Bolt Dark">
+								</div>
+
+								<br>
+
+								<div class="text-right">
+									<span ng-repeat="size in [ '1x', '2x', '3x', '4x' ]">
+										<a ng-href="{{ ::$ctrl.assetUrls[ './gamejolt-bolt-dark-' + size + '.png' ] }}" target="_blank">
+											{{ ::size }}
+										</a>
+										<span ng-hide="::$last" class="dot-separator"></span>
+									</span>
+								</div>
+							</div>
+
+						</div>
+						<div class="col-sm-6">
+
+							<div class="well fill-lightest">
+								<h5 class="section-header">
+									Bolt - Light Backgrounds
+								</h5>
+
+								<br>
+
+								<div class="text-center">
+									<img src="./gamejolt-bolt-light-2x.png" alt="Game Jolt Bolt Light">
+								</div>
+
+								<br>
+
+								<div class="text-right">
+									<span ng-repeat="size in [ '1x', '2x', '3x', '4x' ]">
+										<a ng-href="{{ ::$ctrl.assetUrls[ './gamejolt-bolt-light-' + size + '.png' ] }}" target="_blank">
+											{{ ::size }}
+										</a>
+										<span ng-hide="::$last" class="dot-separator"></span>
+									</span>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<p>The below images should only be used when you are going for a no-color look. Only use straight white, or straight black. Don't recolor them.</p>
+
+					<div class="row">
+						<div class="col-sm-6">
+
+							<div class="well fill-darkest">
+								<h5 class="section-header">
+									Bolt - Dark Backgrounds
+								</h5>
+
+								<br>
+
+								<div class="text-center">
+									<img src="./gamejolt-bolt-white-2x.png" alt="Game Jolt Bolt White">
+								</div>
+
+								<br>
+
+								<div class="text-right">
+									<span ng-repeat="size in [ '1x', '2x', '3x', '4x' ]">
+										<a ng-href="{{ ::$ctrl.assetUrls[ './gamejolt-bolt-white-' + size + '.png' ] }}" target="_blank">
+											{{ ::size }}
+										</a>
+										<span ng-hide="::$last" class="dot-separator"></span>
+									</span>
+								</div>
+							</div>
+
+						</div>
+						<div class="col-sm-6">
+
+							<div class="well fill-lightest">
+								<h5 class="section-header">
+									Bolt - Light Backgrounds
+								</h5>
+
+								<br>
+
+								<div class="text-center">
+									<img src="./gamejolt-bolt-black-2x.png" alt="Game Jolt Bolt Black">
+								</div>
+
+								<br>
+
+								<div class="text-right">
+									<span ng-repeat="size in [ '1x', '2x', '3x', '4x' ]">
+										<a ng-href="{{ ::$ctrl.assetUrls[ './gamejolt-bolt-black-' + size + '.png' ] }}" target="_blank">
+											{{ ::size }}
+										</a>
+										<span ng-hide="::$last" class="dot-separator"></span>
+									</span>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<h1 class="text-center">
+				Digital Color Palette
+			</h1>
+
+			<hr class="underbar underbar-center">
+			<br>
+
+			<p class="text-center">Wanna look like us? Check these hex codes out!</p>
+
+			<div class="row">
+				<div class="col-sm-3"
+					ng-repeat="(hex, classname) in {
+						'ccff00': 'fill-green',
+						'2f7f6f': 'fill-dark-green',
+						'31d6ff': 'fill-blue',
+						'ff3fac': 'fill-pink',
+					}"
+					>
+					<div class="well color-hex-code" ng-class="::classname">
+						#{{ ::hex }}
+					</div>
+				</div>
+			</div>
+
+			<p class="text-center">And don't forget our fifty shades of gray.</p>
+
+			<div class="row">
+				<div class="col-sm-3"
+					ng-repeat="(hex, classname) in {
+						'191919': 'fill-darkest',
+						'292929': 'fill-darker',
+						'3e3e3e': 'fill-dark',
+						'555555': 'fill-gray',
+						'7e7e7e': 'fill-light',
+						'c1c1c1': 'fill-lighter',
+						'eeeeee': 'fill-lightest',
+					}"
+					>
+					<div class="well color-hex-code" ng-class="::classname">
+						#{{ ::hex }}
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+</div>

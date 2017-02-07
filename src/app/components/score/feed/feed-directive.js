@@ -11,7 +11,7 @@ angular.module( 'App.Score.Feed' ).directive( 'gjScoreFeed', function( $state, A
 
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/score/feed/feed.html',
+		template: require( '!html-loader!./feed.html' ),
 		scope: {
 			scoreTable: '=scoreFeedScoreTable',
 		},

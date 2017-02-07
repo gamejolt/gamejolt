@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.OverviewCtrl', function( $scope, $window, App, gettextCatalog, payload )
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.Api.OverviewCtrl', function( $scope, $window, App, gettextCatalog, payload )
 {
 	var _this = this;
 

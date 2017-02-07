@@ -2,7 +2,7 @@ angular.module( 'App.Score.List' ).directive( 'gjScoreList', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/score/list/list.html',
+		template: require( '!html-loader!./list.html' ),
 		scope: {
 			scores: '=scoreListScores',
 			startRank: '=?scoreListStartRank',

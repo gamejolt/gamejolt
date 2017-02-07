@@ -128,7 +128,7 @@
 					items-per-page="$ctrl.listing.perPage"
 					total-items="$ctrl.listing.gamesCount"
 					current-page="$ctrl.listing.currentPage"
-					on-page-change="$ctrl.scroll.to( 'games', { animate: false } )"
+					(on-page-change)="$ctrl.scroll.to( 'games', { animate: false } )"
 					>
 				</gj-pagination>
 

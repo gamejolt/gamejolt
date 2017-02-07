@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit, OnDestroy } from 'ng-metadata/core';
-import template from 'html!./video-embed.html';
+import * as template from '!html-loader!./video-embed.html';
 
 /**
  * We have to not use angular for video embed stuff!

@@ -97,7 +97,7 @@
 				items-per-page="collectionCtrl.perPage"
 				total-items="collectionCtrl.gamesCount"
 				current-page="collectionCtrl.currentPage"
-				on-page-change="Scroll.to( 'collection-pagination', { animate: false } )">
+				(on-page-change)="Scroll.to( 'collection-pagination', { animate: false } )">
 			</gj-pagination>
 
 		</div>

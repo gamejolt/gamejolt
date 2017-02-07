@@ -1,5 +1,5 @@
 import { Component, Input } from 'ng-metadata/core';
-import template from 'html!./top-composition.html';
+import * as template from '!html-loader!./top-composition.html';
 
 @Component({
 	selector: 'gj-analytics-report-top-composition',

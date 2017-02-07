@@ -3,7 +3,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameMaturity'
 	var form = new Form( {
 		model: 'Game',
 		saveMethod: '$saveMaturity',
-		template: '/app/components/forms/dashboard/game/maturity/maturity.html',
+		template: require( './maturity.html' ),
 	} );
 
 	form.scope.isWizard = '<';

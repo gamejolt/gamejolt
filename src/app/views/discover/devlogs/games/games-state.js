@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		abstract: true,
 		controller: 'Discover.Devlogs.GamesCtrl',
 		controllerAs: '$ctrl',
-		templateUrl: '/app/views/discover/devlogs/games/games.html',
+		templateUrl: require( './games.html' ),
 		resolve: {
 
 			// We need translations loaded in for the filtering container, so we wait for "init".

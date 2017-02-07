@@ -1,7 +1,7 @@
 angular.module( 'App.Forms' ).directive( 'gjFormRetrieveLogin', function( $q, Api, Form, Connection )
 {
 	var form = new Form( {
-		template: '/auth/components/forms/retrieve-login/retrieve-login.html'
+		template: require( './retrieve-login.html' )
 	} );
 
 	form.onInit = function( scope )

@@ -5,7 +5,7 @@
 <div class="forum-post-list-item-main"
 	id="forum-post-{{ ::ctrl.id }}"
 	in-view="ctrl.inViewChange( $inview )"
-	in-view-options="{ debounce: 1000 }"
+	in-view-options="{ throttle: 1000 }"
 	ng-class="{ active: ctrl.isActive }"
 	>
 

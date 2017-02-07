@@ -1,6 +1,6 @@
 import { Injectable } from 'ng-metadata/core';
 
-@Injectable()
+@Injectable( 'ActivityCtrl' )
 export class ActivityCtrl
 {
 	activityUnreadCount: number;

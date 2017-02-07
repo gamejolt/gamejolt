@@ -7,7 +7,7 @@
 
 		<div class="alert alert-warning" ng-if="!musicCtrl.songs.length" translate>dash.games.music.no_music_html</div>
 
-		<div oc-lazy-load="{ files: [ '/app/modules/ui-tree.js' ] }">
+		<div ng-if="musicCtrl.Loader.ready( 'ui-tree' )">
 			<gj-editable-accordion
 				is-adding="musicCtrl.isAdding"
 				active-item="musicCtrl.activeItem"

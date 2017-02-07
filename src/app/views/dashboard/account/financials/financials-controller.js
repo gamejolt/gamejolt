@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Account.FinancialsCtrl', function( $scope, App, gettextCatalog, payload )
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Account.FinancialsCtrl', function( $scope, App, gettextCatalog, payload )
 {
 	App.title = gettextCatalog.getString( 'Marketplace Account Setup' );
 

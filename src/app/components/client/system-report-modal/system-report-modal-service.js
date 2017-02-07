@@ -4,7 +4,7 @@ angular.module( 'App.Client.SystemReportModal' ).service( 'Client_SystemReportMo
 	{
 		var modalInstance = $modal.open( {
 			size: 'sm',
-			templateUrl: '/app/components/client/system-report-modal/system-report-modal.html',
+			template: require( '!html-loader!./system-report-modal.html' ),
 			controller: 'Client.SystemReportModalCtrl',
 			controllerAs: 'modalCtrl'
 		} );

@@ -1,142 +1,15 @@
-/// <reference path="./typings/index.d.ts" />
+/// <reference path="./node_modules/ng-metadata/manual_typings/angular-extension.d.ts" />
+/// <reference path="./src/lib/gj-lib-client/typings/oclazyload.d.ts" />
+/// <reference path="./src/lib/gj-lib-client/typings/webpack.d.ts" />
+/// <reference path="./src/lib/gj-lib-client/typings/environment.d.ts" />
+/// <reference path="./src/lib/gj-lib-client/typings/html.d.ts" />
+/// <reference path="./src/lib/gj-lib-client/typings/angular-gettext.d.ts" />
+/// <reference path="./src/lib/gj-lib-client/typings/angular.d.ts" />
 
-// Since we don't import these through ES6.
-declare var oc = require( 'oc' );
-
-declare module "html!*" {
-	const content: string;
-	export default content;
-}
-
-interface Window {
+declare interface Window {
 	_: _.LoDashStatic;
-	moment: moment.MomentStatic;
 	_gjStartTime: number;
 	Stripe: StripeStatic;
 	gapi: any;
-}
-
-declare var global: any;
-
-declare var GJ_ENVIRONMENT: 'development' | 'production';
-declare var GJ_BUILD_TYPE: 'development' | 'production';
-
-//  getString: function (string, scope, context) {
-declare namespace angular.gettext {
-	interface gettextCatalog {
-		getString( string: string, scope: any, context: string ): string;
-	}
-}
-
-// Have to add this in for the moment.
-declare module angular {
-	interface IModule {
-		controller(...args: ProvideSpreadType[]): IModule;
-	}
-
-	interface IDocumentService {
-		[k: number]: HTMLDocument;
-	}
-
-	interface IAugmentedJQuery {
-		[k: number]: HTMLElement;
-	}
-}
-
-// FROM NG-METADATA
-declare type StringMap = {[key:string]:string};
-declare type Type = Function;
-declare type ProvideSpreadType = string|Type;
-
-// @TODO add angular1 module overrides for proper ...provide handling
-declare module angular {
-  interface IParseService{
-    ( exp: string, interceptorFn?: Function, expensiveChecks?: boolean ): ng.ICompiledExpression
-  }
-  interface IModule {
-    value(...args: ProvideSpreadType[]): IModule;
-    constant(...args: ProvideSpreadType[]): IModule;
-    directive(...args: ProvideSpreadType[]): IModule;
-    filter(...args: ProvideSpreadType[]): IModule;
-    service(...args: ProvideSpreadType[]): IModule;
-    provider(...args: ProvideSpreadType[]): IModule;
-  }
-  ///////////////////////////////////////////////////////////////////////////
-  // AUTO module (angular.js)
-  ///////////////////////////////////////////////////////////////////////////
-  export module auto {
-
-    ///////////////////////////////////////////////////////////////////////
-    // ProvideService
-    // see http://docs.angularjs.org/api/AUTO.$provide
-    ///////////////////////////////////////////////////////////////////////
-    interface IProvideService {
-      // Documentation says it returns the registered instance, but actual
-      // implementation does not return anything.
-      // constant(name: string, value: any): any;
-      /**
-       * Register a constant service, such as a string, a number, an array, an object or a function, with the $injector. Unlike value it can be injected into a module configuration function (see config) and it cannot be overridden by an Angular decorator.
-       */
-      constant(...args: ProvideSpreadType[]): void;
-
-      /**
-       * Register a service decorator with the $injector. A service decorator intercepts the creation of a service, allowing it to override or modify the behaviour of the service. The object returned by the decorator may be the original service, or a new service object which replaces or wraps and delegates to the original service.
-       *
-       * @param name The name of the service to decorate.
-       * @param decorator This function will be invoked when the service needs to be instantiated and should return the decorated service instance. The function is called using the injector.invoke method and is therefore fully injectable. Local injection arguments:
-       *
-       * $delegate - The original service instance, which can be monkey patched, configured, decorated or delegated to.
-       */
-      //decorator(name: string, decorator: Function): void;
-      /**
-       * Register a service decorator with the $injector. A service decorator intercepts the creation of a service, allowing it to override or modify the behaviour of the service. The object returned by the decorator may be the original service, or a new service object which replaces or wraps and delegates to the original service.
-       *
-       * @param name The name of the service to decorate.
-       * @param inlineAnnotatedFunction This function will be invoked when the service needs to be instantiated and should return the decorated service instance. The function is called using the injector.invoke method and is therefore fully injectable. Local injection arguments:
-       *
-       * $delegate - The original service instance, which can be monkey patched, configured, decorated or delegated to.
-       */
-      //decorator(name: string, inlineAnnotatedFunction: any[]): void;
-      factory(...args: ProvideSpreadType[]): IServiceProvider;
-      provider(...args: ProvideSpreadType[]): IServiceProvider;
-      service(...args: ProvideSpreadType[]): IServiceProvider;
-      value(...args: ProvideSpreadType[]): IServiceProvider;
-    }
-
-  }
-
-  /**
-   * $rootScope - $rootScopeProvider - service in module ng
-   * see https://docs.angularjs.org/api/ng/type/$rootScope.Scope and https://docs.angularjs.org/api/ng/service/$rootScope
-   */
-  interface IRootScopeService {
-
-    // private members
-    $$postDigest( callback: Function ): void,
-    $$postDigestQueue: Function[],
-    $$applyAsyncQueue: Function[],
-    $$asyncQueue: Function[],
-    $$watchers: Watchers[],
-    $$watchersCount: number,
-    $$listenerCount: Object,
-    $$listeners: Object,
-    $$destroyed: boolean,
-    $$childHead: IScope,
-    $$childTail: IScope,
-    $$prevSibling: IScope,
-    $$nextSibling: IScope,
-
-    // ngMetadata private members
-    $$disconnected?: boolean,
-
-  }
-
-  /* @private */
-  interface Watchers {
-    eq: boolean,
-    exp: ( s: any, l: any, a: any, i: any ) => any,
-    fn: ( newValue: any, oldValue: any ) => any,
-    get: ( s: any, l: any, a: any, i: any ) => any,
-    last: any
-  }
+	jQuery: JQueryStatic;
 }

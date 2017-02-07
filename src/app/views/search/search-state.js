@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		abstract: true,
 		controller: 'SearchCtrl',
 		controllerAs: 'searchCtrl',
-		templateUrl: '/app/views/search/search.html',
+		templateUrl: require( './search.html' ),
 		resolve: {
 			init: function( Translate )
 			{

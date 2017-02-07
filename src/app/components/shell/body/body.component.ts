@@ -1,6 +1,6 @@
 import { Component, Inject } from 'ng-metadata/core';
 import { Shell } from '../shell-service';
-import template from 'html!./body.component.html';
+import * as template from '!html-loader!./body.component.html';
 
 @Component({
 	selector: 'gj-shell-body',

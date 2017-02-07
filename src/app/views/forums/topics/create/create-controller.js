@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Forums.Topics.CreateCtrl', function( $scope, $state, App, Forum_Channel, Forum_Topic, Growls, payload )
+angular.module( 'App.Views.Forums' ).controller( 'Forums.Topics.CreateCtrl', function( $scope, $state, App, Forum_Channel, Forum_Topic, Growls, payload )
 {
 	App.title = 'Create a New Topic';
 

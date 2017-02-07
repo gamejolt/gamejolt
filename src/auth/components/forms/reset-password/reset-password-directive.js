@@ -1,7 +1,7 @@
 angular.module( 'App.Forms' ).directive( 'gjFormResetPassword', function( $q, Form, Api, Connection )
 {
 	var form = new Form( {
-		template: '/auth/components/forms/reset-password/reset-password.html'
+		template: require( './reset-password.html' )
 	} );
 
 	form.scope.userId = '=gjUserId';

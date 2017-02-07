@@ -7,7 +7,7 @@ angular.module( 'App.Chat' ).directive( 'gjChatUserList', function()
 			showPm: '=?chatUserListShowPm',
 			showModTools: '=?chatUserListShowModTools',
 		},
-		templateUrl: '/app/components/chat/user-list/user-list.html',
+		template: require( '!html-loader!./user-list.html' ),
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function( $scope, $attrs, $parse, $state, Chat, ChatConfig )

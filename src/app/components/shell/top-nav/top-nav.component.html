@@ -21,8 +21,8 @@
 		<gj-client-history-navigator ng-if="$ctrl.env.isClient"></gj-client-history-navigator>
 
 		<a class="navbar-item" ui-sref="discover.home">
-			<img ng-if="!$ctrl.screen.isMobile" src="/lib/gj-lib-client/components/site-selector/game-jolt-logo.svg" alt="Game Jolt">
-			<img ng-if="$ctrl.screen.isMobile" src="/lib/gj-lib-client/components/site-selector/jolt.svg" alt="Game Jolt">
+			<img ng-if="!$ctrl.screen.isMobile" src="~img/game-jolt-logo.svg" alt="Game Jolt">
+			<img ng-if="$ctrl.screen.isMobile" src="~img/jolt.svg" alt="Game Jolt">
 		</a>
 
 		<div class="navbar-separator hidden-xs"></div>
@@ -64,7 +64,7 @@
 					gj-tooltip="{{ 'Activity' | translate }}"
 					tooltip-placement="bottom"
 					gj-track-event="top-nav:activity:toggle"
-					gj-activity-notification-count="notificationsCount = $count"
+					gj-activity-notification-count="notificationsCount = $event"
 					>
 					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave" ng-if="notificationsCount > 0">
 						{{ notificationsCount < 100 ? notificationsCount : '99+' }}
@@ -86,9 +86,9 @@
 					<span class="jolticon jolticon-friend-requests"></span>
 				</a>
 				<gj-friend-request-popover
-					on-requests-count="friendRequestCount = $count"
-					on-focus="friendRequestsShowing = true"
-					on-blur="friendRequestsShowing = false"
+					(on-requests-count)="friendRequestCount = $event"
+					(on-focus)="friendRequestsShowing = true"
+					(on-blur)="friendRequestsShowing = false"
 					>
 				</gj-friend-request-popover>
 			</li>

@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Account.LinkedAccounts.LinkCallbackCtrl', function( $scope, $state, $stateParams, App, Growls, payload )
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Account.LinkedAccounts.LinkCallbackCtrl', function( $scope, $state, $stateParams, App, Growls, payload )
 {
 	if ( $stateParams.provider == 'twitter' ) {
 		if ( !payload.success ) {

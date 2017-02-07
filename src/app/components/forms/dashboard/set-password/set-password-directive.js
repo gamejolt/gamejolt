@@ -1,7 +1,7 @@
 angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardSetPassword', function( $q, Form, Api )
 {
 	var form = new Form( {
-		template: '/app/components/forms/dashboard/set-password/set-password.html'
+		template: require( './set-password.html' )
 	} );
 
 	form.onInit = function( scope )

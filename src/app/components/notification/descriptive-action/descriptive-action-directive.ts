@@ -1,6 +1,6 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
-import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
-import template from 'html!./descriptive-action.html';
+import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
+import * as template from '!html-loader!./descriptive-action.html';
 
 @Component({
 	selector: 'gj-notification-descriptive-action',

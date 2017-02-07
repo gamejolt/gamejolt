@@ -1,5 +1,5 @@
 import { Component, Input } from 'ng-metadata/core';
-import template from 'html!./rating-breakdown.html';
+import * as template from '!html-loader!./rating-breakdown.html';
 
 @Component({
 	selector: 'gj-analytics-report-rating-breakdown',

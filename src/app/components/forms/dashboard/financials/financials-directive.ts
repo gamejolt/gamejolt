@@ -1,12 +1,14 @@
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+
+FinancialsFormFactory.$inject = [ 'Form', 'currencyFilter', 'Growls' ];
 export function FinancialsFormFactory(
 	Form: any,
 	currencyFilter: ng.IFilterCurrency,
-	Api: any,
 	Growls: any,
 )
 {
 	const form = new Form( {
-		template: '/app/components/forms/dashboard/financials/financials.html',
+		template: require( './financials.html' ),
 	} );
 
 	form.onInit = ( scope: any ) =>
@@ -88,7 +90,7 @@ export function FinancialsFormFactory(
 				{
 					Growls.error( 'Something went wrong.' );
 				} );
-		}
+		};
 	};
 
 	form.onSubmit = ( scope: any ) =>

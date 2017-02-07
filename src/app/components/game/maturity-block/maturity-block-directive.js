@@ -3,7 +3,7 @@ angular.module( 'App.Game.MaturityBlock' ).component( 'gjGameMaturityBlock', {
 	bindings: {
 		game: '<',
 	},
-	templateUrl: '/app/components/game/maturity-block/maturity-block.html',
+	template: require( '!html-loader!./maturity-block.html' ),
 	controller: function( $scope, $document, App, Environment, Settings )
 	{
 		var _this = this;

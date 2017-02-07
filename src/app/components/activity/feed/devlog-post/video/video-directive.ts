@@ -1,20 +1,19 @@
-import { Component, Input, Output } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Fireside_Post_Video } from './../../../../../../lib/gj-lib-client/components/fireside/post/video/video-model';
-// import { ActivityFeedItem } from './../../item-service';
-import template from 'html!./video.html';
+import { Component, Input, Output, EventEmitter } from 'ng-metadata/core';
+import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { FiresidePostVideo } from '../../../../../../lib/gj-lib-client/components/fireside/post/video/video-model';
+import * as template from '!html-loader!./video.html';
 
 @Component({
 	selector: 'gj-activity-feed-devlog-post-video',
 	template,
 })
-export class VideoComponent
+export class ActivityFeedDevlogPostVideoComponent
 {
-	@Input( '<' ) post: Fireside_Post;
+	@Input( '<' ) post: FiresidePost;
 
-	@Output() onExpand: Function;
+	@Output() private onExpand = new EventEmitter<void>();
 
-	video: Fireside_Post_Video;
+	video: FiresidePostVideo;
 	isShowingVideo = false;
 
 	constructor()
@@ -26,7 +25,7 @@ export class VideoComponent
 	{
 		this.isShowingVideo = true;
 		if ( this.onExpand ) {
-			this.onExpand();
+			this.onExpand.emit( undefined );
 		}
 	}
 }

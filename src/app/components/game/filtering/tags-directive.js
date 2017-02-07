@@ -4,7 +4,7 @@ angular.module( 'App.Game.Filtering' ).directive( 'gjGameFilteringTags', functio
 		scope: {
 			filteringContainer: '=gjFilteringContainer',
 		},
-		templateUrl: '/app/components/game/filtering/tags.html',
+		template: require( '!html-loader!./tags.html' ),
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function( $scope, $state, $stateParams, Analytics )

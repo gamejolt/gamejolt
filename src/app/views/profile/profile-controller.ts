@@ -1,5 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Location } from './../../../lib/gj-lib-client/components/location/location-service';
+import { Location } from '../../../lib/gj-lib-client/components/location/location-service';
+import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
+import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 
 @Injectable()
 export class ProfileCtrl
@@ -16,25 +18,23 @@ export class ProfileCtrl
 	constructor(
 		@Inject( '$scope' ) $scope: any,
 		@Inject( 'Location' ) location: Location,
-		@Inject( 'User' ) user: any,
 		@Inject( 'User_GameSession' ) userGameSession: any,
 		@Inject( 'User_Friendship' ) userFriendship: any,
 		@Inject( 'User_FriendshipsHelper' ) private userFriendshipsHelper: any,
 		@Inject( 'Report_Modal' ) private reportModal: any,
-		@Inject( 'MediaItem' ) mediaItem: any,
 		@Inject( 'profilePayload' ) profilePayload: any
 	)
 	{
-		$scope.User = user;
+		$scope.User = User;
 		$scope.User_Friendship = userFriendship;
 
-		this.user = new user( profilePayload.user );
+		this.user = new User( profilePayload.user );
 
 		location.enforce( {
 			slug: this.user.slug,
 		} );
 
-		this.headerMediaItem = profilePayload.headerMediaItem ? new mediaItem( profilePayload.headerMediaItem ) : null;
+		this.headerMediaItem = profilePayload.headerMediaItem ? new MediaItem( profilePayload.headerMediaItem ) : null;
 		this.gamesCount = profilePayload.gamesCount;
 		this.isOnline = profilePayload.isOnline;
 		this.libraryGamesCount = profilePayload.libraryGamesCount;

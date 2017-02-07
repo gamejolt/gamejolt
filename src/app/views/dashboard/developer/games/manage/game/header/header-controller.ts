@@ -1,6 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { App } from './../../../../../../../app-service';
-import { ModalConfirm } from './../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { App } from '../../../../../../../app-service';
+import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Popover } from '../../../../../../../../lib/gj-lib-client/components/popover/popover.service';
 
 @Injectable()

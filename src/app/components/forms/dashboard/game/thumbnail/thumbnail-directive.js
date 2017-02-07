@@ -1,3 +1,5 @@
+var Loader = require( '../../../../../../lib/gj-lib-client/components/loader/loader.service' ).Loader;
+
 angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameThumbnail', function( Form, Api, gettext )
 {
 	// Needed for the crop label.
@@ -6,13 +8,17 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameThumbnail
 
 	var form = new Form( {
 		model: 'Game',
-		template: '/app/components/forms/dashboard/game/thumbnail/thumbnail.html',
+		template: require( './thumbnail.html' ),
 		saveMethod: '$saveThumbnail',
 		resetOnSubmit: true,
 	} );
 
 	form.onInit = function( scope )
 	{
+		scope.Loader = Loader;
+		Loader.load( 'upload' );
+		Loader.load( 'jcrop' );
+
 		if ( !scope.isLoaded ) {
 			Api.sendRequest( '/web/dash/developer/games/thumbnail/save/' + scope.baseModel.id ).then( function( payload )
 			{

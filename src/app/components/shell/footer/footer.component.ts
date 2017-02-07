@@ -1,6 +1,8 @@
-import { Component, Inject } from 'ng-metadata/core';
+import { Component } from 'ng-metadata/core';
+import * as template from '!html-loader!./footer.component.html';
+
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import template from 'html!./footer.component.html';
+import { getProvider } from '../../../../lib/gj-lib-client/utils/utils';
 
 @Component({
 	selector: 'gj-shell-footer',
@@ -10,15 +12,12 @@ export class ShellFooterComponent
 {
 	curDate = new Date();
 	clientVersion?: string;
+	env = Environment;
 
-	constructor(
-		@Inject( '$window' ) private $window: ng.IWindowService,
-		@Inject( '$injector' ) private $injector: any,
-		@Inject( 'Environment' ) public env: Environment,
-	)
+	constructor()
 	{
-		if ( this.env.isClient ) {
-			const Client_Info = $injector.get( 'Client_Info' );
+		if ( GJ_IS_CLIENT ) {
+			const Client_Info = getProvider<any>( 'Client_Info' );
 			this.clientVersion = Client_Info.getVersion();
 		}
 	}
@@ -27,8 +26,8 @@ export class ShellFooterComponent
 	// all the new language strings get picked up.
 	onLangChange()
 	{
-		if ( !this.env.isClient ) {
-			this.$window.location.reload();
+		if ( !GJ_IS_CLIENT ) {
+			window.location.reload();
 		}
 		else {
 			require( 'nw.gui' ).Window.get().reloadDev();
@@ -37,8 +36,8 @@ export class ShellFooterComponent
 
 	showSystemReport()
 	{
-		if ( this.env.isClient ) {
-			this.$injector.get( 'Client_SystemReportModal' ).show();
+		if ( GJ_IS_CLIENT ) {
+			getProvider<any>( 'Client_SystemReportModal' ).show();
 		}
 	}
 

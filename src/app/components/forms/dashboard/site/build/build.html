@@ -4,7 +4,7 @@
 		<gj-loading></gj-loading>
 	</div>
 
-	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
+	<div ng-if="Loader.ready( 'upload' )">
 		<div ng-if="isLoaded">
 			<form-group name="file" label="{{ 'Upload File' | translate }}">
 				<p class="help-block" translate translate-params-max-filesize="maxFilesize / 1024 / 1024">

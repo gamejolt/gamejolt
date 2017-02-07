@@ -3,7 +3,7 @@ angular.module( 'App.Client.HistoryNavigator' ).directive( 'gjClientHistoryNavig
 	return {
 		restrict: 'E',
 		scope: {},
-		templateUrl: '/app/components/client/history-navigator/history-navigator.html',
+		template: require( '!html-loader!./history-navigator.html' ),
 		link: function( scope )
 		{
 			scope.HistoryNavigator = HistoryNavigator;

@@ -1,4 +1,5 @@
 import { Injectable, Inject } from 'ng-metadata/core';
+import { StateService } from 'angular-ui-router';
 
 const STATE_PREFIX = 'dashboard.developer.games.manage.game.';
 
@@ -23,11 +24,11 @@ const TRANSITION_MAP_DEVLOG: any = {
 	'settings': 'wizard-finish',
 };
 
-@Injectable()
+@Injectable( 'FormDashboardGameWizard' )
 export class FormDashboardGameWizard
 {
 	constructor(
-		@Inject( '$state' ) private $state: ng.ui.IStateService
+		@Inject( '$state' ) private $state: StateService
 	)
 	{
 	}

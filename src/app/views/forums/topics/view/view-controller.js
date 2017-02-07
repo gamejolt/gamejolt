@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Forums.Topics.ViewCtrl', function( $state, $location, $timeout, $window, Environment, Forum_Post, Popover, Growls, AutoScroll, Scroll, Report_Modal )
+angular.module( 'App.Views.Forums' ).controller( 'Forums.Topics.ViewCtrl', function( $state, $location, $timeout, $window, Environment, Forum_Post, Popover, Growls, AutoScroll, Scroll, Report_Modal )
 {
 	var _this = this;
 

@@ -4,6 +4,6 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/wizard-finish',
 		controller: 'Dashboard.Developer.Games.Manage.Game.WizardFinishCtrl',
 		controllerAs: 'finishCtrl',
-		templateUrl: '/app/views/dashboard/developer/games/manage/game/wizard-finish/wizard-finish.html',
+		templateUrl: require( './wizard-finish.html' ),
 	} );
 } );

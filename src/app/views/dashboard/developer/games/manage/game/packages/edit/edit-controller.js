@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Game.Packages.EditCtrl', function(
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.Game.Packages.EditCtrl', function(
 	$scope, $state, Api, App, Game_Package, Game_Release, Sellable, ModalConfirm, Growls, gettextCatalog, packagePayload, $timeout )
 {
 	var _this = this;

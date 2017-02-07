@@ -1,6 +1,8 @@
-import { Component, Inject, Input, Output } from 'ng-metadata/core';
+import { Component, Inject, Input, Output, EventEmitter } from 'ng-metadata/core';
+import * as template from '!html-loader!./dev-stage-selector.html';
+
 import { FormDashboardGameDevStageSelectorConfirm } from './confirm-service';
-import template from 'html!./dev-stage-selector.html';
+import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 
 @Component({
 	selector: 'gj-form-dashboard-game-dev-stage-selector',
@@ -8,12 +10,13 @@ import template from 'html!./dev-stage-selector.html';
 })
 export class DevStageSelectorComponent
 {
-	@Input( '<?' ) game?: any;
+	@Input( '<' ) game: Game;
 
-	@Output( '?' ) onSelect?: Function;
+	@Output() private onSelect = new EventEmitter<number>();
+
+	Game = Game;
 
 	constructor(
-		@Inject( 'Game' ) public gameModel: any,
 		@Inject( 'FormDashboardGameDevStageSelectorConfirm' ) private confirm: FormDashboardGameDevStageSelectorConfirm,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
@@ -24,7 +27,7 @@ export class DevStageSelectorComponent
 	select( stage: number )
 	{
 		if ( this.onSelect ) {
-			this.onSelect( { $stage: stage } );
+			this.onSelect.emit( stage );
 		}
 
 		if ( !this.isEnabled( stage ) || stage == this.game.development_status ) {
@@ -48,7 +51,7 @@ export class DevStageSelectorComponent
 			return true;
 		}
 
-		if ( (stage == this.gameModel.DEVELOPMENT_STATUS_WIP || stage == this.gameModel.DEVELOPMENT_STATUS_FINISHED) && !this.game.has_active_builds ) {
+		if ( (stage == Game.DEVELOPMENT_STATUS_WIP || stage == Game.DEVELOPMENT_STATUS_FINISHED) && !this.game.has_active_builds ) {
 			return false;
 		}
 		return true;

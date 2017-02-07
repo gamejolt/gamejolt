@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Game.Packages.AddCtrl', function( $scope, $state, App, gettextCatalog )
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.Game.Packages.AddCtrl', function( $scope, $state, App, gettextCatalog )
 {
 	App.title = gettextCatalog.getString( 'dash.games.packages.add.page_title', { game: $scope.manageCtrl.game.title } );
 

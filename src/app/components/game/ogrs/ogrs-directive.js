@@ -7,7 +7,7 @@ angular.module( 'App.Game.Ogrs' ).directive( 'gjGameOgrs', function()
 			hideDescriptors: '=?gjHideDescriptors',
 			hideTag: '=gjHideTag',
 		},
-		templateUrl: '/app/components/game/ogrs/ogrs.html',
+		template: require( '!html-loader!./ogrs.html' ),
 		controllerAs: 'ctrl',
 		bindToController: true,
 		controller: function( $scope )
@@ -16,9 +16,9 @@ angular.module( 'App.Game.Ogrs' ).directive( 'gjGameOgrs', function()
 
 			// List them out so they get revisioned.
 			var imgPaths = {
-				'all-ages': '/app/components/game/ogrs/all-ages.png',
-				'teen': '/app/components/game/ogrs/teen.png',
-				'mature': '/app/components/game/ogrs/mature.png',
+				'all-ages': require( './all-ages.png' ),
+				'teen': require( './teen.png' ),
+				'mature': require( './mature.png' ),
 			};
 
 			this.imgTag = undefined;

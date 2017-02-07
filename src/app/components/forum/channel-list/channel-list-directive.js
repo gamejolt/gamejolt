@@ -2,7 +2,7 @@ angular.module( 'App.Forum.ChannelList' ).directive( 'gjForumChannelList', funct
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/forum/channel-list/channel-list.html',
+		template: require( '!html-loader!./channel-list.html' ),
 		scope: {
 			category: '=',
 			channels: '=',

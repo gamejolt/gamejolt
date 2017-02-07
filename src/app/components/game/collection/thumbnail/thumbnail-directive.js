@@ -2,7 +2,7 @@ angular.module( 'App.Game.Collection.Thumbnail' ).directive( 'gjGameCollectionTh
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/game/collection/thumbnail/thumbnail.html',
+		template: require( '!html-loader!./thumbnail.html' ),
 		scope: {
 			collection: '=gjGameCollection',
 			hideTag: '=?gameCollectionHideTag',

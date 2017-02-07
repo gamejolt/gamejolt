@@ -3,7 +3,7 @@ angular.module( 'App.Chat' ).directive( 'gjChatBubbles', function( Screen, Chat,
 	return {
 		restrict: 'E',
 		scope: {},
-		templateUrl: '/app/components/chat/bubbles/bubbles.html',
+		template: require( '!html-loader!./bubbles.html' ),
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function( $scope )

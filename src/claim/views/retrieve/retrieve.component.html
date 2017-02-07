@@ -1,0 +1,26 @@
+<section class="container">
+	<h1 class="section-header">
+		Retrieve Keys
+		<small ng-if="$ctrl.resourceTitle">
+			for {{ $ctrl.resourceTitle }}
+		</small>
+	</h1>
+
+	<p>
+		<span ng-if="!$ctrl.resourceTitle">
+			Please enter your email address to retrieve your keys.
+		</span>
+		<span ng-if="$ctrl.resourceTitle">
+			Please enter your email address to retrieve your keys for <strong>{{ $ctrl.resourceTitle }}</strong>.
+		</span>
+		We will email you a link to your download(s).
+	</p>
+
+	<gj-form-retrieve
+		gj-key="{{ $ctrl.key }}"
+		gj-bundle="$ctrl.bundle"
+		gj-game="$ctrl.game"
+		gj-form-submit-handler="$ctrl.onSubmit()"
+		>
+	</gj-form-retrieve>
+</section>

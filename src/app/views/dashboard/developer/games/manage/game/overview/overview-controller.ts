@@ -1,6 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { App } from './../../../../../../../app-service';
-import { Notification } from './../../../../../../../../lib/gj-lib-client/components/notification/notification-model';
+import { App } from '../../../../../../../app-service';
+import { Notification } from '../../../../../../../../lib/gj-lib-client/components/notification/notification-model';
 
 @Injectable()
 export class OverviewCtrl

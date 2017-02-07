@@ -1,0 +1,99 @@
+<div class="game-cover" ng-if="$ctrl.game.img_header">
+	<img gj-img-responsive="{{ $ctrl.game.img_header }}" alt="">
+</div>
+
+<!--
+	If this game is in a bundle, show a back button.
+-->
+<p ng-if="$ctrl.bundle">
+	<a class="btn btn-outline btn-block" ui-sref="key.bundle( { bundleGameId: null } )">
+		<span class="jolticon jolticon-chevron-left"></span>
+		Back to Bundle
+	</a>
+</p>
+
+<h1 class="sans-margin">{{ $ctrl.game.title }}</h1>
+<h4 class="text-muted sans-margin-top">
+	by
+	<a class="link-unstyled" ng-href="{{ ::$ctrl.env.baseUrl + $ctrl.game.developer.url }}">
+		{{ $ctrl.game.developer.display_name }}
+	</a>
+</h4>
+
+<div class="alert alert-info full-bleed full-bleed-xs" ng-if="$ctrl.showingThanks">
+	<p><strong>Thanks for buying the game!</strong></p>
+	<p>We've emailed you your key's URL (this page) just so you can always find it. You are able to find your download(s) below. Any future updates to the game will be available here as well.</p>
+	<p>~ Warm thanks from both {{ $ctrl.game.developer.display_name }} and the Game Jolt team.</p>
+	<p class="text-muted text-right">Stay Indie... <em>or else!</em> (ノಠ益ಠ)ノ彡┻━┻</p>
+</div>
+
+<div ng-if="!$ctrl.bundle">
+	<div class="alert alert-info full-bleed full-bleed-xs" ng-if="!$ctrl.app.user">
+		<p><a ng-href="{{ $ctrl.loginUrl }}">Sign in to Game Jolt</a> to be able to claim this game into your Library.</p>
+	</div>
+
+	<p ng-if="$ctrl.app.user">
+		<button class="btn btn-success-outline btn-block"
+			ng-click="$ctrl._claim()"
+			>
+			<span class="jolticon jolticon-key-diagonal"></span>
+			Claim Game into Library
+		</button>
+	</p>
+</div>
+
+<gj-fade-collapse
+	fade-collapse-height="$ctrl.isClaimOnly ? undefined : 400"
+	fade-collapse-is-open="$ctrl.showingFullDescription"
+	fade-collapse-is-required="$ctrl.canToggleDescription"
+	>
+	<div class="game-compiled-description" ng-bind-html="$ctrl.game.description_compiled"></div>
+</gj-fade-collapse>
+
+<a class="hidden-text-expander"
+	ng-if="$ctrl.canToggleDescription"
+	ng-click="$ctrl.showingFullDescription = !$ctrl.showingFullDescription"></a>
+
+<div ng-if="!$ctrl.isClaimOnly">
+	<div ng-if="$ctrl.linkedKeys.length">
+		<h3>Extra Keys</h3>
+
+		<div class="table-responsive">
+			<table class="table">
+				<tbody>
+					<tr ng-repeat="linkedKey in $ctrl.linkedKeys track by linkedKey.key">
+						<th>
+							<span ng-if="linkedKey.provider === $ctrl.LinkedKey.PROVIDER_STEAM">
+								<span class="jolticon jolticon-steam"></span>
+								Steam
+							</span>
+						</th>
+						<td>
+							<code>{{ linkedKey.key }}</code>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<h2>Releases</h2>
+
+	<div class="packages-list" ng-if="$ctrl.packagePayload.packages.length">
+		<gj-game-package-card
+			ng-repeat="package in $ctrl.packagePayload.packages"
+			game="::$ctrl.game"
+			sellable="::package._sellable"
+			game-package="::package"
+			game-releases="::package._releases"
+			game-builds="::package._builds"
+			game-build-launch-options="::$ctrl.packagePayload.launchOptions"
+			key="{{ $ctrl.key }}"
+			>
+		</gj-game-package-card>
+	</div>
+
+	<div class="alert alert-warning" ng-if="!$ctrl.packagePayload.packages.length">
+		No releases yet.
+	</div>
+</div>

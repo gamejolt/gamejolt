@@ -2,7 +2,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 {
 	var form = new Form( {
 		model: 'Game_Build',
-		template: '/app/components/forms/dashboard/game/build/build.html',
+		template: require( './build.html' ),
 		resetOnSubmit: true,
 	} );
 
@@ -262,7 +262,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameBuild', f
 
 			var modalInstance = $modal.open( {
 				size: 'md',
-				templateUrl: '/app/components/forms/dashboard/game/build/archive-file-selector.html',
+				template: require( '!html-loader!./archive-file-selector.html' ),
 				controller: 'Forms_Dashboard_Game_Build_ArchiveFileSelectorCtrl',
 				controllerAs: 'modalCtrl',
 				resolve: {

@@ -2,7 +2,7 @@ angular.module( 'App.Trophy.List' ).directive( 'gjTrophyList', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/trophy/list/list.html',
+		template: require( '!html-loader!./list.html' ),
 		scope: {
 			trophies: '=trophyListTrophies',
 			achieved: '=trophyListAchieved',

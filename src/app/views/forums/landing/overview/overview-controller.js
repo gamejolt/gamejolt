@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Forums.Landing.OverviewCtrl', function( $scope, App, Forum_Category, Forum_Channel, Forum_Post, payload )
+angular.module( 'App.Views.Forums' ).controller( 'Forums.Landing.OverviewCtrl', function( $scope, App, Forum_Category, Forum_Channel, Forum_Post, payload )
 {
 	App.title = 'Forums';
 

@@ -1,13 +1,13 @@
 <div id="auth-container" ng-class="{ 'has-cover-img': App.shouldShowCoverImage && authCtrl.coverImgUrl }">
 
-	<gj-cover-img cover-img-url="{{ authCtrl.coverImgUrl }}" ng-if="App.shouldShowCoverImage" class="anim-fade-leave"></gj-cover-img>
+	<gj-cover-img [img-url]="authCtrl.coverImgUrl" ng-if="App.shouldShowCoverImage" class="anim-fade-leave"></gj-cover-img>
 
 	<div class="auth-scroll-container">
 
 		<div class="auth-logo text-center anim-fade-in-enlarge stagger">
 			<a ng-href="{{ ::!Environment.isClient ? Environment.baseUrl + '/' : Environment.authBaseUrl + '/login' }}">
-				<img src="/app/img/game-jolt-logo.svg" width="164" height="18" alt="Game Jolt" class="visible-xs">
-				<img src="/app/img/game-jolt-logo.svg" width="328" height="36" alt="Game Jolt" class="hidden-xs">
+				<img src="~img/game-jolt-logo.svg" width="164" height="18" alt="Game Jolt" class="visible-xs">
+				<img src="~img/game-jolt-logo.svg" width="328" height="36" alt="Game Jolt" class="hidden-xs">
 			</a>
 		</div>
 

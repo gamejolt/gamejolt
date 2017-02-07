@@ -2,7 +2,7 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/client/game-buttons/game-buttons.html',
+		template: require( '!html-loader!./game-buttons.html' ),
 		scope: {
 			game: '<',
 			overlay: '<?overlayVariant',

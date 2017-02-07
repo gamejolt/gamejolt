@@ -1,17 +1,16 @@
-import { App } from './../../../app-service';
+import { App } from '../../../app-service';
+import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 
+PaymentComponent.$inject = [ 'App', 'Form', 'Geo' ];
 export function PaymentComponent(
-	$q: ng.IQService,
-	$window: ng.IWindowService,
 	App: App,
-	Api: any,
 	Form: any,
 	Geo: any,
-	Environment: any,
 )
 {
 	const form = new Form( {
-		template: '/checkout/components/forms/payment/payment.html'
+		template: require( './payment.html' )
 	} );
 
 	form.scope.cards = '=';
@@ -111,9 +110,9 @@ export function PaymentComponent(
 				address_zip: scope.formModel.postcode,
 			};
 
-			return $q( ( resolve, reject ) =>
+			return new Promise( ( resolve, reject ) =>
 			{
-				$window.Stripe.card.createToken( formData, ( status, response ) =>
+				window.Stripe.card.createToken( formData, ( status, response ) =>
 				{
 					if ( status ) {}
 
@@ -138,7 +137,7 @@ export function PaymentComponent(
 					region: scope.formModel.region,
 					street1: scope.formModel.street1,
 					postcode: scope.formModel.postcode,
-				}
+				};
 
 				if ( App.user ) {
 					data.save_card = scope.formModel.save_card;

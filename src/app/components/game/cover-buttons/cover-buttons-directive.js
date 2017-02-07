@@ -7,7 +7,7 @@ angular.module( 'App.Game.CoverButtons' ).component( 'gjGameCoverButtons', {
 		onShowMultiplePackages: '&',
 		onShowPackagePayment: '&',
 	},
-	templateUrl: '/app/components/game/cover-buttons/cover-buttons.html',
+	template: require( '!html-loader!./cover-buttons.html' ),
 	controller: function( Game, Device, Game_Downloader, Game_PlayModal, Game_Build, Analytics, Environment )
 	{
 		var _this = this;

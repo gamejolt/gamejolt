@@ -1,7 +1,8 @@
-import { Component, Input, Output } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import template from 'html!./sketchfab.component.html';
-import { Fireside_Post_Sketchfab } from '../../../../../../lib/gj-lib-client/components/fireside/post/sketchfab/sketchfab-model';
+import { Component, Input, Output, EventEmitter } from 'ng-metadata/core';
+import * as template from '!html-loader!./sketchfab.component.html';
+
+import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { FiresidePostSketchfab } from '../../../../../../lib/gj-lib-client/components/fireside/post/sketchfab/sketchfab-model';
 
 @Component({
 	selector: 'gj-activity-feed-devlog-post-sketchfab',
@@ -9,11 +10,11 @@ import { Fireside_Post_Sketchfab } from '../../../../../../lib/gj-lib-client/com
 })
 export class ActivityFeedDevlogPostSketchfabComponent
 {
-	@Input( '<' ) post: Fireside_Post;
+	@Input( '<' ) post: FiresidePost;
 
-	@Output() onExpand: Function;
+	@Output() private onExpand = new EventEmitter<void>();
 
-	sketchfab: Fireside_Post_Sketchfab;
+	sketchfab: FiresidePostSketchfab;
 	isShowing = false;
 
 	constructor()
@@ -25,7 +26,7 @@ export class ActivityFeedDevlogPostSketchfabComponent
 	{
 		this.isShowing = true;
 		if ( this.onExpand ) {
-			this.onExpand();
+			this.onExpand.emit( undefined );
 		}
 	}
 }

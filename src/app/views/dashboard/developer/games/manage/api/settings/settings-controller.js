@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.SettingsCtrl', function(
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.Api.SettingsCtrl', function(
 	$scope, App, Api, ModalConfirm, Growls, gettextCatalog, payload )
 {
 	var _this = this;

@@ -2,7 +2,7 @@ angular.module( 'App.Trophy.Overview' ).directive( 'gjTrophyOverview', function(
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/trophy/overview/overview.html',
+		template: require( '!html-loader!./overview.html' ),
 		scope: {
 			game: '=trophyOverviewGame',
 			initialPayload: '=?trophyOverviewPayload',

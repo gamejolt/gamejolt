@@ -1,6 +1,6 @@
-import { Component, Input, Output, Inject, SkipSelf, Optional } from 'ng-metadata/core';
+import { Component, Input, Output, Inject, SkipSelf, Optional, EventEmitter } from 'ng-metadata/core';
 import { FormDashboardGameWizard } from './wizard-service';
-import template from 'html!./wizard-controls.html';
+import * as template from '!html-loader!./wizard-controls.html';
 
 @Component({
 	selector: 'gj-form-dashboard-game-wizard-controls',
@@ -11,7 +11,7 @@ export class WizardControlsComponent
 	@Input( '<' ) canProceed: boolean;
 	@Input( '<' ) game: any;
 
-	@Output() onNext: Function;
+	@Output() private onNext = new EventEmitter<void>();
 
 	inForm: boolean;
 
@@ -31,7 +31,7 @@ export class WizardControlsComponent
 			this.wizard.goNext( this.game );
 		}
 		else {
-			this.onNext();
+			this.onNext.emit( undefined );
 		}
 	}
 }

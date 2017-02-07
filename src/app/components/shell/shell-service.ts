@@ -1,8 +1,12 @@
 import { Injectable, Inject } from 'ng-metadata/core';
+
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { BroadcastModal } from '../broadcast-modal/broadcast-modal.service';
+import { getProvider, lazyload } from '../../../lib/gj-lib-client/utils/utils';
+import { App } from '../../app-service';
+import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 
-@Injectable()
+@Injectable( 'Shell' )
 export class Shell
 {
 	collections: any[];
@@ -13,7 +17,7 @@ export class Shell
 	bundleCollections: any[];
 
 	isBootstrapped = false;
-	bootstrapPromise: ng.IPromise<void>;
+	bootstrapPromise: Promise<void>;
 	private bootstrapPromiseResolve: ng.IQResolveReject<void>;
 
 	private _isLeftPaneSticky = true;
@@ -25,19 +29,15 @@ export class Shell
 
 	constructor(
 		@Inject( '$rootScope' ) $rootScope: ng.IRootScopeService,
-		@Inject( '$injector' ) $injector: any,
 		@Inject( 'Backdrop' ) private Backdrop: any,
 		@Inject( 'Screen' ) private screen: Screen,
-		@Inject( 'Api' ) private api: any,
 		@Inject( 'GameCollection' ) private collectionModel: any,
 		@Inject( 'Settings' ) private settings: any,
 		@Inject( 'BroadcastModal' ) private broadcastModal: BroadcastModal,
 		@Inject( 'hotkeys' ) private hotkeys: ng.hotkeys.HotkeysProvider,
-		@Inject( '$ocLazyLoad' ) $ocLazyLoad: oc.ILazyLoad,
-		@Inject( '$q' ) $q: ng.IQService,
 	)
 	{
-		this.bootstrapPromise = $q<void>( ( resolve ) => this.bootstrapPromiseResolve = resolve );
+		this.bootstrapPromise = new Promise<void>( ( resolve ) => this.bootstrapPromiseResolve = resolve );
 
 		this._isLeftPaneSticky = this.settings.get( 'sidebar' );
 
@@ -58,7 +58,7 @@ export class Shell
 			callback: () => this.toggleLeftPane(),
 		} );
 
-		$rootScope.$watch( () => !!$injector.get( 'App' ).user, ( isLoggedIn ) =>
+		$rootScope.$watch( () => !!getProvider<App>( 'App' ).user, ( isLoggedIn ) =>
 		{
 			if ( isLoggedIn ) {
 				this.bootstrap();
@@ -68,10 +68,14 @@ export class Shell
 			}
 
 			if ( isLoggedIn ) {
-				$ocLazyLoad.load( '/app/modules/chat.js' ).then( () =>
+				require.ensure( [], () => lazyload( () =>
+				{
+					require( '../chat/chat.module' );
+				} ), 'chat' )
+				.then( () =>
 				{
 					// Connect to chat.
-					this.chat = $injector.get( 'Chat' );
+					this.chat = getProvider<any>( 'Chat' );
 					this.chat.connect();
 
 					hotkeys.add( {
@@ -173,7 +177,7 @@ export class Shell
 
 	private bootstrap()
 	{
-		this.api.sendRequest( '/web/library' )
+		Api.sendRequest( '/web/library' )
 			.then( ( response: any ) =>
 			{
 				this.collections = this.collectionModel.populate( response.collections );

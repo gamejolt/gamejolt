@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Game.Packages.Release.EditCtrl', function(
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.Game.Packages.Release.EditCtrl', function(
 	$scope, $state, $stateParams, App, Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, Game_Build_Param, Game_Build_File, ModalConfirm, Growls, AutoScroll, gettextCatalog )
 {
 	App.title = gettextCatalog.getString( 'dash.games.releases.edit.page_title', {

@@ -5,7 +5,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/analytics/:resource/:resourceId',
 		controller: 'Dashboard.AnalyticsCtrl',
 		controllerAs: 'analyticsCtrl',
-		templateUrl: '/app/views/dashboard/analytics/analytics.html',
+		templateUrl: require( './analytics.html' ),
 		resolve: {
             payload: function( Api, $stateParams )
             {
@@ -21,6 +21,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 			$scope.analyticsCtrl.stateChanged( $stateParams );
 		},
 		params: {
+			period: 'monthly',
 			metricKey: {
 				value: '',
 				squash: true,

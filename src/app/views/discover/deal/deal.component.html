@@ -1,0 +1,203 @@
+<section class="section landing-header text-center">
+	<div class="container">
+
+		<div class="countdown-info">
+			<span translate>This deal ends in</span>
+			<gj-countdown end="$ctrl.saleEnd"></gj-countdown>
+		</div>
+
+		<h1 class="sans-margin-top">
+			<img class="bolt" src="~img/jolt.svg">
+			<span translate>Lightning Deal</span>
+		</h1>
+
+		<div class="row">
+			<div class="col-xs-5 text-right">
+				<span class="link-help" tooltip="This deal will be gone in just 24 hours!">
+					24hr deal
+				</span>
+			</div>
+			<div class="col-xs-2 text-center">
+				<span class="link-help" tooltip="All games on Game Jolt are DRM-free. No need for an internet connection. They can be downloaded and played directly from the site, or you can install them through our Client.">
+					DRM-free
+				</span>
+			</div>
+			<div class="col-xs-5 text-left">
+				<span class="link-help" tooltip="Game Jolt only takes a max of 10% cut from sales. When you buy from Game Jolt, more money goes to the developer!">
+					Supports indie devs
+				</span>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<section class="section fill-darker text-center">
+	<div class="container">
+
+		<h1 class="sans-margin">
+			<strong>Fran Bow</strong>
+		</h1>
+
+		<p class="small">
+			by <a class="link-unstyled">{{ $ctrl.game.developer.display_name }}</a>
+		</p>
+
+		<br>
+
+		<div class="text-center">
+
+			<!--<p>
+				-60% off
+			</p>-->
+
+			<div>
+				<a class="btn btn-success btn-lg buy-game-button">
+					Buy 60% off
+					<span class="btn-badge">
+						<small>$12.00</small>
+						$5.00
+					</span>
+				</a>
+			</div>
+
+		</div>
+
+		<!--<br>
+		<br>
+
+		<div class="text-center">
+
+			<div class="os-info">
+				<span class="jolticon jolticon-windows"></span>
+				<span class="jolticon jolticon-mac"></span>
+				Windows, macOS
+			</div>
+
+			<span class="dot-separator"></span>
+
+			<gj-game-ogrs-tag gj-game="$ctrl.game"></gj-game-ogrs-tag>
+
+		</div>
+
+		<br>
+
+		<div>
+			<div class="row">
+				<div class="col-xs-4">
+
+
+				</div>
+				<div class="col-xs-4 text-center">
+
+					<div>
+						<span class="text-muted small original-price">
+							$10.00
+						</span>
+						<span class="discount">
+							-40% off
+						</span>
+					</div>
+					<div>
+						<a class="btn btn-success btn-lg buy-game-button">
+							Buy Game
+							<span class="btn-badge">$12.34</span>
+						</a>
+					</div>
+					<div class="countdown-info">
+						<span translate>This sale ends in</span>
+						<gj-countdown end="$ctrl.saleEnd"></gj-countdown>
+					</div>
+
+				</div>
+				<div class="col-xs-4">
+
+
+				</div>
+			</div>
+		</div>-->
+
+	</div>
+</section>
+
+<gj-page-header
+	cover-media-item="$ctrl.game.header_media_item"
+	hide-nav="true"
+	>
+
+	<gj-page-header-content>
+
+		<div class="text-center">
+			<div class="os-info">
+				<span class="jolticon jolticon-windows"></span>
+				<span class="jolticon jolticon-mac"></span>
+				Windows, macOS
+			</div>
+
+			<span class="dot-separator"></span>
+
+			<gj-game-ogrs-tag gj-game="$ctrl.game"></gj-game-ogrs-tag>
+		</div>
+
+	</gj-page-header-content>
+
+</gj-page-header>
+
+<div ng-if="$ctrl.mediaItems.length">
+	<gj-media-bar [media-items]="$ctrl.mediaItems"></gj-media-bar>
+</div>
+
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg7 col-centered">
+
+				<h2 class="section-header" translate>
+					About the Game
+				</h2>
+
+				<hr class="underbar">
+
+				<gj-fade-collapse
+					fade-collapse-height="300"
+					fade-collapse-is-open="$ctrl.showFullDescription"
+					fade-collapse-is-required="$ctrl.canToggleDescription"
+					>
+					<div class="game-compiled-description" ng-bind-html="$ctrl.game.description_compiled"></div>
+				</gj-fade-collapse>
+
+				<a class="hidden-text-expander"
+					ng-if="$ctrl.canToggleDescription"
+					ng-click="$ctrl.showFullDescription = !$ctrl.showFullDescription"
+					>
+				</a>
+
+				<div ng-if="$ctrl.supporters.length > 0">
+					<h2 translate>Supporters</h2>
+
+					<p class="small text-muted" translate translate-params-developer="$ctrl.game.developer.display_name">
+						The kind people that helped support {{ developer }} by paying more than the minimum. Sorted by amount contributed.
+					</p>
+
+					<hr class="underbar">
+
+					<div class="game-supporters">
+						<div class="game-supporter"
+							ng-repeat="user in $ctrl.supporters track by user.id"
+							>
+							<a class="user-avatar ng-scope"
+								ng-href="{{ ::user.url }}"
+								gj-tooltip="{{ ::user.display_name }} (@{{ ::user.username }})"
+								>
+								<img class="img-responsive" alt="" ng-src="{{ ::user.img_avatar }}">
+							</a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</section>

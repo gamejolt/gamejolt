@@ -2,7 +2,7 @@ angular.module( 'App.Chat' ).directive( 'gjChatWindows', function()
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/chat/windows/windows.html',
+		template: require( '!html-loader!./windows.html' ),
 		controller: function( $scope, Chat )
 		{
 			$scope.client = Chat.client;

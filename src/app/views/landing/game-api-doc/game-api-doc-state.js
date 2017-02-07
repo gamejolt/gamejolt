@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/game-api/doc*path',
 		controller: 'Landing.GameApiDocCtrl',
 		controllerAs: '$ctrl',
-		templateUrl: '/app/views/landing/game-api-doc/game-api-doc.html',
+		templateUrl: require( './game-api-doc.html' ),
 		resolve: {
 			path: function( $stateParams, $http, $state )
 			{

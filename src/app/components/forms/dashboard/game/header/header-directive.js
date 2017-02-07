@@ -1,14 +1,19 @@
+var Loader = require( '../../../../../../lib/gj-lib-client/components/loader/loader.service' ).Loader;
+
 angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameHeader', function( Form, Api, $timeout )
 {
 	var form = new Form( {
 		model: 'Game',
-		template: '/app/components/forms/dashboard/game/header/header.html',
+		template: require( './header.html' ),
 		saveMethod: '$saveHeader',
 		resetOnSubmit: true,
 	} );
 
 	form.onInit = function( scope )
 	{
+		scope.Loader = Loader;
+		Loader.load( 'upload' );
+
 		if ( !scope.isLoaded ) {
 			Api.sendRequest( '/web/dash/developer/games/header/save/' + scope.baseModel.id ).then( function( payload )
 			{

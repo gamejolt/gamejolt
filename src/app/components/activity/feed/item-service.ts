@@ -1,22 +1,10 @@
-import { Injectable } from 'ng-metadata/core';
-import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
-import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
+import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 
-export type ActivityFeedInput = Notification | Fireside_Post;
+export type ActivityFeedInput = Notification | FiresidePost;
 
-export function ActivityFeedItemFactory( Notification: any, Fireside_Post: any )
-{
-	ActivityFeedItem.Notification = Notification;
-	ActivityFeedItem.Fireside_Post = Fireside_Post;
-	return ActivityFeedItem;
-}
-
-@Injectable()
 export class ActivityFeedItem
 {
-	static Notification: typeof Notification;
-	static Fireside_Post: typeof Fireside_Post;
-
 	id: string;
 	type: 'devlog-post' | 'notification';
 	feedItem: ActivityFeedInput;
@@ -24,7 +12,7 @@ export class ActivityFeedItem
 
 	constructor( public sourceItem: ActivityFeedInput )
 	{
-		if ( sourceItem instanceof ActivityFeedItem.Notification && sourceItem.type == ActivityFeedItem.Notification.TYPE_DEVLOG_POST_ADD ) {
+		if ( sourceItem instanceof Notification && sourceItem.type === Notification.TYPE_DEVLOG_POST_ADD ) {
 			this.feedItem = sourceItem.action_model;
 		}
 		else {
@@ -32,16 +20,16 @@ export class ActivityFeedItem
 		}
 
 		let dateVal = 0;
-		if ( this.feedItem instanceof ActivityFeedItem.Fireside_Post ) {
+		if ( this.feedItem instanceof FiresidePost ) {
 			this.type = 'devlog-post';
 			dateVal = this.feedItem.updated_on || this.feedItem.added_on;
 		}
-		else if ( this.feedItem instanceof ActivityFeedItem.Notification ) {
+		else if ( this.feedItem instanceof Notification ) {
 			this.type = 'notification';
 			dateVal = this.feedItem.added_on;
 		}
 
 		this.id = `${this.type}-${this.feedItem.id}-${dateVal}`;
-		this.scrollId = <string>sourceItem.scroll_id;
+		this.scrollId = sourceItem.scroll_id as string;
 	}
 }

@@ -3,7 +3,7 @@ angular.module( 'App.Client.InstallPackageModal' ).service( 'Client_InstallPacka
 	this.show = function( game )
 	{
 		var modalInstance = $modal.open( {
-			templateUrl: '/app/components/client/install-package-modal/install-package-modal.html',
+			template: require( '!html-loader!./install-package-modal.html' ),
 			controller: 'Client_InstallPackageModalCtrl',
 			controllerAs: 'modalCtrl',
 			size: 'sm',

@@ -1,6 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { App } from './../../../../../../app-service';
-import { Fireside_Post } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { App } from '../../../../../../app-service';
+import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 
 @Injectable()
 export class DevlogCtrl
@@ -14,7 +14,7 @@ export class DevlogCtrl
 		app.title = gettextCatalog.getString( 'Manage Devlog' );
 	}
 
-	onPostAdded( post: Fireside_Post )
+	onPostAdded( post: FiresidePost )
 	{
 		this.$scope.$broadcast( 'Devlog.postAdded', post );
 	}

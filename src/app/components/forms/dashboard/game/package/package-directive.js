@@ -1,8 +1,11 @@
-angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage', function( $state, $timezone, Form, App, Api, Game_Package, Sellable, Sellable_Pricing, Timezone, ModalConfirm, gettextCatalog )
+var moment = require( 'moment-timezone' );
+var jstz = require( 'jstimezonedetect' );
+
+angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage', function( $state, Form, App, Api, Game_Package, Sellable, Sellable_Pricing, Timezone, ModalConfirm, gettextCatalog )
 {
 	var form = new Form( {
 		model: 'Game_Package',
-		template: '/app/components/forms/dashboard/game/package/package.html',
+		template: require( './package.html' ),
 		resetOnSubmit: true,
 	} );
 
@@ -25,7 +28,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 		scope.pricings = [];
 
 		// Auto-detect timezone.
-		scope.formModel.sale_timezone = $timezone.getName();
+		scope.formModel.sale_timezone = jstz.determine().name();
 
 		// Get timezones list.
 		scope.timezones = [];
@@ -75,8 +78,8 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 			}
 
 			scope.formModel.pricing_type = 'free';
-			scope.formModel.sale_start = window.moment().add( 1, 'day' ).startOf( 'day' ).valueOf();
-			scope.formModel.sale_end = window.moment().add( 1, 'week' ).startOf( 'day' ).valueOf();
+			scope.formModel.sale_start = moment().add( 1, 'day' ).startOf( 'day' ).valueOf();
+			scope.formModel.sale_end = moment().add( 1, 'week' ).startOf( 'day' ).valueOf();
 
 			if ( scope.method == 'add' ) {
 				scope.formModel.visibility = Game_Package.VISIBILITY_PUBLIC;
@@ -139,7 +142,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 					scope.formModel.sale_start = Date.now();
 				}
 				else {
-					scope.formModel.sale_start = window.moment().add( 1, 'day' ).startOf( 'day' ).valueOf();
+					scope.formModel.sale_start = moment().add( 1, 'day' ).startOf( 'day' ).valueOf();
 				}
 			} );
 
@@ -155,7 +158,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGamePackage',
 					.then( function( payload )
 					{
 						scope.promotionalPricing = undefined;
-						scope.formModel.sale_timezone = $timezone.getName();;
+						scope.formModel.sale_timezone = jstz.determine.name();
 						scope.formModel.sale_start = undefined;
 						scope.formModel.sale_end = undefined;
 						scope.formModel.sale_price = undefined;

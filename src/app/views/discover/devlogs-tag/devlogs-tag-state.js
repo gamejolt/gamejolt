@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '^/tag/:tag/posts',
 		controller: 'Discover.DevlogsTagCtrl',
 		controllerAs: 'tagCtrl',
-		templateUrl: '/app/views/discover/devlogs-tag/devlogs-tag.html',
+		templateUrl: require( './devlogs-tag.html' ),
 		resolve: {
 			payload: function( Api, $stateParams )
 			{

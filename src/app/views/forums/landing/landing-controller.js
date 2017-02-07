@@ -1,3 +1,3 @@
-angular.module( 'App.Views' ).controller( 'Forums.LandingCtrl', function()
+angular.module( 'App.Views.Forums' ).controller( 'Forums.LandingCtrl', function()
 {
 } );

@@ -1,4 +1,4 @@
-angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', function( $ocLazyLoad, $q, $window, $state, $location, $injector, Environment, AutoScroll, gettextCatalog )
+angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', function( $q, $window, $state, $location, $injector, Environment, AutoScroll, gettextCatalog )
 {
 	var STORAGE_KEY = 'game-filtering:filters';
 

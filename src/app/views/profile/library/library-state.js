@@ -7,7 +7,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 		url: '/library',
 		controller: 'Profile.LibraryCtrl',
 		controllerAs: 'libraryCtrl',
-		templateUrl: '/app/views/profile/library/library.html',
+		templateUrl: require( './library.html' ),
 		resolve: {
 			payload: function( Api, $stateParams )
 			{

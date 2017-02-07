@@ -1,7 +1,7 @@
 angular.module( 'App.Client.Forms' ).directive( 'gjClientFormSystemReport', function( $q, Form, Api, Client_Logger )
 {
 	var form = new Form( {
-		template: '/app/components/client/forms/system-report/system-report.html',
+		template: require( './system-report.html' ),
 	} );
 
 	form.onInit = function( scope )

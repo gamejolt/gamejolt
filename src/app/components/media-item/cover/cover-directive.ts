@@ -1,7 +1,8 @@
-import { Component, Input, Output, Inject } from 'ng-metadata/core';
-import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Ruler } from './../../../../lib/gj-lib-client/components/ruler/ruler-service';
-import template from 'html!./cover.html';
+import { Component, Input, Output, Inject, EventEmitter } from 'ng-metadata/core';
+import * as template from '!html-loader!./cover.html';
+
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
 
 @Component({
 	selector: 'gj-media-item-cover',
@@ -13,10 +14,10 @@ import template from 'html!./cover.html';
 export class CoverComponent
 {
 	@Input( '<' ) mediaItem: any;
-	@Input( '<?' ) shouldParallax = false;
-	@Input( '<?' ) maxHeight?: number;
+	@Input( '<' ) shouldParallax = false;
+	@Input( '<' ) maxHeight?: number;
 
-	@Output() onLoaded: Function;
+	@Output() private onLoaded = new EventEmitter<void>();
 
 	// isLoaded gets set the first time it loads and stays set
 	// isMediaItemLoaded gets changed every time a new size loads in
@@ -28,12 +29,11 @@ export class CoverComponent
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( '$element' ) $element: ng.IRootElementService,
 		@Inject( 'Screen' ) private screen: Screen,
-		@Inject( 'Ruler' ) private ruler: Ruler
 	)
 	{
 		this._elem = $element[0];
 
-		if ( angular.isUndefined( this.shouldParallax ) ) {
+		if ( typeof this.shouldParallax === 'undefined' ) {
 			this.shouldParallax = true;
 		}
 
@@ -45,8 +45,8 @@ export class CoverComponent
 			if ( isLoaded ) {
 				this.setDimensions();
 
-				if ( !this.isLoaded && this.onLoaded ) {
-					this.onLoaded();
+				if ( !this.isLoaded ) {
+					this.onLoaded.emit( undefined );
 				}
 
 				this.isLoaded = true;
@@ -62,7 +62,7 @@ export class CoverComponent
 	setDimensions()
 	{
 		if ( this.mediaItem ) {
-			const newDimensions = this.mediaItem.getDimensions( this.ruler.width( this._elem ), null, { force: true } );
+			const newDimensions = this.mediaItem.getDimensions( Ruler.width( this._elem ), null, { force: true } );
 
 			// We extend the header to the right and left by 20% on XS since the screen is so small.
 			// This makes sure that we also calculate the height larger.

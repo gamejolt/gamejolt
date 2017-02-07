@@ -2,7 +2,7 @@ angular.module( 'App.Client.InstallProgress' ).directive( 'gjClientInstallProgre
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/client/install-progress/install-progress.html',
+		template: require( '!html-loader!./install-progress.html' ),
 		scope: {
 			localPackage: '=localPackage',
 		},

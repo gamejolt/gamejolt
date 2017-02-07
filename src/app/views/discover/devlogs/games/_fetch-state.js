@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).config( function( $stateProvider, $urlMatcherFactoryProvider, $urlRouterProvider )
+angular.module( 'App.Views' ).config( function( $stateProvider )
 {
 	$stateProvider.state( 'discover.devlogs.games._fetch', {
 		url: '/games/:section?query&page',
@@ -9,7 +9,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlMatcherFacto
 			},
 		},
 		controller: 'Discover.Devlogs.Games._FetchCtrl',
-		templateUrl: '/app/views/discover/devlogs/games/_fetch.html',
+		templateUrl: require( './_fetch.html' ),
 		resolve: {
 			payload: function( $state, $stateParams, Api, filteringContainer )
 			{

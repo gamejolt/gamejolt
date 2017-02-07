@@ -1,19 +1,33 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Meta } from './../lib/gj-lib-client/components/meta/meta-service';
-import { ModalConfirm } from './../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { StateService } from 'angular-ui-router';
 
-@Injectable()
+import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
+import { ModalConfirm } from '../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { User } from '../lib/gj-lib-client/components/user/user.model';
+import { Api } from '../lib/gj-lib-client/components/api/api.service';
+import { getProvider } from '../lib/gj-lib-client/utils/utils';
+
+export function attachProvidersApp( $scope: ng.IScope )
+{
+	$scope['$state'] = getProvider<any>( '$state' );
+	$scope['App'] = getProvider<any>( 'App' );
+	$scope['Meta'] = getProvider<any>( 'Meta' );
+	$scope['Screen'] = getProvider<any>( 'Screen' );
+	$scope['Environment'] = getProvider<any>( 'Environment' );
+	$scope['Scroll'] = getProvider<any>( 'Scroll' );
+	$scope['Shell'] = getProvider<any>( 'Shell' );
+	$scope['Connection'] = getProvider<any>( 'Connection' );
+}
+
+@Injectable( 'App' )
 export class App
 {
-	ver: number | null = null;
-	user: any = null;
+	user: User | null = null;
 	userBootstrapped = false;
 
 	constructor(
 		@Inject( '$rootScope' ) $rootScope: ng.IRootScopeService,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
-		@Inject( '$injector' ) private $injector: any,
-		@Inject( '$q' ) private $q: ng.IQService,
+		@Inject( '$state' ) private $state: StateService,
 		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'Meta' ) private meta: Meta,
@@ -33,29 +47,16 @@ export class App
 	get title() { return this.meta.title; }
 	set title( title: string | null ) { this.meta.title = title; }
 
-	logout()
+	async logout()
 	{
-		return this.$q( ( resolve, reject ) =>
-		{
-			this.modalConfirm.show( 'Are you seriously going to leave us?', 'Really?', 'yes' ).then( () =>
-			{
-				// Must send POST.
-				this.$injector.get( 'Api' ).sendRequest( '/web/dash/account/logout', {} )
-					.then( () =>
-					{
-						// We go to the homepage currently just in case they're in a view they shouldn't be.
-						this.$state.go( 'discover.home' );
+		await this.modalConfirm.show( 'Are you seriously going to leave us?', 'Really?', 'yes' );
 
-						this.growls.success( 'You are now logged out.', 'Goodbye!' );
-						resolve();
-					} )
-					.catch( ( err: any ) =>
-					{
-						console.error( err );
-						this.growls.error( 'Could not log you out.' );
-						reject();
-					} );
-			} );
-		} );
+		// Must send POST.
+		await Api.sendRequest( '/web/dash/account/logout', {} );
+
+		// We go to the homepage currently just in case they're in a view they shouldn't be.
+		this.$state.go( 'discover.home' );
+
+		this.growls.success( 'You are now logged out.', 'Goodbye!' );
 	}
 }

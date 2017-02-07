@@ -1,14 +1,19 @@
+var Loader = require( '../../../../../../lib/gj-lib-client/components/loader/loader.service' ).Loader;
+
 angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameSong', function( Form, Api, gettextCatalog )
 {
 	var form = new Form( {
 		model: 'Game_Song',
-		template: '/app/components/forms/dashboard/game/song/song.html',
+		template: require( './song.html' ),
 	} );
 
 	form.scope.game = '=gjGame';
 
 	form.onInit = function( scope )
 	{
+		scope.Loader = Loader;
+		Loader.load( 'upload' );
+
 		scope.formModel.file = undefined;
 		scope.formModel.game_id = scope.game.id;
 

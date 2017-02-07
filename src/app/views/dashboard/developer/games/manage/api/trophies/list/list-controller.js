@@ -1,6 +1,11 @@
-angular.module( 'App.Views' ).controller( 'Dashboard.Developer.Games.Manage.Api.Trophies.ListCtrl', function( $scope, $timeout, App, Game_Trophy, ModalConfirm, Scroll, gettextCatalog, payload )
+var Loader = require( '../../../../../../../../../lib/gj-lib-client/components/loader/loader.service' ).Loader;
+
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.Api.Trophies.ListCtrl', function( $scope, $timeout, App, Game_Trophy, ModalConfirm, Scroll, gettextCatalog, payload )
 {
 	var _this = this;
+
+	$scope.Loader = Loader;
+	Loader.load( 'ui-tree' );
 
 	App.title = gettextCatalog.getString( 'dash.games.trophies.page_title', { game: $scope.manageCtrl.game.title } );
 

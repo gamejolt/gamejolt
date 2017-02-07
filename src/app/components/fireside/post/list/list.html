@@ -3,7 +3,7 @@
 
 		<a class="fireside-post-list-item" ng-href="{{ ::post.url }}">
 
-			<div class="fireside-post-list-item-img" ng-style="::{ 'background-image': 'url(\'' + (post.header.img_url || '/app/components/fireside/post/thumbnail/no-thumb.png') + '\')' }"></div>
+			<div class="fireside-post-list-item-img" ng-style="::{ 'background-image': 'url(\'' + (post.header.img_url || $ctrl.noThumb) + '\')' }"></div>
 
 			<div class="fireside-post-list-item-meta">
 				<div class="fireside-post-list-item-title">

@@ -3,7 +3,7 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameRelease',
 {
 	var form = new Form( {
 		model: 'Game_Release',
-		template: '/app/components/forms/dashboard/game/release/release.html',
+		template: require( './release.html' ),
 	} );
 
 	form.scope.game = '=gjGame';

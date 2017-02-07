@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '',
 		controller: 'Profile.OverviewCtrl',
 		controllerAs: 'overviewCtrl',
-		templateUrl: '/app/views/profile/overview/overview.html',
+		templateUrl: require( './overview.html' ),
 		resolve: {
 			payload: function( Api, $stateParams )
 			{

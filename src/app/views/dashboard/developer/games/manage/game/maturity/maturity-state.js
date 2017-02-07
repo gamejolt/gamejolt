@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/maturity',
 		controller: 'Dashboard.Developer.Games.Manage.Game.MaturityCtrl',
 		controllerAs: 'maturityCtrl',
-		templateUrl: '/app/views/dashboard/developer/games/manage/game/maturity/maturity.html',
+		templateUrl: require( './maturity.html' ),
 		// resolve: {
 		// 	payload: function( Api, $stateParams )
 		// 	{

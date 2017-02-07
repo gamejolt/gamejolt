@@ -1,12 +1,16 @@
-import { Component, Inject, Input, SkipSelf, OnInit } from 'ng-metadata/core';
-import template from 'html!./autocomplete.html';
+import { Component, Inject, SkipSelf, OnInit } from 'ng-metadata/core';
+import { StateService } from 'angular-ui-router';
+import * as template from '!html-loader!./autocomplete.html';
 
-import { App } from './../../../app-service';
-import { Search } from './../search-service';
-import { SearchComponent } from './../search-directive';
-import { Search_History } from './../history/history-service';
+import { App } from '../../../app-service';
+import { Search } from '../search-service';
+import { SearchComponent } from '../search-directive';
+import { SearchHistory } from '../history/history-service';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { getProvider } from '../../../../lib/gj-lib-client/utils/utils';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -59,11 +63,11 @@ export class AutocompleteComponent implements OnInit
 	selected = 0;
 	games: any[] = [];
 	devlogs: any[] = [];
-	users: any[] = [];
+	users: User[] = [];
 	libraryGames: any[] = [];
 	items: any[] = [];
 
-	@Input( '<?searchAutocompleteModes' ) modes: string[] = [ 'search', 'command' ];
+	modes = [ 'search', 'command' ];
 
 	get isHidden()
 	{
@@ -72,26 +76,20 @@ export class AutocompleteComponent implements OnInit
 
 	constructor(
 		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
-		@Inject( '$injector' ) $injector: any,
+		@Inject( '$state' ) private $state: StateService,
 		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
 		@Inject( 'orderByFilter' ) orderByFilter: ng.IFilterOrderBy,
 		@Inject( 'hotkeys' ) private hotkeys: ng.hotkeys.HotkeysProvider,
 		@Inject( 'gettext' ) gettext: ng.gettext.gettextFunction,
-		@Inject( 'Environment' ) private environment: Environment,
 		@Inject( 'App' ) private app: App,
-		@Inject( 'Analytics' ) private analytics: any,
 		@Inject( 'Search' ) private Search: Search,
-		@Inject( 'Search_History' ) private searchHistory: Search_History,
+		@Inject( 'SearchHistory' ) private searchHistory: SearchHistory,
 		@Inject( 'Fuzzysearch' ) private fuzzysearch: any,
 		@Inject( 'Popover' ) private popover: Popover,
-		@Inject( 'User' ) private user: any,
-		@Inject( 'Game' ) private game: any,
-
 		@Inject( SearchComponent ) @SkipSelf() private searchCtrl: SearchComponent
 	)
 	{
-		this.LocalDb_Game = environment.isClient ? $injector.get( 'LocalDb_Game' ) : null;
+		this.LocalDb_Game = GJ_IS_CLIENT ? getProvider<any>( 'LocalDb_Game' ) : null;
 
 		this.commands = [
 			{
@@ -283,13 +281,13 @@ export class AutocompleteComponent implements OnInit
 			}
 			else {
 				const item = this.items[ (this.selected - 1) ];
-				if ( item instanceof this.game ) {
+				if ( item instanceof Game ) {
 					this.selectGame( item );
 				}
-				else if ( item instanceof this.user ) {
+				else if ( item instanceof User ) {
 					this.selectUser( item );
 				}
-				else if ( this.environment.isClient && item instanceof this.LocalDb_Game ) {
+				else if ( GJ_IS_CLIENT && item instanceof this.LocalDb_Game ) {
 					this.selectLibraryGame( item );
 				}
 			}
@@ -305,25 +303,25 @@ export class AutocompleteComponent implements OnInit
 	viewAll()
 	{
 		this.$state.go( 'search.results', { q: this.searchCtrl.query } );
-		this.analytics.trackEvent( 'search', 'autocomplete', 'go-all' );
+		Analytics.trackEvent( 'search', 'autocomplete', 'go-all' );
 	}
 
 	selectGame( game: any )
 	{
 		this.$state.go( 'discover.games.view.overview', { slug: game.slug, id: game.id } );
-		this.analytics.trackEvent( 'search', 'autocomplete', 'go-game' );
+		Analytics.trackEvent( 'search', 'autocomplete', 'go-game' );
 	}
 
 	selectUser( user: any )
 	{
 		this.$state.go( 'profile.overview', { username: user.username } );
-		this.analytics.trackEvent( 'search', 'autocomplete', 'go-user' );
+		Analytics.trackEvent( 'search', 'autocomplete', 'go-user' );
 	}
 
 	selectLibraryGame( localGame: any )
 	{
 		this.$state.go( 'discover.games.view.overview', { slug: localGame.slug, id: localGame.id } );
-		this.analytics.trackEvent( 'search', 'autocomplete', 'go-library-game' );
+		Analytics.trackEvent( 'search', 'autocomplete', 'go-library-game' );
 	}
 
 	selectCommand( command: Command )
@@ -331,7 +329,7 @@ export class AutocompleteComponent implements OnInit
 		if ( command && command.state ) {
 			this.searchCtrl.query = '';  // Set it as blank.
 			this.$state.go( command.state, command.options || {} );
-			this.analytics.trackEvent( 'search', 'autocomplete', 'go-command' );
+			Analytics.trackEvent( 'search', 'autocomplete', 'go-command' );
 		}
 	}
 
@@ -353,7 +351,7 @@ export class AutocompleteComponent implements OnInit
 					continue;
 				}
 
-				if ( !this.environment.isClient && command.clientRequired ) {
+				if ( !GJ_IS_CLIENT && command.clientRequired ) {
 					continue;
 				}
 

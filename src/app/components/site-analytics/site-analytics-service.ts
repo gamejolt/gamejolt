@@ -1,4 +1,6 @@
 import { Inject, Injectable } from 'ng-metadata/core';
+import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
+import { Graph } from '../../../lib/gj-lib-client/components/graph/graph.service';
 
 export type ResourceName = 'Partner' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
 
@@ -237,12 +239,10 @@ export const ReportTopPartnerRevenue: ReportComponent[] = [ {
 	displayField: 'user_display_name',
 } ];
 
-@Injectable()
+@Injectable( 'SiteAnalytics' )
 export class SiteAnalytics
 {
 	constructor(
-		@Inject( 'Api' ) private api: any,
-		@Inject( 'Graph' ) private graph: any,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 	)
 	{
@@ -350,7 +350,7 @@ export class SiteAnalytics
 	{
 		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'histogram', partnerMode, dates );
 
-		return this.api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
+		return Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
 			.then( ( response: any ) =>
 			{
 				let data: any = {};
@@ -363,7 +363,7 @@ export class SiteAnalytics
 					else if ( request[ metricKey ].analyzer == 'histogram-avg' ) {
 						label = 'Average';
 					}
-					data[ metricKey ] = this.graph.createGraphData( eventData.result );
+					data[ metricKey ] = Graph.createGraphData( eventData.result );
 					data[ metricKey ].total = label ? data[ metricKey ].colTotals[ label ] : eventData.total;
 				} );
 				return data;
@@ -374,7 +374,7 @@ export class SiteAnalytics
 	{
 		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'count', partnerMode, dates );
 
-		return this.api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
+		return Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
 			.then( ( response: any ) =>
 			{
 				let data: any = {};

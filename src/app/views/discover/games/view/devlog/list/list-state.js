@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '',
 		controller: 'Discover.Games.View.Devlog.ListCtrl',
 		controllerAs: 'listCtrl',
-		templateUrl: '/app/views/discover/games/view/devlog/list/list.html',
+		templateUrl: require( './list.html' ),
 		resolve: {
 			payload: function( $stateParams, Api )
 			{

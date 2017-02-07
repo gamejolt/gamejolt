@@ -1,6 +1,6 @@
 import { Component, Input } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import template from 'html!./view.html';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import * as template from '!html-loader!./view.html';
 
 @Component({
 	selector: 'gj-devlog-post-view',
@@ -8,9 +8,9 @@ import template from 'html!./view.html';
 })
 export class ViewComponent
 {
-	@Input( '<' ) post: Fireside_Post;
-	@Input( '<?' ) showGameInfo = false;
-	@Input( '<?' ) inModal = false;
+	@Input( '<' ) post: FiresidePost;
+	@Input( '<' ) showGameInfo = false;
+	@Input( '<' ) inModal = false;
 
 	constructor(
 	)

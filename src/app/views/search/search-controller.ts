@@ -1,5 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Search } from './../../components/search/search-service';
+import { StateService } from 'angular-ui-router';
+
+import { Search } from '../../components/search/search-service';
 
 @Injectable()
 export class SearchCtrl
@@ -10,7 +12,7 @@ export class SearchCtrl
 	payload: any = undefined;
 
 	constructor(
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
+		@Inject( '$state' ) private $state: StateService,
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'Search' ) private search: Search,
 	)

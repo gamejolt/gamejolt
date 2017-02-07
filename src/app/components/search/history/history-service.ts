@@ -2,8 +2,8 @@ import { Injectable, Inject } from 'ng-metadata/core';
 
 const STORAGE_KEY = 'search-history';
 
-@Injectable()
-export class Search_History
+@Injectable( 'SearchHistory' )
+export class SearchHistory
 {
 	constructor(
 		@Inject( '$window' ) private $window: ng.IWindowService

@@ -1,7 +1,7 @@
 angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardWithdrawFunds', function( $q, $state, Form, Api )
 {
 	var form = new Form( {
-		template: '/app/components/forms/dashboard/withdraw-funds/withdraw-funds.html'
+		template: require( './withdraw-funds.html' )
 	} );
 
 	form.scope.user = '=';

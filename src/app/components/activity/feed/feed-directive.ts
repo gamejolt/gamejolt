@@ -1,9 +1,12 @@
-import { Component, Inject, Input, Output, OnDestroy, AfterViewInit } from 'ng-metadata/core';
-import { Notification } from './../../../../lib/gj-lib-client/components/notification/notification-model';
-import { Fireside_Post } from './../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Component, Inject, Input, Output, OnDestroy, AfterViewInit, EventEmitter } from 'ng-metadata/core';
+import * as template from '!html-loader!./feed.html';
+
+import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
+import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedItem } from './item-service';
 import { ActivityFeedContainer } from './feed-container-service';
-import template from 'html!./feed.html';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { Loader } from '../../../../lib/gj-lib-client/components/loader/loader.service';
 
 /**
  * The number of items from the bottom that we should hit before loading more.
@@ -20,19 +23,20 @@ const LOAD_MORE_TIMES = 3;
 	selector: 'gj-activity-feed',
 	template,
 })
-export class FeedComponent implements OnDestroy, AfterViewInit
+export class ActivityFeedComponent implements OnDestroy, AfterViewInit
 {
 	@Input( '@' ) type: 'Notification' | 'Fireside_Post';
 	@Input( '<items' ) feed: ActivityFeedContainer;
 	@Input( '@' ) loadMoreUrl: string;
-	@Input( '<?' ) showEditControls = false;
-	@Input( '<?' ) showGameInfo = false;
-	@Input( '<?' ) disableAutoload = false;
+	@Input( '<' ) showEditControls = false;
+	@Input( '<' ) showGameInfo = false;
+	@Input( '<' ) disableAutoload = false;
 
-	@Output( '?onPostRemoved' ) private _onPostRemoved?: Function;
-	@Output( '?onPostEdited' ) private _onPostEdited?: Function;
-	@Output( '?onPostPublished' ) private _onPostPublished?: Function;
+	@Output( 'onPostRemoved' ) private _onPostRemoved = new EventEmitter<{ $post: FiresidePost }>();
+	@Output( 'onPostEdited' ) private _onPostEdited = new EventEmitter<{ $post: FiresidePost }>();
+	@Output( 'onPostPublished' ) private _onPostPublished = new EventEmitter<{ $post: FiresidePost }>();
 
+	Loader = Loader;
 	isLoadingMore = false;
 
 	private _inView: { [k: string]: ActivityFeedItem } = {};
@@ -46,14 +50,11 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 
 	constructor(
 		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( '$document' ) private $document: ng.IDocumentService,
 		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
 		@Inject( 'Scroll' ) private scroll: any,
-		@Inject( 'Api' ) private api: any,
-		@Inject( 'Notification' ) private notificationModel: typeof Notification,
-		@Inject( 'Fireside_Post' ) private firesidePostModel: typeof Fireside_Post,
 	)
 	{
+		Loader.load( 'hammer' );
 		this.wasHistorical = !!this.feed.getActive();
 	}
 
@@ -95,7 +96,7 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 		const active = this.feed.getActive();
 		if ( active ) {
 			const id = `activity-feed-item-${active.id}`;
-			const elem = this.$document[0].getElementById( id );
+			const elem = window.document.getElementById( id );
 			if ( elem ) {
 				elem.classList.add( 'active' );
 			}
@@ -109,10 +110,10 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 			return false;
 		}
 
-		if ( item.feedItem instanceof this.notificationModel ) {
+		if ( item.feedItem instanceof Notification ) {
 			return item.feedItem.added_on > this.feed.notificationWatermark;
 		}
-		else if ( item.feedItem instanceof this.firesidePostModel ) {
+		else if ( item.feedItem instanceof FiresidePost ) {
 			return item.feedItem.published_on > this.feed.notificationWatermark;
 		}
 	}
@@ -127,26 +128,26 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 		this.feed.setActive( item );
 	}
 
-	onPostEdited( post: Fireside_Post )
+	onPostEdited( post: FiresidePost )
 	{
 		this.feed.update( post );
 		if ( this._onPostEdited ) {
-			this._onPostEdited( { $post: post } );
+			this._onPostEdited.emit( { $post: post } );
 		}
 	}
 
-	onPostPublished( post: Fireside_Post )
+	onPostPublished( post: FiresidePost )
 	{
 		if ( this._onPostPublished ) {
-			this._onPostPublished( { $post: post } );
+			this._onPostPublished.emit( { $post: post } );
 		}
 	}
 
-	onPostRemoved( post: Fireside_Post )
+	onPostRemoved( post: FiresidePost )
 	{
 		this.feed.remove( post );
 		if ( this._onPostRemoved ) {
-			this._onPostRemoved( { $post: post } );
+			this._onPostRemoved.emit( { $post: post } );
 		}
 	}
 
@@ -161,7 +162,7 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 
 		const lastPost = this.feed.items[ this.feed.items.length - 1 ];
 
-		this.api.sendRequest( this.loadMoreUrl, { scrollId: lastPost.scrollId } )
+		Api.sendRequest( this.loadMoreUrl, { scrollId: lastPost.scrollId } )
 			.then( ( response: any ) =>
 			{
 				this.isLoadingMore = false;
@@ -172,10 +173,10 @@ export class FeedComponent implements OnDestroy, AfterViewInit
 				}
 
 				if ( this.type == 'Notification' ) {
-					this.feed.append( this.notificationModel.populate( response.items ) );
+					this.feed.append( Notification.populate( response.items ) );
 				}
 				else if ( this.type == 'Fireside_Post' ) {
-					this.feed.append( this.firesidePostModel.populate( response.items ) );
+					this.feed.append( FiresidePost.populate( response.items ) );
 				}
 			} );
 	}

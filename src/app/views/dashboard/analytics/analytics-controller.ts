@@ -1,4 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
+import { StateService, StateParams } from 'angular-ui-router';
+
 import { App } from '../../../app-service';
 import { MetricMap, Metric, SiteAnalytics, ResourceName,
 	ReportComponent, ReportTopSources, ReportReferringPages, ReportCountries,
@@ -6,6 +8,10 @@ import { MetricMap, Metric, SiteAnalytics, ResourceName,
 	ReportTopGames, ReportTopGameRevenue, ReportTopGamePartnerRevenue, ReportTopPartners, ReportPartnerRevenue,
 	ReportPartnerGeneratedRevenue, ReportTopPartnerRevenue } from '../../../components/site-analytics/site-analytics-service';
 import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { GamePackage } from '../../../../lib/gj-lib-client/components/game/package/package.model';
+import { GameRelease } from '../../../../lib/gj-lib-client/components/game/release/release.model';
 
 @Injectable()
 export class AnalyticsCtrl
@@ -43,14 +49,9 @@ export class AnalyticsCtrl
 	constructor(
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( '$state' ) private $state: ng.ui.IStateService,
-		@Inject( '$stateParams' ) $stateParams: ng.ui.IStateParamsService,
-		@Inject( 'User' ) private User: any,
-		@Inject( 'Game' ) private Game: any,
-		@Inject( 'Game_Package' ) private Game_Package: any,
-		@Inject( 'Game_Release' ) private Game_Release: any,
+		@Inject( '$state' ) private $state: StateService,
+		@Inject( '$stateParams' ) $stateParams: StateParams,
 		@Inject( 'SiteAnalytics' ) private analytics: SiteAnalytics,
-		@Inject( 'SiteAnalyticsReport' ) private reportModel: typeof SiteAnalyticsReport,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any,
 	)
@@ -59,11 +60,11 @@ export class AnalyticsCtrl
 		this.resource = $stateParams['resource'];
 		this.resourceId = parseInt( $stateParams['resourceId'], 10 );
 
-		this.user = payload.user ? new this.User( payload.user ) : null;
-		this.game = payload.game ? new this.Game( payload.game ) : null;
-		this.package = payload.package ? new this.Game_Package( payload.package ) : null;
-		this.release = payload.release ? new this.Game_Release( payload.release ) : null;
-		this.partnerMode = !this.user || this.user.id != app.user.id;
+		this.user = payload.user ? new User( payload.user ) : null;
+		this.game = payload.game ? new Game( payload.game ) : null;
+		this.package = payload.package ? new GamePackage( payload.package ) : null;
+		this.release = payload.release ? new GameRelease( payload.release ) : null;
+		this.partnerMode = !this.user || this.user.id != app.user!.id;
 
 		if ( this.partnerMode ) {
 			this.availableMetrics = this.analytics.pickPartnerMetrics( this.availableMetrics );
@@ -103,7 +104,7 @@ export class AnalyticsCtrl
 		} );
 	}
 
-	stateChanged( $stateParams: ng.ui.IStateParamsService )
+	stateChanged( $stateParams: StateParams )
 	{
 		this.period = $stateParams['period'] || 'monthly';
 		this.resource = $stateParams['resource'];
@@ -222,7 +223,7 @@ export class AnalyticsCtrl
 
 	pullReport( title: string, ...components: ReportComponent[] )
 	{
-		const report = new this.reportModel( title, components, this.resource, this.resourceId, this.metric.collection, this.partnerMode, this.startTime, this.endTime );
+		const report = new SiteAnalyticsReport( title, components, this.resource, this.resourceId, this.metric.collection, this.partnerMode, this.startTime, this.endTime );
 
 		this.pageReports.push( report );
 	}

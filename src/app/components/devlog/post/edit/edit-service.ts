@@ -1,8 +1,10 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { Fireside_Post } from './../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import template from 'html!./edit.html';
+import * as template from '!html-loader!./edit.html';
 
-@Injectable()
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { lazyload } from '../../../../../lib/gj-lib-client/utils/utils';
+
+@Injectable( 'DevlogPostEdit' )
 export class DevlogPostEdit
 {
 	constructor(
@@ -11,7 +13,7 @@ export class DevlogPostEdit
 	{
 	}
 
-	show( post: Fireside_Post ): ng.IPromise<Fireside_Post>
+	show( post: FiresidePost ): Promise<FiresidePost>
 	{
 		const modalInstance = this.$modal.open( {
 			keyboard: false,
@@ -22,7 +24,13 @@ export class DevlogPostEdit
 			size: 'sm',
 			resolve: {
 				// They may load this on the game page without having dash stuff loaded in yet.
-				init: [ '$ocLazyLoad', ( $ocLazyLoad: oc.ILazyLoad ) => $ocLazyLoad.load( '/app/modules/dash.js' ) ],
+				init: () =>
+				{
+					return require.ensure( [], () => lazyload( () =>
+					{
+						require( '../../../../views/dashboard/dashboard.module' );
+					} ), 'dash' );
+				},
 				post: () => post,
 			},
 		} );

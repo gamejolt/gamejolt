@@ -1,8 +1,11 @@
 import { Injectable, Inject } from 'ng-metadata/core';
+import { StateParams } from 'angular-ui-router';
+
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { SiteEditorModal } from '../../../../../../components/site-editor-modal/site-editor-modal.service';
 import { Site } from '../../../../../../../lib/gj-lib-client/components/site/site-model';
 import { SiteBuild } from '../../../../../../../lib/gj-lib-client/components/site/build/build-model';
+import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 
 @Injectable()
 export class SiteCtrl
@@ -11,20 +14,17 @@ export class SiteCtrl
 	builds: SiteBuild[];
 
 	constructor(
-		@Inject( '$stateParams' ) private $stateParams: ng.ui.IStateParamsService,
+		@Inject( '$stateParams' ) private $stateParams: StateParams,
 		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( 'Meta' ) meta: Meta,
-		@Inject( 'Api' ) private api: any,
 		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'SiteEditorModal' ) private editorModal: SiteEditorModal,
-		@Inject( 'Site' ) private siteModel: typeof Site,
-		@Inject( 'SiteBuild' ) public buildModel: typeof SiteBuild,
 		@Inject( 'payload' ) payload: any,
 	)
 	{
 		meta.title = gettextCatalog.getString( 'Manage Site' );
-		this.site = payload.site ? new this.siteModel( payload.site ) : undefined;
-		this.builds = this.buildModel.populate( payload.builds );
+		this.site = payload.site ? new Site( payload.site ) : undefined;
+		this.builds = SiteBuild.populate( payload.builds );
 	}
 
 	toggled()
@@ -37,23 +37,17 @@ export class SiteCtrl
 		}
 	}
 
-	private enable()
+	private async enable()
 	{
-		this.api.sendRequest( `/web/dash/sites/activate/${this.$stateParams['id']}` )
-			.then( ( response: any ) =>
-			{
-				this.$scope['manageCtrl'].game.assign( response.game );
-				this.site = new this.siteModel( response.site );
-			} );
+		const response = await Api.sendRequest( `/web/dash/sites/activate/${this.$stateParams['id']}` );
+		this.$scope['manageCtrl'].game.assign( response.game );
+		this.site = new Site( response.site );
 	}
 
-	private disable()
+	private async disable()
 	{
-		this.api.sendRequest( `/web/dash/sites/deactivate/${this.$stateParams['id']}` )
-			.then( ( response: any ) =>
-			{
-				this.$scope['manageCtrl'].game.assign( response.game );
-			} );
+		const response = await Api.sendRequest( `/web/dash/sites/deactivate/${this.$stateParams['id']}` );
+		this.$scope['manageCtrl'].game.assign( response.game );
 	}
 
 	showEditor()
@@ -65,22 +59,18 @@ export class SiteCtrl
 
 	onBuildAdded( formModel: any )
 	{
-		this.builds.unshift( new this.buildModel( formModel ) );
+		this.builds.unshift( new SiteBuild( formModel ) );
 	}
 
-	activateBuild( build: SiteBuild )
+	async activateBuild( build: SiteBuild )
 	{
-		build.$activate().then( () =>
-		{
-			this.builds.forEach( ( b ) => b.status = b.id === build.id ? SiteBuild.STATUS_ACTIVE : SiteBuild.STATUS_INACTIVE );
-		} );
+		await build.$activate();
+		this.builds.forEach( ( b ) => b.status = b.id === build.id ? SiteBuild.STATUS_ACTIVE : SiteBuild.STATUS_INACTIVE );
 	}
 
-	removeBuild( build: SiteBuild )
+	async removeBuild( build: SiteBuild )
 	{
-		build.$remove().then( () =>
-		{
-			_.remove( this.builds, { id: build.id } );
-		} );
+		await build.$remove();
+		_.remove( this.builds, { id: build.id } );
 	}
 }

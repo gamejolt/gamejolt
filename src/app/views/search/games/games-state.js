@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/search/games?q&page',
 		controller: 'Search.ResultsCtrl',
 		controllerAs: 'resultsCtrl',
-		templateUrl: '/app/views/search/games/games.html',
+		templateUrl: require( './games.html' ),
 		resolve: {
 			payload: function( $stateParams, Search, History_Cache )
 			{

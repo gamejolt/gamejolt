@@ -1,6 +1,6 @@
 <!-- Media Bar -->
 <div ng-if="gameCtrl.game.media_count">
-	<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
+	<gj-media-bar [media-items]="gameCtrl.mediaItems"></gj-media-bar>
 </div>
 
 <section class="section section-thin text-left" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
@@ -55,7 +55,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-10 col-sm-offset-1 col-md-2 col-md-offset-0">
-				<h2 class="section-header" ng-class="{ 'h4 text-right': Screen.isDesktop }" translate>
+				<h2 id="game-releases" class="section-header" ng-class="{ 'h4 text-right': Screen.isDesktop }" translate>
 					Releases
 				</h2>
 			</div>

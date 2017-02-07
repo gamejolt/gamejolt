@@ -2,7 +2,7 @@ angular.module( 'App.Trophy.Completion' ).directive( 'gjTrophyCompletion', funct
 {
 	return {
 		restrict: 'E',
-		templateUrl: '/app/components/trophy/completion/completion.html',
+		template: require( '!html-loader!./completion.html' ),
 		scope: {
 			total: '=trophyCompletionTotal',
 			achieved: '=trophyCompletionAchieved',

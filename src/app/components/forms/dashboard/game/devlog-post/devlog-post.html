@@ -1,5 +1,5 @@
 <form gj-form="formModel" name="devlogPostForm">
-	<div oc-lazy-load="{ files: [ '/app/modules/upload.js' ] }">
+	<div ng-if="Loader.ready( 'upload' )">
 		<gj-form-loader
 			url="/web/dash/developer/games/devlog/save/{{ baseModel.game.id }}/{{ baseModel.id }}"
 			on-loaded="onLoaded( $payload )"

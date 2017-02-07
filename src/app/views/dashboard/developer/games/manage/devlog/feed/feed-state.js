@@ -4,7 +4,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/:tab',
 		controller: 'Dashboard.Developer.Games.Manage.Devlog.FeedCtrl',
 		controllerAs: 'feedCtrl',
-		templateUrl: '/app/views/dashboard/developer/games/manage/devlog/feed/feed.html',
+		templateUrl: require( './feed.html' ),
 		params: {
 			tab: {
 				value: 'active',

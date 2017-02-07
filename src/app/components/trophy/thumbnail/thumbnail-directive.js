@@ -24,7 +24,7 @@ angular.module( 'App.Trophy.Thumbnail' ).directive( 'gjTrophyThumbnail', functio
 			trophy: '=trophyThumbnailTrophy',
 			isAchieved: '=?trophyThumbnailIsAchieved',
 		},
-		templateUrl: '/app/components/trophy/thumbnail/thumbnail.html',
+		template: require( '!html-loader!./thumbnail.html' ),
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function( $scope, $element, $timeout, Screen )
@@ -35,14 +35,14 @@ angular.module( 'App.Trophy.Thumbnail' ).directive( 'gjTrophyThumbnail', functio
 			this.isLoaded = false;
 
 			var imgMapping = {
-				'bronze': '/app/components/trophy/thumbnail/bronze.png',
-				'bronze-secret': '/app/components/trophy/thumbnail/bronze-secret.png',
-				'silver': '/app/components/trophy/thumbnail/silver.png',
-				'silver-secret': '/app/components/trophy/thumbnail/silver-secret.png',
-				'gold': '/app/components/trophy/thumbnail/gold.png',
-				'gold-secret': '/app/components/trophy/thumbnail/gold-secret.png',
-				'platinum': '/app/components/trophy/thumbnail/platinum.png',
-				'platinum-secret': '/app/components/trophy/thumbnail/platinum-secret.png',
+				'bronze': require( './bronze.png' ),
+				'bronze-secret': require( './bronze-secret.png' ),
+				'silver': require( './silver.png' ),
+				'silver-secret': require( './silver-secret.png' ),
+				'gold': require( './gold.png' ),
+				'gold-secret': require( './gold-secret.png' ),
+				'platinum': require( './platinum.png' ),
+				'platinum-secret': require( './platinum-secret.png' ),
 			};
 
 			// Make sure we don't show thumbnails for secret trophies unless they've been achieved.

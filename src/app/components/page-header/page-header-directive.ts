@@ -1,6 +1,8 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
-import { Screen } from './../../../lib/gj-lib-client/components/screen/screen-service';
-import template from 'html!./page-header.html';
+import * as template from '!html-loader!./page-header.html';
+
+import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
+import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
 
 @Component({
 	selector: 'gj-page-header',
@@ -17,12 +19,12 @@ import template from 'html!./page-header.html';
 })
 export class PageHeaderComponent
 {
-	@Input( '<?' ) coverMediaItem?: any;
-	@Input( '<?' ) coverMaxHeight?: number;
-	@Input( '<?' ) hideNav = false;
-	@Input( '<?' ) shouldAffixNav = false;
-	@Input( '<?' ) spotlightDark = false;
-	@Input( '@?' ) colClasses?: string;
+	@Input( '<' ) coverMediaItem?: MediaItem;
+	@Input( '<' ) coverMaxHeight?: number;
+	@Input( '<' ) hideNav = false;
+	@Input( '<' ) shouldAffixNav = false;
+	@Input( '<' ) spotlightDark = false;
+	@Input( '@' ) colClasses?: string;
 
 	hasCoverButtons = false;
 	hasSpotlight = false;

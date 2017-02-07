@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html lang="en" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/" ng-controller="AppCtrl">
+<html lang="en" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/">
 
 	<head>
 
@@ -19,16 +19,16 @@
 
 		<!-- Add to homescreen for Chrome on Android -->
 		<meta name="mobile-web-app-capable" content="yes">
-		<link rel="icon" sizes="192x192" href="/app/img/chrome-touch-icon-192x192.png">
+		<link rel="icon" sizes="192x192" href="${require(`~img/chrome-touch-icon-192x192.png`)}">
 
 		<!-- Add to homescreen for Safari on iOS -->
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 		<meta name="apple-mobile-web-app-title" content="Game Jolt">
-		<link rel="apple-touch-icon-precomposed" href="/app/img/apple-touch-icon-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="${require(`~img/apple-touch-icon-precomposed.png`)}">
 
 		<!-- Tile icon for Win8 (144x144 + tile color) -->
-		<meta name="msapplication-TileImage" content="/app/img/ms-touch-icon-144x144-precomposed.png">
+		<meta name="msapplication-TileImage" content="${require(`~img/ms-touch-icon-144x144-precomposed.png`)}">
 		<meta name="msapplication-TileColor" content="#292929">
 
 		<!-- http://blogs.windows.com/windows_phone/b/wpdev/archive/2012/11/15/adapting-your-webkit-optimized-site-for-internet-explorer-10.aspx#step5 -->
@@ -53,16 +53,13 @@
 
 		</script>
 
-		<link rel="stylesheet" href="/app/main.css">
-		<link rel="shortcut icon" href="/app/img/favicon.png">
-
 		<title>Game Jolt - Indie games for the love of it</title>
 
 		<!-- FB -->
 		<meta property="fb:app_id" content="410666682312265">
 		<meta property="og:site_name" content="Game Jolt">
 		<meta property="fb:admins" content="1070315546">
-		<meta property="og:image" content="/app/img/meta-default-image.png">
+		<meta property="og:image" content="${require(`~img/meta-default-image.png`)}">
 
 		<!-- Twitter -->
 		<meta name="twitter:site" content="@gamejolt">
@@ -70,41 +67,9 @@
 	</head>
 
 	<!-- Add an empty class so we can hook into it when building and add classes for client, app, etc. -->
-	<body class="" gj-body-classes gj-auto-scroll ng-class="{ 'is-client-offline': Connection.isClientOffline }">
+	<body class="" gj-auto-scroll gj-body-classes>
 
-		<gj-client-intro client-intro-done="App.isClientIntroDone = true" ng-if="!App.isClientIntroDone"></gj-client-intro>
-
-		<gj-shell>
-
-			<gj-shell-top-nav></gj-shell-top-nav>
-
-			<gj-offline-alert></gj-offline-alert>
-
-			<gj-shell-sidebar></gj-shell-sidebar>
-
-			<gj-shell-body>
-				<!--<gj-terms-change-alert></gj-terms-change-alert>-->
-				<ui-view id="content" ng-cloak></ui-view>
-			</gj-shell-body>
-
-			<div ng-if="Shell.chat">
-				<gj-shell-chat-pane></gj-shell-chat-pane>
-				<gj-chat-bubbles></gj-chat-bubbles>
-				<gj-chat-windows></gj-chat-windows>
-			</div>
-
-			<gj-growls></gj-growls>
-
-			<gj-shell-hot-bottom>
-				<gj-minbar></gj-minbar>
-				<gj-client-status-bar></gj-client-status-bar>
-			</gj-shell-hot-bottom>
-
-		</gj-shell>
-
-		<div gj-debug-bar></div>
-
-		<script src="/app/modules/error-tracking.js" crossorigin="anonymous"></script>
+		<gj-app></gj-app>
 
 		<script async src="https://www.google-analytics.com/analytics.js"></script>
 		<script>
@@ -112,11 +77,6 @@
 			ga('create', 'UA-6742777-1', 'auto');
 			ga('require', 'linkid', 'linkid.js');
 		</script>
-
-		<script src="/app/vendor.js"></script>
-		<script src="/app/modules/vendor-app.js"></script>
-		<!-- inject client:modules -->
-		<script src="/app/app.js"></script>
 
 	</body>
 </html>

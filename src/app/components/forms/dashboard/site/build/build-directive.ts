@@ -1,11 +1,14 @@
+import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
+import { Loader } from '../../../../../../lib/gj-lib-client/components/loader/loader.service';
+
+SiteBuildFormFactory.$inject = [ 'Form' ];
 export function SiteBuildFormFactory(
 	Form: any,
-	Api: any,
 )
 {
 	const form = new Form( {
 		model: 'SiteBuild',
-		template: '/app/components/forms/dashboard/site/build/build.html',
+		template: require( './build.html' ),
 		resetOnSubmit: true,
 	} );
 
@@ -13,6 +16,9 @@ export function SiteBuildFormFactory(
 
 	form.onInit = function( scope: any )
 	{
+		scope.Loader = Loader;
+		Loader.load( 'upload' );
+
 		scope.formModel.file = undefined;
 		scope.formModel.site_id = scope.site.id;
 

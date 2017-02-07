@@ -1,92 +1,77 @@
-@import './styles/layers'
+@import '../bower-lib/angular-hotkeys/build/hotkeys.css'
+
+@import '~styles/variables'
 @import '../lib/gj-lib-client/stylus/common'
 
-load-module( 'well' )
-load-module( 'i-button' )
-load-module( 'button' )
-load-module( 'jolticons' )
-load-module( 'hidden-text-expander' )
-load-module( 'section' )
-load-module( 'form' )
-load-module( 'alert' )
-load-module( 'tag' )
-load-module( 'blip' )
-load-module( 'badge' )
-load-module( 'list-group' )
-load-module( 'backdrop' )
-
-load-module( 'nav' )
-load-module( 'nav/navbar' )
-load-module( 'nav/nav-pills' )
-load-module( 'nav/nav-platform-list' )
-load-module( 'nav/breadcrumb' )
-
-load-module( 'debug/debug-bar' )
-load-module( 'error' )
-load-module( 'tooltip' )
-load-module( 'card' )
-load-module( 'popover' )
-load-module( 'modal' )
-load-module( 'collapse' )
-load-module( 'loading' )
-load-module( 'loading/fade' )
-load-module( 'growls' )
-load-module( 'progress/bar' )
-load-module( 'ui-tree' )
-load-module( 'editable-accordion' )
-load-module( 'pagination' )
-load-module( 'scroll/affix' )
-load-module( 'toggle-switch' )
-load-module( 'datepicker' )
-load-module( 'timepicker' )
-load-module( 'datetime-picker' )
-load-module( 'graph' )
-load-module( 'fade-collapse' )
-load-module( 'emoji' )
-load-module( 'spoiler' )
-load-module( 'site-selector' )
-load-module( 'social' )
-load-module( 'highlight' )
-load-module( 'translate/lang-selector' )
-load-module( 'lazy/placeholder' )
-load-module( 'overlay-scrollbar' )
-load-module( 'widget-compiler' )
-load-module( 'theme/theme-editor' )
-load-module( 'colorpicker' )
-
-load-module( 'game/thumbnail-img' )
-
-load-module( 'user/user-avatar' )
-
-load-module( 'fireside/post/like/widget' )
-
-load-module( 'comment/widget' )
-load-module( 'comment/video/thumbnail' )
-load-module( 'comment/video/lightbox' )
-
-load-module( 'video' );
-load-module( 'video/embed' )
-
-load-module( 'jam/game/vote/widget' )
-
-load-module( 'ad' )
-
-load-module( 'game/package/card' )
-load-module( 'game/play-modal' )
-
-load-module( 'audio/scrubber' )
-load-module( 'audio/playlist' )
-load-module( 'game/soundtrack/card' )
-
-load-module( 'img/crop' )
-
-load-module( 'form/markdown-editor' )
-load-module( 'form/upload-control' )
-load-module( 'form/slider' )
-
-load-module( 'auth' )
-
-@import '../bower-lib/angular-hotkeys/build/hotkeys.css'
+@import '../lib/gj-lib-client/components/well/well'
+@import '../lib/gj-lib-client/components/button/button'
+@import '../lib/gj-lib-client/components/jolticons/jolticons'
+@import '../lib/gj-lib-client/components/hidden-text-expander/hidden-text-expander'
+@import '../lib/gj-lib-client/components/section/section'
+@import '../lib/gj-lib-client/components/form/form'
+@import '../lib/gj-lib-client/components/alert/alert'
+@import '../lib/gj-lib-client/components/tag/tag'
+@import '../lib/gj-lib-client/components/blip/blip'
+@import '../lib/gj-lib-client/components/badge/badge'
+@import '../lib/gj-lib-client/components/list-group/list-group'
+@import '../lib/gj-lib-client/components/backdrop/backdrop'
+@import '../lib/gj-lib-client/components/nav/nav'
+@import '../lib/gj-lib-client/components/nav/navbar/navbar'
+@import '../lib/gj-lib-client/components/nav/nav-pills/nav-pills'
+@import '../lib/gj-lib-client/components/nav/nav-platform-list/nav-platform-list'
+@import '../lib/gj-lib-client/components/nav/breadcrumb/breadcrumb'
+@import '../lib/gj-lib-client/components/error/error'
+@import '../lib/gj-lib-client/components/tooltip/tooltip'
+@import '../lib/gj-lib-client/components/card/card'
+@import '../lib/gj-lib-client/components/popover/popover'
+@import '../lib/gj-lib-client/components/modal/modal'
+@import '../lib/gj-lib-client/components/collapse/collapse'
+@import '../lib/gj-lib-client/components/loading/loading'
+@import '../lib/gj-lib-client/components/loading/fade/fade.component'
+@import '../lib/gj-lib-client/components/growls/growls'
+@import '../lib/gj-lib-client/components/progress/bar/bar'
+@import '../lib/gj-lib-client/components/ui-tree/ui-tree'
+@import '../lib/gj-lib-client/components/editable-accordion/editable-accordion'
+@import '../lib/gj-lib-client/components/pagination/pagination.component'
+@import '../lib/gj-lib-client/components/scroll/affix/affix'
+@import '../lib/gj-lib-client/components/toggle-switch/toggle-switch'
+@import '../lib/gj-lib-client/components/datepicker/datepicker'
+@import '../lib/gj-lib-client/components/timepicker/timepicker'
+@import '../lib/gj-lib-client/components/datetime-picker/datetime-picker'
+@import '../lib/gj-lib-client/components/graph/graph.component'
+@import '../lib/gj-lib-client/components/fade-collapse/fade-collapse'
+@import '../lib/gj-lib-client/components/emoji/emoji'
+@import '../lib/gj-lib-client/components/spoiler/spoiler'
+@import '../lib/gj-lib-client/components/site-selector/site-selector'
+@import '../lib/gj-lib-client/components/social/social'
+@import '../lib/gj-lib-client/components/highlight/highlight'
+@import '../lib/gj-lib-client/components/translate/lang-selector/lang-selector'
+@import '../lib/gj-lib-client/components/lazy/placeholder/placeholder'
+@import '../lib/gj-lib-client/components/overlay-scrollbar/overlay-scrollbar'
+@import '../lib/gj-lib-client/components/widget-compiler/widget-compiler'
+@import '../lib/gj-lib-client/components/theme/theme-editor/theme-editor'
+@import '../lib/gj-lib-client/components/colorpicker/colorpicker'
+@import '../lib/gj-lib-client/components/media-bar/media-bar'
+@import '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img'
+@import '../lib/gj-lib-client/components/user/user-avatar/user-avatar'
+@import '../lib/gj-lib-client/components/fireside/post/like/widget/widget'
+@import '../lib/gj-lib-client/components/comment/widget/widget'
+@import '../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail'
+@import '../lib/gj-lib-client/components/comment/video/lightbox/lightbox'
+@import '../lib/gj-lib-client/components/video/video'
+@import '../lib/gj-lib-client/components/video/embed/embed'
+@import '../lib/gj-lib-client/components/jam/game/vote/widget/widget'
+@import '../lib/gj-lib-client/components/ad/ad'
+@import '../lib/gj-lib-client/components/game/package/card/card'
+@import '../lib/gj-lib-client/components/game/soundtrack/card/card'
+@import '../lib/gj-lib-client/components/game/play-modal/play-modal.component'
+@import '../lib/gj-lib-client/components/audio/scrubber/scrubber'
+@import '../lib/gj-lib-client/components/audio/playlist/playlist'
+@import '../lib/gj-lib-client/components/img/crop/crop'
+@import '../lib/gj-lib-client/components/form/markdown-editor/markdown-editor'
+@import '../lib/gj-lib-client/components/form/upload-control/upload-control'
+@import '../lib/gj-lib-client/components/form/slider/slider'
+@import '../lib/gj-lib-client/components/auth/auth'
 
 // Components.
 @import './components/**/*.styl'
@@ -95,8 +80,8 @@ load-module( 'auth' )
 @import './views/**/*.styl'
 
 // Styles/overrides.
-@import './styles/client'
-@import './styles/platform-list'
-@import './styles/popover'
-@import './styles/play-button-overlay'
-@import './styles/growls'
+@import '~styles/client'
+@import '~styles/platform-list'
+@import '~styles/popover'
+@import '~styles/play-button-overlay'
+@import '~styles/growls'

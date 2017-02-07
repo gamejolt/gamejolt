@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Forums.Topics.FollowedCtrl', function( $scope, App, $stateParams )
+angular.module( 'App.Views.Forums' ).controller( 'Forums.Topics.FollowedCtrl', function( $scope, App, $stateParams )
 {
 	App.title = "Followed Topics";
 } );

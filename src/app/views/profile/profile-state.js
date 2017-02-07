@@ -5,7 +5,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/@:username',
 		controller: 'ProfileCtrl',
 		controllerAs: 'profileCtrl',
-		templateUrl: '/app/views/profile/profile.html',
+		templateUrl: require( './profile.html' ),
 		resolve: {
 			init: function( Translate )
 			{

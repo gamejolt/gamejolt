@@ -6,7 +6,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 		url: '',
 		controller: 'Dashboard.Developer.Games.Manage.Game.OverviewCtrl',
 		controllerAs: 'overviewCtrl',
-		templateUrl: '/app/views/dashboard/developer/games/manage/game/overview/overview.html',
+		templateUrl: require( './overview.html' ),
 		resolve: {
 			payload: function( Api, $stateParams )
 			{

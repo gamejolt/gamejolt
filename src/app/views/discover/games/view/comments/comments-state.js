@@ -4,6 +4,6 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/comments?comment_page',
 		controller: 'Discover.Games.View.CommentsCtrl',
 		controllerAs: 'commentsCtrl',
-		templateUrl: '/app/views/discover/games/view/comments/comments.html'
+		templateUrl: require( './comments.html' )
 	} );
 } );

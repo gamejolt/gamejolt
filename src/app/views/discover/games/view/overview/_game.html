@@ -1,6 +1,6 @@
 <!-- Media Bar -->
 <div ng-if="gameCtrl.game.media_count">
-	<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
+	<gj-media-bar [media-items]="gameCtrl.mediaItems"></gj-media-bar>
 </div>
 
 <section class="section section-thin fill-darker" ng-if="::overviewCtrl.activeJam">
@@ -228,7 +228,7 @@
 								ng-href="{{ ::user.url }}"
 								gj-tooltip="{{ ::user.display_name }} (@{{ ::user.username }})"
 								>
-								<img class="img-responsive" alt="" src="{{ ::user.img_avatar }}">
+								<img class="img-responsive" alt="" ng-src="{{ ::user.img_avatar }}">
 							</a>
 						</div>
 					</div>

@@ -17,7 +17,7 @@
 			items-per-page="searchCtrl.payload.perPage"
 			total-items="searchCtrl.payload.count"
 			current-page="searchCtrl.payload.page"
-			on-page-change="Scroll.to( 'users-pagination', { animate: false } )"
+			(on-page-change)="Scroll.to( 'users-pagination', { animate: false } )"
 			>
 		</gj-pagination>
 

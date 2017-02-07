@@ -4,6 +4,6 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/thumbnail',
 		controller: 'Dashboard.Developer.Games.Manage.Game.ThumbnailCtrl',
 		controllerAs: 'thumbnailCtrl',
-		templateUrl: '/app/views/dashboard/developer/games/manage/game/thumbnail/thumbnail.html',
+		templateUrl: require( './thumbnail.html' ),
 	} );
 } );

@@ -1,6 +1,7 @@
-import { Component, Inject, Input } from 'ng-metadata/core';
-import { Comment } from './../../../../lib/gj-lib-client/components/comment/comment-model';
-import template from 'html!./avatar-list.html';
+import { Component, Input } from 'ng-metadata/core';
+import * as template from '!html-loader!./avatar-list.html';
+
+import { Comment } from '../../../../lib/gj-lib-client/components/comment/comment-model';
 
 @Component({
 	selector: 'gj-comment-avatar-list',
@@ -14,13 +15,11 @@ export class AvatarListComponent
 	comments: Comment[] = [];
 	isFocused: { [k: number]: boolean } = {};
 
-	constructor(
-		@Inject( 'Comment' ) commentModel: typeof Comment,
-	)
+	constructor()
 	{
 		// Pull in new comments, huzzah!
-		commentModel.fetch( this.resource, this.resourceId, 1 )
-			.then( ( payload: any ) => this.comments = commentModel.populate( payload.comments ) );
+		Comment.fetch( this.resource, this.resourceId, 1 )
+			.then( ( payload: any ) => this.comments = Comment.populate( payload.comments ) );
 	}
 
 	onFocus( commentId: number )

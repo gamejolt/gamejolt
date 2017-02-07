@@ -1,9 +1,11 @@
 import { Component, Inject, OnInit } from 'ng-metadata/core';
+import { StateService } from 'angular-ui-router';
+import * as template from '!html-loader!./sidebar.component.html';
+
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Shell } from '../shell-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { App } from '../../../app-service';
-import template from 'html!./sidebar.component.html';
 
 @Component({
 	selector: 'gj-shell-sidebar',
@@ -36,9 +38,10 @@ export class ShellSidebarComponent implements OnInit
 		'other': 'Other',
 	};
 
+	env = Environment;
+
 	constructor(
-		@Inject( '$state' ) public $state: ng.ui.IStateService,
-		@Inject( 'Environment' ) public env: Environment,
+		@Inject( '$state' ) public $state: StateService,
 		@Inject( 'Shell' ) public shell: Shell,
 		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'App' ) public app: App,

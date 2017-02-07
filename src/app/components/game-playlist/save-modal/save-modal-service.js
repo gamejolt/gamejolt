@@ -5,7 +5,7 @@ angular.module( 'App.GamePlaylist.SaveModal' ).service( 'GamePlaylist_SaveModal'
 		playlist = playlist || null;
 
 		var modalInstance = $modal.open( {
-			templateUrl: '/app/components/game-playlist/save-modal/save-modal.html',
+			template: require( '!html-loader!./save-modal.html' ),
 			controller: 'GamePlaylist_SaveModalCtrl',
 			controllerAs: 'modalCtrl',
 			size: 'sm',
