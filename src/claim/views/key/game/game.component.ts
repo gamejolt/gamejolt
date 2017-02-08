@@ -34,7 +34,6 @@ export class RouteGameComponent implements OnInit
 	env = Environment;
 
 	constructor(
-		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( 'App' ) public app: App,
 		@Inject( 'LinkedKey' ) public LinkedKey: any,
 		@Inject( 'GameBundle' ) private bundleModel: any,
@@ -51,10 +50,10 @@ export class RouteGameComponent implements OnInit
 		this.keyGroup = this.payload.keyGroup ? new this.keyGroupModel( this.payload.keyGroup ) : null;
 
 		if ( this.payload.type === 'game' ) {
-			this.meta.title = `Key Page for ${this.game.title}`;
+			Meta.title = `Key Page for ${this.game.title}`;
 		}
 		else if ( this.payload.type === 'bundle-game' ) {
-			this.meta.title = `Key Page for ${this.game.title} in ${this.bundle.title}`;
+			Meta.title = `Key Page for ${this.game.title} in ${this.bundle.title}`;
 		}
 
 		if ( this.keyGroup && (this.keyGroup.type === this.keyGroupModel.TYPE_USER

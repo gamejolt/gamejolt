@@ -16,14 +16,13 @@ export class DevlogsTagCtrl
 	constructor(
 		@Inject( '$stateParams' ) $stateParams: StateParams,
 		@Inject( 'App' ) app: App,
-		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'payload' ) payload: any,
 	)
 	{
 		this.tag = $stateParams['tag'];
 
 		app.title = `Devlog Entries for ${this.tag}`;
-		meta.description = `Follow along on the latest development for ${this.tag}!`;
+		Meta.description = `Follow along on the latest development for ${this.tag}!`;
 
 		this.items = ActivityFeedService.bootstrap( FiresidePost.populate( payload.items ) );
 	}

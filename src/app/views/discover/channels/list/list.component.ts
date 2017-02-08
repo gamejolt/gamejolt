@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, Input } from 'ng-metadata/core';
 import * as template from '!html-loader!./list.component.html';
 
 import { Channels } from '../../../../components/channel/channels-service';
+import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 
 @Component({
 	selector: 'route-discover-channels-list',
@@ -15,7 +16,6 @@ export class RouteListComponent implements OnInit
 	gameCounts: any = {};
 
 	constructor(
-		@Inject( 'Meta' ) private meta: any,
 		@Inject( 'Channels' ) public channelsService: Channels,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 	)
@@ -24,8 +24,8 @@ export class RouteListComponent implements OnInit
 
 	ngOnInit()
 	{
-		this.meta.title = this.gettextCatalog.getString( 'Top Channels' );
-		this.meta.description = 'Find and discover indie games around specific interests.';
+		Meta.title = this.gettextCatalog.getString( 'Top Channels' );
+		Meta.description = 'Find and discover indie games around specific interests.';
 
 		this.channels = this.payload.channels;
 		this.payload.gameCounts.forEach( ( item: any ) =>

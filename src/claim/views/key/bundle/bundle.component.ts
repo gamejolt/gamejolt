@@ -23,7 +23,6 @@ export class RouteBundleComponent implements OnInit
 
 	constructor(
 		@Inject( '$state' ) public $state: StateService,
-		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( 'App' ) public app: App,
 		@Inject( 'GameBundle' ) private bundleModel: any,
 	)
@@ -35,7 +34,7 @@ export class RouteBundleComponent implements OnInit
 		this.bundle = new this.bundleModel( this.payload.bundle );
 		this.games = Game.populate( this.payload.games );
 
-		this.meta.title = `Key Page for ${this.bundle.title}`;
+		Meta.title = `Key Page for ${this.bundle.title}`;
 	}
 
 	_claim()

@@ -21,7 +21,6 @@ export class RouteRetrieveComponent implements OnInit
 
 	constructor(
 		@Inject( '$state' ) private $state: StateService,
-		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( 'GameBundle' ) private bundleModel: any,
 	)
 	{
@@ -42,9 +41,9 @@ export class RouteRetrieveComponent implements OnInit
 			this.resourceTitle = this.game.title;
 		}
 
-		this.meta.title = 'Retrieve Keys';
+		Meta.title = 'Retrieve Keys';
 		if ( this.resourceTitle ) {
-			this.meta.title += ' for ' + this.resourceTitle;
+			Meta.title += ' for ' + this.resourceTitle;
 		}
 	}
 

@@ -13,13 +13,12 @@ export class ListCtrl
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'App' ) app: App,
-		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'payload' ) payload: any
 	)
 	{
 		app.title = gettextCatalog.getString( 'Devlog for {{ game }}', { game: $scope['gameCtrl'].game.title } );
-		meta.description = `Stay up to date on all the latest posts for ${$scope['gameCtrl'].game.title} on Game Jolt`;
+		Meta.description = `Stay up to date on all the latest posts for ${$scope['gameCtrl'].game.title} on Game Jolt`;
 
 		this.posts = ActivityFeedService.bootstrap( FiresidePost.populate( payload.posts ) );
 	}

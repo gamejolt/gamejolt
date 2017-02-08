@@ -22,7 +22,6 @@ export class RouteRadioComponent implements OnInit
 	currentSongDuration: number;
 
 	constructor(
-		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( 'Game_Song' ) private songModel: any,
 	)
 	{
@@ -30,8 +29,8 @@ export class RouteRadioComponent implements OnInit
 
 	ngOnInit()
 	{
-		this.meta.title = 'Indie Game Radio';
-		this.meta.description = 'Discover new game songs through the Game Jolt radio!';
+		Meta.title = 'Indie Game Radio';
+		Meta.description = 'Discover new game songs through the Game Jolt radio!';
 
 		// Starting the next song will actually change the title.
 		if ( !Environment.isPrerender ) {
@@ -45,7 +44,7 @@ export class RouteRadioComponent implements OnInit
 
 		this.song = new this.songModel( payload.song );
 		this.game = new Game( payload.game );
-		this.meta.title = this.song.title;
+		Meta.title = this.song.title;
 		Analytics.trackEvent( 'radio', 'load-song' );
 	}
 }

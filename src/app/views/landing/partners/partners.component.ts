@@ -9,10 +9,8 @@ import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service
 })
 export class RoutePartnersComponent
 {
-	constructor(
-		@Inject( 'Meta' ) meta: Meta,
-	)
+	constructor()
 	{
-		meta.title = null;
+		Meta.title = null;
 	}
 }

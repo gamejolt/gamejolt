@@ -11,7 +11,6 @@ import { AppModuleNg1 } from './app.module.ng1';
 import ConnectionModule from '../lib/gj-lib-client/components/connection/connection';
 import ConnectionStatePermissionsModule from '../lib/gj-lib-client/components/connection/state-permissions/state-permissions';
 import { ModelModule } from '../lib/gj-lib-client/components/model/model.module';
-import MetaModule from '../lib/gj-lib-client/components/meta/meta';
 import ScreenModule from '../lib/gj-lib-client/components/screen/screen';
 import LoadModule from '../lib/gj-lib-client/components/load/load';
 import LocationModule from '../lib/gj-lib-client/components/location/location';
@@ -97,6 +96,7 @@ import { RegistryModule } from '../lib/gj-lib-client/components/registry/registr
 import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module';
 import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analytics.module';
 import { AdModule } from '../lib/gj-lib-client/components/ad/ad.module';
+import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 
 @NgModule({
 	imports: [

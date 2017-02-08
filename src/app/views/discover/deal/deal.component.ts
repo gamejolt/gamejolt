@@ -20,7 +20,6 @@ export class RouteDealComponent implements OnInit
 	supporters: any[];
 
 	constructor(
-		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( 'Game_Screenshot' ) private screenshotModel: any,
 		@Inject( 'Game_Video' ) private videoModel: any,
 	)
@@ -29,7 +28,7 @@ export class RouteDealComponent implements OnInit
 
 	ngOnInit()
 	{
-		this.meta.title = 'Sale';
+		Meta.title = 'Sale';
 
 		this.game = new Game( this.payload.game );
 		this.supporters = User.populate( this.overview.supporters );

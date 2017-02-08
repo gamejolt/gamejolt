@@ -12,7 +12,6 @@ export class ViewCtrl
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'App' ) app: App,
-		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'Fireside_Post' ) firesidePostModel: typeof FiresidePost,
 		@Inject( 'payload' ) payload: any,
 		@Inject( 'Location' ) location: Location,
@@ -28,8 +27,8 @@ export class ViewCtrl
 		} );
 
 		app.title = this.post.title;
-		meta.description = payload.metaDescription;
-		meta.fb = payload.fb;
-		meta.twitter = payload.twitter;
+		Meta.description = payload.metaDescription;
+		Meta.fb = payload.fb;
+		Meta.twitter = payload.twitter;
 	}
 }

@@ -10,7 +10,6 @@ import { AppModuleNg1 } from './app.module.ng1';
 
 import ConnectionModule from '../lib/gj-lib-client/components/connection/connection';
 import { ModelModule } from '../lib/gj-lib-client/components/model/model.module';
-import MetaModule from '../lib/gj-lib-client/components/meta/meta';
 import ScreenModule from '../lib/gj-lib-client/components/screen/screen';
 import { EnvironmentModule } from '../lib/gj-lib-client/components/environment/environment.module';
 import ImgHelperModule from '../lib/gj-lib-client/components/img/helper/helper';
@@ -25,6 +24,7 @@ import { UserModule } from '../lib/gj-lib-client/components/user/user.module';
 import { CoverImgComponent } from './components/cover-img/cover-img.component';
 import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module';
 import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analytics.module';
+import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 
 @NgModule({
 	imports: [

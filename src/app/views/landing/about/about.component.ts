@@ -15,11 +15,10 @@ export class RouteAboutComponent
 	assetUrls: RequireContextMap;
 
 	constructor(
-		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'Screen' ) public screen: Screen,
 	)
 	{
-		meta.title = null;
+		Meta.title = null;
 
 		this.assetUrls = importContext( require.context( './', false, /\.png$/ ) );
 	}

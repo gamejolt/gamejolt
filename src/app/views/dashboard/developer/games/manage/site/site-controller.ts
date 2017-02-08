@@ -16,13 +16,12 @@ export class SiteCtrl
 	constructor(
 		@Inject( '$stateParams' ) private $stateParams: StateParams,
 		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'SiteEditorModal' ) private editorModal: SiteEditorModal,
 		@Inject( 'payload' ) payload: any,
 	)
 	{
-		meta.title = gettextCatalog.getString( 'Manage Site' );
+		Meta.title = gettextCatalog.getString( 'Manage Site' );
 		this.site = payload.site ? new Site( payload.site ) : undefined;
 		this.builds = SiteBuild.populate( payload.builds );
 	}

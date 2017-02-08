@@ -45,7 +45,6 @@ export class RouteHomeComponent implements OnInit
 		@Inject( '$state' ) private $state: StateService,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'App' ) public app: App,
-		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( 'FeaturedItem' ) private featuredItemModel: any,
 	)
 	{
@@ -53,15 +52,15 @@ export class RouteHomeComponent implements OnInit
 
 	ngOnInit()
 	{
-		this.meta.title = null;
+		Meta.title = null;
 
-		this.meta.description = this.payload.metaDescription;
-		this.meta.fb = this.payload.fb;
-		this.meta.twitter = this.payload.twitter;
-		this.meta.fb.image = this.meta.twitter.image = require( '../../../img/social/social-share-header.png' );
-		this.meta.fb.url = this.meta.twitter.url = Environment.baseUrl;
+		Meta.description = this.payload.metaDescription;
+		Meta.fb = this.payload.fb;
+		Meta.twitter = this.payload.twitter;
+		Meta.fb.image = Meta.twitter.image = require( '../../../img/social/social-share-header.png' );
+		Meta.fb.url = Meta.twitter.url = Environment.baseUrl;
 
-		this.meta.microdata = {
+		Meta.microdata = {
 			'@context': 'http://schema.org',
 			'@type': 'WebSite',
 			'url': 'http://gamejolt.com/',

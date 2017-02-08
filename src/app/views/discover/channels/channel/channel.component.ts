@@ -19,8 +19,9 @@ export class RouteChannelComponent implements OnInit
 	totalGamesCount = 0;
 	shouldShowAds = false;
 
+	meta = Meta;
+
 	constructor(
-		@Inject( 'Meta' ) public meta: Meta,
 		@Inject( 'Channels' ) public channels: Channels,
 	)
 	{

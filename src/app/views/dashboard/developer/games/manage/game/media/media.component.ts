@@ -37,7 +37,6 @@ export class RouteMediaComponent implements OnInit
 	Environment = Environment;
 
 	constructor(
-		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( 'Game_Screenshot' ) private gameScreenshotModel: any,
 		@Inject( 'Game_Video' ) private gameVideoModel: any,
 		@Inject( 'ModalConfirm' ) private confirm: ModalConfirm,
@@ -50,7 +49,7 @@ export class RouteMediaComponent implements OnInit
 
 	ngOnInit()
 	{
-		this.meta.title = this.gettextCatalog.getString( 'dash.games.media.page_title', {
+		Meta.title = this.gettextCatalog.getString( 'dash.games.media.page_title', {
 			game: this.game.title,
 		} );
 

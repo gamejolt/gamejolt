@@ -16,20 +16,19 @@ export class OverviewCtrl
 
 	constructor(
 		@Inject( 'App' ) app: App,
-		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'payload' ) payload: any
 	)
 	{
 		app.title = 'Indie game devlogs';
-		meta.description = 'Find the latest and greatest games in development and follow their devlog feeds!';
+		Meta.description = 'Find the latest and greatest games in development and follow their devlog feeds!';
 
-		meta.fb.title = app.title;
-		meta.twitter.title = app.title;
+		Meta.fb.title = app.title;
+		Meta.twitter.title = app.title;
 
-		meta.fb.description = meta.description;
-		meta.twitter.description = meta.description;
+		Meta.fb.description = Meta.description;
+		Meta.twitter.description = Meta.description;
 
-		meta.twitter.image = require( '../social.png' );
+		Meta.twitter.image = require( '../social.png' );
 
 		this.games = Game.populate( payload.games );
 		this.posts = ActivityFeedService.bootstrap( FiresidePost.populate( payload.posts ) );

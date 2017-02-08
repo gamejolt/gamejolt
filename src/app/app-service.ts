@@ -11,7 +11,7 @@ export function attachProvidersApp( $scope: ng.IScope )
 {
 	$scope['$state'] = getProvider<any>( '$state' );
 	$scope['App'] = getProvider<any>( 'App' );
-	$scope['Meta'] = getProvider<any>( 'Meta' );
+	$scope['Meta'] = Meta;
 	$scope['Screen'] = getProvider<any>( 'Screen' );
 	$scope['Environment'] = getProvider<any>( 'Environment' );
 	$scope['Scroll'] = getProvider<any>( 'Scroll' );
@@ -30,7 +30,6 @@ export class App
 		@Inject( '$state' ) private $state: StateService,
 		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
 		@Inject( 'Growls' ) private growls: any,
-		@Inject( 'Meta' ) private meta: Meta,
 	)
 	{
 		// Payload emits this every time the user is processed.
@@ -44,8 +43,8 @@ export class App
 		} );
 	}
 
-	get title() { return this.meta.title; }
-	set title( title: string | null ) { this.meta.title = title; }
+	get title() { return Meta.title; }
+	set title( title: string | null ) { Meta.title = title; }
 
 	async logout()
 	{

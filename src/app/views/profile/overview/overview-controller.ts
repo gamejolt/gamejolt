@@ -15,7 +15,6 @@ export class OverviewCtrl
 	constructor(
 		@Inject( '$scope' ) $scope: any,
 		@Inject( 'App' ) app: App,
-		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'payload' ) payload: any
 	)
 	{
@@ -30,11 +29,11 @@ export class OverviewCtrl
 
 		app.title = title;
 
-		meta.description = payload.metaDescription;
-		meta.fb = payload.fb || {};
-		meta.fb.title = app.title;
-		meta.twitter = payload.twitter || {};
-		meta.twitter.title = app.title;
+		Meta.description = payload.metaDescription;
+		Meta.fb = payload.fb || {};
+		Meta.fb.title = app.title;
+		Meta.twitter = payload.twitter || {};
+		Meta.twitter.title = app.title;
 
 		this.developerGames = Game.populate( payload.developerGamesTeaser );
 		this.youtubeChannels = YoutubeChannel.populate( payload.youtubeChannels );

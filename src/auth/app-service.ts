@@ -1,4 +1,4 @@
-import { Injectable, Inject } from 'ng-metadata/core';
+import { Injectable } from 'ng-metadata/core';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 
@@ -12,14 +12,8 @@ export class App
 	// once they authorize their account.
 	credentials = {};
 
-	constructor(
-		@Inject( 'Meta' ) private meta: Meta,
-	)
-	{
-	}
-
-	get title() { return this.meta.title; }
-	set title( title: string | null ) { this.meta.title = title; }
+	get title() { return Meta.title; }
+	set title( title: string | null ) { Meta.title = title; }
 
 	redirectDashboard()
 	{

@@ -11,10 +11,9 @@ import { App } from '../../../app-service';
 export class RouteLearnComponent
 {
 	constructor(
-		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'App' ) public app: App,
 	)
 	{
-		meta.title = null;
+		Meta.title = null;
 	}
 }

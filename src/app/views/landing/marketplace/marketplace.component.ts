@@ -19,7 +19,6 @@ export class RouteMarketplaceComponent implements OnInit
 	games: any[];
 
 	constructor(
-		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'App' ) public app: App,
 	)
@@ -28,12 +27,12 @@ export class RouteMarketplaceComponent implements OnInit
 
 	ngOnInit()
 	{
-		this.meta.title = 'Sell Your Games';
+		Meta.title = 'Sell Your Games';
 
-		this.meta.description = this.payload.metaDescription;
-		this.meta.fb = this.payload.fb;
-		this.meta.twitter = this.payload.twitter;
-		this.meta.fb.image = this.meta.twitter.image = require( './social.png' );
+		Meta.description = this.payload.metaDescription;
+		Meta.fb = this.payload.fb;
+		Meta.twitter = this.payload.twitter;
+		Meta.fb.image = Meta.twitter.image = require( './social.png' );
 
 		this.firesidePosts = FiresidePost.populate( this.payload.firesidePosts );
 		this.games = Game.populate( this.payload.games );

@@ -14,7 +14,6 @@ export class CheckoutCtrl
 
 	constructor(
 		@Inject( '$window' ) private $window: ng.IWindowService,
-		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'payload' ) payload: any
 	)
@@ -24,7 +23,7 @@ export class CheckoutCtrl
 		this.order = payload.order;
 		this.game = new Game( payload.game );
 
-		meta.title = 'Buy ' + this.sellable.title;
+		Meta.title = 'Buy ' + this.sellable.title;
 
 		$window.Stripe.setPublishableKey( payload.stripePublishableKey );
 	}

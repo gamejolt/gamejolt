@@ -8,20 +8,19 @@ export class GamesCtrl
 	listing: GameListingContainer;
 
 	constructor(
-		@Inject( 'Meta' ) meta: Meta,
 		@Inject( 'filteringContainer' ) public filteringContainer: any,
 	)
 	{
-		meta.title = 'Browse indie game devlogs';
-		meta.description = 'Find the latest and greatest games in development and follow their devlog feeds!';
+		Meta.title = 'Browse indie game devlogs';
+		Meta.description = 'Find the latest and greatest games in development and follow their devlog feeds!';
 
-		meta.fb.title = meta.title;
-		meta.twitter.title = meta.title;
+		Meta.fb.title = Meta.title;
+		Meta.twitter.title = Meta.title;
 
-		meta.fb.description = meta.description;
-		meta.twitter.description = meta.description;
+		Meta.fb.description = Meta.description;
+		Meta.twitter.description = Meta.description;
 
-		meta.twitter.image = require( '../social.png' );
+		Meta.twitter.image = require( '../social.png' );
 
 		this.listing = new GameListingContainer( filteringContainer );
 	}

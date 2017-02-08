@@ -45,7 +45,6 @@ export class RouteFetchComponent implements OnInit
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'App' ) private app: App,
-		@Inject( 'Meta' ) private meta: Meta,
 		@Inject( '$state' ) private $state: StateService,
 		@Inject( '$stateParams' ) private $stateParams: StateParams,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
@@ -147,7 +146,7 @@ export class RouteFetchComponent implements OnInit
 		}
 
 		this.$parent.pageTitle = this.gettextCatalog.getString( translationId, { section: sectionHuman, category: categoryHuman } );
-		this.meta.description = this.payload.metaDescription;
+		Meta.description = this.payload.metaDescription;
 
 		if ( this.$parent.category == 'rpg' ) {
 			/// {{ category }} is available as the translated category label

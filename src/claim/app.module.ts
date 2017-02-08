@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { AppModuleNg1 } from './app.module.ng1';
 
 import { ModelModule } from '../lib/gj-lib-client/components/model/model.module';
-import MetaModule from '../lib/gj-lib-client/components/meta/meta';
 import ScreenModule from '../lib/gj-lib-client/components/screen/screen';
 import { EnvironmentModule } from '../lib/gj-lib-client/components/environment/environment.module';
 import ImgHelperModule from '../lib/gj-lib-client/components/img/helper/helper';
@@ -40,6 +39,7 @@ import GameThumbnailImgModule from '../lib/gj-lib-client/components/game/thumbna
 import GameThumbnailModule from '../app/components/game/thumbnail/thumbnail';
 import PartnerReferralModule from '../lib/gj-lib-client/components/partner-referral/partner-referral';
 import CardModule from '../lib/gj-lib-client/components/card/card';
+import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 
 const ViewsModule = angular.module( 'App.Views', [] ).name;
 importContext( require.context( './views', true, /\.state\.ts$/ ) );

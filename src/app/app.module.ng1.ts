@@ -6,6 +6,7 @@ import { Payload } from '../lib/gj-lib-client/components/payload/payload-service
 import { App } from './app-service';
 import { Registry } from '../lib/gj-lib-client/components/registry/registry.service';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
+import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 
 import '../lib/gj-lib-client/components/translate/translate';
 import '../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
@@ -406,6 +407,7 @@ export const AppModuleNg1 = angular.module( 'App', [
 	bootstrapFacade( $q, $animate );
 	Payload.initAngular( App, $transitions );
 	Analytics.initAngular( $rootScope );
+	Meta.initAngular( $rootScope );
 
 	Registry.setConfig( 'Game', {
 		maxItems: 100,
