@@ -46,7 +46,7 @@ importContext( require.context( './views', true, /\.state\.ts$/ ) );
 
 @NgModule({
 	imports: [
-		require( 'angular-ui-router' ).default,
+		require( '../lib/ui-router' ).default,
 		require( 'oclazyload' ),
 
 		FormsModule,

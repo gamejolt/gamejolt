@@ -100,7 +100,7 @@ import { AdModule } from '../lib/gj-lib-client/components/ad/ad.module';
 
 @NgModule({
 	imports: [
-		require( 'angular-ui-router' ).default,
+		require( '../lib/ui-router' ).default,
 		require( 'angular-moment' ),
 		require( 'oclazyload' ),
 		require( 'angular-inview' ).name,

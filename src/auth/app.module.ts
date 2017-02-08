@@ -28,7 +28,7 @@ import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analy
 
 @NgModule({
 	imports: [
-		require( 'angular-ui-router' ).default,
+		require( '../lib/ui-router' ).default,
 
 		FormsModule,
 		ViewsModule,
