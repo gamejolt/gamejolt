@@ -1,4 +1,4 @@
-import { Component, Input, Output, Inject, EventEmitter } from 'ng-metadata/core';
+import { Component, Input, Output, Inject, EventEmitter, OnChanges, SimpleChanges } from 'ng-metadata/core';
 import * as template from '!html-loader!./cover.html';
 
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -11,7 +11,7 @@ import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-serv
 		transclude: true,
 	},
 })
-export class CoverComponent
+export class CoverComponent implements OnChanges
 {
 	@Input( '<' ) mediaItem: any;
 	@Input( '<' ) shouldParallax = false;
@@ -57,6 +57,13 @@ export class CoverComponent
 		{
 			this.setDimensions();
 		} );
+	}
+
+	ngOnChanges( changes: SimpleChanges )
+	{
+		if ( changes['mediaItem'] || changes['maxHeight'] ) {
+			this.setDimensions();
+		}
 	}
 
 	setDimensions()
