@@ -3736,7 +3736,7 @@ var UrlRouter = (function () {
     /** @inheritdoc */
     UrlRouter.prototype.sort = function (compareFn) {
 		// @MODIFY
-        // this._rules.sort(this._sortFn = compareFn || this._sortFn);
+        this._rules.sort(this._sortFn = compareFn || this._sortFn);
     };
     /**
      * Given a URL, check all rules and return the best [[MatchResult]]
