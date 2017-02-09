@@ -1,7 +1,7 @@
 angular.module( 'App.Views' ).config( function( $stateProvider )
 {
 	$stateProvider.state( 'discover.games.view.scores.list', {
-		url: '/scores/{tableId:int}/{type:string}?page',
+		url: '/scores/{tableId:int}/{type:path}?page',
 		controller: 'Discover.Games.View.Scores.ListCtrl',
 		controllerAs: 'listCtrl',
 		templateUrl: require( './list.html' ),

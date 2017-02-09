@@ -1,7 +1,7 @@
 angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvider )
 {
 	// http://development.gamejolt.com/games/tea-time-with-luap-sere-make-the-world-right/soundtracks/download/863
-	$urlRouterProvider.when( '/games/{slug:string}/soundtracks/download/{id:int}', '/games/:slug/:id/download/soundtrack' );
+	$urlRouterProvider.when( '/games/{slug:path}/soundtracks/download/{id:int}', '/games/:slug/:id/download/soundtrack' );
 
 	// TODO: Don't index this page if the game is hidden.
 	$stateProvider.state( 'discover.games.view.download.soundtrack', {
