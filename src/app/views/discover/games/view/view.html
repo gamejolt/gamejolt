@@ -19,9 +19,13 @@
 			</div>
 		</section>
 
+		<!--
+			Don't affic the nav on download pages.
+			It takes a lot of space out vertically when on small browser size.
+		-->
 		<gj-page-header
 			cover-media-item="gameCtrl.game.header_media_item"
-			should-affix-nav="true"
+			should-affix-nav="!$state.includes( 'discover.games.view.download' )"
 			>
 
 			<gj-page-header-cover-buttons>

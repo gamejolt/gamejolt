@@ -402,6 +402,7 @@ export const AppModuleNg1 = angular.module( 'App', [
 	$transitions: TransitionService,
 	$rootScope: ng.IRootScopeService,
 	App: App,
+	Scroll: any,
 ) =>
 {
 	bootstrapFacade( $q, $animate );
@@ -412,6 +413,9 @@ export const AppModuleNg1 = angular.module( 'App', [
 	Registry.setConfig( 'Game', {
 		maxItems: 100,
 	} );
+
+	// Match this to the shell top nav height.
+	Scroll.setOffsetTop( 50 );
 } )
 /**
  * angular-ui-router can't handle redirects between states yet.

@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.SoundtrackCtrl', function(
-	$scope, $sce, $window, $timeout, App, Game_Song, gettextCatalog )
+	$scope, $sce, $window, $timeout, App, Game_Song, Scroll, gettextCatalog )
 {
 	var _this = this;
 
@@ -9,7 +9,11 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.Soundtra
 
 	// If they click away from the page before the download starts, then cancel the download redirect.
 	var shouldDownload = true;
-	var downloadPromise = Game_Song.getSoundtrackDownloadUrl( $scope.gameCtrl.game.id )
+	var downloadPromise = $timeout( 5000 )
+		.then( function()
+		{
+			return Game_Song.getSoundtrackDownloadUrl( $scope.gameCtrl.game.id );
+		} )
 		.then( function( response )
 		{
 			if ( shouldDownload ) {
@@ -23,4 +27,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.Soundtra
 	{
 		shouldDownload = false;
 	} );
+
+	window.setTimeout( function()
+	{
+		Scroll.to( 'page-ad-scroll' );
+	}, 0 );
 } );

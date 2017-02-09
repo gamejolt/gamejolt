@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.BuildCtrl', function(
-	$scope, $sce, $window, $timeout, App, Game, Game_Build, gettextCatalog, payload )
+	$scope, $sce, $window, $timeout, App, Game, Game_Build, Scroll, gettextCatalog, payload )
 {
 	var _this = this;
 
@@ -13,7 +13,11 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.BuildCtr
 
 	// If they click away from the page before the download starts, then cancel the download redirect.
 	var shouldDownload = true;
-	var downloadPromise = this.build.getDownloadUrl()
+	var downloadPromise = $timeout( 5000 )
+		.then( function()
+		{
+			return _this.build.getDownloadUrl();
+		} )
 		.then( function( response )
 		{
 			if ( shouldDownload ) {
@@ -27,4 +31,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.BuildCtr
 	{
 		shouldDownload = false;
 	} );
+
+	window.setTimeout( function()
+	{
+		Scroll.to( 'page-ad-scroll' );
+	}, 0 );
 } );

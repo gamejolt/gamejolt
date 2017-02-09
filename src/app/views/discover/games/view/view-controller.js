@@ -7,6 +7,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	var _this = this;
 
 	$scope.Game = Game;
+	$scope.$state = $state;
 
 	this.isLoaded = false;
 	this.game = Registry.find( 'Game', $transition$.params().id );
