@@ -9,7 +9,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	$scope.Game = Game;
 
 	this.isLoaded = false;
-	this.game = Registry.find( 'Game', $transition.params().id );
+	this.game = Registry.find( 'Game', $transition$.params().id );
 	this.installableBuilds = [];
 	this.browserBuilds = [];
 
@@ -29,9 +29,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		}
 	} );
 
-	console.log( 'bootstrapping view', $transition.params() );
-
-	Api.sendRequest( '/web/discover/games/' + $transition.params().id )
+	Api.sendRequest( '/web/discover/games/' + $transition$.params().id )
 		.then( function( payload )
 		{
 			_this.init( payload );
