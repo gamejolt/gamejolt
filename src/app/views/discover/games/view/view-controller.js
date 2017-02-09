@@ -29,6 +29,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		}
 	} );
 
+	console.log( 'bootstrapping view', $stateParams );
+
 	Api.sendRequest( '/web/discover/games/' + $stateParams.id )
 		.then( function( payload )
 		{
