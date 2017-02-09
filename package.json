@@ -54,6 +54,7 @@
     "tc-angular-chartjs": "1.0.11",
     "ua-parser-js": "0.7.12",
     "game-jolt-frontend-lib": "gamejolt/frontend-lib#master",
+    "bootstrap-stylus": "hworld/bootstrap-stylus#master"
   },
   "optionalDependencies": {
     "appdmg": "^0.3.5"
