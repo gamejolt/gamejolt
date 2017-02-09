@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
-	$scope, $state, $stateParams, $transition$, $injector, $timeout, $document, $position, $location,
+	$scope, $state, $transition$, $injector, $timeout, $document, $position, $location,
 	Environment, App, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
 	Game, Game_Rating, Game_ScoreTable, Comment,
 	Registry, Scroll, Clipboard )
@@ -9,7 +9,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 	$scope.Game = Game;
 
 	this.isLoaded = false;
-	this.game = Registry.find( 'Game', $stateParams.id );
+	this.game = Registry.find( 'Game', $transition.params().id );
 	this.installableBuilds = [];
 	this.browserBuilds = [];
 
@@ -29,9 +29,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		}
 	} );
 
-	console.log( 'bootstrapping view', $stateParams );
+	console.log( 'bootstrapping view', $transition.params() );
 
-	Api.sendRequest( '/web/discover/games/' + $stateParams.id )
+	Api.sendRequest( '/web/discover/games/' + $transition.params().id )
 		.then( function( payload )
 		{
 			_this.init( payload );

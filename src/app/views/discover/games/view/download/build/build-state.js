@@ -7,13 +7,13 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		controllerAs: 'buildCtrl',
 		templateUrl: require( './build.html' ),
 		resolve: {
-			payload: function( Api, $stateParams )
+			payload: function( Api, $transition$ )
 			{
-				return Api.sendRequest( '/web/discover/games/builds/download-page/' + $stateParams.id + '/' + $stateParams.buildId );
+				return Api.sendRequest( '/web/discover/games/builds/download-page/' + $transition$.params().id + '/' + $transition$.params().buildId );
 			},
-			tick: function( tickSource, HistoryTick, $stateParams )
+			tick: function( tickSource, HistoryTick, $transition$ )
 			{
-				HistoryTick.sendBeacon( 'game-build', $stateParams.buildId, { sourceResource: 'Game', sourceResourceId: $stateParams.id } );
+				HistoryTick.sendBeacon( 'game-build', $transition$.params().buildId, { sourceResource: 'Game', sourceResourceId: $transition$.params().id } );
 			},
 		}
 	} );
