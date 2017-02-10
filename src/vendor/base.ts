@@ -4,7 +4,8 @@ import 'core-js/modules/es6.array.find';
 import 'core-js/modules/es6.array.find-index';
 
 import 'core-js/modules/es7.object.values';
-import 'core-js/es7/reflect';
+
+import 'reflect-metadata';
 
 import 'angular';
 import 'angular-sanitize';
