@@ -17,8 +17,8 @@
 		<gj-video-embed
 			ng-if="$ctrl.isShowingVideo"
 			video-provider="youtube"
-			video-id="::$ctrl.video.video_id"
-			autoplay="true"
+			[video-id]="::$ctrl.video.video_id"
+			[autoplay]="true"
 			>
 		</gj-video-embed>
 	</div>

@@ -44,8 +44,8 @@
 	<div ng-switch-when="video" class="full-bleed-xs">
 		<gj-video-embed
 			video-provider="youtube"
-			video-id="::$ctrl.post.videos[0].video_id"
-			autoplay="true"
+			[video-id]="::$ctrl.post.videos[0].video_id"
+			[autoplay]="true"
 			>
 		</gj-video-embed>
 	</div>
