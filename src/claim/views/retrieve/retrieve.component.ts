@@ -49,6 +49,6 @@ export class RouteRetrieveComponent implements OnInit
 
 	onSubmit()
 	{
-		this.$state.go( 'retrieve.sent' );
+		this.$state.go( 'sent-key' );
 	}
 }
