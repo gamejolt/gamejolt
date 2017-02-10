@@ -9,9 +9,10 @@ import * as template from '!html-loader!./chat-pane.component.html';
 })
 export class ShellChatPaneComponent
 {
+	screen = Screen;
+
 	constructor(
 		@Inject( 'Shell' ) public shell: Shell,
-		@Inject( 'Screen' ) public screen: Screen,
 	)
 	{
 	}

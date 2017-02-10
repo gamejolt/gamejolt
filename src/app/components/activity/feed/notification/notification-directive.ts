@@ -21,9 +21,10 @@ export class ActivityFeedNotificationComponent
 	canToggleContent: boolean | undefined = undefined;
 	showFullContent = false;
 
+	screen = Screen;
+
 	constructor(
 		@Inject( 'Notification' ) public notificationModel: typeof Notification,
-		@Inject( 'Screen' ) public screen: Screen
 	)
 	{
 		this.notification = this.item.feedItem as Notification;

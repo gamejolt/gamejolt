@@ -18,12 +18,12 @@ export class ShellTopNavComponent
 	friendRequestCount = 0;
 
 	env = Environment;
+	screen = Screen;
 
 	constructor(
 		@Inject( '$state' ) public $state: StateService,
 		@Inject( 'App' ) public app: App,
 		@Inject( 'Shell' ) public shell: Shell,
-		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'Connection' ) public conn: Connection,
 	)
 	{

@@ -19,10 +19,11 @@ export class RouteGameComponent
 
 	coverIsLoaded = false;
 
+	Screen = Screen;
+
 	constructor(
 		@Inject( '$scope' ) public $scope: ng.IScope,
 		@Inject( '$state' ) public $state: StateService,
-		@Inject( 'Screen' ) public Screen: Screen,
 	)
 	{
 		// For back-compat.

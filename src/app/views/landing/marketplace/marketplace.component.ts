@@ -18,8 +18,9 @@ export class RouteMarketplaceComponent implements OnInit
 	firesidePosts: FiresidePost[];
 	games: any[];
 
+	screen = Screen;
+
 	constructor(
-		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'App' ) public app: App,
 	)
 	{

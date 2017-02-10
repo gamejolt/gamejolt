@@ -16,7 +16,6 @@ export class AppComponent
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( '$state' ) $state: StateService,
 		@Inject( 'App' ) App: App,
-		@Inject( 'Screen' ) Screen: Screen,
 		@Inject( 'HistoryNavigator' ) @Host() @Optional() HistoryNavigator: any,
 	)
 	{

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject } from 'ng-metadata/core';
+import { Component, OnInit, Input } from 'ng-metadata/core';
 import { Transition } from 'angular-ui-router';
 import * as template from '!html-loader!./overview.component.html';
 
@@ -26,12 +26,8 @@ export class RouteOverviewComponent implements OnInit
 	hotGames: any[];
 	posts: ActivityFeedContainer;
 
-	constructor(
-		@Inject( 'Environment' ) public env: Environment,
-		@Inject( 'Screen' ) public screen: Screen,
-	)
-	{
-	}
+	env = Environment;
+	screen = Screen;
 
 	ngOnInit()
 	{

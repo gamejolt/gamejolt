@@ -1,5 +1,5 @@
-import { Component, Inject } from 'ng-metadata/core';
-import { importContext, RequireContextMap } from '../../../../lib/gj-lib-client/utils/utils';
+import { Component } from 'ng-metadata/core';
+import { importContext } from '../../../../lib/gj-lib-client/utils/utils';
 
 import * as template from '!html-loader!./about.component.html';
 
@@ -12,14 +12,11 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 })
 export class RouteAboutComponent
 {
-	assetUrls: RequireContextMap;
+	assetUrls = importContext( require.context( './', false, /\.png$/ ) );
+	screen = Screen;
 
-	constructor(
-		@Inject( 'Screen' ) public screen: Screen,
-	)
+	constructor()
 	{
 		Meta.title = null;
-
-		this.assetUrls = importContext( require.context( './', false, /\.png$/ ) );
 	}
 }

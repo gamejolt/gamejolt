@@ -31,9 +31,10 @@ export class PageHeaderComponent
 	hasNav = false;
 	hasControls = false;
 
+	screen = Screen;
+
 	constructor(
 		@Inject( '$transclude' ) $transclude: any,
-		@Inject( 'Screen' ) public screen: Screen,
 	)
 	{
 		this.hasCoverButtons = $transclude.isSlotFilled( 'coverButtons' );

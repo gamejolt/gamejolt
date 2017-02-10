@@ -28,7 +28,6 @@ export class CoverComponent implements OnChanges
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( '$element' ) $element: ng.IRootElementService,
-		@Inject( 'Screen' ) private screen: Screen,
 	)
 	{
 		this._elem = $element[0];
@@ -53,7 +52,7 @@ export class CoverComponent implements OnChanges
 			}
 		} );
 
-		screen.setResizeSpy( $scope, () =>
+		Screen.setResizeSpy( $scope, () =>
 		{
 			this.setDimensions();
 		} );
@@ -73,7 +72,7 @@ export class CoverComponent implements OnChanges
 
 			// We extend the header to the right and left by 20% on XS since the screen is so small.
 			// This makes sure that we also calculate the height larger.
-			if ( this.screen.isXs ) {
+			if ( Screen.isXs ) {
 				newDimensions.height *= 1.4;
 			}
 

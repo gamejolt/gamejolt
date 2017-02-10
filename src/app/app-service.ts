@@ -6,14 +6,16 @@ import { ModalConfirm } from '../lib/gj-lib-client/components/modal/confirm/conf
 import { User } from '../lib/gj-lib-client/components/user/user.model';
 import { Api } from '../lib/gj-lib-client/components/api/api.service';
 import { getProvider } from '../lib/gj-lib-client/utils/utils';
+import { Screen } from '../lib/gj-lib-client/components/screen/screen-service';
+import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 
 export function attachProvidersApp( $scope: ng.IScope )
 {
 	$scope['$state'] = getProvider<any>( '$state' );
 	$scope['App'] = getProvider<any>( 'App' );
 	$scope['Meta'] = Meta;
-	$scope['Screen'] = getProvider<any>( 'Screen' );
-	$scope['Environment'] = getProvider<any>( 'Environment' );
+	$scope['Screen'] = Screen;
+	$scope['Environment'] = Environment;
 	$scope['Scroll'] = getProvider<any>( 'Scroll' );
 	$scope['Shell'] = getProvider<any>( 'Shell' );
 	$scope['Connection'] = getProvider<any>( 'Connection' );

@@ -39,11 +39,11 @@ export class ShellSidebarComponent implements OnInit
 	};
 
 	env = Environment;
+	screen = Screen;
 
 	constructor(
 		@Inject( '$state' ) public $state: StateService,
 		@Inject( 'Shell' ) public shell: Shell,
-		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'App' ) public app: App,
 		@Inject( 'GameCollection' ) private collectionModel: any,
 		@Inject( 'GamePlaylist_SaveModal' ) private playlistModal: any,

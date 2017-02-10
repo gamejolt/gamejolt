@@ -30,9 +30,10 @@ export class ThumbnailComponent implements OnInit
 	salePercentageOff: string;
 	saleOldPricing: any;
 
+	screen = Screen;
+
 	constructor(
 		@Inject( '$element' ) $element: ng.IAugmentedJQuery,
-		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'App' ) public app: App,
 	)
 	{

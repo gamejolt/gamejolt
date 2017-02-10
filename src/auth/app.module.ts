@@ -10,9 +10,7 @@ import { AppModuleNg1 } from './app.module.ng1';
 
 import ConnectionModule from '../lib/gj-lib-client/components/connection/connection';
 import { ModelModule } from '../lib/gj-lib-client/components/model/model.module';
-import ScreenModule from '../lib/gj-lib-client/components/screen/screen';
 import { EnvironmentModule } from '../lib/gj-lib-client/components/environment/environment.module';
-import ImgHelperModule from '../lib/gj-lib-client/components/img/helper/helper';
 import AuthModule from '../lib/gj-lib-client/components/auth/auth';
 import AuthJoinModule from '../lib/gj-lib-client/components/auth/join/join';
 import AuthLoginModule from '../lib/gj-lib-client/components/auth/login/login';
@@ -25,6 +23,7 @@ import { CoverImgComponent } from './components/cover-img/cover-img.component';
 import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module';
 import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analytics.module';
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
+import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
 
 @NgModule({
 	imports: [
@@ -44,7 +43,6 @@ import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 		RulerModule,
 		ScreenModule,
 		ConnectionModule,
-		ImgHelperModule,
 		AuthModule,
 		AuthJoinModule,
 		AuthLoginModule,

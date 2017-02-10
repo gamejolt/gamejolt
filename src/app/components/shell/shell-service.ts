@@ -30,7 +30,6 @@ export class Shell
 	constructor(
 		@Inject( '$rootScope' ) $rootScope: ng.IRootScopeService,
 		@Inject( 'Backdrop' ) private Backdrop: any,
-		@Inject( 'Screen' ) private screen: Screen,
 		@Inject( 'GameCollection' ) private collectionModel: any,
 		@Inject( 'Settings' ) private settings: any,
 		@Inject( 'BroadcastModal' ) private broadcastModal: BroadcastModal,
@@ -101,7 +100,7 @@ export class Shell
 
 	get isLeftPaneVisible()
 	{
-		if ( this.screen.isDesktop ) {
+		if ( Screen.isDesktop ) {
 			return this._isLeftPaneSticky;
 		}
 
@@ -115,7 +114,7 @@ export class Shell
 
 	toggleLeftPane()
 	{
-		if ( this.screen.isDesktop ) {
+		if ( Screen.isDesktop ) {
 			this._isLeftPaneSticky = !this._isLeftPaneSticky;
 		}
 		else {
@@ -140,7 +139,7 @@ export class Shell
 
 	private shouldShowLeftPaneBackdrop()
 	{
-		return this._isLeftPaneOverlayed && this.screen.isMobile;
+		return this._isLeftPaneOverlayed && Screen.isMobile;
 	}
 
 	private checkBackdrop()

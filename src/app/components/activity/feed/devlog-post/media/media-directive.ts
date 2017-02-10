@@ -28,17 +28,18 @@ export class ActivityFeedDevlogPostMediaComponent implements AfterViewInit
 	isWaitingForFrame = false;
 	sliderElem: HTMLElement;
 
+	screen = Screen;
+
 	constructor(
 		@Inject( '$element' ) private $element: ng.IAugmentedJQuery,
 		@Inject( '$window' ) private $window: ng.IWindowService,
 		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: ActivityFeedComponent,
 	)
 	{
 		this.post = this.item.feedItem as FiresidePost;
 		this.activeMediaItem = this.post.media[0];
-		screen.setResizeSpy( $scope, () => this._updateSliderOffset() );
+		Screen.setResizeSpy( $scope, () => this._updateSliderOffset() );
 	}
 
 	ngAfterViewInit()

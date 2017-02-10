@@ -14,9 +14,10 @@ export class HeroComponent
 	webm: string;
 	mp4: string;
 
+	screen = Screen;
+
 	constructor(
 		@Inject( '$sce' ) $sce: ng.ISCEService,
-		@Inject( 'Screen' ) public screen: Screen
 	)
 	{
 		this.game = this.item.game;

@@ -37,13 +37,13 @@ export class ActivityFeedDevlogPostControlsComponent implements OnInit
 	sharePopoverId: string;
 
 	env = Environment;
+	screen = Screen;
 	firesidePostModel = FiresidePost;
 
 	constructor(
 		@Inject( '$state' ) $state: StateService,
 		@Inject( 'App' ) public app: App,
 		@Inject( 'Clipboard' ) private clipboard: Clipboard,
-		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'DevlogPostEdit' ) private editService: DevlogPostEdit,
 	)
 	{
@@ -69,7 +69,7 @@ export class ActivityFeedDevlogPostControlsComponent implements OnInit
 		// We just scroll to the comments.
 		// this.scroll.to( 'comments' );
 
-		if ( this.tab == 'comments' && !this.requireTabs ) {
+		if ( this.tab === 'comments' && !this.requireTabs ) {
 			this.tab = undefined;
 		}
 		else {
@@ -83,7 +83,7 @@ export class ActivityFeedDevlogPostControlsComponent implements OnInit
 
 	toggleLikes()
 	{
-		if ( this.tab == 'likes' && !this.requireTabs ) {
+		if ( this.tab === 'likes' && !this.requireTabs ) {
 			this.tab = undefined;
 		}
 		else {
@@ -94,7 +94,7 @@ export class ActivityFeedDevlogPostControlsComponent implements OnInit
 			this.onExpand.emit( undefined );
 		}
 
-		if ( this.tab == 'likes' ) {
+		if ( this.tab === 'likes' ) {
 			this.loadLikes();
 		}
 	}

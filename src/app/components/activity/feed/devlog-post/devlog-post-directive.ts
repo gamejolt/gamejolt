@@ -19,21 +19,22 @@ export class ActivityFeedDevlogPostComponent
 	post: FiresidePost;
 	icon: string;
 
+	screen = Screen;
+
 	constructor(
-		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'DevlogPostViewModal' ) private viewModal: DevlogPostViewModal,
 		@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: ActivityFeedComponent,
 	)
 	{
 		this.post = this.item.feedItem as FiresidePost;
 
-		if ( this.post.type == 'text' ) {
+		if ( this.post.type === 'text' ) {
 			this.icon = 'blog-article';
 		}
-		else if ( this.post.type == 'media' ) {
+		else if ( this.post.type === 'media' ) {
 			this.icon = 'screenshot';
 		}
-		else if ( this.post.type == 'video' ) {
+		else if ( this.post.type === 'video' ) {
 			this.icon = 'video';
 		}
 	}

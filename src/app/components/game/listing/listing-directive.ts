@@ -23,10 +23,10 @@ export class ListingComponent
 
 	state: string;
 	env = Environment;
+	screen = Screen;
 
 	constructor(
 		@Inject( '$state' ) $state: StateService,
-		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'Scroll' ) public scroll: any,
 	)
 	{

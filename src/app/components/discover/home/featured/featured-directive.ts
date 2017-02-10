@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from 'ng-metadata/core';
+import { Component, Input } from 'ng-metadata/core';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import * as template from '!html-loader!./featured.html';
 
@@ -12,9 +12,9 @@ export class FeaturedComponent
 
 	itemsSmUp: any[];
 
-	constructor(
-		@Inject( 'Screen' ) public screen: Screen
-	)
+	screen = Screen;
+
+	constructor()
 	{
 		this.itemsSmUp = this.items.slice( 2 );
 	}

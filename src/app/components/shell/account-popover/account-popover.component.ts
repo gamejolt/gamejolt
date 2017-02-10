@@ -20,10 +20,10 @@ export class ShellAccountPopoverComponent
 
 	Client?: any;
 	env = Environment;
+	screen = Screen;
 
 	constructor(
 		@Inject( 'App' ) public app: App,
-		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( 'User_TokenModal' ) private User_TokenModal: any,
 		@Inject( 'Connection' ) public conn: Connection,
 	)

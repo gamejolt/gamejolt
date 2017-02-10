@@ -27,16 +27,17 @@ export class GridComponent implements OnInit, OnChanges
 	static idCounter = 0;
 	id = ++GridComponent.idCounter;
 
+	screen = Screen;
+
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( 'Scroll' ) public scroll: any,
-		@Inject( 'Screen' ) public screen: Screen,
 		@Inject( '$stateParams' ) $stateParams: StateParams,
 	)
 	{
 		this.currentPage = $stateParams['page'] || 1;
 
-		$scope.$watch( () => this.screen.breakpoint, () => this.truncate() );
+		$scope.$watch( () => Screen.breakpoint, () => this.truncate() );
 	}
 
 	ngOnInit()

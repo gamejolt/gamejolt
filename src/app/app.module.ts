@@ -11,7 +11,6 @@ import { AppModuleNg1 } from './app.module.ng1';
 import ConnectionModule from '../lib/gj-lib-client/components/connection/connection';
 import ConnectionStatePermissionsModule from '../lib/gj-lib-client/components/connection/state-permissions/state-permissions';
 import { ModelModule } from '../lib/gj-lib-client/components/model/model.module';
-import ScreenModule from '../lib/gj-lib-client/components/screen/screen';
 import LoadModule from '../lib/gj-lib-client/components/load/load';
 import LocationModule from '../lib/gj-lib-client/components/location/location';
 import ClipboardModule from '../lib/gj-lib-client/components/clipboard/clipboard';
@@ -31,11 +30,8 @@ import { YoutubeChannelModule } from '../lib/gj-lib-client/components/youtube/ch
 import CommentVideoLightboxModule from '../lib/gj-lib-client/components/comment/video/lightbox/lightbox';
 import CommentVideoThumbnailModule from '../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import GameThumbnailImgModule from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import ImgHelperModule from '../lib/gj-lib-client/components/img/helper/helper';
-import ImgResponsiveModule from '../lib/gj-lib-client/components/img/responsive/responsive';
 import ResponsiveDimensionsModule from '../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
 import VideoModule from '../lib/gj-lib-client/components/video/video';
-import VideoEmbedModule from '../lib/gj-lib-client/components/video/embed/embed';
 import { FiresidePostModule } from '../lib/gj-lib-client/components/fireside/post/post.module';
 import { FiresidePostTagModule } from '../lib/gj-lib-client/components/fireside/post/tag/tag.module';
 import { FiresidePostVideoModule } from '../lib/gj-lib-client/components/fireside/post/video/video.module';
@@ -71,7 +67,6 @@ import FiresidePostListModule from './components/fireside/post/list/list';
 import GameModLinksModule from './components/game/mod-links/mod-links';
 import CountdownModule from '../lib/gj-lib-client/components/countdown/countdown';
 import LoadingFadeModule from '../lib/gj-lib-client/components/loading/fade/fade';
-import SketchfabEmbedModule from '../lib/gj-lib-client/components/sketchfab/embed/embed';
 import { GameSketchfabModule } from '../lib/gj-lib-client/components/game/sketchfab/sketchfab.module';
 import WidgetCompilerModule from '../lib/gj-lib-client/components/widget-compiler/widget-compiler';
 import { PopoverModule } from '../lib/gj-lib-client/components/popover/popover.module';
@@ -97,6 +92,10 @@ import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module'
 import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analytics.module';
 import { AdModule } from '../lib/gj-lib-client/components/ad/ad.module';
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
+import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
+import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive';
+import { VideoEmbedModule } from '../lib/gj-lib-client/components/video/embed/embed.module';
+import { SketchfabEmbedModule } from '../lib/gj-lib-client/components/sketchfab/embed/embed.module';
 
 @NgModule({
 	imports: [
@@ -147,7 +146,6 @@ import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 		YoutubeSdkModule,
 		YoutubeSubscribeModule,
 		FiresidePostLikeWidgetModule,
-		ImgHelperModule,
 		ImgResponsiveModule,
 		ResponsiveDimensionsModule,
 		WidgetCompilerModule,
