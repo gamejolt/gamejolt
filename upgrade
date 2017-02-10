@@ -1,6 +1,7 @@
 [ ] Header spot doesn't disappear when clearing header
-[ ] Processing doesn't go away from upload-control after it's done
 [ ] Retrying a failed page ruins the URL: http://localhost:8080/error-offline?retryUrl=%2Fradio
+[ ] Test other trackers for analytics
+[ ] Price tag filtering isn't showing consistently
 
 [ ] Game api docs
 [ ] Including jquery twice in prod build
@@ -20,6 +21,8 @@ Eventually
 [ ] urlRouter deprecated
 [ ] Upgrade chartjs
 
+[x] Fix Location service using Meta
+[x] Processing doesn't go away from upload-control after it's done
 [x] Can't play game from header: http://localhost:8080/games/emul8/158947
 [x] Check to make sure progress polling works for upload promises
 [x] Finish out the gameserver, or it will break when pushed
