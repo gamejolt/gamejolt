@@ -11,7 +11,7 @@ angular.module( 'App.Views' ).config( ( $urlMatcherFactoryProvider: any ) =>
 } );
 
 makeState( 'key', {
-	url: '/{key:keyCode}/{bundleGameId:int}?thanks',
+	url: '/claim/{key:keyCode}/{bundleGameId:int}?thanks',
 	lazyLoad: () => $import( './key.module' ),
 	params: {
 		bundleGameId: {

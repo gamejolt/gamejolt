@@ -11,7 +11,7 @@ angular.module( 'App.Views' ).config( ( $urlMatcherFactoryProvider: any ) =>
 } );
 
 makeState( 'retrieve', {
-	url: '/{input:retrieveKey}',
+	url: '/claim/{input:retrieveKey}',
 	lazyLoad: () => $import( './retrieve.module' ),
 	params: {
 		input: {
