@@ -34,10 +34,12 @@
     "angular-sanitize": "1.5.8",
     "angular-ui-router": "1.0.0-rc.1",
     "angular-ui-tree": "2.22.2",
+    "bootstrap-stylus": "hworld/bootstrap-stylus#master",
     "chart.js": "1.0.2",
     "core-js": "2.4.1",
     "decompress-zip": "^0.2.0",
     "favico.js": "0.3.10",
+    "game-jolt-frontend-lib": "gamejolt/frontend-lib#master",
     "hammerjs": "2.0.8",
     "jquery": "3.1.1",
     "jquery-jcrop": "0.9.13",
@@ -49,12 +51,16 @@
     "nw-builder": "gamejolt/nw-builder#skip-merge-app",
     "oclazyload": "1.0.9",
     "pofile": "^1.0.2",
+    "reflect-metadata": "0.1.9",
     "rxjs": "5.0.3",
     "spectrum-colorpicker": "1.8.0",
     "tc-angular-chartjs": "1.0.11",
     "ua-parser-js": "0.7.12",
-    "game-jolt-frontend-lib": "gamejolt/frontend-lib#master",
-    "bootstrap-stylus": "hworld/bootstrap-stylus#master"
+    "vue": "2.1.10",
+    "vue-class-component": "4.4.0",
+    "vue-property-decorator": "3.4.0",
+    "vue-shortkey": "2.0.9",
+    "vue-touch": "2.0.0-beta.4"
   },
   "optionalDependencies": {
     "appdmg": "^0.3.5"
