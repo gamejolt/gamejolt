@@ -7,6 +7,7 @@ import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service
 import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 
 interface DiscoverSection {
 	title: string;
@@ -40,6 +41,9 @@ export class RouteHomeComponent implements OnInit
 
 	discoverSections: DiscoverSection[];
 	chosenSection: DiscoverSection;
+
+	Environment = Environment;
+	Screen = Screen;
 
 	constructor(
 		@Inject( '$state' ) private $state: StateService,

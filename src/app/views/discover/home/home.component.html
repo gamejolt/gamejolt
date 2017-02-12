@@ -69,10 +69,12 @@
 	</div>
 </section>-->
 
+<section class="section section-thin" ng-if="!$ctrl.Environment.isClient && !$ctrl.Screen.isXs">
+	<gj-ad ad-size="leaderboard" ></gj-ad>
+</section>
+
 <section class="section">
 	<div class="container-lg">
-
-		<br>
 
 		<h1 class="section-header text-center">
 			<a class="link-unstyled"
