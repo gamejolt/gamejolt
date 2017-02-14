@@ -90,12 +90,11 @@
 
 			<div ng-if="!editCtrl.isLoadingPreview">
 				<gj-game-package-card
-					game="::manageCtrl.game"
-					sellable="editCtrl.previewSellable"
-					game-package="editCtrl.package"
-					game-releases="editCtrl.previewPackage._releases"
-					game-builds="editCtrl.previewPackage._builds"
-					game-build-launch-options="editCtrl.previewData.launchOptions"
+					[game]="::manageCtrl.game"
+					[sellable]="editCtrl.previewSellable"
+					[package]="editCtrl.package"
+					[releases]="editCtrl.previewPackage._releases"
+					[builds]="editCtrl.previewPackage._builds"
 					>
 				</gj-game-package-card>
 

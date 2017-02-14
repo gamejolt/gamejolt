@@ -142,16 +142,15 @@
 						<div ng-if="::overviewCtrl.packages.length">
 							<gj-game-package-card
 								ng-repeat="package in overviewCtrl.packages"
-								game="::gameCtrl.game"
-								sellable="::package._sellable"
-								game-package="::package"
-								game-releases="::package._releases"
-								game-builds="::package._builds"
-								game-build-launch-options="::overviewCtrl.launchOptions"
-								is-partner="::!!gameCtrl.userPartnerKey"
-								partner-referred-key="::overviewCtrl.partnerReferredKey"
-								partner-referred-by="::overviewCtrl.partnerReferredBy"
-								partner-no-cut="::overviewCtrl.partnerNoCut"
+								[game]="::gameCtrl.game"
+								[sellable]="::package._sellable"
+								[package]="::package"
+								[releases]="::package._releases"
+								[builds]="::package._builds"
+								[is-partner]="::!!gameCtrl.userPartnerKey"
+								[partner-referred-key]="::overviewCtrl.partnerReferredKey"
+								[partner-referred-by]="::overviewCtrl.partnerReferredBy"
+								[partner-no-cut]="::overviewCtrl.partnerNoCut"
 								>
 							</gj-game-package-card>
 						</div>

@@ -1,3 +1,5 @@
+var GamePackagePayloadModel = require( '../../../../../../../../../lib/gj-lib-client/components/game/package/package-payload.model' ).GamePackagePayloadModel;
+
 angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.Game.Packages.EditCtrl', function(
 	$scope, $state, Api, App, Game_Package, Game_Release, Sellable, ModalConfirm, Growls, gettextCatalog, packagePayload, $timeout )
 {
@@ -34,7 +36,7 @@ angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.M
 			.then( function( response )
 			{
 				// We pull all new stuff for the preview so that we don't step on the form.
-				_this.previewData = Game_Package.processPackagePayload( response );
+				_this.previewData = new GamePackagePayloadModel( response );
 				_this.previewSellable = response.sellable ? new Sellable( response.sellable ) : null;
 				_this.previewPackage = _.find( _this.previewData.packages, { id: _this.package.id } );
 				_this.buildsProcessingCount = response.buildsProcessingCount || 0;

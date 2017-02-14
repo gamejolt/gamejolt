@@ -1,3 +1,5 @@
+var GamePackagePayloadModel = require( '../../../../lib/gj-lib-client/components/game/package/package-payload.model' ).GamePackagePayloadModel;
+
 angular.module( 'App.Client.InstallPackageModal' ).controller( 'Client_InstallPackageModalCtrl', function(
 	$scope, $modalInstance, Api, Device, Client_Library, Game, Game_Package, game )
 {
@@ -9,7 +11,7 @@ angular.module( 'App.Client.InstallPackageModal' ).controller( 'Client_InstallPa
 	Api.sendRequest( '/web/discover/games/packages/' + game.id )
 		.then( function( payload )
 		{
-			var packageData = Game_Package.processPackagePayload( payload );
+			var packageData = new GamePackagePayloadModel( payload );
 			angular.extend( _this, packageData );
 
 			var os = Device.os();

@@ -82,13 +82,12 @@
 	<div class="packages-list" ng-if="$ctrl.packagePayload.packages.length">
 		<gj-game-package-card
 			ng-repeat="package in $ctrl.packagePayload.packages"
-			game="::$ctrl.game"
-			sellable="::package._sellable"
-			game-package="::package"
-			game-releases="::package._releases"
-			game-builds="::package._builds"
-			game-build-launch-options="::$ctrl.packagePayload.launchOptions"
-			key="{{ $ctrl.key }}"
+			[game]="::$ctrl.game"
+			[sellable]="::package._sellable"
+			[package]="::package"
+			[releases]="::package._releases"
+			[builds]="::package._builds"
+			[key]="$ctrl.key"
 			>
 		</gj-game-package-card>
 	</div>

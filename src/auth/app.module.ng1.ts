@@ -7,7 +7,7 @@ import { App } from './app-service';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 
-import '../lib/gj-lib-client/components/translate/translate';
+import '../lib/gj-lib-client/components/translate/translate.module';
 import '../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
 import '../lib/gj-lib-client/components/error/error-module';
 import '../lib/gj-lib-client/components/body-classes/body-classes';

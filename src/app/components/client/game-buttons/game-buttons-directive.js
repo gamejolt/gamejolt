@@ -1,3 +1,5 @@
+var GamePackagePayloadModel = require( '../../../../lib/gj-lib-client/components/game/package/package-payload.model' ).GamePackagePayloadModel;
+
 angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', function()
 {
 	return {
@@ -87,7 +89,7 @@ angular.module( 'App.Client.GameButtons' ).directive( 'gjClientGameButtons', fun
 					this.packageDataPromise = Api.sendRequest( '/web/discover/games/packages/' + _this.game.id )
 						.then( function( payload )
 						{
-							var packageData = Game_Package.processPackagePayload( payload );
+							var packageData = new GamePackagePayloadModel( payload );
 							packageData.installableBuilds = Game.pluckInstallableBuilds( packageData.packages, os, arch );
 
 							return packageData;

@@ -98,7 +98,9 @@ import { GameVideoModule } from '../lib/gj-lib-client/components/game/video/vide
 import { ReferrerModule } from '../lib/gj-lib-client/components/referrer/referrer.module';
 import { HistoryTickModule } from '../lib/gj-lib-client/components/history-tick/history-tick.module';
 import { PartnerReferralModule } from '../lib/gj-lib-client/components/partner-referral/partner-referral.module';
+import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
 import { WidgetCompilerModule } from '../lib/gj-lib-client/components/widget-compiler/widget-compiler.module';
+import { GamePackageCardModule } from '../lib/gj-lib-client/components/game/package/card/card.module';
 
 @NgModule({
 	imports: [
@@ -199,7 +201,9 @@ import { WidgetCompilerModule } from '../lib/gj-lib-client/components/widget-com
 		SellablePricingModule,
 		PrimusModule,
 		ReferrerModule,
+		GeoModule,
 		AdModule,
+		GamePackageCardModule,
 		AppModuleNg1,
 	],
 	declarations: [

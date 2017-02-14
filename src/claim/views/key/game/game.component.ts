@@ -4,9 +4,9 @@ import * as template from '!html-loader!./game.component.html';
 
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { GamePackage, GamePackagePayload } from '../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { App } from '../../../app-service';
+import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 
 @Component({
 	selector: 'route-key-game',
@@ -29,7 +29,7 @@ export class RouteGameComponent implements OnInit
 	keyGroup?: any;
 	linkedKeys: any[] = [];
 
-	packagePayload: GamePackagePayload;
+	packagePayload: GamePackagePayloadModel;
 
 	env = Environment;
 
@@ -65,7 +65,7 @@ export class RouteGameComponent implements OnInit
 		this.linkedKeys = this.LinkedKey.populate( this.payload.linkedKeys );
 
 		if ( this.payload.packages && this.payload.packages.length ) {
-			this.packagePayload = GamePackage.processPackagePayload( this.payload );
+			this.packagePayload = new GamePackagePayloadModel( this.payload );
 		}
 	}
 

@@ -1,3 +1,5 @@
+var GamePackagePayloadModel = require( '../../../../../../lib/gj-lib-client/components/game/package/package-payload.model' ).GamePackagePayloadModel;
+
 angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', function(
 	$scope, $stateParams, $transition$, App, Meta, Game, Game_Screenshot, Game_Song, Game_Video, GameSketchfab, Game_NewsArticle, Fireside_Post,
 	Game_Package, Game_Release, Game_Build, Game_Build_LaunchOption, User, Environment,
@@ -114,8 +116,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		this.videoComments = Comment_Video.populate( payload.videoComments );
 		this.videoCommentsCount = payload.videoCommentsCount || 0;
 
-		var packageData = Game_Package.processPackagePayload( payload );
-		angular.extend( this, packageData );
+		var packageData = new GamePackagePayloadModel( payload );
+		Object.assign( this, packageData );
 
 		var os = Device.os();
 		var arch = Device.arch();

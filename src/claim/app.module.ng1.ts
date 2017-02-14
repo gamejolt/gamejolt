@@ -7,9 +7,8 @@ import { App } from './app-service';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 
-import '../lib/gj-lib-client/components/translate/translate';
+import '../lib/gj-lib-client/components/translate/translate.module';
 import '../lib/gj-lib-client/components/error/error-module';
-import '../lib/gj-lib-client/components/geo/geo-module';
 import '../lib/gj-lib-client/components/body-classes/body-classes';
 import '../lib/gj-lib-client/components/loading/loading';
 import '../lib/gj-lib-client/components/scroll/scroll';
@@ -29,7 +28,6 @@ import '../lib/gj-lib-client/components/filesize/filesize';
 import '../lib/gj-lib-client/components/currency/currency';
 import '../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import '../lib/gj-lib-client/components/time/time';
-import '../lib/gj-lib-client/components/game/package/card/card';
 import '../lib/gj-lib-client/components/game/downloader/downloader';
 
 export const AppModuleNg1 = angular.module( 'App', [
@@ -65,7 +63,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.KeyGroup',
 	'gj.Filesize',
 	'gj.Time',
-	'gj.Game.Package.Card',
 	'gj.Game.Downloader',
 ] )
 /*@ngInject*/

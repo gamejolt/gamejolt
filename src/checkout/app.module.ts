@@ -24,6 +24,7 @@ import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
 import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive';
 import { ReferrerModule } from '../lib/gj-lib-client/components/referrer/referrer.module';
+import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
 
 @NgModule({
 	imports: [
@@ -48,6 +49,7 @@ import { ReferrerModule } from '../lib/gj-lib-client/components/referrer/referre
 		SellableModule,
 		SellablePricingModule,
 		ReferrerModule,
+		GeoModule,
 		AppModuleNg1,
 	],
 	declarations: [

@@ -40,6 +40,8 @@ import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/respons
 import { ReferrerModule } from '../lib/gj-lib-client/components/referrer/referrer.module';
 import { HistoryTickModule } from '../lib/gj-lib-client/components/history-tick/history-tick.module';
 import { PartnerReferralModule } from '../lib/gj-lib-client/components/partner-referral/partner-referral.module';
+import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
+import { GamePackageCardModule } from '../lib/gj-lib-client/components/game/package/card/card.module';
 
 const ViewsModule = angular.module( 'App.Views', [] ).name;
 importContext( require.context( './views', true, /\.state\.ts$/ ) );
@@ -83,6 +85,8 @@ importContext( require.context( './views', true, /\.state\.ts$/ ) );
 		PartnerReferralModule,
 		CardModule,
 		ReferrerModule,
+		GeoModule,
+		GamePackageCardModule,
 		AppModuleNg1,
 	],
 	declarations: [

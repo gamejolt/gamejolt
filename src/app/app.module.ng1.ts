@@ -9,9 +9,8 @@ import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.s
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
 
-import '../lib/gj-lib-client/components/translate/translate';
+import '../lib/gj-lib-client/components/translate/translate.module';
 import '../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
-import '../lib/gj-lib-client/components/geo/geo-module';
 import '../lib/gj-lib-client/components/error/error-module';
 import '../lib/gj-lib-client/components/filesize/filesize';
 import '../lib/gj-lib-client/components/time/time';
@@ -64,7 +63,6 @@ import '../lib/gj-lib-client/components/order/item/item';
 import '../lib/gj-lib-client/components/order/payment/payment';
 import '../lib/gj-lib-client/components/order/payment/refund/refund';
 import '../lib/gj-lib-client/components/order/address/address';
-import '../lib/gj-lib-client/components/game/package/card/card';
 import '../lib/gj-lib-client/components/game/downloader/downloader';
 import '../lib/gj-lib-client/components/game/key-pool/key-pool';
 import '../lib/gj-lib-client/components/jam/jam-module';
@@ -209,7 +207,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Order.Payment',
 	'gj.Order.Payment.Refund',
 	'gj.Order.Address',
-	'gj.Game.Package.Card',
 	'gj.Game.Downloader',
 	'gj.Game.KeyPool',
 	'gj.Jam',
@@ -403,7 +400,7 @@ export const AppModuleNg1 = angular.module( 'App', [
 	Payload.initAngular( App, $transitions );
 	Analytics.initAngular( $rootScope );
 	Meta.initAngular( $rootScope );
-	Referrer.init();
+	Referrer.initAngular( $rootScope );
 
 	Registry.setConfig( 'Game', {
 		maxItems: 100,
