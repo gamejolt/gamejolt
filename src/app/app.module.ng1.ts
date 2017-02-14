@@ -201,8 +201,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Comment.Widget',
 	'gj.Subscription',
 	'gj.Game.Rating',
-	'gj.Game.Screenshot',
-	'gj.Game.Video',
 	'gj.Game.Song',
 	'gj.KeyGroup',
 	'gj.Game.NewsArticle',

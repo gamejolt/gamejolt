@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject, Input } from 'ng-metadata/core';
 import * as template from '!html-loader!./media.component.html';
 
-// import { App } from '../../../../../../../app-service';
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Clipboard } from '../../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
@@ -11,6 +10,8 @@ import { Loader } from '../../../../../../../../lib/gj-lib-client/components/loa
 import { Game } from '../../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { MediaItem } from '../../../../../../../../lib/gj-lib-client/components/media-item/media-item-model';
 import { Environment } from '../../../../../../../../lib/gj-lib-client/components/environment/environment.service';
+import { GameVideo } from '../../../../../../../../lib/gj-lib-client/components/game/video/video.model';
+import { GameScreenshot } from '../../../../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
 
 /**
  * Note that we modify media items in place.
@@ -27,7 +28,7 @@ export class RouteMediaComponent implements OnInit
 
 	@Input() game: Game;
 	@Input() isWizard: boolean;
-	@Input() mediaItems: MediaItem[];
+	@Input() mediaItems: (GameScreenshot | GameVideo | GameSketchfab)[];
 
 	addTab: 'image' | 'video' | 'sketchfab' = 'image';
 	activeItem: any = null;
@@ -37,8 +38,6 @@ export class RouteMediaComponent implements OnInit
 	Environment = Environment;
 
 	constructor(
-		@Inject( 'Game_Screenshot' ) private gameScreenshotModel: any,
-		@Inject( 'Game_Video' ) private gameVideoModel: any,
 		@Inject( 'ModalConfirm' ) private confirm: ModalConfirm,
 		@Inject( 'Clipboard' ) public clipboard: Clipboard,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
@@ -64,13 +63,16 @@ export class RouteMediaComponent implements OnInit
 	private _instantiateMediaItem( item: any )
 	{
 		if ( item.media_type == 'image' ) {
-			return new this.gameScreenshotModel( item );
+			return new GameScreenshot( item );
 		}
 		else if ( item.media_type == 'video' ) {
-			return new this.gameVideoModel( item );
+			return new GameVideo( item );
 		}
 		else if ( item.media_type == 'sketchfab' ) {
 			return new GameSketchfab( item );
+		}
+		else {
+			throw new Error( `Invalid media item type.` );
 		}
 	}
 

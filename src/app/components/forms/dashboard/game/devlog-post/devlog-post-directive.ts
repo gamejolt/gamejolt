@@ -1,8 +1,9 @@
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Loader } from '../../../../../../lib/gj-lib-client/components/loader/loader.service';
+import { GameVideo } from '../../../../../../lib/gj-lib-client/components/game/video/video.model';
 
-DevlogPostFormFactory.$inject = [ 'Form', 'KeyGroup', 'Game_Video' ];
-export function DevlogPostFormFactory( Form: any, KeyGroup: any, Game_Video: any )
+DevlogPostFormFactory.$inject = [ 'Form', 'KeyGroup' ];
+export function DevlogPostFormFactory( Form: any, KeyGroup: any )
 {
 	const form = new Form( {
 		model: 'Fireside_Post',
@@ -12,7 +13,7 @@ export function DevlogPostFormFactory( Form: any, KeyGroup: any, Game_Video: any
 	form.onInit = function( scope: any )
 	{
 		scope.Fireside_Post = FiresidePost;
-		scope.Game_Video = Game_Video;
+		scope.GameVideo = GameVideo;
 
 		scope.Loader = Loader;
 		Loader.load( 'upload' );

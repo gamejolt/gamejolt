@@ -96,6 +96,8 @@ import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.modu
 import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive';
 import { VideoEmbedModule } from '../lib/gj-lib-client/components/video/embed/embed.module';
 import { SketchfabEmbedModule } from '../lib/gj-lib-client/components/sketchfab/embed/embed.module';
+import { GameScreenshotModule } from '../lib/gj-lib-client/components/game/screenshot/screenshot.module';
+import { GameVideoModule } from '../lib/gj-lib-client/components/game/video/video.module';
 
 @NgModule({
 	imports: [
@@ -184,6 +186,8 @@ import { SketchfabEmbedModule } from '../lib/gj-lib-client/components/sketchfab/
 		BroadcastModalModule,
 		UserModule,
 		GameModule,
+		GameScreenshotModule,
+		GameVideoModule,
 		GameBuildModule,
 		GameBuildFileModule,
 		GameBuildLaunchOptionModule,
