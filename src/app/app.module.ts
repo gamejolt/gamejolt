@@ -66,7 +66,6 @@ import GameModLinksModule from './components/game/mod-links/mod-links';
 import CountdownModule from '../lib/gj-lib-client/components/countdown/countdown';
 import LoadingFadeModule from '../lib/gj-lib-client/components/loading/fade/fade';
 import { GameSketchfabModule } from '../lib/gj-lib-client/components/game/sketchfab/sketchfab.module';
-import WidgetCompilerModule from '../lib/gj-lib-client/components/widget-compiler/widget-compiler';
 import { PopoverModule } from '../lib/gj-lib-client/components/popover/popover.module';
 import { MediaItemModule } from '../lib/gj-lib-client/components/media-item/media-item.module';
 import { ApiModule } from '../lib/gj-lib-client/components/api/api.module';
@@ -99,6 +98,7 @@ import { GameVideoModule } from '../lib/gj-lib-client/components/game/video/vide
 import { ReferrerModule } from '../lib/gj-lib-client/components/referrer/referrer.module';
 import { HistoryTickModule } from '../lib/gj-lib-client/components/history-tick/history-tick.module';
 import { PartnerReferralModule } from '../lib/gj-lib-client/components/partner-referral/partner-referral.module';
+import { WidgetCompilerModule } from '../lib/gj-lib-client/components/widget-compiler/widget-compiler.module';
 
 @NgModule({
 	imports: [

@@ -105,13 +105,23 @@
 		</a>
 
 		<div gj-expand-when="ctrl.showingParent">
-			<div ng-if="::ctrl.parent" class="forum-post-body forum-post-body-quoted" gj-widget-compiler-bind="::ctrl.parent.content_compiled"></div>
+			<div ng-if="::ctrl.parent" class="forum-post-body forum-post-body-quoted">
+				<gj-widget-compiler
+					[content]="::ctrl.parent.content_compiled"
+					>
+				</gj-widget-compiler>
+			</div>
 			<p ng-if="::!ctrl.parent"><strong translate>Post removed.</strong></p>
 			<hr>
 		</div>
 
 		<div ng-if="!ctrl.isEditing">
-			<div class="forum-post-body" gj-widget-compiler-bind="::ctrl.post.content_compiled"></div>
+			<div class="forum-post-body">
+				<gj-widget-compiler
+					[content]="::ctrl.post.content_compiled"
+					>
+				</gj-widget-compiler>
+			</div>
 		</div>
 
 		<div ng-if="ctrl.isEditing">

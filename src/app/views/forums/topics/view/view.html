@@ -179,7 +179,12 @@
 							fade-collapse-is-open="viewCtrl.showFullDescription"
 							fade-collapse-is-required="viewCtrl.canToggleDescription"
 							>
-							<div class="forum-post-body" gj-widget-compiler-bind="viewCtrl.topic.main_post.content_compiled"></div>
+							<div class="forum-post-body">
+								<gj-widget-compiler
+									[content]="viewCtrl.topic.main_post.content_compiled"
+									>
+								</gj-widget-compiler>
+							</div>
 						</gj-fade-collapse>
 
 						<a class="hidden-text-expander"
@@ -193,7 +198,12 @@
 						No fade collapse on first page.
 					-->
 					<div ng-if="viewCtrl.currentPage <= 1">
-						<div class="forum-post-body" gj-widget-compiler-bind="viewCtrl.topic.main_post.content_compiled"></div>
+						<div class="forum-post-body">
+							<gj-widget-compiler
+								[content]="viewCtrl.topic.main_post.content_compiled"
+								>
+							</gj-widget-compiler>
+						</div>
 					</div>
 				</div>
 

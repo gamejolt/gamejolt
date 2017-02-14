@@ -106,7 +106,10 @@
 			<hr class="underbar">
 
 			<div class="fireside-post-body">
-				<div gj-widget-compiler-bind="$ctrl.post.content_compiled"></div>
+				<gj-widget-compiler
+					[content]="$ctrl.post.content_compiled"
+					>
+				</gj-widget-compiler>
 			</div>
 
 			<hr class="underbar">

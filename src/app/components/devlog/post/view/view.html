@@ -9,7 +9,10 @@
 <div ng-switch="$ctrl.post.type">
 
 	<div ng-switch-when="text" class="fireside-post-body">
-		<div gj-widget-compiler-bind="::$ctrl.post.content_compiled"></div>
+		<gj-widget-compiler
+			[content]="::$ctrl.post.content_compiled"
+			>
+		</gj-widget-compiler>
 	</div>
 
 	<div ng-switch-when="media" class="full-bleed-xs">
