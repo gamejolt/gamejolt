@@ -6,6 +6,7 @@ import { Payload } from '../lib/gj-lib-client/components/payload/payload-service
 import { App } from './app-service';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
+import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
 
 import '../lib/gj-lib-client/components/translate/translate';
 import '../lib/gj-lib-client/components/error/error-module';
@@ -138,5 +139,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	Payload.initAngular( App, $transitions );
 	Analytics.initAngular( $rootScope );
 	Meta.initAngular( $rootScope );
+	Referrer.init();
 } )
 .name;

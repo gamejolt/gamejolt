@@ -23,6 +23,7 @@ import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analy
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
 import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive';
+import { ReferrerModule } from '../lib/gj-lib-client/components/referrer/referrer.module';
 
 @NgModule({
 	imports: [
@@ -46,6 +47,7 @@ import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/respons
 		UserModule,
 		SellableModule,
 		SellablePricingModule,
+		ReferrerModule,
 		AppModuleNg1,
 	],
 	declarations: [

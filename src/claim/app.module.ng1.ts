@@ -27,7 +27,6 @@ import '../lib/gj-lib-client/components/game-bundle/game-bundle';
 import '../lib/gj-lib-client/components/key-group/key-group';
 import '../lib/gj-lib-client/components/filesize/filesize';
 import '../lib/gj-lib-client/components/currency/currency';
-import '../lib/gj-lib-client/components/referrer/referrer';
 import '../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import '../lib/gj-lib-client/components/time/time';
 import '../lib/gj-lib-client/components/game/package/card/card';
@@ -54,7 +53,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.ExpandWhen',
 	'gj.Form',
 	'gj.Currency',
-	'gj.Referrer',
 	'gj.FadeCollapse',
 	'gj.History',
 	'gj.Growls',

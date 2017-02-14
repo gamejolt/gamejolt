@@ -7,6 +7,7 @@ import { App } from './app-service';
 import { Registry } from '../lib/gj-lib-client/components/registry/registry.service';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
+import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
 
 import '../lib/gj-lib-client/components/translate/translate';
 import '../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
@@ -33,7 +34,6 @@ import '../lib/gj-lib-client/components/scroll/affix/affix';
 import '../lib/gj-lib-client/components/scroll/auto-scroll/auto-scroll';
 import '../lib/gj-lib-client/components/scroll/fixed-resizer/fixed-resizer';
 import '../lib/gj-lib-client/components/editable-accordion/editable-accordion';
-import '../lib/gj-lib-client/components/referrer/referrer';
 import '../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import '../lib/gj-lib-client/components/progress/poller/poller';
 import '../lib/gj-lib-client/components/alert/dismissable/dismissable';
@@ -53,8 +53,6 @@ import '../lib/gj-lib-client/components/user/message/message';
 import '../lib/gj-lib-client/components/comment/widget/widget';
 import '../lib/gj-lib-client/components/subscription/subscription';
 import '../lib/gj-lib-client/components/game/rating/rating';
-import '../lib/gj-lib-client/components/game/screenshot/screenshot';
-import '../lib/gj-lib-client/components/game/video/video';
 import '../lib/gj-lib-client/components/game/song/song';
 import '../lib/gj-lib-client/components/key-group/key-group';
 import '../lib/gj-lib-client/components/game/news-article/news-article';
@@ -181,7 +179,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Scroll.AutoScroll',
 	'gj.Scroll.FixedResizer',
 	'gj.EditableAccordion',
-	'gj.Referrer',
 	'gj.FadeCollapse',
 	'gj.Progress.Poller',
 	'gj.Alert.Dismissable',
@@ -406,6 +403,7 @@ export const AppModuleNg1 = angular.module( 'App', [
 	Payload.initAngular( App, $transitions );
 	Analytics.initAngular( $rootScope );
 	Meta.initAngular( $rootScope );
+	Referrer.init();
 
 	Registry.setConfig( 'Game', {
 		maxItems: 100,

@@ -15,7 +15,6 @@ import LoadModule from '../lib/gj-lib-client/components/load/load';
 import LocationModule from '../lib/gj-lib-client/components/location/location';
 import ClipboardModule from '../lib/gj-lib-client/components/clipboard/clipboard';
 import CardModule from '../lib/gj-lib-client/components/card/card';
-import HistoryTickModule from '../lib/gj-lib-client/components/history-tick/history-tick';
 import PaginationModule from '../lib/gj-lib-client/components/pagination/pagination';
 import ModalConfirmModule from '../lib/gj-lib-client/components/modal/confirm/confirm';
 import { EnvironmentModule } from '../lib/gj-lib-client/components/environment/environment.module';
@@ -38,7 +37,6 @@ import { FiresidePostVideoModule } from '../lib/gj-lib-client/components/firesid
 import { FiresidePostSketchfabModule } from '../lib/gj-lib-client/components/fireside/post/sketchfab/sketchfab.module';
 import { FiresidePostLikeModule } from '../lib/gj-lib-client/components/fireside/post/like/like.module';
 import FiresidePostLikeWidgetModule from '../lib/gj-lib-client/components/fireside/post/like/widget/widget';
-import PartnerReferralModule from '../lib/gj-lib-client/components/partner-referral/partner-referral';
 import AuthModule from '../lib/gj-lib-client/components/auth/auth';
 import AuthJoinModule from '../lib/gj-lib-client/components/auth/join/join';
 import BroadcastModalModule from './components/broadcast-modal/broadcast-modal';
@@ -98,6 +96,9 @@ import { VideoEmbedModule } from '../lib/gj-lib-client/components/video/embed/em
 import { SketchfabEmbedModule } from '../lib/gj-lib-client/components/sketchfab/embed/embed.module';
 import { GameScreenshotModule } from '../lib/gj-lib-client/components/game/screenshot/screenshot.module';
 import { GameVideoModule } from '../lib/gj-lib-client/components/game/video/video.module';
+import { ReferrerModule } from '../lib/gj-lib-client/components/referrer/referrer.module';
+import { HistoryTickModule } from '../lib/gj-lib-client/components/history-tick/history-tick.module';
+import { PartnerReferralModule } from '../lib/gj-lib-client/components/partner-referral/partner-referral.module';
 
 @NgModule({
 	imports: [
@@ -197,6 +198,7 @@ import { GameVideoModule } from '../lib/gj-lib-client/components/game/video/vide
 		SellableModule,
 		SellablePricingModule,
 		PrimusModule,
+		ReferrerModule,
 		AdModule,
 		AppModuleNg1,
 	],

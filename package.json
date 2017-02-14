@@ -60,7 +60,8 @@
     "vue-class-component": "4.4.0",
     "vue-property-decorator": "3.4.0",
     "vue-shortkey": "2.0.9",
-    "vue-touch": "2.0.0-beta.4"
+    "vue-touch": "2.0.0-beta.4",
+    "qs": "6.3.0"
   },
   "optionalDependencies": {
     "appdmg": "^0.3.5"

@@ -29,16 +29,17 @@ import { GameBuildModule } from '../lib/gj-lib-client/components/game/build/buil
 import { GameBuildFileModule } from '../lib/gj-lib-client/components/game/build/file/file.module';
 import { GameBuildParamModule } from '../lib/gj-lib-client/components/game/build/param/param.module';
 import { GameBuildLaunchOptionModule } from '../lib/gj-lib-client/components/game/build/launch-option/launch-option.module';
-import HistoryTickModule from '../lib/gj-lib-client/components/history-tick/history-tick';
 import GamePlayModalModule from '../lib/gj-lib-client/components/game/play-modal/play-modal';
 import LoadModule from '../lib/gj-lib-client/components/load/load';
 import GameThumbnailImgModule from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import GameThumbnailModule from '../app/components/game/thumbnail/thumbnail';
-import PartnerReferralModule from '../lib/gj-lib-client/components/partner-referral/partner-referral';
 import CardModule from '../lib/gj-lib-client/components/card/card';
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
 import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive';
+import { ReferrerModule } from '../lib/gj-lib-client/components/referrer/referrer.module';
+import { HistoryTickModule } from '../lib/gj-lib-client/components/history-tick/history-tick.module';
+import { PartnerReferralModule } from '../lib/gj-lib-client/components/partner-referral/partner-referral.module';
 
 const ViewsModule = angular.module( 'App.Views', [] ).name;
 importContext( require.context( './views', true, /\.state\.ts$/ ) );
@@ -81,6 +82,7 @@ importContext( require.context( './views', true, /\.state\.ts$/ ) );
 		GameThumbnailImgModule,
 		PartnerReferralModule,
 		CardModule,
+		ReferrerModule,
 		AppModuleNg1,
 	],
 	declarations: [
