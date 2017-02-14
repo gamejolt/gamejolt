@@ -159,7 +159,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	// GJ lib.
 	'gj.Translate',
 	'gj.Translate.LangSelector',
-	'gj.Geo',
 	'gj.Error',
 	'gj.Filesize',
 	'gj.Time',

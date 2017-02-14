@@ -1,17 +1,28 @@
+import * as angular from 'angular';
 import { ReportComponent, Request, ResourceName, Analyzer, Collection, Field, Condition, ResourceFields } from './site-analytics-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { getProvider } from '../../../lib/gj-lib-client/utils/utils';
+import { Geo } from '../../../lib/gj-lib-client/components/geo/geo.service';
 
 export class SiteAnalyticsReport
 {
 	isLoaded = false;
 
-	constructor( public title: string, public components: ReportComponent[], resource: ResourceName, resourceId: number, collection: Collection, partnerMode: boolean, startTime: number | undefined, endTime: number | undefined )
+	constructor(
+		public title: string,
+		public components: ReportComponent[],
+		resource: ResourceName,
+		resourceId: number,
+		collection: Collection,
+		partnerMode: boolean,
+		startTime: number | undefined,
+		endTime: number | undefined,
+	)
 	{
 		const promises = this.components.map( ( component ) =>
 		{
 			let analyzer = component.type;
-			if ( analyzer == 'rating-breakdown' ) {
+			if ( analyzer === 'rating-breakdown' ) {
 				analyzer = 'top-composition';
 			}
 
@@ -24,19 +35,19 @@ export class SiteAnalyticsReport
 				conditionFields = conditionFields.concat( fetchFields );
 			}
 
-			if ( conditionFields.indexOf( 'source_url' ) != -1 ) {
+			if ( conditionFields.indexOf( 'source_url' ) !== -1 ) {
 				conditions.push( 'source-external' );
 			}
-			if ( conditionFields.indexOf( 'donation' ) != -1 ) {
+			if ( conditionFields.indexOf( 'donation' ) !== -1 ) {
 				conditions.push( 'has-donations' );
 			}
-			if ( conditionFields.indexOf( 'partner' ) != -1 ) {
+			if ( conditionFields.indexOf( 'partner' ) !== -1 ) {
 				conditions.push( 'has-partner' );
 			}
-			if ( conditionFields.indexOf( 'partner_generated_revenue' ) != -1 ) {
+			if ( conditionFields.indexOf( 'partner_generated_revenue' ) !== -1 ) {
 				conditions.push( 'has-partner' );
 			}
-			if ( conditionFields.indexOf( 'partner_generated_donation' ) != -1 ) {
+			if ( conditionFields.indexOf( 'partner_generated_donation' ) !== -1 ) {
 				conditions.push( 'has-donations', 'has-partner' );
 			}
 			if ( partnerMode ) {
@@ -45,10 +56,10 @@ export class SiteAnalyticsReport
 			conditions = _.uniq( conditions );
 
 			// Replace the pseudo fields by their normal fields
-			if ( field == 'partner_generated_revenue' ) {
+			if ( field === 'partner_generated_revenue' ) {
 				field = 'revenue';
 			}
-			else if ( field == 'partner_generated_donation' ) {
+			else if ( field === 'partner_generated_donation' ) {
 				field = 'donation';
 			}
 
@@ -56,10 +67,10 @@ export class SiteAnalyticsReport
 				fetchFields = fetchFields.map( ( fetchField ) =>
 				{
 					let result: Field;
-					if ( fetchField == 'partner_generated_revenue' ) {
+					if ( fetchField === 'partner_generated_revenue' ) {
 						result = 'revenue';
 					}
-					else if ( fetchField == 'partner_generated_donation' ) {
+					else if ( fetchField === 'partner_generated_donation' ) {
 						result = 'donation';
 					}
 					else {
@@ -69,7 +80,18 @@ export class SiteAnalyticsReport
 				} );
 			}
 
-			return this.sendComponentRequest( resource, resourceId, collection, analyzer, field, conditions, fetchFields, component.resourceFields, startTime, endTime );
+			return this.sendComponentRequest(
+				resource,
+				resourceId,
+				collection,
+				analyzer,
+				field,
+				conditions,
+				fetchFields,
+				component.resourceFields,
+				startTime,
+				endTime,
+			);
 		} );
 
 		Promise.all( promises )
@@ -85,7 +107,7 @@ export class SiteAnalyticsReport
 					component.graph = response.graph;
 					component.total = response.total;
 
-					if ( component.type == 'sum' || component.type == 'average' ) {
+					if ( component.type === 'sum' || component.type === 'average' ) {
 						component.hasData = typeof component.data !== 'undefined' && component.data !== null;
 					}
 					else {
@@ -95,7 +117,18 @@ export class SiteAnalyticsReport
 			} );
 	}
 
-	private sendComponentRequest( resource: ResourceName, resourceId: number, collection: Collection, analyzer: Analyzer, field: Field, conditions: Condition[] | undefined, fetchFields: Field[] | undefined, resourceFields: ResourceFields | undefined, startTime: number | undefined, endTime: number | undefined )
+	private sendComponentRequest(
+		resource: ResourceName,
+		resourceId: number,
+		collection: Collection,
+		analyzer: Analyzer,
+		field: Field,
+		conditions: Condition[] | undefined,
+		fetchFields: Field[] | undefined,
+		resourceFields: ResourceFields | undefined,
+		startTime: number | undefined,
+		endTime: number | undefined,
+	)
 	{
 		const request: Request = {
 			target: resource,
@@ -131,7 +164,6 @@ export class SiteAnalyticsReport
 
 	private processComponentResponse( component: ReportComponent, _response: any, gathers?: any )
 	{
-		const Geo = getProvider<any>( 'Geo' );
 		const gettextCatalog = getProvider<ng.gettext.gettextCatalog>( 'gettextCatalog' );
 
 		const field = component.field, analyzer = component.type, displayField = component.displayField;
@@ -141,15 +173,15 @@ export class SiteAnalyticsReport
 		let data: any = {};
 
 		// We return "simple" single value analyzations as is.
-		if ( analyzer == 'sum' || analyzer == 'average' ) {
+		if ( analyzer === 'sum' || analyzer === 'average' ) {
 			response.result = response.result || 0;
 			return response;
 		}
 
 		// For top compositions we convert the { key: value } to [ { label: key, value: value } ]
-		if ( analyzer == 'top-composition' || analyzer == 'top-composition-sum' || analyzer == 'top-composition-avg' ) {
+		if ( analyzer === 'top-composition' || analyzer === 'top-composition-sum' || analyzer === 'top-composition-avg' ) {
 			// Rating is a special case of top composition. We want to keep processing it as { key: value } and not convert it.
-			if ( field != 'rating' ) {
+			if ( field !== 'rating' ) {
 				data = [];
 				angular.forEach( response.result, ( val, key ) =>
 				{
@@ -184,7 +216,7 @@ export class SiteAnalyticsReport
 			if ( gathers && displayField ) {
 				for ( let dataEntry of response.result ) {
 					const resourceInfo: string[] = dataEntry.label.split('-');
-					const resourceName = resourceInfo[0], resourceId = parseInt( resourceInfo[1] );
+					const resourceName = resourceInfo[0], resourceId = parseInt( resourceInfo[1], 10 );
 					const displayValue = gathers[resourceName][resourceId][displayField];
 
 					switch ( resourceName ) {
@@ -212,10 +244,10 @@ export class SiteAnalyticsReport
 			}
 
 			// country code => country name
-			if ( field == 'country' ) {
+			if ( field === 'country' ) {
 				angular.forEach( response.result, ( val ) =>
 				{
-					if ( val.label == 'other' ) {
+					if ( val.label === 'other' ) {
 						val.label = gettextCatalog.getString( 'Unknown' );
 					}
 					else {
@@ -225,12 +257,12 @@ export class SiteAnalyticsReport
 			}
 
 			// All fields except 'rating' and 'source_url' expect to also display the graph (doughnut piechart)
-			if ( field != 'rating' && field != 'source_url' ) {
+			if ( field !== 'rating' && field !== 'source_url' ) {
 				graph = [];
 				for ( let i = 0; i < Math.min( response.result.length, 3 ); i++ ) {
 					const dataEntry = response.result[i];
 					graph.push( {
-						label: typeof dataEntry.label == 'object' ? dataEntry.label.value : dataEntry.label,
+						label: typeof dataEntry.label === 'object' ? dataEntry.label.value : dataEntry.label,
 						value: dataEntry.value,
 					} );
 				}

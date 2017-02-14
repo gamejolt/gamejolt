@@ -39,7 +39,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 
 	'gj.Error',
 	'gj.Translate',
-	'gj.Geo',
 	'gj.BodyClasses',
 	'gj.Loading',
 	'gj.Scroll',

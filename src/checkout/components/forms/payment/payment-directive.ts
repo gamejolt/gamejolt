@@ -1,12 +1,12 @@
 import { App } from '../../../app-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { Geo } from '../../../../lib/gj-lib-client/components/geo/geo.service';
 
-PaymentComponent.$inject = [ 'App', 'Form', 'Geo' ];
+PaymentComponent.$inject = [ 'App', 'Form' ];
 export function PaymentComponent(
 	App: App,
 	Form: any,
-	Geo: any,
 )
 {
 	const form = new Form( {
@@ -33,12 +33,12 @@ export function PaymentComponent(
 
 		scope.formModel.save_card = true;
 
-		if ( Environment.env == 'development' ) {
+		if ( Environment.env === 'development' ) {
 			scope.formModel.fullname = 'Vash the Stampede';
 			scope.formModel.card_number = '4242424242424242';
 			scope.formModel.exp = '1216';
 			scope.formModel.cvc = '123';
-			scope.formModel.street1 = "No-man's Land";
+			scope.formModel.street1 = `No-man's Land`;
 			scope.formModel.postcode = '11111';
 			scope.formModel.save_card = false;
 		}
