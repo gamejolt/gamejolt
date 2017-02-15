@@ -1,6 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { BroadcastModalCtrl } from './broadcast-modal.controller';
 import * as template from '!html-loader!./broadcast-modal.html';
+
 import { App } from '../../app-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 
@@ -28,12 +29,12 @@ export class BroadcastModal
 			return;
 		}
 
-		// Bootstrap it from when this feature was launched.
-		if ( !this.$window.localStorage[ this._key() ] && this.app.user.created_on < 1483566930963 ) {
+		// // Bootstrap it from when this feature was launched.
+		// if ( !this.$window.localStorage[ this._key() ] && this.app.user.created_on < 1483566930963 ) {
 
-			// Will try pulling articles since June 1st, 2016.
+		// 	// Will try pulling articles since June 1st, 2016.
 			this.$window.localStorage[ this._key() ] = 1464739200000;
-		}
+		// }
 
 		const payload = await Api.sendRequest( '/web/broadcasts', { from: this.$window.localStorage[ this._key() ] } );
 
@@ -52,10 +53,8 @@ export class BroadcastModal
 			template,
 			backdrop: 'static',
 			resolve: {
-				posts: () =>
-				{
-					return posts;
-				},
+
+				posts: () => posts,
 			}
 		} );
 	}

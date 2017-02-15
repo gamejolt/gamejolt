@@ -12,12 +12,10 @@ export class BroadcastModalCtrl
 	screen: Screen;
 	env: Environment;
 
-	// DI doesn't work here...
+	/*@ngInject*/
 	constructor(
 		private $modalInstance: any,
 		Fireside_Post: typeof Fireside_Post,
-		Screen: Screen,
-		Environment: Environment,
 		posts: any[],
 	)
 	{
@@ -26,7 +24,7 @@ export class BroadcastModalCtrl
 
 		this.posts = Fireside_Post.populate( posts );
 
-		if ( !this.screen.isXs ) {
+		if ( !Screen.isXs ) {
 			this.post = this.posts[0];
 		}
 	}
