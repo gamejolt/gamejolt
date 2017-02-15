@@ -101,6 +101,7 @@ import { PartnerReferralModule } from '../lib/gj-lib-client/components/partner-r
 import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
 import { WidgetCompilerModule } from '../lib/gj-lib-client/components/widget-compiler/widget-compiler.module';
 import { GamePackageCardModule } from '../lib/gj-lib-client/components/game/package/card/card.module';
+import { NavTabListModule } from '../lib/gj-lib-client/components/nav/tab-list/tab-list.module';
 
 @NgModule({
 	imports: [
@@ -204,6 +205,7 @@ import { GamePackageCardModule } from '../lib/gj-lib-client/components/game/pack
 		GeoModule,
 		AdModule,
 		GamePackageCardModule,
+		NavTabListModule,
 		AppModuleNg1,
 	],
 	declarations: [
