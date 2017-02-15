@@ -10,12 +10,6 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 			{
 				return Api.sendRequest( '/web/dash/developer/games/packages/preview/' + $stateParams.id + '/' + $stateParams.packageId );
 			},
-			sellableCheck: function( $state, widgetPayload )
-			{
-				if ( !widgetPayload.sellable || widgetPayload.sellable.type == 'free' ) {
-					$state.go( 'error-404' );
-				}
-			},
 		}
 	} );
 } );

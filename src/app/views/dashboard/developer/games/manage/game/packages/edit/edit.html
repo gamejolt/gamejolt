@@ -18,29 +18,27 @@
 
 <hr>
 
-<div gj-expand-when="editCtrl.sellable.type != 'free'">
-	<nav class="platform-list inline">
-		<ul>
-			<li>
-				<a ui-sref="dashboard.developer.games.manage.game.packages.edit"
-					ui-sref-active-eq="active"
-					translate
-					>
-					Edit Package
-				</a>
-			</li>
-			<li>
-				<a ui-sref="dashboard.developer.games.manage.game.packages.edit.widget"
-					ui-sref-active="active"
-					translate
-					>
-					Sale Widget
-				</a>
-			</li>
-		</ul>
-	</nav>
-	<br>
-</div>
+<gj-nav-tab-list>
+	<ul>
+		<li>
+			<a ui-sref="dashboard.developer.games.manage.game.packages.edit"
+				ui-sref-active-eq="active"
+				translate
+				>
+				Edit Package
+			</a>
+		</li>
+		<li>
+			<a ui-sref="dashboard.developer.games.manage.game.packages.edit.widget"
+				ui-sref-active="active"
+				translate
+				>
+				Widget
+			</a>
+		</li>
+	</ul>
+</gj-nav-tab-list>
+<br>
 
 <ui-view>
 	<div class="row">
