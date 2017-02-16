@@ -1,4 +1,3 @@
-import '../bower-lib/angularjs-slider/dist/rzslider.min';
 import '../bower-lib/angular-bootstrap/src/dateparser/dateparser';
 import '../bower-lib/angular-bootstrap/src/datepicker/datepicker';
 import '../bower-lib/angular-bootstrap/src/timepicker/timepicker';

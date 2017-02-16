@@ -28,6 +28,8 @@ angular.module( 'App.Views.Dashboard', [] );
 
 @NgModule({
 	imports: [
+		require( '../../../bower-lib/angularjs-slider/dist/rzslider.min' ).name,
+
 		'App.Views.Dashboard',
 
 		'gj.DateHelper',
