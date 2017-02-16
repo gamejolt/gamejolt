@@ -12,15 +12,21 @@ export class PartnerTermsComponent
 
 	checked = false;
 	showAgreement = false;
+	termsTemplate = require( '../../../../../../lib/terms/partner/global.md' );
 
-	hasSignedPartnerAgreement()
+	get hasSignedPartnerAgreement()
 	{
-		return this.account && this.account.tos_signed_partner;
+		return this.account && this.account.tos_signed_partner > 0;
 	}
 
-	hasSignedSomeAgreement()
+	get hasSignedSomeAgreement()
 	{
-		return this.account && (this.account.tos_signed_developer || this.account.tos_signed_partner);
+		return this.account && (this.account.tos_signed_developer > 0 || this.account.tos_signed_partner > 0);
+	}
+
+	get agreementLink()
+	{
+		return 'https://github.com/gamejolt/terms/blob/0371c397b84ac1f10c911de52384a5a727dc9f15/partner/global.md';
 	}
 
 	onAccept()

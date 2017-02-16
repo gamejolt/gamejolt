@@ -1,22 +1,22 @@
 <fieldset>
 
 	<legend>
-		<span ng-if="$ctrl.hasSignedDeveloperAgreement()" class="pull-right done-icon" tooltip="{{ 'You have completed this section.' | translate }}">
+		<span ng-if="$ctrl.hasSignedDeveloperAgreement" class="pull-right done-icon" tooltip="{{ 'You have completed this section.' | translate }}">
 			<span class="jolticon jolticon-check big"></span>
 		</span>
 		Developer Distribution Agreement
 	</legend>
 
-	<div class="form-group" ng-if="$ctrl.hasSignedDeveloperAgreement()">
-		<p class="small">You have agreed to our <b>Distribution Agreement</b> on {{ $ctrl.account.tos_signed_developer_timestamp | date:'medium' }}.</p>
+	<div class="form-group" ng-if="$ctrl.hasSignedDeveloperAgreement">
+		<p class="small">You have agreed to our <a ng-href="{{ $ctrl.agreementLink }}" target="_blank">Distribution Agreement</a> on {{ $ctrl.account.tos_signed_developer_timestamp | date:'medium' }}.</p>
 	</div>
 
-	<div ng-if="!$ctrl.hasSignedDeveloperAgreement()">
+	<div ng-if="!$ctrl.hasSignedDeveloperAgreement">
 
 		<!--
 			If they accepted a different agreement, then show that they can accept this one too.
 		-->
-		<div class="form-group" ng-if="$ctrl.hasSignedSomeAgreement()">
+		<div class="form-group" ng-if="$ctrl.hasSignedSomeAgreement">
 			<div class="small">
 				<div translate>If you would like to sell games on the Marketplace, you must accept the Distribution Agreement.</div>
 				<div>
@@ -39,7 +39,7 @@
 
 	</div>
 
-	<div class="form-group" ng-if="$ctrl.hasSignedOldDeveloperAgreement()">
+	<div class="form-group" ng-if="$ctrl.hasSignedOldDeveloperAgreement">
 		<div class="alert alert-warning">
 			<span translate>You have signed an older version of the Distribution Agreement. To be able to include your games in the Partner Program you must accept the new agreement.</span>
 			<a ui-sref="landing.partners" translate>
@@ -64,9 +64,9 @@
 		</div>
 	</div>
 
-	<div class="form-group" ng-if="$ctrl.shouldShowAgreement()">
+	<div class="form-group" ng-if="$ctrl.shouldShowAgreement">
 		<div class="tos-scroller overlay-scrollbar overlay-scrollbar-light">
-			<div ng-include="'/terms/distribution-agreement/global.html'"></div>
+			<div ng-include="$ctrl.termsTemplate"></div>
 		</div>
 		<br>
 

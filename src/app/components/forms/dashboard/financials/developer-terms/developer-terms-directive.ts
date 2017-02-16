@@ -14,30 +14,39 @@ export class DeveloperTermsComponent
 
 	checked = false;
 	showAgreement = false;
+	termsTemplate = require( '../../../../../../lib/terms/distribution-agreement/global.md' );
 
-	shouldShowAgreement()
+	get shouldShowAgreement()
 	{
-		return (!this.hasSignedSomeAgreement() || this.showAgreement) && !this.hasSignedLatestDeveloperAgreement();
+		return (!this.hasSignedSomeAgreement || this.showAgreement) && !this.hasSignedLatestDeveloperAgreement;
 	}
 
-	hasSignedDeveloperAgreement()
+	get hasSignedDeveloperAgreement()
 	{
-		return this.account && this.account.tos_signed_developer;
+		return this.account && this.account.tos_signed_developer > 0;
 	}
 
-	hasSignedLatestDeveloperAgreement()
+	get hasSignedLatestDeveloperAgreement()
 	{
 		return this.account && this.account.tos_signed_developer === LatestVersion;
 	}
 
-	hasSignedOldDeveloperAgreement()
+	get hasSignedOldDeveloperAgreement()
 	{
 		return this.account && this.account.tos_signed_developer > 0 && this.account.tos_signed_developer !== LatestVersion;
 	}
 
-	hasSignedSomeAgreement()
+	get hasSignedSomeAgreement()
 	{
-		return this.account && (this.account.tos_signed_developer || this.account.tos_signed_partner);
+		return this.account && (this.account.tos_signed_developer > 0 || this.account.tos_signed_partner > 0);
+	}
+
+	get agreementLink()
+	{
+		if ( this.hasSignedOldDeveloperAgreement ) {
+			return 'https://github.com/gamejolt/terms/blob/001ba00910e8ed03e880a1c0bb7a587c498dfff2/distribution-agreement/global.md';
+		}
+		return 'https://github.com/gamejolt/terms/blob/6306eabf457f19ae6a642af23e561b3e675aed55/distribution-agreement/global.md';
 	}
 
 	onAccept()
