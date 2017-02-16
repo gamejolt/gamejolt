@@ -94,11 +94,15 @@ angular.module( 'App.Client.LocalDb' )
 	LocalDb_Package.prototype.getDownloadUrl = function()
 	{
 		if ( this.install_state ) {
-			return this._build.getDownloadUrl();
+			return this._build.getDownloadUrl( {
+				forceDownload: true,
+			} );
 		}
 		else if ( this.update_state ) {
 			var newBuild = new Game_Build( this.update.build );
-			return newBuild.getDownloadUrl();
+			return newBuild.getDownloadUrl( {
+				forceDownload: true,
+			} );
 		}
 		return null;
 	};

@@ -16,7 +16,9 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.BuildCtr
 	var downloadPromise = $timeout( 5000 )
 		.then( function()
 		{
-			return _this.build.getDownloadUrl();
+			return _this.build.getDownloadUrl( {
+				forceDownload: true,
+			} );
 		} )
 		.then( function( response )
 		{
