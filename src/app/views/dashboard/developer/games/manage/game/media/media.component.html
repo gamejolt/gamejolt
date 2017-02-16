@@ -7,7 +7,7 @@
 
 		<h3 class="section-header" translate>Add Media</h3>
 
-		<nav class="platform-list inline nav-justified">
+		<gj-nav-tab-list>
 			<ul>
 				<li>
 					<a ng-click="$ctrl.addTab = 'image'" ng-class="{ active: $ctrl.addTab == 'image' }">
@@ -25,7 +25,7 @@
 					</a>
 				</li>
 			</ul>
-		</nav>
+		</gj-nav-tab-list>
 		<br>
 
 		<div ng-switch="$ctrl.addTab">

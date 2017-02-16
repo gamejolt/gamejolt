@@ -198,20 +198,23 @@
 			</div>
 		</div>
 
-
-		<div class="text-center">
-			<a class="btn btn-outline btn-block-xs"
-				ng-repeat="( i, section ) in $ctrl.discoverSections track by $index"
-				ng-click="$ctrl.changeSection( i )"
-				ng-class="{ active: $ctrl.chosenSection === section }"
-				translate
-				>
-				{{ section.title }}
-			</a>
-		</div>
-		<br>
-
-		<hr class="underbar underbar-center">
+		<gj-nav-tab-list [center]="true">
+			<ul>
+				<li ng-repeat="( i, section ) in $ctrl.discoverSections track by $index">
+					<a
+						ng-click="$ctrl.changeSection( i )"
+						ng-class="{ active: $ctrl.chosenSection === section }"
+						>
+						<span class="hidden-xs">
+							{{ section.title }}
+						</span>
+						<span class="visible-xs">
+							{{ section.smallTitle }}
+						</span>
+					</a>
+				</li>
+			</ul>
+		</gj-nav-tab-list>
 
 		<gj-game-grid
 			games="$ctrl.chosenSection.items"

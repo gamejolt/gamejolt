@@ -91,6 +91,7 @@ export class RouteHomeComponent implements OnInit
 
 		const bestSection = {
 			title: this.gettextCatalog.getString( 'Best Games' ),
+			smallTitle: this.gettextCatalog.getString( 'Best' ),
 			url: this.$state.href( 'discover.games.list._fetch', { section: 'best' } ),
 			eventLabel: 'best-games',
 			items: this.bestGames,
@@ -98,6 +99,7 @@ export class RouteHomeComponent implements OnInit
 
 		const hotSection = {
 			title: this.gettextCatalog.getString( 'Hot Games' ),
+			smallTitle: this.gettextCatalog.getString( 'Hot' ),
 			url: this.$state.href( 'discover.games.list._fetch', { section: 'hot' } ),
 			eventLabel: 'hot-games',
 			items: this.hotGames,
@@ -106,6 +108,7 @@ export class RouteHomeComponent implements OnInit
 		if ( this.app.user ) {
 			const recommendedSection = {
 				title: this.gettextCatalog.getString( 'Recommended Games' ),
+				smallTitle: this.gettextCatalog.getString( 'Recommended' ),
 				url: this.$state.href( 'library.collection.recommended', { id: this.app.user.username } ),
 				eventLabel: 'recommended-games',
 				items: this.recommendedGames,
