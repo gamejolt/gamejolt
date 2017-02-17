@@ -69,6 +69,14 @@ export class RouteSiteComponent implements OnInit
 		}
 	}
 
+	onSettingsSaved()
+	{
+		this.Growls.success(
+			this.gettextCatalog.getString( `Your site settings have been saved.` ),
+			this.gettextCatalog.getString( `Settings Saved` ),
+		);
+	}
+
 	onBuildAdded( response: any )
 	{
 		// Only alert if they had a build previously and uploaded a new one.
