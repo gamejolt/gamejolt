@@ -24,10 +24,15 @@ export class SiteEditorModalComponent
 	isLoaded = false;
 	tab: 'theme' | 'content' = 'theme';
 
+	private isDirty = false;
+	private locationWatcher: Function;
+
 	constructor(
+		@Inject( '$rootScope' ) private $rootScope: ng.IRootScopeService,
 		@Inject( '$sce' ) private $sce: ng.ISCEService,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject( '$location' ) private $location: ng.ILocationService,
 	)
 	{
 		Api.sendRequest( `/web/dash/sites/editor/${this.siteId}` )
@@ -42,6 +47,12 @@ export class SiteEditorModalComponent
 					this.theme = this.site.theme;
 				}
 			} );
+
+		this.$location.hash( 'site-editor' );
+		setTimeout( () =>
+		{
+			this.locationWatcher = this.$rootScope.$on( '$locationChangeStart', ( e ) => this.locationChanged( e ) );
+		} );
 	}
 
 	get siteUrl()
@@ -51,7 +62,13 @@ export class SiteEditorModalComponent
 
 	themeEdited( $theme: any )
 	{
+		this.isDirty = true;
 		this.theme.data = $theme;
+	}
+
+	contentEdited()
+	{
+		this.isDirty = true;
 	}
 
 	save()
@@ -72,9 +89,19 @@ export class SiteEditorModalComponent
 			} );
 	}
 
-	// TODO: If changes, make sure they want to.
 	close()
 	{
-		this._close.emit( undefined );
+		window.history.back();
+	}
+
+	locationChanged( e: ng.IAngularEvent )
+	{
+		if ( !this.isDirty || confirm( this.gettextCatalog.getString( 'You have unsaved changes. Are you sure you want to discard them?' ) ) ) {
+			this._close.emit( undefined );
+			this.locationWatcher();
+		}
+		else if ( e ) {
+			e.preventDefault();
+		}
 	}
 }

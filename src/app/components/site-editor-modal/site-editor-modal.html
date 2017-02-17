@@ -82,7 +82,7 @@
 					<gj-content-block-editor
 						window-id="site-editor-modal-iframe"
 						content-block="$ctrl.site.content_blocks[0]"
-						compiled="$ctrl.contentCompiled( $compiled )"
+						(changed)="$ctrl.contentEdited()"
 						>
 					</gj-content-block-editor>
 
