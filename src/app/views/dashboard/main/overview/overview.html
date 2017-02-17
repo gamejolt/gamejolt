@@ -212,42 +212,77 @@
 					<br>
 
 					<gj-card ng-repeat="game in overviewCtrl.games | orderBy:'posted_on':true | limitTo:(overviewCtrl.gamesExpanded ? undefined : 5) track by game.id">
-						<div class="row">
-							<div class="col-xs-3">
-								<gj-game-thumbnail-img
-									ng-if="game.thumbnail_media_item"
-									game="::game"
+						<div class="card-title">
+							<h4>
+								<a
+									ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
+									gj-track-event="dash:overview:quick-game"
 									>
-								</gj-game-thumbnail-img>
-							</div>
-							<div class="col-xs-9">
-								<div class="card-title">
-									<h4>
-										<a
-											ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
-											gj-track-event="dash:overview:quick-game"
-											>
-											{{ ::game.title }}
-										</a>
-									</h4>
-								</div>
-								<div class="card-controls">
-									<a class="btn btn-outline btn-sm"
-										ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
-										gj-track-event="dash:overview:quick-game"
+									{{ ::game.title }}
+								</a>
+							</h4>
+						</div>
+						<div class="card-controls">
+							<a class="btn btn-outline"
+								ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
+								gj-track-event="dash:overview:quick-game"
+								>
+								<span class="jolticon jolticon-cog"></span>
+								<span translate>Manage</span>
+							</a>
+							<a class="btn btn-outline"
+								gj-track-event="dash:overview:quick-game-analytics"
+								ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: game.id } )"
+								>
+								<span class="jolticon jolticon-chart"></span>
+								<span translate>Analytics</span>
+							</a>
+							<a class="btn btn-outline btn-sparse"
+								gj-track-event="dash:overview:more-game"
+								gj-popover-trigger="overview-game-more-{{ ::game.id }}"
+								>
+								<span class="jolticon jolticon-ellipsis-h"></span>
+							</a>
+
+							<gj-popover popover-id="overview-game-more-{{ ::game.id }}">
+								<div class="list-group list-group-dark">
+									<a class="list-group-item"
+										gj-track-event="dash:overview:quick-game-packages"
+										ui-sref="dashboard.developer.games.manage.game.packages.list( { id: game.id } )"
+										translate
 										>
-										<span class="jolticon jolticon-cog"></span>
-										<span translate>Manage Game</span>
+										Packages
 									</a>
-									<a class="btn btn-outline btn-sm"
-										gj-track-event="dash:overview:quick-game-analytics"
-										ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: game.id } )"
+									<a class="list-group-item"
+										gj-track-event="dash:overview:quick-game-devlog"
+										ui-sref="dashboard.developer.games.manage.devlog.feed( { id: game.id } )"
+										translate
 										>
-										<span class="jolticon jolticon-chart"></span>
-										<span translate>View Analytics</span>
+										Devlog
 									</a>
+									<a class="list-group-item"
+										gj-track-event="dash:overview:quick-game-keys"
+										ui-sref="dashboard.developer.games.manage.key-groups.list( { id: game.id } )"
+										translate
+										>
+										Keys/Access
+									</a>
+									<a class="list-group-item"
+										gj-track-event="dash:overview:quick-game-api"
+										ui-sref="dashboard.developer.games.manage.api.overview( { id: game.id } )"
+										translate
+										>
+										Game API
+									</a>
+									<!--<a class="list-group-item"
+										gj-track-event="dash:overview:quick-game-site"
+										ui-sref="dashboard.developer.games.manage.site( { id: game.id } )"
+										translate
+										>
+										Site
+									</a>-->
 								</div>
-							</div>
+							</gj-popover>
 						</div>
 					</gj-card>
 
@@ -338,14 +373,14 @@
 							</h4>
 						</div>
 						<div class="card-controls">
-							<a class="btn btn-outline btn-sm"
+							<a class="btn btn-outline"
 								ng-href="{{ jam.manageUrl }}"
 								gj-track-event="dash:overview:quick-jam"
 								>
 								<span class="jolticon jolticon-cog"></span>
-								<span translate>Manage Jam</span>
+								<span translate>Manage</span>
 							</a>
-							<a class="btn btn-outline btn-sm"
+							<a class="btn btn-outline"
 								ng-href="{{ jam.fullUrl }}"
 								gj-track-event="dash:overview:quick-jam-view"
 								>
