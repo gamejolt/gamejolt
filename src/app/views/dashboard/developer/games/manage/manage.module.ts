@@ -3,12 +3,10 @@ import { lazyBundle } from '../../../../../../lib/gj-lib-client/utils/angular-fa
 import { RouteManageComponent } from './manage.component';
 
 import Devlog from './devlog/devlog';
-import Site from './site/site';
 
 @NgModule({
 	imports: [
 		Devlog,
-		Site,
 	],
 	declarations: [
 		RouteManageComponent,

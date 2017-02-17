@@ -1,6 +1,8 @@
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Loader } from '../../../../../../lib/gj-lib-client/components/loader/loader.service';
 
+require( './build.styl' );
+
 SiteBuildFormFactory.$inject = [ 'Form' ];
 export function SiteBuildFormFactory(
 	Form: any,
@@ -30,6 +32,14 @@ export function SiteBuildFormFactory(
 					scope.maxFilesize = payload.maxFilesize;
 				} );
 		}
+	};
+
+	form.onSubmit = function( scope: any )
+	{
+		return Api.sendRequest( `/web/dash/sites/upload-build/${scope.site.id}`, {}, {
+			file: scope.formModel.file,
+			progress: ( event ) => scope.formModel._progress = event,
+		} );
 	};
 
 	return form;

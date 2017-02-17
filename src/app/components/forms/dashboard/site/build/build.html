@@ -1,4 +1,4 @@
-<form gj-form="formModel" name="siteBuildForm">
+<form class="form-dash-site-build" gj-form="formModel" name="siteBuildForm">
 
 	<div ng-if="!isLoaded">
 		<gj-loading></gj-loading>
@@ -6,24 +6,26 @@
 
 	<div ng-if="Loader.ready( 'upload' )">
 		<div ng-if="isLoaded">
-			<form-group name="file" label="{{ 'Upload File' | translate }}">
+
+			<form-group name="file" hide-label="true">
+
 				<p class="help-block" translate translate-params-max-filesize="maxFilesize / 1024 / 1024">
 					Static site uploads are currently capped at {{ maxFilesize }}MB. Please upload a .zip file with an index.html file in the root of the folder.
 				</p>
 
 				<gj-form-upload-control
 					form-control="upload"
+					gj-file-select="onSubmit()"
 					gj-max-filesize="maxFilesize"
+					accept=".zip"
+					upload-link-label="{{ 'Upload a static site .zip file.' | translate }}"
 					>
 				</gj-form-upload-control>
 
-				<control-errors label="{{ 'file' | translate }}"></control-errors>
+				<control-errors></control-errors>
+
 			</form-group>
 
-			<button gj-form-submit-button class="btn btn-outline" ng-disabled="!siteBuildForm.$valid" ng-click="onSubmit()">
-				<span class="jolticon" ng-class="'jolticon-' + method"></span>
-				<span translate>Upload File</span>
-			</button>
 		</div>
 	</div>
 
