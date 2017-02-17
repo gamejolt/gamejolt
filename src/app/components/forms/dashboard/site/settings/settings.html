@@ -1,0 +1,43 @@
+<form gj-form="formModel" name="settingsForm">
+
+	<form-group name="title" label="{{ 'Page Title' | translate }}" optional="true">
+		<div class="help-block" translate>
+			You can optionally override the default title for your site. This will show in search engines, and in the tab bar of browsers. By default it's the title of your game.
+		</div>
+		<input form-control="text"
+			ng-maxlength="100"
+			>
+		<control-errors></control-errors>
+	</form-group>
+
+	<form-group name="description" label="{{ 'Description' | translate }}" optional="true">
+		<div class="help-block" translate>
+			Search engines show this description under the title of your page in search results.
+		</div>
+		<textarea form-control ng-maxlength="250" rows="3"></textarea>
+		<control-errors></control-errors>
+	</form-group>
+
+	<form-group name="ga_tracking_id" label="{{ 'dash.games.settings.ga_tracking_id_label' | translate }}" optional="true">
+		<input form-control="text"
+			gj-pattern="gaTrackingId"
+			ng-maxlength="30"
+			ng-attr-placeholder="{{ 'dash.games.settings.ga_tracking_id_placeholder' | translate }}"
+			>
+
+		<control-errors label="{{ 'dash.games.settings.ga_tracking_id_error_label' | translate }}"></control-errors>
+
+		<div class="help-block" translate>dash.games.settings.ga_tracking_id_help_html</div>
+	</form-group>
+
+	<button
+		gj-form-submit-button
+		class="btn btn-success-outline"
+		ng-disabled="!settingsForm.$valid"
+		ng-click="onSubmit()"
+		>
+		<span class="jolticon jolticon-edit"></span>
+		<span translate>Save</span>
+	</button>
+
+</form>
