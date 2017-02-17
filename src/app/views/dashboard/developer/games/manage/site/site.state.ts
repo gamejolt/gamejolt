@@ -6,6 +6,8 @@ makeState( 'dashboard.developer.games.manage.site', {
 	url: '/site',
 	lazyLoad: () => $import( './site.module' ),
 	resolve: {
+
+		/*@ngInject*/
 		payload: function( $transition$: Transition )
 		{
 			return Api.sendRequest( '/web/dash/sites/' + $transition$.params().id );
