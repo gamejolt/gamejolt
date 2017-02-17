@@ -121,7 +121,6 @@ import './components/score/feed/feed-module';
 import './components/score/list/list-module';
 import './components/score/overview/overview-module';
 import './components/score/scoreboard-popover/scoreboard-popover-module';
-import './components/settings/settings-module';
 import './components/sorting/sorting-module';
 import './components/terms/change-alert/change-alert-module';
 import './components/trophy/completion/completion-module';
@@ -248,7 +247,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'App.Minbar',
 	'App.Invite',
 	'App.Sorting',
-	'App.Settings',
 	'App.FeaturedItem',
 	'App.Meter',
 	'App.Game.CompatIcons',

@@ -102,6 +102,7 @@ import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
 import { WidgetCompilerModule } from '../lib/gj-lib-client/components/widget-compiler/widget-compiler.module';
 import { GamePackageCardModule } from '../lib/gj-lib-client/components/game/package/card/card.module';
 import { NavTabListModule } from '../lib/gj-lib-client/components/nav/tab-list/tab-list.module';
+import { SettingsModule } from './components/settings/settings.module';
 
 @NgModule({
 	imports: [
@@ -206,6 +207,7 @@ import { NavTabListModule } from '../lib/gj-lib-client/components/nav/tab-list/t
 		AdModule,
 		GamePackageCardModule,
 		NavTabListModule,
+		SettingsModule,
 		AppModuleNg1,
 	],
 	declarations: [

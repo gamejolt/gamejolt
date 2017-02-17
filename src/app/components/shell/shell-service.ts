@@ -5,6 +5,7 @@ import { BroadcastModal } from '../broadcast-modal/broadcast-modal.service';
 import { getProvider, lazyload } from '../../../lib/gj-lib-client/utils/utils';
 import { App } from '../../app-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
+import { Settings } from '../settings/settings.service';
 
 @Injectable( 'Shell' )
 export class Shell
@@ -31,14 +32,13 @@ export class Shell
 		@Inject( '$rootScope' ) $rootScope: ng.IRootScopeService,
 		@Inject( 'Backdrop' ) private Backdrop: any,
 		@Inject( 'GameCollection' ) private collectionModel: any,
-		@Inject( 'Settings' ) private settings: any,
 		@Inject( 'BroadcastModal' ) private broadcastModal: BroadcastModal,
 		@Inject( 'hotkeys' ) private hotkeys: ng.hotkeys.HotkeysProvider,
 	)
 	{
 		this.bootstrapPromise = new Promise<void>( ( resolve ) => this.bootstrapPromiseResolve = resolve );
 
-		this._isLeftPaneSticky = this.settings.get( 'sidebar' );
+		this._isLeftPaneSticky = Settings.get( 'sidebar' );
 
 		/**
 		 * After changing states, hide all overlays.
@@ -123,7 +123,7 @@ export class Shell
 
 		this._isRightPaneOverlayed = false;
 		this.checkBackdrop();
-		this.settings.set( 'sidebar', this._isLeftPaneSticky );
+		Settings.set( 'sidebar', this._isLeftPaneSticky );
 
 		return this;
 	}

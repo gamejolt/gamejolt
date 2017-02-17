@@ -74,4 +74,15 @@
 		</form-group>
 	</fieldset>
 
+	<fieldset id="settings-notifications">
+		<legend translate>Notifications</legend>
+
+		<form-group name="broadcast_modal" label="{{ 'Show broadcasts?' | translate }}">
+			<p class="help-block" translate>
+				With this on you will receive notifications of new site features that have been added since you last visited.
+			</p>
+			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
+		</form-group>
+	</fieldset>
+
 </form>

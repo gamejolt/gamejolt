@@ -4,6 +4,7 @@ import * as template from '!html-loader!./broadcast-modal.html';
 
 import { App } from '../../app-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
+import { Settings } from '../settings/settings.service';
 
 const STORAGE_KEY_PREFIX = 'broadcast-modal:date:';
 
@@ -25,7 +26,7 @@ export class BroadcastModal
 
 	async check()
 	{
-		if ( !this.app.user ) {
+		if ( !this.app.user || !Settings.get( 'broadcast-modal' ) ) {
 			return;
 		}
 

@@ -17,6 +17,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormSettings', function( $injector, 
 
 		formModel.chat_notify_friends_online = Settings.get( 'chat-notify-friends-online' );
 		formModel.restricted_browsing = Settings.get( 'restricted-browsing' );
+		formModel.broadcast_modal = Settings.get( 'broadcast-modal' );
 
 		if ( Environment.isClient ) {
 			scope.Client_Autostart = Client_Autostart;
@@ -63,6 +64,7 @@ angular.module( 'App.Forms' ).directive( 'gjFormSettings', function( $injector, 
 		{
 			Settings.set( 'chat-notify-friends-online', formModel.chat_notify_friends_online );
 			Settings.set( 'restricted-browsing', formModel.restricted_browsing );
+			Settings.set( 'broadcast-modal', formModel.broadcast_modal );
 
 			if ( Environment.isClient ) {
 				Settings.set( 'game-install-dir', formModel.game_install_dir );
