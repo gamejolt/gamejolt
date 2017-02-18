@@ -1,0 +1,48 @@
+<div class="well fill-lightest text-center"
+	ng-if="!$ctrl.enabled"
+	>
+	<div class="row">
+		<div class="col-xs-8 col-centered">
+
+			<p class="lead" translate>
+				Use one of our pre-built templates and customize it to your style.
+			</p>
+
+			<button class="btn btn-success-outline"
+				ng-click="$ctrl.enable()"
+				gj-tooltip="{{ $ctrl.staticEnabled ? ('This will disable your static site and use a customizable template instead.' | translate) : undefined }}"
+				>
+				<span translate>Turn On</span>
+			</button>
+
+		</div>
+	</div>
+</div>
+
+<div ng-if="$ctrl.enabled">
+
+	<button class="btn btn-outline anim-fade-in no-animate-leave stagger"
+		ng-click="$ctrl.showEditor( 'theme' )"
+		>
+		<span class="jolticon jolticon-cog"></span>
+		<span translate>Customize Theme</span>
+	</button>
+
+	<button class="btn btn-outline anim-fade-in no-animate-leave stagger"
+		ng-click="$ctrl.showEditor( 'content' )"
+		>
+		<span class="jolticon jolticon-edit"></span>
+		<span translate>Edit Content</span>
+	</button>
+
+	<h2 translate>
+		Settings
+	</h2>
+
+	<gj-form-dashboard-site-settings
+		gj-site="$ctrl.site"
+		gj-form-submit-handler="$ctrl.onSettingsSaved()"
+		>
+	</gj-form-dashboard-site-settings>
+
+</div>

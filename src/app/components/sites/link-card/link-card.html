@@ -1,0 +1,21 @@
+<app-card>
+	<div class="card-content">
+		<p>
+			You can access your site through this URL:
+		</p>
+		<input class="form-control" :value="this.site.url">
+	</div>
+	<div class="card-controls">
+		<button class="btn btn-outline" @click="copyLink">
+			<app-jolticon icon="link" />
+			Copy Link
+		</button>
+		<a class="btn btn-outline"
+			:href="this.site.url"
+			target="_blank"
+			>
+			<app-jolticon icon="share" />
+			View Site
+		</a>
+	</div>
+</app-card>
