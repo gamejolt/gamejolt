@@ -71,7 +71,7 @@ export class SiteEditorModalComponent
 		this.isDirty = true;
 	}
 
-	save()
+	async save()
 	{
 		const data = {
 			template_id: this.currentTemplateId,
@@ -79,14 +79,15 @@ export class SiteEditorModalComponent
 			content_blocks: this.site.content_blocks,
 		};
 
-		Api.sendRequest( `/web/dash/sites/editor-save/${this.siteId}`, data, { sanitizeComplexData: false } )
-			.then( ( _response: any ) =>
-			{
-				this.growls.success(
-					this.gettextCatalog.getString( 'Your site has been saved.' ),
-					this.gettextCatalog.getString( 'Site Saved' ),
-				);
-			} );
+		this.isDirty = false;
+		this.close();
+
+		await Api.sendRequest( `/web/dash/sites/editor-save/${this.siteId}`, data, { sanitizeComplexData: false } );
+
+		this.growls.success(
+			this.gettextCatalog.getString( 'Your site has been saved.' ),
+			this.gettextCatalog.getString( 'Site Saved' ),
+		);
 	}
 
 	close()
