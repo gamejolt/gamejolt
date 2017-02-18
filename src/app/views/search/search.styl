@@ -15,8 +15,3 @@ $search-media-list-gutter = 10px
 	.form-group
 		margin: 0
 		position: relative
-
-for i in 1..10
-	@media $media-sm-up
-		.search-media-list-user:nth-child( n + {i * 6 + 1} ):nth-child( -n + {i * 6 + 7} )
-			animation-delay: i * 100ms
