@@ -17,7 +17,7 @@
 									<span class="jolticon jolticon-check"></span>
 								</span>
 								&nbsp;-->
-								Use a Template
+								<span translate>Use a Template</span>
 							</a>
 						</li>
 						<li>
@@ -30,7 +30,7 @@
 									>
 									<span class="jolticon jolticon-check"></span>
 								</span>-->
-								Upload Your Own
+								<span translate>Upload Your Own</span>
 							</a>
 						</li>
 					</ul>
@@ -45,22 +45,22 @@
 					<div class="col-xs-9">
 
 						<div class="alert alert-success" ng-if="$ctrl.customizableEnabled">
-							<p><b>Your site is turned on and active.</b></p>
-							<p>You can customize it using the Site Editor below.</p>
+							<p><strong translate>Your site is turned on and active.</strong></p>
+							<p translate>You can customize it using the Site Editor below.</p>
 						</div>
 
 						<div class="alert alert-success" ng-if="$ctrl.staticEnabled">
-							<p><b>Your static site is turned on and active.</b></p>
-							<p>You can upload new static site builds at any time.</p>
+							<p><strong translate>Your static site is turned on and active.</strong></p>
+							<p translate>You can upload new static site builds at any time.</p>
 						</div>
 
 					</div>
 					<div class="col-xs-3">
 						<button class="btn btn-danger-outline anim-fade-in no-animate-leave pull-right"
 							ng-click="$ctrl.disable()"
-							gj-tooltip="This will turn your Site off completely and it will no longer be accessible."
+							gj-tooltip="{{ 'This will turn your Site off completely and it will no longer be accessible.' | translate }}"
 							>
-							Disable
+							<span translate>Disable</span>
 						</button>
 					</div>
 				</div>
@@ -73,7 +73,7 @@
 						<div class="row">
 							<div class="col-xs-8 col-centered">
 
-								<p class="lead">
+								<p class="lead" translate>
 									Use one of our pre-built templates and customize it to your style.
 								</p>
 
@@ -81,7 +81,7 @@
 									ng-click="$ctrl.enable()"
 									gj-tooltip="{{ $ctrl.staticEnabled ? 'This will disable your static site and use a customizable template instead.' : undefined }}"
 									>
-									Turn On
+									<span translate>Turn On</span>
 								</button>
 
 							</div>
@@ -91,13 +91,20 @@
 					<div ng-if="$ctrl.customizableEnabled">
 
 						<button class="btn btn-outline anim-fade-in no-animate-leave stagger"
-							ng-click="$ctrl.showEditor()"
+							ng-click="$ctrl.showEditor( 'theme' )"
 							>
 							<span class="jolticon jolticon-cog"></span>
-							Show Site Editor
+							<span translate>Customize Theme</span>
 						</button>
 
-						<h2>
+						<button class="btn btn-outline anim-fade-in no-animate-leave stagger"
+							ng-click="$ctrl.showEditor( 'content' )"
+							>
+							<span class="jolticon jolticon-edit"></span>
+							<span translate>Edit Content</span>
+						</button>
+
+						<h2 translate>
 							Settings
 						</h2>
 
@@ -119,7 +126,7 @@
 						<div class="row">
 							<div class="col-xs-8 col-centered">
 
-								<p class="lead">
+								<p class="lead" translate>
 									Have a site already, or want full and complete control over how your site will look? Upload a .zip file of static content.
 								</p>
 
@@ -135,7 +142,7 @@
 									ng-click="$ctrl.activateBuild()"
 									gj-tooltip="{{ $ctrl.customizableEnabled ? 'This will disable your template and use your static build instead.' : undefined }}"
 									>
-									Turn On
+									<span translate>Turn On</span>
 								</button>
 
 							</div>
@@ -144,7 +151,7 @@
 
 					<div ng-if="$ctrl.staticEnabled">
 
-						<h2>Upload a New Build</h2>
+						<h2 translate>Upload a New Build</h2>
 
 						<gj-form-dashboard-site-build
 							site="$ctrl.site"
@@ -159,9 +166,9 @@
 			</div>
 			<div class="col-xs-4">
 
-				<p class="page-help">Every game on Game Jolt, even works-in-progress, needs a maturity rating to describe its content. Accurate ratings and details about content help gamers make informed decisions. Remember, you can always come back later and make changes.</p>
+				<!--<p class="page-help" translate>Every game on Game Jolt, even works-in-progress, needs a maturity rating to describe its content. Accurate ratings and details about content help gamers make informed decisions. Remember, you can always come back later and make changes.</p>
 
-				<hr>
+				<hr>-->
 
 				<gj-card>
 					<div class="card-content">

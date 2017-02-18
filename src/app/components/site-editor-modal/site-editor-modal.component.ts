@@ -6,13 +6,16 @@ import { Site } from '../../../lib/gj-lib-client/components/site/site-model';
 import { SiteTemplate } from '../../../lib/gj-lib-client/components/site/template/template-model';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 
+type EditorTab = 'theme' | 'content';
+
 @Component({
 	selector: 'gj-site-editor-modal',
 	template,
 })
 export class SiteEditorModalComponent
 {
-	@Input( '<' ) siteId: number;
+	@Input() siteId: number;
+	@Input() initialTab?: EditorTab;
 
 	@Output( 'close' ) private _close = new EventEmitter<void>();
 
@@ -22,7 +25,7 @@ export class SiteEditorModalComponent
 	theme: SiteTheme;
 
 	isLoaded = false;
-	tab: 'theme' | 'content' = 'theme';
+	tab: EditorTab;
 
 	private isDirty = false;
 	private locationWatcher: Function;
@@ -35,6 +38,8 @@ export class SiteEditorModalComponent
 		@Inject( '$location' ) private $location: ng.ILocationService,
 	)
 	{
+		this.tab = this.initialTab || 'theme';
+
 		Api.sendRequest( `/web/dash/sites/editor/${this.siteId}` )
 			.then( ( response: any ) =>
 			{

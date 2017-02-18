@@ -62,10 +62,10 @@ export class RouteSiteComponent implements OnInit
 		this.game.assign( response.game );
 	}
 
-	showEditor()
+	showEditor( tab: 'theme' | 'content' )
 	{
 		if ( this.site ) {
-			this.editorModal.show( this.site.id );
+			this.editorModal.show( this.site.id, tab );
 		}
 	}
 

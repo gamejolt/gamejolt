@@ -12,12 +12,13 @@ export class SiteEditorModal
 	{
 	}
 
-	show( siteId: number )
+	show( siteId: number, tab: 'theme' | 'content' = 'theme' )
 	{
 		const body: HTMLElement = this.$document.find( 'body' ).eq( 0 )[0];
 
 		const modalScope = this.$rootScope.$new( true );
 		modalScope['siteId'] = siteId;
+		modalScope['tab'] = tab;
 		modalScope['close'] = () =>
 		{
 			this.$animate.leave( modalElem ).then( () =>
@@ -29,8 +30,9 @@ export class SiteEditorModal
 
 		const modalElemTemplate = angular.element( `
 			<gj-site-editor-modal
-				site-id="siteId"
-				close="close()"
+				[site-id]="siteId"
+				[initial-tab]="tab"
+				(close)="close()"
 				>
 			</gj-site-editor-modal>`
 		);
