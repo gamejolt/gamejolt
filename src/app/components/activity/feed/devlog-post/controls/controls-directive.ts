@@ -43,7 +43,6 @@ export class ActivityFeedDevlogPostControlsComponent implements OnInit
 	constructor(
 		@Inject( '$state' ) $state: StateService,
 		@Inject( 'App' ) public app: App,
-		@Inject( 'Clipboard' ) private clipboard: Clipboard,
 		@Inject( 'DevlogPostEdit' ) private editService: DevlogPostEdit,
 	)
 	{
@@ -108,7 +107,7 @@ export class ActivityFeedDevlogPostControlsComponent implements OnInit
 
 	copyShareUrl()
 	{
-		this.clipboard.copy( this.shareUrl );
+		Clipboard.copy( this.shareUrl );
 	}
 
 	async showEdit()

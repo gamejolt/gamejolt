@@ -13,8 +13,6 @@ import ConnectionStatePermissionsModule from '../lib/gj-lib-client/components/co
 import { ModelModule } from '../lib/gj-lib-client/components/model/model.module';
 import LoadModule from '../lib/gj-lib-client/components/load/load';
 import LocationModule from '../lib/gj-lib-client/components/location/location';
-import ClipboardModule from '../lib/gj-lib-client/components/clipboard/clipboard';
-import CardModule from '../lib/gj-lib-client/components/card/card';
 import PaginationModule from '../lib/gj-lib-client/components/pagination/pagination';
 import ModalConfirmModule from '../lib/gj-lib-client/components/modal/confirm/confirm';
 import { EnvironmentModule } from '../lib/gj-lib-client/components/environment/environment.module';
@@ -103,6 +101,8 @@ import { WidgetCompilerModule } from '../lib/gj-lib-client/components/widget-com
 import { GamePackageCardModule } from '../lib/gj-lib-client/components/game/package/card/card.module';
 import { NavTabListModule } from '../lib/gj-lib-client/components/nav/tab-list/tab-list.module';
 import { SettingsModule } from './components/settings/settings.module';
+import { ClipboardModule } from '../lib/gj-lib-client/components/clipboard/clipboard.module';
+import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 
 @NgModule({
 	imports: [

@@ -36,9 +36,11 @@
 				<!-- track by ID was breaking -->
 				<gj-card
 					ng-repeat="package in listCtrl.packages"
-					is-draggable="listCtrl.packages.length > 1"
+					[is-draggable]="listCtrl.packages.length > 1"
 					ui-tree-node
 					>
+
+					<gj-card-drag-handle ng-if="listCtrl.packages.length > 1"></gj-card-drag-handle>
 
 					<a class="card-remove"
 						ng-if="!package.has_sales"

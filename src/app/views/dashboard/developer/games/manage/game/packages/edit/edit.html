@@ -145,7 +145,7 @@
 
 				<gj-card
 					ng-repeat="release in editCtrl.releases track by release.id"
-					is-inactive="release.status == Game_Release.STATUS_HIDDEN"
+					[is-inactive]="release.status == Game_Release.STATUS_HIDDEN"
 					>
 
 					<a class="card-remove" ng-click="editCtrl.removeRelease( release )">

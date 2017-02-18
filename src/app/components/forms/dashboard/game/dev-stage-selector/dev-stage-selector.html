@@ -7,7 +7,7 @@
 		]"
 		>
 		<a ng-click="$ctrl.select( stage )">
-			<gj-card is-disabled="!$ctrl.isEnabled( stage )">
+			<gj-card [is-disabled]="!$ctrl.isEnabled( stage )">
 				<div class="dev-stage-selector-content">
 
 					<div class="card-title">

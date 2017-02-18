@@ -8,7 +8,6 @@ import { GameSketchfab } from '../../../../../../../../lib/gj-lib-client/compone
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Loader } from '../../../../../../../../lib/gj-lib-client/components/loader/loader.service';
 import { Game } from '../../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { MediaItem } from '../../../../../../../../lib/gj-lib-client/components/media-item/media-item-model';
 import { Environment } from '../../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { GameVideo } from '../../../../../../../../lib/gj-lib-client/components/game/video/video.model';
 import { GameScreenshot } from '../../../../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
@@ -36,10 +35,10 @@ export class RouteMediaComponent implements OnInit
 
 	Loader = Loader;
 	Environment = Environment;
+	clipboard = Clipboard;
 
 	constructor(
 		@Inject( 'ModalConfirm' ) private confirm: ModalConfirm,
-		@Inject( 'Clipboard' ) public clipboard: Clipboard,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 	)
 	{
