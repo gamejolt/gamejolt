@@ -33,7 +33,6 @@ import GamePlayModalModule from '../lib/gj-lib-client/components/game/play-modal
 import LoadModule from '../lib/gj-lib-client/components/load/load';
 import GameThumbnailImgModule from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import GameThumbnailModule from '../app/components/game/thumbnail/thumbnail';
-import CardModule from '../lib/gj-lib-client/components/card/card';
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
 import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive';
@@ -42,6 +41,7 @@ import { HistoryTickModule } from '../lib/gj-lib-client/components/history-tick/
 import { PartnerReferralModule } from '../lib/gj-lib-client/components/partner-referral/partner-referral.module';
 import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
 import { GamePackageCardModule } from '../lib/gj-lib-client/components/game/package/card/card.module';
+import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 
 const ViewsModule = angular.module( 'App.Views', [] ).name;
 importContext( require.context( './views', true, /\.state\.ts$/ ) );
