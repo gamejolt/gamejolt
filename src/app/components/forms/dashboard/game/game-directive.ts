@@ -20,11 +20,11 @@ export function GameFormFactory(
 		scope.App = App;
 
 		// Reset values.
-		scope.acceptedRules = scope.method != 'add';
+		scope.acceptedRules = scope.method !== 'add';
 
 		scope.onLoaded = ( payload: any ) => angular.extend( scope, payload );
 
-		if ( scope.method == 'add' ) {
+		if ( scope.method === 'add' ) {
 			scope.formModel.referrals_enabled = 1;
 		}
 

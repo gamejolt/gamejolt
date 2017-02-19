@@ -49,8 +49,24 @@
 				<fieldset ng-class="{ 'game-form-disabled': isDisabled }" ng-disabled="isDisabled">
 
 					<form-group name="title" label="{{ 'dash.games.form.title_label' | translate }}">
-						<input form-control="text" ng-maxlength="250">
+						<input form-control ng-maxlength="250">
 						<control-errors></control-errors>
+					</form-group>
+
+					<form-group name="path" label="{{ 'URL Path' | translate }}">
+						<input form-control
+							gj-pattern="urlPath"
+							ng-maxlength="50"
+							gj-form-validate-availability="/web/dash/developer/games/check-field-availability/path"
+							>
+
+						<control-errors></control-errors>
+
+						<div class="help-block" translate>
+							<div translate>Customize your game page URLs. Make them really pretty.</div>
+							<div><span translate>Game Page URL</span> <code>gamejolt.com/games/<strong>{{ formModel.path.toLowerCase() || '_' }}</strong>/{{ ::baseModel.id || 'id' }}</code></div>
+							<div><span translate>Sites URL</span> <code>{{ ::App.user.username.toLowerCase() }}.gamejolt.io/<strong>{{ formModel.path.toLowerCase() || '_' }}</strong></code></div>
+						</div>
 					</form-group>
 
 					<form-group name="web_site" label="{{ 'dash.games.form.website_label' | translate }}" optional="true">
@@ -74,7 +90,7 @@
 
 					<div gj-expand-when="formModel.creation_tool == 'other'">
 						<form-group name="creation_tool_other" label="{{ 'dash.games.form.engine_other_label' | translate }}" optional="true">
-							<input form-control="text" ng-maxlength="200">
+							<input form-control ng-maxlength="200">
 							<control-errors></control-errors>
 
 							<p class="help-block">
