@@ -120,10 +120,10 @@ export class ActivityFeedDevlogPostMediaComponent implements AfterViewInit
 			const velocity = $event['velocityX'];
 			if ( Math.abs( velocity ) > 0.65 && $event['distance'] > 10 ) {
 				if ( velocity > 0 ) {
-					this.next();
+					this.prev();
 				}
 				else {
-					this.prev();
+					this.next();
 				}
 				return;
 			}
