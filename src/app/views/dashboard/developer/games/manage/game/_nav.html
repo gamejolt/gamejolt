@@ -65,8 +65,9 @@
 	</button>
 
 	<button ng-if="$ctrl.isWizard" class="btn btn-outline btn-block"
-		ng-click="$ctrl.saveDraft()"
+		ng-click="$ctrl._saveDraft()"
 		>
-		<span translate>Save Draft</span>
+		<span class="visible-lg" translate>Save Draft</span>
+		<span class="visible-md" translate>Save</span>
 	</button>
 </div>

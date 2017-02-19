@@ -1,4 +1,4 @@
-import { Component, Input, Inject } from 'ng-metadata/core';
+import { Component, Input, Inject, EventEmitter, Output } from 'ng-metadata/core';
 import { StateService } from 'angular-ui-router';
 import * as template from '!html-loader!./game.component.html';
 
@@ -17,6 +17,8 @@ export class RouteGameComponent
 	@Input() mediaItems: MediaItem[];
 	@Input() canPublish: boolean;
 
+	@Output() private saveDraft = new EventEmitter<void>();
+
 	coverIsLoaded = false;
 
 	Screen = Screen;
@@ -29,5 +31,10 @@ export class RouteGameComponent
 		// For back-compat.
 		$scope['manageCtrl'] = $scope.$parent['manageCtrl'];
 		$scope['gameCtrl'] = this;
+	}
+
+	_saveDraft()
+	{
+		this.saveDraft.emit( undefined );
 	}
 }
