@@ -1,11 +1,19 @@
-.ctrl-dashboard-developer-games-manage-game
-	.nav-required-step-icon
-		float: right
+.nav-required-step-icon
 
-		&-incomplete
-			.jolticon
-				color: $gj-pink !important
+	@media $media-md-up
+		position: absolute
+		left: -25px
 
-		&-complete
-			.jolticon
-				color: $gj-dark-green !important
+	&-incomplete
+		.jolticon
+			color: $gj-pink !important
+
+	&-complete
+		.jolticon
+			color: $gj-dark-green !important
+
+	@media $media-mobile
+		a.active &
+			&-complete
+				.jolticon
+					color: $gj-green !important
