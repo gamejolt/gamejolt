@@ -69,7 +69,7 @@
 		</div>
 	</div>
 
-	<gj-game-thumbnail-img game="$ctrl.game"></gj-game-thumbnail-img>
+	<gj-game-thumbnail-img [game]="$ctrl.game"></gj-game-thumbnail-img>
 
 	<video ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop" preload loop autoplay ng-attr-poster="{{ ::$ctrl.game.img_thumbnail }}">
 		<source ng-src="{{ ::$ctrl.webm }}" type="video/webm">

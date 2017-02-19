@@ -10,7 +10,7 @@
 			ng-if="::$ctrl.feed.showGameInfo && !$ctrl.screen.isXs"
 			ui-sref="discover.games.view.overview( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id } )"
 			>
-			<gj-game-thumbnail-img game="::$ctrl.post.game"></gj-game-thumbnail-img>
+			<gj-game-thumbnail-img [game]="::$ctrl.post.game"></gj-game-thumbnail-img>
 		</a>
 
 		<a class="timeline-list-item-header"

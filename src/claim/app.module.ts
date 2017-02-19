@@ -31,7 +31,6 @@ import { GameBuildParamModule } from '../lib/gj-lib-client/components/game/build
 import { GameBuildLaunchOptionModule } from '../lib/gj-lib-client/components/game/build/launch-option/launch-option.module';
 import GamePlayModalModule from '../lib/gj-lib-client/components/game/play-modal/play-modal';
 import LoadModule from '../lib/gj-lib-client/components/load/load';
-import GameThumbnailImgModule from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import GameThumbnailModule from '../app/components/game/thumbnail/thumbnail';
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
@@ -42,6 +41,7 @@ import { PartnerReferralModule } from '../lib/gj-lib-client/components/partner-r
 import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
 import { GamePackageCardModule } from '../lib/gj-lib-client/components/game/package/card/card.module';
 import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
+import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
 
 const ViewsModule = angular.module( 'App.Views', [] ).name;
 importContext( require.context( './views', true, /\.state\.ts$/ ) );

@@ -43,7 +43,7 @@
 			<span class="jolticon jolticon-stream"></span>
 		</span>
 
-		<gj-game-thumbnail-img game="::$ctrl.game"></gj-game-thumbnail-img>
+		<gj-game-thumbnail-img [game]="::$ctrl.game"></gj-game-thumbnail-img>
 
 		<gj-video
 			ng-if="$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop && $ctrl.isActive"

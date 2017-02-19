@@ -26,7 +26,6 @@ import YoutubeSubscribeModule from '../lib/gj-lib-client/components/social/youtu
 import { YoutubeChannelModule } from '../lib/gj-lib-client/components/youtube/channel/channel.module';
 import CommentVideoLightboxModule from '../lib/gj-lib-client/components/comment/video/lightbox/lightbox';
 import CommentVideoThumbnailModule from '../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
-import GameThumbnailImgModule from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import ResponsiveDimensionsModule from '../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
 import VideoModule from '../lib/gj-lib-client/components/video/video';
 import { FiresidePostModule } from '../lib/gj-lib-client/components/fireside/post/post.module';
@@ -103,6 +102,7 @@ import { NavTabListModule } from '../lib/gj-lib-client/components/nav/tab-list/t
 import { SettingsModule } from './components/settings/settings.module';
 import { ClipboardModule } from '../lib/gj-lib-client/components/clipboard/clipboard.module';
 import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
+import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
 
 @NgModule({
 	imports: [

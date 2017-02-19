@@ -120,7 +120,7 @@
 				<div class="row">
 					<div class="col-xs-2">
 						<a style="display: block" ui-sref="discover.games.view.overview( { slug: viewCtrl.games[ firstPackage.game_id ].slug, id: firstPackage.game_id } )">
-							<gj-game-thumbnail-img game="::viewCtrl.games[ firstPackage.game_id ]"></gj-game-thumbnail-img>
+							<gj-game-thumbnail-img [game]="::viewCtrl.games[ firstPackage.game_id ]"></gj-game-thumbnail-img>
 						</a>
 					</div>
 					<div class="col-xs-10">
