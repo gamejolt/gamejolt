@@ -5,6 +5,8 @@ import { Site } from '../../../../../../../lib/gj-lib-client/components/site/sit
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 
+require( './site.component.styl' );
+
 @Component({
 	selector: 'route-dashboard-developer-games-manage-site',
 	template,

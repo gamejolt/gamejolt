@@ -1,13 +1,30 @@
 <section class="section">
 	<div class="container">
 
+		<div ng-if="!$ctrl.game.path">
+			<div class="alert alert-info">
+				<p translate>In order to set up a custom site for your game, you first have to set a URL path in your game details page.</p>
+				<div class="alert-actions">
+					<a class="btn btn-outline btn-dark-variant"
+						ui-sref="dashboard.developer.games.manage.game.details( { id: $ctrl.game.id } )"
+						translate
+						>
+						Edit Game Details
+					</a>
+				</div>
+			</div>
+			<br><br>
+		</div>
+
 		<div class="row">
 			<div class="col-xs-8">
 
-				<gj-sites-manage-page
-					[site]="$ctrl.site"
-					>
-				</gj-sites-manage-page>
+				<div ng-class="{ _disabled: !$ctrl.game.path }">
+					<gj-sites-manage-page
+						[site]="$ctrl.site"
+						>
+					</gj-sites-manage-page>
+				</div>
 
 			</div>
 			<div class="col-xs-4">
@@ -17,6 +34,7 @@
 				<hr>-->
 
 				<gj-sites-link-card
+					ng-if="$ctrl.game.path"
 					[site]="$ctrl.site"
 					>
 				</gj-sites-link-card>
