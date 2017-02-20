@@ -17,7 +17,7 @@
 			<control-errors></control-errors>
 
 			<p class="help-block">
-				{{ ::Environment.baseUrl }}/@{{ formModel.username }}
+				<span translate>Profile URL</span> <code>{{ ::Environment.baseUrl }}/@<strong>{{ formModel.username || '_' }}</strong></code>
 			</p>
 
 			<div gj-expand-when="formModel.username != baseModel.username">
@@ -26,7 +26,6 @@
 				</div>
 			</div>
 		</form-group>
-
 
 		<div class="form-group" ng-if="usernameTimeLeft">
 			<label class="control-label">{{ ::'dash.profile.edit.username_label' | translate }}</label>
