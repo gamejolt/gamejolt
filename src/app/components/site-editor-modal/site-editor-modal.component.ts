@@ -85,8 +85,6 @@ export class SiteEditorModalComponent
 		};
 
 		this.isDirty = false;
-		this.close();
-
 		await Api.sendRequest( `/web/dash/sites/editor-save/${this.siteId}`, data, { sanitizeComplexData: false } );
 
 		this.growls.success(
