@@ -65,7 +65,7 @@
 
 						<div ng-repeat="templateId in [ $ctrl.currentTemplateId ]">
 							<gj-theme-editor
-								[window-id]="site-editor-modal-iframe"
+								window-id="site-editor-modal-iframe"
 								[resource-id]="$ctrl.site.id"
 								[template]="templateId"
 								[theme]="$ctrl.theme.data"
@@ -83,7 +83,7 @@
 
 					<gj-content-block-editor
 						[site]="$ctrl.site"
-						[window-id]="site-editor-modal-iframe"
+						window-id="site-editor-modal-iframe"
 						[content-block]="$ctrl.site.content_blocks[0]"
 						(changed)="$ctrl.contentEdited()"
 						>
