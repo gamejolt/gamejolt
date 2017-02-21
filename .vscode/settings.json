@@ -3,5 +3,8 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "files.associations": {
     "*.html": "vue-html"
+  },
+  "emmet.syntaxProfiles": {
+    "vue-html": "html"
   }
 }
