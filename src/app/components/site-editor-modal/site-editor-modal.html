@@ -54,8 +54,8 @@
 					<p class="small text-muted" translate>Themes decide the layout and general styling of your page.</p>
 
 					<gj-theme-selector
-						templates="$ctrl.templates"
-						current-template="$ctrl.currentTemplateId"
+						[templates]="$ctrl.templates"
+						[current-template]="$ctrl.currentTemplateId"
 						(changed)="$ctrl.currentTemplateId = $event"
 						>
 					</gj-theme-selector>
@@ -65,10 +65,10 @@
 
 						<div ng-repeat="templateId in [ $ctrl.currentTemplateId ]">
 							<gj-theme-editor
-								window-id="site-editor-modal-iframe"
-								resource-id="$ctrl.site.id"
-								template="templateId"
-								theme="$ctrl.theme.data"
+								[window-id]="site-editor-modal-iframe"
+								[resource-id]="$ctrl.site.id"
+								[template]="templateId"
+								[theme]="$ctrl.theme.data"
 								(changed)="$ctrl.themeEdited( $event )"
 								>
 							</gj-theme-editor>
@@ -82,8 +82,9 @@
 				<div class="well">
 
 					<gj-content-block-editor
-						window-id="site-editor-modal-iframe"
-						content-block="$ctrl.site.content_blocks[0]"
+						[site]="$ctrl.site"
+						[window-id]="site-editor-modal-iframe"
+						[content-block]="$ctrl.site.content_blocks[0]"
 						(changed)="$ctrl.contentEdited()"
 						>
 					</gj-content-block-editor>
