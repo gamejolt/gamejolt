@@ -6,11 +6,13 @@
 		<input class="form-control" :value="this.site.url">
 	</div>
 	<div class="card-controls">
-		<button class="btn btn-outline" @click="copyLink">
+		<button class="btn btn-outline btn-block"
+			@click="copyLink"
+			>
 			<app-jolticon icon="link" />
 			Copy Link
 		</button>
-		<a class="btn btn-outline"
+		<a class="btn btn-outline btn-block"
 			:href="this.site.url"
 			target="_blank"
 			>

@@ -21,19 +21,25 @@
 
 <div ng-if="$ctrl.enabled">
 
-	<button class="btn btn-outline anim-fade-in no-animate-leave stagger"
-		ng-click="$ctrl.showEditor( 'theme' )"
-		>
-		<span class="jolticon jolticon-cog"></span>
-		<span translate>Customize Theme</span>
-	</button>
+	<div class="alert alert-warning visible-xs full-bleed-xs">
+		<p>The site editor doesn't work on mobile devices at this time.</p>
+	</div>
 
-	<button class="btn btn-outline anim-fade-in no-animate-leave stagger"
-		ng-click="$ctrl.showEditor( 'content' )"
-		>
-		<span class="jolticon jolticon-edit"></span>
-		<span translate>Edit Content</span>
-	</button>
+	<div class="hidden-xs">
+		<button class="btn btn-outline anim-fade-in no-animate-leave stagger"
+			ng-click="$ctrl.showEditor( 'theme' )"
+			>
+			<span class="jolticon jolticon-cog"></span>
+			<span translate>Customize Theme</span>
+		</button>
+
+		<button class="btn btn-outline anim-fade-in no-animate-leave stagger"
+			ng-click="$ctrl.showEditor( 'content' )"
+			>
+			<span class="jolticon jolticon-edit"></span>
+			<span translate>Edit Content</span>
+		</button>
+	</div>
 
 	<h2 translate>
 		Settings
