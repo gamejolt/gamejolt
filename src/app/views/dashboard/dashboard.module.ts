@@ -9,7 +9,6 @@ import Activity from './activity/activity';
 import Analytics from './analytics/analytics';
 import TimezoneModule from '../../../lib/gj-lib-client/components/timezone/timezone';
 import ColorpickerModule from '../../../lib/gj-lib-client/components/colorpicker/colorpicker';
-import ThemeEditorModule from '../../../lib/gj-lib-client/components/theme/theme-editor/theme-editor';
 import ThemeSelectorModule from '../../../lib/gj-lib-client/components/theme/selector/selector';
 import ContentBlockEditor from '../../../lib/gj-lib-client/components/content-block/editor/editor';
 import SiteEditorModalModule from '../../components/site-editor-modal/site-editor-modal';
@@ -20,6 +19,7 @@ import { SiteBuildModule } from '../../../lib/gj-lib-client/components/site/buil
 import { SiteContentBlockModule } from '../../../lib/gj-lib-client/components/site/content-block/content-block.module';
 import { GraphModule } from '../../../lib/gj-lib-client/components/graph/graph.module';
 import { FormsDashboardModule } from '../../components/forms/dashboard/dashboard.module';
+import { ThemeEditorModule } from '../../../lib/gj-lib-client/components/theme/theme-editor/theme-editor';
 
 import '../../../lib/gj-lib-client/components/date-helper/date-helper';
 import '../../../lib/gj-lib-client/components/datetime-picker/datetime-picker';
