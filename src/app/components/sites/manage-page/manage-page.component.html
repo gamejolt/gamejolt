@@ -27,6 +27,16 @@
 			</a>
 		</li>
 	</ul>
+	<ul class="pull-right">
+		<li>
+			<a
+				ng-class="{ active: $ctrl.tab === 'domain' }"
+				ng-click="$ctrl.tab = 'domain'"
+				>
+				<span translate>Custom Domain</span>
+			</a>
+		</li>
+	</ul>
 </gj-nav-tab-list>
 
 <div class="row"
@@ -73,3 +83,9 @@
 	[template-enabled]="$ctrl.templateEnabled"
 	>
 </gj-sites-manage-page-static>
+
+<gj-sites-manage-page-domain
+	ng-if="$ctrl.tab === 'domain'"
+	[site]="$ctrl.site"
+	>
+</gj-sites-manage-page-domain>

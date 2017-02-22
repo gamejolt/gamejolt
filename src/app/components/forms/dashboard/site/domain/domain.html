@@ -1,0 +1,24 @@
+<form gj-form="formModel" name="domainForm">
+
+	<form-group name="domain" label="{{ 'Domain' | translate }}" optional="true">
+		<div class="help-block" translate>
+			You can optionally override the default title for your site. This will show in search engines, and in the tab bar of browsers. By default it's the title of your game.
+		</div>
+		<input form-control
+			gj-pattern="domain"
+			ng-maxlength="100"
+			>
+		<control-errors></control-errors>
+	</form-group>
+
+	<button
+		gj-form-submit-button
+		class="btn btn-success-outline"
+		ng-disabled="!domainForm.$valid"
+		ng-click="onSubmit()"
+		>
+		<span class="jolticon jolticon-edit"></span>
+		<span translate>Save</span>
+	</button>
+
+</form>

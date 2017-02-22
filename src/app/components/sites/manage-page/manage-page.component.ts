@@ -13,7 +13,7 @@ export class SitesManagePageComponent implements OnInit
 	@Input() site: Site;
 	@Input() game?: Game;
 
-	tab: 'template' | 'static' = 'template';
+	tab: 'template' | 'static' | 'domain' = 'template';
 
 	get staticEnabled()
 	{
