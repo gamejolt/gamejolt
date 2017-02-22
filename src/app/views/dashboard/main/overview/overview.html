@@ -186,6 +186,34 @@
 				</div>
 
 				<!--
+					Sites
+				-->
+				<div ng-if="::App.user.is_developer">
+					<h2>
+						<span translate>Sites</span>
+						<span class="tag tag-pink" translate>New!</span>
+					</h2>
+
+					<div class="page-help">
+						<p translate><b>Game Jolt Sites are customizable external sites for your portfolio and games!</b> You can use a customizable template, or simply upload your own static site.</p>
+					</div>
+
+					<div class="page-help">
+						<p translate>You can set up a <b>game site</b> when managing your game.</p>
+					</div>
+
+					<div>
+						<a class="btn btn-success-outline"
+							ui-sref="dashboard.main.site"
+							gj-track-event="dash:overview:quick-profile-site"
+							>
+							<span class="jolticon jolticon-cog"></span>
+							<span translate>Edit Portfolio Site</span>
+						</a>
+					</div>
+				</div>
+
+				<!--
 					Manage Games
 				-->
 				<h2 translate>
@@ -244,7 +272,7 @@
 								<span class="jolticon jolticon-ellipsis-h"></span>
 							</a>
 
-							<gj-popover popover-id="overview-game-more-{{ ::game.id }}">
+							<gj-popover [popover-id]="::'overview-game-more-' + game.id">
 								<div class="list-group list-group-dark">
 									<a class="list-group-item"
 										gj-track-event="dash:overview:quick-game-packages"

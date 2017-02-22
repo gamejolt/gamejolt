@@ -25,6 +25,18 @@
 						Purchases
 					</a>
 				</li>
+				<li>
+					<a
+						ui-sref="dashboard.main.site"
+						ng-class="{ active: $state.includes( 'dashboard.main.site') }"
+						gj-tooltip="{{ 'Game Jolt Sites are customizable external sites for your portfolio and games!' | translate }}"
+						tooltip-placement="bottom"
+						>
+						<span translate>Sites</span>
+						&nbsp;
+						<span class="tag tag-pink" translate>New!</span>
+					</a>
+				</li>
 			</ul>
 		</nav>
 	</gj-page-header-nav>
