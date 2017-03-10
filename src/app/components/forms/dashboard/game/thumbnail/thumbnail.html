@@ -30,6 +30,10 @@
 
 		<form-group name="crop" label="{{ (canCrop ? 'dash.games.thumbnail.crop_label' : 'dash.games.thumbnail.nocrop_label') | translate }}" ng-if="formModel.thumbnail_media_item && !formModel.file">
 
+			<div class="alert alert-info" ng-if="canCrop && formModel.thumbnail_media_item.is_animated">
+				<p translate>Animated thumbnails can't be cropped manually. We set a default crop for you instead.</p>
+			</div>
+
 			<div ng-if="canCrop" class="form-control-static">
 				<img ng-src="{{ formModel.thumbnail_media_item.img_url }}"
 					alt=""
@@ -38,6 +42,7 @@
 					img-crop-aspect-ratio="cropAspectRatio"
 					img-crop-min-width="minWidth"
 					img-crop-min-height="minHeight"
+					disabled="formModel.thumbnail_media_item.is_animated"
 					>
 				<control-errors label="{{ 'dash.games.thumbnail.crop_error_label' | translate }}"></control-errors>
 			</div>
