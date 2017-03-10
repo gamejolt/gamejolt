@@ -39,17 +39,17 @@
 			Devlog-Only
 		</span>
 
-		<span class="game-thumbnail-video-tag" ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop">
+		<span class="game-thumbnail-video-tag" ng-if="::$ctrl.game.thumbnail_media_item.is_animated && $ctrl.screen.isDesktop">
 			<span class="jolticon jolticon-stream"></span>
 		</span>
 
 		<gj-game-thumbnail-img [game]="::$ctrl.game"></gj-game-thumbnail-img>
 
 		<gj-video
-			ng-if="$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop && $ctrl.isActive"
-			poster="{{ ::$ctrl.game.img_thumbnail }}"
-			webm="{{ ::$ctrl.game.img_thumbnail_webm }}"
-			mp4="{{ ::$ctrl.game.img_thumbnail_mp4 }}"
+			ng-if="$ctrl.game.thumbnail_media_item.is_animated && $ctrl.screen.isDesktop && $ctrl.isActive"
+			poster="{{ ::$ctrl.game.thumbnail_media_item.mediaserver_url }}"
+			webm="{{ ::$ctrl.game.thumbnail_media_item.mediaserver_url_webm }}"
+			mp4="{{ ::$ctrl.game.thumbnail_media_item.mediaserver_url_mp4 }}"
 			>
 		</gj-video>
 	</div>
