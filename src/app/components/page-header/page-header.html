@@ -41,29 +41,28 @@
 	</section>
 
 	<div ng-if="$ctrl.hasNav && !$ctrl.hideNav" gj-auto-scroll-anchor>
-		<section class="section page-header-nav"
-			gj-scroll-affix
-			should-affix="$ctrl.shouldAffixNav && $ctrl.screen.isLg && $ctrl.screen.height > 750"
-			>
-			<div class="container">
+		<gj-scroll-affix [should-affix]="$ctrl.shouldAffixNav && $ctrl.screen.isLg && $ctrl.screen.height > 750">
+			<section class="section page-header-nav">
+				<div class="container">
 
-				<div class="row">
-					<div ng-class="$ctrl.colClasses ? $ctrl.colClasses : 'col-xs-12'">
+					<div class="row">
+						<div ng-class="$ctrl.colClasses ? $ctrl.colClasses : 'col-xs-12'">
 
-						<div class="row">
-							<div ng-if="::$ctrl.hasControls" class="col-md-4 col-md-push-8">
-								<div class="page-header-controls" ng-transclude="controls"></div>
+							<div class="row">
+								<div ng-if="::$ctrl.hasControls" class="col-md-4 col-md-push-8">
+									<div class="page-header-controls" ng-transclude="controls"></div>
+								</div>
+								<div ng-class="::{ 'col-md-8 col-md-pull-4': $ctrl.hasControls, 'col-xs-12': !$ctrl.hasControls }">
+									<div ng-transclude="nav"></div>
+								</div>
 							</div>
-							<div ng-class="::{ 'col-md-8 col-md-pull-4': $ctrl.hasControls, 'col-xs-12': !$ctrl.hasControls }">
-								<div ng-transclude="nav"></div>
-							</div>
+
 						</div>
-
 					</div>
-				</div>
 
-			</div>
-		</section>
+				</div>
+			</section>
+		</gj-scroll-affix>
 	</div>
 
 </header>

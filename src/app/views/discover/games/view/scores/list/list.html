@@ -85,19 +85,21 @@
 				<!--
 					We put some extra spacing in here because of the affixed game header.
 				-->
-				<div class="score-tables-list" gj-scroll-affix scroll-offset="-80">
-					<div class="list-group">
-						<a class="list-group-item" ng-repeat="table in listCtrl.scoreTables track by table.id"
-							ui-sref="discover.games.view.scores.list( { tableId: table.id } )"
-							ng-class="{ active: table.id == listCtrl.scoreTable.id }"
-							gj-no-auto-scroll
-							>
+				<gj-scroll-affix [scroll-offset]="80">
+					<div class="score-tables-list">
+						<div class="list-group">
+							<a class="list-group-item" ng-repeat="table in listCtrl.scoreTables track by table.id"
+								ui-sref="discover.games.view.scores.list( { tableId: table.id } )"
+								ng-class="{ active: table.id == listCtrl.scoreTable.id }"
+								gj-no-auto-scroll
+								>
 
-							<h5 class="list-group-item-heading sans-margin-bottom"><strong>{{ ::table.name }}</strong></h5>
-							<p class="list-group-item-text">{{ ::table.description }}</p>
-						</a>
+								<h5 class="list-group-item-heading sans-margin-bottom"><strong>{{ ::table.name }}</strong></h5>
+								<p class="list-group-item-text">{{ ::table.description }}</p>
+							</a>
+						</div>
 					</div>
-				</div>
+				</gj-scroll-affix>
 
 			</div>
 		</div>

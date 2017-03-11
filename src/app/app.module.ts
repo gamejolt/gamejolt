@@ -103,6 +103,7 @@ import { ClipboardModule } from '../lib/gj-lib-client/components/clipboard/clipb
 import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
+import { ScrollAffixModule } from '../lib/gj-lib-client/components/scroll/affix/affix.module';
 import { ConnectionModule } from '../lib/gj-lib-client/components/connection/connection.module';
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
 
@@ -211,6 +212,7 @@ import { TranslateModule } from '../lib/gj-lib-client/components/translate/trans
 		NavTabListModule,
 		SettingsModule,
 		ScrollModule,
+		ScrollAffixModule,
 		TranslateModule,
 		AppModuleNg1,
 	],

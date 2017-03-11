@@ -29,7 +29,6 @@ import '../lib/gj-lib-client/components/tooltip/tooltip';
 import '../lib/gj-lib-client/components/toggle-switch/toggle-switch';
 import '../lib/gj-lib-client/components/growls/growls';
 import '../lib/gj-lib-client/components/scroll/parallax/parallax';
-import '../lib/gj-lib-client/components/scroll/affix/affix';
 import '../lib/gj-lib-client/components/scroll/auto-scroll/auto-scroll';
 import '../lib/gj-lib-client/components/scroll/fixed-resizer/fixed-resizer';
 import '../lib/gj-lib-client/components/editable-accordion/editable-accordion';
@@ -169,7 +168,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.ToggleSwitch',
 	'gj.Growls',
 	'gj.Scroll.Parallax',
-	'gj.Scroll.Affix',
 	'gj.Scroll.AutoScroll',
 	'gj.Scroll.FixedResizer',
 	'gj.EditableAccordion',

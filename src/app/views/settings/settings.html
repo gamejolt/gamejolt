@@ -15,22 +15,24 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-3 col-md-2 hidden-xs">
-				<nav class="platform-list" gj-scroll-affix>
-					<ul>
-						<li ng-if="Environment.isClient">
-							<a href="#settings-client" du-smooth-scroll du-scrollspy translate>settings.client</a>
-						</li>
-						<li>
-							<a href="#settings-chat" du-smooth-scroll du-scrollspy translate>settings.chat</a>
-						</li>
-						<li>
-							<a href="#settings-restrictions" du-smooth-scroll du-scrollspy translate>Restrictions</a>
-						</li>
-						<li>
-							<a href="#settings-notifications" du-smooth-scroll du-scrollspy translate>Notifications</a>
-						</li>
-					</ul>
-				</nav>
+				<gj-scroll-affix>
+					<nav class="platform-list">
+						<ul>
+							<li ng-if="Environment.isClient">
+								<a href="#settings-client" du-smooth-scroll du-scrollspy translate>settings.client</a>
+							</li>
+							<li>
+								<a href="#settings-chat" du-smooth-scroll du-scrollspy translate>settings.chat</a>
+							</li>
+							<li>
+								<a href="#settings-restrictions" du-smooth-scroll du-scrollspy translate>Restrictions</a>
+							</li>
+							<li>
+								<a href="#settings-notifications" du-smooth-scroll du-scrollspy translate>Notifications</a>
+							</li>
+						</ul>
+					</nav>
+				</gj-scroll-affix>
 			</div>
 			<div class="col-sm-9 col-md-8 col-lg-6">
 				<gj-form-settings></gj-form-settings>

@@ -165,17 +165,19 @@
 			<div class="row">
 				<div class="col-md-3" ng-if="Screen.isDesktop">
 
-					<nav class="platform-list" gj-scroll-affix>
-						<ul>
-							<li ng-repeat="report in analyticsCtrl.pageReports track by $index"
-								class="no-animate-leave"
-								>
-								<a ng-href="#report-{{ $index }}" du-smooth-scroll du-scrollspy>
-									{{ report.title }}
-								</a>
-							</li>
-						</ul>
-					</nav>
+					<gj-scroll-affix>
+						<nav class="platform-list">
+							<ul>
+								<li ng-repeat="report in analyticsCtrl.pageReports track by $index"
+									class="no-animate-leave"
+									>
+									<a ng-href="#report-{{ $index }}" du-smooth-scroll du-scrollspy>
+										{{ report.title }}
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</gj-scroll-affix>
 
 				</div>
 				<div class="col-md-9">
