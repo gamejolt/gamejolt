@@ -1,5 +1,4 @@
 import { NgModule } from 'ng-metadata/core';
-import { makeProvider } from '../../../../lib/gj-lib-client/utils/angular-facade';
 import { ActivityFeedComponent } from './feed-directive';
 import { ActivityFeedNotificationComponent } from './notification/notification-directive';
 import { ActivityFeedDevlogPostControlsComponent } from './devlog-post/controls/controls-directive';
@@ -22,7 +21,7 @@ import { ActivityFeedService } from './feed-service';
 		ActivityFeedDevlogPostControlsComponent,
 	],
 	providers: [
-		makeProvider( 'ActivityFeedService', ActivityFeedService ),
+		{ provide: 'ActivityFeedService', useFactory: () => ActivityFeedService },
 	],
 })
 export class ActivityFeedModule { }
