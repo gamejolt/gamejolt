@@ -5,6 +5,7 @@ import * as template from '!html-loader!./listing.html';
 import { GameListingContainer } from './listing-container-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
+import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 
 @Component({
 	selector: 'gj-game-listing',
@@ -24,10 +25,10 @@ export class ListingComponent
 	state: string;
 	env = Environment;
 	screen = Screen;
+	scroll = Scroll;
 
 	constructor(
 		@Inject( '$state' ) $state: StateService,
-		@Inject( 'Scroll' ) public scroll: any,
 	)
 	{
 		this.state = <string>$state.current.name;

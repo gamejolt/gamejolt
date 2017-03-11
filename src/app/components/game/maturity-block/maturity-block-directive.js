@@ -4,7 +4,7 @@ angular.module( 'App.Game.MaturityBlock' ).component( 'gjGameMaturityBlock', {
 		game: '<',
 	},
 	template: require( '!html-loader!./maturity-block.html' ),
-	controller: function( $scope, $document, App, Environment, Settings )
+	controller: function( $scope, Scroll, App, Environment, Settings )
 	{
 		var _this = this;
 
@@ -20,7 +20,7 @@ angular.module( 'App.Game.MaturityBlock' ).component( 'gjGameMaturityBlock', {
 		this.proceed = function()
 		{
 			this.shouldProceed = true;
-			$document.scrollTop( 0 );
+			Scroll.to( 0, { animate: false } );
 		};
 
 		this.removeRestriction = function()
