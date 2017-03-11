@@ -130,9 +130,9 @@
 		</button>
 
 		<gj-popover
-			popover-id="game-buttons-options-{{ ::ctrl.label }}-{{ ::ctrl.game.id }}"
-			popover-on-focus="ctrl.onShowOptions ? ctrl.onShowOptions( $event ) : null"
-			popover-on-blur="ctrl.onHideOptions ? ctrl.onHideOptions( $event ) : null"
+			[popover-id]="::'game-buttons-options-' + ctrl.label + '-' + ctrl.game.id"
+			(focused)="ctrl.onShowOptions ? ctrl.onShowOptions( $event ) : null"
+			(blurred)="ctrl.onHideOptions ? ctrl.onHideOptions( $event ) : null"
 			>
 			<div class="list-group list-group-dark thin">
 				<a class="list-group-item has-icon" ui-sref="discover.games.view.overview( { slug: ctrl.game.slug, id: ctrl.game.id } )">
@@ -160,9 +160,9 @@
 		</gj-popover>
 
 		<gj-popover
-			popover-id="game-buttons-launch-{{ ::ctrl.label }}-{{ ::ctrl.game.id }}"
-			popover-on-focus="ctrl.onShowLaunchOptions ? ctrl.onShowLaunchOptions( $event ) : null"
-			popover-on-blur="ctrl.onHideLaunchOptions ? ctrl.onHideLaunchOptions( $event ) : null"
+			[popover-id]="::'game-buttons-launch-' + ctrl.label + '-' + ctrl.game.id"
+			(focused)="ctrl.onShowLaunchOptions ? ctrl.onShowLaunchOptions( $event ) : null"
+			(blurred)="ctrl.onHideLaunchOptions ? ctrl.onHideLaunchOptions( $event ) : null"
 			>
 			<div class="list-group list-group-dark thin">
 				<a class="list-group-item has-icon"

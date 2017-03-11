@@ -1,10 +1,10 @@
-<gj-popover class="add-to-playlist-popover"
+<gj-popover
 	popover-id="add-to-playlist"
-	popover-on-focus="ctrl.onFocus()"
-	popover-on-blur="ctrl.onBlur()"
+	(focused)="ctrl.onFocus()"
+	(blurred)="ctrl.onBlur()"
 	>
 
-	<div ng-if="ctrl.isShown">
+	<div class="add-to-playlist-popover" ng-if="ctrl.isShown">
 		<div ng-if="ctrl.isLoading">
 			<gj-loading class="loading-centered"></gj-loading>
 		</div>

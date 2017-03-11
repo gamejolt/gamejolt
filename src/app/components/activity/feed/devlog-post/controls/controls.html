@@ -27,14 +27,13 @@
 			</button>
 
 			<gj-popover
-				class="popover-dark"
-				popover-id="{{ ::$ctrl.sharePopoverId }}"
-				popover-append-to-body="::!$ctrl.inModal"
-				popover-on-focus="$ctrl.isShowingShare = true"
-				popover-on-blur="$ctrl.isShowingShare = false"
+				[popover-id]="::$ctrl.sharePopoverId"
+				[append-to-body]="::!$ctrl.inModal"
+				(focused)="$ctrl.isShowingShare = true"
+				(blurred)="$ctrl.isShowingShare = false"
 				>
 
-				<div class="well sans-margin" ng-if="$ctrl.isShowingShare">
+				<div class="well fill-darkest sans-margin" ng-if="$ctrl.isShowingShare">
 					<div class="social-widgets" ng-if="::!$ctrl.env.isClient">
 						<gj-social-twitter-share
 							url="{{ ::$ctrl.shareUrl }}"
@@ -80,7 +79,7 @@
 					<span class="jolticon jolticon-ellipsis-h"></span>
 				</button>
 
-				<gj-popover popover-id="devlog-post-controls-options-{{ ::$ctrl.post.id }}">
+				<gj-popover [popover-id]="::'devlog-post-controls-options-' + $ctrl.post.id">
 					<div class="list-group list-group-dark">
 						<a class="list-group-item has-icon"
 							ng-click="$ctrl.removePost()"

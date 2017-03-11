@@ -38,7 +38,7 @@
 						<span class="jolticon jolticon-ellipsis-h"></span>
 						<span translate>options.options</span>
 					</a>
-					<gj-popover popover-id="data-storage-item-options-{{ item.id }}">
+					<gj-popover [popover-id]="'data-storage-item-options-' + item.id">
 						<div class="list-group nowrap">
 							<a class="list-group-item has-icon" ng-click="$event.stopPropagation(); listCtrl.removeItem( item )">
 								<span class="jolticon jolticon-remove"></span>

@@ -10,7 +10,6 @@ export class HeaderCtrl
 	constructor(
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( 'Popover' ) private popover: Popover,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'ModalConfirm' ) private confirm: ModalConfirm,
@@ -21,7 +20,7 @@ export class HeaderCtrl
 
 	clearHeader()
 	{
-		this.popover.hideAll();
+		Popover.hideAll();
 		this.confirm.show( this.gettextCatalog.getString( 'Are you sure you want to remove your game header?' ), undefined, 'yes' )
 			.then( () => this.$scope['manageCtrl'].game.$clearHeader() );
 	}

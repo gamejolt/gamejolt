@@ -16,10 +16,9 @@
 		</a>
 
 		<gj-popover
-			class="popover-dark"
-			popover-id="comment-avatar-list-item-{{ ::comment.id }}"
-			popover-on-focus="$ctrl.onFocus( comment.id )"
-			popover-on-blur="$ctrl.onBlur( comment.id )"
+			[popover-id]="'comment-avatar-list-item-' + comment.id"
+			(focused)="$ctrl.onFocus( comment.id )"
+			(blurred)="$ctrl.onBlur( comment.id )"
 			>
 			<div class="comment-avatar-list-comment well fill-white sans-margin">
 

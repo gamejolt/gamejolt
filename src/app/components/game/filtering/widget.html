@@ -63,9 +63,9 @@
 -->
 <gj-popover
 	ng-repeat="(filter, options) in ctrl.orderedFilters track by filter"
-	popover-id="games-filter-{{ filter }}"
-	popover-on-focus="ctrl.onPopoverShown( filter )"
-	popover-on-blur="ctrl.onPopoverHidden( filter )"
+	[popover-id]="::'games-filter-' + filter"
+	(focused)="ctrl.onPopoverShown( filter )"
+	(blurred)="ctrl.onPopoverHidden( filter )"
 	>
 
 	<div class="game-filtering-widget-list-group list-group list-group-dark">

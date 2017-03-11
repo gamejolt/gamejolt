@@ -61,7 +61,7 @@
 			</div>
 		</div>
 
-		<gj-popover popover-id="forum-post-popover-{{ ::ctrl.id }}">
+		<gj-popover [popover-id]="::'forum-post-popover-' + ctrl.id">
 			<div class="list-group list-group-dark thin">
 				<a class="list-group-item has-icon"
 					ng-click="ctrl.report()"

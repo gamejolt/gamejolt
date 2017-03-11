@@ -3,7 +3,7 @@
 		<span class="jolticon jolticon-ellipsis-h"></span>
 	</a>
 
-	<gj-popover popover-id="score-user-options-{{ ctrl.score.id }}">
+	<gj-popover [popover-id]="'score-user-options-' + ctrl.score.id">
 		<div class="list-group">
 			<a class="list-group-item has-icon" ui-sref="dashboard.developer.games.manage.api.scoreboards.scores.user.list( { table: ctrl.score.table_id, user: ctrl.score.user.id } )">
 				<span class="jolticon jolticon-pedestals-numbers"></span>

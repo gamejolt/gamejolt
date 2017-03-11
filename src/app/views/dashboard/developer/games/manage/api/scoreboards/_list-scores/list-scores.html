@@ -45,7 +45,7 @@
 						<span class="jolticon jolticon-ellipsis-h"></span>
 						<span translate>options.options</span>
 					</a>
-					<gj-popover popover-id="scores-options-{{ score.id }}">
+					<gj-popover [popover-id]="'scores-options-' + score.id">
 						<div class="list-group nowrap">
 							<a class="list-group-item has-icon" ng-click="$event.stopPropagation(); ctrl.removeScore( score )">
 								<span class="jolticon jolticon-remove"></span>

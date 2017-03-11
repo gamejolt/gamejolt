@@ -149,7 +149,7 @@
 		<span translate>options</span>
 	</button>
 
-	<gj-popover popover-id="game-package-card-more-options-{{ ctrl.package.id }}">
+	<gj-popover [popover-id]="'game-package-card-more-options-' + ctrl.package.id">
 
 		<div ng-if="ctrl.localPackage && (ctrl.browserBuild || (!ctrl.localPackage.install_state && !ctrl.localPackage.isRemoving()))">
 			<div class="list-group nowrap">
