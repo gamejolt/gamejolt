@@ -1,0 +1,11 @@
+// Used for subtracting the bottom margin of thumbnails at the end of a grid.
+.game-thumbnail-grid
+	margin-bottom: -($grid-gutter-width-xs)
+
+	@media $media-sm-up
+		margin-bottom: -($grid-gutter-width)
+
+// Can apply to the ng-repeated element when showing thumbnails.
+// This way you can choose which element gets the animation.
+.game-thumbnail-anim
+	@extend .anim-fade-in-up, .stagger, .no-animate-xs, .no-animate-leave
