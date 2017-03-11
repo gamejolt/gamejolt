@@ -10,7 +10,6 @@ import 'lodash';
 // import '../bower-lib/dexie/dist/latest/Dexie.min';
 
 import '../bower-lib/angular-loading-bar/build/loading-bar.min';
-import '../bower-lib/angular-scroll/angular-scroll.min';
 import '../bower-lib/angular-gettext/dist/angular-gettext.min';
 import '../bower-lib/angular-validation-match/dist/angular-input-match.min';
 
