@@ -9,6 +9,7 @@ import { getProvider } from '../lib/gj-lib-client/utils/utils';
 import { Screen } from '../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
+import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 
 export function attachProvidersApp( $scope: ng.IScope )
 {
@@ -19,7 +20,7 @@ export function attachProvidersApp( $scope: ng.IScope )
 	$scope['Environment'] = Environment;
 	$scope['Scroll'] = Scroll;
 	$scope['Shell'] = getProvider<any>( 'Shell' );
-	$scope['Connection'] = getProvider<any>( 'Connection' );
+	$scope['Connection'] = Connection;
 }
 
 @Injectable( 'App' )

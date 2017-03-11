@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 
 import { AppModuleNg1 } from './app.module.ng1';
 
-import ConnectionModule from '../lib/gj-lib-client/components/connection/connection';
 import ConnectionStatePermissionsModule from '../lib/gj-lib-client/components/connection/state-permissions/state-permissions';
 import { ModelModule } from '../lib/gj-lib-client/components/model/model.module';
 import LoadModule from '../lib/gj-lib-client/components/load/load';
@@ -104,6 +103,7 @@ import { ClipboardModule } from '../lib/gj-lib-client/components/clipboard/clipb
 import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
+import { ConnectionModule } from '../lib/gj-lib-client/components/connection/connection.module';
 
 @NgModule({
 	imports: [

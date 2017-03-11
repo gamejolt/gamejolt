@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 
 import { AppModuleNg1 } from './app.module.ng1';
 
-import ConnectionModule from '../lib/gj-lib-client/components/connection/connection';
 import { ModelModule } from '../lib/gj-lib-client/components/model/model.module';
 import { EnvironmentModule } from '../lib/gj-lib-client/components/environment/environment.module';
 import AuthModule from '../lib/gj-lib-client/components/auth/auth';
@@ -25,6 +24,7 @@ import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analy
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
+import { ConnectionModule } from '../lib/gj-lib-client/components/connection/connection.module';
 
 @NgModule({
 	imports: [

@@ -1,3 +1,3 @@
-angular.module( 'App.Client.Intro', [ 'gj.Connection' ] );
+angular.module( 'App.Client.Intro', [] );
 
 require( './intro-directive' );

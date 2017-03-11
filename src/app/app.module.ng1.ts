@@ -9,6 +9,7 @@ import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.s
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
 import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
+import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 
 import '../lib/gj-lib-client/components/translate/translate.module';
 import '../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
@@ -397,6 +398,7 @@ export const AppModuleNg1 = angular.module( 'App', [
 	Analytics.initAngular( $rootScope );
 	Meta.initAngular( $rootScope );
 	Referrer.initAngular( $rootScope );
+	Connection.initAngular( $rootScope );
 
 	Registry.setConfig( 'Game', {
 		maxItems: 100,
