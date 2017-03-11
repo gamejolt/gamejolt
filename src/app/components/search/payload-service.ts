@@ -12,7 +12,7 @@ export class SearchPayload
 	constructor( public type: string, data: any )
 	{
 		if ( data ) {
-			angular.extend( this, data );
+			Object.assign( this, data );
 		}
 
 		this.users = User.populate( data.users );
