@@ -38,7 +38,7 @@
 				ng-style="{ 'z-index': game._isShowingOptions || game._isShowingLaunchOptions ? 2 : undefined }"
 				>
 
-				<gj-game-thumbnail gj-game="game._game"></gj-game-thumbnail>
+				<gj-game-thumbnail [game]="game._game"></gj-game-thumbnail>
 
 				<!--
 					Try to reduce the # of watchers on page.

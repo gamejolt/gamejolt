@@ -51,7 +51,6 @@ import DevlogPostEditModule from './components/devlog/post/edit/edit';
 import DevlogPostMediaModule from './components/devlog/post/media/media';
 import DevlogPostViewModule from './components/devlog/post/view/view';
 import DevlogPostViewModalModule from './components/devlog/post/view-modal/view-modal';
-import GameThumbnailModule from './components/game/thumbnail/thumbnail';
 import GameFollowWidgetModule from './components/game/follow-widget/follow-widget';
 import GameGridModule from './components/game/grid/grid';
 import FiresidePostThumbnailModule from './components/fireside/post/thumbnail/thumbnail';
@@ -100,6 +99,7 @@ import { ClipboardModule } from '../lib/gj-lib-client/components/clipboard/clipb
 import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
 import { GameCompatIconsModule } from './components/game/compat-icons/compat-icons.module';
+import { GameThumbnailModule } from './components/game/thumbnail/thumbnail.module';
 import { VideoModule } from '../lib/gj-lib-client/components/video/video.module';
 import { UserFriendshipModule } from '../lib/gj-lib-client/components/user/friendship/friendship.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';

@@ -31,7 +31,6 @@ import { GameBuildParamModule } from '../lib/gj-lib-client/components/game/build
 import { GameBuildLaunchOptionModule } from '../lib/gj-lib-client/components/game/build/launch-option/launch-option.module';
 import GamePlayModalModule from '../lib/gj-lib-client/components/game/play-modal/play-modal';
 import LoadModule from '../lib/gj-lib-client/components/load/load';
-import GameThumbnailModule from '../app/components/game/thumbnail/thumbnail';
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
 import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive';
@@ -42,6 +41,7 @@ import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
 import { GamePackageCardModule } from '../lib/gj-lib-client/components/game/package/card/card.module';
 import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
+import { GameThumbnailModule } from '../app/components/game/thumbnail/thumbnail.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 import { UserAvatarModule } from '../lib/gj-lib-client/components/user/user-avatar/user-avatar.module';
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';

@@ -204,7 +204,7 @@
 						<gj-game-thumbnail
 							class="scrollable-grid-item col-xs-10 col-sm-4"
 							ng-repeat="game in overviewCtrl.developerGames track by game.id"
-							gj-game="::game">
+							[game]="::game">
 						</gj-game-thumbnail>
 					</div>
 				</div>

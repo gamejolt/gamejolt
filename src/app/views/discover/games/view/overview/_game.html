@@ -354,7 +354,7 @@
 				<gj-game-thumbnail
 					class="scrollable-grid-item col-xs-9 col-sm-4 col-md-3 meter-dark"
 					ng-repeat="game in overviewCtrl.recommendedGames | limitTo:(Screen.isDesktop ? 4 : 3) track by game.id"
-					gj-game="::game"
+					[game]="::game"
 					gj-track-event="recommended-games:click:{{ $index }}"
 					>
 				</gj-game-thumbnail>

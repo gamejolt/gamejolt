@@ -16,7 +16,7 @@
 				class="col-sm-6 col-md-4 col-lg-3 game-thumbnail-anim"
 				ng-class="{ 'scrollable-grid-item col-xs-11': $ctrl.scrollable && $ctrl.screen.isXs }"
 				ng-repeat="game in $ctrl.processedGames track by game.id"
-				gj-game="game"
+				[game]="game"
 				gj-track-event="{{ $ctrl.eventLabel ? 'game-grid:click:' + $ctrl.eventLabel : undefined }}"
 				>
 			</gj-game-thumbnail>

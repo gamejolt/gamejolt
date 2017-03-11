@@ -64,7 +64,7 @@
 								<gj-game-thumbnail
 									class="scrollable-grid-item col-xs-10 col-sm-6"
 									ng-repeat="game in buildCtrl.developerGames | limitTo:2 track by game.id"
-									gj-game="::game"
+									[game]="::game"
 									>
 								</gj-game-thumbnail>
 							</div>
@@ -82,7 +82,7 @@
 							<gj-game-thumbnail
 								class="scrollable-grid-item col-xs-10 col-sm-6"
 								ng-repeat="game in buildCtrl.recommendedGames | limitTo:6 track by game.id"
-								gj-game="::game"
+								[game]="::game"
 								>
 							</gj-game-thumbnail>
 						</div>

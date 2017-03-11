@@ -1,22 +1,5 @@
-// Used for subtracting the bottom margin of thumbnails at the end of a grid.
-.game-thumbnail-grid
-	margin-bottom: -($grid-gutter-width-xs)
-
-	@media $media-sm-up
-		margin-bottom: -($grid-gutter-width)
-
-// Can apply to the ng-repeated element when showing thumbnails.
-// This way you can choose which element gets the animation.
-.game-thumbnail-anim
-	@extend .anim-fade-in-up, .stagger, .no-animate-xs, .no-animate-leave
-
-gj-game-thumbnail
-	display: block
-
-	// If a video is active, hide the tag.
-	&.active
-		.game-thumbnail-video-tag
-			display: none
+@require '~styles/variables'
+@require '../../../../lib/gj-lib-client/stylus/common/mixins'
 
 .game-thumbnail
 
@@ -32,6 +15,11 @@ gj-game-thumbnail
 	@media $media-sm-up
 		margin-bottom: $grid-gutter-width
 
+	// If a video is active, hide the tag.
+	&.active
+		.game-thumbnail-video-tag
+			display: none
+
 	// Hide these when hovered so there's more info to view the image.'
 	&:hover
 		.game-thumbnail-pricing
@@ -42,11 +30,8 @@ gj-game-thumbnail
 	&-controls
 		position: absolute
 		top: 0
-		right: 0
+		right: 5px
 		z-index: $zindex-controls
-		border-left: 3px solid $white
-		border-bottom: 3px solid $white
-		background-color: $white
 
 	&-thumb
 		position: relative
@@ -71,7 +56,7 @@ gj-game-thumbnail
 
 		img
 		video
-		gj-video
+		.video
 			display: block
 			position: absolute
 			left: 0
@@ -92,15 +77,14 @@ gj-game-thumbnail
 		padding-top: 7px
 
 	&-dev
-		@extend .h6
 		text-overflow()
 		margin: 2px 0
 		color: $gray-light
 		line-height: 1.5  // Cuts off `g` on ff if any lower.
 		font-weight: 300
+		font-size: $font-size-h6
 
 	&-title
-		@extend .h5
 		text-overflow()
 		margin: 0
 		width: 100%
@@ -140,7 +124,6 @@ gj-game-thumbnail
 		z-index: $zindex-tags
 
 	&-tag
-		@extend .tag
 		position: absolute
 		left: 0
 		top: 10px
@@ -149,7 +132,6 @@ gj-game-thumbnail
 		background-color: $gray-darkest
 
 	&-pricing
-		@extend .fill-darkest
 		position: absolute
 		height: 30px
 		line-height: @height
@@ -160,8 +142,6 @@ gj-game-thumbnail
 		z-index: $zindex-tags
 
 		&-owned
-			@extend .fill-green
-
 			& ^[-1]-tag
 				color: inherit
 

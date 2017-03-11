@@ -1,105 +1,108 @@
 <a class="game-thumbnail"
-	ng-href="{{ ::$ctrl.url }}"
+	:href="url"
+	:class="{
+		active: isActive,
+	}"
+	@mouseenter="isHovered = true"
+	@mouseleave="isHovered = false"
 	>
 
 	<div class="game-thumbnail-controls"
-		ng-if="::$ctrl.showControl || $ctrl.showModTools"
+		@click.prevent
 		>
-		<button class="btn btn-sparse"
-			ng-if="::$ctrl.showControl"
-			tooltip="{{ ::$ctrl.controlLabel }}"
-			ng-click="$ctrl.onControlClick( $event )"
-			>
-			<span class="jolticon" ng-class="::'jolticon-' + $ctrl.controlType"></span>
-		</button>
-		<span ng-if="::$ctrl.showModTools">
+		<span v-if="slotId" :class="`ng-slot-${slotId}`"></span>
+		<slot></slot>
+		<span v-if="showModTools">
 			<button class="btn btn-sparse"
-				gj-popover-trigger="game-mod-tools-{{ ::$ctrl.game.id }}"
-				ng-click="$event.preventDefault()"
+				v-app-popover-trigger="`game-mod-tools-${game.id}`"
+				@click.prevent
 				>
-				<span class="jolticon jolticon-cog"></span>
+				<app-jolticon icon="cog" />
 			</button>
-			<gj-popover
-				popover-id="game-mod-tools-{{ ::$ctrl.game.id }}"
-				popover-append-to-body="true"
+			<app-popover
+				:popover-id="`game-mod-tools-${game.id}`"
+				:append-to-body="true"
 				>
-				<gj-game-mod-links game="::$ctrl.game"></gj-game-mod-links>
-			</gj-popover>
+				<app-game-mod-links :game="game"></app-game-mod-links>
+			</app-popover>
 		</span>
 	</div>
 
 	<div class="game-thumbnail-thumb">
-		<span class="jolticon jolticon-game"></span>
+		<app-jolticon icon="game" />
 
-		<span class="game-thumbnail-tag" ng-if="::$ctrl.game.development_status == 2" translate>
-			Early Access
+		<span class="tag game-thumbnail-tag" v-if="game.development_status === 2">
+			<translate>Early Access</translate>
 		</span>
 
-		<span class="game-thumbnail-tag" ng-if="::$ctrl.game.development_status == 4" translate>
-			Devlog-Only
+		<span class="tag game-thumbnail-tag" v-if="game.development_status === 4">
+			<translate>Devlog-Only</translate>
 		</span>
 
-		<span class="game-thumbnail-video-tag" ng-if="::$ctrl.game.thumbnail_media_item.is_animated && $ctrl.screen.isDesktop">
-			<span class="jolticon jolticon-stream"></span>
+		<span class="game-thumbnail-video-tag" v-if="game.thumbnail_media_item && game.thumbnail_media_item.is_animated && Screen.isDesktop">
+			<app-jolticon icon="stream" />
 		</span>
 
-		<gj-game-thumbnail-img [game]="::$ctrl.game"></gj-game-thumbnail-img>
+		<app-game-thumbnail-img :game="game"></app-game-thumbnail-img>
 
-		<gj-video
-			ng-if="$ctrl.game.thumbnail_media_item.is_animated && $ctrl.screen.isDesktop && $ctrl.isActive"
-			poster="{{ ::$ctrl.game.thumbnail_media_item.mediaserver_url }}"
-			webm="{{ ::$ctrl.game.thumbnail_media_item.mediaserver_url_webm }}"
-			mp4="{{ ::$ctrl.game.thumbnail_media_item.mediaserver_url_mp4 }}"
+		<app-video
+			v-if="game.thumbnail_media_item && game.thumbnail_media_item.is_animated && Screen.isDesktop && isActive"
+			:poster="game.thumbnail_media_item.mediaserver_url"
+			:webm="game.thumbnail_media_item.mediaserver_url_webm"
+			:mp4="game.thumbnail_media_item.mediaserver_url_mp4"
 			>
-		</gj-video>
+		</app-video>
 	</div>
 
 	<div class="game-thumbnail-meta">
 
-		<div class="game-thumbnail-pricing"
-			ng-if="::$ctrl.game._has_packages && !$ctrl.hidePricing"
-			ng-class="::{ 'game-thumbnail-pricing-owned': $ctrl.game.sellable.is_owned, 'game-thumbnail-pricing-sale': $ctrl.sale }"
+		<div class="game-thumbnail-pricing fill-darkest"
+			v-if="game._has_packages && !hidePricing"
+			:class="{
+				'game-thumbnail-pricing-owned fill-green': isOwned,
+				'game-thumbnail-pricing-sale': sale,
+			}"
 			>
-			<div ng-if="::!$ctrl.game.sellable.is_owned" ng-switch="::$ctrl.game.sellable.type">
-				<div ng-switch-when="paid">
+			<div v-if="!isOwned">
+				<div v-if="sellableType === 'paid'">
 					<div class="game-thumbnail-pricing-sale-percentage"
-						ng-if="::$ctrl.sale"
+						v-if="sale"
 						>
-						-{{ ::$ctrl.salePercentageOff }}%
+						-{{ salePercentageOff }}%
 					</div>
 					<div class="game-thumbnail-pricing-container">
 						<div class="game-thumbnail-pricing-amount-old"
-							ng-if="::$ctrl.sale"
+							v-if="sale"
 							>
-							${{ ::$ctrl.saleOldPricing.amount | gjCurrency:'' }}
+							${{ oldPricingAmount }}
 						</div>
 						<div class="game-thumbnail-pricing-amount">
-							<span class="game-thumbnail-pricing-currency">$</span>{{ ::$ctrl.pricing.amount | gjCurrency:'' }}
+							<span class="game-thumbnail-pricing-currency">$</span>{{ pricingAmount }}
 						</div>
 					</div>
 				</div>
-				<span class="game-thumbnail-pricing-tag" ng-switch-when="pwyw" translate>
-					Name Your Price
+				<span class="game-thumbnail-pricing-tag" v-else-if="sellableType === 'pwyw'">
+					<translate>Name Your Price</translate>
 				</span>
-				<span class="game-thumbnail-pricing-tag" ng-switch-default translate>
-					Free
+				<span class="game-thumbnail-pricing-tag" v-else>
+					<translate>Free</translate>
 				</span>
 			</div>
-			<div ng-if="::$ctrl.game.sellable.is_owned">
-				<span class="game-thumbnail-pricing-tag" translate>
-					Owned
+			<div v-if="isOwned">
+				<span class="game-thumbnail-pricing-tag">
+					<translate>Owned</translate>
 				</span>
 			</div>
 		</div>
 
 		<div class="game-thumbnail-os">
-			<gj-game-compat-icons gj-game="::$ctrl.game"></gj-game-compat-icons>
+			<app-game-compat-icons :game="game"></app-game-compat-icons>
 		</div>
-		<div class="game-thumbnail-dev" title="{{ ::$ctrl.game.developer.display_name }} (@{{ ::$ctrl.game.developer.username }})">
-			{{ ::$ctrl.game.developer.display_name }}
+		<div class="game-thumbnail-dev" :title="`${game.developer.display_name} (@${game.developer.username})`">
+			{{ game.developer.display_name }}
 		</div>
-		<div class="game-thumbnail-title" title="{{ ::$ctrl.game.title }}">
-			{{ ::$ctrl.game.title }}
+		<div class="game-thumbnail-title" :title="game.title">
+			{{ game.title }}
 		</div>
 	</div>
 </a>

@@ -20,10 +20,10 @@
 	<gj-game-thumbnail
 		class="col-sm-6 game-thumbnail-anim"
 		ng-repeat="game in $ctrl.games track by game.id"
-		gj-game="game"
-		gj-link-to="{{ $ctrl.$state.href( 'key.game', { key: $ctrl.key, bundleGameId: game.id } ) }}"
-		autoplay="true"
-		hide-pricing="true"
+		[game]="game"
+		[link-to]="$ctrl.$state.href( 'key.game', { key: $ctrl.key, bundleGameId: game.id } )"
+		[autoplay]="true"
+		[hide-pricing]="true"
 		>
 	</gj-game-thumbnail>
 </div>

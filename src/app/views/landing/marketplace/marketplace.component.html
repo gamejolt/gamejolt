@@ -230,8 +230,8 @@
 					class="col-sm-4 col-md-3 meter-dark"
 					ng-class="{ 'scrollable-grid-item': $ctrl.screen.isXs }"
 					ng-repeat="game in $ctrl.games | limitTo:($ctrl.screen.isSm ? 3 : 4) track by game.id"
-					gj-game="game"
-					autoplay="true"
+					[game]="game"
+					[autoplay]="true"
 					gj-track-event="marketplace:game:{{ $index }}"
 					>
 				</gj-game-thumbnail>

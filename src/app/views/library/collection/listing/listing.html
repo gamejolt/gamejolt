@@ -1,12 +1,15 @@
 <div class="row">
 	<gj-game-thumbnail
 		class="col-xs-12 col-sm-6 col-lg-4 game-thumbnail-anim"
-		gj-game="::game"
 		ng-repeat="game in listingCtrl.games track by game.id"
-
-		game-thumbnail-show-control="{{ ::listingCtrl.thumbnailControl }}"
-		game-thumbnail-control-label="{{ ::listingCtrl.thumbnailControlLabel }}"
-		game-thumbnail-on-control-click="listingCtrl.thumbnailControlAction( game )"
+		[game]="::game"
 		>
+		<button class="btn btn-sparse"
+			ng-if="::listingCtrl.thumbnailControl"
+			tooltip="{{ ::listingCtrl.thumbnailControlLabel }}"
+			ng-click="listingCtrl.thumbnailControlAction( game )"
+			>
+			<span class="jolticon" ng-class="::'jolticon-' + listingCtrl.thumbnailControl"></span>
+		</button>
 	</gj-game-thumbnail>
 </div>
