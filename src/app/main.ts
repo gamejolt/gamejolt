@@ -1,4 +1,6 @@
 import './vendor';
+import * as Vue from 'vue';
+const GetTextPlugin = require( 'vue-gettext' );
 
 import { platformBrowserDynamic } from 'ng-metadata/platform-browser-dynamic';
 import { enableProdMode } from 'ng-metadata/core';
@@ -13,6 +15,18 @@ import { UiTreeLoader } from '../lib/gj-lib-client/components/loader/ui-tree-loa
 import { JcropLoader } from '../lib/gj-lib-client/components/loader/jcrop-loader';
 import { ChartLoader } from '../lib/gj-lib-client/components/loader/chart-loader';
 import { SpectrumLoader } from '../lib/gj-lib-client/components/loader/spectrum-loader';
+import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
+
+const availableLanguages: any = {};
+for ( const lang of Translate.langs ) {
+	availableLanguages[ lang.code ] = lang.label;
+}
+
+Vue.use( GetTextPlugin, {
+	availableLanguages,
+	defaultLanguage: Translate.lang,
+	translations: {},
+} );
 
 Loader.addLoader( new HammerLoader() );
 Loader.addLoader( new HammerVueLoader() );

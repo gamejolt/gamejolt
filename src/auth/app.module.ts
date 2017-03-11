@@ -25,6 +25,8 @@ import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 import { ConnectionModule } from '../lib/gj-lib-client/components/connection/connection.module';
+import { TranslateLangSelectorModule } from '../lib/gj-lib-client/components/translate/lang-selector/lang-selector.module';
+import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
 
 @NgModule({
 	imports: [
@@ -49,6 +51,8 @@ import { ConnectionModule } from '../lib/gj-lib-client/components/connection/con
 		AuthLoginModule,
 		UserModule,
 		ScrollModule,
+		TranslateModule,
+		TranslateLangSelectorModule,
 		AppModuleNg1,
 	],
 	declarations: [

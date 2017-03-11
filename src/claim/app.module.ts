@@ -43,6 +43,7 @@ import { GamePackageCardModule } from '../lib/gj-lib-client/components/game/pack
 import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
+import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
 
 const ViewsModule = angular.module( 'App.Views', [] ).name;
 importContext( require.context( './views', true, /\.state\.ts$/ ) );
@@ -89,6 +90,7 @@ importContext( require.context( './views', true, /\.state\.ts$/ ) );
 		GeoModule,
 		GamePackageCardModule,
 		ScrollModule,
+		TranslateModule,
 		AppModuleNg1,
 	],
 	declarations: [

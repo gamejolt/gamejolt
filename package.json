@@ -61,6 +61,7 @@
     "ua-parser-js": "0.7.12",
     "vue": "2.1.10",
     "vue-class-component": "4.4.0",
+    "vue-gettext": "gamejolt/vue-gettext#hworld-lazyload",
     "vue-property-decorator": "3.4.0",
     "vue-shortkey": "2.0.9",
     "vue-touch": "2.0.0-beta.4"

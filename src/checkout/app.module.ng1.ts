@@ -7,8 +7,8 @@ import { App } from './app-service';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
+import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
 
-import '../lib/gj-lib-client/components/translate/translate.module';
 import '../lib/gj-lib-client/components/error/error-module';
 import '../lib/gj-lib-client/components/body-classes/body-classes';
 import '../lib/gj-lib-client/components/loading/loading';
@@ -37,7 +37,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'ui.mask',
 
 	'gj.Error',
-	'gj.Translate',
 	'gj.BodyClasses',
 	'gj.Loading',
 	'gj.Scroll.AutoScroll',
@@ -56,7 +55,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	$uiViewScrollProvider: any,
 	$compileProvider: ng.ICompileProvider,
 	$sceDelegateProvider: ng.ISCEDelegateProvider,
-	TranslateProvider: any,
 ) =>
 {
 	$sceDelegateProvider.resourceUrlWhitelist( [
@@ -121,7 +119,7 @@ export const AppModuleNg1 = angular.module( 'App', [
 		},
 	};
 
-	TranslateProvider.addLanguageUrls( languages );
+	Translate.addLanguageUrls( languages );
 } )
 /*@ngInject*/
 .run( (
@@ -129,10 +127,12 @@ export const AppModuleNg1 = angular.module( 'App', [
 	$animate: ng.animate.IAnimateService,
 	$transitions: TransitionService,
 	$rootScope: ng.IRootScopeService,
+	gettextCatalog: ng.gettext.gettextCatalog,
 	App: App,
 ) =>
 {
 	bootstrapFacade( $q, $animate );
+	gettextCatalog.setCurrentLanguage( Translate.lang );
 	Payload.initAngular( App, $transitions );
 	Analytics.initAngular( $rootScope );
 	Meta.initAngular( $rootScope );

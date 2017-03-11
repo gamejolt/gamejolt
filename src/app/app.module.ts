@@ -104,6 +104,7 @@ import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 import { ConnectionModule } from '../lib/gj-lib-client/components/connection/connection.module';
+import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
 
 @NgModule({
 	imports: [
@@ -210,6 +211,7 @@ import { ConnectionModule } from '../lib/gj-lib-client/components/connection/con
 		NavTabListModule,
 		SettingsModule,
 		ScrollModule,
+		TranslateModule,
 		AppModuleNg1,
 	],
 	declarations: [
