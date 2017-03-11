@@ -8,6 +8,7 @@ import { Api } from '../lib/gj-lib-client/components/api/api.service';
 import { getProvider } from '../lib/gj-lib-client/utils/utils';
 import { Screen } from '../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
+import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
 
 export function attachProvidersApp( $scope: ng.IScope )
 {
@@ -16,7 +17,7 @@ export function attachProvidersApp( $scope: ng.IScope )
 	$scope['Meta'] = Meta;
 	$scope['Screen'] = Screen;
 	$scope['Environment'] = Environment;
-	$scope['Scroll'] = getProvider<any>( 'Scroll' );
+	$scope['Scroll'] = Scroll;
 	$scope['Shell'] = getProvider<any>( 'Shell' );
 	$scope['Connection'] = getProvider<any>( 'Connection' );
 }

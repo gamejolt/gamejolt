@@ -103,6 +103,7 @@ import { SettingsModule } from './components/settings/settings.module';
 import { ClipboardModule } from '../lib/gj-lib-client/components/clipboard/clipboard.module';
 import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
+import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 
 @NgModule({
 	imports: [
@@ -208,6 +209,7 @@ import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thu
 		GamePackageCardModule,
 		NavTabListModule,
 		SettingsModule,
+		ScrollModule,
 		AppModuleNg1,
 	],
 	declarations: [

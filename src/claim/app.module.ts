@@ -42,6 +42,7 @@ import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
 import { GamePackageCardModule } from '../lib/gj-lib-client/components/game/package/card/card.module';
 import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
+import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 
 const ViewsModule = angular.module( 'App.Views', [] ).name;
 importContext( require.context( './views', true, /\.state\.ts$/ ) );
@@ -87,6 +88,7 @@ importContext( require.context( './views', true, /\.state\.ts$/ ) );
 		ReferrerModule,
 		GeoModule,
 		GamePackageCardModule,
+		ScrollModule,
 		AppModuleNg1,
 	],
 	declarations: [

@@ -1,5 +1,6 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from '../../../../../../../app-service';
+import { Scroll } from '../../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 
 @Injectable()
 export class ThumbnailCtrl
@@ -7,7 +8,6 @@ export class ThumbnailCtrl
 	constructor(
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
 	)
@@ -21,6 +21,6 @@ export class ThumbnailCtrl
 			this.gettextCatalog.getString( 'dash.games.thumbnail.saved_growl' ),
 			this.gettextCatalog.getString( 'dash.games.thumbnail.saved_growl_title' )
 		);
-		this.scroll.to( 0 );
+		Scroll.to( 0 );
 	}
 }

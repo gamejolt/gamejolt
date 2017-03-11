@@ -25,6 +25,7 @@ import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.modu
 import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive';
 import { ReferrerModule } from '../lib/gj-lib-client/components/referrer/referrer.module';
 import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
+import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 
 @NgModule({
 	imports: [
@@ -50,6 +51,7 @@ import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
 		SellablePricingModule,
 		ReferrerModule,
 		GeoModule,
+		ScrollModule,
 		AppModuleNg1,
 	],
 	declarations: [

@@ -24,6 +24,7 @@ import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module'
 import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analytics.module';
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
+import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 
 @NgModule({
 	imports: [
@@ -47,6 +48,7 @@ import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.modu
 		AuthJoinModule,
 		AuthLoginModule,
 		UserModule,
+		ScrollModule,
 		AppModuleNg1,
 	],
 	declarations: [

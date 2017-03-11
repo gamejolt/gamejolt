@@ -2,6 +2,7 @@ import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from '../../../../../../../app-service';
 import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Popover } from '../../../../../../../../lib/gj-lib-client/components/popover/popover.service';
+import { Scroll } from '../../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 
 @Injectable()
 export class HeaderCtrl
@@ -10,7 +11,6 @@ export class HeaderCtrl
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( 'Popover' ) private popover: Popover,
-		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'ModalConfirm' ) private confirm: ModalConfirm,
@@ -32,6 +32,6 @@ export class HeaderCtrl
 			this.gettextCatalog.getString( 'dash.games.header.saved_growl' ),
 			this.gettextCatalog.getString( 'dash.games.header.saved_growl_title' )
 		);
-		this.scroll.to( 0 );
+		Scroll.to( 0 );
 	}
 }

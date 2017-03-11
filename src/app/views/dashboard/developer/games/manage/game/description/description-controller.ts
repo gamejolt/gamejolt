@@ -1,6 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from '../../../../../../../app-service';
 import { FormDashboardGameWizard } from '../../../../../../../components/forms/dashboard/game/wizard/wizard-service';
+import { Scroll } from '../../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 
 @Injectable()
 export class DescriptionCtrl
@@ -11,7 +12,6 @@ export class DescriptionCtrl
 		@Inject( 'FormDashboardGameWizard' ) private wizard: FormDashboardGameWizard,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( 'Growls' ) private growls: any,
-		@Inject( 'Scroll' ) private scroll: any,
 	)
 	{
 		app.title = gettextCatalog.getString( 'Edit Description for {{ game }}', { game: $scope['manageCtrl'].game.title } );
@@ -28,6 +28,6 @@ export class DescriptionCtrl
 			this.gettextCatalog.getString( 'Your game description has been saved.' ),
 			this.gettextCatalog.getString( 'Description Saved' )
 		);
-		this.scroll.to( 0 );
+		Scroll.to( 0 );
 	}
 }

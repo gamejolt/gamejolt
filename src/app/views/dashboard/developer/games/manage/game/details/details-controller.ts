@@ -1,6 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from '../../../../../../../app-service';
 import { FormDashboardGameWizard } from '../../../../../../../components/forms/dashboard/game/wizard/wizard-service';
+import { Scroll } from '../../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 
 @Injectable()
 export class DetailsCtrl
@@ -9,7 +10,6 @@ export class DetailsCtrl
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( 'Growls' ) private growls: any,
-		@Inject( 'Scroll' ) private scroll: any,
 		@Inject( 'FormDashboardGameWizard' ) private wizard: FormDashboardGameWizard,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
 	)
@@ -29,6 +29,6 @@ export class DetailsCtrl
 			this.gettextCatalog.getString( 'dash.games.edit.save_growl_title' )
 		);
 
-		this.scroll.to( 0 );
+		Scroll.to( 0 );
 	}
 }

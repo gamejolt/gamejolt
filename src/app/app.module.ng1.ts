@@ -8,6 +8,7 @@ import { Registry } from '../lib/gj-lib-client/components/registry/registry.serv
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
+import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
 
 import '../lib/gj-lib-client/components/translate/translate.module';
 import '../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
@@ -20,7 +21,6 @@ import '../lib/gj-lib-client/components/fuzzysearch/fuzzysearch';
 import '../lib/gj-lib-client/components/currency/currency';
 import '../lib/gj-lib-client/components/body-classes/body-classes';
 import '../lib/gj-lib-client/components/loading/loading';
-import '../lib/gj-lib-client/components/scroll/scroll';
 import '../lib/gj-lib-client/components/expand-when/expand-when';
 import '../lib/gj-lib-client/components/ui-tree/placeholder/placeholder';
 import '../lib/gj-lib-client/components/partial/partial';
@@ -163,7 +163,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Currency',
 	'gj.BodyClasses',
 	'gj.Loading',
-	'gj.Scroll',
 	'gj.ExpandWhen',
 	'gj.UiTree.Placeholder',
 	'gj.Partial',
@@ -391,7 +390,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	$transitions: TransitionService,
 	$rootScope: ng.IRootScopeService,
 	App: App,
-	Scroll: any,
 ) =>
 {
 	bootstrapFacade( $q, $animate );

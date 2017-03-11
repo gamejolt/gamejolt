@@ -1,7 +1,8 @@
-GameFormFactory.$inject = [ 'Form', 'Scroll', 'App' ];
+import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+
+GameFormFactory.$inject = [ 'Form', 'App' ];
 export function GameFormFactory(
 	Form: any,
-	Scroll: any,
 	App: any,
 )
 {

@@ -7,6 +7,7 @@ import { ActivityFeedItem } from './item-service';
 import { ActivityFeedContainer } from './feed-container-service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Loader } from '../../../../lib/gj-lib-client/components/loader/loader.service';
+import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 
 /**
  * The number of items from the bottom that we should hit before loading more.
@@ -51,7 +52,6 @@ export class ActivityFeedComponent implements OnDestroy, AfterViewInit
 	constructor(
 		@Inject( '$scope' ) private $scope: ng.IScope,
 		@Inject( '$timeout' ) private $timeout: ng.ITimeoutService,
-		@Inject( 'Scroll' ) private scroll: any,
 	)
 	{
 		Loader.load( 'hammer' );
@@ -80,14 +80,14 @@ export class ActivityFeedComponent implements OnDestroy, AfterViewInit
 
 	ngOnDestroy()
 	{
-		this.feed.setScroll( this.scroll.context.duScrollTop() );
+		this.feed.setScroll( Scroll.getScrollTop() );
 	}
 
 	private _initScroll()
 	{
 		const scroll = this.feed.getScroll();
 		if ( scroll ) {
-			this.scroll.to( scroll, { animate: false } );
+			Scroll.to( scroll, { animate: false } );
 		}
 	}
 
