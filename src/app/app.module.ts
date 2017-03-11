@@ -38,7 +38,6 @@ import BroadcastModalModule from './components/broadcast-modal/broadcast-modal';
 import SplitTestModule from './components/split-test/split-test';
 import ShellModule from './components/shell/shell';
 import { SearchModule } from './components/search/search.module';
-import FriendModule from './components/friend/friend';
 import NotificationModule from './components/notification/notification';
 import MediaItemCoverModule from './components/media-item/cover/cover';
 import PageHeaderModule from './components/page-header/page-header';
@@ -102,6 +101,7 @@ import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
 import { GameCompatIconsModule } from './components/game/compat-icons/compat-icons.module';
 import { VideoModule } from '../lib/gj-lib-client/components/video/video.module';
+import { UserFriendshipModule } from '../lib/gj-lib-client/components/user/friendship/friendship.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 import { ScrollAffixModule } from '../lib/gj-lib-client/components/scroll/affix/affix.module';
 import { GameCollectionModule } from './components/game/collection/collection.module';
@@ -169,7 +169,6 @@ import { TranslateModule } from '../lib/gj-lib-client/components/translate/trans
 		AuthJoinModule,
 		SplitTestModule,
 		ShellModule,
-		FriendModule,
 		ActivityModule,
 		NotificationModule,
 		MediaItemCoverModule,
@@ -213,6 +212,7 @@ import { TranslateModule } from '../lib/gj-lib-client/components/translate/trans
 		NavTabListModule,
 		SettingsModule,
 		GameCompatIconsModule,
+		UserFriendshipModule,
 		ScrollModule,
 		ScrollAffixModule,
 		GameCollectionModule,
