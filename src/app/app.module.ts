@@ -101,6 +101,7 @@ import { SettingsModule } from './components/settings/settings.module';
 import { ClipboardModule } from '../lib/gj-lib-client/components/clipboard/clipboard.module';
 import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
+import { GameCompatIconsModule } from './components/game/compat-icons/compat-icons.module';
 import { VideoModule } from '../lib/gj-lib-client/components/video/video.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 import { ScrollAffixModule } from '../lib/gj-lib-client/components/scroll/affix/affix.module';
@@ -213,6 +214,7 @@ import { TranslateModule } from '../lib/gj-lib-client/components/translate/trans
 		GamePackageCardModule,
 		NavTabListModule,
 		SettingsModule,
+		GameCompatIconsModule,
 		ScrollModule,
 		ScrollAffixModule,
 		GameCollectionModule,

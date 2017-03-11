@@ -104,7 +104,6 @@ import './components/game-playlist/add-to-popover/add-to-popover-module';
 import './components/game-playlist/save-modal/save-modal-module';
 import './components/invite/invite-module';
 import './components/meter/meter-module';
-import './components/game/compat-icons/compat-icons-module';
 import './components/game/filtering/filtering-module';
 import './components/game/cover-buttons/cover-buttons-module';
 import './components/game/ogrs/ogrs-module';
@@ -241,7 +240,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'App.Sorting',
 	'App.FeaturedItem',
 	'App.Meter',
-	'App.Game.CompatIcons',
 	'App.Game.Filtering',
 	'App.Game.CoverButtons',
 	'App.Game.Ogrs',
