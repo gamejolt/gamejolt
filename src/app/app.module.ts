@@ -26,7 +26,6 @@ import { YoutubeChannelModule } from '../lib/gj-lib-client/components/youtube/ch
 import CommentVideoLightboxModule from '../lib/gj-lib-client/components/comment/video/lightbox/lightbox';
 import CommentVideoThumbnailModule from '../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import ResponsiveDimensionsModule from '../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
-import VideoModule from '../lib/gj-lib-client/components/video/video';
 import { FiresidePostModule } from '../lib/gj-lib-client/components/fireside/post/post.module';
 import { FiresidePostTagModule } from '../lib/gj-lib-client/components/fireside/post/tag/tag.module';
 import { FiresidePostVideoModule } from '../lib/gj-lib-client/components/fireside/post/video/video.module';
@@ -102,6 +101,7 @@ import { SettingsModule } from './components/settings/settings.module';
 import { ClipboardModule } from '../lib/gj-lib-client/components/clipboard/clipboard.module';
 import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
+import { VideoModule } from '../lib/gj-lib-client/components/video/video.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 import { ScrollAffixModule } from '../lib/gj-lib-client/components/scroll/affix/affix.module';
 import { ConnectionModule } from '../lib/gj-lib-client/components/connection/connection.module';

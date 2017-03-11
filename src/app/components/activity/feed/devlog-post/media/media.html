@@ -34,10 +34,10 @@
 
 				<gj-video
 					ng-if="item.is_animated && $ctrl.shouldVideoPlay( item )"
-					poster="{{ ::item.mediaserver_url }}"
-					webm="{{ ::item.mediaserver_url_webm }}"
-					mp4="{{ ::item.mediaserver_url_mp4 }}"
-					show-loading="true"
+					[poster]="::item.mediaserver_url"
+					[webm]="::item.mediaserver_url_webm"
+					[mp4]="::item.mediaserver_url_mp4"
+					[show-loading]="true"
 					>
 				</gj-video>
 			</div>
