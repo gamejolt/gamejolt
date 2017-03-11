@@ -16,7 +16,7 @@ import '../lib/gj-lib-client/components/expand-when/expand-when';
 import '../lib/gj-lib-client/components/form/form';
 import '../lib/gj-lib-client/components/history/history';
 import '../lib/gj-lib-client/components/growls/growls';
-import '../lib/gj-lib-client/components/tooltip/tooltip';
+import '../lib/gj-lib-client/components/tooltip/tooltip.module';
 import '../lib/gj-lib-client/components/site-selector/site-selector';
 import '../lib/gj-lib-client/components/user/user-bar/user-bar';
 import '../lib/gj-lib-client/components/linked-key/linked-key';

@@ -25,7 +25,7 @@ import '../lib/gj-lib-client/components/expand-when/expand-when';
 import '../lib/gj-lib-client/components/ui-tree/placeholder/placeholder';
 import '../lib/gj-lib-client/components/partial/partial';
 import '../lib/gj-lib-client/components/backdrop/backdrop';
-import '../lib/gj-lib-client/components/tooltip/tooltip';
+import '../lib/gj-lib-client/components/tooltip/tooltip.module';
 import '../lib/gj-lib-client/components/toggle-switch/toggle-switch';
 import '../lib/gj-lib-client/components/growls/growls';
 import '../lib/gj-lib-client/components/scroll/parallax/parallax';
