@@ -1,6 +1,7 @@
 import './vendor';
 import * as Vue from 'vue';
 const GetTextPlugin = require( 'vue-gettext' );
+const VueShortkey = require( 'vue-shortkey' );
 
 import { platformBrowserDynamic } from 'ng-metadata/platform-browser-dynamic';
 import { enableProdMode } from 'ng-metadata/core';
@@ -27,6 +28,8 @@ Vue.use( GetTextPlugin, {
 	defaultLanguage: Translate.lang,
 	translations: {},
 } );
+
+Vue.use( VueShortkey );
 
 Loader.addLoader( new HammerLoader() );
 Loader.addLoader( new HammerVueLoader() );
