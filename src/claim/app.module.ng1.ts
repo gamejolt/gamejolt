@@ -19,7 +19,6 @@ import '../lib/gj-lib-client/components/growls/growls';
 import '../lib/gj-lib-client/components/tooltip/tooltip';
 import '../lib/gj-lib-client/components/site-selector/site-selector';
 import '../lib/gj-lib-client/components/user/user-bar/user-bar';
-import '../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import '../lib/gj-lib-client/components/linked-key/linked-key';
 import '../lib/gj-lib-client/components/game-bundle/game-bundle';
 import '../lib/gj-lib-client/components/key-group/key-group';
@@ -54,7 +53,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Tooltip',
 	'gj.SiteSelector',
 	'gj.User.UserBar',
-	'gj.User.UserAvatar',
 	'gj.LinkedKey',
 	'gj.GameBundle',
 	'gj.KeyGroup',

@@ -1,5 +1,5 @@
 <div class="forum-post-list-item-icon" ng-class="{ 'has-notification': !!ctrl.post.notification }">
-	<div gj-user-avatar="::ctrl.post.user" class="avatar-circle"></div>
+	<gj-user-avatar [user]="::ctrl.post.user" class="avatar-circle"></gj-user-avatar>
 </div>
 
 <div class="forum-post-list-item-main"

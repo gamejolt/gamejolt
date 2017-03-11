@@ -105,6 +105,7 @@ import { VideoModule } from '../lib/gj-lib-client/components/video/video.module'
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 import { ScrollAffixModule } from '../lib/gj-lib-client/components/scroll/affix/affix.module';
 import { ConnectionModule } from '../lib/gj-lib-client/components/connection/connection.module';
+import { UserAvatarModule } from '../lib/gj-lib-client/components/user/user-avatar/user-avatar.module';
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
 
 @NgModule({
@@ -213,6 +214,7 @@ import { TranslateModule } from '../lib/gj-lib-client/components/translate/trans
 		SettingsModule,
 		ScrollModule,
 		ScrollAffixModule,
+		UserAvatarModule,
 		TranslateModule,
 		AppModuleNg1,
 	],

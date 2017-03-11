@@ -65,7 +65,7 @@
 	</gj-page-header-content>
 
 	<gj-page-header-spotlight>
-		<div gj-user-avatar="profileCtrl.user" ng-if="!profileCtrl.headerImg"></div>
+		<gj-user-avatar [user]="profileCtrl.user" ng-if="!profileCtrl.headerImg"></gj-user-avatar>
 	</gj-page-header-spotlight>
 
 	<gj-page-header-nav>

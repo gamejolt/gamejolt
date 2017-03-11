@@ -20,7 +20,6 @@ import '../lib/gj-lib-client/components/growls/growls';
 import '../lib/gj-lib-client/components/tooltip/tooltip';
 import '../lib/gj-lib-client/components/site-selector/site-selector';
 import '../lib/gj-lib-client/components/user/user-bar/user-bar';
-import '../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 
 export const AppModuleNg1 = angular.module( 'App', [
 
@@ -47,7 +46,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Tooltip',
 	'gj.SiteSelector',
 	'gj.User.UserBar',
-	'gj.User.UserAvatar',
 ] )
 /*@ngInject*/
 .config( (

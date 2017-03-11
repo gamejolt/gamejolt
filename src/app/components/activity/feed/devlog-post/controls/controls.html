@@ -181,7 +181,9 @@
 				>
 				<gj-card>
 					<div style="width: 40px; height: 40px; float: left">
-						<div class="friend-request-popover-avatar" gj-user-avatar="::like.user"></div>
+						<div class="friend-request-popover-avatar">
+							<gj-user-avatar [user]="::like.user"></gj-user-avatar>
+						</div>
 					</div>
 					<div style="margin-left: 55px;">
 						<div class="card-title">

@@ -3,7 +3,7 @@
 		ng-repeat="score in ctrl.scores track by score._id">
 
 		<div class="score-feed-media">
-			<div gj-user-avatar="::(score.user.id ? score.user : null)"></div>
+			<gj-user-avatar [user]="::(score.user.id ? score.user : null)"></gj-user-avatar>
 		</div>
 		<div class="score-feed-content">
 			<div class="score-feed-title" title="{{ ::score.content.score }}">

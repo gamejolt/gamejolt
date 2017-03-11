@@ -30,7 +30,7 @@
 				<div class="search-media-list-item col-xs-3 col-sm-2 col-lg-1 anim-back-in stagger no-animate-xs"
 					ng-repeat="user in searchCtrl.payload.users | limitTo:(Screen.isXs ? 8 : 12) track by user.id"
 					>
-					<div gj-user-avatar="user" avatar-show-name="true"></div>
+					<gj-user-avatar [user]="user" [show-name]="true"></gj-user-avatar>
 				</div>
 			</div>
 

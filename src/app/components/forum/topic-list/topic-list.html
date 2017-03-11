@@ -54,7 +54,7 @@
 		<div class="col-md-3 text-muted small" ng-if="Screen.isDesktop">
 			<div class="forum-topic-list-item-latest-post">
 				<div class="forum-topic-list-item-latest-post-avatar">
-					<div gj-user-avatar="::topic.latest_post.user"></div>
+					<gj-user-avatar [user]="::topic.latest_post.user"></gj-user-avatar>
 				</div>
 				<div class="forum-topic-list-item-latest-post-info">
 					<div class="forum-topic-list-item-latest-post-info-username">

@@ -3,7 +3,7 @@
 		ng-repeat="score in ctrl.scores track by score.id">
 
 		<div class="score-list-media">
-			<div gj-user-avatar="::score.user"></div>
+			<gj-user-avatar [user]="::score.user"></gj-user-avatar>
 		</div>
 		<div class="score-list-content">
 			<div class="score-list-rank">

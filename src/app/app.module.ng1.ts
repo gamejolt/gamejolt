@@ -44,7 +44,6 @@ import '../lib/gj-lib-client/components/activity/stream/stream-module';
 import '../lib/gj-lib-client/components/form/form';
 import '../lib/gj-lib-client/components/form/markdown-editor/markdown-editor';
 import '../lib/gj-lib-client/components/form/upload-control/upload-control';
-import '../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import '../lib/gj-lib-client/components/user/linked-accounts/linked-accounts';
 import '../lib/gj-lib-client/components/user/friendship/friendship';
 import '../lib/gj-lib-client/components/user/message/message';
@@ -183,7 +182,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Form',
 	'gj.Form.MarkdownEditor',
 	'gj.Form.UploadControl',
-	'gj.User.UserAvatar',
 	'gj.User.LinkedAccounts',
 	'gj.User.Friendship',
 	'gj.User.Message',

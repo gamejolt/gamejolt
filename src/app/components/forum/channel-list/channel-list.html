@@ -39,7 +39,7 @@
 				<div ng-if="::latestPost">
 
 					<div class="forum-channel-list-item-latest-topic-avatar">
-						<div gj-user-avatar="::latestPost.user"></div>
+						<gj-user-avatar [user]="::latestPost.user"></gj-user-avatar>
 					</div>
 
 					<div class="forum-channel-list-item-latest-topic-info">

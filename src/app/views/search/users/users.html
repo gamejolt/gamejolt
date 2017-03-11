@@ -5,7 +5,7 @@
 			<div class="search-media-list-item search-media-list-user col-xs-3 col-sm-2 anim-fade-in-up no-animate-xs"
 				ng-repeat="user in searchCtrl.payload.users track by user.id"
 				>
-				<div gj-user-avatar="user" avatar-show-name="true"></div>
+				<gj-user-avatar [user]="user" [show-name]="true"></gj-user-avatar>
 			</div>
 		</div>
 

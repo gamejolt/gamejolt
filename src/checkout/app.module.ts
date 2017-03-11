@@ -26,6 +26,7 @@ import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/respons
 import { ReferrerModule } from '../lib/gj-lib-client/components/referrer/referrer.module';
 import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
+import { UserAvatarModule } from '../lib/gj-lib-client/components/user/user-avatar/user-avatar.module';
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
 
 @NgModule({
@@ -53,6 +54,7 @@ import { TranslateModule } from '../lib/gj-lib-client/components/translate/trans
 		ReferrerModule,
 		GeoModule,
 		ScrollModule,
+		UserAvatarModule,
 		TranslateModule,
 		AppModuleNg1,
 	],
