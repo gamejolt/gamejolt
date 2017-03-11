@@ -1,3 +1,3 @@
-angular.module( 'App.Game.Collection.Thumbnail', [ 'App.Game.Collection' ] );
+angular.module( 'App.Game.Collection.Thumbnail', [] );
 
 require( './thumbnail-directive' );
