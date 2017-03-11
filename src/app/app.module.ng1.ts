@@ -100,7 +100,6 @@ import './components/featured-item/featured-item-module';
 import './components/game/collection/grid/grid-module';
 import './components/game/collection/list/list-module';
 import './components/game/collection/thumbnail/thumbnail-module';
-import './components/game/collection/collection-module';
 import './components/game-playlist/add-to-popover/add-to-popover-module';
 import './components/game-playlist/save-modal/save-modal-module';
 import './components/invite/invite-module';
@@ -248,7 +247,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'App.Game.Ogrs',
 	'App.Game.RatingGrowl',
 	'App.Game.MaturityBlock',
-	'App.Game.Collection',
 	'App.Game.Collection.Thumbnail',
 	'App.Game.Collection.Grid',
 	'App.Game.Collection.List',
