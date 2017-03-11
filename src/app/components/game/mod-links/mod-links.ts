@@ -1,6 +1,35 @@
-import { provide } from 'ng-metadata/core';
-import { GameModLinksComponent } from './mod-links.component';
+import * as Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import * as View from '!view!./mod-links.html';
 
-export default angular.module( 'App.Game.ModLinks', [] )
-.directive( ...provide( GameModLinksComponent ) )
-.name;
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { getProvider } from '../../../../lib/gj-lib-client/utils/utils';
+import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+
+@View
+@Component({
+	name: 'game-mod-links',
+	components: {
+		AppJolticon,
+	}
+})
+export class AppGameModLinks extends Vue
+{
+	@Prop( Object ) game: Game;
+
+	Environment = Environment;
+
+	async tag( tag: string )
+	{
+		// It won't return what site api expects for output, so gotta catch.
+		try {
+			await Api.sendRequest( `/games/tags/tag/${this.game.id}/${tag}`, null, { apiPath: '/moderate', processPayload: false } );
+		}
+		catch ( _e ) {
+			const Growls = getProvider<any>( 'Growls' );
+			Growls.success( 'Tagged the game.' );
+		}
+	}
+}

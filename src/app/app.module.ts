@@ -57,7 +57,6 @@ import GameFollowWidgetModule from './components/game/follow-widget/follow-widge
 import GameGridModule from './components/game/grid/grid';
 import FiresidePostThumbnailModule from './components/fireside/post/thumbnail/thumbnail';
 import FiresidePostListModule from './components/fireside/post/list/list';
-import GameModLinksModule from './components/game/mod-links/mod-links';
 import CountdownModule from '../lib/gj-lib-client/components/countdown/countdown';
 import LoadingFadeModule from '../lib/gj-lib-client/components/loading/fade/fade';
 import { GameSketchfabModule } from '../lib/gj-lib-client/components/game/sketchfab/sketchfab.module';
@@ -191,7 +190,6 @@ import { TranslateModule } from '../lib/gj-lib-client/components/translate/trans
 		CommentAvatarListModule,
 		ChannelsModule,
 		ChannelThumbnailModule,
-		GameModLinksModule,
 		CountdownModule,
 		LoadingFadeModule,
 		BroadcastModalModule,

@@ -1,30 +1,30 @@
 <div class="list-group list-group-dark">
 	<a class="list-group-item has-icon"
-		ng-click="$ctrl.tag( 'fnaf' )"
+		@click="tag( 'fnaf' )"
 		target="_blank"
 		>
-		<span class="jolticon jolticon-tag"></span>
+		<app-jolticon icon="tag" />
 		<span>Tag: #fnaf</span>
 	</a>
 	<a class="list-group-item has-icon"
-		ng-click="$ctrl.tag( 'fangame' )"
+		@click="tag( 'fangame' )"
 		target="_blank"
 		>
-		<span class="jolticon jolticon-tag"></span>
+		<app-jolticon icon="tag" />
 		<span>Tag: #fangame</span>
 	</a>
 	<a class="list-group-item has-icon"
-		ng-click="$ctrl.tag( 'gjfreeze' )"
+		@click="tag( 'gjfreeze' )"
 		target="_blank"
 		>
-		<span class="jolticon jolticon-tag"></span>
+		<app-jolticon icon="tag" />
 		<span>Tag: #gjfreeze</span>
 	</a>
 	<a class="list-group-item has-icon"
-		ng-href="{{ ::$ctrl.env.baseUrl }}/moderate/games/view/{{ ::$ctrl.game.id }}"
+		:href="Environment.baseUrl + `/moderate/games/view/${game.id}`"
 		target="_blank"
 		>
-		<span class="jolticon jolticon-cog"></span>
+		<app-jolticon icon="cog" />
 		<span>Moderate Game</span>
 	</a>
 </div>
