@@ -3,6 +3,7 @@ import { StateParams } from 'angular-ui-router';
 import * as template from '!html-loader!./grid.html';
 
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 
 const RowSizeSm = 2;
 const RowSizeMd = 3;
@@ -28,10 +29,10 @@ export class GridComponent implements OnInit, OnChanges
 	id = ++GridComponent.idCounter;
 
 	screen = Screen;
+	scroll = Scroll;
 
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( 'Scroll' ) public scroll: any,
 		@Inject( '$stateParams' ) $stateParams: StateParams,
 	)
 	{
