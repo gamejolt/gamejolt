@@ -29,7 +29,9 @@ Vue.use( GetTextPlugin, {
 	translations: {},
 } );
 
-Vue.use( VueShortkey );
+Vue.use( VueShortkey, {
+	prevent: [ 'input', 'textarea' ],
+} );
 
 Loader.addLoader( new HammerLoader() );
 Loader.addLoader( new HammerVueLoader() );
