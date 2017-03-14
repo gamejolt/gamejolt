@@ -13,7 +13,8 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.BuildCtr
 
 	// If they click away from the page before the download starts, then cancel the download redirect.
 	var shouldDownload = true;
-	var downloadPromise = $timeout( 5000 )
+	// var downloadPromise = $timeout( 5000 )
+	var downloadPromise = Promise.resolve()
 		.then( function()
 		{
 			return _this.build.getDownloadUrl( {
