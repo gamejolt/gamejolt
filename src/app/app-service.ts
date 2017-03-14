@@ -10,6 +10,7 @@ import { Screen } from '../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
+import { Growls } from '../lib/gj-lib-client/components/growls/growls.service';
 
 export function attachProvidersApp( $scope: ng.IScope )
 {
@@ -33,7 +34,6 @@ export class App
 		@Inject( '$rootScope' ) $rootScope: ng.IRootScopeService,
 		@Inject( '$state' ) private $state: StateService,
 		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
-		@Inject( 'Growls' ) private growls: any,
 	)
 	{
 		// Payload emits this every time the user is processed.
@@ -60,6 +60,6 @@ export class App
 		// We go to the homepage currently just in case they're in a view they shouldn't be.
 		this.$state.go( 'discover.home' );
 
-		this.growls.success( 'You are now logged out.', 'Goodbye!' );
+		Growls.success( 'You are now logged out.', 'Goodbye!' );
 	}
 }
