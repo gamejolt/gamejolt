@@ -112,6 +112,7 @@ import { GrowlsModule } from '../lib/gj-lib-client/components/growls/growls.modu
 import { GameRatingGrowlModule } from './components/game/rating-growl/rating-growl.module';
 import { RatingWidgetModule } from './components/rating/widget/widget.module';
 import { GameRatingModule } from '../lib/gj-lib-client/components/game/rating/rating.module';
+import { FadeCollapseModule } from '../lib/gj-lib-client/components/fade-collapse/fade-collapse.module';
 
 @NgModule({
 	imports: [
@@ -226,6 +227,7 @@ import { GameRatingModule } from '../lib/gj-lib-client/components/game/rating/ra
 		GameRatingModule,
 		GameRatingGrowlModule,
 		RatingWidgetModule,
+		FadeCollapseModule,
 		AppModuleNg1,
 	],
 	declarations: [

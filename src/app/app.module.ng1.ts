@@ -31,7 +31,6 @@ import '../lib/gj-lib-client/components/scroll/parallax/parallax';
 import '../lib/gj-lib-client/components/scroll/auto-scroll/auto-scroll';
 import '../lib/gj-lib-client/components/scroll/fixed-resizer/fixed-resizer';
 import '../lib/gj-lib-client/components/editable-accordion/editable-accordion';
-import '../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import '../lib/gj-lib-client/components/progress/poller/poller';
 import '../lib/gj-lib-client/components/alert/dismissable/dismissable';
 import '../lib/gj-lib-client/components/lazy/placeholder/placeholder';
@@ -162,7 +161,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Scroll.AutoScroll',
 	'gj.Scroll.FixedResizer',
 	'gj.EditableAccordion',
-	'gj.FadeCollapse',
 	'gj.Progress.Poller',
 	'gj.Alert.Dismissable',
 	'gj.Lazy.Placeholder',

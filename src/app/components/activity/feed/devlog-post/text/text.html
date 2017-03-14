@@ -1,7 +1,7 @@
 <gj-fade-collapse
-	fade-collapse-height="500"
-	fade-collapse-is-open="$ctrl.showFullContent"
-	fade-collapse-is-required="::$ctrl.canToggleContent"
+	[collapse-height]="500"
+	[is-open]="$ctrl.showFullContent"
+	(required)="$ctrl.canToggleContent = true"
 	>
 	<div class="fireside-post-body">
 		<gj-widget-compiler

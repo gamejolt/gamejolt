@@ -175,9 +175,9 @@
 					-->
 					<div ng-if="viewCtrl.currentPage > 1">
 						<gj-fade-collapse
-							fade-collapse-height="200"
-							fade-collapse-is-open="viewCtrl.showFullDescription"
-							fade-collapse-is-required="viewCtrl.canToggleDescription"
+							[collapse-height]="200"
+							[is-open]="viewCtrl.showFullDescription"
+							(required)="viewCtrl.canToggleDescription = true"
 							>
 							<div class="forum-post-body">
 								<gj-widget-compiler

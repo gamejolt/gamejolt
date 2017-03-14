@@ -108,9 +108,9 @@
 
 				<div ng-if="gameCtrl.game.description_compiled">
 					<gj-fade-collapse
-						fade-collapse-height="400"
-						fade-collapse-is-open="overviewCtrl.showFullDescription"
-						fade-collapse-is-required="overviewCtrl.canToggleDescription"
+						[collapse-height]="900"
+						[is-open]="overviewCtrl.showFullDescription"
+						(required)="overviewCtrl.canToggleDescription = true"
 						>
 						<div class="game-compiled-description" ng-bind-html="gameCtrl.game.description_compiled"></div>
 					</gj-fade-collapse>

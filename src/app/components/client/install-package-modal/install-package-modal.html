@@ -40,9 +40,9 @@
 
 					<div class="game-package-card-description" ng-if="::package.description">
 						<gj-fade-collapse
-							fade-collapse-height="100"
-							fade-collapse-is-open="modalCtrl.showFullDescription"
-							fade-collapse-is-required="modalCtrl.canToggleDescription"
+							[collapse-height]="100"
+							[is-open]="modalCtrl.showFullDescription"
+							(required)="modalCtrl.canToggleDescription = true"
 							>
 							<p ng-bind-html="::package.description | linky"></p>
 						</gj-fade-collapse>

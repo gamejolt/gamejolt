@@ -43,9 +43,9 @@
 </div>
 
 <gj-fade-collapse
-	fade-collapse-height="$ctrl.isClaimOnly ? undefined : 400"
-	fade-collapse-is-open="$ctrl.showingFullDescription"
-	fade-collapse-is-required="$ctrl.canToggleDescription"
+	[collapse-height]="$ctrl.isClaimOnly ? undefined : 400"
+	[is-open]="$ctrl.showingFullDescription"
+	(required)="$ctrl.canToggleDescription = true"
 	>
 	<div class="game-compiled-description" ng-bind-html="$ctrl.game.description_compiled"></div>
 </gj-fade-collapse>

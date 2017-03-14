@@ -37,7 +37,7 @@
 						<span ng-if="::isOwner" class="comment-avatar-list-comment-owner tag hidden-xs" translate>Owner</span>
 					</div>
 
-					<gj-fade-collapse fade-collapse-height="200">
+					<gj-fade-collapse [collapse-height]="200">
 						<div class="comment-avatar-list-comment-content"
 							ng-bind-html="::comment.comment_compiled"
 							>

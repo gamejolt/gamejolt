@@ -39,9 +39,9 @@
 
 			<div class="timeline-list-item-content" ng-switch="::$ctrl.notification.type">
 				<gj-fade-collapse
-					fade-collapse-height="80"
-					fade-collapse-is-open="$ctrl.showFullContent"
-					fade-collapse-is-required="::$ctrl.canToggleContent"
+					[collapse-height]="80"
+					[is-open]="$ctrl.showFullContent"
+					(required)="$ctrl.canToggleContent = true"
 					>
 					<div
 						ng-switch-when="comment-add"
