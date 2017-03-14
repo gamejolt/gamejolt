@@ -27,8 +27,8 @@
 				class="discover-home-featured-item meter-dark"
 				ng-class="{ 'scrollable-grid-item': $sctrl.screen.isXs }"
 				ng-repeat="item in ($ctrl.screen.isXs ? $ctrl.items : $ctrl.itemsSmUp) track by item.id"
-				gj-game="item.game"
-				autoplay="true"
+				[game]="item.game"
+				[autoplay]="true"
 				gj-track-event="home:featured:game:{{ $index }}"
 				>
 			</gj-game-thumbnail>
