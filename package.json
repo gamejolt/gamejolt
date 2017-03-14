@@ -39,6 +39,7 @@
     "chart.js": "1.0.2",
     "codemirror": "5.24.2",
     "core-js": "2.4.1",
+    "date-fns": "1.28.0",
     "decompress-zip": "0.3.0",
     "favico.js": "0.3.10",
     "game-jolt-frontend-lib": "gamejolt/frontend-lib#master",
