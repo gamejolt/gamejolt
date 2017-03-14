@@ -1,6 +1,8 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
 import * as template from '!html-loader!./follow-widget.html';
+
 import { App } from '../../../../app/app-service';
+import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 
 @Component({
 	selector: 'gj-game-follow-widget',
@@ -17,7 +19,6 @@ export class FollowWidgetComponent
 	constructor(
 		@Inject( 'App' ) private app: App,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
-		@Inject( 'Growls' ) private Growls: any,
 	)
 	{
 		this.followTooltip = gettextCatalog.getString( 'Follow this game to add it to your Library and be notified when new posts are added.' );
@@ -36,7 +37,7 @@ export class FollowWidgetComponent
 			promise = this.game.$follow()
 				.catch( () =>
 				{
-					this.Growls.error(
+					Growls.error(
 						this.gettextCatalog.getString( 'Something has prevented you from following this game.' )
 					);
 				} );
@@ -45,7 +46,7 @@ export class FollowWidgetComponent
 			promise = this.game.$unfollow()
 				.catch( () =>
 				{
-					this.Growls.error(
+					Growls.error(
 						this.gettextCatalog.getString( 'library.followed.remove_game_error_growl' ),
 						this.gettextCatalog.getString( 'library.followed.remove_game_error_growl_title' )
 					);

@@ -2,6 +2,7 @@ import { Component, Inject, Input } from 'ng-metadata/core';
 import * as template from '!html-loader!./paypal.html';
 
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
+import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 
 @Component({
 	selector: 'gj-form-dashboard-financials-paypal',
@@ -13,7 +14,6 @@ export class PaypalComponent
 
 	constructor(
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
-		@Inject( 'Growls' ) private growls: any,
 	)
 	{
 	}
@@ -36,7 +36,7 @@ export class PaypalComponent
 			} )
 			.catch( () =>
 			{
-				this.growls.error( this.gettextCatalog.getString( 'Could not get PayPal redirect URL.' ) );
+				Growls.error( this.gettextCatalog.getString( 'Could not get PayPal redirect URL.' ) );
 			} );
 	}
 }

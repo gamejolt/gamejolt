@@ -1,6 +1,7 @@
 import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from '../../../../../../../app-service';
 import { Scroll } from '../../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 
 @Injectable()
 export class ThumbnailCtrl
@@ -8,7 +9,6 @@ export class ThumbnailCtrl
 	constructor(
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
 	)
 	{
@@ -17,7 +17,7 @@ export class ThumbnailCtrl
 
 	onSaved()
 	{
-		this.growls.success(
+		Growls.success(
 			this.gettextCatalog.getString( 'dash.games.thumbnail.saved_growl' ),
 			this.gettextCatalog.getString( 'dash.games.thumbnail.saved_growl_title' )
 		);

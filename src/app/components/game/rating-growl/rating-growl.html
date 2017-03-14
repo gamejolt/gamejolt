@@ -1,13 +1,16 @@
-<h4>{{ ::'game.rating_growl.title' | translate }}</h4>
+<div>
+	<h4>
+		<translate>game.rating_growl.title</translate>
+	</h4>
 
-<p>{{ growlCtrl.game.title }}</p>
+	<p>{{ game.title }}</p>
 
-<gj-rating-widget
-	class="rating-widget-dark"
-	rating-widget-game="growlCtrl.game"
-	rating-widget-big="true"
-	rating-widget-rating="growlCtrl.rating"
-	>
-</gj-rating-widget>
+	<app-rating-widget
+		class="rating-widget-dark"
+		:game="game"
+		:big="true"
+		>
+	</app-rating-widget>
 
-<p><em>{{ ::'game.rating_growl.message' | translate }}</em></p>
+	<p><em><translate>game.rating_growl.message</translate></em></p>
+</div>

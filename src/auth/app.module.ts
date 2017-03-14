@@ -27,6 +27,7 @@ import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.modu
 import { ConnectionModule } from '../lib/gj-lib-client/components/connection/connection.module';
 import { TranslateLangSelectorModule } from '../lib/gj-lib-client/components/translate/lang-selector/lang-selector.module';
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
+import { GrowlsModule } from '../lib/gj-lib-client/components/growls/growls.module';
 
 @NgModule({
 	imports: [
@@ -53,6 +54,7 @@ import { TranslateModule } from '../lib/gj-lib-client/components/translate/trans
 		ScrollModule,
 		TranslateModule,
 		TranslateLangSelectorModule,
+		GrowlsModule,
 		AppModuleNg1,
 	],
 	declarations: [

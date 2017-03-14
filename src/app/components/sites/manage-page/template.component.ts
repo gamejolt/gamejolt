@@ -3,6 +3,7 @@ import * as template from '!html-loader!./template.component.html';
 
 import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
 import { SiteEditorModal } from '../../site-editor-modal/site-editor-modal.service';
+import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 
 @Component({
 	selector: 'gj-sites-manage-page-template',
@@ -16,7 +17,6 @@ export class SitesManagePageTemplateComponent
 
 	constructor(
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
-		@Inject( 'Growls' ) private Growls: any,
 		@Inject( 'SiteEditorModal' ) private editorModal: SiteEditorModal,
 	)
 	{
@@ -36,7 +36,7 @@ export class SitesManagePageTemplateComponent
 
 	onSettingsSaved()
 	{
-		this.Growls.success(
+		Growls.success(
 			this.gettextCatalog.getString( `Your site settings have been saved.` ),
 			this.gettextCatalog.getString( `Settings Saved` ),
 		);

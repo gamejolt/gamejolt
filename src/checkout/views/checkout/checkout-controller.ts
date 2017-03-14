@@ -3,6 +3,7 @@ import { Environment } from '../../../lib/gj-lib-client/components/environment/e
 import { Sellable } from '../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
 import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
+import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
 
 @Injectable()
 export class CheckoutCtrl
@@ -14,7 +15,6 @@ export class CheckoutCtrl
 
 	constructor(
 		@Inject( '$window' ) private $window: ng.IWindowService,
-		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'payload' ) payload: any
 	)
 	{
@@ -43,7 +43,7 @@ export class CheckoutCtrl
 		}
 
 		if ( !redirect ) {
-			this.growls.error( 'Could not redirect.' );
+			Growls.error( 'Could not redirect.' );
 			return;
 		}
 

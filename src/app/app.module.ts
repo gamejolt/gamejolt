@@ -108,6 +108,10 @@ import { GameCollectionModule } from './components/game/collection/collection.mo
 import { ConnectionModule } from '../lib/gj-lib-client/components/connection/connection.module';
 import { UserAvatarModule } from '../lib/gj-lib-client/components/user/user-avatar/user-avatar.module';
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
+import { GrowlsModule } from '../lib/gj-lib-client/components/growls/growls.module';
+import { GameRatingGrowlModule } from './components/game/rating-growl/rating-growl.module';
+import { RatingWidgetModule } from './components/rating/widget/widget.module';
+import { GameRatingModule } from '../lib/gj-lib-client/components/game/rating/rating.module';
 
 @NgModule({
 	imports: [
@@ -218,6 +222,10 @@ import { TranslateModule } from '../lib/gj-lib-client/components/translate/trans
 		GameCollectionModule,
 		UserAvatarModule,
 		TranslateModule,
+		GrowlsModule,
+		GameRatingModule,
+		GameRatingGrowlModule,
+		RatingWidgetModule,
 		AppModuleNg1,
 	],
 	declarations: [

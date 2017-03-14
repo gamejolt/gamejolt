@@ -6,6 +6,7 @@ import { ModalConfirm } from '../../../../../../lib/gj-lib-client/components/mod
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import { MediaItem } from '../../../../../../lib/gj-lib-client/components/media-item/media-item-model';
 import { attachProvidersApp } from '../../../../../app-service';
+import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 
 @Component({
 	selector: 'route-dash-dev-games-manage',
@@ -25,7 +26,6 @@ export class RouteManageComponent implements OnInit
 	constructor(
 		@Inject( '$scope' ) $scope: ng.IScope,
 		@Inject( '$state' ) public $state: StateService,
-		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 	)
@@ -65,7 +65,7 @@ export class RouteManageComponent implements OnInit
 			.then( () => this.game.$setStatus( Game.STATUS_VISIBLE ) )
 			.then( () =>
 			{
-				this.growls.success(
+				Growls.success(
 					this.gettextCatalog.getString( 'dash.games.overview.published_growl' ),
 					this.gettextCatalog.getString( 'dash.games.overview.published_growl_title' )
 				);
@@ -85,7 +85,7 @@ export class RouteManageComponent implements OnInit
 			.then( () => this.game.$setStatus( Game.STATUS_HIDDEN ) )
 			.then( () =>
 			{
-				this.growls.info(
+				Growls.info(
 					this.gettextCatalog.getString( 'Your game page is now hidden.' ),
 					this.gettextCatalog.getString( 'Game Hidden' )
 				);
@@ -98,7 +98,7 @@ export class RouteManageComponent implements OnInit
 			.then( () => this.game.$setCanceled( true ) )
 			.then( () =>
 			{
-				this.growls.info(
+				Growls.info(
 					this.gettextCatalog.getString( 'Your game is now canceled.' ),
 					this.gettextCatalog.getString( 'Game Canceled' )
 				);
@@ -111,7 +111,7 @@ export class RouteManageComponent implements OnInit
 			.then( () => this.game.$setCanceled( false ) )
 			.then( () =>
 			{
-				this.growls.info(
+				Growls.info(
 					this.gettextCatalog.getString( 'Your game is no longer canceled.' ),
 					this.gettextCatalog.getString( 'Game Uncanceled' )
 				);
@@ -124,7 +124,7 @@ export class RouteManageComponent implements OnInit
 			.then( () => this.game.$remove() )
 			.then( () =>
 			{
-				this.growls.info(
+				Growls.info(
 					this.gettextCatalog.getString( 'dash.games.removed_growl' ),
 					this.gettextCatalog.getString( 'dash.games.removed_growl_title' )
 				);

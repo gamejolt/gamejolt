@@ -2,6 +2,7 @@ import { Injectable, Inject } from 'ng-metadata/core';
 import { App } from '../../../../../../../app-service';
 import { FormDashboardGameWizard } from '../../../../../../../components/forms/dashboard/game/wizard/wizard-service';
 import { Scroll } from '../../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 
 @Injectable()
 export class SettingsCtrl
@@ -9,7 +10,6 @@ export class SettingsCtrl
 	constructor(
 		@Inject( 'App' ) app: App,
 		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'FormDashboardGameWizard' ) private wizard: FormDashboardGameWizard,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
 	)
@@ -24,7 +24,7 @@ export class SettingsCtrl
 			return;
 		}
 
-		this.growls.success(
+		Growls.success(
 			this.gettextCatalog.getString( 'dash.games.settings.save_growl' ),
 			this.gettextCatalog.getString( 'dash.games.settings.save_growl_title' )
 		);

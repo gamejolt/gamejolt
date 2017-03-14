@@ -3,6 +3,7 @@ import * as template from '!html-loader!./static.component.html';
 
 import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 
 @Component({
 	selector: 'gj-sites-manage-page-static',
@@ -16,7 +17,6 @@ export class SitesManagePageStaticComponent
 
 	constructor(
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
-		@Inject( 'Growls' ) private Growls: any,
 	)
 	{
 	}
@@ -25,7 +25,7 @@ export class SitesManagePageStaticComponent
 	{
 		// Only alert if they had a build previously and uploaded a new one.
 		if ( this.site.build ) {
-			this.Growls.success(
+			Growls.success(
 				this.gettextCatalog.getString( `Your new site build is now active.` ),
 				this.gettextCatalog.getString( `Site Updated` ),
 			);

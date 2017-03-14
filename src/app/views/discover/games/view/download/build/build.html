@@ -40,9 +40,9 @@
 						<p class="small" translate>game.download.game.rate_html</p>
 
 						<gj-rating-widget
-							rating-widget-game="gameCtrl.game"
-							rating-widget-big="true"
-							rating-widget-rating="gameCtrl.userRating"
+							[game]="gameCtrl.game"
+							[big]="true"
+							[rating]="gameCtrl.userRating"
 							>
 						</gj-rating-widget>
 					</div>

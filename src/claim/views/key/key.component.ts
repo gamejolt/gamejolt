@@ -6,6 +6,7 @@ import { StateService, Transition } from 'angular-ui-router';
 import { ModalConfirm } from '../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { App } from '../../app-service';
+import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
 
 @Component({
 	selector: 'route-key',
@@ -25,7 +26,6 @@ export class RouteKeyComponent implements OnInit
 	constructor(
 		@Inject( '$state' ) private $state: StateService,
 		@Inject( 'ModalConfirm' ) private confirm: ModalConfirm,
-		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'App' ) private app: App,
 	)
 	{
@@ -66,7 +66,7 @@ export class RouteKeyComponent implements OnInit
 			}
 		}
 		catch ( _e ) {
-			this.growls.error( `For some reason we couldn't claim this into your account!` );
+			Growls.error( `For some reason we couldn't claim this into your account!` );
 		}
 	}
 }

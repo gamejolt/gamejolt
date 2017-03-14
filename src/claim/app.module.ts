@@ -45,6 +45,7 @@ import { GameThumbnailModule } from '../app/components/game/thumbnail/thumbnail.
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 import { UserAvatarModule } from '../lib/gj-lib-client/components/user/user-avatar/user-avatar.module';
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
+import { GrowlsModule } from '../lib/gj-lib-client/components/growls/growls.module';
 
 const ViewsModule = angular.module( 'App.Views', [] ).name;
 importContext( require.context( './views', true, /\.state\.ts$/ ) );
@@ -93,6 +94,7 @@ importContext( require.context( './views', true, /\.state\.ts$/ ) );
 		ScrollModule,
 		UserAvatarModule,
 		TranslateModule,
+		GrowlsModule,
 		AppModuleNg1,
 	],
 	declarations: [

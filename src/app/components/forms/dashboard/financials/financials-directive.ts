@@ -1,10 +1,10 @@
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 
-FinancialsFormFactory.$inject = [ 'Form', 'currencyFilter', 'Growls' ];
+FinancialsFormFactory.$inject = [ 'Form', 'currencyFilter' ];
 export function FinancialsFormFactory(
 	Form: any,
 	currencyFilter: ng.IFilterCurrency,
-	Growls: any,
 )
 {
 	const form = new Form( {

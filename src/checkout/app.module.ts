@@ -28,6 +28,7 @@ import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 import { UserAvatarModule } from '../lib/gj-lib-client/components/user/user-avatar/user-avatar.module';
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
+import { GrowlsModule } from '../lib/gj-lib-client/components/growls/growls.module';
 
 @NgModule({
 	imports: [
@@ -56,6 +57,7 @@ import { TranslateModule } from '../lib/gj-lib-client/components/translate/trans
 		ScrollModule,
 		UserAvatarModule,
 		TranslateModule,
+		GrowlsModule,
 		AppModuleNg1,
 	],
 	declarations: [

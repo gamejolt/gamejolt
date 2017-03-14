@@ -3,6 +3,7 @@ import * as template from '!html-loader!./dev-stage-selector.html';
 
 import { FormDashboardGameDevStageSelectorConfirm } from './confirm-service';
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
+import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 
 @Component({
 	selector: 'gj-form-dashboard-game-dev-stage-selector',
@@ -18,7 +19,6 @@ export class DevStageSelectorComponent
 
 	constructor(
 		@Inject( 'FormDashboardGameDevStageSelectorConfirm' ) private confirm: FormDashboardGameDevStageSelectorConfirm,
-		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 	)
 	{
@@ -38,8 +38,8 @@ export class DevStageSelectorComponent
 			.then( () => this.game.$setDevStage( stage ) )
 			.then( () =>
 			{
-				this.growls.success(
-					this.gettextCatalog.getString( "Your game's development stage has been changed!" ),
+				Growls.success(
+					this.gettextCatalog.getString( `Your game's development stage has been changed!` ),
 					this.gettextCatalog.getString( 'Stage Changed' ),
 				);
 			} );

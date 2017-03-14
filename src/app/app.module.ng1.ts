@@ -27,7 +27,6 @@ import '../lib/gj-lib-client/components/partial/partial';
 import '../lib/gj-lib-client/components/backdrop/backdrop';
 import '../lib/gj-lib-client/components/tooltip/tooltip.module';
 import '../lib/gj-lib-client/components/toggle-switch/toggle-switch';
-import '../lib/gj-lib-client/components/growls/growls';
 import '../lib/gj-lib-client/components/scroll/parallax/parallax';
 import '../lib/gj-lib-client/components/scroll/auto-scroll/auto-scroll';
 import '../lib/gj-lib-client/components/scroll/fixed-resizer/fixed-resizer';
@@ -48,7 +47,6 @@ import '../lib/gj-lib-client/components/user/linked-accounts/linked-accounts';
 import '../lib/gj-lib-client/components/user/message/message';
 import '../lib/gj-lib-client/components/comment/widget/widget';
 import '../lib/gj-lib-client/components/subscription/subscription';
-import '../lib/gj-lib-client/components/game/rating/rating';
 import '../lib/gj-lib-client/components/game/song/song';
 import '../lib/gj-lib-client/components/key-group/key-group';
 import '../lib/gj-lib-client/components/game/news-article/news-article';
@@ -106,12 +104,10 @@ import './components/meter/meter-module';
 import './components/game/filtering/filtering-module';
 import './components/game/cover-buttons/cover-buttons-module';
 import './components/game/ogrs/ogrs-module';
-import './components/game/rating-growl/rating-growl-module';
 import './components/game/maturity-block/maturity-block-module';
 import './components/minbar/minbar-module';
 import './components/offline/alert/alert-module';
 import './components/protocol-watcher/protocol-watcher-module';
-import './components/rating/widget/widget-module';
 import './components/score/feed/feed-module';
 import './components/score/list/list-module';
 import './components/score/overview/overview-module';
@@ -162,7 +158,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Backdrop',
 	'gj.Tooltip',
 	'gj.ToggleSwitch',
-	'gj.Growls',
 	'gj.Scroll.Parallax',
 	'gj.Scroll.AutoScroll',
 	'gj.Scroll.FixedResizer',
@@ -183,7 +178,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.User.Message',
 	'gj.Comment.Widget',
 	'gj.Subscription',
-	'gj.Game.Rating',
 	'gj.Game.Song',
 	'gj.KeyGroup',
 	'gj.Game.NewsArticle',
@@ -241,12 +235,10 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'App.Game.Filtering',
 	'App.Game.CoverButtons',
 	'App.Game.Ogrs',
-	'App.Game.RatingGrowl',
 	'App.Game.MaturityBlock',
 	'App.Game.Collection.Thumbnail',
 	'App.Game.Collection.Grid',
 	'App.Game.Collection.List',
-	'App.Rating.Widget',
 	'App.GamePlaylist.SaveModal',
 	'App.GamePlaylist.AddToPopover',
 	'App.Score.List',

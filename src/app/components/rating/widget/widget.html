@@ -1,26 +1,41 @@
-<div class="rating-widget" ng-class="{ 'rating-widget-big': ctrl.isBig }">
+<div class="rating-widget" :class="{ 'rating-widget-big': big }">
 
 	<span class="rating-widget-icons">
-		<span ng-repeat="i in [ 1, 2, 3, 4, 5 ]">
-			<span class="rating-widget-icon jolticon jolticon-gamejolt"
-				ng-class="{ hover: ctrl.hovered >= i, selected: ctrl.gameRating && ctrl.gameRating.rating >= i, big: ctrl.isBig }"
-				ng-mouseenter="ctrl.hover( i )"
-				ng-mouseleave="ctrl.hover()"
-				ng-click="ctrl.select( i )"
-				gj-tooltip="{{ ctrl.labels[ (i - 1) ] }}"
-				gj-track-event="game-rating:rate:{{ i }}"
-				></span>
+		<span
+			v-for="i of [ 1, 2, 3, 4, 5 ]"
+			@mouseenter="hover( i )"
+			@mouseleave="hover()"
+			@click="select( i )"
+			v-app-track-event="`game-rating:rate:${i}`"
+			>
+			<app-jolticon
+				icon="gamejolt"
+				class="rating-widget-icon"
+				:class="{
+					hover: hovered >= i,
+					selected: gameRating && gameRating.rating >= i,
+					big,
+				}"
+				v-app-tooltip="getTooltip( i )"
+				/>
 		</span>
 	</span>
 
 	<span class="rating-widget-clear">
-		<span class="jolticon jolticon-remove anim-fade-in-enlarge anim-fade-leave"
-			ng-if="ctrl.gameRating.rating"
-			ng-click="ctrl.clear()"
-			ng-class="{ big: ctrl.isBig }"
-			gj-tooltip="{{ 'rating.clear' | translate }}"
-			gj-track-event="game-rating:clear"
-			></span>
+		<transition>
+			<span
+				v-if="gameRating && gameRating.rating"
+				class="anim-fade-in-enlarge anim-fade-leave"
+				@click="clear"
+				v-app-track-event="`game-rating:clear`"
+				>
+				<app-jolticon
+					icon="remove"
+					:class="{ big }"
+					v-app-tooltip="$gettext( 'rating.clear' )"
+					/>
+			</span>
+		</transition>
 	</span>
 
 </div>

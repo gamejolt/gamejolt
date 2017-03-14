@@ -1,5 +1,5 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
-	$scope, $state, $transition$, $injector, $timeout, $document, $position, $location,
+	$scope, $rootScope, $state, $transition$, $injector, $timeout, $document, $position, $location,
 	Environment, App, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
 	Game, Game_Rating, Game_ScoreTable, Comment,
 	Registry, Scroll, Clipboard )
@@ -94,7 +94,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 
 		// Any game rating change will broadcast this event.
 		// We catch it so we can update the page with the new rating! Yay!
-		$scope.$on( 'onGameRatingChange', onGameRatingChange );
+		$rootScope.$on( 'GameRating.changed', onGameRatingChange );
 
 		// For syncing game data to client.
 		if ( Environment.isClient ) {

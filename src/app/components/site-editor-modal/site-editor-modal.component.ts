@@ -5,6 +5,7 @@ import { SiteTheme } from '../../../lib/gj-lib-client/components/site/theme/them
 import { Site } from '../../../lib/gj-lib-client/components/site/site-model';
 import { SiteTemplate } from '../../../lib/gj-lib-client/components/site/template/template-model';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
+import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
 
 type EditorTab = 'theme' | 'content';
 
@@ -33,7 +34,6 @@ export class SiteEditorModalComponent
 	constructor(
 		@Inject( '$rootScope' ) private $rootScope: ng.IRootScopeService,
 		@Inject( '$sce' ) private $sce: ng.ISCEService,
-		@Inject( 'Growls' ) private growls: any,
 		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( '$location' ) private $location: ng.ILocationService,
 	)
@@ -87,7 +87,7 @@ export class SiteEditorModalComponent
 		this.isDirty = false;
 		await Api.sendRequest( `/web/dash/sites/editor-save/${this.siteId}`, data, { sanitizeComplexData: false } );
 
-		this.growls.success(
+		Growls.success(
 			this.gettextCatalog.getString( 'Your site has been saved.' ),
 			this.gettextCatalog.getString( 'Site Saved' ),
 		);

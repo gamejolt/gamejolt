@@ -4,9 +4,9 @@ import * as View from '!view!./mod-links.html';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { getProvider } from '../../../../lib/gj-lib-client/utils/utils';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 
 @View
 @Component({
@@ -28,7 +28,6 @@ export class AppGameModLinks extends Vue
 			await Api.sendRequest( `/games/tags/tag/${this.game.id}/${tag}`, null, { apiPath: '/moderate', processPayload: false } );
 		}
 		catch ( _e ) {
-			const Growls = getProvider<any>( 'Growls' );
 			Growls.success( 'Tagged the game.' );
 		}
 	}
