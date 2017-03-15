@@ -7,6 +7,8 @@ import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
 import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
 
+require( './radio.styl' );
+
 @Component( {
 	selector: 'route-radio',
 	template,

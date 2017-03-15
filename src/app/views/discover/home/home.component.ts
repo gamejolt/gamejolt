@@ -1,6 +1,7 @@
 import { Component, Inject, Input, OnInit } from 'ng-metadata/core';
 import { StateService } from 'angular-ui-router';
 import * as template from '!html-loader!./home.component.html';
+import './home.styl';
 
 import { App } from '../../../app-service';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
@@ -9,12 +10,13 @@ import { Environment } from '../../../../lib/gj-lib-client/components/environmen
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 
-interface DiscoverSection {
+interface DiscoverSection
+{
 	title: string;
 	url: string;
 	eventLabel: string;
 	items: any[];
-};
+}
 
 @Component({
 	selector: 'route-discover-home',

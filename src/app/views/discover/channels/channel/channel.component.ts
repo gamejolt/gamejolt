@@ -6,6 +6,8 @@ import { ChannelsViewHelper } from '../channels-view-helper';
 import { Channels } from '../../../../components/channel/channels-service';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 
+require( './channel.styl' );
+
 @Component({
 	selector: 'route-discover-channels-channel',
 	template,

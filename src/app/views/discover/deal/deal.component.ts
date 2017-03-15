@@ -7,6 +7,8 @@ import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { GameScreenshot } from '../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
 import { GameVideo } from '../../../../lib/gj-lib-client/components/game/video/video.model';
 
+require( './deal.styl' );
+
 @Component({
 	selector: 'route-discover-deal',
 	template,

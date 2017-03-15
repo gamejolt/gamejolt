@@ -4,6 +4,8 @@ import * as template from '!html-loader!./learn.component.html';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { App } from '../../../app-service';
 
+require( './learn.styl' );
+
 @Component({
 	selector: 'route-landing-learn',
 	template,

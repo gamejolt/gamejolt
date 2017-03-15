@@ -12,6 +12,8 @@ import { Environment } from '../../../../../../../../lib/gj-lib-client/component
 import { GameVideo } from '../../../../../../../../lib/gj-lib-client/components/game/video/video.model';
 import { GameScreenshot } from '../../../../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
 
+require( './media.styl' );
+
 /**
  * Note that we modify media items in place.
  * This is bad, but we can refactor it out to events later, perhaps.

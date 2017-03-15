@@ -6,6 +6,8 @@ import * as template from '!html-loader!./about.component.html';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 
+require( './about.styl' );
+
 @Component({
 	selector: 'route-landing-about',
 	template,
