@@ -1,148 +1,166 @@
-<gj-popover class="search-autocomplete-popover shell-popover"
+<app-popover
 	popover-id="search-autocomplete"
-	popover-append-to-body="true"
-	popover-position-by="fixed"
-	popover-track-element-width="#search-input-{{ $ctrl.searchCtrl.id }}"
-	popover-hide-on-state-change="true"
+	position-by="fixed"
+	:append-to-body="true"
+	:track-element-width="'#search-input-' + search.id"
+	:hide-on-state-change="true"
+	:no-max-height="true"
 	>
-	<div class="fill-darkest">
 
-		<div ng-if="$ctrl.isHidden" class="well sans-margin-bottom">
-			<span class="jolticon jolticon-chevron-up"></span>
-			<span translate>Enter your search query for maximum finding...</span>
+	<div class="search-autocomplete-popover fill-darkest">
+
+		<div v-if="isHidden" class="well sans-margin-bottom">
+			<app-jolticon icon="chevron-up" />
+			<translate>Enter your search query for maximum finding...</translate>
 		</div>
 
-		<div ng-if="!$ctrl.isHidden">
+		<div v-if="!isHidden">
 
 			<!-- Regular Search -->
-			<div ng-if="$ctrl.mode == 'search'">
+			<div v-if="mode === 'search'">
 
 				<!-- View All -->
 				<div class="list-group list-group-dark">
 					<a class="list-group-item"
-						ng-class="{ active: $ctrl.selected === 0 }"
-						ng-mousedown="$ctrl.viewAll()"
-						translate
+						:class="{ active: selected === 0 }"
+						@mousedown="viewAll()"
 						>
-						search.autocomplete.show_all
+						<translate>search.autocomplete.show_all</translate>
 					</a>
 				</div>
 
 				<!-- Installed Games -->
-				<div class="popover-heading" ng-if="$ctrl.libraryGames.length">
-					<span class="jolticon jolticon-download-box"></span>
-					<span translate>search.autocomplete.installed_heading</span>
+				<div class="popover-heading" v-if="libraryGames.length">
+					<translate>search.autocomplete.installed_heading</translate>
 				</div>
-				<div class="list-group list-group-dark thin" ng-if="$ctrl.libraryGames.length">
-					<a class="list-group-item"
-						ng-repeat="libraryGame in $ctrl.libraryGames track by libraryGame.id"
-						ng-class="{ active: $ctrl.items[ $ctrl.selected - 1 ] === libraryGame }"
-						ui-sref="discover.games.view.overview( { slug: libraryGame.slug, id: libraryGame.id } )"
-						gj-track-event="search:autocomplete:go-library-game"
+				<div class="list-group list-group-dark thin" v-if="libraryGames.length">
+					<app-router-link
+						class="list-group-item"
+						v-for="libraryGame of libraryGames"
+						:key="libraryGame.id"
+						:to="{
+							name: 'discover.games.view.overview',
+							params: { slug: libraryGame.slug, id: libraryGame.id },
+						}"
+						:class="{ active: items[ selected - 1 ] === libraryGame }"
+						v-app-track-event="`search:autocomplete:go-library-game`"
 						>
 
 						<!-- TODO: Get this working again. -->
-						<!--<div ng-if="$ctrl.environment.isClient" class="pull-right">
+						<!--<div ng-if="environment.isClient" class="pull-right">
 							<gj-client-game-buttons label="installed" game="libraryGame._game" small-variant="true"></gj-client-game-buttons>
 						</div>-->
 
 						<span class="search-game-thumbnail">
-							<gj-game-thumbnail-img [game]="::libraryGame"></gj-game-thumbnail-img>
+							<app-game-thumbnail-img :game="libraryGame"></app-game-thumbnail-img>
 						</span>
 
-						{{ ::libraryGame.title }}
-					</a>
+						{{ libraryGame.title }}
+					</app-router-link>
 				</div>
 
 				<!-- Games -->
-				<div class="popover-heading" ng-if="$ctrl.games.length">
-					<span class="jolticon jolticon-game"></span>
-					<span translate>search.autocomplete.games_heading</span>
+				<div class="popover-heading" v-if="games.length">
+					<translate>search.autocomplete.games_heading</translate>
 				</div>
-				<div class="list-group list-group-dark thin" ng-if="$ctrl.games.length">
-					<a class="list-group-item"
-						ng-repeat="game in $ctrl.games track by game.id"
-						ng-class="{ active: $ctrl.items[ $ctrl.selected - 1 ] === game }"
-						ui-sref="discover.games.view.overview( { slug: game.slug, id: game.id } )"
-						gj-track-event="search:autocomplete:go-game"
+				<div class="list-group list-group-dark thin" v-if="games.length">
+					<app-router-link
+						class="list-group-item"
+						v-for="game of games"
+						:key="game.id"
+						:to="{
+							name: 'discover.games.view.overview',
+							params: { slug: game.slug, id: game.id },
+						}"
+						:class="{ active: items[ selected - 1 ] === game }"
+						v-app-track-event="`search:autocomplete:go-game`"
 						>
 
 						<!-- TODO: Get this working again. -->
-						<!--<div ng-if="$ctrl.environment.isClient" class="pull-right">
+						<!--<div ng-if="environment.isClient" class="pull-right">
 							<gj-client-game-buttons label="not-installed" game="game" small-variant="true"></gj-client-game-buttons>
 						</div>-->
 
 						<div class="pull-right">
-							<gj-game-compat-icons gj-game="game"></gj-game-compat-icons>
+							<app-game-compat-icons :game="game"></app-game-compat-icons>
 						</div>
 
 						<span class="search-game-thumbnail">
-							<gj-game-thumbnail-img [game]="::game"></gj-game-thumbnail-img>
+							<app-game-thumbnail-img :game="game"></app-game-thumbnail-img>
 						</span>
 
-						{{ ::game.title }}
-					</a>
+						{{ game.title }}
+					</app-router-link>
 				</div>
 
 				<!-- Devlogs -->
-				<div class="popover-heading" ng-if="$ctrl.devlogs.length">
-					<span class="jolticon jolticon-blog-article"></span>
-					<span translate>Devlogs</span>
+				<div class="popover-heading" v-if="devlogs.length">
+					<translate>Devlogs</translate>
 				</div>
-				<div class="list-group list-group-dark thin" ng-if="$ctrl.devlogs.length">
-					<a class="list-group-item"
-						ng-repeat="game in $ctrl.devlogs track by game.id"
-						ng-class="{ active: $ctrl.items[ $ctrl.selected - 1 ] === game }"
-						ui-sref="discover.games.view.overview( { slug: game.slug, id: game.id } )"
-						gj-track-event="search:autocomplete:go-game"
+				<div class="list-group list-group-dark thin" v-if="devlogs.length">
+					<app-router-link
+						class="list-group-item"
+						v-for="game of devlogs"
+						:key="game.id"
+						:to="{
+							name: 'discover.games.view.overview',
+							params: { slug: game.slug, id: game.id },
+						}"
+						:class="{ active: items[ selected - 1 ] === game }"
+						v-app-track-event="`search:autocomplete:go-game`"
 						>
 
 						<span class="search-game-thumbnail">
-							<gj-game-thumbnail-img [game]="::game"></gj-game-thumbnail-img>
+							<app-game-thumbnail-img :game="game"></app-game-thumbnail-img>
 						</span>
 
-						{{ ::game.title }}
-					</a>
+						{{ game.title }}
+					</app-router-link>
 				</div>
 
 				<!-- Users -->
-				<div class="popover-heading" ng-if="$ctrl.users.length">
-					<span class="jolticon jolticon-user"></span>
-					<span translate>search.autocomplete.users_heading</span>
+				<div class="popover-heading" v-if="users.length">
+					<translate>search.autocomplete.users_heading</translate>
 				</div>
-				<div class="list-group list-group-dark thin" ng-if="$ctrl.users.length">
-					<a class="list-group-item"
-						ng-repeat="user in $ctrl.users track by user.id"
-						ng-class="{ active: $ctrl.items[ $ctrl.selected - 1 ] === user }"
-						ui-sref="profile.overview( { username: user.username } )"
-						gj-track-event="search:autocomplete:go-user"
+				<div class="list-group list-group-dark thin" v-if="users.length">
+					<app-router-link
+						class="list-group-item"
+						v-for="user of users"
+						:key="user.id"
+						:to="{
+							name: 'profile.overview',
+							params: { username: user.username },
+						}"
+						:class="{ active: items[ selected - 1 ] === user }"
+						v-app-track-event="`search:autocomplete:go-user`"
 						>
-						<img ng-src="{{ ::user.img_avatar }}" class="search-user-avatar" alt="">
-						{{ ::user.display_name }}
-						<span class="tiny text-muted">@{{ ::user.username }}</span>
-					</a>
+						<img :src="user.img_avatar" class="search-user-avatar" alt="">
+						{{ user.display_name }}
+						<span class="tiny text-muted">@{{ user.username }}</span>
+					</app-router-link>
 				</div>
 			</div>
 
 			<!-- Commands -->
-			<div ng-if="$ctrl.mode == 'command'">
-				<div class="list-group list-group-dark thin" ng-if="$ctrl.filteredCommands.length">
+			<div v-if="mode === 'command'">
+				<div class="list-group list-group-dark thin" v-if="filteredCommands.length">
 					<a class="list-group-item"
-						ng-repeat="command in $ctrl.filteredCommands track by command.keyword"
-						ng-class="{ active: $ctrl.selected === $index }"
-						ng-mousedown="$ctrl.selectCommand( command )"
+						v-for="( command, index ) of filteredCommands"
+						:key="command.keyword"
+						:class="{ active: selected === index }"
+						@mousedown="selectCommand( command )"
 						>
-						<span class="tag">{{ ::command.keyword }}</span>
-						<span class="small text-muted">{{ command.description | translate }}</span>
+						<span class="tag">{{ command.keyword }}</span>
+						<span class="small text-muted">{{ command.description }}</span>
 					</a>
 				</div>
 
-				<div class="alert alert-warning" ng-if="!$ctrl.filteredCommands.length" translate>
-					search.autocomplete.no_commands
+				<div class="alert alert-warning" v-if="!filteredCommands.length">
+					<translate>search.autocomplete.no_commands</translate>
 				</div>
 			</div>
 
 		</div>
 
 	</div>
-</gj-popover>
+</app-popover>

@@ -1,15 +1,6 @@
+@require '~styles/variables'
+
 .search-autocomplete-popover
-
-	.popover-content
-		max-height: none
-
-		// SUPER HACK!
-		// On client we show popover menus within the autocomplete.
-		// Because of this, we don't want the popover to mess with the scrollbar, so we just
-		// make it so it never scrolls in client.
-		// Most of the time they should have a large enough screen anyway.
-		body.is-client &
-			overflow: visible !important
 
 	.search-user-avatar
 	.search-game-thumbnail
