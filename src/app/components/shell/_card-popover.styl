@@ -1,17 +1,13 @@
 .shell-card-popover
+	@extend .fill-dark
+	padding: 10px
+
 	$icon-size = 40px
 	$media-width = 50px
 	$gutter-width = 20px
 
 	@media $media-sm-up
 		min-width: 360px
-
-	&.popover
-		position: fixed
-
-	&-well
-		@extend .fill-dark
-		padding: 10px
 
 	.card
 		margin-bottom: 5px
