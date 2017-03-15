@@ -1,0 +1,182 @@
+<footer id="footer" class="section">
+	<div class="container">
+
+		<div class="hidden-xs" v-if="!env.isClient">
+			<div class="text-center">
+				<p>
+					<app-router-link :to="{ name: 'client' }" v-app-track-event="`footer:client-promo`">
+						<img src="~img/game-jolt-client-logo.svg" alt="Game Jolt Client">
+					</app-router-link>
+				</p>
+				<p>
+					<app-router-link :to="{ name: 'client' }" class="btn btn-primary">
+						<translate>Get It Now</translate>
+					</app-router-link>
+				</p>
+			</div>
+
+			<br>
+			<br>
+			<br>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-3 text-center">
+				<app-router-link :to="{ name: 'discover.home' }">
+					<img src="~img/jolt.svg" alt="Game Jolt" width="68" height="72">
+				</app-router-link>
+				<br class="visible-xs">
+				<br class="visible-xs">
+			</div>
+			<div class="col-xs-4 col-sm-3">
+				<ol class="list-unstyled footer-link-list">
+					<li>
+						<app-router-link :to="{ name: 'landing.learn' }">
+							<translate>What's Game Jolt</translate>
+						</app-router-link>
+					</li>
+					<li>
+						<app-router-link :to="{ name: 'client' }">
+							<translate>Client</translate>
+						</app-router-link>
+					</li>
+					<li>
+						<app-router-link :to="{ name: 'discover.devlogs.overview' }">
+							<translate>Devlogs</translate>
+						</app-router-link>
+					</li>
+					<li>
+						<a href="http://fireside.gamejolt.com">
+							<translate>Fireside</translate>
+						</a>
+					</li>
+					<li>
+						<app-router-link :to="{ name: 'radio' }">
+							<translate>Radio</translate>
+						</app-router-link>
+					</li>
+					<li>
+						<a href="http://jams.gamejolt.com">
+							<translate>Jams</translate>
+						</a>
+					</li>
+				</ol>
+			</div>
+			<div class="col-xs-4 col-sm-3">
+				<ol class="list-unstyled footer-link-list">
+					<!--<li>
+						<app-router-link :to="{ name: 'landing.developers">
+							<translate>Developers</translate>
+						</app-router-link>
+					</li>-->
+					<li>
+						<app-router-link :to="{ name: 'landing.marketplace' }">
+							<translate>Marketplace</translate>
+						</app-router-link>
+					</li>
+					<li>
+						<app-router-link :to="{ name: 'landing.partners' }">
+							<translate>Partners</translate>
+						</app-router-link>
+					</li>
+					<!--<li>
+						<app-router-link :to="{ name: 'landing.game-api' }">
+							<translate>Game API</translate>
+						</app-router-link>
+					</li>-->
+					<li>
+						<a href="https://www.redbubble.com/people/gamejolt/shop" target="_blank">
+							<translate>Merch</translate>
+						</a>
+					</li>
+					<li>
+						<app-router-link :to="{ name: 'forums.landing.overview' }">
+							<translate>Forums</translate>
+						</app-router-link>
+					</li>
+					<li>
+						<a href="https://github.com/gamejolt" target="_blank">
+							<translate>footer.open_source</translate>
+						</a>
+					</li>
+				</ol>
+			</div>
+			<div class="col-xs-4 col-sm-3">
+				<ol class="list-unstyled footer-link-list">
+					<li>
+						<a href="https://fireside.gamejolt.com/tag/gjbroadcast" target="_blank">
+							<translate>Blog</translate>
+						</a>
+					</li>
+					<li>
+						<app-router-link :to="{ name: 'landing.about' }">
+							<translate>About</translate>
+						</app-router-link>
+					</li>
+					<li>
+						<a href="mailto:contact@gamejolt.com">
+							<translate>footer.contact</translate>
+						</a>
+					</li>
+					<li>
+						<app-router-link :to="{ name: 'legal.terms' }">
+							<translate>legal.terms</translate>
+						</app-router-link>
+					</li>
+					<li>
+						<app-router-link :to="{ name: 'legal.privacy' }">
+							<translate>legal.privacy</translate>
+						</app-router-link>
+					</li>
+				</ol>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="row">
+			<div class="col-sm-6">
+
+				<p>
+					<a class="btn btn-sparse" href="https://twitter.com/gamejolt" target="_blank">
+						<app-jolticon icon="twitter-bird" />
+					</a>
+					<a class="btn btn-sparse" href="https://facebook.com/gamejolt" target="_blank">
+						<app-jolticon icon="facebook" />
+					</a>
+				</p>
+
+				<p class="tiny">
+					&copy; {{ curDate | date( 'YYYY' ) }} Lucent Web Creative, LLC
+				</p>
+
+				<p class="tiny text-muted" v-if="env.isClient">
+					<a @click="showSystemReport" class="link-muted">
+						<translate>footer.send_system_report</translate>
+					</a>
+					<span class="dot-separator"></span>
+					v{{ clientVersion }}
+				</p>
+
+			</div>
+			<div class="col-sm-6 footer-translations">
+
+				<div>
+					<app-translate-lang-selector @changed="onLangChange" />
+				</div>
+
+				<br class="hidden-xs">
+
+				<p class="small text-muted">
+					<translate>footer.translations</translate>
+					<br>
+					<a href="https://poeditor.com/join/project/B4nWT6EgnD" target="_blank">
+						<translate>footer.translations_help</translate>
+					</a>
+				</p>
+
+			</div>
+		</div>
+
+	</div>
+</footer>
