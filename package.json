@@ -1,6 +1,6 @@
 {
   "name": "game-jolt",
-  "version": "0.10.5",
+  "version": "0.10.6",
   "scripts": {
     "client": "nw build/client/dev/source",
     "client-build-win": "gulp --production --client --arch=32",
@@ -78,7 +78,7 @@
     "appdmg": "^0.3.5"
   },
   "dependencies": {
-    "client-voodoo": "1.0.6",
+    "client-voodoo": "1.0.7",
     "lodash": "3.9.3",
     "nwjs-snappy-updater": "1.0.0"
   }
