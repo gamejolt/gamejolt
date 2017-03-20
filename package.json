@@ -1,6 +1,6 @@
 {
   "name": "game-jolt",
-  "version": "0.10.6",
+  "version": "0.10.7",
   "scripts": {
     "client": "nw build/client/dev/source",
     "client-build-win": "gulp --production --client --arch=32",
