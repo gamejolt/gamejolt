@@ -33,7 +33,7 @@ import GamePlayModalModule from '../lib/gj-lib-client/components/game/play-modal
 import LoadModule from '../lib/gj-lib-client/components/load/load';
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
-import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive';
+import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive.module';
 import { ReferrerModule } from '../lib/gj-lib-client/components/referrer/referrer.module';
 import { HistoryTickModule } from '../lib/gj-lib-client/components/history-tick/history-tick.module';
 import { PartnerReferralModule } from '../lib/gj-lib-client/components/partner-referral/partner-referral.module';
@@ -47,6 +47,7 @@ import { UserAvatarModule } from '../lib/gj-lib-client/components/user/user-avat
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
 import { GrowlsModule } from '../lib/gj-lib-client/components/growls/growls.module';
 import { AppFadeCollapse } from '../lib/gj-lib-client/components/fade-collapse/fade-collapse';
+import { HistoryModule } from '../lib/gj-lib-client/components/history/history.module';
 
 const ViewsModule = angular.module( 'App.Views', [] ).name;
 importContext( require.context( './views', true, /\.state\.ts$/ ) );
@@ -97,6 +98,7 @@ importContext( require.context( './views', true, /\.state\.ts$/ ) );
 		TranslateModule,
 		GrowlsModule,
 		AppFadeCollapse,
+		HistoryModule,
 		AppModuleNg1,
 	],
 	declarations: [

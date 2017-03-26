@@ -1,20 +1,23 @@
-<nav class="chat-bubbles">
+<nav class="chat-bubbles" ng-if="client.openRooms">
 
 	<div class="chat-bubble"
-		ng-repeat="room in Chat.client.openRooms track by room.id"
-		ng-class="{ active: Chat.client.room === room && Shell.isRightPaneVisible }"
+		v-for="room of client.openRooms"
+		:key="room.id"
+		:class="{ active: client.room === room && isRightPaneVisible }"
 		>
-		<div class="chat-bubble-inner" ng-click="ctrl.activateRoom( room.id )">
-			<div gj-tooltip="{{ Chat.client.isPMRoom( room ) ? room.user.displayName + ' (@' + room.user.username + ')' : '#' + room.title }}"
-				tooltip-placement="left"
-				ng-class="{
+		<div class="chat-bubble-inner" @click="activateRoom( room.id )">
+			<div
+				:class="{
 					'chat-bubble-icon': true,
-					'chat-bubble-notification': Chat.client.notifications[ room.id ] && Chat.client.notifications[ room.id ] > 0,
-					'chat-bubble-active': Chat.client.room === room && Shell.isRightPaneVisible
+					'chat-bubble-notification': client.notifications[ room.id ] && client.notifications[ room.id ] > 0,
+					'chat-bubble-active': client.room === room && isRightPaneVisible
 				}"
+				:title="room.isPmRoom ? room.user.displayName + ' (@' + room.user.username + ')' : '#' + room.title"
 				>
-				<img class="chat-bubble-image" ng-src="{{ room.user.imgAvatar }}" ng-if="::Chat.client.isPMRoom( room )">
-				<div class="chat-bubble-letter" ng-if="::Chat.client.isGroupRoom( room )">{{ room.title.toUpperCase().charAt(0) }}</div>
+				<img class="chat-bubble-image" :src="room.user.imgAvatar" v-if="room.isPmRoom">
+				<div class="chat-bubble-letter" v-if="room.isGroupRoom">
+					{{ room.title.toUpperCase().charAt( 0 ) }}
+				</div>
 			</div>
 		</div>
 	</div>

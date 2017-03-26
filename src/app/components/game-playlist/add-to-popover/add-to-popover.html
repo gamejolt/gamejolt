@@ -1,45 +1,46 @@
-<gj-popover
+<app-popover
 	popover-id="add-to-playlist"
-	(focused)="ctrl.onFocus()"
-	(blurred)="ctrl.onBlur()"
+	@focused="onFocus"
+	@blurred="onBlur"
 	>
 
-	<div class="add-to-playlist-popover" ng-if="ctrl.isShown">
-		<div ng-if="ctrl.isLoading">
-			<gj-loading class="loading-centered"></gj-loading>
+	<div class="add-to-playlist-popover" v-if="isShown">
+		<div v-if="isLoading">
+			<app-loading :centered="true" />
 		</div>
 
-		<div ng-if="!ctrl.isLoading">
+		<div v-if="!isLoading">
 			<div class="list-group list-group-dark">
-				<a class="list-group-item has-icon" ng-click="ctrl.newPlaylist()">
-					<span class="jolticon jolticon-add"></span>
-					{{ ::'library.playlists.add_to.new_playlist_button' | translate }}
+				<a class="list-group-item has-icon" @click="newPlaylist">
+					<app-jolticon icon="add" />
+					<translate>library.playlists.add_to.new_playlist_button</translate>
 				</a>
-				<div class="list-group-item" ng-if="ctrl.playlists.length">
+				<div class="list-group-item" v-if="playlists.length">
 					<input
 						type="search"
 						class="form-control"
-						ng-attr-placeholder="{{ ::'library.playlists.add_to.filter_placeholder' | translate }}"
-						gj-focus-when="Screen.isDesktop"
-						ng-model="ctrl.filterQuery"
-						ui-keydown="{ esc: 'ctrl.close( $event )' }"
+						:placeholder="$gettext( 'library.playlists.add_to.filter_placeholder' )"
+						v-app-focus-when="Screen.isDesktop"
+						v-model="filterQuery"
+						keydown.esc.stop="close"
 						>
 				</div>
 			</div>
-			<div class="list-group list-group-dark thin add-to-playlist-popover-playlists" ng-if="ctrl.playlists.length">
+			<div class="list-group list-group-dark thin add-to-playlist-popover-playlists" v-if="playlists.length">
 				<a class="list-group-item has-icon"
-					ng-class="ctrl.playlistsWithGame.indexOf( playlist.id ) === -1 ? 'playlist-no-game' : 'playlist-has-game'"
-					ng-repeat="playlist in ctrl.playlists | filter:ctrl.filterQuery:'name' | orderBy:'name' track by playlist.id"
-					ng-click="ctrl.selectPlaylist( playlist )"
+					:class="playlistsWithGame.indexOf( playlist.id ) === -1 ? 'playlist-no-game' : 'playlist-has-game'"
+					v-for="playlist of filteredPlaylists"
+					:key="playlist.id"
+					@click="selectPlaylist( playlist )"
 					>
-					<span class="jolticon jolticon-playlist" ></span>
-					<span class="jolticon jolticon-check" ></span>
-					<span class="jolticon jolticon-remove"></span>
-					<span class="jolticon jolticon-add"></span>
-					{{ ::playlist.name }}
+					<app-jolticon icon="playlist" />
+					<app-jolticon icon="check" />
+					<app-jolticon icon="remove" />
+					<app-jolticon icon="add" />
+					{{ playlist.name }}
 				</a>
 			</div>
 		</div>
 	</div>
 
-</gj-popover>
+</app-popover>

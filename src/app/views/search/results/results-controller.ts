@@ -18,8 +18,6 @@ export class ResultsCtrl
 		@Inject( '$scope' ) $scope: Scope,
 		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject( '$stateParams' ) $stateParams: StateParams,
-		@Inject( 'Search' ) search: Search,
-		@Inject( 'SearchHistory' ) history: SearchHistory,
 		@Inject( 'payload' ) payload: any,
 	)
 	{
@@ -41,8 +39,8 @@ export class ResultsCtrl
 
 		// We sync the query to the search service so that all places get updated with the new query.
 		// We also record the search history since it was an explicit search request.
-		search.query = searchCtrl.query;
-		history.record( searchCtrl.query );
+		Search.query = searchCtrl.query;
+		SearchHistory.record( searchCtrl.query );
 
 		searchCtrl.payload = payload;
 		searchCtrl.showPagination = searchCtrl.payload.type != 'all';

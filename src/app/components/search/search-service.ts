@@ -1,7 +1,8 @@
-import { Injectable, Inject } from 'ng-metadata/core';
 import { SearchPayload } from './payload-service';
-import { getProvider } from '../../../lib/gj-lib-client/utils/utils';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
+import { fuzzysearch } from '../../../lib/gj-lib-client/utils/string';
+import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
+import { stringSort } from '../../../lib/gj-lib-client/utils/array';
 
 export interface SearchOptions
 {
@@ -9,21 +10,11 @@ export interface SearchOptions
 	page?: number;
 }
 
-@Injectable( 'Search' )
 export class Search
 {
-	Client_Library: any;
-	query = '';
+	static query = '';
 
-	constructor(
-		@Inject( 'orderByFilter' ) private orderByFilter: ng.IFilterOrderBy,
-		@Inject( 'Fuzzysearch' ) private fuzzysearch: any,
-	)
-	{
-		this.Client_Library = GJ_IS_CLIENT ? getProvider( 'Client_Library' ) : undefined;
-	}
-
-	globalQuery( query: string )
+	static globalQuery( query: string )
 	{
 		if ( typeof query === 'undefined' ) {
 			return this.query;
@@ -32,13 +23,13 @@ export class Search
 		this.query = query;
 	}
 
-	async search( query: string, options: SearchOptions = { type: 'all' } )
+	static async search( query: string, options: SearchOptions = { type: 'all' } )
 	{
 		let searchPromises: Promise<any>[] = [];
 		searchPromises.push( this._searchSite( query, options ) );
 
 		// If we're in client, let's try to search their installed games.
-		if ( this.Client_Library && options.type && options.type == 'typeahead' ) {
+		if ( GJ_IS_CLIENT && options.type && options.type === 'typeahead' ) {
 			searchPromises.push( this._searchInstalledGames( query ) );
 		}
 
@@ -52,21 +43,21 @@ export class Search
 		return new SearchPayload( options.type, searchPayload );
 	}
 
-	private async _searchSite( query: string, options: SearchOptions = { type: 'all' } ): Promise<any>
+	private static async _searchSite( query: string, options: SearchOptions = { type: 'all' } ): Promise<any>
 	{
 		let requestOptions: any = {};
 
 		let endpoint = '/web/search';
-		if ( options.type == 'user' ) {
+		if ( options.type === 'user' ) {
 			endpoint += '/users';
 		}
-		else if ( options.type == 'game' ) {
+		else if ( options.type === 'game' ) {
 			endpoint += '/games';
 		}
-		else if ( options.type == 'devlog' ) {
+		else if ( options.type === 'devlog' ) {
 			endpoint += '/devlogs';
 		}
-		else if ( options.type == 'typeahead' ) {
+		else if ( options.type === 'typeahead' ) {
 			endpoint += '/typeahead';
 			requestOptions.detach = true;
 		}
@@ -88,20 +79,22 @@ export class Search
 		}
 	}
 
-	private _searchInstalledGames( query: string ): Promise<any>
+	private static _searchInstalledGames( query: string ): Promise<any>
 	{
-		let games: any[] = [];
+		let games: Game[] = [];
+		// TODO
+		// const ClientLibrary: any = getProvider( 'Client_Library' );
 
-		for ( const game of this.Client_Library.games ) {
-			if ( this.fuzzysearch( query.toLowerCase(), game.title.toLowerCase() ) ) {
-				games.push( game );
-			}
-		}
+		// for ( const game of ClientLibrary.games ) {
+		// 	if ( fuzzysearch( query.toLowerCase(), game.title.toLowerCase() ) ) {
+		// 		games.push( game );
+		// 	}
+		// }
 
-		if ( games.length > 0 ) {
-			games = this.orderByFilter( games, 'title' );
-			games = _.take( games, 3 );  // Only return top 3.
-		}
+		// if ( games.length > 0 ) {
+		// 	games = games.sort( ( a, b ) => stringSort( a.title, b.title ) );
+		// 	games = games.slice( 0, 3 );  // Only return top 3.
+		// }
 
 		return Promise.resolve( games );
 	}

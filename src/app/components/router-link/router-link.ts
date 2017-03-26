@@ -1,8 +1,8 @@
-import * as Vue from 'vue';
+import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { StateService } from 'angular-ui-router';
+// import { StateService } from 'angular-ui-router';
 
-import { getProvider } from '../../../lib/gj-lib-client/utils/utils';
+// import { getProvider } from '../../../lib/gj-lib-client/utils/utils';
 
 interface RouterLinkLocation
 {
@@ -13,7 +13,7 @@ interface RouterLinkLocation
 }
 
 // Gotta wait till app is bootstrapped to get provider.
-let $state: StateService;
+// let $state: StateService;
 
 function guardEvent( e: MouseEvent, to: RouterLinkLocation )
 {
@@ -45,7 +45,7 @@ function guardEvent( e: MouseEvent, to: RouterLinkLocation )
 		e.preventDefault();
 	}
 
-	$state.go( to.name, to.params, to.opts );
+	// $state.go( to.name, to.params, to.opts );
 
 	return true;
 }
@@ -81,20 +81,22 @@ export class AppRouterLink extends Vue
 
 	created()
 	{
-		if ( !$state ) {
-			$state = getProvider<StateService>( '$state' );
-		}
+		// if ( !$state ) {
+		// 	$state = getProvider<StateService>( '$state' );
+		// }
 	}
 
 	render( h: Vue.CreateElement )
 	{
 		const activeClass = this.activeClass || 'router-link-active';
-		const href = $state.href( this.to.name, this.to.params, this.to.opts );
+		// const href = $state.href( this.to.name, this.to.params, this.to.opts );
+		const href = '';
 
 		const classes = {
-			[activeClass]: this.exact
-				? $state.is( this.to.name, this.to.params, this.to.opts )
-				: $state.includes( this.to.name, this.to.params, this.to.opts ),
+			[activeClass]: true,
+			// [activeClass]: this.exact
+			// 	? $state.is( this.to.name, this.to.params, this.to.opts )
+			// 	: $state.includes( this.to.name, this.to.params, this.to.opts ),
 		};
 
 		const on = {

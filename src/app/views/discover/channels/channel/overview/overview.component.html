@@ -1,5 +1,5 @@
 <section class="section section-thin" ng-if="$ctrl.shouldShowAds && !$ctrl.env.isClient && !$ctrl.screen.isXs">
-	<gj-ad ad-size="leaderboard"></gj-ad>
+	<gj-ad size="leaderboard"></gj-ad>
 </section>
 
 <section class="section">
@@ -17,9 +17,9 @@
 		</h2>
 
 		<gj-game-grid
-			games="$ctrl.bestGames"
-			truncate-to-fit="true"
-			scrollable="true"
+			[games]="$ctrl.bestGames"
+			[truncate-to-fit]="true"
+			[scrollable]="true"
 			event-label="channel-overview-best-games"
 			>
 		</gj-game-grid>
@@ -46,9 +46,9 @@
 		</h2>
 
 		<gj-game-grid
-			games="$ctrl.hotGames"
-			truncate-to-fit="true"
-			scrollable="true"
+			[games]="$ctrl.hotGames"
+			[truncate-to-fit]="true"
+			[scrollable]="true"
 			event-label="channel-overview-hot-games"
 			>
 		</gj-game-grid>

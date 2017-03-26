@@ -1,78 +1,72 @@
-<a
-	ng-href="{{ ::$ctrl.$ctrl.notification.url }}"
-	ng-click="$ctrl.go( $event );"
-	>
+<div @click.capture.stop="go">
+	<router-link
+		:to="notification.url"
+		>
 
-	<div class="timeline-list-item-icon">
-		<span class="jolticon" ng-class="::$ctrl.notification.jolticon"></span>
-	</div>
-
-	<div class="timeline-list-item-main">
-
-		<div class="timeline-list-item-meta">
-			<span am-time-ago="::$ctrl.notification.added_on"></span>
+		<div class="timeline-list-item-icon">
+			<app-jolticon icon="icon" />
 		</div>
 
-		<div class="timeline-list-item-title">
-			<gj-notification-descriptive-action notification="::$ctrl.notification"></gj-notification-descriptive-action>
-		</div>
+		<div class="timeline-list-item-main">
 
-		<div class="timeline-list-item-details"
-			ng-if="::[
-				$ctrl.notificationModel.TYPE_COMMENT_ADD,
-				$ctrl.notificationModel.TYPE_COMMENT_ADD_OBJECT_OWNER,
-				$ctrl.notificationModel.TYPE_GAME_RATING_ADD,
-			].indexOf( $ctrl.notification.type ) !== -1"
-			>
-
-			<img ng-if="$ctrl.notification.is_user_based && !$ctrl.screen.isXs"
-				class="timeline-list-item-avatar"
-				ng-src="{{ ::$ctrl.notification.from_model.img_avatar }}"
-				alt=""
-				>
-
-			<div ng-if="$ctrl.notification.is_game_based && !$ctrl.screen.isXs"
-				class="timeline-list-item-thumb"
-				ng-style="::{ 'background-image': 'url( \'' + $ctrl.notification.to_model.img_thumbnail + '\' )' }"
-				>
+			<div class="timeline-list-item-meta">
+				<app-time-ago :date="notification.added_on" />
 			</div>
 
-			<div class="timeline-list-item-content" ng-switch="::$ctrl.notification.type">
-				<gj-fade-collapse
-					[collapse-height]="80"
-					[is-open]="$ctrl.showFullContent"
-					(required)="$ctrl.canToggleContent = true"
-					>
-					<div
-						ng-switch-when="comment-add"
-						class="comment-widget-comment-content"
-						ng-bind-html="::$ctrl.notification.action_model.comment_compiled"
-						>
-					</div>
-					<div
-						ng-switch-when="comment-add-object-owner"
-						class="comment-widget-comment-content"
-						ng-bind-html="::$ctrl.notification.action_model.comment_compiled"
-						>
-					</div>
-					<div
-						ng-switch-when="game-rating-add"
-						translate
-						translate-params-rating="::$ctrl.notification.action_model.rating"
-						>
-						notifications.rating_details_html
-					</div>
-				</gj-fade-collapse>
+			<div class="timeline-list-item-title">
+				<!--<app-notification-descriptive-action :notification="notification" />-->
+			</div>
 
-				<div ng-if="::$ctrl.canToggleContent">
-					<br>
-					<span class="hidden-text-expander"
-						ng-click="$ctrl.toggleFull(); $event.stopPropagation(); $event.preventDefault();"
-						></span>
+			<div class="timeline-list-item-details" v-if="hasDetails">
+
+				<img v-if="notification.is_user_based && !Screen.isXs"
+					class="timeline-list-item-avatar"
+					:src="notification.from_model.img_avatar"
+					alt=""
+					>
+
+				<div v-if="notification.is_game_based && !Screen.isXs"
+					class="timeline-list-item-thumb"
+					:style="{ 'background-image': `url( '${notification.to_model.img_thumbnail}' )` }"
+					>
+				</div>
+
+				<div class="timeline-list-item-content">
+					<app-fade-collapse
+						:collapse-height="80"
+						:is-open="showFullContent"
+						@required="canToggleContent = true"
+						>
+						<div
+							v-if="notification.type === 'comment-add'"
+							class="comment-widget-comment-content"
+							v-html="notification.action_model.comment_compiled"
+							>
+						</div>
+						<div
+							v-if="notification.type === 'comment-add-object-owner'"
+							class="comment-widget-comment-content"
+							v-html="notification.action_model.comment_compiled"
+							>
+						</div>
+						<p v-if="notification.type === 'game-rating-add'">
+							<translate :translate-params="{ rating: notification.action_model.rating }" :escape-html="false">
+								And the value of the rating thou shalt receive is <b>@{ rating }</b>. No more, no less.
+							</translate>
+						</p>
+					</app-fade-collapse>
+
+					<div v-if="canToggleContent">
+						<br>
+						<span class="hidden-text-expander"
+							@click.stop.prevent="toggleFull"
+							>
+						</span>
+					</div>
 				</div>
 			</div>
+
 		</div>
 
-	</div>
-
-</a>
+	</router-link>
+</div>

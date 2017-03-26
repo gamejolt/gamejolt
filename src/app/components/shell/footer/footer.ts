@@ -1,9 +1,8 @@
-import * as Vue from 'vue';
+import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./footer.html?style=./footer.styl';
 
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { getProvider } from '../../../../lib/gj-lib-client/utils/utils';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppRouterLink } from '../../router-link/router-link';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -34,8 +33,9 @@ export class AppShellFooter extends Vue
 	created()
 	{
 		if ( GJ_IS_CLIENT ) {
-			const Client_Info = getProvider<any>( 'Client_Info' );
-			this.clientVersion = Client_Info.getVersion();
+			// TODO
+			// const Client_Info = getProvider<any>( 'Client_Info' );
+			// this.clientVersion = Client_Info.getVersion();
 		}
 	}
 
@@ -54,7 +54,8 @@ export class AppShellFooter extends Vue
 	showSystemReport()
 	{
 		if ( GJ_IS_CLIENT ) {
-			getProvider<any>( 'Client_SystemReportModal' ).show();
+			// TODO
+			// getProvider<any>( 'Client_SystemReportModal' ).show();
 		}
 	}
 }

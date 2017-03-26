@@ -1,22 +1,15 @@
-import { Injectable, Inject } from 'ng-metadata/core';
+import { arrayUnique } from '../../../../lib/gj-lib-client/utils/array';
 
 const STORAGE_KEY = 'search-history';
 
-@Injectable( 'SearchHistory' )
 export class SearchHistory
 {
-	constructor(
-		@Inject( '$window' ) private $window: ng.IWindowService
-	)
-	{
-	}
-
-	get()
+	static get()
 	{
 		let searchHistory: string[] = [];
-		if ( this.$window.localStorage[ STORAGE_KEY ] ) {
+		if ( window.localStorage[ STORAGE_KEY ] ) {
 			try {
-				searchHistory = JSON.parse( this.$window.localStorage[ STORAGE_KEY ] );
+				searchHistory = JSON.parse( window.localStorage[ STORAGE_KEY ] );
 
 				if ( !Array.isArray( searchHistory ) ) {
 					throw new Error( 'Search history is not array.' );
@@ -30,7 +23,7 @@ export class SearchHistory
 		return searchHistory;
 	}
 
-	record( query: string )
+	static record( query: string )
 	{
 		let searchHistory = this.get();
 
@@ -40,16 +33,16 @@ export class SearchHistory
 		}
 
 		searchHistory.unshift( query );
-		searchHistory = _.uniq( searchHistory );
+		searchHistory = arrayUnique( searchHistory );
 
 		// Only keep the last 7.
 		searchHistory = searchHistory.slice( 0, 7 );
 
-		this.$window.localStorage[ STORAGE_KEY ] = JSON.stringify( searchHistory );
+		window.localStorage[ STORAGE_KEY ] = JSON.stringify( searchHistory );
 	}
 
-	clear()
+	static clear()
 	{
-		this.$window.localStorage.removeItem( STORAGE_KEY );
+		window.localStorage.removeItem( STORAGE_KEY );
 	}
 }

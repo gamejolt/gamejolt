@@ -13,9 +13,9 @@
 
 <div collapse="!($ctrl.$state.is( 'dashboard.developer.games.manage.game.header' ) && $ctrl.coverIsLoaded)">
 	<gj-media-item-cover
-		media-item="$ctrl.game.header_media_item"
-		should-parallax="false"
-		on-loaded="$ctrl.coverIsLoaded = true"
+		[media-item]="$ctrl.game.header_media_item"
+		[should-parallax]="false"
+		(loaded)="$ctrl.coverIsLoaded = true"
 		>
 	</gj-media-item-cover>
 </div>

@@ -1,0 +1,9 @@
+<div :class="{ 'is-client-offline': Connection.isClientOffline }">
+
+	<div id="content">
+		<router-view />
+	</div>
+
+	<app-growls />
+
+</div>

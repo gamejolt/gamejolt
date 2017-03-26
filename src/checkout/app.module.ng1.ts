@@ -8,14 +8,14 @@ import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.s
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
 import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
+import { History } from '../lib/gj-lib-client/components/history/history.service';
 
 import '../lib/gj-lib-client/components/error/error-module';
 import '../lib/gj-lib-client/components/body-classes/body-classes';
 import '../lib/gj-lib-client/components/loading/loading';
 import '../lib/gj-lib-client/components/scroll/auto-scroll/auto-scroll';
-import '../lib/gj-lib-client/components/expand-when/expand-when';
+import '../lib/gj-lib-client/components/expand-when/expand-when.module';
 import '../lib/gj-lib-client/components/form/form';
-import '../lib/gj-lib-client/components/history/history';
 import '../lib/gj-lib-client/components/tooltip/tooltip.module';
 import '../lib/gj-lib-client/components/site-selector/site-selector';
 import '../lib/gj-lib-client/components/user/user-bar/user-bar';
@@ -40,7 +40,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Scroll.AutoScroll',
 	'gj.ExpandWhen',
 	'gj.Form',
-	'gj.History',
 	'gj.Tooltip',
 	'gj.SiteSelector',
 	'gj.User.UserBar',
@@ -133,5 +132,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	Analytics.initAngular( $rootScope );
 	Meta.initAngular( $rootScope );
 	Referrer.initAngular( $rootScope );
+	History.initAngular( $rootScope );
 } )
 .name;

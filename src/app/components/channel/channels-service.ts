@@ -1,9 +1,6 @@
-import { Injectable } from 'ng-metadata/core';
-
-@Injectable( 'Channels' )
 export class Channels
 {
-	images = {
+	static images = {
 		fnaf: require( './fnaf.png' ),
 		horror: require( './horror.png' ),
 		fangame: require( './fangame.png' ),

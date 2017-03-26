@@ -14,19 +14,18 @@ export class SearchCtrl
 	constructor(
 		@Inject( '$state' ) private $state: StateService,
 		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( 'Search' ) private search: Search,
 	)
 	{
-		$scope['Search'] = search;
+		$scope['Search'] = Search;
 
 		// We store our own version of the search query and sync back to it on form submission.
-		this.query = search.query;
+		this.query = Search.query;
 	}
 
 	onSearchSubmitted()
 	{
-		this.search.query = this.query;
-		this.$state.go( 'search.results', { q: this.search.query } );
+		Search.query = this.query;
+		this.$state.go( 'search.results', { q: Search.query } );
 	}
 
 	onSearchBlurred()

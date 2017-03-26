@@ -76,7 +76,7 @@ export class Settings
 		if ( typeof defaultSettings[ setting ] !== 'undefined' ) {
 
 			let val;
-			if ( localStorage.getItem( STORAGE_PREFIX + setting ) !== null ) {
+			if ( !GJ_IS_SSR && localStorage.getItem( STORAGE_PREFIX + setting ) !== null ) {
 				val = localStorage.getItem( STORAGE_PREFIX + setting );
 			}
 			else {
@@ -116,7 +116,9 @@ export class Settings
 			val = '' + val;
 		}
 
-		localStorage.setItem( STORAGE_PREFIX + setting, val );
+		if ( !GJ_IS_SSR ) {
+			localStorage.setItem( STORAGE_PREFIX + setting, val );
+		}
 
 		return this;
 	}

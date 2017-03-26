@@ -1,25 +1,24 @@
 <div class="devlog-post-video-embed timeline-list-full-bleed">
-	<div gj-responsive-dimensions responsive-dimensions-ratio="16 / 9">
+	<app-responsive-dimensions :ratio="16 / 9">
 		<a
-			ng-if="!$ctrl.isShowingVideo"
-			ng-click="$ctrl.play()"
+			v-if="!isShowingVideo"
+			@click="play"
 			>
 			<div class="play-button-overlay">
-				<span class="jolticon jolticon-play"></span>
+				<app-jolticon icon="play" />
 			</div>
 
 			<div class="devlog-post-video-embed-thumb"
-				ng-style="::{ 'background-image': 'url(\'' + $ctrl.video.thumbnail_url + '\')' }"
+				:style="{ 'background-image': `url('${video.thumbnail_url}')` }"
 				>
 			</div>
 		</a>
 
-		<gj-video-embed
-			ng-if="$ctrl.isShowingVideo"
+		<app-video-embed
+			v-if="isShowingVideo"
 			video-provider="youtube"
-			[video-id]="::$ctrl.video.video_id"
-			[autoplay]="true"
-			>
-		</gj-video-embed>
-	</div>
+			:video-id="video.video_id"
+			:autoplay="true"
+			/>
+	</app-responsive-dimensions>
 </div>

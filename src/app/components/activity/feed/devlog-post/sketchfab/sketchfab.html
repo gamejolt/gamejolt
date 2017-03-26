@@ -1,0 +1,24 @@
+<div class="devlog-post-sketchfab-embed timeline-list-full-bleed">
+	<!--<div gj-responsive-dimensions responsive-dimensions-ratio="16 / 9">-->
+
+		<a
+			v-if="!isShowing"
+			@click="play"
+			>
+			<div class="play-button-overlay">
+				<app-jolticon icon="play" />
+			</div>
+
+			<div class="devlog-post-sketchfab-embed-thumb"
+				:style="{ 'background-image': `url( '${sketchfab.thumbnail_url}')` }"
+				>
+			</div>
+		</a>
+
+		<app-sketchfab-embed
+			v-if="isShowing"
+			:sketchfab-id="sketchfab.sketchfab_id"
+			:autoplay="true"
+			/>
+	<!--</div>-->
+</div>

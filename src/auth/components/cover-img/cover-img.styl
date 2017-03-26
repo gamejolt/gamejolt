@@ -1,0 +1,39 @@
+@require '~styles/variables'
+
+.cover-img
+
+	&
+	&-container
+	&-highlight
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+
+	&
+	&-highlight
+		// @extend .anim-fade-in
+		display: none
+		background-attachment: fixed
+
+		&.loaded
+			display: block
+
+	// The container is what we set the opacity on.
+	// We need this since the fade-in animation will set the opacity to 1 which will override the opacity we want for the image.
+	&-container
+		opacity: 0.3
+		z-index: $zindex-cover-img
+
+	&
+		background-repeat: no-repeat
+		background-position: center center
+		background-size: cover
+
+	&-highlight
+		background-color: $black
+		z-index: $zindex-cover-img-highlight
+
+		@media $media-sm-up
+			background-image: linear-gradient( to right, rgba( $gj-pink, 0.15 ) 0%, rgba( $gj-pink, 0 ) 25%, rgba( $gj-blue, 0 ) 75%, rgba( $gj-blue, 0.15 ) 100% )

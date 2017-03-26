@@ -1,0 +1,184 @@
+<div>
+
+	<!-- Media Bar -->
+	<app-media-bar
+		v-if="game.media_count"
+		:media-items="mediaItems"
+		/>
+
+	<section class="section section-thin text-left" v-if="!Environment.isClient && !Screen.isXs && game._should_show_ads">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-10 col-md-offset-2">
+					<app-ad size="leaderboard" resource="Game" :resource-id="game.id" />
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" style="padding-bottom: 0"  v-if="game.canceled">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
+					<div class="alert alert-warning full-bleed-xs">
+						<translate :escape-html="false">
+							This devlog project has been <b>canceled</b>. You can still follow it if you'd like to be notified in the case that development continues.
+						</translate>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" style="padding-bottom: 0" v-if="!Screen.isXs && game.comments_enabled">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1 col-md-2 col-md-offset-0" :class="{ 'text-right': Screen.isDesktop }">
+					<h2 class="section-header" :class="{ 'h4': Screen.isDesktop }">
+						<translate>Comments</translate>
+					</h2>
+					<p class="text-muted small">
+						<translate>Leave a comment on this devlog project.</translate>
+					</p>
+				</div>
+				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-0 col-lg-7">
+
+					<!--<gj-comment-avatar-list
+						comment-resource="Game"
+						comment-resource-id="game.id"
+						>
+					</gj-comment-avatar-list>-->
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" style="padding-bottom: 0"
+		v-if="(game._has_packages && !isLoaded) || hasReleasesSection"
+		>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1 col-md-2 col-md-offset-0">
+					<h2 id="game-releases" class="section-header" :class="{ 'h4 text-right': Screen.isDesktop }">
+						<translate>Releases</translate>
+					</h2>
+				</div>
+				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-0 col-lg-7">
+
+					<app-lazy-placeholder :when="isLoaded">
+						<div class="lazy-placeholder" style="height: 135px"></div>
+
+						<div v-if="packages.length">
+							packages
+							<!--<gj-game-package-card
+								ng-repeat="package in packages"
+								:game="game"
+								:sellable="package._sellable"
+								:package="package"
+								:releases="package._releases"
+								:builds="package._builds"
+								>
+							</gj-game-package-card>-->
+						</div>
+
+						soundtrack
+						<!--<gj-game-soundtrack-card
+							v-if="songs.length"
+							game-soundtrack-card-game="game"
+							game-soundtrack-card-songs="songs"
+							>
+						</gj-game-soundtrack-card>-->
+					</app-lazy-placeholder>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" style="padding-bottom: 0">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1 col-md-2 col-md-offset-0">
+					<h2 class="section-header" :class="{ 'h4 text-right': Screen.isDesktop }">
+						<translate>Description</translate>
+					</h2>
+				</div>
+				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-0 col-lg-7">
+
+					<div v-if="!game.description_compiled">
+						<span class="lazy-placeholder"></span>
+						<span class="lazy-placeholder"></span>
+						<span class="lazy-placeholder"></span>
+						<span class="lazy-placeholder" style="width: 40%"></span>
+					</div>
+
+					<div v-else>
+						<app-fade-collapse
+							:collapse-height="900"
+							:is-open="showFullDescription"
+							@required="canToggleDescription = true"
+							>
+							<div class="game-compiled-description" v-html="game.description_compiled"></div>
+						</app-fade-collapse>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<div class="page-cut">
+		<div v-if="canToggleDescription">
+			<button class="btn btn-outline"
+				@click="showFullDescription = !showFullDescription"
+				v-app-track-event="`game-profile:show-full-description`"
+				>
+				<translate v-if="!showFullDescription">Show Full Description</translate>
+				<translate v-else>Less</translate>
+			</button>
+		</div>
+	</div>
+
+	<div v-if="posts && posts.hasItems">
+		<section class="section section-thin text-left" v-if="!Environment.isClient && !Screen.isXs && game._should_show_ads">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-10 col-md-offset-2">
+						<app-ad size="leaderboard" resource="Game" :resource-id="game.id" />
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
+
+						<app-activity-feed
+							type="Fireside_Post"
+							:feed="posts"
+							:load-more-url="`/web/discover/games/devlog/posts/${game.id}`"
+							:show-edit-controls="true"
+							/>
+
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<section class="section" v-else>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
+					<div class="alert alert-info">
+						<translate>This devlog doesn't have any posts yet.</translate>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</div>

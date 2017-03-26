@@ -1,0 +1,49 @@
+@require '~styles/variables'
+@require '../../../lib/gj-lib-client/stylus/animation/fade/fade-in'
+
+#auth-container
+
+	&.has-cover-img
+		.error
+		.alert
+			text-shadow: none
+
+	form
+		.form-group
+			@extend .anim-fade-in-up
+			margin: 0
+
+		.form-control
+
+			// Bigger form controls.
+			height: 40px
+
+			// Scrunch up the form controls so their borders overlap.
+			margin-top: -1px
+
+			// Don't change the color of the border on focus.
+			&:focus
+				border-color: $gray-lighter
+
+	button
+		height: 40px
+
+		&
+		& > .jolticon
+			line-height: 40px
+
+	.loading
+		color: $white
+
+	.auth-lead-text
+		text-align: center
+		margin-top: -20px
+
+	.auth-social-buttons button
+		margin-bottom: 10px
+
+	.auth-page-links
+		margin-top: $line-height-computed
+
+		.auth-page-link
+			margin-bottom: ($line-height-computed / 2)

@@ -11,31 +11,28 @@ import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.serv
 import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
+import { History } from '../lib/gj-lib-client/components/history/history.service';
 
 import '../lib/gj-lib-client/components/error/error-module';
 import '../lib/gj-lib-client/components/filesize/filesize';
 import '../lib/gj-lib-client/components/time/time';
 import '../lib/gj-lib-client/components/duration/duration';
 import '../lib/gj-lib-client/components/fuzzy-number/fuzzy-number';
-import '../lib/gj-lib-client/components/fuzzysearch/fuzzysearch';
 import '../lib/gj-lib-client/components/currency/currency';
 import '../lib/gj-lib-client/components/body-classes/body-classes';
 import '../lib/gj-lib-client/components/loading/loading';
-import '../lib/gj-lib-client/components/expand-when/expand-when';
+import '../lib/gj-lib-client/components/expand-when/expand-when.module';
 import '../lib/gj-lib-client/components/ui-tree/placeholder/placeholder';
 import '../lib/gj-lib-client/components/partial/partial';
 import '../lib/gj-lib-client/components/backdrop/backdrop';
 import '../lib/gj-lib-client/components/tooltip/tooltip.module';
 import '../lib/gj-lib-client/components/toggle-switch/toggle-switch';
-import '../lib/gj-lib-client/components/scroll/parallax/parallax';
+import '../lib/gj-lib-client/components/scroll/parallax/parallax.module';
 import '../lib/gj-lib-client/components/scroll/auto-scroll/auto-scroll';
 import '../lib/gj-lib-client/components/scroll/fixed-resizer/fixed-resizer';
 import '../lib/gj-lib-client/components/editable-accordion/editable-accordion';
-import '../lib/gj-lib-client/components/progress/poller/poller';
+import '../lib/gj-lib-client/components/progress/poller/poller.module';
 import '../lib/gj-lib-client/components/alert/dismissable/dismissable';
-import '../lib/gj-lib-client/components/lazy/placeholder/placeholder';
-import '../lib/gj-lib-client/components/history/history';
-import '../lib/gj-lib-client/components/history/cache/cache';
 import '../lib/gj-lib-client/components/report/form/form';
 import '../lib/gj-lib-client/components/report/modal/modal';
 import '../lib/gj-lib-client/components/activity/stream/stream-module';
@@ -44,13 +41,9 @@ import '../lib/gj-lib-client/components/form/markdown-editor/markdown-editor';
 import '../lib/gj-lib-client/components/form/upload-control/upload-control';
 import '../lib/gj-lib-client/components/user/linked-accounts/linked-accounts';
 import '../lib/gj-lib-client/components/user/message/message';
-import '../lib/gj-lib-client/components/comment/widget/widget';
-import '../lib/gj-lib-client/components/subscription/subscription';
-import '../lib/gj-lib-client/components/game/song/song';
 import '../lib/gj-lib-client/components/key-group/key-group';
 import '../lib/gj-lib-client/components/game/news-article/news-article';
 import '../lib/gj-lib-client/components/game/trophy/trophy';
-import '../lib/gj-lib-client/components/game/score-table/score-table';
 import '../lib/gj-lib-client/components/game/data-store/item/item';
 import '../lib/gj-lib-client/components/order/order';
 import '../lib/gj-lib-client/components/order/item/item';
@@ -67,7 +60,6 @@ import '../lib/gj-lib-client/components/jam/game/vote/widget/widget';
 import '../lib/gj-lib-client/components/jam/award/award';
 import '../lib/gj-lib-client/components/key/key-module';
 import '../lib/gj-lib-client/components/linked-key/linked-key';
-import '../lib/gj-lib-client/components/translation/translation';
 import '../lib/gj-lib-client/components/social/twitter/sdk/sdk';
 import '../lib/gj-lib-client/components/social/twitter/share/share';
 import '../lib/gj-lib-client/components/social/twitter/follow/follow';
@@ -83,8 +75,6 @@ import '../lib/gj-lib-client/components/audio/player/player';
 import '../lib/gj-lib-client/components/audio/scrubber/scrubber';
 import '../lib/gj-lib-client/components/audio/playlist/playlist';
 import '../lib/gj-lib-client/components/game/soundtrack/card/card';
-import '../lib/gj-lib-client/components/game-playlist/game-playlist';
-import '../lib/gj-lib-client/components/game-playlist/game/game';
 import '../lib/gj-lib-client/components/game-bundle/game-bundle';
 import '../lib/gj-lib-client/components/forum/category/category';
 import '../lib/gj-lib-client/components/forum/channel/channel';
@@ -92,20 +82,13 @@ import '../lib/gj-lib-client/components/forum/topic/topic';
 import '../lib/gj-lib-client/components/forum/post/post';
 import '../lib/gj-lib-client/components/img/crop/crop';
 
-import './components/featured-item/featured-item-module';
 import './components/game/collection/grid/grid-module';
 import './components/game/collection/list/list-module';
 import './components/game/collection/thumbnail/thumbnail-module';
-import './components/game-playlist/add-to-popover/add-to-popover-module';
 import './components/game-playlist/save-modal/save-modal-module';
 import './components/invite/invite-module';
-import './components/meter/meter-module';
 import './components/game/filtering/filtering-module';
 import './components/game/cover-buttons/cover-buttons-module';
-import './components/game/ogrs/ogrs-module';
-import './components/game/maturity-block/maturity-block-module';
-import './components/minbar/minbar-module';
-import './components/offline/alert/alert-module';
 import './components/protocol-watcher/protocol-watcher-module';
 import './components/score/feed/feed-module';
 import './components/score/list/list-module';
@@ -136,7 +119,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 
 	'ui.bootstrap.collapse',
 	'ui.bootstrap.modal',
-	'cfp.hotkeys',
 	'ui.keypress',
 	'validation.match',
 	'ui.router.state.events',
@@ -147,7 +129,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Time',
 	'gj.Duration',
 	'gj.FuzzyNumber',
-	'gj.Fuzzysearch',
 	'gj.Currency',
 	'gj.BodyClasses',
 	'gj.Loading',
@@ -163,9 +144,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.EditableAccordion',
 	'gj.Progress.Poller',
 	'gj.Alert.Dismissable',
-	'gj.Lazy.Placeholder',
-	'gj.History',
-	'gj.History.Cache',
 	'gj.Report.Form',
 	'gj.Report.Modal',
 	'gj.Activity.Stream',
@@ -174,13 +152,9 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Form.UploadControl',
 	'gj.User.LinkedAccounts',
 	'gj.User.Message',
-	'gj.Comment.Widget',
-	'gj.Subscription',
-	'gj.Game.Song',
 	'gj.KeyGroup',
 	'gj.Game.NewsArticle',
 	'gj.Game.Trophy',
-	'gj.Game.ScoreTable',
 	'gj.Game.DataStore.Item',
 	'gj.Order',
 	'gj.Order.Item',
@@ -197,7 +171,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Jam.Award',
 	'gj.Key',
 	'gj.LinkedKey',
-	'gj.Translation',
 	'gj.Social.Twitter.Sdk',
 	'gj.Social.Twitter.Share',
 	'gj.Social.Twitter.Follow',
@@ -213,8 +186,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Audio.Scrubber',
 	'gj.Audio.Playlist',
 	'gj.Game.Soundtrack.Card',
-	'gj.GamePlaylist',
-	'gj.GamePlaylist.Game',
 	'gj.GameBundle',
 	'gj.Forum.Category',
 	'gj.Forum.Channel',
@@ -224,21 +195,14 @@ export const AppModuleNg1 = angular.module( 'App', [
 
 	// Components.
 	'App.ProtocolWatcher',
-	'App.Offline.Alert',
-	'App.Minbar',
 	'App.Invite',
 	'App.Sorting',
-	'App.FeaturedItem',
-	'App.Meter',
 	'App.Game.Filtering',
 	'App.Game.CoverButtons',
-	'App.Game.Ogrs',
-	'App.Game.MaturityBlock',
 	'App.Game.Collection.Thumbnail',
 	'App.Game.Collection.Grid',
 	'App.Game.Collection.List',
 	'App.GamePlaylist.SaveModal',
-	'App.GamePlaylist.AddToPopover',
 	'App.Score.List',
 	'App.Score.Feed',
 	'App.Score.Overview',
@@ -360,7 +324,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 
 	Translate.addLanguageUrls( languages );
 } )
-/*@ngInject*/
 .run( (
 	$q: ng.IQService,
 	$animate: ng.animate.IAnimateService,
@@ -377,6 +340,7 @@ export const AppModuleNg1 = angular.module( 'App', [
 	Meta.initAngular( $rootScope );
 	Referrer.initAngular( $rootScope );
 	Connection.initAngular( $rootScope );
+	History.initAngular( $rootScope );
 
 	Registry.setConfig( 'Game', {
 		maxItems: 100,

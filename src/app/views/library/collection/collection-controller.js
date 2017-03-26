@@ -167,7 +167,7 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 		this.collection.$follow().then( function()
 		{
 			_this.isFollowing = true;
-			Shell.collections.push( _this.collection );
+			Shell.addPlaylist( _this.collection );
 		} );
 	};
 
@@ -176,7 +176,7 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 		this.collection.$unfollow().then( function()
 		{
 			_this.isFollowing = false;
-			_.remove( Shell.collections, { type: _this.collection.type, id: _this.collection.id } );
+			Shell.removePlaylist( _this.collection );
 		} );
 	};
 
@@ -201,7 +201,7 @@ angular.module( 'App.Views' ).controller( 'Library.CollectionCtrl', function(
 			{
 				_this.playlist.$remove().then( function()
 				{
-					_.remove( Shell.collections, { type: _this.collection.type, id: _this.collection.id } );
+					Shell.removePlaylist( _this.collection );
 					$state.go( 'library.overview' );
 					Growls.success(
 						gettextCatalog.getString( 'library.playlists.remove_playlist_success_growl', { playlist: _this.playlist.name } ),

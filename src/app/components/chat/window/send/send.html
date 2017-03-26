@@ -1,8 +1,10 @@
 <!-- Message Sending -->
 <div class="chat-window-send">
 
-	<div class="chat-window-send-multi-line-notice anim-fade-in no-animate-leave" ng-if="ctrl.multiLineMode">
-		<span class="jolticon jolticon-notice"></span>
+	<div class="chat-window-send-multi-line-notice anim-fade-in no-animate-leave"
+		v-if="multiLineMode"
+		>
+		<app-jolticon icon="notice" />
 		<span translate>You are in multi-line editing mode. Press <code>ctrl+enter</code> to send.</span>
 	</div>
 
@@ -14,26 +16,31 @@
 			-->
 			<textarea
 				class="form-control"
-				placeholder="{{ 'Enter message...' | translate }}"
+				placeholder="Enter message..."
 				rows="2"
-				ng-model="ctrl.message"
-				ng-change="ctrl.onChange()"
-				ui-keypress="{
-					'shift-enter': 'ctrl.shiftEnter( $event )',
-					'ctrl-enter': 'ctrl.ctrlEnter( $event )',
-					'ctrl-10': 'ctrl.ctrlEnter( $event )',
-					'enter': 'ctrl.enter( $event )',
-				}"
-				gj-focus-when
+				v-app-focus-when
+				v-model="message"
+				@change="onChange"
+				@keydown.shift.enter="shiftEnter"
+				@keydown.ctrl.enter.prevent="ctrlEnter"
+				@keydown.ctrl.10.prevent="ctrlEnter"
+				@keydown.enter.prevent="enter"
 				>
 			</textarea>
 
 		</div>
 		<div class="col-xs-3">
 
-			<button class="btn btn-outline btn-block btn-sparse" ng-click="ctrl.sendMessage( $event )">
-				<span class="jolticon jolticon-add-comment visible-xs"></span>
-				<span class="hidden-xs" translate>Send</span>
+			<button class="btn btn-outline btn-block"
+				:class="{
+					'btn-sparse': Screen.isXs,
+				}"
+				@click.prevent="sendMessage"
+				>
+				<app-jolticon icon="add-comment" v-if="Screen.isXs" />
+				<span v-if="!Screen.isXs" translate>
+					Send
+				</span>
 			</button>
 
 		</div>

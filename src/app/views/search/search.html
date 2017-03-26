@@ -1,69 +1,68 @@
-<gj-page-header
-	should-affix-nav="true"
-	hide-nav="!Search.query"
-	>
+<div>
 
-	<gj-page-header-content>
+	<app-page-header
+		:should-affix-nav="true"
+		:hide-nav="!Search.query"
+		>
 
-		<div ng-if="Screen.isXs">
-			<gj-search
-				(disable-autocomplete)="true"
-				>
-			</gj-search>
+		<div v-if="Screen.isXs">
+			<app-search :autocomplete-disabled="true" />
 		</div>
 
-		<div ng-if="!Screen.isXs">
-			<div class="small text-upper text-muted" translate>
-				search.showing_label
+		<div v-if="!Screen.isXs">
+			<div class="small text-upper text-muted">
+				<translate>search.showing_label</translate>
 			</div>
 
 			<h2 class="sans-margin-top">
-				{{ searchCtrl.query }}
+				{{ query }}
 			</h2>
 
 			<br>
 		</div>
 
-	</gj-page-header-content>
-
-	<gj-page-header-nav>
-		<nav class="platform-list inline">
+		<nav slot="nav" class="platform-list inline">
 			<ul>
 				<li>
-					<a ui-sref="search.results( { q: searchCtrl.query } )" ui-sref-active="active">
-						<span translate>search.results.overview_tab</span>
-					</a>
+					<router-link :to="{ name: 'search.results', query: { q: query } }" :exact="true" active-class="active">
+						<translate>search.results.overview_tab</translate>
+					</router-link>
 				</li>
-				<li ng-if="searchCtrl.payload.usersCount">
-					<a ui-sref="search.users( { q: searchCtrl.query } )" ui-sref-active="active">
-						<span translate>search.results.users_tab</span>
-						<span class="badge">{{ searchCtrl.payload.usersCount | number }}</span>
-					</a>
+				<li v-if="payload.usersCount">
+					<router-link :to="{ name: 'search.users', query: { q: query } }" active-class="active">
+						<translate>search.results.users_tab</translate>
+						<span class="badge">{{ payload.usersCount | number }}</span>
+					</router-link>
 				</li>
-				<li ng-if="searchCtrl.payload.gamesCount">
-					<a ui-sref="search.games( { q: searchCtrl.query } )" ui-sref-active="active">
-						<span translate>search.results.games_tab</span>
-						<span class="badge">{{ searchCtrl.payload.gamesCount | number }}</span>
-					</a>
+				<li v-if="payload.gamesCount">
+					<router-link :to="{ name: 'search.games', query: { q: query } }" active-class="active">
+						<translate>search.results.games_tab</translate>
+						<span class="badge">{{ payload.gamesCount | number }}</span>
+					</router-link>
 				</li>
-				<li ng-if="searchCtrl.payload.devlogsCount">
-					<a ui-sref="search.devlogs( { q: searchCtrl.query } )" ui-sref-active="active">
-						<span translate>Devlogs</span>
-						<span class="badge">{{ searchCtrl.payload.devlogsCount | number }}</span>
-					</a>
+				<li v-if="payload.devlogsCount">
+					<router-link :to="{ name: 'search.devlogs', query: { q: query } }" active-class="active">
+						<translate>Devlogs</translate>
+						<span class="badge">{{ payload.devlogsCount | number }}</span>
+					</router-link>
 				</li>
 			</ul>
 		</nav>
-	</gj-page-header-nav>
 
-</gj-page-header>
+	</app-page-header>
 
-<div gj-expand-when="searchCtrl.noResults">
-	<section class="section fill-pink">
-		<div class="container">
-			{{ ::'search.results.no_results' | translate }}
-		</div>
-	</section>
+	<app-expand :when="noResults">
+		<section class="section fill-pink">
+			<div class="container">
+				<translate>search.results.no_results</translate>
+			</div>
+		</section>
+	</app-expand>
+
+	<router-view
+		:payload="payload"
+		:query="query"
+		@searchpayload="processPayload"
+		/>
+
 </div>
-
-<ui-view></ui-view>

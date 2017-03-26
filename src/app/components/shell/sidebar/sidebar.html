@@ -1,0 +1,570 @@
+<div id="shell-sidebar"
+	:class="{
+		'shell-sidebar': !screen.isXs,
+		'shell-pane shell-pane-left': screen.isXs,
+		'visible': screen.isMobile && isLeftPaneVisible,
+	}"
+	v-shortkey="[ 'm' ]"
+	@shortkey="toggleLeftPane"
+	>
+
+	<!--
+		Gotta put any popovers out of the content area.
+		This is so that we can scroll on the Y axis, but overflow on the X.
+	-->
+	<app-popover
+		popover-id="shell-sidebar-games"
+		position="right"
+		position-by="fixed"
+		:append-to-body="true"
+		:hide-on-state-change="true"
+		>
+		<div class="fill-darkest">
+			<ul class="shell-nav">
+				<li>
+					<router-link
+						class="no-icon"
+						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' }, opts: { inherit: false } }"
+						v-app-track-event="`sidebar:games:featured`"
+						>
+						<translate>Featured Games</translate>
+					</router-link>
+				</li>
+				<li>
+					<router-link
+						class="no-icon"
+						:to="{ name: 'discover.games.list._fetch', params: { section: 'hot' }, opts: { inherit: false } }"
+						v-app-track-event="`sidebar:games:hot`"
+						>
+						<translate>Hot Games</translate>
+					</router-link>
+				</li>
+				<li>
+					<router-link
+						class="no-icon"
+						:to="{ name: 'discover.games.list._fetch', params: { section: 'best' }, opts: { inherit: false } }"
+						v-app-track-event="`sidebar:games:best`"
+						>
+						<translate>Best Games</translate>
+					</router-link>
+				</li>
+				<li>
+					<a
+						class="no-icon"
+						v-app-popover-trigger.hover="`shell-sidebar-genres`"
+						>
+						<app-jolticon icon="chevron-right" class="shell-nav-chevron" />
+						<strong>
+							<translate>Genres</translate>
+						</strong>
+					</a>
+				</li>
+				<li>
+					<router-link
+						class="no-icon"
+						:to="{ name: 'discover.channels.list', opts: { inherit: false } }"
+						v-app-track-event="`sidebar:channels`"
+						v-app-popover-trigger.hover="`shell-sidebar-channels`"
+						>
+						<app-jolticon icon="chevron-right" class="shell-nav-chevron" />
+						<strong>
+							<translate>Channels</translate>
+						</strong>
+					</router-link>
+				</li>
+			</ul>
+		</div>
+
+		<app-popover
+			popover-id="shell-sidebar-genres"
+			position="right"
+			:hide-on-state-change="true"
+			>
+			<div class="fill-darkest">
+				<ul class="shell-nav">
+					<li v-for="( genre, key ) of genres" :key="key">
+						<router-link
+							class="no-icon"
+							:to="{
+								name: 'discover.games.list._fetch-category',
+								params: { section: defaultBrowseSection, category: key },
+								opts: { inherit: false },
+							}"
+							v-app-track-event="`sidebar:genres:${genre}`"
+							>
+							{{ genre }}
+						</router-link>
+					</li>
+				</ul>
+			</div>
+		</app-popover>
+
+		<app-popover
+			popover-id="shell-sidebar-channels"
+			position="right"
+			:hide-on-state-change="true"
+			>
+			<div class="fill-darkest">
+				<ul class="shell-nav">
+					<li v-for="channel of channels" :key="channel">
+						<router-link
+							class="no-icon"
+							:to="{ name: 'discover.channels.channel.overview', params: { channel, channel }, opts: { inherit: false } }"
+							v-app-track-event="`sidebar:channels`"
+							>
+							#{{ channel }}
+						</router-link>
+					</li>
+					<li>
+						<router-link
+							class="no-icon"
+							:to="{ name: 'discover.channels.list' }"
+							v-app-track-event="`sidebar:channels-all`"
+							>
+							<strong>
+								<translate>View all...</translate>
+							</strong>
+						</router-link>
+					</li>
+				</ul>
+			</div>
+		</app-popover>
+	</app-popover>
+
+	<app-popover
+		popover-id="shell-sidebar-more"
+		:position="screen.isXs ? 'bottom' : 'right'"
+		:append-to-body="true"
+		:position-by="screen.isXs ? 'offset' : 'fixed'"
+		:hide-on-state-change="true"
+		>
+		<div class="fill-darkest">
+			<ul class="shell-nav">
+				<li>
+					<router-link
+						:to="{ name: 'forums.landing.overview' }"
+						v-app-track-event="`sidebar:forums`"
+						>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="forums" />
+						</span>
+						<translate>Forums</translate>
+					</router-link>
+				</li>
+				<li>
+					<router-link
+						:to="{ name: 'radio' }"
+						v-app-track-event="`sidebar:radio`"
+						>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="radio" />
+						</span>
+						<translate>Radio</translate>
+					</router-link>
+				</li>
+				<li>
+					<a
+						:href="env.firesideBaseUrl"
+						target="_blank"
+						v-app-track-event="`sidebar:fireside`"
+						>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="fireside" />
+						</span>
+						<translate>Fireside</translate>
+					</a>
+				</li>
+				<li>
+					<a
+						:href="env.jamsBaseUrl"
+						target="_blank"
+						v-app-track-event="`sidebar:jams`"
+						>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="jams" />
+						</span>
+						<translate>Jams</translate>
+					</a>
+				</li>
+				<li>
+					<router-link
+						:to="{ name: 'client' }"
+						v-app-track-event="`sidebar:client`"
+						>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="client" />
+						</span>
+						<translate>Client</translate>
+					</router-link>
+				</li>
+			</ul>
+		</div>
+	</app-popover>
+
+	<div class="shell-sidebar-content fill-darkest scrollable overlay-scrollbar">
+
+		<ul class="shell-nav">
+			<li class="offline-disable">
+
+					<!--:class="{ active: $state.includes( 'discover.games.list' ) }"-->
+				<router-link
+					:to="{ name: 'discover.games.list._fetch', params: { section: defaultBrowseSection }, opts: { inherit: false } }"
+					v-app-track-event="`sidebar:games`"
+					v-app-popover-trigger.hover="{
+						id: `shell-sidebar-games`,
+						disabled: !isLeftPaneVisible || screen.isMobile,
+					}"
+					>
+					<app-jolticon icon="chevron-right" class="shell-nav-chevron" />
+					<span class="shell-nav-icon"
+						v-app-popover-trigger.hover="{
+							id: `shell-sidebar-games`,
+							disabled: isLeftPaneVisible || screen.isMobile,
+						}"
+						>
+						<app-jolticon icon="game" />
+					</span>
+					<span class="shell-nav-label">
+						<translate>Browse Games</translate>
+					</span>
+				</router-link>
+			</li>
+
+			<li class="offline-disable">
+					<!--:class="{ active: $state.includes( 'discover.devlogs' ) }"-->
+				<router-link
+					:to="{ name: 'discover.devlogs.overview', opts: { inherit: false } }"
+					v-app-track-event="`sidebar:devlogs`"
+					>
+					<span class="shell-nav-icon"
+						v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Devlogs' ) : ''"
+						>
+						<app-jolticon icon="devlogs" />
+					</span>
+					<span class="shell-nav-label">
+						<translate>Devlogs</translate>
+					</span>
+				</router-link>
+			</li>
+
+			<li class="offline-disable" v-if="screen.isXs">
+					<!--:class="{ active: $state.includes( 'search' ) }"-->
+				<router-link
+					:to="{ name: 'search.results', opts: { inherit: false } }"
+					v-app-track-event="`sidebar:search`"
+					>
+					<span class="shell-nav-icon"
+						v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Search' ) : ''"
+						>
+						<app-jolticon icon="search" />
+					</span>
+					<span class="shell-nav-label">
+						<translate>Search</translate>
+					</span>
+				</router-link>
+			</li>
+
+			<li class="offline-disable">
+				<a
+					v-app-popover-trigger="{
+						id: `shell-sidebar-more`,
+						event: screen.isMobile ? 'click' : 'hover',
+						disabled: !isLeftPaneVisible,
+					}"
+					>
+					<app-jolticon icon="chevron-right" class="shell-nav-chevron" />
+					<span class="shell-nav-icon"
+						v-app-popover-trigger="{
+							id: `shell-sidebar-more`,
+							event: screen.isMobile ? 'click' : 'hover',
+							disabled: isLeftPaneVisible || screen.isXs,
+						}"
+						>
+						<app-jolticon icon="ellipsis-h" />
+					</span>
+					<span class="shell-nav-label">
+						<translate>More</translate>
+					</span>
+				</a>
+			</li>
+		</ul>
+
+		<div v-if="app.user && isBootstrapped">
+
+			<hr>
+
+			<div class="nav-heading" v-if="isLeftPaneVisible">
+				@{{ app.user.username }}
+			</div>
+
+			<ul class="shell-nav">
+				<li class="offline-disable">
+						<!--:class="{ active: $state.includes( 'dashboard.activity' ) }"-->
+					<router-link
+						:to="{ name: 'dashboard.activity.feed', params: { tab: 'activity' }, opts: { inherit: false } }"
+						v-app-track-event="`sidebar:activity`"
+						>
+						<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
+							v-if="notificationCount > 0"
+							>
+							{{ notificationCount < 100 ? notificationCount : '99+' }}
+						</span>
+						<span class="shell-nav-icon"
+							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Activity Feed' ) : ''"
+							>
+							<app-jolticon icon="feed" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>Activity Feed</translate>
+						</span>
+					</router-link>
+				</li>
+
+				<li class="offline-disable">
+						<!--:class="{ active: $state.includes( 'dashboard' ) && !$state.includes( 'dashboard.activity' ) }"-->
+					<router-link
+						:to="{ name: 'dashboard.main.overview', opts: { inherit: false } }"
+						v-app-track-event="`sidebar:dashboard`"
+						>
+						<span class="shell-nav-icon"
+							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Dashboard' ) : ''"
+							>
+							<app-user-avatar-img class="avatar-circle" :user="app.user" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>Dashboard</translate>
+						</span>
+					</router-link>
+				</li>
+			</ul>
+
+			<hr>
+
+			<ul class="shell-nav">
+				<li class="offline-disable" v-if="env.isClient">
+					<router-link
+						:to="{ name: 'library.installed' }"
+						active-class="active"
+						v-app-track-event="`sidebar:collection:installed`"
+						>
+						<span class="shell-nav-icon"
+							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Installed Games' ) : ''"
+							>
+							<app-jolticon icon="download-box" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>Installed Games</translate>
+						</span>
+					</router-link>
+				</li>
+
+				<li class="offline-disable" v-if="developerCollection">
+					<router-link
+						:to="{
+							name: developerCollection.getSref(),
+							params: developerCollection.getSrefParams(),
+							opts: { inherit: false },
+						}"
+						active-class="active"
+						v-app-track-event="`sidebar:collection:developer`"
+						>
+						<span class="shell-nav-icon"
+							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Your Games' ) : ''"
+							>
+							<app-jolticon icon="user" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>library.nav.developer</translate>
+						</span>
+					</router-link>
+				</li>
+
+				<li class="offline-disable">
+					<router-link
+						:to="{
+							name: followedCollection.getSref(),
+							params: followedCollection.getSrefParams(),
+							opts: { inherit: false },
+						}"
+						active-class="active"
+						v-app-track-event="`sidebar:collection:followed`"
+						>
+						<span class="shell-nav-icon"
+							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Followed Games' ) : ''"
+							>
+							<app-jolticon icon="subscribe" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>library.nav.followed</translate>
+						</span>
+					</router-link>
+				</li>
+
+				<li class="offline-disable">
+					<router-link
+						:to="{
+							name: recommendedCollection.getSref(),
+							params: recommendedCollection.getSrefParams(),
+							opts: { inherit: false },
+						}"
+						active-class="active"
+						v-app-track-event="`sidebar:collection:recommended`"
+						>
+						<span class="shell-nav-icon"
+							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Recommended Games' ) : ''"
+							>
+							<app-jolticon icon="pedestals-numbers" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>Recommended Games</translate>
+						</span>
+					</router-link>
+				</li>
+
+				<li class="offline-disable">
+					<router-link
+						:to="{
+							name: ownedCollection.getSref(),
+							params: ownedCollection.getSrefParams(),
+							opts: { inherit: false },
+						}"
+						active-class="active"
+						v-app-track-event="`sidebar:collection:owned`"
+						>
+						<span class="shell-nav-icon"
+							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Owned Games' ) : ''"
+							>
+							<app-jolticon icon="heart" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>Owned Games</translate>
+						</span>
+					</router-link>
+				</li>
+			</ul>
+
+			<div v-if="!isLeftPaneVisible">
+				<ul class="shell-nav">
+					<li class="offline-disable">
+						<router-link
+							:to="{ name: 'library.overview' }"
+							active-class="active"
+							v-app-track-event="`sidebar:playlists`"
+							>
+							<span class="shell-nav-icon"
+								v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Playlists' ) : ''"
+								>
+								<app-jolticon icon="playlist" />
+							</span>
+						</router-link>
+					</li>
+				</ul>
+			</div>
+
+			<div v-if="isLeftPaneVisible && bundleCollections.length">
+				<div class="nav-heading">
+					<translate>library.nav.bundles</translate>
+					<span class="badge">
+						{{ bundleCollections.length | number }}
+					</span>
+				</div>
+
+				<ul class="shell-nav">
+					<li class="offline-disable"
+						v-for="bundleCollection of filteredBundleCollections"
+						:key="bundleCollection._id"
+						>
+						<router-link
+							:to="{
+								name: bundleCollection.getSref(),
+								params: bundleCollection.getSrefParams(),
+								opts: { inherit: false },
+							}"
+							active-class="active"
+							v-app-track-event="`sidebar:collection:bundle`"
+							:title="bundleCollection.name"
+							>
+							<span class="shell-nav-icon">
+								<app-jolticon icon="bundle" />
+							</span>
+							<span class="shell-nav-label">
+								{{ bundleCollection.name }}
+							</span>
+						</router-link>
+					</li>
+				</ul>
+			</div>
+
+			<div v-if="isLeftPaneVisible">
+				<div class="nav-heading" :title="$gettext( `library.nav.playlists` )">
+					<translate>library.nav.playlists</translate>
+					<span class="badge">
+						{{ collections.length | number }}
+					</span>
+				</div>
+
+				<div class="nav-controls">
+					<a
+						class="btn btn-outline btn-block offline-disable"
+						@click="showAddPlaylistModal"
+						v-app-track-event="`sidebar:playlist-add`"
+						>
+						<app-jolticon icon="add" />
+						<translate>library.nav.new_playlist_button</translate>
+					</a>
+				</div>
+
+				<div class="nav-controls" v-if="collections.length">
+					<input type="search"
+						class="form-control"
+						:placeholder="$gettext( `library.nav.filter_playlists_placeholder` )"
+						v-model="playlistFilterQuery"
+						>
+				</div>
+
+				<div v-if="!collections.length">
+					<div class="alert fill-gray">
+						<translate>library.nav.no_playlists_html</translate>
+					</div>
+				</div>
+
+				<ul class="shell-nav">
+					<li
+						class="offline-disable"
+						v-for="collection of filteredPlaylists"
+						:key="collection._id"
+						v-show="!playlistFilterQuery || playlistFilterComparator( collection )"
+						>
+
+						<router-link
+							:to="{
+								name: collection.getSref(),
+								params: collection.getSrefParams(),
+								opts: { inherit: false },
+							}"
+							active-class="active"
+							v-app-track-event="`sidebar:collection:playlist`"
+							:title="collection.getTitle()"
+							>
+
+							<span class="shell-nav-icon">
+								<app-jolticon icon="playlist" />
+							</span>
+
+							<span class="shell-nav-label">
+								{{ collection.name }}
+
+								<small v-if="collection.from_subscription">
+									<translate>library.by</translate>
+									@{{ collection.owner.username }}
+								</small>
+							</span>
+						</router-link>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+
+	</div>
+</div>

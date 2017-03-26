@@ -1,11 +1,12 @@
-import * as Vue from 'vue';
+import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import * as View from '!view!./thumbnail.html?style=./thumbnail.styl';
+import './thumbnail-content.styl';
 
 import { SellablePricing } from '../../../../lib/gj-lib-client/components/sellable/pricing/pricing.model';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { getProvider } from '../../../../lib/gj-lib-client/utils/utils';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { AppGameCompatIcons } from '../compat-icons/compat-icons';
@@ -15,6 +16,8 @@ import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppGameModLinks } from '../mod-links/mod-links';
+import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 
 @View
 @Component({
@@ -26,6 +29,7 @@ import { AppGameModLinks } from '../mod-links/mod-links';
 		AppVideo,
 		AppPopover,
 		AppGameModLinks,
+		AppUserAvatarImg,
 	},
 	directives: {
 		AppPopoverTrigger,
@@ -41,8 +45,11 @@ export class AppGameThumbnail extends Vue
 
 	@Prop( Number ) slotId: number;
 
+	@State app: AppState;
+
 	showModTools = false;
 	isHovered = false;
+	isThumbnailLoaded = false;
 
 	pricing: SellablePricing | null = null;
 	sale = false;
@@ -90,9 +97,7 @@ export class AppGameThumbnail extends Vue
 
 	mounted()
 	{
-		const App = getProvider<any>( 'App' );
-
-		if ( App.user && App.user.permission_level >= 3 ) {
+		if ( this.app.user && this.app.user.permission_level >= 3 ) {
 			this.showModTools = true;
 		}
 
@@ -105,5 +110,10 @@ export class AppGameThumbnail extends Vue
 				this.salePercentageOff = ((this.saleOldPricing.amount - this.pricing.amount) / this.saleOldPricing.amount * 100).toFixed( 0 );
 			}
 		}
+	}
+
+	onThumbnailLoad()
+	{
+		this.isThumbnailLoaded = true;
 	}
 }

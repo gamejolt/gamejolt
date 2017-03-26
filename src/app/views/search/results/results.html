@@ -1,98 +1,102 @@
-<section class="section" ng-if="!Search.query" style="min-height: 200px">
-	<div class="container">
-		<p class="text-center text-muted">
-			<span class="jolticon jolticon-chevron-up"></span>
-			<span translate>search.results_placeholder</span>
-			<span class="jolticon jolticon-chevron-up"></span>
-		</p>
+<div>
+
+	<section class="section" v-if="!Search.query" style="min-height: 200px">
+		<div class="container">
+			<p class="text-center text-muted">
+				<app-jolticon icon="up" />
+				<translate>search.results_placeholder</translate>
+				<app-jolticon icon="up" />
+			</p>
+		</div>
+	</section>
+
+	<div v-if="Search.query">
+
+		<!-- Users -->
+		<section class="section" v-if="payload.users && payload.users.length">
+			<div class="container-lg">
+
+				<div class="clearfix">
+					<router-link class="btn btn-outline pull-right" :to="{ name: 'search.users', query: { q: query } }">
+						<translate>search.results.view_all_link</translate>
+					</router-link>
+					<h3 class="section-header">
+						<router-link class="link-unstyled" :to="{ name: 'search.users', query: { q: query } }">
+							<translate>search.results.users_heading</translate>
+						</router-link>
+						<small>({{ payload.usersCount | number }})</small>
+					</h3>
+				</div>
+
+				<div class="search-media-list row">
+					<div class="search-media-list-item col-xs-3 col-sm-2 col-lg-1 anim-back-in stagger no-animate-xs"
+						v-for="user of payload.users.slice( 0, Screen.isXs ? 8 : 12 )"
+						:key="user.id"
+						>
+						<app-user-avatar :user="user" :show-name="true" />
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="container-lg">
+
+				<!-- Devlogs -->
+				<div v-if="payload.devlogs && payload.devlogs.length">
+					<div class="clearfix">
+						<router-link class="btn btn-outline pull-right" :to="{ name: 'search.devlogs', query: { q: query } }">
+							<translate>search.results.view_all_link</translate>
+						</router-link>
+						<h3 class="section-header">
+							<router-link class="link-unstyled" :to="{ name: 'search.devlogs', query: { q: query } }">
+								<translate>Devlogs</translate>
+							</router-link>
+							<small>({{ payload.devlogsCount | number }})</small>
+						</h3>
+					</div>
+
+					<app-game-grid
+						:games="payload.devlogsTrimmed"
+						:truncate-to-fit="true"
+						:scrollable="true"
+						event-label="search-overview-devlogs"
+						/>
+
+				</div>
+
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="container-lg">
+
+				<!-- Games -->
+				<div v-if="payload.games && payload.games.length">
+					<div class="clearfix">
+						<router-link class="btn btn-outline pull-right" :to="{ name: 'search.games', query: { q: query } }">
+							<translate>search.results.view_all_link</translate>
+						</router-link>
+						<h3 class="section-header">
+							<router-link class="link-unstyled" :to="{ name: 'search.games', query: { q: query } }">
+								<translate>search.results.games_heading</translate>
+							</router-link>
+							<small>({{ payload.gamesCount | number }})</small>
+						</h3>
+					</div>
+
+					<app-game-grid
+						:games="payload.games"
+						:truncate-to-fit="true"
+						event-label="search-overview-games"
+						/>
+
+				</div>
+
+			</div>
+		</section>
+
 	</div>
-</section>
-
-<div ng-if="Search.query">
-
-	<!-- Users -->
-	<section class="section" ng-if="searchCtrl.payload.users.length">
-		<div class="container-lg">
-
-			<div class="clearfix">
-				<a class="btn btn-outline pull-right" ui-sref="search.users( { q: searchCtrl.query } )" translate>
-					search.results.view_all_link
-				</a>
-				<h3 class="section-header">
-					<a class="link-unstyled" ui-sref="search.users( { q: searchCtrl.query } )" translate>
-						search.results.users_heading
-					</a>
-					<small>({{ searchCtrl.payload.usersCount | number }})</small>
-				</h3>
-			</div>
-
-			<div class="search-media-list row">
-				<div class="search-media-list-item col-xs-3 col-sm-2 col-lg-1 anim-back-in stagger no-animate-xs"
-					ng-repeat="user in searchCtrl.payload.users | limitTo:(Screen.isXs ? 8 : 12) track by user.id"
-					>
-					<gj-user-avatar [user]="user" [show-name]="true"></gj-user-avatar>
-				</div>
-			</div>
-
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="container-lg">
-
-			<!-- Devlogs -->
-			<div ng-if="searchCtrl.payload.devlogs.length">
-				<div class="clearfix">
-					<a class="btn btn-outline pull-right" ui-sref="search.devlogs( { q: searchCtrl.query } )" translate>
-						search.results.view_all_link
-					</a>
-					<h3 class="section-header">
-						<a class="link-unstyled" ui-sref="search.devlogs( { q: searchCtrl.query } )" translate>
-							Devlogs
-						</a>
-						<small>({{ searchCtrl.payload.devlogsCount | number }})</small>
-					</h3>
-				</div>
-
-				<gj-game-grid
-					games="searchCtrl.payload.devlogsTrimmed"
-					truncate-to-fit="true"
-					scrollable="true"
-					event-label="search-overview-devlogs"
-					>
-				</gj-game-grid>
-			</div>
-
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="container-lg">
-
-			<!-- Games -->
-			<div ng-if="searchCtrl.payload.games.length">
-				<div class="clearfix">
-					<a class="btn btn-outline pull-right" ui-sref="search.games( { q: searchCtrl.query } )" translate>
-						search.results.view_all_link
-					</a>
-					<h3 class="section-header">
-						<a class="link-unstyled" ui-sref="search.games( { q: searchCtrl.query } )" translate>
-							search.results.games_heading
-						</a>
-						<small>({{ searchCtrl.payload.gamesCount | number }})</small>
-					</h3>
-				</div>
-
-				<gj-game-grid
-					games="searchCtrl.payload.games"
-					truncate-to-fit="true"
-					event-label="search-overview-games"
-					>
-				</gj-game-grid>
-
-			</div>
-
-		</div>
-	</section>
 
 </div>

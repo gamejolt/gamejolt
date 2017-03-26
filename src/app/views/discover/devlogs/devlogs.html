@@ -1,37 +1,38 @@
-<gj-page-header
-	spotlight-dark="true"
-	>
+<div>
 
-	<gj-page-header-content>
-		<h1 translate translate-params-channel="channelCtrl.channel">
-			Devlogs
+	<app-page-header
+		:spotlight-dark="true"
+		>
+
+		<h1>
+			<translate>Devlogs</translate>
 		</h1>
-		<div class="small text-muted" translate>
-			Find the latest and greatest games in development and follow their devlog feeds!
+
+		<div class="small text-muted">
+			<translate>Find the latest and greatest games in development and follow their devlog feeds!</translate>
 		</div>
-	</gj-page-header-content>
 
-	<gj-page-header-spotlight>
-		<img src="./social.png" width="100" height="100" alt="">
-	</gj-page-header-spotlight>
+		<div slot="spotlight">
+			<img src="./social.png" width="100" height="100" alt="">
+		</div>
 
-	<gj-page-header-nav>
-		<nav class="platform-list inline">
+		<nav slot="nav" class="platform-list inline">
 			<ul>
 				<li>
-					<a ui-sref="discover.devlogs.overview" ui-sref-active="active">
-						<span translate>Overview</span>
-					</a>
+					<router-link :to="{ name: 'discover.devlogs.overview' }" :exact="true" active-class="active">
+						<translate>Overview</translate>
+					</router-link>
 				</li>
 				<li>
-					<a ui-sref="discover.devlogs.games._fetch" ui-sref-active="active">
-						<span translate>Games</span>
-					</a>
+					<router-link :to="{ name: 'discover.devlogs.games' }" active-class="active">
+						<translate>Games</translate>
+					</router-link>
 				</li>
 			</ul>
 		</nav>
-	</gj-page-header-nav>
 
-</gj-page-header>
+	</app-page-header>
 
-<ui-view></ui-view>
+	<router-view />
+
+</div>

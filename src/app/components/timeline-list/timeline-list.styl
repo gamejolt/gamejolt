@@ -1,0 +1,152 @@
+@require '~styles/variables'
+@require '../../../lib/gj-lib-client/stylus/common/mixins'
+
+.timeline-list
+
+	$icon-size = 40px
+	$avatar-size = 30px
+	$avatar-margin = 10px
+
+	margin-bottom: $line-height-computed
+
+	// For doing a full-bleed within the content.
+	&-full-bleed
+
+		@media $media-xs
+			margin-left: -($grid-gutter-width-xs / 2)
+			margin-right: @margin-left
+
+		@media $media-sm-up
+			margin-left: -(($icon-size / 2) + $avatar-margin)
+
+	&-item
+		position: relative
+		display: block
+		color: $gray-dark
+
+		@media $media-xs
+			margin-bottom: $line-height-computed
+
+			&.new
+				border-left: 3px solid $gj-pink
+
+		&-icon
+			position: absolute
+			left: -($icon-size / 2)
+			top: 0
+			width: $icon-size
+			height: $icon-size
+			line-height: $icon-size
+			background-color: $gray-lightest
+			border-radius: 50%
+			text-align: center
+			z-index: 1
+			color: $gray-light
+
+			@media $media-xs
+				display: none
+
+			.timeline-list-item:hover &
+				background-color: $gj-dark-green
+				color: $gj-green
+
+			.timeline-list-item.new &
+				background-color: $gj-pink
+				color: $white
+
+			> .jolticon
+				position: relative
+				top: -1px
+				margin: 0
+				vertical-align: middle
+
+		&-main
+			clearfix()
+			padding-bottom: ($line-height-computed * 1.5)
+
+			@media $media-xs
+				padding-left: ($grid-gutter-width-xs / 2)
+				padding-right: @padding-left
+
+			@media $media-sm-up
+				border-left: 2px solid $gray-lightest
+				padding-left: ($icon-size / 2) + $avatar-margin
+
+			.timeline-list-item.active &
+				border-color: $gj-blue
+
+		&-meta
+			color: $text-muted
+			font-size: $font-size-tiny
+
+		&-title
+			font-weight: bold
+			color: $gray
+
+			strong
+			b
+				color: $black
+
+		&-header
+			display: block
+			background-color: $black
+			margin-bottom: $line-height-computed
+
+			@media $media-xs
+				margin-left: -($grid-gutter-width-xs / 2)
+				margin-right: @margin-left
+
+			@media $media-sm-up
+				margin-left: -(($icon-size / 2) + $avatar-margin)
+
+			&-content
+				clearfix()
+				padding: ($grid-gutter-width-xs / 2)
+
+				@media $media-sm-up
+					padding-top: ($grid-gutter-width / 2)
+					padding-bottom: @padding-top
+					padding-left: ($icon-size / 2) + $avatar-margin
+					padding-right: @padding-top
+
+				.timeline-list-item-meta
+					color: $white
+
+				.timeline-list-item-title
+					font-size: $font-size-h4
+					word-wrap: break-word
+					hyphens: auto
+
+					@media $media-sm-up
+						font-size: $font-size-h3
+
+					&
+					strong
+					b
+						color: $white
+
+		&-details
+			margin-top: 5px
+
+		&-content
+			color: $gray-dark
+
+			p:last-child
+				margin-bottom: 0
+
+		&-thumb
+		&-avatar
+			float: left
+			width: $avatar-size
+			height: $avatar-size
+			margin-right: $avatar-margin
+
+		&-thumb
+			background-color: $gray-lightest
+			background-repeat: no-repeat
+			background-position: center center
+			background-size: cover
+
+		&-mark
+			float: right
+			margin-left: $avatar-margin

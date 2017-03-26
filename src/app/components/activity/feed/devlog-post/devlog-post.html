@@ -1,93 +1,91 @@
-<div class="devlog-post" ng-class="::'devlog-post-' + $ctrl.post.type">
+<div class="devlog-post" :class="'devlog-post-' + post.type">
 
 	<div class="timeline-list-item-icon">
-		<span class="jolticon" ng-class="::'jolticon-' + $ctrl.icon"></span>
+		<app-jolticon :icon="icon" />
 	</div>
 
 	<div class="timeline-list-item-main">
 
-		<a class="devlog-post-game"
-			ng-if="::$ctrl.feed.showGameInfo && !$ctrl.screen.isXs"
-			ui-sref="discover.games.view.overview( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id } )"
+		<router-link
+			class="devlog-post-game"
+			v-if="feed.showGameInfo && !Screen.isXs"
+			:to="{ name: 'discover.games.view.overview', params: { slug: post.game.slug, id: post.game.id } }"
 			>
-			<gj-game-thumbnail-img [game]="::$ctrl.post.game"></gj-game-thumbnail-img>
-		</a>
+			<app-game-thumbnail-img :game="post.game" />
+		</router-link>
 
-		<a class="timeline-list-item-header"
-			ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
-			ng-click="$ctrl._onClick( $event )"
+		<div
+			class="timeline-list-item-header"
+			@click="onClick( $event )"
 			>
-			<div class="timeline-list-item-header-content">
-				<div class="devlog-post-header-content">
-					<div class="timeline-list-item-meta">
-						<span am-time-ago="::$ctrl.post.published_on"></span>
+			<router-link
+				:to="{ name: 'discover.games.view.devlog.view', params: { slug: post.game.slug, id: post.game.id, postSlug: post.slug } }"
+				>
+				<div class="timeline-list-item-header-content">
+					<div class="devlog-post-header-content">
+						<div class="timeline-list-item-meta">
+							<app-time-ago :date="post.published_on" />
 
-						<span ng-if="::$ctrl.post.type == 'media'">
-							<span class="dot-separator"></span>
-							<span class="jolticon jolticon-screenshot middle"></span>
-							{{ ::$ctrl.post.media.length | number }}
-						</span>
+							<span v-if="post.type === 'media'">
+								<span class="dot-separator"></span>
+								<app-jolticon icon="screenshot" class="middle" />
+								{{ post.media.length | number }}
+							</span>
 
-						<span ng-if="::$ctrl.feed.showGameInfo">
-							<span class="dot-separator"></span>
-							<span>{{ ::$ctrl.post.game.title }}</span>
-						</span>
-					</div>
+							<span v-if="feed.showGameInfo">
+								<span class="dot-separator"></span>
+								<span>{{ post.game.title }}</span>
+							</span>
+						</div>
 
-					<div class="timeline-list-item-title">
-						{{ ::$ctrl.post.title }}
+						<div class="timeline-list-item-title">
+							{{ post.title }}
+						</div>
 					</div>
 				</div>
-			</div>
-		</a>
+			</router-link>
+		</div>
 
 		<div class="timeline-list-item-details">
 
-			<div ng-switch="::$ctrl.post.type">
-				<gj-activity-feed-devlog-post-text
-					ng-switch-when="text"
-					post="::$ctrl.post"
-					on-expand="$ctrl.expanded()"
-					>
-				</gj-activity-feed-devlog-post-text>
+			<app-activity-feed-devlog-post-text
+				v-if="post.type === 'text'"
+				:post="post"
+				@expanded="onExpand"
+				/>
 
-				<gj-activity-feed-devlog-post-video
-					ng-switch-when="video"
-					post="::$ctrl.post"
-					on-expand="$ctrl.expanded()"
-					>
-				</gj-activity-feed-devlog-post-video>
+			<app-activity-feed-devlog-post-video
+				v-if="post.type === 'video'"
+				:post="post"
+				@expanded="onExpand"
+				/>
 
-				<gj-activity-feed-devlog-post-sketchfab
-					ng-switch-when="sketchfab"
-					post="::$ctrl.post"
-					on-expand="$ctrl.expanded()"
-					>
-				</gj-activity-feed-devlog-post-sketchfab>
+			<app-activity-feed-devlog-post-sketchfab
+				v-if="post.type === 'sketchfab'"
+				:post="post"
+				@expanded="onExpand"
+				/>
 
-				<!--
-					Media needs the actual activity item.
-				-->
-				<gj-activity-feed-devlog-post-media
-					ng-switch-when="media"
-					item="::$ctrl.item"
-					on-click="$ctrl._onClick( $event )"
-					on-expand="$ctrl.expanded()"
-					>
-				</gj-activity-feed-devlog-post-media>
-			</div>
+			<!--
+				Media needs the actual activity item.
+			-->
+			<app-activity-feed-devlog-post-media
+				v-if="post.type === 'media'"
+				:item="item"
+				@clicked="onClick( $event )"
+				@expanded="onExpand"
+				/>
 
-			<gj-activity-feed-devlog-post-controls
-				post="::$ctrl.post"
-				show-game-info="::$ctrl.feed.showGameInfo"
-				show-edit-controls="::$ctrl.feed.showEditControls"
-				show-extra-info="::!$ctrl.screen.isXs"
-				on-expand="$ctrl.expanded()"
-				on-post-edit="$ctrl.feed.onPostEdited( $ctrl.post )"
-				on-post-publish="$ctrl.feed.onPostPublished( $ctrl.post )"
-				on-post-remove="$ctrl.feed.onPostRemoved( $ctrl.post )"
-				>
-			</gj-activity-feed-devlog-post-controls>
+			<!--<app-activity-feed-devlog-post-controls
+				:post="post"
+				:show-game-info="feed.showGameInfo"
+				:show-edit-controls="feed.showEditControls"
+				:show-extra-info="!Screen.isXs"
+				@expanded="expanded"
+				@posteditted="feed.onPostEdited( post )"
+				@postpublished="feed.onPostPublished( post )"
+				@postremoveed="feed.onPostRemoved( post )"
+				/>-->
 
 		</div>
 

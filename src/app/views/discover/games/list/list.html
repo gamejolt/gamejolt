@@ -1,0 +1,119 @@
+<div>
+
+	<app-page-header>
+
+		<!--
+			Animation scope.
+		-->
+		<div class="games-section-header-copy anim-fade-in-right no-animate-leave no-animate-xs"
+			v-for="sectionCategory of [ section + (category || '') ]"
+			>
+
+			<h1 v-if="section !== 'by-date'">
+				{{ pageTitle }}
+			</h1>
+
+			<h1 v-if="section === 'by-date'">
+				<span v-if="!dateRange">
+					<translate :translate-params="{ date }" :escape-html="false">
+						Games Published <small>on %{ date }</small>
+					</translate>
+				</span>
+				<span v-if="dateRange">
+					<translate
+						:escape-html="false"
+						:translate-params="{
+							dateStart: dateRange[0],
+							dateEnd: dateRange[1],
+						}"
+						>
+						Games Published <small>between %{ dateStart } and %{ dateEnd }</small>
+					</translate>
+				</span>
+			</h1>
+
+			<p class="text-muted small" v-if="section === 'featured'">
+				<translate :translate-params="{ category: descriptiveCategory }">
+					Indie %{ category } that we've featured on the homepage, sorted by feature date.
+				</translate>
+			</p>
+
+			<p class="text-muted small" v-if="section === 'best'">
+				<translate :translate-params="{ category: descriptiveCategory }">
+					Indie %{ category } sorted by Voltage.
+				</translate>
+				<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.voltage_tooltip' )" />
+			</p>
+
+			<p class="text-muted small" v-if="section === 'fresh'">
+				<translate :translate-params="{ category: descriptiveCategory }">
+					Indie %{ category } sorted by Freshness.
+				</translate>
+				<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.freshness_tooltip' )" />
+			</p>
+
+			<p class="text-muted small" v-if="section === 'hot'">
+				<translate :translate-params="{ category: descriptiveCategory }">
+					Indie %{ category } sorted by Hotness.
+				</translate>
+				<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.hotness_tooltip' )" />
+			</p>
+
+			<p class="text-muted small" v-if="section === 'new'">
+				<translate :translate-params="{ category: descriptiveCategory }">
+					Indie %{ category } sorted by publication date.
+				</translate>
+			</p>
+
+			<p class="text-muted small" v-if="section === 'by-date'">
+				<span v-if="!dateRange">
+					<translate :translate-params="{ date }">
+						Games that were published on %{ date }, sorted by Voltage, with the best scores at the top.
+					</translate>
+				</span>
+				<span v-if="dateRange">
+					<translate
+						:translate-params="{
+							dateStart: dateRange[0],
+							dateEnd: dateRange[1],
+						}"
+						>
+						Games that were published between %{ dateStart } and %{ dateEnd }, sorted by Voltage, with the best scores at the top.
+					</translate>
+				</span>
+				<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.voltage_tooltip' )" />
+			</p>
+
+		</div>
+
+	</app-page-header>
+
+	<section class="section fill-dark section-thin">
+		<div class="container">
+			<app-genre-list />
+		</div>
+	</section>
+
+	<section class="section fill-pink section-thin" v-if="section === 'new'">
+		<div class="container">
+			<translate :escape-html="false">
+				games.list.new_games_warning_html
+			</translate>
+		</div>
+	</section>
+
+	<app-game-listing
+		:listing="listing"
+		:include-featured-section="true"
+		:hide-section-nav="section === 'by-date'"
+		:is-loading="routeLoading"
+		>
+
+		<app-game-grid
+			:games="listing.games"
+			event="game-list:click"
+			/>
+
+	</app-game-listing>
+
+</div>

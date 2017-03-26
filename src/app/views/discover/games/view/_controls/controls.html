@@ -1,0 +1,28 @@
+<div class="game-header-controls">
+
+	<!--
+		Playlists
+		Can only add visible games to playlists.
+	-->
+	<a
+		v-if="game.status === Game.STATUS_VISIBLE"
+		class="game-header-add btn btn-outline btn-sparse"
+		v-app-auth-required
+		v-app-popover-trigger="{
+			id: `add-to-playlist`,
+			disabled: !app.user,
+		}"
+		v-app-tooltip.bottom-center="$gettext( 'Add to Playlist' )"
+		v-app-track-event="`game-profile:add-playlist`"
+		>
+		<app-jolticon icon="add" />
+	</a>
+
+	<app-game-playlist-add-to-popover :game="game" />
+
+	<!-- Buttons / Controls -->
+	<div class="game-header-follow-container">
+		<app-game-follow-widget class="btn-block" :game="game" />
+	</div>
+
+</div>

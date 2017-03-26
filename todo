@@ -1,0 +1,14 @@
+[ ] Changing genre filters refreshing the route twice and hits API twice.
+[ ] Doesn't scroll correctly when collapsing a fade collapse.
+[ ] Don't trigger inview if the scroll speed is over a certain threshold.
+[ ] Hot section isn't showing active in game listing when page is set
+
+
+[ ] update to core lodash? https://github.com/lodash/lodash/wiki/Build-Differences
+[ ] add angular-gettext back in
+[ ] media-bar has TS errors
+[ ] scroll-spy has TS errors
+
+[ ] vue-router memory leak
+[ ] cpu spike when switching shell menu showing
+[ ] cpu spike when opening/closing minbar: http://localhost:8080/games/peasvscorn/239492

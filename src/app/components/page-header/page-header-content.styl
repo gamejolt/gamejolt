@@ -1,0 +1,94 @@
+@require '~styles/variables'
+@require '../../../lib/gj-lib-client/stylus/common/mixins'
+
+.page-header
+
+	$page-header-spotlight-breakpoint = media( min: $screen-sm-min, max: 1450px )
+
+	&-cover.has-cover-image
+
+		.page-header-cover-buttons
+
+			.btn
+				margin: 0 5px
+
+		.text-muted
+			color: $gray-lightest
+
+		.link-muted
+			color: rgba( $white, 0.6 )
+
+		.tag
+		.user-dogtag
+			text-shadow: none
+
+		.meter-blip
+			background-color: rgba( $white, 0.5 )
+			box-shadow: 1px 1px 1px rgba( $black, 0.3 )
+
+		.meter-low .meter-blip-filled
+			background-color: $gj-pink
+
+		.meter-mid .meter-blip-filled
+			background-color: $white
+
+		.meter-high .meter-blip-filled
+			background-color: $gj-green
+
+	&-content
+
+		h1, h2, h3
+			margin: 0
+
+			small
+				color: $white
+
+		a
+			color: $white !important
+
+			&:hover
+				color: $white !important
+				text-decoration: underline
+
+		.meter
+			display: inline-block
+			vertical-align: middle
+
+	&-nav
+
+		nav
+			margin-top: 11px !important
+
+		@media $media-md-up
+
+			.platform-list
+				margin-top: 11px !important
+
+			../ .gj-scroll-affixed
+				background-color: $gray-dark
+				margin-top: $shell-top-nav-height !important
+				border-bottom: 2px solid $gray
+				z-index: $zindex-nav-scroll-affixed
+
+				nav
+					margin-left: 0
+
+	&.has-spotlight &
+
+		@media $media-sm
+
+			&-controls
+			&-nav nav
+				margin-left: 100px + ($grid-gutter-width / 2)
+
+		// For when the page gets too small to float the spotlight off the left edge.
+		@media $page-header-spotlight-breakpoint
+
+			&-spotlight
+				left: 0
+
+			&-content
+				padding-left: 100px + ($grid-gutter-width / 2)
+
+			&-nav nav
+				margin-left: 100px + ($grid-gutter-width / 2)

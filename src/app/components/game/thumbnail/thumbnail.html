@@ -1,10 +1,11 @@
-<a class="game-thumbnail"
-	:href="url"
+<router-link class="game-thumbnail"
+	:to="url"
 	:class="{
 		active: isActive,
+		loaded: isThumbnailLoaded,
 	}"
-	@mouseenter="isHovered = true"
-	@mouseleave="isHovered = false"
+	@mouseenter.native="isHovered = true"
+	@mouseleave.native="isHovered = false"
 	>
 
 	<div class="game-thumbnail-controls"
@@ -39,11 +40,14 @@
 			<translate>Devlog-Only</translate>
 		</span>
 
-		<span class="game-thumbnail-video-tag" v-if="game.thumbnail_media_item && game.thumbnail_media_item.is_animated && Screen.isDesktop">
+		<!--<span class="game-thumbnail-video-tag" v-if="game.thumbnail_media_item && game.thumbnail_media_item.is_animated && Screen.isDesktop">
 			<app-jolticon icon="stream" />
-		</span>
+		</span>-->
 
-		<app-game-thumbnail-img :game="game"></app-game-thumbnail-img>
+		<app-game-thumbnail-img
+			:game="game"
+			@loaded="onThumbnailLoad"
+			/>
 
 		<app-video
 			v-if="game.thumbnail_media_item && game.thumbnail_media_item.is_animated && Screen.isDesktop && isActive"
@@ -95,14 +99,20 @@
 			</div>
 		</div>
 
+		<div class="game-thumbnail-avatar">
+			<app-user-avatar-img class="avatar-circle" :user="game.developer" />
+		</div>
+
 		<div class="game-thumbnail-os">
 			<app-game-compat-icons :game="game"></app-game-compat-icons>
 		</div>
+
 		<div class="game-thumbnail-dev" :title="`${game.developer.display_name} (@${game.developer.username})`">
 			{{ game.developer.display_name }}
 		</div>
+
 		<div class="game-thumbnail-title" :title="game.title">
 			{{ game.title }}
 		</div>
 	</div>
-</a>
+</router-link>

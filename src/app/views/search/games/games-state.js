@@ -1,21 +1,21 @@
-angular.module( 'App.Views' ).config( function( $stateProvider )
-{
-	$stateProvider.state( 'search.games', {
-		url: '/search/games?q&page',
-		controller: 'Search.ResultsCtrl',
-		controllerAs: 'resultsCtrl',
-		templateUrl: require( './games.html' ),
-		resolve: {
-			payload: function( $stateParams, Search, History_Cache )
-			{
-				return History_Cache.cache( function()
-				{
-					return Search.search( $stateParams.q, {
-						type: 'game',
-						page: $stateParams.page || 1,
-					} );
-				} );
-			}
-		}
-	} );
-} );
+// angular.module( 'App.Views' ).config( function( $stateProvider )
+// {
+// 	$stateProvider.state( 'search.games', {
+// 		url: '/search/games?q&page',
+// 		controller: 'Search.ResultsCtrl',
+// 		controllerAs: 'resultsCtrl',
+// 		templateUrl: require( './games.html' ),
+// 		resolve: {
+// 			payload: function( $stateParams, Search, History_Cache )
+// 			{
+// 				return History_Cache.cache( function()
+// 				{
+// 					return Search.search( $stateParams.q, {
+// 						type: 'game',
+// 						page: $stateParams.page || 1,
+// 					} );
+// 				} );
+// 			}
+// 		}
+// 	} );
+// } );

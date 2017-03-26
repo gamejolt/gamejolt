@@ -5,13 +5,12 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/library',
 		template: '<ui-view></ui-view>',
 		resolve: {
-			init: function( Translate, Shell )
+			init: function( User, Translate, Shell )
 			{
-				return Translate.loadSection( 'main' )
-					.then( function()
-					{
-						return Shell.bootstrapPomise;
-					} );
+				// No need to await this since library can be offline.
+				User.touch();
+
+				return Promise.all( [ Translate.loadSection( 'main' ), Shell.bootstrapPromise ] );
 			},
 		}
 	} );

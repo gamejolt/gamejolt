@@ -1,3 +1,6 @@
+@require '~styles/variables'
+@require '../../../lib/gj-lib-client/stylus/common/mixins'
+
 #auth-container
 	position: absolute
 	top: 0
@@ -8,39 +11,8 @@
 	&.has-cover-img
 		text-shadow: 1px 1px 1px rgba( $black, 0.3 )
 
-		.error
-		.alert
-			text-shadow: none
-
-	form
-		.form-group
-			@extend .anim-fade-in-up
-			margin: 0
-
-		.form-control
-
-			// Bigger form controls.
-			height: 40px
-
-			// Scrunch up the form controls so their borders overlap.
-			margin-top: -1px
-
-			// Don't change the color of the border on focus.
-			&:focus
-				border-color: $gray-lighter
-
-	button
-		height: 40px
-
-		&
-		& > .jolticon
-			line-height: 40px
-
-	.loading
-		color: $white
-
 .auth-scroll-container
-	@extend .scrollable
+	scrollable()
 	position: relative
 	height: 100%
 	z-index: $zindex-scroll-container
@@ -68,19 +40,6 @@
 
 	img
 		margin: 0 auto
-
-.auth-lead-text
-	text-align: center
-	margin-top: -20px
-
-.auth-social-buttons button
-	margin-bottom: 10px
-
-.auth-page-links
-	margin-top: $line-height-computed
-
-	.auth-page-link
-		margin-bottom: ($line-height-computed / 2)
 
 .auth-shell-bottom-links
 	position: relative

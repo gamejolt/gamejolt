@@ -1,24 +1,22 @@
 <button
-	gj-auth-required
-	ng-click="$ctrl.onClick()"
 	class="game-follow-widget btn"
-	ng-class="[ (!$ctrl.game.is_following ? 'btn-outline' : 'btn-success active'), ($ctrl.sparse ? 'btn-sparse': '') ]"
-	ng-disabled="$ctrl.isProcessing"
-	gj-tooltip="{{ !$ctrl.game.is_following ? $ctrl.followTooltip : undefined }}"
-	tooltip-placement="bottom"
-	gj-track-event="game-follow:{{ !$ctrl.game.is_following ? 'follow' : 'unfollow' }}"
-	ng-switch="!!$ctrl.game.is_following"
+	:class="[ !game.is_following ? 'btn-outline' : 'btn-success active', sparse ? 'btn-sparse': '' ]"
+	v-app-auth-required
+	:disabled="isProcessing"
+	@click="onClick"
+	v-app-tooltip.bottom-center="!game.is_following ? $gettext( 'Follow this game to add it to your Library and be notified when new posts are added.' ) : undefined"
+	v-app-track-event="`game-follow:${!game.is_following ? 'follow' : 'unfollow'}`"
 	>
 	<span class="btn-badge">
-		{{ $ctrl.game.follower_count | number }}
+		{{ game.follower_count | number }}
 	</span>
-	<span ng-switch-when="false">
-		<span class="jolticon jolticon-subscribe"></span>
-		<span ng-if="::!$ctrl.sparse" translate>Follow Game</span>
-		<span ng-if="::$ctrl.sparse" translate>Follow</span>
+	<span v-if="!game.is_following">
+		<app-jolticon icon="subscribe" />
+		<translate v-if="!sparse">Follow Game</translate>
+		<translate v-if="sparse">Follow</translate>
 	</span>
-	<span ng-switch-when="true">
-		<span class="jolticon jolticon-subscribed"></span>
-		<span ng-if="::!$ctrl.sparse" translate>Following</span>
+	<span v-if="game.is_following">
+		<app-jolticon icon="subscribed" />
+		<translate v-if="!sparse">Following</translate>
 	</span>
 </button>

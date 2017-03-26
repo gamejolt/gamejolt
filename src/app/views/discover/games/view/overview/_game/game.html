@@ -1,0 +1,445 @@
+<div class="route-game-overview">
+
+	<!-- Media Bar -->
+	<app-media-bar
+		v-if="game.media_count"
+		:media-items="mediaItems"
+		/>
+
+	<!--<section class="section section-thin fill-darker" ng-if="activeJam">
+		<div class="container">
+
+			<div class="row">
+				<div class="col-sm-10 col-md-8 col-centered">
+
+					<h2 class="section-header">{{ activeJam.name }} Voting</h2>
+
+					<p>This game is part of the <strong><a ng-href="{{ activeJam.fullUrl }}">{{ activeJam.name }}</a></strong> game jam. <strong>Voting for the jam is separate from ratings on Game Jolt.</strong> If you'd like to vote on this game for the jam, you may cast your vote below.</p>
+
+					<hr>
+
+					<gj-jam-game-vote-widget
+						gj-jam="activeJam"
+						gj-game="game"
+						>
+					</gj-jam-game-vote-widget>
+
+				</div>
+			</div>
+
+		</div>
+	</section>-->
+
+	<section class="section section-thin" v-if="!Environment.isClient && !Screen.isXs && game._should_show_ads">
+		<app-ad size="leaderboard" resource="Game" :resource-id="game.id" />
+	</section>
+
+	<section class="section">
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
+					<div class="row">
+						<div class="col-xs-12 col-sm-6 col-sm-push-6 col-md-12 col-md-push-0">
+
+							<!--
+								Can't rate your own games! Remember that.
+							-->
+							<div v-if="app.user && game.developer.id !== app.user.id && game.ratings_enabled && game.can_user_rate">
+								<h2 class="rating-widget-label">
+									<span v-if="!!userRating">
+										<translate>Your Rating</translate>
+									</span>
+									<span v-else>
+										<translate>Rate Game</translate>
+									</span>
+								</h2>
+
+								<hr class="underbar">
+
+								<app-rating-widget
+									:game="game"
+									:rating="userRating"
+									:big="true"
+									/>
+
+								<hr class="hidden-sm">
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
+
+							<app-discover-games-view-overview-stats
+								:is-loaded="isLoaded"
+								:game="game"
+								:profile-count="profileCount"
+								:play-count="playCount"
+								:download-count="downloadCount"
+								:rating-breakdown="ratingBreakdown"
+								:packages="packages"
+								/>
+
+						</div>
+					</div>
+				</div>
+
+				<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
+
+					<!--
+						Convenience Messaging
+					-->
+					<div v-if="game._is_wip && !game.canceled">
+						<div class="alert alert-info full-bleed-xs">
+							<translate :escape-html="false">
+								This game is in <b>early access</b>. It's still in development and the current version may be buggy or incomplete. Follow along to watch it as it develops!
+							</translate>
+						</div>
+						<br>
+					</div>
+
+					<div v-if="game.canceled">
+						<div class="alert alert-warning full-bleed-xs">
+							<translate :escape-html="false">
+								This game was <b>canceled</b>, so the current version might be buggy or incomplete. You can still follow it if you'd like to be notified in the case that development continues.
+							</translate>
+						</div>
+					</div>
+
+					<!--
+						Builds / Soundtrack
+						This is a bit tricky. _has_packages doesn't yet take into account private packages.
+						If the game has only private packages, this will still be set to true.
+						We only use it to figure out if we should show the releases section while loading before
+						we actually have the package data. Because of that, we only use it to figure out what to
+						show while we're loading the section. After it's loaded in, we decide if it should show
+						through the "hasReleasesSection" variable which has the correct data.
+					-->
+					<div v-if="(game._has_packages && !isLoaded) || hasReleasesSection">
+
+						<h2 id="game-releases" :class="{ 'section-header': !Screen.isMobile }">
+							<translate>Releases</translate>
+						</h2>
+
+						<hr class="underbar">
+
+						<!--
+							Partner Controls
+						-->
+						<div v-if="hasPartnerControls">
+							<app-card>
+								<div class="card-content">
+									<p>
+										<translate tag="strong">This game is part of the Partner system!</translate>
+										<translate>You can use this link for sharing the game.</translate>
+									</p>
+									<input class="form-control" :value="partnerLink">
+								</div>
+								<div class="card-controls">
+									<button class="btn btn-outline" @click="copyPartnerLink">
+										<app-jolticon icon="link" />
+										<translate>Copy Partner Link</translate>
+									</button>
+									<a class="btn btn-outline"
+										ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: game.id } )"
+										>
+										<app-jolticon icon="chart" />
+										<translate>View Analytics</translate>
+									</a>
+								</div>
+							</app-card>
+						</div>
+
+						<div v-if="showMultiplePackagesMessage" class="alert alert-info">
+							<app-jolticon icon="notice" />
+							<translate>There are multiple packages for your device. Please choose one below.</translate>
+						</div>
+
+						<app-lazy-placeholder :when="isLoaded">
+							<div class="lazy-placeholder" style="height: 135px"></div>
+
+							<div v-if="packages.length">
+								<app-game-package-card
+									v-for="package of packages"
+									:key="package.id"
+									:game="game"
+									:sellable="package._sellable"
+									:package="package"
+									:releases="package._releases"
+									:builds="package._builds"
+									:is-partner="!!userPartnerKey"
+									:partner-referred-key="partnerReferredKey"
+									:partner-referred-by="partnerReferredBy"
+									:partner-no-cut="partnerNoCut"
+									/>
+							</div>
+
+							<!--<gj-game-soundtrack-card
+								ng-if="songs.length"
+								game-soundtrack-card-game="game"
+								game-soundtrack-card-songs="songs"
+								>
+							</gj-game-soundtrack-card>-->
+						</app-lazy-placeholder>
+
+					</div>
+
+					<!-- Game Description -->
+					<h2
+						:class="{
+							'section-header': !Screen.isMobile && !((game._has_packages && !isLoaded) || hasReleasesSection),
+						}"
+						>
+						<translate>Description</translate>
+					</h2>
+
+					<hr class="underbar">
+
+					<div v-if="!game.description_compiled">
+						<span class="lazy-placeholder"></span>
+						<span class="lazy-placeholder"></span>
+						<span class="lazy-placeholder"></span>
+						<span class="lazy-placeholder" style="width: 40%"></span>
+					</div>
+
+					<div v-else>
+						<app-fade-collapse
+							:collapse-height="2000"
+							:is-open="showFullDescription"
+							@required="canToggleDescription = true"
+							>
+							<div class="game-compiled-description" v-html="game.description_compiled"></div>
+						</app-fade-collapse>
+
+						<a class="hidden-text-expander"
+							v-if="canToggleDescription"
+							@click="showFullDescription = !showFullDescription"
+							v-app-track-event="`game-profile:show-full-description`"
+							>
+						</a>
+					</div>
+
+					<div v-if="twitterShareMessage && !Environment.isClient">
+						<br>
+						<div class="social-widgets">
+							<!--<gj-social-twitter-share
+								url="{{ Environment.baseUrl }}{{ game.getUrl() }}"
+								content="{{ twitterShareMessage }}"
+								>
+							</gj-social-twitter-share>-->
+
+							<span class="dot-separator hidden-xs"></span>
+
+							<!--<gj-social-facebook-like url="{{ Environment.baseUrl }}{{ game.getUrl() }}"></gj-social-facebook-like>-->
+						</div>
+					</div>
+
+					<div v-if="supporters.length > 0">
+						<h2>
+							<translate>Supporters</translate>
+						</h2>
+
+						<!--<p class="small text-muted" translate translate-params-developer="game.developer.display_name">
+							The kind people that helped support {{ developer }} by paying more than the minimum. Sorted by amount contributed.
+						</p>-->
+
+						<hr class="underbar">
+
+						<div class="game-supporters">
+							<div class="game-supporter"
+								v-for="user of supporters"
+								:key="user.id"
+								>
+								<router-link
+									class="user-avatar ng-scope"
+									:to="user.url"
+									v-app-tooltip="`${user.display_name} (@${user.username})`"
+									>
+									<img class="img-responsive" alt="" :src="user.img_avatar">
+								</router-link>
+							</div>
+						</div>
+						<br class="visible-xs visible-sm">
+					</div>
+
+				</div>
+
+				<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
+					<div class="row">
+						<div class="col-xs-12 col-sm-6 col-sm-push-6 col-md-12 col-md-push-0">
+
+							<div id="maturity-rating">
+								<br class="visible-md visible-lg">
+								<app-lazy-placeholder :when="isLoaded">
+									<div class="lazy-placeholder" style="height: 115px"></div>
+									<app-game-ogrs :game="game" />
+								</app-lazy-placeholder>
+							</div>
+
+						</div>
+						<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
+
+							<br>
+							<h2 class="section-header">
+								<translate>Details</translate>
+							</h2>
+
+							<hr class="underbar">
+							<!--<div gj-partial="/app/views/discover/games/view/overview/_details.html"></div>-->
+
+							<div v-if="!Environment.isClient && game._should_show_ads && Screen.isDesktop">
+								<br>
+								<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--
+				Devlog
+			-->
+			<div v-if="posts && posts.hasItems" class="row">
+				<div class="col-sm-10 col-md-8 col-lg-7">
+
+					<h2>
+						<translate>Project Devlog</translate>
+					</h2>
+
+					<hr class="underbar">
+					<br>
+
+					<app-activity-feed
+						type="Fireside_Post"
+						:feed="posts"
+						:load-more-url="`/web/discover/games/devlog/posts/${game.id}`"
+						:show-edit-controls="true"
+						:disable-autoload="true"
+						/>
+
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<!--
+		Recommended Games
+	-->
+	<section class="section fill-darker recommended-games section-thin"
+		v-if="recommendedGames.length"
+		>
+		<div class="container">
+
+			<h2 class="section-header">
+				<translate>You May Also Like</translate>
+			</h2>
+
+			<hr class="underbar">
+
+			<div class="full-bleed-xs scrollable-grid-xs">
+				<div :class="{ 'row': !Screen.isXs }">
+					<div
+						class="scrollable-grid-item col-xs-9 col-sm-4 col-md-3 meter-dark"
+						v-for="( game, i ) of recommendedGames.slice( 0, Screen.isDesktop ? 4 : 3 )"
+						:key="game.id"
+						>
+						<app-game-thumbnail
+							:game="game"
+							v-app-track-event="`recommended-games:click:${i}`"
+							/>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container">
+
+			<!-- Video Comments -->
+			<!--<div v-if="videoComments.length && game.comments_enabled">
+				<h2 class="section-header sans-margin-bottom">
+					<translate>Video Comments</translate>
+				</h2>
+
+				<p class="page-help">
+					<translate>Video comments are sorted by most liked.</translate>
+					<a class="link-help" href="https://help.gamejolt.com/video-comments" target="_blank">
+						<translate>How do I add my video?</translate>
+					</a>
+				</p>
+
+				<hr class="underbar">
+
+				<div class="row">
+					<gj-comment-video-thumbnail
+						class="col-xs-6 col-sm-3"
+						v-for="video of videoComments"
+						:key="video.id"
+						:video="video"
+						:show-user="true"
+						>
+					</gj-comment-video-thumbnail>
+				</div>
+
+				<div class="page-cut" v-if="videoComments.length < videoCommentsCount">
+					<a class="btn btn-outline"
+						@click="loadMoreVideoComments"
+						v-app-track-event="`game-profile:video-comment:more`"
+						>
+						<translate>Load More</translate>
+					</a>
+				</div>
+			</div>-->
+
+			<!-- Comments -->
+			<div id="comments" v-if="isLoaded">
+				<div class="row">
+
+					<div class="col-sm-10 col-md-8 col-lg-7">
+
+						<div v-if="!game.comments_enabled">
+							<h2 class="section-header">
+								<translate>Comments Disabled</translate>
+							</h2>
+							<hr class="underbar">
+							<p class="text-muted">
+								<translate>Comments have been disabled for this game.</translate>
+							</p>
+						</div>
+
+						<div v-if="game.comments_enabled">
+							<h2 class="section-header">
+								<translate>Comments</translate>
+								<small v-if="commentsCount">
+									({{ commentsCount | number }})
+								</small>
+							</h2>
+							<hr class="underbar">
+
+								<!--current-page="currentCommentPage"-->
+							<app-comment-widget
+								resource="Game"
+								:resource-id="game.id"
+								@count="updateCommentsCount"
+								/>
+						</div>
+
+					</div>
+
+					<!--
+						Will overflow a little on md, but what can ya do, amirite?
+					-->
+					<div class="col-md-4 col-lg-offset-1" v-if="!Environment.isClient && game._should_show_ads && Screen.isDesktop">
+						<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+</div>

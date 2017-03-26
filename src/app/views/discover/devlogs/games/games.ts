@@ -1,9 +1,37 @@
-import { provide } from 'ng-metadata/core';
-import { GamesCtrl } from './games-controller';
-import { FetchCtrl } from './_fetch-controller';
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import { Component } from 'vue-property-decorator';
+import * as View from '!view!./games.html';
 
-export default angular.module( 'App.Views.Discover.Devlogs.Games', [] )
-.controller( ...provide( 'Discover.Devlogs.GamesCtrl', { useClass: GamesCtrl } ) )
-.controller( ...provide( 'Discover.Devlogs.Games._FetchCtrl', { useClass: FetchCtrl } ) )
-.name
-;
+import { AppGameListing } from '../../../../components/game/listing/listing';
+import { AppGameGrid } from '../../../../components/game/grid/grid';
+import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
+import { GameFilteringContainer } from '../../../../components/game/filtering/container';
+
+@View
+@Component({
+	name: 'route-discover-devlogs-games',
+	components: {
+		AppGameListing,
+		AppGameGrid,
+	},
+})
+export default class RouteDiscoverDevlogsGames extends Vue
+{
+	listing: GameListingContainer = {} as GameListingContainer;
+
+	@BeforeRouteEnter( { cache: true } )
+	async routeEnter( this: undefined, route: VueRouter.Route )
+	{
+		const filteringContainer = new GameFilteringContainer();
+		return Api.sendRequest( '/web/discover/devlogs/games?' + filteringContainer.getQueryString( route ) );
+	}
+
+	routed()
+	{
+		this.listing = new GameListingContainer();
+		this.listing.processPayload( this.$route, this.$payload );
+	}
+}

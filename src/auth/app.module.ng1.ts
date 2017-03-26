@@ -13,9 +13,8 @@ import '../lib/gj-lib-client/components/error/error-module';
 import '../lib/gj-lib-client/components/body-classes/body-classes';
 import '../lib/gj-lib-client/components/loading/loading';
 import '../lib/gj-lib-client/components/scroll/auto-scroll/auto-scroll';
-import '../lib/gj-lib-client/components/expand-when/expand-when';
+import '../lib/gj-lib-client/components/expand-when/expand-when.module';
 import '../lib/gj-lib-client/components/tooltip/tooltip.module';
-import '../lib/gj-lib-client/components/history/history';
 import '../lib/gj-lib-client/components/form/form';
 import '../lib/gj-lib-client/components/progress/poller/poller';
 import '../lib/gj-lib-client/components/user/linked-accounts/linked-accounts';
@@ -42,7 +41,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.ExpandWhen',
 
 	'gj.Tooltip',
-	'gj.History',
 	'gj.Scroll.AutoScroll',
 
 	'gj.Form',

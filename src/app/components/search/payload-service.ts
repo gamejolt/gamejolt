@@ -1,4 +1,3 @@
-import { getProvider } from '../../../lib/gj-lib-client/utils/utils';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
 
@@ -21,9 +20,10 @@ export class SearchPayload
 		this.libraryGames = [];
 
 		if ( GJ_IS_CLIENT ) {
-			this.libraryGames = data.libraryGames
-				? getProvider<any>( 'LocalDb_Game' ).populate( data.libraryGames )
-				: [];
+			// TODO
+			// this.libraryGames = data.libraryGames
+			// 	? getProvider<any>( 'LocalDb_Game' ).populate( data.libraryGames )
+			// 	: [];
 		}
 	}
 }

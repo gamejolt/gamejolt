@@ -1,0 +1,53 @@
+@require '~styles/variables';
+
+.shell-sidebar
+	position: fixed
+	top: $shell-top-nav-height
+	bottom: 0
+	left: 0
+	width: $shell-top-nav-height
+	z-index: $zindex-page-sidebar
+
+	hr
+		margin: $line-height-computed 15px
+		border-color: $gray-dark
+
+	.shell-nav-label
+		display: none !important
+
+	.shell-nav-chevron
+		display: none !important
+
+	.tag
+		position: absolute !important
+		right: 0
+		top: 0
+		margin-top: 0 !important
+
+	// When hiding, keep the styling active. Only when the animation is fully
+	// done should we revert back to the styling above.
+	.left-pane-visible &
+	.left-pane-visible-remove &
+		width: $shell-sidebar-width
+
+		.shell-nav-label
+			display: block !important
+
+		.shell-nav-chevron
+			display: block !important
+
+		.tag
+			position: relative !important
+			margin-top: 15px !important
+
+	.right-pane-visible &
+		display: none
+
+.shell-sidebar-content
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	padding: $line-height-computed 0
+	overflow-y: auto

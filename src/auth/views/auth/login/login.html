@@ -1,19 +1,23 @@
-<gj-auth-login dark-variant="true"></gj-auth-login>
+<div>
 
-<div class="auth-page-links text-right anim-fade-in">
-	<div class="auth-page-link">
-		<span translate>auth.or</span>
-		<a class="link-unstyled" ui-sref="auth.join">
-			<span translate>auth.join_link</span>
-			<span class="jolticon jolticon-friends"></span>
-		</a>
+	<app-auth-login :dark-variant="true" />
+
+	<div class="auth-page-links text-right anim-fade-in">
+		<div class="auth-page-link">
+			<translate>auth.or</translate>
+			<router-link class="link-unstyled" :to="{ name: 'auth.join' }">
+				<translate>auth.join_link</translate>
+				<app-jolticon icon="friends" />
+			</router-link>
+		</div>
+		<div class="auth-page-link">
+			<router-link class="link-unstyled" :to="{ name: 'auth.forgot' }">
+				<translate>
+					auth.forgot_link
+				</translate>
+				<app-jolticon icon="help-circle" />
+			</router-link>
+		</div>
 	</div>
-	<div class="auth-page-link">
-		<a class="link-unstyled" ui-sref="auth.forgot">
-			<span translate translate-params-username="Username" translate-params-password="Pass">auth.forgot_link</span>
-			<span class="jolticon jolticon-help-circle"></span>
-		</a>
-	</div>
+
 </div>
-
-<ui-view></ui-view>

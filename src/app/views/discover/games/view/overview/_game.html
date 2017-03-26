@@ -28,7 +28,7 @@
 </section>
 
 <section class="section section-thin" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
-	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+	<gj-ad size="leaderboard" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
 </section>
 
 <section class="section">
@@ -243,7 +243,7 @@
 							<br class="visible-md visible-lg">
 							<div gj-lazy-placeholder="overviewCtrl.isLoaded">
 								<div class="lazy-placeholder" style="height: 115px"></div>
-								<gj-game-ogrs gj-game="gameCtrl.game"></gj-game-ogrs>
+								<gj-game-ogrs [game]="gameCtrl.game"></gj-game-ogrs>
 							</div>
 						</div>
 					</div>
@@ -255,7 +255,7 @@
 
 						<div ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
 							<br>
-							<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+							<gj-ad size="rectangle" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
 						</div>
 					</div>
 				</div>
@@ -433,7 +433,7 @@
 					Will overflow a little on md, but what can ya do, amirite?
 				-->
 				<div class="col-md-4 col-lg-offset-1" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
-					<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+					<gj-ad size="rectangle" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
 				</div>
 
 			</div>

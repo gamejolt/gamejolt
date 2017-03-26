@@ -1,24 +1,38 @@
-import { provide } from 'ng-metadata/core';
-import { ShellBodyComponent } from './body/body.component';
-import { ShellSidebarComponent } from './sidebar/sidebar.component';
-import { Shell } from './shell-service';
-import { ShellComponent } from './shell.component';
-import { ShellChatPaneComponent } from './chat-pane/chat-pane.component';
-import { ShellFooterComponent } from './footer/footer.component';
-import { ShellHotBottomComponent } from './hot-bottom/hot-bottom.component';
-import { ShellTopNavComponent } from './top-nav/top-nav.component';
-import { ShellUserBoxComponent } from './user-box/user-box.component';
-import { ShellAccountPopoverComponent } from './account-popover/account-popover.component';
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
+import { State, Getter } from 'vuex-class';
+import * as View from '!view!./shell.html';
+import './shell.styl';
 
-export default angular.module( 'App.Shell', [] )
-.service( ...provide( 'Shell', { useClass: Shell } ) )
-.directive( ...provide( ShellComponent ) )
-.directive( ...provide( ShellChatPaneComponent ) )
-.directive( ...provide( ShellSidebarComponent ) )
-.directive( ...provide( ShellBodyComponent ) )
-.directive( ...provide( ShellFooterComponent ) )
-.directive( ...provide( ShellHotBottomComponent ) )
-.directive( ...provide( ShellTopNavComponent ) )
-.directive( ...provide( ShellAccountPopoverComponent ) )
-.directive( ...provide( ShellUserBoxComponent ) )
-.name;
+import { AppShellTopNav } from './top-nav/top-nav';
+import { AppShellNotificationCount } from './notification-count/notification-count';
+import { AppShellBody } from './body/body';
+import { AppShellSidebar } from './sidebar/sidebar';
+import { AppShellHotBottom } from './hot-bottom/hot-bottom';
+import { AppMinbar } from '../minbar/minbar';
+import { AppOfflineAlert } from '../offline/alert/alert';
+import { AppGrowls } from '../../../lib/gj-lib-client/components/growls/growls';
+import { Chat } from '../chat/chat.service';
+
+@View
+@Component({
+	name: 'shell',
+	components: {
+		AppShellTopNav,
+		AppShellNotificationCount,
+		AppShellBody,
+		AppShellSidebar,
+		AppShellHotBottom,
+		AppMinbar,
+		AppOfflineAlert,
+		AppGrowls,
+		AppShellChat: () => $import( './chat/chat' ).then( m => m.AppShellChat ),
+	}
+})
+export class AppShell extends Vue
+{
+	@State chat: Chat | undefined;
+
+	@Getter isLeftPaneVisible: boolean;
+	@Getter isRightPaneVisible: boolean;
+}

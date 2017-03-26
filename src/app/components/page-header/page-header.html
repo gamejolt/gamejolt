@@ -1,59 +1,70 @@
-<header class="section page-header"
-	ng-class="{ 'has-controls': $ctrl.hasControls, 'has-spotlight': $ctrl.hasSpotlight }"
+<header
+	class="section page-header"
+	:class="{ 'has-controls': hasControls, 'has-spotlight': hasSpotlight }"
 	>
 
-	<section class="section page-header-cover"
-		ng-class="{ 'has-cover-image': !!$ctrl.coverMediaItem }"
+	<section
+		class="section page-header-cover fill-darker"
+		:class="{ 'has-cover-image': !!coverMediaItem }"
 		>
 
-		<gj-media-item-cover
-			ng-if="!!$ctrl.coverMediaItem"
-			media-item="$ctrl.coverMediaItem"
-			max-height="$ctrl.coverMaxHeight"
-			should-parallax="true"
-			>
-		</gj-media-item-cover>
+		<app-media-item-cover
+			v-if="!!coverMediaItem"
+			:media-item="coverMediaItem"
+			:max-height="coverMaxHeight"
+			:should-parallax="true"
+			/>
 
-		<div class="page-header-cover-buttons"
-			ng-if="::$ctrl.hasCoverButtons"
-			ng-transclude="coverButtons"
+		<div
+			class="page-header-cover-buttons"
+			v-if="hasCoverButtons"
 			>
+			<slot name="cover-buttons" />
 		</div>
 
 		<div class="container">
 
 			<div class="row">
-				<div ng-class="$ctrl.colClasses ? $ctrl.colClasses : 'col-xs-12'">
-
-					<div class="page-header-content" ng-transclude="content"></div>
-
+				<div :class="colClasses">
+					<div class="page-header-content">
+						<slot />
+					</div>
 				</div>
 			</div>
 
-			<div class="page-header-spotlight"
-				ng-class="{ dark: $ctrl.spotlightDark }"
-				ng-if="::$ctrl.hasSpotlight"
-				ng-transclude="spotlight"
+			<div
+				class="page-header-spotlight"
+				:class="{ dark: spotlightDark }"
+				v-if="hasSpotlight"
 				>
+				<slot name="spotlight" />
 			</div>
 
 		</div>
 	</section>
 
-	<div ng-if="$ctrl.hasNav && !$ctrl.hideNav" gj-auto-scroll-anchor>
-		<gj-scroll-affix [should-affix]="$ctrl.shouldAffixNav && $ctrl.screen.isLg && $ctrl.screen.height > 750">
+	<!--<div v-if="hasNav && !hideNav" gj-auto-scroll-anchor>-->
+	<div v-if="hasNav && !hideNav">
+		<app-scroll-affix :should-affix="shouldAffixNav && Screen.isLg && Screen.height > 750">
 			<section class="section page-header-nav">
 				<div class="container">
 
 					<div class="row">
-						<div ng-class="$ctrl.colClasses ? $ctrl.colClasses : 'col-xs-12'">
+						<div :class="colClasses">
 
 							<div class="row">
-								<div ng-if="::$ctrl.hasControls" class="col-md-4 col-md-push-8">
-									<div class="page-header-controls" ng-transclude="controls"></div>
+								<div v-if="hasControls" class="col-md-4 col-md-push-8">
+									<div class="page-header-controls">
+										<slot name="controls" />
+									</div>
 								</div>
-								<div ng-class="::{ 'col-md-8 col-md-pull-4': $ctrl.hasControls, 'col-xs-12': !$ctrl.hasControls }">
-									<div ng-transclude="nav"></div>
+								<div
+									:class="{
+										'col-md-8 col-md-pull-4': hasControls,
+										'col-xs-12': !hasControls,
+									}"
+									>
+									<slot name="nav" />
 								</div>
 							</div>
 
@@ -62,7 +73,7 @@
 
 				</div>
 			</section>
-		</gj-scroll-affix>
+		</app-scroll-affix>
 	</div>
 
 </header>

@@ -1,12 +1,22 @@
 <div class="genre-list clearfix full-bleed-xs">
-	<a class="genre-list-genre"
-		ng-repeat="genre in ::$ctrl.categories"
-		ng-class="{ active: $ctrl.$state.includes( 'discover.games.list._fetch-category', { category: genre.url } ) }"
-		ui-sref="discover.games.list._fetch-category( { section: $ctrl.$stateParams.section || 'best', category: genre.url, page: undefined } )"
-		gj-track-event="genre-list:{{ genre.url }}:{{ $ctrl.$stateParams.section || 'home' }}"
-		gj-no-auto-scroll
+	<router-link
+		class="genre-list-genre"
+		v-for="genre of Genre.genres"
+		:to="{
+			name: 'discover.games.list._fetch-category',
+			params: {
+				section: $route.params.section || 'best',
+				category: genre.url,
+			},
+			query: Object.assign( {}, $route.query, { page: undefined } ),
+		}"
+		active-class="active"
+		v-app-track-event="`genre-list:${genre.url}:${$route.params.section || 'home'}`"
+		v-app-no-autoscroll
 		>
-		<img ng-src="{{ ::genre.img }}" ng-attr-alt="{{ ::genre.label }}">
-		<span class="genre-list-genre-label">{{ ::'discover.categories.' + genre.url.replace( '-', '_' ) | translate }}</span>
-	</a>
+		<img :src="genre.img" :alt="genre.label">
+		<span class="genre-list-genre-label">
+			{{ genre.label }}
+		</span>
+	</router-link>
 </div>

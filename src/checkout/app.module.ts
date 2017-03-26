@@ -22,13 +22,14 @@ import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module'
 import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analytics.module';
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
-import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive';
+import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive.module';
 import { ReferrerModule } from '../lib/gj-lib-client/components/referrer/referrer.module';
 import { GeoModule } from '../lib/gj-lib-client/components/geo/geo.module';
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 import { UserAvatarModule } from '../lib/gj-lib-client/components/user/user-avatar/user-avatar.module';
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
 import { GrowlsModule } from '../lib/gj-lib-client/components/growls/growls.module';
+import { HistoryModule } from '../lib/gj-lib-client/components/history/history.module';
 
 @NgModule({
 	imports: [
@@ -58,6 +59,7 @@ import { GrowlsModule } from '../lib/gj-lib-client/components/growls/growls.modu
 		UserAvatarModule,
 		TranslateModule,
 		GrowlsModule,
+		HistoryModule,
 		AppModuleNg1,
 	],
 	declarations: [

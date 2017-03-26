@@ -2,7 +2,7 @@
 
 <div id="page-ad-scroll">
 	<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && !Screen.isXs">
-		<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+		<gj-ad size="leaderboard" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
 	</section>
 
 	<section class="section">
@@ -22,7 +22,7 @@
 					Will overflow a little on md, but what can ya do, amirite?
 				-->
 				<div class="col-sm-5 col-md-4 col-lg-offset-1 text-right" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && !Screen.isXs">
-					<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+					<gj-ad size="rectangle" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
 				</div>
 			</div>
 

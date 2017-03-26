@@ -1,32 +1,39 @@
-<gj-search-history></gj-search-history>
+<div class="app-search">
 
-<!--
-	Put the action/method stuff so that crawlers can see how to submit the form.
--->
-<form class="search-input-form navbar-form" action="/search" method="GET" role="search" onsubmit="return false">
-	<div class="form-group no-animate">
+	<span v-shortkey="[ 's' ]" @shortkey="focus"></span>
+	<span v-shortkey="[ 'shift', ':' ]" @shortkey="commandFocus"></span>
 
-		<label for="search-input-{{ $ctrl.id }}" class="sr-only" translate>search.input.placeholder</label>
+	<app-search-history />
 
-		<div class="navbar-form-control" ng-class="{ active: $ctrl.isFocused }">
+	<!--
+		Put the action/method stuff so that crawlers can see how to submit the form.
+	-->
+	<form class="search-input-form navbar-form" action="/search" method="GET" role="search" onsubmit="return false">
+		<div class="form-group no-animate">
 
-			<!--
-				We use the 'click-show' trigger event.
-				This will make sure that the autocomplete popover doesn't disappear when
-				clicking the search input again.'
-			-->
-			<input type="search" class="search-input form-control"
-				id="search-input-{{ $ctrl.id }}"
-				name="q"
-				ng-attr-placeholder="{{ 'search.input.placeholder' | translate }}"
-				gj-search-input
-				ng-model="$ctrl.query"
-				gj-popover-trigger="search-autocomplete"
-				popover-trigger-event="click-show"
-				>
+			<label :for="`search-input-${id}`" class="sr-only">
+				<translate>search.input.placeholder</translate>
+			</label>
+
+			<div class="navbar-form-control" :class="{ active: isFocused }">
+
+				<!--
+					We use the 'click-show' trigger event.
+					This will make sure that the autocomplete popover doesn't disappear when
+					clicking the search input again.'
+				-->
+				<app-search-input
+					:id="`search-input-${id}`"
+					v-model="query"
+					v-app-popover-trigger.click-show="`search-autocomplete`"
+					@focus="onFocus"
+					@blur="onBlur"
+					@keydown="onKeydown"
+					/>
+			</div>
+
+			<app-search-autocomplete v-if="!autocompleteDisabled" />
+
 		</div>
-
-		<gj-search-autocomplete ng-if="!$ctrl.autocompleteDisabled"></gj-search-autocomplete>
-
-	</div>
-</form>
+	</form>
+</div>

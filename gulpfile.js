@@ -3,6 +3,7 @@ var gulp = require( 'gulp' );
 var config = {
 	staticCdn: 'https://s.gjcdn.net',
 	injectVersion: 2,
+	framework: 'vue',
 	extraBower: {
 		'angular-bootstrap': [
 			'src/transition/transition.js',

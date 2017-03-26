@@ -1,0 +1,35 @@
+@require '~styles/variables'
+
+@media $media-xs
+
+	.genre-list
+		overflow-x: scroll
+		white-space: nowrap
+
+.genre-list-genre
+	display: inline-block
+	width: 10%
+	text-align: center
+
+	@media $media-xs
+		width: 20%
+
+	&.active
+		.genre-list-genre-label
+			background-color: $gj-dark-green
+			color: $gj-green
+
+	img
+		width: 116px * 0.5
+		height: 116px * 0.5
+
+	&-label
+		display: block
+		margin-top: 10px
+		font-size: 9px
+		text-transform: uppercase
+		color: $white
+
+	&:hover
+		.genre-list-genre-label
+			color: $gj-green

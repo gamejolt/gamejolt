@@ -2,7 +2,7 @@ import { NgModule } from 'ng-metadata/core';
 
 import { importContext } from '../../lib/gj-lib-client/utils/utils';
 
-import { Discover } from './discover/discover.module';
+// import { Discover } from './discover/discover.module';
 import Profile from './profile/profile';
 import Search from './search/search';
 
@@ -12,7 +12,7 @@ angular.module( 'App.Views', [] );
 	imports: [
 		'App.Views',
 		Profile,
-		Discover,
+		// Discover,
 		Search,
 	],
 })

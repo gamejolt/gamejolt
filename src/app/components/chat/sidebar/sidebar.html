@@ -3,23 +3,27 @@
 	<!-- Public Chat Rooms -->
 	<div class="chat-rooms-list">
 
-		<div class="nav-heading first" translate>
+		<div class="nav-heading first">
 			Public Chat Rooms
 		</div>
 
 		<ul class="shell-nav">
-			<li ng-repeat="room in client.publicRooms track by room.id">
+			<li v-for="room of client.publicRooms" :key="room.id">
 				<a
-					ng-click="ctrl.onPublicRoomClicked( room.id )"
-					ng-class="{ active: client.room.id == room.id }"
-					title="{{ ::room.title }}"
+					@click="onPublicRoomClicked( room.id )"
+					:class="{ active: client.room && client.room.id === room.id }"
+					:title="room.title"
 					>
-					<span class="tag tag-pink notifications-tag" ng-if="client.roomId == room.id && Chat.roomNotifications">{{ Chat.roomNotifications | number }}</span>
+					<span class="tag tag-pink notifications-tag"
+						v-if="client.roomId === room.id && Chat.roomNotifications"
+						>
+						{{ Chat.roomNotifications | number }}
+					</span>
 					<span class="shell-nav-icon">
-						<span class="jolticon jolticon-number-sign"></span>
+						<app-jolticon icon="number-sign" />
 					</span>
 					<span class="shell-nav-label">
-						{{ ::room.title }}
+						{{ room.title }}
 					</span>
 				</a>
 			</li>
@@ -28,16 +32,18 @@
 
 	<!-- Friends List -->
 	<!-- Only include if not a guest -->
-	<div class="chat-friends-list" ng-if="client.currentUser && client.friendsPopulated">
+	<div class="chat-friends-list" v-if="client.currentUser && client.friendsPopulated">
 
-		<div ng-if="client.friendsPopulated && !client.friendsList.collection.length">
-			<div class="nav-heading" translate>
+		<div v-if="client.friendsPopulated && !client.friendsList.collection.length">
+			<div class="nav-heading">
 				Friends
 			</div>
-			<div class="alert alert-warning" translate>
+			<div class="alert alert-warning">
 				No friends yet.
 			</div>
-			<div class="alert fill-dark" translate>chat.no_friends_message_html</div>
+			<div class="alert fill-dark">
+				<!--chat.no_friends_message_html-->
+			</div>
 		</div>
 
 		<!--
@@ -45,54 +51,66 @@
 			We split out online/offline friends on mobile so that it's fast to display/compile.
 			Will also do it if they have more than 50 friends to keep the site fast.
 		-->
-		<div ng-if="Screen.isXs || client.friendsList.collection.length > 50">
-			<div ng-if="client.friendsList.onlineCount">
+		<div v-if="Screen.isXs || client.friendsList.collection.length > 50">
+			<div v-if="client.friendsList.onlineCount">
 				<div class="nav-heading">
-					<span class="badge badge-active" ng-if="client.friendsList.onlineCount > 0">{{ client.friendsList.onlineCount | number }}</span>
-					<span translate>Online Friends</span>
+					<span class="badge badge-active"
+						v-if="client.friendsList.onlineCount > 0"
+						>
+						{{ client.friendsList.onlineCount | number }}
+					</span>
+					<span>Online Friends</span>
 				</div>
 
-				<gj-chat-user-list
-					chat-user-list-users="client.friendsList.collection  | filter:ctrl.filterOnline"
-					chat-user-list-show-pm="true"
+				<app-chat-user-list
+					:users="onlineFriends"
+					:show-pm="true"
 					>
-				</gj-chat-user-list>
+				</app-chat-user-list>
 			</div>
 
-			<div ng-if="client.friendsList.offlineCount">
-				<a class="nav-heading" ng-click="shouldShowOfflineFriends = !shouldShowOfflineFriends">
-					<span class="badge">{{ client.friendsList.offlineCount }}</span>
+			<div v-if="client.friendsList.offlineCount">
+				<a class="nav-heading"
+					@click="shouldShowOfflineFriends = !shouldShowOfflineFriends"
+					>
+					<span class="badge">
+						{{ client.friendsList.offlineCount | number }}
+					</span>
 					<span>[{{ shouldShowOfflineFriends ? '-' : '+' }}]</span>
-					<span translate>Offline Friends</span>
+					<span>Offline Friends</span>
 				</a>
 
-				<gj-chat-user-list
-					ng-if="shouldShowOfflineFriends"
-					chat-user-list-users="client.friendsList.collection | filter:ctrl.filterOffline"
-					chat-user-list-show-pm="true"
+				<app-chat-user-list
+					v-if="shouldShowOfflineFriends"
+					:users="offlineFriends"
+					:show-pm="true"
 					>
-				</gj-chat-user-list>
+				</app-chat-user-list>
 			</div>
 		</div>
 
-		<div ng-if="!Screen.isXs && client.friendsList.collection.length <= 50">
-			<div ng-if="client.friendsList.collection.length">
+		<div v-if="!Screen.isXs && client.friendsList.collection.length <= 50">
+			<div v-if="client.friendsList.collection.length">
 				<div class="nav-heading">
-					<span class="badge">{{ client.friendsList.collection.length | number }}</span>
-					<span class="badge badge-active" ng-if="client.friendsList.onlineCount > 0">{{ client.friendsList.onlineCount | number }}</span>
-					<span translate>Friends</span>
+					<span class="badge">
+						{{ client.friendsList.collection.length | number }}
+					</span>
+					<span class="badge badge-active"
+						v-if="client.friendsList.onlineCount > 0"
+						>
+						{{ client.friendsList.onlineCount | number }}
+					</span>
+					<span>Friends</span>
 				</div>
 
-				<gj-chat-user-list
-					chat-user-list-users="client.friendsList.collection"
-					chat-user-list-show-pm="true"
+				<app-chat-user-list
+					:users="client.friendsList.collection"
+					:show-pm="true"
 					>
-				</gj-chat-user-list>
+				</app-chat-user-list>
 			</div>
 		</div>
 
 	</div>
-
-	<br>
 
 </div>

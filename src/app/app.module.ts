@@ -12,7 +12,7 @@ import ConnectionStatePermissionsModule from '../lib/gj-lib-client/components/co
 import { ModelModule } from '../lib/gj-lib-client/components/model/model.module';
 import LoadModule from '../lib/gj-lib-client/components/load/load';
 import LocationModule from '../lib/gj-lib-client/components/location/location';
-import PaginationModule from '../lib/gj-lib-client/components/pagination/pagination';
+import { PaginationModule } from '../lib/gj-lib-client/components/pagination/pagination.module';
 import ModalConfirmModule from '../lib/gj-lib-client/components/modal/confirm/confirm';
 import { EnvironmentModule } from '../lib/gj-lib-client/components/environment/environment.module';
 import { NotificationModule as gjNotificationModule } from '../lib/gj-lib-client/components/notification/notification.module';
@@ -25,7 +25,7 @@ import YoutubeSubscribeModule from '../lib/gj-lib-client/components/social/youtu
 import { YoutubeChannelModule } from '../lib/gj-lib-client/components/youtube/channel/channel.module';
 import CommentVideoLightboxModule from '../lib/gj-lib-client/components/comment/video/lightbox/lightbox';
 import CommentVideoThumbnailModule from '../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
-import ResponsiveDimensionsModule from '../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
+import ResponsiveDimensionsModule from '../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions.module';
 import { FiresidePostModule } from '../lib/gj-lib-client/components/fireside/post/post.module';
 import { FiresidePostTagModule } from '../lib/gj-lib-client/components/fireside/post/tag/tag.module';
 import { FiresidePostVideoModule } from '../lib/gj-lib-client/components/fireside/post/video/video.module';
@@ -33,30 +33,26 @@ import { FiresidePostSketchfabModule } from '../lib/gj-lib-client/components/fir
 import { FiresidePostLikeModule } from '../lib/gj-lib-client/components/fireside/post/like/like.module';
 import FiresidePostLikeWidgetModule from '../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 import AuthModule from '../lib/gj-lib-client/components/auth/auth';
-import AuthJoinModule from '../lib/gj-lib-client/components/auth/join/join';
 import BroadcastModalModule from './components/broadcast-modal/broadcast-modal';
 import SplitTestModule from './components/split-test/split-test';
-import ShellModule from './components/shell/shell';
 import { SearchModule } from './components/search/search.module';
 import NotificationModule from './components/notification/notification';
-import MediaItemCoverModule from './components/media-item/cover/cover';
-import PageHeaderModule from './components/page-header/page-header';
-import GenreListModule from './components/genre/list/list';
+import { MediaItemCoverModule } from './components/media-item/cover/cover.module';
+import PageHeaderModule from './components/page-header/page-header.module';
+import { GenreListModule } from './components/genre/list/list.module';
 import CommentAvatarListModule from './components/comment/avatar-list/avatar-list';
-import GameListingModule from './components/game/listing/listing';
-import ChannelsModule from './components/channel/channels';
-import ChannelThumbnailModule from './components/channel/thumbnail/thumbnail';
+import { GameListingModule } from './components/game/listing/listing.module';
+import { ChannelsModule } from './components/channel/channels.module';
+import { ChannelThumbnailModule } from './components/channel/thumbnail/thumbnail.module';
 import DevlogPostAddModule from './components/devlog/post/add/add';
 import DevlogPostEditModule from './components/devlog/post/edit/edit';
 import DevlogPostMediaModule from './components/devlog/post/media/media';
 import DevlogPostViewModule from './components/devlog/post/view/view';
 import DevlogPostViewModalModule from './components/devlog/post/view-modal/view-modal';
-import GameFollowWidgetModule from './components/game/follow-widget/follow-widget';
-import GameGridModule from './components/game/grid/grid';
+import { GameGridModule } from './components/game/grid/grid.module';
 import FiresidePostThumbnailModule from './components/fireside/post/thumbnail/thumbnail';
 import FiresidePostListModule from './components/fireside/post/list/list';
-import CountdownModule from '../lib/gj-lib-client/components/countdown/countdown';
-import LoadingFadeModule from '../lib/gj-lib-client/components/loading/fade/fade';
+import { LoadingFadeModule } from '../lib/gj-lib-client/components/loading/fade/fade.module';
 import { GameSketchfabModule } from '../lib/gj-lib-client/components/game/sketchfab/sketchfab.module';
 import { PopoverModule } from '../lib/gj-lib-client/components/popover/popover.module';
 import { MediaItemModule } from '../lib/gj-lib-client/components/media-item/media-item.module';
@@ -74,7 +70,6 @@ import { PayloadModule } from '../lib/gj-lib-client/components/payload/payload.m
 import { UserModule } from '../lib/gj-lib-client/components/user/user.module';
 import { DeviceModule } from '../lib/gj-lib-client/components/device/device.module';
 import { PrimusModule } from '../lib/gj-lib-client/components/primus/primus.module';
-import { ActivityModule } from './components/activity/activity.module';
 import { MediaBarModule } from '../lib/gj-lib-client/components/media-bar/media-bar.module';
 import { RegistryModule } from '../lib/gj-lib-client/components/registry/registry.module';
 import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module';
@@ -82,7 +77,7 @@ import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analy
 import { AdModule } from '../lib/gj-lib-client/components/ad/ad.module';
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
-import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive';
+import { ImgResponsiveModule } from '../lib/gj-lib-client/components/img/responsive/responsive.module';
 import { VideoEmbedModule } from '../lib/gj-lib-client/components/video/embed/embed.module';
 import { SketchfabEmbedModule } from '../lib/gj-lib-client/components/sketchfab/embed/embed.module';
 import { GameScreenshotModule } from '../lib/gj-lib-client/components/game/screenshot/screenshot.module';
@@ -105,14 +100,27 @@ import { UserFriendshipModule } from '../lib/gj-lib-client/components/user/frien
 import { ScrollModule } from '../lib/gj-lib-client/components/scroll/scroll.module';
 import { ScrollAffixModule } from '../lib/gj-lib-client/components/scroll/affix/affix.module';
 import { GameCollectionModule } from './components/game/collection/collection.module';
+import { ShellModule } from './components/shell/shell.module';
 import { ConnectionModule } from '../lib/gj-lib-client/components/connection/connection.module';
 import { UserAvatarModule } from '../lib/gj-lib-client/components/user/user-avatar/user-avatar.module';
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
+import { MinbarModule } from './components/minbar/minbar.module';
 import { GrowlsModule } from '../lib/gj-lib-client/components/growls/growls.module';
 import { GameRatingGrowlModule } from './components/game/rating-growl/rating-growl.module';
 import { RatingWidgetModule } from './components/rating/widget/widget.module';
 import { GameRatingModule } from '../lib/gj-lib-client/components/game/rating/rating.module';
 import { FadeCollapseModule } from '../lib/gj-lib-client/components/fade-collapse/fade-collapse.module';
+import { MeterModule } from './components/meter/meter.module';
+import { GameScoreTableModule } from '../lib/gj-lib-client/components/game/score-table/score-table.module';
+import { GamePlaylistModule } from '../lib/gj-lib-client/components/game-playlist/game-playlist.module';
+import { GamePlaylistGameModule } from '../lib/gj-lib-client/components/game-playlist/game/game.module';
+import { GameOgrsModule } from './components/game/ogrs/ogrs.module';
+import { GameSongModule } from '../lib/gj-lib-client/components/game/song/song.module';
+import { SubscriptionModule } from '../lib/gj-lib-client/components/subscription/subscription.module';
+import { HistoryModule } from '../lib/gj-lib-client/components/history/history.module';
+import { HistoryCacheModule } from '../lib/gj-lib-client/components/history/cache/cache.module';
+import { CommentWidgetModule } from '../lib/gj-lib-client/components/comment/widget/widget.module';
+import { GameFollowWidgetModule } from './components/game/follow-widget/follow-widget.module';
 
 @NgModule({
 	imports: [
@@ -171,10 +179,9 @@ import { FadeCollapseModule } from '../lib/gj-lib-client/components/fade-collaps
 		SketchfabEmbedModule,
 		PartnerReferralModule,
 		AuthModule,
-		AuthJoinModule,
+		// AuthJoinModule,
 		SplitTestModule,
 		ShellModule,
-		ActivityModule,
 		NotificationModule,
 		MediaItemCoverModule,
 		PageHeaderModule,
@@ -194,7 +201,6 @@ import { FadeCollapseModule } from '../lib/gj-lib-client/components/fade-collaps
 		CommentAvatarListModule,
 		ChannelsModule,
 		ChannelThumbnailModule,
-		CountdownModule,
 		LoadingFadeModule,
 		BroadcastModalModule,
 		UserModule,
@@ -223,11 +229,23 @@ import { FadeCollapseModule } from '../lib/gj-lib-client/components/fade-collaps
 		GameCollectionModule,
 		UserAvatarModule,
 		TranslateModule,
+		MinbarModule,
 		GrowlsModule,
 		GameRatingModule,
 		GameRatingGrowlModule,
 		RatingWidgetModule,
 		FadeCollapseModule,
+		MeterModule,
+		GameScoreTableModule,
+		GamePlaylistModule,
+		GamePlaylistGameModule,
+		GameOgrsModule,
+		GameSongModule,
+		SubscriptionModule,
+		HistoryModule,
+		HistoryCacheModule,
+		CommentWidgetModule,
+		GameFollowWidgetModule,
 		AppModuleNg1,
 	],
 	declarations: [

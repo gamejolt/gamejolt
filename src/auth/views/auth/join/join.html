@@ -1,15 +1,24 @@
-<div class="auth-lead-text" ng-if="Connection.isOnline">
-	<p class="lead anim-fade-in-enlarge" translate>auth.join.join_message_html</p>
-</div>
+<div>
 
-<gj-auth-join dark-variant="true"></gj-auth-join>
-
-<div class="auth-page-links text-right anim-fade-in">
-	<div class="auth-page-link">
-		<span translate>auth.or</span>
-		<a class="link-unstyled" ui-sref="auth.login">
-			<span translate>auth.login_link</span>
-			<span class="jolticon jolticon-sign-in"></span>
-		</a>
+	<div class="auth-lead-text" v-if="Connection.isOnline">
+		<translate tag="p" :escape-html="false" class="lead anim-fade-in-enlarge">
+			auth.join.join_message_html
+		</translate>
 	</div>
+
+	<app-auth-join
+		:dark-variant="true"
+		@joined="onJoin"
+		/>
+
+	<div class="auth-page-links text-right anim-fade-in">
+		<div class="auth-page-link">
+			<translate>auth.or</translate>
+			<router-link class="link-unstyled" :to="{ name: 'auth.login' }">
+				<translate>auth.login_link</translate>
+				<app-jolticon icon="sign-in" />
+			</router-link>
+		</div>
+	</div>
+
 </div>

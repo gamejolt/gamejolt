@@ -1,0 +1,74 @@
+<div>
+
+	<nav class="platform-list inline">
+		<ul>
+			<li v-if="!game._is_devlog">
+				<router-link :to="{ name: 'discover.games.view.overview' }" active-class="active">
+					<translate>games.view.overview_tab</translate>
+				</router-link>
+			</li>
+			<li v-if="game._is_devlog">
+				<router-link :to="{ name: 'discover.games.view.overview' }" active-class="active"
+					ng-class="{ active: $state.is( 'discover.games.view.overview' ) || $state.includes( 'discover.games.view.devlog' ) }"
+					>
+					<translate>Devlog</translate>
+					<span class="badge">{{ postsCount | number }}</span>
+				</router-link>
+			</li>
+			<li v-if="!game._is_devlog && postsCount > 0">
+				<a ui-sref=".devlog.list" ng-class="{ active: $state.includes( 'discover.games.view.devlog' ) }">
+					<translate>Devlog</translate>
+					<span class="badge">{{ postsCount | number }}</span>
+				</a>
+			</li>
+			<li v-if="game._is_devlog && game.comments_enabled">
+				<a ui-sref=".comments" ui-sref-active="active">
+					<translate>Comments</translate>
+					<span class="badge">{{ commentsCount | number }}</span>
+				</a>
+			</li>
+			<li v-if="hasScores">
+				<a ui-sref=".scores.list( { type: 'best', tableId: primaryScoreTable.id } )"
+					ng-class="{ active: $state.includes( 'discover.games.view.scores' ) }"
+					>
+					<translate>games.view.scores_tab</translate>
+				</a>
+			</li>
+			<li v-if="trophiesCount">
+				<a ui-sref=".trophies.list"
+					ng-class="{ active: $state.includes( 'discover.games.view.trophies' ) }"
+					>
+					<translate>games.view.trophies_tab</translate>
+					<span class="badge">{{ trophiesCount | number }}</span>
+				</a>
+			</li>
+			<li v-if="app.user && app.user.id !== game.developer.id">
+				<a v-app-popover-trigger="`game-more-options`">
+					<app-jolticon icon="ellipsis-h" />
+					<translate>options.more</translate>
+				</a>
+			</li>
+		</ul>
+	</nav>
+
+	<app-popover popover-id="game-more-options">
+		<div class="list-group list-group-dark">
+			<a class="list-group-item has-icon"
+				v-if="app.user && app.user.id !== game.developer.id"
+				@click="report"
+				>
+				<app-jolticon icon="flag warning" />
+				<translate>games.view.report_game_button</translate>
+			</a>
+			<a class="list-group-item has-icon"
+				v-if="app.user && app.user.permission_level > 0"
+				:href="`${Environment.baseUrl}/moderate/games/view/${game.id}`"
+				target="_blank"
+				>
+				<app-jolticon icon="cog" />
+				<translate>games.view.moderate_game_button</translate>
+			</a>
+		</div>
+	</app-popover>
+
+</div>

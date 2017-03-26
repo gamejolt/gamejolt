@@ -1,47 +1,52 @@
 <div class="devlog-post-media-embed timeline-list-full-bleed"
-	hm-panstart="$ctrl.panStart( $event )"
-	hm-pan="$ctrl.pan( $event )"
-	hm-panend="$ctrl.panEnd( $event )"
-	hm-recognizer-options='{ "threshold": 20, invokeApply: false, directions: "DIRECTION_HORIZONTAL" }'
 	>
-
-	<a class="devlog-post-media-prev" ng-show="$ctrl.page > 1" ng-click="$ctrl.prev()">
-		<span class="jolticon jolticon-chevron-left"></span>
-	</a>
-
-	<a class="devlog-post-media-next" ng-show="$ctrl.page < $ctrl.post.media.length" ng-click="$ctrl.next()">
-		<span class="jolticon jolticon-chevron-right"></span>
-	</a>
-
-	<a class="devlog-post-media-embed-img"
-		ui-sref="discover.games.view.devlog.view( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id, postSlug: $ctrl.post.slug } )"
-		ng-click="$ctrl.clicked()"
+	<v-touch
+		class="media-bar-lightbox"
+		@panstart="panStart"
+		@pan="pan"
+		@panend="panEnd"
 		>
-		<div class="devlog-post-media-slider"
+
+		<a class="devlog-post-media-prev" v-if="page > 1" @click="prev">
+			<app-jolticon icon="chevron-left" />
+		</a>
+
+		<a class="devlog-post-media-next" v-if="page < post.media.length" @click="next">
+			<app-jolticon icon="chevron-right" />
+		</a>
+
+		<router-link class="devlog-post-media-embed-img"
+			:to="{ name: 'discover.games.view.devlog.view', params: { slug: post.game.slug, id: post.game.id, postSlug: post.slug } }"
+			@click="clicked"
 			>
-			<div class="devlog-post-media-slider-item"
-				ng-repeat="item in ::$ctrl.post.media track by item.id"
-				gj-responsive-dimensions
-				responsive-dimensions-ratio="::item.width / item.height"
-				>
+			<div class="devlog-post-media-slider" ref="slider">
 
-				<img
-					ng-if="::!item.is_animated"
-					gj-img-responsive="{{ ::item.mediaserver_url }}"
-					alt=""
-					ondragstart="return false"
+				<app-responsive-dimensions
+					class="devlog-post-media-slider-item"
+					v-for="item of post.media"
+					:key="item.id"
+					:ratio="item.width / item.height"
 					>
 
-				<gj-video
-					ng-if="item.is_animated && $ctrl.shouldVideoPlay( item )"
-					[poster]="::item.mediaserver_url"
-					[webm]="::item.mediaserver_url_webm"
-					[mp4]="::item.mediaserver_url_mp4"
-					[show-loading]="true"
-					>
-				</gj-video>
+					<app-img-responsive
+						v-if="!item.is_animated"
+						:src="item.mediaserver_url"
+						alt=""
+						ondragstart="return false"
+						/>
+
+					<app-video
+						v-if="item.is_animated && shouldVideoPlay( item )"
+						:poster="item.mediaserver_url"
+						:webm="item.mediaserver_url_webm"
+						:mp4="item.mediaserver_url_mp4"
+						:show-loading="true"
+						/>
+
+				</app-responsive-dimensions>
+
 			</div>
-		</div>
-	</a>
+		</router-link>
 
+	</v-touch>
 </div>

@@ -1,0 +1,28 @@
+<div
+	id="shell"
+	:class="{
+		'left-pane-visible': isLeftPaneVisible,
+		'right-pane-visible': isRightPaneVisible
+	}"
+	>
+
+	<app-shell-notification-count />
+	<app-offline-alert />
+	<app-shell-top-nav />
+	<app-shell-sidebar />
+
+	<app-shell-body>
+		<!--<gj-terms-change-alert></gj-terms-change-alert>-->
+		<slot />
+	</app-shell-body>
+
+	<app-shell-chat v-if="chat && chat.client" />
+
+	<app-growls />
+
+	<app-shell-hot-bottom>
+		<app-minbar />
+		<!--<gj-client-status-bar></gj-client-status-bar>-->
+	</app-shell-hot-bottom>
+
+</div>

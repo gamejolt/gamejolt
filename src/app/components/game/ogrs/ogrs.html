@@ -1,12 +1,26 @@
-<div class="game-ogrs" ng-if="ctrl.imgTag" ng-class="{ 'has-descriptors': !ctrl.hideDescriptors && ctrl.descriptors.length, 'no-descriptors': !ctrl.descriptors.length, 'hide-tag': ctrl.hideTag }">
-	<div class="game-ogrs-inner">
-		<div class="game-ogrs-tag" ng-if="!ctrl.hideTag">
-			<img class="game-ogrs-rating-img" ng-src="{{ ctrl.imgTagUrl }}" width="80" height="100" alt="{{ ctrl.imgTag }}">
-			<img class="game-ogrs-logo" src="./ogrs.png" width="80" height="10" alt="OGRS">
-			<!-- <div class="game-ogrs-id">og-gh986f</div> -->
+<div class="clearfix">
+	<div class="game-ogrs clearfix"
+		v-if="game.tigrs_age > 0"
+		:class="{
+			'has-descriptors': !hideDescriptors && descriptors.length,
+			'no-descriptors': !descriptors.length,
+			'hide-tag': hideTag,
+		}"
+		>
+
+		<app-game-ogrs-tag v-if="!hideTag" :game="game" :full="true" />
+
+		<div
+			class="game-ogrs-descriptors"
+			v-if="!hideDescriptors && descriptors.length"
+			>
+			<div
+				class="game-ogrs-descriptor"
+				v-for="descriptor of descriptors"
+				>
+				{{ descriptor }}
+			</div>
 		</div>
-		<div class="game-ogrs-descriptors" ng-if="!ctrl.hideDescriptors && ctrl.descriptors.length">
-			<div class="game-ogrs-descriptor" ng-repeat="descriptor in ctrl.descriptors">{{ descriptor }}</div>
-		</div>
+
 	</div>
 </div>

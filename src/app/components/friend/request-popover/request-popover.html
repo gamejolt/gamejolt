@@ -1,134 +1,138 @@
-<gj-popover
-	class="shell-popover shell-card-popover popover-dark"
+<app-popover
 	popover-id="friend-requests"
-	popover-append-to-body="true"
-	popover-position-by="fixed"
-	popover-on-focus="$ctrl.onFocus()"
-	popover-on-blur="$ctrl.onBlur()"
-	popover-hide-on-state-change="true"
+	:append-to-body="true"
+	position-by="fixed"
+	@focused="onFocus()"
+	@blurred="onBlur()"
+	:hide-on-state-change="true"
 	>
 
-	<div class="shell-card-popover-well">
+	<div class="shell-card-popover fill-darker">
 
 		<nav class="platform-list inline nav-justified no-animate">
 			<ul>
 				<li>
-					<a ng-class="{ active: $ctrl.activeTab == 'requests' }"
-						ng-click="$ctrl.setActiveTab( 'requests' )"
+					<a
+						:class="{ active: activeTab === 'requests' }"
+						@click="setActiveTab( 'requests' )"
 						>
 						<span translate>Friend Requests</span>
-						<span class="badge">{{ $ctrl.requestsCount }}</span>
+						<span class="badge">{{ requestsCount }}</span>
 					</a>
 				</li>
-				<li ng-if="$ctrl.pending.length">
-					<a ng-class="{ active: $ctrl.activeTab == 'pending' }"
-						ng-click="$ctrl.setActiveTab( 'pending' )"
+				<li v-if="pending.length">
+					<a :class="{ active: activeTab === 'pending' }"
+						@click="setActiveTab( 'pending' )"
 						>
 						<span translate>Sent Requests</span>
-						<span class="badge">{{ $ctrl.pending.length }}</span>
+						<span class="badge">{{ pending.length }}</span>
 					</a>
 				</li>
 			</ul>
 		</nav>
 
-		<div ng-if="$ctrl.isLoading && $ctrl.isShown">
+		<div v-if="isLoading && isShown">
 			<br>
-			<gj-loading class="loading-centered"></gj-loading>
+			<app-loading :centered="true"></app-loading>
 		</div>
 
 		<!-- Requests -->
-		<div ng-if="!$ctrl.isLoading && $ctrl.activeTab == 'requests'">
+		<div v-if="!isLoading && activeTab === 'requests'">
 
-			<div ng-if="$ctrl.isShown && $ctrl.requests.length">
+			<div v-if="isShown && requests.length">
 
 				<a
-					ng-repeat="request in $ctrl.requests track by request.id"
-					ng-href="{{ ::request.getThem( App.user ).url }}"
+					v-for="request of requests"
+					:key="request.id"
+					:href="request.getThem( app.user ).url"
 					>
-					<gj-card>
+					<app-card>
 						<div class="shell-card-popover-card-media">
-							<div class="friend-request-popover-avatar" gj-user-avatar="::request.getThem( App.user )"></div>
+							<div class="friend-request-popover-avatar">
+								<app-user-avatar :user="request.getThem( app.user )"></app-user-avatar>
+							</div>
 						</div>
 						<div class="shell-card-popover-card-body">
 
 							<div class="shell-card-popover-card-controls">
 								<span class="btn btn-success-outline btn-sparse"
-									gj-tooltip="{{ 'Add Friend' | translate }}"
-									ng-click="$ctrl.acceptRequest( $event, request )"
+									v-app-tooltip="'Add Friend'"
+									@click.stop.prevent="acceptRequest( request )"
 									>
-									<span class="jolticon jolticon-friend-add-2"></span>
+									<app-jolticon icon="friend-add-2" />
 								</span>
 								<span class="btn btn-danger-outline btn-sparse"
-									gj-tooltip="{{ 'Dismiss request. Sender will not be notified.' | translate }}"
-									ng-click="$ctrl.rejectRequest( $event, request )"
+									v-app-tooltip="'Dismiss request. Sender will not be notified.'"
+									@click.stop.prevent="rejectRequest( request )"
 									>
-									<span class="jolticon jolticon-friend-remove-2"></span>
+									<app-jolticon icon="friend-remove-2" />
 								</span>
 							</div>
 
 							<div class="card-title">
 								<h5>
-									{{ ::request.getThem( App.user ).display_name }}
+									{{ request.getThem( app.user ).display_name }}
 									<br>
-									<small>@{{ ::request.getThem( App.user ).username }}</small>
+									<small>@{{ request.getThem( app.user ).username }}</small>
 								</h5>
 							</div>
 
 							<div class="card-meta">
-								<span am-time-ago="request.created_on"></span>
+								<!--<span am-time-ago="request.created_on"></span>-->
 							</div>
 						</div>
-					</gj-card>
+					</app-card>
 				</a>
 
 			</div>
 
-			<div class="list-group" ng-if="!$ctrl.requests.length">
-				<div class="list-group-item small disabled" translate>
-					No friend requests right now.
-				</div>
+			<div class="alert alert-info" v-if="!requests.length">
+				<span translate>No friend requests right now.</span>
 			</div>
 		</div>
 
 		<!-- Pending -->
-		<div ng-if="!$ctrl.isLoading && $ctrl.activeTab == 'pending' && $ctrl.pending.length">
+		<div v-if="!isLoading && activeTab === 'pending' && pending.length">
 
 			<a
-				ng-repeat="request in $ctrl.pending track by request.id"
-				ng-href="{{ ::request.getThem( App.user ).url }}"
+				v-for="request of pending"
+				:key="request.id"
+				:href="request.getThem( app.user ).url"
 				>
-				<gj-card>
+				<app-card>
 					<div class="shell-card-popover-card-media">
-						<div class="friend-request-popover-avatar" gj-user-avatar="::request.getThem( App.user )"></div>
+						<div class="friend-request-popover-avatar">
+							<app-user-avatar :user="request.getThem( app.user )"></app-user-avatar>
+						</div>
 					</div>
 					<div class="shell-card-popover-card-body">
 
 						<div class="shell-card-popover-card-controls">
 							<span class="btn btn-danger-outline btn-sparse"
-								gj-tooltip="{{ 'Cancel' | translate }}"
-								ng-click="$ctrl.cancelRequest( $event, request )"
+								v-app-tooltip="'Cancel'"
+								@click.stop.prevent="cancelRequest( request )"
 								>
-								<span class="jolticon jolticon-friend-remove-2"></span>
+								<app-jolticon icon="friend-remove-2" />
 							</span>
 						</div>
 
 						<div class="card-title">
 							<h5>
-								{{ ::request.getThem( App.user ).display_name }}
+								{{ request.getThem( app.user ).display_name }}
 								<br>
-								<small>@{{ ::request.getThem( App.user ).username }}</small>
+								<small>@{{ request.getThem( app.user ).username }}</small>
 							</h5>
 						</div>
 
 						<div class="card-meta">
-							<span am-time-ago="request.created_on"></span>
+							<!--<span am-time-ago="request.created_on"></span>-->
 						</div>
 					</div>
-				</gj-card>
+				</app-card>
 			</a>
 
 		</div>
 
 	</div>
 
-</gj-popover>
+</app-popover>

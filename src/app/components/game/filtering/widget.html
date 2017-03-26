@@ -1,106 +1,123 @@
-<nav class="game-filtering-widget-list platform-list inline">
-	<ul>
-		<li>
-			<a gj-popover-trigger="games-filter-price" gj-track-event="game-filtering:tab-price">
-				<span translate>Price</span>
-				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.price">
-					1
-				</span>
-				<span class="jolticon jolticon-chevron-down"></span>
-			</a>
-		</li>
-		<li>
-			<a gj-popover-trigger="games-filter-os" gj-track-event="game-filtering:tab-os">
-				{{ ::'games.filtering.os_label' | translate }}
-				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.os.length">
-					{{ ctrl.filteringContainer.filters.os.length | number }}
-				</span>
-				<span class="jolticon jolticon-chevron-down"></span>
-			</a>
-		</li>
-		<li>
-			<a gj-popover-trigger="games-filter-browser" gj-track-event="game-filtering:tab-browser">
-				{{ ::'games.filtering.browser_label' | translate }}
-				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.browser.length">
-					{{ ctrl.filteringContainer.filters.browser.length | number }}
-				</span>
-				<span class="jolticon jolticon-chevron-down"></span>
-			</a>
-		</li>
-		<li>
-			<a gj-popover-trigger="games-filter-maturity" gj-track-event="game-filtering:tab-maturity">
-				{{ ::'games.filtering.maturity_label' | translate }}
-				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.maturity.length">
-					{{ ctrl.filteringContainer.filters.maturity.length | number }}
-				</span>
-				<span class="jolticon jolticon-chevron-down"></span>
-			</a>
-		</li>
-		<li>
-			<a gj-popover-trigger="games-filter-status" gj-track-event="game-filtering:tab-status">
-				{{ ::'games.filtering.status_label' | translate }}
-				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.status.length">
-					{{ ctrl.filteringContainer.filters.status.length | number }}
-				</span>
-				<span class="jolticon jolticon-chevron-down"></span>
-			</a>
-		</li>
-		<li ng-if="App.user.is_partner">
-			<a gj-popover-trigger="games-filter-partners" gj-track-event="game-filtering:tab-partners">
-				<span translate>Partners</span>
-				<span class="tag tag-active" translate>New</span>
-				<span class="badge badge-pink" ng-show="ctrl.filteringContainer.filters.partners.length">
-					{{ ctrl.filteringContainer.filters.partners.length | number }}
-				</span>
-				<span class="jolticon jolticon-chevron-down"></span>
-			</a>
-		</li>
-	</ul>
-</nav>
+<div class="game-filtering-widget">
 
-<!--
-	No need to bind-once anything in these popovers since we remove from DOM when they're not visible.
--->
-<gj-popover
-	ng-repeat="(filter, options) in ctrl.orderedFilters track by filter"
-	[popover-id]="::'games-filter-' + filter"
-	(focused)="ctrl.onPopoverShown( filter )"
-	(blurred)="ctrl.onPopoverHidden( filter )"
-	>
+	<nav class="game-filtering-widget-list platform-list inline">
+		<ul>
+			<li>
+				<a v-app-popover-trigger="`games-filter-price`" v-app-track-event="`game-filtering:tab-price`">
+					<translate>Price</translate>
+					<span class="badge badge-pink" v-if="filtering.filters.price">
+						1
+					</span>
+					<app-jolticon icon="chevron-down" />
+				</a>
+			</li>
+			<li>
+				<a v-app-popover-trigger="`games-filter-os`" v-app-track-event="`game-filtering:tab-os`">
+					<translate>games.filtering.os_label</translate>
+					<span class="badge badge-pink" v-if="filtering.filters.os.length">
+						{{ filtering.filters.os.length | number }}
+					</span>
+					<app-jolticon icon="chevron-down" />
+				</a>
+			</li>
+			<li>
+				<a v-app-popover-trigger="`games-filter-browser`" v-app-track-event="`game-filtering:tab-browser`">
+					<translate>games.filtering.browser_label</translate>
+					<span class="badge badge-pink" v-if="filtering.filters.browser.length">
+						{{ filtering.filters.browser.length | number }}
+					</span>
+					<app-jolticon icon="chevron-down" />
+				</a>
+			</li>
+			<li>
+				<a v-app-popover-trigger="`games-filter-maturity`" v-app-track-event="`game-filtering:tab-maturity`">
+					<translate>games.filtering.maturity_label</translate>
+					<span class="badge badge-pink" v-if="filtering.filters.maturity.length">
+						{{ filtering.filters.maturity.length | number }}
+					</span>
+					<app-jolticon icon="chevron-down" />
+				</a>
+			</li>
+			<li>
+				<a v-app-popover-trigger="`games-filter-status`" v-app-track-event="`game-filtering:tab-status`">
+					<translate>games.filtering.status_label</translate>
+					<span class="badge badge-pink" v-if="filtering.filters.status.length">
+						{{ filtering.filters.status.length | number }}
+					</span>
+					<app-jolticon icon="chevron-down" />
+				</a>
+			</li>
+			<li v-if="app.user.is_partner">
+				<a v-app-popover-trigger="`games-filter-partners`" v-app-track-event="`game-filtering:tab-partners`">
+					<translate>Partners</translate>
+					<span class="tag tag-active">
+						<translate>New</translate>
+					</span>
+					<span class="badge badge-pink" v-if="filtering.filters.partners.length">
+						{{ filtering.filters.partners.length | number }}
+					</span>
+					<app-jolticon icon="chevron-down" />
+				</a>
+			</li>
+		</ul>
+	</nav>
 
-	<div class="game-filtering-widget-list-group list-group list-group-dark">
+	<!--
+		No need to bind-once anything in these popovers since we remove from DOM when they're not visible.
+	-->
+	<app-popover
+		v-for="( options, filter ) of orderedFilters"
+		:key="filter"
+		:popover-id="`games-filter-${filter}`"
+		@focused="onPopoverShown( filter )"
+		@blurred="onPopoverHidden( filter )"
+		>
 
-		<a class="list-group-item has-addon"
-			ng-repeat="option in options track by option"
-			ng-class="filter == 'os' || filter == 'browser' ? 'has-icon' : ''"
-			ng-click="ctrl.toggleFilterOption( filter, option )"
-			ng-mouseover="ctrl.hovered[ filter ] = option"
-			ng-mouseout="ctrl.hovered[ filter ] = null"
-			>
+		<div class="game-filtering-widget-list-group list-group list-group-dark">
 
-			<!--
-				Array types get checboxes.
-			-->
-			<div class="list-group-item-addon" ng-if="Game_Filtering_Container.filterDefinitions[ filter ].type == 'array'">
-				<span class="jolticon" ng-class="ctrl.filteringContainer.isFilterOptionSet( filter, option ) ? 'jolticon-checkbox' : 'jolticon-box-empty text-muted'"></span>
-			</div>
-
-			<!--
-				Radio types get radio button things.
-			-->
-			<div class="list-group-item-addon" ng-if="Game_Filtering_Container.filterDefinitions[ filter ].type == 'radio'">
-				<span class="jolticon" ng-class="ctrl.filteringContainer.isFilterOptionSet( filter, option ) ? (ctrl.hovered[ filter ] == option ? 'jolticon-remove' : 'jolticon-radio-circle-filled') : 'jolticon-radio-circle text-muted'"></span>
-			</div>
-
-			<span class="jolticon"
-				ng-show="filter == 'os' || filter == 'browser'"
-				ng-class="::ctrl.getJolticon( filter, option )"
+			<a class="list-group-item has-addon"
+				v-for="option of options"
+				:key="option"
+				:class="filter === 'os' || filter === 'browser' ? 'has-icon' : ''"
+				@click="toggleFilterOption( filter, option )"
+				@mouseover="onMouseover( filter, option )"
+				@mouseout="onMouseout( filter )"
 				>
-			</span>
 
-			{{ ::Game_Filtering_Container.filterDefinitions[ filter ].options[ option ] }}
+				<!--
+					Array types get checboxes.
+				-->
+				<div class="list-group-item-addon" v-if="GameFilteringContainer.definitions[ filter ].type === 'array'">
+					<app-jolticon
+						:icon="filtering.isFilterOptionSet( filter, option )
+							? 'checkbox'
+							: 'box-empty'
+						"
+						/>
+				</div>
 
-		</a>
+				<!--
+					Radio types get radio button things.
+				-->
+				<div class="list-group-item-addon" v-if="GameFilteringContainer.definitions[ filter ].type === 'radio'">
+					<app-jolticon
+						:icon="filtering.isFilterOptionSet( filter, option )
+							? (hovered[ filter ] === option ? 'remove' : 'radio-circle-filled')
+							: 'radio-circle'
+						"
+						/>
+				</div>
 
-	</div>
-</gj-popover>
+				<app-jolticon
+					v-if="filter === 'os' || filter === 'browser'"
+					:icon="getJolticon( filter, option )"
+					/>
+
+				{{ GameFilteringContainer.definitions[ filter ].options[ option ] }}
+
+			</a>
+
+		</div>
+	</app-popover>
+
+</div>

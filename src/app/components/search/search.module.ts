@@ -1,22 +1,14 @@
 import { NgModule } from 'ng-metadata/core';
 import { Search } from './search-service';
-import { SearchComponent } from './search-directive';
-
-import { SearchAutocompleteModule } from './autocomplete/autocomplete.module';
-import { SearchInputModule } from './input/input.module';
-import { SearchHistoryModule } from './history/history.module';
+import { makeComponentProvider } from '../../../lib/gj-lib-client/vue/angular-link';
+import { AppSearch } from './search';
 
 @NgModule({
-	imports: [
-		SearchHistoryModule,
-		SearchAutocompleteModule,
-		SearchInputModule,
+	providers: [
+		{ provide: 'Search', useFactory: () => Search },
 	],
 	declarations: [
-		SearchComponent,
-	],
-	providers: [
-		Search,
-	],
+		makeComponentProvider( AppSearch ),
+	]
 })
 export class SearchModule { }

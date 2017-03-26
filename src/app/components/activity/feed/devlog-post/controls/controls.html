@@ -2,7 +2,7 @@
 <div class="devlog-post-controls">
 	<!--<hr>-->
 
-	<div class="devlog-post-controls-controls">
+	<div class="devlog-post-controls-controls clearfix">
 		<div class="pull-left" ng-if="::$ctrl.post.status == $ctrl.firesidePostModel.STATUS_ACTIVE">
 
 			<!--
@@ -96,9 +96,9 @@
 	<!--
 		We don't show this in the feed on mobile.
 	-->
-	<div class="devlog-post-controls-links" ng-if="::$ctrl.showExtraInfo">
+	<div class="devlog-post-controls-links clearfix" ng-if="::$ctrl.showExtraInfo">
 
-		<div class="devlog-post-controls-stats"
+		<div class="devlog-post-controls-stats text-muted"
 			ng-if="::$ctrl.app.user && $ctrl.post.user.id == $ctrl.app.user.id"
 			>
 
@@ -126,7 +126,7 @@
 
 		</div>
 
-		<a class="devlog-post-controls-link"
+		<a class="devlog-post-controls-link link-muted"
 			ng-if="$ctrl.post.comment_count > 0"
 			ng-class="{ active: $ctrl.tab == 'comments' }"
 			ng-click="$ctrl.toggleComments()"
@@ -137,7 +137,7 @@
 			<b>1</b> comment
 		</a>
 
-		<a class="devlog-post-controls-link"
+		<a class="devlog-post-controls-link link-muted"
 			ng-if="$ctrl.post.like_count > 0"
 			ng-class="{ active: $ctrl.tab == 'likes' }"
 			ng-click="$ctrl.toggleLikes()"
@@ -148,7 +148,7 @@
 			<b>1</b> like
 		</a>
 
-		<a class="devlog-post-controls-link"
+		<a class="devlog-post-controls-link link-muted"
 			ng-if="::$ctrl.showGameInfo"
 			ui-sref="discover.games.view.overview( { slug: $ctrl.post.game.slug, id: $ctrl.post.game.id } )"
 			translate

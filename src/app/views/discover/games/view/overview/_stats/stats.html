@@ -1,0 +1,112 @@
+<div class="route-game-stats">
+	<div class="row">
+		<div class="col-xs-4 stat-big stat-big-smaller">
+
+			<div class="stat-big-label">
+				<translate>games.view.stats.views_label</translate>
+			</div>
+
+			<div class="stat-big-digit">
+				<app-lazy-placeholder :when="isLoaded">
+					<span class="lazy-placeholder"></span>
+					<span :title="number( profileCount )">
+						{{ fuzzynumber( profileCount ) }}
+					</span>
+				</app-lazy-placeholder>
+			</div>
+
+		</div>
+		<div class="col-xs-4 stat-big stat-big-smaller" v-if="game.sellable && game.sellable.type !== 'paid'">
+
+			<div class="stat-big-label">
+				<translate>games.view.stats.downloads_plays_label</translate>
+				<app-jolticon
+					class="text-muted"
+					v-if="playsTooltip"
+					icon="help-circle"
+					v-app-tooltip="playsTooltip"
+					/>
+			</div>
+
+			<div class="stat-big-digit">
+				<app-lazy-placeholder :when="isLoaded">
+					<span class="lazy-placeholder"></span>
+					<span v-if="showNaPlays">
+						<translate>games.view.stats.na</translate>
+					</span>
+					<span v-if="!showNaPlays" :title="number( downloadCount + playCount )">
+						{{ fuzzynumber( downloadCount + playCount ) }}
+					</span>
+				</app-lazy-placeholder>
+			</div>
+
+		</div>
+		<div class="col-xs-4 stat-big stat-big-smaller">
+
+			<div class="stat-big-label">
+				<translate>games.view.stats.ratings_label</translate>
+				<app-jolticon
+					v-if="!game.ratings_enabled"
+					class="text-muted"
+					icon="help-circle"
+					v-app-tooltip="$gettext( 'Ratings are disabled for this game.' )"
+					/>
+			</div>
+
+			<div class="stat-big-digit">
+				<app-lazy-placeholder :when="!!game">
+					<span class="lazy-placeholder"></span>
+					<a
+						v-if="game.ratings_enabled"
+						class="link-unstyled"
+						@click="isShowingRatingBreakdown = !isShowingRatingBreakdown"
+						v-app-tooltip="$gettext( 'games.view.stats.rating_breakdown_tooltip' )"
+						:title="number( game.rating_count || 0 )"
+						>
+						{{ fuzzynumber( game.rating_count || 0 ) }}
+					</a>
+					<translate v-if="!game.ratings_enabled" class="text-upper">
+						Off
+					</translate>
+				</app-lazy-placeholder>
+			</div>
+
+		</div>
+	</div>
+
+	<div v-if="game.ratings_enabled">
+		<app-expand :when="isShowingRatingBreakdown">
+			<br>
+			<div class="rating-breakdown well fill-lightest">
+				<table class="table">
+					<tbody>
+						<tr v-for="( ratingString, i ) of ratingStrings">
+							<th class="rating-breakdown-label">
+								{{ ratingString }}
+							</th>
+							<td class="rating-breakdown-progress" style="vertical-align: middle">
+								<app-progress-bar
+									variant="darker"
+									:percent="ratingBreakdown[ (5 - i) ] / game.rating_count * 100"
+									:thin="true"
+									/>
+								<!--<div class="progress progress-thin progress-darker">
+									<div
+										class="progress-bar"
+										:style="{
+											width: ratingBreakdown[ (5 - i) ] / game.rating_count * 100 + '%',
+										}"
+										>
+									</div>
+								</div>-->
+							</td>
+							<td class="rating-breakdown-count">
+								({{ fuzzynumber( (ratingBreakdown[ (5 - i) ] || 0) ) }})
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</app-expand>
+	</div>
+</div>

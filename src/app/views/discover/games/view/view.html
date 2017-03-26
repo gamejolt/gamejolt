@@ -1,72 +1,138 @@
-<div ng-if="gameCtrl.game">
-	<gj-game-maturity-block game="gameCtrl.game">
+<div class="route-discover-games-view" v-if="game">
+	<app-game-maturity-block :game="game">
 
 		<section class="section section-thin fill-darkest"
-			ng-if="App.user.id == gameCtrl.game.developer.id"
+			v-if="app.user && app.user.id === game.developer.id"
 			>
 			<div class="container text-center">
 
-				<a class="btn btn-outline hidden-xs" ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: gameCtrl.game.id } )">
-					<span class="jolticon jolticon-chart"></span>
-					<span translate>View Analytics</span>
+				<a
+					class="btn btn-outline hidden-xs"
+					ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: game.id } )"
+					>
+					<app-jolticon icon="chart" />
+					<translate>View Analytics</translate>
 				</a>
 
-				<a class="btn btn-outline" ui-sref="dashboard.developer.games.manage.game.overview( { id: gameCtrl.game.id } )">
-					<span class="jolticon jolticon-cog"></span>
-					<span translate>Manage Game</span>
+				<a
+					class="btn btn-outline"
+					ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
+					>
+					<app-jolticon icon="cog" />
+					<translate>Manage Game</translate>
 				</a>
 
 			</div>
 		</section>
 
 		<!--
-			Don't affic the nav on download pages.
+			Don't affix the nav on download pages.
 			It takes a lot of space out vertically when on small browser size.
 		-->
-		<gj-page-header
-			cover-media-item="gameCtrl.game.header_media_item"
-			should-affix-nav="!$state.includes( 'discover.games.view.download' )"
+			<!--:should-affix-nav="!$state.includes( 'discover.games.view.download' )"-->
+		<app-page-header
+			:cover-media-item="game.header_media_item"
 			>
 
-			<gj-page-header-cover-buttons>
-				<div class="game-header-cover-buttons"
-					ng-if="
-						!Screen.isXs
-						&& $state.is( 'discover.games.view.overview' )
-						&& (gameCtrl.installableBuilds.length || gameCtrl.browserBuilds.length || gameCtrl.game._can_buy_primary_sellable)
-					"
+			<!--<div
+				slot="cover-buttons"
+				class="game-header-cover-buttons"
+				v-if="
+					!Screen.isXs
+					&& (installableBuilds.length || browserBuilds.length || game._can_buy_primary_sellable)
+				"
+				>-->
+					<!--&& $state.is( 'discover.games.view.overview' )-->
+				<!--<gj-game-cover-buttons
+					game="game"
+					packages="packages"
+					installable-builds="installableBuilds"
+					browser-builds="browserBuilds"
+					on-show-multiple-packages="scrollToMultiplePackages()"
+					on-show-package-payment="scrollToPackagePayment( $package )"
 					>
-					<gj-game-cover-buttons
-						game="gameCtrl.game"
-						packages="gameCtrl.packages"
-						installable-builds="gameCtrl.installableBuilds"
-						browser-builds="gameCtrl.browserBuilds"
-						on-show-multiple-packages="gameCtrl.scrollToMultiplePackages()"
-						on-show-package-payment="gameCtrl.scrollToPackagePayment( $package )"
+				</gj-game-cover-buttons>-->
+			<!--</div>-->
+
+			<app-user-avatar
+				slot="spotlight"
+				:user="game.developer"
+				/>
+
+			<app-discover-games-view-nav
+				slot="nav"
+				:game="game"
+				:posts-count="postsCount"
+				:comments-count="commentsCount"
+				@report="report"
+				/>
+
+			<app-discover-games-view-controls
+				slot="controls"
+				:game="game"
+				/>
+
+			<h1 :class="{ h2: Screen.isMobile }">
+				<a ui-sref=".overview">
+					{{ game.title }}
+				</a>
+			</h1>
+
+			<div>
+				<translate>by</translate>
+				<a ui-sref="profile.overview( { username: game.developer.username } )">
+					{{ game.developer.display_name }}
+					<small>@{{ game.developer.username }}</small>
+				</a>
+
+				<!--
+					Hide on mobile to keep it clean.
+					They can view in the game details.
+				-->
+				<span class="small" v-if="!Screen.isXs && game.published_on">
+					<span class="dot-separator"></span>
+					<router-link
+						:to="{
+							name: 'discover.games.list._fetch-date',
+							params: {
+								section: 'by-date',
+								date: date( game.published_on, 'YYYY-MM-DD' ),
+							},
+						}"
 						>
-					</gj-game-cover-buttons>
-				</div>
-			</gj-page-header-cover-buttons>
+						<app-time-ago :date="game.published_on" />
+					</router-link>
+				</span>
 
-			<gj-page-header-content>
-				<div gj-partial="/app/views/discover/games/view/_header/_content.html"></div>
-			</gj-page-header-content>
+				<span v-if="game.tigrs_age || game.ratings_enabled">
+					<span class="dot-separator hidden-xs"></span>
+					<br class="visible-xs">
+					<br class="visible-xs">
 
-			<gj-page-header-spotlight>
-				<gj-user-avatar [user]="gameCtrl.game.developer"></gj-user-avatar>
-			</gj-page-header-spotlight>
+					<app-game-ogrs-tag
+						v-if="game.tigrs_age"
+						:game="game"
+						/>
 
-			<gj-page-header-nav>
-				<div gj-partial="/app/views/discover/games/view/_header/_nav.html"></div>
-			</gj-page-header-nav>
+					<span v-if="!game._is_devlog && game.ratings_enabled">
+						<span class="dot-separator"></span>
+						<app-meter
+							:big="true"
+							:dark="true"
+							:rating="game.avg_rating"
+							v-app-tooltip="ratingTooltip"
+							/>
+					</span>
+				</span>
+			</div>
 
-			<gj-page-header-controls>
-				<div gj-partial="/app/views/discover/games/view/_header/_controls.html"></div>
-			</gj-page-header-controls>
+		</app-page-header>
 
-		</gj-page-header>
+		<router-view
+			:game="game"
+			:user-rating="userRating"
+			:rating-breakdown="ratingBreakdown"
+			/>
 
-		<ui-view></ui-view>
-
-	</gj-game-maturity-block>
+	</app-game-maturity-block>
 </div>

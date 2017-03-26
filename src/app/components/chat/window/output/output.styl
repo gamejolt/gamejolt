@@ -1,0 +1,141 @@
+@require '~styles/variables'
+
+.chat-window-message
+	position: relative
+	margin-bottom: 3px
+	word-wrap: break-word
+	word-break: break-all
+	hyphens: auto
+	line-height: $font-size-small * 1.25
+
+	&-date-split
+		position: relative
+		display: block
+		margin-top: $line-height-computed
+		margin-bottom: $line-height-computed
+		width: 100%
+		text-align: center
+
+		&::before
+			content: ''
+			position: absolute
+			left: 0
+			right: 0
+			top: 50%
+			margin-top: 0
+			height: 1px
+			line-height: 1px
+			border-bottom: 2px solid $gray-light
+			z-index: 0
+
+		> .inner
+			position: relative
+			padding-left: 10px
+			padding-right: 10px
+			background-color: $white
+			font-weight: bold
+			z-index: 1
+
+	&-avatar
+		position: absolute
+		left: 0
+		top: 0
+		width: 35px
+		z-index: 1
+
+	&-container
+		margin-left: 35px + 10px
+
+	&-user
+		text-overflow()
+		display: inline-block
+		max-width: 200px
+		font-weight: bold
+		vertical-align: bottom
+
+	&-username
+		color: $text-muted
+		font-size: $font-size-tiny
+
+	&-time
+		margin-left: 5px
+		color: $text-muted
+		font-size: $font-size-tiny
+
+	// This ridiculousness is so that we can show <pre> tags full bleed even if they're in fade-collapsers.
+	// We basically make the content wrap full-bleed to the edges of the chat window, and then we make the
+	// content container have the padding. This allows any tags within the content area to full bleed again
+	// even if in fade-collapse and even with the `overflow-y: hidden` thing we do in the content.
+	&-content-wrap
+		position: relative
+		margin-left: -(35px + 10px + $chat-room-window-padding)
+		margin-right: -(35px + $chat-room-window-padding)
+
+		// Some different styling for the fade collapse.
+		.fade-collapse-collapsed
+			margin-bottom: 5px
+			border-bottom: 1px dashed $gray-light
+
+			&::before
+				max-height: 5px !important
+				background: $white !important
+
+		// Only shown during fade-collapse of messages that are too long.
+		.hidden-text-expander
+			margin-left: 35px + 10px + $chat-room-window-padding
+
+	&-can-mod:hover
+		outline: 1px dashed $gray-lighter
+
+	&-mod-tools
+		display: none
+		position: absolute
+		top: 0
+		right: 0
+		padding: 2px
+		background-color: $white
+		z-index: 2
+
+		../:hover &
+			display: block
+
+	&-content
+		display: block
+
+		// Add in the padding again.
+		padding-left: 35px + 10px + $chat-room-window-padding
+		padding-right: 34px + 1px + $chat-room-window-padding
+
+		// Try to limit the effects of what zalgo text can do to chat.
+		overflow-y: hidden
+
+		p
+			margin-bottom: 5px
+
+		ul
+		ol
+			list-style-position: inside
+			padding-left: 0
+			margin-bottom: 5px
+
+			> li
+				margin-bottom: 0
+
+		// Full-bleed pre tags.
+		pre
+			margin-bottom: 5px
+			margin-left: -(35px + 10px + $chat-room-window-padding)
+			margin-right: -($chat-room-window-padding)
+
+		// If this pre tag is the first part of the first message, be sure to move it down past the avatar.
+		.chat-window-message-not-combined & pre:first-child
+			margin-top: 30px
+
+	// System chat messages.
+	// Robo-Jolt and such.
+	.chat-msg-type-system
+		color: #666
+		font-style: italic
+
+		span
+			font-style: italic

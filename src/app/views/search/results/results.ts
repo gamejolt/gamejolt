@@ -1,7 +1,45 @@
-import { provide } from 'ng-metadata/core';
-import { ResultsCtrl } from './results-controller';
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import { Component, Prop } from 'vue-property-decorator';
+import * as View from '!view!./results.html';
 
-export default angular.module( 'App.Views.Search.Results', [
-] )
-.controller( ...provide( 'Search.ResultsCtrl', { useClass: ResultsCtrl } ) )
-.name;
+import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
+import { Search } from '../../../components/search/search-service';
+import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
+import { AppGameGrid } from '../../../components/game/grid/grid';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+
+@View
+@Component({
+	name: 'route-search-results',
+	components: {
+		AppUserAvatar,
+		AppGameGrid,
+		AppJolticon,
+	},
+	filters: {
+		number,
+	},
+})
+export default class RouteSearchResults extends Vue
+{
+	@Prop( Object ) payload: any;
+	@Prop( String ) query: string;
+
+	Search = makeObservableService( Search );
+	Screen = makeObservableService( Screen );
+
+	@BeforeRouteEnter( { cache: true } )
+	routeEnter( this: undefined, route: VueRouter.Route )
+	{
+		return Search.search( route.query.q );
+	}
+
+	routed()
+	{
+		this.$emit( 'searchpayload', this.$payload );
+	}
+}

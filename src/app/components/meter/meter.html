@@ -1,21 +1,23 @@
-<div class="meter"
-	ng-class="::{
-		'meter-low': ctrl.level <= 5,
-		'meter-mid': ctrl.level > 5 && ctrl.level < 8,
-		'meter-high': ctrl.level >= 8,
-		'meter-big': ctrl.isBig,
-		'meter-full': ctrl.level > 9.50
+<div class="meter clearfix"
+	:class="{
+		'meter-big': big,
+		'meter-dark': dark,
+		'meter-low': level <= 5,
+		'meter-mid': level > 5 && level < 8,
+		'meter-high': level >= 8,
+		'meter-full': level > 9.50
 	}">
 
 	<div class="meter-blip"
-		ng-repeat="i in ::[ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] track by $index"
-		ng-class="::{ 'meter-blip-filled': ctrl.level >= i - 0.1 }"
+		v-for="i of [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]"
+		:key="i"
+		:class="{ 'meter-blip-filled': level >= i - 0.1 }"
 		>
 	</div>
 
 	<!--
 		Since the last bar is special cased to 9.5 instead of 10.
 	-->
-	<div class="meter-blip" ng-class="::{ 'meter-blip-filled': ctrl.level >= 9.5 }"></div>
+	<div class="meter-blip" :class="{ 'meter-blip-filled': level >= 9.5 }"></div>
 
 </div>

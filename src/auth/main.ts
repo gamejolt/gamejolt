@@ -1,11 +1,32 @@
-import '../vendor/base';
+import '../lib/gj-lib-client/utils/polyfills';
+import Vue from 'vue';
+const VueGettext = require( 'vue-gettext' );
 
-import { platformBrowserDynamic } from 'ng-metadata/platform-browser-dynamic';
-import { enableProdMode } from 'ng-metadata/core';
-import { AppModule } from './app.module';
+import { store } from './store/index';
+import { router } from './views/index';
+import { Payload } from '../lib/gj-lib-client/components/payload/payload-service';
+import { App } from './app';
+import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
 
-if ( GJ_BUILD_TYPE == 'production' ) {
-	enableProdMode();
+Payload.initVue( store );
+// Analytics.initVue( $rootScope );
+// Meta.initVue( $rootScope );
+// Connection.initVue( $rootScope );
+
+const availableLanguages: any = {};
+for ( const lang of Translate.langs ) {
+	availableLanguages[ lang.code ] = lang.label;
 }
 
-platformBrowserDynamic().bootstrapModule( AppModule );
+Vue.use( VueGettext, {
+	availableLanguages,
+	defaultLanguage: Translate.lang,
+	translations: require( `!!../translations/en_US/auth.json` ),
+} );
+
+new Vue( {
+	el: '#app',
+	store,
+	router,
+	render: ( h ) => h( App ),
+} );

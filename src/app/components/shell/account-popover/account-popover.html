@@ -1,0 +1,158 @@
+<app-popover
+	popover-id="account-popover"
+	position-by="fixed"
+	:append-to-body="true"
+	:hide-on-state-change="true"
+	@focused="onShow"
+	@blurred="onHide"
+	>
+	<div class="account-popover fill-darkest">
+
+		<div class="list-group-dark">
+			<app-router-link
+				class="list-group-item offline-disable"
+				:to="{ name: 'profile.overview', params: { username: app.user.username } }"
+				v-app-track-event="`account-popover:profile`"
+				>
+				<h4 class="account-popover-heading"
+					:title="$gettext( `View Profile` )"
+					>
+					{{ app.user.display_name }}
+				</h4>
+				<small>@{{ app.user.username }}</small>
+			</app-router-link>
+		</div>
+
+		<div class="account-popover-separator"></div>
+
+		<div class="list-group-dark">
+			<app-router-link
+				class="list-group-item"
+				:to="{ name: env.isClient ? 'library.installed' : 'library.overview' }"
+				v-app-track-event="`account-popover:library`"
+				>
+				<translate>Game Library</translate>
+			</app-router-link>
+			<app-router-link
+				class="list-group-item offline-disable"
+				:to="{ name: 'dashboard.main.overview' }"
+				v-app-track-event="`account-popover:dashboard`"
+				>
+				<translate>Dashboard</translate>
+			</app-router-link>
+			<app-router-link
+				class="list-group-item offline-disable"
+				:to="{ name: screen.isXs ? 'dashboard.account-mobile-nav' : 'dashboard.account.edit' }"
+				v-app-track-event="`account-popover:account`"
+				>
+				<translate>Edit Account</translate>
+			</app-router-link>
+			<a
+				class="list-group-item offline-disable"
+				@click="showToken()"
+				v-app-track-event="`account-popover:token`"
+				>
+				<translate>Game Token</translate>
+			</a>
+			<app-router-link
+				class="list-group-item"
+				:to="{ name: 'settings' }"
+				v-app-track-event="`account-popover:settings`"
+				>
+				<translate>Settings</translate>
+			</app-router-link>
+		</div>
+
+		<div class="account-popover-button offline-disable">
+			<app-router-link
+				class="btn btn-outline btn-block"
+				:to="{ name: 'dashboard.developer.games.add' }"
+				v-app-track-event="`account-popover:add-game`"
+				>
+				<app-jolticon icon="add" />
+				<translate>Add Game</translate>
+			</app-router-link>
+		</div>
+
+		<div class="account-popover-separator"></div>
+
+		<app-shell-user-box></app-shell-user-box>
+
+		<div v-if="app.user.is_developer">
+			<div class="account-popover-separator"></div>
+
+			<div class="list-group-dark">
+				<app-router-link
+					class="list-group-item small"
+					:to="{ name: 'dashboard.withdraw-funds' }"
+					>
+					<app-jolticon
+						class="pull-right"
+						icon="help-circle"
+						v-app-tooltip="$gettext( `These are your available funds to either buy games with or withdraw.` )"
+						/>
+
+					<translate>Wallet Balance</translate>
+					&mdash;
+					<translate v-if="walletAmount === false">
+						Loading...
+					</translate>
+					<span class="account-popover-currency" v-if="walletAmount !== false">
+						{{ walletAmount | currency }}
+					</span>
+				</app-router-link>
+			</div>
+		</div>
+
+		<!--
+			We do slightly different styling here whether we're in client or not.
+			Enough changes to require different markup.
+		-->
+		<div v-if="!env.isClient">
+			<div class="account-popover-separator"></div>
+
+			<div class="list-group-dark">
+				<a class="list-group-item text-right"
+					@click="logout"
+					v-app-track-event="`account-popover:logout`"
+					>
+					<app-jolticon class="warning" icon="logout" />
+					<translate>Logout</translate>
+				</a>
+			</div>
+		</div>
+
+		<div v-if="env.isClient">
+			<div class="account-popover-separator"></div>
+
+			<div class="clearfix">
+				<div v-if="!conn.isClientOffline" class="pull-left text-center" style="width: 50%">
+
+					<div class="list-group-dark">
+						<a class="list-group-item"
+							@click="logout"
+							v-app-track-event="`account-popover:logout`"
+							>
+							<app-jolticon class="warning" icon="logout" />
+							<translate>Logout</translate>
+						</a>
+					</div>
+
+				</div>
+				<div class="pull-right text-center" style="width: 50%">
+
+					<div class="list-group-dark">
+						<a class="list-group-item"
+							@click="Client.quit()"
+							>
+							<app-jolticon class="warning" icon="remove" />
+							<translate>Quit</translate>
+						</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+</app-popover>

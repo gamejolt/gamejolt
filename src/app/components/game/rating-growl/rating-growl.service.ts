@@ -1,15 +1,14 @@
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { App } from '../../../app-service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppGameRatingGrowl } from './rating-growl';
-import { getProvider } from '../../../../lib/gj-lib-client/utils/utils';
+import { appStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 export class GameRatingGrowl
 {
 	static async show( game: Game )
 	{
-		const app = getProvider<App>( 'App' );
+		const app = appStore.state!;
 
 		// Don't show when not logged in.
 		if ( !app.user ) {

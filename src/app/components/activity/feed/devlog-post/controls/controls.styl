@@ -1,0 +1,46 @@
+@require '~styles/variables'
+@require '../../../../../../lib/gj-lib-client/stylus/common/mixins'
+
+.devlog-post-controls
+	margin-bottom: $line-height-computed
+
+	&-links
+		margin-bottom: $line-height-computed
+
+		@media $media-xs
+			font-size: $font-size-small
+
+	&-link
+		// & + &
+		// 	&::before
+		// 		@extend .dot-separator
+		// 		content: ''
+
+		&.active
+			font-weight: bold
+			color: $black
+
+	&-controls
+		margin-top: $line-height-computed
+		margin-bottom: $line-height-computed
+
+	&-stats
+		font-size: $font-size-small
+
+		@media $media-xs
+			margin-top: $font-size-base
+			margin-bottom: $line-height-computed
+
+		@media $media-sm-up
+			float: right
+
+	&-well
+		position: relative
+		margin-top: $line-height-computed + 10px
+		padding-top: $line-height-computed
+		border-top: 1px solid $gray-lightest
+
+		&::before
+			caret( color: $gray-lightest, direction: 'up', size: 10px )
+			display: block
+			content: ''

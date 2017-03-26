@@ -1,35 +1,40 @@
-<div ng-attr-id="grid-pagination-{{ ::$ctrl.id }}">
-	<p class="text-muted small"
-		ng-if="$ctrl.gamesCount"
-		translate
-		translate-n="$ctrl.gamesCount"
-		translate-plural="games.list.games_count"
-		translate-params-page="$ctrl.currentPage"
-		translate-comment="{{ page }} expands to the current page of games"
-		>
-		games.list.games_count
+<div :id="`grid-pagination-${id}`">
+	<p class="text-muted small" v-if="gamesCount">
+		<translate
+			translate
+			:translate-n="gamesCount"
+			:translate-params="{
+				count: number( gamesCount ),
+				page: number( currentPage ),
+			}"
+			translate-plural="Page %{ page } of %{ count } games."
+			>
+			1 game.
+		</translate>
 	</p>
 
-	<div ng-class="{ 'scrollable-grid-xs full-bleed-xs': $ctrl.scrollable && $ctrl.screen.isXs }">
-		<div ng-class="{ 'row': !($ctrl.scrollable && $ctrl.screen.isXs) }">
-			<gj-game-thumbnail
+	<div :class="{ 'scrollable-grid-xs full-bleed-xs': scrollable && Screen.isXs }">
+		<div :class="{ 'row': !(scrollable && Screen.isXs) }">
+			<div
 				class="col-sm-6 col-md-4 col-lg-3 game-thumbnail-anim"
-				ng-class="{ 'scrollable-grid-item col-xs-11': $ctrl.scrollable && $ctrl.screen.isXs }"
-				ng-repeat="game in $ctrl.processedGames track by game.id"
-				[game]="game"
-				gj-track-event="{{ $ctrl.eventLabel ? 'game-grid:click:' + $ctrl.eventLabel : undefined }}"
+				v-for="game of processedGames"
+				:key="game.id"
+				:class="{ 'scrollable-grid-item col-xs-11': scrollable && Screen.isXs }"
 				>
-			</gj-game-thumbnail>
+				<app-game-thumbnail
+					:game="game"
+					v-app-track-event="eventLabel ? 'game-grid:click:' + eventLabel : undefined"
+					/>
+			</div>
 		</div>
 	</div>
 
-	<gj-pagination
+	<app-pagination
 		class="text-center"
-		ng-if="$ctrl.perPage && $ctrl.gamesCount"
-		items-per-page="$ctrl.perPage"
-		total-items="$ctrl.gamesCount"
-		current-page="$ctrl.currentPage"
-		(on-page-change)="$ctrl.scroll.to( 'grid-pagination-' + $ctrl.id, { animate: false } )"
-		>
-	</gj-pagination>
+		v-if="perPage && gamesCount"
+		:items-per-page="perPage"
+		:total-items="gamesCount"
+		:current-page="currentPage"
+		@pagechange="Scroll.to( 'grid-pagination-' + id, { animate: false } )"
+		/>
 </div>

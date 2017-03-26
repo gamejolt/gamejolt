@@ -1,26 +1,27 @@
-import * as Vue from 'vue';
+import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { Subject } from 'rxjs/Subject';
 import * as View from '!view!./autocomplete.html?style=./autocomplete.styl';
+import 'rxjs/add/operator/debounce';
 
-import { App } from '../../../app-service';
 import { Search } from '../search-service';
 import { SearchHistory } from '../history/history-service';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { getProvider } from '../../../../lib/gj-lib-client/utils/utils';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { findVueParent, makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
+import { findVueParent } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppSearch } from '../search';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
-import { StateService } from 'angular-ui-router';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppRouterLink } from '../../router-link/router-link';
 import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { AppGameCompatIcons } from '../../game/compat-icons/compat-icons';
+import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -30,11 +31,11 @@ const KEYCODE_ESC = 27;
 interface Command
 {
 	keyword: string;
-	state: string;
+	routeName: string;
 	description: string;
 	authRequired?: boolean;
 	clientRequired?: boolean;
-	options?: Object;
+	params?: any;
 }
 
 @View
@@ -53,6 +54,7 @@ interface Command
 })
 export class AppSearchAutocomplete extends Vue
 {
+	@State app: AppState;
 	mode: 'search' | 'command' = 'search';
 
 	selected = 0;
@@ -64,12 +66,15 @@ export class AppSearchAutocomplete extends Vue
 
 	modes = [ 'search', 'command' ];
 
-	app?: App = undefined;
 	search: AppSearch = ({} as AppSearch);
 
-	// This gets debounced.
-	// We need to generate it debounced in the constructor.
-	sendSearch: () => void;
+	searchChanges = new Subject<string>();
+	searched$ = this.searchChanges
+		.debounceTime( 500 )
+		.subscribe( ( query ) =>
+		{
+			this.sendSearch( query );
+		} );
 
 	get isHidden()
 	{
@@ -83,12 +88,6 @@ export class AppSearchAutocomplete extends Vue
 
 	mounted()
 	{
-		this.app = makeObservableService( getProvider<App>( 'App' ) );
-
-		// TODO: Remove lodash.
-		// Generate the debounced method.
-		this.sendSearch = _.debounce( () => this._sendSearch(), 200, { leading: false, maxWait: 750, trailing: true } );
-
 		this.search.setKeydownSpy( ( event: KeyboardEvent ) =>
 		{
 			let min = 0;
@@ -125,61 +124,61 @@ export class AppSearchAutocomplete extends Vue
 		const commands: Command[] = [
 			{
 				keyword: ':discover',
-				state: 'discover.home',
+				routeName: 'discover.home',
 				description: this.$gettext( 'commands.discover_description' ),
 			},
 			{
 				keyword: ':games',
-				state: 'discover.games.list._fetch',
-				options: { section: 'featured' },
+				routeName: 'discover.games.list._fetch',
+				params: { section: 'featured' },
 				description: this.$gettext( 'commands.games_description' ),
 			},
 			{
 				keyword: ':devlogs',
-				state: 'discover.devlogs.overview',
+				routeName: 'discover.devlogs.overview',
 				description: this.$gettext( 'Browse devlogs.' ),
 			},
 			{
 				keyword: ':dashboard',
-				state: 'dashboard.main.overview',
+				routeName: 'dashboard.main.overview',
 				authRequired: true,
 				description: this.$gettext( 'commands.dashboard_description' ),
 			},
 			{
 				keyword: ':library',
-				state: 'library.overview',
+				routeName: 'library.overview',
 				authRequired: true,
 				description: this.$gettext( 'commands.library_description' ),
 			},
 			{
 				keyword: ':installed',
-				state: 'library.installed',
+				routeName: 'library.installed',
 				clientRequired: true,
 				description: this.$gettext( 'commands.installed_description' ),
 			},
 			{
 				keyword: ':account',
-				state: 'dashboard.account.edit',
+				routeName: 'dashboard.account.edit',
 				authRequired: true,
 				description: this.$gettext( 'commands.account_description' ),
 			},
 			{
 				keyword: ':activity',
-				state: 'dashboard.activity.feed',
-				options: { tab: 'activity' },
+				routeName: 'dashboard.activity.feed',
+				params: { tab: 'activity' },
 				authRequired: true,
 				description: this.$gettext( 'commands.activity_description' ),
 			},
 			{
 				keyword: ':notifications',
-				state: 'dashboard.activity.feed',
-				options: { tab: 'notifications' },
+				routeName: 'dashboard.activity.feed',
+				params: { tab: 'notifications' },
 				authRequired: true,
 				description: this.$gettext( 'View your notifications.' ),
 			},
 			{
 				keyword: ':settings',
-				state: 'settings',
+				routeName: 'settings',
 				authRequired: true,
 				description: this.$gettext( 'commands.settings_description' ),
 			},
@@ -228,20 +227,19 @@ export class AppSearchAutocomplete extends Vue
 		return this.modes.indexOf( this.mode ) !== -1;
 	}
 
-	private async _sendSearch()
+	private async sendSearch( query: string )
 	{
 		if ( this.search.isEmpty() || !this.inAvailableMode() ) {
 			return;
 		}
 
 		// We store the query that we're waiting on.
-		const thisQuery = this.search.query;
-		const payload = await Search.search( thisQuery, { type: 'typeahead' } );
+		const payload = await Search.search( query, { type: 'typeahead' } );
 
 		// We only update the payload if the query is still the same as when we sent.
 		// This makes sure we don't step on ourselves while typing fast.
 		// Payloads may not come back sequentially.
-		if ( this.search.query === thisQuery ) {
+		if ( this.search.query === query ) {
 			this.games = payload.games;
 			this.devlogs = payload.devlogs;
 			this.users = payload.users;
@@ -280,10 +278,11 @@ export class AppSearchAutocomplete extends Vue
 					this.selectUser( item );
 				}
 				else if ( GJ_IS_CLIENT ) {
-					const LocalDbGame = getProvider<any>( 'LocalDb_Game' );
-					if ( item instanceof LocalDbGame ) {
-						this.selectLibraryGame( item );
-					}
+					// TODO
+					// const LocalDbGame = getProvider<any>( 'LocalDb_Game' );
+					// if ( item instanceof LocalDbGame ) {
+					// 	this.selectLibraryGame( item );
+					// }
 				}
 			}
 		}
@@ -297,44 +296,53 @@ export class AppSearchAutocomplete extends Vue
 
 	viewAll()
 	{
-		const $state = getProvider<StateService>( '$state' );
-		$state.go( 'search.results', { q: this.search.query } );
+		this.$router.push( {
+			name: 'search.results',
+			query: { q: this.search.query },
+		} );
+
 		Analytics.trackEvent( 'search', 'autocomplete', 'go-all' );
 	}
 
 	selectGame( game: any )
 	{
-		const $state = getProvider<StateService>( '$state' );
-		$state.go( 'discover.games.view.overview', { slug: game.slug, id: game.id } );
+		this.$router.push( {
+			name: 'discover.games.view.overview',
+			params: { slug: game.slug, id: game.id },
+		} );
+
 		Analytics.trackEvent( 'search', 'autocomplete', 'go-game' );
 	}
 
 	selectUser( user: any )
 	{
-		const $state = getProvider<StateService>( '$state' );
-		$state.go( 'profile.overview', { username: user.username } );
+		// const $state = getProvider<StateService>( '$state' );
+		// $state.go( 'profile.overview', { username: user.username } );
 		Analytics.trackEvent( 'search', 'autocomplete', 'go-user' );
 	}
 
 	selectLibraryGame( localGame: any )
 	{
-		const $state = getProvider<StateService>( '$state' );
-		$state.go( 'discover.games.view.overview', { slug: localGame.slug, id: localGame.id } );
+		this.$router.push( { name: 'discover.games.view.overview', params: { slug: localGame.slug, id: localGame.id } } );
 		Analytics.trackEvent( 'search', 'autocomplete', 'go-library-game' );
 	}
 
 	selectCommand( command: Command )
 	{
-		if ( command && command.state ) {
+		if ( command && command.routeName ) {
 			this.search.query = '';  // Set it as blank.
-			const $state = getProvider<StateService>( '$state' );
-			$state.go( command.state, command.options || {} );
+
+			this.$router.push( {
+				name: command.routeName,
+				params: command.params || undefined,
+			} );
+
 			Analytics.trackEvent( 'search', 'autocomplete', 'go-command' );
 		}
 	}
 
 	@Watch( 'search.query' )
-	onChange()
+	onChange( query: string )
 	{
 		// Reset the selected index.
 		this.selected = 0;
@@ -348,7 +356,7 @@ export class AppSearchAutocomplete extends Vue
 		}
 		else {
 			this.mode = 'search';
-			this.sendSearch();
+			this.searchChanges.next( query );
 		}
 	}
 }

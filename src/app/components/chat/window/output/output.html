@@ -1,0 +1,92 @@
+<div
+	class="chat-window-output chat-window-output-group scrollable overlay-scrollbar overlay-scrollbar-light"
+	@scroll="onScroll( $event )"
+	>
+
+	<transition-group
+		@enter="onMessageTransition"
+		>
+		<div
+			class="anim-fade-in no-animate-leave"
+			v-for="msg of messages"
+			:key="msg.id"
+			>
+
+			<div
+				class="chat-window-message-date-split"
+				v-if="msg.dateSplit"
+				>
+				<span class="inner">{{ msg.loggedOn | date( 'mediumDate' ) }}</span>
+			</div>
+
+			<div
+				class="chat-window-message"
+				:class="{
+					'chat-msg-type-normal': msg.type === ChatMessage.TypeNormal,
+					'chat-msg-type-system': msg.type === ChatMessage.TypeSystem,
+					'chat-window-message-not-combined': !msg.combine,
+					'chat-window-message-combined': msg.combine,
+					'chat-window-message-can-mod': client.canModerate( room, msg.user ),
+				}"
+				>
+
+				<a class="chat-window-message-avatar"
+					v-if="!msg.combine"
+					:href="msg.user.url"
+					>
+					<img class="img-responsive" :src="msg.user.imgAvatar" alt="">
+				</a>
+
+				<div class="chat-window-message-container">
+					<a class="chat-window-message-user link-unstyled"
+						v-if="!msg.combine"
+						:href="msg.user.url"
+						>
+						{{ msg.user.displayName }}
+					</a>
+					<span class="chat-window-message-username"
+						v-if="!msg.combine"
+						>
+						@{{ msg.user.username }}
+					</span>
+					<span class="chat-window-message-time"
+						v-if="!msg.combine"
+						>
+						<span :title="date( msg.loggedOn, 'medium' )">
+							{{ msg.loggedOn | date( 'shortTime' ) }}
+						</span>
+					</span>
+
+					<div class="chat-window-message-mod-tools"
+						v-if="client.canModerate( room, msg.user )"
+						>
+						<a class="link-muted"
+							@click="muteUser( msg.user.id )"
+							title="Mute User"
+							>
+							<app-jolticon icon="friend-remove-2" />
+						</a>
+					</div>
+
+					<div v-if="!shouldFadeCollapse( msg )" class="chat-window-message-content-wrap">
+						<div class="chat-window-message-content highlight" v-html="msg.content"></div>
+					</div>
+					<div v-else class="chat-window-message-content-wrap">
+						<app-fade-collapse
+							:collapse-height="138"
+							:is-open="msg._expanded"
+							@required="msg._collapsable = true"
+							>
+							<div class="chat-window-message-content highlight" v-html="msg.content"></div>
+						</app-fade-collapse>
+
+						<p v-if="msg._collapsable">
+							<a class="hidden-text-expander" @click="msg._expanded = !msg._expanded"></a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</transition-group>
+
+</div>

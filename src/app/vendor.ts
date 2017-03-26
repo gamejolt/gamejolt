@@ -1,5 +1,4 @@
 import '../vendor/base';
-import '../bower-lib/angular-hotkeys/build/hotkeys.min';
 import '../bower-lib/angular-ui-utils/keypress.min';
 import '../bower-lib/angular-elastic/elastic';
 

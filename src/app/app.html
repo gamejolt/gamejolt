@@ -1,0 +1,11 @@
+<div :class="{ 'is-client-offline': Connection.isClientOffline }">
+
+	<!--<gj-client-intro client-intro-done="App.isClientIntroDone = true" ng-if="!App.isClientIntroDone"></gj-client-intro>-->
+
+	<app-shell>
+		<div id="content">
+			<router-view />
+		</div>
+	</app-shell>
+
+</div>

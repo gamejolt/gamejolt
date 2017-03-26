@@ -1,46 +1,40 @@
-<div class="activity-feed timeline-list full-bleed" ng-if="$ctrl.Loader.ready( 'hammer' )">
+<div class="activity-feed timeline-list full-bleed-xs">
 
-	<!--
-		Note that our ng-repeat track by includes updated on.
-		This way it will update the whole div when the post changes.
-		This allows us to bind-once within the post, and still update during changes.
-	-->
-	<div class="timeline-list-item"
-		ng-repeat="item in $ctrl.feed.items track by item.id"
-		id="activity-feed-item-{{ ::item.id }}"
-		ng-class="::{ new: $ctrl.isItemUnread( item ) }"
-		in-view="$ctrl.onItemInViewChange( $inview, item )"
+	<app-scroll-inview
+		class="timeline-list-item"
+		v-for="item of feed.items"
+		:key="item.id"
+		:id="`activity-feed-item-${item.id}`"
+		:class="{ 'new': isItemUnread( item ) }"
+		@inview="onItemInViewChange( true, item )"
+		@outview="onItemInViewChange( false, item )"
 		>
 
-		<div ng-switch="::item.type">
-			<gj-activity-feed-devlog-post
-				ng-switch-when="devlog-post"
-				item="::item"
-				on-click="$ctrl.setActive( item )"
-				on-expand="$ctrl.onItemExpanded( item )"
-				>
-			</gj-activity-feed-devlog-post>
+		<app-activity-feed-devlog-post
+			v-if="item.type === 'devlog-post'"
+			:item="item"
+			@clicked="setActive( item )"
+			@expanded="onItemExpanded( item )"
+			/>
 
-			<gj-activity-feed-notification
-				ng-switch-when="notification"
-				item="::item"
-				on-click="$ctrl.setActive( item )"
-				>
-			</gj-activity-feed-notification>
-		</div>
+		<app-activity-feed-notification
+			v-if="item.type === 'notification'"
+			:item="item"
+			@clicked="setActive( item )"
+			/>
 
-	</div>
+	</app-scroll-inview>
 
-	<div class="page-cut" ng-if="($ctrl.autoloadDisbled || !$ctrl.feed.reachedEnd) && !$ctrl.isLoadingMore">
-		<button class="btn btn-outline" ng-click="$ctrl.loadMore()">
-			<span translate>Load More</span>
+	<div class="page-cut" v-if="(autoloadDisbled || !feed.reachedEnd) && !isLoadingMore">
+		<button class="btn btn-outline" @click="loadMore" v-app-track-event="`activity-feed:more`">
+			<translate>Load More</translate>
 		</button>
 	</div>
 
-	<gj-loading ng-if="$ctrl.isLoadingMore" class="loading-centered"></gj-loading>
+	<app-loading v-if="isLoadingMore" class="loading-centered" />
 
-	<div class="alert alert-info" ng-if="$ctrl.feed.reachedEnd" translate>
-		A wild Snorlax blocks your path. Looks like it's the end of this feed.
+	<div class="alert alert-info" v-if="feed.reachedEnd">
+		<translate>A wild Snorlax blocks your path. Looks like it's the end of this feed.</translate>
 	</div>
 
 </div>

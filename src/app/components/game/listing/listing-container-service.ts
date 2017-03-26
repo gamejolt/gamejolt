@@ -1,27 +1,26 @@
-import { UIRouterGlobals } from 'angular-ui-router';
+import VueRouter from 'vue-router';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { getProvider } from '../../../../lib/gj-lib-client/utils/utils';
+import { GameFilteringContainer } from '../filtering/container';
 
 export class GameListingContainer
 {
-	games: any[];
+	games: any[] = [];
 	gamesCount = 0;
 	perPage = 10;
 	currentPage = 1;
 	section = 'hot';
 
-	constructor( public filteringContainer: any )
+	constructor( public filteringContainer?: GameFilteringContainer )
 	{
 	}
 
-	processPayload( payload: any )
+	processPayload( route: VueRouter.Route, payload: any )
 	{
-		const $uiRouterGlobals = getProvider<UIRouterGlobals>( '$uiRouterGlobals' );
-
 		this.games = Game.populate( payload.games );
 		this.gamesCount = payload.gamesCount;
 		this.perPage = payload.perPage;
-		this.currentPage = $uiRouterGlobals.params['page'] || 1;
-		this.section = $uiRouterGlobals.params['section'];
+
+		this.currentPage = route.query.page ? parseInt( route.query.page, 10 ) : 1;
+		this.section = route.params.section || 'hot';
 	}
 }

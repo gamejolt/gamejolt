@@ -1,9 +1,8 @@
-$minbar-padding = 3px
-$minbar-spacing = 10px
-$minbar-border-width = 0
+@require '~styles/variables';
+@require '../../../lib/gj-lib-client/stylus/common/mixins'
 
 .minbar
-	@extend .clearfix
+	clearfix()
 
 	// Hide it when a shell pane is shown.
 	.right-pane-visible &
@@ -15,13 +14,13 @@ $minbar-border-width = 0
 		margin-right: $chat-bubble-size + 20px
 
 	&-item
-		@extend .fill-dark
 		display: inline-block
 		position: relative
 		padding: $minbar-padding
 		border: $minbar-border-width solid $white
 		margin-right: ($minbar-spacing - ($minbar-border-width * 2))
 		margin-bottom: @margin-right
+		background-color: $gray-dark
 
 		// Many times minbar items will come into view by clicking minimize on something.
 		// We want to give the view time to change and let the element animate out before
@@ -29,7 +28,7 @@ $minbar-border-width = 0
 		animation-delay: 300ms
 
 		&.active
-			@extend .fill-pink
+			background-color: $gj-pink
 
 		> .notification-tag
 			position: absolute

@@ -1,21 +1,24 @@
-<form class="game-filtering-input" ng-submit="ctrl.onQueryChanged()">
+<form class="game-filtering-input" @submit.prevent="sendSearch">
 
-	<span class="jolticon jolticon-filter"></span>
+	<app-jolticon icon="filter" />
 
-	<a class="anim-fade-enter anim-fade-leave"
-		ng-click="ctrl.clear()"
-		ng-if="ctrl.query"
-		>
-		<span class="jolticon jolticon-remove"></span>
-	</a>
+	<transition>
+		<a class="anim-fade-enter anim-fade-leave"
+			@click="clear"
+			v-if="query"
+			>
+			<app-jolticon icon="remove" />
+		</a>
+	</transition>
 
-	<input type="search"
+	<input
+		ref="input"
+		type="search"
 		class="form-control"
-		ng-attr-placeholder="{{ ::'games.filtering.input_placeholder' | translate }}"
-		ng-model="ctrl.query"
-		ng-model-options="{ updateOn: 'blur' }"
-		ng-change="ctrl.onQueryChanged()"
-		ui-keydown="{ esc: 'ctrl.blur( $event )' }"
+		:placeholder="$gettext( 'games.filtering.input_placeholder' )"
+		v-model="query"
+		@blur="sendSearch"
+		@keydown.esc.stop.prevent="blur"
 		>
 
 </form>

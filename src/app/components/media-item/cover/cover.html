@@ -1,28 +1,39 @@
-<section class="section media-item-cover"
-	ng-class="{ loaded: $ctrl.isLoaded }"
+<div
+	class="media-item-cover-container"
+	:style="{ height }"
 	>
+	<section
+		class="section media-item-cover"
+		:class="{ loaded: isLoaded }"
+		>
 
-	<div class="media-item-cover-img">
-		<img
-			gj-img-responsive="{{ $ctrl.mediaItem.mediaserver_url }}"
-			(on-loaded-change)="$ctrl.isMediaItemLoaded = $event"
-			alt=""
-			gj-parallax-scroll="::$ctrl.shouldParallax"
-			scroll-drag="0.4"
-			scroll-dim="0.8"
-			>
-	</div>
+		<div class="media-item-cover-img">
+			<app-scroll-parallax
+				:disabled="!shouldParallax"
+				:drag="0.4"
+				:dim="0.8"
+				>
+				<app-img-responsive
+					:src="mediaItem.mediaserver_url"
+					@imgloadchange="onLoadChange"
+					alt=""
+					/>
+			</app-scroll-parallax>
+		</div>
 
-	<div class="loading-container" ng-if="!$ctrl.isLoaded">
-		<gj-loading
-			class="loading-centered"
-			loading-no-color
-			loading-stationary
-			hide-label
-			>
-		</gj-loading>
-	</div>
+		<div class="loading-container" v-if="!isLoaded">
+			<app-loading
+				class="loading-centered"
+				:no-color="true"
+				:stationary="true"
+				:hide-label="true"
+				/>
+		</div>
 
-	<div class="media-item-cover-content" ng-transclude></div>
+		<div class="media-item-cover-content">
+			<slot />
+			<!--TODO: angular-->
+		</div>
 
-</section>
+	</section>
+</div>

@@ -1,8 +1,3 @@
-<gj-game-listing
-	listing="$ctrl.listing"
-	hide-filters="true"
-	>
-
-	<ui-view></ui-view>
-
-</gj-game-listing>
+<app-game-listing :listing="listing" :hide-filters="true">
+	<app-game-grid :games="listing.games" event-label="devlogs-games" />
+</app-game-listing>

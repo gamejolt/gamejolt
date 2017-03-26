@@ -1,3 +1,12 @@
-<h1 class="h2 section-header anim-fade-in-enlarge" translate>auth.forgot.heading</h1>
+<div>
 
-<gj-form-retrieve-login gj-form-submit-handler="forgotCtrl.onSubmitted()"></gj-form-retrieve-login>
+	<h2 class="section-header anim-fade-in-enlarge">
+		<translate>auth.forgot.heading</translate>
+	</h2>
+
+	<form-retrieve-login
+		@submit="onSubmitted"
+		>
+	</form-retrieve-login>
+
+</div>

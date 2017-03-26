@@ -19,8 +19,8 @@
 				ng-repeat="channel in ::$ctrl.channels"
 				>
 				<gj-channel-thumbnail
-					channel="{{ ::channel }}"
-					games-count="::$ctrl.gameCounts[ channel ]"
+					[channel]="::channel"
+					[games-count]="::$ctrl.gameCounts[ channel ]"
 					>
 				</gj-channel-thumbnail>
 			</div>

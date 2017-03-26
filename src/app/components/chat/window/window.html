@@ -2,47 +2,45 @@
 
 	<!--
 		We sadly need the chat close thing twice.
-		It takes up the emtpy background space so you can click that to close chat.
+		It takes up the empty background space so you can click that to close chat.
 	-->
-	<div class="chat-window-back-close" ng-click="ctrl.closeChat()"></div>
-	<div class="chat-window">
-		<div class="chat-window-back-close" ng-click="ctrl.closeChat()"></div>
-
-		<!--
-			Using enter/leave anims rather than "in" won't trigger it unless it wasn't in DOM and then was entered.
-			This allows it just to animate on XS size.
-		-->
+	<div class="chat-window-back-close" @click="closeChat"></div>
+	<div class="chat-window anim-fade-in-up">
+		<div class="chat-window-back-close" @click="closeChat"></div>
 
 		<!-- Room Users -->
-		<div class="fill-darkest chat-window-users scrollable overlay-scrollbar anim-fade-enter-enlarge anim-fade-leave-shrink"
-			ng-if="ctrl.room.type != Chat_Room.TYPE_PM && ctrl.isShowingUsers"
-			>
-
-			<div ng-if="Screen.isXs">
-				<br>
-				<div class="nav-controls">
-					<button class="btn btn-outline btn-block" ng-click="ctrl.toggleUsers()">
-						<span class="jolticon jolticon-chevron-left"></span>
-						<span translate>Back to Chat</span>
-					</button>
-				</div>
-			</div>
-
-			<div class="nav-heading first">
-				Room Users
-				<span class="badge" ng-class="{ 'badge-active': ctrl.users.onlineCount > 0 }">
-					{{ ctrl.users.onlineCount | number }}
-				</span>
-			</div>
-
-			<gj-chat-user-list
-				chat-user-list-room="ctrl.room"
-				chat-user-list-users="ctrl.users.collection"
-				chat-user-list-show-mod-tools="ctrl.showModTools"
+		<transition>
+			<div class="fill-darkest chat-window-users scrollable overlay-scrollbar anim-fade-enter-enlarge anim-fade-leave-shrink"
+				v-if="!room.isPmRoom && isShowingUsers"
 				>
-			</gj-chat-user-list>
 
-		</div>
+				<div v-if="Screen.isXs">
+					<br>
+					<div class="nav-controls">
+						<button class="btn btn-outline btn-block" @click="toggleUsers()">
+							<app-jolticon icon="chevron-left" />
+							<translate>Back to Chat</translate>
+						</button>
+					</div>
+				</div>
+
+				<div class="nav-heading first">
+					Room Users
+					<span class="badge" :class="{ 'badge-active': users && users.onlineCount > 0 }">
+						{{ users ? users.onlineCount : 0 | number }}
+					</span>
+				</div>
+
+				<app-chat-user-list
+					v-if="users"
+					:room="room"
+					:users="users.collection"
+					:show-mod-tools="showModTools"
+					>
+				</app-chat-user-list>
+
+			</div>
+		</transition>
 
 		<div class="chat-window-main">
 
@@ -52,76 +50,91 @@
 
 					<div class="chat-window-header-controls">
 
-						<button class="btn btn-sparse anim-fade-in no-animate-leave"
-							ng-click="ctrl.showEditRoomModal()"
-							gj-tooltip="{{ 'Edit Room Details' | translate }}"
-							ng-if="ctrl.room.type != Chat_Room.TYPE_PM && ctrl.showModTools"
+						<button class="btn btn-sparse anim-fade-in"
+							@click="showEditRoomModal"
+							v-if="!room.isPmRoom && showModTools"
+							:title="$gettext( 'Edit Room Details' )"
 							>
-							<span class="jolticon jolticon-edit"></span>
+							<app-jolticon icon="edit" />
 						</button>
 
 						<button class="btn btn-sparse"
-							ng-if="!client.singleRoomMode"
-							ng-click="ctrl.minimize()"
-							gj-tooltip="{{ 'Minimize Room' | translate }}"
+							v-if="!client.singleRoomMode"
+							@click="minimize()"
+							:title="$gettext( 'Minimize Room' )"
 							>
-							<span class="jolticon jolticon-minus"></span>
+							<app-jolticon icon="minus" />
 						</button>
 
 						<button class="btn btn-sparse"
-							ng-click="ctrl.close()"
-							gj-tooltip="{{ 'Close Room' | translate }}"
+							@click="close()"
+							:title="$gettext( 'Close Room' )"
 							>
-							<span class="jolticon jolticon-remove"></span>
+							<app-jolticon icon="remove" />
 						</button>
 
 					</div>
 
 					<!--
-						Bind once and animation scope.
+						Aanimation scope.
 					-->
-					<div class="chat-window-header-content" ng-repeat="room in [ ctrl.room ] track by room.id">
+					<div
+						class="chat-window-header-content"
+						v-for="room of [ room ]"
+						:key="room.id"
+						>
 
 						<a class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
-							ng-if="room.type == Chat_Room.TYPE_PM"
-							ui-sref="profile.overview( { username: ctrl.room.user.username } )"
+							v-if="room.isPmRoom"
+							:href="room.user.url"
 							>
-							<img ng-src="{{ ::ctrl.room.user.imgAvatar }}" alt="">
+							<img :src="room.user.imgAvatar" alt="">
 						</a>
 
-						<h3 ng-if="room.type != Chat_Room.TYPE_PM" class="anim-fade-in-right no-animate-xs">{{ ::ctrl.room.title }}</h3>
-
-						<h3 ng-if="room.type == Chat_Room.TYPE_PM" class="anim-fade-in-right no-animate-xs" title="{{ ::ctrl.room.user.displayName }} (@{{ ::ctrl.room.user.username }})">
-							<a class="link-unstyled"
-								ui-sref="profile.overview( { username: ctrl.room.user.username } )"
-								>
-								{{ ::ctrl.room.user.displayName }}
-							</a>
-							<br>
-							<small>@{{ ::ctrl.room.user.username }}</small>
+						<h3 v-if="!room.isPmRoom" class="anim-fade-in-right no-animate-xs">
+							{{ room.title }}
 						</h3>
 
-						<div ng-if="ctrl.room.type != Chat_Room.TYPE_PM" style="clear: both;">
-							<gj-fade-collapse class="fade-collapse-sm"
-								ng-if="!Screen.isXs"
-								fade-collapse-height="50"
-								fade-collapse-is-required="room._description_collapsed"
+						<h3 v-if="room.isPmRoom" class="anim-fade-in-right no-animate-xs"
+							:title="`${room.user.displayName} (@${room.user.username})`"
+							>
+							<a class="link-unstyled"
+								:href="room.user.url"
+								>
+								{{ room.user.displayName }}
+							</a>
+							<br>
+							<small>@{{ room.user.username }}</small>
+						</h3>
+
+						<div v-if="!room.isPmRoom" style="clear: both;">
+							<app-fade-collapse
+								class="fade-collapse-sm"
+								v-if="!Screen.isXs"
+								:collapse-height="50"
+								@required="room._description_collapsed = true"
 								style="display: block; max-height: 50px; overflow: hidden;"
 								>
 								<div class="chat-window-header-room-description chat-compiled-room-description">
-									<div class="anim-fade-in no-animate-xs" ng-bind-html="::room.description_compiled"></div>
+									<div class="anim-fade-in no-animate-xs" ng-bind-html="room.description_compiled"></div>
 								</div>
-							</gj-fade-collapse>
+							</app-fade-collapse>
 
 							<div>
-								<button class="btn btn-sm toggle-users" ng-class="ctrl.isShowingUsers ? 'btn-success-outline' : 'btn-outline'" ng-click="ctrl.toggleUsers()">
-									<span ng-if="!ctrl.isShowingUsers" translate>Show Users</span>
-									<span ng-if="ctrl.isShowingUsers" translate>Hide Users</span>
-									({{ ctrl.users.onlineCount | number }})
+								<button class="btn btn-sm toggle-users"
+									:class="isShowingUsers ? 'btn-success-outline' : 'btn-outline'"
+									@click="toggleUsers"
+									>
+									<translate v-if="!isShowingUsers">Show Users</translate>
+									<translate v-else>Hide Users</translate>
+									({{ users.onlineCount | number }})
 								</button>
 
-								<button class="btn btn-sm btn-outline" ng-if="room._description_collapsed || Screen.isXs" ng-click="ctrl.viewRoomDetails()" translate>
-									View Room Description
+								<button class="btn btn-sm btn-outline"
+									v-if="room._description_collapsed || Screen.isXs"
+									@click="viewRoomDetails"
+									>
+									<translate>View Room Description</translate>
 								</button>
 							</div>
 						</div>
@@ -131,85 +144,18 @@
 			</div>
 
 			<!--
-				Auto scrolling happens whenever the watched variabe changes.
-				This way we update any time messages changes.
+				The v-for is a hack to make sure we destroy/recreate each time
+				the room changes.
 			-->
-			<div class="chat-window-output chat-window-output-group scrollable overlay-scrollbar overlay-scrollbar-light"
-				gj-chat-auto-scroll="ctrl.messages[ ctrl.messages.length - 1 ]">
+			<app-chat-window-output
+				v-for="room of [ room ]"
+				:key="room.id"
+				:room="room"
+				:messages="messages"
+				/>
 
-				<div class="chat-window-message anim-fade-in no-animate-leave"
-					ng-repeat="msg in ctrl.messages track by msg.id"
-					ng-class="::{
-						'chat-msg-type-normal': msg.type == ChatConfig.MSG_NORMAL,
-						'chat-msg-type-system': msg.type == ChatConfig.MSG_SYSTEM,
-						'chat-window-message-not-combined': !msg.combine,
-						'chat-window-message-combined': msg.combine,
-						'chat-window-message-can-mod': client.canModerate( ctrl.room, msg.user ),
-					}"
-					>
-
-					<a class="chat-window-message-avatar"
-						ng-if="::!msg.combine"
-						ui-sref="profile.overview( { username: msg.user.username } )"
-						>
-						<img ng-src="{{ ::msg.user.imgAvatar }}" alt="">
-					</a>
-
-					<div class="chat-window-message-container">
-						<a class="chat-window-message-user link-unstyled"
-							ng-if="::!msg.combine"
-							ui-sref="profile.overview( { username: msg.user.username } )"
-							>
-							{{ ::msg.user.displayName }}
-						</a>
-						<span class="chat-window-message-username"
-							ng-if="::!msg.combine"
-							>
-							@{{ ::msg.user.username }}
-						</span>
-						<span class="chat-window-message-time"
-							ng-if="::!msg.combine"
-							>
-							{{ ::msg.loggedOn | amDateFormat:'h:mm A' }}
-						</span>
-
-						<div class="chat-window-message-mod-tools" ng-if="::client.canModerate( ctrl.room, msg.user )">
-							<a class="link-muted" gj-tooltip="Mute User" ng-click="ctrl.muteUser( msg.user.id )">
-								<span class="jolticon jolticon-friend-remove-2"></span>
-							</a>
-						</div>
-
-						<div ng-if="::!ctrl.shouldFadeCollapse( msg )" class="chat-window-message-content-wrap">
-							<div class="chat-window-message-content highlight" ng-bind-html="::msg.content"></div>
-						</div>
-
-						<div ng-if="::ctrl.shouldFadeCollapse( msg )" class="chat-window-message-content-wrap">
-							<gj-fade-collapse
-								fade-collapse-height="138"
-								fade-collapse-is-open="msg._expanded"
-								fade-collapse-is-required="::msg._collapsable"
-								>
-								<div class="chat-window-message-content highlight" ng-bind-html="::msg.content"></div>
-							</gj-fade-collapse>
-
-							<p ng-if="msg._collapsable">
-								<a class="hidden-text-expander" ng-click="msg._expanded = !msg._expanded"></a>
-							</p>
-						</div>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="chat-window-send-container" ng-if="client.currentUser">
-
-				<!--
-					The ng-repeat allows us to recompile the send component when switching rooms.
-					It clears out their message and refocuses it.
-				-->
-				<div ng-repeat="room in [ ctrl.room ] track by room.id">
-					<gj-chat-window-send></gj-chat-window-send>
-				</div>
+			<div class="chat-window-send-container" v-if="client.currentUser">
+				<app-chat-window-send />
 			</div>
 
 		</div>

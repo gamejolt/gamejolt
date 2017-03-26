@@ -10,11 +10,5 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 		data: {
 			availableOffline: true,
 		},
-		resolve: {
-			payload: function( Api )
-			{
-				return Api.sendRequest( '/web/library' );
-			},
-		}
 	} );
 } );

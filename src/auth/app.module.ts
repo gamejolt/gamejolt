@@ -18,7 +18,6 @@ import { MediaItemModule } from '../lib/gj-lib-client/components/media-item/medi
 import { ApiModule } from '../lib/gj-lib-client/components/api/api.module';
 import { PayloadModule } from '../lib/gj-lib-client/components/payload/payload.module';
 import { UserModule } from '../lib/gj-lib-client/components/user/user.module';
-import { CoverImgComponent } from './components/cover-img/cover-img.component';
 import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module';
 import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analytics.module';
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
@@ -28,6 +27,7 @@ import { ConnectionModule } from '../lib/gj-lib-client/components/connection/con
 import { TranslateLangSelectorModule } from '../lib/gj-lib-client/components/translate/lang-selector/lang-selector.module';
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
 import { GrowlsModule } from '../lib/gj-lib-client/components/growls/growls.module';
+import { HistoryModule } from '../lib/gj-lib-client/components/history/history.module';
 
 @NgModule({
 	imports: [
@@ -55,11 +55,11 @@ import { GrowlsModule } from '../lib/gj-lib-client/components/growls/growls.modu
 		TranslateModule,
 		TranslateLangSelectorModule,
 		GrowlsModule,
+		HistoryModule,
 		AppModuleNg1,
 	],
 	declarations: [
 		AppComponent,
-		CoverImgComponent,
 	],
 	providers: [
 		App,

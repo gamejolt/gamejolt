@@ -1,2 +1,41 @@
-<div ng-if="!gameCtrl.game._is_devlog" gj-partial="/app/views/discover/games/view/overview/_game.html"></div>
-<div ng-if="gameCtrl.game._is_devlog" gj-partial="/app/views/discover/games/view/overview/_devlog.html"></div>
+<div>
+
+	<app-discover-games-view-overview-game
+		v-if="!game._is_devlog"
+		:is-loaded="isLoaded"
+		:game="game"
+		:media-items="mediaItems"
+		:recommended-games="recommendedGames"
+		:user-rating="userRating"
+		:songs="songs"
+		:packages="packagePayload.packages"
+		:releases="packagePayload.releases"
+		:supporters="supporters"
+		:profile-count="profileCount"
+		:play-count="playCount"
+		:download-count="downloadCount"
+		:rating-breakdown="ratingBreakdown"
+		:posts="posts"
+		/>
+
+	<app-discover-games-view-overview-devlog
+		v-else
+		:is-loaded="isLoaded"
+		:game="game"
+		:media-items="mediaItems"
+		:songs="songs"
+		:packages="packagePayload.packages"
+		:releases="packagePayload.releases"
+		:posts="posts"
+		/>
+		<!--
+		:recommended-games="recommendedGames"
+		:user-rating="userRating"
+		:supporters="supporters"
+		:profile-count="profileCount"
+		:play-count="playCount"
+		:download-count="downloadCount"
+		:rating-breakdown="ratingBreakdown"
+		-->
+
+</div>

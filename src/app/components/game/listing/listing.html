@@ -1,33 +1,26 @@
 <div class="game-listing">
-	<section class="section section-thin" ng-if="$ctrl.showAds && !$ctrl.env.isClient && !$ctrl.screen.isXs">
-		<gj-ad ad-size="leaderboard"></gj-ad>
+	<section class="section section-thin" v-if="showAds && !Environment.isClient && !Screen.isXs">
+		<app-ad size="leaderboard" />
 	</section>
 
-	<section class="section fill-lightest nav-only" ng-if="!$ctrl.hideFilters" id="games">
+	<section class="section fill-lightest nav-only" v-if="!hideFilters" id="games">
 		<div class="container">
-			<gj-game-filtering-widget
-				gj-filtering-container="$ctrl.listing.filteringContainer"
-				>
-			</gj-game-filtering-widget>
+			<app-game-filtering-widget :filtering="listing.filteringContainer" />
 		</div>
 	</section>
 
-	<div class="container">
+	<div class="container" v-if="!hideFilters">
 		<div class="clearfix">
 
-			<gj-game-filtering-tags
-				gj-filtering-container="$ctrl.listing.filteringContainer"
-				>
-			</gj-game-filtering-tags>
+			<app-game-filtering-tags :filtering="listing.filteringContainer" />
 
 			<!--
 				On mobile we show the filtering input above.
 			-->
-			<gj-game-filtering-input
-				ng-if="$ctrl.screen.isSm || ($ctrl.screen.isXs && $ctrl.listing.filteringContainer.filters.query)"
-				gj-filtering-container="$ctrl.listing.filteringContainer"
-				>
-			</gj-game-filtering-input>
+			<app-game-filtering-input
+				v-if="Screen.isSm || (Screen.isXs && listing.filteringContainer.filters.query)"
+				:filtering="listing.filteringContainer"
+				/>
 
 		</div>
 	</div>
@@ -41,109 +34,118 @@
 			<div class="row">
 				<div class="col-sm-6 col-md-3">
 
-					<nav class="pills" ng-class="{ 'nav-justified': $ctrl.screen.isXs }"
-						ng-if="!$ctrl.hideSectionNav"
+					<nav class="pills" :class="{ 'nav-justified': Screen.isXs }"
+						v-if="!hideSectionNav"
 						>
 						<ul>
-							<li ng-if="$ctrl.includeFeaturedSection">
-								<a
-									ui-sref="{{ $ctrl.state }}( { section: 'featured' } )"
-									ui-sref-active="active"
+							<li v-if="includeFeaturedSection">
+								<router-link
+									:to="{ name: $route.name, params: { section: 'featured' } }"
+									:exact="true"
+									active-class="active"
 									gj-no-auto-scroll
-									gj-track-event="game-list:section-selector:featured"
+									v-app-track-event="`game-list:section-selector:featured`"
 									translate
 									>
-									{{ ::'games.list.sections_selector_featured' | translate }}
-								</a>
+									<translate>games.list.sections_selector_featured</translate>
+								</router-link>
 							</li>
 							<li>
-								<a
-									ui-sref="{{ $ctrl.state }}( { section: 'hot' } )"
-									ui-sref-active="active"
+								<router-link
+									:to="{ name: $route.name, params: { section: undefined } }"
+									:exact="true"
+									active-class="active"
 									gj-no-auto-scroll
-									gj-track-event="game-list:section-selector:hot"
+									v-app-track-event="`game-list:section-selector:hot`"
 									>
-									{{ ::'games.list.sections_selector_hot' | translate }}
-								</a>
+									<translate>games.list.sections_selector_hot</translate>
+								</router-link>
 							</li>
 							<li>
-								<a
-									ui-sref="{{ $ctrl.state }}( { section: 'best' } )"
-									ui-sref-active="active"
+								<router-link
+									:to="{ name: $route.name, params: { section: 'best' } }"
+									:exact="true"
+									active-class="active"
 									gj-no-auto-scroll
-									gj-track-event="game-list:section-selector:best"
+									v-app-track-event="`game-list:section-selector:best`"
 									>
-									{{ ::'games.list.sections_selector_best' | translate }}
-								</a>
+									<translate>games.list.sections_selector_best</translate>
+								</router-link>
 							</li>
 							<li>
-								<a
-									ui-sref="{{ $ctrl.state }}( { section: 'new' } )"
-									ui-sref-active="active"
+								<router-link
+									:to="{ name: $route.name, params: { section: 'new' } }"
+									:exact="true"
+									active-class="active"
 									gj-no-auto-scroll
-									gj-track-event="game-list:section-selector:new"
+									v-app-track-event="`game-list:section-selector:new`"
 									>
-									{{ ::'games.list.sections_selector_new' | translate }}
-								</a>
+									<translate>games.list.sections_selector_new</translate>
+								</router-link>
 							</li>
 						</ul>
 					</nav>
 
 				</div>
-				<div class="col-sm-6 col-md-5">
+				<div
+					:class="{
+						'col-sm-6 col-md-5': !hideFilters,
+						'col-sm-6 col-md-9': hideFilters,
+					}"
+					>
 
-					<p class="text-muted small" ng-class="{ 'text-right': !$ctrl.screen.isXs }">
-						<span ng-if="$ctrl.listing.gamesCount == 0" translate>games.list.games_count_none</span>
+					<p class="text-muted small" :class="{ 'text-right': !Screen.isXs }">
+						<translate v-if="listing.gamesCount === 0">
+							games.list.games_count_none
+						</translate>
 
-						<span
-							ng-if="$ctrl.listing.gamesCount > 0"
-							translate
-							translate-n="$ctrl.listing.gamesCount"
-							translate-plural="games.list.games_count"
-							translate-params-page="$ctrl.listing.currentPage"
-							translate-comment="{{ page }} expands to the current page of games"
+						<translate
+							v-if="listing.gamesCount > 0"
+							:translate-params="{ count: number( listing.gamesCount ), page: number( listing.currentPage ) }"
+							:translate-n="listing.gamesCount"
+							translate-plural="Page %{ page } of %{ count } games."
+							translate-comment="%{ page } expands to the current page of games"
 							>
-							games.list.games_count
-						</span>
+							%{ count } game.
+						</translate>
 					</p>
 
 				</div>
-				<div class="col-md-4 visible-md visible-lg">
+				<div class="col-md-4 visible-md visible-lg" v-if="!hideFilters">
 
-					<gj-game-filtering-input
-						gj-filtering-container="$ctrl.listing.filteringContainer"
-						>
-					</gj-game-filtering-input>
+					<app-game-filtering-input :filtering="listing.filteringContainer" />
 
 				</div>
 			</div>
 
-			<div ng-show="$ctrl.listing.gamesCount">
+			<div v-if="listing.gamesCount">
 
-				<!-- This is where the games will show. -->
-				<ng-transclude></ng-transclude>
+				<app-loading-fade :is-loading="isLoading">
+					<slot />
+				</app-loading-fade>
 
-				<gj-pagination
+				<app-pagination
 					class="text-center"
-					items-per-page="$ctrl.listing.perPage"
-					total-items="$ctrl.listing.gamesCount"
-					current-page="$ctrl.listing.currentPage"
-					(on-page-change)="$ctrl.scroll.to( 'games', { animate: false } )"
-					>
-				</gj-pagination>
+					:items-per-page="listing.perPage"
+					:total-items="listing.gamesCount"
+					:current-page="listing.currentPage"
+					@pagechange="Scroll.to( 'games', { animate: false } )"
+					/>
 
 			</div>
 		</div>
 		<div class="container">
-			<div ng-if="!$ctrl.listing.gamesCount" class="alert alert-warning anim-fade-in no-animate-leave">
+			<div v-if="!listing.gamesCount" class="alert alert-warning anim-fade-in no-animate-leave">
 				<div class="container">
-					<p translate>No games match your filters. <b>Zoinks!</b></p>
+					<p>
+						<translate>No games match your filters. Zoinks!</translate>
+					</p>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<section class="section section-thin" ng-if="$ctrl.showAds && !$ctrl.env.isClient && !$ctrl.screen.isXs">
-		<gj-ad ad-size="leaderboard"></gj-ad>
+	<section class="section section-thin" v-if="showAds && !Environment.isClient && !Screen.isXs">
+		<app-ad size="leaderboard" />
 	</section>
 </div>
