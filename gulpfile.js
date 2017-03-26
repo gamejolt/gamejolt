@@ -1,7 +1,7 @@
 var gulp = require( 'gulp' );
 
 var config = {
-	staticCdn: 'https://s.gjcdn.net',
+	staticCdn: 'https://gamejolt.com',
 	injectVersion: 2,
 	framework: 'vue',
 	extraBower: {
