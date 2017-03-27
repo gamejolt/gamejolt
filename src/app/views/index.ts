@@ -8,12 +8,14 @@ import { routeLegal } from './legal/legal.route';
 import { Scroll } from '../../lib/gj-lib-client/components/scroll/scroll.service';
 import { routeSearch } from './search/search.route';
 import { routeTest } from './test/test.route';
+import { routeProfile } from './profile/profile.route';
 
 Vue.use( VueRouter );
 
 const routes = [
 	routeDiscover,
 	routeSearch,
+	routeProfile,
 	routeLanding,
 	routeLegal,
 	...routeTest,
