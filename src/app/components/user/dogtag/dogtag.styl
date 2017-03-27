@@ -1,15 +1,4 @@
-.user-dogtag
-	@extend .tag
-
-.user-dogtag-gmr
-	@extend .tag-active
-
-.user-dogtag-dev
-	@extend .tag-blue
-
-.user-dogtag-edt
-.user-dogtag-mod
-	@extend .tag-pink
+@require '~styles/variables'
 
 // Alternate between all dogtag types!
 @keyframes user-dogtag-guy
@@ -33,7 +22,10 @@
 		background-color: $gj-pink
 		color: $white
 
-.user-dogtag-guy
-	animation-name: user-dogtag-guy
-	animation-duration: 5s
-	animation-iteration-count: infinite
+.user-dogtag
+	text-transform: uppercase
+
+	&-guy
+		animation-name: user-dogtag-guy
+		animation-duration: 5s
+		animation-iteration-count: infinite

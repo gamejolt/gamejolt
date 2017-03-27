@@ -1,0 +1,10 @@
+<span class="user-dogtag tag"
+	:class="{
+		'tag-active': type === 'gmr',
+		'tag-blue': type === 'dev',
+		'tag-pink': type === 'edt' || type === 'mod',
+		'user-dogtag-guy': type === 'guy',
+	}"
+	>
+	{{ type }}
+</span>
