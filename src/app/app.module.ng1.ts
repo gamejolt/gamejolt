@@ -101,7 +101,6 @@ import './components/trophy/list/list-module';
 import './components/trophy/overview/overview-module';
 import './components/trophy/thumbnail/thumbnail-module';
 import './components/user/friendships-helper/friendships-helper-module';
-import './components/user/level-widget/level-widget-module';
 import './components/user/set-password-modal/set-password-modal-module';
 import './components/user/token-modal/token-modal-module';
 
@@ -211,7 +210,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'App.Trophy.List',
 	'App.Trophy.Completion',
 	'App.Trophy.Overview',
-	'App.User.LevelWidget',
 	'App.User.TokenModal',
 	'App.User.SetPasswordModal',
 	'App.User.FriendshipsHelper',
