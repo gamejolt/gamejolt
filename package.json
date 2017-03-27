@@ -64,7 +64,7 @@
     "tc-angular-chartjs": "1.0.11",
     "ua-parser-js": "0.7.12",
     "v-tooltip": "1.1.6",
-    "vue": "2.2.5",
+    "vue": "2.2.6",
     "vue-class-component": "5.0.0",
     "vue-gettext": "gamejolt/vue-gettext#hworld-lazyload",
     "vue-property-decorator": "4.0.0",
