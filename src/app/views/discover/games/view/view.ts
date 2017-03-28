@@ -130,7 +130,9 @@ export default class RouteDiscoverGamesView extends Vue
 		// 	ref: this.userPartnerKey || $location.search().ref || undefined,
 		// } );
 
-		this.loadCommentsCount();
+		if ( this.game.comments_enabled ) {
+			this.loadCommentsCount();
+		}
 
 		// Any game rating change will broadcast this event.
 		// We catch it so we can update the page with the new rating! Yay!
