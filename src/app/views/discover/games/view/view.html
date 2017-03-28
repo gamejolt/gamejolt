@@ -73,17 +73,17 @@
 				/>
 
 			<h1 :class="{ h2: Screen.isMobile }">
-				<a ui-sref=".overview">
+				<router-link :to="{ name: 'discover.games.view.overview' }">
 					{{ game.title }}
-				</a>
+				</router-link>
 			</h1>
 
 			<div>
 				<translate>by</translate>
-				<a ui-sref="profile.overview( { username: game.developer.username } )">
+				<router-link :to="{ name: 'profile.overview', params: { username: game.developer.username } }">
 					{{ game.developer.display_name }}
 					<small>@{{ game.developer.username }}</small>
-				</a>
+				</router-link>
 
 				<!--
 					Hide on mobile to keep it clean.

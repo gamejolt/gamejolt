@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./profile.html';
+import * as View from '!view!./profile.html?style=./profile.styl';
 
 import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
@@ -42,7 +42,7 @@ export default class RouteProfile extends Vue
 
 	@State app: AppState;
 
-	user: User = {} as User;
+	user: User | null = null;
 	headerMediaItem: MediaItem | null = null;
 	gamesCount = 0;
 	videosCount = 0;
@@ -62,7 +62,6 @@ export default class RouteProfile extends Vue
 
 	routed()
 	{
-		console.log( this.$payload );
 		this.user = new User( this.$payload.user );
 
 		// TODO
@@ -121,7 +120,7 @@ export default class RouteProfile extends Vue
 
 	removeFriend()
 	{
-		// TODO		
+		// TODO
 		// this.userFriendshipsHelper.removeFriend( this.userFriendship )
 		// 	.then( () =>
 		// 	{

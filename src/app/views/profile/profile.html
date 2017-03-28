@@ -1,15 +1,23 @@
-<div>
+<div v-if="user">
 
 	<!--
 		If this user is banned, we show very little.
 	-->
-	<div v-if="!user.status">
-		<!--TODO-->
-		<!--<div gj-partial="/app/views/profile/_banned.html"></div>-->
-	</div>
+	<app-page-header v-if="!user.status">
+		<h1>
+			{{ user.display_name }}
+			<br>
+			<small>@{{ user.username }}</small>
+		</h1>
+
+		<div class="text-muted small">
+			<translate>profile.joined</translate>
+			<app-time-ago :date="user.created_on" />
+		</div>
+	</app-page-header>
 
 	<app-page-header
-		v-if="user.status > 0"
+		v-else
 		:cover-media-item="headerMediaItem"
 		:cover-max-height="300"
 		:should-affix-nav="true"
@@ -76,7 +84,7 @@
 		</div>
 
 		<div slot="spotlight">
-			<app-user-avatar :user="user" v-if="!headerImg" />
+			<app-user-avatar :user="user" />
 		</div>
 
 		<div slot="nav">

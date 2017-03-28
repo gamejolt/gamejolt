@@ -19,6 +19,7 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
+import { AppCommentVideoThumbnail } from '../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 
 @View
 @Component({
@@ -29,6 +30,7 @@ import { AppUserLevelWidget } from '../../../components/user/level-widget/level-
 		AppJolticon,
 		AppFadeCollapse,
 		AppGameThumbnail,
+		AppCommentVideoThumbnail,
 		AppUserLevelWidget,
 	},
 	directives: {

@@ -23,8 +23,6 @@ import GamePlayModalModule from '../lib/gj-lib-client/components/game/play-modal
 import YoutubeSdkModule from '../lib/gj-lib-client/components/social/youtube/sdk/sdk';
 import YoutubeSubscribeModule from '../lib/gj-lib-client/components/social/youtube/subscribe/subscribe';
 import { YoutubeChannelModule } from '../lib/gj-lib-client/components/youtube/channel/channel.module';
-import CommentVideoLightboxModule from '../lib/gj-lib-client/components/comment/video/lightbox/lightbox';
-import CommentVideoThumbnailModule from '../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import ResponsiveDimensionsModule from '../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions.module';
 import { FiresidePostModule } from '../lib/gj-lib-client/components/fireside/post/post.module';
 import { FiresidePostTagModule } from '../lib/gj-lib-client/components/fireside/post/tag/tag.module';
@@ -164,8 +162,6 @@ import { GameFollowWidgetModule } from './components/game/follow-widget/follow-w
 		HistoryTickModule,
 		PaginationModule,
 		ModalConfirmModule,
-		CommentVideoThumbnailModule,
-		CommentVideoLightboxModule,
 		GameThumbnailImgModule,
 		GamePlayModalModule,
 		YoutubeSdkModule,
