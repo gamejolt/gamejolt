@@ -33,6 +33,9 @@ import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/numbe
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
 import { ActivityFeedContainer } from '../../../../../../components/activity/feed/feed-container-service';
 import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
+import { CommentVideo } from '../../../../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
+import { AppCommentVideoThumbnail } from '../../../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 
 @View
 @Component({
@@ -51,6 +54,7 @@ import { AppActivityFeed } from '../../../../../../components/activity/feed/feed
 		AppCommentWidget,
 		AppGamePackageCard,
 		AppActivityFeed,
+		AppCommentVideoThumbnail,
 	},
 	directives: {
 		AppTrackEvent,
@@ -70,24 +74,66 @@ export class AppDiscoverGamesViewOverviewGame extends Vue
 	@Prop() packages: GamePackage[];
 	@Prop() releases: GameRelease[];
 	@Prop() songs: GameSong[];
-	@Prop() supporters: User[];
 	@Prop() userPartnerKey: string;
 	@Prop() partnerLink: string;
 	@Prop() twitterShareMessage: string;
-	@Prop() profileCount: number;
-	@Prop() downloadCount: number;
-	@Prop() playCount: number;
 	@Prop() ratingBreakdown: number[];
 	@Prop() posts: ActivityFeedContainer;
 
 	@State app: AppState;
 
+	profileCount = 0;
+	downloadCount = 0;
+	playCount = 0;
+	developerGamesCount = 0;
+	commentsCount = 0;
+	supporters: User[] = [];
+
 	showFullDescription = false;
 	canToggleDescription = false;
-	commentsCount = 0;
+
+	videoComments: CommentVideo[] = [];
+	videoCommentsCount = 0;
+	videoCommentsPage = 0;
 
 	Screen = makeObservableService( Screen );
 	Environment = Environment;
+
+	routed()
+	{
+		this.profileCount = this.$payload.profileCount || 0;
+		this.downloadCount = this.$payload.downloadCount || 0;
+		this.playCount = this.$payload.playCount || 0;
+		this.developerGamesCount = this.$payload.developerGamesCount || 0;
+
+		this.supporters = User.populate( this.$payload.supporters );
+
+		this.videoComments = CommentVideo.populate( this.$payload.videoComments );
+		this.videoCommentsCount = this.$payload.videoCommentsCount || 0;
+
+		// this.scoresPayload = _.pick( payload, [
+		// 	'scoreTables',
+		// 	'scoreTable',
+		// 	'scores',
+		// 	'scoresUserBestScore',
+		// 	'scoresUserScorePlacement',
+		// 	'scoresUserScoreExperience',
+		// ] );
+
+		// this.trophiesPayload = _.pick( payload, [
+		// 	'trophies',
+		// 	'trophiesAchieved',
+		// 	'trophiesExperienceAchieved',
+		// 	'trophiesShowInvisibleTrophyMessage',
+		// ] );
+
+		// // Partner referral system.
+		// if ( payload.partnerReferredKey && payload.partnerReferredBy ) {
+		// 	this.partnerReferredKey = payload.partnerReferredKey;
+		// 	this.partnerReferredBy = new User( payload.partnerReferredBy );
+		// 	this.partnerNoCut = payload.partnerNoCut || false;
+		// }
+	}
 
 	get hasReleasesSection()
 	{
@@ -108,6 +154,17 @@ export class AppDiscoverGamesViewOverviewGame extends Vue
 	updateCommentsCount( count: number )
 	{
 		this.commentsCount = count;
+	}
+
+	async loadVideoComments()
+	{
+		++this.videoCommentsPage;
+		const response = await Api.sendRequest(
+			'/web/discover/games/videos/'
+			+ this.$route.params.id
+			+ '?page=' + this.videoCommentsPage
+		);
+		this.videoComments = this.videoComments.concat( CommentVideo.populate( response.videos ) );
 	}
 
 	// copy partner link

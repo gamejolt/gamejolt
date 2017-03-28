@@ -64,6 +64,10 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue
 	Screen = makeObservableService( Screen );
 	Environment = Environment;
 
+	routed()
+	{
+	}
+
 	get hasReleasesSection()
 	{
 		// The releases section exists if there are releases or songs.

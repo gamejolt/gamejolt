@@ -359,9 +359,12 @@
 		<div class="container">
 
 			<!-- Video Comments -->
-			<!--<div v-if="videoComments.length && game.comments_enabled">
+			<div v-if="videoComments.length && game.comments_enabled">
 				<h2 class="section-header sans-margin-bottom">
 					<translate>Video Comments</translate>
+					<small v-if="commentsCount">
+						({{ videoCommentsCount | number }})
+					</small>
 				</h2>
 
 				<p class="page-help">
@@ -374,25 +377,27 @@
 				<hr class="underbar">
 
 				<div class="row">
-					<gj-comment-video-thumbnail
+					<div
 						class="col-xs-6 col-sm-3"
 						v-for="video of videoComments"
 						:key="video.id"
-						:video="video"
-						:show-user="true"
 						>
-					</gj-comment-video-thumbnail>
+						<app-comment-video-thumbnail
+							:video="video"
+							:show-user="true"
+							/>
+					</div>
 				</div>
 
 				<div class="page-cut" v-if="videoComments.length < videoCommentsCount">
 					<a class="btn btn-outline"
-						@click="loadMoreVideoComments"
+						@click="loadVideoComments"
 						v-app-track-event="`game-profile:video-comment:more`"
 						>
 						<translate>Load More</translate>
 					</a>
 				</div>
-			</div>-->
+			</div>
 
 			<!-- Comments -->
 			<div id="comments" v-if="isLoaded">

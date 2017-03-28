@@ -8,8 +8,6 @@ import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.m
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { GameSong } from '../../../../../../lib/gj-lib-client/components/game/song/song.model';
-import { User } from '../../../../../../lib/gj-lib-client/components/user/user.model';
-import { CommentVideo } from '../../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { GamePackagePayloadModel } from '../../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 // import { Device } from '../../../../../../lib/gj-lib-client/components/device/device.service';
 // import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -42,17 +40,9 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 	isLoaded = false;
 	component: any = null;
 
-	profileCount = 0;
-	downloadCount = 0;
-	playCount = 0;
-	developerGamesCount = 0;
-
 	mediaItems: (GameScreenshot | GameVideo | GameSketchfab)[] = [];
 	songs: GameSong[] = [];
 	recommendedGames: Game[] = [];
-	supporters: User[] = [];
-	videoComments: CommentVideo[] = [];
-	videoCommentsCount = 0;
 	posts: ActivityFeedContainer | null = null;
 
 	// Will be empty.
@@ -93,12 +83,6 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 			Meta.microdata = this.$payload.microdata;
 		}
 
-		this.profileCount = this.$payload.profileCount || 0;
-		this.downloadCount = this.$payload.downloadCount || 0;
-		this.playCount = this.$payload.playCount || 0;
-
-		this.developerGamesCount = this.$payload.developerGamesCount || 0;
-
 		this.mediaItems = [];
 		if ( this.$payload.mediaItems && this.$payload.mediaItems.length ) {
 			this.$payload.mediaItems.forEach( ( item: any ) =>
@@ -115,31 +99,11 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 			} );
 		}
 
-		// this.scoresPayload = _.pick( payload, [
-		// 	'scoreTables',
-		// 	'scoreTable',
-		// 	'scores',
-		// 	'scoresUserBestScore',
-		// 	'scoresUserScorePlacement',
-		// 	'scoresUserScoreExperience',
-		// ] );
-
-		// this.trophiesPayload = _.pick( payload, [
-		// 	'trophies',
-		// 	'trophiesAchieved',
-		// 	'trophiesExperienceAchieved',
-		// 	'trophiesShowInvisibleTrophyMessage',
-		// ] );
-
 		// const wasHistoricalView = History.inHistorical;
 		// this.posts = ActivityFeedService.bootstrap( Fireside_Post.populate( this.$payload.posts ), { inHistorical: wasHistoricalView } );
 		this.posts = ActivityFeedService.bootstrap( FiresidePost.populate( this.$payload.posts ), { inHistorical: false } );
 		this.songs = GameSong.populate( this.$payload.songs );
 		this.recommendedGames = Game.populate( this.$payload.recommendedGames );
-		this.supporters = User.populate( this.$payload.supporters );
-		this.videoComments = CommentVideo.populate( this.$payload.videoComments );
-		this.videoCommentsCount = this.$payload.videoCommentsCount || 0;
-
 		this.packagePayload = new GamePackagePayloadModel( this.$payload );
 
 		// const os = Device.os();
@@ -165,11 +129,13 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 		// 	this.activeJam = new Jam( payload.activeJam );
 		// }
 
-		// // Partner referral system.
-		// if ( payload.partnerReferredKey && payload.partnerReferredBy ) {
-		// 	this.partnerReferredKey = payload.partnerReferredKey;
-		// 	this.partnerReferredBy = new User( payload.partnerReferredBy );
-		// 	this.partnerNoCut = payload.partnerNoCut || false;
-		// }
+		if ( !this.game._is_devlog ) {
+			(this.$refs.game as AppDiscoverGamesViewOverviewGame).$payload = this.$payload;
+			(this.$refs.game as AppDiscoverGamesViewOverviewGame).routed();
+		}
+		else {
+			(this.$refs.devlog as AppDiscoverGamesViewOverviewDevlog).$payload = this.$payload;
+			(this.$refs.devlog as AppDiscoverGamesViewOverviewDevlog).routed();
+		}
 	}
 }

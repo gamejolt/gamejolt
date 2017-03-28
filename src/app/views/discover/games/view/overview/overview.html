@@ -1,6 +1,7 @@
 <div>
 
 	<app-discover-games-view-overview-game
+		ref="game"
 		v-if="!game._is_devlog"
 		:is-loaded="isLoaded"
 		:game="game"
@@ -10,15 +11,12 @@
 		:songs="songs"
 		:packages="packagePayload.packages"
 		:releases="packagePayload.releases"
-		:supporters="supporters"
-		:profile-count="profileCount"
-		:play-count="playCount"
-		:download-count="downloadCount"
 		:rating-breakdown="ratingBreakdown"
 		:posts="posts"
 		/>
 
 	<app-discover-games-view-overview-devlog
+		ref="devlog"
 		v-else
 		:is-loaded="isLoaded"
 		:game="game"
@@ -28,14 +26,5 @@
 		:releases="packagePayload.releases"
 		:posts="posts"
 		/>
-		<!--
-		:recommended-games="recommendedGames"
-		:user-rating="userRating"
-		:supporters="supporters"
-		:profile-count="profileCount"
-		:play-count="playCount"
-		:download-count="downloadCount"
-		:rating-breakdown="ratingBreakdown"
-		-->
 
 </div>
