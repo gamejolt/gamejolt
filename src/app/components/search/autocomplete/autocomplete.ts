@@ -314,10 +314,13 @@ export class AppSearchAutocomplete extends Vue
 		Analytics.trackEvent( 'search', 'autocomplete', 'go-game' );
 	}
 
-	selectUser( user: any )
+	selectUser( user: User )
 	{
-		// const $state = getProvider<StateService>( '$state' );
-		// $state.go( 'profile.overview', { username: user.username } );
+		this.$router.push( {
+			name: 'profile.overview',
+			params: { username: user.username },
+		} );
+
 		Analytics.trackEvent( 'search', 'autocomplete', 'go-user' );
 	}
 
