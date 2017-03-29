@@ -2,22 +2,24 @@
 	<div class="container">
 
 		<div class="row">
-			<gj-comment-video-thumbnail
+			<div
 				class="col-xs-6 col-sm-3"
-				ng-repeat="video in videosCtrl.videos track by $index"
-				video="video"
-				show-game="true"
+				v-for="video of videos"
+				:key="video.id"
 				>
-			</gj-comment-video-thumbnail>
+				<app-comment-video-thumbnail
+					:video="video"
+					:show-game="true"
+					/>
+			</div>
 		</div>
 
-		<div class="page-cut" ng-if="videosCtrl.videos.length < profileCtrl.videosCount">
+		<div class="page-cut" v-if="videos.length < videosCount">
 			<a class="btn btn-outline"
-				ng-click="videosCtrl.loadMore()"
-				translate
-				gj-track-event="profile-videos:more"
+				@click="loadMore"
+				v-app-track-event="`profile-videos:more`"
 				>
-				Load More
+				<translate>Load More</translate>
 			</a>
 		</div>
 

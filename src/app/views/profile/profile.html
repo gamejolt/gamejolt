@@ -131,7 +131,7 @@
 						<translate>profile.remove_friend_button</translate>
 					</a>
 					<a class="list-group-item has-icon"
-						v-if="app.user.permission_level > 0"
+						v-if="app.user && app.user.permission_level > 0"
 						:href="`${Environment.baseUrl}/moderate/users/view/${user.id}`"
 						target="_blank"
 						>
