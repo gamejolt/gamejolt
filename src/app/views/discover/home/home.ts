@@ -17,7 +17,6 @@ import { AppChannelThumbnail } from '../../../components/channel/thumbnail/thumb
 import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { HistoryCache } from '../../../../lib/gj-lib-client/components/history/cache/cache.service';
 
 interface DiscoverSection
 {
@@ -67,11 +66,6 @@ export default class RouteDiscoverHome extends Vue
 	beforeRoute()
 	{
 		return Api.sendRequest( '/web/discover' );
-	}
-
-	created()
-	{
-		console.log( 'created' );
 	}
 
 	routed()

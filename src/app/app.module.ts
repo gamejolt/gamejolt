@@ -20,8 +20,6 @@ import { CommentModule } from '../lib/gj-lib-client/components/comment/comment.m
 import { CommentVoteModule } from '../lib/gj-lib-client/components/comment/vote/vote.module';
 import { CommentVideoModule } from '../lib/gj-lib-client/components/comment/video/video.module';
 import GamePlayModalModule from '../lib/gj-lib-client/components/game/play-modal/play-modal';
-import YoutubeSdkModule from '../lib/gj-lib-client/components/social/youtube/sdk/sdk';
-import YoutubeSubscribeModule from '../lib/gj-lib-client/components/social/youtube/subscribe/subscribe';
 import { YoutubeChannelModule } from '../lib/gj-lib-client/components/youtube/channel/channel.module';
 import ResponsiveDimensionsModule from '../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions.module';
 import { FiresidePostModule } from '../lib/gj-lib-client/components/fireside/post/post.module';
@@ -164,8 +162,6 @@ import { GameFollowWidgetModule } from './components/game/follow-widget/follow-w
 		ModalConfirmModule,
 		GameThumbnailImgModule,
 		GamePlayModalModule,
-		YoutubeSdkModule,
-		YoutubeSubscribeModule,
 		FiresidePostLikeWidgetModule,
 		ImgResponsiveModule,
 		ResponsiveDimensionsModule,
