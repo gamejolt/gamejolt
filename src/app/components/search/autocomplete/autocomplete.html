@@ -34,7 +34,7 @@
 					<translate>search.autocomplete.installed_heading</translate>
 				</div>
 				<div class="list-group list-group-dark thin" v-if="libraryGames.length">
-					<app-router-link
+					<router-link
 						class="list-group-item"
 						v-for="libraryGame of libraryGames"
 						:key="libraryGame.id"
@@ -56,7 +56,7 @@
 						</span>
 
 						{{ libraryGame.title }}
-					</app-router-link>
+					</router-link>
 				</div>
 
 				<!-- Games -->
@@ -64,7 +64,7 @@
 					<translate>search.autocomplete.games_heading</translate>
 				</div>
 				<div class="list-group list-group-dark thin" v-if="games.length">
-					<app-router-link
+					<router-link
 						class="list-group-item"
 						v-for="game of games"
 						:key="game.id"
@@ -90,7 +90,7 @@
 						</span>
 
 						{{ game.title }}
-					</app-router-link>
+					</router-link>
 				</div>
 
 				<!-- Devlogs -->
@@ -98,7 +98,7 @@
 					<translate>Devlogs</translate>
 				</div>
 				<div class="list-group list-group-dark thin" v-if="devlogs.length">
-					<app-router-link
+					<router-link
 						class="list-group-item"
 						v-for="game of devlogs"
 						:key="game.id"
@@ -115,7 +115,7 @@
 						</span>
 
 						{{ game.title }}
-					</app-router-link>
+					</router-link>
 				</div>
 
 				<!-- Users -->
@@ -123,7 +123,7 @@
 					<translate>search.autocomplete.users_heading</translate>
 				</div>
 				<div class="list-group list-group-dark thin" v-if="users.length">
-					<app-router-link
+					<router-link
 						class="list-group-item"
 						v-for="user of users"
 						:key="user.id"
@@ -137,7 +137,7 @@
 						<img :src="user.img_avatar" class="search-user-avatar" alt="">
 						{{ user.display_name }}
 						<span class="tiny text-muted">@{{ user.username }}</span>
-					</app-router-link>
+					</router-link>
 				</div>
 			</div>
 

@@ -18,7 +18,6 @@ import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppRouterLink } from '../../router-link/router-link';
 import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { AppGameCompatIcons } from '../../game/compat-icons/compat-icons';
 import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
@@ -44,7 +43,6 @@ interface Command
 	components: {
 		AppPopover,
 		AppJolticon,
-		AppRouterLink,
 		AppGameThumbnailImg,
 		AppGameCompatIcons,
 	},
