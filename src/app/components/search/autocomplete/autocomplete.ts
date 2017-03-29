@@ -64,7 +64,7 @@ export class AppSearchAutocomplete extends Vue
 
 	modes = [ 'search', 'command' ];
 
-	search: AppSearch = ({} as AppSearch);
+	search: AppSearch | null = null;
 
 	searchChanges = new Subject<string>();
 	searched$ = this.searchChanges
@@ -76,7 +76,7 @@ export class AppSearchAutocomplete extends Vue
 
 	get isHidden()
 	{
-		return this.search.isEmpty();
+		return this.search!.isEmpty();
 	}
 
 	created()
@@ -86,7 +86,7 @@ export class AppSearchAutocomplete extends Vue
 
 	mounted()
 	{
-		this.search.setKeydownSpy( ( event: KeyboardEvent ) =>
+		this.search!.setKeydownSpy( ( event: KeyboardEvent ) =>
 		{
 			let min = 0;
 			let max = 0;
@@ -111,7 +111,7 @@ export class AppSearchAutocomplete extends Vue
 
 				// If they had a command in there but escaped, then remove the whole command.
 				if ( this.mode === 'command' ) {
-					this.search.query = '';
+					this.search!.query = '';
 				}
 			}
 		} );
@@ -189,7 +189,7 @@ export class AppSearchAutocomplete extends Vue
 	{
 		const commands = this.commands;
 		const isLoggedIn = this.app && this.app.user;
-		const search = this.search;
+		const search = this.search!;
 
 		if ( this.mode !== 'command' ) {
 			return commands;
@@ -227,7 +227,7 @@ export class AppSearchAutocomplete extends Vue
 
 	private async sendSearch( query: string )
 	{
-		if ( this.search.isEmpty() || !this.inAvailableMode() ) {
+		if ( this.search!.isEmpty() || !this.inAvailableMode() ) {
 			return;
 		}
 
@@ -237,7 +237,7 @@ export class AppSearchAutocomplete extends Vue
 		// We only update the payload if the query is still the same as when we sent.
 		// This makes sure we don't step on ourselves while typing fast.
 		// Payloads may not come back sequentially.
-		if ( this.search.query === query ) {
+		if ( this.search!.query === query ) {
 			this.games = payload.games;
 			this.devlogs = payload.devlogs;
 			this.users = payload.users;
@@ -256,12 +256,12 @@ export class AppSearchAutocomplete extends Vue
 
 	selectActive()
 	{
-		if ( this.search.isEmpty() ) {
+		if ( this.search!.isEmpty() ) {
 			return;
 		}
 
 		if ( this.mode === 'search' ) {
-			SearchHistory.record( this.search.query );
+			SearchHistory.record( this.search!.query );
 
 			// Selected the "show all results" option.
 			if ( this.selected === 0 ) {
@@ -289,14 +289,14 @@ export class AppSearchAutocomplete extends Vue
 			this.selectCommand( command );
 		}
 
-		this.search.blur();
+		this.search!.blur();
 	}
 
 	viewAll()
 	{
 		this.$router.push( {
 			name: 'search.results',
-			query: { q: this.search.query },
+			query: { q: this.search!.query },
 		} );
 
 		Analytics.trackEvent( 'search', 'autocomplete', 'go-all' );
@@ -331,7 +331,7 @@ export class AppSearchAutocomplete extends Vue
 	selectCommand( command: Command )
 	{
 		if ( command && command.routeName ) {
-			this.search.query = '';  // Set it as blank.
+			this.search!.query = '';  // Set it as blank.
 
 			this.$router.push( {
 				name: command.routeName,
@@ -348,11 +348,11 @@ export class AppSearchAutocomplete extends Vue
 		// Reset the selected index.
 		this.selected = 0;
 
-		if ( this.search.isEmpty() || !this.app ) {
+		if ( this.search!.isEmpty() || !this.app ) {
 			return;
 		}
 
-		if ( this.search.query[0] === ':' ) {
+		if ( this.search!.query[0] === ':' ) {
 			this.mode = 'command';
 		}
 		else {

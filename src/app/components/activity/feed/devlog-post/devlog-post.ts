@@ -16,6 +16,7 @@ import { AppActivityFeedDevlogPostText } from './text/text';
 import { AppActivityFeedDevlogPostMedia } from './media/media';
 import { AppActivityFeedDevlogPostSketchfab } from './sketchfab/sketchfab';
 import { AppActivityFeedDevlogPostVideo } from './video/video';
+import { AppActivityFeedDevlogPostControls } from './controls/controls';
 
 @View
 @Component({
@@ -28,6 +29,7 @@ import { AppActivityFeedDevlogPostVideo } from './video/video';
 		AppActivityFeedDevlogPostMedia,
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
+		AppActivityFeedDevlogPostControls,
 	},
 	filters: {
 		number,

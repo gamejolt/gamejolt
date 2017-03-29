@@ -136,7 +136,7 @@ export default class RouteDiscoverGamesView extends Vue
 
 		// Any game rating change will broadcast this event.
 		// We catch it so we can update the page with the new rating! Yay!
-		EventBus.on( 'GameRating.changed', ( gameId: number ) => this.onGameRatingChange( gameId ) );
+		// EventBus.on( 'GameRating.changed', ( gameId: number ) => this.onGameRatingChange( gameId ) );
 
 		// // For syncing game data to client.
 		// if ( Environment.isClient ) {

@@ -37,7 +37,7 @@ export class AppActivityFeedDevlogPostMedia extends Vue
 
 	page = 1;
 	activeMediaItem: MediaItem | null = null;
-	feed: AppActivityFeed = {} as AppActivityFeed;
+	feed: AppActivityFeed | null = null;
 
 	isDragging = false;
 	isWaitingForFrame = false;
@@ -54,6 +54,10 @@ export class AppActivityFeedDevlogPostMedia extends Vue
 
 	shouldVideoPlay( mediaItem: any )
 	{
+		if ( !this.feed ) {
+			return;
+		}
+
 		// Must be the active media item and also this post must be in view in the feed.
 		return this.activeMediaItem === mediaItem && this.feed.isItemInView( this.item );
 	}

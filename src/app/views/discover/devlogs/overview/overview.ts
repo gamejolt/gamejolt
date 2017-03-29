@@ -35,7 +35,7 @@ export default class RouteDiscoverDevlogsOverview extends Vue
 	@State app: AppState;
 
 	games: any[] = [];
-	posts: ActivityFeedContainer = {} as ActivityFeedContainer;
+	posts: ActivityFeedContainer | null = null;
 
 	isLearnMoreExpanded = false;
 

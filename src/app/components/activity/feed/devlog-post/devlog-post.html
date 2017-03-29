@@ -76,16 +76,16 @@
 				@expanded="onExpand"
 				/>
 
-			<!--<app-activity-feed-devlog-post-controls
+			<app-activity-feed-devlog-post-controls
 				:post="post"
 				:show-game-info="feed.showGameInfo"
 				:show-edit-controls="feed.showEditControls"
 				:show-extra-info="!Screen.isXs"
-				@expanded="expanded"
-				@posteditted="feed.onPostEdited( post )"
-				@postpublished="feed.onPostPublished( post )"
-				@postremoveed="feed.onPostRemoved( post )"
-				/>-->
+				@expanded="onExpand"
+				@edited="feed.onPostEdited( post )"
+				@published="feed.onPostPublished( post )"
+				@removed="feed.onPostRemoved( post )"
+				/>
 
 		</div>
 

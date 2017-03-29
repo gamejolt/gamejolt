@@ -20,7 +20,7 @@ import { GameFilteringContainer } from '../../../../components/game/filtering/co
 })
 export default class RouteDiscoverDevlogsGames extends Vue
 {
-	listing: GameListingContainer = {} as GameListingContainer;
+	listing: GameListingContainer | null = null;
 
 	@BeforeRouteEnter( { cache: true } )
 	async routeEnter( this: undefined, route: VueRouter.Route )

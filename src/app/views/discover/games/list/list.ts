@@ -36,8 +36,8 @@ export default class RouteDiscoverGamesList extends Vue
 	@Prop( String ) category?: string;
 
 	$payload: [ GameFilteringContainer, any ] | any;
-	filtering: GameFilteringContainer = {} as GameFilteringContainer;
-	listing: GameListingContainer = {} as GameListingContainer;
+	filtering: GameFilteringContainer | null = null;
+	listing: GameListingContainer | null = null;
 
 	pageTitle = '';
 	descriptiveCategory = '';
@@ -93,7 +93,7 @@ export default class RouteDiscoverGamesList extends Vue
 		this.filtering = this.$payload[0];
 		this.$payload = this.$payload[1];
 
-		this.listing = new GameListingContainer( this.filtering );
+		this.listing = new GameListingContainer( this.filtering! );
 		this.listing.processPayload( this.$route, this.$payload );
 
 		if ( this.section === 'by-date' ) {
