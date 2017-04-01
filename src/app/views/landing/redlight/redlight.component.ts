@@ -28,7 +28,21 @@ const slogans = [
 ];
 
 const handles = [
-	'gamejolt',
+	'Blizzard_Ent',
+	'SquareEnix',
+	'Konami',
+	'Capcom_Unity',
+	'Ubisoft',
+	'Activision',
+	'CDPROJEKTRED',
+	'SNKPofficial',
+	'NISAmerica',
+	'EA',
+	'Rebellion',
+	'InfinityWard',
+	'SHGames',
+	'riotgames',
+	'Bungie',
 ];
 
 const chosenHandle = handles[ getRandomInt( 0, handles.length ) ];
