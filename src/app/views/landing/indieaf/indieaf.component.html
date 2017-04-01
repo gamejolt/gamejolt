@@ -5,7 +5,7 @@
 
 			<p class="lead">Don't you want to be</p>
 
-			<img class="img-responsive indieaf-logo" src="./header.png" alt="">
+			<img class="img-responsive indieaf-logo" src="./header.jpg" alt="">
 
 		</div>
 	</div>
@@ -15,24 +15,61 @@
 			<div class="row">
 				<div class="col-sm-7 col-centered">
 
-					<p class="lead">
-						A new way to show off how freakin' legit you really are.
-					</p>
+					<div class="social-widgets text-center">
+						<gj-social-twitter-share content="Get indie.AF with Game Jolt Sites #indiedev #gamedev"></gj-social-twitter-share>
 
-					<p>
-						[Graphic of people looking around a computer screen at a gamejolt.io site. On hover, the address bar changes to indie.AF, and the people turn cool.AF and are amazed.]
-					</p>
+						<span class="dot-separator hidden-xs"></span>
+
+						<gj-social-facebook-like></gj-social-facebook-like>
+					</div>
+					<br>
 
 					<p class="text-center">
-						Build your own customizable site with a indie.af domain name through Game Jolt Sites!
+						Build your own customizable portfolio and game sites with an indie.af domain name through <a href="http://fireside.gamejolt.com/post/custom-game-sites-portfolios-fgjzjsa8" target="_blank">Game Jolt Sites</a>!
 					</p>
-
 					<br>
 
 					<div class="text-center">
-						<a class="btn btn-af-outline">
-							Get Indie.AF
-						</a>
+						<div>
+							<a class="btn btn-af-outline" href="#get-indie-af" gj-smooth-scroll>
+								Get Indie.AF
+							</a>
+						</div>
+						<br>
+						<p class="small text-muted">
+							don't be <em>ew</em>
+						</p>
+					</div>
+
+					<br class="hidden-xs">
+					<hr class="underbar underbar-center">
+
+					<div class="spacer"></div>
+
+					<div class="row" ng-if="$ctrl.state === 'bogus'">
+						<div class="col-xs-7">
+							<img class="img-responsive" src="./site-io.jpg" alt="">
+						</div>
+						<div class="col-xs-5">
+							<img class="img-responsive" src="./bogusdude.svg" alt="">
+						</div>
+					</div>
+					<div class="row" ng-if="$ctrl.state === 'indie'">
+						<div class="col-xs-7">
+							<img class="img-responsive" src="./site-af.jpg" alt="">
+						</div>
+						<div class="col-xs-5">
+							<img class="img-responsive" src="./cooldude.svg" alt="">
+						</div>
+					</div>
+
+					<div ng-if="$ctrl.state !== 'indie'">
+						<br>
+						<p class="text-center">
+							<a class="btn btn-af-outline" ng-click="$ctrl.state = 'indie'">
+								Make this Indie.AF!
+							</a>
+						</p>
 					</div>
 
 					<h2 class="text-center">
@@ -114,17 +151,33 @@
 						<div class="indieaf-quote-who">- Bogus IO kid</div>
 					</div>
 
-					<div class="text-center">
-						<div>
-							<a class="btn btn-af-outline">
-								Get Indie.AF
-							</a>
-						</div>
+					<h2 class="text-center" id="get-indie-af">
+						Get Indie.AF
+					</h2>
+					<hr class="underbar underbar-center">
+					<br>
+
+					<p>Create a portfolio from the <em>Sites</em> tab on your Dashboard. To create custom game sites or upload your own, click on the <em>Sites</em> tab when managing your game.</p>
+
+					<p>For the magic to begin, simply replace <code>gamejolt.io</code> in your Sites URL to <code>indie.af</code>. For example, <code>cros.gamejolt.io</code> becomes <code>cros.indie.af</code>. Now you're legit.</p>
+
+					<section ng-if="!$ctrl.app.user">
+
+						<h2 class="section-header text-center">
+							Join
+						</h2>
+
+						<hr class="underbar underbar-center">
 						<br>
-						<p class="small text-muted">
-							don't be <em>ew</em>
-						</p>
-					</div>
+
+						<div class="row">
+							<div class="col-lg-8 col-centered">
+
+								<gj-auth-join></gj-auth-join>
+
+							</div>
+						</div>
+					</section>
 
 				</div>
 			</div>

@@ -16,6 +16,27 @@ interface DiscoverSection {
 	items: any[];
 };
 
+function getRandomInt( min: number, max: number )
+{
+	min = Math.ceil( min );
+	max = Math.floor( max );
+	return Math.floor( Math.random() * (max - min) ) + min;
+}
+
+const redlightSlogans = [
+	`Drive indie traffic to your AAA games`,
+	`A better platform for AAA`,
+	`Real games for real people`,
+	`AAA games with indie branding`,
+	`You too can be indie`,
+	`A direct way to distribute your games and grow an audience for AAA studios`,
+	`Turn those AAAs to $$$s`,
+	`Bringing hope to AAA studios`,
+	`Helping AAA studios to make a name for themselves`,
+	`Putting the indie in AAA`,
+	`Roses are red, violets are blue, indies are cool, now AAAs too!`,
+];
+
 @Component({
 	selector: 'route-discover-home',
 	template,
@@ -44,6 +65,8 @@ export class RouteHomeComponent implements OnInit
 
 	Environment = Environment;
 	Screen = Screen;
+
+	redlightSlogan = redlightSlogans[ getRandomInt( 0, redlightSlogans.length ) ];
 
 	constructor(
 		@Inject( '$state' ) private $state: StateService,
