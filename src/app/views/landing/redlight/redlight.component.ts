@@ -54,7 +54,7 @@ const chosenHandle = handles[ getRandomInt( 0, handles.length ) ];
 export class RouteRedlightComponent
 {
 	slogan = slogans[ getRandomInt( 0, slogans.length ) ];
-	tweet = `Hey @${chosenHandle}! I think your games would be a good fit for Game Jolt #redlight`;
+	tweet = `Hey @${chosenHandle}! I think your games would be a good fit for Game Jolt #redlight #gamedev`;
 
 	Screen = Screen;
 
