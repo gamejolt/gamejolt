@@ -20,6 +20,7 @@ import { AppPopoverTrigger } from '../../../lib/gj-lib-client/components/popover
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
+import { ReportModal } from '../../../lib/gj-lib-client/components/report/modal/modal.service';
 
 @View
 @Component({
@@ -96,7 +97,7 @@ export default class RouteProfile extends Vue
 	{
 		if ( !await UserFriendshipHelper.cancelRequest( this.userFriendship! ) ) {
 			return;
-	}
+		}
 		this.userFriendship = null;
 	}
 
@@ -118,7 +119,6 @@ export default class RouteProfile extends Vue
 
 	report()
 	{
-		// TODO
-		// this.reportModal.show( this.user );
+		ReportModal.show( this.user! );
 	}
 }

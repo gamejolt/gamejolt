@@ -13,7 +13,7 @@ import { ModelModule } from '../lib/gj-lib-client/components/model/model.module'
 import LoadModule from '../lib/gj-lib-client/components/load/load';
 import LocationModule from '../lib/gj-lib-client/components/location/location';
 import { PaginationModule } from '../lib/gj-lib-client/components/pagination/pagination.module';
-import ModalConfirmModule from '../lib/gj-lib-client/components/modal/confirm/confirm';
+import { ModalConfirmModule } from '../lib/gj-lib-client/components/modal/confirm/confirm.module';
 import { EnvironmentModule } from '../lib/gj-lib-client/components/environment/environment.module';
 import { NotificationModule as gjNotificationModule } from '../lib/gj-lib-client/components/notification/notification.module';
 import { CommentModule } from '../lib/gj-lib-client/components/comment/comment.module';

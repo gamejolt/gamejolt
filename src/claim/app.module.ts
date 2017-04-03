@@ -22,7 +22,7 @@ import { SellablePricingModule } from '../lib/gj-lib-client/components/sellable/
 import { RulerModule } from '../lib/gj-lib-client/components/ruler/ruler.module';
 import { AnalyticsModule } from '../lib/gj-lib-client/components/analytics/analytics.module';
 import { DeviceModule } from '../lib/gj-lib-client/components/device/device.module';
-import ModalConfirmModule from '../lib/gj-lib-client/components/modal/confirm/confirm';
+import { ModalConfirmModule } from '../lib/gj-lib-client/components/modal/confirm/confirm.module';
 import { GamePackageModule } from '../lib/gj-lib-client/components/game/package/package.module';
 import { GameReleaseModule } from '../lib/gj-lib-client/components/game/release/release.module';
 import { GameBuildModule } from '../lib/gj-lib-client/components/game/build/build.module';
