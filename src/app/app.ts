@@ -12,7 +12,6 @@ import { Actions, Mutations } from './store/index';
 
 @View
 @Component({
-	name: 'app',
 	components: {
 		AppShell,
 	},
