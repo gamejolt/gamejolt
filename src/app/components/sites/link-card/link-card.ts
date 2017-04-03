@@ -9,7 +9,6 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 
 @View
 @Component({
-	name: 'sites-link-card',
 	components: {
 		AppCard,
 		AppJolticon,

@@ -3,9 +3,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./partners.html';
 
 @View
-@Component({
-	name: 'route-landing-partners',
-})
+@Component({})
 export default class RouteLandingPartners extends Vue
 {
 }

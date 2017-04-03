@@ -20,7 +20,6 @@ if ( !GJ_IS_SSR ) {
 
 @View
 @Component({
-	name: 'activity-feed-devlog-post-media',
 	components: {
 		AppJolticon,
 		AppImgResponsive,

@@ -14,7 +14,6 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 
 @View
 @Component({
-	name: 'game-follow-widget',
 	components: {
 		AppJolticon,
 	},

@@ -24,7 +24,6 @@ import { AppUserAvatarImg } from '../../../../../../lib/gj-lib-client/components
 
 @View
 @Component({
-	name: 'activity-feed-devlog-post-controls',
 	components: {
 		AppJolticon,
 		AppPopover,

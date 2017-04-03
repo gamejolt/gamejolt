@@ -11,7 +11,6 @@ import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/pop
 
 @View
 @Component({
-	name: 'search-history',
 	components: {
 		AppJolticon,
 		AppPopover,

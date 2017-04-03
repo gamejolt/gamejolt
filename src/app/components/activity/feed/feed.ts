@@ -28,7 +28,6 @@ const LOAD_MORE_TIMES = 3;
 
 @View
 @Component({
-	name: 'activity-feed',
 	components: {
 		AppLoading,
 		AppActivityFeedNotification,

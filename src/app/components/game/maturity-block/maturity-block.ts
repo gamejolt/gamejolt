@@ -14,7 +14,6 @@ import { AppGameOgrs } from '../ogrs/ogrs';
 
 @View
 @Component({
-	name: 'game-maturity-block',
 	components: {
 		AppGameOgrs,
 	},

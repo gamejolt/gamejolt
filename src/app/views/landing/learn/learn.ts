@@ -8,7 +8,6 @@ import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-sto
 
 @View
 @Component({
-	name: 'route-landing-learn',
 	components: {
 		AppAuthJoin,
 	},

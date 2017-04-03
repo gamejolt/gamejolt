@@ -11,7 +11,6 @@ import { AppChatUserList } from '../user-list/user-list';
 
 @View
 @Component({
-	name: 'chat-sidebar',
 	components: {
 		AppJolticon,
 		AppChatUserList,

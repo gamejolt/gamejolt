@@ -7,7 +7,6 @@ import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytic
 
 @View
 @Component({
-	name: 'channel-thumbnail',
 	directives: {
 		AppTrackEvent,
 	}

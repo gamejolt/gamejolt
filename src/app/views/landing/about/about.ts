@@ -7,9 +7,7 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 
 @View
-@Component({
-	name: 'route-landing-about',
-})
+@Component({})
 export default class RouteLandingAbout extends Vue
 {
 	assetUrls = importContext( require.context( './', false, /\.png$/ ) );

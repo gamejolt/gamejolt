@@ -6,9 +6,7 @@ import { findVueParent } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppSearch } from '../search';
 
 @View
-@Component({
-	name: 'search-input',
-})
+@Component({})
 export class AppSearchInput extends Vue
 {
 	@Prop( String ) value: string;

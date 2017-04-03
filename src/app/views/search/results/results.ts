@@ -14,7 +14,6 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 
 @View
 @Component({
-	name: 'route-search-results',
 	components: {
 		AppUserAvatar,
 		AppGameGrid,

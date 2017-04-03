@@ -9,7 +9,6 @@ import { AppTooltip } from '../../../lib/gj-lib-client/components/tooltip/toolti
 
 @View
 @Component({
-	name: 'minbar',
 	directives: {
 		AppTooltip,
 	},

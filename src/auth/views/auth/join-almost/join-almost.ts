@@ -11,7 +11,6 @@ import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.s
 
 @View
 @Component({
-	name: 'route-join-almost',
 	components: {
 		AppProgressPoller,
 	}

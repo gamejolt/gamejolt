@@ -19,7 +19,6 @@ type Tab = 'requests' | 'pending';
 
 @View
 @Component({
-	name: 'friend-request-popover',
 	components: {
 		AppPopover,
 		AppLoading,

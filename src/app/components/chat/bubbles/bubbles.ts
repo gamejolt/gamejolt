@@ -8,9 +8,7 @@ import { Chat } from '../chat.service';
 import { Mutations } from '../../../store/index';
 
 @View
-@Component({
-	name: 'chat-bubbles',
-})
+@Component({})
 export class AppChatBubbles extends Vue
 {
 	@Getter isRightPaneVisible: boolean;

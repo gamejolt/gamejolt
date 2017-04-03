@@ -30,10 +30,10 @@ import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppGameMaturityBlock } from '../../../../components/game/maturity-block/maturity-block';
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
+import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 
 @View
 @Component({
-	name: 'route-discover-games-view',
 	components: {
 		AppJolticon,
 		AppPageHeader,
@@ -200,7 +200,7 @@ export default class RouteDiscoverGamesView extends Vue
 
 	report()
 	{
-		// Report_Modal.show( _this.game );
+		ReportModal.show( this.game );
 	}
 
 	// scrollToMultiplePackages()

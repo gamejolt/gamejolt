@@ -8,9 +8,7 @@ import { Mutations } from '../../../store/index';
 const CountInterval = (5 * 60 * 1000);  // 5 minutes.
 const InitialLag = 3000;
 
-@Component({
-	name: 'shell-notification-count',
-})
+@Component({})
 export class AppShellNotificationCount extends Vue
 {
 	private interval: NodeJS.Timer;

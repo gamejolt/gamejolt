@@ -13,7 +13,6 @@ import { Mutations } from '../../../store/index';
 
 @View
 @Component({
-	name: 'route-auth-join',
 	components: {
 		AppJolticon,
 		AppAuthJoin,

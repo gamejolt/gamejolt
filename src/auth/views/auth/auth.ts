@@ -14,7 +14,6 @@ import { AppTranslateLangSelector } from '../../../lib/gj-lib-client/components/
 
 @View
 @Component({
-	name: 'route-auth',
 	components: {
 		AppCoverImg,
 		AppTranslateLangSelector,

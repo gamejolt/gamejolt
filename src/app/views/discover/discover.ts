@@ -1,9 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 
-@Component({
-	name: 'route-discover',
-})
+@Component({})
 export default class RouteDiscover extends Vue
 {
 	render( h: Vue.CreateElement )

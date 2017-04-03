@@ -10,7 +10,6 @@ import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service
 
 @View
 @Component({
-	name: 'route-auth-login',
 	components: {
 		AppJolticon,
 		AppAuthLogin,

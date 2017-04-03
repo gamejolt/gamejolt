@@ -19,7 +19,6 @@ import { AppActivityFeed } from '../../../../components/activity/feed/feed';
 
 @View
 @Component({
-	name: 'route-discover-devlogs-overview',
 	components: {
 		AppExpand,
 		AppVideoEmbed,

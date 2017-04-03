@@ -67,10 +67,7 @@ function findAnchor( children: Vue.VNode[] ): Vue.VNode | undefined
 	return undefined;
 }
 
-// @View
-@Component({
-	name: 'router-link',
-})
+@Component({})
 export class AppRouterLink extends Vue
 {
 	@Prop( { type: Object, required: true } ) to: RouterLinkLocation;

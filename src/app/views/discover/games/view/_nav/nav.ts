@@ -13,7 +13,6 @@ import { Environment } from '../../../../../../lib/gj-lib-client/components/envi
 
 @View
 @Component({
-	name: 'discover-games-view-nav',
 	components: {
 		AppJolticon,
 		AppPopover,

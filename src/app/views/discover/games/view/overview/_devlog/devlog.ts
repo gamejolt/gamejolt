@@ -24,7 +24,6 @@ import { ActivityFeedContainer } from '../../../../../../components/activity/fee
 
 @View
 @Component({
-	name: 'discover-games-view-overview-devlog',
 	components: {
 		AppMediaBar,
 		AppAd,

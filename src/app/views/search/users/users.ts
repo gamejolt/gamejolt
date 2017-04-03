@@ -12,7 +12,6 @@ import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.s
 
 @View
 @Component({
-	name: 'route-search-users',
 	components: {
 		AppUserAvatar,
 		AppPagination,

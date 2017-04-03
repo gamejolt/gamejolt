@@ -13,7 +13,6 @@ import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytic
 
 @View
 @Component({
-	name: 'route-profile-videos',
 	components: {
 		AppCommentVideoThumbnail,
 	},

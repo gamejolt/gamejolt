@@ -21,7 +21,6 @@ import { Mutations } from '../../../store/index';
 
 @View
 @Component({
-	name: 'shell-top-nav',
 	components: {
 		AppJolticon,
 		AppRouterLink,

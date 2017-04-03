@@ -19,7 +19,6 @@ import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-sto
 
 @View
 @Component({
-	name: 'shell-account-popover',
 	components: {
 		AppPopover,
 		AppJolticon,

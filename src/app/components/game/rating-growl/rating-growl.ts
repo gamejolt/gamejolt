@@ -8,7 +8,6 @@ import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/eve
 
 @View
 @Component({
-	name: 'game-rating-growl',
 	components: {
 		AppRatingWidget,
 	}

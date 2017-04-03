@@ -23,7 +23,6 @@ import { AppCommentVideoThumbnail } from '../../../../lib/gj-lib-client/componen
 
 @View
 @Component({
-	name: 'route-profile-overview',
 	components: {
 		AppGameThumbnailImg,
 		AppExpand,

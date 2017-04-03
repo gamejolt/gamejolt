@@ -12,7 +12,6 @@ import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fad
 
 @View
 @Component({
-	name: 'chat-window-output',
 	components: {
 		AppFadeCollapse,
 	},

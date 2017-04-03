@@ -17,7 +17,6 @@ import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-c
 
 @View
 @Component({
-	name: 'chat-window',
 	components: {
 		AppJolticon,
 		AppChatUserList,

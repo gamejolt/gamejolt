@@ -5,9 +5,7 @@ import * as View from '!view!./forgot-sent.html';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 
 @View
-@Component({
-	name: 'route-auth-forgot-sent',
-})
+@Component({})
 export default class RouteAuthForgotSent extends Vue
 {
 	created()

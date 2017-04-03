@@ -11,7 +11,6 @@ import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/eve
 
 @View
 @Component({
-	name: 'rating-widget',
 	components: {
 		AppJolticon,
 	},

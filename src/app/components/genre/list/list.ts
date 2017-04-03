@@ -9,7 +9,6 @@ import { Genre } from '../genre';
 
 @View
 @Component({
-	name: 'genre-list',
 	directives: {
 		AppTrackEvent,
 		AppNoAutoscroll,

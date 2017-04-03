@@ -10,7 +10,6 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 
 @View
 @Component({
-	name: 'chat-user-list',
 	components: {
 		AppJolticon,
 	},

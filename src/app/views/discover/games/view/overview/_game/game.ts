@@ -39,7 +39,6 @@ import { AppCommentVideoThumbnail } from '../../../../../../../lib/gj-lib-client
 
 @View
 @Component({
-	name: 'discover-games-view-overview-game',
 	components: {
 		AppDiscoverGamesViewOverviewStats,
 		AppAd,

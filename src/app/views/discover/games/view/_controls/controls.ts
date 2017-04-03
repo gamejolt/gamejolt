@@ -15,7 +15,6 @@ import { AppGameFollowWidget } from '../../../../../components/game/follow-widge
 
 @View
 @Component({
-	name: 'discover-games-view-controls',
 	components: {
 		AppJolticon,
 		AppGamePlaylistAddToPopover,

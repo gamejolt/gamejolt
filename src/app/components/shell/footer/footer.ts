@@ -11,7 +11,6 @@ import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
 
 @View
 @Component({
-	name: 'shell-footer',
 	components: {
 		AppRouterLink,
 		AppJolticon,

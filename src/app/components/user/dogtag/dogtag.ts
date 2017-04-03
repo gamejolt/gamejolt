@@ -4,9 +4,7 @@ import * as View from '!view!./dogtag.html';
 import './dogtag.styl';
 
 @View
-@Component({
-	name: 'user-dogtag',
-})
+@Component({})
 export class AppUserDogtag extends Vue
 {
 	@Prop( String ) type: string;

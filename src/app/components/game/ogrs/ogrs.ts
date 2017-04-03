@@ -7,7 +7,6 @@ import { AppGameOgrsTag } from './tag';
 
 @View
 @Component({
-	name: 'game-ogrs',
 	components: {
 		AppGameOgrsTag,
 	}

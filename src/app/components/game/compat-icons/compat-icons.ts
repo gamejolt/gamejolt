@@ -24,7 +24,6 @@ const compatFields = Object.keys( compatMapping );
 
 @View
 @Component({
-	name: 'game-compat-icons',
 	components: {
 		AppJolticon,
 	},

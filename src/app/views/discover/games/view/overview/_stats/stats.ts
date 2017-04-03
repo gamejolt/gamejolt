@@ -14,7 +14,6 @@ import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/component
 
 @View
 @Component({
-	name: 'discover-games-view-overview-stats',
 	components: {
 		AppJolticon,
 		AppLazyPlaceholder,

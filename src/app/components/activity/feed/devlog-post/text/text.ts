@@ -8,7 +8,6 @@ import { AppWidgetCompiler } from '../../../../../../lib/gj-lib-client/component
 
 @View
 @Component({
-	name: 'activity-feed-devlog-post-text',
 	components: {
 		AppFadeCollapse,
 		AppWidgetCompiler,

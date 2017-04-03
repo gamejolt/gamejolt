@@ -18,7 +18,6 @@ import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading
 
 @View
 @Component({
-	name: 'game-listing',
 	components: {
 		AppAd,
 		AppPagination,

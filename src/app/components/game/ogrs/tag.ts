@@ -4,9 +4,7 @@ import * as View from '!view!./tag.html?style=./tag.styl';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 @View
-@Component({
-	name: 'game-ogrs-tag',
-})
+@Component({})
 export class AppGameOgrsTag extends Vue
 {
 	@Prop( Game ) game: Game;

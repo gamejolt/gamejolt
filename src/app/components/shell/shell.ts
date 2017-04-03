@@ -13,10 +13,10 @@ import { AppMinbar } from '../minbar/minbar';
 import { AppOfflineAlert } from '../offline/alert/alert';
 import { AppGrowls } from '../../../lib/gj-lib-client/components/growls/growls';
 import { Chat } from '../chat/chat.service';
+import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
 
 @View
 @Component({
-	name: 'shell',
 	components: {
 		AppShellTopNav,
 		AppShellNotificationCount,
@@ -26,6 +26,7 @@ import { Chat } from '../chat/chat.service';
 		AppMinbar,
 		AppOfflineAlert,
 		AppGrowls,
+		AppModals,
 		AppShellChat: () => $import( './chat/chat' ).then( m => m.AppShellChat ),
 	}
 })

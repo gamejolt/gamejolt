@@ -6,7 +6,6 @@ import { AppPageHeader } from '../../../components/page-header/page-header';
 
 @View
 @Component({
-	name: 'route-discover-devlogs',
 	components: {
 		AppPageHeader,
 	},

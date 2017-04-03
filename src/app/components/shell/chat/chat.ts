@@ -10,7 +10,6 @@ import { Mutations } from '../../../store/index';
 
 @View
 @Component({
-	name: 'shell-chat',
 	components: {
 		AppChatBubbles,
 		AppChatSidebar,

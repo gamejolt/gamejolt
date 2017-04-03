@@ -3,9 +3,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./meter.html?style=./meter.styl';
 
 @View
-@Component({
-	name: 'meter',
-})
+@Component({})
 export class AppMeter extends Vue
 {
 	@Prop( Number ) rating: number;

@@ -7,9 +7,7 @@ import * as View from '!view!./empty.html';
 const fallback = () => asyncComponentLoader( $import( './fallback' ) );
 
 @View
-@Component({
-	name: 'route-empty',
-})
+@Component({})
 export default class RouteEmpty extends Vue
 {
 }

@@ -18,7 +18,6 @@ import { AppGameListing } from '../../../../components/game/listing/listing';
 
 @View
 @Component({
-	name: 'route-discover-games-list',
 	components: {
 		AppPageHeader,
 		AppJolticon,

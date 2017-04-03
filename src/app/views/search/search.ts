@@ -15,7 +15,6 @@ import { number } from '../../../lib/gj-lib-client/vue/filters/number';
 
 @View
 @Component({
-	name: 'route-search',
 	components: {
 		AppPageHeader,
 		AppExpand,

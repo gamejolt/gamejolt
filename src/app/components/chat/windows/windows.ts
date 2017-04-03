@@ -8,7 +8,6 @@ import { AppChatWindow } from '../window/window';
 
 @View
 @Component({
-	name: 'chat-windows',
 	components: {
 		AppChatWindow,
 	},

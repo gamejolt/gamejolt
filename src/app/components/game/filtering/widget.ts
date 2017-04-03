@@ -14,7 +14,6 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 
 @View
 @Component({
-	name: 'game-filtering-widget',
 	components: {
 		AppPopover,
 		AppJolticon,

@@ -9,7 +9,6 @@ import { AppSketchfabEmbed } from '../../../../../../lib/gj-lib-client/component
 
 @View
 @Component({
-	name: 'activity-feed-devlog-post-sketchfab',
 	components: {
 		AppJolticon,
 		AppSketchfabEmbed,

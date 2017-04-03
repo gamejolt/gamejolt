@@ -12,7 +12,6 @@ import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vu
 
 @View
 @Component({
-	name: 'activity-feed-notification',
 	components: {
 		AppJolticon,
 		AppTimeAgo,

@@ -10,7 +10,6 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 
 @View
 @Component({
-	name: 'game-filtering-tags',
 	components: {
 		AppJolticon,
 	},

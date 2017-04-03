@@ -10,7 +10,6 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 
 @View
 @Component({
-	name: 'form-retrieve-login',
 	components: {
 		...FormCommonComponents,
 		AppJolticon,

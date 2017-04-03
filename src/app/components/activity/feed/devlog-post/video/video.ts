@@ -10,7 +10,6 @@ import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/com
 
 @View
 @Component({
-	name: 'activity-feed-devlog-post-video',
 	components: {
 		AppJolticon,
 		AppVideoEmbed,

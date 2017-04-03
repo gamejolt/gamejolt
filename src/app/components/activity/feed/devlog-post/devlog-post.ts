@@ -20,7 +20,6 @@ import { AppActivityFeedDevlogPostControls } from './controls/controls';
 
 @View
 @Component({
-	name: 'activity-feed-devlog-post',
 	components: {
 		AppJolticon,
 		AppGameThumbnailImg,

@@ -28,7 +28,6 @@ interface DiscoverSection
 
 @View
 @Component({
-	name: 'route-discover-home',
 	components: {
 		AppNavTabList,
 		AppGameGrid,

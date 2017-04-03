@@ -10,7 +10,6 @@ import { AppGameGrid } from '../../../components/game/grid/grid';
 
 @View
 @Component({
-	name: 'route-search-games',
 	components: {
 		AppGameGrid,
 	},

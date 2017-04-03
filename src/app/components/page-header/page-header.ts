@@ -11,7 +11,6 @@ import { AppMediaItemCover } from '../media-item/cover/cover';
 
 @View
 @Component({
-	name: 'page-header',
 	components: {
 		AppScrollAffix,
 		AppMediaItemCover,

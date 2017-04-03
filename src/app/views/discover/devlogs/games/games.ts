@@ -12,7 +12,6 @@ import { GameFilteringContainer } from '../../../../components/game/filtering/co
 
 @View
 @Component({
-	name: 'route-discover-devlogs-games',
 	components: {
 		AppGameListing,
 		AppGameGrid,

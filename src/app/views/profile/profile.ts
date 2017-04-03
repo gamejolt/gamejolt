@@ -22,7 +22,6 @@ import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
 
 @View
 @Component({
-	name: 'route-profile',
 	components: {
 		AppPageHeader,
 		AppJolticon,

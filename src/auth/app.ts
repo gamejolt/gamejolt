@@ -8,7 +8,6 @@ import { Connection } from '../lib/gj-lib-client/components/connection/connectio
 
 @View
 @Component({
-	name: 'app',
 	components: {
 		AppGrowls,
 	},

@@ -12,7 +12,6 @@ require( './body.styl' );
 
 @View
 @Component({
-	name: 'shell-body',
 	components: {
 		AppPopoverContext,
 		AppShellFooter,

@@ -8,7 +8,6 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 
 @View
 @Component({
-	name: 'offline-alert',
 	components: {
 		AppJolticon,
 	}

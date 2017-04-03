@@ -41,7 +41,6 @@ function setCaretPosition( el: any, caretPos: number )
 
 @View
 @Component({
-	name: 'search',
 	components: {
 		AppSearchHistory,
 		AppSearchAutocomplete,

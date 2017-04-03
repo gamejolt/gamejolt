@@ -39,7 +39,6 @@ interface Command
 
 @View
 @Component({
-	name: 'search-autocomplete',
 	components: {
 		AppPopover,
 		AppJolticon,

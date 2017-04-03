@@ -7,7 +7,6 @@ import { FormRetrieveLogin } from '../../../components/forms/retrieve-login/retr
 
 @View
 @Component({
-	name: 'route-auth-forgot',
 	components: {
 		FormRetrieveLogin,
 	},

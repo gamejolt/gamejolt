@@ -21,7 +21,6 @@ import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/
 
 @View
 @Component({
-	name: 'game-thumbnail',
 	components: {
 		AppJolticon,
 		AppGameThumbnailImg,

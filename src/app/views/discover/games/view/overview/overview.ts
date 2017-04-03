@@ -24,7 +24,6 @@ import { ActivityFeedContainer } from '../../../../../components/activity/feed/f
 
 @View
 @Component({
-	name: 'route-discover-games-view-overview',
 	components: {
 		AppDiscoverGamesViewOverviewGame,
 		AppDiscoverGamesViewOverviewDevlog,

@@ -10,7 +10,6 @@ import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.s
 
 @View
 @Component({
-	name: 'game-mod-links',
 	components: {
 		AppJolticon,
 	}

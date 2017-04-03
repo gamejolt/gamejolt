@@ -17,7 +17,6 @@ import { AppGameThumbnail } from '../../../components/game/thumbnail/thumbnail';
 
 @View
 @Component({
-	name: 'route-landing-marketplace',
 	components: {
 		AppGameThumbnail,
 		AppAuthJoin,

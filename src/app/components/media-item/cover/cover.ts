@@ -11,7 +11,6 @@ import { AppScrollParallax } from '../../../../lib/gj-lib-client/components/scro
 
 @View
 @Component({
-	name: 'media-item-cover',
 	components: {
 		AppLoading,
 		AppScrollParallax,

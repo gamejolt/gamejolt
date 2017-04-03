@@ -19,7 +19,6 @@ let idCounter = 0;
 
 @View
 @Component({
-	name: 'game-grid',
 	components: {
 		AppGameThumbnail,
 		AppPagination,

@@ -5,9 +5,7 @@ import * as View from '!view!./cover-img.html?style=./cover-img.styl';
 import { ImgHelper } from '../../../lib/gj-lib-client/components/img/helper/helper-service';
 
 @View
-@Component({
-	name: 'cover-img',
-})
+@Component({})
 export class AppCoverImg extends Vue
 {
 	@Prop( String ) imgUrl: string;

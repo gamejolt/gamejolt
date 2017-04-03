@@ -10,7 +10,6 @@ import { Screen } from '../../../../../lib/gj-lib-client/components/screen/scree
 
 @View
 @Component({
-	name: 'chat-window-send',
 	components: {
 		AppJolticon,
 	},

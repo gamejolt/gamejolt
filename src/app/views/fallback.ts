@@ -3,9 +3,7 @@ import { Component } from 'vue-property-decorator';
 
 import '../bootstrap-ng';
 
-@Component({
-	name: 'route-ng-fallback',
-})
+@Component({})
 export default class RouteNgFallback extends Vue
 {
 	render( h: Vue.CreateElement )
