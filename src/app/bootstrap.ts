@@ -11,9 +11,11 @@ import { router } from './views/index';
 import { Payload } from '../lib/gj-lib-client/components/payload/payload-service';
 import { App } from './app';
 import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
+import { bootstrapShortkey } from '../lib/gj-lib-client/vue/shortkey';
 
 Payload.initVue( store );
 History.init( router );
+bootstrapShortkey();
 
 const availableLanguages: any = {};
 for ( const lang of Translate.langs ) {
@@ -26,13 +28,6 @@ Vue.use( VueGettext, {
 	defaultLanguage: Translate.lang,
 	translations: require( `!!../translations/en_US/main.json` ),
 } );
-
-if ( !GJ_IS_SSR ) {
-	const VueShortkey = require( 'vue-shortkey' );
-	Vue.use( VueShortkey, {
-		prevent: [ 'input', 'textarea' ],
-	} );
-}
 
 const app = new Vue( {
 	store,
