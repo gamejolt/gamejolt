@@ -117,6 +117,11 @@ import { HistoryModule } from '../lib/gj-lib-client/components/history/history.m
 import { HistoryCacheModule } from '../lib/gj-lib-client/components/history/cache/cache.module';
 import { CommentWidgetModule } from '../lib/gj-lib-client/components/comment/widget/widget.module';
 import { GameFollowWidgetModule } from './components/game/follow-widget/follow-widget.module';
+import { ForumCategoryModule } from '../lib/gj-lib-client/components/forum/category/category.module';
+import { ForumChannelModule } from '../lib/gj-lib-client/components/forum/channel/channel.module';
+import { ForumTopicModule } from '../lib/gj-lib-client/components/forum/topic/topic.module';
+import { ForumPostModule } from '../lib/gj-lib-client/components/forum/post/post.module';
+import { ReportModalModule } from '../lib/gj-lib-client/components/report/modal/modal.module';
 
 @NgModule({
 	imports: [
@@ -238,6 +243,11 @@ import { GameFollowWidgetModule } from './components/game/follow-widget/follow-w
 		HistoryCacheModule,
 		CommentWidgetModule,
 		GameFollowWidgetModule,
+		ForumCategoryModule,
+		ForumChannelModule,
+		ForumTopicModule,
+		ForumPostModule,
+		ReportModalModule,
 		AppModuleNg1,
 	],
 	declarations: [

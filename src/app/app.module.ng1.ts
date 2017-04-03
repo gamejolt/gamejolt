@@ -32,7 +32,6 @@ import '../lib/gj-lib-client/components/scroll/fixed-resizer/fixed-resizer';
 import '../lib/gj-lib-client/components/editable-accordion/editable-accordion';
 import '../lib/gj-lib-client/components/progress/poller/poller.module';
 import '../lib/gj-lib-client/components/alert/dismissable/dismissable';
-import '../lib/gj-lib-client/components/report/modal/modal.module';
 import '../lib/gj-lib-client/components/activity/stream/stream-module';
 import '../lib/gj-lib-client/components/form/form';
 import '../lib/gj-lib-client/components/form/markdown-editor/markdown-editor';
@@ -74,10 +73,6 @@ import '../lib/gj-lib-client/components/audio/scrubber/scrubber';
 import '../lib/gj-lib-client/components/audio/playlist/playlist';
 import '../lib/gj-lib-client/components/game/soundtrack/card/card';
 import '../lib/gj-lib-client/components/game-bundle/game-bundle';
-import '../lib/gj-lib-client/components/forum/category/category';
-import '../lib/gj-lib-client/components/forum/channel/channel';
-import '../lib/gj-lib-client/components/forum/topic/topic';
-import '../lib/gj-lib-client/components/forum/post/post';
 import '../lib/gj-lib-client/components/img/crop/crop';
 
 import './components/game/collection/grid/grid-module';
@@ -140,8 +135,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.EditableAccordion',
 	'gj.Progress.Poller',
 	'gj.Alert.Dismissable',
-	'gj.Report.Form',
-	'gj.Report.Modal',
 	'gj.Activity.Stream',
 	'gj.Form',
 	'gj.Form.MarkdownEditor',
@@ -183,10 +176,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Audio.Playlist',
 	'gj.Game.Soundtrack.Card',
 	'gj.GameBundle',
-	'gj.Forum.Category',
-	'gj.Forum.Channel',
-	'gj.Forum.Topic',
-	'gj.Forum.Post',
 	'gj.Img.Crop',
 
 	// Components.
