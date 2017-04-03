@@ -7,7 +7,7 @@
 /// <reference path="./src/lib/gj-lib-client/typings/angular.d.ts" />
 /// <reference path="./src/lib/gj-lib-client/typings/vue.d.ts" />
 /// <reference path="./src/lib/gj-lib-client/typings/vue/tooltip.d.ts" />
-
+/// <reference path="./src/lib/gj-lib-client/typings/api.d.ts" />
 
 declare interface Window {
 	_: _.LoDashStatic;
