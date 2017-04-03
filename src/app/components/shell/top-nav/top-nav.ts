@@ -45,6 +45,7 @@ export class AppShellTopNav extends Vue
 	@Getter isRightPaneVisible: boolean;
 
 	friendRequestCount = 0;
+	friendRequestsShowing = false;
 	userMenuShowing = false;
 
 	env = Environment;

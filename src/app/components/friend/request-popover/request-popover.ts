@@ -8,9 +8,10 @@ import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading
 import { AppCard } from '../../../../lib/gj-lib-client/components/card/card';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
-import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
+import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 
 const COUNT_INTERVAL = (5 * 60 * 1000);  // 5 minutes.
 const INITIAL_LAG = 3000;
@@ -24,7 +25,7 @@ type Tab = 'requests' | 'pending';
 		AppLoading,
 		AppCard,
 		AppJolticon,
-		AppUserAvatar,
+		AppUserAvatarImg,
 	},
 	directives: {
 		AppTooltip,
@@ -73,7 +74,7 @@ export class AppFriendRequestPopover extends Vue
 	private setCount( count: number )
 	{
 		this.requestsCount = count;
-		this.$emit( 'newRequestsCount', this.requestsCount );
+		this.$emit( 'count', this.requestsCount );
 	}
 
 	async fetchCount()
@@ -96,25 +97,29 @@ export class AppFriendRequestPopover extends Vue
 		this.activeTab = tab;
 	}
 
-	async acceptRequest( request: any )
+	async acceptRequest( request: UserFriendship )
 	{
-		// await getProvider<any>( 'User_FriendshipsHelper' ).acceptRequest( request );
-		// this.removeRequest( request );
+		await UserFriendshipHelper.acceptRequest( request );
+		this.removeRequest( request );
 	}
 
-	async rejectRequest( request: any )
+	async rejectRequest( request: UserFriendship )
 	{
-		// await getProvider<any>( 'User_FriendshipsHelper' ).rejectRequest( request );
-		// this.removeRequest( request );
+		if ( !await UserFriendshipHelper.rejectRequest( request ) ) {
+			return;
+		}
+		this.removeRequest( request );
 	}
 
-	async cancelRequest( request: any )
+	async cancelRequest( request: UserFriendship )
 	{
-		// await getProvider<any>( 'User_FriendshipsHelper' ).cancelRequest( request );
-		// this.removeRequest( request );
+		if ( !await UserFriendshipHelper.cancelRequest( request ) ) {
+			return;
+		}
+		this.removeRequest( request );
 	}
 
-	private removeRequest( request: any )
+	private removeRequest( request: UserFriendship )
 	{
 		const index = this.requests.findIndex( ( item ) => item.id === request.id );
 		if ( index !== -1 ) {

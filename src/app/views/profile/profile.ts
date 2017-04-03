@@ -19,6 +19,7 @@ import { AppPopover } from '../../../lib/gj-lib-client/components/popover/popove
 import { AppPopoverTrigger } from '../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
+import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 
 @View
 @Component({
@@ -83,48 +84,36 @@ export default class RouteProfile extends Vue
 
 	acceptFriendRequest()
 	{
-		// TODO
-		// this.userFriendshipsHelper.acceptRequest( this.userFriendship );
+		UserFriendshipHelper.acceptRequest( this.userFriendship! );
 	}
 
-	sendFriendRequest()
+	async sendFriendRequest()
 	{
-		// TODO
-		// this.userFriendshipsHelper.sendRequest( this.user )
-		// 	.then( ( request: any ) =>
-		// 	{
-		// 		this.userFriendship = request;
-		// 	} );
+		this.userFriendship = await UserFriendshipHelper.sendRequest( this.user! );
 	}
 
-	cancelFriendRequest()
+	async cancelFriendRequest()
 	{
-		// TODO
-		// this.userFriendshipsHelper.cancelRequest( this.userFriendship )
-		// 	.then( () =>
-		// 	{
-		// 		this.userFriendship = undefined;
-		// 	} );
+		if ( !await UserFriendshipHelper.cancelRequest( this.userFriendship! ) ) {
+			return;
+	}
+		this.userFriendship = null;
 	}
 
-	rejectFriendRequest()
+	async rejectFriendRequest()
 	{
-		// TODO
-		// this.userFriendshipsHelper.rejectRequest( this.userFriendship )
-		// 	.then( () =>
-		// 	{
-		// 		this.userFriendship = undefined;
-		// 	} );
+		if ( !await UserFriendshipHelper.rejectRequest( this.userFriendship! ) ) {
+			return;
+		}
+		this.userFriendship = null;
 	}
 
-	removeFriend()
+	async removeFriend()
 	{
-		// TODO
-		// this.userFriendshipsHelper.removeFriend( this.userFriendship )
-		// 	.then( () =>
-		// 	{
-		// 		this.userFriendship = undefined;
-		// 	} );
+		if ( !await UserFriendshipHelper.removeFriend( this.userFriendship! ) ) {
+			return;
+		}
+		this.userFriendship = null;
 	}
 
 	report()

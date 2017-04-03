@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
 import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
@@ -44,6 +44,7 @@ export default class RouteProfileOverview extends Vue
 	@Prop() user: User;
 	@Prop() gamesCount: number;
 	@Prop() videosCount: number;
+	@Prop() userFriendship: UserFriendship;
 	// @Prop() userGameSession?: UserGameSession;
 
 	developerGames: Game[] = [];
@@ -56,25 +57,14 @@ export default class RouteProfileOverview extends Vue
 	User = User;
 	UserFriendship = UserFriendship;
 
-	something = false;
-
 	@BeforeRouteEnter()
 	routeEnter( this: undefined, route: VueRouter.Route )
 	{
 		return Api.sendRequest( '/web/profile/overview/@' + route.params.username );
 	}
 
-	@Watch( 'user' )
-	onUser( user: any )
-	{
-		console.log( 'user change', user );
-	}
-
-	// TODO: User isn't defined yet when this is routed.
 	routed()
 	{
-		console.log( this.user );
-
 		let title = `${this.user.display_name} (@${this.user.username}) - `;
 
 		if ( this.user.is_gamer ) {
@@ -95,7 +85,5 @@ export default class RouteProfileOverview extends Vue
 		this.developerGames = Game.populate( this.$payload.developerGamesTeaser );
 		this.youtubeChannels = YoutubeChannel.populate( this.$payload.youtubeChannels );
 		this.videos = CommentVideo.populate( this.$payload.videos );
-
-		setInterval( () => this.something = !this.something, 2000 );
 	}
 }

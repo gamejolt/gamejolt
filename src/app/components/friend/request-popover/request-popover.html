@@ -1,10 +1,10 @@
 <app-popover
 	popover-id="friend-requests"
-	:append-to-body="true"
 	position-by="fixed"
-	@focused="onFocus()"
-	@blurred="onBlur()"
+	:append-to-body="true"
 	:hide-on-state-change="true"
+	@focused="onFocus"
+	@blurred="onBlur"
 	>
 
 	<div class="shell-card-popover fill-darker">
@@ -41,15 +41,15 @@
 
 			<div v-if="isShown && requests.length">
 
-				<a
+				<router-link
 					v-for="request of requests"
 					:key="request.id"
-					:href="request.getThem( app.user ).url"
+					:to="request.getThem( app.user ).url"
 					>
 					<app-card>
 						<div class="shell-card-popover-card-media">
 							<div class="friend-request-popover-avatar">
-								<app-user-avatar :user="request.getThem( app.user )"></app-user-avatar>
+								<app-user-avatar-img :user="request.getThem( app.user )" />
 							</div>
 						</div>
 						<div class="shell-card-popover-card-body">
@@ -82,7 +82,7 @@
 							</div>
 						</div>
 					</app-card>
-				</a>
+				</router-link>
 
 			</div>
 
@@ -94,15 +94,15 @@
 		<!-- Pending -->
 		<div v-if="!isLoading && activeTab === 'pending' && pending.length">
 
-			<a
+			<router-link
 				v-for="request of pending"
 				:key="request.id"
-				:href="request.getThem( app.user ).url"
+				:to="request.getThem( app.user ).url"
 				>
 				<app-card>
 					<div class="shell-card-popover-card-media">
 						<div class="friend-request-popover-avatar">
-							<app-user-avatar :user="request.getThem( app.user )"></app-user-avatar>
+							<app-user-avatar-img :user="request.getThem( app.user )" />
 						</div>
 					</div>
 					<div class="shell-card-popover-card-body">
@@ -129,7 +129,7 @@
 						</div>
 					</div>
 				</app-card>
-			</a>
+			</router-link>
 
 		</div>
 

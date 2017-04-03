@@ -69,11 +69,11 @@
 							<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT" :animate-initial="true">
 								<div class="alert alert-info">
 									<p>
-										<translate :translate-params="{ user: '@' + userFriendship.target_user.username }">
-											profile.friend_request_sent_pending
+										<translate :translate-params="{ username: '@' + userFriendship.target_user.username }">
+											Friend request to %{ username } pending acceptance.
 										</translate>
 									</p>
-									<a class="btn btn-danger" @click="profileCtrl.cancelFriendRequest()">
+									<a class="btn btn-danger" @click="$emit( 'cancel-friend-request' )">
 										<app-jolticon icon="remove" />
 										<translate>profile.friend_request_cancel</translate>
 									</a>
@@ -83,16 +83,16 @@
 							<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_RECEIVED" :animate-initial="true">
 								<div class="alert alert-info">
 									<p>
-										<translate :translate-params="{ user: '@' + userFriendship.target_user.username }">
-											profile.friend_request_received_pending
+										<translate :translate-params="{ username: '@' + userFriendship.target_user.username }">
+											%{ username } would like to be your friend.
 										</translate>
 									</p>
-									<a class="btn" @click="profileCtrl.acceptFriendRequest()">
+									<a class="btn" @click="$emit( 'accept-friend-request' )">
 										<app-jolticon icon="friend-add-2" />
 										<translate>profile.friend_request_accept</translate>
 									</a>
 									<a class="btn btn-danger"
-										@click="profileCtrl.rejectFriendRequest()"
+										@click="$emit( 'reject-friend-request' )"
 										v-app-tooltip="$gettext( 'profile.friend_request_decline_tooltip' )"
 										>
 										<app-jolticon icon="remove" />

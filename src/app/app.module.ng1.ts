@@ -100,7 +100,6 @@ import './components/trophy/completion/completion-module';
 import './components/trophy/list/list-module';
 import './components/trophy/overview/overview-module';
 import './components/trophy/thumbnail/thumbnail-module';
-import './components/user/friendships-helper/friendships-helper-module';
 import './components/user/set-password-modal/set-password-modal-module';
 import './components/user/token-modal/token-modal-module';
 
