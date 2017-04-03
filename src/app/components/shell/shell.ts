@@ -14,6 +14,7 @@ import { AppOfflineAlert } from '../offline/alert/alert';
 import { AppGrowls } from '../../../lib/gj-lib-client/components/growls/growls';
 import { Chat } from '../chat/chat.service';
 import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
+import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar/bar';
 
 @View
 @Component({
@@ -27,6 +28,7 @@ import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
 		AppOfflineAlert,
 		AppGrowls,
 		AppModals,
+		AppLoadingBar,
 		AppShellChat: () => $import( './chat/chat' ).then( m => m.AppShellChat ),
 	}
 })
