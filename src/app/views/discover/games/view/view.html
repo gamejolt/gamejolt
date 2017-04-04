@@ -29,9 +29,9 @@
 			Don't affix the nav on download pages.
 			It takes a lot of space out vertically when on small browser size.
 		-->
-			<!--:should-affix-nav="!$state.includes( 'discover.games.view.download' )"-->
 		<app-page-header
 			:cover-media-item="game.header_media_item"
+			:should-affix-nav="$route.name !== 'discover.games.view.download'"
 			>
 
 			<!--<div
