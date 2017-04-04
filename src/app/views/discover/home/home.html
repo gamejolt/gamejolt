@@ -1,45 +1,18 @@
-<div v-if="isLoaded">
+<div class="route-discover-home">
 
 	<section class="section landing-header text-center">
 		<div class="container">
-
-			<h1 class="sans-margin-top">
-				<small>Introducing...</small>
-				<br>
-				<img class="bolt" src="~img/jolt.svg">
-				Partners
-			</h1>
-
-			<div class="row">
-				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-					<p class="lead">Promote indie games on your YouTube and Twitch channels and earn revenue when people buy the game!</p>
-
-					<router-link
-						class="btn btn-primary-outline"
-						:to="{ name: 'landing.partners' }"
-						v-app-track-event="`home:header-partners-learn`"
-						>
-						Learn More
-					</router-link>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!--<section class="section landing-header text-center">
-		<div class="container">
 			<div class="row">
 				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 
-					<p class="lead">Find the indie games you <span class="jolticon jolticon-heart big gj-pink"></span> and directly support the developers that make them</p>
+					<p class="lead">Find the indie games you <app-jolticon icon="heart" :big="true" class="header-heart" /> and directly support the developers that make them</p>
 
 					<p>
 						<router-link class="btn btn-outline btn-sm"
 							:to="{ name: 'landing.learn' }"
 							v-app-track-event="`home:header-learn-more`"
-							translate
 							>
-							Learn More
+							<translate>Learn More</translate>
 						</router-link>
 					</p>
 					<br>
@@ -47,33 +20,31 @@
 					<router-link class="btn btn-primary-outline btn-block-xs"
 						:to="{ name: 'discover.games.list._fetch', params: { section: 'best' } }"
 						v-app-track-event="`home:header-browse-games`"
-						translate
 						>
-						Browse Games
+						<translate>Browse Games</translate>
 					</router-link>
 
 					<span class="hidden-xs">
 						&nbsp;&nbsp;&nbsp;
-						<em translate>or</em>
+						<em>or</em>
 						&nbsp;&nbsp;&nbsp;
 					</span>
 
 					<br class="visible-xs">
 
-					<router-link class="btn btn-outline btn-block-xs"
-						gj-auth-required
-						:to="{ name: 'dashboard.developer.games.add' }"
-						ng-click="!app.user ? $event.preventDefault() : ''"
-						v-app-track-event="`home:header-add-game`"
-						translate
-						>
-						Add Your Game
-					</router-link>
+					<span v-app-auth-required>
+						<router-link class="btn btn-outline btn-block-xs"
+							:to="{ name: 'dashboard.developer.games.add' }"
+							v-app-track-event="`home:header-add-game`"
+							>
+							<translate>Add Your Game</translate>
+						</router-link>
+					</span>
 
 				</div>
 			</div>
 		</div>
-	</section>-->
+	</section>
 
 	<section class="section">
 		<div class="container-lg">
@@ -89,13 +60,22 @@
 
 			<hr class="underbar underbar-center">
 
-			<app-game-grid
-				:games="featuredGames"
-				:truncate-to-fit="true"
-				:scrollable="true"
-				event-label="home-featured-games"
-				>
-			</app-game-grid>
+			<div>
+				<app-game-grid-placeholder
+					v-if="!isLoaded"
+					:num="8"
+					:truncate-to-fit="true"
+					:scrollable="true"
+					/>
+
+				<app-game-grid
+					v-else
+					:games="games.featured"
+					:truncate-to-fit="true"
+					:scrollable="true"
+					event-label="home-featured-games"
+					/>
+			</div>
 
 			<div class="text-center">
 				<router-link class="btn btn-outline"
@@ -154,7 +134,7 @@
 
 			<hr class="underbar underbar-center">
 
-			<div class="row">
+			<div class="row" v-if="channels.length">
 				<div class="col-xs-6 col-sm-3 col-md-2"
 					v-for="channel of channels"
 					>
@@ -200,10 +180,10 @@
 
 			<app-nav-tab-list :center="true">
 				<ul>
-					<li v-for="( section, i ) of discoverSections" :key="i">
+					<li v-for="( section, i ) of discoverSections" :key="section.url">
 						<a
 							@click="changeSection( i )"
-							:class="{ active: chosenSection === section }"
+							:class="{ active: chosenSection.url === section.url }"
 							>
 							<span class="hidden-xs">
 								{{ section.title }}
@@ -216,12 +196,22 @@
 				</ul>
 			</app-nav-tab-list>
 
-			<app-game-grid
-				:games="chosenSection.items"
-				:truncate-to-fit="true"
-				:event-label="`home-${chosenSection.eventLabel}`"
-				>
-			</app-game-grid>
+			<div>
+				<app-game-grid-placeholder
+					v-if="!isLoaded"
+					:num="16"
+					:truncate-to-fit="true"
+					/>
+
+				<app-game-grid
+					v-else
+					:games="games[ chosenSection.games ]"
+					:truncate-to-fit="true"
+					:event-label="`home-${chosenSection.eventLabel}`"
+					>
+				</app-game-grid>
+			</div>
+
 
 			<div class="text-center">
 				<router-link class="btn btn-outline"
@@ -235,7 +225,7 @@
 		</div>
 	</section>
 
-	<section class="section fill-lightest" v-if="!app.user">
+	<section class="section fill-lightest" v-if="isLoaded && !app.user">
 		<div class="container">
 
 			<h1 class="section-header text-center">
