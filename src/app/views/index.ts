@@ -7,7 +7,6 @@ import { routeLanding } from './landing/landing.route';
 import { routeLegal } from './legal/legal.route';
 import { Scroll } from '../../lib/gj-lib-client/components/scroll/scroll.service';
 import { routeSearch } from './search/search.route';
-import { routeTest } from './test/test.route';
 import { routeProfile } from './profile/profile.route';
 
 Vue.use( VueRouter );
@@ -18,7 +17,6 @@ const routes = [
 	routeProfile,
 	routeLanding,
 	routeLegal,
-	...routeTest,
 	...routeFallbacks,
 	// {
 	// 	path: '*',
@@ -31,11 +29,8 @@ export const router = new VueRouter( {
 	routes,
 	scrollBehavior( to, _from, savedPosition )
 	{
-		console.log( 'scroll', savedPosition );
-
 		// Skip one auto scroll trigger.
 		if ( !Scroll.shouldAutoScroll ) {
-			console.log( 'skip autoscroll' );
 			Scroll.shouldAutoScroll = true;
 			return undefined;
 		}
