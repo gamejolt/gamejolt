@@ -21,6 +21,8 @@ import { AppTrackEvent } from '../../../../../../../lib/gj-lib-client/components
 import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
 import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../../../../../components/activity/feed/feed-container-service';
+import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
+import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 
 @View
 @Component({
@@ -30,6 +32,8 @@ import { ActivityFeedContainer } from '../../../../../../components/activity/fee
 		AppLazyPlaceholder,
 		AppFadeCollapse,
 		AppActivityFeed,
+		AppSocialTwitterShare,
+		AppSocialFacebookLike,
 	},
 	directives: {
 		AppTrackEvent,
@@ -48,7 +52,7 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue
 	// @Prop() supporters: User[];
 	// @Prop() userPartnerKey: string;
 	// @Prop() partnerLink: string;
-	// @Prop() twitterShareMessage: string;
+	@Prop() twitterShareMessage: string;
 	// @Prop() profileCount: number;
 	// @Prop() downloadCount: number;
 	// @Prop() playCount: number;

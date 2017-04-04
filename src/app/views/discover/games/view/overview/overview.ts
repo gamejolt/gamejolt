@@ -35,6 +35,7 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 	@Prop() game: Game;
 	@Prop() userRating: GameRating;
 	@Prop() ratingBreakdown: number[];
+	@Prop() twitterShareMessage: string;
 
 	isLoaded = false;
 	component: any = null;

@@ -30,6 +30,32 @@
 		</div>
 	</section>
 
+	<section class="section" style="padding-bottom: 0" v-if="twitterShareMessage && !Environment.isClient">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1 col-md-2 col-md-offset-0" :class="{ 'text-right': Screen.isDesktop }">
+					<h2 class="section-header" :class="{ 'h4': Screen.isDesktop }">
+						<translate>Share This</translate>
+					</h2>
+				</div>
+				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-0 col-lg-7">
+
+					<div class="social-widgets">
+						<app-social-twitter-share
+							:url="Environment.baseUrl + game.getUrl()"
+							:content="twitterShareMessage"
+							/>
+
+						<span class="dot-separator hidden-xs"></span>
+
+						<app-social-facebook-like :url="Environment.baseUrl + game.getUrl()" />
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<section class="section" style="padding-bottom: 0" v-if="!Screen.isXs && game.comments_enabled">
 		<div class="container">
 			<div class="row">
