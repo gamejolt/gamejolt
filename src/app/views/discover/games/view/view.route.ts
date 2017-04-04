@@ -3,7 +3,7 @@ import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/uti
 import { routeDiscoverGamesViewOverview } from './overview/overview.route';
 
 export const routeDiscoverGamesView: VueRouter.RouteConfig = {
-	path: ':slug/:id',
+	path: ':slug/:id(\\d+)',
 	props: true,
 	component: () => asyncComponentLoader( $import( './view' ) ),
 	children: [

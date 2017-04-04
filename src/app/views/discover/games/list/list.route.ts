@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/utils';
 
-const SectionRegex = 'featured|new|fresh|hot|best|worst|by\\-date';
+const SectionRegex = 'featured|new|fresh|hot|best|worst';
 const CategoryRegex = 'arcade|action|adventure|rpg|strategy\\-sim|platformer|shooter|puzzle|sports|other';
 const DateRegex = '\\d{4}\\-\\d{2}\\-\\d{2}';
 
@@ -21,7 +21,7 @@ export const routeDiscoverGamesListCategory: VueRouter.RouteConfig = {
 
 export const routeDiscoverGamesListDate: VueRouter.RouteConfig = {
 	name: 'discover.games.list._fetch-date',
-	path: `:section(${SectionRegex})/:date(${DateRegex})`,
+	path: `:section(by\\-date)/:date(${DateRegex})(\:)?:endDate(${DateRegex})?`,
 	props: true,
 	component: () => asyncComponentLoader( $import( './list' ) ),
 };

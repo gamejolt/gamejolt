@@ -15,6 +15,7 @@ import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-serv
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppGameGrid } from '../../../../components/game/grid/grid';
 import { AppGameListing } from '../../../../components/game/listing/listing';
+import { AppState } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 @View
 @Component({
@@ -110,29 +111,14 @@ export default class RouteDiscoverGamesList extends Vue
 
 	processDateSection()
 	{
-		// TODO
-		if ( !this.$route.params.date ) {
-			// this.$state.go( 'error-404' );
-			return;
-		}
-
 		this.dateRange = null;
 		this.date = '';
 
 		// Range?
-		if ( this.$route.params.date.search( ':' ) !== -1 ) {
-			const dateRange = this.$route.params.date.split( ':' );
-
-			// Require only 2 dates.
-			if ( dateRange.length > 2 ) {
-				// TODO
-				// this.$state.go( 'error-404' );
-				return;
-			}
-
+		if ( this.$route.params.endDate ) {
 			this.dateRange = [
-				date( (new Date( dateRange[0] )), 'mediumDate' ),
-				date( (new Date( dateRange[1] )), 'mediumDate' ),
+				date( (new Date( this.$route.params.date )), 'mediumDate' ),
+				date( (new Date( this.$route.params.endDate )), 'mediumDate' ),
 			];
 		}
 		else {
