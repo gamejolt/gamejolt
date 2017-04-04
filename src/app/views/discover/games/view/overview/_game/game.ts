@@ -37,6 +37,8 @@ import { CommentVideo } from '../../../../../../../lib/gj-lib-client/components/
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCommentVideoThumbnail } from '../../../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import { AppDiscoverGamesViewOverviewDetails } from '../_details/details';
+import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
+import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 
 @View
 @Component({
@@ -56,6 +58,8 @@ import { AppDiscoverGamesViewOverviewDetails } from '../_details/details';
 		AppGamePackageCard,
 		AppActivityFeed,
 		AppCommentVideoThumbnail,
+		AppSocialTwitterShare,
+		AppSocialFacebookLike,
 	},
 	directives: {
 		AppTrackEvent,

@@ -221,15 +221,14 @@
 					<div v-if="twitterShareMessage && !Environment.isClient">
 						<br>
 						<div class="social-widgets">
-							<!--<gj-social-twitter-share
-								url="{{ Environment.baseUrl }}{{ game.getUrl() }}"
-								content="{{ twitterShareMessage }}"
-								>
-							</gj-social-twitter-share>-->
+							<app-social-twitter-share
+								:url="Environment.baseUrl + game.getUrl()"
+								:content="twitterShareMessage"
+								/>
 
 							<span class="dot-separator hidden-xs"></span>
 
-							<!--<gj-social-facebook-like url="{{ Environment.baseUrl }}{{ game.getUrl() }}"></gj-social-facebook-like>-->
+							<app-social-facebook-like :url="Environment.baseUrl + game.getUrl()" />
 						</div>
 					</div>
 
@@ -238,9 +237,11 @@
 							<translate>Supporters</translate>
 						</h2>
 
-						<!--<p class="small text-muted" translate translate-params-developer="game.developer.display_name">
-							The kind people that helped support {{ developer }} by paying more than the minimum. Sorted by amount contributed.
-						</p>-->
+						<p class="small text-muted">
+							<translate :translate-params="{ developer: game.developer.display_name }">
+								The kind people that helped support %{ developer } by paying more than the minimum. Sorted by amount contributed.
+							</translate>
+						</p>
 
 						<hr class="underbar">
 
