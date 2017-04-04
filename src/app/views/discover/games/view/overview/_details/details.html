@@ -1,0 +1,65 @@
+<div>
+	<div>
+		<strong>
+			<translate>Development Stage:</translate>
+		</strong>
+		<app-lazy-placeholder tag="span" :when="game.development_status">
+			<span class="lazy-placeholder" style="width: 80px"></span>
+
+			<translate v-if="game._is_wip">
+				Early Access
+			</translate>
+
+			<translate v-if="game._is_finished">
+				Complete
+			</translate>
+
+			<translate class="tag tag-pink" v-if="game.canceled">
+				Canceled
+			</translate>
+		</app-lazy-placeholder>
+	</div>
+
+	<div>
+		<strong>
+			<translate>Engine/Language:</translate>
+		</strong>
+		<app-lazy-placeholder tag="span" :when="game.creation_tool_human">
+			<span class="lazy-placeholder" style="width: 100px"></span>
+			<span>
+				{{ game.creation_tool_human }}
+			</span>
+		</app-lazy-placeholder>
+	</div>
+
+	<div v-if="game.published_on">
+		<strong>
+			<translate>Published On:</translate>
+		</strong>
+		<app-lazy-placeholder tag="span" :when="game.category_human">
+			<span class="lazy-placeholder" style="width: 120px"></span>
+			<router-link
+				:to="{
+					name: 'discover.games.list._fetch-date',
+					params: {
+						section: 'by-date',
+						date: date( game.published_on, 'YYYY-MM-DD' ),
+					},
+				}"
+				>
+				{{ game.published_on | date( 'longDate' ) }}
+			</router-link>
+		</app-lazy-placeholder>
+	</div>
+
+	<br>
+
+	<ul class="list-unstyled" v-if="game.web_site">
+		<li>
+			<app-jolticon icon="world" />
+			<a :href="game.web_site" target="_blank">
+				<translate>Game Web Site</translate>
+			</a>
+		</li>
+	</ul>
+</div>

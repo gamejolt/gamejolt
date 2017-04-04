@@ -15,7 +15,6 @@ import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-serv
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppGameGrid } from '../../../../components/game/grid/grid';
 import { AppGameListing } from '../../../../components/game/listing/listing';
-import { AppState } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 @View
 @Component({

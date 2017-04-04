@@ -36,11 +36,13 @@ import { AppActivityFeed } from '../../../../../../components/activity/feed/feed
 import { CommentVideo } from '../../../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCommentVideoThumbnail } from '../../../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
+import { AppDiscoverGamesViewOverviewDetails } from '../_details/details';
 
 @View
 @Component({
 	components: {
 		AppDiscoverGamesViewOverviewStats,
+		AppDiscoverGamesViewOverviewDetails,
 		AppAd,
 		AppMediaBar,
 		AppGameThumbnail,

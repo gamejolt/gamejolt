@@ -128,16 +128,14 @@
 		</div>
 	</section>
 
-	<div class="page-cut">
-		<div v-if="canToggleDescription">
-			<button class="btn btn-outline"
-				@click="showFullDescription = !showFullDescription"
-				v-app-track-event="`game-profile:show-full-description`"
-				>
-				<translate v-if="!showFullDescription">Show Full Description</translate>
-				<translate v-else>Less</translate>
-			</button>
-		</div>
+	<div class="page-cut" v-if="canToggleDescription">
+		<button class="btn btn-outline"
+			@click="showFullDescription = !showFullDescription"
+			v-app-track-event="`game-profile:show-full-description`"
+			>
+			<translate v-if="!showFullDescription">Show Full Description</translate>
+			<translate v-else>Less</translate>
+		</button>
 	</div>
 
 	<div v-if="posts && posts.hasItems">
@@ -154,7 +152,12 @@
 		<section class="section">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
+					<div class="col-sm-10 col-sm-offset-1 col-md-2 col-md-offset-0">
+					<h2 class="section-header" :class="{ 'h4 text-right': Screen.isDesktop }">
+						<translate>Devlog Feed</translate>
+					</h2>
+				</div>
+					<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-0 col-lg-7">
 
 						<app-activity-feed
 							type="Fireside_Post"

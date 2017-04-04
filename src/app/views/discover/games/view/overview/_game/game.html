@@ -284,7 +284,10 @@
 							</h2>
 
 							<hr class="underbar">
-							<!--<div gj-partial="/app/views/discover/games/view/overview/_details.html"></div>-->
+
+							<app-discover-games-view-overview-details
+								:game="game"
+								/>
 
 							<div v-if="!Environment.isClient && game._should_show_ads && Screen.isDesktop">
 								<br>
