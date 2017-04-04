@@ -1,146 +1,150 @@
-<div class="modal-controls">
-	<button class="btn btn-danger-outline" ng-click="$ctrl.close()">
-		<span class="jolticon jolticon-remove"></span>
-		<span translate>Close</span>
-	</button>
-</div>
+<app-modal :modal="modal">
 
-<div class="modal-header">
-	<h1 class="text-center section-header" translate>
-		We've built some new stuff!
-	</h1>
-
-	<p class="small text-center" translate>
-		Constantly improving for your enjoyment. Be enjoyed!
-	</p>
-</div>
-
-<hr>
-
-<div class="modal-body">
-
-	<div ng-if="$ctrl.screen.isXs && $ctrl.post">
-		<a class="btn btn-outline btn-block" ng-click="$ctrl.post = undefined">
-			<span class="jolticon jolticon-chevron-left"></span>
-			<span translate>Back to Changelog</span>
-		</a>
-		<br>
+	<div class="modal-controls">
+		<button class="btn btn-danger-outline" @click="$emit( 'dismiss' )">
+			<app-jolticon icon="remove" />
+			<translate>Close</translate>
+		</button>
 	</div>
 
-	<div class="row">
-		<div class="col-sm-4 col-sm-push-8" ng-if="!$ctrl.screen.isXs || !$ctrl.post">
+	<div class="modal-header">
+		<h1 class="text-center section-header">
+			<translate>We've built some new stuff!</translate>
+		</h1>
 
-			<div class="list-group">
-				<a class="list-group-item"
-					ng-class="{ 'has-icon': !$ctrl.screen.isXs }"
-					ng-repeat="post in $ctrl.posts track by post.id"
-					ng-click="$ctrl.post = post"
-					>
-					<h5 class="list-group-item-heading">
-						<span
-							ng-if="$ctrl.post.id == post.id && !$ctrl.screen.isXs"
-							class="jolticon jolticon-chevron-right"></span>
+		<p class="small text-center">
+			<translate>Constantly improving for your enjoyment. Be enjoyed!</translate>
+		</p>
+	</div>
 
-						{{ post.title }}
+	<hr>
 
-						<div class="tiny text-muted">
-							<span am-time-ago="::post.published_on"></span>
-						</div>
-					</h5>
-					<p class="list-group-item-text">
-						{{ post.lead }}
-					</p>
-				</a>
-			</div>
+	<div class="modal-body">
+
+		<div v-if="Screen.isXs && post">
+			<a class="btn btn-outline btn-block" @click="post = null">
+				<app-jolticon icon="chevron-left" />
+				<translate>Back to Changelog</translate>
+			</a>
 			<br>
-
-			<div>
-				<a class="btn btn-outline btn-block"
-					ng-href="{{ ::$ctrl.env.firesideBaseUrl }}/tag/gjbroadcast"
-					target="_blank"
-					translate
-					>
-					View Full Changelog
-				</a>
-			</div>
-
 		</div>
-		<div class="col-sm-8 col-sm-pull-4" ng-if="!$ctrl.screen.isXs || $ctrl.post">
 
-			<h2 class="section-header">
-				<a class="link-unstyled" ng-href="{{ $ctrl.post.url }}" target="_blank">
-					{{ $ctrl.post.title }}
-				</a>
-			</h2>
+		<div class="row">
+			<div class="col-sm-4 col-sm-push-8" v-if="!Screen.isXs || !post">
 
-			<p class="lead">
-				{{ $ctrl.post.lead }}
-			</p>
-
-			<div class="social-widgets">
-				<gj-fireside-post-like-widget
-					fireside-post="$ctrl.post"
-					>
-				</gj-fireside-post-like-widget>
-
-				<span ng-if="::!$ctrl.env.isClient">
-					<span class="dot-separator hidden-xs"></span>
-					<br class="visible-xs">
-					<br class="visible-xs">
-
-					<gj-social-twitter-share
-						url="{{ ::$ctrl.post.url }}"
-						content="{{ ::$ctrl.post.title }}"
+				<div class="list-group">
+					<a class="list-group-item"
+						:class="{ 'has-icon': !Screen.isXs }"
+						v-for="_post of posts"
+						:key="_post.id"
+						@click="post = _post"
 						>
-					</gj-social-twitter-share>
+						<h5 class="list-group-item-heading">
+							<app-jolticon
+								v-if="post.id === _post.id && !Screen.isXs"
+								icon="chevron-right"
+								/>
 
-					<span class="dot-separator"></span>
+							{{ _post.title }}
 
-					<gj-social-facebook-like
-						url="{{ ::$ctrl.post.url }}"
+							<div class="tiny text-muted">
+								<app-time-ago :date="_post.published_on" />
+							</div>
+						</h5>
+						<p class="list-group-item-text">
+							{{ _post.lead }}
+						</p>
+					</a>
+				</div>
+				<br>
+
+				<div>
+					<a class="btn btn-outline btn-block"
+						:href="Environment.firesideBaseUrl + '/tag/gjbroadcast'"
+						target="_blank"
 						>
-					</gj-social-facebook-like>
-				</span>
+						<translate>View Full Changelog</translate>
+					</a>
+				</div>
+
 			</div>
+			<div class="col-sm-8 col-sm-pull-4" v-if="!Screen.isXs || post">
 
-			<hr class="underbar">
+				<h2 class="section-header">
+					<a class="link-unstyled" :href="post.url" target="_blank">
+						{{ post.title }}
+					</a>
+				</h2>
 
-			<div class="fireside-post-body">
-				<gj-widget-compiler
-					[content]="$ctrl.post.content_compiled"
-					>
-				</gj-widget-compiler>
+				<p class="lead">
+					{{ post.lead }}
+				</p>
+
+				<!--
+					Need to refresh social widgets any time post changes.
+				-->
+				<div class="social-widgets" v-for="post of [ post ]" :key="post.id">
+					<app-fireside-post-like-widget
+						:post="post"
+						/>
+
+					<span v-if="!Environment.isClient">
+						<span class="dot-separator hidden-xs"></span>
+						<br class="visible-xs">
+						<br class="visible-xs">
+
+						<app-social-twitter-share
+							:url="post.url"
+							:content="post.title"
+							/>
+
+						<span class="dot-separator"></span>
+
+						<app-social-facebook-like
+							:url="post.url"
+							/>
+					</span>
+				</div>
+
+				<hr class="underbar">
+
+				<div class="fireside-post-body">
+					<app-widget-compiler
+						:content="post.content_compiled"
+						/>
+				</div>
+
+				<hr class="underbar">
+
+				<!--
+					Need to refresh social widgets any time post changes.
+				-->
+				<div class="social-widgets" v-for="post of [ post ]" :key="post.id">
+					<app-fireside-post-like-widget
+						:post="post"
+						/>
+
+					<span v-if="!Environment.isClient">
+						<span class="dot-separator hidden-xs"></span>
+						<br class="visible-xs">
+						<br class="visible-xs">
+
+						<app-social-twitter-share
+							:url="post.url"
+							:content="post.title"
+							/>
+
+						<span class="dot-separator"></span>
+
+						<app-social-facebook-like
+							:url="post.url"
+							/>
+					</span>
+				</div>
+
 			</div>
-
-			<hr class="underbar">
-
-			<div class="social-widgets">
-				<gj-fireside-post-like-widget
-					fireside-post="$ctrl.post"
-					>
-				</gj-fireside-post-like-widget>
-
-				<span ng-if="::!$ctrl.env.isClient">
-					<span class="dot-separator hidden-xs"></span>
-					<br class="visible-xs">
-					<br class="visible-xs">
-
-					<gj-social-twitter-share
-						url="{{ ::$ctrl.post.url }}"
-						content="{{ ::$ctrl.post.title }}"
-						>
-					</gj-social-twitter-share>
-
-					<span class="dot-separator"></span>
-
-					<gj-social-facebook-like
-						url="{{ ::$ctrl.post.url }}"
-						>
-					</gj-social-facebook-like>
-				</span>
-			</div>
-
 		</div>
+
 	</div>
 
-</div>
+</app-modal>

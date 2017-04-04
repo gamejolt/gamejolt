@@ -1,62 +1,52 @@
-import { Injectable, Inject } from 'ng-metadata/core';
-import { BroadcastModalCtrl } from './broadcast-modal.controller';
-import * as template from '!html-loader!./broadcast-modal.html';
-
-import { App } from '../../app-service';
-import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
+import { Modal } from '../../../lib/gj-lib-client/components/modal/modal.service';
+import { appStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Settings } from '../settings/settings.service';
+import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
+import { AppBroadcastModal } from './broadcast-modal';
+import { FiresidePost } from '../../../lib/gj-lib-client/components/fireside/post/post-model';
 
 const STORAGE_KEY_PREFIX = 'broadcast-modal:date:';
 
-@Injectable( 'BroadcastModal' )
 export class BroadcastModal
 {
-	constructor(
-		@Inject( '$window' ) private $window: ng.IWindowService,
-		@Inject( '$modal' ) private $modal: any,
-		@Inject( 'App' ) private app: App,
-	)
+	private static _key()
 	{
+		return STORAGE_KEY_PREFIX + appStore.state!.user!.id;
 	}
 
-	private _key()
+	static async check()
 	{
-		return STORAGE_KEY_PREFIX + this.app.user!.id;
-	}
-
-	async check()
-	{
-		if ( !this.app.user || !Settings.get( 'broadcast-modal' ) ) {
+		const user = appStore.state!.user;
+		if ( !user || !Settings.get( 'broadcast-modal' ) ) {
 			return;
 		}
 
 		// Bootstrap it from when this feature was launched.
-		if ( !this.$window.localStorage[ this._key() ] && this.app.user.created_on < 1483566930963 ) {
+		if ( !window.localStorage[ this._key() ] && user.created_on < 1483566930963 ) {
 
 			// Will try pulling articles since June 1st, 2016.
-			this.$window.localStorage[ this._key() ] = 1464739200000;
+			window.localStorage[ this._key() ] = 1464739200000;
 		}
 
-		const payload = await Api.sendRequest( '/web/broadcasts', { from: this.$window.localStorage[ this._key() ] } );
+		const payload = await Api.sendRequest( '/web/broadcasts', { from: window.localStorage[ this._key() ] } );
 
 		if ( payload.broadcasts.length ) {
-			this.show( payload.broadcasts );
+			const posts = FiresidePost.populate( payload.broadcasts );
+			this.show( posts );
 		}
 
-		this.$window.localStorage[ this._key() ] = Date.now();
+		window.localStorage[ this._key() ] = Date.now();
 	}
 
-	private show( posts: any[] )
+	private static async show( posts: FiresidePost[] )
 	{
-		this.$modal.open( {
-			controller: BroadcastModalCtrl,
-			controllerAs: '$ctrl',
-			template,
-			backdrop: 'static',
-			resolve: {
-
-				posts: () => posts,
-			}
-		} );
+		try {
+			await Modal.show( {
+				component: AppBroadcastModal,
+				props: { posts },
+				noBackdropClose: true,
+			} );
+		}
+		catch ( _e ) {}
 	}
 }

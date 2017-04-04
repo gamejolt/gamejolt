@@ -18,12 +18,10 @@
 					<app-jolticon icon="comment" />
 				</button>
 
-				<!--TODO-->
-				<!--<gj-fireside-post-like-widget
-					fireside-post="post"
-					sparse="true"
-					>
-				</gj-fireside-post-like-widget>-->
+				<app-fireside-post-like-widget
+					:post="post"
+					:sparse="true"
+					/>
 
 				<button class="btn btn-outline btn-sparse"
 					v-app-popover-trigger="sharePopoverId"
@@ -41,17 +39,16 @@
 
 					<div class="well fill-darkest sans-margin" v-if="isShowingShare">
 						<div class="social-widgets" v-if="!Environment.isClient">
-							<!--TODO-->
-							<!--<gj-social-twitter-share
-								url="{{ shareUrl }}"
-								content="{{ post.title }}"
-								>
-							</gj-social-twitter-share>
+							<app-social-twitter-share
+								:url="shareUrl"
+								:content="post.title"
+								/>
+
 							<span class="dot-separator"></span>
-							<gj-social-facebook-like
-								url="{{ shareUrl }}"
-								>
-							</gj-social-facebook-like>-->
+
+							<app-social-facebook-like
+								:url="shareUrl"
+								/>
 						</div>
 
 						<button class="btn btn-outline btn-block" @click="copyShareUrl">

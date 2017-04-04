@@ -21,6 +21,9 @@ import { AppCommentWidget } from '../../../../../../lib/gj-lib-client/components
 import { AppLoading } from '../../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppCard } from '../../../../../../lib/gj-lib-client/components/card/card';
 import { AppUserAvatarImg } from '../../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
+import { AppFiresidePostLikeWidget } from '../../../../../../lib/gj-lib-client/components/fireside/post/like/widget/widget';
+import { AppSocialTwitterShare } from '../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
+import { AppSocialFacebookLike } from '../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 
 @View
 @Component({
@@ -32,6 +35,9 @@ import { AppUserAvatarImg } from '../../../../../../lib/gj-lib-client/components
 		AppLoading,
 		AppCard,
 		AppUserAvatarImg,
+		AppFiresidePostLikeWidget,
+		AppSocialTwitterShare,
+		AppSocialFacebookLike,
 	},
 	directives: {
 		AppTooltip,

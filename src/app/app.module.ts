@@ -27,9 +27,7 @@ import { FiresidePostTagModule } from '../lib/gj-lib-client/components/fireside/
 import { FiresidePostVideoModule } from '../lib/gj-lib-client/components/fireside/post/video/video.module';
 import { FiresidePostSketchfabModule } from '../lib/gj-lib-client/components/fireside/post/sketchfab/sketchfab.module';
 import { FiresidePostLikeModule } from '../lib/gj-lib-client/components/fireside/post/like/like.module';
-import FiresidePostLikeWidgetModule from '../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 import AuthModule from '../lib/gj-lib-client/components/auth/auth';
-import BroadcastModalModule from './components/broadcast-modal/broadcast-modal';
 import SplitTestModule from './components/split-test/split-test';
 import { SearchModule } from './components/search/search.module';
 import NotificationModule from './components/notification/notification';
@@ -167,7 +165,6 @@ import { ReportModalModule } from '../lib/gj-lib-client/components/report/modal/
 		ModalConfirmModule,
 		GameThumbnailImgModule,
 		GamePlayModalModule,
-		FiresidePostLikeWidgetModule,
 		ImgResponsiveModule,
 		ResponsiveDimensionsModule,
 		WidgetCompilerModule,
@@ -199,7 +196,6 @@ import { ReportModalModule } from '../lib/gj-lib-client/components/report/modal/
 		ChannelsModule,
 		ChannelThumbnailModule,
 		LoadingFadeModule,
-		BroadcastModalModule,
 		UserModule,
 		GameModule,
 		GameScreenshotModule,

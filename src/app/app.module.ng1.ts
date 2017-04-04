@@ -57,13 +57,6 @@ import '../lib/gj-lib-client/components/jam/game/vote/widget/widget';
 import '../lib/gj-lib-client/components/jam/award/award';
 import '../lib/gj-lib-client/components/key/key-module';
 import '../lib/gj-lib-client/components/linked-key/linked-key';
-import '../lib/gj-lib-client/components/social/twitter/sdk/sdk';
-import '../lib/gj-lib-client/components/social/twitter/share/share';
-import '../lib/gj-lib-client/components/social/twitter/follow/follow';
-import '../lib/gj-lib-client/components/social/facebook/sdk/sdk';
-import '../lib/gj-lib-client/components/social/facebook/like/like';
-import '../lib/gj-lib-client/components/social/facebook/share/share';
-import '../lib/gj-lib-client/components/social/facebook/send/send';
 import '../lib/gj-lib-client/components/game-library/game/game';
 import '../lib/gj-lib-client/components/user/game-score/game-score';
 import '../lib/gj-lib-client/components/user/game-trophy/game-trophy';
@@ -160,13 +153,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Jam.Award',
 	'gj.Key',
 	'gj.LinkedKey',
-	'gj.Social.Twitter.Sdk',
-	'gj.Social.Twitter.Share',
-	'gj.Social.Twitter.Follow',
-	'gj.Social.Facebook.Sdk',
-	'gj.Social.Facebook.Like',
-	'gj.Social.Facebook.Share',
-	'gj.Social.Facebook.Send',
 	'gj.GameLibrary.Game',
 	'gj.User.GameScore',
 	'gj.User.GameTrophy',

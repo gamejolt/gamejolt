@@ -7,6 +7,7 @@ import { Settings } from '../components/settings/settings.service';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
 import { Chat } from '../components/chat/chat.service';
+import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 
 Vue.use( Vuex );
 
@@ -156,6 +157,8 @@ export const store = new Vuex.Store<StoreState>( {
 			state.bundleCollections = GameCollection.populate( response.bundleCollections );
 
 			state.isBootstrapped = true;
+
+			BroadcastModal.check();
 		},
 
 		async [Actions.loadChat]( { state } )
