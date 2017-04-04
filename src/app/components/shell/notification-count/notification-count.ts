@@ -33,8 +33,11 @@ export class AppShellNotificationCount extends Vue
 
 	private async fetchCount()
 	{
-		const response = await Notification.fetchNotificationsCount();
-		this.setNotificationCount( response.notificationsCount );
+		try {
+			const response = await Notification.fetchNotificationsCount();
+			this.setNotificationCount( response.notificationsCount );
+		}
+		catch ( e ) {}
 	}
 
 	render( h: Vue.CreateElement )
