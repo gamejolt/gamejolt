@@ -11,9 +11,9 @@ import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.s
 import { AppPagination } from '../../../../lib/gj-lib-client/components/pagination/pagination';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 
-const RowSizeSm = 2;
-const RowSizeMd = 3;
-const RowSizeLg = 4;
+export const GameGridRowSizeSm = 2;
+export const GameGridRowSizeMd = 3;
+export const GameGridRowSizeLg = 4;
 
 let idCounter = 0;
 
@@ -61,13 +61,13 @@ export class AppGameGrid extends Vue
 
 		let rowSize: number;
 		if ( breakpoint === 'sm' ) {
-			rowSize = RowSizeSm;
+			rowSize = GameGridRowSizeSm;
 		}
 		else if ( breakpoint === 'md' ) {
-			rowSize = RowSizeMd;
+			rowSize = GameGridRowSizeMd;
 		}
 		else if ( breakpoint === 'lg' ) {
-			rowSize = RowSizeLg;
+			rowSize = GameGridRowSizeLg;
 		}
 		else {
 			rowSize = games.length;

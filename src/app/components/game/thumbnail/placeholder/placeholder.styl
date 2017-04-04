@@ -1,0 +1,32 @@
+@require '~styles/variables'
+@require '../../../../../lib/gj-lib-client/stylus/common/mixins'
+
+.game-thumbnail-placeholder
+	margin-bottom: $grid-gutter-width-xs
+
+.placeholder
+
+	&-thumb
+		height: 0
+		padding-top: 56.25%  // HD 16:9
+		background-color: $gray-lightest
+
+	&-meta
+		position: relative
+		padding-top: 7px
+
+	&-avatar
+		img-circle()
+		position: absolute
+		left: -20px
+		top: -20px
+		width: 40px
+		height: 40px
+		background-color: $gray-lightest
+		border: 3px solid $white
+		z-index: 3
+
+	&-title
+		lazy-placeholder-text()
+		margin-left: 30px
+		width: 60%
