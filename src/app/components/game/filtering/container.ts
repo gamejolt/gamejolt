@@ -92,13 +92,7 @@ export class GameFilteringContainer
 	/**
 	 * Whether or not we should store these filters in the browser.
 	 */
-	isPersistent = true;
-
-	/**
-	 * Whether or not we should try to detect their OS to set filters if they
-	 * don't have any set.
-	 */
-	shouldDetect = true;
+	isPersistent = false;
 
 	/**
 	 * This is whether or not the filters are empty that we need for tags. It
@@ -126,7 +120,10 @@ export class GameFilteringContainer
 		} );
 	}
 
-	init( route: VueRouter.Route )
+	init(
+		route: VueRouter.Route,
+		options: { shouldDetect?: boolean } = {},
+	)
 	{
 		const params = route.query;
 
@@ -178,7 +175,12 @@ export class GameFilteringContainer
 			} );
 		}
 		// Only if this is a persistent filtering container.
-		else if ( !GJ_IS_SSR && this.isPersistent && window.localStorage[ STORAGE_KEY ] ) {
+		else if (
+			!GJ_IS_SSR
+			&& options.shouldDetect
+			&& this.isPersistent
+			&& window.localStorage[ STORAGE_KEY ]
+		) {
 			console.log( 'from storage' );
 
 			let filters = JSON.parse( window.localStorage[ STORAGE_KEY ] );
@@ -189,7 +191,11 @@ export class GameFilteringContainer
 				return !this.updateUrl( route, _filters );
 			}
 		}
-		else if ( this.shouldDetect && !GJ_IS_SSR && !Environment.isPrerender ) {
+		else if (
+			!GJ_IS_SSR
+			&& options.shouldDetect
+			&& !Environment.isPrerender
+		) {
 			console.log( 'from device' );
 
 			const os = Device.os();

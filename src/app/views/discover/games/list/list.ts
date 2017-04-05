@@ -34,7 +34,6 @@ export default class RouteDiscoverGamesList extends Vue
 	@Prop( String ) section: string;
 	@Prop( String ) category?: string;
 
-	$payload: [ GameFilteringContainer, any ] | any;
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
 
@@ -68,32 +67,47 @@ export default class RouteDiscoverGamesList extends Vue
 		'games.list.section_best': this.$gettext( 'games.list.section_best' ),
 	};
 
-	@BeforeRouteEnter( { cache: true } )
-	async routeEnter( this: undefined, route: VueRouter.Route )
+	// TODO: Still gotta work on this.
+	@BeforeRouteEnter( { lazy: true, cache: true } )
+	routeEnter( this: undefined, route: VueRouter.Route )
 	{
-		const filteringContainer = new GameFilteringContainer();
+		const filtering = new GameFilteringContainer();
+		filtering.isPersistent = true;
 
-		// TODO
-		// If initialization changed the URL, then we don't want to resolve.
+		// If initialization changed the URL, then we don't want to do the API call.
 		// This prevents a double API call from going out.
-		if ( !filteringContainer.init( route ) ) {
-			console.log( 'pas baaaaahhhh' );
-			return;
+		if ( !filtering.init( route, { shouldDetect: true } ) ) {
+			return undefined;
 		}
 
-		console.log( 'passed through' );
+		return Api.sendRequest( '/web/discover/games?' + filtering.getQueryString( route ) );
+	}
 
-		const response = await Api.sendRequest( '/web/discover/games?' + filteringContainer.getQueryString( route ) );
-		return [ filteringContainer, response ];
+	created()
+	{
+		this.process();
 	}
 
 	routed()
 	{
-		this.filtering = this.$payload[0];
-		this.$payload = this.$payload[1];
+		if ( this.listing && this.$payload ) {
+			this.listing.processPayload( this.$route, this.$payload );
+			this.process();
+		}
+	}
 
-		this.listing = new GameListingContainer( this.filtering! );
-		this.listing.processPayload( this.$route, this.$payload );
+	/**
+	 * Gets called before the payload and after.
+	 */
+	process()
+	{
+		if ( !this.listing || !this.filtering ) {
+			this.filtering = new GameFilteringContainer();
+			this.filtering.isPersistent = true;
+			this.filtering.init( this.$route );
+
+			this.listing = new GameListingContainer( this.filtering );
+		}
 
 		if ( this.section === 'by-date' ) {
 			this.processDateSection();
@@ -113,7 +127,6 @@ export default class RouteDiscoverGamesList extends Vue
 		this.dateRange = null;
 		this.date = '';
 
-		// Range?
 		if ( this.$route.params.endDate ) {
 			this.dateRange = [
 				date( (new Date( this.$route.params.date )), 'mediumDate' ),
@@ -143,8 +156,6 @@ export default class RouteDiscoverGamesList extends Vue
 
 	processGeneralSection()
 	{
-		Meta.description = this.$payload.metaDescription;
-
 		const sectionTranslationKey = 'games.list.section_' + this.section;
 		const sectionHuman = this.translations[ sectionTranslationKey ];
 		let categoryHuman = '';
@@ -177,6 +188,10 @@ export default class RouteDiscoverGamesList extends Vue
 				'%{ category } games',
 				{ category: categoryHuman.toLowerCase() },
 			);
+		}
+
+		if ( this.$payload ) {
+			Meta.description = this.$payload.metaDescription;
 		}
 	}
 

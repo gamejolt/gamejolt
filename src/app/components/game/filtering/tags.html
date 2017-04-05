@@ -1,7 +1,7 @@
 <div class="game-filtering-tags" v-if="!filtering.areTagFiltersEmpty || genre">
 
 	<span v-if="genre">
-		<a class="anim-fade-in tag tag-pink game-filtering-tag" @click="clearGenre">
+		<a class="tag tag-pink game-filtering-tag" @click="clearGenre">
 			<strong>
 				<translate>games.filtering.genre_label</translate>:
 			</strong>
@@ -19,10 +19,10 @@
 		<!-- Array type -->
 		<span
 			v-if="GameFilteringContainer.definitions[ filter ].type === 'array'"
-			v-for="option of value"
-			:key="option"
+			v-for="( option, index ) of value"
+			:key="index"
 			>
-			<a class="anim-fade-in tag tag-pink game-filtering-tag" @click="removeFilterOption( filter, option )">
+			<a class="tag tag-pink game-filtering-tag" @click="removeFilterOption( filter, option )">
 				<strong>{{ GameFilteringContainer.definitions[ filter ].label }}:</strong>
 				{{ GameFilteringContainer.definitions[ filter ].options[ option ] }}
 				<app-jolticon icon="remove" />
@@ -33,7 +33,7 @@
 		<span
 			v-if="GameFilteringContainer.definitions[ filter ].type === 'radio'"
 			>
-			<a class="anim-fade-in tag tag-pink game-filtering-tag" @click="removeFilterOption( filter, value )">
+			<a class="tag tag-pink game-filtering-tag" @click="removeFilterOption( filter, value )">
 				<strong>{{ GameFilteringContainer.definitions[ filter ].label }}:</strong>
 				{{ GameFilteringContainer.definitions[ filter ].options[ value ] }}
 				<app-jolticon icon="remove" />

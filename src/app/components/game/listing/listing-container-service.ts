@@ -4,6 +4,7 @@ import { GameFilteringContainer } from '../filtering/container';
 
 export class GameListingContainer
 {
+	isBootstrapped = false;
 	games: any[] = [];
 	gamesCount = 0;
 	perPage = 10;
@@ -16,6 +17,7 @@ export class GameListingContainer
 
 	processPayload( route: VueRouter.Route, payload: any )
 	{
+		this.isBootstrapped = true;
 		this.games = Game.populate( payload.games );
 		this.gamesCount = payload.gamesCount;
 		this.perPage = payload.perPage;

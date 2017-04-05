@@ -15,6 +15,7 @@ import { AppGameFilteringInput } from '../filtering/input';
 import { AppGameFilteringWidget } from '../filtering/widget';
 import { AppGameFilteringTags } from '../filtering/tags';
 import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
+import { AppGameGridPlaceholder } from '../grid/placeholder/placeholder';
 
 @View
 @Component({
@@ -25,6 +26,7 @@ import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading
 		AppGameFilteringWidget,
 		AppGameFilteringInput,
 		AppGameFilteringTags,
+		AppGameGridPlaceholder,
 	},
 	directives: {
 		AppTrackEvent,

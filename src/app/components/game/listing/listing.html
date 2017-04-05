@@ -94,7 +94,10 @@
 					}"
 					>
 
-					<p class="text-muted small" :class="{ 'text-right': !Screen.isXs }">
+					<p class="text-muted small"
+						v-if="listing.isBootstrapped"
+						:class="{ 'text-right': !Screen.isXs }"
+						>
 						<translate v-if="listing.gamesCount === 0">
 							games.list.games_count_none
 						</translate>
@@ -118,24 +121,35 @@
 				</div>
 			</div>
 
-			<div v-if="listing.gamesCount">
+			<div v-if="listing.isBootstrapped">
+				<div v-if="listing.gamesCount">
 
-				<app-loading-fade :is-loading="isLoading">
-					<slot />
-				</app-loading-fade>
+					<app-loading-fade :is-loading="isLoading">
+						<slot />
+					</app-loading-fade>
 
-				<app-pagination
-					class="text-center"
-					:items-per-page="listing.perPage"
-					:total-items="listing.gamesCount"
-					:current-page="listing.currentPage"
-					@pagechange="Scroll.to( 'games', { animate: false } )"
-					/>
+					<app-pagination
+						class="text-center"
+						:items-per-page="listing.perPage"
+						:total-items="listing.gamesCount"
+						:current-page="listing.currentPage"
+						@pagechange="Scroll.to( 'games', { animate: false } )"
+						/>
+
+				</div>
+			</div>
+			<div v-else>
+
+				<app-game-grid-placeholder :num="16" />
 
 			</div>
+
 		</div>
-		<div class="container">
-			<div v-if="!listing.gamesCount" class="alert alert-warning anim-fade-in no-animate-leave">
+
+		<div class="container anim-fade-in"
+			v-if="listing.isBootstrapped && !listing.gamesCount"
+			>
+			<div class="alert alert-warning">
 				<div class="container">
 					<p>
 						<translate>No games match your filters. Zoinks!</translate>
