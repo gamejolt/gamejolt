@@ -3,6 +3,7 @@ import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/uti
 import { routeDiscoverGamesViewOverview } from './overview/overview.route';
 import { routeDiscoverGamesViewDevlogList } from './devlog/list/list.route';
 import { routeDiscoverGamesViewDevlogView } from './devlog/view/view.route';
+import { routeDiscoverGamesViewComments } from './comments/comments.route';
 
 export const routeDiscoverGamesView: VueRouter.RouteConfig = {
 	path: ':slug/:id(\\d+)',
@@ -12,5 +13,6 @@ export const routeDiscoverGamesView: VueRouter.RouteConfig = {
 		routeDiscoverGamesViewOverview,
 		routeDiscoverGamesViewDevlogList,
 		routeDiscoverGamesViewDevlogView,
+		routeDiscoverGamesViewComments,
 	],
 };

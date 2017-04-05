@@ -1,7 +1,34 @@
-import { provide } from 'ng-metadata/core';
-import { CommentsCtrl } from './comments-controller';
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import * as View from '!view!./comments.html';
 
-export default angular.module( 'App.Views.Discover.Games.View.Comments', [
-] )
-.controller( ...provide( 'Discover.Games.View.CommentsCtrl', { useClass: CommentsCtrl } ) )
-.name;
+import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
+import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
+import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
+import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils/vue';
+import { AppCommentWidget } from '../../../../../../lib/gj-lib-client/components/comment/widget/widget';
+import { AppAd } from '../../../../../../lib/gj-lib-client/components/ad/ad';
+
+@View
+@Component({
+	components: {
+		AppCommentWidget,
+		AppAd,
+	},
+})
+export default class RouteDiscoverGamesViewComments extends Vue
+{
+	@Prop() game: Game;
+
+	Environment = Environment;
+	Screen = makeObservableService( Screen );
+
+	created()
+	{
+		Meta.title = this.$gettextInterpolate(
+			`Comments for %{ game }`,
+			{ game: this.game.title },
+		);
+	}
+}

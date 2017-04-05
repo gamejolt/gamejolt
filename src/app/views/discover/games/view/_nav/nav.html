@@ -8,7 +8,7 @@
 					<translate>games.view.overview_tab</translate>
 				</router-link>
 			</li>
-			
+
 			<li v-if="game._is_devlog">
 				<router-link :to="{ name: 'discover.games.view.overview' }"
 					:class="{ active: $route.name === 'discover.games.view.overview' || $route.name === 'discover.games.view.devlog.view' }"
@@ -26,10 +26,10 @@
 			</li>
 
 			<li v-if="game._is_devlog && game.comments_enabled">
-				<a ui-sref=".comments" ui-sref-active="active">
+				<router-link :to="{ name: 'discover.games.view.comments' }" active-class="active">
 					<translate>Comments</translate>
 					<span class="badge">{{ commentsCount | number }}</span>
-				</a>
+				</router-link>
 			</li>
 
 			<li v-if="hasScores">

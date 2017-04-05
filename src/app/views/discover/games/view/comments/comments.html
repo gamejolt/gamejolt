@@ -1,21 +1,25 @@
-<section class="section" id="comments" ng-if="gameCtrl.isLoaded">
+<section class="section" id="comments" v-if="game">
 	<div class="container">
 		<div class="row">
 
 			<div class="col-sm-10 col-md-8 col-lg-7">
 
-				<div ng-if="::!gameCtrl.game.comments_enabled">
-					<h3 class="section-header">Comments Disabled</h3>
-					<p class="text-muted">Comments have been disabled for this game.</p>
+				<div v-if="!game.comments_enabled">
+					<h3 class="section-header">
+						<translate>Comments Disabled</translate>
+					</h3>
+					<p class="text-muted">
+						<translate>Comments have been disabled for this game.</translate>
+					</p>
 				</div>
 
-				<div ng-if="::gameCtrl.game.comments_enabled">
-					<gj-comment-widget
-						current-page="overviewCtrl.currentCommentPage"
-						comment-resource="Game"
-						comment-resource-id="gameCtrl.game.id"
-						>
-					</gj-comment-widget>
+				<div v-if="game.comments_enabled">
+					<!--TODO-->
+					<!--:current-page="currentCommentPage"-->
+					<app-comment-widget
+						resource="Game"
+						:resource-id="game.id"
+						/>
 				</div>
 
 			</div>
@@ -23,8 +27,10 @@
 			<!--
 				Will overflow a little on md, but what can ya do, amirite?
 			-->
-			<div class="col-md-4 col-lg-offset-1 text-right" ng-if="!Environment.isClient && gameCtrl.game.ads_enabled && Screen.isDesktop">
-				<gj-ad size="rectangle" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
+			<div class="col-md-4 col-lg-offset-1 text-right" 
+				v-if="!Environment.isClient && game.ads_enabled && Screen.isDesktop"
+				>
+				<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
 			</div>
 
 		</div>
