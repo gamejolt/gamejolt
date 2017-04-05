@@ -1,32 +1,37 @@
 <div>
 
+	<!--TODO: Links/active classes-->
 	<nav class="platform-list inline">
 		<ul>
 			<li v-if="!game._is_devlog">
-				<router-link :to="{ name: 'discover.games.view.overview' }" active-class="active">
+				<router-link :to="{ name: 'discover.games.view.overview' }" :class="{ active: $route.name === 'discover.games.view.overview' }">
 					<translate>games.view.overview_tab</translate>
 				</router-link>
 			</li>
+			
 			<li v-if="game._is_devlog">
-				<router-link :to="{ name: 'discover.games.view.overview' }" active-class="active"
-					ng-class="{ active: $state.is( 'discover.games.view.overview' ) || $state.includes( 'discover.games.view.devlog' ) }"
+				<router-link :to="{ name: 'discover.games.view.overview' }"
+					:class="{ active: $route.name === 'discover.games.view.overview' || $route.name === 'discover.games.view.devlog.view' }"
 					>
 					<translate>Devlog</translate>
 					<span class="badge">{{ postsCount | number }}</span>
 				</router-link>
 			</li>
+
 			<li v-if="!game._is_devlog && postsCount > 0">
-				<a ui-sref=".devlog.list" ng-class="{ active: $state.includes( 'discover.games.view.devlog' ) }">
+				<router-link :to="{ name: 'discover.games.view.devlog.list' }" active-class="active">
 					<translate>Devlog</translate>
 					<span class="badge">{{ postsCount | number }}</span>
-				</a>
+				</router-link>
 			</li>
+
 			<li v-if="game._is_devlog && game.comments_enabled">
 				<a ui-sref=".comments" ui-sref-active="active">
 					<translate>Comments</translate>
 					<span class="badge">{{ commentsCount | number }}</span>
 				</a>
 			</li>
+
 			<li v-if="hasScores">
 				<a ui-sref=".scores.list( { type: 'best', tableId: primaryScoreTable.id } )"
 					ng-class="{ active: $state.includes( 'discover.games.view.scores' ) }"
@@ -34,6 +39,7 @@
 					<translate>games.view.scores_tab</translate>
 				</a>
 			</li>
+
 			<li v-if="trophiesCount">
 				<a ui-sref=".trophies.list"
 					ng-class="{ active: $state.includes( 'discover.games.view.trophies' ) }"
@@ -42,6 +48,7 @@
 					<span class="badge">{{ trophiesCount | number }}</span>
 				</a>
 			</li>
+
 			<li v-if="app.user && app.user.id !== game.developer.id">
 				<a v-app-popover-trigger="`game-more-options`">
 					<app-jolticon icon="ellipsis-h" />

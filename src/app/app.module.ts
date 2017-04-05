@@ -41,7 +41,6 @@ import { ChannelThumbnailModule } from './components/channel/thumbnail/thumbnail
 import DevlogPostAddModule from './components/devlog/post/add/add';
 import DevlogPostEditModule from './components/devlog/post/edit/edit';
 import DevlogPostMediaModule from './components/devlog/post/media/media';
-import DevlogPostViewModule from './components/devlog/post/view/view';
 import DevlogPostViewModalModule from './components/devlog/post/view-modal/view-modal';
 import { GameGridModule } from './components/game/grid/grid.module';
 import FiresidePostThumbnailModule from './components/fireside/post/thumbnail/thumbnail';
@@ -184,7 +183,6 @@ import { ReportModalModule } from '../lib/gj-lib-client/components/report/modal/
 		DevlogPostAddModule,
 		DevlogPostEditModule,
 		DevlogPostMediaModule,
-		DevlogPostViewModule,
 		DevlogPostViewModalModule,
 		FiresidePostListModule,
 		FiresidePostThumbnailModule,

@@ -1,74 +1,69 @@
-<div class="tiny text-muted">
-	<span am-time-ago="::$ctrl.post.published_on"></span>
-</div>
+<div>
 
-<h2 class="section-header">
-	{{ $ctrl.post.title }}
-</h2>
-
-<div ng-switch="$ctrl.post.type">
-
-	<div ng-switch-when="text" class="fireside-post-body">
-		<gj-widget-compiler
-			[content]="::$ctrl.post.content_compiled"
-			>
-		</gj-widget-compiler>
+	<div class="tiny text-muted">
+		<app-time-ago :date="post.published_on" />
 	</div>
 
-	<div ng-switch-when="media" class="full-bleed-xs">
-		<div ng-repeat="item in ::$ctrl.post.media track by item.id">
+	<h2 class="section-header">
+		{{ post.title }}
+	</h2>
 
-			<div
-				gj-responsive-dimensions
-				responsive-dimensions-ratio="::item.width / item.height"
+	<div v-if="post.type === 'text'" class="fireside-post-body">
+		<app-widget-compiler
+			:content="post.content_compiled"
+			/>
+	</div>
+
+	<div v-else-if="post.type === 'media'" class="full-bleed-xs">
+		<div v-for="item of post.media" :key="item.id">
+
+			<app-responsive-dimensions
+				:ratio="item.width / item.height"
 				>
 
-				<img
-					ng-if="::!item.is_animated"
-					gj-img-responsive="{{ ::item.mediaserver_url }}"
+				<app-img-responsive
+					v-if="!item.is_animated"
+					:src="item.mediaserver_url"
 					alt=""
-					>
+					/>
 
-				<gj-video
-					ng-if="::item.is_animated"
-					[poster]="::item.mediaserver_url"
-					[webm]="::item.mediaserver_url_webm"
-					[mp4]="::item.mediaserver_url_mp4"
-					[show-loading]="true"
-					>
-				</gj-video>
-			</div>
+				<app-video
+					v-else
+					:poster="item.mediaserver_url"
+					:webm="item.mediaserver_url_webm"
+					:mp4="item.mediaserver_url_mp4"
+					:show-loading="true"
+					/>
+
+			</app-responsive-dimensions>
 
 			<br>
 
 		</div>
 	</div>
 
-	<div ng-switch-when="video" class="full-bleed-xs">
-		<gj-video-embed
+	<div v-else-if="post.type === 'video'" class="full-bleed-xs">
+		<app-video-embed
 			video-provider="youtube"
-			[video-id]="::$ctrl.post.videos[0].video_id"
-			[autoplay]="true"
-			>
-		</gj-video-embed>
+			:video-id="post.videos[0].video_id"
+			:autoplay="true"
+			/>
 	</div>
 
-	<div ng-switch-when="sketchfab" class="full-bleed-xs">
-		<gj-sketchfab-embed
-			[sketchfab-id]="::$ctrl.post.sketchfabs[0].sketchfab_id"
-			[autoplay]="true"
-			>
-		</gj-sketchfab-embed>
+	<div v-else-if="post.type === 'sketchfab'" class="full-bleed-xs">
+		<app-sketchfab-embed
+			:sketchfab-id="post.sketchfabs[0].sketchfab_id"
+			:autoplay="true"
+			/>
 	</div>
+
+	<hr>
+
+	<app-activity-feed-devlog-post-controls
+		:post="post"
+		:show-game-info="showGameInfo"
+		:in-modal="inModal"
+		:require-tabs="true"
+		/>
 
 </div>
-
-<hr>
-
-<gj-activity-feed-devlog-post-controls
-	post="$ctrl.post"
-	show-game-info="$ctrl.showGameInfo"
-	in-modal="$ctrl.inModal"
-	require-tabs="true"
-	>
-</gj-activity-feed-devlog-post-controls>
