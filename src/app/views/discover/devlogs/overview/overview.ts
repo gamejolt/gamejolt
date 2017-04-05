@@ -16,6 +16,8 @@ import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppGameGrid } from '../../../../components/game/grid/grid';
 import { AppActivityFeed } from '../../../../components/activity/feed/feed';
+import { AppGameGridPlaceholder } from '../../../../components/game/grid/placeholder/placeholder';
+import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
 
 @View
 @Component({
@@ -23,7 +25,9 @@ import { AppActivityFeed } from '../../../../components/activity/feed/feed';
 		AppExpand,
 		AppVideoEmbed,
 		AppGameGrid,
+		AppGameGridPlaceholder,
 		AppActivityFeed,
+		AppActivityFeedPlaceholder,
 	},
 	directives: {
 		AppTrackEvent,
@@ -34,17 +38,16 @@ export default class RouteDiscoverDevlogsOverview extends Vue
 	@State app: AppState;
 
 	games: any[] = [];
-	posts: ActivityFeedContainer | null = null;
+	feed: ActivityFeedContainer | null = null;
 
-	isLearnMoreExpanded = false;
-
-	@BeforeRouteEnter()
+	// Don't cache since every page load we pull new games in.
+	@BeforeRouteEnter( { lazy: true } )
 	beforeRoute()
 	{
 		return Api.sendRequest( '/web/discover/devlogs' );
 	}
 
-	routed()
+	created()
 	{
 		Meta.title = 'Indie game devlogs';
 		Meta.description = 'Find the latest and greatest games in development and follow their devlog feeds!';
@@ -56,8 +59,11 @@ export default class RouteDiscoverDevlogsOverview extends Vue
 		Meta.twitter.description = Meta.description;
 
 		Meta.twitter.image = require( '../social.png' );
+	}
 
+	routed()
+	{
 		this.games = Game.populate( this.$payload.games );
-		this.posts = ActivityFeedService.bootstrap( FiresidePost.populate( this.$payload.posts ) );
+		this.feed = ActivityFeedService.bootstrap( FiresidePost.populate( this.$payload.posts ) );
 	}
 }

@@ -15,12 +15,14 @@ import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
+import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
 
 @View
 @Component({
 	components: {
 		AppAd,
 		AppActivityFeed,
+		AppActivityFeedPlaceholder,
 	}
 })
 export default class RouteDiscoverGamesViewDevlogList extends Vue
@@ -32,7 +34,7 @@ export default class RouteDiscoverGamesViewDevlogList extends Vue
 	Environment = Environment;
 	Screen = makeObservableService( Screen );
 
-	@BeforeRouteEnter()
+	@BeforeRouteEnter( { cache: true, lazy: true } )
 	routeEnter( this: undefined, route: VueRouter.Route )
 	{
 		return Api.sendRequest( '/web/discover/games/devlog/' + route.params.id );

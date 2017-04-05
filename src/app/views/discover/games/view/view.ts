@@ -56,7 +56,7 @@ export default class RouteDiscoverGamesView extends Vue
 	@State app: AppState;
 
 	isLoaded = false;
-	game: Game = Registry.find( 'Game', this.id ) || null;
+	game: Game | null = null;
 	installableBuilds: GameBuild[] = [];
 	browserBuilds: GameBuild[] = [];
 
@@ -89,6 +89,11 @@ export default class RouteDiscoverGamesView extends Vue
 	beforeRoute( route: VueRouter.Route )
 	{
 		return Api.sendRequest( '/web/discover/games/' + route.params.id );
+	}
+
+	created()
+	{
+		this.game = Registry.find( 'Game', this.id ) || null;
 	}
 
 	routed()
@@ -168,14 +173,14 @@ export default class RouteDiscoverGamesView extends Vue
 
 	async loadCommentsCount()
 	{
-		const response = await Comment.fetch( 'Game', this.game.id, 1 );
+		const response = await Comment.fetch( 'Game', this.game!.id, 1 );
 		this.commentsCount = response.count || 0;
 	}
 
 	async refreshRatingInfo()
 	{
 		const payload = await Api.sendRequest(
-			'/web/discover/games/refresh-rating-info/' + this.game.id,
+			'/web/discover/games/refresh-rating-info/' + this.game!.id,
 			undefined,
 			{ detach: true },
 		);
@@ -187,20 +192,20 @@ export default class RouteDiscoverGamesView extends Vue
 	{
 		this.userRating = payload.userRating ? new GameRating( payload.userRating ) : null;
 		this.ratingBreakdown = payload.ratingBreakdown;
-		this.game.rating_count = payload.game.rating_count;
-		this.game.avg_rating = payload.game.avg_rating;
+		this.game!.rating_count = payload.game.rating_count;
+		this.game!.avg_rating = payload.game.avg_rating;
 	}
 
 	onGameRatingChange( gameId: number )
 	{
-		if ( gameId === this.game.id ) {
+		if ( gameId === this.game!.id ) {
 			this.refreshRatingInfo();
 		}
 	}
 
 	report()
 	{
-		ReportModal.show( this.game );
+		ReportModal.show( this.game! );
 	}
 
 	// scrollToMultiplePackages()

@@ -1,51 +1,5 @@
 <div>
 
-	<!--<gj-alert-dismissable
-		alert-type="dark"
-		dismiss-key="devlogs-learn-more"
-		no-margin="true"
-		on-dismiss="isLearnMoreExpanded = false"
-		>
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-10 col-md-8 col-lg-6 col-centered" ng-class="{ 'text-center': !Screen.isXs }">
-
-					<p translate>Not sure what devlogs are? Do not fret, have a seat and...</p>
-					<br>
-
-					<button class="btn btn-primary-outline"
-						gj-track-event="devlogs:learn-more"
-						ng-click="isLearnMoreExpanded = !isLearnMoreExpanded"
-						translate
-						>
-						Learn More About Devlogs
-					</button>
-				</div>
-
-			</div>
-		</div>
-	</gj-alert-dismissable>-->
-
-	<app-expand :when="isLearnMoreExpanded">
-		<section class="section section-thin fill-darkest">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-10 col-centered">
-
-						<div class="full-bleed-xs">
-							<app-video-embed
-								video-provider="youtube"
-								video-id="aAk_PEghHXk"
-								:autoplay="true"
-								/>
-						</div>
-
-					</div>
-				</div>
-			</div>
-		</section>
-	</app-expand>
-
 	<section class="section">
 		<div class="container">
 
@@ -59,12 +13,24 @@
 				</router-link>
 			</h2>
 
-			<app-game-grid
-				:games="games"
-				:truncate-to-fit="true"
-				:scrollable="true"
-				event-label="devlogs-overview-featured-devlogs"
-				/>
+			<div>
+
+				<app-game-grid-placeholder
+					v-if="!routeBootstrapped"
+					:num="8"
+					:truncate-to-fit="true"
+					:scrollable="true"
+					/>
+
+				<app-game-grid
+					v-else
+					:games="games"
+					:truncate-to-fit="true"
+					:scrollable="true"
+					event-label="devlogs-overview-featured-devlogs"
+					/>
+
+			</div>
 
 			<div class="page-cut">
 				<router-link
@@ -86,13 +52,17 @@
 					<hr class="underbar underbar-center">
 					<br>
 
-					<app-activity-feed
-						v-if="posts"
-						type="Fireside_Post"
-						:feed="posts"
-						:show-game-info="true"
-						load-more-url="/web/discover/devlogs/posts"
-						/>
+					<div>
+						<app-activity-feed-placeholder v-if="!feed" />
+
+						<app-activity-feed
+							v-else
+							type="Fireside_Post"
+							:feed="feed"
+							:show-game-info="true"
+							load-more-url="/web/discover/devlogs/posts"
+							/>
+					</div>
 
 				</div>
 			</div>

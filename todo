@@ -1,5 +1,6 @@
 [ ] try/catch all detached requests
 
+[ ] comment pages for main game page and devlog comments
 [ ] category filter tags aren't leaving correctly
 [ ] Changing genre filters refreshing the route twice and hits API twice.
 [ ] Doesn't scroll correctly when collapsing a fade collapse.

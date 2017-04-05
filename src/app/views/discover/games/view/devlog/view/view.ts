@@ -15,6 +15,7 @@ import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppDevlogPostView } from '../../../../../../components/devlog/post/view/view';
 import { AppDevlogPostViewPlaceholder } from '../../../../../../components/devlog/post/view/placeholder/placeholder';
 import { AppScrollWhen } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll-when.directive.vue';
+import { Registry } from '../../../../../../../lib/gj-lib-client/components/registry/registry.service';
 
 @View
 @Component({
@@ -29,6 +30,7 @@ import { AppScrollWhen } from '../../../../../../../lib/gj-lib-client/components
 })
 export default class RouteDiscoverGamesViewDevlogView extends Vue
 {
+	@Prop() postSlug: string;
 	@Prop() game: Game;
 
 	post: FiresidePost | null = null;
@@ -43,9 +45,22 @@ export default class RouteDiscoverGamesViewDevlogView extends Vue
 		return Api.sendRequest( '/web/discover/games/devlog/' + route.params.id + '/' + postHash );
 	}
 
+	created()
+	{
+		const hash = FiresidePost.pullHashFromUrl( this.postSlug );
+		this.post = Registry.find( 'FiresidePost', hash, 'hash' ) || null;
+	}
+
 	routed()
 	{
-		this.post = new FiresidePost( this.$payload.post );
+		const post = new FiresidePost( this.$payload.post );
+		if ( this.post ) {
+			this.post.assign( post );
+		}
+		else {
+			this.post = post;
+		}
+
 		this.post.$viewed();
 		this.post.$expanded();
 
