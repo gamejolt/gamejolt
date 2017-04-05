@@ -1,15 +1,11 @@
 import * as angular from 'angular';
-import { TransitionService } from 'angular-ui-router';
 
 import { bootstrapFacade } from '../lib/gj-lib-client/utils/angular-facade';
-import { Payload } from '../lib/gj-lib-client/components/payload/payload-service';
-import { App } from './app-service';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
 
-import '../lib/gj-lib-client/components/error/error-module';
 import '../lib/gj-lib-client/components/body-classes/body-classes';
 import '../lib/gj-lib-client/components/loading/loading';
 import '../lib/gj-lib-client/components/scroll/auto-scroll/auto-scroll';
@@ -34,8 +30,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'ui.bootstrap.collapse',
 
 	// GJ lib.
-	'gj.Error',
-
 	'gj.BodyClasses',
 	'gj.Loading',
 	'gj.ExpandWhen',
@@ -155,15 +149,12 @@ export const AppModuleNg1 = angular.module( 'App', [
 .run( (
 	$q: ng.IQService,
 	$animate: ng.animate.IAnimateService,
-	$transitions: TransitionService,
 	$rootScope: ng.IRootScopeService,
 	gettextCatalog: ng.gettext.gettextCatalog,
-	App: App,
 ) =>
 {
 	bootstrapFacade( $q, $animate );
 	gettextCatalog.setCurrentLanguage( Translate.lang );
-	Payload.initAngular( App, $transitions );
 	Analytics.initAngular( $rootScope );
 	Meta.initAngular( $rootScope );
 	Connection.initAngular( $rootScope );

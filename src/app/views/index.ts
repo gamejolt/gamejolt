@@ -8,6 +8,7 @@ import { routeLegal } from './legal/legal.route';
 import { Scroll } from '../../lib/gj-lib-client/components/scroll/scroll.service';
 import { routeSearch } from './search/search.route';
 import { routeProfile } from './profile/profile.route';
+import { routeError404 } from '../../lib/gj-lib-client/components/error/page/page.route';
 
 Vue.use( VueRouter );
 
@@ -18,10 +19,7 @@ const routes = [
 	routeLanding,
 	routeLegal,
 	...routeFallbacks,
-	// {
-	// 	path: '*',
-	// 	component: () => asyncComponentLoader( $import( './fallback' ) ),
-	// },
+	routeError404,
 ];
 
 export const router = new VueRouter( {

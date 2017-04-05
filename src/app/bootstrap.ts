@@ -12,10 +12,19 @@ import { Payload } from '../lib/gj-lib-client/components/payload/payload-service
 import { App } from './app';
 import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
 import { bootstrapShortkey } from '../lib/gj-lib-client/vue/shortkey';
+import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
+import { Registry } from '../lib/gj-lib-client/components/registry/registry.service';
 
-Payload.initVue( store );
+Payload.init( store, router );
 History.init( router );
 bootstrapShortkey();
+
+Registry.setConfig( 'Game', { maxItems: 100 } );
+Registry.setConfig( 'FiresidePost', { maxItems: 50 } );
+Registry.setConfig( 'User', { maxItems: 100 } );
+
+// Match this to the shell top nav height.
+Scroll.setOffsetTop( 50 );
 
 const availableLanguages: any = {};
 for ( const lang of Translate.langs ) {

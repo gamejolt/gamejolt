@@ -8,7 +8,7 @@ import { Payload } from '../lib/gj-lib-client/components/payload/payload-service
 import { App } from './app';
 import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
 
-Payload.initVue( store );
+Payload.init( store );
 // Analytics.initVue( $rootScope );
 // Meta.initVue( $rootScope );
 // Connection.initVue( $rootScope );

@@ -9,11 +9,13 @@ import { AppShell } from './components/shell/shell';
 import { AppState } from '../lib/gj-lib-client/vue/services/app/app-store';
 import { User } from '../lib/gj-lib-client/components/user/user.model';
 import { Actions, Mutations } from './store/index';
+import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 
 @View
 @Component({
 	components: {
 		AppShell,
+		AppErrorPage,
 	},
 })
 export class App extends Vue

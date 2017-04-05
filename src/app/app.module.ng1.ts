@@ -1,19 +1,14 @@
 import * as angular from 'angular';
-import { StateService, TransitionService } from 'angular-ui-router';
+import { StateService } from 'angular-ui-router';
 
 import { bootstrapFacade } from '../lib/gj-lib-client/utils/angular-facade';
-import { Payload } from '../lib/gj-lib-client/components/payload/payload-service';
-import { App } from './app-service';
-import { Registry } from '../lib/gj-lib-client/components/registry/registry.service';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
-import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
 import { History } from '../lib/gj-lib-client/components/history/history.service';
 
-import '../lib/gj-lib-client/components/error/error-module';
 import '../lib/gj-lib-client/components/filesize/filesize';
 import '../lib/gj-lib-client/components/time/time';
 import '../lib/gj-lib-client/components/duration/duration';
@@ -108,7 +103,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'ui.router.state.events',
 
 	// GJ lib.
-	'gj.Error',
 	'gj.Filesize',
 	'gj.Time',
 	'gj.Duration',
@@ -297,27 +291,17 @@ export const AppModuleNg1 = angular.module( 'App', [
 .run( (
 	$q: ng.IQService,
 	$animate: ng.animate.IAnimateService,
-	$transitions: TransitionService,
 	$rootScope: ng.IRootScopeService,
 	gettextCatalog: ng.gettext.gettextCatalog,
-	App: App,
 ) =>
 {
 	bootstrapFacade( $q, $animate );
 	gettextCatalog.setCurrentLanguage( Translate.lang );
-	Payload.initAngular( App, $transitions );
 	Analytics.initAngular( $rootScope );
 	Meta.initAngular( $rootScope );
 	Referrer.initAngular( $rootScope );
 	Connection.initAngular( $rootScope );
 	History.initAngular( $rootScope );
-
-	Registry.setConfig( 'Game', {
-		maxItems: 100,
-	} );
-
-	// Match this to the shell top nav height.
-	Scroll.setOffsetTop( 50 );
 } )
 /**
  * angular-ui-router can't handle redirects between states yet.
