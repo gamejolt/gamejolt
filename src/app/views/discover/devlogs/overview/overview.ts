@@ -69,7 +69,13 @@ export default class RouteDiscoverDevlogsOverview extends Vue
 		this.games = Game.populate( this.$payload.games );
 
 		if ( !this.feed ) {
-			this.feed = ActivityFeedService.bootstrap( FiresidePost.populate( this.$payload.posts ) );
+			this.feed = ActivityFeedService.bootstrap(
+				FiresidePost.populate( this.$payload.posts ),
+				{
+					type: 'Fireside_Post',
+					url: '/web/discover/devlogs/posts',
+				},
+			);
 		}
 	}
 }

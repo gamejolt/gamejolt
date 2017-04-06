@@ -1,40 +1,19 @@
 <div class="activity-feed timeline-list full-bleed-xs">
 
-	<app-scroll-inview
-		class="timeline-list-item"
+	<app-activity-feed-item
 		v-for="item of feed.items"
 		:key="item.id"
-		:id="`activity-feed-item-${item.id}`"
-		:class="{
-			'new': isItemUnread( item ),
-			'active': feed.activeItem && feed.activeItem.id === item.id,
-		}"
-		@inview="onItemInViewChange( true, item )"
-		@outview="onItemInViewChange( false, item )"
-		>
+		:feed="feed"
+		:item="item"
+		/>
 
-		<app-activity-feed-devlog-post
-			v-if="item.type === 'devlog-post'"
-			:item="item"
-			@clicked="setActive( item )"
-			@expanded="onItemExpanded( item )"
-			/>
-
-		<app-activity-feed-notification
-			v-if="item.type === 'notification'"
-			:item="item"
-			@clicked="setActive( item )"
-			/>
-
-	</app-scroll-inview>
-
-	<div class="page-cut" v-if="(autoloadDisbled || !feed.reachedEnd) && !isLoadingMore">
+	<div class="page-cut" v-if="(disableAutoload || !feed.reachedEnd) && !feed.isLoadingMore">
 		<button class="btn btn-outline" @click="loadMore" v-app-track-event="`activity-feed:more`">
 			<translate>Load More</translate>
 		</button>
 	</div>
 
-	<app-loading v-if="isLoadingMore" class="loading-centered" />
+	<app-loading v-if="feed.isLoadingMore" class="loading-centered" />
 
 	<div class="alert alert-info" v-if="feed.reachedEnd">
 		<translate>A wild Snorlax blocks your path. Looks like it's the end of this feed.</translate>

@@ -1,5 +1,5 @@
 import { ActivityFeedInput } from './item-service';
-import { ActivityFeedContainer } from './feed-container-service';
+import { ActivityFeedContainer, ActivityFeedContainerOptions } from './feed-container-service';
 import { History } from '../../../../lib/gj-lib-client/components/history/history.service';
 import { router } from '../../../bootstrap';
 
@@ -9,18 +9,13 @@ import { router } from '../../../bootstrap';
  */
 const MAX_CACHED_COUNT = 3;
 
-export interface BootstrapOptions
+export interface BootstrapOptions extends ActivityFeedContainerOptions
 {
 	/**
 	 * Override to say if it's a historical bootstrap or not.
 	 * Useful if you are lazy loading the page.
 	 */
 	inHistorical?: boolean;
-
-	/**
-	 * A timestamp of when the notifications in this feed were last viewed.
-	 */
-	notificationWatermark?: number;
 }
 
 interface ActivityFeedState
@@ -34,13 +29,13 @@ export class ActivityFeedService
 	private static _states: ActivityFeedState[] = [];
 	private static _currentState: ActivityFeedState;
 
-	static bootstrap( items?: ActivityFeedInput[], options: BootstrapOptions = {} )
+	static bootstrap( items?: ActivityFeedInput[], options?: BootstrapOptions )
 	{
 		const url = History.futureState
 			? History.futureState.fullPath
 			: router.currentRoute.fullPath;
 
-		const inHistorical = options.inHistorical || History.inHistorical;
+		const inHistorical = options && options.inHistorical || History.inHistorical;
 
 		// If we're bootstrapping in historical, just return what we had.
 		// We only do this if we are going back to the latest state that we have
@@ -56,7 +51,7 @@ export class ActivityFeedService
 		// If items passed in were null then they were trying to pull from
 		// cache. Since we got here we don't have any cached state, so return
 		// null.
-		if ( !items ) {
+		if ( !items || !options ) {
 			return null;
 		}
 
@@ -70,7 +65,7 @@ export class ActivityFeedService
 
 		this._currentState = {
 			url,
-			container: new ActivityFeedContainer( items, options.notificationWatermark ),
+			container: new ActivityFeedContainer( items, options ),
 		};
 
 		// Keep it trimmed.

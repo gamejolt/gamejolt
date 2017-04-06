@@ -1,0 +1,35 @@
+<app-scroll-inview
+	class="timeline-list-item"
+	:id="`activity-feed-item-${item.id}`"
+	:class="{
+		'new': isNew,
+		'active': isActive,
+	}"
+	:extra-padding="inviewPadding"
+	@inview="onInviewChange( true )"
+	@outview="onInviewChange( false )"
+	>
+
+	<div ref="inner">
+		<app-activity-feed-item-placeholder
+			v-if="!isInView"
+			:style="{ height: item.height }"
+			/>
+
+		<div v-else>
+			<app-activity-feed-devlog-post
+				v-if="item.type === 'devlog-post'"
+				:item="item"
+				@clicked="setActive"
+				@expanded="onExpanded"
+				/>
+
+			<app-activity-feed-notification
+				v-if="item.type === 'notification'"
+				:item="item"
+				@clicked="setActive"
+				/>
+		</div>
+	</div>
+
+</app-scroll-inview>

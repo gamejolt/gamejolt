@@ -5,7 +5,6 @@ import * as View from '!view!./devlog-post.html?style=./devlog-post.styl';
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { ActivityFeedItem } from '../item-service';
-// import { DevlogPostViewModal } from '../../../devlog/post/view-modal/view-modal-service';
 import { makeObservableService, findVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
 import { AppActivityFeed } from '../feed';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -69,15 +68,9 @@ export class AppActivityFeedDevlogPost extends Vue
 		this.$emit( 'expanded' );
 	}
 
-	onClick( event: Event )
+	onClick()
 	{
 		this.$emit( 'clicked' );
-
-		// TODO
-		if ( Screen.isXs ) {
-			// this.viewModal.show( this.post );
-			event.preventDefault();
-		}
 	}
 }
 

@@ -9,6 +9,7 @@ export class ActivityFeedItem
 	type: 'devlog-post' | 'notification';
 	feedItem: ActivityFeedInput;
 	scrollId: string;
+	height: string | null = null;
 
 	constructor( public sourceItem: ActivityFeedInput )
 	{
