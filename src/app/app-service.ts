@@ -1,16 +1,12 @@
 import { Injectable, Inject } from 'ng-metadata/core';
-import { StateService } from 'angular-ui-router';
 
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
-import { ModalConfirm } from '../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { User } from '../lib/gj-lib-client/components/user/user.model';
-import { Api } from '../lib/gj-lib-client/components/api/api.service';
 import { getProvider } from '../lib/gj-lib-client/utils/utils';
 import { Screen } from '../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
-import { Growls } from '../lib/gj-lib-client/components/growls/growls.service';
 
 export function attachProvidersApp( $scope: ng.IScope )
 {
@@ -32,8 +28,6 @@ export class App
 
 	constructor(
 		@Inject( '$rootScope' ) $rootScope: ng.IRootScopeService,
-		@Inject( '$state' ) private $state: StateService,
-		@Inject( 'ModalConfirm' ) private modalConfirm: ModalConfirm,
 	)
 	{
 		// Payload emits this every time the user is processed.
@@ -49,17 +43,4 @@ export class App
 
 	get title() { return Meta.title; }
 	set title( title: string | null ) { Meta.title = title; }
-
-	async logout()
-	{
-		await this.modalConfirm.show( 'Are you seriously going to leave us?', 'Really?', 'yes' );
-
-		// Must send POST.
-		await Api.sendRequest( '/web/dash/account/logout', {} );
-
-		// We go to the homepage currently just in case they're in a view they shouldn't be.
-		this.$state.go( 'discover.home' );
-
-		Growls.success( 'You are now logged out.', 'Goodbye!' );
-	}
 }

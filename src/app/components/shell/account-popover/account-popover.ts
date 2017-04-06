@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { State, Action } from 'vuex-class';
 import * as View from '!view!./account-popover.html?style=./account-popover.styl';
 
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
@@ -16,6 +16,7 @@ import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppRouterLink } from '../../router-link/router-link';
 import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { Actions } from '../../../store/index';
 
 @View
 @Component({
@@ -44,6 +45,9 @@ export class AppShellAccountPopover extends Vue
 	conn = makeObservableService( Connection );
 	Client?: any = undefined;
 
+	@Action( Actions.logout )
+	logout: Function;
+
 	created()
 	{
 		if ( GJ_IS_CLIENT ) {
@@ -61,12 +65,6 @@ export class AppShellAccountPopover extends Vue
 	onHide()
 	{
 		this.$emit( 'hidden' );
-	}
-
-	logout()
-	{
-		// TODO
-		// getProvider<App>( 'App' ).logout();
 	}
 
 	showToken()

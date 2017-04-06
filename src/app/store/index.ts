@@ -8,6 +8,12 @@ import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
 import { Chat } from '../components/chat/chat.service';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
+import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
+import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
+import { router } from '../bootstrap';
+import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
+import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
 
 Vue.use( Vuex );
 
@@ -16,6 +22,9 @@ export const Mutations = {
 
 	toggleLeftPane: 'toggleLeftPane',
 	toggleRightPane: 'toggleRightPane',
+	clearPanes: 'clearPanes',
+	showBackdrop: 'showBackdrop',
+	removeBackdrop: 'removeBackdrop',
 
 	addPlaylist: 'addPlaylist',
 	removePlaylist: 'removePlaylist',
@@ -28,6 +37,8 @@ export const Mutations = {
 export const Actions = {
 	bootstrap: 'bootstrap',
 	loadChat: 'loadChat',
+	logout: 'logout',
+	checkBackdrop: 'checkBackdrop',
 };
 
 export class StoreState
@@ -45,6 +56,7 @@ export class StoreState
 	isLeftPaneSticky = Settings.get( 'sidebar' ) as boolean;
 	isLeftPaneOverlayed = false;
 	isRightPaneOverlayed = false;
+	backdrop: AppBackdrop | undefined = undefined;
 
 	chat?: typeof Chat = undefined;
 }
@@ -97,7 +109,7 @@ export const store = new Vuex.Store<StoreState>( {
 			}
 
 			state.isRightPaneOverlayed = false;
-			// state.checkBackdrop();
+			store.dispatch( Actions.checkBackdrop );
 			Settings.set( 'sidebar', state.isLeftPaneSticky );
 		},
 
@@ -105,7 +117,14 @@ export const store = new Vuex.Store<StoreState>( {
 		{
 			state.isRightPaneOverlayed = !state.isRightPaneOverlayed;
 			state.isLeftPaneOverlayed = false;
-			// state.checkBackdrop();
+			store.dispatch( Actions.checkBackdrop );
+		},
+
+		[Mutations.clearPanes]( state )
+		{
+			state.isRightPaneOverlayed = false;
+			state.isLeftPaneOverlayed = false;
+			store.dispatch( Actions.checkBackdrop );
 		},
 
 		[Mutations.addPlaylist]( state, playlist: GameCollection )
@@ -134,6 +153,29 @@ export const store = new Vuex.Store<StoreState>( {
 		[Mutations.setNotificationCount]( state, count: number )
 		{
 			state.notificationCount = count;
+		},
+
+		[Mutations.showBackdrop]( state )
+		{
+			if ( state.backdrop ) {
+				return;
+			}
+
+			state.backdrop = Backdrop.push( document.getElementById( 'shell-body' ) as HTMLElement );
+			state.backdrop.$on( 'clicked', () =>
+			{
+				store.commit( Mutations.clearPanes );
+			} );
+		},
+
+		[Mutations.removeBackdrop]( state )
+		{
+			if ( !state.backdrop ) {
+				return;
+			}
+
+			Backdrop.remove( state.backdrop );
+			state.backdrop = undefined;
 		},
 	},
 	actions: {
@@ -167,6 +209,47 @@ export const store = new Vuex.Store<StoreState>( {
 
 			state.chat = mod.Chat as typeof Chat;
 			state.chat.connect();
+		},
+
+		async [Actions.logout]()
+		{
+			const result = await ModalConfirm.show(
+				Translate.$gettext( 'Are you seriously going to leave us?' ),
+				Translate.$gettext( 'Logout?' ),
+				'yes',
+			);
+
+			if ( !result ) {
+				return;
+			}
+
+			// Must send POST.
+			// This should clear out the user as well.
+			await Api.sendRequest( '/web/dash/account/logout', {} );
+
+			// We go to the homepage currently just in case they're in a view they shouldn't be.
+			router.push( { name: 'discover.home' } );
+
+			Growls.success(
+				Translate.$gettext( 'You are now logged out.' ),
+				Translate.$gettext( 'Goodbye!' ),
+			);
+		},
+
+		[Actions.checkBackdrop]( { state } )
+		{
+			// Ensure we have a backdrop if anything is overlayed.
+			// Otherwise ensure the backdrop is gone.
+			if ( state.isRightPaneOverlayed || store.getters.shouldShowLeftPaneBackdrop ) {
+				if ( state.backdrop ) {
+					return;
+				}
+
+				store.commit( Mutations.showBackdrop );
+			}
+			else if ( state.backdrop ) {
+				store.commit( Mutations.removeBackdrop );
+			}
 		},
 	},
 } );

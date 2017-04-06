@@ -7,7 +7,7 @@
 			<li>
 				<a
 					:class="{ active: isLeftPaneVisible }"
-					@click="toggleLeftPane()"
+					@click="toggleLeftPane"
 					v-app-popover-trigger="`main-menu`"
 					v-app-tooltip.right-middle="$gettext( `Menu (m)` )"
 					v-app-track-event="`top-nav:main-menu:toggle`"
@@ -144,7 +144,7 @@
 			<li>
 				<a
 					:class="{ active: isRightPaneVisible }"
-					@click="toggleRightPane()"
+					@click="toggleRightPane"
 					v-app-tooltip.left-middle="
 						app.user
 						? $gettext( `Chat and Friends List (c)` )
