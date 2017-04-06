@@ -22,6 +22,11 @@ const routes = [
 	routeError404,
 ];
 
+// Should tell the browser that we want to handle our own scrolling.
+if ( 'scrollRestoration' in history ) {
+	history.scrollRestoration = 'manual';
+}
+
 export const router = new VueRouter( {
 	mode: 'history',
 	routes,
@@ -30,6 +35,10 @@ export const router = new VueRouter( {
 		// Skip one auto scroll trigger.
 		if ( !Scroll.shouldAutoScroll ) {
 			Scroll.shouldAutoScroll = true;
+			return undefined;
+		}
+
+		if ( to.meta.noAutoScroll ) {
 			return undefined;
 		}
 
