@@ -6,12 +6,14 @@ import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fir
 import { FiresidePostSketchfab } from '../../../../../../lib/gj-lib-client/components/fireside/post/sketchfab/sketchfab-model';
 import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppSketchfabEmbed } from '../../../../../../lib/gj-lib-client/components/sketchfab/embed/embed';
+import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
 
 @View
 @Component({
 	components: {
 		AppJolticon,
 		AppSketchfabEmbed,
+		AppResponsiveDimensions,
 	},
 })
 export class AppActivityFeedDevlogPostSketchfab extends Vue

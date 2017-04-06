@@ -6,8 +6,7 @@ import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fir
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { ActivityFeedItem } from '../../item-service';
 import { MediaItem } from '../../../../../../lib/gj-lib-client/components/media-item/media-item-model';
-import { makeObservableService, findVueParent } from '../../../../../../lib/gj-lib-client/utils/vue';
-import { AppActivityFeed } from '../../feed';
+import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppImgResponsive } from '../../../../../../lib/gj-lib-client/components/img/responsive/responsive';
 import { AppVideo } from '../../../../../../lib/gj-lib-client/components/video/video';
@@ -36,7 +35,6 @@ export class AppActivityFeedDevlogPostMedia extends Vue
 
 	page = 1;
 	activeMediaItem: MediaItem | null = null;
-	feed: AppActivityFeed | null = null;
 
 	isDragging = false;
 	isWaitingForFrame = false;
@@ -45,20 +43,14 @@ export class AppActivityFeedDevlogPostMedia extends Vue
 
 	created()
 	{
-		this.feed = findVueParent( this, AppActivityFeed ) as AppActivityFeed;
 		this.post = this.item.feedItem as FiresidePost;
 		this.activeMediaItem = this.post.media[0];
-		// Screen.setResizeSpy( $scope, () => this._updateSliderOffset() );
 	}
 
 	shouldVideoPlay( mediaItem: any )
 	{
-		if ( !this.feed ) {
-			return;
-		}
-
-		// Must be the active media item and also this post must be in view in the feed.
-		return this.activeMediaItem === mediaItem && this.feed.isItemInView( this.item );
+		// Must be the active media item.
+		return this.activeMediaItem === mediaItem;
 	}
 
 	clicked()
