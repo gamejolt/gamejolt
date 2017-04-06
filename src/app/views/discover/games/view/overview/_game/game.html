@@ -338,20 +338,12 @@
 
 			<hr class="underbar">
 
-			<div class="full-bleed-xs scrollable-grid-xs">
-				<div :class="{ 'row': !Screen.isXs }">
-					<div
-						class="scrollable-grid-item col-xs-9 col-sm-4 col-md-3 meter-dark"
-						v-for="( game, i ) of recommendedGames.slice( 0, Screen.isDesktop ? 4 : 3 )"
-						:key="game.id"
-						>
-						<app-game-thumbnail
-							:game="game"
-							v-app-track-event="`recommended-games:click:${i}`"
-							/>
-					</div>
-				</div>
-			</div>
+			<app-game-grid
+				:games="recommendedGames"
+				:truncate-to-fit="true"
+				:scrollable="true"
+				event-label="recommended"
+				/>
 
 		</div>
 	</section>

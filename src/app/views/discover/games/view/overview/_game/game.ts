@@ -7,7 +7,6 @@ import { Game } from '../../../../../../../lib/gj-lib-client/components/game/gam
 import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
-import { AppGameThumbnail } from '../../../../../../components/game/thumbnail/thumbnail';
 import { AppTrackEvent } from '../../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { GameScreenshot } from '../../../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
 import { GameVideo } from '../../../../../../../lib/gj-lib-client/components/game/video/video.model';
@@ -39,6 +38,7 @@ import { AppCommentVideoThumbnail } from '../../../../../../../lib/gj-lib-client
 import { AppDiscoverGamesViewOverviewDetails } from '../_details/details';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
+import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 
 @View
 @Component({
@@ -47,7 +47,7 @@ import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/co
 		AppDiscoverGamesViewOverviewDetails,
 		AppAd,
 		AppMediaBar,
-		AppGameThumbnail,
+		AppGameGrid,
 		AppRatingWidget,
 		AppCard,
 		AppJolticon,
