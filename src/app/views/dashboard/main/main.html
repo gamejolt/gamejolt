@@ -1,20 +1,18 @@
-<header class="section">
-	<div class="container">
+<gj-page-header>
 
+	<gj-page-header-content>
 		<h1>{{ ::'dash.overview.heading' | translate }}</h1>
-
-		<h3 class="header-user">
-			<span gj-user-avatar="App.user"></span>
+		<p>
 			{{ App.user.display_name }}
-		</h3>
+			<small>(@{{ App.user.username }})</small>
+		</p>
+	</gj-page-header-content>
 
-		<div>
-			<a class="btn btn-outline" ui-sref="profile.overview( { slug: App.user.slug, id: App.user.id } )" gj-track-event="dash:overview:view-profile">
-				<span class="jolticon jolticon-user"></span>
-				{{ ::'dash.overview.view_profile_button' | translate }}
-			</a>
-		</div>
+	<gj-page-header-spotlight>
+		<span gj-user-avatar="App.user"></span>
+	</gj-page-header-spotlight>
 
+	<gj-page-header-nav>
 		<nav class="platform-list inline">
 			<ul>
 				<li>
@@ -29,8 +27,15 @@
 				</li>
 			</ul>
 		</nav>
+	</gj-page-header-nav>
 
-	</div>
-</header>
+	<gj-page-header-controls>
+		<a class="btn btn-outline btn-block" ui-sref="profile.overview( { username: App.user.username } )" gj-track-event="dash:overview:view-profile">
+			<span class="jolticon jolticon-user"></span>
+			{{ ::'dash.overview.view_profile_button' | translate }}
+		</a>
+	</gj-page-header-controls>
+
+</gj-page-header>
 
 <ui-view></ui-view>

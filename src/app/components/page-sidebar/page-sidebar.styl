@@ -1,8 +1,8 @@
 $page-sidebar-width = 200px
-$page-sidebar-width-lg = 250px
+$page-sidebar-width-lg = 240px
 
 .page-sidebar
-	@extend .fill-darker
+	@extend .fill-darkest
 	position: fixed
 	top: $shell-top-nav-height
 	bottom: 0
@@ -10,9 +10,7 @@ $page-sidebar-width-lg = 250px
 	padding: $line-height-computed 0
 	width: $page-sidebar-width
 	overflow-y: auto
-
-	ul.shell-nav > li > a:hover
-		background-color: $gray-dark
+	z-index: $zindex-page-sidebar
 
 	&-main
 		margin-left: $page-sidebar-width

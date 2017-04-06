@@ -1,18 +1,16 @@
+@media $media-xs
+
+	.genre-list
+		overflow-x: scroll
+		white-space: nowrap
+
 .genre-list-genre
-	display: block
-	float: left
+	display: inline-block
 	width: 10%
 	text-align: center
 
 	@media $media-xs
 		width: 20%
-
-		&:nth-child(1)
-		&:nth-child(2)
-		&:nth-child(3)
-		&:nth-child(4)
-		&:nth-child(5)
-			margin-bottom: $line-height-computed
 
 	&.active
 		.genre-list-genre-label
@@ -20,17 +18,16 @@
 			color: $gj-green
 
 	img
-		width: 58px
-		height: 58px
+		width: 116px * 0.5
+		height: 116px * 0.5
 
 	&-label
 		display: block
 		margin-top: 10px
 		font-size: 9px
 		text-transform: uppercase
-		color: $black
+		color: $white
 
 	&:hover
 		.genre-list-genre-label
-			background-color: $black
-			color: $white
+			color: $gj-green

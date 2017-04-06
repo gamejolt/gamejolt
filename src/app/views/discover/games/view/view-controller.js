@@ -1,8 +1,8 @@
 angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
-	$scope, $stateParams, $injector, $timeout, $document, $position,
-	Environment, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
-	Game, GameLibrary_Game, Game_Rating, Game_ScoreTable,
-	Registry, Scroll )
+	$scope, $state, $stateParams, $injector, $timeout, $document, $position, $location,
+	Environment, App, Location, Api, Payload, SplitTest, Growls, Analytics, Report_Modal, gettextCatalog,
+	Game, Game_Rating, Game_ScoreTable, Comment,
+	Registry, Scroll, Clipboard )
 {
 	var _this = this;
 
@@ -10,27 +10,18 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 
 	this.isLoaded = false;
 	this.game = Registry.find( 'Game', $stateParams.id );
-	this.isNavAffixed = false;
 	this.installableBuilds = [];
 	this.browserBuilds = [];
-
-	this.followTooltip = gettextCatalog.getString( 'library.followed.follow_game_button_tooltip' );
-	this.unfollowTooltip = gettextCatalog.getString( 'library.followed.unfollow_game_button_tooltip' );
 
 	// Overview page will populate this.
 	// We only need it for the overview page, but we need to show it in the view of this controller.
 	this.mediaBarItems = [];
-	this.notificationCounts = {};
 
 	$scope.$watch( '::gameCtrl.game', function( game )
 	{
 		if ( angular.isUndefined( game ) ) {
 			return;
 		}
-
-		Location.enforce( {
-			slug: game.slug,
-		} );
 
 		// If the game has a GA tracking ID, then we attach it to this scope so all page views within get tracked.
 		if ( game.ga_tracking_id ) {
@@ -61,22 +52,44 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 			this.game = game;
 		}
 
-		this.followerCount = payload.followerCount;
-		this.libraryGame = payload.libraryGame ? new GameLibrary_Game( payload.libraryGame ) : null;
-		this.newsArticlesCount = payload.newsArticlesCount || 0;
+		this.postCount = payload.postCount || 0;
 		this.trophiesCount = payload.trophiesCount || 0;
 		this.hasScores = payload.hasScores || false;
 		this.primaryScoreTable = payload.primaryScoreTable ? new Game_ScoreTable( payload.primaryScoreTable ) : null;
 		this.twitterShareMessage = payload.twitterShareMessage || 'Check out this game!';
 
+		this.partnerLink = undefined;
+		this.userPartnerKey = payload.userPartnerKey;
+		if ( this.userPartnerKey ) {
+			this.partnerLink = Environment.baseUrl + $state.href( 'discover.games.view.overview', {
+				id: this.game.id,
+				slug: this.game.slug,
+				ref: this.userPartnerKey,
+			} )
+		}
+
 		processRatingPayload( payload );
 
 		// Don't hook up the events until we're primed.
-		this.onFollowClick = onFollowClick;
 		this.refreshRatingInfo = refreshRatingInfo;
 		this.report = report;
 		this.scrollToMultiplePackages = scrollToMultiplePackages;
 		this.scrollToPackagePayment = scrollToPackagePayment;
+		this.copyPartnerLink = copyPartnerLink;
+
+		// Ensure the URL for this game page.
+		// We need to wait till we have a referral key for a partner.
+		// This will only get through if the user is a partner.
+		Location.enforce( {
+			slug: game.slug,
+			ref: this.userPartnerKey || $location.search().ref || undefined,
+		} );
+
+		// Load comment count
+		Comment.fetch( 'Game', this.game.id, 1 ).then( function( commentPayload )
+		{
+			_this.commentsCount = commentPayload.count || 0;
+		} );
 
 		// Any game rating change will broadcast this event.
 		// We catch it so we can update the page with the new rating! Yay!
@@ -95,51 +108,6 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 				} );
 		}
 	};
-
-	function onFollowClick()
-	{
-		if ( this.libraryGame ) {
-			this.libraryGame.$remove().then( function( response )
-			{
-				_this.libraryGame = null;
-				_this.followerCount = response.followers;
-				Growls.success(
-					gettextCatalog.getString( 'library.followed.remove_game_success_growl', { game: _this.game.title } ),
-					gettextCatalog.getString( 'library.followed.remove_game_success_growl_title', { game: _this.game.title } )
-				);
-			} )
-			.catch( function()
-			{
-				Growls.success(
-					gettextCatalog.getString( 'library.followed.remove_game_error_growl' ),
-					gettextCatalog.getString( 'library.followed.remove_game_error_growl_title' )
-				);
-			} );
-
-			Analytics.trackEvent( 'game-following', 'unfollow' );
-		}
-		else {
-			var newLibraryGame = new GameLibrary_Game( { game_id: this.game.id } );
-
-			newLibraryGame.$save().then( function( response )
-			{
-				_this.libraryGame = newLibraryGame;
-				_this.followerCount = response.followers;
-				Growls.success(
-					gettextCatalog.getString( "You are now following {{ game }}. You'll be notified of news updates as long as it's in your library.", { game: _this.game.title } ),
-					gettextCatalog.getString( 'Game Followed' )
-				);
-			} )
-			.catch( function()
-			{
-				Growls.success(
-					gettextCatalog.getString( 'Something has prevented you from following this game' )
-				);
-			} );
-
-			Analytics.trackEvent( 'game-following', 'follow' );
-		}
-	}
 
 	function refreshRatingInfo()
 	{
@@ -172,9 +140,14 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		Scroll.to( 'game-releases' );
 	}
 
-	function scrollToPackagePayment( package )
+	function scrollToPackagePayment( _package )
 	{
-		Scroll.to( 'game-package-card-' + package.id );
-		$scope.$broadcast( 'Game_Package_Card.showPaymentOptions', package );
+		Scroll.to( 'game-package-card-' + _package.id );
+		$scope.$broadcast( 'Game_Package_Card.showPaymentOptions', _package );
+	}
+
+	function copyPartnerLink()
+	{
+		Clipboard.copy( this.partnerLink );
 	}
 } );

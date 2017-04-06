@@ -6,24 +6,23 @@
 	</div>
 </div>
 
-<header class="section">
-	<div class="container text-center">
+<section class="section landing-header text-center">
+	<div class="container">
 		<div class="row">
-			<div class="col-lg-8 col-centered">
+			<div class="col-lg-6 col-centered">
 				<h1>
-					<img ng-if="Screen.isXs" src="/app/img/game-jolt-client-logo.svg" width="254" height="18" alt="Game Jolt Client">
-					<img ng-if="!Screen.isXs" src="/app/img/game-jolt-client-logo.svg" width="558" height="36" alt="Game Jolt Client">
+					<img class="bolt" src="/app/img/jolt.svg">
+					Client
 					<sup>PREVIEW</sup>
 				</h1>
-				<br>
-				<p class="small">Introducing the Game Jolt Client. Effortlessly install too many games (and counting!), keep them updated automatically, and use the whole site without opening a browser.</p>
+				<p>Effortlessly install too many games (and counting!), keep them updated automatically, and use the whole site without opening a browser.</p>
 			</div>
 		</div>
 		<br>
 
 		<div class="row">
 			<div class="col-lg-6 col-centered">
-				<p>
+				<div>
 					<a class="btn btn-success-outline"
 						ng-class="{ 'btn-lg': !Screen.isXs }"
 						ng-if="::clientCtrl.platform == 'linux'"
@@ -53,24 +52,26 @@
 						<span class="jolticon jolticon-download"></span>
 						Download for Windows
 					</a>
-				</p>
+				</div>
+				<br>
 
-				<p>
+				<div>
 					Download for <a href="#all-downloads" class="link-unstyled" du-smooth-scroll>other platforms</a>
 					<br>
 					<span class="jolticon jolticon-windows text-muted"></span>
 					<span class="jolticon jolticon-mac text-muted"></span>
 					<span class="jolticon jolticon-linux text-muted"></span>
-				</p>
+				</div>
+				<br><br>
 
-				<p>
-					<a href="#news" class="link-unstyled" du-smooth-scroll>What's new?</a>
-				</p>
+				<div>
+					<a href="#news" class="link-help" du-smooth-scroll>What's new?</a>
+				</div>
 				<br>
 			</div>
 		</div>
 	</div>
-</header>
+</section>
 
 <div class="fill-darker">
 
@@ -318,7 +319,9 @@
 	<section class="section fill-dark">
 		<div class="container text-center">
 			<div class="row">
-				<p><strong>Found a bug?</strong> Post it in the <a href="https://github.com/gamejolt/issue-tracker/issues">issue tracker</a>.</p>
+				<p class="sans-margin">
+					<strong>Found a bug?</strong> Post it in the <a href="https://github.com/gamejolt/issue-tracker/issues">issue tracker</a>.
+				</p>
 			</div>
 		</div>
 	</section>

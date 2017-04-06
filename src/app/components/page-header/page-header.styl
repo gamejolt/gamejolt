@@ -13,7 +13,7 @@ gj-page-header-controls
 	// Bootstrap has styling on .page-header.
 	// Gotta override.
 	padding: 0
-	margin-bottom: 0
+	margin: 0
 	border-bottom: 0
 
 	&-cover
@@ -88,6 +88,9 @@ gj-page-header-controls
 		h1, h2, h3
 			margin: 0
 
+			small
+				color: $white
+
 		a
 			color: $white !important
 
@@ -102,7 +105,7 @@ gj-page-header-controls
 	&-spotlight
 		position: absolute
 		width: 100px
-		height: @width
+		height: 100px
 		bottom: -((@width / 2) + 5px)
 		left: -(@width + ($grid-gutter-width / 2))
 		border: 5px solid $white
@@ -114,9 +117,13 @@ gj-page-header-controls
 		justify-content: center
 		overflow: hidden
 
+		&.dark
+			background-color: $gray-darker
+			border-color: $gray
+
 		img
 			max-width: 100%
-			max-height: 100%
+			height: auto
 
 	&-nav
 		position: relative
@@ -160,22 +167,22 @@ gj-page-header-controls
 		@media $media-md-up
 			margin-bottom: 0
 
-	@media $media-sm
+	&.has-spotlight &
 
-		&-controls
-			margin-left: 100px + ($grid-gutter-width / 2)
+		@media $media-sm
 
-		&-nav nav
-			margin-left: 0 !important
+			&-controls
+			&-nav nav
+				margin-left: 100px + ($grid-gutter-width / 2)
 
-	// For when the page gets too small to float the spotlight off the left edge.
-	@media $page-header-spotlight-breakpoint
+		// For when the page gets too small to float the spotlight off the left edge.
+		@media $page-header-spotlight-breakpoint
 
-		&-spotlight
-			left: 0
+			&-spotlight
+				left: 0
 
-		&-content
-			padding-left: 100px + ($grid-gutter-width / 2)
+			&-content
+				padding-left: 100px + ($grid-gutter-width / 2)
 
-		&-nav nav
-			margin-left: 100px + ($grid-gutter-width / 2)
+			&-nav nav
+				margin-left: 100px + ($grid-gutter-width / 2)

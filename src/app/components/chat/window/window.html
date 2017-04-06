@@ -23,7 +23,7 @@
 				<div class="nav-controls">
 					<button class="btn btn-outline btn-block" ng-click="ctrl.toggleUsers()">
 						<span class="jolticon jolticon-chevron-left"></span>
-						Back to Chat
+						<span translate>Back to Chat</span>
 					</button>
 				</div>
 			</div>
@@ -54,7 +54,7 @@
 
 						<button class="btn btn-sparse anim-fade-in no-animate-leave"
 							ng-click="ctrl.showEditRoomModal()"
-							gj-tooltip="Edit Room Details"
+							gj-tooltip="{{ 'Edit Room Details' | translate }}"
 							ng-if="ctrl.room.type != Chat_Room.TYPE_PM && ctrl.showModTools"
 							>
 							<span class="jolticon jolticon-edit"></span>
@@ -63,14 +63,14 @@
 						<button class="btn btn-sparse"
 							ng-if="!client.singleRoomMode"
 							ng-click="ctrl.minimize()"
-							gj-tooltip="Minimize Room"
+							gj-tooltip="{{ 'Minimize Room' | translate }}"
 							>
 							<span class="jolticon jolticon-minus"></span>
 						</button>
 
 						<button class="btn btn-sparse"
-							ng-if="client.singleRoomMode"
 							ng-click="ctrl.close()"
+							gj-tooltip="{{ 'Close Room' | translate }}"
 							>
 							<span class="jolticon jolticon-remove"></span>
 						</button>
@@ -84,19 +84,21 @@
 
 						<a class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
 							ng-if="room.type == Chat_Room.TYPE_PM"
-							ui-sref="profile.overview( { slug: ctrl.room.user.username, id: ctrl.room.user.id } )"
+							ui-sref="profile.overview( { username: ctrl.room.user.username } )"
 							>
 							<img ng-src="{{ ::ctrl.room.user.imgAvatar }}" alt="">
 						</a>
 
 						<h3 ng-if="room.type != Chat_Room.TYPE_PM" class="anim-fade-in-right no-animate-xs">{{ ::ctrl.room.title }}</h3>
 
-						<h3 ng-if="room.type == Chat_Room.TYPE_PM" class="anim-fade-in-right no-animate-xs" title="{{ ::ctrl.room.user.displayName }}">
+						<h3 ng-if="room.type == Chat_Room.TYPE_PM" class="anim-fade-in-right no-animate-xs" title="{{ ::ctrl.room.user.displayName }} (@{{ ::ctrl.room.user.username }})">
 							<a class="link-unstyled"
-								ui-sref="profile.overview( { slug: ctrl.room.user.username, id: ctrl.room.user.id } )"
+								ui-sref="profile.overview( { username: ctrl.room.user.username } )"
 								>
 								{{ ::ctrl.room.user.displayName }}
 							</a>
+							<br>
+							<small>@{{ ::ctrl.room.user.username }}</small>
 						</h3>
 
 						<div ng-if="ctrl.room.type != Chat_Room.TYPE_PM" style="clear: both;">
@@ -113,11 +115,12 @@
 
 							<div>
 								<button class="btn btn-sm toggle-users" ng-class="ctrl.isShowingUsers ? 'btn-success-outline' : 'btn-outline'" ng-click="ctrl.toggleUsers()">
-									{{ !ctrl.isShowingUsers ? 'Show Users' : 'Hide Users' }}
+									<span ng-if="!ctrl.isShowingUsers" translate>Show Users</span>
+									<span ng-if="ctrl.isShowingUsers" translate>Hide Users</span>
 									({{ ctrl.users.onlineCount | number }})
 								</button>
 
-								<button class="btn btn-sm btn-outline" ng-if="room._description_collapsed || Screen.isXs" ng-click="ctrl.viewRoomDetails()">
+								<button class="btn btn-sm btn-outline" ng-if="room._description_collapsed || Screen.isXs" ng-click="ctrl.viewRoomDetails()" translate>
 									View Room Description
 								</button>
 							</div>
@@ -147,7 +150,7 @@
 
 					<a class="chat-window-message-avatar"
 						ng-if="::!msg.combine"
-						ui-sref="profile.overview( { slug: msg.user.username, id: msg.userId } )"
+						ui-sref="profile.overview( { username: msg.user.username } )"
 						>
 						<img ng-src="{{ ::msg.user.imgAvatar }}" alt="">
 					</a>
@@ -155,10 +158,15 @@
 					<div class="chat-window-message-container">
 						<a class="chat-window-message-user link-unstyled"
 							ng-if="::!msg.combine"
-							ui-sref="profile.overview( { slug: msg.user.username, id: msg.userId } )"
+							ui-sref="profile.overview( { username: msg.user.username } )"
 							>
 							{{ ::msg.user.displayName }}
 						</a>
+						<span class="chat-window-message-username"
+							ng-if="::!msg.combine"
+							>
+							@{{ ::msg.user.username }}
+						</span>
 						<span class="chat-window-message-time"
 							ng-if="::!msg.combine"
 							>

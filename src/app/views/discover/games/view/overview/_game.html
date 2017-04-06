@@ -1,0 +1,444 @@
+<!-- Media Bar -->
+<div ng-if="gameCtrl.game.media_count">
+	<gj-game-media-bar gj-media-bar-items="gameCtrl.mediaItems"></gj-game-media-bar>
+</div>
+
+<section class="section section-thin fill-darker" ng-if="::overviewCtrl.activeJam">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-centered">
+
+				<h2 class="section-header">{{ ::overviewCtrl.activeJam.name }} Voting</h2>
+
+				<p>This game is part of the <strong><a ng-href="{{ ::overviewCtrl.activeJam.fullUrl }}">{{ ::overviewCtrl.activeJam.name }}</a></strong> game jam. <strong>Voting for the jam is separate from ratings on Game Jolt.</strong> If you'd like to vote on this game for the jam, you may cast your vote below.</p>
+
+				<hr>
+
+				<gj-jam-game-vote-widget
+					gj-jam="overviewCtrl.activeJam"
+					gj-game="gameCtrl.game"
+					>
+				</gj-jam-game-vote-widget>
+
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<section class="section section-thin" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
+	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+</section>
+
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+
+			<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
+				<div class="row">
+					<div class="col-xs-12 col-sm-6 col-sm-push-6 col-md-12 col-md-push-0">
+						<!--
+							Can't rate your own games! Remember that.
+						-->
+						<div ng-if="App.user && gameCtrl.game.developer.id != App.user.id && gameCtrl.game.ratings_enabled && gameCtrl.game.can_user_rate">
+							<h2 class="rating-widget-label" ng-switch="!!gameCtrl.userRating">
+								<span ng-switch-when="true" translate>
+									Your Rating
+								</span>
+								<span ng-switch-when="false" translate>
+									Rate Game
+								</span>
+							</h2>
+
+							<hr class="underbar">
+
+							<gj-rating-widget
+								rating-widget-game="gameCtrl.game"
+								rating-widget-rating="gameCtrl.userRating"
+								rating-widget-big="true"
+								>
+							</gj-rating-widget>
+
+							<hr class="hidden-sm">
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
+
+						<div gj-partial="/app/views/discover/games/view/overview/_stats.html"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
+
+				<!--
+					Convenience Messaging
+				-->
+				<div ng-if="overviewCtrl.game._is_wip && !overviewCtrl.game.canceled">
+					<div class="alert alert-info full-bleed-xs" translate>
+						This game is in <b>early access</b>. It's still in development and the current version may be buggy or incomplete. Follow along to watch it as it develops!
+					</div>
+					<br>
+				</div>
+
+				<div ng-if="overviewCtrl.game.canceled">
+					<div class="alert alert-warning full-bleed-xs" translate>
+						This game was <b>canceled</b>, so the current version might be buggy or incomplete. You can still follow it if you'd like to be notified in the case that development continues.
+					</div>
+				</div>
+
+				<!--
+					Builds / Soundtrack
+					This is a bit tricky. _has_packages doesn't yet take into account private packages.
+					If the game has only private packages, this will still be set to true.
+					We only use it to figure out if we should show the releases section while loading before
+					we actually have the package data. Because of that, we only use it to figure out what to
+					show while we're loading the section. After it's loaded in, we decide if it should show
+					through the "hasReleasesSection" variable which has the correct data.
+				-->
+				<div ng-if="(gameCtrl.game._has_packages && !overviewCtrl.isLoaded) || overviewCtrl.hasReleasesSection">
+
+					<h2 id="game-releases" ng-class="{ 'section-header': !Screen.isMobile }" translate>
+						Releases
+					</h2>
+
+					<hr class="underbar">
+
+					<!--
+						Partner Controls
+					-->
+					<div ng-if="overviewCtrl.game.referrals_enabled && gameCtrl.userPartnerKey && overviewCtrl.packages.length">
+						<gj-card>
+							<div class="card-content">
+								<p>
+									<strong translate>This game is part of the Partner system!</strong>
+									<span translate>You can use this link for sharing the game.</span>
+								</p>
+								<input class="form-control" value="{{ ::gameCtrl.partnerLink }}">
+							</div>
+							<div class="card-controls">
+								<button class="btn btn-outline" ng-click="gameCtrl.copyPartnerLink()">
+									<span class="jolticon jolticon-link"></span>
+									<span translate>Copy Partner Link</span>
+								</button>
+								<a class="btn btn-outline" ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: gameCtrl.game.id } )">
+									<span class="jolticon jolticon-chart"></span>
+									<span translate>View Analytics</span>
+								</a>
+							</div>
+						</gj-card>
+					</div>
+
+					<div ng-if="gameCtrl.showMultiplePackagesMessage" class="alert alert-info">
+						<span class="jolticon jolticon-notice"></span>
+						<span translate>There are multiple packages for your device. Please choose one below.</span>
+					</div>
+
+					<div gj-lazy-placeholder="overviewCtrl.isLoaded">
+						<div class="lazy-placeholder" style="height: 135px"></div>
+
+						<div ng-if="::overviewCtrl.packages.length">
+							<gj-game-package-card
+								ng-repeat="package in overviewCtrl.packages"
+								game="::gameCtrl.game"
+								sellable="::package._sellable"
+								game-package="::package"
+								game-releases="::package._releases"
+								game-builds="::package._builds"
+								game-build-launch-options="::overviewCtrl.launchOptions"
+								is-partner="::!!gameCtrl.userPartnerKey"
+								partner-referred-key="::overviewCtrl.partnerReferredKey"
+								partner-referred-by="::overviewCtrl.partnerReferredBy"
+								partner-no-cut="::overviewCtrl.partnerNoCut"
+								>
+							</gj-game-package-card>
+						</div>
+
+						<gj-game-soundtrack-card
+							ng-if="::overviewCtrl.songs.length"
+							game-soundtrack-card-game="::gameCtrl.game"
+							game-soundtrack-card-songs="::overviewCtrl.songs"
+							>
+						</gj-game-soundtrack-card>
+					</div>
+
+				</div>
+
+				<!-- Game Description -->
+				<h2 ng-class="{ 'section-header': !Screen.isMobile && !((gameCtrl.game._has_packages && !overviewCtrl.isLoaded) || overviewCtrl.hasReleasesSection) }" translate>
+					Description
+				</h2>
+
+				<hr class="underbar">
+
+				<div ng-if="!gameCtrl.game.description_compiled">
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder" style="width: 40%"></span>
+				</div>
+
+				<div ng-if="gameCtrl.game.description_compiled">
+					<gj-fade-collapse
+						fade-collapse-height="2000"
+						fade-collapse-is-open="overviewCtrl.showFullDescription"
+						fade-collapse-is-required="overviewCtrl.canToggleDescription"
+						>
+						<div class="game-compiled-description" ng-bind-html="gameCtrl.game.description_compiled"></div>
+					</gj-fade-collapse>
+
+					<a class="hidden-text-expander"
+						ng-if="overviewCtrl.canToggleDescription"
+						ng-click="overviewCtrl.showFullDescription = !overviewCtrl.showFullDescription"
+						gj-track-event="game-profile:show-full-description"
+						></a>
+				</div>
+
+				<div ng-if="gameCtrl.twitterShareMessage && !Environment.isClient">
+					<br>
+					<div class="social-widgets">
+						<gj-social-twitter-share
+							url="{{ ::Environment.baseUrl }}{{ ::gameCtrl.game.getUrl() }}"
+							content="{{ ::gameCtrl.twitterShareMessage }}"
+							>
+						</gj-social-twitter-share>
+
+						<span class="dot-separator hidden-xs"></span>
+
+						<gj-social-facebook-like url="{{ ::Environment.baseUrl }}{{ ::gameCtrl.game.getUrl() }}"></gj-social-facebook-like>
+					</div>
+				</div>
+
+				<div ng-if="overviewCtrl.supporters.length > 0">
+					<h2 translate>Supporters</h2>
+
+					<p class="small text-muted" translate translate-params-developer="gameCtrl.game.developer.display_name">
+						The kind people that helped support {{ developer }} by paying more than the minimum. Sorted by amount contributed.
+					</p>
+
+					<hr class="underbar">
+
+					<div class="game-supporters">
+						<div class="game-supporter"
+							ng-repeat="user in overviewCtrl.supporters track by user.id"
+							>
+							<a class="user-avatar ng-scope"
+								ng-href="{{ ::user.url }}"
+								gj-tooltip="{{ ::user.display_name }} (@{{ ::user.username }})"
+								>
+								<img class="img-responsive" alt="" src="{{ ::user.img_avatar }}">
+							</a>
+						</div>
+					</div>
+					<br class="visible-xs visible-sm">
+				</div>
+
+			</div>
+
+			<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
+				<div class="row">
+					<div class="col-xs-12 col-sm-6 col-sm-push-6 col-md-12 col-md-push-0">
+						<div id="maturity-rating">
+							<br class="visible-md visible-lg">
+							<div gj-lazy-placeholder="overviewCtrl.isLoaded">
+								<div class="lazy-placeholder" style="height: 115px"></div>
+								<gj-game-ogrs gj-game="gameCtrl.game"></gj-game-ogrs>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
+						<br>
+						<h2 class="section-header" translate>Details</h2>
+						<hr class="underbar">
+						<div gj-partial="/app/views/discover/games/view/overview/_details.html"></div>
+
+						<div ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
+							<br>
+							<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<div ng-if="gameCtrl.isLoaded && overviewCtrl.posts.hasItems">
+	<hr>
+
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+
+					<h2 class="section-header text-center" translate>
+						Project Devlog
+					</h2>
+
+					<hr class="underbar underbar-center">
+					<br>
+
+					<gj-activity-feed
+						type="Fireside_Post"
+						items="overviewCtrl.posts"
+						load-more-url="/web/discover/games/devlog/posts/{{ gameCtrl.game.id }}"
+						show-edit-controls="true"
+						disable-autoload="true"
+						>
+					</gj-activity-feed>
+
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+
+<!-- Achievements -->
+<div ng-if="::(gameCtrl.hasScores || gameCtrl.trophiesCount)">
+	<hr>
+
+	<section class="section">
+		<div class="container">
+
+			<div class="row">
+
+				<!-- Scores -->
+				<div
+					ng-if="::gameCtrl.hasScores"
+					ng-class="::overviewCtrl.isAchievementsTwoCol ? 'col-md-7' : 'col-xs-12'">
+
+					<gj-score-overview
+						ng-if="::overviewCtrl.scoresPayload"
+						score-overview-game="::gameCtrl.game"
+						score-overview-payload="::overviewCtrl.scoresPayload"
+						score-overview-size="{{ ::(overviewCtrl.isAchievementsTwoCol ? 'small' : 'full') }}">
+					</gj-score-overview>
+
+				</div>
+
+				<!-- Trophies -->
+				<div
+					ng-if="::gameCtrl.trophiesCount"
+					ng-class="::overviewCtrl.isAchievementsTwoCol ? 'col-md-5 col-lg-4 col-lg-offset-1' : 'col-xs-12'">
+
+					<gj-trophy-overview
+						ng-if="::overviewCtrl.trophiesPayload"
+						trophy-overview-game="::gameCtrl.game"
+						trophy-overview-payload="::overviewCtrl.trophiesPayload"
+						trophy-overview-size="{{ ::(overviewCtrl.isAchievementsTwoCol ? 'small' : 'full') }}">
+					</gj-trophy-overview>
+
+				</div>
+
+			</div>
+
+		</div>
+	</section>
+</div>
+
+<!--
+	Recommended Games
+	Since it's a dark fill, we put meter-dark in there to show up better.
+-->
+<section class="section fill-darker recommended-games section-thin" ng-if="::overviewCtrl.recommendedGames.length">
+	<div class="container">
+
+		<h2 class="section-header" translate>You May Also Like</h2>
+
+		<hr class="underbar">
+
+		<div class="full-bleed-xs scrollable-grid-xs">
+			<div ng-class="{ 'row': !Screen.isXs }">
+				<gj-game-thumbnail
+					class="scrollable-grid-item col-xs-9 col-sm-4 col-md-3 meter-dark"
+					ng-repeat="game in overviewCtrl.recommendedGames | limitTo:(Screen.isDesktop ? 4 : 3) track by game.id"
+					gj-game="::game"
+					gj-track-event="recommended-games:click:{{ $index }}"
+					>
+				</gj-game-thumbnail>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<section class="section">
+	<div class="container">
+
+		<!-- Video Comments -->
+		<div ng-if="overviewCtrl.videoComments.length && gameCtrl.game.comments_enabled">
+			<h2 class="section-header sans-margin-bottom" translate>
+				Video Comments
+			</h2>
+
+			<p class="page-help">
+				<span translate>Video comments are sorted by most liked.</span>
+				<a class="link-help" href="https://help.gamejolt.com/video-comments" target="_blank" translate>
+					How do I add my video?
+				</a>
+			</p>
+
+			<hr class="underbar">
+
+			<div class="row">
+				<gj-comment-video-thumbnail
+					class="col-xs-6 col-sm-3"
+					ng-repeat="video in overviewCtrl.videoComments track by video.id"
+					video="::video"
+					show-user="true"
+					>
+				</gj-comment-video-thumbnail>
+			</div>
+
+			<div class="page-cut" ng-if="overviewCtrl.videoComments.length < overviewCtrl.videoCommentsCount">
+				<a class="btn btn-outline"
+					ng-click="overviewCtrl.loadMoreVideoComments()"
+					gj-track-event="game-profile:video-comment:more"
+					translate
+					>
+					Load More
+				</a>
+			</div>
+		</div>
+
+		<!-- Comments -->
+		<div id="comments" ng-if="gameCtrl.isLoaded">
+			<div class="row">
+
+				<div class="col-sm-10 col-md-8 col-lg-7">
+
+					<div ng-if="::!gameCtrl.game.comments_enabled">
+						<h2 class="section-header" translate>Comments Disabled</h2>
+						<hr class="underbar">
+						<p class="text-muted" translate>Comments have been disabled for this game.</p>
+					</div>
+
+					<div ng-if="::gameCtrl.game.comments_enabled">
+						<h2 class="section-header" translate>Comments</h2>
+						<hr class="underbar">
+
+						<gj-comment-widget
+							current-page="overviewCtrl.currentCommentPage"
+							comment-resource="Game"
+							comment-resource-id="gameCtrl.game.id"
+							>
+						</gj-comment-widget>
+					</div>
+
+				</div>
+
+				<!--
+					Will overflow a little on md, but what can ya do, amirite?
+				-->
+				<div class="col-md-4 col-lg-offset-1" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
+					<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</section>

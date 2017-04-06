@@ -1,7 +1,6 @@
 /**
  * Colors
  */
-$body-bg = $white
 $text-color = $gray-dark
 $headings-color = $gray-dark
 $link-color = $gj-dark-green
@@ -20,14 +19,13 @@ $shell-border-color = $black
 $shell-pane-width = 280px
 $shell-top-nav-height = 50px
 $shell-user-box-height = 125px
-$chat-tabs-height = 34px
 $status-bar-height = 28px
+$chat-bubble-size = 60px
 
-// Body bg is the body area underneath the content.
-// It's what the footer ends up being and when there is no shell.
-// Content bg is what the content background ends up being.
-$shell-body-bg = $gray-darkest
-$shell-body-content-bg = $body-bg
+// Have to override $body-bg from bootstrap to be transparent.
+// It then falls through to what `html` is set to.
+$body-bg = transparent
+$shell-body-content-bg = $white
 
 /**
  * Overlay Scrollbars

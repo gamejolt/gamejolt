@@ -3,13 +3,8 @@
 	<!-- Public Chat Rooms -->
 	<div class="chat-rooms-list">
 
-		<div class="nav-heading first">
+		<div class="nav-heading first" translate>
 			Public Chat Rooms
-		</div>
-
-		<div class="nav-well chat-sidebar-total-online">
-			People Online:
-			<span class="highlighted-count">{{ client.allCount | number }}</span>
 		</div>
 
 		<ul class="shell-nav thin">
@@ -80,10 +75,10 @@
 	<div class="chat-friends-list" ng-if="client.currentUser && client.friendsPopulated">
 
 		<div ng-if="client.friendsPopulated && !client.friendsList.collection.length">
-			<div class="nav-heading">
+			<div class="nav-heading" translate>
 				Friends
 			</div>
-			<div class="alert alert-warning">
+			<div class="alert alert-warning" translate>
 				No friends yet.
 			</div>
 			<div class="alert fill-dark" translate>chat.no_friends_message_html</div>
@@ -91,13 +86,14 @@
 
 		<!--
 			Mobile is slow to compile really long friend lists.
-			We split out online/offline friends on mobile so that it's fast to display/compile.'
+			We split out online/offline friends on mobile so that it's fast to display/compile.
+			Will also do it if they have more than 50 friends to keep the site fast.
 		-->
-		<div ng-if="Screen.isXs">
+		<div ng-if="Screen.isXs || client.friendsList.collection.length > 50">
 			<div ng-if="client.friendsList.onlineCount">
 				<div class="nav-heading">
 					<span class="badge badge-active" ng-if="client.friendsList.onlineCount > 0">{{ client.friendsList.onlineCount | number }}</span>
-					Online Friends
+					<span translate>Online Friends</span>
 				</div>
 
 				<gj-chat-user-list
@@ -111,7 +107,7 @@
 				<a class="nav-heading" ng-click="shouldShowOfflineFriends = !shouldShowOfflineFriends">
 					<span class="badge">{{ client.friendsList.offlineCount }}</span>
 					<span>[{{ shouldShowOfflineFriends ? '-' : '+' }}]</span>
-					Offline Friends
+					<span translate>Offline Friends</span>
 				</a>
 
 				<gj-chat-user-list
@@ -123,16 +119,12 @@
 			</div>
 		</div>
 
-		<!--
-			For desktop show the whole friend list.
-			Offline friends get grouped to the end.
-		-->
-		<div ng-if="!Screen.isXs">
+		<div ng-if="!Screen.isXs && client.friendsList.collection.length <= 50">
 			<div ng-if="client.friendsList.collection.length">
 				<div class="nav-heading">
 					<span class="badge">{{ client.friendsList.collection.length | number }}</span>
 					<span class="badge badge-active" ng-if="client.friendsList.onlineCount > 0">{{ client.friendsList.onlineCount | number }}</span>
-					Friends
+					<span translate>Friends</span>
 				</div>
 
 				<gj-chat-user-list

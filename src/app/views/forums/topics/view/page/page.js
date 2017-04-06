@@ -6,7 +6,10 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		resolve: {
 			payload: function( Api, $stateParams, History_Cache )
 			{
-				return History_Cache.cache( Api.sendRequest( '/web/forums/topics/' + $stateParams.id + '?page=' + ($stateParams.page || 1) ) );
+				return History_Cache.cache( function()
+				{
+					return Api.sendRequest( '/web/forums/topics/' + $stateParams.id + '?page=' + ($stateParams.page || 1) );
+				} );
 			},
 			tick: function( HistoryTick, $stateParams )
 			{

@@ -1,30 +1,13 @@
 angular.module( 'App.Views' ).config( function( $stateProvider )
 {
-	function getQueryString( $stateParams, filteringContainer )
-	{
-		var searchParams = [];
-
-		if ( $stateParams.page > 1 ) {
-			searchParams.push( 'page=' + $stateParams.page );
-		}
-
-		if ( $stateParams.sort ) {
-			searchParams.push( 'sort=' + $stateParams.sort );
-		}
-
-		searchParams.push( filteringContainer.getQueryString() );
-		var query = searchParams.join( '&' );
-
-		return query;
-	}
-
-	var queryParams = '?price&sort&os&browser&maturity&status&query&page';
+	var queryParams = '?price&sort&os&browser&maturity&status&partners&query&page';
 
 	var subStates = {
 		'playlist': '^/playlist/:slug/:id',
-		'followed': '^/profile/:slug/:id/followed',
-		'developer': '^/profile/:slug/:id/games',
-		'owned': '^/profile/:slug/:id/owned',
+		'followed': '^/@:id/followed',
+		'developer': '^/@:id/games',
+		'owned': '^/@:id/owned',
+		'recommended': '^/@:id/recommended',
 		'bundle': '^/library/bundle/:slug/:id/games',
 		'tag': '^/tag/:id',
 	};
@@ -40,13 +23,21 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 				collectionType: state,
 			},
 			resolve: {
-				payload: function( $state, $stateParams, Api, filteringContainer )
+				payload: function( $state, $stateParams, Api, GameCollection, filteringContainer )
 				{
 					return filteringContainer.init( 'library.collection.' + state, $stateParams )
 						.then( function()
 						{
-							var query = getQueryString( $stateParams, filteringContainer );
-							return Api.sendRequest( '/web/library/games/' + state + '/' + $stateParams.id + '?' + query );
+							var query = filteringContainer.getQueryString( $stateParams );
+
+							// We needed to take it out for the state params so we can pattern match better.
+							// We add it back in when submitting to API.
+							var id = $stateParams.id;
+							if ( GameCollection.USER_TYPES.indexOf( state ) !== -1 ) {
+								id = '@' + id;
+							}
+
+							return Api.sendRequest( '/web/library/games/' + state + '/' + id + '?' + query );
 						} );
 				}
 			}

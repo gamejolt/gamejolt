@@ -13,10 +13,10 @@ angular.module( 'App.Views' ).controller( 'LibraryCtrl', function( $scope, $stat
 	this.shouldShowSidebar = true;
 
 	this.collections = GameCollection.populate( libraryPayload.collections );
-	this.followedNotificationCount = libraryPayload.followedNotificationCount || 0;
 	this.followedCollection = libraryPayload.followedCollection ? new GameCollection( libraryPayload.followedCollection ) : null;
 	this.developerCollection = libraryPayload.developerCollection ? new GameCollection( libraryPayload.developerCollection ) : null;
 	this.ownedCollection = libraryPayload.ownedCollection ? new GameCollection( libraryPayload.ownedCollection ) : null;
+	this.recommendedCollection = libraryPayload.recommendedCollection ? new GameCollection( libraryPayload.recommendedCollection ) : null;
 	this.bundleCollections = GameCollection.populate( libraryPayload.bundleCollections );
 
 	this.showAddPlaylistModal = showAddPlaylistModal;
@@ -48,7 +48,7 @@ angular.module( 'App.Views' ).controller( 'LibraryCtrl', function( $scope, $stat
 		}
 
 		if ( item.from_subscription ) {
-			actual = item.owner.display_name.toLowerCase();
+			actual = item.owner.username.toLowerCase();
 			if ( actual.indexOf( expected ) !== -1 ) {
 				return true;
 			}

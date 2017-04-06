@@ -1,3 +1,5 @@
+var gulp = require( 'gulp' );
+
 var config = {
 	staticCdn: 'https://b6d3e9q9.ssl.hwcdn.net',
 	extraBower: {
@@ -9,6 +11,12 @@ var config = {
 			'src/collapse/collapse.js',
 			'src/modal/modal.js'
 		],
+	},
+	rollup: {
+		vendor: {
+			'ng-metadata/core': 'vendor.ngMetadata_core',
+			'ng-metadata/platform': 'vendor.ngMetadata_platform',
+		},
 	},
 	modules: {
 		'vendor-app.js': {
@@ -63,6 +71,11 @@ var config = {
 				'angular-ui-tree',
 			],
 		},
+		'chat.js': {
+			components: [
+				'chat',
+			],
+		},
 		'primus.js': {
 			componentVendor: [
 				'primus',
@@ -76,6 +89,7 @@ var config = {
 
 		// Sections of the site.
 		'dash.js': {
+			main: '/views/dashboard/dashboard.ts',
 			components: [
 				'forms/dashboard',
 				'site-analytics',
@@ -94,8 +108,15 @@ var config = {
 			]
 		},
 		'channels.js': {
+			main: '/views/discover/channels/channels.ts',
 			views: [
 				'discover/channels',
+			]
+		},
+		'radio.js': {
+			main: '/views/radio/radio.ts',
+			views: [
+				'radio',
 			]
 		},
 
@@ -127,13 +148,25 @@ var config = {
 		'checkout',
 	],
 	translations: 'site-translations',
-	translationSections: [
-		'auth',
-		'dash',
-		'checkout',
-	],
+	translationSections: {
+		auth: [
+			'auth/',
+		],
+		dash: [
+			'app/components/forms/dashboard',
+			'app/components/forms/site\-analytics',
+			'app/views/dashboard',
+		],
+		checkout: [
+			'checkout/',
+		],
+	},
 };
 
 require( './src/lib/gj-lib-client/gulp/tasks/common.js' )( config );
 require( './tasks/client.js' )( config );
 require( './tasks/app.js' )( config );
+require( './tasks/terms.js' )( config );
+require( './tasks/game-api-doc.js' )( config );
+
+gulp.task( 'pre', gulp.parallel( 'terms', 'game-api-doc:nav', 'game-api-doc:compile' ) );

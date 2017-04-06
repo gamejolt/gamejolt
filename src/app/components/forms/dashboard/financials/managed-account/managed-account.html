@@ -41,7 +41,19 @@
 						{{ ::Geo.getCountryName( code ) }}
 					</option>
 				</select>
+				<control-errors label="country"></control-errors>
+
+				<div gj-expand-when="!formModel.country_code">
+					<br>
+					<div class="alert alert-info sans-margin-bottom">
+						<p translate>If you do not see your country above, all is not lost! We can still manually approve your account.</p>
+						<p>
+							<a href="https://goo.gl/forms/igg8T9dQnZLT2c1l2" target="_blank" translate>Request manual approval here.</a>
+						</p>
+					</div>
+				</div>
 			</form-group>
+
 		</div>
 
 		<div ng-if="account.is_stripe_initialized">
@@ -233,10 +245,10 @@
 						>
 					</gj-form-dashboard-financials-managed-account-address>
 
-					<!--<gj-form-dashboard-financials-managed-account-id-document
+					<gj-form-dashboard-financials-managed-account-id-document
 						name-prefix="legal_entity-additional_owners-{{ i }}-verification"
 						>
-					</gj-form-dashboard-financials-managed-account-id-document>-->
+					</gj-form-dashboard-financials-managed-account-id-document>
 
 				</div>
 
@@ -325,11 +337,13 @@
 			</div>
 		</div>
 
+		<gj-loading ng-if="formState.isProcessing" label="{{ 'Processing...' | translate }}"></gj-loading>
+
 		<button
 			ng-if="!formState.isComplete && !helpers.isVerificationPending()"
 			gj-form-submit-button
 			class="btn btn-success-outline"
-			ng-disabled="!managedAccountForm.$valid"
+			ng-disabled="!managedAccountForm.$valid || formState.isProcessing"
 			ng-click="onSubmit()"
 			>
 			<span class="jolticon jolticon-chevron-right"></span>

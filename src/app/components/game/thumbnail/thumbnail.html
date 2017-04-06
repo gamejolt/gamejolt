@@ -1,28 +1,57 @@
-<a class="game-thumbnail" ng-href="{{ ::$ctrl.url }}">
+<a class="game-thumbnail"
+	ng-href="{{ ::$ctrl.url }}"
+	>
 
-	<div class="game-thumbnail-controls" ng-if="::$ctrl.showControl">
-		<button class="i-button big sparse" tooltip="{{ ::$ctrl.controlLabel }}" ng-click="$ctrl.onControlClick( $event )">
+	<div class="game-thumbnail-controls"
+		ng-if="::$ctrl.showControl || $ctrl.showModTools"
+		>
+		<button class="btn btn-sparse"
+			ng-if="::$ctrl.showControl"
+			tooltip="{{ ::$ctrl.controlLabel }}"
+			ng-click="$ctrl.onControlClick( $event )"
+			>
 			<span class="jolticon" ng-class="::'jolticon-' + $ctrl.controlType"></span>
 		</button>
+		<span ng-if="::$ctrl.showModTools">
+			<button class="btn btn-sparse"
+				gj-popover-trigger="game-mod-tools-{{ ::$ctrl.game.id }}"
+				ng-click="$event.preventDefault()"
+				>
+				<span class="jolticon jolticon-cog"></span>
+			</button>
+			<gj-popover
+				popover-id="game-mod-tools-{{ ::$ctrl.game.id }}"
+				popover-append-to-body="true"
+				>
+				<gj-game-mod-links game="::$ctrl.game"></gj-game-mod-links>
+			</gj-popover>
+		</span>
 	</div>
 
 	<div class="game-thumbnail-thumb">
 		<span class="jolticon jolticon-game"></span>
 
-		<span class="tag tag-pink game-thumbnail-notifications" ng-if="::$ctrl.game.notification_count">{{ ::$ctrl.game.notification_count | number }}</span>
-
-		<span class="game-thumbnail-tags" ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.Screen.isDesktop">
-			<span class="game-thumbnail-tag">
-				<span class="jolticon jolticon-stream"></span>
-			</span>
+		<span class="game-thumbnail-tag" ng-if="::$ctrl.game.development_status == 2" translate>
+			Early Access
 		</span>
 
-		<img gj-img-responsive="{{ ::$ctrl.game.img_thumbnail }}" alt="{{ ::$ctrl.game.title }}">
+		<span class="game-thumbnail-tag" ng-if="::$ctrl.game.development_status == 4" translate>
+			Devlog-Only
+		</span>
 
-		<video ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.Screen.isDesktop" preload loop ng-attr-poster="{{ ::$ctrl.game.img_thumbnail }}">
-			<source ng-src="{{ ::$ctrl.webm }}" type="video/webm">
-			<source ng-src="{{ ::$ctrl.mp4 }}" type="video/mp4">
-		</video>
+		<span class="game-thumbnail-video-tag" ng-if="::$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop">
+			<span class="jolticon jolticon-stream"></span>
+		</span>
+
+		<gj-game-thumbnail-img game="::$ctrl.game"></gj-game-thumbnail-img>
+
+		<gj-video
+			ng-if="$ctrl.game.has_animated_thumbnail && $ctrl.screen.isDesktop && $ctrl.isActive"
+			poster="{{ ::$ctrl.game.img_thumbnail }}"
+			webm="{{ ::$ctrl.game.img_thumbnail_webm }}"
+			mp4="{{ ::$ctrl.game.img_thumbnail_mp4 }}"
+			>
+		</gj-video>
 	</div>
 
 	<div class="game-thumbnail-meta">
@@ -49,16 +78,14 @@
 			</div>
 		</div>
 
-		<div class="game-thumbnail-meter" ng-if="::$ctrl.game.ratings_enabled">
-			<span class="game-thumbnail-rating-count" tooltip="{{ ::'games.thumbnail.ratings' | translate:{ count: $ctrl.game.rating_count || 0 } }}">
-				({{ ::$ctrl.game.rating_count || 0 | number }})
-			</span>
-			<gj-meter meter-rating="::$ctrl.game.avg_rating"></gj-meter>
-		</div>
 		<div class="game-thumbnail-os">
 			<gj-game-compat-icons gj-game="::$ctrl.game"></gj-game-compat-icons>
 		</div>
-		<div class="game-thumbnail-dev" title="{{ ::$ctrl.game.developer.display_name }}">{{ ::$ctrl.game.developer.display_name }}</div>
-		<div class="game-thumbnail-title" title="{{ ::$ctrl.game.title }}">{{ ::$ctrl.game.title }}</div>
+		<div class="game-thumbnail-dev" title="{{ ::$ctrl.game.developer.display_name }} (@{{ ::$ctrl.game.developer.username }})">
+			{{ ::$ctrl.game.developer.display_name }}
+		</div>
+		<div class="game-thumbnail-title" title="{{ ::$ctrl.game.title }}">
+			{{ ::$ctrl.game.title }}
+		</div>
 	</div>
 </a>

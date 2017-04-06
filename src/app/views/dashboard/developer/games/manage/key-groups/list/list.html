@@ -1,0 +1,102 @@
+<h2 class="section-header" translate>
+	Access Keys
+</h2>
+
+<div class="row">
+	<div class="col-md-4 col-md-push-7">
+		<div class="page-help" translate>
+			<p>Manage access keys for your game through key groups.</p>
+			<p>You can create different groups for different types of access, e.g. testers, friends, press, let's players, etc.</p>
+			<p>They will be able to access your game's builds through the provided keys.</p>
+		</div>
+	</div>
+
+	<div class="col-md-7 col-md-pull-4">
+
+		<gj-editable-accordion is-adding="listCtrl.isAdding">
+
+			<gj-editable-accordion-item ng-repeat="group in listCtrl.keyGroups track by group.id">
+				<gj-editable-accordion-item-heading>
+
+					<div class="row">
+						<div class="col-sm-8">
+
+							<div class="card-title">
+								<h4>
+									<a ui-sref="dashboard.developer.games.manage.key-groups.edit( { keyGroupId: group.id } )">
+										{{ group.name }}
+									</a>
+								</h4>
+							</div>
+
+							<div class="card-meta">
+								<span class="tag tag-blue">
+									<span ng-if="group.type == KeyGroup.TYPE_ANONYMOUS" translate>
+										Unrestricted (Anonymous)
+									</span>
+									<span ng-if="group.type == KeyGroup.TYPE_ANONYMOUS_CLAIM" translate>
+										Claim-Only
+									</span>
+									<span ng-if="group.type == KeyGroup.TYPE_EMAIL" translate>
+										Unrestricted (Email)
+									</span>
+									<span ng-if="group.type == KeyGroup.TYPE_USER" translate>
+										User
+									</span>
+								</span>
+							</div>
+
+						</div>
+						<div class="col-sm-4">
+
+							<hr class="visible-xs">
+
+							<div class="key-groups-progress">
+								<div>
+									<strong translate>Viewed</strong>
+									{{ group.viewed_count || 0 | number }} / {{ group.key_count || 0 | number }}
+									({{ group.viewed_count / group.key_count * 100 | number:2 }}%)
+								</div>
+								<div class="progress progress-thin">
+									<div class="progress-bar" ng-style="{ width: (group.viewed_count / group.key_count * 100) + '%' }"></div>
+								</div>
+								<br>
+
+								<div>
+									<strong translate>Claimed</strong>
+									{{ group.claimed_count || 0 | number }} / {{ group.key_count || 0 | number }}
+									({{ group.claimed_count / group.key_count * 100 | number:2 }}%)
+								</div>
+								<div class="progress progress-thin">
+									<div class="progress-bar" ng-style="{ width: (group.claimed_count / group.key_count * 100) + '%' }"></div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="card-controls">
+						<a class="btn btn-outline" ui-sref="dashboard.developer.games.manage.key-groups.edit( { keyGroupId: group.id } )">
+							<span class="jolticon jolticon-cog"></span>
+							<span translate>Manage</span>
+						</a>
+					</div>
+
+				</gj-editable-accordion-item-heading>
+			</gj-editable-accordion-item>
+
+			<gj-editable-accordion-add add-label="{{ 'Add Key Group' | translate }}">
+
+				<gj-form-dashboard-game-key-group
+					game="manageCtrl.game"
+					packages="listCtrl.packages"
+					gj-form-submit-handler="listCtrl.onKeyGroupAdded( formModel )"
+					>
+				</gj-form-dashboard-game-key-group>
+
+			</gj-editable-accordion-add>
+
+		</gj-editable-accordion>
+
+	</div>
+</div>

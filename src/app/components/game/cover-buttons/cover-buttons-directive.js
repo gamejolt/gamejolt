@@ -35,7 +35,7 @@ angular.module( 'App.Game.CoverButtons' ).component( 'gjGameCoverButtons', {
 					// Otherwise we just fall through below and choose first.
 				}
 				else {
-					this.onShowPackages();
+					this.onShowMultiplePackages();
 					return;
 				}
 			}
@@ -57,7 +57,7 @@ angular.module( 'App.Game.CoverButtons' ).component( 'gjGameCoverButtons', {
 					this.installableBuilds = [ Game.chooseBestBuild( this.installableBuilds, os, arch ) ];
 				}
 				else {
-					this.onShowPackages();
+					this.onShowMultiplePackages();
 					return;
 				}
 			}
@@ -79,13 +79,13 @@ angular.module( 'App.Game.CoverButtons' ).component( 'gjGameCoverButtons', {
 			// We pull the primary package for this game.
 			// It's basically the package that has its sellable
 			// as the game's primary sellable.
-			var package = _.find( this.packages, {
+			var _package = _.find( this.packages, {
 				_sellable: {
 					id: this.game.sellable.id,
 				}
 			} );
 
-			this.onShowPackagePayment( { $package: package } );
+			this.onShowPackagePayment( { $package: _package } );
 		};
 	}
 } );

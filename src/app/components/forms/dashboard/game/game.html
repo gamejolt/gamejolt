@@ -1,173 +1,149 @@
 <form gj-form="formModel" name="gameForm">
+	<gj-form-loader
+		url="/web/dash/developer/games/save{{ scope.method == 'edit' ? '/' + scope.baseModel.id : '' }}"
+		on-loaded="onLoaded( $payload )"
+		>
+		<div ng-switch="stage()">
 
-	<div ng-if="!isLoaded">
-		<gj-loading></gj-loading>
-	</div>
+			<div ng-switch-when="rules">
 
-	<div ng-if="isLoaded">
-		<div ng-if="isShowingRules">
+				<div translate>
+					<p>You must agree to the following rules before adding a game:</p>
+					<ul>
+						<li>Don't upload games you didn't make. If you are not the game's developer, don't add the game to the site. If you're a fan, encourage the developer to add it themselves.</li>
+						<li>Publishers are not allowed to upload games; only developers are.</li>
+						<li>Only actual <em>games</em> may be uploaded to the site. No applications, software, or tools are allowed at this time. We may accept these in the future or on a case by case basis, but for now, let's just keep it to games.</li>
+						<li>No stripped-down demos or "lite" versions of commercial games are permitted, unless you also add the full version for sale.</li>
+						<li>We welcome and encourage you to add games that are incomplete and still in development, as long as they are tagged as Works-in-Progress. However, you should keep your game hidden until you have something to show. Work-in-Progress games do not have to be playable, but they must be further along than the concept stage. Before you unhide the game, make sure you at least have some screenshots and an informative description.</li>
+						<li>Do not add links to download/play or purchase your game on other sites unless you have already uploaded it to Game Jolt. You can't use your game page as an advertisement for another site.</li>
+						<li>For browser-based games, we don't allow you to display ads in the preloader on Game Jolt. Remove any ads or block them from showing on the site.</li>
+					</ul>
+					<p>If you have questions or concerns about the rules, get in touch: <a href="mailto:contact@gamejolt.com">contact@gamejolt.com</a></p>
+				</div>
 
-			<h3 class="section-header" translate>dash.games.add.rules_heading</h3>
+				<br>
+				<div>
+					<a class="btn btn-success-outline btn-block" ng-click="acceptRules()">
+						<span class="jolticon jolticon-checkbox"></span>
+						<span translate>dash.games.add.rules_accept_button</span>
+					</a>
+				</div>
 
-			<div translate>dash.games.add.rules_html</div>
-
-			<br>
-			<div>
-				<a class="i-button big block" ng-click="acceptRules()">
-					<span class="jolticon jolticon-checkbox"></span>
-					<span translate>dash.games.add.rules_accept_button</span>
-				</a>
 			</div>
 
-		</div>
+			<div ng-switch-when="dev-status">
 
-		<div ng-if="!isShowingRules">
+				<p class="page-help" translate>
+					Choose the stage of development that your game is currently in. You are able to change your development stage at any point.
+				</p>
 
-			<fieldset ng-class="{ 'game-form-disabled': isDisabled }" ng-disabled="isDisabled">
+				<gj-form-dashboard-game-dev-stage-selector
+					on-select="formModel.development_status = $stage"
+					>
+				</gj-form-dashboard-game-dev-stage-selector>
 
-				<form-group name="title" label="{{ 'dash.games.form.title_label' | translate }}">
-					<input form-control="text" ng-maxlength="250">
-					<control-errors></control-errors>
-				</form-group>
+			</div>
 
-				<form-group name="web_site" label="{{ 'dash.games.form.website_label' | translate }}" optional="true">
-					<input form-control="url" ng-maxlength="250">
-					<control-errors></control-errors>
-				</form-group>
+			<div ng-switch-when="details">
 
-				<form-group name="category" label="{{ 'dash.games.form.category_label' | translate }}">
-					<select form-control="select" ng-options="key as val for ( key, val ) in categories">
-						<option value="" translate>dash.games.form.category_placeholder</option>
-					</select>
-					<control-errors></control-errors>
-				</form-group>
+				<fieldset ng-class="{ 'game-form-disabled': isDisabled }" ng-disabled="isDisabled">
 
-				<form-group name="creation_tool" label="{{ 'dash.games.form.engine_label' | translate }}">
-					<select form-control="select" ng-options="key as val for (key, val) in engines">
-						<option value="" translate>dash.games.form.engine_placeholder</option>
-					</select>
-					<control-errors></control-errors>
-				</form-group>
-
-				<div gj-expand-when="formModel.creation_tool == 'other'">
-					<form-group name="creation_tool_other" label="{{ 'dash.games.form.engine_other_label' | translate }}" optional="true">
-						<input form-control="text" ng-maxlength="200">
+					<form-group name="title" label="{{ 'dash.games.form.title_label' | translate }}">
+						<input form-control="text" ng-maxlength="250">
 						<control-errors></control-errors>
-
-						<p class="help-block">
-							<span translate>dash.games.form.engine_other_help</span>
-							<span class="text-help" tooltip="{{ 'dash.games.form.engine_other_why_tooltip' | translate }}" translate>
-								dash.games.form.engine_other_why
-							</span>
-						</p>
 					</form-group>
-				</div>
 
-				<form-group name="development_status" label="{{ 'dash.games.form.dev_status_label' | translate }}">
-					<div ng-if="!checkIsCompleteAllowed()" class="alert alert-info" translate>dash.games.form.dev_status_not_completable_info_html</div>
+					<form-group name="web_site" label="{{ 'dash.games.form.website_label' | translate }}" optional="true">
+						<input form-control="url" ng-maxlength="250">
+						<control-errors></control-errors>
+					</form-group>
 
-					<div class="radio" ng-class="{ disabled: !checkIsCompleteAllowed() }">
-						<label>
-							<input form-control="radio" ng-value="Game.DEVELOPMENT_STATUS_FINISHED" ng-disabled="!checkIsCompleteAllowed()">
-							<span translate>dash.games.form.dev_status_finished</span> <br>
-							<span class="help-inline" translate>dash.games.form.dev_status_finished_help</span>
-						</label>
+					<form-group name="category" label="{{ 'dash.games.form.category_label' | translate }}">
+						<select form-control="select" ng-options="key as val for ( key, val ) in categories">
+							<option value="" translate>dash.games.form.category_placeholder</option>
+						</select>
+						<control-errors></control-errors>
+					</form-group>
+
+					<form-group name="creation_tool" label="{{ 'dash.games.form.engine_label' | translate }}">
+						<select form-control="select" ng-options="key as val for (key, val) in engines">
+							<option value="" translate>dash.games.form.engine_placeholder</option>
+						</select>
+						<control-errors></control-errors>
+					</form-group>
+
+					<div gj-expand-when="formModel.creation_tool == 'other'">
+						<form-group name="creation_tool_other" label="{{ 'dash.games.form.engine_other_label' | translate }}" optional="true">
+							<input form-control="text" ng-maxlength="200">
+							<control-errors></control-errors>
+
+							<p class="help-block">
+								<span translate>dash.games.form.engine_other_help</span>
+								<span class="text-help" tooltip="{{ 'dash.games.form.engine_other_why_tooltip' | translate }}" translate>
+									dash.games.form.engine_other_why
+								</span>
+							</p>
+						</form-group>
 					</div>
-					<div class="radio">
-						<label>
-							<input form-control="radio" ng-value="Game.DEVELOPMENT_STATUS_WIP">
-							<span translate>dash.games.form.dev_status_wip</span> <br>
-							<span class="help-inline" translate>dash.games.form.dev_status_wip_help</span>
-						</label>
-					</div>
-					<div class="radio" ng-class="{ disabled: !checkIsCompleteAllowed() }">
-						<label>
-							<input form-control="radio" ng-value="Game.DEVELOPMENT_STATUS_CANCELED" ng-disabled="!checkIsCompleteAllowed()">
-							<span translate>dash.games.form.dev_status_canceled</span> <br>
-							<span class="help-inline" translate>dash.games.form.dev_status_canceled_help</span>
-						</label>
-					</div>
 
-					<control-errors></control-errors>
-				</form-group>
+					<form-group name="referrals_enabled" label="{{ 'Add to partner system?' | translate }}">
+						<gj-toggle-switch
+							form-control="checkbox"
+							toggle-switch-on-text="{{ 'forms.on' | translate }}"
+							toggle-switch-off-text="{{ 'forms.off' | translate }}"
+							>
+						</gj-toggle-switch>
 
-				<form-group name="description_markdown" label="{{ 'dash.games.form.description_label' | translate }}">
+						<div class="help-block" translate>
+							<div>
+								<span translate>This will allow Game Jolt Partners to be able to download the game for free, and will give them a 10% cut of the sale.</span>
+								<a ui-sref="landing.partners" class="link-help" target="_blank" translate>
+									What is a Game Jolt Partner?
+								</a>
+							</div>
+							<br>
 
-					<p class="help-block" translate>dash.games.form.description_help_html</p>
+							<div><em translate><b>Note</b>: This will only be enabled for paid or name your price games.</em></div>
 
-					<div
-						form-markdown-editor
-						preview-class="game-compiled-description"
-						markdown-preview-url="/web/dash/developer/games/preview-description"
-						markdown-mode="games"
+							<!--
+								We only show this message to devs that have signed v1 of the distribution agreement.
+								That's because they've approved themselves to be part of the marketplace, but
+								haven't yet signed the terms for partners.
+							-->
+							<div ng-if="account.tos_signed_developer === 1">
+								<br>
+								<div class="alert alert-warning">
+									<span translate>You must sign the new Distribution Agreement which covers the terms for the Partner Program before your games will become available in the Partner Program.</span>
+									<a ui-sref="dashboard.account.financials" translate>Click here to view the new Distribution Agreement</a>
+								</div>
+							</div>
+						</div>
+					</form-group>
+
+				</fieldset>
+
+				<button
+					ng-if="method == 'edit' && !isWizard"
+					gj-form-submit-button
+					class="btn btn-outline"
+					ng-disabled="!gameForm.$valid"
+					ng-click="onSubmit()"
+					>
+					<span class="jolticon jolticon-edit"></span>
+					<span translate>Save Details</span>
+				</button>
+
+				<div ng-if="method == 'add' || isWizard">
+					<gj-form-dashboard-game-wizard-controls
+						game="formModel"
+						can-proceed="gameForm.$valid"
+						on-next="onSubmit()"
 						>
-					</div>
-
-					<control-errors></control-errors>
-
-				</form-group>
-
-				<form-group name="status" label="{{ 'dash.games.form.status_label' | translate }}" ng-if="method == 'edit'">
-					<div ng-if="!checkIsPublishable()" class="alert alert-info" translate>dash.games.form.status_not_publishable_info_html</div>
-
-					<div class="radio" ng-class="{ disabled: !checkIsPublishable() }">
-						<label>
-							<input form-control="radio" ng-value="Game.STATUS_VISIBLE" ng-disabled="!checkIsPublishable()">
-							<span translate>dash.games.form.status_published</span> <br>
-							<span class="help-inline" translate>dash.games.form.status_published_help</span>
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input form-control="radio" ng-value="Game.STATUS_HIDDEN">
-							<span translate>dash.games.form.status_hidden</span> <br>
-							<span class="help-inline" translate>dash.games.form.status_hidden_help</span>
-						</label>
-					</div>
-
-					<control-errors></control-errors>
-				</form-group>
-
-				<div gj-expand-when="baseModel.status != formModel.status && formModel.status == Game.STATUS_VISIBLE">
-					<div class="alert alert-warning" translate>
-						dash.games.overview.publish_confirmation
-					</div>
+					</gj-form-dashboard-game-wizard-controls>
 				</div>
 
-				<div ng-if="!isDisabled">
-					<button gj-form-submit-button class="i-button" ng-disabled="!gameForm.$valid" ng-click="onSubmit()">
-						<span ng-if="method == 'add'">
-							<span class="jolticon jolticon-add"></span>
-							<span translate>dash.games.form.add_button</span>
-						</span>
-						<span ng-if="method == 'edit'">
-							<span class="jolticon jolticon-edit"></span>
-							<span translate>dash.games.form.edit_button</span>
-						</span>
-					</button>
-				</div>
-
-			</fieldset>
-
-			<div gj-expand-when="isFnafDetected">
-				<div class="alert alert-warning">
-					<div translate>dash.games.add.fnaf_autotag_message_html</div>
-
-					<div class="alert-actions">
-						<button gj-form-submit-button class="i-button" ng-click="addAutotag( 'fnaf' )">
-							<span class="jolticon jolticon-tag"></span>
-							<span translate>dash.games.add.fnaf_autotag_accept</span>
-						</button>
-
-						<button gj-form-submit-button class="i-button trans" ng-click="skipAutotag()">
-							<span class="jolticon jolticon-remove"></span>
-							<span translate>dash.games.add.fnaf_autotag_reject</span>
-						</button>
-					</div>
-				</div>
 			</div>
 
 		</div>
-	</div>
-
+	</gj-form-loader>
 </form>

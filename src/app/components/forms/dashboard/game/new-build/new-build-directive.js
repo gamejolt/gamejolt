@@ -12,6 +12,14 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewBuild'
 	form.scope.release = '=gjGameRelease';
 	form.scope.packageBuilds = '=gjGamePackageBuilds';  // All builds for the package.
 
+	// These are the initial browser types.
+	// ROMs will be added to here from the server.
+	var browserTypes = {
+		'.zip': Game_Build.TYPE_HTML,
+		'.swf': Game_Build.TYPE_FLASH,
+		'.unity3d': Game_Build.TYPE_UNITY,
+	};
+
 	form.onInit = function( scope )
 	{
 		// Set the game ID on the form model from the game passed in.
@@ -31,32 +39,36 @@ angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameNewBuild'
 			{
 				scope.isLoaded = true;
 				angular.extend( scope, payload );
+
+				// ROM types can change, so we pull from server.
+				if ( payload.romTypes ) {
+					for ( var i = 0; i < payload.romTypes.length; ++i ) {
+						var ext = payload.romTypes[ i ];
+						browserTypes[ ext ] = Game_Build.TYPE_ROM;
+					}
+				}
 			} );
 		}
-
-		var browserTypes = {
-			'.zip': Game_Build.TYPE_HTML,
-			'.swf': Game_Build.TYPE_FLASH,
-			'.unity3d': Game_Build.TYPE_UNITY,
-			'.gba': Game_Build.TYPE_ROM,
-			'.gbc': Game_Build.TYPE_ROM,
-			'.gb': Game_Build.TYPE_ROM,
-		};
 
 		scope.getUploadAccept = function()
 		{
 			if ( scope.type == 'browser' ) {
-				var validTypes = [];
-				for ( ext in browserTypes ) {
-					if ( !_.find( scope.packageBuilds, { type: browserTypes[ ext ] } ) ) {
-						validTypes.push( ext );
-					}
-				}
-
-				return validTypes.join( ',' );
+				return Object.keys( browserTypes ).join( ',' );
 			}
 
 			return undefined;
+		};
+
+		scope.getValidBrowserTypes = function()
+		{
+			var validTypes = [];
+			for ( ext in browserTypes ) {
+				if ( !_.find( scope.packageBuilds, { type: browserTypes[ ext ] } ) ) {
+					validTypes.push( ext );
+				}
+			}
+
+			return validTypes;
 		};
 	};
 

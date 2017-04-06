@@ -10,7 +10,9 @@
 		<div class="row">
 			<div class="col-sm-7 col-md-8 col-lg-7">
 
-				<h2 class="section-header">{{ ::'game.download.soundtrack.downloading_label' | translate:{ game: gameCtrl.game.title } }}</h2>
+				<h2 class="section-header" translate translate-params-game="gameCtrl.game.title">
+					game.download.soundtrack.downloading_label
+				</h2>
 				<p class="small text-muted">{{ ::'game.download.soundtrack.downloading_wait_message' | translate }}</p>
 
 			</div>

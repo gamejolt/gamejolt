@@ -1,4 +1,4 @@
-angular.module( 'App.Shell' ).service( 'Shell', function( $rootScope, $timeout, $window, App, Screen, Backdrop, hotkeys )
+angular.module( 'App.Shell' ).service( 'Shell', function( $rootScope, $timeout, $window, Screen, Backdrop, hotkeys )
 {
 	var _this = this;
 
@@ -34,7 +34,7 @@ angular.module( 'App.Shell' ).service( 'Shell', function( $rootScope, $timeout, 
 			}
 
 			backdrop = new Backdrop( angular.element( document.getElementById( 'shell-body' ) ) );
-			
+
 			backdrop.onCloseTrigger = function()
 			{
 				// If they clicked the backdrop or something, close all overlayed panes.
@@ -62,14 +62,5 @@ angular.module( 'App.Shell' ).service( 'Shell', function( $rootScope, $timeout, 
 		_this.isLeftPaneVisible = false;
 		_this.isRightPaneVisible = false;
 		checkBackdrop();
-	} );
-
-	hotkeys.add( {
-		combo: 'c',
-		description: 'Toggle the chat.',
-		callback: function()
-		{
-			_this.toggleRightPane();
-		}
 	} );
 } );

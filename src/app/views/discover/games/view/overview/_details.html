@@ -1,25 +1,24 @@
 <div>
-	<strong>Genre:</strong>
-	<span gj-lazy-placeholder="gameCtrl.game.category_human">
-		<span class="lazy-placeholder" style="width: 60px"></span>
-		<a ui-sref="discover.games.list.section-category( { section: 'best', category: gameCtrl.game.category } )">
-			{{ ::gameCtrl.game.category_human }}
-		</a>
-	</span>
-</div>
-
-<div>
-	<strong>Status:</strong>
-	<span gj-lazy-placeholder="gameCtrl.game.development_status_human">
+	<strong translate>Development Stage:</strong>
+	<span gj-lazy-placeholder="gameCtrl.game.development_status">
 		<span class="lazy-placeholder" style="width: 80px"></span>
-		<span>
-			{{ ::gameCtrl.game.development_status_human }}
+
+		<span ng-if="gameCtrl.game._is_wip" translate>
+			Early Access
+		</span>
+
+		<span ng-if="gameCtrl.game._is_finished" translate>
+			Complete
+		</span>
+
+		<span class="tag tag-pink" ng-if="gameCtrl.game.canceled" translate>
+			Canceled
 		</span>
 	</span>
 </div>
 
 <div>
-	<strong>Engine/Language:</strong>
+	<strong translate>Engine/Language:</strong>
 	<span gj-lazy-placeholder="gameCtrl.game.creation_tool_human">
 		<span class="lazy-placeholder" style="width: 100px"></span>
 		<span>
@@ -29,10 +28,10 @@
 </div>
 
 <div ng-if="gameCtrl.game.published_on">
-	<strong>Published On:</strong>
+	<strong translate>Published On:</strong>
 	<span gj-lazy-placeholder="gameCtrl.game.category_human">
 		<span class="lazy-placeholder" style="width: 120px"></span>
-		<a ui-sref="discover.games.list.section-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )">
+		<a ui-sref="discover.games.list._fetch-date( { section: 'by-date', date: '{{ gameCtrl.game.published_on | date:'yyyy-MM-dd' }}' } )">
 			{{ ::gameCtrl.game.published_on | date:'longDate' }}
 		</a>
 	</span>
@@ -43,6 +42,8 @@
 <ul class="list-unstyled" ng-if="gameCtrl.game.web_site">
 	<li>
 		<span class="jolticon jolticon-world"></span>
-		<a ng-href="{{ ::gameCtrl.game.web_site }}">Game Web Site</a>
+		<a ng-href="{{ ::gameCtrl.game.web_site }}" translate>
+			Game Web Site
+		</a>
 	</li>
 </ul>

@@ -1,0 +1,96 @@
+<gj-alert-dismissable
+	alert-type="dark"
+	dismiss-key="devlogs-learn-more"
+	no-margin="true"
+	on-dismiss="overviewCtrl.isLearnMoreExpanded = false"
+	>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-6 col-centered" ng-class="{ 'text-center': !Screen.isXs }">
+
+				<p translate>Not sure what devlogs are? Do not fret, have a seat and...</p>
+				<br>
+
+				<button class="btn btn-primary-outline"
+					gj-track-event="devlogs:learn-more"
+					ng-click="overviewCtrl.isLearnMoreExpanded = !overviewCtrl.isLearnMoreExpanded"
+					translate
+					>
+					Learn More About Devlogs
+				</button>
+			</div>
+
+		</div>
+	</div>
+</gj-alert-dismissable>
+
+<div gj-expand-when="overviewCtrl.isLearnMoreExpanded">
+	<section class="section section-thin fill-darkest">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 col-centered">
+
+					<div class="full-bleed-xs">
+						<gj-video-embed video-provider="youtube" video-id="'aAk_PEghHXk'" autoplay="true"></gj-video-embed>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+
+<section class="section">
+	<div class="container">
+
+		<h2 class="section-header">
+			<a class="link-unstyled"
+				ui-sref="discover.devlogs.games._fetch"
+				gj-track-event="channel:row-heading:best"
+				translate
+				>
+				Featured Devlogs
+			</a>
+		</h2>
+
+		<gj-game-grid
+			games="overviewCtrl.games"
+			truncate-to-fit="true"
+			scrollable="true"
+			event-label="devlogs-overview-featured-devlogs"
+			>
+		</gj-game-grid>
+
+		<div class="page-cut">
+			<a class="btn btn-outline"
+				ui-sref="discover.devlogs.games._fetch"
+				gj-track-event="channel:more-btn:best"
+				translate
+				>
+				Load More
+			</a>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+
+				<h2 class="text-center" translate>
+					Hot Devlog Posts
+				</h2>
+
+				<hr class="underbar underbar-center">
+				<br>
+
+				<gj-activity-feed
+					type="Fireside_Post"
+					items="overviewCtrl.posts"
+					load-more-url="/web/discover/devlogs/posts"
+					show-game-info="true"
+					>
+				</gj-activity-feed>
+
+			</div>
+		</div>
+
+	</div>
+</section>

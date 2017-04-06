@@ -38,6 +38,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 		this.notifications = {};
 		this.openRooms = {};
 		this.pmUsers = {};
+		this.isFocused = true;
 
 		this.messageQueue = [];
 		this.sendingMessage = false;
@@ -144,7 +145,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 
 	ChatClient.prototype.newNotification = function( roomId )
 	{
-		if ( this.room && this.room.id == roomId ) {
+		if ( this.room && this.room.id == roomId && this.isFocused ) {
 
 		}
 		else {
@@ -295,13 +296,8 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 				}
 			}
 
-			if ( this.room && this.room.id == roomId) {
-
-			}
-			else {
-				if ( !this.isPrivateRoom( this.openRooms[ roomId ] ) && !isPrimer ) {
-					this.newNotification( roomId );
-				}
+			if ( !this.isPrivateRoom( this.openRooms[ roomId ] ) && !isPrimer ) {
+				this.newNotification( roomId );
 			}
 
 			// Push it into the room's message list.
@@ -689,7 +685,11 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 		}
 
 		if ( this.checkRoomMutedState( this.room.id ) ) {
-			this.sendRoboJolt( this.room.id, '*Beep boop bop.* You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. *Bzzzzzzzzt.*' );
+			this.sendRoboJolt(
+				this.room.id,
+				'*Beep boop bop.* You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. *Bzzzzzzzzt.*',
+				'<p><em>Beep boop bop.</em> You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. <em>Bzzzzzzzzt.</em></p>'
+			);
 			this.sendingMessage = false;
 			return;
 		}
@@ -698,7 +698,7 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 		this.primus.write( { event: 'message', content: message, roomId: this.room.id } );
 	}
 
-	ChatClient.prototype.sendRoboJolt = function( roomId, messageContent )
+	ChatClient.prototype.sendRoboJolt = function( roomId, contentRaw, content )
 	{
 		var message = {
 			id: Math.random(),
@@ -711,7 +711,8 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 				imgAvatar: 'https://secure.gravatar.com/avatar/eff6eb6a79a34774e8f94400931ce6c9?s=200&r=pg&d=https%3A%2F%2Fb6d3e9q9.ssl.hwcdn.net%2Fimg%2Fno-avatar-3.png',
 			},
 			roomId: roomId,
-			content: messageContent,
+			contentRaw: contentRaw,
+			content: content,
 			loggedOn: Date.now(),
 		};
 
@@ -808,6 +809,21 @@ angular.module( 'App.Chat' ).factory( 'ChatClient', function( $window, $timeout,
 		}
 
 		return room.isMutedGlobal || room.isMutedRoom;
+	};
+
+	ChatClient.prototype.setFocused = function ( focused )
+	{
+		this.isFocused = focused;
+
+		if ( this.room && this.currentUser ) {
+			if ( this.isFocused ) {
+				this.primus.write( { event: 'room-focus', roomId: this.room.id } );
+			} else {
+				this.primus.write( { event: 'room-unfocus', roomId: this.room.id } );
+			}
+
+			this.friendsList.touchRoom( this.room.id );
+		}
 	};
 
 	ChatClient.prototype.isPMRoom = function( room )

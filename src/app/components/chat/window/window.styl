@@ -11,17 +11,15 @@ $chat-room-window-padding = 15px
 	justify-content: center
 	align-items: flex-start
 	z-index: $zindex-chat-window
+	padding-right: 70px
 
 	@media $media-sm-up
 		top: $shell-top-nav-height + 10px
 		left: 0
 		right: $shell-pane-width + 10px
 
-		// When things in the hot bottom are active, we need to move up the bottom of the window.
-		bottom: $chat-tabs-height + 10px
-
 		body.chat-tabs-visible.status-bar-visible &
-			bottom: $chat-tabs-height + $status-bar-height + 10px
+			bottom: $status-bar-height + 10px
 
 .chat-window-back-close
 	position: absolute
@@ -98,6 +96,7 @@ $chat-room-window-padding = 15px
 	h3
 		text-overflow()
 		margin: 0
+		line-height: 1
 
 	&-avatar
 		float: left
@@ -136,7 +135,7 @@ $chat-room-window-padding = 15px
 .chat-window-output
 	flex: 1 1 auto
 	overflow-y: auto
-	overflow-x: hidde
+	overflow-x: hidden
 	padding: $chat-room-window-padding
 	font-size: $font-size-small
 	background-color: $white
@@ -145,6 +144,8 @@ $chat-room-window-padding = 15px
 	position: relative
 	margin-bottom: 3px
 	word-wrap: break-word
+	word-break: break-all
+	hyphens: auto
 	line-height: $font-size-small * 1.25
 
 	&-avatar
@@ -163,12 +164,16 @@ $chat-room-window-padding = 15px
 	&-user
 		text-overflow()
 		display: inline-block
-		max-width: 230px
+		max-width: 200px
 		font-weight: bold
 		vertical-align: bottom
-		margin-right: 5px
+
+	&-username
+		color: $text-muted
+		font-size: $font-size-tiny
 
 	&-time
+		margin-left: 5px
 		color: $text-muted
 		font-size: $font-size-tiny
 

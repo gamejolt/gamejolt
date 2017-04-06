@@ -1,0 +1,16 @@
+<gj-fade-collapse
+	fade-collapse-height="500"
+	fade-collapse-is-open="$ctrl.showFullContent"
+	fade-collapse-is-required="::$ctrl.canToggleContent"
+	>
+	<div class="fireside-post-body">
+		<div gj-widget-compiler-bind="::$ctrl.post.content_compiled"></div>
+	</div>
+</gj-fade-collapse>
+
+<a class="hidden-text-expander"
+	ng-if="::$ctrl.canToggleContent"
+	ng-click="$ctrl.toggleFull()"
+	></a>
+
+<hr>

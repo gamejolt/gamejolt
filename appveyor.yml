@@ -2,14 +2,15 @@ platform:
   - x86
 
 install:
-  - ps: Install-Product node 5.5.0 x86 # We need npm@3 for windows builds
-  - npm install -g gulp bower node-pre-gyp nw-gyp
+  - ps: Install-Product node 6.9.0 x86 # We need npm@3 for windows builds
+  - npm install -g gulp-cli bower node-pre-gyp nw-gyp@0.12.3
   - git submodule update --init --recursive
   - choco install -y InnoSetup
   - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
 
 build_script:
   - bower i
+  - SET CL=-DDELAYIMP_INSECURE_WRITABLE_HOOKS
   - npm i
   - npm run client-build-win
 

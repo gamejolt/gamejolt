@@ -51,9 +51,15 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 			label: gettextCatalog.getString( 'games.filtering.status' ),
 			type: 'array',
 			options: {
-				complete: gettextCatalog.getString( 'games.filtering.status_complete' ),
-				wip: gettextCatalog.getString( 'games.filtering.status_wip' ),
-				canceled: gettextCatalog.getString( 'games.filtering.status_canceled' ),
+				complete: gettextCatalog.getString( 'Complete/Stable' ),
+				wip: gettextCatalog.getString( 'Early Access' ),
+			}
+		},
+		partners: {
+			label: gettextCatalog.getString( 'Partners' ),
+			type: 'array',
+			options: {
+				partners: gettextCatalog.getString( 'Show Partner Games' ),
 			}
 		},
 		query: {
@@ -324,13 +330,29 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 		this.areTagFiltersEmpty = isEmpty( this.filters, { skipQuery: true } );
 	};
 
-	Game_Filtering_Container.prototype.getQueryString = function( filters )
+	Game_Filtering_Container.prototype.getQueryString = function( params )
 	{
-		var queryString = '';
 		var queryPieces = [];
+		var filters = this.filters;
 
-		if ( angular.isUndefined( filters ) ) {
-			filters = this.filters;
+		if ( params.section ) {
+			queryPieces.push( 'section=' + params.section );
+		}
+
+		if ( params.sort ) {
+			queryPieces.push( 'sort=' + params.sort );
+		}
+
+		if ( params.category ) {
+			queryPieces.push( 'category=' + params.category );
+		}
+
+		if ( params.date ) {
+			queryPieces.push( 'date=' + params.date );
+		}
+
+		if ( params.page && params.page > 1 ) {
+			queryPieces.push( 'page=' + params.page );
 		}
 
 		angular.forEach( Game_Filtering_Container.filterDefinitions, function( definition, filter )

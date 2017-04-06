@@ -4,13 +4,6 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 		url: '/terms',
 		controller: 'Legal_TermsCtrl',
 		controllerAs: 'termsCtrl',
-		templateUrl: '/app/views/legal/terms/terms.html',
-		resolve: {
-			payload: function( User )
-			{
-				// No need to wait on this.
-				User.touch();
-			}
-		}
+		templateUrl: '/terms/terms/global.html',
 	} );
 } );
