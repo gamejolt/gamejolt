@@ -28,7 +28,7 @@ export class AppChatWindowOutput extends Vue
 	ChatMessage = ChatMessage;
 
 	private shouldScroll = true;
-	private resize$: Subscription;
+	private resize$: Subscription | undefined;
 
 	date = date;
 
@@ -43,7 +43,10 @@ export class AppChatWindowOutput extends Vue
 
 	destroyed()
 	{
-		this.resize$.unsubscribe();
+		if ( this.resize$ ) {
+			this.resize$.unsubscribe();
+			this.resize$ = undefined
+		}
 	}
 
 	/**

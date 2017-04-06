@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { Subscription } from 'rxjs/Subscription';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import * as View from '!view!./cover.html?style=./cover.styl';
 
@@ -26,16 +27,32 @@ export class AppMediaItemCover extends Vue
 	isLoaded = false;
 	height = 'auto';
 
-	resize$ = Screen.resizeChanges.subscribe( () => this.recalcHeight() );
+	private resize$: Subscription | undefined;
 
-	created() { this.recalcHeight(); }
-	mounted() { this.recalcHeight(); }
+	created()
+	{
+		this.recalcHeight();
+	}
+
+	mounted()
+	{
+		this.recalcHeight();
+		this.resize$ = Screen.resizeChanges.subscribe( () => this.recalcHeight() );
+	}
+
 	@Watch( 'mediaItem' ) mediaItemWatch() { this.recalcHeight(); }
-	@Watch( 'maxHeight' ) maxHeightWatch() { this.recalcHeight(); }
+	@Watch( 'maxHeight' )
+	changes()
+	{
+		this.recalcHeight();
+	}
 
 	destroyed()
 	{
-		this.resize$.unsubscribe();
+		if ( this.resize$ ) {
+			this.resize$.unsubscribe();
+			this.resize$ = undefined;
+		}
 	}
 
 	recalcHeight()
