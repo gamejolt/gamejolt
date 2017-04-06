@@ -94,15 +94,15 @@ export class AppActivityFeedDevlogPostMedia extends Vue
 		this.isDragging = true;
 	}
 
-	pan( $event: ng.IAngularEvent )
+	pan( event: HammerInput )
 	{
 		if ( !this.isWaitingForFrame ) {
 			this.isWaitingForFrame = true;
-			window.requestAnimationFrame( () => this._panTick( $event ) );
+			window.requestAnimationFrame( () => this._panTick( event ) );
 		}
 	}
 
-	private _panTick( $event: any )
+	private _panTick( event: HammerInput )
 	{
 		this.isWaitingForFrame = false;
 
@@ -111,16 +111,16 @@ export class AppActivityFeedDevlogPostMedia extends Vue
 			return;
 		}
 
-		this._updateSliderOffset( $event['deltaX'] );
+		this._updateSliderOffset( event.deltaX );
 	}
 
-	panEnd( $event: any )
+	panEnd( event: HammerInput )
 	{
 		this.isDragging = false;
 
 		// Make sure we moved at a high enough velocity and distance to register the "swipe".
-		const velocity = $event['velocityX'];
-		if ( Math.abs( velocity ) > 0.65 && $event['distance'] > 10 ) {
+		const velocity = event.velocityX;
+		if ( Math.abs( velocity ) > 0.65 && event.distance > 10 ) {
 			if ( velocity > 0 ) {
 				this.prev();
 			}

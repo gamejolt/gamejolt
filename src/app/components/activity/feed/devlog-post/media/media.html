@@ -3,8 +3,9 @@
 	<v-touch
 		class="media-bar-lightbox"
 		@panstart="panStart"
-		@pan="pan"
+		@panmove="pan"
 		@panend="panEnd"
+		:pan-options="{ direction: 'horizontal' }"
 		>
 
 		<a class="devlog-post-media-prev" v-if="page > 1" @click="prev">
@@ -15,38 +16,41 @@
 			<app-jolticon icon="chevron-right" />
 		</a>
 
-		<router-link class="devlog-post-media-embed-img"
-			:to="{ name: 'discover.games.view.devlog.view', params: { slug: post.game.slug, id: post.game.id, postSlug: post.slug } }"
-			@click="clicked"
+		<div class="devlog-post-media-embed-img"
+			@click.capture="clicked"
 			>
-			<div class="devlog-post-media-slider" ref="slider">
+			<router-link
+				:to="{ name: 'discover.games.view.devlog.view', params: { slug: post.game.slug, id: post.game.id, postSlug: post.slug } }"
+				>
+				<div class="devlog-post-media-slider" ref="slider">
 
-				<app-responsive-dimensions
-					class="devlog-post-media-slider-item"
-					v-for="item of post.media"
-					:key="item.id"
-					:ratio="item.width / item.height"
-					>
+					<app-responsive-dimensions
+						class="devlog-post-media-slider-item"
+						v-for="item of post.media"
+						:key="item.id"
+						:ratio="item.width / item.height"
+						>
 
-					<app-img-responsive
-						v-if="!item.is_animated"
-						:src="item.mediaserver_url"
-						alt=""
-						ondragstart="return false"
-						/>
+						<app-img-responsive
+							v-if="!item.is_animated"
+							:src="item.mediaserver_url"
+							alt=""
+							ondragstart="return false"
+							/>
 
-					<app-video
-						v-if="item.is_animated && shouldVideoPlay( item )"
-						:poster="item.mediaserver_url"
-						:webm="item.mediaserver_url_webm"
-						:mp4="item.mediaserver_url_mp4"
-						:show-loading="true"
-						/>
+						<app-video
+							v-if="item.is_animated && shouldVideoPlay( item )"
+							:poster="item.mediaserver_url"
+							:webm="item.mediaserver_url_webm"
+							:mp4="item.mediaserver_url_mp4"
+							:show-loading="true"
+							/>
 
-				</app-responsive-dimensions>
+					</app-responsive-dimensions>
 
-			</div>
-		</router-link>
+				</div>
+			</router-link>
+		</div>
 
 	</v-touch>
 </div>

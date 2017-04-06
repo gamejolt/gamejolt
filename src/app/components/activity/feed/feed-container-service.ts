@@ -12,8 +12,8 @@ export class ActivityFeedContainer
 	notificationWatermark = 0;  // Timestamp.
 	reachedEnd = false;
 
-	private _activeItem: ActivityFeedItem | null = null;
-	private _scroll = 0;
+	activeItem: ActivityFeedItem | null = null;
+	scroll = 0;
 
 	get hasItems()
 	{
@@ -69,26 +69,6 @@ export class ActivityFeedContainer
 		this.items.splice( index, 1 );
 
 		this._processGames();
-	}
-
-	setActive( active: ActivityFeedItem | null )
-	{
-		this._activeItem = active;
-	}
-
-	getActive()
-	{
-		return this._activeItem;
-	}
-
-	setScroll( scroll: number )
-	{
-		this._scroll = scroll;
-	}
-
-	getScroll()
-	{
-		return this._scroll;
 	}
 
 	viewed( item: ActivityFeedItem )

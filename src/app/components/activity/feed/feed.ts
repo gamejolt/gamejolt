@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { Subscription } from 'rxjs/Subscription';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import * as View from '!view!./feed.html';
 import '../../timeline-list/timeline-list.styl';
@@ -41,13 +42,13 @@ const LOAD_MORE_TIMES = 3;
 export class AppActivityFeed extends Vue
 {
 	@Prop( String ) type: 'Notification' | 'Fireside_Post';
-	// @Prop( ActivityFeedContainer '<items' ) feed: ActivityFeedContainer;
 	@Prop( ActivityFeedContainer ) feed: ActivityFeedContainer;
 	@Prop( String ) loadMoreUrl: string;
 	@Prop( Boolean ) showEditControls?: boolean;
 	@Prop( Boolean ) showGameInfo?: boolean;
 	@Prop( Boolean ) disableAutoload?: boolean;
 
+	// TODO: Get this working through dashboard, yeah?
 	// @Output( 'onPostRemoved' ) private _onPostRemoved = new EventEmitter<{ $post: FiresidePost }>();
 	// @Output( 'onPostEdited' ) private _onPostEdited = new EventEmitter<{ $post: FiresidePost }>();
 	// @Output( 'onPostPublished' ) private _onPostPublished = new EventEmitter<{ $post: FiresidePost }>();
@@ -57,64 +58,57 @@ export class AppActivityFeed extends Vue
 	private inView: { [k: string]: ActivityFeedItem } = {};
 	private timesLoaded = 0;
 
-	/**
-	 * Whether or not this feed was bootstrapped with previous data. This
-	 * happens when you click the back button into a feed.
-	 */
-	wasHistorical: boolean;
+	// We save the scroll position every time it changes. When clicking back to
+	// the same feed we can scroll to the previous position that way.
+	private scroll: number;
+	private scroll$: Subscription | undefined;
 
-	created()
+	mounted()
 	{
-		this.wasHistorical = !!this.feed.getActive();
+		this.scroll$ = Scroll.scrollChanges.subscribe(
+			( change ) => this.scroll = change.top,
+		);
 	}
 
 	destroyed()
 	{
-		this.feed.setScroll( Scroll.getScrollTop() );
-	}
+		this.feed.scroll = this.scroll;
 
-	// TODO: Check this
-	@Watch( 'feed.items', { immediate: true } )
-	onItemsChanged( newVal: any[], oldVal: any[] )
-	{
-		setTimeout( () =>
-		{
-			this.isLoadingMore = false;
-
-			// First time getting items in.
-			// Let's try scrolling to a possible active one.
-			// This will happen if they click away and back to the feed.
-			if ( newVal.length && newVal === oldVal ) {
-				this.initScroll();
-				this.initActive();
-			}
-		}, 200 );
-	}
-
-	private initScroll()
-	{
-		const scroll = this.feed.getScroll();
-		if ( scroll ) {
-			Scroll.to( scroll, { animate: false } );
+		if ( this.scroll$ ) {
+			this.scroll$.unsubscribe();
+			this.scroll$ = undefined;
 		}
 	}
 
-	private initActive()
+	@Watch( 'feed', { immediate: true } )
+	async onItemsChanged( feed: ActivityFeedContainer, oldFeed: ActivityFeedContainer | undefined )
 	{
-		const active = this.feed.getActive();
-		if ( active ) {
-			const id = `activity-feed-item-${active.id}`;
-			const elem = document.getElementById( id );
-			if ( elem ) {
-				elem.classList.add( 'active' );
-			}
+		// Gotta make sure the feed has compiled.
+		await this.$nextTick();
+		this.isLoadingMore = false;
+
+		// First time getting items in.
+		// Let's try scrolling to a possible active one.
+		// This will happen if they click away and back to the feed.
+		if ( feed.items.length && feed !== oldFeed ) {
+			this.initScroll();
+		}
+	}
+
+	// TODO: This still some times doesn't scroll to the correct place.
+	// It almost seems like the browser takes over and messes it all up.
+	private initScroll()
+	{
+		const scroll = this.feed.scroll;
+		if ( scroll ) {
+			Scroll.to( scroll, { animate: false } );
 		}
 	}
 
 	isItemUnread( item: ActivityFeedItem )
 	{
 		// Only care if there is a watermark.
-		if ( typeof this.feed.notificationWatermark === 'undefined' ) {
+		if ( this.feed.notificationWatermark === 0 ) {
 			return false;
 		}
 
@@ -133,7 +127,7 @@ export class AppActivityFeed extends Vue
 
 	setActive( item: ActivityFeedItem )
 	{
-		this.feed.setActive( item );
+		this.feed.activeItem = item;
 	}
 
 	onPostEdited( post: FiresidePost )
@@ -173,10 +167,10 @@ export class AppActivityFeed extends Vue
 			return;
 		}
 
-		if ( this.type == 'Notification' ) {
+		if ( this.type === 'Notification' ) {
 			this.feed.append( Notification.populate( response.items ) );
 		}
-		else if ( this.type == 'Fireside_Post' ) {
+		else if ( this.type === 'Fireside_Post' ) {
 			this.feed.append( FiresidePost.populate( response.items ) );
 		}
 	}

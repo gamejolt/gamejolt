@@ -16,7 +16,7 @@
 
 		<div
 			class="timeline-list-item-header"
-			@click="onClick( $event )"
+			@click.capture="onClick( $event )"
 			>
 			<router-link
 				:to="{ name: 'discover.games.view.devlog.view', params: { slug: post.game.slug, id: post.game.id, postSlug: post.slug } }"

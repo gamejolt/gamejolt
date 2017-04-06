@@ -64,13 +64,6 @@ export class AppActivityFeedDevlogPost extends Vue
 		this.post = this.item.feedItem as FiresidePost;
 	}
 
-	// constructor(
-	// 	@Inject( 'DevlogPostViewModal' ) private viewModal: DevlogPostViewModal,
-	// 	@Inject( 'gjActivityFeed' ) @SkipSelf() @Optional() public feed: ActivityFeedComponent,
-	// )
-	// {
-	// }
-
 	onExpand()
 	{
 		this.$emit( 'expanded' );
@@ -78,6 +71,9 @@ export class AppActivityFeedDevlogPost extends Vue
 
 	onClick( event: Event )
 	{
+		this.$emit( 'clicked' );
+
+		// TODO
 		if ( Screen.isXs ) {
 			// this.viewModal.show( this.post );
 			event.preventDefault();

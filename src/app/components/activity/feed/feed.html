@@ -5,7 +5,10 @@
 		v-for="item of feed.items"
 		:key="item.id"
 		:id="`activity-feed-item-${item.id}`"
-		:class="{ 'new': isItemUnread( item ) }"
+		:class="{
+			'new': isItemUnread( item ),
+			'active': feed.activeItem && feed.activeItem.id === item.id,
+		}"
 		@inview="onItemInViewChange( true, item )"
 		@outview="onItemInViewChange( false, item )"
 		>

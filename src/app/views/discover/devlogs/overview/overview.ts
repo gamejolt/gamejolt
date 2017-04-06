@@ -59,11 +59,17 @@ export default class RouteDiscoverDevlogsOverview extends Vue
 		Meta.twitter.description = Meta.description;
 
 		Meta.twitter.image = require( '../social.png' );
+
+		// Try pulling feed from cache.
+		this.feed = ActivityFeedService.bootstrap();
 	}
 
 	routed()
 	{
 		this.games = Game.populate( this.$payload.games );
-		this.feed = ActivityFeedService.bootstrap( FiresidePost.populate( this.$payload.posts ) );
+
+		if ( !this.feed ) {
+			this.feed = ActivityFeedService.bootstrap( FiresidePost.populate( this.$payload.posts ) );
+		}
 	}
 }
