@@ -48,9 +48,9 @@ export class AppShellTopNav extends Vue
 	friendRequestsShowing = false;
 	userMenuShowing = false;
 
-	env = Environment;
-	screen = makeObservableService( Screen );
-	conn = makeObservableService( Connection );
+	Environment = Environment;
+	Screen = makeObservableService( Screen );
+	Connection = makeObservableService( Connection );
 
 	@Mutation( Mutations.toggleRightPane )
 	toggleRightPane: Function;

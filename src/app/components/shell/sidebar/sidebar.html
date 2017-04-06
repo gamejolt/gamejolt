@@ -1,8 +1,8 @@
 <div id="shell-sidebar"
 	:class="{
-		'shell-sidebar': !screen.isXs,
-		'shell-pane shell-pane-left': screen.isXs,
-		'visible': screen.isMobile && isLeftPaneVisible,
+		'shell-sidebar': !Screen.isXs,
+		'shell-pane shell-pane-left': Screen.isXs,
+		'visible': Screen.isMobile && isLeftPaneVisible,
 	}"
 	v-shortkey="[ 'm' ]"
 	@shortkey="toggleLeftPane"
@@ -24,7 +24,7 @@
 				<li>
 					<router-link
 						class="no-icon"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' }, opts: { inherit: false } }"
+						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
 						v-app-track-event="`sidebar:games:featured`"
 						>
 						<translate>Featured Games</translate>
@@ -33,7 +33,7 @@
 				<li>
 					<router-link
 						class="no-icon"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'hot' }, opts: { inherit: false } }"
+						:to="{ name: 'discover.games.list._fetch', params: { section: 'hot' } }"
 						v-app-track-event="`sidebar:games:hot`"
 						>
 						<translate>Hot Games</translate>
@@ -42,7 +42,7 @@
 				<li>
 					<router-link
 						class="no-icon"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'best' }, opts: { inherit: false } }"
+						:to="{ name: 'discover.games.list._fetch', params: { section: 'best' } }"
 						v-app-track-event="`sidebar:games:best`"
 						>
 						<translate>Best Games</translate>
@@ -62,7 +62,7 @@
 				<li>
 					<router-link
 						class="no-icon"
-						:to="{ name: 'discover.channels.list', opts: { inherit: false } }"
+						:to="{ name: 'discover.channels.list' }"
 						v-app-track-event="`sidebar:channels`"
 						v-app-popover-trigger.hover="`shell-sidebar-channels`"
 						>
@@ -88,7 +88,6 @@
 							:to="{
 								name: 'discover.games.list._fetch-category',
 								params: { section: defaultBrowseSection, category: key },
-								opts: { inherit: false },
 							}"
 							v-app-track-event="`sidebar:genres:${genre}`"
 							>
@@ -109,7 +108,7 @@
 					<li v-for="channel of channels" :key="channel">
 						<router-link
 							class="no-icon"
-							:to="{ name: 'discover.channels.channel.overview', params: { channel, channel }, opts: { inherit: false } }"
+							:to="{ name: 'discover.channels.channel.overview', params: { channel, channel } }"
 							v-app-track-event="`sidebar:channels`"
 							>
 							#{{ channel }}
@@ -133,9 +132,9 @@
 
 	<app-popover
 		popover-id="shell-sidebar-more"
-		:position="screen.isXs ? 'bottom' : 'right'"
+		:position="Screen.isXs ? 'bottom' : 'right'"
 		:append-to-body="true"
-		:position-by="screen.isXs ? 'offset' : 'fixed'"
+		:position-by="Screen.isXs ? 'offset' : 'fixed'"
 		:hide-on-state-change="true"
 		>
 		<div class="fill-darkest">
@@ -164,7 +163,7 @@
 				</li>
 				<li>
 					<a
-						:href="env.firesideBaseUrl"
+						:href="Environment.firesideBaseUrl"
 						target="_blank"
 						v-app-track-event="`sidebar:fireside`"
 						>
@@ -176,7 +175,7 @@
 				</li>
 				<li>
 					<a
-						:href="env.jamsBaseUrl"
+						:href="Environment.jamsBaseUrl"
 						target="_blank"
 						v-app-track-event="`sidebar:jams`"
 						>
@@ -206,20 +205,20 @@
 		<ul class="shell-nav">
 			<li class="offline-disable">
 
-					<!--:class="{ active: $state.includes( 'discover.games.list' ) }"-->
 				<router-link
-					:to="{ name: 'discover.games.list._fetch', params: { section: defaultBrowseSection }, opts: { inherit: false } }"
+					:to="{ name: 'discover.games.list._fetch', params: { section: defaultBrowseSection } }"
+					:class="{ active: $route.name.indexOf( 'discover.games.list' ) === 0 }"
 					v-app-track-event="`sidebar:games`"
 					v-app-popover-trigger.hover="{
 						id: `shell-sidebar-games`,
-						disabled: !isLeftPaneVisible || screen.isMobile,
+						disabled: !isLeftPaneVisible || Screen.isMobile,
 					}"
 					>
 					<app-jolticon icon="chevron-right" class="shell-nav-chevron" />
 					<span class="shell-nav-icon"
 						v-app-popover-trigger.hover="{
 							id: `shell-sidebar-games`,
-							disabled: isLeftPaneVisible || screen.isMobile,
+							disabled: isLeftPaneVisible || Screen.isMobile,
 						}"
 						>
 						<app-jolticon icon="game" />
@@ -231,9 +230,9 @@
 			</li>
 
 			<li class="offline-disable">
-					<!--:class="{ active: $state.includes( 'discover.devlogs' ) }"-->
 				<router-link
-					:to="{ name: 'discover.devlogs.overview', opts: { inherit: false } }"
+					:to="{ name: 'discover.devlogs.overview' }"
+					:class="{ active: $route.name.indexOf( 'discover.devlogs' ) === 0 }"
 					v-app-track-event="`sidebar:devlogs`"
 					>
 					<span class="shell-nav-icon"
@@ -247,10 +246,10 @@
 				</router-link>
 			</li>
 
-			<li class="offline-disable" v-if="screen.isXs">
-					<!--:class="{ active: $state.includes( 'search' ) }"-->
+			<li class="offline-disable" v-if="Screen.isXs">
 				<router-link
-					:to="{ name: 'search.results', opts: { inherit: false } }"
+					:to="{ name: 'search.results' }"
+					:class="{ active: $route.name.indexOf( 'search' ) === 0 }"
 					v-app-track-event="`sidebar:search`"
 					>
 					<span class="shell-nav-icon"
@@ -268,7 +267,7 @@
 				<a
 					v-app-popover-trigger="{
 						id: `shell-sidebar-more`,
-						event: screen.isMobile ? 'click' : 'hover',
+						event: Screen.isMobile ? 'click' : 'hover',
 						disabled: !isLeftPaneVisible,
 					}"
 					>
@@ -276,8 +275,8 @@
 					<span class="shell-nav-icon"
 						v-app-popover-trigger="{
 							id: `shell-sidebar-more`,
-							event: screen.isMobile ? 'click' : 'hover',
-							disabled: isLeftPaneVisible || screen.isXs,
+							event: Screen.isMobile ? 'click' : 'hover',
+							disabled: isLeftPaneVisible || Screen.isXs,
 						}"
 						>
 						<app-jolticon icon="ellipsis-h" />
@@ -299,9 +298,10 @@
 
 			<ul class="shell-nav">
 				<li class="offline-disable">
-						<!--:class="{ active: $state.includes( 'dashboard.activity' ) }"-->
+					<!--TODO-->
+					<!--:class="{ active: $state.includes( 'dashboard.activity' ) }"-->
 					<router-link
-						:to="{ name: 'dashboard.activity.feed', params: { tab: 'activity' }, opts: { inherit: false } }"
+						:to="{ name: 'dashboard.activity.feed', params: { tab: 'activity' } }"
 						v-app-track-event="`sidebar:activity`"
 						>
 						<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
@@ -321,9 +321,10 @@
 				</li>
 
 				<li class="offline-disable">
-						<!--:class="{ active: $state.includes( 'dashboard' ) && !$state.includes( 'dashboard.activity' ) }"-->
+					<!--TODO-->
+					<!--:class="{ active: $state.includes( 'dashboard' ) && !$state.includes( 'dashboard.activity' ) }"-->
 					<router-link
-						:to="{ name: 'dashboard.main.overview', opts: { inherit: false } }"
+						:to="{ name: 'dashboard.main.overview' }"
 						v-app-track-event="`sidebar:dashboard`"
 						>
 						<span class="shell-nav-icon"
@@ -341,7 +342,7 @@
 			<hr>
 
 			<ul class="shell-nav">
-				<li class="offline-disable" v-if="env.isClient">
+				<li class="offline-disable" v-if="Environment.isClient">
 					<router-link
 						:to="{ name: 'library.installed' }"
 						active-class="active"
@@ -363,7 +364,6 @@
 						:to="{
 							name: developerCollection.getSref(),
 							params: developerCollection.getSrefParams(),
-							opts: { inherit: false },
 						}"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:developer`"
@@ -384,7 +384,6 @@
 						:to="{
 							name: followedCollection.getSref(),
 							params: followedCollection.getSrefParams(),
-							opts: { inherit: false },
 						}"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:followed`"
@@ -405,7 +404,6 @@
 						:to="{
 							name: recommendedCollection.getSref(),
 							params: recommendedCollection.getSrefParams(),
-							opts: { inherit: false },
 						}"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:recommended`"
@@ -426,7 +424,6 @@
 						:to="{
 							name: ownedCollection.getSref(),
 							params: ownedCollection.getSrefParams(),
-							opts: { inherit: false },
 						}"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:owned`"
@@ -478,7 +475,6 @@
 							:to="{
 								name: bundleCollection.getSref(),
 								params: bundleCollection.getSrefParams(),
-								opts: { inherit: false },
 							}"
 							active-class="active"
 							v-app-track-event="`sidebar:collection:bundle`"
@@ -540,7 +536,6 @@
 							:to="{
 								name: collection.getSref(),
 								params: collection.getSrefParams(),
-								opts: { inherit: false },
 							}"
 							active-class="active"
 							v-app-track-event="`sidebar:collection:playlist`"

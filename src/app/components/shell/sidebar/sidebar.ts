@@ -77,8 +77,8 @@ export class AppShellSidebar extends Vue
 		'other': 'Other',
 	};
 
-	env = Environment;
-	screen = makeObservableService( Screen );
+	Environment = Environment;
+	Screen = makeObservableService( Screen );
 
 	// Show hot when logged in, otherwise default to best.
 	get defaultBrowseSection()

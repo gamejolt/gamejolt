@@ -17,6 +17,7 @@ import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
 import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar/bar';
 import { EventBus } from '../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Mutations } from '../../store/index';
+import { AppState } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 
 @View
 @Component({
@@ -37,6 +38,7 @@ import { Mutations } from '../../store/index';
 export class AppShell extends Vue
 {
 	@State chat: Chat | undefined;
+	@State app: AppState;
 
 	@Getter isLeftPaneVisible: boolean;
 	@Getter isRightPaneVisible: boolean;

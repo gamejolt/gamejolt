@@ -17,12 +17,13 @@
 			</li>
 		</ul>
 
+		<!--TODO-->
 		<!-- History Navigator (for desktop client) -->
-		<!--<gj-client-history-navigator ng-if="env.isClient"></gj-client-history-navigator>-->
+		<!--<gj-client-history-navigator ng-if="Environment.isClient"></gj-client-history-navigator>-->
 
 		<router-link class="navbar-item" :to="{ name: 'discover.home' }">
-			<img v-if="!screen.isMobile" src="~img/game-jolt-logo.svg" alt="Game Jolt">
-			<img v-if="screen.isMobile" src="~img/jolt.svg" alt="Game Jolt">
+			<img v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="Game Jolt">
+			<img v-if="Screen.isMobile" src="~img/jolt.svg" alt="Game Jolt">
 		</router-link>
 
 		<div class="navbar-separator hidden-xs"></div>
@@ -32,7 +33,7 @@
 	<div class="navbar-center">
 
 		<!-- Search Input -->
-		<app-search v-if="!screen.isXs"></app-search>
+		<app-search v-if="!Screen.isXs"></app-search>
 
 	</div>
 
@@ -45,9 +46,10 @@
 		<ul class="navbar-items" v-if="app.user">
 
 			<li class="hidden-xs">
+					<!--TODO-->
 					<!--:class="{ active: $state.includes( 'library' ) }"-->
 				<app-router-link
-					:to="{ name: env.isClient ? 'library.installed' : 'library.overview' }"
+					:to="{ name: Environment.isClient ? 'library.installed' : 'library.overview' }"
 					v-app-tooltip.bottom-center="$gettext( `Your Game Library` )"
 					v-app-track-event="`top-nav:library`"
 					>
@@ -56,7 +58,8 @@
 			</li>
 
 			<!-- Activity -->
-			<li v-if="!conn.isClientOffline">
+			<li v-if="!Connection.isClientOffline">
+					<!--TODO-->
 					<!--:class="{ active: $state.includes( 'dashboard.activity' ) }"-->
 				<app-router-link
 					:to="{ name: 'dashboard.activity.feed', params: { tab: 'activity' } }"
@@ -73,7 +76,7 @@
 			</li>
 
 			<!-- Friend Requests -->
-			<li v-if="!conn.isClientOffline">
+			<li v-if="!Connection.isClientOffline">
 				<a
 					:class="{ active: friendRequestsShowing }"
 					v-app-popover-trigger="`friend-requests`"
@@ -115,23 +118,23 @@
 		<!-- Login/Join Buttons -->
 		<ul class="navbar-items" v-if="!app.user">
 			<li>
-				<a :href="env.authBaseUrl + '/login'" target="_self" v-app-track-event="`top-nav:login:click`">
+				<a :href="Environment.authBaseUrl + '/login'" target="_self" v-app-track-event="`top-nav:login:click`">
 					<app-jolticon class="hidden-xs" icon="sign-in" />
 					<translate>nav.login</translate>
 				</a>
 			</li>
 			<li>
-				<a :href="env.authBaseUrl + '/join'" target="_self" v-app-track-event="`top-nav:join:click`">
+				<a :href="Environment.authBaseUrl + '/join'" target="_self" v-app-track-event="`top-nav:join:click`">
 					<app-jolticon class="hidden-xs" icon="friends" />
 					<translate>nav.join</translate>
 				</a>
 			</li>
 		</ul>
 
-		<div class="navbar-separator" v-if="chat || !conn.isOnline"></div>
+		<div class="navbar-separator" v-if="chat || !Connection.isOnline"></div>
 
 		<!-- Connection Status -->
-		<span v-if="!conn.isOnline">
+		<span v-if="!Connection.isOnline">
 			<span class="navbar-item disconnected-icon"
 				v-app-tooltip.left-middle="$gettext( `We're having trouble connecting to Game Jolt.` )"
 				>
