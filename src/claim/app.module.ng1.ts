@@ -4,7 +4,6 @@ import { bootstrapFacade } from '../lib/gj-lib-client/utils/angular-facade';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
-import { History } from '../lib/gj-lib-client/components/history/history.service';
 
 import '../lib/gj-lib-client/components/body-classes/body-classes';
 import '../lib/gj-lib-client/components/loading/loading';
@@ -134,6 +133,5 @@ export const AppModuleNg1 = angular.module( 'App', [
 	gettextCatalog.setCurrentLanguage( Translate.lang );
 	Analytics.initAngular( $rootScope );
 	Meta.initAngular( $rootScope );
-	History.initAngular( $rootScope );
 } )
 .name;

@@ -7,7 +7,6 @@ import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
-import { History } from '../lib/gj-lib-client/components/history/history.service';
 
 import '../lib/gj-lib-client/components/filesize/filesize';
 import '../lib/gj-lib-client/components/time/time';
@@ -301,7 +300,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	Meta.initAngular( $rootScope );
 	Referrer.initAngular( $rootScope );
 	Connection.initAngular( $rootScope );
-	History.initAngular( $rootScope );
 } )
 /**
  * angular-ui-router can't handle redirects between states yet.

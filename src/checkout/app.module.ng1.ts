@@ -5,7 +5,6 @@ import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.s
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
 import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
-import { History } from '../lib/gj-lib-client/components/history/history.service';
 
 import '../lib/gj-lib-client/components/body-classes/body-classes';
 import '../lib/gj-lib-client/components/loading/loading';
@@ -124,6 +123,5 @@ export const AppModuleNg1 = angular.module( 'App', [
 	Analytics.initAngular( $rootScope );
 	Meta.initAngular( $rootScope );
 	Referrer.initAngular( $rootScope );
-	History.initAngular( $rootScope );
 } )
 .name;
