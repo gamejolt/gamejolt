@@ -28,9 +28,6 @@ export class AppActivityFeed extends Vue
 	@Prop( Boolean ) showEditControls?: boolean;
 	@Prop( Boolean ) showGameInfo?: boolean;
 
-	// TODO: Make this part of the feed container.
-	@Prop( Boolean ) disableAutoload?: boolean;
-
 	// TODO: Get this working through dashboard, yeah?
 	// @Output( 'onPostRemoved' ) private _onPostRemoved = new EventEmitter<{ $post: FiresidePost }>();
 	// @Output( 'onPostEdited' ) private _onPostEdited = new EventEmitter<{ $post: FiresidePost }>();
@@ -76,10 +73,16 @@ export class AppActivityFeed extends Vue
 	// It almost seems like the browser takes over and messes it all up.
 	private initScroll()
 	{
+		console.log( 'init scroll!' );
 		const scroll = this.feed.scroll;
 		if ( scroll ) {
 			Scroll.to( scroll, { animate: false } );
 		}
+	}
+
+	get shouldShowLoadMore()
+	{
+		return !this.feed.reachedEnd && !this.feed.isLoadingMore;
 	}
 
 	// TODO: get these working

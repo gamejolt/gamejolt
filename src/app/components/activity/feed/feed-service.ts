@@ -9,15 +9,6 @@ import { router } from '../../../bootstrap';
  */
 const MAX_CACHED_COUNT = 3;
 
-export interface BootstrapOptions extends ActivityFeedContainerOptions
-{
-	/**
-	 * Override to say if it's a historical bootstrap or not.
-	 * Useful if you are lazy loading the page.
-	 */
-	inHistorical?: boolean;
-}
-
 interface ActivityFeedState
 {
 	url: string;
@@ -29,18 +20,16 @@ export class ActivityFeedService
 	private static _states: ActivityFeedState[] = [];
 	private static _currentState: ActivityFeedState;
 
-	static bootstrap( items?: ActivityFeedInput[], options?: BootstrapOptions )
+	static bootstrap( items?: ActivityFeedInput[], options?: ActivityFeedContainerOptions )
 	{
 		const url = History.futureState
 			? History.futureState.fullPath
 			: router.currentRoute.fullPath;
 
-		const inHistorical = options && options.inHistorical || History.inHistorical;
-
 		// If we're bootstrapping in historical, just return what we had.
 		// We only do this if we are going back to the latest state that we have
 		// stored items for.
-		if ( inHistorical ) {
+		if ( History.inHistorical ) {
 			const state = this._states.find( ( item ) => item.url === url );
 			if ( state ) {
 				this._currentState = state;

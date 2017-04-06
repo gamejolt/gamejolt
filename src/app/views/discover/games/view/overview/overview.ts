@@ -43,7 +43,7 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 	mediaItems: (GameScreenshot | GameVideo | GameSketchfab)[] = [];
 	songs: GameSong[] = [];
 	recommendedGames: Game[] = [];
-	posts: ActivityFeedContainer | null = null;
+	feed: ActivityFeedContainer | null = null;
 
 	// Will be empty.
 	packagePayload = new GamePackagePayloadModel( {} );
@@ -61,6 +61,12 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 		}
 
 		return Api.sendRequest( apiOverviewUrl );
+	}
+
+	created()
+	{
+		// Try pulling feed from cache.
+		this.feed = ActivityFeedService.bootstrap();
 	}
 
 	// @Watch( 'game', { immediate: true } )
@@ -99,9 +105,17 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 			} );
 		}
 
-		// const wasHistoricalView = History.inHistorical;
-		// this.posts = ActivityFeedService.bootstrap( Fireside_Post.populate( this.$payload.posts ), { inHistorical: wasHistoricalView } );
-		this.posts = ActivityFeedService.bootstrap( FiresidePost.populate( this.$payload.posts ), { inHistorical: false } );
+		if ( !this.feed ) {
+			this.feed = ActivityFeedService.bootstrap(
+				FiresidePost.populate( this.$payload.posts ),
+				{
+					type: 'Fireside_Post',
+					url: `/web/discover/games/devlog/posts/${this.game.id}`,
+					noAutoload: !this.game._is_devlog,
+				},
+			);
+		}
+
 		this.songs = GameSong.populate( this.$payload.songs );
 		this.recommendedGames = Game.populate( this.$payload.recommendedGames );
 		this.packagePayload = new GamePackagePayloadModel( this.$payload );

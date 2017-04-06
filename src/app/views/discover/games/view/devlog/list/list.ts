@@ -40,6 +40,12 @@ export default class RouteDiscoverGamesViewDevlogList extends Vue
 		return Api.sendRequest( '/web/discover/games/devlog/' + route.params.id );
 	}
 
+	created()
+	{
+		// Try pulling feed from cache.
+		this.feed = ActivityFeedService.bootstrap();
+	}
+
 	routed()
 	{
 		Meta.title = this.$gettextInterpolate(
@@ -49,6 +55,14 @@ export default class RouteDiscoverGamesViewDevlogList extends Vue
 
 		Meta.description = `Stay up to date on all the latest posts for ${this.game.title} on Game Jolt`;
 
-		this.feed = ActivityFeedService.bootstrap( FiresidePost.populate( this.$payload.posts ) );
+		if ( !this.feed ) {
+			this.feed = ActivityFeedService.bootstrap(
+				FiresidePost.populate( this.$payload.posts ),
+				{
+					type: 'Fireside_Post',
+					url: `/web/discover/games/devlog/posts/${this.game.id}`,
+				},
+			);
+		}
 	}
 }

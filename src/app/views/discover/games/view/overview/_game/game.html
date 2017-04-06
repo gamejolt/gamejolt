@@ -303,7 +303,7 @@
 			<!--
 				Devlog
 			-->
-			<div v-if="posts && posts.hasItems" class="row">
+			<div v-if="feed && feed.hasItems" class="row">
 				<div class="col-sm-10 col-md-8 col-lg-7">
 
 					<h2>
@@ -314,11 +314,8 @@
 					<br>
 
 					<app-activity-feed
-						type="Fireside_Post"
-						:feed="posts"
-						:load-more-url="`/web/discover/games/devlog/posts/${game.id}`"
+						:feed="feed"
 						:show-edit-controls="true"
-						:disable-autoload="true"
 						/>
 
 				</div>

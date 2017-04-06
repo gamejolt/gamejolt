@@ -83,7 +83,7 @@ export class AppDiscoverGamesViewOverviewGame extends Vue
 	@Prop() partnerLink: string;
 	@Prop() twitterShareMessage: string;
 	@Prop() ratingBreakdown: number[];
-	@Prop() posts: ActivityFeedContainer;
+	@Prop() feed: ActivityFeedContainer;
 
 	@State app: AppState;
 

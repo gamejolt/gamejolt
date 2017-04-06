@@ -5,7 +5,4 @@ export const routeDiscoverDevlogsOverview: VueRouter.RouteConfig = {
 	name: 'discover.devlogs.overview',
 	path: '/devlogs',
 	component: () => asyncComponentLoader( $import( './overview' ) ),
-	meta: {
-		noAutoScroll: true,
-	},
 };

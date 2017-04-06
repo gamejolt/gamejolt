@@ -28,6 +28,11 @@ export interface ActivityFeedContainerOptions
 	url: string;
 
 	/**
+	 * Disables infinite scroll.
+	 */
+	noAutoload?: boolean;
+
+	/**
 	 * A timestamp of when the notifications in this feed were last viewed.
 	 */
 	notificationWatermark?: number;
@@ -47,6 +52,7 @@ export class ActivityFeedContainer
 	inViewItems: { [k: string]: ActivityFeedItem } = {};
 	activeItem: ActivityFeedItem | null = null;
 	scroll = 0;
+	noAutoload = false;
 	isLoadingMore = false;
 	timesLoaded = 0;
 	private loadMoreUrl: string;
@@ -62,6 +68,7 @@ export class ActivityFeedContainer
 
 		this.feedType = options.type;
 		this.loadMoreUrl = options.url;
+		this.noAutoload = options.noAutoload || false;
 
 		if ( typeof options.notificationWatermark !== 'undefined' ) {
 			this.notificationWatermark = options.notificationWatermark;
@@ -144,9 +151,8 @@ export class ActivityFeedContainer
 			Vue.set( this.inViewItems, item.id, item );
 			this.viewed( item );
 
-			// TODO
 			// Auto-loading while scrolling.
-			if ( /*!this.disableAutoload &&*/ !this.isLoadingMore && !this.reachedEnd && this.timesLoaded < LOAD_MORE_TIMES ) {
+			if ( !this.noAutoload && !this.isLoadingMore && !this.reachedEnd && this.timesLoaded < LOAD_MORE_TIMES ) {
 				const index = this.items.findIndex( ( _item ) => _item.id === item.id );
 				if ( index >= this.items.length - LOAD_MORE_FROM_BOTTOM ) {
 					this.loadMore();

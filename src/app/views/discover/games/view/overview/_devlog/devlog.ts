@@ -57,7 +57,7 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue
 	// @Prop() downloadCount: number;
 	// @Prop() playCount: number;
 	// @Prop() ratingBreakdown: number[];
-	@Prop() posts: ActivityFeedContainer;
+	@Prop() feed: ActivityFeedContainer;
 
 	@State app: AppState;
 
