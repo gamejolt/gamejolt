@@ -9,11 +9,13 @@ import { Scroll } from '../../lib/gj-lib-client/components/scroll/scroll.service
 import { routeSearch } from './search/search.route';
 import { routeProfile } from './profile/profile.route';
 import { routeError404 } from '../../lib/gj-lib-client/components/error/page/page.route';
+import { routeActivity } from './activity/activity.route';
 
 Vue.use( VueRouter );
 
 const routes = [
 	routeDiscover,
+	routeActivity,
 	routeSearch,
 	routeProfile,
 	routeLanding,

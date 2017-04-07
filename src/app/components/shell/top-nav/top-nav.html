@@ -59,10 +59,9 @@
 
 			<!-- Activity -->
 			<li v-if="!Connection.isClientOffline">
-					<!--TODO-->
-					<!--:class="{ active: $state.includes( 'dashboard.activity' ) }"-->
-				<app-router-link
-					:to="{ name: 'dashboard.activity.feed', params: { tab: 'activity' } }"
+				<router-link
+					:to="{ name: 'activity', params: { tab: 'activity' } }"
+					:class="{ active: $route.name.indexOf( 'activity' ) === 0 }"
 					v-app-tooltip.bottom-center="$gettext( `Activity` )"
 					v-app-track-event="`top-nav:activity:toggle`"
 					>
@@ -72,7 +71,7 @@
 						{{ notificationCount < 100 ? notificationCount : '99+' }}
 					</span>
 					<app-jolticon icon="notifications" />
-				</app-router-link>
+				</router-link>
 			</li>
 
 			<!-- Friend Requests -->

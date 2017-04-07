@@ -298,10 +298,9 @@
 
 			<ul class="shell-nav">
 				<li class="offline-disable">
-					<!--TODO-->
-					<!--:class="{ active: $state.includes( 'dashboard.activity' ) }"-->
 					<router-link
-						:to="{ name: 'dashboard.activity.feed', params: { tab: 'activity' } }"
+						:to="{ name: 'activity', params: { tab: 'activity' } }"
+						:class="{ active: $route.name.indexOf( 'activity' ) === 0 }"
 						v-app-track-event="`sidebar:activity`"
 						>
 						<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"

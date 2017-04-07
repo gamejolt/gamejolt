@@ -1,0 +1,75 @@
+<div>
+
+	<app-page-header
+		:should-affix-nav="true"
+		col-classes="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7"
+		>
+
+		<h1>
+			<translate>Activity Feed</translate>
+		</h1>
+		<br>
+
+		<nav slot="nav" class="platform-list inline nav-justified">
+			<ul>
+				<li>
+					<router-link :to="{ name: 'activity', params: { tab: 'activity' } }" active-class="active">
+						<app-jolticon icon="feed" class="hidden-xs" />
+						<translate>Feed</translate>
+						<span class="tag tag-pink" v-if="activityUnreadCount > 0">
+							{{ activityUnreadCount < 100 ? activityUnreadCount : '99+' }}
+						</span>
+					</router-link>
+				</li>
+				<li>
+					<router-link :to="{ name: 'activity', params: { tab: 'notifications' } }" active-class="active">
+						<app-jolticon icon="notifications" class="hidden-xs" />
+						<translate>Notifications</translate>
+						<span class="tag tag-pink" v-if="notificationsUnreadCount > 0">
+							{{ notificationsUnreadCount < 100 ? notificationsUnreadCount : '99+' }}
+						</span>
+					</router-link>
+				</li>
+			</ul>
+		</nav>
+
+	</app-page-header>
+
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
+
+					<app-activity-feed-placeholder v-if="!feed" />
+
+					<div v-else>
+
+						<div v-for="_feed of [ feed ]" :key="feed.type">
+							<app-activity-feed
+								v-if="_feed.hasItems"
+								:feed="_feed"
+								:show-game-info="true"
+								/>
+
+							<div class="alert alert-info" v-else>
+								<div v-if="tab === 'activity'">
+									<p>
+										<translate>You don't have any activity yet. Follow games to stay up to date on their latest development!</translate>
+									</p>
+								</div>
+								<div v-if="tab === 'notifications'">
+									<p>
+										<translate>You don't have any notifications yet.</translate>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+</div>
