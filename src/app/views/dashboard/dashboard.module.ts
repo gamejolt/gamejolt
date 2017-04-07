@@ -5,7 +5,6 @@ import '../../../vendor/dash';
 
 import { importContext } from '../../../lib/gj-lib-client/utils/utils';
 import Developer from './developer/developer';
-import Activity from './activity/activity';
 import Analytics from './analytics/analytics';
 import TimezoneModule from '../../../lib/gj-lib-client/components/timezone/timezone';
 import ColorpickerModule from '../../../lib/gj-lib-client/components/colorpicker/colorpicker';
@@ -50,7 +49,6 @@ angular.module( 'App.Views.Dashboard', [] );
 
 		// Views.
 		Developer,
-		Activity,
 		Analytics,
 
 		FormsDashboardModule,

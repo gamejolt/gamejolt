@@ -38,5 +38,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 
 	{ path: '/dashboard', component: RouteEmpty, children: [
 		{ name: 'dashboard.main.overview', path: '', component: RouteEmpty },
+		{ name: 'dashboard.developer.games.add', path: 'games/add', component: RouteEmpty },
 	] },
 ];
