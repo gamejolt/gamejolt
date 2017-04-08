@@ -29,8 +29,6 @@ interface PrimusChatEvent
 
 async function getCookie( name: string )
 {
-	return 'iuufhol5no2b8eua9rgd9urvj2';
-
 	// Within Client we have to access it connectedthis way.
 	if ( Environment.isClient ) {
 		const gui = require( 'nw.gui' );
