@@ -20,18 +20,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 
 	{ name: 'radio', path: '/radio', component: fallback },
 
-	{ path: '/library', component: RouteEmpty, children: [
-		{ name: 'library.overview', path: '', component: fallback },
-		{ name: 'library.installed', path: '/installed', component: fallback },
-		{ name: 'library.collection.playlist', path: '/playlist/:slug/:id', component: fallback },
-		{ name: 'library.collection.followed', path: '/@:id/followed', component: fallback },
-		{ name: 'library.collection.developer', path: '/@:id/games', component: fallback },
-		{ name: 'library.collection.owned', path: '/@:id/owned', component: fallback },
-		{ name: 'library.collection.recommended', path: '/@:id/recommended', component: fallback },
-		{ name: 'library.collection.bundle', path: '/library/bundle/:slug/:id/games', component: fallback },
-		{ name: 'library.collection.tag', path: '/tag/:id', component: fallback },
-	] },
-
 	{ name: 'styleguide', path: '/styleguide', component: fallback },
 	{ name: 'settings', path: '/settings', component: fallback },
 	{ name: 'client', path: '/client', component: fallback },

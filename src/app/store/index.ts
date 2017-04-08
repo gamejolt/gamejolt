@@ -14,6 +14,7 @@ import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service
 import { router } from '../bootstrap';
 import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
+import { libraryStore, LibraryState } from './library';
 
 Vue.use( Vuex );
 
@@ -25,9 +26,6 @@ export const Mutations = {
 	clearPanes: 'clearPanes',
 	showBackdrop: 'showBackdrop',
 	removeBackdrop: 'removeBackdrop',
-
-	addPlaylist: 'addPlaylist',
-	removePlaylist: 'removePlaylist',
 
 	clearChat: 'clearChat',
 
@@ -44,13 +42,6 @@ export const Actions = {
 export class StoreState
 {
 	notificationCount = 0;
-	collections: GameCollection[] = [];
-	followedCollection?: GameCollection = undefined;
-	developerCollection?: GameCollection = undefined;
-	ownedCollection?: GameCollection = undefined;
-	recommendedCollection?: GameCollection = undefined;
-	bundleCollections: GameCollection[] = [];
-
 	isBootstrapped = false;
 
 	isLeftPaneSticky = Settings.get( 'sidebar' ) as boolean;
@@ -67,6 +58,7 @@ export const store = new Vuex.Store<StoreState>( {
 	state: new StoreState(),
 	modules: {
 		app: appStore,
+		library: libraryStore,
 	},
 	getters: {
 		isLeftPaneVisible( state )
@@ -89,14 +81,9 @@ export const store = new Vuex.Store<StoreState>( {
 		},
 	},
 	mutations: {
-		[Mutations.clear]( state )
+		[Mutations.clear]()
 		{
-			state.collections = [];
-			state.followedCollection = undefined;
-			state.developerCollection = undefined;
-			state.ownedCollection = undefined;
-			state.recommendedCollection = undefined;
-			state.bundleCollections = [];
+			store.commit( LibraryState.Mutations.clear );
 		},
 
 		[Mutations.toggleLeftPane]( state )
@@ -125,17 +112,6 @@ export const store = new Vuex.Store<StoreState>( {
 			state.isRightPaneOverlayed = false;
 			state.isLeftPaneOverlayed = false;
 			store.dispatch( Actions.checkBackdrop );
-		},
-
-		[Mutations.addPlaylist]( state, playlist: GameCollection )
-		{
-			state.collections.push( playlist );
-		},
-
-		[Mutations.removePlaylist]( state, playlist: GameCollection )
-		{
-			const index = state.collections.findIndex( ( i ) => i._id === playlist._id );
-			state.collections.splice( index, 1 );
 		},
 
 		[Mutations.clearChat]( state )
@@ -179,24 +155,10 @@ export const store = new Vuex.Store<StoreState>( {
 		},
 	},
 	actions: {
-		async [Actions.bootstrap]( { state } )
+		async [Actions.bootstrap]( { state, commit } )
 		{
 			const response = await Api.sendRequest( '/web/library' );
-
-			state.collections = GameCollection.populate( response.collections );
-			state.followedCollection = response.followedCollection
-				? new GameCollection( response.followedCollection )
-				: undefined;
-			state.developerCollection = response.developerCollection
-				? new GameCollection( response.developerCollection )
-				: undefined;
-			state.ownedCollection = response.ownedCollection
-				? new GameCollection( response.ownedCollection )
-				: undefined;
-			state.recommendedCollection = response.recommendedCollection
-				? new GameCollection( response.recommendedCollection )
-				: undefined;
-			state.bundleCollections = GameCollection.populate( response.bundleCollections );
+			commit( LibraryState.Mutations.bootstrap, response );
 
 			state.isBootstrapped = true;
 

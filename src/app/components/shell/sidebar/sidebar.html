@@ -358,11 +358,11 @@
 					</router-link>
 				</li>
 
-				<li class="offline-disable" v-if="developerCollection">
+				<li class="offline-disable" v-if="library.developerCollection">
 					<router-link
 						:to="{
-							name: developerCollection.getSref(),
-							params: developerCollection.getSrefParams(),
+							name: library.developerCollection.getSref(),
+							params: library.developerCollection.getSrefParams(),
 						}"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:developer`"
@@ -381,8 +381,8 @@
 				<li class="offline-disable">
 					<router-link
 						:to="{
-							name: followedCollection.getSref(),
-							params: followedCollection.getSrefParams(),
+							name: library.followedCollection.getSref(),
+							params: library.followedCollection.getSrefParams(),
 						}"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:followed`"
@@ -401,8 +401,8 @@
 				<li class="offline-disable">
 					<router-link
 						:to="{
-							name: recommendedCollection.getSref(),
-							params: recommendedCollection.getSrefParams(),
+							name: library.recommendedCollection.getSref(),
+							params: library.recommendedCollection.getSrefParams(),
 						}"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:recommended`"
@@ -421,8 +421,8 @@
 				<li class="offline-disable">
 					<router-link
 						:to="{
-							name: ownedCollection.getSref(),
-							params: ownedCollection.getSrefParams(),
+							name: library.ownedCollection.getSref(),
+							params: library.ownedCollection.getSrefParams(),
 						}"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:owned`"
@@ -457,11 +457,11 @@
 				</ul>
 			</div>
 
-			<div v-if="isLeftPaneVisible && bundleCollections.length">
+			<div v-if="isLeftPaneVisible && library.bundleCollections.length">
 				<div class="nav-heading">
 					<translate>library.nav.bundles</translate>
 					<span class="badge">
-						{{ bundleCollections.length | number }}
+						{{ library.bundleCollections.length | number }}
 					</span>
 				</div>
 
@@ -494,7 +494,7 @@
 				<div class="nav-heading" :title="$gettext( `library.nav.playlists` )">
 					<translate>library.nav.playlists</translate>
 					<span class="badge">
-						{{ collections.length | number }}
+						{{ library.collections.length | number }}
 					</span>
 				</div>
 
@@ -509,7 +509,7 @@
 					</a>
 				</div>
 
-				<div class="nav-controls" v-if="collections.length">
+				<div class="nav-controls" v-if="library.collections.length">
 					<input type="search"
 						class="form-control"
 						:placeholder="$gettext( `library.nav.filter_playlists_placeholder` )"
@@ -517,7 +517,7 @@
 						>
 				</div>
 
-				<div v-if="!collections.length">
+				<div v-if="!library.collections.length">
 					<div class="alert fill-gray">
 						<translate>library.nav.no_playlists_html</translate>
 					</div>

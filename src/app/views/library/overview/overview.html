@@ -1,50 +1,62 @@
-<header class="section no-nav">
-	<div class="container">
+<div class="route-library-overview">
 
-		<h1 class="section-header sans-margin-bottom">{{ ::'library.heading' | translate }}</h1>
-		<div class="text-muted small" translate>library.description_html</div>
+	<app-page-header>
 
-	</div>
-</header>
-
-<!--
-	When they are offline, we show them this message.
--->
-<section class="section fill-pink text-center" ng-if="Connection.isClientOffline">
-	<p>
-		<span class="jolticon jolticon-notice big"></span>
-	</p>
-	<p class="sans-margin">You must be online to access your playlists.</p>
-</section>
-
-<gj-client-hide-offline>
-	<section class="section collection-row-section"
-		ng-repeat="type in overviewCtrl.collectionTypes track by type.key"
-		ng-if="overviewCtrl[ type.key ].length"
-		>
-
-		<div class="container" ng-if="::type.heading">
-			<h4 class="section-header" ng-if="Screen.isXs">{{ ::type.heading }}</h4>
-			<h2 class="section-header" ng-if="!Screen.isXs">{{ ::type.heading }}</h2>
+		<h1 class="section-header sans-margin-bottom">
+			<translate>library.heading</translate>
+		</h1>
+		<div class="text-muted small">
+			<p><translate>This is your personalized library of games. Here dwell the games you've followed and any playlists or bundles that you've made or followed.</translate></p>
 		</div>
 
-		<div ng-class="!Screen.isXs ? 'container' : ''">
+	</app-page-header>
 
-			<gj-game-collection-list
-				ng-if="Screen.isXs"
-				gj-game-collections="overviewCtrl[ type.key ]"
-				gj-event-label="library-overview:collection:{{ ::type.eventLabel }}"
-				>
-			</gj-game-collection-list>
-
-			<gj-game-collection-grid
-				ng-if="!Screen.isXs"
-				gj-game-collections="overviewCtrl[ type.key ]"
-				gj-event-label="library-overview:collection:{{ ::type.eventLabel }}"
-				>
-			</gj-game-collection-grid>
-
-		</div>
-
+	<!--
+		When they are offline, we show them this message.
+	-->
+	<section class="section fill-pink text-center" v-if="Connection.isClientOffline">
+		<p>
+			<app-jolticon icon="notice" :big="true" />
+		</p>
+		<p class="sans-margin">
+			<translate>You must be online to access your playlists.</translate>
+		</p>
 	</section>
-</gj-client-hide-offline>
+
+	<!--TODO: CLIENT-->
+	<!--<gj-client-hide-offline>-->
+		<section
+			class="section collection-row-section"
+			v-for="group of collectionGroups"
+			:key="group.key"
+			v-if="group.collections.length"
+			>
+
+			<div class="container" v-if="group.heading">
+				<h2 class="section-header"
+					:class="{ 'h4': Screen.isXs }"
+					>
+					{{ group.heading }}
+				</h2>
+			</div>
+
+			<div :class="!Screen.isXs ? 'container' : ''">
+
+				<app-game-collection-list
+					v-if="Screen.isXs"
+					:collections="group.collections"
+					:event-label="`library-overview:collection:${ group.eventLabel }`"
+					/>
+
+				<app-game-collection-grid
+					v-else
+					:collections="group.collections"
+					:event-label="`library-overview:collection:${ group.eventLabel }`"
+					/>
+
+			</div>
+
+		</section>
+	<!--</gj-client-hide-offline>-->
+
+</div>

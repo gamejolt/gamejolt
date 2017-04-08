@@ -1,29 +1,33 @@
 <div class="list-group game-collection-list">
-	<a class="list-group-item clearfix"
-		ng-repeat="collection in ctrl.collections track by collection._id"
-		ui-sref="{{ ::collection.getSref( true ) }}"
-		title="{{ ::collection.getTitle() }}"
-		gj-track-event="{{ ::ctrl.eventLabel }}"
+	<router-link
+		class="list-group-item clearfix"
+		v-for="collection of collections"
+		:key="collection._id"
+		:to="{
+			name: collection.getSref(),
+			params: collection.getSrefParams(),
+		}"
+		:title="collection.getTitle()"
+		v-app-track-event="eventLabel"
 		>
 		<div class="row">
 			<div class="col-xs-3">
-				<gj-game-collection-thumbnail
-					gj-game-collection="::collection"
-					game-collection-hide-tag="true"
-					>
-				</gj-game-collection-thumbnail>
+				<app-game-collection-thumbnail
+					:collection="collection"
+					:hide-tag="true"
+					/>
 			</div>
 			<div class="col-xs-9">
-				<div class="game-collection-title">
+				<div class="game-collection-title h5">
 
-					{{ ::collection.name }}
+					{{ collection.name }}
 
-					<small ng-if="::collection.from_subscription">
-						{{ ::'library.by' | translate }}
-						@{{ ::collection.owner.username }}
+					<small v-if="collection.from_subscription">
+						<translate>library.by</translate>
+						@{{ collection.owner.username }}
 					</small>
 				</div>
 			</div>
 		</div>
-	</a>
+	</router-link>
 </div>

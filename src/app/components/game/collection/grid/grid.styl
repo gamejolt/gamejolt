@@ -1,11 +1,12 @@
+@require '~styles/variables'
+
 .game-collection-grid-item
-	@extend .anim-fade-in-up, .stagger, .no-animate-xs
 	margin-bottom: $grid-gutter-width-xs
 
 	@media $media-sm
 		&:nth-child(odd)
 			clear: both
-			
+
 	@media $media-md
 		&:nth-child(odd)
 			clear: both
@@ -21,7 +22,6 @@
 		display: block
 
 .game-collection-title
-	@extend .h4
 	margin: 0
 	margin-top: $font-size-base
 
@@ -30,7 +30,3 @@
 
 	> small
 		color: $text-muted
-
-.game-collection-desc
-	@extend .text-muted
-	font-size: $font-size-small

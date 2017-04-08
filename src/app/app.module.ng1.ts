@@ -59,12 +59,8 @@ import '../lib/gj-lib-client/components/audio/player/player';
 import '../lib/gj-lib-client/components/audio/scrubber/scrubber';
 import '../lib/gj-lib-client/components/audio/playlist/playlist';
 import '../lib/gj-lib-client/components/game/soundtrack/card/card';
-import '../lib/gj-lib-client/components/game-bundle/game-bundle';
 import '../lib/gj-lib-client/components/img/crop/crop';
 
-import './components/game/collection/grid/grid-module';
-import './components/game/collection/list/list-module';
-import './components/game/collection/thumbnail/thumbnail-module';
 import './components/game-playlist/save-modal/save-modal-module';
 import './components/invite/invite-module';
 import './components/game/filtering/filtering-module';
@@ -154,7 +150,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Audio.Scrubber',
 	'gj.Audio.Playlist',
 	'gj.Game.Soundtrack.Card',
-	'gj.GameBundle',
 	'gj.Img.Crop',
 
 	// Components.
@@ -163,9 +158,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'App.Sorting',
 	'App.Game.Filtering',
 	'App.Game.CoverButtons',
-	'App.Game.Collection.Thumbnail',
-	'App.Game.Collection.Grid',
-	'App.Game.Collection.List',
 	'App.GamePlaylist.SaveModal',
 	'App.Score.List',
 	'App.Score.Feed',

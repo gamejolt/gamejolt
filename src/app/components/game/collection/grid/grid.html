@@ -1,72 +1,81 @@
 <div class="row game-collection-grid">
 
-	<div ng-repeat="collection in ctrl.collections track by collection._id"
+	<div
 		class="col-xs-12 col-sm-6 col-lg-4 game-collection-grid-item"
+		v-for="collection of collections"
+		:key="collection._id"
 		>
 
-		<a ui-sref="{{ ::collection.getSref( true ) }}" gj-track-event="{{ ::ctrl.eventLabel }}">
-			<gj-game-collection-thumbnail gj-game-collection="::collection"></gj-game-collection-thumbnail>
+		<router-link
+			:to="{
+				name: collection.getSref(),
+				params: collection.getSrefParams(),
+			}"
+			v-app-track-event="eventLabel"
+			>
 
-			<div class="game-collection-title" ng-switch="::collection.type">
-				<span ng-switch-when="developer">
-					<span ng-if="::collection.from_subscription || collection.id != App.user.id"
-						translate
-						translate-params-developer="::'@' + collection.owner.username"
+			<app-game-collection-thumbnail
+				:collection="collection"
+				/>
+
+			<div class="game-collection-title h4">
+				<span v-if="collection.type === 'developer'">
+					<translate
+						v-if="collection.from_subscription || collection.id !== app.user.id"
+						:translate-params="{ developer: '@' + collection.owner.username }"
+						:escape-html="false"
 						>
-						Games Made <small>by {{ developer }}</small>
-					</span>
-					<span ng-if="!collection.from_subscription && collection.id == App.user.id"
-						translate
-						>
+						Games Made <small>by %{ developer }</small>
+					</translate>
+					<translate v-else>
 						Your Games
-					</span>
+					</translate>
 				</span>
 
-				<span ng-switch-when="followed">
-					<span ng-if="::collection.from_subscription || collection.id != App.user.id"
-						translate
-						translate-params-user="::'@' + collection.owner.username"
+				<span v-else-if="collection.type === 'followed'">
+					<translate
+						v-if="collection.from_subscription || collection.id !== app.user.id"
+						:translate-params="{ user: '@' + collection.owner.username }"
+						:escape-html="false"
 						>
-						Games Followed <small>by {{ user }}</small>
-					</span>
-					<span ng-if="!collection.from_subscription && collection.id == App.user.id"
-						translate
-						>
+						Games Followed <small>by %{ user }</small>
+					</translate>
+					<translate v-else>
 						Your Followed Games
-					</span>
+					</translate>
 				</span>
 
-				<span ng-switch-when="owned">
-					<span ng-if="::collection.from_subscription || collection.id != App.user.id"
-						translate
-						translate-params-user="::'@' + collection.owner.username"
+				<span v-else-if="collection.type === 'owned'">
+					<translate
+						v-if="collection.from_subscription || collection.id !== app.user.id"
+						:translate-params="{ user: '@' + collection.owner.username }"
+						:escape-html="false"
 						>
-						Games Owned <small>by {{ user }}</small>
-					</span>
-					<span ng-if="!collection.from_subscription && collection.id == App.user.id"
-						translate
-						>
+						Games Owned <small>by %{ user }</small>
+					</translate>
+					<translate v-else>
 						Your Owned Games
-					</span>
+					</translate>
 				</span>
 
-				<span ng-switch-when="recommended">
-					<span ng-if="::collection.from_subscription || collection.id != App.user.id"
-						translate
-						translate-params-user="::'@' + collection.owner.username"
+				<span v-else-if="collection.type === 'recommended'">
+					<translate
+						v-if="collection.from_subscription || collection.id !== app.user.id"
+						:translate-params="{ user: '@' + collection.owner.username }"
+						:escape-html="false"
 						>
-						Game Recommendations <small>for {{ user }}</small>
-					</span>
-					<span ng-if="!collection.from_subscription && collection.id == App.user.id"
-						translate
-						>
+						Game Recommendations <small>for %{ user }</small>
+					</translate>
+					<translate v-else>
 						Your Recommended Games
-					</span>
+					</translate>
 				</span>
 
-				<span ng-switch-default>{{ ::collection.name }}</span>
+				<span v-else>
+					{{ collection.name }}
+				</span>
 			</div>
-		</a>
+		</router-link>
 	</div>
 
 </div>

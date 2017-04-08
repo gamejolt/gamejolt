@@ -1,14 +1,14 @@
-angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvider )
-{
-	$urlRouterProvider.when( '/dashboard/game-library', '/library' );
+// angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvider )
+// {
+// 	$urlRouterProvider.when( '/dashboard/game-library', '/library' );
 
-	$stateProvider.state( 'library.overview', {
-		url: '',
-		controller: 'Library.OverviewCtrl',
-		controllerAs: 'overviewCtrl',
-		templateUrl: require( './overview.html' ),
-		data: {
-			availableOffline: true,
-		},
-	} );
-} );
+// 	$stateProvider.state( 'library.overview', {
+// 		url: '',
+// 		controller: 'Library.OverviewCtrl',
+// 		controllerAs: 'overviewCtrl',
+// 		templateUrl: require( './overview.html' ),
+// 		data: {
+// 			availableOffline: true,
+// 		},
+// 	} );
+// } );

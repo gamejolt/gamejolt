@@ -1,124 +1,372 @@
-<header class="section collection-header">
-	<div class="container">
+<div v-if="collection">
 
-		<div ng-if="collectionCtrl.type == 'tag'">
-			<div gj-partial="/app/views/library/collection/_header-tag.html"></div>
-		</div>
-		<div ng-if="collectionCtrl.type != 'tag'">
-			<div gj-partial="/app/views/library/collection/_header-default.html"></div>
-		</div>
-	</div>
+	<app-page-header
+		class="library-collection-header"
+		:hide-nav="type === 'bundle' || type === 'tag'"
+		>
 
-	<div ng-if="Screen.isXs">
-		<div gj-partial="/app/views/library/collection/_header/_header-xs.html"></div>
-	</div>
-	<div ng-if="Screen.isSm || Screen.isMd">
-		<div gj-partial="/app/views/library/collection/_header/_header-sm.html"></div>
-	</div>
-	<div ng-if="Screen.isLg">
-		<div gj-partial="/app/views/library/collection/_header/_header-desktop.html"></div>
-	</div>
+		<div class="row collection-copy">
+			<div class="col-sm-4 col-md-3"
+				v-if="type !== 'tag' && !Screen.isXs"
+				>
 
-</header>
+				<app-game-collection-thumbnail
+					class="anim-fade-in-enlarge"
+					v-for="collection of [ collection ]"
+					:key="collection._id"
+					:collection="collection"
+					/>
 
-<gj-popover popover-id="collection-options">
-	<div class="list-group">
-		<a class="list-group-item has-icon"
-			ng-click="collectionCtrl.removePlaylist()"
-			>
-			<span class="jolticon jolticon-remove"></span>
-			{{ ::'library.collection.remove_playlist_button' | translate }}
-		</a>
-	</div>
-</gj-popover>
+			</div>
+			<div class="col-sm-8 col-md-9">
 
-<!--
-	Don't ng-if or the ui-view won't load.
-	Just hide it.
--->
-<section class="section" ng-show="collectionCtrl.totalGamesCount">
-	<div class="container">
-
-		<div ng-if="collectionCtrl.totalGamesCount">
-
-			<div class="row">
-				<div class="col-md-4" ng-class="Screen.isDesktop ? 'pull-right' : ''">
-					<gj-game-filtering-input
-						gj-filtering-container="collectionCtrl.filteringContainer"
+				<transition mode="out-in" appear>
+					<div
+						class="anim-fade-enter-right anim-fade-leave-up"
+						v-for="collection of [ collection ]"
+						:key="collection._id"
 						>
-					</gj-game-filtering-input>
-				</div>
-				<div class="col-md-8">
-					<gj-game-filtering-tags
-						gj-filtering-container="collectionCtrl.filteringContainer"
+
+						<!--
+							Tag
+						-->
+						<div v-if="type === 'tag'">
+							<div class="text-muted">
+								<translate>Games tagged with</translate>
+							</div>
+
+							<h2 class="sans-margin">
+								#{{ tag }}
+							</h2>
+						</div>
+
+						<!--
+							Followed Games
+						-->
+						<div v-else-if="type === 'followed'">
+							<div v-if="isOwner">
+								<h1>
+									<translate>Your Followed Games</translate>
+								</h1>
+								<p class="text-muted small">
+									<translate>When you follow a game, it shows up here.</translate>
+									<br>
+									<translate>You'll receive notifications when developers post news about any games you're following.</translate>
+								</p>
+							</div>
+							<div v-else>
+								<h1>
+									<translate>Games Followed</translate>
+								</h1>
+								<h4>
+									<translate>by</translate>
+									<a class="link-unstyled" ui-sref="profile.overview( { username: user.username } )">
+										{{ user.display_name }}
+									</a>
+									<small>@{{ user.username }}</small>
+								</h4>
+								<p class="text-muted small">
+									<translate :translate-params="{ user: user.display_name }">
+										These are the games that %{ user } is following.
+									</translate>
+								</p>
+							</div>
+						</div>
+
+						<!--
+							Developer Games
+						-->
+						<div v-else-if="type === 'developer'">
+							<div v-if="isOwner">
+								<h1>
+									<translate>Your Games</translate>
+								</h1>
+								<p class="text-muted small">
+									<translate>These are the games that you've made. Be proud!</translate>
+									<br>
+									<translate>Feel free to share this page with others to show off your games.</translate>
+								</p>
+							</div>
+							<div v-else>
+								<h1>
+									<translate>Games</translate>
+								</h1>
+								<h4>
+									<translate>by</translate>
+									<a class="link-unstyled" ui-sref="profile.overview( { username: user.username } )">
+										{{ user.display_name }}
+									</a>
+									<small>@{{ user.username }}</small>
+								</h4>
+								<p class="text-muted small">
+									<translate :translate-params="{ user: user.display_name }">
+										These are the games made by %{ user }.
+									</translate>
+								</p>
+							</div>
+						</div>
+
+						<!--
+							Owned Games
+						-->
+						<div v-else-if="type === 'owned'">
+							<div v-if="isOwner">
+								<h1>
+									<translate>Your Owned Games</translate>
+								</h1>
+								<p class="text-muted small">
+									<translate>These are all the games you own.</translate>
+								</p>
+							</div>
+							<div v-else>
+								<h1>
+									<translate>Games Owned</translate>
+								</h1>
+								<h4>
+									<translate>by</translate>
+									<a class="link-unstyled" ui-sref="profile.overview( { username: user.username } )">
+										{{ user.display_name }}
+									</a>
+									<small>@{{ user.username }}</small>
+								</h4>
+								<p class="text-muted small">
+									<translate :translate-params="{ user: user.display_name }">
+										These are all the games owned by %{ user }.
+									</translate>
+								</p>
+							</div>
+						</div>
+
+						<!--
+							Recommended Games
+						-->
+						<div v-else-if="type === 'recommended'">
+							<div v-if="isOwner">
+								<h1>
+									<translate>Your Recommended Games</translate>
+								</h1>
+								<p class="text-muted small">
+									<translate>Every day we pick a handful of games that we think you may like!</translate>
+								</p>
+							</div>
+							<div v-else>
+								<h1>
+									<translate>Game Recommendations</translate>
+								</h1>
+								<h4>
+									<translate>for</translate>
+									<a class="link-unstyled" ui-sref="profile.overview( { username: user.username } )">
+										{{ user.display_name }}
+									</a>
+									<small>@{{ user.username }}</small>
+								</h4>
+							</div>
+						</div>
+
+						<!--
+							Playlist
+						-->
+						<div v-else-if="type === 'playlist'">
+							<h1>
+								{{ playlist.name }}
+							</h1>
+
+							<h4 v-if="!isOwner">
+								<translate>by</translate>
+								<a class="link-unstyled" ui-sref="profile.overview( { username: playlist.user.username } )">
+									{{ playlist.user.display_name }}
+								</a>
+								<small>@{{ playlist.user.username }}</small>
+							</h4>
+						</div>
+
+						<!--
+							Bundle
+						-->
+						<div v-else-if="type === 'bundle'">
+							<h1>{{ bundle.title }}</h1>
+							<p class="text-muted small">{{ bundle.description }}</p>
+						</div>
+
+					</div>
+				</transition>
+
+			</div>
+		</div>
+
+		<div slot="nav">
+
+			<ul class="stat-list">
+				<li class="stat-big stat-big-smaller" v-if="type !== 'bundle' && type !== 'tag'">
+					<div class="stat-big-label"><translate>library.collection.followers_label</translate></div>
+					<div class="stat-big-digit">{{ followerCount | number }}</div>
+				</li>
+				<li class="stat-big stat-big-smaller">
+					<div class="stat-big-label"><translate>library.collection.games_label</translate></div>
+					<div class="stat-big-digit">{{ listing.gamesCount | number }}</div>
+				</li>
+			</ul>
+
+		</div>
+
+		<div slot="controls">
+
+			<!--
+				Weird bug with vue where it wasn't updating the translated text
+				when switching between playlists and things to follow.
+			-->
+			<span v-for="collection of [ collection ]" :key="collection._id">
+
+				<!-- Following -->
+				<span v-if="shouldShowFollow">
+					<app-game-collection-follow-widget
+						class="btn-block"
+						:collection="collection"
+						:follower-count="followerCount"
+						/>
+				</span>
+
+				<span v-else-if="type === 'playlist' && isOwner">
+
+					<!-- Editing Playlist -->
+					<a class="btn btn-outline"
+						v-if="type === 'playlist' && isOwner"
+						@click="editPlaylist"
 						>
-					</gj-game-filtering-tags>
+						<app-jolticon icon="edit" />
+						<translate>Edit Playlist</translate>
+					</a>
 
-					<gj-pagination
-						id="collection-pagination"
-						items-per-page="collectionCtrl.perPage"
-						total-items="collectionCtrl.gamesCount"
-						current-page="collectionCtrl.currentPage">
-					</gj-pagination>
+					<!-- More options -->
+					<a class="btn btn-outline sparse"
+						v-app-popover-trigger="`collection-options`"
+						v-if="type === 'playlist' && isOwner"
+						>
+						<app-jolticon icon="ellipsis-h" />
+						<translate>options.more</translate>
+					</a>
 
+				</span>
+
+			</span>
+
+		</div>
+
+	</app-page-header>
+
+	<app-popover popover-id="collection-options">
+		<div class="list-group">
+			<a class="list-group-item has-icon"
+				@click="removePlaylist"
+				>
+				<app-jolticon icon="remove" />
+				<translate>library.collection.remove_playlist_button</translate>
+			</a>
+		</div>
+	</app-popover>
+
+	<app-game-listing
+		:listing="listing"
+		:hide-section-nav="true"
+		:is-loading="routeLoading"
+		>
+
+		<app-game-grid
+			:games="listing.games"
+			event="collection-game-list:click"
+			/>
+
+	</app-game-listing>
+
+	<!--
+		Don't ng-if or the ui-view won't load.
+		Just hide it.
+	-->
+	<!--<section class="section" ng-show="totalGamesCount">
+		<div class="container">
+
+			<div ng-if="totalGamesCount">
+
+				<div class="row">
+					<div class="col-md-4" ng-class="Screen.isDesktop ? 'pull-right' : ''">
+						<gj-game-filtering-input
+							gj-filtering-container="filteringContainer"
+							>
+						</gj-game-filtering-input>
+					</div>
+					<div class="col-md-8">
+						<gj-game-filtering-tags
+							gj-filtering-container="filteringContainer"
+							>
+						</gj-game-filtering-tags>
+
+						<gj-pagination
+							id="collection-pagination"
+							items-per-page="perPage"
+							total-items="gamesCount"
+							current-page="currentPage">
+						</gj-pagination>
+
+					</div>
 				</div>
+
+				<div class="clearfix">
+					<div class="pull-left">
+						<p class="text-muted small"
+							ng-show="!isLoading && gamesCount"
+							translate
+							translate-n="gamesCount"
+							translate-plural="games.list.games_count"
+							translate-params-page="currentPage"
+							translate-comment="{{ page }} expands to the current page of games"
+							>
+							games.list.games_count
+						</p>
+					</div>
+
+					<div class="pull-right" ng-if="type == 'tag'">
+						<gj-sorting sorting-options="tagSorting"></gj-sorting>
+					</div>
+
+					<div class="pull-right" ng-if="type == 'developer'">
+						<gj-sorting sorting-options="developerSorting"></gj-sorting>
+					</div>
+				</div>
+
 			</div>
 
-			<div class="clearfix">
-				<div class="pull-left">
-					<p class="text-muted small"
-						ng-show="!collectionCtrl.isLoading && collectionCtrl.gamesCount"
-						translate
-						translate-n="collectionCtrl.gamesCount"
-						translate-plural="games.list.games_count"
-						translate-params-page="collectionCtrl.currentPage"
-						translate-comment="{{ page }} expands to the current page of games"
-						>
-						games.list.games_count
-					</p>
-				</div>
+			<ui-view></ui-view>
 
-				<div class="pull-right" ng-if="collectionCtrl.type == 'tag'">
-					<gj-sorting sorting-options="collectionCtrl.tagSorting"></gj-sorting>
-				</div>
+			<div ng-if="totalGamesCount">
 
-				<div class="pull-right" ng-if="collectionCtrl.type == 'developer'">
-					<gj-sorting sorting-options="collectionCtrl.developerSorting"></gj-sorting>
-				</div>
+				<gj-pagination
+					items-per-page="perPage"
+					total-items="gamesCount"
+					current-page="currentPage"
+					(on-page-change)="Scroll.to( 'collection-pagination', { animate: false } )">
+				</gj-pagination>
+
 			</div>
 
 		</div>
+	</section>-->
 
-		<ui-view></ui-view>
+	<!-- No Games Match Filters -->
+	<!--<section class="section fill-pink anim-fade-in no-animate-leave" ng-if="totalGamesCount && !gamesCount">
+		<div class="container" translate>No games match your filters. <b>Zoinks!</b></div>
+	</section>-->
 
-		<div ng-if="collectionCtrl.totalGamesCount">
-
-			<gj-pagination
-				items-per-page="collectionCtrl.perPage"
-				total-items="collectionCtrl.gamesCount"
-				current-page="collectionCtrl.currentPage"
-				(on-page-change)="Scroll.to( 'collection-pagination', { animate: false } )">
-			</gj-pagination>
-
+	<!-- No Games -->
+	<!--<section class="section fill-pink" ng-if="!totalGamesCount">
+		<div class="container" ng-switch="type">
+			<div ng-switch-when="playlist" translate>library.collection.no_games_playlist_html</div>
+			<div ng-switch-when="developer" translate>library.collection.no_games_developer_html</div>
+			<div ng-switch-when="followed" translate>library.collection.no_games_followed_html</div>
+			<div ng-switch-when="bundle" translate>library.collection.no_games_bundle_html</div>
+			<div ng-switch-when="tag" translate>library.collection.no_games_tag_html</div>
+			<div ng-switch-when="owned" translate>You don't own any games yet. Go buy some!</div>
+			<div ng-switch-when="recommended" translate>We don't have enough data from this user to show accurate recommendations yet!</div>
 		</div>
+	</section>-->
 
-	</div>
-</section>
-
-<!-- No Games Match Filters -->
-<section class="section fill-pink anim-fade-in no-animate-leave" ng-if="collectionCtrl.totalGamesCount && !collectionCtrl.gamesCount">
-	<div class="container" translate>No games match your filters. <b>Zoinks!</b></div>
-</section>
-
-<!-- No Games -->
-<section class="section fill-pink" ng-if="!collectionCtrl.totalGamesCount">
-	<div class="container" ng-switch="collectionCtrl.type">
-		<div ng-switch-when="playlist" translate>library.collection.no_games_playlist_html</div>
-		<div ng-switch-when="developer" translate>library.collection.no_games_developer_html</div>
-		<div ng-switch-when="followed" translate>library.collection.no_games_followed_html</div>
-		<div ng-switch-when="bundle" translate>library.collection.no_games_bundle_html</div>
-		<div ng-switch-when="tag" translate>library.collection.no_games_tag_html</div>
-		<div ng-switch-when="owned" translate>You don't own any games yet. Go buy some!</div>
-		<div ng-switch-when="recommended" translate>We don't have enough data from this user to show accurate recommendations yet!</div>
-	</div>
-</section>
+</div>

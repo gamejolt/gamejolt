@@ -6,7 +6,6 @@ import * as View from '!view!./sidebar.html?style=./sidebar.styl';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
-import { GameCollection } from '../../game/collection/collection.model';
 import { AppRouterLink } from '../../router-link/router-link';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
@@ -18,6 +17,7 @@ import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Mutations } from '../../../store/index';
+import { LibraryState } from '../../../store/library';
 
 @View
 @Component({
@@ -39,13 +39,8 @@ import { Mutations } from '../../../store/index';
 export class AppShellSidebar extends Vue
 {
 	@State app: AppState;
+	@State library: LibraryState;
 	@State isBootstrapped: boolean;
-	@State collections: GameCollection[];
-	@State bundleCollections: GameCollection[];
-	@State developerCollection?: GameCollection;
-	@State followedCollection: GameCollection;
-	@State recommendedCollection: GameCollection;
-	@State ownedCollection: GameCollection;
 	@State notificationCount: number;
 
 	@Getter isLeftPaneVisible: boolean;
@@ -88,12 +83,12 @@ export class AppShellSidebar extends Vue
 
 	get filteredPlaylists()
 	{
-		return this.collections.sort( ( a, b ) => stringSort( a.name, b.name ) );
+		return this.library.collections.sort( ( a, b ) => stringSort( a.name, b.name ) );
 	}
 
 	get filteredBundleCollections()
 	{
-		return this.bundleCollections.sort( ( a, b ) => stringSort( a.name, b.name ) );
+		return this.library.bundleCollections.sort( ( a, b ) => stringSort( a.name, b.name ) );
 	}
 
 	showAddPlaylistModal()
