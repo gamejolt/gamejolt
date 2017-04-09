@@ -16,8 +16,10 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Mutations } from '../../../store/index';
+import { Mutations, GetterLibrary } from '../../../store/index';
 import { LibraryState } from '../../../store/library';
+import { AppShellSidebarCollectionList } from './collection-list';
+import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 
 @View
 @Component({
@@ -26,6 +28,8 @@ import { LibraryState } from '../../../store/library';
 		AppPopover,
 		AppJolticon,
 		AppUserAvatarImg,
+		AppShellSidebarCollectionList,
+		AppExpand,
 	},
 	directives: {
 		AppPopoverTrigger,
@@ -44,11 +48,13 @@ export class AppShellSidebar extends Vue
 	@State notificationCount: number;
 
 	@Getter isLeftPaneVisible: boolean;
+	@GetterLibrary playlistFolders: any;
 
 	@Mutation( Mutations.toggleLeftPane )
 	toggleLeftPane: Function;
 
 	playlistFilterQuery = '';
+	openFolders: string[] = [];
 
 	channels = [
 		'horror',
@@ -81,14 +87,21 @@ export class AppShellSidebar extends Vue
 		return this.app.user ? 'hot' : 'best';
 	}
 
-	get filteredPlaylists()
-	{
-		return this.library.collections.sort( ( a, b ) => stringSort( a.name, b.name ) );
-	}
-
 	get filteredBundleCollections()
 	{
 		return this.library.bundleCollections.sort( ( a, b ) => stringSort( a.name, b.name ) );
+	}
+
+	toggleFolder( key: string )
+	{
+		console.log( 'toggle', key );
+		const index = this.openFolders.indexOf( key );
+		if ( index === -1 ) {
+			this.openFolders.push( key );
+		}
+		else {
+			this.openFolders.splice( index, 1 );
+		}
 	}
 
 	showAddPlaylistModal()
@@ -101,29 +114,5 @@ export class AppShellSidebar extends Vue
 		// 		Shell.addPlaylist( collection );
 		// 		getProvider<StateService>( '$state' ).go( collection.getSref(), collection.getSrefParams() );
 		// 	} );
-	}
-
-	/**
-	 * We compare the collection's name or owner's name if it's a subscription.
-	 * This way they can search for "cros" and get cros's games if they're following.
-	 */
-	playlistFilterComparator( item: any )
-	{
-		let actual: string;
-		let expected = this.playlistFilterQuery.toLowerCase();
-
-		actual = item.name.toLowerCase();
-		if ( actual.indexOf( expected ) !== -1 ) {
-			return true;
-		}
-
-		if ( item.from_subscription ) {
-			actual = item.owner.username.toLowerCase();
-			if ( actual.indexOf( expected ) !== -1 ) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

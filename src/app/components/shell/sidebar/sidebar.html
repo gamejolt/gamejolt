@@ -490,6 +490,9 @@
 				</ul>
 			</div>
 
+			<!--
+				Playlists
+			-->
 			<div v-if="isLeftPaneVisible">
 				<div class="nav-heading" :title="$gettext( `library.nav.playlists` )">
 					<translate>library.nav.playlists</translate>
@@ -523,39 +526,41 @@
 					</div>
 				</div>
 
-				<ul class="shell-nav">
-					<li
-						class="offline-disable"
-						v-for="collection of filteredPlaylists"
-						:key="collection._id"
-						v-show="!playlistFilterQuery || playlistFilterComparator( collection )"
-						>
+				<!--
+					Playlist Folders
+				-->
+				<div
+					v-for="( folder, key ) of playlistFolders"
+					:key="key"
+					v-if="key !== 'main'"
+					>
+					<ul class="shell-nav">
+						<li class="offline-disable">
+							<a @click="toggleFolder( key )">
+								<span class="shell-nav-icon">
+									<app-jolticon :icon="openFolders.indexOf( key ) === -1 ? 'folder' : 'folder-open'" />
+								</span>
+								{{ folder.title }}
+							</a>
+							<app-expand :when="openFolders.indexOf( key ) !== -1">
+								<app-shell-sidebar-collection-list
+									:collections="folder.collections"
+									:filter="playlistFilterQuery"
+									:should-sort="key === 'developers'"
+									/>
+							</app-expand>
+						</li>
+					</ul>
+				</div>
 
-						<router-link
-							:to="{
-								name: collection.getSref(),
-								params: collection.getSrefParams(),
-							}"
-							active-class="active"
-							v-app-track-event="`sidebar:collection:playlist`"
-							:title="collection.getTitle()"
-							>
+				<!--
+					Main Playlists (not in folders)
+				-->
+				<app-shell-sidebar-collection-list
+					:collections="playlistFolders.main.collections"
+					:filter="playlistFilterQuery"
+					/>
 
-							<span class="shell-nav-icon">
-								<app-jolticon icon="playlist" />
-							</span>
-
-							<span class="shell-nav-label">
-								{{ collection.name }}
-
-								<small v-if="collection.from_subscription">
-									<translate>library.by</translate>
-									@{{ collection.owner.username }}
-								</small>
-							</span>
-						</router-link>
-					</li>
-				</ul>
 			</div>
 
 		</div>

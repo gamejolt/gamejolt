@@ -60,6 +60,9 @@ export default class RouteLibraryCollection extends Vue
 	followerCount = 0;
 
 	collection: GameCollection | null = null;
+	bundle: GameBundle | null = null;
+	playlist: GamePlaylist | null = null;
+	user: User | null = null;
 
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
@@ -120,6 +123,19 @@ export default class RouteLibraryCollection extends Vue
 		}
 
 		this.followerCount = this.$payload.followerCount || 0;
+		this.playlist = this.$payload.playlist ? new GamePlaylist( this.$payload.playlist ) : null;
+		this.bundle = this.$payload.bundle ? new GameBundle( this.$payload.bundle ) : null;
+
+		this.user = null;
+		if ( this.type === 'followed' || this.type === 'owned' || this.type === 'recommended' ) {
+			this.user = new User( this.$payload.user );
+		}
+		else if ( this.type === 'developer' ) {
+			this.user = new User( this.$payload.developer );
+		}
+		else if ( this.playlist ) {
+			this.user = this.playlist.user;
+		}
 
 		this.processMeta();
 
@@ -253,24 +269,6 @@ export default class RouteLibraryCollection extends Vue
 		return id;
 	}
 
-	get playlist()
-	{
-		if ( this.type !== 'playlist' ) {
-			return undefined;
-		}
-
-		return new GamePlaylist( this.$payload.playlist );
-	}
-
-	get bundle()
-	{
-		if ( this.type !== 'bundle' ) {
-			return undefined;
-		}
-
-		return new GameBundle( this.$payload.bundle );
-	}
-
 	get tag()
 	{
 		if ( this.type !== 'tag' ) {
@@ -278,21 +276,6 @@ export default class RouteLibraryCollection extends Vue
 		}
 
 		return this.id;
-	}
-
-	get user()
-	{
-		if ( this.type === 'followed' || this.type === 'owned' || this.type === 'recommended' ) {
-			return new User( this.$payload.user );
-		}
-		else if ( this.type === 'developer' ) {
-			return new User( this.$payload.developer );
-		}
-		else if ( this.playlist ) {
-			return this.playlist.user;
-		}
-
-		return undefined;
 	}
 
 	get isOwner()

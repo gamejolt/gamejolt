@@ -46,15 +46,14 @@
 		<ul class="navbar-items" v-if="app.user">
 
 			<li class="hidden-xs">
-					<!--TODO-->
-					<!--:class="{ active: $state.includes( 'library' ) }"-->
-				<app-router-link
+				<router-link
 					:to="{ name: Environment.isClient ? 'library.installed' : 'library.overview' }"
+					:class="{ active: $route.name.indexOf( 'library' ) === 0 }"
 					v-app-tooltip.bottom-center="$gettext( `Your Game Library` )"
 					v-app-track-event="`top-nav:library`"
 					>
 					<app-jolticon icon="books" />
-				</app-router-link>
+				</router-link>
 			</li>
 
 			<!-- Activity -->

@@ -60,9 +60,9 @@
 								</h1>
 								<h4>
 									<translate>by</translate>
-									<a class="link-unstyled" ui-sref="profile.overview( { username: user.username } )">
+									<router-link class="link-unstyled" :to="{ name: 'profile.overview', params: { username: user.username } }">
 										{{ user.display_name }}
-									</a>
+									</router-link>
 									<small>@{{ user.username }}</small>
 								</h4>
 								<p class="text-muted small">
@@ -93,9 +93,9 @@
 								</h1>
 								<h4>
 									<translate>by</translate>
-									<a class="link-unstyled" ui-sref="profile.overview( { username: user.username } )">
+									<router-link class="link-unstyled" :to="{ name: 'profile.overview', params: { username: user.username } }">
 										{{ user.display_name }}
-									</a>
+									</router-link>
 									<small>@{{ user.username }}</small>
 								</h4>
 								<p class="text-muted small">
@@ -124,9 +124,9 @@
 								</h1>
 								<h4>
 									<translate>by</translate>
-									<a class="link-unstyled" ui-sref="profile.overview( { username: user.username } )">
+									<router-link class="link-unstyled" :to="{ name: 'profile.overview', params: { username: user.username } }">
 										{{ user.display_name }}
-									</a>
+									</router-link>
 									<small>@{{ user.username }}</small>
 								</h4>
 								<p class="text-muted small">
@@ -155,9 +155,9 @@
 								</h1>
 								<h4>
 									<translate>for</translate>
-									<a class="link-unstyled" ui-sref="profile.overview( { username: user.username } )">
+									<router-link class="link-unstyled" :to="{ name: 'profile.overview', params: { username: user.username } }">
 										{{ user.display_name }}
-									</a>
+									</router-link>
 									<small>@{{ user.username }}</small>
 								</h4>
 							</div>
@@ -173,9 +173,9 @@
 
 							<h4 v-if="!isOwner">
 								<translate>by</translate>
-								<a class="link-unstyled" ui-sref="profile.overview( { username: playlist.user.username } )">
+								<router-link class="link-unstyled" :to="{ name: 'profile.overview', params: { username: playlist.user.username } }">
 									{{ playlist.user.display_name }}
-								</a>
+								</router-link>
 								<small>@{{ playlist.user.username }}</small>
 							</h4>
 						</div>

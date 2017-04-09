@@ -1,18 +1,29 @@
 import Vuex from 'vuex';
 import { GameCollection } from '../components/game/collection/collection.model';
+import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
+
+class GamePlaylistFolder
+{
+	constructor(
+		public title: string,
+		public collections: GameCollection[],
+	)
+	{
+	}
+}
 
 export class LibraryState
 {
 	static readonly Mutations = {
-		bootstrap: 'library/bootstrap',
-		clear: 'library/clear',
-		addCollection: 'library/addCollection',
-		removeCollection: 'library/removeCollection',
+		bootstrap: 'bootstrap',
+		clear: 'clear',
+		addCollection: 'addCollection',
+		removeCollection: 'removeCollection',
 	};
 
 	static readonly Actions = {
-		followCollection: 'library/followCollection',
-		unfollowCollection: 'library/unfollowCollection',
+		followCollection: 'followCollection',
+		unfollowCollection: 'unfollowCollection',
 	};
 
 	collections: GameCollection[] = [];
@@ -25,6 +36,54 @@ export class LibraryState
 
 export const libraryStore: Vuex.Module<LibraryState, any> = {
 	state: new LibraryState(),
+	namespaced: true,
+	getters: {
+
+		/**
+		 * These are their followed developer playlists.
+		 */
+		developerPlaylists( state )
+		{
+			return state.collections.filter( ( item ) =>
+			{
+				return item.type === 'developer';
+			} );
+		},
+
+		/**
+		 * These are playlists that don't belong to a folder.
+		 */
+		mainPlaylists( state )
+		{
+			return state.collections.filter( ( item ) =>
+			{
+				return item.type !== 'developer';
+			} );
+		},
+
+		/**
+		 * Returns a list of folders for their playlists.
+		 */
+		playlistFolders( _state, getters )
+		{
+			const folders: { [k: string]: GamePlaylistFolder } = {};
+
+			folders.main = new GamePlaylistFolder(
+				'',
+				getters.mainPlaylists,
+			);
+
+			const developerPlaylists: GameCollection[] = getters.developerPlaylists;
+			if ( developerPlaylists.length ) {
+				folders.developers = new GamePlaylistFolder(
+					Translate.$gettext( 'Followed Developers' ),
+					developerPlaylists,
+				);
+			}
+
+			return folders;
+		},
+	},
 	mutations: {
 		[LibraryState.Mutations.bootstrap]( state, payload: any )
 		{

@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { namespace, State, Getter, Mutation, Action } from 'vuex-class';
 
 import { appStore } from '../../lib/gj-lib-client/vue/services/app/app-store';
-import { GameCollection } from '../components/game/collection/collection.model';
 import { Settings } from '../components/settings/settings.service';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
@@ -17,6 +17,12 @@ import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.s
 import { libraryStore, LibraryState } from './library';
 
 Vue.use( Vuex );
+
+// Convenience decorators to call into the library module.
+export const StateLibrary = namespace( 'library', State );
+export const GetterLibrary = namespace( 'library', Getter );
+export const MutationLibrary = namespace( 'library', Mutation );
+export const ActionLibrary = namespace( 'library', Action );
 
 export const Mutations = {
 	clear: 'clear',
@@ -83,7 +89,7 @@ export const store = new Vuex.Store<StoreState>( {
 	mutations: {
 		[Mutations.clear]()
 		{
-			store.commit( LibraryState.Mutations.clear );
+			store.commit( 'library/' + LibraryState.Mutations.clear );
 		},
 
 		[Mutations.toggleLeftPane]( state )
@@ -158,7 +164,7 @@ export const store = new Vuex.Store<StoreState>( {
 		async [Actions.bootstrap]( { state, commit } )
 		{
 			const response = await Api.sendRequest( '/web/library' );
-			commit( LibraryState.Mutations.bootstrap, response );
+			commit( 'library/' + LibraryState.Mutations.bootstrap, response );
 
 			state.isBootstrapped = true;
 

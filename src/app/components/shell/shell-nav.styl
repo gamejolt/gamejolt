@@ -68,16 +68,17 @@ ul.shell-nav
 			padding-left: 0
 			line-height: $shell-nav-item-height
 
-			&::before
-				position: absolute
-				content: ''
-				top: 0
-				left: 0
-				bottom: 0
-				width: 3px
-				background-color: $gj-green
-				transform: translate( -4px, 0 )
-				transition: transform 300ms $strong-ease-out
+			// &::before
+			// 	position: absolute
+			// 	display: block
+			// 	content: ''
+			// 	top: 0
+			// 	left: 0
+			// 	bottom: 0
+			// 	width: 3px
+			// 	background-color: $gj-green
+			// 	transform: translate( -4px, 0 )
+			// 	transition: transform 300ms $strong-ease-out
 
 			&:hover
 				color: $white
@@ -91,8 +92,8 @@ ul.shell-nav
 				&:hover
 					color: $gj-green
 
-					&::before
-						transform: translate( 0, 0 )
+					// &::before
+					// 	transform: translate( 0, 0 )
 
 					.jolticon
 						color: $gj-green
@@ -109,27 +110,23 @@ ul.shell-nav
 
 // Nested ULs
 ul.shell-nav ul
-	display: none
-	margin-top: $font-size-base
-	margin-bottom: $font-size-base
-
-	&.active
-		display: block
 
 	> li > a
-		padding-top: 3px
-		padding-bottom: 3px
-		padding-left: 46px
-		color: $gray-light
+		position: relative
+		padding-left: 15px
 
-		&:hover
-			background-color: transparent
+		&::after
+			content: '';
+			display: block;
+			position: absolute;
+			left: 21px;
+			top: 0;
+			bottom: 0;
+			width: 3px;
+			background-color: $gray-darker;
 
-		&.active
-			&
 			&:hover
-				color: $gj-green
-				background-color: transparent
+				display: none
 
 /**
  * Nav headings

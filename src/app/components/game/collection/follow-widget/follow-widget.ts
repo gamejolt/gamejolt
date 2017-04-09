@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { State, Action } from 'vuex-class';
+import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./follow-widget.html';
 
@@ -10,6 +10,7 @@ import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/aut
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { LibraryState } from '../../../../store/library';
 import { GameCollection } from '../collection.model';
+import { ActionLibrary } from '../../../../store/index';
 
 @View
 @Component({
@@ -32,10 +33,10 @@ export class AppGameCollectionFollowWidget extends Vue
 
 	@State library: LibraryState;
 
-	@Action( LibraryState.Actions.followCollection )
+	@ActionLibrary( LibraryState.Actions.followCollection )
 	followCollection: Function;
 
-	@Action( LibraryState.Actions.unfollowCollection )
+	@ActionLibrary( LibraryState.Actions.unfollowCollection )
 	unfollowCollection: Function;
 
 	get isFollowing()
