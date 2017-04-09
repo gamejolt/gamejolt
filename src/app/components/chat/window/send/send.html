@@ -18,7 +18,7 @@
 				class="form-control"
 				placeholder="Enter message..."
 				rows="2"
-				v-app-focus-when
+				v-app-focus-when="Screen.isDesktop"
 				v-model="message"
 				@change="onChange"
 				@keydown.shift.enter="shiftEnter"
