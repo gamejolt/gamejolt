@@ -360,10 +360,7 @@
 
 				<li class="offline-disable" v-if="library.developerCollection">
 					<router-link
-						:to="{
-							name: library.developerCollection.getSref(),
-							params: library.developerCollection.getSrefParams(),
-						}"
+						:to="library.developerCollection.routeLocation"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:developer`"
 						>
@@ -380,10 +377,7 @@
 
 				<li class="offline-disable">
 					<router-link
-						:to="{
-							name: library.followedCollection.getSref(),
-							params: library.followedCollection.getSrefParams(),
-						}"
+						:to="library.followedCollection.routeLocation"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:followed`"
 						>
@@ -400,10 +394,7 @@
 
 				<li class="offline-disable">
 					<router-link
-						:to="{
-							name: library.recommendedCollection.getSref(),
-							params: library.recommendedCollection.getSrefParams(),
-						}"
+						:to="library.recommendedCollection.routeLocation"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:recommended`"
 						>
@@ -420,10 +411,7 @@
 
 				<li class="offline-disable">
 					<router-link
-						:to="{
-							name: library.ownedCollection.getSref(),
-							params: library.ownedCollection.getSrefParams(),
-						}"
+						:to="library.ownedCollection.routeLocation"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:owned`"
 						>
@@ -471,10 +459,7 @@
 						:key="bundleCollection._id"
 						>
 						<router-link
-							:to="{
-								name: bundleCollection.getSref(),
-								params: bundleCollection.getSrefParams(),
-							}"
+							:to="bundleCollection.routeLocation"
 							active-class="active"
 							v-app-track-event="`sidebar:collection:bundle`"
 							:title="bundleCollection.name"

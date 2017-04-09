@@ -1,6 +1,12 @@
 import Vuex from 'vuex';
 import { GameCollection } from '../components/game/collection/collection.model';
 import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
+import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
+import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
+import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { router } from '../bootstrap';
+import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
+import { Scroll } from '../../lib/gj-lib-client/components/scroll/scroll.service';
 
 class GamePlaylistFolder
 {
@@ -10,6 +16,12 @@ class GamePlaylistFolder
 	)
 	{
 	}
+}
+
+function isViewingCollection( collection: GameCollection )
+{
+	return router.currentRoute.name === collection.getSref()
+		&& router.currentRoute.params.id === (collection as any).id;
 }
 
 export class LibraryState
@@ -24,6 +36,9 @@ export class LibraryState
 	static readonly Actions = {
 		followCollection: 'followCollection',
 		unfollowCollection: 'unfollowCollection',
+		newPlaylist: 'newPlaylist',
+		editPlaylist: 'editPlaylist',
+		removePlaylist: 'removePlaylist',
 	};
 
 	collections: GameCollection[] = [];
@@ -135,6 +150,74 @@ export const libraryStore: Vuex.Module<LibraryState, any> = {
 		{
 			await collection.$unfollow();
 			store.commit( LibraryState.Mutations.removeCollection, collection );
+		},
+
+		async [LibraryState.Actions.newPlaylist]( store )
+		{
+			Analytics.trackEvent( 'add-to-playlist', 'new-playlist' );
+
+			const collection = await GamePlaylistSaveModal.show();
+			if ( collection ) {
+				store.commit( LibraryState.Mutations.addCollection, collection );
+				Analytics.trackEvent( 'add-to-playlist', 'new-playlist-complete' );
+			}
+
+			return collection;
+		},
+
+		async [LibraryState.Actions.editPlaylist]( _store, collection: GameCollection )
+		{
+			// If we're viewing the playlist we're editing, we want to sync the
+			// new URL after.
+			let syncUrlAfter = isViewingCollection( collection );
+
+			if ( await GamePlaylistSaveModal.show( collection ) ) {
+
+				if ( syncUrlAfter ) {
+					Scroll.shouldAutoScroll = false;
+					router.push( collection.routeLocation );
+				}
+			}
+		},
+
+		async [LibraryState.Actions.removePlaylist]( store, collection: GameCollection )
+		{
+			if ( !collection.playlist ) {
+				return;
+			}
+
+			const result = await ModalConfirm.show(
+				Translate.$gettext( 'Are you sure you want to remove this playlist?' ),
+			);
+
+			if ( !result ) {
+				return;
+			}
+
+			try {
+				await collection.playlist.$remove();
+				store.commit( LibraryState.Mutations.removeCollection, collection );
+
+				// If they're currently on the playlist page, let's push them to
+				// the library instead.
+				if ( isViewingCollection( collection ) ) {
+					router.push( { name: 'library.overview' } );
+					Growls.success(
+						Translate.$gettextInterpolate(
+							'You have successfully unfollowed %{ playlist }.',
+							{ playlist: collection.name },
+						),
+						Translate.$gettext(
+							'Playlist Unfollowed',
+						),
+					);
+				}
+			}
+			catch ( e ) {
+				Growls.error(
+					Translate.$gettext( 'Error! Error! Unable to unfollow this playlist.' ),
+				);
+			}
 		},
 	},
 };

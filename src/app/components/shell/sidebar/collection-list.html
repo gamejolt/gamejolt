@@ -7,10 +7,7 @@
 		>
 
 		<router-link
-			:to="{
-				name: collection.getSref(),
-				params: collection.getSrefParams(),
-			}"
+			:to="collection.routeLocation"
 			active-class="active"
 			:title="collection.getTitle()"
 			v-app-track-event="`sidebar:collection:playlist`"

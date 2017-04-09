@@ -16,10 +16,11 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Mutations, GetterLibrary } from '../../../store/index';
+import { Mutations, GetterLibrary, ActionLibrary } from '../../../store/index';
 import { LibraryState } from '../../../store/library';
 import { AppShellSidebarCollectionList } from './collection-list';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
+import { GameCollection } from '../../game/collection/collection.model';
 
 @View
 @Component({
@@ -52,6 +53,9 @@ export class AppShellSidebar extends Vue
 
 	@Mutation( Mutations.toggleLeftPane )
 	toggleLeftPane: Function;
+
+	@ActionLibrary( LibraryState.Actions.newPlaylist )
+	newPlaylist: () => Promise<GameCollection | undefined>;
 
 	playlistFilterQuery = '';
 	openFolders: string[] = [];
@@ -104,15 +108,11 @@ export class AppShellSidebar extends Vue
 		}
 	}
 
-	showAddPlaylistModal()
+	async showAddPlaylistModal()
 	{
-		// TODO
-		// getProvider<any>( 'GamePlaylist_SaveModal' ).show()
-		// 	.then( ( response: any ) =>
-		// 	{
-		// 		const collection = new GameCollection( response.gameCollection );
-		// 		Shell.addPlaylist( collection );
-		// 		getProvider<StateService>( '$state' ).go( collection.getSref(), collection.getSrefParams() );
-		// 	} );
+		const collection = await this.newPlaylist();
+		if ( collection ) {
+			this.$router.push( collection.routeLocation );
+		}
 	}
 }

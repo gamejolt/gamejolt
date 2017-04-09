@@ -11,6 +11,7 @@ export default class RouteLibrary extends Vue
 	beforeRoute()
 	{
 		User.touch();
+		return Promise.resolve();
 	}
 
 	render( h: Vue.CreateElement )

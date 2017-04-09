@@ -231,7 +231,7 @@
 					<!-- Editing Playlist -->
 					<a class="btn btn-outline"
 						v-if="type === 'playlist' && isOwner"
-						@click="editPlaylist"
+						@click="editPlaylist( collection )"
 						>
 						<app-jolticon icon="edit" />
 						<translate>Edit Playlist</translate>
@@ -246,6 +246,17 @@
 						<translate>options.more</translate>
 					</a>
 
+					<app-popover popover-id="collection-options">
+						<div class="list-group">
+							<a class="list-group-item has-icon"
+								@click="removePlaylist( collection )"
+								>
+								<app-jolticon icon="remove" />
+								<translate>library.collection.remove_playlist_button</translate>
+							</a>
+						</div>
+					</app-popover>
+
 				</span>
 
 			</span>
@@ -253,17 +264,6 @@
 		</div>
 
 	</app-page-header>
-
-	<app-popover popover-id="collection-options">
-		<div class="list-group">
-			<a class="list-group-item has-icon"
-				@click="removePlaylist"
-				>
-				<app-jolticon icon="remove" />
-				<translate>library.collection.remove_playlist_button</translate>
-			</a>
-		</div>
-	</app-popover>
 
 	<app-game-listing
 		:listing="listing"

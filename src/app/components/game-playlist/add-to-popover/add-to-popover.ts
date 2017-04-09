@@ -15,6 +15,9 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
+import { ActionLibrary } from '../../../store/index';
+import { LibraryState } from '../../../store/library';
+import { GameCollection } from '../../game/collection/collection.model';
 
 @View
 @Component({
@@ -30,6 +33,9 @@ import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/pop
 export class AppGamePlaylistAddToPopover extends Vue
 {
 	@Prop( Game ) game: Game;
+
+	@ActionLibrary( LibraryState.Actions.newPlaylist )
+	newPlaylist: () => Promise<GameCollection | undefined>;
 
 	playlists: GamePlaylist[] = [];
 	playlistsWithGame: number[] = [];
@@ -127,6 +133,7 @@ export class AppGamePlaylistAddToPopover extends Vue
 			Popover.hideAll();
 		}
 		catch( e ) {
+			// TODO
 			Growls.error(
 				this.$gettextInterpolate( 'library.playlists.remove_game_error_growl', { game: this.game.title, playlist: playlist.name } ),
 				this.$gettextInterpolate( 'library.playlists.remove_game_error_growl_title', { game: this.game.title, playlist: playlist.name } )
@@ -134,19 +141,13 @@ export class AppGamePlaylistAddToPopover extends Vue
 		}
 	}
 
-	async newPlaylist()
+	async addToNewPlaylist()
 	{
-		Analytics.trackEvent( 'add-to-playlist', 'new-playlist' );
+		const collection = await this.newPlaylist();
+		if ( collection && collection.playlist ) {
 
-		// await GamePlaylist_SaveModal.show().then( function( response )
-		// {
-		// 	var newPlaylist = new GamePlaylist( response.gamePlaylist );
-		// 	_this.playlists.push( newPlaylist );
-
-		// 	// Now that the playlist is created, let's add the game to this playlist.
-		// 	_this.addToPlaylist( newPlaylist );
-
-		// 	Analytics.trackEvent( 'add-to-playlist', 'new-playlist-complete' );
-		// } );
+			// Now that the playlist is created, let's add the game to this playlist.
+			this.addToPlaylist( collection.playlist );
+		}
 	}
 }

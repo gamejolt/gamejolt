@@ -28,6 +28,7 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { LibraryState } from '../../../store/library';
 import { AppGameCollectionFollowWidget } from '../../../components/game/collection/follow-widget/follow-widget';
+import { ActionLibrary, store } from '../../../store/index';
 
 @View
 @Component({
@@ -56,6 +57,12 @@ export default class RouteLibraryCollection extends Vue
 	@State app: AppState;
 	@State library: LibraryState;
 
+	@ActionLibrary( LibraryState.Actions.editPlaylist )
+	editPlaylist: Function;
+
+	@ActionLibrary( LibraryState.Actions.removePlaylist )
+	removePlaylist: Function;
+
 	type = '';
 	followerCount = 0;
 
@@ -73,7 +80,7 @@ export default class RouteLibraryCollection extends Vue
 	// Not really able to make this lazy since it needs payload to build out the
 	// header.
 	@BeforeRouteEnter( { cache: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
+	async routeEnter( this: undefined, route: VueRouter.Route )
 	{
 		const filtering = new GameFilteringContainer();
 
@@ -90,15 +97,16 @@ export default class RouteLibraryCollection extends Vue
 			id = '@' + id;
 		}
 
-		return Api.sendRequest(
+		const payload = await Api.sendRequest(
 			`/web/library/games/${ route.meta.collectionType }/${ id }?${ query }`
 		);
+
+		await store.state!.bootstrappedPromise;
+		return payload;
 	}
 
 	routed()
 	{
-		// Meta.title = this.pageTitle;
-
 		if ( !this.listing || !this.filtering ) {
 			this.filtering = new GameFilteringContainer();
 			this.filtering.init( this.$route );
@@ -117,13 +125,15 @@ export default class RouteLibraryCollection extends Vue
 			( item ) => item.type === this.type && (item as any).id === this.processedId
 		) || null;
 
-
 		if ( !this.collection ) {
 			this.collection = new GameCollection( this.$payload.collection );
+			this.playlist = this.$payload.playlist ? new GamePlaylist( this.$payload.playlist ) : null;
+		}
+		else {
+			this.playlist = this.collection.playlist || null;
 		}
 
 		this.followerCount = this.$payload.followerCount || 0;
-		this.playlist = this.$payload.playlist ? new GamePlaylist( this.$payload.playlist ) : null;
 		this.bundle = this.$payload.bundle ? new GameBundle( this.$payload.bundle ) : null;
 
 		this.user = null;
@@ -162,7 +172,6 @@ export default class RouteLibraryCollection extends Vue
 		// }
 	}
 
-	// TODO: Pull the titles in as raw text so interpolations work correctly
 	private processMeta()
 	{
 		if ( this.$payload.metaTitle ) {
@@ -288,44 +297,6 @@ export default class RouteLibraryCollection extends Vue
 	{
 		return !this.isOwner;
 	}
-
-	// this.showEditPlaylist = function()
-	// {
-	// 	GamePlaylist_SaveModal.show( this.playlist ).then( function()
-	// 	{
-	// 		_this.collection.slug = _this.playlist.slug;
-	// 		_this.collection.name = _this.playlist.name;
-
-	// 		// Note that we want to replace current URL since technically they didn't go anywhere.
-	// 		// We don't want to reload the controller or anything.
-	// 		AutoScroll.noScroll( true );
-	// 		$state.go( _this.collection.getSref(), _this.collection.getSrefParams(), { notify: false, location: 'replace' } );
-	// 	} );
-	// };
-
-	// this.removePlaylist = function()
-	// {
-	// 	ModalConfirm.show( this.$gettextInterpolate( 'library.playlists.remove_playlist_confirmation', { playlist: _this.playlist.name } ) )
-	// 		.then( function()
-	// 		{
-	// 			_this.playlist.$remove().then( function()
-	// 			{
-	// 				Shell.removePlaylist( _this.collection );
-	// 				$state.go( 'library.overview' );
-	// 				Growls.success(
-	// 					this.$gettextInterpolate( 'library.playlists.remove_playlist_success_growl', { playlist: _this.playlist.name } ),
-	// 					this.$gettextInterpolate( 'library.playlists.remove_playlist_success_growl_title', { playlist: _this.playlist.name } )
-	// 				);
-	// 			} )
-	// 			.catch( function()
-	// 			{
-	// 				Growls.success(
-	// 					this.$gettextInterpolate( 'library.playlists.remove_playlist_error_growl', { playlist: _this.playlist.name } ),
-	// 					this.$gettextInterpolate( 'library.playlists.remove_playlist_error_growl_title', { playlist: _this.playlist.name } )
-	// 				);
-	// 			} );
-	// 		} );
-	// };
 
 	// this.removeFromPlaylist = function( game )
 	// {

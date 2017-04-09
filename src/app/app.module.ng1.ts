@@ -61,7 +61,6 @@ import '../lib/gj-lib-client/components/audio/playlist/playlist';
 import '../lib/gj-lib-client/components/game/soundtrack/card/card';
 import '../lib/gj-lib-client/components/img/crop/crop';
 
-import './components/game-playlist/save-modal/save-modal-module';
 import './components/invite/invite-module';
 import './components/game/filtering/filtering-module';
 import './components/game/cover-buttons/cover-buttons-module';
@@ -158,7 +157,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'App.Sorting',
 	'App.Game.Filtering',
 	'App.Game.CoverButtons',
-	'App.GamePlaylist.SaveModal',
 	'App.Score.List',
 	'App.Score.Feed',
 	'App.Score.Overview',

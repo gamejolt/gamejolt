@@ -1,14 +1,19 @@
-<form gj-form="formModel" name="playlistForm">
+<app-form name="playlistForm">
 
-	<form-group name="name" label="{{ ::'library.playlists.form.name_label' | translate }}">
-		<input form-control="text" ng-maxlength="100">
-		<control-errors></control-errors>
-	</form-group>
+	<app-form-group name="name" :label="$gettext( 'library.playlists.form.name_label' )">
+		<app-form-control
+			type="text"
+			:rules="{
+				max: 100,
+			}"
+			v-app-focus-when
+			/>
+		<app-form-control-errors />
+	</app-form-group>
 
-	<button gj-form-submit-button class="btn btn-success-outline" ng-disabled="!playlistForm.$valid" ng-click="onSubmit()">
-		<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
-		<span ng-if="method == 'add'">{{ ::'library.playlists.form.add_submit_button' | translate }}</span>
-		<span ng-if="method == 'edit'">{{ ::'library.playlists.form.edit_submit_button' | translate }}</span>
-	</button>
+	<app-form-button :icon="method === 'add' ? 'add' : 'edit'">
+		<translate v-if="method === 'add'">Add Playlist</translate>
+		<translate v-else>Save Playlist</translate>
+	</app-form-button>
 
-</form>
+</app-form>

@@ -1,6 +1,7 @@
 import { Model } from '../../../../lib/gj-lib-client/components/model/model.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
 
 export class GameCollection extends Model
 {
@@ -26,6 +27,7 @@ export class GameCollection extends Model
 	img_thumbnail: string;
 	from_subscription: boolean;
 	owner: User;
+	playlist?: GamePlaylist;
 
 	constructor( data: any = {} )
 	{
@@ -39,6 +41,18 @@ export class GameCollection extends Model
 		if ( data.owner ) {
 			this.owner = new User( data.owner );
 		}
+
+		if ( data.playlist ) {
+			this.playlist = new GamePlaylist( data.playlist );
+		}
+	}
+
+	get routeLocation()
+	{
+		return {
+			name: this.getSref(),
+			params: this.getSrefParams(),
+		};
 	}
 
 	getTitle()

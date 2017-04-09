@@ -15,6 +15,7 @@ import { router } from '../bootstrap';
 import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
 import { libraryStore, LibraryState } from './library';
+import { User } from '../../lib/gj-lib-client/components/user/user.model';
 
 Vue.use( Vuex );
 
@@ -48,7 +49,11 @@ export const Actions = {
 export class StoreState
 {
 	notificationCount = 0;
+
 	isBootstrapped = false;
+	bootstrappedPromise =
+		new Promise( ( resolve ) => this._bootstrappedResolver = resolve );
+	_bootstrappedResolver: Function;
 
 	isLeftPaneSticky = Settings.get( 'sidebar' ) as boolean;
 	isLeftPaneOverlayed = false;
@@ -87,8 +92,11 @@ export const store = new Vuex.Store<StoreState>( {
 		},
 	},
 	mutations: {
-		[Mutations.clear]()
+		[Mutations.clear]( state )
 		{
+			state.bootstrappedPromise =
+				new Promise( ( resolve ) => state._bootstrappedResolver = resolve );
+
 			store.commit( 'library/' + LibraryState.Mutations.clear );
 		},
 
@@ -163,10 +171,18 @@ export const store = new Vuex.Store<StoreState>( {
 	actions: {
 		async [Actions.bootstrap]( { state, commit } )
 		{
+			const prevResolver = state._bootstrappedResolver;
 			const response = await Api.sendRequest( '/web/library' );
+
+			// If we failed to finish before we unbootstrapped, then stop.
+			if ( state._bootstrappedResolver !== prevResolver ) {
+				return;
+			}
+
 			commit( 'library/' + LibraryState.Mutations.bootstrap, response );
 
 			state.isBootstrapped = true;
+			state._bootstrappedResolver();
 
 			BroadcastModal.check();
 		},
@@ -221,3 +237,21 @@ export const store = new Vuex.Store<StoreState>( {
 		},
 	},
 } );
+
+// Bootstrap/clear the app when user changes.
+store.watch(
+	( state: any ) => state.app.user,
+	( user?: User ) =>
+	{
+		const isLoggedIn = !!user;
+
+		if ( isLoggedIn ) {
+			store.dispatch( Actions.bootstrap );
+			store.dispatch( Actions.loadChat );
+		}
+		else {
+			store.commit( Mutations.clear );
+			store.commit( Mutations.clearChat );
+		}
+	},
+);
