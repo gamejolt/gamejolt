@@ -1,16 +1,29 @@
-<form gj-form="formModel" name="settingsForm">
+<app-form name="settingsForm">
 
-	<fieldset id="settings-client" ng-if="Environment.isClient">
-		<legend translate>settings.client</legend>
+	<fieldset id="settings-client" v-if="Environment.isClient">
+		<legend>
+			<translate>settings.client</translate>
+		</legend>
 
-		<form-group name="game_install_dir" label="{{ 'settings.game_install_dir_label' | translate }}">
-			<p class="help-block" translate>settings.game_install_dir_help</p>
+		<app-form-group
+			name="game_install_dir"
+			:label="$gettext( 'settings.game_install_dir_label' )"
+			>
+			<p class="help-block">
+				<translate>settings.game_install_dir_help</translate>
+			</p>
 
-			<input class="hidden" form-control="file" nwdirectory>
+			<!--TODO: Will this work?-->
+			<app-form-control
+				class="hidden"
+				type="file"
+				ref="game-install-dir"
+				nwdirectory
+				/>
 
 			<div class="pull-right">
-				<button class="btn btn-sm btn-outline" ng-click="changeLocation( 'game_install_dir' )" translate>
-					settings.change_location_button
+				<button class="btn btn-sm btn-outline" @click="changeLocation( 'game-install-dir' )">
+					<translate>settings.change_location_button</translate>
 				</button>
 			</div>
 
@@ -18,71 +31,125 @@
 				<code>{{ formModel.game_install_dir }}</code>
 			</div>
 
-			<control-errors></control-errors>
-		</form-group>
+			<app-form-control-errors />
+		</app-form-group>
 
-		<form-group ng-class="{ 'sans-margin-bottom': formModel.limit_downloads }" name="limit_downloads" label="{{ 'settings.limit_downloads_label' | translate }}">
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
-		</form-group>
-		<br ng-if="formModel.limit_downloads">
+		<app-form-group
+			:class="{ 'sans-margin-bottom': formModel.limit_downloads }"
+			name="limit_downloads"
+			:label="$gettext( 'settings.limit_downloads_label' )"
+			>
+			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+		</app-form-group>
+		<br v-if="formModel.limit_downloads">
 
-		<form-group name="max_download_count" label="{{ 'settings.max_download_count_label' | translate }}" hide-label="true" ng-if="formModel.max_download_count != -1">
-			<p class="help-block" translate>settings.max_download_count_help</p>
-			<input form-control="number" min="1">
-			<control-errors></control-errors>
-		</form-group>
+		<app-form-group
+			v-if="formModel.max_download_count !== -1"
+			name="max_download_count"
+			:label="$gettext( 'settings.max_download_count_label' )"
+			:hide-label="true"
+			>
+			<p class="help-block">
+				<translate>settings.max_download_count_help</translate>
+			</p>
+			<app-form-control
+				type="number"
+				:rules="{ min_value: 1 }"
+				/>
+			<app-form-control-errors />
+		</app-form-group>
 
-		<form-group ng-class="{ 'sans-margin-bottom': formModel.limit_downloads }" name="limit_extractions" label="{{ 'settings.limit_extractions_label' | translate }}">
-			<p class="help-block" translate>settings.limit_extractions_help</p>
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
-		</form-group>
-		<br ng-if="formModel.limit_downloads">
+		<app-form-group
+			:class="{ 'sans-margin-bottom': formModel.limit_downloads }"
+			name="limit_extractions"
+			:label="$gettext( 'settings.limit_extractions_label' )"
+			>
+			<p class="help-block">
+				<translate>settings.limit_extractions_help</translate>
+			</p>
+			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+		</app-form-group>
+		<br v-if="formModel.limit_downloads">
 
-		<form-group name="max_extract_count" label="{{ 'settings.max_extract_count_label' | translate }}" hide-label="true" ng-if="formModel.max_extract_count != -1">
-			<p class="help-block" translate>settings.max_extract_count_help</p>
-			<input form-control="number" min="1">
-			<control-errors></control-errors>
-		</form-group>
+		<app-form-group
+			v-if="formModel.max_extract_count !== -1"
+			name="max_extract_count"
+			:label="$gettext( 'settings.max_extract_count_label' )"
+			:hide-label="true"
+			>
+			<p class="help-block">
+				<translate>settings.max_extract_count_help</translate>
+			</p>
+			<app-form-control
+				type="number"
+				:rules="{ min_value: 1 }"
+				/>
+			<app-form-control-errors />
+		</app-form-group>
 
-		<form-group name="queue_when_playing" label="{{ 'settings.queue_when_playing_label' | translate }}">
-			<p class="help-block" translate>settings.queue_when_playing_help</p>
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
-		</form-group>
+		<app-form-group
+			name="queue_when_playing"
+			:label="$gettext( 'settings.queue_when_playing_label' )"
+			>
+			<p class="help-block">
+				<translate>settings.queue_when_playing_help</translate>
+			</p>
+			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+		</app-form-group>
 
-		<form-group name="autostart_client" label="{{ 'settings.autostart_client_label' | translate }}" ng-if="::Client_Autostart.canAutostart()">
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
-		</form-group>
+		<app-form-group
+			v-if="Client_Autostart.canAutostart()"
+			name="autostart_client"
+			:label="$gettext( 'settings.autostart_client_label' )"
+			>
+			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+		</app-form-group>
 
 	</fieldset>
 
 	<fieldset id="settings-chat">
-		<legend>{{ 'settings.chat' | translate }}</legend>
+		<legend>
+			<translate>settings.chat</translate>
+		</legend>
 
-		<form-group name="chat_notify_friends_online" label="{{ 'settings.chat_notify_friends_online_label' | translate }}">
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
-		</form-group>
+		<app-form-group
+			name="chat_notify_friends_online"
+			:label="$gettext( 'settings.chat_notify_friends_online_label' )"
+			>
+			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+		</app-form-group>
 	</fieldset>
 
 	<fieldset id="settings-restrictions">
-		<legend translate>Restrictions</legend>
+		<legend>
+			<translate>Restrictions</translate>
+		</legend>
 
-		<form-group name="restricted_browsing" label="{{ 'Restrict browsing?' | translate }}">
-			<p class="help-block" translate>
-				This will block games that have a maturity rating of "Mature" and ask if you'd like to continue before showing the full page.
+		<app-form-group
+			name="restricted_browsing"
+			:label="$gettext( 'Restrict browsing?' )"
+			>
+			<p class="help-block">
+				<translate>This will block games that have a maturity rating of "Mature" and ask if you'd like to continue before showing the full page.</translate>
 			</p>
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
-		</form-group>
+			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+		</app-form-group>
 	</fieldset>
 
 	<fieldset id="settings-notifications">
-		<legend translate>Notifications</legend>
+		<legend>
+			<translate>Notifications</translate>
+		</legend>
 
-		<form-group name="broadcast_modal" label="{{ 'Show broadcasts?' | translate }}">
-			<p class="help-block" translate>
-				With this on you will receive notifications of new site features that have been added since you last visited.
+		<app-form-group
+			name="broadcast_modal"
+			:label="$gettext( 'Show broadcasts?' )"
+			>
+			<p class="help-block">
+				<translate>With this on you will receive notifications of new site features that have been added since you last visited.</translate>
 			</p>
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>
-		</form-group>
+			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+		</app-form-group>
 	</fieldset>
 
-</form>
+</app-form>

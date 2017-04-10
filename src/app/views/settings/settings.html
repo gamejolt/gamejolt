@@ -1,42 +1,82 @@
-<header class="section">
-	<div class="container">
+<div>
+
+	<app-page-header>
 		<div class="row">
 			<div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2 col-lg-6">
-
-				<h1 translate>settings.heading</h1>
-				<br><br>
-
+				<h1>
+					<translate>settings.heading</translate>
+				</h1>
 			</div>
 		</div>
-	</div>
-</header>
+	</app-page-header>
 
-<section class="section">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-3 col-md-2 hidden-xs">
-				<gj-scroll-affix>
-					<nav class="platform-list">
-						<ul>
-							<li ng-if="Environment.isClient">
-								<a href="#settings-client" du-smooth-scroll du-scrollspy translate>settings.client</a>
-							</li>
-							<li>
-								<a href="#settings-chat" du-smooth-scroll du-scrollspy translate>settings.chat</a>
-							</li>
-							<li>
-								<a href="#settings-restrictions" du-smooth-scroll du-scrollspy translate>Restrictions</a>
-							</li>
-							<li>
-								<a href="#settings-notifications" du-smooth-scroll du-scrollspy translate>Notifications</a>
-							</li>
-						</ul>
-					</nav>
-				</gj-scroll-affix>
-			</div>
-			<div class="col-sm-9 col-md-8 col-lg-6">
-				<gj-form-settings></gj-form-settings>
+	<!--<header class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2 col-lg-6">
+
+					<h1>
+						<translate>settings.heading</translate>
+					</h1>
+					<br><br>
+
+				</div>
 			</div>
 		</div>
-	</div>
-</section>
+	</header>-->
+
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-3 col-md-2 hidden-xs">
+
+					<app-scroll-affix>
+						<nav class="platform-list">
+							<ul>
+								<li v-for="( label, section ) of sections" :key="section">
+									<a v-app-scroll-to="`settings-${ section }`">
+										{{ label }}
+									</a>
+								</li>
+								<!--<li>
+									<a
+										href="#settings-chat"
+										v-app-scroll-to
+										v-app-scroll-spy
+										>
+										<translate>settings.chat</translate>
+									</a>
+								</li>
+								<li>
+									<a
+										href="#settings-restrictions"
+										v-app-scroll-to
+										v-app-scroll-spy
+										>
+										<translate>Restrictions</translate>
+									</a>
+								</li>
+								<li>
+									<a
+										href="#settings-notifications"
+										v-app-scroll-to
+										v-app-scroll-spy
+										>
+										<translate>Notifications</translate>
+									</a>
+								</li>-->
+							</ul>
+						</nav>
+					</app-scroll-affix>
+					
+				</div>
+				<div class="col-sm-9 col-md-8 col-lg-6">
+
+					<form-settings />
+					
+				</div>
+			</div>
+		</div>
+	</section>
+
+</div>

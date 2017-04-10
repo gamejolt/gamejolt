@@ -11,6 +11,7 @@ import { routeProfile } from './profile/profile.route';
 import { routeError404 } from '../../lib/gj-lib-client/components/error/page/page.route';
 import { routeActivity } from './activity/activity.route';
 import { routeLibrary } from './library/library.route';
+import { routeSettings } from './settings/settings.route';
 
 Vue.use( VueRouter );
 
@@ -20,6 +21,7 @@ const routes = [
 	routeSearch,
 	routeProfile,
 	routeLibrary,
+	routeSettings,
 	routeLanding,
 	routeLegal,
 	...routeFallbacks,
