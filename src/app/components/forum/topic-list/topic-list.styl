@@ -1,7 +1,10 @@
+@require '~styles/variables'
+@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+
 .forum-topic-list-item
 	margin-bottom: $line-height-computed
 
-	&-title
+	h5
 		font-weight: bold
 		margin: 0
 
@@ -13,14 +16,12 @@
 		color: $text-muted
 
 		a
-			@extend .link-muted
 			font-weight: bold
 
 			&:hover
 				text-decoration: underline
 
 	&-latest-post
-		@extend .clearfix
 
 		&-avatar
 			float: right

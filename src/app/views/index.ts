@@ -12,6 +12,7 @@ import { routeError404 } from '../../lib/gj-lib-client/components/error/page/pag
 import { routeActivity } from './activity/activity.route';
 import { routeLibrary } from './library/library.route';
 import { routeSettings } from './settings/settings.route';
+import { routeForums } from './forums/forums.route';
 
 Vue.use( VueRouter );
 
@@ -23,6 +24,7 @@ const routes = [
 	routeLibrary,
 	routeSettings,
 	routeLanding,
+	routeForums,
 	routeLegal,
 	...routeFallbacks,
 	routeError404,

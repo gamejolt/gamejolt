@@ -1,27 +1,42 @@
-<header class="section">
-	<div class="container forum-header-landing">
+<div>
 
-		<div ng-class="{ 'text-center': Screen.isXs }">
-			<h1>Game Jolt Forums</h1>
-			<img class="forum-header-landing-mascot" src="./butterflies.png" width="218" height="146" alt="The Social Butterflies">
+	<app-page-header class="forum-header-landing">
+
+		<div :class="{ 'text-center': Screen.isXs }">
+			<h1>
+				<translate>Game Jolt Forums</translate>
+			</h1>
+			<img class="forum-header-landing-mascot"
+				src="./butterflies.png"
+				width="218"
+				height="146"
+				alt="The Social Butterflies"
+				>
 		</div>
 
-		<nav class="platform-list inline">
+		<nav slot="nav" class="platform-list inline">
 			<ul>
 				<li>
-					<a ui-sref="forums.landing.overview" ui-sref-active="active">
-						Overview
-					</a>
+					<router-link
+						:to="{ name: 'forums.landing.overview' }"
+						:class="{ active: $route.name === 'forums.landing.overview' }"
+						>
+						<translate>Overview</translate>
+					</router-link>
 				</li>
 				<li>
-					<a ui-sref="forums.landing.active" ui-sref-active="active">
-						Active Topics
-					</a>
+					<router-link
+						:to="{ name: 'forums.landing.active' }"
+						active-class="active"
+						>
+						<translate>Active Topics</translate>
+					</router-link>
 				</li>
 			</ul>
 		</nav>
 
-	</div>
-</header>
+	</app-page-header>
 
-<ui-view></ui-view>
+	<router-view />
+
+</div>

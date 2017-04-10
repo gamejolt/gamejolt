@@ -2,11 +2,13 @@
 	<div class="container">
 
 		<div class="alert alert-info full-bleed-xs">
-			<p>Some topics from all channels sorted by when they last had a post. Smell how fresh.</p>
+			<p>
+				<translate>Some topics from all channels sorted by when they last had a post. Smell how fresh.</translate>
+			</p>
 		</div>
 		<br>
 
-		<gj-forum-topic-list topics="activeCtrl.topics"></gj-forum-topic-list>
+		<app-forum-topic-list :topics="topics" />
 
 	</div>
 </div>

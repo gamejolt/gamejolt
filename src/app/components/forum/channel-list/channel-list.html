@@ -1,45 +1,53 @@
 <div class="forum-channel-list">
 
-	<div class="forum-channel-list-item row" ng-repeat="channel in ctrl.channels track by channel.id">
+	<div class="forum-channel-list-item row"
+		v-for="channel of channels"
+		:key="channel.id"
+		>
 		<div class="col-sm-9 col-md-7">
-			<h4 class="forum-channel-list-item-title">
-				<span class="tag tag-pink" ng-if="::channel.notifications_count">
-					{{ ::channel.notifications_count || 0 | number }}
+			<h4>
+				<span class="tag tag-pink" v-if="channel.notifications_count">
+					{{ channel.notifications_count || 0 | number }}
 				</span>
 				<a class="link-unstyled" ui-sref="forums.channels.view.page( { name: channel.name } )">
-					#{{ ::channel.name }}
+					#{{ channel.name }}
 				</a>
 			</h4>
 			<div>
-				{{ ::channel.description }}
+				{{ channel.description }}
 			</div>
 		</div>
-		<div class="col-sm-3 col-md-2 text-muted small" ng-class="{ 'text-right': !Screen.isXs }">
-			<span
-				translate
-				translate-n="::channel.topics_count || 0"
-				translate-plural="<b>{{ $count | number }}</b> Topics"
+		<div class="col-sm-3 col-md-2 text-muted small" :class="{ 'text-right': !Screen.isXs }">
+			<translate
+				:escape-html="false"
+				:translate-n="channel.topics_count || 0"
+				:translate-params="{ count: number( channel.topics_count || 0 ) }"
+				translate-plural="<b>%{ count }</b> Topics"
 				>
 				<b>1</b> Topic
-			</span>
+			</translate>
+
 			<br class="hidden-xs">
 			<span class="hidden-sm hidden-md hidden-lg dot-separator"></span>
-			<span
-				translate
-				translate-n="::channel.replies_count || 0"
-				translate-plural="<b>{{ $count | number }}</b> Replies"
+
+			<translate
+				:escape-html="false"
+				:translate-n="channel.replies_count || 0"
+				:translate-params="{ count: number( channel.topics_count || 0 ) }"
+				translate-plural="<b>%{ count }</b> Replies"
 				>
 				<b>1</b> Reply
-			</span>
+			</translate>
 		</div>
-		<div class="col-md-3" ng-if="Screen.isDesktop">
-			<div class="forum-channel-list-item-latest-topic"
-				ng-repeat="latestPost in ::[ ctrl.latestPosts[ channel.id ] ] track by latestPost.id"
+		<div class="col-md-3" v-if="Screen.isDesktop">
+			<div class="forum-channel-list-item-latest-topic clearfix"
+				v-for="latestPost of [ indexedPosts[ channel.id ] ]"
+				:key="latestPost.id"
 				>
-				<div ng-if="::latestPost">
+				<div v-if="latestPost">
 
 					<div class="forum-channel-list-item-latest-topic-avatar">
-						<gj-user-avatar [user]="::latestPost.user"></gj-user-avatar>
+						<app-user-avatar :user="latestPost.user" />
 					</div>
 
 					<div class="forum-channel-list-item-latest-topic-info">
@@ -48,28 +56,37 @@
 									slug: latestPost.topic.slug,
 									id: latestPost.topic.id,
 									'#': 'forum-post-' + latestPost.id,
-									page: ctrl.getPostPage( latestPost ),
+									page: getPostPage( latestPost ),
 								} )"
 								>
-								{{ ::latestPost.topic.title }}
+								{{ latestPost.topic.title }}
 							</a>
 						</div>
-						<div class="forum-channel-list-item-latest-topic-info-user">
-							<span translate>by</span>
+						<div class="text-muted">
+							<translate>by</translate>
 							<strong>
-								<a class="link-muted" ui-sref="profile.overview( { username: latestPost.user.username } )">
-									{{ ::latestPost.user.display_name }}
-								</a>
+								<router-link
+									class="link-muted"
+									:to="{
+										name: 'profile.overview',
+										params: { username: latestPost.user.username },
+									}"
+									>
+									{{ latestPost.user.display_name }}
+								</router-link>
 							</strong>
-							<span class="tiny">@{{ ::latestPost.user.username }}</span>
+							<span class="tiny">@{{ latestPost.user.username }}</span>
 						</div>
-						<div class="forum-channel-list-item-latest-topic-info-date">
-							<span title="{{ ::latestPost.posted_on | date:'medium' }}" am-time-ago="::latestPost.posted_on"></span>
+						<div class="text-muted">
+							<app-time-ago
+								:title="date( latestPost.posted_on, 'medium' )"
+								:date="latestPost.posted_on"
+								/>
 						</div>
 					</div>
 
 				</div>
-				<span ng-if="::!latestPost">--</span>
+				<span v-if="!latestPost">--</span>
 			</div>
 		</div>
 	</div>

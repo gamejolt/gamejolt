@@ -16,8 +16,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 	{ name: 'discover.channels.list', path: '/channels', component: RouteEmpty },
 	{ name: 'discover.channels.channel.overview', path: '/channel', component: RouteEmpty },
 
-	{ name: 'forums.landing.overview', path: '/forums', component: fallback },
-
 	{ name: 'radio', path: '/radio', component: fallback },
 
 	{ name: 'styleguide', path: '/styleguide', component: fallback },

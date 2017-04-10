@@ -1,23 +1,22 @@
 <section class="section">
 	<div class="container">
 
-		<gj-forum-rules></gj-forum-rules>
+		<app-forum-rules />
 
-		<div ng-repeat="category in overviewCtrl.categories track by category.id">
+		<div v-for="category of categories" :key="category.id">
 
 			<div class="forum-section-header">
-				<h2 class="sans-margin" id="category-{{ category.url }}">
+				<h2 class="sans-margin" :id="`category-${ category.url }`">
 					{{ category.title }}
 				</h2>
 			</div>
 
-			<gj-forum-channel-list
-				channels="overviewCtrl.channels[ category.id ]"
-				category="category"
-				latest-posts="overviewCtrl.latestPosts"
-				post-count-per-page="overviewCtrl.postCountPerPage"
-				>
-			</gj-forum-channel-list>
+			<app-forum-channel-list
+				:category="category"
+				:channels="groupedChannels[ category.id ]"
+				:latest-posts="latestPosts"
+				:post-count-per-page="postCountPerPage"
+				/>
 
 		</div>
 
