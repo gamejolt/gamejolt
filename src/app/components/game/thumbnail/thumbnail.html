@@ -21,7 +21,7 @@
 				@click.prevent
 				>
 				<span v-if="slotId" :class="`ng-slot-${slotId}`"></span>
-				<slot></slot>
+				<slot />
 				<span v-if="showModTools">
 					<button class="btn btn-sparse"
 						v-app-popover-trigger="`game-mod-tools-${game.id}`"

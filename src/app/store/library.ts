@@ -1,12 +1,15 @@
-import Vuex from 'vuex';
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
+
+import { router } from '../bootstrap';
 import { GameCollection } from '../components/game/collection/collection.model';
-import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
 import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
 import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
-import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { router } from '../bootstrap';
-import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../lib/gj-lib-client/components/scroll/scroll.service';
+import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
+import { Game } from '../../lib/gj-lib-client/components/game/game.model';
+import { GamePlaylist } from '../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
 
 class GamePlaylistFolder
 {
@@ -18,206 +21,296 @@ class GamePlaylistFolder
 	}
 }
 
-function isViewingCollection( collection: GameCollection )
+@Component({})
+export class LibraryState extends Vue
 {
-	return router.currentRoute.name === collection.getSref()
-		&& router.currentRoute.params.id === (collection as any).id;
-}
-
-export class LibraryState
-{
-	static readonly Mutations = {
-		bootstrap: 'bootstrap',
-		clear: 'clear',
-		addCollection: 'addCollection',
-		removeCollection: 'removeCollection',
-	};
-
-	static readonly Actions = {
-		followCollection: 'followCollection',
-		unfollowCollection: 'unfollowCollection',
-		newPlaylist: 'newPlaylist',
-		editPlaylist: 'editPlaylist',
-		removePlaylist: 'removePlaylist',
-	};
-
 	collections: GameCollection[] = [];
-	followedCollection?: GameCollection = undefined;
-	developerCollection?: GameCollection = undefined;
-	ownedCollection?: GameCollection = undefined;
-	recommendedCollection?: GameCollection = undefined;
+	followedCollection: GameCollection | null = null;
+	developerCollection: GameCollection | null = null;
+	ownedCollection: GameCollection | null = null;
+	recommendedCollection: GameCollection | null = null;
 	bundleCollections: GameCollection[] = [];
-}
 
-export const libraryStore: Vuex.Module<LibraryState, any> = {
-	state: new LibraryState(),
-	namespaced: true,
-	getters: {
-
-		/**
-		 * These are their followed developer playlists.
-		 */
-		developerPlaylists( state )
+	/**
+	 * These are their followed developer playlists.
+	 */
+	get developerPlaylists()
+	{
+		return this.collections.filter( ( item ) =>
 		{
-			return state.collections.filter( ( item ) =>
-			{
-				return item.type === 'developer';
-			} );
-		},
+			return item.type === 'developer';
+		} );
+	}
 
-		/**
-		 * These are playlists that don't belong to a folder.
-		 */
-		mainPlaylists( state )
+	/**
+	 * These are playlists that don't belong to a folder.
+	 */
+	get mainPlaylists()
+	{
+		return this.collections.filter( ( item ) =>
 		{
-			return state.collections.filter( ( item ) =>
-			{
-				return item.type !== 'developer';
-			} );
-		},
+			return item.type !== 'developer';
+		} );
+	}
 
-		/**
-		 * Returns a list of folders for their playlists.
-		 */
-		playlistFolders( _state, getters )
-		{
-			const folders: { [k: string]: GamePlaylistFolder } = {};
+	/**
+	 * Returns a list of folders for their playlists.
+	 */
+	get playlistFolders()
+	{
+		const folders: { [k: string]: GamePlaylistFolder } = {};
 
-			folders.main = new GamePlaylistFolder(
-				'',
-				getters.mainPlaylists,
+		folders.main = new GamePlaylistFolder(
+			'',
+			this.mainPlaylists,
+		);
+
+		const developerPlaylists: GameCollection[] = this.developerPlaylists;
+		if ( developerPlaylists.length ) {
+			folders.developers = new GamePlaylistFolder(
+				this.$gettext( 'Followed Developers' ),
+				developerPlaylists,
+			);
+		}
+
+		return folders;
+	}
+
+	private isViewingCollection( collection: GameCollection )
+	{
+		return router.currentRoute.name === collection.getSref()
+			&& router.currentRoute.params.id === (collection as any).id;
+	}
+
+	bootstrap( payload: any )
+	{
+		this.collections = GameCollection.populate( payload.collections );
+		this.followedCollection = payload.followedCollection
+			? new GameCollection( payload.followedCollection )
+			: null;
+		this.developerCollection = payload.developerCollection
+			? new GameCollection( payload.developerCollection )
+			: null;
+		this.ownedCollection = payload.ownedCollection
+			? new GameCollection( payload.ownedCollection )
+			: null;
+		this.recommendedCollection = payload.recommendedCollection
+			? new GameCollection( payload.recommendedCollection )
+			: null;
+		this.bundleCollections = GameCollection.populate( payload.bundleCollections );
+	}
+
+	clear()
+	{
+		this.collections = [];
+		this.followedCollection = null;
+		this.developerCollection = null;
+		this.ownedCollection = null;
+		this.recommendedCollection = null;
+		this.bundleCollections = [];
+	}
+
+	addCollection( collection: GameCollection )
+	{
+		this.collections.push( collection );
+	}
+
+	removeCollection( collection: GameCollection )
+	{
+		const index = this.collections.findIndex( ( item ) => item._id === collection._id );
+		if ( index !== -1 ) {
+			this.collections.splice( index, 1 );
+		}
+	}
+
+	async followCollection( collection: GameCollection )
+	{
+		await collection.$follow();
+		this.addCollection( collection );
+	}
+
+	async unfollowCollection( collection: GameCollection )
+	{
+		await collection.$unfollow();
+		this.removeCollection( collection );
+	}
+
+	async newPlaylist()
+	{
+		Analytics.trackEvent( 'add-to-playlist', 'new-playlist' );
+
+		const collection = await GamePlaylistSaveModal.show();
+		if ( collection ) {
+			this.addCollection( collection );
+			Analytics.trackEvent( 'add-to-playlist', 'new-playlist-complete' );
+		}
+
+		return collection;
+	}
+
+	async editPlaylist( collection: GameCollection )
+	{
+		// If we're viewing the playlist we're editing, we want to sync the
+		// new URL after.
+		let syncUrlAfter = this.isViewingCollection( collection );
+
+		if ( await GamePlaylistSaveModal.show( collection ) ) {
+
+			if ( syncUrlAfter ) {
+				Scroll.shouldAutoScroll = false;
+				router.replace( collection.routeLocation );
+			}
+		}
+	}
+
+	async removePlaylist( collection: GameCollection )
+	{
+		if ( !collection.playlist ) {
+			throw new Error( `Collection isn't a playlist.` );
+		}
+
+		const result = await ModalConfirm.show(
+			collection.isOwner
+				? this.$gettext( `Are you sure you want to remove this playlist?` )
+				: this.$gettext( `Are you sure you want to unfollow this playlist?` ),
+		);
+
+		if ( !result ) {
+			return false;
+		}
+
+		try {
+			await collection.playlist.$remove();
+			this.removeCollection( collection );
+
+			// If they're currently on the playlist page, let's push them to
+			// the library instead.
+			if ( this.isViewingCollection( collection ) ) {
+
+				router.replace( { name: 'library.overview' } );
+
+				Growls.success(
+					this.$gettextInterpolate(
+						collection.isOwner
+							? this.$gettext( `%{ playlist } has been removed.` )
+							: this.$gettext( `You have unfollowed %{ playlist }.` ),
+						{ playlist: collection.name },
+					),
+					this.$gettext(
+						`Playlist Unfollowed`,
+					),
+				);
+
+				return true;
+			}
+		}
+		catch ( e ) {
+			Growls.error(
+				this.$gettext( `Error! Error! Unable to unfollow this playlist.` ),
+			);
+		}
+
+		return false;
+	}
+
+	async addGameToPlaylist( playlist: GamePlaylist, game: Game )
+	{
+		try {
+			await playlist.$addGame( game.id );
+
+			Growls.success(
+				this.$gettextInterpolate(
+					`You've added %{ game } to %{ playlist }. Nice!`,
+					{ game: game.title, playlist: playlist.name },
+				),
+				this.$gettext( `Added Game` ),
 			);
 
-			const developerPlaylists: GameCollection[] = getters.developerPlaylists;
-			if ( developerPlaylists.length ) {
-				folders.developers = new GamePlaylistFolder(
-					Translate.$gettext( 'Followed Developers' ),
-					developerPlaylists,
-				);
-			}
+			return true;
+		}
+		catch ( e ) {
+			Growls.error(
+				this.$gettext( `Error! Error! This game could not be added to the playlist.` ),
+			);
+		}
 
-			return folders;
-		},
-	},
-	mutations: {
-		[LibraryState.Mutations.bootstrap]( state, payload: any )
-		{
-			state.collections = GameCollection.populate( payload.collections );
-			state.followedCollection = payload.followedCollection
-				? new GameCollection( payload.followedCollection )
-				: undefined;
-			state.developerCollection = payload.developerCollection
-				? new GameCollection( payload.developerCollection )
-				: undefined;
-			state.ownedCollection = payload.ownedCollection
-				? new GameCollection( payload.ownedCollection )
-				: undefined;
-			state.recommendedCollection = payload.recommendedCollection
-				? new GameCollection( payload.recommendedCollection )
-				: undefined;
-			state.bundleCollections = GameCollection.populate( payload.bundleCollections );
-		},
+		return false;
+	}
 
-		[LibraryState.Mutations.clear]( state )
-		{
-			state.collections = [];
-			state.followedCollection = undefined;
-			state.developerCollection = undefined;
-			state.ownedCollection = undefined;
-			state.recommendedCollection = undefined;
-			state.bundleCollections = [];
-		},
+	async removeGameFromPlaylist(
+		playlist: GamePlaylist,
+		game: Game,
+		options: { shouldConfirm?: boolean } = {},
+	)
+	{
+		if ( !playlist ) {
+			throw new Error( `Invalid collection passed in.` );
+		}
 
-		[LibraryState.Mutations.addCollection]( state, collection: GameCollection )
-		{
-			state.collections.push( collection );
-		},
-
-		[LibraryState.Mutations.removeCollection]( state, collection: GameCollection )
-		{
-			const index = state.collections.findIndex( ( i ) => i._id === collection._id );
-			state.collections.splice( index, 1 );
-		},
-	},
-	actions: {
-		async [LibraryState.Actions.followCollection]( store, collection: GameCollection )
-		{
-			await collection.$follow();
-			store.commit( LibraryState.Mutations.addCollection, collection );
-		},
-
-		async [LibraryState.Actions.unfollowCollection]( store, collection: GameCollection )
-		{
-			await collection.$unfollow();
-			store.commit( LibraryState.Mutations.removeCollection, collection );
-		},
-
-		async [LibraryState.Actions.newPlaylist]( store )
-		{
-			Analytics.trackEvent( 'add-to-playlist', 'new-playlist' );
-
-			const collection = await GamePlaylistSaveModal.show();
-			if ( collection ) {
-				store.commit( LibraryState.Mutations.addCollection, collection );
-				Analytics.trackEvent( 'add-to-playlist', 'new-playlist-complete' );
-			}
-
-			return collection;
-		},
-
-		async [LibraryState.Actions.editPlaylist]( _store, collection: GameCollection )
-		{
-			// If we're viewing the playlist we're editing, we want to sync the
-			// new URL after.
-			let syncUrlAfter = isViewingCollection( collection );
-
-			if ( await GamePlaylistSaveModal.show( collection ) ) {
-
-				if ( syncUrlAfter ) {
-					Scroll.shouldAutoScroll = false;
-					router.push( collection.routeLocation );
-				}
-			}
-		},
-
-		async [LibraryState.Actions.removePlaylist]( store, collection: GameCollection )
-		{
-			if ( !collection.playlist ) {
-				return;
-			}
-
+		if ( options.shouldConfirm ) {
 			const result = await ModalConfirm.show(
-				Translate.$gettext( 'Are you sure you want to remove this playlist?' ),
+				this.$gettext( 'library.playlists.remove_game_confirmation' ),
 			);
 
 			if ( !result ) {
-				return;
+				return false;
 			}
+		}
 
-			try {
-				await collection.playlist.$remove();
-				store.commit( LibraryState.Mutations.removeCollection, collection );
+		try {
+			await playlist.$removeGame( game.id );
 
-				// If they're currently on the playlist page, let's push them to
-				// the library instead.
-				if ( isViewingCollection( collection ) ) {
-					router.push( { name: 'library.overview' } );
-					Growls.success(
-						Translate.$gettextInterpolate(
-							'You have successfully unfollowed %{ playlist }.',
-							{ playlist: collection.name },
-						),
-						Translate.$gettext(
-							'Playlist Unfollowed',
-						),
-					);
-				}
-			}
-			catch ( e ) {
-				Growls.error(
-					Translate.$gettext( 'Error! Error! Unable to unfollow this playlist.' ),
-				);
-			}
-		},
-	},
-};
+			Growls.success(
+				this.$gettextInterpolate(
+					`You have successfully removed %{ game } from %{ playlist }.`,
+					{ game: game.title, playlist: playlist.name },
+				),
+				this.$gettext( `Removed Game` ),
+			);
+
+			return true;
+		}
+		catch ( e ) {
+			Growls.error(
+				this.$gettext( `Error! Error! This game could not be removed from the playlist.` ),
+			);
+		}
+
+		return false;
+	}
+
+	async unfollowGame( game: Game )
+	{
+		const result = await ModalConfirm.show(
+			this.$gettextInterpolate(
+				`Are you sure you want to stop following %{ game }?`,
+				{ game: game.title },
+			),
+		);
+
+		if ( !result ) {
+			return false;
+		}
+
+		try {
+			await game.$unfollow();
+
+			Growls.success(
+				this.$gettextInterpolate(
+					`You have stopped following %{ game } and will no longer receive notifications about it.`,
+					{ game: game.title },
+				),
+				this.$gettext( `Game Unfollowed` ),
+			);
+
+			return true;
+		}
+		catch ( e ) {
+			Growls.error(
+				this.$gettext( `Uh-oh, something has prevented you from unfollowing this game.` ),
+			);
+		}
+
+		return false;
+	}
+}

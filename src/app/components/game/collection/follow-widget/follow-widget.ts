@@ -10,7 +10,6 @@ import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/aut
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { LibraryState } from '../../../../store/library';
 import { GameCollection } from '../collection.model';
-import { ActionLibrary } from '../../../../store/index';
 
 @View
 @Component({
@@ -33,12 +32,6 @@ export class AppGameCollectionFollowWidget extends Vue
 
 	@State library: LibraryState;
 
-	@ActionLibrary( LibraryState.Actions.followCollection )
-	followCollection: Function;
-
-	@ActionLibrary( LibraryState.Actions.unfollowCollection )
-	unfollowCollection: Function;
-
 	get isFollowing()
 	{
 		return this.library.collections.findIndex(
@@ -49,10 +42,10 @@ export class AppGameCollectionFollowWidget extends Vue
 	onClick()
 	{
 		if ( this.isFollowing ) {
-			this.unfollowCollection( this.collection );
+			this.library.unfollowCollection( this.collection );
 		}
 		else {
-			this.followCollection( this.collection );
+			this.library.followCollection( this.collection );
 		}
 	}
 }

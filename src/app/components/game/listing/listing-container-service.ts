@@ -25,4 +25,13 @@ export class GameListingContainer
 		this.currentPage = route.query.page ? parseInt( route.query.page, 10 ) : 1;
 		this.section = route.params.section || 'hot';
 	}
+
+	removeGame( game: Game )
+	{
+		const index = this.games.findIndex( ( item ) => item.id === game.id );
+		if ( index !== -1 ) {
+			this.games.splice( index, 1 );
+		}
+		--this.gamesCount;
+	}
 }

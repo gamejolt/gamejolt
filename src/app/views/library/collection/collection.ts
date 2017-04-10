@@ -28,7 +28,8 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { LibraryState } from '../../../store/library';
 import { AppGameCollectionFollowWidget } from '../../../components/game/collection/follow-widget/follow-widget';
-import { ActionLibrary, store } from '../../../store/index';
+import { store } from '../../../store/index';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 @View
 @Component({
@@ -56,12 +57,6 @@ export default class RouteLibraryCollection extends Vue
 
 	@State app: AppState;
 	@State library: LibraryState;
-
-	@ActionLibrary( LibraryState.Actions.editPlaylist )
-	editPlaylist: Function;
-
-	@ActionLibrary( LibraryState.Actions.removePlaylist )
-	removePlaylist: Function;
 
 	type = '';
 	followerCount = 0;
@@ -155,21 +150,6 @@ export default class RouteLibraryCollection extends Vue
 		// 		slug: this.collection.slug,
 		// 	} );
 		// }
-
-		// // Controls on thumbnails.
-		// this.thumbnailControl = '';
-		// if ( App.user && collectionCtrl.collection.owner && collectionCtrl.collection.owner.id == App.user.id ) {
-		// 	if ( collectionCtrl.type == 'playlist' ) {
-		// 		this.thumbnailControl = 'remove';
-		// 		this.thumbnailControlLabel = this.$gettextInterpolate( 'library.collection.thumbnail_control_playlist_tooltip' );
-		// 		this.thumbnailControlAction = this.removeFromPlaylist;
-		// 	}
-		// 	else if ( collectionCtrl.type == 'followed' ) {
-		// 		this.thumbnailControl = 'subscribed';
-		// 		this.thumbnailControlLabel = this.$gettextInterpolate( 'library.collection.thumbnail_control_unfollow_tooltip' );
-		// 		this.thumbnailControlAction = this.removeFromLibrary;
-		// 	}
-		// }
 	}
 
 	private processMeta()
@@ -180,7 +160,7 @@ export default class RouteLibraryCollection extends Vue
 		else {
 			if ( this.type === 'followed' ) {
 				const params = { user: '@' + this.user!.username };
-				if ( this.isOwner ) {
+				if ( this.collection!.isOwner ) {
 					Meta.title = this.$gettextInterpolate(
 						'Your Followed Games',
 						params,
@@ -195,7 +175,7 @@ export default class RouteLibraryCollection extends Vue
 			}
 			else if ( this.type === 'playlist' ) {
 				const params = { playlist: this.playlist!.name, user: '@' + this.user!.username };
-				if ( this.isOwner ) {
+				if ( this.collection!.isOwner ) {
 					Meta.title = this.playlist!.name;
 				}
 				else {
@@ -207,7 +187,7 @@ export default class RouteLibraryCollection extends Vue
 			}
 			else if ( this.type === 'developer' ) {
 				const params = { user: '@' + this.user!.username };
-				if ( this.isOwner ) {
+				if ( this.collection!.isOwner ) {
 					Meta.title = this.$gettextInterpolate(
 						'Your Games',
 						params,
@@ -222,7 +202,7 @@ export default class RouteLibraryCollection extends Vue
 			}
 			else if ( this.type === 'owned' ) {
 				const params = { user: '@' + this.user!.username };
-				if ( this.isOwner ) {
+				if ( this.collection!.isOwner ) {
 					Meta.title = this.$gettext( 'Your Owned Games' );
 				}
 				else {
@@ -234,7 +214,7 @@ export default class RouteLibraryCollection extends Vue
 			}
 			else if ( this.type === 'recommended' ) {
 				const params = { user: '@' + this.user!.username };
-				if ( this.isOwner ) {
+				if ( this.collection!.isOwner ) {
 					Meta.title = this.$gettext( 'Your Recommended Games' );
 				}
 				else {
@@ -287,69 +267,23 @@ export default class RouteLibraryCollection extends Vue
 		return this.id;
 	}
 
-	get isOwner()
-	{
-		return !!(this.app.user && this.user
-			&& this.app.user.id === this.user.id);
-	}
-
 	get shouldShowFollow()
 	{
-		return !this.isOwner;
+		return !(this.collection && this.collection.isOwner);
 	}
 
-	// this.removeFromPlaylist = function( game )
-	// {
-	// 	var playlist = collectionCtrl.playlist;
+	async removeFromPlaylist( game: Game )
+	{
+		const playlist = this.collection!.playlist!;
+		if ( await this.library.removeGameFromPlaylist( playlist, game, { shouldConfirm: true } ) ) {
+			this.listing!.removeGame( game );
+		}
+	}
 
-	// 	ModalConfirm.show( this.$gettextInterpolate( 'library.playlists.remove_game_confirmation', { game: game.title, playlist: playlist.name } ) )
-	// 		.then( function()
-	// 		{
-	// 			playlist.$removeGame( game.id ).then( function()
-	// 			{
-	// 				Growls.success(
-	// 					this.$gettextInterpolate( 'library.playlists.remove_game_success_growl', { game: game.title, playlist: playlist.name } ),
-	// 					this.$gettextInterpolate( 'library.playlists.remove_game_success_growl_title', { game: game.title, playlist: playlist.name } )
-	// 				);
-	// 				_this._removeGame( game );
-	// 			} )
-	// 			.catch( function()
-	// 			{
-	// 				Growls.error(
-	// 					this.$gettextInterpolate( 'library.playlists.remove_game_error_growl', { game: game.title, playlist: playlist.name } ),
-	// 					this.$gettextInterpolate( 'library.playlists.remove_game_error_growl_title', { game: game.title, playlist: playlist.name } )
-	// 				);
-	// 			} );
-	// 		} );
-	// };
-
-	// this.removeFromLibrary = function( game )
-	// {
-	// 	ModalConfirm.show( this.$gettextInterpolate( 'library.followed.remove_game_confirmation', { game: game.title } ) )
-	// 		.then( function()
-	// 		{
-	// 			game.$unfollow().then( function()
-	// 			{
-	// 				Growls.success(
-	// 					this.$gettextInterpolate( 'library.followed.remove_game_success_growl', { game: game.title } ),
-	// 					this.$gettextInterpolate( 'library.followed.remove_game_success_growl_title', { game: game.title } )
-	// 				);
-	// 				_this._removeGame( game );
-	// 			} )
-	// 			.catch( function()
-	// 			{
-	// 				Growls.error(
-	// 					this.$gettextInterpolate( 'library.followed.remove_game_error_growl', { game: game.title } ),
-	// 					this.$gettextInterpolate( 'library.followed.remove_game_error_growl_title', { game: game.title } )
-	// 				);
-	// 			} );
-	// 		} );
-	// };
-
-	// this._removeGame = function( game )
-	// {
-	// 	_.remove( this.games, { id: game.id } );
-	// 	--collectionCtrl.gamesCount;
-	// 	--collectionCtrl.totalGamesCount;
-	// };
+	async removeFromLibrary( game: Game )
+	{
+		if ( await this.library.unfollowGame( game ) ) {
+			this.listing!.removeGame( game );
+		}
+	}
 }

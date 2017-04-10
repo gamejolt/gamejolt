@@ -515,7 +515,7 @@
 					Playlist Folders
 				-->
 				<div
-					v-for="( folder, key ) of playlistFolders"
+					v-for="( folder, key ) of library.playlistFolders"
 					:key="key"
 					v-if="key !== 'main'"
 					>
@@ -542,7 +542,7 @@
 					Main Playlists (not in folders)
 				-->
 				<app-shell-sidebar-collection-list
-					:collections="playlistFolders.main.collections"
+					:collections="library.playlistFolders.main.collections"
 					:filter="playlistFilterQuery"
 					/>
 

@@ -16,11 +16,10 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Mutations, GetterLibrary, ActionLibrary } from '../../../store/index';
+import { Mutations } from '../../../store/index';
 import { LibraryState } from '../../../store/library';
 import { AppShellSidebarCollectionList } from './collection-list';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { GameCollection } from '../../game/collection/collection.model';
 
 @View
 @Component({
@@ -49,13 +48,9 @@ export class AppShellSidebar extends Vue
 	@State notificationCount: number;
 
 	@Getter isLeftPaneVisible: boolean;
-	@GetterLibrary playlistFolders: any;
 
 	@Mutation( Mutations.toggleLeftPane )
 	toggleLeftPane: Function;
-
-	@ActionLibrary( LibraryState.Actions.newPlaylist )
-	newPlaylist: () => Promise<GameCollection | undefined>;
 
 	playlistFilterQuery = '';
 	openFolders: string[] = [];
@@ -98,7 +93,6 @@ export class AppShellSidebar extends Vue
 
 	toggleFolder( key: string )
 	{
-		console.log( 'toggle', key );
 		const index = this.openFolders.indexOf( key );
 		if ( index === -1 ) {
 			this.openFolders.push( key );
@@ -110,7 +104,7 @@ export class AppShellSidebar extends Vue
 
 	async showAddPlaylistModal()
 	{
-		const collection = await this.newPlaylist();
+		const collection = await this.library.newPlaylist();
 		if ( collection ) {
 			this.$router.push( collection.routeLocation );
 		}

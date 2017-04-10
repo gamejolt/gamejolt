@@ -14,7 +14,7 @@ import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service
 import { router } from '../bootstrap';
 import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
-import { libraryStore, LibraryState } from './library';
+import { LibraryState } from './library';
 import { User } from '../../lib/gj-lib-client/components/user/user.model';
 
 Vue.use( Vuex );
@@ -48,12 +48,14 @@ export const Actions = {
 
 export class StoreState
 {
-	notificationCount = 0;
+	library = new LibraryState();
 
 	isBootstrapped = false;
 	bootstrappedPromise =
 		new Promise( ( resolve ) => this._bootstrappedResolver = resolve );
 	_bootstrappedResolver: Function;
+
+	notificationCount = 0;
 
 	isLeftPaneSticky = Settings.get( 'sidebar' ) as boolean;
 	isLeftPaneOverlayed = false;
@@ -69,7 +71,6 @@ export const store = new Vuex.Store<StoreState>( {
 	state: new StoreState(),
 	modules: {
 		app: appStore,
-		library: libraryStore,
 	},
 	getters: {
 		isLeftPaneVisible( state )
@@ -97,7 +98,7 @@ export const store = new Vuex.Store<StoreState>( {
 			state.bootstrappedPromise =
 				new Promise( ( resolve ) => state._bootstrappedResolver = resolve );
 
-			store.commit( 'library/' + LibraryState.Mutations.clear );
+			state.library.clear();
 		},
 
 		[Mutations.toggleLeftPane]( state )
@@ -169,7 +170,7 @@ export const store = new Vuex.Store<StoreState>( {
 		},
 	},
 	actions: {
-		async [Actions.bootstrap]( { state, commit } )
+		async [Actions.bootstrap]( { state } )
 		{
 			const prevResolver = state._bootstrappedResolver;
 			const response = await Api.sendRequest( '/web/library' );
@@ -179,7 +180,7 @@ export const store = new Vuex.Store<StoreState>( {
 				return;
 			}
 
-			commit( 'library/' + LibraryState.Mutations.bootstrap, response );
+			state.library.bootstrap( response );
 
 			state.isBootstrapped = true;
 			state._bootstrappedResolver();

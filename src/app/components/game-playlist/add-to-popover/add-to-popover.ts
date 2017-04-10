@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./add-to-popover.html?style=./add-to-popover.styl';
 
@@ -8,16 +9,13 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
 import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { ActionLibrary } from '../../../store/index';
 import { LibraryState } from '../../../store/library';
-import { GameCollection } from '../../game/collection/collection.model';
 
 @View
 @Component({
@@ -34,8 +32,7 @@ export class AppGamePlaylistAddToPopover extends Vue
 {
 	@Prop( Game ) game: Game;
 
-	@ActionLibrary( LibraryState.Actions.newPlaylist )
-	newPlaylist: () => Promise<GameCollection | undefined>;
+	@State library: LibraryState;
 
 	playlists: GamePlaylist[] = [];
 	playlistsWithGame: number[] = [];
@@ -94,37 +91,15 @@ export class AppGamePlaylistAddToPopover extends Vue
 
 	async addToPlaylist( playlist: GamePlaylist )
 	{
-		try {
-			await playlist.$addGame( this.game.id );
-
-			// TODO
-			Growls.success(
-				this.$gettextInterpolate( 'library.playlists.add_game_success_growl', { game: this.game.title, playlist: playlist.name } ),
-				this.$gettextInterpolate( 'library.playlists.add_game_success_growl_title', { game: this.game.title, playlist: playlist.name } )
-			);
-
+		if ( await this.library.addGameToPlaylist( playlist, this.game ) ) {
 			this.playlistsWithGame.push( playlist.id );
 			Popover.hideAll();
-		}
-		catch( e ) {
-			Growls.error(
-				this.$gettextInterpolate( 'library.playlists.add_game_error_growl', { game: this.game.title, playlist: playlist.name } ),
-				this.$gettextInterpolate( 'library.playlists.add_game_error_growl_title', { game: this.game.title, playlist: playlist.name } )
-			);
 		}
 	}
 
 	async removeFromPlaylist( playlist: GamePlaylist )
 	{
-		try {
-			await playlist.$removeGame( this.game.id );
-
-			// TODO
-			Growls.success(
-				this.$gettextInterpolate( 'library.playlists.remove_game_success_growl', { game: this.game.title, playlist: playlist.name } ),
-				this.$gettextInterpolate( 'library.playlists.remove_game_success_growl_title', { game: this.game.title, playlist: playlist.name } )
-			);
-
+		if ( await this.library.removeGameFromPlaylist( playlist, this.game ) ) {
 			const index = this.playlistsWithGame.indexOf( playlist.id );
 			if ( index !== -1 ) {
 				this.playlistsWithGame.splice( index, 1 );
@@ -132,18 +107,11 @@ export class AppGamePlaylistAddToPopover extends Vue
 
 			Popover.hideAll();
 		}
-		catch( e ) {
-			// TODO
-			Growls.error(
-				this.$gettextInterpolate( 'library.playlists.remove_game_error_growl', { game: this.game.title, playlist: playlist.name } ),
-				this.$gettextInterpolate( 'library.playlists.remove_game_error_growl_title', { game: this.game.title, playlist: playlist.name } )
-			);
-		}
 	}
 
 	async addToNewPlaylist()
 	{
-		const collection = await this.newPlaylist();
+		const collection = await this.library.newPlaylist();
 		if ( collection && collection.playlist ) {
 
 			// Now that the playlist is created, let's add the game to this playlist.

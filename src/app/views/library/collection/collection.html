@@ -44,7 +44,7 @@
 							Followed Games
 						-->
 						<div v-else-if="type === 'followed'">
-							<div v-if="isOwner">
+							<div v-if="collection.isOwner">
 								<h1>
 									<translate>Your Followed Games</translate>
 								</h1>
@@ -77,7 +77,7 @@
 							Developer Games
 						-->
 						<div v-else-if="type === 'developer'">
-							<div v-if="isOwner">
+							<div v-if="collection.isOwner">
 								<h1>
 									<translate>Your Games</translate>
 								</h1>
@@ -110,7 +110,7 @@
 							Owned Games
 						-->
 						<div v-else-if="type === 'owned'">
-							<div v-if="isOwner">
+							<div v-if="collection.isOwner">
 								<h1>
 									<translate>Your Owned Games</translate>
 								</h1>
@@ -141,7 +141,7 @@
 							Recommended Games
 						-->
 						<div v-else-if="type === 'recommended'">
-							<div v-if="isOwner">
+							<div v-if="collection.isOwner">
 								<h1>
 									<translate>Your Recommended Games</translate>
 								</h1>
@@ -171,7 +171,7 @@
 								{{ playlist.name }}
 							</h1>
 
-							<h4 v-if="!isOwner">
+							<h4 v-if="!collection.isOwner">
 								<translate>by</translate>
 								<router-link class="link-unstyled" :to="{ name: 'profile.overview', params: { username: playlist.user.username } }">
 									{{ playlist.user.display_name }}
@@ -226,12 +226,12 @@
 						/>
 				</span>
 
-				<span v-else-if="type === 'playlist' && isOwner">
+				<span v-else-if="type === 'playlist' && collection.isOwner">
 
 					<!-- Editing Playlist -->
 					<a class="btn btn-outline"
-						v-if="type === 'playlist' && isOwner"
-						@click="editPlaylist( collection )"
+						v-if="type === 'playlist' && collection.isOwner"
+						@click="library.editPlaylist( collection )"
 						>
 						<app-jolticon icon="edit" />
 						<translate>Edit Playlist</translate>
@@ -240,7 +240,7 @@
 					<!-- More options -->
 					<a class="btn btn-outline sparse"
 						v-app-popover-trigger="`collection-options`"
-						v-if="type === 'playlist' && isOwner"
+						v-if="type === 'playlist' && collection.isOwner"
 						>
 						<app-jolticon icon="ellipsis-h" />
 						<translate>options.more</translate>
@@ -249,7 +249,7 @@
 					<app-popover popover-id="collection-options">
 						<div class="list-group">
 							<a class="list-group-item has-icon"
-								@click="removePlaylist( collection )"
+								@click="library.removePlaylist( collection )"
 								>
 								<app-jolticon icon="remove" />
 								<translate>library.collection.remove_playlist_button</translate>
@@ -274,7 +274,29 @@
 		<app-game-grid
 			:games="listing.games"
 			event="collection-game-list:click"
-			/>
+			>
+
+			<template slot="thumbnail-controls" scope="props">
+				
+				<button class="btn btn-sparse"
+					v-if="type === 'playlist' && collection.isOwner"
+					v-app-tooltip="$gettext( `library.collection.thumbnail_control_playlist_tooltip` )"
+					@click="removeFromPlaylist( props.game )"
+					>
+					<app-jolticon icon="remove" />
+				</button>
+
+				<button class="btn btn-sparse"
+					v-if="type === 'followed' && collection.isOwner"
+					v-app-tooltip="$gettext( `library.collection.thumbnail_control_unfollow_tooltip` )"
+					@click="removeFromLibrary( props.game )"
+					>
+					<app-jolticon icon="subscribed" />
+				</button>
+
+			</template>
+
+		</app-game-grid>
 
 	</app-game-listing>
 
