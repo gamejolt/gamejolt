@@ -19,8 +19,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 	{ name: 'radio', path: '/radio', component: fallback },
 
 	{ name: 'styleguide', path: '/styleguide', component: fallback },
-	{ name: 'settings', path: '/settings', component: fallback },
-	{ name: 'client', path: '/client', component: fallback },
 
 	{ path: '/dashboard', component: RouteEmpty, children: [
 		{ name: 'dashboard.main.overview', path: '', component: RouteEmpty },

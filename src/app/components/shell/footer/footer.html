@@ -4,12 +4,12 @@
 		<div class="hidden-xs" v-if="!env.isClient">
 			<div class="text-center">
 				<p>
-					<router-link :to="{ name: 'client' }" v-app-track-event="`footer:client-promo`">
+					<router-link :to="{ name: 'landing.client' }" v-app-track-event="`footer:client-promo`">
 						<img src="~img/game-jolt-client-logo.svg" alt="Game Jolt Client">
 					</router-link>
 				</p>
 				<p>
-					<router-link :to="{ name: 'client' }" class="btn btn-primary">
+					<router-link :to="{ name: 'landing.client' }" class="btn btn-primary">
 						<translate>Get It Now</translate>
 					</router-link>
 				</p>
@@ -36,7 +36,7 @@
 						</router-link>
 					</li>
 					<li>
-						<router-link :to="{ name: 'client' }">
+						<router-link :to="{ name: 'landing.client' }">
 							<translate>Client</translate>
 						</router-link>
 					</li>

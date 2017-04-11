@@ -176,7 +176,7 @@
 				</li>
 				<li v-if="!Environment.isClient && !isLeftPaneVisible">
 					<router-link
-						:to="{ name: 'client' }"
+						:to="{ name: 'landing.client' }"
 						v-app-track-event="`sidebar:client`"
 						>
 						<span class="shell-nav-icon">
@@ -271,7 +271,7 @@
 
 			<li v-if="!Environment.isClient && isLeftPaneVisible">
 				<router-link
-					:to="{ name: 'client' }"
+					:to="{ name: 'landing.client' }"
 					active-class="active"
 					v-app-track-event="`sidebar:client`"
 					>
