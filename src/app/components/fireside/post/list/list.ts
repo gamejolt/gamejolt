@@ -1,6 +1,18 @@
-import { provide } from 'ng-metadata/core';
-import { ListComponent } from './list-directive';
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import * as View from '!view!./list.html?style=./list.styl';
 
-export default angular.module( 'App.Fireside.Post.List', [] )
-.directive( ...provide( ListComponent ) )
-.name;
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
+
+@View
+@Component({
+	components: {
+		AppTimeAgo,
+	},
+})
+export class AppFiresidePostList extends Vue
+{
+	@Prop( Array ) posts: FiresidePost[];
+	noThumb: string = require( '../thumbnail/no-thumb.png' );
+}

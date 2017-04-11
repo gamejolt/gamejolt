@@ -1,3 +1,6 @@
+@require '~styles/variables'
+@require '../../../../../lib/gj-lib-client/stylus/common/mixins'
+
 .fireside-post-thumbnail
 	margin-bottom: $grid-gutter-width-xs
 
@@ -8,9 +11,6 @@
 		margin-top: 0
 		margin-bottom: 0
 		font-weight: bold
-
-		a
-			@extend .link-unstyled
 
 	&-img
 		position: relative
@@ -39,10 +39,3 @@
 			&::after
 				opacity: 1
 				transition: none
-
-	&-byline
-		@extend .text-muted, .small
-
-		a
-			@extend .link-unstyled
-			color: $gray-darker

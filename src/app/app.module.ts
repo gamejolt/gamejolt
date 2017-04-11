@@ -43,8 +43,6 @@ import DevlogPostEditModule from './components/devlog/post/edit/edit';
 import DevlogPostMediaModule from './components/devlog/post/media/media';
 import DevlogPostViewModalModule from './components/devlog/post/view-modal/view-modal';
 import { GameGridModule } from './components/game/grid/grid.module';
-import FiresidePostThumbnailModule from './components/fireside/post/thumbnail/thumbnail';
-import FiresidePostListModule from './components/fireside/post/list/list';
 import { LoadingFadeModule } from '../lib/gj-lib-client/components/loading/fade/fade.module';
 import { GameSketchfabModule } from '../lib/gj-lib-client/components/game/sketchfab/sketchfab.module';
 import { PopoverModule } from '../lib/gj-lib-client/components/popover/popover.module';
@@ -184,8 +182,6 @@ import { ReportModalModule } from '../lib/gj-lib-client/components/report/modal/
 		DevlogPostEditModule,
 		DevlogPostMediaModule,
 		DevlogPostViewModalModule,
-		FiresidePostListModule,
-		FiresidePostThumbnailModule,
 		GameThumbnailModule,
 		GameFollowWidgetModule,
 		GameGridModule,

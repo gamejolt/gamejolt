@@ -1,18 +1,32 @@
 <div class="fireside-post-thumbnail">
-	<a ng-href="{{ ::$ctrl.post.url }}" class="fireside-post-thumbnail-img" ng-style="::{
-		'background-image': 'url(\'' + ($ctrl.post.header.img_url || $ctrl.noThumb) + '\')' }"
-	></a>
+	<a
+		class="fireside-post-thumbnail-img"
+		:href="post.url"
+		target="_blank"
+		:style="{
+			'background-image': `url('${ post.header.img_url || noThumb }')`,
+		}"
+		>
+	</a>
 
 	<h5 class="fireside-post-thumbnail-heading">
-		<a ng-href="{{ ::$ctrl.post.url }}">
-			{{ ::$ctrl.post.title }}
+		<a class="link-unstyled" :href="post.url">
+			{{ post.title }}
 		</a>
 	</h5>
 
-	<div class="fireside-post-thumbnail-byline">
+	<div class="fireside-post-thumbnail-byline text-muted small">
 		<span class="hidden-xs">By</span>
-		<a class="link-unstyled" ng-href="{{ ::($ctrl.environment.firesideBaseUrl + '/@' + $ctrl.post.user.username) }}">@{{ ::$ctrl.post.user.username }}</a>
+		<a
+			class="link-unstyled"
+			:href="Environment.firesideBaseUrl + `/@${ post.user.username }`"
+			target="_blank"
+			>
+			@{{ post.user.username }}
+		</a>
 		<span class="dot-separator"></span>
-		<em am-time-ago="$ctrl.post.published_on"></em>
+		<em>
+			<app-time-ago :date="post.published_on" />
+		</em>
 	</div>
 </div>
