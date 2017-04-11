@@ -22,9 +22,15 @@
 					<app-jolticon icon="lock" class="text-muted" />
 				</span>
 
-				<a class="link-unstyled" ui-sref="forums.topics.view.page( { slug: topic.slug, id: topic.id } )">
+				<router-link
+					class="link-unstyled"
+					:to="{
+						name: 'forums.topics.view',
+						params: { slug: topic.slug, id: topic.id },
+					}"
+					>
 					{{ topic.title }}
-				</a>
+				</router-link>
 			</h5>
 			<div class="forum-topic-list-item-author">
 				<translate>by</translate>
@@ -69,15 +75,21 @@
 				</div>
 				<div class="forum-topic-list-item-latest-post-info">
 					<div class="forum-topic-list-item-latest-post-info-username">
-						<a ui-sref="forums.topics.view.page( {
-								slug: topic.slug,
-								id: topic.id,
-								'#': 'forum-post-' + topic.latest_post.id,
-								page: getPostPage( topic ),
-							} )"
+						<router-link
+							:to="{
+								name: 'forums.topics.view',
+								params: {
+									slug: topic.slug,
+									id: topic.id,
+								},
+								hash: 'forum-post-' + topic.latest_post.id,
+								query: {
+									page: getPostPage( topic ),
+								},
+							}"
 							>
 							{{ topic.latest_post.user.display_name }}
-						</a>
+						</router-link>
 					</div>
 					<div class="text-muted">
 						@{{ topic.latest_post.user.username }}

@@ -1,104 +1,116 @@
-<header class="section">
-	<div class="container forum-header">
+<div v-if="channel">
 
-		<gj-forum-breadcrumbs
-			channel="viewCtrl.channel"
-			>
-		</gj-forum-breadcrumbs>
+	<app-page-header>
 
 		<h1>
-			<span class="jolticon jolticon-number-sign big"></span>
-			{{ viewCtrl.channel.name }}
+			#{{ channel.name }}
 		</h1>
 
 		<!-- Don't let it get too long! -->
 		<div class="row">
 			<div class="col-sm-10 col-md-8 col-lg-7">
-				<p>{{ viewCtrl.channel.description }}</p>
+				<p>{{ channel.description }}</p>
 			</div>
 		</div>
 
-		<ul class="stat-list pull-right">
-			<li class="stat-big stat-big-smaller">
-				<div class="stat-big-label">
-					Topics
-				</div>
-				<div class="stat-big-digit">
-					{{ viewCtrl.channel.topics_count || 0 | number }}
-				</div>
-			</li>
-			<li class="stat-big stat-big-smaller">
-				<div class="stat-big-label">
-					Replies
-				</div>
-				<div class="stat-big-digit">
-					{{ viewCtrl.channel.replies_count || 0 | number }}
-				</div>
-			</li>
-		</ul>
+		<div class="clearfix">
 
-		<nav class="platform-list inline pull-left buttons" ng-if="App.user">
-			<ul>
-				<li>
-					<a ui-sref="forums.topics.create( { channelName: viewCtrl.channel.name } )">
-						<span class="jolticon jolticon-add"></span>
-						Add Topic
-					</a>
+			<ul class="stat-list" :class="Screen.isXs ? 'text-center' : 'pull-right'">
+				<li class="stat-big stat-big-smaller">
+					<div class="stat-big-label">
+						Topics
+					</div>
+					<div class="stat-big-digit">
+						{{ channel.topics_count || 0 | number }}
+					</div>
+				</li>
+				<li class="stat-big stat-big-smaller">
+					<div class="stat-big-label">
+						Replies
+					</div>
+					<div class="stat-big-digit">
+						{{ channel.replies_count || 0 | number }}
+					</div>
 				</li>
 			</ul>
-		</nav>
 
-	</div>
+			<br class="visible-xs">
 
-</header>
-
-<div class="section">
-	<div class="container" id="forum-topics-list">
-
-		<div ng-if="viewCtrl.stickyTopics.length">
-			<gj-forum-topic-list
-				topics="viewCtrl.stickyTopics"
-				post-count-per-page="viewCtrl.postCountPerPage"
-				>
-			</gj-forum-topic-list>
-			<hr>
-		</div>
-
-		<div ng-if="viewCtrl.topics.length">
-			<p class="text-muted small">
-				Page {{ viewCtrl.currentPage | number }} of {{ viewCtrl.channel.topics_count | number }} topics.
-			</p>
-			<br>
-
-			<gj-forum-topic-list
-				topics="viewCtrl.topics"
-				post-count-per-page="viewCtrl.postCountPerPage"
-				>
-			</gj-forum-topic-list>
-
-			<gj-pagination
-				pager="true"
-				items-per-page="viewCtrl.perPage"
-				total-items="viewCtrl.channel.topics_count"
-				current-page="viewCtrl.currentPage"
-				(on-page-change)="Scroll.to( 'forum-topics-list', { animate: false } )"
-				>
-			</gj-pagination>
-		</div>
-
-		<div ng-if="!viewCtrl.topics.length" class="text-center">
-			<p class="lead">There aren't any topics here yet!</p>
-			<p>
-				<a class="btn btn-outline"
-					ui-sref="forums.topics.create( { channelName: viewCtrl.channel.name } )"
+			<div :class="{ 'pull-left': !Screen.isXs }">
+				<a
+					class="btn btn-success-outline"
+					:class="{ 'btn-block': Screen.isXs }"
+					ui-sref="forums.topics.create( { channelName: channel.name } )"
 					>
-					Add Topic
+					<app-jolticon icon="add" />
+					<translate>Add Topic</translate>
 				</a>
-			</p>
+			</div>
+
 		</div>
 
-	</div>
-</div>
+		<div slot="nav">
+			<app-forum-breadcrumbs
+				:channel="channel"
+				/>
+		</div>
 
-<!-- Needed so the inner "page" state gets pulled in. -->
-<ui-view></ui-view>
+	</app-page-header>
+
+	<div class="section">
+		<div class="container" id="forum-topics-list">
+
+			<div v-if="stickyTopics.length">
+				<app-forum-topic-list
+					:topics="stickyTopics"
+					:post-count-per-page="postCountPerPage"
+					/>
+				<hr>
+			</div>
+
+			<div v-if="topics.length">
+				<p class="text-muted small">
+					<translate
+						:translate-params="{
+							currentPage: number( currentPage ),
+							count: number( channel.topics_count ),
+						}"
+						:translate-n="channel.topics_count"
+						translate-plural="Page %{ currentPage } of %{ count } topics."
+						>
+						1 topic.
+					</translate>
+				</p>
+				<br>
+
+				<app-forum-topic-list
+					:topics="topics"
+					:post-count-per-page="postCountPerPage"
+					/>
+
+				<app-pagination
+					:pager="true"
+					:items-per-page="perPage"
+					:total-items="channel.topics_count"
+					:current-page="currentPage"
+					@pagechange="Scroll.to( 'forum-topics-list', { animate: false } )"
+					/>
+			</div>
+
+			<div v-if="!topics.length" class="text-center">
+				<p class="lead">
+					<translate>There aren't any topics here yet!</translate>
+				</p>
+				<p>
+					<a class="btn btn-outline"
+						ui-sref="forums.topics.create( { channelName: channel.name } )"
+						>
+						<translate>Add Topic</translate>
+					</a>
+				</p>
+			</div>
+
+		</div>
+	</div>
+
+</div>

@@ -85,6 +85,34 @@ export default class RouteDiscoverGamesView extends Vue
 		return number( this.game.rating_count || 0 ) + ' rating(s), avg: ' + this.game.avg_rating;
 	}
 
+	// get installableBuilds()
+	// {
+	// 	if ( !this.packagePayload ) {
+	// 		return [];
+	// 	}
+
+	// 	const os = Device.os();
+	// 	const arch = Device.arch();
+	// 	return Game.pluckInstallableBuilds( this.packagePayload.packages || [], os, arch );
+	// }
+
+	// get browserBuilds()
+	// {
+	// 	if ( !this.packagePayload ) {
+	// 		return [];
+	// 	}
+
+	// 	let builds = Game.pluckBrowserBuilds( this.packagePayload.packages || [] );
+
+	// 	// On Client we only want to include HTML games.
+	// 	if ( Environment.isClient ) {
+	// 		builds = builds.filter( ( item ) => item.type === GameBuild.TYPE_HTML );
+	// 	}
+
+	// 	// Pull in ROMs to the browser builds.
+	// 	return builds.concat( Game.pluckRomBuilds( this.packagePayload.packages || [] ) );
+	// }
+
 	@BeforeRouteEnter( { lazy: true, cache: true, cacheTag: 'view' } )
 	beforeRoute( route: VueRouter.Route )
 	{

@@ -18,7 +18,7 @@ angular.module( 'App.Views.Forums' ).controller( 'Forums.Topics.ViewCtrl', funct
 		}
 		else {
 			AutoScroll.noScroll( true );
-			$state.reload( 'forums.topics.view.page' ).then( function()
+			$state.reload( 'forums.topics.view' ).then( function()
 			{
 				$location.replace().hash( 'forum-post-' + formModel.id );
 			} );

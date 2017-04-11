@@ -9,9 +9,15 @@
 				<span class="tag tag-pink" v-if="channel.notifications_count">
 					{{ channel.notifications_count || 0 | number }}
 				</span>
-				<a class="link-unstyled" ui-sref="forums.channels.view.page( { name: channel.name } )">
+				<router-link
+					class="link-unstyled"
+					:to="{
+						name: 'forums.channels.view',
+						params: { name: channel.name },
+					}"
+					>
 					#{{ channel.name }}
-				</a>
+				</router-link>
 			</h4>
 			<div>
 				{{ channel.description }}
@@ -52,15 +58,21 @@
 
 					<div class="forum-channel-list-item-latest-topic-info">
 						<div class="forum-channel-list-item-latest-topic-info-title">
-							<a ui-sref="forums.topics.view.page( {
-									slug: latestPost.topic.slug,
-									id: latestPost.topic.id,
-									'#': 'forum-post-' + latestPost.id,
-									page: getPostPage( latestPost ),
-								} )"
+							<router-link
+								:to="{
+									name: 'forums.topics.view',
+									params: {
+										slug: latestPost.topic.slug,
+										id: latestPost.topic.id,
+									},
+									hash: 'forum-post-' + latestPost.id,
+									query: {
+										page: getPostPage( latestPost ),
+									},
+								}"
 								>
 								{{ latestPost.topic.title }}
-							</a>
+							</router-link>
 						</div>
 						<div class="text-muted">
 							<translate>by</translate>

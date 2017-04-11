@@ -1,0 +1,228 @@
+<div class="forum-post-list-item timeline-list-item">
+
+	<div class="timeline-list-item-icon" :class="{ 'has-notification': !!post.notification }">
+		<app-user-avatar class="avatar-circle" :user="post.user" />
+	</div>
+
+		<!--in-view="inViewChange( $inview )"
+		in-view-options="{ throttle: 1000 }"-->
+	<div class="timeline-list-item-main"
+		:id="`forum-post-${ id }`"
+		:class="{ active: isActive }"
+		>
+
+		<div class="timeline-list-item-details">
+
+			<div class="forum-post-meta">
+				<small class="pull-right text-muted">
+					<!--<translate
+						:translate-params="{ count: number( userPostCount ) }"
+						:translate-n="userPostCount"
+						translate-plural="%{ count } posts"
+						>
+						1 post
+					</translate>-->
+				</small>
+
+				<div class="forum-post-users">
+					<router-link
+						class="forum-post-author link-unstyled"
+						:to="{
+							name: 'profile.overview',
+							params: { username: post.user.username },
+						}"
+						>
+						{{ post.user.display_name }}
+					</router-link>
+
+					<small class="text-muted">
+						@{{ post.user.username }}
+					</small>
+				</div>
+
+				<div class="forum-post-controls">
+					<small class="text-muted"
+						:title="date( post.posted_on, 'medium' )"
+						>
+						<app-time-ago :date="post.posted_on" />
+					</small>
+
+					<span class="dot-separator"></span>
+
+					<!-- Permalink -->
+					<a class="link-muted"
+						@click="copyPermalink"
+						v-app-tooltip="$gettext( `Copy Link to Clipboard` )"
+						>
+						<app-jolticon icon="link" class="middle" />
+					</a>
+
+					<a class="link-muted"
+						v-if="app.user && post.user_id === app.user.id && !topic.is_locked && !isEditing"
+						@click="edit()"
+						v-app-tooltip="$gettext( 'Edit Post' )"
+						>
+						<app-jolticon icon="edit" class="middle" />
+					</a>
+
+					<a class="link-muted"
+						v-if="app.user"
+						v-app-popover-trigger="`forum-post-popover-${ id }`"
+						v-app-tooltip="$gettext( 'Options' )"
+						>
+						<app-jolticon icon="ellipsis-h" class="middle" />
+					</a>
+				</div>
+			</div>
+
+			<app-popover :popover-id="`forum-post-popover-${ id }`" v-if="app.user">
+				<div class="list-group list-group-dark thin">
+					<a class="list-group-item has-icon"
+						@click="report"
+						>
+						<app-jolticon icon="flag" class="warning" />
+						<translate>Report Post</translate>
+					</a>
+					<a class="list-group-item"
+						v-if="app.user.permission_level > 0"
+						:href="Environment.baseUrl + `/moderate/forums/posts/edit/${ post.id }`"
+						target="_blank"
+						>
+						<translate>Edit</translate>
+					</a>
+					<a class="list-group-item"
+						v-if="app.user.permission_level > 0"
+						:href="Environment.baseUrl + `/moderate/forums/posts/remove/${ post.id }`"
+						target="_blank"
+						>
+						<translate>Remove</translate>
+					</a>
+					<a class="list-group-item"
+						v-if="app.user.permission_level > 0"
+						:href="Environment.baseUrl + `/moderate/users/view/${ post.user_id }`"
+						target="_blank"
+						>
+						<translate>Moderate User</translate>
+					</a>
+				</div>
+			</app-popover>
+
+			<a class="forum-post-replied-to-btn"
+				v-if="!isReply && post.parent_post_id"
+				@click="loadParentPost"
+				>
+				<app-jolticon class="middle" :icon="'chevron-' + (!showingParent ? 'right' : 'down')" />
+				<translate
+					:escape-html="false"
+					:translate-params="{ user: post.replied_to.display_name }"
+					>
+					In response to <b>%{ user }</b>
+				</translate>
+				<small>@{{ post.replied_to.username }}</small>
+			</a>
+
+			<app-expand :when="showingParent">
+				<div v-if="parent" class="forum-post-body forum-post-body-quoted">
+					<app-widget-compiler
+						:content="parent.content_compiled"
+						/>
+				</div>
+				<p v-if="!parent">
+					<strong><translate>Post removed.</translate></strong>
+				</p>
+				<hr>
+			</app-expand>
+
+			<div v-if="!isEditing">
+				<div class="forum-post-body">
+					<app-widget-compiler
+						:content="post.content_compiled"
+						/>
+				</div>
+			</div>
+
+			<div v-if="isEditing">
+				<form-forum-post
+					:model="topic"
+					:post="post"
+					@cancel="closeEdit"
+					@submit="closeEdit"
+					/>
+				<br>
+			</div>
+
+			<p class="text-muted small" v-if="post.modified_by">
+				<translate>Last modified on</translate>
+				<span :title="date( post.modified_on, 'medium' )">
+					{{ post.modified_on | date( 'longDate' ) }}
+				</span>
+				<translate>by</translate>
+				<router-link
+					class="link-unstyled"
+					:to="{
+						name: 'profile.overview',
+						params: { username: post.modified_by_user.username },
+					}"
+					>
+					<strong>
+						{{ post.modified_by_user.display_name }}
+					</strong>
+				</router-link>
+				<small>@{{ post.modified_by_user.username }}</small>
+			</p>
+
+			<div class="forum-post-actions" v-if="!isReply">
+
+				<button
+					class="btn btn-outline btn-sm"
+					v-if="!topic.is_locked && app.user"
+					:disabled="isEditing"
+					@click="reply"
+					>
+					<app-jolticon icon="reply" />
+					<translate>Reply</translate>
+				</button>
+
+				<span v-if="post.replies_count">
+					<a class="btn btn-outline btn-sm"
+						@click="toggleReplies"
+						:disabled="isEditing"
+						>
+						<app-jolticon
+							:icon="showReplies
+								? 'chevron-down'
+								: 'chevron-right'
+							"
+							/>
+						<translate v-if="!showReplies">
+							Show Replies
+						</translate>
+						<translate v-else>
+							Hide Replies
+						</translate>
+					</a>
+					<span class="blip light">
+						<span class="blip-caret"></span>
+						<span class="blip-count">
+							{{ post.replies_count || 0 | number }}
+						</span>
+					</span>
+				</span>
+
+			</div>
+
+			<app-expand :when="isReplying">
+				<br>
+				<form-forum-post
+					:model="topic"
+					:reply-to="post"
+					@cancel="closeReply"
+					@submit="onReplied( formModel, $response )"
+					/>
+				<br>
+			</app-expand>
+
+		</div>
+	</div>
+
+</div>

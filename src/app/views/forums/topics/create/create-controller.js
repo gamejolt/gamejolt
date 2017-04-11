@@ -11,6 +11,6 @@ angular.module( 'App.Views.Forums' ).controller( 'Forums.Topics.CreateCtrl', fun
 			Growls.info( 'Your topic has been marked for review. Please allow some time for it to show on the site.', 'Topic Needs Review' );
 		}
 
-		$state.go( 'forums.channels.view.page', { name: this.channel.name } );
+		$state.go( 'forums.channels.view', { name: this.channel.name } );
 	};
 } );

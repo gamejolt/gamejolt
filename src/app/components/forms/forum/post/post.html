@@ -1,27 +1,39 @@
-<form gj-form="formModel" name="forumPostForm">
+<app-form name="forumPostForm">
 
-	<form-group class="no-animate" name="content_markdown" label="{{ 'Post Content' | translate }}" hide-label="true">
+	<app-form-group
+		class="no-animate"
+		name="content_markdown"
+		:label="$gettext( 'Post Content' )"
+		:hide-label="true"
+		>
 
-		<div
+		<!--<div
 			form-markdown-editor
 			preview-class="forum-post-body"
 			markdown-preview-url="/web/forums/posts/preview"
 			markdown-mode="forums"
 			>
-		</div>
+		</div>-->
 
-		<control-errors></control-errors>
+		<app-form-control
+			type="text"
+			/>
 
-	</form-group>
+		<app-form-control-errors />
 
-	<button gj-form-submit-button class="btn btn-outline" ng-disabled="!forumPostForm.$valid" ng-click="onSubmit()">
-		<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
-		<span ng-if="method == 'add'" translate>Add Reply</span>
-		<span ng-if="method == 'edit'" translate>Save</span>
+	</app-form-group>
+
+	<app-form-button :icon="method" class="btn-outline">
+		<translate v-if="method === 'add'">Add Reply</translate>
+		<translate v-if="method === 'edit'">Save</translate>
+	</app-form-button>
+
+	<button
+		class="btn btn-danger-outline"
+		v-if="method === 'edit' || replyTo"
+		@click="onCancel"
+		>
+		<translate>Cancel</translate>
 	</button>
 
-	<button class="btn btn-danger-outline" ng-if="method == 'edit' || replyTo" ng-click="onCancel()" translate>
-		Cancel
-	</button>
-
-</form>
+</app-form>
