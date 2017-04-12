@@ -36,7 +36,7 @@ if ( 'scrollRestoration' in history ) {
 }
 
 export const router = new VueRouter( {
-	mode: 'history',
+	mode: !GJ_IS_CLIENT ? 'history' : undefined,
 	routes,
 	scrollBehavior( to, _from, savedPosition )
 	{
