@@ -1,6 +1,6 @@
 {
   "name": "game-jolt-client",
-  "main": "app://game-jolt-client/index.html#!/",
+  "main": "app://game-jolt-client/index.html#/",
   "window": {
     "show": true,
     "width": 1250,
