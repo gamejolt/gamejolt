@@ -1,20 +1,21 @@
 {
   "name": "game-jolt-client",
-  "main": "app://game-jolt-client/index.html#!/",
+  "main": "http://localhost:8080/",
+  "node-remote": "http://*/*",
   "window": {
-    "show": false,
+    "show": true,
     "width": 1250,
     "height": 700,
     "min_height": 400,
     "min_width": 400,
     "position": "center",
-    "toolbar": false,
+    "toolbar": true,
     "frame": true,
     "icon": "app/img/client/icon-256x256.png"
   },
   "webkit": {
     "plugin": true
   },
-  "chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+  "chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments --mixed-content",
   "user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
 }
