@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { namespace, State, Getter, Mutation, Action } from 'vuex-class';
 
 import { appStore } from '../../lib/gj-lib-client/vue/services/app/app-store';
 import { Settings } from '../components/settings/settings.service';
@@ -18,12 +17,6 @@ import { LibraryState } from './library';
 import { User } from '../../lib/gj-lib-client/components/user/user.model';
 
 Vue.use( Vuex );
-
-// Convenience decorators to call into the library module.
-export const StateLibrary = namespace( 'library', State );
-export const GetterLibrary = namespace( 'library', Getter );
-export const MutationLibrary = namespace( 'library', Mutation );
-export const ActionLibrary = namespace( 'library', Action );
 
 export const Mutations = {
 	clear: 'clear',

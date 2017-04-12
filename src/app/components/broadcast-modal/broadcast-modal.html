@@ -1,7 +1,7 @@
-<app-modal :modal="modal">
+<app-modal>
 
 	<div class="modal-controls">
-		<button class="btn btn-danger-outline" @click="$emit( 'dismiss' )">
+		<button class="btn btn-danger-outline" @click="modal.dismiss()">
 			<app-jolticon icon="remove" />
 			<translate>Close</translate>
 		</button>

@@ -1,11 +1,11 @@
 import Vue from 'vue';
+import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./post.html?style=./post.styl';
 
 import { ForumTopic } from '../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { ForumPost } from '../../../../lib/gj-lib-client/components/forum/post/post.model';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { State } from 'vuex-class';
 import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
@@ -169,9 +169,9 @@ export class AppForumPostListPost extends Vue
 // 		{
 // 			var _this = this;
 
-			
 
-			
+
+
 
 // 		}
 // 	}

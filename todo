@@ -1,13 +1,12 @@
 [ ] try/catch all detached requests
 
-[ ] make all modals async loaded
+[ ] Check broadcast modal -- might not remove backdrop?
 [ ] comment pages for main game page and devlog comments
 [ ] category filter tags aren't leaving correctly
 [ ] Changing genre filters refreshing the route twice and hits API twice.
 [ ] Doesn't scroll correctly when collapsing a fade collapse.
 [ ] Don't trigger inview if the scroll speed is over a certain threshold.
 [ ] Hot section isn't showing active in game listing when page is set
-
 
 [ ] update to core lodash? https://github.com/lodash/lodash/wiki/Build-Differences
 [ ] add angular-gettext back in

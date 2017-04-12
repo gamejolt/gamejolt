@@ -2,8 +2,8 @@ import { Modal } from '../../../lib/gj-lib-client/components/modal/modal.service
 import { appStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Settings } from '../settings/settings.service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { AppBroadcastModal } from './broadcast-modal';
 import { FiresidePost } from '../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { asyncComponentLoader } from '../../../lib/gj-lib-client/utils/utils';
 
 const STORAGE_KEY_PREFIX = 'broadcast-modal:date:';
 
@@ -40,13 +40,10 @@ export class BroadcastModal
 
 	private static async show( posts: FiresidePost[] )
 	{
-		try {
-			await Modal.show( {
-				component: AppBroadcastModal,
-				props: { posts },
-				noBackdropClose: true,
-			} );
-		}
-		catch ( _e ) {}
+		await Modal.show( {
+			component: () => asyncComponentLoader( $import( './broadcast-modal' ) ),
+			props: { posts },
+			noBackdropClose: true,
+		} );
 	}
 }

@@ -183,28 +183,3 @@ export class AppForumPostListItem extends Vue
 		}
 	}
 }
-
-
-// angular.module( 'App.Forum.PostList' ).directive( 'gjForumPostListPost', function()
-// {
-// 	return {
-// 		restrict: 'E',
-// 		template: require( '!html-loader!./post.html' ),
-// 		scope: {
-// 			topic: '=',
-// 			post: '=',
-// 			isReply: '=?',
-// 		},
-// 		bindToController: true,
-// 		controllerAs: 'ctrl',
-// 		controller: function( $element, $scope, $state, $q, $location, Environment, App, Api, Popover, Forum_Post, Growls, AutoScroll, Report_Modal, Clipboard )
-// 		{
-// 			var _this = this;
-
-			
-
-			
-
-// 		}
-// 	}
-// } );

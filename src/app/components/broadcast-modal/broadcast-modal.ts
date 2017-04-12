@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./broadcast-modal.html';
 
@@ -9,16 +8,14 @@ import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTimeAgo } from '../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppWidgetCompiler } from '../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
-import { Modal } from '../../../lib/gj-lib-client/components/modal/modal.service';
-import { AppModal } from '../../../lib/gj-lib-client/components/modal/modal';
 import { AppFiresidePostLikeWidget } from '../../../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 import { AppSocialTwitterShare } from '../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../lib/gj-lib-client/components/social/facebook/like/like';
+import { BaseModal } from '../../../lib/gj-lib-client/components/modal/base';
 
 @View
 @Component({
 	components: {
-		AppModal,
 		AppJolticon,
 		AppTimeAgo,
 		AppWidgetCompiler,
@@ -27,9 +24,8 @@ import { AppSocialFacebookLike } from '../../../lib/gj-lib-client/components/soc
 		AppSocialFacebookLike,
 	},
 })
-export class AppBroadcastModal extends Vue
+export default class AppBroadcastModal extends BaseModal
 {
-	@Prop( Modal ) modal: Modal;
 	@Prop( { type: Array, default: () => [] } ) posts: FiresidePost[];
 
 	post: FiresidePost | null = null;

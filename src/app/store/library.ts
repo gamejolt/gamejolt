@@ -155,7 +155,6 @@ export class LibraryState extends Vue
 		let syncUrlAfter = this.isViewingCollection( collection );
 
 		if ( await GamePlaylistSaveModal.show( collection ) ) {
-
 			if ( syncUrlAfter ) {
 				Scroll.shouldAutoScroll = false;
 				router.replace( collection.routeLocation );
@@ -197,7 +196,9 @@ export class LibraryState extends Vue
 						{ playlist: collection.name },
 					),
 					this.$gettext(
-						`Playlist Unfollowed`,
+						collection.isOwner
+							? this.$gettext( `Playlist Removed` )
+							: this.$gettext( `Playlist Unfollowed` ),
 					),
 				);
 
