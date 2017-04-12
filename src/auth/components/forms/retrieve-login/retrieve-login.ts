@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./retrieve-login.html';
 
-import { FormCommonComponents } from '../../../../lib/gj-lib-client/components/form-vue/form';
 import { BaseForm, FormOnSubmit } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
@@ -11,11 +10,10 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 @View
 @Component({
 	components: {
-		...FormCommonComponents,
 		AppJolticon,
 	},
 })
-export class FormRetrieveLogin extends BaseForm implements FormOnSubmit
+export class FormRetrieveLogin extends BaseForm<any> implements FormOnSubmit
 {
 	Connection = makeObservableService( Connection );
 

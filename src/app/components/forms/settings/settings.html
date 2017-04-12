@@ -1,4 +1,4 @@
-<app-form name="settingsForm">
+<app-form name="settingsForm" @changed="onChange">
 
 	<fieldset id="settings-client" v-if="Environment.isClient">
 		<legend>
@@ -39,7 +39,7 @@
 			name="limit_downloads"
 			:label="$gettext( 'settings.limit_downloads_label' )"
 			>
-			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+			<app-form-control-toggle-switch :on-label="$gettext( 'Yes' )" :off-label="$gettext( 'No' )" />
 		</app-form-group>
 		<br v-if="formModel.limit_downloads">
 
@@ -67,7 +67,7 @@
 			<p class="help-block">
 				<translate>settings.limit_extractions_help</translate>
 			</p>
-			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+			<app-form-control-toggle-switch :on-label="$gettext( 'Yes' )" :off-label="$gettext( 'No' )" />
 		</app-form-group>
 		<br v-if="formModel.limit_downloads">
 
@@ -94,7 +94,7 @@
 			<p class="help-block">
 				<translate>settings.queue_when_playing_help</translate>
 			</p>
-			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+			<app-form-control-toggle-switch :on-label="$gettext( 'Yes' )" :off-label="$gettext( 'No' )" />
 		</app-form-group>
 
 		<app-form-group
@@ -102,7 +102,7 @@
 			name="autostart_client"
 			:label="$gettext( 'settings.autostart_client_label' )"
 			>
-			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+			<app-form-control-toggle-switch :on-label="$gettext( 'Yes' )" :off-label="$gettext( 'No' )" />
 		</app-form-group>
 
 	</fieldset>
@@ -116,7 +116,7 @@
 			name="chat_notify_friends_online"
 			:label="$gettext( 'settings.chat_notify_friends_online_label' )"
 			>
-			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+			<app-form-control-toggle-switch :on-label="$gettext( 'Yes' )" :off-label="$gettext( 'No' )" />
 		</app-form-group>
 	</fieldset>
 
@@ -132,7 +132,7 @@
 			<p class="help-block">
 				<translate>This will block games that have a maturity rating of "Mature" and ask if you'd like to continue before showing the full page.</translate>
 			</p>
-			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+			<app-form-control-toggle-switch :on-label="$gettext( 'Yes' )" :off-label="$gettext( 'No' )" />
 		</app-form-group>
 	</fieldset>
 
@@ -148,7 +148,7 @@
 			<p class="help-block">
 				<translate>With this on you will receive notifications of new site features that have been added since you last visited.</translate>
 			</p>
-			<!--<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="{{ 'Yes' | translate }}" toggle-switch-off-text="{{ 'No' | translate }}"></gj-toggle-switch>-->
+			<app-form-control-toggle-switch :on-label="$gettext( 'Yes' )" :off-label="$gettext( 'No' )" />
 		</app-form-group>
 	</fieldset>
 

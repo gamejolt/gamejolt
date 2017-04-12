@@ -2,25 +2,23 @@ import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./post.html';
 
 import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
-import { FormCommonComponents } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
+import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
 
 @View
 @Component({
 	components: {
-		...FormCommonComponents,
+		AppFormControlMarkdown,
 	},
 })
-export class FormForumPost extends BaseForm
+export class FormForumPost extends BaseForm<ForumPost>
 {
 	@Prop( ForumTopic ) topic: ForumTopic;
 	@Prop( ForumPost ) replyTo?: ForumPost;
 
-	formModel: ForumPost;
-
 	modelClass = ForumPost;
-	// resetOnSubmit: true,
+	resetOnSubmit = true;
 
 	created()
 	{

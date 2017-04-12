@@ -2,9 +2,9 @@ import { Component, Watch } from 'vue-property-decorator';
 import * as View from '!view!./settings.html';
 
 import { BaseForm } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { FormCommonComponents } from '../../../../lib/gj-lib-client/components/form-vue/form';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Settings } from '../../settings/settings.service';
+import { AppFormControlToggleSwitch } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle-switch/toggle-switch';
 
 // if ( Environment.isClient ) {
 // 	var Client_Installer = $injector.get( 'Client_Installer' );
@@ -14,10 +14,10 @@ import { Settings } from '../../settings/settings.service';
 @View
 @Component({
 	components: {
-		...FormCommonComponents,
-	},
+		AppFormControlToggleSwitch,
+	}
 })
-export class FormSettings extends BaseForm
+export class FormSettings extends BaseForm<any>
 {
 	Environment = Environment;
 
@@ -80,10 +80,9 @@ export class FormSettings extends BaseForm
 			: -1;
 	}
 
-	@Watch( 'formModel', { deep: true } )
-	formModelChange()
+	onChange()
 	{
-		console.log( 'form model change' );
+		console.log( 'form model change', this.formModel );
 		Settings.set( 'chat-notify-friends-online', this.formModel.chat_notify_friends_online );
 		Settings.set( 'restricted-browsing', this.formModel.restricted_browsing );
 		Settings.set( 'broadcast-modal', this.formModel.broadcast_modal );
