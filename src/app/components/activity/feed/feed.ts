@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Subscription } from 'rxjs/Subscription';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import * as View from '!view!./feed.html';
-import '../../timeline-list/timeline-list.styl';
+import '../../../../lib/gj-lib-client/components/timeline-list/timeline-list.styl';
 
 import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedContainer } from './feed-container-service';

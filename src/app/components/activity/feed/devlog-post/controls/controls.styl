@@ -11,11 +11,10 @@
 			font-size: $font-size-small
 
 	&-link
-		// TODO
-		// & + &
-		// 	&::before
-		// 		@extend .dot-separator
-		// 		content: ''
+		& + &
+			&::before
+				dot-separator()
+				content: ''
 
 		&.active
 			font-weight: bold
