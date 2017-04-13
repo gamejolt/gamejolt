@@ -81,7 +81,7 @@
 
 				<div class="col-md-3 col-md-push-8 col-md-offset-1">
 
-					<app-scroll-affix v-if="app.user">
+					<app-scroll-affix :should-affix="Screen.isDesktop" v-if="app.user">
 						<button
 							class="btn btn-primary-outline btn-block"
 							v-if="!topic.is_locked"
@@ -265,25 +265,37 @@
 						@replied="onPostAdded"
 						/>
 
-					<br><br>
+					<div class="timeline-list-item">
+						<div class="timeline-list-item-main">
+							<div class="timeline-list-item-details">
 
-					<app-pagination
-						:items-per-page="perPage"
-						:total-items="topic.replies_count"
-						:current-page="currentPage"
-						@pagechange="pageChange"
-						/>
+								<br>
+
+								<app-pagination
+									:items-per-page="perPage"
+									:total-items="topic.replies_count"
+									:current-page="currentPage"
+									@pagechange="pageChange"
+									/>
+
+							</div>
+						</div>
+					</div>
 
 					<div v-if="app.user">
 						<div v-if="!topic.is_locked">
-							<h3 class="sans-margin-top" id="add-reply">
-								<translate>Add Reply</translate>
-							</h3>
 
-							<form-forum-post
-								:topic="topic"
-								@submit="onPostAdded"
-								/>
+							<app-message-thread-add>
+								<h4 class="sans-margin-top" id="add-reply">
+									<translate>Add Reply</translate>
+								</h4>
+
+								<form-forum-post
+									:topic="topic"
+									@submit="onPostAdded"
+									/>
+
+							</app-message-thread-add>
 						</div>
 
 						<div class="alert alert-info full-bleed-xs" v-if="topic.is_locked">

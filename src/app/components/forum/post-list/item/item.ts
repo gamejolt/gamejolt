@@ -12,9 +12,7 @@ import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growl
 import { Popover } from '../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 import { Clipboard } from '../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
-import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
@@ -23,12 +21,15 @@ import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { FormForumPost } from '../../../forms/forum/post/post';
+import { AppMessageThreadItem } from '../../../../../lib/gj-lib-client/components/message-thread/item/item';
+import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
+import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 
 @View
 @Component({
 	components: {
-		AppUserAvatar,
-		AppTimeAgo,
+		AppScrollInview,
+		AppMessageThreadItem,
 		AppJolticon,
 		AppPopover,
 		AppWidgetCompiler,
@@ -50,17 +51,18 @@ export class AppForumPostListItem extends Vue
 	@Prop( ForumPost ) post: ForumPost;
 	@Prop( Boolean ) isReply: boolean;
 	@Prop( Boolean ) showReplies: boolean;
-	// onReply: '=?',
-	// userPostCount: '=',
 
 	@State app: AppState;
 
 	isEditing = false;
 	isReplying = false;
 	isActive = false;
+	isShowingReplies = false;
 
 	showingParent = false;
 	parent: ForumPost | null = null;
+	replies: ForumPost[] = [];
+	totalReplyCount = 0;
 
 	date = date;
 	number = number;
@@ -71,25 +73,43 @@ export class AppForumPostListItem extends Vue
 		return (this.isReply ? this.post.parent_post_id + '-' : '') + this.post.id;
 	}
 
-	created()
+	mounted()
 	{
-		// this.checkPermalink();
+		this.checkPermalink();
 	}
 
 	toggleReplies()
 	{
-		this.$emit( 'toggle-replies' );
-		// if ( $scope.listCtrl.showingReplies[ this.post.id ] ) {
-		// 	$scope.listCtrl.showingReplies[ this.post.id ] = false;
-		// 	return $q.resolve();
-		// }
+		if ( this.isShowingReplies ) {
+			this.isShowingReplies = false;
+			return;
+		}
 
-		// // If we already have replies loaded in from a previous run, let's show them while loading new ones.
-		// if ( $scope.listCtrl.replies[ this.post.id ] && $scope.listCtrl.replies[ this.post.id ].length ) {
-		// 	$scope.listCtrl.showingReplies[ this.post.id ] = true;
-		// }
+		this.loadReplies();
+	}
 
-		// return this.loadReplies();
+	async loadReplies()
+	{
+		try {
+			const payload = await Api.sendRequest(
+				'/web/forums/posts/replies/' + this.post.id,
+				undefined,
+				{ noErrorRedirect: true },
+			);
+
+			this.replies = ForumPost.populate( payload.replies );
+			this.totalReplyCount = payload.repliesCount || 0;
+
+			if ( !this.isShowingReplies ) {
+				this.isShowingReplies = true;
+			}
+		}
+		catch ( e ) {
+			Growls.error(
+				this.$gettext( `Couldn't load replies for some reason.` ),
+				this.$gettext( `Loading Failed` ),
+			);
+		}
 	}
 
 	async loadParentPost()
@@ -156,15 +176,15 @@ export class AppForumPostListItem extends Vue
 		ReportModal.show( this.post );
 	}
 
-	// inViewChange( isInView )
-	// {
-	// 	if ( isInView && this.post.notification ) {
+	onInviewChange( isInView: boolean )
+	{
+		if ( isInView && this.post.notification ) {
 
-	// 		// Don't wait for success before updating the view.
-	// 		this.post.notification.$read();
-	// 		this.post.notification = null;
-	// 	}
-	// }
+			// Don't wait for success before updating the view.
+			this.post.notification.$read();
+			this.post.notification = undefined;
+		}
+	}
 
 	copyPermalink()
 	{
@@ -173,13 +193,10 @@ export class AppForumPostListItem extends Vue
 
 	private checkPermalink()
 	{
-		var hash = $location.hash();
-		if ( !hash || hash.indexOf( 'forum-post-' ) !== 0 ) {
-			return;
-		}
-
-		if ( hash === 'forum-post-' + this.id ) {
+		const hash = this.$route.hash;
+		if ( hash === '#forum-post-' + this.id ) {
 			this.isActive = true;
+			Scroll.to( 'forum-post-' + this.id );
 		}
 	}
 }

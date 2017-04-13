@@ -35,6 +35,8 @@ import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/w
 import { AppForumPostList } from '../../../../components/forum/post-list/post-list';
 import { AppScrollAffix } from '../../../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { FormForumPost } from '../../../../components/forms/forum/post/post';
+import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components/message-thread/add/add';
 
 @View
 @Component({
@@ -50,6 +52,7 @@ import { FormForumPost } from '../../../../components/forms/forum/post/post';
 		AppWidgetCompiler,
 		AppForumPostList,
 		AppScrollAffix,
+		AppMessageThreadAdd,
 		FormForumPost,
 	},
 	directives: {
@@ -57,6 +60,9 @@ import { FormForumPost } from '../../../../components/forms/forum/post/post';
 		AppScrollTo,
 		AppPopoverTrigger,
 		AppTrackEvent,
+	},
+	filters: {
+		number,
 	},
 })
 export default class RouteForumsTopicsView extends Vue
@@ -167,14 +173,13 @@ export default class RouteForumsTopicsView extends Vue
 		--this.followerCount;
 	}
 
-	pageChange( page: number )
+	pageChange()
 	{
 		// We try to switch pages and give it time for the main post to cut off
 		// if it's too long. This is super hacky, it doesn't always work... I
 		// don't really know how to make this better. Maybe a scroll directive
 		// that gets loaded in once the content is loaded for main post? Would
 		// sure be a lot of work just to get the scrolling hook working better.
-		this.currentPage = page;
 		setTimeout( () =>
 		{
 			Scroll.to( 'forum-posts-list', { animate: true } );
