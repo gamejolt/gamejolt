@@ -18,6 +18,7 @@ import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/
 import { AppSearch } from '../../search/search';
 import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Mutations } from '../../../store/index';
+import { ChatClient } from '../../chat/client';
 
 @View
 @Component({
@@ -38,7 +39,7 @@ import { Mutations } from '../../../store/index';
 export class AppShellTopNav extends Vue
 {
 	@State app: AppState;
-	@State chat: any;
+	@State chat: ChatClient;
 	@State notificationCount: number;
 
 	@Getter isLeftPaneVisible: boolean;

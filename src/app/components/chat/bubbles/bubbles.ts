@@ -1,39 +1,39 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { Getter, Mutation } from 'vuex-class';
+import { Getter, Mutation, State } from 'vuex-class';
 import * as View from '!view!./bubbles.html?style=./bubbles.styl';
 
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
-import { Chat } from '../chat.service';
 import { Mutations } from '../../../store/index';
+import { ChatClient } from '../client';
 
 @View
 @Component({})
 export class AppChatBubbles extends Vue
 {
+	@State chat: ChatClient;
 	@Getter isRightPaneVisible: boolean;
 
 	@Mutation( Mutations.toggleRightPane )
 	toggleRightPane: Function;
 
 	Screen = makeObservableService( Screen );
-	client = Chat.client;
 
 	activateRoom( roomId: number )
 	{
 		if ( !this.isRightPaneVisible ) {
 			this.toggleRightPane();
 
-			if ( !this.client.isInRoom( roomId ) ) {
-				this.client.maximizeRoom( roomId );
+			if ( !this.chat.isInRoom( roomId ) ) {
+				this.chat.maximizeRoom( roomId );
 			}
 		}
 		else {
-			if ( this.client.isInRoom( roomId ) ) {
-				this.client.minimizeRoom();
+			if ( this.chat.isInRoom( roomId ) ) {
+				this.chat.minimizeRoom();
 			}
 			else {
-				this.client.maximizeRoom( roomId );
+				this.chat.maximizeRoom( roomId );
 			}
 		}
 	}

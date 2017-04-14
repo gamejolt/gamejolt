@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
 
 import { store, Mutations } from '../../store/index';
 import { ChatUser } from './user';
@@ -9,17 +10,14 @@ import { Environment } from '../../../lib/gj-lib-client/components/environment/e
 import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoomStorage } from './room-storage.service';
-import { Chat } from './chat.service';
 import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
+import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
+import { EventBus } from '../../../lib/gj-lib-client/components/event-bus/event-bus.service';
+import { ChatNotification } from './notification/notification.service';
 
-export interface ChatClientOptions
-{
-	/**
-	 * Single room mode should only allow a single room to be
-	 * open at any one time.
-	 */
-	forceSingleRoomMode?: boolean;
-}
+export const ChatMaxNumMessages = 200;
+export const ChatMaxNumTabs = 10;
+export const ChatSiteModPermission = 2;
 
 interface PrimusChatEvent
 {
@@ -27,10 +25,16 @@ interface PrimusChatEvent
 	data: any;
 }
 
+export interface ChatNewMessageEvent
+{
+	isPrimer: boolean;
+	message: ChatMessage;
+}
+
 async function getCookie( name: string )
 {
 	// Within Client we have to access it connectedthis way.
-	if ( Environment.isClient ) {
+	if ( GJ_IS_CLIENT ) {
 		const gui = require( 'nw.gui' );
 		const win = gui.Window.get();
 		win.cookies.get( {
@@ -59,53 +63,88 @@ async function getCookie( name: string )
 	}
 }
 
-export class ChatClient
+@Component({})
+export class ChatClient extends Vue
 {
 	connected = false;
-	spark: any = null;
 	allCount = 0;
 	publicRooms: ChatRoom[] = [];
-	forceSingleRoomMode = false;
-	singleRoomMode = false;
 
-	primus: any = null;
+	currentUser: ChatUser | null = null;
+	friendsList: ChatUserCollection = null as any;
+	private friendsPopulated = false;
 
-	startTime = 0;
-	currentUser?: ChatUser;
-	friendsList: ChatUserCollection;
-	friendsPopulated = false;
-
-	room?: ChatRoom;
+	room: ChatRoom | null = null;
 
 	// The following are indexed by room ID.
-	messages: { [k: number]: ChatMessage[] } = {};
-	usersOnline: { [k: number]: ChatUserCollection } = {};
-	notifications: { [k: number]: number } = {};
-	openRooms: { [k: number]: ChatRoom } = {};
+	messages: { [k: string]: ChatMessage[] } = {};
+	usersOnline: { [k: string]: ChatUserCollection } = {};
+	notifications: { [k: string]: number } = {};
+	openRooms: { [k: string]: ChatRoom } = {};
 	isFocused = true;
 
-	messageQueue: string[] = [];
-	sendingMessage = false;
+	private messageQueue: string[] = [];
+	private sendingMessage = false;
 
-	// TODO
-	constructor( options: ChatClientOptions = {} )
+	private spark: any = null;
+	private primus: any = null;
+	private startTime = 0;
+
+	/**
+	 * Whether or not to allow only one open room at a time.
+	 */
+	get singleRoomMode()
 	{
-		this.forceSingleRoomMode = !!options.forceSingleRoomMode;
+		// If the user is chatting as guest, or they're on mobile.
+		return !this.currentUser || Screen.isXs;
+	}
 
-		// Initialize Primus.
-		this._reset();
+	get friendNotificationsCount()
+	{
+		let count = 0;
+		for ( const key of Object.keys( this.notifications ) ) {
+			const cur = this.notifications[ key ];
+
+			// Notifications for a room? Increment friend notifications.
+			if ( this.friendsList.getByRoom( parseInt( key, 10 ) ) ) {
+				count += (cur || 0);
+			}
+		}
+
+		return count;
+	}
+
+	get roomNotificationsCount()
+	{
+		let count = 0;
+		for ( const val of Object.values( this.notifications ) ) {
+			count += val || 0;
+		}
+		return count;
+	}
+
+	async created()
+	{
+		if ( GJ_IS_SSR || Environment.isPrerender ) {
+			return;
+		}
+
+		// Initialize after we've been created. This allows the chat to get
+		// attached to the store before initializing all models within.
+		await this.$nextTick();
+		this.reset();
 		this.initPrimus();
 	}
 
-	private _reset()
+	private reset()
 	{
 		this.startTime = Date.now();
 
-		this.currentUser = undefined;
+		this.currentUser = null;
 		this.friendsList = new ChatUserCollection( ChatUserCollection.TYPE_FRIEND );
 		this.friendsPopulated = false;
 
-		this.room = undefined;
+		this.room = null;
 
 		// The following are indexed by roomId
 		this.messages = {};
@@ -120,7 +159,7 @@ export class ChatClient
 
 	reconnect()
 	{
-		this._reset();
+		this.reset();
 
 		if ( this.spark ) {
 
@@ -132,9 +171,7 @@ export class ChatClient
 	logout()
 	{
 		this.reconnect();
-
-		// TODO
-		// $rootScope.$emit( 'Chat.logOut' );
+		ChatRoomStorage.logout();
 	}
 
 	/**
@@ -184,22 +221,19 @@ export class ChatClient
 			if ( options.sendUnfocusEvent && this.currentUser ) {
 				this.primus.write( { event: 'room-unfocus', roomId: this.room.id } );
 			}
-			// this.friendsList.touchRoom( this.room.id );
 		}
 
 		if ( newRoom ) {
 			if ( this.currentUser ) {
 				this.primus.write( { event: 'room-focus', roomId: newRoom.id } );
 			}
-			// this.friendsList.touchRoom( newRoom.id );
 
 			if ( newRoom.isGroupRoom ) {
-				Vue.delete( this.notifications, '' + newRoom.id );
-				// $rootScope.$emit( 'Chat.notificationsUpdated' );
+				this.$delete( this.notifications, '' + newRoom.id );
 			}
 		}
 
-		this.room = newRoom;
+		this.room = newRoom || null;
 	}
 
 	newNotification( roomId: number )
@@ -215,8 +249,6 @@ export class ChatClient
 				this.notifications[ roomId ] = 1;
 			}
 		}
-
-		// $rootScope.$emit( 'Chat.notificationsUpdated' );
 	}
 
 	/**
@@ -233,8 +265,8 @@ export class ChatClient
 			if ( roomId && !this.openRooms[ roomId ] ) {
 
 				// Only allow a certain number of tabs to be open at once.
-				if ( Object.keys( this.openRooms ).length >= Chat.MAX_NUM_TABS ) {
-					Growls.error( 'You can only have ' + Chat.MAX_NUM_TABS + ' chat tabs open at once.', 'Too Many Chats' );
+				if ( Object.keys( this.openRooms ).length >= ChatMaxNumTabs ) {
+					Growls.error( 'You can only have ' + ChatMaxNumTabs + ' chat tabs open at once.', 'Too Many Chats' );
 					return;
 				}
 
@@ -244,10 +276,7 @@ export class ChatClient
 					isSource: isSource || false,
 				} );
 
-				// $rootScope.$emit( 'Chat.joinRoom', {
-				// 	roomId: roomId,
-				// 	isSource: isSource || false
-				// } );
+				ChatRoomStorage.joinRoom( roomId );
 			}
 			else {
 				this.maximizeRoom( roomId );
@@ -268,9 +297,7 @@ export class ChatClient
 				roomId: roomId,
 			} );
 
-			// $rootScope.$emit( 'Chat.leaveRoom', {
-			// 	roomId: roomId,
-			// } );
+			ChatRoomStorage.leaveRoom( roomId );
 		}
 	}
 
@@ -338,7 +365,7 @@ export class ChatClient
 			this.messages[ roomId ].push( message );
 
 			// If we are over our max message count, then remove older messages.
-			if ( this.messages[ roomId ].length > Chat.MAX_NUM_MESSAGES ) {
+			if ( this.messages[ roomId ].length > ChatMaxNumMessages ) {
 				this.messages[ roomId ].splice( 0, 1 );  // Just remove the oldest.
 			}
 		}
@@ -346,12 +373,6 @@ export class ChatClient
 
 	private _processMessage( msg: PrimusChatEvent )
 	{
-		/**
-		 * Will be called when the user is ready to chat (set-cookie must be sent by us before this fired).
-		 *
-		 * string `event` 'connected'
-		 * object `payload`
-		 */
 		if ( msg.event === 'connected' ) {
 
 			// Cap it at a max of 60s.
@@ -360,18 +381,9 @@ export class ChatClient
 
 			const lastRoomId = this.room ? this.room.id : undefined;
 
-			this.currentUser = msg.data.user ? new ChatUser( msg.data.user ) : undefined;
+			this.currentUser = msg.data.user ? new ChatUser( msg.data.user ) : null;
 			this.connected = true;
 			this.openRooms = {}; // If there are open rooms, we can't re-enter the room.
-
-			// If they are a guest, only allow them to view a single room at a time.
-			// The constructor can force single room mode for if they are browsing on mobile, etc.
-			if ( !this.currentUser || this.forceSingleRoomMode ) {
-				this.singleRoomMode = true;
-			}
-			else {
-				this.singleRoomMode = false;
-			}
 
 			this.setRoom( undefined );
 
@@ -384,8 +396,6 @@ export class ChatClient
 			else {
 				ChatRoomStorage.destroy();
 			}
-
-			// $rootScope.$emit( 'Chat.connected', {} );
 		}
 		else if ( msg.event === 'friends-list' ) {
 
@@ -394,7 +404,6 @@ export class ChatClient
 
 				this.friendsList = new ChatUserCollection( ChatUserCollection.TYPE_FRIEND, friendsList );
 				this.friendsPopulated = true;
-				// $rootScope.$emit( 'Chat.friendsListUpdated', {} );
 			}
 		}
 		else if ( msg.event === 'public-rooms' ) {
@@ -402,7 +411,6 @@ export class ChatClient
 		}
 		else if ( msg.event === 'notifications' ) {
 			this.notifications = msg.data.notifications;
-			// $rootScope.$emit( 'Chat.notificationsUpdated' );
 		}
 		else if ( msg.event === 'message' ) {
 			const message = new ChatMessage( msg.data.message );
@@ -416,8 +424,6 @@ export class ChatClient
 			if ( this.messageQueue.length ) {
 				this._sendNextMessage();
 			}
-
-			// $rootScope.$emit( 'Chat.message', message );
 		}
 		else if ( msg.event === 'message-removed' ) {
 			const id = msg.data.id;
@@ -437,15 +443,13 @@ export class ChatClient
 			// If the notification key is null, set it to 1.
 			this.newNotification( message.roomId );
 
-			// $rootScope.$emit( 'Chat.notification', message, this.notifications[ message.roomId ] );
+			ChatNotification.notification( message );
 		}
 		else if ( msg.event === 'clear-notifications' ) {
 			const roomId = msg.data.roomId;
 
 			if ( this.openRooms[ roomId ] ) {
-				Vue.delete( this.notifications, roomId );
-
-				// $rootScope.$emit( 'Chat.notificationsUpdated' );
+				this.$delete( this.notifications, roomId );
 			}
 		}
 		else if ( msg.event === 'user-enter-room' ) {
@@ -558,12 +562,9 @@ export class ChatClient
 		else if ( msg.event === 'friend-add' ) {
 			const user = new ChatUser( msg.data.user );
 			this.friendsList.add( user );
-			// $rootScope.$emit( 'Chat.friendsListUpdated', {} );
 		}
 		else if ( msg.event === 'friend-remove' ) {
 			const userId = msg.data.userId;
-
-			// Delete their room
 
 			const friend = this.friendsList.get( userId );
 			if ( friend ) {
@@ -571,19 +572,16 @@ export class ChatClient
 			}
 
 			this.friendsList.remove( userId );
-			// $rootScope.$emit( 'Chat.friendsListUpdated', {} );
 		}
 		else if ( msg.event === 'friend-online' ) {
 			const user = new ChatUser( msg.data.user );
 			this.friendsList.online( user );
-			// $rootScope.$emit( 'Chat.friendsListUpdated', {} );
-			// $rootScope.$emit( 'Chat.friendOnline', user.id );
+			ChatNotification.friendOnline( user.id );
 		}
 		else if ( msg.event === 'friend-offline' ) {
 			const userId = msg.data.userId;
 			this.friendsList.offline( userId );
-			// $rootScope.$emit( 'Chat.friendsListUpdated', {} );
-			// $rootScope.$emit( 'Chat.friendOffline', userId );
+			ChatNotification.friendOffline( userId );
 		}
 		else if ( msg.event === 'you-leave-room' ) {
 			const roomId = msg.data.roomId;
@@ -595,26 +593,18 @@ export class ChatClient
 					this.setRoom( undefined, { sendUnfocusEvent: false } );
 				}
 
-				// If there was a PM'd user before, let's update the status so it doesn't show their room is open anymore
-				// if ( this.pmUsers[ roomId ] ) {
-				// 	this.friendsList.touchRoom( roomId );
-				// }
-
 				// Reset the room we were in
-				Vue.delete( this.usersOnline, roomId );
-				Vue.delete( this.openRooms, roomId );
-				Vue.delete( this.messages, roomId );
-				// Vue.delete( this.pmUsers, roomId );
+				this.$delete( this.usersOnline, roomId );
+				this.$delete( this.openRooms, roomId );
+				this.$delete( this.messages, roomId );
 			}
 		}
 		else if ( msg.event === 'invalid-room' ) {
-			// const roomId = msg.data.roomId;
+			const roomId = msg.data.roomId;
 
 			// Remove this room from room storage if it happened to be there.
 			// If other local sessions were joined, let's disconnect them.
-			// $rootScope.$emit( 'Chat.leaveRoom', {
-			// 	roomId: roomId,
-			// } );
+			ChatRoomStorage.leaveRoom( roomId );
 		}
 		else if ( msg.event === 'online-count' ) {
 			this.allCount = msg.data.onlineCount;
@@ -633,19 +623,11 @@ export class ChatClient
 			}
 
 			// Set the room info
-			Vue.set( this.openRooms, '' + room.id, room );
-			Vue.set( this.messages, '' + room.id, [] );
+			this.$set( this.openRooms, '' + room.id, room );
+			this.$set( this.messages, '' + room.id, [] );
 
 			if ( room.isGroupRoom ) {
-				Vue.set( this.usersOnline, '' + room.id, new ChatUserCollection( ChatUserCollection.TYPE_ROOM, users ) );
-
-				this.refreshModStates();
-				this.refreshMutedStates();
-			}
-			else if ( room.isPmRoom ) {
-
-				// Since we cleared notifications, gotta touch them.
-				// this.friendsList.touchRoom( room.id );
+				this.$set( this.usersOnline, '' + room.id, new ChatUserCollection( ChatUserCollection.TYPE_ROOM, users ) );
 			}
 
 			this._processNewOutput( messages, true );
@@ -655,8 +637,6 @@ export class ChatClient
 			if ( isSource ) {
 				this.setRoom( room );
 			}
-
-			// $rootScope.$emit( 'Chat.notificationsUpdated' );
 		}
 	}
 
@@ -691,12 +671,15 @@ export class ChatClient
 			return;
 		}
 
-		messages.forEach( ( msg ) =>
+		messages.forEach( ( message ) =>
 		{
-			this.outputMessage( msg.roomId, ChatMessage.TypeNormal, msg, isPrimer );
+			this.outputMessage( message.roomId, ChatMessage.TypeNormal, message, isPrimer );
 
 			// Emit an event that we've sent out a new message.
-			// $rootScope.$emit( 'Chat.newMessage', { message: msg, isPrimer: isPrimer } );
+			EventBus.emit( 'Chat.newMessage', <ChatNewMessageEvent>{
+				message,
+				isPrimer,
+			} );
 		} );
 	}
 
@@ -714,11 +697,11 @@ export class ChatClient
 			return;
 		}
 
-		if ( this.checkRoomMutedState( this.room.id ) ) {
+		if ( this.room.isMuted ) {
 			this.sendRoboJolt(
 				this.room.id,
-				'*Beep boop bop.* You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. *Bzzzzzzzzt.*',
-				'<p><em>Beep boop bop.</em> You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. <em>Bzzzzzzzzt.</em></p>'
+				`*Beep boop bop.* You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. *Bzzzzzzzzt.*`,
+				`<p><em>Beep boop bop.</em> You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. <em>Bzzzzzzzzt.</em></p>`,
 			);
 			this.sendingMessage = false;
 			return;
@@ -738,7 +721,7 @@ export class ChatClient
 				id: 192757,
 				username: 'robo-jolt-2000',
 				displayName: 'RoboJolt 2000',
-				imgAvatar: 'https://secure.gravatar.com/avatar/eff6eb6a79a34774e8f94400931ce6c9?s=200&r=pg&d=https%3A%2F%2Fs.gjcdn.net%2Fimg%2Fno-avatar-3.png',
+				imgAvatar: `https://secure.gravatar.com/avatar/eff6eb6a79a34774e8f94400931ce6c9?s=200&r=pg&d=https%3A%2F%2Fs.gjcdn.net%2Fimg%2Fno-avatar-3.png`,
 			} ),
 			roomId,
 			contentRaw,
@@ -756,12 +739,12 @@ export class ChatClient
 		}
 
 		// No one can moderate site mods.
-		if ( targetUser.permissionLevel >= Chat.SITE_MOD_PERMISSION ) {
+		if ( targetUser.permissionLevel >= ChatSiteModPermission ) {
 			return false;
 		}
 
 		// Site mods can moderate everyone else.
-		if ( this.currentUser.permissionLevel >= Chat.SITE_MOD_PERMISSION ) {
+		if ( this.currentUser.permissionLevel >= ChatSiteModPermission ) {
 			return true;
 		}
 
@@ -785,68 +768,6 @@ export class ChatClient
 		return false;
 	}
 
-	refreshModStates()
-	{
-		// Guest
-		if ( !this.currentUser ) {
-			return;
-		}
-
-		Object.keys( this.openRooms ).forEach( ( _roomId ) =>
-		{
-			const roomId = parseInt( _roomId, 10 );
-			const room = this.openRooms[ roomId ];
-
-			if ( !room.isGroupRoom ) {
-				return;
-			}
-
-			const us = this.usersOnline[ roomId ].get( this.currentUser!.id );
-			if ( us ) {
-				room.isMod = us.isMod || false;
-			}
-		} );
-	}
-
-	refreshMutedStates()
-	{
-		// Guest
-		if ( !this.currentUser ) {
-			return;
-		}
-
-		Object.keys( this.openRooms ).forEach( ( _roomId ) =>
-		{
-			const roomId = parseInt( _roomId, 10 );
-			const room = this.openRooms[ roomId ];
-
-			if ( !room.isGroupRoom ) {
-				return;
-			}
-
-			const us = this.usersOnline[ roomId ].get( this.currentUser!.id );
-			if ( us ) {
-				room.isMutedGlobal = !!us.isMutedGlobal;
-				room.isMutedRoom = !!us.isMutedRoom;
-			}
-		} );
-	}
-
-	checkRoomMutedState( roomId: number )
-	{
-		// Guest
-		if ( !this.currentUser ) {
-			return false;
-		}
-
-		const room = this.openRooms[ roomId ];
-		if ( !room || !room.isGroupRoom ) {
-			return false;
-		}
-
-		return room.isMutedGlobal || room.isMutedRoom;
-	}
-
 	setFocused( focused: boolean )
 	{
 		this.isFocused = focused;
@@ -854,30 +775,19 @@ export class ChatClient
 		if ( this.room && this.currentUser ) {
 			if ( this.isFocused ) {
 				this.primus.write( { event: 'room-focus', roomId: this.room.id } );
-			} else {
+			}
+			else {
 				this.primus.write( { event: 'room-unfocus', roomId: this.room.id } );
 			}
-
-			// this.friendsList.touchRoom( this.room.id );
 		}
 	}
 
-	hasOpenRooms()
-	{
-		return Object.keys( this.openRooms ).length > 0;
-	}
-
-	isInRoom( roomId: number )
+	isInRoom( roomId?: number )
 	{
 		if ( !roomId ) {
 			return !!this.room;
 		}
 
 		return this.room ? this.room.id === roomId : false;
-	}
-
-	isRoomOpen( roomId: number )
-	{
-		return !!this.openRooms[ roomId ];
 	}
 }

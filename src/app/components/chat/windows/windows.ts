@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { Getter } from 'vuex-class';
+import { Getter, State } from 'vuex-class';
 import * as View from '!view!./windows.html?style=./windows.styl';
 
-import { Chat } from '../chat.service';
 import { AppChatWindow } from '../window/window';
+import { ChatClient } from '../client';
 
 @View
 @Component({
@@ -14,7 +14,6 @@ import { AppChatWindow } from '../window/window';
 })
 export class AppChatWindows extends Vue
 {
-	client = Chat.client;
-
+	@State chat: ChatClient;
 	@Getter isRightPaneVisible: boolean;
 }

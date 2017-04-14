@@ -1,9 +1,9 @@
 import Vue from 'vue';
+import { State, Mutation } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./window.html?style=./window.styl';
 
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
-import { Chat } from '../chat.service';
 import { ChatRoom } from '../room';
 import { ChatMessage } from '../message';
 import { ChatUserCollection } from '../user-collection';
@@ -14,6 +14,9 @@ import { AppChatWindowSend } from './send/send';
 import { AppChatWindowOutput } from './output/output';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
+import { ChatClient } from '../client';
+import { Mutations } from '../../../store/index';
+import { ChatRoomDetailsModal } from '../room-details-modal/room-details-modal.service';
 
 @View
 @Component({
@@ -30,55 +33,36 @@ import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-c
 })
 export class AppChatWindow extends Vue
 {
-	@Prop( Object ) room: ChatRoom;
+	@Prop( ChatRoom ) room: ChatRoom;
 	@Prop( Array ) messages: ChatMessage[];
-	@Prop( Object ) users?: ChatUserCollection;
+	@Prop( ChatUserCollection ) users?: ChatUserCollection;
+
+	@State chat: ChatClient;
+
+	@Mutation( Mutations.toggleRightPane )
+	toggleRightPane: Function;
 
 	isShowingUsers = false;
-	showModTools = false;
 
-	client = Chat.client;
 	ChatRoom = ChatRoom;
 	Screen = makeObservableService( Screen );
 
 	minimize()
 	{
-		this.client.minimizeRoom();
+		this.chat.minimizeRoom();
 	}
 
 	close()
 	{
-		this.client.leaveRoom( this.room.id );
+		this.chat.leaveRoom( this.room.id );
 	}
 
-	// $scope.$watch( 'ctrl.room.isMod', function( isMod, prev )
-	// {
-	// 	if ( !Chat.client.currentUser || !Chat.client.isGroupRoom( _this.room ) ) {
-	// 		_this.showModTools = false;
-	// 		return;
-	// 	}
-
-	// 	if ( !!isMod || Chat.client.currentUser.permissionLevel >= ChatConfig.SITE_MOD_PERMISSION ) {
-	// 		_this.showModTools = true;
-	// 	}
-	// 	else {
-	// 		_this.showModTools = false;
-	// 	}
-
-	// 	// Only if things have changed! Perf improvement.
-	// 	if ( isMod !== prev ) {
-
-	// 		// We gotta refresh the whole user list now so the mod tools get changed. Yikes!
-	// 		Chat.client.usersOnline[ _this.room.id ].touchAll();
-	// 	}
-	// } );
-
-	// Closes chat completely.
-	// When you click on the empty space behind the chat, we want to close the chat just
-	// like you would when clicking the normal backdrop.
+	// Closes chat completely. When you click on the empty space behind the
+	// chat, we want to close the chat just like you would when clicking the
+	// normal backdrop.
 	closeChat()
 	{
-		// Shell.toggleRightPane();
+		this.toggleRightPane();
 	}
 
 	showEditRoomModal()
@@ -86,9 +70,9 @@ export class AppChatWindow extends Vue
 		// Chat_SaveRoomModal.show( this.room );
 	}
 
-	viewRoomDetails()
+	showRoomDetails()
 	{
-		// Chat_RoomDetailsModal.show( this.room );
+		ChatRoomDetailsModal.show( this.room );
 	}
 
 	toggleUsers()

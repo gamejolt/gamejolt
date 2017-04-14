@@ -10,122 +10,15 @@
 
 	<ul class="shell-nav" v-show="users.length">
 
-		<li
-			class="chat-user"
-			v-for="user in users"
+		<app-chat-user-list-item
+			v-for="user of users"
 			:key="user.id"
 			v-show="!filterQuery || user.displayName.toLowerCase().indexOf( filterQuery.toLowerCase() ) !== -1"
-			>
-
-			<a
-				:href="getUserProfileUrl( user )"
-				:class="{ active: showPm && client.room && client.room.id === user.roomId }"
-				:title="`${user.displayName} (@${user.username})`"
-				@click.stop.prevent="onUserClick( user, $event )"
-				>
-
-				<!--
-					Notification tag has to go first to resolve a stupid bug:
-					https://github.com/gamejolt/next-issue-tracker/issues/96
-				-->
-				<span class="tag tag-pink notifications-tag" v-if="client.notifications[ user.roomId ] || 0">
-					{{ client.notifications[ user.roomId ] || 0 | number }}
-				</span>
-
-				<div class="chat-user-moderate" v-if="showModTools">
-					<span class="chat-user-moderate-action"
-						@click.stop="moderateUser( $event, user )"
-						>
-						<app-jolticon icon="cog" />
-					</span>
-				</div>
-
-				<div class="shell-nav-icon">
-					<div class="user-avatar">
-						<img :src="user.imgAvatar" />
-
-						<span class="chat-user-status"
-							v-if="user.isOnline !== undefined"
-							:class="{
-								'offline': !user.isOnline,
-								'online active': user.isOnline,
-							}"
-							>
-						</span>
-					</div>
-				</div>
-
-				<div class="shell-nav-label">
-
-					<!-- Only show tags in room user lists -->
-					<span ng-if="room">
-						<span class="chat-user-role tag tag-active" v-if="user.isMod === 'owner'" title="Room Admin">A</span>
-						<span class="chat-user-role tag tag-active" v-if="user.isMod === 'moderator'" title="Room Moderator">M</span>
-						<span class="chat-user-role tag tag-active" v-if="user.permissionLevel >= Chat.SITE_MOD_PERMISSION" title="Site Moderator">S</span>
-						<span class="chat-user-role tag tag-pink" v-if="showModTools && (user.isMutedRoom || user.isMutedGlobal)" title="Muted">
-							&#x274C;
-						</span>
-					</span>
-
-					<span>{{ user.displayName }}</span>
-					<span class="tiny">@{{ user.username }}</span>
-
-					<div class="chat-user-list-meta">
-
-						<!--
-							We have to make sure that it doesn't return undefined' if there is none, or it won't bind once.
-							Angular waits until the thing it's watching is undefined to bind once.
-						-->
-						<!-- <span ng-if="user.currently_playing !== undefined && user.currently_playing">
-							Playing <em>{{ user.currently_playing.game }}</em>
-						</span> -->
-					</div>
-				</div>
-
-			</a>
-
-			<div class="well fill-darker sans-margin" v-if="showModTools && moderatingUser.id === user.id">
-
-				<div v-if="canModerate( moderatingUser )">
-					<span class="btn btn-sm btn-outline"
-						v-if="!user.isMutedRoom && client.canModerate( room, user, 'mute' )"
-						@click="mute( moderatingUser )"
-						translate
-						>
-						Mute
-					</span>
-
-					<span class="btn btn-sm btn-outline"
-						v-if="user.isMutedRoom && client.canModerate( room, user, 'mute' )"
-						@click="unmute( moderatingUser )"
-						translate
-						>
-						Unmute
-					</span>
-
-					<span class="btn btn-sm btn-outline"
-						v-if="!user.isMod && client.canModerate( room, user, 'mod' )"
-						@click="mod( moderatingUser )"
-						translate
-						>
-						Mod
-					</span>
-
-					<span class="btn btn-sm btn-outline"
-						v-if="!!user.isMod && client.canModerate( room, user, 'mod' )"
-						@click="demod( moderatingUser )"
-						translate
-						>
-						Demod
-					</span>
-				</div>
-
-				<div v-if="!canModerate( moderatingUser )" translate>
-					You don't have the correct permissions to moderate this user.
-				</div>
-			</div>
-
-		</li>
+			:user="user"
+			:room="room"
+			:show-pm="showPm"
+			:show-mod-tools="showModTools"
+			/>
 
 	</ul>
 

@@ -17,7 +17,7 @@
 				<div v-if="Screen.isXs">
 					<br>
 					<div class="nav-controls">
-						<button class="btn btn-outline btn-block" @click="toggleUsers()">
+						<button class="btn btn-outline btn-block" @click="toggleUsers">
 							<app-jolticon icon="chevron-left" />
 							<translate>Back to Chat</translate>
 						</button>
@@ -25,7 +25,7 @@
 				</div>
 
 				<div class="nav-heading first">
-					Room Users
+					<translate>Room Users</translate>
 					<span class="badge" :class="{ 'badge-active': users && users.onlineCount > 0 }">
 						{{ users ? users.onlineCount : 0 | number }}
 					</span>
@@ -35,7 +35,7 @@
 					v-if="users"
 					:room="room"
 					:users="users.collection"
-					:show-mod-tools="showModTools"
+					:show-mod-tools="room.isMod"
 					>
 				</app-chat-user-list>
 
@@ -52,22 +52,22 @@
 
 						<button class="btn btn-sparse anim-fade-in"
 							@click="showEditRoomModal"
-							v-if="!room.isPmRoom && showModTools"
+							v-if="room.isMod"
 							:title="$gettext( 'Edit Room Details' )"
 							>
 							<app-jolticon icon="edit" />
 						</button>
 
 						<button class="btn btn-sparse"
-							v-if="!client.singleRoomMode"
-							@click="minimize()"
+							v-if="!chat.singleRoomMode"
+							@click="minimize"
 							:title="$gettext( 'Minimize Room' )"
 							>
 							<app-jolticon icon="minus" />
 						</button>
 
 						<button class="btn btn-sparse"
-							@click="close()"
+							@click="close"
 							:title="$gettext( 'Close Room' )"
 							>
 							<app-jolticon icon="remove" />
@@ -76,7 +76,7 @@
 					</div>
 
 					<!--
-						Aanimation scope.
+						Animation scope.
 					-->
 					<div
 						class="chat-window-header-content"
@@ -116,7 +116,7 @@
 								style="display: block; max-height: 50px; overflow: hidden;"
 								>
 								<div class="chat-window-header-room-description chat-compiled-room-description">
-									<div class="anim-fade-in no-animate-xs" ng-bind-html="room.description_compiled"></div>
+									<div class="anim-fade-in no-animate-xs" v-html="room.description_compiled"></div>
 								</div>
 							</app-fade-collapse>
 
@@ -132,7 +132,7 @@
 
 								<button class="btn btn-sm btn-outline"
 									v-if="room._description_collapsed || Screen.isXs"
-									@click="viewRoomDetails"
+									@click="showRoomDetails"
 									>
 									<translate>View Room Description</translate>
 								</button>
@@ -148,13 +148,14 @@
 				the room changes.
 			-->
 			<app-chat-window-output
+				class="chat-window-output"
 				v-for="room of [ room ]"
 				:key="room.id"
 				:room="room"
 				:messages="messages"
 				/>
 
-			<div class="chat-window-send-container" v-if="client.currentUser">
+			<div class="chat-window-send-container" v-if="chat.currentUser">
 				<app-chat-window-send />
 			</div>
 

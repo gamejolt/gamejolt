@@ -82,7 +82,6 @@ export class FormSettings extends BaseForm<any>
 
 	onChange()
 	{
-		console.log( 'form model change', this.formModel );
 		Settings.set( 'chat-notify-friends-online', this.formModel.chat_notify_friends_online );
 		Settings.set( 'restricted-browsing', this.formModel.restricted_browsing );
 		Settings.set( 'broadcast-modal', this.formModel.broadcast_modal );

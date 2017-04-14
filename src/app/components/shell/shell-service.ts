@@ -4,7 +4,6 @@ import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-serv
 // import { App } from '../../app-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Settings } from '../settings/settings.service';
-import { Chat } from '../chat/chat.service';
 import { GameCollection } from '../game/collection/collection.model';
 
 let bootstrapPromiseResolve: any = undefined;
@@ -29,7 +28,7 @@ export class Shell
 	// private static _isRightPaneOverlayed = false;
 
 	private static backdrop?: any = undefined;
-	private static chat?: typeof Chat = undefined;
+	// private static chat?: typeof Chat = undefined;
 
 	static init()
 	{

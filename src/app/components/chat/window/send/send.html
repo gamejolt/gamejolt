@@ -5,7 +5,7 @@
 		v-if="multiLineMode"
 		>
 		<app-jolticon icon="notice" />
-		<span translate>You are in multi-line editing mode. Press <code>ctrl+enter</code> to send.</span>
+		<translate :escape-html="false">You are in multi-line editing mode. Press <code>ctrl+enter</code> to send.</translate>
 	</div>
 
 	<div class="row">
@@ -24,7 +24,7 @@
 				@keydown.shift.enter="shiftEnter"
 				@keydown.ctrl.enter.prevent="ctrlEnter"
 				@keydown.ctrl.10.prevent="ctrlEnter"
-				@keydown.enter.prevent="enter"
+				@keydown.enter="enter"
 				>
 			</textarea>
 
@@ -38,9 +38,9 @@
 				@click.prevent="sendMessage"
 				>
 				<app-jolticon icon="add-comment" v-if="Screen.isXs" />
-				<span v-if="!Screen.isXs" translate>
+				<translate v-if="!Screen.isXs">
 					Send
-				</span>
+				</translate>
 			</button>
 
 		</div>

@@ -4,18 +4,18 @@
 	<div class="chat-rooms-list">
 
 		<div class="nav-heading first">
-			Public Chat Rooms
+			<translate>Public Chat Rooms</translate>
 		</div>
 
 		<ul class="shell-nav">
-			<li v-for="room of client.publicRooms" :key="room.id">
+			<li v-for="room of chat.publicRooms" :key="room.id">
 				<a
 					@click="onPublicRoomClicked( room.id )"
-					:class="{ active: client.room && client.room.id === room.id }"
+					:class="{ active: chat.room && chat.room.id === room.id }"
 					:title="room.title"
 					>
 					<span class="tag tag-pink notifications-tag"
-						v-if="client.roomId === room.id && Chat.roomNotifications"
+						v-if="chat.roomId === room.id && Chat.roomNotifications"
 						>
 						{{ Chat.roomNotifications | number }}
 					</span>
@@ -32,17 +32,17 @@
 
 	<!-- Friends List -->
 	<!-- Only include if not a guest -->
-	<div class="chat-friends-list" v-if="client.currentUser && client.friendsPopulated">
+	<div class="chat-friends-list" v-if="chat.currentUser && chat.friendsPopulated">
 
-		<div v-if="client.friendsPopulated && !client.friendsList.collection.length">
+		<div v-if="chat.friendsPopulated && !chat.friendsList.collection.length">
 			<div class="nav-heading">
-				Friends
+				<translate>Friends</translate>
 			</div>
 			<div class="alert alert-warning">
-				No friends yet.
+				<translate>No friends yet.</translate>
 			</div>
 			<div class="alert fill-dark">
-				<!--chat.no_friends_message_html-->
+				<translate :escape-html="false">chat.no_friends_message_html</translate>
 			</div>
 		</div>
 
@@ -51,63 +51,60 @@
 			We split out online/offline friends on mobile so that it's fast to display/compile.
 			Will also do it if they have more than 50 friends to keep the site fast.
 		-->
-		<div v-if="Screen.isXs || client.friendsList.collection.length > 50">
-			<div v-if="client.friendsList.onlineCount">
+		<div v-if="Screen.isXs || chat.friendsList.collection.length > 50">
+			<div v-if="chat.friendsList.onlineCount">
 				<div class="nav-heading">
 					<span class="badge badge-active"
-						v-if="client.friendsList.onlineCount > 0"
+						v-if="chat.friendsList.onlineCount > 0"
 						>
-						{{ client.friendsList.onlineCount | number }}
+						{{ chat.friendsList.onlineCount | number }}
 					</span>
-					<span>Online Friends</span>
+					<translate>Online Friends</translate>
 				</div>
 
 				<app-chat-user-list
 					:users="onlineFriends"
 					:show-pm="true"
-					>
-				</app-chat-user-list>
+					/>
 			</div>
 
-			<div v-if="client.friendsList.offlineCount">
+			<div v-if="chat.friendsList.offlineCount">
 				<a class="nav-heading"
 					@click="shouldShowOfflineFriends = !shouldShowOfflineFriends"
 					>
 					<span class="badge">
-						{{ client.friendsList.offlineCount | number }}
+						{{ chat.friendsList.offlineCount | number }}
 					</span>
 					<span>[{{ shouldShowOfflineFriends ? '-' : '+' }}]</span>
-					<span>Offline Friends</span>
+					<translate>Offline Friends</translate>
 				</a>
 
 				<app-chat-user-list
 					v-if="shouldShowOfflineFriends"
 					:users="offlineFriends"
 					:show-pm="true"
-					>
-				</app-chat-user-list>
+					/>
 			</div>
 		</div>
 
-		<div v-if="!Screen.isXs && client.friendsList.collection.length <= 50">
-			<div v-if="client.friendsList.collection.length">
+		<div v-if="!Screen.isXs && chat.friendsList.collection.length <= 50">
+			<div v-if="chat.friendsList.collection.length">
 				<div class="nav-heading">
 					<span class="badge">
-						{{ client.friendsList.collection.length | number }}
+						{{ chat.friendsList.collection.length | number }}
 					</span>
 					<span class="badge badge-active"
-						v-if="client.friendsList.onlineCount > 0"
+						v-if="chat.friendsList.onlineCount > 0"
 						>
-						{{ client.friendsList.onlineCount | number }}
+						{{ chat.friendsList.onlineCount | number }}
 					</span>
-					<span>Friends</span>
+					<translate>Friends</translate>
 				</div>
 
 				<app-chat-user-list
-					:users="client.friendsList.collection"
+					:users="chat.friendsList.collection"
 					:show-pm="true"
-					>
-				</app-chat-user-list>
+					/>
 			</div>
 		</div>
 

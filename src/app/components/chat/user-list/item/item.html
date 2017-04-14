@@ -1,0 +1,123 @@
+<li class="chat-user">
+
+	<a
+		:href="user.url"
+		:class="{
+			active: showPm && chat.room && chat.room.id === user.roomId,
+		}"
+		:title="`${user.displayName} (@${user.username})`"
+		@click.stop.prevent="onUserClick"
+		>
+
+		<span class="tag tag-pink notifications-tag"
+			v-if="chat.notifications[ user.roomId ] || 0"
+			>
+			{{ chat.notifications[ user.roomId ] || 0 | number }}
+		</span>
+
+		<div class="chat-user-moderate" v-if="showModTools">
+			<span class="chat-user-moderate-action"
+				@click.stop.prevent="toggleModTools"
+				>
+				<app-jolticon icon="cog" />
+			</span>
+		</div>
+
+		<div class="shell-nav-icon">
+			<div class="user-avatar">
+				<img :src="user.imgAvatar" />
+
+				<span class="chat-user-status"
+					v-if="user.isOnline !== undefined"
+					:class="{
+						'offline': !user.isOnline,
+						'online active': user.isOnline,
+					}"
+					>
+				</span>
+			</div>
+		</div>
+
+		<div class="shell-nav-label">
+
+			<!-- Only show tags in room user lists -->
+			<span v-if="room">
+				<span class="chat-user-role tag tag-active"
+					v-if="user.isMod === 'owner'"
+					:title="$gettext( `Room Admin` )"
+					>
+					A
+				</span>
+				<span class="chat-user-role tag tag-active"
+					v-if="user.isMod === 'moderator'"
+					:title="$gettext( `Room Moderator` )"
+					>
+					M
+				</span>
+				<span class="chat-user-role tag tag-active"
+					v-if="user.permissionLevel >= ChatSiteModPermission"
+					:title="$gettext( `Site Moderator` )"
+					>
+					S
+				</span>
+				<span class="chat-user-role tag tag-pink"
+					v-if="showModTools && (user.isMutedRoom || user.isMutedGlobal)"
+					:title="$gettext( `Muted` )"
+					>
+					X
+				</span>
+			</span>
+
+			<span>{{ user.displayName }}</span>
+			<span class="tiny">@{{ user.username }}</span>
+
+			<!--<div class="chat-user-list-meta">
+				 <span v-if="user.currently_playing !== undefined && user.currently_playing">
+					Playing <em>{{ user.currently_playing.game }}</em>
+				</span>
+			</div>-->
+		</div>
+
+	</a>
+
+	<div class="nav-well" v-if="showModTools && areModToolsOpen">
+		<div v-if="canModerate">
+			<span v-if="chat.canModerate( room, user, 'mute' )">
+				<span class="btn btn-sm btn-outline"
+					v-if="!user.isMutedRoom"
+					@click="mute"
+					>
+					<translate>Mute</translate>
+				</span>
+
+				<span class="btn btn-sm btn-outline"
+					v-else
+					@click="unmute"
+					>
+					<translate>Unmute</translate>
+				</span>
+			</span>
+
+			<span v-if="chat.canModerate( room, user, 'mod' )">
+				<span class="btn btn-sm btn-outline"
+					v-if="!user.isMod"
+					@click="mod"
+					>
+					<translate>Mod</translate>
+				</span>
+
+				<span class="btn btn-sm btn-outline"
+					v-else
+					@click="demod"
+					>
+					<translate>Demod</translate>
+				</span>
+			</span>
+		</div>
+
+		<div v-else>
+			<translate>You don't have the correct permissions to moderate this user.</translate>
+		</div>
+	</div>
+
+</li>

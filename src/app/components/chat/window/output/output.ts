@@ -1,36 +1,34 @@
 import Vue from 'vue';
+import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import { Subscription } from 'rxjs/Subscription';
 import * as View from '!view!./output.html?style=./output.styl';
 
-import { Chat } from '../../chat.service';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { ChatClient } from '../../client';
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
-import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
+import { AppChatWindowOutputItem } from './item/item';
 
 @View
 @Component({
 	components: {
-		AppFadeCollapse,
+		AppChatWindowOutputItem,
 	},
 	filters: {
 		date,
-	}
+	},
 })
 export class AppChatWindowOutput extends Vue
 {
-	@Prop( Object ) room: ChatRoom;
+	@Prop( ChatRoom ) room: ChatRoom;
 	@Prop( Array ) messages: ChatMessage[];
 
-	client = Chat.client;
-	ChatMessage = ChatMessage;
+	@State chat: ChatClient;
 
 	private shouldScroll = true;
 	private resize$: Subscription | undefined;
-
-	date = date;
 
 	async mounted()
 	{
@@ -45,7 +43,7 @@ export class AppChatWindowOutput extends Vue
 	{
 		if ( this.resize$ ) {
 			this.resize$.unsubscribe();
-			this.resize$ = undefined
+			this.resize$ = undefined;
 		}
 	}
 
@@ -81,23 +79,5 @@ export class AppChatWindowOutput extends Vue
 	private autoscroll()
 	{
 		this.$el.scrollTop = this.$el.scrollHeight + 10000;
-	}
-
-	muteUser( userId: number )
-	{
-		this.client.mute( userId, this.room.id );
-	}
-
-	removeMessage( msgId: number )
-	{
-		this.client.removeMessage( msgId, this.room.id );
-	}
-
-	shouldFadeCollapse( msg: ChatMessage )
-	{
-		if ( msg.contentRaw.split( '\n' ).length > 6 || msg.contentRaw.length >= 500 ) {
-			return true;
-		}
-		return false;
 	}
 }

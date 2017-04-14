@@ -1,0 +1,60 @@
+@require '~styles/variables'
+@require '../../../../../lib/gj-lib-client/stylus/common/mixins'
+
+.chat-user
+
+	&:hover
+		.chat-user-moderate-action
+			opacity: 1
+
+	&-list-meta
+		text-overflow()
+		color: $text-muted
+		font-size: $font-size-small
+
+	&-moderate
+		float: right
+		margin-top: 2px
+
+		&-moderate-action
+			display: inline-block
+			opacity: 0
+
+			&:hover .jolticon
+				color: $gj-blue !important
+
+	&-role
+		float: none !important
+		margin-left: 0 !important
+		margin-right: 5px !important
+		margin-top: 0 !important
+
+	&-role + &-role
+		margin-left: -5px !important
+
+	.user-avatar
+		position: relative
+
+		img
+			display: inline-block
+			width: 25px
+			vertical-align: middle
+			border-radius: 50%
+
+		.chat-user-status
+			position: absolute
+			right: 10px
+			bottom: 8px
+			width: 12px
+			height: 12px
+			border: 2px solid rgb( 25, 25, 25 )
+			border-radius: 100%
+
+			&.online
+				background-color: $gj-green
+
+			&.in-game
+				background-color: $gj-pink
+
+			&.offline
+				background-color: $gray-lightest

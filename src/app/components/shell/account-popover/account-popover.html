@@ -9,7 +9,7 @@
 	<div class="account-popover fill-darkest">
 
 		<div class="list-group-dark">
-			<app-router-link
+			<router-link
 				class="list-group-item offline-disable"
 				:to="{ name: 'profile.overview', params: { username: app.user.username } }"
 				v-app-track-event="`account-popover:profile`"
@@ -20,33 +20,33 @@
 					{{ app.user.display_name }}
 				</h4>
 				<small>@{{ app.user.username }}</small>
-			</app-router-link>
+			</router-link>
 		</div>
 
 		<div class="account-popover-separator"></div>
 
 		<div class="list-group-dark">
-			<app-router-link
+			<router-link
 				class="list-group-item"
 				:to="{ name: env.isClient ? 'library.installed' : 'library.overview' }"
 				v-app-track-event="`account-popover:library`"
 				>
 				<translate>Game Library</translate>
-			</app-router-link>
-			<app-router-link
+			</router-link>
+			<router-link
 				class="list-group-item offline-disable"
 				:to="{ name: 'dashboard.main.overview' }"
 				v-app-track-event="`account-popover:dashboard`"
 				>
 				<translate>Dashboard</translate>
-			</app-router-link>
-			<app-router-link
+			</router-link>
+			<router-link
 				class="list-group-item offline-disable"
 				:to="{ name: screen.isXs ? 'dashboard.account-mobile-nav' : 'dashboard.account.edit' }"
 				v-app-track-event="`account-popover:account`"
 				>
 				<translate>Edit Account</translate>
-			</app-router-link>
+			</router-link>
 			<a
 				class="list-group-item offline-disable"
 				@click="showToken"
@@ -54,24 +54,24 @@
 				>
 				<translate>Game Token</translate>
 			</a>
-			<app-router-link
+			<router-link
 				class="list-group-item"
 				:to="{ name: 'settings' }"
 				v-app-track-event="`account-popover:settings`"
 				>
 				<translate>Settings</translate>
-			</app-router-link>
+			</router-link>
 		</div>
 
 		<div class="account-popover-button offline-disable">
-			<app-router-link
+			<router-link
 				class="btn btn-outline btn-block"
 				:to="{ name: 'dashboard.developer.games.add' }"
 				v-app-track-event="`account-popover:add-game`"
 				>
 				<app-jolticon icon="add" />
 				<translate>Add Game</translate>
-			</app-router-link>
+			</router-link>
 		</div>
 
 		<div class="account-popover-separator"></div>
@@ -82,7 +82,7 @@
 			<div class="account-popover-separator"></div>
 
 			<div class="list-group-dark">
-				<app-router-link
+				<router-link
 					class="list-group-item small"
 					:to="{ name: 'dashboard.withdraw-funds' }"
 					>
@@ -100,7 +100,7 @@
 					<span class="account-popover-currency" v-if="walletAmount !== false">
 						{{ walletAmount | currency }}
 					</span>
-				</app-router-link>
+				</router-link>
 			</div>
 		</div>
 

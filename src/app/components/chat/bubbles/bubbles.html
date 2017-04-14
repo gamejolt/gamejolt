@@ -1,16 +1,16 @@
-<nav class="chat-bubbles" ng-if="client.openRooms">
+<nav class="chat-bubbles">
 
 	<div class="chat-bubble"
-		v-for="room of client.openRooms"
+		v-for="room of chat.openRooms"
 		:key="room.id"
-		:class="{ active: client.room === room && isRightPaneVisible }"
+		:class="{ active: chat.room === room && isRightPaneVisible }"
 		>
 		<div class="chat-bubble-inner" @click="activateRoom( room.id )">
 			<div
 				:class="{
 					'chat-bubble-icon': true,
-					'chat-bubble-notification': client.notifications[ room.id ] && client.notifications[ room.id ] > 0,
-					'chat-bubble-active': client.room === room && isRightPaneVisible
+					'chat-bubble-notification': chat.notifications[ room.id ] && chat.notifications[ room.id ] > 0,
+					'chat-bubble-active': chat.room === room && isRightPaneVisible
 				}"
 				:title="room.isPmRoom ? room.user.displayName + ' (@' + room.user.username + ')' : '#' + room.title"
 				>

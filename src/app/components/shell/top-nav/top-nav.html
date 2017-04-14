@@ -148,15 +148,15 @@
 					@click="toggleRightPane"
 					v-app-tooltip.left-middle="
 						app.user
-						? $gettext( `Chat and Friends List (c)` )
-						: $gettext( `Chat (c)` )
+							? $gettext( `Chat and Friends List (c)` )
+							: $gettext( `Chat (c)` )
 					"
 					v-app-track-event="`top-nav:chat:toggle`"
 					>
 					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
-						v-if="chat.friendNotifications"
+						v-if="chat.friendNotificationsCount"
 						>
-						{{ chat.friendNotifications }}
+						{{ chat.friendNotificationsCount }}
 					</span>
 					<app-jolticon icon="user-messages" />
 				</a>

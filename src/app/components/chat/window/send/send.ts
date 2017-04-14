@@ -1,12 +1,13 @@
 import Vue from 'vue';
+import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./send.html?style=./send.styl';
 
-import { Chat } from '../../chat.service';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { ChatClient } from '../../client';
 
 @View
 @Component({
@@ -19,10 +20,11 @@ import { Screen } from '../../../../../lib/gj-lib-client/components/screen/scree
 })
 export class AppChatWindowSend extends Vue
 {
+	@State chat: ChatClient;
+
 	message = '';
 	multiLineMode = false;
 
-	client = Chat.client;
 	Screen = makeObservableService( Screen );
 
 	// Vue will trigger all events that match, which means the "enter" event
@@ -41,26 +43,16 @@ export class AppChatWindowSend extends Vue
 	async shiftEnter()
 	{
 		this.multiLineMode = true;
-
-		this.handledEvent = true;
-		await this.$nextTick();
-		this.handledEvent = false;
-
-		// Hacky. Triggers an auto scroll through an event.
-		// This is since the send box moves up a bit, it is no longer scrolled correctly.
-		// $rootScope.$broadcast( 'Chat.triggerAutoScroll' );
+		this.eventHandled();
 	}
 
 	async ctrlEnter()
 	{
 		this.sendMessage();
-
-		this.handledEvent = true;
-		await this.$nextTick();
-		this.handledEvent = false;
+		this.eventHandled();
 	}
 
-	enter()
+	enter( event: Event )
 	{
 		if ( this.handledEvent ) {
 			return;
@@ -68,33 +60,29 @@ export class AppChatWindowSend extends Vue
 
 		if ( !this.multiLineMode ) {
 			this.sendMessage();
+			event.preventDefault();
+			return;
 		}
 	}
 
 	sendMessage()
 	{
 		const message = this.message;
-		this.client.queueMessage( message );
+		this.chat.queueMessage( message );
 
 		this.message = '';
 		this.multiLineMode = false;
 	}
+
+	/**
+	 * Marks that the event has been handled since the `enter` event always gets
+	 * called. This way `enter` will know now to do anything since the event was
+	 * already handled in another handler.
+	 */
+	private async eventHandled()
+	{
+		this.handledEvent = true;
+		await this.$nextTick();
+		this.handledEvent = false;
+	}
 }
-
-
-// angular.module( 'App.Chat' ).directive( 'gjChatWindowSend', function( $rootScope )
-// {
-// 	return {
-// 		restrict: 'E',
-// 		template: require( '!html-loader!./send.html' ),
-// 		scope: true,
-// 		controllerAs: 'ctrl',
-// 		controller: function( $element, Chat )
-// 		{
-// 			this.message = '';
-// 			this.multiLineMode = false;
-
-
-// 		}
-// 	};
-// } );

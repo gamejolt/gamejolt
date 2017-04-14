@@ -12,12 +12,12 @@ import { AppShellHotBottom } from './hot-bottom/hot-bottom';
 import { AppMinbar } from '../minbar/minbar';
 import { AppOfflineAlert } from '../offline/alert/alert';
 import { AppGrowls } from '../../../lib/gj-lib-client/components/growls/growls';
-import { Chat } from '../chat/chat.service';
 import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
 import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar/bar';
 import { EventBus } from '../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Mutations } from '../../store/index';
 import { AppState } from '../../../lib/gj-lib-client/vue/services/app/app-store';
+import { ChatClient } from '../chat/client';
 
 @View
 @Component({
@@ -37,8 +37,8 @@ import { AppState } from '../../../lib/gj-lib-client/vue/services/app/app-store'
 })
 export class AppShell extends Vue
 {
-	@State chat: Chat | undefined;
 	@State app: AppState;
+	@State chat: ChatClient | null;
 
 	@Getter isLeftPaneVisible: boolean;
 	@Getter isRightPaneVisible: boolean;

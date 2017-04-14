@@ -5,7 +5,6 @@ import { appStore } from '../../lib/gj-lib-client/vue/services/app/app-store';
 import { Settings } from '../components/settings/settings.service';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
-import { Chat } from '../components/chat/chat.service';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
@@ -15,6 +14,7 @@ import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdro
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
 import { LibraryState } from './library';
 import { User } from '../../lib/gj-lib-client/components/user/user.model';
+import { ChatClient } from '../components/chat/client';
 
 Vue.use( Vuex );
 
@@ -42,6 +42,7 @@ export const Actions = {
 export class StoreState
 {
 	library = new LibraryState();
+	chat: ChatClient | null = null;
 
 	isBootstrapped = false;
 	bootstrappedPromise =
@@ -53,9 +54,7 @@ export class StoreState
 	isLeftPaneSticky = Settings.get( 'sidebar' ) as boolean;
 	isLeftPaneOverlayed = false;
 	isRightPaneOverlayed = false;
-	backdrop: AppBackdrop | undefined = undefined;
-
-	chat?: typeof Chat = undefined;
+	backdrop?: AppBackdrop;
 }
 
 export type Store = Vuex.Store<StoreState>;
@@ -126,12 +125,10 @@ export const store = new Vuex.Store<StoreState>( {
 		{
 			// Log out of chat. This will notify other tabs to disconnect from the server too.
 			if ( state.chat ) {
-				if ( state.chat.client ) {
-					state.chat.client.logout();
-				}
+				state.chat.logout();
 			}
 
-			state.chat = undefined;
+			state.chat = null;
 		},
 
 		[Mutations.setNotificationCount]( state, count: number )
@@ -183,10 +180,9 @@ export const store = new Vuex.Store<StoreState>( {
 
 		async [Actions.loadChat]( { state } )
 		{
-			const mod = await $import( '../components/chat/chat.service' );
-
-			state.chat = mod.Chat as typeof Chat;
-			state.chat.connect();
+			const mod = await $import( '../components/chat/client' );
+			const chatClientModel: typeof ChatClient = mod.ChatClient;
+			state.chat = new chatClientModel();
 		},
 
 		async [Actions.logout]()

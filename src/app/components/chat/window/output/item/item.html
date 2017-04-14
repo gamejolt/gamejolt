@@ -1,0 +1,77 @@
+<div
+	class="chat-window-message"
+	:class="{
+		'chat-msg-type-normal': message.type === ChatMessage.TypeNormal,
+		'chat-msg-type-system': message.type === ChatMessage.TypeSystem,
+		'chat-window-message-not-combined': !message.combine,
+		'chat-window-message-combined': message.combine,
+		'chat-window-message-can-mod': canModerate,
+	}"
+	>
+
+	<a class="chat-window-message-avatar"
+		v-if="!message.combine"
+		:href="message.user.url"
+		>
+		<img class="img-responsive" :src="message.user.imgAvatar" alt="">
+	</a>
+
+	<div class="chat-window-message-container">
+		<a class="chat-window-message-user link-unstyled"
+			v-if="!message.combine"
+			:href="message.user.url"
+			>
+			{{ message.user.displayName }}
+		</a>
+		<span class="chat-window-message-username"
+			v-if="!message.combine"
+			>
+			@{{ message.user.username }}
+		</span>
+		<span class="chat-window-message-time"
+			v-if="!message.combine"
+			>
+			<span :title="loggedOn">
+				{{ message.loggedOn | date( 'shortTime' ) }}
+			</span>
+		</span>
+
+		<div class="chat-window-message-mod-tools"
+			v-if="canModerate"
+			>
+			<a class="link-muted"
+				@click="muteUser"
+				:title="$gettext( 'Mute User' )"
+				>
+				<app-jolticon icon="friend-remove-2" />
+			</a>
+		</div>
+
+		<div v-if="!shouldFadeCollapse" class="chat-window-message-content-wrap">
+			<div
+				class="chat-window-message-content"
+				lang="en"
+				v-html="message.content"
+				>
+				</div>
+		</div>
+		<div v-else class="chat-window-message-content-wrap">
+			<app-fade-collapse
+				:collapse-height="138"
+				:is-open="isExpanded"
+				@required="isCollapsable = true"
+				>
+				<div
+					class="chat-window-message-content"
+					lang="en"
+					v-html="message.content"
+					>
+				</div>
+			</app-fade-collapse>
+
+			<p v-if="isCollapsable">
+				<a class="hidden-text-expander" @click="isExpanded = !isExpanded"></a>
+			</p>
+		</div>
+	</div>
+</div>
