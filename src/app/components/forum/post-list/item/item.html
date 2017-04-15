@@ -152,28 +152,19 @@
 			&nbsp;
 			&nbsp;
 
-			<button
-				class="btn btn-outline btn-sm"
-				v-if="post.replies_count"
+			<a
+				v-if="post.replies_count && !isEditing"
+				class="small"
 				@click="toggleReplies"
-				:disabled="isEditing"
 				>
-				<span class="btn-badge" v-if="post.replies_count">
-					{{ post.replies_count || 0 | number }}
-				</span>
-				<app-jolticon
-					:icon="isShowingReplies
-						? 'chevron-down'
-						: 'chevron-right'
-					"
-					/>
-				<translate v-if="!isShowingReplies">
-					Show Replies
+				<translate
+					:translate-n="post.replies_count"
+					:translate-params="{ count: post.replies_count }"
+					translate-plural="+%{ count } replies"
+					>
+					+1 reply
 				</translate>
-				<translate v-else>
-					Hide Replies
-				</translate>
-			</button>
+			</a>
 
 		</div>
 
