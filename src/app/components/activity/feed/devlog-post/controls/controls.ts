@@ -24,6 +24,7 @@ import { AppUserAvatarImg } from '../../../../../../lib/gj-lib-client/components
 import { AppFiresidePostLikeWidget } from '../../../../../../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 import { AppSocialTwitterShare } from '../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
+import { AppCommentWidgetAdd } from '../../../../../../lib/gj-lib-client/components/comment/widget/add/add';
 
 @View
 @Component({
@@ -31,6 +32,7 @@ import { AppSocialFacebookLike } from '../../../../../../lib/gj-lib-client/compo
 		AppJolticon,
 		AppPopover,
 		AppGameFollowWidget,
+		AppCommentWidgetAdd,
 		AppCommentWidget,
 		AppLoading,
 		AppCard,

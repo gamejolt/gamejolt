@@ -1,10 +1,10 @@
-<div @click.capture.stop="go">
+<div @click.stop="go">
 	<router-link
-		:to="notification.url || ''"
+		:to="notification.routeLocation"
 		>
 
-		<div class="timeline-list-item-icon">
-			<app-jolticon icon="icon" />
+		<div class="timeline-list-item-bubble">
+			<app-jolticon :icon="icon" />
 		</div>
 
 		<div class="timeline-list-item-main">
@@ -14,7 +14,7 @@
 			</div>
 
 			<div class="timeline-list-item-title">
-				<!--<app-notification-descriptive-action :notification="notification" />-->
+				<app-notification-descriptive-action :notification="notification" />
 			</div>
 
 			<div class="timeline-list-item-details" v-if="hasDetails">

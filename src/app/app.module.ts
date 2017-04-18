@@ -29,7 +29,6 @@ import { FiresidePostLikeModule } from '../lib/gj-lib-client/components/fireside
 import AuthModule from '../lib/gj-lib-client/components/auth/auth';
 import SplitTestModule from './components/split-test/split-test';
 import { SearchModule } from './components/search/search.module';
-import NotificationModule from './components/notification/notification';
 import { MediaItemCoverModule } from './components/media-item/cover/cover.module';
 import PageHeaderModule from './components/page-header/page-header.module';
 import { GenreListModule } from './components/genre/list/list.module';
@@ -168,7 +167,6 @@ import { ReportModalModule } from '../lib/gj-lib-client/components/report/modal/
 		// AuthJoinModule,
 		SplitTestModule,
 		ShellModule,
-		NotificationModule,
 		MediaItemCoverModule,
 		PageHeaderModule,
 		GameListingModule,
