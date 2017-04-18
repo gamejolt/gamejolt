@@ -19,7 +19,6 @@ import { NotificationModule as gjNotificationModule } from '../lib/gj-lib-client
 import { CommentModule } from '../lib/gj-lib-client/components/comment/comment.module';
 import { CommentVoteModule } from '../lib/gj-lib-client/components/comment/vote/vote.module';
 import { CommentVideoModule } from '../lib/gj-lib-client/components/comment/video/video.module';
-import GamePlayModalModule from '../lib/gj-lib-client/components/game/play-modal/play-modal';
 import { YoutubeChannelModule } from '../lib/gj-lib-client/components/youtube/channel/channel.module';
 import ResponsiveDimensionsModule from '../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions.module';
 import { FiresidePostModule } from '../lib/gj-lib-client/components/fireside/post/post.module';
@@ -95,13 +94,10 @@ import { ShellModule } from './components/shell/shell.module';
 import { ConnectionModule } from '../lib/gj-lib-client/components/connection/connection.module';
 import { UserAvatarModule } from '../lib/gj-lib-client/components/user/user-avatar/user-avatar.module';
 import { TranslateModule } from '../lib/gj-lib-client/components/translate/translate.module';
-import { MinbarModule } from './components/minbar/minbar.module';
 import { GrowlsModule } from '../lib/gj-lib-client/components/growls/growls.module';
-import { GameRatingGrowlModule } from './components/game/rating-growl/rating-growl.module';
 import { RatingWidgetModule } from './components/rating/widget/widget.module';
 import { GameRatingModule } from '../lib/gj-lib-client/components/game/rating/rating.module';
 import { FadeCollapseModule } from '../lib/gj-lib-client/components/fade-collapse/fade-collapse.module';
-import { MeterModule } from './components/meter/meter.module';
 import { GameScoreTableModule } from '../lib/gj-lib-client/components/game/score-table/score-table.module';
 import { GamePlaylistModule } from '../lib/gj-lib-client/components/game-playlist/game-playlist.module';
 import { GamePlaylistGameModule } from '../lib/gj-lib-client/components/game-playlist/game/game.module';
@@ -161,7 +157,6 @@ import { ReportModalModule } from '../lib/gj-lib-client/components/report/modal/
 		PaginationModule,
 		ModalConfirmModule,
 		GameThumbnailImgModule,
-		GamePlayModalModule,
 		ImgResponsiveModule,
 		ResponsiveDimensionsModule,
 		WidgetCompilerModule,
@@ -216,13 +211,10 @@ import { ReportModalModule } from '../lib/gj-lib-client/components/report/modal/
 		GameCollectionModule,
 		UserAvatarModule,
 		TranslateModule,
-		MinbarModule,
 		GrowlsModule,
 		GameRatingModule,
-		GameRatingGrowlModule,
 		RatingWidgetModule,
 		FadeCollapseModule,
-		MeterModule,
 		GameScoreTableModule,
 		GamePlaylistModule,
 		GamePlaylistGameModule,

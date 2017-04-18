@@ -9,7 +9,6 @@ import { AppShellNotificationCount } from './notification-count/notification-cou
 import { AppShellBody } from './body/body';
 import { AppShellSidebar } from './sidebar/sidebar';
 import { AppShellHotBottom } from './hot-bottom/hot-bottom';
-import { AppMinbar } from '../minbar/minbar';
 import { AppOfflineAlert } from '../offline/alert/alert';
 import { AppGrowls } from '../../../lib/gj-lib-client/components/growls/growls';
 import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
@@ -18,6 +17,7 @@ import { EventBus } from '../../../lib/gj-lib-client/components/event-bus/event-
 import { Mutations } from '../../store/index';
 import { AppState } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 import { ChatClient } from '../chat/client';
+import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
 
 @View
 @Component({

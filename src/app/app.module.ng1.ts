@@ -41,7 +41,6 @@ import '../lib/gj-lib-client/components/order/item/item';
 import '../lib/gj-lib-client/components/order/payment/payment';
 import '../lib/gj-lib-client/components/order/payment/refund/refund';
 import '../lib/gj-lib-client/components/order/address/address';
-import '../lib/gj-lib-client/components/game/downloader/downloader';
 import '../lib/gj-lib-client/components/game/key-pool/key-pool';
 import '../lib/gj-lib-client/components/jam/jam-module';
 import '../lib/gj-lib-client/components/jam/game/game';
@@ -63,7 +62,6 @@ import '../lib/gj-lib-client/components/img/crop/crop';
 
 import './components/invite/invite-module';
 import './components/game/filtering/filtering-module';
-import './components/game/cover-buttons/cover-buttons-module';
 import './components/protocol-watcher/protocol-watcher-module';
 import './components/score/feed/feed-module';
 import './components/score/list/list-module';
@@ -131,7 +129,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Order.Payment',
 	'gj.Order.Payment.Refund',
 	'gj.Order.Address',
-	'gj.Game.Downloader',
 	'gj.Game.KeyPool',
 	'gj.Jam',
 	'gj.Jam.Game',
@@ -156,7 +153,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'App.Invite',
 	'App.Sorting',
 	'App.Game.Filtering',
-	'App.Game.CoverButtons',
 	'App.Score.List',
 	'App.Score.Feed',
 	'App.Score.Overview',

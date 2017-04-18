@@ -1,64 +1,70 @@
 <div class="game-cover-buttons"
-	ng-class="{ 'game-cover-buttons-patching': $ctrl.isGamePatching }"
+	:class="{
+		'game-cover-buttons-patching': isGamePatching,
+	}"
 	>
 
 	<!--
-		If the primary is for sale and they don't own it yet, the only button
-		we should show is the buy button.
+		If the primary is for sale and they don't own it yet, the only button we
+		should show is the buy button.
 	-->
-	<a class="btn btn-lg btn-success-outline btn-overlay-variant"
-		ng-if="$ctrl.game._can_buy_primary_sellable"
-		ng-click="$ctrl.buy()"
+	<button
+		class="btn btn-lg btn-success-outline btn-overlay-variant"
+		v-if="game._can_buy_primary_sellable"
+		@click="buy"
 		>
-		<span class="jolticon jolticon-heart"></span>
-		<span translate>Buy Game</span>
-	</a>
+		<app-jolticon icon="heart" />
+		<translate>Buy Game</translate>
+	</button>
 
 	<!--
 		If the game is not for sale, or if they own the game, then show the
 		normal buttons.
 	-->
-	<span ng-if="!$ctrl.game._can_buy_primary_sellable">
+	<span v-else>
 
 		<!--
-			For Client we hide this once they start installing a package or if they have something installed.
+			For Client we hide this once they start installing a package or if
+			they have something installed.
 		-->
 		<a class="btn btn-lg btn-primary-outline btn-overlay-variant"
-			ng-if="$ctrl.browserBuilds.length && !$ctrl.hasLocalPackage"
-			ng-click="$ctrl.play()"
+			v-if="browserBuilds.length && !hasLocalPackage"
+			@click="play"
 			>
-			<span class="jolticon jolticon-play"></span>
-			<span ng-if="!$ctrl.Environment.isClient" translate>Play Game</span>
-			<span ng-if="$ctrl.Environment.isClient" translate>Quick Play</span>
+			<app-jolticon icon="play" />
+			<translate v-if="!GJ_IS_CLIENT">Play Game</translate>
+			<translate v-else>Quick Play</translate>
 		</a>
 
 		<!--
-			We don't show this in Client. Instead we let the client-game-buttons component handle it.
+			We don't show this in Client. Instead we let the client-game-buttons
+			component handle it.
 		-->
 		<a class="btn btn-lg btn-success-outline btn-overlay-variant"
-			ng-if="$ctrl.installableBuilds.length && !$ctrl.Environment.isClient"
-			ng-click="$ctrl.download()"
+			v-if="installableBuilds.length && !GJ_IS_CLIENT"
+			@click="download"
 			>
-			<span class="jolticon jolticon-download"></span>
-			<span translate>Download</span>
+			<app-jolticon icon="download" />
+			<translate>Download</translate>
 		</a>
 
-		<span ng-if="$ctrl.Environment.isClient">
+		<!--TODO-->
+		<!--<span v-if="GJ_IS_CLIENT">
 			<gj-client-game-buttons
 				label="game-cover"
-				game="$ctrl.game"
+				game="game"
 				large-variant="true"
 				overlay-variant="true"
-				is-patching="$ctrl.isGamePatching"
-				has-package="$ctrl.hasLocalPackage"
-				on-show-multiple-packages="$ctrl.onShowMultiplePackages( { $package: $package } )"
-				on-show-package-payment="$ctrl.onShowPackagePayment( { $package: $package } )"
+				is-patching="isGamePatching"
+				has-package="hasLocalPackage"
+				on-show-multiple-packages="onShowMultiplePackages( { $package: $package } )"
+				on-show-package-payment="onShowPackagePayment( { $package: $package } )"
 
-				has-installable-builds="!!$ctrl.installableBuilds.length"
-				can-install="!!$ctrl.installableBuilds.length"
+				has-installable-builds="!!installableBuilds.length"
+				can-install="!!installableBuilds.length"
 				>
 			</gj-client-game-buttons>
-		</span>
+		</span>-->
 	</span>
 
 </div>

@@ -1,4 +1,5 @@
 <div class="route-discover-games-view" v-if="game">
+
 	<app-game-maturity-block :game="game">
 
 		<section class="section section-thin fill-darkest"
@@ -25,6 +26,10 @@
 			</div>
 		</section>
 
+		<!--<app-game-page-cover
+			:game="game"
+			/>-->
+
 		<!--
 			Don't affix the nav on download pages.
 			It takes a lot of space out vertically when on small browser size.
@@ -34,25 +39,24 @@
 			:should-affix-nav="$route.name !== 'discover.games.view.download'"
 			>
 
-			<!--<div
+					<!--&& (installableBuilds.length || browserBuilds.length || game._can_buy_primary_sellable)-->
+			<div
 				slot="cover-buttons"
 				class="game-header-cover-buttons"
-				v-if="
-					!Screen.isXs
-					&& (installableBuilds.length || browserBuilds.length || game._can_buy_primary_sellable)
-				"
-				>-->
-					<!--&& $state.is( 'discover.games.view.overview' )-->
-				<!--<gj-game-cover-buttons
-					game="game"
-					packages="packages"
-					installable-builds="installableBuilds"
-					browser-builds="browserBuilds"
-					on-show-multiple-packages="scrollToMultiplePackages()"
-					on-show-package-payment="scrollToPackagePayment( $package )"
-					>
-				</gj-game-cover-buttons>-->
-			<!--</div>-->
+				>
+				<app-game-cover-buttons
+					v-if="
+						!Screen.isXs
+						&& $route.name === 'discover.games.view.overview'
+					"
+					:game="game"
+					:packages="packagePayload && packagePayload.packages"
+					:installable-builds="installableBuilds"
+					:browser-builds="browserBuilds"
+					@multiple="scrollToMultiplePackages"
+					@buy="scrollToPackagePayment"
+					/>
+			</div>
 
 			<app-user-avatar
 				slot="spotlight"
@@ -133,6 +137,7 @@
 			:user-rating="userRating"
 			:rating-breakdown="ratingBreakdown"
 			:twitter-share-message="twitterShareMessage"
+			:package-payload="packagePayload"
 			/>
 
 	</app-game-maturity-block>

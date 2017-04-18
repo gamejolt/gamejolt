@@ -21,6 +21,8 @@ import { AppDiscoverGamesViewOverviewDevlog } from './_devlog/devlog';
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
+import { findVueParent } from '../../../../../../lib/gj-lib-client/utils/vue';
+import RouteDiscoverGamesView from '../view';
 
 @View
 @Component({
@@ -36,6 +38,7 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 	@Prop() userRating: GameRating;
 	@Prop() ratingBreakdown: number[];
 	@Prop() twitterShareMessage: string;
+	@Prop() packagePayload: GamePackagePayloadModel | null;
 
 	isLoaded = false;
 	component: any = null;
@@ -44,9 +47,6 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 	songs: GameSong[] = [];
 	recommendedGames: Game[] = [];
 	feed: ActivityFeedContainer | null = null;
-
-	// Will be empty.
-	packagePayload = new GamePackagePayloadModel( {} );
 
 	@BeforeRouteEnter( { lazy: true, cache: true } )
 	beforeRoute( route: VueRouter.Route )
@@ -77,7 +77,7 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 	// 	}
 	// }
 
-	routed()
+	async routed()
 	{
 		this.isLoaded = true;
 
@@ -118,7 +118,11 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 
 		this.songs = GameSong.populate( this.$payload.songs );
 		this.recommendedGames = Game.populate( this.$payload.recommendedGames );
-		this.packagePayload = new GamePackagePayloadModel( this.$payload );
+
+		const parent = findVueParent( this, RouteDiscoverGamesView ) as RouteDiscoverGamesView | undefined;
+		if ( parent ) {
+			parent.processPackagesPayload( this.$payload );
+		}
 
 		// const os = Device.os();
 		// const arch = Device.arch();
@@ -142,6 +146,10 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 		// if ( payload.activeJam ) {
 		// 	this.activeJam = new Jam( payload.activeJam );
 		// }
+
+		// Have to wait so that the components are in the DOM so we can pull
+		// their ref.
+		await this.$nextTick();
 
 		if ( !this.game._is_devlog ) {
 			(this.$refs.game as AppDiscoverGamesViewOverviewGame).$payload = this.$payload;

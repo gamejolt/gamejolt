@@ -14,9 +14,11 @@ import { Translate } from '../lib/gj-lib-client/components/translate/translate.s
 import { bootstrapShortkey } from '../lib/gj-lib-client/vue/shortkey';
 import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
 import { Registry } from '../lib/gj-lib-client/components/registry/registry.service';
+import { GamePlayModal } from '../lib/gj-lib-client/components/game/play-modal/play-modal.service';
 
 Payload.init( store, router );
 History.init( router );
+GamePlayModal.init( { canMinimize: true } );
 bootstrapShortkey();
 
 Registry.setConfig( 'Game', { maxItems: 100 } );

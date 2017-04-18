@@ -24,13 +24,18 @@ import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/
 import { AppDiscoverGamesViewNav } from './_nav/nav';
 import { AppDiscoverGamesViewControls } from './_controls/controls';
 import { AppGameOgrsTag } from '../../../../components/game/ogrs/tag';
-import { AppMeter } from '../../../../components/meter/meter';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppGameMaturityBlock } from '../../../../components/game/maturity-block/maturity-block';
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
+import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/cover-buttons';
+import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
+import { GamePackagePayloadModel } from '../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
+import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
+import { AppMeter } from '../../../../../lib/gj-lib-client/components/meter/meter';
 
 @View
 @Component({
@@ -44,6 +49,7 @@ import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/
 		AppMeter,
 		AppTimeAgo,
 		AppGameMaturityBlock,
+		AppGameCoverButtons,
 	},
 	directives: {
 		AppTooltip,
@@ -57,8 +63,6 @@ export default class RouteDiscoverGamesView extends Vue
 
 	isLoaded = false;
 	game: Game | null = null;
-	installableBuilds: GameBuild[] = [];
-	browserBuilds: GameBuild[] = [];
 
 	commentsCount = 0;
 	postsCount = 0;
@@ -66,6 +70,9 @@ export default class RouteDiscoverGamesView extends Vue
 	hasScores = false;
 	primaryScoreTable: GameScoreTable | null = null;
 	twitterShareMessage = 'Check out this game!';
+
+	packagePayload: GamePackagePayloadModel | null = null;
+	showMultiplePackagesMessage = false;
 
 	partnerLink: string | null = null;
 	userPartnerKey: string | null = null;
@@ -85,33 +92,33 @@ export default class RouteDiscoverGamesView extends Vue
 		return number( this.game.rating_count || 0 ) + ' rating(s), avg: ' + this.game.avg_rating;
 	}
 
-	// get installableBuilds()
-	// {
-	// 	if ( !this.packagePayload ) {
-	// 		return [];
-	// 	}
+	get installableBuilds()
+	{
+		if ( !this.packagePayload ) {
+			return [];
+		}
 
-	// 	const os = Device.os();
-	// 	const arch = Device.arch();
-	// 	return Game.pluckInstallableBuilds( this.packagePayload.packages || [], os, arch );
-	// }
+		const os = Device.os();
+		const arch = Device.arch();
+		return Game.pluckInstallableBuilds( this.packagePayload.packages || [], os, arch );
+	}
 
-	// get browserBuilds()
-	// {
-	// 	if ( !this.packagePayload ) {
-	// 		return [];
-	// 	}
+	get browserBuilds()
+	{
+		if ( !this.packagePayload ) {
+			return [];
+		}
 
-	// 	let builds = Game.pluckBrowserBuilds( this.packagePayload.packages || [] );
+		let builds = Game.pluckBrowserBuilds( this.packagePayload.packages || [] );
 
-	// 	// On Client we only want to include HTML games.
-	// 	if ( Environment.isClient ) {
-	// 		builds = builds.filter( ( item ) => item.type === GameBuild.TYPE_HTML );
-	// 	}
+		// On Client we only want to include HTML games.
+		if ( GJ_IS_CLIENT ) {
+			builds = builds.filter( ( item ) => item.type === GameBuild.TYPE_HTML );
+		}
 
-	// 	// Pull in ROMs to the browser builds.
-	// 	return builds.concat( Game.pluckRomBuilds( this.packagePayload.packages || [] ) );
-	// }
+		// Pull in ROMs to the browser builds.
+		return builds.concat( Game.pluckRomBuilds( this.packagePayload.packages || [] ) );
+	}
 
 	@BeforeRouteEnter( { lazy: true, cache: true, cacheTag: 'view' } )
 	beforeRoute( route: VueRouter.Route )
@@ -224,6 +231,11 @@ export default class RouteDiscoverGamesView extends Vue
 		this.game!.avg_rating = payload.game.avg_rating;
 	}
 
+	processPackagesPayload( payload: any )
+	{
+		this.packagePayload = new GamePackagePayloadModel( payload );
+	}
+
 	onGameRatingChange( gameId: number )
 	{
 		if ( gameId === this.game!.id ) {
@@ -236,17 +248,18 @@ export default class RouteDiscoverGamesView extends Vue
 		ReportModal.show( this.game! );
 	}
 
-	// scrollToMultiplePackages()
-	// {
-	// 	_this.showMultiplePackagesMessage = true;
-	// 	Scroll.to( 'game-releases' );
-	// }
+	scrollToMultiplePackages()
+	{
+		this.showMultiplePackagesMessage = true;
+		Scroll.to( 'game-releases' );
+	}
 
-	// scrollToPackagePayment( _package )
-	// {
-	// 	Scroll.to( 'game-package-card-' + _package.id );
-	// 	$scope.$broadcast( 'Game_Package_Card.showPaymentOptions', _package );
-	// }
+	// TODO: Can we do this through a ref call?
+	scrollToPackagePayment( _package: GamePackage )
+	{
+		// Scroll.to( 'game-package-card-' + _package.id );
+		// $scope.$broadcast( 'Game_Package_Card.showPaymentOptions', _package );
+	}
 
 	copyPartnerLink()
 	{
