@@ -36,11 +36,6 @@ import '../lib/gj-lib-client/components/key-group/key-group';
 import '../lib/gj-lib-client/components/game/news-article/news-article';
 import '../lib/gj-lib-client/components/game/trophy/trophy';
 import '../lib/gj-lib-client/components/game/data-store/item/item';
-import '../lib/gj-lib-client/components/order/order';
-import '../lib/gj-lib-client/components/order/item/item';
-import '../lib/gj-lib-client/components/order/payment/payment';
-import '../lib/gj-lib-client/components/order/payment/refund/refund';
-import '../lib/gj-lib-client/components/order/address/address';
 import '../lib/gj-lib-client/components/game/key-pool/key-pool';
 import '../lib/gj-lib-client/components/jam/jam-module';
 import '../lib/gj-lib-client/components/jam/game/game';
@@ -50,7 +45,6 @@ import '../lib/gj-lib-client/components/jam/game/vote/widget/widget';
 import '../lib/gj-lib-client/components/jam/award/award';
 import '../lib/gj-lib-client/components/key/key-module';
 import '../lib/gj-lib-client/components/linked-key/linked-key';
-import '../lib/gj-lib-client/components/game-library/game/game';
 import '../lib/gj-lib-client/components/user/game-score/game-score';
 import '../lib/gj-lib-client/components/user/game-trophy/game-trophy';
 import '../lib/gj-lib-client/components/user/game-session/game-session';
@@ -124,11 +118,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Game.NewsArticle',
 	'gj.Game.Trophy',
 	'gj.Game.DataStore.Item',
-	'gj.Order',
-	'gj.Order.Item',
-	'gj.Order.Payment',
-	'gj.Order.Payment.Refund',
-	'gj.Order.Address',
 	'gj.Game.KeyPool',
 	'gj.Jam',
 	'gj.Jam.Game',
@@ -138,7 +127,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Jam.Award',
 	'gj.Key',
 	'gj.LinkedKey',
-	'gj.GameLibrary.Game',
 	'gj.User.GameScore',
 	'gj.User.GameTrophy',
 	'gj.User.GameSession',
