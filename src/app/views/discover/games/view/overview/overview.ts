@@ -22,6 +22,7 @@ import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fir
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
 import { findVueParent } from '../../../../../../lib/gj-lib-client/utils/vue';
+import { GameScoreTable } from '../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import RouteDiscoverGamesView from '../view';
 
 @View
@@ -39,6 +40,9 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 	@Prop() ratingBreakdown: number[];
 	@Prop() twitterShareMessage: string;
 	@Prop() packagePayload: GamePackagePayloadModel | null;
+	@Prop() trophiesCount: number;
+	@Prop() hasScores: boolean;
+	@Prop() primaryScoreTable: GameScoreTable | null;
 
 	isLoaded = false;
 	component: any = null;

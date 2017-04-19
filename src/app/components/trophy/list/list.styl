@@ -1,10 +1,13 @@
+@require '~styles/variables'
+@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+
 $trophy-list-thumbnail-size-xs = 70px
 $trophy-list-thumbnail-size = 100px
 $trophy-list-gutter-xs = $grid-gutter-width-xs / 2
 $trophy-list-gutter = $grid-gutter-width / 2
 
 .trophy-list-item
-	@extend .clearfix
+	clearfix()
 
 .trophy-list-item + .trophy-list-item
 	margin-top: $line-height-computed

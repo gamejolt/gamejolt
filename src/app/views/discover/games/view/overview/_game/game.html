@@ -30,7 +30,7 @@
 		</div>
 	</section>-->
 
-	<section class="section section-thin" v-if="!Environment.isClient && !Screen.isXs && game._should_show_ads">
+	<section class="section section-thin" v-if="!GJ_IS_CLIENT && !Screen.isXs && game._should_show_ads">
 		<app-ad size="leaderboard" resource="Game" :resource-id="game.id" />
 	</section>
 
@@ -218,7 +218,7 @@
 						</a>
 					</div>
 
-					<div v-if="twitterShareMessage && !Environment.isClient">
+					<div v-if="twitterShareMessage && !GJ_IS_CLIENT">
 						<br>
 						<div class="social-widgets">
 							<app-social-twitter-share
@@ -290,7 +290,7 @@
 								:game="game"
 								/>
 
-							<div v-if="!Environment.isClient && game._should_show_ads && Screen.isDesktop">
+							<div v-if="!GJ_IS_CLIENT && game._should_show_ads && Screen.isDesktop">
 								<br>
 								<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
 							</div>
@@ -323,6 +323,55 @@
 
 		</div>
 	</section>
+
+	<!-- Achievements -->
+	<div v-if="hasScores || trophiesCount">
+		<hr>
+
+		<section class="section">
+			<div class="container">
+
+				<div class="row">
+
+					<!--
+						Scores
+					-->
+					<div
+						v-if="hasScores"
+						:class="isAchievementsTwoCol ? 'col-md-7' : 'col-xs-12'"
+						>
+
+						<!--<gj-score-overview
+							v-if="scoresPayload"
+							score-overview-game="game"
+							score-overview-payload="scoresPayload"
+							score-overview-size="{{ (isAchievementsTwoCol ? 'small' : 'full') }}">
+						</gj-score-overview>-->
+
+					</div>
+
+					<!--
+						Trophies
+					-->
+					<div
+						v-if="trophiesCount"
+						:class="isAchievementsTwoCol ? 'col-md-5 col-lg-4 col-lg-offset-1' : 'col-xs-12'"
+						>
+
+						<app-trophy-overview
+							v-if="trophiesPayload"
+							:game="game"
+							:initial-payload="trophiesPayload"
+							:size="isAchievementsTwoCol ? 'small' : 'full'"
+							/>
+
+					</div>
+
+				</div>
+
+			</div>
+		</section>
+	</div>
 
 	<!--
 		Recommended Games
@@ -430,7 +479,7 @@
 					<!--
 						Will overflow a little on md, but what can ya do, amirite?
 					-->
-					<div class="col-md-4 col-lg-offset-1" v-if="!Environment.isClient && game._should_show_ads && Screen.isDesktop">
+					<div class="col-md-4 col-lg-offset-1" v-if="!GJ_IS_CLIENT && game._should_show_ads && Screen.isDesktop">
 						<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
 					</div>
 

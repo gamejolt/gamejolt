@@ -5,6 +5,7 @@ import { routeDiscoverGamesViewDevlogList } from './devlog/list/list.route';
 import { routeDiscoverGamesViewDevlogView } from './devlog/view/view.route';
 import { routeDiscoverGamesViewComments } from './comments/comments.route';
 import { routeDiscoverGamesViewDownloadBuild } from './download/build/build.route';
+import { routeDiscoverGamesViewTrophiesList } from './trophies/list/list.route';
 
 export const routeDiscoverGamesView: VueRouter.RouteConfig = {
 	path: ':slug/:id(\\d+)',
@@ -16,5 +17,6 @@ export const routeDiscoverGamesView: VueRouter.RouteConfig = {
 		routeDiscoverGamesViewDevlogView,
 		routeDiscoverGamesViewComments,
 		routeDiscoverGamesViewDownloadBuild,
+		routeDiscoverGamesViewTrophiesList,
 	],
 };

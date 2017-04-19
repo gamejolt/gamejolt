@@ -39,6 +39,9 @@ import { AppDiscoverGamesViewOverviewDetails } from '../_details/details';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
+import { objectPick } from '../../../../../../../lib/gj-lib-client/utils/object';
+import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
+import { AppTrophyOverview } from '../../../../../../components/trophy/overview/overview';
 
 @View
 @Component({
@@ -60,6 +63,7 @@ import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 		AppCommentVideoThumbnail,
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
+		AppTrophyOverview,
 	},
 	directives: {
 		AppTrackEvent,
@@ -84,6 +88,9 @@ export class AppDiscoverGamesViewOverviewGame extends Vue
 	@Prop() twitterShareMessage: string;
 	@Prop() ratingBreakdown: number[];
 	@Prop() feed: ActivityFeedContainer;
+	@Prop() trophiesCount: number;
+	@Prop() hasScores: boolean;
+	@Prop() primaryScoreTable: GameScoreTable | null;
 
 	@State app: AppState;
 
@@ -101,6 +108,9 @@ export class AppDiscoverGamesViewOverviewGame extends Vue
 	videoCommentsCount = 0;
 	videoCommentsPage = 0;
 
+	scoresPayload: any = null;
+	trophiesPayload: any = null;
+
 	Screen = makeObservableService( Screen );
 	Environment = Environment;
 
@@ -116,28 +126,21 @@ export class AppDiscoverGamesViewOverviewGame extends Vue
 		this.videoComments = CommentVideo.populate( this.$payload.videoComments );
 		this.videoCommentsCount = this.$payload.videoCommentsCount || 0;
 
-		// this.scoresPayload = _.pick( payload, [
-		// 	'scoreTables',
-		// 	'scoreTable',
-		// 	'scores',
-		// 	'scoresUserBestScore',
-		// 	'scoresUserScorePlacement',
-		// 	'scoresUserScoreExperience',
-		// ] );
+		this.scoresPayload = objectPick( this.$payload, [
+			'scoreTables',
+			'scoreTable',
+			'scores',
+			'scoresUserBestScore',
+			'scoresUserScorePlacement',
+			'scoresUserScoreExperience',
+		] );
 
-		// this.trophiesPayload = _.pick( payload, [
-		// 	'trophies',
-		// 	'trophiesAchieved',
-		// 	'trophiesExperienceAchieved',
-		// 	'trophiesShowInvisibleTrophyMessage',
-		// ] );
-
-		// // Partner referral system.
-		// if ( payload.partnerReferredKey && payload.partnerReferredBy ) {
-		// 	this.partnerReferredKey = payload.partnerReferredKey;
-		// 	this.partnerReferredBy = new User( payload.partnerReferredBy );
-		// 	this.partnerNoCut = payload.partnerNoCut || false;
-		// }
+		this.trophiesPayload = objectPick( this.$payload, [
+			'trophies',
+			'trophiesAchieved',
+			'trophiesExperienceAchieved',
+			'trophiesShowInvisibleTrophyMessage',
+		] );
 	}
 
 	get hasReleasesSection()
@@ -154,6 +157,15 @@ export class AppDiscoverGamesViewOverviewGame extends Vue
 	get showMultiplePackagesMessage()
 	{
 		return false;
+	}
+
+	/**
+	 * Whether or not the achievements row should be two columns. When there is
+	 * both scores and trophies, we split them in half.
+	 */
+	get isAchievementsTwoCol()
+	{
+		return this.hasScores && this.trophiesCount;
 	}
 
 	updateCommentsCount( count: number )

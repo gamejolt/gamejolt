@@ -112,6 +112,7 @@ import { ForumChannelModule } from '../lib/gj-lib-client/components/forum/channe
 import { ForumTopicModule } from '../lib/gj-lib-client/components/forum/topic/topic.module';
 import { ForumPostModule } from '../lib/gj-lib-client/components/forum/post/post.module';
 import { ReportModalModule } from '../lib/gj-lib-client/components/report/modal/modal.module';
+import { TrophyThumbnailModule } from './components/trophy/thumbnail/thumbnail.module';
 
 @NgModule({
 	imports: [
@@ -228,6 +229,7 @@ import { ReportModalModule } from '../lib/gj-lib-client/components/report/modal/
 		ForumTopicModule,
 		ForumPostModule,
 		ReportModalModule,
+		TrophyThumbnailModule,
 		AppModuleNg1,
 	],
 	declarations: [

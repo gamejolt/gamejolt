@@ -29,6 +29,8 @@ export class AppDiscoverGamesViewNav extends Vue
 	@Prop( Game ) game: Game;
 	@Prop( Number ) postsCount: number;
 	@Prop( Number ) commentsCount: number;
+	@Prop( Number ) trophiesCount: number;
+	@Prop( Boolean ) hasScores?: boolean;
 
 	@State app: AppState;
 

@@ -1,56 +1,82 @@
-<section class="section">
-	<div class="container">
+<div v-if="routeBootstrapped">
 
-		<div class="row">
-			<div class="col-sm-10 col-md-8 col-lg-7">
+	<section class="section">
+		<div class="container">
 
-				<h2 class="section-header">{{ ::'game.trophies.heading' | translate }}</h2>
+			<h2 class="section-header">
+				<translate>game.trophies.heading</translate>
+			</h2>
 
-				<gj-trophy-completion
-					ng-if="App.user"
-					trophy-completion-total="::listCtrl.trophies.length"
-					trophy-completion-achieved="::listCtrl.achieved.length"
-					trophy-completion-experience="::listCtrl.experience">
-				</gj-trophy-completion>
-
-				<nav class="pills" ng-if="::listCtrl.filteredTrophies.achieved.length">
-					<ul>
-						<li>
-							<a ng-class="{ active: listCtrl.currentFilter == 'all' }" ng-click="listCtrl.currentFilter = 'all'">
-								{{ ::'game.trophies.all_tab' | translate }}
-								<span class="badge hidden-xs">{{ ::listCtrl.trophies.length }}</span>
-							</a>
-						</li>
-						<li>
-							<a ng-class="{ active: listCtrl.currentFilter == 'achieved' }" ng-click="listCtrl.currentFilter = 'achieved'">
-								{{ ::'game.trophies.achieved_tab' | translate }}
-								<span class="badge hidden-xs">{{ ::listCtrl.filteredTrophies.achieved.length }}</span>
-							</a>
-						</li>
-						<li>
-							<a ng-class="{ active: listCtrl.currentFilter == 'unachieved' }" ng-click="listCtrl.currentFilter = 'unachieved'">
-								{{ ::'game.trophies.unachieved_tab' | translate }}
-								<span class="badge hidden-xs">{{ ::listCtrl.filteredTrophies.unachieved.length }}</span>
-							</a>
-						</li>
-					</ul>
-				</nav>
-
-				<div class="alert alert-warning" ng-if="::listCtrl.showInvisibleTrophyMessage">
-					{{ ::'trophies.invisible_trophies_message' | translate }}
+			<div class="row">
+				<div class="col-sm-10 col-md-9 col-lg-5 col-lg-push-7">
+					<app-trophy-completion
+						v-if="app.user"
+						:total="trophies.length"
+						:achieved="achieved.length"
+						:experience="experience"
+						/>
 				</div>
+				<div class="col-sm-10 col-md-9 col-lg-7 col-lg-pull-5">
 
-				<gj-trophy-list
-					trophy-list-trophies="(listCtrl.currentFilter == 'all' ? listCtrl.trophies : listCtrl.filteredTrophies[ listCtrl.currentFilter ])"
-					trophy-list-achieved="::listCtrl.achieved">
-				</gj-trophy-list>
+					<app-nav-tab-list v-if="filteredTrophies.achieved.length">
 
+						<ul>
+							<li>
+								<a
+									:class="{ active: currentFilter === 'all' }"
+									@click="currentFilter = 'all'"
+									>
+									<translate>game.trophies.all_tab</translate>
+									<span class="badge hidden-xs">
+										{{ trophies.length | number }}
+									</span>
+								</a>
+							</li>
+							<li>
+								<a
+									:class="{ active: currentFilter === 'achieved' }"
+									@click="currentFilter = 'achieved'"
+									>
+									<translate>game.trophies.achieved_tab</translate>
+									<span class="badge hidden-xs">
+										{{ filteredTrophies.achieved.length | number }}
+									</span>
+								</a>
+							</li>
+							<li>
+								<a
+									:class="{ active: currentFilter === 'unachieved' }"
+									@click="currentFilter = 'unachieved'"
+									>
+									<translate>game.trophies.unachieved_tab</translate>
+									<span class="badge hidden-xs">
+										{{ filteredTrophies.unachieved.length | number }}
+									</span>
+								</a>
+							</li>
+						</ul>
+
+					</app-nav-tab-list>
+
+					<div class="alert alert-warning" v-if="showInvisibleTrophyMessage">
+						<translate>trophies.invisible_trophies_message</translate>
+					</div>
+
+					<app-trophy-list
+						:trophies="currentFilter === 'all' ? trophies : filteredTrophies[ currentFilter ]"
+						:achieved="achieved"
+						/>
+
+				</div>
 			</div>
+
 		</div>
+	</section>
 
-	</div>
-</section>
+	<section class="section fill-pink" v-if="!trophies.length">
+		<div class="container text-center">
+			<translate>game.trophies.no_trophies_html</translate>
+		</div>
+	</section>
 
-<section class="section fill-pink" ng-if="::(!listCtrl.trophies.length)">
-	<div class="container text-center" translate>game.trophies.no_trophies_html</div>
-</section>
+</div>

@@ -1,13 +1,33 @@
-<div class="trophy-thumbnail" ng-class="::{ 'trophy-thumbnail-achieved': ctrl.isAchieved }">
+<div
+	class="trophy-thumbnail"
+	:class="{
+		'trophy-thumbnail-achieved': isAchieved,
+	}"
+	v-app-tooltip="trophy.title"
+	>
 
-	<div class="trophy-thumbnail-img">
-		<div class="trophy-thumbnail-img-inner anim-fade-in" ng-class="ctrl.isLoaded ? 'is-loaded' : ''">
-			<img ng-class="::(ctrl.trophy.has_thumbnail ? 'img-responsive' : '')"
-				ng-src="{{ ::ctrl.imgSrc }}"
-				alt="{{ ::ctrl.trophy.title }}">
+	<div class="trophy-thumbnail-img" ref="thumb">
+		<div
+			class="trophy-thumbnail-img-inner anim-fade-in"
+			:class="{ 'is-loaded': isLoaded }"
+			>
+			<img
+				:class="[
+					hasThumbnailImg ? 'img-responsive' : undefined,
+					!hasThumbnailImg ? `trophy-thumbnail-img-${ imgMultiplier }x` : undefined,
+				]"
+				:style="{
+					width: !hasThumbnailImg ? imgWidth + 'px' : undefined,
+					height: !hasThumbnailImg ? imgHeight + 'px' : undefined,
+				}"
+				:src="imgSrc"
+				:alt="trophy.title"
+				>
 		</div>
 	</div>
 
-	<span class="trophy-thumbnail-difficulty">{{ ::ctrl.trophy.difficultyLabel }}</span>
+	<span class="trophy-thumbnail-difficulty">
+		{{ trophy.difficultyLabel }}
+	</span>
 
 </div>

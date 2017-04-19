@@ -9,7 +9,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.Trophies.ListCtrl
 	this.experience = payload.trophiesExperienceAchieved || 0;
 	this.showInvisibleTrophyMessage = payload.trophiesShowInvisibleTrophyMessage || false;
 
-	this.achievedIndexed = Game_Trophy.indexAchieved( this.achieved );
+	this.achievedIndexed = User_GameTrophy.indexAchieved( this.achieved );
 	this.filteredTrophies = Game_Trophy.splitAchieved( this.trophies, this.achievedIndexed );
 
 	this.currentFilter = 'all';

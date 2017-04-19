@@ -41,12 +41,10 @@
 			</li>
 
 			<li v-if="trophiesCount">
-				<a ui-sref=".trophies.list"
-					ng-class="{ active: $state.includes( 'discover.games.view.trophies' ) }"
-					>
+				<router-link :to="{ name: 'discover.games.view.trophies.list' }" active-class="active">
 					<translate>games.view.trophies_tab</translate>
 					<span class="badge">{{ trophiesCount | number }}</span>
-				</a>
+				</router-link>
 			</li>
 
 			<li v-if="app.user && app.user.id !== game.developer.id">

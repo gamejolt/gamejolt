@@ -6,7 +6,7 @@
 		:media-items="mediaItems"
 		/>
 
-	<section class="section section-thin text-left" v-if="!Environment.isClient && !Screen.isXs && game._should_show_ads">
+	<section class="section section-thin text-left" v-if="!GJ_IS_CLIENT && !Screen.isXs && game._should_show_ads">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-10 col-md-offset-2">
@@ -30,7 +30,7 @@
 		</div>
 	</section>
 
-	<section class="section" style="padding-bottom: 0" v-if="twitterShareMessage && !Environment.isClient">
+	<section class="section" style="padding-bottom: 0" v-if="twitterShareMessage && !GJ_IS_CLIENT">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-10 col-sm-offset-1 col-md-2 col-md-offset-0" :class="{ 'text-right': Screen.isDesktop }">
@@ -165,7 +165,7 @@
 	</div>
 
 	<div v-if="feed && feed.hasItems">
-		<section class="section section-thin text-left" v-if="!Environment.isClient && !Screen.isXs && game._should_show_ads">
+		<section class="section section-thin text-left" v-if="!GJ_IS_CLIENT && !Screen.isXs && game._should_show_ads">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-10 col-md-offset-2">
