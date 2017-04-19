@@ -172,7 +172,7 @@
 	</div>
 
 	<app-comment-widget-add
-		v-if="!tab"
+		v-if="app.user && !tab"
 		resource="Fireside_Post"
 		:resource-id="post.id"
 		/>
