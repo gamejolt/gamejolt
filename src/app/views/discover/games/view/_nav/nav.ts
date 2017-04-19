@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./nav.html';
 
@@ -10,6 +10,8 @@ import { AppPopoverTrigger } from '../../../../../../lib/gj-lib-client/component
 import { AppPopover } from '../../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppState } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
+import { RouteState } from '../view.state';
+import { ReportModal } from '../../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 
 @View
 @Component({
@@ -26,11 +28,11 @@ import { Environment } from '../../../../../../lib/gj-lib-client/components/envi
 })
 export class AppDiscoverGamesViewNav extends Vue
 {
-	@Prop( Game ) game: Game;
-	@Prop( Number ) postsCount: number;
-	@Prop( Number ) commentsCount: number;
-	@Prop( Number ) trophiesCount: number;
-	@Prop( Boolean ) hasScores?: boolean;
+	@RouteState game: Game;
+	@RouteState postsCount: number;
+	@RouteState commentsCount: number;
+	@RouteState trophiesCount: number;
+	@RouteState hasScores?: boolean;
 
 	@State app: AppState;
 
@@ -38,6 +40,6 @@ export class AppDiscoverGamesViewNav extends Vue
 
 	report()
 	{
-		this.$emit( 'report' );
+		ReportModal.show( this.game );
 	}
 }

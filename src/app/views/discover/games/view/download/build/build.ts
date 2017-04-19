@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import * as View from '!view!./build.html';
 
 import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
@@ -21,6 +21,8 @@ import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/co
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { RouteState } from '../../view.state';
+import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 
 const DownloadDelay = 5000;
 
@@ -37,8 +39,8 @@ const DownloadDelay = 5000;
 })
 export default class RouteDiscoverGamesViewDownloadBuild extends Vue
 {
-	@Prop() game: Game;
-	@Prop() userRating: GameRating;
+	@RouteState game: Game;
+	@RouteState userRating: GameRating | null;
 
 	@State app: AppState;
 
@@ -71,7 +73,10 @@ export default class RouteDiscoverGamesViewDownloadBuild extends Vue
 
 	async routed()
 	{
-		// App.title = gettextCatalog.getString( 'game.download.game.page_title', { game: $scope.gameCtrl.game.title } );
+		Meta.title = this.$gettextInterpolate(
+			`Downloading %{ game }`,
+			{ game: this.game.title },
+		);
 
 		this.build = new GameBuild( this.$payload.build );
 		this.src = null;
@@ -79,6 +84,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends Vue
 		this.developerGames = Game.populate( this.$payload.developerGames );
 		this.recommendedGames = Game.populate( this.$payload.recommendedGames );
 
+		// Wait for view so we can scroll.
 		await this.$nextTick();
 
 		// Scroll down past the header.

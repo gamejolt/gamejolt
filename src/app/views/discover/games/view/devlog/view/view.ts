@@ -8,7 +8,6 @@ import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/r
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
@@ -16,6 +15,7 @@ import { AppDevlogPostView } from '../../../../../../components/devlog/post/view
 import { AppDevlogPostViewPlaceholder } from '../../../../../../components/devlog/post/view/placeholder/placeholder';
 import { AppScrollWhen } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll-when.directive.vue';
 import { Registry } from '../../../../../../../lib/gj-lib-client/components/registry/registry.service';
+import { RouteState } from '../../view.state';
 
 @View
 @Component({
@@ -31,11 +31,11 @@ import { Registry } from '../../../../../../../lib/gj-lib-client/components/regi
 export default class RouteDiscoverGamesViewDevlogView extends Vue
 {
 	@Prop() postSlug: string;
-	@Prop() game: Game;
+
+	@RouteState game: Game;
 
 	post: FiresidePost | null = null;
 
-	Environment = Environment;
 	Screen = makeObservableService( Screen );
 
 	@BeforeRouteEnter( { lazy: true, cache: true } )
@@ -48,7 +48,7 @@ export default class RouteDiscoverGamesViewDevlogView extends Vue
 	created()
 	{
 		const hash = FiresidePost.pullHashFromUrl( this.postSlug );
-		this.post = Registry.find( 'FiresidePost', hash, 'hash' ) || null;
+		this.post = Registry.find<FiresidePost>( 'FiresidePost', hash, 'hash' );
 	}
 
 	routed()

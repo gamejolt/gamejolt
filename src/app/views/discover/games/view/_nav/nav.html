@@ -1,16 +1,19 @@
 <div>
 
-	<!--TODO: Links/active classes-->
 	<nav class="platform-list inline">
 		<ul>
 			<li v-if="!game._is_devlog">
-				<router-link :to="{ name: 'discover.games.view.overview' }" :class="{ active: $route.name === 'discover.games.view.overview' }">
+				<router-link
+					:to="{ name: 'discover.games.view.overview' }"
+					:class="{ active: $route.name === 'discover.games.view.overview' }"
+					>
 					<translate>games.view.overview_tab</translate>
 				</router-link>
 			</li>
 
 			<li v-if="game._is_devlog">
-				<router-link :to="{ name: 'discover.games.view.overview' }"
+				<router-link
+					:to="{ name: 'discover.games.view.overview' }"
 					:class="{ active: $route.name === 'discover.games.view.overview' || $route.name === 'discover.games.view.devlog.view' }"
 					>
 					<translate>Devlog</translate>
@@ -19,29 +22,39 @@
 			</li>
 
 			<li v-if="!game._is_devlog && postsCount > 0">
-				<router-link :to="{ name: 'discover.games.view.devlog.list' }" active-class="active">
+				<router-link
+					:to="{ name: 'discover.games.view.devlog.list' }"
+					active-class="active"
+					>
 					<translate>Devlog</translate>
 					<span class="badge">{{ postsCount | number }}</span>
 				</router-link>
 			</li>
 
 			<li v-if="game._is_devlog && game.comments_enabled">
-				<router-link :to="{ name: 'discover.games.view.comments' }" active-class="active">
+				<router-link
+					:to="{ name: 'discover.games.view.comments' }"
+					active-class="active"
+					>
 					<translate>Comments</translate>
 					<span class="badge">{{ commentsCount | number }}</span>
 				</router-link>
 			</li>
 
-			<li v-if="hasScores">
+			<!--TODO-->
+			<!--<li v-if="hasScores">
 				<a ui-sref=".scores.list( { type: 'best', tableId: primaryScoreTable.id } )"
 					ng-class="{ active: $state.includes( 'discover.games.view.scores' ) }"
 					>
 					<translate>games.view.scores_tab</translate>
 				</a>
-			</li>
+			</li>-->
 
 			<li v-if="trophiesCount">
-				<router-link :to="{ name: 'discover.games.view.trophies.list' }" active-class="active">
+				<router-link
+					:to="{ name: 'discover.games.view.trophies.list' }"
+					active-class="active"
+					>
 					<translate>games.view.trophies_tab</translate>
 					<span class="badge">{{ trophiesCount | number }}</span>
 				</router-link>

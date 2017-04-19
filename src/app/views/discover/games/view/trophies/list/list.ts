@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
 import { GameTrophy } from '../../../../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
@@ -15,6 +15,7 @@ import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/numbe
 import { AppTrophyList } from '../../../../../../components/trophy/list/list';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
+import { RouteState } from '../../view.state';
 
 @View
 @Component({
@@ -29,7 +30,7 @@ import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components
 })
 export default class RouteDiscoverGamesViewTrophiesList extends Vue
 {
-	@Prop() game: Game;
+	@RouteState game: Game;
 
 	@State app: AppState;
 
@@ -55,7 +56,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends Vue
 	routed()
 	{
 		Meta.title = this.$gettextInterpolate(
-			'Trophies for %{ game }',
+			`Trophies for %{ game }`,
 			{ game: this.game.title },
 		);
 

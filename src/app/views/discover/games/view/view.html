@@ -1,4 +1,6 @@
-<div class="route-discover-games-view" v-if="game">
+<div class="route-discover-games-view"
+	v-if="game"
+	>
 
 	<app-game-maturity-block :game="game">
 
@@ -26,10 +28,6 @@
 			</div>
 		</section>
 
-		<!--<app-game-page-cover
-			:game="game"
-			/>-->
-
 		<!--
 			Don't affix the nav on download pages.
 			It takes a lot of space out vertically when on small browser size.
@@ -39,18 +37,17 @@
 			:should-affix-nav="$route.name !== 'discover.games.view.download'"
 			>
 
-					<!--&& (installableBuilds.length || browserBuilds.length || game._can_buy_primary_sellable)-->
-			<div
-				slot="cover-buttons"
-				class="game-header-cover-buttons"
-				>
+			<!--
+				Only show the cover buttons on the overview page.
+			-->
+			<div slot="cover-buttons">
 				<app-game-cover-buttons
 					v-if="
 						!Screen.isXs
 						&& $route.name === 'discover.games.view.overview'
 					"
 					:game="game"
-					:packages="packagePayload && packagePayload.packages"
+					:packages="packages"
 					:installable-builds="installableBuilds"
 					:browser-builds="browserBuilds"
 					@multiple="scrollToMultiplePackages"
@@ -65,17 +62,10 @@
 
 			<app-discover-games-view-nav
 				slot="nav"
-				:game="game"
-				:posts-count="postsCount"
-				:comments-count="commentsCount"
-				:trophies-count="trophiesCount"
-				:has-scores="hasScores"
-				@report="report"
 				/>
 
 			<app-discover-games-view-controls
 				slot="controls"
-				:game="game"
 				/>
 
 			<h1 :class="{ h2: Screen.isMobile }">
@@ -134,16 +124,7 @@
 
 		</app-page-header>
 
-		<router-view
-			:game="game"
-			:user-rating="userRating"
-			:rating-breakdown="ratingBreakdown"
-			:twitter-share-message="twitterShareMessage"
-			:package-payload="packagePayload"
-			:trophies-count="trophiesCount"
-			:has-scores="hasScores"
-			:primary-score-table="primaryScoreTable"
-			/>
+		<router-view />
 
 	</app-game-maturity-block>
 </div>

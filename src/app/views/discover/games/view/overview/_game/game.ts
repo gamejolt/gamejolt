@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./game.html?style=./game.styl';
 
@@ -14,9 +14,7 @@ import { GameSketchfab } from '../../../../../../../lib/gj-lib-client/components
 import { AppState } from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { GameRating } from '../../../../../../../lib/gj-lib-client/components/game/rating/rating.model';
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
-import { GameRelease } from '../../../../../../../lib/gj-lib-client/components/game/release/release.model';
 import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
-import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { AppCard } from '../../../../../../../lib/gj-lib-client/components/card/card';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppFadeCollapse } from '../../../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
@@ -33,15 +31,15 @@ import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/compo
 import { ActivityFeedContainer } from '../../../../../../components/activity/feed/feed-container-service';
 import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
 import { CommentVideo } from '../../../../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCommentVideoThumbnail } from '../../../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import { AppDiscoverGamesViewOverviewDetails } from '../_details/details';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
-import { objectPick } from '../../../../../../../lib/gj-lib-client/utils/object';
-import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { AppTrophyOverview } from '../../../../../../components/trophy/overview/overview';
+import { RouteState, RouteMutation, RouteStore, RouteAction, RouteGetter } from '../../view.state';
+import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
+import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 
 @View
 @Component({
@@ -73,90 +71,47 @@ import { AppTrophyOverview } from '../../../../../../components/trophy/overview/
 		number,
 	},
 })
-export class AppDiscoverGamesViewOverviewGame extends Vue
+export class AppDiscoverGamesViewOverviewGame extends Vue implements
+	Pick<RouteStore, 'setCommentsCount'>,
+	Pick<RouteStore, 'loadVideoComments'>
 {
-	@Prop() isLoaded: boolean;
-	@Prop() game: Game;
-	@Prop() mediaItems: (GameScreenshot | GameVideo | GameSketchfab)[];
-	@Prop() recommendedGames: Game[];
-	@Prop() userRating: GameRating;
-	@Prop() packages: GamePackage[];
-	@Prop() releases: GameRelease[];
-	@Prop() songs: GameSong[];
-	@Prop() userPartnerKey: string;
-	@Prop() partnerLink: string;
-	@Prop() twitterShareMessage: string;
-	@Prop() ratingBreakdown: number[];
-	@Prop() feed: ActivityFeedContainer;
-	@Prop() trophiesCount: number;
-	@Prop() hasScores: boolean;
-	@Prop() primaryScoreTable: GameScoreTable | null;
+	@RouteState isOverviewLoaded: boolean;
+	@RouteState game: Game;
+	@RouteState mediaItems: (GameScreenshot | GameVideo | GameSketchfab)[];
+	@RouteState recommendedGames: Game[];
+	@RouteState userRating: GameRating;
+	@RouteState songs: GameSong[];
+	@RouteState userPartnerKey: string;
+	@RouteState partnerLink: string;
+	@RouteState twitterShareMessage: string;
+	@RouteState feed: ActivityFeedContainer;
+	@RouteState trophiesCount: number;
+	@RouteState hasScores: boolean;
+	@RouteState supporters: User[];
+	@RouteState commentsCount: number;
+	@RouteState videoComments: CommentVideo[];
+	@RouteState videoCommentsCount: number;
+	@RouteState shouldShowMultiplePackagesMessage: boolean;
+
+	@RouteGetter packages: GamePackage[];
+	@RouteGetter hasReleasesSection: boolean;
+
+	@RouteMutation setCommentsCount: ( count: number ) => void;
+	@RouteAction loadVideoComments: () => Promise<void>;
 
 	@State app: AppState;
-
-	profileCount = 0;
-	downloadCount = 0;
-	playCount = 0;
-	developerGamesCount = 0;
-	commentsCount = 0;
-	supporters: User[] = [];
 
 	showFullDescription = false;
 	canToggleDescription = false;
 
-	videoComments: CommentVideo[] = [];
-	videoCommentsCount = 0;
-	videoCommentsPage = 0;
-
-	scoresPayload: any = null;
-	trophiesPayload: any = null;
-
 	Screen = makeObservableService( Screen );
 	Environment = Environment;
 
-	routed()
-	{
-		this.profileCount = this.$payload.profileCount || 0;
-		this.downloadCount = this.$payload.downloadCount || 0;
-		this.playCount = this.$payload.playCount || 0;
-		this.developerGamesCount = this.$payload.developerGamesCount || 0;
-
-		this.supporters = User.populate( this.$payload.supporters );
-
-		this.videoComments = CommentVideo.populate( this.$payload.videoComments );
-		this.videoCommentsCount = this.$payload.videoCommentsCount || 0;
-
-		this.scoresPayload = objectPick( this.$payload, [
-			'scoreTables',
-			'scoreTable',
-			'scores',
-			'scoresUserBestScore',
-			'scoresUserScorePlacement',
-			'scoresUserScoreExperience',
-		] );
-
-		this.trophiesPayload = objectPick( this.$payload, [
-			'trophies',
-			'trophiesAchieved',
-			'trophiesExperienceAchieved',
-			'trophiesShowInvisibleTrophyMessage',
-		] );
-	}
-
-	get hasReleasesSection()
-	{
-		// The releases section exists if there are releases or songs.
-		return this.releases.length || this.songs.length;
-	}
-
 	get hasPartnerControls()
 	{
-		return this.game.referrals_enabled && this.userPartnerKey && this.packages.length;
-	}
-
-	get showMultiplePackagesMessage()
-	{
-		return false;
+		return this.game.referrals_enabled
+			&& this.userPartnerKey
+			&& this.packages.length;
 	}
 
 	/**
@@ -168,21 +123,10 @@ export class AppDiscoverGamesViewOverviewGame extends Vue
 		return this.hasScores && this.trophiesCount;
 	}
 
-	updateCommentsCount( count: number )
+	copyPartnerLink()
 	{
-		this.commentsCount = count;
+		if ( this.partnerLink ) {
+			Clipboard.copy( this.partnerLink );
+		}
 	}
-
-	async loadVideoComments()
-	{
-		++this.videoCommentsPage;
-		const response = await Api.sendRequest(
-			'/web/discover/games/videos/'
-			+ this.$route.params.id
-			+ '?page=' + this.videoCommentsPage
-		);
-		this.videoComments = this.videoComments.concat( CommentVideo.populate( response.videos ) );
-	}
-
-	// copy partner link
 }
