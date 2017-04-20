@@ -26,7 +26,6 @@ import '../lib/gj-lib-client/components/scroll/fixed-resizer/fixed-resizer';
 import '../lib/gj-lib-client/components/editable-accordion/editable-accordion';
 import '../lib/gj-lib-client/components/progress/poller/poller.module';
 import '../lib/gj-lib-client/components/alert/dismissable/dismissable';
-import '../lib/gj-lib-client/components/activity/stream/stream-module';
 import '../lib/gj-lib-client/components/form/form';
 import '../lib/gj-lib-client/components/form/markdown-editor/markdown-editor';
 import '../lib/gj-lib-client/components/form/upload-control/upload-control';
@@ -92,7 +91,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.EditableAccordion',
 	'gj.Progress.Poller',
 	'gj.Alert.Dismissable',
-	'gj.Activity.Stream',
 	'gj.Form',
 	'gj.Form.MarkdownEditor',
 	'gj.Form.UploadControl',
