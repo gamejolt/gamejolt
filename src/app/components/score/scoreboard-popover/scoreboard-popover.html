@@ -1,18 +1,26 @@
-<gj-popover popover-id="scoreboard-selector" track-element-width=".scoreboard-selector">
-	<div class="popover-heading"><strong>{{ ::'scores.scoreboard_popover.heading' | translate }}</strong></div>
+<app-popover
+	popover-id="scoreboard-selector"
+	track-element-width=".scoreboard-selector"
+	>
+	<div class="popover-heading">
+		<strong>
+			<translate>scores.scoreboard_popover.heading</translate>
+		</strong>
+	</div>
 
 	<div class="list-group">
 		<a class="list-group-item has-icon"
-			ng-repeat="table in ctrl.tables track by table.id"
-			ng-click="ctrl.selectTable( table )"
+			v-for="table of tables"
+			:key="table.id"
+			@click="selectTable( table )"
 			>
 
 			<h5 class="list-group-item-heading sans-margin-bottom">
-				<span class="jolticon jolticon-check" ng-if="table.id == ctrl.currentTable.id"></span>
-				<strong>{{ ::table.name }}</strong>
+				<app-jolticon icon="check" v-if="table.id === currentTable.id" />
+				<strong>{{ table.name }}</strong>
 			</h5>
 
-			<div class="list-group-item-text">{{ ::table.description }}</div>
+			<div class="list-group-item-text">{{ table.description }}</div>
 		</a>
 	</div>
-</gj-popover>
+</app-popover>

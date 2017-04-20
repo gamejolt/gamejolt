@@ -333,12 +333,12 @@
 						:class="isAchievementsTwoCol ? 'col-md-7' : 'col-xs-12'"
 						>
 
-						<!--<gj-score-overview
+						<app-score-overview
 							v-if="scoresPayload"
-							score-overview-game="game"
-							score-overview-payload="scoresPayload"
-							score-overview-size="{{ (isAchievementsTwoCol ? 'small' : 'full') }}">
-						</gj-score-overview>-->
+							:game="game"
+							:initial-payload="scoresPayload"
+							:size="isAchievementsTwoCol ? 'small' : 'full'"
+							/>
 
 					</div>
 

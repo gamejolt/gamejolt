@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import * as View from '!view!./overview.html?style=./overview.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
@@ -89,6 +89,14 @@ export class AppTrophyOverview extends Vue
 	}
 
 	created()
+	{
+		if ( this.initialPayload ) {
+			this.processPayload( this.initialPayload );
+		}
+	}
+
+	@Watch( 'initialPayload' )
+	onChange()
 	{
 		if ( this.initialPayload ) {
 			this.processPayload( this.initialPayload );

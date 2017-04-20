@@ -49,10 +49,6 @@ import '../lib/gj-lib-client/components/img/crop/crop';
 import './components/invite/invite-module';
 import './components/game/filtering/filtering-module';
 import './components/protocol-watcher/protocol-watcher-module';
-import './components/score/feed/feed-module';
-import './components/score/list/list-module';
-import './components/score/overview/overview-module';
-import './components/score/scoreboard-popover/scoreboard-popover-module';
 import './components/sorting/sorting-module';
 import './components/terms/change-alert/change-alert-module';
 import './components/user/set-password-modal/set-password-modal-module';
@@ -121,10 +117,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'App.Invite',
 	'App.Sorting',
 	'App.Game.Filtering',
-	'App.Score.List',
-	'App.Score.Feed',
-	'App.Score.Overview',
-	'App.Score.ScoreboardPopover',
 	'App.User.TokenModal',
 	'App.User.SetPasswordModal',
 	'App.User.FriendshipsHelper',

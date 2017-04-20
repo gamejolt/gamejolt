@@ -41,14 +41,20 @@
 				</router-link>
 			</li>
 
-			<!--TODO-->
-			<!--<li v-if="hasScores">
-				<a ui-sref=".scores.list( { type: 'best', tableId: primaryScoreTable.id } )"
-					ng-class="{ active: $state.includes( 'discover.games.view.scores' ) }"
+			<li v-if="hasScores">
+				<router-link
+					:to="{
+						name: 'discover.games.view.scores.list',
+						params: {
+							type: 'best',
+							tableId: primaryScoreTable.id,
+						},
+					}"
+					:class="{ active: $route.name === 'discover.games.view.scores.list' }"
 					>
 					<translate>games.view.scores_tab</translate>
-				</a>
-			</li>-->
+				</router-link>
+			</li>
 
 			<li v-if="trophiesCount">
 				<router-link

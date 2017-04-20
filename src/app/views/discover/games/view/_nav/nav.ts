@@ -12,6 +12,7 @@ import { AppState } from '../../../../../../lib/gj-lib-client/vue/services/app/a
 import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { RouteState } from '../view.state';
 import { ReportModal } from '../../../../../../lib/gj-lib-client/components/report/modal/modal.service';
+import { GameScoreTable } from '../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 
 @View
 @Component({
@@ -32,7 +33,8 @@ export class AppDiscoverGamesViewNav extends Vue
 	@RouteState postsCount: number;
 	@RouteState commentsCount: number;
 	@RouteState trophiesCount: number;
-	@RouteState hasScores?: boolean;
+	@RouteState hasScores: boolean;
+	@RouteState primaryScoreTable: GameScoreTable | null;
 
 	@State app: AppState;
 

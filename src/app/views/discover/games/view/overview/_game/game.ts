@@ -40,6 +40,7 @@ import { AppTrophyOverview } from '../../../../../../components/trophy/overview/
 import { RouteState, RouteMutation, RouteStore, RouteAction, RouteGetter } from '../../view.state';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
+import { AppScoreOverview } from '../../../../../../components/score/overview/overview';
 
 @View
 @Component({
@@ -62,6 +63,7 @@ import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/g
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
 		AppTrophyOverview,
+		AppScoreOverview,
 	},
 	directives: {
 		AppTrackEvent,
@@ -85,13 +87,15 @@ export class AppDiscoverGamesViewOverviewGame extends Vue implements
 	@RouteState partnerLink: string;
 	@RouteState twitterShareMessage: string;
 	@RouteState feed: ActivityFeedContainer;
-	@RouteState trophiesCount: number;
-	@RouteState hasScores: boolean;
 	@RouteState supporters: User[];
 	@RouteState commentsCount: number;
 	@RouteState videoComments: CommentVideo[];
 	@RouteState videoCommentsCount: number;
 	@RouteState shouldShowMultiplePackagesMessage: boolean;
+	@RouteState trophiesCount: number;
+	@RouteState hasScores: boolean;
+	@RouteState trophiesPayload: any;
+	@RouteState scoresPayload: any;
 
 	@RouteGetter packages: GamePackage[];
 	@RouteGetter hasReleasesSection: boolean;
