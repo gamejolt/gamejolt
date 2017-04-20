@@ -12,7 +12,7 @@ import { AppTooltip } from '../../../../../../lib/gj-lib-client/components/toolt
 import { AppGamePlaylistAddToPopover } from '../../../../../components/game-playlist/add-to-popover/add-to-popover';
 import { AppAuthRequired } from '../../../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { AppGameFollowWidget } from '../../../../../components/game/follow-widget/follow-widget';
-import { RouteState } from '../view.state';
+import { RouteState, RouteStore } from '../view.state';
 
 @View
 @Component({
@@ -30,7 +30,7 @@ import { RouteState } from '../view.state';
 })
 export class AppDiscoverGamesViewControls extends Vue
 {
-	@RouteState game: Game;
+	@RouteState game: RouteStore['game'];
 
 	@State app: AppState;
 

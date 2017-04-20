@@ -15,13 +15,12 @@ import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppState } from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppGameThumbnail } from '../../../../../../components/game/thumbnail/thumbnail';
-import { GameRating } from '../../../../../../../lib/gj-lib-client/components/game/rating/rating.model';
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { RouteState } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.state';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 
 const DownloadDelay = 5000;
@@ -39,8 +38,8 @@ const DownloadDelay = 5000;
 })
 export default class RouteDiscoverGamesViewDownloadBuild extends Vue
 {
-	@RouteState game: Game;
-	@RouteState userRating: GameRating | null;
+	@RouteState game: RouteStore['game'];
+	@RouteState userRating: RouteStore['userRating'];
 
 	@State app: AppState;
 

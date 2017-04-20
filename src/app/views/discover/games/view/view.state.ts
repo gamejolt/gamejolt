@@ -22,7 +22,6 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { router } from '../../../index';
 
-
 export const RouteState = namespace( 'route', State );
 export const RouteAction = namespace( 'route', Action );
 export const RouteMutation = namespace( 'route', Mutation );

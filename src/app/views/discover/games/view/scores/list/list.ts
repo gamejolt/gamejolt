@@ -6,8 +6,7 @@ import * as View from '!view!./list.html?style=./list.styl';
 
 import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState } from '../../view.state';
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
+import { RouteState, RouteStore } from '../../view.state';
 import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { UserGameScore } from '../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
@@ -38,7 +37,7 @@ export default class RouteDiscoverGamesViewScoresList extends Vue
 {
 	@Prop( String ) type: 'best' | 'user';
 
-	@RouteState game: Game;
+	@RouteState game: RouteStore['game'];
 
 	@State app: AppState;
 

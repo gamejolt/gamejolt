@@ -50,23 +50,19 @@ import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/
 		AppTooltip,
 	},
 })
-export default class RouteDiscoverGamesView extends Vue implements
-	Pick<RouteStore, 'bootstrapGame'>,
-	Pick<RouteStore, 'bootstrap'>,
-	Pick<RouteStore, 'refreshRatingInfo'>,
-	Pick<RouteStore, 'showMultiplePackagesMessage'>
+export default class RouteDiscoverGamesView extends Vue
 {
 	@Prop() id: string;
 
-	@RouteState game: Game;
-	@RouteState userPartnerKey: string | null;
+	@RouteState game: RouteStore['game'];
+	@RouteState userPartnerKey: RouteStore['userPartnerKey'];
 
-	@RouteGetter packages: GamePackage[];
+	@RouteGetter packages: RouteStore['packages'];
 
-	@RouteAction bootstrap: ( payload: any ) => Promise<void>;
-	@RouteAction refreshRatingInfo: () => Promise<void>;
-	@RouteMutation bootstrapGame: ( gameId: number ) => void;
-	@RouteMutation showMultiplePackagesMessage: () => void;
+	@RouteAction bootstrap: RouteStore['bootstrap'];
+	@RouteAction refreshRatingInfo: RouteStore['refreshRatingInfo'];
+	@RouteMutation bootstrapGame: RouteStore['bootstrapGame'];
+	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
 
 	@State app: AppState;
 

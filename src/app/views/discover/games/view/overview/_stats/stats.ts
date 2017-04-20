@@ -2,16 +2,14 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./stats.html?style=./stats.styl';
 
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { fuzzynumber } from '../../../../../../../lib/gj-lib-client/vue/filters/fuzzynumber';
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
-import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
-import { RouteState, RouteGetter } from '../../view.state';
+import { RouteState, RouteGetter, RouteStore } from '../../view.state';
 
 @View
 @Component({
@@ -27,14 +25,14 @@ import { RouteState, RouteGetter } from '../../view.state';
 })
 export class AppDiscoverGamesViewOverviewStats extends Vue
 {
-	@RouteState isOverviewLoaded: boolean;
-	@RouteState game: Game;
-	@RouteState profileCount: number;
-	@RouteState downloadCount: number;
-	@RouteState playCount: number;
-	@RouteState ratingBreakdown: number[];
+	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
+	@RouteState game: RouteStore['game'];
+	@RouteState profileCount: RouteStore['profileCount'];
+	@RouteState downloadCount: RouteStore['downloadCount'];
+	@RouteState playCount: RouteStore['playCount'];
+	@RouteState ratingBreakdown: RouteStore['ratingBreakdown'];
 
-	@RouteGetter packages: GamePackage[];
+	@RouteGetter packages: RouteStore['packages'];
 
 	isShowingRatingBreakdown = false;
 

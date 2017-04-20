@@ -7,7 +7,6 @@ import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.s
 import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
@@ -15,7 +14,7 @@ import { AppDevlogPostView } from '../../../../../../components/devlog/post/view
 import { AppDevlogPostViewPlaceholder } from '../../../../../../components/devlog/post/view/placeholder/placeholder';
 import { AppScrollWhen } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll-when.directive.vue';
 import { Registry } from '../../../../../../../lib/gj-lib-client/components/registry/registry.service';
-import { RouteState } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.state';
 
 @View
 @Component({
@@ -32,7 +31,7 @@ export default class RouteDiscoverGamesViewDevlogView extends Vue
 {
 	@Prop() postSlug: string;
 
-	@RouteState game: Game;
+	@RouteState game: RouteStore['game'];
 
 	post: FiresidePost | null = null;
 

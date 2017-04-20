@@ -3,7 +3,6 @@ import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 
 import { BeforeRouteEnter } from '../../../../../../lib/gj-lib-client/utils/router';
-import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppDiscoverGamesViewOverviewGame } from './_game/game';
@@ -17,16 +16,14 @@ import { RouteMutation, RouteStore, RouteState } from '../view.state';
 		AppDiscoverGamesViewOverviewDevlog,
 	},
 })
-export default class RouteDiscoverGamesViewOverview extends Vue implements
-	Pick<RouteStore, 'processOverviewPayload'>,
-	Pick<RouteStore, 'bootstrapFeed'>
+export default class RouteDiscoverGamesViewOverview extends Vue
 {
 	@Prop() id: string;
 
-	@RouteState game: Game;
+	@RouteState game: RouteStore['game'];
 
-	@RouteMutation bootstrapFeed: () => void;
-	@RouteMutation processOverviewPayload: ( payload: any ) => void;
+	@RouteMutation bootstrapFeed: RouteStore['bootstrapFeed'];
+	@RouteMutation processOverviewPayload: RouteStore['processOverviewPayload'];
 
 	@BeforeRouteEnter( { lazy: true, cache: true } )
 	beforeRoute( route: VueRouter.Route )
