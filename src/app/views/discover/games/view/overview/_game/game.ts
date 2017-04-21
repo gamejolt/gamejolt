@@ -31,6 +31,7 @@ import { AppTrophyOverview } from '../../../../../../components/trophy/overview/
 import { RouteState, RouteMutation, RouteStore, RouteAction, RouteGetter } from '../../view.state';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { AppScoreOverview } from '../../../../../../components/score/overview/overview';
+import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
 
 @View
 @Component({
@@ -48,6 +49,7 @@ import { AppScoreOverview } from '../../../../../../components/score/overview/ov
 		AppGameOgrs,
 		AppCommentWidget,
 		AppGamePackageCard,
+		AppGameSoundtrackCard,
 		AppActivityFeed,
 		AppCommentVideoThumbnail,
 		AppSocialTwitterShare,

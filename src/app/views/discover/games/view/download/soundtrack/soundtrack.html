@@ -1,31 +1,61 @@
-<iframe nwdisable nwfaketop id="download-frame" class="hidden" ng-if="soundtrackCtrl.src" ng-src="{{ soundtrackCtrl.src }}"></iframe>
+<div>
 
-<div id="page-ad-scroll">
-	<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && !Screen.isXs">
-		<gj-ad size="leaderboard" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
-	</section>
+	<iframe
+		id="download-frame"
+		class="hidden"
+		nwdisable
+		nwfaketop
+		v-if="src"
+		:src="src"
+		>
+	</iframe>
 
-	<section class="section">
-		<div class="container">
+	<div id="page-ad-scroll">
+		<section class="ad-section" v-if="!GJ_IS_CLIENT && game._should_show_ads && !Screen.isXs">
+			<app-ad size="leaderboard" resource="Game" :resource-id="game.id" />
+		</section>
 
-			<div class="row">
-				<div class="col-sm-7 col-md-8 col-lg-7">
+		<section class="section">
+			<div class="container">
 
-					<h2 class="section-header" translate translate-params-game="gameCtrl.game.title">
-						game.download.soundtrack.downloading_label
-					</h2>
-					<p class="small text-muted">{{ ::'game.download.soundtrack.downloading_wait_message' | translate }}</p>
+				<div class="row">
+					<div class="col-sm-7 col-md-8 col-lg-7">
 
+						<h2 class="section-header">
+							<translate
+								:translate-params="{ game: game.title }"
+								>
+								Downloading soundtrack for %{ game }...
+							</translate>
+						</h2>
+
+						<p class="small text-muted">
+							<translate>game.download.soundtrack.downloading_wait_message</translate>
+						</p>
+
+						<!--
+							Set visibility so that the page height doesn't
+							change when we hide. We don't want to change if
+							they're trying to click something.
+						-->
+						<app-loading
+							:style="{ visibility: src ? 'hidden': undefined }"
+							:hide-label="true"
+							/>
+
+					</div>
+
+					<!--
+						Will overflow a little on md, but what can ya do,
+						amirite?
+					-->
+					<div class="col-sm-5 col-md-4 col-lg-offset-1 text-right" v-if="!GJ_IS_CLIENT && game._should_show_ads && !Screen.isXs">
+						<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
+					</div>
 				</div>
 
-				<!--
-					Will overflow a little on md, but what can ya do, amirite?
-				-->
-				<div class="col-sm-5 col-md-4 col-lg-offset-1 text-right" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && !Screen.isXs">
-					<gj-ad size="rectangle" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
-				</div>
 			</div>
+		</section>
+	</div>
 
-		</div>
-	</section>
 </div>

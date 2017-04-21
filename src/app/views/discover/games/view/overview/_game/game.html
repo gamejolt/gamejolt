@@ -165,12 +165,11 @@
 									/>
 							</div>
 
-							<!--<gj-game-soundtrack-card
-								ng-if="songs.length"
-								game-soundtrack-card-game="game"
-								game-soundtrack-card-songs="songs"
-								>
-							</gj-game-soundtrack-card>-->
+							<app-game-soundtrack-card
+								v-if="songs.length"
+								:game="game"
+								:songs="songs"
+								/>
 						</app-lazy-placeholder>
 
 					</div>

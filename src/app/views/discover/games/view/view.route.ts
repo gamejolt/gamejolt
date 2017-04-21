@@ -7,6 +7,7 @@ import { routeDiscoverGamesViewComments } from './comments/comments.route';
 import { routeDiscoverGamesViewDownloadBuild } from './download/build/build.route';
 import { routeDiscoverGamesViewTrophiesList } from './trophies/list/list.route';
 import { routeDiscoverGamesViewScoresList } from './scores/list/list.route';
+import { routeDiscoverGamesViewDownloadSoundtrack } from './download/soundtrack/soundtrack.route';
 
 export const routeDiscoverGamesView: VueRouter.RouteConfig = {
 	path: ':slug/:id(\\d+)',
@@ -18,6 +19,7 @@ export const routeDiscoverGamesView: VueRouter.RouteConfig = {
 		routeDiscoverGamesViewDevlogView,
 		routeDiscoverGamesViewComments,
 		routeDiscoverGamesViewDownloadBuild,
+		routeDiscoverGamesViewDownloadSoundtrack,
 		routeDiscoverGamesViewTrophiesList,
 		routeDiscoverGamesViewScoresList,
 	],

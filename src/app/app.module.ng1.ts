@@ -39,10 +39,6 @@ import '../lib/gj-lib-client/components/jam/game/vote/widget/widget';
 import '../lib/gj-lib-client/components/jam/award/award';
 import '../lib/gj-lib-client/components/key/key-module';
 import '../lib/gj-lib-client/components/linked-key/linked-key';
-import '../lib/gj-lib-client/components/audio/player/player';
-import '../lib/gj-lib-client/components/audio/scrubber/scrubber';
-import '../lib/gj-lib-client/components/audio/playlist/playlist';
-import '../lib/gj-lib-client/components/game/soundtrack/card/card';
 import '../lib/gj-lib-client/components/img/crop/crop';
 
 import './components/invite/invite-module';
@@ -104,10 +100,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Jam.Award',
 	'gj.Key',
 	'gj.LinkedKey',
-	'gj.Audio.Player',
-	'gj.Audio.Scrubber',
-	'gj.Audio.Playlist',
-	'gj.Game.Soundtrack.Card',
 	'gj.Img.Crop',
 
 	// Components.

@@ -48,8 +48,6 @@ export default class RouteDiscoverGamesViewDownloadBuild extends Vue
 	developerGames: Game[] = [];
 	recommendedGames: Game[] = [];
 
-	shouldDownload = false;
-
 	Screen = makeObservableService( Screen );
 	Environment = Environment;
 
@@ -101,11 +99,6 @@ export default class RouteDiscoverGamesViewDownloadBuild extends Vue
 		] );
 
 		this.src = data[0].downloadUrl;
-	}
-
-	destroyed()
-	{
-		this.shouldDownload = false;
 	}
 
 	private async timeout()
