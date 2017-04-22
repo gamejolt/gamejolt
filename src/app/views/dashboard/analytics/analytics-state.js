@@ -15,7 +15,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider )
 	} );
 
 	$stateProvider.state( 'dashboard.analytics.view', {
-		url: '/:period/:metricKey?year&month',
+		url: '/:period/:metricKey?viewAs&year&month',
 		controller: function( $scope, $stateParams )
 		{
 			$scope.analyticsCtrl.stateChanged( $stateParams );

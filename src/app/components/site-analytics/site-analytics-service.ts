@@ -65,6 +65,7 @@ type DateRange = [ number, number ];
 export interface Request {
 	target: ResourceName;
 	target_id: number;
+	view_as?: number;
 	collection: Collection;
 	analyzer: Analyzer;
 	field?: Field;
@@ -346,9 +347,9 @@ export class SiteAnalytics
 		return <MetricMap>_.pick( metrics, possibleMetrics );
 	}
 
-	getHistogram( resource: ResourceName, resourceId: number, metrics: MetricMap, partnerMode: boolean, dates: DateRange )
+	getHistogram( resource: ResourceName, resourceId: number, metrics: MetricMap, partnerMode: boolean, viewAs: number, dates: DateRange )
 	{
-		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'histogram', partnerMode, dates );
+		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'histogram', partnerMode, viewAs, dates );
 
 		return Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
 			.then( ( response: any ) =>
@@ -370,9 +371,9 @@ export class SiteAnalytics
 			} );
 	}
 
-	getCount( resource: ResourceName, resourceId: number, metrics: MetricMap, partnerMode: boolean, dates?: DateRange )
+	getCount( resource: ResourceName, resourceId: number, metrics: MetricMap, partnerMode: boolean, viewAs: number, dates?: DateRange )
 	{
-		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'count', partnerMode, dates );
+		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'count', partnerMode, viewAs, dates );
 
 		return Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
 			.then( ( response: any ) =>
@@ -396,7 +397,7 @@ export class SiteAnalytics
 	/**
 	 * Generate count/histogram requests.
 	 */
-	private generateAggregationRequest( resource: ResourceName, resourceId: number, metrics: MetricMap, analyzer: Analyzer, partnerMode: boolean, dates?: DateRange )
+	private generateAggregationRequest( resource: ResourceName, resourceId: number, metrics: MetricMap, analyzer: Analyzer, partnerMode: boolean, viewAs: number, dates?: DateRange )
 	{
 		let request: { [k: string]: Request } = {};
 
@@ -419,6 +420,10 @@ export class SiteAnalytics
 				collection: metric.collection,
 				analyzer: _analyzer,
 			};
+
+			if ( viewAs ) {
+				request[ metric.key ].view_as = viewAs;
+			}
 
 			if ( metric.field ) {
 				request[ metric.key ].field = metric.field;

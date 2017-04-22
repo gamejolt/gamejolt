@@ -23,6 +23,7 @@ export class AnalyticsCtrl
 	 * replace the URL from there on out.
 	 */
 	private paramsBootstrapped = false;
+	private appUserId: number;
 
 	user?: any;
 	game?: any;
@@ -35,6 +36,7 @@ export class AnalyticsCtrl
 	resource: ResourceName;
 	resourceId: number;
 	partnerMode: boolean;
+	viewAs: number;
 	availableMetrics: MetricMap;
 	metric: Metric;
 
@@ -64,7 +66,10 @@ export class AnalyticsCtrl
 		this.game = payload.game ? new Game( payload.game ) : null;
 		this.package = payload.package ? new GamePackage( payload.package ) : null;
 		this.release = payload.release ? new GameRelease( payload.release ) : null;
-		this.partnerMode = !this.user || this.user.id != app.user!.id;
+
+		this.appUserId = app.user!.id;
+		this.viewAs = this.appUserId;
+		this.partnerMode = !this.user || this.user.id != this.viewAs;
 
 		if ( this.partnerMode ) {
 			this.availableMetrics = this.analytics.pickPartnerMetrics( this.availableMetrics );
@@ -106,6 +111,13 @@ export class AnalyticsCtrl
 
 	stateChanged( $stateParams: StateParams )
 	{
+		if ( $stateParams['viewAs'] ) {
+			this.viewAs = parseInt( $stateParams['viewAs'], 10 ) || this.appUserId;
+		}
+		else {
+			this.viewAs = this.appUserId;
+		}
+		this.partnerMode = !this.user || this.user.id != this.viewAs;
 		this.period = $stateParams['period'] || 'monthly';
 		this.resource = $stateParams['resource'];
 		this.resourceId = parseInt( $stateParams['resourceId'], 10 );
@@ -147,7 +159,8 @@ export class AnalyticsCtrl
 
 		// If any of the parameters changed, refresh the state.
 		if (
-			this.period != $stateParams['period']
+			this.viewAs != $stateParams['viewAs']
+			|| this.period != $stateParams['period']
 			|| this.metric.key != $stateParams['metricKey']
 			|| this.resource != $stateParams['resource']
 			|| this.resourceId != $stateParams['resourceId']
@@ -159,6 +172,9 @@ export class AnalyticsCtrl
 
 			let stateParams: any = _.pick( this, [ 'period', 'resource', 'resourceId' ] );
 			stateParams.metricKey = this.metric.key;
+			if ( this.viewAs != this.appUserId ) {
+				stateParams.viewAs = this.viewAs;
+			}
 
 			this.$state.go(
 				'dashboard.analytics.view',
@@ -211,19 +227,19 @@ export class AnalyticsCtrl
 			throw new Error( 'Dates required to get histograms.' );
 		}
 
-		return this.analytics.getHistogram( this.resource, this.resourceId, this.availableMetrics, this.partnerMode, [ this.startTime, this.endTime ] )
+		return this.analytics.getHistogram( this.resource, this.resourceId, this.availableMetrics, this.partnerMode, this.viewAs, [ this.startTime, this.endTime ] )
 			.then( ( data: any ) => angular.extend( this, data ) );
 	}
 
 	counts()
 	{
-		return this.analytics.getCount( this.resource, this.resourceId, this.availableMetrics, this.partnerMode )
+		return this.analytics.getCount( this.resource, this.resourceId, this.availableMetrics, this.partnerMode, this.viewAs )
 			.then( ( data: any ) => angular.extend( this, data ) );
 	}
 
 	pullReport( title: string, ...components: ReportComponent[] )
 	{
-		const report = new SiteAnalyticsReport( title, components, this.resource, this.resourceId, this.metric.collection, this.partnerMode, this.startTime, this.endTime );
+		const report = new SiteAnalyticsReport( title, components, this.resource, this.resourceId, this.metric.collection, this.partnerMode, this.viewAs, this.startTime, this.endTime );
 
 		this.pageReports.push( report );
 	}
