@@ -1,7 +1,7 @@
 <div>
 
 	<!-- Buttons -->
-	<div class="devlog-post-controls">
+	<div class="devlog-post-controls timeline-list-item-controls">
 		<!--<hr>-->
 
 		<div class="devlog-post-controls-controls clearfix">
@@ -10,7 +10,7 @@
 				<!--
 					If we require tabs, then there is no reason to show the reply button.
 				-->
-				<button class="btn btn-outline btn-sparse"
+				<button class="btn btn-outline btn-sparse btn-circle"
 					v-if="!requireTabs"
 					@click="toggleComments"
 					v-app-tooltip="$gettext( 'Comment on This Post' )"
@@ -20,10 +20,10 @@
 
 				<app-fireside-post-like-widget
 					:post="post"
-					:sparse="true"
+					:circle="true"
 					/>
 
-				<button class="btn btn-outline btn-sparse"
+				<button class="btn btn-outline btn-sparse btn-circle"
 					v-app-popover-trigger="sharePopoverId"
 					v-app-tooltip="$gettext( 'Share' )"
 					>
@@ -61,7 +61,11 @@
 
 			<div class="pull-right">
 				<app-game-follow-widget
-					v-if="showGameInfo && app.user && post.user.id !== app.user.id"
+					v-if="
+						showGameInfo
+						&& (app.user && post.user.id !== app.user.id)
+						&& !post.game.is_following
+					"
 					:game="post.game"
 					:sparse="true"
 					/>
@@ -166,6 +170,12 @@
 		</div>
 
 	</div>
+
+	<app-comment-widget-add
+		v-if="app.user && !tab"
+		resource="Fireside_Post"
+		:resource-id="post.id"
+		/>
 
 	<div class="devlog-post-controls-well" v-if="tab">
 

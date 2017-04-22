@@ -1,4 +1,7 @@
-<div class="route-discover-games-view" v-if="game">
+<div class="route-discover-games-view"
+	v-if="game"
+	>
+
 	<app-game-maturity-block :game="game">
 
 		<section class="section section-thin fill-darkest"
@@ -34,25 +37,23 @@
 			:should-affix-nav="$route.name !== 'discover.games.view.download'"
 			>
 
-			<!--<div
-				slot="cover-buttons"
-				class="game-header-cover-buttons"
-				v-if="
-					!Screen.isXs
-					&& (installableBuilds.length || browserBuilds.length || game._can_buy_primary_sellable)
-				"
-				>-->
-					<!--&& $state.is( 'discover.games.view.overview' )-->
-				<!--<gj-game-cover-buttons
-					game="game"
-					packages="packages"
-					installable-builds="installableBuilds"
-					browser-builds="browserBuilds"
-					on-show-multiple-packages="scrollToMultiplePackages()"
-					on-show-package-payment="scrollToPackagePayment( $package )"
-					>
-				</gj-game-cover-buttons>-->
-			<!--</div>-->
+			<!--
+				Only show the cover buttons on the overview page.
+			-->
+			<div slot="cover-buttons">
+				<app-game-cover-buttons
+					v-if="
+						!Screen.isXs
+						&& $route.name === 'discover.games.view.overview'
+					"
+					:game="game"
+					:packages="packages"
+					:installable-builds="installableBuilds"
+					:browser-builds="browserBuilds"
+					@multiple="scrollToMultiplePackages"
+					@buy="scrollToPackagePayment"
+					/>
+			</div>
 
 			<app-user-avatar
 				slot="spotlight"
@@ -61,15 +62,10 @@
 
 			<app-discover-games-view-nav
 				slot="nav"
-				:game="game"
-				:posts-count="postsCount"
-				:comments-count="commentsCount"
-				@report="report"
 				/>
 
 			<app-discover-games-view-controls
 				slot="controls"
-				:game="game"
 				/>
 
 			<h1 :class="{ h2: Screen.isMobile }">
@@ -128,12 +124,7 @@
 
 		</app-page-header>
 
-		<router-view
-			:game="game"
-			:user-rating="userRating"
-			:rating-breakdown="ratingBreakdown"
-			:twitter-share-message="twitterShareMessage"
-			/>
+		<router-view />
 
 	</app-game-maturity-block>
 </div>

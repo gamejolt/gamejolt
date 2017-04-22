@@ -1,38 +1,55 @@
-<div class="trophy-completion alert" ng-class="::(ctrl.achieved > 0 ? 'alert-info' : 'alert-warning')">
+<div
+	class="trophy-completion alert"
+	:class="achieved > 0 ? 'alert-info fill-dark' : 'alert-warning'"
+	>
 
-	<div ng-if="::(ctrl.achieved > 0)">
-		<p
-			translate
-			translate-params-achieved="ctrl.achieved"
-			translate-params-total="ctrl.total"
-			>
-			trophies.completion.lead_html
+	<div v-if="achieved > 0">
+		<p>
+			<translate
+				:translate-params="{
+					achieved: number( achieved ),
+					total: number( total ),
+				}"
+				:escape-html="false"
+				>
+				You've achieved <b>%{ achieved }</b> trophies out of a possible <b>%{ total }</b>.
+			</translate>
 		</p>
 		<br>
 
-		<div class="progress progress-darker progress-thin">
-			<div class="progress-bar" ng-style="::{ width: ctrl.completionRate + '%' }"></div>
-		</div>
+		<app-progress-bar
+			:percent="completionRate"
+			:thin="true"
+			variant="darker"
+			/>
 
 		<div class="clearfix">
 			<div class="pull-left">
 				<div class="stat-big stat-big-smaller" style="margin-bottom: 0">
-					<div class="stat-big-digit">{{ ::ctrl.completionRate | number }}%</div>
-					<div class="stat-big-label">{{ ::'trophies.completion.completion_label' | translate }}</div>
+					<div class="stat-big-digit">
+						{{ completionRate | number }}%
+					</div>
+					<div class="stat-big-label">
+						<translate>trophies.completion.completion_label</translate>
+					</div>
 				</div>
 			</div>
 			<div class="pull-right">
 				<div class="stat-big stat-big-smaller text-right" style="margin-bottom: 0">
 					<div class="stat-big-digit">
-						<span class="jolticon jolticon-exp text-muted"></span>
-						{{ ::ctrl.experience | number }}
+						<app-jolticon icon="exp" class="text-muted" />
+						{{ experience | number }}
 					</div>
-					<div class="stat-big-label">{{ ::'trophies.completion.exp_gained_label' | translate }}</div>
+					<div class="stat-big-label">
+						<translate>trophies.completion.exp_gained_label</translate>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div ng-if="::(!ctrl.achieved)" translate>trophies.completion.none_achieved_html</div>
+	<div v-if="!achieved">
+		<translate>You haven't achieved any trophies for this game yet!</translate>
+	</div>
 
 </div>

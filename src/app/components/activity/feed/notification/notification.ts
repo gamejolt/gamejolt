@@ -9,6 +9,7 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
+import { AppNotificationDescriptiveAction } from '../../../notification/descriptive-action/descriptive-action';
 
 @View
 @Component({
@@ -16,6 +17,7 @@ import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vu
 		AppJolticon,
 		AppTimeAgo,
 		AppFadeCollapse,
+		AppNotificationDescriptiveAction,
 	},
 })
 export class AppActivityFeedNotification extends Vue
@@ -50,7 +52,7 @@ export class AppActivityFeedNotification extends Vue
 
 	go()
 	{
-		this.notification.go();
+		this.notification.go( this.$router );
 		this.$emit( 'clicked' );
 	}
 

@@ -1,174 +1,200 @@
-<!--
-	Scoreboard info/selector.
--->
-<div class="row">
-
-	<div class="col-xs-12" ng-class="::(ctrl.size == 'full' ? 'col-md-6' : '')">
-		<h2 class="section-header sans-margin">
-			<a class="link-unstyled" ui-sref="discover.games.view.scores.list( { slug: ctrl.game.slug, id: ctrl.game.id, tableId: ctrl.scoreTable.id, type: 'best' } )">
-				{{ ::'scores.overview.heading' | translate }}
-			</a>
-			<small ng-show="::(ctrl.scoreTables.length > 1)">({{ ::ctrl.scoreTables.length | number }})</small>
-		</h2>
-
-		<hr class="underbar">
-	</div>
-
-	<div class="col-xs-12" ng-class="::(ctrl.size == 'full' ? 'col-md-6' : '')">
-		<div class="scoreboard-selector">
-			<div class="list-group">
-
-				<!--
-					When more than one, you can click to change.
-				-->
-				<a class="list-group-item has-addon" gj-popover-trigger="scoreboard-selector" ng-if="::ctrl.scoreTables.length > 1">
-					<div class="list-group-item-addon fill-lighter">
-						<span class="jolticon jolticon-chevron-down"></span>
-					</div>
-
-					<h5 class="list-group-item-heading sans-margin-bottom"><strong>{{ ctrl.scoreTable.name }}</strong></h5>
-					<p class="list-group-item-text">{{ ctrl.scoreTable.description }}</p>
-				</a>
-
-				<!--
-					When only one, it's not clickable.
-				-->
-				<div class="list-group-item" ng-if="::ctrl.scoreTables.length <= 1">
-					<h5 class="list-group-item-heading sans-margin-bottom"><strong>{{ ctrl.scoreTable.name }}</strong></h5>
-					<p class="list-group-item-text">{{ ctrl.scoreTable.description }}</p>
-				</div>
-			</div>
-
-			<gj-scoreboard-popover
-				ng-if="::ctrl.scoreTables.length > 1"
-				scoreboard-popover-current-table="ctrl.scoreTable"
-				scoreboard-popover-tables="::ctrl.scoreTables"
-				scoreboard-popover-on-select="ctrl.changeTable( table )">
-			</gj-scoreboard-popover>
-		</div>
-	</div>
-</div>
-
-<div class="row">
+<div>
 
 	<!--
-		User Best Score
-		Only show if logged in.
+		Scoreboard info/selector.
 	-->
-	<div class="col-xs-12" ng-class="::(ctrl.size == 'full' ? 'col-md-6' : '')"
-		ng-if="App.user">
+	<div class="row">
 
-		<div class="score-overview-user-best">
-			<h4 class="section-header">{{ ::'scores.overview.user_best_heading' | translate }}</h4>
+		<div class="col-xs-12" :class="size === 'full' ? 'col-md-6' : ''">
+			<h2 class="section-header sans-margin">
+				<router-link
+					class="link-unstyled"
+					:to="{
+						name: 'discover.games.view.scores.list',
+						params: {
+							slug: game.slug,
+							id: game.id,
+							tableId: scoreTable.id,
+							type: 'best',
+						},
+					}"
+					>
+					<translate>scores.overview.heading</translate>
+				</router-link>
+				<small v-if="(scoreTables.length > 1)">
+					({{ scoreTables.length | number }})
+				</small>
+			</h2>
 
-			<div class="row">
-				<div class="col-sm-3 hidden-xs">
-					<gj-user-avatar [user]="::App.user"></gj-user-avatar>
-				</div>
+			<hr class="underbar">
+		</div>
 
-				<!-- Bind Once Scope -->
-				<div class="col-xs-12 col-sm-9 anim-fade-in-right no-animate-leave no-animate-xs"
-					ng-repeat="bestScore in [ ctrl.userBestScore ] track by bestScore.id">
+		<div class="col-xs-12" :class="size === 'full' ? 'col-md-6' : ''">
 
-					<div class="alert alert-warning" ng-if="::!bestScore">
-						<h4 class="sans-margin">{{ ::'scores.overview.user_best_none_heading' | translate }}</h4>
-						<p translate>scores.overview.user_best_none_body_html</p>
+			<app-scoreboard-selector
+				v-if="scoreTables.length > 1"
+				:current-table="scoreTable"
+				:tables="scoreTables"
+				@select="changeTable"
+				/>
+
+		</div>
+	</div>
+
+	<div class="row">
+
+		<!--
+			User Best Score
+			Only show if logged in.
+		-->
+		<div
+			class="col-xs-12"
+			:class="size === 'full' ? 'col-md-6' : ''"
+			v-if="app.user"
+			>
+
+			<div class="score-overview-user-best">
+				<h4 class="section-header">
+					<translate>scores.overview.user_best_heading</translate>
+				</h4>
+
+				<div class="row">
+					<div class="col-sm-3 hidden-xs">
+						<app-user-avatar :user="app.user" />
 					</div>
 
-					<div class="well fill-dark clearfix" ng-if="::bestScore">
-						<div class="stat-big stat-big-smaller pull-right text-right">
-							<div class="stat-big-digit stat-big-highlight">
-								#{{ ::ctrl.userScorePlacement | number }}
+					<!-- Animation Scope -->
+					<div
+						v-for="_ of [ userBestScore ]"
+						:key="_.id"
+						class="col-xs-12 col-sm-9 anim-fade-in-right no-animate-leave no-animate-xs"
+						>
+
+						<div class="alert alert-warning full-bleed-xs" v-if="!userBestScore">
+							<h4 class="sans-margin">
+								<translate>scores.overview.user_best_none_heading</translate>
+							</h4>
+							<p>
+								<translate :escape-html="false">scores.overview.user_best_none_body_html</translate>
+							</p>
+						</div>
+
+						<div class="well fill-dark clearfix full-bleed-xs" v-if="userBestScore">
+							<div class="stat-big stat-big-smaller pull-right text-right">
+								<div class="stat-big-digit stat-big-highlight">
+									#{{ userScorePlacement | number }}
+								</div>
+								<div class="stat-big-label">Current Rank</div>
 							</div>
-							<div class="stat-big-label">Current Rank</div>
+
+							<h4 class="sans-margin">{{ userBestScore.score }}</h4>
+							<div>
+								<span class="text-muted">
+									<app-time-ago :date="userBestScore.logged_on" />
+								</span>
+							</div>
+							<br>
+
+							<div>
+								<app-jolticon icon="exp" class="text-muted middle" />
+								{{ (userScoreExperience || 0) | number }}
+								<span class="initialism">
+									<translate>leveling.exp</translate>
+								</span>
+							</div>
 						</div>
 
-						<h4 class="sans-margin">{{ ::bestScore.score }}</h4>
-						<div>
-							<span class="text-muted" am-time-ago="::bestScore.logged_on"></span>
-						</div>
-						<br>
-
-						<div>
-							<span class="jolticon jolticon-exp text-muted" style="vertical-align: middle"></span>
-							{{ ::(ctrl.userScoreExperience || 0) | number }}
-							<span class="initialism">{{ ::'leveling.exp' | translate }}</span>
-						</div>
-					</div>
-
-				</div>
-			</div>
-		</div>
-
-	</div>
-
-	<!--
-		Top Scores
-		If we're showing this full-size, then we pull this bit to the right on MD-up.
-		This will collapse the row a bit so it's not really long.
-	-->
-	<div class="col-xs-12" ng-class="::(ctrl.size == 'full' ? 'col-md-6 pull-right' : '')">
-
-		<div class="score-overview-top">
-			<h4 ng-class="{ 'section-header': !App.user || (Screen.isDesktop && ctrl.size == 'full') }">
-				{{ ::'scores.overview.top_scores_heading' | translate }}
-			</h4>
-
-			<div ng-if="ctrl.scores.length">
-
-				<!--
-					When screen isn't XS, we split the scores out into two columns.
-				-->
-				<div class="row" ng-if="!Screen.isXs">
-					<div class="col-sm-6">
-						<gj-score-list
-							score-list-scores="ctrl.scoresLeft"
-							score-list-step="2">
-						</gj-score-list>
-					</div>
-					<div class="col-sm-6">
-						<gj-score-list
-							score-list-scores="ctrl.scoresRight"
-							score-list-start-rank="2"
-							score-list-step="2">
-						</gj-score-list>
 					</div>
 				</div>
-
-				<!--
-					When screen is XS we just show as one long list.
-				-->
-				<gj-score-list
-					score-list-scores="ctrl.scores"
-					ng-if="Screen.isXs">
-				</gj-score-list>
-
-				<a class="btn btn-outline btn-block-xs" ui-sref="discover.games.view.scores.list( { slug: ctrl.game.slug, id: ctrl.game.id, tableId: ctrl.scoreTable.id, type: 'best' } )">
-					<span class="jolticon jolticon-media-list"></span>
-					{{ ::'scores.overview.view_more_button' | translate }}
-				</a>
 			</div>
-
-			<div class="alert alert-warning full-bleed-xs" ng-if="!ctrl.scores.length" translate>scores.overview.no_scores_html</div>
 
 		</div>
 
-	</div>
+		<!--
+			Top Scores
+			If we're showing this full-size, then we pull this bit to the right on MD-up.
+			This will collapse the row a bit so it's not really long.
+		-->
+		<div class="col-xs-12" :class="(size === 'full' ? 'col-md-6 pull-right' : '')">
 
-	<!--
-		Latest Scores
-		Don't even include the feed if there is no scores for this scoreboard.
-	-->
-	<div class="col-xs-12" ng-class="::(ctrl.size == 'full' ? 'col-md-6' : '')"
-		ng-if="ctrl.scores.length">
+			<div class="score-overview-top">
+				<h4 :class="{ 'section-header': !app.user || (Screen.isDesktop && size === 'full') }">
+					<translate>scores.overview.top_scores_heading</translate>
+				</h4>
 
-		<div class="score-overview-feed">
-			<h4 translate>Latest Scores</h4>
+				<div v-if="scores.length">
 
-			<div class="scrollable-grid-xs">
-				<gj-score-feed score-feed-score-table="ctrl.scoreTable"></gj-score-feed>
+					<!--
+						When screen isn't XS, we split the scores out into two columns.
+					-->
+					<div class="row" v-if="!Screen.isXs">
+						<div class="col-sm-6">
+							<app-score-list
+								:scores="scoresLeft"
+								:step="2"
+								/>
+						</div>
+						<div class="col-sm-6">
+							<app-score-list
+								:scores="scoresRight"
+								:start-rank="2"
+								:step="2"
+								/>
+						</div>
+					</div>
+
+					<!--
+						When screen is XS we just show as one long list.
+					-->
+					<app-score-list
+						:scores="scores"
+						v-if="Screen.isXs"
+						/>
+
+					<router-link
+						class="btn btn-outline btn-block-xs"
+						:to="{
+							name: 'discover.games.view.scores.list',
+							params: {
+								slug: game.slug,
+								id: game.id,
+								tableId: scoreTable.id,
+								type: 'best',
+							},
+						}"
+						>
+						<app-jolticon icon="media-list" />
+						<translate>scores.overview.view_more_button</translate>
+					</router-link>
+				</div>
+
+				<div class="alert alert-warning full-bleed-xs" v-if="!scores.length">
+					<translate>scores.overview.no_scores_html</translate>
+				</div>
+
 			</div>
+
 		</div>
 
+		<!--
+			Latest Scores
+			Don't even include the feed if there is no scores for this scoreboard.
+		-->
+		<div class="col-xs-12" :class="size === 'full' ? 'col-md-6' : ''"
+			v-if="scores.length"
+			>
+
+			<div class="score-overview-feed">
+				<h4>
+					<translate>Latest Scores</translate>
+				</h4>
+
+				<div class="scrollable-grid-xs">
+					<app-score-feed :score-table="scoreTable" />
+				</div>
+			</div>
+
+		</div>
 	</div>
+
 </div>

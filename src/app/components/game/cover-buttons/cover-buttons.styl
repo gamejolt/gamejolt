@@ -1,0 +1,21 @@
+@require '~styles/variables'
+
+.game-cover-buttons
+	display: block
+	position: relative
+
+	&-patching
+		padding-bottom: 150px
+
+	.client-game-buttons
+		display: inline-block
+
+	.client-install-progress
+		position: absolute
+		padding: 15px 30px
+		width: 450px
+		left: 50%
+		margin-left: -(@width / 2)
+		bottom: 0
+		background-color: rgba( $black, 0.5 )
+		color: $white

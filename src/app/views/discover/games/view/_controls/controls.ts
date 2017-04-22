@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./controls.html';
 
@@ -12,6 +12,7 @@ import { AppTooltip } from '../../../../../../lib/gj-lib-client/components/toolt
 import { AppGamePlaylistAddToPopover } from '../../../../../components/game-playlist/add-to-popover/add-to-popover';
 import { AppAuthRequired } from '../../../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { AppGameFollowWidget } from '../../../../../components/game/follow-widget/follow-widget';
+import { RouteState, RouteStore } from '../view.state';
 
 @View
 @Component({
@@ -29,7 +30,7 @@ import { AppGameFollowWidget } from '../../../../../components/game/follow-widge
 })
 export class AppDiscoverGamesViewControls extends Vue
 {
-	@Prop( Game ) game: Game;
+	@RouteState game: RouteStore['game'];
 
 	@State app: AppState;
 

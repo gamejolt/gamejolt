@@ -1,0 +1,69 @@
+@require '~styles/variables'
+@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+
+$score-list-avatar-size-xs = 50px
+$score-list-avatar-size = 100px
+$score-list-gutter-xs = $grid-gutter-width-xs / 2
+$score-list-gutter = $grid-gutter-width / 2
+
+.score-list-item
+	position: relative
+
+.score-list-media
+	float: left
+	width: ($score-list-avatar-size-xs - $score-list-gutter-xs)
+
+	@media $media-sm-up
+		width: ($score-list-avatar-size - $score-list-gutter)
+
+	// Since avatars can be transparent.
+	.user-avatar
+		background-color: $gray-lighter
+
+.score-list-rank
+	@media $media-xs
+		float: right
+		margin-left: $score-list-gutter-xs
+		color: $gray-lighter
+		font-size: $font-size-h4
+		font-family: $font-family-heading
+		font-weight: bold
+
+	@media $media-sm-up
+		position: absolute
+		left: 0
+		top: ($score-list-avatar-size - $score-list-gutter) - 25px
+		line-height: 25px
+		height: 25px
+		background-color: $gray-darkest
+		color: $gj-green
+		font-weight: bold
+		text-align: right
+		padding: 0 4px
+
+@media $media-sm-up
+	.score-list-rank-sign
+		color: $gray-light
+		font-size: $font-size-tiny
+		position: relative
+		top: -3px
+
+.score-list-content
+	margin-left: $score-list-avatar-size-xs
+
+	@media $media-sm-up
+		margin-left: $score-list-avatar-size
+
+.score-list-title
+	text-overflow()
+	font-family: $font-family-heading
+
+	@media $media-sm-up
+		font-weight: bold
+
+.score-list-user
+	text-overflow()
+	font-size: $font-size-small
+
+	@media $media-sm-up
+		font-size: $font-size-base

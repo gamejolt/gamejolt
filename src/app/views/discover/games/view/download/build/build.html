@@ -1,109 +1,156 @@
-<iframe nwdisable nwfaketop id="download-frame" class="hidden" ng-if="buildCtrl.src" ng-src="{{ buildCtrl.src }}"></iframe>
+<div>
 
-<div id="page-ad-scroll">
-	<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && !Screen.isXs">
-		<gj-ad size="leaderboard" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
-	</section>
+	<iframe
+		id="download-frame"
+		class="hidden"
+		nwdisable
+		nwfaketop
+		v-if="src"
+		:src="src"
+		>
+	</iframe>
 
-	<section class="section">
-		<div class="container">
+	<div id="page-ad-scroll">
+		<section class="ad-section" v-if="!GJ_IS_CLIENT && game._should_show_ads && !Screen.isXs">
+			<app-ad size="leaderboard" resource="Game" :resource-id="game.id" />
+		</section>
 
-			<div class="row">
-				<div class="col-sm-9 col-md-8 col-lg-8">
+		<section class="section">
+			<div class="container">
 
-					<h2 class="section-header" translate translate-params-game="gameCtrl.game.title">game.download.game.downloading_label</h2>
-					<p class="small text-muted">{{ ::'game.download.game.downloading_wait_message' | translate }}</p>
+				<div class="row">
+					<div class="col-sm-9 col-md-8 col-lg-8">
 
-					<!--
-						Social sharing
-					-->
-					<div ng-if="::!Environment.isClient">
-						<h4 class="section-header">{{ ::'game.download.game.share_heading' | translate }}</h4>
-						<div class="social-widgets">
-							<gj-social-twitter-share
-								url="{{ ::Environment.baseUrl }}{{ ::gameCtrl.game.getUrl() }}"
-								content="{{ ::gameCtrl.twitterShareMessage }}"
+						<h2 class="section-header">
+							<translate
+								:translate-params="{ game: game.title }"
 								>
-							</gj-social-twitter-share>
-
-							<span class="dot-separator hidden-xs"></span>
-
-							<gj-social-facebook-like url="{{ ::Environment.baseUrl }}{{ ::gameCtrl.game.getUrl() }}"></gj-social-facebook-like>
-						</div>
-					</div>
-
-					<!--
-						Rating widget
-					-->
-					<div ng-if="App.user && App.user.id != gameCtrl.game.developer.id && gameCtrl.game.ratings_enabled && gameCtrl.game.can_user_rate">
-						<br>
-						<p class="small" translate>game.download.game.rate_html</p>
-
-						<gj-rating-widget
-							[game]="gameCtrl.game"
-							[big]="true"
-							[rating]="gameCtrl.userRating"
-							>
-						</gj-rating-widget>
-					</div>
-
-					<!--
-						Developer's games
-					-->
-					<div ng-if="buildCtrl.developerGames.length">
-
-						<h2>
-							<a class="link-unstyled" ui-sref="library.collection.developer( { id: gameCtrl.game.developer.username } )">
-								{{ ::'game.download.game.developer_games_heading' | translate }}
-							</a>
-							<small>{{ ::'game.download.game.developer_games_heading_small' | translate }}</small>
+								Downloading %{ game }...
+							</translate>
 						</h2>
 
-						<div class="scrollable-grid-xs game-thumbnail-grid">
-							<div class="row">
-								<gj-game-thumbnail
-									class="scrollable-grid-item col-xs-10 col-sm-6"
-									ng-repeat="game in buildCtrl.developerGames | limitTo:2 track by game.id"
-									[game]="::game"
+						<p class="small text-muted">
+							<translate>game.download.game.downloading_wait_message</translate>
+						</p>
+
+						<!--
+							Set visibility so that the page height doesn't
+							change when we hide. We don't want to change if
+							they're trying to click something.
+						-->
+						<app-loading
+							:style="{ visibility: src ? 'hidden': undefined }"
+							:hide-label="true"
+							/>
+
+						<!--
+							Social sharing
+						-->
+						<div v-if="!GJ_IS_CLIENT">
+							<h4>
+								<translate>game.download.game.share_heading</translate>
+							</h4>
+							<div class="social-widgets">
+								<app-social-twitter-share
+									:url="Environment.baseUrl + game.getUrl()"
+									:content="twitterShareMessage"
+									/>
+
+								<span class="dot-separator hidden-xs"></span>
+
+								<app-social-facebook-like
+									:url="Environment.baseUrl + game.getUrl()"
+									/>
+							</div>
+						</div>
+
+						<!--
+							Rating widget
+						-->
+						<div v-if="app.user && app.user.id !== game.developer.id && game.ratings_enabled && game.can_user_rate">
+							<br>
+							<p class="small">
+								<translate :escape-html="false">game.download.game.rate_html</translate>
+							</p>
+
+							<app-rating-widget
+								:game="game"
+								:big="true"
+								:rating="userRating"
+								/>
+						</div>
+
+						<!--
+							Developer's games
+						-->
+						<div v-if="developerGames.length">
+
+							<h2>
+								<router-link
+									class="link-unstyled"
+									:to="{
+										name: 'library.collection.developer',
+										params: { id: game.developer.username },
+									}"
 									>
-								</gj-game-thumbnail>
+									<translate>game.download.game.developer_games_heading</translate>
+								</router-link>
+								<small>
+									<translate>game.download.game.developer_games_heading_small</translate>
+								</small>
+							</h2>
+
+							<div class="scrollable-grid-xs game-thumbnail-grid">
+								<div class="row">
+									<div
+										class="scrollable-grid-item col-xs-10 col-sm-6"
+										v-for="game of developerGames.slice( 0, 2 )"
+										:key="game.id"
+										>
+										<app-game-thumbnail :game="game" />
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+						<!--
+							Recommended games
+						-->
+						<h2>
+							<translate>game.download.game.recommended_heading</translate>
+						</h2>
+
+						<div class="scrollable-grid-xs">
+							<div class="row">
+								<div
+									class="scrollable-grid-item col-xs-10 col-sm-6"
+									v-for="game in recommendedGames.slice( 0, 6 )"
+									:key="game.id"
+									>
+									<app-game-thumbnail :game="game" />
+								</div>
 							</div>
 						</div>
 
 					</div>
 
 					<!--
-						Recommended games
+						Will overflow a little on sm/md, but what can ya do, amirite?
 					-->
-					<h2>{{ ::'game.download.game.recommended_heading' | translate }}</h2>
-
-					<div class="scrollable-grid-xs">
-						<div class="row">
-							<gj-game-thumbnail
-								class="scrollable-grid-item col-xs-10 col-sm-6"
-								ng-repeat="game in buildCtrl.recommendedGames | limitTo:6 track by game.id"
-								[game]="::game"
-								>
-							</gj-game-thumbnail>
-						</div>
+					<div class="col-sm-3 text-right" v-if="!GJ_IS_CLIENT && game._should_show_ads && Screen.isSm">
+						<app-ad size="skyscraper" resource="Game" :resource-id="game.id" />
 					</div>
 
+					<div class="col-md-4 text-right" v-if="!GJ_IS_CLIENT && game._should_show_ads && Screen.isDesktop">
+						<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
+						<br>
+						<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
+					</div>
 				</div>
 
-				<!--
-					Will overflow a little on sm/md, but what can ya do, amirite?
-				-->
-				<div class="col-sm-3 text-right" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isSm">
-					<gj-ad size="skyscraper" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
-				</div>
-
-				<div class="col-md-4 text-right" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
-					<gj-ad size="rectangle" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
-					<br>
-					<gj-ad size="rectangle" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
-				</div>
 			</div>
+		</section>
+	</div>
 
-		</div>
-	</section>
 </div>

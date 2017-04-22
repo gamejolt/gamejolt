@@ -29,7 +29,6 @@ import { GameBuildModule } from '../lib/gj-lib-client/components/game/build/buil
 import { GameBuildFileModule } from '../lib/gj-lib-client/components/game/build/file/file.module';
 import { GameBuildParamModule } from '../lib/gj-lib-client/components/game/build/param/param.module';
 import { GameBuildLaunchOptionModule } from '../lib/gj-lib-client/components/game/build/launch-option/launch-option.module';
-import GamePlayModalModule from '../lib/gj-lib-client/components/game/play-modal/play-modal';
 import LoadModule from '../lib/gj-lib-client/components/load/load';
 import { MetaModule } from '../lib/gj-lib-client/components/meta/meta.module';
 import { ScreenModule } from '../lib/gj-lib-client/components/screen/screen.module';
@@ -84,7 +83,6 @@ importContext( require.context( './views', true, /\.state\.ts$/ ) );
 		SellablePricingModule,
 		ModalConfirmModule,
 		HistoryTickModule,
-		GamePlayModalModule,
 		LoadModule,
 		GameThumbnailModule,
 		GameThumbnailImgModule,

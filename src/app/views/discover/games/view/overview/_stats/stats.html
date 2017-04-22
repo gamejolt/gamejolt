@@ -7,7 +7,7 @@
 			</div>
 
 			<div class="stat-big-digit">
-				<app-lazy-placeholder :when="isLoaded">
+				<app-lazy-placeholder :when="isOverviewLoaded">
 					<span class="lazy-placeholder"></span>
 					<span :title="number( profileCount )">
 						{{ fuzzynumber( profileCount ) }}
@@ -29,7 +29,7 @@
 			</div>
 
 			<div class="stat-big-digit">
-				<app-lazy-placeholder :when="isLoaded">
+				<app-lazy-placeholder :when="isOverviewLoaded">
 					<span class="lazy-placeholder"></span>
 					<span v-if="showNaPlays">
 						<translate>games.view.stats.na</translate>
@@ -90,15 +90,6 @@
 									:percent="ratingBreakdown[ (5 - i) ] / game.rating_count * 100"
 									:thin="true"
 									/>
-								<!--<div class="progress progress-thin progress-darker">
-									<div
-										class="progress-bar"
-										:style="{
-											width: ratingBreakdown[ (5 - i) ] / game.rating_count * 100 + '%',
-										}"
-										>
-									</div>
-								</div>-->
 							</td>
 							<td class="rating-breakdown-count">
 								({{ fuzzynumber( (ratingBreakdown[ (5 - i) ] || 0) ) }})

@@ -1,30 +1,38 @@
-<ol class="score-list">
-	<li class="score-list-item anim-fade-in-up stagger no-animate-leave"
-		ng-repeat="score in ctrl.scores track by score.id">
+<ol class="score-list list-unstyled">
+	<li class="score-list-item clearfix anim-fade-in-up no-animate-leave"
+		v-for="( score, i ) of scores"
+		:key="score.id"
+		>
 
 		<div class="score-list-media">
-			<gj-user-avatar [user]="::score.user"></gj-user-avatar>
+			<app-user-avatar :user="score.user" />
 		</div>
+
 		<div class="score-list-content">
 			<div class="score-list-rank">
-				<span class="score-list-rank-sign">#</span>{{ ::(ctrl.startRank || 1) + (ctrl.step ? $index * ctrl.step : $index) | number }}
+				<span class="score-list-rank-sign">#</span>{{ (startRank || 1) + (step ? i * step : i) | number }}
 			</div>
-			<div class="score-list-title" title="{{ ::score.score }}">
-				{{ ::score.score }}
+			<div class="score-list-title" :title="score.score">
+				{{ score.score }}
 			</div>
 			<div class="score-list-user">
-				<span ng-if="::score.user">
-					<a ng-href="{{ ::score.user.url }}">
-						{{ ::score.user.display_name }}
+				<span v-if="score.user">
+					<a :href="score.user.url">
+						{{ score.user.display_name }}
 					</a>
-					<small class="text-muted">@{{ ::score.user.username }}</small>
+					<small class="text-muted">@{{ score.user.username }}</small>
 				</span>
-				<span ng-if="::!score.user">
-					{{ ::score.guest }}
-					<em class="text-muted small">({{ ::'scores.guest' | translate }})</em>
+				<span v-if="!score.user">
+					{{ score.guest }}
+					<em class="text-muted small">
+						(<translate>scores.guest</translate>)
+					</em>
 				</span>
 			</div>
-			<div class="score-list-time" am-time-ago="::score.logged_on"></div>
+			<div class="score-list-time text-muted small">
+				<app-time-ago :date="score.logged_on" />
+			</div>
 		</div>
+
 	</li>
 </ol>

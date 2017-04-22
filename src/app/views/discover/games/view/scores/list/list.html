@@ -1,108 +1,133 @@
-<section class="section fill-lightest section-thin" ng-if="Screen.isMobile && listCtrl.scoreTables.length > 1">
-	<div class="container">
-		<nav class="pills">
-			<ul class="sans-margin">
-				<li ng-repeat="table in listCtrl.scoreTables track by table.id">
-					<a
-						ui-sref="discover.games.view.scores.list( { tableId: table.id } )"
-						ng-class="{ active: listCtrl.scoreTable.id == table.id }"
-						gj-tooltip="{{ table.description }}"
-						gj-no-auto-scroll
-						>
-						{{ ::table.name }}
-					</a>
-				</li>
-			</ul>
-		</nav>
-	</div>
-</section>
+<div class="route-discover-games-view-scores-list" v-if="scoreTable">
 
-<section class="section">
-	<div class="container">
+	<section class="section">
+		<div class="container">
 
-		<div class="row">
-			<div class="col-md-8">
+			<app-scoreboard-selector
+				v-if="Screen.isMobile && scoreTables.length > 1"
+				:current-table="scoreTable"
+				:tables="scoreTables"
+				@select="changeTable"
+				/>
 
-				<h2 class="section-header sans-margin-bottom">
-					{{ listCtrl.scoreTable.name }}
-				</h2>
+			<div class="row">
+				<div class="col-md-8">
 
-				<p class="text-muted">{{ listCtrl.scoreTable.description }}</p>
-				<br>
+					<h2 class="section-header sans-margin-bottom">
+						{{ scoreTable.name }}
+					</h2>
+					<p class="text-muted">
+						{{ scoreTable.description }}
+					</p>
+					<br>
 
-				<nav class="platform-list inline" ng-if="App.user">
-					<ul>
-						<li>
-							<a ui-sref="^.list( { type: 'best' } )" ui-sref-active="active" gj-no-auto-scroll>{{ ::'game.scores.best_tab' | translate }}</a>
-						</li>
-						<li>
-							<a ui-sref="^.list( { type: 'user' } )" ui-sref-active="active" gj-no-auto-scroll>{{ ::'game.scores.user_tab' | translate }}</a>
-						</li>
-					</ul>
-				</nav>
+					<app-nav-tab-list v-if="app.user">
+						<ul>
+							<li>
+								<router-link
+									:to="{
+										name: 'discover.games.view.scores.list',
+										params: { type: 'best' },
+									}"
+									active-class="active"
+									v-app-no-autoscroll="true"
+									>
+									<translate>game.scores.best_tab</translate>
+								</router-link>
+							</li>
+							<li>
+								<router-link
+									:to="{
+										name: 'discover.games.view.scores.list',
+										params: { type: 'user' },
+									}"
+									active-class="active"
+									v-app-no-autoscroll="true"
+									>
+									<translate>game.scores.user_tab</translate>
+								</router-link>
+							</li>
+						</ul>
+					</app-nav-tab-list>
 
-				<!--
-					When screen isn't XS, we split the scores out into two columns.
-				-->
-				<div class="row" ng-if="!Screen.isXs">
-					<div class="col-sm-6">
-						<gj-score-list
-							score-list-scores="listCtrl.scoresLeft"
-							score-list-step="2">
-						</gj-score-list>
-					</div>
-					<div class="col-sm-6">
-						<gj-score-list
-							score-list-scores="listCtrl.scoresRight"
-							score-list-start-rank="2"
-							score-list-step="2">
-						</gj-score-list>
-					</div>
-				</div>
-
-				<!--
-					When screen is XS we just show as one long list.
-				-->
-				<gj-score-list
-					score-list-scores="listCtrl.scores"
-					ng-if="Screen.isXs">
-				</gj-score-list>
-
-				<div ng-if="!listCtrl.scores.length">
-					<div ng-switch="listCtrl.type" class="alert alert-warning full-bleed-xs">
-						<div ng-switch-when="best" translate>game.scores.no_scores_html</div>
-						<div ng-switch-when="user" translate>game.scores.no_user_scores_html</div>
-					</div>
-				</div>
-
-			</div>
-
-			<!--
-				On larger screens we show the score board selector to the right.
-			-->
-			<div class="col-md-4" ng-if="Screen.isDesktop && listCtrl.scoreTables.length > 1">
-
-				<!--
-					We put some extra spacing in here because of the affixed game header.
-				-->
-				<gj-scroll-affix [scroll-offset]="80">
-					<div class="score-tables-list">
-						<div class="list-group">
-							<a class="list-group-item" ng-repeat="table in listCtrl.scoreTables track by table.id"
-								ui-sref="discover.games.view.scores.list( { tableId: table.id } )"
-								ng-class="{ active: table.id == listCtrl.scoreTable.id }"
-								gj-no-auto-scroll
-								>
-
-								<h5 class="list-group-item-heading sans-margin-bottom"><strong>{{ ::table.name }}</strong></h5>
-								<p class="list-group-item-text">{{ ::table.description }}</p>
-							</a>
+					<!--
+						When screen isn't XS, we split the scores out into two columns.
+					-->
+					<div class="row" v-if="!Screen.isXs">
+						<div class="col-sm-6">
+							<app-score-list
+								:scores="scoresLeft"
+								:step="2"
+								/>
+						</div>
+						<div class="col-sm-6">
+							<app-score-list
+								:scores="scoresRight"
+								:start-rank="2"
+								:step="2"
+								/>
 						</div>
 					</div>
-				</gj-scroll-affix>
 
+					<!--
+						When screen is XS we just show as one long list.
+					-->
+					<app-score-list
+						:scores="scores"
+						v-if="Screen.isXs"
+						/>
+
+					<div v-if="!scores.length">
+						<div class="alert alert-warning full-bleed-xs">
+							<div v-if="type === 'best'">
+								<translate :escape-html="false">game.scores.no_scores_html</translate>
+							</div>
+							<div v-else-if="type === 'user'">
+								<translate :escape-html="false">game.scores.no_user_scores_html</translate>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<!--
+					On larger screens we show the score board selector to the right.
+				-->
+				<div class="col-md-4" v-if="Screen.isDesktop && scoreTables.length > 1">
+
+					<!--
+						We put some extra spacing in here because of the affixed game header.
+					-->
+					<app-scroll-affix :scroll-offset="80">
+						<div class="score-tables-list">
+							<div class="list-group">
+								<router-link
+									class="list-group-item"
+									v-for="table of scoreTables"
+									:key="table.id"
+									:to="{
+										name: 'discover.games.view.scores.list',
+										params: { tableId: table.id },
+									}"
+									:class="{ active: table.id === scoreTable.id }"
+									v-app-no-autoscroll
+									>
+
+									<h5 class="list-group-item-heading sans-margin-bottom">
+										<strong>{{ table.name }}</strong>
+									</h5>
+									<p class="list-group-item-text">
+										{{ table.description }}
+									</p>
+								</router-link>
+							</div>
+						</div>
+					</app-scroll-affix>
+
+				</div>
 			</div>
-		</div>
 
-	</div>
-</section>
+		</div>
+	</section>
+
+</div>

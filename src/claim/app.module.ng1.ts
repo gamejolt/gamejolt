@@ -19,7 +19,6 @@ import '../lib/gj-lib-client/components/key-group/key-group';
 import '../lib/gj-lib-client/components/filesize/filesize';
 import '../lib/gj-lib-client/components/currency/currency';
 import '../lib/gj-lib-client/components/time/time';
-import '../lib/gj-lib-client/components/game/downloader/downloader';
 
 export const AppModuleNg1 = angular.module( 'App', [
 
@@ -47,7 +46,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.KeyGroup',
 	'gj.Filesize',
 	'gj.Time',
-	'gj.Game.Downloader',
 ] )
 /*@ngInject*/
 .config( (

@@ -13,6 +13,7 @@ import { routeActivity } from './activity/activity.route';
 import { routeLibrary } from './library/library.route';
 import { routeSettings } from './settings/settings.route';
 import { routeForums } from './forums/forums.route';
+import { routeRadio } from './radio/radio.route';
 
 Vue.use( VueRouter );
 
@@ -25,6 +26,7 @@ const routes = [
 	routeSettings,
 	routeLanding,
 	routeForums,
+	routeRadio,
 	routeLegal,
 	...routeFallbacks,
 	routeError404,

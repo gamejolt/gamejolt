@@ -30,7 +30,7 @@
 		</div>
 	</section>-->
 
-	<section class="section section-thin" v-if="!Environment.isClient && !Screen.isXs && game._should_show_ads">
+	<section class="section section-thin" v-if="!GJ_IS_CLIENT && !Screen.isXs && game._should_show_ads">
 		<app-ad size="leaderboard" resource="Game" :resource-id="game.id" />
 	</section>
 
@@ -69,15 +69,7 @@
 						</div>
 						<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
 
-							<app-discover-games-view-overview-stats
-								:is-loaded="isLoaded"
-								:game="game"
-								:profile-count="profileCount"
-								:play-count="playCount"
-								:download-count="downloadCount"
-								:rating-breakdown="ratingBreakdown"
-								:packages="packages"
-								/>
+							<app-discover-games-view-overview-stats />
 
 						</div>
 					</div>
@@ -114,7 +106,7 @@
 						show while we're loading the section. After it's loaded in, we decide if it should show
 						through the "hasReleasesSection" variable which has the correct data.
 					-->
-					<div v-if="(game._has_packages && !isLoaded) || hasReleasesSection">
+					<div v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
 
 						<h2 id="game-releases" :class="{ 'section-header': !Screen.isMobile }">
 							<translate>Releases</translate>
@@ -149,12 +141,12 @@
 							</app-card>
 						</div>
 
-						<div v-if="showMultiplePackagesMessage" class="alert alert-info">
+						<div v-if="shouldShowMultiplePackagesMessage" class="alert alert-info">
 							<app-jolticon icon="notice" />
 							<translate>There are multiple packages for your device. Please choose one below.</translate>
 						</div>
 
-						<app-lazy-placeholder :when="isLoaded">
+						<app-lazy-placeholder :when="isOverviewLoaded">
 							<div class="lazy-placeholder" style="height: 135px"></div>
 
 							<div v-if="packages.length">
@@ -173,12 +165,11 @@
 									/>
 							</div>
 
-							<!--<gj-game-soundtrack-card
-								ng-if="songs.length"
-								game-soundtrack-card-game="game"
-								game-soundtrack-card-songs="songs"
-								>
-							</gj-game-soundtrack-card>-->
+							<app-game-soundtrack-card
+								v-if="songs.length"
+								:game="game"
+								:songs="songs"
+								/>
 						</app-lazy-placeholder>
 
 					</div>
@@ -186,7 +177,7 @@
 					<!-- Game Description -->
 					<h2
 						:class="{
-							'section-header': !Screen.isMobile && !((game._has_packages && !isLoaded) || hasReleasesSection),
+							'section-header': !Screen.isMobile && !((game._has_packages && !isOverviewLoaded) || hasReleasesSection),
 						}"
 						>
 						<translate>Description</translate>
@@ -218,7 +209,7 @@
 						</a>
 					</div>
 
-					<div v-if="twitterShareMessage && !Environment.isClient">
+					<div v-if="twitterShareMessage && !GJ_IS_CLIENT">
 						<br>
 						<div class="social-widgets">
 							<app-social-twitter-share
@@ -270,7 +261,7 @@
 
 							<div id="maturity-rating">
 								<br class="visible-md visible-lg">
-								<app-lazy-placeholder :when="isLoaded">
+								<app-lazy-placeholder :when="isOverviewLoaded">
 									<div class="lazy-placeholder" style="height: 115px"></div>
 									<app-game-ogrs :game="game" />
 								</app-lazy-placeholder>
@@ -286,11 +277,9 @@
 
 							<hr class="underbar">
 
-							<app-discover-games-view-overview-details
-								:game="game"
-								/>
+							<app-discover-games-view-overview-details />
 
-							<div v-if="!Environment.isClient && game._should_show_ads && Screen.isDesktop">
+							<div v-if="!GJ_IS_CLIENT && game._should_show_ads && Screen.isDesktop">
 								<br>
 								<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
 							</div>
@@ -298,31 +287,82 @@
 						</div>
 					</div>
 				</div>
-			</div>
 
-			<!--
-				Devlog
-			-->
-			<div v-if="feed && feed.hasItems" class="row">
-				<div class="col-sm-10 col-md-8 col-lg-7">
+				<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
 
-					<h2>
-						<translate>Project Devlog</translate>
-					</h2>
+					<!--
+						Devlog Feed
+					-->
+					<div v-if="feed && feed.hasItems">
 
-					<hr class="underbar">
-					<br>
+						<h2>
+							<translate>Project Devlog</translate>
+						</h2>
 
-					<app-activity-feed
-						:feed="feed"
-						:show-edit-controls="true"
-						/>
+						<hr class="underbar">
+						<br>
+
+						<app-activity-feed
+							:feed="feed"
+							:show-edit-controls="true"
+							/>
+
+					</div>
 
 				</div>
 			</div>
 
 		</div>
 	</section>
+
+	<!-- Achievements -->
+	<div v-if="hasScores || trophiesCount">
+		<hr>
+
+		<section class="section">
+			<div class="container">
+
+				<div class="row">
+
+					<!--
+						Scores
+					-->
+					<div
+						v-if="hasScores"
+						:class="isAchievementsTwoCol ? 'col-md-7' : 'col-xs-12'"
+						>
+
+						<app-score-overview
+							v-if="scoresPayload"
+							:game="game"
+							:initial-payload="scoresPayload"
+							:size="isAchievementsTwoCol ? 'small' : 'full'"
+							/>
+
+					</div>
+
+					<!--
+						Trophies
+					-->
+					<div
+						v-if="trophiesCount"
+						:class="isAchievementsTwoCol ? 'col-md-5 col-lg-4 col-lg-offset-1' : 'col-xs-12'"
+						>
+
+						<app-trophy-overview
+							v-if="trophiesPayload"
+							:game="game"
+							:initial-payload="trophiesPayload"
+							:size="isAchievementsTwoCol ? 'small' : 'full'"
+							/>
+
+					</div>
+
+				</div>
+
+			</div>
+		</section>
+	</div>
 
 	<!--
 		Recommended Games
@@ -393,7 +433,7 @@
 			</div>
 
 			<!-- Comments -->
-			<div id="comments" v-if="isLoaded">
+			<div id="comments" v-if="isOverviewLoaded">
 				<div class="row">
 
 					<div class="col-sm-10 col-md-8 col-lg-7">
@@ -417,11 +457,10 @@
 							</h2>
 							<hr class="underbar">
 
-								<!--current-page="currentCommentPage"-->
 							<app-comment-widget
 								resource="Game"
 								:resource-id="game.id"
-								@count="updateCommentsCount"
+								@count="setCommentsCount"
 								/>
 						</div>
 
@@ -430,7 +469,7 @@
 					<!--
 						Will overflow a little on md, but what can ya do, amirite?
 					-->
-					<div class="col-md-4 col-lg-offset-1" v-if="!Environment.isClient && game._should_show_ads && Screen.isDesktop">
+					<div class="col-md-4 col-lg-offset-1" v-if="!GJ_IS_CLIENT && game._should_show_ads && Screen.isDesktop">
 						<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
 					</div>
 

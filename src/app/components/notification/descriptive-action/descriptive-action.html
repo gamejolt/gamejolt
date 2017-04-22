@@ -1,21 +1,25 @@
-<!-- User -->
-<strong ng-if="::$ctrl.notification.is_user_based">
-	<span ng-if="::$ctrl.notification.from_model">
-		{{ ::$ctrl.notification.from_model.display_name }}
-	</span>
-	<span ng-if="::!$ctrl.notification.from_model" translate>
-		Someone
-	</span>
-</strong>
+<span>
 
-<small ng-if="::$ctrl.notification.is_user_based && $ctrl.notification.from_model">
-	(@{{ ::$ctrl.notification.from_model.username }})
-</small>
+	<!-- User -->
+	<strong v-if="notification.is_user_based">
+		<span v-if="notification.from_model">
+			{{ notification.from_model.display_name }}
+		</span>
+		<translate v-if="!notification.from_model">
+			Someone
+		</translate>
+	</strong>
 
-<!-- Game -->
-<strong ng-if="::$ctrl.notification.is_game_based">
-	{{ ::$ctrl.notification.to_model.title }}
-</strong>
+	<small v-if="notification.is_user_based && notification.from_model">
+		(@{{ notification.from_model.username }})
+	</small>
 
-<!-- Actions -->
-<span ng-bind-html="::$ctrl.getAction()"></span>
+	<!-- Game -->
+	<strong v-if="notification.is_game_based">
+		{{ notification.to_model.title }}
+	</strong>
+
+	<!-- Actions -->
+	<span v-html="action"></span>
+
+</span>

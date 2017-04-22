@@ -1,4 +1,4 @@
-<section class="section" id="comments" v-if="game">
+<section class="section" id="comments">
 	<div class="container">
 		<div class="row">
 
@@ -14,8 +14,6 @@
 				</div>
 
 				<div v-if="game.comments_enabled">
-					<!--TODO-->
-					<!--:current-page="currentCommentPage"-->
 					<app-comment-widget
 						resource="Game"
 						:resource-id="game.id"
@@ -27,8 +25,8 @@
 			<!--
 				Will overflow a little on md, but what can ya do, amirite?
 			-->
-			<div class="col-md-4 col-lg-offset-1 text-right" 
-				v-if="!Environment.isClient && game.ads_enabled && Screen.isDesktop"
+			<div class="col-md-4 col-lg-offset-1 text-right"
+				v-if="!GJ_IS_CLIENT && game.ads_enabled && Screen.isDesktop"
 				>
 				<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
 			</div>

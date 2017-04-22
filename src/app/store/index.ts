@@ -230,10 +230,10 @@ export const store = new Vuex.Store<StoreState>( {
 
 // Bootstrap/clear the app when user changes.
 store.watch(
-	( state: any ) => state.app.user,
-	( user?: User ) =>
+	( state: any ) => state.app.user && state.app.user.id,
+	( userId?: number ) =>
 	{
-		const isLoggedIn = !!user;
+		const isLoggedIn = !!userId;
 
 		if ( isLoggedIn ) {
 			store.dispatch( Actions.bootstrap );

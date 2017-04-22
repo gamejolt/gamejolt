@@ -26,23 +26,11 @@ import '../lib/gj-lib-client/components/scroll/fixed-resizer/fixed-resizer';
 import '../lib/gj-lib-client/components/editable-accordion/editable-accordion';
 import '../lib/gj-lib-client/components/progress/poller/poller.module';
 import '../lib/gj-lib-client/components/alert/dismissable/dismissable';
-import '../lib/gj-lib-client/components/activity/stream/stream-module';
 import '../lib/gj-lib-client/components/form/form';
 import '../lib/gj-lib-client/components/form/markdown-editor/markdown-editor';
 import '../lib/gj-lib-client/components/form/upload-control/upload-control';
 import '../lib/gj-lib-client/components/user/linked-accounts/linked-accounts';
-import '../lib/gj-lib-client/components/user/message/message';
 import '../lib/gj-lib-client/components/key-group/key-group';
-import '../lib/gj-lib-client/components/game/news-article/news-article';
-import '../lib/gj-lib-client/components/game/trophy/trophy';
-import '../lib/gj-lib-client/components/game/data-store/item/item';
-import '../lib/gj-lib-client/components/order/order';
-import '../lib/gj-lib-client/components/order/item/item';
-import '../lib/gj-lib-client/components/order/payment/payment';
-import '../lib/gj-lib-client/components/order/payment/refund/refund';
-import '../lib/gj-lib-client/components/order/address/address';
-import '../lib/gj-lib-client/components/game/downloader/downloader';
-import '../lib/gj-lib-client/components/game/key-pool/key-pool';
 import '../lib/gj-lib-client/components/jam/jam-module';
 import '../lib/gj-lib-client/components/jam/game/game';
 import '../lib/gj-lib-client/components/jam/voting-category/voting-category';
@@ -51,30 +39,13 @@ import '../lib/gj-lib-client/components/jam/game/vote/widget/widget';
 import '../lib/gj-lib-client/components/jam/award/award';
 import '../lib/gj-lib-client/components/key/key-module';
 import '../lib/gj-lib-client/components/linked-key/linked-key';
-import '../lib/gj-lib-client/components/game-library/game/game';
-import '../lib/gj-lib-client/components/user/game-score/game-score';
-import '../lib/gj-lib-client/components/user/game-trophy/game-trophy';
-import '../lib/gj-lib-client/components/user/game-session/game-session';
-import '../lib/gj-lib-client/components/audio/player/player';
-import '../lib/gj-lib-client/components/audio/scrubber/scrubber';
-import '../lib/gj-lib-client/components/audio/playlist/playlist';
-import '../lib/gj-lib-client/components/game/soundtrack/card/card';
 import '../lib/gj-lib-client/components/img/crop/crop';
 
 import './components/invite/invite-module';
 import './components/game/filtering/filtering-module';
-import './components/game/cover-buttons/cover-buttons-module';
 import './components/protocol-watcher/protocol-watcher-module';
-import './components/score/feed/feed-module';
-import './components/score/list/list-module';
-import './components/score/overview/overview-module';
-import './components/score/scoreboard-popover/scoreboard-popover-module';
 import './components/sorting/sorting-module';
 import './components/terms/change-alert/change-alert-module';
-import './components/trophy/completion/completion-module';
-import './components/trophy/list/list-module';
-import './components/trophy/overview/overview-module';
-import './components/trophy/thumbnail/thumbnail-module';
 import './components/user/set-password-modal/set-password-modal-module';
 import './components/user/token-modal/token-modal-module';
 
@@ -116,23 +87,11 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.EditableAccordion',
 	'gj.Progress.Poller',
 	'gj.Alert.Dismissable',
-	'gj.Activity.Stream',
 	'gj.Form',
 	'gj.Form.MarkdownEditor',
 	'gj.Form.UploadControl',
 	'gj.User.LinkedAccounts',
-	'gj.User.Message',
 	'gj.KeyGroup',
-	'gj.Game.NewsArticle',
-	'gj.Game.Trophy',
-	'gj.Game.DataStore.Item',
-	'gj.Order',
-	'gj.Order.Item',
-	'gj.Order.Payment',
-	'gj.Order.Payment.Refund',
-	'gj.Order.Address',
-	'gj.Game.Downloader',
-	'gj.Game.KeyPool',
 	'gj.Jam',
 	'gj.Jam.Game',
 	'gj.Jam.VotingCategory',
@@ -141,14 +100,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Jam.Award',
 	'gj.Key',
 	'gj.LinkedKey',
-	'gj.GameLibrary.Game',
-	'gj.User.GameScore',
-	'gj.User.GameTrophy',
-	'gj.User.GameSession',
-	'gj.Audio.Player',
-	'gj.Audio.Scrubber',
-	'gj.Audio.Playlist',
-	'gj.Game.Soundtrack.Card',
 	'gj.Img.Crop',
 
 	// Components.
@@ -156,15 +107,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'App.Invite',
 	'App.Sorting',
 	'App.Game.Filtering',
-	'App.Game.CoverButtons',
-	'App.Score.List',
-	'App.Score.Feed',
-	'App.Score.Overview',
-	'App.Score.ScoreboardPopover',
-	'App.Trophy.Thumbnail',
-	'App.Trophy.List',
-	'App.Trophy.Completion',
-	'App.Trophy.Overview',
 	'App.User.TokenModal',
 	'App.User.SetPasswordModal',
 	'App.User.FriendshipsHelper',
