@@ -8,7 +8,7 @@ export class ClientShortcut
 	{
 		// We just make ".desktop" entries for linux at the moment.
 		// This way it's easier to launch them.
-		if ( Device.os() != 'linux' || GJ_BUILD_TYPE == 'development' ) {
+		if ( Device.os() !== 'linux' || GJ_BUILD_TYPE === 'development' ) {
 			return;
 		}
 

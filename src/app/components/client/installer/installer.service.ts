@@ -126,19 +126,19 @@ export class ClientInstaller
 		];
 
 		let promise: Promise<void>;
-		if ( downloadStates.indexOf( localPackage.install_state || '' ) != -1 ) {
+		if ( downloadStates.indexOf( localPackage.install_state || '' ) !== -1 ) {
 			localPackage.install_state = LocalDbPackage.PATCH_PENDING
 			promise = db.packages.put( localPackage );
 		}
-		else if ( unpackStates.indexOf( localPackage.install_state || '' ) != -1 ) {
+		else if ( unpackStates.indexOf( localPackage.install_state || '' ) !== -1 ) {
 			localPackage.install_state = LocalDbPackage.DOWNLOADED
 			promise = db.packages.put( localPackage );
 		}
-		else if ( downloadStates.indexOf( localPackage.update_state || '' ) != -1 ) {
+		else if ( downloadStates.indexOf( localPackage.update_state || '' ) !== -1 ) {
 			localPackage.update_state = LocalDbPackage.PATCH_PENDING
 			promise = db.packages.put( localPackage );
 		}
-		else if ( unpackStates.indexOf( localPackage.update_state || '' ) != -1 ) {
+		else if ( unpackStates.indexOf( localPackage.update_state || '' ) !== -1 ) {
 			localPackage.update_state = LocalDbPackage.DOWNLOADED
 			promise = db.packages.put( localPackage );
 		}
@@ -155,7 +155,7 @@ export class ClientInstaller
 	{
 		const operation = localPackage.install_state ? 'install' : 'update';
 		let packageTitle = (localPackage.title || game.title);
-		if ( packageTitle != game.title ) {
+		if ( packageTitle !== game.title ) {
 			packageTitle += ' for ' + game.title;
 		}
 
@@ -262,30 +262,30 @@ export class ClientInstaller
 			}
 			await db.packages.put( localPackage );
 
-			const action = operation == 'install' ? 'finished installing' : 'updated to the latest version';
-			const title = operation == 'install' ? 'Game Installed' : 'Game Updated';
+			const action = operation === 'install' ? 'finished installing' : 'updated to the latest version';
+			const title = operation === 'install' ? 'Game Installed' : 'Game Updated';
 			Growls.success( packageTitle + ' has ' + action + '.', title );
 		}
 		catch ( err ) {
 			console.error( err );
 
-			var action = operation == 'install' ? 'install' : 'update';
-			var title = operation == 'install' ? 'Installation Failed' : 'Update Failed';
+			const action = operation === 'install' ? 'install' : 'update';
+			const title = operation === 'install' ? 'Installation Failed' : 'Update Failed';
 			Growls.error( packageTitle + ' failed to ' + action + '.', title );
 
-			if ( localPackage.install_state == LocalDbPackage.DOWNLOADING ) {
+			if ( localPackage.install_state === LocalDbPackage.DOWNLOADING ) {
 				localPackage.install_state = LocalDbPackage.DOWNLOAD_FAILED;
 				db.packages.put( localPackage );
 			}
-			else if ( localPackage.install_state == LocalDbPackage.UNPACKING ) {
+			else if ( localPackage.install_state === LocalDbPackage.UNPACKING ) {
 				localPackage.install_state = LocalDbPackage.UNPACK_FAILED;
 				db.packages.put( localPackage );
 			}
-			else if ( localPackage.update_state == LocalDbPackage.DOWNLOADING ) {
+			else if ( localPackage.update_state === LocalDbPackage.DOWNLOADING ) {
 				localPackage.update_state = LocalDbPackage.DOWNLOAD_FAILED;
 				db.packages.put( localPackage );
 			}
-			else if ( localPackage.update_state == LocalDbPackage.UNPACKING ) {
+			else if ( localPackage.update_state === LocalDbPackage.UNPACKING ) {
 				localPackage.update_state = LocalDbPackage.UNPACK_FAILED;
 				db.packages.put( localPackage );
 			}
@@ -296,12 +296,12 @@ export class ClientInstaller
 
 	private static getPatchHandleIdx( packageId: number )
 	{
-		return this.currentlyPatching.findIndex( ( value ) => value.packageId == packageId );
+		return this.currentlyPatching.findIndex( ( value ) => value.packageId === packageId );
 	}
 
 	private static startPatching( localPackage: LocalDbPackage, patchHandle: PatchHandle )
 	{
-		if ( this.getPatchHandleIdx( localPackage.id ) == -1 ) {
+		if ( this.getPatchHandleIdx( localPackage.id ) === -1 ) {
 			this.currentlyPatching.push( {
 				packageId: localPackage.id,
 				handle: patchHandle,
@@ -313,7 +313,7 @@ export class ClientInstaller
 	private static stopPatching( localPackage: LocalDbPackage )
 	{
 		const idx = this.getPatchHandleIdx( localPackage.id );
-		if ( idx != -1 ) {
+		if ( idx !== -1 ) {
 			this.currentlyPatching.splice( idx, 1 );
 			--this.numPatching;
 		}
@@ -322,7 +322,7 @@ export class ClientInstaller
 	static pause( localPackage: LocalDbPackage )
 	{
 		const idx = this.getPatchHandleIdx( localPackage.id );
-		if ( idx == -1 ) {
+		if ( idx === -1 ) {
 			throw new Error( 'Package is not installing.' );
 		}
 
@@ -332,7 +332,7 @@ export class ClientInstaller
 	static resume( localPackage: LocalDbPackage )
 	{
 		const idx = this.getPatchHandleIdx( localPackage.id );
-		if ( idx == -1 ) {
+		if ( idx === -1 ) {
 			return this.retryInstall( localPackage );
 		}
 
@@ -344,12 +344,12 @@ export class ClientInstaller
 		return new Promise( ( resolve ) =>
 		{
 			const idx = this.getPatchHandleIdx( localPackage.id );
-			if ( idx == -1 ) {
+			if ( idx === -1 ) {
 				resolve();
 				return;
 			}
 
-			var patchHandle = this.currentlyPatching[idx].handle;
+			const patchHandle = this.currentlyPatching[idx].handle;
 
 			// This is absurd, ylivay.
 			// TODO promisify the new client voodoo like no tomorrow.

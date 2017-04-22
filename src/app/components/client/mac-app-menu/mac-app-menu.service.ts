@@ -16,7 +16,7 @@ export class ClientMacAppMenu
 		{
 			// If we should just minimize instead of quitting.
 			// Many applications on mac just minimize instead of actually close.
-			if ( intent != 'quit' ) {
+			if ( intent !== 'quit' ) {
 				ClientControl.close();
 			}
 			else {

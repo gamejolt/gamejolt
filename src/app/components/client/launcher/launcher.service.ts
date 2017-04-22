@@ -26,7 +26,7 @@ export class ClientLauncher
 		{
 			// Pid files are named after the package ids they are currently running.
 			try {
-				return parseInt( path.basename( filename ) );
+				return parseInt( path.basename( filename ), 10 );
 			}
 			catch ( err ) {
 				return false;
@@ -63,7 +63,9 @@ export class ClientLauncher
 		}
 
 		try {
-			credentials = ( credentials && credentials.username && credentials.token ) ? { username: credentials.username, user_token: credentials.token } : null;
+			credentials = ( credentials && credentials.username && credentials.token )
+				? { username: credentials.username, user_token: credentials.token }
+				: null;
 			const launchInstance = await Launcher.launch( localPackage, os, arch, credentials ).promise;
 			return await this.attach( localPackage, launchInstance );
 		}
@@ -110,7 +112,7 @@ export class ClientLauncher
 		let removed = false;
 		for ( let i = this.currentlyPlaying.length - 1; i >= 0; i-- )
 		{
-			if ( this.currentlyPlaying[i].id == localPackage.id ) {
+			if ( this.currentlyPlaying[i].id === localPackage.id ) {
 				this.currentlyPlaying.splice( i, 1 );
 				removed = true;
 			}

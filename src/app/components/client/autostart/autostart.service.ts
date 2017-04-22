@@ -13,7 +13,7 @@ export class ClientAutoStart
 
 	static canAutoStart()
 	{
-		return GJ_BUILD_TYPE == 'production' && Device.os() == 'windows';
+		return GJ_BUILD_TYPE === 'production' && Device.os() === 'windows';
 	}
 
 	static async set()

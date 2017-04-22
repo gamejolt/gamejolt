@@ -11,7 +11,7 @@ export class ClientInfo
 
 		// Slightly different path on dev and mac.
 		let packagePath = path.resolve( cwd, '..', 'package.json' );
-		if ( GJ_BUILD_TYPE == 'development' || os.type() == 'Darwin' ) {
+		if ( GJ_BUILD_TYPE === 'development' || os.type() === 'Darwin' ) {
 			packagePath = path.resolve( cwd, 'package.json' );
 		}
 

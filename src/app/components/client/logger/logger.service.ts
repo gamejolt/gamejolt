@@ -1,6 +1,6 @@
 import { Logger } from 'client-voodoo';
 
-export class Client_Logger
+export class ClientLogger
 {
 	static getLogInfo()
 	{

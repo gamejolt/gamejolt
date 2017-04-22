@@ -27,13 +27,12 @@ import { ClientInfo } from '../../client/info/info.service';
 export class AppShellFooter extends Vue
 {
 	curDate = new Date();
-	clientVersion?: string;
 	env = Environment;
 
-	created()
+	get clientVersion()
 	{
 		if ( GJ_IS_CLIENT ) {
-			this.clientVersion = ClientInfo.version;
+			return ( require( '../../client/info/info.service' ).ClientInfo as typeof ClientInfo ).version;
 		}
 	}
 

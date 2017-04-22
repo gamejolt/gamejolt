@@ -1,5 +1,5 @@
-
 import * as gui from 'nw.gui';
+
 const win = gui.Window.get();
 
 export class ClientControl
@@ -11,8 +11,8 @@ export class ClientControl
 
 		const app = gui.App;
 		if ( app.argv.length ) {
-			for ( var i = 0; i < app.argv.length; ++i ) {
-				if ( app.argv[ i ] == '--silent-start' ) {
+			for ( let i = 0; i < app.argv.length; ++i ) {
+				if ( app.argv[ i ] === '--silent-start' ) {
 					console.info( 'Started silently.' );
 					startedSilently = true;
 					break;
@@ -70,5 +70,5 @@ export class ClientControl
 	static clearProgressBar()
 	{
 		win.setProgressBar( -1 );
-	};
+	}
 }

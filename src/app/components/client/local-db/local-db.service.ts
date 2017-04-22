@@ -11,13 +11,13 @@ class LocalDb extends Dexie
 	{
 		super( 'local' );
 
-		this.version(1).stores( {
+		this.version( 1 ).stores( {
 			'games': 'id',
 			'packages': 'id,game_id',
 		} );
 
-		this.games.mapToClass(LocalDbGame);
-		this.packages.mapToClass(LocalDbPackage);
+		this.games.mapToClass( LocalDbGame );
+		this.packages.mapToClass( LocalDbPackage );
 
 		this.open();
 	}

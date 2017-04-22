@@ -37,7 +37,7 @@ export class ClientLibrary
 	// This will ensure that anything that happens to the indexeddb will also get mapped into this class.
 	static setupDbWatcher()
 	{
-		var watchThese = [
+		const watchThese = [
 			{
 				model: LocalDbPackage,
 				table: db.packages,
@@ -62,7 +62,7 @@ export class ClientLibrary
 					// TODO: vue reactivity?
 					(ClientLibrary as any )[ watchInfo.key ][ key ] = newModel;
 
-					if ( watchInfo.key == 'packages' ) {
+					if ( watchInfo.key === 'packages' ) {
 						ClientLibrary.packagesByGame = _.groupBy( ClientLibrary.packages, 'game_id' );
 					}
 				} );
@@ -72,8 +72,8 @@ export class ClientLibrary
 			{
 				trans.on( 'complete', function()
 				{
-					var localPackage = (ClientLibrary as any)[ watchInfo.key ][ key ];
-					for ( var i in mods ) {
+					const localPackage = (ClientLibrary as any)[ watchInfo.key ][ key ];
+					for ( let i in mods ) {
 						if ( !mods.hasOwnProperty( i ) ) {
 							continue;
 						}
@@ -89,7 +89,7 @@ export class ClientLibrary
 				{
 					delete (ClientLibrary as any )[ watchInfo.key ][ key ];
 
-					if ( watchInfo.key == 'packages' ) {
+					if ( watchInfo.key === 'packages' ) {
 						ClientLibrary.packagesByGame = _.groupBy( ClientLibrary.packages, 'game_id' );
 					}
 				} );
@@ -134,13 +134,19 @@ export class ClientLibrary
 		return packages[0];
 	}
 
-	static installPackage( _game: Game, _package: GamePackage, _release: GameRelease, _build: GameBuild, _launchOptions: GameBuildLaunchOption[] )
+	static installPackage(
+		_game: Game,
+		_package: GamePackage,
+		_release: GameRelease,
+		_build: GameBuild,
+		_launchOptions: GameBuildLaunchOption[],
+	)
 	{
 		HistoryTick.sendBeacon( 'game-build', _build.id, { sourceResource: 'Game', sourceResourceId: _game.id } );
 		HistoryTick.sendBeacon( 'game-build-install', _build.id, { sourceResource: 'Game', sourceResourceId: _game.id } );
 
-		var game = LocalDbGame.fromGame( _game );
-		var localPackage = LocalDbPackage.createForInstall( _package, _release, _build, _launchOptions );
+		const game = LocalDbGame.fromGame( _game );
+		const localPackage = LocalDbPackage.createForInstall( _package, _release, _build, _launchOptions );
 
 		db
 			.transaction( 'rw', [ db.games, db.packages ], function()

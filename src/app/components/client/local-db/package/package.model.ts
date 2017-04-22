@@ -4,10 +4,11 @@ import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/buil
 import { GameBuildLaunchOption } from '../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
 import { IDownloadProgress, IExtractProgress, IParsedWrapper } from 'client-voodoo';
 import { db } from '../local-db.service';
-import { Api } from "../../../../../lib/gj-lib-client/components/api/api.service";
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { LocalDbGame } from '../game/game.model';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { ClientLibrary } from '../../library/library.service';
+import { ClientInstaller } from '../../installer/installer.service';
 
 export class LocalDbPackage
 {
@@ -119,7 +120,7 @@ export class LocalDbPackage
 		// Let's just pull the ones for our build.
 		const _launchOptions: typeof LocalDbPackage.prototype.launch_options = [];
 		for ( let launchOption of launchOptions ) {
-			if ( launchOption.game_build_id != build.id ) {
+			if ( launchOption.game_build_id !== build.id ) {
 				continue;
 			}
 
@@ -160,96 +161,84 @@ export class LocalDbPackage
 		throw new Error( 'Not ready to get the package download url' );
 	}
 
-	//isSettled()
 	get isSettled()
 	{
 		return !this.install_state && !this.update_state && !this.remove_state;
 	}
 
-	//isPatching()
 	get isPatching()
 	{
-		return this.install_state == LocalDbPackage.PATCH_PENDING
-			|| this.install_state == LocalDbPackage.DOWNLOADING
-			|| this.install_state == LocalDbPackage.UNPACKING
-			|| this.update_state == LocalDbPackage.PATCH_PENDING
-			|| this.update_state == LocalDbPackage.DOWNLOADING
-			|| this.update_state == LocalDbPackage.UNPACKING
+		return this.install_state === LocalDbPackage.PATCH_PENDING
+			|| this.install_state === LocalDbPackage.DOWNLOADING
+			|| this.install_state === LocalDbPackage.UNPACKING
+			|| this.update_state === LocalDbPackage.PATCH_PENDING
+			|| this.update_state === LocalDbPackage.DOWNLOADING
+			|| this.update_state === LocalDbPackage.UNPACKING
 			;
 	}
 
-	//isInstalling()
 	get isInstalling()
 	{
-		return this.install_state == LocalDbPackage.PATCH_PENDING
-			|| this.install_state == LocalDbPackage.DOWNLOADING
-			|| this.install_state == LocalDbPackage.UNPACKING
+		return this.install_state === LocalDbPackage.PATCH_PENDING
+			|| this.install_state === LocalDbPackage.DOWNLOADING
+			|| this.install_state === LocalDbPackage.UNPACKING
 			;
 	}
 
-	//isUpdating()
 	get isUpdating()
 	{
-		return this.update_state == LocalDbPackage.PATCH_PENDING
-			|| this.update_state == LocalDbPackage.DOWNLOADING
-			|| this.update_state == LocalDbPackage.UNPACKING
+		return this.update_state === LocalDbPackage.PATCH_PENDING
+			|| this.update_state === LocalDbPackage.DOWNLOADING
+			|| this.update_state === LocalDbPackage.UNPACKING
 			;
 	}
 
-	//isDownloading()
 	get isDownloading()
 	{
-		return this.install_state == LocalDbPackage.DOWNLOADING
-			|| this.update_state == LocalDbPackage.DOWNLOADING
+		return this.install_state === LocalDbPackage.DOWNLOADING
+			|| this.update_state === LocalDbPackage.DOWNLOADING
 			;
 	}
 
-	//isUnpacking()
 	get isUnpacking()
 	{
-		return this.install_state == LocalDbPackage.UNPACKING
-			|| this.update_state == LocalDbPackage.UNPACKING
+		return this.install_state === LocalDbPackage.UNPACKING
+			|| this.update_state === LocalDbPackage.UNPACKING
 			;
 	}
 
-	//isPatchPaused()
 	get isPatchPaused()
 	{
 		return !!this.patch_paused;
 	}
 
-	//isPatchQueued()
 	get isPatchQueued()
 	{
 		return !!this.patch_queued;
 	}
 
-	//didInstallFail()
 	get didInstallFail()
 	{
-		return this.install_state == LocalDbPackage.DOWNLOAD_FAILED
-			|| this.install_state == LocalDbPackage.UNPACK_FAILED
+		return this.install_state === LocalDbPackage.DOWNLOAD_FAILED
+			|| this.install_state === LocalDbPackage.UNPACK_FAILED
 			;
 	}
 
-	//didUpdateFail()
 	get didUpdateFail()
 	{
-		return this.update_state == LocalDbPackage.DOWNLOAD_FAILED
-			|| this.update_state == LocalDbPackage.UNPACK_FAILED
+		return this.update_state === LocalDbPackage.DOWNLOAD_FAILED
+			|| this.update_state === LocalDbPackage.UNPACK_FAILED
 			;
 	}
 
-	//isRunning()
 	get isRunning()
 	{
 		return !!this.running_pid;
 	}
 
-	//isRemoving()
 	get isRemoving()
 	{
-		return this.remove_state == LocalDbPackage.REMOVING;
+		return this.remove_state === LocalDbPackage.REMOVING;
 	}
 
 	setInstalled()
@@ -260,7 +249,7 @@ export class LocalDbPackage
 		this.unpack_progress = null;
 		this.patch_paused = null;
 		this.patch_queued = null;
-	};
+	}
 
 	setUpdated()
 	{
@@ -276,12 +265,10 @@ export class LocalDbPackage
 		this.unpack_progress = null;
 		this.patch_paused = null;
 		this.patch_queued = null;
-	};
+	}
 
 	async startUpdate( newBuildId: number )
 	{
-		var _this = this;
-
 		// If this package isn't installed (and at rest), we don't update.
 		// We also don't update if we're currently running the game. Imagine that happening!
 		if ( !this.isSettled || this.isRunning ) {
@@ -298,18 +285,15 @@ export class LocalDbPackage
 
 		await db.packages.put( this );
 
-		var game = ClientLibrary.games[ _this.game_id ];
-		$injector.get( 'Client_Installer' ).install( game, _this );
+		const game = ClientLibrary.games[ this.game_id ];
+		ClientInstaller.install( game, this );
 
 		return true;
 	}
 
-	//$uninstall()
 	async uninstall()
 	{
-		var _this = this;
-		let game: LocalDbGame | null = null;
-		var Client_Installer = $injector.get( 'Client_Installer' );
+		let game: LocalDbGame | undefined;
 
 		// We just use this so they don't click "uninstall" twice in a row.
 		// No need to save to the DB.
@@ -317,78 +301,57 @@ export class LocalDbPackage
 			return this._uninstallingPromise;
 		}
 
-		this._uninstallingPromise = db.transaction( 'rw', [ db.games, db.packages ], function()
+		this._uninstallingPromise = db.transaction( 'rw', [ db.games, db.packages ], async () =>
 		{
 			// Are we removing a current install?
-			var wasInstalling = _this.isInstalling;
+			const wasInstalling = this.isInstalling;
 
-			// Cancel any installs first.
-			// It may or may not be patching.
-			return Client_Installer.cancel( _this )
-				.then( function()
-				{
-					return db.games.get( _this.game_id );
-				 } )
-				.then( function( _game )
-				{
-					game = _game || null;
+			try {
+				// Cancel any installs first.
+				// It may or may not be patching.
+				await ClientInstaller.cancel( this )
+				game = await db.games.get( this.game_id );
 
-					// Make sure we're clean.
-					_this.install_state = null;
-					_this.download_progress = null;
-					_this.unpack_progress = null;
-					_this.patch_paused = null;
-					_this.patch_queued = null;
+				// Make sure we're clean.
+				this.install_state = null;
+				this.download_progress = null;
+				this.unpack_progress = null;
+				this.patch_paused = null;
+				this.patch_queued = null;
 
-					_this.remove_state = LocalDbPackage.REMOVING;
-					return db.packages.put( _this );
-				} )
-				.then( function()
-				{
-					return ClientLibrary.removePackage( _this );
-				} )
-				.then( function()
-				{
-					// Get the number of packages in this game.
-					return db.packages.where( 'game_id' ).equals( _this.game_id ).count()
-						.then( function( count )
-						{
-							// Note that some times a game is removed before the package (really weird cases).
-							// We still want the remove to go through, so be sure to skip this situation.
-							if ( !game ) {
-								return;
-							}
+				this.remove_state = LocalDbPackage.REMOVING;
+				await db.packages.put( this );
+				await ClientLibrary.removePackage( this );
 
-							// If this is the last package for the game, remove the game since we no longer need it.
-							if ( count <= 1 ) {
-								return db.games.delete( game.id );
-							}
-						} )
-						.then( function()
-						{
-							db.packages.delete( _this.id );
-						} );
-				} )
-				.then( function()
-				{
-					if ( !wasInstalling ) {
-						Growls.success( 'Removed ' + (_this.title || (game ? game.title : 'the package')) + ' from your computer.', 'Package Removed' );
-					}
-				} )
-				.catch( function( err )
-				{
-					console.error( err );
+				// Get the number of packages in this game.
+				const count = await db.packages.where( 'game_id' ).equals( this.game_id ).count();
 
-					if ( wasInstalling ) {
-						Growls.error( 'Could not stop the installation.' );
-					}
-					else {
-						Growls.error( 'Could not remove ' + (_this.title || (game ? game.title : 'the package')) + '.', 'Remove Failed' );
-					}
+				// Note that some times a game is removed before the package (really weird cases).
+				// We still want the remove to go through, so be sure to skip this situation.
+				// If this is the last package for the game, remove the game since we no longer need it.
+				if ( game && count <= 1 ) {
+					await db.games.delete( game.id );
+				}
 
-					_this.remove_state = LocalDbPackage.REMOVE_FAILED;
-					db.packages.put( _this );
-				} );
+				await db.packages.delete( this.id );
+
+				if ( !wasInstalling ) {
+					Growls.success( 'Removed ' + (this.title || (game ? game.title : 'the package')) + ' from your computer.', 'Package Removed' );
+				}
+			}
+			catch ( err ) {
+				console.error( err );
+
+				if ( wasInstalling ) {
+					Growls.error( 'Could not stop the installation.' );
+				}
+				else {
+					Growls.error( 'Could not remove ' + (this.title || (game ? game.title : 'the package')) + '.', 'Remove Failed' );
+				}
+
+				this.remove_state = LocalDbPackage.REMOVE_FAILED;
+				await db.packages.put( this );
+			}
 		} );
 
 		return this._uninstallingPromise;
