@@ -18,6 +18,10 @@ import { GamePlayModal } from '../lib/gj-lib-client/components/game/play-modal/p
 
 Payload.init( store, router );
 History.init( router );
+
+if ( GJ_IS_CLIENT ) {
+	require( './bootstrap-client' );
+}
 GamePlayModal.init( { canMinimize: true } );
 bootstrapShortkey();
 

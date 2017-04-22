@@ -8,6 +8,7 @@ import { AppRouterLink } from '../../router-link/router-link';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTranslateLangSelector } from '../../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
 import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
+import { ClientInfo } from '../../client/info/info.service';
 
 @View
 @Component({
@@ -32,9 +33,7 @@ export class AppShellFooter extends Vue
 	created()
 	{
 		if ( GJ_IS_CLIENT ) {
-			// TODO
-			// const Client_Info = getProvider<any>( 'Client_Info' );
-			// this.clientVersion = Client_Info.getVersion();
+			this.clientVersion = ClientInfo.version;
 		}
 	}
 
