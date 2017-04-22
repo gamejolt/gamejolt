@@ -170,8 +170,11 @@ export class AnalyticsCtrl
 				options = { location: 'replace' };
 			}
 
-			let stateParams: any = _.pick( this, [ 'viewAs', 'period', 'resource', 'resourceId' ] );
+			let stateParams: any = _.pick( this, [ 'period', 'resource', 'resourceId' ] );
 			stateParams.metricKey = this.metric.key;
+			if ( this.viewAs != this.appUserId ) {
+				stateParams.viewAs = this.viewAs;
+			}
 
 			this.$state.go(
 				'dashboard.analytics.view',
