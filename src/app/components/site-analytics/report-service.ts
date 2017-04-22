@@ -15,6 +15,7 @@ export class SiteAnalyticsReport
 		resourceId: number,
 		collection: Collection,
 		partnerMode: boolean,
+		viewAs: number | undefined,
 		startTime: number | undefined,
 		endTime: number | undefined,
 	)
@@ -86,6 +87,7 @@ export class SiteAnalyticsReport
 				collection,
 				analyzer,
 				field,
+				viewAs,
 				conditions,
 				fetchFields,
 				component.resourceFields,
@@ -123,6 +125,7 @@ export class SiteAnalyticsReport
 		collection: Collection,
 		analyzer: Analyzer,
 		field: Field,
+		viewAs: number | undefined,
 		conditions: Condition[] | undefined,
 		fetchFields: Field[] | undefined,
 		resourceFields: ResourceFields | undefined,
@@ -137,6 +140,10 @@ export class SiteAnalyticsReport
 			analyzer: analyzer,
 			field: field,
 		};
+
+		if ( viewAs ) {
+			request.view_as = viewAs;
+		}
 
 		if ( conditions ) {
 			request.conditions = conditions;
