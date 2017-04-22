@@ -12,7 +12,6 @@
     "angular-gettext": "2.3.6",
     "angular-ui-utils": "bower-keypress",
     "angular-validation-match": "1.4.0",
-    "dexie": "1.2.0",
     "humanize-duration": "3.0.0",
     "angular-elastic": "2.5.1",
     "angularjs-slider": "2.13.0",

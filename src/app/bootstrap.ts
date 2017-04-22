@@ -17,6 +17,10 @@ import { Registry } from '../lib/gj-lib-client/components/registry/registry.serv
 
 Payload.init( store, router );
 History.init( router );
+
+if ( GJ_IS_CLIENT ) {
+	require( './bootstrap-client' );
+}
 bootstrapShortkey();
 
 Registry.setConfig( 'Game', { maxItems: 100 } );
