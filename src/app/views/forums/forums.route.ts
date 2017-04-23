@@ -7,6 +7,7 @@ import { routeForumsTopicsView } from './topics/view/view.route';
 export const routeForums: VueRouter.RouteConfig = {
 	name: 'forums',
 	path: '/forums',
+	props: true,
 	component: () => asyncComponentLoader( $import( './forums' ) ),
 	children: [
 		routeForumsLanding,

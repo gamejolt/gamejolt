@@ -10,6 +10,7 @@ import { routeAuthJoinAlmost } from './join-almost/join-almost.route';
 export const routeAuth: VueRouter.RouteConfig = {
 	name: 'auth',
 	path: '/',
+	props: true,
 	component: RouteAuth,
 	children: [
 		routeAuthLogin,

@@ -4,6 +4,7 @@ import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/uti
 export const routeForumsLandingOverview: VueRouter.RouteConfig = {
 	name: 'forums.landing.overview',
 	path: '/forums',
+	props: true,
 	component: () => asyncComponentLoader( $import( './overview' ) ),
 	children: [
 		{ path: '/community/forums', redirect: { name: 'forums.landing.overview' } },

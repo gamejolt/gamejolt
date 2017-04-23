@@ -5,6 +5,7 @@ import { routeLibraryCollectionRoutes } from './collection/collection.route';
 
 export const routeLibrary: VueRouter.RouteConfig = {
 	path: '/library',
+	props: true,
 	component: () => asyncComponentLoader( $import( './library' ) ),
 	children: [
 		routeLibraryOverview,

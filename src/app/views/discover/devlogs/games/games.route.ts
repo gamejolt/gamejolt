@@ -4,5 +4,6 @@ import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/uti
 export const routeDiscoverDevlogsGames: VueRouter.RouteConfig = {
 	name: 'discover.devlogs.games',
 	path: 'games/:section?',
+	props: true,
 	component: () => asyncComponentLoader( $import( './games' ) ),
 };

@@ -16,8 +16,8 @@ export const routeLibraryCollectionRoutes: VueRouter.RouteConfig[] = routes.map(
 	return {
 		name: `library.collection.${ route[0] }`,
 		path: route[1],
-		component: () => asyncComponentLoader( $import( './collection' ) ),
 		props: true,
+		component: () => asyncComponentLoader( $import( './collection' ) ),
 		meta: {
 			collectionType: route[0],
 		},

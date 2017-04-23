@@ -4,5 +4,6 @@ import { asyncComponentLoader } from '../../../../../../lib/gj-lib-client/utils/
 export const routeDiscoverChannelsViewDevlogs: VueRouter.RouteConfig = {
 	name: 'discover.channels.view.devlogs',
 	path: 'devlogs/:section?',
+	props: true,
 	component: () => asyncComponentLoader( $import( './devlogs' ) ),
 };

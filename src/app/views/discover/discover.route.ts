@@ -7,6 +7,7 @@ import { routeDiscoverChannels } from './channels/channels.route';
 
 export const routeDiscover: VueRouter.RouteConfig = {
 	path: '/',
+	props: true,
 	component: RouteDiscover,
 	children: [
 		routeDiscoverHome,

@@ -8,6 +8,7 @@ const name = 'forums.channels.view';
 export const routeForumsChannelsView: VueRouter.RouteConfig = {
 	name: 'forums.channels.view',
 	path: '/f/:name',
+	props: true,
 	component: () => asyncComponentLoader( $import( './view' ) ),
 	children: [
 		{ path: `${ path }2`, redirect: { name, params: { name: 'gj-feedback' } } },

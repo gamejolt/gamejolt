@@ -4,5 +4,6 @@ import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/uti
 export const routeDiscoverDevlogsOverview: VueRouter.RouteConfig = {
 	name: 'discover.devlogs.overview',
 	path: '/devlogs',
+	props: true,
 	component: () => asyncComponentLoader( $import( './overview' ) ),
 };

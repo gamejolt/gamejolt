@@ -5,6 +5,7 @@ import RouteDiscoverGames from './games';
 
 export const routeDiscoverGames: VueRouter.RouteConfig = {
 	path: 'games',
+	props: true,
 	component: RouteDiscoverGames,
 	children: [
 		routeDiscoverGamesListSection,

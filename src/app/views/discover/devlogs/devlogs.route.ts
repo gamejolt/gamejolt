@@ -6,6 +6,7 @@ import { routeDiscoverDevlogsGames } from './games/games.route';
 export const routeDiscoverDevlogs: VueRouter.RouteConfig = {
 	name: 'discover.devlogs',
 	path: '/devlogs',
+	props: true,
 	component: () => asyncComponentLoader( $import( './devlogs' ) ),
 	children: [
 		routeDiscoverDevlogsOverview,

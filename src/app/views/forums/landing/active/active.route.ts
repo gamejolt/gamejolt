@@ -4,5 +4,6 @@ import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/uti
 export const routeForumsLandingActive: VueRouter.RouteConfig = {
 	name: 'forums.landing.active',
 	path: 'active',
+	props: true,
 	component: () => asyncComponentLoader( $import( './active' ) ),
 };

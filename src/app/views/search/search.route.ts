@@ -8,6 +8,7 @@ import { routeSearchUsers } from './users/users.route';
 export const routeSearch: VueRouter.RouteConfig = {
 	name: 'search',
 	path: '/search',
+	props: true,
 	component: () => asyncComponentLoader( $import( './search' ) ),
 	children: [
 		routeSearchResults,

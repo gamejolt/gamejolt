@@ -9,6 +9,7 @@ import { routeLandingClient } from './client/client.route';
 
 export const routeLanding: VueRouter.RouteConfig = {
 	path: '',
+	props: true,
 	component: RouteLanding,
 	children: [
 		routeLandingClient,
