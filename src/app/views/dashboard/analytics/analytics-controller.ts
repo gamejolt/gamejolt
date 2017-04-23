@@ -159,7 +159,8 @@ export class AnalyticsCtrl
 
 		// If any of the parameters changed, refresh the state.
 		if (
-			this.viewAs != $stateParams['viewAs']
+			(!$stateParams['viewAs'] && this.viewAs != this.appUserId)
+			|| ($stateParams['viewAs'] && this.viewAs != $stateParams['viewAs'])
 			|| this.period != $stateParams['period']
 			|| this.metric.key != $stateParams['metricKey']
 			|| this.resource != $stateParams['resource']
