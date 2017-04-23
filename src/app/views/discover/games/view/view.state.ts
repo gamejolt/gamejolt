@@ -117,10 +117,11 @@ export class RouteStore
 		return this.packagePayload.releases;
 	}
 
+	// TODO: Fix these errors when vuex-ts-decorators is fixed
 	get hasReleasesSection()
 	{
 		// The releases section exists if there are releases or songs.
-		return this.releases.length || this.songs.length;
+		return this.packages().length > 0 || this.songs.length > 0;
 	}
 
 	@action
@@ -237,6 +238,7 @@ export class RouteStore
 
 		// This may have been bootstrapped from cache in the `bootstrapFeed`
 		// mutation. If there was no cached feed, then we'll generate a new one.
+		// Also regenerate if the game changed.
 		if ( !this.feed ) {
 			this.feed = ActivityFeedService.bootstrap(
 				FiresidePost.populate( payload.posts ),

@@ -1,0 +1,35 @@
+<div>
+
+	<app-page-header
+		:hide-nav="true"
+		>
+
+		<h1>
+			<translate>Channels</translate>
+		</h1>
+
+		<p class="small text-muted">
+			<translate>Channels are like mini Game Jolts. Find and discover games around specific interests.</translate>
+		</p>
+
+	</app-page-header>
+
+	<section class="section">
+		<div class="container">
+
+			<div class="row">
+				<div class="col-xs-6 col-sm-3 col-md-2"
+					v-for="channel of channels"
+					>
+					{{ channel }}
+					<app-channel-thumbnail
+						:channel="channel"
+						:games-count="gameCounts[ channel ]"
+						/>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+</div>

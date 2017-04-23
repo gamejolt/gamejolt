@@ -16,6 +16,7 @@ import { AppGameFilteringWidget } from '../filtering/widget';
 import { AppGameFilteringTags } from '../filtering/tags';
 import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
 import { AppGameGridPlaceholder } from '../grid/placeholder/placeholder';
+import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 
 @View
 @Component({
@@ -27,6 +28,7 @@ import { AppGameGridPlaceholder } from '../grid/placeholder/placeholder';
 		AppGameFilteringInput,
 		AppGameFilteringTags,
 		AppGameGridPlaceholder,
+		AppNavTabList,
 	},
 	directives: {
 		AppTrackEvent,

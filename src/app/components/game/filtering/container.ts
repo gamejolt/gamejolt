@@ -318,6 +318,9 @@ export class GameFilteringContainer
 		if ( route.params.section ) {
 			queryPieces.push( 'section=' + route.params.section );
 		}
+		else {
+			queryPieces.push( 'section=hot' );
+		}
 
 		if ( route.query.sort ) {
 			queryPieces.push( 'sort=' + route.query.sort );

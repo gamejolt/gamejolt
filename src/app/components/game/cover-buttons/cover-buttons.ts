@@ -25,7 +25,6 @@ export class AppGameCoverButtons extends Vue
 	@Prop( Array ) installableBuilds: GameBuild[];
 	@Prop( Array ) browserBuilds: GameBuild[];
 
-	// TODO
 	// isGamePatching = undefined;
 	// hasLocalPackage = false;
 

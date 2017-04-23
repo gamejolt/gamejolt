@@ -108,7 +108,10 @@
 					<li v-for="channel of channels" :key="channel">
 						<router-link
 							class="no-icon"
-							:to="{ name: 'discover.channels.channel.overview', params: { channel, channel } }"
+							:to="{
+								name: 'discover.channels.view.overview',
+								params: { channel },
+							}"
 							v-app-track-event="`sidebar:channels`"
 							>
 							#{{ channel }}
@@ -341,10 +344,9 @@
 				</li>
 
 				<li class="offline-disable">
-					<!--TODO-->
-					<!--:class="{ active: $state.includes( 'dashboard' ) && !$state.includes( 'dashboard.activity' ) }"-->
 					<router-link
 						:to="{ name: 'dashboard.main.overview' }"
+						:class="{ active: $route.name.indexOf( 'dasboard' ) === 0 && $route.name.indexOf( 'dashboard.activity' ) === -1 }"
 						v-app-track-event="`sidebar:dashboard`"
 						>
 						<span class="shell-nav-icon"

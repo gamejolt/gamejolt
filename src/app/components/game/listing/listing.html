@@ -14,14 +14,6 @@
 
 			<app-game-filtering-tags :filtering="listing.filteringContainer" />
 
-			<!--
-				On mobile we show the filtering input above.
-			-->
-			<app-game-filtering-input
-				v-if="Screen.isSm || (Screen.isXs && listing.filteringContainer.filters.query)"
-				:filtering="listing.filteringContainer"
-				/>
-
 		</div>
 	</div>
 
@@ -31,70 +23,52 @@
 	<section class="section">
 		<div class="container-lg">
 
-			<div class="row">
-				<div class="col-sm-6 col-md-3">
+			<app-nav-tab-list v-if="!hideSectionNav">
+				<ul>
+					<li v-if="includeFeaturedSection">
+						<router-link
+							:to="{ name: $route.name, params: { section: 'featured' } }"
+							:class="{ active: $route.params.section === 'featured' }"
+							gj-no-auto-scroll
+							v-app-track-event="`game-list:section-selector:featured`"
+							>
+							<translate>games.list.sections_selector_featured</translate>
+						</router-link>
+					</li>
+					<li>
+						<router-link
+							:to="{ name: $route.name, params: { section: null } }"
+							:class="{ active: !$route.params.section }"
+							gj-no-auto-scroll
+							v-app-track-event="`game-list:section-selector:hot`"
+							>
+							<translate>games.list.sections_selector_hot</translate>
+						</router-link>
+					</li>
+					<li>
+						<router-link
+							:to="{ name: $route.name, params: { section: 'best' } }"
+							:class="{ active: $route.params.section === 'best' }"
+							gj-no-auto-scroll
+							v-app-track-event="`game-list:section-selector:best`"
+							>
+							<translate>games.list.sections_selector_best</translate>
+						</router-link>
+					</li>
+					<li>
+						<router-link
+							:to="{ name: $route.name, params: { section: 'new' } }"
+							:class="{ active: $route.params.section === 'new' }"
+							gj-no-auto-scroll
+							v-app-track-event="`game-list:section-selector:new`"
+							>
+							<translate>games.list.sections_selector_new</translate>
+						</router-link>
+					</li>
+				</ul>
 
-					<nav class="pills" :class="{ 'nav-justified': Screen.isXs }"
-						v-if="!hideSectionNav"
-						>
-						<ul>
-							<li v-if="includeFeaturedSection">
-								<router-link
-									:to="{ name: $route.name, params: { section: 'featured' } }"
-									:exact="true"
-									active-class="active"
-									gj-no-auto-scroll
-									v-app-track-event="`game-list:section-selector:featured`"
-									translate
-									>
-									<translate>games.list.sections_selector_featured</translate>
-								</router-link>
-							</li>
-							<li>
-								<router-link
-									:to="{ name: $route.name, params: { section: undefined } }"
-									:exact="true"
-									active-class="active"
-									gj-no-auto-scroll
-									v-app-track-event="`game-list:section-selector:hot`"
-									>
-									<translate>games.list.sections_selector_hot</translate>
-								</router-link>
-							</li>
-							<li>
-								<router-link
-									:to="{ name: $route.name, params: { section: 'best' } }"
-									:exact="true"
-									active-class="active"
-									gj-no-auto-scroll
-									v-app-track-event="`game-list:section-selector:best`"
-									>
-									<translate>games.list.sections_selector_best</translate>
-								</router-link>
-							</li>
-							<li>
-								<router-link
-									:to="{ name: $route.name, params: { section: 'new' } }"
-									:exact="true"
-									active-class="active"
-									gj-no-auto-scroll
-									v-app-track-event="`game-list:section-selector:new`"
-									>
-									<translate>games.list.sections_selector_new</translate>
-								</router-link>
-							</li>
-						</ul>
-					</nav>
-
-				</div>
-				<div
-					:class="{
-						'col-sm-6 col-md-5': !hideFilters,
-						'col-sm-6 col-md-9': hideFilters,
-					}"
-					>
-
-					<p class="text-muted small"
+				<div slot="meta">
+					<div
 						v-if="listing.isBootstrapped"
 						:class="{ 'text-right': !Screen.isXs }"
 						>
@@ -111,15 +85,16 @@
 							>
 							%{ count } game.
 						</translate>
-					</p>
-
+					</div>
 				</div>
-				<div class="col-md-4 visible-md visible-lg" v-if="!hideFilters">
 
-					<app-game-filtering-input :filtering="listing.filteringContainer" />
+				<app-game-filtering-input
+					v-if="!hideFilters"
+					slot="input"
+					:filtering="listing.filteringContainer"
+					/>
 
-				</div>
-			</div>
+			</app-nav-tab-list>
 
 			<div v-if="listing.isBootstrapped">
 				<div v-if="listing.gamesCount">

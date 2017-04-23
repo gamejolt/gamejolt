@@ -22,7 +22,7 @@ export default class RouteDiscoverDevlogsGames extends Vue
 	listing: GameListingContainer | null = null;
 
 	@BeforeRouteEnter( { cache: true } )
-	async routeEnter( this: undefined, route: VueRouter.Route )
+	routeEnter( this: undefined, route: VueRouter.Route )
 	{
 		const filteringContainer = new GameFilteringContainer();
 		return Api.sendRequest( '/web/discover/devlogs/games?' + filteringContainer.getQueryString( route ) );

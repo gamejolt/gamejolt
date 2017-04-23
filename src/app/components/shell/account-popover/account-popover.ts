@@ -49,7 +49,6 @@ export class AppShellAccountPopover extends Vue
 	created()
 	{
 		if ( GJ_IS_CLIENT ) {
-			// TODO
 			// this.Client = getProvider<any>( 'Client' );
 		}
 	}

@@ -4,5 +4,6 @@ import { asyncComponentLoader } from '../../../../../../../lib/gj-lib-client/uti
 export const routeDiscoverGamesViewScoresList: VueRouter.RouteConfig = {
 	name: 'discover.games.view.scores.list',
 	path: 'scores/:tableId(\\d+)/:type',
+	props: true,
 	component: () => asyncComponentLoader( $import( './list' ) ),
 };

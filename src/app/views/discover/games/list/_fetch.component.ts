@@ -10,8 +10,8 @@
 // const BadgeImageMap: any = {
 // 	'featured': require( '../../../../img/categories/featured.png' ),
 // 	'best': require( '../../../../img/categories/best.png' ),
-// 	'fresh': require( '../../../../img/categories/best.png' ),  // TODO: Needs different image.
-// 	'hot': require( '../../../../img/categories/best.png' ),  // TODO: Needs different image.
+// 	'fresh': require( '../../../../img/categories/best.png' ),
+// 	'hot': require( '../../../../img/categories/best.png' ),
 // 	'new': require( '../../../../img/categories/new.png' ),
 // 	'arcade': require( '../../../../img/categories/arcade.png' ),
 // 	'action': require( '../../../../img/categories/action.png' ),

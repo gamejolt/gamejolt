@@ -1,8 +1,8 @@
 <app-game-listing
 	v-if="listing"
 	:listing="listing"
-	:hide-filters="true"
+	:show-ads="shouldShowAds"
 	:is-loading="routeLoading"
 	>
-	<app-game-grid :games="listing.games" event-label="devlogs-games" />
+	<app-game-grid :games="listing.games" event-label="channel-games" />
 </app-game-listing>

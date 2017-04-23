@@ -1,0 +1,74 @@
+<div>
+
+	<app-page-header
+		:should-affix-nav="true"
+		:spotlight-dark="true"
+		>
+
+		<h1>
+			<translate :translate-params="{ channel }">
+				#%{ channel } Channel
+			</translate>
+		</h1>
+
+		<div class="small text-muted">
+			{{ Meta.description }}
+		</div>
+		<br>
+
+		<div>
+			<translate
+				:translate-n="totalGamesCount"
+				:translate-params="{ count: number( totalGamesCount ) }"
+				translate-plural="<b>%{ count }</b> Games"
+				:escape-html="false"
+				>
+				<b>1</b> Game
+			</translate>
+		</div>
+
+		<img
+			slot="spotlight"
+			:src="Channels.images[ channel ]"
+			width="58"
+			height="58"
+			alt=""
+			>
+
+		<nav slot="nav" class="platform-list inline">
+			<ul>
+				<li>
+					<router-link
+						:to="{ name: 'discover.channels.view.overview' }"
+						:class="{ active: $route.name === 'discover.channels.view.overview' }"
+						>
+						<translate>Overview</translate>
+					</router-link>
+				</li>
+				<li>
+					<router-link
+						:to="{ name: 'discover.channels.view.games' }"
+						active-class="active"
+						>
+						<translate>Games</translate>
+					</router-link>
+				</li>
+				<li>
+					<router-link
+						:to="{ name: 'discover.channels.view.devlogs' }"
+						active-class="active"
+						>
+						<translate>Devlogs</translate>
+					</router-link>
+				</li>
+			</ul>
+		</nav>
+
+	</app-page-header>
+
+	<router-view
+		:channel="channel"
+		:should-show-ads="shouldShowAds"
+		/>
+
+</div>

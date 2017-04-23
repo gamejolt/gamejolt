@@ -103,6 +103,7 @@
 	</section>
 
 	<app-game-listing
+		v-if="listing"
 		:listing="listing"
 		:include-featured-section="true"
 		:hide-section-nav="section === 'by-date'"

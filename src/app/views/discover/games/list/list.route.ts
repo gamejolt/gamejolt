@@ -7,14 +7,14 @@ const DateRegex = '\\d{4}\\-\\d{2}\\-\\d{2}';
 
 export const routeDiscoverGamesListSection: VueRouter.RouteConfig = {
 	name: 'discover.games.list._fetch',
-	path: `:section(${SectionRegex})`,
+	path: `:section(${SectionRegex})?`,
 	props: true,
 	component: () => asyncComponentLoader( $import( './list' ) ),
 };
 
 export const routeDiscoverGamesListCategory: VueRouter.RouteConfig = {
 	name: 'discover.games.list._fetch-category',
-	path: `:section(${SectionRegex})/:category(${CategoryRegex})`,
+	path: `:section(${SectionRegex})?/:category(${CategoryRegex})`,
 	props: true,
 	component: () => asyncComponentLoader( $import( './list' ) ),
 };

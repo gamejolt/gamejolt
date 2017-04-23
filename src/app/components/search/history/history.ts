@@ -43,9 +43,10 @@ export class AppSearchHistory extends Vue
 
 	go( query: string )
 	{
-		// TODO
-		// const $state = getProvider<StateService>( '$state' );
-		// $state.go( 'search.results', { q: query } );
+		this.$router.push( {
+			name: 'search.results',
+			query: { q: query },
+		} );
 		Popover.hideAll();
 	}
 

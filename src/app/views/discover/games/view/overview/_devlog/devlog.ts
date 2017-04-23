@@ -17,6 +17,7 @@ import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/co
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { RouteState, RouteGetter, RouteStore } from '../../view.state';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
+import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
 
 @View
 @Component({
@@ -29,6 +30,7 @@ import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/compo
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
 		AppGamePackageCard,
+		AppGameSoundtrackCard,
 	},
 	directives: {
 		AppTrackEvent,

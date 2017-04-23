@@ -272,12 +272,13 @@
 		>
 
 		<app-game-grid
+			v-if="listing"
 			:games="listing.games"
 			event="collection-game-list:click"
 			>
 
 			<template slot="thumbnail-controls" scope="props">
-				
+
 				<button class="btn btn-sparse"
 					v-if="type === 'playlist' && collection.isOwner"
 					v-app-tooltip="$gettext( `library.collection.thumbnail_control_playlist_tooltip` )"

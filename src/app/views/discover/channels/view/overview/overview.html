@@ -1,0 +1,134 @@
+<div>
+
+	<section class="section section-thin" v-if="shouldShowAds && !GJ_IS_CLIENT && !Screen.isXs">
+		<app-ad size="leaderboard" />
+	</section>
+
+	<!--
+		Best Games
+	-->
+	<section class="section">
+		<div class="container-lg">
+
+			<h1 class="section-header text-center">
+				<a class="link-unstyled"
+					ui-sref="discover.channels.view.games( { section: 'best' } )"
+					v-app-track-event="`channel:row-heading:best`"
+					>
+					<translate :translate-params="{ channel }">
+						Best #%{ channel }
+					</translate>
+				</a>
+			</h1>
+
+			<hr class="underbar underbar-center">
+
+			<app-game-grid-placeholder
+				v-if="!isLoaded"
+				:num="8"
+				:truncate-to-fit="true"
+				:scrollable="true"
+				/>
+
+			<app-game-grid
+				v-else
+				:games="bestGames"
+				:truncate-to-fit="true"
+				:scrollable="true"
+				event-label="channel-overview-best-games"
+				/>
+
+			<div class="text-center">
+				<a
+					class="btn btn-outline"
+					ui-sref="discover.channels.view.games( { section: 'best' } )"
+					v-app-track-event="`channel:more-btn:best`"
+					>
+					<translate>Load More</translate>
+				</a>
+			</div>
+
+		</div>
+	</section>
+
+	<!--
+		Hot Games
+	-->
+	<section class="section">
+		<div class="container-lg">
+
+			<h1 class="section-header text-center">
+				<a
+					class="link-unstyled"
+					ui-sref="discover.channels.view.games( { section: 'hot' } )"
+					v-app-track-event="`channel:row-heading:hot`"
+					>
+					<translate :translate-params="{ channel }">
+						Hot #%{ channel }
+					</translate>
+				</a>
+			</h1>
+
+			<hr class="underbar underbar-center">
+
+			<app-game-grid-placeholder
+				v-if="!isLoaded"
+				:num="8"
+				:truncate-to-fit="true"
+				:scrollable="true"
+				/>
+
+			<app-game-grid
+				v-else
+				:games="hotGames"
+				:truncate-to-fit="true"
+				:scrollable="true"
+				event-label="channel-overview-hot-games"
+				/>
+
+			<div class="text-center">
+				<a
+					class="btn btn-outline"
+					ui-sref="discover.channels.view.games( { section: 'hot' } )"
+					v-app-track-event="`channel:more-btn:hot`"
+					>
+					<translate>Load More</translate>
+				</a>
+			</div>
+
+		</div>
+	</section>
+
+	<!--
+		Feed
+	-->
+	<section class="section">
+		<div class="container">
+
+			<div class="row" v-if="feed">
+				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+
+					<h1 class="section-header text-center">
+						<translate>Hot Devlog Posts</translate>
+					</h1>
+
+					<hr class="underbar underbar-center">
+					<br>
+
+					<app-activity-feed
+						v-if="feed.hasItems"
+						:feed="feed"
+						:show-game-info="true"
+						/>
+
+					<div class="alert alert-info" v-if="!feed.hasItems">
+						<translate>This channel doesn't have any posts yet.</translate>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+</div>

@@ -13,9 +13,6 @@ export default class RouteEmpty extends Vue
 }
 
 export const routeFallbacks: VueRouter.RouteConfig[] = [
-	{ name: 'discover.channels.list', path: '/channels', component: RouteEmpty },
-	{ name: 'discover.channels.channel.overview', path: '/channel', component: RouteEmpty },
-
 	{ name: 'styleguide', path: '/styleguide', component: fallback },
 
 	{ path: '/dashboard', component: RouteEmpty, children: [
