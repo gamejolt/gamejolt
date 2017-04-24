@@ -8,9 +8,9 @@ import { Settings } from '../../settings/settings.service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { State } from 'vuex-class';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { AppGameOgrs } from '../ogrs/ogrs';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -22,7 +22,7 @@ export class AppGameMaturityBlock extends Vue
 {
 	@Prop( Game ) game: Game;
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	isLoaded = false;
 	isBlocking: boolean = Settings.get( 'restricted-browsing' );

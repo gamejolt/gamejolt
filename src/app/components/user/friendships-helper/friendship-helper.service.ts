@@ -119,7 +119,7 @@ export class UserFriendshipHelper
 
 	static async removeFriend( friendship: UserFriendship )
 	{
-		const them = friendship.getThem( appStore.state!.user! );
+		const them = friendship.getThem( appStore.state.user! );
 
 		const confirmResult = await ModalConfirm.show(
 			Translate.$gettextInterpolate(

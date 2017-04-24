@@ -6,7 +6,7 @@ import * as View from '!view!./user-box.html?style=./user-box.styl';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -22,5 +22,5 @@ import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-sto
 })
 export class AppShellUserBox extends Vue
 {
-	@State app: AppState;
+	@State app: Store['app'];
 }

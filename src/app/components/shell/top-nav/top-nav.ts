@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State, Getter, Mutation } from 'vuex-class';
+import { State, Getter, Action } from 'vuex-class';
 import * as View from '!view!./top-nav.html?style=./top-nav.styl';
 
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -16,8 +16,7 @@ import { AppFriendRequestPopover } from '../../friend/request-popover/request-po
 import { AppRouterLink } from '../../router-link/router-link';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppSearch } from '../../search/search';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Mutations } from '../../../store/index';
+import { Store } from '../../../store/index';
 import { ChatClient } from '../../chat/client';
 
 @View
@@ -38,12 +37,12 @@ import { ChatClient } from '../../chat/client';
 })
 export class AppShellTopNav extends Vue
 {
-	@State app: AppState;
+	@State app: Store['app'];
 	@State chat: ChatClient;
-	@State notificationCount: number;
+	@State notificationCount: Store['notificationCount'];
 
-	@Getter isLeftPaneVisible: boolean;
-	@Getter isRightPaneVisible: boolean;
+	@Getter isLeftPaneVisible: Store['isLeftPaneVisible'];
+	@Getter isRightPaneVisible: Store['isRightPaneVisible'];
 
 	friendRequestCount = 0;
 	friendRequestsShowing = false;
@@ -53,9 +52,6 @@ export class AppShellTopNav extends Vue
 	Screen = makeObservableService( Screen );
 	Connection = makeObservableService( Connection );
 
-	@Mutation( Mutations.toggleRightPane )
-	toggleRightPane: Function;
-
-	@Mutation( Mutations.toggleLeftPane )
-	toggleLeftPane: Function;
+	@Action toggleRightPane: Store['toggleRightPane'];
+	@Action toggleLeftPane: Store['toggleLeftPane'];
 }

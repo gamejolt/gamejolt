@@ -16,7 +16,7 @@ import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
 import { Registry } from '../lib/gj-lib-client/components/registry/registry.service';
 import { GamePlayModal } from '../lib/gj-lib-client/components/game/play-modal/play-modal.service';
 
-Payload.init( store, router );
+Payload.init( store as any, router );
 History.init( router );
 
 if ( GJ_IS_CLIENT ) {
@@ -45,7 +45,7 @@ Vue.use( VueGettext, {
 } );
 
 const app = new Vue( {
-	store,
+	store: store as any,
 	router,
 	render: ( h ) => h( App ),
 } );

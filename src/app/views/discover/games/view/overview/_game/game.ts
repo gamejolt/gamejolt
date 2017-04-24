@@ -7,7 +7,6 @@ import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/m
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppTrackEvent } from '../../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppState } from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import { AppCard } from '../../../../../../../lib/gj-lib-client/components/card/card';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -32,6 +31,7 @@ import { RouteState, RouteMutation, RouteStore, RouteAction, RouteGetter } from 
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { AppScoreOverview } from '../../../../../../components/score/overview/overview';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
+import { Store } from '../../../../../../store/index';
 
 @View
 @Component({
@@ -93,7 +93,7 @@ export class AppDiscoverGamesViewOverviewGame extends Vue
 	@RouteMutation setCommentsCount: RouteStore['setCommentsCount'];
 	@RouteAction loadVideoComments: RouteStore['loadVideoComments'];
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	showFullDescription = false;
 	canToggleDescription = false;

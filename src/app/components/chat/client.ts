@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 
-import { store, Mutations } from '../../store/index';
+import { store } from '../../store/index';
 import { ChatUser } from './user';
 import { ChatUserCollection } from './user-collection';
 import { ChatRoom } from './room';
@@ -284,7 +284,7 @@ export class ChatClient extends Vue
 
 			// If we opened this room in this session explicitly, make sure the right pane is visible.
 			if ( isSource && !store.getters.isRightPaneVisible ) {
-				store.commit( Mutations.toggleRightPane );
+				store.dispatch( 'toggleRightPane' );
 			}
 		}
 	}

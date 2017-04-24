@@ -5,7 +5,6 @@ import * as View from '!view!./marketplace.html';
 
 import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
@@ -14,6 +13,7 @@ import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
 import { AppGameThumbnail } from '../../../components/game/thumbnail/thumbnail';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -27,7 +27,7 @@ import { AppGameThumbnail } from '../../../components/game/thumbnail/thumbnail';
 })
 export default class RouteLandingMarketplace extends Vue
 {
-	@State app: AppState;
+	@State app: Store['app'];
 
 	firesidePosts: FiresidePost[] = [];
 	games: Game[] = [];

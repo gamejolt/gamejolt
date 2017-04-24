@@ -12,7 +12,7 @@ import { AppPageHeader } from '../../../components/page-header/page-header';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppGameCollectionList } from '../../../components/game/collection/list/list';
 import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
-import { LibraryState } from '../../../store/library';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -25,8 +25,8 @@ import { LibraryState } from '../../../store/library';
 })
 export default class RouteLibraryOverview extends Vue
 {
-	@State library: LibraryState;
-	@State isBootstrapped: boolean;
+	@State library: Store['library'];
+	@State isBootstrapped: Store['isBootstrapped'];
 
 	Connection = makeObservableService( Connection );
 	Screen = makeObservableService( Screen );

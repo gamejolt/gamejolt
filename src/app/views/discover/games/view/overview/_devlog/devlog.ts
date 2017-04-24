@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./devlog.html?style=./devlog.styl';
 
-import { AppState } from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -18,6 +17,7 @@ import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/co
 import { RouteState, RouteGetter, RouteStore } from '../../view.state';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
+import { Store } from '../../../../../../store/index';
 
 @View
 @Component({
@@ -48,7 +48,7 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue
 	@RouteGetter packages: RouteStore['packages'];
 	@RouteGetter hasReleasesSection: RouteStore['hasReleasesSection'];
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	showFullDescription = false;
 	canToggleDescription = false;

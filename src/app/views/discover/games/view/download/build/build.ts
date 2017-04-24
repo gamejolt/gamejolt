@@ -13,7 +13,6 @@ import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
-import { AppState } from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppGameThumbnail } from '../../../../../../components/game/thumbnail/thumbnail';
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
@@ -22,6 +21,7 @@ import { Environment } from '../../../../../../../lib/gj-lib-client/components/e
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { RouteState, RouteStore } from '../../view.state';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
+import { Store } from '../../../../../../store/index';
 
 const DownloadDelay = 5000;
 
@@ -41,7 +41,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends Vue
 	@RouteState game: RouteStore['game'];
 	@RouteState userRating: RouteStore['userRating'];
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	src: string | null = null;
 	build: GameBuild = null as any;

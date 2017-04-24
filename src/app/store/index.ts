@@ -1,7 +1,5 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-
-import { appStore } from '../../lib/gj-lib-client/vue/services/app/app-store';
+import { VuexStore, VuexModule, VuexAction, VuexMutation } from '../../lib/gj-lib-client/utils/vuex';
+import { AppStore, Mutations as AppMutations, appStore } from '../../lib/gj-lib-client/vue/services/app/app-store';
 import { Settings } from '../components/settings/settings.service';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
@@ -13,235 +11,293 @@ import { router } from '../bootstrap';
 import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
 import { LibraryState } from './library';
-import { User } from '../../lib/gj-lib-client/components/user/user.model';
 import { ChatClient } from '../components/chat/client';
 
-Vue.use( Vuex );
-
-export const Mutations = {
-	clear: 'clear',
-
-	toggleLeftPane: 'toggleLeftPane',
-	toggleRightPane: 'toggleRightPane',
-	clearPanes: 'clearPanes',
-	showBackdrop: 'showBackdrop',
-	removeBackdrop: 'removeBackdrop',
-
-	clearChat: 'clearChat',
-
-	setNotificationCount: 'setNotificationCount',
+export type Actions = {
+	bootstrap: undefined;
+	logout: undefined;
+	clear: undefined;
+	loadChat: undefined;
+	clearChat: undefined;
+	toggleLeftPane: undefined;
+	toggleRightPane: undefined;
+	clearPanes: undefined;
+	_checkBackdrop: undefined;
 };
 
-export const Actions = {
-	bootstrap: 'bootstrap',
-	loadChat: 'loadChat',
-	logout: 'logout',
-	checkBackdrop: 'checkBackdrop',
+export type Mutations = AppMutations & {
+	setNotificationsCount: number;
+	_setBootstrapped: undefined;
+	_clear: undefined;
+	_setChat: ChatClient;
+	_clearChat: undefined;
+	_toggleLeftPane: undefined;
+	_toggleRightPane: undefined;
+	_clearPanes: undefined;
+	_addBackdrop: undefined;
+	_removeBackdrop: undefined;
 };
 
-export class StoreState
+@VuexModule({
+	store: true,
+	modules: {
+		app: appStore,
+	},
+})
+export class Store extends VuexStore<Store, Actions, Mutations>
 {
+	app: AppStore;
+
 	library = new LibraryState();
 	chat: ChatClient | null = null;
 
 	isBootstrapped = false;
+	_bootstrappedResolver: Function | null = null;
 	bootstrappedPromise =
 		new Promise( ( resolve ) => this._bootstrappedResolver = resolve );
-	_bootstrappedResolver: Function;
 
 	notificationCount = 0;
 
 	isLeftPaneSticky = Settings.get( 'sidebar' ) as boolean;
 	isLeftPaneOverlayed = false;
 	isRightPaneOverlayed = false;
-	backdrop?: AppBackdrop;
+	backdrop: AppBackdrop | null = null;
+
+	get isLeftPaneVisible()
+	{
+		if ( Screen.isDesktop ) {
+			return this.isLeftPaneSticky;
+		}
+
+		return this.isLeftPaneOverlayed;
+	}
+
+	get isRightPaneVisible()
+	{
+		return this.isRightPaneOverlayed;
+	}
+
+	get shouldShowLeftPaneBackdrop()
+	{
+		return this.isLeftPaneOverlayed && Screen.isMobile;
+	}
+
+	@VuexAction
+	async bootstrap()
+	{
+		const prevResolver = this._bootstrappedResolver;
+		const response = await Api.sendRequest( '/web/library' );
+
+		// If we failed to finish before we unbootstrapped, then stop.
+		if ( this._bootstrappedResolver !== prevResolver ) {
+			return;
+		}
+
+		this.library.bootstrap( response );
+
+		this._setBootstrapped();
+		// this.commit( '_setBootstrapped' );
+
+		BroadcastModal.check();
+	}
+
+	@VuexAction
+	async logout()
+	{
+		const result = await ModalConfirm.show(
+			Translate.$gettext( 'Are you seriously going to leave us?' ),
+			Translate.$gettext( 'Logout?' ),
+			'yes',
+		);
+
+		if ( !result ) {
+			return;
+		}
+
+		// Must send POST.
+		// This should clear out the user as well.
+		await Api.sendRequest( '/web/dash/account/logout', {} );
+
+		// We go to the homepage currently just in case they're in a view they shouldn't be.
+		router.push( { name: 'discover.home' } );
+
+		Growls.success(
+			Translate.$gettext( 'You are now logged out.' ),
+			Translate.$gettext( 'Goodbye!' ),
+		);
+	}
+
+	@VuexAction
+	async clear()
+	{
+		this._clear();
+		// this.commit( '_clear' );
+		this.library.clear();
+	}
+
+	@VuexAction
+	async loadChat()
+	{
+		const mod = await $import( '../components/chat/client' );
+		const chatClientModel: typeof ChatClient = mod.ChatClient;
+		this._setChat( new chatClientModel() );
+		// this.commit( '_setChat', new chatClientModel() );
+	}
+
+	@VuexAction
+	async clearChat()
+	{
+		// Log out of chat. This will notify other tabs to disconnect from the server too.
+		if ( this.chat ) {
+			this.chat.logout();
+		}
+
+		this._clearChat();
+	}
+
+	@VuexAction
+	async toggleLeftPane()
+	{
+		this._toggleLeftPane();
+		this._checkBackdrop();
+		Settings.set( 'sidebar', this.isLeftPaneSticky );
+	}
+
+	@VuexAction
+	async toggleRightPane()
+	{
+		this._toggleRightPane();
+		this._checkBackdrop();
+	}
+
+	@VuexAction
+	async clearPanes()
+	{
+		this._clearPanes();
+		this._checkBackdrop();
+	}
+
+	@VuexAction
+	async _checkBackdrop()
+	{
+		// Ensure we have a backdrop if anything is overlayed.
+		// Otherwise ensure the backdrop is gone.
+		if ( this.isRightPaneOverlayed || this.shouldShowLeftPaneBackdrop ) {
+			if ( this.backdrop ) {
+				return;
+			}
+
+			this._addBackdrop();
+			this.backdrop!.$on( 'clicked', () =>
+			{
+				this._clearPanes();
+				this._checkBackdrop();
+			} );
+		}
+		else if ( this.backdrop ) {
+			this._removeBackdrop();
+		}
+	}
+
+	@VuexMutation
+	setNotificationCount( count: Mutations['setNotificationsCount'] )
+	{
+		this.notificationCount = count;
+	}
+
+	@VuexMutation
+	_setBootstrapped()
+	{
+		this.isBootstrapped = true;
+		if ( this._bootstrappedResolver ) {
+			this._bootstrappedResolver();
+		}
+	}
+
+	@VuexMutation
+	_clear()
+	{
+		this.bootstrappedPromise =
+			new Promise( ( resolve ) => this._bootstrappedResolver = resolve );
+	}
+
+	@VuexMutation
+	_setChat( chat: Mutations['_setChat'] )
+	{
+		this.chat = chat;
+	}
+
+	@VuexMutation
+	_clearChat()
+	{
+		this.chat = null;
+	}
+
+	@VuexMutation
+	_toggleLeftPane()
+	{
+		if ( Screen.isDesktop ) {
+			this.isLeftPaneSticky = !this.isLeftPaneSticky;
+		}
+		else {
+			this.isLeftPaneOverlayed = !this.isLeftPaneOverlayed;
+		}
+
+		this.isRightPaneOverlayed = false;
+	}
+
+	@VuexMutation
+	_toggleRightPane()
+	{
+		this.isRightPaneOverlayed = !this.isRightPaneOverlayed;
+		this.isLeftPaneOverlayed = false;
+	}
+
+	@VuexMutation
+	_clearPanes()
+	{
+		this.isRightPaneOverlayed = false;
+		this.isLeftPaneOverlayed = false;
+	}
+
+	@VuexMutation
+	_addBackdrop()
+	{
+		if ( this.backdrop ) {
+			return;
+		}
+
+		this.backdrop = Backdrop.push( document.getElementById( 'shell-body' ) as HTMLElement );
+	}
+
+	@VuexMutation
+	_removeBackdrop()
+	{
+		if ( !this.backdrop ) {
+			return;
+		}
+
+		Backdrop.remove( this.backdrop );
+		this.backdrop = null;
+	}
 }
 
-export type Store = Vuex.Store<StoreState>;
-
-export const store = new Vuex.Store<StoreState>( {
-	state: new StoreState(),
-	modules: {
-		app: appStore,
-	},
-	getters: {
-		isLeftPaneVisible( state )
-		{
-			if ( Screen.isDesktop ) {
-				return state.isLeftPaneSticky;
-			}
-
-			return state.isLeftPaneOverlayed;
-		},
-
-		isRightPaneVisible( state )
-		{
-			return state.isRightPaneOverlayed;
-		},
-
-		shouldShowLeftPaneBackdrop( state )
-		{
-			return state.isLeftPaneOverlayed && Screen.isMobile;
-		},
-	},
-	mutations: {
-		[Mutations.clear]( state )
-		{
-			state.bootstrappedPromise =
-				new Promise( ( resolve ) => state._bootstrappedResolver = resolve );
-
-			state.library.clear();
-		},
-
-		[Mutations.toggleLeftPane]( state )
-		{
-			if ( Screen.isDesktop ) {
-				state.isLeftPaneSticky = !state.isLeftPaneSticky;
-			}
-			else {
-				state.isLeftPaneOverlayed = !state.isLeftPaneOverlayed;
-			}
-
-			state.isRightPaneOverlayed = false;
-			store.dispatch( Actions.checkBackdrop );
-			Settings.set( 'sidebar', state.isLeftPaneSticky );
-		},
-
-		[Mutations.toggleRightPane]( state )
-		{
-			state.isRightPaneOverlayed = !state.isRightPaneOverlayed;
-			state.isLeftPaneOverlayed = false;
-			store.dispatch( Actions.checkBackdrop );
-		},
-
-		[Mutations.clearPanes]( state )
-		{
-			state.isRightPaneOverlayed = false;
-			state.isLeftPaneOverlayed = false;
-			store.dispatch( Actions.checkBackdrop );
-		},
-
-		[Mutations.clearChat]( state )
-		{
-			// Log out of chat. This will notify other tabs to disconnect from the server too.
-			if ( state.chat ) {
-				state.chat.logout();
-			}
-
-			state.chat = null;
-		},
-
-		[Mutations.setNotificationCount]( state, count: number )
-		{
-			state.notificationCount = count;
-		},
-
-		[Mutations.showBackdrop]( state )
-		{
-			if ( state.backdrop ) {
-				return;
-			}
-
-			state.backdrop = Backdrop.push( document.getElementById( 'shell-body' ) as HTMLElement );
-			state.backdrop.$on( 'clicked', () =>
-			{
-				store.commit( Mutations.clearPanes );
-			} );
-		},
-
-		[Mutations.removeBackdrop]( state )
-		{
-			if ( !state.backdrop ) {
-				return;
-			}
-
-			Backdrop.remove( state.backdrop );
-			state.backdrop = undefined;
-		},
-	},
-	actions: {
-		async [Actions.bootstrap]( { state } )
-		{
-			const prevResolver = state._bootstrappedResolver;
-			const response = await Api.sendRequest( '/web/library' );
-
-			// If we failed to finish before we unbootstrapped, then stop.
-			if ( state._bootstrappedResolver !== prevResolver ) {
-				return;
-			}
-
-			state.library.bootstrap( response );
-
-			state.isBootstrapped = true;
-			state._bootstrappedResolver();
-
-			BroadcastModal.check();
-		},
-
-		async [Actions.loadChat]( { state } )
-		{
-			const mod = await $import( '../components/chat/client' );
-			const chatClientModel: typeof ChatClient = mod.ChatClient;
-			state.chat = new chatClientModel();
-		},
-
-		async [Actions.logout]()
-		{
-			const result = await ModalConfirm.show(
-				Translate.$gettext( 'Are you seriously going to leave us?' ),
-				Translate.$gettext( 'Logout?' ),
-				'yes',
-			);
-
-			if ( !result ) {
-				return;
-			}
-
-			// Must send POST.
-			// This should clear out the user as well.
-			await Api.sendRequest( '/web/dash/account/logout', {} );
-
-			// We go to the homepage currently just in case they're in a view they shouldn't be.
-			router.push( { name: 'discover.home' } );
-
-			Growls.success(
-				Translate.$gettext( 'You are now logged out.' ),
-				Translate.$gettext( 'Goodbye!' ),
-			);
-		},
-
-		[Actions.checkBackdrop]( { state } )
-		{
-			// Ensure we have a backdrop if anything is overlayed.
-			// Otherwise ensure the backdrop is gone.
-			if ( state.isRightPaneOverlayed || store.getters.shouldShowLeftPaneBackdrop ) {
-				if ( state.backdrop ) {
-					return;
-				}
-
-				store.commit( Mutations.showBackdrop );
-			}
-			else if ( state.backdrop ) {
-				store.commit( Mutations.removeBackdrop );
-			}
-		},
-	},
-} );
+export const store = new Store() as VuexStore<Store, Actions, Mutations>;
 
 // Bootstrap/clear the app when user changes.
 store.watch(
-	( state: any ) => state.app.user && state.app.user.id,
-	( userId?: number ) =>
+	( state ) => state.app.user && state.app.user.id,
+	( userId ) =>
 	{
 		const isLoggedIn = !!userId;
 
 		if ( isLoggedIn ) {
-			store.dispatch( Actions.bootstrap );
-			store.dispatch( Actions.loadChat );
+			store.dispatch( 'bootstrap' );
+			store.dispatch( 'loadChat' );
 		}
 		else {
-			store.commit( Mutations.clear );
-			store.commit( Mutations.clearChat );
+			store.dispatch( 'clear' );
+			store.dispatch( 'clearChat' );
 		}
 	},
 );

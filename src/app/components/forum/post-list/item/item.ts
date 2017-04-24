@@ -6,7 +6,6 @@ import * as View from '!view!./item.html?style=./item.styl';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppState } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Popover } from '../../../../../lib/gj-lib-client/components/popover/popover.service';
@@ -24,6 +23,7 @@ import { FormForumPost } from '../../../forms/forum/post/post';
 import { AppMessageThreadItem } from '../../../../../lib/gj-lib-client/components/message-thread/item/item';
 import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { Store } from '../../../../store/index';
 
 @View
 @Component({
@@ -52,7 +52,7 @@ export class AppForumPostListItem extends Vue
 	@Prop( Boolean ) isReply: boolean;
 	@Prop( Boolean ) showReplies: boolean;
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	isEditing = false;
 	isReplying = false;

@@ -17,7 +17,7 @@ import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service
 	beforeRouteEnter( _to, _from, next )
 	{
 		// Redirect right away if they are logged in.
-		if ( appStore.state && appStore.state.user ) {
+		if ( appStore.state.user ) {
 			Auth.redirectDashboard();
 			return next( false );
 		}

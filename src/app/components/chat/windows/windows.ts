@@ -5,6 +5,7 @@ import * as View from '!view!./windows.html?style=./windows.styl';
 
 import { AppChatWindow } from '../window/window';
 import { ChatClient } from '../client';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -15,5 +16,5 @@ import { ChatClient } from '../client';
 export class AppChatWindows extends Vue
 {
 	@State chat: ChatClient;
-	@Getter isRightPaneVisible: boolean;
+	@Getter isRightPaneVisible: Store['isRightPaneVisible'];
 }

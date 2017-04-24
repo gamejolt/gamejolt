@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State, Getter, Mutation } from 'vuex-class';
+import { State, Getter, Action } from 'vuex-class';
 import * as View from '!view!./sidebar.html?style=./sidebar.styl';
 
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -15,9 +15,7 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Mutations } from '../../../store/index';
-import { LibraryState } from '../../../store/library';
+import { Store } from '../../../store/index';
 import { AppShellSidebarCollectionList } from './collection-list';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 
@@ -42,15 +40,14 @@ import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expan
 })
 export class AppShellSidebar extends Vue
 {
-	@State app: AppState;
-	@State library: LibraryState;
-	@State isBootstrapped: boolean;
-	@State notificationCount: number;
+	@State app: Store['app'];
+	@State library: Store['library'];
+	@State isBootstrapped: Store['isBootstrapped'];
+	@State notificationCount: Store['notificationCount'];
 
-	@Getter isLeftPaneVisible: boolean;
+	@Getter isLeftPaneVisible: Store['isLeftPaneVisible'];
 
-	@Mutation( Mutations.toggleLeftPane )
-	toggleLeftPane: Function;
+	@Action toggleLeftPane: Store['toggleLeftPane'];
 
 	playlistFilterQuery = '';
 	openFolders: string[] = [];

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { State, Mutation } from 'vuex-class';
+import { State, Action } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./window.html?style=./window.styl';
 
@@ -15,7 +15,7 @@ import { AppChatWindowOutput } from './output/output';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { ChatClient } from '../client';
-import { Mutations } from '../../../store/index';
+import { Store } from '../../../store/index';
 import { ChatRoomDetailsModal } from '../room-details-modal/room-details-modal.service';
 
 @View
@@ -39,8 +39,7 @@ export class AppChatWindow extends Vue
 
 	@State chat: ChatClient;
 
-	@Mutation( Mutations.toggleRightPane )
-	toggleRightPane: Function;
+	@Action toggleRightPane: Store['toggleRightPane'];
 
 	isShowingUsers = false;
 

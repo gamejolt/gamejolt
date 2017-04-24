@@ -9,9 +9,9 @@ import { AppCard } from '../../../../lib/gj-lib-client/components/card/card';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
+import { Store } from '../../../store/index';
 
 const COUNT_INTERVAL = (5 * 60 * 1000);  // 5 minutes.
 const INITIAL_LAG = 3000;
@@ -33,7 +33,7 @@ type Tab = 'requests' | 'pending';
 })
 export class AppFriendRequestPopover extends Vue
 {
-	@State app: AppState;
+	@State app: Store['app'];
 
 	private isShown = false;
 	private isLoading = true;

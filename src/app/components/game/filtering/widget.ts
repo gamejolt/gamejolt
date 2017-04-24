@@ -4,13 +4,13 @@ import { State } from 'vuex-class';
 import * as View from '!view!./widget.html?style=./widget.styl';
 
 import { GameFilteringContainer } from './container';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -30,7 +30,7 @@ export class AppGameFilteringWidget extends Vue
 {
 	@Prop( Object ) filtering: GameFilteringContainer;
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	GameFilteringContainer = GameFilteringContainer;
 

@@ -7,7 +7,6 @@ import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
@@ -19,6 +18,7 @@ import { Environment } from '../../../../lib/gj-lib-client/components/environmen
 import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholder/placeholder';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
+import { Store } from '../../../store/index';
 
 interface DiscoverSection
 {
@@ -47,7 +47,7 @@ interface DiscoverSection
 })
 export default class RouteDiscoverHome extends Vue
 {
-	@State app: AppState;
+	@State app: Store['app'];
 
 	isLoaded = false;
 	chosenSection: DiscoverSection | null = null;

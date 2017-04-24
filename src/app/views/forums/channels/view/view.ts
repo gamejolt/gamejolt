@@ -9,7 +9,6 @@ import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { AppState } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppForumTopicList } from '../../../../components/forum/topic-list/topic-list';
@@ -19,6 +18,7 @@ import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Store } from '../../../../store/index';
 
 @View
 @Component({
@@ -35,7 +35,7 @@ import { Screen } from '../../../../../lib/gj-lib-client/components/screen/scree
 })
 export default class RouteForumsChannelsView extends Vue
 {
-	@State app: AppState;
+	@State app: Store['app'];
 
 	channel: ForumChannel | null = null;
 	topics: ForumTopic[] = [];

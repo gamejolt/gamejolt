@@ -58,7 +58,7 @@ export class GameCollection extends Model
 
 	get isOwner()
 	{
-		const user = appStore.state!.user;
+		const user = appStore.state.user;
 		return !!(user && this.owner && user.id === this.owner.id);
 	}
 

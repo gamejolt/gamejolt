@@ -10,7 +10,6 @@ import { Clipboard } from '../../../../../../lib/gj-lib-client/components/clipbo
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils/vue';
-import { AppState } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppTooltip } from '../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -25,6 +24,7 @@ import { AppFiresidePostLikeWidget } from '../../../../../../lib/gj-lib-client/c
 import { AppSocialTwitterShare } from '../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppCommentWidgetAdd } from '../../../../../../lib/gj-lib-client/components/comment/widget/add/add';
+import { Store } from '../../../../../store/index';
 
 @View
 @Component({
@@ -55,7 +55,7 @@ export class AppActivityFeedDevlogPostControls extends Vue
 	@Prop( Boolean ) requireTabs?: boolean;
 	@Prop( Boolean ) inModal?: boolean;
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	tab: 'comments' | 'likes' | null = null;
 	hasLoadedLikes = false;

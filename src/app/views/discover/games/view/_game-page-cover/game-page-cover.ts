@@ -11,13 +11,13 @@ import { date } from '../../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppGameOgrsTag } from '../../../../../components/game/ogrs/tag';
 import { AppGamePlaylistAddToPopover } from '../../../../../components/game-playlist/add-to-popover/add-to-popover';
 import { AppGameFollowWidget } from '../../../../../components/game/follow-widget/follow-widget';
-import { AppState } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppTooltip } from '../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppAuthRequired } from '../../../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { AppTrackEvent } from '../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppPopoverTrigger } from '../../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppMeter } from '../../../../../../lib/gj-lib-client/components/meter/meter';
+import { Store } from '../../../../../store/index';
 
 @View
 @Component({
@@ -44,7 +44,7 @@ export class AppGamePageCover extends Vue
 {
 	@Prop( Game ) game: Game;
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	coverMediaItem: MediaItem | null = null;
 

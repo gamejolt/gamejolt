@@ -15,7 +15,7 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { LibraryState } from '../../../store/library';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -32,7 +32,7 @@ export class AppGamePlaylistAddToPopover extends Vue
 {
 	@Prop( Game ) game: Game;
 
-	@State library: LibraryState;
+	@State library: Store['library'];
 
 	playlists: GamePlaylist[] = [];
 	playlistsWithGame: number[] = [];

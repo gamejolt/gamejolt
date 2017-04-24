@@ -1,6 +1,5 @@
-import { module, action, mutation } from 'vuex-ts-decorators';
 import { namespace, Action, Mutation, State, Getter } from 'vuex-class';
-import { VuexDispatch, VuexCommit } from '../../../../../lib/gj-lib-client/utils/vuex';
+import { VuexStore, VuexModule, VuexAction, VuexMutation } from '../../../../../lib/gj-lib-client/utils/vuex';
 
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GameScoreTable } from '../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
@@ -22,10 +21,11 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { router } from '../../../index';
 
-export const RouteState = namespace( 'route', State );
-export const RouteAction = namespace( 'route', Action );
-export const RouteMutation = namespace( 'route', Mutation );
-export const RouteGetter = namespace( 'route', Getter );
+export const RouteStoreNamespace = 'route';
+export const RouteState = namespace( RouteStoreNamespace, State );
+export const RouteAction = namespace( RouteStoreNamespace, Action );
+export const RouteMutation = namespace( RouteStoreNamespace, Mutation );
+export const RouteGetter = namespace( RouteStoreNamespace, Getter );
 
 type Actions = {
 	bootstrap: any,
@@ -45,14 +45,9 @@ type Mutations = {
 	showMultiplePackagesMessage: undefined;
 };
 
-@module({
-	namespaced: true,
-})
-export class RouteStore
+@VuexModule()
+export class RouteStore extends VuexStore<RouteStore, Actions, Mutations>
 {
-	dispatch: VuexDispatch<Actions>;
-	commit: VuexCommit<Mutations>;
-
 	isOverviewLoaded = false;
 
 	// We will bootstrap this right away, so it should always be set for use.
@@ -117,32 +112,31 @@ export class RouteStore
 		return this.packagePayload.releases;
 	}
 
-	// TODO: Fix these errors when vuex-ts-decorators is fixed
 	get hasReleasesSection()
 	{
 		// The releases section exists if there are releases or songs.
-		return this.packages().length > 0 || this.songs.length > 0;
+		return this.packages.length > 0 || this.songs.length > 0;
 	}
 
-	@action
+	@VuexAction
 	async bootstrap( payload: Actions['bootstrap'] )
 	{
-		this.commit( 'processPayload', payload );
-		this.commit( 'processRatingPayload', payload );
+		this.processPayload( payload );
+		this.processRatingPayload( payload );
 
 		if ( this.game.comments_enabled ) {
-			this.dispatch( 'loadCommentsCount' );
+			this.loadCommentsCount();
 		}
 	}
 
-	@action
+	@VuexAction
 	async loadCommentsCount()
 	{
 		const response = await Comment.fetch( 'Game', this.game.id, 1 );
-		this.commit( 'setCommentsCount', response.count || 0 );
+		this.setCommentsCount( response.count || 0 );
 	}
 
-	@action
+	@VuexAction
 	async loadVideoComments()
 	{
 		++this.videoCommentsPage;
@@ -152,13 +146,10 @@ export class RouteStore
 			+ '?page=' + this.videoCommentsPage
 		);
 
-		this.commit(
-			'pushVideoComments',
-			CommentVideo.populate( response.videos ),
-		);
+		this.pushVideoComments( CommentVideo.populate( response.videos ) );
 	}
 
-	@action
+	@VuexAction
 	async refreshRatingInfo()
 	{
 		const response = await Api.sendRequest(
@@ -167,23 +158,23 @@ export class RouteStore
 			{ detach: true },
 		);
 
-		this.commit( 'processRatingPayload', response );
+		this.processRatingPayload( response );
 	}
 
-	@mutation
+	@VuexMutation
 	bootstrapGame( gameId: Mutations['bootstrapGame'] )
 	{
 		this.game = Registry.find<Game>( 'Game', gameId ) as any;
 	}
 
-	@mutation
+	@VuexMutation
 	bootstrapFeed()
 	{
 		// Try pulling feed from cache.
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	@mutation
+	@VuexMutation
 	processPayload( payload: Mutations['processPayload'] )
 	{
 		// Load in the full data that we have for the game.
@@ -215,7 +206,7 @@ export class RouteStore
 		}
 	}
 
-	@mutation
+	@VuexMutation
 	processOverviewPayload( payload: Mutations['processOverviewPayload'] )
 	{
 		this.isOverviewLoaded = true;
@@ -285,7 +276,7 @@ export class RouteStore
 		] );
 	}
 
-	@mutation
+	@VuexMutation
 	processRatingPayload( payload: Mutations['processRatingPayload'] )
 	{
 		this.userRating = payload.userRating ? new GameRating( payload.userRating ) : null;
@@ -294,19 +285,19 @@ export class RouteStore
 		this.game.avg_rating = payload.game.avg_rating;
 	}
 
-	@mutation
+	@VuexMutation
 	setCommentsCount( count: Mutations['setCommentsCount'] )
 	{
 		this.commentsCount = count;
 	}
 
-	@mutation
+	@VuexMutation
 	pushVideoComments( videos: Mutations['pushVideoComments'] )
 	{
 		this.videoComments = this.videoComments.concat( videos );
 	}
 
-	@mutation
+	@VuexMutation
 	showMultiplePackagesMessage()
 	{
 		this.shouldShowMultiplePackagesMessage = true;

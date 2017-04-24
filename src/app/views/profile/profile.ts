@@ -6,7 +6,6 @@ import * as View from '!view!./profile.html?style=./profile.styl';
 
 import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
-import { AppState } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 import { BeforeRouteEnter } from '../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
@@ -21,6 +20,7 @@ import { Environment } from '../../../lib/gj-lib-client/components/environment/e
 import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 import { ReportModal } from '../../../lib/gj-lib-client/components/report/modal/modal.service';
+import { Store } from '../../store/index';
 
 @View
 @Component({
@@ -41,7 +41,7 @@ export default class RouteProfile extends Vue
 {
 	@Prop( String ) username: string;
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	user: User | null = null;
 	headerMediaItem: MediaItem | null = null;

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State, Getter, Mutation } from 'vuex-class';
+import { State, Getter, Action } from 'vuex-class';
 import * as View from '!view!./shell.html';
 import './shell.styl';
 
@@ -14,9 +14,7 @@ import { AppGrowls } from '../../../lib/gj-lib-client/components/growls/growls';
 import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
 import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar/bar';
 import { EventBus } from '../../../lib/gj-lib-client/components/event-bus/event-bus.service';
-import { Mutations } from '../../store/index';
-import { AppState } from '../../../lib/gj-lib-client/vue/services/app/app-store';
-import { ChatClient } from '../chat/client';
+import { Store } from '../../store/index';
 import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
 
 @View
@@ -37,18 +35,18 @@ import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
 })
 export class AppShell extends Vue
 {
-	@State app: AppState;
-	@State chat: ChatClient | null;
+	@State app: Store['app'];
+	@State chat: Store['chat'];
 
-	@Getter isLeftPaneVisible: boolean;
-	@Getter isRightPaneVisible: boolean;
+	@Getter isLeftPaneVisible: Store['isLeftPaneVisible'];
+	@Getter isRightPaneVisible: Store['isRightPaneVisible'];
 
-	@Mutation( Mutations.clearPanes )
-	clearPanes: Function;
+	@Action clearPanes: Store['clearPanes'];
 
 	mounted()
 	{
 		// When changing routes, hide all overlays.
+		console.log( this.clearPanes );
 		EventBus.on( 'routeChangeBefore', () => this.clearPanes() );
 	}
 }

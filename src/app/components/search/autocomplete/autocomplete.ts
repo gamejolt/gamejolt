@@ -20,7 +20,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { AppGameCompatIcons } from '../../game/compat-icons/compat-icons';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -51,7 +51,7 @@ interface Command
 })
 export class AppSearchAutocomplete extends Vue
 {
-	@State app: AppState;
+	@State app: AppStore;
 	mode: 'search' | 'command' = 'search';
 
 	selected = 0;

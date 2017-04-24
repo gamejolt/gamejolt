@@ -9,7 +9,6 @@ import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router'
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppState } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
@@ -28,9 +27,9 @@ import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scrol
 import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { AppMeter } from '../../../../../lib/gj-lib-client/components/meter/meter';
-import { store } from '../../../../bootstrap';
 import { RouteState, RouteAction, RouteStore, RouteMutation, RouteGetter } from './view.state';
 import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
+import { Store } from '../../../../store/index';
 
 @View
 @Component({
@@ -64,7 +63,7 @@ export default class RouteDiscoverGamesView extends Vue
 	@RouteMutation bootstrapGame: RouteStore['bootstrapGame'];
 	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	date = date;
 	Screen = makeObservableService( Screen );
@@ -104,7 +103,7 @@ export default class RouteDiscoverGamesView extends Vue
 
 	created()
 	{
-		store.registerModule( 'route', new RouteStore() );
+		this.$store.registerModule( 'route', new RouteStore() );
 		this.bootstrapGame( parseInt( this.id, 10 ) );
 
 		// Any game rating change will broadcast this event.

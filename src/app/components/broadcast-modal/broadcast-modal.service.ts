@@ -11,12 +11,12 @@ export class BroadcastModal
 {
 	private static _key()
 	{
-		return STORAGE_KEY_PREFIX + appStore.state!.user!.id;
+		return STORAGE_KEY_PREFIX + appStore.state.user!.id;
 	}
 
 	static async check()
 	{
-		const user = appStore.state!.user;
+		const user = appStore.state.user;
 		if ( !user || !Settings.get( 'broadcast-modal' ) ) {
 			return;
 		}

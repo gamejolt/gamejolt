@@ -8,13 +8,13 @@ import { GameTrophy } from '../../../../../../../lib/gj-lib-client/components/ga
 import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { UserGameTrophy } from '../../../../../../../lib/gj-lib-client/components/user/game-trophy/game-trophy.model';
-import { AppState } from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppTrophyCompletion } from '../../../../../../components/trophy/completion/completion';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppTrophyList } from '../../../../../../components/trophy/list/list';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { RouteState, RouteStore } from '../../view.state';
+import { Store } from '../../../../../../store/index';
 
 @View
 @Component({
@@ -31,7 +31,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends Vue
 {
 	@RouteState game: RouteStore['game'];
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	trophies: GameTrophy[] = [];
 	achieved: UserGameTrophy[] = [];

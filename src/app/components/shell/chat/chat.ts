@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import { Mutation, Getter, State } from 'vuex-class';
+import { Getter, State, Action } from 'vuex-class';
 import * as View from '!view!./chat.html';
 
 import { AppChatBubbles } from '../../chat/bubbles/bubbles';
 import { AppChatSidebar } from '../../chat/sidebar/sidebar';
 import { AppChatWindows } from '../../chat/windows/windows';
-import { Mutations } from '../../../store/index';
+import { Store } from '../../../store/index';
 import { ChatClient, ChatNewMessageEvent } from '../../chat/client';
 import { Favicon } from '../../../../lib/gj-lib-client/components/favicon/favicon.service';
 import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
@@ -25,10 +25,9 @@ export class AppShellChat extends Vue
 	// bootstrapped.
 	@State chat: ChatClient;
 
-	@Getter isRightPaneVisible: boolean;
+	@Getter isRightPaneVisible: Store['isRightPaneVisible'];
 
-	@Mutation( Mutations.toggleRightPane )
-	toggleRightPane: Function;
+	@Action toggleRightPane: Store['toggleRightPane'];
 
 	private isWindowFocused = false;
 	private unfocusedNotificationsCount = 0;

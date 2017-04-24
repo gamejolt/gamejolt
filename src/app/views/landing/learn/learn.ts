@@ -4,7 +4,7 @@ import { State } from 'vuex-class';
 import * as View from '!view!./learn.html?style=./learn.styl';
 
 import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -14,5 +14,5 @@ import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-sto
 })
 export default class RouteLandingLearn extends Vue
 {
-	@State app: AppState;
+	@State app: Store['app'];
 }

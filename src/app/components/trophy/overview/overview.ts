@@ -4,7 +4,6 @@ import * as View from '!view!./overview.html?style=./overview.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { State } from 'vuex-class';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { UserGameTrophy } from '../../../../lib/gj-lib-client/components/user/game-trophy/game-trophy.model';
@@ -13,6 +12,7 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppTrophyCompletion } from '../completion/completion';
 import { AppTrophyThumbnail } from '../thumbnail/thumbnail';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -31,7 +31,7 @@ export class AppTrophyOverview extends Vue
 	@Prop( Object ) initialPayload?: any;
 	@Prop( { type: String, default: 'full' } ) size?: 'small' | 'full';
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	trophies: GameTrophy[] = [];
 	showInvisibleTrophyMessage = false;

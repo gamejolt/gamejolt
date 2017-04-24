@@ -8,7 +8,6 @@ import { FiresidePost } from '../../../../../lib/gj-lib-client/components/firesi
 import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppState } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
@@ -18,6 +17,7 @@ import { AppGameGrid } from '../../../../components/game/grid/grid';
 import { AppActivityFeed } from '../../../../components/activity/feed/feed';
 import { AppGameGridPlaceholder } from '../../../../components/game/grid/placeholder/placeholder';
 import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
+import { Store } from '../../../../store/index';
 
 @View
 @Component({
@@ -35,7 +35,7 @@ import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed
 })
 export default class RouteDiscoverDevlogsOverview extends Vue
 {
-	@State app: AppState;
+	@State app: Store['app'];
 
 	games: any[] = [];
 	feed: ActivityFeedContainer | null = null;

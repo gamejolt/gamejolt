@@ -24,7 +24,6 @@ import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppState } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppScrollTo } from '../../../../../lib/gj-lib-client/components/scroll/to/to.directive';
 import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
@@ -37,6 +36,7 @@ import { AppScrollAffix } from '../../../../../lib/gj-lib-client/components/scro
 import { FormForumPost } from '../../../../components/forms/forum/post/post';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components/message-thread/add/add';
+import { Store } from '../../../../store/index';
 
 @View
 @Component({
@@ -67,7 +67,7 @@ import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components
 })
 export default class RouteForumsTopicsView extends Vue
 {
-	@State app: AppState;
+	@State app: Store['app'];
 
 	topic: ForumTopic | null = null;
 	channel: ForumChannel | null = null;

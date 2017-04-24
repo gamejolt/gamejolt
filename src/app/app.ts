@@ -6,8 +6,8 @@ import * as View from '!view!./app.html';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 import { makeObservableService } from '../lib/gj-lib-client/utils/vue';
 import { AppShell } from './components/shell/shell';
-import { AppState } from '../lib/gj-lib-client/vue/services/app/app-store';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
+import { Store } from './store/index';
 
 @View
 @Component({
@@ -18,7 +18,7 @@ import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 })
 export class App extends Vue
 {
-	@State app: AppState;
+	@State app: Store['app'];
 
 	Connection = makeObservableService( Connection );
 

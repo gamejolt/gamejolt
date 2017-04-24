@@ -8,8 +8,8 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { LibraryState } from '../../../../store/library';
 import { GameCollection } from '../collection.model';
+import { Store } from '../../../../store/index';
 
 @View
 @Component({
@@ -30,7 +30,7 @@ export class AppGameCollectionFollowWidget extends Vue
 	@Prop( GameCollection ) collection: GameCollection;
 	@Prop( Number ) followerCount?: number;
 
-	@State library: LibraryState;
+	@State library: Store['library'];
 
 	get isFollowing()
 	{

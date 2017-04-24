@@ -10,7 +10,6 @@ import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppGameListing } from '../../../components/game/listing/listing';
@@ -26,9 +25,8 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { LibraryState } from '../../../store/library';
 import { AppGameCollectionFollowWidget } from '../../../components/game/collection/follow-widget/follow-widget';
-import { store } from '../../../store/index';
+import { store, Store } from '../../../store/index';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 @View
@@ -55,8 +53,8 @@ export default class RouteLibraryCollection extends Vue
 {
 	@Prop( String ) id: string;
 
-	@State app: AppState;
-	@State library: LibraryState;
+	@State app: Store['app'];
+	@State library: Store['library'];
 
 	type = '';
 	followerCount = 0;

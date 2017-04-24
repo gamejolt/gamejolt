@@ -11,7 +11,6 @@ import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/component
 import { UserGameScore } from '../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { AppState } from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppNoAutoscroll } from '../../../../../../../lib/gj-lib-client/components/scroll/auto-scroll/no-autoscroll.directive.vue';
 import { AppScoreList } from '../../../../../../components/score/list/list';
 import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
@@ -20,6 +19,7 @@ import { makeObservableService } from '../../../../../../../lib/gj-lib-client/ut
 import { AppScoreboardSelector } from '../../../../../../components/score/scoreboard-selector/scoreboard-selector';
 import { Popover } from '../../../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { Store } from '../../../../../../store/index';
 
 @View
 @Component({
@@ -39,7 +39,7 @@ export default class RouteDiscoverGamesViewScoresList extends Vue
 
 	@RouteState game: RouteStore['game'];
 
-	@State app: AppState;
+	@State app: Store['app'];
 
 	scoreTables: GameScoreTable[] = [];
 	scoreTable: GameScoreTable | null = null;

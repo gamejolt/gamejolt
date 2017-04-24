@@ -14,8 +14,8 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { AppShellUserBox } from '../user-box/user-box';
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Actions } from '../../../store/index';
+import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -34,7 +34,7 @@ import { Actions } from '../../../store/index';
 })
 export class AppShellAccountPopover extends Vue
 {
-	@State app: AppState;
+	@State app: AppStore;
 
 	walletAmount: number | false = false;
 
@@ -43,8 +43,7 @@ export class AppShellAccountPopover extends Vue
 	conn = makeObservableService( Connection );
 	Client?: any = undefined;
 
-	@Action( Actions.logout )
-	logout: Function;
+	@Action logout: Store['logout'];
 
 	created()
 	{

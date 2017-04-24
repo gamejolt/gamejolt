@@ -4,7 +4,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import * as View from '!view!./overview.html?style=./overview.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppState } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { GameScoreTable } from '../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
@@ -43,7 +43,7 @@ export class AppScoreOverview extends Vue
 	@Prop( Object ) initialPayload?: any;
 	@Prop( { type: String, default: 'full' } ) size: 'full' | 'small';
 
-	@State app: AppState;
+	@State app: AppStore;
 
 	scoreTables: GameScoreTable[] = [];
 	scoreTable: GameScoreTable | null = null;
