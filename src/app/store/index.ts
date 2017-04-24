@@ -1,5 +1,6 @@
 import { VuexStore, VuexModule, VuexAction, VuexMutation } from '../../lib/gj-lib-client/utils/vuex';
-import { AppStore, Mutations as AppMutations, appStore } from '../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppStore, Mutations as AppMutations, Actions as AppActions, appStore } from '../../lib/gj-lib-client/vue/services/app/app-store';
+import { LibraryStore, Mutations as LibraryMutations, Actions as LibraryActions } from './library';
 import { Settings } from '../components/settings/settings.service';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
@@ -10,10 +11,10 @@ import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service
 import { router } from '../bootstrap';
 import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
-import { LibraryState } from './library';
 import { ChatClient } from '../components/chat/client';
 
-export type Actions = {
+export type Actions = AppActions & LibraryActions &
+{
 	bootstrap: undefined;
 	logout: undefined;
 	clear: undefined;
@@ -25,7 +26,8 @@ export type Actions = {
 	_checkBackdrop: undefined;
 };
 
-export type Mutations = AppMutations & {
+export type Mutations = AppMutations & LibraryMutations &
+{
 	setNotificationsCount: number;
 	_setBootstrapped: undefined;
 	_clear: undefined;
@@ -42,13 +44,14 @@ export type Mutations = AppMutations & {
 	store: true,
 	modules: {
 		app: appStore,
+		library: new LibraryStore(),
 	},
 })
 export class Store extends VuexStore<Store, Actions, Mutations>
 {
 	app: AppStore;
+	library: LibraryStore;
 
-	library = new LibraryState();
 	chat: ChatClient | null = null;
 
 	isBootstrapped = false;
@@ -93,10 +96,9 @@ export class Store extends VuexStore<Store, Actions, Mutations>
 			return;
 		}
 
-		this.library.bootstrap( response );
+		this.commit( 'library/bootstrap', response );
 
 		this._setBootstrapped();
-		// this.commit( '_setBootstrapped' );
 
 		BroadcastModal.check();
 	}
@@ -131,8 +133,7 @@ export class Store extends VuexStore<Store, Actions, Mutations>
 	async clear()
 	{
 		this._clear();
-		// this.commit( '_clear' );
-		this.library.clear();
+		this.commit( 'library/clear' );
 	}
 
 	@VuexAction
@@ -141,7 +142,6 @@ export class Store extends VuexStore<Store, Actions, Mutations>
 		const mod = await $import( '../components/chat/client' );
 		const chatClientModel: typeof ChatClient = mod.ChatClient;
 		this._setChat( new chatClientModel() );
-		// this.commit( '_setChat', new chatClientModel() );
 	}
 
 	@VuexAction

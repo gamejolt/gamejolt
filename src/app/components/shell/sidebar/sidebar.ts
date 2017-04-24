@@ -18,6 +18,7 @@ import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { Store } from '../../../store/index';
 import { AppShellSidebarCollectionList } from './collection-list';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
+import { LibraryStore, LibraryAction, LibraryState, LibraryGetter } from '../../../store/library';
 
 @View
 @Component({
@@ -36,18 +37,25 @@ import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expan
 	},
 	filters: {
 		number,
-	}
+	},
 })
 export class AppShellSidebar extends Vue
 {
 	@State app: Store['app'];
-	@State library: Store['library'];
 	@State isBootstrapped: Store['isBootstrapped'];
 	@State notificationCount: Store['notificationCount'];
+	@LibraryState bundleCollections: LibraryStore['bundleCollections'];
+	@LibraryState developerCollection: LibraryStore['developerCollection'];
+	@LibraryState followedCollection: LibraryStore['followedCollection'];
+	@LibraryState recommendedCollection: LibraryStore['recommendedCollection'];
+	@LibraryState ownedCollection: LibraryStore['ownedCollection'];
+	@LibraryState collections: LibraryStore['collections'];
 
 	@Getter isLeftPaneVisible: Store['isLeftPaneVisible'];
+	@LibraryGetter playlistFolders: LibraryStore['playlistFolders'];
 
 	@Action toggleLeftPane: Store['toggleLeftPane'];
+	@LibraryAction newPlaylist: LibraryStore['newPlaylist'];
 
 	playlistFilterQuery = '';
 	openFolders: string[] = [];
@@ -85,7 +93,7 @@ export class AppShellSidebar extends Vue
 
 	get filteredBundleCollections()
 	{
-		return this.library.bundleCollections.sort( ( a, b ) => stringSort( a.name, b.name ) );
+		return this.bundleCollections.sort( ( a, b ) => stringSort( a.name, b.name ) );
 	}
 
 	toggleFolder( key: string )
@@ -101,7 +109,7 @@ export class AppShellSidebar extends Vue
 
 	async showAddPlaylistModal()
 	{
-		const collection = await this.library.newPlaylist();
+		const collection = await this.newPlaylist();
 		if ( collection ) {
 			this.$router.push( collection.routeLocation );
 		}

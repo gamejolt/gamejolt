@@ -223,6 +223,8 @@
 						class="btn-block"
 						:collection="collection"
 						:follower-count="followerCount"
+						@follow="++followerCount"
+						@unfollow="--followerCount"
 						/>
 				</span>
 
@@ -231,7 +233,7 @@
 					<!-- Editing Playlist -->
 					<a class="btn btn-outline"
 						v-if="type === 'playlist' && collection.isOwner"
-						@click="library.editPlaylist( collection )"
+						@click="editPlaylist( collection )"
 						>
 						<app-jolticon icon="edit" />
 						<translate>Edit Playlist</translate>
@@ -249,7 +251,7 @@
 					<app-popover popover-id="collection-options">
 						<div class="list-group">
 							<a class="list-group-item has-icon"
-								@click="library.removePlaylist( collection )"
+								@click="removePlaylist( collection )"
 								>
 								<app-jolticon icon="remove" />
 								<translate>library.collection.remove_playlist_button</translate>

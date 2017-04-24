@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { namespace, State, Action, Mutation, Getter } from 'vuex-class';
+import { VuexModule, VuexMutation, VuexAction } from '../../lib/gj-lib-client/utils/vuex';
 
 import { router } from '../bootstrap';
 import { GameCollection } from '../components/game/collection/collection.model';
@@ -10,6 +10,34 @@ import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/c
 import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
 import { Game } from '../../lib/gj-lib-client/components/game/game.model';
 import { GamePlaylist } from '../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
+import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
+
+export const LibraryState = namespace( 'library', State );
+export const LibraryAction = namespace( 'library', Action );
+export const LibraryMutation = namespace( 'library', Mutation );
+export const LibraryGetter = namespace( 'library', Getter );
+
+export type Actions = {
+	'library/followCollection': GameCollection;
+	'library/unfollowCollection': GameCollection;
+	'library/newPlaylist': undefined;
+	'library/editPlaylist': GameCollection;
+	'library/removePlaylist': GameCollection;
+	'library/addGameToPlaylist': { playlist: GamePlaylist, game: Game };
+	'library/removeGameFromPlaylist': {
+		playlist: GamePlaylist,
+		game: Game,
+		shouldConfirm?: boolean,
+	};
+	'library/unfollowGame': Game;
+};
+
+export type Mutations = {
+	'library/bootstrap': any;
+	'library/clear': undefined;
+	'library/addCollection': GameCollection;
+	'library/removeCollection': GameCollection;
+};
 
 class GamePlaylistFolder
 {
@@ -21,8 +49,14 @@ class GamePlaylistFolder
 	}
 }
 
-@Component({})
-export class LibraryState extends Vue
+function isViewingCollection( collection: GameCollection )
+{
+	return router.currentRoute.name === collection.getSref()
+		&& router.currentRoute.params.id === (collection as any).id;
+}
+
+@VuexModule()
+export class LibraryStore
 {
 	collections: GameCollection[] = [];
 	followedCollection: GameCollection | null = null;
@@ -36,10 +70,7 @@ export class LibraryState extends Vue
 	 */
 	get developerPlaylists()
 	{
-		return this.collections.filter( ( item ) =>
-		{
-			return item.type === 'developer';
-		} );
+		return this.collections.filter( ( item ) => item.type === 'developer' );
 	}
 
 	/**
@@ -47,10 +78,7 @@ export class LibraryState extends Vue
 	 */
 	get mainPlaylists()
 	{
-		return this.collections.filter( ( item ) =>
-		{
-			return item.type !== 'developer';
-		} );
+		return this.collections.filter( ( item ) => item.type !== 'developer' );
 	}
 
 	/**
@@ -58,6 +86,7 @@ export class LibraryState extends Vue
 	 */
 	get playlistFolders()
 	{
+		console.log( 'playlist folders', this );
 		const folders: { [k: string]: GamePlaylistFolder } = {};
 
 		folders.main = new GamePlaylistFolder(
@@ -68,7 +97,7 @@ export class LibraryState extends Vue
 		const developerPlaylists: GameCollection[] = this.developerPlaylists;
 		if ( developerPlaylists.length ) {
 			folders.developers = new GamePlaylistFolder(
-				this.$gettext( 'Followed Developers' ),
+				Translate.$gettext( 'Followed Developers' ),
 				developerPlaylists,
 			);
 		}
@@ -76,13 +105,8 @@ export class LibraryState extends Vue
 		return folders;
 	}
 
-	private isViewingCollection( collection: GameCollection )
-	{
-		return router.currentRoute.name === collection.getSref()
-			&& router.currentRoute.params.id === (collection as any).id;
-	}
-
-	bootstrap( payload: any )
+	@VuexMutation
+	bootstrap( payload: Mutations['library/bootstrap'] )
 	{
 		this.collections = GameCollection.populate( payload.collections );
 		this.followedCollection = payload.followedCollection
@@ -100,6 +124,7 @@ export class LibraryState extends Vue
 		this.bundleCollections = GameCollection.populate( payload.bundleCollections );
 	}
 
+	@VuexMutation
 	clear()
 	{
 		this.collections = [];
@@ -110,12 +135,14 @@ export class LibraryState extends Vue
 		this.bundleCollections = [];
 	}
 
-	addCollection( collection: GameCollection )
+	@VuexMutation
+	addCollection( collection: Mutations['library/addCollection'] )
 	{
 		this.collections.push( collection );
 	}
 
-	removeCollection( collection: GameCollection )
+	@VuexMutation
+	removeCollection( collection: Mutations['library/removeCollection'] )
 	{
 		const index = this.collections.findIndex( ( item ) => item._id === collection._id );
 		if ( index !== -1 ) {
@@ -123,18 +150,21 @@ export class LibraryState extends Vue
 		}
 	}
 
-	async followCollection( collection: GameCollection )
+	@VuexAction
+	async followCollection( collection: Actions['library/followCollection'] )
 	{
 		await collection.$follow();
 		this.addCollection( collection );
 	}
 
-	async unfollowCollection( collection: GameCollection )
+	@VuexAction
+	async unfollowCollection( collection: Actions['library/unfollowCollection'] )
 	{
 		await collection.$unfollow();
 		this.removeCollection( collection );
 	}
 
+	@VuexAction
 	async newPlaylist()
 	{
 		Analytics.trackEvent( 'add-to-playlist', 'new-playlist' );
@@ -148,11 +178,12 @@ export class LibraryState extends Vue
 		return collection;
 	}
 
-	async editPlaylist( collection: GameCollection )
+	@VuexAction
+	async editPlaylist( collection: Actions['library/editPlaylist'] )
 	{
 		// If we're viewing the playlist we're editing, we want to sync the
 		// new URL after.
-		let syncUrlAfter = this.isViewingCollection( collection );
+		let syncUrlAfter = isViewingCollection( collection );
 
 		if ( await GamePlaylistSaveModal.show( collection ) ) {
 			if ( syncUrlAfter ) {
@@ -162,7 +193,8 @@ export class LibraryState extends Vue
 		}
 	}
 
-	async removePlaylist( collection: GameCollection )
+	@VuexAction
+	async removePlaylist( collection: Actions['library/removePlaylist'] )
 	{
 		if ( !collection.playlist ) {
 			throw new Error( `Collection isn't a playlist.` );
@@ -170,8 +202,8 @@ export class LibraryState extends Vue
 
 		const result = await ModalConfirm.show(
 			collection.isOwner
-				? this.$gettext( `Are you sure you want to remove this playlist?` )
-				: this.$gettext( `Are you sure you want to unfollow this playlist?` ),
+				? Translate.$gettext( `Are you sure you want to remove this playlist?` )
+				: Translate.$gettext( `Are you sure you want to unfollow this playlist?` ),
 		);
 
 		if ( !result ) {
@@ -184,21 +216,21 @@ export class LibraryState extends Vue
 
 			// If they're currently on the playlist page, let's push them to
 			// the library instead.
-			if ( this.isViewingCollection( collection ) ) {
+			if ( isViewingCollection( collection ) ) {
 
 				router.replace( { name: 'library.overview' } );
 
 				Growls.success(
-					this.$gettextInterpolate(
+					Translate.$gettextInterpolate(
 						collection.isOwner
-							? this.$gettext( `%{ playlist } has been removed.` )
-							: this.$gettext( `You have unfollowed %{ playlist }.` ),
+							? Translate.$gettext( `%{ playlist } has been removed.` )
+							: Translate.$gettext( `You have unfollowed %{ playlist }.` ),
 						{ playlist: collection.name },
 					),
-					this.$gettext(
+					Translate.$gettext(
 						collection.isOwner
-							? this.$gettext( `Playlist Removed` )
-							: this.$gettext( `Playlist Unfollowed` ),
+							? Translate.$gettext( `Playlist Removed` )
+							: Translate.$gettext( `Playlist Unfollowed` ),
 					),
 				);
 
@@ -207,50 +239,50 @@ export class LibraryState extends Vue
 		}
 		catch ( e ) {
 			Growls.error(
-				this.$gettext( `Error! Error! Unable to unfollow this playlist.` ),
+				Translate.$gettext( `Error! Error! Unable to unfollow this playlist.` ),
 			);
 		}
 
 		return false;
 	}
 
-	async addGameToPlaylist( playlist: GamePlaylist, game: Game )
+	@VuexAction
+	async addGameToPlaylist( { playlist, game }: Actions['library/addGameToPlaylist'] )
 	{
 		try {
 			await playlist.$addGame( game.id );
 
 			Growls.success(
-				this.$gettextInterpolate(
+				Translate.$gettextInterpolate(
 					`You've added %{ game } to %{ playlist }. Nice!`,
 					{ game: game.title, playlist: playlist.name },
 				),
-				this.$gettext( `Added Game` ),
+				Translate.$gettext( `Added Game` ),
 			);
 
 			return true;
 		}
 		catch ( e ) {
 			Growls.error(
-				this.$gettext( `Error! Error! This game could not be added to the playlist.` ),
+				Translate.$gettext( `Error! Error! This game could not be added to the playlist.` ),
 			);
 		}
 
 		return false;
 	}
 
+	@VuexAction
 	async removeGameFromPlaylist(
-		playlist: GamePlaylist,
-		game: Game,
-		options: { shouldConfirm?: boolean } = {},
+		{ playlist, game, shouldConfirm }: Actions['library/removeGameFromPlaylist'],
 	)
 	{
 		if ( !playlist ) {
 			throw new Error( `Invalid collection passed in.` );
 		}
 
-		if ( options.shouldConfirm ) {
+		if ( shouldConfirm ) {
 			const result = await ModalConfirm.show(
-				this.$gettext( 'library.playlists.remove_game_confirmation' ),
+				Translate.$gettext( 'library.playlists.remove_game_confirmation' ),
 			);
 
 			if ( !result ) {
@@ -262,28 +294,29 @@ export class LibraryState extends Vue
 			await playlist.$removeGame( game.id );
 
 			Growls.success(
-				this.$gettextInterpolate(
+				Translate.$gettextInterpolate(
 					`You have successfully removed %{ game } from %{ playlist }.`,
 					{ game: game.title, playlist: playlist.name },
 				),
-				this.$gettext( `Removed Game` ),
+				Translate.$gettext( `Removed Game` ),
 			);
 
 			return true;
 		}
 		catch ( e ) {
 			Growls.error(
-				this.$gettext( `Error! Error! This game could not be removed from the playlist.` ),
+				Translate.$gettext( `Error! Error! This game could not be removed from the playlist.` ),
 			);
 		}
 
 		return false;
 	}
 
-	async unfollowGame( game: Game )
+	@VuexAction
+	async unfollowGame( game: Actions['library/unfollowGame'] )
 	{
 		const result = await ModalConfirm.show(
-			this.$gettextInterpolate(
+			Translate.$gettextInterpolate(
 				`Are you sure you want to stop following %{ game }?`,
 				{ game: game.title },
 			),
@@ -297,18 +330,18 @@ export class LibraryState extends Vue
 			await game.$unfollow();
 
 			Growls.success(
-				this.$gettextInterpolate(
+				Translate.$gettextInterpolate(
 					`You have stopped following %{ game } and will no longer receive notifications about it.`,
 					{ game: game.title },
 				),
-				this.$gettext( `Game Unfollowed` ),
+				Translate.$gettext( `Game Unfollowed` ),
 			);
 
 			return true;
 		}
 		catch ( e ) {
 			Growls.error(
-				this.$gettext( `Uh-oh, something has prevented you from unfollowing this game.` ),
+				Translate.$gettext( `Uh-oh, something has prevented you from unfollowing this game.` ),
 			);
 		}
 

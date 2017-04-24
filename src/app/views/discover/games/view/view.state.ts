@@ -21,11 +21,10 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { router } from '../../../index';
 
-export const RouteStoreNamespace = 'route';
-export const RouteState = namespace( RouteStoreNamespace, State );
-export const RouteAction = namespace( RouteStoreNamespace, Action );
-export const RouteMutation = namespace( RouteStoreNamespace, Mutation );
-export const RouteGetter = namespace( RouteStoreNamespace, Getter );
+export const RouteState = namespace( 'route', State );
+export const RouteAction = namespace( 'route', Action );
+export const RouteMutation = namespace( 'route', Mutation );
+export const RouteGetter = namespace( 'route', Getter );
 
 type Actions = {
 	bootstrap: any,

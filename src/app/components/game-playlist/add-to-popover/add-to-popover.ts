@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./add-to-popover.html?style=./add-to-popover.styl';
 
@@ -15,7 +14,7 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { Store } from '../../../store/index';
+import { LibraryAction, LibraryStore } from '../../../store/library';
 
 @View
 @Component({
@@ -32,7 +31,9 @@ export class AppGamePlaylistAddToPopover extends Vue
 {
 	@Prop( Game ) game: Game;
 
-	@State library: Store['library'];
+	@LibraryAction addGameToPlaylist: LibraryStore['addGameToPlaylist'];
+	@LibraryAction removeGameFromPlaylist: LibraryStore['removeGameFromPlaylist'];
+	@LibraryAction newPlaylist: LibraryStore['newPlaylist'];
 
 	playlists: GamePlaylist[] = [];
 	playlistsWithGame: number[] = [];
@@ -91,7 +92,8 @@ export class AppGamePlaylistAddToPopover extends Vue
 
 	async addToPlaylist( playlist: GamePlaylist )
 	{
-		if ( await this.library.addGameToPlaylist( playlist, this.game ) ) {
+		const game = this.game;
+		if ( await this.addGameToPlaylist( { playlist, game } ) ) {
 			this.playlistsWithGame.push( playlist.id );
 			Popover.hideAll();
 		}
@@ -99,7 +101,8 @@ export class AppGamePlaylistAddToPopover extends Vue
 
 	async removeFromPlaylist( playlist: GamePlaylist )
 	{
-		if ( await this.library.removeGameFromPlaylist( playlist, this.game ) ) {
+		const game = this.game;
+		if ( await this.removeGameFromPlaylist( { playlist, game } ) ) {
 			const index = this.playlistsWithGame.indexOf( playlist.id );
 			if ( index !== -1 ) {
 				this.playlistsWithGame.splice( index, 1 );
@@ -111,7 +114,7 @@ export class AppGamePlaylistAddToPopover extends Vue
 
 	async addToNewPlaylist()
 	{
-		const collection = await this.library.newPlaylist();
+		const collection = await this.newPlaylist();
 		if ( collection && collection.playlist ) {
 
 			// Now that the playlist is created, let's add the game to this playlist.

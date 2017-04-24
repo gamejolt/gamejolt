@@ -28,6 +28,7 @@ import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popo
 import { AppGameCollectionFollowWidget } from '../../../components/game/collection/follow-widget/follow-widget';
 import { store, Store } from '../../../store/index';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { LibraryAction, LibraryStore, LibraryState } from '../../../store/library';
 
 @View
 @Component({
@@ -54,7 +55,12 @@ export default class RouteLibraryCollection extends Vue
 	@Prop( String ) id: string;
 
 	@State app: Store['app'];
-	@State library: Store['library'];
+	@LibraryState collections: LibraryStore['collections'];
+
+	@LibraryAction removeGameFromPlaylist: LibraryStore['removeGameFromPlaylist'];
+	@LibraryAction unfollowGame: LibraryStore['unfollowGame'];
+	@LibraryAction editPlaylist: LibraryStore['editPlaylist'];
+	@LibraryAction removePlaylist: LibraryStore['removePlaylist'];
 
 	type = '';
 	followerCount = 0;
@@ -114,7 +120,7 @@ export default class RouteLibraryCollection extends Vue
 		// We try pulling a populated collection from the registry.
 		// This will be the case if it's in their library.
 		// When they don't have it registered in their library, we just make an instance of a new one.
-		this.collection = this.library.collections.find(
+		this.collection = this.collections.find(
 			( item ) => item.type === this.type && (item as any).id === this.processedId
 		) || null;
 
@@ -273,14 +279,14 @@ export default class RouteLibraryCollection extends Vue
 	async removeFromPlaylist( game: Game )
 	{
 		const playlist = this.collection!.playlist!;
-		if ( await this.library.removeGameFromPlaylist( playlist, game, { shouldConfirm: true } ) ) {
+		if ( await this.removeGameFromPlaylist( { playlist, game, shouldConfirm: true } ) ) {
 			this.listing!.removeGame( game );
 		}
 	}
 
 	async removeFromLibrary( game: Game )
 	{
-		if ( await this.library.unfollowGame( game ) ) {
+		if ( await this.unfollowGame( game ) ) {
 			this.listing!.removeGame( game );
 		}
 	}

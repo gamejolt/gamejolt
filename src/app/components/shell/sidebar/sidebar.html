@@ -177,7 +177,7 @@
 						<translate>Jams</translate>
 					</a>
 				</li>
-				<li v-if="!Environment.isClient && !isLeftPaneVisible">
+				<li v-if="!GJ_IS_CLIENT && !isLeftPaneVisible">
 					<router-link
 						:to="{ name: 'landing.client' }"
 						v-app-track-event="`sidebar:client`"
@@ -272,7 +272,7 @@
 				</router-link>
 			</li>
 
-			<li v-if="!Environment.isClient && isLeftPaneVisible">
+			<li v-if="!GJ_IS_CLIENT && isLeftPaneVisible">
 				<router-link
 					:to="{ name: 'landing.client' }"
 					active-class="active"
@@ -364,7 +364,7 @@
 			<hr>
 
 			<ul class="shell-nav">
-				<li class="offline-disable" v-if="Environment.isClient">
+				<li class="offline-disable" v-if="GJ_IS_CLIENT">
 					<router-link
 						:to="{ name: 'library.installed' }"
 						active-class="active"
@@ -381,9 +381,9 @@
 					</router-link>
 				</li>
 
-				<li class="offline-disable" v-if="library.developerCollection">
+				<li class="offline-disable" v-if="developerCollection">
 					<router-link
-						:to="library.developerCollection.routeLocation"
+						:to="developerCollection.routeLocation"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:developer`"
 						>
@@ -398,9 +398,9 @@
 					</router-link>
 				</li>
 
-				<li class="offline-disable">
+				<li class="offline-disable" v-if="followedCollection">
 					<router-link
-						:to="library.followedCollection.routeLocation"
+						:to="followedCollection.routeLocation"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:followed`"
 						>
@@ -415,9 +415,9 @@
 					</router-link>
 				</li>
 
-				<li class="offline-disable">
+				<li class="offline-disable" v-if="recommendedCollection">
 					<router-link
-						:to="library.recommendedCollection.routeLocation"
+						:to="recommendedCollection.routeLocation"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:recommended`"
 						>
@@ -432,9 +432,9 @@
 					</router-link>
 				</li>
 
-				<li class="offline-disable">
+				<li class="offline-disable" v-if="ownedCollection">
 					<router-link
-						:to="library.ownedCollection.routeLocation"
+						:to="ownedCollection.routeLocation"
 						active-class="active"
 						v-app-track-event="`sidebar:collection:owned`"
 						>
@@ -468,11 +468,11 @@
 				</ul>
 			</div>
 
-			<div v-if="isLeftPaneVisible && library.bundleCollections.length">
+			<div v-if="isLeftPaneVisible && bundleCollections.length">
 				<div class="nav-heading">
 					<translate>library.nav.bundles</translate>
 					<span class="badge">
-						{{ library.bundleCollections.length | number }}
+						{{ bundleCollections.length | number }}
 					</span>
 				</div>
 
@@ -505,7 +505,7 @@
 				<div class="nav-heading" :title="$gettext( `library.nav.playlists` )">
 					<translate>library.nav.playlists</translate>
 					<span class="badge">
-						{{ library.collections.length | number }}
+						{{ collections.length | number }}
 					</span>
 				</div>
 
@@ -520,7 +520,7 @@
 					</a>
 				</div>
 
-				<div class="nav-controls" v-if="library.collections.length">
+				<div class="nav-controls" v-if="collections.length">
 					<input type="search"
 						class="form-control"
 						:placeholder="$gettext( `library.nav.filter_playlists_placeholder` )"
@@ -528,7 +528,7 @@
 						>
 				</div>
 
-				<div v-if="!library.collections.length">
+				<div v-if="!collections.length">
 					<div class="alert fill-gray">
 						<translate>library.nav.no_playlists_html</translate>
 					</div>
@@ -538,7 +538,7 @@
 					Playlist Folders
 				-->
 				<div
-					v-for="( folder, key ) of library.playlistFolders"
+					v-for="( folder, key ) of playlistFolders"
 					:key="key"
 					v-if="key !== 'main'"
 					>
@@ -565,7 +565,7 @@
 					Main Playlists (not in folders)
 				-->
 				<app-shell-sidebar-collection-list
-					:collections="library.playlistFolders.main.collections"
+					:collections="playlistFolders.main.collections"
 					:filter="playlistFilterQuery"
 					/>
 

@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./follow-widget.html';
 
@@ -9,7 +8,7 @@ import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analy
 import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { GameCollection } from '../collection.model';
-import { Store } from '../../../../store/index';
+import { LibraryState, LibraryStore, LibraryAction } from '../../../../store/library';
 
 @View
 @Component({
@@ -30,22 +29,26 @@ export class AppGameCollectionFollowWidget extends Vue
 	@Prop( GameCollection ) collection: GameCollection;
 	@Prop( Number ) followerCount?: number;
 
-	@State library: Store['library'];
+	@LibraryState collections: LibraryStore['collections'];
+	@LibraryAction followCollection: LibraryStore['followCollection'];
+	@LibraryAction unfollowCollection: LibraryStore['unfollowCollection'];
 
 	get isFollowing()
 	{
-		return this.library.collections.findIndex(
+		return this.collections.findIndex(
 			( item ) => item.type === this.collection.type && (item as any).id === this.collection.id,
 		) !== -1;
 	}
 
-	onClick()
+	async onClick()
 	{
 		if ( this.isFollowing ) {
-			this.library.unfollowCollection( this.collection );
+			await this.unfollowCollection( this.collection );
+			this.$emit( 'unfollow' );
 		}
 		else {
-			this.library.followCollection( this.collection );
+			await this.followCollection( this.collection );
+			this.$emit( 'follow' );
 		}
 	}
 }

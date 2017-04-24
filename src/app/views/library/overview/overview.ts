@@ -13,6 +13,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { AppGameCollectionList } from '../../../components/game/collection/list/list';
 import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
 import { Store } from '../../../store/index';
+import { LibraryState, LibraryStore } from '../../../store/library';
 
 @View
 @Component({
@@ -25,8 +26,12 @@ import { Store } from '../../../store/index';
 })
 export default class RouteLibraryOverview extends Vue
 {
-	@State library: Store['library'];
 	@State isBootstrapped: Store['isBootstrapped'];
+	@LibraryState followedCollection: LibraryStore['followedCollection'];
+	@LibraryState developerCollection: LibraryStore['developerCollection'];
+	@LibraryState ownedCollection: LibraryStore['ownedCollection'];
+	@LibraryState recommendedCollection: LibraryStore['recommendedCollection'];
+	@LibraryState collections: LibraryStore['collections'];
 
 	Connection = makeObservableService( Connection );
 	Screen = makeObservableService( Screen );
@@ -70,20 +75,20 @@ export default class RouteLibraryOverview extends Vue
 	{
 		const main: GameCollection[] = [];
 
-		if ( this.library.followedCollection ) {
-			main.push( this.library.followedCollection );
+		if ( this.followedCollection ) {
+			main.push( this.followedCollection );
 		}
 
-		if ( this.library.developerCollection ) {
-			main.push( this.library.developerCollection );
+		if ( this.developerCollection ) {
+			main.push( this.developerCollection );
 		}
 
-		if ( this.library.ownedCollection ) {
-			main.push( this.library.ownedCollection );
+		if ( this.ownedCollection ) {
+			main.push( this.ownedCollection );
 		}
 
-		if ( this.library.recommendedCollection ) {
-			main.push( this.library.recommendedCollection );
+		if ( this.recommendedCollection ) {
+			main.push( this.recommendedCollection );
 		}
 
 		return main;
@@ -91,7 +96,7 @@ export default class RouteLibraryOverview extends Vue
 
 	get playlistCollections()
 	{
-		return this.library.collections.filter( ( collection ) =>
+		return this.collections.filter( ( collection ) =>
 		{
 			if ( collection.type === 'playlist' && !collection.from_subscription ) {
 				return true;
@@ -102,7 +107,7 @@ export default class RouteLibraryOverview extends Vue
 
 	get followedCollections()
 	{
-		return this.library.collections.filter( ( collection ) =>
+		return this.collections.filter( ( collection ) =>
 		{
 			if ( collection.from_subscription ) {
 				return true;
