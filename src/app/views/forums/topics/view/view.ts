@@ -29,7 +29,6 @@ import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/p
 import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppPagination } from '../../../../../lib/gj-lib-client/components/pagination/pagination';
 import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
 import { AppForumPostList } from '../../../../components/forum/post-list/post-list';
 import { AppScrollAffix } from '../../../../../lib/gj-lib-client/components/scroll/affix/affix';
@@ -37,6 +36,7 @@ import { FormForumPost } from '../../../../components/forms/forum/post/post';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components/message-thread/add/add';
 import { Store } from '../../../../store/index';
+import { AppMessageThreadPagination } from '../../../../../lib/gj-lib-client/components/message-thread/pagination/pagination';
 
 @View
 @Component({
@@ -48,11 +48,11 @@ import { Store } from '../../../../store/index';
 		AppTimeAgo,
 		AppPopover,
 		AppFadeCollapse,
-		AppPagination,
 		AppWidgetCompiler,
 		AppForumPostList,
 		AppScrollAffix,
 		AppMessageThreadAdd,
+		AppMessageThreadPagination,
 		FormForumPost,
 	},
 	directives: {

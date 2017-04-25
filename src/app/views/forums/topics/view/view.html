@@ -251,7 +251,7 @@
 						Page {{ currentPage | number }} of {{ topic.replies_count | number }} replies.
 					</p>
 
-					<app-pagination
+					<app-message-thread-pagination
 						:items-per-page="perPage"
 						:total-items="topic.replies_count"
 						:current-page="currentPage"
@@ -265,22 +265,12 @@
 						@replied="onPostAdded"
 						/>
 
-					<div class="timeline-list-item">
-						<div class="timeline-list-item-main">
-							<div class="timeline-list-item-details">
-
-								<br>
-
-								<app-pagination
-									:items-per-page="perPage"
-									:total-items="topic.replies_count"
-									:current-page="currentPage"
-									@pagechange="pageChange"
-									/>
-
-							</div>
-						</div>
-					</div>
+					<app-message-thread-pagination
+						:items-per-page="perPage"
+						:total-items="topic.replies_count"
+						:current-page="currentPage"
+						@pagechange="pageChange"
+						/>
 
 					<div v-if="app.user">
 						<div v-if="!topic.is_locked">
