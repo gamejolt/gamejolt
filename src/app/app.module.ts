@@ -26,7 +26,6 @@ import { FiresidePostTagModule } from '../lib/gj-lib-client/components/fireside/
 import { FiresidePostVideoModule } from '../lib/gj-lib-client/components/fireside/post/video/video.module';
 import { FiresidePostSketchfabModule } from '../lib/gj-lib-client/components/fireside/post/sketchfab/sketchfab.module';
 import { FiresidePostLikeModule } from '../lib/gj-lib-client/components/fireside/post/like/like.module';
-import AuthModule from '../lib/gj-lib-client/components/auth/auth';
 import SplitTestModule from './components/split-test/split-test';
 import { SearchModule } from './components/search/search.module';
 import { MediaItemCoverModule } from './components/media-item/cover/cover.module';
@@ -164,8 +163,6 @@ import { TrophyThumbnailModule } from './components/trophy/thumbnail/thumbnail.m
 		VideoEmbedModule,
 		SketchfabEmbedModule,
 		PartnerReferralModule,
-		AuthModule,
-		// AuthJoinModule,
 		SplitTestModule,
 		ShellModule,
 		MediaItemCoverModule,

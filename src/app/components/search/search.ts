@@ -65,7 +65,6 @@ export class AppSearch extends Vue
 
 	created()
 	{
-		console.log( 'search comp', Search.query );
 		this.query = Search.query;
 	}
 

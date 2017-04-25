@@ -10,9 +10,6 @@ import { AppModuleNg1 } from './app.module.ng1';
 
 import { ModelModule } from '../lib/gj-lib-client/components/model/model.module';
 import { EnvironmentModule } from '../lib/gj-lib-client/components/environment/environment.module';
-import AuthModule from '../lib/gj-lib-client/components/auth/auth';
-import AuthJoinModule from '../lib/gj-lib-client/components/auth/join/join';
-import AuthLoginModule from '../lib/gj-lib-client/components/auth/login/login';
 import { PopoverModule } from '../lib/gj-lib-client/components/popover/popover.module';
 import { MediaItemModule } from '../lib/gj-lib-client/components/media-item/media-item.module';
 import { ApiModule } from '../lib/gj-lib-client/components/api/api.module';
@@ -47,9 +44,6 @@ import { HistoryModule } from '../lib/gj-lib-client/components/history/history.m
 		RulerModule,
 		ScreenModule,
 		ConnectionModule,
-		AuthModule,
-		AuthJoinModule,
-		AuthLoginModule,
 		UserModule,
 		ScrollModule,
 		TranslateModule,

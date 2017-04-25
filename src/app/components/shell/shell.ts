@@ -46,7 +46,6 @@ export class AppShell extends Vue
 	mounted()
 	{
 		// When changing routes, hide all overlays.
-		console.log( this.clearPanes );
 		EventBus.on( 'routeChangeBefore', () => this.clearPanes() );
 	}
 }

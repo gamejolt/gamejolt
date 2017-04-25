@@ -16,6 +16,7 @@ import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Store } from '../../../store/index';
+import { UserTokenModal } from '../../user/token-modal/token-modal.service';
 
 @View
 @Component({
@@ -65,8 +66,7 @@ export class AppShellAccountPopover extends Vue
 
 	showToken()
 	{
-		// TODO
-		// getProvider<any>( 'User_TokenModal' ).show();
+		UserTokenModal.show();
 	}
 
 	async getWallet()

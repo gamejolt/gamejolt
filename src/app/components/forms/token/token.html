@@ -1,17 +1,25 @@
-<form gj-form="formModel" name="tokenForm">
+<app-form name="tokenForm">
 
-	<form-group name="token" label="Game Token">
-		<input form-control="text" ng-minlength="4" ng-maxlength="30" autocomplete="off">
-		<control-errors></control-errors>
+	<app-form-group name="token" :label="$gettext( 'Game Token' )">
+		<app-form-control
+			type="text"
+			:rules="{
+				min: 4,
+				max: 30,
+			}"
+			autocomplete="off"
+			v-app-focus-when
+			/>
+
+		<app-form-control-errors />
 
 		<p class="help-block">
-			For security reasons, don't make your game token the same as your password.
+			<translate>For security reasons, don't make your game token the same as your password.</translate>
 		</p>
-	</form-group>
+	</app-form-group>
 
-	<button gj-form-submit-button class="btn" ng-disabled="!tokenForm.$valid" ng-click="onSubmit()">
-		<span class="jolticon jolticon-edit"></span>
-		Save Game Token
-	</button>
+	<app-form-button icon="edit">
+		<translate>Save Game Token</translate>
+	</app-form-button>
 
-</form>
+</app-form>

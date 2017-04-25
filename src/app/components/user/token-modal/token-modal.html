@@ -1,60 +1,63 @@
-<div class="modal-controls">
-	<button class="btn btn-danger-outline" ng-click="modalCtrl.close()">
-		<span class="jolticon jolticon-remove"></span>
-		Close
-	</button>
-</div>
+<app-modal>
 
-<div class="modal-header">
-	<h2 class="modal-title" ng-if="!modalCtrl.isChanging">
-		<span class="jolticon jolticon-token big"></span>
-		Your Game Token
-	</h2>
-
-	<h2 class="modal-title" ng-if="modalCtrl.isChanging">
-		Change Game Token
-	</h2>
-</div>
-
-<div class="modal-body">
-	<p class="text-muted small">
-		Your game token is like a special password you use to log into games that support high scores and achievements.
-		[ <a href="https://help.gamejolt.com/tokens" target="_blank" class="link-help">more info</a> ]
-	</p>
-
-	<p class="text-muted small">
-		Never share your account password. In fact, if a game asks for your password instead of your game token, please report it!
-	</p>
-
-	<div gj-expand-when="!modalCtrl.isChanging">
-		<table class="table">
-			<tbody>
-				<tr>
-					<th>Current Game Token</th>
-					<td>
-						<p ng-if="!modalCtrl.token" class="text-muted">Loading...</p>
-						<p ng-if="modalCtrl.token">
-							<code>{{ modalCtrl.token }}</code>
-						</p>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+	<div class="modal-controls">
+		<button class="btn btn-danger-outline" @click="modal.dismiss()">
+			<app-jolticon icon="remove" />
+			<translate>Close</translate>
+		</button>
 	</div>
 
-	<div gj-expand-when="modalCtrl.isChanging">
-		<gj-form-token
-			gj-user="App.user"
-			gj-token="modalCtrl.token"
-			gj-form-submit-handler="modalCtrl.onTokenChanged( formModel )">
-		</gj-form-token>
+	<div class="modal-header">
+		<h2 class="modal-title">
+			<app-jolticon icon="token" :big="true" />
+			<translate v-if="!isChanging">Your Game Token</translate>
+			<translate v-else>Change Game Token</translate>
+		</h2>
 	</div>
 
-</div>
+	<div class="modal-body">
+		<p class="text-muted small">
+			<translate>Your game token is like a special password you use to log into games that support high scores and achievements.</translate>
+			[ <a href="https://help.gamejolt.com/tokens" target="_blank" class="link-help">
+				<translate>more info</translate>
+			</a> ]
+		</p>
 
-<div class="modal-footer">
-	<button class="btn btn-outline anim-fade-enter anim-fade-leave" ng-click="modalCtrl.showChangeForm()" ng-if="!modalCtrl.isChanging">
-		<span class="jolticon jolticon-edit"></span>
-		Change Game Token
-	</button>
-</div>
+		<p class="text-muted small">
+			<translate>Never share your account password. In fact, if a game asks for your password instead of your game token, please report it!</translate>
+		</p>
+
+		<app-expand :when="!isChanging">
+			<table class="table">
+				<tbody>
+					<tr>
+						<th>Current Game Token</th>
+						<td>
+							<div v-if="!token">
+								<app-loading />
+							</div>
+							<p v-else>
+								<code>{{ token }}</code>
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</app-expand>
+
+		<app-expand :when="isChanging">
+			<form-token
+				:token="token"
+				@submit="onTokenChanged"
+				/>
+		</app-expand>
+	</div>
+
+	<div class="modal-footer">
+		<button class="btn btn-outline anim-fade-enter anim-fade-leave" @click="showChangeForm" v-if="!isChanging">
+			<app-jolticon icon="edit" />
+			<translate>Change Game Token</translate>
+		</button>
+	</div>
+
+</app-modal>

@@ -47,7 +47,6 @@ import './components/protocol-watcher/protocol-watcher-module';
 import './components/sorting/sorting-module';
 import './components/terms/change-alert/change-alert-module';
 import './components/user/set-password-modal/set-password-modal-module';
-import './components/user/token-modal/token-modal-module';
 
 export const AppModuleNg1 = angular.module( 'App', [
 
@@ -107,7 +106,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'App.Invite',
 	'App.Sorting',
 	'App.Game.Filtering',
-	'App.User.TokenModal',
 	'App.User.SetPasswordModal',
 	'App.User.FriendshipsHelper',
 	'App.Terms.ChangeAlert',
