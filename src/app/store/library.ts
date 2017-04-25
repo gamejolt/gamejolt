@@ -1,5 +1,5 @@
 import { namespace, State, Action, Mutation, Getter } from 'vuex-class';
-import { VuexModule, VuexMutation, VuexAction } from '../../lib/gj-lib-client/utils/vuex';
+import { VuexModule, VuexMutation, VuexAction, VuexStore } from '../../lib/gj-lib-client/utils/vuex';
 
 import { router } from '../bootstrap';
 import { GameCollection } from '../components/game/collection/collection.model';
@@ -56,7 +56,7 @@ function isViewingCollection( collection: GameCollection )
 }
 
 @VuexModule()
-export class LibraryStore
+export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations>
 {
 	collections: GameCollection[] = [];
 	followedCollection: GameCollection | null = null;
@@ -86,7 +86,6 @@ export class LibraryStore
 	 */
 	get playlistFolders()
 	{
-		console.log( 'playlist folders', this );
 		const folders: { [k: string]: GamePlaylistFolder } = {};
 
 		folders.main = new GamePlaylistFolder(

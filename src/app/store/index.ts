@@ -282,7 +282,7 @@ export class Store extends VuexStore<Store, Actions, Mutations>
 	}
 }
 
-export const store = new Store() as VuexStore<Store, Actions, Mutations>;
+export const store = new Store();
 
 // Bootstrap/clear the app when user changes.
 store.watch(
