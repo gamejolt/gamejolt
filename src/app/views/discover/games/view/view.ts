@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./view.html';
 import './view-content.styl';
@@ -27,7 +27,7 @@ import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scrol
 import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { AppMeter } from '../../../../../lib/gj-lib-client/components/meter/meter';
-import { RouteState, RouteAction, RouteStore, RouteMutation, RouteGetter } from './view.state';
+import { RouteState, RouteAction, RouteStore, RouteMutation } from './view.state';
 import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Store } from '../../../../store/index';
 
@@ -55,12 +55,12 @@ export default class RouteDiscoverGamesView extends Vue
 
 	@RouteState game: RouteStore['game'];
 	@RouteState userPartnerKey: RouteStore['userPartnerKey'];
-
-	@RouteGetter packages: RouteStore['packages'];
+	@RouteState packages: RouteStore['packages'];
 
 	@RouteAction bootstrap: RouteStore['bootstrap'];
 	@RouteAction refreshRatingInfo: RouteStore['refreshRatingInfo'];
 	@RouteMutation bootstrapGame: RouteStore['bootstrapGame'];
+	@RouteMutation clear: RouteStore['clear'];
 	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
 
 	@State app: Store['app'];
@@ -124,6 +124,7 @@ export default class RouteDiscoverGamesView extends Vue
 
 	routed()
 	{
+		this.clear();
 		this.bootstrap( this.$payload );
 
 		// TODO

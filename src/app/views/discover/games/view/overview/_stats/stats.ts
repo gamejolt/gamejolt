@@ -9,7 +9,7 @@ import { fuzzynumber } from '../../../../../../../lib/gj-lib-client/vue/filters/
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
 import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
-import { RouteState, RouteGetter, RouteStore } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.state';
 
 @View
 @Component({
@@ -31,8 +31,7 @@ export class AppDiscoverGamesViewOverviewStats extends Vue
 	@RouteState downloadCount: RouteStore['downloadCount'];
 	@RouteState playCount: RouteStore['playCount'];
 	@RouteState ratingBreakdown: RouteStore['ratingBreakdown'];
-
-	@RouteGetter packages: RouteStore['packages'];
+	@RouteState packages: RouteStore['packages'];
 
 	isShowingRatingBreakdown = false;
 

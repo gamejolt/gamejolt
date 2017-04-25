@@ -1,4 +1,4 @@
-import { namespace, Action, Mutation, State, Getter } from 'vuex-class';
+import { namespace, Action, Mutation, State } from 'vuex-class';
 import { VuexStore, VuexModule, VuexAction, VuexMutation } from '../../../../../lib/gj-lib-client/utils/vuex';
 
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
@@ -24,7 +24,6 @@ import { router } from '../../../index';
 export const RouteState = namespace( 'route', State );
 export const RouteAction = namespace( 'route', Action );
 export const RouteMutation = namespace( 'route', Mutation );
-export const RouteGetter = namespace( 'route', Getter );
 
 type Actions = {
 	bootstrap: any,
@@ -34,6 +33,7 @@ type Actions = {
 };
 
 type Mutations = {
+	clear: undefined;
 	bootstrapGame: number;
 	bootstrapFeed: undefined;
 	processPayload: any;
@@ -160,6 +160,18 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations>
 		this.processRatingPayload( response );
 	}
 
+	/**
+	 * This will clear things that may not get reset by the bootstrap methods.
+	 */
+	@VuexMutation
+	clear()
+	{
+		console.log( 'clear' );
+		this.feed = null;
+		this.showFullDescription = false;
+		this.canToggleDescription = false;
+	}
+
 	@VuexMutation
 	bootstrapGame( gameId: Mutations['bootstrapGame'] )
 	{
@@ -171,6 +183,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations>
 	{
 		// Try pulling feed from cache.
 		this.feed = ActivityFeedService.bootstrap();
+		console.log( 'bootstrap feed', this.feed );
 	}
 
 	@VuexMutation

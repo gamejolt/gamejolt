@@ -14,7 +14,7 @@ import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/m
 import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
-import { RouteState, RouteGetter, RouteStore } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.state';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
 import { Store } from '../../../../../../store/index';
@@ -44,9 +44,8 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue
 	@RouteState songs: RouteStore['songs'];
 	@RouteState twitterShareMessage: RouteStore['twitterShareMessage'];
 	@RouteState feed: RouteStore['feed'];
-
-	@RouteGetter packages: RouteStore['packages'];
-	@RouteGetter hasReleasesSection: RouteStore['hasReleasesSection'];
+	@RouteState packages: RouteStore['packages'];
+	@RouteState hasReleasesSection: RouteStore['hasReleasesSection'];
 
 	@State app: Store['app'];
 

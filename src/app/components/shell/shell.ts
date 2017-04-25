@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State, Getter, Action } from 'vuex-class';
+import { State, Action } from 'vuex-class';
 import * as View from '!view!./shell.html';
 import './shell.styl';
 
@@ -37,9 +37,8 @@ export class AppShell extends Vue
 {
 	@State app: Store['app'];
 	@State chat: Store['chat'];
-
-	@Getter isLeftPaneVisible: Store['isLeftPaneVisible'];
-	@Getter isRightPaneVisible: Store['isRightPaneVisible'];
+	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
+	@State isRightPaneVisible: Store['isRightPaneVisible'];
 
 	@Action clearPanes: Store['clearPanes'];
 

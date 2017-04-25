@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State, Getter, Action } from 'vuex-class';
+import { State, Action } from 'vuex-class';
 import * as View from '!view!./top-nav.html?style=./top-nav.styl';
 
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -40,9 +40,8 @@ export class AppShellTopNav extends Vue
 	@State app: Store['app'];
 	@State chat: ChatClient;
 	@State notificationCount: Store['notificationCount'];
-
-	@Getter isLeftPaneVisible: Store['isLeftPaneVisible'];
-	@Getter isRightPaneVisible: Store['isRightPaneVisible'];
+	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
+	@State isRightPaneVisible: Store['isRightPaneVisible'];
 
 	friendRequestCount = 0;
 	friendRequestsShowing = false;

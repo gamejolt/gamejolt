@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import { Getter, State, Action } from 'vuex-class';
+import { State, Action } from 'vuex-class';
 import * as View from '!view!./chat.html';
 
 import { AppChatBubbles } from '../../chat/bubbles/bubbles';
@@ -24,8 +24,7 @@ export class AppShellChat extends Vue
 	// Chat should be available since we only include in DOM if chat is
 	// bootstrapped.
 	@State chat: ChatClient;
-
-	@Getter isRightPaneVisible: Store['isRightPaneVisible'];
+	@State isRightPaneVisible: Store['isRightPaneVisible'];
 
 	@Action toggleRightPane: Store['toggleRightPane'];
 

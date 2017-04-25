@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { Getter, State, Action } from 'vuex-class';
+import { State, Action } from 'vuex-class';
 import * as View from '!view!./bubbles.html?style=./bubbles.styl';
 
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
@@ -12,7 +12,7 @@ import { ChatClient } from '../client';
 export class AppChatBubbles extends Vue
 {
 	@State chat: ChatClient;
-	@Getter isRightPaneVisible: Store['isRightPaneVisible'];
+	@State isRightPaneVisible: Store['isRightPaneVisible'];
 	@Action toggleRightPane: Store['toggleRightPane'];
 
 	Screen = makeObservableService( Screen );

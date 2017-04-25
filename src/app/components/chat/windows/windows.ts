@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { Getter, State } from 'vuex-class';
+import { State } from 'vuex-class';
 import * as View from '!view!./windows.html?style=./windows.styl';
 
 import { AppChatWindow } from '../window/window';
@@ -16,5 +16,5 @@ import { Store } from '../../../store/index';
 export class AppChatWindows extends Vue
 {
 	@State chat: ChatClient;
-	@Getter isRightPaneVisible: Store['isRightPaneVisible'];
+	@State isRightPaneVisible: Store['isRightPaneVisible'];
 }

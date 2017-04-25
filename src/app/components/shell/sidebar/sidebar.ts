@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State, Getter, Action } from 'vuex-class';
+import { State, Action } from 'vuex-class';
 import * as View from '!view!./sidebar.html?style=./sidebar.styl';
 
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -18,7 +18,7 @@ import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { Store } from '../../../store/index';
 import { AppShellSidebarCollectionList } from './collection-list';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { LibraryStore, LibraryAction, LibraryState, LibraryGetter } from '../../../store/library';
+import { LibraryStore, LibraryAction, LibraryState } from '../../../store/library';
 
 @View
 @Component({
@@ -44,15 +44,14 @@ export class AppShellSidebar extends Vue
 	@State app: Store['app'];
 	@State isBootstrapped: Store['isBootstrapped'];
 	@State notificationCount: Store['notificationCount'];
+	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
 	@LibraryState bundleCollections: LibraryStore['bundleCollections'];
 	@LibraryState developerCollection: LibraryStore['developerCollection'];
 	@LibraryState followedCollection: LibraryStore['followedCollection'];
 	@LibraryState recommendedCollection: LibraryStore['recommendedCollection'];
 	@LibraryState ownedCollection: LibraryStore['ownedCollection'];
 	@LibraryState collections: LibraryStore['collections'];
-
-	@Getter isLeftPaneVisible: Store['isLeftPaneVisible'];
-	@LibraryGetter playlistFolders: LibraryStore['playlistFolders'];
+	@LibraryState playlistFolders: LibraryStore['playlistFolders'];
 
 	@Action toggleLeftPane: Store['toggleLeftPane'];
 	@LibraryAction newPlaylist: LibraryStore['newPlaylist'];

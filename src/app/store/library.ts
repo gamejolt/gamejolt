@@ -1,4 +1,4 @@
-import { namespace, State, Action, Mutation, Getter } from 'vuex-class';
+import { namespace, State, Action, Mutation } from 'vuex-class';
 import { VuexModule, VuexMutation, VuexAction, VuexStore } from '../../lib/gj-lib-client/utils/vuex';
 
 import { router } from '../bootstrap';
@@ -15,7 +15,6 @@ import { Translate } from '../../lib/gj-lib-client/components/translate/translat
 export const LibraryState = namespace( 'library', State );
 export const LibraryAction = namespace( 'library', Action );
 export const LibraryMutation = namespace( 'library', Mutation );
-export const LibraryGetter = namespace( 'library', Getter );
 
 export type Actions = {
 	'library/followCollection': GameCollection;
