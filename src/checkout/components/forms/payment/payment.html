@@ -126,13 +126,12 @@
 									<form-group name="region" label="{{ 'state/province' | translate }}" class="">
 
 										<input form-control="text"
-											class="no-animate-leave"
 											ng-if="!formState.regions"
 											placeholder="{{ 'state/province' | translate }}"
 											ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 1000 } }"
 											>
 
-										<select class="no-animate-leave" form-control ng-if="formState.regions">
+										<select form-control ng-if="formState.regions">
 											<option ng-repeat="region in formState.regions track by region.code" value="{{ ::region.code }}">
 												{{ region.name }}
 											</option>
