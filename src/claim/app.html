@@ -1,17 +1,22 @@
 <div>
-
 	<div id="shell">
 
 		<div id="header">
-			<div gj-user-bar="$ctrl.app.user" gj-current-site="main" hide-site-selector="true" ng-cloak></div>
+			<app-user-bar :user="app.user" site="main" :hide-site-selector="true" />
 		</div>
 
-		<ui-view id="content" ng-cloak></ui-view>
-		<gj-growls></gj-growls>
+		<div id="content">
+			<app-error-page>
+				<router-view />
+			</app-error-page>
+		</div>
 
+		<app-loading-bar />
+		<app-growls />
+		<app-modals />
 	</div>
 
-	<footer id="footer" ng-cloak>
+	<footer id="footer">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-6">
@@ -25,11 +30,10 @@
 				</div>
 				<div class="col-sm-6">
 					<p class="footer-copyright">
-						&copy; {{ $ctrl.currentDate | date:'yyyy' }} Lucent Web Creative, LLC
+						&copy; {{ curDate | date( 'YYYY' ) }} Lucent Web Creative, LLC
 					</p>
 				</div>
 			</div>
 		</div>
 	</footer>
-
 </div>

@@ -1,0 +1,122 @@
+<div>
+
+	<div class="game-cover">
+		<app-media-item-cover
+			v-if="game.header_media_item"
+			:media-item="game.header_media_item"
+			/>
+	</div>
+
+	<!--
+		If this game is in a bundle, show a back button.
+	-->
+	<div v-if="bundle">
+		<br>
+		<router-link
+			class="btn btn-outline btn-block"
+			:to="{
+				name: 'key',
+				params: $route.params,
+				query: {},
+			}"
+			>
+			<app-jolticon icon="chevron-left" />
+			<translate>Back to Bundle</translate>
+		</router-link>
+	</div>
+
+	<div class="text-center">
+		<h1>{{ game.title }}</h1>
+		<h4>
+			<translate>by</translate>
+			<a class="link-unstyled" :href="Environment.baseUrl + game.developer.url">
+				{{ game.developer.display_name }}
+			</a>
+		</h4>
+	</div>
+
+	<div class="alert alert-info full-bleed full-bleed-xs" v-if="showingThanks">
+		<p><strong>Thanks for buying the game!</strong></p>
+		<p>We've emailed you your key's URL (this page) just so you can always find it. You are able to find your download(s) below. Any future updates to the game will be available here as well.</p>
+		<p>~ Warm thanks from both {{ game.developer.display_name }} and the Game Jolt team.</p>
+		<p class="text-muted text-right">Stay Indie... <em>or else!</em> (ノಠ益ಠ)ノ彡┻━┻</p>
+	</div>
+
+	<div v-if="!bundle">
+		<div class="alert alert-info full-bleed full-bleed-xs text-center" v-if="!app.user">
+			<p><a :href="loginUrl"><translate>Sign in to Game Jolt to be able to claim this game into your Library.</translate></a></p>
+		</div>
+
+		<p v-else>
+			<button
+				class="btn btn-success-outline btn-block"
+				@click="claim"
+				>
+				<app-jolticon icon="key-diagonal" />
+				<translate>Claim Game into Library</translate>
+			</button>
+		</p>
+	</div>
+
+	<app-fade-collapse
+		:collapse-height="isClaimOnly ? undefined : 400"
+		:is-open="showingFullDescription"
+		@required="canToggleDescription = true"
+		>
+		<div class="game-compiled-description" v-html="game.description_compiled"></div>
+	</app-fade-collapse>
+
+	<a class="hidden-text-expander"
+		v-if="canToggleDescription"
+		@click="showingFullDescription = !showingFullDescription"
+		>
+	</a>
+
+	<div v-if="!isClaimOnly">
+		<div v-if="linkedKeys.length">
+			<h3>
+				<translate>Extra Keys</translate>
+			</h3>
+
+			<div class="table-responsive">
+				<table class="table">
+					<tbody>
+						<tr v-for="linkedKey of linkedKeys" :key="linkedKey.key">
+							<th>
+								<span v-if="linkedKey.provider === LinkedKey.PROVIDER_STEAM">
+									<app-jolticon icon="steam" />
+									Steam
+								</span>
+							</th>
+							<td>
+								<code>{{ linkedKey.key }}</code>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<h2>
+			<translate>Releases</translate>
+		</h2>
+
+		<div class="packages-list" v-if="packagePayload && packagePayload.packages.length">
+			<app-game-package-card
+				v-for="package of packagePayload.packages"
+				:key="package.id"
+				:game="game"
+				:sellable="package._sellable"
+				:package="package"
+				:releases="package._releases"
+				:builds="package._builds"
+				:access-key="accessKey"
+				/>
+		</div>
+
+		<div class="alert alert-warning" v-else>
+			<translate>No releases yet.</translate>
+		</div>
+	</div>
+
+</div>

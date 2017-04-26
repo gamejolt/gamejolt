@@ -1,17 +1,21 @@
-<form gj-form="formModel" name="retrieveForm">
+<app-form name="retrieveForm">
 
-	<form-group name="email" label="Email Address">
-		<input form-control="email"
-			ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 250 } }"
-			>
-		<control-errors>
-			<control-error when="server">That email address doesn't seem to be correct. Please check that you entered it correctly.</control-error>
-		</control-errors>
-	</form-group>
+	<app-form-group name="email" :label="$gettext( 'Email Address' )">
+		<app-form-control
+			type="email"
+			:validate-on="[ 'blur' ]"
+			/>
 
-	<button gj-form-submit-button class="btn btn-outline" ng-disabled="!retrieveForm.$valid" ng-click="onSubmit()">
-		<span class="jolticon jolticon-key-diagonal"></span>
-		Retrieve
-	</button>
+		<app-form-control-errors>
+			<app-form-control-error
+				when="server"
+				:message="$gettext( `That email address doesn't seem to be correct. Please check that you entered it correctly.` )"
+				/>
+		</app-form-control-errors>
+	</app-form-group>
 
-</form>
+	<app-form-button icon="key-diagonal">
+		<translate>Retrieve</translate>
+	</app-form-button>
+
+</app-form>
