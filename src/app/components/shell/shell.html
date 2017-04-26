@@ -18,6 +18,10 @@
 
 	<app-shell-chat v-if="chat" />
 
+	<div v-if="GJ_IS_CLIENT">
+		<app-shell-client />
+	</div>
+
 	<app-loading-bar />
 	<app-growls />
 	<app-modals />
