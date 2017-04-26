@@ -1,7 +1,7 @@
 import { Component, Watch } from 'vue-property-decorator';
 import * as View from '!view!./settings.html';
 
-import { BaseForm } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { BaseForm, FormOnInit } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Settings } from '../../settings/settings.service';
 import { AppFormControlToggleSwitch } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle-switch/toggle-switch';
@@ -17,11 +17,11 @@ import { AppFormControlToggleSwitch } from '../../../../lib/gj-lib-client/compon
 		AppFormControlToggleSwitch,
 	}
 })
-export class FormSettings extends BaseForm<any>
+export class FormSettings extends BaseForm<any> implements FormOnInit
 {
 	Environment = Environment;
 
-	created()
+	onInit()
 	{
 		this.formModel.chat_notify_friends_online = Settings.get( 'chat-notify-friends-online' );
 		this.formModel.restricted_browsing = Settings.get( 'restricted-browsing' );

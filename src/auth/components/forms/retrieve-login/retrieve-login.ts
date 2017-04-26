@@ -17,7 +17,7 @@ export class FormRetrieveLogin extends BaseForm<any> implements FormOnSubmit
 {
 	Connection = makeObservableService( Connection );
 
-	changed()
+	onChanged()
 	{
 		this.setState( 'invalidEmail', false );
 	}

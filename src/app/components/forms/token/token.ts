@@ -1,7 +1,7 @@
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./token.html';
 
-import { BaseForm, FormOnSubmit, FormOnSubmitSuccess } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { BaseForm, FormOnSubmit, FormOnSubmitSuccess, FormOnInit } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
 
@@ -11,11 +11,11 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 		AppFocusWhen,
 	},
 })
-export class FormToken extends BaseForm<any> implements FormOnSubmit, FormOnSubmitSuccess
+export class FormToken extends BaseForm<any> implements FormOnInit, FormOnSubmit, FormOnSubmitSuccess
 {
 	@Prop( String ) token: string;
 
-	created()
+	onInit()
 	{
 		this.formModel.token = this.token;
 	}
