@@ -42,10 +42,17 @@ export class AppScoreFeed extends Vue
 		this.closeSubscription();
 	}
 
-	private processUser( user: any )
+	private processScore( score: any )
 	{
-		const noAvatar = 'https://s.gjcdn.net/img/no-avatar-3.png';
-		user.img_avatar = 'https://secure.gravatar.com/avatar/' + user.email_hash + '?s=200&r=pg&d=' + encodeURIComponent( noAvatar );
+		if ( score.user ) {
+			const noAvatar = 'https://s.gjcdn.net/img/no-avatar-3.png';
+			score.user.img_avatar = 'https://secure.gravatar.com/avatar/' + score.user.email_hash
+				+ '?s=200&r=pg&d=' + encodeURIComponent( noAvatar );
+		}
+
+		if ( typeof score.time === 'string' ) {
+			score.time = parseInt( score.time, 10 );
+		}
 	}
 
 	private async setupSubscription()
@@ -82,10 +89,7 @@ export class AppScoreFeed extends Vue
 					if ( !latestScoreDate || scoreDate.getTime() > latestScoreDate.getTime() ) {
 						this.latestScore = score;
 
-						if ( score.user ) {
-							this.processUser( score.user );
-						}
-
+						this.processScore( score );
 						this.scores.unshift( score );
 					}
 				}
