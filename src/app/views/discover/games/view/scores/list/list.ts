@@ -20,6 +20,7 @@ import { AppScoreboardSelector } from '../../../../../../components/score/scoreb
 import { Popover } from '../../../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { Store } from '../../../../../../store/index';
+import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/components/loading/fade/fade';
 
 @View
 @Component({
@@ -28,6 +29,7 @@ import { Store } from '../../../../../../store/index';
 		AppScoreList,
 		AppScrollAffix,
 		AppScoreboardSelector,
+		AppLoadingFade,
 	},
 	directives: {
 		AppNoAutoscroll,
@@ -62,7 +64,7 @@ export default class RouteDiscoverGamesViewScoresList extends Vue
 		return this.scores.filter( ( _score, i ) => i % 2 === 1 );
 	}
 
-	@BeforeRouteEnter()
+	@BeforeRouteEnter({ cache: true })
 	beforeRoute( this: undefined, route: VueRouter.Route )
 	{
 		let query = '';
