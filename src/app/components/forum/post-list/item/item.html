@@ -98,6 +98,7 @@
 			<hr>
 		</app-expand>
 
+
 		<div v-if="!isEditing">
 			<div class="forum-post-body">
 				<app-widget-compiler
@@ -106,10 +107,10 @@
 			</div>
 		</div>
 
-		<div v-if="isEditing">
+		<div v-else>
 			<form-forum-post
-				:model="topic"
-				:post="post"
+				:model="post"
+				:topic="topic"
 				@cancel="closeEdit"
 				@submit="closeEdit"
 				/>
@@ -169,13 +170,15 @@
 
 		<div v-if="isReplying || isShowingReplies" slot="replies">
 
-			<form-forum-post
-				v-if="isReplying"
-				:model="topic"
-				:reply-to="post"
-				@cancel="closeReply"
-				@submit="onReplied( formModel, $response )"
-				/>
+			<app-message-thread-add v-if="isReplying">
+				<form-forum-post
+					v-if="isReplying"
+					:topic="topic"
+					:reply-to="post"
+					@cancel="closeReply"
+					@submit="onReplied"
+					/>
+			</app-message-thread-add>
 
 			<app-forum-post-list-item
 				v-if="isShowingReplies && replies.length > 0"

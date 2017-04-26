@@ -1,8 +1,4 @@
 <app-message-thread class="forum-post-list">
-		<!--class="forum-post-list-item"-->
-	<!--<div
-
-		>-->
 
 	<app-forum-post-list-item
 		v-for="post of posts"
@@ -10,16 +6,7 @@
 		:topic="topic"
 		:post="post"
 		:user-post-count="userPostCounts[ post.user_id ]"
+		@replied="onReplied"
 		/>
 
-		<!--<div v-if="showingReplies[ post.id ]">-->
-			<!--<app-forum-post-list-replies
-				topic="topic"
-				replies="replies[ post.id ]"
-				replies-count="replyCounts[ post.id ]"
-				user-post-counts="userPostCounts"
-				/>-->
-		<!--</div>-->
-
-	<!--</div>-->
 </app-message-thread>

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { State } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import * as View from '!view!./item.html?style=./item.styl';
 
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
@@ -24,17 +24,22 @@ import { AppMessageThreadItem } from '../../../../../lib/gj-lib-client/component
 import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { Store } from '../../../../store/index';
+import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components/message-thread/add/add';
 
 @View
 @Component({
 	components: {
 		AppScrollInview,
 		AppMessageThreadItem,
+		AppMessageThreadAdd,
 		AppJolticon,
 		AppPopover,
 		AppWidgetCompiler,
 		AppExpand,
 		FormForumPost,
+
+		// Since it's recursive it needs to be able to resolve itself.
+		AppForumPostListItem: () => Promise.resolve( AppForumPostListItem ),
 	},
 	directives: {
 		AppTooltip,
@@ -56,7 +61,6 @@ export class AppForumPostListItem extends Vue
 
 	isEditing = false;
 	isReplying = false;
-	isActive = false;
 	isShowingReplies = false;
 
 	showingParent = false;
@@ -73,9 +77,20 @@ export class AppForumPostListItem extends Vue
 		return (this.isReply ? this.post.parent_post_id + '-' : '') + this.post.id;
 	}
 
-	mounted()
+	get isActive()
 	{
-		this.checkPermalink();
+		// We never mark ourselves as active if we're showing as a reply.
+		return !this.parent && this.$route.hash === '#forum-post-' + this.id;
+	}
+
+	@Watch( 'isActive', { immediate: true } )
+	async onActiveChanged( isActive: boolean )
+	{
+		// Wait till we're compiled into the DOM.
+		await this.$nextTick();
+		if ( isActive ) {
+			Scroll.to( this.$el );
+		}
 	}
 
 	toggleReplies()
@@ -146,18 +161,16 @@ export class AppForumPostListItem extends Vue
 		this.isReplying = false;
 	}
 
-	onReplied( newPost: ForumPost )
+	onReplied( newPost: ForumPost, response: any )
 	{
-		// If their post was marked as spam, make sure they know.
-		if ( newPost.status === ForumPost.STATUS_SPAM ) {
-			Growls.info(
-				this.$gettext( `Your post has been marked for review. Please allow some time for it to show on the site.` ),
-				this.$gettext( `Post Needs Review` ),
-			);
+		this.isReplying = false;
+
+		// If the replies list is open, refresh it.
+		if ( this.isShowingReplies ) {
+			this.loadReplies();
 		}
 
-		this.isReplying = false;
-		this.$emit( 'replied', newPost );
+		this.$emit( 'replied', newPost, response );
 	}
 
 	edit()
@@ -189,14 +202,5 @@ export class AppForumPostListItem extends Vue
 	copyPermalink()
 	{
 		Clipboard.copy( this.post.getPermalink() );
-	}
-
-	private checkPermalink()
-	{
-		const hash = this.$route.hash;
-		if ( hash === '#forum-post-' + this.id ) {
-			this.isActive = true;
-			Scroll.to( 'forum-post-' + this.id );
-		}
 	}
 }

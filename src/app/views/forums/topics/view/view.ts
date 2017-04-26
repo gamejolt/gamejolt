@@ -37,6 +37,7 @@ import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components/message-thread/add/add';
 import { Store } from '../../../../store/index';
 import { AppMessageThreadPagination } from '../../../../../lib/gj-lib-client/components/message-thread/pagination/pagination';
+import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
 
 @View
 @Component({
@@ -54,6 +55,7 @@ import { AppMessageThreadPagination } from '../../../../../lib/gj-lib-client/com
 		AppMessageThreadAdd,
 		AppMessageThreadPagination,
 		FormForumPost,
+		FormForumTopic,
 	},
 	directives: {
 		AppTooltip,
@@ -69,8 +71,8 @@ export default class RouteForumsTopicsView extends Vue
 {
 	@State app: Store['app'];
 
-	topic: ForumTopic | null = null;
-	channel: ForumChannel | null = null;
+	topic: ForumTopic = null as any;
+	channel: ForumChannel = null as any;
 	posts: ForumPost[] = [];
 
 	isEditingTopic = false;
@@ -123,7 +125,7 @@ export default class RouteForumsTopicsView extends Vue
 		this.userPostCounts = this.$payload.userPostCounts || {};
 	}
 
-	onPostAdded( newPost: ForumPost, response: any )
+	async onPostAdded( newPost: ForumPost, response: any )
 	{
 		// If their post was marked as spam, make sure they know.
 		if ( newPost.status === ForumPost.STATUS_SPAM ) {
@@ -133,19 +135,13 @@ export default class RouteForumsTopicsView extends Vue
 			);
 		}
 
-		// We want to either go to the correct page or stay on the current one but reload it to get all new posts.
-		// Note that we scroll to the post as well.
-		if ( response.page !== this.currentPage ) {
-			// this.$router.push( )
-			// $state.go( $state.current, { page: response.page, '#': 'forum-post-' + newPost.id } );
-		}
-		else {
-			Scroll.shouldAutoScroll = false;
-			// $state.reload( 'forums.topics.view' ).then( function()
-			// {
-			// 	$location.replace().hash( 'forum-post-' + newPost.id );
-			// } );
-		}
+		// When the new post comes into the DOM the hash will match and it will
+		// scroll to it.
+		this.$router.replace( {
+			name: this.$route.name,
+			query: { page: response.page },
+			hash: '#forum-post-' + newPost.id,
+		} );
 	}
 
 	editTopic()
@@ -161,14 +157,14 @@ export default class RouteForumsTopicsView extends Vue
 
 	async follow()
 	{
-		await this.topic!.$follow();
+		await this.topic.$follow();
 		this.isFollowing = true;
 		++this.followerCount;
 	}
 
 	async unfollow()
 	{
-		await this.topic!.$unfollow();
+		await this.topic.$unfollow();
 		this.isFollowing = false;
 		--this.followerCount;
 	}
@@ -188,6 +184,6 @@ export default class RouteForumsTopicsView extends Vue
 
 	report()
 	{
-		ReportModal.show( this.topic! );
+		ReportModal.show( this.topic );
 	}
 }

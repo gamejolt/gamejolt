@@ -22,19 +22,9 @@ export class AppForumPostList extends Vue
 	// No longer showing this.
 	@Prop( Object ) userPostCounts: any;
 
-	// onReplied( parent: ForumPost, newPost: ForumPost )
-	// {
-	// 	// If the replies list is open, we add it at the bottom of the replies list as well.
-	// 	// Otherwise we let the caller of the post-list handle the new reply.
-	// 	if ( this.showingReplies[ parent.id ] ) {
-	// 		this.loadReplies( parent );
-	// 	}
-
-	// 	this.$emit( 'replied', newPost );
-
-	// 	// // Hand it off to whatever called the post-list directive.
-	// 	// if ( this.onReply ) {
-	// 	// 	this.onReply( { formModel: formModel, $response: response } );
-	// 	// }
-	// }
+	// Bubble it up.
+	onReplied( ...args: any[] )
+	{
+		this.$emit( 'replied', ...args );
+	}
 }

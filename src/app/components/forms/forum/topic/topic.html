@@ -1,31 +1,42 @@
-<form gj-form="formModel" name="forumTopicForm">
+<app-form name="forumTopicForm">
 
-	<form-group class="no-animate" name="title" label="{{ 'Title' | translate }}">
-		<input form-control="text" ng-maxlength="300">
-		<control-errors></control-errors>
-	</form-group>
+	<app-form-group
+		name="title"
+		:label="$gettext( 'Title' )"
+		>
 
-	<form-group class="no-animate" name="content_markdown" label="{{ 'Topic Content' | translate }}">
+		<app-form-control type="text" :rules="{ max: 300 }" />
 
-		<div
-			form-markdown-editor
+		<app-form-control-errors />
+
+	</app-form-group>
+
+	<app-form-group
+		name="content_markdown"
+		:label="$gettext( 'Topic Content' )"
+		>
+
+		<app-form-control-markdown
 			preview-class="forum-post-body"
-			markdown-preview-url="/web/forums/posts/preview"
-			>
-		</div>
+			preview-url="/web/forums/posts/preview"
+			markdown-mode="forums"
+			/>
 
-		<control-errors></control-errors>
+		<app-form-control-errors />
 
-	</form-group>
+	</app-form-group>
 
-	<button gj-form-submit-button class="btn btn-outline" ng-disabled="!forumTopicForm.$valid" ng-click="onSubmit()">
-		<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
-		<span ng-if="method == 'add'" translate>Add Topic</span>
-		<span ng-if="method == 'edit'" translate>Save</span>
+	<app-form-button :icon="method" class="btn-outline">
+		<translate v-if="method === 'add'">Add Topic</translate>
+		<translate v-if="method === 'edit'">Save</translate>
+	</app-form-button>
+
+	<button
+		class="btn btn-danger-outline"
+		v-if="method === 'edit'"
+		@click.prevent="onCancel"
+		>
+		<translate>Cancel</translate>
 	</button>
 
-	<button class="btn btn-danger-outline" ng-if="method == 'edit'" ng-click="onCancel()" translate>
-		Cancel
-	</button>
-
-</form>
+</app-form>

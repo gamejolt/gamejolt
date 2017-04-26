@@ -37,7 +37,7 @@ export default class RouteForumsChannelsView extends Vue
 {
 	@State app: Store['app'];
 
-	channel: ForumChannel | null = null;
+	channel: ForumChannel = null as any;
 	topics: ForumTopic[] = [];
 	postCountPerPage = 0;
 	stickyTopics: ForumTopic[] = [];
