@@ -29,7 +29,6 @@ import '../lib/gj-lib-client/components/alert/dismissable/dismissable';
 import '../lib/gj-lib-client/components/form/form';
 import '../lib/gj-lib-client/components/form/markdown-editor/markdown-editor';
 import '../lib/gj-lib-client/components/form/upload-control/upload-control';
-import '../lib/gj-lib-client/components/user/linked-accounts/linked-accounts';
 import '../lib/gj-lib-client/components/jam/jam-module';
 import '../lib/gj-lib-client/components/jam/game/game';
 import '../lib/gj-lib-client/components/jam/voting-category/voting-category';
@@ -86,7 +85,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Form',
 	'gj.Form.MarkdownEditor',
 	'gj.Form.UploadControl',
-	'gj.User.LinkedAccounts',
 	'gj.Jam',
 	'gj.Jam.Game',
 	'gj.Jam.VotingCategory',
