@@ -6,9 +6,12 @@ import { routeAuthJoin } from './join/join.route';
 import { routeAuthForgot } from './forgot/forgot.route';
 import { routeAuthForgotSent } from './forgot-sent/forgot-sent.route';
 import { routeAuthJoinAlmost } from './join-almost/join-almost.route';
+import { routeError404 } from '../../../lib/gj-lib-client/components/error/page/page.route';
+import { routeAuthResetPassword } from './reset-password/reset-password.route';
+import { routeAuthAuthorize } from './authorize/authorize.route';
+import { routeAuthLinkedAccount } from './linked-account/linked-account.route';
 
 export const routeAuth: VueRouter.RouteConfig = {
-	name: 'auth',
 	path: '/',
 	props: true,
 	component: RouteAuth,
@@ -18,5 +21,9 @@ export const routeAuth: VueRouter.RouteConfig = {
 		routeAuthJoinAlmost,
 		routeAuthForgot,
 		routeAuthForgotSent,
+		routeAuthResetPassword,
+		routeAuthAuthorize,
+		routeAuthLinkedAccount,
+		routeError404,
 	],
 };

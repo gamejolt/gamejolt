@@ -1,15 +1,22 @@
-<div ng-if="pollCtrl.isPolling">
-	<p>Please login to your account through your web browser.</p>
+<div v-if="token">
 
-	<div
-		gj-progress-poller="/web/auth/poll-oauth/{{ pollCtrl.token }}"
-		progress-poller-on-complete="pollCtrl.completed( $response )"
-		progress-poller-on-error="pollCtrl.failed()"
-		progress-poller-interval="2500"
-		>
+	<div v-if="isPolling">
+		<p>Please login to your account through your web browser.</p>
+
+		<app-progress-poller
+			:url="`/web/auth/poll-oauth/${ token }`"
+			:interval="2500"
+			@complete="completed"
+			@error="failed"
+			/>
 	</div>
-</div>
 
-<div ng-if="!pollCtrl.isPolling">
-	<gj-loading label="{{ 'auth.linked_account.loading_message' | translate }}" class="loading-centered" loading-big></gj-loading>
+	<div v-else>
+		<app-loading
+			:label="$gettext( 'auth.linked_account.loading_message' )"
+			:centered="true"
+			:big="true"
+			/>
+	</div>
+
 </div>

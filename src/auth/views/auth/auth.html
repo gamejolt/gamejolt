@@ -14,7 +14,7 @@
 
 	<div class="auth-scroll-container">
 		<div class="auth-logo text-center anim-fade-in-enlarge stagger">
-			<a :href="!Environment.isClient ? Environment.baseUrl + '/' : Environment.authBaseUrl + '/login'">
+			<a :href="!GJ_IS_CLIENT ? Environment.baseUrl + '/' : Environment.authBaseUrl + '/login'">
 				<img src="~img/game-jolt-logo.svg" width="164" height="18" alt="Game Jolt" class="visible-xs">
 				<img src="~img/game-jolt-logo.svg" width="328" height="36" alt="Game Jolt" class="hidden-xs">
 			</a>

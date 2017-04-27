@@ -1,5 +1,19 @@
-<div class="anim-fade-in-up">
-	<h1 class="h3 section-header" translate>auth.authorize.invalid.heading</h1>
+<div class="anim-fade-in-up" v-if="routeBootstrapped">
+	<div v-if="isSuccess">
+		<h2 class="section-header">
+			<translate>auth.authorize.success_growl_title</translate>
+		</h2>
+		<div>
+			<translate>auth.authorize.success_growl</translate>
+		</div>
+	</div>
 
-	<div translate>auth.authorize.invalid.body_html</div>
+	<div v-else>
+		<h2 class="section-header">
+			<translate>auth.authorize.invalid.heading</translate>
+		</h2>
+		<div>
+			<translate :escape-html="false">auth.authorize.invalid.body_html</translate>
+		</div>
+	</div>
 </div>

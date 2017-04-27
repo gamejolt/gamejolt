@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { Mutation } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./join.html';
 
@@ -7,9 +8,9 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import { appStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service';
-import { Mutations } from '../../../store/index';
+import { Store } from '../../../store/index';
+import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
+import { loggedUserBlock } from '../auth';
 
 @View
 @Component({
@@ -17,19 +18,18 @@ import { Mutations } from '../../../store/index';
 		AppJolticon,
 		AppAuthJoin,
 	},
-	beforeRouteEnter( _to, _from, next )
-	{
-		// Redirect right away if they are logged in.
-		if ( appStore.state.user ) {
-			Auth.redirectDashboard();
-			return next( false );
-		}
-		next();
-	}
 })
 export default class RouteAuthJoin extends Vue
 {
+	@Mutation setCredentials: Store['setCredentials'];
+
 	Connection = makeObservableService( Connection );
+
+	@BeforeRouteEnter()
+	routeEnter()
+	{
+		return loggedUserBlock();
+	}
 
 	created()
 	{
@@ -40,7 +40,7 @@ export default class RouteAuthJoin extends Vue
 	{
 		// We store these so we can log them in automatically once their
 		// verification happens.
-		this.$store.commit( Mutations.setCredentials, {
+		this.setCredentials( {
 			username: formModel.username,
 			password: formModel.password,
 		} );

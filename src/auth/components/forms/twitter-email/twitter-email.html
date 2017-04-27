@@ -1,0 +1,33 @@
+<app-form name="twitterEmailForm">
+
+	<app-form-group
+		name="email"
+		:label="$gettext( 'auth.linked_account.twitter.finalize.email_label' )"
+		:hide-label="true"
+		>
+		<p class="help-block">
+			<translate>auth.linked_account.twitter.finalize.email_help</translate>
+		</p>
+
+		<app-form-control
+			type="email"
+			:validate-on="[ 'blur' ]"
+			:placeholder="$gettext( 'auth.linked_account.twitter.finalize.email_label' )"
+			@change="onChanged"
+			/>
+
+		<app-form-control-errors />
+	</app-form-group>
+	<br>
+
+	<div class="alert alert-warning anim-fade-in-enlarge no-animate-leave"
+		v-if="duplicateEmail"
+		>
+		<translate>auth.linked_account.twitter.finalize.duplicate_email_error_html</translate>
+	</div>
+
+	<app-form-button icon="chevron-right" class="btn-block btn-outline btn-dark-variant">
+		<translate>auth.linked_account.twitter.finalize.submit_button</translate>
+	</app-form-button>
+
+</app-form>

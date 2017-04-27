@@ -1,4 +1,6 @@
-angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Account.LinkedAccountsCtrl', function( $scope, $state, App, Growls, User_LinkedAccounts, Youtube_Channel, User_SetPasswordModal, ModalConfirm, gettextCatalog, payload )
+const router =
+
+angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Account.LinkedAccountsCtrl', function( $scope, $state, App, Growls, UserLinkedAccounts, Youtube_Channel, User_SetPasswordModal, ModalConfirm, gettextCatalog, payload )
 {
 	var _this = this;
 
@@ -9,12 +11,13 @@ angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Account.LinkedAcc
 
 	this.link = function( provider )
 	{
-		User_LinkedAccounts.link( provider );
+		// TODO: Make sure app.router exists.
+		UserLinkedAccounts.link( App.router, provider );
 	};
 
 	this.unlink = function( provider )
 	{
-		User_LinkedAccounts.unlink( provider ).catch( function( error )
+		UserLinkedAccounts.unlink( App.user, provider ).catch( function( error )
 		{
 			// If they don't have a password, we have to show them a modal to set it.
 			if ( error == 'no-password' ) {
