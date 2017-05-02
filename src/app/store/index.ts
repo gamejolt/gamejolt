@@ -46,7 +46,7 @@ const modules: any = {
 	library: new LibraryStore(),
 };
 if ( GJ_IS_CLIENT ) {
-	const clientLibrary = require( './client-library' );
+	const clientLibrary = require( './client-library' ).ClientLibraryStore;
 	modules.clientLibrary = new clientLibrary();
 }
 @VuexModule({

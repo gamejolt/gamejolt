@@ -20,7 +20,7 @@ Payload.init( store as any, router );
 History.init( router );
 
 if ( GJ_IS_CLIENT ) {
-	require( './bootstrap-client' );
+	// require( './bootstrap-client' );
 }
 GamePlayModal.init( { canMinimize: true } );
 bootstrapShortkey();
