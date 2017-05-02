@@ -8,6 +8,7 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service';
 import { AppProgressPoller } from '../../../../lib/gj-lib-client/components/progress/poller/poller';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -17,7 +18,7 @@ import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.s
 })
 export default class RouteJoinAlmost extends Vue
 {
-	@State credentials: any;
+	@State credentials: Store['credentials'];
 
 	created()
 	{
@@ -26,7 +27,7 @@ export default class RouteJoinAlmost extends Vue
 
 	async onAuthorized()
 	{
-		if ( !this.credentials.username || !this.credentials.password ) {
+		if ( !this.credentials ) {
 			return;
 		}
 

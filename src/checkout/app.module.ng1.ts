@@ -13,7 +13,6 @@ import '../lib/gj-lib-client/components/expand-when/expand-when.module';
 import '../lib/gj-lib-client/components/form/form';
 import '../lib/gj-lib-client/components/tooltip/tooltip.module';
 import '../lib/gj-lib-client/components/site-selector/site-selector';
-import '../lib/gj-lib-client/components/user/user-bar/user-bar';
 
 export const AppModuleNg1 = angular.module( 'App', [
 
@@ -36,7 +35,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Form',
 	'gj.Tooltip',
 	'gj.SiteSelector',
-	'gj.User.UserBar',
 ] )
 /*@ngInject*/
 .config( (

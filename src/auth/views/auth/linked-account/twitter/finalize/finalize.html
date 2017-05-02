@@ -1,3 +1,12 @@
-<h1 class="h2 section-header anim-fade-in-enlarge" translate>auth.linked_account.twitter.finalize.heading</h1>
+<div>
 
-<gj-form-twitter-email state="finalizeCtrl.state" gj-form-submit-handler="finalizeCtrl.onSubmitted()"></gj-form-twitter-email>
+	<h2 class="section-header anim-fade-in-enlarge">
+		<translate>auth.linked_account.twitter.finalize.heading</translate>
+	</h2>
+
+	<form-twitter-email
+		:state-handle="state"
+		@submit="onSubmitted"
+		/>
+
+</div>

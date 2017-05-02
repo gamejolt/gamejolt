@@ -1,4 +1,4 @@
-<div class="route-discover-games-view-scores-list" v-if="scoreTable">
+<div class="route-discover-games-view-scores-list" v-if="routeBootstrapped">
 
 	<section class="section">
 		<div class="container">
@@ -27,7 +27,7 @@
 								<router-link
 									:to="{
 										name: 'discover.games.view.scores.list',
-										params: { type: 'best' },
+										params: Object.assign( {}, $route.params, { type: 'best' } ),
 									}"
 									active-class="active"
 									v-app-no-autoscroll="true"
@@ -39,7 +39,7 @@
 								<router-link
 									:to="{
 										name: 'discover.games.view.scores.list',
-										params: { type: 'user' },
+										params: Object.assign( {}, $route.params, { type: 'user' } ),
 									}"
 									active-class="active"
 									v-app-no-autoscroll="true"
@@ -53,29 +53,33 @@
 					<!--
 						When screen isn't XS, we split the scores out into two columns.
 					-->
-					<div class="row" v-if="!Screen.isXs">
-						<div class="col-sm-6">
-							<app-score-list
-								:scores="scoresLeft"
-								:step="2"
-								/>
+					<app-loading-fade :is-loading="routeLoading">
+						<div class="row" v-if="!Screen.isXs">
+							<div class="col-sm-6">
+								<app-score-list
+									:scores="scoresLeft"
+									:step="2"
+									/>
+							</div>
+							<div class="col-sm-6">
+								<app-score-list
+									:scores="scoresRight"
+									:start-rank="2"
+									:step="2"
+									/>
+							</div>
 						</div>
-						<div class="col-sm-6">
-							<app-score-list
-								:scores="scoresRight"
-								:start-rank="2"
-								:step="2"
-								/>
-						</div>
-					</div>
+					</app-loading-fade>
 
 					<!--
 						When screen is XS we just show as one long list.
 					-->
-					<app-score-list
-						:scores="scores"
-						v-if="Screen.isXs"
-						/>
+					<app-loading-fade :is-loading="routeLoading">
+						<app-score-list
+							:scores="scores"
+							v-if="Screen.isXs"
+							/>
+					</app-loading-fade>
 
 					<div v-if="!scores.length">
 						<div class="alert alert-warning full-bleed-xs">
@@ -107,7 +111,7 @@
 									:key="table.id"
 									:to="{
 										name: 'discover.games.view.scores.list',
-										params: { tableId: table.id },
+										params: Object.assign( {}, $route.params, { tableId: table.id } ),
 									}"
 									:class="{ active: table.id === scoreTable.id }"
 									v-app-no-autoscroll

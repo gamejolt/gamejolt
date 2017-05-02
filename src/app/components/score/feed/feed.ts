@@ -50,9 +50,7 @@ export class AppScoreFeed extends Vue
 				+ '?s=200&r=pg&d=' + encodeURIComponent( noAvatar );
 		}
 
-		if ( typeof score.time === 'string' ) {
-			score.time = parseInt( score.time, 10 );
-		}
+		score.time = new Date( score.time );
 	}
 
 	private async setupSubscription()

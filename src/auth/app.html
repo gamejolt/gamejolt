@@ -1,9 +1,12 @@
 <div :class="{ 'is-client-offline': Connection.isClientOffline }">
 
 	<div id="content">
-		<router-view />
+		<app-error-page>
+			<router-view />
+		</app-error-page>
 	</div>
 
+	<app-loading-bar />
 	<app-growls />
 
 </div>

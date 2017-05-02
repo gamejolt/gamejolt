@@ -1,61 +1,78 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-
-import { appStore } from '../../lib/gj-lib-client/vue/services/app/app-store';
+import { VuexStore, VuexModule, VuexMutation, VuexAction } from '../../lib/gj-lib-client/utils/vuex';
+import { AppStore, Mutations as AppMutations, Actions as AppActions, appStore } from '../../lib/gj-lib-client/vue/services/app/app-store';
 import { MediaItem } from '../../lib/gj-lib-client/components/media-item/media-item-model';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 
-Vue.use( Vuex );
-
-export const Mutations = {
-	showCoverImage: 'showCoverImage',
-	hideCoverImage: 'hideCoverImage',
-	bootstrap: 'bootstrap',
-	setCredentials: 'setCredentials',
-};
-
-export const Actions = {
-	bootstrap: 'bootstrap',
-};
-
-export class StoreState
+interface AuthCredentials
 {
-	shouldShowCoverImage = true;
-	coverMediaItem?: MediaItem = undefined;
-
-	// We store these when they sign up so that we can log them in
-	// once they authorize their account.
-	credentials: any = {};
+	username: string;
+	password: string;
 }
 
-export type Store = Vuex.Store<StoreState>;
+export type Actions = AppActions &
+{
+	bootstrap: undefined;
+};
 
-export const store = new Vuex.Store<StoreState>( {
-	state: new StoreState(),
+export type Mutations = AppMutations &
+{
+	showCoverImage: undefined;
+	hideCoverImage: undefined;
+	processPayload: any;
+	setCredentials: any;
+};
+
+@VuexModule({
+	store: true,
 	modules: {
 		app: appStore,
 	},
-	mutations: {
-		[Mutations.showCoverImage]: state => state.shouldShowCoverImage = true,
-		[Mutations.hideCoverImage]: state => state.shouldShowCoverImage = false,
+})
+export class Store extends VuexStore<Store, Actions, Mutations>
+{
+	app: AppStore;
 
-		[Mutations.bootstrap]( state, payload: any )
-		{
-			if ( payload.mediaItem ) {
-				state.coverMediaItem = new MediaItem( payload.mediaItem );
-			}
-		},
+	shouldShowCoverImage = true;
+	coverMediaItem?: MediaItem = undefined;
 
-		[Mutations.setCredentials]( state, credentials: any )
-		{
-			state.credentials = credentials;
-		},
-	},
-	actions: {
-		async [Actions.bootstrap]( { commit } )
-		{
-			const payload = await Api.sendRequest( '/web/auth/get-customized-page' );
-			commit( Mutations.bootstrap, payload );
-		},
+	/**
+	 * We store these when they sign up so that we can log them in once they
+	 * authorize their account.
+	 */
+	credentials: AuthCredentials | null = null;
+
+	@VuexAction
+	async bootstrap()
+	{
+		const payload = await Api.sendRequest( '/web/auth/get-customized-page' );
+		this.processPayload( payload );
 	}
-} );
+
+	@VuexMutation
+	showCoverImage()
+	{
+		this.shouldShowCoverImage = true;
+	}
+
+	@VuexMutation
+	hideCoverImage()
+	{
+		this.shouldShowCoverImage = false;
+	}
+
+	@VuexMutation
+	processPayload( payload: Mutations['processPayload'] )
+	{
+		if ( payload.mediaItem ) {
+			this.coverMediaItem = new MediaItem( payload.mediaItem );
+		}
+	}
+
+	@VuexMutation
+	setCredentials( credentials: AuthCredentials )
+	{
+		this.credentials = credentials;
+	}
+}
+
+export const store = new Store();

@@ -29,16 +29,12 @@ import '../lib/gj-lib-client/components/alert/dismissable/dismissable';
 import '../lib/gj-lib-client/components/form/form';
 import '../lib/gj-lib-client/components/form/markdown-editor/markdown-editor';
 import '../lib/gj-lib-client/components/form/upload-control/upload-control';
-import '../lib/gj-lib-client/components/user/linked-accounts/linked-accounts';
-import '../lib/gj-lib-client/components/key-group/key-group';
 import '../lib/gj-lib-client/components/jam/jam-module';
 import '../lib/gj-lib-client/components/jam/game/game';
 import '../lib/gj-lib-client/components/jam/voting-category/voting-category';
 import '../lib/gj-lib-client/components/jam/game/vote/vote';
 import '../lib/gj-lib-client/components/jam/game/vote/widget/widget';
 import '../lib/gj-lib-client/components/jam/award/award';
-import '../lib/gj-lib-client/components/key/key-module';
-import '../lib/gj-lib-client/components/linked-key/linked-key';
 import '../lib/gj-lib-client/components/img/crop/crop';
 
 import './components/invite/invite-module';
@@ -89,16 +85,12 @@ export const AppModuleNg1 = angular.module( 'App', [
 	'gj.Form',
 	'gj.Form.MarkdownEditor',
 	'gj.Form.UploadControl',
-	'gj.User.LinkedAccounts',
-	'gj.KeyGroup',
 	'gj.Jam',
 	'gj.Jam.Game',
 	'gj.Jam.VotingCategory',
 	'gj.Jam.Game.Vote',
 	'gj.Jam.Game.Vote.Widget',
 	'gj.Jam.Award',
-	'gj.Key',
-	'gj.LinkedKey',
 	'gj.Img.Crop',
 
 	// Components.

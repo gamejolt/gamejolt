@@ -18,7 +18,7 @@
 		When it does, we can log them in.
 	-->
 	<app-progress-poller
-		v-if="credentials.username && credentials.password"
+		v-if="credentials && credentials.username && credentials.password"
 		:url="`/web/auth/poll-authorized/${credentials.username}`"
 		@complete="onAuthorized"
 		/>

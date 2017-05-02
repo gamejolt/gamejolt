@@ -1,0 +1,39 @@
+<div>
+	<div id="shell">
+
+		<div id="header">
+			<app-user-bar :user="app.user" site="main" :hide-site-selector="true" />
+		</div>
+
+		<div id="content">
+			<app-error-page>
+				<router-view />
+			</app-error-page>
+		</div>
+
+		<app-loading-bar />
+		<app-growls />
+		<app-modals />
+	</div>
+
+	<footer id="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6">
+					<p class="footer-links">
+						<a href="mailto:contact@gamejolt.com">Contact Game Jolt</a>
+						&nbsp;|&nbsp;
+						<a href="http://gamejolt.com/terms">Terms</a>
+						&nbsp;|&nbsp;
+						<a href="http://gamejolt.com/privacy">Privacy Policy</a>
+					</p>
+				</div>
+				<div class="col-sm-6">
+					<p class="footer-copyright">
+						&copy; {{ curDate | date( 'YYYY' ) }} Lucent Web Creative, LLC
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+</div>

@@ -25,12 +25,9 @@
 			<translate :escape-html="false">auth.forgot.invalid_email_error_html</translate>
 		</div>
 
-		<div class="form-group">
-			<button gj-form-submit-button class="btn btn-block">
-				<app-jolticon icon="key-diagonal" />
-				<translate>auth.forgot.submit_button</translate>
-			</button>
-		</div>
+		<app-form-button icon="key-diagonal" class="btn-block btn-outline btn-dark-variant">
+			<translate>auth.forgot.submit_button</translate>
+		</app-form-button>
 
 	</fieldset>
 </app-form>
