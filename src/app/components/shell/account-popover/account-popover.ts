@@ -17,6 +17,7 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Store } from '../../../store/index';
 import { UserTokenModal } from '../../user/token-modal/token-modal.service';
+import { ClientControl as _ClientControl } from '../../client/control/client.service';
 
 @View
 @Component({
@@ -42,16 +43,9 @@ export class AppShellAccountPopover extends Vue
 	env = Environment;
 	screen = makeObservableService( Screen );
 	conn = makeObservableService( Connection );
-	Client?: any = undefined;
+	ClientControl: typeof _ClientControl | null = GJ_IS_CLIENT ? require( '../../client/control/client.service').ClientControl : null;
 
 	@Action logout: Store['logout'];
-
-	created()
-	{
-		if ( GJ_IS_CLIENT ) {
-			// this.Client = getProvider<any>( 'Client' );
-		}
-	}
 
 	onShow()
 	{

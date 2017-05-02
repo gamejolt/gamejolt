@@ -21,6 +21,7 @@ import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytic
 import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { AppGameCompatIcons } from '../../game/compat-icons/compat-icons';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { LocalDbGame as _LocalDbGame } from '../../client/local-db/game/game.model';
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -55,10 +56,10 @@ export class AppSearchAutocomplete extends Vue
 	mode: 'search' | 'command' = 'search';
 
 	selected = 0;
-	games: any[] = [];
-	devlogs: any[] = [];
+	games: Game[] = [];
+	devlogs: Game[] = [];
 	users: User[] = [];
-	libraryGames: any[] = [];
+	libraryGames: _LocalDbGame[] = [];
 	items: any[] = [];
 
 	modes = [ 'search', 'command' ];
@@ -275,11 +276,10 @@ export class AppSearchAutocomplete extends Vue
 					this.selectUser( item );
 				}
 				else if ( GJ_IS_CLIENT ) {
-					// TODO
-					// const LocalDbGame = getProvider<any>( 'LocalDb_Game' );
-					// if ( item instanceof LocalDbGame ) {
-					// 	this.selectLibraryGame( item );
-					// }
+					const LocalDbGame: typeof _LocalDbGame = require( '../../client/local-db/game/game.model' ).LocalDbGame;
+					if ( item instanceof LocalDbGame ) {
+						this.selectLibraryGame( item );
+					}
 				}
 			}
 		}
@@ -301,11 +301,11 @@ export class AppSearchAutocomplete extends Vue
 		Analytics.trackEvent( 'search', 'autocomplete', 'go-all' );
 	}
 
-	selectGame( game: any )
+	selectGame( game: Game )
 	{
 		this.$router.push( {
 			name: 'discover.games.view.overview',
-			params: { slug: game.slug, id: game.id },
+			params: { slug: game.slug, id: game.id + '' },
 		} );
 
 		Analytics.trackEvent( 'search', 'autocomplete', 'go-game' );
@@ -321,9 +321,9 @@ export class AppSearchAutocomplete extends Vue
 		Analytics.trackEvent( 'search', 'autocomplete', 'go-user' );
 	}
 
-	selectLibraryGame( localGame: any )
+	selectLibraryGame( localGame: _LocalDbGame )
 	{
-		this.$router.push( { name: 'discover.games.view.overview', params: { slug: localGame.slug, id: localGame.id } } );
+		this.$router.push( { name: 'discover.games.view.overview', params: { slug: localGame.slug, id: localGame.id + '' } } );
 		Analytics.trackEvent( 'search', 'autocomplete', 'go-library-game' );
 	}
 

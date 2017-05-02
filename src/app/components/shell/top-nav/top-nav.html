@@ -19,7 +19,7 @@
 
 		<!--TODO-->
 		<!-- History Navigator (for desktop client) -->
-		<!--<gj-client-history-navigator ng-if="Environment.isClient"></gj-client-history-navigator>-->
+		<!--<gj-client-history-navigator ng-if="GJ_IS_CLIENT"></gj-client-history-navigator>-->
 
 		<router-link class="navbar-item" :to="{ name: 'discover.home' }">
 			<img v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="Game Jolt">
@@ -47,7 +47,7 @@
 
 			<li class="hidden-xs">
 				<router-link
-					:to="{ name: Environment.isClient ? 'library.installed' : 'library.overview' }"
+					:to="{ name: GJ_IS_CLIENT ? 'library.installed' : 'library.overview' }"
 					:class="{ active: $route.name.indexOf( 'library' ) === 0 }"
 					v-app-tooltip.bottom-center="$gettext( `Your Game Library` )"
 					v-app-track-event="`top-nav:library`"

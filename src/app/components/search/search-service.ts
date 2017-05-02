@@ -1,8 +1,6 @@
 import { SearchPayload } from './payload-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { fuzzysearch } from '../../../lib/gj-lib-client/utils/string';
-import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
-import { stringSort } from '../../../lib/gj-lib-client/utils/array';
+import { store } from '../../store/index';
 
 export interface SearchOptions
 {
@@ -30,7 +28,7 @@ export class Search
 
 		// If we're in client, let's try to search their installed games.
 		if ( GJ_IS_CLIENT && options.type && options.type === 'typeahead' ) {
-			searchPromises.push( this._searchInstalledGames( query ) );
+			searchPromises.push( store.state.clientLibrary.searchInstalledGames( query ) );
 		}
 
 		const _payload = await Promise.all( searchPromises );
@@ -77,25 +75,5 @@ export class Search
 		catch ( _e ) {
 			return Promise.resolve( {} );
 		}
-	}
-
-	private static _searchInstalledGames( query: string ): Promise<any>
-	{
-		let games: Game[] = [];
-		// TODO
-		// const ClientLibrary: any = getProvider( 'Client_Library' );
-
-		// for ( const game of ClientLibrary.games ) {
-		// 	if ( fuzzysearch( query.toLowerCase(), game.title.toLowerCase() ) ) {
-		// 		games.push( game );
-		// 	}
-		// }
-
-		// if ( games.length > 0 ) {
-		// 	games = games.sort( ( a, b ) => stringSort( a.title, b.title ) );
-		// 	games = games.slice( 0, 3 );  // Only return top 3.
-		// }
-
-		return Promise.resolve( games );
 	}
 }

@@ -1,5 +1,3 @@
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-
 const STORAGE_PREFIX = 'settings.';
 
 type SettingValue = string | number | boolean;
@@ -43,7 +41,7 @@ const defaultSettings: { [k: string]: Setting } = {
 
 		// By default we don't notify friends state in site.
 		// We do notify by default in client.
-		val: () => Environment.isClient ? 1 : 0,
+		val: () => GJ_IS_CLIENT ? 1 : 0,
 	},
 	'restricted-browsing': {
 		type: 'boolean',

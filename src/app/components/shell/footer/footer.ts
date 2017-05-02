@@ -8,7 +8,6 @@ import { AppRouterLink } from '../../router-link/router-link';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTranslateLangSelector } from '../../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
 import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
-import { ClientInfo } from '../../client/info/info.service';
 
 @View
 @Component({
@@ -31,9 +30,7 @@ export class AppShellFooter extends Vue
 
 	get clientVersion()
 	{
-		if ( GJ_IS_CLIENT ) {
-			return ( require( '../../client/info/info.service' ).ClientInfo as typeof ClientInfo ).version;
-		}
+		return GJ_VERSION;
 	}
 
 	// We have to refresh the whole browser when language changes so that

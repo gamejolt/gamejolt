@@ -1,12 +1,13 @@
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
+import { LocalDbGame } from '../client/local-db/game/game.model';
 
 export class SearchPayload
 {
 	users: User[];
 	games: Game[];
 	devlogs: Game[];
-	libraryGames: any[];
+	libraryGames: LocalDbGame[];
 
 	constructor( public type: string, data: any )
 	{
@@ -20,10 +21,7 @@ export class SearchPayload
 		this.libraryGames = [];
 
 		if ( GJ_IS_CLIENT ) {
-			// TODO
-			// this.libraryGames = data.libraryGames
-			// 	? getProvider<any>( 'LocalDb_Game' ).populate( data.libraryGames )
-			// 	: [];
+			this.libraryGames = data.libraryGames || [];
 		}
 	}
 }

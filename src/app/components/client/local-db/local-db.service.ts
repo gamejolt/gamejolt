@@ -1,8 +1,9 @@
-import { Dexie } from 'dexie';
+
+import Dexie from 'dexie';
 import { LocalDbGame } from './game/game.model';
 import { LocalDbPackage } from './package/package.model';
 
-class LocalDb extends Dexie
+export class LocalDb extends Dexie
 {
 	games: Dexie.Table<LocalDbGame, number>;
 	packages: Dexie.Table<LocalDbPackage, number>;

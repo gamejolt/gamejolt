@@ -142,8 +142,9 @@ export default class RouteDiscoverGamesView extends Vue
 		// 	ref: this.userPartnerKey || $location.search().ref || undefined,
 		// } );
 
+		// TOOD should we sync from the registry or here?
 		// // For syncing game data to client.
-		// if ( Environment.isClient ) {
+		// if ( GJ_IS_CLIENT ) {
 
 		// 	// Only sync if it's in library.
 		// 	return $injector.get( 'LocalDb_Game' ).fetch( game.id )

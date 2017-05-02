@@ -3,10 +3,10 @@
 	<div id="shell">
 
 		<div id="header">
-			<div gj-user-bar="App.user" gj-current-site="main" hide-site-selector="Environment.isClient" ng-cloak>
+			<div gj-user-bar="App.user" gj-current-site="main" hide-site-selector="GJ_IS_CLIENT" ng-cloak>
 
 				<a class="btn btn-outline btn-dark-variant"
-					ng-if="Environment.isClient"
+					ng-if="GJ_IS_CLIENT"
 					ng-click="HistoryNavigator.back()"
 					>
 					<span class="jolticon jolticon-chevron-left"></span>

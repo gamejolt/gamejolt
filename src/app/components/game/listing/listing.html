@@ -1,5 +1,5 @@
 <div class="game-listing">
-	<section class="section section-thin" v-if="showAds && !Environment.isClient && !Screen.isXs">
+	<section class="section section-thin" v-if="showAds && !GJ_IS_CLIENT && !Screen.isXs">
 		<app-ad size="leaderboard" />
 	</section>
 
@@ -134,7 +134,7 @@
 		</div>
 	</section>
 
-	<section class="section section-thin" v-if="showAds && !Environment.isClient && !Screen.isXs">
+	<section class="section section-thin" v-if="showAds && !GJ_IS_CLIENT && !Screen.isXs">
 		<app-ad size="leaderboard" />
 	</section>
 </div>

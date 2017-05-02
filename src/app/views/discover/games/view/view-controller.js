@@ -97,7 +97,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.ViewCtrl', function(
 		$rootScope.$on( 'GameRating.changed', onGameRatingChange );
 
 		// For syncing game data to client.
-		if ( Environment.isClient ) {
+		if ( GJ_IS_CLIENT ) {
 
 			// Only sync if it's in library.
 			return $injector.get( 'LocalDb_Game' ).fetch( game.id )

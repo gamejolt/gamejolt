@@ -127,7 +127,7 @@ angular.module( 'App.Views' ).controller( 'Discover.Games.View.OverviewCtrl', fu
 		$scope.gameCtrl.browserBuilds = Game.pluckBrowserBuilds( this.packages || [] );
 
 		// On Client we only want to include HTML games.
-		if ( Environment.isClient ) {
+		if ( GJ_IS_CLIENT ) {
 			$scope.gameCtrl.browserBuilds = _.where( $scope.gameCtrl.browserBuilds, { type: Game_Build.TYPE_HTML } );
 		}
 

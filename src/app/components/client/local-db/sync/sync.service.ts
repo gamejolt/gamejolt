@@ -117,14 +117,13 @@ export class LocalDbSync
 					}
 
 					// TODO: get rid of lodash
-					const _package: any = _.find( data.packages, { id: localPackage.id } );
-					const _release: any = _.find( data.releases, { id: localPackage.release.id } );
-					const _build: any = _.find( data.builds, { id: localPackage.build.id } );
-					const _launchOptions: any = _.where( data.launchOptions, { game_build_id: localPackage.build.id } );
+					const _package = (data.packages as any[]).find( ( a ) => a.id === localPackage.id );
+					const _release = (data.release as any[]).find( ( a ) => a.id === localPackage.release.id );
+					const _build = (data.builds as any[]).find( ( a ) => a.id === localPackage.build.id );
+					const _launchOptions = (data.launchOptions as any[]).filter( ( a ) => a.game_build_id === localPackage.build.id );
 
 					// Assign so we don't lose fields.
-					const newPackage = LocalDbPackage.fromPackageInfo( _package, _release, _build, _launchOptions );
-					localPackage.assign( newPackage );
+					localPackage.setFromPackageInfo( _package, _release, _build, _launchOptions );
 
 					return db.packages.put( localPackage );
 				} );
