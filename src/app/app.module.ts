@@ -105,13 +105,15 @@ import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
 import { AdPlacementModule } from './components/ad/placement/placement.module';
 
+import '../lib/ng-dfp';
+
 @NgModule({
 	imports: [
 		require( '../lib/ui-router' ).default,
 		require( 'angular-moment' ),
 		require( 'oclazyload' ),
 		require( 'angular-inview' ).name,
-		require( 'ngDfp' ),
+		'ngDfp',
 
 		EnvironmentModule,
 		ApiModule,
