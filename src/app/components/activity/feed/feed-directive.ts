@@ -7,6 +7,9 @@ import { ActivityFeedItem } from './item-service';
 import { ActivityFeedContainer } from './feed-container-service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Loader } from '../../../../lib/gj-lib-client/components/loader/loader.service';
+import { Model } from '../../../../lib/gj-lib-client/components/model/model.service';
+import { isPrerender } from '../../../../lib/gj-lib-client/components/environment/environment.service';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 /**
  * The number of items from the bottom that we should hit before loading more.
@@ -30,6 +33,8 @@ export class ActivityFeedComponent implements OnDestroy, AfterViewInit
 	@Input( '@' ) loadMoreUrl: string;
 	@Input( '<' ) showEditControls = false;
 	@Input( '<' ) showGameInfo = false;
+	@Input( '<' ) showAds = false;
+	@Input( '<' ) adResource?: Model;
 	@Input( '<' ) disableAutoload = false;
 
 	@Output( 'onPostRemoved' ) private _onPostRemoved = new EventEmitter<{ $post: FiresidePost }>();
@@ -203,5 +208,23 @@ export class ActivityFeedComponent implements OnDestroy, AfterViewInit
 	onItemExpanded( item: ActivityFeedItem )
 	{
 		this.feed.expanded( item );
+	}
+
+	shouldShowAd( index: number )
+	{
+		if ( !this.showAds || isPrerender || GJ_IS_CLIENT ) {
+			return false;
+		}
+
+		if ( this.adResource && this.adResource instanceof Game && !this.adResource._should_show_ads ) {
+			return false;
+		}
+
+		index = index + 1;
+		if ( index === 2 || index === 12 || index === 22 ) {
+			return true;
+		}
+
+		return false;
 	}
 }

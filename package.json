@@ -50,6 +50,7 @@
     "moment-timezone": "0.5.11",
     "ng-file-upload": "12.2.13",
     "ng-metadata": "4.0.1",
+    "ngDfp": "0.16.1",
     "nw-builder": "gamejolt/nw-builder#skip-merge-app",
     "oclazyload": "1.0.9",
     "pofile": "^1.0.2",

@@ -16,7 +16,7 @@ import { Environment } from '../../../../lib/gj-lib-client/components/environmen
 export class ListingComponent
 {
 	@Input( '<' ) listing: GameListingContainer;
-	@Input( '<' ) showAds = false;
+	@Input( '<' ) showAds = true;
 	@Input( '<' ) hideFilters = false;
 	@Input( '<' ) hideSectionNav = false;
 	@Input( '<' ) includeFeaturedSection = false;

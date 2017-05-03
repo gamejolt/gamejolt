@@ -1,0 +1,68 @@
+@require '~styles/variables'
+@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+
+.game-grid
+
+	&-ad
+
+		@media $media-xs
+			full-bleed()
+			background-color: $gray-lightest
+			padding-top: ($grid-gutter-width-xs / 2)
+			padding-bottom: ($grid-gutter-width-xs / 2)
+			margin-bottom: $grid-gutter-width-xs
+
+		@media $media-sm
+			background-color: $gray-lightest
+			padding-top: ($grid-gutter-width / 2)
+			padding-bottom: ($grid-gutter-width / 2)
+			margin-bottom: $grid-gutter-width
+
+		@media $media-md-up
+			float: right
+			width: (100% / 3)
+
+		&-inner
+			margin: 0 auto
+			padding: 0
+			width: 300px
+			text-align: center
+
+			@media screen and (min-width: 1400px)
+				padding: 20px
+				width: 300px + @padding * 2
+				background-color: $gray-lightest
+
+	&-items
+
+		@media $media-sm-up
+			margin-left: -($grid-gutter-width / 2)
+			margin-right: -($grid-gutter-width / 2)
+
+	&-item
+		display: inline-block
+		vertical-align: top
+		width: 100%
+
+		@media $media-sm-up
+			padding-left: ($grid-gutter-width / 2)
+			padding-right: ($grid-gutter-width / 2)
+
+		@media $media-sm
+			width: (100% / 2)
+
+		@media $media-md-up
+			width: (100% / 3)
+
+// When the grid is scrollable on XS size.
+@media $media-xs
+	.scrollable-grid-xs .game-grid
+
+		&-items
+			padding-left: -($grid-gutter-width-xs / 2)
+			padding-right: -($grid-gutter-width-xs / 2)
+
+		&-item
+			padding-left: ($grid-gutter-width-xs / 2)
+			padding-right: ($grid-gutter-width-xs / 2)
+			width: 85%

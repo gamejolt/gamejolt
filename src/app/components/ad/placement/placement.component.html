@@ -1,0 +1,17 @@
+<div ng-if="$ctrl.isVisible">
+	<section class="section section-thin" ng-if="$ctrl.Screen.isDesktop">
+		<gj-ad
+			size="leaderboard"
+			[resource]="::$ctrl.resource"
+			>
+		</gj-ad>
+	</section>
+
+	<section class="section section-thin fill-lightest" ng-if="$ctrl.Screen.isMobile">
+		<gj-ad
+			size="rectangle"
+			[resource]="::$ctrl.resource"
+			>
+		</gj-ad>
+	</section>
+</div>

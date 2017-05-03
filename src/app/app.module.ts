@@ -103,6 +103,7 @@ import { SettingsModule } from './components/settings/settings.module';
 import { ClipboardModule } from '../lib/gj-lib-client/components/clipboard/clipboard.module';
 import { CardModule } from '../lib/gj-lib-client/components/card/card.module';
 import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img.module';
+import { AdPlacementModule } from './components/ad/placement/placement.module';
 
 @NgModule({
 	imports: [
@@ -110,6 +111,7 @@ import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thu
 		require( 'angular-moment' ),
 		require( 'oclazyload' ),
 		require( 'angular-inview' ).name,
+		require( 'ngDfp' ),
 
 		EnvironmentModule,
 		ApiModule,
@@ -208,6 +210,7 @@ import { GameThumbnailImgModule } from '../lib/gj-lib-client/components/game/thu
 		GamePackageCardModule,
 		NavTabListModule,
 		SettingsModule,
+		AdPlacementModule,
 		AppModuleNg1,
 	],
 	declarations: [

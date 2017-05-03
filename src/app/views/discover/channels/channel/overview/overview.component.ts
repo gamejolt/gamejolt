@@ -31,8 +31,8 @@ export class RouteOverviewComponent implements OnInit
 
 	ngOnInit()
 	{
-		this.bestGames = Game.populate( this.payload.bestGames );
-		this.hotGames = Game.populate( this.payload.hotGames );
+		this.bestGames = Game.populate( this.payload.bestGames ).slice( 0, 6 );
+		this.hotGames = Game.populate( this.payload.hotGames ).slice( 0, 6 );
 		this.posts = ActivityFeedService.bootstrap( FiresidePost.populate( this.payload.posts ) );
 
 		ChannelsViewHelper.setDefaultMetaData( this.$transition$.params().channel );

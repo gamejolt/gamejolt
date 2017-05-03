@@ -29,6 +29,13 @@
 			</gj-activity-feed-notification>
 		</div>
 
+		<div class="timeline-list-ad" ng-if="$ctrl.shouldShowAd( $index )">
+			<section class="section section-thin fill-lightest text-center">
+				<gj-ad size="rectangle" [resource]="$ctrl.adResource"></gj-ad>
+				<div class="ad-label" translate>Advertisement</div>
+			</section>
+		</div>
+
 	</div>
 
 	<div class="page-cut" ng-if="($ctrl.autoloadDisbled || !$ctrl.feed.reachedEnd) && !$ctrl.isLoadingMore">

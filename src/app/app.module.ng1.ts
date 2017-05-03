@@ -8,6 +8,7 @@ import { Registry } from '../lib/gj-lib-client/components/registry/registry.serv
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
+import { Ads } from '../lib/gj-lib-client/components/ad/ads.service';
 
 import '../lib/gj-lib-client/components/translate/translate.module';
 import '../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
@@ -385,6 +386,17 @@ export const AppModuleNg1 = angular.module( 'App', [
 	TranslateProvider.addLanguageUrls( languages );
 } )
 /*@ngInject*/
+.config( ( DoubleClickProvider: any ) =>
+{
+	for ( const slot of Ads.TAG_SLOTS ) {
+		(DoubleClickProvider.defineSlot as Function).apply( DoubleClickProvider, [
+			slot.adUnit,
+			slot.sizes,
+			slot.id,
+		] );
+	}
+} )
+/*@ngInject*/
 .run( (
 	$q: ng.IQService,
 	$animate: ng.animate.IAnimateService,
@@ -392,6 +404,7 @@ export const AppModuleNg1 = angular.module( 'App', [
 	$rootScope: ng.IRootScopeService,
 	App: App,
 	Scroll: any,
+	DoubleClick: any,
 ) =>
 {
 	bootstrapFacade( $q, $animate );
@@ -406,6 +419,29 @@ export const AppModuleNg1 = angular.module( 'App', [
 
 	// Match this to the shell top nav height.
 	Scroll.setOffsetTop( 50 );
+
+	$rootScope.$on( '$stateChangeStart', () =>
+	{
+		for ( const slot of Ads.TAG_SLOTS ) {
+			DoubleClick
+				.getSlot( slot.id )
+				.then( ( _slot: any ) =>
+				{
+					if ( (window as any).googletag.pubads ) {
+						(window as any).googletag.pubads().clear( [ _slot ] );
+					}
+				} );
+		}
+	} );
+
+	$rootScope.$on( '$stateChangeSuccess', () =>
+	{
+		for ( const slot of Ads.TAG_SLOTS ) {
+			if ( (window as any).googletag.pubads ) {
+				DoubleClick.refreshAds( slot.id );
+			}
+		}
+	} );
 } )
 /**
  * angular-ui-router can't handle redirects between states yet.

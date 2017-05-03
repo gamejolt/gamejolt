@@ -20,86 +20,106 @@
 			<br>
 		</div>
 
-		<div class="row">
-			<div class="col-sm-3 text-center">
-				<a ui-sref="discover.home">
-					<img src="~img/jolt.svg" alt="Game Jolt" width="68" height="72">
-				</a>
-				<br class="visible-xs">
-				<br class="visible-xs">
+		<div class="footer-jolt" ng-if="$ctrl.Screen.isXs">
+			<a ui-sref="discover.home">
+				<img src="~img/jolt.svg" alt="Game Jolt" width="68" height="72">
+			</a>
+		</div>
+
+		<br class="visible-xs">
+
+		<div class="clearfix">
+			<div class="footer-ad" ng-if="!$ctrl.Screen.isXs">
+				<gj-ad ng-repeat="i in [ $ctrl.adIndex ] track by i" size="rectangle"></gj-ad>
 			</div>
-			<div class="col-xs-4 col-sm-3">
-				<ol class="list-unstyled footer-link-list">
-					<li>
-						<a ui-sref="landing.learn" translate>What's Game Jolt</a>
-					</li>
-					<li>
-						<a ui-sref="client" translate>Client</a>
-					</li>
-					<li>
-						<a ui-sref="discover.devlogs.overview" translate>Devlogs</a>
-					</li>
-					<li>
-						<a href="http://fireside.gamejolt.com" translate>Fireside</a>
-					</li>
-					<li>
-						<a ui-sref="radio" translate>Radio</a>
-					</li>
-					<li>
-						<a href="http://jams.gamejolt.com" translate>Jams</a>
-					</li>
-				</ol>
+
+			<div class="footer-links">
+				<div class="row">
+					<div class="col-xs-4">
+						<ol class="list-unstyled footer-link-list">
+							<li>
+								<a ui-sref="landing.learn" translate>What's Game Jolt</a>
+							</li>
+							<li>
+								<a ui-sref="client" translate>Client</a>
+							</li>
+							<li>
+								<a ui-sref="discover.devlogs.overview" translate>Devlogs</a>
+							</li>
+							<li>
+								<a href="http://fireside.gamejolt.com" translate>Fireside</a>
+							</li>
+							<li>
+								<a ui-sref="radio" translate>Radio</a>
+							</li>
+							<li>
+								<a href="http://jams.gamejolt.com" translate>Jams</a>
+							</li>
+						</ol>
+					</div>
+					<div class="col-xs-4">
+						<ol class="list-unstyled footer-link-list">
+							<!--<li>
+								<a ui-sref="landing.developers" translate>Developers</a>
+							</li>-->
+							<li>
+								<a ui-sref="landing.marketplace" translate>Marketplace</a>
+							</li>
+							<li>
+								<a ui-sref="landing.partners" translate>Partners</a>
+							</li>
+							<!--<li>
+								<a ui-sref="landing.game-api" translate>Game API</a>
+							</li>-->
+							<li>
+								<a href="https://www.redbubble.com/people/gamejolt/shop" target="_blank" translate>Merch</a>
+							</li>
+							<li>
+								<a ui-sref="forums.landing.overview" translate>Forums</a>
+							</li>
+							<li>
+								<a href="https://github.com/gamejolt" target="_blank" translate>footer.open_source</a>
+							</li>
+						</ol>
+					</div>
+					<div class="col-xs-4">
+						<ol class="list-unstyled footer-link-list">
+							<li>
+								<a href="https://fireside.gamejolt.com/tag/gjbroadcast" target="_blank" translate>Blog</a>
+							</li>
+							<li>
+								<a ui-sref="landing.about" translate>About</a>
+							</li>
+							<li>
+								<a href="mailto:contact@gamejolt.com" translate>footer.contact</a>
+							</li>
+							<li>
+								<a ui-sref="legal.terms" translate>legal.terms</a>
+							</li>
+							<li>
+								<a ui-sref="legal.privacy" translate>legal.privacy</a>
+							</li>
+						</ol>
+					</div>
+				</div>
 			</div>
-			<div class="col-xs-4 col-sm-3">
-				<ol class="list-unstyled footer-link-list">
-					<!--<li>
-						<a ui-sref="landing.developers" translate>Developers</a>
-					</li>-->
-					<li>
-						<a ui-sref="landing.marketplace" translate>Marketplace</a>
-					</li>
-					<li>
-						<a ui-sref="landing.partners" translate>Partners</a>
-					</li>
-					<!--<li>
-						<a ui-sref="landing.game-api" translate>Game API</a>
-					</li>-->
-					<li>
-						<a href="https://www.redbubble.com/people/gamejolt/shop" target="_blank" translate>Merch</a>
-					</li>
-					<li>
-						<a ui-sref="forums.landing.overview" translate>Forums</a>
-					</li>
-					<li>
-						<a href="https://github.com/gamejolt" target="_blank" translate>footer.open_source</a>
-					</li>
-				</ol>
-			</div>
-			<div class="col-xs-4 col-sm-3">
-				<ol class="list-unstyled footer-link-list">
-					<li>
-						<a href="https://fireside.gamejolt.com/tag/gjbroadcast" target="_blank" translate>Blog</a>
-					</li>
-					<li>
-						<a ui-sref="landing.about" translate>About</a>
-					</li>
-					<li>
-						<a href="mailto:contact@gamejolt.com" translate>footer.contact</a>
-					</li>
-					<li>
-						<a ui-sref="legal.terms" translate>legal.terms</a>
-					</li>
-					<li>
-						<a ui-sref="legal.privacy" translate>legal.privacy</a>
-					</li>
-				</ol>
-			</div>
+		</div>
+
+		<br class="visible-xs">
+
+		<div class="footer-ad" ng-if="$ctrl.Screen.isXs">
+			<gj-ad ng-repeat="i in [ $ctrl.adIndex ] track by i" size="rectangle"></gj-ad>
 		</div>
 
 		<hr>
 
-		<div class="row">
-			<div class="col-sm-6">
+		<div class="clearfix">
+			<div class="footer-jolt" ng-if="!$ctrl.Screen.isXs">
+				<a ui-sref="discover.home">
+					<img src="~img/jolt.svg" alt="Game Jolt" width="68" height="72">
+				</a>
+			</div>
+			<div class="footer-meta">
 
 				<p>
 					<a class="btn btn-sparse" href="https://twitter.com/gamejolt" target="_blank">
@@ -119,7 +139,7 @@
 				</p>
 
 			</div>
-			<div class="col-sm-6 footer-translations">
+			<div class="footer-translations">
 
 				<div>
 					<gj-translate-lang-selector

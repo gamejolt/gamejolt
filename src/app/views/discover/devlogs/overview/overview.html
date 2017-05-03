@@ -1,3 +1,5 @@
+<gj-ad-placement [visible-desktop]="true"></gj-ad-placement>
+
 <gj-alert-dismissable
 	alert-type="dark"
 	dismiss-key="devlogs-learn-more"
@@ -46,9 +48,9 @@
 </div>
 
 <section class="section">
-	<div class="container">
+	<div class="container-lg">
 
-		<h2 class="section-header">
+		<h2 class="section-header text-center">
 			<a class="link-unstyled"
 				ui-sref="discover.devlogs.games._fetch"
 				gj-track-event="channel:row-heading:best"
@@ -57,6 +59,8 @@
 				Featured Devlogs
 			</a>
 		</h2>
+
+		<hr class="underbar underbar-center">
 
 		<gj-game-grid
 			games="overviewCtrl.games"
@@ -76,10 +80,18 @@
 			</a>
 		</div>
 
+	</div>
+</div>
+
+<gj-ad-placement [hidden-desktop]="true"></gj-ad-placement>
+
+<section class="section">
+	<div class="container">
+
 		<div class="row">
 			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 
-				<h2 class="text-center" translate>
+				<h2 class="section-header text-center" translate>
 					Hot Devlog Posts
 				</h2>
 
@@ -91,6 +103,7 @@
 					items="overviewCtrl.posts"
 					load-more-url="/web/discover/devlogs/posts"
 					show-game-info="true"
+					show-ads="true"
 					>
 				</gj-activity-feed>
 

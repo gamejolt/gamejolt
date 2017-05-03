@@ -1,11 +1,9 @@
-<section class="section section-thin" ng-if="$ctrl.shouldShowAds && !$ctrl.env.isClient && !$ctrl.screen.isXs">
-	<gj-ad ad-size="leaderboard"></gj-ad>
-</section>
+<gj-ad-placement [visible-desktop]="true"></gj-ad-placement>
 
 <section class="section">
-	<div class="container">
+	<div class="container-lg">
 
-		<h2 class="section-header">
+		<h2 class="section-header text-center">
 			<a class="link-unstyled"
 				ui-sref="discover.channels.channel.games._fetch( { section: 'best' } )"
 				gj-track-event="channel:row-heading:best"
@@ -16,10 +14,13 @@
 			</a>
 		</h2>
 
+		<hr class="underbar underbar-center">
+
 		<gj-game-grid
 			games="$ctrl.bestGames"
 			truncate-to-fit="true"
 			scrollable="true"
+			show-ads="true"
 			event-label="channel-overview-best-games"
 			>
 		</gj-game-grid>
@@ -34,7 +35,15 @@
 			</a>
 		</div>
 
-		<h2 class="section-header">
+	</div>
+</div>
+
+<gj-ad-placement [visible-sm]="true"></gj-ad-placement>
+
+<section class="section">
+	<div class="container-lg">
+
+		<h2 class="section-header text-center">
 			<a class="link-unstyled"
 				ui-sref="discover.channels.channel.games._fetch( { section: 'hot' } )"
 				gj-track-event="channel:row-heading:hot"
@@ -44,6 +53,8 @@
 				Hot <b>#{{ channel }}</b>
 			</a>
 		</h2>
+
+		<hr class="underbar underbar-center">
 
 		<gj-game-grid
 			games="$ctrl.hotGames"
@@ -63,10 +74,18 @@
 			</a>
 		</div>
 
+	</div>
+</div>
+
+<gj-ad-placement [hidden-desktop]="true"></gj-ad-placement>
+
+<section class="section">
+	<div class="container">
+
 		<div class="row">
 			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 
-				<h2 class="text-center" translate>
+				<h2 class="section-header text-center" translate>
 					Hot Devlog Posts
 				</h2>
 
@@ -79,6 +98,7 @@
 					items="$ctrl.posts"
 					load-more-url="/web/discover/channels/posts/{{ $ctrl.channel }}"
 					show-game-info="true"
+					show-ads="true"
 					>
 				</gj-activity-feed>
 

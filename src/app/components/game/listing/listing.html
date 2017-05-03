@@ -1,7 +1,4 @@
 <div class="game-listing">
-	<section class="section section-thin" ng-if="$ctrl.showAds && !$ctrl.env.isClient && !$ctrl.screen.isXs">
-		<gj-ad ad-size="leaderboard"></gj-ad>
-	</section>
 
 	<section class="section fill-lightest nav-only" ng-if="!$ctrl.hideFilters" id="games">
 		<div class="container">
@@ -11,6 +8,8 @@
 			</gj-game-filtering-widget>
 		</div>
 	</section>
+
+	<gj-ad-placement ng-if="$ctrl.showAds" [visible-desktop]="true"></gj-ad-placement>
 
 	<div class="container">
 		<div class="clearfix">
@@ -144,6 +143,6 @@
 	</section>
 
 	<section class="section section-thin" ng-if="$ctrl.showAds && !$ctrl.env.isClient && !$ctrl.screen.isXs">
-		<gj-ad ad-size="leaderboard"></gj-ad>
+		<gj-ad size="leaderboard"></gj-ad>
 	</section>
 </div>

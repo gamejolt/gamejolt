@@ -4,6 +4,8 @@ import { App } from '../../../../../../app-service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Location } from '../../../../../../../lib/gj-lib-client/components/location/location-service';
 
+import './view.styl';
+
 @Injectable()
 export class ViewCtrl
 {

@@ -3,15 +3,7 @@
 	<gj-media-bar [media-items]="gameCtrl.mediaItems"></gj-media-bar>
 </div>
 
-<section class="section section-thin text-left" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-10 col-md-offset-2">
-				<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
-			</div>
-		</div>
-	</div>
-</section>
+<gj-ad-placement [resource]="gameCtrl.game"></gj-ad-placement>
 
 <section class="section" style="padding-bottom: 0"  ng-if="overviewCtrl.game.canceled">
 	<div class="container">
@@ -135,15 +127,8 @@
 </div>
 
 <div ng-if="overviewCtrl.posts.hasItems">
-	<section class="section section-thin text-left" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-10 col-md-offset-2">
-					<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
-				</div>
-			</div>
-		</div>
-	</section>
+
+	<gj-ad-placement [hidden-desktop]="true" [resource]="gameCtrl.game"></gj-ad-placement>
 
 	<section class="section">
 		<div class="container">
@@ -155,6 +140,8 @@
 						items="overviewCtrl.posts"
 						load-more-url="/web/discover/games/devlog/posts/{{ gameCtrl.game.id }}"
 						show-edit-controls="true"
+						show-ads="true"
+						ad-resource="gameCtrl.game"
 						>
 					</gj-activity-feed>
 

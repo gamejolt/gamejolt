@@ -27,9 +27,7 @@
 	</div>
 </section>
 
-<section class="section section-thin" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
-	<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
-</section>
+<gj-ad-placement [resource]="gameCtrl.game"></gj-ad-placement>
 
 <section class="section">
 	<div class="container">
@@ -60,12 +58,9 @@
 								rating-widget-big="true"
 								>
 							</gj-rating-widget>
-
-							<hr class="hidden-sm">
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
-
 						<div gj-partial="/app/views/discover/games/view/overview/_stats.html"></div>
 					</div>
 				</div>
@@ -239,6 +234,11 @@
 			<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
 				<div class="row">
 					<div class="col-xs-12 col-sm-6 col-sm-push-6 col-md-12 col-md-push-0">
+
+						<div ng-if="Screen.isDesktop" style="width: 300px">
+							<gj-ad size="rectangle" [resource]="gameCtrl.game"></gj-ad>
+						</div>
+
 						<div id="maturity-rating">
 							<br class="visible-md visible-lg">
 							<div gj-lazy-placeholder="overviewCtrl.isLoaded">
@@ -246,17 +246,20 @@
 								<gj-game-ogrs gj-game="gameCtrl.game"></gj-game-ogrs>
 							</div>
 						</div>
+
 					</div>
 					<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
+
 						<br>
 						<h2 class="section-header" translate>Details</h2>
 						<hr class="underbar">
 						<div gj-partial="/app/views/discover/games/view/overview/_details.html"></div>
 
-						<div ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
+						<div ng-if="Screen.isDesktop" style="width: 300px">
 							<br>
-							<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+							<gj-ad size="rectangle" [resource]="gameCtrl.game"></gj-ad>
 						</div>
+
 					</div>
 				</div>
 			</div>
@@ -265,9 +268,9 @@
 	</div>
 </section>
 
-<div ng-if="gameCtrl.isLoaded && overviewCtrl.posts.hasItems">
-	<hr>
+<gj-ad-placement [hidden-desktop]="true" [resource]="gameCtrl.game"></gj-ad-placement>
 
+<div ng-if="gameCtrl.isLoaded && overviewCtrl.posts.hasItems">
 	<section class="section">
 		<div class="container">
 			<div class="row">
@@ -364,6 +367,16 @@
 	</div>
 </section>
 
+<!--
+	Only show this placement if there's enough space separating the previous one.
+-->
+<gj-ad-placement
+	ng-if="::gameCtrl.hasScores || gameCtrl.trophiesCount || overviewCtrl.posts.hasItems"
+	[hidden-desktop]="true"
+	[resource]="gameCtrl.game"
+	>
+</gj-ad-placement>
+
 <section class="section">
 	<div class="container">
 
@@ -429,15 +442,10 @@
 
 				</div>
 
-				<!--
-					Will overflow a little on md, but what can ya do, amirite?
-				-->
-				<div class="col-md-4 col-lg-offset-1" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
-					<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
-				</div>
-
 			</div>
 		</div>
 
 	</div>
 </section>
+
+<gj-ad-placement [visible-desktop]="true" [resource]="gameCtrl.game"></gj-ad-placement>

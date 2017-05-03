@@ -1,15 +1,13 @@
 <iframe nwdisable nwfaketop id="download-frame" class="hidden" ng-if="soundtrackCtrl.src" ng-src="{{ soundtrackCtrl.src }}"></iframe>
 
 <div id="page-ad-scroll">
-	<section class="ad-section" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && !Screen.isXs">
-		<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
-	</section>
+	<gj-ad-placement [resource]="gameCtrl.game"></gj-ad-placement>
 
 	<section class="section">
 		<div class="container">
 
 			<div class="row">
-				<div class="col-sm-7 col-md-8 col-lg-7">
+				<div class="col-md-8 col-lg-7">
 
 					<h2 class="section-header" translate translate-params-game="gameCtrl.game.title">
 						game.download.soundtrack.downloading_label
@@ -21,8 +19,8 @@
 				<!--
 					Will overflow a little on md, but what can ya do, amirite?
 				-->
-				<div class="col-sm-5 col-md-4 col-lg-offset-1 text-right" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && !Screen.isXs">
-					<gj-ad ad-size="rectangle" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
+				<div class="col-md-4 col-lg-5 text-right" ng-if="Screen.isDesktop">
+					<gj-ad size="rectangle" [resource]="gameCtrl.game"></gj-ad>
 				</div>
 			</div>
 

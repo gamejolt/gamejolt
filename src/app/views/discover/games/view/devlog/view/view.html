@@ -1,18 +1,10 @@
 <div gj-scroll-when></div>
 
-<section class="section section-thin" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-7 col-lg-offset-2">
-				<gj-ad ad-size="leaderboard" ad-resource="Game" ad-resource-id="::gameCtrl.game.id"></gj-ad>
-			</div>
-		</div>
-	</div>
-</section>
+<gj-ad-placement [hidden-desktop]="true" [resource]="gameCtrl.game"></gj-ad-placement>
 
 <div class="container">
 	<div class="row">
-		<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+		<div class="col-sm-10 col-md-8 col-lg-7" ng-class="{ 'col-centered': Screen.isMobile }">
 
 			<section class="section">
 				<gj-devlog-post-view
@@ -22,5 +14,12 @@
 			</section>
 
 		</div>
+		<div class="col-md-4 col-lg-5" ng-if="Screen.isDesktop">
+			<div class="desktop-ad-spot">
+				<gj-ad class="pull-right" [resource]="gameCtrl.game"></gj-ad>
+			</div>
+		</div>
 	</div>
 </div>
+
+<gj-ad-placement [resource]="gameCtrl.game"></gj-ad-placement>
