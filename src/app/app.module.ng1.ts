@@ -420,8 +420,21 @@ export const AppModuleNg1 = angular.module( 'App', [
 	// Match this to the shell top nav height.
 	Scroll.setOffsetTop( 50 );
 
-	$rootScope.$on( '$stateChangeStart', () =>
+	let shouldRefreshAds = false;
+	$rootScope.$on( '$stateChangeStart', ( _e: any, toState: any, toParams: any, fromState: any, fromParams: any ) =>
 	{
+		fromParams = angular.copy( fromParams );
+		toParams = angular.copy( toParams );
+
+		// Don't change ads if just the hash has changed.
+		delete fromParams['#'];
+		delete toParams['#'];
+
+		if ( toState === fromState && angular.equals( fromParams, toParams ) ) {
+			return;
+		}
+
+		shouldRefreshAds = true;
 		for ( const slot of Ads.TAG_SLOTS ) {
 			DoubleClick
 				.getSlot( slot.id )
@@ -436,11 +449,19 @@ export const AppModuleNg1 = angular.module( 'App', [
 
 	$rootScope.$on( '$stateChangeSuccess', () =>
 	{
-		for ( const slot of Ads.TAG_SLOTS ) {
-			if ( (window as any).googletag.pubads ) {
-				DoubleClick.refreshAds( slot.id );
+		if ( shouldRefreshAds ) {
+			for ( const slot of Ads.TAG_SLOTS ) {
+				if ( (window as any).googletag.pubads ) {
+					DoubleClick.refreshAds( slot.id );
+				}
 			}
 		}
+		shouldRefreshAds = false;
+	} );
+
+	$rootScope.$on( '$stateChangeError', () =>
+	{
+		shouldRefreshAds = false;
 	} );
 } )
 /**
