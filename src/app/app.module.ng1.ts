@@ -388,6 +388,9 @@ export const AppModuleNg1 = angular.module( 'App', [
 /*@ngInject*/
 .config( ( DoubleClickProvider: any ) =>
 {
+	// This needs to be set otherwise page ipressions are wrong when calling
+	// display/refresh in random spots on the page.
+	DoubleClickProvider.setSingleRequest( false );
 	for ( const slot of Ads.TAG_SLOTS ) {
 		(DoubleClickProvider.defineSlot as Function).apply( DoubleClickProvider, [
 			slot.adUnit,
@@ -404,7 +407,6 @@ export const AppModuleNg1 = angular.module( 'App', [
 	$rootScope: ng.IRootScopeService,
 	App: App,
 	Scroll: any,
-	DoubleClick: any,
 ) =>
 {
 	bootstrapFacade( $q, $animate );
@@ -420,8 +422,7 @@ export const AppModuleNg1 = angular.module( 'App', [
 	// Match this to the shell top nav height.
 	Scroll.setOffsetTop( 50 );
 
-	let shouldRefreshAds = false;
-	$rootScope.$on( '$stateChangeStart', ( _e: any, toState: any, toParams: any, fromState: any, fromParams: any ) =>
+	$rootScope.$on( '$stateChangeSuccess', ( _e: any, toState: any, toParams: any, fromState: any, fromParams: any ) =>
 	{
 		fromParams = angular.copy( fromParams );
 		toParams = angular.copy( toParams );
@@ -434,34 +435,19 @@ export const AppModuleNg1 = angular.module( 'App', [
 			return;
 		}
 
-		shouldRefreshAds = true;
-		for ( const slot of Ads.TAG_SLOTS ) {
-			DoubleClick
-				.getSlot( slot.id )
-				.then( ( _slot: any ) =>
-				{
-					if ( (window as any).googletag.pubads ) {
-						(window as any).googletag.pubads().clear( [ _slot ] );
-					}
-				} );
+		if ( !(window as any).googletag || !(window as any).googletag.pubads ) {
+			return;
 		}
-	} );
 
-	$rootScope.$on( '$stateChangeSuccess', () =>
-	{
-		if ( shouldRefreshAds ) {
-			for ( const slot of Ads.TAG_SLOTS ) {
-				if ( (window as any).googletag.pubads ) {
-					DoubleClick.refreshAds( slot.id );
-				}
-			}
-		}
-		shouldRefreshAds = false;
-	} );
+		// We want to clear any ads on the page every page change. This will
+		// force a refresh of the ad slots to happen on next display/refresh
+		// call. If we didn't do this then the slots would always show the same
+		// exact ads.
+		(window as any).googletag.pubads().clear();
 
-	$rootScope.$on( '$stateChangeError', () =>
-	{
-		shouldRefreshAds = false;
+		// Updating the correlator tells the service that a new page view has
+		// ocurred.
+		(window as any).googletag.pubads().updateCorrelator();
 	} );
 } )
 /**

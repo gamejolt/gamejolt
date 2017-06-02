@@ -65,7 +65,7 @@ angular.module('ngDfp', [])
       }
 
       var gads   = document.createElement('script'),
-          useSSL = 'https:' === document.location.protocol,
+          useSSL = true,
           node   = document.getElementsByTagName('script')[0];
 
       gads.async = true;
@@ -100,7 +100,7 @@ angular.module('ngDfp', [])
           /**
            If sent, set the slot specific targeting
            */
-	  var slotTargeting = slot.getSlotTargeting();
+      var slotTargeting = slot.getSlotTargeting();
           if(slotTargeting){
             angular.forEach(slotTargeting, function (value, key) {
               definedSlots[id].setTargeting(value.id, value.value);
@@ -108,7 +108,7 @@ angular.module('ngDfp', [])
           }
         });
 
-	      /**
+          /**
          Set the page targeting key->values
          */
         angular.forEach(pageTargeting, function (value, key) {
@@ -122,7 +122,7 @@ angular.module('ngDfp', [])
           googletag.pubads().collapseEmptyDivs();
         }
 
-	/**
+    /**
          If requested set to true the setCentering
          */
         if (setCentering) {
@@ -339,7 +339,7 @@ angular.module('ngDfp', [])
           });
 
           googletag.cmd.push(function() {
-            $window.googletag.pubads().refresh(slots);
+            $window.googletag.pubads().refresh(slots, {changeCorrelator: false});
           });
         }
       };
