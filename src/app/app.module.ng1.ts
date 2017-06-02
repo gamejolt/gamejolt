@@ -448,6 +448,11 @@ export const AppModuleNg1 = angular.module( 'App', [
 		// Updating the correlator tells the service that a new page view has
 		// ocurred.
 		(window as any).googletag.pubads().updateCorrelator();
+
+		// Broadcast an event so our ads know that a new page change happened
+		// and they should refresh themselves. We do it this way so that the
+		// logic of whether or not the states are a match is preserved.
+		$rootScope.$broadcast( '$adsRefreshed' );
 	} );
 } )
 /**
