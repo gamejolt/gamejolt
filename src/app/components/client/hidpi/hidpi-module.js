@@ -1,6 +1,6 @@
 angular.module( 'App.Client.Hidpi', [] ).run( function( Environment, $window, $log )
 {
-	if ( Environment.isClient ) {
+	if ( GJ_IS_CLIENT ) {
 		var os = require( 'os' );
 		var platform = os.platform();
 

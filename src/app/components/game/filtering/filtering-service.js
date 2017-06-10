@@ -217,7 +217,7 @@ angular.module( 'App.Game.Filtering' ).factory( 'Game_Filtering_Container', func
 
 					// Always add in all browser types if we auto-detected.
 					// TODO: Would be nice to not have to manually add every single one in, but rather just a single filter for all browser types.
-					if ( !Environment.isClient ) {
+					if ( !GJ_IS_CLIENT ) {
 						filters.browser = Object.keys( Game_Filtering_Container.filterDefinitions.browser.options );
 					}
 					// On client we only do HTML for now.

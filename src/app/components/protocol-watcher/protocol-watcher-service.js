@@ -28,7 +28,7 @@ angular.module( 'App.ProtocolWatcher' ).provider( 'ProtocolWatcher', function()
 		ProtocolWatcher.init = function()
 		{
 			// We never switch protocols on Client.
-			if ( Environment.isClient ) {
+			if ( GJ_IS_CLIENT ) {
 				return;
 			}
 

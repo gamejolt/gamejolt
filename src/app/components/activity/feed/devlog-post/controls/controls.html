@@ -38,7 +38,7 @@
 					>
 
 					<div class="well fill-darkest sans-margin" v-if="isShowingShare">
-						<div class="social-widgets" v-if="!Environment.isClient">
+						<div class="social-widgets" v-if="!GJ_IS_CLIENT">
 							<app-social-twitter-share
 								:url="shareUrl"
 								:content="post.title"

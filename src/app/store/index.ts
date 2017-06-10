@@ -1,6 +1,7 @@
 import { VuexStore, VuexModule, VuexAction, VuexMutation } from '../../lib/gj-lib-client/utils/vuex';
 import { AppStore, Mutations as AppMutations, Actions as AppActions, appStore } from '../../lib/gj-lib-client/vue/services/app/app-store';
 import { LibraryStore, Mutations as LibraryMutations, Actions as LibraryActions } from './library';
+import { ClientLibraryStore, Mutations as ClientLibraryMutations, Actions as ClientLibraryActions } from './client-library';
 import { Settings } from '../components/settings/settings.service';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
@@ -13,7 +14,7 @@ import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdro
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
 import { ChatClient } from '../components/chat/client';
 
-export type Actions = AppActions & LibraryActions &
+export type Actions = AppActions & LibraryActions & ClientLibraryActions &
 {
 	bootstrap: undefined;
 	logout: undefined;
@@ -26,7 +27,7 @@ export type Actions = AppActions & LibraryActions &
 	_checkBackdrop: undefined;
 };
 
-export type Mutations = AppMutations & LibraryMutations &
+export type Mutations = AppMutations & LibraryMutations & ClientLibraryMutations &
 {
 	setNotificationsCount: number;
 	_setBootstrapped: undefined;
@@ -42,17 +43,23 @@ export type Mutations = AppMutations & LibraryMutations &
 	setAngularPayload: any;
 };
 
+const modules: any = {
+	app: appStore,
+	library: new LibraryStore(),
+};
+if ( GJ_IS_CLIENT ) {
+	const clientLibrary = require( './client-library' ).ClientLibraryStore;
+	modules.clientLibrary = new clientLibrary();
+}
 @VuexModule({
 	store: true,
-	modules: {
-		app: appStore,
-		library: new LibraryStore(),
-	},
+	modules: modules,
 })
 export class Store extends VuexStore<Store, Actions, Mutations>
 {
 	app: AppStore;
 	library: LibraryStore;
+	clientLibrary: ClientLibraryStore;
 
 	chat: ChatClient | null = null;
 
@@ -311,10 +318,18 @@ store.watch(
 		if ( isLoggedIn ) {
 			store.dispatch( 'bootstrap' );
 			store.dispatch( 'loadChat' );
+
+			if ( GJ_IS_CLIENT ) {
+				store.dispatch( 'clientLibrary/bootstrap' );
+			}
 		}
 		else {
 			store.dispatch( 'clear' );
 			store.dispatch( 'clearChat' );
+
+			if ( GJ_IS_CLIENT ) {
+				store.dispatch( 'clientLibrary/clear' );
+			}
 		}
 	},
 );

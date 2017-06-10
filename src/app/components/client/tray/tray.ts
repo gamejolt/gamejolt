@@ -4,6 +4,10 @@ import gui from 'nw.gui';
 import { Component } from 'vue-property-decorator';
 
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { ClientControl } from '../control/client.service';
+import { State, Action } from 'vuex-class';
+import { Store } from '../../../store/index';
+import { UserTokenModal } from '../../user/token-modal/token-modal.service';
 
 const packagePrefix = GJ_BUILD_TYPE === 'production' ? '/package' : '';
 
@@ -12,6 +16,9 @@ let tray: gui.Tray | undefined;
 @Component({})
 export class AppClientTray extends Vue
 {
+	@State app: Store['app'];
+	@Action logout: Store['logout'];
+
 	/**
 	 * Whether or not the app will actually quit when you tell it to or if it
 	 * will do a soft quit.
@@ -50,7 +57,7 @@ export class AppClientTray extends Vue
 			}
 			// Otherwise actually quit.
 			else {
-				Client.quit();
+				ClientControl.quit();
 			}
 		} );
 	}
@@ -60,7 +67,7 @@ export class AppClientTray extends Vue
 		const win = gui.Window.get();
 
 		if ( this.isClosed || this.isMinimized || !this.isFocused ) {
-			Client.show();
+			ClientControl.show();
 			this.isClosed = false;
 		}
 		// If the window is being shown and is focused, let's minimize it.
@@ -72,7 +79,7 @@ export class AppClientTray extends Vue
 	private go( location: VueRouter.Location )
 	{
 		this.$router.push( location );
-		Client.show();
+		ClientControl.show();
 	}
 
 	render( h: Vue.CreateElement )
@@ -92,8 +99,9 @@ export class AppClientTray extends Vue
 			// It needs to stay as a relative file path or it will break.
 			icon: packagePrefix + '/app/components/client/tray/' + (Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
 			// TODO: Click doesn't exist?
-			// click: () => this.toggleVisibility(),
-		} );
+			// it does exist, just not typed for some reason
+			click: () => this.toggleVisibility(),
+		} as any );
 
 		const menu = new gui.Menu();
 
@@ -108,79 +116,78 @@ export class AppClientTray extends Vue
 
 			menu.append( new gui.MenuItem( { type: 'separator' } ) );
 
-			// TODO: Convert these...
-			// menu.append( new gui.MenuItem( {
-			// 	label: 'Game Library',
-			// 	click: function()
-			// 	{
-			// 		$state.go( 'library.installed' );
-			// 		Client.show();
-			// 	}
-			// } ) );
+			menu.append( new gui.MenuItem( {
+				label: 'Game Library',
+				click: () =>
+				{
+					this.go( { name: 'library.installed' } );
+					ClientControl.show();
+				}
+			} ) );
 
-			// menu.append( new gui.MenuItem( {
-			// 	label: 'Dashboard',
-			// 	click: function()
-			// 	{
-			// 		$state.go( 'dash.main.overview' );
-			// 		Client.show();
-			// 	}
-			// } ) );
+			menu.append( new gui.MenuItem( {
+				label: 'Dashboard',
+				click: () =>
+				{
+					this.go( { name: 'dashboard.main.overview' } );
+					ClientControl.show();
+				}
+			} ) );
 
-			// menu.append( new gui.MenuItem( {
-			// 	label: 'Edit Account',
-			// 	click: function()
-			// 	{
-			// 		$state.go( 'dash.account.edit' );
-			// 		Client.show();
-			// 	}
-			// } ) );
+			menu.append( new gui.MenuItem( {
+				label: 'Edit Account',
+				click: () =>
+				{
+					this.go( { name: 'dashboard.account.edit' } );
+					ClientControl.show();
+				}
+			} ) );
 
-			// menu.append( new gui.MenuItem( {
-			// 	label: 'Your Profile',
-			// 	click: function()
-			// 	{
-			// 		$state.go( 'profile.overview', { username: App.user.username } );
-			// 		Client.show();
-			// 	}
-			// } ) );
+			menu.append( new gui.MenuItem( {
+				label: 'Your Profile',
+				click: () =>
+				{
+					this.go( { name: 'profile.overview', params: { username: this.app.user.username } } );
+					ClientControl.show();
+				}
+			} ) );
 
-			// menu.append( new gui.MenuItem( {
-			// 	label: 'Your Game Token',
-			// 	click: function()
-			// 	{
-			// 		$injector.get( 'User_TokenModal' ).show();
-			// 		Client.show();
-			// 	}
-			// } ) );
+			menu.append( new gui.MenuItem( {
+				label: 'Your Game Token',
+				click: () =>
+				{
+					UserTokenModal.show();
+					ClientControl.show();
+				}
+			} ) );
 
-			// menu.append( new gui.MenuItem( {
-			// 	label: 'Settings',
-			// 	click: function()
-			// 	{
-			// 		$state.go( 'settings' );
-			// 		Client.show();
-			// 	}
-			// } ) );
+			menu.append( new gui.MenuItem( {
+				label: 'Settings',
+				click: () =>
+				{
+					this.go( { name: 'settings' } );
+					ClientControl.show();
+				}
+			} ) );
 
-			// menu.append( new gui.MenuItem( { type: 'separator' } ) );
+			menu.append( new gui.MenuItem( { type: 'separator' } ) );
 
-			// menu.append( new gui.MenuItem( {
-			// 	label: 'Logout',
-			// 	click: function()
-			// 	{
-			// 		App.logout();
-			// 		Client.show();
-			// 	},
-			// } ) );
+			menu.append( new gui.MenuItem( {
+				label: 'Logout',
+				click: () =>
+				{
+					this.logout();
+					ClientControl.show();
+				},
+			} ) );
 		}
 
 		// TODO
 		// menu.append( new gui.MenuItem( {
 		// 	label: 'Quit',
-		// 	click: function()
+		// 	click: () =>
 		// 	{
-		// 		Client.quit();
+		// 		ClientControl.quit();
 		// 	},
 		// } ) );
 

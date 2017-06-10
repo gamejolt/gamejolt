@@ -22,7 +22,7 @@ History.init( router );
 Analytics.initRouter( router );
 
 if ( GJ_IS_CLIENT ) {
-	require( './bootstrap-client' );
+	// require( './bootstrap-client' );
 }
 GamePlayModal.init( { canMinimize: true } );
 bootstrapShortkey();

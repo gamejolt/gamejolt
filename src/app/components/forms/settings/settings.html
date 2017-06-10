@@ -1,6 +1,6 @@
 <app-form name="settingsForm" @changed="onChange">
 
-	<fieldset id="settings-client" v-if="Environment.isClient">
+	<fieldset id="settings-client" v-if="GJ_IS_CLIENT">
 		<legend>
 			<translate>settings.client</translate>
 		</legend>
@@ -98,7 +98,7 @@
 		</app-form-group>
 
 		<app-form-group
-			v-if="Client_Autostart.canAutostart()"
+			v-if="ClientAutoStart.canAutoStart"
 			name="autostart_client"
 			:label="$gettext( 'settings.autostart_client_label' )"
 			>

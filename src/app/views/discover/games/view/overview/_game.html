@@ -27,7 +27,7 @@
 	</div>
 </section>
 
-<section class="section section-thin" ng-if="!Environment.isClient && !Screen.isXs && gameCtrl.game._should_show_ads">
+<section class="section section-thin" ng-if="!GJ_IS_CLIENT && !Screen.isXs && gameCtrl.game._should_show_ads">
 	<gj-ad size="leaderboard" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
 </section>
 
@@ -195,7 +195,7 @@
 						></a>
 				</div>
 
-				<div ng-if="gameCtrl.twitterShareMessage && !Environment.isClient">
+				<div ng-if="gameCtrl.twitterShareMessage && !GJ_IS_CLIENT">
 					<br>
 					<div class="social-widgets">
 						<gj-social-twitter-share
@@ -253,7 +253,7 @@
 						<hr class="underbar">
 						<div gj-partial="/app/views/discover/games/view/overview/_details.html"></div>
 
-						<div ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
+						<div ng-if="!GJ_IS_CLIENT && gameCtrl.game._should_show_ads && Screen.isDesktop">
 							<br>
 							<gj-ad size="rectangle" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
 						</div>
@@ -432,7 +432,7 @@
 				<!--
 					Will overflow a little on md, but what can ya do, amirite?
 				-->
-				<div class="col-md-4 col-lg-offset-1" ng-if="!Environment.isClient && gameCtrl.game._should_show_ads && Screen.isDesktop">
+				<div class="col-md-4 col-lg-offset-1" ng-if="!GJ_IS_CLIENT && gameCtrl.game._should_show_ads && Screen.isDesktop">
 					<gj-ad size="rectangle" resource="Game" [resource-id]="::gameCtrl.game.id"></gj-ad>
 				</div>
 

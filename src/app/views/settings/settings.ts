@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./settings.html';
 
 import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppPageHeader } from '../../components/page-header/page-header';
 import { BeforeRouteEnter } from '../../../lib/gj-lib-client/utils/router';
@@ -24,13 +23,11 @@ import { AppScrollTo } from '../../../lib/gj-lib-client/components/scroll/to/to.
 })
 export default class RouteSettings extends Vue
 {
-	Environment = Environment;
-
 	get sections()
 	{
 		const sections: any = {};
 
-		if ( Environment.isClient ) {
+		if ( GJ_IS_CLIENT ) {
 			sections.client = this.$gettext( 'settings.client' );
 		}
 
