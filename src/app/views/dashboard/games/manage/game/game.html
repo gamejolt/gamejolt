@@ -1,0 +1,51 @@
+<div>
+
+	<section class="alert alert-warning sans-margin-bottom" v-if="game.status === Game.STATUS_HIDDEN">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-10 col-lg-8 col-centered" :class="{ 'text-center': Screen.isDesktop }">
+					<translate>dash.games.hidden_message</translate>
+					<span v-if="!game.published_on">
+						<translate>dash.games.hidden_message_unpublished</translate>
+					</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<app-expand :when="$route.name === 'dash.games.manage.game.header'" v-if="game.header_media_item">
+		<app-media-item-cover
+			:media-item="game.header_media_item"
+			:should-parallax="false"
+			/>
+	</app-expand>
+
+	<app-expand :when="$route.name === 'dash.games.manage.game.media' && media.length > 0">
+		<app-media-bar :media-items="media" />
+	</app-expand>
+
+	<div class="container" v-if="Screen.isMobile">
+		<br>
+		<app-nav-tab-list>
+			<app-manage-game-nav />
+		</app-nav-tab-list>
+	</div>
+
+	<section class="section">
+		<div class="container">
+
+			<div class="row">
+				<div class="col-md-2" v-if="Screen.isDesktop">
+					<nav class="platform-list">
+						<app-manage-game-nav />
+					</nav>
+				</div>
+				<div class="col-xs-12 col-md-10">
+					<router-view />
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+</div>

@@ -1,0 +1,178 @@
+<h2 class="section-header">
+	{{ 'dash.games.api.overview.heading' | translate }}
+</h2>
+
+<div class="page-help">
+	<div translate>dash.games.api.overview.page_help_html</div>
+	<p>
+		<a class="link-help" href="https://help.gamejolt.com/dev-game-api" target="_blank">{{ 'dash.games.api.overview.page_help_link' | translate }}</a>
+		<br>
+		<a class="link-help" ui-sref="forums.channels.view( { name: 'gj-game-api' } )">{{ 'dash.games.api.overview.page_forum_link' | translate }}</a>
+	</p>
+</div>
+
+<h2 class="sans-margin-bottom">
+	{{ 'dash.games.api.overview.sessions_heading' | translate }}
+</h2>
+
+<p class="text-muted small">
+	{{ 'dash.games.api.overview.sessions_help' | translate }}
+</p>
+
+<div class="well fill-lightest full-bleed-xs sans-margin-bottom">
+	<div class="row">
+		<div class="col-xs-6 col-sm-3">
+			<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
+				<div class="stat-big-label">
+					{{ 'dash.games.api.overview.sessions_active_label' | translate }}
+				</div>
+				<div class="stat-big-digit">
+					{{ overviewCtrl.numActiveSessions | number }}
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+			<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
+				<div class="stat-big-label">
+					{{ 'dash.games.api.overview.sessions_time_label' | translate }}
+				</div>
+				<div class="stat-big-digit">
+					{{ overviewCtrl.sessionStats.time | duration }}
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+			<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
+				<div class="stat-big-label">
+					{{ 'dash.games.api.overview.sessions_avg_label' | translate }}
+				</div>
+				<div class="stat-big-digit">
+					{{ overviewCtrl.sessionStats.avg | duration }}
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+			<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
+				<div class="stat-big-label">
+					{{ 'dash.games.api.overview.sessions_users_label' | translate }}
+				</div>
+				<div class="stat-big-digit">
+					{{ overviewCtrl.sessionStats['user-count'] | number }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<h2>
+	<a class="link-unstyled" ui-sref="^.trophies.list">
+		{{ 'dash.games.api.overview.trophies_heading' | translate }}
+	</a>
+</h2>
+
+<div class="well fill-lightest full-bleed-xs sans-margin-bottom">
+	<div class="row">
+		<div class="col-xs-6 col-sm-3">
+			<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
+				<div class="stat-big-label">
+					{{ 'dash.games.api.overview.trophies_label' | translate }}
+				</div>
+				<div class="stat-big-digit">
+					{{ overviewCtrl.numActiveTrophies | number }}
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+			<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
+				<div class="stat-big-label">
+					{{ 'dash.games.api.overview.trophies_exp_label' | translate }}
+					<span class="jolticon jolticon-help-circle" v-app-tooltip="$gettext( `dash.games.api.overview.trophies_exp_tooltip` )"></span>
+				</div>
+				<div class="stat-big-digit">
+					<span v-if="!overviewCtrl.numActiveTrophies">
+						{{ 'dash.games.api.overview.na' | translate }}
+					</span>
+					<span v-if="overviewCtrl.numActiveTrophies">
+						{{ overviewCtrl.totalTrophyExp | number }}
+						{{ 'leveling.exp' | translate }}
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+			<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
+				<div class="stat-big-label">
+					{{ 'dash.games.api.overview.trophies_achieved_label' | translate }}
+				</div>
+				<div class="stat-big-digit">
+					{{ overviewCtrl.totalAchievedTrophies | number }}
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+			<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
+				<div class="stat-big-label">
+					{{ 'dash.games.api.overview.trophies_users_label' | translate }}
+				</div>
+				<div class="stat-big-digit">
+					{{ overviewCtrl.totalUsersWithTrophies | number }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<h2>
+	<a class="link-unstyled" ui-sref="^.scoreboards.list">
+		{{ 'dash.games.api.overview.scores_heading' | translate }}
+	</a>
+</h2>
+
+<div class="well fill-lightest full-bleed-xs sans-margin-bottom">
+	<div class="row">
+		<div class="col-xs-6 col-sm-3">
+			<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
+				<div class="stat-big-label">
+					{{ 'dash.games.api.overview.scores_label' | translate }}
+					<span class="jolticon jolticon-help-circle" v-app-tooltip="$gettext( `dash.games.api.overview.scores_tooltip` )"></span>
+				</div>
+				<div class="stat-big-digit">
+					{{ overviewCtrl.totalScores | number }}
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+			<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
+				<div class="stat-big-label">
+					{{ 'dash.games.api.overview.scores_users_label' | translate }}
+					<span class="jolticon jolticon-help-circle" v-app-tooltip="$gettext( `dash.games.api.overview.scores_users_tooltip` )"></span>
+				</div>
+				<div class="stat-big-digit">
+					{{ overviewCtrl.totalUsersWithScores | number }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<h2>
+	<a class="link-unstyled" ui-sref="^.data-storage.items.list">
+		{{ 'dash.games.api.overview.data_heading' | translate }}
+	</a>
+</h2>
+
+<div class="well fill-lightest full-bleed-xs sans-margin-bottom">
+	<div class="row">
+		<div class="col-xs-6 col-sm-3">
+			<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
+				<div class="stat-big-label">
+					{{ 'dash.games.api.overview.data_items_label' | translate }}
+					<span class="jolticon jolticon-help-circle" v-app-tooltip="$gettext( `dash.games.api.overview.data_items_tooltip` )"></span>
+				</div>
+				<div class="stat-big-digit">
+					{{ overviewCtrl.numGlobalItems | number }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

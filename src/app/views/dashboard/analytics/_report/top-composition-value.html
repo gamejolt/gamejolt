@@ -1,49 +1,61 @@
-<!--
-If graph data is null, then don't show the graph and give more space for the table.'
--->
-<div ng-class="$ctrl.reportData.graph !== null ? 'col-sm-8' : 'col-xs-12'">
+<div>
 
-	<div class="alert alert-info" ng-if="!$ctrl.reportData.hasData" translate>
-		No data yet.
-	</div>
+	<!--
+	If graph data is null, then don't show the graph and give more space for the
+	table.
+	-->
+	<div :class="reportData.graph !== null ? 'col-sm-8' : 'col-xs-12'">
 
-	<table class="table table-striped table-condensed" ng-if="$ctrl.reportData.hasData">
-		<thead>
-			<tr>
-				<th style="width: 20px"></th>
-				<th>
-					{{ $ctrl.reportData.fieldLabel }}
-				</th>
-				<th class="text-right">
-					<!--{{ analyticsCtrl.stats[ analyticsCtrl.eventType ].label }}-->
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="val in $ctrl.reportData.data track by $index">
-				<td>
-					{{ $index + 1 | number }}.
-				</td>
-				<th>
-					<span ng-if="$ctrl.getTypeof( val.label ) !== 'object'">
-						{{ val.label }}
-					</span>
-					<a ng-if="$ctrl.getTypeof( val.label ) === 'object'" ui-sref="dashboard.analytics.view({ resource: val.label.resource, resourceId: val.label.resourceId })">
-						{{ val.label.value }}
-					</a>
-				</th>
-				<td class="text-right">
-					<div ng-switch="$ctrl.reportData.fieldType">
-						<span ng-switch-when="number">
+		<div class="alert alert-info" v-if="!reportData.hasData">
+			<translate>No data yet.</translate>
+		</div>
+
+		<table class="table table-striped table-condensed" v-if="reportData.hasData">
+			<thead>
+				<tr>
+					<th style="width: 20px"></th>
+					<th>
+						{{ reportData.fieldLabel }}
+					</th>
+					<th class="text-right">
+						<!--{{ analyticsCtrl.stats[ analyticsCtrl.eventType ].label }}-->
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="( val, i ) of reportData.data" :key="i">
+					<td>
+						{{ i + 1 | number }}.
+					</td>
+					<th>
+						<span v-if="typeof val.label !== 'object'">
+							{{ val.label }}
+						</span>
+						<router-link
+							v-else
+							:to="{
+								name: 'dash.analytics',
+								params: {
+									resource: val.label.resource,
+									resourceId: val.label.resourceId,
+								},
+							}"
+							>
+							{{ val.label.value }}
+						</router-link>
+					</th>
+					<td class="text-right">
+						<span v-if="reportData.fieldType === 'number'">
 							{{ val.value | number }}
 						</span>
-						<span ng-switch-when="currency">
-							{{ val.value / 100 | currency }}
+						<span v-else-if="reportData.fieldType === 'currency'">
+							{{ val.value | currency }}
 						</span>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
 
 </div>

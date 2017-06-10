@@ -35,14 +35,14 @@
 			</router-link>
 			<router-link
 				class="list-group-item offline-disable"
-				:to="{ name: 'dashboard.main.overview' }"
+				:to="{ name: 'dash.main.overview' }"
 				v-app-track-event="`account-popover:dashboard`"
 				>
 				<translate>Dashboard</translate>
 			</router-link>
 			<router-link
 				class="list-group-item offline-disable"
-				:to="{ name: screen.isXs ? 'dashboard.account-mobile-nav' : 'dashboard.account.edit' }"
+				:to="{ name: screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit' }"
 				v-app-track-event="`account-popover:account`"
 				>
 				<translate>Edit Account</translate>
@@ -66,7 +66,7 @@
 		<div class="account-popover-button offline-disable">
 			<router-link
 				class="btn btn-outline btn-block"
-				:to="{ name: 'dashboard.developer.games.add' }"
+				:to="{ name: 'dash.games.add' }"
 				v-app-track-event="`account-popover:add-game`"
 				>
 				<app-jolticon icon="add" />
@@ -84,7 +84,7 @@
 			<div class="list-group-dark">
 				<router-link
 					class="list-group-item small"
-					:to="{ name: 'dashboard.withdraw-funds' }"
+					:to="{ name: 'dash.withdraw-funds' }"
 					>
 					<app-jolticon
 						class="pull-right"

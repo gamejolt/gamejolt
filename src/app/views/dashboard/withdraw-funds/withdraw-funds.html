@@ -1,6 +1,6 @@
 <header class="section no-nav">
 	<div class="container">
-		<h1>{{ ::'dash.funds.withdraw.heading' | translate }}</h1>
+		<h1>{{ 'dash.funds.withdraw.heading' | translate }}</h1>
 	</div>
 </header>
 
@@ -9,34 +9,34 @@
 
 		<div class="row">
 
-			<div class="col-sm-3 col-md-4 col-lg-6" ng-class="{ 'pull-right': !Screen.isXs }">
+			<div class="col-sm-3 col-md-4 col-lg-6" :class="{ 'pull-right': !Screen.isXs }">
 
-				<div ng-class="{ 'well fill-lightest text-center': Screen.isXs }">
-					<ul ng-class="Screen.isXs ? 'stat-list' : 'list-unstyled'">
-						<li ng-if="withdrawCtrl.revenuePending > 0" class="stat-big" ng-class="{ 'stat-big-smaller': Screen.isXs }">
-							<div class="stat-big-label">{{ ::'dash.funds.withdraw.revenue_pending' | translate }}</div>
-							<div class="stat-big-digit">{{ ::withdrawCtrl.revenuePending | currency:'$' }}</div>
+				<div :class="{ 'well fill-lightest text-center': Screen.isXs }">
+					<ul :class="Screen.isXs ? 'stat-list' : 'list-unstyled'">
+						<li v-if="withdrawCtrl.revenuePending > 0" class="stat-big" :class="{ 'stat-big-smaller': Screen.isXs }">
+							<div class="stat-big-label">{{ 'dash.funds.withdraw.revenue_pending' | translate }}</div>
+							<div class="stat-big-digit">{{ withdrawCtrl.revenuePending | currency:'$' }}</div>
 						</li>
-						<li class="stat-big" ng-class="{ 'stat-big-smaller': Screen.isXs }">
-							<div class="stat-big-label">{{ ::'dash.funds.withdraw.revenue_withdrawable' | translate }}</div>
-							<div class="stat-big-digit">{{ ::withdrawCtrl.revenueWithdrawable | currency:'$' }}</div>
+						<li class="stat-big" :class="{ 'stat-big-smaller': Screen.isXs }">
+							<div class="stat-big-label">{{ 'dash.funds.withdraw.revenue_withdrawable' | translate }}</div>
+							<div class="stat-big-digit">{{ withdrawCtrl.revenueWithdrawable | currency:'$' }}</div>
 						</li>
 					</ul>
 				</div>
 
 			</div>
 
-			<div class="col-sm-9 col-md-8 col-lg-6" ng-class="{ 'pull-left': !Screen.isXs }">
+			<div class="col-sm-9 col-md-8 col-lg-6" :class="{ 'pull-left': !Screen.isXs }">
 				<div translate>dash.funds.withdraw.page_help_html</div>
 
-				<gj-form-dashboard-withdraw-funds
+				<form-withdraw-funds
 					user="withdrawCtrl.user"
 					paypal-email="withdrawCtrl.email"
 					min-amount="withdrawCtrl.minAmount"
 					withdrawable-amount="withdrawCtrl.revenueWithdrawable"
-					gj-form-submit-handler="withdrawCtrl.onSubmit()"
+					@submit="withdrawCtrl.onSubmit()"
 					>
-				</gj-form-dashboard-withdraw-funds>
+				</form-withdraw-funds>
 			</div>
 
 		</div>

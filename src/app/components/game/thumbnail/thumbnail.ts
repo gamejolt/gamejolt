@@ -91,12 +91,12 @@ export class AppGameThumbnail extends Vue
 
 	get pricingAmount()
 	{
-		return this.pricing && currency( this.pricing.amount, '' );
+		return this.pricing && currency( this.pricing.amount );
 	}
 
 	get oldPricingAmount()
 	{
-		return this.saleOldPricing && currency( this.saleOldPricing.amount, '' );
+		return this.saleOldPricing && currency( this.saleOldPricing.amount );
 	}
 
 	mounted()

@@ -1,6 +1,8 @@
-import { Inject, Injectable } from 'ng-metadata/core';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Graph } from '../../../lib/gj-lib-client/components/graph/graph.service';
+import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
+import { objectPick } from '../../../lib/gj-lib-client/utils/object';
+import { arrayIndexBy } from '../../../lib/gj-lib-client/utils/array';
 
 export type ResourceName = 'Partner' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
 
@@ -34,7 +36,6 @@ export interface ResourceFields
 	user?: UserField[];
 	partner?: UserField[];
 }
-
 
 export type MetricKey =
 	'view' | 'download' | 'install' | 'comment' | 'rating' | 'follow' | 'sale' | 'revenue';
@@ -239,74 +240,67 @@ export const ReportTopPartnerRevenue: ReportComponent[] = [ {
 	displayField: 'user_display_name',
 } ];
 
-@Injectable( 'SiteAnalytics' )
 export class SiteAnalytics
 {
-	constructor(
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
-	)
-	{
-		this._metrics = [
-			{
-				key: 'view',
-				collection: 'views',
-				label: this.gettextCatalog.getString( 'Views' ),
-				type: 'number',
-			},
-			{
-				key: 'download',
-				collection: 'downloads',
-				label: this.gettextCatalog.getString( 'Downloads' ),
-				type: 'number',
-			},
-			{
-				key: 'install',
-				collection: 'installs',
-				label: this.gettextCatalog.getString( 'Installs' ),
-				type: 'number',
-			},
-			{
-				key: 'comment',
-				collection: 'comments',
-				label: this.gettextCatalog.getString( 'Comments' ),
-				type: 'number',
-			},
-			{
-				key: 'rating',
-				collection: 'ratings',
-				label: this.gettextCatalog.getString( 'Ratings' ),
-				type: 'number',
-			},
-			{
-				key: 'follow',
-				collection: 'follows',
-				label: this.gettextCatalog.getString( 'Follows' ),
-				type: 'number',
-			},
-			{
-				key: 'sale',
-				collection: 'sales',
-				label: this.gettextCatalog.getString( 'Sales' ),
-				type: 'number',
-			},
-			{
-				key: 'revenue',
-				collection: 'sales',
-				label: this.gettextCatalog.getString( 'Revenue' ),
-				type: 'currency',
-				field: 'revenue',
-			},
-		];
-	}
+	private static _metrics: Metric[] = [
+		{
+			key: 'view',
+			collection: 'views',
+			label: Translate.$gettext( 'Views' ),
+			type: 'number',
+		},
+		{
+			key: 'download',
+			collection: 'downloads',
+			label: Translate.$gettext( 'Downloads' ),
+			type: 'number',
+		},
+		{
+			key: 'install',
+			collection: 'installs',
+			label: Translate.$gettext( 'Installs' ),
+			type: 'number',
+		},
+		{
+			key: 'comment',
+			collection: 'comments',
+			label: Translate.$gettext( 'Comments' ),
+			type: 'number',
+		},
+		{
+			key: 'rating',
+			collection: 'ratings',
+			label: Translate.$gettext( 'Ratings' ),
+			type: 'number',
+		},
+		{
+			key: 'follow',
+			collection: 'follows',
+			label: Translate.$gettext( 'Follows' ),
+			type: 'number',
+		},
+		{
+			key: 'sale',
+			collection: 'sales',
+			label: Translate.$gettext( 'Sales' ),
+			type: 'number',
+		},
+		{
+			key: 'revenue',
+			collection: 'sales',
+			label: Translate.$gettext( 'Revenue' ),
+			type: 'currency',
+			field: 'revenue',
+		},
+	];
 
-	private _metrics: Metric[];
-	private _allMetrics: MetricMap;
-	private _packageMetrics: MetricMap;
+	private static _allMetrics: MetricMap;
+	private static _packageMetrics: MetricMap;
 
-	get allMetrics()
+	static get allMetrics()
 	{
 		if ( !this._allMetrics ) {
-			this._allMetrics = _.indexBy( this._metrics, 'key' );
+			this._allMetrics = arrayIndexBy( this._metrics, 'key' );
 		}
 
 		return this._allMetrics;
@@ -314,101 +308,106 @@ export class SiteAnalytics
 
 	// Currently all metrics work for users and games.
 	// Changes between the reports loaded is in the analytics controller at time of switching metric.
-	get userMetrics()
+	static get userMetrics()
 	{
 		return this.allMetrics;
 	}
 
-	get gameMetrics()
+	static get gameMetrics()
 	{
 		return this.allMetrics;
 	}
 
-	get packageMetrics()
+	static get packageMetrics()
 	{
 		if ( !this._packageMetrics ) {
 			const possibleMetrics: MetricKey[] = [ 'download' ];
-			this._packageMetrics = <MetricMap>_.pick( this.allMetrics, possibleMetrics );
+			this._packageMetrics = <MetricMap>objectPick( this.allMetrics, possibleMetrics );
 		}
 
 		return this._packageMetrics;
 	}
 
 	// Current release metrics are the same as package metrics.
-	get releaseMetrics()
+	static get releaseMetrics()
 	{
 		return this.packageMetrics;
 	}
 
-	pickPartnerMetrics( metrics: MetricMap )
+	static pickPartnerMetrics( metrics: MetricMap )
 	{
 		const possibleMetrics: MetricKey[] = [ 'view', 'sale', 'revenue' ];
-		return <MetricMap>_.pick( metrics, possibleMetrics );
+		return <MetricMap>objectPick( metrics, possibleMetrics );
 	}
 
-	getHistogram( resource: ResourceName, resourceId: number, metrics: MetricMap, partnerMode: boolean, dates: DateRange )
+	static async getHistogram( resource: ResourceName, resourceId: number, metrics: MetricMap, partnerMode: boolean, dates: DateRange )
 	{
 		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'histogram', partnerMode, dates );
 
-		return Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
-			.then( ( response: any ) =>
-			{
-				let data: any = {};
-				angular.forEach( response, ( eventData, metricKey ) =>
-				{
-					let label: string | undefined = undefined;
-					if ( request[ metricKey ].analyzer == 'histogram-sum' ) {
-						label = 'Sum';
-					}
-					else if ( request[ metricKey ].analyzer == 'histogram-avg' ) {
-						label = 'Average';
-					}
-					data[ metricKey ] = Graph.createGraphData( eventData.result );
-					data[ metricKey ].total = label ? data[ metricKey ].colTotals[ label ] : eventData.total;
-				} );
-				return data;
-			} );
+		const response = await Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } );
+
+		let data: any = {};
+		Object.entries( response ).forEach( ( [ metricKey, eventData ] ) =>
+		{
+			let label: string | undefined = undefined;
+			if ( request[ metricKey ].analyzer === 'histogram-sum' ) {
+				label = 'Sum';
+			}
+			else if ( request[ metricKey ].analyzer === 'histogram-avg' ) {
+				label = 'Average';
+			}
+			data[ metricKey ] = Graph.createGraphData( eventData.result );
+			data[ metricKey ].total = label ? data[ metricKey ].colTotals[ label ] : eventData.total;
+		} );
+
+		return data;
 	}
 
-	getCount( resource: ResourceName, resourceId: number, metrics: MetricMap, partnerMode: boolean, dates?: DateRange )
+	static async getCount( resource: ResourceName, resourceId: number, metrics: MetricMap, partnerMode: boolean, dates?: DateRange )
 	{
 		const request = this.generateAggregationRequest( resource, resourceId, metrics, 'count', partnerMode, dates );
 
-		return Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } )
-			.then( ( response: any ) =>
-			{
-				let data: any = {};
-				angular.forEach( response, ( eventData, metricKey ) =>
-				{
-					let amount = eventData.total;
-					if ( request[ metricKey ].analyzer == 'sum' ) {
-						amount = eventData.result;
-					}
+		const response = await Api.sendRequest( '/web/dash/analytics/display', request, { sanitizeComplexData: false } );
 
-					data[ metricKey ] = {
-						total: amount,
-					};
-				} );
-				return data;
-			} );
+		let data: any = {};
+		Object.entries( response ).forEach( ( [ metricKey, eventData ] ) =>
+		{
+			let amount = eventData.total;
+			if ( request[ metricKey ].analyzer === 'sum' ) {
+				amount = eventData.result;
+			}
+
+			data[ metricKey ] = {
+				total: amount,
+			};
+		} );
+
+		return data;
 	}
 
 	/**
 	 * Generate count/histogram requests.
 	 */
-	private generateAggregationRequest( resource: ResourceName, resourceId: number, metrics: MetricMap, analyzer: Analyzer, partnerMode: boolean, dates?: DateRange )
+	private static generateAggregationRequest(
+		resource: ResourceName,
+		resourceId: number,
+		metrics: MetricMap,
+		analyzer: Analyzer,
+		partnerMode: boolean,
+		dates?: DateRange,
+	)
 	{
 		let request: { [k: string]: Request } = {};
 
-		angular.forEach( metrics, ( metric ) =>
+		Object.values( metrics ).forEach( ( metric ) =>
 		{
 			let _analyzer = analyzer;
 
-			if ( metric.type == 'currency' ) {
-				if ( _analyzer == 'histogram' ) {
+			if ( metric.type === 'currency' ) {
+				if ( _analyzer === 'histogram' ) {
 					_analyzer = 'histogram-sum';
 				}
-				else if ( _analyzer == 'count' ) {
+				else if ( _analyzer === 'count' ) {
 					_analyzer = 'sum';
 				}
 			}
@@ -425,7 +424,7 @@ export class SiteAnalytics
 			}
 
 			if ( partnerMode ) {
-				if ( request[ metric.key ].field == 'revenue' ) {
+				if ( request[ metric.key ].field === 'revenue' ) {
 					request[ metric.key ].field = 'partner_revenue';
 				}
 				request[ metric.key ].conditions = [ 'partner' ];

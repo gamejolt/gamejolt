@@ -1,6 +1,6 @@
 <form gj-form="formModel" name="saveRoomForm">
 
-	<form-group name="_type" label="Room Type" ng-if="method == 'add'">
+	<form-group name="_type" label="Room Type" v-if="method === 'add'">
 		<div class="radio">
 			<label>
 				<input form-control="radio" ng-value="Chat_Room.TYPE_OPEN_GROUP">
@@ -18,16 +18,16 @@
 		<control-errors></control-errors>
 	</form-group>
 
-	<div gj-expand-when="formModel._type == Chat_Room.TYPE_CLOSED_GROUP">
+	<div gj-expand-when="formModel._type === Chat_Room.TYPE_CLOSED_GROUP">
 		<form-group name="is_viral_room" label="Allow everyone to invite other users?">
 			<p class="help-block">
 				With this option on, anyone in the room will be able to invite other users into the room. If it's off, only mods can.
 			</p>
-			<gj-toggle-switch form-control="checkbox" toggle-switch-on-text="Yes" toggle-switch-off-text="No"></gj-toggle-switch>
+			<app-form-control-toggle :on-label="$gettext( 'Yes' )" :off-label="$gettext( 'No' )" />
 		</form-group>
 	</div>
 
-	<form-group name="title" label="Title" ng-if="method == 'add'">
+	<form-group name="title" label="Title" v-if="method === 'add'">
 		<p class="help-block">Room names should be lowercase with hyphens <code>-</code> used to separate words. It must be unique against all other rooms created.</p>
 		<p class="help-block">Example: <code>this-is-a-room</code></p>
 		<input form-control="text" ng-maxlength="100" gj-pattern="urlPath">
@@ -61,10 +61,9 @@
 		<control-errors></control-errors>
 	</form-group>-->
 
-	<button gj-form-submit-button class="btn" ng-disabled="!saveRoomForm.$valid" ng-click="onSubmit()">
-		<span class="jolticon" ng-class="method == 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
-		<span ng-if="method == 'add'">Create Room</span>
-		<span ng-if="method == 'edit'">Edit Room</span>
-	</button>
+	<app-form-button icon="metho">
+		<translate v-if="method === 'add'">Create Room</translate>
+		<translate v-if="method === 'edit'">Edit Room</translate>
+	</app-form-button>
 
 </form>

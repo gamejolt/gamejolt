@@ -3,20 +3,27 @@
 	<div class="col-md-4 col-md-push-8">
 
 		<div class="well fill-lightest text-center">
-			<p><strong translate>dash.avatar.current_label</strong></p>
-			<img class="img-responsive" style="display: inline-block; max-width: 100px" ng-src="{{ ::App.user.img_avatar }}" ng-attr-alt="{{ 'dash.avatar.current_alt' | translate }}">
+			<p><strong><translate>dash.avatar.current_label</translate></strong></p>
+			<img
+				class="img-responsive"
+				style="display: inline-block; max-width: 100px"
+				:src="app.user.img_avatar"
+				:alt="$gettext( `dash.avatar.current_alt` )"
+				>
 		</div>
 
 	</div>
 
 	<div class="col-md-8 col-md-pull-4">
 
-		<div translate>dash.avatar.body_html</div>
+		<div>
+			<translate :escape-html="false">dash.avatar.body_html</translate>
+		</div>
 
 		<p>
-			<a href="http://gravatar.com" class="btn" ng-class="{ block: Screen.isXs }">
-				<span class="jolticon jolticon-chevron-right"></span>
-				<span translate>dash.avatar.get_avatar_button</span>
+			<a href="http://gravatar.com" target="_blank" class="btn" :class="{ block: Screen.isXs }">
+				<app-jolticon icon="chevron-right" />
+				<translate>dash.avatar.get_avatar_button</translate>
 			</a>
 		</p>
 		<br>

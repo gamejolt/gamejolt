@@ -1,5 +1,6 @@
 import { Component, Output, Inject, Input, EventEmitter } from 'ng-metadata/core';
 import * as template from '!html-loader!./site-editor-modal.html';
+import './site-editor-modal.styl';
 
 import { SiteTheme } from '../../../lib/gj-lib-client/components/site/theme/theme-model';
 import { Site } from '../../../lib/gj-lib-client/components/site/site-model';

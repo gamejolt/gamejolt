@@ -1,0 +1,182 @@
+<app-form name="devlogPostForm">
+	<div v-if="Loader.ready( 'upload' )">
+		<gj-form-loader
+			url="/web/dash/developer/games/devlog/save/{{ baseModel.game.id }}/{{ baseModel.id }}"
+			on-loaded="onLoaded( $payload )"
+			>
+
+			<div v-if="formModel.type === 'sketchfab'" class="alert alert-info">
+				<p translate>With Sketchfab you can embed 3D content from your game in the browser. You can also view that content from any Virtual Reality headset. AMAZING!</p>
+				<p>
+					<a href="https://sketchfab.com/" class="link-help" target="_blank" translate>Learn more about Sketchfab</a>
+				</p>
+			</div>
+
+			<app-form-group name="title"
+				:label="$gettext( `Title` )"
+				>
+				<input form-control="text" ng-maxlength="250">
+				<app-form-control-errors />
+			</app-form-group>
+
+			<div ng-switch="formModel.type">
+
+				<div ng-switch-when="text">
+					<app-form-group name="content_markdown"
+						:label="$gettext( `Post Content` )"
+						>
+
+						<div
+							form-markdown-editor
+							markdown-mode="devlog"
+							preview-class="fireside-post-body"
+							markdown-preview-url="/web/dash/developer/games/devlog/preview"
+							show-media-items="true"
+							media-item-type="fireside-post-image"
+							:placeholder="$gettext( `Write your post content here...` )"
+							>
+						</div>
+
+						<app-form-control-errors />
+
+					</app-form-group>
+				</div>
+
+				<div ng-switch-when="media">
+					<div class="alert alert-info" translate>
+						Note that at this time we don't allow you to modify the media after you save the post. Make sure it's lookin' good before you save.
+					</div>
+
+					<app-form-group name="file"
+						v-if="!hasMediaItems"
+						:label="$gettext( `Upload Media` )"
+						>
+
+						<p class="help-block" translate>
+							Your image must be a PNG, JPG, or GIF. <br>
+							<b>Animated GIFs are supported.</b>
+						</p>
+
+						<gj-form-upload-control
+							form-control="upload"
+							gj-max-filesize="maxFilesize"
+							gj-max-img-width="maxWidth"
+							gj-max-img-height="maxHeight"
+							accept=".png,.jpg,.jpeg,.gif"
+							multiple
+							is-sortable="true"
+							>
+						</gj-form-upload-control>
+
+						<app-form-control-errors />
+					</app-form-group>
+				</div>
+
+				<div ng-switch-when="video">
+					<app-form-group name="video_url"
+						v-if="!wasPublished"
+						:label="$gettext( `Video URL` )"
+						>
+
+						<p class="help-block" translate>
+							Currently only YouTube videos are supported.
+						</p>
+
+						<input form-control="text" ng-pattern="GameVideo.REGEX.YOUTUBE">
+
+						<app-form-control-errors />
+					</app-form-group>
+				</div>
+
+				<div ng-switch-when="sketchfab">
+					<app-form-group
+						name="sketchfab_id"
+						v-if="!wasPublished"
+						:label="$gettext( `Sketchfab Model ID` )"
+						>
+
+						<p class="help-block">
+							<span translate>This is the ID in your model's URL. For example:</span>
+							<code>https://sketchfab.com/models/<strong>ID</strong></code>
+						</p>
+
+						<input form-control="text">
+
+						<app-form-control-errors />
+					</app-form-group>
+				</div>
+
+			</div>
+
+			<!--
+				Can only modify access control before it's published for the first time.'
+			-->
+			<div class="form-group"
+				v-if="!baseModel.published_on"
+				>
+				<label class="control-label" translate>
+					Access Permissions
+				</label>
+
+				<div class="alert alert-info"
+					v-if="!keyGroups.length"
+					translate
+					>
+					You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. You can create a user key group through the <b>Keys/Access</b> page.
+				</div>
+
+				<div v-if="keyGroups.length">
+					<p class="help-block"
+						translate
+						>
+						You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. Only User-type key groups can be selected.
+					</p>
+
+					<div class="checkbox" v-for="keyGroup of keyGroups track by keyGroup.id">
+						<label>
+							<input type="checkbox" ng-model="formModel.keyGroups[ keyGroup.id ]">
+							{{ keyGroup.name }}
+						</label>
+					</div>
+				</div>
+			</div>
+
+			<div
+				class="form-group"
+				v-if="baseModel.published_on && baseModel.key_groups.length"
+				>
+				<label class="control-label" translate>
+					Access Permissions
+				</label>
+				<div class="alert alert-info" translate>
+					The below key groups have access to this post. You can't edit who has access after posting since notifications have already gone out.
+				</div>
+				<div>
+					<span class="tag" v-for="keyGroup of baseModel.key_groups track by keyGroup.id">
+						{{ keyGroup.name }}
+					</span>
+				</div>
+			</div>
+
+			<button class="btn btn-success" ng-disabled="!devlogPostForm.$valid" ng-click="onSubmit()">
+				<span v-if="baseModel.status !== Fireside_Post.STATUS_ACTIVE">
+					<app-jolticon icon="add" />
+					<span translate>Publish</span>
+				</span>
+				<span v-if="baseModel.status === Fireside_Post.STATUS_ACTIVE">
+					<app-jolticon icon="edit" />
+					<span translate>Save</span>
+				</span>
+			</button>
+
+			<button class="btn btn-outline"
+				v-if="baseModel.status !== Fireside_Post.STATUS_ACTIVE"
+				ng-disabled="!devlogPostForm.$valid"
+				ng-click="onDraftSubmit()"
+				>
+				<span translate>Save as Draft</span>
+			</button>
+
+		</gj-form-loader>
+	</div>
+</app-form>

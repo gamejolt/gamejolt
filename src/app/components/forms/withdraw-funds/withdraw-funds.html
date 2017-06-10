@@ -1,0 +1,42 @@
+<app-form name="withdrawFundsForm">
+
+	<div class="alert alert-info" translate>dash.funds.withdraw.form_help_html</div>
+
+	<app-form-group v-if="!user.paypal_id" name="email_address" :label="$gettext( `dash.funds.withdraw.email_label` )">
+		<p class="help-block above">{{ 'dash.funds.withdraw.email_help' | translate }}</p>
+		<input form-control="email">
+		<app-form-control-errors />
+	</app-form-group>
+
+	<div v-if="user.paypal_id" class="form-group">
+		<label class="control-label" translate>Current PayPal Account</label>
+		<div class="form-static">{{ user.paypal_email_address }}</div>
+		<p class="help-block" translate translate-params-url="$state.href( 'dash.account.financials' )">
+			You can link a different PayPal account in your <a href="{{ url }}">payment setup</a>.
+		</p>
+	</div>
+
+	<app-form-group name="amount" :label="$gettext( `dash.funds.withdraw.amount_label` )">
+		<p class="help-block above"
+			translate
+			translate-params-amount="minAmount"
+			>
+			dash.funds.withdraw.amount_help
+		</p>
+		<input-group>
+			<input-group-addon>$</input-group-addon>
+			<input form-control="number"
+				gj-form-currency-input
+				step="0.01"
+				ng-min="minAmount"
+				ng-max="withdrawableAmount"
+				>
+		</input-group>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<app-form-button icon="chevron-right">
+		<translate>dash.funds.withdraw.submit_button</translate>
+	</app-form-button>
+
+</app-form>

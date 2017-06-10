@@ -38,6 +38,8 @@ export type Mutations = AppMutations & LibraryMutations &
 	_clearPanes: undefined;
 	_addBackdrop: undefined;
 	_removeBackdrop: undefined;
+	setIsShowingAngular: boolean;
+	setAngularPayload: any;
 };
 
 @VuexModule({
@@ -65,6 +67,9 @@ export class Store extends VuexStore<Store, Actions, Mutations>
 	isLeftPaneOverlayed = false;
 	isRightPaneOverlayed = false;
 	backdrop: AppBackdrop | null = null;
+
+	isShowingAngular = false;
+	angularPayload: any = null;
 
 	get isLeftPaneVisible()
 	{
@@ -279,6 +284,18 @@ export class Store extends VuexStore<Store, Actions, Mutations>
 
 		Backdrop.remove( this.backdrop );
 		this.backdrop = null;
+	}
+
+	@VuexMutation
+	setIsShowingAngular( visible: Mutations['setIsShowingAngular'] )
+	{
+		this.isShowingAngular = visible;
+	}
+
+	@VuexMutation
+	setAngularPayload( payload: any )
+	{
+		this.angularPayload = payload;
 	}
 }
 

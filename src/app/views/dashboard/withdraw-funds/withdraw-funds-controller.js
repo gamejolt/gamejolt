@@ -18,6 +18,6 @@ angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.WithdrawFundsCtrl
 			gettextCatalog.getString( 'dash.funds.withdraw.success_growl' ),
 			gettextCatalog.getString( 'dash.funds.withdraw.success_growl_title' )
 		);
-		$state.go( 'dashboard.main.overview' );
+		$state.go( 'dash.main.overview' );
 	};
 } );

@@ -1,6 +1,6 @@
 angular.module( 'App.Views' ).config( function( $stateProvider )
 {
-	$stateProvider.state( 'dashboard.account.financials', {
+	$stateProvider.state( 'dash.account.financials', {
 		url: '/financials',
 		controller: 'Dashboard.Account.FinancialsCtrl',
 		controllerAs: 'financialsCtrl',

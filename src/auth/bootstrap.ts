@@ -11,9 +11,11 @@ import { router } from './views/index';
 import { Payload } from '../lib/gj-lib-client/components/payload/payload-service';
 import { App } from './app';
 import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
+import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 
 Payload.init( store as any, router );
 History.init( router );
+Analytics.initRouter( router );
 
 const availableLanguages: any = {};
 for ( const lang of Translate.langs ) {

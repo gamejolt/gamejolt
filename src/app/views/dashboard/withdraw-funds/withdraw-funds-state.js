@@ -2,7 +2,7 @@ angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvid
 {
 	$urlRouterProvider.when( '/dashboard/developer/withdraw-funds', '/dashboard/withdraw-funds' );
 
-	$stateProvider.state( 'dashboard.withdraw-funds', {
+	$stateProvider.state( 'dash.withdraw-funds', {
 		url: '/withdraw-funds',
 		controller: 'Dashboard.WithdrawFundsCtrl',
 		controllerAs: 'withdrawCtrl',

@@ -6,6 +6,12 @@
 		<div id="content">
 			<app-error-page>
 				<router-view />
+
+				<div v-show="isShowingAngular">
+					<div v-pre>
+						<gj-app></gj-app>
+					</div>
+				</div>
 			</app-error-page>
 		</div>
 	</app-shell>

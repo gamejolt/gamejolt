@@ -4,25 +4,30 @@
 		<thead>
 			<tr>
 				<th>
-					Rating Given
+					<translate>Rating Given</translate>
 				</th>
 				<th class="text-right">
-					Count
+					<translate>Count</translate>
 				</th>
 				<th style="width: 150px"></th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="i in [ 5, 4, 3, 2, 1 ]">
+			<tr v-for="i of [ 5, 4, 3, 2, 1 ]">
 				<td>
 					{{ i }}
 				</td>
 				<td class="text-right">
-					{{ $ctrl.reportData.data[ i ] | number }}
+					{{ reportData.data[ i ] || 0 | number }}
 				</td>
 				<td>
-					<div class="report-percentage" ng-style="{ width: $ctrl.reportData.data[ i ] / $ctrl.reportData.total * 70 + 'px' }"></div>
-					<small>{{ $ctrl.reportData.data[ i ] / $ctrl.reportData.total * 100 | number:2 }}%</small>
+					<div class="report-percentage"
+						:style="{ width: (reportData.data[ i ] || 0) / reportData.total * 70 + 'px' }"
+						>
+					</div>
+					<small>
+						{{ (reportData.data[ i ] / reportData.total) || 0 | number( { style: 'percent', maximumFractionDigits: 2 } ) }}
+					</small>
 				</td>
 			</tr>
 		</tbody>

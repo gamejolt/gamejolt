@@ -1,0 +1,48 @@
+<app-form name="addKeys">
+
+	<app-form-group name="amount"
+		:label="$gettext( `# of Keys to Generate` )"
+		v-if="(keyGroup.type === KeyGroup.TYPE_ANONYMOUS || keyGroup.type === KeyGroup.TYPE_ANONYMOUS_CLAIM)"
+		>
+		<input
+			form-control="number"
+			step="1"
+			min="1"
+			ng-max="20000 - keyGroup.key_count"
+			>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<app-form-group name="emails"
+		:label="$gettext( `Email Addresses` )"
+		v-if="keyGroup.type === KeyGroup.TYPE_EMAIL"
+		>
+		<p class="help-block" translate>
+			Paste one email address per line, or separate them by commas.
+		</p>
+		<textarea form-control rows="10" ng-maxlength="750"></textarea>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<app-form-group name="users"
+		:label="$gettext( `Usernames` )"
+		v-if="keyGroup.type === KeyGroup.TYPE_USER"
+		>
+		<p class="help-block" translate>
+			Paste one username per line, or separate them by commas.
+		</p>
+		<textarea form-control rows="10" ng-maxlength="750"></textarea>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<div gj-expand-when="formState.serverErrors['num-keys']">
+		<div class="alert alert-warning" translate>
+			You can only have a max of {{ 20000 | number }} keys in a single key group.
+		</div>
+	</div>
+
+	<app-form-button icon="add">
+		<translate>Add</translate>
+	</app-form-button>
+
+</app-form>

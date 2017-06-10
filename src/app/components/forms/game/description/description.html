@@ -1,0 +1,66 @@
+<app-form name="descriptionForm">
+
+	<app-form-group
+		name="description_markdown"
+		:label="$gettext( `dash.games.form.description_label` )"
+		:hide-label="true"
+		>
+
+		<app-form-control-markdown
+			preview-class="game-compiled-description"
+			preview-url="/web/dash/developer/games/description/preview"
+			markdown-mode="games"
+			:show-media-items="true"
+			media-item-type="game-description"
+			:placeholder="$gettext( `Write your game description here...` )"
+			/>
+
+		<app-form-control-errors />
+
+	</app-form-group>
+
+	<app-expand :when="isFnafDetected">
+		<div class="alert alert-warning">
+			<div>
+				<translate :escape-html="false">
+					dash.games.add.fnaf_autotag_message_html
+				</translate>
+			</div>
+
+			<div class="alert-actions">
+				<button
+					class="btn btn-success-outline"
+					@click="addAutotag( 'fnaf' )"
+					>
+					<app-jolticon icon="tag" />
+					<translate>dash.games.add.fnaf_autotag_accept</translate>
+				</button>
+
+				<button
+					class="btn btn-outline"
+					@click="skipAutotag"
+					>
+					<app-jolticon icon="remove" />
+					<translate>dash.games.add.fnaf_autotag_reject</translate>
+				</button>
+			</div>
+		</div>
+	</app-expand>
+
+	<app-form-button
+		v-if="!isWizard && !isFnafDetected"
+		icon="edit"
+		>
+		<translate>Save Description</translate>
+	</app-form-button>
+	<div v-else>
+		<!--TODO-->
+		<!--<gj-form-dashboard-game-wizard-controls
+			game="formModel"
+			can-proceed="descriptionForm.$valid"
+			on-next="onSubmit()"
+			>
+		</gj-form-dashboard-game-wizard-controls>-->
+	</div>
+
+</app-form>

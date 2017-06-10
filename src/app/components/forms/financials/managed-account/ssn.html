@@ -1,0 +1,35 @@
+<div v-if="helpers.requiresField( namePrefixDotted + '.personal_id_number' )">
+	<app-form-group
+		v-if="!helpers.getStripeField( namePrefixDotted + '.personal_id_number_provided' )"
+		name="{{ namePrefix }}-personal_id_number"
+		label="{{ account.country_code === 'us' ? 'Social Security Number or ITIN' : 'Foreign Tax Identification Number' }}"
+		>
+
+		<p class="help-block" v-if="account.country_code === 'us'">
+			We are required by the IRS to collect your Social Security Number (SSN) or Individual Taxpayer Identification Number (ITIN) for tax purposes. For security reasons, we use Stripe to store this information, it will not be stored on Game Jolt's servers.
+		</p>
+
+		<p class="help-block" v-if="account.country_code !== 'us'">
+			We are required by the IRS to collect your Tax Identification Number (TIN) for tax purposes. For security reasons, we use Stripe to store this information, it will not be stored on Game Jolt's servers.
+		</p>
+
+		<input form-control>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<div v-if="helpers.getStripeField( namePrefixDotted + '.personal_id_number_provided' )" class="form-horizontal">
+		<div class="form-group">
+			<label class="control-label col-sm-4">
+				<span v-if="account.country_code === 'us'">
+					SSN/ITIN
+				</span>
+				<span v-if="account.country_code !== 'us'">
+					Foreign Tax Identification Number
+				</span>
+			</label>
+			<div class="form-static col-sm-8">
+				Provided
+			</div>
+		</div>
+	</div>
+</div>

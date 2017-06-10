@@ -1,0 +1,33 @@
+<div class="row">
+	<div class="col-sm-7">
+
+		<div class="alert"
+			:class="manageCtrl.canPublish ? 'alert-success' : 'alert-info'"
+			>
+			<div v-if="manageCtrl.canPublish" translate>
+				Your game is ready to be published to the site! If you're not ready yet, you can always save it for later.
+			</div>
+
+			<div v-if="!manageCtrl.canPublish" translate>
+				You still have some information to fill out before we can publish it to the site. You can always save it for later and come back to it, though!
+			</div>
+
+			<div class="alert-actions">
+				<button class="btn btn-success-outline btn-dark-variant"
+					ng-disabled="!manageCtrl.canPublish"
+					ng-click="manageCtrl.publish()"
+					>
+					<span translate>Publish</span>
+				</button>
+
+				<button class="btn btn-outline btn-dark-variant"
+					ng-click="manageCtrl.saveDraft()"
+					>
+					<span translate>Save Draft</span>
+				</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+

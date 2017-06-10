@@ -1,0 +1,198 @@
+<app-form name="gameMaturityForm">
+
+	<app-form-group name="tigrs_age" :label="$gettext( `dash.games.maturity.age_label` )">
+		<p class="help-block" v-if="baseModel._is_wip" translate>
+			dash.games.maturity.wip_help
+		</p>
+
+		<div class="radio" v-for="item of age track by $index" v-if="$index > 0">
+			<label>
+				<input form-control="radio" ng-value="$index">
+				{{ item.label }}
+				<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+			</label>
+		</div>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<div gj-expand-when="formModel.tigrs_age !== 0">
+
+		<fieldset>
+			<legend translate>dash.games.maturity.violence_legend</legend>
+
+			<app-form-group name="tigrs_cartoon_violence" :label="$gettext( `dash.games.maturity.cartoon_violence_label` )">
+				<div class="radio" v-for="item of cartoonViolence track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group name="tigrs_fantasy_violence" :label="$gettext( `dash.games.maturity.fantasy_violence_label` )">
+				<div class="radio" v-for="item of fantasyViolence track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group name="tigrs_realistic_violence" :label="$gettext( `dash.games.maturity.realistic_violence_label` )">
+				<div class="radio" v-for="item of realisticViolence track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group name="tigrs_bloodshed" :label="$gettext( `dash.games.maturity.bloodshed_label` )">
+				<div class="radio" v-for="item of bloodshed track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group name="tigrs_sexual_violence" :label="$gettext( `dash.games.maturity.sexual_violence_label` )">
+				<div class="radio" v-for="item of sexualViolence track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+		</fieldset>
+
+		<fieldset>
+			<legend translate>dash.games.maturity.substances_legend</legend>
+
+			<app-form-group name="tigrs_alcohol" :label="$gettext( `dash.games.maturity.alcohol_label` )">
+				<div class="radio" v-for="item of alcohol track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group name="tigrs_drugs" :label="$gettext( `dash.games.maturity.drugs_label` )">
+				<div class="radio" v-for="item of drugs track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group name="tigrs_tobacco" :label="$gettext( `dash.games.maturity.tobacco_label` )">
+				<div class="radio" v-for="item of tobacco track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+		</fieldset>
+
+		<fieldset>
+			<legend translate>dash.games.maturity.sex_nudity_legend</legend>
+
+			<app-form-group name="tigrs_nudity" :label="$gettext( `dash.games.maturity.nudity_label` )">
+				<div class="radio" v-for="item of nudity track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group name="tigrs_sexual_themes" :label="$gettext( `dash.games.maturity.sexual_themes_label` )">
+				<div class="radio" v-for="item of sexualThemes track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+		</fieldset>
+
+		<fieldset>
+			<legend translate>dash.games.maturity.misc_legend</legend>
+
+			<app-form-group name="tigrs_language" :label="$gettext( `dash.games.maturity.language_label` )">
+				<div class="radio" v-for="item of language track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group name="tigrs_humor" :label="$gettext( `dash.games.maturity.humor_label` )">
+				<div class="radio" v-for="item of humor track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group name="tigrs_gambling" :label="$gettext( `dash.games.maturity.gambling_label` )">
+				<div class="radio" v-for="item of gambling track by $index">
+					<label>
+						<input form-control="radio" ng-value="$index">
+						{{ item.label }}
+						<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+					</label>
+				</div>
+				<app-form-control-errors />
+			</app-form-group>
+		</fieldset>
+
+	</div>
+
+	<app-form-button
+		v-if="!isWizard"
+		ng-disabled="!gameMaturityForm.$valid || !formModel.tigrs_age"
+		icon="edit"
+		>
+		<translate>dash.games.maturity.save_button</translate>
+	</app-form-button>
+
+	<div v-if="isWizard">
+		<gj-form-dashboard-game-wizard-controls
+			game="formModel"
+			can-proceed="gameMaturityForm.$valid && formModel.tigrs_age"
+			on-next="onSubmit()"
+			>
+		</gj-form-dashboard-game-wizard-controls>
+	</div>
+
+</app-form>

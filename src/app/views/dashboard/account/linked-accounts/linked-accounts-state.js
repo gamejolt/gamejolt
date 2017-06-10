@@ -1,6 +1,6 @@
 angular.module( 'App.Views' ).config( function( $stateProvider )
 {
-	$stateProvider.state( 'dashboard.account.linked-accounts', {
+	$stateProvider.state( 'dash.account.linked-accounts', {
 		url: '/linked-accounts',
 		controller: 'Dashboard.Account.LinkedAccountsCtrl',
 		controllerAs: 'linkedAccountsCtrl',

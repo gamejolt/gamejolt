@@ -1,0 +1,47 @@
+<nav class="breadcrumb">
+	<ul>
+		<li>
+			<a ui-sref="dashboard.games.manage.game.packages.list">
+				<span class="breadcrumb-tag">&nbsp;</span>
+				<span translate>Packages</span>
+			</a>
+			<span class="breadcrumb-separator jolticon jolticon-chevron-right"></span>
+		</li>
+		<li>
+			<a ui-sref="dashboard.games.manage.game.packages.edit( { packageId: releaseCtrl.package.id } )">
+				<span class="breadcrumb-tag">{{ 'dash.games.releases.manage.breadcrumb_package' | translate }}</span>
+				{{ releaseCtrl.package.title || manageCtrl.game.title }}
+			</a>
+			<span class="breadcrumb-separator jolticon jolticon-chevron-right"></span>
+		</li>
+		<li>
+			<span class="active">
+				<span class="breadcrumb-tag">{{ 'dash.games.releases.manage.breadcrumb_release' | translate }}</span>
+				{{ releaseCtrl.release.version_number }}
+			</span>
+		</li>
+	</ul>
+</nav>
+
+<hr>
+
+<div class="row">
+	<div class="col-lg-9">
+
+		<form-game-release
+			gj-game="manageCtrl.game"
+			gj-game-package="releaseCtrl.package"
+			gj-game-release="releaseCtrl.release"
+			gj-game-builds="releaseCtrl.builds"
+			gj-game-launch-options="releaseCtrl.launchOptions"
+			gj-build-download-counts="releaseCtrl.buildDownloadCounts"
+			@submit="editCtrl.onSaved( formModel )"
+			gj-on-remove-release="editCtrl.removeRelease( $release )"
+			gj-on-unpublish-release="editCtrl.unpublishRelease( $release )"
+			are-builds-locked-by-jam="releaseCtrl.areBuildsLockedByJam"
+			are-web-builds-locked-by-sellable="releaseCtrl.areWebBuildsLockedBySellable"
+			>
+		</form-game-release>
+
+	</div>
+</div>

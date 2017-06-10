@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from 'ng-metadata/core';
 import * as template from '!html-loader!./manage-page.component.html';
+import './manage-page.component.styl';
 
 import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';

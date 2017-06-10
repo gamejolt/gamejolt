@@ -1,19 +1,19 @@
 <div class="col-sm-6 col-sm-3">
 
-	<div class="alert alert-info" ng-if="!$ctrl.reportData.hasData" translate>
-		No data yet.
+	<div class="alert alert-info" v-if="!reportData.hasData">
+		<translate>No data yet.</translate>
 	</div>
 
-	<div class="stat-big" ng-if="$ctrl.reportData.hasData">
+	<div class="stat-big" v-if="reportData.hasData">
 		<div class="stat-big-label">
-			{{ $ctrl.reportData.fieldLabel }}
+			{{ reportData.fieldLabel }}
 		</div>
-		<div class="stat-big-digit" ng-switch="$ctrl.reportData.fieldType">
-			<span ng-switch-when="number">
-				{{ $ctrl.reportData.data | number }}
+		<div class="stat-big-digit">
+			<span v-if="reportData.fieldType === 'number'">
+				{{ reportData.data | number }}
 			</span>
-			<span ng-switch-when="currency">
-				{{ $ctrl.reportData.data / 100 | currency }}
+			<span v-else-if="reportData.fieldType === 'currency'">
+				{{ reportData.data | currency }}
 			</span>
 		</div>
 	</div>

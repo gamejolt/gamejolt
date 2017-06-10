@@ -1,0 +1,18 @@
+<app-form name="domainForm">
+
+	<app-form-group name="domain" :label="$gettext( `Domain` )" optional="true">
+		<div class="help-block" translate>
+			You can optionally override the default title for your site. This will show in search engines, and in the tab bar of browsers. By default it's the title of your game.
+		</div>
+		<input form-control
+			gj-pattern="domain"
+			ng-maxlength="100"
+			>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<app-form-button icon="edit">
+		<translate>Save</translate>
+	</app-form-button>
+
+</app-form>

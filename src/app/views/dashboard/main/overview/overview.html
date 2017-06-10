@@ -1,50 +1,61 @@
-<section class="section">
+<section class="section" v-if="routeBootstrapped">
 	<div class="container">
 
 		<div class="row">
-			<div class="col-md-5" ng-class="{ 'pull-right': Screen.isDesktop }">
+			<div class="col-md-5" :class="{ 'pull-right': Screen.isDesktop }">
 
 				<!--
 					Broadcast
 				-->
-				<div ng-if="::overviewCtrl.latestBroadcast">
-					<a ng-href="{{ ::overviewCtrl.latestBroadcast.url }}" gj-track-event="dash:overview:broadcast-view">
-						<gj-card>
+				<div v-if="latestBroadcast">
+					<a :href="latestBroadcast.url" target="_blank" v-app-track-event="`dash:overview:broadcast-view`">
+						<app-card>
 							<div class="row">
 								<div class="col-xs-10">
 									<div class="card-title">
-										<h4>{{ ::overviewCtrl.latestBroadcast.title }}</h4>
+										<h4>{{ latestBroadcast.title }}</h4>
 									</div>
-									<div class="card-content">{{ ::overviewCtrl.latestBroadcast.lead }}</div>
+									<div class="card-content">
+										{{ latestBroadcast.lead }}
+									</div>
 								</div>
 								<div class="col-xs-2 text-center">
-									<span class="jolticon jolticon-broadcast big"></span>
+									<app-jolticon icon="broadcast" :big="true" />
 								</div>
 							</div>
-						</gj-card>
+						</app-card>
 					</a>
 
 					<div class="text-right small">
-						<a class="link-muted" ng-href="{{ ::Environment.firesideBaseUrl }}/tag/gjbroadcast" gj-track-event="dash:overview:broadcast-all">{{ ::'dash.overview.broadcast_view_all' | translate }}</a>
+						<a class="link-muted" :href="Environment.firesideBaseUrl + `/tag/gjbroadcast`" v-app-track-event="`dash:overview:broadcast-all`">
+							<translate>dash.overview.broadcast_view_all</translate>
+						</a>
 					</div>
 				</div>
 
 				<!--
 					Revenue
 				-->
-				<div ng-if="::overviewCtrl.revenueTotal !== undefined">
+				<div v-if="revenueTotal !== undefined">
 					<h2>
-						{{ ::'dash.overview.revenue_heading' | translate }}
-						<span class="jolticon jolticon-help-circle text-muted big" tooltip="{{ ::'dash.overview.revenue_tooltip' | translate }}"></span>
+						<translate>dash.overview.revenue_heading</translate>
+						<app-jolticon
+							icon="help-circle"
+							:big="true"
+							class="text-muted"
+							v-app-tooltip="$gettext( `dash.overview.revenue_tooltip` )"
+							/>
 					</h2>
 
 					<div class="row">
 						<div class="col-xs-6 col-sm-4">
 							<div class="stat-big stat-big-smaller">
-								<div class="stat-big-label" translate>Revenue To Date</div>
+								<div class="stat-big-label">
+									<translate>Revenue To Date</translate>
+								</div>
 								<div class="stat-big-digit">
-									<a ng-click="overviewCtrl.isShowingRevenueBreakdown = !overviewCtrl.isShowingRevenueBreakdown">
-										{{ ::overviewCtrl.revenueTotal || 0 | currency:'$' }}
+									<a @click="isShowingRevenueBreakdown = !isShowingRevenueBreakdown">
+										{{ revenueTotal | currency }}
 									</a>
 								</div>
 							</div>
@@ -52,40 +63,46 @@
 						<div class="col-xs-6 col-sm-4">
 							<div class="stat-big stat-big-smaller">
 								<div class="stat-big-label">
-									<span translate>Pending Revenue</span>
+									<translate>Pending Revenue</translate>
 								</div>
 								<div class="stat-big-digit">
-									{{ ::overviewCtrl.revenuePendingActivation || 0 | currency:'$' }}
-									<span class="jolticon jolticon-help-circle text-muted" tooltip="To account for refunds, chargebacks, and fraud, we hold on to sales revenue for 7 days."></span>
+									{{ revenuePendingActivation | currency }}
+									<app-jolticon
+										icon="help-circle"
+										class="text-muted"
+										v-app-tooltip="$gettext( `To account for refunds, chargebacks, and fraud, we hold on to sales revenue for 7 days.` )"
+										/>
 								</div>
 							</div>
 						</div>
 						<div class="col-xs-6 col-sm-4">
 							<div class="stat-big stat-big-smaller">
-								<div class="stat-big-label" translate>Wallet Balance</div>
-								<div class="stat-big-digit">{{ ::overviewCtrl.walletBalance || 0 | currency:'$' }}</div>
+								<div class="stat-big-label">
+									<translate>Wallet Balance</translate>
+								</div>
+								<div class="stat-big-digit">{{ walletBalance | currency }}</div>
 							</div>
 						</div>
 					</div>
 					<br>
 
-					<div gj-expand-when="overviewCtrl.isShowingRevenueBreakdown">
+					<app-expand :when="isShowingRevenueBreakdown">
 						<div class="well fill-lightest">
 
 							<table class="table table-condensed">
 								<tbody>
 									<tr>
-										<th translate>Revenue To Date</th>
-										<td class="text-right">{{ overviewCtrl.revenueTotal || 0 | currency:'$' }}</td>
+										<th><translate>Revenue To Date</translate></th>
+										<td class="text-right">{{ revenueTotal | currency }}</td>
 									</tr>
 									<tr>
-										<th translate>Pending Revenue</th>
-										<td class="text-right">{{ overviewCtrl.revenuePendingActivation || 0 | currency:'$' }}
+										<th><translate>Pending Revenue</translate></th>
+										<td class="text-right">{{ revenuePendingActivation | currency }}
 										</td>
 									</tr>
 									<tr>
-										<th translate>Total Revenue</th>
-										<td class="text-right">{{ (overviewCtrl.revenueTotal + overviewCtrl.revenuePendingActivation) | currency:'$' }}
+										<th><translate>Total Revenue</translate></th>
+										<td class="text-right">{{ (revenueTotal + revenuePendingActivation) | currency }}
 										</td>
 									</tr>
 								</tbody>
@@ -94,13 +111,13 @@
 							<table class="table table-condensed">
 								<tbody>
 									<tr>
-										<th translate>Withdrawals Processing</th>
-										<td class="text-right">{{ overviewCtrl.revenuePendingWithdraw || 0 | currency:'$' }}
+										<th><translate>Withdrawals Processing</translate></th>
+										<td class="text-right">{{ revenuePendingWithdraw | currency }}
 										</td>
 									</tr>
 									<tr>
-										<th translate>Withdrawn To Date</th>
-										<td class="text-right">{{ overviewCtrl.revenueWithdrawn || 0 | currency:'$' }}
+										<th><translate>Withdrawn To Date</translate></th>
+										<td class="text-right">{{ revenueWithdrawn | currency }}
 										</td>
 									</tr>
 								</tbody>
@@ -108,218 +125,285 @@
 							<table class="table table-condensed sans-margin-bottom">
 								<tbody>
 									<tr>
-										<th translate>Wallet Purchases</th>
-										<td class="text-right">{{ overviewCtrl.revenueSpent || 0 | currency:'$' }}</td>
+										<th><translate>Wallet Purchases</translate></th>
+										<td class="text-right">{{ revenueSpent | currency }}</td>
 									</tr>
 									<tr>
-										<th translate>Wallet Balance</th>
-										<td class="text-right">{{ overviewCtrl.walletBalance || 0 | currency:'$' }}</td>
+										<th><translate>Wallet Balance</translate></th>
+										<td class="text-right">{{ walletBalance | currency }}</td>
 									</tr>
 								</tbody>
 							</table>
 
 						</div>
+					</app-expand>
+
+					<div v-if="revenuePendingWithdraw > 0" class="alert alert-info">
+						<translate
+							:escape-html="false"
+							:translate-params="{
+								amount: currency( revenuePendingWithdraw ),
+							}"
+							>
+							You have pending withdrawals amounting to <b>%{ amount }</b>.
+						</translate>
 					</div>
 
-					<div ng-if="overviewCtrl.revenuePendingWithdraw > 0" class="alert alert-info" translate>
-						You have pending withdrawals amounting to {{ ::overviewCtrl.revenuePendingWithdraw | currency:'$' }}.
-					</div>
-
-					<div class="alert alert-info" ng-if="::overviewCtrl.revenuePending" translate translate-params-amount="overviewCtrl.revenuePending">
-						dash.overview.revenue_pending_message_html
+					<div class="alert alert-info" v-if="revenuePending">
+						<translate
+							:escape-html="false"
+							:translate-params="{
+								amount: currency( revenuePending ),
+							}"
+							>
+							You currently have <b>%{ amount }</b> pending withdrawal.
+						</translate>
 					</div>
 
 					<div>
-						<a class="btn btn-outline btn-block" ui-sref="dashboard.withdraw-funds">
-							<span class="jolticon jolticon-chevron-right needs-icon"></span>
-							{{ ::'dash.overview.revenue_withdraw_button' | translate }}
-						</a>
+						<router-link class="btn btn-outline btn-block" :to="{ name: 'dash.withdraw-funds' }">
+							<app-jolticon icon="chevron-right" />
+							<translate>dash.overview.revenue_withdraw_button</translate>
+						</router-link>
 					</div>
 				</div>
 			</div>
 
-			<div class="col-md-7" ng-class="{ 'pull-left': Screen.isDesktop }">
+			<div class="col-md-7" :class="{ 'pull-left': Screen.isDesktop }">
 
 				<!--
 					Integrate
 				-->
-				<div ng-if="::!overviewCtrl.isFullyIntegrated">
-					<h2 ng-class="{ 'section-header': Screen.isDesktop }">
-						{{ ::'dash.integrate.heading' | translate }}
+				<div v-if="!isFullyIntegrated">
+					<h2 :class="{ 'section-header': Screen.isDesktop }">
+						<translate>dash.integrate.heading</translate>
 					</h2>
 
-					<p>{{ ::'dash.integrate.lead' | translate }}</p>
+					<p><translate>dash.integrate.lead</translate></p>
 
 					<table class="table">
 						<tbody>
 							<tr
-								ng-repeat="key in overviewCtrl.integrationKeys"
-								ng-if="overviewCtrl.integration[ key ]"
+								v-for="key of integrationKeys"
+								:key="key"
+								v-if="integration[ key ]"
 								>
 								<td style="width: 1px">
-									<span class="jolticon jolticon-check" ng-class="overviewCtrl.integration[ key ].achieved ? 'active' : 'text-muted'"></span>
+									<app-jolticon
+										icon="check"
+										:class="integration[ key ].achieved ? 'active' : 'text-muted'"
+										/>
 								</td>
 								<td>
-									<span class="jolticon jolticon-exp text-muted"></span>
+									<app-jolticon
+										icon="exp"
+										class="text-muted"
+										/>
 									<strong>
-										{{ overviewCtrl.integration[ key ].exp | number }}
-										{{ ::'leveling.exp' | translate }}
+										{{ integration[ key ].exp | number }}
+										<translate>leveling.exp</translate>
 									</strong>
 								</td>
 								<td>
-									<span ng-if="overviewCtrl.integration[ key ].achieved" class="tag tag-active pull-right">
-										<span class="jolticon jolticon-check"></span>
-										{{ ::'dash.integrate.done' | translate }}
+									<span v-if="integration[ key ].achieved" class="tag tag-active pull-right">
+										<app-jolticon icon="check" />
+										<translate>dash.integrate.done</translate>
 									</span>
-									<span ng-class="{ 'text-muted': overviewCtrl.integration[ key ].achieved }" ng-bind-html="::overviewCtrl.integrationTranslations[ key ]"></span>
+									<span
+										:class="{ 'text-muted': integration[ key ].achieved }"
+										v-html="integrationTranslations[ key ]"
+										>
+									</span>
 								</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 
-				<br ng-if="overviewCtrl.isFullyIntegrated && Screen.isMobile">
+				<br v-if="isFullyIntegrated && Screen.isMobile">
 
 				<div class="alert alert-info">
-					<h4>{{ ::'dash.integrate.exp_help_heading' | translate }}</h4>
-					<div translate>dash.integrate.exp_help_body_html</div>
+					<h4>
+						<translate>dash.integrate.exp_help_heading</translate>
+					</h4>
+					<div>
+						<translate :escape-html="false">dash.integrate.exp_help_body_html</translate>
+					</div>
 				</div>
 
 				<!--
 					Sites
 				-->
-				<div ng-if="::App.user.is_developer">
+				<div v-if="app.user.is_developer">
 					<h2>
-						<span translate>Sites</span>
-						<span class="tag tag-pink" translate>New!</span>
+						<translate>Sites</translate>
+						<span class="tag tag-pink">
+							<translate>New!</translate>
+						</span>
 					</h2>
 
 					<div class="page-help">
-						<p translate><b>Game Jolt Sites are customizable external sites for your portfolio and games!</b> You can use a customizable template, or simply upload your own static site.</p>
+						<p><translate :escape-html="false"><b>Game Jolt Sites are customizable external sites for your portfolio and games!</b> You can use a customizable template, or simply upload your own static site.</translate></p>
 					</div>
 
 					<div class="page-help">
-						<p translate>You can set up a <b>game site</b> when managing your game.</p>
+						<p><translate :escape-html="false">You can set up a <b>game site</b> when managing your game.</translate></p>
 					</div>
 
 					<div>
-						<a class="btn btn-success-outline"
-							ui-sref="dashboard.main.site"
-							gj-track-event="dash:overview:quick-profile-site"
+						<router-link
+							class="btn btn-success-outline"
+							:to="{ name: 'dash.main.site' }"
+							v-app-track-event="`dash:overview:quick-profile-site`"
 							>
-							<span class="jolticon jolticon-cog"></span>
-							<span translate>Edit Portfolio Site</span>
-						</a>
+							<app-jolticon icon="cog" />
+							<translate>Edit Portfolio Site</translate>
+						</router-link>
 					</div>
 				</div>
 
 				<!--
 					Manage Games
 				-->
-				<h2 translate>
-					Your Games
+				<h2>
+					<translate>Your Games</translate>
 				</h2>
 
-				<div ng-if="!overviewCtrl.games.length">
+				<div v-if="!games.length">
 					<div class="page-help">
-						<p translate>Are you a developer? Add your free or commercial game to the site!</p>
+						<p><translate>Are you a developer? Add your free or commercial game to the site!</translate></p>
 					</div>
 				</div>
 
 				<div>
-					<a class="btn btn-success-outline"
-						ui-sref="dashboard.developer.games.add"
-						gj-track-event="dash:overview:quick-add-game"
+					<router-link
+						class="btn btn-success-outline"
+						:to="{ name: 'dash.games.add' }"
+						v-app-track-event="`dash:overview:quick-add-game`"
 						>
-						<span class="jolticon jolticon-add"></span>
-						<span translate>Add Game</span>
-					</a>
+						<app-jolticon icon="add" />
+						<translate>Add Game</translate>
+					</router-link>
 				</div>
 
-				<div ng-if="overviewCtrl.games.length > 0">
+				<div v-if="games.length > 0">
 					<br>
 
-					<gj-card ng-repeat="game in overviewCtrl.games | orderBy:'posted_on':true | limitTo:(overviewCtrl.gamesExpanded ? undefined : 5) track by game.id">
+					<app-card
+						v-for="game of games.slice( 0, gamesExpanded ? games.length : 5 )"
+						:key="game.id"
+						>
 						<div class="card-title">
 							<h4>
-								<a
-									ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
-									gj-track-event="dash:overview:quick-game"
+								<router-link
+									:to="{
+										name: 'dash.games.manage.game.overview',
+										params: { id: game.id },
+									}"
+									v-app-track-event="`dash:overview:quick-game`"
 									>
-									{{ ::game.title }}
-								</a>
+									{{ game.title }}
+								</router-link>
 							</h4>
 						</div>
 						<div class="card-controls">
-							<a class="btn btn-outline"
-								ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
-								gj-track-event="dash:overview:quick-game"
+							<router-link
+								class="btn btn-outline"
+								:to="{
+									name: 'dash.games.manage.game.overview',
+									params: { id: game.id },
+								}"
+								v-app-track-event="`dash:overview:quick-game`"
 								>
-								<span class="jolticon jolticon-cog"></span>
-								<span translate>Manage</span>
-							</a>
-							<a class="btn btn-outline"
-								gj-track-event="dash:overview:quick-game-analytics"
-								ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: game.id } )"
+								<app-jolticon icon="cog" />
+								<translate>Manage</translate>
+							</router-link>
+							<router-link
+								class="btn btn-outline"
+								v-app-track-event="`dash:overview:quick-game-analytics`"
+								:to="{
+									name: 'dash.analytics',
+									params: { resource: 'Game', resourceId: game.id },
+								}"
 								>
-								<span class="jolticon jolticon-chart"></span>
-								<span translate>Analytics</span>
-							</a>
-							<a class="btn btn-outline btn-sparse"
-								gj-track-event="dash:overview:more-game"
-								gj-popover-trigger="overview-game-more-{{ ::game.id }}"
+								<app-jolticon icon="chart" />
+								<translate>Analytics</translate>
+							</router-link>
+							<button
+								class="btn btn-outline btn-sparse"
+								v-app-track-event="`dash:overview:more-game`"
+								v-app-popover-trigger="`overview-game-more-${ game.id }`"
 								>
-								<span class="jolticon jolticon-ellipsis-h"></span>
-							</a>
+								<app-jolticon icon="ellipsis-h" />
+							</button>
 
-							<gj-popover [popover-id]="::'overview-game-more-' + game.id">
+							<app-popover :popover-id="`overview-game-more-${ game.id }`">
 								<div class="list-group list-group-dark">
-									<a class="list-group-item"
-										gj-track-event="dash:overview:quick-game-packages"
-										ui-sref="dashboard.developer.games.manage.game.packages.list( { id: game.id } )"
-										translate
+									<router-link
+										class="list-group-item"
+										v-app-track-event="`dash:overview:quick-game-packages`"
+										:to="{
+											name: 'dash.games.manage.game.packages.list',
+											params: { id: game.id },
+										}"
 										>
-										Packages
-									</a>
-									<a class="list-group-item"
-										gj-track-event="dash:overview:quick-game-devlog"
-										ui-sref="dashboard.developer.games.manage.devlog.feed( { id: game.id } )"
-										translate
+										<translate>Packages</translate>
+									</router-link>
+									<router-link
+										class="list-group-item"
+										v-app-track-event="`dash:overview:quick-game-devlog`"
+										:to="{
+											name: 'dash.games.manage.devlog.feed',
+											params: { id: game.id },
+										}"
 										>
-										Devlog
-									</a>
-									<a class="list-group-item"
-										gj-track-event="dash:overview:quick-game-keys"
-										ui-sref="dashboard.developer.games.manage.key-groups.list( { id: game.id } )"
-										translate
+										<translate>Devlog</translate>
+									</router-link>
+									<router-link
+										class="list-group-item"
+										v-app-track-event="`dash:overview:quick-game-keys`"
+										:to="{
+											name: 'dash.games.manage.key-groups.list',
+											params: { id: game.id },
+										}"
 										>
-										Keys/Access
-									</a>
-									<a class="list-group-item"
-										gj-track-event="dash:overview:quick-game-api"
-										ui-sref="dashboard.developer.games.manage.api.overview( { id: game.id } )"
-										translate
+										<translate>Keys/Access</translate>
+									</router-link>
+									<router-link
+										class="list-group-item"
+										v-app-track-event="`dash:overview:quick-game-api`"
+										:to="{
+											name: 'dash.games.manage.api.overview',
+											params: { id: game.id },
+										}"
 										>
-										Game API
-									</a>
-									<a class="list-group-item"
-										gj-track-event="dash:overview:quick-game-site"
-										ui-sref="dashboard.developer.games.manage.site( { id: game.id } )"
-										translate
+										<translate>Game API</translate>
+									</router-link>
+									<router-link
+										class="list-group-item"
+										v-app-track-event="`dash:overview:quick-game-site`"
+										:to="{
+											name: 'dash.games.manage.site',
+											params: { id: game.id },
+										}"
 										>
-										Site
-									</a>
+										<translate>Site</translate>
+									</router-link>
 								</div>
-							</gj-popover>
+							</app-popover>
 						</div>
-					</gj-card>
+					</app-card>
 
-					<div class="page-cut" ng-if="!overviewCtrl.gamesExpanded && overviewCtrl.games.length > 5">
-						<button class="btn btn-outline" ng-click="overviewCtrl.gamesExpanded = true" gj-track-event="dash:overview:expand-games">
+					<div class="page-cut" v-if="!gamesExpanded && games.length > 5">
+						<button
+							class="btn btn-outline"
+							@click="gamesExpanded = true"
+							v-app-track-event="`dash:overview:expand-games`"
+							>
 							<span class="btn-badge">
-								{{ overviewCtrl.games.length | number }}
+								{{ games.length | number }}
 							</span>
-							<span translate>Expand All</span>
+							<translate>Expand All</translate>
 						</button>
 					</div>
 				</div>
@@ -328,141 +412,173 @@
 				<!--
 					Video Comments
 				-->
-				<h2 translate>Your Video Comments</h2>
+				<h2>
+					<translate>Your Video Comments</translate>
+				</h2>
 
-				<div ng-if="!overviewCtrl.videos.length">
+				<div v-if="!videos.length">
 					<div class="page-help">
-						<p translate>Are you a let's player? Add your YouTube videos through video comments!</p>
+						<p><translate>Are you a let's player? Add your YouTube videos through video comments!</translate></p>
 					</div>
 
 					<div>
 						<a class="btn btn-outline" href="https://help.gamejolt.com/video-comments" target="_blank">
-							<span translate>Learn More</span>
+							<translate>Learn More</translate>
 						</a>
 					</div>
 				</div>
 
-				<div ng-if="overviewCtrl.videos.length > 0">
+				<div v-if="videos.length > 0">
 					<div class="row">
-						<gj-comment-video-thumbnail
+						<app-comment-video-thumbnail
 							class="col-xs-6"
-							ng-repeat="video in overviewCtrl.videos | limitTo:4 track by video.id"
-							video="video"
-							>
-						</gj-comment-video-thumbnail>
+							v-for="video of videos.slice( 0, 4 )"
+							:key="video.id"
+							:video="video"
+							/>
 					</div>
 
 					<div class="page-cut">
-						<a class="btn btn-outline"
-							ui-sref="profile.videos( { username: App.user.username } )"
-							gj-track-event="dash:overview:expand-videos"
+						<router-link class="btn btn-outline"
+							:to="{ name: 'profile.videos', params: { username: app.user.username } }"
+							v-app-track-event="`dash:overview:expand-videos`"
 							>
 							<span class="btn-badge">
-								{{ overviewCtrl.videosCount | number }}
+								{{ videosCount | number }}
 							</span>
-							<span translate>View All</span>
-						</a>
+							<translate>View All</translate>
+						</router-link>
 					</div>
 				</div>
 
 				<!--
 					Game Jams
 				-->
-				<h2 translate>Your Game Jams</h2>
+				<h2>
+					<translate>Your Game Jams</translate>
+				</h2>
 
-				<div ng-if="!overviewCtrl.jams.length">
+				<!--<div v-if="!jams.length">
 					<div class="page-help">
-						<p translate>Got an idea for a game jam? You're already almost done. Simple and powerful, host your jam through Game Jolt!</p>
+						<p><translate>Got an idea for a game jam? You're already almost done. Simple and powerful, host your jam through Game Jolt!</translate></p>
 					</div>
 				</div>
 
 				<div>
 					<a class="btn btn-success-outline" href="http://jams.gamejolt.com/manage/jams/add" target="_blank">
-						<span class="jolticon jolticon-add"></span>
-						<span translate>Create Jam</span>
+						<app-jolticon icon="add" />
+						<translate>Create Jam</translate>
 					</a>
-					<a ng-if="!overviewCtrl.jams.length" class="btn btn-outline" href="http://jams.gamejolt.com" target="_blank">
-						<span translate>Learn More</span>
+					<a v-if="!jams.length" class="btn btn-outline" href="http://jams.gamejolt.com" target="_blank">
+						<translate>Learn More</translate>
 					</a>
 				</div>
 
-				<div ng-if="overviewCtrl.jams.length > 0">
+				<div v-if="jams.length > 0">
 					<br>
 
-					<gj-card ng-repeat="jam in overviewCtrl.jams | limitTo:(overviewCtrl.jamsExpanded ? undefined : 5) track by jam.id">
+					<app-card
+						v-for="jam of jams.slice( 0, jamsExpanded ? jams.length : 5)"
+						:key="jam.id"
+						>
 						<div class="card-title">
 							<h4>
 								<a
-									ng-href="{{ jam.manageUrl }}"
-									gj-track-event="dash:overview:quick-jam"
+									:href="jam.manageUrl"
+									target="_blank"
+									v-app-track-event="`dash:overview:quick-jam`"
 									>
-									{{ ::jam.name }}
+									{{ jam.name }}
 								</a>
 							</h4>
 						</div>
 						<div class="card-controls">
 							<a class="btn btn-outline"
-								ng-href="{{ jam.manageUrl }}"
-								gj-track-event="dash:overview:quick-jam"
+								:href="jam.manageUrl"
+								target="_blank"
+								v-app-track-event="`dash:overview:quick-jam`"
 								>
-								<span class="jolticon jolticon-cog"></span>
-								<span translate>Manage</span>
+								<app-jolticon icon="cog" />
+								<translate>Manage</translate>
 							</a>
 							<a class="btn btn-outline"
-								ng-href="{{ jam.fullUrl }}"
-								gj-track-event="dash:overview:quick-jam-view"
+								:href="jam.fullUrl"
+								target="_blank"
+								v-app-track-event="`dash:overview:quick-jam-view`"
 								>
-								<span class="jolticon jolticon-share"></span>
-								<span translate>View Jam</span>
+								<app-jolticon icon="share" />
+								<translate>View Jam</translate>
 							</a>
 						</div>
-					</gj-card>
+					</app-card>
 
-					<div class="page-cut" ng-if="!overviewCtrl.jamsExpanded && overviewCtrl.jams.length > 5">
-						<button class="btn btn-outline" ng-click="overviewCtrl.jamsExpanded = true" gj-track-event="dash:overview:expand-jams">
+					<div class="page-cut" v-if="!jamsExpanded && jams.length > 5">
+						<button
+							class="btn btn-outline"
+							@click="jamsExpanded = true"
+							v-app-track-event="`dash:overview:expand-jams`"
+							>
 							<span class="btn-badge">
-								{{ overviewCtrl.jams.length | number }}
+								{{ jams.length | number }}
 							</span>
-							<span translate>Expand All</span>
+							<translate>Expand All</translate>
 						</button>
 					</div>
-				</div>
+				</div>-->
 
 			</div>
 
-			<div class="col-md-5" ng-class="{ 'pull-right': Screen.isDesktop }" style="clear: right">
+			<div class="col-md-5" :class="{ 'pull-right': Screen.isDesktop }" style="clear: right">
 
 				<h2>
-					<a ui-sref="dashboard.account.edit" class="link-unstyled">
-						<span translate>Edit Account</span>
-					</a>
+					<router-link :to="{ name: 'dash.account.edit' }" class="link-unstyled">
+						<translate>Edit Account</translate>
+					</router-link>
 				</h2>
 
 				<div class="list-group">
-					<a class="list-group-item has-icon" ui-sref="dashboard.account.edit">
-						<span class="jolticon jolticon-edit"></span>
-						<span translate>Edit Profile</span>
-					</a>
-					<a class="list-group-item has-icon" ui-sref="dashboard.account.avatar">
-						<span class="jolticon jolticon-user"></span>
-						<span translate>Change Avatar</span>
-					</a>
-					<a class="list-group-item has-icon" ui-sref="dashboard.account.linked-accounts">
-						<span class="jolticon jolticon-link"></span>
-						<span translate>Linked Accounts</span>
-					</a>
-					<a class="list-group-item has-icon" ui-sref="dashboard.account.email-preferences">
-						<span class="jolticon jolticon-email"></span>
-						<span translate>Email Preferences</span>
-					</a>
-					<a class="list-group-item has-icon" ui-sref="dashboard.account.financials">
-						<span class="jolticon jolticon-cog"></span>
-						<span translate>Marketplace Account Setup</span>
-					</a>
-					<a class="list-group-item has-icon" ui-sref="dashboard.account.change-password">
-						<span class="jolticon jolticon-key-diagonal"></span>
-						<span translate>Change Password</span>
-					</a>
+					<router-link
+						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.edit' }"
+						>
+						<app-jolticon icon="edit" />
+						<translate>Edit Profile</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.avatar' }"
+						>
+						<app-jolticon icon="user" />
+						<translate>Change Avatar</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.linked-accounts' }"
+						>
+						<app-jolticon icon="link" />
+						<translate>Linked Accounts</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.email-preferences' }"
+						>
+						<app-jolticon icon="email" />
+						<translate>Email Preferences</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.financials' }"
+						>
+						<app-jolticon icon="cog" />
+						<translate>Marketplace Account Setup</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.change-password' }"
+						>
+						<app-jolticon icon="key-diagonal" />
+						<translate>Change Password</translate>
+					</router-link>
 				</div>
 
 			</div>

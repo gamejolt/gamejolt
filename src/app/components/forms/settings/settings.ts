@@ -4,7 +4,7 @@ import * as View from '!view!./settings.html';
 import { BaseForm, FormOnInit } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Settings } from '../../settings/settings.service';
-import { AppFormControlToggleSwitch } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle-switch/toggle-switch';
+import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 
 // if ( Environment.isClient ) {
 // 	var Client_Installer = $injector.get( 'Client_Installer' );
@@ -14,7 +14,7 @@ import { AppFormControlToggleSwitch } from '../../../../lib/gj-lib-client/compon
 @View
 @Component({
 	components: {
-		AppFormControlToggleSwitch,
+		AppFormControlToggle,
 	}
 })
 export class FormSettings extends BaseForm<any> implements FormOnInit

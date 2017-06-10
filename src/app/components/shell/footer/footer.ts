@@ -1,3 +1,5 @@
+import * as nwGui from 'nw.gui';
+
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./footer.html?style=./footer.styl';
@@ -44,7 +46,8 @@ export class AppShellFooter extends Vue
 			window.location.reload();
 		}
 		else {
-			require( 'nw.gui' ).Window.get().reloadDev();
+			const gui = require( 'nw.gui' ) as typeof nwGui;
+			gui.Window.get().reloadDev();
 		}
 	}
 

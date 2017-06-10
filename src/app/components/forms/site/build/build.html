@@ -1,0 +1,32 @@
+<app-form class="form-dash-site-build" name="siteBuildForm">
+
+	<div v-if="!isLoaded">
+		<gj-loading></gj-loading>
+	</div>
+
+	<div v-if="Loader.ready( 'upload' )">
+		<div v-if="isLoaded">
+
+			<app-form-group name="file" hide-label="true">
+
+				<p class="help-block" translate translate-params-max-filesize="maxFilesize / 1024 / 1024">
+					Static site uploads are currently capped at {{ maxFilesize }}MB. Please upload a .zip file with an index.html file in the root of the folder.
+				</p>
+
+				<gj-form-upload-control
+					form-control="upload"
+					gj-file-select="onSubmit()"
+					gj-max-filesize="maxFilesize"
+					accept=".zip"
+					upload-link-:label="$gettext( `Upload a static site zip file.` )"
+					>
+				</gj-form-upload-control>
+
+				<app-form-control-errors />
+
+			</app-form-group>
+
+		</div>
+	</div>
+
+</app-form>

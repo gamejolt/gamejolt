@@ -1,0 +1,331 @@
+<gj-card>
+
+	<a class="card-remove" ng-click="remove()">
+		<app-jolticon icon="remove" />
+	</a>
+
+	<div class="card-stats">
+		<div class="stat-big stat-big-smaller">
+			<div class="stat-big-label">{{ 'dash.games.releases.builds.downloads_label' | translate }}</div>
+			<div class="stat-big-digit" ng-attr-title="{{ (buildDownloadCounts[ baseModel.id ] || 0) | number }}">
+				{{ (buildDownloadCounts[ baseModel.id ] || 0) | fuzzyNumber }}
+			</div>
+		</div>
+	</div>
+
+	<div class="card-title">
+		<h5>
+			{{ baseModel.primary_file.filename }}
+			<small class="text-muted">({{ baseModel.primary_file.filesize | filesize }})</small>
+		</h5>
+	</div>
+
+	<div class="card-meta">
+
+		<span class="tag" v-if="baseModel.type === Game_Build.TYPE_DOWNLOADABLE">
+			<app-jolticon icon="download" />
+			<span translate>Downloadable</span>
+		</span>
+
+		<span class="tag" v-if="baseModel.type === Game_Build.TYPE_HTML">
+			<app-jolticon icon="html5" />
+			{{ 'games.browser_html' | translate }}
+		</span>
+
+		<span class="tag" v-if="baseModel.type === Game_Build.TYPE_FLASH">
+			<app-jolticon icon="flash" />
+			{{ 'games.browser_flash' | translate }}
+		</span>
+
+		<span class="tag" v-if="baseModel.type === Game_Build.TYPE_UNITY">
+			<app-jolticon icon="unity" />
+			{{ 'games.browser_unity' | translate }}
+		</span>
+
+		<span class="tag" v-if="baseModel.type === Game_Build.TYPE_SILVERLIGHT">
+			<app-jolticon icon="silverlight" />
+			{{ 'games.browser_silverlight' | translate }}
+		</span>
+
+		<span class="tag" v-if="baseModel.type === Game_Build.TYPE_APPLET">
+			<app-jolticon icon="java" />
+			{{ 'games.browser_applet' | translate }}
+		</span>
+
+		<span class="tag" v-if="baseModel.type === Game_Build.TYPE_ROM">
+			<app-jolticon icon="rom" />
+			<span translate>ROM</span>
+		</span>
+
+		<!--
+			Missing fields.
+		-->
+		<span class="tag tag-pink" v-if="baseModel.hasError( Game_Build.ERROR_MISSING_FIELDS )">
+			<app-jolticon icon="notice" />
+			<span translate>Incomplete</span>
+		</span>
+
+		<span v-if="!baseModel.hasError( Game_Build.ERROR_MISSING_FIELDS )">
+			<span class="tag tag-blue" v-if="baseModel.status === Game_Build.STATUS_ADDING">
+				<span translate>Processing</span>
+			</span>
+
+			<span class="tag tag-active" v-if="baseModel.status === Game_Build.STATUS_ACTIVE">
+				<app-jolticon icon="check" />
+				<span translate>Active</span>
+			</span>
+		</span>
+
+	</div>
+
+	<!--
+		Processing the build.
+	-->
+	<div gj-expand-when="!baseModel.errors && baseModel.status === Game_Build.STATUS_ADDING">
+		<div
+			gj-progress-poller="/web/dash/developer/games/builds/poll-progress/{{ game.id }}/{{ package.id }}/{{ release.id }}/{{ baseModel.id }}"
+			progress-poller-on-complete="onBuildProcessingComplete( $response )"
+			>
+
+			<br>
+			<div class="progress progress-thin progress-striped active">
+				<div class="progress-bar" style="width: 100%"></div>
+			</div>
+
+			<div class="text-center small" translate>
+				dash.games.releases.builds.processing_message_html
+			</div>
+		</div>
+	</div>
+
+</gj-card>
+
+<div class="editable-accordion-item-edit active">
+	<div class="editable-accordion-item-edit-well well fill-lightest">
+
+		<div v-if="!isLoaded">
+			<gj-loading></gj-loading>
+		</div>
+
+		<ng-form
+			name="buildForm"
+			ng-show="isLoaded"
+			>
+
+			<div v-if="baseModel.type === Game_Build.TYPE_APPLET" class="alert alert-warning sans-margin">
+				<app-jolticon icon="notice" />
+				<span translate>
+					<strong>Java Applets have been deprecated.</strong>
+					You can no longer edit your Java Applet builds, although gamers will still be able to play them if their browsers support them. You can add .jar files as downloadables and the Game Jolt Client will correctly launch them for users instead.
+				</span>
+			</div>
+
+			<div v-if="baseModel.type === Game_Build.TYPE_SILVERLIGHT" class="alert alert-warning sans-margin">
+				<app-jolticon icon="notice" />
+				<span translate>
+					<strong>Silverlight builds have been deprecated.</strong>
+					You can no longer edit your Silverlight builds, although gamers will still be able to play them if their browsers support them.
+				</span>
+			</div>
+
+			<!--
+				Don't attach to the ng-form above or the scope will be messed up and not able to submit the form.
+			-->
+			<div v-if="isLoaded && !isDeprecated">
+
+				<div class="game-build-form-spinner no-animate-leave" v-if="formState.isSettingPlatform">
+					<gj-loading hide-label="true"></gj-loading>
+				</div>
+
+				<!--
+					Platform Selector
+				-->
+				<div class="downloadable-platforms"
+					v-if="baseModel.type === Game_Build.TYPE_DOWNLOADABLE && !forceOther"
+					>
+
+					<!--
+						When this build is not able to launch on certain platforms.
+					-->
+					<p v-if="restrictedPlatforms.length">
+						<app-jolticon icon="info-circle" />
+						<span translate>This build is not launchable on certain platforms. They've been disabled below.</span>
+					</p>
+
+					<p class="help-block" translate>dash.games.builds.form.platforms_help_html</p>
+
+					<div class="clearfix">
+						<div v-for="platform of platformOptions">
+							<app-form-group name="os_{{ platform.key }}" optional="true" hide-label="true">
+								<div class="checkbox" :class="{ 'disabled': isPlatformDisabled( platform.key ) }">
+									<label>
+										<input form-control="checkbox"
+											ng-disabled="isPlatformDisabled( platform.key )"
+											ng-change="platformChanged( platform.key )"
+											>
+										{{ platform.label }}
+									</label>
+								</div>
+							</app-form-group>
+						</div>
+					</div>
+
+					<div name="platformsValidate"
+						ng-model="formModel.platformsValidate"
+						gj-form-dashboard-game-build-platforms-validator="baseModel"
+						>
+						<div gj-expand-when="buildForm.platformsValidate.$error.noPlatforms">
+							<div class="alert alert-warning sans-margin-bottom" translate>dash.games.builds.form.no_platforms_error</div>
+						</div>
+					</div>
+
+				</div>
+
+				<!--
+					This happens when it's not a launchable file type.
+					In that case, it is forced as "other".
+				-->
+				<p class="sans-margin" v-if="forceOther">
+					<app-jolticon icon="info-circle" />
+					<span translate>This build doesn't seem to be a Windows, Mac, or Linux build, so we've marked it as "Other" for you.</span>
+				</p>
+
+				<!--
+					Launch Options
+				-->
+				<fieldset
+					v-if="formModel.platformsValidate && baseModel.type === Game_Build.TYPE_DOWNLOADABLE && !baseModel.os_other"
+					class="form-horizontal"
+					>
+					<legend translate>Launch Options</legend>
+
+					<div v-if="baseModel.primary_file.is_archive">
+						<app-form-group
+							v-for="platform of platformOptions"
+							v-if="baseModel[ 'os_' + platform.key ]"
+							name="launch_{{ platform.key }}"
+							label="{{ platform.label }}"
+							label-class="col-sm-3"
+							>
+							<div class="col-sm-9">
+								<input-group class="input-group-sm">
+									<input form-control ng-maxlength="500">
+									<input-group-addon>
+										<a class="link-unstyled"
+											gj-v-app-tooltip="$gettext( `dash.games.releases.builds.launch_options.form.file_selector_tooltip` )"
+											ng-click="openFileSelector( platform.key )"
+											>
+											<app-jolticon icon="ellipsis-h" />
+										</a>
+									</input-group-addon>
+								</input-group>
+
+								<app-form-control-errors
+									:ignore-dirty="true"
+									:label="$gettext( `dash.games.releases.builds.launch_options.form.file_error_label` )"
+									/>
+							</div>
+						</app-form-group>
+					</div>
+
+					<div gj-expand-when="formState.serverErrors.launchOptions">
+						<div class="alert alert-warning" translate>
+							<strong>The launch options you entered are invalid.</strong>
+							Make sure each selected file is in your build and that it works on the appropriate operating system.
+						</div>
+					</div>
+
+					<div gj-expand-when="!baseModel.primary_file.is_archive">
+						<div class="alert alert-info sans-margin-bottom" translate>
+							dash.games.releases.builds.launch_options.standalone_info_html
+						</div>
+					</div>
+				</fieldset>
+
+				<!--
+					Browser Embed Dimensions
+				-->
+				<div v-if="baseModel.isBrowserBased()">
+					<p class="help-block" translate>dash.games.builds.form.dimensions_help_html</p>
+
+					<div class="row">
+						<div class="col-sm-6">
+							<app-form-group name="embed_width" :label="$gettext( `dash.games.builds.form.width_label` )">
+								<input class="input-sm" form-control="number">
+								<app-form-control-errors :ignore-dirty="true" />
+							</app-form-group>
+						</div>
+						<div class="col-sm-6">
+							<app-form-group name="embed_height" :label="$gettext( `dash.games.builds.form.height_label` )">
+								<input class="input-sm" form-control="number">
+								<app-form-control-errors :ignore-dirty="true" />
+							</app-form-group>
+						</div>
+					</div>
+				</div>
+
+				<!--
+					Unity Right Click Menu
+				-->
+				<app-form-group
+					v-if="formModel.type === Game_Build.TYPE_UNITY"
+					name="browser_disable_right_click"
+					:label="$gettext( `dash.games.builds.form.disable_right_click_label` )"
+					>
+					<p class="help-block" translate>dash.games.builds.form.disable_right_click_help</p>
+					<app-form-control-toggle :on-label="$gettext( 'Yes' )" :off-label="$gettext( 'No' )" />
+				</app-form-group>
+
+				<div class="alert alert-warning"
+					v-if="baseModel.type === Game_Build.TYPE_UNITY"
+					>
+					<app-jolticon icon="notice" />
+					<span translate>
+						<strong>Most browsers have stopped supporting the Unity Web Player.</strong>
+						Please consider exporting to WebGL instead.
+					</span>
+				</div>
+
+				<div class="alert alert-info"
+					v-if="baseModel.isBrowserBased()"
+					:class="{ 'sans-margin-bottom': !buildForm.browserValidate.$error.browser }"
+					>
+					<app-jolticon icon="notice" />
+					<span translate>
+						<strong>Be sure to remove or block ads from showing in your browser games.</strong>
+						We serve our own ads and share the revenue with developers. Domain names to block: gamejolt.com, *.gamejolt.com, gamejolt.net, *.gamejolt.net
+					</span>
+				</div>
+
+				<p class="sans-margin" v-if="baseModel.type === Game_Build.TYPE_ROM">
+					<app-jolticon icon="info-circle" />
+					<span translate
+						translate-params-platform="emulatorInfo[ baseModel.emulator_type ]"
+						translate-comment="{{ platform }} will be the platform this ROM works on, such as Game Boy, NES, etc."
+						>
+						We've detected this build is actually a ROM for the {{ platform }}. We will automatically emulate it in browser for you!
+					</span>
+				</p>
+
+				<div name="browserValidate"
+					ng-model="formModel.browserValidate"
+					gj-form-dashboard-game-build-browser-validator="formModel"
+					>
+					<div gj-expand-when="buildForm.browserValidate.$error.browser">
+						<div class="alert alert-warning sans-margin-bottom" translate>
+							This build has more info to fill in before it will be available in this release.
+						</div>
+					</div>
+				</div>
+
+				<app-form-button
+					class="btn-success-outline game-build-form-submit-button"
+					v-if="buildForm.$valid && wasChanged"
+					>
+					<translate>Save Build</translate>
+				</app-form-button>
+
+			</div>
+		</ng-form>
+	</div>
+</div>

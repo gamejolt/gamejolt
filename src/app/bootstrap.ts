@@ -15,9 +15,11 @@ import { bootstrapShortkey } from '../lib/gj-lib-client/vue/shortkey';
 import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
 import { Registry } from '../lib/gj-lib-client/components/registry/registry.service';
 import { GamePlayModal } from '../lib/gj-lib-client/components/game/play-modal/play-modal.service';
+import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 
 Payload.init( store as any, router );
 History.init( router );
+Analytics.initRouter( router );
 
 if ( GJ_IS_CLIENT ) {
 	require( './bootstrap-client' );
@@ -41,7 +43,13 @@ Vue.use( VueGettext, {
 	silent: true,
 	availableLanguages,
 	defaultLanguage: Translate.lang,
-	translations: require( `!!../translations/en_US/main.json` ),
+	translations: {
+		en: Object.assign(
+			{},
+			require( `!!../translations/en_US/main.json` ).en_US,
+			require( `!!../translations/en_US/dash.json` ).en_US,
+		),
+	},
 } );
 
 const app = new Vue( {

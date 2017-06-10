@@ -1,0 +1,39 @@
+<app-form name="headerForm">
+	<app-form-loader
+		:url="`/web/dash/developer/games/header/save/${ model.id }`"
+		@loaded="onLoaded"
+		>
+
+		<app-form-group
+			name="file"
+			:label="$gettext( `dash.games.header.upload_label` )"
+			>
+
+			<p class="help-block">
+				<translate :escape-html="false">
+					dash.forms.image_filetype_help_html
+				</translate>
+			</p>
+
+			<!--TODO: Not working?-->
+			<app-form-control-upload
+				:rules="{
+					filesize: maxFilesize,
+					min_img_dimensions: [ minWidth, 0 ],
+					max_img_dimensions: [ maxWidth, 0 ],
+					min_img_ratio: minAspectRatio,
+					max_img_ratio: maxAspectRatio,
+				}"
+				accept=".png,.jpg,.jpeg,.gif"
+				/>
+
+			<app-form-control-errors :label="$gettext( `dash.games.header.upload_error_label` )" />
+
+		</app-form-group>
+
+		<app-form-button icon="edit">
+			<translate>dash.games.header.save_button</translate>
+		</app-form-button>
+
+	</app-form-loader>
+</app-form>

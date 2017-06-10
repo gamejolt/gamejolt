@@ -1,231 +1,269 @@
-<ui-view></ui-view>
+<div class="route-analytics" v-if="routeBootstrapped">
 
-<header class="section">
-	<div class="container">
+	<app-page-header>
 
 		<nav class="breadcrumb">
 			<ul>
 				<li>
-					<a
-						ui-sref="dashboard.analytics.view( { resource: 'User', resourceId: analyticsCtrl.user.id } )"
-						ui-sref-opts="{ location: 'replace' }"
-						ui-sref-active="active"
+					<router-link
+						:to="{
+							name: 'dash.analytics',
+							params: { resource: 'User', resourceId: user.id },
+							query: $route.query,
+						}"
+						replace
+						active-class="active"
 						>
 						<span class="breadcrumb-tag" translate>User</span>
-						@{{ analyticsCtrl.user.username }}
-					</a>
-					<span class="breadcrumb-separator jolticon jolticon-chevron-right" ng-if="analyticsCtrl.game"></span>
+						@{{ user.username }}
+					</router-link>
+					<span class="breadcrumb-separator jolticon jolticon-chevron-right" v-if="game"></span>
 				</li>
-				<li ng-if="analyticsCtrl.game">
-					<a
-						ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: analyticsCtrl.game.id } )"
-						ui-sref-opts="{ location: 'replace' }"
-						ui-sref-active="active"
+				<li v-if="game">
+					<router-link
+						:to="{
+							name: 'dash.analytics',
+							params: { resource: 'Game', resourceId: game.id },
+							query: $route.query,
+						}"
+						replace
+						active-class="active"
 						>
 						<span class="breadcrumb-tag" translate>Game</span>
-						{{ analyticsCtrl.game.title }}
-					</a>
-					<span class="breadcrumb-separator jolticon jolticon-chevron-right" ng-if="analyticsCtrl.package"></span>
+						{{ game.title }}
+					</router-link>
+					<span class="breadcrumb-separator jolticon jolticon-chevron-right" v-if="package"></span>
 				</li>
-				<li ng-if="analyticsCtrl.package">
-					<a
-						ui-sref="dashboard.analytics.view( { resource: 'Game_Package', resourceId: analyticsCtrl.package.id } )"
-						ui-sref-opts="{ location: 'replace' }"
-						ui-sref-active="active"
+				<li v-if="package">
+					<router-link
+						:to="{
+							name: 'dash.analytics',
+							params: { resource: 'Game_Package', resourceId: package.id },
+							query: $route.query,
+						}"
+						replace
+						active-class="active"
 						>
 						<span class="breadcrumb-tag" translate>Package</span>
-						{{ analyticsCtrl.package.title || analyticsCtrl.game.title }}
-					</a>
-					<span class="breadcrumb-separator jolticon jolticon-chevron-right" ng-if="analyticsCtrl.release"></span>
+						{{ package.title || game.title }}
+					</router-link>
+					<span class="breadcrumb-separator jolticon jolticon-chevron-right" v-if="release"></span>
 				</li>
-				<li ng-if="analyticsCtrl.release">
-					<a
-						ui-sref="dashboard.analytics.view( { resource: 'Game_Release', resourceId: analyticsCtrl.release.id } )"
-						ui-sref-opts="{ location: 'replace' }"
-						ui-sref-active="active"
+				<li v-if="release">
+					<router-link
+						:to="{
+							name: 'dash.analytics',
+							params: { resource: 'Game_Release', resourceId: release.id },
+							query: $route.query,
+						}"
+						replace
+						active-class="active"
 						>
 						<span class="breadcrumb-tag" translate>Release</span>
-						{{ analyticsCtrl.release.version_number }}
-					</a>
+						{{ release.version_number }}
+					</router-link>
 				</li>
 			</ul>
 		</nav>
-		<br>
 
-		<div class="row">
-			<div class="col-md-6 col-md-push-6" ng-class="{ 'text-right': !Screen.isXs }">
-
-				<div class="analytics-month-selector" ng-if="analyticsCtrl.period == 'monthly'">
-					<a class="btn btn-outline btn-sparse"
-						ui-sref="dashboard.analytics.view( { period: 'monthly', year: analyticsCtrl.prevYear, month: analyticsCtrl.prevMonth } )"
-						ui-sref-opts="{ location: 'replace' }"
+		<nav slot="nav" class="platform-list inline">
+			<ul>
+				<li>
+					<router-link
+						:to="{
+							name: 'dash.analytics',
+							params: $route.params,
+							query: { period: 'all' },
+						}"
+						replace
+						:class="{ active: period === 'all' }"
+						translate
 						>
-						<span class="jolticon jolticon-chevron-left"></span>
-					</a>
-
-					<strong>
-						{{ analyticsCtrl.startTime | date:'MMMM yyyy' }}
-					</strong>
-
-					<a class="btn btn-outline btn-sparse"
-						ng-if="analyticsCtrl.now > analyticsCtrl.endTime"
-						ui-sref="dashboard.analytics.view( { period: 'monthly', year: analyticsCtrl.nextYear, month: analyticsCtrl.nextMonth } )"
-						ui-sref-opts="{ location: 'replace' }"
+						All-Time
+					</router-link>
+				</li>
+				<li>
+					<router-link
+						:to="{
+							name: 'dash.analytics',
+							params: $route.params,
+							query: { period: undefined },
+						}"
+						replace
+						:class="{ active: period === 'monthly' }"
+						translate
 						>
-						<span class="jolticon jolticon-chevron-right"></span>
-					</a>
-				</div>
+						Monthly
+					</router-link>
+				</li>
+			</ul>
+		</nav>
 
-			</div>
-			<div class="col-md-6 col-md-pull-6">
-				<nav class="platform-list inline">
-					<ul>
-						<li>
-							<a
-								ui-sref="dashboard.analytics.view( { period: 'all' } )"
-								ui-sref-opts="{ location: 'replace' }"
-								ui-sref-active="active"
-								translate
-								>
-								All-Time
-							</a>
-							<a
-								ui-sref="dashboard.analytics.view( { period: 'monthly' } )"
-								ui-sref-opts="{ location: 'replace' }"
-								ui-sref-active="active"
-								translate
-								>
-								Monthly
-							</a>
-						</li>
-					</ul>
-				</nav>
-			</div>
-		</div>
-
-	</div>
-</header>
-
-<div gj-expand-when="analyticsCtrl.period == 'monthly' && analyticsCtrl[ analyticsCtrl.metric.key ].graph">
-	<gj-graph
-		ng-if="analyticsCtrl[ analyticsCtrl.metric.key ].graph"
-		[dataset]="analyticsCtrl[ analyticsCtrl.metric.key ].graph"
-		>
-	</gj-graph>
-</div>
-
-<section class="section section-thin">
-	<div class="container">
-
-		<div class="row">
-			<div class="col-sm-4 col-md-3" ng-repeat="metric in analyticsCtrl.availableMetrics track by metric.key">
-
-				<a class="stat-graph-overlay"
-					ui-sref="dashboard.analytics.view( { metricKey: metric.key } )"
-					ui-sref-opts="{ location: 'replace' }"
-					ui-sref-active="active"
+		<div slot="controls" :class="{ 'text-right': !Screen.isXs }">
+			<div class="analytics-month-selector" v-if="period === 'monthly'">
+				<router-link class="btn btn-outline btn-sparse"
+					:to="{
+						name: 'dash.analytics',
+						params: $route.params,
+						query: { period: 'monthly', year: prevYear, month: prevMonth },
+					}"
+					replace
 					>
+					<app-jolticon icon="chevron-left" />
+				</router-link>
 
-					<gj-graph
-						ng-if="analyticsCtrl.period == 'monthly' && analyticsCtrl[ metric.key ]"
-						[dataset]="analyticsCtrl[ metric.key ].graph"
-						[background-variant]="true"
-						>
-					</gj-graph>
+				<strong>
+					{{ startTime | date( 'MMMM YYYY' ) }}
+				</strong>
 
-					<div class="stat-big">
-						<div class="stat-big-label">
-							{{ metric.label }}
-						</div>
-						<div class="stat-big-digit" ng-switch="metric.type">
-							<span ng-switch-when="number">
-								{{ analyticsCtrl[ metric.key ].total | number }}
-							</span>
-
-							<span ng-switch-when="currency">
-								{{ analyticsCtrl[ metric.key ].total / 100 | currency }}
-							</span>
-						</div>
-					</div>
-				</a>
-
+				<router-link class="btn btn-outline btn-sparse"
+					v-if="now > endTime"
+					:to="{
+						name: 'dash.analytics',
+						params: $route.params,
+						query: { period: 'monthly', year: nextYear, month: nextMonth },
+					}"
+					replace
+					>
+					<app-jolticon icon="chevron-right" />
+				</router-link>
 			</div>
 		</div>
 
-	</div>
-</section>
+	</app-page-header>
 
-<div ng-if="analyticsCtrl.pageReports.length">
+	<div v-if="metricData[ metric.key ]">
 
-	<hr>
+		<app-expand :when="period === 'monthly' && !!metricData[ metric.key ].graph">
+			<app-graph
+				v-if="metricData[ metric.key ].graph"
+				:dataset="metricData[ metric.key ].graph"
+				/>
+		</app-expand>
 
-	<section class="section">
-		<div class="container">
+		<section class="section section-thin">
+			<div class="container">
 
-			<div class="row">
-				<div class="col-md-3" ng-if="Screen.isDesktop">
+				<div class="row">
+					<div class="col-sm-4 col-md-3"
+						v-for="metric of availableMetrics"
+						:key="metric.key"
+						>
 
-					<gj-scroll-affix>
-						<nav class="platform-list">
-							<ul>
-								<li ng-repeat="report in analyticsCtrl.pageReports track by $index"
-									class="no-animate-leave"
-									>
-									<a ng-href="#report-{{ $index }}" du-smooth-scroll du-scrollspy>
-										{{ report.title }}
-									</a>
-								</li>
-							</ul>
-						</nav>
-					</gj-scroll-affix>
+						<router-link class="stat-graph-overlay"
+							:to="{
+								name: 'dash.analytics',
+								params: { metricKey: metric.key },
+								query: $route.query,
+							}"
+							replace
+							active-class="active"
+							>
 
+							<app-graph
+								v-if="period === 'monthly' && metricData[ metric.key ]"
+								:dataset="metricData[ metric.key ].graph"
+								:background-variant="true"
+								/>
+
+							<div class="stat-big">
+								<div class="stat-big-label">
+									{{ metric.label }}
+								</div>
+								<div class="stat-big-digit">
+									<span v-if="metric.type === 'number'">
+										{{ metricData[ metric.key ].total | number }}
+									</span>
+									<span v-else-if="metric.type === 'currency'">
+										{{ metricData[ metric.key ].total | currency }}
+									</span>
+								</div>
+							</div>
+						</router-link>
+
+					</div>
 				</div>
-				<div class="col-md-9">
 
-					<div ng-repeat="report in analyticsCtrl.pageReports track by $index" id="report-{{ $index }}">
+			</div>
+		</section>
 
-						<h2 ng-class="{ 'section-header': $first }">
-							{{ report.title }}
-						</h2>
+		<div v-if="pageReports.length">
 
-						<gj-loading ng-if="!report.isLoaded"></gj-loading>
+			<hr>
 
-						<div ng-if="report.isLoaded" class="row">
-							<div ng-repeat="component in report.components track by $index">
+			<section class="section">
+				<div class="container">
 
-								<gj-analytics-report-simple-stat
-									ng-if="component.type == 'sum' || component.type == 'average'"
-									report-data="component"
-									>
-								</gj-analytics-report-simple-stat>
+					<div class="row">
+						<div class="col-md-3" v-if="Screen.isDesktop">
 
-								<gj-analytics-report-top-composition
-									ng-if="component.type == 'top-composition'"
-									report-data="component"
-									>
-								</gj-analytics-report-top-composition>
+							<app-scroll-affix>
+								<nav class="platform-list">
+									<ul>
+										<li
+											v-for="( report, i ) of pageReports"
+											:key="i"
+											class="no-animate-leave"
+											>
+											<a
+												:href="`#report-${ i }`"
+												v-app-scroll-to
+												>
+												{{ report.title }}
+											</a>
+										</li>
+									</ul>
+								</nav>
+							</app-scroll-affix>
 
-								<gj-analytics-report-top-composition-value
-									ng-if="component.type == 'top-composition-sum' || component.type == 'top-composition-avg'"
-									report-data="component"
-									>
-								</gj-analytics-report-top-composition-value>
+						</div>
+						<div class="col-md-9">
 
-								<gj-analytics-report-rating-breakdown
-									ng-if="component.type == 'rating-breakdown'"
-									report-data="component"
-									>
-								</gj-analytics-report-rating-breakdown>
+							<div
+								v-for="( report, i ) of pageReports"
+								:key="i"
+								:id="`report-${ i }`">
+
+								<h2 :class="{ 'section-header': i === 0 }">
+									{{ report.title }}
+								</h2>
+
+								<app-loading v-if="!report.isLoaded" />
+
+								<div v-if="report.isLoaded" class="row">
+									<div v-for="( component, n ) of report.components" :key="n">
+
+										<app-analytics-report-simple-stat
+											v-if="component.type === 'sum' || component.type === 'average'"
+											:report-data="component"
+											/>
+
+										<app-analytics-report-top-composition
+											v-else-if="component.type === 'top-composition'"
+											:report-data="component"
+											/>
+
+										<app-analytics-report-top-composition-value
+											v-else-if="component.type === 'top-composition-sum' || component.type === 'top-composition-avg'"
+											:report-data="component"
+											/>
+
+										<app-analytics-report-rating-breakdown
+											v-else-if="component.type === 'rating-breakdown'"
+											:report-data="component"
+											/>
+
+									</div>
+								</div>
 
 							</div>
-						</div>
 
+						</div>
 					</div>
 
 				</div>
-			</div>
+			</section>
 
 		</div>
-	</section>
-
+	</div>
 </div>

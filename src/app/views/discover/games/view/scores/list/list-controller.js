@@ -1,4 +1,4 @@
-angular.module( 'App.Views' ).controller( 'Discover.Games.View.Scores.ListCtrl', function( $scope, $state, $stateParams, App, AutoScroll, Game_ScoreTable, User_GameScore, gettextCatalog, payload )
+angular.module( 'App.Views' ).controller( 'Discover.Games.View.Scores.ListCtrl', function( $scope, $state, $stateParams, App, Game_ScoreTable, User_GameScore, gettextCatalog, payload )
 {
 	App.title = gettextCatalog.getString( 'game.scores.page_title', { game: $scope.gameCtrl.game.title } );
 

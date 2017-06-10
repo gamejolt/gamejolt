@@ -4,7 +4,7 @@ import { AppTrophyThumbnail } from './thumbnail';
 
 @NgModule({
 	declarations: [
-		makeComponentProvider(AppTrophyThumbnail),
+		makeComponentProvider( AppTrophyThumbnail ),
 	],
 })
 export class TrophyThumbnailModule { }

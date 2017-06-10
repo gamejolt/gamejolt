@@ -1,0 +1,95 @@
+<div v-if="helpers.requiresField( namePrefixDotted + '.line1' ) || isForceRequired">
+
+	<div v-if="!helpers.getStripeField( namePrefixDotted + '.line1' )">
+
+		<app-form-group
+			v-if="helpers.requiresField( namePrefixDotted + '.line1' ) || isForceRequired"
+			name="{{ namePrefix }}-line1"
+			label="Address"
+			>
+			<input form-control>
+			<app-form-control-errors />
+		</app-form-group>
+
+		<app-form-group
+			v-if="helpers.requiresField( namePrefixDotted + '.line1' ) || isForceRequired"
+			name="{{ namePrefix }}-line2"
+			label="Apartment/Suite/Unit"
+			optional="true"
+			>
+			<input form-control>
+			<app-form-control-errors />
+		</app-form-group>
+
+		<!--
+			We only ask for their country if this is an additional owner.
+			Additional owners can live in any country.
+		-->
+		<app-form-group
+			v-if="isForceRequired"
+			name="{{ namePrefix }}-country"
+			label="Country"
+			>
+			<select form-control="select">
+				<option v-for="country of countries track by country.code" ng-value="country.code | uppercase">{{ country.name }}</option>
+			</select>
+			<app-form-control-errors />
+		</app-form-group>
+
+		<div class="row" v-if="helpers.requiresField( namePrefixDotted + '.city' ) || isForceRequired">
+			<div class="col-sm-4">
+				<app-form-group
+					name="{{ namePrefix }}-city"
+					label="City"
+					>
+					<input form-control>
+					<app-form-control-errors />
+				</app-form-group>
+			</div>
+			<div class="col-sm-4" v-if="helpers.requiresField( namePrefixDotted + '.state' ) || isForceRequired">
+				<app-form-group
+					name="{{ namePrefix }}-state"
+					label="State/Province/County"
+					>
+					<input form-control>
+					<app-form-control-errors />
+				</app-form-group>
+			</div>
+			<div class="col-sm-4" v-if="helpers.requiresField( namePrefixDotted + '.postal_code' ) || isForceRequired">
+				<app-form-group
+					name="{{ namePrefix }}-postal_code"
+					label="Zip/Postal Code"
+					>
+					<input form-control>
+					<app-form-control-errors />
+				</app-form-group>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-horizontal" v-if="helpers.getStripeField( namePrefixDotted + '.line1' )">
+		<div class="form-group">
+			<label class="control-label col-sm-4">
+				Address
+			</label>
+			<div class="form-static col-sm-8">
+				<div>{{ helpers.getStripeField( namePrefixDotted + '.line1' ) }}</div>
+				<div v-if="helpers.getStripeField( namePrefixDotted + '.line2' )">
+					{{ helpers.getStripeField( namePrefixDotted + '.line2' ) }}
+				</div>
+				<div>{{ helpers.getStripeField( namePrefixDotted + '.city' ) }}</div>
+				<div v-if="helpers.getStripeField( namePrefixDotted + '.state' )">
+					{{ helpers.getStripeField( namePrefixDotted + '.state' ) }}
+				</div>
+
+				<div v-if="helpers.getStripeField( namePrefixDotted + '.country' )">
+					{{ Geo.getCountryName( helpers.getStripeField( namePrefixDotted + '.country' ) ) }}
+				</div>
+				<div v-if="!helpers.getStripeField( namePrefixDotted + '.country' )">
+					{{ Geo.getCountryName( account.country_code ) }}
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

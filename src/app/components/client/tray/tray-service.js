@@ -107,7 +107,7 @@ angular.module( 'App.Client.Tray' )
 				label: 'Dashboard',
 				click: function()
 				{
-					$state.go( 'dashboard.main.overview' );
+					$state.go( 'dash.main.overview' );
 					Client.show();
 				}
 			} ) );
@@ -116,7 +116,7 @@ angular.module( 'App.Client.Tray' )
 				label: 'Edit Account',
 				click: function()
 				{
-					$state.go( 'dashboard.account.edit' );
+					$state.go( 'dash.account.edit' );
 					Client.show();
 				}
 			} ) );

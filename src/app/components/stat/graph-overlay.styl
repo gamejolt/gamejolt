@@ -1,0 +1,52 @@
+@require '~styles/variables'
+
+.stat-graph-overlay
+	display: block
+	position: relative
+	margin-bottom: $line-height-computed
+
+	&::before
+		display: block
+		content: ''
+		position: absolute
+		left: 0
+		right: 0
+		bottom: 0
+		height: 3px
+		opacity: 0
+		background-color: $gray-light
+		transition: opacity 300ms
+		z-index: 1
+
+	a&
+		color: inherit
+		padding-bottom: 3px
+
+		&.active
+			&
+			&:hover
+				&::before
+					transition: none
+					opacity: 1
+
+		&:hover::before
+			transition: none
+			opacity: 0.8
+
+	> .stat-big
+		position: relative
+		margin-bottom: 0
+
+	// Duplicate so it's more "important" than the scoped graph styles.
+	.graph.graph
+		position: absolute
+		padding: 0
+		margin: 0
+		left: -3px
+		right: -2px
+		bottom: 0
+		height: 50px
+		z-index: 0
+
+		&-line .chart
+			height: 50px

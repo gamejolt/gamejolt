@@ -1,7 +1,7 @@
 import { makeState } from '../../../../../lib/gj-lib-client/utils/angular-facade';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 
-makeState( 'dashboard.main.site', {
+makeState( 'dash.main.site', {
 	url: '/site',
 	lazyLoad: () => $import( './site.module' ),
 	resolve: {

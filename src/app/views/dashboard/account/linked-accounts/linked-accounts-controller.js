@@ -20,7 +20,7 @@ angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Account.LinkedAcc
 		UserLinkedAccounts.unlink( App.user, provider ).catch( function( error )
 		{
 			// If they don't have a password, we have to show them a modal to set it.
-			if ( error == 'no-password' ) {
+			if ( error === 'no-password' ) {
 				User_SetPasswordModal.show().then( function()
 				{
 					Growls.success( 'Your new password has been set. You can now log in with it.', 'Password Set' );

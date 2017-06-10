@@ -1,0 +1,250 @@
+<div>
+
+	<div class="row">
+		<div class="col-lg-8">
+
+			<div class="alert alert-success" v-if="game.is_published">
+				<app-jolticon icon="check" />
+				<translate>This game page is published to the site.</translate>
+			</div>
+
+			<!-- Show a little message if they still have builds being processed. -->
+			<div class="alert alert-info" v-if="hasBuildsProcessing">
+				<app-progress-poller
+					:url="`/web/dash/developer/games/poll-build-progress/${ game.id }`"
+					@complete="onAllBuildsProcessed"
+					/>
+
+				<app-progress-bar
+					:thin="true"
+					:percent="100"
+					:active="true"
+					variant="striped"
+					/>
+
+				<p>
+					<app-jolticon icon="notice" />
+					<translate>dash.games.overview.todo_info_builds_processing_html</translate>
+				</p>
+			</div>
+
+			<app-expand :when="!game.is_published && canPublish">
+				<div class="alert alert-success">
+					<p>
+						<translate>Your game page is ready to publish to the site for all to see!</translate>
+					</p>
+
+					<div class="alert-actions">
+						<button
+							class="btn btn-success-outline btn-block btn-dark-variant"
+							v-app-tooltip="$gettext( `dash.games.overview.todo_info_publish_button_tooltip` )"
+							@click="publish"
+							>
+							<app-jolticon icon="active" />
+							<translate>dash.games.overview.todo_info_publish_button</translate>
+						</button>
+					</div>
+				</div>
+			</app-expand>
+
+			<app-expand :when="game.canceled">
+				<div class="alert alert-info">
+					<p>
+						<translate>Your game is set as being a canceled game. You can transition back to a normal game page at any time!</translate>
+					</p>
+
+					<div class="alert-actions">
+						<button
+							class="btn btn-success-outline btn-block btn-dark-variant"
+							v-app-tooltip="$gettext( `This will make your game active again.` )"
+							@click="uncancel"
+							>
+							<app-jolticon icon="active" />
+							<translate>Uncancel Game</translate>
+						</button>
+					</div>
+				</div>
+			</app-expand>
+
+		</div>
+	</div>
+
+	<h2>
+		<translate>dash.games.overview.stats_heading</translate>
+	</h2>
+
+	<div class="row">
+		<div class="col-lg-8">
+			<!--TODO-->
+			<!--<app-graph
+				graph-widget-url="/web/dash/developer/games/graphs/overview/{{ game.id }}"
+				[graph-widget-hide-table]="true"
+				>
+			</app-graph>-->
+		</div>
+		<div class="col-lg-4">
+			<div class="row">
+				<div class="col-xs-6 col-sm-4 col-lg-6">
+					<div class="stat-big">
+						<div class="stat-big-label">
+							<translate>dash.games.overview.stats_views</translate>
+						</div>
+						<div class="stat-big-digit">
+							{{ viewCount | number }}
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-4 col-lg-6">
+					<div class="stat-big">
+						<div class="stat-big-label">
+							<translate>dash.games.overview.stats_plays</translate>
+						</div>
+						<div class="stat-big-digit">
+							{{ downloadCount + playCount | number }}
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-4 col-lg-6">
+					<div class="stat-big">
+						<div class="stat-big-label">
+							<translate>dash.games.overview.stats_rating</translate>
+						</div>
+						<div class="stat-big-digit">
+							<span v-if="game.avg_rating">
+								{{ game.avg_rating | number }}
+							</span>
+							<span v-if="!game.avg_rating">
+								<translate>dash.games.overview.stats_na</translate>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-4 col-lg-6">
+					<div class="stat-big">
+						<div class="stat-big-label">
+							<translate>dash.games.overview.stats_ratings</translate>
+						</div>
+						<div class="stat-big-digit">
+							{{ game.rating_count || 0 | number }}
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-4 col-lg-6">
+					<div class="stat-big">
+						<div class="stat-big-label">
+							<translate>dash.games.overview.stats_comments</translate>
+						</div>
+						<div class="stat-big-digit">
+							{{ commentCount | number }}
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-4 col-lg-6">
+					<div class="stat-big">
+						<div class="stat-big-label">
+							<translate>dash.games.overview.stats_followers</translate>
+						</div>
+						<div class="stat-big-digit">
+							{{ game.follower_count | number }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="visible-xs">
+		<router-link
+			class="btn btn-outline btn-block"
+			:to="{
+				name: 'dash.analytics',
+				params: { resource: 'Game', resourceId: game.id },
+			}"
+			>
+			<app-jolticon icon="chart" />
+			<translate>View Game Analytics</translate>
+		</router-link>
+	</div>
+
+
+	<div class="row">
+		<div class="col-lg-8">
+
+			<h2>
+				<translate>Development Stage</translate>
+			</h2>
+
+			<!--TODO-->
+			<!--<form-game-dev-stage-selector
+				game="game"
+				>
+			</form-game-dev-stage-selector>-->
+
+			<h2>
+				<translate>Danger Zone</translate>
+				<app-jolticon icon="notice big warning" />
+			</h2>
+
+			<app-expand :when="game.status !== Game.STATUS_HIDDEN">
+				<h4>
+					<translate>Hide Game</translate>
+				</h4>
+
+				<div class="page-help">
+					<p><translate>Your game page is currently published and active. You can hide it to remove it from the game listings. People with the link will still be able to view it.</translate></p>
+				</div>
+
+				<button
+					class="btn btn-danger-outline"
+					@click="hide"
+					>
+					<translate>Hide Game</translate>
+				</button>
+			</app-expand>
+
+			<app-expand :when="!game.canceled">
+				<h4>
+					<translate>Cancel Game</translate>
+				</h4>
+
+				<div class="page-help">
+					<p><translate>Canceling your game will signal to everyone that you're no longer working on it. People will still be able to view the game page and access your published packages, but it will not show in game listings.</translate></p>
+					<p><translate>If you've transitioned development off of Game Jolt, you must remove your game instead.</translate></p>
+				</div>
+
+				<button
+					class="btn btn-danger-outline"
+					@click="cancel"
+					>
+					<translate>Cancel Game</translate>
+				</button>
+			</app-expand>
+
+			<h4>
+				<translate>Remove Game</translate>
+			</h4>
+
+			<div class="page-help">
+				<p>
+					<translate :escape-html="false">
+						Removing your game page will remove it from the site completely. <b>This is permanent!</b>
+					</translate>
+				</p>
+			</div>
+
+			<div class="alert alert-info" v-if="game.has_sales">
+				<translate>You can't remove games with active sales at this time.</translate>
+			</div>
+
+			<button
+				class="btn btn-danger-outline"
+				@click="removeGame"
+				:disabled="game.has_sales"
+				>
+				<translate>Remove Game</translate>
+			</button>
+
+		</div>
+	</div>
+
+</div>

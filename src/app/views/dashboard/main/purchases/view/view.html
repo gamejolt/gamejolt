@@ -1,156 +1,205 @@
-<section class="section">
-	<div class="container">
+<div class="route-purchases-view">
 
-		<h2 class="section-header" translate>Order Details</h2>
+	<section class="section">
+		<div class="container">
 
-		<p class="text-muted">
-			<span translate>Ordered on</span>
-			{{ viewCtrl.order.completed_on | date:'medium' }}
+			<h2 class="section-header">
+				<translate>Order Details</translate>
+			</h2>
 
-			<span class="dot-separator"></span>
+			<p class="text-muted">
+				<translate>Ordered on</translate>
+				{{ order.completed_on | date( 'medium' ) }}
 
-			<span translate>Order #</span>
-			{{ viewCtrl.order.id }}
-		</p>
+				<span class="dot-separator"></span>
 
-		<div class="alert alert-warning" ng-if="viewCtrl.order._is_refunded" translate translate-params-date="viewCtrl.firstRefund.created_on | date:'medium'">
-			This order was refunded on {{ date }}.
-		</div>
+				<translate>Order #</translate>
+				{{ order.id }}
+			</p>
 
-		<hr>
-
-		<div class="row">
-			<div class="col-sm-4">
-				<h4 class="section-header" translate>Billing</h4>
-
-				<div ng-repeat="address in [ viewCtrl.order.billing_address ] track by $index">
-					<div ng-if="address.fullname">
-						<strong>{{ address.fullname }}</strong>
-					</div>
-
-					<div ng-if="address.street1">
-						{{ address.street1 }}
-					</div>
-
-					<div ng-if="address.street2">
-						{{ address.street2 }}
-					</div>
-
-					<div>
-						<span ng-if="address.city">
-							{{ address.city }}
-						</span>
-						<span ng-if="address.region">
-							{{ ::Geo.getRegionName( address.country, address.region ) || address.region }}
-						</span>
-						<span ng-if="address.postcode">
-							{{ address.postcode }}
-						</span>
-					</div>
-
-					<div ng-if="address.country">
-						{{ ::Geo.getCountryName( address.country ) }}
-					</div>
-				</div>
-				<br>
+			<div class="alert alert-warning" v-if="order._is_refunded">
+				<translate
+					:translate-params="{
+						date: date( firstRefund.created_on, 'medium' ),
+					}"
+					>
+					This order was refunded on %{ date }.
+				</translate>
 			</div>
-			<div class="col-sm-4">
-				<h4 ng-class="{ 'section-header': !Screen.isXs }" translate>Payment</h4>
-				<div ng-repeat="payment in viewCtrl.order.payments track by payment.id">
 
-					<div ng-if="payment.method == Order_Payment.METHOD_CC_STRIPE">
-						<span class="tag">
-							{{ payment.stripe_payment_source.brand }}
-						</span>
-						****
-						{{ payment.stripe_payment_source.last4 }}
-					</div>
+			<hr>
 
-					<div ng-if="payment.method == Order_Payment.METHOD_PAYPAL">
-						<span class="tag">
-							PayPal
-						</span>
-						{{ payment.paypal_email_address }}
-					</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<h4 class="section-header">
+						<translate>Billing</translate>
+					</h4>
 
-					<div ng-if="payment.method == Order_Payment.METHOD_WALLET">
-						<span class="tag">
-							Wallet
-						</span>
-						{{ payment.amount / 100 | currency }}
-					</div>
+					<div v-for="address of [ order.billing_address ]">
+						<div v-if="address.fullname">
+							<strong>{{ address.fullname }}</strong>
+						</div>
 
-				</div>
-			</div>
-			<div class="col-sm-4">
-				<h4 ng-class="{ 'section-header': !Screen.isXs }" translate>Summary</h4>
+						<div v-if="address.street1">
+							{{ address.street1 }}
+						</div>
 
-				<table class="summary-table">
-					<tbody>
-						<tr>
-							<th translate>Subtotal</th>
-							<td>{{ viewCtrl.order.amount / 100 | currency }}</td>
-						</tr>
-						<tr ng-if="viewCtrl.order.tax_amount">
-							<th translate>Tax</th>
-							<td>{{ viewCtrl.order.tax_amount / 100 | currency }}</td>
-						</tr>
-					</tbody>
-					<tfoot>
-						<tr>
-							<th translate>Total</th>
-							<td>{{ viewCtrl.order.total_amount / 100 | currency }}</td>
-						</tr>
-					</tfoot>
-				</table>
-			</div>
-		</div>
+						<div v-if="address.street2">
+							{{ address.street2 }}
+						</div>
 
-		<hr>
-
-		<div ng-repeat="item in ::viewCtrl.order.items track by item.id">
-			<h4>
-				<span class="tag tag-pink" ng-if="::item.is_refunded" translate>Refunded</span>
-				{{ ::item.sellable.title }}
-				&mdash;
-				<small>{{ ::item.amount / 100 | currency }}</small>
-			</h4>
-
-			<div ng-repeat="firstPackage in ::[ viewCtrl.packagesBySellable[ item.sellable.id ][0] ] track by firstPackage.id">
-				<div class="row">
-					<div class="col-xs-2">
-						<a style="display: block" ui-sref="discover.games.view.overview( { slug: viewCtrl.games[ firstPackage.game_id ].slug, id: firstPackage.game_id } )">
-							<gj-game-thumbnail-img [game]="::viewCtrl.games[ firstPackage.game_id ]"></gj-game-thumbnail-img>
-						</a>
-					</div>
-					<div class="col-xs-10">
-						<p>
-							<a ui-sref="discover.games.view.overview( { slug: viewCtrl.games[ firstPackage.game_id ].slug, id: firstPackage.game_id } )">
-								{{ ::viewCtrl.games[ firstPackage.game_id ].title }}
-							</a>
-							<br>
-							<span class="small">
-								<span translate>by</span>
-								<a ui-sref="profile.overview( { username: viewCtrl.games[ firstPackage.game_id ].developer.username } )">
-									{{ ::viewCtrl.games[ firstPackage.game_id ].developer.display_name }}
-								</a>
+						<div>
+							<span v-if="address.city">
+								{{ address.city }}
 							</span>
-						<p>
+							<span v-if="address.region">
+								{{ Geo.getRegionName( address.country, address.region ) || address.region }}
+							</span>
+							<span v-if="address.postcode">
+								{{ address.postcode }}
+							</span>
+						</div>
 
-						<h5 class="sans-margin" translate>Packages</h5>
+						<div v-if="address.country">
+							{{ Geo.getCountryName( address.country ) }}
+						</div>
+					</div>
+					<br>
+				</div>
+				<div class="col-sm-4">
+					<h4 :class="{ 'section-header': !Screen.isXs }">
+						<translate>Payment</translate>
+					</h4>
+					<div v-for="payment of order.payments" :key="payment.id">
 
-						<div class="small text-muted">
-							<div ng-repeat="package in ::viewCtrl.packagesBySellable[ item.sellable.id ] track by package.id">
-								- {{ ::package.title || viewCtrl.games[ package.game_id ].title }}
+						<div v-if="payment.method === OrderPayment.METHOD_CC_STRIPE">
+							<span class="tag">
+								{{ payment.stripe_payment_source.brand }}
+							</span>
+							****
+							{{ payment.stripe_payment_source.last4 }}
+						</div>
+
+						<div v-else-if="payment.method === OrderPayment.METHOD_PAYPAL">
+							<span class="tag">
+								PayPal
+							</span>
+							{{ payment.paypal_email_address }}
+						</div>
+
+						<div v-else-if="payment.method === OrderPayment.METHOD_WALLET">
+							<span class="tag">
+								Wallet
+							</span>
+							{{ payment.amount | currency }}
+						</div>
+
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<h4 :class="{ 'section-header': !Screen.isXs }">
+						<translate>Summary</translate>
+					</h4>
+
+					<table class="summary-table">
+						<tbody>
+							<tr>
+								<th><translate>Subtotal</translate></th>
+								<td>{{ order.amount | currency }}</td>
+							</tr>
+							<tr v-if="order.tax_amount">
+								<th><translate>Tax</translate></th>
+								<td>{{ order.tax_amount | currency }}</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th><translate>Total</translate></th>
+								<td>{{ order.total_amount | currency }}</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+
+			<hr>
+
+			<div v-for="item of order.items" :key="item.id">
+				<h4>
+					<span class="tag tag-pink" v-if="item.is_refunded">
+						<translate>Refunded</translate>
+					</span>
+					{{ item.sellable.title }}
+					&mdash;
+					<small>{{ item.amount | currency }}</small>
+				</h4>
+
+				<div
+					v-for="firstPackage of [ packagesBySellable[ item.sellable.id ][0] ]"
+					:key="firstPackage.id"
+					>
+					<div class="row">
+						<div class="col-xs-2">
+							<router-link
+								style="display: block"
+								:to="{
+									name: 'discover.games.view.overview',
+									params: {
+										slug: games[ firstPackage.game_id ].slug,
+										id: firstPackage.game_id,
+									},
+								}"
+								>
+								<app-game-thumbnail-img
+									:game="games[ firstPackage.game_id ]"
+									/>
+							</router-link>
+						</div>
+						<div class="col-xs-10">
+							<p>
+								<router-link
+									:to="{
+										name: 'discover.games.view.overview',
+										params: {
+											slug: games[ firstPackage.game_id ].slug,
+											id: firstPackage.game_id,
+										},
+									}"
+									>
+									{{ games[ firstPackage.game_id ].title }}
+								</router-link>
+								<br>
+								<span class="small">
+									<translate>by</translate>
+									<router-link
+										:to="{
+											name: 'profile.overview',
+											params: { username: games[ firstPackage.game_id ].developer.username }
+										}"
+										>
+										{{ games[ firstPackage.game_id ].developer.display_name }}
+									</router-link>
+								</span>
+							<p>
+
+							<h5 class="sans-margin">
+								<translate>Packages</translate>
+							</h5>
+
+							<div class="small text-muted">
+								<div v-for="package of packagesBySellable[ item.sellable.id ]" :key="package.id">
+									- {{ package.title || games[ package.game_id ].title }}
+								</div>
 							</div>
 						</div>
 					</div>
+
+					<br>
 				</div>
 
-				<br>
 			</div>
 
 		</div>
+	</section>
 
-	</div>
-</section>
+</div>

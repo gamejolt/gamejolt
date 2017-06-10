@@ -27,6 +27,11 @@ export class AppGameMaturityBlock extends Vue
 	isLoaded = false;
 	isBlocking: boolean = Settings.get( 'restricted-browsing' );
 
+	get shouldBlock()
+	{
+		return this.game.tigrs_age === 3 && this.isBlocking;
+	}
+
 	created()
 	{
 		if ( Environment.isPrerender || GJ_IS_SSR ) {

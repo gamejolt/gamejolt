@@ -1,0 +1,73 @@
+<div class="row" v-if="routeBootstrapped">
+	<div class="col-sm-4 col-sm-push-8">
+		<div class="page-help">
+			<translate :escape-html="false">dash.games.music.page_help_html</translate>
+		</div>
+	</div>
+
+	<div class="col-sm-8 col-sm-pull-4">
+
+		<div
+			class="alert alert-info"
+			v-if="!songs.length"
+			>
+			<translate :escape-html="false">dash.games.music.no_music_html</translate>
+		</div>
+
+		<app-card-list
+			:items="songs"
+			:active-item="activeItem"
+			@activate="activeItem = $event"
+			>
+			<!--is-adding="isAdding"
+			active-item="activeItem"-->
+
+			<app-card-list-draggable @changed="saveSongSort">
+				<app-card-list-item
+					v-for="song of songs"
+					:key="song.id"
+					:item="song"
+					>
+
+					<a class="card-remove"
+						@click.stop="removeSong( song )"
+						>
+						<app-jolticon icon="remove" />
+					</a>
+
+					<div class="card-title">
+						<h5>{{ song.title }}</h5>
+					</div>
+
+					<div slot="body">
+						<form-game-song
+							:game="game"
+							:model="song"
+							@submit="onSongEdited"
+							/>
+					</div>
+
+				</app-card-list-item>
+			</app-card-list-draggable>
+
+			<!--<gj-editable-accordion-add add-label="{{ 'dash.games.music.add_button' | translate }}">
+
+				<form-game-song
+					gj-game="game"
+					@submit="onSongAdded( formModel )">
+				</form-game-song>
+
+			</gj-editable-accordion-add>-->
+
+		</app-card-list>
+
+		<!--<div v-if="isWizard">
+			<form-game-wizard-controls
+				game="game"
+				can-proceed="true"
+				>
+			</form-game-wizard-controls>
+		</div>-->
+
+	</div>
+</div>

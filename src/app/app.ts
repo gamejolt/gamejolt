@@ -19,8 +19,13 @@ import { Store } from './store/index';
 export class App extends Vue
 {
 	@State app: Store['app'];
+	@State isShowingAngular: Store['isShowingAngular'];
 
 	Connection = makeObservableService( Connection );
+
+	created()
+	{
+	}
 
 	// created()
 	// {

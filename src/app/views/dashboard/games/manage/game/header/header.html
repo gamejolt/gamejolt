@@ -1,0 +1,43 @@
+<div class="row">
+	<div class="col-sm-4 col-sm-push-8">
+		<button
+			class="btn btn-danger-outline btn-block"
+			v-if="game.header_media_item"
+			@click="clearHeader"
+			>
+			<app-jolticon icon="remove" />
+			<translate>dash.games.header.clear_button</translate>
+		</button>
+		<br>
+
+		<div class="page-help">
+			<div>
+				<translate :escape-html="false">
+					dash.games.header.page_help_html
+				</translate>
+			</div>
+			<p>
+				<a class="link-help" href="https://help.gamejolt.com/dev-page-headers" target="_blank">
+					<translate>dash.games.header.page_help_link</translate>
+				</a>
+			</p>
+		</div>
+	</div>
+
+	<div class="col-sm-8 col-sm-pull-4">
+
+		<form-game-header
+			:model="game"
+			:is-wizard="isWizard"
+			@submit="onSaved"
+			/>
+
+		<div v-if="isWizard">
+			<!--<form-game-wizard-controls
+				game="game"
+				can-proceed="true"
+				>
+			</form-game-wizard-controls>-->
+		</div>
+	</div>
+</div>

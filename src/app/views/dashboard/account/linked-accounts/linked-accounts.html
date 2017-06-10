@@ -1,27 +1,27 @@
 <div ui-view="main-content">
 
 	<div class="row linked-accounts-list">
-		<div class="col-md-6" ng-repeat="provider in [ 'facebook', 'twitter', 'google', 'twitch' ] track by $index">
+		<div class="col-md-6" v-for="provider of [ 'facebook', 'twitter', 'google', 'twitch' ] track by $index">
 			<div class="well fill-lightest">
 
 				<div class="linked-accounts-list-icon">
-					<span class="jolticon big" ng-class="::{
-						'jolticon-facebook': provider == 'facebook',
-						'jolticon-twitter-bird': provider == 'twitter',
-						'jolticon-google-plus': provider == 'google',
-						'jolticon-twitch': provider == 'twitch',
+					<span class="jolticon big" :class="{
+						'jolticon-facebook': provider === 'facebook',
+						'jolticon-twitter-bird': provider === 'twitter',
+						'jolticon-google-plus': provider === 'google',
+						'jolticon-twitch': provider === 'twitch',
 					}"></span>
 				</div>
 
 				<div class="linked-accounts-list-body">
-					<h5 ng-switch="::provider">
+					<h5 ng-switch="provider">
 						<span ng-switch-when="facebook" translate>Facebook</span>
 						<span ng-switch-when="twitter" translate>Twitter</span>
 						<span ng-switch-when="google" translate>Google+</span>
 						<span ng-switch-when="twitch" translate>Twitch</span>
 					</h5>
 
-					<div ng-if="(provider == 'facebook' && !App.user.facebook_id) || (provider == 'twitch' && !App.user.twitch_id) || (provider == 'twitter' && !App.user.twitter_id) || (provider == 'google' && !App.user.google_id)">
+					<div v-if="(provider === 'facebook' && !App.user.facebook_id) || (provider === 'twitch' && !App.user.twitch_id) || (provider === 'twitter' && !App.user.twitter_id) || (provider === 'google' && !App.user.google_id)">
 						<p>
 							<small class="text-muted" translate>Not linked.</small>
 						</p>
@@ -31,8 +31,8 @@
 						</a>
 					</div>
 
-					<div ng-if="(provider == 'facebook' && App.user.facebook_id) || (provider == 'twitch' && App.user.twitch_id) || (provider == 'twitter' && App.user.twitter_id) || (provider == 'google' && App.user.google_id)">
-						<p ng-switch="::provider">
+					<div v-if="(provider === 'facebook' && App.user.facebook_id) || (provider === 'twitch' && App.user.twitch_id) || (provider === 'twitter' && App.user.twitter_id) || (provider === 'google' && App.user.google_id)">
+						<p ng-switch="provider">
 							<strong ng-switch-when="facebook">
 								<a ng-href="https://facebook.com/{{ App.user.facebook_id }}">
 									{{ App.user.facebook_name }}
@@ -80,8 +80,8 @@
 				You can link your YouTube channels in order to post video comments on games.
 			</p>
 
-			<div class="list-group" ng-if="linkedAccountsCtrl.channels.length > 0">
-				<div class="list-group-item clearfix" ng-repeat="channel in linkedAccountsCtrl.channels track by channel.id">
+			<div class="list-group" v-if="linkedAccountsCtrl.channels.length > 0">
+				<div class="list-group-item clearfix" v-for="channel of linkedAccountsCtrl.channels track by channel.id">
 					<div class="pull-right">
 						<button class="btn btn-danger-outline btn-sm"
 							ng-click="linkedAccountsCtrl.unlinkYoutube( channel )"

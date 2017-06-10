@@ -1,11 +1,10 @@
 <div class="row">
 	<div class="col-md-9 col-lg-8">
 
-		<gj-form-dashboard-profile
-			gj-user="App.user"
-			gj-form-submit-handler="editCtrl.onProfileSaved( formModel )"
-			>
-		</gj-form-dashboard-profile>
+		<form-profile
+			:model="app.user"
+			@submit="onProfileSaved"
+			/>
 
 	</div>
 </div>

@@ -1,5 +1,7 @@
 import { Component, Inject, Input } from 'ng-metadata/core';
-import * as template from '!html-loader!./page-header.html';
+import * as template from '!html-loader!./page-header.component.html';
+import './page-header.styl';
+import './page-header-content.styl';
 
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';

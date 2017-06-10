@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import * as nwGui from 'nw.gui';
 import { Component } from 'vue-property-decorator';
 
 import { store } from '../../store/index';
@@ -35,9 +36,9 @@ async function getCookie( name: string )
 {
 	// Within Client we have to access it connectedthis way.
 	if ( GJ_IS_CLIENT ) {
-		const gui = require( 'nw.gui' );
+		const gui = require( 'nw.gui' ) as typeof nwGui;
 		const win = gui.Window.get();
-		win.cookies.get( {
+		(win as any).cookies.get( {
 			url: 'game-jolt-client',
 			name: name,
 		},

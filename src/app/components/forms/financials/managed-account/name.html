@@ -1,0 +1,32 @@
+<div class="row" v-if="!helpers.getStripeField( namePrefixDotted + '.first_name' )">
+	<div class="col-sm-6" v-if="helpers.requiresField( namePrefixDotted + '.first_name' ) || isForceRequired">
+		<app-form-group
+			name="{{ namePrefix }}-first_name"
+			label="First Name"
+			>
+			<input form-control>
+			<app-form-control-errors />
+		</app-form-group>
+	</div>
+	<div class="col-sm-6" v-if="helpers.requiresField( namePrefixDotted + '.last_name' ) || isForceRequired">
+		<app-form-group
+			name="{{ namePrefix }}-last_name"
+			label="Last Name"
+			>
+			<input form-control>
+			<app-form-control-errors />
+		</app-form-group>
+	</div>
+</div>
+
+<div class="form-horizontal" v-if="helpers.getStripeField( namePrefixDotted + '.first_name' )">
+	<div class="form-group">
+		<label class="control-label col-sm-4">
+			Name
+		</label>
+		<div class="form-static col-sm-8">
+			{{ helpers.getStripeField( namePrefixDotted + '.first_name' ) }}
+			{{ helpers.getStripeField( namePrefixDotted + '.last_name' ) }}
+		</div>
+	</div>
+</div>

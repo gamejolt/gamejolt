@@ -137,7 +137,7 @@ export class AppSearchAutocomplete extends Vue
 			},
 			{
 				keyword: ':dashboard',
-				routeName: 'dashboard.main.overview',
+				routeName: 'dash.main.overview',
 				authRequired: true,
 				description: this.$gettext( 'commands.dashboard_description' ),
 			},
@@ -155,7 +155,7 @@ export class AppSearchAutocomplete extends Vue
 			},
 			{
 				keyword: ':account',
-				routeName: 'dashboard.account.edit',
+				routeName: 'dash.account.edit',
 				authRequired: true,
 				description: this.$gettext( 'commands.account_description' ),
 			},

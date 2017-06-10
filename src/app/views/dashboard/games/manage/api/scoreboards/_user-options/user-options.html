@@ -1,0 +1,19 @@
+<span v-if="ctrl.score.user_id">
+	<a class="text-muted" style="margin-right: 5px" gj-popover-trigger="score-user-options-{{ ctrl.score.id }}" ng-click="$event.stopPropagation()">
+		<span class="jolticon jolticon-ellipsis-h"></span>
+	</a>
+
+	<gj-popover [popover-id]="'score-user-options-' + ctrl.score.id">
+		<div class="list-group">
+			<a class="list-group-item has-icon" ui-sref="dashboard.games.manage.api.scoreboards.scores.user.list( { table: ctrl.score.table_id, user: ctrl.score.user.id } )">
+				<span class="jolticon jolticon-pedestals-numbers"></span>
+				<span translate>dash.games.scores.view_user_scores</span> <br>
+				<small class="text-muted" translate translate-params-table="ctrl.scoreTable.name">dash.games.scores.view_user_scores_table</small>
+			</a>
+			<a class="list-group-item has-icon" ng-href="{{ ctrl.score.user.url }}">
+				<span class="jolticon jolticon-user"></span>
+				<span translate>dash.games.scores.goto_user_profile</span>
+			</a>
+		</div>
+	</gj-popover>
+</span>

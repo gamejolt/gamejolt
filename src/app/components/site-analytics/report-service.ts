@@ -1,8 +1,8 @@
-import * as angular from 'angular';
 import { ReportComponent, Request, ResourceName, Analyzer, Collection, Field, Condition, ResourceFields } from './site-analytics-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { getProvider } from '../../../lib/gj-lib-client/utils/utils';
 import { Geo } from '../../../lib/gj-lib-client/components/geo/geo.service';
+import { arrayUnique } from '../../../lib/gj-lib-client/utils/array';
+import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
 
 export class SiteAnalyticsReport
 {
@@ -53,7 +53,7 @@ export class SiteAnalyticsReport
 			if ( partnerMode ) {
 				conditions.push( 'partner' );
 			}
-			conditions = _.uniq( conditions );
+			conditions = arrayUnique( conditions );
 
 			// Replace the pseudo fields by their normal fields
 			if ( field === 'partner_generated_revenue' ) {
@@ -146,11 +146,13 @@ export class SiteAnalyticsReport
 			request.fetch_fields = fetchFields;
 		}
 
-		if ( resourceFields ) {
-			// Resource fields has different string union types as values, and typescript can't infer it as a merged string union yet.
-			const a: any = _.flatten( _.values( resourceFields ) );
-			request.resource_fields = a;
-		}
+		// TODO
+		// if ( resourceFields ) {
+		// 	// Resource fields has different string union types as values, and
+		// 	// typescript can't infer it as a merged string union yet.
+		// 	const a: any = _.flatten( _.values( resourceFields ) );
+		// 	request.resource_fields = a;
+		// }
 
 		if ( startTime && endTime ) {
 			const date = new Date();
@@ -164,11 +166,10 @@ export class SiteAnalyticsReport
 
 	private processComponentResponse( component: ReportComponent, _response: any, gathers?: any )
 	{
-		const gettextCatalog = getProvider<ng.gettext.gettextCatalog>( 'gettextCatalog' );
-
 		const field = component.field, analyzer = component.type, displayField = component.displayField;
 
-		let response: any = angular.copy( _response );
+		// Copy the response.
+		let response: any = Object.assign( {}, _response );
 		let graph: any = null;
 		let data: any = {};
 
@@ -183,7 +184,7 @@ export class SiteAnalyticsReport
 			// Rating is a special case of top composition. We want to keep processing it as { key: value } and not convert it.
 			if ( field !== 'rating' ) {
 				data = [];
-				angular.forEach( response.result, ( val, key ) =>
+				Object.entries( response.result ).forEach( ( [ key, val ] ) =>
 				{
 					switch ( analyzer ) {
 						case 'top-composition-sum':
@@ -245,10 +246,10 @@ export class SiteAnalyticsReport
 
 			// country code => country name
 			if ( field === 'country' ) {
-				angular.forEach( response.result, ( val ) =>
+				Object.values( response.result ).forEach( ( val ) =>
 				{
 					if ( val.label === 'other' ) {
-						val.label = gettextCatalog.getString( 'Unknown' );
+						val.label = Translate.$gettext( 'Unknown' );
 					}
 					else {
 						val.label = Geo.getCountryName( val.label ) || val.label;

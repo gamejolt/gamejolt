@@ -11,7 +11,7 @@
 
 				<a
 					class="btn btn-outline hidden-xs"
-					ui-sref="dashboard.analytics.view( { resource: 'Game', resourceId: game.id } )"
+					ui-sref="dashboard.analytics( { resource: 'Game', resourceId: game.id } )"
 					>
 					<app-jolticon icon="chart" />
 					<translate>View Analytics</translate>
@@ -19,7 +19,7 @@
 
 				<a
 					class="btn btn-outline"
-					ui-sref="dashboard.developer.games.manage.game.overview( { id: game.id } )"
+					ui-sref="dashboard.games.manage.game.overview( { id: game.id } )"
 					>
 					<app-jolticon icon="cog" />
 					<translate>Manage Game</translate>

@@ -1,31 +1,56 @@
-<header class="section">
-	<div class="container">
+<div>
 
-		<h1>Manage Account</h1>
-		<br>
+	<app-page-header>
+		<h1>
+			<translate>Manage Account</translate>
+		</h1>
+	</app-page-header>
 
-	</div>
-</header>
+	<nav>
+		<div class="list-group">
+			<router-link
+				class="list-group-item"
+				:to="{ name: 'dash.account.edit' }"
+				active-class="active"
+				>
+				<translate>Profile</translate>
+			</router-link>
+			<router-link
+				class="list-group-item"
+				:to="{ name: 'dash.account.avatar' }"
+				active-class="active"
+				>
+				<translate>Avatar</translate>
+			</router-link>
+			<router-link
+				class="list-group-item"
+				:to="{ name: 'dash.account.linked-accounts' }"
+				active-class="active"
+				>
+				<translate>Linked Accounts</translate>
+			</router-link>
+			<router-link
+				class="list-group-item"
+				:to="{ name: 'dash.account.email-preferences' }"
+				active-class="active"
+				>
+				<translate>Email Preferences</translate>
+			</router-link>
+			<router-link
+				class="list-group-item"
+				:to="{ name: 'dash.account.change-password' }"
+				active-class="active"
+				>
+				<translate>Password</translate>
+			</router-link>
+			<router-link
+				class="list-group-item"
+				:to="{ name: 'dash.account.financials' }"
+				active-class="active"
+				>
+				<translate>Marketplace Account Setup</translate>
+			</router-link>
+		</div>
+	</nav>
 
-<nav>
-	<div class="list-group">
-		<a class="list-group-item" ui-sref="dashboard.account.edit" ui-sref-active="active" translate>
-			Profile
-		</a>
-		<a class="list-group-item" ui-sref="dashboard.account.avatar" ui-sref-active="active" translate>
-			Avatar
-		</a>
-		<a class="list-group-item" ui-sref="dashboard.account.linked-accounts" ui-sref-active="active" translate>
-			Linked Accounts
-		</a>
-		<a class="list-group-item" ui-sref="dashboard.account.email-preferences" ui-sref-active="active" translate>
-			Email Preferences
-		</a>
-		<a class="list-group-item" ui-sref="dashboard.account.change-password" ui-sref-active="active" translate>
-			Password
-		</a>
-		<a class="list-group-item" ui-sref="dashboard.account.financials" ui-sref-active="active" translate>
-			Marketplace Account Setup
-		</a>
-	</div>
-</nav>
+</div>

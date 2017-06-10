@@ -1,3 +1,6 @@
+import * as nwGui from 'nw.gui';
+import * as nodePath from 'path';
+
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 
 const STORAGE_PREFIX = 'settings.';
@@ -15,8 +18,8 @@ const defaultSettings: { [k: string]: Setting } = {
 		type: 'string',
 		val: () =>
 		{
-			const gui = require( 'nw.gui' );
-			const path = require( 'path' );
+			const gui = require( 'nw.gui' ) as typeof nwGui;
+			const path = require( 'path' ) as typeof nodePath;
 			const dataPath = gui.App.dataPath;
 
 			return path.join( dataPath, 'Games' );

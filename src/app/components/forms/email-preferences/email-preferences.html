@@ -1,0 +1,61 @@
+<app-form name="emailPreferencesForm">
+
+	<app-form-group name="email_address">
+		<app-form-control
+			type="email"
+			:rules="{
+				max: 200,
+				availability: '/web/dash/email-preferences/check-field-availability/email_address',
+			}"
+			:validate-on="[ 'blur' ]"
+			/>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<div class="form-horizontal">
+
+		<app-form-group
+			name="newsletter"
+			:label="$gettext( `dash.email_prefs.newsletter_label` )"
+			label-class="col-sm-4"
+			>
+			<div class="col-sm-8">
+				<app-form-control-toggle :on-label="$gettext( 'Yes' )" :off-label="$gettext( 'No' )" />
+				<p class="help-block"><translate>dash.email_prefs.newsletter_help</translate></p>
+			</div>
+		</app-form-group>
+
+	</div>
+
+	<fieldset>
+		<legend><translate>dash.email_prefs.notifications_heading</translate></legend>
+
+		<div class="alert alert-info"><translate>dash.email_prefs.notifications_description</translate></div>
+
+		<div class="form-horizontal">
+			<app-form-group
+				v-for="notificationType of notificationTypes"
+				:key="notificationType.key"
+				:name="notificationType.key"
+				:label="notificationType.label"
+				label-class="col-sm-4"
+				>
+				<div class="col-sm-8">
+					<app-form-control-toggle />
+					<p class="help-block" v-if="notificationType.help">
+						{{ notificationType.help }}
+					</p>
+				</div>
+			</app-form-group>
+		</div>
+	</fieldset>
+
+	<div class="row">
+		<div class="col-sm-8 col-sm-offset-4">
+			<app-form-button icon="edit">
+				<translate>dash.email_prefs.submit_button</translate>
+			</app-form-button>
+		</div>
+	</div>
+
+</app-form>

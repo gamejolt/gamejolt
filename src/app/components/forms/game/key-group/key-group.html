@@ -1,0 +1,139 @@
+<app-form name="keyGroupForm">
+
+	<app-form-group name="type"
+		:label="$gettext( `Key Type` )"
+		v-if="method === 'add'"
+		>
+		<div class="radio">
+			<label>
+				<input form-control="radio" ng-value="KeyGroup.TYPE_USER">
+				<span translate>User</span> &mdash;
+				<span class="help-inline" translate>Only the Game Jolt users you specify will be able to access and claim your game. Useful for testers, friends, etc.</span>
+			</label>
+		</div>
+		<div class="radio">
+			<label>
+				<input form-control="radio" ng-value="KeyGroup.TYPE_ANONYMOUS_CLAIM">
+				<span translate>Claim-Only</span> &mdash;
+				<span class="help-inline" translate>Game can only be accessed once the key is claimed by a Game Jolt user. Useful for key giveaways where you'd like only one person to be able to claim per key, but you don't care who claims it.</span>
+			</label>
+		</div>
+		<div class="radio">
+			<label>
+				<input form-control="radio" ng-value="KeyGroup.TYPE_ANONYMOUS">
+				<span translate>Unrestricted (Anonymous)</span> &mdash;
+				<span class="help-inline" translate>Anyone can access the game through the key page until the key has been claimed by a Game Jolt user. Useful for press keys, bundles, or any time you need to anonymously give out keys and see which have been claimed.</span>
+			</label>
+		</div>
+		<div class="radio">
+			<label>
+				<input form-control="radio" ng-value="KeyGroup.TYPE_EMAIL">
+				<span translate>Unrestricted (Email)</span> &mdash;
+				<span class="help-inline" translate>Behaves exactly like Unrestricted keys, except they can be retrieved at any time through a retrieval page by entering their email address. Useful for assigning keys for Kickstarter rewards, etc</span>
+			</label>
+		</div>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<app-form-group name="name"
+		:label="$gettext( `Label` )"
+		v-if="!!formModel.type"
+		>
+		<p class="help-block" translate>
+			This is just so you can keep track of your groups. It won't be shown to users.
+		</p>
+		<input
+			form-control
+			ng-maxlength="150"
+			>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<!-- Turning off for now -->
+	<!--<app-form-group name="message"
+		:label="$gettext( `Message` )" optional="true"
+		v-if="!!formModel.type"
+		>
+		<p class="help-block" translate>
+			You can write a custom message for the key/claim page here. A nice greeting, instructions for testers, etc.
+		</p>
+		<textarea form-control rows="2" ng-maxlength="750"></textarea>
+		<app-form-control-errors />
+	</app-form-group>-->
+
+	<app-form-group name="amount"
+		:label="$gettext( `# of Keys to Generate` )"
+		v-if="!!formModel.type && method === 'add' && (formModel.type === KeyGroup.TYPE_ANONYMOUS || formModel.type === KeyGroup.TYPE_ANONYMOUS_CLAIM)"
+		>
+		<input
+			form-control="number"
+			step="1"
+			min="1"
+			max="20000"
+			>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<app-form-group name="emails"
+		:label="$gettext( `Email Addresses` )"
+		v-if="!!formModel.type && method === 'add' && formModel.type === KeyGroup.TYPE_EMAIL"
+		>
+		<p class="help-block" translate>
+			Paste one email address per line, or separate them by commas.
+		</p>
+		<textarea form-control rows="10" ng-maxlength="750"></textarea>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<app-form-group name="users"
+		:label="$gettext( `Usernames` )"
+		v-if="!!formModel.type && method === 'add' && formModel.type === KeyGroup.TYPE_USER"
+		>
+		<p class="help-block" translate>
+			Paste one username per line, or separate them by commas.
+		</p>
+		<textarea form-control rows="10" ng-maxlength="750"></textarea>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<div class="form-group"
+		v-if="!!formModel.type"
+		>
+		<label class="control-label" translate>
+			Access Permissions
+		</label>
+
+		<p class="help-block" translate>
+			The packages for your game that this key group will give access to.
+		</p>
+
+		<div class="checkbox" v-for="package of packages track by package.id">
+			<label>
+				<input type="checkbox" ng-model="formModel.packages[ package.id ]">
+				<span v-if="package.visibility === Game_Package.VISIBILITY_PRIVATE"
+					class="tag tag-pink"
+					tooltip="This package is private, but will be accessible in this key group if you assign it."
+					translate
+					>
+					Private
+				</span>
+				{{ package.title || game.title }}
+			</label>
+		</div>
+	</div>
+
+	<div gj-expand-when="formState.serverErrors['num-keys']">
+		<div class="alert alert-warning" translate>
+			You can only have a max of {{ 20000 | number }} keys in a single key group.
+		</div>
+	</div>
+
+	<app-form-button
+		v-if="!!formModel.type && !keyGroupForm.$pristine"
+		ng-disabled="!keyGroupForm.$valid || !arePackagesChosen()"
+		:icon="method"
+		>
+		<translate>Save Key Group</translate>
+	</app-form-button>
+
+</app-form>

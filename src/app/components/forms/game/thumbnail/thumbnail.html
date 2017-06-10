@@ -1,0 +1,104 @@
+<app-form name="thumbnailForm">
+	<app-form-loader
+		:url="`/web/dash/developer/games/thumbnail/save/${ formModel.id }`"
+		@loaded="onLoaded"
+		>
+
+		<!--
+			They are required to upload a media item if there is none set yet.
+		-->
+		<app-form-group
+			name="file"
+			:label="$gettext( `dash.games.thumbnail.upload_label` )"
+			:optional="formModel.thumbnail_media_item && canCrop"
+			>
+
+			<p class="help-block">
+				<translate :escape-html="false">dash.forms.thumbnail_filetype_help_html</translate>
+			</p>
+
+			<app-form-control-upload
+				:rules="{
+					filesize: maxFilesize,
+					min_img_dimensions: [ minWidth, minHeight ],
+					max_img_dimensions: [ maxWidth, maxHeight ],
+				}"
+				accept=".png,.jpg,.jpeg,.gif"
+				/>
+					<!--
+					minImgWidth: minWidth,
+					minImgHeight: minHeight,
+					maxImgWidth: maxWidth,
+					maxImgHeight: maxHeight,
+					-->
+
+			<!--<gj-form-upload-control
+				form-control="upload"
+				gj-max-filesize="maxFilesize"
+				gj-min-img-width="minWidth"
+				gj-min-img-height="minHeight"
+				gj-max-img-width="maxWidth"
+				gj-max-img-height="maxHeight"
+				accept=".png,.jpg,.jpeg,.gif"
+				>
+			</gj-form-upload-control>-->
+
+			<app-form-control-errors
+				:label="$gettext( `dash.games.thumbnail.upload_error_label` )"
+				/>
+
+		</app-form-group>
+
+		<app-form-group
+			name="crop"
+			:label="canCrop
+				? $gettext( 'dash.games.thumbnail.crop_label' )
+				: $gettext( 'dash.games.thumbnail.nocrop_label' )
+			"
+			v-if="formModel.thumbnail_media_item && !formModel.file"
+			>
+
+			<div
+				class="alert alert-info"
+				v-if="
+					canCrop
+					&& formModel.thumbnail_media_item
+					&& formModel.thumbnail_media_item.is_animated
+				"
+				>
+				<p>
+					<translate>Animated thumbnails can't be cropped manually. We set a default crop for you instead.</translate>
+				</p>
+			</div>
+
+			<div v-if="canCrop" class="form-control-static">
+				crop
+				<!--<img ng-src="{{ formModel.thumbnail_media_item.img_url }}"
+					alt=""
+					gj-img-crop
+					form-control="crop"
+					img-crop-aspect-ratio="cropAspectRatio"
+					img-crop-min-width="minWidth"
+					img-crop-min-height="minHeight"
+					disabled="formModel.thumbnail_media_item.is_animated"
+					>-->
+				<app-form-control-errors
+					:label="$gettext( `dash.games.thumbnail.crop_error_label` )"
+					/>
+			</div>
+			<div v-else>
+				<img :src="formModel.thumbnail_media_item.img_url" alt="">
+			</div>
+		</app-form-group>
+
+		<app-form-button icon="edit">
+			<translate v-if="formModel.file || !formModel.thumbnail_media_item || !canCrop">
+				dash.games.thumbnail.upload_button
+			</translate>
+			<translate v-else>
+				dash.games.thumbnail.save_button
+			</translate>
+		</app-form-button>
+
+	</app-form-loader>
+</app-form>

@@ -1,0 +1,134 @@
+<div>
+
+	<ul class="sans-margin game-dash-nav">
+		<li v-if="!isWizard">
+			<router-link
+				:to="{
+					name: 'dash.games.manage.game.overview',
+				}"
+				active-class="active"
+				exact
+				>
+				<translate>Overview</translate>
+			</router-link>
+		</li>
+		<li>
+			<router-link
+				:to="{
+					name: 'dash.games.manage.game.details',
+				}"
+				active-class="active"
+				>
+				<app-manage-game-nav-required :is-complete="true" />
+				<translate>Details</translate>
+			</router-link>
+		</li>
+		<li>
+			<router-link
+				:to="{
+					name: 'dash.games.manage.game.description',
+				}"
+				active-class="active"
+				>
+				<app-manage-game-nav-required :is-complete="!!game.description_markdown" />
+				<translate>Description</translate>
+			</router-link>
+		</li>
+		<li>
+			<router-link
+				:to="{
+					name: 'dash.games.manage.game.maturity',
+				}"
+				active-class="active"
+				>
+				<app-manage-game-nav-required :is-complete="!!game.tigrs_age" />
+				<translate>Maturity</translate>
+			</router-link>
+		</li>
+		<li>
+			<router-link
+				:to="{
+					name: 'dash.games.manage.game.thumbnail',
+				}"
+				active-class="active"
+				>
+				<app-manage-game-nav-required :is-complete="!!game.thumbnail_media_item" />
+				<translate>Thumbnail</translate>
+			</router-link>
+		</li>
+		<li>
+			<router-link
+				:to="{
+					name: 'dash.games.manage.game.header',
+				}"
+				active-class="active"
+				>
+				<translate>Header</translate>
+			</router-link>
+		</li>
+		<li v-if="!isWizard || !game._is_devlog">
+			<router-link
+				:to="{
+					name: 'dash.games.manage.game.media',
+				}"
+				active-class="active"
+				>
+				<translate>Media</translate>
+			</router-link>
+		</li>
+		<li v-if="!isWizard || !game._is_devlog">
+			<router-link
+				:to="{
+					name: 'dash.games.manage.game.packages.list',
+				}"
+				:class="{
+					active: $route.name.indexOf( 'dash.games.manage.game.packages' ) === 0
+				}"
+				>
+				<app-manage-game-nav-required v-if="!game._is_devlog" :is-complete="game.has_active_builds" />
+				<translate>Packages</translate>
+			</router-link>
+		</li>
+		<li v-if="!isWizard || !game._is_devlog">
+			<router-link
+				:to="{
+					name: 'dash.games.manage.game.music',
+				}"
+				active-class="active"
+				>
+				<translate>Music</translate>
+			</router-link>
+		</li>
+		<li>
+			<router-link
+				:to="{
+					name: 'dash.games.manage.game.settings',
+				}"
+				active-class="active"
+				>
+				<translate>Settings</translate>
+			</router-link>
+		</li>
+	</ul>
+
+	<div v-if="$route.name !== 'dash.games.manage.game.wizard-finish'">
+		<button
+			class="btn btn-success-outline btn-block"
+			v-if="game.status === Game.STATUS_HIDDEN"
+			:disabled="!canPublish"
+			@click="publish"
+			>
+			<translate>Publish</translate>
+		</button>
+
+		<button
+			class="btn btn-outline btn-block"
+			v-if="isWizard"
+			@click="saveDraft"
+			>
+			<translate class="visible-lg">Save Draft</translate>
+			<translate class="visible-md">Save</translate>
+		</button>
+	</div>
+
+</div>
