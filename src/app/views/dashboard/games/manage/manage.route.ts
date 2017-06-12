@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/utils';
 import { routeDashGamesManageGame } from './game/game.route';
-import { routeDashGamesManageGameDescription } from './game/description/description.route';
+import { routeDashGamesManageApi } from './api/api.route';
 
 export const routeDashGamesManage: VueRouter.RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',
@@ -9,6 +9,6 @@ export const routeDashGamesManage: VueRouter.RouteConfig = {
 	component: () => asyncComponentLoader( $import( './manage' ) ),
 	children: [
 		routeDashGamesManageGame,
-		routeDashGamesManageGameDescription,
+		routeDashGamesManageApi,
 	],
 };

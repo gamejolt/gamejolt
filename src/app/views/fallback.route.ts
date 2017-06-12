@@ -17,12 +17,8 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 
 		{ name: 'dash.games.add', path: 'games/add', component: RouteEmpty },
 		{ path: 'games/:id(\\d+)', component: RouteEmpty, children: [
-			{ name: 'dash.games.manage.game.header', path: 'header', component: RouteEmpty },
 			{ name: 'dash.games.manage.game.maturity', path: 'maturity', component: RouteEmpty },
-			{ name: 'dash.games.manage.game.media', path: 'media', component: RouteEmpty },
-			{ name: 'dash.games.manage.game.music', path: 'music', component: RouteEmpty },
 			{ name: 'dash.games.manage.game.settings', path: 'settings', component: RouteEmpty },
-			{ name: 'dash.games.manage.game.thumbnail', path: 'thumbnail', component: RouteEmpty },
 			{ name: 'dash.games.manage.game.wizard-finish', path: 'wizard-finish', component: RouteEmpty },
 
 			{ name: 'dash.games.manage.game.packages.add', path: 'packages/add', component: RouteEmpty },
@@ -38,7 +34,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 
 			{ name: 'dash.games.manage.devlog.feed', path: 'devlog/:tab?', component: RouteEmpty },
 
-			{ name: 'dash.games.manage.api.overview', path: 'api', component: RouteEmpty },
 			{ name: 'dash.games.manage.api.settings', path: 'api/settings', component: RouteEmpty },
 			{ name: 'dash.games.manage.api.trophies.list', path: 'api/trophies', component: RouteEmpty },
 			{ name: 'dash.games.manage.api.data-storage.items.list', path: 'api/data-storage/items', component: RouteEmpty },
