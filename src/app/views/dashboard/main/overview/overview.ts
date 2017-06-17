@@ -25,6 +25,7 @@ import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { numberSort } from '../../../../../lib/gj-lib-client/utils/array';
+import { Jam } from '../../../../../lib/gj-lib-client/components/jam/jam.model';
 
 @View
 @Component({
@@ -59,6 +60,7 @@ export default class RouteDashMainOverview extends Vue {
 	games: Game[] = [];
 	videos: CommentVideo[] = [];
 	videosCount = 0;
+	jams: Jam[] = [];
 
 	activityNotifications: Notification[] = [];
 	latestBroadcast: FiresidePost | null = null;
@@ -124,8 +126,7 @@ export default class RouteDashMainOverview extends Vue {
 		this.videos = CommentVideo.populate(this.$payload.videos);
 		this.videosCount = this.$payload.videosCount || 0;
 
-		// TODO
-		// this.jams = Jam.populate( this.$payload.jams );
+		this.jams = Jam.populate(this.$payload.jams);
 
 		this.activityNotifications = Notification.populate(
 			this.$payload.activityNotifications
