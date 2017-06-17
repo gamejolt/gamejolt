@@ -9,5 +9,5 @@
   },
   "prettier.useTabs": true,
   "prettier.singleQuote": true,
-  "prettier.trailingComma": "all"
+  "prettier.trailingComma": "es5"
 }
