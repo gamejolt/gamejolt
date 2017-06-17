@@ -7,7 +7,7 @@ angular
 		Game_Trophy,
 		User_GameTrophy,
 		gettextCatalog,
-		payload,
+		payload
 	) {
 		var _this = this;
 
@@ -26,7 +26,7 @@ angular
 		this.achievedIndexed = User_GameTrophy.indexAchieved(this.achieved);
 		this.filteredTrophies = Game_Trophy.splitAchieved(
 			this.trophies,
-			this.achievedIndexed,
+			this.achievedIndexed
 		);
 
 		this.currentFilter = 'all';

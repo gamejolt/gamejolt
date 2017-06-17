@@ -104,7 +104,7 @@ export default class RouteForumsTopicsView extends Vue {
 			'/web/forums/topics/' +
 				route.params.id +
 				'?page=' +
-				(route.query.page || 1),
+				(route.query.page || 1)
 		);
 	}
 
@@ -132,9 +132,9 @@ export default class RouteForumsTopicsView extends Vue {
 		if (newPost.status === ForumPost.STATUS_SPAM) {
 			Growls.info(
 				this.$gettext(
-					`Your post has been marked for review. Please allow some time for it to show on the site.`,
+					`Your post has been marked for review. Please allow some time for it to show on the site.`
 				),
-				this.$gettext(`Post Needs Review`),
+				this.$gettext(`Post Needs Review`)
 			);
 		}
 

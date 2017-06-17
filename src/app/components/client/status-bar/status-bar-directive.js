@@ -11,7 +11,7 @@ angular
 				Client_Library,
 				Client_Launcher,
 				Client_Installer,
-				LocalDb_Package,
+				LocalDb_Package
 			) {
 				var _this = this;
 
@@ -32,7 +32,7 @@ angular
 						} else {
 							window.document.body.classList.remove('status-bar-visible');
 						}
-					},
+					}
 				);
 
 				$scope.$on('$destroy', function() {

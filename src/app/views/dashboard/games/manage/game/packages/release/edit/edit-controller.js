@@ -15,7 +15,7 @@ angular
 			Game_Build_File,
 			ModalConfirm,
 			Growls,
-			gettextCatalog,
+			gettextCatalog
 		) {
 			App.title = gettextCatalog.getString(
 				'dash.games.releases.edit.page_title',
@@ -23,7 +23,7 @@ angular
 					game: $scope.manageCtrl.game.title,
 					package: $scope.releaseCtrl.packageTitle,
 					release: $scope.releaseCtrl.release.version_number,
-				},
+				}
 			);
 
 			$scope.Game_Release = Game_Release;
@@ -42,8 +42,8 @@ angular
 			function unpublishRelease(release) {
 				ModalConfirm.show(
 					gettextCatalog.getString(
-						'dash.games.releases.manage.unpublish_release_confirmation',
-					),
+						'dash.games.releases.manage.unpublish_release_confirmation'
+					)
 				)
 					.then(function() {
 						return release.$unpublish($scope.manageCtrl['game']);
@@ -51,11 +51,11 @@ angular
 					.then(function() {
 						Growls.success(
 							gettextCatalog.getString(
-								'dash.games.releases.manage.unpublish_release_growl',
+								'dash.games.releases.manage.unpublish_release_growl'
 							),
 							gettextCatalog.getString(
-								'dash.games.releases.manage.unpublish_release_growl_title',
-							),
+								'dash.games.releases.manage.unpublish_release_growl_title'
+							)
 						);
 					});
 			}
@@ -63,8 +63,8 @@ angular
 			function removeRelease(release) {
 				ModalConfirm.show(
 					gettextCatalog.getString(
-						'dash.games.releases.manage.remove_release_confirmation',
-					),
+						'dash.games.releases.manage.remove_release_confirmation'
+					)
 				)
 					.then(function() {
 						return release.$remove($scope.manageCtrl['game']);
@@ -72,11 +72,11 @@ angular
 					.then(function() {
 						Growls.success(
 							gettextCatalog.getString(
-								'dash.games.releases.manage.remove_release_growl',
+								'dash.games.releases.manage.remove_release_growl'
 							),
 							gettextCatalog.getString(
-								'dash.games.releases.manage.remove_release_growl_title',
-							),
+								'dash.games.releases.manage.remove_release_growl_title'
+							)
 						);
 
 						$state.go('dash.games.manage.game.packages.edit', {
@@ -84,5 +84,5 @@ angular
 						});
 					});
 			}
-		},
+		}
 	);

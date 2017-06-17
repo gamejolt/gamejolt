@@ -39,7 +39,7 @@ export class AppActivityFeed extends Vue {
 
 	mounted() {
 		this.scroll$ = Scroll.scrollChanges.subscribe(
-			change => (this.scroll = change.top),
+			change => (this.scroll = change.top)
 		);
 	}
 
@@ -55,7 +55,7 @@ export class AppActivityFeed extends Vue {
 	@Watch('feed', { immediate: true })
 	async onItemsChanged(
 		feed: ActivityFeedContainer,
-		oldFeed: ActivityFeedContainer | undefined,
+		oldFeed: ActivityFeedContainer | undefined
 	) {
 		// Gotta make sure the feed has compiled.
 		await this.$nextTick();

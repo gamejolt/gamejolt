@@ -110,7 +110,7 @@ app.get('*', (req, res) => {
 		.on('end', () => {
 			const total = Date.now() - s;
 			console.log(
-				`request: ${total}ms | compilation: ${total - ctx.prefetchTime}ms`,
+				`request: ${total}ms | compilation: ${total - ctx.prefetchTime}ms`
 			);
 		})
 		.pipe(res);

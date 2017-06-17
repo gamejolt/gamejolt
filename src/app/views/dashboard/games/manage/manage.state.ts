@@ -146,7 +146,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexAction
 	async publish() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext('dash.games.overview.publish_confirmation'),
+			Translate.$gettext('dash.games.overview.publish_confirmation')
 		);
 		if (!result) {
 			return;
@@ -156,7 +156,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 		Growls.success(
 			Translate.$gettext('dash.games.overview.published_growl'),
-			Translate.$gettext('dash.games.overview.published_growl_title'),
+			Translate.$gettext('dash.games.overview.published_growl_title')
 		);
 
 		router.push({
@@ -179,7 +179,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexAction
 	async hide() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext('Are you sure you want to hide your game page?'),
+			Translate.$gettext('Are you sure you want to hide your game page?')
 		);
 		if (!result) {
 			return;
@@ -189,14 +189,14 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 		Growls.info(
 			Translate.$gettext('Your game page is now hidden.'),
-			Translate.$gettext('Game Hidden'),
+			Translate.$gettext('Game Hidden')
 		);
 	}
 
 	@VuexAction
 	async cancel() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext('Are you sure you want to cancel your game?'),
+			Translate.$gettext('Are you sure you want to cancel your game?')
 		);
 		if (!result) {
 			return;
@@ -206,14 +206,14 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 		Growls.info(
 			Translate.$gettext('Your game is now canceled.'),
-			Translate.$gettext('Game Canceled'),
+			Translate.$gettext('Game Canceled')
 		);
 	}
 
 	@VuexAction
 	async uncancel() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext('Are you sure you want to uncancel your game?'),
+			Translate.$gettext('Are you sure you want to uncancel your game?')
 		);
 		if (!result) {
 			return;
@@ -223,14 +223,14 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 		Growls.info(
 			Translate.$gettext('Your game is no longer canceled.'),
-			Translate.$gettext('Game Uncanceled'),
+			Translate.$gettext('Game Uncanceled')
 		);
 	}
 
 	@VuexAction
 	async removeGame() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext('dash.games.remove_confirmation'),
+			Translate.$gettext('dash.games.remove_confirmation')
 		);
 		if (!result) {
 			return;
@@ -240,7 +240,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 		Growls.info(
 			Translate.$gettext('dash.games.removed_growl'),
-			Translate.$gettext('dash.games.removed_growl_title'),
+			Translate.$gettext('dash.games.removed_growl_title')
 		);
 
 		router.push({ name: 'dash.main.overview' });
@@ -252,7 +252,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 		await Api.sendRequest(
 			'/web/dash/developer/games/media/save-sort/' + this.game.id,
-			this.currentMediaSort,
+			this.currentMediaSort
 		);
 	}
 }

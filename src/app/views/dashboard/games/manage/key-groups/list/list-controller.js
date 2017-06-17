@@ -7,7 +7,7 @@ angular
 		KeyGroup,
 		Game_Package,
 		gettextCatalog,
-		payload,
+		payload
 	) {
 		var _this = this;
 		var manageCtrl = $scope.manageCtrl;

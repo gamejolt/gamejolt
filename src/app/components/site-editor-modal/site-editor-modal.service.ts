@@ -6,7 +6,7 @@ export class SiteEditorModal {
 		@Inject('$rootScope') private $rootScope: ng.IRootScopeService,
 		@Inject('$document') private $document: ng.IDocumentService,
 		@Inject('$compile') private $compile: ng.ICompileService,
-		@Inject('$animate') private $animate: ng.animate.IAnimateService,
+		@Inject('$animate') private $animate: ng.animate.IAnimateService
 	) {}
 
 	show(siteId: number, tab: 'theme' | 'content' = 'theme') {

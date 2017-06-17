@@ -29,7 +29,7 @@ export class AppChatSidebar extends Vue {
 
 	get onlineFriends() {
 		return this.chat.friendsList.collection.filter(
-			item => item.isOnline || this.chat.notifications[item.roomId],
+			item => item.isOnline || this.chat.notifications[item.roomId]
 		);
 	}
 

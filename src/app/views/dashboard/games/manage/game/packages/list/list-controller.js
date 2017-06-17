@@ -14,7 +14,7 @@ angular
 			ModalConfirm,
 			Growls,
 			gettextCatalog,
-			packagesPayload,
+			packagesPayload
 		) {
 			var _this = this;
 			var manageCtrl = $scope.manageCtrl;
@@ -31,7 +31,7 @@ angular
 			this.packages = Game_Package.populate(packagesPayload.packages);
 			this.sellables = _.indexBy(
 				Sellable.populate(packagesPayload.sellables),
-				'game_package_id',
+				'game_package_id'
 			);
 
 			this.onPackagesSorted = onPackagesSorted;
@@ -51,8 +51,8 @@ angular
 			function removePackage(_package) {
 				ModalConfirm.show(
 					gettextCatalog.getString(
-						'Are you sure you want to remove this package? All of the releases and builds it contains will be removed as well.',
-					),
+						'Are you sure you want to remove this package? All of the releases and builds it contains will be removed as well.'
+					)
 				)
 					.then(function() {
 						return _package.$remove($scope.manageCtrl['game']);
@@ -60,12 +60,12 @@ angular
 					.then(function() {
 						Growls.success(
 							gettextCatalog.getString('The game package has been removed.'),
-							gettextCatalog.getString('Package Removed'),
+							gettextCatalog.getString('Package Removed')
 						);
 
 						// We have to do a refresh since a new package may have been chosen as the primary sellable.
 						$state.reload($state.current);
 					});
 			}
-		},
+		}
 	);

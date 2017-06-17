@@ -10,7 +10,7 @@ angular
 		Screen,
 		Client,
 		App,
-		User_TokenModal,
+		User_TokenModal
 	) {
 		var gui = require('nw.gui');
 
@@ -23,7 +23,7 @@ angular
 				{
 					// hideEdit: false,
 					// hideWindow: false,
-				},
+				}
 			);
 
 			win.menu = menu;

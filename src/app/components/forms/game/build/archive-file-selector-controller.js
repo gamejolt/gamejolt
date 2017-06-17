@@ -4,7 +4,7 @@ angular
 		$scope,
 		$modalInstance,
 		Api,
-		data,
+		data
 	) {
 		var _this = this;
 
@@ -21,7 +21,7 @@ angular
 		];
 		Api.sendRequest(
 			'/web/dash/developer/games/builds/files/archive-file-list/' +
-				params.join('/'),
+				params.join('/')
 		)
 			.then(function(response) {
 				_this.files = response.fileList || [];

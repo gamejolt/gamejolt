@@ -21,7 +21,7 @@ export class ProfileCtrl {
 		@Inject('User_Friendship') userFriendship: any,
 		@Inject('User_FriendshipsHelper') private userFriendshipsHelper: any,
 		@Inject('Report_Modal') private reportModal: any,
-		@Inject('profilePayload') profilePayload: any,
+		@Inject('profilePayload') profilePayload: any
 	) {
 		$scope.User = User;
 		$scope.User_Friendship = userFriendship;

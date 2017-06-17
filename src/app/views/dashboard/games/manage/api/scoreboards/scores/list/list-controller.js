@@ -10,7 +10,7 @@ angular
 			Game_ScoreTable,
 			User_GameScore,
 			gettextCatalog,
-			payload,
+			payload
 		) {
 			var _this = this;
 
@@ -26,7 +26,7 @@ angular
 				{
 					game: $scope.manageCtrl.game.title,
 					table: this.scoreTable.name,
-				},
+				}
 			);
 
 			this.changeTable = function(tableId) {
@@ -38,5 +38,5 @@ angular
 				Scroll.shouldAutoScroll = false;
 				$state.reload($state.current);
 			};
-		},
+		}
 	);

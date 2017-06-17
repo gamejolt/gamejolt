@@ -5,7 +5,7 @@ angular
 		$state,
 		App,
 		Growls,
-		Client,
+		Client
 	) {
 		App.title = 'Waiting for Link';
 

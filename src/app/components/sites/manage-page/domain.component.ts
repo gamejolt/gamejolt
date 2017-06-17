@@ -12,13 +12,13 @@ export class SitesManagePageDomainComponent {
 	@Input() site: Site;
 
 	constructor(
-		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog
 	) {}
 
 	onDomainSaved() {
 		Growls.success(
 			this.gettextCatalog.getString(`Your domain settings have been saved.`),
-			this.gettextCatalog.getString(`Domain Saved`),
+			this.gettextCatalog.getString(`Domain Saved`)
 		);
 	}
 }

@@ -24,7 +24,7 @@ export default class RouteDiscoverDevlogsGames extends Vue {
 	routeEnter(this: undefined, route: VueRouter.Route) {
 		const filteringContainer = new GameFilteringContainer();
 		return Api.sendRequest(
-			'/web/discover/devlogs/games?' + filteringContainer.getQueryString(route),
+			'/web/discover/devlogs/games?' + filteringContainer.getQueryString(route)
 		);
 	}
 

@@ -6,7 +6,7 @@ import { Injectable, Inject } from 'ng-metadata/core';
 export class SplitTest {
 	constructor(
 		@Inject('$location') private $location: ng.ILocationService,
-		@Inject('$window') private $window: ng.IWindowService,
+		@Inject('$window') private $window: ng.IWindowService
 	) {}
 
 	// hasSideNav()

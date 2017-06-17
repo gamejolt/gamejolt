@@ -64,7 +64,7 @@ export default class RouteDashGamesManageGameMedia extends Vue {
 	@BeforeRouteEnter()
 	routeEnter(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
-			'/web/dash/developer/games/media/' + route.params.id,
+			'/web/dash/developer/games/media/' + route.params.id
 		);
 	}
 
@@ -95,7 +95,7 @@ export default class RouteDashGamesManageGameMedia extends Vue {
 		/// {{ type }} contains the translated media item type (image/video/sketchfab)
 		const message = this.$gettextInterpolate(
 			'Are you sure you want to remove this %{ type }?',
-			{ type: typeLabel },
+			{ type: typeLabel }
 		);
 
 		const result = await ModalConfirm.show(message);

@@ -28,7 +28,7 @@ export class FormTwitterEmail extends BaseForm<any> implements FormOnSubmit {
 	async onSubmit() {
 		const response = await Api.sendRequest(
 			'/web/auth/twitter/create-account?state=' + this.stateHandle,
-			this.formModel,
+			this.formModel
 		);
 
 		if (response.success === false) {

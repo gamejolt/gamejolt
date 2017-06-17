@@ -56,7 +56,7 @@ export class AppScoreFeed extends Vue {
 		this.subscription = await ActivityStream.subscribe(
 			'scores',
 			{ tableId: this.scoreTable.id },
-			(message: any) => this.messageHandler(message),
+			(message: any) => this.messageHandler(message)
 		);
 	}
 

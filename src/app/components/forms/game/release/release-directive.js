@@ -10,7 +10,7 @@ angular
 		Game_Build_LaunchOption,
 		ModalConfirm,
 		Growls,
-		gettextCatalog,
+		gettextCatalog
 	) {
 		var form = new Form({
 			model: 'Game_Release',
@@ -60,7 +60,7 @@ angular
 					'/web/dash/developer/games/releases/save/' +
 						scope.game.id +
 						'/' +
-						scope.package.id,
+						scope.package.id
 				).then(function(payload) {
 					scope.isLoaded = true;
 
@@ -97,7 +97,7 @@ angular
 
 				// Add the new ones into the global list.
 				scope.launchOptions = scope.launchOptions.concat(
-					Game_Build_LaunchOption.populate(launchOptions),
+					Game_Build_LaunchOption.populate(launchOptions)
 				);
 			}
 
@@ -108,8 +108,8 @@ angular
 			function removeBuild(build) {
 				ModalConfirm.show(
 					gettextCatalog.getString(
-						'dash.games.releases.builds.remove_build_confirmation',
-					),
+						'dash.games.releases.builds.remove_build_confirmation'
+					)
 				)
 					.then(function() {
 						return build.$remove(scope.game);
@@ -119,11 +119,11 @@ angular
 
 						Growls.success(
 							gettextCatalog.getString(
-								'dash.games.releases.builds.remove_build_growl',
+								'dash.games.releases.builds.remove_build_growl'
 							),
 							gettextCatalog.getString(
-								'dash.games.releases.builds.remove_build_growl_title',
-							),
+								'dash.games.releases.builds.remove_build_growl_title'
+							)
 						);
 					});
 			}
@@ -147,8 +147,8 @@ angular
 			function savePublished() {
 				ModalConfirm.show(
 					gettextCatalog.getString(
-						'dash.games.releases.manage.publish_release_confirmation',
-					),
+						'dash.games.releases.manage.publish_release_confirmation'
+					)
 				)
 					.then(function() {
 						scope.formModel.should_publish = true;
@@ -157,11 +157,11 @@ angular
 					.then(function() {
 						Growls.success(
 							gettextCatalog.getString(
-								'dash.games.releases.manage.publish_release_growl',
+								'dash.games.releases.manage.publish_release_growl'
 							),
 							gettextCatalog.getString(
-								'dash.games.releases.manage.publish_release_growl_title',
-							),
+								'dash.games.releases.manage.publish_release_growl_title'
+							)
 						);
 					});
 			}

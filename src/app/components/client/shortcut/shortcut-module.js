@@ -9,6 +9,6 @@ angular.module('App.Client.Shortcut', []).run(function(Environment, Device) {
 	var Shortcut = require('client-voodoo').Shortcut;
 	Shortcut.create(
 		process.execPath,
-		path.resolve(require('~/img/client/icon-256x256.png')),
+		path.resolve(require('~/img/client/icon-256x256.png'))
 	);
 });

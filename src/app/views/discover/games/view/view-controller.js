@@ -26,7 +26,7 @@ angular
 		Comment,
 		Registry,
 		Scroll,
-		Clipboard,
+		Clipboard
 	) {
 		var _this = this;
 
@@ -137,7 +137,7 @@ angular
 			Api.sendRequest(
 				'/web/discover/games/refresh-rating-info/' + this.game.id,
 				null,
-				{ detach: true },
+				{ detach: true }
 			).then(processRatingPayload);
 		}
 

@@ -80,7 +80,7 @@ export default class RouteProfileOverview extends Vue {
 
 		this.developerGames = Game.populate(this.$payload.developerGamesTeaser);
 		this.youtubeChannels = YoutubeChannel.populate(
-			this.$payload.youtubeChannels,
+			this.$payload.youtubeChannels
 		);
 		this.videos = CommentVideo.populate(this.$payload.videos);
 	}

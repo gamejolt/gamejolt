@@ -5,7 +5,7 @@ import { FiresidePost } from '../../../../../lib/gj-lib-client/components/firesi
 export class ModalCtrl {
 	constructor(
 		@Inject('$modalInstance') private $modalInstance: any,
-		@Inject('post') public post: FiresidePost,
+		@Inject('post') public post: FiresidePost
 	) {}
 
 	onSubmitted(post: FiresidePost) {

@@ -8,7 +8,7 @@ angular
 		Game_ScoreTable,
 		User_GameScore,
 		gettextCatalog,
-		payload,
+		payload
 	) {
 		App.title = gettextCatalog.getString('game.scores.page_title', {
 			game: $scope.gameCtrl.game.title,

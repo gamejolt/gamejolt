@@ -73,7 +73,7 @@ export class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnInit {
 
 	async clearImage() {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.trophies.form.clear_image_confirmation'),
+			this.$gettext('dash.games.trophies.form.clear_image_confirmation')
 		);
 
 		if (!result) {

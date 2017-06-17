@@ -11,7 +11,7 @@ angular.module('App.Views').config(function($stateProvider) {
 					'/web/dash/developer/games/api/scores/list-table-scores/' +
 						$stateParams.id +
 						'/' +
-						$stateParams.table,
+						$stateParams.table
 				);
 			},
 		},

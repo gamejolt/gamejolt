@@ -16,7 +16,7 @@ angular.module('App.Client.Intro').directive('gjClientIntro', function() {
 			$timeout,
 			App,
 			Client,
-			Connection,
+			Connection
 		) {
 			var _this = this;
 
@@ -42,7 +42,7 @@ angular.module('App.Client.Intro').directive('gjClientIntro', function() {
 				img.className = 'client-intro-logo';
 
 				var $wrapper = angular.element(
-					$element[0].getElementsByClassName('client-intro-wrap')[0],
+					$element[0].getElementsByClassName('client-intro-wrap')[0]
 				);
 				$wrapper.append(img);
 			}

@@ -11,7 +11,7 @@ angular
 		Client_Library,
 		Game,
 		Game_Package,
-		game,
+		game
 	) {
 		var _this = this;
 
@@ -19,7 +19,7 @@ angular
 		this.isLoading = true;
 
 		Api.sendRequest('/web/discover/games/packages/' + game.id).then(function(
-			payload,
+			payload
 		) {
 			var packageData = new GamePackagePayloadModel(payload);
 			angular.extend(_this, packageData);
@@ -31,11 +31,11 @@ angular
 			_this.installableBuilds = Game.pluckInstallableBuilds(
 				_this.packages,
 				os,
-				arch,
+				arch
 			);
 			_this.buildsByPackage = _.indexBy(
 				_this.installableBuilds,
-				'game_package_id',
+				'game_package_id'
 			);
 		});
 
@@ -46,7 +46,7 @@ angular
 				build._package,
 				build._release,
 				build,
-				build._launch_options,
+				build._launch_options
 			);
 
 			// TODO: Go to installed games and scroll to the installing game.

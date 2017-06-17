@@ -85,7 +85,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isBootstrapped = false;
 	_bootstrappedResolver: Function | null = null;
 	bootstrappedPromise = new Promise(
-		resolve => (this._bootstrappedResolver = resolve),
+		resolve => (this._bootstrappedResolver = resolve)
 	);
 
 	notificationCount = 0;
@@ -136,7 +136,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		const result = await ModalConfirm.show(
 			Translate.$gettext('Are you seriously going to leave us?'),
 			Translate.$gettext('Logout?'),
-			'yes',
+			'yes'
 		);
 
 		if (!result) {
@@ -152,7 +152,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 		Growls.success(
 			Translate.$gettext('You are now logged out.'),
-			Translate.$gettext('Goodbye!'),
+			Translate.$gettext('Goodbye!')
 		);
 	}
 
@@ -233,7 +233,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	_clear() {
 		this.bootstrappedPromise = new Promise(
-			resolve => (this._bootstrappedResolver = resolve),
+			resolve => (this._bootstrappedResolver = resolve)
 		);
 	}
 
@@ -277,7 +277,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		}
 
 		this.backdrop = Backdrop.push(
-			document.getElementById('shell-body') as HTMLElement,
+			document.getElementById('shell-body') as HTMLElement
 		);
 	}
 
@@ -325,5 +325,5 @@ store.watch(
 				store.dispatch('clientLibrary/clear');
 			}
 		}
-	},
+	}
 );

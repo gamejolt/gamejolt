@@ -97,7 +97,7 @@ export class AppClientTray extends Vue {
 				// TODO: Click doesn't exist?
 				// it does exist, just not typed for some reason
 				click: () => this.toggleVisibility(),
-			} as any,
+			} as any
 		);
 
 		const menu = new gui.Menu();
@@ -111,7 +111,7 @@ export class AppClientTray extends Vue {
 							name: 'discover.games.list._fetch',
 							params: { section: 'featured' },
 						}),
-				}),
+				})
 			);
 
 			menu.append(new gui.MenuItem({ type: 'separator' }));
@@ -123,7 +123,7 @@ export class AppClientTray extends Vue {
 						this.go({ name: 'library.installed' });
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(
@@ -133,7 +133,7 @@ export class AppClientTray extends Vue {
 						this.go({ name: 'dashboard.main.overview' });
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(
@@ -143,7 +143,7 @@ export class AppClientTray extends Vue {
 						this.go({ name: 'dashboard.account.edit' });
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(
@@ -156,7 +156,7 @@ export class AppClientTray extends Vue {
 						});
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(
@@ -166,7 +166,7 @@ export class AppClientTray extends Vue {
 						UserTokenModal.show();
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(
@@ -176,7 +176,7 @@ export class AppClientTray extends Vue {
 						this.go({ name: 'settings' });
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(new gui.MenuItem({ type: 'separator' }));
@@ -188,7 +188,7 @@ export class AppClientTray extends Vue {
 						this.logout();
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 		}
 

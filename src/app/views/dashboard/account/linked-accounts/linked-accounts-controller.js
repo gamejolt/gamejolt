@@ -10,7 +10,7 @@ const router = angular
 		User_SetPasswordModal,
 		ModalConfirm,
 		gettextCatalog,
-		payload,
+		payload
 	) {
 		var _this = this;
 
@@ -31,7 +31,7 @@ const router = angular
 					User_SetPasswordModal.show().then(function() {
 						Growls.success(
 							'Your new password has been set. You can now log in with it.',
-							'Password Set',
+							'Password Set'
 						);
 
 						// Try to unlink again once they've set one!
@@ -44,8 +44,8 @@ const router = angular
 		this.unlinkYoutube = function(channel) {
 			ModalConfirm.show(
 				gettextCatalog.getString(
-					'Are you you want to unlink this channel? Any videos you may have done as part of this channel will be removed from Game Jolt.',
-				),
+					'Are you you want to unlink this channel? Any videos you may have done as part of this channel will be removed from Game Jolt.'
+				)
 			)
 				.then(function() {
 					return channel.$remove();

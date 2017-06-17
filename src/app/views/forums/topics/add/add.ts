@@ -50,9 +50,9 @@ export default class RouteForumsTopicsAdd extends Vue {
 		if (formModel.status === ForumTopic.STATUS_SPAM) {
 			Growls.info(
 				this.$gettext(
-					`Your topic has been marked for review. Please allow some time for it to show on the site.`,
+					`Your topic has been marked for review. Please allow some time for it to show on the site.`
 				),
-				this.$gettext(`Topic Needs Review`),
+				this.$gettext(`Topic Needs Review`)
 			);
 		}
 

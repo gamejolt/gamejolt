@@ -27,7 +27,7 @@ export default class RouteDashGamesManageGameThumbnail extends Vue {
 	onSaved() {
 		Growls.success(
 			this.$gettext('dash.games.thumbnail.saved_growl'),
-			this.$gettext('dash.games.thumbnail.saved_growl_title'),
+			this.$gettext('dash.games.thumbnail.saved_growl_title')
 		);
 		Scroll.to(0);
 	}

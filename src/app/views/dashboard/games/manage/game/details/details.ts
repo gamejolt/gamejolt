@@ -32,7 +32,7 @@ export default class RouteDashGamesManageGameDetails extends Vue {
 
 		Growls.success(
 			this.$gettext('dash.games.edit.save_growl'),
-			this.$gettext('dash.games.edit.save_growl_title'),
+			this.$gettext('dash.games.edit.save_growl_title')
 		);
 
 		Scroll.to(0);

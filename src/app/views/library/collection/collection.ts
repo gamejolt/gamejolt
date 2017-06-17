@@ -99,7 +99,7 @@ export default class RouteLibraryCollection extends Vue {
 		}
 
 		const payload = await Api.sendRequest(
-			`/web/library/games/${route.meta.collectionType}/${id}?${query}`,
+			`/web/library/games/${route.meta.collectionType}/${id}?${query}`
 		);
 
 		await store.state!.bootstrappedPromise;
@@ -123,8 +123,7 @@ export default class RouteLibraryCollection extends Vue {
 		// When they don't have it registered in their library, we just make an instance of a new one.
 		this.collection =
 			this.collections.find(
-				item =>
-					item.type === this.type && (item as any).id === this.processedId,
+				item => item.type === this.type && (item as any).id === this.processedId
 			) || null;
 
 		if (!this.collection) {
@@ -175,7 +174,7 @@ export default class RouteLibraryCollection extends Vue {
 				} else {
 					Meta.title = this.$gettextInterpolate(
 						'Games Followed by %{ user }',
-						params,
+						params
 					);
 				}
 			} else if (this.type === 'playlist') {
@@ -188,7 +187,7 @@ export default class RouteLibraryCollection extends Vue {
 				} else {
 					Meta.title = this.$gettextInterpolate(
 						'%{ playlist } by %{ user }',
-						params,
+						params
 					);
 				}
 			} else if (this.type === 'developer') {
@@ -205,7 +204,7 @@ export default class RouteLibraryCollection extends Vue {
 				} else {
 					Meta.title = this.$gettextInterpolate(
 						'Games Owned by %{ user }',
-						params,
+						params
 					);
 				}
 			} else if (this.type === 'recommended') {
@@ -215,7 +214,7 @@ export default class RouteLibraryCollection extends Vue {
 				} else {
 					Meta.title = this.$gettextInterpolate(
 						'Game Recommendations for %{ user }',
-						params,
+						params
 					);
 				}
 			} else if (this.type === 'bundle') {

@@ -16,7 +16,7 @@ export class SitesManagePageTemplateComponent {
 
 	constructor(
 		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog,
-		@Inject('SiteEditorModal') private editorModal: SiteEditorModal,
+		@Inject('SiteEditorModal') private editorModal: SiteEditorModal
 	) {}
 
 	enable() {
@@ -32,7 +32,7 @@ export class SitesManagePageTemplateComponent {
 	onSettingsSaved() {
 		Growls.success(
 			this.gettextCatalog.getString(`Your site settings have been saved.`),
-			this.gettextCatalog.getString(`Settings Saved`),
+			this.gettextCatalog.getString(`Settings Saved`)
 		);
 	}
 }

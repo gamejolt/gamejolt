@@ -52,7 +52,7 @@ export default class RouteActivity extends Vue {
 						type: 'Fireside_Post',
 						url: `/web/dash/activity/more/${this.tab}`,
 						notificationWatermark: this.$payload.unreadWatermark,
-					},
+					}
 				);
 			}
 		} else {
@@ -65,7 +65,7 @@ export default class RouteActivity extends Vue {
 						type: 'Notification',
 						url: `/web/dash/activity/more/${this.tab}`,
 						notificationWatermark: this.$payload.unreadWatermark,
-					},
+					}
 				);
 			}
 		}

@@ -17,7 +17,7 @@ angular
 			Growls,
 			gettextCatalog,
 			packagePayload,
-			$timeout,
+			$timeout
 		) {
 			var _this = this;
 
@@ -37,7 +37,7 @@ angular
 				{
 					game: $scope.manageCtrl.game.title,
 					package: this.package.title || $scope.manageCtrl.game.title,
-				},
+				}
 			);
 
 			this.newRelease = newRelease;
@@ -56,7 +56,7 @@ angular
 						'/' +
 						_this.package.id,
 					null,
-					{ detach: true },
+					{ detach: true }
 				).then(function(response) {
 					// We pull all new stuff for the preview so that we don't step on the form.
 					_this.previewData = new GamePackagePayloadModel(response);
@@ -97,7 +97,7 @@ angular
 						'/' +
 						this.package.id,
 					{},
-					{ detach: true },
+					{ detach: true }
 				)
 					.then(function(response) {
 						$state.go('dash.games.manage.game.packages.release.edit', {
@@ -107,7 +107,7 @@ angular
 					})
 					.catch(function() {
 						Growls.error(
-							gettextCatalog.getString('Could not create new release.'),
+							gettextCatalog.getString('Could not create new release.')
 						);
 						_this.isAddingRelease = false;
 					});
@@ -116,8 +116,8 @@ angular
 			function removeRelease(release) {
 				ModalConfirm.show(
 					gettextCatalog.getString(
-						'dash.games.releases.manage.remove_release_confirmation',
-					),
+						'dash.games.releases.manage.remove_release_confirmation'
+					)
 				)
 					.then(function() {
 						return release.$remove($scope.manageCtrl['game']);
@@ -125,14 +125,14 @@ angular
 					.then(function() {
 						Growls.success(
 							gettextCatalog.getString(
-								'dash.games.releases.manage.remove_release_growl',
+								'dash.games.releases.manage.remove_release_growl'
 							),
 							gettextCatalog.getString(
-								'dash.games.releases.manage.remove_release_growl_title',
-							),
+								'dash.games.releases.manage.remove_release_growl_title'
+							)
 						);
 						_.remove(_this.releases, { id: release.id });
 					});
 			}
-		},
+		}
 	);

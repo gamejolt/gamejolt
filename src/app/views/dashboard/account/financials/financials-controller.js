@@ -4,11 +4,11 @@ angular
 		$scope,
 		App,
 		gettextCatalog,
-		payload,
+		payload
 	) {
 		App.title = gettextCatalog.getString('Marketplace Account Setup');
 
 		$scope.accountCtrl.heading = gettextCatalog.getString(
-			'Marketplace Account Setup',
+			'Marketplace Account Setup'
 		);
 	});

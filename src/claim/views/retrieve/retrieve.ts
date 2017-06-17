@@ -103,7 +103,7 @@ export default class RouteRetrieve extends Vue {
 		if (this.resourceTitle) {
 			Meta.title = this.$gettextInterpolate(
 				`Retrieve Your Keys for %{ resource }`,
-				{ resource: this.resourceTitle },
+				{ resource: this.resourceTitle }
 			);
 		}
 	}

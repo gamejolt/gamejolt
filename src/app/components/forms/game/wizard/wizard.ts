@@ -8,5 +8,5 @@ export default angular
 	.service(
 		...provide('FormDashboardGameWizard', {
 			useClass: FormDashboardGameWizard,
-		}),
+		})
 	).name;

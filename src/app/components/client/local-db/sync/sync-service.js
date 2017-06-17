@@ -10,7 +10,7 @@ angular
 		Device,
 		LocalDb,
 		LocalDb_Game,
-		LocalDb_Package,
+		LocalDb_Package
 	) {
 		var _this = this;
 
@@ -121,7 +121,7 @@ angular
 						_package,
 						_release,
 						_build,
-						_launchOptions,
+						_launchOptions
 					);
 					localPackage.assign(newPackage);
 					return localPackage.$save();
@@ -131,7 +131,7 @@ angular
 
 		this.updatePackage = function(packageId, newBuildId) {
 			return LocalDb_Package.fetch(parseInt(packageId, 10)).then(function(
-				localPackage,
+				localPackage
 			) {
 				return localPackage.$startUpdate(newBuildId);
 			});

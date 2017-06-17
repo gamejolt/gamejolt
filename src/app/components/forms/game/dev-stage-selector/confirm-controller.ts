@@ -14,14 +14,14 @@ export class ModalCtrl {
 		@Inject('$modalInstance') private $modalInstance: any,
 		@Inject('game') public game: any,
 		@Inject('stage') public stage: number,
-		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog
 	) {
 		this.from = this._getStatusString(this.game.development_status);
 		this.to = this._getStatusString(this.stage);
 		this.action = `${this.from}:${this.to}`;
 
 		this.fromTranslated = this._getStatusTranslated(
-			this.game.development_status,
+			this.game.development_status
 		);
 		this.toTranslated = this._getStatusTranslated(this.stage);
 	}
@@ -31,13 +31,13 @@ export class ModalCtrl {
 			return this.gettextCatalog.getString(
 				'devlog-only',
 				{},
-				'development status',
+				'development status'
 			);
 		} else if (stage === Game.DEVELOPMENT_STATUS_WIP) {
 			return this.gettextCatalog.getString(
 				'early access',
 				{},
-				'development status',
+				'development status'
 			);
 		}
 

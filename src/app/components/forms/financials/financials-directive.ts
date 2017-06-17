@@ -4,7 +4,7 @@ import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growl
 FinancialsFormFactory.$inject = ['Form', 'currencyFilter'];
 export function FinancialsFormFactory(
 	Form: any,
-	currencyFilter: ng.IFilterCurrency,
+	currencyFilter: ng.IFilterCurrency
 ) {
 	const form = new Form({
 		template: require('./financials.html'),

@@ -191,7 +191,7 @@ export class GameFilteringContainer {
 				// TODO: Would be nice to not have to manually add every single one in, but rather just a single filter for all browser types.
 				if (!GJ_IS_CLIENT) {
 					filters.browser = Object.keys(
-						GameFilteringContainer.definitions.browser.options,
+						GameFilteringContainer.definitions.browser.options
 					);
 				} else {
 					// On client we only do HTML for now.
@@ -256,7 +256,7 @@ export class GameFilteringContainer {
 
 		if (definition.type === 'array') {
 			const index = this.filters[filter].findIndex(
-				(item: any) => item === option,
+				(item: any) => item === option
 			);
 			if (index !== -1) {
 				this.filters[filter].splice(index, 1);

@@ -11,7 +11,7 @@ angular
 			Game_ScoreTable,
 			ModalConfirm,
 			gettextCatalog,
-			payload,
+			payload
 		) {
 			var _this = this;
 
@@ -20,7 +20,7 @@ angular
 
 			App.title = gettextCatalog.getString(
 				'dash.games.scoreboards.page_title',
-				{ game: $scope.manageCtrl.game.title },
+				{ game: $scope.manageCtrl.game.title }
 			);
 
 			$scope.Game_ScoreTable = Game_ScoreTable;
@@ -60,9 +60,7 @@ angular
 
 			function removeTable(table) {
 				ModalConfirm.show(
-					gettextCatalog.getString(
-						'dash.games.scoreboards.remove_confirmation',
-					),
+					gettextCatalog.getString('dash.games.scoreboards.remove_confirmation')
 				)
 					.then(function() {
 						return table.$remove();
@@ -76,5 +74,5 @@ angular
 			function updateSort() {
 				_this.currentSort = _.pluck(_this.scoreTables, 'id');
 			}
-		},
+		}
 	);

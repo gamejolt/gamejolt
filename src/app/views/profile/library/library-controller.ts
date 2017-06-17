@@ -13,7 +13,7 @@ export class LibraryCtrl {
 		@Inject('$scope') $scope: any,
 		@Inject('App') app: App,
 		@Inject('GameCollection') gameCollection: any,
-		@Inject('payload') payload: any,
+		@Inject('payload') payload: any
 	) {
 		app.title = 'Library of @' + $scope.profileCtrl.user.username;
 

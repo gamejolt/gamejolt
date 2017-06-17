@@ -15,7 +15,7 @@ export class SitesManagePageStaticComponent {
 	@Input() templateEnabled: boolean;
 
 	constructor(
-		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog
 	) {}
 
 	onBuildAdded(response: any) {
@@ -23,7 +23,7 @@ export class SitesManagePageStaticComponent {
 		if (this.site.build) {
 			Growls.success(
 				this.gettextCatalog.getString(`Your new site build is now active.`),
-				this.gettextCatalog.getString(`Site Updated`),
+				this.gettextCatalog.getString(`Site Updated`)
 			);
 		}
 
@@ -37,7 +37,7 @@ export class SitesManagePageStaticComponent {
 
 		const response = await Api.sendRequest(
 			`/web/dash/sites/activate-primary-build/${this.site.id}`,
-			{},
+			{}
 		);
 		this.site.assign(response.site);
 	}

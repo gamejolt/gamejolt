@@ -45,7 +45,7 @@ export default class RouteDiscoverChannelsViewOverview extends Vue {
 	@BeforeRouteEnter({ cache: true, lazy: true })
 	routeEnter(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
-			'/web/discover/channels/overview/' + route.params.channel,
+			'/web/discover/channels/overview/' + route.params.channel
 		);
 	}
 
@@ -65,7 +65,7 @@ export default class RouteDiscoverChannelsViewOverview extends Vue {
 				{
 					type: 'Fireside_Post',
 					url: `/web/discover/channels/posts/${this.channel}`,
-				},
+				}
 			);
 		}
 

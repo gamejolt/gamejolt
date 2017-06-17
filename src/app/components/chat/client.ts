@@ -45,7 +45,7 @@ async function getCookie(name: string) {
 					return undefined;
 				}
 				return cookieData.value;
-			},
+			}
 		);
 	} else {
 		let i,
@@ -195,7 +195,7 @@ export class ChatClient extends Vue {
 
 	setRoom(
 		newRoom: ChatRoom | undefined,
-		options: { sendUnfocusEvent?: boolean } = {},
+		options: { sendUnfocusEvent?: boolean } = {}
 	) {
 		Object.assign(options, {
 			sendUnfocusEvent: true,
@@ -253,7 +253,7 @@ export class ChatClient extends Vue {
 				if (Object.keys(this.openRooms).length >= ChatMaxNumTabs) {
 					Growls.error(
 						'You can only have ' + ChatMaxNumTabs + ' chat tabs open at once.',
-						'Too Many Chats',
+						'Too Many Chats'
 					);
 					return;
 				}
@@ -313,7 +313,7 @@ export class ChatClient extends Vue {
 		roomId: number,
 		type: ChatMessageType,
 		message: ChatMessage,
-		isPrimer: boolean,
+		isPrimer: boolean
 	) {
 		if (this.openRooms[roomId]) {
 			message.type = type;
@@ -380,7 +380,7 @@ export class ChatClient extends Vue {
 			if (!this.singleRoomMode) {
 				ChatRoomStorage.init();
 				ChatRoomStorage.getJoinedRooms().forEach(roomId =>
-					this.enterRoom(roomId, roomId === lastRoomId),
+					this.enterRoom(roomId, roomId === lastRoomId)
 				);
 			} else {
 				ChatRoomStorage.destroy();
@@ -390,7 +390,7 @@ export class ChatClient extends Vue {
 			if (friendsList) {
 				this.friendsList = new ChatUserCollection(
 					ChatUserCollection.TYPE_FRIEND,
-					friendsList,
+					friendsList
 				);
 				this.friendsPopulated = true;
 			}
@@ -416,7 +416,7 @@ export class ChatClient extends Vue {
 
 			if (this.messages[roomId].length) {
 				const index = this.messages[roomId].findIndex(
-					message => message.id === id,
+					message => message.id === id
 				);
 				if (index !== -1) {
 					this.messages[roomId].splice(index, 1);
@@ -460,7 +460,7 @@ export class ChatClient extends Vue {
 				// Remove their messages from view.
 				if (this.messages[roomId].length) {
 					const index = this.messages[roomId].findIndex(
-						message => message.userId === userId,
+						message => message.userId === userId
 					);
 					if (index !== -1) {
 						this.messages[roomId].splice(index, 1);
@@ -578,7 +578,7 @@ export class ChatClient extends Vue {
 		room: ChatRoom,
 		messages: ChatMessage[],
 		users: any[],
-		isSource: boolean,
+		isSource: boolean
 	) {
 		if (!this.room || this.room.id !== room.id) {
 			if (room.type === ChatRoom.ROOM_PM) {
@@ -598,7 +598,7 @@ export class ChatClient extends Vue {
 				this.$set(
 					this.usersOnline,
 					'' + room.id,
-					new ChatUserCollection(ChatUserCollection.TYPE_ROOM, users),
+					new ChatUserCollection(ChatUserCollection.TYPE_ROOM, users)
 				);
 			}
 
@@ -646,7 +646,7 @@ export class ChatClient extends Vue {
 				message.roomId,
 				ChatMessage.TypeNormal,
 				message,
-				isPrimer,
+				isPrimer
 			);
 
 			// Emit an event that we've sent out a new message.
@@ -655,7 +655,7 @@ export class ChatClient extends Vue {
 				<ChatNewMessageEvent>{
 					message,
 					isPrimer,
-				},
+				}
 			);
 		});
 	}
@@ -677,7 +677,7 @@ export class ChatClient extends Vue {
 			this.sendRoboJolt(
 				this.room.id,
 				`*Beep boop bop.* You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. *Bzzzzzzzzt.*`,
-				`<p><em>Beep boop bop.</em> You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. <em>Bzzzzzzzzt.</em></p>`,
+				`<p><em>Beep boop bop.</em> You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. <em>Bzzzzzzzzt.</em></p>`
 			);
 			this.sendingMessage = false;
 			return;

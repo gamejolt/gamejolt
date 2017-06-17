@@ -7,7 +7,7 @@ export class AddCtrl {
 	constructor(
 		@Inject('App') app: App,
 		@Inject('gettextCatalog') gettextCatalog: ng.gettext.gettextCatalog,
-		@Inject('FormDashboardGameWizard') private wizard: FormDashboardGameWizard,
+		@Inject('FormDashboardGameWizard') private wizard: FormDashboardGameWizard
 	) {
 		app.title = gettextCatalog.getString('dash.games.add.page_title');
 	}

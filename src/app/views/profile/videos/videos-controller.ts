@@ -14,7 +14,7 @@ export class VideosCtrl {
 		@Inject('$scope') $scope: any,
 		@Inject('$stateParams') private $stateParams: StateParams,
 		@Inject('App') app: App,
-		@Inject('payload') payload: any,
+		@Inject('payload') payload: any
 	) {
 		app.title = `Videos from ${$scope.profileCtrl.user.display_name} (@${$scope
 			.profileCtrl.user.username})`;
@@ -25,7 +25,7 @@ export class VideosCtrl {
 	loadMore() {
 		++this.page;
 		Api.sendRequest(
-			`/web/profile/videos/${this.$stateParams['id']}?page=${this.page}`,
+			`/web/profile/videos/${this.$stateParams['id']}?page=${this.page}`
 		).then((response: any) => {
 			this.videos = this.videos.concat(CommentVideo.populate(response.videos));
 		});

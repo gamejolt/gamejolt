@@ -6,7 +6,7 @@ angular
 		App,
 		User,
 		gettextCatalog,
-		payload,
+		payload
 	) {
 		App.title = gettextCatalog.getString('dash.funds.withdraw.page_title');
 
@@ -23,7 +23,7 @@ angular
 		this.onSubmit = function(response) {
 			Growls.success(
 				gettextCatalog.getString('dash.funds.withdraw.success_growl'),
-				gettextCatalog.getString('dash.funds.withdraw.success_growl_title'),
+				gettextCatalog.getString('dash.funds.withdraw.success_growl_title')
 			);
 			$state.go('dash.main.overview');
 		};

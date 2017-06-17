@@ -14,16 +14,16 @@ export class FeedCtrl {
 		@Inject('$scope') $scope: ng.IScope,
 		@Inject('$state') private $state: StateService,
 		@Inject('$stateParams') private $stateParams: StateParams,
-		@Inject('payload') payload: any,
+		@Inject('payload') payload: any
 	) {
 		this.tab = $stateParams['tab'];
 		this.posts = ActivityFeedService.bootstrap(
-			FiresidePost.populate(payload.posts),
+			FiresidePost.populate(payload.posts)
 		);
 
 		$scope.$on(
 			'Devlog.postAdded',
-			(_event: ng.IAngularEvent, post: FiresidePost) => this.onPostAdded(post),
+			(_event: ng.IAngularEvent, post: FiresidePost) => this.onPostAdded(post)
 		);
 	}
 

@@ -8,7 +8,7 @@ angular
 		$injector,
 		Environment,
 		AutoScroll,
-		gettextCatalog,
+		gettextCatalog
 	) {
 		var STORAGE_KEY = 'game-filtering:filters';
 
@@ -47,7 +47,7 @@ angular
 					unity: gettextCatalog.getString('games.filtering.browser_unity'),
 					applet: gettextCatalog.getString('games.filtering.browser_applet'),
 					silverlight: gettextCatalog.getString(
-						'games.filtering.browser_silverlight',
+						'games.filtering.browser_silverlight'
 					),
 				},
 			},
@@ -56,7 +56,7 @@ angular
 				type: 'array',
 				options: {
 					everyone: gettextCatalog.getString(
-						'games.filtering.maturity_everyone',
+						'games.filtering.maturity_everyone'
 					),
 					teen: gettextCatalog.getString('games.filtering.maturity_teen'),
 					adult: gettextCatalog.getString('games.filtering.maturity_adult'),
@@ -130,7 +130,7 @@ angular
 						this.filters[key] = null;
 					}
 				},
-				this,
+				this
 			);
 
 			// This is whether or not the filters are empty that we need for tags.
@@ -169,7 +169,7 @@ angular
 					// This ensures that they can view a shared URL with them without overwriting their filters.
 					angular.forEach(Game_Filtering_Container.filterDefinitions, function(
 						definition,
-						filter,
+						filter
 					) {
 						if (stateParams[filter]) {
 							if (definition.type == 'array') {
@@ -220,7 +220,7 @@ angular
 						// TODO: Would be nice to not have to manually add every single one in, but rather just a single filter for all browser types.
 						if (!GJ_IS_CLIENT) {
 							filters.browser = Object.keys(
-								Game_Filtering_Container.filterDefinitions.browser.options,
+								Game_Filtering_Container.filterDefinitions.browser.options
 							);
 						} else {
 							// On client we only do HTML for now.
@@ -241,7 +241,7 @@ angular
 
 		Game_Filtering_Container.prototype.toggleFilterOption = function(
 			filter,
-			option,
+			option
 		) {
 			if (
 				!Game_Filtering_Container.filterDefinitions[filter] ||
@@ -303,7 +303,7 @@ angular
 
 		Game_Filtering_Container.prototype.isFilterOptionSet = function(
 			filter,
-			option,
+			option
 		) {
 			if (
 				!Game_Filtering_Container.filterDefinitions[filter] ||
@@ -390,7 +390,7 @@ angular
 						queryPieces.push('f_' + filter + '=' + value);
 					}
 				},
-				this,
+				this
 			);
 
 			return queryPieces.join('&');
@@ -436,7 +436,7 @@ angular
 						params[filter] = value;
 					}
 				},
-				this,
+				this
 			);
 
 			return params;

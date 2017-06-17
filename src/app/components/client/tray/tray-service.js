@@ -19,7 +19,7 @@ angular
 		Screen,
 		Client,
 		App,
-		Environment,
+		Environment
 	) {
 		var gui = require('nw.gui');
 
@@ -104,11 +104,11 @@ angular
 							$state.go(
 								'discover.games.list._fetch',
 								{ section: 'featured' },
-								{ inherit: false },
+								{ inherit: false }
 							);
 							Client.show();
 						},
-					}),
+					})
 				);
 
 				menu.append(new gui.MenuItem({ type: 'separator' }));
@@ -120,7 +120,7 @@ angular
 							$state.go('library.installed');
 							Client.show();
 						},
-					}),
+					})
 				);
 
 				menu.append(
@@ -130,7 +130,7 @@ angular
 							$state.go('dash.main.overview');
 							Client.show();
 						},
-					}),
+					})
 				);
 
 				menu.append(
@@ -140,7 +140,7 @@ angular
 							$state.go('dash.account.edit');
 							Client.show();
 						},
-					}),
+					})
 				);
 
 				menu.append(
@@ -150,7 +150,7 @@ angular
 							$state.go('profile.overview', { username: App.user.username });
 							Client.show();
 						},
-					}),
+					})
 				);
 
 				menu.append(
@@ -160,7 +160,7 @@ angular
 							$injector.get('User_TokenModal').show();
 							Client.show();
 						},
-					}),
+					})
 				);
 
 				menu.append(
@@ -170,7 +170,7 @@ angular
 							$state.go('settings');
 							Client.show();
 						},
-					}),
+					})
 				);
 
 				menu.append(new gui.MenuItem({ type: 'separator' }));
@@ -182,7 +182,7 @@ angular
 							App.logout();
 							Client.show();
 						},
-					}),
+					})
 				);
 			}
 
@@ -192,7 +192,7 @@ angular
 					click: function() {
 						Client.quit();
 					},
-				}),
+				})
 			);
 
 			tray.menu = menu;

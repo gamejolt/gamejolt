@@ -18,7 +18,7 @@ export class AppComponent {
 		@Inject('HistoryNavigator')
 		@Host()
 		@Optional()
-		HistoryNavigator: any,
+		HistoryNavigator: any
 	) {
 		$scope['$state'] = $state;
 		$scope['App'] = App;

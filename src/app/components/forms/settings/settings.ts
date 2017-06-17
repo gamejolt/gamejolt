@@ -30,7 +30,7 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 
 	onInit() {
 		this.formModel.chat_notify_friends_online = Settings.get(
-			'chat-notify-friends-online',
+			'chat-notify-friends-online'
 		);
 		this.formModel.restricted_browsing = Settings.get('restricted-browsing');
 		this.formModel.broadcast_modal = Settings.get('broadcast-modal');
@@ -87,7 +87,7 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 	onChange() {
 		Settings.set(
 			'chat-notify-friends-online',
-			this.formModel.chat_notify_friends_online,
+			this.formModel.chat_notify_friends_online
 		);
 		Settings.set('restricted-browsing', this.formModel.restricted_browsing);
 		Settings.set('broadcast-modal', this.formModel.broadcast_modal);

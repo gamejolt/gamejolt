@@ -10,7 +10,7 @@ angular.module('App.Views').config(function($stateProvider) {
 					'/web/dash/developer/games/api/scores/' +
 						$stateParams.id +
 						'/' +
-						$stateParams.score,
+						$stateParams.score
 				);
 			},
 		},

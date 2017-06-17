@@ -65,7 +65,7 @@ export class AppKeyGame extends Vue {
 		} else if (this.payload.type === 'bundle-game' && this.bundle) {
 			Meta.title = this.$gettextInterpolate(
 				`Key Page for %{ game } in %{ bundle }`,
-				{ game: this.game.title, bundle: this.bundle.title },
+				{ game: this.game.title, bundle: this.bundle.title }
 			);
 		}
 

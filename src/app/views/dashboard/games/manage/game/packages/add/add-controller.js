@@ -5,7 +5,7 @@ angular
 		function($scope, $state, App, gettextCatalog) {
 			App.title = gettextCatalog.getString(
 				'dash.games.packages.add.page_title',
-				{ game: $scope.manageCtrl.game.title },
+				{ game: $scope.manageCtrl.game.title }
 			);
 
 			this.onPackageAdded = onPackageAdded;
@@ -15,5 +15,5 @@ angular
 					packageId: newPackage.id,
 				});
 			}
-		},
+		}
 	);

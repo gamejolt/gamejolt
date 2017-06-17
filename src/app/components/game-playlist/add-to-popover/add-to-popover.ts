@@ -46,7 +46,7 @@ export class AppGamePlaylistAddToPopover extends Vue {
 	get filteredPlaylists() {
 		return this.playlists
 			.filter(item =>
-				fuzzysearch(this.filterQuery.toLowerCase(), item.name.toLowerCase()),
+				fuzzysearch(this.filterQuery.toLowerCase(), item.name.toLowerCase())
 			)
 			.sort((a, b) => stringSort(a.name, b.name));
 	}

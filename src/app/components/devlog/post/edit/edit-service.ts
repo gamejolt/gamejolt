@@ -25,7 +25,7 @@ export class DevlogPostEdit {
 							lazyload(() => {
 								require('../../../../views/dashboard/dashboard.module');
 							}),
-						'dash',
+						'dash'
 					);
 				},
 				post: () => post,

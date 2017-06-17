@@ -8,13 +8,13 @@ angular
 			Game_DataStore_Item,
 			ModalConfirm,
 			gettextCatalog,
-			payload,
+			payload
 		) {
 			var _this = this;
 
 			App.title = gettextCatalog.getString(
 				'dash.games.data_store.items.page_title',
-				{ game: $scope.manageCtrl.game.title },
+				{ game: $scope.manageCtrl.game.title }
 			);
 
 			this.items = Game_DataStore_Item.populate(payload.items);
@@ -22,8 +22,8 @@ angular
 			this.removeItem = function(item) {
 				ModalConfirm.show(
 					gettextCatalog.getString(
-						'dash.games.data_store.items.remove_confirmation',
-					),
+						'dash.games.data_store.items.remove_confirmation'
+					)
 				)
 					.then(function() {
 						return item.$remove();
@@ -32,5 +32,5 @@ angular
 						_.remove(_this.items, { id: item.id });
 					});
 			};
-		},
+		}
 	);

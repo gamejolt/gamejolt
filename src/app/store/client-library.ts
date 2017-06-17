@@ -235,7 +235,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexAction
 	async retryInstallPackage(
-		localPackage: Actions['clientLibrary/retryInstallPackage'],
+		localPackage: Actions['clientLibrary/retryInstallPackage']
 	) {
 		// Reset states.
 		const downloadStates = [
@@ -274,7 +274,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexAction
 	async _installPackage(
-		[localGame, localPackage]: Actions['clientLibrary/_installPackage'],
+		[localGame, localPackage]: Actions['clientLibrary/_installPackage']
 	) {
 		const operation = localPackage.install_state ? 'install' : 'update';
 		let packageTitle = localPackage.title || localGame.title;
@@ -292,7 +292,7 @@ export class ClientLibraryStore extends VuexStore<
 					path.join(
 						Settings.get('game-install-dir'),
 						localGame.slug + '-' + localGame.id,
-						(localPackage.title || 'default') + '-' + localPackage.id,
+						(localPackage.title || 'default') + '-' + localPackage.id
 					),
 				]);
 				needsSaving = true;
@@ -437,7 +437,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexMutation
 	setPatchingPackage(
-		[localPackage, patchHandle]: Mutations['clientLibrary/setPatchingPackage'],
+		[localPackage, patchHandle]: Mutations['clientLibrary/setPatchingPackage']
 	) {
 		if (this.currentlyPatching[localPackage.id]) {
 			return;
@@ -449,7 +449,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexMutation
 	unsetPatchingPackage(
-		localPackage: Mutations['clientLibrary/unsetPatchingPackage'],
+		localPackage: Mutations['clientLibrary/unsetPatchingPackage']
 	) {
 		if (!this.currentlyPatching[localPackage.id]) {
 			return;
@@ -464,7 +464,7 @@ export class ClientLibraryStore extends VuexStore<
 		[
 			localPackage,
 			uninstallPromise,
-		]: Mutations['clientLibrary/setCurrentlyUninstalling'],
+		]: Mutations['clientLibrary/setCurrentlyUninstalling']
 	) {
 		if (this.currentlyUninstalling[localPackage.id]) {
 			return;
@@ -475,7 +475,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexMutation
 	unsetCurrentlyUninstalling(
-		localPackage: Mutations['clientLibrary/unsetCurrentlyUninstalling'],
+		localPackage: Mutations['clientLibrary/unsetCurrentlyUninstalling']
 	) {
 		if (!this.currentlyUninstalling[localPackage.id]) {
 			return;
@@ -486,7 +486,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexMutation
 	pausePatchingPackage(
-		localPackage: Mutations['clientLibrary/pausePatchingPackage'],
+		localPackage: Mutations['clientLibrary/pausePatchingPackage']
 	) {
 		const handle = this.currentlyPatching[localPackage.id];
 		if (!handle) {
@@ -498,7 +498,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexMutation
 	resumePatchingPackage(
-		localPackage: Mutations['clientLibrary/resumePatchingPackage'],
+		localPackage: Mutations['clientLibrary/resumePatchingPackage']
 	) {
 		const handle = this.currentlyPatching[localPackage.id];
 		if (!handle) {
@@ -510,7 +510,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexAction
 	cancelPatchingPackage(
-		localPackage: Actions['clientLibrary/cancelPatchingPackage'],
+		localPackage: Actions['clientLibrary/cancelPatchingPackage']
 	) {
 		return new Promise<void>(resolve => {
 			const patchHandle = this.currentlyPatching[localPackage.id];
@@ -538,7 +538,7 @@ export class ClientLibraryStore extends VuexStore<
 			release,
 			build,
 			launchOptions,
-		]: Actions['clientLibrary/installPackage'],
+		]: Actions['clientLibrary/installPackage']
 	) {
 		HistoryTick.sendBeacon('game-build', build.id, {
 			sourceResource: 'Game',
@@ -572,7 +572,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexAction
 	async updatePackage(
-		[localPackage, newBuildId]: Actions['clientLibrary/updatePackage'],
+		[localPackage, newBuildId]: Actions['clientLibrary/updatePackage']
 	) {
 		// If this package isn't installed (and at rest), we don't update.
 		// We also don't update if we're currently running the game. Imagine that happening!
@@ -588,7 +588,7 @@ export class ClientLibraryStore extends VuexStore<
 		const response = await Api.sendRequest(
 			'/web/client/get-build-for-update/' + newBuildId,
 			null,
-			{ detach: true },
+			{ detach: true }
 		);
 		if (!response.package) {
 			return false;
@@ -608,7 +608,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexAction
 	async uninstallPackage(
-		localPackage: Actions['clientLibrary/uninstallPackage'],
+		localPackage: Actions['clientLibrary/uninstallPackage']
 	) {
 		let localGame: LocalDbGame | undefined;
 
@@ -663,7 +663,7 @@ export class ClientLibraryStore extends VuexStore<
 								(localPackage.title ||
 									(localGame ? localGame.title : 'the package')) +
 								' from your computer.',
-							'Package Removed',
+							'Package Removed'
 						);
 					}
 				} catch (err) {
@@ -677,7 +677,7 @@ export class ClientLibraryStore extends VuexStore<
 								(localPackage.title ||
 									(localGame ? localGame.title : 'the package')) +
 								'.',
-							'Remove Failed',
+							'Remove Failed'
 						);
 					}
 
@@ -688,7 +688,7 @@ export class ClientLibraryStore extends VuexStore<
 					await db.packages.put(localPackage);
 					this.unsetCurrentlyUninstalling(localPackage);
 				}
-			},
+			}
 		);
 
 		this.setCurrentlyUninstalling([localPackage, uninstallingPromise]);
@@ -697,7 +697,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexAction
 	async _uninstallPackage(
-		packageId: Actions['clientLibrary/_uninstallPackage'],
+		packageId: Actions['clientLibrary/_uninstallPackage']
 	) {
 		const localPackage = this.packagesById[packageId];
 		if (!localPackage) {
@@ -736,7 +736,7 @@ export class ClientLibraryStore extends VuexStore<
 			release,
 			build,
 			launchOptions,
-		]: Mutations['clientLibrary/setPackageData'],
+		]: Mutations['clientLibrary/setPackageData']
 	) {
 		_setPackageData(localPackage, _package, release, build, launchOptions);
 	}
@@ -749,7 +749,7 @@ export class ClientLibraryStore extends VuexStore<
 			release,
 			build,
 			launchOptions,
-		]: Mutations['clientLibrary/setPackageUpdateData'],
+		]: Mutations['clientLibrary/setPackageUpdateData']
 	) {
 		localPackage.update = new LocalDbPackage();
 		_setPackageData(
@@ -757,14 +757,14 @@ export class ClientLibraryStore extends VuexStore<
 			_package,
 			release,
 			build,
-			launchOptions,
+			launchOptions
 		);
 		localPackage.update_state = LocalDbPackage.PATCH_PENDING;
 	}
 
 	@VuexMutation
 	setPackageInstalled(
-		localPackage: Mutations['clientLibrary/setPackageInstalled'],
+		localPackage: Mutations['clientLibrary/setPackageInstalled']
 	) {
 		// Remove any stuff only needed while installing.
 		localPackage.install_state = null;
@@ -776,7 +776,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexMutation
 	setPackageUpdated(
-		localPackage: Mutations['clientLibrary/setPackageUpdated'],
+		localPackage: Mutations['clientLibrary/setPackageUpdated']
 	) {
 		// Copy the new package into this one.
 		// this.assign( this.update );
@@ -794,7 +794,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexMutation
 	setPackageUninstalling(
-		localPackage: Mutations['clientLibrary/setPackageUninstalling'],
+		localPackage: Mutations['clientLibrary/setPackageUninstalling']
 	) {
 		// TODO: do we need to clean update state?
 		localPackage.install_state = null;
@@ -807,42 +807,42 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexMutation
 	setPackageInstallState(
-		[localPackage, state]: Mutations['clientLibrary/setPackageInstallState'],
+		[localPackage, state]: Mutations['clientLibrary/setPackageInstallState']
 	) {
 		localPackage.install_state = state;
 	}
 
 	@VuexMutation
 	setPackageUpdateState(
-		[localPackage, state]: Mutations['clientLibrary/setPackageUpdateState'],
+		[localPackage, state]: Mutations['clientLibrary/setPackageUpdateState']
 	) {
 		localPackage.update_state = state;
 	}
 
 	@VuexMutation
 	setPackageRemoveState(
-		[localPackage, state]: Mutations['clientLibrary/setPackageRemoveState'],
+		[localPackage, state]: Mutations['clientLibrary/setPackageRemoveState']
 	) {
 		localPackage.remove_state = state;
 	}
 
 	@VuexMutation
 	setPackageInstallDir(
-		[localPackage, dir]: Mutations['clientLibrary/setPackageInstallDir'],
+		[localPackage, dir]: Mutations['clientLibrary/setPackageInstallDir']
 	) {
 		localPackage.install_dir = dir;
 	}
 
 	@VuexMutation
 	setPackagePatchQueued(
-		[localPackage, queued]: Mutations['clientLibrary/setPackagePatchQueued'],
+		[localPackage, queued]: Mutations['clientLibrary/setPackagePatchQueued']
 	) {
 		localPackage.patch_queued = queued;
 	}
 
 	@VuexMutation
 	setPackagePatchPaused(
-		[localPackage, paused]: Mutations['clientLibrary/setPackagePatchPaused'],
+		[localPackage, paused]: Mutations['clientLibrary/setPackagePatchPaused']
 	) {
 		localPackage.patch_paused = paused;
 	}
@@ -852,7 +852,7 @@ export class ClientLibraryStore extends VuexStore<
 		[
 			localPackage,
 			progress,
-		]: Mutations['clientLibrary/setPackageDownloadProgress'],
+		]: Mutations['clientLibrary/setPackageDownloadProgress']
 	) {
 		localPackage.download_progress = progress;
 	}
@@ -862,7 +862,7 @@ export class ClientLibraryStore extends VuexStore<
 		[
 			localPackage,
 			progress,
-		]: Mutations['clientLibrary/setPackageUnpackProgress'],
+		]: Mutations['clientLibrary/setPackageUnpackProgress']
 	) {
 		localPackage.unpack_progress = progress;
 	}
@@ -887,7 +887,7 @@ export class ClientLibraryStore extends VuexStore<
 	@VuexGetter
 	searchInstalledGames(query: string) {
 		let games = this.games.filter(game =>
-			fuzzysearch(query.toLowerCase(), game.title.toLowerCase()),
+			fuzzysearch(query.toLowerCase(), game.title.toLowerCase())
 		);
 
 		if (games.length > 0) {
@@ -903,7 +903,7 @@ function _setPackageData(
 	_package: GamePackage,
 	release: GameRelease,
 	build: GameBuild,
-	launchOptions: GameBuildLaunchOption[],
+	launchOptions: GameBuildLaunchOption[]
 ) {
 	localPackage.id = _package.id;
 	localPackage.game_id = _package.game_id;

@@ -402,7 +402,7 @@ export class SiteAnalytics {
 			const possibleMetrics: MetricKey[] = ['download'];
 			this._packageMetrics = <MetricMap>objectPick(
 				this.allMetrics,
-				possibleMetrics,
+				possibleMetrics
 			);
 		}
 
@@ -424,7 +424,7 @@ export class SiteAnalytics {
 		resourceId: number,
 		metrics: MetricMap,
 		partnerMode: boolean,
-		dates: DateRange,
+		dates: DateRange
 	) {
 		const request = this.generateAggregationRequest(
 			resource,
@@ -432,13 +432,13 @@ export class SiteAnalytics {
 			metrics,
 			'histogram',
 			partnerMode,
-			dates,
+			dates
 		);
 
 		const response = await Api.sendRequest(
 			'/web/dash/analytics/display',
 			request,
-			{ sanitizeComplexData: false },
+			{ sanitizeComplexData: false }
 		);
 
 		let data: any = {};
@@ -463,7 +463,7 @@ export class SiteAnalytics {
 		resourceId: number,
 		metrics: MetricMap,
 		partnerMode: boolean,
-		dates?: DateRange,
+		dates?: DateRange
 	) {
 		const request = this.generateAggregationRequest(
 			resource,
@@ -471,13 +471,13 @@ export class SiteAnalytics {
 			metrics,
 			'count',
 			partnerMode,
-			dates,
+			dates
 		);
 
 		const response = await Api.sendRequest(
 			'/web/dash/analytics/display',
 			request,
-			{ sanitizeComplexData: false },
+			{ sanitizeComplexData: false }
 		);
 
 		let data: any = {};
@@ -504,7 +504,7 @@ export class SiteAnalytics {
 		metrics: MetricMap,
 		analyzer: Analyzer,
 		partnerMode: boolean,
-		dates?: DateRange,
+		dates?: DateRange
 	) {
 		let request: { [k: string]: Request } = {};
 

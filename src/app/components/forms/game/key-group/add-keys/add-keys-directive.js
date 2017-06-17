@@ -3,7 +3,7 @@ angular
 	.directive('gjFormDashboardGameKeyGroupAddKeys', function(
 		Form,
 		KeyGroup,
-		Api,
+		Api
 	) {
 		var form = new Form({
 			template: require('./add-keys.html'),
@@ -21,7 +21,7 @@ angular
 					scope.keyGroup.game_id +
 					'/' +
 					scope.keyGroup.id,
-				scope.formModel,
+				scope.formModel
 			);
 		};
 

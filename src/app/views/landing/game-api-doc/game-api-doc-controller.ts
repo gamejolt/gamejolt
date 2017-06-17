@@ -7,7 +7,7 @@ export class GameApiDocCtrl {
 		@Inject('App') app: App,
 		@Inject('gettextCatalog') gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject('path') public path: string,
-		@Inject('nav') public nav: any,
+		@Inject('nav') public nav: any
 	) {
 		app.title = gettextCatalog.getString('Game API Documentation');
 	}

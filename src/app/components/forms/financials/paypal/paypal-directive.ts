@@ -12,7 +12,7 @@ export class PaypalComponent {
 	@Input('<') user: any;
 
 	constructor(
-		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog
 	) {}
 
 	linkPayPal() {
@@ -32,7 +32,7 @@ export class PaypalComponent {
 			})
 			.catch(() => {
 				Growls.error(
-					this.gettextCatalog.getString('Could not get PayPal redirect URL.'),
+					this.gettextCatalog.getString('Could not get PayPal redirect URL.')
 				);
 			});
 	}

@@ -12,7 +12,7 @@ export class SearchCtrl {
 
 	constructor(
 		@Inject('$state') private $state: StateService,
-		@Inject('$scope') $scope: ng.IScope,
+		@Inject('$scope') $scope: ng.IScope
 	) {
 		$scope['Search'] = Search;
 

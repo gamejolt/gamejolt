@@ -53,7 +53,7 @@ export default class RouteForumsChannelsView extends Vue {
 			'/web/forums/channels/' +
 				route.params.name +
 				'?page=' +
-				(route.query.page || 1),
+				(route.query.page || 1)
 		);
 	}
 

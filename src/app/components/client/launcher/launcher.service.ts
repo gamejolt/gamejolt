@@ -61,7 +61,7 @@ export class ClientLauncher {
 			});
 		} catch (e) {
 			console.log(
-				'Could not get game token to launch with - launching anyways',
+				'Could not get game token to launch with - launching anyways'
 			);
 			console.error(e);
 		}
@@ -74,7 +74,7 @@ export class ClientLauncher {
 				localPackage,
 				os,
 				arch,
-				credentials,
+				credentials
 			).promise;
 			return await this.attach(localPackage, launchInstance);
 		} catch (e) {
@@ -88,7 +88,7 @@ export class ClientLauncher {
 		try {
 			if (!localPackage.running_pid) {
 				throw new Error(
-					"Cannot reattach to package (it isn't supposed to be running)",
+					"Cannot reattach to package (it isn't supposed to be running)"
 				);
 			}
 
@@ -102,7 +102,7 @@ export class ClientLauncher {
 
 	static attach(
 		localPackage: LocalDbPackage,
-		launchInstance: LaunchInstanceHandle,
+		launchInstance: LaunchInstanceHandle
 	) {
 		this.currentlyPlaying.push(localPackage);
 

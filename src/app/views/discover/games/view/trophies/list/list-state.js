@@ -7,7 +7,7 @@ angular.module('App.Views').config(function($stateProvider) {
 		resolve: {
 			payload: function(Api, $stateParams) {
 				return Api.sendRequest(
-					'/web/discover/games/trophies/' + $stateParams.id,
+					'/web/discover/games/trophies/' + $stateParams.id
 				);
 			},
 		},

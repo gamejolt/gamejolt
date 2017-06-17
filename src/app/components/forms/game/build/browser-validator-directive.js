@@ -2,14 +2,14 @@ angular
 	.module('App.Forms.Dashboard')
 	.directive('gjFormDashboardGameBuildBrowserValidator', function(
 		$parse,
-		Game_Build,
+		Game_Build
 	) {
 		return {
 			restrict: 'A',
 			require: 'ngModel',
 			link: function(scope, element, attrs, ngModel) {
 				var model = $parse(attrs.gjFormDashboardGameBuildBrowserValidator)(
-					scope,
+					scope
 				);
 
 				// Update the model so the validator kicks in whenever value changes.
@@ -24,7 +24,7 @@ angular
 					},
 					function(val) {
 						ngModel.$setViewValue(val);
-					},
+					}
 				);
 
 				ngModel.$validators.browser = function(modelVal, viewVal) {

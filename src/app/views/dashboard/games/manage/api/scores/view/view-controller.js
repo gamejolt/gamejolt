@@ -8,7 +8,7 @@ angular
 		Game_ScoreTable,
 		ModalConfirm,
 		gettextCatalog,
-		payload,
+		payload
 	) {
 		var _this = this;
 
@@ -21,7 +21,7 @@ angular
 
 		this.removeScore = function(score) {
 			ModalConfirm.show(
-				gettextCatalog.getString('dash.games.scores.view.remove_confirmation'),
+				gettextCatalog.getString('dash.games.scores.view.remove_confirmation')
 			)
 				.then(function() {
 					return _this.score.$remove();

@@ -38,8 +38,8 @@ module.exports = function(config) {
 				.pipe(
 					plugins.replace(
 						'<base href="/">',
-						'<base href="/' + section + '.html">',
-					),
+						'<base href="/' + section + '.html">'
+					)
 				)
 				.pipe(gulp.dest(config.buildDir));
 		});

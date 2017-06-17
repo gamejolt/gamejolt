@@ -18,7 +18,7 @@ export default class RouteAuthLinkedAccountTwitterCallback extends Vue {
 				oauth_verifier +
 				'&state=' +
 				state,
-			{},
+			{}
 		);
 	}
 
@@ -36,7 +36,7 @@ export default class RouteAuthLinkedAccountTwitterCallback extends Vue {
 				Growls.error({
 					sticky: true,
 					title: this.$gettext(
-						'auth.linked_account.twitter.failed_growl_title',
+						'auth.linked_account.twitter.failed_growl_title'
 					),
 					message: this.$gettext('auth.linked_account.twitter.failed_growl'),
 				});

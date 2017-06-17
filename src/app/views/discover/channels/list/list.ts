@@ -33,7 +33,7 @@ export default class RouteDiscoverChannelsList extends Vue {
 	routed() {
 		this.channels = this.$payload.channels;
 		this.$payload.gameCounts.forEach((item: any) =>
-			this.$set(this.gameCounts, item.channel, item.count),
+			this.$set(this.gameCounts, item.channel, item.count)
 		);
 	}
 }

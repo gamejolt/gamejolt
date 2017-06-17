@@ -19,7 +19,7 @@ angular
 		LocalDb,
 		LocalDb_Game,
 		LocalDb_Package,
-		HistoryTick,
+		HistoryTick
 	) {
 		var _this = this;
 
@@ -120,7 +120,7 @@ angular
 			_package,
 			_release,
 			_build,
-			_launchOptions,
+			_launchOptions
 		) {
 			HistoryTick.sendBeacon('game-build', _build.id, {
 				sourceResource: 'Game',
@@ -136,7 +136,7 @@ angular
 				_package,
 				_release,
 				_build,
-				_launchOptions,
+				_launchOptions
 			);
 
 			LocalDb.transaction('rw', [LocalDb_Game, LocalDb_Package], function() {

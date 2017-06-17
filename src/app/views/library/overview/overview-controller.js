@@ -6,7 +6,7 @@ angular
 		App,
 		GameCollection,
 		Shell,
-		gettextCatalog,
+		gettextCatalog
 	) {
 		var _this = this;
 
@@ -70,6 +70,6 @@ angular
 						_this.followedCollections.push(collection);
 					}
 				});
-			},
+			}
 		);
 	});

@@ -27,7 +27,7 @@ export default class RouteDashAccountEdit extends Vue {
 
 	onProfileSaved() {
 		Growls.success(
-			this.$gettext(`Your information has been updated. Right on!`),
+			this.$gettext(`Your information has been updated. Right on!`)
 		);
 		Scroll.to(0);
 	}

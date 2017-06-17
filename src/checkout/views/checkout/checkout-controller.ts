@@ -14,7 +14,7 @@ export class CheckoutCtrl {
 
 	constructor(
 		@Inject('$window') private $window: ng.IWindowService,
-		@Inject('payload') payload: any,
+		@Inject('payload') payload: any
 	) {
 		this.cards = payload.cards || [];
 		this.sellable = new Sellable(payload.sellable);

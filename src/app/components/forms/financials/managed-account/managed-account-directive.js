@@ -12,7 +12,7 @@ angular
 		Growls,
 		Environment,
 		Geo,
-		currencyFilter,
+		currencyFilter
 	) {
 		var form = new Form({
 			template: require('./managed-account.html'),
@@ -157,16 +157,16 @@ angular
 				return (
 					scope.helpers.requiresField('legal_entity.verification.document') ||
 					scope.helpers.requiresField(
-						'legal_entity.additional_owners.0.verification.document',
+						'legal_entity.additional_owners.0.verification.document'
 					) ||
 					scope.helpers.requiresField(
-						'legal_entity.additional_owners.1.verification.document',
+						'legal_entity.additional_owners.1.verification.document'
 					) ||
 					scope.helpers.requiresField(
-						'legal_entity.additional_owners.2.verification.document',
+						'legal_entity.additional_owners.2.verification.document'
 					) ||
 					scope.helpers.requiresField(
-						'legal_entity.additional_owners.3.verification.document',
+						'legal_entity.additional_owners.3.verification.document'
 					)
 				);
 			};
@@ -200,13 +200,13 @@ angular
 
 				function copyOwnerData(oldIndex, newIndex) {
 					var regex = new RegExp(
-						'legal_entity-additional_owners-' + oldIndex + '-',
+						'legal_entity-additional_owners-' + oldIndex + '-'
 					);
 					for (var field in scope.formModel) {
 						if (regex.test(field)) {
 							var newField = field.replace(
 								'-' + oldIndex + '-',
-								'-' + newIndex + '-',
+								'-' + newIndex + '-'
 							);
 							scope.formModel[newField] = scope.formModel[field];
 						}
@@ -244,7 +244,7 @@ angular
 				formData.append(
 					'file',
 					document.getElementById(inputId).querySelector("input[type='file']")
-						.files[0],
+						.files[0]
 				);
 
 				var xhr = new XMLHttpRequest();
@@ -282,7 +282,7 @@ angular
 						} else {
 							resolve(response.id);
 						}
-					},
+					}
 				);
 			});
 		}
@@ -319,7 +319,7 @@ angular
 							return uploadIdDocument(
 								'legal_entity-additional_owners-' +
 									curIndex +
-									'-verification-document-input',
+									'-verification-document-input'
 							);
 						})
 						.then(function(response) {

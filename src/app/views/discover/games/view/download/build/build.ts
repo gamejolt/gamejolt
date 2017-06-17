@@ -61,7 +61,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends Vue {
 		});
 
 		return Api.sendRequest(
-			`/web/discover/games/builds/download-page/${gameId}/${buildId}`,
+			`/web/discover/games/builds/download-page/${gameId}/${buildId}`
 		);
 	}
 

@@ -6,5 +6,5 @@ angular
 		App,
 		GameCollection,
 		GamePlaylist_SaveModal,
-		libraryPayload,
+		libraryPayload
 	) {});

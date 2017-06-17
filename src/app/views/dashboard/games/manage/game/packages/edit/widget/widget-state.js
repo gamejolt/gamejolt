@@ -11,7 +11,7 @@ angular.module('App.Views').config(function($stateProvider) {
 					'/web/dash/developer/games/packages/preview/' +
 						$stateParams.id +
 						'/' +
-						$stateParams.packageId,
+						$stateParams.packageId
 				);
 			},
 		},

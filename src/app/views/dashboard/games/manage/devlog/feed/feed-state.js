@@ -16,7 +16,7 @@ angular.module('App.Views').config(function($stateProvider) {
 					'/web/dash/developer/games/devlog/posts/' +
 						$stateParams['id'] +
 						'/' +
-						$stateParams['tab'],
+						$stateParams['tab']
 				);
 			},
 		},

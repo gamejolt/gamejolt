@@ -27,7 +27,7 @@ export class WizardControlsComponent {
 		@SkipSelf()
 		@Optional()
 		private gjForm: any,
-		@Inject('FormDashboardGameWizard') private wizard: FormDashboardGameWizard,
+		@Inject('FormDashboardGameWizard') private wizard: FormDashboardGameWizard
 	) {
 		this.inForm = !!this.gjForm;
 	}

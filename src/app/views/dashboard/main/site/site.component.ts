@@ -16,7 +16,7 @@ export class RouteSiteComponent implements OnInit {
 	site?: Site;
 
 	constructor(
-		@Inject('gettextCatalog') gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject('gettextCatalog') gettextCatalog: ng.gettext.gettextCatalog
 	) {
 		Meta.title = gettextCatalog.getString('Manage Site');
 	}

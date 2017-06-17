@@ -51,7 +51,7 @@ export default class RouteDashMainPurchasesView extends Vue {
 		this.games = arrayIndexBy(Game.populate(this.$payload.games), 'id');
 
 		const packages: GamePackage[] = GamePackage.populate(
-			this.$payload.packages,
+			this.$payload.packages
 		);
 		this.packagesBySellable = {};
 		for (const _package of packages) {

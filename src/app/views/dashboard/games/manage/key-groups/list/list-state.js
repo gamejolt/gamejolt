@@ -7,7 +7,7 @@ angular.module('App.Views').config(function($stateProvider) {
 		resolve: {
 			payload: function($stateParams, Api) {
 				return Api.sendRequest(
-					'/web/dash/developer/games/key-groups/' + $stateParams.id,
+					'/web/dash/developer/games/key-groups/' + $stateParams.id
 				);
 			},
 		},

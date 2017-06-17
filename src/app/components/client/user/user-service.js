@@ -8,7 +8,7 @@ angular
 		$rootScope,
 		Environment,
 		App,
-		User,
+		User
 	) {
 		var _this = this;
 

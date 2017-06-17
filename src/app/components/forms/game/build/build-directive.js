@@ -12,7 +12,7 @@ angular
 		Game_Build_LaunchOption,
 		Growls,
 		gettextCatalog,
-		$timeout,
+		$timeout
 	) {
 		var form = new Form({
 			model: 'Game_Build',
@@ -72,7 +72,7 @@ angular
 				];
 
 				Api.sendRequest(
-					'/web/dash/developer/games/builds/save/' + params.join('/'),
+					'/web/dash/developer/games/builds/save/' + params.join('/')
 				).then(function(payload) {
 					scope.isLoaded = true;
 					angular.extend(scope, payload);
@@ -89,13 +89,13 @@ angular
 				windows: {
 					icon: 'windows',
 					label: gettextCatalog.getString(
-						'dash.games.releases.builds.windows_tag',
+						'dash.games.releases.builds.windows_tag'
 					),
 				},
 				windows_64: {
 					icon: 'windows',
 					label: gettextCatalog.getString(
-						'dash.games.releases.builds.windows_64_tag',
+						'dash.games.releases.builds.windows_64_tag'
 					),
 				},
 				mac: {
@@ -105,25 +105,25 @@ angular
 				mac_64: {
 					icon: 'mac',
 					label: gettextCatalog.getString(
-						'dash.games.releases.builds.mac_64_tag',
+						'dash.games.releases.builds.mac_64_tag'
 					),
 				},
 				linux: {
 					icon: 'linux',
 					label: gettextCatalog.getString(
-						'dash.games.releases.builds.linux_tag',
+						'dash.games.releases.builds.linux_tag'
 					),
 				},
 				linux_64: {
 					icon: 'linux',
 					label: gettextCatalog.getString(
-						'dash.games.releases.builds.linux_64_tag',
+						'dash.games.releases.builds.linux_64_tag'
 					),
 				},
 				other: {
 					icon: 'other-os',
 					label: gettextCatalog.getString(
-						'dash.games.releases.builds.other_tag',
+						'dash.games.releases.builds.other_tag'
 					),
 				},
 			};
@@ -137,7 +137,7 @@ angular
 				{
 					key: 'windows_64',
 					label: gettextCatalog.getString(
-						'dash.games.builds.form.windows_64_tag',
+						'dash.games.builds.form.windows_64_tag'
 					),
 					icon: 'windows',
 				},
@@ -159,7 +159,7 @@ angular
 				{
 					key: 'linux_64',
 					label: gettextCatalog.getString(
-						'dash.games.builds.form.linux_64_tag',
+						'dash.games.builds.form.linux_64_tag'
 					),
 					icon: 'linux',
 				},
@@ -224,7 +224,7 @@ angular
 				return Api.sendRequest(
 					'/web/dash/developer/games/builds/set-platform/' + params.join('/'),
 					{},
-					{ detach: true },
+					{ detach: true }
 				)
 					.then(function(response) {
 						scope.baseModel.assign(new Game_Build(response.gameBuild));
@@ -247,8 +247,8 @@ angular
 					.catch(function() {
 						Growls.error(
 							gettextCatalog.getString(
-								'Could not set the platform for some reason.',
-							),
+								'Could not set the platform for some reason.'
+							)
 						);
 						scope.formState.isSettingPlatform = false;
 					});
@@ -258,22 +258,22 @@ angular
 		function setupEmulators(scope) {
 			scope.emulatorInfo = {};
 			scope.emulatorInfo[Game_Build.EMULATOR_GB] = gettextCatalog.getString(
-				'Game Boy',
+				'Game Boy'
 			);
 			scope.emulatorInfo[Game_Build.EMULATOR_GBC] = gettextCatalog.getString(
-				'Game Boy Color',
+				'Game Boy Color'
 			);
 			scope.emulatorInfo[Game_Build.EMULATOR_GBA] = gettextCatalog.getString(
-				'Game Boy Advance',
+				'Game Boy Advance'
 			);
 			scope.emulatorInfo[Game_Build.EMULATOR_NES] = gettextCatalog.getString(
-				'NES',
+				'NES'
 			);
 			scope.emulatorInfo[Game_Build.EMULATOR_SNES] = gettextCatalog.getString(
-				'SNES',
+				'SNES'
 			);
 			scope.emulatorInfo[Game_Build.EMULATOR_VBOY] = gettextCatalog.getString(
-				'Virtual Boy',
+				'Virtual Boy'
 			);
 			scope.emulatorInfo[
 				Game_Build.EMULATOR_GENESIS
@@ -282,23 +282,23 @@ angular
 				Game_Build.EMULATOR_ATARI2600
 			] = gettextCatalog.getString('Atari 2600');
 			scope.emulatorInfo[Game_Build.EMULATOR_ZX] = gettextCatalog.getString(
-				'ZX Spectrum',
+				'ZX Spectrum'
 			);
 			scope.emulatorInfo[Game_Build.EMULATOR_C64] = gettextCatalog.getString(
-				'Commodore 64',
+				'Commodore 64'
 			);
 			scope.emulatorInfo[Game_Build.EMULATOR_CPC] = gettextCatalog.getString(
-				'Amstrad CPC',
+				'Amstrad CPC'
 			);
 			scope.emulatorInfo[Game_Build.EMULATOR_MSX] = gettextCatalog.getString(
-				'MSX',
+				'MSX'
 			);
 		}
 
 		function setupLaunchOptions(scope) {
 			var prevCount = undefined;
 			scope.$watchCollection('releaseLaunchOptions', function(
-				releaseLaunchOptions,
+				releaseLaunchOptions
 			) {
 				scope.buildLaunchOptions = _.where(releaseLaunchOptions, {
 					game_build_id: scope.baseModel.id,

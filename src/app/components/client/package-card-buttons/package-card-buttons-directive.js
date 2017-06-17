@@ -16,7 +16,7 @@ angular
 				LocalDb_Package,
 				Game,
 				Game_Build,
-				Popover,
+				Popover
 			) {
 				// Parent scope controller.
 				var ctrl = $scope.ctrl;
@@ -79,7 +79,7 @@ angular
 
 				// We watch their library to see if this package is installed.
 				$scope.$watch('Client_Library.packages[ ctrl.package.id ]', function(
-					localPackage,
+					localPackage
 				) {
 					ctrl.localPackage = localPackage;
 				});
@@ -100,7 +100,7 @@ angular
 						build._package,
 						build._release,
 						build,
-						build._launch_options,
+						build._launch_options
 					);
 
 					ctrl.isPaymentOpen = false;

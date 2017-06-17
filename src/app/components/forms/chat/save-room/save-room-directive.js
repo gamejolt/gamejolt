@@ -22,7 +22,7 @@ angular
 						) {
 							scope.formModel.type = Chat_Room.TYPE_VIRAL_GROUP;
 						}
-					},
+					}
 				);
 			}
 		};

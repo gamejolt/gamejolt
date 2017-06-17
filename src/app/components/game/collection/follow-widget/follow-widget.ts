@@ -41,7 +41,7 @@ export class AppGameCollectionFollowWidget extends Vue {
 			this.collections.findIndex(
 				item =>
 					item.type === this.collection.type &&
-					(item as any).id === this.collection.id,
+					(item as any).id === this.collection.id
 			) !== -1
 		);
 	}

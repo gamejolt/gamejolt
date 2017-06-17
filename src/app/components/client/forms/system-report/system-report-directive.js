@@ -4,7 +4,7 @@ angular
 		$q,
 		Form,
 		Api,
-		Client_Logger,
+		Client_Logger
 	) {
 		var form = new Form({
 			template: require('./system-report.html'),

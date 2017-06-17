@@ -16,7 +16,7 @@ angular
 			ModalConfirm,
 			Growls,
 			gettextCatalog,
-			payload,
+			payload
 		) {
 			// We update the global packages list.
 			// This ensures as we edit the package, things stay updated.
@@ -27,7 +27,7 @@ angular
 			this.releases = Game_Release.populate(payload.releases);
 			this.builds = Game_Build.populate(payload.builds);
 			this.launchOptions = Game_Build_LaunchOption.populate(
-				payload.launchOptions,
+				payload.launchOptions
 			);
 
 			this.buildDownloadCounts = payload.buildDownloadCounts;
@@ -38,5 +38,5 @@ angular
 				payload.package.is_in_paid_sellable ||
 				payload.package.has_sales ||
 				false;
-		},
+		}
 	);

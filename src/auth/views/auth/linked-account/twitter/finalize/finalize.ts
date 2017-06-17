@@ -18,14 +18,14 @@ export default class RouteAuthLinkedAccountTwitterFinalize extends Vue {
 
 	created() {
 		Meta.title = this.$gettext(
-			'auth.linked_account.twitter.finalize.page_title',
+			'auth.linked_account.twitter.finalize.page_title'
 		);
 	}
 
 	onSubmitted() {
 		Growls.success(
 			this.$gettext('auth.linked_account.twitter.created_growl'),
-			this.$gettext('auth.linked_account.twitter.created_growl_title'),
+			this.$gettext('auth.linked_account.twitter.created_growl_title')
 		);
 		setTimeout(() => Auth.redirectDashboard(), 3000);
 	}

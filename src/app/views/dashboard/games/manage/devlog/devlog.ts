@@ -7,10 +7,10 @@ export default angular
 	.controller(
 		...provide('Dashboard.Developer.Games.Manage.DevlogCtrl', {
 			useClass: DevlogCtrl,
-		}),
+		})
 	)
 	.controller(
 		...provide('Dashboard.Developer.Games.Manage.Devlog.FeedCtrl', {
 			useClass: FeedCtrl,
-		}),
+		})
 	).name;

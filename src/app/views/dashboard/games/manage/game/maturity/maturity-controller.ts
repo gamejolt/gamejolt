@@ -10,7 +10,7 @@ export class MaturityCtrl {
 		@Inject('App') app: App,
 		@Inject('$scope') private $scope: ng.IScope,
 		@Inject('FormDashboardGameWizard') private wizard: FormDashboardGameWizard,
-		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog
 	) {
 		app.title = gettextCatalog.getString('dash.games.maturity.page_title', {
 			game: $scope['manageCtrl'].game.title,
@@ -25,7 +25,7 @@ export class MaturityCtrl {
 
 		Growls.success(
 			this.gettextCatalog.getString('dash.games.maturity.saved_growl'),
-			this.gettextCatalog.getString('dash.games.maturity.saved_growl_title'),
+			this.gettextCatalog.getString('dash.games.maturity.saved_growl_title')
 		);
 		Scroll.to(0);
 	}

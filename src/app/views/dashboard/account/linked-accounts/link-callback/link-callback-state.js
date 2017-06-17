@@ -14,7 +14,7 @@ angular.module('App.Views').config(function($stateProvider) {
 							$stateParams.oauth_verifier +
 							'&state=' +
 							$stateParams.state,
-						{},
+						{}
 					);
 				} else if ($stateParams.provider === 'facebook') {
 					return Api.sendRequest(
@@ -24,7 +24,7 @@ angular.module('App.Views').config(function($stateProvider) {
 							$stateParams.code +
 							'&state=' +
 							$stateParams.state,
-						{},
+						{}
 					);
 				} else if ($stateParams.provider === 'twitch') {
 					return Api.sendRequest(
@@ -34,7 +34,7 @@ angular.module('App.Views').config(function($stateProvider) {
 							$stateParams.code +
 							'&state=' +
 							$stateParams.state,
-						{},
+						{}
 					);
 				} else if ($stateParams.provider === 'google') {
 					return Api.sendRequest(
@@ -44,7 +44,7 @@ angular.module('App.Views').config(function($stateProvider) {
 							$stateParams.code +
 							'&state=' +
 							$stateParams.state,
-						{},
+						{}
 					);
 				} else if ($stateParams.provider === 'youtube-channel') {
 					return Api.sendRequest(
@@ -54,7 +54,7 @@ angular.module('App.Views').config(function($stateProvider) {
 							$stateParams.code +
 							'&state=' +
 							$stateParams.state,
-						{},
+						{}
 					);
 				}
 			},

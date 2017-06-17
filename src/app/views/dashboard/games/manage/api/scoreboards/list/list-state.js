@@ -7,7 +7,7 @@ angular.module('App.Views').config(function($stateProvider) {
 		resolve: {
 			payload: function(Api, $stateParams) {
 				return Api.sendRequest(
-					'/web/dash/developer/games/api/scores/' + $stateParams.id,
+					'/web/dash/developer/games/api/scores/' + $stateParams.id
 				);
 			},
 		},

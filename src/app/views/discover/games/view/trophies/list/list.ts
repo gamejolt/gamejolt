@@ -66,7 +66,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends Vue {
 		this.achievedIndexed = UserGameTrophy.indexAchieved(this.achieved);
 		this.filteredTrophies = GameTrophy.splitAchieved(
 			this.trophies,
-			this.achievedIndexed,
+			this.achievedIndexed
 		);
 
 		this.currentFilter = 'all';

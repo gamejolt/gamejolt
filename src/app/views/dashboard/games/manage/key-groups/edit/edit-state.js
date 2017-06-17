@@ -10,7 +10,7 @@ angular.module('App.Views').config(function($stateProvider) {
 					'/web/dash/developer/games/key-groups/' +
 						$stateParams.id +
 						'/' +
-						$stateParams.keyGroupId,
+						$stateParams.keyGroupId
 				);
 			},
 		},

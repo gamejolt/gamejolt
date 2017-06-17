@@ -41,12 +41,12 @@ export class SiteEditorModalComponent {
 		@Inject('$rootScope') private $rootScope: ng.IRootScopeService,
 		@Inject('$sce') private $sce: ng.ISCEService,
 		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog,
-		@Inject('$location') private $location: ng.ILocationService,
+		@Inject('$location') private $location: ng.ILocationService
 	) {
 		this.tab = this.initialTab || 'theme';
 
 		Api.sendRequest(
-			`/web/dash/sites/editor/${this.siteId}`,
+			`/web/dash/sites/editor/${this.siteId}`
 		).then((response: any) => {
 			this.isLoaded = true;
 			this.site = new Site(response.site);
@@ -61,7 +61,7 @@ export class SiteEditorModalComponent {
 		this.$location.hash('site-editor');
 		setTimeout(() => {
 			this.locationWatcher = this.$rootScope.$on('$locationChangeStart', e =>
-				this.locationChanged(e),
+				this.locationChanged(e)
 			);
 		});
 	}
@@ -93,7 +93,7 @@ export class SiteEditorModalComponent {
 
 		Growls.success(
 			this.gettextCatalog.getString('Your site has been saved.'),
-			this.gettextCatalog.getString('Site Saved'),
+			this.gettextCatalog.getString('Site Saved')
 		);
 	}
 
@@ -106,8 +106,8 @@ export class SiteEditorModalComponent {
 			!this.isDirty ||
 			confirm(
 				this.gettextCatalog.getString(
-					'You have unsaved changes. Are you sure you want to discard them?',
-				),
+					'You have unsaved changes. Are you sure you want to discard them?'
+				)
 			)
 		) {
 			this._close.emit(undefined);

@@ -32,7 +32,7 @@ export default class RouteDiscoverGamesViewOverview extends Vue {
 
 		const ref = PartnerReferral.getReferrer(
 			'Game',
-			parseInt(route.params.id, 10),
+			parseInt(route.params.id, 10)
 		);
 		if (ref) {
 			apiOverviewUrl += '?ref=' + ref;
@@ -64,7 +64,7 @@ export default class RouteDiscoverGamesViewOverview extends Vue {
 		return h(
 			this.game._is_devlog
 				? AppDiscoverGamesViewOverviewDevlog
-				: AppDiscoverGamesViewOverviewGame,
+				: AppDiscoverGamesViewOverviewGame
 		);
 	}
 }

@@ -15,7 +15,7 @@ angular
 		Game_Package,
 		Game_Release,
 		Game_Build_File,
-		Game_Build_LaunchOption,
+		Game_Build_LaunchOption
 	) {
 		function LocalDb_Package(data) {
 			if (data) {
@@ -44,7 +44,7 @@ angular
 			_package,
 			release,
 			build,
-			launchOptions,
+			launchOptions
 		) {
 			var packageData = _.pick(_package, [
 				'id',
@@ -92,13 +92,13 @@ angular
 			_package,
 			release,
 			build,
-			launchOptions,
+			launchOptions
 		) {
 			var localPackage = LocalDb_Package.fromPackageInfo(
 				_package,
 				release,
 				build,
-				launchOptions,
+				launchOptions
 			);
 			localPackage.install_state = LocalDb_Package.PATCH_PENDING;
 
@@ -282,7 +282,7 @@ angular
 			return Api.sendRequest(
 				'/web/client/get-build-for-update/' + newBuildId,
 				null,
-				{ detach: true },
+				{ detach: true }
 			).then(function(response) {
 				if (!response.package) {
 					return $q.resolve(false);
@@ -292,7 +292,7 @@ angular
 					response.package,
 					response.release,
 					response.build,
-					response.launchOptions,
+					response.launchOptions
 				);
 				_this.update_state = LocalDb_Package.PATCH_PENDING;
 
@@ -370,7 +370,7 @@ angular
 									'Removed ' +
 										(_this.title || game.title || 'the package') +
 										' from your computer.',
-									'Package Removed',
+									'Package Removed'
 								);
 							}
 						})
@@ -384,13 +384,13 @@ angular
 									'Could not remove ' +
 										(_this.title || game.title || 'the package') +
 										'.',
-									'Remove Failed',
+									'Remove Failed'
 								);
 							}
 
 							_this.$setRemoveState(LocalDb_Package.REMOVE_FAILED);
 						});
-				},
+				}
 			);
 
 			return this._uninstallingPromise;

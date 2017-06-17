@@ -28,7 +28,7 @@ export class OverviewCtrl {
 
 		this.games = Game.populate(payload.games);
 		this.posts = ActivityFeedService.bootstrap(
-			FiresidePost.populate(payload.posts),
+			FiresidePost.populate(payload.posts)
 		);
 	}
 }

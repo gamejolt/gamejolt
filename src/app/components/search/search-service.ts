@@ -25,7 +25,7 @@ export class Search {
 		// If we're in client, let's try to search their installed games.
 		if (GJ_IS_CLIENT && options.type && options.type === 'typeahead') {
 			searchPromises.push(
-				store.state.clientLibrary.searchInstalledGames(query),
+				store.state.clientLibrary.searchInstalledGames(query)
 			);
 		}
 
@@ -41,7 +41,7 @@ export class Search {
 
 	private static async _searchSite(
 		query: string,
-		options: SearchOptions = { type: 'all' },
+		options: SearchOptions = { type: 'all' }
 	): Promise<any> {
 		let requestOptions: any = {};
 
@@ -68,7 +68,7 @@ export class Search {
 			return await Api.sendRequest(
 				endpoint + '?' + searchParams.join('&'),
 				null,
-				requestOptions,
+				requestOptions
 			);
 		} catch (_e) {
 			return Promise.resolve({});

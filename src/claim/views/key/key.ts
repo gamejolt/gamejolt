@@ -72,8 +72,8 @@ export default class RouteKey extends Vue {
 		const result = await ModalConfirm.show(
 			this.$gettextInterpolate(
 				`Claiming this %{ type } into your Library will allow you to access it through your Game Jolt account and invalidate this key page.`,
-				{ type: resourceName },
-			),
+				{ type: resourceName }
+			)
 		);
 
 		const user = this.app.user;
@@ -95,8 +95,8 @@ export default class RouteKey extends Vue {
 		} catch (_e) {
 			Growls.error(
 				this.$gettext(
-					`For some reason we couldn't claim this into your account!`,
-				),
+					`For some reason we couldn't claim this into your account!`
+				)
 			);
 		}
 	}

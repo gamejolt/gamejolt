@@ -153,7 +153,7 @@ export class ClientInstaller {
 				localPackage.install_dir = path.join(
 					Settings.get('game-install-dir'),
 					game.slug + '-' + game.id,
-					(localPackage.title || 'default') + '-' + localPackage.id,
+					(localPackage.title || 'default') + '-' + localPackage.id
 				);
 				needsSaving = true;
 			}
@@ -271,13 +271,13 @@ export class ClientInstaller {
 
 	private static getPatchHandleIdx(packageId: number) {
 		return this.currentlyPatching.findIndex(
-			value => value.packageId === packageId,
+			value => value.packageId === packageId
 		);
 	}
 
 	private static startPatching(
 		localPackage: LocalDbPackage,
-		patchHandle: PatchHandle,
+		patchHandle: PatchHandle
 	) {
 		if (this.getPatchHandleIdx(localPackage.id) === -1) {
 			this.currentlyPatching.push({

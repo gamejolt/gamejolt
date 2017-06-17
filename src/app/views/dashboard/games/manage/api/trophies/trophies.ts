@@ -74,16 +74,16 @@ export default class RouteDashGamesManageApiTrophies extends Vue {
 	get trophySorts() {
 		return {
 			[GameTrophy.DIFFICULTY_BRONZE]: this.getTrophyGroup(
-				GameTrophy.DIFFICULTY_BRONZE,
+				GameTrophy.DIFFICULTY_BRONZE
 			),
 			[GameTrophy.DIFFICULTY_SILVER]: this.getTrophyGroup(
-				GameTrophy.DIFFICULTY_SILVER,
+				GameTrophy.DIFFICULTY_SILVER
 			),
 			[GameTrophy.DIFFICULTY_GOLD]: this.getTrophyGroup(
-				GameTrophy.DIFFICULTY_GOLD,
+				GameTrophy.DIFFICULTY_GOLD
 			),
 			[GameTrophy.DIFFICULTY_PLATINUM]: this.getTrophyGroup(
-				GameTrophy.DIFFICULTY_PLATINUM,
+				GameTrophy.DIFFICULTY_PLATINUM
 			),
 		};
 	}
@@ -95,7 +95,7 @@ export default class RouteDashGamesManageApiTrophies extends Vue {
 	@BeforeRouteEnter()
 	routeEnter(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
-			'/web/dash/developer/games/api/trophies/' + route.params.id,
+			'/web/dash/developer/games/api/trophies/' + route.params.id
 		);
 	}
 

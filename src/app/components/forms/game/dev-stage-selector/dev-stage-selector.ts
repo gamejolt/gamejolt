@@ -9,10 +9,10 @@ export default angular
 	.service(
 		...provide('FormDashboardGameDevStageSelectorConfirm', {
 			useClass: FormDashboardGameDevStageSelectorConfirm,
-		}),
+		})
 	)
 	.controller(
 		...provide('Form.Dashboard.Game.DevStageSelectorConfirmCtrl', {
 			useClass: ModalCtrl,
-		}),
+		})
 	).name;

@@ -13,7 +13,7 @@ angular
 		Sellable_Pricing,
 		Timezone,
 		ModalConfirm,
-		gettextCatalog,
+		gettextCatalog
 	) {
 		var form = new Form({
 			model: 'Game_Package',
@@ -67,7 +67,7 @@ angular
 			}
 
 			Api.sendRequest(
-				'/web/dash/developer/games/packages/save/' + params.join('/'),
+				'/web/dash/developer/games/packages/save/' + params.join('/')
 			).then(function(payload) {
 				scope.isLoaded = true;
 				scope.isProcessing = false;
@@ -116,10 +116,10 @@ angular
 						scope.formModel.pricing_type = scope.sellable.type;
 
 						scope.originalPricing = Sellable_Pricing.getOriginalPricing(
-							scope.pricings,
+							scope.pricings
 						);
 						scope.promotionalPricing = Sellable_Pricing.getPromotionalPricing(
-							scope.pricings,
+							scope.pricings
 						);
 
 						scope.formModel.price = scope.originalPricing
@@ -134,10 +134,10 @@ angular
 								scope.promotionalPricing.amount / 100;
 
 							scope.saleStartLocal = moment(scope.promotionalPricing.start).tz(
-								scope.promotionalPricing.timezone,
+								scope.promotionalPricing.timezone
 							);
 							scope.saleEndLocal = moment(scope.promotionalPricing.end).tz(
-								scope.promotionalPricing.timezone,
+								scope.promotionalPricing.timezone
 							);
 						}
 
@@ -174,15 +174,15 @@ angular
 				scope.cancelSale = function() {
 					ModalConfirm.show(
 						gettextCatalog.getString(
-							'Are you sure you want to cancel this sale?',
-						),
+							'Are you sure you want to cancel this sale?'
+						)
 					)
 						.then(function() {
 							scope.isProcessing = true;
 							var params = [scope.formModel.game_id, scope.formModel.id];
 							return Api.sendRequest(
 								'/web/dash/developer/games/packages/cancel-sales/' +
-									params.join('/'),
+									params.join('/')
 							);
 						})
 						.then(function(payload) {

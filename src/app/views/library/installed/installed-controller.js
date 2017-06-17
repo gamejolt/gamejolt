@@ -7,7 +7,7 @@ angular
 		LocalDb_Game,
 		LocalDb_Package,
 		Client_Library,
-		gettextCatalog,
+		gettextCatalog
 	) {
 		var _this = this;
 
@@ -36,7 +36,7 @@ angular
 			},
 			function(installingPackages) {
 				_this.installingGames = _.groupBy(installingPackages, 'game_id');
-			},
+			}
 		);
 
 		$scope.$watchCollection(
@@ -50,6 +50,6 @@ angular
 			},
 			function(updatingPackages) {
 				_this.updatingGames = _.groupBy(updatingPackages, 'game_id');
-			},
+			}
 		);
 	});

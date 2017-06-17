@@ -15,7 +15,7 @@ export default class RouteAuthLinkedAccountFacebookCallback extends Vue {
 		const { code, state } = route.query;
 		return Api.sendRequest(
 			'/web/auth/facebook/callback?code=' + code + '&state=' + state,
-			{},
+			{}
 		);
 	}
 
@@ -33,7 +33,7 @@ export default class RouteAuthLinkedAccountFacebookCallback extends Vue {
 				Growls.error({
 					sticky: true,
 					message: this.$gettext(
-						`auth.linked_account.facebook.duplicate_email_growl`,
+						`auth.linked_account.facebook.duplicate_email_growl`
 					),
 				});
 			} else {

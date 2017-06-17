@@ -4,12 +4,12 @@ angular
 		$scope,
 		$modalInstance,
 		Growls,
-		gettextCatalog,
+		gettextCatalog
 	) {
 		this.onSubmit = function() {
 			Growls.success(
 				gettextCatalog.getString('system_report.sent_growl'),
-				gettextCatalog.getString('system_report.sent_growl_title'),
+				gettextCatalog.getString('system_report.sent_growl_title')
 			);
 			$modalInstance.close();
 		};

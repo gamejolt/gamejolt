@@ -55,7 +55,7 @@ export default class RouteDiscoverGamesViewDevlogList extends Vue {
 				{
 					type: 'Fireside_Post',
 					url: `/web/discover/games/devlog/posts/${this.game.id}`,
-				},
+				}
 			);
 		}
 	}

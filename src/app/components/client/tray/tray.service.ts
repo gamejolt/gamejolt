@@ -74,7 +74,7 @@ export class ClientTray {
 						'/app/components/client/tray/' +
 						(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
 				click: toggleVisibility,
-			} as any /* use as any because typings for nw.gui are wrong at this time */,
+			} as any /* use as any because typings for nw.gui are wrong at this time */
 		);
 
 		tray.tooltip = 'Game Jolt Client';
@@ -89,11 +89,11 @@ export class ClientTray {
 						$state.go(
 							'discover.games.list._fetch',
 							{ section: 'featured' },
-							{ inherit: false },
+							{ inherit: false }
 						);
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(new gui.MenuItem({ type: 'separator' }));
@@ -105,7 +105,7 @@ export class ClientTray {
 						$state.go('library.installed');
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(
@@ -115,7 +115,7 @@ export class ClientTray {
 						$state.go('dashboard.main.overview');
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(
@@ -125,7 +125,7 @@ export class ClientTray {
 						$state.go('dashboard.account.edit');
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(
@@ -135,7 +135,7 @@ export class ClientTray {
 						$state.go('profile.overview', { username: App.user.username });
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(
@@ -145,7 +145,7 @@ export class ClientTray {
 						UserTokenModal.show();
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(
@@ -155,7 +155,7 @@ export class ClientTray {
 						$state.go('settings');
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 
 			menu.append(new gui.MenuItem({ type: 'separator' }));
@@ -167,7 +167,7 @@ export class ClientTray {
 						App.logout();
 						ClientControl.show();
 					},
-				}),
+				})
 			);
 		}
 
@@ -177,7 +177,7 @@ export class ClientTray {
 				click: function() {
 					ClientControl.quit();
 				},
-			}),
+			})
 		);
 
 		tray.menu = menu;

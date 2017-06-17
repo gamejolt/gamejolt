@@ -3,7 +3,7 @@ angular
 	.config(function($stateProvider, $urlRouterProvider) {
 		$urlRouterProvider.when(
 			'/dashboard/developer/games/add',
-			'/dashboard/games/add',
+			'/dashboard/games/add'
 		);
 
 		$stateProvider.state('dash.games.add', {

@@ -47,17 +47,17 @@ export default class RouteDiscoverGamesList extends Vue {
 		'discover.categories.arcade': this.$gettext('discover.categories.arcade'),
 		'discover.categories.action': this.$gettext('discover.categories.action'),
 		'discover.categories.adventure': this.$gettext(
-			'discover.categories.adventure',
+			'discover.categories.adventure'
 		),
 		'discover.categories.platformer': this.$gettext(
-			'discover.categories.platformer',
+			'discover.categories.platformer'
 		),
 		'discover.categories.puzzle': this.$gettext('discover.categories.puzzle'),
 		'discover.categories.rpg': this.$gettext('discover.categories.rpg'),
 		'discover.categories.shooter': this.$gettext('discover.categories.shooter'),
 		'discover.categories.sports': this.$gettext('discover.categories.sports'),
 		'discover.categories.strategy_sim': this.$gettext(
-			'discover.categories.strategy_sim',
+			'discover.categories.strategy_sim'
 		),
 		'discover.categories.other': this.$gettext('discover.categories.other'),
 
@@ -85,7 +85,7 @@ export default class RouteDiscoverGamesList extends Vue {
 		}
 
 		return Api.sendRequest(
-			'/web/discover/games?' + filtering.getQueryString(route),
+			'/web/discover/games?' + filtering.getQueryString(route)
 		);
 	}
 
@@ -139,7 +139,7 @@ export default class RouteDiscoverGamesList extends Vue {
 		if (!this.dateRange) {
 			this.pageTitle = this.$gettextInterpolate(
 				'Games Published on %{ date }',
-				{ date: this.date },
+				{ date: this.date }
 			);
 		} else {
 			this.pageTitle = this.$gettextInterpolate(
@@ -147,7 +147,7 @@ export default class RouteDiscoverGamesList extends Vue {
 				{
 					dateStart: this.dateRange[0],
 					dateEnd: this.dateRange[1],
-				},
+				}
 			);
 		}
 	}
@@ -169,17 +169,17 @@ export default class RouteDiscoverGamesList extends Vue {
 
 		this.pageTitle = this.$gettextInterpolate(
 			'%{ section } Indie %{ category } Games',
-			context,
+			context
 		);
 		if (this.category === 'rpg') {
 			this.pageTitle = this.$gettextInterpolate(
 				'%{ section } Indie RPGs',
-				context,
+				context
 			);
 		} else if (this.category === 'other') {
 			this.pageTitle = this.$gettextInterpolate(
 				'%{ section } Alternative Indie Games',
-				context,
+				context
 			);
 		}
 
@@ -190,7 +190,7 @@ export default class RouteDiscoverGamesList extends Vue {
 		} else {
 			this.descriptiveCategory = this.$gettextInterpolate(
 				'%{ category } games',
-				{ category: categoryHuman.toLowerCase() },
+				{ category: categoryHuman.toLowerCase() }
 			);
 		}
 

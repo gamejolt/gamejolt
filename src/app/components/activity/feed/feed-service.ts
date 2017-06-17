@@ -23,7 +23,7 @@ export class ActivityFeedService {
 
 	static bootstrap(
 		items?: ActivityFeedInput[],
-		options?: ActivityFeedContainerOptions,
+		options?: ActivityFeedContainerOptions
 	) {
 		const url = History.futureState
 			? History.futureState.fullPath

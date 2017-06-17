@@ -47,9 +47,7 @@ export class AppGameFollowWidget extends Vue {
 				await this.game.$follow();
 			} catch (e) {
 				Growls.error(
-					this.$gettext(
-						'Something has prevented you from following this game.',
-					),
+					this.$gettext('Something has prevented you from following this game.')
 				);
 			}
 		} else {
@@ -58,7 +56,7 @@ export class AppGameFollowWidget extends Vue {
 			} catch (e) {
 				Growls.error(
 					this.$gettext('library.followed.remove_game_error_growl'),
-					this.$gettext('library.followed.remove_game_error_growl_title'),
+					this.$gettext('library.followed.remove_game_error_growl_title')
 				);
 			}
 		}

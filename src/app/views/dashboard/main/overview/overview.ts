@@ -128,7 +128,7 @@ export default class RouteDashMainOverview extends Vue {
 		// this.jams = Jam.populate( this.$payload.jams );
 
 		this.activityNotifications = Notification.populate(
-			this.$payload.activityNotifications,
+			this.$payload.activityNotifications
 		);
 		this.latestBroadcast = this.$payload.latestBroadcast
 			? new FiresidePost(this.$payload.latestBroadcast)

@@ -18,8 +18,8 @@ importContext(
 	require.context(
 		'!ng-cache-loader?module=App.Views&prefix=src:/[dirs]!./',
 		true,
-		/\/_[^\/]*\.html$/,
-	),
+		/\/_[^\/]*\.html$/
+	)
 );
 
 // require( './styleguide/styleguide-state.js' );

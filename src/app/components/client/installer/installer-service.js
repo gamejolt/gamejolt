@@ -13,7 +13,7 @@ angular
 		Settings,
 		LocalDb,
 		LocalDb_Package,
-		Growls,
+		Growls
 	) {
 		var _this = this;
 
@@ -52,7 +52,7 @@ angular
 					}
 
 					Client.setProgressBar(progress);
-				},
+				}
 			);
 		};
 
@@ -123,8 +123,8 @@ angular
 						path.join(
 							Settings.get('game-install-dir'),
 							game.slug + '-' + game.id,
-							(localPackage.name || 'default') + '-' + localPackage.id,
-						),
+							(localPackage.name || 'default') + '-' + localPackage.id
+						)
 					);
 				});
 			}
@@ -243,7 +243,7 @@ angular
 					Growls.add(
 						'error',
 						packageTitle + ' failed to ' + action + '.',
-						title,
+						title
 					);
 
 					if (localPackage.install_state == LocalDb_Package.DOWNLOADING) {

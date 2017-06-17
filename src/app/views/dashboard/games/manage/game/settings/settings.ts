@@ -6,5 +6,5 @@ export default angular
 	.controller(
 		...provide('Dashboard.Developer.Games.Manage.Game.SettingsCtrl', {
 			useClass: SettingsCtrl,
-		}),
+		})
 	).name;

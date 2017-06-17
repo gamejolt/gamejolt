@@ -14,7 +14,7 @@ angular
 		Growls,
 		Environment,
 		gettextCatalog,
-		payload,
+		payload
 	) {
 		var _this = this;
 
@@ -39,7 +39,7 @@ angular
 					$stateParams.id +
 					'/' +
 					$stateParams.keyGroupId,
-				this.search,
+				this.search
 			).then(function(response) {
 				_this.keys = Key.populate(response.keys);
 			});
@@ -57,23 +57,23 @@ angular
 		this.removeGroup = function(keyGroup, disableKeys) {
 			ModalConfirm.show(
 				gettextCatalog.getString(
-					'Are you sure you want to remove this key group? All keys within this key group will be invalidated. Any access that users may have gained from these keys will be revoked. This can not be reversed.',
+					'Are you sure you want to remove this key group? All keys within this key group will be invalidated. Any access that users may have gained from these keys will be revoked. This can not be reversed.'
 				),
-				gettextCatalog.getString('Remove key group?'),
+				gettextCatalog.getString('Remove key group?')
 			)
 				.then(function() {
 					return keyGroup.$remove().catch(function() {
 						Growls.error(
 							gettextCatalog.getString(
-								'Could not remove key group for some reason.',
-							),
+								'Could not remove key group for some reason.'
+							)
 						);
 					});
 				})
 				.then(function() {
 					Growls.success(
 						gettextCatalog.getString('The key group has been removed.'),
-						gettextCatalog.getString('Removed Key Group'),
+						gettextCatalog.getString('Removed Key Group')
 					);
 					$state.go('dash.games.manage.key-groups.list');
 				});
@@ -82,21 +82,21 @@ angular
 		this.removeKey = function(key) {
 			ModalConfirm.show(
 				gettextCatalog.getString(
-					"Are you sure you want to remove this key? This will revoke this key's access, or anyone that has claimed this key. This can not be reversed.",
+					"Are you sure you want to remove this key? This will revoke this key's access, or anyone that has claimed this key. This can not be reversed."
 				),
-				gettextCatalog.getString('Remove key?'),
+				gettextCatalog.getString('Remove key?')
 			)
 				.then(function() {
 					return key.$remove().catch(function() {
 						Growls.error(
-							gettextCatalog.getString('Could not remove key for some reason.'),
+							gettextCatalog.getString('Could not remove key for some reason.')
 						);
 					});
 				})
 				.then(function() {
 					Growls.success(
 						gettextCatalog.getString('The key has been removed.'),
-						gettextCatalog.getString('Removed Key'),
+						gettextCatalog.getString('Removed Key')
 					);
 					_.remove(_this.keys, { id: key.id });
 				});

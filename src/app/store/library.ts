@@ -89,7 +89,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 		if (developerPlaylists.length) {
 			folders.developers = new GamePlaylistFolder(
 				Translate.$gettext('Followed Developers'),
-				developerPlaylists,
+				developerPlaylists
 			);
 		}
 
@@ -132,7 +132,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 	@VuexMutation
 	removeCollection(collection: Mutations['library/removeCollection']) {
 		const index = this.collections.findIndex(
-			item => item._id === collection._id,
+			item => item._id === collection._id
 		);
 		if (index !== -1) {
 			this.collections.splice(index, 1);
@@ -187,9 +187,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 		const result = await ModalConfirm.show(
 			collection.isOwner
 				? Translate.$gettext(`Are you sure you want to remove this playlist?`)
-				: Translate.$gettext(
-						`Are you sure you want to unfollow this playlist?`,
-					),
+				: Translate.$gettext(`Are you sure you want to unfollow this playlist?`)
 		);
 
 		if (!result) {
@@ -210,20 +208,20 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 						collection.isOwner
 							? Translate.$gettext(`%{ playlist } has been removed.`)
 							: Translate.$gettext(`You have unfollowed %{ playlist }.`),
-						{ playlist: collection.name },
+						{ playlist: collection.name }
 					),
 					Translate.$gettext(
 						collection.isOwner
 							? Translate.$gettext(`Playlist Removed`)
-							: Translate.$gettext(`Playlist Unfollowed`),
-					),
+							: Translate.$gettext(`Playlist Unfollowed`)
+					)
 				);
 
 				return true;
 			}
 		} catch (e) {
 			Growls.error(
-				Translate.$gettext(`Error! Error! Unable to unfollow this playlist.`),
+				Translate.$gettext(`Error! Error! Unable to unfollow this playlist.`)
 			);
 		}
 
@@ -241,17 +239,17 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 			Growls.success(
 				Translate.$gettextInterpolate(
 					`You've added %{ game } to %{ playlist }. Nice!`,
-					{ game: game.title, playlist: playlist.name },
+					{ game: game.title, playlist: playlist.name }
 				),
-				Translate.$gettext(`Added Game`),
+				Translate.$gettext(`Added Game`)
 			);
 
 			return true;
 		} catch (e) {
 			Growls.error(
 				Translate.$gettext(
-					`Error! Error! This game could not be added to the playlist.`,
-				),
+					`Error! Error! This game could not be added to the playlist.`
+				)
 			);
 		}
 
@@ -270,7 +268,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 
 		if (shouldConfirm) {
 			const result = await ModalConfirm.show(
-				Translate.$gettext('library.playlists.remove_game_confirmation'),
+				Translate.$gettext('library.playlists.remove_game_confirmation')
 			);
 
 			if (!result) {
@@ -284,17 +282,17 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 			Growls.success(
 				Translate.$gettextInterpolate(
 					`You have successfully removed %{ game } from %{ playlist }.`,
-					{ game: game.title, playlist: playlist.name },
+					{ game: game.title, playlist: playlist.name }
 				),
-				Translate.$gettext(`Removed Game`),
+				Translate.$gettext(`Removed Game`)
 			);
 
 			return true;
 		} catch (e) {
 			Growls.error(
 				Translate.$gettext(
-					`Error! Error! This game could not be removed from the playlist.`,
-				),
+					`Error! Error! This game could not be removed from the playlist.`
+				)
 			);
 		}
 
@@ -306,8 +304,8 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 		const result = await ModalConfirm.show(
 			Translate.$gettextInterpolate(
 				`Are you sure you want to stop following %{ game }?`,
-				{ game: game.title },
-			),
+				{ game: game.title }
+			)
 		);
 
 		if (!result) {
@@ -320,17 +318,17 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 			Growls.success(
 				Translate.$gettextInterpolate(
 					`You have stopped following %{ game } and will no longer receive notifications about it.`,
-					{ game: game.title },
+					{ game: game.title }
 				),
-				Translate.$gettext(`Game Unfollowed`),
+				Translate.$gettext(`Game Unfollowed`)
 			);
 
 			return true;
 		} catch (e) {
 			Growls.error(
 				Translate.$gettext(
-					`Uh-oh, something has prevented you from unfollowing this game.`,
-				),
+					`Uh-oh, something has prevented you from unfollowing this game.`
+				)
 			);
 		}
 

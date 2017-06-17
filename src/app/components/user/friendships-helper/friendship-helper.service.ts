@@ -15,9 +15,9 @@ export class UserFriendshipHelper {
 			Growls.success(
 				Translate.$gettextInterpolate(
 					`A friend request has been sent to @%{ username }. You'll be notified when they accept.`,
-					{ username: request.target_user.username },
+					{ username: request.target_user.username }
 				),
-				Translate.$gettext(`Request Sent`),
+				Translate.$gettext(`Request Sent`)
 			);
 
 			return request;
@@ -34,9 +34,9 @@ export class UserFriendshipHelper {
 			Growls.success(
 				Translate.$gettextInterpolate(
 					`You are now friends with @%{ username }!`,
-					{ username: request.user.username },
+					{ username: request.user.username }
 				),
-				Translate.$gettext(`Request Accepted`),
+				Translate.$gettext(`Request Accepted`)
 			);
 		} catch (e) {
 			Growls.error(Translate.$gettext(`Unable to accept friend request.`));
@@ -48,10 +48,10 @@ export class UserFriendshipHelper {
 		const confirmResult = await ModalConfirm.show(
 			Translate.$gettextInterpolate(
 				`Cancel the friend request you sent to @%{ username }?`,
-				{ username: request.target_user.username },
+				{ username: request.target_user.username }
 			),
 			undefined,
-			'yes',
+			'yes'
 		);
 
 		if (!confirmResult) {
@@ -64,9 +64,9 @@ export class UserFriendshipHelper {
 			Growls.success(
 				Translate.$gettextInterpolate(
 					`Your friend request to @%{ username } was canceled.`,
-					{ username: request.target_user.username },
+					{ username: request.target_user.username }
 				),
-				Translate.$gettext(`Request Canceled`),
+				Translate.$gettext(`Request Canceled`)
 			);
 
 			return response;
@@ -80,10 +80,10 @@ export class UserFriendshipHelper {
 		const confirmResult = await ModalConfirm.show(
 			Translate.$gettextInterpolate(
 				`Dismiss the friend request from @%{ username }?`,
-				{ username: request.user.username },
+				{ username: request.user.username }
 			),
 			undefined,
-			'yes',
+			'yes'
 		);
 
 		if (!confirmResult) {
@@ -96,9 +96,9 @@ export class UserFriendshipHelper {
 			Growls.success(
 				Translate.$gettextInterpolate(
 					`You have dismissed the friend request from @%{ username }.`,
-					{ username: request.user.username },
+					{ username: request.user.username }
 				),
-				Translate.$gettext(`Request Dismissed`),
+				Translate.$gettext(`Request Dismissed`)
 			);
 
 			return response;
@@ -116,7 +116,7 @@ export class UserFriendshipHelper {
 				username: them.username,
 			}),
 			undefined,
-			'yes',
+			'yes'
 		);
 
 		if (!confirmResult) {
@@ -129,9 +129,9 @@ export class UserFriendshipHelper {
 			Growls.success(
 				Translate.$gettextInterpolate(
 					`@%{ username } is no longer your friend.`,
-					{ username: them.username },
+					{ username: them.username }
 				),
-				Translate.$gettext('Friend Removed'),
+				Translate.$gettext('Friend Removed')
 			);
 
 			return response;

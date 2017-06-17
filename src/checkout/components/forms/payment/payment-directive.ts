@@ -49,7 +49,7 @@ export function PaymentComponent(App: App, Form: any) {
 
 		scope.$watchGroup(
 			['formModel.selectedCard', 'formModel.country', 'formModel.region'],
-			getTax,
+			getTax
 		);
 
 		function getTax() {

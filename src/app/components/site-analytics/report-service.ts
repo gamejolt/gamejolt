@@ -24,7 +24,7 @@ export class SiteAnalyticsReport {
 		collection: Collection,
 		partnerMode: boolean,
 		startTime: number | undefined,
-		endTime: number | undefined,
+		endTime: number | undefined
 	) {
 		const promises = this.components.map(component => {
 			let analyzer = component.type;
@@ -93,7 +93,7 @@ export class SiteAnalyticsReport {
 				fetchFields,
 				component.resourceFields,
 				startTime,
-				endTime,
+				endTime
 			);
 		});
 
@@ -104,7 +104,7 @@ export class SiteAnalyticsReport {
 				let response = this.processComponentResponse(
 					component,
 					componentResponses[i].data,
-					componentResponses[i].gathers,
+					componentResponses[i].gathers
 				);
 
 				component.data = response.result;
@@ -132,7 +132,7 @@ export class SiteAnalyticsReport {
 		fetchFields: Field[] | undefined,
 		resourceFields: ResourceFields | undefined,
 		startTime: number | undefined,
-		endTime: number | undefined,
+		endTime: number | undefined
 	) {
 		const request: Request = {
 			target: resource,
@@ -168,14 +168,14 @@ export class SiteAnalyticsReport {
 		return Api.sendRequest(
 			'/web/dash/analytics/display',
 			{ data: request },
-			{ sanitizeComplexData: false },
+			{ sanitizeComplexData: false }
 		);
 	}
 
 	private processComponentResponse(
 		component: ReportComponent,
 		_response: any,
-		gathers?: any,
+		gathers?: any
 	) {
 		const field = component.field,
 			analyzer = component.type,

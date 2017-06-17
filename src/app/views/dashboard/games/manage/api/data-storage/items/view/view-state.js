@@ -11,7 +11,7 @@ angular.module('App.Views').config(function($stateProvider) {
 					'/web/dash/developer/games/api/data-storage/' +
 						$stateParams.id +
 						'/' +
-						$stateParams.item,
+						$stateParams.item
 				);
 			},
 		},

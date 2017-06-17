@@ -2,14 +2,14 @@ angular
 	.module('App.Forms.Dashboard')
 	.directive('gjFormDashboardGameBuildPlatformsValidator', function(
 		$parse,
-		Game_Build,
+		Game_Build
 	) {
 		return {
 			restrict: 'A',
 			require: 'ngModel',
 			link: function(scope, element, attrs, ngModel) {
 				var model = $parse(attrs.gjFormDashboardGameBuildPlatformsValidator)(
-					scope,
+					scope
 				);
 
 				// Update the model so the validator kicks in whenever value changes.
@@ -31,7 +31,7 @@ angular
 					},
 					function(val) {
 						ngModel.$setViewValue(val);
-					},
+					}
 				);
 
 				ngModel.$validators.noPlatforms = function(modelVal, viewVal) {

@@ -3,7 +3,7 @@ angular
 	.config(function($stateProvider, $urlRouterProvider) {
 		$urlRouterProvider.when(
 			'/dashboard/developer/withdraw-funds',
-			'/dashboard/withdraw-funds',
+			'/dashboard/withdraw-funds'
 		);
 
 		$stateProvider.state('dash.withdraw-funds', {

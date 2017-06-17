@@ -7,7 +7,7 @@ export class DevlogCtrl {
 	constructor(
 		@Inject('$scope') private $scope: ng.IScope,
 		@Inject('App') app: App,
-		@Inject('gettextCatalog') gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject('gettextCatalog') gettextCatalog: ng.gettext.gettextCatalog
 	) {
 		app.title = gettextCatalog.getString('Manage Devlog');
 	}

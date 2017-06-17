@@ -49,7 +49,7 @@ export class AppDiscoverGamesViewOverviewStats extends Vue {
 		if (!this.packages.length) {
 			if (this.totalPlays) {
 				return this.$gettext(
-					`This game used to have playable builds that are no longer available.`,
+					`This game used to have playable builds that are no longer available.`
 				);
 			} else {
 				return this.$gettext(`This game doesn't have playable builds yet.`);

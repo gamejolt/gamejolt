@@ -17,7 +17,7 @@ export class ResultsCtrl {
 		@Inject('$scope') $scope: Scope,
 		@Inject('gettextCatalog') gettextCatalog: ng.gettext.gettextCatalog,
 		@Inject('$stateParams') $stateParams: StateParams,
-		@Inject('payload') payload: any,
+		@Inject('payload') payload: any
 	) {
 		const searchCtrl = $scope.searchCtrl;
 

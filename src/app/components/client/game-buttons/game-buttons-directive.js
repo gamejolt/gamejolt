@@ -45,7 +45,7 @@ angular
 				Game_Package,
 				Game_Release,
 				Game_Build,
-				Game_Build_LaunchOption,
+				Game_Build_LaunchOption
 			) {
 				var _this = this;
 				var os = Device.os();
@@ -83,7 +83,7 @@ angular
 					},
 					function(localPackage) {
 						_this.localPackage = localPackage;
-					},
+					}
 				);
 
 				if (!angular.isUndefined($attrs.isPatching)) {
@@ -103,13 +103,13 @@ angular
 
 					if (!this.packageDataPromise) {
 						this.packageDataPromise = Api.sendRequest(
-							'/web/discover/games/packages/' + _this.game.id,
+							'/web/discover/games/packages/' + _this.game.id
 						).then(function(payload) {
 							var packageData = new GamePackagePayloadModel(payload);
 							packageData.installableBuilds = Game.pluckInstallableBuilds(
 								packageData.packages,
 								os,
-								arch,
+								arch
 							);
 
 							return packageData;
@@ -120,7 +120,7 @@ angular
 						// If more than one package for their OS, then we have to show an install package modal.
 						if (
 							_.size(
-								_.groupBy(packageData.installableBuilds, 'game_package_id'),
+								_.groupBy(packageData.installableBuilds, 'game_package_id')
 							) > 1
 						) {
 							// TODO: Get some sort of something working again so we can use this when not on game page.
@@ -132,7 +132,7 @@ angular
 						var build = Game.chooseBestBuild(
 							packageData.installableBuilds,
 							os,
-							arch,
+							arch
 						);
 
 						// If the build belongs to a pwyw package, open up the package
@@ -147,7 +147,7 @@ angular
 							build._package,
 							build._release,
 							build,
-							build._launch_options,
+							build._launch_options
 						);
 					});
 				};
@@ -190,7 +190,7 @@ angular
 
 					fs.readdir(path.resolve(localPackage.install_dir), function(
 						err,
-						files,
+						files
 					) {
 						if (err) {
 							return;
@@ -199,7 +199,7 @@ angular
 						// Just open the first file in the folder.
 						// This way we open within the package folder instead of the parent folder.
 						gui.Shell.showItemInFolder(
-							path.resolve(localPackage.install_dir, files[0]),
+							path.resolve(localPackage.install_dir, files[0])
 						);
 					});
 				};

@@ -12,7 +12,7 @@ angular
 			ModalConfirm,
 			Growls,
 			gettextCatalog,
-			payload,
+			payload
 		) {
 			var _this = this;
 
@@ -26,7 +26,7 @@ angular
 					game: $scope.manageCtrl.game.title,
 					user: this.user.display_name,
 					table: this.scoreTable.name,
-				},
+				}
 			);
 
 			this.onScoreRemoved = function(score) {
@@ -36,8 +36,8 @@ angular
 			this.removeAll = function() {
 				return ModalConfirm.show(
 					gettextCatalog.getString(
-						'dash.games.scores.user.list.remove_confirmation',
-					),
+						'dash.games.scores.user.list.remove_confirmation'
+					)
 				)
 					.then(function() {
 						return _this.scoreTable.$removeAllUserScores(_this.user.id);
@@ -49,15 +49,15 @@ angular
 								{
 									user: _this.user.display_name,
 									table: _this.scoreTable.name,
-								},
+								}
 							),
 							gettextCatalog.getString(
 								'dash.games.scores.user.list.remove_growl_title',
 								{
 									user: _this.user.display_name,
 									table: _this.scoreTable.name,
-								},
-							),
+								}
+							)
 						);
 
 						$state.go('dash.games.manage.api.scoreboards.scores.list', {
@@ -65,5 +65,5 @@ angular
 						});
 					});
 			};
-		},
+		}
 	);

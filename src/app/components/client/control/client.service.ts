@@ -21,7 +21,7 @@ export class ClientControl {
 		// We should force it into view.
 		app.on('open', () => {
 			console.info(
-				'They tried opening the Client again. Force showing the window.',
+				'They tried opening the Client again. Force showing the window.'
 			);
 			this.show();
 		});

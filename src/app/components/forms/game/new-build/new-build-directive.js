@@ -11,7 +11,7 @@ angular
 		Game_Release,
 		Game_Build,
 		Game_Build_File,
-		gettextCatalog,
+		gettextCatalog
 	) {
 		var form = new Form({
 			model: 'Game_Build',
@@ -51,7 +51,7 @@ angular
 				];
 
 				Api.sendRequest(
-					'/web/dash/developer/games/builds/save/' + params.join('/'),
+					'/web/dash/developer/games/builds/save/' + params.join('/')
 				).then(function(payload) {
 					scope.isLoaded = true;
 					angular.extend(scope, payload);

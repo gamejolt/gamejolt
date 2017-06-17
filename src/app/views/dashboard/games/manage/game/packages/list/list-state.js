@@ -7,7 +7,7 @@ angular.module('App.Views').config(function($stateProvider) {
 		resolve: {
 			packagesPayload: function($stateParams, Api) {
 				return Api.sendRequest(
-					'/web/dash/developer/games/packages/' + $stateParams.id,
+					'/web/dash/developer/games/packages/' + $stateParams.id
 				);
 			},
 			checkRedirect: function($state, $stateParams, packagesPayload) {

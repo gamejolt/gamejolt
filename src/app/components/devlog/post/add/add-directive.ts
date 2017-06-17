@@ -24,7 +24,7 @@ export class DevlogPostAddComponent {
 
 	showAddModal(type: string) {
 		Api.sendRequest(
-			`/web/dash/developer/games/devlog/new-post/${this.game.id}/${type}`,
+			`/web/dash/developer/games/devlog/new-post/${this.game.id}/${type}`
 		)
 			.then((response: any) => {
 				return new FiresidePost(response.post);

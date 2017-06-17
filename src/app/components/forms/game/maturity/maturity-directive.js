@@ -17,17 +17,17 @@ angular
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.age_everyone_option',
+						'dash.games.maturity.age_everyone_option'
 					),
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.age_teen_option',
+						'dash.games.maturity.age_teen_option'
 					),
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.age_mature_option',
+						'dash.games.maturity.age_mature_option'
 					),
 				},
 			];
@@ -39,21 +39,21 @@ angular
 				{
 					label: gettextCatalog.getString('dash.games.maturity.mild_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.cartoon_violence_1_description',
+						'dash.games.maturity.cartoon_violence_1_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.moderate_option',
+						'dash.games.maturity.moderate_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.cartoon_violence_2_description',
+						'dash.games.maturity.cartoon_violence_2_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString('dash.games.maturity.intense_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.cartoon_violence_3_description',
+						'dash.games.maturity.cartoon_violence_3_description'
 					),
 				},
 			];
@@ -65,21 +65,21 @@ angular
 				{
 					label: gettextCatalog.getString('dash.games.maturity.mild_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.fantasy_violence_1_description',
+						'dash.games.maturity.fantasy_violence_1_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.moderate_option',
+						'dash.games.maturity.moderate_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.fantasy_violence_2_description',
+						'dash.games.maturity.fantasy_violence_2_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString('dash.games.maturity.intense_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.fantasy_violence_3_description',
+						'dash.games.maturity.fantasy_violence_3_description'
 					),
 				},
 			];
@@ -91,21 +91,21 @@ angular
 				{
 					label: gettextCatalog.getString('dash.games.maturity.mild_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.realistic_violence_1_description',
+						'dash.games.maturity.realistic_violence_1_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.moderate_option',
+						'dash.games.maturity.moderate_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.realistic_violence_2_description',
+						'dash.games.maturity.realistic_violence_2_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString('dash.games.maturity.intense_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.realistic_violence_3_description',
+						'dash.games.maturity.realistic_violence_3_description'
 					),
 				},
 			];
@@ -117,21 +117,21 @@ angular
 				{
 					label: gettextCatalog.getString('dash.games.maturity.mild_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.bloodshed_1_description',
+						'dash.games.maturity.bloodshed_1_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.moderate_option',
+						'dash.games.maturity.moderate_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.bloodshed_2_description',
+						'dash.games.maturity.bloodshed_2_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString('dash.games.maturity.intense_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.bloodshed_3_description',
+						'dash.games.maturity.bloodshed_3_description'
 					),
 				},
 			];
@@ -142,10 +142,10 @@ angular
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.sexual_violence_label',
+						'dash.games.maturity.sexual_violence_label'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.sexual_violence_description',
+						'dash.games.maturity.sexual_violence_description'
 					),
 				},
 			];
@@ -156,16 +156,16 @@ angular
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.reference_option',
+						'dash.games.maturity.reference_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.alcohol_1_description',
+						'dash.games.maturity.alcohol_1_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString('dash.games.maturity.use_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.alcohol_2_description',
+						'dash.games.maturity.alcohol_2_description'
 					),
 				},
 			];
@@ -176,16 +176,16 @@ angular
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.reference_option',
+						'dash.games.maturity.reference_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.drugs_1_description',
+						'dash.games.maturity.drugs_1_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString('dash.games.maturity.use_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.drugs_2_description',
+						'dash.games.maturity.drugs_2_description'
 					),
 				},
 			];
@@ -196,16 +196,16 @@ angular
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.reference_option',
+						'dash.games.maturity.reference_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.tobacco_1_description',
+						'dash.games.maturity.tobacco_1_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString('dash.games.maturity.use_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.tobacco_2_description',
+						'dash.games.maturity.tobacco_2_description'
 					),
 				},
 			];
@@ -216,18 +216,18 @@ angular
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.brief_nudity_option',
+						'dash.games.maturity.brief_nudity_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.nudity_1_description',
+						'dash.games.maturity.nudity_1_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.full_nudity_option',
+						'dash.games.maturity.full_nudity_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.nudity_2_description',
+						'dash.games.maturity.nudity_2_description'
 					),
 				},
 			];
@@ -238,24 +238,24 @@ angular
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.suggestive_option',
+						'dash.games.maturity.suggestive_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.sexual_themes_1_description',
+						'dash.games.maturity.sexual_themes_1_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.moderate_option',
+						'dash.games.maturity.moderate_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.sexual_themes_2_description',
+						'dash.games.maturity.sexual_themes_2_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString('dash.games.maturity.graphic_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.sexual_themes_3_description',
+						'dash.games.maturity.sexual_themes_3_description'
 					),
 				},
 			];
@@ -267,21 +267,21 @@ angular
 				{
 					label: gettextCatalog.getString('dash.games.maturity.mild_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.language_1_description',
+						'dash.games.maturity.language_1_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.moderate_option',
+						'dash.games.maturity.moderate_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.language_2_description',
+						'dash.games.maturity.language_2_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString('dash.games.maturity.strong_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.language_3_description',
+						'dash.games.maturity.language_3_description'
 					),
 				},
 			];
@@ -292,24 +292,24 @@ angular
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.shenanigans_option',
+						'dash.games.maturity.shenanigans_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.humor_1_description',
+						'dash.games.maturity.humor_1_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.moderate_option',
+						'dash.games.maturity.moderate_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.humor_2_description',
+						'dash.games.maturity.humor_2_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString('dash.games.maturity.strong_option'),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.humor_3_description',
+						'dash.games.maturity.humor_3_description'
 					),
 				},
 			];
@@ -320,18 +320,18 @@ angular
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.simulated_option',
+						'dash.games.maturity.simulated_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.gambling_1_description',
+						'dash.games.maturity.gambling_1_description'
 					),
 				},
 				{
 					label: gettextCatalog.getString(
-						'dash.games.maturity.real_gambling_option',
+						'dash.games.maturity.real_gambling_option'
 					),
 					description: gettextCatalog.getString(
-						'dash.games.maturity.gambling_2_description',
+						'dash.games.maturity.gambling_2_description'
 					),
 				},
 			];

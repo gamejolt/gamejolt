@@ -77,7 +77,7 @@ export class ChatNotification {
 	private static queueFriendConnection(
 		userId: number,
 		isOnline: boolean,
-		fn: (friend: ChatUser) => void,
+		fn: (friend: ChatUser) => void
 	) {
 		const friend = this.chat.friendsList.get(userId);
 		if (!friend) {

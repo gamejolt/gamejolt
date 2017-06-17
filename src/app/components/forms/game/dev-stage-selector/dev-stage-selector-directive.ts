@@ -25,7 +25,7 @@ export class DevStageSelectorComponent {
 	constructor(
 		@Inject('FormDashboardGameDevStageSelectorConfirm')
 		private confirm: FormDashboardGameDevStageSelectorConfirm,
-		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog
 	) {}
 
 	select(stage: number) {
@@ -43,9 +43,9 @@ export class DevStageSelectorComponent {
 			.then(() => {
 				Growls.success(
 					this.gettextCatalog.getString(
-						`Your game's development stage has been changed!`,
+						`Your game's development stage has been changed!`
 					),
-					this.gettextCatalog.getString('Stage Changed'),
+					this.gettextCatalog.getString('Stage Changed')
 				);
 			});
 	}

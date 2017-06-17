@@ -7,7 +7,7 @@ angular
 		ModalConfirm,
 		Growls,
 		gettextCatalog,
-		payload,
+		payload
 	) {
 		var _this = this;
 
@@ -21,15 +21,15 @@ angular
 		this.generateNewKey = function() {
 			ModalConfirm.show(
 				gettextCatalog.getString(
-					'dash.games.api.settings.generate_confirmation',
-				),
+					'dash.games.api.settings.generate_confirmation'
+				)
 			)
 				.then(function() {
 					// Make sure it's a POST request.
 					return Api.sendRequest(
 						'/web/dash/developer/games/api/settings/generate-new-key/' +
 							$scope.manageCtrl.game.id,
-						{},
+						{}
 					);
 				})
 				.then(function(response) {
@@ -38,10 +38,10 @@ angular
 						_this.shouldShowKey = true;
 						Growls.success({
 							title: gettextCatalog.getString(
-								'dash.games.api.settings.generate_growl_title',
+								'dash.games.api.settings.generate_growl_title'
 							),
 							message: gettextCatalog.getString(
-								'dash.games.api.settings.generate_growl',
+								'dash.games.api.settings.generate_growl'
 							),
 							sticky: true,
 						});

@@ -47,7 +47,7 @@ Vue.use(VueGettext, {
 		en: Object.assign(
 			{},
 			require(`!!../translations/en_US/main.json`).en_US,
-			require(`!!../translations/en_US/dash.json`).en_US,
+			require(`!!../translations/en_US/dash.json`).en_US
 		),
 	},
 });

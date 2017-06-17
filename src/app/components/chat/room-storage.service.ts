@@ -16,7 +16,7 @@ export class ChatRoomStorage {
 				JSON.stringify({
 					action: null,
 					rooms: [],
-				}),
+				})
 			);
 		}
 

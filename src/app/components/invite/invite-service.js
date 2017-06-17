@@ -11,7 +11,7 @@ angular.module('App.Invite').service('Invite', function($location, Api) {
 		return Api.sendRequest(
 			'/web/auth/set-invite-referrer/' + invite,
 			{},
-			{ detach: true },
+			{ detach: true }
 		);
 	};
 });

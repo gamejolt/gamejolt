@@ -141,7 +141,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			'/web/discover/games/videos/' +
 				this.game.id +
 				'?page=' +
-				this.videoCommentsPage,
+				this.videoCommentsPage
 		);
 
 		this.pushVideoComments(CommentVideo.populate(response.videos));
@@ -152,7 +152,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		const response = await Api.sendRequest(
 			'/web/discover/games/refresh-rating-info/' + this.game.id,
 			null,
-			{ detach: true },
+			{ detach: true }
 		);
 
 		this.processRatingPayload(response);
@@ -243,7 +243,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 					type: 'Fireside_Post',
 					url: `/web/discover/games/devlog/posts/${this.game.id}`,
 					noAutoload: !this.game._is_devlog,
-				},
+				}
 			);
 		}
 

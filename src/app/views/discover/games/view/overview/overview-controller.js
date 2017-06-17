@@ -31,7 +31,7 @@ angular
 		SplitTest,
 		Device,
 		PartnerReferral,
-		gettextCatalog,
+		gettextCatalog
 	) {
 		var _this = this;
 		var wasHistoricalView = History.inHistorical;
@@ -60,7 +60,7 @@ angular
 		});
 
 		$scope.$watch('gameCtrl.hasScores && gameCtrl.trophiesCount', function(
-			val,
+			val
 		) {
 			// Whether or now the achievements row should be two columns.
 			// When there is both scores and trophies, we split them in half.
@@ -136,7 +136,7 @@ angular
 
 			this.posts = ActivityFeedService.bootstrap(
 				Fireside_Post.populate(payload.posts),
-				{ inHistorical: wasHistoricalView },
+				{ inHistorical: wasHistoricalView }
 			);
 			this.songs = Game_Song.populate(payload.songs);
 			this.recommendedGames = Game.populate(payload.recommendedGames);
@@ -154,10 +154,10 @@ angular
 			$scope.gameCtrl.installableBuilds = Game.pluckInstallableBuilds(
 				this.packages || [],
 				os,
-				arch,
+				arch
 			);
 			$scope.gameCtrl.browserBuilds = Game.pluckBrowserBuilds(
-				this.packages || [],
+				this.packages || []
 			);
 
 			// On Client we only want to include HTML games.
@@ -169,7 +169,7 @@ angular
 
 			// Pull in ROMs to the browser builds.
 			$scope.gameCtrl.browserBuilds = $scope.gameCtrl.browserBuilds.concat(
-				Game.pluckRomBuilds(_this.packages || []),
+				Game.pluckRomBuilds(_this.packages || [])
 			);
 
 			// The releases section exists if there are releases or songs.
@@ -183,12 +183,12 @@ angular
 				// If they had plays from a previous build but no longer have builds.
 				if (this.playCount + this.downloadCount) {
 					this.playsTooltip = gettextCatalog.getString(
-						'This game used to have playable builds but they have been removed.',
+						'This game used to have playable builds but they have been removed.'
 					);
 				} else {
 					this.showNaPlays = true;
 					this.playsTooltip = gettextCatalog.getString(
-						'This game has no playable builds yet.',
+						'This game has no playable builds yet.'
 					);
 				}
 			}
@@ -213,10 +213,10 @@ angular
 				'/web/discover/games/videos/' +
 					$stateParams.id +
 					'?page=' +
-					this.videoCommentsPage,
+					this.videoCommentsPage
 			).then(function(response) {
 				_this.videoComments = _this.videoComments.concat(
-					Comment_Video.populate(response.videos),
+					Comment_Video.populate(response.videos)
 				);
 			});
 		};

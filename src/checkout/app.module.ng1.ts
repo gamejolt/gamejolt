@@ -42,7 +42,7 @@ export const AppModuleNg1 = angular
 			$locationProvider: ng.ILocationProvider,
 			$uiViewScrollProvider: any,
 			$compileProvider: ng.ICompileProvider,
-			$sceDelegateProvider: ng.ISCEDelegateProvider,
+			$sceDelegateProvider: ng.ISCEDelegateProvider
 		) => {
 			$sceDelegateProvider.resourceUrlWhitelist([
 				'self',
@@ -67,10 +67,10 @@ export const AppModuleNg1 = angular
 				// Since we're using the "app://" protocol, we have to change the sanitization whitelist
 				// to include the app protocol as well. Otherwise we get "unsafe:" prefixed onto certain URLs.
 				$compileProvider.aHrefSanitizationWhitelist(
-					/^\s*(https?|ftp|mailto|tel|file|app):/,
+					/^\s*(https?|ftp|mailto|tel|file|app):/
 				);
 				$compileProvider.imgSrcSanitizationWhitelist(
-					/^\s*((https?|ftp|file|blob|app):|data:image\/)/,
+					/^\s*((https?|ftp|file|blob|app):|data:image\/)/
 				);
 			}
 
@@ -110,7 +110,7 @@ export const AppModuleNg1 = angular
 			};
 
 			Translate.addLanguageUrls(languages);
-		},
+		}
 	)
 	/*@ngInject*/
 	.run(
@@ -118,12 +118,12 @@ export const AppModuleNg1 = angular
 			$q: ng.IQService,
 			$animate: ng.animate.IAnimateService,
 			$rootScope: ng.IRootScopeService,
-			gettextCatalog: ng.gettext.gettextCatalog,
+			gettextCatalog: ng.gettext.gettextCatalog
 		) => {
 			bootstrapFacade($q, $animate);
 			gettextCatalog.setCurrentLanguage(Translate.lang);
 			Analytics.initAngular($rootScope);
 			Meta.initAngular($rootScope);
 			Referrer.initAngular($rootScope);
-		},
+		}
 	).name;

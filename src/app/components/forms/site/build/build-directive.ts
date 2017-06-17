@@ -22,7 +22,7 @@ export function SiteBuildFormFactory(Form: any) {
 
 		if (!scope.isLoaded) {
 			Api.sendRequest(
-				'/web/dash/sites/upload-build/' + scope.formModel.site_id,
+				'/web/dash/sites/upload-build/' + scope.formModel.site_id
 			).then((payload: any) => {
 				scope.isLoaded = true;
 				scope.maxFilesize = payload.maxFilesize;
@@ -37,7 +37,7 @@ export function SiteBuildFormFactory(Form: any) {
 			{
 				file: scope.formModel.file,
 				progress: event => (scope.formModel._progress = event),
-			},
+			}
 		);
 	};
 

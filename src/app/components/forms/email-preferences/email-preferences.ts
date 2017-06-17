@@ -30,10 +30,10 @@ export class FormEmailPreferences extends BaseForm<User> {
 			{
 				key: 'notify_followed_game_updates',
 				label: this.$gettext(
-					'dash.email_prefs.notify_followed_game_updates_label',
+					'dash.email_prefs.notify_followed_game_updates_label'
 				),
 				help: this.$gettext(
-					'dash.email_prefs.notify_followed_game_updates_help',
+					'dash.email_prefs.notify_followed_game_updates_help'
 				),
 			},
 			{

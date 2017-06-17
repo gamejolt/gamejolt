@@ -103,7 +103,7 @@ export class AppForumPostListItem extends Vue {
 			const payload = await Api.sendRequest(
 				'/web/forums/posts/replies/' + this.post.id,
 				undefined,
-				{ noErrorRedirect: true },
+				{ noErrorRedirect: true }
 			);
 
 			this.replies = ForumPost.populate(payload.replies);
@@ -115,7 +115,7 @@ export class AppForumPostListItem extends Vue {
 		} catch (e) {
 			Growls.error(
 				this.$gettext(`Couldn't load replies for some reason.`),
-				this.$gettext(`Loading Failed`),
+				this.$gettext(`Loading Failed`)
 			);
 		}
 	}
@@ -134,7 +134,7 @@ export class AppForumPostListItem extends Vue {
 		try {
 			const payload = await Api.sendRequest(
 				'/web/forums/posts/parent/' + this.post.id,
-				{ noErrorRedirect: true },
+				{ noErrorRedirect: true }
 			);
 			this.parent = new ForumPost(payload.parent);
 			this.showingParent = true;

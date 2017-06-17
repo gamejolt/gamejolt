@@ -3,7 +3,7 @@ angular
 	.config(function($stateProvider, $urlRouterProvider) {
 		$urlRouterProvider.when(
 			'/games/{category:arcade|action|adventure|rpg|strategy-sim|platformer|shooter|puzzle|sports|other}/{slug:path}/{id:int}',
-			'/games/:slug/:id',
+			'/games/:slug/:id'
 		);
 
 		$stateProvider.state('discover.games.view.overview', {

@@ -17,7 +17,7 @@ export class AvatarListComponent {
 	constructor() {
 		// Pull in new comments, huzzah!
 		Comment.fetch(this.resource, this.resourceId, 1).then(
-			(payload: any) => (this.comments = Comment.populate(payload.comments)),
+			(payload: any) => (this.comments = Comment.populate(payload.comments))
 		);
 	}
 

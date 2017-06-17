@@ -13,7 +13,7 @@ angular.module('App.Views').config(function($stateProvider) {
 						'/' +
 						$stateParams.table +
 						'/' +
-						$stateParams.user,
+						$stateParams.user
 				);
 			},
 		},

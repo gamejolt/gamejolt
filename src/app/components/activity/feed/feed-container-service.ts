@@ -61,7 +61,7 @@ export class ActivityFeedContainer {
 
 	constructor(
 		items: ActivityFeedInput[],
-		options: ActivityFeedContainerOptions,
+		options: ActivityFeedContainerOptions
 	) {
 		this.append(items);
 

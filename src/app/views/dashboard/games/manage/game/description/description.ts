@@ -32,7 +32,7 @@ export default class RouteDashGamesManageGameDescription extends Vue {
 
 		Growls.success(
 			this.$gettext(`Your game description has been saved.`),
-			this.$gettext(`Description Saved`),
+			this.$gettext(`Description Saved`)
 		);
 		Scroll.to(0);
 	}

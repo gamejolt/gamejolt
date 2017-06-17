@@ -3,7 +3,7 @@ angular
 	.directive('gjFormDashboardGameKeyGroup', function(
 		Form,
 		KeyGroup,
-		Game_Package,
+		Game_Package
 	) {
 		var form = new Form({
 			model: 'KeyGroup',

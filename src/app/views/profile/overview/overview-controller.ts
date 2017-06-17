@@ -14,7 +14,7 @@ export class OverviewCtrl {
 	constructor(
 		@Inject('$scope') $scope: any,
 		@Inject('App') app: App,
-		@Inject('payload') payload: any,
+		@Inject('payload') payload: any
 	) {
 		let title = `${$scope.profileCtrl.user.display_name} (@${$scope.profileCtrl
 			.user.username}) - `;

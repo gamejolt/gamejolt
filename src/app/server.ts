@@ -35,7 +35,7 @@ export default (context: any) => {
 					} else {
 						return null;
 					}
-				}),
+				})
 			)
 				.then((componentState: any) => {
 					console.log(`data pre-fetch: ${Date.now() - s}ms`);

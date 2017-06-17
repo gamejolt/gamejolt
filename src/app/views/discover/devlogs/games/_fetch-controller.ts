@@ -9,7 +9,7 @@ interface Scope extends ng.IScope {
 export class FetchCtrl {
 	constructor(
 		@Inject('$scope') $scope: Scope,
-		@Inject('payload') payload: any,
+		@Inject('payload') payload: any
 	) {
 		$scope.$ctrl.listing.processPayload(payload);
 	}

@@ -23,5 +23,5 @@ angular
 					widgetUrl +
 					'" frameborder="0" width="500" height="245"></iframe>';
 			});
-		},
+		}
 	);

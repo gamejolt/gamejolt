@@ -59,7 +59,7 @@ export class AppGameCoverButtons extends Vue {
 
 		// Prioritize HTML build.
 		const defaultBuild = this.browserBuilds.find(
-			item => item.type === GameBuild.TYPE_HTML,
+			item => item.type === GameBuild.TYPE_HTML
 		);
 
 		const build = this.chooseBuild(this.browserBuilds, defaultBuild);
@@ -94,7 +94,7 @@ export class AppGameCoverButtons extends Vue {
 		// as the game's primary sellable.
 		this.$emit(
 			'buy',
-			this.packages.find(item => item._sellable!.id === this.game.sellable.id),
+			this.packages.find(item => item._sellable!.id === this.game.sellable.id)
 		);
 	}
 }

@@ -10,7 +10,7 @@ angular
 		$rootScope,
 		Client_Library,
 		Device,
-		Growls,
+		Growls
 	) {
 		var _this = this;
 
@@ -68,7 +68,7 @@ angular
 
 			$rootScope.$emit(
 				'Client_Launcher.gameLaunched',
-				this.currentlyPlaying.length,
+				this.currentlyPlaying.length
 			);
 
 			return localPackage.$setRunningPid(launchInstance.pid);
@@ -82,7 +82,7 @@ angular
 			if (removedItems.length) {
 				$rootScope.$emit(
 					'Client_Launcher.gameClosed',
-					this.currentlyPlaying.length,
+					this.currentlyPlaying.length
 				);
 			}
 		};

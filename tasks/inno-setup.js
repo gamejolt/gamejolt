@@ -28,7 +28,7 @@ var InnoSetup = function(appDir, outDir, version, certFile, certPw) {
 InnoSetup.prototype.build = function() {
 	var script = fs.readFileSync(
 		path.resolve(__dirname, 'vendor', 'gamejolt.iss'),
-		{ encoding: 'utf8' },
+		{ encoding: 'utf8' }
 	);
 	script = script
 		.replace(/\{\{APP_DIR\}\}/g, shellEscape(this.appDir))

@@ -16,7 +16,7 @@ angular
 		User,
 		Shell,
 		gettextCatalog,
-		filteringContainer,
+		filteringContainer
 	) {
 		var _this = this;
 
@@ -86,12 +86,12 @@ angular
 				if (this.isOwner) {
 					App.title = gettextCatalog.getString(
 						'library.collection.followed_owner_page_title',
-						{ user: '@' + user.username },
+						{ user: '@' + user.username }
 					);
 				} else {
 					App.title = gettextCatalog.getString(
 						'library.collection.followed_page_title',
-						{ user: '@' + user.username },
+						{ user: '@' + user.username }
 					);
 				}
 			} else if (this.type == 'playlist') {
@@ -101,12 +101,12 @@ angular
 				if (this.isOwner) {
 					App.title = gettextCatalog.getString(
 						'library.collection.playlist_owner_page_title',
-						{ playlist: playlist.name, user: '@' + playlist.user.username },
+						{ playlist: playlist.name, user: '@' + playlist.user.username }
 					);
 				} else {
 					App.title = gettextCatalog.getString(
 						'library.collection.playlist_page_title',
-						{ playlist: playlist.name, user: '@' + playlist.user.username },
+						{ playlist: playlist.name, user: '@' + playlist.user.username }
 					);
 				}
 			} else if (this.type == 'developer') {
@@ -116,12 +116,12 @@ angular
 				if (this.isOwner) {
 					App.title = gettextCatalog.getString(
 						'library.collection.developer_owner_page_title',
-						{ user: '@' + user.username },
+						{ user: '@' + user.username }
 					);
 				} else {
 					App.title = gettextCatalog.getString(
 						'library.collection.developer_page_title',
-						{ user: '@' + user.username },
+						{ user: '@' + user.username }
 					);
 				}
 			} else if (this.type == 'owned') {
@@ -144,7 +144,7 @@ angular
 				} else {
 					App.title = gettextCatalog.getString(
 						'Game Recommendations for {{ user }}',
-						{ user: '@' + user.username },
+						{ user: '@' + user.username }
 					);
 				}
 			} else if (this.type == 'bundle') {
@@ -152,13 +152,13 @@ angular
 				this.bundle = bundle;
 				App.title = gettextCatalog.getString(
 					'library.collection.bundle_page_title',
-					{ bundle: bundle.title },
+					{ bundle: bundle.title }
 				);
 			} else if (this.type == 'tag') {
 				this.tag = this.collection.id;
 				App.title = gettextCatalog.getString(
 					'library.collection.tag_page_title',
-					{ tag: this.collection.id },
+					{ tag: this.collection.id }
 				);
 			}
 
@@ -218,7 +218,7 @@ angular
 				$state.go(
 					_this.collection.getSref(),
 					_this.collection.getSrefParams(),
-					{ notify: false, location: 'replace' },
+					{ notify: false, location: 'replace' }
 				);
 			});
 		};
@@ -227,8 +227,8 @@ angular
 			ModalConfirm.show(
 				gettextCatalog.getString(
 					'library.playlists.remove_playlist_confirmation',
-					{ playlist: _this.playlist.name },
-				),
+					{ playlist: _this.playlist.name }
+				)
 			).then(function() {
 				_this.playlist
 					.$remove()
@@ -238,24 +238,24 @@ angular
 						Growls.success(
 							gettextCatalog.getString(
 								'library.playlists.remove_playlist_success_growl',
-								{ playlist: _this.playlist.name },
+								{ playlist: _this.playlist.name }
 							),
 							gettextCatalog.getString(
 								'library.playlists.remove_playlist_success_growl_title',
-								{ playlist: _this.playlist.name },
-							),
+								{ playlist: _this.playlist.name }
+							)
 						);
 					})
 					.catch(function() {
 						Growls.success(
 							gettextCatalog.getString(
 								'library.playlists.remove_playlist_error_growl',
-								{ playlist: _this.playlist.name },
+								{ playlist: _this.playlist.name }
 							),
 							gettextCatalog.getString(
 								'library.playlists.remove_playlist_error_growl_title',
-								{ playlist: _this.playlist.name },
-							),
+								{ playlist: _this.playlist.name }
+							)
 						);
 					});
 			});

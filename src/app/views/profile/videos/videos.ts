@@ -43,7 +43,7 @@ export default class RouteProfileVideos extends Vue {
 		++this.page;
 
 		const response = await Api.sendRequest(
-			`/web/profile/videos/@${this.user.username}?page=${this.page}`,
+			`/web/profile/videos/@${this.user.username}?page=${this.page}`
 		);
 		this.videos = this.videos.concat(CommentVideo.populate(response.videos));
 	}

@@ -71,7 +71,7 @@ export default class RouteDiscoverDevlogsOverview extends Vue {
 				{
 					type: 'Fireside_Post',
 					url: '/web/discover/devlogs/posts',
-				},
+				}
 			);
 		}
 	}

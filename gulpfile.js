@@ -142,5 +142,5 @@ require('./tasks/game-api-doc.js')(config);
 
 gulp.task(
 	'pre',
-	gulp.parallel('terms', 'game-api-doc:nav', 'game-api-doc:compile'),
+	gulp.parallel('terms', 'game-api-doc:nav', 'game-api-doc:compile')
 );

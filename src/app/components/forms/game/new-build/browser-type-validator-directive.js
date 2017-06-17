@@ -2,14 +2,14 @@ angular
 	.module('App.Forms.Dashboard')
 	.directive('gjFormDashboardGameNewBuildBrowserTypeValidator', function(
 		$parse,
-		Game_Build,
+		Game_Build
 	) {
 		return {
 			restrict: 'A',
 			require: 'ngModel',
 			link: function(scope, element, attrs, ngModel) {
 				var validTypesParsed = $parse(
-					attrs.gjFormDashboardGameNewBuildBrowserTypeValidator,
+					attrs.gjFormDashboardGameNewBuildBrowserTypeValidator
 				);
 
 				ngModel.$validators.browserType = function(modelVal, viewVal) {

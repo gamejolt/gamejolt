@@ -34,7 +34,7 @@ export default class RouteDashGamesManageGameHeader extends Vue {
 		const result = await ModalConfirm.show(
 			this.$gettext(`Are you sure you want to remove your game header?`),
 			undefined,
-			'yes',
+			'yes'
 		);
 
 		if (result) {
@@ -45,7 +45,7 @@ export default class RouteDashGamesManageGameHeader extends Vue {
 	onSaved() {
 		Growls.success(
 			this.$gettext('dash.games.header.saved_growl'),
-			this.$gettext('dash.games.header.saved_growl_title'),
+			this.$gettext('dash.games.header.saved_growl_title')
 		);
 		Scroll.to(0);
 	}

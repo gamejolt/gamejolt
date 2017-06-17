@@ -34,7 +34,7 @@ export default class RouteAuthResetPassword extends Vue {
 	onSubmitted() {
 		Growls.success(
 			this.$gettext('auth.reset_password.success_growl'),
-			this.$gettext('auth.reset_password.success_growl_title'),
+			this.$gettext('auth.reset_password.success_growl_title')
 		);
 		this.$router.push({ name: 'auth.login' });
 	}

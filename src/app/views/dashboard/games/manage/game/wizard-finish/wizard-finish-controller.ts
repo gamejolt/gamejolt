@@ -5,7 +5,7 @@ import { App } from '../../../../../../../app-service';
 export class WizardFinishCtrl {
 	constructor(
 		@Inject('App') app: App,
-		@Inject('gettextCatalog') gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject('gettextCatalog') gettextCatalog: ng.gettext.gettextCatalog
 	) {
 		app.title = gettextCatalog.getString('The End Is Not the End');
 	}

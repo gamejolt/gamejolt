@@ -45,7 +45,7 @@ module.exports = function(config) {
 			'node_modules',
 			'client-voodoo',
 			'node_modules',
-			'lzma-native',
+			'lzma-native'
 		);
 	}
 
@@ -59,7 +59,7 @@ module.exports = function(config) {
 				'node_modules',
 				'client-voodoo',
 				'node_modules',
-				'windows-mutex',
+				'windows-mutex'
 			);
 		}
 	}
@@ -75,7 +75,7 @@ module.exports = function(config) {
 			'cd ' +
 				path.resolve(windowsMutexPath) +
 				' && nw-gyp clean configure build --target=0.12.3 --arch=' +
-				config.gypArch,
+				config.gypArch
 		);
 	}
 
@@ -121,7 +121,7 @@ module.exports = function(config) {
 				'/win32-package.tar.gz ' +
 				s3Dir +
 				'/win32-package.tar.gz --acl public-read',
-		]),
+		])
 	);
 
 	// We can skip all this stuff if not doing a client build.
@@ -231,11 +231,11 @@ module.exports = function(config) {
 		// Copy the package.json file over into the build directory.
 		fs.writeFileSync(
 			config.buildDir + '/package.json',
-			JSON.stringify(clientJson),
+			JSON.stringify(clientJson)
 		);
 		fs.writeFileSync(
 			config.buildDir + '/update-hook.js',
-			fs.readFileSync(path.resolve('./src/update-hook.js')),
+			fs.readFileSync(path.resolve('./src/update-hook.js'))
 		);
 
 		cb();
@@ -255,13 +255,13 @@ module.exports = function(config) {
 			'cd ' +
 				path.resolve(config.buildDir, windowsMutexPath) +
 				' && nw-gyp clean configure build --target=0.12.3 --arch=' +
-				config.gypArch,
+				config.gypArch
 		);
 		nodeModuletasks.push(
 			path.resolve('tasks/rid.exe') +
 				' ' +
 				path.resolve(config.buildDir, lzmaPath, 'binding/lzma_native.node') +
-				' nw.exe GameJoltClient.exe',
+				' nw.exe GameJoltClient.exe'
 		);
 		nodeModuletasks.push(
 			path.resolve('tasks/rid.exe') +
@@ -269,9 +269,9 @@ module.exports = function(config) {
 				path.resolve(
 					config.buildDir,
 					windowsMutexPath,
-					'build/Release/CreateMutex.node',
+					'build/Release/CreateMutex.node'
 				) +
-				' nw.exe GameJoltClient.exe',
+				' nw.exe GameJoltClient.exe'
 		);
 	}
 
@@ -369,7 +369,7 @@ module.exports = function(config) {
 		var base = path.join(releaseDir, config.platformArch);
 		var packagePath = path.join(
 			releaseDir,
-			config.platformArch + '-package.zip',
+			config.platformArch + '-package.zip'
 		);
 
 		if (config.platform != 'osx') {
@@ -403,9 +403,9 @@ module.exports = function(config) {
 										throw err;
 									}
 									cb();
-								},
+								}
 							);
-						},
+						}
 					);
 				});
 			});
@@ -482,7 +482,7 @@ module.exports = function(config) {
 				path.resolve(releaseDir),
 				packageJson.version,
 				certFile,
-				certPw.trim(),
+				certPw.trim()
 			);
 			return builder.build();
 		});
@@ -515,8 +515,8 @@ module.exports = function(config) {
 					'client:modify-urls',
 					'client:nw',
 					'client:nw-unpackage',
-					'client:package',
-				),
+					'client:package'
+				)
 			);
 		}
 	}

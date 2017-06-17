@@ -22,5 +22,5 @@ export const routeLibraryCollectionRoutes: VueRouter.RouteConfig[] = routes.map(
 				collectionType: route[0],
 			},
 		};
-	},
+	}
 );
