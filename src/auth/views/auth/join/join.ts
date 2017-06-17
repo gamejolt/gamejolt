@@ -19,32 +19,28 @@ import { loggedUserBlock } from '../auth';
 		AppAuthJoin,
 	},
 })
-export default class RouteAuthJoin extends Vue
-{
+export default class RouteAuthJoin extends Vue {
 	@Mutation setCredentials: Store['setCredentials'];
 
-	Connection = makeObservableService( Connection );
+	Connection = makeObservableService(Connection);
 
 	@BeforeRouteEnter()
-	routeEnter()
-	{
+	routeEnter() {
 		return loggedUserBlock();
 	}
 
-	created()
-	{
-		Meta.title = this.$gettext( 'auth.join.page_title' );
+	created() {
+		Meta.title = this.$gettext('auth.join.page_title');
 	}
 
-	onJoin( formModel: any )
-	{
+	onJoin(formModel: any) {
 		// We store these so we can log them in automatically once their
 		// verification happens.
-		this.setCredentials( {
+		this.setCredentials({
 			username: formModel.username,
 			password: formModel.password,
-		} );
+		});
 
-		this.$router.push( { name: 'auth.join-almost' } );
+		this.$router.push({ name: 'auth.join-almost' });
 	}
 }

@@ -26,9 +26,8 @@ import { Store } from '../../../store/index';
 		number,
 	},
 })
-export class AppGameFilteringWidget extends Vue
-{
-	@Prop( Object ) filtering: GameFilteringContainer;
+export class AppGameFilteringWidget extends Vue {
+	@Prop(Object) filtering: GameFilteringContainer;
 
 	@State app: Store['app'];
 
@@ -38,61 +37,51 @@ export class AppGameFilteringWidget extends Vue
 	hovered: any = {};
 
 	orderedFilters: any = {
-		price: [ 'free', 'sale', 'paid', '5-less', '15-less', '30-less' ],
-		os: [ 'windows', 'mac', 'linux', 'other', 'rom' ],
-		browser: [ 'html', 'flash', 'unity', 'applet', 'silverlight' ],
-		maturity: [ 'everyone', 'teen', 'adult' ],
-		status: [ 'complete', 'wip' ],
-		partners: [ 'partners' ],
+		price: ['free', 'sale', 'paid', '5-less', '15-less', '30-less'],
+		os: ['windows', 'mac', 'linux', 'other', 'rom'],
+		browser: ['html', 'flash', 'unity', 'applet', 'silverlight'],
+		maturity: ['everyone', 'teen', 'adult'],
+		status: ['complete', 'wip'],
+		partners: ['partners'],
 	};
 
-	onPopoverShown( filter: string )
-	{
-		this.visiblePopovers[ filter ] = true;
+	onPopoverShown(filter: string) {
+		this.visiblePopovers[filter] = true;
 	}
 
-	onPopoverHidden( filter: string )
-	{
-		this.visiblePopovers[ filter ] = false;
+	onPopoverHidden(filter: string) {
+		this.visiblePopovers[filter] = false;
 	}
 
-	onMouseover( filter: string, option: any )
-	{
-		Vue.set( this.hovered, filter, option );
+	onMouseover(filter: string, option: any) {
+		Vue.set(this.hovered, filter, option);
 	}
 
-	onMouseout( filter: string )
-	{
-		Vue.set( this.hovered, filter, null );
+	onMouseout(filter: string) {
+		Vue.set(this.hovered, filter, null);
 	}
 
-	toggleFilterOption( filter: string, option: any )
-	{
+	toggleFilterOption(filter: string, option: any) {
 		const label = filter + '-' + option;
-		if ( this.filtering.isFilterOptionSet( filter, option ) ) {
-			Analytics.trackEvent( 'game-filtering', 'toggle', label + '-off' );
-		}
-		else {
-			Analytics.trackEvent( 'game-filtering', 'toggle', label + '-on' );
+		if (this.filtering.isFilterOptionSet(filter, option)) {
+			Analytics.trackEvent('game-filtering', 'toggle', label + '-off');
+		} else {
+			Analytics.trackEvent('game-filtering', 'toggle', label + '-on');
 		}
 
-		this.filtering.toggleFilterOption( filter, option );
+		this.filtering.toggleFilterOption(filter, option);
 		this.filtering.onChanged();
 	}
 
-	getJolticon( filter: string, option: any )
-	{
-		if ( filter === 'os' ) {
-			return (option === 'other' ? 'other-os' : option);
-		}
-		else if ( filter === 'browser' ) {
-			if ( option === 'html' ) {
+	getJolticon(filter: string, option: any) {
+		if (filter === 'os') {
+			return option === 'other' ? 'other-os' : option;
+		} else if (filter === 'browser') {
+			if (option === 'html') {
 				return 'html5';
-			}
-			else if ( option === 'applet' ) {
+			} else if (option === 'applet') {
 				return 'java';
-			}
-			else {
+			} else {
 				return option;
 			}
 		}

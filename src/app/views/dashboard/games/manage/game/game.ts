@@ -22,8 +22,7 @@ import { AppMediaBar } from '../../../../../../lib/gj-lib-client/components/medi
 		AppMediaBar,
 	},
 })
-export default class RouteDashGamesManageGame extends Vue
-{
+export default class RouteDashGamesManageGame extends Vue {
 	@RouteState game: RouteStore['game'];
 	@RouteState isWizard: RouteStore['isWizard'];
 	@RouteState media: RouteStore['media'];
@@ -32,5 +31,5 @@ export default class RouteDashGamesManageGame extends Vue
 	@RouteAction saveDraft: RouteStore['saveDraft'];
 
 	Game = Game;
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 }

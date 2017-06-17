@@ -24,18 +24,17 @@ import { BaseModal } from '../../../lib/gj-lib-client/components/modal/base';
 		AppSocialFacebookLike,
 	},
 })
-export default class AppBroadcastModal extends BaseModal
-{
-	@Prop( { type: Array, default: () => [] } ) posts: FiresidePost[];
+export default class AppBroadcastModal extends BaseModal {
+	@Prop({ type: Array, default: () => [] })
+	posts: FiresidePost[];
 
 	post: FiresidePost | null = null;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 	Environment = Environment;
 
-	created()
-	{
-		if ( !Screen.isXs ) {
+	created() {
+		if (!Screen.isXs) {
 			this.post = this.posts[0];
 		}
 	}

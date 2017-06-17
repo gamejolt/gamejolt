@@ -17,33 +17,26 @@ import { FormToken } from '../../forms/token/token';
 		AppLoading,
 		AppExpand,
 		FormToken,
-	}
+	},
 })
-export default class AppUserTokenModal extends BaseModal
-{
+export default class AppUserTokenModal extends BaseModal {
 	token = '';
 	isChanging = false;
 
-	async created()
-	{
+	async created() {
 		try {
-			const response = await Api.sendRequest( '/web/dash/token' );
+			const response = await Api.sendRequest('/web/dash/token');
 			this.token = response.token;
-		}
-		catch ( e ) {
-			Growls.error(
-				Translate.$gettext( `Couldn't get your token.` ),
-			);
+		} catch (e) {
+			Growls.error(Translate.$gettext(`Couldn't get your token.`));
 		}
 	}
 
-	showChangeForm()
-	{
+	showChangeForm() {
 		this.isChanging = true;
 	}
 
-	onTokenChanged( formModel: { token: string } )
-	{
+	onTokenChanged(formModel: { token: string }) {
 		this.isChanging = false;
 		this.token = formModel.token;
 	}

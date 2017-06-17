@@ -26,42 +26,39 @@ import { Store } from '../../../store/index';
 		number,
 	},
 })
-export class AppGameFollowWidget extends Vue
-{
-	@Prop( Game ) game: Game;
-	@Prop( Boolean ) sparse?: boolean;
+export class AppGameFollowWidget extends Vue {
+	@Prop(Game) game: Game;
+	@Prop(Boolean) sparse?: boolean;
 
 	@State app: Store['app'];
 
 	followTooltip: string;
 	isProcessing = false;
 
-	async onClick()
-	{
-		if ( !this.app.user || this.isProcessing ) {
+	async onClick() {
+		if (!this.app.user || this.isProcessing) {
 			return;
 		}
 
 		this.isProcessing = true;
 
-		if ( !this.game.is_following ) {
+		if (!this.game.is_following) {
 			try {
 				await this.game.$follow();
-			}
-			catch ( e ) {
+			} catch (e) {
 				Growls.error(
-					this.$gettext( 'Something has prevented you from following this game.' )
+					this.$gettext(
+						'Something has prevented you from following this game.',
+					),
 				);
 			}
-		}
-		else {
+		} else {
 			try {
 				await this.game.$unfollow();
-			}
-			catch ( e ) {
+			} catch (e) {
 				Growls.error(
-					this.$gettext( 'library.followed.remove_game_error_growl' ),
-					this.$gettext( 'library.followed.remove_game_error_growl_title' )
+					this.$gettext('library.followed.remove_game_error_growl'),
+					this.$gettext('library.followed.remove_game_error_growl_title'),
 				);
 			}
 		}

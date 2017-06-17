@@ -9,38 +9,38 @@ import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/gr
 import { Auth } from '../../../../../../lib/gj-lib-client/components/auth/auth.service';
 
 @Component({})
-export default class RouteAuthLinkedAccountTwitterCallback extends Vue
-{
+export default class RouteAuthLinkedAccountTwitterCallback extends Vue {
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
+	routeEnter(this: undefined, route: VueRouter.Route) {
 		const { oauth_verifier, state } = route.query;
 		return Api.sendRequest(
-			'/web/auth/twitter/callback?oauth_verifier=' + oauth_verifier + '&state=' + state,
+			'/web/auth/twitter/callback?oauth_verifier=' +
+				oauth_verifier +
+				'&state=' +
+				state,
 			{},
 		);
 	}
 
-	routed()
-	{
-		if ( !this.$payload.success ) {
-
+	routed() {
+		if (!this.$payload.success) {
 			// If they don't have an account yet, let's create one for them. For
 			// Twitter, they need to fill out their email address, so take them
 			// to the page to do that.
-			if ( this.$payload.reason && this.$payload.reason === 'no-account' ) {
-				this.$router.push( {
+			if (this.$payload.reason && this.$payload.reason === 'no-account') {
+				this.$router.push({
 					name: 'auth.linked-account.twitter.finalize',
 					params: { state: this.$route.params.state },
-				} );
-			}
-			else {
-				Growls.error( {
+				});
+			} else {
+				Growls.error({
 					sticky: true,
-					title: this.$gettext( 'auth.linked_account.twitter.failed_growl_title' ),
-					message: this.$gettext( 'auth.linked_account.twitter.failed_growl' ),
-				} );
-				this.$router.push( { name: 'auth.join' } );
+					title: this.$gettext(
+						'auth.linked_account.twitter.failed_growl_title',
+					),
+					message: this.$gettext('auth.linked_account.twitter.failed_growl'),
+				});
+				this.$router.push({ name: 'auth.join' });
 			}
 			return;
 		}
@@ -48,8 +48,7 @@ export default class RouteAuthLinkedAccountTwitterCallback extends Vue
 		Auth.redirectDashboard();
 	}
 
-	render( h: Vue.CreateElement )
-	{
-		return h( AuthLinkedAccountProcessing );
+	render(h: Vue.CreateElement) {
+		return h(AuthLinkedAccountProcessing);
 	}
 }

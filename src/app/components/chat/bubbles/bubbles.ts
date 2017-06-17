@@ -9,29 +9,25 @@ import { ChatClient } from '../client';
 
 @View
 @Component({})
-export class AppChatBubbles extends Vue
-{
+export class AppChatBubbles extends Vue {
 	@State chat: ChatClient;
 	@State isRightPaneVisible: Store['isRightPaneVisible'];
 	@Action toggleRightPane: Store['toggleRightPane'];
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	activateRoom( roomId: number )
-	{
-		if ( !this.isRightPaneVisible ) {
+	activateRoom(roomId: number) {
+		if (!this.isRightPaneVisible) {
 			this.toggleRightPane();
 
-			if ( !this.chat.isInRoom( roomId ) ) {
-				this.chat.maximizeRoom( roomId );
+			if (!this.chat.isInRoom(roomId)) {
+				this.chat.maximizeRoom(roomId);
 			}
-		}
-		else {
-			if ( this.chat.isInRoom( roomId ) ) {
+		} else {
+			if (this.chat.isInRoom(roomId)) {
 				this.chat.minimizeRoom();
-			}
-			else {
-				this.chat.maximizeRoom( roomId );
+			} else {
+				this.chat.maximizeRoom(roomId);
 			}
 		}
 	}

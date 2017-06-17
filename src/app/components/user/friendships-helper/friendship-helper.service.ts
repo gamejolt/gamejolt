@@ -5,11 +5,9 @@ import { Translate } from '../../../../lib/gj-lib-client/components/translate/tr
 import { ModalConfirm } from '../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { appStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 
-export class UserFriendshipHelper
-{
-	static async sendRequest( targetUser: User )
-	{
-		const request = new UserFriendship( { target_user_id: targetUser.id } );
+export class UserFriendshipHelper {
+	static async sendRequest(targetUser: User) {
+		const request = new UserFriendship({ target_user_id: targetUser.id });
 
 		try {
 			await request.$save();
@@ -19,19 +17,17 @@ export class UserFriendshipHelper
 					`A friend request has been sent to @%{ username }. You'll be notified when they accept.`,
 					{ username: request.target_user.username },
 				),
-				Translate.$gettext( `Request Sent` ),
+				Translate.$gettext(`Request Sent`),
 			);
 
 			return request;
-		}
-		catch ( e ) {
-			Growls.error( Translate.$gettext( `Friend request could not be sent.` ) );
+		} catch (e) {
+			Growls.error(Translate.$gettext(`Friend request could not be sent.`));
 			throw e;
 		}
 	}
 
-	static async acceptRequest( request: UserFriendship )
-	{
+	static async acceptRequest(request: UserFriendship) {
 		try {
 			await request.$accept();
 
@@ -40,17 +36,15 @@ export class UserFriendshipHelper
 					`You are now friends with @%{ username }!`,
 					{ username: request.user.username },
 				),
-				Translate.$gettext( `Request Accepted` ),
+				Translate.$gettext(`Request Accepted`),
 			);
-		}
-		catch ( e ) {
-			Growls.error( Translate.$gettext( `Unable to accept friend request.` ) );
+		} catch (e) {
+			Growls.error(Translate.$gettext(`Unable to accept friend request.`));
 			throw e;
 		}
 	}
 
-	static async cancelRequest( request: UserFriendship )
-	{
+	static async cancelRequest(request: UserFriendship) {
 		const confirmResult = await ModalConfirm.show(
 			Translate.$gettextInterpolate(
 				`Cancel the friend request you sent to @%{ username }?`,
@@ -60,7 +54,7 @@ export class UserFriendshipHelper
 			'yes',
 		);
 
-		if ( !confirmResult ) {
+		if (!confirmResult) {
 			return false;
 		}
 
@@ -72,19 +66,17 @@ export class UserFriendshipHelper
 					`Your friend request to @%{ username } was canceled.`,
 					{ username: request.target_user.username },
 				),
-				Translate.$gettext( `Request Canceled` ),
+				Translate.$gettext(`Request Canceled`),
 			);
 
 			return response;
-		}
-		catch ( e ) {
-			Growls.error( Translate.$gettext( `Unable to cancel friend request.` ) );
+		} catch (e) {
+			Growls.error(Translate.$gettext(`Unable to cancel friend request.`));
 			throw e;
 		}
 	}
 
-	static async rejectRequest( request: UserFriendship )
-	{
+	static async rejectRequest(request: UserFriendship) {
 		const confirmResult = await ModalConfirm.show(
 			Translate.$gettextInterpolate(
 				`Dismiss the friend request from @%{ username }?`,
@@ -94,7 +86,7 @@ export class UserFriendshipHelper
 			'yes',
 		);
 
-		if ( !confirmResult ) {
+		if (!confirmResult) {
 			return false;
 		}
 
@@ -106,31 +98,28 @@ export class UserFriendshipHelper
 					`You have dismissed the friend request from @%{ username }.`,
 					{ username: request.user.username },
 				),
-				Translate.$gettext( `Request Dismissed` ),
+				Translate.$gettext(`Request Dismissed`),
 			);
 
 			return response;
-		}
-		catch ( e ) {
-			Growls.error( Translate.$gettext( `Unable to dismiss friend request.` ) );
+		} catch (e) {
+			Growls.error(Translate.$gettext(`Unable to dismiss friend request.`));
 			throw e;
 		}
 	}
 
-	static async removeFriend( friendship: UserFriendship )
-	{
-		const them = friendship.getThem( appStore.state.user! );
+	static async removeFriend(friendship: UserFriendship) {
+		const them = friendship.getThem(appStore.state.user!);
 
 		const confirmResult = await ModalConfirm.show(
-			Translate.$gettextInterpolate(
-				`Remove @%{ username } as a friend?`,
-				{ username: them.username },
-			),
+			Translate.$gettextInterpolate(`Remove @%{ username } as a friend?`, {
+				username: them.username,
+			}),
 			undefined,
 			'yes',
 		);
 
-		if ( !confirmResult ) {
+		if (!confirmResult) {
 			return false;
 		}
 
@@ -142,13 +131,12 @@ export class UserFriendshipHelper
 					`@%{ username } is no longer your friend.`,
 					{ username: them.username },
 				),
-				Translate.$gettext( 'Friend Removed' ),
+				Translate.$gettext('Friend Removed'),
 			);
 
 			return response;
-		}
-		catch ( e ) {
-			Growls.error( Translate.$gettext( 'Unable to remove friend.' ) );
+		} catch (e) {
+			Growls.error(Translate.$gettext('Unable to remove friend.'));
 			throw e;
 		}
 	}

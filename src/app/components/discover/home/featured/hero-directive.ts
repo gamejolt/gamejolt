@@ -6,9 +6,8 @@ import * as template from '!html-loader!./hero.html';
 	selector: 'gj-discover-home-featured-hero',
 	template,
 })
-export class HeroComponent
-{
-	@Input( '<' ) item: any;
+export class HeroComponent {
+	@Input('<') item: any;
 
 	game: any;
 	webm: string;
@@ -16,15 +15,12 @@ export class HeroComponent
 
 	screen = Screen;
 
-	constructor(
-		@Inject( '$sce' ) $sce: ng.ISCEService,
-	)
-	{
+	constructor(@Inject('$sce') $sce: ng.ISCEService) {
 		this.game = this.item.game;
 
-		if ( this.game.has_animated_thumbnail ) {
-			this.webm = $sce.trustAsResourceUrl( this.game.img_thumbnail_webm );
-			this.mp4 = $sce.trustAsResourceUrl( this.game.img_thumbnail_mp4 );
+		if (this.game.has_animated_thumbnail) {
+			this.webm = $sce.trustAsResourceUrl(this.game.img_thumbnail_webm);
+			this.mp4 = $sce.trustAsResourceUrl(this.game.img_thumbnail_mp4);
 		}
 	}
 }

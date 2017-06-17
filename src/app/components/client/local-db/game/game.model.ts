@@ -1,5 +1,4 @@
-export class LocalDbGame
-{
+export class LocalDbGame {
 	id = 0;
 
 	title = '';

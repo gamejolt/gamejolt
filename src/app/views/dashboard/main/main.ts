@@ -22,7 +22,6 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 		AppTooltip,
 	},
 })
-export default class RouteDashMain extends Vue
-{
+export default class RouteDashMain extends Vue {
 	@State app: Store['app'];
 }

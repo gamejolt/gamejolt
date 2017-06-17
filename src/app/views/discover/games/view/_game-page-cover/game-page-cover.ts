@@ -36,13 +36,10 @@ import { Store } from '../../../../../store/index';
 		AppTrackEvent,
 		AppPopoverTrigger,
 	},
-	filters: {
-
-	},
+	filters: {},
 })
-export class AppGamePageCover extends Vue
-{
-	@Prop( Game ) game: Game;
+export class AppGamePageCover extends Vue {
+	@Prop(Game) game: Game;
 
 	@State app: Store['app'];
 
@@ -51,8 +48,7 @@ export class AppGamePageCover extends Vue
 	date = date;
 	Game = Game;
 
-	created()
-	{
+	created() {
 		this.coverMediaItem = this.game.header_media_item || null;
 	}
 }

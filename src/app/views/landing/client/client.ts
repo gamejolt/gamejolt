@@ -31,52 +31,45 @@ const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 		AppScrollTo,
 	},
 })
-export default class RouteLandingClient extends Vue
-{
+export default class RouteLandingClient extends Vue {
 	platform = Device.os();
 	downloadSrc = '';
 	firesidePosts: FiresidePost[] = [];
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	created()
-	{
+	created() {
 		Meta.title = 'Game Jolt Client';
 	}
 
-	@BeforeRouteEnter( { cache: true, lazy: true } )
-	routeEnter()
-	{
-		return Api.sendRequest( '/web/client' );
+	@BeforeRouteEnter({ cache: true, lazy: true })
+	routeEnter() {
+		return Api.sendRequest('/web/client');
 	}
 
-	routed()
-	{
-		this.firesidePosts = FiresidePost.populate( this.$payload.firesidePosts );
+	routed() {
+		this.firesidePosts = FiresidePost.populate(this.$payload.firesidePosts);
 	}
 
-	async download( platform: string )
-	{
-		if ( platform === 'windows' ) {
+	async download(platform: string) {
+		if (platform === 'windows') {
 			platform = 'win32';
-		}
-		else if ( platform === 'linux' ) {
+		} else if (platform === 'linux') {
 			platform = 'linux64';
-		}
-		else if ( platform === 'mac' ) {
+		} else if (platform === 'mac') {
 			platform = 'osx64';
 		}
 
 		// This will reset the iframe since it removes it when there is no download src.
 		this.downloadSrc = '';
 
-		const response = await Axios.get( ManifestUrl );
+		const response = await Axios.get(ManifestUrl);
 
-		if ( !response.data[ platform ] || !response.data[ platform ].url ) {
-			Growls.error( `Couldn't find a download for your platform!` );
+		if (!response.data[platform] || !response.data[platform].url) {
+			Growls.error(`Couldn't find a download for your platform!`);
 			return;
 		}
 
-		this.downloadSrc = response.data[ platform ].url;
+		this.downloadSrc = response.data[platform].url;
 	}
 }

@@ -13,16 +13,14 @@ import { AppWidgetCompiler } from '../../../../../../lib/gj-lib-client/component
 		AppWidgetCompiler,
 	},
 })
-export class AppActivityFeedDevlogPostText extends Vue
-{
-	@Prop( FiresidePost ) post: FiresidePost;
+export class AppActivityFeedDevlogPostText extends Vue {
+	@Prop(FiresidePost) post: FiresidePost;
 
 	canToggleContent = false;
 	showFullContent = false;
 
-	toggleFull()
-	{
+	toggleFull() {
 		this.showFullContent = !this.showFullContent;
-		this.$emit( 'expanded' );
+		this.$emit('expanded');
 	}
 }

@@ -5,5 +5,5 @@ export const routeLandingAbout: VueRouter.RouteConfig = {
 	name: 'landing.about',
 	path: '/about',
 	props: true,
-	component: () => asyncComponentLoader( $import( './about' ) ),
+	component: () => asyncComponentLoader($import('./about')),
 };

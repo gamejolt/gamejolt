@@ -14,23 +14,20 @@ import { AppGameGrid } from '../../../components/game/grid/grid';
 		AppGameGrid,
 	},
 })
-export default class RouteSearchDevlogs extends Vue
-{
-	@Prop( Object ) payload: any;
+export default class RouteSearchDevlogs extends Vue {
+	@Prop(Object) payload: any;
 
-	Search = makeObservableService( Search );
+	Search = makeObservableService(Search);
 
-	@BeforeRouteEnter( { cache: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Search.search( route.query.q, {
+	@BeforeRouteEnter({ cache: true })
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Search.search(route.query.q, {
 			type: 'devlog',
-			page: route.query.page ? parseInt( route.query.page, 10 ) : 1,
-		} );
+			page: route.query.page ? parseInt(route.query.page, 10) : 1,
+		});
 	}
 
-	routed()
-	{
-		this.$emit( 'searchpayload', this.$payload );
+	routed() {
+		this.$emit('searchpayload', this.$payload);
 	}
 }

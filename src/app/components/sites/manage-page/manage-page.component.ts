@@ -9,30 +9,25 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 	selector: 'gj-sites-manage-page',
 	template,
 })
-export class SitesManagePageComponent implements OnInit
-{
+export class SitesManagePageComponent implements OnInit {
 	@Input() site: Site;
 	@Input() game?: Game;
 
 	tab: 'template' | 'static' | 'domain' = 'template';
 
-	get staticEnabled()
-	{
+	get staticEnabled() {
 		return this.site.status === Site.STATUS_ACTIVE && this.site.is_static;
 	}
 
-	get templateEnabled()
-	{
+	get templateEnabled() {
 		return this.site.status === Site.STATUS_ACTIVE && !this.site.is_static;
 	}
 
-	ngOnInit()
-	{
+	ngOnInit() {
 		this.tab = this.staticEnabled ? 'static' : 'template';
 	}
 
-	disable()
-	{
+	disable() {
 		return this.site.$deactivate();
 	}
 }

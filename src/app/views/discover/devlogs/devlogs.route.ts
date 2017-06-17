@@ -7,9 +7,6 @@ export const routeDiscoverDevlogs: VueRouter.RouteConfig = {
 	name: 'discover.devlogs',
 	path: '/devlogs',
 	props: true,
-	component: () => asyncComponentLoader( $import( './devlogs' ) ),
-	children: [
-		routeDiscoverDevlogsOverview,
-		routeDiscoverDevlogsGames,
-	],
+	component: () => asyncComponentLoader($import('./devlogs')),
+	children: [routeDiscoverDevlogsOverview, routeDiscoverDevlogsGames],
 };

@@ -18,30 +18,26 @@ import { ChatClient } from '../client';
 	},
 	filters: {
 		number,
-	}
+	},
 })
-export class AppChatSidebar extends Vue
-{
+export class AppChatSidebar extends Vue {
 	@State chat: ChatClient;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
 	shouldShowOfflineFriends = false;
 
-	get onlineFriends()
-	{
+	get onlineFriends() {
 		return this.chat.friendsList.collection.filter(
-			( item ) => item.isOnline || this.chat.notifications[ item.roomId ],
+			item => item.isOnline || this.chat.notifications[item.roomId],
 		);
 	}
 
-	get offlineFriends()
-	{
-		return this.chat.friendsList.collection.filter( ( item ) => !item.isOnline );
+	get offlineFriends() {
+		return this.chat.friendsList.collection.filter(item => !item.isOnline);
 	}
 
-	onPublicRoomClicked( roomId: number )
-	{
-		this.chat.enterRoom( roomId, true );
+	onPublicRoomClicked(roomId: number) {
+		this.chat.enterRoom(roomId, true);
 	}
 }

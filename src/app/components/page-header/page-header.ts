@@ -14,41 +14,36 @@ import { AppMediaItemCover } from '../media-item/cover/cover';
 	components: {
 		AppScrollAffix,
 		AppMediaItemCover,
-	}
+	},
 })
-export class AppPageHeader extends Vue
-{
-	@Prop( Object ) coverMediaItem?: MediaItem;
-	@Prop( Number ) coverMaxHeight?: number;
-	@Prop( Boolean ) hideNav?: boolean;
-	@Prop( Boolean ) shouldAffixNav?: boolean;
-	@Prop( Boolean ) spotlightDark?: boolean;
-	@Prop( { type: String, default: 'col-xs-12' } ) colClasses?: string;
+export class AppPageHeader extends Vue {
+	@Prop(Object) coverMediaItem?: MediaItem;
+	@Prop(Number) coverMaxHeight?: number;
+	@Prop(Boolean) hideNav?: boolean;
+	@Prop(Boolean) shouldAffixNav?: boolean;
+	@Prop(Boolean) spotlightDark?: boolean;
+	@Prop({ type: String, default: 'col-xs-12' })
+	colClasses?: string;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	get hasCoverButtons()
-	{
+	get hasCoverButtons() {
 		return !!this.$slots['cover-buttons'];
 	}
 
-	get hasSpotlight()
-	{
+	get hasSpotlight() {
 		return !!this.$slots['spotlight'];
 	}
 
-	get hasNav()
-	{
+	get hasNav() {
 		return !!this.$slots['nav'];
 	}
 
-	get hasControls()
-	{
+	get hasControls() {
 		return !!this.$slots['controls'];
 	}
 
-	get hasContent()
-	{
+	get hasContent() {
 		return !!this.$slots.default;
 	}
 }

@@ -1,21 +1,28 @@
-import { VuexStore, VuexModule, VuexMutation, VuexAction } from '../../lib/gj-lib-client/utils/vuex';
-import { AppStore, Mutations as AppMutations, Actions as AppActions, appStore } from '../../lib/gj-lib-client/vue/services/app/app-store';
+import {
+	VuexStore,
+	VuexModule,
+	VuexMutation,
+	VuexAction,
+} from '../../lib/gj-lib-client/utils/vuex';
+import {
+	AppStore,
+	Mutations as AppMutations,
+	Actions as AppActions,
+	appStore,
+} from '../../lib/gj-lib-client/vue/services/app/app-store';
 import { MediaItem } from '../../lib/gj-lib-client/components/media-item/media-item-model';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 
-interface AuthCredentials
-{
+interface AuthCredentials {
 	username: string;
 	password: string;
 }
 
-export type Actions = AppActions &
-{
+export type Actions = AppActions & {
 	bootstrap: undefined;
 };
 
-export type Mutations = AppMutations &
-{
+export type Mutations = AppMutations & {
 	showCoverImage: undefined;
 	hideCoverImage: undefined;
 	processPayload: any;
@@ -28,8 +35,7 @@ export type Mutations = AppMutations &
 		app: appStore,
 	},
 })
-export class Store extends VuexStore<Store, Actions, Mutations>
-{
+export class Store extends VuexStore<Store, Actions, Mutations> {
 	app: AppStore;
 
 	shouldShowCoverImage = true;
@@ -42,35 +48,30 @@ export class Store extends VuexStore<Store, Actions, Mutations>
 	credentials: AuthCredentials | null = null;
 
 	@VuexAction
-	async bootstrap()
-	{
-		const payload = await Api.sendRequest( '/web/auth/get-customized-page' );
-		this.processPayload( payload );
+	async bootstrap() {
+		const payload = await Api.sendRequest('/web/auth/get-customized-page');
+		this.processPayload(payload);
 	}
 
 	@VuexMutation
-	showCoverImage()
-	{
+	showCoverImage() {
 		this.shouldShowCoverImage = true;
 	}
 
 	@VuexMutation
-	hideCoverImage()
-	{
+	hideCoverImage() {
 		this.shouldShowCoverImage = false;
 	}
 
 	@VuexMutation
-	processPayload( payload: Mutations['processPayload'] )
-	{
-		if ( payload.mediaItem ) {
-			this.coverMediaItem = new MediaItem( payload.mediaItem );
+	processPayload(payload: Mutations['processPayload']) {
+		if (payload.mediaItem) {
+			this.coverMediaItem = new MediaItem(payload.mediaItem);
 		}
 	}
 
 	@VuexMutation
-	setCredentials( credentials: AuthCredentials )
-	{
+	setCredentials(credentials: AuthCredentials) {
 		this.credentials = credentials;
 	}
 }

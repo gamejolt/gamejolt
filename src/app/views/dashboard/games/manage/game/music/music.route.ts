@@ -5,7 +5,7 @@ export const routeDashGamesManageGameMusic: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.game.music',
 	path: 'music',
 	props: true,
-	component: () => asyncComponentLoader( $import( './music' ) ),
+	component: () => asyncComponentLoader($import('./music')),
 	children: [
 		{
 			path: '/dashboard/developer/games/soundtracks/:id(\\d+)/',
@@ -13,7 +13,6 @@ export const routeDashGamesManageGameMusic: VueRouter.RouteConfig = {
 		},
 	],
 };
-
 
 // angular.module( 'App.Views' ).config( function( $stateProvider, $urlRouterProvider )
 // {

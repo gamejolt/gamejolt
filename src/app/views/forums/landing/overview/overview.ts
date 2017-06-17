@@ -18,38 +18,34 @@ import { AppForumChannelList } from '../../../../components/forum/channel-list/c
 		AppForumChannelList,
 	},
 })
-export default class RouteForumsLandingOverview extends Vue
-{
+export default class RouteForumsLandingOverview extends Vue {
 	categories: ForumCategory[] = [];
 	groupedChannels: { [k: number]: ForumChannel[] } = {};
 	latestPosts: ForumPost[] = [];
 	postCountPerPage = 0;
 
-	created()
-	{
-		Meta.title = this.$gettext( 'Forums' );
+	created() {
+		Meta.title = this.$gettext('Forums');
 	}
 
-	@BeforeRouteEnter( { cache: true } )
-	routeEnter()
-	{
-		return Api.sendRequest( '/web/forums' );
+	@BeforeRouteEnter({ cache: true })
+	routeEnter() {
+		return Api.sendRequest('/web/forums');
 	}
 
-	routed()
-	{
-		this.categories = ForumCategory.populate( this.$payload.categories );
-		this.latestPosts = ForumPost.populate( this.$payload.latestPosts );
+	routed() {
+		this.categories = ForumCategory.populate(this.$payload.categories);
+		this.latestPosts = ForumPost.populate(this.$payload.latestPosts);
 		this.postCountPerPage = this.$payload.postCountPerPage;
 
 		this.groupedChannels = {};
-		const channels = ForumChannel.populate( this.$payload.channels );
-		for ( const channel of channels ) {
-			if ( !this.groupedChannels[ channel.category.id ] ) {
-				this.groupedChannels[ channel.category.id ] = [];
+		const channels = ForumChannel.populate(this.$payload.channels);
+		for (const channel of channels) {
+			if (!this.groupedChannels[channel.category.id]) {
+				this.groupedChannels[channel.category.id] = [];
 			}
 
-			this.groupedChannels[ channel.category.id ].push( channel );
+			this.groupedChannels[channel.category.id].push(channel);
 		}
 	}
 }

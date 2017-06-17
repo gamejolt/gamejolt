@@ -6,8 +6,7 @@ import { ChatSiteModPermission } from './client';
 // Mapping of user IDs to their notification count.
 type UserNotifications = { [k: number]: number };
 
-export class ChatUserCollection
-{
+export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
 	static readonly TYPE_ROOM = 'room';
 
@@ -15,107 +14,94 @@ export class ChatUserCollection
 	onlineCount = 0;
 	offlineCount = 0;
 
-	private get chat()
-	{
+	private get chat() {
 		return store.state.chat!;
 	}
 
-	constructor( public type: 'friend' | 'room', users: any[] = [] )
-	{
-		if ( users && users.length ) {
-			for ( const user of users ) {
-				if ( user.isOnline ) {
+	constructor(public type: 'friend' | 'room', users: any[] = []) {
+		if (users && users.length) {
+			for (const user of users) {
+				if (user.isOnline) {
 					++this.onlineCount;
-				}
-				else {
+				} else {
 					++this.offlineCount;
 				}
 
-				this.collection.push( new ChatUser( user ) );
+				this.collection.push(new ChatUser(user));
 			}
 		}
 
 		this.sort();
 	}
 
-	get( input: number | ChatUser )
-	{
+	get(input: number | ChatUser) {
 		const userId = typeof input === 'number' ? input : input.id;
-		return this.collection.find( ( user ) => user.id === userId );
+		return this.collection.find(user => user.id === userId);
 	}
 
-	getByRoom( input: number | ChatRoom )
-	{
+	getByRoom(input: number | ChatRoom) {
 		const roomId = typeof input === 'number' ? input : input.id;
-		return this.collection.find( ( user ) => user.roomId === roomId );
+		return this.collection.find(user => user.roomId === roomId);
 	}
 
-	has( input: number | ChatUser )
-	{
-		return !!this.get( input );
+	has(input: number | ChatUser) {
+		return !!this.get(input);
 	}
 
-	add( user: ChatUser )
-	{
+	add(user: ChatUser) {
 		// Don't add the same user again.
-		if ( this.has( user ) ) {
+		if (this.has(user)) {
 			return;
 		}
 
-		if ( user.isOnline ) {
+		if (user.isOnline) {
 			++this.onlineCount;
-		}
-		else if ( user.isOnline ) {
+		} else if (user.isOnline) {
 			++this.offlineCount;
 		}
 
-		this.collection.push( user );
+		this.collection.push(user);
 		this.sort();
 	}
 
-	remove( input: number | ChatUser )
-	{
+	remove(input: number | ChatUser) {
 		const userId = typeof input === 'number' ? input : input.id;
-		const index = this.collection.findIndex( ( user ) => user.id === userId );
+		const index = this.collection.findIndex(user => user.id === userId);
 
-		if ( index !== -1 ) {
-			const user = this.collection[ index ];
+		if (index !== -1) {
+			const user = this.collection[index];
 
-			if ( user.isOnline ) {
+			if (user.isOnline) {
 				--this.onlineCount;
-			}
-			else {
+			} else {
 				--this.offlineCount;
 			}
 
-			this.collection.splice( index, 1 );
-		}
-		else {
+			this.collection.splice(index, 1);
+		} else {
 			return;
 		}
 
 		this.sort();
 	}
 
-	update( user: ChatUser )
-	{
-		const curUser = this.get( user );
-		if ( curUser ) {
-			Object.assign( curUser, user );
+	update(user: ChatUser) {
+		const curUser = this.get(user);
+		if (curUser) {
+			Object.assign(curUser, user);
 		}
 
 		this.sort();
 	}
 
-	online( input: number | ChatUser )
-	{
-		const user = this.get( input );
-		if ( !user ) {
+	online(input: number | ChatUser) {
+		const user = this.get(input);
+		if (!user) {
 			return;
 		}
 
 		// Were they previously offline?
-		if ( !user.isOnline ) {
+		if (!user.isOnline) {
 			--this.offlineCount;
 			++this.onlineCount;
 		}
@@ -123,15 +109,14 @@ export class ChatUserCollection
 		user.isOnline = true;
 	}
 
-	offline( input: number | ChatUser )
-	{
-		const user = this.get( input );
-		if ( !user ) {
+	offline(input: number | ChatUser) {
+		const user = this.get(input);
+		if (!user) {
 			return;
 		}
 
 		// Were they previously online?
-		if ( user.isOnline ) {
+		if (user.isOnline) {
 			++this.offlineCount;
 			--this.onlineCount;
 		}
@@ -139,118 +124,104 @@ export class ChatUserCollection
 		user.isOnline = false;
 	}
 
-	mute( input: number | ChatUser, isGlobal: boolean )
-	{
-		const user = this.get( input );
-		if ( !user ) {
+	mute(input: number | ChatUser, isGlobal: boolean) {
+		const user = this.get(input);
+		if (!user) {
 			return;
 		}
 
-		if ( isGlobal ) {
+		if (isGlobal) {
 			user.isMutedGlobal = true;
-		}
-		else {
+		} else {
 			user.isMutedRoom = true;
 		}
 	}
 
-	unmute( input: number | ChatUser, isGlobal: boolean )
-	{
-		const user = this.get( input );
-		if ( !user ) {
+	unmute(input: number | ChatUser, isGlobal: boolean) {
+		const user = this.get(input);
+		if (!user) {
 			return;
 		}
 
-		if ( isGlobal ) {
+		if (isGlobal) {
 			user.isMutedGlobal = false;
-		}
-		else {
+		} else {
 			user.isMutedRoom = false;
 		}
 	}
 
-	mod( input: number | ChatUser )
-	{
-		const user = this.get( input );
-		if ( !user ) {
+	mod(input: number | ChatUser) {
+		const user = this.get(input);
+		if (!user) {
 			return;
 		}
 
 		user.isMod = 'moderator';
 	}
 
-	demod( input: number | ChatUser )
-	{
-		const user = this.get( input );
-		if ( !user ) {
+	demod(input: number | ChatUser) {
+		const user = this.get(input);
+		if (!user) {
 			return;
 		}
 
 		user.isMod = false;
 	}
 
-	sort()
-	{
+	sort() {
 		// Mapping of user IDs to their notification count.
 		let notifications: UserNotifications;
-		if ( this.type === ChatUserCollection.TYPE_FRIEND && this.chat ) {
+		if (this.type === ChatUserCollection.TYPE_FRIEND && this.chat) {
 			notifications = this.chat.notifications;
 		}
 
-		this.collection.sort( ( a, b ) =>
-		{
+		this.collection.sort((a, b) => {
 			// We group users into different areas.
 			// The grouped sort val takes precedence.
-			const aSort = this.getSortVal( a, notifications );
-			const bSort = this.getSortVal( b, notifications );
-			if ( aSort > bSort ) {
+			const aSort = this.getSortVal(a, notifications);
+			const bSort = this.getSortVal(b, notifications);
+			if (aSort > bSort) {
 				return 1;
-			}
-			else if ( aSort < bSort ) {
+			} else if (aSort < bSort) {
 				return -1;
 			}
 
-			if ( a.displayName.toLowerCase() > b.displayName.toLowerCase() ) {
+			if (a.displayName.toLowerCase() > b.displayName.toLowerCase()) {
 				return 1;
-			}
-			else if ( a.displayName.toLowerCase() < b.displayName.toLowerCase() ) {
+			} else if (a.displayName.toLowerCase() < b.displayName.toLowerCase()) {
 				return -1;
 			}
 
 			return 0;
-		} );
+		});
 	}
 
-	private getSortVal( user: ChatUser, notifications: UserNotifications )
-	{
-		if ( this.type === ChatUserCollection.TYPE_ROOM ) {
-
+	private getSortVal(user: ChatUser, notifications: UserNotifications) {
+		if (this.type === ChatUserCollection.TYPE_ROOM) {
 			// We sort muted users to the bottom of the list.
-			if ( user.isMutedRoom || user.isMutedGlobal ) {
+			if (user.isMutedRoom || user.isMutedGlobal) {
 				return 7;
 			}
 
 			// Sort mods to top of room lists.
-			if ( user.isMod === 'owner' ) {
+			if (user.isMod === 'owner') {
 				return 0;
-			}
-			else if ( user.isMod === 'moderator' ) {
+			} else if (user.isMod === 'moderator') {
 				return 1;
-			}
-			else if ( user.permissionLevel >= ChatSiteModPermission ) {
+			} else if (user.permissionLevel >= ChatSiteModPermission) {
 				return 2;
 			}
 		}
 
 		// Sort users with notifications at the top of friend lists.
-		if ( notifications && notifications[ user.roomId ] ) {
-			if ( user.isOnline ) {
+		if (notifications && notifications[user.roomId]) {
+			if (user.isOnline) {
 				return 3;
 			}
 			return 4;
 		}
 
-		if ( user.isOnline ) {
+		if (user.isOnline) {
 			return 5;
 		}
 

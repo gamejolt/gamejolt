@@ -8,8 +8,7 @@ import { GameCollection } from '../game/collection/collection.model';
 
 let bootstrapPromiseResolve: any = undefined;
 
-export class Shell
-{
+export class Shell {
 	// static notificationCount = 0;
 	// static collections: GameCollection[] = [];
 	// static followedCollection?: GameCollection = undefined;
@@ -30,13 +29,10 @@ export class Shell
 	private static backdrop?: any = undefined;
 	// private static chat?: typeof Chat = undefined;
 
-	static init()
-	{
+	static init() {
 		// const $rootScope = getProvider<ng.IRootScopeService>( '$rootScope' );
 		// const hotkeys = getProvider<ng.hotkeys.HotkeysProvider>( 'hotkeys' );
-
 		// this._isLeftPaneSticky = Settings.get( 'sidebar' );
-
 		// /**
 		//  * After changing states, hide all overlays.
 		//  */
@@ -47,13 +43,11 @@ export class Shell
 		// 	this._isRightPaneOverlayed = false;
 		// 	this.checkBackdrop();
 		// } );
-
 		// hotkeys.add( {
 		// 	combo: 'm',
 		// 	description: 'Toggle the sidebar menu.',
 		// 	callback: () => this.toggleLeftPane(),
 		// } );
-
 		// $rootScope.$watch( () => !!getProvider<App>( 'App' ).user, async ( isLoggedIn ) =>
 		// {
 		// 	if ( isLoggedIn ) {
@@ -62,13 +56,10 @@ export class Shell
 		// 	else {
 		// 		this.clear();
 		// 	}
-
 		// 	if ( isLoggedIn ) {
 		// 		const mod = await $import( '../chat/chat.service' );
-
 		// 		this.chat = mod.Chat as typeof Chat;
 		// 		this.chat.connect();
-
 		// 		hotkeys.add( {
 		// 			combo: 'c',
 		// 			description: 'Toggle the chat.',
@@ -83,7 +74,6 @@ export class Shell
 		// 			}
 		// 			hotkeys.del( 'c' );
 		// 		}
-
 		// 		this.chat = undefined;
 		// 	}
 		// } );

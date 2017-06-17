@@ -14,9 +14,8 @@ import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vu
 		currency,
 	},
 })
-export class AppAnalyticsReportTopCompositionValue extends Vue
-{
-	@Prop( Object ) reportData: any;
+export class AppAnalyticsReportTopCompositionValue extends Vue {
+	@Prop(Object) reportData: any;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 }

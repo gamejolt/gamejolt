@@ -1,21 +1,18 @@
-angular.module( 'App.Views' )
-.config( function( $stateProvider )
-{
-	$stateProvider.state( 'checkout', {
+angular.module('App.Views').config(function($stateProvider) {
+	$stateProvider.state('checkout', {
 		url: '/checkout/:orderId',
 		controller: 'CheckoutCtrl',
 		controllerAs: 'checkoutCtrl',
-		templateUrl: require( './checkout.html' ),
+		templateUrl: require('./checkout.html'),
 		resolve: {
 			// init: function( Translate )
 			// {
 			// 	// Bootstrap the translation for this module.
 			// 	return Translate.addParts( 'checkout' );
 			// },
-			payload: function( $stateParams, Api )
-			{
-				return Api.sendRequest( '/web/checkout/' + $stateParams.orderId, {} );
-			}
-		}
-	} );
-} );
+			payload: function($stateParams, Api) {
+				return Api.sendRequest('/web/checkout/' + $stateParams.orderId, {});
+			},
+		},
+	});
+});

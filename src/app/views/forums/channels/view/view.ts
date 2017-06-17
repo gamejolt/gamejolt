@@ -33,8 +33,7 @@ import { Store } from '../../../../store/index';
 		number,
 	},
 })
-export default class RouteForumsChannelsView extends Vue
-{
+export default class RouteForumsChannelsView extends Vue {
 	@State app: Store['app'];
 
 	channel: ForumChannel = null as any;
@@ -46,40 +45,37 @@ export default class RouteForumsChannelsView extends Vue
 
 	number = number;
 	Scroll = Scroll;
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter( { cache: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
+	@BeforeRouteEnter({ cache: true })
+	routeEnter(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
-			'/web/forums/channels/'
-			+ route.params.name
-			+ '?page=' + (route.query.page || 1)
+			'/web/forums/channels/' +
+				route.params.name +
+				'?page=' +
+				(route.query.page || 1),
 		);
 	}
 
-	routed()
-	{
+	routed() {
 		// TODO
 		// Location.enforce( {
 		// 	name: payload.channel.name,
 		// } );
 
-		this.channel = new ForumChannel( this.$payload.channel );
-		this.topics = ForumTopic.populate( this.$payload.topics );
+		this.channel = new ForumChannel(this.$payload.channel);
+		this.topics = ForumTopic.populate(this.$payload.topics);
 		this.postCountPerPage = this.$payload.postCountPerPage;
 
-		if ( this.$payload.stickyTopics && this.$payload.stickyTopics.length ) {
-			this.stickyTopics = ForumTopic.populate( this.$payload.stickyTopics );
-		}
-		else {
+		if (this.$payload.stickyTopics && this.$payload.stickyTopics.length) {
+			this.stickyTopics = ForumTopic.populate(this.$payload.stickyTopics);
+		} else {
 			this.stickyTopics = [];
 		}
 
-		Meta.title = this.$gettextInterpolate(
-			`%{ channel } Forum`,
-			{ channel: '#' + this.channel.name },
-		);
+		Meta.title = this.$gettextInterpolate(`%{ channel } Forum`, {
+			channel: '#' + this.channel.name,
+		});
 
 		this.perPage = this.$payload.perPage;
 		this.currentPage = this.$payload.page || 1;

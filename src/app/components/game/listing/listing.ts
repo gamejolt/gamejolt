@@ -34,17 +34,16 @@ import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-
 		AppTrackEvent,
 	},
 })
-export class AppGameListing extends Vue
-{
-	@Prop( Object ) listing: GameListingContainer;
-	@Prop( Boolean ) showAds?: boolean;
-	@Prop( Boolean ) hideFilters?: boolean;
-	@Prop( Boolean ) hideSectionNav?: boolean;
-	@Prop( Boolean ) includeFeaturedSection?: boolean;
-	@Prop( Boolean ) isLoading?: boolean;
+export class AppGameListing extends Vue {
+	@Prop(Object) listing: GameListingContainer;
+	@Prop(Boolean) showAds?: boolean;
+	@Prop(Boolean) hideFilters?: boolean;
+	@Prop(Boolean) hideSectionNav?: boolean;
+	@Prop(Boolean) includeFeaturedSection?: boolean;
+	@Prop(Boolean) isLoading?: boolean;
 
 	number = number;
 	Environment = Environment;
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 	Scroll = Scroll;
 }

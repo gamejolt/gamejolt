@@ -16,23 +16,19 @@ import { Store } from '../../../../store/index';
 		FormProfile,
 	},
 })
-export default class RouteDashAccountEdit extends Vue
-{
+export default class RouteDashAccountEdit extends Vue {
 	@State app: Store['app'];
 	@RouteMutation setHeading: RouteStore['setHeading'];
 
-	created()
-	{
-		Meta.title = this.$gettext( `dash.profile.edit.page_title` );
-		this.setHeading( this.$gettext( 'dash.profile.edit.heading' ) );
+	created() {
+		Meta.title = this.$gettext(`dash.profile.edit.page_title`);
+		this.setHeading(this.$gettext('dash.profile.edit.heading'));
 	}
 
-	onProfileSaved()
-	{
+	onProfileSaved() {
 		Growls.success(
-			this.$gettext( `Your information has been updated. Right on!` ),
+			this.$gettext(`Your information has been updated. Right on!`),
 		);
-		Scroll.to( 0 );
+		Scroll.to(0);
 	}
 }
-

@@ -1,3 +1,3 @@
-angular.module( 'App.Client.Logger', [] );
+angular.module('App.Client.Logger', []);
 
-require( './logger-service' );
+require('./logger-service');

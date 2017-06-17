@@ -33,24 +33,22 @@ import { Store } from '../../../../store/index';
 		AppTrackEvent,
 	},
 })
-export default class RouteDiscoverDevlogsOverview extends Vue
-{
+export default class RouteDiscoverDevlogsOverview extends Vue {
 	@State app: Store['app'];
 
 	games: any[] = [];
 	feed: ActivityFeedContainer | null = null;
 
 	// Don't cache since every page load we pull new games in.
-	@BeforeRouteEnter( { lazy: true } )
-	beforeRoute()
-	{
-		return Api.sendRequest( '/web/discover/devlogs' );
+	@BeforeRouteEnter({ lazy: true })
+	beforeRoute() {
+		return Api.sendRequest('/web/discover/devlogs');
 	}
 
-	created()
-	{
+	created() {
 		Meta.title = 'Indie game devlogs';
-		Meta.description = 'Find the latest and greatest games in development and follow their devlog feeds!';
+		Meta.description =
+			'Find the latest and greatest games in development and follow their devlog feeds!';
 
 		Meta.fb.title = Meta.title;
 		Meta.twitter.title = Meta.title;
@@ -58,19 +56,18 @@ export default class RouteDiscoverDevlogsOverview extends Vue
 		Meta.fb.description = Meta.description;
 		Meta.twitter.description = Meta.description;
 
-		Meta.twitter.image = require( '../social.png' );
+		Meta.twitter.image = require('../social.png');
 
 		// Try pulling feed from cache.
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed()
-	{
-		this.games = Game.populate( this.$payload.games );
+	routed() {
+		this.games = Game.populate(this.$payload.games);
 
-		if ( !this.feed ) {
+		if (!this.feed) {
 			this.feed = ActivityFeedService.bootstrap(
-				FiresidePost.populate( this.$payload.posts ),
+				FiresidePost.populate(this.$payload.posts),
 				{
 					type: 'Fireside_Post',
 					url: '/web/discover/devlogs/posts',

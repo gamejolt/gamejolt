@@ -7,7 +7,6 @@ import { Store } from '../../store/index';
 
 @View
 @Component({})
-export default class RouteDash extends Vue
-{
+export default class RouteDash extends Vue {
 	@State app: Store['app'];
 }

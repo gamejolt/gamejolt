@@ -16,25 +16,21 @@ import { currency } from '../../../../../../lib/gj-lib-client/vue/filters/curren
 		currency,
 	},
 })
-export default class RouteDashMainPurchasesList extends Vue
-{
+export default class RouteDashMainPurchasesList extends Vue {
 	orders: Order[] = [];
 
 	date = date;
 
 	@BeforeRouteEnter({ cache: true })
-	routeEnter()
-	{
-		return Api.sendRequest( '/web/dash/purchases' );
+	routeEnter() {
+		return Api.sendRequest('/web/dash/purchases');
 	}
 
-	created()
-	{
-		Meta.title = this.$gettext( 'Order History' );
+	created() {
+		Meta.title = this.$gettext('Order History');
 	}
 
-	routed()
-	{
-		this.orders = Order.populate( this.$payload.orders );
+	routed() {
+		this.orders = Order.populate(this.$payload.orders);
 	}
 }

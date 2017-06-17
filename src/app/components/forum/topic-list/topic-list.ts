@@ -26,23 +26,21 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 		number,
 	},
 })
-export class AppForumTopicList extends Vue
-{
-	@Prop( Array ) topics: ForumTopic[];
-	@Prop( Number ) postCountPerPage: number;
+export class AppForumTopicList extends Vue {
+	@Prop(Array) topics: ForumTopic[];
+	@Prop(Number) postCountPerPage: number;
 
 	date = date;
 	number = number;
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	getPostPage( topic: ForumTopic )
-	{
-		if ( !this.postCountPerPage ) {
+	getPostPage(topic: ForumTopic) {
+		if (!this.postCountPerPage) {
 			return undefined;
 		}
 
-		const page = Math.ceil( topic.replies_count / this.postCountPerPage );
-		if ( page === 1 ) {
+		const page = Math.ceil(topic.replies_count / this.postCountPerPage);
+		if (page === 1) {
 			return undefined;
 		}
 

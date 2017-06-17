@@ -17,8 +17,7 @@ import { AppGameThumbnail } from '../../../../app/components/game/thumbnail/thum
 		AppGameThumbnail,
 	},
 })
-export class AppKeyBundle extends Vue
-{
+export class AppKeyBundle extends Vue {
 	@Prop() payload: any;
 	@Prop() loginUrl: string;
 	@Prop() accessKey?: string;
@@ -28,19 +27,16 @@ export class AppKeyBundle extends Vue
 	bundle: GameBundle = null as any;
 	games: Game[] = [];
 
-	created()
-	{
-		this.bundle = new GameBundle( this.payload.bundle );
-		this.games = Game.populate( this.payload.games );
+	created() {
+		this.bundle = new GameBundle(this.payload.bundle);
+		this.games = Game.populate(this.payload.games);
 
-		Meta.title = this.$gettextInterpolate(
-			`Key Page for %{ bundle }`,
-			{ bundle: this.bundle.title },
-		);
+		Meta.title = this.$gettextInterpolate(`Key Page for %{ bundle }`, {
+			bundle: this.bundle.title,
+		});
 	}
 
-	claim()
-	{
-		this.$emit( 'claim', this.bundle );
+	claim() {
+		this.$emit('claim', this.bundle);
 	}
 }

@@ -33,10 +33,9 @@ import { ChatClient } from '../../chat/client';
 		AppTooltip,
 		AppPopoverTrigger,
 		AppTrackEvent,
-	}
+	},
 })
-export class AppShellTopNav extends Vue
-{
+export class AppShellTopNav extends Vue {
 	@State app: Store['app'];
 	@State chat: ChatClient;
 	@State notificationCount: Store['notificationCount'];
@@ -48,8 +47,8 @@ export class AppShellTopNav extends Vue
 	userMenuShowing = false;
 
 	Environment = Environment;
-	Screen = makeObservableService( Screen );
-	Connection = makeObservableService( Connection );
+	Screen = makeObservableService(Screen);
+	Connection = makeObservableService(Connection);
 
 	@Action toggleRightPane: Store['toggleRightPane'];
 	@Action toggleLeftPane: Store['toggleLeftPane'];

@@ -7,9 +7,8 @@ import { Notification } from '../../../../lib/gj-lib-client/components/notificat
 
 @View
 @Component({})
-export class AppNotificationDescriptiveAction extends Vue
-{
-	@Prop( Notification ) notification: Notification;
+export class AppNotificationDescriptiveAction extends Vue {
+	@Prop(Notification) notification: Notification;
 
 	// constructor(
 	// 	@Inject( 'gettext' ) gettext: ng.gettext.gettextFunction,
@@ -44,12 +43,11 @@ export class AppNotificationDescriptiveAction extends Vue
 	// 	}
 	// }
 
-	get translationValues(): any
-	{
-		if ( this.notification.type === Notification.TYPE_SELLABLE_SELL ) {
+	get translationValues(): any {
+		if (this.notification.type === Notification.TYPE_SELLABLE_SELL) {
 			return {
 				object: this.notification.to_model.title,
-				amount: currency( this.notification.action_model.amount / 100 ),
+				amount: currency(this.notification.action_model.amount / 100),
 			};
 		}
 
@@ -58,9 +56,8 @@ export class AppNotificationDescriptiveAction extends Vue
 		};
 	}
 
-	get action()
-	{
-		switch ( this.notification.type ) {
+	get action() {
+		switch (this.notification.type) {
 			case Notification.TYPE_COMMENT_ADD_OBJECT_OWNER:
 				return this.$gettextInterpolate(
 					`commented on <b>%{ object }</b>.`,

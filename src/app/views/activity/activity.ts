@@ -24,34 +24,30 @@ import { AppActivityFeedPlaceholder } from '../../components/activity/feed/place
 		AppActivityFeedPlaceholder,
 	},
 })
-export default class RouteActivity extends Vue
-{
-	@Prop( String ) tab: 'activity' | 'notifications';
+export default class RouteActivity extends Vue {
+	@Prop(String) tab: 'activity' | 'notifications';
 
 	feed: ActivityFeedContainer | null = null;
 	activityUnreadCount = 0;
 	notificationsUnreadCount = 0;
 
-	@BeforeRouteEnter( { cache: true, lazy: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/dash/activity/' + route.params.tab );
+	@BeforeRouteEnter({ cache: true, lazy: true })
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest('/web/dash/activity/' + route.params.tab);
 	}
 
-	created()
-	{
+	created() {
 		// Try to pull from cache.
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed()
-	{
-		if ( this.tab === 'activity' ) {
-			Meta.title = this.$gettext( 'Your Activity Feed' );
+	routed() {
+		if (this.tab === 'activity') {
+			Meta.title = this.$gettext('Your Activity Feed');
 
-			if ( !this.feed || this.feed.feedType !== 'Fireside_Post' ) {
+			if (!this.feed || this.feed.feedType !== 'Fireside_Post') {
 				this.feed = ActivityFeedService.bootstrap(
-					FiresidePost.populate( this.$payload.items ),
+					FiresidePost.populate(this.$payload.items),
 					{
 						type: 'Fireside_Post',
 						url: `/web/dash/activity/more/${this.tab}`,
@@ -59,13 +55,12 @@ export default class RouteActivity extends Vue
 					},
 				);
 			}
-		}
-		else {
-			Meta.title = this.$gettext( 'Your Notifications' );
+		} else {
+			Meta.title = this.$gettext('Your Notifications');
 
-			if ( !this.feed || this.feed.feedType !== 'Notification' ) {
+			if (!this.feed || this.feed.feedType !== 'Notification') {
 				this.feed = ActivityFeedService.bootstrap(
-					Notification.populate( this.$payload.items ),
+					Notification.populate(this.$payload.items),
 					{
 						type: 'Notification',
 						url: `/web/dash/activity/more/${this.tab}`,
@@ -73,7 +68,7 @@ export default class RouteActivity extends Vue
 					},
 				);
 			}
-			}
+		}
 
 		this.activityUnreadCount = this.$payload.activityUnreadCount || 0;
 		this.notificationsUnreadCount = this.$payload.notificationsUnreadCount || 0;

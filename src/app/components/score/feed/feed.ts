@@ -16,20 +16,18 @@ import { Environment } from '../../../../lib/gj-lib-client/components/environmen
 		AppTimeAgo,
 	},
 })
-export class AppScoreFeed extends Vue
-{
-	@Prop( GameScoreTable ) scoreTable: GameScoreTable;
+export class AppScoreFeed extends Vue {
+	@Prop(GameScoreTable) scoreTable: GameScoreTable;
 
 	latestScore: any | null = null;
 	scores: any[] = [];
 
 	private subscription?: ActivityStreamSubscription;
 
-	@Watch( 'scoreTable.id', { immediate: true } )
-	onScoreTableChange()
-	{
+	@Watch('scoreTable.id', { immediate: true })
+	onScoreTableChange() {
 		// Only works in browser context.
-		if ( Environment.isPrerender || GJ_IS_SSR ) {
+		if (Environment.isPrerender || GJ_IS_SSR) {
 			return;
 		}
 
@@ -37,70 +35,69 @@ export class AppScoreFeed extends Vue
 		this.setupSubscription();
 	}
 
-	destroyed()
-	{
+	destroyed() {
 		this.closeSubscription();
 	}
 
-	private processScore( score: any )
-	{
-		if ( score.user ) {
+	private processScore(score: any) {
+		if (score.user) {
 			const noAvatar = 'https://s.gjcdn.net/img/no-avatar-3.png';
-			score.user.img_avatar = 'https://secure.gravatar.com/avatar/' + score.user.email_hash
-				+ '?s=200&r=pg&d=' + encodeURIComponent( noAvatar );
+			score.user.img_avatar =
+				'https://secure.gravatar.com/avatar/' +
+				score.user.email_hash +
+				'?s=200&r=pg&d=' +
+				encodeURIComponent(noAvatar);
 		}
 
-		score.time = new Date( score.time );
+		score.time = new Date(score.time);
 	}
 
-	private async setupSubscription()
-	{
+	private async setupSubscription() {
 		this.subscription = await ActivityStream.subscribe(
 			'scores',
 			{ tableId: this.scoreTable.id },
-			( message: any ) => this.messageHandler( message ),
+			(message: any) => this.messageHandler(message),
 		);
 	}
 
-	private messageHandler( message: any )
-	{
-		if ( !message.event ) {
+	private messageHandler(message: any) {
+		if (!message.event) {
 			return;
 		}
 
-		switch ( message.event ) {
+		switch (message.event) {
 			case 'new-scores':
-
-				if ( !message.scores || !message.scores.length ) {
+				if (!message.scores || !message.scores.length) {
 					return;
 				}
 
 				let latestScoreDate: Date | null = null;
-				if ( this.latestScore ) {
-					latestScoreDate = new Date( this.latestScore.time );
+				if (this.latestScore) {
+					latestScoreDate = new Date(this.latestScore.time);
 				}
 
-				for ( const score of message.scores ) {
+				for (const score of message.scores) {
+					const scoreDate = new Date(score.time);
 
-					const scoreDate = new Date( score.time );
-
-					if ( !latestScoreDate || scoreDate.getTime() > latestScoreDate.getTime() ) {
+					if (
+						!latestScoreDate ||
+						scoreDate.getTime() > latestScoreDate.getTime()
+					) {
 						this.latestScore = score;
 
-						this.processScore( score );
-						this.scores.unshift( score );
+						this.processScore(score);
+						this.scores.unshift(score);
 					}
 				}
 
-				this.scores = this.scores.slice( 0, 3 );
+				this.scores = this.scores.slice(0, 3);
 
 				break;
 		}
 	}
 
-	private closeSubscription()
-	{
-		if ( this.subscription ) {
+	private closeSubscription() {
+		if (this.subscription) {
 			this.subscription.unsubscribe();
 		}
 

@@ -3,8 +3,6 @@ import { makeComponentProvider } from '../../../../lib/gj-lib-client/vue/angular
 import { AppSitesLinkCard } from './link-card';
 
 @NgModule({
-	declarations: [
-		makeComponentProvider( AppSitesLinkCard ),
-	],
+	declarations: [makeComponentProvider(AppSitesLinkCard)],
 })
-export class SitesLinkCardModule { }
+export class SitesLinkCardModule {}

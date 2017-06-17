@@ -17,80 +17,69 @@ import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/eve
 	directives: {
 		AppTooltip,
 		AppTrackEvent,
-	}
+	},
 })
-export class AppRatingWidget extends Vue
-{
-	@Prop( Object ) game: Game;
-	@Prop( Object ) rating?: GameRating;
-	@Prop( Boolean ) big?: boolean;
+export class AppRatingWidget extends Vue {
+	@Prop(Object) game: Game;
+	@Prop(Object) rating?: GameRating;
+	@Prop(Boolean) big?: boolean;
 
 	clearLabel = '';
 	hovered = 0;
 	isProcessing = false;
 	gameRating = this.rating;
 
-	@Watch( 'rating' )
-	newRating( rating: GameRating )
-	{
+	@Watch('rating')
+	newRating(rating: GameRating) {
 		this.gameRating = rating;
 	}
 
-	getTooltip( index: number )
-	{
-		if ( index === 1 ) {
-			return this.$gettext( 'rating.one' );
-		}
-		else if ( index === 2 ) {
-			return this.$gettext( 'rating.two' );
-		}
-		else if ( index === 3 ) {
-			return this.$gettext( 'rating.three' );
-		}
-		else if ( index === 4 ) {
-			return this.$gettext( 'rating.four' );
-		}
-		else if ( index === 5 ) {
-			return this.$gettext( 'rating.five' );
+	getTooltip(index: number) {
+		if (index === 1) {
+			return this.$gettext('rating.one');
+		} else if (index === 2) {
+			return this.$gettext('rating.two');
+		} else if (index === 3) {
+			return this.$gettext('rating.three');
+		} else if (index === 4) {
+			return this.$gettext('rating.four');
+		} else if (index === 5) {
+			return this.$gettext('rating.five');
 		}
 		return undefined;
 	}
 
-	hover( index?: number )
-	{
-		if ( typeof index === 'undefined' ) {
+	hover(index?: number) {
+		if (typeof index === 'undefined') {
 			this.hovered = 0;
-		}
-		else {
+		} else {
 			this.hovered = index;
 		}
 	}
 
-	async select( index: number )
-	{
-		if ( this.isProcessing ) {
+	async select(index: number) {
+		if (this.isProcessing) {
 			return;
 		}
 
 		this.isProcessing = true;
 
-		const gameRating = new GameRating( {
+		const gameRating = new GameRating({
 			game_id: this.game.id,
 			rating: index,
-		} );
+		});
 
 		await gameRating.$save();
 
 		this.gameRating = gameRating;
 		this.isProcessing = false;
 
-		this.$emit( 'changed', gameRating );
-		EventBus.emit( 'GameRating.changed', this.game.id );
+		this.$emit('changed', gameRating);
+		EventBus.emit('GameRating.changed', this.game.id);
 	}
 
-	async clear()
-	{
-		if ( this.isProcessing || !this.gameRating ) {
+	async clear() {
+		if (this.isProcessing || !this.gameRating) {
 			return;
 		}
 
@@ -101,7 +90,7 @@ export class AppRatingWidget extends Vue
 		this.gameRating = undefined;
 		this.isProcessing = false;
 
-		this.$emit( 'changed', undefined );
-		EventBus.emit( 'GameRating.changed', this.game.id );
+		this.$emit('changed', undefined);
+		EventBus.emit('GameRating.changed', this.game.id);
 	}
 }

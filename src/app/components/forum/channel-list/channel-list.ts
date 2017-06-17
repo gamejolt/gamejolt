@@ -23,30 +23,27 @@ import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ag
 		number,
 	},
 })
-export class AppForumChannelList extends Vue
-{
-	@Prop( ForumCategory ) category: ForumCategory;
-	@Prop( Array ) channels: ForumChannel[];
-	@Prop( Array ) latestPosts: ForumPost[];
-	@Prop( Number ) postCountPerPage: number;
+export class AppForumChannelList extends Vue {
+	@Prop(ForumCategory) category: ForumCategory;
+	@Prop(Array) channels: ForumChannel[];
+	@Prop(Array) latestPosts: ForumPost[];
+	@Prop(Number) postCountPerPage: number;
 
 	number = number;
 	date = date;
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	get indexedPosts()
-	{
-		return arrayIndexByFunc( this.latestPosts, ( item ) => item.topic!.channel_id );
+	get indexedPosts() {
+		return arrayIndexByFunc(this.latestPosts, item => item.topic!.channel_id);
 	}
 
-	getPostPage( post: ForumPost )
-	{
-		if ( !this.postCountPerPage ) {
+	getPostPage(post: ForumPost) {
+		if (!this.postCountPerPage) {
 			return undefined;
 		}
 
-		const page = Math.ceil( post.topic!.replies_count / this.postCountPerPage );
-		if ( page === 1 ) {
+		const page = Math.ceil(post.topic!.replies_count / this.postCountPerPage);
+		if (page === 1) {
 			return undefined;
 		}
 

@@ -16,7 +16,6 @@ import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 		AppErrorPage,
 	},
 })
-export class App extends Vue
-{
-	Connection = makeObservableService( Connection );
+export class App extends Vue {
+	Connection = makeObservableService(Connection);
 }

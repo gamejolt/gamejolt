@@ -1,11 +1,19 @@
-import { ReportComponent, Request, ResourceName, Analyzer, Collection, Field, Condition, ResourceFields } from './site-analytics-service';
+import {
+	ReportComponent,
+	Request,
+	ResourceName,
+	Analyzer,
+	Collection,
+	Field,
+	Condition,
+	ResourceFields,
+} from './site-analytics-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Geo } from '../../../lib/gj-lib-client/components/geo/geo.service';
 import { arrayUnique } from '../../../lib/gj-lib-client/utils/array';
 import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
 
-export class SiteAnalyticsReport
-{
+export class SiteAnalyticsReport {
 	isLoaded = false;
 
 	constructor(
@@ -17,67 +25,62 @@ export class SiteAnalyticsReport
 		partnerMode: boolean,
 		startTime: number | undefined,
 		endTime: number | undefined,
-	)
-	{
-		const promises = this.components.map( ( component ) =>
-		{
+	) {
+		const promises = this.components.map(component => {
 			let analyzer = component.type;
-			if ( analyzer === 'rating-breakdown' ) {
+			if (analyzer === 'rating-breakdown') {
 				analyzer = 'top-composition';
 			}
 
 			let conditions: Condition[] = [];
-			let field = component.field, fetchFields = component.fetchFields;
+			let field = component.field,
+				fetchFields = component.fetchFields;
 
 			// Conditions are added based on the fields that we're searching on in either the component.field or component.fetchFields fields.
-			let conditionFields = [ field ];
-			if ( fetchFields ) {
-				conditionFields = conditionFields.concat( fetchFields );
+			let conditionFields = [field];
+			if (fetchFields) {
+				conditionFields = conditionFields.concat(fetchFields);
 			}
 
-			if ( conditionFields.indexOf( 'source_url' ) !== -1 ) {
-				conditions.push( 'source-external' );
+			if (conditionFields.indexOf('source_url') !== -1) {
+				conditions.push('source-external');
 			}
-			if ( conditionFields.indexOf( 'donation' ) !== -1 ) {
-				conditions.push( 'has-donations' );
+			if (conditionFields.indexOf('donation') !== -1) {
+				conditions.push('has-donations');
 			}
-			if ( conditionFields.indexOf( 'partner' ) !== -1 ) {
-				conditions.push( 'has-partner' );
+			if (conditionFields.indexOf('partner') !== -1) {
+				conditions.push('has-partner');
 			}
-			if ( conditionFields.indexOf( 'partner_generated_revenue' ) !== -1 ) {
-				conditions.push( 'has-partner' );
+			if (conditionFields.indexOf('partner_generated_revenue') !== -1) {
+				conditions.push('has-partner');
 			}
-			if ( conditionFields.indexOf( 'partner_generated_donation' ) !== -1 ) {
-				conditions.push( 'has-donations', 'has-partner' );
+			if (conditionFields.indexOf('partner_generated_donation') !== -1) {
+				conditions.push('has-donations', 'has-partner');
 			}
-			if ( partnerMode ) {
-				conditions.push( 'partner' );
+			if (partnerMode) {
+				conditions.push('partner');
 			}
-			conditions = arrayUnique( conditions );
+			conditions = arrayUnique(conditions);
 
 			// Replace the pseudo fields by their normal fields
-			if ( field === 'partner_generated_revenue' ) {
+			if (field === 'partner_generated_revenue') {
 				field = 'revenue';
-			}
-			else if ( field === 'partner_generated_donation' ) {
+			} else if (field === 'partner_generated_donation') {
 				field = 'donation';
 			}
 
-			if ( fetchFields ) {
-				fetchFields = fetchFields.map( ( fetchField ) =>
-				{
+			if (fetchFields) {
+				fetchFields = fetchFields.map(fetchField => {
 					let result: Field;
-					if ( fetchField === 'partner_generated_revenue' ) {
+					if (fetchField === 'partner_generated_revenue') {
 						result = 'revenue';
-					}
-					else if ( fetchField === 'partner_generated_donation' ) {
+					} else if (fetchField === 'partner_generated_donation') {
 						result = 'donation';
-					}
-					else {
+					} else {
 						result = fetchField;
 					}
 					return result;
-				} );
+				});
 			}
 
 			return this.sendComponentRequest(
@@ -92,29 +95,31 @@ export class SiteAnalyticsReport
 				startTime,
 				endTime,
 			);
-		} );
+		});
 
-		Promise.all( promises )
-			.then( ( componentResponses: any ) =>
-			{
-				this.isLoaded = true;
+		Promise.all(promises).then((componentResponses: any) => {
+			this.isLoaded = true;
 
-				this.components.forEach( ( component, i ) =>
-				{
-					let response = this.processComponentResponse( component, componentResponses[ i ].data, componentResponses[ i ].gathers );
+			this.components.forEach((component, i) => {
+				let response = this.processComponentResponse(
+					component,
+					componentResponses[i].data,
+					componentResponses[i].gathers,
+				);
 
-					component.data = response.result;
-					component.graph = response.graph;
-					component.total = response.total;
+				component.data = response.result;
+				component.graph = response.graph;
+				component.total = response.total;
 
-					if ( component.type === 'sum' || component.type === 'average' ) {
-						component.hasData = typeof component.data !== 'undefined' && component.data !== null;
-					}
-					else {
-						component.hasData = component.data && Object.keys( component.data ).length > 0;
-					}
-				} );
-			} );
+				if (component.type === 'sum' || component.type === 'average') {
+					component.hasData =
+						typeof component.data !== 'undefined' && component.data !== null;
+				} else {
+					component.hasData =
+						component.data && Object.keys(component.data).length > 0;
+				}
+			});
+		});
 	}
 
 	private sendComponentRequest(
@@ -128,8 +133,7 @@ export class SiteAnalyticsReport
 		resourceFields: ResourceFields | undefined,
 		startTime: number | undefined,
 		endTime: number | undefined,
-	)
-	{
+	) {
 		const request: Request = {
 			target: resource,
 			target_id: resourceId,
@@ -138,11 +142,11 @@ export class SiteAnalyticsReport
 			field: field,
 		};
 
-		if ( conditions ) {
+		if (conditions) {
 			request.conditions = conditions;
 		}
 
-		if ( fetchFields ) {
+		if (fetchFields) {
 			request.fetch_fields = fetchFields;
 		}
 
@@ -154,39 +158,51 @@ export class SiteAnalyticsReport
 		// 	request.resource_fields = a;
 		// }
 
-		if ( startTime && endTime ) {
+		if (startTime && endTime) {
 			const date = new Date();
 			request.from_date = startTime / 1000;
 			request.to_date = endTime / 1000;
 			request.timezone = date.getTimezoneOffset();
 		}
 
-		return Api.sendRequest( '/web/dash/analytics/display', { data: request }, { sanitizeComplexData: false } );
+		return Api.sendRequest(
+			'/web/dash/analytics/display',
+			{ data: request },
+			{ sanitizeComplexData: false },
+		);
 	}
 
-	private processComponentResponse( component: ReportComponent, _response: any, gathers?: any )
-	{
-		const field = component.field, analyzer = component.type, displayField = component.displayField;
+	private processComponentResponse(
+		component: ReportComponent,
+		_response: any,
+		gathers?: any,
+	) {
+		const field = component.field,
+			analyzer = component.type,
+			displayField = component.displayField;
 
 		// Copy the response.
-		let response: any = Object.assign( {}, _response );
+		let response: any = Object.assign({}, _response);
 		let graph: any = null;
 		let data: any = {};
 
 		// We return "simple" single value analyzations as is.
-		if ( analyzer === 'sum' || analyzer === 'average' ) {
+		if (analyzer === 'sum' || analyzer === 'average') {
 			response.result = response.result || 0;
 			return response;
 		}
 
 		// For top compositions we convert the { key: value } to [ { label: key, value: value } ]
-		if ( analyzer === 'top-composition' || analyzer === 'top-composition-sum' || analyzer === 'top-composition-avg' ) {
+		if (
+			analyzer === 'top-composition' ||
+			analyzer === 'top-composition-sum' ||
+			analyzer === 'top-composition-avg'
+		) {
 			// Rating is a special case of top composition. We want to keep processing it as { key: value } and not convert it.
-			if ( field !== 'rating' ) {
+			if (field !== 'rating') {
 				data = [];
-				Object.entries( response.result ).forEach( ( [ key, val ] ) =>
-				{
-					switch ( analyzer ) {
+				Object.entries(response.result).forEach(([key, val]) => {
+					switch (analyzer) {
 						case 'top-composition-sum':
 							val = val.sum;
 							break;
@@ -196,31 +212,30 @@ export class SiteAnalyticsReport
 							break;
 					}
 
-					data.push( {
+					data.push({
 						label: key,
 						value: val,
-					} );
-				} );
+					});
+				});
 				response.result = data;
-			}
-			else {
+			} else {
 				// Make sure all the rating values are filled in, and in the correct order
 				data = {};
-				[ 1, 2, 3, 4, 5 ].forEach( ( rating ) =>
-				{
-					data[ rating ] = response.result[ rating ] || 0;
-				} );
+				[1, 2, 3, 4, 5].forEach(rating => {
+					data[rating] = response.result[rating] || 0;
+				});
 				response.result = data;
 			}
 
 			// Top composition fields may refer to gathered fields. In this case replace them in now.
-			if ( gathers && displayField ) {
-				for ( let dataEntry of response.result ) {
+			if (gathers && displayField) {
+				for (let dataEntry of response.result) {
 					const resourceInfo: string[] = dataEntry.label.split('-');
-					const resourceName = resourceInfo[0], resourceId = parseInt( resourceInfo[1], 10 );
+					const resourceName = resourceInfo[0],
+						resourceId = parseInt(resourceInfo[1], 10);
 					const displayValue = gathers[resourceName][resourceId][displayField];
 
-					switch ( resourceName ) {
+					switch (resourceName) {
 						case 'game':
 							dataEntry.label = {
 								resource: 'Game',
@@ -245,27 +260,27 @@ export class SiteAnalyticsReport
 			}
 
 			// country code => country name
-			if ( field === 'country' ) {
-				Object.values( response.result ).forEach( ( val ) =>
-				{
-					if ( val.label === 'other' ) {
-						val.label = Translate.$gettext( 'Unknown' );
+			if (field === 'country') {
+				Object.values(response.result).forEach(val => {
+					if (val.label === 'other') {
+						val.label = Translate.$gettext('Unknown');
+					} else {
+						val.label = Geo.getCountryName(val.label) || val.label;
 					}
-					else {
-						val.label = Geo.getCountryName( val.label ) || val.label;
-					}
-				} );
+				});
 			}
 
 			// All fields except 'rating' and 'source_url' expect to also display the graph (doughnut piechart)
-			if ( field !== 'rating' && field !== 'source_url' ) {
+			if (field !== 'rating' && field !== 'source_url') {
 				graph = [];
-				for ( let i = 0; i < Math.min( response.result.length, 3 ); i++ ) {
+				for (let i = 0; i < Math.min(response.result.length, 3); i++) {
 					const dataEntry = response.result[i];
-					graph.push( {
-						label: typeof dataEntry.label === 'object' ? dataEntry.label.value : dataEntry.label,
+					graph.push({
+						label: typeof dataEntry.label === 'object'
+							? dataEntry.label.value
+							: dataEntry.label,
 						value: dataEntry.value,
-					} );
+					});
 				}
 				response.graph = graph;
 			}

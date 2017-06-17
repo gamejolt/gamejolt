@@ -25,9 +25,8 @@ import { AppActivityFeedDevlogPostControls } from '../../../activity/feed/devlog
 		AppActivityFeedDevlogPostControls,
 	},
 })
-export class AppDevlogPostView extends Vue
-{
-	@Prop( FiresidePost ) post: FiresidePost;
-	@Prop( Boolean ) showGameInfo?: boolean;
-	@Prop( Boolean ) inModal?: boolean;
+export class AppDevlogPostView extends Vue {
+	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(Boolean) showGameInfo?: boolean;
+	@Prop(Boolean) inModal?: boolean;
 }

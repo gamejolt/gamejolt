@@ -22,40 +22,36 @@ import { RouteState, RouteStore } from '../../view.state';
 		AppAd,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
-	}
+	},
 })
-export default class RouteDiscoverGamesViewDevlogList extends Vue
-{
+export default class RouteDiscoverGamesViewDevlogList extends Vue {
 	@RouteState game: RouteStore['game'];
 
 	feed: ActivityFeedContainer | null = null;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter( { cache: true, lazy: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/discover/games/devlog/' + route.params.id );
+	@BeforeRouteEnter({ cache: true, lazy: true })
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest('/web/discover/games/devlog/' + route.params.id);
 	}
 
-	created()
-	{
+	created() {
 		// Try pulling feed from cache.
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed()
-	{
-		Meta.title = this.$gettextInterpolate(
-			`Devlog for %{ game }`,
-			{ game: this.game.title },
-		);
+	routed() {
+		Meta.title = this.$gettextInterpolate(`Devlog for %{ game }`, {
+			game: this.game.title,
+		});
 
-		Meta.description = `Stay up to date on all the latest posts for ${ this.game.title } on Game Jolt`;
+		Meta.description = `Stay up to date on all the latest posts for ${this.game
+			.title} on Game Jolt`;
 
-		if ( !this.feed ) {
+		if (!this.feed) {
 			this.feed = ActivityFeedService.bootstrap(
-				FiresidePost.populate( this.$payload.posts ),
+				FiresidePost.populate(this.$payload.posts),
 				{
 					type: 'Fireside_Post',
 					url: `/web/discover/games/devlog/posts/${this.game.id}`,

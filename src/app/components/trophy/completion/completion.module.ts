@@ -3,8 +3,6 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppTrophyCompletion } from './completion';
 
 @NgModule({
-	declarations: [
-		makeObservableService( AppTrophyCompletion ),
-	],
+	declarations: [makeObservableService(AppTrophyCompletion)],
 })
-export class TrophyCompletionModule { }
+export class TrophyCompletionModule {}

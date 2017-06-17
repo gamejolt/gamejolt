@@ -7,21 +7,11 @@ import {
 	BaseForm,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import {
-	Environment,
-} from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import {
-	AppLoading,
-} from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import {
-	AppExpand,
-} from '../../../../lib/gj-lib-client/components/expand/expand';
-import {
-	AppJolticon,
-} from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import {
-	AppFormControlMarkdown,
-} from '../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
+import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
+import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppFormControlMarkdown } from '../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
 
 @View
 @Component({

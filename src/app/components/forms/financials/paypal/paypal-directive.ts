@@ -8,35 +8,32 @@ import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/gr
 	selector: 'gj-form-dashboard-financials-paypal',
 	template,
 })
-export class PaypalComponent
-{
-	@Input( '<' ) user: any;
+export class PaypalComponent {
+	@Input('<') user: any;
 
 	constructor(
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
-	)
-	{
-	}
+		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog,
+	) {}
 
-	linkPayPal()
-	{
-		Api.sendRequest( '/web/dash/financials/get-paypal-auth', null, { detach: true } )
-			.then( ( response: any ) =>
-			{
-				if ( !response || !response.authUrl ) {
-					return Promise.reject( undefined );
+	linkPayPal() {
+		Api.sendRequest('/web/dash/financials/get-paypal-auth', null, {
+			detach: true,
+		})
+			.then((response: any) => {
+				if (!response || !response.authUrl) {
+					return Promise.reject(undefined);
 				}
 
-				if ( GJ_IS_CLIENT ) {
-					require( 'nw.gui' ).Shell.openExternal( response.authUrl );
-				}
-				else {
+				if (GJ_IS_CLIENT) {
+					require('nw.gui').Shell.openExternal(response.authUrl);
+				} else {
 					window.location.href = response.authUrl;
 				}
-			} )
-			.catch( () =>
-			{
-				Growls.error( this.gettextCatalog.getString( 'Could not get PayPal redirect URL.' ) );
-			} );
+			})
+			.catch(() => {
+				Growls.error(
+					this.gettextCatalog.getString('Could not get PayPal redirect URL.'),
+				);
+			});
 	}
 }

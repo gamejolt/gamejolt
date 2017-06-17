@@ -27,41 +27,38 @@ import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
 		FormForumTopic,
 	},
 })
-export default class RouteForumsTopicsAdd extends Vue
-{
+export default class RouteForumsTopicsAdd extends Vue {
 	@State app: Store['app'];
 
 	channel: ForumChannel = null as any;
 
-	created()
-	{
-		Meta.title = this.$gettext( `Create a New Topic` );
+	created() {
+		Meta.title = this.$gettext(`Create a New Topic`);
 	}
 
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/forums/topics/create/' + route.params.channel );
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest('/web/forums/topics/create/' + route.params.channel);
 	}
 
-	routed()
-	{
-		this.channel = new ForumChannel( this.$payload.channel );
+	routed() {
+		this.channel = new ForumChannel(this.$payload.channel);
 	}
 
-	onCreated( formModel: ForumTopic )
-	{
+	onCreated(formModel: ForumTopic) {
 		// If their post was marked as spam, make sure they know.
-		if ( formModel.status === ForumTopic.STATUS_SPAM ) {
+		if (formModel.status === ForumTopic.STATUS_SPAM) {
 			Growls.info(
-				this.$gettext( `Your topic has been marked for review. Please allow some time for it to show on the site.` ),
-				this.$gettext( `Topic Needs Review` ),
+				this.$gettext(
+					`Your topic has been marked for review. Please allow some time for it to show on the site.`,
+				),
+				this.$gettext(`Topic Needs Review`),
 			);
 		}
 
-		this.$router.push( {
+		this.$router.push({
 			name: 'forums.channels.view',
 			params: { name: this.channel.name },
-		} );
+		});
 	}
 }

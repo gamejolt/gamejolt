@@ -1,3 +1,3 @@
-angular.module( 'App.Client.Control', [] );
+angular.module('App.Client.Control', []);
 
-require( './client-service' );
+require('./client-service');

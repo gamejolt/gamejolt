@@ -27,9 +27,8 @@ import { LibraryAction, LibraryStore } from '../../../store/library';
 		AppFocusWhen,
 	},
 })
-export class AppGamePlaylistAddToPopover extends Vue
-{
-	@Prop( Game ) game: Game;
+export class AppGamePlaylistAddToPopover extends Vue {
+	@Prop(Game) game: Game;
 
 	@LibraryAction addGameToPlaylist: LibraryStore['addGameToPlaylist'];
 	@LibraryAction removeGameFromPlaylist: LibraryStore['removeGameFromPlaylist'];
@@ -42,83 +41,76 @@ export class AppGamePlaylistAddToPopover extends Vue
 	isLoading = true;
 	filterQuery = '';
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	get filteredPlaylists()
-	{
+	get filteredPlaylists() {
 		return this.playlists
-			.filter( ( item ) => fuzzysearch( this.filterQuery.toLowerCase(), item.name.toLowerCase() ) )
-			.sort( ( a, b ) => stringSort( a.name, b.name ) );
+			.filter(item =>
+				fuzzysearch(this.filterQuery.toLowerCase(), item.name.toLowerCase()),
+			)
+			.sort((a, b) => stringSort(a.name, b.name));
 	}
 
-	onFocus()
-	{
+	onFocus() {
 		this.isShown = true;
 		this.fetchPlaylists();
 
-		Analytics.trackEvent( 'add-to-playlist', 'open' );
+		Analytics.trackEvent('add-to-playlist', 'open');
 	}
 
-	onBlur()
-	{
+	onBlur() {
 		this.isShown = false;
 	}
 
-	close()
-	{
+	close() {
 		Popover.hideAll();
 	}
 
-	async fetchPlaylists()
-	{
-		const response = await GamePlaylist.fetchPlaylists( { gameId: this.game.id } );
+	async fetchPlaylists() {
+		const response = await GamePlaylist.fetchPlaylists({
+			gameId: this.game.id,
+		});
 
 		this.playlists = response.playlists;
 		this.playlistsWithGame = response.playlistsWithGame;
 		this.isLoading = false;
 	}
 
-	selectPlaylist( playlist: GamePlaylist )
-	{
-		if ( this.playlistsWithGame.indexOf( playlist.id ) === -1 ) {
-			this.addToPlaylist( playlist );
-			Analytics.trackEvent( 'add-to-playlist', 'add-game' );
-		}
-		else {
-			this.removeFromPlaylist( playlist );
-			Analytics.trackEvent( 'add-to-playlist', 'remove-game' );
+	selectPlaylist(playlist: GamePlaylist) {
+		if (this.playlistsWithGame.indexOf(playlist.id) === -1) {
+			this.addToPlaylist(playlist);
+			Analytics.trackEvent('add-to-playlist', 'add-game');
+		} else {
+			this.removeFromPlaylist(playlist);
+			Analytics.trackEvent('add-to-playlist', 'remove-game');
 		}
 	}
 
-	async addToPlaylist( playlist: GamePlaylist )
-	{
+	async addToPlaylist(playlist: GamePlaylist) {
 		const game = this.game;
-		if ( await this.addGameToPlaylist( { playlist, game } ) ) {
-			this.playlistsWithGame.push( playlist.id );
+		if (await this.addGameToPlaylist({ playlist, game })) {
+			this.playlistsWithGame.push(playlist.id);
 			Popover.hideAll();
 		}
 	}
 
-	async removeFromPlaylist( playlist: GamePlaylist )
-	{
+	async removeFromPlaylist(playlist: GamePlaylist) {
 		const game = this.game;
-		if ( await this.removeGameFromPlaylist( { playlist, game } ) ) {
-			const index = this.playlistsWithGame.indexOf( playlist.id );
-			if ( index !== -1 ) {
-				this.playlistsWithGame.splice( index, 1 );
+		if (await this.removeGameFromPlaylist({ playlist, game })) {
+			const index = this.playlistsWithGame.indexOf(playlist.id);
+			if (index !== -1) {
+				this.playlistsWithGame.splice(index, 1);
 			}
 
 			Popover.hideAll();
 		}
 	}
 
-	async addToNewPlaylist()
-	{
+	async addToNewPlaylist() {
 		const collection = await this.newPlaylist();
-		if ( collection && collection.playlist ) {
-
+		if (collection && collection.playlist) {
 			// Now that the playlist is created, let's add the game to this playlist.
-			this.addToPlaylist( collection.playlist );
+			this.addToPlaylist(collection.playlist);
 		}
 	}
 }

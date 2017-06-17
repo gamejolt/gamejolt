@@ -11,6 +11,4 @@ import { AppActivityFeedItemPlaceholder } from '../item/placeholder/placeholder'
 		AppActivityFeedItemPlaceholder,
 	},
 })
-export class AppActivityFeedPlaceholder extends Vue
-{
-}
+export class AppActivityFeedPlaceholder extends Vue {}

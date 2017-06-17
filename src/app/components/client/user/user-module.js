@@ -1,3 +1,3 @@
-angular.module( 'App.Client.User', [] );
+angular.module('App.Client.User', []);
 
-require( './user-service' );
+require('./user-service');

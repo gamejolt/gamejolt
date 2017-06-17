@@ -37,11 +37,11 @@ import { AppScoreFeed } from '../feed/feed';
 		number,
 	},
 })
-export class AppScoreOverview extends Vue
-{
-	@Prop( Game ) game: Game;
-	@Prop( Object ) initialPayload?: any;
-	@Prop( { type: String, default: 'full' } ) size: 'full' | 'small';
+export class AppScoreOverview extends Vue {
+	@Prop(Game) game: Game;
+	@Prop(Object) initialPayload?: any;
+	@Prop({ type: String, default: 'full' })
+	size: 'full' | 'small';
 
 	@State app: AppStore;
 
@@ -52,63 +52,62 @@ export class AppScoreOverview extends Vue
 	userScorePlacement = 0;
 	userScoreExperience = 0;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
 	// Even.
-	get scoresLeft()
-	{
-		return this.scores.filter( ( _score, i ) => i % 2 === 0 );
+	get scoresLeft() {
+		return this.scores.filter((_score, i) => i % 2 === 0);
 	}
 
 	// Odd.
-	get scoresRight()
-	{
-		return this.scores.filter( ( _score, i ) => i % 2 === 1 );
+	get scoresRight() {
+		return this.scores.filter((_score, i) => i % 2 === 1);
 	}
 
-	created()
-	{
-		if ( this.initialPayload ) {
-			this.processPayload( this.initialPayload );
-		}
-		else {
+	created() {
+		if (this.initialPayload) {
+			this.processPayload(this.initialPayload);
+		} else {
 			this.changeTable();
 		}
 	}
 
-	@Watch( 'initialPayload' )
-	onChange()
-	{
-		if ( this.initialPayload ) {
-			this.processPayload( this.initialPayload );
+	@Watch('initialPayload')
+	onChange() {
+		if (this.initialPayload) {
+			this.processPayload(this.initialPayload);
 		}
 	}
 
-	private processPayload( payload: any )
-	{
-		this.scoreTables = payload.scoreTables ? GameScoreTable.populate( payload.scoreTables ) : [];
-		this.scoreTable = payload.scoreTable ? new GameScoreTable( payload.scoreTable ) : null;
-		this.scores = payload.scores ? UserGameScore.populate( payload.scores ) : [];
-		this.userBestScore = payload.scoresUserBestScore ? new UserGameScore( payload.scoresUserBestScore ) : null;
+	private processPayload(payload: any) {
+		this.scoreTables = payload.scoreTables
+			? GameScoreTable.populate(payload.scoreTables)
+			: [];
+		this.scoreTable = payload.scoreTable
+			? new GameScoreTable(payload.scoreTable)
+			: null;
+		this.scores = payload.scores ? UserGameScore.populate(payload.scores) : [];
+		this.userBestScore = payload.scoresUserBestScore
+			? new UserGameScore(payload.scoresUserBestScore)
+			: null;
 		this.userScorePlacement = payload.scoresUserScorePlacement || 0;
 		this.userScoreExperience = payload.scoresUserScoreExperience || 0;
 	}
 
-	async changeTable( table?: GameScoreTable )
-	{
+	async changeTable(table?: GameScoreTable) {
 		Popover.hideAll();
 
 		// Only if not current table.
-		if ( table && this.scoreTable && table.id === this.scoreTable.id ) {
+		if (table && this.scoreTable && table.id === this.scoreTable.id) {
 			return;
 		}
 
 		let url = '/web/discover/games/scores/overview/' + this.game.id;
-		if ( table ) {
+		if (table) {
 			url += '/' + table.id;
 		}
 
-		const payload = await Api.sendRequest( url );
-		this.processPayload( payload );
+		const payload = await Api.sendRequest(url);
+		this.processPayload(payload);
 	}
 }

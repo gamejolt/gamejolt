@@ -20,44 +20,40 @@ import { AppNotificationDescriptiveAction } from '../../../notification/descript
 		AppNotificationDescriptiveAction,
 	},
 })
-export class AppActivityFeedNotification extends Vue
-{
-	@Prop( ActivityFeedItem ) item: ActivityFeedItem;
+export class AppActivityFeedNotification extends Vue {
+	@Prop(ActivityFeedItem) item: ActivityFeedItem;
 
 	notification: Notification;
 
 	canToggleContent = false;
 	showFullContent = false;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	get icon()
-	{
-		return this.notification.jolticon.replace( 'jolticon-', '' );
+	get icon() {
+		return this.notification.jolticon.replace('jolticon-', '');
 	}
 
-	get hasDetails()
-	{
-		return [
-			Notification.TYPE_COMMENT_ADD,
-			Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
-			Notification.TYPE_GAME_RATING_ADD,
-		].indexOf( this.notification.type ) !== -1;
+	get hasDetails() {
+		return (
+			[
+				Notification.TYPE_COMMENT_ADD,
+				Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
+				Notification.TYPE_GAME_RATING_ADD,
+			].indexOf(this.notification.type) !== -1
+		);
 	}
 
-	created()
-	{
+	created() {
 		this.notification = this.item.feedItem as Notification;
 	}
 
-	go()
-	{
-		this.notification.go( this.$router );
-		this.$emit( 'clicked' );
+	go() {
+		this.notification.go(this.$router);
+		this.$emit('clicked');
 	}
 
-	toggleFull()
-	{
+	toggleFull() {
 		this.showFullContent = !this.showFullContent;
 	}
 }

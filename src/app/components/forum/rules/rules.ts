@@ -10,7 +10,6 @@ import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expan
 		AppExpand,
 	},
 })
-export class AppForumRules extends Vue
-{
+export class AppForumRules extends Vue {
 	isShowingRules = false;
 }

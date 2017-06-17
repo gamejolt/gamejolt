@@ -1,3 +1,3 @@
-angular.module( 'App.Sorting', [] );
+angular.module('App.Sorting', []);
 
-require( './sorting-directive' );
+require('./sorting-directive');

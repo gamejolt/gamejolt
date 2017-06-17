@@ -12,22 +12,22 @@ import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.s
 @Component({
 	components: {
 		AppJolticon,
-	}
+	},
 })
-export class AppGameModLinks extends Vue
-{
-	@Prop( Object ) game: Game;
+export class AppGameModLinks extends Vue {
+	@Prop(Object) game: Game;
 
 	Environment = Environment;
 
-	async tag( tag: string )
-	{
+	async tag(tag: string) {
 		// It won't return what site api expects for output, so gotta catch.
 		try {
-			await Api.sendRequest( `/games/tags/tag/${this.game.id}/${tag}`, null, { apiPath: '/moderate', processPayload: false } );
-		}
-		catch ( _e ) {
-			Growls.success( 'Tagged the game.' );
+			await Api.sendRequest(`/games/tags/tag/${this.game.id}/${tag}`, null, {
+				apiPath: '/moderate',
+				processPayload: false,
+			});
+		} catch (_e) {
+			Growls.success('Tagged the game.');
 		}
 	}
 }

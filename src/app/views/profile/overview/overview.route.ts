@@ -5,5 +5,5 @@ export const routeProfileOverview: VueRouter.RouteConfig = {
 	name: 'profile.overview',
 	path: '/@:username',
 	props: true,
-	component: () => asyncComponentLoader( $import( './overview' ) ),
+	component: () => asyncComponentLoader($import('./overview')),
 };

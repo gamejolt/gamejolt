@@ -7,18 +7,15 @@ import { AppSearch } from '../search';
 
 @View
 @Component({})
-export class AppSearchInput extends Vue
-{
-	@Prop( String ) value: string;
+export class AppSearchInput extends Vue {
+	@Prop(String) value: string;
 
-	mounted()
-	{
-		const search = findVueParent( this, AppSearch ) as AppSearch;
+	mounted() {
+		const search = findVueParent(this, AppSearch) as AppSearch;
 		search.inputElem = this.$el;
 	}
 
-	onChange( val: string )
-	{
-		this.$emit( 'input', val );
+	onChange(val: string) {
+		this.$emit('input', val);
 	}
 }

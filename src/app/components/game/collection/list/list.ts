@@ -17,10 +17,9 @@ import { Store } from '../../../../store/index';
 		AppTrackEvent,
 	},
 })
-export class AppGameCollectionList extends Vue
-{
-	@Prop( Array ) collections: GameCollection[];
-	@Prop( String ) eventLabel?: string;
+export class AppGameCollectionList extends Vue {
+	@Prop(Array) collections: GameCollection[];
+	@Prop(String) eventLabel?: string;
 
 	@State app: Store['app'];
 }

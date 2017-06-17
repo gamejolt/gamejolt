@@ -29,10 +29,9 @@ import { AppGameListing } from '../../../../components/game/listing/listing';
 		AppTooltip,
 	},
 })
-export default class RouteDiscoverGamesList extends Vue
-{
-	@Prop( String ) section: string;
-	@Prop( String ) category?: string;
+export default class RouteDiscoverGamesList extends Vue {
+	@Prop(String) section: string;
+	@Prop(String) category?: string;
 
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
@@ -40,58 +39,63 @@ export default class RouteDiscoverGamesList extends Vue
 	pageTitle = '';
 	descriptiveCategory = '';
 
-	dateRange: [ string, string ] | null = null;
+	dateRange: [string, string] | null = null;
 	date = '';
 
 	translations: any = {
-		'discover.categories.all': this.$gettext( 'discover.categories.all' ),
-		'discover.categories.arcade': this.$gettext( 'discover.categories.arcade' ),
-		'discover.categories.action': this.$gettext( 'discover.categories.action' ),
-		'discover.categories.adventure': this.$gettext( 'discover.categories.adventure' ),
-		'discover.categories.platformer': this.$gettext( 'discover.categories.platformer' ),
-		'discover.categories.puzzle': this.$gettext( 'discover.categories.puzzle' ),
-		'discover.categories.rpg': this.$gettext( 'discover.categories.rpg' ),
-		'discover.categories.shooter': this.$gettext( 'discover.categories.shooter' ),
-		'discover.categories.sports': this.$gettext( 'discover.categories.sports' ),
-		'discover.categories.strategy_sim': this.$gettext( 'discover.categories.strategy_sim' ),
-		'discover.categories.other': this.$gettext( 'discover.categories.other' ),
+		'discover.categories.all': this.$gettext('discover.categories.all'),
+		'discover.categories.arcade': this.$gettext('discover.categories.arcade'),
+		'discover.categories.action': this.$gettext('discover.categories.action'),
+		'discover.categories.adventure': this.$gettext(
+			'discover.categories.adventure',
+		),
+		'discover.categories.platformer': this.$gettext(
+			'discover.categories.platformer',
+		),
+		'discover.categories.puzzle': this.$gettext('discover.categories.puzzle'),
+		'discover.categories.rpg': this.$gettext('discover.categories.rpg'),
+		'discover.categories.shooter': this.$gettext('discover.categories.shooter'),
+		'discover.categories.sports': this.$gettext('discover.categories.sports'),
+		'discover.categories.strategy_sim': this.$gettext(
+			'discover.categories.strategy_sim',
+		),
+		'discover.categories.other': this.$gettext('discover.categories.other'),
 
-		'games.list.page_title': this.$gettext( 'games.list.page_title' ),
-		'games.list.page_title_rpg': this.$gettext( 'games.list.page_title_rpg' ),
-		'games.list.page_title_other': this.$gettext( 'games.list.page_title_other' ),
+		'games.list.page_title': this.$gettext('games.list.page_title'),
+		'games.list.page_title_rpg': this.$gettext('games.list.page_title_rpg'),
+		'games.list.page_title_other': this.$gettext('games.list.page_title_other'),
 
-		'games.list.section_featured': this.$gettext( 'games.list.section_featured' ),
-		'games.list.section_new': this.$gettext( 'games.list.section_new' ),
-		'games.list.section_fresh': this.$gettext( 'games.list.section_fresh' ),
-		'games.list.section_hot': this.$gettext( 'games.list.section_hot' ),
-		'games.list.section_best': this.$gettext( 'games.list.section_best' ),
+		'games.list.section_featured': this.$gettext('games.list.section_featured'),
+		'games.list.section_new': this.$gettext('games.list.section_new'),
+		'games.list.section_fresh': this.$gettext('games.list.section_fresh'),
+		'games.list.section_hot': this.$gettext('games.list.section_hot'),
+		'games.list.section_best': this.$gettext('games.list.section_best'),
 	};
 
 	// TODO: Still gotta work on this.
-	@BeforeRouteEnter( { lazy: true, cache: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
+	@BeforeRouteEnter({ lazy: true, cache: true })
+	routeEnter(this: undefined, route: VueRouter.Route) {
 		const filtering = new GameFilteringContainer();
 		filtering.isPersistent = true;
 
 		// If initialization changed the URL, then we don't want to do the API call.
 		// This prevents a double API call from going out.
-		if ( !filtering.init( route, { shouldDetect: true } ) ) {
+		if (!filtering.init(route, { shouldDetect: true })) {
 			return undefined;
 		}
 
-		return Api.sendRequest( '/web/discover/games?' + filtering.getQueryString( route ) );
+		return Api.sendRequest(
+			'/web/discover/games?' + filtering.getQueryString(route),
+		);
 	}
 
-	created()
-	{
+	created() {
 		this.process();
 	}
 
-	routed()
-	{
-		if ( this.listing && this.$payload ) {
-			this.listing.processPayload( this.$route, this.$payload );
+	routed() {
+		if (this.listing && this.$payload) {
+			this.listing.processPayload(this.$route, this.$payload);
 			this.process();
 		}
 	}
@@ -99,51 +103,45 @@ export default class RouteDiscoverGamesList extends Vue
 	/**
 	 * Gets called before the payload and after.
 	 */
-	process()
-	{
-		if ( !this.listing || !this.filtering ) {
+	process() {
+		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer();
 			this.filtering.isPersistent = true;
-			this.filtering.init( this.$route );
+			this.filtering.init(this.$route);
 
-			this.listing = new GameListingContainer( this.filtering );
+			this.listing = new GameListingContainer(this.filtering);
 		}
 
-		if ( this.section === 'by-date' ) {
+		if (this.section === 'by-date') {
 			this.processDateSection();
-		}
-		else if ( this.section === 'worst' ) {
+		} else if (this.section === 'worst') {
 			this.processWorstSection();
-		}
-		else {
+		} else {
 			this.processGeneralSection();
 		}
 
 		Meta.title = this.pageTitle;
 	}
 
-	processDateSection()
-	{
+	processDateSection() {
 		this.dateRange = null;
 		this.date = '';
 
-		if ( this.$route.params.endDate ) {
+		if (this.$route.params.endDate) {
 			this.dateRange = [
-				date( (new Date( this.$route.params.date )), 'mediumDate' ),
-				date( (new Date( this.$route.params.endDate )), 'mediumDate' ),
+				date(new Date(this.$route.params.date), 'mediumDate'),
+				date(new Date(this.$route.params.endDate), 'mediumDate'),
 			];
-		}
-		else {
-			this.date = date( (new Date( this.$route.params.date )), 'mediumDate' );
+		} else {
+			this.date = date(new Date(this.$route.params.date), 'mediumDate');
 		}
 
-		if ( !this.dateRange ) {
+		if (!this.dateRange) {
 			this.pageTitle = this.$gettextInterpolate(
 				'Games Published on %{ date }',
 				{ date: this.date },
 			);
-		}
-		else {
+		} else {
 			this.pageTitle = this.$gettextInterpolate(
 				'Games Published Between %{ dateStart } and %{ dateEnd }',
 				{
@@ -154,14 +152,14 @@ export default class RouteDiscoverGamesList extends Vue
 		}
 	}
 
-	processGeneralSection()
-	{
+	processGeneralSection() {
 		const sectionTranslationKey = 'games.list.section_' + this.section;
-		const sectionHuman = this.translations[ sectionTranslationKey ];
+		const sectionHuman = this.translations[sectionTranslationKey];
 		let categoryHuman = '';
-		if ( this.category ) {
-			const categoryTranslationKey = 'discover.categories.' + this.category.replace( '-', '_' );
-			categoryHuman = this.translations[ categoryTranslationKey ];
+		if (this.category) {
+			const categoryTranslationKey =
+				'discover.categories.' + this.category.replace('-', '_');
+			categoryHuman = this.translations[categoryTranslationKey];
 		}
 
 		const context = {
@@ -169,34 +167,40 @@ export default class RouteDiscoverGamesList extends Vue
 			category: categoryHuman,
 		};
 
-		this.pageTitle = this.$gettextInterpolate( '%{ section } Indie %{ category } Games', context );
-		if ( this.category === 'rpg' ) {
-			this.pageTitle = this.$gettextInterpolate( '%{ section } Indie RPGs', context );
-		}
-		else if ( this.category === 'other' ) {
-			this.pageTitle = this.$gettextInterpolate( '%{ section } Alternative Indie Games', context );
+		this.pageTitle = this.$gettextInterpolate(
+			'%{ section } Indie %{ category } Games',
+			context,
+		);
+		if (this.category === 'rpg') {
+			this.pageTitle = this.$gettextInterpolate(
+				'%{ section } Indie RPGs',
+				context,
+			);
+		} else if (this.category === 'other') {
+			this.pageTitle = this.$gettextInterpolate(
+				'%{ section } Alternative Indie Games',
+				context,
+			);
 		}
 
-		if ( this.category === 'rpg' ) {
-			this.descriptiveCategory = this.$gettext( 'role-playing games' );
-		}
-		else if ( this.category === 'other' ) {
-			this.descriptiveCategory = this.$gettext( 'alt games and other weirdness' );
-		}
-		else {
+		if (this.category === 'rpg') {
+			this.descriptiveCategory = this.$gettext('role-playing games');
+		} else if (this.category === 'other') {
+			this.descriptiveCategory = this.$gettext('alt games and other weirdness');
+		} else {
 			this.descriptiveCategory = this.$gettextInterpolate(
 				'%{ category } games',
 				{ category: categoryHuman.toLowerCase() },
 			);
 		}
 
-		if ( this.$payload ) {
+		if (this.$payload) {
 			Meta.description = this.$payload.metaDescription;
 		}
 	}
 
-	processWorstSection()
-	{
-		this.pageTitle = 'Ṣ̢̖͇͈͙̹̦Y̱͍͉S̺̳̞͠Y̸̱͚̙͕̺̺ͅS͎̘̲͕̹̀ͅT͉͕̺̲ͅE͓̱̥̠̰̱͚M̪̙̪̥̹ͅ ͏̼̲̫̰E͇̺̩̼R͏̗͙Ŕ͖̦͕Ơ̰̱͖̗̯̞R҉̻̯̠͚';
+	processWorstSection() {
+		this.pageTitle =
+			'Ṣ̢̖͇͈͙̹̦Y̱͍͉S̺̳̞͠Y̸̱͚̙͕̺̺ͅS͎̘̲͕̹̀ͅT͉͕̺̲ͅE͓̱̥̠̰̱͚M̪̙̪̥̹ͅ ͏̼̲̫̰E͇̺̩̼R͏̗͙Ŕ͖̦͕Ơ̰̱͖̗̯̞R҉̻̯̠͚';
 	}
 }

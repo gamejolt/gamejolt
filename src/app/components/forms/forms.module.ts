@@ -1,10 +1,8 @@
 import { NgModule } from 'ng-metadata/core';
 
-angular.module( 'App.Forms', [] );
+angular.module('App.Forms', []);
 
 @NgModule({
-	imports: [
-		'App.Forms',
-	],
+	imports: ['App.Forms'],
 })
-export class FormsModule { }
+export class FormsModule {}

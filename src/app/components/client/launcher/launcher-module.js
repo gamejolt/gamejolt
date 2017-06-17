@@ -1,3 +1,3 @@
-angular.module( 'App.Client.Launcher', [] );
+angular.module('App.Client.Launcher', []);
 
-require( './launcher-service' );
+require('./launcher-service');

@@ -27,7 +27,12 @@ import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/co
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 import { AppTrophyOverview } from '../../../../../../components/trophy/overview/overview';
-import { RouteState, RouteMutation, RouteStore, RouteAction } from '../../view.state';
+import {
+	RouteState,
+	RouteMutation,
+	RouteStore,
+	RouteAction,
+} from '../../view.state';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { AppScoreOverview } from '../../../../../../components/score/overview/overview';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
@@ -65,8 +70,7 @@ import { Store } from '../../../../../../store/index';
 		number,
 	},
 })
-export class AppDiscoverGamesViewOverviewGame extends Vue
-{
+export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
 	@RouteState game: RouteStore['game'];
 	@RouteState mediaItems: RouteStore['mediaItems'];
@@ -81,7 +85,8 @@ export class AppDiscoverGamesViewOverviewGame extends Vue
 	@RouteState commentsCount: RouteStore['commentsCount'];
 	@RouteState videoComments: RouteStore['videoComments'];
 	@RouteState videoCommentsCount: RouteStore['videoCommentsCount'];
-	@RouteState shouldShowMultiplePackagesMessage: RouteStore['shouldShowMultiplePackagesMessage'];
+	@RouteState
+	shouldShowMultiplePackagesMessage: RouteStore['shouldShowMultiplePackagesMessage'];
 	@RouteState trophiesCount: RouteStore['trophiesCount'];
 	@RouteState hasScores: RouteStore['hasScores'];
 	@RouteState trophiesPayload: RouteStore['trophiesPayload'];
@@ -97,29 +102,26 @@ export class AppDiscoverGamesViewOverviewGame extends Vue
 	showFullDescription = false;
 	canToggleDescription = false;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 	Environment = Environment;
 
-	get hasPartnerControls()
-	{
-		return this.game.referrals_enabled
-			&& this.userPartnerKey
-			&& this.packages.length;
+	get hasPartnerControls() {
+		return (
+			this.game.referrals_enabled && this.userPartnerKey && this.packages.length
+		);
 	}
 
 	/**
 	 * Whether or not the achievements row should be two columns. When there is
 	 * both scores and trophies, we split them in half.
 	 */
-	get isAchievementsTwoCol()
-	{
+	get isAchievementsTwoCol() {
 		return this.hasScores && this.trophiesCount;
 	}
 
-	copyPartnerLink()
-	{
-		if ( this.partnerLink ) {
-			Clipboard.copy( this.partnerLink );
+	copyPartnerLink() {
+		if (this.partnerLink) {
+			Clipboard.copy(this.partnerLink);
 		}
 	}
 }

@@ -8,8 +8,6 @@ import { AppLazyPlaceholder } from '../../../../../../lib/gj-lib-client/componen
 @Component({
 	components: {
 		AppLazyPlaceholder,
-	}
+	},
 })
-export class AppDevlogPostViewPlaceholder extends Vue
-{
-}
+export class AppDevlogPostViewPlaceholder extends Vue {}

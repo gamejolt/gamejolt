@@ -29,8 +29,7 @@ import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils
 		date,
 	},
 })
-export default class RouteDashMainPurchasesView extends Vue
-{
+export default class RouteDashMainPurchasesView extends Vue {
 	order: Order = null as any;
 	packagesBySellable: any = null;
 	games: any = null;
@@ -40,36 +39,39 @@ export default class RouteDashMainPurchasesView extends Vue
 	Geo = Geo;
 	OrderPayment = OrderPayment;
 	date = date;
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/dash/purchases/' + route.params.id );
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest('/web/dash/purchases/' + route.params.id);
 	}
 
-	routed()
-	{
-		this.order = new Order( this.$payload.order );
-		this.games = arrayIndexBy( Game.populate( this.$payload.games ), 'id' );
+	routed() {
+		this.order = new Order(this.$payload.order);
+		this.games = arrayIndexBy(Game.populate(this.$payload.games), 'id');
 
-		const packages: GamePackage[] = GamePackage.populate( this.$payload.packages );
+		const packages: GamePackage[] = GamePackage.populate(
+			this.$payload.packages,
+		);
 		this.packagesBySellable = {};
-		for ( const _package of packages ) {
-			if ( !this.packagesBySellable[ _package.sellable_id ] ) {
-				this.packagesBySellable[ _package.sellable_id ] = [];
+		for (const _package of packages) {
+			if (!this.packagesBySellable[_package.sellable_id]) {
+				this.packagesBySellable[_package.sellable_id] = [];
 			}
-			this.packagesBySellable[ _package.sellable_id ].push( _package );
+			this.packagesBySellable[_package.sellable_id].push(_package);
 		}
 
 		this.firstRefund = null;
-		if ( this.order._is_refunded && this.order.payments[0] && this.order.payments[0].refunds ) {
+		if (
+			this.order._is_refunded &&
+			this.order.payments[0] &&
+			this.order.payments[0].refunds
+		) {
 			this.firstRefund = this.order.payments[0].refunds[0];
 		}
 
-		Meta.title = this.$gettextInterpolate(
-			`View Order: #%{ orderId }`,
-			{ orderId: this.order.id },
-		);
+		Meta.title = this.$gettextInterpolate(`View Order: #%{ orderId }`, {
+			orderId: this.order.id,
+		});
 	}
 }

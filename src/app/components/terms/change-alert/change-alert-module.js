@@ -1,3 +1,3 @@
-angular.module( 'App.Terms.ChangeAlert', [] );
+angular.module('App.Terms.ChangeAlert', []);
 
-require( './change-alert-directive' );
+require('./change-alert-directive');

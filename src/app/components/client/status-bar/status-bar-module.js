@@ -1,3 +1,3 @@
-angular.module( 'App.Client.StatusBar', [] );
+angular.module('App.Client.StatusBar', []);
 
-require( './status-bar-directive' );
+require('./status-bar-directive');

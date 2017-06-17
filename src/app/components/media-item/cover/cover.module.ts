@@ -3,8 +3,6 @@ import { makeComponentProvider } from '../../../../lib/gj-lib-client/vue/angular
 import { AppMediaItemCover } from './cover';
 
 @NgModule({
-	declarations: [
-		makeComponentProvider( AppMediaItemCover ),
-	],
+	declarations: [makeComponentProvider(AppMediaItemCover)],
 })
-export class MediaItemCoverModule { }
+export class MediaItemCoverModule {}

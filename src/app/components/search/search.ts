@@ -18,23 +18,21 @@ const KEYCODE_ESC = 27;
 
 let searchIterator = 0;
 
-function setCaretPosition( el: any, caretPos: number )
-{
+function setCaretPosition(el: any, caretPos: number) {
 	// This is used to not only get "focus", but
 	// to make sure we don't have it everything -selected-
 	// (it causes an issue in chrome, and having it doesn't hurt any other browser)
 	el.value = el.value;
 
-	if ( el !== null ) {
-		if ( el.createTextRange ) {
+	if (el !== null) {
+		if (el.createTextRange) {
 			const range = el.createTextRange();
-			range.move( 'character', caretPos );
+			range.move('character', caretPos);
 			range.select();
-		}
-		// (el.selectionStart === 0 added for Firefox bug)
-		else if ( el.selectionStart || el.selectionStart === 0 ) {
+		} else if (el.selectionStart || el.selectionStart === 0) {
+			// (el.selectionStart === 0 added for Firefox bug)
 			el.focus();
-			el.setSelectionRange( caretPos, caretPos );
+			el.setSelectionRange(caretPos, caretPos);
 		}
 	}
 }
@@ -50,9 +48,9 @@ function setCaretPosition( el: any, caretPos: number )
 		AppPopoverTrigger,
 	},
 })
-export class AppSearch extends Vue
-{
-	@Prop( { type: Boolean, default: false } ) autocompleteDisabled: boolean;
+export class AppSearch extends Vue {
+	@Prop({ type: Boolean, default: false })
+	autocompleteDisabled: boolean;
 
 	id = ++searchIterator;
 
@@ -61,71 +59,64 @@ export class AppSearch extends Vue
 	inputElem: HTMLElement | undefined;
 	keydownSpies: Function[] = [];
 
-	Search = makeObservableService( Search );
+	Search = makeObservableService(Search);
 
-	created()
-	{
+	created() {
 		this.query = Search.query;
 	}
 
 	// Sync it.
-	@Watch( 'Search.query' )
-	queryChange()
-	{
+	@Watch('Search.query')
+	queryChange() {
 		this.query = Search.query;
 	}
 
-	isEmpty()
-	{
+	isEmpty() {
 		return !this.query.trim();
 	}
 
-	async focus()
-	{
+	async focus() {
 		await this.$nextTick();
 
-		if ( this.inputElem ) {
+		if (this.inputElem) {
 			this.inputElem.focus();
 		}
 	}
 
-	async blur()
-	{
+	async blur() {
 		await this.$nextTick();
 
-		if ( this.inputElem ) {
+		if (this.inputElem) {
 			this.inputElem.blur();
 		}
 	}
 
-	commandFocus( event: KeyboardEvent )
-	{
+	commandFocus(event: KeyboardEvent) {
 		event.preventDefault();
 		this.query = ':';
 
 		// We push their cursor after the ":".
 		// This will also focus it.
-		if ( this.inputElem ) {
-			setCaretPosition( this.inputElem, 1 );
+		if (this.inputElem) {
+			setCaretPosition(this.inputElem, 1);
 		}
 	}
 
 	/**
 	 * Ability to set watchers for when a keydown event fires.
 	 */
-	setKeydownSpy( fn: Function )
-	{
-		this.keydownSpies.push( fn );
+	setKeydownSpy(fn: Function) {
+		this.keydownSpies.push(fn);
 	}
 
-	onKeydown( event: KeyboardEvent )
-	{
+	onKeydown(event: KeyboardEvent) {
 		// This stops the default behavior from happening when we press up/down
 		// or enter (we don't want to submit form).
-		if ( event.keyCode === KEYCODE_ESC
-			|| event.keyCode === KEYCODE_UP
-			|| event.keyCode === KEYCODE_DOWN
-			|| event.keyCode === KEYCODE_ENTER
+		if (
+			event.keyCode === KEYCODE_ESC ||
+			event.keyCode === KEYCODE_UP ||
+			event.keyCode === KEYCODE_DOWN ||
+			event.keyCode === KEYCODE_ENTER
 		) {
 			event.preventDefault();
 		}
@@ -133,45 +124,41 @@ export class AppSearch extends Vue
 		// If autocomplete is disabled, then we want to submit the form on enter.
 		// Normally the autocomplete will take control of the submission since they
 		// technically highlight what they want in autocomplete and go to it.
-		if ( this.autocompleteDisabled && event.keyCode === KEYCODE_ENTER ) {
-			SearchHistory.record( this.query );
-			this.$router.push( { name: 'search.results', query: { q: this.query } } );
+		if (this.autocompleteDisabled && event.keyCode === KEYCODE_ENTER) {
+			SearchHistory.record(this.query);
+			this.$router.push({ name: 'search.results', query: { q: this.query } });
 		}
 
 		// We want to blur the input on escape.
-		if ( event.keyCode === KEYCODE_ESC ) {
+		if (event.keyCode === KEYCODE_ESC) {
 			this.blur();
-			this.toggleAutocomplete( false );
+			this.toggleAutocomplete(false);
 			event.stopPropagation();
 		}
 
-		for ( const spy of this.keydownSpies ) {
-			spy( event );
+		for (const spy of this.keydownSpies) {
+			spy(event);
 		}
 	}
 
-	onFocus()
-	{
+	onFocus() {
 		this.isFocused = true;
-		this.toggleAutocomplete( true );
+		this.toggleAutocomplete(true);
 	}
 
-	onBlur()
-	{
+	onBlur() {
 		this.isFocused = false;
 	}
 
-	private toggleAutocomplete( state: boolean )
-	{
-		const autocomplete = Popover.getPopover( 'search-autocomplete' );
-		if ( !autocomplete || !this.inputElem ) {
+	private toggleAutocomplete(state: boolean) {
+		const autocomplete = Popover.getPopover('search-autocomplete');
+		if (!autocomplete || !this.inputElem) {
 			return;
 		}
 
-		if ( state ) {
-			autocomplete.show( this.inputElem );
-		}
-		else {
+		if (state) {
+			autocomplete.show(this.inputElem);
+		} else {
 			autocomplete.hide();
 		}
 	}

@@ -67,8 +67,7 @@ import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
 		number,
 	},
 })
-export default class RouteForumsTopicsView extends Vue
-{
+export default class RouteForumsTopicsView extends Vue {
 	@State app: Store['app'];
 
 	topic: ForumTopic = null as any;
@@ -86,35 +85,38 @@ export default class RouteForumsTopicsView extends Vue
 	userPostCounts: any = null;
 	unfollowHover = false;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 	Environment = Environment;
 
-	get loginUrl()
-	{
-		return Environment.authBaseUrl + '/login?redirect='
-			+ encodeURIComponent( this.$route.fullPath );
+	get loginUrl() {
+		return (
+			Environment.authBaseUrl +
+			'/login?redirect=' +
+			encodeURIComponent(this.$route.fullPath)
+		);
 	}
 
-	@BeforeRouteEnter( { cache: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		HistoryTick.sendBeacon( 'forum-topic', parseInt( route.params.id, 10 ) );
+	@BeforeRouteEnter({ cache: true })
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		HistoryTick.sendBeacon('forum-topic', parseInt(route.params.id, 10));
 
-		return Api.sendRequest( '/web/forums/topics/'
-			+ route.params.id
-			+ '?page=' + (route.query.page || 1) );
+		return Api.sendRequest(
+			'/web/forums/topics/' +
+				route.params.id +
+				'?page=' +
+				(route.query.page || 1),
+		);
 	}
 
-	routed()
-	{
+	routed() {
 		// TODO
 		// Location.enforce( {
 		// 	slug: payload.topic.slug,
 		// } );
 
-		this.topic = new ForumTopic( this.$payload.topic );
-		this.channel = new ForumChannel( this.$payload.channel );
-		this.posts = ForumPost.populate( this.$payload.posts );
+		this.topic = new ForumTopic(this.$payload.topic);
+		this.channel = new ForumChannel(this.$payload.channel);
+		this.posts = ForumPost.populate(this.$payload.posts);
 
 		Meta.title = this.topic.title;
 
@@ -125,65 +127,59 @@ export default class RouteForumsTopicsView extends Vue
 		this.userPostCounts = this.$payload.userPostCounts || {};
 	}
 
-	async onPostAdded( newPost: ForumPost, response: any )
-	{
+	async onPostAdded(newPost: ForumPost, response: any) {
 		// If their post was marked as spam, make sure they know.
-		if ( newPost.status === ForumPost.STATUS_SPAM ) {
+		if (newPost.status === ForumPost.STATUS_SPAM) {
 			Growls.info(
-				this.$gettext( `Your post has been marked for review. Please allow some time for it to show on the site.` ),
-				this.$gettext( `Post Needs Review` ),
+				this.$gettext(
+					`Your post has been marked for review. Please allow some time for it to show on the site.`,
+				),
+				this.$gettext(`Post Needs Review`),
 			);
 		}
 
 		// When the new post comes into the DOM the hash will match and it will
 		// scroll to it.
-		this.$router.replace( {
+		this.$router.replace({
 			name: this.$route.name,
 			query: { page: response.page },
 			hash: '#forum-post-' + newPost.id,
-		} );
+		});
 	}
 
-	editTopic()
-	{
+	editTopic() {
 		this.isEditingTopic = true;
 		Popover.hideAll();
 	}
 
-	closeEditTopic()
-	{
+	closeEditTopic() {
 		this.isEditingTopic = false;
 	}
 
-	async follow()
-	{
+	async follow() {
 		await this.topic.$follow();
 		this.isFollowing = true;
 		++this.followerCount;
 	}
 
-	async unfollow()
-	{
+	async unfollow() {
 		await this.topic.$unfollow();
 		this.isFollowing = false;
 		--this.followerCount;
 	}
 
-	pageChange()
-	{
+	pageChange() {
 		// We try to switch pages and give it time for the main post to cut off
 		// if it's too long. This is super hacky, it doesn't always work... I
 		// don't really know how to make this better. Maybe a scroll directive
 		// that gets loaded in once the content is loaded for main post? Would
 		// sure be a lot of work just to get the scrolling hook working better.
-		setTimeout( () =>
-		{
-			Scroll.to( 'forum-posts-list', { animate: true } );
-		}, 200 );
+		setTimeout(() => {
+			Scroll.to('forum-posts-list', { animate: true });
+		}, 200);
 	}
 
-	report()
-	{
-		ReportModal.show( this.topic );
+	report() {
+		ReportModal.show(this.topic);
 	}
 }

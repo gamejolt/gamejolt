@@ -14,5 +14,5 @@ export const routeDiscover: VueRouter.RouteConfig = {
 		routeDiscoverGames,
 		routeDiscoverDevlogs,
 		routeDiscoverChannels,
-	]
+	],
 };

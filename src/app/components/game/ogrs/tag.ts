@@ -5,21 +5,17 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 @View
 @Component({})
-export class AppGameOgrsTag extends Vue
-{
-	@Prop( Game ) game: Game;
-	@Prop( Boolean ) full?: boolean;
+export class AppGameOgrsTag extends Vue {
+	@Prop(Game) game: Game;
+	@Prop(Boolean) full?: boolean;
 
-	get imgTag()
-	{
-		if ( this.game ) {
-			if ( this.game.tigrs_age === 1 ) {
+	get imgTag() {
+		if (this.game) {
+			if (this.game.tigrs_age === 1) {
 				return 'all-ages';
-			}
-			else if ( this.game.tigrs_age === 2 ) {
+			} else if (this.game.tigrs_age === 2) {
 				return 'teen';
-			}
-			else if ( this.game.tigrs_age === 3 ) {
+			} else if (this.game.tigrs_age === 3) {
 				return 'mature';
 			}
 		}
@@ -27,14 +23,12 @@ export class AppGameOgrsTag extends Vue
 		return '';
 	}
 
-	get imgTagUrl()
-	{
-		return require( `./${this.imgTag}${!this.full ? '-tag' : '' }.png` );
+	get imgTagUrl() {
+		return require(`./${this.imgTag}${!this.full ? '-tag' : ''}.png`);
 	}
 
-	get imgTagHeight()
-	{
-		if ( this.full ) {
+	get imgTagHeight() {
+		if (this.full) {
 			return 100;
 		}
 

@@ -13,10 +13,9 @@ import { Connection } from '../../../lib/gj-lib-client/components/connection/con
 import { AppTranslateLangSelector } from '../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
 import { Auth } from '../../../lib/gj-lib-client/components/auth/auth.service';
 
-export function loggedUserBlock()
-{
+export function loggedUserBlock() {
 	// Redirect right away if they are logged in.
-	if ( store.state.app.user ) {
+	if (store.state.app.user) {
 		Auth.redirectDashboard();
 
 		// Never resolve.
@@ -30,17 +29,15 @@ export function loggedUserBlock()
 		AppCoverImg,
 		AppTranslateLangSelector,
 	},
-	async beforeRouteEnter( _to, _from, next )
-	{
-		await store.dispatch( 'bootstrap' );
+	async beforeRouteEnter(_to, _from, next) {
+		await store.dispatch('bootstrap');
 		next();
 	},
 })
-export default class RouteAuth extends Vue
-{
+export default class RouteAuth extends Vue {
 	@State shouldShowCoverImage: boolean;
 	@State coverMediaItem?: MediaItem;
 
-	Environment = makeObservableService( Environment );
-	Connection = makeObservableService( Connection );
+	Environment = makeObservableService(Environment);
+	Connection = makeObservableService(Connection);
 }

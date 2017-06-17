@@ -10,15 +10,16 @@ import { Environment } from '../lib/gj-lib-client/components/environment/environ
 	selector: 'gj-app',
 	template,
 })
-export class AppComponent
-{
+export class AppComponent {
 	constructor(
-		@Inject( '$scope' ) $scope: ng.IScope,
-		@Inject( '$state' ) $state: StateService,
-		@Inject( 'App' ) App: App,
-		@Inject( 'HistoryNavigator' ) @Host() @Optional() HistoryNavigator: any,
-	)
-	{
+		@Inject('$scope') $scope: ng.IScope,
+		@Inject('$state') $state: StateService,
+		@Inject('App') App: App,
+		@Inject('HistoryNavigator')
+		@Host()
+		@Optional()
+		HistoryNavigator: any,
+	) {
 		$scope['$state'] = $state;
 		$scope['App'] = App;
 		$scope['Screen'] = Screen;

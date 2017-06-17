@@ -14,30 +14,27 @@ import { Store } from '../../../store/index';
 @Component({
 	components: {
 		AppProgressPoller,
-	}
+	},
 })
-export default class RouteJoinAlmost extends Vue
-{
+export default class RouteJoinAlmost extends Vue {
 	@State credentials: Store['credentials'];
 
-	created()
-	{
-		Meta.title = this.$gettext( 'auth.join.almost.page_title' );
+	created() {
+		Meta.title = this.$gettext('auth.join.almost.page_title');
 	}
 
-	async onAuthorized()
-	{
-		if ( !this.credentials ) {
+	async onAuthorized() {
+		if (!this.credentials) {
 			return;
 		}
 
 		// Now that they're authorized, we try to log them in with the credentials they used to sign up.
-		const response = await Api.sendRequest( '/web/auth/login', this.credentials );
-		if ( !response.success ) {
-			Growls.error( {
-				message: this.$gettext( `Couldn't log you in for some reason.` ),
+		const response = await Api.sendRequest('/web/auth/login', this.credentials);
+		if (!response.success) {
+			Growls.error({
+				message: this.$gettext(`Couldn't log you in for some reason.`),
 				sticky: true,
-			} );
+			});
 			return;
 		}
 

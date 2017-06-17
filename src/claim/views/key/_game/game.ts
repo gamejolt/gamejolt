@@ -25,8 +25,7 @@ import { LinkedKey } from '../../../../lib/gj-lib-client/components/linked-key/l
 		AppMediaItemCover,
 	},
 })
-export class AppKeyGame extends Vue
-{
+export class AppKeyGame extends Vue {
 	@Prop() payload: any;
 	@Prop() loginUrl: string;
 	@Prop() accessKey?: string;
@@ -48,42 +47,45 @@ export class AppKeyGame extends Vue
 	Environment = Environment;
 	LinkedKey = LinkedKey;
 
-	created()
-	{
+	created() {
 		this.showingThanks = this.$route.query.thanks !== undefined;
 
-		this.game = new Game( this.payload.game );
-		this.bundle = this.payload.bundle ? new GameBundle( this.payload.bundle ) : null;
-		this.keyGroup = this.payload.keyGroup ? new KeyGroup( this.payload.keyGroup ) : null;
+		this.game = new Game(this.payload.game);
+		this.bundle = this.payload.bundle
+			? new GameBundle(this.payload.bundle)
+			: null;
+		this.keyGroup = this.payload.keyGroup
+			? new KeyGroup(this.payload.keyGroup)
+			: null;
 
-		if ( this.payload.type === 'game' ) {
-			Meta.title = this.$gettextInterpolate(
-				`Key Page for %{ game }`,
-				{ game: this.game.title },
-			);
-		}
-		else if ( this.payload.type === 'bundle-game' && this.bundle ) {
+		if (this.payload.type === 'game') {
+			Meta.title = this.$gettextInterpolate(`Key Page for %{ game }`, {
+				game: this.game.title,
+			});
+		} else if (this.payload.type === 'bundle-game' && this.bundle) {
 			Meta.title = this.$gettextInterpolate(
 				`Key Page for %{ game } in %{ bundle }`,
 				{ game: this.game.title, bundle: this.bundle.title },
 			);
 		}
 
-		if ( this.keyGroup && (this.keyGroup.type === KeyGroup.TYPE_USER
-			|| this.keyGroup.type === KeyGroup.TYPE_ANONYMOUS_CLAIM) ) {
+		if (
+			this.keyGroup &&
+			(this.keyGroup.type === KeyGroup.TYPE_USER ||
+				this.keyGroup.type === KeyGroup.TYPE_ANONYMOUS_CLAIM)
+		) {
 			this.isClaimOnly = true;
 			return;
 		}
 
-		this.linkedKeys = LinkedKey.populate( this.payload.linkedKeys );
+		this.linkedKeys = LinkedKey.populate(this.payload.linkedKeys);
 
-		if ( this.payload.packages && this.payload.packages.length ) {
-			this.packagePayload = new GamePackagePayloadModel( this.payload );
+		if (this.payload.packages && this.payload.packages.length) {
+			this.packagePayload = new GamePackagePayloadModel(this.payload);
 		}
 	}
 
-	claim()
-	{
-		this.$emit( 'claim', this.game );
+	claim() {
+		this.$emit('claim', this.game);
 	}
 }

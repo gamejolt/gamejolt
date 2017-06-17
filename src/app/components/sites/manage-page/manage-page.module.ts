@@ -9,11 +9,7 @@ import SiteSettings from '../../forms/dashboard/site/settings/settings';
 import SiteDomain from '../../forms/dashboard/site/domain/domain';
 
 @NgModule({
-	imports: [
-		SiteBuild,
-		SiteSettings,
-		SiteDomain,
-	],
+	imports: [SiteBuild, SiteSettings, SiteDomain],
 	declarations: [
 		SitesManagePageComponent,
 		SitesManagePageStaticComponent,
@@ -21,4 +17,4 @@ import SiteDomain from '../../forms/dashboard/site/domain/domain';
 		SitesManagePageDomainComponent,
 	],
 })
-export class SitesManagePageModule { }
+export class SitesManagePageModule {}

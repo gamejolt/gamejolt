@@ -10,6 +10,4 @@ import { AppPageHeader } from '../../../components/page-header/page-header';
 		AppPageHeader,
 	},
 })
-export default class RouteDiscoverDevlogs extends Vue
-{
-}
+export default class RouteDiscoverDevlogs extends Vue {}

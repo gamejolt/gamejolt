@@ -25,14 +25,12 @@ import { AppLoadingBar } from '../lib/gj-lib-client/components/loading/bar/bar';
 		date,
 	},
 })
-export class App extends Vue
-{
+export class App extends Vue {
 	@State app: Store['app'];
 
 	curDate = new Date();
 
-	mounted()
-	{
+	mounted() {
 		// Will load the user in asynchronously so that the user-bar in the
 		// shell will get loaded with a user.
 		User.touch();

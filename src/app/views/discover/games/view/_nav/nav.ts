@@ -25,8 +25,7 @@ import { Store } from '../../../../../store/index';
 		number,
 	},
 })
-export class AppDiscoverGamesViewNav extends Vue
-{
+export class AppDiscoverGamesViewNav extends Vue {
 	@RouteState game: RouteStore['game'];
 	@RouteState postsCount: RouteStore['postsCount'];
 	@RouteState commentsCount: RouteStore['commentsCount'];
@@ -38,8 +37,7 @@ export class AppDiscoverGamesViewNav extends Vue
 
 	Environment = Environment;
 
-	report()
-	{
-		ReportModal.show( this.game );
+	report() {
+		ReportModal.show(this.game);
 	}
 }

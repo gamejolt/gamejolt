@@ -17,9 +17,8 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 		number,
 	},
 })
-export class AppScoreList extends Vue
-{
-	@Prop( Array ) scores: UserGameScore[];
-	@Prop( Number ) startRank?: number;
-	@Prop( Number ) step?: number;
+export class AppScoreList extends Vue {
+	@Prop(Array) scores: UserGameScore[];
+	@Prop(Number) startRank?: number;
+	@Prop(Number) step?: number;
 }

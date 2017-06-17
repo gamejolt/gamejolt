@@ -1,4 +1,4 @@
-angular.module( 'App.User.SetPasswordModal', [] );
+angular.module('App.User.SetPasswordModal', []);
 
-require( './set-password-modal-controller' );
-require( './set-password-modal-service' );
+require('./set-password-modal-controller');
+require('./set-password-modal-service');

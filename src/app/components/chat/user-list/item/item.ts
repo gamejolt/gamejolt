@@ -18,12 +18,11 @@ import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 		number,
 	},
 })
-export class AppChatUserListItem extends Vue
-{
-	@Prop( ChatUser ) user: ChatUser;
-	@Prop( ChatRoom ) room?: ChatRoom;
-	@Prop( Boolean ) showPm?: boolean;
-	@Prop( Boolean ) showModTools?: boolean;
+export class AppChatUserListItem extends Vue {
+	@Prop(ChatUser) user: ChatUser;
+	@Prop(ChatRoom) room?: ChatRoom;
+	@Prop(Boolean) showPm?: boolean;
+	@Prop(Boolean) showModTools?: boolean;
 
 	@State chat: ChatClient;
 
@@ -31,59 +30,52 @@ export class AppChatUserListItem extends Vue
 
 	ChatSiteModPermission = ChatSiteModPermission;
 
-	get canModerate()
-	{
-		if ( !this.room || !this.showModTools ) {
+	get canModerate() {
+		if (!this.room || !this.showModTools) {
 			return false;
 		}
 
-		return this.chat.canModerate( this.room, this.user );
+		return this.chat.canModerate(this.room, this.user);
 	}
 
-	onUserClick()
-	{
+	onUserClick() {
 		// Otherwise, the default is just to follow the link, which is fine.
-		if ( !this.showPm ) {
+		if (!this.showPm) {
 			return;
 		}
 
-		this.chat.enterRoom( this.user.roomId, true );
+		this.chat.enterRoom(this.user.roomId, true);
 	}
 
-	toggleModTools()
-	{
+	toggleModTools() {
 		this.areModToolsOpen = !this.areModToolsOpen;
 	}
 
-	mod()
-	{
-		if ( !this.canModerate ) {
+	mod() {
+		if (!this.canModerate) {
 			return;
 		}
-		this.chat.mod( this.user.id, this.room!.id );
+		this.chat.mod(this.user.id, this.room!.id);
 	}
 
-	demod()
-	{
-		if ( !this.canModerate ) {
+	demod() {
+		if (!this.canModerate) {
 			return;
 		}
-		this.chat.demod( this.user.id, this.room!.id );
+		this.chat.demod(this.user.id, this.room!.id);
 	}
 
-	mute()
-	{
-		if ( !this.canModerate ) {
+	mute() {
+		if (!this.canModerate) {
 			return;
 		}
-		this.chat.mute( this.user.id, this.room!.id );
+		this.chat.mute(this.user.id, this.room!.id);
 	}
 
-	unmute()
-	{
-		if ( !this.canModerate ) {
+	unmute() {
+		if (!this.canModerate) {
 			return;
 		}
-		this.chat.unmute( this.user.id, this.room!.id );
+		this.chat.unmute(this.user.id, this.room!.id);
 	}
 }

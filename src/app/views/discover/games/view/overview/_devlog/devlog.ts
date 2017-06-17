@@ -36,8 +36,7 @@ import { Store } from '../../../../../../store/index';
 		AppTrackEvent,
 	},
 })
-export class AppDiscoverGamesViewOverviewDevlog extends Vue
-{
+export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
 	@RouteState game: RouteStore['game'];
 	@RouteState mediaItems: RouteStore['mediaItems'];
@@ -52,6 +51,6 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue
 	showFullDescription = false;
 	canToggleDescription = false;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 	Environment = Environment;
 }

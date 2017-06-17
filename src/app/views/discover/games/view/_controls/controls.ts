@@ -28,8 +28,7 @@ import { Store } from '../../../../../store/index';
 		AppAuthRequired,
 	},
 })
-export class AppDiscoverGamesViewControls extends Vue
-{
+export class AppDiscoverGamesViewControls extends Vue {
 	@RouteState game: RouteStore['game'];
 
 	@State app: Store['app'];

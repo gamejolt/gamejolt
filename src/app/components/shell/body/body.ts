@@ -8,16 +8,15 @@ import { AppShellFooter } from '../footer/footer';
 import { AppPopoverContext } from '../../../../lib/gj-lib-client/components/popover/popover-context';
 
 // Includes global styling.
-require( './body.styl' );
+require('./body.styl');
 
 @View
 @Component({
 	components: {
 		AppPopoverContext,
 		AppShellFooter,
-	}
+	},
 })
-export class AppShellBody extends Vue
-{
-	Shell = makeObservableService( Shell );
+export class AppShellBody extends Vue {
+	Shell = makeObservableService(Shell);
 }

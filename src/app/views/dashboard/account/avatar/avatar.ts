@@ -16,16 +16,14 @@ import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vu
 		AppJolticon,
 	},
 })
-export default class RouteDashAccountAvatar extends Vue
-{
+export default class RouteDashAccountAvatar extends Vue {
 	@State app: Store['app'];
 	@RouteMutation setHeading: RouteStore['setHeading'];
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	created()
-	{
-		Meta.title = this.$gettext( `dash.avatar.page_title` );
-		this.setHeading( this.$gettext( 'dash.avatar.heading' ) );
+	created() {
+		Meta.title = this.$gettext(`dash.avatar.page_title`);
+		this.setHeading(this.$gettext('dash.avatar.heading'));
 	}
 }

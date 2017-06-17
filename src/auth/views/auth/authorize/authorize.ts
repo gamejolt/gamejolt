@@ -10,28 +10,24 @@ import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service
 
 @View
 @Component({})
-export default class RouteAuthAuthorize extends Vue
-{
+export default class RouteAuthAuthorize extends Vue {
 	isSuccess = false;
 
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
+	routeEnter(this: undefined, route: VueRouter.Route) {
 		const { userId, code, type } = route.params;
-		return Api.sendRequest( `/web/auth/authorize/${ userId }/${ code }/${ type }` );
+		return Api.sendRequest(`/web/auth/authorize/${userId}/${code}/${type}`);
 	}
 
-	routed()
-	{
+	routed() {
 		this.isSuccess = this.$payload.success;
 
 		// Redirect them to their dashboard after a bit.
-		if ( this.isSuccess ) {
-			setTimeout( () => Auth.redirectDashboard(), 3000 );
-			Meta.title = this.$gettext( 'Redirecting...' );
-		}
-		else {
-			Meta.title = this.$gettext( 'auth.authorize.invalid.page_title' );
+		if (this.isSuccess) {
+			setTimeout(() => Auth.redirectDashboard(), 3000);
+			Meta.title = this.$gettext('Redirecting...');
+		} else {
+			Meta.title = this.$gettext('auth.authorize.invalid.page_title');
 		}
 	}
 }

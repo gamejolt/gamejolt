@@ -20,8 +20,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { Store } from '../../../store/index';
 
-interface DiscoverSection
-{
+interface DiscoverSection {
 	title: string;
 	smallTitle: string;
 	url: string;
@@ -45,8 +44,7 @@ interface DiscoverSection
 		AppAuthRequired,
 	},
 })
-export default class RouteDiscoverHome extends Vue
-{
+export default class RouteDiscoverHome extends Vue {
 	@State app: Store['app'];
 
 	isLoaded = false;
@@ -61,62 +59,57 @@ export default class RouteDiscoverHome extends Vue
 		recommended: [],
 	};
 
-	@BeforeRouteEnter( { lazy: true, cache: true } )
-	beforeRoute()
-	{
-		return Api.sendRequest( '/web/discover' );
+	@BeforeRouteEnter({ lazy: true, cache: true })
+	beforeRoute() {
+		return Api.sendRequest('/web/discover');
 	}
 
-	get discoverSections()
-	{
+	get discoverSections() {
 		const bestSection: DiscoverSection = {
-			title: this.$gettext( 'Best Games' ),
-			smallTitle: this.$gettext( 'Best' ),
-			url: this.$router.resolve( {
+			title: this.$gettext('Best Games'),
+			smallTitle: this.$gettext('Best'),
+			url: this.$router.resolve({
 				name: 'discover.games.list._fetch',
 				params: { section: 'best' },
-			} ).href,
+			}).href,
 			eventLabel: 'best-games',
 			games: 'best',
 		};
 
 		const hotSection: DiscoverSection = {
-			title: this.$gettext( 'Hot Games' ),
-			smallTitle: this.$gettext( 'Hot' ),
-			url: this.$router.resolve( {
+			title: this.$gettext('Hot Games'),
+			smallTitle: this.$gettext('Hot'),
+			url: this.$router.resolve({
 				name: 'discover.games.list._fetch',
 				params: { section: 'hot' },
-			} ).href,
+			}).href,
 			eventLabel: 'hot-games',
 			games: 'hot',
 		};
 
-		if ( this.isLoaded && this.app.user ) {
+		if (this.isLoaded && this.app.user) {
 			const recommendedSection = {
-				title: this.$gettext( 'Recommended Games' ),
-				smallTitle: this.$gettext( 'Recommended' ),
-				url: this.$router.resolve( {
+				title: this.$gettext('Recommended Games'),
+				smallTitle: this.$gettext('Recommended'),
+				url: this.$router.resolve({
 					name: 'library.collection.recommended',
 					params: { id: this.app.user.username },
-				} ).href,
+				}).href,
 				eventLabel: 'recommended-games',
 				games: 'recommended',
 			};
 
-			return [ hotSection, recommendedSection, bestSection ];
-		}
-		else {
-			return [ hotSection, bestSection ];
+			return [hotSection, recommendedSection, bestSection];
+		} else {
+			return [hotSection, bestSection];
 		}
 	}
 
-	created()
-	{
+	created() {
 		this.chosenSection = this.discoverSections[0];
 	}
 
-	routed()
-	{
+	routed() {
 		this.isLoaded = true;
 
 		Meta.title = null;
@@ -124,32 +117,31 @@ export default class RouteDiscoverHome extends Vue
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb;
 		Meta.twitter = this.$payload.twitter;
-		Meta.fb.image = Meta.twitter.image = require( '../../../img/social/social-share-header.png' );
+		Meta.fb.image = Meta.twitter.image = require('../../../img/social/social-share-header.png');
 		Meta.fb.url = Meta.twitter.url = Environment.baseUrl;
 
 		Meta.microdata = {
 			'@context': 'http://schema.org',
 			'@type': 'WebSite',
-			'url': 'http://gamejolt.com/',
-			'name': 'Game Jolt',
-			'potentialAction': {
+			url: 'http://gamejolt.com/',
+			name: 'Game Jolt',
+			potentialAction: {
 				'@type': 'SearchAction',
-				'target': 'http://gamejolt.com/search?q={search_term_string}',
-				'query-input': 'required name=search_term_string'
+				target: 'http://gamejolt.com/search?q={search_term_string}',
+				'query-input': 'required name=search_term_string',
 			},
 		};
 
-		this.featuredItems = FeaturedItem.populate( this.$payload.featuredGames );
-		this.games.featured = this.featuredItems.map( ( item ) => item.game );
-		this.games.hot = Game.populate( this.$payload.hotGames );
-		this.games.best = Game.populate( this.$payload.bestGames );
-		this.games.recommended = Game.populate( this.$payload.recommendedGames );
+		this.featuredItems = FeaturedItem.populate(this.$payload.featuredGames);
+		this.games.featured = this.featuredItems.map(item => item.game);
+		this.games.hot = Game.populate(this.$payload.hotGames);
+		this.games.best = Game.populate(this.$payload.bestGames);
+		this.games.recommended = Game.populate(this.$payload.recommendedGames);
 
 		this.channels = this.$payload.channels;
 	}
 
-	changeSection( sectionIndex: number )
-	{
-		this.chosenSection = this.discoverSections[ sectionIndex ];
+	changeSection(sectionIndex: number) {
+		this.chosenSection = this.discoverSections[sectionIndex];
 	}
 }

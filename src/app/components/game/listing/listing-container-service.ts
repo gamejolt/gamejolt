@@ -2,8 +2,7 @@ import VueRouter from 'vue-router';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameFilteringContainer } from '../filtering/container';
 
-export class GameListingContainer
-{
+export class GameListingContainer {
 	isBootstrapped = false;
 	games: any[] = [];
 	gamesCount = 0;
@@ -11,26 +10,22 @@ export class GameListingContainer
 	currentPage = 1;
 	section = 'hot';
 
-	constructor( public filteringContainer?: GameFilteringContainer )
-	{
-	}
+	constructor(public filteringContainer?: GameFilteringContainer) {}
 
-	processPayload( route: VueRouter.Route, payload: any )
-	{
+	processPayload(route: VueRouter.Route, payload: any) {
 		this.isBootstrapped = true;
-		this.games = Game.populate( payload.games );
+		this.games = Game.populate(payload.games);
 		this.gamesCount = payload.gamesCount;
 		this.perPage = payload.perPage;
 
-		this.currentPage = route.query.page ? parseInt( route.query.page, 10 ) : 1;
+		this.currentPage = route.query.page ? parseInt(route.query.page, 10) : 1;
 		this.section = route.params.section || 'hot';
 	}
 
-	removeGame( game: Game )
-	{
-		const index = this.games.findIndex( ( item ) => item.id === game.id );
-		if ( index !== -1 ) {
-			this.games.splice( index, 1 );
+	removeGame(game: Game) {
+		const index = this.games.findIndex(item => item.id === game.id);
+		if (index !== -1) {
+			this.games.splice(index, 1);
 		}
 		--this.gamesCount;
 	}

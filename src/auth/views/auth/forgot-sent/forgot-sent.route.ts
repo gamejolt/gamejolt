@@ -5,7 +5,7 @@ export const routeAuthForgotSent: VueRouter.RouteConfig = {
 	name: 'auth.forgot-sent',
 	path: 'forgot/sent',
 	props: true,
-	component: () => asyncComponentLoader( $import( './forgot-sent' ) ),
+	component: () => asyncComponentLoader($import('./forgot-sent')),
 	meta: {
 		hideCoverImage: true,
 	},

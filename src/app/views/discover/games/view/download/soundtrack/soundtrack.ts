@@ -23,28 +23,24 @@ const DownloadDelay = 5000;
 		AppLoading,
 	},
 })
-export default class RouteDiscoverGamesViewDownloadSoundtrack extends Vue
-{
+export default class RouteDiscoverGamesViewDownloadSoundtrack extends Vue {
 	@RouteState game: RouteStore['game'];
 
 	src: string | null = null;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
 	@BeforeRouteEnter()
-	beforeRoute( this: undefined, route: VueRouter.Route )
-	{
-		const gameId = parseInt( route.params.id, 10 );
+	beforeRoute(this: undefined, route: VueRouter.Route) {
+		const gameId = parseInt(route.params.id, 10);
 
-		HistoryTick.sendBeacon(
-			'game-soundtrack',
-			gameId,
-			{ sourceResource: 'Game', sourceResourceId: gameId },
-		);
+		HistoryTick.sendBeacon('game-soundtrack', gameId, {
+			sourceResource: 'Game',
+			sourceResourceId: gameId,
+		});
 	}
 
-	async routed()
-	{
+	async routed() {
 		Meta.title = this.$gettextInterpolate(
 			`Downloading soundtrack for %{ game }`,
 			{ game: this.game.title },
@@ -54,29 +50,26 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends Vue
 		await this.$nextTick();
 
 		// Scroll down past the header.
-		Scroll.to( 'page-ad-scroll' );
+		Scroll.to('page-ad-scroll');
 
 		// We do it like this so that we start getting the download URL right
 		// away while still waiting for the timeout.
-		const data = await Promise.all<any>( [
-			GameSong.getSoundtrackDownloadUrl( this.game.id ),
+		const data = await Promise.all<any>([
+			GameSong.getSoundtrackDownloadUrl(this.game.id),
 
 			// Wait at least this long before spawning the download.
 			this.timeout(),
-		] );
+		]);
 
 		this.src = data[0].downloadUrl;
 	}
 
-	private async timeout()
-	{
-		return new Promise( ( resolve ) =>
-		{
-			setTimeout( resolve, DownloadDelay );
-		} );
+	private async timeout() {
+		return new Promise(resolve => {
+			setTimeout(resolve, DownloadDelay);
+		});
 	}
 }
-
 
 // angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.SoundtrackCtrl', function(
 // 	$scope, $sce, $window, $timeout, App, Game_Song, Scroll, gettextCatalog )

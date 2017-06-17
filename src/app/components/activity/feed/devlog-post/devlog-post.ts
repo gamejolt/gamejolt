@@ -5,7 +5,10 @@ import * as View from '!view!./devlog-post.html?style=./devlog-post.styl';
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { ActivityFeedItem } from '../item-service';
-import { makeObservableService, findVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
+import {
+	makeObservableService,
+	findVueParent,
+} from '../../../../../lib/gj-lib-client/utils/vue';
 import { AppActivityFeed } from '../feed';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppGameThumbnailImg } from '../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
@@ -33,44 +36,36 @@ import { AppActivityFeedDevlogPostControls } from './controls/controls';
 		number,
 	},
 })
-export class AppActivityFeedDevlogPost extends Vue
-{
-	@Prop( ActivityFeedItem ) item: ActivityFeedItem;
+export class AppActivityFeedDevlogPost extends Vue {
+	@Prop(ActivityFeedItem) item: ActivityFeedItem;
 
 	post: FiresidePost;
 
 	feed: AppActivityFeed;
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	get icon()
-	{
-		if ( this.post.type === 'text' ) {
+	get icon() {
+		if (this.post.type === 'text') {
 			return 'blog-article';
-		}
-		else if ( this.post.type === 'media' ) {
+		} else if (this.post.type === 'media') {
 			return 'screenshot';
-		}
-		else if ( this.post.type === 'video' ) {
+		} else if (this.post.type === 'video') {
 			return 'video';
 		}
 
 		return '';
 	}
 
-	created()
-	{
-		this.feed = findVueParent( this, AppActivityFeed ) as AppActivityFeed;
+	created() {
+		this.feed = findVueParent(this, AppActivityFeed) as AppActivityFeed;
 		this.post = this.item.feedItem as FiresidePost;
 	}
 
-	onExpand()
-	{
-		this.$emit( 'expanded' );
+	onExpand() {
+		this.$emit('expanded');
 	}
 
-	onClick()
-	{
-		this.$emit( 'clicked' );
+	onClick() {
+		this.$emit('clicked');
 	}
 }
-

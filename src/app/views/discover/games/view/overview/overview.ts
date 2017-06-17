@@ -16,8 +16,7 @@ import { RouteMutation, RouteStore, RouteState } from '../view.state';
 		AppDiscoverGamesViewOverviewDevlog,
 	},
 })
-export default class RouteDiscoverGamesViewOverview extends Vue
-{
+export default class RouteDiscoverGamesViewOverview extends Vue {
 	@Prop() id: string;
 
 	@RouteState game: RouteStore['game'];
@@ -25,48 +24,47 @@ export default class RouteDiscoverGamesViewOverview extends Vue
 	@RouteMutation bootstrapFeed: RouteStore['bootstrapFeed'];
 	@RouteMutation processOverviewPayload: RouteStore['processOverviewPayload'];
 
-	@BeforeRouteEnter( { lazy: true, cache: true } )
-	beforeRoute( route: VueRouter.Route )
-	{
+	@BeforeRouteEnter({ lazy: true, cache: true })
+	beforeRoute(route: VueRouter.Route) {
 		// If we have a tracked partner "ref" in the URL, we want to pass that along
 		// when gathering the payload.
 		let apiOverviewUrl = '/web/discover/games/overview/' + route.params.id;
 
-		const ref = PartnerReferral.getReferrer( 'Game', parseInt( route.params.id, 10 ) );
-		if ( ref ) {
+		const ref = PartnerReferral.getReferrer(
+			'Game',
+			parseInt(route.params.id, 10),
+		);
+		if (ref) {
 			apiOverviewUrl += '?ref=' + ref;
 		}
 
-		return Api.sendRequest( apiOverviewUrl );
+		return Api.sendRequest(apiOverviewUrl);
 	}
 
-	created()
-	{
+	created() {
 		// Try pulling feed from cache.
 		this.bootstrapFeed();
 	}
 
-	async routed()
-	{
+	async routed() {
 		const dev = this.game.developer;
-		Meta.title = `${ this.game.title } by ${ dev.display_name } (@${ dev.username })`;
+		Meta.title = `${this.game.title} by ${dev.display_name} (@${dev.username})`;
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb;
 		Meta.twitter = this.$payload.twitter;
 
-		if ( this.$payload.microdata ) {
+		if (this.$payload.microdata) {
 			Meta.microdata = this.$payload.microdata;
 		}
 
-		this.processOverviewPayload( this.$payload );
+		this.processOverviewPayload(this.$payload);
 	}
 
-	render( h: Vue.CreateElement )
-	{
+	render(h: Vue.CreateElement) {
 		return h(
 			this.game._is_devlog
 				? AppDiscoverGamesViewOverviewDevlog
-				: AppDiscoverGamesViewOverviewGame
+				: AppDiscoverGamesViewOverviewGame,
 		);
 	}
 }

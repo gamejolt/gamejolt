@@ -13,6 +13,4 @@ import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/load
 		AppLoading,
 	},
 })
-export class AuthLinkedAccountProcessing extends Vue
-{
-}
+export class AuthLinkedAccountProcessing extends Vue {}

@@ -16,17 +16,14 @@ import { RouteState, RouteStore } from '../view.state';
 		AppAd,
 	},
 })
-export default class RouteDiscoverGamesViewComments extends Vue
-{
+export default class RouteDiscoverGamesViewComments extends Vue {
 	@RouteState game: RouteStore['game'];
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	created()
-	{
-		Meta.title = this.$gettextInterpolate(
-			`Comments for %{ game }`,
-			{ game: this.game.title },
-		);
+	created() {
+		Meta.title = this.$gettextInterpolate(`Comments for %{ game }`, {
+			game: this.game.title,
+		});
 	}
 }

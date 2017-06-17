@@ -1,7 +1,10 @@
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./game.html?style=./game.styl';
 
-import { BaseForm, FormOnInit } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { AppFormLoader } from '../../../../lib/gj-lib-client/components/form-vue/loader/loader';
@@ -24,9 +27,8 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 		AppTooltip,
 	},
 })
-export class FormGame extends BaseForm<Game> implements FormOnInit
-{
-	@Prop( Boolean ) isWizard?: boolean;
+export class FormGame extends BaseForm<Game> implements FormOnInit {
+	@Prop(Boolean) isWizard?: boolean;
 
 	@State app: Store['app'];
 
@@ -39,60 +41,61 @@ export class FormGame extends BaseForm<Game> implements FormOnInit
 	categories: any = null;
 	engines: any = null;
 
-	get loadUrl()
-	{
+	get loadUrl() {
 		let url = '/web/dash/developer/games/save';
-		if ( this.method === 'edit' ) {
+		if (this.method === 'edit') {
 			url += '/' + this.model!.id;
 		}
 		return url;
 	}
 
-	get stage()
-	{
-		if ( !this.acceptedRules ) {
+	get stage() {
+		if (!this.acceptedRules) {
 			return 'rules';
-		}
-		else if ( this.formModel.development_status === undefined ) {
+		} else if (this.formModel.development_status === undefined) {
 			return 'dev-status';
 		}
 		return 'details';
 	}
 
-	get gameUrl()
-	{
-		return 'gamejolt.com/games'
-			+ '/<b>' + (this.formModel.path ? this.formModel.path.toLowerCase() : '_') + '</b>'
-			+ '/' + (this.model ? this.model.id : 'id');
+	get gameUrl() {
+		return (
+			'gamejolt.com/games' +
+			'/<b>' +
+			(this.formModel.path ? this.formModel.path.toLowerCase() : '_') +
+			'</b>' +
+			'/' +
+			(this.model ? this.model.id : 'id')
+		);
 	}
 
-	get siteUrl()
-	{
-		return this.app.user!.username.toLowerCase()
-			+ '.gamejolt.io'
-			+ '/<b>' + (this.formModel.path ? this.formModel.path.toLowerCase() : '_') + '</b>';
+	get siteUrl() {
+		return (
+			this.app.user!.username.toLowerCase() +
+			'.gamejolt.io' +
+			'/<b>' +
+			(this.formModel.path ? this.formModel.path.toLowerCase() : '_') +
+			'</b>'
+		);
 	}
 
-	onInit()
-	{
+	onInit() {
 		this.acceptedRules = this.method !== 'add';
 
-		if ( this.method === 'add' ) {
+		if (this.method === 'add') {
 			this.formModel.referrals_enabled = true;
 		}
 	}
 
-	onLoaded( payload: any )
-	{
+	onLoaded(payload: any) {
 		this.account = payload.account;
 		this.categories = payload.categories;
 		this.engines = payload.engines;
 	}
 
-	acceptRules()
-	{
+	acceptRules() {
 		this.acceptedRules = true;
-		Scroll.to( 0, { animate: false } );
+		Scroll.to(0, { animate: false });
 	}
 }
 
@@ -115,7 +118,6 @@ export class FormGame extends BaseForm<Game> implements FormOnInit
 // 	form.onInit = function( scope: any )
 // 	{
 // 		scope.App = App;
-
 
 // 	};
 

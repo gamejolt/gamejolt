@@ -30,8 +30,7 @@ import { AppGameGridPlaceholder } from '../../../../../components/game/grid/plac
 		AppTrackEvent,
 	},
 })
-export default class RouteDiscoverChannelsViewOverview extends Vue
-{
+export default class RouteDiscoverChannelsViewOverview extends Vue {
 	@Prop() channel: any;
 	@Prop() shouldShowAds: boolean;
 
@@ -44,33 +43,32 @@ export default class RouteDiscoverChannelsViewOverview extends Vue
 	Screen = Screen;
 
 	@BeforeRouteEnter({ cache: true, lazy: true })
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/discover/channels/overview/' + route.params.channel );
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest(
+			'/web/discover/channels/overview/' + route.params.channel,
+		);
 	}
 
-	created()
-	{
+	created() {
 		// Try pulling feed from cache.
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed()
-	{
+	routed() {
 		this.isLoaded = true;
-		this.bestGames = Game.populate( this.$payload.bestGames );
-		this.hotGames = Game.populate( this.$payload.hotGames );
+		this.bestGames = Game.populate(this.$payload.bestGames);
+		this.hotGames = Game.populate(this.$payload.hotGames);
 
-		if ( !this.feed ) {
+		if (!this.feed) {
 			this.feed = ActivityFeedService.bootstrap(
-				FiresidePost.populate( this.$payload.posts ),
+				FiresidePost.populate(this.$payload.posts),
 				{
 					type: 'Fireside_Post',
-					url: `/web/discover/channels/posts/${ this.channel }`,
+					url: `/web/discover/channels/posts/${this.channel}`,
 				},
 			);
 		}
 
-		ChannelsViewHelper.setDefaultMetaData( this.$route.params.channel );
+		ChannelsViewHelper.setDefaultMetaData(this.$route.params.channel);
 	}
 }

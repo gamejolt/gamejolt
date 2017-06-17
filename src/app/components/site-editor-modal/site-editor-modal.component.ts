@@ -1,4 +1,10 @@
-import { Component, Output, Inject, Input, EventEmitter } from 'ng-metadata/core';
+import {
+	Component,
+	Output,
+	Inject,
+	Input,
+	EventEmitter,
+} from 'ng-metadata/core';
 import * as template from '!html-loader!./site-editor-modal.html';
 import './site-editor-modal.styl';
 
@@ -14,12 +20,11 @@ type EditorTab = 'theme' | 'content';
 	selector: 'gj-site-editor-modal',
 	template,
 })
-export class SiteEditorModalComponent
-{
+export class SiteEditorModalComponent {
 	@Input() siteId: number;
 	@Input() initialTab?: EditorTab;
 
-	@Output( 'close' ) private _close = new EventEmitter<void>();
+	@Output('close') private _close = new EventEmitter<void>();
 
 	site: Site;
 	templates: SiteTemplate[] = [];
@@ -33,52 +38,48 @@ export class SiteEditorModalComponent
 	private locationWatcher: Function;
 
 	constructor(
-		@Inject( '$rootScope' ) private $rootScope: ng.IRootScopeService,
-		@Inject( '$sce' ) private $sce: ng.ISCEService,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog,
-		@Inject( '$location' ) private $location: ng.ILocationService,
-	)
-	{
+		@Inject('$rootScope') private $rootScope: ng.IRootScopeService,
+		@Inject('$sce') private $sce: ng.ISCEService,
+		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog,
+		@Inject('$location') private $location: ng.ILocationService,
+	) {
 		this.tab = this.initialTab || 'theme';
 
-		Api.sendRequest( `/web/dash/sites/editor/${this.siteId}` )
-			.then( ( response: any ) =>
-			{
-				this.isLoaded = true;
-				this.site = new Site( response.site );
-				this.templates = SiteTemplate.populate( response.templates );
+		Api.sendRequest(
+			`/web/dash/sites/editor/${this.siteId}`,
+		).then((response: any) => {
+			this.isLoaded = true;
+			this.site = new Site(response.site);
+			this.templates = SiteTemplate.populate(response.templates);
 
-				if ( this.site.theme ) {
-					this.currentTemplateId = this.site.theme.template.id;
-					this.theme = this.site.theme;
-				}
-			} );
+			if (this.site.theme) {
+				this.currentTemplateId = this.site.theme.template.id;
+				this.theme = this.site.theme;
+			}
+		});
 
-		this.$location.hash( 'site-editor' );
-		setTimeout( () =>
-		{
-			this.locationWatcher = this.$rootScope.$on( '$locationChangeStart', ( e ) => this.locationChanged( e ) );
-		} );
+		this.$location.hash('site-editor');
+		setTimeout(() => {
+			this.locationWatcher = this.$rootScope.$on('$locationChangeStart', e =>
+				this.locationChanged(e),
+			);
+		});
 	}
 
-	get siteUrl()
-	{
-		return this.$sce.trustAsResourceUrl( this.site.url );
+	get siteUrl() {
+		return this.$sce.trustAsResourceUrl(this.site.url);
 	}
 
-	themeEdited( $theme: any )
-	{
+	themeEdited($theme: any) {
 		this.isDirty = true;
 		this.theme.data = $theme;
 	}
 
-	contentEdited()
-	{
+	contentEdited() {
 		this.isDirty = true;
 	}
 
-	async save()
-	{
+	async save() {
 		const data = {
 			template_id: this.currentTemplateId,
 			theme: this.theme.data,
@@ -86,26 +87,32 @@ export class SiteEditorModalComponent
 		};
 
 		this.isDirty = false;
-		await Api.sendRequest( `/web/dash/sites/editor-save/${this.siteId}`, data, { sanitizeComplexData: false } );
+		await Api.sendRequest(`/web/dash/sites/editor-save/${this.siteId}`, data, {
+			sanitizeComplexData: false,
+		});
 
 		Growls.success(
-			this.gettextCatalog.getString( 'Your site has been saved.' ),
-			this.gettextCatalog.getString( 'Site Saved' ),
+			this.gettextCatalog.getString('Your site has been saved.'),
+			this.gettextCatalog.getString('Site Saved'),
 		);
 	}
 
-	close()
-	{
+	close() {
 		window.history.back();
 	}
 
-	locationChanged( e: ng.IAngularEvent )
-	{
-		if ( !this.isDirty || confirm( this.gettextCatalog.getString( 'You have unsaved changes. Are you sure you want to discard them?' ) ) ) {
-			this._close.emit( undefined );
+	locationChanged(e: ng.IAngularEvent) {
+		if (
+			!this.isDirty ||
+			confirm(
+				this.gettextCatalog.getString(
+					'You have unsaved changes. Are you sure you want to discard them?',
+				),
+			)
+		) {
+			this._close.emit(undefined);
 			this.locationWatcher();
-		}
-		else if ( e ) {
+		} else if (e) {
 			e.preventDefault();
 		}
 	}

@@ -10,7 +10,6 @@ import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 		number,
 	},
 })
-export class AppAnalyticsReportRatingBreakdown extends Vue
-{
-	@Prop( Object ) reportData: any;
+export class AppAnalyticsReportRatingBreakdown extends Vue {
+	@Prop(Object) reportData: any;
 }

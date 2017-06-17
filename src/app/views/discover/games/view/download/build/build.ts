@@ -36,8 +36,7 @@ const DownloadDelay = 5000;
 		AppLoading,
 	},
 })
-export default class RouteDiscoverGamesViewDownloadBuild extends Vue
-{
+export default class RouteDiscoverGamesViewDownloadBuild extends Vue {
 	@RouteState game: RouteStore['game'];
 	@RouteState userRating: RouteStore['userRating'];
 
@@ -48,64 +47,58 @@ export default class RouteDiscoverGamesViewDownloadBuild extends Vue
 	developerGames: Game[] = [];
 	recommendedGames: Game[] = [];
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 	Environment = Environment;
 
 	@BeforeRouteEnter()
-	beforeRoute( this: undefined, route: VueRouter.Route )
-	{
-		const gameId = parseInt( route.params.id, 10 );
-		const buildId = parseInt( route.params.buildId, 10 );
+	beforeRoute(this: undefined, route: VueRouter.Route) {
+		const gameId = parseInt(route.params.id, 10);
+		const buildId = parseInt(route.params.buildId, 10);
 
-		HistoryTick.sendBeacon(
-			'game-build',
-			buildId,
-			{ sourceResource: 'Game', sourceResourceId: gameId },
-		);
+		HistoryTick.sendBeacon('game-build', buildId, {
+			sourceResource: 'Game',
+			sourceResourceId: gameId,
+		});
 
 		return Api.sendRequest(
-			`/web/discover/games/builds/download-page/${ gameId }/${ buildId }`,
+			`/web/discover/games/builds/download-page/${gameId}/${buildId}`,
 		);
 	}
 
-	async routed()
-	{
-		Meta.title = this.$gettextInterpolate(
-			`Downloading %{ game }`,
-			{ game: this.game.title },
-		);
+	async routed() {
+		Meta.title = this.$gettextInterpolate(`Downloading %{ game }`, {
+			game: this.game.title,
+		});
 
-		this.build = new GameBuild( this.$payload.build );
+		this.build = new GameBuild(this.$payload.build);
 		this.src = null;
 
-		this.developerGames = Game.populate( this.$payload.developerGames );
-		this.recommendedGames = Game.populate( this.$payload.recommendedGames );
+		this.developerGames = Game.populate(this.$payload.developerGames);
+		this.recommendedGames = Game.populate(this.$payload.recommendedGames);
 
 		// Wait for view so we can scroll.
 		await this.$nextTick();
 
 		// Scroll down past the header.
-		Scroll.to( 'page-ad-scroll' );
+		Scroll.to('page-ad-scroll');
 
 		// We do it like this so that we start getting the download URL right
 		// away while still waiting for the timeout.
-		const data = await Promise.all<any>( [
-			this.build.getDownloadUrl( {
+		const data = await Promise.all<any>([
+			this.build.getDownloadUrl({
 				forceDownload: true,
-			} ),
+			}),
 
 			// Wait at least this long before spawning the download.
 			this.timeout(),
-		] );
+		]);
 
 		this.src = data[0].downloadUrl;
 	}
 
-	private async timeout()
-	{
-		return new Promise( ( resolve ) =>
-		{
-			setTimeout( resolve, DownloadDelay );
-		} );
+	private async timeout() {
+		return new Promise(resolve => {
+			setTimeout(resolve, DownloadDelay);
+		});
 	}
 }

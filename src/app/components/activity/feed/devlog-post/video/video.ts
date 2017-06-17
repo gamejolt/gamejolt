@@ -16,21 +16,18 @@ import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/com
 		AppResponsiveDimensions,
 	},
 })
-export class AppActivityFeedDevlogPostVideo extends Vue
-{
-	@Prop( FiresidePost ) post: FiresidePost;
+export class AppActivityFeedDevlogPostVideo extends Vue {
+	@Prop(FiresidePost) post: FiresidePost;
 
 	video: FiresidePostVideo | null = null;
 	isShowingVideo = false;
 
-	created()
-	{
+	created() {
 		this.video = this.post.videos[0];
 	}
 
-	play()
-	{
+	play() {
 		this.isShowingVideo = true;
-		this.$emit( 'expanded' );
+		this.$emit('expanded');
 	}
 }

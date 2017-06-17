@@ -28,8 +28,7 @@ const KEYCODE_DOWN = 40;
 const KEYCODE_ENTER = 13;
 const KEYCODE_ESC = 27;
 
-interface Command
-{
+interface Command {
 	keyword: string;
 	routeName: string;
 	description: string;
@@ -48,10 +47,9 @@ interface Command
 	},
 	directives: {
 		AppTrackEvent,
-	}
+	},
 })
-export class AppSearchAutocomplete extends Vue
-{
+export class AppSearchAutocomplete extends Vue {
 	@State app: AppStore;
 	mode: 'search' | 'command' = 'search';
 
@@ -62,182 +60,166 @@ export class AppSearchAutocomplete extends Vue
 	libraryGames: _LocalDbGame[] = [];
 	items: any[] = [];
 
-	modes = [ 'search', 'command' ];
+	modes = ['search', 'command'];
 
 	search: AppSearch | null = null;
 
 	searchChanges = new Subject<string>();
-	searched$ = this.searchChanges
-		.debounceTime( 500 )
-		.subscribe( ( query ) =>
-		{
-			this.sendSearch( query );
-		} );
+	searched$ = this.searchChanges.debounceTime(500).subscribe(query => {
+		this.sendSearch(query);
+	});
 
-	get isHidden()
-	{
+	get isHidden() {
 		return this.search!.isEmpty();
 	}
 
-	created()
-	{
-		this.search = findVueParent( this, AppSearch ) as AppSearch;
+	created() {
+		this.search = findVueParent(this, AppSearch) as AppSearch;
 	}
 
-	mounted()
-	{
-		this.search!.setKeydownSpy( ( event: KeyboardEvent ) =>
-		{
+	mounted() {
+		this.search!.setKeydownSpy((event: KeyboardEvent) => {
 			let min = 0;
 			let max = 0;
 
-			if ( this.mode === 'search' ) {
+			if (this.mode === 'search') {
 				max = this.items.length;
-			}
-			else if ( this.mode === 'command' ) {
+			} else if (this.mode === 'command') {
 				max = this.filteredCommands.length - 1;
 			}
 
-			if ( event.keyCode === KEYCODE_DOWN ) {
-				this.selected = Math.min( this.selected + 1, max );
-			}
-			else if ( event.keyCode === KEYCODE_UP ) {
-				this.selected = Math.max( this.selected - 1, min );
-			}
-			else if ( event.keyCode === KEYCODE_ENTER ) {
+			if (event.keyCode === KEYCODE_DOWN) {
+				this.selected = Math.min(this.selected + 1, max);
+			} else if (event.keyCode === KEYCODE_UP) {
+				this.selected = Math.max(this.selected - 1, min);
+			} else if (event.keyCode === KEYCODE_ENTER) {
 				this.selectActive();
-			}
-			else if ( event.keyCode === KEYCODE_ESC ) {
-
+			} else if (event.keyCode === KEYCODE_ESC) {
 				// If they had a command in there but escaped, then remove the whole command.
-				if ( this.mode === 'command' ) {
+				if (this.mode === 'command') {
 					this.search!.query = '';
 				}
 			}
-		} );
+		});
 	}
 
-	get commands()
-	{
+	get commands() {
 		const commands: Command[] = [
 			{
 				keyword: ':discover',
 				routeName: 'discover.home',
-				description: this.$gettext( 'commands.discover_description' ),
+				description: this.$gettext('commands.discover_description'),
 			},
 			{
 				keyword: ':games',
 				routeName: 'discover.games.list._fetch',
 				params: { section: 'featured' },
-				description: this.$gettext( 'commands.games_description' ),
+				description: this.$gettext('commands.games_description'),
 			},
 			{
 				keyword: ':devlogs',
 				routeName: 'discover.devlogs.overview',
-				description: this.$gettext( 'Browse devlogs.' ),
+				description: this.$gettext('Browse devlogs.'),
 			},
 			{
 				keyword: ':dashboard',
 				routeName: 'dash.main.overview',
 				authRequired: true,
-				description: this.$gettext( 'commands.dashboard_description' ),
+				description: this.$gettext('commands.dashboard_description'),
 			},
 			{
 				keyword: ':library',
 				routeName: 'library.overview',
 				authRequired: true,
-				description: this.$gettext( 'commands.library_description' ),
+				description: this.$gettext('commands.library_description'),
 			},
 			{
 				keyword: ':installed',
 				routeName: 'library.installed',
 				clientRequired: true,
-				description: this.$gettext( 'commands.installed_description' ),
+				description: this.$gettext('commands.installed_description'),
 			},
 			{
 				keyword: ':account',
 				routeName: 'dash.account.edit',
 				authRequired: true,
-				description: this.$gettext( 'commands.account_description' ),
+				description: this.$gettext('commands.account_description'),
 			},
 			{
 				keyword: ':activity',
 				routeName: 'activity',
 				params: { tab: 'activity' },
 				authRequired: true,
-				description: this.$gettext( 'commands.activity_description' ),
+				description: this.$gettext('commands.activity_description'),
 			},
 			{
 				keyword: ':notifications',
 				routeName: 'activity',
 				params: { tab: 'notifications' },
 				authRequired: true,
-				description: this.$gettext( 'View your notifications.' ),
+				description: this.$gettext('View your notifications.'),
 			},
 			{
 				keyword: ':settings',
 				routeName: 'settings',
 				authRequired: true,
-				description: this.$gettext( 'commands.settings_description' ),
+				description: this.$gettext('commands.settings_description'),
 			},
 		];
 
-		return commands.sort( ( a, b ) => stringSort( a.keyword, b.keyword ) );
+		return commands.sort((a, b) => stringSort(a.keyword, b.keyword));
 	}
 
-	get filteredCommands()
-	{
+	get filteredCommands() {
 		const commands = this.commands;
 		const isLoggedIn = this.app && this.app.user;
 		const search = this.search!;
 
-		if ( this.mode !== 'command' ) {
+		if (this.mode !== 'command') {
 			return commands;
 		}
 
 		const filteredCommands = [];
-		for ( const command of commands ) {
-			if ( !isLoggedIn && command.authRequired ) {
+		for (const command of commands) {
+			if (!isLoggedIn && command.authRequired) {
 				continue;
 			}
 
-			if ( !GJ_IS_CLIENT && command.clientRequired ) {
+			if (!GJ_IS_CLIENT && command.clientRequired) {
 				continue;
 			}
 
-			if ( search.query.length === 1
-				|| fuzzysearch( search.query.toLowerCase(), command.keyword )
+			if (
+				search.query.length === 1 ||
+				fuzzysearch(search.query.toLowerCase(), command.keyword)
 			) {
-				filteredCommands.push( command );
+				filteredCommands.push(command);
 			}
 		}
 
 		return filteredCommands;
 	}
 
-	getPopover()
-	{
-		return Popover.getPopover( 'search-autocomplete' );
+	getPopover() {
+		return Popover.getPopover('search-autocomplete');
 	}
 
-	inAvailableMode()
-	{
-		return this.modes.indexOf( this.mode ) !== -1;
+	inAvailableMode() {
+		return this.modes.indexOf(this.mode) !== -1;
 	}
 
-	private async sendSearch( query: string )
-	{
-		if ( this.search!.isEmpty() || !this.inAvailableMode() ) {
+	private async sendSearch(query: string) {
+		if (this.search!.isEmpty() || !this.inAvailableMode()) {
 			return;
 		}
 
 		// We store the query that we're waiting on.
-		const payload = await Search.search( query, { type: 'typeahead' } );
+		const payload = await Search.search(query, { type: 'typeahead' });
 
 		// We only update the payload if the query is still the same as when we sent.
 		// This makes sure we don't step on ourselves while typing fast.
 		// Payloads may not come back sequentially.
-		if ( this.search!.query === query ) {
+		if (this.search!.query === query) {
 			this.games = payload.games;
 			this.devlogs = payload.devlogs;
 			this.users = payload.users;
@@ -246,117 +228,108 @@ export class AppSearchAutocomplete extends Vue
 			// All items so we can calculate global selection indexes easily.
 			// This needs to be in the order that they will show in the results list.
 			this.items = ([] as any[])
-				.concat( this.libraryGames )
-				.concat( this.games )
-				.concat( this.devlogs )
-				.concat( this.users )
-				;
+				.concat(this.libraryGames)
+				.concat(this.games)
+				.concat(this.devlogs)
+				.concat(this.users);
 		}
 	}
 
-	selectActive()
-	{
-		if ( this.search!.isEmpty() ) {
+	selectActive() {
+		if (this.search!.isEmpty()) {
 			return;
 		}
 
-		if ( this.mode === 'search' ) {
-			SearchHistory.record( this.search!.query );
+		if (this.mode === 'search') {
+			SearchHistory.record(this.search!.query);
 
 			// Selected the "show all results" option.
-			if ( this.selected === 0 ) {
+			if (this.selected === 0) {
 				this.viewAll();
-			}
-			else {
-				const item = this.items[ (this.selected - 1) ];
-				if ( item instanceof Game ) {
-					this.selectGame( item );
-				}
-				else if ( item instanceof User ) {
-					this.selectUser( item );
-				}
-				else if ( GJ_IS_CLIENT ) {
-					const LocalDbGame: typeof _LocalDbGame = require( '../../client/local-db/game/game.model' ).LocalDbGame;
-					if ( item instanceof LocalDbGame ) {
-						this.selectLibraryGame( item );
+			} else {
+				const item = this.items[this.selected - 1];
+				if (item instanceof Game) {
+					this.selectGame(item);
+				} else if (item instanceof User) {
+					this.selectUser(item);
+				} else if (GJ_IS_CLIENT) {
+					const LocalDbGame: typeof _LocalDbGame = require('../../client/local-db/game/game.model')
+						.LocalDbGame;
+					if (item instanceof LocalDbGame) {
+						this.selectLibraryGame(item);
 					}
 				}
 			}
-		}
-		else if ( this.mode === 'command' ) {
-			const command = this.filteredCommands[ this.selected ];
-			this.selectCommand( command );
+		} else if (this.mode === 'command') {
+			const command = this.filteredCommands[this.selected];
+			this.selectCommand(command);
 		}
 
 		this.search!.blur();
 	}
 
-	viewAll()
-	{
-		this.$router.push( {
+	viewAll() {
+		this.$router.push({
 			name: 'search.results',
 			query: { q: this.search!.query },
-		} );
+		});
 
-		Analytics.trackEvent( 'search', 'autocomplete', 'go-all' );
+		Analytics.trackEvent('search', 'autocomplete', 'go-all');
 	}
 
-	selectGame( game: Game )
-	{
-		this.$router.push( {
+	selectGame(game: Game) {
+		this.$router.push({
 			name: 'discover.games.view.overview',
 			params: { slug: game.slug, id: game.id + '' },
-		} );
+		});
 
-		Analytics.trackEvent( 'search', 'autocomplete', 'go-game' );
+		Analytics.trackEvent('search', 'autocomplete', 'go-game');
 	}
 
-	selectUser( user: User )
-	{
-		this.$router.push( {
+	selectUser(user: User) {
+		this.$router.push({
 			name: 'profile.overview',
 			params: { username: user.username },
-		} );
+		});
 
-		Analytics.trackEvent( 'search', 'autocomplete', 'go-user' );
+		Analytics.trackEvent('search', 'autocomplete', 'go-user');
 	}
 
-	selectLibraryGame( localGame: _LocalDbGame )
-	{
-		this.$router.push( { name: 'discover.games.view.overview', params: { slug: localGame.slug, id: localGame.id + '' } } );
-		Analytics.trackEvent( 'search', 'autocomplete', 'go-library-game' );
+	selectLibraryGame(localGame: _LocalDbGame) {
+		this.$router.push({
+			name: 'discover.games.view.overview',
+			params: { slug: localGame.slug, id: localGame.id + '' },
+		});
+		Analytics.trackEvent('search', 'autocomplete', 'go-library-game');
 	}
 
-	selectCommand( command: Command )
-	{
-		if ( command && command.routeName ) {
-			this.search!.query = '';  // Set it as blank.
+	selectCommand(command: Command) {
+		if (command && command.routeName) {
+			this.search!.query = ''; // Set it as blank.
 
-			this.$router.push( {
+			this.$router.push({
 				name: command.routeName,
 				params: command.params || undefined,
-			} );
+			});
 
-			Analytics.trackEvent( 'search', 'autocomplete', 'go-command' );
+			Analytics.trackEvent('search', 'autocomplete', 'go-command');
 		}
 	}
 
-	@Watch( 'search.query' )
-	onChange( query: string )
-	{
+	@Watch('search.query')
+	onChange(query: string) {
 		// Reset the selected index.
 		this.selected = 0;
 
-		if ( this.search!.isEmpty() || !this.app ) {
+		if (this.search!.isEmpty() || !this.app) {
 			return;
 		}
 
-		if ( this.search!.query[0] === ':' ) {
+		if (this.search!.query[0] === ':') {
 			this.mode = 'command';
-		}
-		else {
+		} else {
 			this.mode = 'search';
-			this.searchChanges.next( query );
+			this.searchChanges.next(query);
 		}
 	}
 }

@@ -20,57 +20,49 @@ import { Screen } from '../../../../../lib/gj-lib-client/components/screen/scree
 		AppActivityFeedDevlogPost,
 		AppActivityFeedNotification,
 		AppActivityFeedItemPlaceholder,
-	}
+	},
 })
-export class AppActivityFeedItem extends Vue
-{
-	@Prop( ActivityFeedItem ) item: ActivityFeedItem;
-	@Prop( ActivityFeedContainer ) feed: ActivityFeedContainer;
+export class AppActivityFeedItem extends Vue {
+	@Prop(ActivityFeedItem) item: ActivityFeedItem;
+	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
 
 	inviewPadding = Screen.windowHeight;
 
-	get isNew()
-	{
+	get isNew() {
 		// Only care if there is a watermark.
-		if ( this.feed.notificationWatermark === 0 ) {
+		if (this.feed.notificationWatermark === 0) {
 			return false;
 		}
 
-		if ( this.item.feedItem instanceof Notification ) {
+		if (this.item.feedItem instanceof Notification) {
 			return this.item.feedItem.added_on > this.feed.notificationWatermark;
-		}
-		else if ( this.item.feedItem instanceof FiresidePost ) {
+		} else if (this.item.feedItem instanceof FiresidePost) {
 			return this.item.feedItem.published_on > this.feed.notificationWatermark;
 		}
 	}
 
-	get isInView()
-	{
-		return !!this.feed.inViewItems[ this.item.id ];
+	get isInView() {
+		return !!this.feed.inViewItems[this.item.id];
 	}
 
-	get isActive()
-	{
-		return this.feed.activeItem
-			&& this.feed.activeItem.id === this.item.id;
+	get isActive() {
+		return this.feed.activeItem && this.feed.activeItem.id === this.item.id;
 	}
 
-	setActive()
-	{
+	setActive() {
 		this.feed.activeItem = this.item;
 	}
 
-	onExpanded()
-	{
-		this.feed.expanded( this.item );
+	onExpanded() {
+		this.feed.expanded(this.item);
 	}
 
-	onInviewChange( visible: boolean )
-	{
-		this.feed.inViewChange( this.item, visible );
+	onInviewChange(visible: boolean) {
+		this.feed.inViewChange(this.item, visible);
 
-		if ( this.$refs.inner ) {
-			this.item.height = Ruler.outerHeight( this.$refs.inner as HTMLElement ) + 'px';
+		if (this.$refs.inner) {
+			this.item.height =
+				Ruler.outerHeight(this.$refs.inner as HTMLElement) + 'px';
 		}
 	}
 }

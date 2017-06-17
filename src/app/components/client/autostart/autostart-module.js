@@ -1,3 +1,3 @@
-angular.module( 'App.Client.Autostart', [] );
+angular.module('App.Client.Autostart', []);
 
-require( './autostart-service' );
+require('./autostart-service');

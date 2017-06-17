@@ -6,13 +6,11 @@ interface Scope extends ng.IScope {
 }
 
 @Injectable()
-export class FetchCtrl
-{
+export class FetchCtrl {
 	constructor(
-		@Inject( '$scope' ) $scope: Scope,
-		@Inject( 'payload' ) payload: any,
-	)
-	{
-		$scope.$ctrl.listing.processPayload( payload );
+		@Inject('$scope') $scope: Scope,
+		@Inject('payload') payload: any,
+	) {
+		$scope.$ctrl.listing.processPayload(payload);
 	}
 }

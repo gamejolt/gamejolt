@@ -14,23 +14,19 @@ import { AppForumTopicList } from '../../../../components/forum/topic-list/topic
 		AppForumTopicList,
 	},
 })
-export default class RouteForumsLandingActive extends Vue
-{
+export default class RouteForumsLandingActive extends Vue {
 	topics: ForumTopic[] = [];
 
-	created()
-	{
-		Meta.title = this.$gettext( `Active Topics in All Forums` );
+	created() {
+		Meta.title = this.$gettext(`Active Topics in All Forums`);
 	}
 
-	@BeforeRouteEnter( { cache: true } )
-	routeEnter()
-	{
-		return Api.sendRequest( '/web/forums/active-topics' );
+	@BeforeRouteEnter({ cache: true })
+	routeEnter() {
+		return Api.sendRequest('/web/forums/active-topics');
 	}
 
-	routed()
-	{
-		this.topics = ForumTopic.populate( this.$payload.topics );
+	routed() {
+		this.topics = ForumTopic.populate(this.$payload.topics);
 	}
 }

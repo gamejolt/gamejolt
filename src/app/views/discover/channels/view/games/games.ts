@@ -15,42 +15,39 @@ import { AppGameGrid } from '../../../../../components/game/grid/grid';
 	components: {
 		AppGameListing,
 		AppGameGrid,
-	}
+	},
 })
-export default class RouteDiscoverChannelsViewGames extends Vue
-{
+export default class RouteDiscoverChannelsViewGames extends Vue {
 	@Prop() shouldShowAds: boolean;
 
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
 
 	// TODO: Still gotta work on this
-	@BeforeRouteEnter( { cache: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
+	@BeforeRouteEnter({ cache: true })
+	routeEnter(this: undefined, route: VueRouter.Route) {
 		const filtering = new GameFilteringContainer();
 
 		// If initialization changed the URL, then we don't want to do the API call.
 		// This prevents a double API call from going out.
-		if ( !filtering.init( route ) ) {
+		if (!filtering.init(route)) {
 			return undefined;
 		}
 
 		return Api.sendRequest(
-			`/web/discover/channels/games/${ route.params.channel }?`
-			+ filtering.getQueryString( route ),
+			`/web/discover/channels/games/${route.params.channel}?` +
+				filtering.getQueryString(route),
 		);
 	}
 
-	routed()
-	{
-		if ( !this.listing || !this.filtering ) {
+	routed() {
+		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer();
-			this.filtering.init( this.$route );
+			this.filtering.init(this.$route);
 
-			this.listing = new GameListingContainer( this.filtering );
+			this.listing = new GameListingContainer(this.filtering);
 		}
 
-		this.listing.processPayload( this.$route, this.$payload );
+		this.listing.processPayload(this.$route, this.$payload);
 	}
 }

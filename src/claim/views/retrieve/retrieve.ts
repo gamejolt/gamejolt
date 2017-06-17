@@ -12,16 +12,14 @@ import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { FormRetrieve } from '../../components/forms/retrieve/retrieve';
 import { AppInvalidKey } from '../../components/invalid-key/invalid-key';
 
-interface SuccessPayload
-{
+interface SuccessPayload {
 	error: false;
 	type: 'game' | 'bundle';
 	key: string;
 	payload?: any;
 }
 
-interface ErrorPayload
-{
+interface ErrorPayload {
 	error: true;
 }
 
@@ -34,41 +32,37 @@ type Payload = SuccessPayload | ErrorPayload | undefined;
 		AppInvalidKey,
 	},
 })
-export default class RouteRetrieve extends Vue
-{
+export default class RouteRetrieve extends Vue {
 	invalidKey = false;
 	key = '';
 	bundle: GameBundle | null = null;
 	game: Game | null = null;
 	resourceTitle = '';
 
-	Meta = makeObservableService( Meta );
+	Meta = makeObservableService(Meta);
 	$payload: Payload;
 
 	@BeforeRouteEnter()
-	async routeEnter( this: undefined, route: VueRouter.Route ):
-		Promise<Payload>
-	{
+	async routeEnter(this: undefined, route: VueRouter.Route): Promise<Payload> {
 		let type: 'game' | 'bundle' | undefined;
 		let key = '';
 
 		// Retrieving all keys. We don't need to call the API.
-		if ( !route.params.input ) {
+		if (!route.params.input) {
 			return undefined;
 		}
 
-		const matches = route.params.input.match( /(g|b)\-([0-9a-zA-Z]+)/ );
-		if ( matches ) {
-			if ( matches[1] === 'g' ) {
+		const matches = route.params.input.match(/(g|b)\-([0-9a-zA-Z]+)/);
+		if (matches) {
+			if (matches[1] === 'g') {
 				type = 'game';
-			}
-			else if ( matches[1] === 'b' ) {
+			} else if (matches[1] === 'b') {
 				type = 'bundle';
 			}
 		}
 
 		// Invalid key passed in.
-		if ( !matches || !type ) {
+		if (!matches || !type) {
 			return { error: true };
 		}
 
@@ -79,36 +73,34 @@ export default class RouteRetrieve extends Vue
 			error: false,
 			type,
 			key,
-			payload: await Api.sendRequest( `/claim/retrieve/${ type }/${ key }` ),
+			payload: await Api.sendRequest(`/claim/retrieve/${type}/${key}`),
 		};
 	}
 
-	routed()
-	{
+	routed() {
 		// Invalid key.
-		if ( this.$payload && (this.$payload.error || this.$payload.payload.error) ) {
+		if (this.$payload && (this.$payload.error || this.$payload.payload.error)) {
 			this.invalidKey = true;
 			return;
 		}
 
 		// Retrieving a key for a particular bundle or game.
-		if ( this.$payload && !this.$payload.error ) {
+		if (this.$payload && !this.$payload.error) {
 			const { key, payload: { bundle, game } } = this.$payload;
 			this.key = key;
-			this.bundle = bundle ? new GameBundle( bundle ) : null;
-			this.game = game ? new Game( game ) : null;
+			this.bundle = bundle ? new GameBundle(bundle) : null;
+			this.game = game ? new Game(game) : null;
 		}
 
 		this.resourceTitle = '';
-		if ( this.bundle ) {
+		if (this.bundle) {
 			this.resourceTitle = this.bundle.title;
-		}
-		else if ( this.game ) {
+		} else if (this.game) {
 			this.resourceTitle = this.game.title;
 		}
 
-		Meta.title = this.$gettext( `Retrieve Your Keys` );
-		if ( this.resourceTitle ) {
+		Meta.title = this.$gettext(`Retrieve Your Keys`);
+		if (this.resourceTitle) {
 			Meta.title = this.$gettextInterpolate(
 				`Retrieve Your Keys for %{ resource }`,
 				{ resource: this.resourceTitle },
@@ -116,8 +108,7 @@ export default class RouteRetrieve extends Vue
 		}
 	}
 
-	onSubmit()
-	{
-		this.$router.push( { name: 'sent-key' } );
+	onSubmit() {
+		this.$router.push({ name: 'sent-key' });
 	}
 }

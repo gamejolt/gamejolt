@@ -39,8 +39,7 @@ import { AppCommentVideoThumbnail } from '../../../../lib/gj-lib-client/componen
 		number,
 	},
 })
-export default class RouteProfileOverview extends Vue
-{
+export default class RouteProfileOverview extends Vue {
 	@Prop() user: User;
 	@Prop() gamesCount: number;
 	@Prop() videosCount: number;
@@ -58,19 +57,16 @@ export default class RouteProfileOverview extends Vue
 	UserFriendship = UserFriendship;
 
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/profile/overview/@' + route.params.username );
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest('/web/profile/overview/@' + route.params.username);
 	}
 
-	routed()
-	{
+	routed() {
 		let title = `${this.user.display_name} (@${this.user.username}) - `;
 
-		if ( this.user.is_gamer ) {
+		if (this.user.is_gamer) {
 			title += 'An indie gamer';
-		}
-		else if ( this.user.is_developer ) {
+		} else if (this.user.is_developer) {
 			title += 'An indie game developer';
 		}
 
@@ -82,8 +78,10 @@ export default class RouteProfileOverview extends Vue
 		Meta.twitter = this.$payload.twitter || {};
 		Meta.twitter.title = Meta.title;
 
-		this.developerGames = Game.populate( this.$payload.developerGamesTeaser );
-		this.youtubeChannels = YoutubeChannel.populate( this.$payload.youtubeChannels );
-		this.videos = CommentVideo.populate( this.$payload.videos );
+		this.developerGames = Game.populate(this.$payload.developerGamesTeaser);
+		this.youtubeChannels = YoutubeChannel.populate(
+			this.$payload.youtubeChannels,
+		);
+		this.videos = CommentVideo.populate(this.$payload.videos);
 	}
 }

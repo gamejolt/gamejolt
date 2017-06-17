@@ -15,26 +15,22 @@ import { FormEmailPreferences } from '../../../../components/forms/email-prefere
 		FormEmailPreferences,
 	},
 })
-export default class RouteDashAccountEmailPreferences extends Vue
-{
+export default class RouteDashAccountEmailPreferences extends Vue {
 	@RouteMutation setHeading: RouteStore['setHeading'];
 
 	user: User = null as any;
 
 	@BeforeRouteEnter()
-	routeEnter()
-	{
-		return Api.sendRequest( '/web/dash/email-preferences' );
+	routeEnter() {
+		return Api.sendRequest('/web/dash/email-preferences');
 	}
 
-	created()
-	{
-		Meta.title = this.$gettext( `dash.email_prefs.page_title` );
-		this.setHeading( this.$gettext( 'dash.email_prefs.heading' ) );
+	created() {
+		Meta.title = this.$gettext(`dash.email_prefs.page_title`);
+		this.setHeading(this.$gettext('dash.email_prefs.heading'));
 	}
 
-	routed()
-	{
-		this.user = new User( this.$payload.user );
+	routed() {
+		this.user = new User(this.$payload.user);
 	}
 }

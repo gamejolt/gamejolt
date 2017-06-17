@@ -6,9 +6,6 @@ import { routeDashGamesManageApi } from './api/api.route';
 export const routeDashGamesManage: VueRouter.RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',
 	props: true,
-	component: () => asyncComponentLoader( $import( './manage' ) ),
-	children: [
-		routeDashGamesManageGame,
-		routeDashGamesManageApi,
-	],
+	component: () => asyncComponentLoader($import('./manage')),
+	children: [routeDashGamesManageGame, routeDashGamesManageApi],
 };

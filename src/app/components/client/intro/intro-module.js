@@ -1,3 +1,3 @@
-angular.module( 'App.Client.Intro', [] );
+angular.module('App.Client.Intro', []);
 
-require( './intro-directive' );
+require('./intro-directive');

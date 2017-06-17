@@ -11,8 +11,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 		AppJolticon,
 	},
 })
-export class AppForumBreadcrumbs extends Vue
-{
-	@Prop( ForumChannel ) channel?: ForumChannel;
-	@Prop( String ) page?: string;
+export class AppForumBreadcrumbs extends Vue {
+	@Prop(ForumChannel) channel?: ForumChannel;
+	@Prop(String) page?: string;
 }

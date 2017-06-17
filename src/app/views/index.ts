@@ -12,7 +12,10 @@ import { routeLanding } from './landing/landing.route';
 import { routeLegal } from './legal/legal.route';
 import { routeSearch } from './search/search.route';
 import { routeProfile } from './profile/profile.route';
-import { routeError404, RouteError404 } from '../../lib/gj-lib-client/components/error/page/page.route';
+import {
+	routeError404,
+	RouteError404,
+} from '../../lib/gj-lib-client/components/error/page/page.route';
 import { routeActivity } from './activity/activity.route';
 import { routeLibrary } from './library/library.route';
 import { routeSettings } from './settings/settings.route';
@@ -20,13 +23,13 @@ import { routeForums } from './forums/forums.route';
 import { routeRadio } from './radio/radio.route';
 import { routeDash } from './dashboard/dashboard.route';
 
-Vue.use( VueRouter );
+Vue.use(VueRouter);
 
-Component.registerHooks( [
+Component.registerHooks([
 	'beforeRouteEnter',
 	'beforeRouteUpdate',
-	'beforeRouteLeave'
-] );
+	'beforeRouteLeave',
+]);
 
 const routes = [
 	routeDiscover,
@@ -45,30 +48,29 @@ const routes = [
 ];
 
 // Should tell the browser that we want to handle our own scrolling.
-if ( 'scrollRestoration' in history ) {
+if ('scrollRestoration' in history) {
 	history.scrollRestoration = 'manual';
 }
 
 // let prevAnchor: HTMLElement | undefined;
 
-export const router = new VueRouter( {
+export const router = new VueRouter({
 	mode: !GJ_IS_CLIENT ? 'history' : undefined,
 	routes,
-	scrollBehavior( to, from, savedPosition )
-	{
-		Autoscroll.routeChange( to, from );
+	scrollBehavior(to, from, savedPosition) {
+		Autoscroll.routeChange(to, from);
 
 		// Skip one auto scroll trigger.
-		if ( !Scroll.shouldAutoScroll ) {
+		if (!Scroll.shouldAutoScroll) {
 			Scroll.shouldAutoScroll = true;
 			return undefined;
 		}
 
-		if ( to.meta.noAutoScroll ) {
+		if (to.meta.noAutoScroll) {
 			return undefined;
 		}
 
-		if ( savedPosition ) {
+		if (savedPosition) {
 			return savedPosition;
 		}
 
@@ -99,15 +101,15 @@ export const router = new VueRouter( {
 			y: 0,
 		};
 
-		if ( to.hash ) {
+		if (to.hash) {
 			position.selector = to.hash;
 		}
 
 		return position;
-	}
-} );
+	},
+});
 
-if ( !GJ_IS_SSR ) {
+if (!GJ_IS_SSR) {
 	// document.body.addEventListener( 'click', ( e ) =>
 	// {
 	// 	let target: HTMLAnchorElement;
@@ -115,48 +117,39 @@ if ( !GJ_IS_SSR ) {
 	// 		console.log( 'not html element' );
 	// 		return;
 	// 	}
-
 	// 	target = e.target as HTMLAnchorElement;
 	// 	console.log( 'target', target );
 	// 	// 	while (nodeName_(elm[0]) !== 'a') {
 	// 	//     // ignore rewriting if no A tag (reached root element, or no parent - removed from document)
 	// 	//     if (elm[0] === $rootElement[0] || !(elm = elm.parent())[0]) return;
 	// 	//   }
-
 	// 	while ( target.nodeName.toLowerCase() !== 'a' ) {
 	// 		if ( target as any === document || !target.parentNode ) {
 	// 			return;
 	// 		}
 	// 		target = target.parentNode as HTMLAnchorElement;
 	// 	}
-
 	// 	// while ( parent.nodeName !== 'a' && parent !== document.body ) {
 	// 	// 	parent = target;
 	// 	// }
-
 	// 	// if ( parent === document.body ) {
 	// 	// 	console.log( 'not found' );
 	// 	// 	return;
 	// 	// }
-
 	// 	let href = target.href;
 	// 	if ( !href ) {
 	// 		return;
 	// 	}
-
 	// 	if ( href.indexOf( window.location.origin ) === 0 ) {
 	// 		href = href.replace( window.location.origin, '' );
 	// 	}
 	// 	console.log( href );
-
 	// 	const matched = router.getMatchedComponents( href );
 	// 	console.log( 'matched', matched );
-
 	// 	if ( matched.length === 1 && matched[0] === RouteError404 ) {
 	// 		console.log( 'skip because 404' );
 	// 		return;
 	// 	}
-
 	// 	if ( matched ) {
 	// 		e.preventDefault();
 	// 		e.stopPropagation();

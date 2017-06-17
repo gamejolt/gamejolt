@@ -17,10 +17,9 @@ import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/eve
 		AppChatBubbles,
 		AppChatSidebar,
 		AppChatWindows,
-	}
+	},
 })
-export class AppShellChat extends Vue
-{
+export class AppShellChat extends Vue {
 	// Chat should be available since we only include in DOM if chat is
 	// bootstrapped.
 	@State chat: ChatClient;
@@ -35,104 +34,97 @@ export class AppShellChat extends Vue
 	private focusCallback?: EventListener;
 	private blurCallback?: EventListener;
 
-	get totalNotificationsCount()
-	{
+	get totalNotificationsCount() {
 		return this.chat.roomNotificationsCount + this.unfocusedNotificationsCount;
 	}
 
-	mounted()
-	{
-		this.blurCallback = () => this.isWindowFocused = false;
-		this.focusCallback = () => this.isWindowFocused = true;
+	mounted() {
+		this.blurCallback = () => (this.isWindowFocused = false);
+		this.focusCallback = () => (this.isWindowFocused = true);
 
-		window.addEventListener( 'blur', this.blurCallback );
-		window.addEventListener( 'focus', this.focusCallback );
+		window.addEventListener('blur', this.blurCallback);
+		window.addEventListener('focus', this.focusCallback);
 
-		this.newMessageCallback = ( event: ChatNewMessageEvent ) =>
-		{
+		this.newMessageCallback = (event: ChatNewMessageEvent) => {
 			// If we have a general room open, and our window is unfocused or
 			// minimized, then increment our room notifications count (since
 			// they haven't seen this message yet). Note that if these messages
 			// came in because we were priming output for a room with old
 			// messages, we don't want to increase notification counts.
-			if ( !this.isWindowFocused && this.chat.room ) {
-				if ( !event.isPrimer && event.message && event.message.roomId === this.chat.room.id ) {
+			if (!this.isWindowFocused && this.chat.room) {
+				if (
+					!event.isPrimer &&
+					event.message &&
+					event.message.roomId === this.chat.room.id
+				) {
 					++this.unfocusedNotificationsCount;
 				}
 			}
-		}
+		};
 
-		EventBus.on( 'Chat.newMessage', this.newMessageCallback );
+		EventBus.on('Chat.newMessage', this.newMessageCallback);
 	}
 
-	destroyed()
-	{
+	destroyed() {
 		Favicon.reset();
 
-		if ( this.newMessageCallback ) {
-			EventBus.off( 'Chat.newMessage', this.newMessageCallback );
+		if (this.newMessageCallback) {
+			EventBus.off('Chat.newMessage', this.newMessageCallback);
 			this.newMessageCallback = undefined;
 		}
 
-		if ( this.blurCallback ) {
-			window.removeEventListener( 'blur', this.blurCallback );
+		if (this.blurCallback) {
+			window.removeEventListener('blur', this.blurCallback);
 			this.blurCallback = undefined;
 		}
 
-		if ( this.focusCallback ) {
-			window.removeEventListener( 'blur', this.focusCallback );
+		if (this.focusCallback) {
+			window.removeEventListener('blur', this.focusCallback);
 			this.focusCallback = undefined;
 		}
 	}
 
 	// When the chat sidebar is closed, we want to make sure we leave their
 	// current active room.
-	@Watch( 'isRightPaneVisible' )
-	onRightPaneChange()
-	{
-		if ( this.isRightPaneVisible ) {
+	@Watch('isRightPaneVisible')
+	onRightPaneChange() {
+		if (this.isRightPaneVisible) {
 			return;
 		}
 
 		// If the chat sidebar is no longer visible, but we are in a room, close
 		// it.
-		if ( this.chat.isInRoom() ) {
+		if (this.chat.isInRoom()) {
 			this.chat.minimizeRoom();
 		}
 	}
 
 	// Keep the favicon up to date with chat notification counts.
-	@Watch( 'totalNotificationsCount' )
-	onNotificationsCountChange( count: number )
-	{
-		if ( count ) {
-			Favicon.badge( count );
-		}
-		else {
+	@Watch('totalNotificationsCount')
+	onNotificationsCountChange(count: number) {
+		if (count) {
+			Favicon.badge(count);
+		} else {
 			Favicon.reset();
 		}
 	}
 
-	@Watch( 'isWindowFocused' )
-	onWindowFocusChanged( isFocused: boolean )
-	{
+	@Watch('isWindowFocused')
+	onWindowFocusChanged(isFocused: boolean) {
 		// When the window is unfocused, start counting notifications for
 		// current room.
-		if ( !isFocused ) {
-
+		if (!isFocused) {
 			// Notify the client that we are unfocused, so it should start
 			// accumulating notifications for the current room.
-			this.chat.setFocused( false );
-		}
-		// When we focus it back, clear out all accumulated notifications.
-		else {
-
+			this.chat.setFocused(false);
+		} else {
+			// When we focus it back, clear out all accumulated notifications.
 			// Set that we're not longer focused, and clear out room
 			// notifications. The user has now "seen" the messages.
 			this.unfocusedNotificationsCount = 0;
 
 			// Notify the client that we aren't unfocused anymore.
-			this.chat.setFocused( true );
+			this.chat.setFocused(true);
 		}
 	}
 }

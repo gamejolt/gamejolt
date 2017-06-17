@@ -5,5 +5,5 @@ export const routeDiscoverChannelsViewOverview: VueRouter.RouteConfig = {
 	name: 'discover.channels.view.overview',
 	path: '/channels/:channel',
 	props: true,
-	component: () => asyncComponentLoader( $import( './overview' ) ),
+	component: () => asyncComponentLoader($import('./overview')),
 };

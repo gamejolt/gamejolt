@@ -1,7 +1,10 @@
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./description.html';
 
-import { BaseForm, FormOnInit } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
@@ -15,15 +18,13 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 		AppJolticon,
 	},
 })
-export class FormGameDescription extends BaseForm<Game> implements FormOnInit
-{
-	@Prop( Boolean ) isWizard?: boolean;
+export class FormGameDescription extends BaseForm<Game> implements FormOnInit {
+	@Prop(Boolean) isWizard?: boolean;
 
 	modelClass = Game;
 	saveMethod = '$saveDescription' as '$saveDescription';
 
-	onInit()
-	{
+	onInit() {
 		// TODO
 		// scope.$watchCollection( 'formState.serverErrors["autotag-fnaf"]', ( isFnafDetected: boolean ) =>
 		// {
@@ -35,16 +36,14 @@ export class FormGameDescription extends BaseForm<Game> implements FormOnInit
 		// } );
 	}
 
-	addAutotag( tag: string )
-	{
+	addAutotag(tag: string) {
 		(this.formModel as any).autotag = tag;
 
 		// TODO
 		// this.onSubmit();
 	}
 
-	skipAutotag()
-	{
+	skipAutotag() {
 		(this.formModel as any).autotag_skip = true;
 
 		// TODO

@@ -5,7 +5,7 @@ export const routeDashGamesManageGameDescription: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.game.description',
 	path: 'description',
 	props: true,
-	component: () => asyncComponentLoader( $import( './description' ) ),
+	component: () => asyncComponentLoader($import('./description')),
 	children: [
 		{
 			path: '/dashboard/developer/games/description/:id(\\d+)',

@@ -1,11 +1,14 @@
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
-import { IDownloadProgress, IExtractProgress, IParsedWrapper } from 'client-voodoo';
+import {
+	IDownloadProgress,
+	IExtractProgress,
+	IParsedWrapper,
+} from 'client-voodoo';
 import { Component } from 'vue-property-decorator';
 import Vue from 'vue';
 
 @Component({})
-export class LocalDbPackage extends Vue
-{
+export class LocalDbPackage extends Vue {
 	// Will be used for install_state and update_state.
 	static readonly PATCH_PENDING = 'patch-pending';
 	static readonly DOWNLOADING = 'downloading';
@@ -66,102 +69,95 @@ export class LocalDbPackage extends Vue
 		executable_path: string;
 	}[] = [];
 
-	getDownloadUrl()
-	{
-		if ( this.install_state ) {
-			return GameBuild.getDownloadUrl( this.build.id, {
+	getDownloadUrl() {
+		if (this.install_state) {
+			return GameBuild.getDownloadUrl(this.build.id, {
 				forceDownload: true,
-			} );
-		}
-		else if ( this.update_state ) {
-			if ( !this.update ) {
-				throw new Error( 'Update build is not set' );
+			});
+		} else if (this.update_state) {
+			if (!this.update) {
+				throw new Error('Update build is not set');
 			}
 
-			return GameBuild.getDownloadUrl( this.update.build.id, {
+			return GameBuild.getDownloadUrl(this.update.build.id, {
 				forceDownload: true,
-			} );
+			});
 		}
-		throw new Error( 'Not ready to get the package download url' );
+		throw new Error('Not ready to get the package download url');
 	}
 
-	get isSettled()
-	{
+	get isSettled() {
 		return !this.install_state && !this.update_state && !this.remove_state;
 	}
 
-	get isPatching()
-	{
-		return this.install_state === LocalDbPackage.PATCH_PENDING
-			|| this.install_state === LocalDbPackage.DOWNLOADING
-			|| this.install_state === LocalDbPackage.UNPACKING
-			|| this.update_state === LocalDbPackage.PATCH_PENDING
-			|| this.update_state === LocalDbPackage.DOWNLOADING
-			|| this.update_state === LocalDbPackage.UNPACKING
-			;
+	get isPatching() {
+		return (
+			this.install_state === LocalDbPackage.PATCH_PENDING ||
+			this.install_state === LocalDbPackage.DOWNLOADING ||
+			this.install_state === LocalDbPackage.UNPACKING ||
+			this.update_state === LocalDbPackage.PATCH_PENDING ||
+			this.update_state === LocalDbPackage.DOWNLOADING ||
+			this.update_state === LocalDbPackage.UNPACKING
+		);
 	}
 
-	get isInstalling()
-	{
-		return this.install_state === LocalDbPackage.PATCH_PENDING
-			|| this.install_state === LocalDbPackage.DOWNLOADING
-			|| this.install_state === LocalDbPackage.UNPACKING
-			;
+	get isInstalling() {
+		return (
+			this.install_state === LocalDbPackage.PATCH_PENDING ||
+			this.install_state === LocalDbPackage.DOWNLOADING ||
+			this.install_state === LocalDbPackage.UNPACKING
+		);
 	}
 
-	get isUpdating()
-	{
-		return this.update_state === LocalDbPackage.PATCH_PENDING
-			|| this.update_state === LocalDbPackage.DOWNLOADING
-			|| this.update_state === LocalDbPackage.UNPACKING
-			;
+	get isUpdating() {
+		return (
+			this.update_state === LocalDbPackage.PATCH_PENDING ||
+			this.update_state === LocalDbPackage.DOWNLOADING ||
+			this.update_state === LocalDbPackage.UNPACKING
+		);
 	}
 
-	get isDownloading()
-	{
-		return this.install_state === LocalDbPackage.DOWNLOADING
-			|| this.update_state === LocalDbPackage.DOWNLOADING
-			;
+	get isDownloading() {
+		return (
+			this.install_state === LocalDbPackage.DOWNLOADING ||
+			this.update_state === LocalDbPackage.DOWNLOADING
+		);
 	}
 
-	get isUnpacking()
-	{
-		return this.install_state === LocalDbPackage.UNPACKING
-			|| this.update_state === LocalDbPackage.UNPACKING
-			;
+	get isUnpacking() {
+		return (
+			this.install_state === LocalDbPackage.UNPACKING ||
+			this.update_state === LocalDbPackage.UNPACKING
+		);
 	}
 
-	get isPatchPaused()
-	{
+	get isPatchPaused() {
 		return !!this.patch_paused;
 	}
 
-	get isPatchQueued()
-	{
+	get isPatchQueued() {
 		return !!this.patch_queued;
 	}
 
-	get didInstallFail()
-	{
-		return this.install_state === LocalDbPackage.DOWNLOAD_FAILED
-			|| this.install_state === LocalDbPackage.UNPACK_FAILED
-			;
+	get didInstallFail() {
+		return (
+			this.install_state === LocalDbPackage.DOWNLOAD_FAILED ||
+			this.install_state === LocalDbPackage.UNPACK_FAILED
+		);
 	}
 
-	get didUpdateFail()
-	{
-		return this.update_state === LocalDbPackage.DOWNLOAD_FAILED
-			|| this.update_state === LocalDbPackage.UNPACK_FAILED
-			;
+	get didUpdateFail() {
+		return (
+			this.update_state === LocalDbPackage.DOWNLOAD_FAILED ||
+			this.update_state === LocalDbPackage.UNPACK_FAILED
+		);
 	}
 
-	get isRunning()
-	{
+	get isRunning() {
 		return !!this.running_pid;
 	}
 
-	get isRemoving()
-	{
+	get isRemoving() {
 		return this.remove_state === LocalDbPackage.REMOVING;
 	}
 }

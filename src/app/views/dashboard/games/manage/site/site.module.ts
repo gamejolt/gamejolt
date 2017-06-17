@@ -5,15 +5,10 @@ import { SitesLinkCardModule } from '../../../../../../components/sites/link-car
 import { SitesManagePageModule } from '../../../../../../components/sites/manage-page/manage-page.module';
 
 @NgModule({
-	imports : [
-		SitesLinkCardModule,
-		SitesManagePageModule,
-	],
-	declarations: [
-		RouteSiteComponent
-	],
+	imports: [SitesLinkCardModule, SitesManagePageModule],
+	declarations: [RouteSiteComponent],
 })
-export class RouteModule { }
+export class RouteModule {}
 
-lazyBundle( RouteModule );
+lazyBundle(RouteModule);
 export default RouteSiteComponent;

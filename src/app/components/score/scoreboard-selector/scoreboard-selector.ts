@@ -17,13 +17,11 @@ import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popo
 		AppPopoverTrigger,
 	},
 })
-export class AppScoreboardSelector extends Vue
-{
-	@Prop( GameScoreTable ) currentTable: GameScoreTable;
-	@Prop( Array ) tables: GameScoreTable[];
+export class AppScoreboardSelector extends Vue {
+	@Prop(GameScoreTable) currentTable: GameScoreTable;
+	@Prop(Array) tables: GameScoreTable[];
 
-	selectTable( table: GameScoreTable )
-	{
-		this.$emit( 'select', table );
+	selectTable(table: GameScoreTable) {
+		this.$emit('select', table);
 	}
 }

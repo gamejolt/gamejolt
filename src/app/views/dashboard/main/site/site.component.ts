@@ -9,22 +9,19 @@ import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-serv
 	selector: 'route-dashboard-site',
 	template,
 })
-export class RouteSiteComponent implements OnInit
-{
+export class RouteSiteComponent implements OnInit {
 	@Input() payload: any;
 	@Input() game: Game;
 
 	site?: Site;
 
 	constructor(
-		@Inject( 'gettextCatalog' ) gettextCatalog: ng.gettext.gettextCatalog,
-	)
-	{
-		Meta.title = gettextCatalog.getString( 'Manage Site' );
+		@Inject('gettextCatalog') gettextCatalog: ng.gettext.gettextCatalog,
+	) {
+		Meta.title = gettextCatalog.getString('Manage Site');
 	}
 
-	ngOnInit()
-	{
-		this.site = new Site( this.payload.site );
+	ngOnInit() {
+		this.site = new Site(this.payload.site);
 	}
 }

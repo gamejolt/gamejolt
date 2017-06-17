@@ -5,5 +5,5 @@ export const routeLegalTerms: VueRouter.RouteConfig = {
 	name: 'legal.terms',
 	path: '/terms',
 	props: true,
-	component: () => asyncComponentLoader( $import( './terms' ) ),
+	component: () => asyncComponentLoader($import('./terms')),
 };

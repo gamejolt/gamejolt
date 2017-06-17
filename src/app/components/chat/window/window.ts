@@ -31,11 +31,10 @@ import { ChatRoomDetailsModal } from '../room-details-modal/room-details-modal.s
 		number,
 	},
 })
-export class AppChatWindow extends Vue
-{
-	@Prop( ChatRoom ) room: ChatRoom;
-	@Prop( Array ) messages: ChatMessage[];
-	@Prop( ChatUserCollection ) users?: ChatUserCollection;
+export class AppChatWindow extends Vue {
+	@Prop(ChatRoom) room: ChatRoom;
+	@Prop(Array) messages: ChatMessage[];
+	@Prop(ChatUserCollection) users?: ChatUserCollection;
 
 	@State chat: ChatClient;
 
@@ -44,38 +43,32 @@ export class AppChatWindow extends Vue
 	isShowingUsers = false;
 
 	ChatRoom = ChatRoom;
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	minimize()
-	{
+	minimize() {
 		this.chat.minimizeRoom();
 	}
 
-	close()
-	{
-		this.chat.leaveRoom( this.room.id );
+	close() {
+		this.chat.leaveRoom(this.room.id);
 	}
 
 	// Closes chat completely. When you click on the empty space behind the
 	// chat, we want to close the chat just like you would when clicking the
 	// normal backdrop.
-	closeChat()
-	{
+	closeChat() {
 		this.toggleRightPane();
 	}
 
-	showEditRoomModal()
-	{
+	showEditRoomModal() {
 		// Chat_SaveRoomModal.show( this.room );
 	}
 
-	showRoomDetails()
-	{
-		ChatRoomDetailsModal.show( this.room );
+	showRoomDetails() {
+		ChatRoomDetailsModal.show(this.room);
 	}
 
-	toggleUsers()
-	{
+	toggleUsers() {
 		this.isShowingUsers = !this.isShowingUsers;
 	}
 }

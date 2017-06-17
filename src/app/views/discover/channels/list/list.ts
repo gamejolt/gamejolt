@@ -13,30 +13,27 @@ import { AppChannelThumbnail } from '../../../../components/channel/thumbnail/th
 	components: {
 		AppPageHeader,
 		AppChannelThumbnail,
-	}
+	},
 })
-export default class RouteDiscoverChannelsList extends Vue
-{
+export default class RouteDiscoverChannelsList extends Vue {
 	channels: any[] = [];
 	gameCounts: any = {};
 
 	@BeforeRouteEnter()
-	routeEnter()
-	{
-		return Api.sendRequest( '/web/discover/channels' );
+	routeEnter() {
+		return Api.sendRequest('/web/discover/channels');
 	}
 
-	created()
-	{
-		Meta.title = this.$gettext( 'Top Channels' );
-		Meta.description = 'Find and discover indie games around specific interests.';
+	created() {
+		Meta.title = this.$gettext('Top Channels');
+		Meta.description =
+			'Find and discover indie games around specific interests.';
 	}
 
-	routed()
-	{
+	routed() {
 		this.channels = this.$payload.channels;
-		this.$payload.gameCounts.forEach( ( item: any ) =>
-			this.$set( this.gameCounts, item.channel, item.count )
+		this.$payload.gameCounts.forEach((item: any) =>
+			this.$set(this.gameCounts, item.channel, item.count),
 		);
 	}
 }

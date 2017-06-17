@@ -1,3 +1,3 @@
-angular.module( 'App.Client.HideOffline', [] );
+angular.module('App.Client.HideOffline', []);
 
-require( './hide-offline-directive' );
+require('./hide-offline-directive');

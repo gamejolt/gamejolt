@@ -25,31 +25,28 @@ import { Store } from '../../../store/index';
 		AppTrackEvent,
 	},
 })
-export default class RouteLandingMarketplace extends Vue
-{
+export default class RouteLandingMarketplace extends Vue {
 	@State app: Store['app'];
 
 	firesidePosts: FiresidePost[] = [];
 	games: Game[] = [];
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
 	@BeforeRouteEnter()
-	beforeRoute()
-	{
-		return Api.sendRequest( '/web/marketplace' );
+	beforeRoute() {
+		return Api.sendRequest('/web/marketplace');
 	}
 
-	routed()
-	{
+	routed() {
 		Meta.title = 'Sell Your Games';
 
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb;
 		Meta.twitter = this.$payload.twitter;
-		Meta.fb.image = Meta.twitter.image = require( './social.png' );
+		Meta.fb.image = Meta.twitter.image = require('./social.png');
 
-		this.firesidePosts = FiresidePost.populate( this.$payload.firesidePosts );
-		this.games = Game.populate( this.$payload.games );
+		this.firesidePosts = FiresidePost.populate(this.$payload.firesidePosts);
+		this.games = Game.populate(this.$payload.games);
 	}
 }

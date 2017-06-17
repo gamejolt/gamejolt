@@ -1,19 +1,14 @@
-export class ClientHistoryNavigator
-{
+export class ClientHistoryNavigator {
 	static readonly canGoForward = true;
 	static readonly canGoBack = true;
 
-	static init()
-	{
-	}
+	static init() {}
 
-	static back()
-	{
+	static back() {
 		window.history.back();
 	}
 
-	static forward()
-	{
+	static forward() {
 		window.history.forward();
 	}
 }

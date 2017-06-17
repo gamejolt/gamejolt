@@ -23,22 +23,19 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 		number,
 	},
 })
-export default class RouteSearchResults extends Vue
-{
-	@Prop( Object ) payload: any;
-	@Prop( String ) query: string;
+export default class RouteSearchResults extends Vue {
+	@Prop(Object) payload: any;
+	@Prop(String) query: string;
 
-	Search = makeObservableService( Search );
-	Screen = makeObservableService( Screen );
+	Search = makeObservableService(Search);
+	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter( { cache: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Search.search( route.query.q );
+	@BeforeRouteEnter({ cache: true })
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Search.search(route.query.q);
 	}
 
-	routed()
-	{
-		this.$emit( 'searchpayload', this.$payload );
+	routed() {
+		this.$emit('searchpayload', this.$payload);
 	}
 }

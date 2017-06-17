@@ -1,3 +1,3 @@
-angular.module( 'App.Client.PackageCardButtons', [] );
+angular.module('App.Client.PackageCardButtons', []);
 
-require( './package-card-buttons-directive' );
+require('./package-card-buttons-directive');

@@ -17,8 +17,7 @@ import { RouteState, RouteStore } from '../../view.state';
 		date,
 	},
 })
-export class AppDiscoverGamesViewOverviewDetails extends Vue
-{
+export class AppDiscoverGamesViewOverviewDetails extends Vue {
 	@RouteState game: RouteStore['game'];
 
 	date = date;

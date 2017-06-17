@@ -16,17 +16,16 @@ import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/medi
 			spotlight: '?gjPageHeaderSpotlight',
 			nav: '?gjPageHeaderNav',
 			controls: '?gjPageHeaderControls',
-		}
+		},
 	},
 })
-export class PageHeaderComponent
-{
-	@Input( '<' ) coverMediaItem?: MediaItem;
-	@Input( '<' ) coverMaxHeight?: number;
-	@Input( '<' ) hideNav = false;
-	@Input( '<' ) shouldAffixNav = false;
-	@Input( '<' ) spotlightDark = false;
-	@Input( '@' ) colClasses?: string;
+export class PageHeaderComponent {
+	@Input('<') coverMediaItem?: MediaItem;
+	@Input('<') coverMaxHeight?: number;
+	@Input('<') hideNav = false;
+	@Input('<') shouldAffixNav = false;
+	@Input('<') spotlightDark = false;
+	@Input('@') colClasses?: string;
 
 	hasCoverButtons = false;
 	hasSpotlight = false;
@@ -35,13 +34,10 @@ export class PageHeaderComponent
 
 	screen = Screen;
 
-	constructor(
-		@Inject( '$transclude' ) $transclude: any,
-	)
-	{
-		this.hasCoverButtons = $transclude.isSlotFilled( 'coverButtons' );
-		this.hasSpotlight = $transclude.isSlotFilled( 'spotlight' );
-		this.hasNav = $transclude.isSlotFilled( 'nav' );
-		this.hasControls = $transclude.isSlotFilled( 'controls' );
+	constructor(@Inject('$transclude') $transclude: any) {
+		this.hasCoverButtons = $transclude.isSlotFilled('coverButtons');
+		this.hasSpotlight = $transclude.isSlotFilled('spotlight');
+		this.hasNav = $transclude.isSlotFilled('nav');
+		this.hasControls = $transclude.isSlotFilled('controls');
 	}
 }

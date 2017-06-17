@@ -5,5 +5,5 @@ export const routeSearchResults: VueRouter.RouteConfig = {
 	name: 'search.results',
 	path: '/search',
 	props: true,
-	component: () => asyncComponentLoader( $import( './results' ) ),
+	component: () => asyncComponentLoader($import('./results')),
 };

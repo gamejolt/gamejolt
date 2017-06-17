@@ -30,12 +30,13 @@ import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
 		AppGrowls,
 		AppModals,
 		AppLoadingBar,
-		AppShellChat: () => $import( './chat/chat' ).then( m => m.AppShellChat ),
-		AppShellClient: GJ_IS_CLIENT ? require( './client/client' ).AppShellClient : undefined,
+		AppShellChat: () => $import('./chat/chat').then(m => m.AppShellChat),
+		AppShellClient: GJ_IS_CLIENT
+			? require('./client/client').AppShellClient
+			: undefined,
 	},
 })
-export class AppShell extends Vue
-{
+export class AppShell extends Vue {
 	@State app: Store['app'];
 	@State chat: Store['chat'];
 	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
@@ -43,9 +44,8 @@ export class AppShell extends Vue
 
 	@Action clearPanes: Store['clearPanes'];
 
-	mounted()
-	{
+	mounted() {
 		// When changing routes, hide all overlays.
-		EventBus.on( 'routeChangeBefore', () => this.clearPanes() );
+		EventBus.on('routeChangeBefore', () => this.clearPanes());
 	}
 }

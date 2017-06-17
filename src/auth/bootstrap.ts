@@ -4,7 +4,7 @@ import '../lib/gj-lib-client/utils/polyfills';
 import { History } from '../lib/gj-lib-client/components/history/history.service';
 
 import Vue from 'vue';
-const VueGettext = require( 'vue-gettext' );
+const VueGettext = require('vue-gettext');
 
 import { store } from './store/index';
 import { router } from './views/index';
@@ -13,26 +13,26 @@ import { App } from './app';
 import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 
-Payload.init( store as any, router );
-History.init( router );
-Analytics.initRouter( router );
+Payload.init(store as any, router);
+History.init(router);
+Analytics.initRouter(router);
 
 const availableLanguages: any = {};
-for ( const lang of Translate.langs ) {
-	availableLanguages[ lang.code ] = lang.label;
+for (const lang of Translate.langs) {
+	availableLanguages[lang.code] = lang.label;
 }
 
-Vue.use( VueGettext, {
+Vue.use(VueGettext, {
 	silent: true,
 	availableLanguages,
 	defaultLanguage: Translate.lang,
-	translations: require( `!!../translations/en_US/auth.json` ),
-} );
+	translations: require(`!!../translations/en_US/auth.json`),
+});
 
-const app = new Vue( {
+const app = new Vue({
 	store: store as any,
 	router,
-	render: ( h ) => h( App ),
-} );
+	render: h => h(App),
+});
 
 export { app, store, router };

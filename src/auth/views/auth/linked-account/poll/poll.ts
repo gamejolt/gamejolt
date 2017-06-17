@@ -14,60 +14,56 @@ import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/load
 		AppLoading,
 	},
 })
-export default class RouteAuthLinkedAccountPoll extends Vue
-{
+export default class RouteAuthLinkedAccountPoll extends Vue {
 	token = '';
 	isPolling = true;
 
-	created()
-	{
-		Meta.title = this.$gettext( `Waiting for Login` );
+	created() {
+		Meta.title = this.$gettext(`Waiting for Login`);
 		this.token = this.$route.query.token;
 	}
 
-	completed( response: any )
-	{
+	completed(response: any) {
 		// Redirect them off to complete their social login like normal.
-		if ( response.provider === 'facebook' ) {
-			this.$router.push( {
+		if (response.provider === 'facebook') {
+			this.$router.push({
 				name: 'auth.linked-account.facebook.callback',
-				query: { code: response.code, state: this.token }
-			} );
-		}
-		else if ( response.provider === 'twitch' ) {
-			this.$router.push( {
+				query: { code: response.code, state: this.token },
+			});
+		} else if (response.provider === 'twitch') {
+			this.$router.push({
 				name: 'auth.linked-account.twitch.callback',
-				query: { code: response.code, state: this.token }
-			} );
-		}
-		else if ( response.provider === 'twitter' ) {
-			this.$router.push( {
+				query: { code: response.code, state: this.token },
+			});
+		} else if (response.provider === 'twitter') {
+			this.$router.push({
 				name: 'auth.linked-account.twitter.callback',
-				query: { oauth_verifier: response['oauth-verifier'], state: this.token }
-			} );
-		}
-		else if ( response.provider === 'google' ) {
-			this.$router.push( {
+				query: {
+					oauth_verifier: response['oauth-verifier'],
+					state: this.token,
+				},
+			});
+		} else if (response.provider === 'google') {
+			this.$router.push({
 				name: 'auth.linked-account.google.callback',
-				query: { code: response.code, state: this.token }
-			} );
+				query: { code: response.code, state: this.token },
+			});
 		}
 
 		this.isPolling = false;
 
 		// Focus back to the Client.
 		// TODO: Client
-		if ( GJ_IS_CLIENT ) {
+		if (GJ_IS_CLIENT) {
 			// Client.show();
 		}
 	}
 
-	failed()
-	{
+	failed() {
 		Growls.error(
-			this.$gettext( `Couldn't authorize.` ),
-			this.$gettext( `Authorization Failed` ),
+			this.$gettext(`Couldn't authorize.`),
+			this.$gettext(`Authorization Failed`),
 		);
-		this.$router.push( { name: 'auth.login' } );
+		this.$router.push({ name: 'auth.login' });
 	}
 }

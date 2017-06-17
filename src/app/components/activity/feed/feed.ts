@@ -21,12 +21,11 @@ import { AppActivityFeedItem } from './item/item';
 		AppTrackEvent,
 	},
 })
-export class AppActivityFeed extends Vue
-{
-	@Prop( String ) type: 'Notification' | 'Fireside_Post';
-	@Prop( ActivityFeedContainer ) feed: ActivityFeedContainer;
-	@Prop( Boolean ) showEditControls?: boolean;
-	@Prop( Boolean ) showGameInfo?: boolean;
+export class AppActivityFeed extends Vue {
+	@Prop(String) type: 'Notification' | 'Fireside_Post';
+	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
+	@Prop(Boolean) showEditControls?: boolean;
+	@Prop(Boolean) showGameInfo?: boolean;
 
 	// TODO: Get this working through dashboard, yeah?
 	// @Output( 'onPostRemoved' ) private _onPostRemoved = new EventEmitter<{ $post: FiresidePost }>();
@@ -38,73 +37,67 @@ export class AppActivityFeed extends Vue
 	private scroll: number;
 	private scroll$: Subscription | undefined;
 
-	mounted()
-	{
+	mounted() {
 		this.scroll$ = Scroll.scrollChanges.subscribe(
-			( change ) => this.scroll = change.top,
+			change => (this.scroll = change.top),
 		);
 	}
 
-	destroyed()
-	{
+	destroyed() {
 		this.feed.scroll = this.scroll;
 
-		if ( this.scroll$ ) {
+		if (this.scroll$) {
 			this.scroll$.unsubscribe();
 			this.scroll$ = undefined;
 		}
 	}
 
-	@Watch( 'feed', { immediate: true } )
-	async onItemsChanged( feed: ActivityFeedContainer, oldFeed: ActivityFeedContainer | undefined )
-	{
+	@Watch('feed', { immediate: true })
+	async onItemsChanged(
+		feed: ActivityFeedContainer,
+		oldFeed: ActivityFeedContainer | undefined,
+	) {
 		// Gotta make sure the feed has compiled.
 		await this.$nextTick();
 
 		// First time getting items in.
 		// Let's try scrolling to a possible active one.
 		// This will happen if they click away and back to the feed.
-		if ( feed.items.length && feed !== oldFeed ) {
+		if (feed.items.length && feed !== oldFeed) {
 			this.initScroll();
 		}
 	}
 
 	// TODO: This still some times doesn't scroll to the correct place.
 	// It almost seems like the browser takes over and messes it all up.
-	private initScroll()
-	{
-		console.log( 'init scroll!' );
+	private initScroll() {
+		console.log('init scroll!');
 		const scroll = this.feed.scroll;
-		if ( scroll ) {
-			Scroll.to( scroll, { animate: false } );
+		if (scroll) {
+			Scroll.to(scroll, { animate: false });
 		}
 	}
 
-	get shouldShowLoadMore()
-	{
+	get shouldShowLoadMore() {
 		return !this.feed.reachedEnd && !this.feed.isLoadingMore;
 	}
 
 	// TODO: get these working
-	onPostEdited( post: FiresidePost )
-	{
-		this.feed.update( post );
-		this.$emit( 'postedited', post );
+	onPostEdited(post: FiresidePost) {
+		this.feed.update(post);
+		this.$emit('postedited', post);
 	}
 
-	onPostPublished( post: FiresidePost )
-	{
-		this.$emit( 'postpublished', post );
+	onPostPublished(post: FiresidePost) {
+		this.$emit('postpublished', post);
 	}
 
-	onPostRemoved( post: FiresidePost )
-	{
-		this.feed.remove( post );
-		this.$emit( 'postremoved', post );
+	onPostRemoved(post: FiresidePost) {
+		this.feed.remove(post);
+		this.$emit('postremoved', post);
 	}
 
-	loadMore()
-	{
+	loadMore() {
 		this.feed.loadMore();
 	}
 }

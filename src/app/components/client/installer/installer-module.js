@@ -1,3 +1,3 @@
-angular.module( 'App.Client.Installer', [] );
+angular.module('App.Client.Installer', []);
 
-require( './installer-service' );
+require('./installer-service');

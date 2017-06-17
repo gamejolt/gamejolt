@@ -1,3 +1,3 @@
-angular.module( 'App.Client.GameButtons', [] );
+angular.module('App.Client.GameButtons', []);
 
-require( './game-buttons-directive' );
+require('./game-buttons-directive');

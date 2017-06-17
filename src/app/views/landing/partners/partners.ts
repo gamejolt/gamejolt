@@ -4,6 +4,4 @@ import * as View from '!view!./partners.html';
 
 @View
 @Component({})
-export default class RouteLandingPartners extends Vue
-{
-}
+export default class RouteLandingPartners extends Vue {}

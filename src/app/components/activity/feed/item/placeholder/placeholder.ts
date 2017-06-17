@@ -10,6 +10,4 @@ import { AppButtonPlaceholder } from '../../../../../../lib/gj-lib-client/compon
 		AppButtonPlaceholder,
 	},
 })
-export class AppActivityFeedItemPlaceholder extends Vue
-{
-}
+export class AppActivityFeedItemPlaceholder extends Vue {}

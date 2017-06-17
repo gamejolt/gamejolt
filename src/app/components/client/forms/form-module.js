@@ -1,4 +1,4 @@
-angular.module( 'App.Client.Forms', [] );
+angular.module('App.Client.Forms', []);
 
-require( './nwdirectory-directive' );
-require( './system-report/system-report-directive' );
+require('./nwdirectory-directive');
+require('./system-report/system-report-directive');

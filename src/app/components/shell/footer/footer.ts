@@ -23,34 +23,29 @@ import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
 	},
 	filters: {
 		date,
-	}
+	},
 })
-export class AppShellFooter extends Vue
-{
+export class AppShellFooter extends Vue {
 	curDate = new Date();
 	env = Environment;
 
-	get clientVersion()
-	{
+	get clientVersion() {
 		return GJ_VERSION;
 	}
 
 	// We have to refresh the whole browser when language changes so that
 	// all the new language strings get picked up.
-	onLangChange()
-	{
-		if ( !GJ_IS_CLIENT ) {
+	onLangChange() {
+		if (!GJ_IS_CLIENT) {
 			window.location.reload();
-		}
-		else {
-			const gui = require( 'nw.gui' ) as typeof nwGui;
+		} else {
+			const gui = require('nw.gui') as typeof nwGui;
 			gui.Window.get().reloadDev();
 		}
 	}
 
-	showSystemReport()
-	{
-		if ( GJ_IS_CLIENT ) {
+	showSystemReport() {
+		if (GJ_IS_CLIENT) {
 			// TODO
 			// getProvider<any>( 'Client_SystemReportModal' ).show();
 		}

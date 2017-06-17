@@ -6,5 +6,8 @@
   },
   "emmet.syntaxProfiles": {
     "vue-html": "html"
-  }
+  },
+  "prettier.useTabs": true,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "all"
 }

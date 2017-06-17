@@ -20,38 +20,32 @@ import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/pop
 		AppTrackEvent,
 	},
 })
-export class AppSearchHistory extends Vue
-{
+export class AppSearchHistory extends Vue {
 	isVisible = false;
 	recentSearches: string[] = [];
 
-	refresh()
-	{
+	refresh() {
 		this.recentSearches = SearchHistory.get();
 	}
 
-	onShow()
-	{
+	onShow() {
 		this.isVisible = true;
 		this.refresh();
 	}
 
-	onHide()
-	{
+	onHide() {
 		this.isVisible = false;
 	}
 
-	go( query: string )
-	{
-		this.$router.push( {
+	go(query: string) {
+		this.$router.push({
 			name: 'search.results',
 			query: { q: query },
-		} );
+		});
 		Popover.hideAll();
 	}
 
-	clear()
-	{
+	clear() {
 		SearchHistory.clear();
 		Popover.hideAll();
 	}

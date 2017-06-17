@@ -6,23 +6,21 @@ import { ClientLibraryState } from './library';
  * It should return a single package for a game, even if they have multiple
  * installed.
  */
-export function findActiveForGame( state: ClientLibraryState, gameId: number )
-{
+export function findActiveForGame(state: ClientLibraryState, gameId: number) {
 	const packages = state.packagesByGameId[gameId];
 
-	if ( !packages || !packages.length ) {
+	if (!packages || !packages.length) {
 		return null;
 	}
 
-	for ( let i = 0; i < packages.length; i++ ) {
-		if ( packages[ i ].install_state ) {
-			return packages[ i ];
+	for (let i = 0; i < packages.length; i++) {
+		if (packages[i].install_state) {
+			return packages[i];
 		}
 	}
 
 	return packages[0];
 }
-
 
 // import { LocalDbPackage } from '../local-db/package/package.model';
 // import { LocalDbGame } from '../local-db/game/game.model';

@@ -1,6 +1,6 @@
 // Required by PostCSS.
 module.exports = {
-	plugins:{
-		'autoprefixer': {},
+	plugins: {
+		autoprefixer: {},
 	},
 };

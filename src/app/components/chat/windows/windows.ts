@@ -13,8 +13,7 @@ import { Store } from '../../../store/index';
 		AppChatWindow,
 	},
 })
-export class AppChatWindows extends Vue
-{
+export class AppChatWindows extends Vue {
 	@State chat: ChatClient;
 	@State isRightPaneVisible: Store['isRightPaneVisible'];
 }

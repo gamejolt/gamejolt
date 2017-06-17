@@ -16,24 +16,20 @@ import { UserLinkedAccounts } from '../../../../lib/gj-lib-client/components/use
 		AppAuthLogin,
 	},
 })
-export default class RouteAuthLogin extends Vue
-{
+export default class RouteAuthLogin extends Vue {
 	redirect = '';
 
 	@BeforeRouteEnter()
-	routeEnter()
-	{
+	routeEnter() {
 		return loggedUserBlock();
 	}
 
-	created()
-	{
-		Meta.title = this.$gettext( 'auth.login.page_title' );
+	created() {
+		Meta.title = this.$gettext('auth.login.page_title');
 		this.redirect = this.$route.query.redirect || '';
 	}
 
-	linkedAccountLogin( provider: any )
-	{
-		UserLinkedAccounts.login( this.$router, provider );
+	linkedAccountLogin(provider: any) {
+		UserLinkedAccounts.login(this.$router, provider);
 	}
 }

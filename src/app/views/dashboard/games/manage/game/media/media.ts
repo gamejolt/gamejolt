@@ -3,7 +3,13 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./media.html?style=./media.styl';
 
-import { RouteState, RouteStore, RouteMutation, Media, RouteAction } from '../../manage.state';
+import {
+	RouteState,
+	RouteStore,
+	RouteMutation,
+	Media,
+	RouteAction,
+} from '../../manage.state';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
@@ -36,8 +42,7 @@ import { FormGameSketchfab } from '../../../../../../components/forms/game/sketc
 		AppTooltip,
 	},
 })
-export default class RouteDashGamesManageGameMedia extends Vue
-{
+export default class RouteDashGamesManageGameMedia extends Vue {
 	@RouteState game: RouteStore['game'];
 	@RouteState isWizard: RouteStore['isWizard'];
 	@RouteState media: RouteStore['media'];
@@ -57,40 +62,34 @@ export default class RouteDashGamesManageGameMedia extends Vue
 	Clipboard = Clipboard;
 
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/dash/developer/games/media/' + route.params.id );
-	}
-
-	created()
-	{
-		Meta.title = this.$gettextInterpolate(
-			`Manage Media for %{ game }`,
-			{ game: this.game.title },
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest(
+			'/web/dash/developer/games/media/' + route.params.id,
 		);
 	}
 
-	routed()
-	{
-		this.populateMedia( this.$payload.mediaItems || [] );
+	created() {
+		Meta.title = this.$gettextInterpolate(`Manage Media for %{ game }`, {
+			game: this.game.title,
+		});
 	}
 
-	onMediaEdited()
-	{
+	routed() {
+		this.populateMedia(this.$payload.mediaItems || []);
+	}
+
+	onMediaEdited() {
 		this.activeItem = null;
 	}
 
-	async removeItem( item: Media )
-	{
+	async removeItem(item: Media) {
 		let typeLabel = '';
-		if ( item.media_type === 'image' ) {
-			typeLabel = this.$gettext( 'dash.games.media.image_label' ).toLowerCase();
-		}
-		else if ( item.media_type === 'video' ) {
-			typeLabel = this.$gettext( 'dash.games.media.video_label' ).toLowerCase();
-		}
-		else if ( item.media_type === 'sketchfab' ) {
-			typeLabel = this.$gettext( 'sketchfab model' ).toLowerCase();
+		if (item.media_type === 'image') {
+			typeLabel = this.$gettext('dash.games.media.image_label').toLowerCase();
+		} else if (item.media_type === 'video') {
+			typeLabel = this.$gettext('dash.games.media.video_label').toLowerCase();
+		} else if (item.media_type === 'sketchfab') {
+			typeLabel = this.$gettext('sketchfab model').toLowerCase();
 		}
 
 		/// {{ type }} contains the translated media item type (image/video/sketchfab)
@@ -99,13 +98,13 @@ export default class RouteDashGamesManageGameMedia extends Vue
 			{ type: typeLabel },
 		);
 
-		const result = await ModalConfirm.show( message );
-		if ( !result ) {
+		const result = await ModalConfirm.show(message);
+		if (!result) {
 			return;
 		}
 
 		await item.$remove();
 
-		this.removeMedia( item );
+		this.removeMedia(item);
 	}
 }

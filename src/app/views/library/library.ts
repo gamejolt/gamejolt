@@ -5,17 +5,14 @@ import { BeforeRouteEnter } from '../../../lib/gj-lib-client/utils/router';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 
 @Component({})
-export default class RouteLibrary extends Vue
-{
+export default class RouteLibrary extends Vue {
 	@BeforeRouteEnter()
-	beforeRoute()
-	{
+	beforeRoute() {
 		User.touch();
 		return Promise.resolve();
 	}
 
-	render( h: Vue.CreateElement )
-	{
-		return h( 'router-view' );
+	render(h: Vue.CreateElement) {
+		return h('router-view');
 	}
 }

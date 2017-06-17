@@ -1,7 +1,13 @@
 import { State, namespace, Action, Mutation } from 'vuex-class';
 import { LocalDbPackage } from '../components/client/local-db/package/package.model';
 import { LocalDbGame } from '../components/client/local-db/game/game.model';
-import { VuexModule, VuexStore, VuexAction, VuexMutation, VuexGetter } from '../../lib/gj-lib-client/utils/vuex';
+import {
+	VuexModule,
+	VuexStore,
+	VuexAction,
+	VuexMutation,
+	VuexGetter,
+} from '../../lib/gj-lib-client/utils/vuex';
 import { db } from '../components/client/local-db/local-db.service';
 import { PatchHandle, Patcher, Uninstaller } from 'client-voodoo';
 import { ClientInstaller } from '../components/client/installer/installer.service';
@@ -18,15 +24,21 @@ import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { fuzzysearch } from '../../lib/gj-lib-client/utils/string';
 import { stringSort } from '../../lib/gj-lib-client/utils/array';
 
-export const ClientLibraryState = namespace( 'clientLibrary', State );
-export const ClientLibraryAction = namespace( 'clientLibrary', Action );
-export const ClientLibraryMutation = namespace( 'clientLibrary', Mutation );
+export const ClientLibraryState = namespace('clientLibrary', State);
+export const ClientLibraryAction = namespace('clientLibrary', Action);
+export const ClientLibraryMutation = namespace('clientLibrary', Mutation);
 
 export type Actions = {
 	'clientLibrary/bootstrap': undefined;
 	'clientLibrary/clear': undefined;
 	'clientLibrary/retryInstallPackage': LocalDbPackage;
-	'clientLibrary/installPackage': [Game, GamePackage, GameRelease, GameBuild, GameBuildLaunchOption[]];
+	'clientLibrary/installPackage': [
+		Game,
+		GamePackage,
+		GameRelease,
+		GameBuild,
+		GameBuildLaunchOption[]
+	];
 	'clientLibrary/_installPackage': [LocalDbGame, LocalDbPackage];
 	'clientLibrary/updatePackage': [LocalDbPackage, number];
 	'clientLibrary/uninstallPackage': LocalDbPackage;
@@ -36,8 +48,8 @@ export type Actions = {
 
 export type Mutations = {
 	'clientLibrary/_bootstrap': {
-		packages: LocalDbPackage[],
-		games: LocalDbGame[],
+		packages: LocalDbPackage[];
+		games: LocalDbGame[];
 	};
 	'clientLibrary/setPatchingPackage': [LocalDbPackage, PatchHandle];
 	'clientLibrary/unsetPatchingPackage': LocalDbPackage;
@@ -46,24 +58,63 @@ export type Mutations = {
 	'clientLibrary/pausePatchingPackage': LocalDbPackage;
 	'clientLibrary/resumePatchingPackage': LocalDbPackage;
 	'clientLibrary/setGameData': [LocalDbGame, Game];
-	'clientLibrary/setPackageData': [LocalDbPackage, GamePackage, GameRelease, GameBuild, GameBuildLaunchOption[]];
-	'clientLibrary/setPackageUpdateData': [LocalDbPackage, GamePackage, GameRelease, GameBuild, GameBuildLaunchOption[]];
+	'clientLibrary/setPackageData': [
+		LocalDbPackage,
+		GamePackage,
+		GameRelease,
+		GameBuild,
+		GameBuildLaunchOption[]
+	];
+	'clientLibrary/setPackageUpdateData': [
+		LocalDbPackage,
+		GamePackage,
+		GameRelease,
+		GameBuild,
+		GameBuildLaunchOption[]
+	];
 	'clientLibrary/setPackageInstalled': LocalDbPackage;
 	'clientLibrary/setPackageUpdated': LocalDbPackage;
 	'clientLibrary/setPackageUninstalling': LocalDbPackage;
-	'clientLibrary/setPackageInstallState': [LocalDbPackage, LocalDbPackage['install_state']];
-	'clientLibrary/setPackageUpdateState': [LocalDbPackage, LocalDbPackage['update_state']];
-	'clientLibrary/setPackageRemoveState': [LocalDbPackage, LocalDbPackage['remove_state']];
-	'clientLibrary/setPackageInstallDir': [LocalDbPackage, LocalDbPackage['install_dir']];
-	'clientLibrary/setPackagePatchQueued': [LocalDbPackage, LocalDbPackage['patch_queued']];
-	'clientLibrary/setPackagePatchPaused': [LocalDbPackage, LocalDbPackage['patch_paused']];
-	'clientLibrary/setPackageDownloadProgress': [LocalDbPackage, LocalDbPackage['download_progress']];
-	'clientLibrary/setPackageUnpackProgress': [LocalDbPackage, LocalDbPackage['unpack_progress']];
+	'clientLibrary/setPackageInstallState': [
+		LocalDbPackage,
+		LocalDbPackage['install_state']
+	];
+	'clientLibrary/setPackageUpdateState': [
+		LocalDbPackage,
+		LocalDbPackage['update_state']
+	];
+	'clientLibrary/setPackageRemoveState': [
+		LocalDbPackage,
+		LocalDbPackage['remove_state']
+	];
+	'clientLibrary/setPackageInstallDir': [
+		LocalDbPackage,
+		LocalDbPackage['install_dir']
+	];
+	'clientLibrary/setPackagePatchQueued': [
+		LocalDbPackage,
+		LocalDbPackage['patch_queued']
+	];
+	'clientLibrary/setPackagePatchPaused': [
+		LocalDbPackage,
+		LocalDbPackage['patch_paused']
+	];
+	'clientLibrary/setPackageDownloadProgress': [
+		LocalDbPackage,
+		LocalDbPackage['download_progress']
+	];
+	'clientLibrary/setPackageUnpackProgress': [
+		LocalDbPackage,
+		LocalDbPackage['unpack_progress']
+	];
 };
 
 @VuexModule()
-export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, Mutations>
-{
+export class ClientLibraryStore extends VuexStore<
+	ClientLibraryStore,
+	Actions,
+	Mutations
+> {
 	packages: LocalDbPackage[] = [];
 	games: LocalDbGame[] = [];
 
@@ -75,9 +126,8 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private _bootstrapPromise: Promise<void> | null = null;
 
 	@VuexAction
-	async bootstrap()
-	{
-		if ( this._bootstrapPromise ) {
+	async bootstrap() {
+		if (this._bootstrapPromise) {
 			return;
 		}
 
@@ -85,33 +135,33 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		ClientInstaller.checkQueueSettings();
 
 		// This will retry to install anything that was installing before client was closed.
-		for ( let localPackage of this.packages ) {
-			if ( localPackage.isPatching && !localPackage.isPatchPaused ) {
-				this.retryInstallPackage( localPackage );
+		for (let localPackage of this.packages) {
+			if (localPackage.isPatching && !localPackage.isPatchPaused) {
+				this.retryInstallPackage(localPackage);
 			}
 		}
 
-		this._bootstrapPromise = Promise.all( [
+		this._bootstrapPromise = Promise.all([
 			db.packages.toArray(),
 			db.games.toArray(),
-		] ).then( ( [packages, games] ) =>
-		{
-			this._bootstrap( {packages, games} );
-		} );
+		]).then(([packages, games]) => {
+			this._bootstrap({ packages, games });
+		});
 		return this._bootstrapPromise;
 	}
 
 	@VuexMutation
-	private _bootstrap( {packages, games}: Mutations['clientLibrary/_bootstrap'] )
-	{
+	private _bootstrap({
+		packages,
+		games,
+	}: Mutations['clientLibrary/_bootstrap']) {
 		this.packages = packages;
 		this.games = games;
 	}
 
 	@VuexAction
-	async clear()
-	{
-		if ( this._bootstrapPromise ) {
+	async clear() {
+		if (this._bootstrapPromise) {
 			await this._bootstrapPromise;
 		}
 
@@ -119,51 +169,50 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		this._bootstrapPromise = null;
 	}
 
-	get packagesById()
-	{
-		return this.packages.reduce<{ [packageId: number]: LocalDbPackage }>( ( accum, _package ) =>
-		{
+	get packagesById() {
+		return this.packages.reduce<{
+			[packageId: number]: LocalDbPackage;
+		}>((accum, _package) => {
 			accum[_package.id] = _package;
 			return accum;
-		}, {} );
+		}, {});
 	}
 
-	get gamesById()
-	{
-		return this.games.reduce<{ [gameId: number]: LocalDbGame }>( ( accum, game ) =>
-		{
+	get gamesById() {
+		return this.games.reduce<{
+			[gameId: number]: LocalDbGame;
+		}>((accum, game) => {
 			accum[game.id] = game;
 			return accum;
-		}, {} );
+		}, {});
 	}
 
-	get packagesByGameId()
-	{
-		return this.packages.reduce<{ [gameId: number]: LocalDbPackage[] }>( ( accum, _package ) =>
-		{
-			if ( !accum[_package.game_id] ) {
+	get packagesByGameId() {
+		return this.packages.reduce<{
+			[gameId: number]: LocalDbPackage[];
+		}>((accum, _package) => {
+			if (!accum[_package.game_id]) {
 				accum[_package.game_id] = [];
 			}
-			accum[_package.game_id].push( _package );
+			accum[_package.game_id].push(_package);
 			return accum;
-		}, {} );
+		}, {});
 	}
 
-	get currentPatchingProgress()
-	{
-		if ( !this.numPatching ) {
+	get currentPatchingProgress() {
+		if (!this.numPatching) {
 			return null;
 		}
 
 		let currentProgress = 0;
 		let numPatching = this.numPatching;
-		for ( let packageIdStr in this.currentlyPatching ) {
-			const packageId = parseInt( packageIdStr, 10 );
-			const progress = this.getPackagePatchProgress( packageId );
+		for (let packageIdStr in this.currentlyPatching) {
+			const packageId = parseInt(packageIdStr, 10);
+			const progress = this.getPackagePatchProgress(packageId);
 
 			// If the progress is null, we don't count that package progress as part of the total progress,
 			// because it means there was some unexpected error with the stored package.
-			if ( progress == null ) {
+			if (progress == null) {
 				numPatching -= 1;
 				continue;
 			}
@@ -174,21 +223,20 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexGetter
-	getPackagePatchProgress( packageId: number )
-	{
-		const localPackage = this.packages[ packageId ];
-		if ( localPackage.download_progress ) {
+	getPackagePatchProgress(packageId: number) {
+		const localPackage = this.packages[packageId];
+		if (localPackage.download_progress) {
 			return localPackage.download_progress.progress;
-		}
-		else if ( localPackage.unpack_progress ) {
+		} else if (localPackage.unpack_progress) {
 			return localPackage.unpack_progress.progress;
 		}
 		return null;
 	}
 
 	@VuexAction
-	async retryInstallPackage( localPackage: Actions['clientLibrary/retryInstallPackage'] )
-	{
+	async retryInstallPackage(
+		localPackage: Actions['clientLibrary/retryInstallPackage'],
+	) {
 		// Reset states.
 		const downloadStates = [
 			LocalDbPackage.DOWNLOADING,
@@ -201,36 +249,36 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		];
 
 		let promise: Promise<void>;
-		if ( downloadStates.indexOf( localPackage.install_state || '' ) !== -1 ) {
-			this.setPackageInstallState( [ localPackage, LocalDbPackage.PATCH_PENDING ] );
-			promise = db.packages.put( localPackage );
-		}
-		else if ( unpackStates.indexOf( localPackage.install_state || '' ) !== -1 ) {
-			this.setPackageInstallState( [ localPackage, LocalDbPackage.DOWNLOADED ] );
-			promise = db.packages.put( localPackage );
-		}
-		else if ( downloadStates.indexOf( localPackage.update_state || '' ) !== -1 ) {
-			this.setPackageUpdateState( [ localPackage, LocalDbPackage.PATCH_PENDING ] );
-			promise = db.packages.put( localPackage );
-		}
-		else if ( unpackStates.indexOf( localPackage.update_state || '' ) !== -1 ) {
-			this.setPackageUpdateState( [ localPackage, LocalDbPackage.DOWNLOADED ] );
-			promise = db.packages.put( localPackage );
-		}
-		else {
+		if (downloadStates.indexOf(localPackage.install_state || '') !== -1) {
+			this.setPackageInstallState([localPackage, LocalDbPackage.PATCH_PENDING]);
+			promise = db.packages.put(localPackage);
+		} else if (unpackStates.indexOf(localPackage.install_state || '') !== -1) {
+			this.setPackageInstallState([localPackage, LocalDbPackage.DOWNLOADED]);
+			promise = db.packages.put(localPackage);
+		} else if (downloadStates.indexOf(localPackage.update_state || '') !== -1) {
+			this.setPackageUpdateState([localPackage, LocalDbPackage.PATCH_PENDING]);
+			promise = db.packages.put(localPackage);
+		} else if (unpackStates.indexOf(localPackage.update_state || '') !== -1) {
+			this.setPackageUpdateState([localPackage, LocalDbPackage.DOWNLOADED]);
+			promise = db.packages.put(localPackage);
+		} else {
 			promise = Promise.resolve();
 		}
 
 		await promise;
-		return this._installPackage( [this.games[ localPackage.game_id ], localPackage] );
+		return this._installPackage([
+			this.games[localPackage.game_id],
+			localPackage,
+		]);
 	}
 
 	@VuexAction
-	async _installPackage( [localGame, localPackage]: Actions['clientLibrary/_installPackage'] )
-	{
+	async _installPackage(
+		[localGame, localPackage]: Actions['clientLibrary/_installPackage'],
+	) {
 		const operation = localPackage.install_state ? 'install' : 'update';
-		let packageTitle = (localPackage.title || localGame.title);
-		if ( packageTitle !== localGame.title ) {
+		let packageTitle = localPackage.title || localGame.title;
+		if (packageTitle !== localGame.title) {
 			packageTitle += ' for ' + localGame.title;
 		}
 
@@ -238,143 +286,160 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			let needsSaving = false;
 
 			// We freeze the installation directory in time.
-			if ( !localPackage.install_dir ) {
-				this.setPackageInstallDir( [ localPackage, path.join(
-					Settings.get( 'game-install-dir' ),
-					localGame.slug + '-' + localGame.id,
-					(localPackage.title || 'default') + '-' + localPackage.id
-				) ] );
+			if (!localPackage.install_dir) {
+				this.setPackageInstallDir([
+					localPackage,
+					path.join(
+						Settings.get('game-install-dir'),
+						localGame.slug + '-' + localGame.id,
+						(localPackage.title || 'default') + '-' + localPackage.id,
+					),
+				]);
 				needsSaving = true;
 			}
 
 			// If we were paused before, let's resume.
 			// This happens if they paused, then restarted client. The patch would still be paused
 			// but if they click resume we want to start a new install again.
-			if ( localPackage.isPatchPaused ) {
-				this.setPackagePatchPaused( [localPackage, false] );
+			if (localPackage.isPatchPaused) {
+				this.setPackagePatchPaused([localPackage, false]);
 				needsSaving = true;
 			}
 
-			if ( needsSaving ) {
-				await db.packages.put( localPackage );
+			if (needsSaving) {
+				await db.packages.put(localPackage);
 			}
 
-			const getDownloadUrl = function()
-			{
-				return localPackage.getDownloadUrl()
-					.then( ( response ) => response.downloadUrl );
+			const getDownloadUrl = function() {
+				return localPackage
+					.getDownloadUrl()
+					.then(response => response.downloadUrl);
 			};
 
-			const patchHandle = Patcher.patch( getDownloadUrl, localPackage );
+			const patchHandle = Patcher.patch(getDownloadUrl, localPackage);
 
 			patchHandle
-				.onDownloading( () =>
-				{
-					if ( localPackage.install_state ) {
-						this.setPackageInstallState( [ localPackage, LocalDbPackage.DOWNLOADING ] );
-						db.packages.put( localPackage );
+				.onDownloading(() => {
+					if (localPackage.install_state) {
+						this.setPackageInstallState([
+							localPackage,
+							LocalDbPackage.DOWNLOADING,
+						]);
+						db.packages.put(localPackage);
+					} else if (localPackage.update_state) {
+						this.setPackageUpdateState([
+							localPackage,
+							LocalDbPackage.DOWNLOADING,
+						]);
+						db.packages.put(localPackage);
 					}
-					else if ( localPackage.update_state ) {
-						this.setPackageUpdateState( [ localPackage, LocalDbPackage.DOWNLOADING ] );
-						db.packages.put( localPackage );
-					}
-				} )
-				.onProgress( 1, ( progress ) =>
-				{
-					this.setPackageDownloadProgress( [ localPackage, progress ] );
-					db.packages.put( localPackage );
-				} )
-				.onPatching( () =>
-				{
+				})
+				.onProgress(1, progress => {
+					this.setPackageDownloadProgress([localPackage, progress]);
+					db.packages.put(localPackage);
+				})
+				.onPatching(() => {
 					// No longer needed.
-					this.setPackageDownloadProgress( [ localPackage, null ] );
+					this.setPackageDownloadProgress([localPackage, null]);
 
-					if ( localPackage.install_state ) {
-						this.setPackageInstallState( [ localPackage, LocalDbPackage.UNPACKING ] );
-						db.packages.put( localPackage );
+					if (localPackage.install_state) {
+						this.setPackageInstallState([
+							localPackage,
+							LocalDbPackage.UNPACKING,
+						]);
+						db.packages.put(localPackage);
+					} else if (localPackage.update_state) {
+						this.setPackageUpdateState([
+							localPackage,
+							LocalDbPackage.UNPACKING,
+						]);
+						db.packages.put(localPackage);
 					}
-					else if ( localPackage.update_state ) {
-						this.setPackageUpdateState( [ localPackage, LocalDbPackage.UNPACKING ] );
-						db.packages.put( localPackage );
+				})
+				.onExtractProgress(1, progress => {
+					this.setPackageUnpackProgress([localPackage, progress]);
+					db.packages.put(localPackage);
+				})
+				.onPaused(wasQueued => {
+					if (wasQueued) {
+						this.setPackagePatchQueued([localPackage, true]);
+					} else {
+						this.setPackagePatchPaused([localPackage, true]);
 					}
-				} )
-				.onExtractProgress( 1, ( progress ) =>
-				{
-					this.setPackageUnpackProgress( [ localPackage, progress ] );
-					db.packages.put( localPackage );
-				} )
-				.onPaused( ( wasQueued ) =>
-				{
-					if ( wasQueued ) {
-						this.setPackagePatchQueued( [ localPackage, true ] );
+					db.packages.put(localPackage);
+				})
+				.onResumed(wasQueued => {
+					if (wasQueued) {
+						this.setPackagePatchQueued([localPackage, false]);
+					} else {
+						this.setPackagePatchPaused([localPackage, false]);
 					}
-					else {
-						this.setPackagePatchPaused( [ localPackage, true ] );
-					}
-					db.packages.put( localPackage );
-				} )
-				.onResumed( ( wasQueued ) =>
-				{
-					if ( wasQueued ) {
-						this.setPackagePatchQueued( [ localPackage, false ] );
-					}
-					else {
-						this.setPackagePatchPaused( [ localPackage, false ] );
-					}
-					db.packages.put( localPackage );
-				} )
+					db.packages.put(localPackage);
+				})
 				.start();
 
-			this.setPatchingPackage( [ localPackage, patchHandle ] );
+			this.setPatchingPackage([localPackage, patchHandle]);
 			await patchHandle.promise;
 
-			this.unsetPatchingPackage( localPackage );
-			if ( localPackage.install_state ) {
-				this.setPackageInstalled( localPackage );
+			this.unsetPatchingPackage(localPackage);
+			if (localPackage.install_state) {
+				this.setPackageInstalled(localPackage);
+			} else if (localPackage.update_state) {
+				this.setPackageUpdated(localPackage);
 			}
-			else if ( localPackage.update_state ) {
-				this.setPackageUpdated( localPackage );
-			}
-			await db.packages.put( localPackage );
+			await db.packages.put(localPackage);
 
-			const action = operation === 'install' ? 'finished installing' : 'updated to the latest version';
+			const action = operation === 'install'
+				? 'finished installing'
+				: 'updated to the latest version';
 			const title = operation === 'install' ? 'Game Installed' : 'Game Updated';
-			Growls.success( packageTitle + ' has ' + action + '.', title );
+			Growls.success(packageTitle + ' has ' + action + '.', title);
 			return true;
-		}
-		catch ( err ) {
-			console.error( err );
+		} catch (err) {
+			console.error(err);
 
 			const action = operation === 'install' ? 'install' : 'update';
-			const title = operation === 'install' ? 'Installation Failed' : 'Update Failed';
-			Growls.error( packageTitle + ' failed to ' + action + '.', title );
+			const title = operation === 'install'
+				? 'Installation Failed'
+				: 'Update Failed';
+			Growls.error(packageTitle + ' failed to ' + action + '.', title);
 
-			if ( localPackage.install_state === LocalDbPackage.DOWNLOADING ) {
-				this.setPackageInstallState( [ localPackage, LocalDbPackage.DOWNLOAD_FAILED ] );
-				db.packages.put( localPackage );
-			}
-			else if ( localPackage.install_state === LocalDbPackage.UNPACKING ) {
-				this.setPackageInstallState( [ localPackage, LocalDbPackage.UNPACK_FAILED ] );
-				db.packages.put( localPackage );
-			}
-			else if ( localPackage.update_state === LocalDbPackage.DOWNLOADING ) {
-				this.setPackageUpdateState( [ localPackage, LocalDbPackage.DOWNLOAD_FAILED ] );
-				db.packages.put( localPackage );
-			}
-			else if ( localPackage.update_state === LocalDbPackage.UNPACKING ) {
-				this.setPackageUpdateState( [ localPackage, LocalDbPackage.UNPACK_FAILED ] );
-				db.packages.put( localPackage );
+			if (localPackage.install_state === LocalDbPackage.DOWNLOADING) {
+				this.setPackageInstallState([
+					localPackage,
+					LocalDbPackage.DOWNLOAD_FAILED,
+				]);
+				db.packages.put(localPackage);
+			} else if (localPackage.install_state === LocalDbPackage.UNPACKING) {
+				this.setPackageInstallState([
+					localPackage,
+					LocalDbPackage.UNPACK_FAILED,
+				]);
+				db.packages.put(localPackage);
+			} else if (localPackage.update_state === LocalDbPackage.DOWNLOADING) {
+				this.setPackageUpdateState([
+					localPackage,
+					LocalDbPackage.DOWNLOAD_FAILED,
+				]);
+				db.packages.put(localPackage);
+			} else if (localPackage.update_state === LocalDbPackage.UNPACKING) {
+				this.setPackageUpdateState([
+					localPackage,
+					LocalDbPackage.UNPACK_FAILED,
+				]);
+				db.packages.put(localPackage);
 			}
 
-			this.unsetPatchingPackage( localPackage );
+			this.unsetPatchingPackage(localPackage);
 			return false;
 		}
 	}
 
 	@VuexMutation
-	setPatchingPackage( [localPackage, patchHandle]: Mutations['clientLibrary/setPatchingPackage'] )
-	{
-		if ( this.currentlyPatching[localPackage.id] ) {
+	setPatchingPackage(
+		[localPackage, patchHandle]: Mutations['clientLibrary/setPatchingPackage'],
+	) {
+		if (this.currentlyPatching[localPackage.id]) {
 			return;
 		}
 
@@ -383,9 +448,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	unsetPatchingPackage( localPackage: Mutations['clientLibrary/unsetPatchingPackage'] )
-	{
-		if ( !this.currentlyPatching[localPackage.id] ) {
+	unsetPatchingPackage(
+		localPackage: Mutations['clientLibrary/unsetPatchingPackage'],
+	) {
+		if (!this.currentlyPatching[localPackage.id]) {
 			return;
 		}
 
@@ -394,9 +460,13 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	setCurrentlyUninstalling( [localPackage, uninstallPromise]: Mutations['clientLibrary/setCurrentlyUninstalling'] )
-	{
-		if ( this.currentlyUninstalling[localPackage.id] ) {
+	setCurrentlyUninstalling(
+		[
+			localPackage,
+			uninstallPromise,
+		]: Mutations['clientLibrary/setCurrentlyUninstalling'],
+	) {
+		if (this.currentlyUninstalling[localPackage.id]) {
 			return;
 		}
 
@@ -404,9 +474,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	unsetCurrentlyUninstalling( localPackage: Mutations['clientLibrary/unsetCurrentlyUninstalling'] )
-	{
-		if ( !this.currentlyUninstalling[localPackage.id] ) {
+	unsetCurrentlyUninstalling(
+		localPackage: Mutations['clientLibrary/unsetCurrentlyUninstalling'],
+	) {
+		if (!this.currentlyUninstalling[localPackage.id]) {
 			return;
 		}
 
@@ -414,191 +485,231 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	pausePatchingPackage( localPackage: Mutations['clientLibrary/pausePatchingPackage'] )
-	{
+	pausePatchingPackage(
+		localPackage: Mutations['clientLibrary/pausePatchingPackage'],
+	) {
 		const handle = this.currentlyPatching[localPackage.id];
-		if ( !handle ) {
-			throw new Error( 'Package is not currently patching.' );
+		if (!handle) {
+			throw new Error('Package is not currently patching.');
 		}
 
 		handle.stop();
 	}
 
 	@VuexMutation
-	resumePatchingPackage( localPackage: Mutations['clientLibrary/resumePatchingPackage'] )
-	{
+	resumePatchingPackage(
+		localPackage: Mutations['clientLibrary/resumePatchingPackage'],
+	) {
 		const handle = this.currentlyPatching[localPackage.id];
-		if ( !handle ) {
-			return this.retryInstallPackage( localPackage );
+		if (!handle) {
+			return this.retryInstallPackage(localPackage);
 		}
 
 		handle.start();
 	}
 
 	@VuexAction
-	cancelPatchingPackage( localPackage: Actions['clientLibrary/cancelPatchingPackage'] )
-	{
-		return new Promise<void>( ( resolve ) =>
-		{
+	cancelPatchingPackage(
+		localPackage: Actions['clientLibrary/cancelPatchingPackage'],
+	) {
+		return new Promise<void>(resolve => {
 			const patchHandle = this.currentlyPatching[localPackage.id];
-			if ( !patchHandle ) {
+			if (!patchHandle) {
 				resolve();
 				return;
 			}
 
 			// This is absurd, ylivay.
 			// TODO promisify the new client voodoo like no tomorrow.
-			patchHandle.onCanceled( () =>
-			{
-				this.unsetPatchingPackage( localPackage );
+			patchHandle.onCanceled(() => {
+				this.unsetPatchingPackage(localPackage);
 				resolve();
-			} );
+			});
 
 			patchHandle.cancel();
-		} );
+		});
 	}
 
 	@VuexAction
-	async installPackage( [game, _package, release, build, launchOptions]: Actions['clientLibrary/installPackage'] )
-	{
-		HistoryTick.sendBeacon( 'game-build', build.id, { sourceResource: 'Game', sourceResourceId: game.id } );
-		HistoryTick.sendBeacon( 'game-build-install', build.id, { sourceResource: 'Game', sourceResourceId: game.id } );
+	async installPackage(
+		[
+			game,
+			_package,
+			release,
+			build,
+			launchOptions,
+		]: Actions['clientLibrary/installPackage'],
+	) {
+		HistoryTick.sendBeacon('game-build', build.id, {
+			sourceResource: 'Game',
+			sourceResourceId: game.id,
+		});
+		HistoryTick.sendBeacon('game-build-install', build.id, {
+			sourceResource: 'Game',
+			sourceResourceId: game.id,
+		});
 
 		const localGame = new LocalDbGame();
-		this.setGameData( [ localGame, game ] );
+		this.setGameData([localGame, game]);
 		const localPackage = new LocalDbPackage();
-		this.setPackageData( [ localPackage, _package, release, build, launchOptions ] );
+		this.setPackageData([
+			localPackage,
+			_package,
+			release,
+			build,
+			launchOptions,
+		]);
 
-		await db.transaction( 'rw', [ db.games, db.packages ], () =>
-		{
-			return Promise.all( [
-				db.games.put( localGame ),
-				db.packages.put( localPackage ),
-			] );
-		} );
+		await db.transaction('rw', [db.games, db.packages], () => {
+			return Promise.all([
+				db.games.put(localGame),
+				db.packages.put(localPackage),
+			]);
+		});
 
-		return this._installPackage( [ localGame, localPackage ] );
+		return this._installPackage([localGame, localPackage]);
 	}
 
 	@VuexAction
-	async updatePackage( [localPackage, newBuildId]: Actions['clientLibrary/updatePackage'] )
-	{
+	async updatePackage(
+		[localPackage, newBuildId]: Actions['clientLibrary/updatePackage'],
+	) {
 		// If this package isn't installed (and at rest), we don't update.
 		// We also don't update if we're currently running the game. Imagine that happening!
-		if ( !localPackage.isSettled || localPackage.isRunning ) {
+		if (!localPackage.isSettled || localPackage.isRunning) {
 			return false;
 		}
 
-		const localGame = this.gamesById[ localPackage.game_id ];
-		if ( !localGame ) {
+		const localGame = this.gamesById[localPackage.game_id];
+		if (!localGame) {
 			return false;
 		}
 
-		const response = await Api.sendRequest( '/web/client/get-build-for-update/' + newBuildId, null, { detach: true } );
-		if ( !response.package ) {
+		const response = await Api.sendRequest(
+			'/web/client/get-build-for-update/' + newBuildId,
+			null,
+			{ detach: true },
+		);
+		if (!response.package) {
 			return false;
 		}
 
-		this.setPackageUpdateData( [ localPackage, response.package, response.release, response.build, response.launchOptions ] );
-		await db.packages.put( localPackage );
+		this.setPackageUpdateData([
+			localPackage,
+			response.package,
+			response.release,
+			response.build,
+			response.launchOptions,
+		]);
+		await db.packages.put(localPackage);
 
-		return this._installPackage( [ localGame, localPackage ] );
+		return this._installPackage([localGame, localPackage]);
 	}
 
 	@VuexAction
-	async uninstallPackage( localPackage: Actions['clientLibrary/uninstallPackage'] )
-	{
+	async uninstallPackage(
+		localPackage: Actions['clientLibrary/uninstallPackage'],
+	) {
 		let localGame: LocalDbGame | undefined;
 
 		// We just use this so they don't click "uninstall" twice in a row.
 		// No need to save to the DB.
-		let uninstallingPromise = this.currentlyUninstalling[ localPackage.id ];
-		if ( uninstallingPromise ) {
+		let uninstallingPromise = this.currentlyUninstalling[localPackage.id];
+		if (uninstallingPromise) {
 			return uninstallingPromise;
 		}
 
-		uninstallingPromise = db.transaction( 'rw', [ db.games, db.packages ], async () =>
-		{
-			// Are we removing a current install?
-			const wasInstalling = localPackage.isInstalling;
+		uninstallingPromise = db.transaction(
+			'rw',
+			[db.games, db.packages],
+			async () => {
+				// Are we removing a current install?
+				const wasInstalling = localPackage.isInstalling;
 
-			try {
-				// Cancel any installs first.
-				// It may or may not be patching.
-				await this.cancelPatchingPackage( localPackage );
+				try {
+					// Cancel any installs first.
+					// It may or may not be patching.
+					await this.cancelPatchingPackage(localPackage);
 
-				// TODO: do we need to refetch from localdb or can we just reference our resource?
-				localGame = await db.games.get( localPackage.game_id );
+					// TODO: do we need to refetch from localdb or can we just reference our resource?
+					localGame = await db.games.get(localPackage.game_id);
 
-				// Make sure we're clean.
-				// TODO: do we need to clean update state?
-				this.setPackageUninstalling( localPackage );
-				await db.packages.put( localPackage );
+					// Make sure we're clean.
+					// TODO: do we need to clean update state?
+					this.setPackageUninstalling(localPackage);
+					await db.packages.put(localPackage);
 
-				// TODO: verify result of uninstallation? Roll back?
-				await this._uninstallPackage( localPackage.id );
+					// TODO: verify result of uninstallation? Roll back?
+					await this._uninstallPackage(localPackage.id);
 
-				// Get the number of packages in this game.
-				const count = await db.packages.where( 'game_id' ).equals( localPackage.game_id ).count();
+					// Get the number of packages in this game.
+					const count = await db.packages
+						.where('game_id')
+						.equals(localPackage.game_id)
+						.count();
 
-				// Note that some times a game is removed before the package (really weird cases).
-				// We still want the remove to go through, so be sure to skip this situation.
-				// If this is the last package for the game, remove the game since we no longer need it.
-				if ( localGame && count <= 1 ) {
-					await db.games.delete( localGame.id );
+					// Note that some times a game is removed before the package (really weird cases).
+					// We still want the remove to go through, so be sure to skip this situation.
+					// If this is the last package for the game, remove the game since we no longer need it.
+					if (localGame && count <= 1) {
+						await db.games.delete(localGame.id);
+					}
+
+					await db.packages.delete(localPackage.id);
+
+					if (!wasInstalling) {
+						Growls.success(
+							'Removed ' +
+								(localPackage.title ||
+									(localGame ? localGame.title : 'the package')) +
+								' from your computer.',
+							'Package Removed',
+						);
+					}
+				} catch (err) {
+					console.error(err);
+
+					if (wasInstalling) {
+						Growls.error('Could not stop the installation.');
+					} else {
+						Growls.error(
+							'Could not remove ' +
+								(localPackage.title ||
+									(localGame ? localGame.title : 'the package')) +
+								'.',
+							'Remove Failed',
+						);
+					}
+
+					this.setPackageRemoveState([
+						localPackage,
+						LocalDbPackage.REMOVE_FAILED,
+					]);
+					await db.packages.put(localPackage);
+					this.unsetCurrentlyUninstalling(localPackage);
 				}
+			},
+		);
 
-				await db.packages.delete( localPackage.id );
-
-				if ( !wasInstalling ) {
-					Growls.success(
-						'Removed '
-							+ (localPackage.title || (localGame ? localGame.title : 'the package'))
-							+ ' from your computer.',
-						'Package Removed'
-					);
-				}
-			}
-			catch ( err ) {
-				console.error( err );
-
-				if ( wasInstalling ) {
-					Growls.error( 'Could not stop the installation.' );
-				}
-				else {
-					Growls.error(
-						'Could not remove '
-							+ (localPackage.title || (localGame ? localGame.title : 'the package'))
-							+ '.',
-						'Remove Failed'
-					);
-				}
-
-				this.setPackageRemoveState( [ localPackage, LocalDbPackage.REMOVE_FAILED ] );
-				await db.packages.put( localPackage );
-				this.unsetCurrentlyUninstalling( localPackage );
-			}
-		} );
-
-		this.setCurrentlyUninstalling( [ localPackage, uninstallingPromise ] );
+		this.setCurrentlyUninstalling([localPackage, uninstallingPromise]);
 		return uninstallingPromise;
 	}
 
 	@VuexAction
-	async _uninstallPackage( packageId: Actions['clientLibrary/_uninstallPackage'] )
-	{
+	async _uninstallPackage(
+		packageId: Actions['clientLibrary/_uninstallPackage'],
+	) {
 		const localPackage = this.packagesById[packageId];
-		if ( !localPackage ) {
-			throw new Error( 'Package isn\'t installed' );
+		if (!localPackage) {
+			throw new Error("Package isn't installed");
 		}
 
 		// TODO: verify that package is currently uninstallable? (not currently installing or playing)
-		return Uninstaller.uninstall( localPackage ).promise;
+		return Uninstaller.uninstall(localPackage).promise;
 	}
 
 	@VuexMutation
-	setGameData( [localGame, game]: Mutations['clientLibrary/setGameData'] )
-	{
+	setGameData([localGame, game]: Mutations['clientLibrary/setGameData']) {
 		localGame.id = game.id;
 		localGame.title = game.title;
 		localGame.slug = game.slug;
@@ -618,22 +729,43 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	setPackageData( [localPackage, _package, release, build, launchOptions]: Mutations['clientLibrary/setPackageData'] )
-	{
-		_setPackageData( localPackage, _package, release, build, launchOptions );
+	setPackageData(
+		[
+			localPackage,
+			_package,
+			release,
+			build,
+			launchOptions,
+		]: Mutations['clientLibrary/setPackageData'],
+	) {
+		_setPackageData(localPackage, _package, release, build, launchOptions);
 	}
 
 	@VuexMutation
-	setPackageUpdateData( [localPackage, _package, release, build, launchOptions]: Mutations['clientLibrary/setPackageUpdateData'] )
-	{
+	setPackageUpdateData(
+		[
+			localPackage,
+			_package,
+			release,
+			build,
+			launchOptions,
+		]: Mutations['clientLibrary/setPackageUpdateData'],
+	) {
 		localPackage.update = new LocalDbPackage();
-		_setPackageData( localPackage.update, _package, release, build, launchOptions );
+		_setPackageData(
+			localPackage.update,
+			_package,
+			release,
+			build,
+			launchOptions,
+		);
 		localPackage.update_state = LocalDbPackage.PATCH_PENDING;
 	}
 
 	@VuexMutation
-	setPackageInstalled( localPackage: Mutations['clientLibrary/setPackageInstalled'] )
-	{
+	setPackageInstalled(
+		localPackage: Mutations['clientLibrary/setPackageInstalled'],
+	) {
 		// Remove any stuff only needed while installing.
 		localPackage.install_state = null;
 		localPackage.download_progress = null;
@@ -643,12 +775,13 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	setPackageUpdated( localPackage: Mutations['clientLibrary/setPackageUpdated'] )
-	{
+	setPackageUpdated(
+		localPackage: Mutations['clientLibrary/setPackageUpdated'],
+	) {
 		// Copy the new package into this one.
 		// this.assign( this.update );
 		// TODO: validate Object.assign is good enough a replacement for model.assign
-		Object.assign( localPackage, localPackage.update );
+		Object.assign(localPackage, localPackage.update);
 
 		// Remove any stuff only needed while updating.
 		localPackage.update = null;
@@ -660,8 +793,9 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	setPackageUninstalling( localPackage: Mutations['clientLibrary/setPackageUninstalling'] )
-	{
+	setPackageUninstalling(
+		localPackage: Mutations['clientLibrary/setPackageUninstalling'],
+	) {
 		// TODO: do we need to clean update state?
 		localPackage.install_state = null;
 		localPackage.download_progress = null;
@@ -672,65 +806,78 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	setPackageInstallState( [localPackage, state]: Mutations['clientLibrary/setPackageInstallState'] )
-	{
+	setPackageInstallState(
+		[localPackage, state]: Mutations['clientLibrary/setPackageInstallState'],
+	) {
 		localPackage.install_state = state;
 	}
 
 	@VuexMutation
-	setPackageUpdateState( [localPackage, state]: Mutations['clientLibrary/setPackageUpdateState'] )
-	{
+	setPackageUpdateState(
+		[localPackage, state]: Mutations['clientLibrary/setPackageUpdateState'],
+	) {
 		localPackage.update_state = state;
 	}
 
 	@VuexMutation
-	setPackageRemoveState( [localPackage, state]: Mutations['clientLibrary/setPackageRemoveState'] )
-	{
+	setPackageRemoveState(
+		[localPackage, state]: Mutations['clientLibrary/setPackageRemoveState'],
+	) {
 		localPackage.remove_state = state;
 	}
 
 	@VuexMutation
-	setPackageInstallDir( [localPackage, dir]: Mutations['clientLibrary/setPackageInstallDir'] )
-	{
+	setPackageInstallDir(
+		[localPackage, dir]: Mutations['clientLibrary/setPackageInstallDir'],
+	) {
 		localPackage.install_dir = dir;
 	}
 
 	@VuexMutation
-	setPackagePatchQueued( [localPackage, queued]: Mutations['clientLibrary/setPackagePatchQueued'] )
-	{
+	setPackagePatchQueued(
+		[localPackage, queued]: Mutations['clientLibrary/setPackagePatchQueued'],
+	) {
 		localPackage.patch_queued = queued;
 	}
 
 	@VuexMutation
-	setPackagePatchPaused( [localPackage, paused]: Mutations['clientLibrary/setPackagePatchPaused'] )
-	{
+	setPackagePatchPaused(
+		[localPackage, paused]: Mutations['clientLibrary/setPackagePatchPaused'],
+	) {
 		localPackage.patch_paused = paused;
 	}
 
 	@VuexMutation
-	setPackageDownloadProgress( [localPackage, progress]: Mutations['clientLibrary/setPackageDownloadProgress'] )
-	{
+	setPackageDownloadProgress(
+		[
+			localPackage,
+			progress,
+		]: Mutations['clientLibrary/setPackageDownloadProgress'],
+	) {
 		localPackage.download_progress = progress;
 	}
 
 	@VuexMutation
-	setPackageUnpackProgress( [localPackage, progress]: Mutations['clientLibrary/setPackageUnpackProgress'] )
-	{
+	setPackageUnpackProgress(
+		[
+			localPackage,
+			progress,
+		]: Mutations['clientLibrary/setPackageUnpackProgress'],
+	) {
 		localPackage.unpack_progress = progress;
 	}
 
 	@VuexGetter
-	findActiveForGame( gameId: number )
-	{
+	findActiveForGame(gameId: number) {
 		const packages = this.packagesByGameId[gameId];
 
-		if ( !packages || !packages.length ) {
+		if (!packages || !packages.length) {
 			return null;
 		}
 
-		for ( let i = 0; i < packages.length; i++ ) {
-			if ( packages[ i ].install_state ) {
-				return packages[ i ];
+		for (let i = 0; i < packages.length; i++) {
+			if (packages[i].install_state) {
+				return packages[i];
 			}
 		}
 
@@ -738,17 +885,16 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexGetter
-	searchInstalledGames( query: string )
-	{
-		let games = this.games.filter( ( game ) => fuzzysearch( query.toLowerCase(), game.title.toLowerCase() ) );
+	searchInstalledGames(query: string) {
+		let games = this.games.filter(game =>
+			fuzzysearch(query.toLowerCase(), game.title.toLowerCase()),
+		);
 
-		if ( games.length > 0 ) {
-			games = games
-				.sort( ( a, b ) => stringSort( a.title, b.title ) )
-				.slice( 0, 3 );  // Only return top 3.
+		if (games.length > 0) {
+			games = games.sort((a, b) => stringSort(a.title, b.title)).slice(0, 3); // Only return top 3.
 		}
 
-		return Promise.resolve( games );
+		return Promise.resolve(games);
 	}
 }
 
@@ -757,9 +903,8 @@ function _setPackageData(
 	_package: GamePackage,
 	release: GameRelease,
 	build: GameBuild,
-	launchOptions: GameBuildLaunchOption[]
-)
-{
+	launchOptions: GameBuildLaunchOption[],
+) {
 	localPackage.id = _package.id;
 	localPackage.game_id = _package.game_id;
 	localPackage.title = _package.title;
@@ -794,16 +939,16 @@ function _setPackageData(
 	// All launch options are passed in.
 	// Let's just pull the ones for our build.
 	const _launchOptions: typeof LocalDbPackage.prototype.launch_options = [];
-	for ( let launchOption of launchOptions ) {
-		if ( launchOption.game_build_id !== build.id ) {
+	for (let launchOption of launchOptions) {
+		if (launchOption.game_build_id !== build.id) {
 			continue;
 		}
 
-		_launchOptions.push( {
+		_launchOptions.push({
 			id: launchOption.id,
 			os: launchOption.os,
 			executable_path: launchOption.executable_path,
-		} );
+		});
 	}
 	localPackage.launch_options = _launchOptions;
 }

@@ -25,8 +25,7 @@ import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago
 		AppTooltip,
 	},
 })
-export default class RouteDashGamesManage extends Vue
-{
+export default class RouteDashGamesManage extends Vue {
 	@RouteState game: RouteStore['game'];
 	@RouteState isWizard: RouteStore['isWizard'];
 
@@ -35,23 +34,19 @@ export default class RouteDashGamesManage extends Vue
 	Game = Game;
 
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/dash/developer/games/' + route.params.id );
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest('/web/dash/developer/games/' + route.params.id);
 	}
 
-	created()
-	{
-		this.$store.registerModule( 'route', new RouteStore() );
+	created() {
+		this.$store.registerModule('route', new RouteStore());
 	}
 
-	routed()
-	{
-		this.populate( this.$payload );
+	routed() {
+		this.populate(this.$payload);
 	}
 
-	destroyed()
-	{
-		this.$store.unregisterModule( 'route' );
+	destroyed() {
+		this.$store.unregisterModule('route');
 	}
 }

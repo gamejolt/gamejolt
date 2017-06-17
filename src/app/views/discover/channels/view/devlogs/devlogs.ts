@@ -15,28 +15,25 @@ import { AppGameGrid } from '../../../../../components/game/grid/grid';
 	components: {
 		AppGameListing,
 		AppGameGrid,
-	}
+	},
 })
-export default class RouteDiscoverChannelsViewDevlogs extends Vue
-{
+export default class RouteDiscoverChannelsViewDevlogs extends Vue {
 	@Prop() shouldShowAds: boolean;
 
 	// Devlogs don't have filters.
 	listing: GameListingContainer | null = null;
 
-	@BeforeRouteEnter( { cache: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
+	@BeforeRouteEnter({ cache: true })
+	routeEnter(this: undefined, route: VueRouter.Route) {
 		const filtering = new GameFilteringContainer();
 		return Api.sendRequest(
-			`/web/discover/channels/devlogs/${ route.params.channel }?`
-			+ filtering.getQueryString( route ),
+			`/web/discover/channels/devlogs/${route.params.channel}?` +
+				filtering.getQueryString(route),
 		);
 	}
 
-	routed()
-	{
+	routed() {
 		this.listing = new GameListingContainer();
-		this.listing.processPayload( this.$route, this.$payload );
+		this.listing.processPayload(this.$route, this.$payload);
 	}
 }

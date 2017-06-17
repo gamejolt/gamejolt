@@ -1,3 +1,3 @@
-angular.module( 'App.Client.InstallProgress', [] );
+angular.module('App.Client.InstallProgress', []);
 
-require( './install-progress-directive' );
+require('./install-progress-directive');

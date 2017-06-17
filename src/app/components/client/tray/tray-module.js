@@ -1,3 +1,3 @@
-angular.module( 'App.Client.Tray', [] );
+angular.module('App.Client.Tray', []);
 
-require( './tray-service' );
+require('./tray-service');

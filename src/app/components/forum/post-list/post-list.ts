@@ -14,17 +14,15 @@ import { AppMessageThread } from '../../../../lib/gj-lib-client/components/messa
 		AppForumPostListItem,
 	},
 })
-export class AppForumPostList extends Vue
-{
-	@Prop( ForumTopic ) topic: ForumTopic;
-	@Prop( Array ) posts: ForumPost[];
+export class AppForumPostList extends Vue {
+	@Prop(ForumTopic) topic: ForumTopic;
+	@Prop(Array) posts: ForumPost[];
 
 	// No longer showing this.
-	@Prop( Object ) userPostCounts: any;
+	@Prop(Object) userPostCounts: any;
 
 	// Bubble it up.
-	onReplied( ...args: any[] )
-	{
-		this.$emit( 'replied', ...args );
+	onReplied(...args: any[]) {
+		this.$emit('replied', ...args);
 	}
 }

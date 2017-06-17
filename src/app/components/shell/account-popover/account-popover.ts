@@ -34,38 +34,37 @@ import { ClientControl as _ClientControl } from '../../client/control/client.ser
 		currency,
 	},
 })
-export class AppShellAccountPopover extends Vue
-{
+export class AppShellAccountPopover extends Vue {
 	@State app: AppStore;
 
 	walletAmount: number | false = false;
 
 	env = Environment;
-	screen = makeObservableService( Screen );
-	conn = makeObservableService( Connection );
-	ClientControl: typeof _ClientControl | null = GJ_IS_CLIENT ? require( '../../client/control/client.service').ClientControl : null;
+	screen = makeObservableService(Screen);
+	conn = makeObservableService(Connection);
+	ClientControl: typeof _ClientControl | null = GJ_IS_CLIENT
+		? require('../../client/control/client.service').ClientControl
+		: null;
 
 	@Action logout: Store['logout'];
 
-	onShow()
-	{
-		this.$emit( 'shown' );
+	onShow() {
+		this.$emit('shown');
 		this.getWallet();
 	}
 
-	onHide()
-	{
-		this.$emit( 'hidden' );
+	onHide() {
+		this.$emit('hidden');
 	}
 
-	showToken()
-	{
+	showToken() {
 		UserTokenModal.show();
 	}
 
-	async getWallet()
-	{
-		const response = await Api.sendRequest( '/web/dash/funds/wallet', { detach: true } );
+	async getWallet() {
+		const response = await Api.sendRequest('/web/dash/funds/wallet', {
+			detach: true,
+		});
 		this.walletAmount = response.amount;
 	}
 }

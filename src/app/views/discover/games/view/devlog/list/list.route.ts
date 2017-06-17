@@ -5,5 +5,5 @@ export const routeDiscoverGamesViewDevlogList: VueRouter.RouteConfig = {
 	name: 'discover.games.view.devlog.list',
 	path: 'devlog',
 	props: true,
-	component: () => asyncComponentLoader( $import( './list' ) ),
+	component: () => asyncComponentLoader($import('./list')),
 };

@@ -1,3 +1,3 @@
-angular.module( 'App.Client.Info', [] );
+angular.module('App.Client.Info', []);
 
-require( './info-service' );
+require('./info-service');

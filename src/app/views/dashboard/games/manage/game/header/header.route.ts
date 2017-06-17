@@ -5,5 +5,5 @@ export const routeDashGamesManageGameHeader: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.game.header',
 	path: 'header',
 	props: true,
-	component: () => asyncComponentLoader( $import( './header' ) ),
+	component: () => asyncComponentLoader($import('./header')),
 };

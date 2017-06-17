@@ -4,6 +4,4 @@ import * as View from '!view!./invalid-key.html';
 
 @View
 @Component({})
-export class AppInvalidKey extends Vue
-{
-}
+export class AppInvalidKey extends Vue {}

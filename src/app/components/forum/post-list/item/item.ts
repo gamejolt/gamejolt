@@ -39,7 +39,7 @@ import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components
 		FormForumPost,
 
 		// Since it's recursive it needs to be able to resolve itself.
-		AppForumPostListItem: () => Promise.resolve( AppForumPostListItem ),
+		AppForumPostListItem: () => Promise.resolve(AppForumPostListItem),
 	},
 	directives: {
 		AppTooltip,
@@ -50,12 +50,11 @@ import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components
 		number,
 	},
 })
-export class AppForumPostListItem extends Vue
-{
-	@Prop( ForumTopic ) topic: ForumTopic;
-	@Prop( ForumPost ) post: ForumPost;
-	@Prop( Boolean ) isReply: boolean;
-	@Prop( Boolean ) showReplies: boolean;
+export class AppForumPostListItem extends Vue {
+	@Prop(ForumTopic) topic: ForumTopic;
+	@Prop(ForumPost) post: ForumPost;
+	@Prop(Boolean) isReply: boolean;
+	@Prop(Boolean) showReplies: boolean;
 
 	@State app: Store['app'];
 
@@ -72,30 +71,26 @@ export class AppForumPostListItem extends Vue
 	number = number;
 	Environment = Environment;
 
-	get id()
-	{
+	get id() {
 		return (this.isReply ? this.post.parent_post_id + '-' : '') + this.post.id;
 	}
 
-	get isActive()
-	{
+	get isActive() {
 		// We never mark ourselves as active if we're showing as a reply.
 		return !this.parent && this.$route.hash === '#forum-post-' + this.id;
 	}
 
-	@Watch( 'isActive', { immediate: true } )
-	async onActiveChanged( isActive: boolean )
-	{
+	@Watch('isActive', { immediate: true })
+	async onActiveChanged(isActive: boolean) {
 		// Wait till we're compiled into the DOM.
 		await this.$nextTick();
-		if ( isActive ) {
-			Scroll.to( this.$el );
+		if (isActive) {
+			Scroll.to(this.$el);
 		}
 	}
 
-	toggleReplies()
-	{
-		if ( this.isShowingReplies ) {
+	toggleReplies() {
+		if (this.isShowingReplies) {
 			this.isShowingReplies = false;
 			return;
 		}
@@ -103,8 +98,7 @@ export class AppForumPostListItem extends Vue
 		this.loadReplies();
 	}
 
-	async loadReplies()
-	{
+	async loadReplies() {
 		try {
 			const payload = await Api.sendRequest(
 				'/web/forums/posts/replies/' + this.post.id,
@@ -112,95 +106,86 @@ export class AppForumPostListItem extends Vue
 				{ noErrorRedirect: true },
 			);
 
-			this.replies = ForumPost.populate( payload.replies );
+			this.replies = ForumPost.populate(payload.replies);
 			this.totalReplyCount = payload.repliesCount || 0;
 
-			if ( !this.isShowingReplies ) {
+			if (!this.isShowingReplies) {
 				this.isShowingReplies = true;
 			}
-		}
-		catch ( e ) {
+		} catch (e) {
 			Growls.error(
-				this.$gettext( `Couldn't load replies for some reason.` ),
-				this.$gettext( `Loading Failed` ),
+				this.$gettext(`Couldn't load replies for some reason.`),
+				this.$gettext(`Loading Failed`),
 			);
 		}
 	}
 
-	async loadParentPost()
-	{
-		if ( this.showingParent ) {
+	async loadParentPost() {
+		if (this.showingParent) {
 			this.showingParent = false;
 			return;
 		}
 
 		// Don't load it in more than once.
-		if ( this.parent ) {
+		if (this.parent) {
 			this.showingParent = true;
 		}
 
 		try {
-			const payload = await Api.sendRequest( '/web/forums/posts/parent/' + this.post.id, { noErrorRedirect: true } );
-			this.parent = new ForumPost( payload.parent );
+			const payload = await Api.sendRequest(
+				'/web/forums/posts/parent/' + this.post.id,
+				{ noErrorRedirect: true },
+			);
+			this.parent = new ForumPost(payload.parent);
 			this.showingParent = true;
-		}
-		catch ( e ) {
+		} catch (e) {
 			// The post was probably removed.
 			this.parent = null;
 			this.showingParent = true;
 		}
 	}
 
-	reply()
-	{
+	reply() {
 		this.isReplying = true;
 	}
 
-	closeReply()
-	{
+	closeReply() {
 		this.isReplying = false;
 	}
 
-	onReplied( newPost: ForumPost, response: any )
-	{
+	onReplied(newPost: ForumPost, response: any) {
 		this.isReplying = false;
 
 		// If the replies list is open, refresh it.
-		if ( this.isShowingReplies ) {
+		if (this.isShowingReplies) {
 			this.loadReplies();
 		}
 
-		this.$emit( 'replied', newPost, response );
+		this.$emit('replied', newPost, response);
 	}
 
-	edit()
-	{
+	edit() {
 		this.isEditing = true;
 		Popover.hideAll();
 	}
 
-	closeEdit()
-	{
+	closeEdit() {
 		this.isEditing = false;
 	}
 
-	report()
-	{
-		ReportModal.show( this.post );
+	report() {
+		ReportModal.show(this.post);
 	}
 
-	onInviewChange( isInView: boolean )
-	{
-		if ( isInView && this.post.notification ) {
-
+	onInviewChange(isInView: boolean) {
+		if (isInView && this.post.notification) {
 			// Don't wait for success before updating the view.
 			this.post.notification.$read();
 			this.post.notification = undefined;
 		}
 	}
 
-	copyPermalink()
-	{
-		Clipboard.copy( this.post.getPermalink() );
+	copyPermalink() {
+		Clipboard.copy(this.post.getPermalink());
 	}
 }

@@ -13,21 +13,20 @@ import { FormTwitterEmail } from '../../../../../components/forms/twitter-email/
 		FormTwitterEmail,
 	},
 })
-export default class RouteAuthLinkedAccountTwitterFinalize extends Vue
-{
-	@Prop( String ) state: string;
+export default class RouteAuthLinkedAccountTwitterFinalize extends Vue {
+	@Prop(String) state: string;
 
-	created()
-	{
-		Meta.title = this.$gettext( 'auth.linked_account.twitter.finalize.page_title' );
+	created() {
+		Meta.title = this.$gettext(
+			'auth.linked_account.twitter.finalize.page_title',
+		);
 	}
 
-	onSubmitted()
-	{
+	onSubmitted() {
 		Growls.success(
-			this.$gettext( 'auth.linked_account.twitter.created_growl' ),
-			this.$gettext( 'auth.linked_account.twitter.created_growl_title' )
+			this.$gettext('auth.linked_account.twitter.created_growl'),
+			this.$gettext('auth.linked_account.twitter.created_growl_title'),
 		);
-		setTimeout( () => Auth.redirectDashboard(), 3000 );
+		setTimeout(() => Auth.redirectDashboard(), 3000);
 	}
 }

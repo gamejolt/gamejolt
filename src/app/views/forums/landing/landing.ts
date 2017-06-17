@@ -12,7 +12,6 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 		AppPageHeader,
 	},
 })
-export default class RouteForumsLanding extends Vue
-{
-	Screen = makeObservableService( Screen );
+export default class RouteForumsLanding extends Vue {
+	Screen = makeObservableService(Screen);
 }

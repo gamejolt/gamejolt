@@ -40,6 +40,7 @@
     "jstimezonedetect": "1.0.6",
     "nw-builder": "gamejolt/nw-builder#skip-merge-app",
     "pofile": "1.0.8",
+    "prettier": "1.4.4",
     "qs": "6.4.0",
     "reflect-metadata": "0.1.10",
     "rxjs": "5.3.3",

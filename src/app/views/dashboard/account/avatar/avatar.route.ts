@@ -5,5 +5,5 @@ export const routeDashAccountAvatar: VueRouter.RouteConfig = {
 	name: 'dash.account.avatar',
 	path: 'profile/avatar',
 	props: true,
-	component: () => asyncComponentLoader( $import( './avatar' ) ),
+	component: () => asyncComponentLoader($import('./avatar')),
 };

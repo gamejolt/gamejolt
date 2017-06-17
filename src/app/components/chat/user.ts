@@ -1,5 +1,4 @@
-export class ChatUser
-{
+export class ChatUser {
 	id: number;
 	roomId: number;
 	username: string;
@@ -12,13 +11,11 @@ export class ChatUser
 	isMod: 'owner' | 'moderator' | false = false;
 	permissionLevel: number;
 
-	constructor( data: Partial<ChatUser> = {} )
-	{
-		Object.assign( this, data );
+	constructor(data: Partial<ChatUser> = {}) {
+		Object.assign(this, data);
 	}
 
-	get url()
-	{
+	get url() {
 		return `/@${this.username}`;
 	}
 }

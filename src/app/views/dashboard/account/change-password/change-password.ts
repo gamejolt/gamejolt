@@ -12,13 +12,11 @@ import { FormChangePassword } from '../../../../components/forms/change-password
 		FormChangePassword,
 	},
 })
-export default class RouteDashAccountChangePassword extends Vue
-{
+export default class RouteDashAccountChangePassword extends Vue {
 	@RouteMutation setHeading: RouteStore['setHeading'];
 
-	created()
-	{
-		Meta.title = this.$gettext( `dash.change_pass.page_title` );
-		this.setHeading( this.$gettext( 'dash.change_pass.heading' ) );
+	created() {
+		Meta.title = this.$gettext(`dash.change_pass.page_title`);
+		this.setHeading(this.$gettext('dash.change_pass.heading'));
 	}
 }

@@ -12,7 +12,7 @@ import { routeDiscoverGamesViewDownloadSoundtrack } from './download/soundtrack/
 export const routeDiscoverGamesView: VueRouter.RouteConfig = {
 	path: ':slug/:id(\\d+)',
 	props: true,
-	component: () => asyncComponentLoader( $import( './view' ) ),
+	component: () => asyncComponentLoader($import('./view')),
 	children: [
 		routeDiscoverGamesViewOverview,
 		routeDiscoverGamesViewDevlogList,

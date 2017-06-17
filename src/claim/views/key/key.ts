@@ -22,44 +22,42 @@ import { Store } from '../../store/index';
 		AppInvalidKey,
 	},
 })
-export default class RouteKey extends Vue
-{
-	@Prop( String ) accessKey: string;
+export default class RouteKey extends Vue {
+	@Prop(String) accessKey: string;
 
 	@State app: Store['app'];
 
 	invalidKey = false;
 	type = '';
 
-	get loginUrl()
-	{
-		return Environment.authBaseUrl + '/login?redirect='
-			+ encodeURIComponent( this.$route.fullPath );
+	get loginUrl() {
+		return (
+			Environment.authBaseUrl +
+			'/login?redirect=' +
+			encodeURIComponent(this.$route.fullPath)
+		);
 	}
 
-	get component()
-	{
-		if ( this.type === 'bundle' && !this.$route.query.bundleGameId ) {
+	get component() {
+		if (this.type === 'bundle' && !this.$route.query.bundleGameId) {
 			return AppKeyBundle;
 		}
 		return AppKeyGame;
 	}
 
 	@BeforeRouteEnter({ cache: true })
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
+	routeEnter(this: undefined, route: VueRouter.Route) {
 		let url = '/claim/view/' + route.params.accessKey;
 
-		if ( route.query.bundleGameId ) {
+		if (route.query.bundleGameId) {
 			url += '?game_id=' + route.query.bundleGameId;
 		}
 
-		return Api.sendRequest( url );
+		return Api.sendRequest(url);
 	}
 
-	routed()
-	{
-		if ( this.$payload.error === 'invalid-key' ) {
+	routed() {
+		if (this.$payload.error === 'invalid-key') {
 			this.invalidKey = true;
 			return;
 		}
@@ -67,9 +65,8 @@ export default class RouteKey extends Vue
 		this.type = this.$payload.type;
 	}
 
-	async claim( resource: Game | GameBundle )
-	{
-		console.log( 'claim', resource );
+	async claim(resource: Game | GameBundle) {
+		console.log('claim', resource);
 		const resourceName = resource instanceof GameBundle ? 'bundle' : 'game';
 
 		const result = await ModalConfirm.show(
@@ -80,25 +77,26 @@ export default class RouteKey extends Vue
 		);
 
 		const user = this.app.user;
-		if ( !result || !user ) {
+		if (!result || !user) {
 			return;
 		}
 
 		try {
-			await Api.sendRequest( '/web/library/claim-key', { key: this.accessKey } );
+			await Api.sendRequest('/web/library/claim-key', { key: this.accessKey });
 
-			if ( resource instanceof GameBundle ) {
-				window.location.href = Environment.wttfBaseUrl
-					+ `/library/bundle/${ resource.slug }/${resource.id}/games`;
+			if (resource instanceof GameBundle) {
+				window.location.href =
+					Environment.wttfBaseUrl +
+					`/library/bundle/${resource.slug}/${resource.id}/games`;
+			} else if (resource instanceof Game) {
+				window.location.href =
+					Environment.wttfBaseUrl + `/profile/${user.slug}/${user.id}/owned`;
 			}
-			else if ( resource instanceof Game ) {
-				window.location.href = Environment.wttfBaseUrl
-					+ `/profile/${ user.slug }/${ user.id }/owned`;
-			}
-		}
-		catch ( _e ) {
+		} catch (_e) {
 			Growls.error(
-				this.$gettext( `For some reason we couldn't claim this into your account!` ),
+				this.$gettext(
+					`For some reason we couldn't claim this into your account!`,
+				),
 			);
 		}
 	}

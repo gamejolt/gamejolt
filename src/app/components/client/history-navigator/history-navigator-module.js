@@ -1,4 +1,4 @@
-angular.module( 'App.Client.HistoryNavigator', [] );
+angular.module('App.Client.HistoryNavigator', []);
 
-require( './history-navigator-directive' );
-require( './history-navigator-service' );
+require('./history-navigator-directive');
+require('./history-navigator-service');

@@ -6,16 +6,14 @@ import * as template from '!html-loader!./featured.html';
 	selector: 'gj-discover-home-featured',
 	template,
 })
-export class FeaturedComponent
-{
-	@Input( '<featuredItems' ) items: any[];
+export class FeaturedComponent {
+	@Input('<featuredItems') items: any[];
 
 	itemsSmUp: any[];
 
 	screen = Screen;
 
-	constructor()
-	{
-		this.itemsSmUp = this.items.slice( 2 );
+	constructor() {
+		this.itemsSmUp = this.items.slice(2);
 	}
 }

@@ -3,16 +3,13 @@ import { GameListingContainer } from '../../../../components/game/listing/listin
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 
 @Injectable()
-export class GamesCtrl
-{
+export class GamesCtrl {
 	listing: GameListingContainer;
 
-	constructor(
-		@Inject( 'filteringContainer' ) public filteringContainer: any,
-	)
-	{
+	constructor(@Inject('filteringContainer') public filteringContainer: any) {
 		Meta.title = 'Browse indie game devlogs';
-		Meta.description = 'Find the latest and greatest games in development and follow their devlog feeds!';
+		Meta.description =
+			'Find the latest and greatest games in development and follow their devlog feeds!';
 
 		Meta.fb.title = Meta.title;
 		Meta.twitter.title = Meta.title;
@@ -20,8 +17,8 @@ export class GamesCtrl
 		Meta.fb.description = Meta.description;
 		Meta.twitter.description = Meta.description;
 
-		Meta.twitter.image = require( '../social.png' );
+		Meta.twitter.image = require('../social.png');
 
-		this.listing = new GameListingContainer( filteringContainer );
+		this.listing = new GameListingContainer(filteringContainer);
 	}
 }

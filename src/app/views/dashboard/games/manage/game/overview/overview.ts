@@ -30,8 +30,7 @@ import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/numbe
 		number,
 	},
 })
-export default class RouteDashGamesManageGameOverview extends Vue
-{
+export default class RouteDashGamesManageGameOverview extends Vue {
 	@RouteState game: RouteStore['game'];
 	@RouteState canPublish: RouteStore['canPublish'];
 
@@ -69,17 +68,16 @@ export default class RouteDashGamesManageGameOverview extends Vue
 	// } );
 
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/dash/developer/games/overview/' + route.params.id );
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest(
+			'/web/dash/developer/games/overview/' + route.params.id,
+		);
 	}
 
-	routed()
-	{
-		Meta.title = this.$gettextInterpolate(
-			'Manage %{ game }',
-			{ game: this.game.title },
-		);
+	routed() {
+		Meta.title = this.$gettextInterpolate('Manage %{ game }', {
+			game: this.game.title,
+		});
 
 		this.viewCount = this.$payload.viewCount || 0;
 		this.downloadCount = this.$payload.downloadCount || 0;
@@ -92,9 +90,7 @@ export default class RouteDashGamesManageGameOverview extends Vue
 	// This is called if they loaded up the page and had builds in a processing
 	// state but then the progress polling eventually found that they were all
 	// processed. We just want to give the green light.
-	onAllBuildsProcessed()
-	{
+	onAllBuildsProcessed() {
 		this.hasBuildsProcessing = false;
 	}
 }
-

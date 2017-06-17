@@ -12,10 +12,9 @@ import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago
 		AppTimeAgo,
 	},
 })
-export class AppFiresidePostThumbnail extends Vue
-{
-	@Prop( FiresidePost ) post: FiresidePost;
+export class AppFiresidePostThumbnail extends Vue {
+	@Prop(FiresidePost) post: FiresidePost;
 
-	noThumb: string = require( './no-thumb.png' );
+	noThumb: string = require('./no-thumb.png');
 	Environment = Environment;
 }

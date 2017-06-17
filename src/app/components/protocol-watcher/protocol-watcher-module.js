@@ -1,3 +1,3 @@
-angular.module( 'App.ProtocolWatcher', [] );
+angular.module('App.ProtocolWatcher', []);
 
-require( './protocol-watcher-service' );
+require('./protocol-watcher-service');

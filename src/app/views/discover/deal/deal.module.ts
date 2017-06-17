@@ -3,11 +3,9 @@ import { RouteDealComponent } from './deal.component';
 import { lazyBundle } from '../../../../lib/gj-lib-client/utils/angular-facade';
 
 @NgModule({
-	declarations: [
-		RouteDealComponent
-	],
+	declarations: [RouteDealComponent],
 })
-export class RouteModule { }
+export class RouteModule {}
 
-lazyBundle( RouteModule );
+lazyBundle(RouteModule);
 export default RouteDealComponent;

@@ -9,11 +9,9 @@ import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/gr
 import { Auth } from '../../../../../../lib/gj-lib-client/components/auth/auth.service';
 
 @Component({})
-export default class RouteAuthLinkedAccountFacebookCallback extends Vue
-{
+export default class RouteAuthLinkedAccountFacebookCallback extends Vue {
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
+	routeEnter(this: undefined, route: VueRouter.Route) {
 		const { code, state } = route.query;
 		return Api.sendRequest(
 			'/web/auth/facebook/callback?code=' + code + '&state=' + state,
@@ -21,38 +19,38 @@ export default class RouteAuthLinkedAccountFacebookCallback extends Vue
 		);
 	}
 
-	routed()
-	{
-		if ( !this.$payload.success ) {
-
-			if ( this.$payload.reason && this.$payload.reason === 'no-email' ) {
-				Growls.error( {
+	routed() {
+		if (!this.$payload.success) {
+			if (this.$payload.reason && this.$payload.reason === 'no-email') {
+				Growls.error({
 					sticky: true,
-					message: this.$gettext( `auth.linked_account.facebook.no_email_growl` ),
-				} );
-			}
-			else if ( this.$payload.reason && this.$payload.reason === 'duplicate-email' ) {
-				Growls.error( {
+					message: this.$gettext(`auth.linked_account.facebook.no_email_growl`),
+				});
+			} else if (
+				this.$payload.reason &&
+				this.$payload.reason === 'duplicate-email'
+			) {
+				Growls.error({
 					sticky: true,
-					message: this.$gettext( `auth.linked_account.facebook.duplicate_email_growl` ),
-				} );
-			}
-			else {
-				Growls.error( {
+					message: this.$gettext(
+						`auth.linked_account.facebook.duplicate_email_growl`,
+					),
+				});
+			} else {
+				Growls.error({
 					sticky: true,
-					title: this.$gettext( 'Login Failed' ),
-					message: this.$gettext( 'auth.linked_account.facebook.failed_growl' ),
-				} );
+					title: this.$gettext('Login Failed'),
+					message: this.$gettext('auth.linked_account.facebook.failed_growl'),
+				});
 			}
-			this.$router.push( { name: 'auth.join' } );
+			this.$router.push({ name: 'auth.join' });
 			return;
 		}
 
 		Auth.redirectDashboard();
 	}
 
-	render( h: Vue.CreateElement )
-	{
-		return h( AuthLinkedAccountProcessing );
+	render(h: Vue.CreateElement) {
+		return h(AuthLinkedAccountProcessing);
 	}
 }

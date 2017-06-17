@@ -17,20 +17,19 @@ import { GameFilteringContainer } from '../../../../components/game/filtering/co
 		AppGameGrid,
 	},
 })
-export default class RouteDiscoverDevlogsGames extends Vue
-{
+export default class RouteDiscoverDevlogsGames extends Vue {
 	listing: GameListingContainer | null = null;
 
-	@BeforeRouteEnter( { cache: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
+	@BeforeRouteEnter({ cache: true })
+	routeEnter(this: undefined, route: VueRouter.Route) {
 		const filteringContainer = new GameFilteringContainer();
-		return Api.sendRequest( '/web/discover/devlogs/games?' + filteringContainer.getQueryString( route ) );
+		return Api.sendRequest(
+			'/web/discover/devlogs/games?' + filteringContainer.getQueryString(route),
+		);
 	}
 
-	routed()
-	{
+	routed() {
 		this.listing = new GameListingContainer();
-		this.listing.processPayload( this.$route, this.$payload );
+		this.listing.processPayload(this.$route, this.$payload);
 	}
 }

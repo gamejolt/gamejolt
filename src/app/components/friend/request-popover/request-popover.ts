@@ -13,7 +13,7 @@ import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-h
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { Store } from '../../../store/index';
 
-const COUNT_INTERVAL = (5 * 60 * 1000);  // 5 minutes.
+const COUNT_INTERVAL = 5 * 60 * 1000; // 5 minutes.
 const INITIAL_LAG = 3000;
 
 type Tab = 'requests' | 'pending';
@@ -29,10 +29,9 @@ type Tab = 'requests' | 'pending';
 	},
 	directives: {
 		AppTooltip,
-	}
+	},
 })
-export class AppFriendRequestPopover extends Vue
-{
+export class AppFriendRequestPopover extends Vue {
 	@State app: Store['app'];
 
 	private isShown = false;
@@ -44,88 +43,76 @@ export class AppFriendRequestPopover extends Vue
 	private pending: any[] = [];
 	private countInterval: NodeJS.Timer;
 
-	mounted()
-	{
+	mounted() {
 		// Fetch count right away.
-		setTimeout( () => this.fetchCount(), INITIAL_LAG );
+		setTimeout(() => this.fetchCount(), INITIAL_LAG);
 
 		// Fetch counts every X minutes afterwards.
-		this.countInterval = setInterval( () => this.fetchCount(), COUNT_INTERVAL );
+		this.countInterval = setInterval(() => this.fetchCount(), COUNT_INTERVAL);
 	}
 
-	destroyed()
-	{
-		clearInterval( this.countInterval );
+	destroyed() {
+		clearInterval(this.countInterval);
 	}
 
-	onFocus()
-	{
+	onFocus() {
 		this.isShown = true;
 		this.fetchRequests();
-		this.$emit( 'focused' );
+		this.$emit('focused');
 	}
 
-	onBlur()
-	{
+	onBlur() {
 		this.isShown = false;
-		this.$emit( 'blurred' );
+		this.$emit('blurred');
 	}
 
-	private setCount( count: number )
-	{
+	private setCount(count: number) {
 		this.requestsCount = count;
-		this.$emit( 'count', this.requestsCount );
+		this.$emit('count', this.requestsCount);
 	}
 
-	async fetchCount()
-	{
+	async fetchCount() {
 		const response = await UserFriendship.fetchCount();
-		this.setCount( response.requestCount );
+		this.setCount(response.requestCount);
 	}
 
-	async fetchRequests()
-	{
+	async fetchRequests() {
 		const response = await UserFriendship.fetchRequests();
 		this.requests = response.requests;
-		this.setCount( this.requests.length );
+		this.setCount(this.requests.length);
 		this.pending = response.pending;
 		this.isLoading = false;
 	}
 
-	setActiveTab( tab: Tab )
-	{
+	setActiveTab(tab: Tab) {
 		this.activeTab = tab;
 	}
 
-	async acceptRequest( request: UserFriendship )
-	{
-		await UserFriendshipHelper.acceptRequest( request );
-		this.removeRequest( request );
+	async acceptRequest(request: UserFriendship) {
+		await UserFriendshipHelper.acceptRequest(request);
+		this.removeRequest(request);
 	}
 
-	async rejectRequest( request: UserFriendship )
-	{
-		if ( !await UserFriendshipHelper.rejectRequest( request ) ) {
+	async rejectRequest(request: UserFriendship) {
+		if (!await UserFriendshipHelper.rejectRequest(request)) {
 			return;
 		}
-		this.removeRequest( request );
+		this.removeRequest(request);
 	}
 
-	async cancelRequest( request: UserFriendship )
-	{
-		if ( !await UserFriendshipHelper.cancelRequest( request ) ) {
+	async cancelRequest(request: UserFriendship) {
+		if (!await UserFriendshipHelper.cancelRequest(request)) {
 			return;
 		}
-		this.removeRequest( request );
+		this.removeRequest(request);
 	}
 
-	private removeRequest( request: UserFriendship )
-	{
-		const index = this.requests.findIndex( ( item ) => item.id === request.id );
-		if ( index !== -1 ) {
-			this.requests.splice( index, 1 );
+	private removeRequest(request: UserFriendship) {
+		const index = this.requests.findIndex(item => item.id === request.id);
+		if (index !== -1) {
+			this.requests.splice(index, 1);
 		}
 
-		this.setCount( this.requests.length );
+		this.setCount(this.requests.length);
 	}
 }

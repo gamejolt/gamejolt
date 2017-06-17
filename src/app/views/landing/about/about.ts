@@ -8,16 +8,15 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 
 @View
 @Component({})
-export default class RouteLandingAbout extends Vue
-{
-	assetUrls = importContext( require.context( './', false, /\.png$/ ) );
-	Screen = makeObservableService( Screen );
+export default class RouteLandingAbout extends Vue {
+	assetUrls = importContext(require.context('./', false, /\.png$/));
+	Screen = makeObservableService(Screen);
 
 	colors = {
-		'ccff00': 'fill-green',
+		ccff00: 'fill-green',
 		'2f7f6f': 'fill-dark-green',
 		'31d6ff': 'fill-blue',
-		'ff3fac': 'fill-pink',
+		ff3fac: 'fill-pink',
 	};
 
 	grays = {
@@ -26,7 +25,7 @@ export default class RouteLandingAbout extends Vue
 		'3e3e3e': 'fill-dark',
 		'555555': 'fill-gray',
 		'7e7e7e': 'fill-light',
-		'c1c1c1': 'fill-lighter',
-		'eeeeee': 'fill-lightest',
+		c1c1c1: 'fill-lighter',
+		eeeeee: 'fill-lightest',
 	};
 }

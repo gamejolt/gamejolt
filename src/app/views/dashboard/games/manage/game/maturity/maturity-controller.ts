@@ -5,29 +5,28 @@ import { Scroll } from '../../../../../../../../lib/gj-lib-client/components/scr
 import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 
 @Injectable()
-export class MaturityCtrl
-{
+export class MaturityCtrl {
 	constructor(
-		@Inject( 'App' ) app: App,
-		@Inject( '$scope' ) private $scope: ng.IScope,
-		@Inject( 'FormDashboardGameWizard' ) private wizard: FormDashboardGameWizard,
-		@Inject( 'gettextCatalog' ) private gettextCatalog: ng.gettext.gettextCatalog
-	)
-	{
-		app.title = gettextCatalog.getString( 'dash.games.maturity.page_title', { game: $scope['manageCtrl'].game.title } );
+		@Inject('App') app: App,
+		@Inject('$scope') private $scope: ng.IScope,
+		@Inject('FormDashboardGameWizard') private wizard: FormDashboardGameWizard,
+		@Inject('gettextCatalog') private gettextCatalog: ng.gettext.gettextCatalog,
+	) {
+		app.title = gettextCatalog.getString('dash.games.maturity.page_title', {
+			game: $scope['manageCtrl'].game.title,
+		});
 	}
 
-	onSaved()
-	{
-		if ( this.$scope['manageCtrl'].isWizard ) {
-			this.wizard.goNext( this.$scope['manageCtrl'].game );
+	onSaved() {
+		if (this.$scope['manageCtrl'].isWizard) {
+			this.wizard.goNext(this.$scope['manageCtrl'].game);
 			return;
 		}
 
 		Growls.success(
-			this.gettextCatalog.getString( 'dash.games.maturity.saved_growl' ),
-			this.gettextCatalog.getString( 'dash.games.maturity.saved_growl_title' )
+			this.gettextCatalog.getString('dash.games.maturity.saved_growl'),
+			this.gettextCatalog.getString('dash.games.maturity.saved_growl_title'),
 		);
-		Scroll.to( 0 );
+		Scroll.to(0);
 	}
 }

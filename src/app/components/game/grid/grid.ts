@@ -27,21 +27,21 @@ let idCounter = 0;
 		AppTrackEvent,
 	},
 })
-export class AppGameGrid extends Vue
-{
-	@Prop( { type: Array, default: () => [] } ) games: Game[];
-	@Prop( Number ) gamesCount?: number;
-	@Prop( Number ) perPage?: number;
-	@Prop( Boolean ) truncateToFit?: boolean;
-	@Prop( Boolean ) scrollable?: boolean;
-	@Prop( String ) eventLabel?: string;
+export class AppGameGrid extends Vue {
+	@Prop({ type: Array, default: () => [] })
+	games: Game[];
+	@Prop(Number) gamesCount?: number;
+	@Prop(Number) perPage?: number;
+	@Prop(Boolean) truncateToFit?: boolean;
+	@Prop(Boolean) scrollable?: boolean;
+	@Prop(String) eventLabel?: string;
 
 	currentPage = 1;
 
 	id = ++idCounter;
 
 	number = number;
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 	Scroll = Scroll;
 
 	/**
@@ -49,31 +49,27 @@ export class AppGameGrid extends Vue
 	 * games. This will trim the last few games off if it can't fit within the
 	 * rows completely.
 	 */
-	get processedGames()
-	{
+	get processedGames() {
 		const truncateToFit = this.truncateToFit;
 		const breakpoint = this.Screen.breakpoint;
 		const games = this.games;
 
-		if ( !truncateToFit ) {
+		if (!truncateToFit) {
 			return games;
 		}
 
 		let rowSize: number;
-		if ( breakpoint === 'sm' ) {
+		if (breakpoint === 'sm') {
 			rowSize = GameGridRowSizeSm;
-		}
-		else if ( breakpoint === 'md' ) {
+		} else if (breakpoint === 'md') {
 			rowSize = GameGridRowSizeMd;
-		}
-		else if ( breakpoint === 'lg' ) {
+		} else if (breakpoint === 'lg') {
 			rowSize = GameGridRowSizeLg;
-		}
-		else {
+		} else {
 			rowSize = games.length;
 		}
 
-		let chunkSize = Math.max( 1, Math.floor( games.length / rowSize ) ) * rowSize;
-		return games.slice( 0, chunkSize );
+		let chunkSize = Math.max(1, Math.floor(games.length / rowSize)) * rowSize;
+		return games.slice(0, chunkSize);
 	}
 }

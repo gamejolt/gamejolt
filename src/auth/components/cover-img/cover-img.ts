@@ -6,17 +6,15 @@ import { ImgHelper } from '../../../lib/gj-lib-client/components/img/helper/help
 
 @View
 @Component({})
-export class AppCoverImg extends Vue
-{
-	@Prop( String ) imgUrl: string;
+export class AppCoverImg extends Vue {
+	@Prop(String) imgUrl: string;
 
 	isLoaded = false;
 
-	@Watch( 'imgUrl', { immediate: true } )
-	async onChanged()
-	{
+	@Watch('imgUrl', { immediate: true })
+	async onChanged() {
 		this.isLoaded = false;
-		await ImgHelper.loaded( this.imgUrl );
+		await ImgHelper.loaded(this.imgUrl);
 		this.isLoaded = true;
 	}
 }

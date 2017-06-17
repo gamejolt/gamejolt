@@ -10,6 +10,4 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 		AppTooltip,
 	},
 })
-export default class RouteLandingGameApi extends Vue
-{
-}
+export default class RouteLandingGameApi extends Vue {}

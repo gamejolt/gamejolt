@@ -9,7 +9,7 @@
 /// <reference path="./src/lib/gj-lib-client/typings/vue/tooltip.d.ts" />
 /// <reference path="./src/lib/gj-lib-client/typings/api.d.ts" />
 
-declare interface Window {
+interface Window {
 	_: _.LoDashStatic;
 	_gjStartTime: number;
 	Stripe: StripeStatic;

@@ -35,9 +35,8 @@ import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/component
 		AppNoAutoscroll,
 	},
 })
-export default class RouteDiscoverGamesViewScoresList extends Vue
-{
-	@Prop( String ) type: 'best' | 'user';
+export default class RouteDiscoverGamesViewScoresList extends Vue {
+	@Prop(String) type: 'best' | 'user';
 
 	@RouteState game: RouteStore['game'];
 
@@ -50,59 +49,61 @@ export default class RouteDiscoverGamesViewScoresList extends Vue
 	userScorePlacement = 0;
 	userScoreExperience = 0;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
 	// Even.
-	get scoresLeft()
-	{
-		return this.scores.filter( ( _score, i ) => i % 2 === 0 );
+	get scoresLeft() {
+		return this.scores.filter((_score, i) => i % 2 === 0);
 	}
 
 	// Odd.
-	get scoresRight()
-	{
-		return this.scores.filter( ( _score, i ) => i % 2 === 1 );
+	get scoresRight() {
+		return this.scores.filter((_score, i) => i % 2 === 1);
 	}
 
 	@BeforeRouteEnter({ cache: true })
-	beforeRoute( this: undefined, route: VueRouter.Route )
-	{
+	beforeRoute(this: undefined, route: VueRouter.Route) {
 		let query = '';
-		if ( parseInt( route.query.page, 10 ) > 1 ) {
+		if (parseInt(route.query.page, 10) > 1) {
 			query = '?page=' + route.query.page;
 		}
 
-		const url = '/web/discover/games/scores'
-			+ '/' + route.params.id
-			+ '/' + route.params.tableId
-			+ '/' + route.params.type;
+		const url =
+			'/web/discover/games/scores' +
+			'/' +
+			route.params.id +
+			'/' +
+			route.params.tableId +
+			'/' +
+			route.params.type;
 
-		return Api.sendRequest( url + query );
+		return Api.sendRequest(url + query);
 	}
 
-	routed()
-	{
-		Meta.title = this.$gettextInterpolate(
-			`Scores for %{ game }`,
-			{ game: this.game.title },
-		);
+	routed() {
+		Meta.title = this.$gettextInterpolate(`Scores for %{ game }`, {
+			game: this.game.title,
+		});
 
-		this.scoreTables = GameScoreTable.populate( this.$payload.scoreTables );
-		this.scoreTable = this.$payload.scoreTable ? new GameScoreTable( this.$payload.scoreTable ) : null;
-		this.scores = UserGameScore.populate( this.$payload.scores );
-		this.userBestScore = this.$payload.scoresUserBestScore ? new UserGameScore( this.$payload.scoresUserBestScore ) : null;
+		this.scoreTables = GameScoreTable.populate(this.$payload.scoreTables);
+		this.scoreTable = this.$payload.scoreTable
+			? new GameScoreTable(this.$payload.scoreTable)
+			: null;
+		this.scores = UserGameScore.populate(this.$payload.scores);
+		this.userBestScore = this.$payload.scoresUserBestScore
+			? new UserGameScore(this.$payload.scoresUserBestScore)
+			: null;
 		this.userScorePlacement = this.$payload.scoresUserScorePlacement || 0;
 		this.userScoreExperience = this.$payload.scoresUserScoreExperience || 0;
 	}
 
-	changeTable( table: GameScoreTable )
-	{
+	changeTable(table: GameScoreTable) {
 		Scroll.shouldAutoScroll = false;
 
-		this.$router.push( {
+		this.$router.push({
 			name: 'discover.games.view.scores.list',
 			params: { tableId: table.id + '' },
-		} );
+		});
 
 		Popover.hideAll();
 	}

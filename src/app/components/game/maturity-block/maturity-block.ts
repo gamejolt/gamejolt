@@ -18,53 +18,47 @@ import { Store } from '../../../store/index';
 		AppGameOgrs,
 	},
 })
-export class AppGameMaturityBlock extends Vue
-{
-	@Prop( Game ) game: Game;
+export class AppGameMaturityBlock extends Vue {
+	@Prop(Game) game: Game;
 
 	@State app: Store['app'];
 
 	isLoaded = false;
-	isBlocking: boolean = Settings.get( 'restricted-browsing' );
+	isBlocking: boolean = Settings.get('restricted-browsing');
 
-	get shouldBlock()
-	{
+	get shouldBlock() {
 		return this.game.tigrs_age === 3 && this.isBlocking;
 	}
 
-	created()
-	{
-		if ( Environment.isPrerender || GJ_IS_SSR ) {
+	created() {
+		if (Environment.isPrerender || GJ_IS_SSR) {
 			this.isLoaded = true;
 			this.isBlocking = false;
 		}
 	}
 
-	@Watch( 'game.tigrs_age', { immediate: true } )
-	onWatch( val: number )
-	{
-		if ( typeof val === 'undefined' ) {
+	@Watch('game.tigrs_age', { immediate: true })
+	onWatch(val: number) {
+		if (typeof val === 'undefined') {
 			return;
 		}
 
 		this.isLoaded = true;
 
 		// If it's the dev of the game, just show immediately.
-		if ( this.app.user && this.app.user.id === this.game.developer.id ) {
+		if (this.app.user && this.app.user.id === this.game.developer.id) {
 			this.isBlocking = false;
 		}
 	}
 
-	proceed()
-	{
+	proceed() {
 		this.isBlocking = false;
-		Scroll.to( 0, { animate: false } );
-		Analytics.trackEvent( 'restricted-browsing', 'unblock' );
+		Scroll.to(0, { animate: false });
+		Analytics.trackEvent('restricted-browsing', 'unblock');
 	}
 
-	removeRestriction()
-	{
-		Settings.set( 'restricted-browsing', false );
+	removeRestriction() {
+		Settings.set('restricted-browsing', false);
 		this.proceed();
 	}
 }

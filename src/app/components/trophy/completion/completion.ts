@@ -16,16 +16,14 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 		number,
 	},
 })
-export class AppTrophyCompletion extends Vue
-{
-	@Prop( Number ) total: number;
-	@Prop( Number ) achieved: number;
-	@Prop( Number ) experience: number;
+export class AppTrophyCompletion extends Vue {
+	@Prop(Number) total: number;
+	@Prop(Number) achieved: number;
+	@Prop(Number) experience: number;
 
 	number = number;
 
-	get completionRate()
-	{
-		return Math.ceil( this.achieved / this.total * 100 );
+	get completionRate() {
+		return Math.ceil(this.achieved / this.total * 100);
 	}
 }

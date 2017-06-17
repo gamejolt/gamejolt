@@ -14,25 +14,21 @@ import { FormGameThumbnail } from '../../../../../../components/forms/game/thumb
 		FormGameThumbnail,
 	},
 })
-export default class RouteDashGamesManageGameThumbnail extends Vue
-{
+export default class RouteDashGamesManageGameThumbnail extends Vue {
 	@RouteState game: RouteStore['game'];
 	@RouteState isWizard: RouteStore['isWizard'];
 
-	created()
-	{
-		Meta.title = this.$gettextInterpolate(
-			`Edit Thumbnail for %{ game }`,
-			{ game: this.game.title },
-		);
+	created() {
+		Meta.title = this.$gettextInterpolate(`Edit Thumbnail for %{ game }`, {
+			game: this.game.title,
+		});
 	}
 
-	onSaved()
-	{
+	onSaved() {
 		Growls.success(
-			this.$gettext( 'dash.games.thumbnail.saved_growl' ),
-			this.$gettext( 'dash.games.thumbnail.saved_growl_title' ),
+			this.$gettext('dash.games.thumbnail.saved_growl'),
+			this.$gettext('dash.games.thumbnail.saved_growl_title'),
 		);
-		Scroll.to( 0 );
+		Scroll.to(0);
 	}
 }

@@ -1,12 +1,9 @@
 /*@ngInject*/
-export function SiteSettingsFormFactory(
-	Form: any,
-)
-{
-	const form = new Form( {
+export function SiteSettingsFormFactory(Form: any) {
+	const form = new Form({
 		model: 'Site',
-		template: require( './settings.html' ),
-	} );
+		template: require('./settings.html'),
+	});
 
 	return form;
 }

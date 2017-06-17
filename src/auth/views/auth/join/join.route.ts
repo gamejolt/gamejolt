@@ -5,5 +5,5 @@ export const routeAuthJoin: VueRouter.RouteConfig = {
 	name: 'auth.join',
 	path: 'join',
 	props: true,
-	component: () => asyncComponentLoader( $import( './join' ) ),
+	component: () => asyncComponentLoader($import('./join')),
 };

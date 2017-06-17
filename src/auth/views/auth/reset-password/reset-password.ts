@@ -15,32 +15,27 @@ import { FormResetPassword } from '../../../components/forms/reset-password/rese
 		FormResetPassword,
 	},
 })
-export default class RouteAuthResetPassword extends Vue
-{
-	@Prop( String ) userId: string;
-	@Prop( String ) token: string;
+export default class RouteAuthResetPassword extends Vue {
+	@Prop(String) userId: string;
+	@Prop(String) token: string;
 
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
+	routeEnter(this: undefined, route: VueRouter.Route) {
 		// Will return a 404 if the key isn't correct for this user.
-		return Api.sendRequest(
-			'/web/auth/check-reset-key/' + route.params.userId,
-			{ key: route.params.token },
-		);
+		return Api.sendRequest('/web/auth/check-reset-key/' + route.params.userId, {
+			key: route.params.token,
+		});
 	}
 
-	created()
-	{
-		Meta.title = this.$gettext( 'auth.reset_password.page_title' );
+	created() {
+		Meta.title = this.$gettext('auth.reset_password.page_title');
 	}
 
-	onSubmitted()
-	{
+	onSubmitted() {
 		Growls.success(
-			this.$gettext( 'auth.reset_password.success_growl' ),
-			this.$gettext( 'auth.reset_password.success_growl_title' )
+			this.$gettext('auth.reset_password.success_growl'),
+			this.$gettext('auth.reset_password.success_growl_title'),
 		);
-		this.$router.push( { name: 'auth.login' } );
+		this.$router.push({ name: 'auth.login' });
 	}
 }

@@ -19,15 +19,12 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 		number,
 	},
 })
-export class AppUserLevelWidget extends Vue
-{
-	@Prop( User ) user: User;
+export class AppUserLevelWidget extends Vue {
+	@Prop(User) user: User;
 
-	get tooltip()
-	{
-		return this.$gettextInterpolate(
-			'%{ percentage }% progress to next level',
-			{ percentage: this.user.level_next_percentage },
-		);
+	get tooltip() {
+		return this.$gettextInterpolate('%{ percentage }% progress to next level', {
+			percentage: this.user.level_next_percentage,
+		});
 	}
 }

@@ -14,28 +14,24 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 		AppJolticon,
 	},
 })
-export class AppGameFilteringTags extends Vue
-{
-	@Prop( Object ) filtering: GameFilteringContainer;
+export class AppGameFilteringTags extends Vue {
+	@Prop(Object) filtering: GameFilteringContainer;
 
 	GameFilteringContainer = GameFilteringContainer;
-	Genre = makeObservableService( Genre );
+	Genre = makeObservableService(Genre);
 
-	get genre()
-	{
+	get genre() {
 		return this.$route.params.category;
 	}
 
-	removeFilterOption( filter: string, option: any )
-	{
-		Analytics.trackEvent( 'game-filtering', 'remove', filter + '-' + option );
+	removeFilterOption(filter: string, option: any) {
+		Analytics.trackEvent('game-filtering', 'remove', filter + '-' + option);
 
-		this.filtering.unsetFilter( filter, option );
+		this.filtering.unsetFilter(filter, option);
 		this.filtering.onChanged();
 	}
 
-	clearGenre()
-	{
-		this.$router.push( { name: 'discover.games.list._fetch' } );
+	clearGenre() {
+		this.$router.push({ name: 'discover.games.list._fetch' });
 	}
 }

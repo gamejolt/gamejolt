@@ -18,7 +18,11 @@ import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { Store } from '../../../store/index';
 import { AppShellSidebarCollectionList } from './collection-list';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { LibraryStore, LibraryAction, LibraryState } from '../../../store/library';
+import {
+	LibraryStore,
+	LibraryAction,
+	LibraryState,
+} from '../../../store/library';
 
 @View
 @Component({
@@ -39,8 +43,7 @@ import { LibraryStore, LibraryAction, LibraryState } from '../../../store/librar
 		number,
 	},
 })
-export class AppShellSidebar extends Vue
-{
+export class AppShellSidebar extends Vue {
 	@State app: Store['app'];
 	@State isBootstrapped: Store['isBootstrapped'];
 	@State notificationCount: Store['notificationCount'];
@@ -59,58 +62,46 @@ export class AppShellSidebar extends Vue
 	playlistFilterQuery = '';
 	openFolders: string[] = [];
 
-	channels = [
-		'horror',
-		'multiplayer',
-		'retro',
-		'survival',
-		'fangame',
-		'fnaf',
-	];
+	channels = ['horror', 'multiplayer', 'retro', 'survival', 'fangame', 'fnaf'];
 
 	genres = {
-		'action': 'Action',
-		'adventure': 'Adventure',
-		'arcade': 'Arcade',
-		'platformer': 'Platformer',
-		'puzzle': 'Puzzle',
-		'rpg': 'RPG',
-		'shooter': 'Shooter',
-		'sports': 'Sports',
+		action: 'Action',
+		adventure: 'Adventure',
+		arcade: 'Arcade',
+		platformer: 'Platformer',
+		puzzle: 'Puzzle',
+		rpg: 'RPG',
+		shooter: 'Shooter',
+		sports: 'Sports',
 		'strategy-sim': 'Strategy/Sim',
-		'other': 'Other',
+		other: 'Other',
 	};
 
 	Environment = Environment;
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
 	// Show hot when logged in, otherwise default to best.
-	get defaultBrowseSection()
-	{
+	get defaultBrowseSection() {
 		return this.app.user ? 'hot' : 'best';
 	}
 
-	get filteredBundleCollections()
-	{
-		return this.bundleCollections.sort( ( a, b ) => stringSort( a.name, b.name ) );
+	get filteredBundleCollections() {
+		return this.bundleCollections.sort((a, b) => stringSort(a.name, b.name));
 	}
 
-	toggleFolder( key: string )
-	{
-		const index = this.openFolders.indexOf( key );
-		if ( index === -1 ) {
-			this.openFolders.push( key );
-		}
-		else {
-			this.openFolders.splice( index, 1 );
+	toggleFolder(key: string) {
+		const index = this.openFolders.indexOf(key);
+		if (index === -1) {
+			this.openFolders.push(key);
+		} else {
+			this.openFolders.splice(index, 1);
 		}
 	}
 
-	async showAddPlaylistModal()
-	{
+	async showAddPlaylistModal() {
 		const collection = await this.newPlaylist();
-		if ( collection ) {
-			this.$router.push( collection.routeLocation );
+		if (collection) {
+			this.$router.push(collection.routeLocation);
 		}
 	}
 }

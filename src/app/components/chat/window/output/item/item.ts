@@ -21,10 +21,9 @@ import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/
 		date,
 	},
 })
-export class AppChatWindowOutputItem extends Vue
-{
-	@Prop( ChatMessage ) message: ChatMessage;
-	@Prop( ChatRoom ) room: ChatRoom;
+export class AppChatWindowOutputItem extends Vue {
+	@Prop(ChatMessage) message: ChatMessage;
+	@Prop(ChatRoom) room: ChatRoom;
 
 	@State chat: ChatClient;
 
@@ -34,29 +33,26 @@ export class AppChatWindowOutputItem extends Vue
 	date = date;
 	ChatMessage = ChatMessage;
 
-	get shouldFadeCollapse()
-	{
-		return this.message.contentRaw.split( '\n' ).length > 6
-			|| this.message.contentRaw.length >= 500;
+	get shouldFadeCollapse() {
+		return (
+			this.message.contentRaw.split('\n').length > 6 ||
+			this.message.contentRaw.length >= 500
+		);
 	}
 
-	get canModerate()
-	{
-		return this.chat.canModerate( this.room, this.message.user );
+	get canModerate() {
+		return this.chat.canModerate(this.room, this.message.user);
 	}
 
-	get loggedOn()
-	{
-		return date( this.message.loggedOn, 'medium' );
+	get loggedOn() {
+		return date(this.message.loggedOn, 'medium');
 	}
 
-	muteUser()
-	{
-		this.chat.mute( this.message.user.id, this.room.id );
+	muteUser() {
+		this.chat.mute(this.message.user.id, this.room.id);
 	}
 
-	removeMessage( msgId: number )
-	{
-		this.chat.removeMessage( msgId, this.room.id );
+	removeMessage(msgId: number) {
+		this.chat.removeMessage(msgId, this.room.id);
 	}
 }

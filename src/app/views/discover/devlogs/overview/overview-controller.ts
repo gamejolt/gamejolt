@@ -7,20 +7,16 @@ import { ActivityFeedService } from '../../../../components/activity/feed/feed-s
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 
 @Injectable()
-export class OverviewCtrl
-{
+export class OverviewCtrl {
 	games: any[];
 	posts: ActivityFeedContainer;
 
 	isLearnMoreExpanded = false;
 
-	constructor(
-		@Inject( 'App' ) app: App,
-		@Inject( 'payload' ) payload: any
-	)
-	{
+	constructor(@Inject('App') app: App, @Inject('payload') payload: any) {
 		app.title = 'Indie game devlogs';
-		Meta.description = 'Find the latest and greatest games in development and follow their devlog feeds!';
+		Meta.description =
+			'Find the latest and greatest games in development and follow their devlog feeds!';
 
 		Meta.fb.title = app.title;
 		Meta.twitter.title = app.title;
@@ -28,9 +24,11 @@ export class OverviewCtrl
 		Meta.fb.description = Meta.description;
 		Meta.twitter.description = Meta.description;
 
-		Meta.twitter.image = require( '../social.png' );
+		Meta.twitter.image = require('../social.png');
 
-		this.games = Game.populate( payload.games );
-		this.posts = ActivityFeedService.bootstrap( FiresidePost.populate( payload.posts ) );
+		this.games = Game.populate(payload.games);
+		this.posts = ActivityFeedService.bootstrap(
+			FiresidePost.populate(payload.posts),
+		);
 	}
 }

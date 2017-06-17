@@ -8,7 +8,7 @@ export const routeDashMain: VueRouter.RouteConfig = {
 	name: 'dash.main',
 	path: '/dashboard',
 	props: true,
-	component: () => asyncComponentLoader( $import( './main' ) ),
+	component: () => asyncComponentLoader($import('./main')),
 	children: [
 		routeDashMainOverview,
 		routeDashMainPurchasesList,

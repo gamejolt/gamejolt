@@ -4,8 +4,7 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
 import { appStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 
-export class GameCollection extends Model
-{
+export class GameCollection extends Model {
 	static readonly TYPE_FOLLOWED = 'followed';
 	static readonly TYPE_DEVELOPER = 'developer';
 	static readonly TYPE_OWNED = 'owned';
@@ -30,63 +29,57 @@ export class GameCollection extends Model
 	owner: User;
 	playlist?: GamePlaylist;
 
-	constructor( data: any = {} )
-	{
-		super( data );
+	constructor(data: any = {}) {
+		super(data);
 
 		// This is a fake ID that can be used in track by's and what not.
-		if ( data.id && data.type ) {
+		if (data.id && data.type) {
 			this._id = data.type + '-' + data.id;
 		}
 
-		if ( data.owner ) {
-			this.owner = new User( data.owner );
+		if (data.owner) {
+			this.owner = new User(data.owner);
 		}
 
-		if ( data.playlist ) {
-			this.playlist = new GamePlaylist( data.playlist );
+		if (data.playlist) {
+			this.playlist = new GamePlaylist(data.playlist);
 		}
 	}
 
-	get routeLocation()
-	{
+	get routeLocation() {
 		return {
 			name: this.getSref(),
 			params: this.getSrefParams(),
 		};
 	}
 
-	get isOwner()
-	{
+	get isOwner() {
 		const user = appStore.state.user;
 		return !!(user && this.owner && user.id === this.owner.id);
 	}
 
-	getTitle()
-	{
+	getTitle() {
 		let title = this.name;
-		if ( this.from_subscription ) {
+		if (this.from_subscription) {
 			title += ' - @' + this.owner.username;
 		}
 		return title;
 	}
 
-	getSref( includeParams?: boolean )
-	{
+	getSref(includeParams?: boolean) {
 		let sref = 'library.collection.' + this.type;
 
-		if ( includeParams ) {
-			sref += '(' + JSON.stringify( this.getSrefParams() ) + ')';
+		if (includeParams) {
+			sref += '(' + JSON.stringify(this.getSrefParams()) + ')';
 		}
 
 		return sref;
 	}
 
-	getSrefParams()
-	{
+	getSrefParams() {
 		let id = '' + this.id;
-		if ( id[0] === '@' ) {
-			id = id.substring( 1 );
+		if (id[0] === '@') {
+			id = id.substring(1);
 		}
 
 		return {
@@ -95,15 +88,15 @@ export class GameCollection extends Model
 		};
 	}
 
-	$follow()
-	{
-		return Api.sendRequest( '/web/library/follow/' + this.type, { id: this.id } );
+	$follow() {
+		return Api.sendRequest('/web/library/follow/' + this.type, { id: this.id });
 	}
 
-	$unfollow()
-	{
-		return Api.sendRequest( '/web/library/unfollow/' + this.type, { id: this.id } );
+	$unfollow() {
+		return Api.sendRequest('/web/library/unfollow/' + this.type, {
+			id: this.id,
+		});
 	}
 }
 
-Model.create( GameCollection );
+Model.create(GameCollection);

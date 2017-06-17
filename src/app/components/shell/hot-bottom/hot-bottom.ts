@@ -4,6 +4,4 @@ import * as View from '!view!./hot-bottom.html?style=./hot-bottom.styl';
 
 @View
 @Component({})
-export class AppShellHotBottom extends Vue
-{
-}
+export class AppShellHotBottom extends Vue {}

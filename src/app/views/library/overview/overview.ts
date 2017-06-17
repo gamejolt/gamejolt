@@ -24,8 +24,7 @@ import { LibraryState, LibraryStore } from '../../../store/library';
 		AppGameCollectionList,
 	},
 })
-export default class RouteLibraryOverview extends Vue
-{
+export default class RouteLibraryOverview extends Vue {
 	@State isBootstrapped: Store['isBootstrapped'];
 	@LibraryState followedCollection: LibraryStore['followedCollection'];
 	@LibraryState developerCollection: LibraryStore['developerCollection'];
@@ -33,16 +32,14 @@ export default class RouteLibraryOverview extends Vue
 	@LibraryState recommendedCollection: LibraryStore['recommendedCollection'];
 	@LibraryState collections: LibraryStore['collections'];
 
-	Connection = makeObservableService( Connection );
-	Screen = makeObservableService( Screen );
+	Connection = makeObservableService(Connection);
+	Screen = makeObservableService(Screen);
 
-	created()
-	{
-		Meta.title = this.$gettext( 'library.page_title' );
+	created() {
+		Meta.title = this.$gettext('library.page_title');
 	}
 
-	get collectionGroups()
-	{
+	get collectionGroups() {
 		return [
 			{
 				key: 'mainCollections',
@@ -52,7 +49,7 @@ export default class RouteLibraryOverview extends Vue
 			},
 			{
 				key: 'playlistCollections',
-				heading: this.$gettext( 'Your Playlists' ),
+				heading: this.$gettext('Your Playlists'),
 				eventLabel: 'playlist',
 				collections: this.playlistCollections,
 			},
@@ -64,55 +61,50 @@ export default class RouteLibraryOverview extends Vue
 			// },
 			{
 				key: 'followedCollections',
-				heading: this.$gettext( 'Followed Playlists' ),
+				heading: this.$gettext('Followed Playlists'),
 				eventLabel: 'followed',
 				collections: this.followedCollections,
-			}
+			},
 		];
 	}
 
-	get mainCollections()
-	{
+	get mainCollections() {
 		const main: GameCollection[] = [];
 
-		if ( this.followedCollection ) {
-			main.push( this.followedCollection );
+		if (this.followedCollection) {
+			main.push(this.followedCollection);
 		}
 
-		if ( this.developerCollection ) {
-			main.push( this.developerCollection );
+		if (this.developerCollection) {
+			main.push(this.developerCollection);
 		}
 
-		if ( this.ownedCollection ) {
-			main.push( this.ownedCollection );
+		if (this.ownedCollection) {
+			main.push(this.ownedCollection);
 		}
 
-		if ( this.recommendedCollection ) {
-			main.push( this.recommendedCollection );
+		if (this.recommendedCollection) {
+			main.push(this.recommendedCollection);
 		}
 
 		return main;
 	}
 
-	get playlistCollections()
-	{
-		return this.collections.filter( ( collection ) =>
-		{
-			if ( collection.type === 'playlist' && !collection.from_subscription ) {
+	get playlistCollections() {
+		return this.collections.filter(collection => {
+			if (collection.type === 'playlist' && !collection.from_subscription) {
 				return true;
 			}
 			return false;
-		} );
+		});
 	}
 
-	get followedCollections()
-	{
-		return this.collections.filter( ( collection ) =>
-		{
-			if ( collection.from_subscription ) {
+	get followedCollections() {
+		return this.collections.filter(collection => {
+			if (collection.from_subscription) {
 				return true;
 			}
 			return false;
-		} );
+		});
 	}
 }

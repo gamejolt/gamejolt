@@ -1,3 +1,3 @@
-angular.module( 'App.Client.MacAppMenu', [] );
+angular.module('App.Client.MacAppMenu', []);
 
-require( './mac-app-menu-service' );
+require('./mac-app-menu-service');

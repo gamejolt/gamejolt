@@ -11,15 +11,12 @@ import { FormRetrieveLogin } from '../../../components/forms/retrieve-login/retr
 		FormRetrieveLogin,
 	},
 })
-export default class RouteAuthForgot extends Vue
-{
-	created()
-	{
-		Meta.title = this.$gettext( 'auth.forgot.page_title' );
+export default class RouteAuthForgot extends Vue {
+	created() {
+		Meta.title = this.$gettext('auth.forgot.page_title');
 	}
 
-	onSubmitted()
-	{
-		this.$router.push( { name: 'auth.forgot-sent' } );
+	onSubmitted() {
+		this.$router.push({ name: 'auth.forgot-sent' });
 	}
 }

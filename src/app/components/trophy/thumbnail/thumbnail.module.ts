@@ -3,8 +3,6 @@ import { makeComponentProvider } from '../../../../lib/gj-lib-client/vue/angular
 import { AppTrophyThumbnail } from './thumbnail';
 
 @NgModule({
-	declarations: [
-		makeComponentProvider( AppTrophyThumbnail ),
-	],
+	declarations: [makeComponentProvider(AppTrophyThumbnail)],
 })
-export class TrophyThumbnailModule { }
+export class TrophyThumbnailModule {}

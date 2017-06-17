@@ -18,57 +18,51 @@ import { ChatClient } from '../../client';
 		AppFocusWhen,
 	},
 })
-export class AppChatWindowSend extends Vue
-{
+export class AppChatWindowSend extends Vue {
 	@State chat: ChatClient;
 
 	message = '';
 	multiLineMode = false;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
 	// Vue will trigger all events that match, which means the "enter" event
 	// always fires. We use this to know if we handled the event in another
 	// event handler already.
 	private handledEvent = false;
 
-	onChange()
-	{
+	onChange() {
 		// If they remove whole message, remove multi-line mode.
-		if ( this.multiLineMode && this.message.length === 0 ) {
+		if (this.multiLineMode && this.message.length === 0) {
 			this.multiLineMode = false;
 		}
 	}
 
-	async shiftEnter()
-	{
+	async shiftEnter() {
 		this.multiLineMode = true;
 		this.eventHandled();
 	}
 
-	async ctrlEnter()
-	{
+	async ctrlEnter() {
 		this.sendMessage();
 		this.eventHandled();
 	}
 
-	enter( event: Event )
-	{
-		if ( this.handledEvent ) {
+	enter(event: Event) {
+		if (this.handledEvent) {
 			return;
 		}
 
-		if ( !this.multiLineMode ) {
+		if (!this.multiLineMode) {
 			this.sendMessage();
 			event.preventDefault();
 			return;
 		}
 	}
 
-	sendMessage()
-	{
+	sendMessage() {
 		const message = this.message;
-		this.chat.queueMessage( message );
+		this.chat.queueMessage(message);
 
 		this.message = '';
 		this.multiLineMode = false;
@@ -79,8 +73,7 @@ export class AppChatWindowSend extends Vue
 	 * called. This way `enter` will know now to do anything since the event was
 	 * already handled in another handler.
 	 */
-	private async eventHandled()
-	{
+	private async eventHandled() {
 		this.handledEvent = true;
 		await this.$nextTick();
 		this.handledEvent = false;

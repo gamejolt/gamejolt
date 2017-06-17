@@ -10,6 +10,4 @@ import { AppClientTray } from '../../client/tray/tray';
 		AppClientTray,
 	},
 })
-export class AppClient extends Vue
-{
-}
+export class AppClient extends Vue {}

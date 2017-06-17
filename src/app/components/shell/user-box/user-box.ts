@@ -18,9 +18,8 @@ import { Store } from '../../../store/index';
 	},
 	filters: {
 		number,
-	}
+	},
 })
-export class AppShellUserBox extends Vue
-{
+export class AppShellUserBox extends Vue {
 	@State app: Store['app'];
 }

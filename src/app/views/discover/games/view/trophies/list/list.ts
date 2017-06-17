@@ -27,8 +27,7 @@ import { Store } from '../../../../../../store/index';
 		number,
 	},
 })
-export default class RouteDiscoverGamesViewTrophiesList extends Vue
-{
+export default class RouteDiscoverGamesViewTrophiesList extends Vue {
 	@RouteState game: RouteStore['game'];
 
 	@State app: Store['app'];
@@ -47,25 +46,28 @@ export default class RouteDiscoverGamesViewTrophiesList extends Vue
 	currentFilter = 'all';
 
 	@BeforeRouteEnter({ cache: true })
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/discover/games/trophies/' + route.params.id );
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest('/web/discover/games/trophies/' + route.params.id);
 	}
 
-	routed()
-	{
-		Meta.title = this.$gettextInterpolate(
-			`Trophies for %{ game }`,
-			{ game: this.game.title },
-		);
+	routed() {
+		Meta.title = this.$gettextInterpolate(`Trophies for %{ game }`, {
+			game: this.game.title,
+		});
 
-		this.trophies = GameTrophy.populate( this.$payload.trophies );
-		this.achieved = this.$payload.trophiesAchieved ? UserGameTrophy.populate( this.$payload.trophiesAchieved ) : [];
+		this.trophies = GameTrophy.populate(this.$payload.trophies);
+		this.achieved = this.$payload.trophiesAchieved
+			? UserGameTrophy.populate(this.$payload.trophiesAchieved)
+			: [];
 		this.experience = this.$payload.trophiesExperienceAchieved || 0;
-		this.showInvisibleTrophyMessage = this.$payload.trophiesShowInvisibleTrophyMessage || false;
+		this.showInvisibleTrophyMessage =
+			this.$payload.trophiesShowInvisibleTrophyMessage || false;
 
-		this.achievedIndexed = UserGameTrophy.indexAchieved( this.achieved );
-		this.filteredTrophies = GameTrophy.splitAchieved( this.trophies, this.achievedIndexed );
+		this.achievedIndexed = UserGameTrophy.indexAchieved(this.achieved);
+		this.filteredTrophies = GameTrophy.splitAchieved(
+			this.trophies,
+			this.achievedIndexed,
+		);
 
 		this.currentFilter = 'all';
 	}

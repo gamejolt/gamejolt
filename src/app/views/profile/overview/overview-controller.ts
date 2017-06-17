@@ -6,24 +6,22 @@ import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 @Injectable()
-export class OverviewCtrl
-{
+export class OverviewCtrl {
 	developerGames: any[];
 	youtubeChannels: YoutubeChannel[];
 	videos: CommentVideo[];
 
 	constructor(
-		@Inject( '$scope' ) $scope: any,
-		@Inject( 'App' ) app: App,
-		@Inject( 'payload' ) payload: any
-	)
-	{
-		let title = `${$scope.profileCtrl.user.display_name} (@${$scope.profileCtrl.user.username}) - `;
+		@Inject('$scope') $scope: any,
+		@Inject('App') app: App,
+		@Inject('payload') payload: any,
+	) {
+		let title = `${$scope.profileCtrl.user.display_name} (@${$scope.profileCtrl
+			.user.username}) - `;
 
-		if ( $scope.profileCtrl.user.is_gamer ) {
+		if ($scope.profileCtrl.user.is_gamer) {
 			title += 'An indie gamer';
-		}
-		else if ( $scope.profileCtrl.user.is_developer ) {
+		} else if ($scope.profileCtrl.user.is_developer) {
 			title += 'An indie game developer';
 		}
 
@@ -35,8 +33,8 @@ export class OverviewCtrl
 		Meta.twitter = payload.twitter || {};
 		Meta.twitter.title = app.title;
 
-		this.developerGames = Game.populate( payload.developerGamesTeaser );
-		this.youtubeChannels = YoutubeChannel.populate( payload.youtubeChannels );
-		this.videos = CommentVideo.populate( payload.videos );
+		this.developerGames = Game.populate(payload.developerGamesTeaser);
+		this.youtubeChannels = YoutubeChannel.populate(payload.youtubeChannels);
+		this.videos = CommentVideo.populate(payload.videos);
 	}
 }

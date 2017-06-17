@@ -27,36 +27,33 @@ import { RouteState, RouteStore } from '../../view.state';
 		AppScrollWhen,
 	},
 })
-export default class RouteDiscoverGamesViewDevlogView extends Vue
-{
+export default class RouteDiscoverGamesViewDevlogView extends Vue {
 	@Prop() postSlug: string;
 
 	@RouteState game: RouteStore['game'];
 
 	post: FiresidePost | null = null;
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter( { lazy: true, cache: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		const postHash = FiresidePost.pullHashFromUrl( route.params.postSlug );
-		return Api.sendRequest( '/web/discover/games/devlog/' + route.params.id + '/' + postHash );
+	@BeforeRouteEnter({ lazy: true, cache: true })
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		const postHash = FiresidePost.pullHashFromUrl(route.params.postSlug);
+		return Api.sendRequest(
+			'/web/discover/games/devlog/' + route.params.id + '/' + postHash,
+		);
 	}
 
-	created()
-	{
-		const hash = FiresidePost.pullHashFromUrl( this.postSlug );
-		this.post = Registry.find<FiresidePost>( 'FiresidePost', hash, 'hash' );
+	created() {
+		const hash = FiresidePost.pullHashFromUrl(this.postSlug);
+		this.post = Registry.find<FiresidePost>('FiresidePost', hash, 'hash');
 	}
 
-	routed()
-	{
-		const post = new FiresidePost( this.$payload.post );
-		if ( this.post ) {
-			this.post.assign( post );
-		}
-		else {
+	routed() {
+		const post = new FiresidePost(this.$payload.post);
+		if (this.post) {
+			this.post.assign(post);
+		} else {
 			this.post = post;
 		}
 

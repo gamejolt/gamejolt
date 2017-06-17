@@ -11,7 +11,6 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 		AppJolticon,
 	},
 })
-export default class AppChatRoomDetailsModal extends BaseModal
-{
-	@Prop( ChatRoom ) room: ChatRoom;
+export default class AppChatRoomDetailsModal extends BaseModal {
+	@Prop(ChatRoom) room: ChatRoom;
 }

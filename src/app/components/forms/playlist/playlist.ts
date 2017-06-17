@@ -11,7 +11,6 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 		AppFocusWhen,
 	},
 })
-export class FormPlaylist extends BaseForm<GamePlaylist>
-{
+export class FormPlaylist extends BaseForm<GamePlaylist> {
 	modelClass = GamePlaylist;
 }

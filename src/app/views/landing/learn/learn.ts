@@ -12,7 +12,6 @@ import { Store } from '../../../store/index';
 		AppAuthJoin,
 	},
 })
-export default class RouteLandingLearn extends Vue
-{
+export default class RouteLandingLearn extends Vue {
 	@State app: Store['app'];
 }

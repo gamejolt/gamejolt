@@ -33,7 +33,7 @@ import { HistoryModule } from '../lib/gj-lib-client/components/history/history.m
 
 @NgModule({
 	imports: [
-		require( '../lib/ui-router' ).default,
+		require('../lib/ui-router').default,
 
 		FormsModule,
 		ViewsModule,
@@ -62,16 +62,8 @@ import { HistoryModule } from '../lib/gj-lib-client/components/history/history.m
 		HistoryModule,
 		AppModuleNg1,
 	],
-	declarations: [
-		AppComponent,
-	],
-	providers: [
-		App,
-	],
-	bootstrap: [
-		AppComponent,
-	],
+	declarations: [AppComponent],
+	providers: [App],
+	bootstrap: [AppComponent],
 })
-export class AppModule
-{
-}
+export class AppModule {}

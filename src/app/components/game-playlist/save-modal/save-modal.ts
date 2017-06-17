@@ -14,18 +14,15 @@ import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
 		FormPlaylist,
 	},
 })
-export default class AppGamePlaylistSaveModal extends BaseModal
-{
-	@Prop( GameCollection ) collection?: GameCollection;
+export default class AppGamePlaylistSaveModal extends BaseModal {
+	@Prop(GameCollection) collection?: GameCollection;
 
-	onSaved( _formModel: GamePlaylist, response: any )
-	{
-		if ( this.collection ) {
-			this.collection.assign( response.gameCollection );
-			this.modal.resolve( this.collection );
-		}
-		else {
-			this.modal.resolve( new GameCollection( response.gameCollection ) );
+	onSaved(_formModel: GamePlaylist, response: any) {
+		if (this.collection) {
+			this.collection.assign(response.gameCollection);
+			this.modal.resolve(this.collection);
+		} else {
+			this.modal.resolve(new GameCollection(response.gameCollection));
 		}
 	}
 }

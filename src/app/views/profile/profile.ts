@@ -37,9 +37,8 @@ import { Store } from '../../store/index';
 		AppPopoverTrigger,
 	},
 })
-export default class RouteProfile extends Vue
-{
-	@Prop( String ) username: string;
+export default class RouteProfile extends Vue {
+	@Prop(String) username: string;
 
 	@State app: Store['app'];
 
@@ -56,21 +55,21 @@ export default class RouteProfile extends Vue
 	Environment = Environment;
 
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/profile/@' + route.params.username );
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest('/web/profile/@' + route.params.username);
 	}
 
-	routed()
-	{
-		this.user = new User( this.$payload.user );
+	routed() {
+		this.user = new User(this.$payload.user);
 
 		// TODO
 		// Location.enforce( {
 		// 	slug: this.user.slug,
 		// } );
 
-		this.headerMediaItem = this.$payload.headerMediaItem ? new MediaItem( this.$payload.headerMediaItem ) : null;
+		this.headerMediaItem = this.$payload.headerMediaItem
+			? new MediaItem(this.$payload.headerMediaItem)
+			: null;
 		this.gamesCount = this.$payload.gamesCount;
 		this.isOnline = this.$payload.isOnline;
 		this.libraryGamesCount = this.$payload.libraryGamesCount;
@@ -78,47 +77,41 @@ export default class RouteProfile extends Vue
 		// this.activeGameSession = this.$payload.activeGameSession ? new userGameSession( this.$payload.activeGameSession ) : null;
 		this.videosCount = this.$payload.videosCount || 0;
 
-		if ( this.$payload.userFriendship ) {
-			this.userFriendship = new UserFriendship( this.$payload.userFriendship );
+		if (this.$payload.userFriendship) {
+			this.userFriendship = new UserFriendship(this.$payload.userFriendship);
 		}
 	}
 
-	acceptFriendRequest()
-	{
-		UserFriendshipHelper.acceptRequest( this.userFriendship! );
+	acceptFriendRequest() {
+		UserFriendshipHelper.acceptRequest(this.userFriendship!);
 	}
 
-	async sendFriendRequest()
-	{
-		this.userFriendship = await UserFriendshipHelper.sendRequest( this.user! );
+	async sendFriendRequest() {
+		this.userFriendship = await UserFriendshipHelper.sendRequest(this.user!);
 	}
 
-	async cancelFriendRequest()
-	{
-		if ( !await UserFriendshipHelper.cancelRequest( this.userFriendship! ) ) {
+	async cancelFriendRequest() {
+		if (!await UserFriendshipHelper.cancelRequest(this.userFriendship!)) {
 			return;
 		}
 		this.userFriendship = null;
 	}
 
-	async rejectFriendRequest()
-	{
-		if ( !await UserFriendshipHelper.rejectRequest( this.userFriendship! ) ) {
+	async rejectFriendRequest() {
+		if (!await UserFriendshipHelper.rejectRequest(this.userFriendship!)) {
 			return;
 		}
 		this.userFriendship = null;
 	}
 
-	async removeFriend()
-	{
-		if ( !await UserFriendshipHelper.removeFriend( this.userFriendship! ) ) {
+	async removeFriend() {
+		if (!await UserFriendshipHelper.removeFriend(this.userFriendship!)) {
 			return;
 		}
 		this.userFriendship = null;
 	}
 
-	report()
-	{
-		ReportModal.show( this.user! );
+	report() {
+		ReportModal.show(this.user!);
 	}
 }

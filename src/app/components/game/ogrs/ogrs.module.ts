@@ -5,8 +5,8 @@ import { AppGameOgrs } from './ogrs';
 
 @NgModule({
 	declarations: [
-		makeComponentProvider( AppGameOgrsTag ),
-		makeComponentProvider( AppGameOgrs ),
+		makeComponentProvider(AppGameOgrsTag),
+		makeComponentProvider(AppGameOgrs),
 	],
 })
-export class GameOgrsModule { }
+export class GameOgrsModule {}

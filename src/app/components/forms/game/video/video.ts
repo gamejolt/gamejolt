@@ -2,26 +2,25 @@ import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./video.html';
 
 import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
-import { BaseForm, FormOnInit } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 
 @View
 @Component({
-	components: {
-
-	},
+	components: {},
 })
-export class FormGameVideo extends BaseForm<GameVideo> implements FormOnInit
-{
-	@Prop( Game ) game: Game;
+export class FormGameVideo extends BaseForm<GameVideo> implements FormOnInit {
+	@Prop(Game) game: Game;
 
 	modelClass = GameVideo;
 	resetOnSubmit = true;
 
 	GameVideo = GameVideo;
 
-	onInit()
-	{
+	onInit() {
 		this.formModel.game_id = this.game.id;
 	}
 }

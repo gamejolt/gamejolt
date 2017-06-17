@@ -17,8 +17,7 @@ import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 		AppPageHeader,
 	},
 })
-export default class RouteDiscoverChannelsView extends Vue
-{
+export default class RouteDiscoverChannelsView extends Vue {
 	channel = '';
 	totalGamesCount = 0;
 	shouldShowAds = false;
@@ -28,19 +27,16 @@ export default class RouteDiscoverChannelsView extends Vue
 	Channels = Channels;
 
 	@BeforeRouteEnter({ cache: true, lazy: true, cacheTag: 'view' })
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/discover/channels/' + route.params.channel );
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest('/web/discover/channels/' + route.params.channel);
 	}
 
-	created()
-	{
+	created() {
 		this.channel = this.$route.params.channel;
-		ChannelsViewHelper.setDefaultMetaData( this.$route.params.channel );
+		ChannelsViewHelper.setDefaultMetaData(this.$route.params.channel);
 	}
 
-	routed()
-	{
+	routed() {
 		// Overwrite channel from server so we can decide how it displays in the
 		// end.
 		this.channel = this.$payload.channel;

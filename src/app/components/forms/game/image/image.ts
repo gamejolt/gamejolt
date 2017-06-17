@@ -2,7 +2,10 @@ import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./image.html';
 
 import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
-import { BaseForm, FormOnInit } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppFormLoader } from '../../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
@@ -14,17 +17,16 @@ import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/component
 		AppFormControlUpload,
 	},
 })
-export class FormGameImage extends BaseForm<GameScreenshot> implements FormOnInit
-{
-	@Prop( Game ) game: Game;
+export class FormGameImage extends BaseForm<GameScreenshot>
+	implements FormOnInit {
+	@Prop(Game) game: Game;
 
 	modelClass = GameScreenshot;
 	maxFilesize = 0;
 	maxWidth = 0;
 	maxHeight = 0;
 
-	onInit()
-	{
+	onInit() {
 		this.formModel.game_id = this.game.id;
 
 		// // Only on adding can they send in the file.
@@ -43,8 +45,7 @@ export class FormGameImage extends BaseForm<GameScreenshot> implements FormOnIni
 		// }
 	}
 
-	onLoaded( payload: any )
-	{
+	onLoaded(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;

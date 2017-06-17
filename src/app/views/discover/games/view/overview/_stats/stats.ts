@@ -23,8 +23,7 @@ import { RouteState, RouteStore } from '../../view.state';
 		AppTooltip,
 	},
 })
-export class AppDiscoverGamesViewOverviewStats extends Vue
-{
+export class AppDiscoverGamesViewOverviewStats extends Vue {
 	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
 	@RouteState game: RouteStore['game'];
 	@RouteState profileCount: RouteStore['profileCount'];
@@ -38,38 +37,35 @@ export class AppDiscoverGamesViewOverviewStats extends Vue
 	number = number;
 	fuzzynumber = fuzzynumber;
 
-	get totalPlays()
-	{
+	get totalPlays() {
 		return this.playCount + this.downloadCount;
 	}
 
-	get showNaPlays()
-	{
+	get showNaPlays() {
 		return !this.packages.length && !this.totalPlays;
 	}
 
-	get playsTooltip()
-	{
-		if ( !this.packages.length ) {
-			if ( this.totalPlays ) {
-				return this.$gettext( `This game used to have playable builds that are no longer available.` );
-			}
-			else {
-				return this.$gettext( `This game doesn't have playable builds yet.` );
+	get playsTooltip() {
+		if (!this.packages.length) {
+			if (this.totalPlays) {
+				return this.$gettext(
+					`This game used to have playable builds that are no longer available.`,
+				);
+			} else {
+				return this.$gettext(`This game doesn't have playable builds yet.`);
 			}
 		}
 
 		return false;
 	}
 
-	get ratingStrings()
-	{
+	get ratingStrings() {
 		return [
-			this.$gettext( 'rating.five' ),
-			this.$gettext( 'rating.four' ),
-			this.$gettext( 'rating.three' ),
-			this.$gettext( 'rating.two' ),
-			this.$gettext( 'rating.one' ),
+			this.$gettext('rating.five'),
+			this.$gettext('rating.four'),
+			this.$gettext('rating.three'),
+			this.$gettext('rating.two'),
+			this.$gettext('rating.one'),
 		];
 	}
 }

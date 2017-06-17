@@ -45,8 +45,7 @@ import { numberSort } from '../../../../../lib/gj-lib-client/utils/array';
 		number,
 	},
 })
-export default class RouteDashMainOverview extends Vue
-{
+export default class RouteDashMainOverview extends Vue {
 	@State app: Store['app'];
 
 	revenueTotal = 0;
@@ -79,67 +78,68 @@ export default class RouteDashMainOverview extends Vue
 	];
 
 	Game = Game;
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 	Environment = Environment;
 	currency = currency;
 
-	get integrationTranslations()
-	{
+	get integrationTranslations() {
 		return {
-			'played_game': this.$gettext( 'dash.integrate.played_game_html' ),
-			'rated_game': this.$gettext( 'dash.integrate.rated_game_html' ),
-			'got_trophy': this.$gettext( 'dash.integrate.got_trophy_html' ),
-			'got_score': this.$gettext( 'dash.integrate.got_score_html' ),
-			'has_friend': this.$gettext( 'dash.integrate.has_friend_html' ),
+			played_game: this.$gettext('dash.integrate.played_game_html'),
+			rated_game: this.$gettext('dash.integrate.rated_game_html'),
+			got_trophy: this.$gettext('dash.integrate.got_trophy_html'),
+			got_score: this.$gettext('dash.integrate.got_score_html'),
+			has_friend: this.$gettext('dash.integrate.has_friend_html'),
 		};
 	}
 
 	@BeforeRouteEnter({ cache: true })
-	routeEnter()
-	{
-		return Api.sendRequest( '/web/dash' );
+	routeEnter() {
+		return Api.sendRequest('/web/dash');
 	}
 
-	created()
-	{
-		Meta.title = this.$gettext( 'dash.overview.page_title' );
+	created() {
+		Meta.title = this.$gettext('dash.overview.page_title');
 	}
 
-	routed()
-	{
+	routed() {
 		// Keep them undefined if not on the payload.
 		// This will ensure that if they aren't an account with revenue, it won't show the revenue widget.
-		if ( this.$payload.revenueTotal !== undefined && this.$payload.revenueTotal !== null ) {
+		if (
+			this.$payload.revenueTotal !== undefined &&
+			this.$payload.revenueTotal !== null
+		) {
 			this.revenueTotal = this.$payload.revenueTotal || 0;
 			this.revenueWithdrawn = this.$payload.revenueWithdrawn || 0;
 			this.revenueSpent = this.$payload.revenueSpent || 0;
 			this.revenueCurrent = this.$payload.revenueCurrent || 0;
 			this.revenuePendingWithdraw = this.$payload.revenuePendingWithdraw || 0;
-			this.revenuePendingActivation = this.$payload.revenuePendingActivation || 0;
+			this.revenuePendingActivation =
+				this.$payload.revenuePendingActivation || 0;
 			this.walletBalance = this.$payload.walletBalance || 0;
 		}
 
-		this.games = Game.populate( this.$payload.games );
-		this.games
-			.sort( ( a, b ) => numberSort( a.posted_on, b.posted_on ) )
-			.reverse();
+		this.games = Game.populate(this.$payload.games);
+		this.games.sort((a, b) => numberSort(a.posted_on, b.posted_on)).reverse();
 
-		this.videos = CommentVideo.populate( this.$payload.videos );
+		this.videos = CommentVideo.populate(this.$payload.videos);
 		this.videosCount = this.$payload.videosCount || 0;
 
 		// TODO
 		// this.jams = Jam.populate( this.$payload.jams );
 
-		this.activityNotifications = Notification.populate( this.$payload.activityNotifications );
-		this.latestBroadcast = this.$payload.latestBroadcast ? new FiresidePost( this.$payload.latestBroadcast ) : null;
+		this.activityNotifications = Notification.populate(
+			this.$payload.activityNotifications,
+		);
+		this.latestBroadcast = this.$payload.latestBroadcast
+			? new FiresidePost(this.$payload.latestBroadcast)
+			: null;
 
 		this.integration = this.$payload.integration || {};
 
-		this.integrationKeys.forEach( ( key ) =>
-		{
-			if ( this.integration[ key ] && !this.integration[ key ].achieved ) {
+		this.integrationKeys.forEach(key => {
+			if (this.integration[key] && !this.integration[key].achieved) {
 				this.isFullyIntegrated = false;
 			}
-		} );
+		});
 	}
 }

@@ -1,8 +1,7 @@
-angular.module( 'App.Views' ).config( function( $stateProvider )
-{
-	$stateProvider.state( 'dash.games.manage.key-groups', {
+angular.module('App.Views').config(function($stateProvider) {
+	$stateProvider.state('dash.games.manage.key-groups', {
 		abstract: true,
 		url: '/keys',
-		templateUrl: require( './key-groups.html' ),
-	} );
-} );
+		templateUrl: require('./key-groups.html'),
+	});
+});

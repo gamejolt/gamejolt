@@ -5,5 +5,5 @@ export const routeDiscoverChannelsList: VueRouter.RouteConfig = {
 	name: 'discover.channels.list',
 	path: '/channels',
 	props: true,
-	component: () => asyncComponentLoader( $import( './list' ) ),
+	component: () => asyncComponentLoader($import('./list')),
 };

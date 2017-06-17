@@ -5,5 +5,5 @@ export const routeDashAccountMobileNav: VueRouter.RouteConfig = {
 	name: 'dash.account-mobile-nav',
 	path: 'account/nav',
 	props: true,
-	component: () => asyncComponentLoader( $import( './mobile-nav' ) ),
+	component: () => asyncComponentLoader($import('./mobile-nav')),
 };

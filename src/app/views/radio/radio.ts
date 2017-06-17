@@ -28,50 +28,44 @@ import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/
 		time,
 	},
 })
-export default class RouteRadio extends Vue
-{
+export default class RouteRadio extends Vue {
 	song: GameSong = null as any;
 	game: Game = null as any;
 
 	currentTime = 0;
 	duration = 0;
 
-	created()
-	{
-		Meta.title = this.$gettext( 'Radio' );
+	created() {
+		Meta.title = this.$gettext('Radio');
 		Meta.description = 'Discover new game songs through the Game Jolt radio!';
 	}
 
-	mounted()
-	{
+	mounted() {
 		// Starting the next song will actually change the title.
-		if ( !Environment.isPrerender ) {
+		if (!Environment.isPrerender) {
 			this.getNextSong();
 		}
 	}
 
-	async getNextSong()
-	{
-		const payload = await Api.sendRequest( '/web/radio/get-random-song' );
+	async getNextSong() {
+		const payload = await Api.sendRequest('/web/radio/get-random-song');
 
-		this.game = new Game( payload.game );
-		this.song = new GameSong( payload.song );
+		this.game = new Game(payload.game);
+		this.song = new GameSong(payload.song);
 
 		Meta.title = this.song.title;
 
-		Analytics.trackEvent( 'radio', 'load-song' );
+		Analytics.trackEvent('radio', 'load-song');
 	}
 
-	durationEvent( event: { duration: number, currentTime: number } )
-	{
+	durationEvent(event: { duration: number; currentTime: number }) {
 		this.duration = event.duration;
 		this.currentTime = event.currentTime;
 	}
 
-	async seek( pos: number )
-	{
+	async seek(pos: number) {
 		const time = this.duration * pos;
 		let player = this.$refs.player as AppAudioPlayer;
-		player.seek( time );
+		player.seek(time);
 	}
 }

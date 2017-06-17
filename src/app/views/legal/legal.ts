@@ -7,11 +7,9 @@ import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 
 @View
 @Component({})
-export default class RouteLegal extends Vue
-{
+export default class RouteLegal extends Vue {
 	@BeforeRouteEnter()
-	beforeRoute()
-	{
+	beforeRoute() {
 		return User.touch();
 	}
 }

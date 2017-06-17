@@ -46,14 +46,14 @@ import { Store } from '../../../../../store/index';
 		AppPopoverTrigger,
 	},
 })
-export class AppActivityFeedDevlogPostControls extends Vue
-{
-	@Prop( FiresidePost ) post: FiresidePost;
-	@Prop( Boolean ) showGameInfo?: boolean;
-	@Prop( Boolean ) showEditControls?: boolean;
-	@Prop( { type: Boolean, default: true } ) showExtraInfo?: boolean;
-	@Prop( Boolean ) requireTabs?: boolean;
-	@Prop( Boolean ) inModal?: boolean;
+export class AppActivityFeedDevlogPostControls extends Vue {
+	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(Boolean) showGameInfo?: boolean;
+	@Prop(Boolean) showEditControls?: boolean;
+	@Prop({ type: Boolean, default: true })
+	showExtraInfo?: boolean;
+	@Prop(Boolean) requireTabs?: boolean;
+	@Prop(Boolean) inModal?: boolean;
 
 	@State app: Store['app'];
 
@@ -65,98 +65,90 @@ export class AppActivityFeedDevlogPostControls extends Vue
 
 	number = number;
 	Environment = Environment;
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 	FiresidePost = FiresidePost;
 
-	get sharePopoverId()
-	{
-		return `activity-feed-devlog-post-share-${ this.inModal ? 'modal' : 'no-modal' }-${ this.post.id }`;
+	get sharePopoverId() {
+		return `activity-feed-devlog-post-share-${this.inModal
+			? 'modal'
+			: 'no-modal'}-${this.post.id}`;
 	}
 
-	get shareUrl()
-	{
-		return Environment.baseUrl + this.$router.resolve( {
-			name: 'discover.games.view.devlog.view',
-			params: {
-				slug: this.post.game.slug,
-				id: this.post.game.id,
-				postSlug: this.post.slug,
-			},
-		} ).href;
+	get shareUrl() {
+		return (
+			Environment.baseUrl +
+			this.$router.resolve({
+				name: 'discover.games.view.devlog.view',
+				params: {
+					slug: this.post.game.slug,
+					id: this.post.game.id,
+					postSlug: this.post.slug,
+				},
+			}).href
+		);
 	}
 
-	created()
-	{
-		if ( this.requireTabs ) {
+	created() {
+		if (this.requireTabs) {
 			this.tab = 'comments';
 		}
 	}
 
-	updateCommentsCount( count: number )
-	{
+	updateCommentsCount(count: number) {
 		this.post.comment_count = count;
 	}
 
-	toggleComments()
-	{
+	toggleComments() {
 		// If we aren't in the feed, then don't toggle comments out.
 		// We just scroll to the comments.
 		// this.scroll.to( 'comments' );
 
-		if ( this.tab === 'comments' && !this.requireTabs ) {
+		if (this.tab === 'comments' && !this.requireTabs) {
 			this.tab = null;
-		}
-		else {
+		} else {
 			this.tab = 'comments';
 		}
 
-		this.$emit( 'expanded' );
+		this.$emit('expanded');
 	}
 
-	toggleLikes()
-	{
-		if ( this.tab === 'likes' && !this.requireTabs ) {
+	toggleLikes() {
+		if (this.tab === 'likes' && !this.requireTabs) {
 			this.tab = null;
-		}
-		else {
+		} else {
 			this.tab = 'likes';
 		}
 
-		this.$emit( 'expanded' );
+		this.$emit('expanded');
 
-		if ( this.tab === 'likes' ) {
+		if (this.tab === 'likes') {
 			this.loadLikes();
 		}
 	}
 
-	async loadLikes()
-	{
+	async loadLikes() {
 		const likes = await this.post.fetchLikes();
 		this.likes = likes;
 		this.hasLoadedLikes = true;
 	}
 
-	copyShareUrl()
-	{
-		Clipboard.copy( this.shareUrl );
+	copyShareUrl() {
+		Clipboard.copy(this.shareUrl);
 	}
 
-	async showEdit()
-	{
+	async showEdit() {
 		// TODO
 		// await this.editService.show( this.post );
-		this.$emit( 'edited' );
+		this.$emit('edited');
 	}
 
-	async publishPost()
-	{
+	async publishPost() {
 		await this.post.$publish();
-		this.$emit( 'published' );
+		this.$emit('published');
 	}
 
-	async removePost()
-	{
+	async removePost() {
 		await this.post.remove();
-		this.$emit( 'removed' );
+		this.$emit('removed');
 	}
 }

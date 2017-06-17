@@ -6,10 +6,8 @@ import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service
 
 @View
 @Component({})
-export default class RouteAuthForgotSent extends Vue
-{
-	created()
-	{
-		Meta.title = this.$gettext( 'auth.forgot.sent.page_title' );
+export default class RouteAuthForgotSent extends Vue {
+	created() {
+		Meta.title = this.$gettext('auth.forgot.sent.page_title');
 	}
 }

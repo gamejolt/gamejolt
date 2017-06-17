@@ -20,8 +20,7 @@ import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytic
 		AppTrackEvent,
 	},
 })
-export default class RouteProfileVideos extends Vue
-{
+export default class RouteProfileVideos extends Vue {
 	@Prop() user: User;
 	@Prop() videosCount: number;
 
@@ -29,23 +28,23 @@ export default class RouteProfileVideos extends Vue
 	page = 0;
 
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/profile/videos/@' + route.params.username );
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest('/web/profile/videos/@' + route.params.username);
 	}
 
-	routed()
-	{
-		Meta.title = `Videos from ${this.user.display_name} (@${this.user.username})`;
+	routed() {
+		Meta.title = `Videos from ${this.user.display_name} (@${this.user
+			.username})`;
 
-		this.videos = CommentVideo.populate( this.$payload.videos );
+		this.videos = CommentVideo.populate(this.$payload.videos);
 	}
 
-	async loadMore()
-	{
+	async loadMore() {
 		++this.page;
 
-		const response = await Api.sendRequest( `/web/profile/videos/@${this.user.username}?page=${this.page}` );
-		this.videos = this.videos.concat( CommentVideo.populate( response.videos ) );
+		const response = await Api.sendRequest(
+			`/web/profile/videos/@${this.user.username}?page=${this.page}`,
+		);
+		this.videos = this.videos.concat(CommentVideo.populate(response.videos));
 	}
 }

@@ -1,7 +1,12 @@
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./token.html';
 
-import { BaseForm, FormOnSubmit, FormOnSubmitSuccess, FormOnInit } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnSubmit,
+	FormOnSubmitSuccess,
+	FormOnInit,
+} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
 
@@ -11,22 +16,19 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 		AppFocusWhen,
 	},
 })
-export class FormToken extends BaseForm<any> implements FormOnInit, FormOnSubmit, FormOnSubmitSuccess
-{
-	@Prop( String ) token: string;
+export class FormToken extends BaseForm<any>
+	implements FormOnInit, FormOnSubmit, FormOnSubmitSuccess {
+	@Prop(String) token: string;
 
-	onInit()
-	{
+	onInit() {
 		this.formModel.token = this.token;
 	}
 
-	onSubmit()
-	{
-		return Api.sendRequest( '/web/dash/token/save', this.formModel );
+	onSubmit() {
+		return Api.sendRequest('/web/dash/token/save', this.formModel);
 	}
 
-	onSubmitSuccess( response: any )
-	{
+	onSubmitSuccess(response: any) {
 		this.formModel.token = response.token;
 	}
 }

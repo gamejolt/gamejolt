@@ -19,28 +19,24 @@ import { RouteState, RouteStore } from './account.state';
 		AppJolticon,
 		AppPageHeader,
 		AppUserAvatar,
-	}
+	},
 })
-export default class RouteDashAccount extends Vue
-{
+export default class RouteDashAccount extends Vue {
 	@State app: Store['app'];
 	@RouteState heading: RouteStore['heading'];
 
-	Screen = makeObservableService( Screen );
+	Screen = makeObservableService(Screen);
 
 	@BeforeRouteEnter({})
-	routeEnter()
-	{
+	routeEnter() {
 		User.touch();
 	}
 
-	created()
-	{
-		this.$store.registerModule( 'route', new RouteStore() );
+	created() {
+		this.$store.registerModule('route', new RouteStore());
 	}
 
-	destroyed()
-	{
-		this.$store.unregisterModule( 'route' );
+	destroyed() {
+		this.$store.unregisterModule('route');
 	}
 }

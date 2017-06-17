@@ -21,32 +21,28 @@ import { AppScrollTo } from '../../../lib/gj-lib-client/components/scroll/to/to.
 		AppScrollTo,
 	},
 })
-export default class RouteSettings extends Vue
-{
-	get sections()
-	{
+export default class RouteSettings extends Vue {
+	get sections() {
 		const sections: any = {};
 
-		if ( GJ_IS_CLIENT ) {
-			sections.client = this.$gettext( 'settings.client' );
+		if (GJ_IS_CLIENT) {
+			sections.client = this.$gettext('settings.client');
 		}
 
 		return {
-			chat: this.$gettext( 'settings.chat' ),
-			restrictions: this.$gettext( 'Restrictions' ),
-			notifications: this.$gettext( 'Notifications' ),
+			chat: this.$gettext('settings.chat'),
+			restrictions: this.$gettext('Restrictions'),
+			notifications: this.$gettext('Notifications'),
 		};
 	}
 
 	@BeforeRouteEnter()
-	routeEnter()
-	{
+	routeEnter() {
 		User.touch();
 		return Promise.resolve();
 	}
 
-	created()
-	{
-		Meta.title = this.$gettext( 'Settings' );
+	created() {
+		Meta.title = this.$gettext('Settings');
 	}
 }

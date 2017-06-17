@@ -11,7 +11,7 @@ import { routeDashGamesManageGameThumbnail } from './thumbnail/thumbnail.route';
 export const routeDashGamesManageGame: VueRouter.RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',
 	props: true,
-	component: () => asyncComponentLoader( $import( './game' ) ),
+	component: () => asyncComponentLoader($import('./game')),
 	children: [
 		routeDashGamesManageGameOverview,
 		routeDashGamesManageGameDetails,

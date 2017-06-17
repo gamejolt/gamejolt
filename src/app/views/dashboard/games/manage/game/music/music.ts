@@ -25,8 +25,7 @@ import { FormGameSong } from '../../../../../../components/forms/game/song/song'
 		AppJolticon,
 	},
 })
-export default class RouteDashGamesManageGameMusic extends Vue
-{
+export default class RouteDashGamesManageGameMusic extends Vue {
 	@RouteState game: RouteStore['game'];
 	@RouteState isWizard: RouteStore['isWizard'];
 
@@ -34,60 +33,53 @@ export default class RouteDashGamesManageGameMusic extends Vue
 	isAdding = false;
 	activeItem: GameSong | null = null;
 
-	get currentSort()
-	{
-		return this.songs.map( ( item ) => item.id );
+	get currentSort() {
+		return this.songs.map(item => item.id);
 	}
 
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/dash/developer/games/music/' + route.params.id );
-	}
-
-	created()
-	{
-		Meta.title = this.$gettextInterpolate(
-			`Manage Music for %{ game }`,
-			{ game: this.game.title },
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest(
+			'/web/dash/developer/games/music/' + route.params.id,
 		);
 	}
 
-	routed()
-	{
-		this.songs = GameSong.populate( this.$payload.songs );
+	created() {
+		Meta.title = this.$gettextInterpolate(`Manage Music for %{ game }`, {
+			game: this.game.title,
+		});
 	}
 
-	onSongEdited()
-	{
+	routed() {
+		this.songs = GameSong.populate(this.$payload.songs);
+	}
+
+	onSongEdited() {
 		this.activeItem = null;
 	}
 
-	onSongAdded( formModel: GameSong )
-	{
-		this.songs.push( new GameSong( formModel ) );
+	onSongAdded(formModel: GameSong) {
+		this.songs.push(new GameSong(formModel));
 		this.isAdding = false;
 	}
 
-	saveSongSort( songs: GameSong[] )
-	{
+	saveSongSort(songs: GameSong[]) {
 		this.songs = songs;
-		GameSong.$saveSort( this.game.id, this.currentSort );
+		GameSong.$saveSort(this.game.id, this.currentSort);
 	}
 
-	async removeSong( song: GameSong )
-	{
+	async removeSong(song: GameSong) {
 		const result = await ModalConfirm.show(
-			this.$gettext( 'dash.games.music.remove_confirmation' ),
+			this.$gettext('dash.games.music.remove_confirmation'),
 		);
 
-		if ( !result ) {
+		if (!result) {
 			return;
 		}
 
-		const index = this.songs.findIndex( ( item ) => item.id === song.id );
-		if ( index !== -1 ) {
-			this.songs.splice( index, 1 );
+		const index = this.songs.findIndex(item => item.id === song.id);
+		if (index !== -1) {
+			this.songs.splice(index, 1);
 		}
 
 		return song.$remove();

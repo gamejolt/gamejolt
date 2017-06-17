@@ -13,8 +13,7 @@ import { AppImgResponsive } from '../../../../../lib/gj-lib-client/components/im
 		AppImgResponsive,
 	},
 })
-export class AppGameCollectionThumbnail extends Vue
-{
-	@Prop( GameCollection ) collection: GameCollection;
-	@Prop( Boolean ) hideTag?: boolean;
+export class AppGameCollectionThumbnail extends Vue {
+	@Prop(GameCollection) collection: GameCollection;
+	@Prop(Boolean) hideTag?: boolean;
 }

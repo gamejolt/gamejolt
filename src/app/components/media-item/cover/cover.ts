@@ -18,51 +18,49 @@ import { AppScrollParallax } from '../../../../lib/gj-lib-client/components/scro
 		AppImgResponsive,
 	},
 })
-export class AppMediaItemCover extends Vue
-{
-	@Prop( MediaItem ) mediaItem: MediaItem;
-	@Prop( { type: Boolean, default: true } ) shouldParallax?: boolean;
-	@Prop( Number ) maxHeight?: number;
+export class AppMediaItemCover extends Vue {
+	@Prop(MediaItem) mediaItem: MediaItem;
+	@Prop({ type: Boolean, default: true })
+	shouldParallax?: boolean;
+	@Prop(Number) maxHeight?: number;
 
 	isLoaded = false;
 	height = 'auto';
 
 	private resize$: Subscription | undefined;
 
-	created()
-	{
+	created() {
 		this.recalcHeight();
 	}
 
-	mounted()
-	{
+	mounted() {
 		this.recalcHeight();
-		this.resize$ = Screen.resizeChanges.subscribe( () => this.recalcHeight() );
+		this.resize$ = Screen.resizeChanges.subscribe(() => this.recalcHeight());
 	}
 
-	@Watch( 'mediaItem' ) mediaItemWatch() { this.recalcHeight(); }
-	@Watch( 'maxHeight' )
-	changes()
-	{
+	@Watch('mediaItem')
+	mediaItemWatch() {
+		this.recalcHeight();
+	}
+	@Watch('maxHeight')
+	changes() {
 		this.recalcHeight();
 	}
 
-	destroyed()
-	{
-		if ( this.resize$ ) {
+	destroyed() {
+		if (this.resize$) {
 			this.resize$.unsubscribe();
 			this.resize$ = undefined;
 		}
 	}
 
-	recalcHeight()
-	{
+	recalcHeight() {
 		// Resize counter is just to trigger this getter any time window is
 		// resized.
-		if ( this.mediaItem ) {
-			if ( this.$el ) {
+		if (this.mediaItem) {
+			if (this.$el) {
 				const newDimensions = this.mediaItem.getDimensions(
-					Ruler.width( this.$el ),
+					Ruler.width(this.$el),
 					undefined,
 					{ force: true },
 				);
@@ -70,11 +68,11 @@ export class AppMediaItemCover extends Vue
 				// We extend the header to the right and left by 20% on XS since
 				// the screen is so small. This makes sure that we also
 				// calculate the height larger.
-				if ( Screen.isXs ) {
+				if (Screen.isXs) {
 					newDimensions.height *= 1.4;
 				}
 
-				if ( this.maxHeight && newDimensions.height > this.maxHeight ) {
+				if (this.maxHeight && newDimensions.height > this.maxHeight) {
 					newDimensions.height = this.maxHeight;
 				}
 
@@ -91,12 +89,11 @@ export class AppMediaItemCover extends Vue
 		this.height = '0';
 	}
 
-	onLoadChange( isLoaded: boolean )
-	{
+	onLoadChange(isLoaded: boolean) {
 		this.isLoaded = isLoaded;
 
-		if ( this.isLoaded ) {
-			this.$emit( 'loaded' );
+		if (this.isLoaded) {
+			this.$emit('loaded');
 			this.recalcHeight();
 		}
 	}

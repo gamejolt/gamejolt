@@ -2,7 +2,10 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./thumbnail.html';
 
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { BaseForm, FormOnInit } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { AppFormLoader } from '../../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 
@@ -13,8 +16,7 @@ import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/component
 		AppFormControlUpload,
 	},
 })
-export class FormGameThumbnail extends BaseForm<Game> implements FormOnInit
-{
+export class FormGameThumbnail extends BaseForm<Game> implements FormOnInit {
 	modelClass = Game;
 	resetOnSubmit = true;
 	saveMethod = '$saveThumbnail' as '$saveThumbnail';
@@ -25,13 +27,9 @@ export class FormGameThumbnail extends BaseForm<Game> implements FormOnInit
 	maxHeight = 0;
 	cropAspectRatio = 0;
 
-	onInit()
-	{
+	onInit() {}
 
-	}
-
-	onLoaded( payload: any )
-	{
+	onLoaded(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.minWidth = payload.minWidth;
 		this.minHeight = payload.minHeight;
@@ -45,22 +43,23 @@ export class FormGameThumbnail extends BaseForm<Game> implements FormOnInit
 	 * We don't want to allow to crop them, but we do want to allow them to upload a new one.
 	 * We check here if it's too small to crop to signal to the form to remove the cropper.
 	 */
-	get canCrop()
-	{
+	get canCrop() {
 		const model = this.model!;
 
-		if ( !model.thumbnail_media_item ) {
+		if (!model.thumbnail_media_item) {
 			return false;
 		}
 
-		if ( model.thumbnail_media_item!.width < this.minWidth || model.thumbnail_media_item.height < this.minHeight ) {
+		if (
+			model.thumbnail_media_item!.width < this.minWidth ||
+			model.thumbnail_media_item.height < this.minHeight
+		) {
 			return false;
 		}
 
 		return true;
 	}
 }
-
 
 // angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameThumbnail', function( Form, Api, gettext )
 // {

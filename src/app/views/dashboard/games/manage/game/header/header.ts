@@ -18,40 +18,35 @@ import { FormGameHeader } from '../../../../../../components/forms/game/header/h
 		FormGameHeader,
 	},
 })
-export default class RouteDashGamesManageGameHeader extends Vue
-{
+export default class RouteDashGamesManageGameHeader extends Vue {
 	@RouteState game: RouteStore['game'];
 	@RouteState isWizard: RouteStore['isWizard'];
 
-	created()
-	{
-		Meta.title = this.$gettextInterpolate(
-			'Edit Header for %{ game }',
-			{ game: this.game.title },
-		);
+	created() {
+		Meta.title = this.$gettextInterpolate('Edit Header for %{ game }', {
+			game: this.game.title,
+		});
 	}
 
-	async clearHeader()
-	{
+	async clearHeader() {
 		Popover.hideAll();
 
 		const result = await ModalConfirm.show(
-			this.$gettext( `Are you sure you want to remove your game header?` ),
+			this.$gettext(`Are you sure you want to remove your game header?`),
 			undefined,
-			'yes'
+			'yes',
 		);
 
-		if ( result ) {
+		if (result) {
 			this.game.$clearHeader();
 		}
 	}
 
-	onSaved()
-	{
+	onSaved() {
 		Growls.success(
-			this.$gettext( 'dash.games.header.saved_growl' ),
-			this.$gettext( 'dash.games.header.saved_growl_title' )
+			this.$gettext('dash.games.header.saved_growl'),
+			this.$gettext('dash.games.header.saved_growl_title'),
 		);
-		Scroll.to( 0 );
+		Scroll.to(0);
 	}
 }

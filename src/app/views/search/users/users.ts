@@ -17,24 +17,21 @@ import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.s
 		AppPagination,
 	},
 })
-export default class RouteSearchUsers extends Vue
-{
-	@Prop( Object ) payload: any;
+export default class RouteSearchUsers extends Vue {
+	@Prop(Object) payload: any;
 
-	Search = makeObservableService( Search );
+	Search = makeObservableService(Search);
 	Scroll = Scroll;
 
-	@BeforeRouteEnter( { cache: true } )
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Search.search( route.query.q, {
+	@BeforeRouteEnter({ cache: true })
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Search.search(route.query.q, {
 			type: 'user',
-			page: route.query.page ? parseInt( route.query.page, 10 ) : 1,
-		} );
+			page: route.query.page ? parseInt(route.query.page, 10) : 1,
+		});
 	}
 
-	routed()
-	{
-		this.$emit( 'searchpayload', this.$payload );
+	routed() {
+		this.$emit('searchpayload', this.$payload);
 	}
 }

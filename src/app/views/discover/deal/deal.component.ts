@@ -7,14 +7,13 @@ import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { GameScreenshot } from '../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
 import { GameVideo } from '../../../../lib/gj-lib-client/components/game/video/video.model';
 
-require( './deal.styl' );
+require('./deal.styl');
 
 @Component({
 	selector: 'route-discover-deal',
 	template,
 })
-export class RouteDealComponent implements OnInit
-{
+export class RouteDealComponent implements OnInit {
 	@Input() payload: any;
 	@Input() overview: any;
 
@@ -23,26 +22,23 @@ export class RouteDealComponent implements OnInit
 	mediaItems: any[];
 	supporters: any[];
 
-	ngOnInit()
-	{
+	ngOnInit() {
 		Meta.title = 'Sale';
 
-		this.game = new Game( this.payload.game );
-		this.supporters = User.populate( this.overview.supporters );
+		this.game = new Game(this.payload.game);
+		this.supporters = User.populate(this.overview.supporters);
 
-		this.saleEnd = Date.now() + (86400 * 1000);
+		this.saleEnd = Date.now() + 86400 * 1000;
 
 		this.mediaItems = [];
-		if ( this.overview.mediaItems && this.overview.mediaItems.length ) {
-			this.overview.mediaItems.forEach( ( item: any ) =>
-			{
-				if ( item.media_type === 'image' ) {
-					this.mediaItems.push( new GameScreenshot( item ) );
+		if (this.overview.mediaItems && this.overview.mediaItems.length) {
+			this.overview.mediaItems.forEach((item: any) => {
+				if (item.media_type === 'image') {
+					this.mediaItems.push(new GameScreenshot(item));
+				} else if (item.media_type === 'video') {
+					this.mediaItems.push(new GameVideo(item));
 				}
-				else if ( item.media_type === 'video' ) {
-					this.mediaItems.push( new GameVideo( item ) );
-				}
-			} );
+			});
 		}
 	}
 }

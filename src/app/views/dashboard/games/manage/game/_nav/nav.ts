@@ -12,8 +12,7 @@ import { AppManageGameNavRequired } from './required';
 		AppManageGameNavRequired,
 	},
 })
-export class AppManageGameNav extends Vue
-{
+export class AppManageGameNav extends Vue {
 	@RouteState game: RouteStore['game'];
 	@RouteState isWizard: RouteStore['isWizard'];
 	@RouteState canPublish: RouteStore['canPublish'];

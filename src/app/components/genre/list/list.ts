@@ -14,7 +14,6 @@ import { Genre } from '../genre';
 		AppNoAutoscroll,
 	},
 })
-export class AppGenreList extends Vue
-{
-	Genre = makeObservableService( Genre );
+export class AppGenreList extends Vue {
+	Genre = makeObservableService(Genre);
 }

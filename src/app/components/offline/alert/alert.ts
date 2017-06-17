@@ -10,22 +10,20 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 @Component({
 	components: {
 		AppJolticon,
-	}
+	},
 })
-export class AppOfflineAlert extends Vue
-{
+export class AppOfflineAlert extends Vue {
 	shouldShow = false;
 	forceHidden = false;
 
-	Connection = makeObservableService( Connection );
+	Connection = makeObservableService(Connection);
 
-	@Watch( 'Connection.isOnline' )
-	onlineChange( isOnline: boolean )
-	{
+	@Watch('Connection.isOnline')
+	onlineChange(isOnline: boolean) {
 		this.shouldShow = !isOnline;
 
 		// Always reset the force hidden state when we switch to offline.
-		if ( !isOnline ) {
+		if (!isOnline) {
 			this.forceHidden = false;
 		}
 	}

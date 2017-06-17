@@ -5,5 +5,5 @@ export const routeLibraryOverview: VueRouter.RouteConfig = {
 	name: 'library.overview',
 	path: '/library',
 	props: true,
-	component: () => asyncComponentLoader( $import( './overview' ) ),
+	component: () => asyncComponentLoader($import('./overview')),
 };
