@@ -1,0 +1,140 @@
+<div class="row">
+	<div class="col-md-10 col-lg-9">
+
+		<h2 class="section-header">
+			<translate>dash.games.trophies.heading</translate>
+		</h2>
+
+		<div class="page-help">
+			<div>
+				<translate :escape-html="false">dash.games.trophies.page_help_html</translate>
+			</div>
+			<p>
+				<a class="link-help" href="https://help.gamejolt.com/dev-trophies" target="_blank">
+					<translate>dash.games.trophies.page_help_link</translate>
+				</a>
+			</p>
+		</div>
+
+		<div class="alert alert-warning" v-if="hasHiddenTrophies">
+			<translate :escape-html="false">dash.games.trophies.has_hidden_html</translate>
+		</div>
+
+		<div v-for="difficulty of GameTrophy.difficulties">
+
+			<h4>
+				<translate :translate-params="{ difficulty: trophyLabels[ difficulty ] }">
+					%{ difficulty } Trophies
+				</translate>
+			</h4>
+
+			<div v-if="!groupedTrophies[ difficulty ].length">
+				<p class="text-muted small">
+					<translate>
+						No trophies added yet for this difficulty level.
+					</translate>
+				</p>
+			</div>
+
+			<app-card-list
+				:items="groupedTrophies[ difficulty ]"
+				:active-item="activeItem[ difficulty ]"
+				@activate="activeItem[ difficulty ] = $event"
+				>
+				<!--is-adding="isAdding[ difficulty ]"-->
+
+					<!--ui-tree="{ accept: canDrop, dropped: onTrophySorted }"-->
+				<app-card-list-draggable @changed="saveTrophySort">
+					<app-card-list-item
+						v-for="trophy of groupedTrophies[ difficulty ]"
+						:key="trophy.id"
+						:id="`trophy-container-${ trophy.id }`"
+						:item="trophy"
+						>
+						<!--is-inactive="!trophy.visible"-->
+
+						<div class="row">
+							<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
+
+								<app-trophy-thumbnail
+									:trophy="trophy"
+									/>
+
+								<br class="visible-xs">
+
+							</div>
+							<div class="col-xs-12 col-sm-10">
+
+								<a class="card-remove"
+									@click.stop="removeTrophy( trophy )"
+									>
+									<app-jolticon icon="remove" />
+								</a>
+
+								<div class="card-stats">
+									<div class="stat-big">
+										<div class="stat-big-label">
+											<translate>dash.games.trophies.trophy_id_label</translate>
+										</div>
+										<div class="stat-big-digit">
+											{{ trophy.id }}
+										</div>
+									</div>
+								</div>
+
+								<div class="card-title">
+									<h5>{{ trophy.title }}</h5>
+								</div>
+
+								<div class="card-content">
+									{{ trophy.description }}
+								</div>
+
+								<div class="card-meta" v-if="!trophy.visible || trophy.secret">
+									<span
+										v-if="!trophy.visible"
+										class="tag tag-pink"
+										v-app-tooltip="$gettext( `dash.games.trophies.hidden_tooltip` )"
+										>
+										<translate>dash.games.trophies.hidden_tag</translate>
+									</span>
+									<span
+										v-if="trophy.secret"
+										class="tag"
+										v-app-tooltip="$gettext( `dash.games.trophies.secret_tooltip` )"
+										>
+										<translate>dash.games.trophies.secret_tag</translate>
+									</span>
+								</div>
+
+							</div>
+						</div>
+
+						<div slot="body">
+							<form-game-trophy
+								:game="game"
+								:model="trophy"
+								@submit="onTrophyEdited"
+								/>
+						</div>
+
+					</app-card-list-item>
+				</app-card-list-draggable>
+
+				<!--<gj-editable-accordion-add :add-label="$gettext( 'New Trophy' )">
+
+					<form-game-trophy
+						gj-game="manageCtrl.game"
+						trophy-difficulty="difficulty"
+						@submit="onTrophyAdded( formModel )"
+						>
+					</form-game-trophy>
+
+				</gj-editable-accordion-add>-->
+
+			</app-card-list>
+
+		</div>
+
+	</div>
+</div>

@@ -23,8 +23,7 @@ import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/to
 		number,
 	},
 })
-export default class RouteDashGamesManageApiOverview extends Vue
-{
+export default class RouteDashGamesManageApiOverview extends Vue {
 	@RouteState game: RouteStore['game'];
 
 	numActiveSessions = 0;
@@ -42,19 +41,14 @@ export default class RouteDashGamesManageApiOverview extends Vue
 	} = null as any;
 
 	@BeforeRouteEnter()
-	routeEnter( this: undefined, route: VueRouter.Route )
-	{
-		return Api.sendRequest( '/web/dash/developer/games/api/' + route.params.id );
+	routeEnter(this: undefined, route: VueRouter.Route) {
+		return Api.sendRequest('/web/dash/developer/games/api/' + route.params.id);
 	}
 
-	routed()
-	{
-		Meta.title = this.$gettextInterpolate(
-			'Game API for %{ game }',
-			{ game: this.game.title },
-		);
-
-		console.log( 'payload', this.$payload );
+	routed() {
+		Meta.title = this.$gettextInterpolate('Game API for %{ game }', {
+			game: this.game.title,
+		});
 
 		this.sessionStats = this.$payload.sessionStats;
 
@@ -69,31 +63,8 @@ export default class RouteDashGamesManageApiOverview extends Vue
 			'numGlobalItems',
 		];
 
-		fields.forEach( ( field ) =>
-		{
-			(this as any)[ field ] = this.$payload[ field ] || 0;
-		} );
+		fields.forEach(field => {
+			(this as any)[field] = this.$payload[field] || 0;
+		});
 	}
 }
-
-
-// angular.module( 'App.Views.Dashboard' ).controller( 'Dashboard.Developer.Games.Manage.Api.OverviewCtrl', function( $scope, $window, App, gettextCatalog, payload )
-// {
-// 	var _this = this;
-
-// 	App.title = gettextCatalog.getString( 'dash.games.api.overview.page_title', { game: $scope.manageCtrl.game.title } );
-
-// 	this.sessionStats = payload.sessionStats;
-
-// 	var fields = [
-// 		'numActiveTrophies', 'totalTrophyExp', 'totalAchievedTrophies', 'totalUsersWithTrophies',
-// 		'totalScores', 'totalUsersWithScores',
-// 		'numActiveSessions',
-// 		'numGlobalItems',
-// 	];
-
-// 	fields.forEach( function( field )
-// 	{
-// 		_this[ field ] = payload[ field ] || 0;
-// 	} );
-// } );

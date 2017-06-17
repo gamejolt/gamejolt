@@ -2,7 +2,7 @@
 	<li>
 		<router-link
 			:to="{ name: 'dash.games.manage.api.overview' }"
-			active-class="active"
+			:class="{ active: $route.name === 'dash.games.manage.api.overview' }"
 			>
 			<translate>Overview</translate>
 		</router-link>

@@ -1,85 +1,127 @@
 <app-form name="trophyForm">
+	<app-form-loader
+		:url="`/web/dash/developer/games/api/trophies/save/${ formModel.game_id }`"
+		@loaded="onLoaded"
+		>
 
-	<div v-if="!isLoaded">
-		<gj-loading></gj-loading>
-	</div>
+		<!--
+			Show the current image if there is one.
+		-->
+		<div class="form-group" v-if="formModel.has_thumbnail">
+			<label class="control-label">
+				<translate>Current Trophy Image</translate>
+			</label>
 
-	<div v-if="Loader.ready( 'upload' )">
-		<div v-if="isLoaded">
+			<app-img-responsive
+				:src="formModel.img_thumbnail"
+				:alt="$gettext( 'Current Trophy Image' )"
+				/>
 
-			<!--
-				Show the current image if there is one.
-			-->
-			<div class="form-group" v-if="formModel.has_thumbnail">
-				<label class="control-label">Current Trophy Image</label>
+			<br>
 
-				<img gj-img-responsive="{{ formModel.img_thumbnail }}" alt="Current Trophy Image">
-				<br>
-
-				<div>
-					<a class="btn btn-danger" ng-click="clearImage()">
-						<app-jolticon icon="remove" />
-						Clear Image
-					</a>
-				</div>
+			<div>
+				<button class="btn btn-danger" @click="clearImage">
+					<app-jolticon icon="remove" />
+					<translate>Clear Image</translate>
+				</button>
 			</div>
-
-			<!--
-				Only want them to be able to change difficulty when editing.
-			-->
-			<app-form-group name="difficulty"
-				:label="$gettext( `dash.games.trophies.form.difficulty_label` )"
-				v-if="method === 'edit'"
-				>
-				<select form-control ng-options="item.value as item.label for item in difficultyOptions"></select>
-				<app-form-control-errors />
-			</app-form-group>
-
-			<app-form-group name="file" label="{{ !formModel.has_thumbnail ? 'dash.games.trophies.form.upload_label' : 'dash.games.trophies.form.change_image_label' | translate }}" optional="true">
-
-				<p class="help-block" translate>dash.forms.image_filetype_help_html</p>
-
-				<p class="help-block">
-					<a class="link-help">{{ 'dash.games.trophies.form.image_help_link' | translate }}</a>
-				</p>
-
-				<gj-form-upload-control
-					form-control="upload"
-					gj-max-filesize="maxFilesize"
-					gj-max-img-width="maxWidth"
-					gj-max-img-height="maxHeight"
-					accept=".png,.jpg,.jpeg,.gif"
-					>
-				</gj-form-upload-control>
-
-				<app-form-control-errors :label="$gettext( `dash.games.trophies.form.image_error_label` )" />
-
-			</app-form-group>
-
-			<app-form-group name="title" :label="$gettext( `dash.games.trophies.form.title_label` )">
-				<input form-control="text" maxlength="150">
-				<app-form-control-errors />
-			</app-form-group>
-
-			<app-form-group name="description" :label="$gettext( `dash.games.trophies.form.description_label` )">
-				<textarea form-control rows="3" maxlength="1500"></textarea>
-				<app-form-control-errors />
-			</app-form-group>
-
-			<app-form-group name="secret" :label="$gettext( `dash.games.trophies.form.secret_label` )">
-				<p class="help-block">{{ 'dash.games.trophies.form.secret_help' | translate }}</p>
-				<app-form-control-toggle :on-label="$gettext( 'Yes' )" :off-label="$gettext( 'No' )" />
-			</app-form-group>
-
-			<app-form-group name="hidden" :label="$gettext( `dash.games.trophies.form.hidden_label` )">
-				<p class="help-block">{{ 'dash.games.trophies.form.hidden_help' | translate }}</p>
-				<app-form-control-toggle :on-label="$gettext( 'Yes' )" :off-label="$gettext( 'No' )" />
-			</app-form-group>
-
-			<app-form-button :icon="method">
-				<translate>dash.games.trophies.form.save_button</translate>
-			</app-form-button>
 		</div>
-	</div>
 
+		<app-form-group
+			v-if="method === 'edit'"
+			name="difficulty"
+			:label="$gettext( `dash.games.trophies.form.difficulty_label` )"
+			>
+			<app-form-control-select>
+				<option
+					v-for="item of difficultyOptions"
+					:key="item.label"
+					:value="item.value"
+					>
+					{{ item.label }}
+				</option>
+			</app-form-control-select>
+			<app-form-control-errors />
+		</app-form-group>
+
+		<app-form-group
+			name="file"
+			:label="!formModel.has_thumbnail
+				? $gettext( 'dash.games.trophies.form.upload_label' )
+				: $gettext( 'dash.games.trophies.form.change_image_label' )
+			"
+			:optional="true"
+			>
+
+			<p class="help-block">
+				<translate :escape-html="false">
+					dash.forms.image_filetype_help_html
+				</translate>
+			</p>
+
+			<p class="help-block">
+				<a class="link-help">
+					<translate>dash.games.trophies.form.image_help_link</translate>
+				</a>
+			</p>
+
+			<app-form-control-upload
+				:rules="{
+					filesize: maxFilesize,
+					max_img_dimensions: [ maxWidth, maxHeight ],
+				}"
+				accept=".png,.jpg,.jpeg,.gif"
+				/>
+
+			<app-form-control-errors
+				:label="$gettext( `dash.games.trophies.form.image_error_label` )"
+				/>
+
+		</app-form-group>
+
+		<app-form-group name="title" :label="$gettext( `dash.games.trophies.form.title_label` )">
+			<app-form-control
+				type="text"
+				:rules="{
+					max: 150,
+				}"
+				/>
+			<app-form-control-errors />
+		</app-form-group>
+
+		<app-form-group name="description" :label="$gettext( `dash.games.trophies.form.description_label` )">
+			<app-form-control-textarea
+				rows="3"
+				:rules="{
+					max: 1500,
+				}"
+				/>
+			<app-form-control-errors />
+		</app-form-group>
+
+		<app-form-group name="secret" :label="$gettext( `dash.games.trophies.form.secret_label` )">
+			<p class="help-block">
+				<translate>dash.games.trophies.form.secret_help</translate>
+			</p>
+			<app-form-control-toggle
+				:on-label="$gettext( 'Yes' )"
+				:off-label="$gettext( 'No' )"
+				/>
+		</app-form-group>
+
+		<app-form-group name="visible" :label="$gettext( `Visible` )">
+			<p class="help-block">
+				<translate>dash.games.trophies.form.hidden_help</translate>
+			</p>
+			<app-form-control-toggle
+				:on-label="$gettext( 'Yes' )"
+				:off-label="$gettext( 'No' )"
+				/>
+		</app-form-group>
+
+		<app-form-button :icon="method">
+			<translate>dash.games.trophies.form.save_button</translate>
+		</app-form-button>
+
+	</app-form-loader>
 </app-form>

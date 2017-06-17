@@ -12,7 +12,6 @@ import { AppManageGameApiNav } from './_nav/nav';
 		AppManageGameApiNav,
 	},
 })
-export default class RouteDashGamesManageApi extends Vue
-{
-	Screen = makeObservableService( Screen );
+export default class RouteDashGamesManageApi extends Vue {
+	Screen = makeObservableService(Screen);
 }
