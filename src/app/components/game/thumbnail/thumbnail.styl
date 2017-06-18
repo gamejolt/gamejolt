@@ -1,9 +1,11 @@
 @require '~styles/variables'
 @require '../../../../lib/gj-lib-client/stylus/common/mixins'
 
+$game-thumbnail-avatar-size = 35px
+$game-thumbnail-meta-spacing = 7px
+
 .game-thumbnail
 
-	$zindex-tags = 3
 	$zindex-controls = 3
 
 	position: relative
@@ -12,18 +14,6 @@
 
 	@media $media-sm-up
 		margin-bottom: $grid-gutter-width
-
-	// If a video is active, hide the tag.
-	&.active
-		.game-thumbnail-video-tag
-			display: none
-
-	// Hide these when hovered so there's more info to view the image.'
-	&:hover
-		.game-thumbnail-pricing
-		.game-thumbnail-tag
-		.game-thumbnail-video-tag
-			display: none
 
 	&-controls
 		position: absolute
@@ -66,48 +56,26 @@
 			margin-top: @margin-left
 			color: $gray-lighter
 
-		&::after
-			display: none
-			content: ''
-			position: absolute
-			bottom: 0
-			left: 0
-			right: 0
-			height: 30px
-			background-image: linear-gradient( to bottom, transparent 0%, rgba( $black, 0.35 ) 100% )
-			z-index: 2
-
 	&-meta
 		position: relative
-		padding-top: 7px
+		padding-top: $game-thumbnail-meta-spacing
 
 	&-avatar
-		img-circle()
-		position: absolute
-		left: -20px
-		top: -20px
-		width: 40px
-		height: 40px
-		background-color: $white
-		border: 3px solid $gray-lightest
-		z-index: 3
+		float: left
+		width: $game-thumbnail-avatar-size
+		height: $game-thumbnail-avatar-size
 
 	&-dev
 		text-overflow()
-		position: absolute
-		top: -20px
-		left: 30px
-		right: 100px
-		color: $white
+		margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
+		color: $text-muted
 		font-weight: bold
 		font-size: $font-size-h6
-		text-shadow: 0 0 4px rgba( $black, 0.8 )
-		z-index: 3
 
 	&-title
 		text-overflow()
 		margin: 0
-		margin-left: 30px
+		margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
 		line-height: 1.3
 		font-weight: bold
 		color: $gray-darker
@@ -117,30 +85,26 @@
 		.fill-darkest &
 			color: $gray-lightest
 
-	&-os
-		float: right
-		margin-left: 5px
+	&-meta-extra
+		clear: both
+		margin-top: $game-thumbnail-meta-spacing
 
-	&-tag
-		position: absolute
-		left: 5px
-		top: 5px
-		z-index: $zindex-tags
-		color: $white
-		background-color: rgba( $gray-darkest, 0.7 )
-		border-radius: $border-radius-base
+	&-os
+		display: inline-block
+
+	&-tags
+		display: inline-block
+		margin-left: $game-thumbnail-meta-spacing
 
 	&-pricing
-		position: absolute
+		float: right
 		height: 30px
 		line-height: @height
-		right: 5px
-		top: -(@height + @right)
+		margin-left: $game-thumbnail-meta-spacing
 		padding: 0 10px
 		text-align: center
 		border-radius: $border-radius-base
-		background-color: rgba( $gray-darkest, 0.7 )
-		z-index: $zindex-tags
+		background-color: $gray-dark
 
 		&-owned
 			& ^[-1]-tag
@@ -171,7 +135,6 @@
 		&-sale
 			height: 36px
 			line-height: @height
-			top: -(@height + 5px)
 
 			.game-thumbnail-pricing
 
