@@ -111,7 +111,7 @@
 		</li>
 	</ul>
 
-	<div v-if="$route.name !== 'dash.games.manage.game.wizard-finish'">
+	<div class="hidden-xs" v-if="$route.name !== 'dash.games.manage.game.wizard-finish'">
 		<button
 			class="btn btn-success-outline btn-block"
 			v-if="game.status === Game.STATUS_HIDDEN"

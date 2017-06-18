@@ -1,11 +1,10 @@
 <div>
-	<section class="section fill-lightest section-thin" v-if="Screen.isMobile">
-		<div class="container">
-			<nav class="pills">
-				<app-manage-game-api-nav />
-			</nav>
-		</div>
-	</section>
+	<div class="container" v-if="Screen.isMobile">
+		<br>
+		<app-nav-tab-list>
+			<app-manage-game-api-nav />
+		</app-nav-tab-list>
+	</div>
 
 	<section class="section">
 		<div class="container">
