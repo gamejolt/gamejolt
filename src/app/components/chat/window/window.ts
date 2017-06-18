@@ -16,7 +16,6 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { ChatClient } from '../client';
 import { Store } from '../../../store/index';
-import { ChatRoomDetailsModal } from '../room-details-modal/room-details-modal.service';
 
 @View
 @Component({
@@ -41,6 +40,7 @@ export class AppChatWindow extends Vue {
 	@Action toggleRightPane: Store['toggleRightPane'];
 
 	isShowingUsers = false;
+	isDescriptionCollapsed = false;
 
 	ChatRoom = ChatRoom;
 	Screen = makeObservableService(Screen);
@@ -62,10 +62,6 @@ export class AppChatWindow extends Vue {
 
 	showEditRoomModal() {
 		// Chat_SaveRoomModal.show( this.room );
-	}
-
-	showRoomDetails() {
-		ChatRoomDetailsModal.show(this.room);
 	}
 
 	toggleUsers() {

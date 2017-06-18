@@ -8,42 +8,21 @@
 		<translate :escape-html="false">You are in multi-line editing mode. Press <code>ctrl+enter</code> to send.</translate>
 	</div>
 
-	<div class="row">
-		<div class="col-xs-9">
-
-			<!--
-				ctrl+enter sends key code 10 on Chrome. Yeah.
-			-->
-			<textarea
-				class="form-control"
-				placeholder="Enter message..."
-				rows="2"
-				v-app-focus-when="Screen.isDesktop"
-				v-model="message"
-				@change="onChange"
-				@keydown.shift.enter="shiftEnter"
-				@keydown.ctrl.enter.prevent="ctrlEnter"
-				@keydown.ctrl.10.prevent="ctrlEnter"
-				@keydown.enter="enter"
-				>
-			</textarea>
-
-		</div>
-		<div class="col-xs-3">
-
-			<button class="btn btn-outline btn-block"
-				:class="{
-					'btn-sparse': Screen.isXs,
-				}"
-				@click.prevent="sendMessage"
-				>
-				<app-jolticon icon="add-comment" v-if="Screen.isXs" />
-				<translate v-if="!Screen.isXs">
-					Send
-				</translate>
-			</button>
-
-		</div>
-	</div>
+	<!--
+		ctrl+enter sends key code 10 on Chrome. Yeah.
+	-->
+	<textarea
+		class="form-control"
+		placeholder="Enter message..."
+		:rows="Screen.isXs ? 1 : 2"
+		v-app-focus-when="Screen.isDesktop"
+		v-model="message"
+		@change="onChange"
+		@keydown.shift.enter="shiftEnter"
+		@keydown.ctrl.enter.prevent="ctrlEnter"
+		@keydown.ctrl.10.prevent="ctrlEnter"
+		@keydown.enter="enter"
+		>
+	</textarea>
 
 </div>

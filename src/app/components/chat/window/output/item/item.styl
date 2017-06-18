@@ -6,6 +6,10 @@
 	margin-bottom: 3px
 	line-height: $font-size-base * 1.25
 
+	@media $media-xs
+		font-size: $font-size-small
+		line-height: $font-size-small * 1.25
+
 	&-avatar
 		position: absolute
 		left: 0
@@ -60,20 +64,20 @@
 		.hidden-text-expander
 			margin-left: 35px + 10px + $chat-room-window-padding
 
-	&-can-mod:hover
-		outline: 1px dashed $gray-lighter
-
 	&-mod-tools
 		display: none
-		position: absolute
-		top: 0
-		right: 0
-		padding: 2px
-		background-color: $white
-		z-index: 2
 
-		../:hover &
-			display: block
+		// Only show mod tools on larger screens
+		@media $media-sm-up
+			position: absolute
+			top: 0
+			right: 0
+			padding: 2px
+			background-color: $gray-darker
+			z-index: 2
+
+			../:hover &
+				display: block
 
 	&-content
 		display: block

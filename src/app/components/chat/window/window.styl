@@ -88,7 +88,6 @@
 
 .chat-window-header
 	clearfix()
-	background-color: gray-darkest
 	padding: $chat-room-window-padding
 
 	h2
@@ -107,27 +106,15 @@
 			display: block
 			width: 45px
 			height: 45px
+			border-radius: $border-radius-base
 
 .chat-window-header-controls
 	float: right
-	margin-top: 10px
-	margin-left: 10px
 
 	> .btn
 		position: relative
-		vertical-align: op
-		top: -($chat-room-window-padding)
-		right: -($chat-room-window-padding)
+		vertical-align: top
 		margin-left: 5px
-
-		&:last-child
-			margin-right: 10px
-
-.chat-window-header-room-description
-	font-size: $font-size-small
-	color: $text-muted
-	width: 100%
-	margin: 5px 0
 
 /**
  * Chat Window Output
@@ -137,10 +124,10 @@
 	overflow-y: auto
 	overflow-x: hidden
 	padding: $chat-room-window-padding
-	// font-size: $font-size-small
 
 .chat-window-send-container
 	width: 100%
 	flex: 0 0 auto
-	background-color: $gray-lightest
+	background-color: $gray-darker
+	border-top: 1px solid $gray-dark
 	padding: $chat-room-window-padding

@@ -5,7 +5,14 @@
 	textarea
 		resize: none
 		font-size: $font-size-small
+		border: 0
+		background-color: transparent
+		color: $white
+
+		@media $media-sm-up
+			border: 1px solid $gray-dark
 
 	.chat-window-send-multi-line-notice
 		margin-bottom: 5px
 		font-size: $font-size-small
+		color: $gray-light

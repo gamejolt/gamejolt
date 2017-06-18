@@ -24,7 +24,19 @@
 					</div>
 				</div>
 
-				<div class="nav-heading first">
+				<div v-if="!room.isPmRoom">
+					<div class="nav-heading first">
+						<translate>Room Description</translate>
+					</div>
+
+					<div class="nav-well">
+						<div class="chat-compiled-room-description">
+							<div v-html="room.description_compiled"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="nav-heading">
 					<translate>Room Users</translate>
 					<span class="badge" :class="{ 'badge-active': users && users.onlineCount > 0 }">
 						{{ users ? users.onlineCount : 0 | number }}
@@ -49,6 +61,13 @@
 				<div class="chat-window-header fill-darkest">
 
 					<div class="chat-window-header-controls">
+
+						<button class="btn btn-sparse anim-fade-in"
+							v-if="!room.isPmRoom"
+							@click="toggleUsers"
+							>
+							<app-jolticon icon="users" />
+						</button>
 
 						<button class="btn btn-sparse anim-fade-in"
 							@click="showEditRoomModal"
@@ -107,37 +126,25 @@
 							<small>@{{ room.user.username }}</small>
 						</h3>
 
-						<div v-if="!room.isPmRoom" style="clear: both;">
+						<span v-if="!room.isPmRoom && !Screen.isXs">
 							<app-fade-collapse
 								class="fade-collapse-sm"
-								v-if="!Screen.isXs"
-								:collapse-height="50"
-								@required="room._description_collapsed = true"
-								style="display: block; max-height: 50px; overflow: hidden;"
+								:collapse-height="60"
+								@required="isDescriptionCollapsed = true"
 								>
 								<div class="chat-window-header-room-description chat-compiled-room-description">
 									<div class="anim-fade-in no-animate-xs" v-html="room.description_compiled"></div>
 								</div>
 							</app-fade-collapse>
 
-							<div>
-								<button class="btn btn-sm toggle-users"
-									:class="isShowingUsers ? 'btn-success-outline' : 'btn-outline'"
-									@click="toggleUsers"
-									>
-									<translate v-if="!isShowingUsers">Show Users</translate>
-									<translate v-else>Hide Users</translate>
-									({{ users.onlineCount | number }})
-								</button>
+							<button class="btn btn-sm btn-outline anim-fade-in"
+								v-if="isDescriptionCollapsed && !isShowingUsers"
+								@click="toggleUsers"
+								>
+								<translate>more</translate>
+							</button>
+						</span>
 
-								<button class="btn btn-sm btn-outline"
-									v-if="room._description_collapsed || Screen.isXs"
-									@click="showRoomDetails"
-									>
-									<translate>View Room Description</translate>
-								</button>
-							</div>
-						</div>
 					</div>
 
 				</div>
