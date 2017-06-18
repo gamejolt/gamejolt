@@ -39,19 +39,18 @@
 			<app-card-list
 				:items="groupedTrophies[ difficulty ]"
 				:active-item="activeItem[ difficulty ]"
+				:is-adding="isAdding[ difficulty ]"
 				@activate="activeItem[ difficulty ] = $event"
 				>
-				<!--is-adding="isAdding[ difficulty ]"-->
 
-					<!--ui-tree="{ accept: canDrop, dropped: onTrophySorted }"-->
 				<app-card-list-draggable @changed="saveTrophySort">
 					<app-card-list-item
 						v-for="trophy of groupedTrophies[ difficulty ]"
 						:key="trophy.id"
 						:id="`trophy-container-${ trophy.id }`"
 						:item="trophy"
+						:is-inactive="!trophy.visible"
 						>
-						<!--is-inactive="!trophy.visible"-->
 
 						<div class="row">
 							<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
@@ -121,16 +120,16 @@
 					</app-card-list-item>
 				</app-card-list-draggable>
 
-				<!--<gj-editable-accordion-add :add-label="$gettext( 'New Trophy' )">
-
+				<app-card-list-add
+					:label="$gettext( 'New Trophy' )"
+					@toggle="isAdding[ difficulty ] = !isAdding[ difficulty ]"
+					>
 					<form-game-trophy
-						gj-game="manageCtrl.game"
-						trophy-difficulty="difficulty"
+						:game="game"
+						:difficulty="difficulty"
 						@submit="onTrophyAdded( formModel )"
-						>
-					</form-game-trophy>
-
-				</gj-editable-accordion-add>-->
+						/>
+				</app-card-list-add>
 
 			</app-card-list>
 

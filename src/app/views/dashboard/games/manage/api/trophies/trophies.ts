@@ -15,6 +15,9 @@ import { AppTrophyThumbnail } from '../../../../../../components/trophy/thumbnai
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { FormGameTrophy } from '../../../../../../components/forms/game/trophy/trophy';
+import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
+import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 
 @View
 @Component({
@@ -22,6 +25,7 @@ import { FormGameTrophy } from '../../../../../../components/forms/game/trophy/t
 		AppCardList,
 		AppCardListDraggable,
 		AppCardListItem,
+		AppCardListAdd,
 		AppTrophyThumbnail,
 		AppJolticon,
 		FormGameTrophy,
@@ -123,21 +127,22 @@ export default class RouteDashGamesManageApiTrophies extends Vue {
 	// 		return false;
 	// 	}
 
-	// 	function onTrophyAdded( trophy )
-	// 	{
-	// 		// Close all "add" forms.
-	// 		this.isAdding = {};
+	async onTrophyAdded(trophy: GameTrophy) {
+		// Close all "add" forms.
+		this.isAdding = {
+			[GameTrophy.DIFFICULTY_BRONZE]: false,
+			[GameTrophy.DIFFICULTY_SILVER]: false,
+			[GameTrophy.DIFFICULTY_GOLD]: false,
+			[GameTrophy.DIFFICULTY_PLATINUM]: false,
+		};
+		this.trophies.push(trophy);
 
-	// 		this.trophies.push( trophy );
-	// 		refreshTrophies();
-
-	// 		// We want to scroll to the top of the item's position when saving since the form is pretty long.
-	// 		// The position may change if they changed the difficulty level, so we let angular compile first.
-	// 		$timeout( function()
-	// 		{
-	// 			Scroll.to( 'trophy-container-' + trophy.id );
-	// 		} );
-	// 	}
+		// We want to scroll to the top of the item's position when saving
+		// since the form is pretty long. The position may change if they
+		// changed the difficulty level, so we let it compile first.
+		await this.$nextTick();
+		Scroll.to('trophy-container-' + trophy.id);
+	}
 
 	// 	function onTrophyEdited( trophy )
 	// 	{
@@ -156,33 +161,31 @@ export default class RouteDashGamesManageApiTrophies extends Vue {
 	// 	}
 
 	// TODO
-	saveTrophySort() {}
+	saveTrophySort() {
+		// const difficulty = event.source.nodeScope.trophy.difficulty;
+		// const newSort = _.pluck( _this.groupedTrophies[ difficulty ], 'id' );
+		// // Make sure that the sorting has changed.
+		// if ( !angular.equals( newSort, _this.trophySorts[ difficulty ] ) ) {
+		// 	// Save off the sort.
+		// 	_this.trophySorts[ difficulty ] = newSort;
+		// 	Game_Trophy.$saveSort( $scope.manageCtrl.game.id, difficulty, newSort );
+		// }
+	}
 
-	// 	function onTrophySorted( event )
-	// 	{
-	// 		var difficulty = event.source.nodeScope.trophy.difficulty;
-	// 		var newSort = _.pluck( _this.groupedTrophies[ difficulty ], 'id' );
+	async removeTrophy(trophy: GameTrophy) {
+		const result = await ModalConfirm.show(
+			this.$gettext('dash.games.trophies.remove_confirmation')
+		);
 
-	// 		// Make sure that the sorting has changed.
-	// 		if ( !angular.equals( newSort, _this.trophySorts[ difficulty ] ) ) {
+		if (!result) {
+			return;
+		}
 
-	// 			// Save off the sort.
-	// 			_this.trophySorts[ difficulty ] = newSort;
-	// 			Game_Trophy.$saveSort( $scope.manageCtrl.game.id, difficulty, newSort );
-	// 		}
-	// 	}
+		await trophy.$remove();
 
-	// 	function removeTrophy( trophy )
-	// 	{
-	// 		ModalConfirm.show( gettextCatalog.getString( 'dash.games.trophies.remove_confirmation' ) )
-	// 			.then( function()
-	// 			{
-	// 				return trophy.$remove();
-	// 			} )
-	// 			.then( function()
-	// 			{
-	// 				_.remove( _this.trophies, { id: trophy.id } );
-	// 				refreshTrophies();
-	// 			} );
-	// 	}
+		const index = this.trophies.findIndex(item => item.id === trophy.id);
+		if (index !== -1) {
+			this.trophies.splice(index, 1);
+		}
+	}
 }
