@@ -17,24 +17,26 @@
 	</a>
 
 	<div class="chat-window-message-container">
-		<a class="chat-window-message-user link-unstyled"
-			v-if="!message.combine"
-			:href="message.user.url"
-			>
-			{{ message.user.displayName }}
-		</a>
-		<span class="chat-window-message-username"
-			v-if="!message.combine"
-			>
-			@{{ message.user.username }}
-		</span>
-		<span class="chat-window-message-time"
-			v-if="!message.combine"
-			>
-			<span :title="loggedOn">
-				{{ message.loggedOn | date( 'shortTime' ) }}
+		<div class="chat-window-message-byline">
+			<a class="chat-window-message-user link-unstyled"
+				v-if="!message.combine"
+				:href="message.user.url"
+				>
+				{{ message.user.displayName }}
+			</a>
+			<span class="chat-window-message-username"
+				v-if="!message.combine"
+				>
+				@{{ message.user.username }}
 			</span>
-		</span>
+			<span class="chat-window-message-time"
+				v-if="!message.combine"
+				>
+				<span :title="loggedOn">
+					{{ message.loggedOn | date( 'shortTime' ) }}
+				</span>
+			</span>
+		</div>
 
 		<div class="chat-window-message-mod-tools"
 			v-if="canModerate"

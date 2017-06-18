@@ -244,9 +244,11 @@
 								<router-link
 									class="user-avatar ng-scope"
 									:to="user.url"
-									v-app-tooltip="`${user.display_name} (@${user.username})`"
 									>
-									<img class="img-responsive" alt="" :src="user.img_avatar">
+									<app-user-avatar-img
+										:user="user"
+										v-app-tooltip="`${user.display_name} (@${user.username})`"
+										/>
 								</router-link>
 							</div>
 						</div>
@@ -287,15 +289,23 @@
 						</div>
 					</div>
 				</div>
+			</div>
 
-				<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
+		</div>
+	</section>
 
-					<!--
-						Devlog Feed
-					-->
-					<div v-if="feed && feed.hasItems">
+	<!--
+		Devlog Feed
+	-->
+	<div v-if="feed && feed.hasItems">
+		<div class="page-cut"></div>
 
-						<h2>
+		<section class="section">
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-12 col-md-8 col-lg-7">
+
+						<h2 class="section-header">
 							<translate>Project Devlog</translate>
 						</h2>
 
@@ -308,16 +318,16 @@
 							/>
 
 					</div>
-
 				</div>
 			</div>
+		</section>
+	</div>
 
-		</div>
-	</section>
-
-	<!-- Achievements -->
+	<!--
+		Achievements
+	-->
 	<div v-if="hasScores || trophiesCount">
-		<hr>
+		<div class="page-cut"></div>
 
 		<section class="section">
 			<div class="container">

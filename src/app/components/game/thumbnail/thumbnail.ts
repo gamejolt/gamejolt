@@ -53,7 +53,7 @@ export class AppGameThumbnail extends Vue {
 	@State app: AppStore;
 
 	showModTools = false;
-	isHovered = false;
+	isHovered = true;
 	isInview = false;
 	isThumbnailLoaded = false;
 

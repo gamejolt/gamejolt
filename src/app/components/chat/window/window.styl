@@ -12,6 +12,7 @@
 	align-items: flex-start
 	z-index: $zindex-chat-window
 	padding-right: 70px
+	padding-left: ($grid-gutter-width / 2)
 
 	@media $media-sm-up
 		top: $shell-top-nav-height + 10px
@@ -35,7 +36,7 @@
 	display: flex
 	flex: 1 1 auto
 	justify-content: center
-	max-width: $chat-room-window-width
+	width: 100%
 	height: 100%
 	z-index: 1
 
@@ -74,7 +75,6 @@
 	flex: 1 1 auto
 	display: flex
 	flex-direction: column
-	max-width: 1000px * 0.75  // Up to 75%
 	z-index: 1
 
 /**
@@ -110,6 +110,7 @@
 
 .chat-window-header-controls
 	float: right
+	margin-top: 10px
 	margin-left: 10px
 
 	> .btn
@@ -136,8 +137,7 @@
 	overflow-y: auto
 	overflow-x: hidden
 	padding: $chat-room-window-padding
-	font-size: $font-size-small
-	background-color: $white
+	// font-size: $font-size-small
 
 .chat-window-send-container
 	width: 100%

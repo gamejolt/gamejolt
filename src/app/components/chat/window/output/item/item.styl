@@ -4,7 +4,7 @@
 .chat-window-message
 	position: relative
 	margin-bottom: 3px
-	line-height: $font-size-small * 1.25
+	line-height: $font-size-base * 1.25
 
 	&-avatar
 		position: absolute
@@ -13,8 +13,14 @@
 		width: 35px
 		z-index: 1
 
+		> img
+			border-radius: $border-radius-base
+
 	&-container
-		margin-left: 35px + 10px
+		margin-left: 35px + 20px
+
+	&-byline
+		margin-bottom: 5px
 
 	&-user
 		text-overflow()

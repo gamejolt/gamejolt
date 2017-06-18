@@ -7,7 +7,7 @@
 		:item="item"
 		/>
 
-	<div class="page-cut" v-if="shouldShowLoadMore">
+	<div v-if="shouldShowLoadMore" class="text-center">
 		<button class="btn btn-outline" @click="loadMore" v-app-track-event="`activity-feed:more`">
 			<translate>Load More</translate>
 		</button>

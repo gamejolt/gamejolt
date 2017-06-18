@@ -1,5 +1,5 @@
 <div
-	class="scrollable overlay-scrollbar overlay-scrollbar-light"
+	class="scrollable overlay-scrollbar overlay-scrollbar fill-darker"
 	@scroll="onScroll"
 	>
 
@@ -18,6 +18,11 @@
 				>
 				<span class="inner">{{ message.loggedOn | date( 'mediumDate' ) }}</span>
 			</div>
+
+			<hr
+				class="chat-window-output-hr"
+				v-if="!message.dateSplit && !message.combine"
+				>
 
 			<app-chat-window-output-item
 				:message="message"

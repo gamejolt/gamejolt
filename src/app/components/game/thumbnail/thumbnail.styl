@@ -27,7 +27,7 @@
 
 	&-controls
 		position: absolute
-		top: 0
+		top: 5px
 		right: 5px
 		z-index: $zindex-controls
 
@@ -50,6 +50,7 @@
 		padding-top: 56.25%  // HD 16:9
 		overflow: hidden
 		background-color: $gray-lightest
+		border-radius: $border-radius-base
 
 		.fill-dark &
 		.fill-darker &
@@ -120,44 +121,25 @@
 		float: right
 		margin-left: 5px
 
-	&-meter
-		margin-left: 5px
-		float: right
-
-		.meter
-			display: inline-block
-
-	&-rating-count
-		color: $text-muted
-		font-size: $font-size-tiny
-		margin-right: 2px
-
-	&-video-tag
-		position: absolute
-		bottom: 0
-		left: 5px
-		padding: 5px
-		padding-bottom: 3px
-		color: $gj-blue
-		background-color: rgba( $black, 0.8 )
-		z-index: $zindex-tags
-
 	&-tag
 		position: absolute
-		left: 0
-		top: 10px
+		left: 5px
+		top: 5px
 		z-index: $zindex-tags
-		color: $gj-blue
-		background-color: $gray-darkest
+		color: $white
+		background-color: rgba( $gray-darkest, 0.7 )
+		border-radius: $border-radius-base
 
 	&-pricing
 		position: absolute
 		height: 30px
 		line-height: @height
-		top: -(@height)
 		right: 5px
+		top: -(@height + @right)
 		padding: 0 10px
 		text-align: center
+		border-radius: $border-radius-base
+		background-color: rgba( $gray-darkest, 0.7 )
 		z-index: $zindex-tags
 
 		&-owned
@@ -167,6 +149,7 @@
 		&-amount
 			color: $white
 			font-size: $font-size-small
+			font-weight: bold
 
 		&-currency
 			color: $gray-lighter
@@ -188,7 +171,7 @@
 		&-sale
 			height: 36px
 			line-height: @height
-			top: -(@height)
+			top: -(@height + 5px)
 
 			.game-thumbnail-pricing
 
@@ -201,8 +184,11 @@
 					padding-right: 10px
 					height: 36px
 					line-height: @height
+					font-size: $font-size-small
 					font-weight: bold
 					background-color: $gj-green
+					border-top-left-radius: $border-radius-base
+					border-bottom-left-radius: $border-radius-base
 					color: $black
 
 				&-container

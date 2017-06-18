@@ -4,9 +4,9 @@
 		active: isActive,
 		loaded: isThumbnailLoaded,
 	}"
-	@mouseenter.native="isHovered = true"
-	@mouseleave.native="isHovered = false"
 	>
+	<!--@mouseenter.native="isHovered = true"
+	@mouseleave.native="isHovered = false"-->
 	<app-scroll-inview
 		:extra-padding="Screen.height"
 		@inview="isInview = true"
@@ -68,7 +68,7 @@
 
 			<div class="game-thumbnail-meta">
 
-				<div class="game-thumbnail-pricing fill-darkest"
+				<div class="game-thumbnail-pricing"
 					v-if="game._has_packages && !hidePricing"
 					:class="{
 						'game-thumbnail-pricing-owned fill-green': isOwned,

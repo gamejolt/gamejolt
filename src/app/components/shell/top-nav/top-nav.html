@@ -103,7 +103,7 @@
 					v-app-popover-trigger="`account-popover`"
 					v-app-track-event="`top-nav:user-menu:toggle`"
 					>
-					<app-user-avatar-img class="avatar-circle" :user="app.user" />
+					<app-user-avatar-img :user="app.user" />
 				</a>
 				<app-shell-account-popover
 					@shown="userMenuShowing = true"

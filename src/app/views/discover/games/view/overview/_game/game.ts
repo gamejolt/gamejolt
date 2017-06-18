@@ -37,6 +37,7 @@ import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/cli
 import { AppScoreOverview } from '../../../../../../components/score/overview/overview';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
 import { Store } from '../../../../../../store/index';
+import { AppUserAvatarImg } from '../../../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 
 @View
 @Component({
@@ -61,6 +62,7 @@ import { Store } from '../../../../../../store/index';
 		AppSocialFacebookLike,
 		AppTrophyOverview,
 		AppScoreOverview,
+		AppUserAvatarImg,
 	},
 	directives: {
 		AppTrackEvent,
