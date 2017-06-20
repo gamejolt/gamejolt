@@ -1,9 +1,13 @@
 <div class="row">
 	<div class="col-lg-8">
 
-		<h2 class="section-header">{{ 'dash.games.api.settings.heading' | translate }}</h2>
+		<h2 class="section-header">
+			<translate>dash.games.api.settings.heading</translate>
+		</h2>
 
-		<div class="alert alert-warning" translate>dash.games.api.settings.page_alert_html</div>
+		<div class="alert alert-warning">
+			<translate :escape-html="false">dash.games.api.settings.page_alert_html</translate>
+		</div>
 
 		<div class="table-responsive">
 			<table class="table">
@@ -12,22 +16,29 @@
 				</colgroup>
 				<tbody>
 					<tr>
-						<th>{{ 'dash.games.api.settings.game_id_label' | translate }}</th>
-						<td>{{ manageCtrl.game.id }}</td>
+						<th>
+							<translate>dash.games.api.settings.game_id_label</translate>
+						</th>
+						<td>{{ game.id }}</td>
 					</tr>
 					<tr>
-						<th>{{ 'dash.games.api.settings.key_label' | translate }}</th>
+						<th>
+							<translate>dash.games.api.settings.key_label</translate>
+						</th>
 						<td>
-							<div v-if="settingsCtrl.shouldShowKey">
-								<input type="text" class="form-control" ng-value="settingsCtrl.privateKey">
+							<div v-if="shouldShowKey">
+								<input type="text" class="form-control" :value="privateKey">
 								<br>
 							</div>
-							<p v-if="!settingsCtrl.shouldShowKey">
-								<a class="link-muted" ng-click="settingsCtrl.shouldShowKey = true">{{ 'dash.games.api.settings.key_show_link' | translate }}</a>
+							<p v-else>
+								<a class="link-muted" @click="shouldShowKey = true">
+									<translate>dash.games.api.settings.key_show_link</translate>
+								</a>
 							</p>
-							<a class="btn btn-outline" ng-click="settingsCtrl.generateNewKey()">
-								<span class="jolticon jolticon-claim"></span>
-								{{ 'dash.games.api.settings.key_generate_button' | translate }}
+
+							<a class="btn btn-outline" @click="generateNewKey">
+								<app-jolticon icon="claim" />
+								<translate>dash.games.api.settings.key_generate_button</translate>
 							</a>
 						</td>
 					</tr>

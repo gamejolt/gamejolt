@@ -40,7 +40,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 						path: 'wizard-finish',
 						component: RouteEmpty,
 					},
-
 					{
 						name: 'dash.games.manage.game.packages.add',
 						path: 'packages/add',
@@ -66,13 +65,11 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 						path: 'packages/:packageId(\\d+)/releases/:releaseId(\\d+)/edit',
 						component: RouteEmpty,
 					},
-
 					{
 						name: 'dash.games.manage.site',
 						path: 'site',
 						component: RouteEmpty,
 					},
-
 					{
 						name: 'dash.games.manage.key-groups.list',
 						path: 'keys',
@@ -83,46 +80,9 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 						path: 'keys/edit/:keyGroupId(\\d+)',
 						component: RouteEmpty,
 					},
-
 					{
 						name: 'dash.games.manage.devlog.feed',
 						path: 'devlog/:tab?',
-						component: RouteEmpty,
-					},
-
-					{
-						name: 'dash.games.manage.api.settings',
-						path: 'api/settings',
-						component: RouteEmpty,
-					},
-					{
-						name: 'dash.games.manage.api.data-storage.items.list',
-						path: 'api/data-storage/items',
-						component: RouteEmpty,
-					},
-					{
-						name: 'dash.games.manage.api.data-storage.items.view',
-						path: 'api/data-storage/items/:item(\\d+)',
-						component: RouteEmpty,
-					},
-					{
-						name: 'dash.games.manage.api.scoreboards.list',
-						path: 'api/scoreboards',
-						component: RouteEmpty,
-					},
-					{
-						name: 'dash.games.manage.api.scoreboards.scores.list',
-						path: 'api/scoreboards/:table(\\d+)/scores',
-						component: RouteEmpty,
-					},
-					{
-						name: 'dash.games.manage.api.scoreboards.scores.user.list',
-						path: 'api/scoreboards/:table(\\d+)/user/:user(\\d+)',
-						component: RouteEmpty,
-					},
-					{
-						name: 'dash.games.manage.api.scores.view',
-						path: 'api/scores/:score(\\d+)',
 						component: RouteEmpty,
 					},
 				],

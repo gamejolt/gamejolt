@@ -38,18 +38,8 @@ export default class RouteDashGamesManageApiTrophies extends Vue {
 	@RouteState game: RouteStore['game'];
 
 	trophies: GameTrophy[] = [];
-	isAdding = {
-		[GameTrophy.DIFFICULTY_BRONZE]: false,
-		[GameTrophy.DIFFICULTY_SILVER]: false,
-		[GameTrophy.DIFFICULTY_GOLD]: false,
-		[GameTrophy.DIFFICULTY_PLATINUM]: false,
-	};
-	activeItem = {
-		[GameTrophy.DIFFICULTY_BRONZE]: null,
-		[GameTrophy.DIFFICULTY_SILVER]: null,
-		[GameTrophy.DIFFICULTY_GOLD]: null,
-		[GameTrophy.DIFFICULTY_PLATINUM]: null,
-	};
+	isAdding: { [x: number]: boolean } = {};
+	activeItem: { [x: number]: GameTrophy | null } = {};
 
 	GameTrophy = GameTrophy;
 
@@ -96,6 +86,11 @@ export default class RouteDashGamesManageApiTrophies extends Vue {
 		return this.trophies.filter(item => !item.visible).length > 0;
 	}
 
+	created() {
+		this.resetActive();
+		this.resetAdding();
+	}
+
 	@BeforeRouteEnter()
 	routeEnter(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
@@ -115,26 +110,9 @@ export default class RouteDashGamesManageApiTrophies extends Vue {
 		return this.groupedTrophies[difficulty].map(item => item.id);
 	}
 
-	// 	function canDrop( sourceScope, destScope, destIndex )
-	// 	{
-	// 		// Difficulty is pull into the scopes by the ng-repeat on the page.
-	// 		// We check to see if the difficulties are the same.
-	// 		// We don't currently allow dragging/dropping between difficulty levels just yet.
-	// 		if ( sourceScope.difficulty === destScope.difficulty ) {
-	// 			return true;
-	// 		}
-
-	// 		return false;
-	// 	}
-
 	async onTrophyAdded(trophy: GameTrophy) {
 		// Close all "add" forms.
-		this.isAdding = {
-			[GameTrophy.DIFFICULTY_BRONZE]: false,
-			[GameTrophy.DIFFICULTY_SILVER]: false,
-			[GameTrophy.DIFFICULTY_GOLD]: false,
-			[GameTrophy.DIFFICULTY_PLATINUM]: false,
-		};
+		this.resetAdding();
 		this.trophies.push(trophy);
 
 		// We want to scroll to the top of the item's position when saving
@@ -144,32 +122,32 @@ export default class RouteDashGamesManageApiTrophies extends Vue {
 		Scroll.to('trophy-container-' + trophy.id);
 	}
 
-	// 	function onTrophyEdited( trophy )
-	// 	{
-	// 		// Close all "edit" forms.
-	// 		_this.activeItem = {};
+	async onTrophyEdited(trophy: GameTrophy) {
+		// Close all "edit" forms.
+		this.resetActive();
 
-	// 		// May have switched difficulty level, so we gotta fully refresh.
-	// 		refreshTrophies();
+		// We want to scroll to the top of the item's position when saving since
+		// the form is pretty long. The position may change if they changed the
+		// difficulty level, so we let angular compile first.
+		await this.$nextTick();
+		Scroll.to('trophy-container-' + trophy.id);
+	}
 
-	// 		// We want to scroll to the top of the item's position when saving since the form is pretty long.
-	// 		// The position may change if they changed the difficulty level, so we let angular compile first.
-	// 		$timeout( function()
-	// 		{
-	// 			Scroll.to( 'trophy-container-' + trophy.id );
-	// 		} );
-	// 	}
+	saveTrophySort(difficulty: number, trophies: GameTrophy[]) {
+		// Pull out the trophies and then add them back in in the correct order.
+		const trophyIds = trophies.map(i => i.id);
+		let filtered = this.trophies
+			.filter(i => trophyIds.indexOf(i.id) === -1)
+			.concat(trophies);
 
-	// TODO
-	saveTrophySort() {
-		// const difficulty = event.source.nodeScope.trophy.difficulty;
-		// const newSort = _.pluck( _this.groupedTrophies[ difficulty ], 'id' );
-		// // Make sure that the sorting has changed.
-		// if ( !angular.equals( newSort, _this.trophySorts[ difficulty ] ) ) {
-		// 	// Save off the sort.
-		// 	_this.trophySorts[ difficulty ] = newSort;
-		// 	Game_Trophy.$saveSort( $scope.manageCtrl.game.id, difficulty, newSort );
-		// }
+		// Replace with new sort.
+		this.trophies.splice(0, this.trophies.length, ...filtered);
+
+		GameTrophy.$saveSort(
+			this.game.id,
+			difficulty,
+			this.trophySorts[difficulty]
+		);
 	}
 
 	async removeTrophy(trophy: GameTrophy) {
@@ -187,5 +165,23 @@ export default class RouteDashGamesManageApiTrophies extends Vue {
 		if (index !== -1) {
 			this.trophies.splice(index, 1);
 		}
+	}
+
+	private resetAdding() {
+		this.$set(this, 'isAdding', {
+			[GameTrophy.DIFFICULTY_BRONZE]: false,
+			[GameTrophy.DIFFICULTY_SILVER]: false,
+			[GameTrophy.DIFFICULTY_GOLD]: false,
+			[GameTrophy.DIFFICULTY_PLATINUM]: false,
+		});
+	}
+
+	private resetActive() {
+		this.$set(this, 'activeItem', {
+			[GameTrophy.DIFFICULTY_BRONZE]: null,
+			[GameTrophy.DIFFICULTY_SILVER]: null,
+			[GameTrophy.DIFFICULTY_GOLD]: null,
+			[GameTrophy.DIFFICULTY_PLATINUM]: null,
+		});
 	}
 }

@@ -43,7 +43,7 @@
 				@activate="activeItem[ difficulty ] = $event"
 				>
 
-				<app-card-list-draggable @changed="saveTrophySort">
+				<app-card-list-draggable @change="saveTrophySort(difficulty, $event)">
 					<app-card-list-item
 						v-for="trophy of groupedTrophies[ difficulty ]"
 						:key="trophy.id"
@@ -127,7 +127,7 @@
 					<form-game-trophy
 						:game="game"
 						:difficulty="difficulty"
-						@submit="onTrophyAdded( formModel )"
+						@submit="onTrophyAdded"
 						/>
 				</app-card-list-add>
 

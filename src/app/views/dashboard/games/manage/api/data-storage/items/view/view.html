@@ -1,42 +1,45 @@
-<h2 class="section-header">
-	<div class="section-header-controls">
-		<a class="btn btn-sparse" gj-popover-trigger="more-item-options">
-			<span class="jolticon jolticon-ellipsis-h"></span>
-		</a>
+<div v-if="routeBootstrapped">
+
+	<h2 class="section-header">
+		<div class="section-header-controls">
+			<button class="btn btn-sparse btn-danger-outline" @click="remove">
+				<app-jolticon icon="remove" />
+			</button>
+		</div>
+
+		<translate>dash.games.data_store.items.view.heading</translate>
+	</h2>
+
+	<div class="table-responsive">
+		<table class="table table-fixed">
+			<colgroup>
+				<col class="col-sm-3 col-md-2">
+			</colgroup>
+			<tbody>
+				<tr>
+					<th>
+						<translate>dash.games.data_store.items.view.key_label</translate>
+					</th>
+					<td><code>{{ item.key }}</code></td>
+				</tr>
+				<tr>
+					<th>
+						<translate>dash.games.data_store.items.view.date_label</translate>
+					</th>
+					<td>
+						{{ item.posted_on | date('medium') }}
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<translate>dash.games.data_store.items.view.data_label</translate>
+					</th>
+					<td class="small">
+						<pre>{{ item.data }}</pre>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
-	<span translate>dash.games.data_store.items.view.heading</span>
-</h2>
-
-<gj-popover popover-id="more-item-options">
-	<div class="list-group">
-		<a class="list-group-item has-icon" ng-click="viewCtrl.remove()">
-			<span class="jolticon jolticon-remove"></span>
-			<span translate>dash.games.data_store.items.remove_button</span>
-		</a>
-	</div>
-</gj-popover>
-
-<div class="table-responsive">
-	<table class="table table-fixed">
-		<colgroup>
-			<col class="col-sm-3 col-md-2">
-		</colgroup>
-		<tbody>
-			<tr>
-				<th translate>dash.games.data_store.items.view.key_label</th>
-				<td><code>{{ viewCtrl.item.key }}</code></td>
-			</tr>
-			<tr>
-				<th translate>dash.games.data_store.items.view.date_label</th>
-				<td>
-					{{ viewCtrl.item.posted_on | date:'medium' }}
-				</td>
-			</tr>
-			<tr>
-				<th translate>dash.games.data_store.items.view.data_label</th>
-				<td class="small"><pre>{{ viewCtrl.item.data }}</pre></td>
-			</tr>
-		</tbody>
-	</table>
 </div>

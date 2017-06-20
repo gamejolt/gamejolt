@@ -1,140 +1,139 @@
-<h2 class="section-header" translate>dash.games.scoreboards.heading</h2>
+<div>
 
-<div class="page-help">
-	<div translate>dash.games.scoreboards.page_help_html</div>
-	<p>
-		<a class="link-help" href="https://help.gamejolt.com/dev-scoreboards" target="_blank" translate>dash.games.scoreboards.page_help_link</a>
-	</p>
-</div>
+	<h2 class="section-header">
+		<translate>dash.games.scoreboards.heading</translate>
+	</h2>
 
-<div class="row">
+	<div class="page-help">
+		<div>
+			<translate :escape-html="false">dash.games.scoreboards.page_help_html</translate>
+		</div>
+		<p>
+			<a class="link-help" href="https://help.gamejolt.com/dev-scoreboards" target="_blank">
+				<translate>dash.games.scoreboards.page_help_link</translate>
+			</a>
+		</p>
+	</div>
 
-	<div class="col-md-10 col-lg-9">
+	<div class="row">
+		<div class="col-md-10 col-lg-9">
 
-		<div v-if="Loader.ready( 'ui-tree' )">
-			<gj-editable-accordion
-				active-item="listCtrl.activeItem"
-				is-adding="listCtrl.isAdding"
+			<app-card-list
+				:items="scoreTables"
+				:active-item="activeItem"
+				:is-adding="isAdding"
+				@activate="activeItem = $event"
 				>
-
-				<div ui-tree="{ dropped: listCtrl.onTablesSorted }"
-					ui-tree-nodes
-					ng-model="listCtrl.scoreTables"
-					>
-
-					<!-- track by ID was breaking -->
-					<gj-editable-accordion-item
-						v-for="scoreTable of listCtrl.scoreTables"
-						ui-tree-node
+				<app-card-list-draggable @change="saveSort">
+					<app-card-list-item
+						v-for="(scoreTable, i) of scoreTables"
+						:key="scoreTable"
+						:item="scoreTable"
 						>
 
-						<gj-editable-accordion-item-heading>
+						<!--
+							Can only remove if there is more than one score table left.
+						-->
+						<a
+							class="card-remove"
+							v-if="scoreTables.length > 1"
+							@click.stop="removeTable( scoreTable )"
+							>
+							<app-jolticon icon="remove" />
+						</a>
 
-							<!--
-								Can only remove if there is more than one score table left.
-							-->
-							<a class="card-remove"
-								v-if="listCtrl.scoreTables.length > 1"
-								ng-click="listCtrl.removeTable( scoreTable ); $event.stopPropagation()"
-								>
-								<span class="jolticon jolticon-remove"></span>
-							</a>
-
-							<div class="card-stats">
-								<div class="stat-big">
-									<div class="stat-big-label" translate>dash.games.scoreboards.table_id_label</div>
-									<div class="stat-big-digit">{{ scoreTable.id }}</div>
+						<div class="card-stats">
+							<div class="stat-big">
+								<div class="stat-big-label">
+									<translate>dash.games.scoreboards.table_id_label</translate>
 								</div>
+								<div class="stat-big-digit">{{ scoreTable.id }}</div>
 							</div>
+						</div>
 
-							<div class="card-title">
-								<h4>
-									{{ scoreTable.name }}
-								</h4>
-							</div>
+						<div class="card-title">
+							<h4>
+								{{ scoreTable.name }}
+							</h4>
+						</div>
 
-							<div class="card-meta">
-								<span class="tag tag-active"
-									v-app-tooltip="$gettext( `dash.games.scoreboards.primary_tooltip` )"
-									v-if="$index === 0"
-									translate
-									>
-									dash.games.scoreboards.primary_tag
-								</span>
-								<span class="tag"
-									v-app-tooltip="$gettext( `dash.games.scoreboards.guest_tooltip` )"
-									v-if="scoreTable.allow_guest_scores"
-									translate
-									>
-									dash.games.scoreboards.guest_tag
-								</span>
-								<span class="tag"
-									v-app-tooltip="$gettext( `dash.games.scoreboards.unique_tooltip` )"
-									v-if="scoreTable.unique_scores"
-									translate
-									>
-									dash.games.scoreboards.unique_tag
-								</span>
-								<span class="tag"
-									v-app-tooltip="$gettext( `dash.games.scoreboards.asc_tooltip` )"
-									v-if="scoreTable.scores_sorting_direction === Game_ScoreTable.SORTING_DIRECTION_ASC"
-									translate
-									>
-									dash.games.scoreboards.asc_tag
-								</span>
-								<span class="tag"
-									v-app-tooltip="$gettext( `dash.games.scoreboards.desc_tooltip` )"
-									v-if="scoreTable.scores_sorting_direction === Game_ScoreTable.SORTING_DIRECTION_DESC"
-									translate
-									>
-									dash.games.scoreboards.desc_tag
-								</span>
-							</div>
-
-							<div class="card-content">
-								{{ scoreTable.description }}
-							</div>
-
-							<div class="card-controls">
-
-								<!-- Don't propagate the click so that it doesn't open the accordion item. -->
-								<a class="btn btn-outline" ui-sref="^.scores.list( { table: scoreTable.id } )" ng-click="$event.stopPropagation()">
-									<span class="jolticon jolticon-chevron-right"></span>
-									<span translate>dash.games.scoreboards.scores_button</span>
-								</a>
-
-							</div>
-
-
-						</gj-editable-accordion-item-heading>
-
-						<gj-editable-accordion-item-body>
-
-							<form-game-score-table
-								gj-game="manageCtrl.game"
-								gj-game-score-table="scoreTable"
-								@submit="listCtrl.onTableEdited( formModel )"
+						<div class="card-meta">
+							<span class="tag tag-active"
+								v-if="i === 0"
+								v-app-tooltip="$gettext( `dash.games.scoreboards.primary_tooltip` )"
 								>
-							</form-game-score-table>
+								<translate>dash.games.scoreboards.primary_tag</translate>
+							</span>
+							<span class="tag"
+								v-if="scoreTable.allow_guest_scores"
+								v-app-tooltip="$gettext( `dash.games.scoreboards.guest_tooltip` )"
+								>
+								<translate>dash.games.scoreboards.guest_tag</translate>
+							</span>
+							<span class="tag"
+								v-if="scoreTable.unique_scores"
+								v-app-tooltip="$gettext( `dash.games.scoreboards.unique_tooltip` )"
+								>
+								<translate>dash.games.scoreboards.unique_tag</translate>
+							</span>
+							<span class="tag"
+								v-if="scoreTable.scores_sorting_direction === GameScoreTable.SORTING_DIRECTION_ASC"
+								v-app-tooltip="$gettext( `dash.games.scoreboards.asc_tooltip` )"
+								>
+								<translate>dash.games.scoreboards.asc_tag</translate>
+							</span>
+							<span class="tag"
+								v-if="scoreTable.scores_sorting_direction === GameScoreTable.SORTING_DIRECTION_DESC"
+								v-app-tooltip="$gettext( `dash.games.scoreboards.desc_tooltip` )"
+								>
+								<translate>dash.games.scoreboards.desc_tag</translate>
+							</span>
+						</div>
 
-						</gj-editable-accordion-item-body>
+						<div class="card-content">
+							{{ scoreTable.description }}
+						</div>
 
-					</gj-editable-accordion-item>
+						<div class="card-controls">
 
-				</div>
+							<!-- Don't propagate the click so that it doesn't open the accordion item. -->
+							<router-link
+								class="btn btn-outline"
+								:to="{
+									name: 'dash.games.manage.api.scoreboards.scores.list',
+									params: { table: scoreTable.id }
+								}"
+								@click.native.stop
+								>
+								<app-jolticon icon="chevron-right" />
+								<translate>dash.games.scoreboards.scores_button</translate>
+							</router-link>
 
-				<!-- Add Table -->
-				<gj-editable-accordion-add add-label="{{ 'dash.games.scoreboards.add_button' | translate }}">
+						</div>
 
+						<div slot="body">
+							<form-game-score-table
+								:game="game"
+								:model="scoreTable"
+								@submit="onTableEdited"
+								/>
+						</div>
+
+					</app-card-list-item>
+				</app-card-list-draggable>
+
+				<app-card-list-add
+					:label="$gettext( `dash.games.scoreboards.add_button` )"
+					@toggle="isAdding = !isAdding"
+					>
 					<form-game-score-table
-						gj-game="manageCtrl.game"
-						@submit="listCtrl.onTableAdded( formModel )">
-					</form-game-score-table>
+						:game="game"
+						@submit="onTableAdded"
+						/>
+				</app-card-list-add>
+			</app-card-list>
 
-				</gj-editable-accordion-add>
-
-			</gj-editable-accordion>
 		</div>
-
 	</div>
+
 </div>

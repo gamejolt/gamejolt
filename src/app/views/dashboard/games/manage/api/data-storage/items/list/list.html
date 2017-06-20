@@ -1,53 +1,87 @@
-<h2 class="section-header" translate>dash.games.data_store.items.heading</h2>
+<div>
 
-<div class="page-help">
-	<div translate>dash.games.data_store.items.page_help_html</div>
-	<p>
-		<a class="link-help" href="https://help.gamejolt.com/dev-data-storage" target="_blank" translate>dash.games.data_store.items.page_help_link</a>
-	</p>
-</div>
+	<h2 class="section-header">
+		<translate>dash.games.data_store.items.heading</translate>
+	</h2>
 
-<div class="table-responsive">
-	<table class="table table-condensed">
-		<colgroup>
-			<col class="col-xs-3">
-			<col class="col-xs-4">
-		</colgroup>
-		<thead>
-			<tr>
-				<th translate>dash.games.data_store.items.key_label</th>
-				<th translate>dash.games.data_store.items.preview_label</th>
-				<th translate>dash.games.data_store.items.date_label</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr v-for="item of listCtrl.items track by item.id" ng-click="$state.go( 'dash.games.manage.api.data-storage.items.view', { item: item.id } )">
-				<td class="small">
-					<code>{{ item.key }}</code>
-				</td>
-				<td class="small">
-					<span>{{ item.data | limitTo:50 }}</span>
-					<a class="hidden-text-expander inline" v-if="item.data.length > 50" ui-sref="dashboard.games.manage.api.data-storage.items.view( { item: item.id } )"></a>
-				</td>
-				<td class="small">
-					{{ item.posted_on | date:'medium' }}
-				</td>
-				<td class="text-right">
-					<a class="text-muted" gj-popover-trigger="data-storage-item-options-{{ item.id }}" ng-click="$event.stopPropagation()">
-						<span class="jolticon jolticon-ellipsis-h"></span>
-						<span translate>options.options</span>
-					</a>
-					<gj-popover [popover-id]="'data-storage-item-options-' + item.id">
-						<div class="list-group nowrap">
-							<a class="list-group-item has-icon" ng-click="$event.stopPropagation(); listCtrl.removeItem( item )">
-								<span class="jolticon jolticon-remove"></span>
-								<span translate>dash.games.data_store.items.remove_button</span>
+	<div class="page-help">
+		<div>
+			<translate :escape-html="false">dash.games.data_store.items.page_help_html</translate>
+		</div>
+		<p>
+			<a class="link-help" href="https://help.gamejolt.com/dev-data-storage" target="_blank">
+				<translate>dash.games.data_store.items.page_help_link</translate>
+			</a>
+		</p>
+	</div>
+
+	<div class="table-responsive">
+		<table class="table table-condensed">
+			<colgroup>
+				<col class="col-xs-3">
+				<col class="col-xs-4">
+			</colgroup>
+			<thead>
+				<tr>
+					<th>
+						<translate>dash.games.data_store.items.key_label</translate>
+					</th>
+					<th>
+						<translate>dash.games.data_store.items.preview_label</translate>
+					</th>
+					<th>
+						<translate>dash.games.data_store.items.date_label</translate>
+					</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					v-for="item of items"
+					:key="item.id"
+					>
+					<td class="small">
+						<router-link
+							class="table-primary-link"
+							:to="{
+								name: 'dash.games.manage.api.data-storage.items.view',
+								params: { item: item.id },
+							}"
+							>
+							<code>{{ item.key }}</code>
+						</router-link>
+					</td>
+					<td class="small">
+						<span>{{ item.data.slice(0, 50) }}</span>
+						<span v-if="item.data.length > 50">...</span>
+					</td>
+					<td class="small">
+						{{ item.posted_on | date('medium') }}
+					</td>
+					<td class="text-right">
+						<div class="table-controls">
+							<a
+								class="link-muted"
+								v-app-popover-trigger="`data-storage-item-options-${item.id}`"
+								>
+								<app-jolticon icon="cog" />
 							</a>
 						</div>
-					</gj-popover>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+						<app-popover :popover-id="`data-storage-item-options-${item.id}`">
+							<div class="list-group nowrap">
+								<a
+									class="list-group-item has-icon"
+									@click="removeItem( item )"
+									>
+									<app-jolticon icon="remove" />
+									<translate>dash.games.data_store.items.remove_button</translate>
+								</a>
+							</div>
+						</app-popover>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
 </div>

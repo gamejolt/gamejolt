@@ -21,7 +21,7 @@
 			>
 			<!--is-adding="isAdding"-->
 
-			<app-card-list-draggable @changed="saveSongSort">
+			<app-card-list-draggable @change="saveSongSort">
 				<app-card-list-item
 					v-for="song of songs"
 					:key="song.id"

@@ -1,26 +1,41 @@
-<h2 class="section-header" translate>dash.games.scores.list.heading</h2>
+<div>
 
-<div class="row">
-	<div class="col-md-10 col-lg-9">
-		<div class="form-group">
-			<select class="form-control"
-				ng-model="listCtrl.selectedTable"
-				ng-options="table.name for table in listCtrl.scoreTables"
-				ng-change="listCtrl.changeTable( listCtrl.selectedTable.id )"></select>
+	<h2 class="section-header">
+		<translate>dash.games.scores.list.heading</translate>
+	</h2>
+
+	<div class="row">
+		<div class="col-md-10 col-lg-9">
+			<div class="form-group">
+				<select class="form-control" v-model="selectedTable" @change="changeTable">
+					<option
+						v-for="table of scoreTables"
+						:key="table.id"
+						:selected="table.id === selectedTable"
+						:value="table.id"
+						>
+						{{ table.name }}
+					</option>
+				</select>
+			</div>
 		</div>
 	</div>
+
+	<div class="page-help">
+		<translate :escape-html="false">dash.games.scores.list.page_help_html</translate>
+	</div>
+
+	<div class="alert alert-warning anim-fade-in"
+		v-if="!scores.length"
+		>
+		<translate :escape-html="false">dash.games.scores.list.no_scores_html</translate>
+	</div>
+
+	<app-manage-game-list-scores
+		v-if="scores.length"
+		:score-table="scoreTable"
+		:scores="scores"
+		@remove="onScoreRemoved"
+		/>
+
 </div>
-
-<div class="page-help" translate>dash.games.scores.list.page_help_html</div>
-
-<div class="alert alert-warning anim-fade-in" v-if="!listCtrl.scores.length" translate>
-	dash.games.scores.list.no_scores_html
-</div>
-
-<gj-dash-list-scores-developer
-	v-if="listCtrl.scores.length"
-	gj-score-table="listCtrl.scoreTable"
-	gj-scores="listCtrl.scores"
-	on-remove="listCtrl.onScoreRemoved( $score )"
-	>
-</gj-dash-list-scores-developer>
