@@ -21,6 +21,13 @@
 		<span>Tag: #gjfreeze</span>
 	</a>
 	<a class="list-group-item has-icon"
+		@click="tag( 'gjheat' )"
+		target="_blank"
+		>
+		<app-jolticon icon="tag" />
+		<span>Tag: #gjheat</span>
+	</a>
+	<a class="list-group-item has-icon"
 		:href="Environment.secureBaseUrl + `/moderate/games/view/${game.id}`"
 		target="_blank"
 		>
