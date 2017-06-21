@@ -119,6 +119,7 @@ type DateRange = [number, number];
 export interface Request {
 	target: ResourceName;
 	target_id: number;
+	view_as?: number;
 	collection: Collection;
 	analyzer: Analyzer;
 	field?: Field;
@@ -424,6 +425,7 @@ export class SiteAnalytics {
 		resourceId: number,
 		metrics: MetricMap,
 		partnerMode: boolean,
+		viewAs: number,
 		dates: DateRange
 	) {
 		const request = this.generateAggregationRequest(
@@ -432,6 +434,7 @@ export class SiteAnalytics {
 			metrics,
 			'histogram',
 			partnerMode,
+			viewAs,
 			dates
 		);
 
@@ -463,6 +466,7 @@ export class SiteAnalytics {
 		resourceId: number,
 		metrics: MetricMap,
 		partnerMode: boolean,
+		viewAs: number,
 		dates?: DateRange
 	) {
 		const request = this.generateAggregationRequest(
@@ -471,6 +475,7 @@ export class SiteAnalytics {
 			metrics,
 			'count',
 			partnerMode,
+			viewAs,
 			dates
 		);
 
@@ -504,6 +509,7 @@ export class SiteAnalytics {
 		metrics: MetricMap,
 		analyzer: Analyzer,
 		partnerMode: boolean,
+		viewAs: number,
 		dates?: DateRange
 	) {
 		let request: { [k: string]: Request } = {};
@@ -525,6 +531,10 @@ export class SiteAnalytics {
 				collection: metric.collection,
 				analyzer: _analyzer,
 			};
+
+			if (viewAs) {
+				request[metric.key].view_as = viewAs;
+			}
 
 			if (metric.field) {
 				request[metric.key].field = metric.field;

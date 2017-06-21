@@ -96,7 +96,8 @@ export default class RouteDashAnalytics extends Vue {
 	resource: ResourceName = null as any;
 	resourceId = 0;
 	partnerMode = false;
-	availableMetrics: MetricMap = null as any;
+	viewAs = 0;
+	availableMetrics: MetricMap = {};
 	metric: Metric = null as any;
 	metricData: any = {};
 
@@ -128,6 +129,15 @@ export default class RouteDashAnalytics extends Vue {
 		this.resource = this.$route.params.resource as ResourceName;
 		this.resourceId = parseInt(this.$route.params.resourceId, 10);
 
+		const appUser = this.app.user!;
+		if (this.$route.query.viewAs) {
+			this.viewAs = parseInt(this.$route.query.viewAs, 10);
+		}
+
+		if (!this.viewAs) {
+			this.viewAs = appUser.id;
+		}
+
 		this.user = this.$payload.user ? new User(this.$payload.user) : null;
 		this.game = this.$payload.game ? new Game(this.$payload.game) : null;
 		this.package = this.$payload.package
@@ -136,13 +146,7 @@ export default class RouteDashAnalytics extends Vue {
 		this.release = this.$payload.release
 			? new GameRelease(this.$payload.release)
 			: null;
-		this.partnerMode = !this.user || this.user.id !== this.app.user!.id;
-
-		if (this.partnerMode) {
-			this.availableMetrics = SiteAnalytics.pickPartnerMetrics(
-				this.availableMetrics
-			);
-		}
+		this.partnerMode = !this.user || this.user.id !== this.viewAs;
 
 		this.period = (this.$route.query['period'] as any) || 'monthly';
 		this.resource = this.$route.params['resource'] as any;
@@ -272,6 +276,7 @@ export default class RouteDashAnalytics extends Vue {
 			this.resourceId,
 			this.availableMetrics,
 			this.partnerMode,
+			this.viewAs,
 			[this.startTime, this.endTime]
 		);
 
@@ -285,7 +290,8 @@ export default class RouteDashAnalytics extends Vue {
 			this.resource,
 			this.resourceId,
 			this.availableMetrics,
-			this.partnerMode
+			this.partnerMode,
+			this.viewAs
 		);
 
 		for (const i in data) {
@@ -301,6 +307,7 @@ export default class RouteDashAnalytics extends Vue {
 			this.resourceId,
 			this.metric.collection,
 			this.partnerMode,
+			this.viewAs,
 			this.startTime,
 			this.endTime
 		);
