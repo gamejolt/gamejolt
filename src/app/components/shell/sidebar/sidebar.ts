@@ -6,7 +6,6 @@ import * as View from '!view!./sidebar.html?style=./sidebar.styl';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
-import { AppRouterLink } from '../../router-link/router-link';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
@@ -27,7 +26,6 @@ import {
 @View
 @Component({
 	components: {
-		AppRouterLink,
 		AppPopover,
 		AppJolticon,
 		AppUserAvatarImg,

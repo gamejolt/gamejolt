@@ -13,7 +13,6 @@ import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytic
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppShellAccountPopover } from '../account-popover/account-popover';
 import { AppFriendRequestPopover } from '../../friend/request-popover/request-popover';
-import { AppRouterLink } from '../../router-link/router-link';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppSearch } from '../../search/search';
 import { Store } from '../../../store/index';
@@ -23,7 +22,6 @@ import { ChatClient } from '../../chat/client';
 @Component({
 	components: {
 		AppJolticon,
-		AppRouterLink,
 		AppUserAvatarImg,
 		AppShellAccountPopover,
 		AppFriendRequestPopover,

@@ -6,7 +6,6 @@ import * as View from '!view!./footer.html?style=./footer.styl';
 
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppRouterLink } from '../../router-link/router-link';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTranslateLangSelector } from '../../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
 import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
@@ -14,7 +13,6 @@ import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
 @View
 @Component({
 	components: {
-		AppRouterLink,
 		AppJolticon,
 		AppTranslateLangSelector,
 	},
