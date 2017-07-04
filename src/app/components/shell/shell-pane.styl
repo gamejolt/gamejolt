@@ -1,12 +1,12 @@
 .shell-pane
 	@extend .clearfix
 	position: fixed
-	left: 0
 	top: $shell-top-nav-height
 	bottom: 0
 	background-color: $gray-darkest
 	z-index: $zindex-shell-pane
-	width: $percentage-11
+	width: $percentage-10
+	transition: transform 300ms $strong-ease-out
 
 	@media $media-sm-up
 		width: $shell-pane-width
@@ -18,9 +18,18 @@
 	body.status-bar-visible &
 		bottom: $status-bar-height
 
+.shell-pane-left
+	left: 0
+	right: auto
+
 .shell-pane-right
 	left: auto
 	right: 0
+
+.right-pane-visible .shell-pane-left
+.right-pane-visible .shell-sidebar
+.left-pane-visible .shell-pane-right
+	z-index: $zindex-shell-pane-under !important
 
 // When we are hiding the pane and showing the content again, we want to also
 // keep it visible during this time.
@@ -29,24 +38,19 @@
 #shell.right-pane-visible-remove .shell-pane
 	display: block
 
-@media $media-xs
+// Pane slide transitions
+.shell-pane-left
+	transform: translateX(-100%)
+	.left-pane-visible &
+		transform: translateX(0)
 
-	// On mobile, always hide the pane until it's visible.
-	.shell-pane
-		display: none
-
-	.left-pane-visible .shell-pane-left
-		display: block
-
-	.right-pane-visible .shell-pane-right
-		display: block
+.shell-pane-right
+	transform: translateX(100%)
+	.right-pane-visible &
+		transform: translateX(0)
 
 @media $media-sm-up
 
-	// One sm-up, we always want to hide the chat sidebar until it shows.
-	// The left sidebar will still show a bit, so we don't want to hide it completely.
-	.shell-pane-right
-		display: none
-
-		.right-pane-visible &
-			display: block
+	// On sm-up left pane is always visible.
+	.shell-pane-left
+		transform: translateX(0)

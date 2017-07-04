@@ -8,26 +8,12 @@ body
 #shell-body
 	position: relative
 	background-color: transparent
-	transition: transform 450ms $strong-ease-out
 	z-index: $zindex-shell-body
 	overflow-x: hidden
 	min-height: 100vh
 
 	// Space for the top nav.
 	margin-top: $shell-top-nav-height
-
-	// When we are showing a right pane we want to shift the whole body over to reveal the pane.
-	#shell.right-pane-visible &
-		transform: translate( -($percentage-11), 0 )
-		@media $media-sm-up
-			transform: translate( -($shell-pane-width), 0 )
-
-	#shell.left-pane-visible &
-		@media $media-xs
-			transform: translate( $percentage-11, 0 )
-
-		@media $media-sm
-			transform: translate( $shell-sidebar-width - $shell-top-nav-height, 0 )
 
 	// Affixed components should be shifted down from the top of the shell to make room
 	// for the top nav.

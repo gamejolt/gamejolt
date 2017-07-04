@@ -6,7 +6,8 @@
 	bottom: 0
 	left: 0
 	width: $shell-top-nav-height
-	z-index: $zindex-page-sidebar
+	z-index: $zindex-shell-pane
+	transition: width 300ms $strong-ease-out
 
 	hr
 		margin: $line-height-computed 15px
@@ -39,9 +40,6 @@
 		.tag
 			position: relative !important
 			margin-top: 15px !important
-
-	.right-pane-visible &
-		display: none
 
 .shell-sidebar-content
 	position: absolute
