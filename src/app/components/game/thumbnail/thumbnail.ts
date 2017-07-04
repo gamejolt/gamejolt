@@ -48,8 +48,6 @@ export class AppGameThumbnail extends Vue {
 	@Prop({ type: Boolean, default: false })
 	animateEnter: boolean;
 
-	@Prop(Number) slotId: number;
-
 	@State app: AppStore;
 
 	showModTools = false;

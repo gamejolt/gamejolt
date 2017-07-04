@@ -5,10 +5,8 @@
 		loaded: isThumbnailLoaded,
 	}"
 	>
-	<!--@mouseenter.native="isHovered = true"
-	@mouseleave.native="isHovered = false"-->
 	<app-scroll-inview
-		:extra-padding="Screen.height"
+		:extra-padding="Screen.height / 2"
 		@inview="isInview = true"
 		@outview="isInview = false"
 		>
@@ -20,7 +18,6 @@
 			<div class="game-thumbnail-controls"
 				@click.prevent
 				>
-				<span v-if="slotId" :class="`ng-slot-${slotId}`"></span>
 				<slot />
 				<span v-if="showModTools">
 					<button class="btn btn-sparse"
@@ -40,10 +37,6 @@
 
 			<div class="game-thumbnail-thumb">
 				<app-jolticon icon="game" />
-
-				<!--<span class="game-thumbnail-video-tag" v-if="game.thumbnail_media_item && game.thumbnail_media_item.is_animated && Screen.isDesktop">
-					<app-jolticon icon="stream" />
-				</span>-->
 
 				<app-game-thumbnail-img
 					:game="game"
@@ -112,7 +105,8 @@
 				</div>
 
 				<div class="game-thumbnail-meta-extra">
-					<div class="game-thumbnail-os">
+					<!-- Don't show if devlog -->
+					<div class="game-thumbnail-os" v-if="game.development_status !== 4">
 						<app-game-compat-icons :game="game" />
 					</div>
 
