@@ -18,6 +18,6 @@ export class FormGameSketchfab extends BaseForm<GameSketchfab>
 	resetOnSubmit = true;
 
 	onInit() {
-		this.formModel.game_id = this.game.id;
+		this.setField('game_id', this.game.id);
 	}
 }

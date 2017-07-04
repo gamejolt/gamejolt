@@ -23,10 +23,10 @@ export class FormForumPost extends BaseForm<ForumPost> implements FormOnInit {
 	resetOnSubmit = true;
 
 	onInit() {
-		this.formModel.topic_id = this.topic.id;
+		this.setField('topic_id', this.topic.id);
 
 		if (this.replyTo) {
-			this.formModel.reply_to = this.replyTo.id; // Post ID.
+			this.setField('reply_to', this.replyTo.id); // Post ID.
 		}
 	}
 

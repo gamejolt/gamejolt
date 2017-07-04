@@ -21,7 +21,7 @@ export class FormToken extends BaseForm<any>
 	@Prop(String) token: string;
 
 	onInit() {
-		this.formModel.token = this.token;
+		this.setField('token', this.token);
 	}
 
 	onSubmit() {
@@ -29,6 +29,6 @@ export class FormToken extends BaseForm<any>
 	}
 
 	onSubmitSuccess(response: any) {
-		this.formModel.token = response.token;
+		this.setField('token', response.token);
 	}
 }

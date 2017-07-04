@@ -22,12 +22,14 @@ export class FormGameScoreTable extends BaseForm<GameScoreTable>
 	modelClass = GameScoreTable;
 
 	onInit() {
-		this.formModel.game_id = this.game.id;
+		this.setField('game_id', this.game.id);
 
 		if (this.method === 'add') {
-			this.formModel.unique_scores = true;
-			this.formModel.scores_sorting_direction =
-				GameScoreTable.SORTING_DIRECTION_DESC;
+			this.setField('unique_scores', true);
+			this.setField(
+				'scores_sorting_direction',
+				GameScoreTable.SORTING_DIRECTION_DESC
+			);
 		}
 	}
 }

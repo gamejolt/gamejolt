@@ -134,10 +134,10 @@
 					<span translate>To send all your money when doing automatic pay outs set this to $0.</span>
 				</p>
 
-				<input-group>
-					<input-group-addon>
+				<div class="input-group">
+					<span class="input-group-addon">
 						$
-					</input-group-addon>
+					</span>
 					<input
 						form-control="number"
 						gj-form-currency-input
@@ -145,7 +145,7 @@
 						ng-max="maxWallet / 100"
 						ng-min="0"
 						>
-				</input-group>
+				</div>
 				<app-form-control-errors />
 			</app-form-group>
 
@@ -168,10 +168,10 @@
 					<span translate>For no minimum, set this to $0.</span>
 				</p>
 
-				<input-group>
-					<input-group-addon>
+				<div class="input-group">
+					<span class="input-group-addon">
 						$
-					</input-group-addon>
+					</span>
 					<input
 						form-control="number"
 						gj-form-currency-input
@@ -179,7 +179,7 @@
 						ng-max="maxPayout / 100"
 						ng-min="0"
 						>
-				</input-group>
+				</div>
 				<app-form-control-errors />
 			</app-form-group>
 

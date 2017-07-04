@@ -21,10 +21,10 @@ export class FormForumTopic extends BaseForm<ForumTopic> implements FormOnInit {
 	modelClass = ForumTopic;
 
 	onInit() {
-		this.formModel.channel_id = this.channel.id;
+		this.setField('channel_id', this.channel.id);
 
 		if (this.method === 'edit' && this.model) {
-			this.formModel.content_markdown = this.model.main_post.content_markdown;
+			this.setField('content_markdown', this.model.main_post.content_markdown);
 		}
 	}
 

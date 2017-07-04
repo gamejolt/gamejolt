@@ -55,13 +55,13 @@ export class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnInit {
 	}
 
 	onInit() {
-		this.formModel.game_id = this.game.id;
-		this.formModel.file = undefined;
+		this.setField('game_id', this.game.id);
+		this.setField('file', undefined);
 
 		// If we're adding, set some defaults.
 		if (this.method === 'add') {
-			this.formModel.difficulty = this.difficulty;
-			this.formModel.secret = false;
+			this.setField('difficulty', this.difficulty);
+			this.setField('secret', false);
 		}
 	}
 
@@ -87,7 +87,7 @@ export class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnInit {
 		await this.model!.$clearImage();
 
 		// Copy just the differences that we want.
-		this.formModel.has_thumbnail = this.model!.has_thumbnail;
-		this.formModel.img_thumbnail = this.model!.img_thumbnail;
+		this.setField('has_thumbnail', this.model!.has_thumbnail);
+		this.setField('img_thumbnail', this.model!.img_thumbnail);
 	}
 }

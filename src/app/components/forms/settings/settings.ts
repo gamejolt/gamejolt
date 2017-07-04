@@ -6,7 +6,7 @@ import {
 	FormOnInit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Settings } from '../../settings/settings.service';
-import { AppFormControlToggleSwitch } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle-switch/toggle-switch';
+import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { ClientAutoStart as _ClientAutoStart } from '../../client/autostart/autostart.service';
 import { ClientInstaller as _ClientInstaller } from '../../client/installer/installer.service';
 
@@ -29,25 +29,31 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 	ClientAutoStart = ClientAutoStart;
 
 	onInit() {
-		this.formModel.chat_notify_friends_online = Settings.get(
-			'chat-notify-friends-online'
+		this.setField(
+			'chat_notify_friends_online',
+			Settings.get('chat-notify-friends-online')
 		);
-		this.formModel.restricted_browsing = Settings.get('restricted-browsing');
-		this.formModel.broadcast_modal = Settings.get('broadcast-modal');
+		this.setField('restricted_browsing', Settings.get('restricted-browsing'));
+		this.setField('broadcast_modal', Settings.get('broadcast-modal'));
 
 		if (GJ_IS_CLIENT) {
-			this.formModel.game_install_dir = Settings.get('game-install-dir');
-			this.formModel.queue_when_playing = Settings.get('queue-when-playing');
+			this.setField('game_install_dir', Settings.get('game-install-dir'));
+			this.setField('queue_when_playing', Settings.get('queue-when-playing'));
 
-			this.formModel.max_download_count = Settings.get('max-download-count');
-			this.formModel.limit_downloads = this.formModel.max_download_count !== -1;
+			this.setField('max_download_count', Settings.get('max-download-count'));
+			this.setField(
+				'limit_downloads',
+				this.formModel.max_download_count !== -1
+			);
 
-			this.formModel.max_extract_count = Settings.get('max-extract-count');
-			this.formModel.limit_extractions =
-				this.formModel.max_extract_count !== -1;
+			this.setField('max_extract_count', Settings.get('max-extract-count'));
+			this.setField(
+				'limit_extractions',
+				this.formModel.max_extract_count !== -1
+			);
 
 			if (ClientAutoStart!.canAutoStart) {
-				this.formModel.autostart_client = Settings.get('autostart-client');
+				this.setField('autostart_client', Settings.get('autostart-client'));
 			}
 		}
 	}
@@ -68,9 +74,10 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 			return;
 		}
 
-		this.formModel.max_download_count = shouldLimit
-			? Settings.getDefault('max-download-count')
-			: -1;
+		this.setField(
+			'max_download_count',
+			shouldLimit ? Settings.getDefault('max-download-count') : -1
+		);
 	}
 
 	@Watch('formModel.limit_extractions')
@@ -79,9 +86,10 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 			return;
 		}
 
-		this.formModel.max_extract_count = shouldLimit
-			? Settings.getDefault('max-extract-count')
-			: -1;
+		this.setField(
+			'max_extract_count',
+			shouldLimit ? Settings.getDefault('max-extract-count') : -1
+		);
 	}
 
 	onChange() {

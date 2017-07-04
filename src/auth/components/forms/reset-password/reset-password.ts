@@ -20,7 +20,7 @@ export class FormResetPassword extends BaseForm<any>
 	Connection = makeObservableService(Connection);
 
 	onInit() {
-		this.formModel.password = '';
+		this.setField('password', '');
 	}
 
 	onSubmit() {

@@ -23,15 +23,15 @@
 			>
 			dash.funds.withdraw.amount_help
 		</p>
-		<input-group>
-			<input-group-addon>$</input-group-addon>
+		<div class="input-group">
+			<span class="input-group-addon">$</span>
 			<input form-control="number"
 				gj-form-currency-input
 				step="0.01"
 				ng-min="minAmount"
 				ng-max="withdrawableAmount"
 				>
-		</input-group>
+		</div>
 		<app-form-control-errors />
 	</app-form-group>
 

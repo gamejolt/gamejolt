@@ -21,7 +21,7 @@ export class FormGameVideo extends BaseForm<GameVideo> implements FormOnInit {
 	GameVideo = GameVideo;
 
 	onInit() {
-		this.formModel.game_id = this.game.id;
+		this.setField('game_id', this.game.id);
 	}
 }
 

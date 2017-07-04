@@ -13,9 +13,9 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 export class FormChangePassword extends BaseForm<any>
 	implements FormOnInit, FormOnSubmit {
 	onInit() {
-		this.formModel.old_password = '';
-		this.formModel.password = '';
-		this.formModel.confirm_password = '';
+		this.setField('old_password', '');
+		this.setField('password', '');
+		this.setField('confirm_password', '');
 	}
 
 	onSubmit() {

@@ -27,7 +27,7 @@ export class FormGameImage extends BaseForm<GameScreenshot>
 	maxHeight = 0;
 
 	onInit() {
-		this.formModel.game_id = this.game.id;
+		this.setField('game_id', this.game.id);
 
 		// // Only on adding can they send in the file.
 		// if ( this.method === 'add' ) {

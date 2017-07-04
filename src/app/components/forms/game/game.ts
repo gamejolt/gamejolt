@@ -83,7 +83,7 @@ export class FormGame extends BaseForm<Game> implements FormOnInit {
 		this.acceptedRules = this.method !== 'add';
 
 		if (this.method === 'add') {
-			this.formModel.referrals_enabled = true;
+			this.setField('referrals_enabled', true);
 		}
 	}
 

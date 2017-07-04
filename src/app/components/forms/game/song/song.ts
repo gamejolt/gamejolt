@@ -36,7 +36,7 @@ export class FormGameSong extends BaseForm<GameSong> implements FormOnInit {
 
 	onInit() {
 		// scope.formModel.file = undefined;
-		this.formModel.game_id = this.game.id;
+		this.setField('game_id', this.game.id);
 	}
 
 	onLoaded(payload: any) {

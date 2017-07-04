@@ -208,17 +208,17 @@
 							label-class="col-sm-3"
 							>
 							<div class="col-sm-9">
-								<input-group class="input-group-sm">
+								<div class="input-group input-group-sm">
 									<input form-control ng-maxlength="500">
-									<input-group-addon>
+									<span class="input-group-addon">
 										<a class="link-unstyled"
 											gj-v-app-tooltip="$gettext( `dash.games.releases.builds.launch_options.form.file_selector_tooltip` )"
 											ng-click="openFileSelector( platform.key )"
 											>
 											<app-jolticon icon="ellipsis-h" />
 										</a>
-									</input-group-addon>
-								</input-group>
+									</span>
+								</div>
 
 								<app-form-control-errors
 									:ignore-dirty="true"
