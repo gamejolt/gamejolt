@@ -1,146 +1,202 @@
 <app-form name="packageForm">
+	<app-form-loader :url="loadUrl" @loaded="onLoaded">
+		<app-loading-fade :is-loading="isProcessing">
 
-	<div v-if="!isLoaded">
-		<gj-loading></gj-loading>
-	</div>
+			<app-form-group
+				name="title"
+				:label="$gettext( `dash.games.packages.form.title_label` )"
+				>
+				<p class="help-block">
+					<translate :escape-html="false"
+						>dash.games.packages.form.title_help_html
+					</translate>
+				</p>
 
-	<div v-if="isLoaded">
-		<gj-loading-fade [is-loading]="isProcessing || formState.isProcessing">
-
-			<app-form-group name="title" :label="$gettext( `dash.games.packages.form.title_label` )">
-				<p class="help-block" translate>dash.games.packages.form.title_help_html</p>
-
-				<input
-					form-control
-					ng-maxlength="150"
-					gj-form-validate-availability="/web/dash/developer/games/packages/check-field-availability/{{ game.id }}/title"
-					>
+				<app-form-control
+					:rules="{
+						max: 150,
+						availability: `/web/dash/developer/games/packages/check-field-availability/${ game.id }/title`
+					}"
+					/>
 
 				<app-form-control-errors />
 			</app-form-group>
 
-			<app-form-group name="description" :label="$gettext( `dash.games.packages.form.description_label` )" optional="true">
-				<p class="help-block" translate>dash.games.packages.form.description_help_html</p>
+			<app-form-group
+				name="description"
+				:label="$gettext( `dash.games.packages.form.description_label` )"
+				:optional="true"
+				>
+				<p class="help-block">
+					<translate :escape-html="false">
+						dash.games.packages.form.description_help_html
+					</translate>
+				</p>
 
-				<div v-if="!formState.showDescriptionInput">
-					<a class="btn btn-outline btn-sm" ng-click="formState.showDescriptionInput = true">
+				<div v-if="!showDescriptionInput">
+					<button class="btn btn-outline btn-sm" @click="showDescriptionInput = true">
 						<app-jolticon icon="add" />
 						<translate>dash.games.packages.form.description_change_button</translate>
-					</a>
+					</button>
 				</div>
-
-				<div v-if="formState.showDescriptionInput">
-					<textarea form-control rows="2" ng-maxlength="750"></textarea>
+				<div v-else>
+					<app-form-control-textarea rows="2" :rules="{ max: 750 }" />
 					<app-form-control-errors />
 				</div>
 			</app-form-group>
 
-			<app-form-group name="visibility" :label="$gettext( `Visibility` )">
+			<app-form-group
+				name="visibility"
+				:label="$gettext( `Visibility` )"
+				>
 				<div class="radio">
 					<label>
-						<input form-control="radio" ng-value="Game_Package.VISIBILITY_PUBLIC">
-						<span translate>Public</span> &mdash;
-						<span class="help-inline" translate>Anyone can access this package.</span>
-					</label>
-				</div>
-
-				<div class="radio">
-					<label>
-						<input form-control="radio" ng-value="Game_Package.VISIBILITY_PRIVATE">
-						<span translate>Private</span> &mdash;
-						<span class="help-inline" translate>
-							Only you can access this package, as well as any keys you assign. You can assign keys in your <strong>Keys/Access</strong> page.
+						<app-form-control-radio :value="GamePackage.VISIBILITY_PUBLIC" />
+						<translate>Public</translate> &mdash;
+						<span class="help-inline">
+							<translate>Anyone can access this package.</translate>
 						</span>
 					</label>
 				</div>
 
-				<div class="alert alert-info" translate>
-					Note that regardless of this setting, your package will only be visible on your game's page if it has published releases in it.
+				<div class="radio">
+					<label>
+						<app-form-control-radio :value="GamePackage.VISIBILITY_PRIVATE" />
+						<translate>Private</translate> &mdash;
+						<span class="help-inline">
+							<translate :escape-html="false">Only you can access this package, as well as any keys you assign. You can assign keys in your <b>Keys/Access</b> page.</translate>
+						</span>
+					</label>
+				</div>
+
+				<div class="alert alert-info">
+					<translate>Note that regardless of this setting, your package will only be visible on your game's page if it has published releases in it.</translate>
 				</div>
 			</app-form-group>
 
-			<app-form-group name="pricing_type" :label="$gettext( `Pricing Type` )">
+			<app-form-group
+				name="pricing_type"
+				:label="$gettext( `Pricing Type` )"
+				>
 
-				<div class="alert alert-warning" v-if="isFangame" translate>
-					Accepting payments for fangames is illegal and against our terms. If you sell fangames, we will remove your account and block you from the Marketplace.
+				<div class="alert alert-warning" v-if="isFangame">
+					<translate>Accepting payments for fangames is illegal and against our terms. If you sell fangames, we will remove your account and block you from the Marketplace.</translate>
 				</div>
-
-				<div v-if="!isFangame">
+				<div v-else>
 					<p class="help-block" v-if="!isUserVerified">
 						<app-jolticon icon="notice" />
-						<span translate translate-params-url="$state.href( 'dash.account.financials' )">
-							You must <a href="{{ url }}">set up your financial information</a> before you can start accepting money.
-						</span>
+						<translate>
+							You must set up your financial information before you can start accepting money.
+						</translate>
+						<router-link :to="{ name: 'dash.account.financials' }">
+							<translate>Go to financial set up.</translate>
+						</router-link>
 					</p>
 
-					<div class="alert alert-warning" v-if="isUserVerified && package.has_browser_builds" translate>
-						Packages with browser builds cannot be sold at this time.
+					<div class="alert alert-warning" v-if="isUserVerified && package && package.has_browser_builds">
+						<translate>Packages with browser builds cannot be sold at this time.</translate>
 					</div>
 				</div>
 
 				<div class="radio">
 					<label>
-						<input form-control="radio" value="free">
-						<span translate>Free</span> &mdash;
-						<span class="help-inline" translate>Completely free with no option to pay at all.</span>
+						<app-form-control-radio value="free" />
+						<translate>Free</translate> &mdash;
+						<span class="help-inline">
+							<translate>Completely free with no option to pay at all.</translate>
+						</span>
 					</label>
 				</div>
 
 				<div class="radio" :class="{ disabled: !isUserVerified || isFangame }">
 					<label>
-						<input form-control="radio" value="pwyw" ng-disabled="!isUserVerified || isFangame">
-						<span translate>Pay What You Want</span> &mdash;
-						<span class="help-inline" translate>They will be able to pay $0 or more. They set the price.</span>
+						<app-form-control-radio value="pwyw" :disabled="!isUserVerified || isFangame" />
+						<translate>Pay What You Want</translate> &mdash;
+						<span class="help-inline">
+							<translate>They will be able to pay $0 or more. They set the price.</translate>
+						</span>
 					</label>
 				</div>
 
-				<div class="radio" :class="{ disabled: !isUserVerified || package.has_browser_builds || isFangame }">
+				<div class="radio"
+					:class="{
+						disabled: !isUserVerified || (package && package.has_browser_builds) || isFangame,
+					}"
+					>
 					<label>
-						<input form-control="radio" value="paid" ng-disabled="!isUserVerified || package.has_browser_builds || isFangame">
-						<span translate>Paid</span> &mdash;
-						<span class="help-inline" translate>Charge a specific price with the ability for them to pay more.</span>
+						<app-form-control-radio
+							value="paid"
+							:disabled="!isUserVerified || (package && package.has_browser_builds) || isFangame"
+							/>
+						<translate>Paid</translate> &mdash;
+						<span class="help-inline">
+							<translate>Charge a specific price with the ability for them to pay more.</translate>
+						</span>
 					</label>
 				</div>
 			</app-form-group>
 
-			<app-form-group name="price" :label="$gettext( `Suggested Price` )" v-if="formModel.pricing_type === 'pwyw'" optional="true">
+			<app-form-group
+				name="price"
+				:label="$gettext( `Suggested Price` )"
+				v-if="formModel.pricing_type === 'pwyw'"
+				:optional="true"
+				>
 				<div class="row">
 					<div class="col-sm-3">
-						<gj-toggle-switch type="checkbox" ng-model="formState.hasSuggestedPrice" toggle-switch-on-text="On" toggle-switch-off-text="Off"></gj-toggle-switch>
+						<app-form-group
+							name="has_suggested_price"
+							:hide-label="true"
+							>
+							<app-form-control-toggle />
+						</app-form-group>
 						<br class="visible-xs">
 					</div>
 					<div class="col-sm-9">
-						<input-group>
-							<input-group-addon>$</input-group-addon>
-							<input form-control="number"
-								gj-form-currency-input
+						<div class="input-group">
+							<span class="input-group-addon">$</span>
+							<!--TODO-->
+							<app-form-control
+								type="number"
 								step="0.1"
-								ng-min="minPrice / 100"
-								ng-disabled="!formState.hasSuggestedPrice"
-								>
-						</input-group>
+								:rules="{
+									min_value: minPrice / 100,
+								}"
+								:disabled="!formModel.has_suggested_price"
+								/>
+								<!--gj-form-currency-input-->
+						</div>
 						<app-form-control-errors />
 					</div>
 				</div>
 			</app-form-group>
 
-			<app-form-group name="price" :label="$gettext( `Price` )" v-if="formModel.pricing_type === 'paid'">
-				<input-group>
-					<input-group-addon>$</input-group-addon>
-					<input form-control="number"
-						gj-form-currency-input
+			<app-form-group
+				name="price"
+				:label="$gettext( `Price` )"
+				v-if="formModel.pricing_type === 'paid'"
+				>
+				<div class="input-group">
+					<span class="input-group-addon">$</span>
+					<!--TODO-->
+					<app-form-control
+						type="number"
 						step="0.1"
-						ng-min="minPrice / 100"
-						>
-				</input-group>
+						:rules="{
+							min_value: minPrice / 100,
+						}"
+						/>
+						<!--gj-form-currency-input-->
+				</div>
 				<app-form-control-errors />
 			</app-form-group>
 
-			<div v-if="formModel.pricing_type === 'paid'">
+			<!--TODO-->
+			<!--<div v-if="formModel.pricing_type === 'paid'">
 				<div class="form-group">
 
-					<label class="control-label" translate>
-						Run a Sale
+					<label class="control-label">
+						<translate>Run a Sale</translate>
 					</label>
 
 					<div v-if="promotionalPricing">
@@ -188,11 +244,11 @@
 						</div>
 
 						<div>
-							<a class="btn btn-outline btn-sm" ng-click="formState.isShowingSaleForm = true" v-if="!formState.isShowingSaleForm">
+							<a class="btn btn-outline btn-sm" @click="isShowingSaleForm = true" v-if="!isShowingSaleForm">
 								<app-jolticon icon="edit" />
 								<span translate>Edit Sale</span>
 							</a>
-							<a class="btn btn-danger-outline btn-sm" ng-click="cancelSale()">
+							<a class="btn btn-danger-outline btn-sm" @click="cancelSale()">
 								<app-jolticon icon="remove" />
 								<span translate>Cancel Sale</span>
 							</a>
@@ -200,14 +256,14 @@
 					</div>
 
 					<div v-if="!promotionalPricing">
-						<a class="btn btn-outline btn-sm" ng-click="formState.isShowingSaleForm = true" v-if="!formState.isShowingSaleForm">
+						<a class="btn btn-outline btn-sm" @click="isShowingSaleForm = true" v-if="!isShowingSaleForm">
 							<app-jolticon icon="add" />
 							<span translate>Setup Sale</span>
 						</a>
 					</div>
 				</div>
 
-				<div v-if="formState.isShowingSaleForm">
+				<div v-if="isShowingSaleForm">
 					<app-form-group name="sale_timezone" :label="$gettext( `Timezone` )">
 
 						<p class="help-block" translate>
@@ -227,12 +283,12 @@
 					<div class="form-group">
 						<label class="control-label" translate>
 							Start
-						</label>
+						</label>-->
 
 						<!--
 							Can only set this when first setting up a sale.
 						-->
-						<app-form-group name="sale_start_now" hide-label="true" v-if="!promotionalPricing">
+						<!--<app-form-group name="sale_start_now" hide-label="true" v-if="!promotionalPricing">
 							<div class="checkbox">
 								<label>
 									<input form-control="checkbox">
@@ -245,7 +301,7 @@
 							<gj-datetime-picker
 								name="sale_start"
 								date-model="formModel.sale_start"
-								date-server-errors="formState.serverErrors"
+								date-server-errors="serverErrors"
 								timezone="formModel.sale_timezone"
 								min-date="now"
 								>
@@ -258,7 +314,7 @@
 						<gj-datetime-picker
 							name="sale_end"
 							date-model="formModel.sale_end"
-							date-server-errors="formState.serverErrors"
+							date-server-errors="serverErrors"
 							timezone="formModel.sale_timezone"
 							min-date="formModel.sale_start"
 							>
@@ -267,15 +323,15 @@
 					</app-form-group>
 
 					<app-form-group name="sale_price" :label="$gettext( `Sale Price` )">
-						<input-group>
-							<input-group-addon>$</input-group-addon>
+						<div class="input-group">
+							<span class="input-group-addon">$</span>
 							<input form-control="number"
 								gj-form-currency-input
 								step="0.1"
 								ng-min="minPrice / 100"
 								ng-max="formModel.price - 0.01"
 								>
-						</input-group>
+						</div>
 
 						<p class="help-block" v-if="formModel.price && formModel.sale_price">
 							{{ ((formModel.price - formModel.sale_price) / formModel.price * 100).toFixed( 0 ) }}% off
@@ -284,36 +340,51 @@
 						<app-form-control-errors />
 					</app-form-group>
 				</div>
-			</div>
+			</div>-->
 
-			<app-form-group name="primary" :label="$gettext( `Primary Package` )" optional="!startedPrimary && hasPrimarySellable">
-				<p class="help-block" translate>
-					We use the primary package to determine the price to show on game listings. You can only have one primary package for your game.
+			<app-form-group
+				name="primary"
+				:label="$gettext( `Primary Package` )"
+				:optional="!startedPrimary && hasPrimarySellable"
+				>
+				<p class="help-block">
+					<translate>We use the primary package to determine the price to show on game listings. You can only have one primary package for your game.</translate>
 				</p>
 				<div class="checkbox">
 					<label>
-						<input form-control="checkbox" ng-disabled="startedPrimary || !hasPrimarySellable">
+						<app-form-control-checkbox
+							:disabled="startedPrimary || !hasPrimarySellable"
+							/>
+
 						<span v-if="!hasPrimarySellable">
-							<strong translate>Since you don't have any packages yet, we'll mark this as your primary one.</strong>
+							<strong>
+								<translate>Since you don't have any packages yet, we'll mark this as your primary one.</translate>
+							</strong>
 						</span>
-						<span v-if="hasPrimarySellable">
-							<span v-if="!startedPrimary" translate>Make this package the primary package</span>
-							<strong v-if="startedPrimary" translate>This is currently the primary package</strong>
+						<span v-else>
+							<span v-if="!startedPrimary">
+								<translate>Make this package the primary package</translate>
+							</span>
+							<strong v-else>
+								<translate>This is currently the primary package</translate>
+							</strong>
 						</span>
 					</label>
 				</div>
 			</app-form-group>
 
 			<app-form-button
-				ng-show="method === 'add' || !packageForm.$pristine"
+				v-if="method === 'add' || changed"
 				:icon="method"
 				>
-				<span class="jolticon" :class="method === 'add' ? 'jolticon-add' : 'jolticon-edit'"></span>
-				<span v-if="method === 'add'">{{ 'dash.games.packages.form.add_package_button' | translate }}</span>
-				<span v-if="method === 'edit'">{{ 'dash.games.packages.form.save_package_button' | translate }}</span>
+				<span v-if="method === 'add'">
+					<translate>dash.games.packages.form.add_package_button</translate>
+				</span>
+				<span v-else-if="method === 'edit'">
+					<translate>dash.games.packages.form.save_package_button</translate>
+				</span>
 			</app-form-button>
 
-		</gj-loading-fade>
-	</div>
-
+		</app-loading-fade>
+	</app-form-loader>
 </app-form>

@@ -7,6 +7,10 @@ import { routeDashGamesManageGameHeader } from './header/header.route';
 import { routeDashGamesManageGameMedia } from './media/media.route';
 import { routeDashGamesManageGameMusic } from './music/music.route';
 import { routeDashGamesManageGameThumbnail } from './thumbnail/thumbnail.route';
+import { routeDashGamesManageGamePackagesList } from './packages/list/list.route';
+import { routeDashGamesManageGamePackagesAdd } from './packages/add/add.route';
+import { routeDashGamesManageGamePackagesEdit } from './packages/edit/edit.route';
+import { routeDashGamesManageGameSettings } from './settings/settings.route';
 
 export const routeDashGamesManageGame: VueRouter.RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',
@@ -20,5 +24,9 @@ export const routeDashGamesManageGame: VueRouter.RouteConfig = {
 		routeDashGamesManageGameMedia,
 		routeDashGamesManageGameMusic,
 		routeDashGamesManageGameThumbnail,
+		routeDashGamesManageGameSettings,
+		routeDashGamesManageGamePackagesList,
+		routeDashGamesManageGamePackagesAdd,
+		routeDashGamesManageGamePackagesEdit,
 	],
 };

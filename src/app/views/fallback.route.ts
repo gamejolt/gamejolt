@@ -31,28 +31,8 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 						component: RouteEmpty,
 					},
 					{
-						name: 'dash.games.manage.game.settings',
-						path: 'settings',
-						component: RouteEmpty,
-					},
-					{
 						name: 'dash.games.manage.game.wizard-finish',
 						path: 'wizard-finish',
-						component: RouteEmpty,
-					},
-					{
-						name: 'dash.games.manage.game.packages.add',
-						path: 'packages/add',
-						component: RouteEmpty,
-					},
-					{
-						name: 'dash.games.manage.game.packages.list',
-						path: 'packages',
-						component: RouteEmpty,
-					},
-					{
-						name: 'dash.games.manage.game.packages.edit',
-						path: 'packages/:packageId(\\d+)',
 						component: RouteEmpty,
 					},
 					{

@@ -2,11 +2,10 @@
 	<div class="col-md-8">
 
 		<form-game-settings
-			gj-game="manageCtrl.game"
-			is-wizard="manageCtrl.isWizard"
-			@submit="settingsCtrl.onSaved()"
-			>
-		</form-game-settings>
+			:model="game"
+			:is-wizard="isWizard"
+			@submit="onSaved"
+			/>
 
 	</div>
 </div>
