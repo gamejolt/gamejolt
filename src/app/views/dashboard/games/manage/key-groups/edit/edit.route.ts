@@ -1,0 +1,28 @@
+import VueRouter from 'vue-router';
+import { asyncComponentLoader } from '../../../../../../../lib/gj-lib-client/utils/utils';
+
+export const routeDashGamesManageKeyGroupsEdit: VueRouter.RouteConfig = {
+	name: 'dash.games.manage.key-groups.edit',
+	path: 'keys/edit/:id(\\d+)',
+	props: true,
+	component: () => asyncComponentLoader($import('./edit')),
+};
+
+// angular.module('App.Views').config(function($stateProvider) {
+// 	$stateProvider.state('dash.games.manage.key-groups.edit', {
+// 		url: '/edit/{keyGroupId:int}',
+// 		controller: 'Dashboard.Developer.Games.Manage.KeyGroups.EditCtrl',
+// 		controllerAs: 'editCtrl',
+// 		templateUrl: require('./edit.html'),
+// 		resolve: {
+// 			payload: function($stateParams, Api) {
+// 				return Api.sendRequest(
+// 					'/web/dash/developer/games/key-groups/' +
+// 						$stateParams.id +
+// 						'/' +
+// 						$stateParams.keyGroupId
+// 				);
+// 			},
+// 		},
+// 	});
+// });

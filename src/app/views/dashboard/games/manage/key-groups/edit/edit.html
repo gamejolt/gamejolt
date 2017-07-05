@@ -1,150 +1,164 @@
-<div class="row">
-	<div class="col-sm-10 col-md-7 col-lg-6">
+<div>
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-md-7 col-lg-6">
 
-		<h2 class="section-header" translate>
-			Edit Key Group
-		</h2>
+					<h2 class="section-header">
+						<translate>Edit Key Group</translate>
+					</h2>
 
-		<form-game-key-group
-			game="manageCtrl.game"
-			packages="editCtrl.packages"
-			gj-key-group="editCtrl.keyGroup"
-			>
-		</form-game-key-group>
+					<!-- TODO: <form-game-key-group
+						game="game"
+						packages="packages"
+						gj-key-group="keyGroup"
+						>
+					</form-game-key-group>-->
 
-	</div>
-	<div class="col-sm-10 col-md-4 col-md-offset-1 col-lg-5">
+				</div>
+				<div class="col-sm-10 col-md-4 col-md-offset-1 col-lg-5">
 
-		<div class="alert alert-info" v-if="editCtrl.keyGroup.type === KeyGroup.TYPE_EMAIL">
-			<p translate>You can hand out this URL for people to retrieve the keys attached to their email addresses.</p>
-			<a ng-href="{{ Environment.secureBaseUrl }}/claim/g-{{ manageCtrl.game.id }}" target="_blank">
-				{{ Environment.secureBaseUrl }}/claim/g-{{ manageCtrl.game.id }}
-			</a>
-		</div>
+					<div class="alert alert-info" v-if="keyGroup.type === KeyGroup.TYPE_EMAIL">
+						<p><translate>You can hand out this URL for people to retrieve the keys attached to their email addresses.</translate></p>
+						<a :href="`${Environment.secureBaseUrl}/claim/g-${game.id}`" target="_blank">
+							{{ Environment.secureBaseUrl }}/claim/g-{{ game.id }}
+						</a>
+					</div>
 
-		<div class="alert alert-info" v-if="editCtrl.keyGroup.type === KeyGroup.TYPE_USER">
-			<p translate>
-				<strong>Not so fast!</strong> In order for the users in this key group to gain access, you'll need to email or message their keys to them. Copy each key page individually below, or export the full set to a CSV. Once they've received and claimed the key into their library, their claim date will appear in the table below.
-			</p>
-		</div>
+					<div class="alert alert-info" v-if="keyGroup.type === KeyGroup.TYPE_USER">
+						<p>
+							<translate :escape-html="false"><strong>Not so fast!</strong> In order for the users in this key group to gain access, you'll need to email or message their keys to them. Copy each key page individually below, or export the full set to a CSV. Once they've received and claimed the key into their library, their claim date will appear in the table below.</translate>
+						</p>
+					</div>
 
-		<h5><strong translate>Viewed</strong></h5>
-		<p>
-			{{ editCtrl.keyGroup.viewed_count || 0 | number }} / {{ editCtrl.keyGroup.key_count || 0 | number }}
-			<small>({{ editCtrl.keyGroup.viewed_count / editCtrl.keyGroup.key_count * 100 | number:2 }}%)</small>
-		</p>
-		<div class="progress progress-thin">
-			<div class="progress-bar" ng-style="{ width: (editCtrl.keyGroup.viewed_count / editCtrl.keyGroup.key_count * 100) + '%' }"></div>
-		</div>
+					<h5><strong><translate>Viewed</translate></strong></h5>
+					<p>
+						{{ keyGroup.viewed_count || 0 | number }} / {{ keyGroup.key_count || 0 | number }}
+						<small>({{ keyGroup.viewed_count / keyGroup.key_count | number( { style: 'percent', maximumFractionDigits: 2 } ) }})</small>
+					</p>
 
-		<h5><strong translate>Claimed</strong></h5>
-		<p>
-			{{ editCtrl.keyGroup.claimed_count || 0 | number }} / {{ editCtrl.keyGroup.key_count || 0 | number }}
-			<small>({{ editCtrl.keyGroup.claimed_count / editCtrl.keyGroup.key_count * 100 | number:2 }}%)</small>
-		</p>
-		<div class="progress progress-thin">
-			<div class="progress-bar" ng-style="{ width: (editCtrl.keyGroup.claimed_count / editCtrl.keyGroup.key_count * 100) + '%' }"></div>
-		</div>
-
-		<hr>
-
-		<div>
-			<a class="btn btn-danger-outline btn-block" ng-click="editCtrl.removeGroup( editCtrl.keyGroup )">
-				<span class="jolticon jolticon-remove"></span>
-				<span translate>Remove Key Group</span>
-			</a>
-		</div>
-
-	</div>
-</div>
-
-<h2>
-	<div class="section-header-controls">
-		<button class="btn btn-success-outline" ng-click="editCtrl.isShowingAddKeys = !editCtrl.isShowingAddKeys">
-			<span class="jolticon jolticon-add"></span>
-			<span translate>Add Keys</span>
-		</button>
-		<a class="btn btn-outline" ng-href="{{ Environment.baseUrl }}/x/keys/export-csv/{{ manageCtrl.game.id }}/{{ editCtrl.keyGroup.id }}" target="_blank">
-			<span translate>Export CSV</span>
-		</a>
-	</div>
-
-	<span translate>Keys</span>
-</h2>
-
-<div class="full-bleed-xs" gj-expand-when="editCtrl.isShowingAddKeys">
-	<div class="well fill-lightest">
-		<div class="row">
-			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-
-				<form-game-key-group-add-keys
-					key-group="editCtrl.keyGroup"
-					@submit="editCtrl.onNewKeysAdded()"
+					<app-progress-bar
+						:thin="true"
+						:percent="keyGroup.viewed_count / keyGroup.key_count * 100"
 					>
-				</form-game-key-group-add-keys>
+					</app-progress-bar>
+
+					<h5><strong><translate>Claimed</translate></strong></h5>
+					<p>
+						{{ keyGroup.claimed_count || 0 | number }} / {{ keyGroup.key_count || 0 | number }}
+						<small>({{ keyGroup.claimed_count / keyGroup.key_count | number( { style: 'percent', maximumFractionDigits: 2 } ) }})</small>
+					</p>
+
+					<app-progress-bar
+						:thin="true"
+						:percent="keyGroup.claimed_count / keyGroup.key_count * 100"
+					>
+					</app-progress-bar>
+
+					<hr>
+
+					<div>
+						<a class="btn btn-danger-outline btn-block" @click="removeGroup( keyGroup )">
+							<app-jolticon icon="remove" />
+							<translate>Remove Key Group</translate>
+						</a>
+					</div>
+
+				</div>
+			</div>
+
+			<h2>
+				<div class="section-header-controls">
+					<button class="btn btn-success-outline" @click="isShowingAddKeys = !isShowingAddKeys">
+						<app-jolticon icon="add" />
+						<translate>Add Keys</translate>
+					</button>
+					<a class="btn btn-outline" :href="`${ Environment.baseUrl }/x/keys/export-csv/${ game.id }/${ keyGroup.id }`" target="_blank">
+						<translate>Export CSV</translate>
+					</a>
+				</div>
+
+				<translate>Keys</translate>
+			</h2>
+
+
+			<app-expand-component :when="isShowingAddKeys" class="full-bleed-xs">
+				<div class="well fill-lightest">
+					<div class="row">
+						<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+
+							<!-- TODO: <form-game-key-group-add-keys
+								key-group="keyGroup"
+								@submit="onNewKeysAdded()"
+								>
+							</form-game-key-group-add-keys>-->
+
+						</div>
+					</div>
+				</div>
+			</app-expand-component>
+
+			<div class="well fill-lightest full-bleed-xs">
+
+				<form class="form-inline">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Filter" ng-model="search.filter" style="min-width: 250px">
+					</div>
+
+					<button class="btn btn-outline" @click="searchKeys()">
+						<translate>Submit</translate>
+					</button>
+				</form>
 
 			</div>
+
+			<div class="table-responsive">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th><translate>Key</translate></th>
+							<th v-if="keyGroup.type === KeyGroup.TYPE_EMAIL"><translate>Email</translate></th>
+							<th><translate>User</translate></th>
+							<th><translate>Claimed On</translate></th>
+							<th><translate>Last Viewed On</translate></th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="key of keys">
+							<td>
+								<code>{{ key.key }}</code>
+								<a @click="copyKeyLink( key )" gj-v-app-tooltip="$gettext( `Copy Key Page URL` )">
+									<app-jolticon icon="link" />
+								</a>
+							</td>
+							<td v-if="keyGroup.type === KeyGroup.TYPE_EMAIL">
+								{{ key.email }}
+							</td>
+
+							<td ng-switch="!!key.user_id">
+								<span ng-switch-when="true">{{ key.username }}</span>
+								<span ng-switch-when="false">-</span>
+							</td>
+							<td ng-switch="!!key.claimed_on">
+								<span ng-switch-when="true" am-time-ago="key.claimed_on"></span>
+								<span ng-switch-when="false">-</span>
+							</td>
+							<td ng-switch="!!key.viewed_on">
+								<span ng-switch-when="true" am-time-ago="key.viewed_on"></span>
+								<span ng-switch-when="false">-</span>
+							</td>
+							<td style="text-align: right">
+								<a class="btn btn-danger-outline btn-sm btn-sparse"
+									@click="removeKey( key )"
+									>
+									<app-jolticon icon="remove" />
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</div>
-</div>
-
-<div class="well fill-lightest full-bleed-xs">
-
-	<form class="form-inline">
-		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Filter" ng-model="editCtrl.search.filter" style="min-width: 250px">
-		</div>
-
-		<button class="btn btn-outline" ng-click="editCtrl.searchKeys()" translate>
-			Submit
-		</button>
-	</form>
-
-</div>
-
-<div class="table-responsive">
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th translate>Key</th>
-				<th v-if="editCtrl.keyGroup.type === KeyGroup.TYPE_EMAIL" translate>Email</th>
-				<th translate>User</th>
-				<th translate>Claimed On</th>
-				<th translate>Last Viewed On</th>
-				<th translate></th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr v-for="key of editCtrl.keys track by key.id">
-				<td>
-					<code>{{ key.key }}</code>
-					<a ng-click="editCtrl.copyKeyLink( key )" gj-v-app-tooltip="$gettext( `Copy Key Page URL` )">
-						<span class="jolticon jolticon-link"></span>
-					</a>
-				</td>
-				<td v-if="editCtrl.keyGroup.type === KeyGroup.TYPE_EMAIL">
-					{{ key.email }}
-				</td>
-				<td ng-switch="!!key.user_id">
-					<span ng-switch-when="true">{{ key.username }}</span>
-					<span ng-switch-when="false">-</span>
-				</td>
-				<td ng-switch="!!key.claimed_on">
-					<span ng-switch-when="true" am-time-ago="key.claimed_on"></span>
-					<span ng-switch-when="false">-</span>
-				</td>
-				<td ng-switch="!!key.viewed_on">
-					<span ng-switch-when="true" am-time-ago="key.viewed_on"></span>
-					<span ng-switch-when="false">-</span>
-				</td>
-				<td style="text-align: right">
-					<a class="btn btn-danger-outline btn-sm btn-sparse"
-						ng-click="editCtrl.removeKey( key )"
-						>
-						<span class="jolticon jolticon-remove"></span>
-					</a>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+	</section>
 </div>
