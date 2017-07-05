@@ -12,7 +12,7 @@
 
 	<div id="page-ad-scroll">
 		<section class="ad-section" v-if="!GJ_IS_CLIENT && game._should_show_ads && !Screen.isXs">
-			<app-ad size="leaderboard" resource="Game" :resource-id="game.id" />
+			<app-ad size="leaderboard" :resource="game" />
 		</section>
 
 		<section class="section">
@@ -139,13 +139,13 @@
 						Will overflow a little on sm/md, but what can ya do, amirite?
 					-->
 					<div class="col-sm-3 text-right" v-if="!GJ_IS_CLIENT && game._should_show_ads && Screen.isSm">
-						<app-ad size="skyscraper" resource="Game" :resource-id="game.id" />
+						<app-ad size="skyscraper" :resource="game" />
 					</div>
 
 					<div class="col-md-4 text-right" v-if="!GJ_IS_CLIENT && game._should_show_ads && Screen.isDesktop">
-						<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
+						<app-ad size="rectangle" :resource="game" />
 						<br>
-						<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
+						<app-ad size="rectangle" :resource="game" />
 					</div>
 				</div>
 

@@ -31,7 +31,7 @@
 	</section>-->
 
 	<section class="section section-thin" v-if="!GJ_IS_CLIENT && !Screen.isXs && game._should_show_ads">
-		<app-ad size="leaderboard" resource="Game" :resource-id="game.id" />
+		<app-ad size="leaderboard" :resource="game" />
 	</section>
 
 	<section class="section">
@@ -283,7 +283,7 @@
 
 							<div v-if="!GJ_IS_CLIENT && game._should_show_ads && Screen.isDesktop">
 								<br>
-								<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
+								<app-ad size="rectangle" :resource="game" />
 							</div>
 
 						</div>
@@ -480,7 +480,7 @@
 						Will overflow a little on md, but what can ya do, amirite?
 					-->
 					<div class="col-md-4 col-lg-offset-1" v-if="!GJ_IS_CLIENT && game._should_show_ads && Screen.isDesktop">
-						<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
+						<app-ad size="rectangle" :resource="game" />
 					</div>
 
 				</div>

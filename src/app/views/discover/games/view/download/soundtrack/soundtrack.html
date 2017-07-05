@@ -12,7 +12,7 @@
 
 	<div id="page-ad-scroll">
 		<section class="ad-section" v-if="!GJ_IS_CLIENT && game._should_show_ads && !Screen.isXs">
-			<app-ad size="leaderboard" resource="Game" :resource-id="game.id" />
+			<app-ad size="leaderboard" :resource="game" />
 		</section>
 
 		<section class="section">
@@ -50,7 +50,7 @@
 						amirite?
 					-->
 					<div class="col-sm-5 col-md-4 col-lg-offset-1 text-right" v-if="!GJ_IS_CLIENT && game._should_show_ads && !Screen.isXs">
-						<app-ad size="rectangle" resource="Game" :resource-id="game.id" />
+						<app-ad size="rectangle" :resource="game" />
 					</div>
 				</div>
 
