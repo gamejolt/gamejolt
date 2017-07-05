@@ -1,8 +1,6 @@
 <div>
 
-	<section class="section section-thin" v-if="shouldShowAds && !GJ_IS_CLIENT && !Screen.isXs">
-		<app-ad size="leaderboard" />
-	</section>
+	<app-ad-placement :visible-desktop="true" />
 
 	<!--
 		Best Games
@@ -11,14 +9,18 @@
 		<div class="container-lg">
 
 			<h1 class="section-header text-center">
-				<a class="link-unstyled"
-					ui-sref="discover.channels.view.games( { section: 'best' } )"
+				<router-link
+					class="link-unstyled"
+					:to="{
+						name: 'discover.channels.view.games',
+						params: { section: 'best' },
+					}"
 					v-app-track-event="`channel:row-heading:best`"
 					>
 					<translate :translate-params="{ channel }">
 						Best #%{ channel }
 					</translate>
-				</a>
+				</router-link>
 			</h1>
 
 			<hr class="underbar underbar-center">
@@ -35,21 +37,27 @@
 				:games="bestGames"
 				:truncate-to-fit="true"
 				:scrollable="true"
+				:show-ads="true"
 				event-label="channel-overview-best-games"
 				/>
 
 			<div class="text-center">
-				<a
+				<router-link
 					class="btn btn-outline"
-					ui-sref="discover.channels.view.games( { section: 'best' } )"
+					:to="{
+						name: 'discover.channels.view.games',
+						params: { section: 'best' },
+					}"
 					v-app-track-event="`channel:more-btn:best`"
 					>
 					<translate>Load More</translate>
-				</a>
+				</router-link>
 			</div>
 
 		</div>
 	</section>
+
+	<app-ad-placement :visible-sm="true" />
 
 	<!--
 		Hot Games
@@ -58,15 +66,18 @@
 		<div class="container-lg">
 
 			<h1 class="section-header text-center">
-				<a
+				<router-link
 					class="link-unstyled"
-					ui-sref="discover.channels.view.games( { section: 'hot' } )"
+					:to="{
+						name: 'discover.channels.view.games',
+						params: { section: 'hot' },
+					}"
 					v-app-track-event="`channel:row-heading:hot`"
 					>
 					<translate :translate-params="{ channel }">
 						Hot #%{ channel }
 					</translate>
-				</a>
+				</router-link>
 			</h1>
 
 			<hr class="underbar underbar-center">
@@ -87,17 +98,22 @@
 				/>
 
 			<div class="text-center">
-				<a
+				<router-link
 					class="btn btn-outline"
-					ui-sref="discover.channels.view.games( { section: 'hot' } )"
+					:to="{
+						name: 'discover.channels.view.games',
+						params: { section: 'hot' },
+					}"
 					v-app-track-event="`channel:more-btn:hot`"
 					>
 					<translate>Load More</translate>
-				</a>
+				</router-link>
 			</div>
 
 		</div>
 	</section>
+
+	<app-ad-placement :hidden-desktop="true" />
 
 	<!--
 		Feed
@@ -119,6 +135,7 @@
 						v-if="feed.hasItems"
 						:feed="feed"
 						:show-game-info="true"
+						:show-ads="true"
 						/>
 
 					<div class="alert alert-info" v-if="!feed.hasItems">

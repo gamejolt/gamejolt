@@ -13,23 +13,44 @@
 		</translate>
 	</p>
 
-	<div :class="{ 'scrollable-grid-xs full-bleed-xs': scrollable && Screen.isXs }">
-		<div :class="{ 'row': !(scrollable && Screen.isXs) }">
-			<div
-				class="col-sm-6 col-md-4 col-lg-3 game-thumbnail-anim"
-				v-for="game of processedGames"
-				:key="game.id"
-				:class="{ 'scrollable-grid-item col-xs-11': scrollable && Screen.isXs }"
-				>
-				<app-game-thumbnail
-					:game="game"
-					v-app-track-event="eventLabel ? 'game-grid:click:' + eventLabel : undefined"
-					>
-
-					<slot name="thumbnail-controls" :game="game" />
-					
-				</app-game-thumbnail>
+	<div :class="{ 'scrollable-grid-xs full-bleed-xs': scrollable }">
+		<div class="game-grid-items">
+			<div class="game-grid-ad" v-if="Screen.isDesktop && showAds">
+				<div class="game-grid-ad-inner">
+					<app-ad size="rectangle" />
+					<span class="ad-label visible-lg">
+						<translate>Advertisement</translate>
+					</span>
+				</div>
 			</div>
+
+			<!--
+				Keep the end div and the opening div together below. If you
+				don't it will not wrap correctly in the DOM since it adds the
+				space.
+			-->
+			<template v-for="(game, i) of processedGames">
+				<div class="game-grid-ad"
+					v-if="shouldShowAd(i)"
+					:key="game.id"
+					>
+					<div class="game-grid-ad-inner">
+						<app-ad size="rectangle" />
+						<span class="ad-label visible-lg">
+							<translate>Advertisement</translate>
+						</span>
+					</div>
+				</div><div class="game-grid-item"
+					:key="game.id"
+					>
+					<app-game-thumbnail
+						:game="game"
+						v-app-track-event="eventLabel ? 'game-grid:click:' + eventLabel : undefined"
+						>
+						<slot name="thumbnail-controls" :game="game" />
+					</app-game-thumbnail>
+				</div>
+			</template>
 		</div>
 	</div>
 

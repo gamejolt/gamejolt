@@ -1,11 +1,20 @@
 <div class="activity-feed timeline-list full-bleed-xs">
 
-	<app-activity-feed-item
-		v-for="item of feed.items"
-		:key="item.id"
-		:feed="feed"
-		:item="item"
-		/>
+	<div v-for="(item, i) of feed.items" :key="item.id">
+		<app-activity-feed-item
+			:feed="feed"
+			:item="item"
+			/>
+
+		<div class="timeline-list-ad" v-if="shouldShowAd(i)">
+			<section class="section section-thin fill-lightest text-center">
+				<app-ad size="rectangle" :resource="adResource" />
+				<div class="ad-label">
+					<translate>Advertisement</translate>
+				</div>
+			</section>
+		</div>
+	</div>
 
 	<div v-if="shouldShowLoadMore" class="text-center">
 		<button class="btn btn-outline" @click="loadMore" v-app-track-event="`activity-feed:more`">

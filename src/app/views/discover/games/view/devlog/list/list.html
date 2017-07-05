@@ -1,15 +1,5 @@
 <div v-if="game">
 
-	<section class="section section-thin text-left" v-if="!GJ_IS_CLIENT && !Screen.isXs && game._should_show_ads">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-10 col-md-offset-2">
-					<app-ad size="leaderboard" :resource="game" />
-				</div>
-			</div>
-		</div>
-	</section>
-
 	<section class="section">
 		<div class="container">
 			<div class="row">
@@ -21,6 +11,8 @@
 						v-else
 						:feed="feed"
 						:show-edit-controls="true"
+						:show-ads="true"
+						:ad-resource="game"
 						/>
 
 				</div>

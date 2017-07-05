@@ -8,12 +8,14 @@ import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils
 import { AppCommentWidget } from '../../../../../../lib/gj-lib-client/components/comment/widget/widget';
 import { AppAd } from '../../../../../../lib/gj-lib-client/components/ad/ad';
 import { RouteState, RouteStore } from '../view.state';
+import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 
 @View
 @Component({
 	components: {
 		AppCommentWidget,
 		AppAd,
+		AppAdPlacement,
 	},
 })
 export default class RouteDiscoverGamesViewComments extends Vue {

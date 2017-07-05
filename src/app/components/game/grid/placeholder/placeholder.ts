@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./placeholder.html';
+import * as View from '!view!./placeholder.html?style=./placeholder.styl';
 
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
@@ -24,17 +24,17 @@ export class AppGameGridPlaceholder extends Vue {
 
 	Screen = makeObservableService(Screen);
 
-	get loop() {
+	get count() {
 		if (!this.truncateToFit) {
-			return Array(this.num);
+			return this.num;
 		}
 
 		let rowSize: number;
-		if (this.Screen.breakpoint === 'sm') {
+		if (Screen.breakpoint === 'sm') {
 			rowSize = GameGridRowSizeSm;
-		} else if (this.Screen.breakpoint === 'md') {
+		} else if (Screen.breakpoint === 'md') {
 			rowSize = GameGridRowSizeMd;
-		} else if (this.Screen.breakpoint === 'lg') {
+		} else if (Screen.breakpoint === 'lg') {
 			rowSize = GameGridRowSizeLg;
 		} else {
 			rowSize = this.num;

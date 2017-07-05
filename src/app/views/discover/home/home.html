@@ -73,6 +73,7 @@
 					:games="games.featured"
 					:truncate-to-fit="true"
 					:scrollable="true"
+					:show-ads="Screen.isDesktop"
 					event-label="home-featured-games"
 					/>
 			</div>
@@ -89,7 +90,7 @@
 		</div>
 	</section>
 
-	<div class="page-cut"></div>
+	<app-ad-placement />
 
 	<section class="section">
 		<div class="container">
@@ -154,7 +155,7 @@
 		</div>
 	</section>
 
-	<div class="page-cut"></div>
+	<app-ad-placement :hidden-desktop="true" />
 
 	<section class="section">
 		<div class="container-lg">
@@ -207,6 +208,7 @@
 					v-else
 					:games="games[ chosenSection.games ]"
 					:truncate-to-fit="true"
+					:show-ads="Screen.isDesktop"
 					:event-label="`home-${chosenSection.eventLabel}`"
 					>
 				</app-game-grid>
@@ -224,6 +226,8 @@
 
 		</div>
 	</section>
+
+	<app-ad-placement />
 
 	<section class="section fill-lightest" v-if="isLoaded && !app.user">
 		<div class="container">

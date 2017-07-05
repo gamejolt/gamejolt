@@ -6,7 +6,6 @@ import * as View from '!view!./devlog.html?style=./devlog.styl';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
 import { AppFadeCollapse } from '../../../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { AppTrackEvent } from '../../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
@@ -18,12 +17,13 @@ import { RouteState, RouteStore } from '../../view.state';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
 import { Store } from '../../../../../../store/index';
+import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 
 @View
 @Component({
 	components: {
 		AppMediaBar,
-		AppAd,
+		AppAdPlacement,
 		AppLazyPlaceholder,
 		AppFadeCollapse,
 		AppActivityFeed,

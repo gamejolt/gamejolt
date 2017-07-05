@@ -18,8 +18,6 @@ import { AppGameGrid } from '../../../../../components/game/grid/grid';
 	},
 })
 export default class RouteDiscoverChannelsViewGames extends Vue {
-	@Prop() shouldShowAds: boolean;
-
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
 

@@ -38,6 +38,7 @@ import { AppScoreOverview } from '../../../../../../components/score/overview/ov
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
 import { Store } from '../../../../../../store/index';
 import { AppUserAvatarImg } from '../../../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
+import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 
 @View
 @Component({
@@ -45,6 +46,7 @@ import { AppUserAvatarImg } from '../../../../../../../lib/gj-lib-client/compone
 		AppDiscoverGamesViewOverviewStats,
 		AppDiscoverGamesViewOverviewDetails,
 		AppAd,
+		AppAdPlacement,
 		AppMediaBar,
 		AppGameGrid,
 		AppRatingWidget,

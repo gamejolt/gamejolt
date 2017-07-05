@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import * as View from '!view!./devlogs.html';
 
 import { GameListingContainer } from '../../../../../components/game/listing/listing-container-service';
@@ -18,8 +18,6 @@ import { AppGameGrid } from '../../../../../components/game/grid/grid';
 	},
 })
 export default class RouteDiscoverChannelsViewDevlogs extends Vue {
-	@Prop() shouldShowAds: boolean;
-
 	// Devlogs don't have filters.
 	listing: GameListingContainer | null = null;
 

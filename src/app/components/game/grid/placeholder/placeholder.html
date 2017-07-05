@@ -1,12 +1,11 @@
 <div>
 
 	<div :class="{ 'scrollable-grid-xs full-bleed-xs': scrollable && Screen.isXs }">
-		<div :class="{ 'row': !(scrollable && Screen.isXs) }">
+		<div class="game-grid-items">
 			<div
-				class="col-sm-6 col-md-4 col-lg-3 game-thumbnail-anim"
-				v-for="( _, i ) of loop"
+				class="game-grid-item"
+				v-for="i of count"
 				:key="i"
-				:class="{ 'scrollable-grid-item col-xs-11': scrollable && Screen.isXs }"
 				>
 				<app-game-thumbnail-placeholder />
 			</div>

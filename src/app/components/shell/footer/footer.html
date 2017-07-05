@@ -1,7 +1,7 @@
 <footer id="footer" class="section">
 	<div class="container">
 
-		<div class="hidden-xs" v-if="!env.isClient">
+		<div class="hidden-xs" v-if="!GJ_IS_CLIENT">
 			<div class="text-center">
 				<p>
 					<router-link :to="{ name: 'landing.client' }" v-app-track-event="`footer:client-promo`">
@@ -20,122 +20,142 @@
 			<br>
 		</div>
 
-		<div class="row">
-			<div class="col-sm-3 text-center">
-				<router-link :to="{ name: 'discover.home' }">
-					<img src="~img/jolt.svg" alt="Game Jolt" width="68" height="72">
-				</router-link>
-				<br class="visible-xs">
-				<br class="visible-xs">
+		<div class="footer-jolt" v-if="Screen.isXs">
+			<router-link :to="{ name: 'discover.home' }">
+				<img src="~img/jolt.svg" alt="Game Jolt" width="68" height="72">
+			</router-link>
+		</div>
+
+		<br class="visible-xs">
+
+		<div class="clearfix">
+			<div class="footer-ad" v-if="!Screen.isXs">
+				<app-ad size="rectangle" />
 			</div>
-			<div class="col-xs-4 col-sm-3">
-				<ol class="list-unstyled footer-link-list">
-					<li>
-						<router-link :to="{ name: 'landing.learn' }">
-							<translate>What's Game Jolt</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link :to="{ name: 'landing.client' }">
-							<translate>Client</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link :to="{ name: 'discover.devlogs.overview' }">
-							<translate>Devlogs</translate>
-						</router-link>
-					</li>
-					<li>
-						<a href="http://fireside.gamejolt.com">
-							<translate>Fireside</translate>
-						</a>
-					</li>
-					<li>
-						<router-link :to="{ name: 'radio' }">
-							<translate>Radio</translate>
-						</router-link>
-					</li>
-					<li>
-						<a href="http://jams.gamejolt.com">
-							<translate>Jams</translate>
-						</a>
-					</li>
-				</ol>
+
+			<div class="footer-links">
+				<div class="row">
+					<div class="col-xs-4">
+						<ol class="list-unstyled footer-link-list">
+							<li>
+								<router-link :to="{ name: 'landing.learn' }">
+									<translate>What's Game Jolt</translate>
+								</router-link>
+							</li>
+							<li>
+								<router-link :to="{ name: 'landing.client' }">
+									<translate>Client</translate>
+								</router-link>
+							</li>
+							<li>
+								<router-link :to="{ name: 'discover.devlogs.overview' }">
+									<translate>Devlogs</translate>
+								</router-link>
+							</li>
+							<li>
+								<a href="http://fireside.gamejolt.com">
+									<translate>Fireside</translate>
+								</a>
+							</li>
+							<li>
+								<router-link :to="{ name: 'radio' }">
+									<translate>Radio</translate>
+								</router-link>
+							</li>
+							<li>
+								<a href="http://jams.gamejolt.com">
+									<translate>Jams</translate>
+								</a>
+							</li>
+						</ol>
+					</div>
+					<div class="col-xs-4">
+						<ol class="list-unstyled footer-link-list">
+							<!--<li>
+								<router-link :to="{ name: 'landing.developers">
+									<translate>Developers</translate>
+								</router-link>
+							</li>-->
+							<li>
+								<router-link :to="{ name: 'landing.marketplace' }">
+									<translate>Marketplace</translate>
+								</router-link>
+							</li>
+							<li>
+								<router-link :to="{ name: 'landing.partners' }">
+									<translate>Partners</translate>
+								</router-link>
+							</li>
+							<!--<li>
+								<router-link :to="{ name: 'landing.game-api' }">
+									<translate>Game API</translate>
+								</router-link>
+							</li>-->
+							<li>
+								<a href="https://www.redbubble.com/people/gamejolt/shop" target="_blank">
+									<translate>Merch</translate>
+								</a>
+							</li>
+							<li>
+								<router-link :to="{ name: 'forums.landing.overview' }">
+									<translate>Forums</translate>
+								</router-link>
+							</li>
+							<li>
+								<a href="https://github.com/gamejolt" target="_blank">
+									<translate>footer.open_source</translate>
+								</a>
+							</li>
+						</ol>
+					</div>
+					<div class="col-xs-4">
+						<ol class="list-unstyled footer-link-list">
+							<li>
+								<a href="https://fireside.gamejolt.com/tag/gjbroadcast" target="_blank">
+									<translate>Blog</translate>
+								</a>
+							</li>
+							<li>
+								<router-link :to="{ name: 'landing.about' }">
+									<translate>About</translate>
+								</router-link>
+							</li>
+							<li>
+								<a href="mailto:contact@gamejolt.com">
+									<translate>footer.contact</translate>
+								</a>
+							</li>
+							<li>
+								<router-link :to="{ name: 'legal.terms' }">
+									<translate>legal.terms</translate>
+								</router-link>
+							</li>
+							<li>
+								<router-link :to="{ name: 'legal.privacy' }">
+									<translate>legal.privacy</translate>
+								</router-link>
+							</li>
+						</ol>
+					</div>
+				</div>
 			</div>
-			<div class="col-xs-4 col-sm-3">
-				<ol class="list-unstyled footer-link-list">
-					<!--<li>
-						<router-link :to="{ name: 'landing.developers">
-							<translate>Developers</translate>
-						</router-link>
-					</li>-->
-					<li>
-						<router-link :to="{ name: 'landing.marketplace' }">
-							<translate>Marketplace</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link :to="{ name: 'landing.partners' }">
-							<translate>Partners</translate>
-						</router-link>
-					</li>
-					<!--<li>
-						<router-link :to="{ name: 'landing.game-api' }">
-							<translate>Game API</translate>
-						</router-link>
-					</li>-->
-					<li>
-						<a href="https://www.redbubble.com/people/gamejolt/shop" target="_blank">
-							<translate>Merch</translate>
-						</a>
-					</li>
-					<li>
-						<router-link :to="{ name: 'forums.landing.overview' }">
-							<translate>Forums</translate>
-						</router-link>
-					</li>
-					<li>
-						<a href="https://github.com/gamejolt" target="_blank">
-							<translate>footer.open_source</translate>
-						</a>
-					</li>
-				</ol>
-			</div>
-			<div class="col-xs-4 col-sm-3">
-				<ol class="list-unstyled footer-link-list">
-					<li>
-						<a href="https://fireside.gamejolt.com/tag/gjbroadcast" target="_blank">
-							<translate>Blog</translate>
-						</a>
-					</li>
-					<li>
-						<router-link :to="{ name: 'landing.about' }">
-							<translate>About</translate>
-						</router-link>
-					</li>
-					<li>
-						<a href="mailto:contact@gamejolt.com">
-							<translate>footer.contact</translate>
-						</a>
-					</li>
-					<li>
-						<router-link :to="{ name: 'legal.terms' }">
-							<translate>legal.terms</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link :to="{ name: 'legal.privacy' }">
-							<translate>legal.privacy</translate>
-						</router-link>
-					</li>
-				</ol>
-			</div>
+		</div>
+
+		<br class="visible-xs">
+
+		<div class="footer-ad" v-if="Screen.isXs">
+			<app-ad size="rectangle" />
 		</div>
 
 		<hr>
 
-		<div class="row">
-			<div class="col-sm-6">
+		<div class="clearfix">
+			<div class="footer-jolt" v-if="!Screen.isXs">
+				<router-link :to="{ name: 'discover.home' }">
+					<img src="~img/jolt.svg" alt="Game Jolt" width="68" height="72">
+				</router-link>
+			</div>
+			<div class="footer-meta">
 
 				<p>
 					<a class="btn btn-sparse" href="https://twitter.com/gamejolt" target="_blank">
@@ -150,7 +170,7 @@
 					&copy; {{ curDate | date( 'YYYY' ) }} Lucent Web Creative, LLC
 				</p>
 
-				<p class="tiny text-muted" v-if="env.isClient">
+				<p class="tiny text-muted" v-if="GJ_IS_CLIENT">
 					<a @click="showSystemReport" class="link-muted">
 						<translate>footer.send_system_report</translate>
 					</a>
@@ -159,7 +179,7 @@
 				</p>
 
 			</div>
-			<div class="col-sm-6 footer-translations">
+			<div class="footer-translations">
 
 				<div>
 					<app-translate-lang-selector @changed="onLangChange" />
