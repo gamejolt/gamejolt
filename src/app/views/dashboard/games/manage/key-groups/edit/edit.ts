@@ -118,11 +118,36 @@ import { Environment } from '../../../../../../../lib/gj-lib-client/components/e
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { arrayRemove } from '../../../../../../../lib/gj-lib-client/utils/array';
+import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
+import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
+import { AppTimeAgo } from '../../../../../../../lib/gj-lib-client/components/time/ago/ago';
+import {
+	RouteState,
+	RouteStore,
+} from '../../../../../discover/games/view/view.state';
+import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 
 @View
-@Component({})
+@Component({
+	components: {
+		AppProgressBar,
+		AppJolticon,
+		AppExpand,
+		AppTimeAgo,
+	},
+	directives: {
+		AppTooltip,
+	},
+	filters: {
+		number,
+	},
+})
 export default class RouteDashGamesManageKeyGroupsEdit extends Vue {
-	keyGroup: KeyGroup | null = null;
+	@RouteState game: RouteStore['game'];
+
+	keyGroup: KeyGroup = null as any;
 	packages: GamePackage[] = [];
 	keys: Key[] = [];
 
@@ -132,6 +157,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends Vue {
 		filter: '',
 		state: 'all',
 	};
+	Environment = Environment;
 	KeyGroup = KeyGroup;
 
 	@BeforeRouteEnter()
@@ -144,9 +170,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends Vue {
 
 	routed() {
 		// TODO: why is this nullable?
-		this.keyGroup = this.$payload.keyGroup
-			? new KeyGroup(this.$payload.keyGroup)
-			: null;
+		this.keyGroup = new KeyGroup(this.$payload.keyGroup);
 		this.packages = GamePackage.populate(this.$payload.packages);
 		this.keys = Key.populate(this.$payload.keys);
 
@@ -155,14 +179,14 @@ export default class RouteDashGamesManageKeyGroupsEdit extends Vue {
 		});
 	}
 
-	searchKeys() {
-		Api.sendRequest(
+	async searchKeys() {
+		const response = await Api.sendRequest(
 			'/web/dash/developer/games/key-groups/search-keys/' +
 				`${this.$route.params.id}/${this.$route.params.keyGroupId}`,
 			this.search
-		).then(response => {
-			this.keys = Key.populate(response.keys);
-		});
+		);
+
+		this.keys = Key.populate(response.keys);
 	}
 
 	copyKeyLink(key: Key) {
@@ -180,52 +204,62 @@ export default class RouteDashGamesManageKeyGroupsEdit extends Vue {
 		// $state.reload('dash.games.manage.key-groups.edit');
 	}
 
-	removeGroup(keyGroup: KeyGroup) {
-		ModalConfirm.show(
+	async removeGroup(keyGroup: KeyGroup) {
+		const resolved = await ModalConfirm.show(
 			this.$gettext(
 				// tslint:disable-next-line:max-line-length
 				'Are you sure you want to remove this key group? All keys within this key group will be invalidated. Any access that users may have gained from these keys will be revoked. This can not be reversed.'
 			),
 			this.$gettext('Remove key group?')
-		)
-			.then(() => {
-				return keyGroup.$remove().catch(() => {
-					Growls.error(
-						this.$gettext('Could not remove key group for some reason.')
-					);
-				});
-			})
-			.then(() => {
-				Growls.success(
-					this.$gettext('The key group has been removed.'),
-					this.$gettext('Removed Key Group')
-				);
-				this.$router.push({
-					name: 'dash.games.manage.key-groups.list',
-				});
-			});
+		);
+
+		if (!resolved) {
+			return;
+		}
+
+		try {
+			await keyGroup.$remove();
+		} catch (e) {
+			Growls.error(
+				this.$gettext('Could not remove key group for some reason.')
+			);
+			return;
+		}
+
+		Growls.success(
+			this.$gettext('The key group has been removed.'),
+			this.$gettext('Removed Key Group')
+		);
+		this.$router.push({
+			name: 'dash.games.manage.key-groups.list',
+		});
 	}
 
-	removeKey(key: Key) {
-		ModalConfirm.show(
+	async removeKey(key: Key) {
+		const resolved = await ModalConfirm.show(
 			this.$gettext(
 				// tslint:disable-next-line:max-line-length
 				`Are you sure you want to remove this key? This will revoke this key's access, or anyone that has claimed this key. This can not be reversed.`
 			),
 			this.$gettext('Remove key?')
-		)
-			.then(() => {
-				return key.$remove().catch(() => {
-					Growls.error(this.$gettext('Could not remove key for some reason.'));
-				});
-			})
-			.then(() => {
-				Growls.success(
-					this.$gettext('The key has been removed.'),
-					this.$gettext('Removed Key')
-				);
+		);
 
-				arrayRemove(this.keys, k => k.id === key.id);
-			});
+		if (!resolved) {
+			return;
+		}
+
+		try {
+			await key.$remove();
+		} catch (e) {
+			Growls.error(this.$gettext('Could not remove key for some reason.'));
+			return;
+		}
+
+		Growls.success(
+			this.$gettext('The key has been removed.'),
+			this.$gettext('Removed Key')
+		);
+
+		arrayRemove(this.keys, k => k.id === key.id);
 	}
 }

@@ -3,6 +3,7 @@ import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/uti
 import { routeDashGamesManageGame } from './game/game.route';
 import { routeDashGamesManageApi } from './api/api.route';
 import { routeDashGamesManageKeyGroupsList } from './key-groups/list/list.route';
+import { routeDashGamesManageKeyGroupsEdit } from './key-groups/edit/edit.route';
 
 export const routeDashGamesManage: VueRouter.RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',
@@ -12,5 +13,6 @@ export const routeDashGamesManage: VueRouter.RouteConfig = {
 		routeDashGamesManageGame,
 		routeDashGamesManageApi,
 		routeDashGamesManageKeyGroupsList,
+		routeDashGamesManageKeyGroupsEdit,
 	],
 };

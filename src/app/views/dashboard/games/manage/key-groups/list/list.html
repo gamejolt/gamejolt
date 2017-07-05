@@ -35,7 +35,7 @@
 										<h4>
 											<router-link
 												:to="{
-													name: 'dashboard.games.manage.key-groups.edit',
+													name: 'dash.games.manage.key-groups.edit',
 													params: { keyGroupId: group.id },
 												}"
 												>
@@ -75,7 +75,7 @@
 										<app-progress-bar
 											:thin="true"
 											:percent="group.viewed_count / group.key_count * 100"
-										>
+											>
 										</app-progress-bar>
 										<br>
 
@@ -87,7 +87,7 @@
 										<app-progress-bar
 											:thin="true"
 											:percent="group.claimed_count / group.key_count * 100"
-										>
+											>
 										</app-progress-bar>
 									</div>
 
@@ -97,7 +97,7 @@
 							<div class="card-controls">
 								<router-link class="btn btn-outline"
 									:to="{
-										name: 'dashboard.games.manage.key-groups.edit',
+										name: 'dash.games.manage.key-groups.edit',
 										params: { keyGroupId: group.id },
 									}"
 									>
