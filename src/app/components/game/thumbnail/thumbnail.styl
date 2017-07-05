@@ -1,11 +1,9 @@
 @require '~styles/variables'
 @require '../../../../lib/gj-lib-client/stylus/common/mixins'
 
-$game-thumbnail-avatar-size = 35px
-$game-thumbnail-meta-spacing = 7px
-
 .game-thumbnail
-
+	$zindex-img = 1
+	$zindex-video = 2
 	$zindex-controls = 3
 
 	position: relative
@@ -23,7 +21,6 @@ $game-thumbnail-meta-spacing = 7px
 
 	// Hide the image until it's loaded in.
 	&.loaded
-
 		.game-thumbnail-img
 			opacity: 1
 
@@ -37,7 +34,7 @@ $game-thumbnail-meta-spacing = 7px
 	&-thumb
 		position: relative
 		height: 0
-		padding-top: 56.25%  // HD 16:9
+		padding-top: 56.25% // HD 16:9
 		overflow: hidden
 		background-color: $gray-lightest
 		border-radius: $border-radius-base
@@ -55,6 +52,26 @@ $game-thumbnail-meta-spacing = 7px
 			top: @left
 			margin-top: @margin-left
 			color: $gray-lighter
+
+		>>>
+			img
+			video
+			.video
+				position: absolute !important
+				display: block
+				left: 0
+				right: 0
+				top: 0
+				bottom: 0
+				width: 100%
+				height: 100%
+				border-radius: $border-radius-base
+
+			img
+				z-index: $zindex-img
+
+			video
+				z-index: $zindex-video
 
 	&-meta
 		position: relative
@@ -138,14 +155,12 @@ $game-thumbnail-meta-spacing = 7px
 			&.muted
 				color: $gray-lighter
 
-
 		// This is way too complex.
 		&-sale
 			height: 36px
 			line-height: @height
 
 			.game-thumbnail-pricing
-
 				&-sale-percentage
 					display: inline-block
 					vertical-align: top

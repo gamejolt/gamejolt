@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./thumbnail.html?style=./thumbnail.styl';
-import './thumbnail-content.styl';
 
 import { SellablePricing } from '../../../../lib/gj-lib-client/components/sellable/pricing/pricing.model';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
