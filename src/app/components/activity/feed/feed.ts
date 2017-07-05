@@ -10,12 +10,17 @@ import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.s
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppActivityFeedItem } from './item/item';
+import { Model } from '../../../../lib/gj-lib-client/components/model/model.service';
+import { isPrerender } from '../../../../lib/gj-lib-client/components/environment/environment.service';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 
 @View
 @Component({
 	components: {
 		AppLoading,
 		AppActivityFeedItem,
+		AppAd,
 	},
 	directives: {
 		AppTrackEvent,
@@ -26,6 +31,8 @@ export class AppActivityFeed extends Vue {
 	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
 	@Prop(Boolean) showEditControls?: boolean;
 	@Prop(Boolean) showGameInfo?: boolean;
+	@Prop(Boolean) showAds?: boolean;
+	@Prop(Object) adResource?: Model;
 
 	// TODO: Get this working through dashboard, yeah?
 	// @Output( 'onPostRemoved' ) private _onPostRemoved = new EventEmitter<{ $post: FiresidePost }>();
@@ -80,6 +87,27 @@ export class AppActivityFeed extends Vue {
 
 	get shouldShowLoadMore() {
 		return !this.feed.reachedEnd && !this.feed.isLoadingMore;
+	}
+
+	shouldShowAd(index: number) {
+		if (!this.showAds || isPrerender || GJ_IS_CLIENT || GJ_IS_SSR) {
+			return false;
+		}
+
+		if (
+			this.adResource &&
+			this.adResource instanceof Game &&
+			!this.adResource._should_show_ads
+		) {
+			return false;
+		}
+
+		index = index + 1;
+		if (index === 2 || index === 12 || index === 22) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// TODO: get these working

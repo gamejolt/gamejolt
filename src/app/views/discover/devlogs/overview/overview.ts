@@ -18,6 +18,7 @@ import { AppActivityFeed } from '../../../../components/activity/feed/feed';
 import { AppGameGridPlaceholder } from '../../../../components/game/grid/placeholder/placeholder';
 import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
 import { Store } from '../../../../store/index';
+import { AppAdPlacement } from '../../../../../lib/gj-lib-client/components/ad/placement/placement';
 
 @View
 @Component({
@@ -28,6 +29,7 @@ import { Store } from '../../../../store/index';
 		AppGameGridPlaceholder,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
+		AppAdPlacement,
 	},
 	directives: {
 		AppTrackEvent,

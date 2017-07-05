@@ -22,6 +22,9 @@ import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/component
 import { RouteState, RouteStore } from '../../view.state';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Store } from '../../../../../../store/index';
+import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { AppDiscoverGamesViewOverviewDetails } from '../../overview/_details/details';
+import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
 
 const DownloadDelay = 5000;
 
@@ -29,11 +32,14 @@ const DownloadDelay = 5000;
 @Component({
 	components: {
 		AppAd,
+		AppAdPlacement,
 		AppGameThumbnail,
 		AppRatingWidget,
 		AppSocialFacebookLike,
 		AppSocialTwitterShare,
 		AppLoading,
+		AppGameOgrs,
+		AppDiscoverGamesViewOverviewDetails,
 	},
 })
 export default class RouteDiscoverGamesViewDownloadBuild extends Vue {

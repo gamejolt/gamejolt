@@ -1,13 +1,11 @@
 <div class="game-listing">
-	<section class="section section-thin" v-if="showAds && !GJ_IS_CLIENT && !Screen.isXs">
-		<app-ad size="leaderboard" />
-	</section>
-
 	<section class="section fill-lightest nav-only" v-if="!hideFilters" id="games">
 		<div class="container">
 			<app-game-filtering-widget :filtering="listing.filteringContainer" />
 		</div>
 	</section>
+
+	<app-ad-placement v-if="showAds" :visible-desktop="true" />
 
 	<div class="container" v-if="!hideFilters">
 		<div class="clearfix">

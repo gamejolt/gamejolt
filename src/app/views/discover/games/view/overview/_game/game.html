@@ -30,9 +30,7 @@
 		</div>
 	</section>-->
 
-	<section class="section section-thin" v-if="!GJ_IS_CLIENT && !Screen.isXs && game._should_show_ads">
-		<app-ad size="leaderboard" :resource="game" />
-	</section>
+	<app-ad-placement :resource="game" />
 
 	<section class="section">
 		<div class="container">
@@ -63,8 +61,6 @@
 									:rating="userRating"
 									:big="true"
 									/>
-
-								<hr class="hidden-sm">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
@@ -261,6 +257,11 @@
 					<div class="row">
 						<div class="col-xs-12 col-sm-6 col-sm-push-6 col-md-12 col-md-push-0">
 
+							<div v-if="Screen.isDesktop" style="width: 300px">
+								<hr>
+								<app-ad size="rectangle" :resource="game" />
+							</div>
+
 							<div id="maturity-rating">
 								<br class="visible-md visible-lg">
 								<app-lazy-placeholder :when="isOverviewLoaded">
@@ -281,7 +282,7 @@
 
 							<app-discover-games-view-overview-details />
 
-							<div v-if="!GJ_IS_CLIENT && game._should_show_ads && Screen.isDesktop">
+							<div v-if="Screen.isDesktop" style="width: 300px">
 								<br>
 								<app-ad size="rectangle" :resource="game" />
 							</div>
@@ -293,6 +294,8 @@
 
 		</div>
 	</section>
+
+	<app-ad-placement :hidden-desktop="true" :resource="game" />
 
 	<!--
 		Devlog Feed
@@ -398,6 +401,16 @@
 		</div>
 	</section>
 
+	<!--
+		Only show this placement if there's enough space separating the
+		previous one.
+	-->
+	<app-ad-placement
+		v-if="hasScores || trophiesCount || (feed && feed.hasItems)"
+		:hidden-desktop="true"
+		:resource="game"
+		/>
+
 	<section class="section">
 		<div class="container">
 
@@ -476,17 +489,12 @@
 
 					</div>
 
-					<!--
-						Will overflow a little on md, but what can ya do, amirite?
-					-->
-					<div class="col-md-4 col-lg-offset-1" v-if="!GJ_IS_CLIENT && game._should_show_ads && Screen.isDesktop">
-						<app-ad size="rectangle" :resource="game" />
-					</div>
-
 				</div>
 			</div>
 
 		</div>
 	</section>
+
+	<app-ad-placement :visible-desktop="true" :resource="game" />
 
 </div>

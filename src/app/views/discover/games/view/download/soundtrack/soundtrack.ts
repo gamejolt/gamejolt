@@ -13,6 +13,7 @@ import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/component
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
+import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 
 const DownloadDelay = 5000;
 
@@ -20,6 +21,7 @@ const DownloadDelay = 5000;
 @Component({
 	components: {
 		AppAd,
+		AppAdPlacement,
 		AppLoading,
 	},
 })

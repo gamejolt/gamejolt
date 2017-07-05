@@ -17,11 +17,13 @@ import { AppGameFilteringTags } from '../filtering/tags';
 import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
 import { AppGameGridPlaceholder } from '../grid/placeholder/placeholder';
 import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
+import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
 
 @View
 @Component({
 	components: {
 		AppAd,
+		AppAdPlacement,
 		AppPagination,
 		AppLoadingFade,
 		AppGameFilteringWidget,
@@ -36,11 +38,12 @@ import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-
 })
 export class AppGameListing extends Vue {
 	@Prop(Object) listing: GameListingContainer;
-	@Prop(Boolean) showAds?: boolean;
 	@Prop(Boolean) hideFilters?: boolean;
 	@Prop(Boolean) hideSectionNav?: boolean;
 	@Prop(Boolean) includeFeaturedSection?: boolean;
 	@Prop(Boolean) isLoading?: boolean;
+	@Prop({ type: Boolean, default: true })
+	showAds: boolean;
 
 	number = number;
 	Environment = Environment;

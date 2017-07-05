@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./view.html';
+import * as View from '!view!./view.html?style=./view.styl';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
@@ -15,11 +15,13 @@ import { AppDevlogPostViewPlaceholder } from '../../../../../../components/devlo
 import { AppScrollWhen } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll-when.directive.vue';
 import { Registry } from '../../../../../../../lib/gj-lib-client/components/registry/registry.service';
 import { RouteState, RouteStore } from '../../view.state';
+import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 
 @View
 @Component({
 	components: {
 		AppAd,
+		AppAdPlacement,
 		AppDevlogPostView,
 		AppDevlogPostViewPlaceholder,
 	},

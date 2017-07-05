@@ -1,29 +1,49 @@
-@require '~styles/variables';
+@require '~styles/variables'
 
 #footer
 	position: relative
-	z-index: $zindex-footer
 	background-color: $gray-darkest
 	background-image: url('../shell-bg.png')
 	background-repeat: repeat
+	z-index: $zindex-footer
 
 	@media $media-xs
 		text-align: center
 
 	hr
 		border-color: $gray-dark
+.footer
 
-.footer-link-list
-	font-size: $font-size-tiny
+	&-ad .ad-inner
+		margin-left: auto
+		margin-right: auto
+
+	&-link-list
+		font-size: $font-size-tiny
+
+		@media $media-sm-up
+			font-size: $font-size-small
+
+		> li > a
+			color: $text-muted
+			&:hover
+				color: $white
 
 	@media $media-sm-up
-		font-size: $font-size-small
 
-	> li > a
-		color: $text-muted
-		&:hover
-			color: $white
+		&-ad
+			float: right
 
-.footer-translations
-	@media $media-sm-up
-		text-align: right
+		&-links
+			margin-right: 300px + $grid-gutter-width
+
+		&-jolt
+			float: left
+
+		&-meta
+			float: left
+			margin-left: $grid-gutter-width
+
+		&-translations
+			float: right
+			text-align: right

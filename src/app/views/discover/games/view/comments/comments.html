@@ -1,36 +1,44 @@
-<section class="section" id="comments">
-	<div class="container">
-		<div class="row">
+<div id="comments">
 
-			<div class="col-sm-10 col-md-8 col-lg-7">
+	<app-ad-placement :hidden-desktop="true" :resource="game" />
 
-				<div v-if="!game.comments_enabled">
-					<h3 class="section-header">
-						<translate>Comments Disabled</translate>
-					</h3>
-					<p class="text-muted">
-						<translate>Comments have been disabled for this game.</translate>
-					</p>
+	<section class="section">
+		<div class="container">
+			<div class="row">
+
+				<div class="col-sm-10 col-md-8 col-lg-7">
+
+					<div v-if="!game.comments_enabled">
+						<h3 class="section-header">
+							<translate>Comments Disabled</translate>
+						</h3>
+						<p class="text-muted">
+							<translate>Comments have been disabled for this game.</translate>
+						</p>
+					</div>
+
+					<div v-if="game.comments_enabled">
+						<app-comment-widget
+							resource="Game"
+							:resource-id="game.id"
+							/>
+					</div>
+
 				</div>
 
-				<div v-if="game.comments_enabled">
-					<app-comment-widget
-						resource="Game"
-						:resource-id="game.id"
-						/>
+				<!--
+					Will overflow a little on md, but what can ya do, amirite?
+				-->
+				<div class="col-md-4 col-lg-offset-1 text-right"
+					v-if="Screen.isDesktop"
+					>
+					<app-ad size="rectangle" :resource="game" />
 				</div>
 
 			</div>
-
-			<!--
-				Will overflow a little on md, but what can ya do, amirite?
-			-->
-			<div class="col-md-4 col-lg-offset-1 text-right"
-				v-if="!GJ_IS_CLIENT && game.ads_enabled && Screen.isDesktop"
-				>
-				<app-ad size="rectangle" :resource="game" />
-			</div>
-
 		</div>
-	</div>
-</section>
+	</section>
+
+	<app-ad-placement :visible-desktop="true" :resource="game" />
+
+</div>

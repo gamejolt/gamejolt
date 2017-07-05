@@ -19,6 +19,9 @@ import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholde
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { Store } from '../../../store/index';
+import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
 
 interface DiscoverSection {
 	title: string;
@@ -38,6 +41,7 @@ interface DiscoverSection {
 		AppGenreList,
 		AppChannelThumbnail,
 		AppAuthJoin,
+		AppAdPlacement,
 	},
 	directives: {
 		AppTrackEvent,
@@ -58,6 +62,8 @@ export default class RouteDiscoverHome extends Vue {
 		best: [],
 		recommended: [],
 	};
+
+	Screen = makeObservableService(Screen);
 
 	@BeforeRouteEnter({ lazy: true, cache: true })
 	beforeRoute() {

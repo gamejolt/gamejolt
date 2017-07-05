@@ -6,15 +6,7 @@
 		:media-items="mediaItems"
 		/>
 
-	<section class="section section-thin text-left" v-if="!GJ_IS_CLIENT && !Screen.isXs && game._should_show_ads">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-10 col-md-offset-2">
-					<app-ad size="leaderboard" :resource="game" />
-				</div>
-			</div>
-		</div>
-	</section>
+	<app-ad-placement :resource="game" />
 
 	<section class="section" style="padding-bottom: 0"  v-if="game.canceled">
 		<div class="container">
@@ -162,15 +154,7 @@
 	</div>
 
 	<div v-if="feed && feed.hasItems">
-		<section class="section section-thin text-left" v-if="!GJ_IS_CLIENT && !Screen.isXs && game._should_show_ads">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-10 col-md-offset-2">
-						<app-ad size="leaderboard" :resource="game" />
-					</div>
-				</div>
-			</div>
-		</section>
+		<app-ad-placement :hidden-desktop="true" :resource="game" />
 
 		<section class="section">
 			<div class="container">
@@ -185,6 +169,8 @@
 						<app-activity-feed
 							:feed="feed"
 							:show-edit-controls="true"
+							:show-ads="true"
+							:ad-resource="game"
 							/>
 
 					</div>
