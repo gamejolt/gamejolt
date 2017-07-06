@@ -1,30 +1,34 @@
 <div class="row">
 	<div class="col-sm-5 col-sm-push-7">
-		<gj-scroll-affix [should-affix]="Screen.isDesktop" [scroll-offset]="15">
+		<app-scroll-affix
+			v-if="current"
+			:shouldAffix="Screen.isDesktop"
+			:scrollOffset="15"
+			>
 			<div class="anim-fade-enter anim-fade-leave"
-				v-if="maturityCtrl.formModel.tigrs_age"
+				v-if="current.tigrs_age"
 				>
-				<gj-game-ogrs [game]="maturityCtrl.formModel"></gj-game-ogrs>
+				<app-game-ogrs :game="current"></app-game-ogrs>
 			</div>
-		</gj-scroll-affix>
+		</app-scroll-affix>
 
 		<div class="page-help">
-			<div translate>dash.games.maturity.page_help_html</div>
+			<div><translate :escape-html="false">dash.games.maturity.page_help_html</translate></div>
 			<p>
-				<a class="link-help" href="https://help.gamejolt.com/dev-maturity-ratings" target="_blank">{{ 'dash.games.maturity.page_help_link' | translate }}</a>
+				<a class="link-help" href="https://help.gamejolt.com/dev-maturity-ratings" target="_blank"><translate>dash.games.maturity.page_help_link</translate></a>
 			</p>
 		</div>
 	</div>
 
 	<div class="col-sm-7 col-sm-pull-5">
 		<!--
-			We pull the form model so that we can show the changes as they modify.
+			We set current whenever the form model changes so updates can be reflected in scroll affix and tigrs.
 		-->
 		<form-game-maturity
-			gj-game="manageCtrl.game"
-			gj-form-model="maturityCtrl.formModel"
-			is-wizard="manageCtrl.isWizard"
-			@submit="maturityCtrl.onSaved()"
+			:model="game"
+			:isWizard="isWizard"
+			@changed="current = $event"
+			@submit="onSaved"
 			>
 		</form-game-maturity>
 	</div>

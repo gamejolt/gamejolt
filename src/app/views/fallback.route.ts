@@ -26,11 +26,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 				component: RouteEmpty,
 				children: [
 					{
-						name: 'dash.games.manage.game.maturity',
-						path: 'maturity',
-						component: RouteEmpty,
-					},
-					{
 						name: 'dash.games.manage.game.wizard-finish',
 						path: 'wizard-finish',
 						component: RouteEmpty,
