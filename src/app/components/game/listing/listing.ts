@@ -37,11 +37,16 @@ import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/plac
 	},
 })
 export class AppGameListing extends Vue {
-	@Prop(Object) listing: GameListingContainer;
-	@Prop(Boolean) hideFilters?: boolean;
-	@Prop(Boolean) hideSectionNav?: boolean;
-	@Prop(Boolean) includeFeaturedSection?: boolean;
-	@Prop(Boolean) isLoading?: boolean;
+	@Prop([Object])
+	listing: GameListingContainer;
+	@Prop([Boolean])
+	hideFilters?: boolean;
+	@Prop([Boolean])
+	hideSectionNav?: boolean;
+	@Prop([Boolean])
+	includeFeaturedSection?: boolean;
+	@Prop([Boolean])
+	isLoading?: boolean;
 	@Prop({ type: Boolean, default: true })
 	showAds: boolean;
 

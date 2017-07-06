@@ -16,7 +16,8 @@ import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/compone
 	},
 })
 export class FormForumTopic extends BaseForm<ForumTopic> implements FormOnInit {
-	@Prop(ForumChannel) channel: ForumChannel;
+	@Prop([ForumChannel])
+	channel: ForumChannel;
 
 	modelClass = ForumTopic;
 

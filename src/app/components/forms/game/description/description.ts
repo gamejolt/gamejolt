@@ -19,7 +19,8 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 	},
 })
 export class FormGameDescription extends BaseForm<Game> implements FormOnInit {
-	@Prop(Boolean) isWizard?: boolean;
+	@Prop([Boolean])
+	isWizard?: boolean;
 
 	modelClass = Game;
 	saveMethod = '$saveDescription' as '$saveDescription';

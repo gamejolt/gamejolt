@@ -27,7 +27,8 @@ import { Store } from '../../../store/index';
 	},
 })
 export class AppGameFilteringWidget extends Vue {
-	@Prop(Object) filtering: GameFilteringContainer;
+	@Prop([Object])
+	filtering: GameFilteringContainer;
 
 	@State app: Store['app'];
 

@@ -27,8 +27,10 @@ import { Store } from '../../../store/index';
 	},
 })
 export class AppGameFollowWidget extends Vue {
-	@Prop(Game) game: Game;
-	@Prop(Boolean) sparse?: boolean;
+	@Prop([Game])
+	game: Game;
+	@Prop([Boolean])
+	sparse?: boolean;
 
 	@State app: Store['app'];
 

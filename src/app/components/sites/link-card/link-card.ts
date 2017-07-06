@@ -15,7 +15,8 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 	},
 })
 export class AppSitesLinkCard extends Vue {
-	@Prop(Object) site: Site;
+	@Prop([Object])
+	site: Site;
 
 	copyLink() {
 		Clipboard.copy(this.site.url);

@@ -6,8 +6,10 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 @View
 @Component({})
 export class AppGameOgrsTag extends Vue {
-	@Prop(Game) game: Game;
-	@Prop(Boolean) full?: boolean;
+	@Prop([Game])
+	game: Game;
+	@Prop([Boolean])
+	full?: boolean;
 
 	get imgTag() {
 		if (this.game) {

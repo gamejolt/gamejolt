@@ -19,7 +19,8 @@ export class FormGameSettings extends BaseForm<Game> {
 	modelClass = Game;
 	saveMethod: '$saveSettings' = '$saveSettings';
 
-	@Prop(Boolean) isWizard?: boolean;
+	@Prop([Boolean])
+	isWizard?: boolean;
 
 	hasPackagesForSale = false;
 

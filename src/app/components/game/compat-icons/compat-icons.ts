@@ -29,7 +29,8 @@ const compatFields = Object.keys(compatMapping);
 	},
 })
 export class AppGameCompatIcons extends Vue {
-	@Prop(Object) game: Game;
+	@Prop([Object])
+	game: Game;
 
 	platforms: string[] = [];
 

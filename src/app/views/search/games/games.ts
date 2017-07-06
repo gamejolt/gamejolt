@@ -15,7 +15,8 @@ import { AppGameGrid } from '../../../components/game/grid/grid';
 	},
 })
 export default class RouteSearchGames extends Vue {
-	@Prop(Object) payload: any;
+	@Prop([Object])
+	payload: any;
 
 	Search = makeObservableService(Search);
 

@@ -10,7 +10,8 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 @View
 @Component({})
 export class FormTwitterEmail extends BaseForm<any> implements FormOnSubmit {
-	@Prop(String) stateHandle: string;
+	@Prop([String])
+	stateHandle: string;
 
 	duplicateEmail = false;
 

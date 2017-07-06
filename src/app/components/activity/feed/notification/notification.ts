@@ -21,7 +21,8 @@ import { AppNotificationDescriptiveAction } from '../../../notification/descript
 	},
 })
 export class AppActivityFeedNotification extends Vue {
-	@Prop(ActivityFeedItem) item: ActivityFeedItem;
+	@Prop([ActivityFeedItem])
+	item: ActivityFeedItem;
 
 	notification: Notification;
 

@@ -31,9 +31,12 @@ import { Store } from '../../../store/index';
 	},
 })
 export class AppChatWindow extends Vue {
-	@Prop(ChatRoom) room: ChatRoom;
-	@Prop(Array) messages: ChatMessage[];
-	@Prop(ChatUserCollection) users?: ChatUserCollection;
+	@Prop([ChatRoom])
+	room: ChatRoom;
+	@Prop([Array])
+	messages: ChatMessage[];
+	@Prop([ChatUserCollection])
+	users?: ChatUserCollection;
 
 	@State chat: ChatClient;
 

@@ -32,12 +32,18 @@ let idCounter = 0;
 export class AppGameGrid extends Vue {
 	@Prop({ type: Array, default: () => [] })
 	games: Game[];
-	@Prop(Number) gamesCount?: number;
-	@Prop(Number) perPage?: number;
-	@Prop(Boolean) truncateToFit?: boolean;
-	@Prop(Boolean) scrollable?: boolean;
-	@Prop(Boolean) showAds?: boolean;
-	@Prop(String) eventLabel?: string;
+	@Prop([Number])
+	gamesCount?: number;
+	@Prop([Number])
+	perPage?: number;
+	@Prop([Boolean])
+	truncateToFit?: boolean;
+	@Prop([Boolean])
+	scrollable?: boolean;
+	@Prop([Boolean])
+	showAds?: boolean;
+	@Prop([String])
+	eventLabel?: string;
 
 	currentPage = 1;
 

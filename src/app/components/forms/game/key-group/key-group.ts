@@ -9,21 +9,30 @@ import {
 	BaseForm,
 	FormOnInit,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { FormOnSubmitSuccess } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 
 @View
 @Component({
 	components: {
 		AppExpand,
 	},
+	directives: {
+		AppTooltip,
+	},
 	filters: {
 		number,
 	},
 })
-export class FormGameKeyGroup extends BaseForm<KeyGroup> implements FormOnInit {
+export class FormGameKeyGroup extends BaseForm<KeyGroup>
+	implements FormOnInit, FormOnSubmitSuccess {
 	modelClass = KeyGroup;
+	resetOnSubmit = true;
 
-	@Prop(Game) game: Game;
-	@Prop(Array) packages: GamePackage[];
+	@Prop([Game])
+	game: Game;
+	@Prop([Array])
+	packages: GamePackage[];
 
 	number = number;
 	KeyGroup = KeyGroup;
@@ -31,62 +40,13 @@ export class FormGameKeyGroup extends BaseForm<KeyGroup> implements FormOnInit {
 
 	onInit() {
 		this.setField('game_id', this.game.id);
-		// this.setField('packages', []);
-
-		// if (this.method === 'edit') {
-		// 	this.setField('packages', this.model!.packages.map(i => i.id));
-		// }
 	}
 
 	get arePackagesChosen() {
 		return this.formModel.packages.length > 0;
 	}
+
+	onSubmitSuccess(response: any): void {
+		this.game.assign(response.game);
+	}
 }
-
-// angular
-// 	.module('App.Forms.Dashboard')
-// 	.directive('gjFormDashboardGameKeyGroup', function(
-// 		Form,
-// 		KeyGroup,
-// 		Game_Package
-// 	) {
-// 		var form = new Form({
-// 			model: 'KeyGroup',
-// 			template: require('./key-group.html'),
-// 			resetOnSubmit: true,
-// 		});
-
-// 		form.scope.game = '=';
-// 		form.scope.packages = '=';
-
-// 		form.onInit = function(scope) {
-// 			scope.KeyGroup = KeyGroup;
-// 			scope.Game_Package = Game_Package;
-// 			scope.formModel.game_id = scope.game.id;
-
-// 			scope.formModel.packages = {};
-// 			if (scope.method === 'add') {
-// 			} else if (scope.method === 'edit') {
-// 				angular.forEach(scope.baseModel.packages, function(_package) {
-// 					scope.formModel.packages[_package.id] = true;
-// 				});
-// 			}
-
-// 			scope.arePackagesChosen = function() {
-// 				for (var i in scope.formModel.packages) {
-// 					if (scope.formModel.packages[i]) {
-// 						return true;
-// 					}
-// 				}
-// 				return false;
-// 			};
-// 		};
-
-// 		form.onSubmitSuccess = function(scope, response) {
-// 			if (scope.game) {
-// 				scope.game.assign(response.game);
-// 			}
-// 		};
-
-// 		return form;
-// 	});

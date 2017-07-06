@@ -19,10 +19,12 @@ import { AppScrollParallax } from '../../../../lib/gj-lib-client/components/scro
 	},
 })
 export class AppMediaItemCover extends Vue {
-	@Prop(MediaItem) mediaItem: MediaItem;
+	@Prop([MediaItem])
+	mediaItem: MediaItem;
 	@Prop({ type: Boolean, default: true })
 	shouldParallax?: boolean;
-	@Prop(Number) maxHeight?: number;
+	@Prop([Number])
+	maxHeight?: number;
 
 	isLoaded = false;
 	height = 'auto';

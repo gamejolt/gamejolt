@@ -23,7 +23,8 @@ import { Store } from '../../store/index';
 	},
 })
 export default class RouteKey extends Vue {
-	@Prop(String) accessKey: string;
+	@Prop([String])
+	accessKey: string;
 
 	@State app: Store['app'];
 

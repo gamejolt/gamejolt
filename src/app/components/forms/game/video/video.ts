@@ -13,7 +13,8 @@ import { Game } from '../../../../../lib/gj-lib-client/components/game/game.mode
 	components: {},
 })
 export class FormGameVideo extends BaseForm<GameVideo> implements FormOnInit {
-	@Prop(Game) game: Game;
+	@Prop([Game])
+	game: Game;
 
 	modelClass = GameVideo;
 	resetOnSubmit = true;

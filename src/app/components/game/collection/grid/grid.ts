@@ -18,8 +18,10 @@ import { Store } from '../../../../store/index';
 	},
 })
 export class AppGameCollectionGrid extends Vue {
-	@Prop(Array) collections: GameCollection[];
-	@Prop(String) eventLabel?: string;
+	@Prop([Array])
+	collections: GameCollection[];
+	@Prop([String])
+	eventLabel?: string;
 
 	@State app: Store['app'];
 }

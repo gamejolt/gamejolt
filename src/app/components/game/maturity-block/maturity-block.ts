@@ -19,7 +19,8 @@ import { Store } from '../../../store/index';
 	},
 })
 export class AppGameMaturityBlock extends Vue {
-	@Prop(Game) game: Game;
+	@Prop([Game])
+	game: Game;
 
 	@State app: Store['app'];
 

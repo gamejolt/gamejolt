@@ -27,12 +27,18 @@ import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 	},
 })
 export class AppActivityFeed extends Vue {
-	@Prop(String) type: 'Notification' | 'Fireside_Post';
-	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
-	@Prop(Boolean) showEditControls?: boolean;
-	@Prop(Boolean) showGameInfo?: boolean;
-	@Prop(Boolean) showAds?: boolean;
-	@Prop(Object) adResource?: Model;
+	@Prop([String])
+	type: 'Notification' | 'Fireside_Post';
+	@Prop([ActivityFeedContainer])
+	feed: ActivityFeedContainer;
+	@Prop([Boolean])
+	showEditControls?: boolean;
+	@Prop([Boolean])
+	showGameInfo?: boolean;
+	@Prop([Boolean])
+	showAds?: boolean;
+	@Prop([Object])
+	adResource?: Model;
 
 	// TODO: Get this working through dashboard, yeah?
 	// @Output( 'onPostRemoved' ) private _onPostRemoved = new EventEmitter<{ $post: FiresidePost }>();

@@ -15,5 +15,6 @@ import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/to
 	},
 })
 export class AppManageGameNavRequired extends Vue {
-	@Prop(Boolean) isComplete?: boolean;
+	@Prop([Boolean])
+	isComplete?: boolean;
 }

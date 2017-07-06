@@ -30,8 +30,10 @@ import { AppGameListing } from '../../../../components/game/listing/listing';
 	},
 })
 export default class RouteDiscoverGamesList extends Vue {
-	@Prop(String) section: string;
-	@Prop(String) category?: string;
+	@Prop([String])
+	section: string;
+	@Prop([String])
+	category?: string;
 
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;

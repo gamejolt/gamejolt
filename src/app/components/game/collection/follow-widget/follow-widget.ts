@@ -29,8 +29,10 @@ import {
 	},
 })
 export class AppGameCollectionFollowWidget extends Vue {
-	@Prop(GameCollection) collection: GameCollection;
-	@Prop(Number) followerCount?: number;
+	@Prop([GameCollection])
+	collection: GameCollection;
+	@Prop([Number])
+	followerCount?: number;
 
 	@LibraryState collections: LibraryStore['collections'];
 	@LibraryAction followCollection: LibraryStore['followCollection'];

@@ -26,8 +26,10 @@ import { Store } from '../../../store/index';
 	},
 })
 export class AppTrophyOverview extends Vue {
-	@Prop(Game) game: Game;
-	@Prop(Object) initialPayload?: any;
+	@Prop([Game])
+	game: Game;
+	@Prop([Object])
+	initialPayload?: any;
 	@Prop({ type: String, default: 'full' })
 	size?: 'small' | 'full';
 

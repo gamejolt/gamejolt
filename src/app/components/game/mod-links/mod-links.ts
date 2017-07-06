@@ -15,7 +15,8 @@ import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.s
 	},
 })
 export class AppGameModLinks extends Vue {
-	@Prop(Object) game: Game;
+	@Prop([Object])
+	game: Game;
 
 	Environment = Environment;
 

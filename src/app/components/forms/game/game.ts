@@ -28,7 +28,8 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 	},
 })
 export class FormGame extends BaseForm<Game> implements FormOnInit {
-	@Prop(Boolean) isWizard?: boolean;
+	@Prop([Boolean])
+	isWizard?: boolean;
 
 	@State app: Store['app'];
 

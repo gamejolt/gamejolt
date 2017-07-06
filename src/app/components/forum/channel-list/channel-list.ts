@@ -24,10 +24,14 @@ import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ag
 	},
 })
 export class AppForumChannelList extends Vue {
-	@Prop(ForumCategory) category: ForumCategory;
-	@Prop(Array) channels: ForumChannel[];
-	@Prop(Array) latestPosts: ForumPost[];
-	@Prop(Number) postCountPerPage: number;
+	@Prop([ForumCategory])
+	category: ForumCategory;
+	@Prop([Array])
+	channels: ForumChannel[];
+	@Prop([Array])
+	latestPosts: ForumPost[];
+	@Prop([Number])
+	postCountPerPage: number;
 
 	number = number;
 	date = date;

@@ -55,7 +55,8 @@ import {
 	},
 })
 export default class RouteLibraryCollection extends Vue {
-	@Prop(String) id: string;
+	@Prop([String])
+	id: string;
 
 	@State app: Store['app'];
 	@LibraryState collections: LibraryStore['collections'];

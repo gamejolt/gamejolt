@@ -14,8 +14,10 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 @Component({})
 export class FormResetPassword extends BaseForm<any>
 	implements FormOnInit, FormOnSubmit {
-	@Prop(Number) userId: number;
-	@Prop(String) token: string;
+	@Prop([Number])
+	userId: number;
+	@Prop([String])
+	token: string;
 
 	Connection = makeObservableService(Connection);
 

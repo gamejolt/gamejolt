@@ -25,9 +25,12 @@ import { number } from '../../../../../../../../lib/gj-lib-client/vue/filters/nu
 	},
 })
 export class AppManageGameListScores extends Vue {
-	@Prop(GameScoreTable) scoreTable: GameScoreTable;
-	@Prop(Array) scores: UserGameScore[];
-	@Prop(Boolean) isForUser?: boolean;
+	@Prop([GameScoreTable])
+	scoreTable: GameScoreTable;
+	@Prop([Array])
+	scores: UserGameScore[];
+	@Prop([Boolean])
+	isForUser?: boolean;
 
 	async removeScore(score: UserGameScore) {
 		const result = await ModalConfirm.show(

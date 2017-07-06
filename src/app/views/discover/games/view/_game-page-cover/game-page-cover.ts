@@ -39,7 +39,8 @@ import { Store } from '../../../../../store/index';
 	filters: {},
 })
 export class AppGamePageCover extends Vue {
-	@Prop(Game) game: Game;
+	@Prop([Game])
+	game: Game;
 
 	@State app: Store['app'];
 

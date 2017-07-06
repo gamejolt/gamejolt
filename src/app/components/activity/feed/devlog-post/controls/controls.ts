@@ -47,13 +47,18 @@ import { Store } from '../../../../../store/index';
 	},
 })
 export class AppActivityFeedDevlogPostControls extends Vue {
-	@Prop(FiresidePost) post: FiresidePost;
-	@Prop(Boolean) showGameInfo?: boolean;
-	@Prop(Boolean) showEditControls?: boolean;
+	@Prop([FiresidePost])
+	post: FiresidePost;
+	@Prop([Boolean])
+	showGameInfo?: boolean;
+	@Prop([Boolean])
+	showEditControls?: boolean;
 	@Prop({ type: Boolean, default: true })
 	showExtraInfo?: boolean;
-	@Prop(Boolean) requireTabs?: boolean;
-	@Prop(Boolean) inModal?: boolean;
+	@Prop([Boolean])
+	requireTabs?: boolean;
+	@Prop([Boolean])
+	inModal?: boolean;
 
 	@State app: Store['app'];
 

@@ -38,8 +38,10 @@ import { AppScrollInview } from '../../../../lib/gj-lib-client/components/scroll
 	},
 })
 export class AppGameThumbnail extends Vue {
-	@Prop(Object) game: Game;
-	@Prop(String) linkTo?: string;
+	@Prop([Object])
+	game: Game;
+	@Prop([String])
+	linkTo?: string;
 	@Prop({ type: Boolean, default: false })
 	autoplay: boolean;
 	@Prop({ type: Boolean, default: false })

@@ -14,7 +14,8 @@ import { FormTwitterEmail } from '../../../../../components/forms/twitter-email/
 	},
 })
 export default class RouteAuthLinkedAccountTwitterFinalize extends Vue {
-	@Prop(String) state: string;
+	@Prop([String])
+	state: string;
 
 	created() {
 		Meta.title = this.$gettext(
