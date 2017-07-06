@@ -66,7 +66,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	packagePayload: GamePackagePayloadModel | null = null;
 	shouldShowMultiplePackagesMessage = false;
 
-	partnerLink: string | null = null;
 	userPartnerKey: string | null = null;
 
 	partnerReferredKey = '';
@@ -116,6 +115,23 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	get hasReleasesSection() {
 		// The releases section exists if there are releases or songs.
 		return this.packages.length > 0 || this.songs.length > 0;
+	}
+
+	get partnerLink() {
+		if (this.userPartnerKey) {
+			return (
+				Environment.baseUrl +
+				router.resolve({
+					name: 'discover.games.view.overview',
+					params: {
+						id: this.game.id + '',
+						slug: this.game.slug,
+						ref: this.userPartnerKey,
+					},
+				}).href
+			);
+		}
+		return undefined;
 	}
 
 	@VuexAction
@@ -200,20 +216,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.twitterShareMessage =
 			payload.twitterShareMessage || 'Check out this game!';
 
-		this.partnerLink = null;
 		this.userPartnerKey = payload.userPartnerKey;
-		if (this.userPartnerKey) {
-			this.partnerLink =
-				Environment.baseUrl +
-				router.resolve({
-					name: 'discover.games.view.overview',
-					params: {
-						id: this.game.id + '',
-						slug: this.game.slug,
-						ref: this.userPartnerKey,
-					},
-				});
-		}
 	}
 
 	@VuexMutation
