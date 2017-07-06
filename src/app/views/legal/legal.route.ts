@@ -7,6 +7,6 @@ export const routeLegal: VueRouter.RouteConfig = {
 	name: 'legal',
 	path: '',
 	props: true,
-	component: () => asyncComponentLoader($import('./legal')),
+	component: () => asyncComponentLoader(import('./legal')),
 	children: [routeLegalPrivacy, routeLegalTerms],
 };

@@ -5,5 +5,5 @@ export const routeSearchGames: VueRouter.RouteConfig = {
 	name: 'search.games',
 	path: 'games',
 	props: true,
-	component: () => asyncComponentLoader($import('./games')),
+	component: () => asyncComponentLoader(import('./games')),
 };

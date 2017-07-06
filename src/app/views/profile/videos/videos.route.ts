@@ -5,5 +5,5 @@ export const routeProfileVideos: VueRouter.RouteConfig = {
 	name: 'profile.videos',
 	path: 'videos',
 	props: true,
-	component: () => asyncComponentLoader($import('./videos')),
+	component: () => asyncComponentLoader(import('./videos')),
 };

@@ -5,7 +5,7 @@ export const routeAuthForgot: VueRouter.RouteConfig = {
 	name: 'auth.forgot',
 	path: 'forgot',
 	props: true,
-	component: () => asyncComponentLoader($import('./forgot')),
+	component: () => asyncComponentLoader(import('./forgot')),
 	meta: {
 		hideCoverImage: true,
 	},

@@ -5,5 +5,5 @@ export const routeDiscoverDevlogsOverview: VueRouter.RouteConfig = {
 	name: 'discover.devlogs.overview',
 	path: '/devlogs',
 	props: true,
-	component: () => asyncComponentLoader($import('./overview')),
+	component: () => asyncComponentLoader(import('./overview')),
 };

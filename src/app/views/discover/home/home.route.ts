@@ -5,5 +5,5 @@ export const routeDiscoverHome: VueRouter.RouteConfig = {
 	name: 'discover.home',
 	path: '',
 	props: true,
-	component: () => asyncComponentLoader($import('./home')),
+	component: () => asyncComponentLoader(import('./home')),
 };

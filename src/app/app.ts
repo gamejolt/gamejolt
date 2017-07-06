@@ -32,7 +32,7 @@ export class App extends Vue {
 	// async loadTranslations()
 	// {
 	// 	if ( this.$language ) {
-	// 		const main = await $import( '!!../../../translations/' + Translate.lang + '/main.json' );
+	// 		const main = await import( '!!../../../translations/' + Translate.lang + '/main.json' );
 	// 		this.$language.addTranslations( main );
 	// 	}
 	// }

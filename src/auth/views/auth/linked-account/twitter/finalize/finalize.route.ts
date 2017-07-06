@@ -5,5 +5,5 @@ export const routeAuthLinkedAccountTwitterFinalize: VueRouter.RouteConfig = {
 	name: 'auth.linked-account.twitter.finalize',
 	path: 'twitter/finalize/:state',
 	props: true,
-	component: () => asyncComponentLoader($import('./finalize')),
+	component: () => asyncComponentLoader(import('./finalize')),
 };

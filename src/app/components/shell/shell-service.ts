@@ -57,7 +57,7 @@ export class Shell {
 		// 		this.clear();
 		// 	}
 		// 	if ( isLoggedIn ) {
-		// 		const mod = await $import( '../chat/chat.service' );
+		// 		const mod = await import( '../chat/chat.service' );
 		// 		this.chat = mod.Chat as typeof Chat;
 		// 		this.chat.connect();
 		// 		hotkeys.add( {

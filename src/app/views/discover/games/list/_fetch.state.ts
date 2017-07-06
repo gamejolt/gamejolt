@@ -35,7 +35,7 @@
 // {
 // 	makeState( `discover.games.list.${state}`, {
 // 		url: url + '?price&os&browser&maturity&status&partners&page&query',
-// 		lazyLoad: () => $import( './list.module' ),
+// 		lazyLoad: () => import( './list.module' ),
 // 		lazyLoadComponent: '_fetch',
 // 		resolve: {
 

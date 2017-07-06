@@ -5,5 +5,5 @@ export const routeDiscoverGamesViewComments: VueRouter.RouteConfig = {
 	name: 'discover.games.view.comments',
 	path: 'comments',
 	props: true,
-	component: () => asyncComponentLoader($import('./comments')),
+	component: () => asyncComponentLoader(import('./comments')),
 };

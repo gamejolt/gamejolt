@@ -13,7 +13,7 @@ import { routeDashGamesManageApiScoreboardsScoreUser } from './scoreboards/score
 export const routeDashGamesManageApi: VueRouter.RouteConfig = {
 	path: 'api',
 	props: true,
-	component: () => asyncComponentLoader($import('./api')),
+	component: () => asyncComponentLoader(import('./api')),
 	children: [
 		routeDashGamesManageApiOverview,
 		routeDashGamesManageApiTrophies,

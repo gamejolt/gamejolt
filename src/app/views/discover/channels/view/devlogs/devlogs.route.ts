@@ -5,5 +5,5 @@ export const routeDiscoverChannelsViewDevlogs: VueRouter.RouteConfig = {
 	name: 'discover.channels.view.devlogs',
 	path: 'devlogs/:section?',
 	props: true,
-	component: () => asyncComponentLoader($import('./devlogs')),
+	component: () => asyncComponentLoader(import('./devlogs')),
 };

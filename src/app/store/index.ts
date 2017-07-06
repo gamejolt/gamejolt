@@ -164,9 +164,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async loadChat() {
-		const mod = await $import('../components/chat/client');
-		const chatClientModel: typeof ChatClient = mod.ChatClient;
-		this._setChat(new chatClientModel());
+		const mod = await import('../components/chat/client');
+		this._setChat(new mod.ChatClient());
 	}
 
 	@VuexAction

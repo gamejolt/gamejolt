@@ -10,7 +10,7 @@ export const routeDash: VueRouter.RouteConfig = {
 	name: 'dashboard',
 	path: '/dashboard',
 	props: true,
-	component: () => asyncComponentLoader($import('./dashboard')),
+	component: () => asyncComponentLoader(import('./dashboard')),
 	children: [
 		routeDashMain,
 		routeDashAccount,

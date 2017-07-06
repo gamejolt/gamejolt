@@ -61,7 +61,8 @@
 		"vuedraggable": "2.14.1",
 		"vuex": "2.3.1",
 		"vuex-class": "0.2.0",
-		"lodash": "3.9.3"
+		"lodash": "3.9.3",
+		"tslint": "5.5.0"
 	},
 	"optionalDependencies": {
 		"appdmg": "0.3.10"

@@ -5,5 +5,5 @@ export const routeActivity: VueRouter.RouteConfig = {
 	name: 'activity',
 	path: '/:tab(activity|notifications)',
 	props: true,
-	component: () => asyncComponentLoader($import('./activity')),
+	component: () => asyncComponentLoader(import('./activity')),
 };

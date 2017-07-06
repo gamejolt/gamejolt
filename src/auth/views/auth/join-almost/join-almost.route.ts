@@ -5,7 +5,7 @@ export const routeAuthJoinAlmost: VueRouter.RouteConfig = {
 	name: 'auth.join-almost',
 	path: 'join/almost',
 	props: true,
-	component: () => asyncComponentLoader($import('./join-almost')),
+	component: () => asyncComponentLoader(import('./join-almost')),
 	meta: {
 		hideCoverImage: true,
 	},

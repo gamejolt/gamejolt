@@ -5,6 +5,6 @@ import { routeDashGamesManage } from './manage/manage.route';
 export const routeDashGames: VueRouter.RouteConfig = {
 	path: 'games',
 	props: true,
-	component: () => asyncComponentLoader($import('./games')),
+	component: () => asyncComponentLoader(import('./games')),
 	children: [routeDashGamesManage],
 };

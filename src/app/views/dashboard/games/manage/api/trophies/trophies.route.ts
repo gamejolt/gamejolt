@@ -5,5 +5,5 @@ export const routeDashGamesManageApiTrophies: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.api.trophies.list',
 	path: 'trophies',
 	props: true,
-	component: () => asyncComponentLoader($import('./trophies')),
+	component: () => asyncComponentLoader(import('./trophies')),
 };

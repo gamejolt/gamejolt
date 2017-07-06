@@ -5,5 +5,5 @@ export const routeDashGamesManageGamePackagesAdd: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.game.packages.add',
 	path: 'packages/add',
 	props: true,
-	component: () => asyncComponentLoader($import('./add')),
+	component: () => asyncComponentLoader(import('./add')),
 };

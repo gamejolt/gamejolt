@@ -5,7 +5,7 @@ export const routeForumsLandingOverview: VueRouter.RouteConfig = {
 	name: 'forums.landing.overview',
 	path: '/forums',
 	props: true,
-	component: () => asyncComponentLoader($import('./overview')),
+	component: () => asyncComponentLoader(import('./overview')),
 	children: [
 		{
 			path: '/community/forums',

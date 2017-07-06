@@ -5,5 +5,5 @@ export const routeAuthLinkedAccountPoll: VueRouter.RouteConfig = {
 	name: 'auth.linked-account.poll',
 	path: 'linked-account/poll',
 	props: true,
-	component: () => asyncComponentLoader($import('./poll')),
+	component: () => asyncComponentLoader(import('./poll')),
 };

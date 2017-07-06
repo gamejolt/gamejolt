@@ -5,7 +5,7 @@ import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils'
 export class GamePlaylistSaveModal {
 	static async show(collection?: GameCollection) {
 		return await Modal.show<GameCollection>({
-			component: () => asyncComponentLoader($import('./save-modal')),
+			component: () => asyncComponentLoader(import('./save-modal')),
 			props: { collection },
 			size: 'sm',
 		});

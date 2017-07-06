@@ -5,5 +5,5 @@ export const routeRadio: VueRouter.RouteConfig = {
 	name: 'radio',
 	path: '/radio',
 	props: true,
-	component: () => asyncComponentLoader($import('./radio')),
+	component: () => asyncComponentLoader(import('./radio')),
 };

@@ -1,27 +1,19 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "removeComments": false,
-    "isolatedModules": true,
-    "strict": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
-    "allowJs": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "importHelpers": true,
-    "allowSyntheticDefaultImports": true,
-    "lib": [
-      "dom",
-      "es2015",
-      "es2017.object"
-    ]
-  },
-  "exclude": [
-    "build",
-    "node_modules",
-    "src/bower-lib"
-  ]
+	"compilerOptions": {
+		"target": "es5",
+		"moduleResolution": "node",
+		"experimentalDecorators": true,
+		"removeComments": false,
+		"isolatedModules": true,
+		"strict": true,
+		"noUnusedParameters": true,
+		"noUnusedLocals": true,
+		"allowJs": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"importHelpers": true,
+		"allowSyntheticDefaultImports": true,
+		"lib": ["dom", "es2015", "es2017.object"]
+	},
+	"exclude": ["build", "node_modules", "src/bower-lib"]
 }

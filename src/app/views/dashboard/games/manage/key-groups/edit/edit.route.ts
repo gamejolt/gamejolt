@@ -5,7 +5,7 @@ export const routeDashGamesManageKeyGroupsEdit: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.key-groups.edit',
 	path: 'keys/edit/:keyGroupId(\\d+)',
 	props: true,
-	component: () => asyncComponentLoader($import('./edit')),
+	component: () => asyncComponentLoader(import('./edit')),
 };
 
 // angular.module('App.Views').config(function($stateProvider) {

@@ -9,7 +9,7 @@ export const routeSearch: VueRouter.RouteConfig = {
 	name: 'search',
 	path: '/search',
 	props: true,
-	component: () => asyncComponentLoader($import('./search')),
+	component: () => asyncComponentLoader(import('./search')),
 	children: [
 		routeSearchResults,
 		routeSearchGames,

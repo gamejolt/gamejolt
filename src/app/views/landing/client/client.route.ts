@@ -5,5 +5,5 @@ export const routeLandingClient: VueRouter.RouteConfig = {
 	name: 'landing.client',
 	path: '/client',
 	props: true,
-	component: () => asyncComponentLoader($import('./client')),
+	component: () => asyncComponentLoader(import('./client')),
 };

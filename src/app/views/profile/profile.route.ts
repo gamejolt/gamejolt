@@ -7,6 +7,6 @@ export const routeProfile: VueRouter.RouteConfig = {
 	name: 'profile',
 	path: '/@:username',
 	props: true,
-	component: () => asyncComponentLoader($import('./profile')),
+	component: () => asyncComponentLoader(import('./profile')),
 	children: [routeProfileOverview, routeProfileVideos],
 };

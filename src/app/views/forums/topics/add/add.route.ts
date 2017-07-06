@@ -5,5 +5,5 @@ export const routeForumsTopicsAdd: VueRouter.RouteConfig = {
 	name: 'forums.topics.add',
 	path: '/f/:channel/create',
 	props: true,
-	component: () => asyncComponentLoader($import('./add')),
+	component: () => asyncComponentLoader(import('./add')),
 };

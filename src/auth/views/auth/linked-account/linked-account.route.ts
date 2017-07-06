@@ -11,7 +11,7 @@ export const routeAuthLinkedAccount: VueRouter.RouteConfig = {
 	name: 'auth.linked-account',
 	path: 'auth',
 	props: true,
-	component: () => asyncComponentLoader($import('./linked-account')),
+	component: () => asyncComponentLoader(import('./linked-account')),
 	meta: {
 		hideCoverImage: true,
 	},

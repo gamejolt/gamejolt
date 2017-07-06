@@ -5,5 +5,5 @@ export const routeAuthLogin: VueRouter.RouteConfig = {
 	name: 'auth.login',
 	path: 'login',
 	props: true,
-	component: () => asyncComponentLoader($import('./login')),
+	component: () => asyncComponentLoader(import('./login')),
 };

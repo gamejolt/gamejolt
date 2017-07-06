@@ -30,7 +30,7 @@ import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
 		AppGrowls,
 		AppModals,
 		AppLoadingBar,
-		AppShellChat: () => $import('./chat/chat').then(m => m.AppShellChat),
+		AppShellChat: () => import('./chat/chat').then(m => m.AppShellChat),
 		AppShellClient: GJ_IS_CLIENT
 			? require('./client/client').AppShellClient
 			: undefined,

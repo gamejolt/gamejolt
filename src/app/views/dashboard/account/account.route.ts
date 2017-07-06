@@ -8,7 +8,7 @@ import { routeDashAccountChangePassword } from './change-password/change-passwor
 export const routeDashAccount: VueRouter.RouteConfig = {
 	path: '/dashboard',
 	props: true,
-	component: () => asyncComponentLoader($import('./account')),
+	component: () => asyncComponentLoader(import('./account')),
 	children: [
 		routeDashAccountEdit,
 		routeDashAccountAvatar,

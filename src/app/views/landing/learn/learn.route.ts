@@ -5,5 +5,5 @@ export const routeLandingLearn: VueRouter.RouteConfig = {
 	name: 'landing.learn',
 	path: '/learn',
 	props: true,
-	component: () => asyncComponentLoader($import('./learn')),
+	component: () => asyncComponentLoader(import('./learn')),
 };

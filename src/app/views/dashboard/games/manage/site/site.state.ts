@@ -4,7 +4,7 @@ import { makeState } from '../../../../../../../lib/gj-lib-client/utils/angular-
 
 makeState('dash.games.manage.site', {
 	url: '/site',
-	lazyLoad: () => $import('./site.module'),
+	lazyLoad: () => import('./site.module'),
 	resolve: {
 		/*@ngInject*/
 		payload: function($transition$: Transition) {

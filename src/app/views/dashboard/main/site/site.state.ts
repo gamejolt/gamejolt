@@ -3,7 +3,7 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 
 makeState('dash.main.site', {
 	url: '/site',
-	lazyLoad: () => $import('./site.module'),
+	lazyLoad: () => import('./site.module'),
 	resolve: {
 		/*@ngInject*/
 		payload: function() {

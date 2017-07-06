@@ -5,5 +5,5 @@ export const routeDashGamesManageGameSettings: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.game.settings',
 	path: 'settings',
 	props: true,
-	component: () => asyncComponentLoader($import('./settings')),
+	component: () => asyncComponentLoader(import('./settings')),
 };

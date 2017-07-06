@@ -5,5 +5,5 @@ export const routeLandingMarketplace: VueRouter.RouteConfig = {
 	name: 'landing.marketplace',
 	path: '/marketplace',
 	props: true,
-	component: () => asyncComponentLoader($import('./marketplace')),
+	component: () => asyncComponentLoader(import('./marketplace')),
 };

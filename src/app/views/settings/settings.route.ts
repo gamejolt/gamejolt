@@ -5,7 +5,7 @@ export const routeSettings: VueRouter.RouteConfig = {
 	name: 'settings',
 	path: '/settings',
 	props: true,
-	component: () => asyncComponentLoader($import('./settings')),
+	component: () => asyncComponentLoader(import('./settings')),
 	meta: {
 		availableOffline: true,
 	},

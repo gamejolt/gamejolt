@@ -5,5 +5,5 @@ export const routeForumsLandingActive: VueRouter.RouteConfig = {
 	name: 'forums.landing.active',
 	path: 'active',
 	props: true,
-	component: () => asyncComponentLoader($import('./active')),
+	component: () => asyncComponentLoader(import('./active')),
 };

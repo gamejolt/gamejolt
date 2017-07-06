@@ -5,5 +5,5 @@ export const routeLandingGameApi: VueRouter.RouteConfig = {
 	name: 'landing.game-api',
 	path: '/game-api',
 	props: true,
-	component: () => asyncComponentLoader($import('./game-api')),
+	component: () => asyncComponentLoader(import('./game-api')),
 };

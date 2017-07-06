@@ -38,7 +38,7 @@ export class BroadcastModal {
 
 	private static async show(posts: FiresidePost[]) {
 		await Modal.show({
-			component: () => asyncComponentLoader($import('./broadcast-modal')),
+			component: () => asyncComponentLoader(import('./broadcast-modal')),
 			props: { posts },
 			noBackdropClose: true,
 		});

@@ -7,6 +7,6 @@ export const routeForumsLanding: VueRouter.RouteConfig = {
 	name: 'forums.landing',
 	path: '',
 	props: true,
-	component: () => asyncComponentLoader($import('./landing')),
+	component: () => asyncComponentLoader(import('./landing')),
 	children: [routeForumsLandingOverview, routeForumsLandingActive],
 };

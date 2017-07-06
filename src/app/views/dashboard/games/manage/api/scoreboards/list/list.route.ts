@@ -5,5 +5,5 @@ export const routeDashGamesManageApiScoreboardsList: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.api.scoreboards.list',
 	path: 'scoreboards',
 	props: true,
-	component: () => asyncComponentLoader($import('./list')),
+	component: () => asyncComponentLoader(import('./list')),
 };

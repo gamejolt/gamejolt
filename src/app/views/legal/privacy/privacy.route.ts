@@ -5,5 +5,5 @@ export const routeLegalPrivacy: VueRouter.RouteConfig = {
 	name: 'legal.privacy',
 	path: '/privacy',
 	props: true,
-	component: () => asyncComponentLoader($import('./privacy')),
+	component: () => asyncComponentLoader(import('./privacy')),
 };
