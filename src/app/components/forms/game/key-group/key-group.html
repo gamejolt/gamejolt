@@ -111,7 +111,7 @@
 		<app-form-control-errors />
 	</app-form-group>
 
-	<app-form-group name="packages"
+	<app-form-group name="package_ids"
 		v-if="!!formModel.type"
 		:label="$gettext( `Access Permissions` )"
 		>
@@ -122,7 +122,7 @@
 
 		<div class="checkbox" v-for="pkg of packages" :key="pkg.id">
 			<label>
-				<app-form-control-checkbox :value="pkg" />
+				<app-form-control-checkbox :value="pkg.id" />
 				<span v-if="pkg.visibility === GamePackage.VISIBILITY_PRIVATE"
 					class="tag tag-pink"
 					v-app-tooltip="$gettext( `This package is private, but will be accessible in this key group if you assign it.` )"
