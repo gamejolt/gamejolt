@@ -129,6 +129,7 @@ import {
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';
+import { FormGameKeyGroupAddKeys } from '../../../../../../components/forms/game/key-group/add-keys/add-keys';
 
 @View
 @Component({
@@ -138,6 +139,7 @@ import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-gr
 		AppExpand,
 		AppTimeAgo,
 		FormGameKeyGroup,
+		FormGameKeyGroupAddKeys,
 	},
 	directives: {
 		AppTooltip,

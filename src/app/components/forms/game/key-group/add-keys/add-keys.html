@@ -4,12 +4,16 @@
 		:label="$gettext( `# of Keys to Generate` )"
 		v-if="(keyGroup.type === KeyGroup.TYPE_ANONYMOUS || keyGroup.type === KeyGroup.TYPE_ANONYMOUS_CLAIM)"
 		>
-		<input
-			form-control="number"
+		<app-form-control
+			type="number"
 			step="1"
 			min="1"
-			ng-max="20000 - keyGroup.key_count"
-			>
+			:max="20000 - keyGroup.key_count"
+			:rules="{
+				min_value: 1,
+				max_value: 20000 - keyGroup.key_count,
+			}"
+			/>
 		<app-form-control-errors />
 	</app-form-group>
 
@@ -17,10 +21,15 @@
 		:label="$gettext( `Email Addresses` )"
 		v-if="keyGroup.type === KeyGroup.TYPE_EMAIL"
 		>
-		<p class="help-block" translate>
-			Paste one email address per line, or separate them by commas.
+		<p class="help-block">
+			<translate>Paste one email address per line, or separate them by commas.</translate>
 		</p>
-		<textarea form-control rows="10" ng-maxlength="750"></textarea>
+		<app-form-control-textarea
+			rows="10"
+			:rules="{
+				max: 750,
+			}"
+			/>
 		<app-form-control-errors />
 	</app-form-group>
 
@@ -28,18 +37,29 @@
 		:label="$gettext( `Usernames` )"
 		v-if="keyGroup.type === KeyGroup.TYPE_USER"
 		>
-		<p class="help-block" translate>
-			Paste one username per line, or separate them by commas.
+		<p class="help-block">
+			<translate>Paste one username per line, or separate them by commas.</translate>
 		</p>
-		<textarea form-control rows="10" ng-maxlength="750"></textarea>
+		<app-form-control-textarea
+			rows="10"
+			:rules="{
+				max: 750,
+			}"
+			/>
 		<app-form-control-errors />
 	</app-form-group>
 
-	<div gj-expand-when="formState.serverErrors['num-keys']">
-		<div class="alert alert-warning" translate>
-			You can only have a max of {{ 20000 | number }} keys in a single key group.
+	<app-expand :when="serverErrors['num-keys']">
+		<div class="alert alert-warning">
+			<translate
+				:translate-params="{
+					max: number( 20000 ),
+				}"
+				>
+				You can only have a max of %{ max } keys in a single key group.
+			</translate>
 		</div>
-	</div>
+	</app-expand>
 
 	<app-form-button icon="add">
 		<translate>Add</translate>
