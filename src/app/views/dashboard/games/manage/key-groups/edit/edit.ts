@@ -128,6 +128,7 @@ import {
 } from '../../../../../discover/games/view/view.state';
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
+import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';
 
 @View
 @Component({
@@ -136,6 +137,7 @@ import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/numbe
 		AppJolticon,
 		AppExpand,
 		AppTimeAgo,
+		FormGameKeyGroup,
 	},
 	directives: {
 		AppTooltip,
@@ -157,6 +159,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends Vue {
 		filter: '',
 		state: 'all',
 	};
+	number = number;
 	Environment = Environment;
 	KeyGroup = KeyGroup;
 
@@ -175,7 +178,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends Vue {
 		this.keys = Key.populate(this.$payload.keys);
 
 		Meta.title = this.$gettextInterpolate('Edit Key Group: %{ name }', {
-			name: this.keyGroup ? this.keyGroup.name : 'none',
+			name: this.keyGroup.name,
 		});
 	}
 

@@ -15,6 +15,7 @@ import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/component
 import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
+import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';
 
 @View
 @Component({
@@ -24,6 +25,7 @@ import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/numbe
 		AppCardListAdd,
 		AppProgressBar,
 		AppJolticon,
+		FormGameKeyGroup,
 	},
 	filters: {
 		number,

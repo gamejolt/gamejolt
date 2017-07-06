@@ -111,12 +111,11 @@
 							:label="$gettext( 'Add Key Group' )"
 							@toggle="isAdding = !isAdding">
 
-							<!-- TODO: <form-game-key-group
-								game="game"
-								packages="packages"
-								@submit="onKeyGroupAdded( formModel )"
-								>
-							</form-game-key-group>-->
+							<form-game-key-group
+								:game="game"
+								:packages="packages"
+								@submit="onKeyGroupAdded"
+								/>
 
 						</app-card-list-add>
 

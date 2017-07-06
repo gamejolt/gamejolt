@@ -51,16 +51,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 						component: RouteEmpty,
 					},
 					{
-						name: 'dash.games.manage.key-groups.list',
-						path: 'keys',
-						component: RouteEmpty,
-					},
-					{
-						name: 'dash.games.manage.key-groups.edit',
-						path: 'keys/edit/:keyGroupId(\\d+)',
-						component: RouteEmpty,
-					},
-					{
 						name: 'dash.games.manage.devlog.feed',
 						path: 'devlog/:tab?',
 						component: RouteEmpty,
