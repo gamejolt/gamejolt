@@ -9,6 +9,7 @@
 		:date="post.posted_on"
 		:is-active="isActive"
 		:is-new="!!post.notification"
+		:is-showing-replies="isReplying || isShowingReplies"
 		>
 
 		<span slot="meta">
