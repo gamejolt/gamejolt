@@ -1,11 +1,13 @@
 import { app, router } from './bootstrap';
 import { Device } from '../lib/gj-lib-client/components/device/device.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
+import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 
 export default (context: any) => {
 	return new Promise((resolve, reject) => {
 		const s = Date.now();
 
+		Environment.ssrContext = context;
 		Device.ua = context.ua;
 		router.push(context.url);
 
@@ -43,6 +45,7 @@ export default (context: any) => {
 				};
 
 				context.prefetchTime = Date.now() - s;
+
 				resolve(app);
 			} catch (e) {
 				reject({ code: 500 });
