@@ -9,7 +9,7 @@
 	"customProperties": [],
 	"depthLimit": false,
 	"duplicates": true,
-	"efficient": "always",
+	"efficient": false,
 	"exclude": [],
 	"extendPref": "@extend",
 	"globalDupe": false,
