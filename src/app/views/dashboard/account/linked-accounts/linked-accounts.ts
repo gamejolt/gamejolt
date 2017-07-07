@@ -106,6 +106,19 @@ export default class RouteDashAccountLinkedAccounts extends Vue {
 		this.channels = YoutubeChannel.populate(this.$payload.channels);
 	}
 
+	getProviderIcon(provider: Provider) {
+		switch (provider) {
+			case 'facebook':
+				return 'facebook';
+			case 'twitter':
+				return 'twitter-bird';
+			case 'google':
+				return 'google-plus';
+			case 'twitch':
+				return 'twitch';
+		}
+	}
+
 	link(provider: Provider) {
 		// TODO: Make sure app.router exists.
 		// note: still relevant in vue?

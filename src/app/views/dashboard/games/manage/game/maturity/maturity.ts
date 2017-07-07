@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./maturity.html';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { RouteState, RouteStore } from '../../manage.state';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
@@ -28,7 +28,7 @@ export default class RouteDashGamesManageGameMaturity extends Vue {
 
 	Screen = Screen;
 
-	@BeforeRouteEnter()
+	@RouteResolve({})
 	routeResolve(this: void) {}
 
 	routed() {

@@ -1,4 +1,6 @@
 import { namespace, State, Action, Mutation } from 'vuex-class';
+import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
+import { VuexAction } from '../../../../lib/gj-lib-client/utils/vuex';
 import {
 	VuexModule,
 	VuexStore,
@@ -18,6 +20,7 @@ type Mutations = {
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	heading = '';
+	channels: YoutubeChannel[] = [];
 
 	@VuexMutation
 	setHeading(heading: Mutations['setHeading']) {

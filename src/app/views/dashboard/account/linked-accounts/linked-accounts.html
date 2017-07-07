@@ -10,12 +10,7 @@
 				<div class="linked-accounts-list-icon">
 					<app-jolticon
 						:big="true"
-						:icon="{
-							'facebook': provider === 'facebook',
-							'twitter-bird': provider === 'twitter',
-							'google-plus': provider === 'google',
-							'twitch': provider === 'twitch',
-						}"
+						:icon="getProviderIcon( provider )"
 						/>
 				</div>
 
