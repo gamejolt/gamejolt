@@ -1,69 +1,84 @@
-<div ui-view="main-content">
-
+<div>
 	<div class="row linked-accounts-list">
-		<div class="col-md-6" v-for="provider of [ 'facebook', 'twitter', 'google', 'twitch' ] track by $index">
+		<div
+			class="col-md-6"
+			v-for="(provider, index) of [ 'facebook', 'twitter', 'google', 'twitch' ]"
+			:key="index"
+			>
 			<div class="well fill-lightest">
 
 				<div class="linked-accounts-list-icon">
-					<span class="jolticon big" :class="{
-						'jolticon-facebook': provider === 'facebook',
-						'jolticon-twitter-bird': provider === 'twitter',
-						'jolticon-google-plus': provider === 'google',
-						'jolticon-twitch': provider === 'twitch',
-					}"></span>
+					<app-jolticon
+						:big="true"
+						:icon="{
+							'facebook': provider === 'facebook',
+							'twitter-bird': provider === 'twitter',
+							'google-plus': provider === 'google',
+							'twitch': provider === 'twitch',
+						}"
+						/>
 				</div>
 
 				<div class="linked-accounts-list-body">
-					<h5 ng-switch="provider">
-						<span ng-switch-when="facebook" translate>Facebook</span>
-						<span ng-switch-when="twitter" translate>Twitter</span>
-						<span ng-switch-when="google" translate>Google+</span>
-						<span ng-switch-when="twitch" translate>Twitch</span>
+					<h5>
+						<span v-if="provider === 'facebook'"><translate>Facebook</translate></span>
+						<span v-else-if="provider === 'twitter'"><translate>Twitter</translate></span>
+						<span v-else-if="provider === 'google'"><translate>Google+</translate></span>
+						<span v-else-if="provider === 'twitch'"><translate>Twitch</translate></span>
 					</h5>
 
-					<div v-if="(provider === 'facebook' && !App.user.facebook_id) || (provider === 'twitch' && !App.user.twitch_id) || (provider === 'twitter' && !App.user.twitter_id) || (provider === 'google' && !App.user.google_id)">
+					<div v-if="(provider === 'facebook' && !user.facebook_id)
+						|| (provider === 'twitch' && !user.twitch_id)
+						|| (provider === 'twitter' && !user.twitter_id)
+						|| (provider === 'google' && !user.google_id)"
+						>
 						<p>
-							<small class="text-muted" translate>Not linked.</small>
+							<small class="text-muted"><translate>Not linked.</translate></small>
 						</p>
-						<a class="btn btn-success-outline" ng-click="linkedAccountsCtrl.link( provider )">
-							<span class="jolticon jolticon-link"></span>
-							<span translate>Link Now</span>
-						</a>
+						<button class="btn btn-success-outline" @click="link( provider )">
+							<app-jolticon icon="link" />
+							<translate>Link Now</translate>
+						</button>
 					</div>
 
-					<div v-if="(provider === 'facebook' && App.user.facebook_id) || (provider === 'twitch' && App.user.twitch_id) || (provider === 'twitter' && App.user.twitter_id) || (provider === 'google' && App.user.google_id)">
-						<p ng-switch="provider">
-							<strong ng-switch-when="facebook">
-								<a ng-href="https://facebook.com/{{ App.user.facebook_id }}">
-									{{ App.user.facebook_name }}
+					<div v-if="(provider === 'facebook' && user.facebook_id)
+						|| (provider === 'twitch' && user.twitch_id)
+						|| (provider === 'twitter' && user.twitter_id)
+						|| (provider === 'google' && user.google_id)"
+						>
+
+						<p>
+							<strong v-if="provider === 'facebook'">
+								<a :href="`https://facebook.com/${ user.facebook_id }`">
+									{{ user.facebook_name }}
 								</a>
 							</strong>
-							<strong ng-switch-when="twitter">
-								<a ng-href="https://twitter.com/{{ App.user.twitter_screenname }}">
-									@{{ App.user.twitter_screenname }}
+							<strong v-else-if="provider === 'twitter'">
+								<a :href="`https://twitter.com/${ user.twitter_screenname }`">
+									{{ user.twitter_screenname }}
 								</a>
 							</strong>
-							<strong ng-switch-when="google">
-								<a ng-href="https://plus.google.com/{{ App.user.google_id }}">
-									{{ App.user.google_nickname }}
+							<strong v-else-if="provider === 'google'">
+								<a :href="`https://plus.google.com/${ user.google_id }`">
+									{{ user.google_nickname }}
 								</a>
 							</strong>
-							<strong ng-switch-when="twitch">
-								<a ng-href="https://twitch.tv/{{ App.user.twitch_name }}">
-									{{ App.user.twitch_name }}
+							<strong v-else-if="provider === 'twitch'">
+								<a :href="`https://twitch.tv/${ user.twitch_name }`">
+									{{ user.twitch_name }}
 								</a>
 							</strong>
 						</p>
 
 						<div>
-							<a class="btn btn-outline" ng-click="linkedAccountsCtrl.link( provider )">
-								<span class="jolticon jolticon-retweet need-icon"></span>
-								<span translate>Sync</span>
-							</a>
-							<a class="btn btn-danger-outline" ng-click="linkedAccountsCtrl.unlink( provider )">
-								<span class="jolticon jolticon-remove"></span>
-								<span translate>Unlink</span>
-							</a>
+							<button class="btn btn-outline" @click="link( provider )">
+								<app-jolticon icon="retweet" class="need-icon" />
+								<translate>Sync</translate>
+							</button>
+							<button class="btn btn-danger-outline" @click="unlink( provider )">
+								<app-jolticon icon="remove" />
+								<translate>Unlink</translate>
+							</button>
 						</div>
 					</div>
 				</div>
@@ -74,24 +89,29 @@
 
 	<div class="row">
 		<div class="col-md-8 col-lg-6">
-			<h3 translate>YouTube Channels</h3>
+			<h3><translate>YouTube Channels</translate></h3>
 
-			<p class="page-help" translate>
-				You can link your YouTube channels in order to post video comments on games.
+			<p class="page-help">
+				<translate>You can link your YouTube channels in order to post video comments on games.</translate>
 			</p>
 
-			<div class="list-group" v-if="linkedAccountsCtrl.channels.length > 0">
-				<div class="list-group-item clearfix" v-for="channel of linkedAccountsCtrl.channels track by channel.id">
+			<div class="list-group" v-if="channels.length > 0">
+				<div
+					class="list-group-item clearfix"
+					v-for="channel of channels"
+					:key="channel.id"
+					>
 					<div class="pull-right">
-						<button class="btn btn-danger-outline btn-sm"
-							ng-click="linkedAccountsCtrl.unlinkYoutube( channel )"
+						<button
+							class="btn btn-danger-outline btn-sm"
+							@click="unlinkYoutube( channel )"
 							>
-							<span class="jolticon jolticon-remove"></span>
-							<span translate>Unlink</span>
+							<app-jolticon icon="remove" />
+							<translate>Unlink</translate>
 						</button>
 					</div>
 					<strong>
-						<a ng-href="https://www.youtube.com/channel/{{ channel.channel_id }}" target="_blank">
+						<a :href="`https://www.youtube.com/channel/${ channel.channel_id }`" target="_blank">
 							{{ channel.title }}
 						</a>
 					</strong>
@@ -99,16 +119,11 @@
 			</div>
 
 			<div>
-				<a class="btn btn-success-outline" ng-click="linkedAccountsCtrl.link( 'youtube-channel' )">
-					<span class="jolticon jolticon-add"></span>
-					<span translate>Link YouTube Channel</span>
-				</a>
+				<button class="btn btn-success-outline" @click="link( 'youtube-channel' )">
+					<app-jolticon icon="add" />
+					<translate>Link YouTube Channel</translate>
+				</button>
 			</div>
 		</div>
 	</div>
-
-
 </div>
-
-<!-- We need this for child routes, even though they have no templates -->
-<ui-view></ui-view>

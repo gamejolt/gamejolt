@@ -1,11 +1,10 @@
-<p>Please use your web browser to complete the process.</p>
+<p><translate>Please use your web browser to complete the process.</translate></p>
 
-<div
-	gj-progress-poller="/web/auth/poll-oauth/{{ linkingCtrl.token }}"
-	progress-poller-on-complete="linkingCtrl.completed( $response )"
-	progress-poller-on-error="linkingCtrl.failed()"
-	progress-poller-interval="2500"
-	>
-</div>
+<app-progress-poller
+	:url="`/web/auth/poll-oauth/${ token }`"
+	:interval="2500"
+	@complete="completed"
+	@error="failed"
+	/>
 
-<gj-loading label="Linking..."></gj-loading>
+<app-loading :label="$gettext('Linking...')" />
