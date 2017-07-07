@@ -58,21 +58,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 				path: 'financials',
 				component: RouteEmpty,
 			},
-			{
-				name: 'dash.account.linked-accounts',
-				path: 'linked-accounts',
-				component: RouteEmpty,
-			},
-			{
-				name: 'dash.account.linked-accounts.linking',
-				path: 'linked-accounts/linking',
-				component: RouteEmpty,
-			},
-			{
-				name: 'dash.account.linked-accounts.link-callback',
-				path: 'linked-accounts/link-callback/:provider',
-				component: RouteEmpty,
-			},
 		],
 	},
 ];

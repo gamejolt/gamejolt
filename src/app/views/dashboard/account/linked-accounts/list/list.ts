@@ -62,25 +62,26 @@
 
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./linked-accounts.html?style=./linked-accounts.styl';
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteMutation, RouteStore } from '../account.state';
-import { YoutubeChannel } from '../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
-import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
-import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import * as View from '!view!./list.html?style=./list.styl';
+
+import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
+import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
+import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
+import { RouteMutation, RouteStore } from '../../account.state';
+import { YoutubeChannel } from '../../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
+import { ModalConfirm } from '../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { arrayRemove } from '../../../../../../lib/gj-lib-client/utils/array';
+import { UserSetPasswordModal } from '../../../../../components/user/set-password-modal/set-password-modal.service';
+import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import {
 	AppState,
 	AppStore,
-} from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
+} from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import {
 	UserLinkedAccounts,
 	Provider,
-} from '../../../../../lib/gj-lib-client/components/user/linked-accounts/linked-accounts.service';
+} from '../../../../../../lib/gj-lib-client/components/user/linked-accounts/linked-accounts.service';
 
 @View
 @Component({
@@ -88,7 +89,7 @@ import {
 		AppJolticon,
 	},
 })
-export default class RouteDashAccountLinkedAccounts extends Vue {
+export default class RouteDashAccountLinkedAccountsList extends Vue {
 	@AppState user: AppStore['user'];
 	@RouteMutation setHeading: RouteStore['setHeading'];
 

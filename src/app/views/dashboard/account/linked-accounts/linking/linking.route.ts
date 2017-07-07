@@ -3,7 +3,7 @@ import { asyncComponentLoader } from '../../../../../../lib/gj-lib-client/utils/
 
 export const routeDashAccountLinkedAccountsLinking: VueRouter.RouteConfig = {
 	name: 'dash.account.linked-accounts.linking',
-	path: 'linking',
+	path: 'linked-accounts/linking',
 	props: true,
 	component: () => asyncComponentLoader(import('./linking')),
 };

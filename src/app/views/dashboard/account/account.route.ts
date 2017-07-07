@@ -4,7 +4,7 @@ import { routeDashAccountEdit } from './edit/edit.route';
 import { routeDashAccountAvatar } from './avatar/avatar.route';
 import { routeDashAccountEmailPreferences } from './email-preferences/email-preferences.route';
 import { routeDashAccountChangePassword } from './change-password/change-password.route';
-import { routeDashAccountLinkedAccounts } from './linked-accounts/linked-accounts.route';
+import { routeDashAccountLinkedAccountsList } from './linked-accounts/list/list.route';
 
 export const routeDashAccount: VueRouter.RouteConfig = {
 	path: '/dashboard',
@@ -15,6 +15,6 @@ export const routeDashAccount: VueRouter.RouteConfig = {
 		routeDashAccountAvatar,
 		routeDashAccountEmailPreferences,
 		routeDashAccountChangePassword,
-		routeDashAccountLinkedAccounts,
+		routeDashAccountLinkedAccountsList,
 	],
 };

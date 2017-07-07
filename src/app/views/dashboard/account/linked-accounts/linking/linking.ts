@@ -87,7 +87,7 @@ export default class RouteDashAccountLinkedAccountsLinking extends Vue {
 			this.$gettext('Link Failed')
 		);
 
-		this.$router.push({ name: 'dash.account.linked-accounts' });
+		this.$router.push({ name: 'dash.account.linked-accounts.list' });
 
 		// $state.go('^');
 	}

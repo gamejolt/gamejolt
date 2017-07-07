@@ -187,7 +187,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends Vue {
 		}
 
 		this.$router.push({
-			name: 'dash.account.linked-accounts',
+			name: 'dash.account.linked-accounts.list',
 		});
 	}
 }
