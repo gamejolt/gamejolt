@@ -35,7 +35,7 @@
 				justify-content: center
 
 			.page-header-content
-				text-shadow: 1px 1px 1px rgba( $black, 0.5 )
+				text-shadow: 1px 1px 1px rgba($black, 0.5)
 
 				@media $media-sm-up
 					position: absolute
@@ -82,7 +82,7 @@
 			// On bigger sizes we need to put it above the media bar, otherwise it's below.
 			// If we do this in XS as well, any of the popovers in it will get covered by the
 			// full-page shade that shows.
-			z-index: 1
+			z-index: $zindex-page-header-nav
 
 		@media $media-md-up
 			height: 65px
@@ -90,7 +90,7 @@
 			// Force on to GPU.
 			// For some reason Chrome wasn't repainting when it would disappear.
 			// This fixes the Chrome bug. Odd.
-			transform: translate3d( 0, 0, 0 )
+			transform: translate3d(0, 0, 0)
 
 	&-controls
 		clearfix()
