@@ -21,11 +21,7 @@
 				<div class="col-xs-6 col-sm-3 col-md-2"
 					v-for="channel of channels"
 					>
-					{{ channel }}
-					<app-channel-thumbnail
-						:channel="channel"
-						:games-count="gameCounts[ channel ]"
-						/>
+					<app-channel-thumbnail :channel="channel" />
 				</div>
 			</div>
 

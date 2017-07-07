@@ -17,7 +17,6 @@ import { AppChannelThumbnail } from '../../../../components/channel/thumbnail/th
 })
 export default class RouteDiscoverChannelsList extends Vue {
 	channels: any[] = [];
-	gameCounts: any = {};
 
 	@RouteResolve()
 	routeResolve() {
@@ -32,8 +31,5 @@ export default class RouteDiscoverChannelsList extends Vue {
 
 	routed() {
 		this.channels = this.$payload.channels;
-		this.$payload.gameCounts.forEach((item: any) =>
-			this.$set(this.gameCounts, item.channel, item.count)
-		);
 	}
 }

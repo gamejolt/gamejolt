@@ -19,7 +19,6 @@ import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 })
 export default class RouteDiscoverChannelsView extends Vue {
 	channel = '';
-	totalGamesCount = 0;
 
 	number = number;
 	Meta = Meta;
@@ -39,6 +38,5 @@ export default class RouteDiscoverChannelsView extends Vue {
 		// Overwrite channel from server so we can decide how it displays in the
 		// end.
 		this.channel = this.$payload.channel;
-		this.totalGamesCount = this.$payload.totalGamesCount;
 	}
 }
