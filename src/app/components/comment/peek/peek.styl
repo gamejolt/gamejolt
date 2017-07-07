@@ -1,0 +1,29 @@
+@require '~styles/variables'
+
+.comment-peek
+	margin-left: -10px
+	margin-right: -10px
+	margin-bottom: $line-height-computed
+
+	&-item
+		display: inline-block
+		vertical-align: top
+		width: 50%
+		padding: 0 10px
+
+	&-meta
+		margin-bottom: 10px
+
+	&-avatar
+		float: left
+		width: 40px
+		margin-right: 10px
+
+		>>> img
+			border: 2px solid $gray-lighter
+			background-color: $white
+
+	&-content
+		padding: 10px
+		border-radius: $border-radius-base
+

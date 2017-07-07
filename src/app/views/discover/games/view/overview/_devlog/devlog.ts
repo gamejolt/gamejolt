@@ -18,6 +18,10 @@ import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/compo
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
 import { Store } from '../../../../../../store/index';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
+import { AppCommentWidgetAdd } from '../../../../../../../lib/gj-lib-client/components/comment/widget/add/add';
+import { Comment } from '../../../../../../../lib/gj-lib-client/components/comment/comment-model';
+import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 
 @View
 @Component({
@@ -31,6 +35,8 @@ import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/component
 		AppSocialFacebookLike,
 		AppGamePackageCard,
 		AppGameSoundtrackCard,
+		AppCommentPeek,
+		AppCommentWidgetAdd,
 	},
 	directives: {
 		AppTrackEvent,
@@ -48,9 +54,23 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 
 	@State app: Store['app'];
 
+	comments: Comment[] = [];
+	commentsCount = 0;
 	showFullDescription = false;
 	canToggleDescription = false;
 
 	Screen = makeObservableService(Screen);
 	Environment = Environment;
+	number = number;
+
+	async created() {
+		const payload = await Comment.fetch('Game', this.game.id, 1);
+		this.commentsCount = payload.count;
+		this.comments = Comment.populate(payload.comments);
+	}
+
+	onCommentAdd(comment: Comment) {
+		++this.commentsCount;
+		this.comments.unshift(comment);
+	}
 }
