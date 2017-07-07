@@ -14,6 +14,7 @@ import { Model } from '../../../../lib/gj-lib-client/components/model/model.serv
 import { isPrerender } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 
 @View
 @Component({
@@ -96,7 +97,13 @@ export class AppActivityFeed extends Vue {
 	}
 
 	shouldShowAd(index: number) {
-		if (!this.showAds || isPrerender || GJ_IS_CLIENT || GJ_IS_SSR) {
+		if (
+			!this.showAds ||
+			isPrerender ||
+			GJ_IS_CLIENT ||
+			GJ_IS_SSR ||
+			Screen.isXs
+		) {
 			return false;
 		}
 

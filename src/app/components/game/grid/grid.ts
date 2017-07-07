@@ -89,7 +89,7 @@ export class AppGameGrid extends Vue {
 	}
 
 	shouldShowAd(index: number) {
-		if (!this.showAds) {
+		if (!this.showAds || Screen.isXs) {
 			return false;
 		}
 
