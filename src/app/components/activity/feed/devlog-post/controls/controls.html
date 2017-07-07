@@ -10,20 +10,31 @@
 				<!--
 					If we require tabs, then there is no reason to show the reply button.
 				-->
-				<button class="btn btn-outline btn-sparse btn-circle"
+				<button
+					class="btn btn-outline btn-sparse btn-circle"
 					v-if="!requireTabs"
 					@click="toggleComments"
 					v-app-tooltip="$gettext( 'Comment on This Post' )"
 					>
 					<app-jolticon icon="comment" />
 				</button>
+				<span
+					class="blip light filled"
+					v-if="!requireTabs && post.comment_count > 0"
+					>
+					<span class="blip-caret"></span>
+					<span class="blip-count">
+						{{ post.comment_count | number }}
+					</span>
+				</span>
 
 				<app-fireside-post-like-widget
 					:post="post"
 					:circle="true"
 					/>
 
-				<button class="btn btn-outline btn-sparse btn-circle"
+				<button
+					class="btn btn-outline btn-sparse btn-circle"
 					v-app-popover-trigger="sharePopoverId"
 					v-app-tooltip="$gettext( 'Share' )"
 					>
