@@ -127,12 +127,16 @@
 										<app-jolticon icon="link" />
 										<translate>Copy Partner Link</translate>
 									</button>
-									<a class="btn btn-outline"
-										ui-sref="dashboard.analytics( { resource: 'Game', resourceId: game.id } )"
+									<router-link
+										class="btn btn-outline"
+										:to="{
+											name: 'dash.analytics',
+											params: { resource: 'Game', resourceId: game.id },
+										}"
 										>
 										<app-jolticon icon="chart" />
 										<translate>View Analytics</translate>
-									</a>
+									</router-link>
 								</div>
 							</app-card>
 						</div>
