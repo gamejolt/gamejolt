@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
-import { BeforeRouteEnter } from '../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Order } from '../../../../../../lib/gj-lib-client/components/order/order.model';
@@ -21,12 +21,12 @@ export default class RouteDashMainPurchasesList extends Vue {
 
 	date = date;
 
-	@BeforeRouteEnter({ cache: true })
-	routeEnter() {
+	@RouteResolve({ cache: true })
+	routeResolve() {
 		return Api.sendRequest('/web/dash/purchases');
 	}
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettext('Order History');
 	}
 

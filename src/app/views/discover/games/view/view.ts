@@ -5,7 +5,7 @@ import { State } from 'vuex-class';
 import * as View from '!view!./view.html';
 import './view-content.styl';
 
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
@@ -101,12 +101,12 @@ export default class RouteDiscoverGamesView extends Vue {
 		return builds.concat(Game.pluckRomBuilds(this.packages));
 	}
 
-	@BeforeRouteEnter({ lazy: true, cache: true, cacheTag: 'view' })
+	@RouteResolve({ lazy: true, cache: true, cacheTag: 'view' })
 	beforeRoute(route: VueRouter.Route) {
 		return Api.sendRequest('/web/discover/games/' + route.params.id);
 	}
 
-	created() {
+	routeInit() {
 		this.$store.registerModule('route', new RouteStore());
 		this.bootstrapGame(parseInt(this.id, 10));
 

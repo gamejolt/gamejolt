@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./edit.html';
 
-import { BeforeRouteEnter } from '../../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../../lib/gj-lib-client/utils/router';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../../../../../../../lib/gj-lib-client/components/game/release/release.model';
 import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
@@ -57,8 +57,8 @@ export default class RouteDashGamesManageGamePackagesEdit extends Vue {
 	GameRelease = GameRelease;
 	number = number;
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/packages/' +
 				route.params.id +

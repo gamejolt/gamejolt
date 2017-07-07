@@ -18,14 +18,14 @@ import { GamePlayModal } from '../lib/gj-lib-client/components/game/play-modal/p
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Ads } from '../lib/gj-lib-client/components/ad/ads.service';
 
+if (GJ_IS_CLIENT) {
+	// require( './bootstrap-client' );
+}
+
 Payload.init(store as any, router);
 History.init(router);
 Analytics.initRouter(router);
 Ads.init(router);
-
-if (GJ_IS_CLIENT) {
-	// require( './bootstrap-client' );
-}
 
 GamePlayModal.init({ canMinimize: true });
 bootstrapShortkey();

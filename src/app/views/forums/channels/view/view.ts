@@ -4,7 +4,7 @@ import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./view.html';
 
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
@@ -47,8 +47,8 @@ export default class RouteForumsChannelsView extends Vue {
 	Scroll = Scroll;
 	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter({ cache: true })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: true })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
 			'/web/forums/channels/' +
 				route.params.name +

@@ -4,7 +4,7 @@ import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./list.html?style=./list.styl';
 
-import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../view.state';
 import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
@@ -62,7 +62,7 @@ export default class RouteDiscoverGamesViewScoresList extends Vue {
 		return this.scores.filter((_score, i) => i % 2 === 1);
 	}
 
-	@BeforeRouteEnter({ cache: true })
+	@RouteResolve({ cache: true })
 	beforeRoute(this: undefined, route: VueRouter.Route) {
 		let query = '';
 		if (parseInt(route.query.page, 10) > 1) {

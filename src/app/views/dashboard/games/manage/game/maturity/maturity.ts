@@ -29,7 +29,7 @@ export default class RouteDashGamesManageGameMaturity extends Vue {
 	Screen = Screen;
 
 	@BeforeRouteEnter()
-	routeEnter(this: void) {}
+	routeResolve(this: void) {}
 
 	routed() {
 		this.current = this.game;

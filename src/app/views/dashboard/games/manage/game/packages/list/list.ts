@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
-import { BeforeRouteEnter } from '../../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../../lib/gj-lib-client/utils/router';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../../manage.state';
@@ -47,8 +47,8 @@ export default class RouteDashGamesManageGamePackagesList extends Vue {
 		return this.packages.map(i => i.id);
 	}
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		// TODO
 		// if (!packagesPayload.packages.length) {
 		// 	$state.go('dash.games.manage.game.packages.add', $stateParams);

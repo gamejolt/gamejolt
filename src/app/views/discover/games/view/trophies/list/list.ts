@@ -5,7 +5,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
 import { GameTrophy } from '../../../../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
-import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { UserGameTrophy } from '../../../../../../../lib/gj-lib-client/components/user/game-trophy/game-trophy.model';
 import { AppTrophyCompletion } from '../../../../../../components/trophy/completion/completion';
@@ -45,8 +45,8 @@ export default class RouteDiscoverGamesViewTrophiesList extends Vue {
 
 	currentFilter = 'all';
 
-	@BeforeRouteEnter({ cache: true })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: true })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest('/web/discover/games/trophies/' + route.params.id);
 	}
 

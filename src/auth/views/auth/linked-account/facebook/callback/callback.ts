@@ -3,15 +3,15 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 
 import { AuthLinkedAccountProcessing } from '../../_processing/processing';
-import { BeforeRouteEnter } from '../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Auth } from '../../../../../../lib/gj-lib-client/components/auth/auth.service';
 
 @Component({})
 export default class RouteAuthLinkedAccountFacebookCallback extends Vue {
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		const { code, state } = route.query;
 		return Api.sendRequest(
 			'/web/auth/facebook/callback?code=' + code + '&state=' + state,

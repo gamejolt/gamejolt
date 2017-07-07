@@ -6,7 +6,7 @@ import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-serv
 import { ForumCategory } from '../../../../../lib/gj-lib-client/components/forum/category/category.model';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppForumRules } from '../../../../components/forum/rules/rules';
 import { AppForumChannelList } from '../../../../components/forum/channel-list/channel-list';
@@ -24,12 +24,12 @@ export default class RouteForumsLandingOverview extends Vue {
 	latestPosts: ForumPost[] = [];
 	postCountPerPage = 0;
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettext('Forums');
 	}
 
-	@BeforeRouteEnter({ cache: true })
-	routeEnter() {
+	@RouteResolve({ cache: true })
+	routeResolve() {
 		return Api.sendRequest('/web/forums');
 	}
 

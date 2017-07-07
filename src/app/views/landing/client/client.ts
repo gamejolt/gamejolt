@@ -6,7 +6,7 @@ import * as View from '!view!./client.html?style=./client.styl';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -38,12 +38,12 @@ export default class RouteLandingClient extends Vue {
 
 	Screen = makeObservableService(Screen);
 
-	created() {
+	routeInit() {
 		Meta.title = 'Game Jolt Client';
 	}
 
-	@BeforeRouteEnter({ cache: true, lazy: true })
-	routeEnter() {
+	@RouteResolve({ cache: true, lazy: true })
+	routeResolve() {
 		return Api.sendRequest('/web/client');
 	}
 

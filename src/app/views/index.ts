@@ -48,8 +48,10 @@ const routes = [
 ];
 
 // Should tell the browser that we want to handle our own scrolling.
-if ('scrollRestoration' in history) {
-	history.scrollRestoration = 'manual';
+if (!GJ_IS_SSR) {
+	if ('scrollRestoration' in history) {
+		history.scrollRestoration = 'manual';
+	}
 }
 
 // let prevAnchor: HTMLElement | undefined;

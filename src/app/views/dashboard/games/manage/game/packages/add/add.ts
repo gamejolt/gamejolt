@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./add.html';
 
-import { BeforeRouteEnter } from '../../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../../manage.state';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
@@ -19,8 +19,8 @@ import { FormGamePackage } from '../../../../../../../components/forms/game/pack
 export default class RouteDashGamesManageGamePackagesAdd extends Vue {
 	@RouteState game: RouteStore['game'];
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined) {}
+	@RouteResolve()
+	routeResolve(this: undefined) {}
 
 	routed() {
 		Meta.title = this.$gettextInterpolate('Add Package for %{ game }', {

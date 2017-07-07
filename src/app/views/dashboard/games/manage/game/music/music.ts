@@ -4,7 +4,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./music.html';
 
 import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
-import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../manage.state';
@@ -37,14 +37,14 @@ export default class RouteDashGamesManageGameMusic extends Vue {
 		return this.songs.map(item => item.id);
 	}
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/music/' + route.params.id
 		);
 	}
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettextInterpolate(`Manage Music for %{ game }`, {
 			game: this.game.title,
 		});

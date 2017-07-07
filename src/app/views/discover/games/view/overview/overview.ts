@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 
-import { BeforeRouteEnter } from '../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppDiscoverGamesViewOverviewGame } from './_game/game';
@@ -24,7 +24,7 @@ export default class RouteDiscoverGamesViewOverview extends Vue {
 	@RouteMutation bootstrapFeed: RouteStore['bootstrapFeed'];
 	@RouteMutation processOverviewPayload: RouteStore['processOverviewPayload'];
 
-	@BeforeRouteEnter({ lazy: true, cache: true })
+	@RouteResolve({ lazy: true, cache: true })
 	beforeRoute(route: VueRouter.Route) {
 		// If we have a tracked partner "ref" in the URL, we want to pass that along
 		// when gathering the payload.
@@ -41,7 +41,7 @@ export default class RouteDiscoverGamesViewOverview extends Vue {
 		return Api.sendRequest(apiOverviewUrl);
 	}
 
-	created() {
+	routeInit() {
 		// Try pulling feed from cache.
 		this.bootstrapFeed();
 	}

@@ -3,7 +3,7 @@ import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./home.html?style=./home.styl';
 
-import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
@@ -65,7 +65,7 @@ export default class RouteDiscoverHome extends Vue {
 
 	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter({ lazy: true, cache: true })
+	@RouteResolve({ lazy: true, cache: true })
 	beforeRoute() {
 		return Api.sendRequest('/web/discover');
 	}
@@ -111,7 +111,7 @@ export default class RouteDiscoverHome extends Vue {
 		}
 	}
 
-	created() {
+	routeInit() {
 		this.chosenSection = this.discoverSections[0];
 	}
 

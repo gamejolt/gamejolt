@@ -8,7 +8,7 @@ import { OrderPayment } from '../../../../../../lib/gj-lib-client/components/ord
 import { date } from '../../../../../../lib/gj-lib-client/vue/filters/date';
 import { Order } from '../../../../../../lib/gj-lib-client/components/order/order.model';
 import { OrderPaymentRefund } from '../../../../../../lib/gj-lib-client/components/order/payment/refund/refund.model';
-import { BeforeRouteEnter } from '../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePackage } from '../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
@@ -41,8 +41,8 @@ export default class RouteDashMainPurchasesView extends Vue {
 	date = date;
 	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest('/web/dash/purchases/' + route.params.id);
 	}
 

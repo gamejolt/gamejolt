@@ -3,7 +3,7 @@ import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./marketplace.html';
 
-import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -33,7 +33,7 @@ export default class RouteLandingMarketplace extends Vue {
 
 	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter()
+	@RouteResolve()
 	beforeRoute() {
 		return Api.sendRequest('/web/marketplace');
 	}

@@ -4,7 +4,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./view.html?style=./view.styl';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -38,15 +38,15 @@ export default class RouteDiscoverGamesViewDevlogView extends Vue {
 
 	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter({ lazy: true, cache: true })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ lazy: true, cache: true })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		const postHash = FiresidePost.pullHashFromUrl(route.params.postSlug);
 		return Api.sendRequest(
 			'/web/discover/games/devlog/' + route.params.id + '/' + postHash
 		);
 	}
 
-	created() {
+	routeInit() {
 		const hash = FiresidePost.pullHashFromUrl(this.postSlug);
 		this.post = Registry.find<FiresidePost>('FiresidePost', hash, 'hash');
 	}

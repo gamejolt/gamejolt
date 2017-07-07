@@ -5,7 +5,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./add.html';
 
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
@@ -32,12 +32,12 @@ export default class RouteForumsTopicsAdd extends Vue {
 
 	channel: ForumChannel = null as any;
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettext(`Create a New Topic`);
 	}
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest('/web/forums/topics/create/' + route.params.channel);
 	}
 

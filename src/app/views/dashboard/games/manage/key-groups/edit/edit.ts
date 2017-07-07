@@ -107,7 +107,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./edit.html';
-import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
 import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
@@ -165,8 +165,8 @@ export default class RouteDashGamesManageKeyGroupsEdit extends Vue {
 	Environment = Environment;
 	KeyGroup = KeyGroup;
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/key-groups/' +
 				`${route.params.id}/${route.params.keyGroupId}`

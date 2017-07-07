@@ -14,7 +14,7 @@ export class BroadcastModal {
 
 	static async check() {
 		const user = appStore.state.user;
-		if (!user || !Settings.get('broadcast-modal')) {
+		if (!user || !Settings.get('broadcast-modal') || GJ_IS_SSR) {
 			return;
 		}
 

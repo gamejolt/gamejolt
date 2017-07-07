@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
-import { BeforeRouteEnter } from '../../../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
 import { RouteState, RouteStore } from '../../../../manage.state';
@@ -32,8 +32,8 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends Vue {
 
 	items: GameDataStoreItem[] = [];
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/api/data-storage/' + route.params.id
 		);

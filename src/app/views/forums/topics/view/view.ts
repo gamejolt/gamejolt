@@ -11,7 +11,7 @@ import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/pos
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Popover } from '../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
@@ -96,8 +96,8 @@ export default class RouteForumsTopicsView extends Vue {
 		);
 	}
 
-	@BeforeRouteEnter({ cache: true })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: true })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		HistoryTick.sendBeacon('forum-topic', parseInt(route.params.id, 10));
 
 		return Api.sendRequest(

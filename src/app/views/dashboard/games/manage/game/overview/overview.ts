@@ -4,7 +4,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { RouteState, RouteStore, RouteAction } from '../../manage.state';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
@@ -67,8 +67,8 @@ export default class RouteDashGamesManageGameOverview extends Vue {
 	// 	} );
 	// } );
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/overview/' + route.params.id
 		);

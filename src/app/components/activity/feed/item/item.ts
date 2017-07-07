@@ -44,7 +44,7 @@ export class AppActivityFeedItem extends Vue {
 	}
 
 	get isInView() {
-		return !!this.feed.inViewItems[this.item.id];
+		return GJ_IS_SSR || !!this.feed.inViewItems[this.item.id];
 	}
 
 	get isActive() {

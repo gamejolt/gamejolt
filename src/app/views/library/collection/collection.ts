@@ -6,7 +6,7 @@ import * as View from '!view!./collection.html?style=./collection.styl';
 
 import { GameFilteringContainer } from '../../../components/game/filtering/container';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
-import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
@@ -82,8 +82,8 @@ export default class RouteLibraryCollection extends Vue {
 	// TODO: Still gotta work on this.
 	// Not really able to make this lazy since it needs payload to build out the
 	// header.
-	@BeforeRouteEnter({ cache: true })
-	async routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: true })
+	async routeResolve(this: undefined, route: VueRouter.Route) {
 		const filtering = new GameFilteringContainer();
 
 		// If initialization changed the URL, then we don't want to do the API call.

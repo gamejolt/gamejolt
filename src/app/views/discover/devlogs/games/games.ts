@@ -5,7 +5,7 @@ import * as View from '!view!./games.html';
 
 import { AppGameListing } from '../../../../components/game/listing/listing';
 import { AppGameGrid } from '../../../../components/game/grid/grid';
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
 import { GameFilteringContainer } from '../../../../components/game/filtering/container';
@@ -20,8 +20,8 @@ import { GameFilteringContainer } from '../../../../components/game/filtering/co
 export default class RouteDiscoverDevlogsGames extends Vue {
 	listing: GameListingContainer | null = null;
 
-	@BeforeRouteEnter({ cache: true })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: true })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		const filteringContainer = new GameFilteringContainer();
 		return Api.sendRequest(
 			'/web/discover/devlogs/games?' + filteringContainer.getQueryString(route)

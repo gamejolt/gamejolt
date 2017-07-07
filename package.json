@@ -38,6 +38,7 @@
 		"jquery": "3.2.1",
 		"jquery-jcrop": "0.9.13",
 		"jstimezonedetect": "1.0.6",
+		"lodash": "3.9.3",
 		"nw-builder": "gamejolt/nw-builder#skip-merge-app",
 		"pofile": "1.0.8",
 		"prettier": "1.5.2",
@@ -46,6 +47,7 @@
 		"rxjs": "5.4.1",
 		"smoothscroll-polyfill": "0.3.5",
 		"spectrum-colorpicker": "1.8.0",
+		"tslint": "5.5.0",
 		"ua-parser-js": "0.7.13",
 		"v-tooltip": "1.1.6",
 		"vee-validate": "2.0.0-rc.6",
@@ -56,13 +58,10 @@
 		"vue-router": "2.7.0",
 		"vue-server-renderer": "2.3.4",
 		"vue-shortkey": "2.1.8",
-		"vue-ssr-webpack-plugin": "3.0.0",
 		"vue-touch": "2.0.0-beta.4",
 		"vuedraggable": "2.14.1",
 		"vuex": "2.3.1",
-		"vuex-class": "0.2.0",
-		"lodash": "3.9.3",
-		"tslint": "5.5.0"
+		"vuex-class": "0.2.0"
 	},
 	"optionalDependencies": {
 		"appdmg": "0.3.10"

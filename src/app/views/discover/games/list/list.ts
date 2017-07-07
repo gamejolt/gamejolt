@@ -6,7 +6,7 @@ import * as View from '!view!./list.html';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppGenreList } from '../../../../components/genre/list/list';
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameFilteringContainer } from '../../../../components/game/filtering/container';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
@@ -75,8 +75,8 @@ export default class RouteDiscoverGamesList extends Vue {
 	};
 
 	// TODO: Still gotta work on this.
-	@BeforeRouteEnter({ lazy: true, cache: true })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ lazy: true, cache: true })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		const filtering = new GameFilteringContainer();
 		filtering.isPersistent = true;
 
@@ -91,7 +91,7 @@ export default class RouteDiscoverGamesList extends Vue {
 		);
 	}
 
-	created() {
+	routeInit() {
 		this.process();
 	}
 

@@ -5,7 +5,7 @@ const STORAGE_KEY = 'search-history';
 export class SearchHistory {
 	static get() {
 		let searchHistory: string[] = [];
-		if (window.localStorage[STORAGE_KEY]) {
+		if (!GJ_IS_SSR && window.localStorage[STORAGE_KEY]) {
 			try {
 				searchHistory = JSON.parse(window.localStorage[STORAGE_KEY]);
 
@@ -34,10 +34,14 @@ export class SearchHistory {
 		// Only keep the last 7.
 		searchHistory = searchHistory.slice(0, 7);
 
-		window.localStorage[STORAGE_KEY] = JSON.stringify(searchHistory);
+		if (!GJ_IS_SSR) {
+			window.localStorage[STORAGE_KEY] = JSON.stringify(searchHistory);
+		}
 	}
 
 	static clear() {
-		window.localStorage.removeItem(STORAGE_KEY);
+		if (!GJ_IS_SSR) {
+			window.localStorage.removeItem(STORAGE_KEY);
+		}
 	}
 }

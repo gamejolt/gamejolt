@@ -20,7 +20,7 @@
 // 	private ngInjector?: ng.auto.IInjectorService;
 
 // 	@BeforeRouteEnter({ cache: false, lazy: false })
-// 	routeEnter( this: undefined, route: VueRouter.Route )
+// 	routeResolve( this: undefined, route: VueRouter.Route )
 // 	{
 // 		console.log( 'route enter' );
 // 		if ( route.meta && route.meta.resolve ) {

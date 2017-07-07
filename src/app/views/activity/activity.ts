@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./activity.html';
 
-import { BeforeRouteEnter } from '../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';
 import { Notification } from '../../../lib/gj-lib-client/components/notification/notification-model';
@@ -32,12 +32,12 @@ export default class RouteActivity extends Vue {
 	activityUnreadCount = 0;
 	notificationsUnreadCount = 0;
 
-	@BeforeRouteEnter({ cache: true, lazy: true })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: true, lazy: true })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest('/web/dash/activity/' + route.params.tab);
 	}
 
-	created() {
+	routeInit() {
 		// Try to pull from cache.
 		this.feed = ActivityFeedService.bootstrap();
 	}

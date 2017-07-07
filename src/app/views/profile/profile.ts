@@ -6,7 +6,7 @@ import * as View from '!view!./profile.html?style=./profile.styl';
 
 import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
-import { BeforeRouteEnter } from '../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
 import { AppPageHeader } from '../../components/page-header/page-header';
@@ -55,8 +55,8 @@ export default class RouteProfile extends Vue {
 	UserFriendship = UserFriendship;
 	Environment = Environment;
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest('/web/profile/@' + route.params.username);
 	}
 

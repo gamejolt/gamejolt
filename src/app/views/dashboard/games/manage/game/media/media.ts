@@ -12,7 +12,7 @@ import {
 } from '../../manage.state';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
-import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
@@ -61,14 +61,14 @@ export default class RouteDashGamesManageGameMedia extends Vue {
 	Environment = Environment;
 	Clipboard = Clipboard;
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/media/' + route.params.id
 		);
 	}
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettextInterpolate(`Manage Media for %{ game }`, {
 			game: this.game.title,
 		});

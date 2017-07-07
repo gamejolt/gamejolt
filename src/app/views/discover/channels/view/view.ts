@@ -4,7 +4,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./view.html';
 
 import { ChannelsViewHelper } from '../channels-view-helper';
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Channels } from '../../../../components/channel/channels-service';
@@ -25,12 +25,12 @@ export default class RouteDiscoverChannelsView extends Vue {
 	Meta = Meta;
 	Channels = Channels;
 
-	@BeforeRouteEnter({ cache: true, lazy: true, cacheTag: 'view' })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: true, lazy: true, cacheTag: 'view' })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest('/web/discover/channels/' + route.params.channel);
 	}
 
-	created() {
+	routeInit() {
 		this.channel = this.$route.params.channel;
 		ChannelsViewHelper.setDefaultMetaData(this.$route.params.channel);
 	}

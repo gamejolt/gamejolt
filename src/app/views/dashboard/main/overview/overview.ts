@@ -5,7 +5,7 @@ import * as View from '!view!./overview.html';
 
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
@@ -94,12 +94,12 @@ export default class RouteDashMainOverview extends Vue {
 		};
 	}
 
-	@BeforeRouteEnter({ cache: true })
-	routeEnter() {
+	@RouteResolve({ cache: true })
+	routeResolve() {
 		return Api.sendRequest('/web/dash');
 	}
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettext('dash.overview.page_title');
 	}
 

@@ -4,7 +4,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./devlogs.html';
 
 import { GameListingContainer } from '../../../../../components/game/listing/listing-container-service';
-import { BeforeRouteEnter } from '../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameFilteringContainer } from '../../../../../components/game/filtering/container';
 import { AppGameListing } from '../../../../../components/game/listing/listing';
@@ -21,8 +21,8 @@ export default class RouteDiscoverChannelsViewDevlogs extends Vue {
 	// Devlogs don't have filters.
 	listing: GameListingContainer | null = null;
 
-	@BeforeRouteEnter({ cache: true })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: true })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		const filtering = new GameFilteringContainer();
 		return Api.sendRequest(
 			`/web/discover/channels/devlogs/${route.params.channel}?` +

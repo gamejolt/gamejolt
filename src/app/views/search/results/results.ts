@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./results.html';
 
-import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { Search } from '../../../components/search/search-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -32,8 +32,8 @@ export default class RouteSearchResults extends Vue {
 	Search = makeObservableService(Search);
 	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter({ cache: true })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: true })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Search.search(route.query.q);
 	}
 

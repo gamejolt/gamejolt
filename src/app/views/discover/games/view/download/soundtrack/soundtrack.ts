@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./soundtrack.html';
 
-import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../view.state';
@@ -32,7 +32,7 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends Vue {
 
 	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter()
+	@RouteResolve()
 	beforeRoute(this: undefined, route: VueRouter.Route) {
 		const gameId = parseInt(route.params.id, 10);
 

@@ -5,7 +5,7 @@ import * as View from '!view!./settings.html';
 
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../manage.state';
-import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { FormGameSettings } from '../../../../../../components/forms/game/settings/settings';
@@ -19,8 +19,8 @@ import { FormGameSettings } from '../../../../../../components/forms/game/settin
 export default class RouteDashGamesManageGameSettings extends Vue {
 	@RouteState game: RouteStore['game'];
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined) {}
+	@RouteResolve()
+	routeResolve(this: undefined) {}
 
 	routed() {
 		Meta.title = this.$gettextInterpolate('Settings for %{ game }', {

@@ -8,7 +8,7 @@ import { FiresidePost } from '../../../../../lib/gj-lib-client/components/firesi
 import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
@@ -42,12 +42,12 @@ export default class RouteDiscoverDevlogsOverview extends Vue {
 	feed: ActivityFeedContainer | null = null;
 
 	// Don't cache since every page load we pull new games in.
-	@BeforeRouteEnter({ lazy: true })
-	beforeRoute() {
+	@RouteResolve({ lazy: true })
+	routeResolve() {
 		return Api.sendRequest('/web/discover/devlogs');
 	}
 
-	created() {
+	routeInit() {
 		Meta.title = 'Indie game devlogs';
 		Meta.description =
 			'Find the latest and greatest games in development and follow their devlog feeds!';
@@ -61,7 +61,9 @@ export default class RouteDiscoverDevlogsOverview extends Vue {
 		Meta.twitter.image = require('../social.png');
 
 		// Try pulling feed from cache.
-		this.feed = ActivityFeedService.bootstrap();
+		if (!GJ_IS_SSR) {
+			this.feed = ActivityFeedService.bootstrap();
+		}
 	}
 
 	routed() {

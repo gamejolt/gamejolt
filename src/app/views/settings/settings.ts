@@ -5,7 +5,7 @@ import * as View from '!view!./settings.html';
 import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppPageHeader } from '../../components/page-header/page-header';
-import { BeforeRouteEnter } from '../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 import { FormSettings } from '../../components/forms/settings/settings';
 import { AppScrollTo } from '../../../lib/gj-lib-client/components/scroll/to/to.directive';
@@ -36,13 +36,13 @@ export default class RouteSettings extends Vue {
 		};
 	}
 
-	@BeforeRouteEnter()
-	routeEnter() {
+	@RouteResolve()
+	routeResolve() {
 		User.touch();
 		return Promise.resolve();
 	}
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettext('Settings');
 	}
 }

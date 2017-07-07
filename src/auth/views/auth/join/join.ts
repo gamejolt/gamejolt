@@ -9,7 +9,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Store } from '../../../store/index';
-import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { loggedUserBlock } from '../auth';
 
 @View
@@ -24,12 +24,12 @@ export default class RouteAuthJoin extends Vue {
 
 	Connection = makeObservableService(Connection);
 
-	@BeforeRouteEnter()
-	routeEnter() {
+	@RouteResolve()
+	routeResolve() {
 		return loggedUserBlock();
 	}
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettext('auth.join.page_title');
 	}
 

@@ -10,7 +10,7 @@ import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fir
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { BeforeRouteEnter } from '../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppGameGrid } from '../../../../../components/game/grid/grid';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
@@ -41,14 +41,14 @@ export default class RouteDiscoverChannelsViewOverview extends Vue {
 	Environment = Environment;
 	Screen = Screen;
 
-	@BeforeRouteEnter({ cache: true, lazy: true })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: true, lazy: true })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
 			'/web/discover/channels/overview/' + route.params.channel
 		);
 	}
 
-	created() {
+	routeInit() {
 		// Try pulling feed from cache.
 		this.feed = ActivityFeedService.bootstrap();
 	}

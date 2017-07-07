@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./view.html';
 
-import { BeforeRouteEnter } from '../../../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
@@ -30,8 +30,8 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends Vue {
 	score: UserGameScore = null as any;
 	scoreTable: GameScoreTable = null as any;
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/api/scores/' +
 				route.params.id +

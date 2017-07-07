@@ -4,7 +4,7 @@ import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./key.html';
 
-import { BeforeRouteEnter } from '../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppKeyGame } from './_game/game';
@@ -46,8 +46,8 @@ export default class RouteKey extends Vue {
 		return AppKeyGame;
 	}
 
-	@BeforeRouteEnter({ cache: true })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: true })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		let url = '/claim/view/' + route.params.accessKey;
 
 		if (route.query.bundleGameId) {

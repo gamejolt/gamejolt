@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./manage.html';
 
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { RouteState, RouteStore, RouteMutation } from './manage.state';
@@ -33,12 +33,12 @@ export default class RouteDashGamesManage extends Vue {
 
 	Game = Game;
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest('/web/dash/developer/games/' + route.params.id);
 	}
 
-	created() {
+	routeInit() {
 		this.$store.registerModule('route', new RouteStore());
 	}
 

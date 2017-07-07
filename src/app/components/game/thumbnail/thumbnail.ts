@@ -3,7 +3,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./thumbnail.html?style=./thumbnail.styl';
 
-import { SellablePricing } from '../../../../lib/gj-lib-client/components/sellable/pricing/pricing.model';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -51,15 +50,9 @@ export class AppGameThumbnail extends Vue {
 
 	@State app: AppStore;
 
-	showModTools = false;
 	isHovered = true;
 	isInview = false;
 	isThumbnailLoaded = false;
-
-	pricing: SellablePricing | null = null;
-	sale = false;
-	salePercentageOff = '';
-	saleOldPricing: SellablePricing | null = null;
 
 	Screen = makeObservableService(Screen);
 
@@ -85,6 +78,31 @@ export class AppGameThumbnail extends Vue {
 		return this.game.sellable && this.game.sellable.type;
 	}
 
+	get pricing() {
+		if (this.game.sellable && Array.isArray(this.game.sellable.pricings)) {
+			return this.game.sellable.pricings[0];
+		}
+	}
+
+	get saleOldPricing() {
+		if (this.game.sellable && Array.isArray(this.game.sellable.pricings)) {
+			return this.game.sellable.pricings[1];
+		}
+	}
+
+	get sale() {
+		return this.pricing && this.pricing.promotional;
+	}
+
+	get salePercentageOff() {
+		if (this.pricing && this.saleOldPricing) {
+			return ((this.saleOldPricing.amount - this.pricing.amount) /
+				this.saleOldPricing.amount *
+				100).toFixed(0);
+		}
+		return '';
+	}
+
 	get pricingAmount() {
 		return this.pricing && currency(this.pricing.amount);
 	}
@@ -93,22 +111,14 @@ export class AppGameThumbnail extends Vue {
 		return this.saleOldPricing && currency(this.saleOldPricing.amount);
 	}
 
-	mounted() {
-		if (this.app.user && this.app.user.permission_level >= 3) {
-			this.showModTools = true;
-		}
+	get showModTools() {
+		return this.app.user && this.app.user.permission_level >= 3;
+	}
 
-		// Pricing info.
-		if (this.game.sellable && Array.isArray(this.game.sellable.pricings)) {
-			this.pricing = this.game.sellable.pricings[0];
-			if (this.pricing.promotional) {
-				this.saleOldPricing = this.game.sellable.pricings[1];
-				this.sale = true;
-				this.salePercentageOff = ((this.saleOldPricing.amount -
-					this.pricing.amount) /
-					this.saleOldPricing.amount *
-					100).toFixed(0);
-			}
+	created() {
+		if (GJ_IS_SSR) {
+			this.isInview = true;
+			this.isThumbnailLoaded = true;
 		}
 	}
 

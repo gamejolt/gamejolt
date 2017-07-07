@@ -4,7 +4,7 @@ import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./build.html';
 
-import { BeforeRouteEnter } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
@@ -56,7 +56,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends Vue {
 	Screen = makeObservableService(Screen);
 	Environment = Environment;
 
-	@BeforeRouteEnter()
+	@RouteResolve()
 	beforeRoute(this: undefined, route: VueRouter.Route) {
 		const gameId = parseInt(route.params.id, 10);
 		const buildId = parseInt(route.params.buildId, 10);

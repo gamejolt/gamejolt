@@ -5,7 +5,7 @@ import * as View from '!view!./email-preferences.html';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteMutation, RouteStore } from '../account.state';
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { FormEmailPreferences } from '../../../../components/forms/email-preferences/email-preferences';
 
@@ -20,12 +20,12 @@ export default class RouteDashAccountEmailPreferences extends Vue {
 
 	user: User = null as any;
 
-	@BeforeRouteEnter()
-	routeEnter() {
+	@RouteResolve()
+	routeResolve() {
 		return Api.sendRequest('/web/dash/email-preferences');
 	}
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettext(`dash.email_prefs.page_title`);
 		this.setHeading(this.$gettext('dash.email_prefs.heading'));
 	}

@@ -30,7 +30,7 @@ import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../../../lib/gj-lib-client/components/game/release/release.model';
-import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Store } from '../../../store/index';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
@@ -111,8 +111,8 @@ export default class RouteDashAnalytics extends Vue {
 
 	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter({ cache: false })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: false })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
 			'/web/dash/analytics/' +
 				route.params.resource +
@@ -121,7 +121,7 @@ export default class RouteDashAnalytics extends Vue {
 		);
 	}
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettext('Analytics');
 	}
 

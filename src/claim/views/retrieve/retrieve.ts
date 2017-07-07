@@ -5,7 +5,7 @@ import * as View from '!view!./retrieve.html';
 
 import { GameBundle } from '../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
-import { BeforeRouteEnter } from '../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
@@ -42,8 +42,11 @@ export default class RouteRetrieve extends Vue {
 	Meta = makeObservableService(Meta);
 	$payload: Payload;
 
-	@BeforeRouteEnter()
-	async routeEnter(this: undefined, route: VueRouter.Route): Promise<Payload> {
+	@RouteResolve()
+	async routeResolve(
+		this: undefined,
+		route: VueRouter.Route
+	): Promise<Payload> {
 		let type: 'game' | 'bundle' | undefined;
 		let key = '';
 

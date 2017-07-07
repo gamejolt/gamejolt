@@ -9,7 +9,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { AppPageHeader } from '../../../components/page-header/page-header';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { Store } from '../../../store/index';
-import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { RouteState, RouteStore } from './account.state';
 
@@ -27,12 +27,12 @@ export default class RouteDashAccount extends Vue {
 
 	Screen = makeObservableService(Screen);
 
-	@BeforeRouteEnter({})
-	routeEnter() {
+	@RouteResolve({})
+	routeResolve() {
 		User.touch();
 	}
 
-	created() {
+	routeInit() {
 		this.$store.registerModule('route', new RouteStore());
 	}
 

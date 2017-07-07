@@ -4,7 +4,7 @@ import * as View from '!view!./active.html';
 
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { BeforeRouteEnter } from '../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppForumTopicList } from '../../../../components/forum/topic-list/topic-list';
 
@@ -17,12 +17,12 @@ import { AppForumTopicList } from '../../../../components/forum/topic-list/topic
 export default class RouteForumsLandingActive extends Vue {
 	topics: ForumTopic[] = [];
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettext(`Active Topics in All Forums`);
 	}
 
-	@BeforeRouteEnter({ cache: true })
-	routeEnter() {
+	@RouteResolve({ cache: true })
+	routeResolve() {
 		return Api.sendRequest('/web/forums/active-topics');
 	}
 

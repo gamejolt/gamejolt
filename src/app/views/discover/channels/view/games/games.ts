@@ -4,7 +4,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./games.html';
 
 import { GameListingContainer } from '../../../../../components/game/listing/listing-container-service';
-import { BeforeRouteEnter } from '../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameFilteringContainer } from '../../../../../components/game/filtering/container';
 import { AppGameListing } from '../../../../../components/game/listing/listing';
@@ -22,8 +22,8 @@ export default class RouteDiscoverChannelsViewGames extends Vue {
 	listing: GameListingContainer | null = null;
 
 	// TODO: Still gotta work on this
-	@BeforeRouteEnter({ cache: true })
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve({ cache: true })
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		const filtering = new GameFilteringContainer();
 
 		// If initialization changed the URL, then we don't want to do the API call.

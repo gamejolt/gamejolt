@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
-import { BeforeRouteEnter } from '../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
 import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
@@ -56,8 +56,8 @@ export default class RouteProfileOverview extends Vue {
 	User = User;
 	UserFriendship = UserFriendship;
 
-	@BeforeRouteEnter()
-	routeEnter(this: undefined, route: VueRouter.Route) {
+	@RouteResolve()
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest('/web/profile/overview/@' + route.params.username);
 	}
 
