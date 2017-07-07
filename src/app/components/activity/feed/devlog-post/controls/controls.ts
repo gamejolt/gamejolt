@@ -45,6 +45,9 @@ import { Store } from '../../../../../store/index';
 		AppTooltip,
 		AppPopoverTrigger,
 	},
+	filters: {
+		number,
+	},
 })
 export class AppActivityFeedDevlogPostControls extends Vue {
 	@Prop([FiresidePost])
