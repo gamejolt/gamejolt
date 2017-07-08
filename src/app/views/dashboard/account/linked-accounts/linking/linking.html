@@ -1,10 +1,12 @@
-<p><translate>Please use your web browser to complete the process.</translate></p>
+<div>
+	<p><translate>Please use your web browser to complete the process.</translate></p>
 
-<app-progress-poller
-	:url="`/web/auth/poll-oauth/${ token }`"
-	:interval="2500"
-	@complete="completed"
-	@error="failed"
-	/>
+	<app-progress-poller
+		:url="`/web/auth/poll-oauth/${ token }`"
+		:interval="2500"
+		@complete="completed"
+		@error="failed"
+		/>
 
-<app-loading :label="$gettext('Linking...')" />
+	<app-loading :label="$gettext('Linking...')" />
+</div>

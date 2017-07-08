@@ -190,4 +190,8 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends Vue {
 			name: 'dash.account.linked-accounts.list',
 		});
 	}
+
+	render(h: Vue.CreateElement) {
+		return h('div');
+	}
 }
