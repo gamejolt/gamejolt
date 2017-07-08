@@ -200,11 +200,16 @@
 
 				<div class="row">
 					<div class="col-md-6 col-centered">
-						<a class="btn btn-primary-outline btn-block"
-							ui-sref="discover.games.list.section( { section: 'best', price: 'paid' } )"
+						<router-link
+							class="btn btn-primary-outline btn-block"
+							:to="{
+								name: 'discover.games.list._fetch',
+								params: { section: 'best' },
+								query: { price: 'paid' },
+							}"
 							>
 							View More
-						</a>
+						</router-link>
 					</div>
 				</div>
 
@@ -234,9 +239,9 @@
 								Get started at
 							</p>
 							<p>
-								<a class="btn btn-success" ui-sref="dashboard.account.financials">
+								<router-link class="btn btn-success" :to="{ name: 'dash.account.financials' }">
 									Marketplace Account Setup
-								</a>
+								</router-link>
 							</p>
 						</div>
 

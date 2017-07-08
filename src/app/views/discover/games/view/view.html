@@ -9,21 +9,27 @@
 			>
 			<div class="container text-center">
 
-				<a
+				<router-link
 					class="btn btn-outline hidden-xs"
-					ui-sref="dashboard.analytics( { resource: 'Game', resourceId: game.id } )"
+					:to="{
+						name: 'dash.analytics',
+						params: { resource: 'Game', resourceId: game.id },
+					}"
 					>
 					<app-jolticon icon="chart" />
 					<translate>View Analytics</translate>
-				</a>
+				</router-link>
 
-				<a
+				<router-link
 					class="btn btn-outline"
-					ui-sref="dashboard.games.manage.game.overview( { id: game.id } )"
+					:to="{
+						name: 'dash.games.manage.game.overview',
+						params: { id: game.id },
+					}"
 					>
 					<app-jolticon icon="cog" />
 					<translate>Manage Game</translate>
-				</a>
+				</router-link>
 
 			</div>
 		</section>

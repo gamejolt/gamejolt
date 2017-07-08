@@ -86,11 +86,22 @@
 
 						<p>
 							Get started now by browsing
-							<a ui-sref="discover.games.list._fetch( { section: 'featured' } )">Featured</a>,
-							<a ui-sref="discover.games.list._fetch( { section: 'hot' } )">Hot</a>,
-							<a ui-sref="discover.devlogs.overview">Devlogs</a>,
-							<a ui-sref="discover.games.list._fetch( { section: 'best', 'status': 'wip' } )">Early Access</a>
-							or <a ui-sref="discover.games.list._fetch( { section: 'best', price: 'paid' } )">Paid</a>
+							<router-link :to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }">
+								Featured
+							</router-link>,
+							<router-link :to="{ name: 'discover.games.list._fetch', params: { section: null } }">
+								Hot
+							</router-link>,
+							<router-link :to="{ name: 'discover.devlogs.overview' }">
+								Devlogs
+							</router-link>,
+							<router-link :to="{ name: 'discover.games.list._fetch', params: { section: 'best' }, query: { status: 'wip' } }">
+								Early Access
+							</router-link>
+							or
+							<router-link :to="{ name: 'discover.games.list._fetch', params: { section: 'best' }, query: { price: 'paid' } }">
+								Paid
+							</router-link>
 							games!
 						</p>
 
@@ -203,9 +214,13 @@
 
 						<p>
 							Browse
-							<a ui-sref="discover.devlogs.overview">Devlogs</a>
+							<router-link :to="{ name: 'discover.devlogs.overview' }">
+								Devlogs
+							</router-link>
 							and
-							<a ui-sref="discover.games.list._fetch( { section: 'best', 'status': 'wip' } )">Early Access</a>
+							<router-link :to="{ name: 'discover.games.list._fetch', params: { section: 'best' }, query: { status: 'wip' } }">
+								Early Access
+							</router-link>
 							games.
 						</p>
 

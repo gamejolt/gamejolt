@@ -16,18 +16,18 @@
 		<nav class="platform-list inline">
 			<ul>
 				<li>
-					<a ui-sref="dashboard.main.overview" ui-sref-active="active" translate>
+					<a ui-sref="dash.main.overview" ui-sref-active="active" translate>
 						Overview
 					</a>
 				</li>
 				<li>
-					<a ui-sref="dashboard.main.purchases.list" :class="{ active: $state.includes( 'dash.main.purchases') }" translate>
+					<a ui-sref="dash.main.purchases.list" :class="{ active: $state.includes( 'dash.main.purchases') }" translate>
 						Purchases
 					</a>
 				</li>
 				<li>
 					<a
-						ui-sref="dashboard.main.site"
+						ui-sref="dash.main.site"
 						:class="{ active: $state.includes( 'dash.main.site') }"
 						gj-v-app-tooltip="$gettext( `Game Jolt Sites are customizable external sites for your portfolio and games!` )"
 						tooltip-placement="bottom"

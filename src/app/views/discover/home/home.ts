@@ -87,7 +87,7 @@ export default class RouteDiscoverHome extends Vue {
 			smallTitle: this.$gettext('Hot'),
 			url: this.$router.resolve({
 				name: 'discover.games.list._fetch',
-				params: { section: 'hot' },
+				params: { section: null as any },
 			}).href,
 			eventLabel: 'hot-games',
 			games: 'hot',

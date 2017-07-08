@@ -71,8 +71,8 @@ export class ClientTray {
 				// It needs to stay as a relative file path or it will break.
 				icon:
 					packagePrefix +
-						'/app/components/client/tray/' +
-						(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
+					'/app/components/client/tray/' +
+					(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
 				click: toggleVisibility,
 			} as any /* use as any because typings for nw.gui are wrong at this time */
 		);
@@ -112,7 +112,7 @@ export class ClientTray {
 				new gui.MenuItem({
 					label: 'Dashboard',
 					click: function() {
-						$state.go('dashboard.main.overview');
+						$state.go('dash.main.overview');
 						ClientControl.show();
 					},
 				})
@@ -122,7 +122,7 @@ export class ClientTray {
 				new gui.MenuItem({
 					label: 'Edit Account',
 					click: function() {
-						$state.go('dashboard.account.edit');
+						$state.go('dash.account.edit');
 						ClientControl.show();
 					},
 				})

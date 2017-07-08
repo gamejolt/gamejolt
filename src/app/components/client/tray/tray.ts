@@ -92,8 +92,8 @@ export class AppClientTray extends Vue {
 				// It needs to stay as a relative file path or it will break.
 				icon:
 					packagePrefix +
-						'/app/components/client/tray/' +
-						(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
+					'/app/components/client/tray/' +
+					(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
 				// TODO: Click doesn't exist?
 				// it does exist, just not typed for some reason
 				click: () => this.toggleVisibility(),
@@ -130,7 +130,7 @@ export class AppClientTray extends Vue {
 				new gui.MenuItem({
 					label: 'Dashboard',
 					click: () => {
-						this.go({ name: 'dashboard.main.overview' });
+						this.go({ name: 'dash.main.overview' });
 						ClientControl.show();
 					},
 				})
@@ -140,7 +140,7 @@ export class AppClientTray extends Vue {
 				new gui.MenuItem({
 					label: 'Edit Account',
 					click: () => {
-						this.go({ name: 'dashboard.account.edit' });
+						this.go({ name: 'dash.account.edit' });
 						ClientControl.show();
 					},
 				})

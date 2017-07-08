@@ -5,7 +5,9 @@
 		:to="{
 			name: 'discover.games.list._fetch-category',
 			params: {
-				section: $route.params.section || 'best',
+				section: typeof $route.params.section === 'undefined'
+					? 'best'
+					: $route.params.section,
 				category: genre.url,
 			},
 			query: Object.assign( {}, $route.query, { page: undefined } ),
