@@ -18,6 +18,24 @@ import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-sto
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppGameThumbnailPlaceholder } from './placeholder/placeholder';
 import { AppScrollInview } from '../../../../lib/gj-lib-client/components/scroll/inview/inview';
+import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
+
+/**
+ * An array of all the thumbnails on the page.
+ */
+const thumbnails: AppGameThumbnail[] = [];
+
+// We want to attach to the window focus/blur events globally so that we don't
+// register so many events.
+if (typeof window !== undefined) {
+	window.addEventListener('focus', () => {
+		thumbnails.forEach(i => (i.isWindowFocused = true));
+	});
+
+	window.addEventListener('blur', () => {
+		thumbnails.forEach(i => (i.isWindowFocused = false));
+	});
+}
 
 @View
 @Component({
@@ -39,25 +57,33 @@ import { AppScrollInview } from '../../../../lib/gj-lib-client/components/scroll
 export class AppGameThumbnail extends Vue {
 	@Prop([Object])
 	game: Game;
+
 	@Prop([String])
 	linkTo?: string;
-	@Prop({ type: Boolean, default: false })
+
+	@Prop({ type: Boolean, default: true })
 	autoplay: boolean;
+
 	@Prop({ type: Boolean, default: false })
 	hidePricing: boolean;
+
 	@Prop({ type: Boolean, default: false })
 	animateEnter: boolean;
 
 	@State app: AppStore;
 
-	isHovered = true;
 	isInview = false;
 	isThumbnailLoaded = false;
+	isWindowFocused = typeof document !== 'undefined' && document.hasFocus
+		? document.hasFocus()
+		: true;
 
 	Screen = makeObservableService(Screen);
 
 	get isActive() {
-		return this.isHovered || this.autoplay;
+		// When the window is not focused we don't want to play videos. This
+		// should speed up inactive tabs.
+		return this.autoplay && this.isWindowFocused;
 	}
 
 	get url() {
@@ -120,6 +146,12 @@ export class AppGameThumbnail extends Vue {
 			this.isInview = true;
 			this.isThumbnailLoaded = true;
 		}
+
+		thumbnails.push(this);
+	}
+
+	destroyed() {
+		arrayRemove(thumbnails, i => i === this);
 	}
 
 	onThumbnailLoad() {

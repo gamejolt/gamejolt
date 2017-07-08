@@ -193,7 +193,6 @@
 						v-for="( game, i ) of games.slice( 0, Screen.isSm ? 3 : 4 )"
 						:key="game.id"
 						:game="game"
-						:autoplay="true"
 						v-app-track-event="`marketplace:game:${i}`"
 						/>
 				</div>
