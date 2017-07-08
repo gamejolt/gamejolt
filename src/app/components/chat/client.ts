@@ -270,7 +270,7 @@ export class ChatClient extends Vue {
 			}
 
 			// If we opened this room in this session explicitly, make sure the right pane is visible.
-			if (isSource && !store.getters.isRightPaneVisible) {
+			if (isSource && !store.state.isRightPaneVisible) {
 				store.dispatch('toggleRightPane');
 			}
 		}
@@ -676,6 +676,7 @@ export class ChatClient extends Vue {
 		if (this.room.isMuted) {
 			this.sendRoboJolt(
 				this.room.id,
+				// tslint:disable-next-line:max-line-length
 				`*Beep boop bop.* You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. *Bzzzzzzzzt.*`,
 				`<p><em>Beep boop bop.</em> You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. <em>Bzzzzzzzzt.</em></p>`
 			);
@@ -700,6 +701,7 @@ export class ChatClient extends Vue {
 				id: 192757,
 				username: 'robo-jolt-2000',
 				displayName: 'RoboJolt 2000',
+				// tslint:disable-next-line:max-line-length
 				imgAvatar: `https://secure.gravatar.com/avatar/eff6eb6a79a34774e8f94400931ce6c9?s=200&r=pg&d=https%3A%2F%2Fs.gjcdn.net%2Fimg%2Fno-avatar-3.png`,
 			}),
 			roomId,
