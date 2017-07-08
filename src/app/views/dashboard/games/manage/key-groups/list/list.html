@@ -20,14 +20,13 @@
 
 					<app-card-list
 						:items="keyGroups"
-						:is-adding="isAdding">
-
+						:is-adding="isAdding"
+						>
 						<app-card-list-item
 							v-for="group of keyGroups"
 							:key="group.id"
 							:item="group"
 							>
-
 							<div class="row">
 								<div class="col-sm-8">
 
@@ -75,8 +74,7 @@
 										<app-progress-bar
 											:thin="true"
 											:percent="group.viewed_count / group.key_count * 100"
-											>
-										</app-progress-bar>
+											/>
 										<br>
 
 										<div>
@@ -87,8 +85,7 @@
 										<app-progress-bar
 											:thin="true"
 											:percent="group.claimed_count / group.key_count * 100"
-											>
-										</app-progress-bar>
+											/>
 									</div>
 
 								</div>
@@ -109,16 +106,14 @@
 
 						<app-card-list-add
 							:label="$gettext( 'Add Key Group' )"
-							@toggle="isAdding = !isAdding">
-
+							@toggle="isAdding = !isAdding"
+							>
 							<form-game-key-group
 								:game="game"
 								:packages="packages"
 								@submit="onKeyGroupAdded"
 								/>
-
 						</app-card-list-add>
-
 					</app-card-list>
 
 				</div>
