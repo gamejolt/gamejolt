@@ -95,12 +95,12 @@ export default class RouteDashAccountLinkedAccountsList extends Vue {
 
 	channels: YoutubeChannel[] = [];
 
-	@RouteResolve({})
+	@RouteResolve()
 	routeResolve(this: undefined) {
 		return Api.sendRequest('/web/dash/linked-accounts');
 	}
 
-	resolved() {
+	routed() {
 		Meta.title = 'Linked Accounts';
 		this.setHeading('Linked Accounts');
 
