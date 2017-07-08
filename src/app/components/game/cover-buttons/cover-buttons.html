@@ -11,7 +11,7 @@
 	<button
 		class="btn btn-lg btn-success-outline btn-overlay-variant"
 		v-if="game._can_buy_primary_sellable"
-		@click="buy"
+		@click="buy()"
 		>
 		<app-jolticon icon="heart" />
 		<translate>Buy Game</translate>
@@ -29,7 +29,7 @@
 		-->
 		<a class="btn btn-lg btn-primary-outline btn-overlay-variant"
 			v-if="browserBuilds.length && !hasLocalPackage"
-			@click="play"
+			@click="play()"
 			>
 			<app-jolticon icon="play" />
 			<translate v-if="!GJ_IS_CLIENT">Play Game</translate>
@@ -42,7 +42,7 @@
 		-->
 		<a class="btn btn-lg btn-success-outline btn-overlay-variant"
 			v-if="installableBuilds.length && !GJ_IS_CLIENT"
-			@click="download"
+			@click="download()"
 			>
 			<app-jolticon icon="download" />
 			<translate>Download</translate>

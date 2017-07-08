@@ -11,6 +11,7 @@ import { Device } from '../../../../lib/gj-lib-client/components/device/device.s
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { GameDownloader } from '../../../../lib/gj-lib-client/components/game/downloader/downloader.service';
 import { GamePlayModal } from '../../../../lib/gj-lib-client/components/game/play-modal/play-modal.service';
+import { GamePackagePurchaseModal } from '../../../../lib/gj-lib-client/components/game/package/purchase-modal/purchase-modal.service';
 
 @View
 @Component({
@@ -21,10 +22,13 @@ import { GamePlayModal } from '../../../../lib/gj-lib-client/components/game/pla
 export class AppGameCoverButtons extends Vue {
 	@Prop([Game])
 	game: Game;
+
 	@Prop([Array])
 	packages: GamePackage[];
+
 	@Prop([Array])
 	installableBuilds: GameBuild[];
+
 	@Prop([Array])
 	browserBuilds: GameBuild[];
 
@@ -84,21 +88,23 @@ export class AppGameCoverButtons extends Vue {
 			// If the build belongs to a pwyw package, open up the package
 			// payment form.
 			if (build._package!.shouldShowNamePrice()) {
-				this.$emit('buy', build._package);
-				return;
+				this.buy(build._package);
+			} else {
+				GameDownloader.download(this.$router, this.game, build);
 			}
-
-			GameDownloader.download(this.$router, this.game, build);
 		}
 	}
 
-	buy() {
-		// We pull the primary package for this game.
-		// It's basically the package that has its sellable
-		// as the game's primary sellable.
-		this.$emit(
-			'buy',
-			this.packages.find(item => item._sellable!.id === this.game.sellable.id)
-		);
+	buy(pkg?: GamePackage) {
+		if (!pkg) {
+			pkg = this.packages.find(
+				item => item._sellable!.id === this.game.sellable.id
+			);
+			if (!pkg) {
+				return;
+			}
+		}
+
+		GamePackagePurchaseModal.show(this.game, pkg, pkg._sellable!);
 	}
 }

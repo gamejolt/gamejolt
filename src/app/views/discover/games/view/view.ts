@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./view.html';
 import './view-content.styl';
@@ -24,7 +24,6 @@ import { AppGameMaturityBlock } from '../../../../components/game/maturity-block
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/cover-buttons';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { AppMeter } from '../../../../../lib/gj-lib-client/components/meter/meter';
 import {
@@ -144,7 +143,7 @@ export default class RouteDiscoverGamesView extends Vue {
 		// 	ref: this.userPartnerKey || $location.search().ref || undefined,
 		// } );
 
-		// TOOD should we sync from the registry or here?
+		// TODO should we sync from the registry or here?
 		// // For syncing game data to client.
 		// if ( GJ_IS_CLIENT ) {
 
@@ -168,11 +167,5 @@ export default class RouteDiscoverGamesView extends Vue {
 	scrollToMultiplePackages() {
 		this.showMultiplePackagesMessage();
 		Scroll.to('game-releases');
-	}
-
-	// TODO: Can we do this through a ref call?
-	scrollToPackagePayment(_package: GamePackage) {
-		// Scroll.to( 'game-package-card-' + _package.id );
-		// $scope.$broadcast( 'Game_Package_Card.showPaymentOptions', _package );
 	}
 }
