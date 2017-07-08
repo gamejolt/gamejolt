@@ -13,7 +13,7 @@ import {
 export default class RouteDashAccountLinkedAccountsLinkCallback extends Vue {
 	@AppState user: AppStore['user'];
 
-	@RouteResolve({})
+	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		// Force POST.
 		if (route.params.provider === 'twitter') {
