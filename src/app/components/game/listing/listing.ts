@@ -11,7 +11,6 @@ import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppPagination } from '../../../../lib/gj-lib-client/components/pagination/pagination';
-import { AppGameFilteringInput } from '../filtering/input';
 import { AppGameFilteringWidget } from '../filtering/widget';
 import { AppGameFilteringTags } from '../filtering/tags';
 import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
@@ -27,7 +26,6 @@ import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/plac
 		AppPagination,
 		AppLoadingFade,
 		AppGameFilteringWidget,
-		AppGameFilteringInput,
 		AppGameFilteringTags,
 		AppGameGridPlaceholder,
 		AppNavTabList,
