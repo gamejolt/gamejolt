@@ -11,9 +11,15 @@
 	>
 
 	<div ref="inner">
+
+		<!--
+			Notifications are so small that there's no reason to not include
+			them into the view.
+		-->
 		<app-activity-feed-item-placeholder
-			v-if="!isInView"
+			v-if="item.type !== 'notification' && !isInView"
 			:style="{ height: item.height }"
+			:type="item.type"
 			/>
 
 		<div v-else>

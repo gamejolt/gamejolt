@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./placeholder.html?style=./placeholder.styl';
 
 import { AppButtonPlaceholder } from '../../../../../../lib/gj-lib-client/components/button/placeholder/placeholder';
@@ -10,4 +10,7 @@ import { AppButtonPlaceholder } from '../../../../../../lib/gj-lib-client/compon
 		AppButtonPlaceholder,
 	},
 })
-export class AppActivityFeedItemPlaceholder extends Vue {}
+export class AppActivityFeedItemPlaceholder extends Vue {
+	@Prop([String])
+	type: string;
+}
