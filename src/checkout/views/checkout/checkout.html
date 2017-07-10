@@ -1,29 +1,42 @@
-<section class="container">
+<section class="container" v-if="routeBootstrapped">
 
-	<div class="game-cover" ng-if="checkoutCtrl.game.header_media_item">
-		<img gj-img-responsive="{{ checkoutCtrl.game.header_media_item.mediaserver_url }}" alt="">
+	<div class="game-cover">
+		<app-media-item-cover
+			v-if="game.header_media_item"
+			:media-item="game.header_media_item"
+			/>
 	</div>
+
+	<!--<div class="game-cover" ng-if="game.header_media_item">
+		<img gj-img-responsive="{{ game.header_media_item.mediaserver_url }}" alt="">
+	</div>-->
 
 	<div class="text-center">
 		<h1 class="h2 sans-margin">
-			<a class="link-unstyled" ng-href="{{ ::Environment.wttfBaseUrl }}/games/{{ checkoutCtrl.game.slug }}/{{ checkoutCtrl.game.id }}">
-				{{ checkoutCtrl.game.title }}
+			<a
+				class="link-unstyled"
+				:href="`${ Environment.wttfBaseUrl }/games/${ game.slug }/${ game.id }`"
+				target="_blank"
+				>
+				{{ game.title }}
 			</a>
 		</h1>
 		<h4 class="text-muted sans-margin-top">
-			<span translate>by</span>
-			<a class="link-unstyled" ng-href="{{ ::Environment.wttfBaseUrl }}/profile/{{ checkoutCtrl.game.developer.slug }}/{{ checkoutCtrl.game.developer.id }}">
-				{{ checkoutCtrl.game.developer.display_name }}
+			<translate>by</translate>
+			<a
+				class="link-unstyled"
+				:href="`${ Environment.wttfBaseUrl }/profile/${ game.developer.slug }/${ game.developer.id }`"
+				>
+				{{ game.developer.display_name }}
 			</a>
 		</h4>
 	</div>
 	<br>
 
-	<gj-form-payment
-		cards="checkoutCtrl.cards"
-		order="checkoutCtrl.order"
-		gj-form-submit-handler="checkoutCtrl.onSubmit( $response )"
-		>
-	</gj-form-payment>
+	<form-payment
+		:cards="cards"
+		:order="order"
+		@submit="onSubmit"
+		/>
 
 </section>

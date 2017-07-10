@@ -1,27 +1,36 @@
-<form gj-form="formModel" name="paymentForm" ng-submit="onSubmit()">
+<app-form name="paymentForm">
 
 	<div class="row">
 		<div class="col-sm-6 col-centered">
 
-			<div class="card-list full-bleed-xs"
-				ng-if="cards.length"
+			<div
+				class="card-list full-bleed-xs"
+				v-if="cards.length"
 				>
-				<a class="card-list-item"
-					ng-repeat="card in cards track by card.id"
-					ng-class="{ active: formModel.selectedCard == card.id }"
-					ng-click="formModel.selectedCard = card.id"
+				<a
+					class="card-list-item"
+					v-for="card of cards"
+					:key="card.id"
+					:class="{ active: formModel.selectedCard === card.id }"
+					@click="formModel.selectedCard = card.id"
 					>
 					<div class="pull-left" style="margin-right: 15px">
-						<input type="radio" ng-checked="formModel.selectedCard == card.id" name="same">
+						<input type="radio" :checked="formModel.selectedCard === card.id" name="same">
 					</div>
 					<div class="pull-left">
 						<strong>Card ending in {{ card.last4 }}</strong> <br>
-						<span class="small text-muted">Expires {{ card.exp_month }}/{{ card.exp_year }}</span>
+						<span class="small text-muted">
+							Expires {{ card.exp_month }}/{{ card.exp_year }}
+						</span>
 					</div>
 				</a>
-				<a class="card-list-item" ng-class="{ active: !formModel.selectedCard }" ng-click="formModel.selectedCard = 0">
+				<a
+					class="card-list-item"
+					:class="{ active: !formModel.selectedCard }"
+					@click="formModel.selectedCard = 0"
+					>
 					<div class="pull-left" style="margin-right: 15px">
-						<input type="radio" ng-checked="formModel.selectedCard == 0" name="same">
+						<input type="radio" :checked="formModel.selectedCard === 0" name="same">
 					</div>
 					<div class="pull-left">
 						<strong>Use a new card</strong>
@@ -32,121 +41,158 @@
 		</div>
 	</div>
 
-	<div class="new-card-expander" ng-class="{ 'has-cards': cards.length }" gj-expand-when="!formModel.selectedCard || !cards.length">
+	<app-expand
+		class="new-card-expander"
+		:class="{ 'has-cards': cards.length }"
+		:when="!formModel.selectedCard || !cards.length"
+		>
 		<div class="well fill-lightest">
 			<div class="row">
 				<div class="col-sm-6 col-centered">
 					<div class="form-payment-card">
 
-						<form-group name="fullname" label="{{ 'name on card' | translate }}">
-							<span class="jolticon jolticon-user"></span>
-							<input form-control="text"
+						<app-form-group name="fullname" :label="$gettext('name on card')">
+							<app-jolticon icon="user" />
+							<app-form-control
+								type="text"
 								class="has-icon"
-								placeholder="{{ 'name on card' | translate }}"
-								gj-focus-when
-								>
-							<control-errors></control-errors>
-						</form-group>
+								:placeholder="$gettext('name on card')"
+								v-app-focus-when
+								/>
+							<app-form-control-errors />
+						</app-form-group>
 
-						<form-group name="card_number" label="{{ 'card number' | translate }}">
-							<span class="jolticon jolticon-credit-card"></span>
-							<input form-control="text"
+						<app-form-group name="card_number" :label="$gettext('card number')">
+							<app-jolticon icon="credit-card" />
+							<app-form-control
+								type="text"
 								class="has-icon"
-								placeholder="{{ 'card number' | translate }}"
-								cc-number
-								cc-format
-								ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 1000 } }"
-								>
-							<control-errors>
-								<control-error when="ccNumber">Please enter a valid card number.</control-error>
-							</control-errors>
-						</form-group>
+								:placeholder="$gettext('card number')"
+								:rules="{
+									credit_card: true,
+								}"
+								:mask="ccMask"
+								:validate-on="['blur']"
+								/>
+							<app-form-control-errors>
+								<app-form-control-error
+									when="credit_card"
+									:message="$gettext(`Please enter a valid card number.`)"
+									/>
+							</app-form-control-errors>
+						</app-form-group>
 
 						<div class="clearfix">
 							<div class="left-col">
-								<form-group name="exp" label="{{ 'card expiration' | translate }}">
-									<span class="jolticon jolticon-calendar"></span>
-									<input form-control="text"
+								<app-form-group name="exp" :label="$gettext('card expiration')">
+									<app-jolticon icon="calendar" />
+									<app-form-control
+										type="text"
 										class="has-icon"
 										placeholder="mm/yy"
-										ui-mask="99/99"
-										gj-form-cc-exp
-										ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 1000 } }"
-										>
-									<control-errors>
-										<control-error when="ccExpInvalid">Please enter a valid expiration.</control-error>
-										<control-error when="ccExpExpired">This card has expired.</control-error>
-									</control-errors>
-								</form-group>
+										:rules="{
+											cc_exp: true,
+											cc_exp_expired: true,
+										}"
+										:mask="expMask"
+										:validate-on="['blur']"
+										/>
+									<app-form-control-errors>
+										<app-form-control-error
+											when="cc_exp"
+											:message="$gettext(`Please enter a valid expiration.`)"
+											/>
+										<app-form-control-error
+											when="cc_exp_expired"
+											:message="$gettext(`This card has expired.`)"
+											/>
+									</app-form-control-errors>
+								</app-form-group>
 							</div>
 							<div class="right-col">
-								<form-group name="cvc" label="CVC">
-									<span class="jolticon jolticon-token"></span>
-									<input form-control="text"
+								<app-form-group name="cvc" label="CVC">
+									<app-jolticon icon="token" />
+									<app-form-control
+										type="text"
 										class="has-icon"
 										placeholder="cvc"
-										cc-cvc
-										ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 1000 } }"
-										>
-									<control-errors>
-										<control-error when="ccCvc">Please enter a valid cvc.</control-error>
-									</control-errors>
-								</form-group>
+										:rules="{
+											max: 4,
+											pattern: /^[0-9]*$/
+										}"
+										:validate-on="['blur']"
+										/>
+									<app-form-control-errors>
+										<app-form-control-error when="ccCvc" :message="$gettext(`Please enter a valid cvc.`)" />
+									</app-form-control-errors>
+								</app-form-group>
 							</div>
 						</div>
 
-						<form-group name="save_card" label="{{ 'Remember card?' | translate }}" ng-if="App.user">
+						<app-form-group v-if="app.user" name="save_card" :label="$gettext('Remember card?')">
 							<label class="checkbox">
-								<input form-control="checkbox">
-								Remember this card for future purchases
+								<app-form-control-checkbox />
+								<translate>Remember this card for future purchases</translate>
 							</label>
-						</form-group>
+						</app-form-group>
 
 						<fieldset>
-							<legend>Billing Address</legend>
+							<legend>
+								<translate>Billing Address</translate>
+							</legend>
 
-							<form-group name="country" label="{{ 'country' | translate }}">
-								<select form-control>
-									<option ng-repeat="country in ::formState.countries track by country.code" value="{{ ::country.code }}">
+							<app-form-group name="country" :label="$gettext('country')">
+								<app-form-control-select>
+									<option
+										v-for="country of countries"
+										:key="country.code"
+										:value="country.code"
+										>
 										{{ country.name }}
 									</option>
-								</select>
-								<control-errors></control-errors>
-							</form-group>
+								</app-form-control-select>
+								<app-form-control-errors />
+							</app-form-group>
 
-							<form-group name="street1" label="{{ 'street address' | translate }}">
-								<input form-control="text"
-									placeholder="{{ 'street address' | translate }}"
-									>
-								<control-errors></control-errors>
-							</form-group>
+							<app-form-group name="street1" :label="$gettext('street address')">
+								<app-form-control
+									type="text"
+									:placeholder="$gettext('street address')"
+									/>
+								<app-form-control-errors />
+							</app-form-group>
 
 							<div class="clearfix">
 								<div class="left-col">
-									<form-group name="region" label="{{ 'state/province' | translate }}" class="">
+									<app-form-group name="region" :label="$gettext('state/province')">
 
-										<input form-control="text"
-											ng-if="!formState.regions"
-											placeholder="{{ 'state/province' | translate }}"
-											ng-model-options="{ updateOn: 'blur default', debounce: { blur: 0, default: 1000 } }"
-											>
+										<app-form-control
+											type="text"
+											v-if="!regions"
+											:placeholder="$gettext('state/province')"
+											/>
 
-										<select form-control ng-if="formState.regions">
-											<option ng-repeat="region in formState.regions track by region.code" value="{{ ::region.code }}">
+										<app-form-control-select v-else>
+											<option
+												v-for="region of regions"
+												:key="region.code"
+												:value="region.code"
+												>
 												{{ region.name }}
 											</option>
-										</select>
+										</app-form-control-select>
 
-										<control-errors></control-errors>
-									</form-group>
+										<app-form-control-errors />
+									</app-form-group>
 								</div>
 								<div class="right-col">
-									<form-group name="postcode" label="{{ 'zip code' | translate }}">
-										<input form-control="text"
-											placeholder="{{ 'zip code' | translate }}"
-											>
-										<control-errors></control-errors>
-									</form-group>
+									<app-form-group name="postcode" :label="$gettext('zip code')">
+										<app-form-control
+											type="text"
+											:placeholder="$gettext('zip code')"
+											/>
+										<app-form-control-errors />
+									</app-form-group>
 								</div>
 							</div>
 						</fieldset>
@@ -154,43 +200,42 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</app-expand>
 
 	<br>
 
-	<gj-loading
-		ng-if="!formState.calculatedTax && paymentForm.$valid"
+	<app-loading
+		v-if="!calculatedTax && valid"
 		class="loading-centered"
-		label="Calculating tax..."
-		>
-	</gj-loading>
+		:label="$gettext(`Calculating tax...`)"
+		/>
 
-	<div class="anim-fade-in no-animate-leave text-center" ng-if="formState.calculatedTax && formState.taxAmount > 0">
-		+{{ formState.taxAmount / 100 | currency:'$' }} taxes
-		<span tooltip="We are required to collect taxes on orders for certain regions.">
-			<span class="jolticon jolticon-help-circle text-muted"></span>
+	<div class="anim-fade-in no-animate-leave text-center" v-if="calculatedTax && taxAmount > 0">
+		+{{ taxAmount | currency }} taxes
+		<span v-app-tooltip="$gettext(`We are required to collect taxes on orders for certain regions.`)">
+			<app-jolticon class="text-muted" icon="help-circle" />
 		</span>
 	</div>
 	<br>
 
-	<div gj-expand-when="formState.stripeError">
-		<div class="alert alert-warning">{{ formState.stripeError }}</div>
-	</div>
+	<app-expand :when="stripeError">
+		<div class="alert alert-warning">
+			{{ stripeError }}
+		</div>
+	</app-expand>
 
-	<button gj-form-submit-button
-		ng-if="!paymentForm.$valid || (formState.calculatedTax && !formState.isProcessing)"
-		class="btn btn-block btn-success-outline btn-lg"
-		ng-disabled="!paymentForm.$valid"
-		ng-click="onSubmit()"
+	<app-form-button
+		v-if="!valid || (calculatedTax && !isProcessing)"
+		class="btn-block btn-success-outline btn-lg"
+		:disabled="!valid"
 		>
-		Pay {{ (order.amount + formState.taxAmount) / 100 | currency:'$':2 }}
-	</button>
+		Pay {{ order.amount + taxAmount | currency }}
+	</app-form-button>
 
-	<gj-loading
-		ng-if="formState.isProcessing"
+	<app-loading
+		v-if="isProcessing"
 		class="loading-centered"
-		label="Processing..."
-		>
-	</gj-loading>
+		:label="$gettext(`Processing...`)"
+		/>
 
-</form>
+</app-form>
