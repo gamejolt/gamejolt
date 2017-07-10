@@ -38,17 +38,12 @@
 
 				<app-game-thumbnail-img
 					:game="game"
+					:class="{ hidden: shouldShowVideo }"
 					@loaded="onThumbnailLoad"
 					/>
 
 				<app-video
-					v-if="
-						game.thumbnail_media_item &&
-						game.thumbnail_media_item.is_animated &&
-						Screen.isDesktop &&
-						isActive &&
-						isInview
-					"
+					v-if="shouldShowVideo"
 					:poster="game.thumbnail_media_item.mediaserver_url"
 					:webm="game.thumbnail_media_item.mediaserver_url_webm"
 					:mp4="game.thumbnail_media_item.mediaserver_url_mp4"

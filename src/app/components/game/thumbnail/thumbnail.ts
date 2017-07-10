@@ -85,6 +85,16 @@ export class AppGameThumbnail extends Vue {
 		return this.autoplay && this.isWindowFocused;
 	}
 
+	get shouldShowVideo() {
+		return (
+			this.game.thumbnail_media_item &&
+			this.game.thumbnail_media_item.is_animated &&
+			Screen.isDesktop &&
+			this.isActive &&
+			this.isInview
+		);
+	}
+
 	get url() {
 		if (this.linkTo === 'dashboard') {
 			return this.game.getUrl('dashboard');
