@@ -1,4 +1,4 @@
-@require '~styles/variables';
+@require '~styles/variables'
 
 .shell-sidebar
 	position: fixed
@@ -7,7 +7,7 @@
 	left: 0
 	width: $shell-top-nav-height
 	z-index: $zindex-shell-pane
-	transition: width 300ms $strong-ease-out
+	will-change: width
 
 	hr
 		margin: $line-height-computed 15px
