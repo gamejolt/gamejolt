@@ -47,7 +47,6 @@ if (typeof window !== undefined) {
 		AppPopover,
 		AppGameModLinks,
 		AppUserAvatarImg,
-		AppGameThumbnailPlaceholder,
 		AppScrollInview,
 	},
 	directives: {

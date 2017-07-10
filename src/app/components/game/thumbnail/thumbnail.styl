@@ -44,7 +44,14 @@
 		.fill-darkest &
 			background-color: $black
 
-		> .jolticon
+		> .inner
+			position: absolute
+			top: 0
+			left: 0
+			width: 100%
+			height: 100%
+
+		.jolticon
 			position: absolute
 			font-size: 16px * 4
 			left: 50%
@@ -57,12 +64,8 @@
 			img
 			video
 			.video
-				position: absolute !important
+				position: relative !important
 				display: block
-				left: 0
-				right: 0
-				top: 0
-				bottom: 0
 				width: 100%
 				height: 100%
 				border-radius: $border-radius-base
