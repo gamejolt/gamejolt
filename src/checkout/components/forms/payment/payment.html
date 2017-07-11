@@ -12,7 +12,7 @@
 					v-for="card of cards"
 					:key="card.id"
 					:class="{ active: formModel.selectedCard === card.id }"
-					@click="formModel.selectedCard = card.id"
+					@click="selectCard(card)"
 					>
 					<div class="pull-left" style="margin-right: 15px">
 						<input type="radio" :checked="formModel.selectedCard === card.id" name="same">
@@ -27,7 +27,7 @@
 				<a
 					class="card-list-item"
 					:class="{ active: !formModel.selectedCard }"
-					@click="formModel.selectedCard = 0"
+					@click="selectCard()"
 					>
 					<div class="pull-left" style="margin-right: 15px">
 						<input type="radio" :checked="formModel.selectedCard === 0" name="same">
@@ -218,7 +218,7 @@
 	</div>
 	<br>
 
-	<app-expand :when="stripeError">
+	<app-expand :when="!!stripeError">
 		<div class="alert alert-warning">
 			{{ stripeError }}
 		</div>

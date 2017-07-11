@@ -47,7 +47,7 @@ export default class RouteCheckout extends Vue {
 		window.Stripe.setPublishableKey(this.$payload.stripePublishableKey);
 	}
 
-	onSubmit(response: any) {
+	onSubmit(_formModel: any, response: any) {
 		let redirect: string | null = null;
 
 		// For client, the orders are always done as a user.

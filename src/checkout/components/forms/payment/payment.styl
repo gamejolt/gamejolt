@@ -5,7 +5,7 @@ fieldset
 	margin-top: $line-height-computed
 
 	& > legend
-		// @extend .h4
+		font-family: $font-family-heading
 		margin-top: 0
 		font-weight: 300
 
@@ -81,16 +81,14 @@ a.card-list-item
 	color: $black
 	padding: 15px
 	margin-bottom: 10px
-	outline: 1px solid $gray-lighter
-
-	&:last-child
-		border-bottom: 0
+	border: 1px solid $gray-lighter
+	border-radius: $border-radius-base
 
 	&:hover
-		outline-color: $gray-lighter
+		border-color: $gray-lighter
 
 	&.active
-		outline-color: $gray
+		border-color: $gray
 
 h4
 	font-weight: 300

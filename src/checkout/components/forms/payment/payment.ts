@@ -7,7 +7,10 @@ import {
 	FormOnInit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Geo } from '../../../../lib/gj-lib-client/components/geo/geo.service';
+import {
+	Geo,
+	Region,
+} from '../../../../lib/gj-lib-client/components/geo/geo.service';
 import { Order } from '../../../../lib/gj-lib-client/components/order/order.model';
 import { FormOnSubmit } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
@@ -45,6 +48,7 @@ export class FormPayment extends BaseForm<any>
 
 	stripeError: string | null = null;
 	countries = Geo.getCountries();
+	regions: Region[] | null = null;
 	calculatedTax = false;
 	taxAmount = 0;
 
@@ -72,11 +76,6 @@ export class FormPayment extends BaseForm<any>
 	expMask = [/\d/, /\d/, '/', /\d/, /\d/];
 
 	onInit() {
-		// this.stripeError = null;
-		// this.countries = Geo.getCountries();
-		// this.calculatedTax = false;
-		// this.taxAmount = 0;
-
 		this.setField('country', 'us');
 		this.setField('selectedCard', 0);
 		if (this.cards && this.cards.length) {
@@ -100,7 +99,7 @@ export class FormPayment extends BaseForm<any>
 
 	@Watch('formModel.country')
 	onCountryChange() {
-		this.regions = Geo.getRegions(this.formModel.country);
+		this.regions = Geo.getRegions(this.formModel.country) || null;
 		if (this.regions) {
 			this.formModel.region = this.regions[0].code; // Default to first.
 		} else {
@@ -110,10 +109,18 @@ export class FormPayment extends BaseForm<any>
 	}
 
 	@Watch('formModel.selectedCard')
-	@Watch('formModel.country')
 	@Watch('formModel.region')
 	onTaxFieldsChange() {
 		this.getTax();
+	}
+
+	selectCard(card?: any) {
+		if (card) {
+			this.setField('selectedCard', card.id);
+		} else {
+			this.setField('selectedCard', 0);
+			this.getTax();
+		}
 	}
 
 	private async getTax() {
@@ -130,8 +137,8 @@ export class FormPayment extends BaseForm<any>
 			address = this.formModel;
 		}
 
-		this.calculatedTax = false;
 		if (!address.country || !address.region) {
+			this.calculatedTax = true;
 			return;
 		}
 
@@ -141,6 +148,7 @@ export class FormPayment extends BaseForm<any>
 			region: address.region,
 		};
 
+		this.calculatedTax = false;
 		const response = await Api.sendRequest('/web/checkout/taxes', data, {
 			detach: true,
 		});
@@ -154,10 +162,14 @@ export class FormPayment extends BaseForm<any>
 
 		// New card
 		if (this.formModel.selectedCard === 0) {
+			// Have to remove the masking.
+			const cardNumber = this.formModel.card_number.replace(' ', '');
+			const cardExp = this.formModel.exp.replace('/', '');
+
 			const formData = {
-				number: this.formModel.card_number,
-				exp_month: this.formModel.exp.substr(0, 2),
-				exp_year: this.formModel.exp.substr(2, 2),
+				number: cardNumber,
+				exp_month: cardExp.substr(0, 2),
+				exp_year: cardExp.substr(2, 2),
 				cvc: this.formModel.cvc,
 
 				name: this.formModel.fullname,
@@ -191,7 +203,7 @@ export class FormPayment extends BaseForm<any>
 				postcode: this.formModel.postcode,
 			};
 
-			if (App.user) {
+			if (this.app.user) {
 				data.save_card = this.formModel.save_card;
 			}
 
@@ -203,18 +215,3 @@ export class FormPayment extends BaseForm<any>
 		}
 	}
 }
-
-// PaymentComponent.$inject = ['App', 'Form'];
-// export function PaymentComponent(App: App, Form: any) {
-// 	const form = new Form({
-// 		template: require('./payment.html'),
-// 	});
-
-// 	form.onInit = function(this: any) {};
-
-// 	form.onSubmit = function(this: any) {
-
-// 	};
-
-// 	return form;
-// }
