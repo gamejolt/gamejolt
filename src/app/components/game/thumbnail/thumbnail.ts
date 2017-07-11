@@ -16,7 +16,6 @@ import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/pop
 import { AppGameModLinks } from '../mod-links/mod-links';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
-import { AppGameThumbnailPlaceholder } from './placeholder/placeholder';
 import { AppScrollInview } from '../../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
 
