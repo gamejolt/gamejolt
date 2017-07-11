@@ -7,22 +7,17 @@ import { MediaItem } from '../../../../lib/gj-lib-client/components/media-item/m
 import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppImgResponsive } from '../../../../lib/gj-lib-client/components/img/responsive/responsive';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppScrollParallax } from '../../../../lib/gj-lib-client/components/scroll/parallax/parallax';
 
 @View
 @Component({
 	components: {
-		AppLoading,
-		AppScrollParallax,
 		AppImgResponsive,
 	},
 })
 export class AppMediaItemCover extends Vue {
 	@Prop([MediaItem])
 	mediaItem: MediaItem;
-	@Prop({ type: Boolean, default: true })
-	shouldParallax?: boolean;
+
 	@Prop([Number])
 	maxHeight?: number;
 
@@ -32,7 +27,9 @@ export class AppMediaItemCover extends Vue {
 	private resize$: Subscription | undefined;
 
 	created() {
-		this.recalcHeight();
+		if (GJ_IS_SSR) {
+			this.recalcHeight();
+		}
 	}
 
 	mounted() {
@@ -44,6 +41,7 @@ export class AppMediaItemCover extends Vue {
 	mediaItemWatch() {
 		this.recalcHeight();
 	}
+
 	@Watch('maxHeight')
 	changes() {
 		this.recalcHeight();
@@ -96,7 +94,6 @@ export class AppMediaItemCover extends Vue {
 
 		if (this.isLoaded) {
 			this.$emit('loaded');
-			this.recalcHeight();
 		}
 	}
 }
