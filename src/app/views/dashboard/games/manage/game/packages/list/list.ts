@@ -18,6 +18,7 @@ import { currency } from '../../../../../../../../lib/gj-lib-client/vue/filters/
 import { AppCardList } from '../../../../../../../../lib/gj-lib-client/components/card/list/list';
 import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
 import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
+import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
 
 @View
 @Component({
@@ -26,6 +27,7 @@ import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/compo
 		AppCardList,
 		AppCardListDraggable,
 		AppCardListItem,
+		AppDashGameWizardControls,
 	},
 	directives: {
 		AppTooltip,
@@ -36,7 +38,6 @@ import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/compo
 })
 export default class RouteDashGamesManageGamePackagesList extends Vue {
 	@RouteState game: RouteStore['game'];
-	@RouteState isWizard: RouteStore['isWizard'];
 
 	packages: GamePackage[] = [];
 	sellables: { [x: number]: Sellable } = {};

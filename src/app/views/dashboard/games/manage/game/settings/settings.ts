@@ -29,12 +29,6 @@ export default class RouteDashGamesManageGameSettings extends Vue {
 	}
 
 	onSaved() {
-		// TODO
-		// if (this.$scope['manageCtrl'].isWizard) {
-		// 	this.wizard.goNext(this.$scope['manageCtrl'].game);
-		// 	return;
-		// }
-
 		Growls.success(
 			this.$gettext('dash.games.settings.save_growl'),
 			this.$gettext('dash.games.settings.save_growl_title')

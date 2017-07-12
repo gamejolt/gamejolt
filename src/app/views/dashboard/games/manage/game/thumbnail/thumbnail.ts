@@ -7,16 +7,17 @@ import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/met
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { FormGameThumbnail } from '../../../../../../components/forms/game/thumbnail/thumbnail';
+import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
 
 @View
 @Component({
 	components: {
 		FormGameThumbnail,
+		AppDashGameWizardControls,
 	},
 })
 export default class RouteDashGamesManageGameThumbnail extends Vue {
 	@RouteState game: RouteStore['game'];
-	@RouteState isWizard: RouteStore['isWizard'];
 
 	created() {
 		Meta.title = this.$gettextInterpolate(`Edit Thumbnail for %{ game }`, {

@@ -24,7 +24,6 @@ import { AppMediaBar } from '../../../../../../lib/gj-lib-client/components/medi
 })
 export default class RouteDashGamesManageGame extends Vue {
 	@RouteState game: RouteStore['game'];
-	@RouteState isWizard: RouteStore['isWizard'];
 	@RouteState media: RouteStore['media'];
 	@RouteState canPublish: RouteStore['canPublish'];
 

@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import * as View from '!view!./description.html';
 
 import {
@@ -9,6 +9,7 @@ import { Game } from '../../../../../lib/gj-lib-client/components/game/game.mode
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppDashGameWizardControls } from '../wizard-controls/wizard-controls';
 
 @View
 @Component({
@@ -16,12 +17,10 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 		AppExpand,
 		AppFormControlMarkdown,
 		AppJolticon,
+		AppDashGameWizardControls,
 	},
 })
 export class FormGameDescription extends BaseForm<Game> implements FormOnInit {
-	@Prop([Boolean])
-	isWizard?: boolean;
-
 	modelClass = Game;
 	saveMethod = '$saveDescription' as '$saveDescription';
 

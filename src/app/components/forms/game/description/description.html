@@ -47,20 +47,10 @@
 		</div>
 	</app-expand>
 
-	<app-form-button
-		v-if="!isWizard && !isFnafDetected"
-		icon="edit"
-		>
-		<translate>Save Description</translate>
-	</app-form-button>
-	<div v-else>
-		<!--TODO-->
-		<!--<gj-form-dashboard-game-wizard-controls
-			game="formModel"
-			can-proceed="descriptionForm.$valid"
-			on-next="onSubmit()"
-			>
-		</gj-form-dashboard-game-wizard-controls>-->
-	</div>
+	<app-dash-game-wizard-controls v-if="!isFnafDetected">
+		<app-form-button icon="edit">
+			<translate>Save Description</translate>
+		</app-form-button>
+	</app-dash-game-wizard-controls>
 
 </app-form>

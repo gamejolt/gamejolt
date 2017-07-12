@@ -6,7 +6,7 @@ import {
 	VuexAction,
 } from '../../../../../lib/gj-lib-client/utils/vuex';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { router } from '../../../../bootstrap';
+import { router, store } from '../../../../bootstrap';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
@@ -41,6 +41,29 @@ type Mutations = {
 	updateMedia: Media[];
 };
 
+const STATE_PREFIX = 'dash.games.manage.game';
+
+const TRANSITION_MAP: any = {
+	details: 'description',
+	description: 'maturity',
+	maturity: 'thumbnail',
+	thumbnail: 'header',
+	header: 'media',
+	media: 'packages.list',
+	packages: 'music',
+	music: 'settings',
+	settings: 'wizard-finish',
+};
+
+const TRANSITION_MAP_DEVLOG: any = {
+	details: 'description',
+	description: 'maturity',
+	maturity: 'thumbnail',
+	thumbnail: 'header',
+	header: 'settings',
+	settings: 'wizard-finish',
+};
+
 function instantiateMediaItem(item: any) {
 	if (item.media_type === 'image') {
 		return new GameScreenshot(item);
@@ -59,7 +82,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	media: Media[] = [];
 
 	get isWizard() {
-		return !!router.currentRoute.query.isWizard;
+		return !!store.state.$route.query.wizard;
 	}
 
 	get canPublish() {
@@ -141,6 +164,39 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	updateMedia(items: Mutations['updateMedia']) {
 		this.media = items;
+	}
+
+	@VuexAction
+	async startWizard(game: Game) {
+		router.push({
+			name: `${STATE_PREFIX}.description`,
+			params: { id: game.id + '' },
+			query: { wizard: 'true' },
+		});
+	}
+
+	@VuexAction
+	async wizardNext() {
+		if (!this.game) {
+			return;
+		}
+
+		let transitionMap = TRANSITION_MAP;
+		if (this.game._is_devlog) {
+			transitionMap = TRANSITION_MAP_DEVLOG;
+		}
+
+		const routeName = router.currentRoute.name!;
+		for (const current in transitionMap) {
+			if (routeName.indexOf(`${STATE_PREFIX}.${current}`) !== -1) {
+				const next = transitionMap[current];
+				router.push({
+					name: `${STATE_PREFIX}.${next}`,
+					query: { wizard: 'true' },
+				});
+				return;
+			}
+		}
 	}
 
 	@VuexAction

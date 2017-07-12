@@ -1,10 +1,18 @@
-import { provide } from 'ng-metadata/core';
-import { WizardFinishCtrl } from './wizard-finish-controller';
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
+import * as View from '!view!./wizard-finish.html';
 
-export default angular
-	.module('App.Views.Dashboard.Developer.Games.Manage.Game.WizardFinish', [])
-	.controller(
-		...provide('Dashboard.Developer.Games.Manage.Game.WizardFinishCtrl', {
-			useClass: WizardFinishCtrl,
-		})
-	).name;
+import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
+import { RouteState, RouteStore, RouteAction } from '../../manage.state';
+
+@View
+@Component({})
+export default class RouteDashGamesManageGameWizardFinish extends Vue {
+	@RouteState canPublish: RouteStore['canPublish'];
+	@RouteAction publish: RouteStore['publish'];
+	@RouteAction saveDraft: RouteStore['saveDraft'];
+
+	created() {
+		Meta.title = this.$gettext('The End Is Not the End');
+	}
+}
