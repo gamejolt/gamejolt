@@ -1,3 +1,5 @@
+import VueRouter from 'vue-router';
+import { sync } from 'vuex-router-sync';
 import {
 	VuexStore,
 	VuexModule,
@@ -27,7 +29,7 @@ import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.se
 import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
 import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
-import { router } from '../bootstrap';
+import { router } from '../views';
 import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
 import { ChatClient } from '../components/chat/client';
@@ -79,6 +81,9 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	app: AppStore;
 	library: LibraryStore;
 	clientLibrary: ClientLibraryStore;
+
+	// From the vuex-router-sync.
+	$route: VueRouter.Route;
 
 	chat: ChatClient | null = null;
 
@@ -300,6 +305,9 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 }
 
 export const store = new Store();
+
+// Sync the routes into the store.
+sync(store as any, router, { moduleName: '$route' });
 
 // Bootstrap/clear the app when user changes.
 store.watch(
