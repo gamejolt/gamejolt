@@ -31,6 +31,7 @@ export class FormGameKeyGroup extends BaseForm<KeyGroup>
 
 	@Prop([Game])
 	game: Game;
+
 	@Prop([Array])
 	packages: GamePackage[];
 
@@ -38,12 +39,12 @@ export class FormGameKeyGroup extends BaseForm<KeyGroup>
 	KeyGroup = KeyGroup;
 	GamePackage = GamePackage;
 
-	onInit() {
-		this.setField('game_id', this.game.id);
-	}
-
 	get arePackagesChosen() {
 		return this.formModel.packages.length > 0;
+	}
+
+	onInit() {
+		this.setField('game_id', this.game.id);
 	}
 
 	onSubmitSuccess(response: any): void {

@@ -1,0 +1,94 @@
+@require '~styles/variables'
+@require './../../../../lib/gj-lib-client/stylus/common/mixins'
+
+fieldset
+	margin-top: $line-height-computed
+
+	& > legend
+		font-family: $font-family-heading
+		margin-top: 0
+		font-weight: 300
+
+>>> .form-group
+	position: relative
+	margin: 0
+
+	label[for]
+		display: none
+
+	.form-control
+		border-radius: 0
+
+	.jolticon
+		position: absolute
+		left: 8px
+		top: 11px
+		color: $text-muted
+		z-index: 3
+
+// Change form styling to use outlines instead of borders.
+// This will allow the outlines to overlap each other properly.
+>>> .form-control
+	position: relative
+	height: 40px
+	box-shadow: none
+	border: 0 !important
+	outline: 1px solid $input-border
+	z-index: 1
+
+	&:focus
+		outline: 1px solid $input-border-focus
+		outline-offset: 0  // Chrome adds an offset on focus for outlines.
+		z-index: 2
+
+	&.has-icon
+		padding-left: 33px
+
+.left-col
+	float: left
+	width: 50%
+
+.right-col
+	float: right
+	width: 50%
+
+.checkbox
+	cursor: pointer
+	color: $gray
+	font-weight: normal
+	font-size: $font-size-small
+
+.new-card-expander
+	margin-left: -($grid-gutter-width-xs / 2)
+	margin-right: -($grid-gutter-width-xs / 2)
+
+	@media $media-sm-up
+		margin-left: -($grid-gutter-width / 2)
+		margin-right: -($grid-gutter-width / 2)
+
+	&.has-cards .well
+		position: relative
+		margin-top: 10px
+
+		// Up arrow.
+		&::before
+			caret(color: $gray-lightest, direction: 'up', size: 10px)
+			content: ''
+
+a.card-list-item
+	clearfix()
+	display: block
+	color: $black
+	padding: 15px
+	margin-bottom: 10px
+	border: 1px solid $gray-lighter
+	border-radius: $border-radius-base
+
+	&:hover
+		border-color: $gray-lighter
+
+	&.active
+		border-color: $gray
+
+h4
+	font-weight: 300

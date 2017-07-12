@@ -11,117 +11,115 @@
 		@outview="isInview = false"
 		>
 
-		<app-game-thumbnail-placeholder v-if="!isInview" />
+		<div class="game-thumbnail-controls"
+			v-if="isInview"
+			@click.prevent
+			>
+			<slot />
+			<span v-if="showModTools">
+				<button class="btn btn-sparse"
+					v-app-popover-trigger="`game-mod-tools-${game.id}`"
+					@click.prevent
+					>
+					<app-jolticon icon="cog" />
+				</button>
+				<app-popover
+					:popover-id="`game-mod-tools-${game.id}`"
+					:append-to-body="true"
+					>
+					<app-game-mod-links :game="game"></app-game-mod-links>
+				</app-popover>
+			</span>
+		</div>
 
-		<div v-else>
-
-			<div class="game-thumbnail-controls"
-				@click.prevent
-				>
-				<slot />
-				<span v-if="showModTools">
-					<button class="btn btn-sparse"
-						v-app-popover-trigger="`game-mod-tools-${game.id}`"
-						@click.prevent
-						>
-						<app-jolticon icon="cog" />
-					</button>
-					<app-popover
-						:popover-id="`game-mod-tools-${game.id}`"
-						:append-to-body="true"
-						>
-						<app-game-mod-links :game="game"></app-game-mod-links>
-					</app-popover>
-				</span>
-			</div>
-
-			<div class="game-thumbnail-thumb">
+		<div class="game-thumbnail-thumb">
+			<div class="inner">
 				<app-jolticon icon="game" />
 
 				<app-game-thumbnail-img
 					:game="game"
+					:class="{ hidden: shouldShowVideo }"
 					@loaded="onThumbnailLoad"
 					/>
 
 				<app-video
-					v-if="game.thumbnail_media_item && game.thumbnail_media_item.is_animated && Screen.isDesktop && isActive"
+					v-if="shouldShowVideo"
 					:poster="game.thumbnail_media_item.mediaserver_url"
 					:webm="game.thumbnail_media_item.mediaserver_url_webm"
 					:mp4="game.thumbnail_media_item.mediaserver_url_mp4"
 					/>
 			</div>
+		</div>
 
-			<div class="game-thumbnail-meta">
+		<div class="game-thumbnail-meta">
 
-				<div class="game-thumbnail-pricing"
-					v-if="game._has_packages && !hidePricing"
-					:class="{
-						'game-thumbnail-pricing-owned': isOwned,
-						'game-thumbnail-pricing-sale': sale,
-					}"
-					>
-					<div v-if="!isOwned">
-						<div v-if="sellableType === 'paid'">
-							<div class="game-thumbnail-pricing-sale-percentage"
+			<div class="game-thumbnail-pricing"
+				v-if="game._has_packages && !hidePricing"
+				:class="{
+					'game-thumbnail-pricing-owned': isOwned,
+					'game-thumbnail-pricing-sale': sale,
+				}"
+				>
+				<div v-if="!isOwned">
+					<div v-if="sellableType === 'paid'">
+						<div class="game-thumbnail-pricing-sale-percentage"
+							v-if="sale"
+							>
+							-{{ salePercentageOff }}%
+						</div>
+						<div class="game-thumbnail-pricing-container">
+							<div class="game-thumbnail-pricing-amount-old"
 								v-if="sale"
 								>
-								-{{ salePercentageOff }}%
+								{{ oldPricingAmount }}
 							</div>
-							<div class="game-thumbnail-pricing-container">
-								<div class="game-thumbnail-pricing-amount-old"
-									v-if="sale"
-									>
-									{{ oldPricingAmount }}
-								</div>
-								<div class="game-thumbnail-pricing-amount">
-									{{ pricingAmount }}
-								</div>
+							<div class="game-thumbnail-pricing-amount">
+								{{ pricingAmount }}
 							</div>
 						</div>
-						<span class="game-thumbnail-pricing-tag" v-else-if="sellableType === 'pwyw'">
-							<translate>Name Your Price</translate>
-						</span>
-						<span class="game-thumbnail-pricing-tag" v-else>
-							<translate>Free</translate>
-						</span>
 					</div>
-					<div v-if="isOwned">
-						<span class="game-thumbnail-pricing-tag">
-							<translate>Owned</translate>
-						</span>
-					</div>
+					<span class="game-thumbnail-pricing-tag" v-else-if="sellableType === 'pwyw'">
+						<translate>Name Your Price</translate>
+					</span>
+					<span class="game-thumbnail-pricing-tag" v-else>
+						<translate>Free</translate>
+					</span>
 				</div>
-
-				<div class="game-thumbnail-avatar">
-					<app-user-avatar-img :user="game.developer" />
-				</div>
-
-				<div class="game-thumbnail-dev" :title="`${game.developer.display_name} (@${game.developer.username})`">
-					{{ game.developer.display_name }}
-				</div>
-
-				<div class="game-thumbnail-title" :title="game.title">
-					{{ game.title }}
-				</div>
-
-				<div class="game-thumbnail-meta-extra">
-					<!-- Don't show if devlog -->
-					<div class="game-thumbnail-os" v-if="game.development_status !== 4">
-						<app-game-compat-icons :game="game" />
-					</div>
-
-					<span class="game-thumbnail-tags">
-						<span class="tag game-thumbnail-tag" v-if="game.development_status === 2">
-							<translate>Early Access</translate>
-						</span>
-
-						<span class="tag game-thumbnail-tag" v-if="game.development_status === 4">
-							<translate>Devlog-Only</translate>
-						</span>
+				<div v-if="isOwned">
+					<span class="game-thumbnail-pricing-tag">
+						<translate>Owned</translate>
 					</span>
 				</div>
 			</div>
 
+			<div class="game-thumbnail-avatar">
+				<app-user-avatar-img :user="game.developer" />
+			</div>
+
+			<div class="game-thumbnail-dev" :title="`${game.developer.display_name} (@${game.developer.username})`">
+				{{ game.developer.display_name }}
+			</div>
+
+			<div class="game-thumbnail-title" :title="game.title">
+				{{ game.title }}
+			</div>
+
+			<div class="game-thumbnail-meta-extra">
+				<!-- Don't show if devlog -->
+				<div class="game-thumbnail-os" v-if="game.development_status !== 4">
+					<app-game-compat-icons :game="game" />
+				</div>
+
+				<span class="game-thumbnail-tags">
+					<span class="tag game-thumbnail-tag" v-if="game.development_status === 2">
+						<translate>Early Access</translate>
+					</span>
+
+					<span class="tag game-thumbnail-tag" v-if="game.development_status === 4">
+						<translate>Devlog-Only</translate>
+					</span>
+				</span>
+			</div>
 		</div>
 
 	</app-scroll-inview>

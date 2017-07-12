@@ -272,7 +272,7 @@
 				</router-link>
 			</li>
 
-			<li v-if="!GJ_IS_CLIENT && isLeftPaneVisible">
+			<li v-if="!GJ_IS_CLIENT && !Screen.isXs && isLeftPaneVisible">
 				<router-link
 					:to="{ name: 'landing.client' }"
 					active-class="active"
@@ -316,7 +316,7 @@
 
 			<hr>
 
-			<div class="nav-heading" v-if="isLeftPaneVisible">
+			<div class="nav-heading" v-if="isLeftPaneVisible || Screen.isXs">
 				@{{ app.user.username }}
 			</div>
 

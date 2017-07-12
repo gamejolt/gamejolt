@@ -6,33 +6,12 @@
 	width: 100%
 	height: auto
 	background-color: $gray
-	transition: height 250ms $strong-ease-out
 
 .media-item-cover
 	padding: 0
 	position: relative
 	overflow: hidden
 	height: 100%
-
-	&::before
-		content: ''
-		display: none
-		position: absolute
-		top: 0
-		right: 0
-		bottom: 0
-		left: 0
-		background-color: $black
-		background-image: linear-gradient( to right, rgba( $gj-pink, 0.25 ) 0%, rgba( $gj-pink, 0 ) 25%, rgba( $gj-blue, 0 ) 75%, rgba( $gj-blue, 0.25 ) 100% )
-
-	.loading-container
-		position: absolute
-		left: 0
-		right: 0
-		top: 50%
-
-		.loading
-			margin-top: -20px
 
 	&-img
 		position: relative
@@ -46,12 +25,7 @@
 			width: 100%
 			height: auto
 
-	// Loaded.
 	&.loaded
-
-		&::before
-			display: block
-
 		@media $media-sm-up
 			&::after
 				content: ''
@@ -60,5 +34,5 @@
 				left: 0
 				right: 0
 				height: 150px
-				background-image: linear-gradient( to bottom, transparent 0%, rgba( $black, 0.3 ) 70%, rgba( $black, 0.6 ) 100% )
+				background-image: linear-gradient(to bottom, transparent 0, rgba($black, 0.3) 70%, rgba($black, 0.6) 100%)
 				z-index: 0

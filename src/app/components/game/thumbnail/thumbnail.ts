@@ -16,7 +16,6 @@ import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/pop
 import { AppGameModLinks } from '../mod-links/mod-links';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
-import { AppGameThumbnailPlaceholder } from './placeholder/placeholder';
 import { AppScrollInview } from '../../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
 
@@ -47,7 +46,6 @@ if (typeof window !== undefined) {
 		AppPopover,
 		AppGameModLinks,
 		AppUserAvatarImg,
-		AppGameThumbnailPlaceholder,
 		AppScrollInview,
 	},
 	directives: {
@@ -84,6 +82,16 @@ export class AppGameThumbnail extends Vue {
 		// When the window is not focused we don't want to play videos. This
 		// should speed up inactive tabs.
 		return this.autoplay && this.isWindowFocused;
+	}
+
+	get shouldShowVideo() {
+		return (
+			this.game.thumbnail_media_item &&
+			this.game.thumbnail_media_item.is_animated &&
+			Screen.isDesktop &&
+			this.isActive &&
+			this.isInview
+		);
 	}
 
 	get url() {

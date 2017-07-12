@@ -107,6 +107,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./edit.html';
+
 import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
@@ -174,7 +175,6 @@ export default class RouteDashGamesManageKeyGroupsEdit extends Vue {
 	}
 
 	routed() {
-		// TODO: why is this nullable?
 		this.keyGroup = new KeyGroup(this.$payload.keyGroup);
 		this.packages = GamePackage.populate(this.$payload.packages);
 		this.keys = Key.populate(this.$payload.keys);
@@ -235,6 +235,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends Vue {
 			this.$gettext('The key group has been removed.'),
 			this.$gettext('Removed Key Group')
 		);
+
 		this.$router.push({
 			name: 'dash.games.manage.key-groups.list',
 		});
