@@ -1,67 +1,79 @@
-<gj-alert-dismissable alert-type="dark" dismiss-key="devlogs-dash" no-margin="true">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-10 col-md-8 col-lg-6 col-centered" :class="{ 'text-center': !Screen.isXs }">
+<div v-if="routeBootstrapped">
+	<section class="section section-has-nav fill-lightest">
+		<div class="container">
 
-				<p translate>Game news is now Devlogs! Share your development progress by posting updates, images, GIFs, and videos for your project! Followers will get notified in their activity feeds.</p>
-				<br>
+			<h4 class="section-header">
+				<translate>Add Post</translate>
+			</h4>
 
-				<a class="btn btn-primary-outline" href="http://fireside.gamejolt.com/post/devlogs-early-access-feeds-and-way-more-dgdrxxr5" gj-track-event="dash:devlogs-learn-more" translate>
-					Learn More
-				</a>
-			</div>
+			 <app-devlog-post-add
+				:game="game"
+				@add="onPostAdded"
+				/>
+
+			<nav class="platform-list inline section-nav">
+				<ul>
+					<li>
+						<router-link
+							:to="{
+								name: 'dash.games.manage.devlog',
+								params: {
+									tab: null,
+								},
+							}"
+							active-class="active"
+							:exact="true"
+							>
+							<translate>Posts</translate>
+						</router-link>
+					</li>
+					<li>
+						<router-link
+							:to="{
+								name: 'dash.games.manage.devlog',
+								params: {
+									tab: 'draft',
+								},
+							}"
+							active-class="active"
+							:exact="true"
+							>
+							<translate>Draft Posts</translate>
+						</router-link>
+					</li>
+				</ul>
+			</nav>
 
 		</div>
-	</div>
-</gj-alert-dismissable>
+	</section>
 
-<section class="section section-has-nav fill-lightest">
-	<div class="container">
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-7">
 
-		<h4 class="section-header" translate>
-			Add Post
-		</h4>
+					<app-activity-feed
+						v-if="feed.hasItems"
+						:feed="feed"
+						:show-edit-controls="true"
+						@postedited="onPostEdited"
+						@postpublished="onPostPublished"
+						/>
 
-		<gj-devlog-post-add
-			game="manageCtrl.game"
-			(on-added)="devlogCtrl.onPostAdded( $event )"
-			>
-		</gj-devlog-post-add>
-
-		<nav class="platform-list inline section-nav">
-			<ul>
-				<li>
-					<a
-						ui-sref="dash.games.manage.devlog.feed( { tab: 'active' } )"
-						ui-sref-active="active"
-						translate
+					<div class="alert alert-info"
+						v-else
 						>
-						Posts
-					</a>
-				</li>
-				<li>
-					<a
-						ui-sref="dash.games.manage.devlog.feed( { tab: 'draft' } )"
-						ui-sref-active="active"
-						translate
-						>
-						Draft Posts
-					</a>
-				</li>
-			</ul>
-		</nav>
+						<div v-if="_tab === 'active'">
+							<p><translate>You haven't published any posts yet.</translate></p>
+						</div>
+						<div v-else-if="_tab === 'draft'">
+							<p><translate>You don't have any draft posts.</translate></p>
+						</div>
+					</div>
 
-	</div>
-</section>
 
-<section class="section">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-7">
-
-				<ui-view></ui-view>
-
+				</div>
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
+</div>

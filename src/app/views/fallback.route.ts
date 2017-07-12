@@ -8,7 +8,6 @@ import * as View from '!view!./empty.html';
 export default class RouteEmpty extends Vue {}
 
 export const routeFallbacks: VueRouter.RouteConfig[] = [
-	{ name: 'styleguide', path: '/styleguide', component: RouteEmpty },
 	{
 		path: '/dashboard',
 		component: RouteEmpty,
@@ -43,11 +42,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 					{
 						name: 'dash.games.manage.site',
 						path: 'site',
-						component: RouteEmpty,
-					},
-					{
-						name: 'dash.games.manage.devlog.feed',
-						path: 'devlog/:tab?',
 						component: RouteEmpty,
 					},
 				],
