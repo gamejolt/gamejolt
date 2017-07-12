@@ -1,23 +1,23 @@
-<div v-if="helpers.requiresField( namePrefixDotted + '.line1' ) || isForceRequired">
+<div v-if="helpers.requiresField( namePrefix + '.line1' ) || forceRequired">
 
-	<div v-if="!helpers.getStripeField( namePrefixDotted + '.line1' )">
+	<div v-if="!helpers.getStripeField( namePrefix + '.line1' )">
 
 		<app-form-group
-			v-if="helpers.requiresField( namePrefixDotted + '.line1' ) || isForceRequired"
-			name="{{ namePrefix }}-line1"
-			label="Address"
+			v-if="helpers.requiresField( namePrefix + '.line1' ) || forceRequired"
+			:name="`${ namePrefix }.line1`"
+			:label="$gettext('Address')"
 			>
-			<input form-control>
+			<app-form-control />
 			<app-form-control-errors />
 		</app-form-group>
 
 		<app-form-group
-			v-if="helpers.requiresField( namePrefixDotted + '.line1' ) || isForceRequired"
-			name="{{ namePrefix }}-line2"
-			label="Apartment/Suite/Unit"
-			optional="true"
+			v-if="helpers.requiresField( namePrefix + '.line1' ) || forceRequired"
+			:name="`${ namePrefix }.line2`"
+			:label="$gettext('Apartment/Suite/Unit')"
+			:optional="true"
 			>
-			<input form-control>
+			<app-form-control />
 			<app-form-control-errors />
 		</app-form-group>
 
@@ -26,66 +26,72 @@
 			Additional owners can live in any country.
 		-->
 		<app-form-group
-			v-if="isForceRequired"
-			name="{{ namePrefix }}-country"
-			label="Country"
+			v-if="forceRequired"
+			:name="`${ namePrefix }.country`"
+			:label="$gettext('Country')"
 			>
-			<select form-control="select">
-				<option v-for="country of countries track by country.code" ng-value="country.code | uppercase">{{ country.name }}</option>
-			</select>
+			<app-form-control-select>
+				<option
+					v-for="country of countries"
+					:key="country.code"
+					:value="country.code.toUpperCase()"
+					>
+					{{ country.name }}
+				</option>
+			</app-form-control-select>
 			<app-form-control-errors />
 		</app-form-group>
 
-		<div class="row" v-if="helpers.requiresField( namePrefixDotted + '.city' ) || isForceRequired">
+		<div class="row" v-if="helpers.requiresField( namePrefix + '.city' ) || forceRequired">
 			<div class="col-sm-4">
 				<app-form-group
-					name="{{ namePrefix }}-city"
-					label="City"
+					:name="`${ namePrefix }.city`"
+					:label="$gettext('City')"
 					>
-					<input form-control>
+					<app-form-control />
 					<app-form-control-errors />
 				</app-form-group>
 			</div>
-			<div class="col-sm-4" v-if="helpers.requiresField( namePrefixDotted + '.state' ) || isForceRequired">
+			<div class="col-sm-4" v-if="helpers.requiresField( namePrefix + '.state' ) || forceRequired">
 				<app-form-group
-					name="{{ namePrefix }}-state"
-					label="State/Province/County"
+					:name="`${ namePrefix }.state`"
+					:label="$gettext('State/Province/County')"
 					>
-					<input form-control>
+					<app-form-control />
 					<app-form-control-errors />
 				</app-form-group>
 			</div>
-			<div class="col-sm-4" v-if="helpers.requiresField( namePrefixDotted + '.postal_code' ) || isForceRequired">
+			<div class="col-sm-4" v-if="helpers.requiresField( namePrefix + '.postal_code' ) || forceRequired">
 				<app-form-group
-					name="{{ namePrefix }}-postal_code"
-					label="Zip/Postal Code"
+					:name="`${ namePrefix }.postal_code`"
+					:label="$gettext('Zip/Postal Code')"
 					>
-					<input form-control>
+					<app-form-control />
 					<app-form-control-errors />
 				</app-form-group>
 			</div>
 		</div>
 	</div>
 
-	<div class="form-horizontal" v-if="helpers.getStripeField( namePrefixDotted + '.line1' )">
+	<div class="form-horizontal" v-if="helpers.getStripeField( namePrefix + '.line1' )">
 		<div class="form-group">
 			<label class="control-label col-sm-4">
-				Address
+				<translate>Address</translate>
 			</label>
 			<div class="form-static col-sm-8">
-				<div>{{ helpers.getStripeField( namePrefixDotted + '.line1' ) }}</div>
-				<div v-if="helpers.getStripeField( namePrefixDotted + '.line2' )">
-					{{ helpers.getStripeField( namePrefixDotted + '.line2' ) }}
+				<div>{{ helpers.getStripeField( namePrefix + '.line1' ) }}</div>
+				<div v-if="helpers.getStripeField( namePrefix + '.line2' )">
+					{{ helpers.getStripeField( namePrefix + '.line2' ) }}
 				</div>
-				<div>{{ helpers.getStripeField( namePrefixDotted + '.city' ) }}</div>
-				<div v-if="helpers.getStripeField( namePrefixDotted + '.state' )">
-					{{ helpers.getStripeField( namePrefixDotted + '.state' ) }}
+				<div>{{ helpers.getStripeField( namePrefix + '.city' ) }}</div>
+				<div v-if="helpers.getStripeField( namePrefix + '.state' )">
+					{{ helpers.getStripeField( namePrefix + '.state' ) }}
 				</div>
 
-				<div v-if="helpers.getStripeField( namePrefixDotted + '.country' )">
-					{{ Geo.getCountryName( helpers.getStripeField( namePrefixDotted + '.country' ) ) }}
+				<div v-if="helpers.getStripeField( namePrefix + '.country' )">
+					{{ Geo.getCountryName( helpers.getStripeField( namePrefix + '.country' ) ) }}
 				</div>
-				<div v-if="!helpers.getStripeField( namePrefixDotted + '.country' )">
+				<div v-if="!helpers.getStripeField( namePrefix + '.country' )">
 					{{ Geo.getCountryName( account.country_code ) }}
 				</div>
 			</div>

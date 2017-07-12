@@ -2,9 +2,9 @@
 
 	<legend>
 		<span v-if="hasSignedPartnerAgreement" class="pull-right done-icon" v-app-tooltip="$gettext( `You have completed this section.` )">
-			<app-jolticon icon="check big" />
+			<app-jolticon icon="check" :big="true" />
 		</span>
-		Partner Agreement
+		<translate>Partner Agreement</translate>
 	</legend>
 
 	<div v-if="!hasSignedPartnerAgreement">
@@ -14,46 +14,54 @@
 		-->
 		<div class="form-group" v-if="hasSignedSomeAgreement && !showAgreement">
 			<div class="small">
-				<div translate>If you would to be a Game Jolt partner, you must accept the Partner Agreement.</div>
+				<div><translate>If you would to be a Game Jolt partner, you must accept the Partner Agreement.</translate></div>
 			</div>
 			<br>
 
 			<button
 				class="btn btn-primary-outline"
-				ng-click="showAgreement = true"
-				translate
+				@click="showAgreement = true"
 				>
-				Show Partner Agreement
+				<translate>Show Partner Agreement</translate>
 			</button>
 		</div>
 
 		<div class="form-group" v-if="!hasSignedSomeAgreement || showAgreement">
 			<div class="tos-scroller overlay-scrollbar overlay-scrollbar-light">
-				<div ng-include="termsTemplate"></div>
+				<div v-html="termsTemplate"></div>
 			</div>
 			<br>
 
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" ng-model="checked">
-					By checking this box and clicking the button below marked "I Agree," I agree that I have read, understand, and agree to be bound by the terms of this agreement.
+					<input type="checkbox" v-model="checked">
+					<translate>By checking this box and clicking the button below marked "I Agree," I agree that I have read, understand, and agree to be bound by the terms of this agreement.</translate>
 				</label>
 			</div>
 			<br>
 
 			<button
 				class="btn btn-success-outline"
-				ng-disabled="!checked"
-				ng-click="onAccept()"
+				:disabled="!checked"
+				@click="onAccept()"
 				>
-				I Agree
+				<translate>I Agree</translate>
 			</button>
 		</div>
 
 	</div>
 
 	<div class="form-group" v-if="hasSignedPartnerAgreement">
-		<p class="small">You have agreed to our <a ng-href="{{ agreementLink }}" target="_blank">Partner Agreement</a> on {{ account.tos_signed_partner_timestamp | date:'medium' }}.</p>
+		<p class="small">
+			<translate
+				:translate-params="{
+					date: date( account.tos_signed_partner_timestamp, 'medium' ),
+				}"
+				>
+				You have agreed to our Partner Agreement on %{ date }.
+			</translate><br />
+			<a :href="agreementLink" target="_blank">View Partner Agreement</a>
+		</p>
 	</div>
 
 </fieldset>
