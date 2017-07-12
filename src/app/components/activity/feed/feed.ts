@@ -30,21 +30,21 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 export class AppActivityFeed extends Vue {
 	@Prop([String])
 	type: 'Notification' | 'Fireside_Post';
+
 	@Prop([ActivityFeedContainer])
 	feed: ActivityFeedContainer;
+
 	@Prop([Boolean])
 	showEditControls?: boolean;
+
 	@Prop([Boolean])
 	showGameInfo?: boolean;
+
 	@Prop([Boolean])
 	showAds?: boolean;
+
 	@Prop([Object])
 	adResource?: Model;
-
-	// TODO: Get this working through dashboard, yeah?
-	// @Output( 'onPostRemoved' ) private _onPostRemoved = new EventEmitter<{ $post: FiresidePost }>();
-	// @Output( 'onPostEdited' ) private _onPostEdited = new EventEmitter<{ $post: FiresidePost }>();
-	// @Output( 'onPostPublished' ) private _onPostPublished = new EventEmitter<{ $post: FiresidePost }>();
 
 	// We save the scroll position every time it changes. When clicking back to
 	// the same feed we can scroll to the previous position that way.
@@ -67,7 +67,7 @@ export class AppActivityFeed extends Vue {
 	}
 
 	@Watch('feed', { immediate: true })
-	async onItemsChanged(
+	async onFeedChanged(
 		feed: ActivityFeedContainer,
 		oldFeed: ActivityFeedContainer | undefined
 	) {
@@ -82,10 +82,7 @@ export class AppActivityFeed extends Vue {
 		}
 	}
 
-	// TODO: This still some times doesn't scroll to the correct place.
-	// It almost seems like the browser takes over and messes it all up.
 	private initScroll() {
-		console.log('init scroll!');
 		const scroll = this.feed.scroll;
 		if (scroll) {
 			Scroll.to(scroll, { animate: false });
@@ -123,13 +120,13 @@ export class AppActivityFeed extends Vue {
 		return false;
 	}
 
-	// TODO: get these working
 	onPostEdited(post: FiresidePost) {
 		this.feed.update(post);
 		this.$emit('postedited', post);
 	}
 
 	onPostPublished(post: FiresidePost) {
+		this.feed.update(post);
 		this.$emit('postpublished', post);
 	}
 

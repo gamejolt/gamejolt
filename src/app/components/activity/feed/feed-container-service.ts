@@ -3,6 +3,7 @@ import { ActivityFeedItem, ActivityFeedInput } from './item-service';
 import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
+import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
 
 /**
  * The number of items from the bottom that we should hit before loading more.
@@ -74,40 +75,30 @@ export class ActivityFeedContainer {
 		}
 	}
 
-	prepend(_items: ActivityFeedInput[]) {
-		const items = _items.map(item => new ActivityFeedItem(item));
+	prepend(input: ActivityFeedInput[]) {
+		const items = input.map(item => new ActivityFeedItem(item));
 		this.items = items.concat(this.items);
-		this._processGames();
+		this.processGames();
 	}
 
-	append(_items: ActivityFeedInput[]) {
-		const items = _items.map(item => new ActivityFeedItem(item));
+	append(input: ActivityFeedInput[]) {
+		const items = input.map(item => new ActivityFeedItem(item));
 		this.items = this.items.concat(items);
-		this._processGames();
+		this.processGames();
 	}
 
-	update(_item: ActivityFeedInput) {
-		const item = new ActivityFeedItem(_item);
-		const index = this.items.findIndex(i => {
-			return i.type === item.type && i.feedItem.id === item.feedItem.id;
-		});
-
-		if (index >= 0) {
-			Vue.set(this.items, index, item);
-		}
-
-		this._processGames();
+	update(_input: ActivityFeedInput) {
+		this.processGames();
 	}
 
-	remove(_item: ActivityFeedInput) {
-		const item = new ActivityFeedItem(_item);
-		const index = this.items.findIndex(i => {
-			return i.type === item.type && i.feedItem.id === item.feedItem.id;
-		});
+	remove(input: ActivityFeedInput) {
+		const item = new ActivityFeedItem(input);
+		arrayRemove(
+			this.items,
+			i => i.type === item.type && i.feedItem.id === item.feedItem.id
+		);
 
-		this.items.splice(index, 1);
-
-		this._processGames();
+		this.processGames();
 	}
 
 	viewed(item: ActivityFeedItem) {
@@ -191,7 +182,7 @@ export class ActivityFeedContainer {
 	 * are shared across all items. It not only reduces mem usage, but also helps
 	 * to keep things in sync (game follows, etc).
 	 */
-	private _processGames() {
+	private processGames() {
 		for (const item of this.items) {
 			if (item.feedItem instanceof FiresidePost) {
 				if (!this.games[item.feedItem.game.id]) {

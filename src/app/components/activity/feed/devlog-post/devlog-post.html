@@ -55,22 +55,19 @@
 				/>
 
 			<app-activity-feed-devlog-post-video
-				v-if="post.type === 'video'"
+				v-else-if="post.type === 'video'"
 				:post="post"
 				@expanded="onExpand"
 				/>
 
 			<app-activity-feed-devlog-post-sketchfab
-				v-if="post.type === 'sketchfab'"
+				v-else-if="post.type === 'sketchfab'"
 				:post="post"
 				@expanded="onExpand"
 				/>
 
-			<!--
-				Media needs the actual activity item.
-			-->
 			<app-activity-feed-devlog-post-media
-				v-if="post.type === 'media'"
+				v-else-if="post.type === 'media'"
 				:item="item"
 				@clicked="onClick( $event )"
 				@expanded="onExpand"

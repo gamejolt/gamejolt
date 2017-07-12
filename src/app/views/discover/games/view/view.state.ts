@@ -179,7 +179,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	 */
 	@VuexMutation
 	clear() {
-		console.log('clear');
 		this.feed = null;
 		this.showFullDescription = false;
 		this.canToggleDescription = false;
@@ -194,7 +193,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	bootstrapFeed() {
 		// Try pulling feed from cache.
 		this.feed = ActivityFeedService.bootstrap();
-		console.log('bootstrap feed', this.feed);
 	}
 
 	@VuexMutation

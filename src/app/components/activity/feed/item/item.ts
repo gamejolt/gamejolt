@@ -25,6 +25,7 @@ import { Screen } from '../../../../../lib/gj-lib-client/components/screen/scree
 export class AppActivityFeedItem extends Vue {
 	@Prop([ActivityFeedItem])
 	item: ActivityFeedItem;
+
 	@Prop([ActivityFeedContainer])
 	feed: ActivityFeedContainer;
 

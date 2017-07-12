@@ -31,7 +31,7 @@
 				/>
 
 			<app-activity-feed-notification
-				v-if="item.type === 'notification'"
+				v-else-if="item.type === 'notification'"
 				:item="item"
 				@clicked="setActive"
 				/>

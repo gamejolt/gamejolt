@@ -5,7 +5,6 @@ import * as View from '!view!./controls.html?style=./controls.styl';
 
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { FiresidePostLike } from '../../../../../../lib/gj-lib-client/components/fireside/post/like/like-model';
-// import { DevlogPostEdit } from '../../../../devlog/post/edit/edit-service';
 import { Clipboard } from '../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -52,14 +51,19 @@ import { Store } from '../../../../../store/index';
 export class AppActivityFeedDevlogPostControls extends Vue {
 	@Prop([FiresidePost])
 	post: FiresidePost;
+
 	@Prop([Boolean])
 	showGameInfo?: boolean;
+
 	@Prop([Boolean])
 	showEditControls?: boolean;
+
 	@Prop({ type: Boolean, default: true })
 	showExtraInfo?: boolean;
+
 	@Prop([Boolean])
 	requireTabs?: boolean;
+
 	@Prop([Boolean])
 	inModal?: boolean;
 
@@ -145,9 +149,12 @@ export class AppActivityFeedDevlogPostControls extends Vue {
 	}
 
 	async showEdit() {
-		// TODO
-		// await this.editService.show( this.post );
-		this.$emit('edited');
+		// Dynamic import since it loads so much form stuff.
+		const module = await import('../../../../devlog/post/edit-modal/edit-modal-service');
+		const post = await module.DevlogPostEditModal.show(this.post);
+		if (post) {
+			this.$emit('edited');
+		}
 	}
 
 	async publishPost() {
@@ -156,7 +163,8 @@ export class AppActivityFeedDevlogPostControls extends Vue {
 	}
 
 	async removePost() {
-		await this.post.remove();
-		this.$emit('removed');
+		if (await this.post.remove()) {
+			this.$emit('removed');
+		}
 	}
 }
