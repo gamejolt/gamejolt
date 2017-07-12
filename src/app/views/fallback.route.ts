@@ -52,12 +52,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 					},
 				],
 			},
-
-			{
-				name: 'dash.account.financials',
-				path: 'financials',
-				component: RouteEmpty,
-			},
 		],
 	},
 ];
