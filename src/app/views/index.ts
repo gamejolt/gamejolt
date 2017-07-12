@@ -11,6 +11,7 @@ import { routeSettings } from './settings/settings.route';
 import { routeForums } from './forums/forums.route';
 import { routeRadio } from './radio/radio.route';
 import { routeDash } from './dashboard/dashboard.route';
+import { routeStyleguide } from './styleguide/styleguide.route';
 
 const routes = [
 	routeDiscover,
@@ -24,6 +25,7 @@ const routes = [
 	routeRadio,
 	routeLegal,
 	routeDash,
+	routeStyleguide,
 	...routeFallbacks,
 ];
 
