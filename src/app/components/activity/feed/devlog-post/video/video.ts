@@ -17,8 +17,7 @@ import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/com
 	},
 })
 export class AppActivityFeedDevlogPostVideo extends Vue {
-	@Prop([FiresidePost])
-	post: FiresidePost;
+	@Prop(FiresidePost) post: FiresidePost;
 
 	video: FiresidePostVideo | null = null;
 	isShowingVideo = false;

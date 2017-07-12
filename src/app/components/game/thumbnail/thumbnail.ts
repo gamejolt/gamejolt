@@ -53,11 +53,9 @@ if (typeof window !== undefined) {
 	},
 })
 export class AppGameThumbnail extends Vue {
-	@Prop([Object])
-	game: Game;
+	@Prop(Object) game: Game;
 
-	@Prop([String])
-	linkTo?: string;
+	@Prop(String) linkTo?: string;
 
 	@Prop({ type: Boolean, default: true })
 	autoplay: boolean;

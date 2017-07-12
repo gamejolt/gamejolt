@@ -28,23 +28,12 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 	},
 })
 export class AppActivityFeed extends Vue {
-	@Prop([String])
-	type: 'Notification' | 'Fireside_Post';
-
-	@Prop([ActivityFeedContainer])
-	feed: ActivityFeedContainer;
-
-	@Prop([Boolean])
-	showEditControls?: boolean;
-
-	@Prop([Boolean])
-	showGameInfo?: boolean;
-
-	@Prop([Boolean])
-	showAds?: boolean;
-
-	@Prop([Object])
-	adResource?: Model;
+	@Prop(String) type: 'Notification' | 'Fireside_Post';
+	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
+	@Prop(Boolean) showEditControls?: boolean;
+	@Prop(Boolean) showGameInfo?: boolean;
+	@Prop(Boolean) showAds?: boolean;
+	@Prop(Object) adResource?: Model;
 
 	// We save the scroll position every time it changes. When clicking back to
 	// the same feed we can scroll to the previous position that way.

@@ -11,6 +11,5 @@ import { AppButtonPlaceholder } from '../../../../../../lib/gj-lib-client/compon
 	},
 })
 export class AppActivityFeedItemPlaceholder extends Vue {
-	@Prop([String])
-	type: string;
+	@Prop(String) type: string;
 }

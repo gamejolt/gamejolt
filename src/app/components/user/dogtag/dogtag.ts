@@ -6,6 +6,5 @@ import './dogtag.styl';
 @View
 @Component({})
 export class AppUserDogtag extends Vue {
-	@Prop([String])
-	type: string;
+	@Prop(String) type: string;
 }

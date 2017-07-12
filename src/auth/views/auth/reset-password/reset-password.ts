@@ -16,10 +16,8 @@ import { FormResetPassword } from '../../../components/forms/reset-password/rese
 	},
 })
 export default class RouteAuthResetPassword extends Vue {
-	@Prop([String])
-	userId: string;
-	@Prop([String])
-	token: string;
+	@Prop(String) userId: string;
+	@Prop(String) token: string;
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {

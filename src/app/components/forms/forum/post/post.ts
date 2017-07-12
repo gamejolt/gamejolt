@@ -16,10 +16,8 @@ import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/compone
 	},
 })
 export class FormForumPost extends BaseForm<ForumPost> implements FormOnInit {
-	@Prop([ForumTopic])
-	topic: ForumTopic;
-	@Prop([ForumPost])
-	replyTo?: ForumPost;
+	@Prop(ForumTopic) topic: ForumTopic;
+	@Prop(ForumPost) replyTo?: ForumPost;
 
 	modelClass = ForumPost;
 	resetOnSubmit = true;

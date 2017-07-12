@@ -14,8 +14,7 @@ import { AppWidgetCompiler } from '../../../../../../lib/gj-lib-client/component
 	},
 })
 export class AppActivityFeedDevlogPostText extends Vue {
-	@Prop([FiresidePost])
-	post: FiresidePost;
+	@Prop(FiresidePost) post: FiresidePost;
 
 	canToggleContent = false;
 	showFullContent = false;

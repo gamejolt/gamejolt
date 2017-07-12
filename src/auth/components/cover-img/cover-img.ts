@@ -7,8 +7,7 @@ import { ImgHelper } from '../../../lib/gj-lib-client/components/img/helper/help
 @View
 @Component({})
 export class AppCoverImg extends Vue {
-	@Prop([String])
-	imgUrl: string;
+	@Prop(String) imgUrl: string;
 
 	isLoaded = false;
 

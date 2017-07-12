@@ -14,8 +14,7 @@ import { FormGameDevlogPost } from '../../../forms/game/devlog-post/devlog-post'
 	},
 })
 export default class AppDevlogPostEditModal extends BaseModal {
-	@Prop([FiresidePost])
-	post: FiresidePost;
+	@Prop(FiresidePost) post: FiresidePost;
 
 	onSubmitted(post: FiresidePost) {
 		this.modal.resolve(post);

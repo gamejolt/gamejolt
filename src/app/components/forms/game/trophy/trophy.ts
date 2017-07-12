@@ -23,10 +23,8 @@ import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/component
 	},
 })
 export class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnInit {
-	@Prop([Game])
-	game: Game;
-	@Prop([Number])
-	difficulty: number;
+	@Prop(Game) game: Game;
+	@Prop(Number) difficulty: number;
 
 	modelClass = GameTrophy;
 	resetOnSubmit = true;

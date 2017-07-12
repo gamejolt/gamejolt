@@ -13,10 +13,8 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 	},
 })
 export class AppChannelThumbnail extends Vue {
-	@Prop([String])
-	channel: string;
-	@Prop([Number])
-	gamesCount?: number;
+	@Prop(String) channel: string;
+	@Prop(Number) gamesCount?: number;
 
 	Channels = Channels;
 	number = number;

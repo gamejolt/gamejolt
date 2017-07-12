@@ -15,11 +15,9 @@ import { AppImgResponsive } from '../../../../lib/gj-lib-client/components/img/r
 	},
 })
 export class AppMediaItemCover extends Vue {
-	@Prop([MediaItem])
-	mediaItem: MediaItem;
+	@Prop(MediaItem) mediaItem: MediaItem;
 
-	@Prop([Number])
-	maxHeight?: number;
+	@Prop(Number) maxHeight?: number;
 
 	isLoaded = false;
 	height = 'auto';

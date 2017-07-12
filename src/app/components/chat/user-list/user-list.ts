@@ -13,14 +13,10 @@ import { AppChatUserListItem } from './item/item';
 	},
 })
 export class AppChatUserList extends Vue {
-	@Prop([Array])
-	users: ChatUser[];
-	@Prop([ChatRoom])
-	room?: ChatRoom;
-	@Prop([Boolean])
-	showPm?: boolean;
-	@Prop([Boolean])
-	showModTools?: boolean;
+	@Prop(Array) users: ChatUser[];
+	@Prop(ChatRoom) room?: ChatRoom;
+	@Prop(Boolean) showPm?: boolean;
+	@Prop(Boolean) showModTools?: boolean;
 
 	filterQuery = '';
 }

@@ -37,8 +37,7 @@ import { AppActivityFeedDevlogPostControls } from './controls/controls';
 	},
 })
 export class AppActivityFeedDevlogPost extends Vue {
-	@Prop([ActivityFeedItem])
-	item: ActivityFeedItem;
+	@Prop(ActivityFeedItem) item: ActivityFeedItem;
 
 	post: FiresidePost;
 

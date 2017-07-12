@@ -21,8 +21,7 @@ import {
 	},
 })
 export class AppDashGameWizardControls extends Vue {
-	@Prop([Boolean])
-	disabled?: boolean;
+	@Prop(Boolean) disabled?: boolean;
 
 	@RouteState isWizard: RouteStore['isWizard'];
 	@RouteAction wizardNext: RouteStore['wizardNext'];

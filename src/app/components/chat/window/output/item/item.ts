@@ -22,10 +22,8 @@ import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/
 	},
 })
 export class AppChatWindowOutputItem extends Vue {
-	@Prop([ChatMessage])
-	message: ChatMessage;
-	@Prop([ChatRoom])
-	room: ChatRoom;
+	@Prop(ChatMessage) message: ChatMessage;
+	@Prop(ChatRoom) room: ChatRoom;
 
 	@State chat: ChatClient;
 

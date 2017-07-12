@@ -12,8 +12,7 @@ import { Game } from '../../../../../lib/gj-lib-client/components/game/game.mode
 @Component({})
 export class FormGameSketchfab extends BaseForm<GameSketchfab>
 	implements FormOnInit {
-	@Prop([Game])
-	game: Game;
+	@Prop(Game) game: Game;
 
 	modelClass = GameSketchfab;
 	resetOnSubmit = true;

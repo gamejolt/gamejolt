@@ -17,12 +17,9 @@ import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 	},
 })
 export class AppShellSidebarCollectionList extends Vue {
-	@Prop([Array])
-	collections: GameCollection[];
-	@Prop([String])
-	filter: string;
-	@Prop([Boolean])
-	shouldSort?: boolean;
+	@Prop(Array) collections: GameCollection[];
+	@Prop(String) filter: string;
+	@Prop(Boolean) shouldSort?: boolean;
 
 	get filtered() {
 		if (!this.shouldSort) {

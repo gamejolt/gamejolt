@@ -15,8 +15,7 @@ import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
 	},
 })
 export default class AppGamePlaylistSaveModal extends BaseModal {
-	@Prop([GameCollection])
-	collection?: GameCollection;
+	@Prop(GameCollection) collection?: GameCollection;
 
 	onSaved(_formModel: GamePlaylist, response: any) {
 		if (this.collection) {

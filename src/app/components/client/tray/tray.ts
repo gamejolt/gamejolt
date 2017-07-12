@@ -92,8 +92,8 @@ export class AppClientTray extends Vue {
 				// It needs to stay as a relative file path or it will break.
 				icon:
 					packagePrefix +
-					'/app/components/client/tray/' +
-					(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
+						'/app/components/client/tray/' +
+						(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
 				// TODO: Click doesn't exist?
 				// it does exist, just not typed for some reason
 				click: () => this.toggleVisibility(),

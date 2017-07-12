@@ -27,10 +27,8 @@ if (!GJ_IS_SSR) {
 	},
 })
 export class AppActivityFeedDevlogPostMedia extends Vue {
-	@Prop([ActivityFeedItem])
-	item: ActivityFeedItem;
-	@Prop([Boolean])
-	isNew?: boolean;
+	@Prop(ActivityFeedItem) item: ActivityFeedItem;
+	@Prop(Boolean) isNew?: boolean;
 
 	post: FiresidePost;
 

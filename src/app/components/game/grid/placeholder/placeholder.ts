@@ -18,12 +18,9 @@ import { AppGameThumbnailPlaceholder } from '../../thumbnail/placeholder/placeho
 	},
 })
 export class AppGameGridPlaceholder extends Vue {
-	@Prop([Number])
-	num: number;
-	@Prop([Boolean])
-	truncateToFit?: boolean;
-	@Prop([Boolean])
-	scrollable?: boolean;
+	@Prop(Number) num: number;
+	@Prop(Boolean) truncateToFit?: boolean;
+	@Prop(Boolean) scrollable?: boolean;
 
 	Screen = makeObservableService(Screen);
 

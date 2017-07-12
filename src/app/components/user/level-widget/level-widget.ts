@@ -20,8 +20,7 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 	},
 })
 export class AppUserLevelWidget extends Vue {
-	@Prop([User])
-	user: User;
+	@Prop(User) user: User;
 
 	get tooltip() {
 		return this.$gettextInterpolate('%{ percentage }% progress to next level', {

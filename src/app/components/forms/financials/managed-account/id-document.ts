@@ -13,9 +13,7 @@ import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/component
 	},
 })
 export class FormFinancialsManagedAccountIdDocument extends BaseForm<any> {
-	@Prop([String])
-	namePrefix: string;
+	@Prop(String) namePrefix: string;
 
-	@Prop([Object])
-	helpers: Helpers;
+	@Prop(Object) helpers: Helpers;
 }

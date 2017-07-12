@@ -18,8 +18,7 @@ import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.s
 	},
 })
 export default class RouteSearchUsers extends Vue {
-	@Prop([Object])
-	payload: any;
+	@Prop(Object) payload: any;
 
 	Search = makeObservableService(Search);
 	Scroll = Scroll;

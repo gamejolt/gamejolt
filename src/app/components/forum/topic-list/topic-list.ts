@@ -27,10 +27,8 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 	},
 })
 export class AppForumTopicList extends Vue {
-	@Prop([Array])
-	topics: ForumTopic[];
-	@Prop([Number])
-	postCountPerPage: number;
+	@Prop(Array) topics: ForumTopic[];
+	@Prop(Number) postCountPerPage: number;
 
 	date = date;
 	number = number;

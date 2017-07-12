@@ -24,10 +24,8 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 	},
 })
 export default class RouteSearchResults extends Vue {
-	@Prop([Object])
-	payload: any;
-	@Prop([String])
-	query: string;
+	@Prop(Object) payload: any;
+	@Prop(String) query: string;
 
 	Search = makeObservableService(Search);
 	Screen = makeObservableService(Screen);

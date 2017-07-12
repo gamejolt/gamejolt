@@ -20,17 +20,13 @@ import { GamePackagePurchaseModal } from '../../../../lib/gj-lib-client/componen
 	},
 })
 export class AppGameCoverButtons extends Vue {
-	@Prop([Game])
-	game: Game;
+	@Prop(Game) game: Game;
 
-	@Prop([Array])
-	packages: GamePackage[];
+	@Prop(Array) packages: GamePackage[];
 
-	@Prop([Array])
-	installableBuilds: GameBuild[];
+	@Prop(Array) installableBuilds: GameBuild[];
 
-	@Prop([Array])
-	browserBuilds: GameBuild[];
+	@Prop(Array) browserBuilds: GameBuild[];
 
 	// isGamePatching = undefined;
 	// hasLocalPackage = false;

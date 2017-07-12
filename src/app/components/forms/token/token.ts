@@ -18,8 +18,7 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 })
 export class FormToken extends BaseForm<any>
 	implements FormOnInit, FormOnSubmit, FormOnSubmitSuccess {
-	@Prop([String])
-	token: string;
+	@Prop(String) token: string;
 
 	onInit() {
 		this.setField('token', this.token);
