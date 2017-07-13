@@ -24,9 +24,7 @@ export class AppDeveloperTerms extends Vue {
 
 	checked = false;
 	showAgreement = false;
-	termsTemplate: string = require('!html-loader!markdown-loader!../../../../../lib/terms/distribution-agreement/global.md');
-
-	date = date;
+	termsTemplate: string = require('../../../../../lib/terms/distribution-agreement/global.md');
 
 	get shouldShowAgreement() {
 		return (
@@ -77,6 +75,6 @@ export class AppDeveloperTerms extends Vue {
 	}
 
 	onAccept() {
-		this.$emit('accepted', undefined);
+		this.$emit('accepted');
 	}
 }

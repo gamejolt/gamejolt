@@ -1,9 +1,9 @@
-<app-form name="financialsForm" class="dash-financials-form">
+<app-form name="financialsForm">
 
 	<app-form-loader
 		:url="`/web/dash/financials/save`"
 		@loaded="onLoaded"
-	>
+		>
 
 		<div v-if="!isVerified">
 			<div class="alert alert-info">
@@ -70,7 +70,7 @@
 				<span v-if="user.paypal_id" class="pull-right done-icon" v-app-tooltip="$gettext( `You have completed this section.` )">
 					<app-jolticon icon="check big" />
 				</span>
-				<span><translate>PayPal Account</translate></span>
+				<translate>PayPal Account</translate>
 			</legend>
 
 			<div class="form-group">
@@ -90,7 +90,7 @@
 					@click="linkPayPal()"
 					>
 					<span v-if="!user.paypal_id"><translate>Link PayPal Account</translate></span>
-					<span v-if="user.paypal_id"><translate>Change PayPal Account</translate></span>
+					<span v-else><translate>Change PayPal Account</translate></span>
 				</button>
 			</div>
 
@@ -128,13 +128,27 @@
 				<translate :escape-html="false">You decide what percentage of your sale revenue to give to Game Jolt. <strong>We won't let you give us more than 10%</strong> because we'd rather have you support other indie developers by buying their games.</translate>
 			</p>
 
-			<div class="form-group">
-				<!--TODO: replace with vue component <rzslider
-					rz-slider-model="formModel.percentage_split"
-					rz-slider-options="sliderOptions"
-					>
-				</rzslider>-->
-			</div>
+			<app-form-group
+				name="percentage_split"
+				:hide-label="true"
+				>
+
+				<app-form-control
+					type="number"
+					step="1"
+					max="10"
+					min="0"
+					:rules="{
+						pattern: /^\d+$/,
+						max_value: 10,
+						min_value: 0,
+					}"
+					/>
+				<app-form-control-errors
+					when="pattern"
+					:message="$gettext('Please enter a value between 0 and 10.')"
+					/>
+			</app-form-group>
 
 		</fieldset>
 

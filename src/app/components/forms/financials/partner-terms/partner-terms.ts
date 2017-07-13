@@ -24,9 +24,7 @@ export class AppPartnerTerms extends Vue {
 
 	checked = false;
 	showAgreement = false;
-
-	termsTemplate: string = require('!html-loader!markdown-loader!../../../../../lib/terms/partner/global.md');
-	date = date;
+	termsTemplate: string = require('../../../../../lib/terms/partner/global.md');
 
 	get hasSignedPartnerAgreement() {
 		return this.account && this.account.tos_signed_partner > 0;
@@ -45,6 +43,6 @@ export class AppPartnerTerms extends Vue {
 	}
 
 	onAccept() {
-		this.$emit('accepted', undefined);
+		this.$emit('accepted');
 	}
 }

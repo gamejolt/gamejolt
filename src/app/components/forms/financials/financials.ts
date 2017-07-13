@@ -160,19 +160,6 @@ export class FormFinancials extends BaseForm<FinancialsFormModel>
 	maxPayout: number;
 	minWithdraw: number;
 
-	sliderOptions = {
-		floor: 0,
-		ceil: 100,
-		translate: (v: number) => {
-			return v + '%';
-		},
-		onEnd: () => {
-			if (this.formModel.percentage_split > 10) {
-				this.formModel.percentage_split = 10;
-			}
-		},
-	};
-
 	currency = currency;
 
 	get hasSignedAgreement() {
@@ -201,9 +188,9 @@ export class FormFinancials extends BaseForm<FinancialsFormModel>
 		this.minWithdraw = payload.minWithdraw;
 
 		// These user fields should be populated because the user object in this form's url payload should pull financial fields.
-		this.formModel.wallet_maximum = this.user.revenue_wallet_maximum! / 100;
-		this.formModel.payout_minimum = this.user.revenue_payout_minimum! / 100;
-		this.formModel.percentage_split = 100 - this.user.revenue_percentage!;
+		this.setField('wallet_maximum', this.user.revenue_wallet_maximum! / 100);
+		this.setField('payout_minimum', this.user.revenue_payout_minimum! / 100);
+		this.setField('percentage_split', 100 - this.user.revenue_percentage!);
 
 		if (this.account) {
 			if (this.account.tos_signed_developer) {
