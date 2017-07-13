@@ -29,11 +29,9 @@ export class FormGameKeyGroup extends BaseForm<KeyGroup>
 	modelClass = KeyGroup;
 	resetOnSubmit = true;
 
-	@Prop([Game])
-	game: Game;
+	@Prop(Game) game: Game;
 
-	@Prop([Array])
-	packages: GamePackage[];
+	@Prop(Array) packages: GamePackage[];
 
 	number = number;
 	KeyGroup = KeyGroup;

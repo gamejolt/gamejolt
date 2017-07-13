@@ -21,8 +21,7 @@ import { AppDevlogPostAdd } from '../../../../../components/devlog/post/add/add'
 	},
 })
 export default class RouteDashGamesManageDevlog extends Vue {
-	@Prop([String])
-	tab: 'draft' | undefined;
+	@Prop(String) tab: 'draft' | undefined;
 
 	@RouteState game: RouteStore['game'];
 

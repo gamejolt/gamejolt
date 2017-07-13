@@ -17,8 +17,7 @@ import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/com
 	},
 })
 export class AppActivityFeedDevlogPostSketchfab extends Vue {
-	@Prop([FiresidePost])
-	post: FiresidePost;
+	@Prop(FiresidePost) post: FiresidePost;
 
 	sketchfab: FiresidePostSketchfab | null = null;
 	isShowing = false;

@@ -38,10 +38,8 @@ import { AppScoreFeed } from '../feed/feed';
 	},
 })
 export class AppScoreOverview extends Vue {
-	@Prop([Game])
-	game: Game;
-	@Prop([Object])
-	initialPayload?: any;
+	@Prop(Game) game: Game;
+	@Prop(Object) initialPayload?: any;
 	@Prop({ type: String, default: 'full' })
 	size: 'full' | 'small';
 

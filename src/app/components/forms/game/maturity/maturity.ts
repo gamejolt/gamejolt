@@ -1,11 +1,13 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./maturity.html';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
+
 import {
 	BaseForm,
 	FormOnInit,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
+import { AppDashGameWizardControls } from '../wizard-controls/wizard-controls';
 
 export type MaturityField = {
 	label?: string;
@@ -16,6 +18,7 @@ export type MaturityField = {
 @Component({
 	components: {
 		AppExpand,
+		AppDashGameWizardControls,
 	},
 })
 export class FormGameMaturity extends BaseForm<Game> implements FormOnInit {

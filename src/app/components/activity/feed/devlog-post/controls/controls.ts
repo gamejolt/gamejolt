@@ -49,23 +49,13 @@ import { Store } from '../../../../../store/index';
 	},
 })
 export class AppActivityFeedDevlogPostControls extends Vue {
-	@Prop([FiresidePost])
-	post: FiresidePost;
-
-	@Prop([Boolean])
-	showGameInfo?: boolean;
-
-	@Prop([Boolean])
-	showEditControls?: boolean;
-
+	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(Boolean) showGameInfo?: boolean;
+	@Prop(Boolean) showEditControls?: boolean;
 	@Prop({ type: Boolean, default: true })
 	showExtraInfo?: boolean;
-
-	@Prop([Boolean])
-	requireTabs?: boolean;
-
-	@Prop([Boolean])
-	inModal?: boolean;
+	@Prop(Boolean) requireTabs?: boolean;
+	@Prop(Boolean) inModal?: boolean;
 
 	@State app: Store['app'];
 
@@ -150,7 +140,9 @@ export class AppActivityFeedDevlogPostControls extends Vue {
 
 	async showEdit() {
 		// Dynamic import since it loads so much form stuff.
-		const module = await import('../../../../devlog/post/edit-modal/edit-modal-service');
+		const module = await import(
+			'../../../../devlog/post/edit-modal/edit-modal-service'
+		);
 		const post = await module.DevlogPostEditModal.show(this.post);
 		if (post) {
 			this.$emit('edited');

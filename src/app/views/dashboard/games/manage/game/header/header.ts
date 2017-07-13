@@ -10,17 +10,18 @@ import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGameHeader } from '../../../../../../components/forms/game/header/header';
+import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
 
 @View
 @Component({
 	components: {
 		AppJolticon,
 		FormGameHeader,
+		AppDashGameWizardControls,
 	},
 })
 export default class RouteDashGamesManageGameHeader extends Vue {
 	@RouteState game: RouteStore['game'];
-	@RouteState isWizard: RouteStore['isWizard'];
 
 	created() {
 		Meta.title = this.$gettextInterpolate('Edit Header for %{ game }', {

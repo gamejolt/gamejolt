@@ -12,12 +12,9 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 @View
 @Component({})
 export class FormRetrieve extends BaseForm<any> implements FormOnSubmit {
-	@Prop([String])
-	keyId: string;
-	@Prop([GameBundle])
-	bundle: GameBundle;
-	@Prop([Game])
-	game: Game;
+	@Prop(String) keyId: string;
+	@Prop(GameBundle) bundle: GameBundle;
+	@Prop(Game) game: Game;
 
 	onSubmit() {
 		let url = '/claim/retrieve';

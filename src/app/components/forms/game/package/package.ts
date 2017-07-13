@@ -44,11 +44,9 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 	modelClass = GamePackage as any;
 	resetOnSubmit = true;
 
-	@Prop([Game])
-	game: Game;
-	@Prop([Sellable])
-	sellable: Sellable;
-	// @Prop([GamePackage]) package?: GamePackage;
+	@Prop(Game) game: Game;
+	@Prop(Sellable) sellable: Sellable;
+	// @Prop(GamePackage) package?: GamePackage;
 
 	showDescriptionInput = false;
 	isShowingSaleForm = false;

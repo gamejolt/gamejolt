@@ -212,21 +212,14 @@
 
 			</fieldset>
 
-			<app-form-button
-				v-if="method === 'edit' && !isWizard"
-				icon="edit"
-				>
-				<translate>Save Details</translate>
-			</app-form-button>
-			<div v-else>
-				<!--TODO-->
-				<!--<gj-form-dashboard-game-wizard-controls
-					game="formModel"
-					can-proceed="gameForm.$valid"
-					on-next="onSubmit()"
+			<app-dash-game-wizard-controls>
+				<app-form-button
+					v-if="method === 'edit'"
+					icon="edit"
 					>
-				</gj-form-dashboard-game-wizard-controls>-->
-			</div>
+					<translate>Save Details</translate>
+				</app-form-button>
+			</app-dash-game-wizard-controls>
 
 		</div>
 

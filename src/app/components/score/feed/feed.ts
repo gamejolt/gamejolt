@@ -17,8 +17,7 @@ import { Environment } from '../../../../lib/gj-lib-client/components/environmen
 	},
 })
 export class AppScoreFeed extends Vue {
-	@Prop([GameScoreTable])
-	scoreTable: GameScoreTable;
+	@Prop(GameScoreTable) scoreTable: GameScoreTable;
 
 	latestScore: any | null = null;
 	scores: any[] = [];

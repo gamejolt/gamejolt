@@ -73,22 +73,11 @@
 			<app-form-control-toggle />
 		</app-form-group>
 
-		<app-form-button
-			v-if="!isWizard"
-			icon="edit"
-			>
-			<translate>dash.games.settings.save_button</translate>
-		</app-form-button>
-
-		<!--TODO-->
-		<!--<div v-if="isWizard">
-			<gj-form-dashboard-game-wizard-controls
-				game="formModel"
-				can-proceed="settingsForm.$valid"
-				on-next="onSubmit()"
-				>
-			</gj-form-dashboard-game-wizard-controls>
-		</div>-->
+		<app-dash-game-wizard-controls>
+			<app-form-button icon="edit">
+				<translate>dash.games.settings.save_button</translate>
+			</app-form-button>
+		</app-dash-game-wizard-controls>
 
 	</app-form-loader>
 </app-form>

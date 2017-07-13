@@ -224,26 +224,15 @@
 
 	</app-expand>
 
-	<!-- TODO: readd validation check to the :disabled attribute:
-		!gameMaturityForm.$valid || !formModel.tigrs_age
-	-->
-	<app-form-button
-		v-if="!isWizard"
+	<app-dash-game-wizard-controls
 		:disabled="!formModel.tigrs_age"
-		icon="edit"
 		>
-		<translate>dash.games.maturity.save_button</translate>
-	</app-form-button>
-
-	<div v-if="isWizard">
-		<!--TODO
-		<gj-form-dashboard-game-wizard-controls
-			game="formModel"
-			can-proceed="gameMaturityForm.$valid && formModel.tigrs_age"
-			on-next="onSubmit()"
+		<app-form-button
+			icon="edit"
+			:disabled="!formModel.tigrs_age || !valid"
 			>
-		</gj-form-dashboard-game-wizard-controls>
-		-->
-	</div>
+			<translate>dash.games.maturity.save_button</translate>
+		</app-form-button>
+	</app-dash-game-wizard-controls>
 
 </app-form>

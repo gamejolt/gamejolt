@@ -25,6 +25,7 @@ import { FormGameImage } from '../../../../../../components/forms/game/image/ima
 import { AppCardListDraggable } from '../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
 import { FormGameVideo } from '../../../../../../components/forms/game/video/video';
 import { FormGameSketchfab } from '../../../../../../components/forms/game/sketchfab/sketchfab';
+import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
 
 @View
 @Component({
@@ -37,6 +38,7 @@ import { FormGameSketchfab } from '../../../../../../components/forms/game/sketc
 		AppCardListItem,
 		AppCardListDraggable,
 		AppJolticon,
+		AppDashGameWizardControls,
 	},
 	directives: {
 		AppTooltip,
@@ -44,7 +46,6 @@ import { FormGameSketchfab } from '../../../../../../components/forms/game/sketc
 })
 export default class RouteDashGamesManageGameMedia extends Vue {
 	@RouteState game: RouteStore['game'];
-	@RouteState isWizard: RouteStore['isWizard'];
 	@RouteState media: RouteStore['media'];
 
 	@RouteMutation populateMedia: RouteStore['populateMedia'];

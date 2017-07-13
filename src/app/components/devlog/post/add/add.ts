@@ -10,8 +10,7 @@ import { DevlogPostEditModal } from '../edit-modal/edit-modal-service';
 @View
 @Component({})
 export class AppDevlogPostAdd extends Vue {
-	@Prop([Game])
-	game: Game;
+	@Prop(Game) game: Game;
 
 	async showAddModal(type: string) {
 		const response = await Api.sendRequest(

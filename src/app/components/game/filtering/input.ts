@@ -13,8 +13,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 	},
 })
 export class AppGameFilteringInput extends Vue {
-	@Prop([Object])
-	filtering: GameFilteringContainer;
+	@Prop(Object) filtering: GameFilteringContainer;
 
 	query = '';
 

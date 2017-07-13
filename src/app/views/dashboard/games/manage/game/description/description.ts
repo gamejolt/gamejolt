@@ -16,7 +16,6 @@ import { FormGameDescription } from '../../../../../../components/forms/game/des
 })
 export default class RouteDashGamesManageGameDescription extends Vue {
 	@RouteState game: RouteStore['game'];
-	@RouteState isWizard: RouteStore['isWizard'];
 
 	created() {
 		Meta.title = this.$gettextInterpolate('Edit Description for %{ game }', {
@@ -25,11 +24,6 @@ export default class RouteDashGamesManageGameDescription extends Vue {
 	}
 
 	onSaved() {
-		if (this.isWizard) {
-			// this.wizard.goNext( this.game );
-			return;
-		}
-
 		Growls.success(
 			this.$gettext(`Your game description has been saved.`),
 			this.$gettext(`Description Saved`)

@@ -171,13 +171,9 @@
 			</app-card-list>
 		</div>
 
-		<div v-if="isWizard">
-			<!--<form-game-wizard-controls
-				game="game"
-				can-proceed="!game._is_devlog || game.has_active_builds"
-				>
-			</form-game-wizard-controls>-->
-		</div>
+		<app-dash-game-wizard-controls
+			:disabled="!game._is_devlog && !game.has_active_builds"
+			/>
 
 	</div>
 </div>

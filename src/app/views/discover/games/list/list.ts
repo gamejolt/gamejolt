@@ -33,8 +33,7 @@ export default class RouteDiscoverGamesList extends Vue {
 	@Prop({ type: String, default: 'hot' })
 	section?: string;
 
-	@Prop([String])
-	category?: string;
+	@Prop(String) category?: string;
 
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;

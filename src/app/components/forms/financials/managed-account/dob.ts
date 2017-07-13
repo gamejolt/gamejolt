@@ -10,14 +10,11 @@ import { Helpers } from './managed-account';
 @Component({})
 export class FormFinancialsManagedAccountDob extends BaseForm<any>
 	implements FormOnInit {
-	@Prop([Boolean])
-	forceRequired: boolean;
+	@Prop(Boolean) forceRequired: boolean;
 
-	@Prop([String])
-	namePrefix: string;
+	@Prop(String) namePrefix: string;
 
-	@Prop([Object])
-	helpers: Helpers;
+	@Prop(Object) helpers: Helpers;
 
 	days: string[] = [];
 	years: string[] = [];

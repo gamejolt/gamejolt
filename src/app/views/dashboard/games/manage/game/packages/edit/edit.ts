@@ -22,6 +22,7 @@ import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components
 import { number } from '../../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { FormGamePackage } from '../../../../../../../components/forms/game/package/package';
 import { AppExpand } from '../../../../../../../../lib/gj-lib-client/components/expand/expand';
+import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
 
 @View
 @Component({
@@ -33,6 +34,7 @@ import { AppExpand } from '../../../../../../../../lib/gj-lib-client/components/
 		AppCard,
 		AppExpand,
 		FormGamePackage,
+		AppDashGameWizardControls,
 	},
 	directives: {
 		AppTooltip,

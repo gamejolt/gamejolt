@@ -8,8 +8,7 @@ import { Notification } from '../../../../lib/gj-lib-client/components/notificat
 @View
 @Component({})
 export class AppNotificationDescriptiveAction extends Vue {
-	@Prop([Notification])
-	notification: Notification;
+	@Prop(Notification) notification: Notification;
 
 	// constructor(
 	// 	@Inject( 'gettext' ) gettext: ng.gettext.gettextFunction,

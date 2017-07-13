@@ -6,15 +6,11 @@ import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/f
 @View
 @Component({})
 export class FormFinancialsManagedAccountSsn extends BaseForm<any> {
-	@Prop([Boolean])
-	isForceRequired: boolean;
+	@Prop(Boolean) isForceRequired: boolean;
 
-	@Prop([String])
-	namePrefix: string;
+	@Prop(String) namePrefix: string;
 
-	@Prop([String])
-	countryCode: string;
+	@Prop(String) countryCode: string;
 
-	@Prop([Object])
-	helpers: Helpers;
+	@Prop(Object) helpers: Helpers;
 }

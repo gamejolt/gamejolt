@@ -40,11 +40,8 @@ export class FormPayment extends BaseForm<any>
 	implements FormOnInit, FormOnSubmit {
 	@State app: AppStore;
 
-	@Prop([Array])
-	cards: any[];
-
-	@Prop([Order])
-	order: Order;
+	@Prop(Array) cards: any[];
+	@Prop(Order) order: Order;
 
 	stripeError: string | null = null;
 	countries = Geo.getCountries();

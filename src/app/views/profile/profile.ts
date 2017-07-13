@@ -38,8 +38,7 @@ import { Store } from '../../store/index';
 	},
 })
 export default class RouteProfile extends Vue {
-	@Prop([String])
-	username: string;
+	@Prop(String) username: string;
 
 	@State app: Store['app'];
 

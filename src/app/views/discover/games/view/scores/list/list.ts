@@ -36,8 +36,7 @@ import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/component
 	},
 })
 export default class RouteDiscoverGamesViewScoresList extends Vue {
-	@Prop([String])
-	type: 'best' | 'user';
+	@Prop(String) type: 'best' | 'user';
 
 	@RouteState game: RouteStore['game'];
 

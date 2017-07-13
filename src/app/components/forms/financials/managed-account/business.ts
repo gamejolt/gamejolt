@@ -6,6 +6,5 @@ import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/f
 @View
 @Component({})
 export class FormFinancialsManagedAccountBusiness extends BaseForm<any> {
-	@Prop([Object])
-	helpers: Helpers;
+	@Prop(Object) helpers: Helpers;
 }

@@ -14,14 +14,11 @@ import {
 @Component({})
 export class FormFinancialsManagedAccountAddress extends BaseForm<any>
 	implements FormOnInit {
-	@Prop([Boolean])
-	forceRequired: boolean;
+	@Prop(Boolean) forceRequired: boolean;
 
-	@Prop([String])
-	namePrefix: string;
+	@Prop(String) namePrefix: string;
 
-	@Prop([Object])
-	helpers: Helpers;
+	@Prop(Object) helpers: Helpers;
 
 	countries: Country[] = [];
 

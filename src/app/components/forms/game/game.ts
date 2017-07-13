@@ -14,6 +14,7 @@ import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expan
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppDashGameWizardControls } from './wizard-controls/wizard-controls';
 
 @View
 @Component({
@@ -22,15 +23,13 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 		AppFormLoader,
 		AppFormControlToggle,
 		AppExpand,
+		AppDashGameWizardControls,
 	},
 	directives: {
 		AppTooltip,
 	},
 })
 export class FormGame extends BaseForm<Game> implements FormOnInit {
-	@Prop([Boolean])
-	isWizard?: boolean;
-
 	@State app: Store['app'];
 
 	// We need to reset all the "is published", "has builds" stuff.
@@ -99,28 +98,3 @@ export class FormGame extends BaseForm<Game> implements FormOnInit {
 		Scroll.to(0, { animate: false });
 	}
 }
-
-// GameFormFactory.$inject = [ 'Form', 'App' ];
-// export function GameFormFactory(
-// 	Form: any,
-// 	App: any,
-// )
-// {
-// 	const form = new Form( {
-// 		model: 'Game',
-// 		template: require( './game.html' ),
-
-// 		// We need this to reset all the "is published", "has builds" stuff.
-// 		resetOnSubmit: true,
-// 	} );
-
-// 	form.scope.isWizard = '<';
-
-// 	form.onInit = function( scope: any )
-// 	{
-// 		scope.App = App;
-
-// 	};
-
-// 	return form;
-// }

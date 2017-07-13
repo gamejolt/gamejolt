@@ -15,8 +15,7 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 	},
 })
 export class AppGameFilteringTags extends Vue {
-	@Prop([Object])
-	filtering: GameFilteringContainer;
+	@Prop(Object) filtering: GameFilteringContainer;
 
 	GameFilteringContainer = GameFilteringContainer;
 	Genre = makeObservableService(Genre);

@@ -1,0 +1,28 @@
+<div>
+	<div v-if="isWizard">
+		<hr>
+
+		<div class="pull-right">
+			<app-form-button
+				v-if="inForm"
+				icon="chevron-right"
+				:disabled="!canProceed"
+				@click.native="next()"
+				>
+				<translate>Save & Next</translate>
+			</app-form-button>
+			<button
+				v-else
+				class="btn"
+				:disabled="!canProceed"
+				@click="next()"
+				>
+				<app-jolticon icon="chevron-right" />
+				<translate>Next Step</translate>
+			</button>
+		</div>
+	</div>
+	<div v-else>
+		<slot />
+	</div>
+</div>

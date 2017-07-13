@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./maturity.html';
+
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { RouteState, RouteStore } from '../../manage.state';
@@ -22,7 +23,6 @@ import { FormGameMaturity } from '../../../../../../components/forms/game/maturi
 })
 export default class RouteDashGamesManageGameMaturity extends Vue {
 	@RouteState game: RouteStore['game'];
-	@RouteState isWizard: RouteStore['isWizard'];
 
 	current: Game = null as any;
 
@@ -43,12 +43,6 @@ export default class RouteDashGamesManageGameMaturity extends Vue {
 	}
 
 	onSaved() {
-		if (this.isWizard) {
-			// TODO
-			// this.wizard.goNext(this.game);
-			return;
-		}
-
 		Growls.success(
 			this.$gettext(`dash.games.maturity.saved_growl`),
 			this.$gettext(`dash.games.maturity.saved_growl_title`)
