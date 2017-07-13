@@ -1,0 +1,91 @@
+<div>
+	<app-nav-tab-list>
+		<ul>
+			<li>
+				<a
+					:class="{ active: tab === 'template' }"
+					@click="tab = 'template'"
+					>
+					<span class="sites-manage-page-active-tab"
+						v-if="templateEnabled"
+						>
+						<app-jolticon icon="checkbox" />
+					</span>
+					<translate>Use a Template</translate>
+				</a>
+			</li>
+			<li>
+				<a
+					:class="{ active: tab === 'static' }"
+					@click="tab = 'static'"
+					>
+					<span class="sites-manage-page-active-tab"
+						v-if="staticEnabled"
+						>
+						<app-jolticon icon="checkbox" />
+					</span>
+					<translate>Upload Your Own</translate>
+				</a>
+			</li>
+		</ul>
+		<ul class="pull-right">
+			<li>
+				<a
+					:class="{ active: tab === 'domain' }"
+					@click="tab = 'domain'"
+					>
+					<translate>Custom Domain</translate>
+				</a>
+			</li>
+		</ul>
+	</app-nav-tab-list>
+
+	<div class="row"
+		v-if="(templateEnabled && tab === 'template')
+			|| (staticEnabled && tab === 'static')"
+		>
+		<div class="col-sm-9">
+
+			<div class="alert alert-success full-bleed-xs" v-if="templateEnabled">
+				<p><strong><translate>Your site is turned on and active.</translate></strong></p>
+				<p><translate>You can customize it using the site editor below.</translate></p>
+			</div>
+
+			<div class="alert alert-success full-bleed-xs" v-if="staticEnabled">
+				<p><strong><translate>Your static site is turned on and active.</translate></strong></p>
+				<p><translate>You can upload new static site builds at any time.</translate></p>
+			</div>
+
+		</div>
+		<div class="col-sm-3">
+			<div class="clearfix">
+				<button class="btn btn-danger-outline anim-fade-in no-animate-leave pull-right"
+					@click="disable()"
+					v-app-tooltip="$gettext('This will turn your Site off completely and it will no longer be accessible.')"
+					>
+					<translate>Disable</translate>
+				</button>
+			</div>
+			<br>
+		</div>
+	</div>
+
+	<app-sites-manage-page-template
+		v-if="tab === 'template'"
+		:site="site"
+		:enabled="templateEnabled"
+		:static-enabled="staticEnabled"
+		/>
+
+	<app-sites-manage-page-static
+		v-if="tab === 'static'"
+		:site="site"
+		:enabled="staticEnabled"
+		:template-enabled="templateEnabled"
+		/>
+
+	<app-sites-manage-page-domain
+		v-if="tab === 'domain'"
+		:site="site"
+		/>
+</div>

@@ -1,40 +1,64 @@
 <app-form name="settingsForm">
 
-	<app-form-group name="title" :label="$gettext( `Page Title` )" optional="true">
-		<div class="help-block" v-if="!baseModel.game_id" translate>
-			You can override the default title for your site. This will show in search engines, and in the tab bar of browsers. By default it's your display name.
+	<app-form-group
+		name="title"
+		:label="$gettext( `Page Title` )"
+		:optional="true"
+		>
+		<div class="help-block" v-if="!formModel.game_id">
+			<translate>You can override the default title for your site. This will show in search engines, and in the tab bar of browsers. By default it's your display name.</translate>
 		</div>
-		<div class="help-block" v-if="baseModel.game_id" translate>
-			You can override the default title for your site. This will show in search engines, and in the tab bar of browsers. By default it's the title of your game.
+		<div class="help-block" v-if="formModel.game_id">
+			<translate>You can override the default title for your site. This will show in search engines, and in the tab bar of browsers. By default it's the title of your game.</translate>
 		</div>
-		<input form-control="text"
-			ng-maxlength="100"
-			>
+
+		<app-form-control
+			:maxlength="100"
+			:rules="{
+				max: 100,
+			}"
+			/>
 		<app-form-control-errors />
 	</app-form-group>
 
-	<app-form-group name="description" :label="$gettext( `Description` )" optional="true">
-		<div class="help-block" translate>
-			Search engines show this as the description under the page title in search results.
+	<app-form-group
+		name="description"
+		:label="$gettext( `Description` )"
+		:optional="true">
+		<div class="help-block">
+			<translate>Search engines show this as the description under the page title in search results.</translate>
 		</div>
-		<textarea form-control ng-maxlength="250" rows="3"></textarea>
+		<app-form-control-textarea
+			rows="3"
+			:maxlength="250"
+			:rules="{
+				max: 250,
+			}"
+			/>
 		<app-form-control-errors />
 	</app-form-group>
 
-	<app-form-group name="ga_tracking_id" :label="$gettext( `dash.games.settings.ga_tracking_id_label` )" optional="true">
-		<input form-control="text"
-			gj-pattern="gaTrackingId"
-			ng-maxlength="30"
+	<app-form-group
+		name="ga_tracking_id"
+		:label="$gettext( `dash.games.settings.ga_tracking_id_label` )"
+		:optional="true"
+		>
+		<app-form-control
+			:maxlength="30"
+			:rules="{
+				max: 30,
+				pattern: 'gaTrackingId',
+			}"
 			:placeholder="$gettext( `dash.games.settings.ga_tracking_id_placeholder` )"
-			>
+			/>
 
 		<app-form-control-errors :label="$gettext( `dash.games.settings.ga_tracking_id_error_label` )" />
 
 		<div class="help-block">
-			<p translate>Use <b>Google Analytics</b> to track a multitude of stats and get tons of information about your site. Just enter your Google Analytics tracking ID here and we'll start sending data over there right away.</p>
+			<p><translate>Use <strong>Google Analytics</strong> to track a multitude of stats and get tons of information about your site. Just enter your Google Analytics tracking ID here and we'll start sending data over there right away.</translate></p>
 			<p>
-				<a class="link-help" href="https://support.google.com/analytics/answer/1008080" target="_blank" translate>
-					How do I get my tracking ID?
+				<a class="link-help" href="https://support.google.com/analytics/answer/1008080" target="_blank">
+					<translate>How do I get my tracking ID?</translate>
 				</a>
 			</p>
 		</div>

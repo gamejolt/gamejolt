@@ -3,6 +3,7 @@ import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils'
 import { routeDashMainOverview } from './overview/overview.route';
 import { routeDashMainPurchasesList } from './purchases/list/list.route';
 import { routeDashMainPurchasesView } from './purchases/view/view.route';
+import { routeDashMainSite } from './site/site.route';
 
 export const routeDashMain: VueRouter.RouteConfig = {
 	name: 'dash.main',
@@ -13,5 +14,6 @@ export const routeDashMain: VueRouter.RouteConfig = {
 		routeDashMainOverview,
 		routeDashMainPurchasesList,
 		routeDashMainPurchasesView,
+		routeDashMainSite,
 	],
 };

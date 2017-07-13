@@ -1,0 +1,37 @@
+<div class="well fill-lightest text-center"
+	v-if="!enabled"
+	>
+	<div class="row">
+		<div class="col-xs-8 col-centered">
+
+			<p class="lead">
+				<translate>Have a site already or want to create one from scratch? We'll host it. Upload a .zip file of static content.</translate>
+			</p>
+
+			<form-dash-site-build
+				v-if="!site.build"
+				:site="site"
+				@submit="onBuildAdded"
+				/>
+
+			<button class="btn btn-success-outline"
+				v-if="site.build"
+				@click="activateBuild()"
+				v-app-tooltip="templateEnabled ? $gettext('This will disable your template and use your static build instead.') : undefined"
+				>
+				<translate>Turn On</translate>
+			</button>
+
+		</div>
+	</div>
+</div>
+<div v-else>
+
+	<h2><translate>Upload a New Build</translate></h2>
+
+	<form-dash-site-build
+		:site="site"
+		@submit="onBuildAdded"
+		/>
+
+</div>

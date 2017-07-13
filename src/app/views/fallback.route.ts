@@ -12,7 +12,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 		path: '/dashboard',
 		component: RouteEmpty,
 		children: [
-			{ name: 'dash.main.site', path: 'site', component: RouteEmpty },
 			{
 				name: 'dash.withdraw-funds',
 				path: 'withdraw-funds',
