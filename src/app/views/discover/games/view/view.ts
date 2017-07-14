@@ -26,12 +26,7 @@ import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/c
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { AppMeter } from '../../../../../lib/gj-lib-client/components/meter/meter';
-import {
-	RouteState,
-	RouteAction,
-	RouteStore,
-	RouteMutation,
-} from './view.state';
+import { RouteState, RouteAction, RouteStore, RouteMutation } from './view.state';
 import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Store } from '../../../../store/index';
 
@@ -64,8 +59,7 @@ export default class RouteDiscoverGamesView extends Vue {
 	@RouteAction refreshRatingInfo: RouteStore['refreshRatingInfo'];
 	@RouteMutation bootstrapGame: RouteStore['bootstrapGame'];
 	@RouteMutation clear: RouteStore['clear'];
-	@RouteMutation
-	showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
+	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
 
 	@State app: Store['app'];
 
@@ -75,11 +69,7 @@ export default class RouteDiscoverGamesView extends Vue {
 	private ratingCallback?: Function;
 
 	get ratingTooltip() {
-		return (
-			number(this.game.rating_count || 0) +
-			' rating(s), avg: ' +
-			this.game.avg_rating
-		);
+		return number(this.game.rating_count || 0) + ' rating(s), avg: ' + this.game.avg_rating;
 	}
 
 	get installableBuilds() {

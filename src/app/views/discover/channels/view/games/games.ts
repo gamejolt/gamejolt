@@ -33,8 +33,7 @@ export default class RouteDiscoverChannelsViewGames extends Vue {
 		}
 
 		return Api.sendRequest(
-			`/web/discover/channels/games/${route.params.channel}?` +
-				filtering.getQueryString(route)
+			`/web/discover/channels/games/${route.params.channel}?` + filtering.getQueryString(route)
 		);
 	}
 

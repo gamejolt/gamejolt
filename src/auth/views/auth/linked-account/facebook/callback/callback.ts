@@ -13,10 +13,7 @@ export default class RouteAuthLinkedAccountFacebookCallback extends Vue {
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		const { code, state } = route.query;
-		return Api.sendRequest(
-			'/web/auth/facebook/callback?code=' + code + '&state=' + state,
-			{}
-		);
+		return Api.sendRequest('/web/auth/facebook/callback?code=' + code + '&state=' + state, {});
 	}
 
 	routed() {
@@ -26,15 +23,10 @@ export default class RouteAuthLinkedAccountFacebookCallback extends Vue {
 					sticky: true,
 					message: this.$gettext(`auth.linked_account.facebook.no_email_growl`),
 				});
-			} else if (
-				this.$payload.reason &&
-				this.$payload.reason === 'duplicate-email'
-			) {
+			} else if (this.$payload.reason && this.$payload.reason === 'duplicate-email') {
 				Growls.error({
 					sticky: true,
-					message: this.$gettext(
-						`auth.linked_account.facebook.duplicate_email_growl`
-					),
+					message: this.$gettext(`auth.linked_account.facebook.duplicate_email_growl`),
 				});
 			} else {
 				Growls.error({

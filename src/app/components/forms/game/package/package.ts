@@ -39,8 +39,7 @@ type FormGamePackageModel = GamePackage & {
 		AppLoadingFade,
 	},
 })
-export class FormGamePackage extends BaseForm<FormGamePackageModel>
-	implements FormOnInit {
+export class FormGamePackage extends BaseForm<FormGamePackageModel> implements FormOnInit {
 	modelClass = GamePackage as any;
 	resetOnSubmit = true;
 
@@ -150,16 +149,11 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 			if (this.sellable.type !== 'free') {
 				this.setField('pricing_type', this.sellable.type);
 
-				this.originalPricing =
-					SellablePricing.getOriginalPricing(this.pricings) || null;
+				this.originalPricing = SellablePricing.getOriginalPricing(this.pricings) || null;
 
-				this.promotionalPricing =
-					SellablePricing.getPromotionalPricing(this.pricings) || null;
+				this.promotionalPricing = SellablePricing.getPromotionalPricing(this.pricings) || null;
 
-				this.setField(
-					'price',
-					this.originalPricing ? this.originalPricing.amount / 100 : 0
-				);
+				this.setField('price', this.originalPricing ? this.originalPricing.amount / 100 : 0);
 
 				if (this.promotionalPricing) {
 					this.setField('sale_timezone', this.promotionalPricing.timezone);
@@ -192,9 +186,7 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 		this.isProcessing = true;
 
 		const params = [this.formModel.game_id, this.formModel.id];
-		await Api.sendRequest(
-			'/web/dash/developer/games/packages/cancel-sales/' + params.join('/')
-		);
+		await Api.sendRequest('/web/dash/developer/games/packages/cancel-sales/' + params.join('/'));
 
 		this.promotionalPricing = null;
 		this.setField('sale_timezone', determine().name());

@@ -39,8 +39,7 @@ export class AppDeveloperTerms extends Vue {
 	get hasSignedLatestDeveloperAgreement() {
 		return (
 			this.account &&
-			this.account.tos_signed_developer ===
-				UserStripeManagedAccount.TERMS_DISTRIBUTION_VERSION
+			this.account.tos_signed_developer === UserStripeManagedAccount.TERMS_DISTRIBUTION_VERSION
 		);
 	}
 
@@ -48,16 +47,13 @@ export class AppDeveloperTerms extends Vue {
 		return (
 			this.account &&
 			this.account.tos_signed_developer > 0 &&
-			this.account.tos_signed_developer !==
-				UserStripeManagedAccount.TERMS_DISTRIBUTION_VERSION
+			this.account.tos_signed_developer !== UserStripeManagedAccount.TERMS_DISTRIBUTION_VERSION
 		);
 	}
 
 	get hasSignedSomeAgreement() {
 		return (
-			this.account &&
-			(this.account.tos_signed_developer > 0 ||
-				this.account.tos_signed_partner > 0)
+			this.account && (this.account.tos_signed_developer > 0 || this.account.tos_signed_partner > 0)
 		);
 	}
 

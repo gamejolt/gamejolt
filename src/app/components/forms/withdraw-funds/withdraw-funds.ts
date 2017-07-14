@@ -1,6 +1,10 @@
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./withdraw-funds.html';
-import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+	FormOnSubmit,
+} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
@@ -12,7 +16,8 @@ interface WithdrawFundsFormModel {
 
 @View
 @Component({})
-export class FormWithdrawFunds extends BaseForm<WithdrawFundsFormModel> implements FormOnInit, FormOnSubmit {
+export class FormWithdrawFunds extends BaseForm<WithdrawFundsFormModel>
+	implements FormOnInit, FormOnSubmit {
 	@Prop(User) user: User;
 	@Prop(String) paypalEmail: string;
 	@Prop(Number) minAmount: number;

@@ -10,9 +10,6 @@ export class ClientShortcut {
 			return;
 		}
 
-		Shortcut.create(
-			process.execPath,
-			path.resolve(require('~/img/client/icon-256x256.png'))
-		);
+		Shortcut.create(process.execPath, path.resolve(require('~/img/client/icon-256x256.png')));
 	}
 }

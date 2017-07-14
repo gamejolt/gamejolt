@@ -41,9 +41,7 @@ export class AppActivityFeed extends Vue {
 	private scroll$: Subscription | undefined;
 
 	mounted() {
-		this.scroll$ = Scroll.scrollChanges.subscribe(
-			change => (this.scroll = change.top)
-		);
+		this.scroll$ = Scroll.scrollChanges.subscribe(change => (this.scroll = change.top));
 	}
 
 	destroyed() {
@@ -56,10 +54,7 @@ export class AppActivityFeed extends Vue {
 	}
 
 	@Watch('feed', { immediate: true })
-	async onFeedChanged(
-		feed: ActivityFeedContainer,
-		oldFeed: ActivityFeedContainer | undefined
-	) {
+	async onFeedChanged(feed: ActivityFeedContainer, oldFeed: ActivityFeedContainer | undefined) {
 		// Gotta make sure the feed has compiled.
 		await this.$nextTick();
 
@@ -83,21 +78,11 @@ export class AppActivityFeed extends Vue {
 	}
 
 	shouldShowAd(index: number) {
-		if (
-			!this.showAds ||
-			isPrerender ||
-			GJ_IS_CLIENT ||
-			GJ_IS_SSR ||
-			Screen.isXs
-		) {
+		if (!this.showAds || isPrerender || GJ_IS_CLIENT || GJ_IS_SSR || Screen.isXs) {
 			return false;
 		}
 
-		if (
-			this.adResource &&
-			this.adResource instanceof Game &&
-			!this.adResource._should_show_ads
-		) {
+		if (this.adResource && this.adResource instanceof Game && !this.adResource._should_show_ads) {
 			return false;
 		}
 

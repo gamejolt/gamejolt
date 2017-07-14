@@ -16,8 +16,7 @@ import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
 		number,
 	},
 })
-export class FormGameKeyGroupAddKeys extends BaseForm<any>
-	implements FormOnSubmit {
+export class FormGameKeyGroupAddKeys extends BaseForm<any> implements FormOnSubmit {
 	@Prop(KeyGroup) keyGroup: KeyGroup;
 
 	number = number;

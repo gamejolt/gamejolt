@@ -34,9 +34,7 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends Vue {
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/api/data-storage/' + route.params.id
-		);
+		return Api.sendRequest('/web/dash/developer/games/api/data-storage/' + route.params.id);
 	}
 
 	routed() {

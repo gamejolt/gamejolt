@@ -154,10 +154,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	async loadVideoComments() {
 		++this.videoCommentsPage;
 		const response = await Api.sendRequest(
-			'/web/discover/games/videos/' +
-				this.game.id +
-				'?page=' +
-				this.videoCommentsPage
+			'/web/discover/games/videos/' + this.game.id + '?page=' + this.videoCommentsPage
 		);
 
 		this.pushVideoComments(CommentVideo.populate(response.videos));
@@ -211,8 +208,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.primaryScoreTable = payload.primaryScoreTable
 			? new GameScoreTable(payload.primaryScoreTable)
 			: null;
-		this.twitterShareMessage =
-			payload.twitterShareMessage || 'Check out this game!';
+		this.twitterShareMessage = payload.twitterShareMessage || 'Check out this game!';
 
 		this.userPartnerKey = payload.userPartnerKey;
 	}
@@ -238,14 +234,11 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		// mutation. If there was no cached feed, then we'll generate a new one.
 		// Also regenerate if the game changed.
 		if (!this.feed) {
-			this.feed = ActivityFeedService.bootstrap(
-				FiresidePost.populate(payload.posts),
-				{
-					type: 'Fireside_Post',
-					url: `/web/discover/games/devlog/posts/${this.game.id}`,
-					noAutoload: !this.game._is_devlog,
-				}
-			);
+			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(payload.posts), {
+				type: 'Fireside_Post',
+				url: `/web/discover/games/devlog/posts/${this.game.id}`,
+				noAutoload: !this.game._is_devlog,
+			});
 		}
 
 		this.songs = GameSong.populate(payload.songs);
@@ -263,9 +256,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.videoCommentsCount = payload.videoCommentsCount || 0;
 
 		this.partnerReferredKey = payload.partnerReferredKey || '';
-		this.partnerReferredBy = payload.partnerReferredBy
-			? new User(payload.partnerReferredBy)
-			: null;
+		this.partnerReferredBy = payload.partnerReferredBy ? new User(payload.partnerReferredBy) : null;
 		this.partnerNoCut = payload.partnerNoCut || false;
 
 		this.scoresPayload = objectPick(payload, [
@@ -287,9 +278,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	processRatingPayload(payload: Mutations['processRatingPayload']) {
-		this.userRating = payload.userRating
-			? new GameRating(payload.userRating)
-			: null;
+		this.userRating = payload.userRating ? new GameRating(payload.userRating) : null;
 		this.ratingBreakdown = payload.ratingBreakdown;
 		this.game.rating_count = payload.game.rating_count;
 		this.game.avg_rating = payload.game.avg_rating;

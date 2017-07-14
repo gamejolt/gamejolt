@@ -31,9 +31,7 @@ export class AppPartnerTerms extends Vue {
 
 	get hasSignedSomeAgreement() {
 		return (
-			this.account &&
-			(this.account.tos_signed_developer > 0 ||
-				this.account.tos_signed_partner > 0)
+			this.account && (this.account.tos_signed_developer > 0 || this.account.tos_signed_partner > 0)
 		);
 	}
 

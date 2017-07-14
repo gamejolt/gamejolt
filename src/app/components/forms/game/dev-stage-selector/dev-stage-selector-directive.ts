@@ -1,10 +1,4 @@
-import {
-	Component,
-	Inject,
-	Input,
-	Output,
-	EventEmitter,
-} from 'ng-metadata/core';
+import { Component, Inject, Input, Output, EventEmitter } from 'ng-metadata/core';
 import * as template from '!html-loader!./dev-stage-selector.html';
 
 import { FormDashboardGameDevStageSelectorConfirm } from './confirm-service';
@@ -37,17 +31,12 @@ export class DevStageSelectorComponent {
 			return;
 		}
 
-		this.confirm
-			.show(this.game, stage)
-			.then(() => this.game.$setDevStage(stage))
-			.then(() => {
-				Growls.success(
-					this.gettextCatalog.getString(
-						`Your game's development stage has been changed!`
-					),
-					this.gettextCatalog.getString('Stage Changed')
-				);
-			});
+		this.confirm.show(this.game, stage).then(() => this.game.$setDevStage(stage)).then(() => {
+			Growls.success(
+				this.gettextCatalog.getString(`Your game's development stage has been changed!`),
+				this.gettextCatalog.getString('Stage Changed')
+			);
+		});
 	}
 
 	isEnabled(stage: number) {
@@ -56,8 +45,7 @@ export class DevStageSelectorComponent {
 		}
 
 		if (
-			(stage === Game.DEVELOPMENT_STATUS_WIP ||
-				stage === Game.DEVELOPMENT_STATUS_FINISHED) &&
+			(stage === Game.DEVELOPMENT_STATUS_WIP || stage === Game.DEVELOPMENT_STATUS_FINISHED) &&
 			!this.game.has_active_builds
 		) {
 			return false;

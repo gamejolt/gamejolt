@@ -31,9 +31,7 @@ import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
 		AppModals,
 		AppLoadingBar,
 		AppShellChat: () => import('./chat/chat').then(m => m.AppShellChat),
-		AppShellClient: GJ_IS_CLIENT
-			? require('./client/client').AppShellClient
-			: undefined,
+		AppShellClient: GJ_IS_CLIENT ? require('./client/client').AppShellClient : undefined,
 	},
 })
 export class AppShell extends Vue {

@@ -4,11 +4,7 @@ import * as View from '!view!./placeholder.html?style=./placeholder.styl';
 
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
-import {
-	GameGridRowSizeSm,
-	GameGridRowSizeMd,
-	GameGridRowSizeLg,
-} from '../grid';
+import { GameGridRowSizeSm, GameGridRowSizeMd, GameGridRowSizeLg } from '../grid';
 import { AppGameThumbnailPlaceholder } from '../../thumbnail/placeholder/placeholder';
 
 @View

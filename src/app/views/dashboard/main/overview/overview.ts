@@ -106,17 +106,13 @@ export default class RouteDashMainOverview extends Vue {
 	routed() {
 		// Keep them undefined if not on the payload.
 		// This will ensure that if they aren't an account with revenue, it won't show the revenue widget.
-		if (
-			this.$payload.revenueTotal !== undefined &&
-			this.$payload.revenueTotal !== null
-		) {
+		if (this.$payload.revenueTotal !== undefined && this.$payload.revenueTotal !== null) {
 			this.revenueTotal = this.$payload.revenueTotal || 0;
 			this.revenueWithdrawn = this.$payload.revenueWithdrawn || 0;
 			this.revenueSpent = this.$payload.revenueSpent || 0;
 			this.revenueCurrent = this.$payload.revenueCurrent || 0;
 			this.revenuePendingWithdraw = this.$payload.revenuePendingWithdraw || 0;
-			this.revenuePendingActivation =
-				this.$payload.revenuePendingActivation || 0;
+			this.revenuePendingActivation = this.$payload.revenuePendingActivation || 0;
 			this.walletBalance = this.$payload.walletBalance || 0;
 		}
 
@@ -128,9 +124,7 @@ export default class RouteDashMainOverview extends Vue {
 
 		this.jams = Jam.populate(this.$payload.jams);
 
-		this.activityNotifications = Notification.populate(
-			this.$payload.activityNotifications
-		);
+		this.activityNotifications = Notification.populate(this.$payload.activityNotifications);
 		this.latestBroadcast = this.$payload.latestBroadcast
 			? new FiresidePost(this.$payload.latestBroadcast)
 			: null;

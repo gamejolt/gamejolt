@@ -34,10 +34,8 @@ export default class RouteDashGamesManageDevlog extends Vue {
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
-			'/web/dash/developer/games/devlog/posts/' +
-				route.params.id +
-				'/' +
-				route.params.tab || 'active'
+			'/web/dash/developer/games/devlog/posts/' + route.params.id + '/' + route.params.tab ||
+				'active'
 		);
 	}
 
@@ -46,14 +44,10 @@ export default class RouteDashGamesManageDevlog extends Vue {
 	}
 
 	routed() {
-		this.feed = ActivityFeedService.bootstrap(
-			FiresidePost.populate(this.$payload.posts),
-			{
-				type: 'Fireside_Post',
-				url: `/web/dash/developer/games/devlog/posts/${this.game.id}/${this
-					._tab}`,
-			}
-		)!;
+		this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.posts), {
+			type: 'Fireside_Post',
+			url: `/web/dash/developer/games/devlog/posts/${this.game.id}/${this._tab}`,
+		})!;
 	}
 
 	onPostAdded(post: FiresidePost) {

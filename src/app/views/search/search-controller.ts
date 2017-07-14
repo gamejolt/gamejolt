@@ -10,10 +10,7 @@ export class SearchCtrl {
 	noResults = false;
 	payload: any = undefined;
 
-	constructor(
-		@Inject('$state') private $state: StateService,
-		@Inject('$scope') $scope: ng.IScope
-	) {
+	constructor(@Inject('$state') private $state: StateService, @Inject('$scope') $scope: ng.IScope) {
 		$scope['Search'] = Search;
 
 		// We store our own version of the search query and sync back to it on form submission.

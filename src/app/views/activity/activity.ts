@@ -46,27 +46,21 @@ export default class RouteActivity extends Vue {
 			Meta.title = this.$gettext('Your Activity Feed');
 
 			if (!this.feed || this.feed.feedType !== 'Fireside_Post') {
-				this.feed = ActivityFeedService.bootstrap(
-					FiresidePost.populate(this.$payload.items),
-					{
-						type: 'Fireside_Post',
-						url: `/web/dash/activity/more/${this.tab}`,
-						notificationWatermark: this.$payload.unreadWatermark,
-					}
-				);
+				this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.items), {
+					type: 'Fireside_Post',
+					url: `/web/dash/activity/more/${this.tab}`,
+					notificationWatermark: this.$payload.unreadWatermark,
+				});
 			}
 		} else {
 			Meta.title = this.$gettext('Your Notifications');
 
 			if (!this.feed || this.feed.feedType !== 'Notification') {
-				this.feed = ActivityFeedService.bootstrap(
-					Notification.populate(this.$payload.items),
-					{
-						type: 'Notification',
-						url: `/web/dash/activity/more/${this.tab}`,
-						notificationWatermark: this.$payload.unreadWatermark,
-					}
-				);
+				this.feed = ActivityFeedService.bootstrap(Notification.populate(this.$payload.items), {
+					type: 'Notification',
+					url: `/web/dash/activity/more/${this.tab}`,
+					notificationWatermark: this.$payload.unreadWatermark,
+				});
 			}
 		}
 

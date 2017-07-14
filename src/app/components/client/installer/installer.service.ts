@@ -106,15 +106,9 @@ export class ClientInstaller {
 
 	static async retryInstall(localPackage: LocalDbPackage) {
 		// Reset states.
-		const downloadStates = [
-			LocalDbPackage.DOWNLOADING,
-			LocalDbPackage.DOWNLOAD_FAILED,
-		];
+		const downloadStates = [LocalDbPackage.DOWNLOADING, LocalDbPackage.DOWNLOAD_FAILED];
 
-		const unpackStates = [
-			LocalDbPackage.UNPACKING,
-			LocalDbPackage.UNPACK_FAILED,
-		];
+		const unpackStates = [LocalDbPackage.UNPACKING, LocalDbPackage.UNPACK_FAILED];
 
 		let promise: Promise<void>;
 		if (downloadStates.indexOf(localPackage.install_state || '') !== -1) {
@@ -171,9 +165,7 @@ export class ClientInstaller {
 			}
 
 			const getDownloadUrl = function() {
-				return localPackage
-					.getDownloadUrl()
-					.then(response => response.downloadUrl);
+				return localPackage.getDownloadUrl().then(response => response.downloadUrl);
 			};
 
 			const patchHandle = Patcher.patch(getDownloadUrl, localPackage);
@@ -246,9 +238,7 @@ export class ClientInstaller {
 			console.error(err);
 
 			const action = operation === 'install' ? 'install' : 'update';
-			const title = operation === 'install'
-				? 'Installation Failed'
-				: 'Update Failed';
+			const title = operation === 'install' ? 'Installation Failed' : 'Update Failed';
 			Growls.error(packageTitle + ' failed to ' + action + '.', title);
 
 			if (localPackage.install_state === LocalDbPackage.DOWNLOADING) {
@@ -270,15 +260,10 @@ export class ClientInstaller {
 	}
 
 	private static getPatchHandleIdx(packageId: number) {
-		return this.currentlyPatching.findIndex(
-			value => value.packageId === packageId
-		);
+		return this.currentlyPatching.findIndex(value => value.packageId === packageId);
 	}
 
-	private static startPatching(
-		localPackage: LocalDbPackage,
-		patchHandle: PatchHandle
-	) {
+	private static startPatching(localPackage: LocalDbPackage, patchHandle: PatchHandle) {
 		if (this.getPatchHandleIdx(localPackage.id) === -1) {
 			this.currentlyPatching.push({
 				packageId: localPackage.id,

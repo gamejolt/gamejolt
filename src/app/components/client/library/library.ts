@@ -26,28 +26,18 @@ export type Mutations = {
 };
 
 @VuexModule()
-export class ClientLibraryStore extends VuexStore<
-	ClientLibraryStore,
-	Actions,
-	Mutations
-> {
+export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, Mutations> {
 	packages: LocalDbPackage[] = [];
 	games: LocalDbGame[] = [];
 
 	@VuexAction
 	async loadLocalDb() {
-		const [packages, games] = await Promise.all([
-			db.packages.toArray(),
-			db.games.toArray(),
-		]);
+		const [packages, games] = await Promise.all([db.packages.toArray(), db.games.toArray()]);
 		this.bootstrapLocalDb({ packages, games });
 	}
 
 	@VuexMutation
-	bootstrapLocalDb({
-		packages,
-		games,
-	}: Mutations['client-library/bootstrapLocalDb']) {
+	bootstrapLocalDb({ packages, games }: Mutations['client-library/bootstrapLocalDb']) {
 		this.packages = packages;
 		this.games = games;
 	}

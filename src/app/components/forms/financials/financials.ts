@@ -145,8 +145,7 @@ export interface FinancialsFormModel {
 		currency,
 	},
 })
-export class FormFinancials extends BaseForm<FinancialsFormModel>
-	implements FormOnSubmit {
+export class FormFinancials extends BaseForm<FinancialsFormModel> implements FormOnSubmit {
 	// We will set this to which agreement we should show them depending on
 	// their account type.
 	whichAgreement: 'developer' | 'partner' = null as any;
@@ -177,9 +176,7 @@ export class FormFinancials extends BaseForm<FinancialsFormModel>
 	onLoaded(payload: any) {
 		console.log('Payload: ');
 		console.log(payload);
-		this.account = payload.account
-			? new UserStripeManagedAccount(payload.account)
-			: null;
+		this.account = payload.account ? new UserStripeManagedAccount(payload.account) : null;
 		this.user = new User(payload.user);
 		this.partner = payload.partner ? new ReferralEntry(payload.partner) : null;
 
@@ -222,10 +219,7 @@ export class FormFinancials extends BaseForm<FinancialsFormModel>
 
 	async onSubmit() {
 		try {
-			const response = await Api.sendRequest(
-				'/web/dash/financials/save',
-				this.formModel
-			);
+			const response = await Api.sendRequest('/web/dash/financials/save', this.formModel);
 			if (response.success !== false) {
 				this.refreshFields(response);
 			}
@@ -239,13 +233,9 @@ export class FormFinancials extends BaseForm<FinancialsFormModel>
 
 	async linkPayPal() {
 		try {
-			const response = await Api.sendRequest(
-				'/web/dash/financials/get-paypal-auth',
-				null,
-				{
-					detach: true,
-				}
-			);
+			const response = await Api.sendRequest('/web/dash/financials/get-paypal-auth', null, {
+				detach: true,
+			});
 
 			if (!response || !response.authUrl) {
 				throw new Error(`Response does not have an 'authUrl' field`);

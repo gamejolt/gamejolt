@@ -33,8 +33,7 @@ export default class RouteProfileVideos extends Vue {
 	}
 
 	routed() {
-		Meta.title = `Videos from ${this.user.display_name} (@${this.user
-			.username})`;
+		Meta.title = `Videos from ${this.user.display_name} (@${this.user.username})`;
 
 		this.videos = CommentVideo.populate(this.$payload.videos);
 	}

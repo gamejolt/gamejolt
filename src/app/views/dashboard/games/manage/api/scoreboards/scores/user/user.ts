@@ -50,14 +50,11 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends Vue {
 		this.scoreTable = new GameScoreTable(this.$payload.scoreTable);
 		this.scores = UserGameScore.populate(this.$payload.scores);
 
-		Meta.title = this.$gettextInterpolate(
-			'View Scores for %{ user } on %{ table } - %{ game }',
-			{
-				game: this.game.title,
-				user: this.user.display_name,
-				table: this.scoreTable.name,
-			}
-		);
+		Meta.title = this.$gettextInterpolate('View Scores for %{ user } on %{ table } - %{ game }', {
+			game: this.game.title,
+			user: this.user.display_name,
+			table: this.scoreTable.name,
+		});
 	}
 
 	onScoreRemoved(score: UserGameScore) {
@@ -79,9 +76,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends Vue {
 		await this.scoreTable.$removeAllUserScores(this.user.id);
 
 		Growls.success(
-			this.$gettext(
-				`All of the user's scores have been removed from the scoreboard.`
-			),
+			this.$gettext(`All of the user's scores have been removed from the scoreboard.`),
 			this.$gettext(`Scores Removed`)
 		);
 

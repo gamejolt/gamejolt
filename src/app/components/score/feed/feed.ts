@@ -79,10 +79,7 @@ export class AppScoreFeed extends Vue {
 				for (const score of message.scores) {
 					const scoreDate = new Date(score.time);
 
-					if (
-						!latestScoreDate ||
-						scoreDate.getTime() > latestScoreDate.getTime()
-					) {
+					if (!latestScoreDate || scoreDate.getTime() > latestScoreDate.getTime()) {
 						this.latestScore = score;
 
 						this.processScore(score);

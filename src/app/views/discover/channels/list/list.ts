@@ -25,8 +25,7 @@ export default class RouteDiscoverChannelsList extends Vue {
 
 	routeInit() {
 		Meta.title = this.$gettext('Top Channels');
-		Meta.description =
-			'Find and discover indie games around specific interests.';
+		Meta.description = 'Find and discover indie games around specific interests.';
 	}
 
 	routed() {

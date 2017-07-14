@@ -285,9 +285,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexAction
 	async removeGame() {
-		const result = await ModalConfirm.show(
-			Translate.$gettext('dash.games.remove_confirmation')
-		);
+		const result = await ModalConfirm.show(Translate.$gettext('dash.games.remove_confirmation'));
 		if (!result) {
 			return;
 		}

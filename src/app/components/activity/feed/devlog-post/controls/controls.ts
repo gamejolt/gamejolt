@@ -71,9 +71,7 @@ export class AppActivityFeedDevlogPostControls extends Vue {
 	FiresidePost = FiresidePost;
 
 	get sharePopoverId() {
-		return `activity-feed-devlog-post-share-${this.inModal
-			? 'modal'
-			: 'no-modal'}-${this.post.id}`;
+		return `activity-feed-devlog-post-share-${this.inModal ? 'modal' : 'no-modal'}-${this.post.id}`;
 	}
 
 	get shareUrl() {
@@ -140,9 +138,7 @@ export class AppActivityFeedDevlogPostControls extends Vue {
 
 	async showEdit() {
 		// Dynamic import since it loads so much form stuff.
-		const module = await import(
-			'../../../../devlog/post/edit-modal/edit-modal-service'
-		);
+		const module = await import('../../../../devlog/post/edit-modal/edit-modal-service');
 		const post = await module.DevlogPostEditModal.show(this.post);
 		if (post) {
 			this.$emit('edited');

@@ -41,9 +41,7 @@ export default class RouteDiscoverGamesViewDevlogView extends Vue {
 	@RouteResolve({ lazy: true, cache: true })
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		const postHash = FiresidePost.pullHashFromUrl(route.params.postSlug);
-		return Api.sendRequest(
-			'/web/discover/games/devlog/' + route.params.id + '/' + postHash
-		);
+		return Api.sendRequest('/web/discover/games/devlog/' + route.params.id + '/' + postHash);
 	}
 
 	routeInit() {

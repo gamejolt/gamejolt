@@ -28,11 +28,7 @@ import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popo
 import { AppGameCollectionFollowWidget } from '../../../components/game/collection/follow-widget/follow-widget';
 import { store, Store } from '../../../store/index';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import {
-	LibraryAction,
-	LibraryStore,
-	LibraryState,
-} from '../../../store/library';
+import { LibraryAction, LibraryStore, LibraryState } from '../../../store/library';
 
 @View
 @Component({
@@ -128,24 +124,16 @@ export default class RouteLibraryCollection extends Vue {
 
 		if (!this.collection) {
 			this.collection = new GameCollection(this.$payload.collection);
-			this.playlist = this.$payload.playlist
-				? new GamePlaylist(this.$payload.playlist)
-				: null;
+			this.playlist = this.$payload.playlist ? new GamePlaylist(this.$payload.playlist) : null;
 		} else {
 			this.playlist = this.collection.playlist || null;
 		}
 
 		this.followerCount = this.$payload.followerCount || 0;
-		this.bundle = this.$payload.bundle
-			? new GameBundle(this.$payload.bundle)
-			: null;
+		this.bundle = this.$payload.bundle ? new GameBundle(this.$payload.bundle) : null;
 
 		this.user = null;
-		if (
-			this.type === 'followed' ||
-			this.type === 'owned' ||
-			this.type === 'recommended'
-		) {
+		if (this.type === 'followed' || this.type === 'owned' || this.type === 'recommended') {
 			this.user = new User(this.$payload.user);
 		} else if (this.type === 'developer') {
 			this.user = new User(this.$payload.developer);
@@ -172,10 +160,7 @@ export default class RouteLibraryCollection extends Vue {
 				if (this.collection!.isOwner) {
 					Meta.title = this.$gettextInterpolate('Your Followed Games', params);
 				} else {
-					Meta.title = this.$gettextInterpolate(
-						'Games Followed by %{ user }',
-						params
-					);
+					Meta.title = this.$gettextInterpolate('Games Followed by %{ user }', params);
 				}
 			} else if (this.type === 'playlist') {
 				const params = {
@@ -185,10 +170,7 @@ export default class RouteLibraryCollection extends Vue {
 				if (this.collection!.isOwner) {
 					Meta.title = this.playlist!.name;
 				} else {
-					Meta.title = this.$gettextInterpolate(
-						'%{ playlist } by %{ user }',
-						params
-					);
+					Meta.title = this.$gettextInterpolate('%{ playlist } by %{ user }', params);
 				}
 			} else if (this.type === 'developer') {
 				const params = { user: '@' + this.user!.username };
@@ -202,20 +184,14 @@ export default class RouteLibraryCollection extends Vue {
 				if (this.collection!.isOwner) {
 					Meta.title = this.$gettext('Your Owned Games');
 				} else {
-					Meta.title = this.$gettextInterpolate(
-						'Games Owned by %{ user }',
-						params
-					);
+					Meta.title = this.$gettextInterpolate('Games Owned by %{ user }', params);
 				}
 			} else if (this.type === 'recommended') {
 				const params = { user: '@' + this.user!.username };
 				if (this.collection!.isOwner) {
 					Meta.title = this.$gettext('Your Recommended Games');
 				} else {
-					Meta.title = this.$gettextInterpolate(
-						'Game Recommendations for %{ user }',
-						params
-					);
+					Meta.title = this.$gettextInterpolate('Game Recommendations for %{ user }', params);
 				}
 			} else if (this.type === 'bundle') {
 				Meta.title = this.bundle!.title;
@@ -263,9 +239,7 @@ export default class RouteLibraryCollection extends Vue {
 
 	async removeFromPlaylist(game: Game) {
 		const playlist = this.collection!.playlist!;
-		if (
-			await this.removeGameFromPlaylist({ playlist, game, shouldConfirm: true })
-		) {
+		if (await this.removeGameFromPlaylist({ playlist, game, shouldConfirm: true })) {
 			this.listing!.removeGame(game);
 		}
 	}

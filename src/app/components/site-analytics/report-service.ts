@@ -114,11 +114,9 @@ export class SiteAnalyticsReport {
 				component.total = response.total;
 
 				if (component.type === 'sum' || component.type === 'average') {
-					component.hasData =
-						typeof component.data !== 'undefined' && component.data !== null;
+					component.hasData = typeof component.data !== 'undefined' && component.data !== null;
 				} else {
-					component.hasData =
-						component.data && Object.keys(component.data).length > 0;
+					component.hasData = component.data && Object.keys(component.data).length > 0;
 				}
 			});
 		});
@@ -179,11 +177,7 @@ export class SiteAnalyticsReport {
 		);
 	}
 
-	private processComponentResponse(
-		component: ReportComponent,
-		_response: any,
-		gathers?: any
-	) {
+	private processComponentResponse(component: ReportComponent, _response: any, gathers?: any) {
 		const field = component.field,
 			analyzer = component.type,
 			displayField = component.displayField;
@@ -283,9 +277,7 @@ export class SiteAnalyticsReport {
 				for (let i = 0; i < Math.min(response.result.length, 3); i++) {
 					const dataEntry = response.result[i];
 					graph.push({
-						label: typeof dataEntry.label === 'object'
-							? dataEntry.label.value
-							: dataEntry.label,
+						label: typeof dataEntry.label === 'object' ? dataEntry.label.value : dataEntry.label,
 						value: dataEntry.value,
 					});
 				}

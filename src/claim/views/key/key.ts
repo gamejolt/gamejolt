@@ -31,11 +31,7 @@ export default class RouteKey extends Vue {
 	type = '';
 
 	get loginUrl() {
-		return (
-			Environment.authBaseUrl +
-			'/login?redirect=' +
-			encodeURIComponent(this.$route.fullPath)
-		);
+		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
 	}
 
 	get component() {
@@ -86,18 +82,12 @@ export default class RouteKey extends Vue {
 
 			if (resource instanceof GameBundle) {
 				window.location.href =
-					Environment.wttfBaseUrl +
-					`/library/bundle/${resource.slug}/${resource.id}/games`;
+					Environment.wttfBaseUrl + `/library/bundle/${resource.slug}/${resource.id}/games`;
 			} else if (resource instanceof Game) {
-				window.location.href =
-					Environment.wttfBaseUrl + `/profile/${user.slug}/${user.id}/owned`;
+				window.location.href = Environment.wttfBaseUrl + `/profile/${user.slug}/${user.id}/owned`;
 			}
 		} catch (_e) {
-			Growls.error(
-				this.$gettext(
-					`For some reason we couldn't claim this into your account!`
-				)
-			);
+			Growls.error(this.$gettext(`For some reason we couldn't claim this into your account!`));
 		}
 	}
 }

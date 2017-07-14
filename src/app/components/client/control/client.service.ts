@@ -20,9 +20,7 @@ export class ClientControl {
 		// If they try to open the app again we should get a second 'open' event.
 		// We should force it into view.
 		app.on('open', () => {
-			console.info(
-				'They tried opening the Client again. Force showing the window.'
-			);
+			console.info('They tried opening the Client again. Force showing the window.');
 			this.show();
 		});
 

@@ -17,9 +17,7 @@ export default class RouteAuthLinkedAccountTwitterFinalize extends Vue {
 	@Prop(String) state: string;
 
 	created() {
-		Meta.title = this.$gettext(
-			'auth.linked_account.twitter.finalize.page_title'
-		);
+		Meta.title = this.$gettext('auth.linked_account.twitter.finalize.page_title');
 	}
 
 	onSubmitted() {

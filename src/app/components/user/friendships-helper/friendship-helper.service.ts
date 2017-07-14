@@ -32,10 +32,9 @@ export class UserFriendshipHelper {
 			await request.$accept();
 
 			Growls.success(
-				Translate.$gettextInterpolate(
-					`You are now friends with @%{ username }!`,
-					{ username: request.user.username }
-				),
+				Translate.$gettextInterpolate(`You are now friends with @%{ username }!`, {
+					username: request.user.username,
+				}),
 				Translate.$gettext(`Request Accepted`)
 			);
 		} catch (e) {
@@ -46,10 +45,9 @@ export class UserFriendshipHelper {
 
 	static async cancelRequest(request: UserFriendship) {
 		const confirmResult = await ModalConfirm.show(
-			Translate.$gettextInterpolate(
-				`Cancel the friend request you sent to @%{ username }?`,
-				{ username: request.target_user.username }
-			),
+			Translate.$gettextInterpolate(`Cancel the friend request you sent to @%{ username }?`, {
+				username: request.target_user.username,
+			}),
 			undefined,
 			'yes'
 		);
@@ -62,10 +60,9 @@ export class UserFriendshipHelper {
 			const response = await request.$remove();
 
 			Growls.success(
-				Translate.$gettextInterpolate(
-					`Your friend request to @%{ username } was canceled.`,
-					{ username: request.target_user.username }
-				),
+				Translate.$gettextInterpolate(`Your friend request to @%{ username } was canceled.`, {
+					username: request.target_user.username,
+				}),
 				Translate.$gettext(`Request Canceled`)
 			);
 
@@ -78,10 +75,9 @@ export class UserFriendshipHelper {
 
 	static async rejectRequest(request: UserFriendship) {
 		const confirmResult = await ModalConfirm.show(
-			Translate.$gettextInterpolate(
-				`Dismiss the friend request from @%{ username }?`,
-				{ username: request.user.username }
-			),
+			Translate.$gettextInterpolate(`Dismiss the friend request from @%{ username }?`, {
+				username: request.user.username,
+			}),
 			undefined,
 			'yes'
 		);
@@ -127,10 +123,9 @@ export class UserFriendshipHelper {
 			const response = await friendship.$remove();
 
 			Growls.success(
-				Translate.$gettextInterpolate(
-					`@%{ username } is no longer your friend.`,
-					{ username: them.username }
-				),
+				Translate.$gettextInterpolate(`@%{ username } is no longer your friend.`, {
+					username: them.username,
+				}),
 				Translate.$gettext('Friend Removed')
 			);
 

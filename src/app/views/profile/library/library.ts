@@ -33,13 +33,9 @@ export default class RouteProfileLibrary extends Vue {
 
 		this.collections = GameCollection.populate(this.$payload.collections);
 
-		const followedCollection = new GameCollection(
-			this.$payload.followedCollection
-		);
+		const followedCollection = new GameCollection(this.$payload.followedCollection);
 		const ownedCollection = new GameCollection(this.$payload.ownedCollection);
-		const recommendedCollection = new GameCollection(
-			this.$payload.recommendedCollection
-		);
+		const recommendedCollection = new GameCollection(this.$payload.recommendedCollection);
 
 		const developerCollection = this.$payload.developerCollection
 			? new GameCollection(this.$payload.developerCollection)

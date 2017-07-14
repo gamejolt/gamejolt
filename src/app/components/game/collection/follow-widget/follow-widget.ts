@@ -8,11 +8,7 @@ import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analy
 import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { GameCollection } from '../collection.model';
-import {
-	LibraryState,
-	LibraryStore,
-	LibraryAction,
-} from '../../../../store/library';
+import { LibraryState, LibraryStore, LibraryAction } from '../../../../store/library';
 
 @View
 @Component({
@@ -39,9 +35,7 @@ export class AppGameCollectionFollowWidget extends Vue {
 	get isFollowing() {
 		return (
 			this.collections.findIndex(
-				item =>
-					item.type === this.collection.type &&
-					(item as any).id === this.collection.id
+				item => item.type === this.collection.type && (item as any).id === this.collection.id
 			) !== -1
 		);
 	}

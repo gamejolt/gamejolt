@@ -41,17 +41,12 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends Vue {
 		this.scoreTable = new GameScoreTable(this.$payload.scoreTable);
 		this.scores = UserGameScore.populate(this.$payload.scores);
 
-		this.selectedTable = this.scoreTables.find(
-			i => i.id === this.scoreTable.id
-		)!.id;
+		this.selectedTable = this.scoreTables.find(i => i.id === this.scoreTable.id)!.id;
 
-		Meta.title = this.$gettextInterpolate(
-			`View Scores for %{ table } - %{ game }`,
-			{
-				game: this.game.title,
-				table: this.scoreTable.name,
-			}
-		);
+		Meta.title = this.$gettextInterpolate(`View Scores for %{ table } - %{ game }`, {
+			game: this.game.title,
+			table: this.scoreTable.name,
+		});
 	}
 
 	changeTable() {

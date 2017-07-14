@@ -54,12 +54,7 @@ export default class RouteCheckout extends Vue {
 		// We will always go back to game page in those cases.
 		// For non-users on site they may have to go to a key page.
 		if (GJ_IS_CLIENT) {
-			redirect =
-				Environment.wttfBaseUrl +
-				'/games/' +
-				this.game.slug +
-				'/' +
-				this.game.id;
+			redirect = Environment.wttfBaseUrl + '/games/' + this.game.slug + '/' + this.game.id;
 		} else {
 			redirect = response.redirectUrl;
 		}

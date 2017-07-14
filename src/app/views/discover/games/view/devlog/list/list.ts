@@ -50,13 +50,10 @@ export default class RouteDiscoverGamesViewDevlogList extends Vue {
 			.title} on Game Jolt`;
 
 		if (!this.feed) {
-			this.feed = ActivityFeedService.bootstrap(
-				FiresidePost.populate(this.$payload.posts),
-				{
-					type: 'Fireside_Post',
-					url: `/web/discover/games/devlog/posts/${this.game.id}`,
-				}
-			);
+			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.posts), {
+				type: 'Fireside_Post',
+				url: `/web/discover/games/devlog/posts/${this.game.id}`,
+			});
 		}
 	}
 }

@@ -14,10 +14,7 @@ export default class RouteAuthLinkedAccountTwitterCallback extends Vue {
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		const { oauth_verifier, state } = route.query;
 		return Api.sendRequest(
-			'/web/auth/twitter/callback?oauth_verifier=' +
-				oauth_verifier +
-				'&state=' +
-				state,
+			'/web/auth/twitter/callback?oauth_verifier=' + oauth_verifier + '&state=' + state,
 			{}
 		);
 	}
@@ -35,9 +32,7 @@ export default class RouteAuthLinkedAccountTwitterCallback extends Vue {
 			} else {
 				Growls.error({
 					sticky: true,
-					title: this.$gettext(
-						'auth.linked_account.twitter.failed_growl_title'
-					),
+					title: this.$gettext('auth.linked_account.twitter.failed_growl_title'),
 					message: this.$gettext('auth.linked_account.twitter.failed_growl'),
 				});
 				this.$router.push({ name: 'auth.join' });

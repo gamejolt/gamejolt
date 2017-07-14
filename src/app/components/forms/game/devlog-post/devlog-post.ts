@@ -31,8 +31,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppFocusWhen,
 	},
 })
-export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
-	implements FormOnInit {
+export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel> implements FormOnInit {
 	modelClass = FiresidePost as any;
 
 	$refs: {
@@ -55,10 +54,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 		if (model.type === FiresidePost.TYPE_VIDEO) {
 			if (model.videos.length) {
-				this.setField(
-					'video_url',
-					'https://www.youtube.com/watch?v=' + model.videos[0].video_id
-				);
+				this.setField('video_url', 'https://www.youtube.com/watch?v=' + model.videos[0].video_id);
 			}
 		} else if (model.type === FiresidePost.TYPE_SKETCHFAB) {
 			if (model.sketchfabs.length) {

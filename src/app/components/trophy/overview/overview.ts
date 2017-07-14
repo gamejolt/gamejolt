@@ -99,8 +99,7 @@ export class AppTrophyOverview extends Vue {
 
 	private processPayload(payload: any) {
 		this.trophies = GameTrophy.populate(payload.trophies);
-		this.showInvisibleTrophyMessage =
-			payload.trophiesShowInvisibleTrophyMessage || false;
+		this.showInvisibleTrophyMessage = payload.trophiesShowInvisibleTrophyMessage || false;
 		this.experience = payload.trophiesExperienceAchieved || 0;
 
 		this.achieved = payload.trophiesAchieved

@@ -7,10 +7,7 @@ import {
 	FormOnInit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import {
-	Geo,
-	Region,
-} from '../../../../lib/gj-lib-client/components/geo/geo.service';
+import { Geo, Region } from '../../../../lib/gj-lib-client/components/geo/geo.service';
 import { Order } from '../../../../lib/gj-lib-client/components/order/order.model';
 import { FormOnSubmit } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
@@ -36,8 +33,7 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 		currency,
 	},
 })
-export class FormPayment extends BaseForm<any>
-	implements FormOnInit, FormOnSubmit {
+export class FormPayment extends BaseForm<any> implements FormOnInit, FormOnSubmit {
 	@State app: AppStore;
 
 	@Prop(Array) cards: any[];
@@ -123,9 +119,7 @@ export class FormPayment extends BaseForm<any>
 	private async getTax() {
 		let address: any = {};
 		if (this.formModel.selectedCard !== 0) {
-			const card: any = this.cards.find(
-				i => i.id === this.formModel.selectedCard
-			);
+			const card: any = this.cards.find(i => i.id === this.formModel.selectedCard);
 			if (!card) {
 				return;
 			}
@@ -176,9 +170,7 @@ export class FormPayment extends BaseForm<any>
 				address_zip: this.formModel.postcode,
 			};
 
-			const response = await new Promise<
-				StripeCardTokenResponse
-			>((resolve, reject) => {
+			const response = await new Promise<StripeCardTokenResponse>((resolve, reject) => {
 				window.Stripe.card.createToken(formData, (_status, stripeResponse) => {
 					if (stripeResponse.error) {
 						this.stripeError = stripeResponse.error.message;

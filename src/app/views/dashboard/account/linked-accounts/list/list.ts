@@ -74,10 +74,7 @@ import { arrayRemove } from '../../../../../../lib/gj-lib-client/utils/array';
 import { UserSetPasswordModal } from '../../../../../components/user/set-password-modal/set-password-modal.service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import {
-	AppState,
-	AppStore,
-} from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import {
 	UserLinkedAccounts,
 	Provider,
@@ -142,9 +139,7 @@ export default class RouteDashAccountLinkedAccountsList extends Vue {
 				}
 
 				Growls.success(
-					this.$gettext(
-						'Your new password has been set. You can now log in with it.'
-					),
+					this.$gettext('Your new password has been set. You can now log in with it.'),
 					this.$gettext('Password Set')
 				);
 

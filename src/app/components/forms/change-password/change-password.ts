@@ -10,8 +10,7 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 
 @View
 @Component({})
-export class FormChangePassword extends BaseForm<any>
-	implements FormOnInit, FormOnSubmit {
+export class FormChangePassword extends BaseForm<any> implements FormOnInit, FormOnSubmit {
 	onInit() {
 		this.setField('old_password', '');
 		this.setField('password', '');

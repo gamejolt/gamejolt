@@ -75,46 +75,18 @@ export type Mutations = {
 	'clientLibrary/setPackageInstalled': LocalDbPackage;
 	'clientLibrary/setPackageUpdated': LocalDbPackage;
 	'clientLibrary/setPackageUninstalling': LocalDbPackage;
-	'clientLibrary/setPackageInstallState': [
-		LocalDbPackage,
-		LocalDbPackage['install_state']
-	];
-	'clientLibrary/setPackageUpdateState': [
-		LocalDbPackage,
-		LocalDbPackage['update_state']
-	];
-	'clientLibrary/setPackageRemoveState': [
-		LocalDbPackage,
-		LocalDbPackage['remove_state']
-	];
-	'clientLibrary/setPackageInstallDir': [
-		LocalDbPackage,
-		LocalDbPackage['install_dir']
-	];
-	'clientLibrary/setPackagePatchQueued': [
-		LocalDbPackage,
-		LocalDbPackage['patch_queued']
-	];
-	'clientLibrary/setPackagePatchPaused': [
-		LocalDbPackage,
-		LocalDbPackage['patch_paused']
-	];
-	'clientLibrary/setPackageDownloadProgress': [
-		LocalDbPackage,
-		LocalDbPackage['download_progress']
-	];
-	'clientLibrary/setPackageUnpackProgress': [
-		LocalDbPackage,
-		LocalDbPackage['unpack_progress']
-	];
+	'clientLibrary/setPackageInstallState': [LocalDbPackage, LocalDbPackage['install_state']];
+	'clientLibrary/setPackageUpdateState': [LocalDbPackage, LocalDbPackage['update_state']];
+	'clientLibrary/setPackageRemoveState': [LocalDbPackage, LocalDbPackage['remove_state']];
+	'clientLibrary/setPackageInstallDir': [LocalDbPackage, LocalDbPackage['install_dir']];
+	'clientLibrary/setPackagePatchQueued': [LocalDbPackage, LocalDbPackage['patch_queued']];
+	'clientLibrary/setPackagePatchPaused': [LocalDbPackage, LocalDbPackage['patch_paused']];
+	'clientLibrary/setPackageDownloadProgress': [LocalDbPackage, LocalDbPackage['download_progress']];
+	'clientLibrary/setPackageUnpackProgress': [LocalDbPackage, LocalDbPackage['unpack_progress']];
 };
 
 @VuexModule()
-export class ClientLibraryStore extends VuexStore<
-	ClientLibraryStore,
-	Actions,
-	Mutations
-> {
+export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, Mutations> {
 	packages: LocalDbPackage[] = [];
 	games: LocalDbGame[] = [];
 
@@ -151,10 +123,7 @@ export class ClientLibraryStore extends VuexStore<
 	}
 
 	@VuexMutation
-	private _bootstrap({
-		packages,
-		games,
-	}: Mutations['clientLibrary/_bootstrap']) {
+	private _bootstrap({ packages, games }: Mutations['clientLibrary/_bootstrap']) {
 		this.packages = packages;
 		this.games = games;
 	}
@@ -234,19 +203,11 @@ export class ClientLibraryStore extends VuexStore<
 	}
 
 	@VuexAction
-	async retryInstallPackage(
-		localPackage: Actions['clientLibrary/retryInstallPackage']
-	) {
+	async retryInstallPackage(localPackage: Actions['clientLibrary/retryInstallPackage']) {
 		// Reset states.
-		const downloadStates = [
-			LocalDbPackage.DOWNLOADING,
-			LocalDbPackage.DOWNLOAD_FAILED,
-		];
+		const downloadStates = [LocalDbPackage.DOWNLOADING, LocalDbPackage.DOWNLOAD_FAILED];
 
-		const unpackStates = [
-			LocalDbPackage.UNPACKING,
-			LocalDbPackage.UNPACK_FAILED,
-		];
+		const unpackStates = [LocalDbPackage.UNPACKING, LocalDbPackage.UNPACK_FAILED];
 
 		let promise: Promise<void>;
 		if (downloadStates.indexOf(localPackage.install_state || '') !== -1) {
@@ -266,16 +227,11 @@ export class ClientLibraryStore extends VuexStore<
 		}
 
 		await promise;
-		return this._installPackage([
-			this.games[localPackage.game_id],
-			localPackage,
-		]);
+		return this._installPackage([this.games[localPackage.game_id], localPackage]);
 	}
 
 	@VuexAction
-	async _installPackage(
-		[localGame, localPackage]: Actions['clientLibrary/_installPackage']
-	) {
+	async _installPackage([localGame, localPackage]: Actions['clientLibrary/_installPackage']) {
 		const operation = localPackage.install_state ? 'install' : 'update';
 		let packageTitle = localPackage.title || localGame.title;
 		if (packageTitle !== localGame.title) {
@@ -311,9 +267,7 @@ export class ClientLibraryStore extends VuexStore<
 			}
 
 			const getDownloadUrl = function() {
-				return localPackage
-					.getDownloadUrl()
-					.then(response => response.downloadUrl);
+				return localPackage.getDownloadUrl().then(response => response.downloadUrl);
 			};
 
 			const patchHandle = Patcher.patch(getDownloadUrl, localPackage);
@@ -321,16 +275,10 @@ export class ClientLibraryStore extends VuexStore<
 			patchHandle
 				.onDownloading(() => {
 					if (localPackage.install_state) {
-						this.setPackageInstallState([
-							localPackage,
-							LocalDbPackage.DOWNLOADING,
-						]);
+						this.setPackageInstallState([localPackage, LocalDbPackage.DOWNLOADING]);
 						db.packages.put(localPackage);
 					} else if (localPackage.update_state) {
-						this.setPackageUpdateState([
-							localPackage,
-							LocalDbPackage.DOWNLOADING,
-						]);
+						this.setPackageUpdateState([localPackage, LocalDbPackage.DOWNLOADING]);
 						db.packages.put(localPackage);
 					}
 				})
@@ -343,16 +291,10 @@ export class ClientLibraryStore extends VuexStore<
 					this.setPackageDownloadProgress([localPackage, null]);
 
 					if (localPackage.install_state) {
-						this.setPackageInstallState([
-							localPackage,
-							LocalDbPackage.UNPACKING,
-						]);
+						this.setPackageInstallState([localPackage, LocalDbPackage.UNPACKING]);
 						db.packages.put(localPackage);
 					} else if (localPackage.update_state) {
-						this.setPackageUpdateState([
-							localPackage,
-							LocalDbPackage.UNPACKING,
-						]);
+						this.setPackageUpdateState([localPackage, LocalDbPackage.UNPACKING]);
 						db.packages.put(localPackage);
 					}
 				})
@@ -399,34 +341,20 @@ export class ClientLibraryStore extends VuexStore<
 			console.error(err);
 
 			const action = operation === 'install' ? 'install' : 'update';
-			const title = operation === 'install'
-				? 'Installation Failed'
-				: 'Update Failed';
+			const title = operation === 'install' ? 'Installation Failed' : 'Update Failed';
 			Growls.error(packageTitle + ' failed to ' + action + '.', title);
 
 			if (localPackage.install_state === LocalDbPackage.DOWNLOADING) {
-				this.setPackageInstallState([
-					localPackage,
-					LocalDbPackage.DOWNLOAD_FAILED,
-				]);
+				this.setPackageInstallState([localPackage, LocalDbPackage.DOWNLOAD_FAILED]);
 				db.packages.put(localPackage);
 			} else if (localPackage.install_state === LocalDbPackage.UNPACKING) {
-				this.setPackageInstallState([
-					localPackage,
-					LocalDbPackage.UNPACK_FAILED,
-				]);
+				this.setPackageInstallState([localPackage, LocalDbPackage.UNPACK_FAILED]);
 				db.packages.put(localPackage);
 			} else if (localPackage.update_state === LocalDbPackage.DOWNLOADING) {
-				this.setPackageUpdateState([
-					localPackage,
-					LocalDbPackage.DOWNLOAD_FAILED,
-				]);
+				this.setPackageUpdateState([localPackage, LocalDbPackage.DOWNLOAD_FAILED]);
 				db.packages.put(localPackage);
 			} else if (localPackage.update_state === LocalDbPackage.UNPACKING) {
-				this.setPackageUpdateState([
-					localPackage,
-					LocalDbPackage.UNPACK_FAILED,
-				]);
+				this.setPackageUpdateState([localPackage, LocalDbPackage.UNPACK_FAILED]);
 				db.packages.put(localPackage);
 			}
 
@@ -436,9 +364,7 @@ export class ClientLibraryStore extends VuexStore<
 	}
 
 	@VuexMutation
-	setPatchingPackage(
-		[localPackage, patchHandle]: Mutations['clientLibrary/setPatchingPackage']
-	) {
+	setPatchingPackage([localPackage, patchHandle]: Mutations['clientLibrary/setPatchingPackage']) {
 		if (this.currentlyPatching[localPackage.id]) {
 			return;
 		}
@@ -448,9 +374,7 @@ export class ClientLibraryStore extends VuexStore<
 	}
 
 	@VuexMutation
-	unsetPatchingPackage(
-		localPackage: Mutations['clientLibrary/unsetPatchingPackage']
-	) {
+	unsetPatchingPackage(localPackage: Mutations['clientLibrary/unsetPatchingPackage']) {
 		if (!this.currentlyPatching[localPackage.id]) {
 			return;
 		}
@@ -461,10 +385,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexMutation
 	setCurrentlyUninstalling(
-		[
-			localPackage,
-			uninstallPromise,
-		]: Mutations['clientLibrary/setCurrentlyUninstalling']
+		[localPackage, uninstallPromise]: Mutations['clientLibrary/setCurrentlyUninstalling']
 	) {
 		if (this.currentlyUninstalling[localPackage.id]) {
 			return;
@@ -474,9 +395,7 @@ export class ClientLibraryStore extends VuexStore<
 	}
 
 	@VuexMutation
-	unsetCurrentlyUninstalling(
-		localPackage: Mutations['clientLibrary/unsetCurrentlyUninstalling']
-	) {
+	unsetCurrentlyUninstalling(localPackage: Mutations['clientLibrary/unsetCurrentlyUninstalling']) {
 		if (!this.currentlyUninstalling[localPackage.id]) {
 			return;
 		}
@@ -485,9 +404,7 @@ export class ClientLibraryStore extends VuexStore<
 	}
 
 	@VuexMutation
-	pausePatchingPackage(
-		localPackage: Mutations['clientLibrary/pausePatchingPackage']
-	) {
+	pausePatchingPackage(localPackage: Mutations['clientLibrary/pausePatchingPackage']) {
 		const handle = this.currentlyPatching[localPackage.id];
 		if (!handle) {
 			throw new Error('Package is not currently patching.');
@@ -497,9 +414,7 @@ export class ClientLibraryStore extends VuexStore<
 	}
 
 	@VuexMutation
-	resumePatchingPackage(
-		localPackage: Mutations['clientLibrary/resumePatchingPackage']
-	) {
+	resumePatchingPackage(localPackage: Mutations['clientLibrary/resumePatchingPackage']) {
 		const handle = this.currentlyPatching[localPackage.id];
 		if (!handle) {
 			return this.retryInstallPackage(localPackage);
@@ -509,9 +424,7 @@ export class ClientLibraryStore extends VuexStore<
 	}
 
 	@VuexAction
-	cancelPatchingPackage(
-		localPackage: Actions['clientLibrary/cancelPatchingPackage']
-	) {
+	cancelPatchingPackage(localPackage: Actions['clientLibrary/cancelPatchingPackage']) {
 		return new Promise<void>(resolve => {
 			const patchHandle = this.currentlyPatching[localPackage.id];
 			if (!patchHandle) {
@@ -532,13 +445,7 @@ export class ClientLibraryStore extends VuexStore<
 
 	@VuexAction
 	async installPackage(
-		[
-			game,
-			_package,
-			release,
-			build,
-			launchOptions,
-		]: Actions['clientLibrary/installPackage']
+		[game, _package, release, build, launchOptions]: Actions['clientLibrary/installPackage']
 	) {
 		HistoryTick.sendBeacon('game-build', build.id, {
 			sourceResource: 'Game',
@@ -552,28 +459,17 @@ export class ClientLibraryStore extends VuexStore<
 		const localGame = new LocalDbGame();
 		this.setGameData([localGame, game]);
 		const localPackage = new LocalDbPackage();
-		this.setPackageData([
-			localPackage,
-			_package,
-			release,
-			build,
-			launchOptions,
-		]);
+		this.setPackageData([localPackage, _package, release, build, launchOptions]);
 
 		await db.transaction('rw', [db.games, db.packages], () => {
-			return Promise.all([
-				db.games.put(localGame),
-				db.packages.put(localPackage),
-			]);
+			return Promise.all([db.games.put(localGame), db.packages.put(localPackage)]);
 		});
 
 		return this._installPackage([localGame, localPackage]);
 	}
 
 	@VuexAction
-	async updatePackage(
-		[localPackage, newBuildId]: Actions['clientLibrary/updatePackage']
-	) {
+	async updatePackage([localPackage, newBuildId]: Actions['clientLibrary/updatePackage']) {
 		// If this package isn't installed (and at rest), we don't update.
 		// We also don't update if we're currently running the game. Imagine that happening!
 		if (!localPackage.isSettled || localPackage.isRunning) {
@@ -585,11 +481,9 @@ export class ClientLibraryStore extends VuexStore<
 			return false;
 		}
 
-		const response = await Api.sendRequest(
-			'/web/client/get-build-for-update/' + newBuildId,
-			null,
-			{ detach: true }
-		);
+		const response = await Api.sendRequest('/web/client/get-build-for-update/' + newBuildId, null, {
+			detach: true,
+		});
 		if (!response.package) {
 			return false;
 		}
@@ -607,9 +501,7 @@ export class ClientLibraryStore extends VuexStore<
 	}
 
 	@VuexAction
-	async uninstallPackage(
-		localPackage: Actions['clientLibrary/uninstallPackage']
-	) {
+	async uninstallPackage(localPackage: Actions['clientLibrary/uninstallPackage']) {
 		let localGame: LocalDbGame | undefined;
 
 		// We just use this so they don't click "uninstall" twice in a row.
@@ -619,86 +511,72 @@ export class ClientLibraryStore extends VuexStore<
 			return uninstallingPromise;
 		}
 
-		uninstallingPromise = db.transaction(
-			'rw',
-			[db.games, db.packages],
-			async () => {
-				// Are we removing a current install?
-				const wasInstalling = localPackage.isInstalling;
+		uninstallingPromise = db.transaction('rw', [db.games, db.packages], async () => {
+			// Are we removing a current install?
+			const wasInstalling = localPackage.isInstalling;
 
-				try {
-					// Cancel any installs first.
-					// It may or may not be patching.
-					await this.cancelPatchingPackage(localPackage);
+			try {
+				// Cancel any installs first.
+				// It may or may not be patching.
+				await this.cancelPatchingPackage(localPackage);
 
-					// TODO: do we need to refetch from localdb or can we just reference our resource?
-					localGame = await db.games.get(localPackage.game_id);
+				// TODO: do we need to refetch from localdb or can we just reference our resource?
+				localGame = await db.games.get(localPackage.game_id);
 
-					// Make sure we're clean.
-					// TODO: do we need to clean update state?
-					this.setPackageUninstalling(localPackage);
-					await db.packages.put(localPackage);
+				// Make sure we're clean.
+				// TODO: do we need to clean update state?
+				this.setPackageUninstalling(localPackage);
+				await db.packages.put(localPackage);
 
-					// TODO: verify result of uninstallation? Roll back?
-					await this._uninstallPackage(localPackage.id);
+				// TODO: verify result of uninstallation? Roll back?
+				await this._uninstallPackage(localPackage.id);
 
-					// Get the number of packages in this game.
-					const count = await db.packages
-						.where('game_id')
-						.equals(localPackage.game_id)
-						.count();
+				// Get the number of packages in this game.
+				const count = await db.packages.where('game_id').equals(localPackage.game_id).count();
 
-					// Note that some times a game is removed before the package (really weird cases).
-					// We still want the remove to go through, so be sure to skip this situation.
-					// If this is the last package for the game, remove the game since we no longer need it.
-					if (localGame && count <= 1) {
-						await db.games.delete(localGame.id);
-					}
-
-					await db.packages.delete(localPackage.id);
-
-					if (!wasInstalling) {
-						Growls.success(
-							'Removed ' +
-								(localPackage.title ||
-									(localGame ? localGame.title : 'the package')) +
-								' from your computer.',
-							'Package Removed'
-						);
-					}
-				} catch (err) {
-					console.error(err);
-
-					if (wasInstalling) {
-						Growls.error('Could not stop the installation.');
-					} else {
-						Growls.error(
-							'Could not remove ' +
-								(localPackage.title ||
-									(localGame ? localGame.title : 'the package')) +
-								'.',
-							'Remove Failed'
-						);
-					}
-
-					this.setPackageRemoveState([
-						localPackage,
-						LocalDbPackage.REMOVE_FAILED,
-					]);
-					await db.packages.put(localPackage);
-					this.unsetCurrentlyUninstalling(localPackage);
+				// Note that some times a game is removed before the package (really weird cases).
+				// We still want the remove to go through, so be sure to skip this situation.
+				// If this is the last package for the game, remove the game since we no longer need it.
+				if (localGame && count <= 1) {
+					await db.games.delete(localGame.id);
 				}
+
+				await db.packages.delete(localPackage.id);
+
+				if (!wasInstalling) {
+					Growls.success(
+						'Removed ' +
+							(localPackage.title || (localGame ? localGame.title : 'the package')) +
+							' from your computer.',
+						'Package Removed'
+					);
+				}
+			} catch (err) {
+				console.error(err);
+
+				if (wasInstalling) {
+					Growls.error('Could not stop the installation.');
+				} else {
+					Growls.error(
+						'Could not remove ' +
+							(localPackage.title || (localGame ? localGame.title : 'the package')) +
+							'.',
+						'Remove Failed'
+					);
+				}
+
+				this.setPackageRemoveState([localPackage, LocalDbPackage.REMOVE_FAILED]);
+				await db.packages.put(localPackage);
+				this.unsetCurrentlyUninstalling(localPackage);
 			}
-		);
+		});
 
 		this.setCurrentlyUninstalling([localPackage, uninstallingPromise]);
 		return uninstallingPromise;
 	}
 
 	@VuexAction
-	async _uninstallPackage(
-		packageId: Actions['clientLibrary/_uninstallPackage']
-	) {
+	async _uninstallPackage(packageId: Actions['clientLibrary/_uninstallPackage']) {
 		const localPackage = this.packagesById[packageId];
 		if (!localPackage) {
 			throw new Error("Package isn't installed");
@@ -752,20 +630,12 @@ export class ClientLibraryStore extends VuexStore<
 		]: Mutations['clientLibrary/setPackageUpdateData']
 	) {
 		localPackage.update = new LocalDbPackage();
-		_setPackageData(
-			localPackage.update,
-			_package,
-			release,
-			build,
-			launchOptions
-		);
+		_setPackageData(localPackage.update, _package, release, build, launchOptions);
 		localPackage.update_state = LocalDbPackage.PATCH_PENDING;
 	}
 
 	@VuexMutation
-	setPackageInstalled(
-		localPackage: Mutations['clientLibrary/setPackageInstalled']
-	) {
+	setPackageInstalled(localPackage: Mutations['clientLibrary/setPackageInstalled']) {
 		// Remove any stuff only needed while installing.
 		localPackage.install_state = null;
 		localPackage.download_progress = null;
@@ -775,9 +645,7 @@ export class ClientLibraryStore extends VuexStore<
 	}
 
 	@VuexMutation
-	setPackageUpdated(
-		localPackage: Mutations['clientLibrary/setPackageUpdated']
-	) {
+	setPackageUpdated(localPackage: Mutations['clientLibrary/setPackageUpdated']) {
 		// Copy the new package into this one.
 		// this.assign( this.update );
 		// TODO: validate Object.assign is good enough a replacement for model.assign
@@ -793,9 +661,7 @@ export class ClientLibraryStore extends VuexStore<
 	}
 
 	@VuexMutation
-	setPackageUninstalling(
-		localPackage: Mutations['clientLibrary/setPackageUninstalling']
-	) {
+	setPackageUninstalling(localPackage: Mutations['clientLibrary/setPackageUninstalling']) {
 		// TODO: do we need to clean update state?
 		localPackage.install_state = null;
 		localPackage.download_progress = null;
@@ -806,63 +672,45 @@ export class ClientLibraryStore extends VuexStore<
 	}
 
 	@VuexMutation
-	setPackageInstallState(
-		[localPackage, state]: Mutations['clientLibrary/setPackageInstallState']
-	) {
+	setPackageInstallState([localPackage, state]: Mutations['clientLibrary/setPackageInstallState']) {
 		localPackage.install_state = state;
 	}
 
 	@VuexMutation
-	setPackageUpdateState(
-		[localPackage, state]: Mutations['clientLibrary/setPackageUpdateState']
-	) {
+	setPackageUpdateState([localPackage, state]: Mutations['clientLibrary/setPackageUpdateState']) {
 		localPackage.update_state = state;
 	}
 
 	@VuexMutation
-	setPackageRemoveState(
-		[localPackage, state]: Mutations['clientLibrary/setPackageRemoveState']
-	) {
+	setPackageRemoveState([localPackage, state]: Mutations['clientLibrary/setPackageRemoveState']) {
 		localPackage.remove_state = state;
 	}
 
 	@VuexMutation
-	setPackageInstallDir(
-		[localPackage, dir]: Mutations['clientLibrary/setPackageInstallDir']
-	) {
+	setPackageInstallDir([localPackage, dir]: Mutations['clientLibrary/setPackageInstallDir']) {
 		localPackage.install_dir = dir;
 	}
 
 	@VuexMutation
-	setPackagePatchQueued(
-		[localPackage, queued]: Mutations['clientLibrary/setPackagePatchQueued']
-	) {
+	setPackagePatchQueued([localPackage, queued]: Mutations['clientLibrary/setPackagePatchQueued']) {
 		localPackage.patch_queued = queued;
 	}
 
 	@VuexMutation
-	setPackagePatchPaused(
-		[localPackage, paused]: Mutations['clientLibrary/setPackagePatchPaused']
-	) {
+	setPackagePatchPaused([localPackage, paused]: Mutations['clientLibrary/setPackagePatchPaused']) {
 		localPackage.patch_paused = paused;
 	}
 
 	@VuexMutation
 	setPackageDownloadProgress(
-		[
-			localPackage,
-			progress,
-		]: Mutations['clientLibrary/setPackageDownloadProgress']
+		[localPackage, progress]: Mutations['clientLibrary/setPackageDownloadProgress']
 	) {
 		localPackage.download_progress = progress;
 	}
 
 	@VuexMutation
 	setPackageUnpackProgress(
-		[
-			localPackage,
-			progress,
-		]: Mutations['clientLibrary/setPackageUnpackProgress']
+		[localPackage, progress]: Mutations['clientLibrary/setPackageUnpackProgress']
 	) {
 		localPackage.unpack_progress = progress;
 	}

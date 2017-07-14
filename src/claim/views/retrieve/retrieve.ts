@@ -43,10 +43,7 @@ export default class RouteRetrieve extends Vue {
 	$payload: Payload;
 
 	@RouteResolve()
-	async routeResolve(
-		this: undefined,
-		route: VueRouter.Route
-	): Promise<Payload> {
+	async routeResolve(this: undefined, route: VueRouter.Route): Promise<Payload> {
 		let type: 'game' | 'bundle' | undefined;
 		let key = '';
 
@@ -104,10 +101,9 @@ export default class RouteRetrieve extends Vue {
 
 		Meta.title = this.$gettext(`Retrieve Your Keys`);
 		if (this.resourceTitle) {
-			Meta.title = this.$gettextInterpolate(
-				`Retrieve Your Keys for %{ resource }`,
-				{ resource: this.resourceTitle }
-			);
+			Meta.title = this.$gettextInterpolate(`Retrieve Your Keys for %{ resource }`, {
+				resource: this.resourceTitle,
+			});
 		}
 	}
 

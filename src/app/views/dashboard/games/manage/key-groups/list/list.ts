@@ -42,9 +42,7 @@ export default class RouteDashGamesManageKeyGroupsList extends Vue {
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/key-groups/' + route.params.id
-		);
+		return Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id);
 	}
 
 	routed() {

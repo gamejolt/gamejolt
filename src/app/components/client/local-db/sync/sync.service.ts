@@ -14,10 +14,7 @@ export class LocalDbSync {
 	static async check() {
 		// We will pull our full library and try to see if any of them need to be updated.
 		let games: LocalDbGame[], packages: LocalDbPackage[];
-		[games, packages] = await Promise.all([
-			db.games.toArray(),
-			db.packages.toArray(),
-		]);
+		[games, packages] = await Promise.all([db.games.toArray(), db.packages.toArray()]);
 
 		const builds = packages.map(function(localPackage) {
 			return localPackage.build;
@@ -74,9 +71,7 @@ export class LocalDbSync {
 			return this.updatePackage(data['packageId'], data['newBuildId']);
 		});
 
-		return Promise.all(
-			gamePromises.concat(packagePromises).concat(updateBuildsPromises)
-		);
+		return Promise.all(gamePromises.concat(packagePromises).concat(updateBuildsPromises));
 	}
 
 	static syncGame(id: number, data: any) {
@@ -103,26 +98,15 @@ export class LocalDbSync {
 				}
 
 				// TODO: get rid of lodash
-				const _package = (data.packages as any[]).find(
-					a => a.id === localPackage.id
-				);
-				const _release = (data.release as any[]).find(
-					a => a.id === localPackage.release.id
-				);
-				const _build = (data.builds as any[]).find(
-					a => a.id === localPackage.build.id
-				);
+				const _package = (data.packages as any[]).find(a => a.id === localPackage.id);
+				const _release = (data.release as any[]).find(a => a.id === localPackage.release.id);
+				const _build = (data.builds as any[]).find(a => a.id === localPackage.build.id);
 				const _launchOptions = (data.launchOptions as any[]).filter(
 					a => a.game_build_id === localPackage.build.id
 				);
 
 				// Assign so we don't lose fields.
-				localPackage.setFromPackageInfo(
-					_package,
-					_release,
-					_build,
-					_launchOptions
-				);
+				localPackage.setFromPackageInfo(_package, _release, _build, _launchOptions);
 
 				return db.packages.put(localPackage);
 			});

@@ -189,10 +189,7 @@ export class AppSearchAutocomplete extends Vue {
 				continue;
 			}
 
-			if (
-				search.query.length === 1 ||
-				fuzzysearch(search.query.toLowerCase(), command.keyword)
-			) {
+			if (search.query.length === 1 || fuzzysearch(search.query.toLowerCase(), command.keyword)) {
 				filteredCommands.push(command);
 			}
 		}

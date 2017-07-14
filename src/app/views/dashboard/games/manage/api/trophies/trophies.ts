@@ -67,18 +67,10 @@ export default class RouteDashGamesManageApiTrophies extends Vue {
 
 	get trophySorts() {
 		return {
-			[GameTrophy.DIFFICULTY_BRONZE]: this.getTrophyGroup(
-				GameTrophy.DIFFICULTY_BRONZE
-			),
-			[GameTrophy.DIFFICULTY_SILVER]: this.getTrophyGroup(
-				GameTrophy.DIFFICULTY_SILVER
-			),
-			[GameTrophy.DIFFICULTY_GOLD]: this.getTrophyGroup(
-				GameTrophy.DIFFICULTY_GOLD
-			),
-			[GameTrophy.DIFFICULTY_PLATINUM]: this.getTrophyGroup(
-				GameTrophy.DIFFICULTY_PLATINUM
-			),
+			[GameTrophy.DIFFICULTY_BRONZE]: this.getTrophyGroup(GameTrophy.DIFFICULTY_BRONZE),
+			[GameTrophy.DIFFICULTY_SILVER]: this.getTrophyGroup(GameTrophy.DIFFICULTY_SILVER),
+			[GameTrophy.DIFFICULTY_GOLD]: this.getTrophyGroup(GameTrophy.DIFFICULTY_GOLD),
+			[GameTrophy.DIFFICULTY_PLATINUM]: this.getTrophyGroup(GameTrophy.DIFFICULTY_PLATINUM),
 		};
 	}
 
@@ -93,9 +85,7 @@ export default class RouteDashGamesManageApiTrophies extends Vue {
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/api/trophies/' + route.params.id
-		);
+		return Api.sendRequest('/web/dash/developer/games/api/trophies/' + route.params.id);
 	}
 
 	routed() {
@@ -136,18 +126,12 @@ export default class RouteDashGamesManageApiTrophies extends Vue {
 	saveTrophySort(difficulty: number, trophies: GameTrophy[]) {
 		// Pull out the trophies and then add them back in in the correct order.
 		const trophyIds = trophies.map(i => i.id);
-		let filtered = this.trophies
-			.filter(i => trophyIds.indexOf(i.id) === -1)
-			.concat(trophies);
+		let filtered = this.trophies.filter(i => trophyIds.indexOf(i.id) === -1).concat(trophies);
 
 		// Replace with new sort.
 		this.trophies.splice(0, this.trophies.length, ...filtered);
 
-		GameTrophy.$saveSort(
-			this.game.id,
-			difficulty,
-			this.trophySorts[difficulty]
-		);
+		GameTrophy.$saveSort(this.game.id, difficulty, this.trophySorts[difficulty]);
 	}
 
 	async removeTrophy(trophy: GameTrophy) {

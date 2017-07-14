@@ -46,9 +46,7 @@ export class AppGameFollowWidget extends Vue {
 			try {
 				await this.game.$follow();
 			} catch (e) {
-				Growls.error(
-					this.$gettext('Something has prevented you from following this game.')
-				);
+				Growls.error(this.$gettext('Something has prevented you from following this game.'));
 			}
 		} else {
 			try {

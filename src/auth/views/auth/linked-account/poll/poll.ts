@@ -60,10 +60,7 @@ export default class RouteAuthLinkedAccountPoll extends Vue {
 	}
 
 	failed() {
-		Growls.error(
-			this.$gettext(`Couldn't authorize.`),
-			this.$gettext(`Authorization Failed`)
-		);
+		Growls.error(this.$gettext(`Couldn't authorize.`), this.$gettext(`Authorization Failed`));
 		this.$router.push({ name: 'auth.login' });
 	}
 }

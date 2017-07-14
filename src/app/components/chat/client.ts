@@ -193,10 +193,7 @@ export class ChatClient extends Vue {
 		this.primus.on('data', (msg: any) => this._processMessage(msg));
 	}
 
-	setRoom(
-		newRoom: ChatRoom | undefined,
-		options: { sendUnfocusEvent?: boolean } = {}
-	) {
+	setRoom(newRoom: ChatRoom | undefined, options: { sendUnfocusEvent?: boolean } = {}) {
 		Object.assign(options, {
 			sendUnfocusEvent: true,
 		});
@@ -309,12 +306,7 @@ export class ChatClient extends Vue {
 		this._sendNextMessage();
 	}
 
-	outputMessage(
-		roomId: number,
-		type: ChatMessageType,
-		message: ChatMessage,
-		isPrimer: boolean
-	) {
+	outputMessage(roomId: number, type: ChatMessageType, message: ChatMessage, isPrimer: boolean) {
 		if (this.openRooms[roomId]) {
 			message.type = type;
 			message.loggedOn = new Date(message.loggedOn);
@@ -322,25 +314,19 @@ export class ChatClient extends Vue {
 			message.dateSplit = false;
 
 			if (this.messages[roomId].length) {
-				const latestMessage = this.messages[roomId][
-					this.messages[roomId].length - 1
-				];
+				const latestMessage = this.messages[roomId][this.messages[roomId].length - 1];
 
 				// Combine if the same user and within 5 minutes of their previous message.
 				if (
 					message.userId === latestMessage.userId &&
-					message.loggedOn.getTime() - latestMessage.loggedOn.getTime() <=
-						5 * 60 * 1000
+					message.loggedOn.getTime() - latestMessage.loggedOn.getTime() <= 5 * 60 * 1000
 				) {
 					message.combine = true;
 				}
 
 				// If the date is different than the date for the previous
 				// message, we want to split it in the view.
-				if (
-					message.loggedOn.toDateString() !==
-					latestMessage.loggedOn.toDateString()
-				) {
+				if (message.loggedOn.toDateString() !== latestMessage.loggedOn.toDateString()) {
 					message.dateSplit = true;
 					message.combine = false;
 				}
@@ -388,10 +374,7 @@ export class ChatClient extends Vue {
 		} else if (msg.event === 'friends-list') {
 			const friendsList = msg.data.friendsList;
 			if (friendsList) {
-				this.friendsList = new ChatUserCollection(
-					ChatUserCollection.TYPE_FRIEND,
-					friendsList
-				);
+				this.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND, friendsList);
 				this.friendsPopulated = true;
 			}
 		} else if (msg.event === 'public-rooms') {
@@ -415,9 +398,7 @@ export class ChatClient extends Vue {
 			const roomId = msg.data.roomId;
 
 			if (this.messages[roomId].length) {
-				const index = this.messages[roomId].findIndex(
-					message => message.id === id
-				);
+				const index = this.messages[roomId].findIndex(message => message.id === id);
 				if (index !== -1) {
 					this.messages[roomId].splice(index, 1);
 				}
@@ -459,9 +440,7 @@ export class ChatClient extends Vue {
 			if (room && room.isGroupRoom) {
 				// Remove their messages from view.
 				if (this.messages[roomId].length) {
-					const index = this.messages[roomId].findIndex(
-						message => message.userId === userId
-					);
+					const index = this.messages[roomId].findIndex(message => message.userId === userId);
 					if (index !== -1) {
 						this.messages[roomId].splice(index, 1);
 					}
@@ -574,12 +553,7 @@ export class ChatClient extends Vue {
 		}
 	}
 
-	private _joinRoom(
-		room: ChatRoom,
-		messages: ChatMessage[],
-		users: any[],
-		isSource: boolean
-	) {
+	private _joinRoom(room: ChatRoom, messages: ChatMessage[], users: any[], isSource: boolean) {
 		if (!this.room || this.room.id !== room.id) {
 			if (room.type === ChatRoom.ROOM_PM) {
 				// We need to rename the room to the username
@@ -642,12 +616,7 @@ export class ChatClient extends Vue {
 		}
 
 		messages.forEach(message => {
-			this.outputMessage(
-				message.roomId,
-				ChatMessage.TypeNormal,
-				message,
-				isPrimer
-			);
+			this.outputMessage(message.roomId, ChatMessage.TypeNormal, message, isPrimer);
 
 			// Emit an event that we've sent out a new message.
 			EventBus.emit(

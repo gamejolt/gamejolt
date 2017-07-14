@@ -41,9 +41,7 @@ export default class AppSiteEditorModal extends BaseModal {
 	async created() {
 		this.tab = this.initialTab || 'theme';
 
-		const response = await Api.sendRequest(
-			`/web/dash/sites/editor/${this.siteId}`
-		);
+		const response = await Api.sendRequest(`/web/dash/sites/editor/${this.siteId}`);
 
 		this.isLoaded = true;
 		this.site = new Site(response.site);
@@ -96,10 +94,7 @@ export default class AppSiteEditorModal extends BaseModal {
 			sanitizeComplexData: false,
 		});
 
-		Growls.success(
-			this.$gettext('Your site has been saved.'),
-			this.$gettext('Site Saved')
-		);
+		Growls.success(this.$gettext('Your site has been saved.'), this.$gettext('Site Saved'));
 	}
 
 	close() {
