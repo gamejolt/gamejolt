@@ -6,7 +6,7 @@
 					:class="{ active: tab === 'template' }"
 					@click="tab = 'template'"
 					>
-					<span class="sites-manage-page-active-tab"
+					<span class="page-active-tab"
 						v-if="templateEnabled"
 						>
 						<app-jolticon icon="checkbox" />
@@ -19,7 +19,7 @@
 					:class="{ active: tab === 'static' }"
 					@click="tab = 'static'"
 					>
-					<span class="sites-manage-page-active-tab"
+					<span class="page-active-tab"
 						v-if="staticEnabled"
 						>
 						<app-jolticon icon="checkbox" />
@@ -40,7 +40,8 @@
 		</ul>
 	</app-nav-tab-list>
 
-	<div class="row"
+	<div
+		class="row"
 		v-if="(templateEnabled && tab === 'template')
 			|| (staticEnabled && tab === 'static')"
 		>
@@ -59,9 +60,10 @@
 		</div>
 		<div class="col-sm-3">
 			<div class="clearfix">
-				<button class="btn btn-danger-outline anim-fade-in no-animate-leave pull-right"
+				<button
+					class="btn btn-danger-outline anim-fade-in no-animate-leave pull-right"
 					@click="disable()"
-					v-app-tooltip="$gettext('This will turn your Site off completely and it will no longer be accessible.')"
+					v-app-tooltip="$gettext(`This will turn your Site off completely and it will no longer be accessible.`)"
 					>
 					<translate>Disable</translate>
 				</button>
@@ -78,14 +80,14 @@
 		/>
 
 	<app-sites-manage-page-static
-		v-if="tab === 'static'"
+		v-else-if="tab === 'static'"
 		:site="site"
 		:enabled="staticEnabled"
 		:template-enabled="templateEnabled"
 		/>
 
 	<app-sites-manage-page-domain
-		v-if="tab === 'domain'"
+		v-else-if="tab === 'domain'"
 		:site="site"
 		/>
 </div>

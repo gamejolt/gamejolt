@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./domain.html';
+
 import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 

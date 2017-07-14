@@ -9,6 +9,7 @@ import {
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppFormLoader } from '../../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
+import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 
 @View
 @Component({
@@ -19,35 +20,31 @@ import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/component
 })
 export class FormGameImage extends BaseForm<GameScreenshot>
 	implements FormOnInit {
+	modelClass = GameScreenshot;
+	resetOnSubmit = true;
+
 	@Prop(Game) game: Game;
 
-	modelClass = GameScreenshot;
+	$refs: {
+		form: AppForm;
+	};
+
 	maxFilesize = 0;
 	maxWidth = 0;
 	maxHeight = 0;
 
 	onInit() {
 		this.setField('game_id', this.game.id);
-
-		// // Only on adding can they send in the file.
-		// if ( this.method === 'add' ) {
-		// 	if ( !scope.isLoaded ) {
-		// 		Api.sendRequest( '/web/dash/developer/games/media/save/image/' + scope.formModel.game_id )
-		// 			.then( function( payload )
-		// 			{
-		// 				scope.isLoaded = true;
-		// 				angular.extend( scope, payload );
-		// 			} );
-		// 	}
-		// }
-		// else {
-		// 	this.isLoaded = true;
-		// }
 	}
 
 	onLoaded(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
+	}
+
+	imagesSelected() {
+		// When images are selected, submit the form immediately.
+		this.$refs.form.submit();
 	}
 }

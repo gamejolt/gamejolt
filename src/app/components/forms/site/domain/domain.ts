@@ -1,5 +1,11 @@
-import { SiteDomainFormFactory } from './domain-directive';
+import { Component } from 'vue-property-decorator';
+import * as View from '!view!./domain.html';
 
-export default angular
-	.module('App.Forms.Dashboard.Site.Domain', [])
-	.directive('gjFormDashboardSiteDomain', SiteDomainFormFactory).name;
+import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { Site } from '../../../../../lib/gj-lib-client/components/site/site-model';
+
+@View
+@Component({})
+export class FormSiteDomain extends BaseForm<Site> {
+	modelClass = Site;
+}
