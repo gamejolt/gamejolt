@@ -69,11 +69,11 @@
 				</p>
 			</div>
 
-			<div class="alert alert-warning" v-if="helpers.isVerificationPending()">
+			<div class="alert alert-warning" v-if="isVerificationPending">
 				<p><translate :escape-html="false"><strong>Stripe is in the process of verifying your details.</strong> This can take anywhere from a few minutes to a few days. We'll contact you when the verification process is complete and if Stripe requires additional supporting documents (such as a photo ID) in order to identify you. Hang tight!</translate></p>
 			</div>
 
-			<div class="alert alert-warning" v-if="helpers.requiresVerificationDocument()">
+			<div class="alert alert-warning" v-if="requiresVerificationDocument">
 				<p><translate :escape-html="false"><strong>Stripe needs additional identification documents in order to verify your account.</strong> Please enter them below.</translate></p>
 			</div>
 
@@ -110,17 +110,14 @@
 			<div v-if="account.type === 'company'">
 				<h4><translate>Company Details</translate></h4>
 
-				<form-financials-managed-account-business
-					:helpers="helpers"
-					/>
+				<app-financials-managed-account-business />
 
 				<!--
 					Business Address
 					It uses the legal entity address.
 				-->
-				<form-financials-managed-account-address
+				<app-financials-managed-account-address
 					namePrefix="legal_entity.address"
-					:helpers="helpers"
 					/>
 			</div>
 
@@ -148,51 +145,46 @@
 			<!--
 				Personal Name
 			-->
-			<form-financials-managed-account-name
+			<app-financials-managed-account-name
 				namePrefix="legal_entity"
-				:helpers="helpers"
 				/>
 
 			<!--
 				Personal DOB
 			-->
-			<form-financials-managed-account-dob
+			<app-financials-managed-account-dob
 				namePrefix="legal_entity.dob"
-				:helpers="helpers"
 				/>
 
 			<!--
 				Personal Address
 				Some times required for individual accounts in GB too.
 			-->
-			<form-financials-managed-account-address
+			<app-financials-managed-account-address
 				:namePrefix="account.type === 'company' ? 'legal_entity.personal_address' : 'legal_entity.address'"
-				:helpers="helpers"
 				/>
 
 			<!--
 				SSN
 			-->
-			<form-financials-managed-account-ssn
+			<app-financials-managed-account-ssn
 				namePrefix="legal_entity"
 				:countryCode="account.country_code"
-				:helpers="helpers"
 				/>
 
 			<!--
 				Personal ID Verification
 			-->
-			<form-financials-managed-account-id-document
-				ref="uploadId"
+			<app-financials-managed-account-id-document
+				ref="id-document"
 				namePrefix="legal_entity.verification"
-				:helpers="helpers"
 				/>
 
 			<!--
 				Additional Owners (for Europe)
 				Anyone that owns at least 25% of the company needs to be listed.
 			-->
-			<div v-if="(helpers.requiresField( 'legal_entity.additional_owners' ) && account.status === 'unverified') || formModel.additional_owners_count > 0">
+			<div v-if="(requiresField( 'legal_entity.additional_owners' ) && account.status === 'unverified') || formModel.additional_owners_count > 0">
 
 				<h4><translate>Additional Owners</translate></h4>
 
@@ -218,7 +210,7 @@
 							<button
 								class="btn btn-danger-outline btn-sparse"
 								v-if="value.verification.status !== 'verified'"
-								@click="helpers.removeAdditionalOwner( i )"
+								@click="removeAdditionalOwner( i )"
 								>
 								<app-jolticon icon="remove" />
 							</button>
@@ -233,27 +225,24 @@
 					<!--
 						These are the only fields we need to collect according to Stripe.
 					-->
-					<form-financials-managed-account-name
+					<app-financials-managed-account-name
 						:namePrefix="`legal_entity.additional_owners.${ i }`"
 						:forceRequired="true"
-						:helpers="helpers"
 						/>
 
-					<form-financials-managed-account-dob
+					<app-financials-managed-account-dob
 						:namePrefix="`legal_entity.additional_owners.${ i }.dob`"
 						:forceRequired="true"
-						:helpers="helpers"
 						/>
 
-					<form-financials-managed-account-address
+					<app-financials-managed-account-address
 						:namePrefix="`legal_entity.additional_owners.${ i }.address`"
 						:forceRequired="true"
-						:helpers="helpers"
 						/>
 
-					<form-financials-managed-account-id-document
+					<app-financials-managed-account-id-document
+						:ref="`additional-id-document-${ i }`"
 						:namePrefix="`legal_entity.additional_owners.${ i }.verification`"
-						:helpers="helpers"
 						/>
 
 				</div>
@@ -261,7 +250,7 @@
 				<!-- Add additional owner -->
 				<div class="clearfix">
 					<div class="pull-right" v-if="formModel.additional_owners_count <= 3">
-						<button class="btn btn-outline" @click="helpers.addAdditionalOwner()">
+						<button class="btn btn-outline" @click="addAdditionalOwner()">
 							<app-jolticon icon="add" />
 							<translate>Add Additional Owner</translate>
 						</button>
@@ -345,7 +334,7 @@
 		<app-loading v-if="isProcessing" :label="$gettext( `Processing...` )" />
 
 		<app-form-button
-			v-if="!isComplete && !helpers.isVerificationPending()"
+			v-if="!isComplete && !isVerificationPending"
 			class="btn-success-outline"
 			icon="chevron-right"
 			>

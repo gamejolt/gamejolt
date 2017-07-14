@@ -21,7 +21,7 @@
 		"@types/node": "8.0.11",
 		"@types/nw.gui": "0.0.20",
 		"@types/qs": "6.5.0",
-		"@types/stripe": "3.0.0",
+		"@types/stripe": "2.0.2",
 		"@types/ua-parser-js": "0.7.31",
 		"autosize": "3.0.21",
 		"axios": "0.16.2",

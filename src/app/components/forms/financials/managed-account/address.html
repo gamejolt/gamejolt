@@ -1,9 +1,9 @@
-<div v-if="helpers.requiresField( namePrefix + '.line1' ) || forceRequired">
+<div v-if="parent.requiresField( namePrefix + '.line1' ) || forceRequired">
 
-	<div v-if="!helpers.getStripeField( namePrefix + '.line1' )">
+	<div v-if="!parent.getStripeField( namePrefix + '.line1' )">
 
 		<app-form-group
-			v-if="helpers.requiresField( namePrefix + '.line1' ) || forceRequired"
+			v-if="parent.requiresField( namePrefix + '.line1' ) || forceRequired"
 			:name="`${ namePrefix }.line1`"
 			:label="$gettext('Address')"
 			>
@@ -12,7 +12,7 @@
 		</app-form-group>
 
 		<app-form-group
-			v-if="helpers.requiresField( namePrefix + '.line1' ) || forceRequired"
+			v-if="parent.requiresField( namePrefix + '.line1' ) || forceRequired"
 			:name="`${ namePrefix }.line2`"
 			:label="$gettext('Apartment/Suite/Unit')"
 			:optional="true"
@@ -42,7 +42,7 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<div class="row" v-if="helpers.requiresField( namePrefix + '.city' ) || forceRequired">
+		<div class="row" v-if="parent.requiresField( namePrefix + '.city' ) || forceRequired">
 			<div class="col-sm-4">
 				<app-form-group
 					:name="`${ namePrefix }.city`"
@@ -52,7 +52,7 @@
 					<app-form-control-errors />
 				</app-form-group>
 			</div>
-			<div class="col-sm-4" v-if="helpers.requiresField( namePrefix + '.state' ) || forceRequired">
+			<div class="col-sm-4" v-if="parent.requiresField( namePrefix + '.state' ) || forceRequired">
 				<app-form-group
 					:name="`${ namePrefix }.state`"
 					:label="$gettext('State/Province/County')"
@@ -61,7 +61,7 @@
 					<app-form-control-errors />
 				</app-form-group>
 			</div>
-			<div class="col-sm-4" v-if="helpers.requiresField( namePrefix + '.postal_code' ) || forceRequired">
+			<div class="col-sm-4" v-if="parent.requiresField( namePrefix + '.postal_code' ) || forceRequired">
 				<app-form-group
 					:name="`${ namePrefix }.postal_code`"
 					:label="$gettext('Zip/Postal Code')"
@@ -73,25 +73,25 @@
 		</div>
 	</div>
 
-	<div class="form-horizontal" v-if="helpers.getStripeField( namePrefix + '.line1' )">
+	<div class="form-horizontal" v-if="parent.getStripeField( namePrefix + '.line1' )">
 		<div class="form-group">
 			<label class="control-label col-sm-4">
 				<translate>Address</translate>
 			</label>
 			<div class="form-static col-sm-8">
-				<div>{{ helpers.getStripeField( namePrefix + '.line1' ) }}</div>
-				<div v-if="helpers.getStripeField( namePrefix + '.line2' )">
-					{{ helpers.getStripeField( namePrefix + '.line2' ) }}
+				<div>{{ parent.getStripeField( namePrefix + '.line1' ) }}</div>
+				<div v-if="parent.getStripeField( namePrefix + '.line2' )">
+					{{ parent.getStripeField( namePrefix + '.line2' ) }}
 				</div>
-				<div>{{ helpers.getStripeField( namePrefix + '.city' ) }}</div>
-				<div v-if="helpers.getStripeField( namePrefix + '.state' )">
-					{{ helpers.getStripeField( namePrefix + '.state' ) }}
+				<div>{{ parent.getStripeField( namePrefix + '.city' ) }}</div>
+				<div v-if="parent.getStripeField( namePrefix + '.state' )">
+					{{ parent.getStripeField( namePrefix + '.state' ) }}
 				</div>
 
-				<div v-if="helpers.getStripeField( namePrefix + '.country' )">
-					{{ Geo.getCountryName( helpers.getStripeField( namePrefix + '.country' ) ) }}
+				<div v-if="parent.getStripeField( namePrefix + '.country' )">
+					{{ Geo.getCountryName( parent.getStripeField( namePrefix + '.country' ) ) }}
 				</div>
-				<div v-if="!helpers.getStripeField( namePrefix + '.country' )">
+				<div v-if="!parent.getStripeField( namePrefix + '.country' )">
 					{{ Geo.getCountryName( account.country_code ) }}
 				</div>
 			</div>

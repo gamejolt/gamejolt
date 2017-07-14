@@ -1,19 +1,18 @@
-<div v-if="helpers.requiresField( namePrefix + '.document' )">
+<div v-if="parent.requiresField( namePrefix + '.document' )">
 
 	<!--
 		It only has a details_code if it failed to verify.
 	-->
 	<div
 		v-if="
-			!helpers.getStripeField( namePrefix + '.document' )
-			|| helpers.getStripeField( namePrefix + '.details_code' )
-		"
+			!parent.getStripeField( namePrefix + '.document' )
+			|| parent.getStripeField( namePrefix + '.details_code' )"
 		>
 		<hr>
 
-		<div class="alert alert-info" v-if="helpers.getStripeField( namePrefix + '.details' )">
+		<div class="alert alert-info" v-if="parent.getStripeField( namePrefix + '.details' )">
 			<app-jolticon icon="notice" />
-			{{ helpers.getStripeField( namePrefix + '.details' ) }}
+			{{ parent.getStripeField( namePrefix + '.details' ) }}
 		</div>
 
 		<app-form-group
@@ -36,8 +35,8 @@
 
 	<div
 		v-if="
-			helpers.getStripeField( namePrefix + '.document' )
-			&& !helpers.getStripeField( namePrefix + '.details_code' )
+			parent.getStripeField( namePrefix + '.document' )
+			&& !parent.getStripeField( namePrefix + '.details_code' )
 		"
 		class="form-horizontal"
 		>

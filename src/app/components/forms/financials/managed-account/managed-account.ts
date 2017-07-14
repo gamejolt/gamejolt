@@ -10,44 +10,45 @@ import { loadScript } from '../../../../../lib/gj-lib-client/utils/utils';
 import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { FormFinancialsManagedAccountName } from './name';
-import { FormFinancialsManagedAccountDob } from './dob';
-import { FormFinancialsManagedAccountAddress } from './address';
-import { FormFinancialsManagedAccountSsn } from './ssn';
-import { FormFinancialsManagedAccountIdDocument } from './id-document';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import {
-	BaseForm,
-	FormOnInit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { AppFinancialsManagedAccountName } from './name';
+import { AppFinancialsManagedAccountDob } from './dob';
+import { AppFinancialsManagedAccountAddress } from './address';
+import { AppFinancialsManagedAccountSsn } from './ssn';
+import { AppFinancialsManagedAccountIdDocument } from './id-document';
+import { BaseForm, FormOnInit } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 
-export interface Helpers {
-	requiresField: (field: string) => boolean | undefined;
-	getStripeField: (fieldPath: string) => any;
-	requiresVerificationDocument: () => boolean | undefined;
-	isVerificationPending: () => boolean;
-	addAdditionalOwner: () => void;
-	removeAdditionalOwner: (index: number) => void;
+// CODE REVIEW - populate form model.
+interface FormModel {
+	additional_owners_count: number;
+	'legal_entity.verification.document': any;
+	'legal_entity.verification.status': any;
+	'legal_entity.additional_owners.0.verification.document': any;
+	'legal_entity.additional_owners.1.verification.document': any;
+	'legal_entity.additional_owners.2.verification.document': any;
+	'legal_entity.additional_owners.3.verification.document': any;
+	[k: string]: any;
 }
 
+// CODE REVIEW - change all managed account child components to be normal components and not form components.
+// use components: {
+//        ...CommonFormComponents,
+//    },
 @View
 @Component({
 	components: {
 		AppLoading,
 		AppExpand,
 		AppJolticon,
-		FormFinancialsManagedAccountName,
-		FormFinancialsManagedAccountDob,
-		FormFinancialsManagedAccountAddress,
-		FormFinancialsManagedAccountSsn,
-		FormFinancialsManagedAccountIdDocument,
+		AppFinancialsManagedAccountName,
+		AppFinancialsManagedAccountDob,
+		AppFinancialsManagedAccountAddress,
+		AppFinancialsManagedAccountSsn,
+		AppFinancialsManagedAccountIdDocument,
 	},
 })
-export class FormFinancialsManagedAccount extends BaseForm<any>
-	implements FormOnInit, FormOnSubmit {
+export class FormFinancialsManagedAccount extends BaseForm<FormModel> implements FormOnInit, FormOnSubmit {
 	resetOnSubmit = true;
 	isLoaded = false;
-	isComplete = false;
 
 	stripePublishableKey = '';
 	stripeMeta: any = null;
@@ -63,9 +64,6 @@ export class FormFinancialsManagedAccount extends BaseForm<any>
 	readonly Geo = Geo;
 	readonly currency = currency;
 
-	_self = this;
-	helpers: Helpers = null as any;
-
 	mounted() {
 		return loadScript('https://js.stripe.com/v2/');
 	}
@@ -80,171 +78,24 @@ export class FormFinancialsManagedAccount extends BaseForm<any>
 		// 	scope.formModel.bankAccount_accountHolderType = 'individual';
 		// }
 
-		// TODO: change to vue uploader?
-		// await Loader.load('upload');
-
-		// Gotta load in the Stripe JS API as well.
-		// await loadScript('https://js.stripe.com/v2/');
-
+		this.isLoaded = false;
 		const payload = await Api.sendRequest('/web/dash/financials/account');
-		console.log(payload);
 
 		this.stripePublishableKey = payload.stripe.publishableKey;
 		Stripe.setPublishableKey(payload.stripe.publishableKey);
 
-		// TODO add types?
-		Object.assign(this, payload);
+		this.user = new User(payload.user);
+		this.account = new UserStripeManagedAccount(payload.account);
+		this.stripe = payload.stripe;
+		this.stripeMeta = payload.stripe.required;
+		console.log(this.stripe);
 
-		this.stripeMeta = {};
-		Object.assign(this.stripeMeta, payload.stripe.required);
-		console.log(this.stripeMeta);
-
-		this.formModel.additional_owners_count = 0;
-		if (
-			payload.stripe &&
-			payload.stripe.current &&
-			payload.stripe.current.legal_entity.additional_owners
-		) {
-			this.formModel.additional_owners_count =
-				payload.stripe.current.legal_entity.additional_owners.length;
+		this.setField('additional_owners_count', 0);
+		if (payload.stripe && payload.stripe.current && payload.stripe.current.legal_entity.additional_owners) {
+			this.setField('additional_owners_count', payload.stripe.current.legal_entity.additional_owners.length);
 		}
 
-		// Due by will be set if this account is required to fill in more by a specific date.
-		// This is for additional collection of fields beyond what we want initially.
-		this.isComplete =
-			payload.account.is_verified &&
-			!payload.stripe.current.verification.due_by;
-
 		this.isLoaded = true;
-
-		const _self = this;
-		this.helpers = {
-			requiresField: (field: string) => {
-				if (!_self.stripeMeta) {
-					return undefined;
-				}
-
-				return (
-					_self.stripeMeta.minimum.indexOf(field) !== -1 ||
-					// We special case personal_id_number.
-					// We need it for taxes, so we collect it if it's just in "additional".
-					(field === 'legal_entity.personal_id_number' &&
-						_self.stripeMeta.additional.indexOf(field) !== -1) ||
-					(_self.stripe.current &&
-						_self.stripe.current.verification &&
-						_self.stripe.current.verification.fields_needed &&
-						_self.stripe.current.verification.fields_needed.indexOf(field) !==
-							-1)
-				);
-			},
-
-			getStripeField: (fieldPath: string) => {
-				if (!_self.stripe.current) {
-					return undefined;
-				}
-
-				// Gotta traverse the object chain.
-				// We should return false if any of the paths don't exist.
-				const pieces = fieldPath.split('.');
-				const field = pieces.pop();
-				let obj = _self.stripe.current;
-
-				for (let piece of pieces) {
-					if (!obj[piece]) {
-						return undefined;
-					}
-					obj = obj[piece];
-				}
-
-				if (!field || !obj[field]) {
-					return undefined;
-				}
-
-				return obj[field];
-			},
-
-			// This is only needed after the initial submission in some instances.
-			requiresVerificationDocument: () => {
-				return (
-					_self.helpers.requiresField('legal_entity.verification.document') ||
-					_self.helpers.requiresField(
-						'legal_entity.additional_owners.0.verification.document'
-					) ||
-					_self.helpers.requiresField(
-						'legal_entity.additional_owners.1.verification.document'
-					) ||
-					_self.helpers.requiresField(
-						'legal_entity.additional_owners.2.verification.document'
-					) ||
-					_self.helpers.requiresField(
-						'legal_entity.additional_owners.3.verification.document'
-					)
-				);
-			},
-
-			isVerificationPending: () => {
-				// If they're in pending state and we don't require more info from them.
-				if (
-					_self.account &&
-					_self.account.status === 'pending' &&
-					!_self.helpers.requiresVerificationDocument()
-				) {
-					return true;
-				}
-
-				return false;
-			},
-
-			addAdditionalOwner: () => {
-				++_self.formModel.additional_owners_count;
-			},
-
-			removeAdditionalOwner: (index: number) => {
-				// Helpers.
-				function removeOwnerData(idx: number) {
-					const regex = new RegExp(
-						'legal_entity\\.additional_owners\\.' + idx + '\\.'
-					);
-					for (let field in _self.formModel) {
-						if (regex.test(field)) {
-							delete _self.formModel[field];
-						}
-					}
-				}
-
-				function copyOwnerData(oldIndex: number, newIndex: number) {
-					const regex = new RegExp(
-						'legal_entity\\.additional_owners\\.' + oldIndex + '\\.'
-					);
-					for (let field in _self.formModel) {
-						if (regex.test(field)) {
-							const newField = field.replace(
-								'.' + oldIndex + '.',
-								'.' + newIndex + '.'
-							);
-							_self.formModel[newField] = _self.formModel[field];
-						}
-					}
-				}
-
-				// Reindex all the owners after the one that was removed to be shifted over once.
-				for (
-					let i = index + 1;
-					i < _self.formModel.additional_owners_count;
-					++i
-				) {
-					// We have to remove the owner data from the index before.
-					// If the current owner doesn't have all fields filled, it won't overwrite completely.
-					// It needs a "pristine" state to copy into.
-					removeOwnerData(i - 1);
-					copyOwnerData(i, i - 1);
-				}
-
-				// Clear out all the fields for the last one as well since it's now shifted.
-				removeOwnerData(_self.formModel.additional_owners_count - 1);
-				--_self.formModel.additional_owners_count;
-			},
-		};
 
 		// scope.updateCurrencies = function( )
 		// {
@@ -252,48 +103,114 @@ export class FormFinancialsManagedAccount extends BaseForm<any>
 		// }
 	}
 
-	uploadIdDocument(refChain: string[]) {
-		// TODO: this doesn't work with the new uploader
-		return new Promise<any>((resolve, reject) => {
-			const formData = new FormData();
-			formData.append('purpose', 'identity_document');
+	requiresField(field: string) {
+		if (!this.stripeMeta) {
+			return undefined;
+		}
 
-			console.log(this.$refs);
-			let uploadComponent: any = this;
-			for (let refId of refChain) {
-				console.log(uploadComponent.$refs);
-				uploadComponent = uploadComponent.$refs[refId];
+		return (
+			this.stripeMeta.minimum.indexOf(field) !== -1 ||
+			// We special case personal_id_number.
+			// We need it for taxes, so we collect it if it's just in "additional".
+			(field === 'legal_entity.personal_id_number' && this.stripeMeta.additional.indexOf(field) !== -1) ||
+			(this.stripe.current &&
+				this.stripe.current.verification &&
+				this.stripe.current.verification.fields_needed &&
+				this.stripe.current.verification.fields_needed.indexOf(field) !== -1)
+		);
+	}
+
+	getStripeField(fieldPath: string) {
+		if (!this.stripe.current) {
+			return undefined;
+		}
+
+		// Gotta traverse the object chain.
+		// We should return false if any of the paths don't exist.
+		const pieces = fieldPath.split('.');
+		const field = pieces.pop();
+		let obj = this.stripe.current;
+
+		for (let piece of pieces) {
+			if (!obj[piece]) {
+				return undefined;
 			}
-			console.log(uploadComponent);
-			if (!(uploadComponent instanceof AppFormControlUpload)) {
-				throw new Error('Could not upload document');
+			obj = obj[piece];
+		}
+
+		if (!field || !obj[field]) {
+			return undefined;
+		}
+
+		return obj[field];
+	}
+
+	// This is only needed after the initial submission in some instances.
+	get requiresVerificationDocument() {
+		return (
+			this.requiresField('legal_entity.verification.document') ||
+			this.requiresField('legal_entity.additional_owners.0.verification.document') ||
+			this.requiresField('legal_entity.additional_owners.1.verification.document') ||
+			this.requiresField('legal_entity.additional_owners.2.verification.document') ||
+			this.requiresField('legal_entity.additional_owners.3.verification.document')
+		);
+	}
+
+	get isVerificationPending() {
+		// If they're in pending state and we don't require more info from them.
+		if (this.account && this.account.status === 'pending' && !this.requiresVerificationDocument) {
+			return true;
+		}
+
+		return false;
+	}
+
+	addAdditionalOwner() {
+		this.setField('additional_owners_count', this.formModel.additional_owners_count + 1);
+	}
+
+	private removeOwnerData(idx: number) {
+		const regex = new RegExp('legal_entity\\.additional_owners\\.' + idx + '\\.');
+		for (let field in this.formModel) {
+			if (regex.test(field)) {
+				this.$delete(this.formModel, field);
 			}
-			formData.append('file', uploadComponent.files[0]!);
+		}
+	}
 
-			// const fileElement = document.getElementById(inputId)!.querySelector(
-			// 	`input[type='file']`
-			// );
-			// formData.append('file', (fileElement as any).files[0]);
+	private copyOwnerData(oldIndex: number, newIndex: number) {
+		const regex = new RegExp('legal_entity\\.additional_owners\\.' + oldIndex + '\\.');
+		for (let field in this.formModel) {
+			if (regex.test(field)) {
+				const newField = field.replace('.' + oldIndex + '.', '.' + newIndex + '.');
+				this.setField(newField, this.formModel[newField]);
+			}
+		}
+	}
 
-			const xhr = new XMLHttpRequest();
-			xhr.open('POST', this.StripeFileUploadUrl);
-			xhr.setRequestHeader(
-				'Authorization',
-				'Bearer ' + this.stripePublishableKey
-			);
-			xhr.setRequestHeader('Accept', 'application/json'); // Makes sure it doesn't return as JSONP.
-			xhr.send(formData);
+	removeAdditionalOwner(index: number) {
+		// Reindex all the owners after the one that was removed to be shifted over once.
+		for (let i = index + 1; i < this.formModel.additional_owners_count; ++i) {
+			// We have to remove the owner data from the index before.
+			// If the current owner doesn't have all fields filled, it won't overwrite completely.
+			// It needs a "pristine" state to copy into.
+			this.removeOwnerData(i - 1);
+			this.copyOwnerData(i, i - 1);
+		}
 
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState === 4) {
-					if (xhr.status === 200) {
-						resolve(JSON.parse(xhr.responseText));
-					} else {
-						reject(JSON.parse(xhr.responseText).error);
-					}
-				}
-			};
-		});
+		// Clear out all the fields for the last one as well since it's now shifted.
+		this.removeOwnerData(this.formModel.additional_owners_count - 1);
+		this.setField('additional_owners_count', this.formModel.additional_owners_count - 1);
+	}
+
+	get isComplete() {
+		if (!this.account) {
+			return false;
+		}
+
+		// Due by will be set if this account is required to fill in more by a specific date.
+		// This is for additional collection of fields beyond what we want initially.
+		return this.account.is_verified && this.stripe.current.verification.due_by;
 	}
 
 	createPiiToken(data: any) {
@@ -307,7 +224,7 @@ export class FormFinancialsManagedAccount extends BaseForm<any>
 				{
 					personal_id_number: data['legal_entity.personal_id_number'],
 				},
-				function(_: any, response: any) {
+				(_: any, response: any) => {
 					if (response.error) {
 						reject(response.error);
 					} else {
@@ -320,9 +237,7 @@ export class FormFinancialsManagedAccount extends BaseForm<any>
 
 	async onSubmit() {
 		// We don't want to send the sensitive data to GJ.
-		const data: typeof FormFinancialsManagedAccount.prototype.formModel = JSON.parse(
-			JSON.stringify(this.formModel)
-		);
+		const data = JSON.parse(JSON.stringify(this.formModel));
 
 		console.log('Submitting data: ');
 		console.log(data);
@@ -333,32 +248,18 @@ export class FormFinancialsManagedAccount extends BaseForm<any>
 				this.formModel['legal_entity.verification.document'] &&
 				this.formModel['legal_entity.verification.status'] !== 'verified'
 			) {
-				const _response = await this.uploadIdDocument([
-					'uploadId',
-					'document-input',
-				]);
+				const idDocument: AppFinancialsManagedAccountIdDocument = this.$refs['id-document'] as any;
+				const _response = await idDocument.uploadIdDocument(this.stripePublishableKey);
 				data['legal_entity.verification.document'] = _response.id;
 			}
 
 			// Additional files
 			for (let i = 0; i < 4; i++) {
-				if (
-					this.formModel[
-						'legal_entity.additional_owners.' + i + '.verification.document'
-					]
-				) {
+				if (this.formModel[`legal_entity.additional_owners.${i}.verification.document`]) {
 					const curIndex = i;
-					const _response = await this.uploadIdDocument([
-						'legal_entity.additional_owners.' +
-							curIndex +
-							'.verification.document-input',
-					]);
-					data[
-						'legal_entity.additional_owners.' +
-							curIndex +
-							'.verification.document'
-					] =
-						_response.id;
+					const idDocument: AppFinancialsManagedAccountIdDocument = this.$refs[`additional-id-document-${i}`] as any;
+					const _response = await idDocument.uploadIdDocument(this.stripePublishableKey);
+					data[`legal_entity.additional_owners.${curIndex}.verification.document`] = _response.id;
 				}
 			}
 
@@ -384,10 +285,7 @@ export class FormFinancialsManagedAccount extends BaseForm<any>
 		// This is for backwards compatibility support with angular which used hyphenated fields.
 		data['dotted'] = true;
 
-		const response = await Api.sendRequest(
-			'/web/dash/financials/account',
-			data
-		);
+		const response = await Api.sendRequest('/web/dash/financials/account', data);
 		if (response.success === false) {
 			this.genericError = true;
 		}

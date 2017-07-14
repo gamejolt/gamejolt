@@ -1,25 +1,29 @@
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./dob.html';
-import {
-	BaseForm,
-	FormOnInit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Helpers } from './managed-account';
+import { FormFinancialsManagedAccount } from './managed-account';
+import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
+import { CommonFormComponents } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import Vue from 'vue';
 
 @View
-@Component({})
-export class FormFinancialsManagedAccountDob extends BaseForm<any>
-	implements FormOnInit {
+@Component({
+	components: {
+		...CommonFormComponents,
+	},
+})
+export class AppFinancialsManagedAccountDob extends Vue {
 	@Prop(Boolean) forceRequired: boolean;
 
 	@Prop(String) namePrefix: string;
 
-	@Prop(Object) helpers: Helpers;
-
 	days: string[] = [];
 	years: string[] = [];
 
-	onInit() {
+	parent: FormFinancialsManagedAccount = null as any;
+
+	created() {
+		this.parent = findRequiredVueParent(this, FormFinancialsManagedAccount);
+
 		this.days = [];
 		for (let i = 1; i <= 31; ++i) {
 			this.days.push('' + i);

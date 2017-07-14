@@ -1,12 +1,12 @@
 <div>
-	<div v-if="!helpers.getStripeField( namePrefix + '.year' )">
+	<div v-if="!parent.getStripeField( namePrefix + '.year' )">
 
 		<div>
 			<label class="control-label"><translate>Date of Birth</translate></label>
 		</div>
 
 		<div class="row">
-			<div class="col-sm-4" v-if="helpers.requiresField( namePrefix + '.month' ) || forceRequired">
+			<div class="col-sm-4" v-if="parent.requiresField( namePrefix + '.month' ) || forceRequired">
 				<app-form-group
 					:name="`${ namePrefix }.month`"
 					:label="$gettext('Month')"
@@ -32,7 +32,7 @@
 					<app-form-control-errors />
 				</app-form-group>
 			</div>
-			<div class="col-sm-4" v-if="helpers.requiresField( namePrefix + '.day' ) || forceRequired">
+			<div class="col-sm-4" v-if="parent.requiresField( namePrefix + '.day' ) || forceRequired">
 				<app-form-group
 					:name="`${ namePrefix }.day`"
 					:label="$gettext('Day')"
@@ -52,7 +52,7 @@
 					<app-form-control-errors />
 				</app-form-group>
 			</div>
-			<div class="col-sm-4" v-if="helpers.requiresField( namePrefix + '.year' ) || forceRequired">
+			<div class="col-sm-4" v-if="parent.requiresField( namePrefix + '.year' ) || forceRequired">
 				<app-form-group
 					:name="`${ namePrefix }.year`"
 					:label="$gettext('Year')"
@@ -75,7 +75,7 @@
 		</div>
 	</div>
 
-	<div class="form-horizontal" v-if="helpers.getStripeField( namePrefix + '.year' )">
+	<div class="form-horizontal" v-if="parent.getStripeField( namePrefix + '.year' )">
 		<div class="form-group">
 			<label class="control-label col-sm-4">
 				<translate>Date of Birth</translate>
