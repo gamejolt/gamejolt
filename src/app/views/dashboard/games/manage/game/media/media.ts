@@ -79,6 +79,10 @@ export default class RouteDashGamesManageGameMedia extends Vue {
 		this.populateMedia(this.$payload.mediaItems || []);
 	}
 
+	onImagesAdded(_model: any, response: any) {
+		this.addImages(response.screenshots);
+	}
+
 	onMediaEdited() {
 		this.activeItem = null;
 	}
