@@ -5,6 +5,7 @@ import { routeDashAccount } from './account/account.route';
 import { routeDashAccountMobileNav } from './account/mobile-nav.route';
 import { routeDashAnalytics } from './analytics/analytics.route';
 import { routeDashGames } from './games/games.route';
+import { routeDashWithdrawFunds } from './withdraw-funds/withdraw-funds.route';
 
 export const routeDash: VueRouter.RouteConfig = {
 	name: 'dashboard',
@@ -17,5 +18,6 @@ export const routeDash: VueRouter.RouteConfig = {
 		routeDashAccountMobileNav,
 		routeDashGames,
 		routeDashAnalytics,
+		routeDashWithdrawFunds,
 	],
 };

@@ -1,36 +1,48 @@
 <app-form name="withdrawFundsForm">
 
-	<div class="alert alert-info" translate>dash.funds.withdraw.form_help_html</div>
+	<div class="alert alert-info"><translate>dash.funds.withdraw.form_help_html</translate></div>
 
-	<app-form-group v-if="!user.paypal_id" name="email_address" :label="$gettext( `dash.funds.withdraw.email_label` )">
-		<p class="help-block above">{{ 'dash.funds.withdraw.email_help' | translate }}</p>
-		<input form-control="email">
+	<app-form-group
+		v-if="!user.paypal_id"
+		name="email_address"
+		:label="$gettext( `dash.funds.withdraw.email_label` )"
+		>
+		<p class="help-block above"><translate>dash.funds.withdraw.email_help</translate></p>
+		<app-form-control :type="email" />
 		<app-form-control-errors />
 	</app-form-group>
 
-	<div v-if="user.paypal_id" class="form-group">
-		<label class="control-label" translate>Current PayPal Account</label>
+	<div v-else class="form-group">
+		<label class="control-label"><translate>Current PayPal Account</translate></label>
 		<div class="form-static">{{ user.paypal_email_address }}</div>
-		<p class="help-block" translate translate-params-url="$state.href( 'dash.account.financials' )">
-			You can link a different PayPal account in your <a href="{{ url }}">payment setup</a>.
+		<p class="help-block">
+			<translate>You can link a different PayPal account in your payment setup.</translate>
+			<router-link :to="{ name: 'dash.account.financials' }">
+				<translate>Go to your financials page.</translate>
+			</router-link>
 		</p>
 	</div>
 
-	<app-form-group name="amount" :label="$gettext( `dash.funds.withdraw.amount_label` )">
-		<p class="help-block above"
-			translate
-			translate-params-amount="minAmount"
-			>
-			dash.funds.withdraw.amount_help
+	<app-form-group
+		name="amount"
+		:label="$gettext( `dash.funds.withdraw.amount_label` )"
+		>
+		<p class="help-block above">
+			<translate :translate-params="{ amount: currency(minAmount * 100) }">The minimum amount you can withdraw at this time is %{ amount }.</translate>
 		</p>
 		<div class="input-group">
 			<span class="input-group-addon">$</span>
-			<input form-control="number"
-				gj-form-currency-input
+			<app-form-control
+				type="number"
 				step="0.01"
-				ng-min="minAmount"
-				ng-max="withdrawableAmount"
-				>
+				:min="minAmount"
+				:max="withdrawableAmount"
+				:rules="{
+					min_value: minAmount,
+					max_value: withdrawableAmount,
+				}"
+				/>
+			<!-- TODO gj-form-currency-input -->
 		</div>
 		<app-form-control-errors />
 	</app-form-group>
