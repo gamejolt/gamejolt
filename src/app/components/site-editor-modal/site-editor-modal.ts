@@ -10,6 +10,7 @@ import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.serv
 import { AppThemeSelector } from '../../../lib/gj-lib-client/components/theme/selector/selector';
 import { AppLoading } from '../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppThemeEditor } from '../../../lib/gj-lib-client/components/theme/theme-editor/theme-editor';
+import { AppContentBlockEditor } from '../../../lib/gj-lib-client/components/content-block/editor/editor';
 
 type EditorTab = 'theme' | 'content';
 
@@ -19,6 +20,7 @@ type EditorTab = 'theme' | 'content';
 		AppLoading,
 		AppThemeSelector,
 		AppThemeEditor,
+		AppContentBlockEditor,
 	},
 })
 export default class AppSiteEditorModal extends BaseModal {
