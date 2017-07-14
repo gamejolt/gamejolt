@@ -1,23 +1,23 @@
 <app-card>
 	<div class="card-content">
 		<p>
-			This is your Site URL:
+			<translate>This is your Site URL:</translate>
 		</p>
-		<input class="form-control" :value="this.site.url">
+		<input class="form-control" :value="site.url">
 	</div>
 	<div class="card-controls">
 		<button class="btn btn-outline btn-block"
 			@click="copyLink"
 			>
 			<app-jolticon icon="link" />
-			Copy Link
+			<translate>Copy Link</translate>
 		</button>
 		<a class="btn btn-outline btn-block"
-			:href="this.site.url"
+			:href="site.url"
 			target="_blank"
 			>
 			<app-jolticon icon="share" />
-			View Site
+			<translate>View Site</translate>
 		</a>
 	</div>
 </app-card>
