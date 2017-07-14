@@ -1,4 +1,4 @@
-<app-form name="mediaForm">
+<app-form name="mediaForm" ref="form">
 	<app-form-loader
 		:url="`/web/dash/developer/games/media/save/image/${ formModel.game_id }`"
 		@loaded="onLoaded"
@@ -10,7 +10,6 @@
 			:label="$gettext( `dash.games.media.image.form.image_label` )"
 			:hide-label="true"
 			>
-
 			<p class="help-block">
 				<translate :escape-html="false">dash.forms.image_filetype_help_html</translate>
 			</p>
@@ -22,22 +21,10 @@
 				}"
 				accept=".png,.jpg,.jpeg,.gif"
 				:multiple="true"
-				:sortable="true"
+				@changed="imagesSelected()"
 				/>
 
-			<!--<gj-form-upload-control
-				form-control="upload"
-				gj-max-filesize="maxFilesize"
-				gj-max-img-width="maxWidth"
-				gj-max-img-height="maxHeight"
-				accept=".png,.jpg,.jpeg,.gif"
-				multiple="true"
-				is-sortable="true"
-				>
-			</gj-form-upload-control>-->
-
 			<app-form-control-errors :label="$gettext( `selection of images` )" />
-
 		</app-form-group>
 
 		<app-form-group
@@ -54,7 +41,7 @@
 		</app-form-group>
 
 		<app-form-button
-			v-if="changed"
+			v-if="changed && method !== 'add'"
 			:icon="method"
 			>
 			<translate v-if="method === 'add'">Add</translate>
