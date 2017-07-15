@@ -56,11 +56,14 @@
 
 								<hr class="underbar">
 
-								<app-rating-widget
-									:game="game"
-									:rating="userRating"
-									:big="true"
-									/>
+								<div>
+									<app-rating-widget
+										:game="game"
+										:rating="userRating"
+										:big="true"
+										/>
+								</div>
+								<br>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
@@ -77,20 +80,23 @@
 						Convenience Messaging
 					-->
 					<div v-if="game._is_wip && !game.canceled">
+						<br class="visible-xs">
 						<div class="alert alert-info full-bleed-xs">
 							<translate :escape-html="false">
 								This game is in <b>early access</b>. It's still in development and the current version may be buggy or incomplete. Follow along to watch it as it develops!
 							</translate>
 						</div>
-						<br>
+						<br class="hidden-xs">
 					</div>
 
 					<div v-if="game.canceled">
+						<br class="visible-xs">
 						<div class="alert alert-warning full-bleed-xs">
 							<translate :escape-html="false">
 								This game was <b>canceled</b>, so the current version might be buggy or incomplete. You can still follow it if you'd like to be notified in the case that development continues.
 							</translate>
 						</div>
+						<br class="hidden-xs">
 					</div>
 
 					<!--
