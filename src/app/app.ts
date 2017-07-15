@@ -22,18 +22,21 @@ export class App extends Vue {
 
 	Connection = makeObservableService(Connection);
 
-	created() {}
+	// created() {}
 
-	// created()
-	// {
-	// 	this.loadTranslations();
-	// }
+	created() {
+		// this.loadTranslations();
+	}
 
-	// async loadTranslations()
-	// {
-	// 	if ( this.$language ) {
-	// 		const main = await import( '!!../../../translations/' + Translate.lang + '/main.json' );
-	// 		this.$language.addTranslations( main );
+	// loadTranslations() {
+	// 	console.log('load translations');
+	// 	if (this.$language) {
+	// 		import('!!./../translations/en_US/main.json').then(mod => {
+	// 			console.log('mod', mod);
+	// 			this.$language.addTranslations(mod);
+	// 		});
+	// 		// const dash = await import('!!../../../translations/' + Translate.lang + '/dash.json');
+	// 		// this.$language.addTranslations(main);
 	// 	}
 	// }
 }

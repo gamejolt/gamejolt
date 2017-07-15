@@ -5,7 +5,7 @@ import { Device } from '../../../../lib/gj-lib-client/components/device/device.s
 import { forEach } from '../../../../lib/gj-lib-client/utils/collection';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { objectEquals } from '../../../../lib/gj-lib-client/utils/object';
-import { router } from '../../../bootstrap';
+import { router } from '../../../views/index';
 import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
 
 const STORAGE_KEY = 'game-filtering:filters';

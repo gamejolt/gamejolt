@@ -1,7 +1,7 @@
 import { ActivityFeedInput } from './item-service';
 import { ActivityFeedContainer, ActivityFeedContainerOptions } from './feed-container-service';
 import { History } from '../../../../lib/gj-lib-client/components/history/history.service';
-import { router } from '../../../bootstrap';
+import { router } from '../../../views/index';
 
 /**
  * Number of states we will keep cached.

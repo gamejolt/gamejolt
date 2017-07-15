@@ -6,7 +6,7 @@ import {
 	VuexStore,
 } from '../../lib/gj-lib-client/utils/vuex';
 
-import { router } from '../bootstrap';
+import { router } from '../views';
 import { GameCollection } from '../components/game/collection/collection.model';
 import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
 import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';

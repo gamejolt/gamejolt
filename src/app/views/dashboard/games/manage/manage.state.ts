@@ -6,7 +6,6 @@ import {
 	VuexAction,
 } from '../../../../../lib/gj-lib-client/utils/vuex';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { router, store } from '../../../../bootstrap';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
@@ -14,6 +13,8 @@ import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game
 import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
 import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { store } from '../../../../store/index';
+import { router } from '../../../index';
 
 export const RouteState = namespace('route', State);
 export const RouteAction = namespace('route', Action);
