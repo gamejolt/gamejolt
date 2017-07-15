@@ -1,11 +1,11 @@
 import VueRouter from 'vue-router';
-import { asyncComponentLoader } from '../../../../../../../lib/gj-lib-client/utils/utils';
+
 
 export const routeDiscoverGamesViewDownloadSoundtrack: VueRouter.RouteConfig = {
 	name: 'discover.games.view.download.soundtrack',
 	path: 'download/soundtrack',
 	props: true,
-	component: () => asyncComponentLoader(import('./soundtrack')),
+	component: () => import('./soundtrack'),
 	children: [
 		// http://localhost:8080/games/tea-time-with-luap-sere-make-the-world-right/soundtracks/download/863
 		{

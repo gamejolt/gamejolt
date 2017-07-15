@@ -1,11 +1,11 @@
 import VueRouter from 'vue-router';
-import { asyncComponentLoader } from '../../../../../../lib/gj-lib-client/utils/utils';
+
 
 export const routeAuthLinkedAccountFacebookCallback: VueRouter.RouteConfig = {
 	name: 'auth.linked-account.facebook.callback',
 	path: 'facebook/callback',
 	props: true,
-	component: () => asyncComponentLoader(import('./callback')),
+	component: () => import('./callback'),
 };
 
 // angular.module( 'App.Views' ).config( function( $stateProvider )

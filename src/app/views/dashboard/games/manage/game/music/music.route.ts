@@ -1,11 +1,10 @@
 import VueRouter from 'vue-router';
-import { asyncComponentLoader } from '../../../../../../../lib/gj-lib-client/utils/utils';
 
 export const routeDashGamesManageGameMusic: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.game.music',
 	path: 'music',
 	props: true,
-	component: () => asyncComponentLoader(import('./music')),
+	component: () => import('./music'),
 	children: [
 		{
 			path: '/dashboard/developer/games/soundtracks/:id(\\d+)/',

@@ -1,5 +1,5 @@
 import VueRouter from 'vue-router';
-import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils';
+
 import { routeDashAccountEdit } from './edit/edit.route';
 import { routeDashAccountAvatar } from './avatar/avatar.route';
 import { routeDashAccountEmailPreferences } from './email-preferences/email-preferences.route';
@@ -12,7 +12,7 @@ import { routeDashAccountFinancials } from './financials/financials.route';
 export const routeDashAccount: VueRouter.RouteConfig = {
 	path: '/dashboard',
 	props: true,
-	component: () => asyncComponentLoader(import('./account')),
+	component: () => import('./account'),
 	children: [
 		routeDashAccountEdit,
 		routeDashAccountAvatar,

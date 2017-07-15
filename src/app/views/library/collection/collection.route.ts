@@ -1,5 +1,4 @@
 import VueRouter from 'vue-router';
-import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils';
 
 const routes: Array<[string, string]> = [
 	['playlist', '/playlist/:slug/:id(\\d+)'],
@@ -16,7 +15,7 @@ export const routeLibraryCollectionRoutes: VueRouter.RouteConfig[] = routes.map(
 		name: `library.collection.${route[0]}`,
 		path: route[1],
 		props: true,
-		component: () => asyncComponentLoader(import('./collection')),
+		component: () => import('./collection'),
 		meta: {
 			collectionType: route[0],
 		},
