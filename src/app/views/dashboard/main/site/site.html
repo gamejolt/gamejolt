@@ -1,6 +1,9 @@
 <section class="section" v-if="routeBootstrapped">
 	<div class="container">
 
+		<!-- Needed for the editor route to trigger -->
+		<router-view :site="site" />
+
 		<div class="row">
 			<div class="col-lg-8">
 
@@ -16,7 +19,8 @@
 				<br class="hidden-lg">
 
 				<p class="page-help">
-					<translate :escape-html="false"><strong>Game Jolt Sites are customizable external sites for your portfolio and games!</strong> You can use a customizable template, or simply upload your own static site.</translate>
+					<strong><translate>Game Jolt Sites are customizable external sites for your portfolio and games!</translate></strong>
+					<translate>You can use a customizable template, or simply upload your own static site.</translate>
 				</p>
 
 				<p class="page-help">
@@ -24,7 +28,7 @@
 				</p>
 
 				<p class="page-help">
-					<translate :escape-html="false">You can set up a <strong>game site</strong> when managing your game.</translate>
+					<translate>You can set up a game site when managing your game.</translate>
 				</p>
 
 				<hr>

@@ -162,7 +162,6 @@
 
 					<div>
 						<router-link class="btn btn-outline btn-block" :to="{ name: 'dash.withdraw-funds' }">
-							<app-jolticon icon="chevron-right" />
 							<translate>dash.overview.revenue_withdraw_button</translate>
 						</router-link>
 					</div>
@@ -237,18 +236,16 @@
 				<div v-if="app.user.is_developer">
 					<h2>
 						<translate>Sites</translate>
-						<span class="tag tag-pink">
-							<translate>New!</translate>
-						</span>
 					</h2>
 
-					<div class="page-help">
-						<p><translate :escape-html="false"><b>Game Jolt Sites are customizable external sites for your portfolio and games!</b> You can use a customizable template, or simply upload your own static site.</translate></p>
-					</div>
+					<p class="page-help">
+						<strong><translate>Game Jolt Sites are customizable external sites for your portfolio and games!</translate></strong>
+						<translate>You can use a customizable template, or simply upload your own static site.</translate>
+					</p>
 
-					<div class="page-help">
-						<p><translate :escape-html="false">You can set up a <b>game site</b> when managing your game.</translate></p>
-					</div>
+					<p class="page-help">
+						<translate>You can set up a game site when managing your game.</translate>
+					</p>
 
 					<div>
 						<router-link

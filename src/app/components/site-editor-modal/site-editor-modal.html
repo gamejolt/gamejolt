@@ -17,14 +17,28 @@
 						<div class="navbar-left">
 							<ul class="navbar-items">
 								<li>
-									<a :class="{ active: tab === 'theme' }" @click="tab = 'theme'">
+									<router-link
+										replace
+										:to="{
+											name: $route.name,
+											params: Object.assign({}, $route.params, { tab: 'theme' })
+										}"
+										active-class="active"
+										>
 										<translate>Customize Theme</translate>
-									</a>
+									</router-link>
 								</li>
 								<li>
-									<a :class="{ active: tab === 'content' }" @click="tab = 'content'">
+									<router-link
+										replace
+										:to="{
+											name: $route.name,
+											params: Object.assign({}, $route.params, { tab: 'content' })
+										}"
+										active-class="active"
+										>
 										<translate>Edit Content</translate>
-									</a>
+									</router-link>
 								</li>
 							</ul>
 						</div>
@@ -99,7 +113,7 @@
 							window-id="site-editor-modal-iframe"
 							:site="site"
 							:content-block="site.content_blocks[0]"
-							@change="contentEdited()"
+							@change="contentEdited"
 							/>
 
 					</div>
