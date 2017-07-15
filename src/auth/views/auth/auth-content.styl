@@ -1,5 +1,6 @@
 @require '~styles/variables'
 @require '../../../lib/gj-lib-client/stylus/animation/fade/fade-in'
+@require '../../../lib/gj-lib-client/components/auth/auth-form'
 
 #auth-container
 
@@ -8,29 +9,16 @@
 		.alert
 			text-shadow: none
 
+	// We want all the forms in the auth section to match the auth-form styling.
 	form
+		@extend .auth-form
+
 		.form-group
 			@extend .anim-fade-in-up
-			margin: 0
 
-		.form-control
-
-			// Bigger form controls.
-			height: 40px
-
-			// Scrunch up the form controls so their borders overlap.
-			margin-top: -1px
-
-			// Don't change the color of the border on focus.
-			&:focus
-				border-color: $gray-lighter
-
+	// Match the button heights to the auth-form input heights.
 	button
 		height: 40px
-
-		&
-		& > .jolticon
-			line-height: 40px
 
 	.loading
 		color: $white
@@ -41,6 +29,11 @@
 
 	.auth-social-buttons button
 		margin-bottom: 10px
+
+	.auth-line-thru
+		&::before
+		&::after
+			border-color: rgba($white, 0.5)
 
 	.auth-page-links
 		margin-top: $line-height-computed
