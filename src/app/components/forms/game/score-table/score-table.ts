@@ -19,6 +19,7 @@ export class FormGameScoreTable extends BaseForm<GameScoreTable> implements Form
 	@Prop(Game) game: Game;
 
 	modelClass = GameScoreTable;
+	GameScoreTable = GameScoreTable;
 
 	onInit() {
 		this.setField('game_id', this.game.id);

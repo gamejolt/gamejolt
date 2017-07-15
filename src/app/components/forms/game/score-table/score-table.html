@@ -37,21 +37,22 @@
 		name="scores_sorting_direction"
 		:label="$gettext( `dash.games.scoreboard.form.direction_label` )"
 		>
-		<!--TODO-->
-		<!--<div class="radio">
+		<div class="radio">
 			<label>
-				<input form-control="radio" ng-value="Game_ScoreTable.SORTING_DIRECTION_DESC">
-				<translate>dash.games.scoreboard.form.desc_label</translate> <br>
+				<app-form-control-radio :value="GameScoreTable.SORTING_DIRECTION_DESC" />
+				<translate>dash.games.scoreboard.form.desc_label</translate>
+				<br>
 				<span class="help-inline"><translate>dash.games.scoreboard.form.desc_help</translate></span>
 			</label>
 		</div>
 		<div class="radio">
 			<label>
-				<input form-control="radio" ng-value="Game_ScoreTable.SORTING_DIRECTION_ASC">
-				<translate>dash.games.scoreboard.form.asc_label</translate> <br>
+				<app-form-control-radio :value="GameScoreTable.SORTING_DIRECTION_ASC" />
+				<translate>dash.games.scoreboard.form.asc_label</translate>
+				<br>
 				<span class="help-inline"><translate>dash.games.scoreboard.form.asc_help</translate></span>
 			</label>
-		</div>-->
+		</div>
 	</app-form-group>
 
 	<app-form-button :icon="method">
