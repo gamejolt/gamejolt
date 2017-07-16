@@ -6,7 +6,7 @@ import {
 	VuexStore,
 } from '../../lib/gj-lib-client/utils/vuex';
 
-import { router } from '../bootstrap';
+import { router } from '../views';
 import { GameCollection } from '../components/game/collection/collection.model';
 import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
 import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
@@ -131,9 +131,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 
 	@VuexMutation
 	removeCollection(collection: Mutations['library/removeCollection']) {
-		const index = this.collections.findIndex(
-			item => item._id === collection._id
-		);
+		const index = this.collections.findIndex(item => item._id === collection._id);
 		if (index !== -1) {
 			this.collections.splice(index, 1);
 		}
@@ -220,36 +218,29 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 				return true;
 			}
 		} catch (e) {
-			Growls.error(
-				Translate.$gettext(`Error! Error! Unable to unfollow this playlist.`)
-			);
+			Growls.error(Translate.$gettext(`Error! Error! Unable to unfollow this playlist.`));
 		}
 
 		return false;
 	}
 
 	@VuexAction
-	async addGameToPlaylist({
-		playlist,
-		game,
-	}: Actions['library/addGameToPlaylist']) {
+	async addGameToPlaylist({ playlist, game }: Actions['library/addGameToPlaylist']) {
 		try {
 			await playlist.$addGame(game.id);
 
 			Growls.success(
-				Translate.$gettextInterpolate(
-					`You've added %{ game } to %{ playlist }. Nice!`,
-					{ game: game.title, playlist: playlist.name }
-				),
+				Translate.$gettextInterpolate(`You've added %{ game } to %{ playlist }. Nice!`, {
+					game: game.title,
+					playlist: playlist.name,
+				}),
 				Translate.$gettext(`Added Game`)
 			);
 
 			return true;
 		} catch (e) {
 			Growls.error(
-				Translate.$gettext(
-					`Error! Error! This game could not be added to the playlist.`
-				)
+				Translate.$gettext(`Error! Error! This game could not be added to the playlist.`)
 			);
 		}
 
@@ -290,9 +281,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 			return true;
 		} catch (e) {
 			Growls.error(
-				Translate.$gettext(
-					`Error! Error! This game could not be removed from the playlist.`
-				)
+				Translate.$gettext(`Error! Error! This game could not be removed from the playlist.`)
 			);
 		}
 
@@ -302,10 +291,9 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 	@VuexAction
 	async unfollowGame(game: Actions['library/unfollowGame']) {
 		const result = await ModalConfirm.show(
-			Translate.$gettextInterpolate(
-				`Are you sure you want to stop following %{ game }?`,
-				{ game: game.title }
-			)
+			Translate.$gettextInterpolate(`Are you sure you want to stop following %{ game }?`, {
+				game: game.title,
+			})
 		);
 
 		if (!result) {
@@ -326,9 +314,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 			return true;
 		} catch (e) {
 			Growls.error(
-				Translate.$gettext(
-					`Uh-oh, something has prevented you from unfollowing this game.`
-				)
+				Translate.$gettext(`Uh-oh, something has prevented you from unfollowing this game.`)
 			);
 		}
 

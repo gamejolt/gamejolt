@@ -4,9 +4,6 @@ import { AppGameOgrsTag } from './tag';
 import { AppGameOgrs } from './ogrs';
 
 @NgModule({
-	declarations: [
-		makeComponentProvider(AppGameOgrsTag),
-		makeComponentProvider(AppGameOgrs),
-	],
+	declarations: [makeComponentProvider(AppGameOgrsTag), makeComponentProvider(AppGameOgrs)],
 })
 export class GameOgrsModule {}

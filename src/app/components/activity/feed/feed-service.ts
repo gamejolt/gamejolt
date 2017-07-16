@@ -1,10 +1,7 @@
 import { ActivityFeedInput } from './item-service';
-import {
-	ActivityFeedContainer,
-	ActivityFeedContainerOptions,
-} from './feed-container-service';
+import { ActivityFeedContainer, ActivityFeedContainerOptions } from './feed-container-service';
 import { History } from '../../../../lib/gj-lib-client/components/history/history.service';
-import { router } from '../../../bootstrap';
+import { router } from '../../../views/index';
 
 /**
  * Number of states we will keep cached.
@@ -21,13 +18,8 @@ export class ActivityFeedService {
 	private static _states: ActivityFeedState[] = [];
 	private static _currentState: ActivityFeedState;
 
-	static bootstrap(
-		items?: ActivityFeedInput[],
-		options?: ActivityFeedContainerOptions
-	) {
-		const url = History.futureState
-			? History.futureState.fullPath
-			: router.currentRoute.fullPath;
+	static bootstrap(items?: ActivityFeedInput[], options?: ActivityFeedContainerOptions) {
+		const url = History.futureState ? History.futureState.fullPath : router.currentRoute.fullPath;
 
 		// If we're bootstrapping in historical, just return what we had.
 		// We only do this if we are going back to the latest state that we have

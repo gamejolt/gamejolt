@@ -60,14 +60,10 @@ export default class RouteDiscoverGamesViewTrophiesList extends Vue {
 			? UserGameTrophy.populate(this.$payload.trophiesAchieved)
 			: [];
 		this.experience = this.$payload.trophiesExperienceAchieved || 0;
-		this.showInvisibleTrophyMessage =
-			this.$payload.trophiesShowInvisibleTrophyMessage || false;
+		this.showInvisibleTrophyMessage = this.$payload.trophiesShowInvisibleTrophyMessage || false;
 
 		this.achievedIndexed = UserGameTrophy.indexAchieved(this.achieved);
-		this.filteredTrophies = GameTrophy.splitAchieved(
-			this.trophies,
-			this.achievedIndexed
-		);
+		this.filteredTrophies = GameTrophy.splitAchieved(this.trophies, this.achievedIndexed);
 
 		this.currentFilter = 'all';
 	}

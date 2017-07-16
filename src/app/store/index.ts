@@ -12,11 +12,7 @@ import {
 	Actions as AppActions,
 	appStore,
 } from '../../lib/gj-lib-client/vue/services/app/app-store';
-import {
-	LibraryStore,
-	Mutations as LibraryMutations,
-	Actions as LibraryActions,
-} from './library';
+import { LibraryStore, Mutations as LibraryMutations, Actions as LibraryActions } from './library';
 import {
 	ClientLibraryStore,
 	Mutations as ClientLibraryMutations,
@@ -89,9 +85,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	isBootstrapped = false;
 	_bootstrappedResolver: Function | null = null;
-	bootstrappedPromise = new Promise(
-		resolve => (this._bootstrappedResolver = resolve)
-	);
+	bootstrappedPromise = new Promise(resolve => (this._bootstrappedResolver = resolve));
 
 	notificationCount = 0;
 
@@ -155,10 +149,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		// We go to the homepage currently just in case they're in a view they shouldn't be.
 		router.push({ name: 'discover.home' });
 
-		Growls.success(
-			Translate.$gettext('You are now logged out.'),
-			Translate.$gettext('Goodbye!')
-		);
+		Growls.success(Translate.$gettext('You are now logged out.'), Translate.$gettext('Goodbye!'));
 	}
 
 	@VuexAction
@@ -236,9 +227,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	_clear() {
-		this.bootstrappedPromise = new Promise(
-			resolve => (this._bootstrappedResolver = resolve)
-		);
+		this.bootstrappedPromise = new Promise(resolve => (this._bootstrappedResolver = resolve));
 	}
 
 	@VuexMutation

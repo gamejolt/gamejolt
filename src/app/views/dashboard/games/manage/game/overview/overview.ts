@@ -69,9 +69,7 @@ export default class RouteDashGamesManageGameOverview extends Vue {
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/overview/' + route.params.id
-		);
+		return Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id);
 	}
 
 	routed() {

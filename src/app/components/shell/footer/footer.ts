@@ -1,5 +1,3 @@
-import * as nwGui from 'nw.gui';
-
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./footer.html?style=./footer.styl';
@@ -32,17 +30,6 @@ export class AppShellFooter extends Vue {
 
 	get clientVersion() {
 		return GJ_VERSION;
-	}
-
-	// We have to refresh the whole browser when language changes so that
-	// all the new language strings get picked up.
-	onLangChange() {
-		if (!GJ_IS_CLIENT) {
-			window.location.reload();
-		} else {
-			const gui = require('nw.gui') as typeof nwGui;
-			gui.Window.get().reloadDev();
-		}
 	}
 
 	showSystemReport() {

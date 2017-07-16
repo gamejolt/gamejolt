@@ -1,7 +1,9 @@
 @require '~styles/variables'
 
 >>> .site-editor-modal-open
-	overflow: hidden
+	&
+	.modal
+		overflow: hidden !important
 
 .site-editor-modal
 	position: fixed

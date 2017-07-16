@@ -36,10 +36,7 @@ export class ClientLauncher {
 		for (let packageId in ClientLibrary.packages) {
 			const localPackage = ClientLibrary.packages[packageId];
 
-			if (
-				runningPackageIds.indexOf(localPackage.id) !== -1 ||
-				localPackage.isRunning
-			) {
+			if (runningPackageIds.indexOf(localPackage.id) !== -1 || localPackage.isRunning) {
 				localPackage.running_pid = {
 					wrapperId: localPackage.id.toString(),
 				};
@@ -60,9 +57,7 @@ export class ClientLauncher {
 				game_id: localPackage.game_id,
 			});
 		} catch (e) {
-			console.log(
-				'Could not get game token to launch with - launching anyways'
-			);
+			console.log('Could not get game token to launch with - launching anyways');
 			console.error(e);
 		}
 
@@ -70,12 +65,7 @@ export class ClientLauncher {
 			credentials = credentials && credentials.username && credentials.token
 				? { username: credentials.username, user_token: credentials.token }
 				: null;
-			const launchInstance = await Launcher.launch(
-				localPackage,
-				os,
-				arch,
-				credentials
-			).promise;
+			const launchInstance = await Launcher.launch(localPackage, os, arch, credentials).promise;
 			return await this.attach(localPackage, launchInstance);
 		} catch (e) {
 			this.clear(localPackage);
@@ -87,9 +77,7 @@ export class ClientLauncher {
 	static async reattach(localPackage: LocalDbPackage) {
 		try {
 			if (!localPackage.running_pid) {
-				throw new Error(
-					"Cannot reattach to package (it isn't supposed to be running)"
-				);
+				throw new Error("Cannot reattach to package (it isn't supposed to be running)");
 			}
 
 			const launchInstance = await Launcher.attach(localPackage.running_pid);
@@ -100,10 +88,7 @@ export class ClientLauncher {
 		}
 	}
 
-	static attach(
-		localPackage: LocalDbPackage,
-		launchInstance: LaunchInstanceHandle
-	) {
+	static attach(localPackage: LocalDbPackage, launchInstance: LaunchInstanceHandle) {
 		this.currentlyPlaying.push(localPackage);
 
 		launchInstance.on('end', () => {

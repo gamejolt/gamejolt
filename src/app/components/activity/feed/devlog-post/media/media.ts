@@ -70,10 +70,8 @@ export class AppActivityFeedDevlogPostMedia extends Vue {
 
 	private _updateSliderOffset(extraOffsetPx = 0) {
 		const pagePercent = this.page - 1;
-		const pagePx =
-			(this.$refs.slider as HTMLElement).offsetWidth * -pagePercent;
-		(this.$refs
-			.slider as HTMLElement).style.transform = `translate3d( ${pagePx +
+		const pagePx = (this.$refs.slider as HTMLElement).offsetWidth * -pagePercent;
+		(this.$refs.slider as HTMLElement).style.transform = `translate3d( ${pagePx +
 			extraOffsetPx}px, 0, 0 )`;
 	}
 

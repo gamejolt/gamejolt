@@ -1,11 +1,10 @@
 import VueRouter from 'vue-router';
-import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils';
 
 export const routeDashAnalytics: VueRouter.RouteConfig = {
 	name: 'dash.analytics',
 	path: 'analytics/:resource/:resourceId/:metricKey?',
 	// props: true,
-	component: () => asyncComponentLoader(import('./analytics')),
+	component: () => import('./analytics'),
 };
 
 // angular.module( 'App.Views' ).config( function( $stateProvider )

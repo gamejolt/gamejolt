@@ -50,10 +50,7 @@ export default class RouteForumsChannelsView extends Vue {
 	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
-			'/web/forums/channels/' +
-				route.params.name +
-				'?page=' +
-				(route.query.page || 1)
+			'/web/forums/channels/' + route.params.name + '?page=' + (route.query.page || 1)
 		);
 	}
 

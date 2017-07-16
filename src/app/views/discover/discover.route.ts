@@ -9,10 +9,5 @@ export const routeDiscover: VueRouter.RouteConfig = {
 	path: '/',
 	props: true,
 	component: RouteDiscover,
-	children: [
-		routeDiscoverHome,
-		routeDiscoverGames,
-		routeDiscoverDevlogs,
-		routeDiscoverChannels,
-	],
+	children: [routeDiscoverHome, routeDiscoverGames, routeDiscoverDevlogs, routeDiscoverChannels],
 };

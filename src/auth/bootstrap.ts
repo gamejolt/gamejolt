@@ -4,35 +4,26 @@ import '../lib/gj-lib-client/utils/polyfills';
 import { History } from '../lib/gj-lib-client/components/history/history.service';
 
 import Vue from 'vue';
-const VueGettext = require('vue-gettext');
 
 import { store } from './store/index';
 import { router } from './views/index';
 import { Payload } from '../lib/gj-lib-client/components/payload/payload-service';
 import { App } from './app';
-import { Translate } from '../lib/gj-lib-client/components/translate/translate.service';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
+import { bootstrapAppTranslations } from '../utils/translations';
 
 Payload.init(store as any, router);
 History.init(router);
 Analytics.initRouter(router);
 
-const availableLanguages: any = {};
-for (const lang of Translate.langs) {
-	availableLanguages[lang.code] = lang.label;
+export async function createApp() {
+	await bootstrapAppTranslations();
+
+	const app = new Vue({
+		store: store as any,
+		router,
+		render: h => h(App),
+	});
+
+	return { app, store, router };
 }
-
-Vue.use(VueGettext, {
-	silent: true,
-	availableLanguages,
-	defaultLanguage: Translate.lang,
-	translations: require(`!!../translations/en_US/auth.json`),
-});
-
-const app = new Vue({
-	store: store as any,
-	router,
-	render: h => h(App),
-});
-
-export { app, store, router };

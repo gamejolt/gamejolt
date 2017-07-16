@@ -1,5 +1,5 @@
 import VueRouter from 'vue-router';
-import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils';
+
 import { routeAuthLinkedAccountTwitterCallback } from './twitter/callback/callback.route';
 import { routeAuthLinkedAccountTwitterFinalize } from './twitter/finalize/finalize.route';
 import { routeAuthLinkedAccountPoll } from './poll/poll.route';
@@ -11,7 +11,7 @@ export const routeAuthLinkedAccount: VueRouter.RouteConfig = {
 	name: 'auth.linked-account',
 	path: 'auth',
 	props: true,
-	component: () => asyncComponentLoader(import('./linked-account')),
+	component: () => import('./linked-account'),
 	meta: {
 		hideCoverImage: true,
 	},

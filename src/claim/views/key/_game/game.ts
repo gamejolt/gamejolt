@@ -51,22 +51,18 @@ export class AppKeyGame extends Vue {
 		this.showingThanks = this.$route.query.thanks !== undefined;
 
 		this.game = new Game(this.payload.game);
-		this.bundle = this.payload.bundle
-			? new GameBundle(this.payload.bundle)
-			: null;
-		this.keyGroup = this.payload.keyGroup
-			? new KeyGroup(this.payload.keyGroup)
-			: null;
+		this.bundle = this.payload.bundle ? new GameBundle(this.payload.bundle) : null;
+		this.keyGroup = this.payload.keyGroup ? new KeyGroup(this.payload.keyGroup) : null;
 
 		if (this.payload.type === 'game') {
 			Meta.title = this.$gettextInterpolate(`Key Page for %{ game }`, {
 				game: this.game.title,
 			});
 		} else if (this.payload.type === 'bundle-game' && this.bundle) {
-			Meta.title = this.$gettextInterpolate(
-				`Key Page for %{ game } in %{ bundle }`,
-				{ game: this.game.title, bundle: this.bundle.title }
-			);
+			Meta.title = this.$gettextInterpolate(`Key Page for %{ game } in %{ bundle }`, {
+				game: this.game.title,
+				bundle: this.bundle.title,
+			});
 		}
 
 		if (

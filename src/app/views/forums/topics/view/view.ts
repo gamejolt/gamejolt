@@ -89,11 +89,7 @@ export default class RouteForumsTopicsView extends Vue {
 	Environment = Environment;
 
 	get loginUrl() {
-		return (
-			Environment.authBaseUrl +
-			'/login?redirect=' +
-			encodeURIComponent(this.$route.fullPath)
-		);
+		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
 	}
 
 	@RouteResolve({ cache: true })
@@ -101,10 +97,7 @@ export default class RouteForumsTopicsView extends Vue {
 		HistoryTick.sendBeacon('forum-topic', parseInt(route.params.id, 10));
 
 		return Api.sendRequest(
-			'/web/forums/topics/' +
-				route.params.id +
-				'?page=' +
-				(route.query.page || 1)
+			'/web/forums/topics/' + route.params.id + '?page=' + (route.query.page || 1)
 		);
 	}
 

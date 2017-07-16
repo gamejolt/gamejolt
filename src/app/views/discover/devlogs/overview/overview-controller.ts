@@ -27,8 +27,6 @@ export class OverviewCtrl {
 		Meta.twitter.image = require('../social.png');
 
 		this.games = Game.populate(payload.games);
-		this.posts = ActivityFeedService.bootstrap(
-			FiresidePost.populate(payload.posts)
-		);
+		this.posts = ActivityFeedService.bootstrap(FiresidePost.populate(payload.posts));
 	}
 }

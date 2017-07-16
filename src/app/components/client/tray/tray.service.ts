@@ -86,11 +86,7 @@ export class ClientTray {
 				new gui.MenuItem({
 					label: 'Browse Games',
 					click: function() {
-						$state.go(
-							'discover.games.list._fetch',
-							{ section: 'featured' },
-							{ inherit: false }
-						);
+						$state.go('discover.games.list._fetch', { section: 'featured' }, { inherit: false });
 						ClientControl.show();
 					},
 				})

@@ -3,13 +3,7 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./media.html?style=./media.styl';
 
-import {
-	RouteState,
-	RouteStore,
-	RouteMutation,
-	Media,
-	RouteAction,
-} from '../../manage.state';
+import { RouteState, RouteStore, RouteMutation, Media, RouteAction } from '../../manage.state';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
@@ -64,9 +58,7 @@ export default class RouteDashGamesManageGameMedia extends Vue {
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/media/' + route.params.id
-		);
+		return Api.sendRequest('/web/dash/developer/games/media/' + route.params.id);
 	}
 
 	routeInit() {
@@ -98,10 +90,9 @@ export default class RouteDashGamesManageGameMedia extends Vue {
 		}
 
 		/// {{ type }} contains the translated media item type (image/video/sketchfab)
-		const message = this.$gettextInterpolate(
-			'Are you sure you want to remove this %{ type }?',
-			{ type: typeLabel }
-		);
+		const message = this.$gettextInterpolate('Are you sure you want to remove this %{ type }?', {
+			type: typeLabel,
+		});
 
 		const result = await ModalConfirm.show(message);
 		if (!result) {

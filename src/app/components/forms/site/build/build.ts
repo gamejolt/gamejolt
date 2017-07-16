@@ -19,8 +19,7 @@ import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/component
 		AppFormControlUpload,
 	},
 })
-export class FormDashSiteBuild extends BaseForm<SiteBuild>
-	implements FormOnInit, FormOnSubmit {
+export class FormDashSiteBuild extends BaseForm<SiteBuild> implements FormOnInit, FormOnSubmit {
 	modelClass = SiteBuild;
 	resetOnSubmit = true;
 

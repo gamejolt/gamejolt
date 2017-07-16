@@ -20,25 +20,15 @@ export class ModalCtrl {
 		this.to = this._getStatusString(this.stage);
 		this.action = `${this.from}:${this.to}`;
 
-		this.fromTranslated = this._getStatusTranslated(
-			this.game.development_status
-		);
+		this.fromTranslated = this._getStatusTranslated(this.game.development_status);
 		this.toTranslated = this._getStatusTranslated(this.stage);
 	}
 
 	private _getStatusTranslated(stage: number) {
 		if (stage === Game.DEVELOPMENT_STATUS_DEVLOG) {
-			return this.gettextCatalog.getString(
-				'devlog-only',
-				{},
-				'development status'
-			);
+			return this.gettextCatalog.getString('devlog-only', {}, 'development status');
 		} else if (stage === Game.DEVELOPMENT_STATUS_WIP) {
-			return this.gettextCatalog.getString(
-				'early access',
-				{},
-				'development status'
-			);
+			return this.gettextCatalog.getString('early access', {}, 'development status');
 		}
 
 		return this.gettextCatalog.getString('complete', {}, 'development status');

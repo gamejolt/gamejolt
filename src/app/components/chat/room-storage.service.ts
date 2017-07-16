@@ -21,8 +21,7 @@ export class ChatRoomStorage {
 		}
 
 		if (!this.storageListener) {
-			this.storageListener = (event: StorageEvent) =>
-				this.onStorageEvent(event);
+			this.storageListener = (event: StorageEvent) => this.onStorageEvent(event);
 			window.addEventListener('storage', this.storageListener);
 		}
 
@@ -44,11 +43,7 @@ export class ChatRoomStorage {
 		const data = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '{}');
 
 		// Don't reprocess the same command.
-		if (
-			data.action &&
-			data.action.type === 'join' &&
-			data.action.roomId === roomId
-		) {
+		if (data.action && data.action.type === 'join' && data.action.roomId === roomId) {
 			return;
 		}
 
@@ -68,11 +63,7 @@ export class ChatRoomStorage {
 		const data = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '{}');
 
 		// Don't reprocess the same command.
-		if (
-			data.action &&
-			data.action.type === 'leave' &&
-			data.action.roomId === roomId
-		) {
+		if (data.action && data.action.type === 'leave' && data.action.roomId === roomId) {
 			return;
 		}
 

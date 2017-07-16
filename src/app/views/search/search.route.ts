@@ -1,5 +1,5 @@
 import VueRouter from 'vue-router';
-import { asyncComponentLoader } from '../../../lib/gj-lib-client/utils/utils';
+
 import { routeSearchResults } from './results/results.route';
 import { routeSearchGames } from './games/games.route';
 import { routeSearchDevlogs } from './devlogs/devlogs.route';
@@ -9,11 +9,6 @@ export const routeSearch: VueRouter.RouteConfig = {
 	name: 'search',
 	path: '/search',
 	props: true,
-	component: () => asyncComponentLoader(import('./search')),
-	children: [
-		routeSearchResults,
-		routeSearchGames,
-		routeSearchDevlogs,
-		routeSearchUsers,
-	],
+	component: () => import('./search'),
+	children: [routeSearchResults, routeSearchGames, routeSearchDevlogs, routeSearchUsers],
 };

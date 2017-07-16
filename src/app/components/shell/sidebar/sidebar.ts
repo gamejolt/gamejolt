@@ -17,11 +17,7 @@ import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { Store } from '../../../store/index';
 import { AppShellSidebarCollectionList } from './collection-list';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import {
-	LibraryStore,
-	LibraryAction,
-	LibraryState,
-} from '../../../store/library';
+import { LibraryStore, LibraryAction, LibraryState } from '../../../store/library';
 
 @View
 @Component({

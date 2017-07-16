@@ -1,9 +1,5 @@
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
-import {
-	IDownloadProgress,
-	IExtractProgress,
-	IParsedWrapper,
-} from 'client-voodoo';
+import { IDownloadProgress, IExtractProgress, IParsedWrapper } from 'client-voodoo';
 import { Component } from 'vue-property-decorator';
 import Vue from 'vue';
 

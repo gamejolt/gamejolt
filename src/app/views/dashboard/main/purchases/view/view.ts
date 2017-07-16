@@ -50,9 +50,7 @@ export default class RouteDashMainPurchasesView extends Vue {
 		this.order = new Order(this.$payload.order);
 		this.games = arrayIndexBy(Game.populate(this.$payload.games), 'id');
 
-		const packages: GamePackage[] = GamePackage.populate(
-			this.$payload.packages
-		);
+		const packages: GamePackage[] = GamePackage.populate(this.$payload.packages);
 		this.packagesBySellable = {};
 		for (const _package of packages) {
 			if (!this.packagesBySellable[_package.sellable_id]) {
@@ -62,11 +60,7 @@ export default class RouteDashMainPurchasesView extends Vue {
 		}
 
 		this.firstRefund = null;
-		if (
-			this.order._is_refunded &&
-			this.order.payments[0] &&
-			this.order.payments[0].refunds
-		) {
+		if (this.order._is_refunded && this.order.payments[0] && this.order.payments[0].refunds) {
 			this.firstRefund = this.order.payments[0].refunds[0];
 		}
 

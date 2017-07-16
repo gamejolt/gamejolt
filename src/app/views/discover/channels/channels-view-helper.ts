@@ -31,9 +31,7 @@ export class ChannelsViewHelper {
 				break;
 
 			case 'analog':
-				Meta.title = Translate.$gettext(
-					`Analog Games, Big Games, and Alt. Sports`
-				);
+				Meta.title = Translate.$gettext(`Analog Games, Big Games, and Alt. Sports`);
 				Meta.description = Translate.$gettext(
 					`Analog games are physical games you can play in real life. Also called big games, alt. sports, etc.`
 				);

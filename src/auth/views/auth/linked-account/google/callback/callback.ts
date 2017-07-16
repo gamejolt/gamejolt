@@ -13,10 +13,7 @@ export default class RouteAuthLinkedAccountGoogleCallback extends Vue {
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		const { code, state } = route.query;
-		return Api.sendRequest(
-			'/web/auth/google/callback?code=' + code + '&state=' + state,
-			{}
-		);
+		return Api.sendRequest('/web/auth/google/callback?code=' + code + '&state=' + state, {});
 	}
 
 	routed() {
@@ -28,10 +25,7 @@ export default class RouteAuthLinkedAccountGoogleCallback extends Vue {
 						`Your Google+ account did not return an email address. Make sure you have verified it with Google.`
 					),
 				});
-			} else if (
-				this.$payload.reason &&
-				this.$payload.reason === 'duplicate-email'
-			) {
+			} else if (this.$payload.reason && this.$payload.reason === 'duplicate-email') {
 				Growls.error({
 					sticky: true,
 					message: this.$gettext(

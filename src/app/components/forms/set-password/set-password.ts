@@ -9,8 +9,7 @@ import {
 
 @View
 @Component({})
-export class FormSetPassword extends BaseForm<any>
-	implements FormOnInit, FormOnSubmit {
+export class FormSetPassword extends BaseForm<any> implements FormOnInit, FormOnSubmit {
 	onInit() {
 		this.setField('password', '');
 	}

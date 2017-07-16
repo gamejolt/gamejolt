@@ -61,8 +61,7 @@ export class AppActivityFeedItem extends Vue {
 		this.feed.inViewChange(this.item, visible);
 
 		if (this.$refs.inner) {
-			this.item.height =
-				Ruler.outerHeight(this.$refs.inner as HTMLElement) + 'px';
+			this.item.height = Ruler.outerHeight(this.$refs.inner as HTMLElement) + 'px';
 		}
 	}
 }

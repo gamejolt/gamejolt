@@ -68,24 +68,15 @@ export class Settings {
 	static get(setting: string) {
 		if (typeof defaultSettings[setting] !== 'undefined') {
 			let val;
-			if (
-				!GJ_IS_SSR &&
-				localStorage.getItem(STORAGE_PREFIX + setting) !== null
-			) {
+			if (!GJ_IS_SSR && localStorage.getItem(STORAGE_PREFIX + setting) !== null) {
 				val = localStorage.getItem(STORAGE_PREFIX + setting);
 			} else {
 				val = this.getDefault(setting);
 			}
 
-			if (
-				defaultSettings[setting].type === 'string' &&
-				typeof val !== 'string'
-			) {
+			if (defaultSettings[setting].type === 'string' && typeof val !== 'string') {
 				val = '' + val;
-			} else if (
-				defaultSettings[setting].type === 'number' &&
-				typeof val !== 'number'
-			) {
+			} else if (defaultSettings[setting].type === 'number' && typeof val !== 'number') {
 				val = parseInt(val, 10);
 			} else if (defaultSettings[setting].type === 'boolean') {
 				if (val === '0') {

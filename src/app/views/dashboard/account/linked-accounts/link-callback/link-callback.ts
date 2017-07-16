@@ -4,10 +4,7 @@ import { Component } from 'vue-property-decorator';
 import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import {
-	AppState,
-	AppStore,
-} from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 @Component({})
 export default class RouteDashAccountLinkedAccountsLinkCallback extends Vue {
@@ -78,21 +75,16 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends Vue {
 			if (!this.$payload.success) {
 				if (this.$payload.reason && this.$payload.reason === 'account-taken') {
 					Growls.error(
-						this.$gettext(
-							'This Twitter account is already linked to another Game Jolt account.'
-						)
+						this.$gettext('This Twitter account is already linked to another Game Jolt account.')
 					);
 				} else {
 					Growls.error(this.$gettext('Unable to link your Twitter account.'));
 				}
 			} else {
 				Growls.success(
-					this.$gettextInterpolate(
-						'Your Twitter account (@%{ name }) has been linked.',
-						{
-							name: this.user.twitter_screenname,
-						}
-					),
+					this.$gettextInterpolate('Your Twitter account (@%{ name }) has been linked.', {
+						name: this.user.twitter_screenname,
+					}),
 					this.$gettext('Account Linked')
 				);
 			}
@@ -100,21 +92,16 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends Vue {
 			if (!this.$payload.success) {
 				if (this.$payload.reason && this.$payload.reason === 'account-taken') {
 					Growls.error(
-						this.$gettext(
-							'This Facebook account is already linked to another Game Jolt account.'
-						)
+						this.$gettext('This Facebook account is already linked to another Game Jolt account.')
 					);
 				} else {
 					Growls.error(this.$gettext('Unable to link your Facebook account.'));
 				}
 			} else {
 				Growls.success(
-					this.$gettextInterpolate(
-						'Your Facebook account (%{ name }) has been linked.',
-						{
-							name: this.user.facebook_name,
-						}
-					),
+					this.$gettextInterpolate('Your Facebook account (%{ name }) has been linked.', {
+						name: this.user.facebook_name,
+					}),
 					this.$gettext('Account Linked')
 				);
 			}
@@ -122,21 +109,16 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends Vue {
 			if (!this.$payload.success) {
 				if (this.$payload.reason && this.$payload.reason === 'account-taken') {
 					Growls.error(
-						this.$gettext(
-							'This Twitch account is already linked to another Game Jolt account.'
-						)
+						this.$gettext('This Twitch account is already linked to another Game Jolt account.')
 					);
 				} else {
 					Growls.error(this.$gettext('Unable to link your Twitch account.'));
 				}
 			} else {
 				Growls.success(
-					this.$gettextInterpolate(
-						'Your Twitch account (%{ name }) has been linked.',
-						{
-							name: this.user.twitch_name,
-						}
-					),
+					this.$gettextInterpolate('Your Twitch account (%{ name }) has been linked.', {
+						name: this.user.twitch_name,
+					}),
 					this.$gettext('Account Linked')
 				);
 			}
@@ -144,21 +126,16 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends Vue {
 			if (!this.$payload.success) {
 				if (this.$payload.reason && this.$payload.reason === 'account-taken') {
 					Growls.error(
-						this.$gettext(
-							'This Google+ account is already linked to another Game Jolt account.'
-						)
+						this.$gettext('This Google+ account is already linked to another Game Jolt account.')
 					);
 				} else {
 					Growls.error(this.$gettext('Unable to link your Google+ account.'));
 				}
 			} else {
 				Growls.success(
-					this.$gettextInterpolate(
-						'Your Google+ account (%{ name }) has been linked.',
-						{
-							name: this.user.google_nickname,
-						}
-					),
+					this.$gettextInterpolate('Your Google+ account (%{ name }) has been linked.', {
+						name: this.user.google_nickname,
+					}),
 					this.$gettext('Account Linked')
 				);
 			}
@@ -168,9 +145,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends Vue {
 					Growls.error(this.$gettext('Unable to link your YouTube channel.'));
 				} else if (this.$payload.reason === 'channel-taken') {
 					Growls.error(
-						this.$gettext(
-							'This YouTube channel is already linked to another Game Jolt account.'
-						)
+						this.$gettext('This YouTube channel is already linked to another Game Jolt account.')
 					);
 				} else if (this.$payload.reason === 'not-public') {
 					Growls.error(this.$gettext('This YouTube channel is not public.'));

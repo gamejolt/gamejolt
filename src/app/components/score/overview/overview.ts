@@ -80,12 +80,8 @@ export class AppScoreOverview extends Vue {
 	}
 
 	private processPayload(payload: any) {
-		this.scoreTables = payload.scoreTables
-			? GameScoreTable.populate(payload.scoreTables)
-			: [];
-		this.scoreTable = payload.scoreTable
-			? new GameScoreTable(payload.scoreTable)
-			: null;
+		this.scoreTables = payload.scoreTables ? GameScoreTable.populate(payload.scoreTables) : [];
+		this.scoreTable = payload.scoreTable ? new GameScoreTable(payload.scoreTable) : null;
 		this.scores = payload.scores ? UserGameScore.populate(payload.scores) : [];
 		this.userBestScore = payload.scoresUserBestScore
 			? new UserGameScore(payload.scoresUserBestScore)

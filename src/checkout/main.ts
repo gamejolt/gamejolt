@@ -1,7 +1,7 @@
-import { app, router } from './bootstrap';
+import { createApp } from './bootstrap';
 
-// store.replaceState(window.__INITIAL_STATE__)
-
-router.onReady(() => {
-	app.$mount('#app');
+createApp().then(({ app, router }) => {
+	router.onReady(() => {
+		app.$mount('#app');
+	});
 });

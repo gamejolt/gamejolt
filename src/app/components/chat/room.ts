@@ -36,9 +36,7 @@ export class ChatRoom {
 	}
 
 	get isPrivateRoom() {
-		return (
-			this.type === ChatRoom.ROOM_PM || this.type === ChatRoom.ROOM_CLOSED_GROUP
-		);
+		return this.type === ChatRoom.ROOM_PM || this.type === ChatRoom.ROOM_CLOSED_GROUP;
 	}
 
 	get isGroupRoom() {
@@ -55,10 +53,7 @@ export class ChatRoom {
 		}
 
 		// If they're a global site mod, then they can mod this room.
-		if (
-			this.chat.currentUser &&
-			this.chat.currentUser.permissionLevel >= ChatSiteModPermission
-		) {
+		if (this.chat.currentUser && this.chat.currentUser.permissionLevel >= ChatSiteModPermission) {
 			return true;
 		}
 

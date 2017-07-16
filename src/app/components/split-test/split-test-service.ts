@@ -20,10 +20,7 @@ export class SplitTest {
 			return variation;
 		}
 
-		if (
-			angular.isDefined(payload._experiment) &&
-			angular.isDefined(payload._variation)
-		) {
+		if (angular.isDefined(payload._experiment) && angular.isDefined(payload._variation)) {
 			if (payload._experiment == experiment) {
 				return payload._variation;
 			}

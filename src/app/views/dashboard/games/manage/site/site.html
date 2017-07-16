@@ -1,6 +1,9 @@
 <section class="section" v-if="routeBootstrapped">
 	<div class="container">
 
+		<!-- Needed for the editor route to trigger -->
+		<router-view :site="site" />
+
 		<div v-if="!game.path">
 			<div class="alert alert-info">
 				<p><translate>In order to set up a custom site for your game, you first have to set a URL path in your game details page.</translate></p>

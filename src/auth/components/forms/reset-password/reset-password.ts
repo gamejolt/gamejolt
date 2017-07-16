@@ -12,8 +12,7 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 
 @View
 @Component({})
-export class FormResetPassword extends BaseForm<any>
-	implements FormOnInit, FormOnSubmit {
+export class FormResetPassword extends BaseForm<any> implements FormOnInit, FormOnSubmit {
 	@Prop(Number) userId: number;
 	@Prop(String) token: string;
 

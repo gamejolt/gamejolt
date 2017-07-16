@@ -27,12 +27,7 @@ import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/co
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 import { AppTrophyOverview } from '../../../../../../components/trophy/overview/overview';
-import {
-	RouteState,
-	RouteMutation,
-	RouteStore,
-	RouteAction,
-} from '../../view.state';
+import { RouteState, RouteMutation, RouteStore, RouteAction } from '../../view.state';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { AppScoreOverview } from '../../../../../../components/score/overview/overview';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
@@ -89,8 +84,7 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState commentsCount: RouteStore['commentsCount'];
 	@RouteState videoComments: RouteStore['videoComments'];
 	@RouteState videoCommentsCount: RouteStore['videoCommentsCount'];
-	@RouteState
-	shouldShowMultiplePackagesMessage: RouteStore['shouldShowMultiplePackagesMessage'];
+	@RouteState shouldShowMultiplePackagesMessage: RouteStore['shouldShowMultiplePackagesMessage'];
 	@RouteState trophiesCount: RouteStore['trophiesCount'];
 	@RouteState hasScores: RouteStore['hasScores'];
 	@RouteState trophiesPayload: RouteStore['trophiesPayload'];
@@ -110,9 +104,7 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	Environment = Environment;
 
 	get hasPartnerControls() {
-		return (
-			this.game.referrals_enabled && this.userPartnerKey && this.packages.length
-		);
+		return this.game.referrals_enabled && this.userPartnerKey && this.packages.length;
 	}
 
 	/**

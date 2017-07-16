@@ -1,4 +1,6 @@
 import { Component, Prop } from 'vue-property-decorator';
+import VueRouter from 'vue-router';
+import { State } from 'vuex-class';
 import * as View from '!view!./site-editor-modal.html?style=./site-editor-modal.styl';
 
 import { BaseModal } from '../../../lib/gj-lib-client/components/modal/base';
@@ -12,8 +14,6 @@ import { AppLoading } from '../../../lib/gj-lib-client/vue/components/loading/lo
 import { AppThemeEditor } from '../../../lib/gj-lib-client/components/theme/theme-editor/theme-editor';
 import { AppContentBlockEditor } from '../../../lib/gj-lib-client/components/content-block/editor/editor';
 
-type EditorTab = 'theme' | 'content';
-
 @View
 @Component({
 	components: {
@@ -25,7 +25,9 @@ type EditorTab = 'theme' | 'content';
 })
 export default class AppSiteEditorModal extends BaseModal {
 	@Prop() siteId: number;
-	@Prop() initialTab?: EditorTab;
+	@Prop() onInit?: Function;
+
+	@State('$route') routeState: VueRouter.Route;
 
 	site: Site = null as any;
 	templates: SiteTemplate[] = [];
@@ -33,17 +35,19 @@ export default class AppSiteEditorModal extends BaseModal {
 	theme: SiteTheme;
 
 	isLoaded = false;
-	tab: EditorTab = 'theme';
 
 	private isDirty = false;
-	// private locationWatcher: Function;
+
+	get tab() {
+		return this.routeState.params.tab;
+	}
+
+	get siteUrl() {
+		return this.site.url;
+	}
 
 	async created() {
-		this.tab = this.initialTab || 'theme';
-
-		const response = await Api.sendRequest(
-			`/web/dash/sites/editor/${this.siteId}`
-		);
+		const response = await Api.sendRequest(`/web/dash/sites/editor/${this.siteId}`);
 
 		this.isLoaded = true;
 		this.site = new Site(response.site);
@@ -54,25 +58,17 @@ export default class AppSiteEditorModal extends BaseModal {
 			this.theme = this.site.theme;
 		}
 
-		// TODO
-		// location.hash('site-editor');
-		// setTimeout(() => {
-		// 	this.locationWatcher = this.$rootScope.$on('$locationChangeStart', e =>
-		// 		this.locationChanged(e)
-		// 	);
-		// });
+		if (this.onInit) {
+			this.onInit(this);
+		}
 	}
 
 	mounted() {
-		document.body.classList.add('game-play-modal-open');
+		document.body.classList.add('site-editor-modal-open');
 	}
 
 	destroyed() {
-		document.body.classList.remove('game-play-modal-open');
-	}
-
-	get siteUrl() {
-		return this.site.url;
+		document.body.classList.remove('site-editor-modal-open');
 	}
 
 	themeEdited($theme: any) {
@@ -82,6 +78,13 @@ export default class AppSiteEditorModal extends BaseModal {
 
 	contentEdited() {
 		this.isDirty = true;
+	}
+
+	canLeave() {
+		return (
+			!this.isDirty ||
+			confirm(this.$gettext('You have unsaved changes. Are you sure you want to discard them?'))
+		);
 	}
 
 	async save() {
@@ -96,30 +99,10 @@ export default class AppSiteEditorModal extends BaseModal {
 			sanitizeComplexData: false,
 		});
 
-		Growls.success(
-			this.$gettext('Your site has been saved.'),
-			this.$gettext('Site Saved')
-		);
+		Growls.success(this.$gettext('Your site has been saved.'), this.$gettext('Site Saved'));
 	}
 
 	close() {
-		// window.history.back();
-		this.modal.dismiss();
+		window.history.back();
 	}
-
-	// locationChanged(e: ng.IAngularEvent) {
-	// 	if (
-	// 		!this.isDirty ||
-	// 		confirm(
-	// 			this.$gettext(
-	// 				'You have unsaved changes. Are you sure you want to discard them?'
-	// 			)
-	// 		)
-	// 	) {
-	// 		this._close.emit(undefined);
-	// 		this.locationWatcher();
-	// 	} else if (e) {
-	// 		e.preventDefault();
-	// 	}
-	// }
 }

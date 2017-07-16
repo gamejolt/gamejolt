@@ -59,10 +59,7 @@ export class AppNotificationDescriptiveAction extends Vue {
 	get action() {
 		switch (this.notification.type) {
 			case Notification.TYPE_COMMENT_ADD_OBJECT_OWNER:
-				return this.$gettextInterpolate(
-					`commented on <b>%{ object }</b>.`,
-					this.translationValues
-				);
+				return this.$gettextInterpolate(`commented on <b>%{ object }</b>.`, this.translationValues);
 
 			case Notification.TYPE_COMMENT_ADD:
 				return this.$gettextInterpolate(
@@ -77,28 +74,16 @@ export class AppNotificationDescriptiveAction extends Vue {
 				);
 
 			case Notification.TYPE_FRIENDSHIP_REQUEST:
-				return this.$gettextInterpolate(
-					`sent you a friend request.`,
-					this.translationValues
-				);
+				return this.$gettextInterpolate(`sent you a friend request.`, this.translationValues);
 
 			case Notification.TYPE_FRIENDSHIP_ACCEPT:
-				return this.$gettextInterpolate(
-					`accepted your friend request.`,
-					this.translationValues
-				);
+				return this.$gettextInterpolate(`accepted your friend request.`, this.translationValues);
 
 			case Notification.TYPE_GAME_RATING_ADD:
-				return this.$gettextInterpolate(
-					`received a new rating.`,
-					this.translationValues
-				);
+				return this.$gettextInterpolate(`received a new rating.`, this.translationValues);
 
 			case Notification.TYPE_GAME_FOLLOW:
-				return this.$gettextInterpolate(
-					`followed <b>%{ object }</b>.`,
-					this.translationValues
-				);
+				return this.$gettextInterpolate(`followed <b>%{ object }</b>.`, this.translationValues);
 
 			case Notification.TYPE_SELLABLE_SELL:
 				return this.$gettextInterpolate(

@@ -33,10 +33,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends Vue {
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
-			'/web/dash/developer/games/api/scores/' +
-				route.params.id +
-				'/' +
-				route.params.score
+			'/web/dash/developer/games/api/scores/' + route.params.id + '/' + route.params.score
 		);
 	}
 

@@ -62,9 +62,7 @@ export class AppGameCoverButtons extends Vue {
 		Analytics.trackEvent('game-cover-buttons', 'download', 'play');
 
 		// Prioritize HTML build.
-		const defaultBuild = this.browserBuilds.find(
-			item => item.type === GameBuild.TYPE_HTML
-		);
+		const defaultBuild = this.browserBuilds.find(item => item.type === GameBuild.TYPE_HTML);
 
 		const build = this.chooseBuild(this.browserBuilds, defaultBuild);
 		if (build) {
@@ -93,9 +91,7 @@ export class AppGameCoverButtons extends Vue {
 
 	buy(pkg?: GamePackage) {
 		if (!pkg) {
-			pkg = this.packages.find(
-				item => item._sellable!.id === this.game.sellable.id
-			);
+			pkg = this.packages.find(item => item._sellable!.id === this.game.sellable.id);
 			if (!pkg) {
 				return;
 			}

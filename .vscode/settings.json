@@ -9,5 +9,6 @@
 	"prettier.useTabs": true,
 	"prettier.singleQuote": true,
 	"prettier.trailingComma": "es5",
+	"prettier.printWidth": 100,
 	"editor.formatOnSave": true
 }

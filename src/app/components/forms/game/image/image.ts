@@ -18,8 +18,7 @@ import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/fo
 		AppFormControlUpload,
 	},
 })
-export class FormGameImage extends BaseForm<GameScreenshot>
-	implements FormOnInit {
+export class FormGameImage extends BaseForm<GameScreenshot> implements FormOnInit {
 	modelClass = GameScreenshot;
 	resetOnSubmit = true;
 

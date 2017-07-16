@@ -62,10 +62,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends Vue {
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
-			'/web/dash/developer/games/packages/' +
-				route.params.id +
-				'/' +
-				route.params.packageId
+			'/web/dash/developer/games/packages/' + route.params.id + '/' + route.params.packageId
 		);
 	}
 
@@ -78,13 +75,10 @@ export default class RouteDashGamesManageGamePackagesEdit extends Vue {
 		this.previewPackage = null;
 		this.isShowingPackageEdit = false;
 
-		Meta.title = this.$gettextInterpolate(
-			`Edit Package %{ package } - %{ game }`,
-			{
-				game: this.game.title,
-				package: this.package.title || this.game.title,
-			}
-		);
+		Meta.title = this.$gettextInterpolate(`Edit Package %{ package } - %{ game }`, {
+			game: this.game.title,
+			package: this.package.title || this.game.title,
+		});
 
 		this.loadPreview();
 	}
@@ -93,21 +87,15 @@ export default class RouteDashGamesManageGamePackagesEdit extends Vue {
 		this.isLoadingPreview = true;
 
 		const response = await Api.sendRequest(
-			'/web/dash/developer/games/packages/preview/' +
-				this.package.game_id +
-				'/' +
-				this.package.id,
+			'/web/dash/developer/games/packages/preview/' + this.package.game_id + '/' + this.package.id,
 			null,
 			{ detach: true }
 		);
 
 		// We pull all new stuff for the preview so that we don't step on the form.
 		this.previewData = new GamePackagePayloadModel(response);
-		this.previewSellable = response.sellable
-			? new Sellable(response.sellable)
-			: null;
-		this.previewPackage =
-			this.previewData.packages.find(i => i.id === this.package.id) || null;
+		this.previewSellable = response.sellable ? new Sellable(response.sellable) : null;
+		this.previewPackage = this.previewData.packages.find(i => i.id === this.package.id) || null;
 		this.buildsProcessingCount = response.buildsProcessingCount || 0;
 		this.isLoadingPreview = false;
 

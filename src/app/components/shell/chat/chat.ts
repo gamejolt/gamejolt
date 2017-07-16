@@ -52,11 +52,7 @@ export class AppShellChat extends Vue {
 			// came in because we were priming output for a room with old
 			// messages, we don't want to increase notification counts.
 			if (!this.isWindowFocused && this.chat.room) {
-				if (
-					!event.isPrimer &&
-					event.message &&
-					event.message.roomId === this.chat.room.id
-				) {
+				if (!event.isPrimer && event.message && event.message.roomId === this.chat.room.id) {
 					++this.unfocusedNotificationsCount;
 				}
 			}

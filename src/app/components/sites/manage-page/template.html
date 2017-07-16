@@ -28,21 +28,21 @@
 		</div>
 
 		<div class="hidden-xs">
-			<button
+			<router-link
 				class="btn btn-outline anim-fade-in no-animate-leave stagger"
-				@click="showEditor( 'theme' )"
+				:to="themeEditorLocation"
 				>
 				<app-jolticon icon="cog" />
 				<translate>Customize Theme</translate>
-			</button>
+			</router-link>
 
-			<button
+			<router-link
 				class="btn btn-outline anim-fade-in no-animate-leave stagger"
-				@click="showEditor( 'content' )"
+				:to="contentEditorLocation"
 				>
 				<app-jolticon icon="edit" />
 				<translate>Edit Content</translate>
-			</button>
+			</router-link>
 		</div>
 
 		<h2>

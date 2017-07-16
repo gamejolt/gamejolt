@@ -48,19 +48,13 @@ export default class RouteDiscoverGamesList extends Vue {
 		'discover.categories.all': this.$gettext('discover.categories.all'),
 		'discover.categories.arcade': this.$gettext('discover.categories.arcade'),
 		'discover.categories.action': this.$gettext('discover.categories.action'),
-		'discover.categories.adventure': this.$gettext(
-			'discover.categories.adventure'
-		),
-		'discover.categories.platformer': this.$gettext(
-			'discover.categories.platformer'
-		),
+		'discover.categories.adventure': this.$gettext('discover.categories.adventure'),
+		'discover.categories.platformer': this.$gettext('discover.categories.platformer'),
 		'discover.categories.puzzle': this.$gettext('discover.categories.puzzle'),
 		'discover.categories.rpg': this.$gettext('discover.categories.rpg'),
 		'discover.categories.shooter': this.$gettext('discover.categories.shooter'),
 		'discover.categories.sports': this.$gettext('discover.categories.sports'),
-		'discover.categories.strategy_sim': this.$gettext(
-			'discover.categories.strategy_sim'
-		),
+		'discover.categories.strategy_sim': this.$gettext('discover.categories.strategy_sim'),
 		'discover.categories.other': this.$gettext('discover.categories.other'),
 
 		'games.list.page_title': this.$gettext('games.list.page_title'),
@@ -86,9 +80,7 @@ export default class RouteDiscoverGamesList extends Vue {
 			return undefined;
 		}
 
-		return Api.sendRequest(
-			'/web/discover/games?' + filtering.getQueryString(route)
-		);
+		return Api.sendRequest('/web/discover/games?' + filtering.getQueryString(route));
 	}
 
 	routeInit() {
@@ -139,10 +131,9 @@ export default class RouteDiscoverGamesList extends Vue {
 		}
 
 		if (!this.dateRange) {
-			this.pageTitle = this.$gettextInterpolate(
-				'Games Published on %{ date }',
-				{ date: this.date }
-			);
+			this.pageTitle = this.$gettextInterpolate('Games Published on %{ date }', {
+				date: this.date,
+			});
 		} else {
 			this.pageTitle = this.$gettextInterpolate(
 				'Games Published Between %{ dateStart } and %{ dateEnd }',
@@ -159,8 +150,7 @@ export default class RouteDiscoverGamesList extends Vue {
 		const sectionHuman = this.translations[sectionTranslationKey];
 		let categoryHuman = '';
 		if (this.category) {
-			const categoryTranslationKey =
-				'discover.categories.' + this.category.replace('-', '_');
+			const categoryTranslationKey = 'discover.categories.' + this.category.replace('-', '_');
 			categoryHuman = this.translations[categoryTranslationKey];
 		}
 
@@ -169,20 +159,11 @@ export default class RouteDiscoverGamesList extends Vue {
 			category: categoryHuman,
 		};
 
-		this.pageTitle = this.$gettextInterpolate(
-			'%{ section } Indie %{ category } Games',
-			context
-		);
+		this.pageTitle = this.$gettextInterpolate('%{ section } Indie %{ category } Games', context);
 		if (this.category === 'rpg') {
-			this.pageTitle = this.$gettextInterpolate(
-				'%{ section } Indie RPGs',
-				context
-			);
+			this.pageTitle = this.$gettextInterpolate('%{ section } Indie RPGs', context);
 		} else if (this.category === 'other') {
-			this.pageTitle = this.$gettextInterpolate(
-				'%{ section } Alternative Indie Games',
-				context
-			);
+			this.pageTitle = this.$gettextInterpolate('%{ section } Alternative Indie Games', context);
 		}
 
 		if (this.category === 'rpg') {
@@ -190,10 +171,9 @@ export default class RouteDiscoverGamesList extends Vue {
 		} else if (this.category === 'other') {
 			this.descriptiveCategory = this.$gettext('alt games and other weirdness');
 		} else {
-			this.descriptiveCategory = this.$gettextInterpolate(
-				'%{ category } games',
-				{ category: categoryHuman.toLowerCase() }
-			);
+			this.descriptiveCategory = this.$gettextInterpolate('%{ category } games', {
+				category: categoryHuman.toLowerCase(),
+			});
 		}
 
 		if (this.$payload) {

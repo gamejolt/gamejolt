@@ -34,10 +34,7 @@ export class AppChatWindowOutputItem extends Vue {
 	ChatMessage = ChatMessage;
 
 	get shouldFadeCollapse() {
-		return (
-			this.message.contentRaw.split('\n').length > 6 ||
-			this.message.contentRaw.length >= 500
-		);
+		return this.message.contentRaw.split('\n').length > 6 || this.message.contentRaw.length >= 500;
 	}
 
 	get canModerate() {

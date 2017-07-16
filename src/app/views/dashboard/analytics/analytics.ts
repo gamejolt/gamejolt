@@ -114,10 +114,7 @@ export default class RouteDashAnalytics extends Vue {
 	@RouteResolve({ cache: false })
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
-			'/web/dash/analytics/' +
-				route.params.resource +
-				'/' +
-				route.params.resourceId
+			'/web/dash/analytics/' + route.params.resource + '/' + route.params.resourceId
 		);
 	}
 
@@ -140,12 +137,8 @@ export default class RouteDashAnalytics extends Vue {
 
 		this.user = this.$payload.user ? new User(this.$payload.user) : null;
 		this.game = this.$payload.game ? new Game(this.$payload.game) : null;
-		this.package = this.$payload.package
-			? new GamePackage(this.$payload.package)
-			: null;
-		this.release = this.$payload.release
-			? new GameRelease(this.$payload.release)
-			: null;
+		this.package = this.$payload.package ? new GamePackage(this.$payload.package) : null;
+		this.release = this.$payload.release ? new GameRelease(this.$payload.release) : null;
 		this.partnerMode = !this.user || this.user.id !== this.viewAs;
 
 		this.period = (this.$route.query['period'] as any) || 'monthly';
@@ -155,16 +148,12 @@ export default class RouteDashAnalytics extends Vue {
 		switch (this.resource) {
 			case 'User':
 				this.availableMetrics = SiteAnalytics.userMetrics;
-				this.metric = this.availableMetrics[
-					this.$route.params['metricKey'] || 'user-view'
-				];
+				this.metric = this.availableMetrics[this.$route.params['metricKey'] || 'user-view'];
 				break;
 
 			case 'Game':
 				this.availableMetrics = SiteAnalytics.gameMetrics;
-				this.metric = this.availableMetrics[
-					this.$route.params['metricKey'] || 'view'
-				];
+				this.metric = this.availableMetrics[this.$route.params['metricKey'] || 'view'];
 				break;
 
 			case 'Game_Package':
@@ -172,9 +161,7 @@ export default class RouteDashAnalytics extends Vue {
 					throw new Error('Invalid resource.');
 				}
 				this.availableMetrics = SiteAnalytics.packageMetrics;
-				this.metric = this.availableMetrics[
-					this.$route.params['metricKey'] || 'download'
-				];
+				this.metric = this.availableMetrics[this.$route.params['metricKey'] || 'download'];
 				break;
 
 			case 'Game_Release':
@@ -182,9 +169,7 @@ export default class RouteDashAnalytics extends Vue {
 					throw new Error('Invalid resource.');
 				}
 				this.availableMetrics = SiteAnalytics.releaseMetrics;
-				this.metric = this.availableMetrics[
-					this.$route.params['metricKey'] || 'download'
-				];
+				this.metric = this.availableMetrics[this.$route.params['metricKey'] || 'download'];
 				break;
 
 			default:
@@ -192,9 +177,7 @@ export default class RouteDashAnalytics extends Vue {
 		}
 
 		if (this.partnerMode) {
-			this.availableMetrics = SiteAnalytics.pickPartnerMetrics(
-				this.availableMetrics
-			);
+			this.availableMetrics = SiteAnalytics.pickPartnerMetrics(this.availableMetrics);
 		}
 
 		// TODO
@@ -322,10 +305,7 @@ export default class RouteDashAnalytics extends Vue {
 			switch (this.metric.key) {
 				case 'view':
 					this.pullReport(this.$gettext('Top Sources'), ...ReportTopSources);
-					this.pullReport(
-						this.$gettext('Referring Pages'),
-						...ReportReferringPages
-					);
+					this.pullReport(this.$gettext('Referring Pages'), ...ReportReferringPages);
 					this.pullReport(this.$gettext('Countries'), ...ReportCountries);
 					if (!this.partnerMode) {
 						this.pullReport(this.$gettext('Partners'), ...ReportTopPartners);
@@ -335,10 +315,7 @@ export default class RouteDashAnalytics extends Vue {
 				case 'download':
 					this.pullReport(this.$gettext('Operating Systems'), ...ReportOs);
 					this.pullReport(this.$gettext('Top Sources'), ...ReportTopSources);
-					this.pullReport(
-						this.$gettext('Referring Pages'),
-						...ReportReferringPages
-					);
+					this.pullReport(this.$gettext('Referring Pages'), ...ReportReferringPages);
 					this.pullReport(this.$gettext('Countries'), ...ReportCountries);
 					if (!this.partnerMode) {
 						this.pullReport(this.$gettext('Partners'), ...ReportTopPartners);
@@ -351,17 +328,11 @@ export default class RouteDashAnalytics extends Vue {
 					break;
 
 				case 'comment':
-					this.pullReport(
-						this.$gettext('Languages'),
-						...ReportCommentLanguages
-					);
+					this.pullReport(this.$gettext('Languages'), ...ReportCommentLanguages);
 					break;
 
 				case 'rating':
-					this.pullReport(
-						this.$gettext('Rating Breakdown'),
-						...ReportRatingBreakdown
-					);
+					this.pullReport(this.$gettext('Rating Breakdown'), ...ReportRatingBreakdown);
 					break;
 
 				case 'follow':
@@ -370,10 +341,7 @@ export default class RouteDashAnalytics extends Vue {
 
 				case 'sale':
 					this.pullReport(this.$gettext('Top Sources'), ...ReportTopSources);
-					this.pullReport(
-						this.$gettext('Referring Pages'),
-						...ReportReferringPages
-					);
+					this.pullReport(this.$gettext('Referring Pages'), ...ReportReferringPages);
 					this.pullReport(this.$gettext('Countries'), ...ReportCountries);
 					this.pullReport(this.$gettext('Operating Systems'), ...ReportOs);
 					if (!this.partnerMode) {
@@ -383,23 +351,14 @@ export default class RouteDashAnalytics extends Vue {
 
 				case 'revenue':
 					if (!this.partnerMode) {
-						this.pullReport(
-							this.$gettext('Revenue Stats'),
-							...ReportDevRevenue
-						);
+						this.pullReport(this.$gettext('Revenue Stats'), ...ReportDevRevenue);
 						this.pullReport(
 							this.$gettext('Revenue from Partners'),
 							...ReportPartnerGeneratedRevenue
 						);
-						this.pullReport(
-							this.$gettext('Top Profitable Partners'),
-							...ReportTopPartnerRevenue
-						);
+						this.pullReport(this.$gettext('Top Profitable Partners'), ...ReportTopPartnerRevenue);
 					} else {
-						this.pullReport(
-							this.$gettext('Revenue Stats'),
-							...ReportPartnerRevenue
-						);
+						this.pullReport(this.$gettext('Revenue Stats'), ...ReportPartnerRevenue);
 					}
 					break;
 			}
@@ -432,18 +391,12 @@ export default class RouteDashAnalytics extends Vue {
 
 				case 'comment':
 					this.pullReport(this.$gettext('Top Games'), ...ReportTopGames);
-					this.pullReport(
-						this.$gettext('Languages'),
-						...ReportCommentLanguages
-					);
+					this.pullReport(this.$gettext('Languages'), ...ReportCommentLanguages);
 					break;
 
 				case 'rating':
 					this.pullReport(this.$gettext('Top Games'), ...ReportTopGames);
-					this.pullReport(
-						this.$gettext('Rating Breakdown'),
-						...ReportRatingBreakdown
-					);
+					this.pullReport(this.$gettext('Rating Breakdown'), ...ReportRatingBreakdown);
 					break;
 
 				case 'follow':
@@ -463,31 +416,16 @@ export default class RouteDashAnalytics extends Vue {
 
 				case 'revenue':
 					if (!this.partnerMode) {
-						this.pullReport(
-							this.$gettext('Revenue Stats'),
-							...ReportDevRevenue
-						);
-						this.pullReport(
-							this.$gettext('Top Profitable Games'),
-							...ReportTopGameRevenue
-						);
+						this.pullReport(this.$gettext('Revenue Stats'), ...ReportDevRevenue);
+						this.pullReport(this.$gettext('Top Profitable Games'), ...ReportTopGameRevenue);
 						this.pullReport(
 							this.$gettext('Revenue from Partners'),
 							...ReportPartnerGeneratedRevenue
 						);
-						this.pullReport(
-							this.$gettext('Top Profitable Partners'),
-							...ReportTopPartnerRevenue
-						);
+						this.pullReport(this.$gettext('Top Profitable Partners'), ...ReportTopPartnerRevenue);
 					} else {
-						this.pullReport(
-							this.$gettext('Revenue Stats'),
-							...ReportPartnerRevenue
-						);
-						this.pullReport(
-							this.$gettext('Top Profitable Games'),
-							...ReportTopGamePartnerRevenue
-						);
+						this.pullReport(this.$gettext('Revenue Stats'), ...ReportPartnerRevenue);
+						this.pullReport(this.$gettext('Top Profitable Games'), ...ReportTopGamePartnerRevenue);
 					}
 					break;
 			}

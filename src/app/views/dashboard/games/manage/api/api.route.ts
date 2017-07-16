@@ -1,5 +1,5 @@
 import VueRouter from 'vue-router';
-import { asyncComponentLoader } from '../../../../../../lib/gj-lib-client/utils/utils';
+
 import { routeDashGamesManageApiOverview } from './overview/overview.route';
 import { routeDashGamesManageApiTrophies } from './trophies/trophies.route';
 import { routeDashGamesManageApiSettings } from './settings/settings.route';
@@ -13,7 +13,7 @@ import { routeDashGamesManageApiScoreboardsScoreUser } from './scoreboards/score
 export const routeDashGamesManageApi: VueRouter.RouteConfig = {
 	path: 'api',
 	props: true,
-	component: () => asyncComponentLoader(import('./api')),
+	component: () => import('./api'),
 	children: [
 		routeDashGamesManageApiOverview,
 		routeDashGamesManageApiTrophies,

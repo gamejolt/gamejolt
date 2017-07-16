@@ -1,9 +1,11 @@
-import { app, router } from './bootstrap';
+import { createApp } from './bootstrap';
 import { Device } from '../lib/gj-lib-client/components/device/device.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 
-export default (context: any) => {
+export default async (context: any) => {
+	const { app, router } = await createApp();
+
 	return new Promise((resolve, reject) => {
 		const s = Date.now();
 

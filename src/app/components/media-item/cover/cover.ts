@@ -57,11 +57,9 @@ export class AppMediaItemCover extends Vue {
 		// resized.
 		if (this.mediaItem) {
 			if (this.$el) {
-				const newDimensions = this.mediaItem.getDimensions(
-					Ruler.width(this.$el),
-					undefined,
-					{ force: true }
-				);
+				const newDimensions = this.mediaItem.getDimensions(Ruler.width(this.$el), undefined, {
+					force: true,
+				});
 
 				// We extend the header to the right and left by 20% on XS since
 				// the screen is so small. This makes sure that we also

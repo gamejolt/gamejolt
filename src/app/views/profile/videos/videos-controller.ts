@@ -16,8 +16,8 @@ export class VideosCtrl {
 		@Inject('App') app: App,
 		@Inject('payload') payload: any
 	) {
-		app.title = `Videos from ${$scope.profileCtrl.user.display_name} (@${$scope
-			.profileCtrl.user.username})`;
+		app.title = `Videos from ${$scope.profileCtrl.user.display_name} (@${$scope.profileCtrl.user
+			.username})`;
 
 		this.videos = CommentVideo.populate(payload.videos);
 	}

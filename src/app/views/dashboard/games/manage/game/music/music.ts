@@ -40,9 +40,7 @@ export default class RouteDashGamesManageGameMusic extends Vue {
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/music/' + route.params.id
-		);
+		return Api.sendRequest('/web/dash/developer/games/music/' + route.params.id);
 	}
 
 	routeInit() {
@@ -70,9 +68,7 @@ export default class RouteDashGamesManageGameMusic extends Vue {
 	}
 
 	async removeSong(song: GameSong) {
-		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.music.remove_confirmation')
-		);
+		const result = await ModalConfirm.show(this.$gettext('dash.games.music.remove_confirmation'));
 
 		if (!result) {
 			return;

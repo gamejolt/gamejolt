@@ -16,8 +16,7 @@ export class OverviewCtrl {
 		@Inject('App') app: App,
 		@Inject('payload') payload: any
 	) {
-		let title = `${$scope.profileCtrl.user.display_name} (@${$scope.profileCtrl
-			.user.username}) - `;
+		let title = `${$scope.profileCtrl.user.display_name} (@${$scope.profileCtrl.user.username}) - `;
 
 		if ($scope.profileCtrl.user.is_gamer) {
 			title += 'An indie gamer';

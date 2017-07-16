@@ -43,9 +43,7 @@ export default class RouteDiscoverChannelsViewOverview extends Vue {
 
 	@RouteResolve({ cache: true, lazy: true })
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		return Api.sendRequest(
-			'/web/discover/channels/overview/' + route.params.channel
-		);
+		return Api.sendRequest('/web/discover/channels/overview/' + route.params.channel);
 	}
 
 	routeInit() {
@@ -59,13 +57,10 @@ export default class RouteDiscoverChannelsViewOverview extends Vue {
 		this.hotGames = Game.populate(this.$payload.hotGames).slice(0, 6);
 
 		if (!this.feed) {
-			this.feed = ActivityFeedService.bootstrap(
-				FiresidePost.populate(this.$payload.posts),
-				{
-					type: 'Fireside_Post',
-					url: `/web/discover/channels/posts/${this.channel}`,
-				}
-			);
+			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.posts), {
+				type: 'Fireside_Post',
+				url: `/web/discover/channels/posts/${this.channel}`,
+			});
 		}
 
 		ChannelsViewHelper.setDefaultMetaData(this.$route.params.channel);

@@ -45,9 +45,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends Vue {
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/api/scores/' + route.params.id
-		);
+		return Api.sendRequest('/web/dash/developer/games/api/scores/' + route.params.id);
 	}
 
 	routed() {

@@ -46,21 +46,15 @@ export class FormGameMaturity extends BaseForm<Game> implements FormOnInit {
 		},
 		{
 			label: this.$gettext('dash.games.maturity.mild_option'),
-			description: this.$gettext(
-				'dash.games.maturity.cartoon_violence_1_description'
-			),
+			description: this.$gettext('dash.games.maturity.cartoon_violence_1_description'),
 		},
 		{
 			label: this.$gettext('dash.games.maturity.moderate_option'),
-			description: this.$gettext(
-				'dash.games.maturity.cartoon_violence_2_description'
-			),
+			description: this.$gettext('dash.games.maturity.cartoon_violence_2_description'),
 		},
 		{
 			label: this.$gettext('dash.games.maturity.intense_option'),
-			description: this.$gettext(
-				'dash.games.maturity.cartoon_violence_3_description'
-			),
+			description: this.$gettext('dash.games.maturity.cartoon_violence_3_description'),
 		},
 	];
 
@@ -70,21 +64,15 @@ export class FormGameMaturity extends BaseForm<Game> implements FormOnInit {
 		},
 		{
 			label: this.$gettext('dash.games.maturity.mild_option'),
-			description: this.$gettext(
-				'dash.games.maturity.fantasy_violence_1_description'
-			),
+			description: this.$gettext('dash.games.maturity.fantasy_violence_1_description'),
 		},
 		{
 			label: this.$gettext('dash.games.maturity.moderate_option'),
-			description: this.$gettext(
-				'dash.games.maturity.fantasy_violence_2_description'
-			),
+			description: this.$gettext('dash.games.maturity.fantasy_violence_2_description'),
 		},
 		{
 			label: this.$gettext('dash.games.maturity.intense_option'),
-			description: this.$gettext(
-				'dash.games.maturity.fantasy_violence_3_description'
-			),
+			description: this.$gettext('dash.games.maturity.fantasy_violence_3_description'),
 		},
 	];
 
@@ -94,21 +82,15 @@ export class FormGameMaturity extends BaseForm<Game> implements FormOnInit {
 		},
 		{
 			label: this.$gettext('dash.games.maturity.mild_option'),
-			description: this.$gettext(
-				'dash.games.maturity.realistic_violence_1_description'
-			),
+			description: this.$gettext('dash.games.maturity.realistic_violence_1_description'),
 		},
 		{
 			label: this.$gettext('dash.games.maturity.moderate_option'),
-			description: this.$gettext(
-				'dash.games.maturity.realistic_violence_2_description'
-			),
+			description: this.$gettext('dash.games.maturity.realistic_violence_2_description'),
 		},
 		{
 			label: this.$gettext('dash.games.maturity.intense_option'),
-			description: this.$gettext(
-				'dash.games.maturity.realistic_violence_3_description'
-			),
+			description: this.$gettext('dash.games.maturity.realistic_violence_3_description'),
 		},
 	];
 
@@ -136,9 +118,7 @@ export class FormGameMaturity extends BaseForm<Game> implements FormOnInit {
 		},
 		{
 			label: this.$gettext('dash.games.maturity.sexual_violence_label'),
-			description: this.$gettext(
-				'dash.games.maturity.sexual_violence_description'
-			),
+			description: this.$gettext('dash.games.maturity.sexual_violence_description'),
 		},
 	];
 
@@ -204,21 +184,15 @@ export class FormGameMaturity extends BaseForm<Game> implements FormOnInit {
 		},
 		{
 			label: this.$gettext('dash.games.maturity.suggestive_option'),
-			description: this.$gettext(
-				'dash.games.maturity.sexual_themes_1_description'
-			),
+			description: this.$gettext('dash.games.maturity.sexual_themes_1_description'),
 		},
 		{
 			label: this.$gettext('dash.games.maturity.moderate_option'),
-			description: this.$gettext(
-				'dash.games.maturity.sexual_themes_2_description'
-			),
+			description: this.$gettext('dash.games.maturity.sexual_themes_2_description'),
 		},
 		{
 			label: this.$gettext('dash.games.maturity.graphic_option'),
-			description: this.$gettext(
-				'dash.games.maturity.sexual_themes_3_description'
-			),
+			description: this.$gettext('dash.games.maturity.sexual_themes_3_description'),
 		},
 	];
 

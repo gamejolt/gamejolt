@@ -24,9 +24,7 @@ export class Search {
 
 		// If we're in client, let's try to search their installed games.
 		if (GJ_IS_CLIENT && options.type && options.type === 'typeahead') {
-			searchPromises.push(
-				store.state.clientLibrary.searchInstalledGames(query)
-			);
+			searchPromises.push(store.state.clientLibrary.searchInstalledGames(query));
 		}
 
 		const _payload = await Promise.all(searchPromises);
@@ -65,11 +63,7 @@ export class Search {
 
 		// Catch failures and return an empty success instead.
 		try {
-			return await Api.sendRequest(
-				endpoint + '?' + searchParams.join('&'),
-				null,
-				requestOptions
-			);
+			return await Api.sendRequest(endpoint + '?' + searchParams.join('&'), null, requestOptions);
 		} catch (_e) {
 			return Promise.resolve({});
 		}

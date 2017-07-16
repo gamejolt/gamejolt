@@ -155,7 +155,7 @@
 
 		<app-form-button
 			class="btn-success"
-			:ng-disabled="!valid"
+			:disabled="!valid"
 			:icon="model.status !== FiresidePost.STATUS_ACTIVE ? 'add' : 'edit'"
 			>
 			<span v-if="model.status !== FiresidePost.STATUS_ACTIVE">
@@ -169,7 +169,7 @@
 		<button
 			class="btn btn-outline"
 			v-if="model.status !== FiresidePost.STATUS_ACTIVE"
-			:ng-disabled="!valid"
+			:disabled="!valid"
 			@click.prevent="onDraftSubmit()"
 			>
 			<translate>Save as Draft</translate>

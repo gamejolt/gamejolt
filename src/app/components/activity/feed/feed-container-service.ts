@@ -60,10 +60,7 @@ export class ActivityFeedContainer {
 		return this.items.length > 0;
 	}
 
-	constructor(
-		items: ActivityFeedInput[],
-		options: ActivityFeedContainerOptions
-	) {
+	constructor(items: ActivityFeedInput[], options: ActivityFeedContainerOptions) {
 		this.append(items);
 
 		this.feedType = options.type;
@@ -93,10 +90,7 @@ export class ActivityFeedContainer {
 
 	remove(input: ActivityFeedInput) {
 		const item = new ActivityFeedItem(input);
-		arrayRemove(
-			this.items,
-			i => i.type === item.type && i.feedItem.id === item.feedItem.id
-		);
+		arrayRemove(this.items, i => i.type === item.type && i.feedItem.id === item.feedItem.id);
 
 		this.processGames();
 	}

@@ -57,10 +57,7 @@ export class AppChatWindowOutput extends Vue {
 			return;
 		}
 
-		if (
-			this.$el.scrollHeight - (this.$el.scrollTop + this.$el.offsetHeight) >
-			30
-		) {
+		if (this.$el.scrollHeight - (this.$el.scrollTop + this.$el.offsetHeight) > 30) {
 			this.shouldScroll = false;
 		} else {
 			this.shouldScroll = true;

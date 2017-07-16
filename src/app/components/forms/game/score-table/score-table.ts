@@ -15,21 +15,18 @@ import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/component
 		AppFormControlToggle,
 	},
 })
-export class FormGameScoreTable extends BaseForm<GameScoreTable>
-	implements FormOnInit {
+export class FormGameScoreTable extends BaseForm<GameScoreTable> implements FormOnInit {
 	@Prop(Game) game: Game;
 
 	modelClass = GameScoreTable;
+	GameScoreTable = GameScoreTable;
 
 	onInit() {
 		this.setField('game_id', this.game.id);
 
 		if (this.method === 'add') {
 			this.setField('unique_scores', true);
-			this.setField(
-				'scores_sorting_direction',
-				GameScoreTable.SORTING_DIRECTION_DESC
-			);
+			this.setField('scores_sorting_direction', GameScoreTable.SORTING_DIRECTION_DESC);
 		}
 	}
 }

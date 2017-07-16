@@ -24,10 +24,7 @@ export class FormRetrieveLogin extends BaseForm<any> implements FormOnSubmit {
 	}
 
 	async onSubmit() {
-		const response = await Api.sendRequest(
-			'/web/auth/retrieve',
-			this.formModel
-		);
+		const response = await Api.sendRequest('/web/auth/retrieve', this.formModel);
 
 		if (response.success === false) {
 			if (response.reason && response.reason === 'invalid-email') {

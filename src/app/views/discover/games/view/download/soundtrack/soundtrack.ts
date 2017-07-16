@@ -43,10 +43,9 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends Vue {
 	}
 
 	async routed() {
-		Meta.title = this.$gettextInterpolate(
-			`Downloading soundtrack for %{ game }`,
-			{ game: this.game.title }
-		);
+		Meta.title = this.$gettextInterpolate(`Downloading soundtrack for %{ game }`, {
+			game: this.game.title,
+		});
 
 		// Wait for view so we can scroll.
 		await this.$nextTick();

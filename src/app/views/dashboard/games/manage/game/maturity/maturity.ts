@@ -34,12 +34,9 @@ export default class RouteDashGamesManageGameMaturity extends Vue {
 	routed() {
 		this.current = this.game;
 
-		Meta.title = this.$gettextInterpolate(
-			`Edit Maturity Rating for %{ game }`,
-			{
-				game: this.game.title,
-			}
-		);
+		Meta.title = this.$gettextInterpolate(`Edit Maturity Rating for %{ game }`, {
+			game: this.game.title,
+		});
 	}
 
 	onSaved() {

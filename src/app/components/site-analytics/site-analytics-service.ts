@@ -4,12 +4,7 @@ import { Translate } from '../../../lib/gj-lib-client/components/translate/trans
 import { objectPick } from '../../../lib/gj-lib-client/utils/object';
 import { arrayIndexBy } from '../../../lib/gj-lib-client/utils/array';
 
-export type ResourceName =
-	| 'Partner'
-	| 'User'
-	| 'Game'
-	| 'Game_Package'
-	| 'Game_Release';
+export type ResourceName = 'Partner' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
 
 // TODO: Figure this out.const ORDERED_ASC = 'ordered-asc';
 export type Analyzer =
@@ -401,10 +396,7 @@ export class SiteAnalytics {
 	static get packageMetrics() {
 		if (!this._packageMetrics) {
 			const possibleMetrics: MetricKey[] = ['download'];
-			this._packageMetrics = <MetricMap>objectPick(
-				this.allMetrics,
-				possibleMetrics
-			);
+			this._packageMetrics = <MetricMap>objectPick(this.allMetrics, possibleMetrics);
 		}
 
 		return this._packageMetrics;
@@ -438,11 +430,9 @@ export class SiteAnalytics {
 			dates
 		);
 
-		const response = await Api.sendRequest(
-			'/web/dash/analytics/display',
-			request,
-			{ sanitizeComplexData: false }
-		);
+		const response = await Api.sendRequest('/web/dash/analytics/display', request, {
+			sanitizeComplexData: false,
+		});
 
 		let data: any = {};
 		Object.entries(response).forEach(([metricKey, eventData]) => {
@@ -453,9 +443,7 @@ export class SiteAnalytics {
 				label = 'Average';
 			}
 			data[metricKey] = Graph.createGraphData(eventData.result);
-			data[metricKey].total = label
-				? data[metricKey].colTotals[label]
-				: eventData.total;
+			data[metricKey].total = label ? data[metricKey].colTotals[label] : eventData.total;
 		});
 
 		return data;
@@ -479,11 +467,9 @@ export class SiteAnalytics {
 			dates
 		);
 
-		const response = await Api.sendRequest(
-			'/web/dash/analytics/display',
-			request,
-			{ sanitizeComplexData: false }
-		);
+		const response = await Api.sendRequest('/web/dash/analytics/display', request, {
+			sanitizeComplexData: false,
+		});
 
 		let data: any = {};
 		Object.entries(response).forEach(([metricKey, eventData]) => {

@@ -55,9 +55,7 @@ export default class RouteDashGamesManageGamePackagesList extends Vue {
 		// 	$state.go('dash.games.manage.game.packages.add', $stateParams);
 		// }
 
-		return Api.sendRequest(
-			'/web/dash/developer/games/packages/' + route.params.id
-		);
+		return Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id);
 	}
 
 	routed() {

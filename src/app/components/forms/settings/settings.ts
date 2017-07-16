@@ -13,10 +13,8 @@ import { ClientInstaller as _ClientInstaller } from '../../client/installer/inst
 let ClientInstaller: typeof _ClientInstaller | undefined;
 let ClientAutoStart: typeof _ClientAutoStart | undefined;
 if (GJ_IS_CLIENT) {
-	ClientInstaller = require('../../client/installer/installer.service')
-		.ClientInstaller;
-	ClientAutoStart = require('../../client/autostart/autostart.service')
-		.ClientAutoStart;
+	ClientInstaller = require('../../client/installer/installer.service').ClientInstaller;
+	ClientAutoStart = require('../../client/autostart/autostart.service').ClientAutoStart;
 }
 
 @View
@@ -29,10 +27,7 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 	ClientAutoStart = ClientAutoStart;
 
 	onInit() {
-		this.setField(
-			'chat_notify_friends_online',
-			Settings.get('chat-notify-friends-online')
-		);
+		this.setField('chat_notify_friends_online', Settings.get('chat-notify-friends-online'));
 		this.setField('restricted_browsing', Settings.get('restricted-browsing'));
 		this.setField('broadcast_modal', Settings.get('broadcast-modal'));
 
@@ -41,16 +36,10 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 			this.setField('queue_when_playing', Settings.get('queue-when-playing'));
 
 			this.setField('max_download_count', Settings.get('max-download-count'));
-			this.setField(
-				'limit_downloads',
-				this.formModel.max_download_count !== -1
-			);
+			this.setField('limit_downloads', this.formModel.max_download_count !== -1);
 
 			this.setField('max_extract_count', Settings.get('max-extract-count'));
-			this.setField(
-				'limit_extractions',
-				this.formModel.max_extract_count !== -1
-			);
+			this.setField('limit_extractions', this.formModel.max_extract_count !== -1);
 
 			if (ClientAutoStart!.canAutoStart) {
 				this.setField('autostart_client', Settings.get('autostart-client'));
@@ -86,17 +75,11 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 			return;
 		}
 
-		this.setField(
-			'max_extract_count',
-			shouldLimit ? Settings.getDefault('max-extract-count') : -1
-		);
+		this.setField('max_extract_count', shouldLimit ? Settings.getDefault('max-extract-count') : -1);
 	}
 
 	onChange() {
-		Settings.set(
-			'chat-notify-friends-online',
-			this.formModel.chat_notify_friends_online
-		);
+		Settings.set('chat-notify-friends-online', this.formModel.chat_notify_friends_online);
 		Settings.set('restricted-browsing', this.formModel.restricted_browsing);
 		Settings.set('broadcast-modal', this.formModel.broadcast_modal);
 

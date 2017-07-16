@@ -1,5 +1,4 @@
 import VueRouter from 'vue-router';
-import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/utils';
 
 // For the redirects.
 const path = '/community/forums/:slug/';
@@ -9,7 +8,7 @@ export const routeForumsChannelsView: VueRouter.RouteConfig = {
 	name: 'forums.channels.view',
 	path: '/f/:name',
 	props: true,
-	component: () => asyncComponentLoader(import('./view')),
+	component: () => import('./view'),
 	children: [
 		{ path: `${path}2`, redirect: { name, params: { name: 'gj-feedback' } } },
 		{ path: `${path}7`, redirect: { name, params: { name: 'jams' } } },

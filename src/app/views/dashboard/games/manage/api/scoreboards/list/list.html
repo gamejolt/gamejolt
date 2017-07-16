@@ -27,7 +27,7 @@
 				<app-card-list-draggable @change="saveSort">
 					<app-card-list-item
 						v-for="(scoreTable, i) of scoreTables"
-						:key="scoreTable"
+						:key="scoreTable.id"
 						:item="scoreTable"
 						>
 
