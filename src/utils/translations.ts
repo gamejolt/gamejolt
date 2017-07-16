@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Axios from 'axios';
 import {
 	TranslationLangs,
 	getTranslationLang,
@@ -14,41 +15,19 @@ export async function bootstrapAppTranslations() {
 
 	let lang = getTranslationLang();
 
-	const promises = [];
-	promises.push(
-		import(/* webpackChunkName: "translations" */
-		'!!../translations/' + lang + '/main.json')
-	);
-	promises.push(
-		import(/* webpackChunkName: "translations" */
-		'!!../translations/' + lang + '/dash.json')
-	);
-	promises.push(
-		import(/* webpackChunkName: "translations" */
-		'!!../translations/' + lang + '/claim.json')
-	);
-	promises.push(
-		import(/* webpackChunkName: "translations" */
-		'!!../translations/' + lang + '/checkout.json')
-	);
-	promises.push(
-		import(/* webpackChunkName: "translations" */
-		'!!../translations/' + lang + '/auth.json')
-	);
+	// Don't use webpack to require directly. If we did it would generate new
+	// files for each section that we built for.
+	const response = await Axios({
+		url: require('!file-loader!../translations/' + lang + '/main.json'),
+		ignoreLoadingBar: true,
+	});
 
-	const allResolved = await Promise.all(promises);
-
-	let translations: any = {};
-	for (const resolved of allResolved) {
-		Object.assign(translations, resolved[lang]);
-	}
+	const translations = response.data;
 
 	Vue.use(VueGettext, {
 		silent: true,
 		availableLanguages,
 		defaultLanguage: lang,
-		translations: {
-			[lang]: translations,
-		},
+		translations,
 	});
 }
