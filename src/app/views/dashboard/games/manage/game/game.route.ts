@@ -13,6 +13,7 @@ import { routeDashGamesManageGamePackagesEdit } from './packages/edit/edit.route
 import { routeDashGamesManageGameSettings } from './settings/settings.route';
 import { routeDashGamesManageGameMaturity } from './maturity/maturity.route';
 import { routeDashGamesManageGameWizardFinish } from './wizard-finish/wizard-finish.route';
+import { routeDashGamesManageGamePackageReleaseEdit } from './packages/release/edit/edit.route';
 
 export const routeDashGamesManageGame: VueRouter.RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',
@@ -30,6 +31,7 @@ export const routeDashGamesManageGame: VueRouter.RouteConfig = {
 		routeDashGamesManageGamePackagesList,
 		routeDashGamesManageGamePackagesAdd,
 		routeDashGamesManageGamePackagesEdit,
+		routeDashGamesManageGamePackageReleaseEdit,
 		routeDashGamesManageGameMaturity,
 		routeDashGamesManageGameWizardFinish,
 	],

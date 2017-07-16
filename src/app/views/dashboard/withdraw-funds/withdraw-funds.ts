@@ -9,6 +9,7 @@ import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service
 import { FormWithdrawFunds } from '../../../components/forms/withdraw-funds/withdraw-funds';
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 
 @View
 @Component({
@@ -29,7 +30,7 @@ export default class RouteDashWithdrawFunds extends Vue {
 	revenueWithdrawable = 0;
 	email = '';
 
-	readonly Screen = Screen;
+	readonly Screen = makeObservableService(Screen);
 
 	created() {
 		Meta.title = this.$gettext('dash.funds.withdraw.page_title');

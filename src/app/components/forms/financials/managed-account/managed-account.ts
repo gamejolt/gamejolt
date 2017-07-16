@@ -15,7 +15,10 @@ import { AppFinancialsManagedAccountDob } from './dob';
 import { AppFinancialsManagedAccountAddress } from './address';
 import { AppFinancialsManagedAccountSsn } from './ssn';
 import { AppFinancialsManagedAccountIdDocument } from './id-document';
-import { BaseForm, FormOnInit } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 
 // CODE REVIEW - populate form model.
 interface FormModel {
@@ -46,7 +49,8 @@ interface FormModel {
 		AppFinancialsManagedAccountIdDocument,
 	},
 })
-export class FormFinancialsManagedAccount extends BaseForm<FormModel> implements FormOnInit, FormOnSubmit {
+export class FormFinancialsManagedAccount extends BaseForm<FormModel>
+	implements FormOnInit, FormOnSubmit {
 	resetOnSubmit = true;
 	isLoaded = false;
 
@@ -91,8 +95,15 @@ export class FormFinancialsManagedAccount extends BaseForm<FormModel> implements
 		console.log(this.stripe);
 
 		this.setField('additional_owners_count', 0);
-		if (payload.stripe && payload.stripe.current && payload.stripe.current.legal_entity.additional_owners) {
-			this.setField('additional_owners_count', payload.stripe.current.legal_entity.additional_owners.length);
+		if (
+			payload.stripe &&
+			payload.stripe.current &&
+			payload.stripe.current.legal_entity.additional_owners
+		) {
+			this.setField(
+				'additional_owners_count',
+				payload.stripe.current.legal_entity.additional_owners.length
+			);
 		}
 
 		this.isLoaded = true;
@@ -112,7 +123,8 @@ export class FormFinancialsManagedAccount extends BaseForm<FormModel> implements
 			this.stripeMeta.minimum.indexOf(field) !== -1 ||
 			// We special case personal_id_number.
 			// We need it for taxes, so we collect it if it's just in "additional".
-			(field === 'legal_entity.personal_id_number' && this.stripeMeta.additional.indexOf(field) !== -1) ||
+			(field === 'legal_entity.personal_id_number' &&
+				this.stripeMeta.additional.indexOf(field) !== -1) ||
 			(this.stripe.current &&
 				this.stripe.current.verification &&
 				this.stripe.current.verification.fields_needed &&
@@ -257,7 +269,9 @@ export class FormFinancialsManagedAccount extends BaseForm<FormModel> implements
 			for (let i = 0; i < 4; i++) {
 				if (this.formModel[`legal_entity.additional_owners.${i}.verification.document`]) {
 					const curIndex = i;
-					const idDocument: AppFinancialsManagedAccountIdDocument = this.$refs[`additional-id-document-${i}`] as any;
+					const idDocument: AppFinancialsManagedAccountIdDocument = this.$refs[
+						`additional-id-document-${i}`
+					] as any;
 					const _response = await idDocument.uploadIdDocument(this.stripePublishableKey);
 					data[`legal_entity.additional_owners.${curIndex}.verification.document`] = _response.id;
 				}

@@ -1,32 +1,43 @@
-<div class="modal-controls">
-	<button class="btn btn-danger-outline" ng-click="modalCtrl.close()">
-		<app-jolticon icon="remove" />
-		<span translate>dash.games.releases.builds.launch_options.file_selector.cancel_button</span>
-	</button>
-</div>
-
-<div class="modal-header">
-	<h2 class="modal-title" translate>dash.games.releases.builds.launch_options.file_selector.heading</h2>
-</div>
-
-<div class="modal-body">
-	<gj-loading v-if="modalCtrl.isLoading" loading-big="true" class="loading-centered"></gj-loading>
-
-	<div v-if="!modalCtrl.isLoading && modalCtrl.files.length">
-		<div class="form-group">
-			<input class="form-control" type="search" :placeholder="$gettext( `dash.games.releases.builds.launch_options.file_selector.filter_placeholder` )" ng-model="modalCtrl.filter">
-		</div>
-
-		<div class="list-group">
-			<a class="list-group-item thin"
-				v-for="file of modalCtrl.files | filter:modalCtrl.filter"
-				ng-click="modalCtrl.select( file )"
-				>
-				{{ file }}
-			</a>
-		</div>
+<app-modal>
+	<div class="modal-controls">
+		<button class="btn btn-danger-outline" @click="modal.dismiss">
+			<app-jolticon icon="remove" />
+			<translate>dash.games.releases.builds.launch_options.file_selector.cancel_button</translate>
+		</button>
 	</div>
 
-	<div class="alert alert-warning" v-if="!modalCtrl.isLoading && !modalCtrl.files.length" translate>dash.games.releases.builds.launch_options.file_selector.no_files_html</div>
+	<div class="modal-header">
+		<h2 class="modal-title"><translate>dash.games.releases.builds.launch_options.file_selector.heading</translate></h2>
+	</div>
 
-</div>
+	<div class="modal-body">
+		<app-loading
+			v-if="!isLoaded"
+			:big="true"
+			class="loading-centered"
+			/>
+
+		<div v-else-if="files.length">
+			<div class="form-group">
+				<input
+					class="form-control"
+					type="search"
+					:placeholder="$gettext( `dash.games.releases.builds.launch_options.file_selector.filter_placeholder` )"
+					v-model="filter"
+				>
+			</div>
+
+			<div class="list-group">
+				<a class="list-group-item thin"
+					v-for="file of filteredFiles"
+					@click="select( file )"
+					>
+					{{ file }}
+				</a>
+			</div>
+		</div>
+
+		<div v-else class="alert alert-warning"><translate :escape-html="false">dash.games.releases.builds.launch_options.file_selector.no_files_html</translate></div>
+
+	</div>
+</app-modal>
