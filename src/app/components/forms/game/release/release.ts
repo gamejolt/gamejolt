@@ -61,15 +61,6 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	onInit() {
 		this.setField('game_id', this.game.id);
 		this.setField('game_package_id', this.package.id);
-
-		// TODO: Can't modify props directly.
-		// if (!this.builds) {
-		// 	this.builds = [];
-		// }
-
-		// if (!this.launchOptions) {
-		// 	this.launchOptions = [];
-		// }
 	}
 
 	onLoad(payload: any) {

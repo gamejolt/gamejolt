@@ -67,7 +67,7 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 	@Prop(GameRelease) release: GameRelease;
 	@Prop(Array) releaseLaunchOptions: GameBuildLaunchOption[];
 	@Prop(Object) buildDownloadCounts: { [buildId: number]: number };
-	@Prop(Array) packageBuilds: GameBuild[];
+	@Prop(Array) builds: GameBuild[];
 
 	private releaseForm: FormGameRelease;
 
@@ -201,9 +201,7 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 
 		// Can't choose a platform chosen by another build in this package.
 		if (platform !== 'other') {
-			const foundBuild = this.packageBuilds.find(
-				value => (value as any)[`os_${platform}`] === true
-			);
+			const foundBuild = this.builds.find(value => (value as any)[`os_${platform}`] === true);
 			if (foundBuild && foundBuild.id !== this.model!.id) {
 				return true;
 			}
