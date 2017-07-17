@@ -5,7 +5,10 @@ import * as View from '!view!./devlog-post.html?style=./devlog-post.styl';
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { ActivityFeedItem } from '../item-service';
-import { makeObservableService, findVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
+import {
+	makeObservableService,
+	findRequiredVueParent,
+} from '../../../../../lib/gj-lib-client/utils/vue';
 import { AppActivityFeed } from '../feed';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppGameThumbnailImg } from '../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
@@ -54,7 +57,7 @@ export class AppActivityFeedDevlogPost extends Vue {
 	}
 
 	created() {
-		this.feed = findVueParent(this, AppActivityFeed) as AppActivityFeed;
+		this.feed = findRequiredVueParent(this, AppActivityFeed);
 		this.post = this.item.feedItem as FiresidePost;
 	}
 

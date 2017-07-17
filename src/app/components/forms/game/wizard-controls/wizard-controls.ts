@@ -29,7 +29,7 @@ export class AppDashGameWizardControls extends Vue {
 	form?: AppForm;
 
 	created() {
-		this.form = findVueParent(this, AppForm) as AppForm | undefined;
+		this.form = findVueParent(this, AppForm);
 	}
 
 	get inForm() {

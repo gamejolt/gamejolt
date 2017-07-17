@@ -11,7 +11,7 @@ import { Popover } from '../../../../lib/gj-lib-client/components/popover/popove
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { findVueParent } from '../../../../lib/gj-lib-client/utils/vue';
+import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppSearch } from '../search';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
@@ -74,7 +74,7 @@ export class AppSearchAutocomplete extends Vue {
 	}
 
 	created() {
-		this.search = findVueParent(this, AppSearch) as AppSearch;
+		this.search = findRequiredVueParent(this, AppSearch);
 	}
 
 	mounted() {
