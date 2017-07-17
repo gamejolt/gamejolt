@@ -152,9 +152,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexAction
 	async loadVideoComments() {
-		++this.videoCommentsPage;
 		const response = await Api.sendRequest(
-			'/web/discover/games/videos/' + this.game.id + '?page=' + this.videoCommentsPage
+			'/web/discover/games/videos/' + this.game.id + '?page=' + (this.videoCommentsPage + 1)
 		);
 
 		this.pushVideoComments(CommentVideo.populate(response.videos));
@@ -291,6 +290,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	pushVideoComments(videos: Mutations['pushVideoComments']) {
+		++this.videoCommentsPage;
 		this.videoComments = this.videoComments.concat(videos);
 	}
 
