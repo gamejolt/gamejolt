@@ -31,7 +31,7 @@
 						name: 'dash.games.manage.game.packages.edit',
 					}"
 					active-class="active"
-					:exact="true"
+					exact
 					>
 					<translate>Edit Package</translate>
 				</router-link>
@@ -51,225 +51,229 @@
 
 	<br>
 
-	<div class="row">
-		<div class="col-sm-8">
+	<div v-if="$route.name === 'dash.games.manage.game.packages.edit'">
+		<div class="row">
+			<div class="col-sm-8">
 
-			<div class="alert alert-warning"
-				v-if="game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC"
-				>
-				<app-jolticon icon="notice" />
-				<!--TODO-->
-				<!--<span
-					translate
-					translate-params-url="$state.href( 'dash.games.manage.game.overview' )"
+				<div class="alert alert-warning"
+					v-if="game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC"
 					>
-					<b>This package won't show up on your devlog-only game page.</b> Switch your game page to early access or complete from the <a href="{{ url }}">Overview/Setup</a> page for it to show.
-				</span>-->
-			</div>
+					<app-jolticon icon="notice" />
+					<!--TODO-->
+					<!--<span
+						translate
+						translate-params-url="$state.href( 'dash.games.manage.game.overview' )"
+						>
+						<b>This package won't show up on your devlog-only game page.</b> Switch your game page to early access or complete from the <a href="{{ url }}">Overview/Setup</a> page for it to show.
+					</span>-->
+				</div>
 
-			<h3 :class="{ 'section-header': !(game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC) }">
-				<translate>Package Preview</translate>
-			</h3>
+				<h3 :class="{ 'section-header': !(game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC) }">
+					<translate>Package Preview</translate>
+				</h3>
 
-			<div>
-				<button
-					class="btn btn-outline btn-block"
-					@click="isShowingPackageEdit = !isShowingPackageEdit"
-					>
-					<app-jolticon icon="edit" />
-					<translate v-if="!isShowingPackageEdit">Edit Package Details</translate>
-					<translate v-else>Hide Package Details</translate>
-				</button>
-			</div>
-			<br>
-
-			<app-expand :when="isShowingPackageEdit">
-				<form-game-package
-					:model="package"
-					:game="game"
-					:sellable="sellable"
-					@submit="onEdited"
-					@salecanceled="onEdited"
-					/>
-
-				<br>
-			</app-expand>
-			<!--<div collapse="!isShowingPackageEdit">-->
-				<!--TODO-->
-				<!---->
-				<!--<br>
-			</div>-->
-
-			<div v-if="isLoadingPreview">
-				<app-loading />
-			</div>
-			<div v-else>
-				<app-game-package-card
-					:game="game"
-					:sellable="previewSellable"
-					:package="package"
-					:releases="previewPackage._releases"
-					:builds="previewPackage._builds"
-					/>
-
-				<!--TODO-->
-				<!--<div
-					v-if="buildsProcessingCount > 0"
-					gj-progress-poller="/web/dash/developer/games/packages/poll-processing-builds/{{ game.id }}/{{ package.id }}/{{ buildsProcessingCount }}"
-					progress-poller-on-complete="onBuildsProcessed( $response )"
-					>
-					<div class="alert alert-info">
-						<app-jolticon icon="notice" />
-						<translate>This package has builds that are still processing. They will translate available in the package as soon as they're finished processing.</span>
-					</div>
-				</div>-->
-			</div>
-
-		</div>
-	</div>
-
-	<h3>
-		<translate>dash.games.packages.manage.releases.heading</translate>
-	</h3>
-
-	<div class="row">
-		<div class="col-sm-4 col-sm-push-8">
-			<div class="page-help">
 				<div>
+					<button
+						class="btn btn-outline btn-block"
+						@click="isShowingPackageEdit = !isShowingPackageEdit"
+						>
+						<app-jolticon icon="edit" />
+						<translate v-if="!isShowingPackageEdit">Edit Package Details</translate>
+						<translate v-else>Hide Package Details</translate>
+					</button>
+				</div>
+				<br>
+
+				<app-expand :when="isShowingPackageEdit">
+					<form-game-package
+						:model="package"
+						:game="game"
+						:sellable="sellable"
+						@submit="onEdited"
+						@salecanceled="onEdited"
+						/>
+
+					<br>
+				</app-expand>
+				<!--<div collapse="!isShowingPackageEdit">-->
+					<!--TODO-->
+					<!---->
+					<!--<br>
+				</div>-->
+
+				<div v-if="isLoadingPreview">
+					<app-loading />
+				</div>
+				<div v-else>
+					<app-game-package-card
+						:game="game"
+						:sellable="previewSellable"
+						:package="package"
+						:releases="previewPackage._releases"
+						:builds="previewPackage._builds"
+						/>
+
+					<!--TODO-->
+					<!--<div
+						v-if="buildsProcessingCount > 0"
+						gj-progress-poller="/web/dash/developer/games/packages/poll-processing-builds/{{ game.id }}/{{ package.id }}/{{ buildsProcessingCount }}"
+						progress-poller-on-complete="onBuildsProcessed( $response )"
+						>
+						<div class="alert alert-info">
+							<app-jolticon icon="notice" />
+							<translate>This package has builds that are still processing. They will translate available in the package as soon as they're finished processing.</span>
+						</div>
+					</div>-->
+				</div>
+
+			</div>
+		</div>
+
+		<h3>
+			<translate>dash.games.packages.manage.releases.heading</translate>
+		</h3>
+
+		<div class="row">
+			<div class="col-sm-4 col-sm-push-8">
+				<div class="page-help">
+					<div>
+						<translate :escape-html="false">
+							dash.games.packages.manage.releases.page_help_html
+						</translate>
+					</div>
+					<p>
+						<a class="link-help" href="https://help.gamejolt.com/dev-packages#releases" target="_blank">
+							<translate>dash.games.packages.manage.releases.page_help_link</translate>
+						</a>
+					</p>
+				</div>
+			</div>
+
+			<div class="col-sm-8 col-sm-pull-4">
+
+				<div class="alert alert-warning" v-if="!releases.length">
 					<translate :escape-html="false">
-						dash.games.packages.manage.releases.page_help_html
+						<p>There are no releases in this package yet.</p>
+						<p>Add a release to this package in order to upload builds/files to it.</p>
 					</translate>
 				</div>
-				<p>
-					<a class="link-help" href="https://help.gamejolt.com/dev-packages#releases" target="_blank">
-						<translate>dash.games.packages.manage.releases.page_help_link</translate>
-					</a>
-				</p>
-			</div>
-		</div>
 
-		<div class="col-sm-8 col-sm-pull-4">
+				<div>
+					<button
+						class="btn btn-success-outline btn-block"
+						@click="newRelease"
+						:disabled="isAddingRelease"
+						>
+						<app-jolticon icon="add" />
+						<translate>New Release</translate>
+					</button>
+				</div>
+				<br>
 
-			<div class="alert alert-warning" v-if="!releases.length">
-				<translate :escape-html="false">
-					<p>There are no releases in this package yet.</p>
-					<p>Add a release to this package in order to upload builds/files to it.</p>
-				</translate>
-			</div>
+				<div v-if="releases.length">
 
-			<div>
-				<button
-					class="btn btn-success-outline btn-block"
-					@click="newRelease"
-					:disabled="isAddingRelease"
-					>
-					<app-jolticon icon="add" />
-					<translate>New Release</translate>
-				</button>
-			</div>
-			<br>
+					<app-card
+						v-for="release of releases"
+						:key="release.id"
+						:is-inactive="release.status === GameRelease.STATUS_HIDDEN"
+						>
 
-			<div v-if="releases.length">
+						<a class="card-remove" @click="removeRelease( release )">
+							<app-jolticon icon="remove" />
+						</a>
 
-				<app-card
-					v-for="release of releases"
-					:key="release.id"
-					:is-inactive="release.status === GameRelease.STATUS_HIDDEN"
-					>
+						<div class="card-title">
+							<h4>
+								<router-link
+									:to="{
+										name: 'dash.games.manage.game.packages.release.edit',
+										params: {
+											packageId: package.id,
+											releaseId: release.id,
+										},
+									}"
+									>
+									{{ release.version_number }}
+								</router-link>
+							</h4>
+						</div>
 
-					<a class="card-remove" @click="removeRelease( release )">
-						<app-jolticon icon="remove" />
-					</a>
+						<div class="card-meta">
+							<span class="tag"
+								v-if="release.status === GameRelease.STATUS_HIDDEN"
+								v-app-tooltip="$gettext( `dash.games.packages.manage.releases.hidden_tooltip` )"
+								>
+								<app-jolticon icon="inactive" />
+								<translate>dash.games.packages.manage.releases.hidden_tag</translate>
+							</span>
 
-					<div class="card-title">
-						<h4>
+							<span class="tag tag-active"
+								v-if="release.status === GameRelease.STATUS_PUBLISHED"
+								v-app-tooltip="$gettext( `dash.games.packages.manage.releases.published_tooltip` )"
+								>
+								<app-jolticon icon="active" />
+								<translate>dash.games.packages.manage.releases.published_tag</translate>
+							</span>
+
+							<span class="dot-separator"></span>
+
+							<span v-if="!release.build_count">
+								<translate>dash.games.packages.manage.releases.builds_count_none</translate>
+							</span>
+
+							<span v-if="release.build_count">
+								<translate
+									:translate-params="{
+										count: number( release.build_count ),
+									}"
+									:translate-n="release.build_count"
+									translate-plural="%{ count } builds"
+									>
+									1 build
+								</translate>
+							</span>
+						</div>
+
+						<div class="card-content" v-if="package.description">
+							{{ package.description }}
+						</div>
+
+						<div class="card-controls">
 							<router-link
+								class="btn btn-outline"
 								:to="{
 									name: 'dash.games.manage.game.packages.release.edit',
-									params: {
-										packageId: package.id,
-										releaseId: release.id,
-									},
+									params: { packageId: package.id, releaseId: release.id },
 								}"
 								>
-								{{ release.version_number }}
+								<app-jolticon icon="edit" />
+								<translate>Edit Release</translate>
 							</router-link>
-						</h4>
-					</div>
 
-					<div class="card-meta">
-						<span class="tag"
-							v-if="release.status === GameRelease.STATUS_HIDDEN"
-							v-app-tooltip="$gettext( `dash.games.packages.manage.releases.hidden_tooltip` )"
-							>
-							<app-jolticon icon="inactive" />
-							<translate>dash.games.packages.manage.releases.hidden_tag</translate>
-						</span>
-
-						<span class="tag tag-active"
-							v-if="release.status === GameRelease.STATUS_PUBLISHED"
-							v-app-tooltip="$gettext( `dash.games.packages.manage.releases.published_tooltip` )"
-							>
-							<app-jolticon icon="active" />
-							<translate>dash.games.packages.manage.releases.published_tag</translate>
-						</span>
-
-						<span class="dot-separator"></span>
-
-						<span v-if="!release.build_count">
-							<translate>dash.games.packages.manage.releases.builds_count_none</translate>
-						</span>
-
-						<span v-if="release.build_count">
-							<translate
-								:translate-params="{
-									count: number( release.build_count ),
+							<router-link
+								class="btn btn-outline"
+								:to="{
+									name: 'dash.analytics',
+									params: { resource: 'Game_Release', resourceId: release.id },
 								}"
-								:translate-n="release.build_count"
-								translate-plural="%{ count } builds"
 								>
-								1 build
-							</translate>
-						</span>
-					</div>
+								<app-jolticon icon="chart" />
+								<translate>Analytics</translate>
+							</router-link>
+						</div>
 
-					<div class="card-content" v-if="package.description">
-						{{ package.description }}
-					</div>
+					</app-card>
 
-					<div class="card-controls">
-						<router-link
-							class="btn btn-outline"
-							:to="{
-								name: 'dash.games.manage.game.packages.release.edit',
-								params: { packageId: package.id, releaseId: release.id },
-							}"
-							>
-							<app-jolticon icon="edit" />
-							<translate>Edit Release</translate>
-						</router-link>
+				</div>
 
-						<router-link
-							class="btn btn-outline"
-							:to="{
-								name: 'dash.analytics',
-								params: { resource: 'Game_Release', resourceId: release.id },
-							}"
-							>
-							<app-jolticon icon="chart" />
-							<translate>Analytics</translate>
-						</router-link>
-					</div>
-
-				</app-card>
+				<app-dash-game-wizard-controls
+					:disabled="!game._is_devlog && !game.has_active_builds"
+					/>
 
 			</div>
-
-			<app-dash-game-wizard-controls
-				:disabled="!game._is_devlog && !game.has_active_builds"
-				/>
-
 		</div>
 	</div>
+
+	<router-view/>
 
 </div>

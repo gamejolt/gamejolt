@@ -16,13 +16,6 @@ export const routeFallbacks: VueRouter.RouteConfig[] = [
 			{
 				path: 'games/:id(\\d+)',
 				component: RouteEmpty,
-				children: [
-					{
-						name: 'dash.games.manage.game.packages.edit.widget',
-						path: 'packages/:packageId(\\d+)/widget',
-						component: RouteEmpty,
-					},
-				],
 			},
 		],
 	},
