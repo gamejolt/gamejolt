@@ -6,7 +6,7 @@ import * as View from '!view!./manage.html';
 import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { RouteState, RouteStore, RouteMutation } from './manage.state';
+import { RouteStateName, RouteState, RouteStore, RouteMutation } from './manage.state';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
@@ -39,7 +39,7 @@ export default class RouteDashGamesManage extends Vue {
 	}
 
 	routeInit() {
-		this.$store.registerModule('route', new RouteStore());
+		this.$store.registerModule(RouteStateName, new RouteStore());
 	}
 
 	routed() {
@@ -47,6 +47,6 @@ export default class RouteDashGamesManage extends Vue {
 	}
 
 	destroyed() {
-		this.$store.unregisterModule('route');
+		this.$store.unregisterModule(RouteStateName);
 	}
 }

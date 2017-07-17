@@ -16,9 +16,10 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { store } from '../../../../store/index';
 import { router } from '../../../index';
 
-export const RouteState = namespace('route', State);
-export const RouteAction = namespace('route', Action);
-export const RouteMutation = namespace('route', Mutation);
+export const RouteStateName = 'manageRoute';
+export const RouteState = namespace(RouteStateName, State);
+export const RouteAction = namespace(RouteStateName, Action);
+export const RouteMutation = namespace(RouteStateName, Mutation);
 
 export type Media = GameScreenshot | GameVideo | GameSketchfab;
 

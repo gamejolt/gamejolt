@@ -26,7 +26,7 @@ import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/c
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { AppMeter } from '../../../../../lib/gj-lib-client/components/meter/meter';
-import { RouteState, RouteAction, RouteStore, RouteMutation } from './view.state';
+import { RouteStateName, RouteState, RouteAction, RouteStore, RouteMutation } from './view.state';
 import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Store } from '../../../../store/index';
 
@@ -96,7 +96,7 @@ export default class RouteDiscoverGamesView extends Vue {
 	}
 
 	routeInit() {
-		this.$store.registerModule('route', new RouteStore());
+		this.$store.registerModule(RouteStateName, new RouteStore());
 		this.bootstrapGame(parseInt(this.id, 10));
 
 		// Any game rating change will broadcast this event.
@@ -106,7 +106,7 @@ export default class RouteDiscoverGamesView extends Vue {
 	}
 
 	destroyed() {
-		this.$store.unregisterModule('route');
+		this.$store.unregisterModule(RouteStateName);
 
 		if (this.ratingCallback) {
 			EventBus.off('GameRating.changed', this.ratingCallback);

@@ -11,7 +11,7 @@ import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/use
 import { Store } from '../../../store/index';
 import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { RouteState, RouteStore } from './account.state';
+import { RouteStateName, RouteState, RouteStore } from './account.state';
 
 @View
 @Component({
@@ -33,10 +33,10 @@ export default class RouteDashAccount extends Vue {
 	}
 
 	routeInit() {
-		this.$store.registerModule('route', new RouteStore());
+		this.$store.registerModule(RouteStateName, new RouteStore());
 	}
 
 	destroyed() {
-		this.$store.unregisterModule('route');
+		this.$store.unregisterModule(RouteStateName);
 	}
 }
