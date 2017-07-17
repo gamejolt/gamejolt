@@ -20,6 +20,7 @@ import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/fo
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGameBuild } from '../build/build';
 import { FormGameNewBuild } from '../new-build/new-build';
+import { AppCardList } from '../../../../../lib/gj-lib-client/components/card/list/list';
 
 type GameReleaseFormModel = GameRelease & {
 	should_publish: boolean;
@@ -29,6 +30,7 @@ type GameReleaseFormModel = GameRelease & {
 @Component({
 	components: {
 		AppJolticon,
+		AppCardList,
 		FormGameBuild,
 		FormGameNewBuild,
 	},
@@ -61,15 +63,6 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	onInit() {
 		this.setField('game_id', this.game.id);
 		this.setField('game_package_id', this.package.id);
-
-		// TODO: Can't modify props directly.
-		// if (!this.builds) {
-		// 	this.builds = [];
-		// }
-
-		// if (!this.launchOptions) {
-		// 	this.launchOptions = [];
-		// }
 	}
 
 	onLoad(payload: any) {
@@ -104,7 +97,10 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 		}
 
 		// Add the new ones into the global list.
-		this.launchOptions = this.launchOptions.concat(GameBuildLaunchOption.populate(launchOptions));
+		const newLaunchOptions = GameBuildLaunchOption.populate(launchOptions);
+		for (const launchOption of newLaunchOptions) {
+			this.launchOptions.push(launchOption);
+		}
 	}
 
 	onBuildEdited(build: GameBuild, response: any) {

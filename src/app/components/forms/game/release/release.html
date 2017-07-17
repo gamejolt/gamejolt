@@ -32,24 +32,22 @@
 			<translate>You don't have any builds in this release yet. You won't be able to publish until you put some in.</translate>
 		</div>
 
-		<div
-			v-for="build of builds"
-			:key="build.id"
-			class="anim-fade-leave-enlarge anim-fade-enter"
-			>
-			<!-- <form-game-build
+		<app-card-list :items="builds">
+			 <form-game-build
+			 	v-for="build of builds"
+				:key="build.id"
+				:model="build"
 				:game="game"
 				:package="package"
 				:release="model"
-				:model="build"
 				:release-launch-options="launchOptions"
-				:package-builds="builds"
+				:builds="builds"
 				:build-download-counts="buildDownloadCounts"
 				@update-launch-options="updateBuildLaunchOptions"
 				@remove-build="removeBuild"
 				@submit="onBuildEdited( build, $event )"
-				/> -->
-		</div>
+				/>
+		</app-card-list>
 
 		<br>
 
@@ -63,30 +61,30 @@
 				<h5 class="sans-margin-top">
 					<strong><translate>Upload Downloadable Build</translate></strong>
 				</h5>
-				<!-- <form-game-new-build
-					:type="downloadable"
+				 <form-game-new-build
+					type="downloadable"
 					:game="game"
 					:package="package"
 					:release="model"
 					@submit="onBuildAdded"
-					/> -->
+					/>
 			</div>
 			<div class="col-sm-6">
 				<br class="visible-xs">
 				<h5 class="sans-margin-top">
 					<strong><translate>Upload Browser Build</translate></strong>
 				</h5>
-				<!-- <form-game-new-build
+				 <form-game-new-build
 					v-if="!areWebBuildsLockedBySellable"
-					:type="browser"
+					type="browser"
 					:game="game"
 					:package="package"
 					:release="model"
 					@submit="onBuildAdded"
-					/> -->
-				<!-- <div v-else class="alert alert-info">
+					/>
+				 <div v-else class="alert alert-info">
 					<translate>Browser builds can not currently be uploaded to games that are for sale.</translate>
-				</div> -->
+				</div>
 			</div>
 		</div>
 
