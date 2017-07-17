@@ -1,3 +1,357 @@
+import { Component, Prop, Watch } from 'vue-property-decorator';
+import * as View from '!view!./build.html?style=./build.styl';
+
+import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
+import {
+	BaseForm,
+	FormOnInit,
+	FormOnLoad,
+} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
+import { GameRelease } from '../../../../../lib/gj-lib-client/components/game/release/release.model';
+import { GameBuildLaunchOption } from '../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
+import { AppCard } from '../../../../../lib/gj-lib-client/components/card/card';
+import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+import { filesize } from '../../../../../lib/gj-lib-client/vue/filters/filesize';
+import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
+import { AppProgressPoller } from '../../../../../lib/gj-lib-client/components/progress/poller/poller';
+import { AppProgressBar } from '../../../../../lib/gj-lib-client/components/progress/bar/bar';
+import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { FormGameRelease } from '../release/release';
+import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
+import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
+import { fuzzynumber } from '../../../../../lib/gj-lib-client/vue/filters/fuzzynumber';
+import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
+
+type GameBuildFormModel = GameBuild & {
+	launch_windows: string;
+	launch_windows_64: string;
+	launch_mac: string;
+	launch_mac_64: string;
+	launch_linux: string;
+	launch_linux_64: string;
+	launch_other: string;
+};
+
+@View
+@Component({
+	components: {
+		AppCard,
+		AppJolticon,
+		AppExpand,
+		AppProgressPoller,
+		AppProgressBar,
+		AppLoading,
+	},
+	directives: {
+		AppTooltip,
+	},
+	filters: {
+		fuzzynumber,
+		filesize,
+	},
+})
+export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormOnInit, FormOnLoad {
+	modelClass = GameBuild as any;
+	resetOnSubmit = true;
+	reloadOnSubmit = true;
+
+	@Prop(Game) game: Game;
+	@Prop(GamePackage) package: GamePackage;
+	@Prop(GameRelease) release: GameRelease;
+	@Prop(Array) releaseLaunchOptions: GameBuildLaunchOption[];
+	@Prop(Object) buildDownloadCounts: { [buildId: number]: number };
+	@Prop(Array) packageBuilds: GameBuild[];
+
+	private releaseForm: FormGameRelease;
+
+	maxFilesize = 0;
+	restrictedPlatforms: string[] = [];
+	forceOther = false;
+	romTypes: string[] = [];
+	isSettingPlatform = false;
+	prevCount = -1;
+	buildLaunchOptions: GameBuildLaunchOption[] = [];
+	skipChangedWatch = false;
+	wasChanged = false;
+
+	readonly number = number;
+	readonly GameBuild = GameBuild;
+
+	$refs: {
+		form: AppForm;
+	};
+
+	get loadUrl() {
+		return `/web/dash/developer/games/builds/save/${this.game.id}/${this.package.id}/${this.release
+			.id}/${this.model!.id}`;
+	}
+
+	created() {
+		this.releaseForm = findRequiredVueParent(this, FormGameRelease);
+		this.releaseForm.buildForms.push(this);
+	}
+
+	beforeDestroy() {
+		arrayRemove(this.releaseForm.buildForms, buildForm => buildForm === this);
+	}
+
+	onInit() {
+		this.maxFilesize = 0;
+		this.restrictedPlatforms = [];
+		this.forceOther = false;
+		this.romTypes = [];
+		this.isSettingPlatform = false;
+		this.prevCount = -1;
+		this.buildLaunchOptions = [];
+		this.skipChangedWatch = false;
+		this.wasChanged = false;
+	}
+
+	onLoad(payload: any) {
+		this.maxFilesize = payload.maxFilesize;
+		this.restrictedPlatforms = payload.restrictedPlatforms;
+		this.forceOther = payload.forceOther;
+		this.romTypes = payload.romTypes;
+	}
+
+	remove() {
+		this.$emit('remove-build', this.model);
+	}
+
+	save() {
+		return this.$refs.form.submit();
+	}
+
+	get isDeprecated() {
+		return (
+			this.model &&
+			(this.model.type === GameBuild.TYPE_APPLET || this.model.type === GameBuild.TYPE_SILVERLIGHT)
+		);
+	}
+
+	get platformOptions() {
+		return [
+			{
+				key: 'windows',
+				label: this.$gettext('dash.games.builds.form.windows_tag'),
+				icon: 'windows',
+			},
+			{
+				key: 'windows_64',
+				label: this.$gettext('dash.games.builds.form.windows_64_tag'),
+				icon: 'windows',
+			},
+			{
+				key: 'mac',
+				label: this.$gettext('dash.games.builds.form.mac_tag'),
+				icon: 'mac',
+			},
+			{
+				key: 'mac_64',
+				label: this.$gettext('dash.games.builds.form.mac_64_tag'),
+				icon: 'mac',
+			},
+			{
+				key: 'linux',
+				label: this.$gettext('dash.games.builds.form.linux_tag'),
+				icon: 'linux',
+			},
+			{
+				key: 'linux_64',
+				label: this.$gettext('dash.games.builds.form.linux_64_tag'),
+				icon: 'linux',
+			},
+			{
+				key: 'other',
+				label: this.$gettext('dash.games.builds.form.other_tag'),
+				icon: 'other-os',
+			},
+		];
+	}
+
+	isPlatformDisabled(platform: string) {
+		// Restricted by server.
+		if (this.restrictedPlatforms && Array.isArray(this.restrictedPlatforms)) {
+			if (this.restrictedPlatforms.indexOf(platform) !== -1) {
+				return true;
+			}
+		}
+
+		// Can only be other OR a platform.
+		if (platform !== 'other' && this.model!.os_other) {
+			return true;
+		} else if (
+			platform === 'other' &&
+			(this.model!.os_windows ||
+				this.model!.os_mac ||
+				this.model!.os_linux ||
+				this.model!.os_windows_64 ||
+				this.model!.os_mac_64 ||
+				this.model!.os_linux_64)
+		) {
+			return true;
+		}
+
+		// Can't choose a platform chosen by another build in this package.
+		if (platform !== 'other') {
+			const foundBuild = this.packageBuilds.find(
+				value => (value as any)[`os_${platform}`] === true
+			);
+			if (foundBuild && foundBuild.id !== this.model!.id) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	async platformChanged(platform: string) {
+		this.isSettingPlatform = true;
+
+		try {
+			const params = [
+				this.game.id,
+				this.package.id,
+				this.release.id,
+				this.model!.id,
+				platform,
+				(this.formModel as any)['os_' + platform] ? 1 : 0,
+			];
+
+			const response = await Api.sendRequest(
+				'/web/dash/developer/games/builds/set-platform/' + params.join('/'),
+				{},
+				{ detach: true }
+			);
+
+			this.model!.assign(response.gameBuild);
+			this.game.assign(response.game);
+
+			// Copy new platforms to the form model.
+			for (let _platform of GameBuildLaunchOption.LAUNCHABLE_PLATFORMS) {
+				const key = 'os_' + _platform;
+
+				// oh geez
+				this.setField(key as any, (this.model as any)[key]);
+			}
+
+			// Copy new launch options in.
+			this.$emit('update-launch-options', this.model, response.launchOptions);
+		} catch (err) {
+			console.error(err);
+			Growls.error(this.$gettext('Could not set the platform for some reason.'));
+		} finally {
+			this.isSettingPlatform = false;
+		}
+	}
+
+	get emulatorsInfo(): { [type: string]: string } {
+		return {
+			[GameBuild.EMULATOR_GB]: this.$gettext('Game Boy'),
+			[GameBuild.EMULATOR_GBC]: this.$gettext('Game Boy Color'),
+			[GameBuild.EMULATOR_GBA]: this.$gettext('Game Boy Advance'),
+			[GameBuild.EMULATOR_NES]: this.$gettext('NES'),
+			[GameBuild.EMULATOR_SNES]: this.$gettext('SNES'),
+			[GameBuild.EMULATOR_VBOY]: this.$gettext('Virtual Boy'),
+			[GameBuild.EMULATOR_GENESIS]: this.$gettext('Genesis/Mega Drive'),
+			[GameBuild.EMULATOR_ATARI2600]: this.$gettext('Atari 2600'),
+			[GameBuild.EMULATOR_ZX]: this.$gettext('ZX Spectrum'),
+			[GameBuild.EMULATOR_C64]: this.$gettext('Commodore 64'),
+			[GameBuild.EMULATOR_CPC]: this.$gettext('Amstrad CPC'),
+			[GameBuild.EMULATOR_MSX]: this.$gettext('MSX'),
+		};
+	}
+
+	@Watch('releaseLaunchOptions')
+	onReleaseLaunchOptionsChanged() {
+		this.buildLaunchOptions = this.releaseLaunchOptions.filter(
+			launchOption => launchOption.game_build_id === this.model!.id
+		);
+
+		if (this.prevCount === -1) {
+			this.prevCount = this.buildLaunchOptions.length;
+		}
+
+		for (let launchOption of this.buildLaunchOptions) {
+			this.setField(('launch_' + launchOption.os) as any, launchOption.executable_path);
+		}
+
+		// This will skip a single cycle of checking if the form fields have changed.
+		// This is so that we don't get the "save build" button when adding a new launch option in after selecting new platform.
+		// Only if we add, not if we remove.
+		if (this.buildLaunchOptions.length > this.prevCount) {
+			this.skipChangedWatch = true;
+		}
+
+		this.prevCount = this.buildLaunchOptions.length;
+	}
+
+	async openFileSelector(platform: string) {
+		const selected = await ArchiveFileSelectorModal.show(
+			this.game.id,
+			this.package.id,
+			this.release.id,
+			this.model!.id,
+			this.model!.primary_file.id,
+			platform
+		);
+
+		if (!selected) {
+			return;
+		}
+
+		this.setField(('launch_' + platform) as any, selected);
+	}
+
+	onBuildProcessingComplete(response: any) {
+		// Just copy over the new build data into our current one.
+		this.model!.assign(response.build);
+		if (response.game) {
+			this.game.assign(response.game);
+		}
+	}
+
+	@Watch('formModel.embed_width')
+	@Watch('formModel.embed_height')
+	@Watch('formModel.browser_disable_right_click')
+	@Watch('formModel.launch_windows')
+	@Watch('formModel.launch_windows_64')
+	@Watch('formModel.launch_mac')
+	@Watch('formModel.launch_mac_64')
+	@Watch('formModel.launch_linux')
+	@Watch('formModel.launch_linux_64')
+	@Watch('formModel.launch_other')
+	onBuildFieldsChanged() {
+		// TODO make it not run for the first population of those fields.
+		console.log(this.skipChangedWatch);
+		if (this.skipChangedWatch) {
+			this.skipChangedWatch = false;
+			return;
+		}
+
+		// // Skip the initial watch.
+		// if (angular.equals(newVals, oldVals)) {
+		// 	return;
+		// }
+
+		console.log('mkay then');
+		this.wasChanged = true;
+	}
+
+	onSubmitSuccess(response: any) {
+		if (this.game) {
+			this.game.assign(response.game);
+		}
+	}
+}
+
 // angular
 // 	.module('App.Forms.Dashboard')
 // 	.directive('gjFormDashboardGameBuild', function(
@@ -346,359 +700,3 @@
 
 // 		return form;
 // 	});
-
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import * as View from '!view!./build.html';
-import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
-import {
-	BaseForm,
-	FormOnInit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { GameRelease } from '../../../../../lib/gj-lib-client/components/game/release/release.model';
-import { GameBuildLaunchOption } from '../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
-import { AppCard } from '../../../../../lib/gj-lib-client/components/card/card';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { filesize } from '../../../../../lib/gj-lib-client/vue/filters/filesize';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppProgressPoller } from '../../../../../lib/gj-lib-client/components/progress/poller/poller';
-import { AppProgressBar } from '../../../../../lib/gj-lib-client/components/progress/bar/bar';
-import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppFormLoader } from '../../../../../lib/gj-lib-client/components/form-vue/loader/loader';
-import { FormGameRelease } from '../release/release';
-import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
-import { fuzzynumber } from '../../../../../lib/gj-lib-client/vue/filters/fuzzynumber';
-import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
-
-type GameBuildFormModel = GameBuild & {
-	launch_windows: string;
-	launch_windows_64: string;
-	launch_mac: string;
-	launch_mac_64: string;
-	launch_linux: string;
-	launch_linux_64: string;
-	launch_other: string;
-};
-
-@View
-@Component({
-	components: {
-		AppCard,
-		AppJolticon,
-		AppExpand,
-		AppFormLoader,
-		AppProgressPoller,
-		AppProgressBar,
-		AppLoading,
-	},
-	directives: {
-		AppTooltip,
-	},
-	filters: {
-		fuzzynumber,
-		filesize,
-	},
-})
-export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormOnInit {
-	modelClass = GameBuild as any;
-	resetOnSubmit = true;
-
-	@Prop(Game) game: Game;
-	@Prop(GamePackage) package: GamePackage;
-	@Prop(GameRelease) release: GameRelease;
-	@Prop(Array) releaseLaunchOptions: GameBuildLaunchOption[];
-	@Prop(Object) buildDownloadCounts: { [buildId: number]: number };
-	@Prop(Array) packageBuilds: GameBuild[];
-
-	private releaseForm: FormGameRelease;
-
-	firstInit = true;
-	maxFilesize = 0;
-	restrictedPlatforms: string[] = [];
-	forceOther = false;
-	romTypes: string[] = [];
-	isSettingPlatform = false;
-	prevCount = -1;
-	buildLaunchOptions: GameBuildLaunchOption[] = [];
-	skipChangedWatch = false;
-	wasChanged = false;
-
-	readonly number = number;
-	readonly GameBuild = GameBuild;
-
-	$refs: {
-		loader: AppFormLoader;
-		form: AppForm;
-	};
-
-	created() {
-		this.releaseForm = findRequiredVueParent(this, FormGameRelease);
-		this.releaseForm.buildForms.push(this);
-	}
-
-	beforeDestroy() {
-		arrayRemove(this.releaseForm.buildForms, buildForm => buildForm === this);
-	}
-
-	onInit() {
-		this.maxFilesize = 0;
-		this.restrictedPlatforms = [];
-		this.forceOther = false;
-		this.romTypes = [];
-		this.isSettingPlatform = false;
-		this.prevCount = -1;
-		this.buildLaunchOptions = [];
-		this.skipChangedWatch = false;
-		this.wasChanged = false;
-
-		if (this.firstInit) {
-			this.firstInit = false;
-		} else {
-			this.$refs.loader.load();
-		}
-	}
-
-	onLoaded(payload: any) {
-		this.maxFilesize = payload.maxFilesize;
-		this.restrictedPlatforms = payload.restrictedPlatforms;
-		this.forceOther = payload.forceOther;
-		this.romTypes = payload.romTypes;
-	}
-
-	remove() {
-		this.$emit('remove-build', this.model);
-	}
-
-	save() {
-		return this.$refs.form.submit();
-	}
-
-	get isDeprecated() {
-		return (
-			this.model &&
-			(this.model.type === GameBuild.TYPE_APPLET || this.model.type === GameBuild.TYPE_SILVERLIGHT)
-		);
-	}
-
-	get platformOptions() {
-		return [
-			{
-				key: 'windows',
-				label: this.$gettext('dash.games.builds.form.windows_tag'),
-				icon: 'windows',
-			},
-			{
-				key: 'windows_64',
-				label: this.$gettext('dash.games.builds.form.windows_64_tag'),
-				icon: 'windows',
-			},
-			{
-				key: 'mac',
-				label: this.$gettext('dash.games.builds.form.mac_tag'),
-				icon: 'mac',
-			},
-			{
-				key: 'mac_64',
-				label: this.$gettext('dash.games.builds.form.mac_64_tag'),
-				icon: 'mac',
-			},
-			{
-				key: 'linux',
-				label: this.$gettext('dash.games.builds.form.linux_tag'),
-				icon: 'linux',
-			},
-			{
-				key: 'linux_64',
-				label: this.$gettext('dash.games.builds.form.linux_64_tag'),
-				icon: 'linux',
-			},
-			{
-				key: 'other',
-				label: this.$gettext('dash.games.builds.form.other_tag'),
-				icon: 'other-os',
-			},
-		];
-	}
-
-	isPlatformDisabled(platform: string) {
-		// Restricted by server.
-		if (this.restrictedPlatforms && Array.isArray(this.restrictedPlatforms)) {
-			if (this.restrictedPlatforms.indexOf(platform) !== -1) {
-				return true;
-			}
-		}
-
-		// Can only be other OR a platform.
-		if (platform !== 'other' && this.model!.os_other) {
-			return true;
-		} else if (
-			platform === 'other' &&
-			(this.model!.os_windows ||
-				this.model!.os_mac ||
-				this.model!.os_linux ||
-				this.model!.os_windows_64 ||
-				this.model!.os_mac_64 ||
-				this.model!.os_linux_64)
-		) {
-			return true;
-		}
-
-		// Can't choose a platform chosen by another build in this package.
-		if (platform !== 'other') {
-			const foundBuild = this.packageBuilds.find(
-				value => (value as any)[`os_${platform}`] === true
-			);
-			if (foundBuild && foundBuild.id !== this.model!.id) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	async platformChanged(platform: string) {
-		this.isSettingPlatform = true;
-
-		try {
-			const params = [
-				this.game.id,
-				this.package.id,
-				this.release.id,
-				this.model!.id,
-				platform,
-				(this.formModel as any)['os_' + platform] ? 1 : 0,
-			];
-
-			const response = await Api.sendRequest(
-				'/web/dash/developer/games/builds/set-platform/' + params.join('/'),
-				{},
-				{ detach: true }
-			);
-
-			this.model!.assign(response.gameBuild);
-			this.game.assign(response.game);
-
-			// Copy new platforms to the form model.
-			for (let _platform of GameBuildLaunchOption.LAUNCHABLE_PLATFORMS) {
-				const key = 'os_' + _platform;
-
-				// oh geez
-				this.setField(key as any, (this.model as any)[key]);
-			}
-
-			// Copy new launch options in.
-			this.$emit('update-launch-options', this.model, response.launchOptions);
-		} catch (err) {
-			console.error(err);
-			Growls.error(this.$gettext('Could not set the platform for some reason.'));
-		} finally {
-			this.isSettingPlatform = false;
-		}
-	}
-
-	get emulatorsInfo(): { [type: string]: string } {
-		return {
-			[GameBuild.EMULATOR_GB]: this.$gettext('Game Boy'),
-			[GameBuild.EMULATOR_GBC]: this.$gettext('Game Boy Color'),
-			[GameBuild.EMULATOR_GBA]: this.$gettext('Game Boy Advance'),
-			[GameBuild.EMULATOR_NES]: this.$gettext('NES'),
-			[GameBuild.EMULATOR_SNES]: this.$gettext('SNES'),
-			[GameBuild.EMULATOR_VBOY]: this.$gettext('Virtual Boy'),
-			[GameBuild.EMULATOR_GENESIS]: this.$gettext('Genesis/Mega Drive'),
-			[GameBuild.EMULATOR_ATARI2600]: this.$gettext('Atari 2600'),
-			[GameBuild.EMULATOR_ZX]: this.$gettext('ZX Spectrum'),
-			[GameBuild.EMULATOR_C64]: this.$gettext('Commodore 64'),
-			[GameBuild.EMULATOR_CPC]: this.$gettext('Amstrad CPC'),
-			[GameBuild.EMULATOR_MSX]: this.$gettext('MSX'),
-		};
-	}
-
-	@Watch('releaseLaunchOptions')
-	onReleaseLaunchOptionsChanged() {
-		this.buildLaunchOptions = this.releaseLaunchOptions.filter(
-			launchOption => launchOption.game_build_id === this.model!.id
-		);
-
-		if (this.prevCount === -1) {
-			this.prevCount = this.buildLaunchOptions.length;
-		}
-
-		for (let launchOption of this.buildLaunchOptions) {
-			this.setField(('launch_' + launchOption.os) as any, launchOption.executable_path);
-		}
-
-		// This will skip a single cycle of checking if the form fields have changed.
-		// This is so that we don't get the "save build" button when adding a new launch option in after selecting new platform.
-		// Only if we add, not if we remove.
-		if (this.buildLaunchOptions.length > this.prevCount) {
-			this.skipChangedWatch = true;
-		}
-
-		this.prevCount = this.buildLaunchOptions.length;
-	}
-
-	async openFileSelector(platform: string) {
-		const selected = await ArchiveFileSelectorModal.show(
-			this.game.id,
-			this.package.id,
-			this.release.id,
-			this.model!.id,
-			this.model!.primary_file.id,
-			platform
-		);
-
-		if (!selected) {
-			return;
-		}
-
-		this.setField(('launch_' + platform) as any, selected);
-	}
-
-	onBuildProcessingComplete(response: any) {
-		// Just copy over the new build data into our current one.
-		this.model!.assign(response.build);
-		if (response.game) {
-			this.game.assign(response.game);
-		}
-	}
-
-	@Watch('formModel.embed_width')
-	@Watch('formModel.embed_height')
-	@Watch('formModel.browser_disable_right_click')
-	@Watch('formModel.launch_windows')
-	@Watch('formModel.launch_windows_64')
-	@Watch('formModel.launch_mac')
-	@Watch('formModel.launch_mac_64')
-	@Watch('formModel.launch_linux')
-	@Watch('formModel.launch_linux_64')
-	@Watch('formModel.launch_other')
-	onBuildFieldsChanged() {
-		// TODO make it not run for the first population of those fields.
-		console.log(this.skipChangedWatch);
-		if (this.skipChangedWatch) {
-			this.skipChangedWatch = false;
-			return;
-		}
-
-		// // Skip the initial watch.
-		// if (angular.equals(newVals, oldVals)) {
-		// 	return;
-		// }
-
-		console.log('mkay then');
-		this.wasChanged = true;
-	}
-
-	onSubmitSuccess(response: any) {
-		if (this.game) {
-			this.game.assign(response.game);
-		}
-	}
-}

@@ -5,8 +5,8 @@ import { GameSong } from '../../../../../lib/gj-lib-client/components/game/song/
 import {
 	BaseForm,
 	FormOnInit,
+	FormOnLoad,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppFormLoader } from '../../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
@@ -14,17 +14,20 @@ import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/component
 @View
 @Component({
 	components: {
-		AppFormLoader,
 		AppFormControlUpload,
 	},
 })
-export class FormGameSong extends BaseForm<GameSong> implements FormOnInit {
+export class FormGameSong extends BaseForm<GameSong> implements FormOnInit, FormOnLoad {
 	@Prop(Game) game: Game;
 
 	modelClass = GameSong;
 	maxFilesize = 0;
 
 	number = number;
+
+	get loadUrl() {
+		return `/web/dash/developer/games/music/save/${this.game.id}`;
+	}
 
 	get fileLabel() {
 		if (this.method === 'add') {
@@ -35,11 +38,10 @@ export class FormGameSong extends BaseForm<GameSong> implements FormOnInit {
 	}
 
 	onInit() {
-		// scope.formModel.file = undefined;
 		this.setField('game_id', this.game.id);
 	}
 
-	onLoaded(payload: any) {
+	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 	}
 }

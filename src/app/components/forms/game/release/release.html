@@ -1,145 +1,145 @@
-<app-form name="releaseForm" class="game-release-form">
-
-	<app-form-loader
-		:url="`/web/dash/developer/games/releases/save/${ game.id }/${ package.id }`"
-		@loaded="onLoaded"
+<app-form
+	class="game-release-form"
+	name="releaseForm"
+	ref="form"
+	>
+	<app-form-group
+		name="version_number"
+		:title="$gettext('dash.games.releases.form.version_number_label')"
 		>
-		<app-form-group
-			name="version_number"
-			:title="$gettext('dash.games.releases.form.version_number_label')"
+		<div class="help-block">
+			<div><translate :escape-html="false">dash.games.releases.form.version_number_help_html</translate></div>
+			<a class="link-help" href="https://help.gamejolt.com/dev-packages#release-version-numbers" target="_blank">
+				<translate>dash.games.releases.form.version_number_help_link</translate>
+			</a>
+		</div>
+
+		<app-form-control
+			:rules="{
+				pattern: 'semver',
+				max: 50,
+				availability: `/web/dash/developer/games/releases/check-field-availability/${ game.id }/${ package.id }/version_number`
+			}"
+			/>
+		<app-form-control-errors />
+
+	</app-form-group>
+
+	<fieldset>
+		<legend><translate>Builds</translate></legend>
+
+		<div class="alert alert-warning" v-if="!builds.length">
+			<translate>You don't have any builds in this release yet. You won't be able to publish until you put some in.</translate>
+		</div>
+
+		<div
+			v-for="build of builds"
+			:key="build.id"
+			class="anim-fade-leave-enlarge anim-fade-enter"
 			>
-			<div class="help-block">
-				<div><translate :escape-html="false">dash.games.releases.form.version_number_help_html</translate></div>
-				<a class="link-help" href="https://help.gamejolt.com/dev-packages#release-version-numbers" target="_blank">
-					<translate>dash.games.releases.form.version_number_help_link</translate>
-				</a>
-			</div>
+			<!-- <form-game-build
+				:game="game"
+				:package="package"
+				:release="model"
+				:model="build"
+				:release-launch-options="launchOptions"
+				:package-builds="builds"
+				:build-download-counts="buildDownloadCounts"
+				@update-launch-options="updateBuildLaunchOptions"
+				@remove-build="removeBuild"
+				@submit="onBuildEdited( build, $event )"
+				/> -->
+		</div>
 
-			<app-form-control
-				maxlength="50"
-				:rules="{
-					pattern: 'semver',
-					max: 50,
-					availability: `/web/dash/developer/games/releases/check-field-availability/${ game.id }/${ package.id }/version_number`
-				}"
-				/>
-			<app-form-control-errors />
+		<br>
 
-		</app-form-group>
-
-		<fieldset>
-			<legend><translate>Builds</translate></legend>
-
-			<div class="alert alert-warning" v-if="!builds.length">
-				<translate>You don't have any builds in this release yet. You won't be able to publish until you put some in.</translate>
-			</div>
-
-			<div
-				v-for="build of builds"
-				:key="build.id"
-				class="anim-fade-leave-enlarge anim-fade-enter">
-				<form-game-build
+		<div class="alert alert-warning sans-margin" v-if="areBuildsLockedByJam">
+			<app-jolticon icon="notice" />
+			<strong><translate>Your game is part of a jam that locks builds during voting.</translate></strong>
+			<translate>You will not be able to add new builds until the voting period ends.</translate>
+		</div>
+		<div class="row" v-else>
+			<div class="col-sm-6">
+				<h5 class="sans-margin-top">
+					<strong><translate>Upload Downloadable Build</translate></strong>
+				</h5>
+				<!-- <form-game-new-build
+					:type="downloadable"
 					:game="game"
 					:package="package"
 					:release="model"
-					:model="build"
-					:release-launch-options="launchOptions"
-					:package-builds="builds"
-					:build-download-counts="buildDownloadCounts"
-					@update-launch-options="updateBuildLaunchOptions( ...arguments )"
-					@remove-build="removeBuild( $event )"
-					@submit="onBuildEdited( build, $event )"
-					/>
+					@submit="onBuildAdded"
+					/> -->
 			</div>
-
-			<br>
-
-			<div class="alert alert-warning sans-margin" v-if="areBuildsLockedByJam">
-				<app-jolticon icon="notice" />
-				<translate :escape-html="false">
-					<strong>Your game is part of a jam that locks builds during voting.</strong>
-					You will not be able to add new builds until the voting period ends.
-				</translate>
+			<div class="col-sm-6">
+				<br class="visible-xs">
+				<h5 class="sans-margin-top">
+					<strong><translate>Upload Browser Build</translate></strong>
+				</h5>
+				<!-- <form-game-new-build
+					v-if="!areWebBuildsLockedBySellable"
+					:type="browser"
+					:game="game"
+					:package="package"
+					:release="model"
+					@submit="onBuildAdded"
+					/> -->
+				<!-- <div v-else class="alert alert-info">
+					<translate>Browser builds can not currently be uploaded to games that are for sale.</translate>
+				</div> -->
 			</div>
-
-			<div class="row" v-else>
-				<div class="col-sm-6">
-					<h5 class="sans-margin-top"><strong><translate>Upload Downloadable Build</translate></strong></h5>
-					<form-game-new-build
-						:type="downloadable"
-						:game="game"
-						:package="package"
-						:release="model"
-						:package-builds="builds"
-						@submit="onBuildAdded( $event )"
-						/>
-				</div>
-				<div class="col-sm-6">
-					<br class="visible-xs">
-					<h5 class="sans-margin-top"><strong><translate>Upload Browser Build</translate></strong></h5>
-					<form-game-new-build
-						v-if="!areWebBuildsLockedBySellable"
-						:type="browser"
-						:game="game"
-						:package="package"
-						:release="model"
-						:package-builds="builds"
-						@submit="onBuildAdded( $event )"
-						/>
-					<div v-else class="alert alert-info"><translate>Browser builds can not currently be uploaded to games that are for sale.</translate></div>
-				</div>
-			</div>
-
-		</fieldset>
-
-		<hr>
-
-		<span v-if="model.status !== GameRelease.STATUS_PUBLISHED">
-			<button
-				class="btn btn-success"
-				:disabled="!valid || !builds.length"
-				@click="savePublished()"
-				>
-				<app-jolticon :class="method === 'add' ? 'add' : 'edit'" />
-				<translate>Publish Release</translate>
-			</button>
-
-			<button
-				class="btn btn-outline"
-				:disabled="!valid || !builds.length"
-				@click="saveDraft()">
-				<translate>Save Draft</translate>
-			</button>
-		</span>
-
-		<span v-else>
-			<button
-				class="btn"
-				:disabled="!valid || !builds.length"
-				@click="onSubmit()">
-				<app-jolticon icon="edit" />
-				<translate>Save Release</translate>
-			</button>
-		</span>
-
-
-		<div :class="{ 'pull-right': !Screen.isXs }">
-			<br class="visible-xs">
-
-			<button
-				class="btn btn-outline"
-				v-if="model.status === GameRelease.STATUS_PUBLISHED"
-				@click="unpublish()">
-				<translate>Unpublish Release</translate>
-			</button>
-
-			<button
-				class="btn btn-danger-outline"
-				@click="remove()">
-				<translate>Remove Release</translate>
-			</button>
 		</div>
 
-	</app-form-loader>
+	</fieldset>
 
+	<hr>
+
+	<span v-if="model.status !== GameRelease.STATUS_PUBLISHED">
+		<button
+			class="btn btn-success"
+			:disabled="!valid || !builds.length"
+			@click="savePublished()"
+			>
+			<app-jolticon :icon="method" />
+			<translate>Publish Release</translate>
+		</button>
+
+		<button
+			class="btn btn-outline"
+			:disabled="!valid || !builds.length"
+			@click="saveDraft()"
+			>
+			<translate>Save Draft</translate>
+		</button>
+	</span>
+	<span v-else>
+		<button
+			class="btn"
+			:disabled="!valid || !builds.length"
+			@click="save()"
+			>
+			<app-jolticon icon="edit" />
+			<translate>Save Release</translate>
+		</button>
+	</span>
+
+
+	<div :class="{ 'pull-right': !Screen.isXs }">
+		<br class="visible-xs">
+
+		<button
+			class="btn btn-outline"
+			v-if="model.status === GameRelease.STATUS_PUBLISHED"
+			@click="unpublish()"
+			>
+			<translate>Unpublish Release</translate>
+		</button>
+
+		<button
+			class="btn btn-danger-outline"
+			@click="remove()"
+			>
+			<translate>Remove Release</translate>
+		</button>
+	</div>
 </app-form>

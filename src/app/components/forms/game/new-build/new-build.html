@@ -1,55 +1,43 @@
-<app-form name="newBuildForm" class="game-new-build-form">
-
-	<app-form-Loader
-		ref="loader"
-		:url="`/web/dash/developer/games/builds/save/${ formModel.game_id }/${ formModel.game_package_id }/${ formModel.game_release_id }`"
-		@loaded="onLoaded"
+<app-form
+	class="game-new-build-form"
+	name="newBuildForm"
+	ref="form"
+	>
+	<!--
+		Can only add files. Can't edit builds anymore.
+		They need to release a new version to do that.
+	-->
+	<app-form-group
+		name="file"
+		:label="$gettext('Upload File')"
+		:hide-label="true"
+		:optional="true"
 		>
 
-		<!--
-			Can only add files. Can't edit builds anymore.
-			They need to release a new version to do that.
-		-->
-		<app-form-group
-			name="file"
-			:label="$gettext('Upload File')"
-			:hide-label="true"
-			:optional="true"
-			>
+		<app-form-control-upload
+			:rules="{
+				filesize: maxFilesize,
+			}"
+			:accept="uploadAccept"
+			@change="submit"
+			/>
 
-			<app-form-control-upload
-				ref="document-input"
-				:rules="{
-					filesize: maxFilesize,
-				}"
-				:accept="uploadAccept"
-				@change="submit"
-				/>
-			<app-form-control-errors :label="$gettext( `dash.games.builds.form.file_error_label` )" />
+		<app-form-control-errors
+			:label="$gettext( `dash.games.builds.form.file_error_label` )"
+			/>
 
-			<!-- TODO this is probably all wrong -->
-			<!-- <app-expand :when="newBuildForm.file.$error.browserType">
-				<br>
-				<div class="alert alert-warning sans-margin-bottom" translate>
-					You can't upload multiple browser builds of the same type into the same release. If you're trying to update your build, add a new release first.
-				</div>
-			</app-expand> -->
+		<!-- TODO this is probably all wrong -->
+		<!-- <app-expand :when="newBuildForm.file.$error.browserType">
+			<br>
+			<div class="alert alert-warning sans-margin-bottom" translate>
+				You can't upload multiple browser builds of the same type into the same release. If you're trying to update your build, add a new release first.
+			</div>
+		</app-expand> -->
 
-			<!--
-				Stupid injection issues.
-				It was injecting 'index.html' no matter what I did.
-			-->
-			<p class="help-block" v-if="type === 'browser'">
-				<translate
-					:translate-params="{
-						filename: 'index.html',
-					}"
-					>
-					For HTML builds, upload a .zip archive containing all of your build's files and assets. There must be an %{ filename } file in the root folder.
-				</translate>
-			</p>
-		</app-form-group>
-
-	</app-form-loader>
-
+		<p class="help-block" v-if="type === 'browser'">
+			<translate>
+				For HTML builds, upload a .zip archive containing all of your build's files and assets. There must be an index.html file in the root folder.
+			</translate>
+		</p>
+	</app-form-group>
 </app-form>

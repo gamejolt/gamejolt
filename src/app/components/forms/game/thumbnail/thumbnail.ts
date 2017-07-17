@@ -4,19 +4,17 @@ import * as View from '!view!./thumbnail.html';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import {
 	BaseForm,
-	FormOnInit,
+	FormOnLoad,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppFormLoader } from '../../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 
 @View
 @Component({
 	components: {
-		AppFormLoader,
 		AppFormControlUpload,
 	},
 })
-export class FormGameThumbnail extends BaseForm<Game> implements FormOnInit {
+export class FormGameThumbnail extends BaseForm<Game> implements FormOnLoad {
 	modelClass = Game;
 	resetOnSubmit = true;
 	saveMethod = '$saveThumbnail' as '$saveThumbnail';
@@ -27,9 +25,11 @@ export class FormGameThumbnail extends BaseForm<Game> implements FormOnInit {
 	maxHeight = 0;
 	cropAspectRatio = 0;
 
-	onInit() {}
+	get loadUrl() {
+		return `/web/dash/developer/games/thumbnail/save/${this.model!.id}`;
+	}
 
-	onLoaded(payload: any) {
+	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.minWidth = payload.minWidth;
 		this.minHeight = payload.minHeight;

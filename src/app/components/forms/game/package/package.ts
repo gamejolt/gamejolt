@@ -7,6 +7,7 @@ import * as View from '!view!./package.html';
 import {
 	BaseForm,
 	FormOnInit,
+	FormOnLoad,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
@@ -14,7 +15,6 @@ import { Sellable } from '../../../../../lib/gj-lib-client/components/sellable/s
 import { SellablePricing } from '../../../../../lib/gj-lib-client/components/sellable/pricing/pricing.model';
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppFormLoader } from '../../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoadingFade } from '../../../../../lib/gj-lib-client/components/loading/fade/fade';
@@ -34,14 +34,15 @@ type FormGamePackageModel = GamePackage & {
 @Component({
 	components: {
 		AppJolticon,
-		AppFormLoader,
 		AppFormControlToggle,
 		AppLoadingFade,
 	},
 })
-export class FormGamePackage extends BaseForm<FormGamePackageModel> implements FormOnInit {
+export class FormGamePackage extends BaseForm<FormGamePackageModel>
+	implements FormOnInit, FormOnLoad {
 	modelClass = GamePackage as any;
 	resetOnSubmit = true;
+	reloadOnSubmit = true;
 
 	@Prop(Game) game: Game;
 	@Prop(Sellable) sellable: Sellable;
@@ -108,7 +109,7 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel> implements F
 		this.isProcessing = false;
 	}
 
-	onLoaded(payload: any) {
+	onLoad(payload: any) {
 		this.startedPrimary = !!(this.sellable && this.sellable.primary);
 		this.hasPrimarySellable = payload.hasPrimarySellable;
 		this.minPrice = payload.minPrice || 50;

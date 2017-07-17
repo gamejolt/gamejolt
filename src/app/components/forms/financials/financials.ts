@@ -107,13 +107,13 @@ import * as View from '!view!./financials.html?style=./financials.styl';
 import {
 	BaseForm,
 	FormOnSubmit,
+	FormOnLoad,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { UserStripeManagedAccount } from '../../../../lib/gj-lib-client/components/user/stripe-managed-account/stripe-managed-account';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { ReferralEntry } from '../../../../lib/gj-lib-client/components/referral-entry/referral-entry.model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppFormLoader } from '../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
@@ -131,7 +131,6 @@ export interface FinancialsFormModel {
 @View
 @Component({
 	components: {
-		AppFormLoader,
 		AppExpand,
 		AppJolticon,
 		AppPartnerTerms,
@@ -145,7 +144,8 @@ export interface FinancialsFormModel {
 		currency,
 	},
 })
-export class FormFinancials extends BaseForm<FinancialsFormModel> implements FormOnSubmit {
+export class FormFinancials extends BaseForm<FinancialsFormModel>
+	implements FormOnSubmit, FormOnLoad {
 	// We will set this to which agreement we should show them depending on
 	// their account type.
 	whichAgreement: 'developer' | 'partner' = null as any;
@@ -161,6 +161,10 @@ export class FormFinancials extends BaseForm<FinancialsFormModel> implements For
 
 	currency = currency;
 
+	get loadUrl() {
+		return `/web/dash/financials/save`;
+	}
+
 	get hasSignedAgreement() {
 		if (!this.account) {
 			return false;
@@ -173,9 +177,7 @@ export class FormFinancials extends BaseForm<FinancialsFormModel> implements For
 		return this.account && this.account.is_verified;
 	}
 
-	onLoaded(payload: any) {
-		console.log('Payload: ');
-		console.log(payload);
+	onLoad(payload: any) {
 		this.account = payload.account ? new UserStripeManagedAccount(payload.account) : null;
 		this.user = new User(payload.user);
 		this.partner = payload.partner ? new ReferralEntry(payload.partner) : null;

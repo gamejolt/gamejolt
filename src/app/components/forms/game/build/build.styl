@@ -1,6 +1,7 @@
-gj-form-dashboard-game-build
+@require '~styles/variables'
 
-	ng-form
+.game-build-form
+	form
 		display: block
 		position: relative
 		font-size: $font-size-small
@@ -9,7 +10,7 @@ gj-form-dashboard-game-build
 	legend
 		font-size: $font-size-h4
 
-	.game-build-form-spinner
+	&-spinner
 		position: absolute
 		top: 0
 		right: 0
@@ -34,15 +35,15 @@ gj-form-dashboard-game-build
 	.stat-big.stat-big-smaller
 		margin-bottom: 0
 
-	.form-group
-	.help-block
+	>>> .form-group,
+	>>> .help-block,
 	.alert
 		margin-bottom: ($line-height-computed / 2)
 
-	.game-build-form-submit-button
+	&-submit-button
 		margin-top: ($line-height-computed / 2)
 
-	.downloadable-platforms
+	>>> .downloadable-platforms
 
 		&.form-group
 		.form-group

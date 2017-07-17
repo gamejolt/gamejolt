@@ -1,52 +1,45 @@
 <app-form name="mediaForm" ref="form">
-	<app-form-loader
-		:url="`/web/dash/developer/games/media/save/image/${ formModel.game_id }`"
-		@loaded="onLoaded"
+	<app-form-group
+		v-if="method === 'add'"
+		name="file"
+		:label="$gettext( `dash.games.media.image.form.image_label` )"
+		:hide-label="true"
 		>
+		<p class="help-block">
+			<translate :escape-html="false">dash.forms.image_filetype_help_html</translate>
+		</p>
 
-		<app-form-group
-			v-if="method === 'add'"
-			name="file"
-			:label="$gettext( `dash.games.media.image.form.image_label` )"
-			:hide-label="true"
-			>
-			<p class="help-block">
-				<translate :escape-html="false">dash.forms.image_filetype_help_html</translate>
-			</p>
+		<app-form-control-upload
+			:rules="{
+				filesize: maxFilesize,
+				max_img_dimensions: [ maxWidth, maxHeight ],
+			}"
+			accept=".png,.jpg,.jpeg,.gif"
+			:multiple="true"
+			@changed="imagesSelected()"
+			/>
 
-			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					max_img_dimensions: [ maxWidth, maxHeight ],
-				}"
-				accept=".png,.jpg,.jpeg,.gif"
-				:multiple="true"
-				@changed="imagesSelected()"
-				/>
+		<app-form-control-errors :label="$gettext( `selection of images` )" />
+	</app-form-group>
 
-			<app-form-control-errors :label="$gettext( `selection of images` )" />
-		</app-form-group>
+	<app-form-group
+		v-if="method !== 'add'"
+		name="caption"
+		:label="$gettext( `dash.games.media.image.form.caption_label` )"
+		:optional="true"
+		>
+		<app-form-control type="text" :rules="{ max: 200 }" />
+		<app-form-control-errors />
+		<p class="help-block">
+			<translate>dash.games.media.image.form.caption_help</translate>
+		</p>
+	</app-form-group>
 
-		<app-form-group
-			v-if="method !== 'add'"
-			name="caption"
-			:label="$gettext( `dash.games.media.image.form.caption_label` )"
-			:optional="true"
-			>
-			<app-form-control type="text" :rules="{ max: 200 }" />
-			<app-form-control-errors />
-			<p class="help-block">
-				<translate>dash.games.media.image.form.caption_help</translate>
-			</p>
-		</app-form-group>
-
-		<app-form-button
-			v-if="changed && method !== 'add'"
-			:icon="method"
-			>
-			<translate v-if="method === 'add'">Add</translate>
-			<translate v-else-if="method === 'edit'">Save</translate>
-		</app-form-button>
-
-	</app-form-loader>
+	<app-form-button
+		v-if="changed && method !== 'add'"
+		:icon="method"
+		>
+		<translate v-if="method === 'add'">Add</translate>
+		<translate v-else-if="method === 'edit'">Save</translate>
+	</app-form-button>
 </app-form>

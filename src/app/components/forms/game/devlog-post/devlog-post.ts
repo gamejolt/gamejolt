@@ -4,11 +4,11 @@ import * as View from '!view!./devlog-post.html';
 import {
 	BaseForm,
 	FormOnInit,
+	FormOnLoad,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
 import { KeyGroup } from '../../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { AppFormLoader } from '../../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
@@ -23,7 +23,6 @@ type FormGameDevlogPostModel = FiresidePost & {
 @View
 @Component({
 	components: {
-		AppFormLoader,
 		AppFormControlMarkdown,
 		AppFormControlUpload,
 	},
@@ -31,7 +30,8 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppFocusWhen,
 	},
 })
-export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel> implements FormOnInit {
+export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
+	implements FormOnInit, FormOnLoad {
 	modelClass = FiresidePost as any;
 
 	$refs: {
@@ -48,6 +48,10 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel> implem
 	FiresidePost = FiresidePost;
 	GameVideo = GameVideo;
 
+	get loadUrl() {
+		return `/web/dash/developer/games/devlog/save/${this.model!.game.id}/${this.model!.id}`;
+	}
+
 	onInit() {
 		const model = this.model!;
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
@@ -63,7 +67,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel> implem
 		}
 	}
 
-	onLoaded(payload: any) {
+	onLoad(payload: any) {
 		this.keyGroups = KeyGroup.populate(payload.keyGroups);
 		this.hasMediaItems = payload.hasMediaItems;
 		this.wasPublished = payload.wasPublished;

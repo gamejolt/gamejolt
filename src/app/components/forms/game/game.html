@@ -1,227 +1,220 @@
 <app-form name="gameForm">
-	<app-form-loader
-		:url="loadUrl"
-		@loaded="onLoaded"
-		>
+	<div v-if="stage === 'rules'">
 
-		<div v-if="stage === 'rules'">
-
-			<div>
-				<translate :escape-html="false">
-					<p>You must agree to the following rules before adding a game:</p>
-					<ul>
-						<li>Don't upload games you didn't make. If you are not the game's developer, don't add the game to the site. If you're a fan, encourage the developer to add it themselves.</li>
-						<li>Publishers are not allowed to upload games; only developers are.</li>
-						<li>Only actual <em>games</em> may be uploaded to the site. No applications, software, or tools are allowed at this time. We may accept these in the future or on a case by case basis, but for now, let's just keep it to games.</li>
-						<li>No stripped-down demos or "lite" versions of commercial games are permitted, unless you also add the full version for sale.</li>
-						<li>We welcome and encourage you to add games that are incomplete and still in development, as long as they are tagged as Works-in-Progress. However, you should keep your game hidden until you have something to show. Work-in-Progress games do not have to be playable, but they must be further along than the concept stage. Before you unhide the game, make sure you at least have some screenshots and an informative description.</li>
-						<li>Do not add links to download/play or purchase your game on other sites unless you have already uploaded it to Game Jolt. You can't use your game page as an advertisement for another site.</li>
-						<li>For browser-based games, we don't allow you to display ads in the preloader on Game Jolt. Remove any ads or block them from showing on the site.</li>
-					</ul>
-					<p>If you have questions or concerns about the rules, get in touch: <a href="mailto:contact@gamejolt.com">contact@gamejolt.com</a></p>
-				</translate>
-			</div>
-
-			<br>
-
-			<div>
-				<a
-					class="btn btn-success-outline btn-block"
-					@click="acceptRules"
-					>
-					<app-jolticon icon="checkbox" />
-					<translate>dash.games.add.rules_accept_button</translate>
-				</a>
-			</div>
-
+		<div>
+			<translate :escape-html="false">
+				<p>You must agree to the following rules before adding a game:</p>
+				<ul>
+					<li>Don't upload games you didn't make. If you are not the game's developer, don't add the game to the site. If you're a fan, encourage the developer to add it themselves.</li>
+					<li>Publishers are not allowed to upload games; only developers are.</li>
+					<li>Only actual <em>games</em> may be uploaded to the site. No applications, software, or tools are allowed at this time. We may accept these in the future or on a case by case basis, but for now, let's just keep it to games.</li>
+					<li>No stripped-down demos or "lite" versions of commercial games are permitted, unless you also add the full version for sale.</li>
+					<li>We welcome and encourage you to add games that are incomplete and still in development, as long as they are tagged as Works-in-Progress. However, you should keep your game hidden until you have something to show. Work-in-Progress games do not have to be playable, but they must be further along than the concept stage. Before you unhide the game, make sure you at least have some screenshots and an informative description.</li>
+					<li>Do not add links to download/play or purchase your game on other sites unless you have already uploaded it to Game Jolt. You can't use your game page as an advertisement for another site.</li>
+					<li>For browser-based games, we don't allow you to display ads in the preloader on Game Jolt. Remove any ads or block them from showing on the site.</li>
+				</ul>
+				<p>If you have questions or concerns about the rules, get in touch: <a href="mailto:contact@gamejolt.com">contact@gamejolt.com</a></p>
+			</translate>
 		</div>
 
-		<div v-else-if="stage === 'dev-status'">
+		<br>
 
-			<p class="page-help">
-				<translate>Choose the stage of development that your game is currently in. You are able to change your development stage at any point.</translate>
-			</p>
-
-			<!--TODO-->
-			<!--<gj-form-dashboard-game-dev-stage-selector
-				(on-select)="formModel.development_status = $event"
+		<div>
+			<a
+				class="btn btn-success-outline btn-block"
+				@click="acceptRules"
 				>
-			</gj-form-dashboard-game-dev-stage-selector>-->
-
+				<app-jolticon icon="checkbox" />
+				<translate>dash.games.add.rules_accept_button</translate>
+			</a>
 		</div>
 
-		<div v-else-if="stage === 'details'">
+	</div>
 
-			<fieldset :class="{ 'game-form-disabled': isDisabled }" :disabled="isDisabled">
+	<div v-else-if="stage === 'dev-status'">
 
-				<app-form-group
-					name="title"
-					:label="$gettext( `dash.games.form.title_label` )"
-					>
-					<app-form-control
-						type="text"
-						:rules="{
-							max: 250,
-						}"
-						/>
-					<app-form-control-errors />
-				</app-form-group>
+		<p class="page-help">
+			<translate>Choose the stage of development that your game is currently in. You are able to change your development stage at any point.</translate>
+		</p>
 
-				<app-form-group
-					name="path"
-					:label="$gettext( `URL Path` )"
-					>
-					<app-form-control
-						type="text"
-						:rules="{
-							pattern: 'urlPath',
-							max: 50,
-							availability: '/web/dash/developer/games/check-field-availability/path',
-						}"
-						/>
+		<!--TODO-->
+		<!--<gj-form-dashboard-game-dev-stage-selector
+			(on-select)="formModel.development_status = $event"
+			>
+		</gj-form-dashboard-game-dev-stage-selector>-->
 
-					<app-form-control-errors />
+	</div>
 
-					<div class="help-block">
-						<div>
-							<translate>Customize your game page URLs. Make them really pretty.</translate>
-						</div>
-						<div>
-							<translate>Game Page URL</translate>
-							<code v-html="gameUrl"></code>
-						</div>
-						<div>
-							<translate>Sites URL</translate>
-							<code v-html="siteUrl"></code>
-						</div>
+	<div v-else-if="stage === 'details'">
+
+		<fieldset :class="{ 'game-form-disabled': isDisabled }" :disabled="isDisabled">
+
+			<app-form-group
+				name="title"
+				:label="$gettext( `dash.games.form.title_label` )"
+				>
+				<app-form-control
+					type="text"
+					:rules="{
+						max: 250,
+					}"
+					/>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group
+				name="path"
+				:label="$gettext( `URL Path` )"
+				>
+				<app-form-control
+					type="text"
+					:rules="{
+						pattern: 'urlPath',
+						max: 50,
+						availability: '/web/dash/developer/games/check-field-availability/path',
+					}"
+					/>
+
+				<app-form-control-errors />
+
+				<div class="help-block">
+					<div>
+						<translate>Customize your game page URLs. Make them really pretty.</translate>
 					</div>
-				</app-form-group>
+					<div>
+						<translate>Game Page URL</translate>
+						<code v-html="gameUrl"></code>
+					</div>
+					<div>
+						<translate>Sites URL</translate>
+						<code v-html="siteUrl"></code>
+					</div>
+				</div>
+			</app-form-group>
 
+			<app-form-group
+				name="web_site"
+				:label="$gettext( `dash.games.form.website_label` )"
+				:optional="true"
+				>
+				<app-form-control
+					type="url"
+					:rules="{
+						max: 250,
+					}"
+					/>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group
+				name="category"
+				:label="$gettext( `dash.games.form.category_label` )"
+				>
+				<app-form-control-select>
+					<option value="">
+						<translate>dash.games.form.category_placeholder</translate>
+					</option>
+					<option
+						v-for="( label, key ) of categories"
+						:key="key"
+						:value="key"
+						>
+						{{ label }}
+					</option>
+				</app-form-control-select>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group
+				name="creation_tool"
+				:label="$gettext( `dash.games.form.engine_label` )"
+				>
+				<app-form-control-select>
+					<option value="">
+						<translate>dash.games.form.engine_placeholder</translate>
+					</option>
+					<option
+						v-for="( label, key ) of engines"
+						:key="key"
+						:value="key"
+						>
+						{{ label }}
+					</option>
+				</app-form-control-select>
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-expand :when="formModel.creation_tool === 'other'">
 				<app-form-group
-					name="web_site"
-					:label="$gettext( `dash.games.form.website_label` )"
+					name="creation_tool_other"
+					:label="$gettext( `dash.games.form.engine_other_label` )"
 					:optional="true"
 					>
 					<app-form-control
-						type="url"
+						type="text"
 						:rules="{
-							max: 250,
+							max: 200,
 						}"
 						/>
+
 					<app-form-control-errors />
+
+					<p class="help-block">
+						<translate>dash.games.form.engine_other_help</translate>
+						<span class="text-help" v-app-tooltip="$gettext( `dash.games.form.engine_other_why_tooltip` )">
+							<translate>dash.games.form.engine_other_why</translate>
+						</span>
+					</p>
 				</app-form-group>
+			</app-expand>
 
-				<app-form-group
-					name="category"
-					:label="$gettext( `dash.games.form.category_label` )"
-					>
-					<app-form-control-select>
-						<option value="">
-							<translate>dash.games.form.category_placeholder</translate>
-						</option>
-						<option
-							v-for="( label, key ) of categories"
-							:key="key"
-							:value="key"
-							>
-							{{ label }}
-						</option>
-					</app-form-control-select>
-					<app-form-control-errors />
-				</app-form-group>
+			<app-form-group name="referrals_enabled" :label="$gettext( `Add to partner system?` )">
+				<app-form-control-toggle />
 
-				<app-form-group
-					name="creation_tool"
-					:label="$gettext( `dash.games.form.engine_label` )"
-					>
-					<app-form-control-select>
-						<option value="">
-							<translate>dash.games.form.engine_placeholder</translate>
-						</option>
-						<option
-							v-for="( label, key ) of engines"
-							:key="key"
-							:value="key"
-							>
-							{{ label }}
-						</option>
-					</app-form-control-select>
-					<app-form-control-errors />
-				</app-form-group>
+				<div class="help-block">
+					<div>
+						<translate>This will allow Game Jolt Partners to be able to download the game for free, and give them a 10% cut of sales they refer to your game.</translate>
+						<router-link :to="{ name: 'landing.partners' }" class="link-help" target="_blank">
+							<translate>What is a Game Jolt Partner?</translate>
+						</router-link>
+					</div>
+					<br>
 
-				<app-expand :when="formModel.creation_tool === 'other'">
-					<app-form-group
-						name="creation_tool_other"
-						:label="$gettext( `dash.games.form.engine_other_label` )"
-						:optional="true"
-						>
-						<app-form-control
-							type="text"
-							:rules="{
-								max: 200,
-							}"
-							/>
+					<div>
+						<em>
+							<translate :escape-html="false">
+								<b>Note</b>: This will only be enabled for "paid" or "name your price" games.
+							</translate>
+						</em>
+					</div>
 
-						<app-form-control-errors />
-
-						<p class="help-block">
-							<translate>dash.games.form.engine_other_help</translate>
-							<span class="text-help" v-app-tooltip="$gettext( `dash.games.form.engine_other_why_tooltip` )">
-								<translate>dash.games.form.engine_other_why</translate>
-							</span>
-						</p>
-					</app-form-group>
-				</app-expand>
-
-				<app-form-group name="referrals_enabled" :label="$gettext( `Add to partner system?` )">
-					<app-form-control-toggle />
-
-					<div class="help-block">
-						<div>
-							<translate>This will allow Game Jolt Partners to be able to download the game for free, and give them a 10% cut of sales they refer to your game.</translate>
-							<router-link :to="{ name: 'landing.partners' }" class="link-help" target="_blank">
-								<translate>What is a Game Jolt Partner?</translate>
+					<!--
+						We only show this message to devs that have signed v1 of the distribution agreement.
+						That's because they've approved themselves to be part of the marketplace, but
+						haven't yet signed the terms for partners.
+					-->
+					<div v-if="account && account.tos_signed_developer === 1">
+						<br>
+						<div class="alert alert-warning">
+							<translate>You must sign the new Distribution Agreement which covers the terms for the Partner Program before your games will become available in the Partner Program.</translate>
+							<router-link :to="{ name: 'dash.account.financials' }">
+								<translate>Click here to view the new Distribution Agreement</translate>
 							</router-link>
 						</div>
-						<br>
-
-						<div>
-							<em>
-								<translate :escape-html="false">
-									<b>Note</b>: This will only be enabled for "paid" or "name your price" games.
-								</translate>
-							</em>
-						</div>
-
-						<!--
-							We only show this message to devs that have signed v1 of the distribution agreement.
-							That's because they've approved themselves to be part of the marketplace, but
-							haven't yet signed the terms for partners.
-						-->
-						<div v-if="account && account.tos_signed_developer === 1">
-							<br>
-							<div class="alert alert-warning">
-								<translate>You must sign the new Distribution Agreement which covers the terms for the Partner Program before your games will become available in the Partner Program.</translate>
-								<router-link :to="{ name: 'dash.account.financials' }">
-									<translate>Click here to view the new Distribution Agreement</translate>
-								</router-link>
-							</div>
-						</div>
 					</div>
-				</app-form-group>
+				</div>
+			</app-form-group>
 
-			</fieldset>
+		</fieldset>
 
-			<app-dash-game-wizard-controls>
-				<app-form-button
-					v-if="method === 'edit'"
-					icon="edit"
-					>
-					<translate>Save Details</translate>
-				</app-form-button>
-			</app-dash-game-wizard-controls>
+		<app-dash-game-wizard-controls>
+			<app-form-button
+				v-if="method === 'edit'"
+				icon="edit"
+				>
+				<translate>Save Details</translate>
+			</app-form-button>
+		</app-dash-game-wizard-controls>
 
-		</div>
-
-	</app-form-loader>
+	</div>
 </app-form>

@@ -1,35 +1,37 @@
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./new-build.html';
+
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../../../../lib/gj-lib-client/components/game/release/release.model';
-import { AppFormLoader } from '../../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 import {
 	BaseForm,
 	FormOnInit,
+	FormOnLoad,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 
 @View
 @Component({
 	components: {
-		AppFormLoader,
 		AppFormControlUpload,
 	},
 })
-export class FormGameNewBuild extends BaseForm<GameBuild> implements FormOnInit {
+export class FormGameNewBuild extends BaseForm<GameBuild> implements FormOnInit, FormOnLoad {
 	modelClass = GameBuild;
 	resetOnSubmit = true;
+	reloadOnSubmit = true;
 
 	@Prop(String) type: 'downloadable' | 'browser';
 	@Prop(Game) game: Game;
 	@Prop(GamePackage) package: GamePackage;
 	@Prop(GameRelease) release: GameRelease;
-	@Prop(Array) packageBuilds: GameBuild[]; // All builds for the package.
 
-	firstInit = true;
+	$refs: {
+		form: AppForm;
+	};
 
 	maxFilesize = 0;
 	restrictedPlatforms: string[] = [];
@@ -38,10 +40,10 @@ export class FormGameNewBuild extends BaseForm<GameBuild> implements FormOnInit 
 
 	private browserTypes: { [ext: string]: string } = {};
 
-	$refs: {
-		loader: AppFormLoader;
-		form: AppForm;
-	};
+	get loadUrl() {
+		return `/web/dash/developer/games/builds/save/${this.game.id}/${this.package.id}/${this.release
+			.id}`;
+	}
 
 	onInit() {
 		// Set the game ID on the form model from the game passed in.
@@ -55,15 +57,9 @@ export class FormGameNewBuild extends BaseForm<GameBuild> implements FormOnInit 
 			'.swf': GameBuild.TYPE_FLASH,
 			'.unity3d': GameBuild.TYPE_UNITY,
 		};
-
-		if (this.firstInit) {
-			this.firstInit = false;
-		} else {
-			this.$refs.loader.load();
-		}
 	}
 
-	onLoaded(payload: any) {
+	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.restrictedPlatforms = payload.restrictedPlatforms;
 		this.forceOther = payload.forceOther;

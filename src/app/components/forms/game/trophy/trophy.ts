@@ -4,12 +4,12 @@ import * as View from '!view!./trophy.html';
 import {
 	BaseForm,
 	FormOnInit,
+	FormOnLoad,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { GameTrophy } from '../../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { AppImgResponsive } from '../../../../../lib/gj-lib-client/components/img/responsive/responsive';
-import { AppFormLoader } from '../../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 
@@ -17,12 +17,11 @@ import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/component
 @Component({
 	components: {
 		AppImgResponsive,
-		AppFormLoader,
 		AppFormControlToggle,
 		AppFormControlUpload,
 	},
 })
-export class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnInit {
+export class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnInit, FormOnLoad {
 	@Prop(Game) game: Game;
 	@Prop(Number) difficulty: number;
 
@@ -32,6 +31,10 @@ export class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnInit {
 	maxFilesize = 0;
 	maxWidth = 0;
 	maxHeight = 0;
+
+	get loadUrl() {
+		return `/web/dash/developer/games/api/trophies/save/${this.game.id}`;
+	}
 
 	get difficultyOptions() {
 		return [
@@ -56,7 +59,6 @@ export class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnInit {
 
 	onInit() {
 		this.setField('game_id', this.game.id);
-		this.setField('file', undefined);
 
 		// If we're adding, set some defaults.
 		if (this.method === 'add') {
@@ -65,7 +67,7 @@ export class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnInit {
 		}
 	}
 
-	onLoaded(payload: any) {
+	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;

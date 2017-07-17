@@ -37,17 +37,17 @@
 		<div class="col-lg-9">
 
 			<form-game-release
+				:model="release"
 				:game="game"
 				:package="package"
-				:model="release"
 				:builds="builds"
 				:launch-options="launchOptions"
 				:build-download-counts="buildDownloadCounts"
-				@submit="onSaved"
-				@remove-release="removeRelease( $event )"
-				@unpublish-release="unpublishRelease( $event )"
 				:are-builds-locked-by-jam="areBuildsLockedByJam"
 				:are-web-builds-locked-by-sellable="areWebBuildsLockedBySellable"
+				@submit="onSaved"
+				@remove-release="removeRelease"
+				@unpublish-release="unpublishRelease"
 				/>
 		</div>
 	</div>

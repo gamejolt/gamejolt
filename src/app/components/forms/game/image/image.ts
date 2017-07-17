@@ -5,20 +5,19 @@ import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game
 import {
 	BaseForm,
 	FormOnInit,
+	FormOnLoad,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppFormLoader } from '../../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 
 @View
 @Component({
 	components: {
-		AppFormLoader,
 		AppFormControlUpload,
 	},
 })
-export class FormGameImage extends BaseForm<GameScreenshot> implements FormOnInit {
+export class FormGameImage extends BaseForm<GameScreenshot> implements FormOnInit, FormOnLoad {
 	modelClass = GameScreenshot;
 	resetOnSubmit = true;
 
@@ -32,11 +31,15 @@ export class FormGameImage extends BaseForm<GameScreenshot> implements FormOnIni
 	maxWidth = 0;
 	maxHeight = 0;
 
+	get loadUrl() {
+		return `/web/dash/developer/games/media/save/image/${this.game.id}`;
+	}
+
 	onInit() {
 		this.setField('game_id', this.game.id);
 	}
 
-	onLoaded(payload: any) {
+	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;

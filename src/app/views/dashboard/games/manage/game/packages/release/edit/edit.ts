@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./edit.html';
+
 import { RouteResolve } from '../../../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { RouteState, RouteStore } from '../../../../manage.state';
@@ -27,7 +28,6 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends Vue {
 	@RouteState game: RouteStore['game'];
 
 	package: GamePackage = null as any;
-	packageTitle = '';
 	release: GameRelease = null as any;
 	releases: GameRelease[] = [];
 	builds: GameBuild[] = [];
@@ -49,11 +49,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends Vue {
 	}
 
 	routed() {
-		// We update the global packages list.
-		// This ensures as we edit the package, things stay updated.
 		this.package = new GamePackage(this.$payload.package);
-		this.packageTitle = this.package.title || this.game.title;
-
 		this.release = new GameRelease(this.$payload.release);
 		this.releases = GameRelease.populate(this.$payload.releases);
 		this.builds = GameBuild.populate(this.$payload.builds);
@@ -68,7 +64,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends Vue {
 
 		Meta.title = this.$gettextInterpolate('Edit Release %{ release } - %{ package } - %{ game }', {
 			game: this.game.title,
-			package: this.packageTitle,
+			package: this.package.title || this.game.title,
 			release: this.release.version_number,
 		});
 	}

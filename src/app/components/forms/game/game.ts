@@ -1,13 +1,13 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import * as View from '!view!./game.html?style=./game.styl';
 
 import {
 	BaseForm,
 	FormOnInit,
+	FormOnLoad,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { AppFormLoader } from '../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
@@ -20,7 +20,6 @@ import { AppDashGameWizardControls } from './wizard-controls/wizard-controls';
 @Component({
 	components: {
 		AppJolticon,
-		AppFormLoader,
 		AppFormControlToggle,
 		AppExpand,
 		AppDashGameWizardControls,
@@ -29,7 +28,7 @@ import { AppDashGameWizardControls } from './wizard-controls/wizard-controls';
 		AppTooltip,
 	},
 })
-export class FormGame extends BaseForm<Game> implements FormOnInit {
+export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
 	@State app: Store['app'];
 
 	// We need to reset all the "is published", "has builds" stuff.
@@ -87,7 +86,7 @@ export class FormGame extends BaseForm<Game> implements FormOnInit {
 		}
 	}
 
-	onLoaded(payload: any) {
+	onLoad(payload: any) {
 		this.account = payload.account;
 		this.categories = payload.categories;
 		this.engines = payload.engines;

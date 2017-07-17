@@ -1,237 +1,229 @@
 <app-form name="financialsForm" class="form-dashboard-financials">
-
-	<app-form-loader
-		:url="`/web/dash/financials/save`"
-		@loaded="onLoaded"
-		>
-
-		<div v-if="!isVerified">
-			<div class="alert alert-info">
-				<translate>Before you can use the Marketplace, we'll need to gather some details from you. This will ensure that your account is completely set up and ready to run smoothly on the Game Jolt Marketplace.</translate>
-			</div>
-
-			<!--
-				If they haven't accepted any terms yet.
-			-->
-			<fieldset v-if="!hasSignedAgreement && partner">
-				<legend><translate>To start, which type of account would you like to set up?</translate></legend>
-
-				<div class="row">
-					<div class="col-xs-6">
-						<button class="btn btn-block"
-							:class="whichAgreement === 'developer' ? 'btn-success' : 'btn-outline'"
-							@click="whichAgreement = 'developer'"
-							>
-							<translate>I'm a game developer</translate>
-						</button>
-					</div>
-					<div class="col-xs-6">
-						<button class="btn btn-block"
-							:class="whichAgreement === 'partner' ? 'btn-success' : 'btn-outline'"
-							@click="whichAgreement = 'partner'"
-							>
-							<translate>I'm a partner</translate>
-						</button>
-					</div>
-				</div>
-			</fieldset>
+	<div v-if="!isVerified">
+		<div class="alert alert-info">
+			<translate>Before you can use the Marketplace, we'll need to gather some details from you. This will ensure that your account is completely set up and ready to run smoothly on the Game Jolt Marketplace.</translate>
 		</div>
 
-		<div class="alert alert-success" v-if="isVerified">
-			<app-jolticon icon="check" />
-			<translate>Your account is ready for the Game Jolt Marketplace! You can set additional options below.</translate>
-		</div>
-		<br>
-
 		<!--
-			First step is to sign an agreement.
+			If they haven't accepted any terms yet.
 		-->
-		<app-expand :when="!!whichAgreement || hasSignedAgreement">
+		<fieldset v-if="!hasSignedAgreement && partner">
+			<legend><translate>To start, which type of account would you like to set up?</translate></legend>
 
-			<app-developer-terms
-				v-if="whichAgreement === 'developer' || hasSignedAgreement"
-				:account="account"
-				@accepted="acceptTerms( 'developer' )"
-				/>
-
-			<app-partner-terms
-				v-if="partner && (whichAgreement === 'partner' || hasSignedAgreement)"
-				:account="account"
-				@accepted="acceptTerms( 'partner' )"
-				/>
-
-		</app-expand>
-
-		<!--
-			PayPal is required.
-		-->
-		<fieldset v-if="account">
-			<legend>
-				<span v-if="user.paypal_id" class="pull-right done-icon" v-app-tooltip="$gettext( `You have completed this section.` )">
-					<app-jolticon icon="check big" />
-				</span>
-				<translate>PayPal Account</translate>
-			</legend>
-
-			<div class="form-group">
-
-				<p class="small">
-					<translate>We currently use PayPal for automatic monthly deposits. You will also be able to withdraw your revenue at any time through this linked account.</translate>
-				</p>
-
-				<div v-if="user.paypal_id">
-					<label class="control-label"><translate>Current PayPal Account</translate></label>
-					<div class="form-static">{{ user.paypal_email_address }}</div>
-					<br>
+			<div class="row">
+				<div class="col-xs-6">
+					<button class="btn btn-block"
+						:class="whichAgreement === 'developer' ? 'btn-success' : 'btn-outline'"
+						@click="whichAgreement = 'developer'"
+						>
+						<translate>I'm a game developer</translate>
+					</button>
 				</div>
-
-				<button
-					class="btn btn-primary-outline"
-					@click="linkPayPal()"
-					>
-					<span v-if="!user.paypal_id"><translate>Link PayPal Account</translate></span>
-					<span v-else><translate>Change PayPal Account</translate></span>
-				</button>
-			</div>
-
-		</fieldset>
-
-		<!--
-			They need to have PayPal linked before they can do this.
-		-->
-		<fieldset v-if="account && user.paypal_id">
-			<legend>
-				<span v-if="isVerified" class="pull-right done-icon" v-app-tooltip="$gettext( `You have completed this section.` )">
-					<app-jolticon icon="check" :big="true" />
-				</span>
-				<translate>Marketplace Account</translate>
-			</legend>
-
-			 <form-financials-managed-account
-				v-if="!account.skip_stripe"
-				/>
-
-			<div class="alert alert-info" v-if="account.skip_stripe">
-				<p>
-					<translate>You've been manually approved for the Marketplace.</translate>
-				</p>
+				<div class="col-xs-6">
+					<button class="btn btn-block"
+						:class="whichAgreement === 'partner' ? 'btn-success' : 'btn-outline'"
+						@click="whichAgreement = 'partner'"
+						>
+						<translate>I'm a partner</translate>
+					</button>
+				</div>
 			</div>
 		</fieldset>
+	</div>
 
-		<!--
-			Only allow them to change percentage split if they are signed up as a dev.
-		-->
-		<fieldset v-if="isVerified && account.tos_signed_developer">
-			<legend><translate>Percentage Split</translate></legend>
+	<div class="alert alert-success" v-if="isVerified">
+		<app-jolticon icon="check" />
+		<translate>Your account is ready for the Game Jolt Marketplace! You can set additional options below.</translate>
+	</div>
+	<br>
+
+	<!--
+		First step is to sign an agreement.
+	-->
+	<app-expand :when="!!whichAgreement || hasSignedAgreement">
+
+		<app-developer-terms
+			v-if="whichAgreement === 'developer' || hasSignedAgreement"
+			:account="account"
+			@accepted="acceptTerms( 'developer' )"
+			/>
+
+		<app-partner-terms
+			v-if="partner && (whichAgreement === 'partner' || hasSignedAgreement)"
+			:account="account"
+			@accepted="acceptTerms( 'partner' )"
+			/>
+
+	</app-expand>
+
+	<!--
+		PayPal is required.
+	-->
+	<fieldset v-if="account">
+		<legend>
+			<span v-if="user.paypal_id" class="pull-right done-icon" v-app-tooltip="$gettext( `You have completed this section.` )">
+				<app-jolticon icon="check big" />
+			</span>
+			<translate>PayPal Account</translate>
+		</legend>
+
+		<div class="form-group">
 
 			<p class="small">
-				<translate :escape-html="false">You decide what percentage of your sale revenue to give to Game Jolt. <strong>We won't let you give us more than 10%</strong> because we'd rather have you support other indie developers by buying their games.</translate>
+				<translate>We currently use PayPal for automatic monthly deposits. You will also be able to withdraw your revenue at any time through this linked account.</translate>
 			</p>
 
-			<app-form-group
-				name="percentage_split"
-				:hide-label="true"
-				>
+			<div v-if="user.paypal_id">
+				<label class="control-label"><translate>Current PayPal Account</translate></label>
+				<div class="form-static">{{ user.paypal_email_address }}</div>
+				<br>
+			</div>
 
+			<button
+				class="btn btn-primary-outline"
+				@click="linkPayPal()"
+				>
+				<span v-if="!user.paypal_id"><translate>Link PayPal Account</translate></span>
+				<span v-else><translate>Change PayPal Account</translate></span>
+			</button>
+		</div>
+
+	</fieldset>
+
+	<!--
+		They need to have PayPal linked before they can do this.
+	-->
+	<fieldset v-if="account && user.paypal_id">
+		<legend>
+			<span v-if="isVerified" class="pull-right done-icon" v-app-tooltip="$gettext( `You have completed this section.` )">
+				<app-jolticon icon="check" :big="true" />
+			</span>
+			<translate>Marketplace Account</translate>
+		</legend>
+
+			<form-financials-managed-account
+			v-if="!account.skip_stripe"
+			/>
+
+		<div class="alert alert-info" v-if="account.skip_stripe">
+			<p>
+				<translate>You've been manually approved for the Marketplace.</translate>
+			</p>
+		</div>
+	</fieldset>
+
+	<!--
+		Only allow them to change percentage split if they are signed up as a dev.
+	-->
+	<fieldset v-if="isVerified && account.tos_signed_developer">
+		<legend><translate>Percentage Split</translate></legend>
+
+		<p class="small">
+			<translate :escape-html="false">You decide what percentage of your sale revenue to give to Game Jolt. <strong>We won't let you give us more than 10%</strong> because we'd rather have you support other indie developers by buying their games.</translate>
+		</p>
+
+		<app-form-group
+			name="percentage_split"
+			:hide-label="true"
+			>
+
+			<app-form-control
+				type="number"
+				step="1"
+				max="10"
+				min="0"
+				:rules="{
+					pattern: /^\d+$/,
+					max_value: 10,
+					min_value: 0,
+				}"
+				/>
+			<app-form-control-errors
+				when="pattern"
+				:message="$gettext('Please enter a value between 0 and 10.')"
+				/>
+		</app-form-group>
+
+	</fieldset>
+
+	<fieldset v-if="isVerified">
+		<legend><translate>Wallet</translate></legend>
+
+		<p class="small"><translate>Your Wallet is where your earnings will be stored for you to buy games on Game Jolt or withdraw into your PayPal account.</translate></p>
+
+		<p class="small"><translate>We never take a cut of games you buy when you pay with your Wallet, and there are no payment processing fees. The money goes directly to the developer.</translate></p>
+
+		<app-form-group
+			name="wallet_maximum"
+			:label="$gettext( `Set an amount you would like to keep in your wallet` )"
+			>
+			<p class="help-block">
+				<translate>We'll keep this amount in your Wallet when doing automatic pay outs. This way you always have some money to buy other games on the site through your Wallet.</translate>
+				<br>
+				<translate>To send all your money when doing automatic pay outs set this to $0.</translate>
+			</p>
+
+			<div class="input-group">
+				<span class="input-group-addon">$</span>
 				<app-form-control
 					type="number"
 					step="1"
-					max="10"
 					min="0"
+					:max="maxWallet / 100"
 					:rules="{
-						pattern: /^\d+$/,
-						max_value: 10,
 						min_value: 0,
+						max_value: maxWallet / 100,
 					}"
 					/>
-				<app-form-control-errors
-					when="pattern"
-					:message="$gettext('Please enter a value between 0 and 10.')"
-					/>
-			</app-form-group>
+				<!--gj-form-currency-input-->
+			</div>
+			<app-form-control-errors />
+		</app-form-group>
 
-		</fieldset>
+	</fieldset>
 
-		<fieldset v-if="isVerified">
-			<legend><translate>Wallet</translate></legend>
+	<fieldset v-if="isVerified">
+		<legend><translate>Minimum Payout</translate></legend>
 
-			<p class="small"><translate>Your Wallet is where your earnings will be stored for you to buy games on Game Jolt or withdraw into your PayPal account.</translate></p>
+		<p class="small"><translate>If you'd like, you can set an amount below, and we will not make monthly deposits into your PayPal account until your revenue reaches this amount. This can help to maintain cleaner accounting on your end.</translate></p>
 
-			<p class="small"><translate>We never take a cut of games you buy when you pay with your Wallet, and there are no payment processing fees. The money goes directly to the developer.</translate></p>
-
-			<app-form-group
-				name="wallet_maximum"
-				:label="$gettext( `Set an amount you would like to keep in your wallet` )"
-				>
-				<p class="help-block">
-					<translate>We'll keep this amount in your Wallet when doing automatic pay outs. This way you always have some money to buy other games on the site through your Wallet.</translate>
-					<br>
-					<translate>To send all your money when doing automatic pay outs set this to $0.</translate>
-				</p>
-
-				<div class="input-group">
-					<span class="input-group-addon">$</span>
-					<app-form-control
-						type="number"
-						step="1"
-						min="0"
-						:max="maxWallet / 100"
-						:rules="{
-							min_value: 0,
-							max_value: maxWallet / 100,
-						}"
-						/>
-					<!--gj-form-currency-input-->
-				</div>
-				<app-form-control-errors />
-			</app-form-group>
-
-		</fieldset>
-
-		<fieldset v-if="isVerified">
-			<legend><translate>Minimum Payout</translate></legend>
-
-			<p class="small"><translate>If you'd like, you can set an amount below, and we will not make monthly deposits into your PayPal account until your revenue reaches this amount. This can help to maintain cleaner accounting on your end.</translate></p>
-
-			<app-form-group
-				name="payout_minimum"
-				:label="$gettext('Min. Payout Amount')"
-				>
-				<p class="help-block">
-					<translate :translate-params="{
-							max: currency( maxPayout ),
-						}">
-						The max you can set this to is %{ max } USD.
-					</translate>
-					<br>
-					<translate>For no minimum, set this to $0.</translate>
-				</p>
-
-				<div class="input-group">
-					<span class="input-group-addon">$</span>
-					<app-form-control
-						type="number"
-						step="1"
-						min="0"
-						:max="maxPayout / 100"
-						:rules="{
-							min_value: 0,
-							max_value: maxPayout / 100,
-						}"
-						/>
-					<!--gj-form-currency-input-->
-				</div>
-				<app-form-control-errors />
-			</app-form-group>
-
-		</fieldset>
-
-		<app-form-button
-			v-if="isVerified"
-			icon="edit"
+		<app-form-group
+			name="payout_minimum"
+			:label="$gettext('Min. Payout Amount')"
 			>
-			<translate>Save</translate>
-		</app-form-button>
-	</app-form-loader>
+			<p class="help-block">
+				<translate :translate-params="{
+						max: currency( maxPayout ),
+					}">
+					The max you can set this to is %{ max } USD.
+				</translate>
+				<br>
+				<translate>For no minimum, set this to $0.</translate>
+			</p>
 
+			<div class="input-group">
+				<span class="input-group-addon">$</span>
+				<app-form-control
+					type="number"
+					step="1"
+					min="0"
+					:max="maxPayout / 100"
+					:rules="{
+						min_value: 0,
+						max_value: maxPayout / 100,
+					}"
+					/>
+				<!--gj-form-currency-input-->
+			</div>
+			<app-form-control-errors />
+		</app-form-group>
+
+	</fieldset>
+
+	<app-form-button
+		v-if="isVerified"
+		icon="edit"
+		>
+		<translate>Save</translate>
+	</app-form-button>
 </app-form>

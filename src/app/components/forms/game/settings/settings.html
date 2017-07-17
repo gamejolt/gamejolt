@@ -1,83 +1,76 @@
 <app-form name="settingsForm">
-	<app-form-loader
-		:url="`/web/dash/developer/games/settings/save/${ formModel.id }`"
-		@loaded="onLoaded"
+	<app-form-group
+		name="ga_tracking_id"
+		:label="$gettext( `dash.games.settings.ga_tracking_id_label` )"
+		:optional="true"
 		>
+		<app-form-control
+			type="text"
+			:rules="{
+				max: 30,
+				pattern: 'gaTrackingId',
+			}"
+			:placeholder="$gettext( `dash.games.settings.ga_tracking_id_placeholder` )"
+			/>
 
-		<app-form-group
-			name="ga_tracking_id"
-			:label="$gettext( `dash.games.settings.ga_tracking_id_label` )"
-			:optional="true"
-			>
-			<app-form-control
-				type="text"
-				:rules="{
-					max: 30,
-					pattern: 'gaTrackingId',
-				}"
-				:placeholder="$gettext( `dash.games.settings.ga_tracking_id_placeholder` )"
-				/>
+		<app-form-control-errors
+			:label="$gettext( `dash.games.settings.ga_tracking_id_error_label` )"
+			/>
 
-			<app-form-control-errors
-				:label="$gettext( `dash.games.settings.ga_tracking_id_error_label` )"
-				/>
+		<div class="help-block">
+			<translate :escape-html="false">dash.games.settings.ga_tracking_id_help_html</translate>
+		</div>
+	</app-form-group>
 
-			<div class="help-block">
-				<translate :escape-html="false">dash.games.settings.ga_tracking_id_help_html</translate>
-			</div>
-		</app-form-group>
+	<app-form-group
+		v-if="!hasPackagesForSale"
+		name="ads_enabled"
+		:label="$gettext( `dash.games.settings.ads_label` )"
+		>
+		<div class="help-block">
+			<translate :escape-html="false">dash.games.settings.ads_help_html</translate>
+		</div>
+		<app-form-control-toggle />
+	</app-form-group>
+	<div v-else class="form-group">
+		<label class="control-label">
+			<translate>dash.games.settings.ads_label</translate>
+		</label>
+		<div class="alert alert-info">
+			<translate>We don't show ads on Marketplace game pages (even for pay what you want games).</translate>
+		</div>
+	</div>
 
-		<app-form-group
-			v-if="!hasPackagesForSale"
-			name="ads_enabled"
-			:label="$gettext( `dash.games.settings.ads_label` )"
-			>
-			<div class="help-block">
-				<translate :escape-html="false">dash.games.settings.ads_help_html</translate>
-			</div>
-			<app-form-control-toggle />
-		</app-form-group>
-		<div v-else class="form-group">
-			<label class="control-label">
-				<translate>dash.games.settings.ads_label</translate>
-			</label>
-			<div class="alert alert-info">
-				<translate>We don't show ads on Marketplace game pages (even for pay what you want games).</translate>
-			</div>
+	<app-form-group
+		name="comments_enabled"
+		:label="$gettext( `dash.games.settings.comments_label` )"
+		>
+		<div class="help-block">
+			<translate :escape-html="false">dash.games.settings.comments_help_html</translate>
+		</div>
+		<app-form-control-toggle />
+	</app-form-group>
+
+	<app-form-group
+		name="ratings_enabled"
+		:label="$gettext( `dash.games.settings.ratings_label` )"
+		>
+		<div class="alert alert-info" v-if="model._is_devlog">
+			<app-jolticon icon="notice" class="warning" />
+			<translate :escape-html="false">
+				<b>Users can't rate devlog-only games.</b> Enable or disable ratings for when you're ready to transition to early access or a complete game.
+			</translate>
 		</div>
 
-		<app-form-group
-			name="comments_enabled"
-			:label="$gettext( `dash.games.settings.comments_label` )"
-			>
-			<div class="help-block">
-				<translate :escape-html="false">dash.games.settings.comments_help_html</translate>
-			</div>
-			<app-form-control-toggle />
-		</app-form-group>
+		<div class="help-block">
+			<translate :escape-html="false">dash.games.settings.ratings_help_html</translate>
+		</div>
+		<app-form-control-toggle />
+	</app-form-group>
 
-		<app-form-group
-			name="ratings_enabled"
-			:label="$gettext( `dash.games.settings.ratings_label` )"
-			>
-			<div class="alert alert-info" v-if="model._is_devlog">
-				<app-jolticon icon="notice" class="warning" />
-				<translate :escape-html="false">
-					<b>Users can't rate devlog-only games.</b> Enable or disable ratings for when you're ready to transition to early access or a complete game.
-				</translate>
-			</div>
-
-			<div class="help-block">
-				<translate :escape-html="false">dash.games.settings.ratings_help_html</translate>
-			</div>
-			<app-form-control-toggle />
-		</app-form-group>
-
-		<app-dash-game-wizard-controls>
-			<app-form-button icon="edit">
-				<translate>dash.games.settings.save_button</translate>
-			</app-form-button>
-		</app-dash-game-wizard-controls>
-
-	</app-form-loader>
+	<app-dash-game-wizard-controls>
+		<app-form-button icon="edit">
+			<translate>dash.games.settings.save_button</translate>
+		</app-form-button>
+	</app-dash-game-wizard-controls>
 </app-form>

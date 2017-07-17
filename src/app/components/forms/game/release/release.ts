@@ -1,9 +1,12 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./release.html';
+import * as View from '!view!./release.html?style=./release.styl';
+
 import { GameRelease } from '../../../../../lib/gj-lib-client/components/game/release/release.model';
 import {
 	BaseForm,
 	FormOnInit,
+	FormOnSubmitSuccess,
+	FormOnLoad,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
@@ -13,9 +16,7 @@ import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vu
 import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { FormOnSubmitSuccess } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
-import { AppFormLoader } from '../../../../../lib/gj-lib-client/components/form-vue/loader/loader';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGameBuild } from '../build/build';
 import { FormGameNewBuild } from '../new-build/new-build';
@@ -27,14 +28,13 @@ type GameReleaseFormModel = GameRelease & {
 @View
 @Component({
 	components: {
-		AppFormLoader,
 		AppJolticon,
 		FormGameBuild,
 		FormGameNewBuild,
 	},
 })
 export class FormGameRelease extends BaseForm<GameReleaseFormModel>
-	implements FormOnInit, FormOnSubmitSuccess {
+	implements FormOnInit, FormOnLoad, FormOnSubmitSuccess {
 	modelClass = GameRelease as any;
 
 	@Prop(Game) game: Game;
@@ -45,25 +45,34 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	@Prop(Boolean) areBuildsLockedByJam: boolean;
 	@Prop(Boolean) areWebBuildsLockedBySellable: boolean;
 
+	$refs: {
+		form: AppForm;
+	};
+
 	buildForms: FormGameBuild[] = [];
 
 	readonly Screen = makeObservableService(Screen);
 	readonly GameRelease = GameRelease;
 
+	get loadUrl() {
+		return `/web/dash/developer/games/releases/save/${this.game.id}/${this.package.id}`;
+	}
+
 	onInit() {
 		this.setField('game_id', this.game.id);
 		this.setField('game_package_id', this.package.id);
 
-		if (!this.builds) {
-			this.builds = [];
-		}
+		// TODO: Can't modify props directly.
+		// if (!this.builds) {
+		// 	this.builds = [];
+		// }
 
-		if (!this.launchOptions) {
-			this.launchOptions = [];
-		}
+		// if (!this.launchOptions) {
+		// 	this.launchOptions = [];
+		// }
 	}
 
-	onLoaded(payload: any) {
+	onLoad(payload: any) {
 		if (this.method === 'add') {
 			this.setField('version_number', payload.nextVersion || '0.1.0');
 		}
@@ -80,8 +89,8 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 
 	/**
 	 * Launch options include launch options for alll builds in this release.
-	 * When launch options are modified for a build, we need to merge the changes back into
-	 * the global array of them.
+	 * When launch options are modified for a build, we need to merge the
+	 * changes back into the global array of them.
 	 **/
 	updateBuildLaunchOptions(build: GameBuild, launchOptions: GameBuildLaunchOption[]) {
 		// Remove old ones for build.
@@ -122,17 +131,8 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 
 	async save() {
 		// Save all the managed build forms before saving the release.
-		const buildFormSavePromises: Promise<any>[] = [];
-		for (let buildForm of this.buildForms) {
-			if (!buildForm.isDeprecated) {
-				continue;
-			}
-			buildFormSavePromises.push(buildForm.save());
-		}
-
-		await Promise.all(buildFormSavePromises);
-		const form: AppForm = this.$refs['form'] as any;
-		return form.submit();
+		await Promise.all(this.buildForms.filter(i => !i.isDeprecated).map(i => i.save()));
+		this.$refs.form.submit();
 	}
 
 	async savePublished() {
@@ -159,7 +159,7 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	}
 
 	unpublish() {
-		this.$emit('unpuslish-release', this.model);
+		this.$emit('unpublish-release', this.model);
 	}
 
 	remove() {

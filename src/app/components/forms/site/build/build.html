@@ -1,35 +1,28 @@
 <app-form class="form-dash-site-build" name="siteBuildForm">
-	<app-form-loader
-		:url="`/web/dash/sites/upload-build/${ this.formModel.site_id }`"
-		@loaded="onLoaded"
+	<app-form-group
+		name="file"
+		:hide-label="true"
 		>
-
-		<app-form-group
-			name="file"
-			:hide-label="true"
-			>
-			<p class="help-block">
-				<translate
-					:translate-params="{
-						maxFilesize: maxFilesize / 1024 / 1024,
-					}"
-					>
-					Static site uploads are currently capped at %{ maxFilesize }MB. Please upload a .zip file with an index.html file in the root of the folder.
-				</translate>
-			</p>
-
-				<!-- :progress="progress" -->
-			<app-form-control-upload
-				:rules="{
-					size: maxFilesize,
+		<p class="help-block">
+			<translate
+				:translate-params="{
+					maxFilesize: maxFilesize / 1024 / 1024,
 				}"
-				accept=".zip"
-				:upload-link-label="$gettext( `Upload a static site zip file.` )"
-				@changed="onSubmit()"
-				/>
+				>
+				Static site uploads are currently capped at %{ maxFilesize }MB. Please upload a .zip file with an index.html file in the root of the folder.
+			</translate>
+		</p>
 
-			<app-form-control-errors />
-		</app-form-group>
+			<!-- :progress="progress" -->
+		<app-form-control-upload
+			:rules="{
+				size: maxFilesize,
+			}"
+			accept=".zip"
+			:upload-link-label="$gettext( `Upload a static site zip file.` )"
+			@changed="onSubmit()"
+			/>
 
-	</app-form-loader>
+		<app-form-control-errors />
+	</app-form-group>
 </app-form>
