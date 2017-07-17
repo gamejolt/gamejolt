@@ -32,12 +32,10 @@
 			<translate>You don't have any builds in this release yet. You won't be able to publish until you put some in.</translate>
 		</div>
 
-		<div
-			v-for="build of builds"
-			:key="build.id"
-			class="anim-fade-leave-enlarge anim-fade-enter"
-			>
+		<app-card-list :items="builds">
 			 <form-game-build
+			 	v-for="build of builds"
+				:key="build.id"
 				:model="build"
 				:game="game"
 				:package="package"
@@ -49,7 +47,7 @@
 				@remove-build="removeBuild"
 				@submit="onBuildEdited( build, $event )"
 				/>
-		</div>
+		</app-card-list>
 
 		<br>
 

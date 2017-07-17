@@ -14,7 +14,6 @@ import { GameBuildLaunchOption } from '../../../../../lib/gj-lib-client/componen
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
-import { AppCard } from '../../../../../lib/gj-lib-client/components/card/card';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { filesize } from '../../../../../lib/gj-lib-client/vue/filters/filesize';
@@ -28,6 +27,7 @@ import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vu
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 import { fuzzynumber } from '../../../../../lib/gj-lib-client/vue/filters/fuzzynumber';
 import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
+import { AppCardListItem } from '../../../../../lib/gj-lib-client/components/card/list/item/item';
 
 type GameBuildFormModel = GameBuild & {
 	launch_windows: string;
@@ -42,7 +42,7 @@ type GameBuildFormModel = GameBuild & {
 @View
 @Component({
 	components: {
-		AppCard,
+		AppCardListItem,
 		AppJolticon,
 		AppExpand,
 		AppProgressPoller,
@@ -78,7 +78,6 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 	isSettingPlatform = false;
 	prevCount = -1;
 	buildLaunchOptions: GameBuildLaunchOption[] = [];
-	skipChangedWatch = false;
 	wasChanged = false;
 
 	readonly number = number;
@@ -91,6 +90,14 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 	get loadUrl() {
 		return `/web/dash/developer/games/builds/save/${this.game.id}/${this.package.id}/${this.release
 			.id}/${this.model!.id}`;
+	}
+
+	get hasBrowserError() {
+		return this.hasCustomError('browser');
+	}
+
+	get isBrowserBased() {
+		return this.model!.isBrowserBased();
 	}
 
 	created() {
@@ -110,7 +117,6 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 		this.isSettingPlatform = false;
 		this.prevCount = -1;
 		this.buildLaunchOptions = [];
-		this.skipChangedWatch = false;
 		this.wasChanged = false;
 	}
 
@@ -281,14 +287,20 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 			this.setField(('launch_' + launchOption.os) as any, launchOption.executable_path);
 		}
 
-		// This will skip a single cycle of checking if the form fields have changed.
-		// This is so that we don't get the "save build" button when adding a new launch option in after selecting new platform.
-		// Only if we add, not if we remove.
-		if (this.buildLaunchOptions.length > this.prevCount) {
-			this.skipChangedWatch = true;
-		}
-
 		this.prevCount = this.buildLaunchOptions.length;
+	}
+
+	@Watch('formModel.embed_width')
+	@Watch('formModel.embed_height')
+	onDimensionsChanged() {
+		const hasError =
+			this.isBrowserBased && (!this.formModel.embed_width || !this.formModel.embed_height);
+
+		if (hasError) {
+			this.setCustomError('browser');
+		} else {
+			this.clearCustomError('browser');
+		}
 	}
 
 	async openFileSelector(platform: string) {
@@ -306,6 +318,7 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 		}
 
 		this.setField(('launch_' + platform) as any, selected);
+		this.onBuildFieldChanged();
 	}
 
 	onBuildProcessingComplete(response: any) {
@@ -316,30 +329,11 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 		}
 	}
 
-	@Watch('formModel.embed_width')
-	@Watch('formModel.embed_height')
-	@Watch('formModel.browser_disable_right_click')
-	@Watch('formModel.launch_windows')
-	@Watch('formModel.launch_windows_64')
-	@Watch('formModel.launch_mac')
-	@Watch('formModel.launch_mac_64')
-	@Watch('formModel.launch_linux')
-	@Watch('formModel.launch_linux_64')
-	@Watch('formModel.launch_other')
-	onBuildFieldsChanged() {
-		// TODO make it not run for the first population of those fields.
-		console.log(this.skipChangedWatch);
-		if (this.skipChangedWatch) {
-			this.skipChangedWatch = false;
-			return;
-		}
-
-		// // Skip the initial watch.
-		// if (angular.equals(newVals, oldVals)) {
-		// 	return;
-		// }
-
-		console.log('mkay then');
+	/**
+	 * Must be called any time a field changes that we need to show the save
+	 * button for.
+	 */
+	onBuildFieldChanged() {
 		this.wasChanged = true;
 	}
 
