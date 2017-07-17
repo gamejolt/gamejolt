@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import * as View from '!view!./thumbnail.html';
 
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
@@ -7,15 +7,21 @@ import {
 	FormOnLoad,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
+import { AppFormControlCrop } from '../../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
+
+type FormModel = Game & {
+	crop: any;
+};
 
 @View
 @Component({
 	components: {
 		AppFormControlUpload,
+		AppFormControlCrop,
 	},
 })
-export class FormGameThumbnail extends BaseForm<Game> implements FormOnLoad {
-	modelClass = Game;
+export class FormGameThumbnail extends BaseForm<FormModel> implements FormOnLoad {
+	modelClass = Game as any;
 	resetOnSubmit = true;
 	saveMethod = '$saveThumbnail' as '$saveThumbnail';
 	maxFilesize = 0;
@@ -29,6 +35,17 @@ export class FormGameThumbnail extends BaseForm<Game> implements FormOnLoad {
 		return `/web/dash/developer/games/thumbnail/save/${this.model!.id}`;
 	}
 
+	get crop() {
+		return this.formModel.thumbnail_media_item
+			? this.formModel.thumbnail_media_item.getCrop()
+			: undefined;
+	}
+
+	@Watch('crop')
+	onCropChange() {
+		this.setField('crop', this.crop);
+	}
+
 	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.minWidth = payload.minWidth;
@@ -39,9 +56,10 @@ export class FormGameThumbnail extends BaseForm<Game> implements FormOnLoad {
 	}
 
 	/**
-	 * Old thumbnails were smaller than our current minimums.
-	 * We don't want to allow to crop them, but we do want to allow them to upload a new one.
-	 * We check here if it's too small to crop to signal to the form to remove the cropper.
+	 * Old thumbnails were smaller than our current minimums. We don't want to
+	 * allow to crop them, but we do want to allow them to upload a new one. We
+	 * check here if it's too small to crop to signal to the form to remove the
+	 * cropper.
 	 */
 	get canCrop() {
 		const model = this.model!;
@@ -60,52 +78,3 @@ export class FormGameThumbnail extends BaseForm<Game> implements FormOnLoad {
 		return true;
 	}
 }
-
-// angular.module( 'App.Forms.Dashboard' ).directive( 'gjFormDashboardGameThumbnail', function( Form, Api, gettext )
-// {
-// 	// Needed for the crop label.
-// 	gettext( 'dash.games.thumbnail.crop_label' );
-// 	gettext( 'dash.games.thumbnail.nocrop_label' );
-
-// 	var form = new Form( {
-// 		model: 'Game',
-// 		template: require( './thumbnail.html' ),
-// 		saveMethod: '$saveThumbnail',
-// 		resetOnSubmit: true,
-// 	} );
-
-// 	form.onInit = function( scope )
-// 	{
-// 		scope.Loader = Loader;
-// 		Loader.load( 'upload' );
-// 		Loader.load( 'jcrop' );
-
-// 		// Only set this once.
-// 		// If the thumbnail changes outside of this form, we want to reinitialize it to pick up the changes.
-// 		if ( !scope.isWatcherSet ) {
-// 			scope.$watch( function()
-// 			{
-// 				return !!this.model!.thumbnail_media_item;
-// 			},
-// 			function( newVal, oldVal )
-// 			{
-// 				if ( newVal !== oldVal ) {
-// 					form._init( scope );
-// 				}
-// 			} );
-// 			scope.isWatcherSet = true;
-// 		}
-
-// 		if ( scope.formModel.thumbnail_media_item ) {
-// 			scope.formModel.crop = scope.formModel.thumbnail_media_item.getCrop();
-// 			form.checkCanCrop( scope );
-// 		}
-// 		else {
-// 			scope.formModel.crop = undefined;
-// 		}
-
-// 		scope.formModel.file = undefined;
-// 	};
-
-// 	return form;
-// } );

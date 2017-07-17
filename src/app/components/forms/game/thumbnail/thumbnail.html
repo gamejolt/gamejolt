@@ -50,16 +50,14 @@
 		</div>
 
 		<div v-if="canCrop" class="form-control-static">
-			crop
-			<!--<img ng-src="{{ formModel.thumbnail_media_item.img_url }}"
-				alt=""
-				gj-img-crop
-				form-control="crop"
-				img-crop-aspect-ratio="cropAspectRatio"
-				img-crop-min-width="minWidth"
-				img-crop-min-height="minHeight"
-				disabled="formModel.thumbnail_media_item.is_animated"
-				>-->
+			<app-form-control-crop
+				:src="formModel.thumbnail_media_item.img_url"
+				:aspect-ratio="cropAspectRatio"
+				:min-width="minWidth"
+				:min-height="minHeight"
+				:disabled="formModel.thumbnail_media_item.is_animated"
+				/>
+
 			<app-form-control-errors
 				:label="$gettext( `dash.games.thumbnail.crop_error_label` )"
 				/>
