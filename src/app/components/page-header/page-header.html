@@ -42,9 +42,7 @@
 		</div>
 	</section>
 
-	<!--TODO(rewrite)-->
-	<!--<div v-if="hasNav && !hideNav" gj-auto-scroll-anchor>-->
-	<div v-if="hasNav && !hideNav">
+	<app-autoscroll-anchor v-if="hasNav && !hideNav">
 		<app-scroll-affix :should-affix="shouldAffixNav && Screen.isLg && Screen.height > 750">
 			<section class="section page-header-nav">
 				<div class="container">
@@ -74,6 +72,6 @@
 				</div>
 			</section>
 		</app-scroll-affix>
-	</div>
+	</app-autoscroll-anchor>
 
 </header>
