@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./devlog.html?style=./devlog.styl';
 
@@ -70,10 +70,13 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	Environment = Environment;
 	number = number;
 
-	async created() {
-		const payload = await Comment.fetch('Game', this.game.id, 1);
-		this.commentsCount = payload.count;
-		this.comments = Comment.populate(payload.comments);
+	@Watch('game.id', { immediate: true })
+	async onGameChange() {
+		if (this.game) {
+			const payload = await Comment.fetch('Game', this.game.id, 1);
+			this.commentsCount = payload.count;
+			this.comments = Comment.populate(payload.comments);
+		}
 	}
 
 	onCommentAdd(comment: Comment) {
