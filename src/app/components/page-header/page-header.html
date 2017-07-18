@@ -42,7 +42,10 @@
 		</div>
 	</section>
 
-	<app-autoscroll-anchor v-if="hasNav && !hideNav">
+	<app-autoscroll-anchor
+		v-if="hasNav && !hideNav"
+		:autoscroll-route-param="autoscrollRouteParam"
+		>
 		<app-scroll-affix :should-affix="shouldAffixNav && Screen.isLg && Screen.height > 750">
 			<section class="section page-header-nav">
 				<div class="container">

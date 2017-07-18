@@ -26,6 +26,8 @@ export class AppPageHeader extends Vue {
 	@Prop(Boolean) spotlightDark?: boolean;
 	@Prop({ type: String, default: 'col-xs-12' })
 	colClasses?: string;
+	@Prop([String, Number])
+	autoscrollRouteParam: string | number;
 
 	Screen = makeObservableService(Screen);
 
