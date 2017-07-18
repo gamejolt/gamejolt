@@ -62,9 +62,9 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	showFullDescription = false;
 	canToggleDescription = false;
 
-	headingColClasses = 'col-sm-10 col-sm-offset-1 col-md-3 col-md-offset-0';
-	contentColClasses = 'col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-0 col-lg-7';
-	contentColClassesFull = 'col-sm-10 col-sm-offset-1 col-md-9 col-md-offset-0 col-lg-10';
+	headingColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-2';
+	contentColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-7';
+	contentColClassesFull = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-10';
 
 	Screen = makeObservableService(Screen);
 	Environment = Environment;
