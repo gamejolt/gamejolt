@@ -18,6 +18,7 @@ import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-sto
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppScrollInview } from '../../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
+import { Settings } from '../../settings/settings.service';
 
 /**
  * An array of all the thumbnails on the page.
@@ -54,7 +55,6 @@ if (typeof window !== undefined) {
 })
 export class AppGameThumbnail extends Vue {
 	@Prop(Object) game: Game;
-
 	@Prop(String) linkTo?: string;
 
 	@Prop({ type: Boolean, default: true })
@@ -79,7 +79,7 @@ export class AppGameThumbnail extends Vue {
 	get isActive() {
 		// When the window is not focused we don't want to play videos. This
 		// should speed up inactive tabs.
-		return this.autoplay && this.isWindowFocused;
+		return !!Settings.get('animated-thumbnails') && this.autoplay && this.isWindowFocused;
 	}
 
 	get shouldShowVideo() {

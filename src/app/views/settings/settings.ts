@@ -30,6 +30,7 @@ export default class RouteSettings extends Vue {
 		}
 
 		return {
+			site: this.$gettext('Site'),
 			chat: this.$gettext('settings.chat'),
 			restrictions: this.$gettext('Restrictions'),
 			notifications: this.$gettext('Notifications'),
