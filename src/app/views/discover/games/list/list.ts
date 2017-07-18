@@ -68,7 +68,7 @@ export default class RouteDiscoverGamesList extends Vue {
 		'games.list.section_best': this.$gettext('games.list.section_best'),
 	};
 
-	// TODO: Still gotta work on this.
+	// TODO(rewrite): Still gotta work on this.
 	@RouteResolve({ lazy: true, cache: true })
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		const filtering = new GameFilteringContainer();

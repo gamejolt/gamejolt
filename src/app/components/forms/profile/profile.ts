@@ -46,7 +46,7 @@ export class FormProfile extends BaseForm<User> implements FormOnInit {
 
 		this.formModel.assign(payload.user);
 
-		// TODO
+		// TODO(rewrite)
 		// if ( scope.usernameTimeLeft ) {
 		// 	scope.usernameDuration = moment.duration( scope.usernameTimeLeft ).humanize();
 		// }

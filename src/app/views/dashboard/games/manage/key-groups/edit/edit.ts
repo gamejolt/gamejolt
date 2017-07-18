@@ -196,7 +196,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends Vue {
 
 	onNewKeysAdded() {
 		// Only reload this single state.
-		// TODO: reload might not work this way, check this.
+		// TODO(rewrite): reload might not work this way, check this.
 		this.$router.push({
 			name: 'dash.games.manage.key-groups.edit',
 			params: this.$route.params,

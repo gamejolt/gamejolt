@@ -53,7 +53,7 @@ export default class RouteAuthLinkedAccountPoll extends Vue {
 		this.isPolling = false;
 
 		// Focus back to the Client.
-		// TODO: Client
+		// TODO(rewrite): Client
 		if (GJ_IS_CLIENT) {
 			// Client.show();
 		}

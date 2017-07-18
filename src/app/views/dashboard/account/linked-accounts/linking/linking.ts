@@ -77,7 +77,7 @@ export default class RouteDashAccountLinkedAccountsLinking extends Vue {
 		}
 
 		// Focus back to the Client.
-		// TODO
+		// TODO(rewrite)
 		// Client.show();
 	}
 

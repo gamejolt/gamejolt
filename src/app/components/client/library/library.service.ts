@@ -83,7 +83,7 @@ export function findActiveForGame(state: ClientLibraryState, gameId: number) {
 // 				{
 // 					const newModel = new watchInfo.model();
 // 					Object.assign( newModel, obj );
-// 					// TODO: vue reactivity?
+// 					// TODO(rewrite): vue reactivity?
 // 					(ClientLibrary as any )[ watchInfo.key ][ key ] = newModel;
 
 // 					if ( watchInfo.key === 'packages' ) {
@@ -102,7 +102,7 @@ export function findActiveForGame(state: ClientLibraryState, gameId: number) {
 // 							continue;
 // 						}
 // 						localPackage[ i ] = mods[ i ];
-// 						// TODO: vue reactivity?
+// 						// TODO(rewrite): vue reactivity?
 // 					}
 // 				} );
 // 			} );

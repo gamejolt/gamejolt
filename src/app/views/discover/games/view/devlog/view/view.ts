@@ -60,7 +60,7 @@ export default class RouteDiscoverGamesViewDevlogView extends Vue {
 		this.post.$viewed();
 		this.post.$expanded();
 
-		// TODO
+		// TODO(rewrite)
 		// location.enforce( {
 		// 	slug: $scope['gameCtrl'].game.slug,
 		// 	postSlug: this.post.slug,

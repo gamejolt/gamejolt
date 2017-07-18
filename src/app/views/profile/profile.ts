@@ -62,7 +62,7 @@ export default class RouteProfile extends Vue {
 	routed() {
 		this.user = new User(this.$payload.user);
 
-		// TODO
+		// TODO(rewrite)
 		// Location.enforce( {
 		// 	slug: this.user.slug,
 		// } );
@@ -73,7 +73,7 @@ export default class RouteProfile extends Vue {
 		this.gamesCount = this.$payload.gamesCount;
 		this.isOnline = this.$payload.isOnline;
 		this.libraryGamesCount = this.$payload.libraryGamesCount;
-		// TODO
+		// TODO(rewrite)
 		// this.activeGameSession = this.$payload.activeGameSession ? new userGameSession( this.$payload.activeGameSession ) : null;
 		this.videosCount = this.$payload.videosCount || 0;
 

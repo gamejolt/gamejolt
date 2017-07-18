@@ -31,7 +31,7 @@ export class ClientInstaller {
 		// We set the system progress bar as we patch.
 		// Should be the accumulation of all current patches ongoing.
 
-		// TODO watch currentProgress and refresh progress when it changes.
+		// TODO(rewrite) watch currentProgress and refresh progress when it changes.
 		// $rootScope.$watch( function()
 		// {
 		// 	if ( !_this.numPatching ) {
@@ -229,9 +229,8 @@ export class ClientInstaller {
 			}
 			await db.packages.put(localPackage);
 
-			const action = operation === 'install'
-				? 'finished installing'
-				: 'updated to the latest version';
+			const action =
+				operation === 'install' ? 'finished installing' : 'updated to the latest version';
 			const title = operation === 'install' ? 'Game Installed' : 'Game Updated';
 			Growls.success(packageTitle + ' has ' + action + '.', title);
 		} catch (err) {
@@ -310,7 +309,7 @@ export class ClientInstaller {
 			const patchHandle = this.currentlyPatching[idx].handle;
 
 			// This is absurd, ylivay.
-			// TODO promisify the new client voodoo like no tomorrow.
+			// TODO(rewrite) promisify the new client voodoo like no tomorrow.
 			patchHandle.onCanceled(() => {
 				this.stopPatching(localPackage);
 				resolve();

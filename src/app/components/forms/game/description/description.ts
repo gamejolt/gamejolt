@@ -25,7 +25,7 @@ export class FormGameDescription extends BaseForm<Game> implements FormOnInit {
 	saveMethod = '$saveDescription' as '$saveDescription';
 
 	onInit() {
-		// TODO
+		// TODO(rewrite)
 		// scope.$watchCollection( 'formState.serverErrors["autotag-fnaf"]', ( isFnafDetected: boolean ) =>
 		// {
 		// 	// This will make it so they can't edit the form and force them to choose if they want to tag or not.
@@ -39,14 +39,14 @@ export class FormGameDescription extends BaseForm<Game> implements FormOnInit {
 	addAutotag(tag: string) {
 		(this.formModel as any).autotag = tag;
 
-		// TODO
+		// TODO(rewrite)
 		// this.onSubmit();
 	}
 
 	skipAutotag() {
 		(this.formModel as any).autotag_skip = true;
 
-		// TODO
+		// TODO(rewrite)
 		// scope.onSubmit();
 	}
 }
