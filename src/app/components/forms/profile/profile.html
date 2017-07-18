@@ -1,132 +1,117 @@
 <app-form name="profileForm">
+	<app-form-group
+		v-if="!usernameTimeLeft"
+		name="username"
+		:label="$gettext( `dash.profile.edit.username_label` )"
+		>
+		<app-form-control
+			type="text"
+			:rules="{
+				min: 3,
+				max: 30,
+				pattern: 'username',
+				availability: '/web/dash/profile/check-field-availability/username',
+			}"
+			:validate-on="[ 'blur' ]"
+			/>
 
-	<div v-if="!isLoaded">
-		<app-loading />
+		<app-form-control-errors />
+
+		<p class="help-block">
+			<translate>Profile URL</translate>
+			<code>{{ Environment.baseUrl }}/@<strong>{{ formModel.username || '_' }}</strong></code>
+		</p>
+
+		<app-expand :when="formModel.username !== model.username">
+			<div class="alert alert-info">
+				<translate>Changing your username will change your public profile URL. Any current links to your old profile URL will not automatically redirect to your new profile URL.</translate>
+			</div>
+		</app-expand>
+	</app-form-group>
+
+	<div class="form-group" v-else>
+		<label class="control-label">
+			<translate>dash.profile.edit.username_label</translate>
+		</label>
+		<p class="form-control-static">{{ formModel.username }}</p>
+		<p class="help-block">
+			<translate>You can only change your username once a week.</translate>
+			<br>
+			<translate :translate-params="{ duration: usernameDuration }">
+				You have %{ duration } left until you can change it again.
+			</translate>
+		</p>
 	</div>
 
-	<div v-else>
+	<app-form-group
+		v-if="!nameTimeLeft"
+		name="name"
+		:label="$gettext( `dash.profile.edit.display_name_label` )"
+		:optional="true"
+		>
+		<app-form-control
+			type="text"
+			:rules="{
+				max: 100,
+				availability: '/web/dash/profile/check-field-availability/name',
+			}"
+			:validate-on="[ 'blur' ]"
+			/>
 
-		<!-- Username -->
-		<app-form-group
-			v-if="!usernameTimeLeft"
-			name="username"
-			:label="$gettext( `dash.profile.edit.username_label` )"
-			>
-			<app-form-control
-				type="text"
-				:rules="{
-					min: 3,
-					max: 30,
-					pattern: 'username',
-					availability: '/web/dash/profile/check-field-availability/username',
-				}"
-				:validate-on="[ 'blur' ]"
-				/>
+		<app-form-control-errors />
 
-			<app-form-control-errors />
+		<p class="help-block">
+			<translate>Your display name is an optional personal identifier (such as a company name or real name). Unlike usernames, display names can contain spaces and special characters.</translate>
+		</p>
+	</app-form-group>
 
-			<p class="help-block">
-				<translate>Profile URL</translate>
-				<code>{{ Environment.baseUrl }}/@<strong>{{ formModel.username || '_' }}</strong></code>
-			</p>
-
-			<app-expand :when="formModel.username !== model.username">
-				<div class="alert alert-info">
-					<translate>Changing your username will change your public profile URL. Any current links to your old profile URL will not automatically redirect to your new profile URL.</translate>
-				</div>
-			</app-expand>
-		</app-form-group>
-
-		<div class="form-group" v-else>
-			<label class="control-label">
-				<translate>dash.profile.edit.username_label</translate>
-			</label>
-			<p class="form-control-static">{{ formModel.username }}</p>
-			<p class="help-block">
-				<translate
-					:escape-html="false"
-					:translate-params="{ duration: usernameDuration }"
-					>
-					dash.profile.edit.username_time_left_html
-				</translate>
-			</p>
-		</div>
-
-		<!-- Display Name -->
-		<app-form-group
-			v-if="!nameTimeLeft"
-			name="name"
-			:label="$gettext( `dash.profile.edit.display_name_label` )"
-			:optional="true"
-			>
-			<app-form-control
-				type="text"
-				:rules="{
-					max: 100,
-					availability: '/web/dash/profile/check-field-availability/name',
-				}"
-				:validate-on="[ 'blur' ]"
-				/>
-
-			<app-form-control-errors />
-
-			<p class="help-block">
-				<translate>Your display name is an optional personal identifier (such as a company name or real name). Unlike usernames, display names can contain spaces and special characters.</translate>
-			</p>
-		</app-form-group>
-
-		<div class="form-group" v-else>
-			<label class="control-label"><translate>dash.profile.edit.display_name_label</translate></label>
-			<p class="form-control-static">{{ formModel.name }}</p>
-			<p class="help-block">
-				<translate
-					:escape-html="false"
-					:translate-params="{ duration: nameDuration }"
-					>
-					dash.profile.edit.display_name_time_left_html
-				</translate>
-			</p>
-		</div>
-
-		<!-- Web Site -->
-		<app-form-group
-			name="web_site"
-			:label="$gettext( `dash.profile.edit.website_label` )"
-			:optional="true"
-			>
-			<app-form-control
-				type="url"
-				:rules="{
-					max: 250,
-				}"
-				/>
-			<app-form-control-errors />
-		</app-form-group>
-
-		<!-- User Bio -->
-		<app-form-group
-			name="description_markdown"
-			:label="$gettext( `dash.profile.edit.description_label` )"
-			:optional="true"
-			>
-
-			<p class="help-block">
-				<translate :escape-html="false">dash.profile.edit.description_help_html</translate>
-			</p>
-
-			<app-form-control-markdown
-				preview-class="user-compiled-description"
-				preview-url="/web/dash/profile/preview-description"
-				markdown-mode="users"
-				/>
-
-			<app-form-control-errors />
-
-		</app-form-group>
-
-		<app-form-button icon="edit">
-			<translate>dash.profile.edit.submit_button</translate>
-		</app-form-button>
+	<div class="form-group" v-else>
+		<label class="control-label"><translate>dash.profile.edit.display_name_label</translate></label>
+		<p class="form-control-static">{{ formModel.name }}</p>
+		<p class="help-block">
+			<translate>You can only change your display name once a week.</translate>
+			<br>
+			<translate :translate-params="{ duration: nameDuration }">
+				You have %{ duration } left until you can change it again.
+			</translate>
+		</p>
 	</div>
 
+	<app-form-group
+		name="web_site"
+		:label="$gettext( `dash.profile.edit.website_label` )"
+		:optional="true"
+		>
+		<app-form-control
+			type="url"
+			:rules="{
+				max: 250,
+			}"
+			/>
+		<app-form-control-errors />
+	</app-form-group>
+
+	<app-form-group
+		name="description_markdown"
+		:label="$gettext( `dash.profile.edit.description_label` )"
+		:optional="true"
+		>
+
+		<p class="help-block">
+			<translate :escape-html="false">dash.profile.edit.description_help_html</translate>
+		</p>
+
+		<app-form-control-markdown
+			preview-class="user-compiled-description"
+			preview-url="/web/dash/profile/preview-description"
+			markdown-mode="users"
+			/>
+
+		<app-form-control-errors />
+
+	</app-form-group>
+
+	<app-form-button icon="edit">
+		<translate>dash.profile.edit.submit_button</translate>
+	</app-form-button>
 </app-form>
