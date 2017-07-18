@@ -22,6 +22,7 @@ import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
 import { AppCommentWidgetAdd } from '../../../../../../../lib/gj-lib-client/components/comment/widget/add/add';
 import { Comment } from '../../../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
+import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 
 @View
 @Component({
@@ -37,6 +38,7 @@ import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/numbe
 		AppGameSoundtrackCard,
 		AppCommentPeek,
 		AppCommentWidgetAdd,
+		AppGameGrid,
 	},
 	directives: {
 		AppTrackEvent,
@@ -51,6 +53,7 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	@RouteState feed: RouteStore['feed'];
 	@RouteState packages: RouteStore['packages'];
 	@RouteState hasReleasesSection: RouteStore['hasReleasesSection'];
+	@RouteState recommendedGames: RouteStore['recommendedGames'];
 
 	@State app: Store['app'];
 
@@ -58,6 +61,10 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	commentsCount = 0;
 	showFullDescription = false;
 	canToggleDescription = false;
+
+	headingColClasses = 'col-sm-10 col-sm-offset-1 col-md-3 col-md-offset-0';
+	contentColClasses = 'col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-0 col-lg-7';
+	contentColClassesFull = 'col-sm-10 col-sm-offset-1 col-md-9 col-md-offset-0 col-lg-10';
 
 	Screen = makeObservableService(Screen);
 	Environment = Environment;
