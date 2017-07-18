@@ -8,6 +8,7 @@ import { makeObservableService } from '../lib/gj-lib-client/utils/vue';
 import { AppShell } from './components/shell/shell';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { Store } from './store/index';
+import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 
 @View
 @Component({
@@ -22,21 +23,12 @@ export class App extends Vue {
 
 	Connection = makeObservableService(Connection);
 
-	// created() {}
-
 	created() {
-		// this.loadTranslations();
+		// Let it finish doing all the initial rendering junk and track after
+		// that.
+		setTimeout(() => {
+			const ms = Date.now() - window._gjStartTime;
+			Analytics.trackTiming('shell', 'vue-start', ms);
+		});
 	}
-
-	// loadTranslations() {
-	// 	console.log('load translations');
-	// 	if (this.$language) {
-	// 		import('!!./../translations/en_US/main.json').then(mod => {
-	// 			console.log('mod', mod);
-	// 			this.$language.addTranslations(mod);
-	// 		});
-	// 		// const dash = await import('!!../../../translations/' + Translate.lang + '/dash.json');
-	// 		// this.$language.addTranslations(main);
-	// 	}
-	// }
 }
