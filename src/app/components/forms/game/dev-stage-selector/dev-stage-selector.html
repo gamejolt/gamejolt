@@ -1,42 +1,40 @@
 <div class="row dev-stage-selector">
 	<div class="col-xs-12"
-		v-for="stage of [
-			Game.DEVELOPMENT_STATUS_DEVLOG,
-			Game.DEVELOPMENT_STATUS_WIP,
-			Game.DEVELOPMENT_STATUS_FINISHED,
-		]"
+		v-for="stage of stages"
 		>
-		<a ng-click="select( stage )">
-			<gj-card [is-disabled]="!isEnabled( stage )">
+		<a @click="select( stage )">
+			<app-card :is-disabled="!isEnabled( stage )">
 				<div class="dev-stage-selector-content">
 
 					<div class="card-title">
 						<h4>
-							<span class="jolticon"
-								:class="game.development_status === stage ? 'jolticon-radio-circle-filled' : 'jolticon-radio-circle'"
-							></span>
-							<span v-if="stage === Game.DEVELOPMENT_STATUS_DEVLOG" translate>Devlog-Only</span>
-							<span v-if="stage === Game.DEVELOPMENT_STATUS_WIP" translate>Early Access</span>
-							<span v-if="stage === Game.DEVELOPMENT_STATUS_FINISHED" translate>Complete/Stable</span>
+							<app-jolticon :icon="game && game.development_status === stage ? 'radio-circle-filled' : 'radio-circle'" />
+							<span v-if="stage === Game.DEVELOPMENT_STATUS_DEVLOG">
+								<translate>Devlog-Only</translate>
+							</span>
+							<span v-else-if="stage === Game.DEVELOPMENT_STATUS_WIP">
+								<translate>Early Access</translate>
+							</span>
+							<span v-else-if="stage === Game.DEVELOPMENT_STATUS_FINISHED">
+								<translate>Complete/Stable</translate>
+							</span>
 						</h4>
 					</div>
 
 					<div class="card-content">
 						<div v-if="stage === Game.DEVELOPMENT_STATUS_DEVLOG">
-							<div translate>
-								You don't have anything playable yet, but would like to share active game development in the form of images, videos, posts and more. Your game page will use the new Devlog format.
+							<div>
+								<translate>You don't have anything playable yet, but would like to share active game development in the form of images, videos, posts and more. Your game page will use the new Devlog format.</translate>
 							</div>
 						</div>
-
-						<div v-if="stage === Game.DEVELOPMENT_STATUS_WIP">
-							<div translate>
-								Your game has playable builds, but you're still actively developing it.
+						<div v-else-if="stage === Game.DEVELOPMENT_STATUS_WIP">
+							<div>
+								<translate>Your game has playable builds, but you're still actively developing it.</translate>
 							</div>
 						</div>
-
-						<div v-if="stage === Game.DEVELOPMENT_STATUS_FINISHED">
-							<div translate>
-								Your game is complete. It's in a stable state and you only plan on making bug fixes, performance optimizations, or small improvements.
+						<div v-else-if="stage === Game.DEVELOPMENT_STATUS_FINISHED">
+							<div>
+								<translate>Your game is complete. It's in a stable state and you only plan on making bug fixes, performance optimizations, or small improvements.</translate>
 							</div>
 						</div>
 					</div>
@@ -45,7 +43,7 @@
 						<br>
 						<div class="alert alert-info sans-margin">
 							<app-jolticon icon="notice" />
-							<span translate>You must have active published packages to transition to this stage.</span>
+							<translate>You must have active published packages to transition to this stage.</translate>
 						</div>
 					</div>
 
@@ -62,7 +60,7 @@
 						>
 
 					<img
-						v-if="stage === Game.DEVELOPMENT_STATUS_WIP"
+						v-else-if="stage === Game.DEVELOPMENT_STATUS_WIP"
 						src="./mascot-early-access.png"
 						width="48"
 						height="46"
@@ -70,7 +68,7 @@
 						>
 
 					<img
-						v-if="stage === Game.DEVELOPMENT_STATUS_FINISHED"
+						v-else-if="stage === Game.DEVELOPMENT_STATUS_FINISHED"
 						src="./mascot-complete.png"
 						width="52"
 						height="54"
@@ -78,7 +76,7 @@
 						>
 
 				</div>
-			</gj-card>
+			</app-card>
 		</a>
 	</div>
 </div>

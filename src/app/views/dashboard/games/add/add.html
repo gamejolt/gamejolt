@@ -1,26 +1,25 @@
-<header class="section no-nav">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-				<h1 translate>dash.games.add.heading</h1>
+<div>
+	 <header class="section no-nav">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+					<h1>
+						<translate>dash.games.add.heading</translate>
+					</h1>
+				</div>
 			</div>
 		</div>
-	</div>
-</header>
+	</header>
 
-<section class="section">
-	<div class="container">
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 
-		<div class="row">
-			<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
+					<form-game @submit="onSubmit" />
 
-				<form-game
-					@submit="addCtrl.onSubmit( formModel )"
-					>
-				</form-game>
-
+				</div>
 			</div>
 		</div>
-
-	</div>
-</section>
+	</section>
+</div>

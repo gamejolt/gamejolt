@@ -1,28 +1,13 @@
-import { Injectable, Inject } from 'ng-metadata/core';
-import * as template from '!html-loader!./confirm.html';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { Modal } from '../../../../../lib/gj-lib-client/components/modal/modal.service';
+import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/utils';
 
-@Injectable( 'FormDashboardGameDevStageSelectorConfirm' )
-export class FormDashboardGameDevStageSelectorConfirm
-{
-	constructor(
-		@Inject( '$modal' ) private $modal: any
-	)
-	{
-	}
-
-	show( game: any, stage: number ): Promise<void>
-	{
-		const modalInstance = this.$modal.open( {
-			template,
+export class GameDevStageSelectorConfirmModal {
+	static async show(game: Game, stage: number) {
+		return await Modal.show<boolean>({
+			component: () => asyncComponentLoader(import('./confirm')),
+			props: { game, stage },
 			size: 'sm',
-			controller: 'Form.Dashboard.Game.DevStageSelectorConfirmCtrl',
-			controllerAs: ',
-			resolve: {
-				game: () => game,
-				stage: () => stage,
-			},
-		} );
-
-		return modalInstance.result;
+		});
 	}
 }

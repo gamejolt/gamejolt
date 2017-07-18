@@ -1,6 +1,5 @@
 import { initRouter } from '../../lib/gj-lib-client/utils/router';
 import { routeDiscover } from './discover/discover.route';
-import { routeFallbacks } from './fallback.route';
 import { routeLanding } from './landing/landing.route';
 import { routeLegal } from './legal/legal.route';
 import { routeSearch } from './search/search.route';
@@ -26,7 +25,6 @@ const routes = [
 	routeLegal,
 	routeDash,
 	routeStyleguide,
-	...routeFallbacks,
 ];
 
 export const router = initRouter(routes);

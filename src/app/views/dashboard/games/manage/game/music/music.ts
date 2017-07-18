@@ -15,6 +15,7 @@ import { AppCardListDraggable } from '../../../../../../../lib/gj-lib-client/com
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGameSong } from '../../../../../../components/forms/game/song/song';
 import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
+import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
 
 @View
 @Component({
@@ -23,6 +24,7 @@ import { AppDashGameWizardControls } from '../../../../../../components/forms/ga
 		AppCardList,
 		AppCardListItem,
 		AppCardListDraggable,
+		AppCardListAdd,
 		AppJolticon,
 		AppDashGameWizardControls,
 	},
@@ -51,6 +53,7 @@ export default class RouteDashGamesManageGameMusic extends Vue {
 
 	routed() {
 		this.songs = GameSong.populate(this.$payload.songs);
+		this.isAdding = !this.songs.length;
 	}
 
 	onSongEdited() {

@@ -37,11 +37,7 @@
 			<translate>Choose the stage of development that your game is currently in. You are able to change your development stage at any point.</translate>
 		</p>
 
-		<!--TODO-->
-		<!--<gj-form-dashboard-game-dev-stage-selector
-			(on-select)="formModel.development_status = $event"
-			>
-		</gj-form-dashboard-game-dev-stage-selector>-->
+		<app-game-dev-stage-selector @select="selectStage" />
 
 	</div>
 
