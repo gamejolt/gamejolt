@@ -18,9 +18,7 @@ angular
 		this.game = game;
 		this.isLoading = true;
 
-		Api.sendRequest('/web/discover/games/packages/' + game.id).then(function(
-			payload
-		) {
+		Api.sendRequest('/web/discover/games/packages/' + game.id).then(function(payload) {
 			var packageData = new GamePackagePayloadModel(payload);
 			angular.extend(_this, packageData);
 
@@ -28,15 +26,8 @@ angular
 			var arch = Device.arch();
 
 			_this.isLoading = false;
-			_this.installableBuilds = Game.pluckInstallableBuilds(
-				_this.packages,
-				os,
-				arch
-			);
-			_this.buildsByPackage = _.indexBy(
-				_this.installableBuilds,
-				'game_package_id'
-			);
+			_this.installableBuilds = Game.pluckInstallableBuilds(_this.packages, os, arch);
+			_this.buildsByPackage = _.indexBy(_this.installableBuilds, 'game_package_id');
 		});
 
 		this.install = function(_package) {
@@ -49,7 +40,7 @@ angular
 				build._launch_options
 			);
 
-			// TODO: Go to installed games and scroll to the installing game.
+			// TODO(rewrite): Go to installed games and scroll to the installing game.
 			$modalInstance.dismiss();
 		};
 

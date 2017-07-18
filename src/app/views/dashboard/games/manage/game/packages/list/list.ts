@@ -50,7 +50,7 @@ export default class RouteDashGamesManageGamePackagesList extends Vue {
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		// TODO
+		// TODO(rewrite)
 		// if (!packagesPayload.packages.length) {
 		// 	$state.go('dash.games.manage.game.packages.add', $stateParams);
 		// }
@@ -97,7 +97,7 @@ export default class RouteDashGamesManageGamePackagesList extends Vue {
 		);
 
 		// We have to do a refresh since a new package may have been chosen as the primary sellable.
-		// TODO
+		// TODO(rewrite)
 		// $state.reload($state.current);
 	}
 }

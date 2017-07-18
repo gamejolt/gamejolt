@@ -71,8 +71,8 @@ export class ClientTray {
 				// It needs to stay as a relative file path or it will break.
 				icon:
 					packagePrefix +
-						'/app/components/client/tray/' +
-						(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
+					'/app/components/client/tray/' +
+					(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
 				click: toggleVisibility,
 			} as any /* use as any because typings for nw.gui are wrong at this time */
 		);
@@ -179,7 +179,7 @@ export class ClientTray {
 		tray.menu = menu;
 
 		// Save a global reference to this tray so it doesn't get GCed.
-		// TODO: do we still need global?
+		// TODO(rewrite): do we still need global?
 		this.clientTray = tray;
 	}
 }

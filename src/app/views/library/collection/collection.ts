@@ -74,7 +74,7 @@ export default class RouteLibraryCollection extends Vue {
 
 	Screen = makeObservableService(Screen);
 
-	// TODO: Still gotta work on this.
+	// TODO(rewrite): Still gotta work on this.
 	// Not really able to make this lazy since it needs payload to build out the
 	// header.
 	@RouteResolve({ cache: true })
@@ -143,6 +143,7 @@ export default class RouteLibraryCollection extends Vue {
 
 		this.processMeta();
 
+		// TODO(rewrite)
 		// // Tag pages don't have slugs.
 		// if ( this.type != 'tag' ) {
 		// 	Location.enforce( {

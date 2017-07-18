@@ -180,7 +180,7 @@ export default class RouteDashAnalytics extends Vue {
 			this.availableMetrics = SiteAnalytics.pickPartnerMetrics(this.availableMetrics);
 		}
 
-		// TODO
+		// TODO(rewrite)
 		// // If any of the parameters changed, refresh the state.
 		// if (
 		// 	this.period !== this.$route.params['period']
