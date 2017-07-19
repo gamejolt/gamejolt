@@ -96,7 +96,7 @@
 		<button
 			class="btn btn-success"
 			:disabled="!valid || !builds.length"
-			@click="savePublished()"
+			@click.prevent="savePublished()"
 			>
 			<app-jolticon :icon="method" />
 			<translate>Publish Release</translate>
@@ -105,7 +105,7 @@
 		<button
 			class="btn btn-outline"
 			:disabled="!valid || !builds.length"
-			@click="saveDraft()"
+			@click.prevent="saveDraft()"
 			>
 			<translate>Save Draft</translate>
 		</button>
@@ -114,7 +114,7 @@
 		<button
 			class="btn"
 			:disabled="!valid || !builds.length"
-			@click="save()"
+			@click.prevent="save()"
 			>
 			<app-jolticon icon="edit" />
 			<translate>Save Release</translate>
@@ -128,14 +128,14 @@
 		<button
 			class="btn btn-outline"
 			v-if="model.status === GameRelease.STATUS_PUBLISHED"
-			@click="unpublish()"
+			@click.prevent="unpublish()"
 			>
 			<translate>Unpublish Release</translate>
 		</button>
 
 		<button
 			class="btn btn-danger-outline"
-			@click="remove()"
+			@click.prevent="remove()"
 			>
 			<translate>Remove Release</translate>
 		</button>

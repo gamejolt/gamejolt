@@ -18,6 +18,7 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoadingFade } from '../../../../../lib/gj-lib-client/components/loading/fade/fade';
+import { AppTimepicker } from '../../../../../lib/gj-lib-client/components/timepicker/timepicker';
 
 type FormGamePackageModel = GamePackage & {
 	primary: boolean;

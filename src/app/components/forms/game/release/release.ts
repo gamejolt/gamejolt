@@ -104,6 +104,8 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	}
 
 	onBuildEdited(build: GameBuild, response: any) {
+		console.log('Build edited:');
+		console.log(response);
 		this.updateBuildLaunchOptions(build, response.launchOptions);
 	}
 

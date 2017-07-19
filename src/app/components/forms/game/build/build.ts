@@ -28,6 +28,7 @@ import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/fo
 import { fuzzynumber } from '../../../../../lib/gj-lib-client/vue/filters/fuzzynumber';
 import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
 import { AppCardListItem } from '../../../../../lib/gj-lib-client/components/card/list/item/item';
+import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 
 type GameBuildFormModel = GameBuild & {
 	launch_windows: string;
@@ -48,6 +49,7 @@ type GameBuildFormModel = GameBuild & {
 		AppProgressPoller,
 		AppProgressBar,
 		AppLoading,
+		AppFormControlToggle,
 	},
 	directives: {
 		AppTooltip,
@@ -100,39 +102,8 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 		return this.model!.isBrowserBased();
 	}
 
-	created() {
-		this.releaseForm = findRequiredVueParent(this, FormGameRelease);
-		this.releaseForm.buildForms.push(this);
-	}
-
-	beforeDestroy() {
-		arrayRemove(this.releaseForm.buildForms, buildForm => buildForm === this);
-	}
-
-	onInit() {
-		this.maxFilesize = 0;
-		this.restrictedPlatforms = [];
-		this.forceOther = false;
-		this.romTypes = [];
-		this.isSettingPlatform = false;
-		this.prevCount = -1;
-		this.buildLaunchOptions = [];
-		this.wasChanged = false;
-	}
-
-	onLoad(payload: any) {
-		this.maxFilesize = payload.maxFilesize;
-		this.restrictedPlatforms = payload.restrictedPlatforms;
-		this.forceOther = payload.forceOther;
-		this.romTypes = payload.romTypes;
-	}
-
-	remove() {
-		this.$emit('remove-build', this.model);
-	}
-
-	save() {
-		return this.$refs.form.submit();
+	get hasPlatformsError() {
+		return this.hasCustomError('platforms');
 	}
 
 	get isDeprecated() {
@@ -180,6 +151,83 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 				icon: 'other-os',
 			},
 		];
+	}
+
+	get platformsValid() {
+		if (!this.model) {
+			return false;
+		}
+
+		if (this.model.type !== GameBuild.TYPE_DOWNLOADABLE) {
+			return true;
+		}
+
+		return (
+			!!this.model.os_windows ||
+			!!this.model.os_mac ||
+			!!this.model.os_linux ||
+			!!this.model.os_windows_64 ||
+			!!this.model.os_mac_64 ||
+			!!this.model.os_linux_64 ||
+			!!this.model.os_other
+		);
+	}
+
+	get emulatorsInfo(): { [type: string]: string } {
+		return {
+			[GameBuild.EMULATOR_GB]: this.$gettext('Game Boy'),
+			[GameBuild.EMULATOR_GBC]: this.$gettext('Game Boy Color'),
+			[GameBuild.EMULATOR_GBA]: this.$gettext('Game Boy Advance'),
+			[GameBuild.EMULATOR_NES]: this.$gettext('NES'),
+			[GameBuild.EMULATOR_SNES]: this.$gettext('SNES'),
+			[GameBuild.EMULATOR_VBOY]: this.$gettext('Virtual Boy'),
+			[GameBuild.EMULATOR_GENESIS]: this.$gettext('Genesis/Mega Drive'),
+			[GameBuild.EMULATOR_ATARI2600]: this.$gettext('Atari 2600'),
+			[GameBuild.EMULATOR_ZX]: this.$gettext('ZX Spectrum'),
+			[GameBuild.EMULATOR_C64]: this.$gettext('Commodore 64'),
+			[GameBuild.EMULATOR_CPC]: this.$gettext('Amstrad CPC'),
+			[GameBuild.EMULATOR_MSX]: this.$gettext('MSX'),
+		};
+	}
+
+	created() {
+		this.releaseForm = findRequiredVueParent(this, FormGameRelease);
+		this.releaseForm.buildForms.push(this);
+	}
+
+	beforeDestroy() {
+		arrayRemove(this.releaseForm.buildForms, buildForm => buildForm === this);
+	}
+
+	onInit() {
+		this.maxFilesize = 0;
+		this.restrictedPlatforms = [];
+		this.forceOther = false;
+		this.romTypes = [];
+		this.isSettingPlatform = false;
+		this.prevCount = -1;
+		this.buildLaunchOptions = [];
+		this.wasChanged = false;
+
+		// This populates buildLaunchOptions for the first time.
+		this.onReleaseLaunchOptionsChanged();
+		this.validatePlatforms();
+	}
+
+	onLoad(payload: any) {
+		console.log(payload);
+		this.maxFilesize = payload.maxFilesize;
+		this.restrictedPlatforms = payload.restrictedPlatforms;
+		this.forceOther = payload.forceOther;
+		this.romTypes = payload.romTypes;
+	}
+
+	remove() {
+		this.$emit('remove-build', this.model);
+	}
+
+	save() {
+		return this.$refs.form.submit();
 	}
 
 	isPlatformDisabled(platform: string) {
@@ -254,23 +302,20 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 		} finally {
 			this.isSettingPlatform = false;
 		}
+
+		this.validatePlatforms();
 	}
 
-	get emulatorsInfo(): { [type: string]: string } {
-		return {
-			[GameBuild.EMULATOR_GB]: this.$gettext('Game Boy'),
-			[GameBuild.EMULATOR_GBC]: this.$gettext('Game Boy Color'),
-			[GameBuild.EMULATOR_GBA]: this.$gettext('Game Boy Advance'),
-			[GameBuild.EMULATOR_NES]: this.$gettext('NES'),
-			[GameBuild.EMULATOR_SNES]: this.$gettext('SNES'),
-			[GameBuild.EMULATOR_VBOY]: this.$gettext('Virtual Boy'),
-			[GameBuild.EMULATOR_GENESIS]: this.$gettext('Genesis/Mega Drive'),
-			[GameBuild.EMULATOR_ATARI2600]: this.$gettext('Atari 2600'),
-			[GameBuild.EMULATOR_ZX]: this.$gettext('ZX Spectrum'),
-			[GameBuild.EMULATOR_C64]: this.$gettext('Commodore 64'),
-			[GameBuild.EMULATOR_CPC]: this.$gettext('Amstrad CPC'),
-			[GameBuild.EMULATOR_MSX]: this.$gettext('MSX'),
-		};
+	private validatePlatforms() {
+		if (!this.platformsValid) {
+			this.setCustomError('platforms');
+		} else {
+			this.clearCustomError('platforms');
+		}
+	}
+
+	getExecutablePath(platform: string) {
+		return (this.formModel as any)['launch_' + platform];
 	}
 
 	@Watch('releaseLaunchOptions')

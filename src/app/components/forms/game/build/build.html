@@ -160,15 +160,9 @@
 						</div>
 					</div>
 
-					<!-- TODO add game build platforms filter
-					<div name="platformsValidate"
-						ng-model="formModel.platformsValidate"
-						gj-form-dashboard-game-build-platforms-validator="model"
-						>
-						<div gj-expand-when="buildForm.platformsValidate.$error.noPlatforms">
-							<div class="alert alert-warning sans-margin-bottom" translate>dash.games.builds.form.no_platforms_error</div>
-						</div>
-					</div>-->
+					<app-expand :when="hasPlatformsError">
+						<div class="alert alert-warning sans-margin-bottom"><translate :escape-html="false">dash.games.builds.form.no_platforms_error</translate></div>
+					</app-expand>
 
 				</div>
 
@@ -185,7 +179,7 @@
 					Launch Options
 				-->
 				<fieldset
-					v-if="formModel.platformsValidate && model.type === GameBuild.TYPE_DOWNLOADABLE && !model.os_other"
+					v-if="!hasPlatformsError && model.type === GameBuild.TYPE_DOWNLOADABLE && !model.os_other"
 					class="form-horizontal"
 					>
 					<legend><translate>Launch Options</translate></legend>
@@ -207,6 +201,7 @@
 										}"
 										@changed="onBuildFieldChanged"
 										/>
+										<!--  TODO: this doesn't register when the file is selected to clear the error -->
 
 									<span class="input-group-addon">
 										<a class="link-unstyled"

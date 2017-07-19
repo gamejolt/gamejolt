@@ -55,7 +55,12 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends Vue {
 		this.builds = GameBuild.populate(this.$payload.builds);
 		this.launchOptions = GameBuildLaunchOption.populate(this.$payload.launchOptions);
 
-		this.buildDownloadCounts = this.$payload.buildDownloadCounts;
+		this.buildDownloadCounts = this.$payload.buildDownloadCounts || {};
+		// If the server has no build counts it returns an empty array instead of an empty object.
+		// This is an issue with the backend not explicitly casting empty arrays to objects.
+		if (Array.isArray(this.buildDownloadCounts)) {
+			this.buildDownloadCounts = {};
+		}
 
 		// If the game was entered into a jam that locks its builds.
 		this.areBuildsLockedByJam = this.$payload.areBuildsLockedByJam || false;
