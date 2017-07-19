@@ -6,7 +6,7 @@ import * as View from '!view!./collection.html?style=./collection.styl';
 
 import { GameFilteringContainer } from '../../../components/game/filtering/container';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve, enforceLocation } from '../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
@@ -98,6 +98,13 @@ export default class RouteLibraryCollection extends Vue {
 			`/web/library/games/${route.meta.collectionType}/${id}?${query}`
 		);
 
+		if (payload && payload.collection) {
+			const redirect = enforceLocation(route, { slug: payload.collection.slug });
+			if (redirect) {
+				return redirect;
+			}
+		}
+
 		await store.state!.bootstrappedPromise;
 		return payload;
 	}
@@ -142,14 +149,6 @@ export default class RouteLibraryCollection extends Vue {
 		}
 
 		this.processMeta();
-
-		// TODO(rewrite)
-		// // Tag pages don't have slugs.
-		// if ( this.type != 'tag' ) {
-		// 	Location.enforce( {
-		// 		slug: this.collection.slug,
-		// 	} );
-		// }
 	}
 
 	private processMeta() {

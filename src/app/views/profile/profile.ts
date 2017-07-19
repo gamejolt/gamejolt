@@ -62,11 +62,6 @@ export default class RouteProfile extends Vue {
 	routed() {
 		this.user = new User(this.$payload.user);
 
-		// TODO(rewrite)
-		// Location.enforce( {
-		// 	slug: this.user.slug,
-		// } );
-
 		this.headerMediaItem = this.$payload.headerMediaItem
 			? new MediaItem(this.$payload.headerMediaItem)
 			: null;

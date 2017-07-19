@@ -4,7 +4,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./view.html?style=./view.styl';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { RouteResolve, enforceLocation } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -39,9 +39,20 @@ export default class RouteDiscoverGamesViewDevlogView extends Vue {
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve({ lazy: true, cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: VueRouter.Route) {
 		const postHash = FiresidePost.pullHashFromUrl(route.params.postSlug);
-		return Api.sendRequest('/web/discover/games/devlog/' + route.params.id + '/' + postHash);
+		const payload = await Api.sendRequest(
+			'/web/discover/games/devlog/' + route.params.id + '/' + postHash
+		);
+
+		if (payload && payload.post) {
+			const redirect = enforceLocation(route, { postSlug: payload.post.slug });
+			if (redirect) {
+				return redirect;
+			}
+		}
+
+		return payload;
 	}
 
 	routeInit() {
@@ -59,12 +70,6 @@ export default class RouteDiscoverGamesViewDevlogView extends Vue {
 
 		this.post.$viewed();
 		this.post.$expanded();
-
-		// TODO(rewrite)
-		// location.enforce( {
-		// 	slug: $scope['gameCtrl'].game.slug,
-		// 	postSlug: this.post.slug,
-		// } );
 
 		Meta.title = this.post.title;
 		Meta.description = this.$payload.metaDescription;

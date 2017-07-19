@@ -55,11 +55,6 @@ export default class RouteForumsChannelsView extends Vue {
 	}
 
 	routed() {
-		// TODO(rewrite)
-		// Location.enforce( {
-		// 	name: payload.channel.name,
-		// } );
-
 		this.channel = new ForumChannel(this.$payload.channel);
 		this.topics = ForumTopic.populate(this.$payload.topics);
 		this.postCountPerPage = this.$payload.postCountPerPage;
