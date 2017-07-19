@@ -25,7 +25,7 @@
 	<app-nav-tab-list>
 		<ul>
 			<li>
-				<!--TODO-->
+				<!--TODO(rewrite)-->
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.packages.edit',
@@ -59,7 +59,7 @@
 					v-if="game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC"
 					>
 					<app-jolticon icon="notice" />
-					<!--TODO-->
+					<!--TODO(rewrite)-->
 					<!--<span
 						translate
 						translate-params-url="$state.href( 'dash.games.manage.game.overview' )"
@@ -96,7 +96,7 @@
 					<br>
 				</app-expand>
 				<!--<div collapse="!isShowingPackageEdit">-->
-					<!--TODO-->
+					<!--TODO(rewrite)-->
 					<!---->
 					<!--<br>
 				</div>-->
@@ -113,7 +113,7 @@
 						:builds="previewPackage._builds"
 						/>
 
-					<!--TODO-->
+					<!--TODO(rewrite)-->
 					<!--<div
 						v-if="buildsProcessingCount > 0"
 						gj-progress-poller="/web/dash/developer/games/packages/poll-processing-builds/{{ game.id }}/{{ package.id }}/{{ buildsProcessingCount }}"

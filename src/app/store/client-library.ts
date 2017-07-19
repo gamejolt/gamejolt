@@ -134,7 +134,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			await this._bootstrapPromise;
 		}
 
-		// TODO: clear stuff
+		// TODO(rewrite): clear stuff
 		this._bootstrapPromise = null;
 	}
 
@@ -331,9 +331,8 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			}
 			await db.packages.put(localPackage);
 
-			const action = operation === 'install'
-				? 'finished installing'
-				: 'updated to the latest version';
+			const action =
+				operation === 'install' ? 'finished installing' : 'updated to the latest version';
 			const title = operation === 'install' ? 'Game Installed' : 'Game Updated';
 			Growls.success(packageTitle + ' has ' + action + '.', title);
 			return true;
@@ -433,7 +432,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			}
 
 			// This is absurd, ylivay.
-			// TODO promisify the new client voodoo like no tomorrow.
+			// TODO(rewrite) promisify the new client voodoo like no tomorrow.
 			patchHandle.onCanceled(() => {
 				this.unsetPatchingPackage(localPackage);
 				resolve();
@@ -520,15 +519,15 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				// It may or may not be patching.
 				await this.cancelPatchingPackage(localPackage);
 
-				// TODO: do we need to refetch from localdb or can we just reference our resource?
+				// TODO(rewrite): do we need to refetch from localdb or can we just reference our resource?
 				localGame = await db.games.get(localPackage.game_id);
 
 				// Make sure we're clean.
-				// TODO: do we need to clean update state?
+				// TODO(rewrite): do we need to clean update state?
 				this.setPackageUninstalling(localPackage);
 				await db.packages.put(localPackage);
 
-				// TODO: verify result of uninstallation? Roll back?
+				// TODO(rewrite): verify result of uninstallation? Roll back?
 				await this._uninstallPackage(localPackage.id);
 
 				// Get the number of packages in this game.
@@ -582,7 +581,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			throw new Error("Package isn't installed");
 		}
 
-		// TODO: verify that package is currently uninstallable? (not currently installing or playing)
+		// TODO(rewrite): verify that package is currently uninstallable? (not currently installing or playing)
 		return Uninstaller.uninstall(localPackage).promise;
 	}
 
@@ -648,7 +647,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	setPackageUpdated(localPackage: Mutations['clientLibrary/setPackageUpdated']) {
 		// Copy the new package into this one.
 		// this.assign( this.update );
-		// TODO: validate Object.assign is good enough a replacement for model.assign
+		// TODO(rewrite): validate Object.assign is good enough a replacement for model.assign
 		Object.assign(localPackage, localPackage.update);
 
 		// Remove any stuff only needed while updating.
@@ -662,7 +661,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 	@VuexMutation
 	setPackageUninstalling(localPackage: Mutations['clientLibrary/setPackageUninstalling']) {
-		// TODO: do we need to clean update state?
+		// TODO(rewrite): do we need to clean update state?
 		localPackage.install_state = null;
 		localPackage.download_progress = null;
 		localPackage.unpack_progress = null;

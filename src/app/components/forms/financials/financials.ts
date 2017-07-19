@@ -258,6 +258,6 @@ export class FormFinancials extends BaseForm<FinancialsFormModel>
 		this.account = new UserStripeManagedAccount(response.account);
 		this.user = new User(response.user);
 
-		// TODO: need to update fields in the form model that were based off of the account/user fields?
+		// TODO(rewrite): need to update fields in the form model that were based off of the account/user fields?
 	}
 }

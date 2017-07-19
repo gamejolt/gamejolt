@@ -17,6 +17,7 @@
 		<app-card-list
 			:items="songs"
 			:active-item="activeItem"
+			:is-adding="isAdding"
 			@activate="activeItem = $event"
 			>
 			<!--is-adding="isAdding"-->
@@ -49,15 +50,15 @@
 				</app-card-list-item>
 			</app-card-list-draggable>
 
-			<!--<gj-editable-accordion-add add-label="{{ 'dash.games.music.add_button' | translate }}">
-
+			<app-card-list-add
+				:label="$gettext('dash.games.music.add_button')"
+				@toggle="isAdding = !isAdding"
+				>
 				<form-game-song
-					gj-game="game"
-					@submit="onSongAdded( formModel )">
-				</form-game-song>
-
-			</gj-editable-accordion-add>-->
-
+					:game="game"
+					@submit="onSongAdded"
+					/>
+			</app-card-list-add>
 		</app-card-list>
 
 		<app-dash-game-wizard-controls />

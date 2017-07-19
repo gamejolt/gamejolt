@@ -118,7 +118,7 @@ export default class RouteDiscoverGamesView extends Vue {
 		this.clear();
 		this.bootstrap(this.$payload);
 
-		// TODO
+		// TODO(rewrite)
 		// If the game has a GA tracking ID, then we attach it to this
 		// scope so all page views within get tracked.
 		// if ( this.game.ga_tracking_id ) {
@@ -133,7 +133,7 @@ export default class RouteDiscoverGamesView extends Vue {
 		// 	ref: this.userPartnerKey || $location.search().ref || undefined,
 		// } );
 
-		// TODO should we sync from the registry or here?
+		// TODO(rewrite) should we sync from the registry or here?
 		// // For syncing game data to client.
 		// if ( GJ_IS_CLIENT ) {
 

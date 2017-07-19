@@ -102,7 +102,7 @@ export default class RouteForumsTopicsView extends Vue {
 	}
 
 	routed() {
-		// TODO
+		// TODO(rewrite)
 		// Location.enforce( {
 		// 	slug: payload.topic.slug,
 		// } );

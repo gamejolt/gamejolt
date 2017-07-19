@@ -97,7 +97,7 @@ export class LocalDbSync {
 					throw new Error('Package is not set in localdb');
 				}
 
-				// TODO: get rid of lodash
+				// TODO(rewrite): get rid of lodash
 				const _package = (data.packages as any[]).find(a => a.id === localPackage.id);
 				const _release = (data.release as any[]).find(a => a.id === localPackage.release.id);
 				const _build = (data.builds as any[]).find(a => a.id === localPackage.build.id);

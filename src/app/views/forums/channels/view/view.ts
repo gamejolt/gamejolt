@@ -55,7 +55,7 @@ export default class RouteForumsChannelsView extends Vue {
 	}
 
 	routed() {
-		// TODO
+		// TODO(rewrite)
 		// Location.enforce( {
 		// 	name: payload.channel.name,
 		// } );

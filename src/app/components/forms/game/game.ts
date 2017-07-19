@@ -15,6 +15,7 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppDashGameWizardControls } from './wizard-controls/wizard-controls';
+import { AppGameDevStageSelector } from './dev-stage-selector/dev-stage-selector';
 
 @View
 @Component({
@@ -23,6 +24,7 @@ import { AppDashGameWizardControls } from './wizard-controls/wizard-controls';
 		AppFormControlToggle,
 		AppExpand,
 		AppDashGameWizardControls,
+		AppGameDevStageSelector,
 	},
 	directives: {
 		AppTooltip,
@@ -90,6 +92,10 @@ export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
 		this.account = payload.account;
 		this.categories = payload.categories;
 		this.engines = payload.engines;
+	}
+
+	selectStage(stage: number) {
+		this.setField('development_status', stage);
 	}
 
 	acceptRules() {

@@ -24,6 +24,7 @@ export const RouteMutation = namespace(RouteStateName, Mutation);
 export type Media = GameScreenshot | GameVideo | GameSketchfab;
 
 type Actions = {
+	wizardNext: undefined;
 	publish: undefined;
 	saveDraft: undefined;
 	hide: undefined;
@@ -166,15 +167,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	updateMedia(items: Mutations['updateMedia']) {
 		this.media = items;
-	}
-
-	@VuexAction
-	async startWizard(game: Game) {
-		router.push({
-			name: `${STATE_PREFIX}.description`,
-			params: { id: game.id + '' },
-			query: { wizard: 'true' },
-		});
 	}
 
 	@VuexAction

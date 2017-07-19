@@ -75,7 +75,7 @@
 
 	<div class="row">
 		<div class="col-lg-8">
-			<!--TODO-->
+			<!--TODO(rewrite)-->
 			<!--<app-graph
 				graph-widget-url="/web/dash/developer/games/graphs/overview/{{ game.id }}"
 				[graph-widget-hide-table]="true"
@@ -174,11 +174,7 @@
 				<translate>Development Stage</translate>
 			</h2>
 
-			<!--TODO-->
-			<!--<form-game-dev-stage-selector
-				game="game"
-				>
-			</form-game-dev-stage-selector>-->
+			<app-game-dev-stage-selector :game="game" />
 
 			<h2>
 				<translate>Danger Zone</translate>

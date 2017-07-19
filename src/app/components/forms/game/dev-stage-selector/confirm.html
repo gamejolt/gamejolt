@@ -1,63 +1,71 @@
-<div class="modal-header">
-	<h2 class="modal-title" translate>Are you sure?</h2>
-</div>
+<app-modal>
 
-<div class="modal-body">
+	<div class="modal-header">
+		<h2 class="modal-title">
+			<translate>Are you sure?</translate>
+		</h2>
+	</div>
 
-	<p
-		translate
-		translate-params-from="fromTranslated"
-		translate-params-to="toTranslated"
-		>
-		When switching your game page from a {{ from }} page to a {{ to }} page, the follow changes will occur:
-	</p>
+	<div class="modal-body">
+		<p>
+			<translate
+				:translate-params="{
+					from: fromTranslated,
+					to: toTranslated,
+				}"
+				>
+				When switching your game page from a %{ from } page to a %{ to } page, the follow changes will occur:
+			</translate>
+		</p>
 
-	<ul>
+		<ul>
 
-		<!-- Ratings -->
-		<li v-if="from === 'devlog'" translate>
-			People will now be able to rate your game (unless you turn it off in your Settings).
-		</li>
-		<li v-if="action === 'wip:complete'" translate>
-			Your early access ratings will be archived and we will show a separate rating average for your complete game page.
-		</li>
-		<li v-if="action === 'complete:wip'" translate>
-			Your complete game ratings will be archived and we will show a separate rating average for your early access game page.
-		</li>
-		<li v-if="to === 'devlog'" translate>
-			Ratings will be disabled for your game. Any ratings you currently have will be archived until you transition back to an early access or complete game page.
-		</li>
+			<!-- Ratings -->
+			<li v-if="from === 'devlog'">
+				<translate>People will now be able to rate your game (unless you turn it off in your Settings).</translate>
+			</li>
+			<li v-else-if="action === 'wip:complete'">
+				<translate>Your early access ratings will be archived and we will show a separate rating average for your complete game page.</translate>
+			</li>
+			<li v-else-if="action === 'complete:wip'">
+				<translate>Your complete game ratings will be archived and we will show a separate rating average for your early access game page.</translate>
+			</li>
+			<li v-else-if="to === 'devlog'">
+				<translate>Ratings will be disabled for your game. Any ratings you currently have will be archived until you transition back to an early access or complete game page.</translate>
+			</li>
 
-		<!-- Builds -->
-		<li v-if="from === 'devlog'" translate>
-			Public packages/builds for your game will now be visible to everyone.
-		</li>
-		<li v-if="to === 'devlog'" translate>
-			Any public packages/builds for your game will be hidden while your game page is devlog-only.
-		</li>
+			<!-- Builds -->
+			<li v-if="from === 'devlog'">
+				<translate>Public packages/builds for your game will now be visible to everyone.</translate>
+			</li>
+			<li v-else-if="to === 'devlog'">
+				<translate>Any public packages/builds for your game will be hidden while your game page is devlog-only.</translate>
+			</li>
 
-		<!-- Devlog Tab -->
-		<li v-if="from === 'devlog'" translate>
-			Your game's devlog feed will be moved into its own tab. You can continue posting devlog posts for your game.
-		</li>
-		<li v-if="to === 'devlog'" translate>
-			Your game's devlog feed will move back to your game's main page.
-		</li>
+			<!-- Devlog Tab -->
+			<li v-if="from === 'devlog'">
+				<translate>Your game's devlog feed will be moved into its own tab. You can continue posting devlog posts for your game.</translate>
+			</li>
+			<li v-else-if="to === 'devlog'">
+				<translate>Your game's devlog feed will move back to your game's main page.</translate>
+			</li>
 
-		<!-- Published Date -->
-		<li v-if="action === 'devlog:wip' || action === 'devlog:complete' || action === 'wip:complete'" translate>
-			Your game will be added to the top of the "new game" list.
-		</li>
-	</ul>
-</div>
+			<!-- Published Date -->
+			<li v-if="action === 'devlog:wip' || action === 'devlog:complete' || action === 'wip:complete'">
+				<translate>Your game will be added to the top of the "new game" list.</translate>
+			</li>
+		</ul>
+	</div>
 
-<div class="modal-footer">
-	<button class="btn btn-success-outline" ng-click="proceed()">
-		<app-jolticon icon="check" />
-		<span translate>Proceed</span>
-	</button>
-	<button class="btn btn-danger-outline" ng-click="cancel()">
-		<app-jolticon icon="remove" />
-		<span translate>Cancel</span>
-	</button>
-</div>
+	<div class="modal-footer">
+		<button class="btn btn-success-outline" @click="proceed()">
+			<app-jolticon icon="check" />
+			<translate>Proceed</translate>
+		</button>
+		<button class="btn btn-danger-outline" @click="cancel()">
+			<app-jolticon icon="remove" />
+			<translate>Cancel</translate>
+		</button>
+	</div>
+
+</app-modal>

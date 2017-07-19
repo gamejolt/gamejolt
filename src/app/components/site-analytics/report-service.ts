@@ -155,7 +155,7 @@ export class SiteAnalyticsReport {
 			request.fetch_fields = fetchFields;
 		}
 
-		// TODO
+		// TODO(rewrite)
 		// if ( resourceFields ) {
 		// 	// Resource fields has different string union types as values, and
 		// 	// typescript can't infer it as a merged string union yet.

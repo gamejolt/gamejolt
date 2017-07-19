@@ -13,7 +13,7 @@
 				<translate>settings.game_install_dir_help</translate>
 			</p>
 
-			<!--TODO: Will this work?-->
+			<!--TODO(rewrite): Will this work?-->
 			<app-form-control
 				class="hidden"
 				type="file"
@@ -105,6 +105,22 @@
 			<app-form-control-toggle />
 		</app-form-group>
 
+	</fieldset>
+
+	<fieldset id="settings-site">
+		<legend>
+			<translate>Site</translate>
+		</legend>
+
+		<app-form-group
+			name="animated_thumbnails"
+			:label="$gettext( 'Animated thumbnails?' )"
+			>
+			<p class="help-block">
+				<translate>Turning this off will show a static image instead of animated thumbnails.</translate>
+			</p>
+			<app-form-control-toggle />
+		</app-form-group>
 	</fieldset>
 
 	<fieldset id="settings-chat">

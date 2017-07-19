@@ -1,8 +1,10 @@
 import VueRouter from 'vue-router';
+import { routeDashGamesManageGamePackagesEditWidget } from './widget/widget.route';
 
 export const routeDashGamesManageGamePackagesEdit: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.game.packages.edit',
-	path: ':packageId(\\d+)',
+	path: 'packages/:packageId(\\d+)',
 	props: true,
 	component: () => import('./edit'),
+	children: [routeDashGamesManageGamePackagesEditWidget],
 };

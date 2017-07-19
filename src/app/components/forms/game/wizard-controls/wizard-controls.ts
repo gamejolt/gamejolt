@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./wizard-controls.html';
 
@@ -6,12 +7,7 @@ import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/fo
 import { findVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
 import { AppFormButton } from '../../../../../lib/gj-lib-client/components/form-vue/button/button';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-
-import {
-	RouteAction,
-	RouteStore,
-	RouteState,
-} from '../../../../views/dashboard/games/manage/manage.state';
+import { RouteStore, RouteStateName } from '../../../../views/dashboard/games/manage/manage.state';
 
 @View
 @Component({
@@ -23,13 +19,19 @@ import {
 export class AppDashGameWizardControls extends Vue {
 	@Prop(Boolean) disabled?: boolean;
 
-	@RouteState isWizard: RouteStore['isWizard'];
-	@RouteAction wizardNext: RouteStore['wizardNext'];
+	// The manage route store may not be loaded in if we're in the "add" form.
+	// We have to do all this a bit custom so that we don't expect the module to
+	// exist.
+	@State(RouteStateName) manageRoute?: RouteStore;
 
 	form?: AppForm;
 
 	created() {
 		this.form = findVueParent(this, AppForm);
+	}
+
+	get isWizard() {
+		return !this.manageRoute || this.manageRoute.isWizard;
 	}
 
 	get inForm() {
@@ -51,6 +53,11 @@ export class AppDashGameWizardControls extends Vue {
 				return;
 			}
 		}
-		this.wizardNext();
+
+		if (this.manageRoute) {
+			// Sadly we can't attach directly to this since manageRoute may not
+			// exist.
+			this.$store.dispatch(`${RouteStateName}/wizardNext`);
+		}
 	}
 }

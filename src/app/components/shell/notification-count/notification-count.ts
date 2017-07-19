@@ -17,10 +17,6 @@ export class AppShellNotificationCount extends Vue {
 	created() {
 		setTimeout(() => this.fetchCount(), InitialLag);
 		this.interval = setInterval(() => this.fetchCount(), CountInterval);
-
-		// TODO
-		// Can emit this to refresh the notification counts when they've changed.
-		// $scope.$on( 'NotificationCount.refresh', () => this.fetchCount() );
 	}
 
 	destroyed() {

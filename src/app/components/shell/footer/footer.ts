@@ -34,7 +34,7 @@ export class AppShellFooter extends Vue {
 
 	showSystemReport() {
 		if (GJ_IS_CLIENT) {
-			// TODO
+			// TODO(rewrite)
 			// getProvider<any>( 'Client_SystemReportModal' ).show();
 		}
 	}

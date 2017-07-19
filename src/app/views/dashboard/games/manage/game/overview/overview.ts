@@ -14,6 +14,7 @@ import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/component
 import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
+import { AppGameDevStageSelector } from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector';
 
 @View
 @Component({
@@ -22,6 +23,7 @@ import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/numbe
 		AppProgressPoller,
 		AppProgressBar,
 		AppExpand,
+		AppGameDevStageSelector,
 	},
 	directives: {
 		AppTooltip,
@@ -49,7 +51,7 @@ export default class RouteDashGamesManageGameOverview extends Vue {
 
 	Game = Game;
 
-	// TODO!
+	// TODO(rewrite)!
 	// .run( function( $state, Payload, Location )
 	// {
 	// 	// If there is any sort of error while trying to go to the game dashboard, we want to direct instead to the game page.

@@ -118,8 +118,6 @@ export default class RouteDashAccountLinkedAccountsList extends Vue {
 	}
 
 	link(provider: Provider) {
-		// TODO: Make sure app.router exists.
-		// note: still relevant in vue?
 		UserLinkedAccounts.link(this.$router, provider);
 	}
 
@@ -146,7 +144,7 @@ export default class RouteDashAccountLinkedAccountsList extends Vue {
 				// Try to unlink again once they've set one!
 				await this.unlink(provider);
 			}
-			// TODO: proper fail case?
+			// TODO(rewrite): proper fail case?
 		}
 	}
 
