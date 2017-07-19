@@ -85,7 +85,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	media: Media[] = [];
 
 	get isWizard() {
-		return !!store.state.$route.query.wizard;
+		return !!store.state.route.query.wizard;
 	}
 
 	get canPublish() {
