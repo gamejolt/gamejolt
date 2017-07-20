@@ -11,10 +11,12 @@ import { Payload } from '../lib/gj-lib-client/components/payload/payload-service
 import { App } from './app';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { bootstrapAppTranslations } from '../utils/translations';
+import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 
-Payload.init(store as any, router);
+Payload.init(store);
 History.init(router);
 Analytics.initRouter(router);
+Connection.init(store);
 
 export async function createApp() {
 	await bootstrapAppTranslations();

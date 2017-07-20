@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./trophies.html';
 
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../manage.state';
@@ -18,6 +16,10 @@ import { FormGameTrophy } from '../../../../../../components/forms/game/trophy/t
 import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -34,7 +36,7 @@ import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/
 		AppTooltip,
 	},
 })
-export default class RouteDashGamesManageApiTrophies extends Vue {
+export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	trophies: GameTrophy[] = [];

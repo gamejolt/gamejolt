@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -6,7 +5,6 @@ import * as View from '!view!./profile.html?style=./profile.styl';
 
 import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
-import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
 import { AppPageHeader } from '../../components/page-header/page-header';
@@ -21,6 +19,10 @@ import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 import { ReportModal } from '../../../lib/gj-lib-client/components/report/modal/modal.service';
 import { Store } from '../../store/index';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -37,7 +39,7 @@ import { Store } from '../../store/index';
 		AppPopoverTrigger,
 	},
 })
-export default class RouteProfile extends Vue {
+export default class RouteProfile extends BaseRouteComponent {
 	@Prop(String) username: string;
 
 	@State app: Store['app'];

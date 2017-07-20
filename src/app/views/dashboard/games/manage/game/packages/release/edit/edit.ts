@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./edit.html';
 
-import { RouteResolve } from '../../../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { RouteState, RouteStore } from '../../../../manage.state';
 import { GamePackage } from '../../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
@@ -16,6 +14,10 @@ import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/me
 import { GameBuildLaunchOption } from '../../../../../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
 import { FormGameRelease } from '../../../../../../../../components/forms/game/release/release';
 import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -24,7 +26,7 @@ import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/co
 		FormGameRelease,
 	},
 })
-export default class RouteDashGamesManageGamePackageReleaseEdit extends Vue {
+export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	package: GamePackage = null as any;

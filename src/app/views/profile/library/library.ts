@@ -1,14 +1,16 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./library.html';
 
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -16,7 +18,7 @@ import { AppGameCollectionGrid } from '../../../components/game/collection/grid/
 		AppGameCollectionGrid,
 	},
 })
-export default class RouteProfileLibrary extends Vue {
+export default class RouteProfileLibrary extends BaseRouteComponent {
 	@Prop() user: User;
 
 	collections: GameCollection[] = [];

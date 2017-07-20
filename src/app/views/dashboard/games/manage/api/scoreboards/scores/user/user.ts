@@ -1,10 +1,8 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./user.html';
 
 import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteResolve } from '../../../../../../../../../lib/gj-lib-client/utils/router';
 import { User } from '../../../../../../../../../lib/gj-lib-client/components/user/user.model';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
@@ -15,6 +13,10 @@ import { Growls } from '../../../../../../../../../lib/gj-lib-client/components/
 import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppManageGameListScores } from '../../_list-scores/list-scores';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -26,7 +28,7 @@ import { AppManageGameListScores } from '../../_list-scores/list-scores';
 		AppTooltip,
 	},
 })
-export default class RouteDashGamesManageApiScoreboardsScoresUser extends Vue {
+export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	user: User = null as any;

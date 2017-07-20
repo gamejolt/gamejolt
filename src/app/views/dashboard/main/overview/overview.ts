@@ -1,11 +1,9 @@
-import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
@@ -26,6 +24,10 @@ import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/
 import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { numberSort } from '../../../../../lib/gj-lib-client/utils/array';
 import { Jam } from '../../../../../lib/gj-lib-client/components/jam/jam.model';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -46,7 +48,7 @@ import { Jam } from '../../../../../lib/gj-lib-client/components/jam/jam.model';
 		number,
 	},
 })
-export default class RouteDashMainOverview extends Vue {
+export default class RouteDashMainOverview extends BaseRouteComponent {
 	@State app: Store['app'];
 
 	revenueTotal = 0;

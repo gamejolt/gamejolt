@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./soundtrack.html';
 
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../view.state';
@@ -14,6 +12,10 @@ import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 const DownloadDelay = 5000;
 
@@ -25,7 +27,7 @@ const DownloadDelay = 5000;
 		AppLoading,
 	},
 })
-export default class RouteDiscoverGamesViewDownloadSoundtrack extends Vue {
+export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	src: string | null = null;
@@ -33,7 +35,7 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends Vue {
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve()
-	beforeRoute(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		const gameId = parseInt(route.params.id, 10);
 
 		HistoryTick.sendBeacon('game-soundtrack', gameId, {
@@ -71,39 +73,3 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends Vue {
 		});
 	}
 }
-
-// angular.module( 'App.Views' ).controller( 'Discover.Games.View.Download.SoundtrackCtrl', function(
-// 	$scope, $sce, $window, $timeout, App, Game_Song, Scroll, gettextCatalog )
-// {
-// 	var _this = this;
-
-// 	App.title = gettextCatalog.getString( 'game.download.soundtrack.page_title', { game: $scope.gameCtrl.game.title } );
-
-// 	this.src = undefined;
-
-// 	// If they click away from the page before the download starts, then cancel the download redirect.
-// 	var shouldDownload = true;
-// 	var downloadPromise = $timeout( 5000 )
-// 		.then( function()
-// 		{
-// 			return Game_Song.getSoundtrackDownloadUrl( $scope.gameCtrl.game.id );
-// 		} )
-// 		.then( function( response )
-// 		{
-// 			if ( shouldDownload ) {
-// 				_this.src = $sce.trustAsResourceUrl( response.downloadUrl );
-// 			}
-
-// 			downloadPromise = null;
-// 		} );
-
-// 	$scope.$on( '$stateChangeStart', function()
-// 	{
-// 		shouldDownload = false;
-// 	} );
-
-// 	window.setTimeout( function()
-// 	{
-// 		Scroll.to( 'page-ad-scroll' );
-// 	}, 0 );
-// } );

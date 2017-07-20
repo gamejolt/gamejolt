@@ -1,14 +1,15 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./settings.html';
 
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../manage.state';
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { FormGameSettings } from '../../../../../../components/forms/game/settings/settings';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -16,7 +17,7 @@ import { FormGameSettings } from '../../../../../../components/forms/game/settin
 		FormGameSettings,
 	},
 })
-export default class RouteDashGamesManageGameSettings extends Vue {
+export default class RouteDashGamesManageGameSettings extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	@RouteResolve()

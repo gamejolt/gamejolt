@@ -1,11 +1,14 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./linking.html';
-import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
+
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppProgressPoller } from '../../../../../../lib/gj-lib-client/components/progress/poller/poller';
 import { AppLoading } from '../../../../../../lib/gj-lib-client/vue/components/loading/loading';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -14,11 +17,11 @@ import { AppLoading } from '../../../../../../lib/gj-lib-client/vue/components/l
 		AppLoading,
 	},
 })
-export default class RouteDashAccountLinkedAccountsLinking extends Vue {
+export default class RouteDashAccountLinkedAccountsLinking extends BaseRouteComponent {
 	token: string;
 
 	@RouteResolve()
-	routeEnter(this: undefined) {}
+	routeResolve(this: undefined) {}
 
 	routed() {
 		Meta.title = this.$gettext('Waiting for Link');

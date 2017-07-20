@@ -16,15 +16,17 @@ import { GamePlayModal } from '../lib/gj-lib-client/components/game/play-modal/p
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Ads } from '../lib/gj-lib-client/components/ad/ads.service';
 import { bootstrapAppTranslations } from '../utils/translations';
+import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 
 if (GJ_IS_CLIENT) {
 	// require( './bootstrap-client' );
 }
 
-Payload.init(store as any, router);
+Payload.init(store);
 History.init(router);
 Analytics.initRouter(router);
 Ads.init(router);
+Connection.init(store);
 
 GamePlayModal.init({ canMinimize: true });
 bootstrapShortkey();

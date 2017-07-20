@@ -60,11 +60,9 @@
 // 		};
 // 	});
 
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html?style=./list.styl';
 
-import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteMutation, RouteStore } from '../../account.state';
@@ -76,6 +74,10 @@ import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/gr
 import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import {
 	UserLinkedAccounts,
 	Provider,
 } from '../../../../../../lib/gj-lib-client/components/user/linked-accounts/linked-accounts.service';
@@ -86,7 +88,7 @@ import {
 		AppJolticon,
 	},
 })
-export default class RouteDashAccountLinkedAccountsList extends Vue {
+export default class RouteDashAccountLinkedAccountsList extends BaseRouteComponent {
 	@AppState user: AppStore['user'];
 	@RouteMutation setHeading: RouteStore['setHeading'];
 

@@ -1,13 +1,15 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
-import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Order } from '../../../../../../lib/gj-lib-client/components/order/order.model';
 import { date } from '../../../../../../lib/gj-lib-client/vue/filters/date';
 import { currency } from '../../../../../../lib/gj-lib-client/vue/filters/currency';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -16,7 +18,7 @@ import { currency } from '../../../../../../lib/gj-lib-client/vue/filters/curren
 		currency,
 	},
 })
-export default class RouteDashMainPurchasesList extends Vue {
+export default class RouteDashMainPurchasesList extends BaseRouteComponent {
 	orders: Order[] = [];
 
 	date = date;

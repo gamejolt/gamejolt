@@ -1,15 +1,17 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../manage.state';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -23,7 +25,7 @@ import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/to
 		number,
 	},
 })
-export default class RouteDashGamesManageApiOverview extends Vue {
+export default class RouteDashGamesManageApiOverview extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	numActiveSessions = 0;

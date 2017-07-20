@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./checkout.html?style=./checkout.styl';
 
-import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { Sellable } from '../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { Order } from '../../../lib/gj-lib-client/components/order/order.model';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
@@ -13,6 +11,10 @@ import { Environment } from '../../../lib/gj-lib-client/components/environment/e
 import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppMediaItemCover } from '../../../app/components/media-item/cover/cover';
 import { FormPayment } from '../../components/forms/payment/payment';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -21,7 +23,7 @@ import { FormPayment } from '../../components/forms/payment/payment';
 		FormPayment,
 	},
 })
-export default class RouteCheckout extends Vue {
+export default class RouteCheckout extends BaseRouteComponent {
 	cards: any[];
 	sellable: Sellable;
 	order: Order;

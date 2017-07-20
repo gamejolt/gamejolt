@@ -70,6 +70,8 @@ import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/component
 	},
 })
 export class AppDiscoverGamesViewOverviewGame extends Vue {
+	@State app: Store['app'];
+
 	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
 	@RouteState game: RouteStore['game'];
 	@RouteState mediaItems: RouteStore['mediaItems'];
@@ -95,10 +97,10 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteMutation setCommentsCount: RouteStore['setCommentsCount'];
 	@RouteAction loadVideoComments: RouteStore['loadVideoComments'];
 
-	@State app: Store['app'];
-
-	showFullDescription = false;
-	canToggleDescription = false;
+	@RouteState showDescription: RouteStore['showDescription'];
+	@RouteState canToggleDescription: RouteStore['canToggleDescription'];
+	@RouteMutation toggleDescription: RouteStore['toggleDescription'];
+	@RouteMutation setCanToggleDescription: RouteStore['setCanToggleDescription'];
 
 	Screen = makeObservableService(Screen);
 	Environment = Environment;

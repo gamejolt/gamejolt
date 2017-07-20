@@ -1,14 +1,16 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./settings.html';
 
 import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppPageHeader } from '../../components/page-header/page-header';
-import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 import { FormSettings } from '../../components/forms/settings/settings';
 import { AppScrollTo } from '../../../lib/gj-lib-client/components/scroll/to/to.directive';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -21,7 +23,7 @@ import { AppScrollTo } from '../../../lib/gj-lib-client/components/scroll/to/to.
 		AppScrollTo,
 	},
 })
-export default class RouteSettings extends Vue {
+export default class RouteSettings extends BaseRouteComponent {
 	get sections() {
 		const sections: any = {};
 
@@ -38,9 +40,8 @@ export default class RouteSettings extends Vue {
 	}
 
 	@RouteResolve()
-	routeResolve() {
+	async routeResolve() {
 		User.touch();
-		return Promise.resolve();
 	}
 
 	routeInit() {

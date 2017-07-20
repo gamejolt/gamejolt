@@ -150,14 +150,22 @@
 						<span class="lazy-placeholder"></span>
 						<span class="lazy-placeholder" style="width: 40%"></span>
 					</div>
-
 					<div v-else>
+						<!--
+							Set a :key to let vue know that it should update
+							this when the game changes.
+						-->
 						<app-fade-collapse
-							:collapse-height="900"
-							:is-open="showFullDescription"
-							@required="canToggleDescription = true"
+							:collapse-height="1000"
+							:is-open="showDescription"
+							:key="game.id"
+							@require-change="setCanToggleDescription"
 							>
-							<div class="game-compiled-description" v-html="game.description_compiled"></div>
+							<div
+								class="game-compiled-description"
+								v-html="game.description_compiled"
+								>
+							</div>
 						</app-fade-collapse>
 					</div>
 
@@ -168,10 +176,10 @@
 
 	<div class="page-cut" v-if="canToggleDescription">
 		<button class="btn btn-outline"
-			@click="showFullDescription = !showFullDescription"
+			@click="toggleDescription()"
 			v-app-track-event="`game-profile:show-full-description`"
 			>
-			<translate v-if="!showFullDescription">Show Full Description</translate>
+			<translate v-if="!showDescription">Show Full Description</translate>
 			<translate v-else>Less</translate>
 		</button>
 	</div>
@@ -203,42 +211,43 @@
 		</div>
 	</section>
 
-	<div v-if="feed && feed.hasItems">
-		<app-ad-placement :hidden-desktop="true" :resource="game" />
+	<div v-if="feed">
+		<div v-if="feed.hasItems">
+			<app-ad-placement :hidden-desktop="true" :resource="game" />
 
-		<section class="section">
+			<section class="section">
+				<div class="container">
+					<div class="row">
+						<div :class="[ headingColClasses, { 'text-right': Screen.isLg } ]">
+							<h2 class="section-header" :class="{ 'h4': Screen.isLg }">
+								<translate>Devlog Feed</translate>
+							</h2>
+						</div>
+						<div :class="contentColClasses">
+
+							<app-activity-feed
+								:feed="feed"
+								:show-edit-controls="true"
+								:show-ads="true"
+								:ad-resource="game"
+								/>
+
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<section class="section" v-else>
 			<div class="container">
 				<div class="row">
-					<div :class="[ headingColClasses, { 'text-right': Screen.isLg } ]">
-						<h2 class="section-header" :class="{ 'h4': Screen.isLg }">
-							<translate>Devlog Feed</translate>
-						</h2>
-					</div>
-					<div :class="contentColClasses">
-
-						<app-activity-feed
-							:feed="feed"
-							:show-edit-controls="true"
-							:show-ads="true"
-							:ad-resource="game"
-							/>
-
+					<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
+						<div class="alert alert-info">
+							<translate>This devlog doesn't have any posts yet.</translate>
+						</div>
 					</div>
 				</div>
 			</div>
 		</section>
 	</div>
-
-	<section class="section" v-else>
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
-					<div class="alert alert-info">
-						<translate>This devlog doesn't have any posts yet.</translate>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
 
 </div>

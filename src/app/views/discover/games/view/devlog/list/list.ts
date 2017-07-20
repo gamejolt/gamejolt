@@ -1,10 +1,8 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
 import { ActivityFeedContainer } from '../../../../../../components/activity/feed/feed-container-service';
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { ActivityFeedService } from '../../../../../../components/activity/feed/feed-service';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
@@ -15,6 +13,10 @@ import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
 import { RouteState, RouteStore } from '../../view.state';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -24,7 +26,7 @@ import { RouteState, RouteStore } from '../../view.state';
 		AppActivityFeedPlaceholder,
 	},
 })
-export default class RouteDiscoverGamesViewDevlogList extends Vue {
+export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	feed: ActivityFeedContainer | null = null;

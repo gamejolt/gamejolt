@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./header.html';
 
@@ -11,6 +10,7 @@ import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGameHeader } from '../../../../../../components/forms/game/header/header';
 import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
+import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -20,10 +20,10 @@ import { AppDashGameWizardControls } from '../../../../../../components/forms/ga
 		AppDashGameWizardControls,
 	},
 })
-export default class RouteDashGamesManageGameHeader extends Vue {
+export default class RouteDashGamesManageGameHeader extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettextInterpolate('Edit Header for %{ game }', {
 			game: this.game.title,
 		});

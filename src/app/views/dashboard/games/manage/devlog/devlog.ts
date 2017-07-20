@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./devlog.html';
 
-import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
@@ -12,6 +10,10 @@ import { RouteState, RouteStore } from '../manage.state';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { AppDevlogPostAdd } from '../../../../../components/devlog/post/add/add';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -20,7 +22,7 @@ import { AppDevlogPostAdd } from '../../../../../components/devlog/post/add/add'
 		AppDevlogPostAdd,
 	},
 })
-export default class RouteDashGamesManageDevlog extends Vue {
+export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 	@Prop(String) tab: 'draft' | undefined;
 
 	@RouteState game: RouteStore['game'];

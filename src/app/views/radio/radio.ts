@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./radio.html?style=./radio.styl';
 
@@ -13,6 +12,7 @@ import { AppAudioScrubber } from '../../../lib/gj-lib-client/components/audio/sc
 import { AppTrackEvent } from '../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { time } from '../../../lib/gj-lib-client/vue/filters/time';
 import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -28,21 +28,19 @@ import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/
 		time,
 	},
 })
-export default class RouteRadio extends Vue {
+export default class RouteRadio extends BaseRouteComponent {
 	song: GameSong = null as any;
 	game: Game = null as any;
 
 	currentTime = 0;
 	duration = 0;
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettext('Radio');
 		Meta.description = 'Discover new game songs through the Game Jolt radio!';
-	}
 
-	mounted() {
 		// Starting the next song will actually change the title.
-		if (!Environment.isPrerender) {
+		if (!Environment.isPrerender && !GJ_IS_SSR) {
 			this.getNextSong();
 		}
 	}
@@ -64,8 +62,8 @@ export default class RouteRadio extends Vue {
 	}
 
 	async seek(pos: number) {
-		const time = this.duration * pos;
+		const seek = this.duration * pos;
 		let player = this.$refs.player as AppAudioPlayer;
-		player.seek(time);
+		player.seek(seek);
 	}
 }

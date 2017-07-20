@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./account.html';
@@ -9,9 +8,12 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { AppPageHeader } from '../../../components/page-header/page-header';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { Store } from '../../../store/index';
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { RouteStateName, RouteState, RouteStore } from './account.state';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -21,22 +23,17 @@ import { RouteStateName, RouteState, RouteStore } from './account.state';
 		AppUserAvatar,
 	},
 })
-export default class RouteDashAccount extends Vue {
+export default class RouteDashAccount extends BaseRouteComponent {
 	@State app: Store['app'];
 	@RouteState heading: RouteStore['heading'];
 
 	Screen = makeObservableService(Screen);
 
+	storeName = RouteStateName;
+	storeModule = RouteStore;
+
 	@RouteResolve({})
 	routeResolve() {
 		User.touch();
-	}
-
-	routeInit() {
-		this.$store.registerModule(RouteStateName, new RouteStore());
-	}
-
-	destroyed() {
-		this.$store.unregisterModule(RouteStateName);
 	}
 }

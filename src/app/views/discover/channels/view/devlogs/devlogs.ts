@@ -1,14 +1,16 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./devlogs.html';
 
 import { GameListingContainer } from '../../../../../components/game/listing/listing-container-service';
-import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameFilteringContainer } from '../../../../../components/game/filtering/container';
 import { AppGameListing } from '../../../../../components/game/listing/listing';
 import { AppGameGrid } from '../../../../../components/game/grid/grid';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -17,7 +19,7 @@ import { AppGameGrid } from '../../../../../components/game/grid/grid';
 		AppGameGrid,
 	},
 })
-export default class RouteDiscoverChannelsViewDevlogs extends Vue {
+export default class RouteDiscoverChannelsViewDevlogs extends BaseRouteComponent {
 	// Devlogs don't have filters.
 	listing: GameListingContainer | null = null;
 

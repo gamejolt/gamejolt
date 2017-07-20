@@ -103,12 +103,10 @@
 // 		};
 // 	});
 
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./edit.html';
 
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
 import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
@@ -128,6 +126,10 @@ import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/to
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';
 import { FormGameKeyGroupAddKeys } from '../../../../../../components/forms/game/key-group/add-keys/add-keys';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -146,7 +148,7 @@ import { FormGameKeyGroupAddKeys } from '../../../../../../components/forms/game
 		number,
 	},
 })
-export default class RouteDashGamesManageKeyGroupsEdit extends Vue {
+export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	keyGroup: KeyGroup = null as any;

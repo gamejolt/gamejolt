@@ -2,13 +2,16 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 
-import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppDiscoverGamesViewOverviewGame } from './_game/game';
 import { PartnerReferral } from '../../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
 import { AppDiscoverGamesViewOverviewDevlog } from './_devlog/devlog';
 import { RouteMutation, RouteStore, RouteState } from '../view.state';
+import {
+	RouteResolve,
+	BaseRouteComponent,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @Component({
 	components: {
@@ -16,7 +19,7 @@ import { RouteMutation, RouteStore, RouteState } from '../view.state';
 		AppDiscoverGamesViewOverviewDevlog,
 	},
 })
-export default class RouteDiscoverGamesViewOverview extends Vue {
+export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@Prop() id: string;
 
 	@RouteState game: RouteStore['game'];
@@ -25,7 +28,7 @@ export default class RouteDiscoverGamesViewOverview extends Vue {
 	@RouteMutation processOverviewPayload: RouteStore['processOverviewPayload'];
 
 	@RouteResolve({ lazy: true, cache: true })
-	beforeRoute(route: VueRouter.Route) {
+	routeResolve(route: VueRouter.Route) {
 		// If we have a tracked partner "ref" in the URL, we want to pass that along
 		// when gathering the payload.
 		let apiOverviewUrl = '/web/discover/games/overview/' + route.params.id;

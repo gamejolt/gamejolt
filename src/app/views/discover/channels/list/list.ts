@@ -1,12 +1,14 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { AppChannelThumbnail } from '../../../../components/channel/thumbnail/thumbnail';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -15,7 +17,7 @@ import { AppChannelThumbnail } from '../../../../components/channel/thumbnail/th
 		AppChannelThumbnail,
 	},
 })
-export default class RouteDiscoverChannelsList extends Vue {
+export default class RouteDiscoverChannelsList extends BaseRouteComponent {
 	channels: any[] = [];
 
 	@RouteResolve()

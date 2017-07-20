@@ -1,10 +1,8 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./view.html';
 
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
@@ -19,6 +17,10 @@ import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/br
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Store } from '../../../../store/index';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -33,7 +35,7 @@ import { Store } from '../../../../store/index';
 		number,
 	},
 })
-export default class RouteForumsChannelsView extends Vue {
+export default class RouteForumsChannelsView extends BaseRouteComponent {
 	@State app: Store['app'];
 
 	channel: ForumChannel = null as any;

@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./maturity.html';
 
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { RouteState, RouteStore } from '../../manage.state';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
@@ -12,6 +10,10 @@ import { Game } from '../../../../../../../lib/gj-lib-client/components/game/gam
 import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
 import { FormGameMaturity } from '../../../../../../components/forms/game/maturity/maturity';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -21,7 +23,7 @@ import { FormGameMaturity } from '../../../../../../components/forms/game/maturi
 		FormGameMaturity,
 	},
 })
-export default class RouteDashGamesManageGameMaturity extends Vue {
+export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	current: Game = null as any;

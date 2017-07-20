@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
-import { RouteResolve } from '../../../../../../../../lib/gj-lib-client/utils/router';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../../manage.state';
@@ -19,6 +17,10 @@ import { AppCardList } from '../../../../../../../../lib/gj-lib-client/component
 import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
 import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
 import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -36,7 +38,7 @@ import { AppDashGameWizardControls } from '../../../../../../../components/forms
 		currency,
 	},
 })
-export default class RouteDashGamesManageGamePackagesList extends Vue {
+export default class RouteDashGamesManageGamePackagesList extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	packages: GamePackage[] = [];

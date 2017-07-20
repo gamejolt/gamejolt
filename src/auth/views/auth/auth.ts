@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./auth.html?style=./auth.styl';
@@ -12,6 +11,7 @@ import { Environment } from '../../../lib/gj-lib-client/components/environment/e
 import { Connection } from '../../../lib/gj-lib-client/components/connection/connection-service';
 import { AppTranslateLangSelector } from '../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
 import { Auth } from '../../../lib/gj-lib-client/components/auth/auth.service';
+import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
 
 export function loggedUserBlock() {
 	// Redirect right away if they are logged in.
@@ -34,7 +34,7 @@ export function loggedUserBlock() {
 		next();
 	},
 })
-export default class RouteAuth extends Vue {
+export default class RouteAuth extends BaseRouteComponent {
 	@State shouldShowCoverImage: boolean;
 	@State coverMediaItem?: MediaItem;
 

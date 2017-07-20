@@ -1,10 +1,8 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./view.html?style=./view.styl';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteResolve, enforceLocation } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -16,6 +14,11 @@ import { AppScrollWhen } from '../../../../../../../lib/gj-lib-client/components
 import { Registry } from '../../../../../../../lib/gj-lib-client/components/registry/registry.service';
 import { RouteState, RouteStore } from '../../view.state';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { enforceLocation } from '../../../../../../../lib/gj-lib-client/utils/router';
 
 @View
 @Component({
@@ -29,7 +32,7 @@ import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/component
 		AppScrollWhen,
 	},
 })
-export default class RouteDiscoverGamesViewDevlogView extends Vue {
+export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent {
 	@Prop() postSlug: string;
 
 	@RouteState game: RouteStore['game'];

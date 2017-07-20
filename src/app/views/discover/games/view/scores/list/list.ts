@@ -1,10 +1,8 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./list.html?style=./list.styl';
 
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../view.state';
 import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
@@ -21,6 +19,10 @@ import { Popover } from '../../../../../../../lib/gj-lib-client/components/popov
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { Store } from '../../../../../../store/index';
 import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/components/loading/fade/fade';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -35,7 +37,7 @@ import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/component
 		AppNoAutoscroll,
 	},
 })
-export default class RouteDiscoverGamesViewScoresList extends Vue {
+export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent {
 	@Prop(String) type: 'best' | 'user';
 
 	@RouteState game: RouteStore['game'];
@@ -62,7 +64,7 @@ export default class RouteDiscoverGamesViewScoresList extends Vue {
 	}
 
 	@RouteResolve({ cache: true })
-	beforeRoute(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		let query = '';
 		if (parseInt(route.query.page, 10) > 1) {
 			query = '?page=' + route.query.page;

@@ -1,13 +1,16 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @Component({})
-export default class RouteDashAccountLinkedAccountsLinkCallback extends Vue {
+export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRouteComponent {
 	@AppState user: AppStore['user'];
 
 	@RouteResolve()

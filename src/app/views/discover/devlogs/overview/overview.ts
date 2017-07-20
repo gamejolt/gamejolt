@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./overview.html';
@@ -8,7 +7,6 @@ import { FiresidePost } from '../../../../../lib/gj-lib-client/components/firesi
 import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
@@ -19,6 +17,10 @@ import { AppGameGridPlaceholder } from '../../../../components/game/grid/placeho
 import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
 import { Store } from '../../../../store/index';
 import { AppAdPlacement } from '../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -35,7 +37,7 @@ import { AppAdPlacement } from '../../../../../lib/gj-lib-client/components/ad/p
 		AppTrackEvent,
 	},
 })
-export default class RouteDiscoverDevlogsOverview extends Vue {
+export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 	@State app: Store['app'];
 
 	games: any[] = [];

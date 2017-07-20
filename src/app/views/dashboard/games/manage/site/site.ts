@@ -1,15 +1,17 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./site.html?style=./site.styl';
 
-import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { RouteState, RouteStore } from '../manage.state';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Site } from '../../../../../../lib/gj-lib-client/components/site/site-model';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppSitesLinkCard } from '../../../../../components/sites/link-card/link-card';
 import { AppSitesManagePage } from '../../../../../components/sites/manage-page/manage-page';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -18,7 +20,7 @@ import { AppSitesManagePage } from '../../../../../components/sites/manage-page/
 		AppSitesManagePage,
 	},
 })
-export default class RouteDashGamesManageSite extends Vue {
+export default class RouteDashGamesManageSite extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	site: Site = null as any;

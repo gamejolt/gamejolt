@@ -1,8 +1,7 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
-import { RouteResolve } from '../../../../../../../../lib/gj-lib-client/utils/router';
+
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { GameScoreTable } from '../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
@@ -15,6 +14,10 @@ import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/
 import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { FormGameScoreTable } from '../../../../../../../components/forms/game/score-table/score-table';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -30,7 +33,7 @@ import { FormGameScoreTable } from '../../../../../../../components/forms/game/s
 		AppTooltip,
 	},
 })
-export default class RouteDashGamesManageApiScoreboardsList extends Vue {
+export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	GameScoreTable = GameScoreTable;

@@ -1,11 +1,10 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./view.html';
 import './view-content.styl';
 
-import { RouteResolve, enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
+import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
@@ -30,6 +29,10 @@ import { RouteStateName, RouteState, RouteAction, RouteStore, RouteMutation } fr
 import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Store } from '../../../../store/index';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
+import {
+	RouteResolve,
+	BaseRouteComponent,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -49,7 +52,7 @@ import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics
 		AppTooltip,
 	},
 })
-export default class RouteDiscoverGamesView extends Vue {
+export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@Prop() id: string;
 
 	@RouteState game: RouteStore['game'];
@@ -59,8 +62,11 @@ export default class RouteDiscoverGamesView extends Vue {
 	@RouteAction bootstrap: RouteStore['bootstrap'];
 	@RouteAction refreshRatingInfo: RouteStore['refreshRatingInfo'];
 	@RouteMutation bootstrapGame: RouteStore['bootstrapGame'];
-	@RouteMutation clear: RouteStore['clear'];
 	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
+	@RouteMutation resetDescription: RouteStore['resetDescription'];
+
+	storeName = RouteStateName;
+	storeModule = RouteStore;
 
 	@State app: Store['app'];
 
@@ -93,7 +99,7 @@ export default class RouteDiscoverGamesView extends Vue {
 	}
 
 	@RouteResolve({ lazy: true, cache: true, cacheTag: 'view' })
-	async beforeRoute(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: VueRouter.Route) {
 		const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
 
 		if (payload && payload.game) {
@@ -113,13 +119,15 @@ export default class RouteDiscoverGamesView extends Vue {
 	}
 
 	routeInit() {
-		this.$store.registerModule(RouteStateName, new RouteStore());
+		this.resetDescription();
 		this.bootstrapGame(parseInt(this.id, 10));
 
 		// Any game rating change will broadcast this event. We catch it so we
 		// can update the page with the new rating! Yay!
-		this.ratingCallback = (gameId: number) => this.onGameRatingChange(gameId);
-		EventBus.on('GameRating.changed', this.ratingCallback);
+		if (!this.ratingCallback) {
+			this.ratingCallback = (gameId: number) => this.onGameRatingChange(gameId);
+			EventBus.on('GameRating.changed', this.ratingCallback);
+		}
 
 		// Since routes are reused when switching params (new game page) we want
 		// to unset any previously set tracking IDs.
@@ -130,7 +138,6 @@ export default class RouteDiscoverGamesView extends Vue {
 	}
 
 	routed() {
-		this.clear();
 		this.bootstrap(this.$payload);
 
 		// If the game has a GA tracking ID, then we attach it to this
@@ -140,7 +147,7 @@ export default class RouteDiscoverGamesView extends Vue {
 			this.gaTrackingId = this.game.ga_tracking_id;
 		}
 
-		// TODO(rewrite) should we sync from the registry or here?
+		// TODO(rewrite)
 		// // For syncing game data to client.
 		// if ( GJ_IS_CLIENT ) {
 
@@ -155,9 +162,7 @@ export default class RouteDiscoverGamesView extends Vue {
 		// }
 	}
 
-	destroyed() {
-		this.$store.unregisterModule(RouteStateName);
-
+	routeDestroy() {
 		if (this.ratingCallback) {
 			EventBus.off('GameRating.changed', this.ratingCallback);
 			this.ratingCallback = undefined;

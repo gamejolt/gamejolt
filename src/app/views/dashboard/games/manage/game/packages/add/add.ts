@@ -1,13 +1,15 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./add.html';
 
-import { RouteResolve } from '../../../../../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../../manage.state';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGamePackage } from '../../../../../../../components/forms/game/package/package';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -16,7 +18,7 @@ import { FormGamePackage } from '../../../../../../../components/forms/game/pack
 		FormGamePackage,
 	},
 })
-export default class RouteDashGamesManageGamePackagesAdd extends Vue {
+export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	@RouteResolve()

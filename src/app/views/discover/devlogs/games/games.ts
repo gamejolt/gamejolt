@@ -1,14 +1,16 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./games.html';
 
 import { AppGameListing } from '../../../../components/game/listing/listing';
 import { AppGameGrid } from '../../../../components/game/grid/grid';
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
 import { GameFilteringContainer } from '../../../../components/game/filtering/container';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -17,7 +19,7 @@ import { GameFilteringContainer } from '../../../../components/game/filtering/co
 		AppGameGrid,
 	},
 })
-export default class RouteDiscoverDevlogsGames extends Vue {
+export default class RouteDiscoverDevlogsGames extends BaseRouteComponent {
 	listing: GameListingContainer | null = null;
 
 	@RouteResolve({ cache: true })

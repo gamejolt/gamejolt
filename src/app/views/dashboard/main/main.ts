@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./main.html';
@@ -9,6 +8,7 @@ import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/use
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -22,6 +22,6 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 		AppTooltip,
 	},
 })
-export default class RouteDashMain extends Vue {
+export default class RouteDashMain extends BaseRouteComponent {
 	@State app: Store['app'];
 }

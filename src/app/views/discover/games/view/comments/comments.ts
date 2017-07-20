@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./comments.html';
 
@@ -9,6 +8,7 @@ import { AppCommentWidget } from '../../../../../../lib/gj-lib-client/components
 import { AppAd } from '../../../../../../lib/gj-lib-client/components/ad/ad';
 import { RouteState, RouteStore } from '../view.state';
 import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -18,12 +18,12 @@ import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/a
 		AppAdPlacement,
 	},
 })
-export default class RouteDiscoverGamesViewComments extends Vue {
+export default class RouteDiscoverGamesViewComments extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	Screen = makeObservableService(Screen);
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettextInterpolate(`Comments for %{ game }`, {
 			game: this.game.title,
 		});

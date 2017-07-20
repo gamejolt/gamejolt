@@ -1,13 +1,15 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./add.html';
 
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { FormGame } from '../../../../components/forms/game/game';
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -15,7 +17,7 @@ import { User } from '../../../../../lib/gj-lib-client/components/user/user.mode
 		FormGame,
 	},
 })
-export default class RouteDashGamesAdd extends Vue {
+export default class RouteDashGamesAdd extends BaseRouteComponent {
 	@RouteResolve()
 	routeResolve(this: undefined, _route: VueRouter.Route) {
 		return User.touch();

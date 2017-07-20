@@ -1,16 +1,18 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./authorize.html';
 
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({})
-export default class RouteAuthAuthorize extends Vue {
+export default class RouteAuthAuthorize extends BaseRouteComponent {
 	isSuccess = false;
 
 	@RouteResolve()

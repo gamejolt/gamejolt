@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
-import { RouteResolve } from '../../../../../../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
 import { RouteState, RouteStore } from '../../../../manage.state';
@@ -13,6 +11,10 @@ import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/d
 import { AppPopoverTrigger } from '../../../../../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppPopover } from '../../../../../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -27,7 +29,7 @@ import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/co
 		date,
 	},
 })
-export default class RouteDashGamesManageApiDataStorageItemsList extends Vue {
+export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	items: GameDataStoreItem[] = [];

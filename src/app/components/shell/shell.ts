@@ -13,7 +13,6 @@ import { AppOfflineAlert } from '../offline/alert/alert';
 import { AppGrowls } from '../../../lib/gj-lib-client/components/growls/growls';
 import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
 import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar/bar';
-import { EventBus } from '../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Store } from '../../store/index';
 import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
 
@@ -44,6 +43,9 @@ export class AppShell extends Vue {
 
 	mounted() {
 		// When changing routes, hide all overlays.
-		EventBus.on('routeChangeBefore', () => this.clearPanes());
+		this.$router.beforeEach((_to, _from, next) => {
+			this.clearPanes();
+			next();
+		});
 	}
 }

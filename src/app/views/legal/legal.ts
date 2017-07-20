@@ -1,15 +1,17 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./legal.html';
 
-import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({})
-export default class RouteLegal extends Vue {
+export default class RouteLegal extends BaseRouteComponent {
 	@RouteResolve()
-	beforeRoute() {
+	routeResolve() {
 		return User.touch();
 	}
 }

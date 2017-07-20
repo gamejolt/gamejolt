@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./description.html';
 
@@ -7,6 +6,7 @@ import { RouteState, RouteStore } from '../../manage.state';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { FormGameDescription } from '../../../../../../components/forms/game/description/description';
+import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -14,10 +14,10 @@ import { FormGameDescription } from '../../../../../../components/forms/game/des
 		FormGameDescription,
 	},
 })
-export default class RouteDashGamesManageGameDescription extends Vue {
+export default class RouteDashGamesManageGameDescription extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettextInterpolate('Edit Description for %{ game }', {
 			game: this.game.title,
 		});

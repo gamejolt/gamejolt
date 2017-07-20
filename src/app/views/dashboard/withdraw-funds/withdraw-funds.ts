@@ -1,8 +1,7 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./withdraw-funds.html';
+
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
@@ -10,6 +9,10 @@ import { FormWithdrawFunds } from '../../../components/forms/withdraw-funds/with
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -20,7 +23,7 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 		currency,
 	},
 })
-export default class RouteDashWithdrawFunds extends Vue {
+export default class RouteDashWithdrawFunds extends BaseRouteComponent {
 	user: User = null as any;
 	minAmount = 0;
 	revenueTotal = 0;

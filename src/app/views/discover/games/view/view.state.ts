@@ -39,7 +39,6 @@ type Actions = {
 };
 
 type Mutations = {
-	clear: undefined;
 	bootstrapGame: number;
 	bootstrapFeed: undefined;
 	processPayload: any;
@@ -48,6 +47,9 @@ type Mutations = {
 	setCommentsCount: number;
 	pushVideoComments: CommentVideo[];
 	showMultiplePackagesMessage: undefined;
+	resetDescription: undefined;
+	toggleDescription: undefined;
+	setCanToggleDescription: boolean;
 };
 
 @VuexModule()
@@ -87,7 +89,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	supporters: User[] = [];
 	recommendedGames: Game[] = [];
 
-	showFullDescription = false;
+	showDescription = false;
 	canToggleDescription = false;
 
 	videoComments: CommentVideo[] = [];
@@ -171,16 +173,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.processRatingPayload(response);
 	}
 
-	/**
-	 * This will clear things that may not get reset by the bootstrap methods.
-	 */
-	@VuexMutation
-	clear() {
-		this.feed = null;
-		this.showFullDescription = false;
-		this.canToggleDescription = false;
-	}
-
 	@VuexMutation
 	bootstrapGame(gameId: Mutations['bootstrapGame']) {
 		this.game = Registry.find<Game>('Game', gameId) as any;
@@ -188,6 +180,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	bootstrapFeed() {
+		console.log('rawr bootstrap feed');
 		// Try pulling feed from cache.
 		this.feed = ActivityFeedService.bootstrap();
 	}
@@ -234,6 +227,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		// mutation. If there was no cached feed, then we'll generate a new one.
 		// Also regenerate if the game changed.
 		if (!this.feed) {
+			console.log('rawr no feed, populate it');
 			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(payload.posts), {
 				type: 'Fireside_Post',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,
@@ -298,5 +292,20 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	showMultiplePackagesMessage() {
 		this.shouldShowMultiplePackagesMessage = true;
+	}
+
+	@VuexMutation
+	resetDescription() {
+		this.showDescription = false;
+	}
+
+	@VuexMutation
+	toggleDescription() {
+		this.showDescription = !this.showDescription;
+	}
+
+	@VuexMutation
+	setCanToggleDescription(flag: Mutations['setCanToggleDescription']) {
+		this.canToggleDescription = flag;
 	}
 }

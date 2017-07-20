@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
@@ -6,7 +5,7 @@ import * as View from '!view!./collection.html?style=./collection.styl';
 
 import { GameFilteringContainer } from '../../../components/game/filtering/container';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
-import { RouteResolve, enforceLocation } from '../../../../lib/gj-lib-client/utils/router';
+import { enforceLocation } from '../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
@@ -29,6 +28,10 @@ import { AppGameCollectionFollowWidget } from '../../../components/game/collecti
 import { store, Store } from '../../../store/index';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { LibraryAction, LibraryStore, LibraryState } from '../../../store/library';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -50,7 +53,7 @@ import { LibraryAction, LibraryStore, LibraryState } from '../../../store/librar
 		number,
 	},
 })
-export default class RouteLibraryCollection extends Vue {
+export default class RouteLibraryCollection extends BaseRouteComponent {
 	@Prop(String) id: string;
 
 	@State app: Store['app'];

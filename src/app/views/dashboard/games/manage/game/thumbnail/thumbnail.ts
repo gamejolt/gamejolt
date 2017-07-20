@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./thumbnail.html';
 
@@ -8,6 +7,7 @@ import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { FormGameThumbnail } from '../../../../../../components/forms/game/thumbnail/thumbnail';
 import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
+import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -16,10 +16,10 @@ import { AppDashGameWizardControls } from '../../../../../../components/forms/ga
 		AppDashGameWizardControls,
 	},
 })
-export default class RouteDashGamesManageGameThumbnail extends Vue {
+export default class RouteDashGamesManageGameThumbnail extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettextInterpolate(`Edit Thumbnail for %{ game }`, {
 			game: this.game.title,
 		});

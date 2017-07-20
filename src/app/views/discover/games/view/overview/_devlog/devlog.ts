@@ -13,7 +13,7 @@ import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/m
 import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
-import { RouteState, RouteStore } from '../../view.state';
+import { RouteState, RouteStore, RouteMutation } from '../../view.state';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
 import { Store } from '../../../../../../store/index';
@@ -45,6 +45,8 @@ import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 	},
 })
 export class AppDiscoverGamesViewOverviewDevlog extends Vue {
+	@State app: Store['app'];
+
 	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
 	@RouteState game: RouteStore['game'];
 	@RouteState mediaItems: RouteStore['mediaItems'];
@@ -55,12 +57,13 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	@RouteState hasReleasesSection: RouteStore['hasReleasesSection'];
 	@RouteState recommendedGames: RouteStore['recommendedGames'];
 
-	@State app: Store['app'];
+	@RouteState showDescription: RouteStore['showDescription'];
+	@RouteState canToggleDescription: RouteStore['canToggleDescription'];
+	@RouteMutation toggleDescription: RouteStore['toggleDescription'];
+	@RouteMutation setCanToggleDescription: RouteStore['setCanToggleDescription'];
 
 	comments: Comment[] = [];
 	commentsCount = 0;
-	showFullDescription = false;
-	canToggleDescription = false;
 
 	headingColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-2';
 	contentColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-7';

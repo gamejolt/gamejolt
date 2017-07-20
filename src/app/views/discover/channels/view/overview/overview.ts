@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
@@ -10,13 +9,16 @@ import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fir
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppGameGrid } from '../../../../../components/game/grid/grid';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { AppTrackEvent } from '../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppGameGridPlaceholder } from '../../../../../components/game/grid/placeholder/placeholder';
 import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -30,7 +32,7 @@ import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/a
 		AppTrackEvent,
 	},
 })
-export default class RouteDiscoverChannelsViewOverview extends Vue {
+export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponent {
 	@Prop() channel: any;
 
 	isLoaded = false;
