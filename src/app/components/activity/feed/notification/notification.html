@@ -35,7 +35,7 @@
 					<app-fade-collapse
 						:collapse-height="80"
 						:is-open="showFullContent"
-						@required="canToggleContent = true"
+						@require-change="canToggleContent = $event"
 						>
 						<div
 							v-if="notification.type === 'comment-add'"

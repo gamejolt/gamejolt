@@ -130,7 +130,7 @@
 							<app-fade-collapse
 								class="fade-collapse-sm"
 								:collapse-height="60"
-								@required="isDescriptionCollapsed = true"
+								@require-change="isDescriptionCollapsed = $event"
 								>
 								<div class="chat-window-header-room-description chat-compiled-room-description">
 									<div class="anim-fade-in no-animate-xs" v-html="room.description_compiled"></div>

@@ -182,7 +182,7 @@
 							<app-fade-collapse
 								:collapse-height="200"
 								:is-open="showFullDescription"
-								@required="canToggleDescription = true"
+								@require-change="canToggleDescription = $event"
 								>
 								<div class="forum-post-body">
 									<app-widget-compiler
