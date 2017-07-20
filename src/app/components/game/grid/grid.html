@@ -32,7 +32,7 @@
 			<template v-for="(game, i) of processedGames">
 				<div class="game-grid-ad"
 					v-if="shouldShowAd(i)"
-					:key="game.id"
+					:key="game.id + '-ad'"
 					>
 					<div class="game-grid-ad-inner">
 						<app-ad size="rectangle" />
