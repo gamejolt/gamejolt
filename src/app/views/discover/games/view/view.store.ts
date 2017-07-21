@@ -26,10 +26,10 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { router } from '../../../index';
 
-export const RouteStateName = 'gameRoute';
-export const RouteState = namespace(RouteStateName, State);
-export const RouteAction = namespace(RouteStateName, Action);
-export const RouteMutation = namespace(RouteStateName, Mutation);
+export const RouteStoreName = 'gameRoute';
+export const RouteState = namespace(RouteStoreName, State);
+export const RouteAction = namespace(RouteStoreName, Action);
+export const RouteMutation = namespace(RouteStoreName, Mutation);
 
 type Actions = {
 	bootstrap: any;
@@ -175,7 +175,10 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	bootstrapGame(gameId: Mutations['bootstrapGame']) {
-		this.game = Registry.find<Game>('Game', gameId) as any;
+		const game = Registry.find<Game>('Game', gameId) as any;
+		// if (game) {
+		this.game = game;
+		// }
 	}
 
 	@VuexMutation

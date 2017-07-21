@@ -2,7 +2,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./maturity.html';
 
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../manage.state';
+import { RouteState, RouteStore } from '../../manage.store';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';

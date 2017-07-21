@@ -4,7 +4,7 @@ import * as View from '!view!./list.html';
 
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../../manage.state';
+import { RouteState, RouteStore } from '../../../manage.store';
 import { arrayIndexBy } from '../../../../../../../../lib/gj-lib-client/utils/array';
 import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';

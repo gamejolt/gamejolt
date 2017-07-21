@@ -6,7 +6,7 @@ import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/ap
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { GameScoreTable } from '../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { RouteState, RouteStore } from '../../../manage.state';
+import { RouteState, RouteStore } from '../../../manage.store';
 import { AppCardList } from '../../../../../../../../lib/gj-lib-client/components/card/list/list';
 import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
 import { AppCardListAdd } from '../../../../../../../../lib/gj-lib-client/components/card/list/add/add';

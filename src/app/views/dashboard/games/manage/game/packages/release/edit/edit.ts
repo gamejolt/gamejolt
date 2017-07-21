@@ -3,7 +3,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./edit.html';
 
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteState, RouteStore } from '../../../../manage.state';
+import { RouteState, RouteStore } from '../../../../manage.store';
 import { GamePackage } from '../../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../../../../../../../../lib/gj-lib-client/components/game/release/release.model';
 import { GameBuild } from '../../../../../../../../../lib/gj-lib-client/components/game/build/build.model';

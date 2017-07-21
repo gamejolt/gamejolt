@@ -2,7 +2,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./wizard-finish.html';
 
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore, RouteAction } from '../../manage.state';
+import { RouteState, RouteStore, RouteAction } from '../../manage.store';
 import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View

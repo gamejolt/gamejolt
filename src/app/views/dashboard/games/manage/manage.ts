@@ -4,7 +4,7 @@ import * as View from '!view!./manage.html';
 
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { RouteStateName, RouteState, RouteStore, RouteMutation } from './manage.state';
+import { RouteStoreName, RouteState, RouteStore, RouteMutation } from './manage.store';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
@@ -33,7 +33,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 
 	@RouteMutation populate: RouteStore['populate'];
 
-	storeName = RouteStateName;
+	storeName = RouteStoreName;
 	storeModule = RouteStore;
 
 	Game = Game;

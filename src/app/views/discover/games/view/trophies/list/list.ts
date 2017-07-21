@@ -11,7 +11,7 @@ import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/numbe
 import { AppTrophyList } from '../../../../../../components/trophy/list/list';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { RouteState, RouteStore } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.store';
 import { Store } from '../../../../../../store/index';
 import {
 	BaseRouteComponent,

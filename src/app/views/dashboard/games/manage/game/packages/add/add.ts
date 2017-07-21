@@ -2,7 +2,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./add.html';
 
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../../manage.state';
+import { RouteState, RouteStore } from '../../../manage.store';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGamePackage } from '../../../../../../../components/forms/game/package/package';

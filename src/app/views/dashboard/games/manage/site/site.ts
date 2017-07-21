@@ -2,7 +2,7 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./site.html?style=./site.styl';
 
-import { RouteState, RouteStore } from '../manage.state';
+import { RouteState, RouteStore } from '../manage.store';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Site } from '../../../../../../lib/gj-lib-client/components/site/site-model';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';

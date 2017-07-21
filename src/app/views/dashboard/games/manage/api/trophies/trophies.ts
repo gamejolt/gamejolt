@@ -4,7 +4,7 @@ import * as View from '!view!./trophies.html';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../manage.state';
+import { RouteState, RouteStore } from '../../manage.store';
 import { GameTrophy } from '../../../../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
 import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
 import { AppCardListDraggable } from '../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';

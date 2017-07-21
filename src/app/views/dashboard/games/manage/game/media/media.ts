@@ -2,7 +2,7 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./media.html?style=./media.styl';
 
-import { RouteState, RouteStore, RouteMutation, Media, RouteAction } from '../../manage.state';
+import { RouteState, RouteStore, RouteMutation, Media, RouteAction } from '../../manage.store';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';

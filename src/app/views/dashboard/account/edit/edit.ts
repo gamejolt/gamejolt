@@ -5,7 +5,7 @@ import * as View from '!view!./edit.html';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { RouteMutation, RouteStore } from '../account.state';
+import { RouteMutation, RouteStore } from '../account.store';
 import { FormProfile } from '../../../../components/forms/profile/profile';
 import { Store } from '../../../../store/index';
 import { BaseRouteComponent } from '../../../../../lib/gj-lib-client/components/route/route-component';

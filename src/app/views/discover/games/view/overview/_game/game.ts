@@ -27,7 +27,7 @@ import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/co
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 import { AppTrophyOverview } from '../../../../../../components/trophy/overview/overview';
-import { RouteState, RouteMutation, RouteStore, RouteAction } from '../../view.state';
+import { RouteState, RouteMutation, RouteStore, RouteAction } from '../../view.store';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { AppScoreOverview } from '../../../../../../components/score/overview/overview';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';

@@ -13,7 +13,7 @@ import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/m
 import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
-import { RouteState, RouteStore, RouteMutation } from '../../view.state';
+import { RouteState, RouteStore, RouteMutation } from '../../view.store';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
 import { Store } from '../../../../../../store/index';

@@ -4,7 +4,7 @@ import * as View from '!view!./header.html';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Popover } from '../../../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { RouteState, RouteStore } from '../../manage.state';
+import { RouteState, RouteStore } from '../../manage.store';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';

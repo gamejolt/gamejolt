@@ -6,7 +6,7 @@ import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api
 import { Scroll } from '../../../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../../../manage.state';
+import { RouteState, RouteStore } from '../../../../manage.store';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { AppManageGameListScores } from '../../_list-scores/list-scores';
 import {

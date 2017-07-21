@@ -12,7 +12,7 @@ import { AppDevlogPostView } from '../../../../../../components/devlog/post/view
 import { AppDevlogPostViewPlaceholder } from '../../../../../../components/devlog/post/view/placeholder/placeholder';
 import { AppScrollWhen } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll-when.directive.vue';
 import { Registry } from '../../../../../../../lib/gj-lib-client/components/registry/registry.service';
-import { RouteState, RouteStore } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.store';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import {
 	BaseRouteComponent,

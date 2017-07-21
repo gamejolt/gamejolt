@@ -5,7 +5,7 @@ import * as View from '!view!./view.html';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../../../manage.state';
+import { RouteState, RouteStore } from '../../../../manage.store';
 import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
 import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';

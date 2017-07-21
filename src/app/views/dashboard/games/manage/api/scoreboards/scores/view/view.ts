@@ -6,7 +6,7 @@ import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api
 import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { RouteState, RouteStore } from '../../../../manage.state';
+import { RouteState, RouteStore } from '../../../../manage.store';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../../../../../lib/gj-lib-client/vue/filters/number';

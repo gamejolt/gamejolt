@@ -4,7 +4,7 @@ import * as View from '!view!./soundtrack.html';
 
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.store';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';

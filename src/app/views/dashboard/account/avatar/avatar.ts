@@ -3,7 +3,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./avatar.html';
 
 import { Store } from '../../../../store/index';
-import { RouteStore, RouteMutation } from '../account.state';
+import { RouteStore, RouteMutation } from '../account.store';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';

@@ -8,7 +8,7 @@ import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/
 import { AppPopoverTrigger } from '../../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppPopover } from '../../../../../../lib/gj-lib-client/components/popover/popover';
 import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { RouteState, RouteStore } from '../view.state';
+import { RouteState, RouteStore } from '../view.store';
 import { ReportModal } from '../../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 import { Store } from '../../../../../store/index';
 

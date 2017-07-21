@@ -3,7 +3,7 @@ import * as View from '!view!./game.html';
 
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils/vue';
-import { RouteState, RouteStore, RouteAction } from '../manage.state';
+import { RouteState, RouteStore, RouteAction } from '../manage.store';
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppExpand } from '../../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppManageGameNav } from './_nav/nav';

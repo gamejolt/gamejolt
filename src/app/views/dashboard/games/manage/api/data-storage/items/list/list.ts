@@ -4,7 +4,7 @@ import * as View from '!view!./list.html';
 
 import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
-import { RouteState, RouteStore } from '../../../../manage.state';
+import { RouteState, RouteStore } from '../../../../manage.store';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';

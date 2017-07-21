@@ -7,7 +7,7 @@ import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-s
 import { AppDiscoverGamesViewOverviewGame } from './_game/game';
 import { PartnerReferral } from '../../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
 import { AppDiscoverGamesViewOverviewDevlog } from './_devlog/devlog';
-import { RouteMutation, RouteStore, RouteState } from '../view.state';
+import { RouteMutation, RouteStore, RouteState } from '../view.store';
 import {
 	RouteResolve,
 	BaseRouteComponent,

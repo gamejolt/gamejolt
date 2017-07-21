@@ -65,7 +65,7 @@ import * as View from '!view!./list.html?style=./list.styl';
 
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteMutation, RouteStore } from '../../account.state';
+import { RouteMutation, RouteStore } from '../../account.store';
 import { YoutubeChannel } from '../../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
 import { ModalConfirm } from '../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { arrayRemove } from '../../../../../../lib/gj-lib-client/utils/array';

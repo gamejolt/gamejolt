@@ -17,7 +17,7 @@ import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/co
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { RouteState, RouteStore } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.store';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Store } from '../../../../../../store/index';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';

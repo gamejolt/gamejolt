@@ -25,7 +25,7 @@ import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/c
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { AppMeter } from '../../../../../lib/gj-lib-client/components/meter/meter';
-import { RouteStateName, RouteState, RouteAction, RouteStore, RouteMutation } from './view.state';
+import { RouteStoreName, RouteState, RouteAction, RouteStore, RouteMutation } from './view.store';
 import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Store } from '../../../../store/index';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
@@ -65,7 +65,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
 	@RouteMutation resetDescription: RouteStore['resetDescription'];
 
-	storeName = RouteStateName;
+	storeName = RouteStoreName;
 	storeModule = RouteStore;
 
 	@State app: Store['app'];

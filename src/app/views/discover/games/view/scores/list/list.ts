@@ -4,7 +4,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./list.html?style=./list.styl';
 
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.store';
 import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { UserGameScore } from '../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';

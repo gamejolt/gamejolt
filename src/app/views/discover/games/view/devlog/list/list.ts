@@ -12,7 +12,7 @@ import { makeObservableService } from '../../../../../../../lib/gj-lib-client/ut
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
-import { RouteState, RouteStore } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.store';
 import {
 	BaseRouteComponent,
 	RouteResolve,

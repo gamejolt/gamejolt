@@ -9,7 +9,7 @@ import { AppPageHeader } from '../../../components/page-header/page-header';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { Store } from '../../../store/index';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { RouteStateName, RouteState, RouteStore } from './account.state';
+import { RouteStoreName, RouteState, RouteStore } from './account.store';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -29,11 +29,11 @@ export default class RouteDashAccount extends BaseRouteComponent {
 
 	Screen = makeObservableService(Screen);
 
-	storeName = RouteStateName;
+	storeName = RouteStoreName;
 	storeModule = RouteStore;
 
 	@RouteResolve({})
-	routeResolve() {
+	async routeResolve() {
 		User.touch();
 	}
 }

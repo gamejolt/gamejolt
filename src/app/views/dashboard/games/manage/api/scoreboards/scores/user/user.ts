@@ -6,7 +6,7 @@ import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/me
 import { User } from '../../../../../../../../../lib/gj-lib-client/components/user/user.model';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { RouteState, RouteStore } from '../../../../manage.state';
+import { RouteState, RouteStore } from '../../../../manage.store';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Growls } from '../../../../../../../../../lib/gj-lib-client/components/growls/growls.service';

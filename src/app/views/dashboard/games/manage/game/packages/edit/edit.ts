@@ -6,7 +6,7 @@ import { GamePackage } from '../../../../../../../../lib/gj-lib-client/component
 import { GameRelease } from '../../../../../../../../lib/gj-lib-client/components/game/release/release.model';
 import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../../manage.state';
+import { RouteState, RouteStore } from '../../../manage.store';
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePackagePayloadModel } from '../../../../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
