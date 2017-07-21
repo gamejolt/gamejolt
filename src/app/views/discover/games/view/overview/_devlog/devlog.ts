@@ -23,6 +23,8 @@ import { AppCommentWidgetAdd } from '../../../../../../../lib/gj-lib-client/comp
 import { Comment } from '../../../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
+import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
+import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
 
 @View
 @Component({
@@ -32,6 +34,7 @@ import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 		AppLazyPlaceholder,
 		AppFadeCollapse,
 		AppActivityFeed,
+		AppActivityFeedPlaceholder,
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
 		AppGamePackageCard,
@@ -39,6 +42,7 @@ import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 		AppCommentPeek,
 		AppCommentWidgetAdd,
 		AppGameGrid,
+		AppGameGridPlaceholder,
 	},
 	directives: {
 		AppTrackEvent,

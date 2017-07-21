@@ -184,9 +184,7 @@
 		</button>
 	</div>
 
-	<section class="section" style="padding-bottom: 0"
-		v-if="recommendedGames.length"
-		>
+	<section class="section" style="padding-bottom: 0">
 		<div class="container">
 			<div class="row">
 				<div :class="[ headingColClasses, { 'text-right': Screen.isLg } ]">
@@ -199,7 +197,15 @@
 				</div>
 				<div :class="contentColClassesFull">
 
+					<app-game-grid-placeholder
+						v-if="!recommendedGames.length"
+						:num="5"
+						:truncate-to-fit="true"
+						:scrollable="true"
+						/>
+
 					<app-game-grid
+						v-else
 						:games="recommendedGames"
 						:truncate-to-fit="true"
 						:scrollable="true"
@@ -211,43 +217,38 @@
 		</div>
 	</section>
 
-	<div v-if="feed">
-		<div v-if="feed.hasItems">
-			<app-ad-placement :hidden-desktop="true" :resource="game" />
+	<app-ad-placement :hidden-desktop="true" :resource="game" />
 
-			<section class="section">
-				<div class="container">
-					<div class="row">
-						<div :class="[ headingColClasses, { 'text-right': Screen.isLg } ]">
-							<h2 class="section-header" :class="{ 'h4': Screen.isLg }">
-								<translate>Devlog Feed</translate>
-							</h2>
-						</div>
-						<div :class="contentColClasses">
-
-							<app-activity-feed
-								:feed="feed"
-								:show-edit-controls="true"
-								:show-ads="true"
-								:ad-resource="game"
-								/>
-
-						</div>
-					</div>
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div :class="[ headingColClasses, { 'text-right': Screen.isLg } ]">
+					<h2 class="section-header" :class="{ 'h4': Screen.isLg }">
+						<translate>Devlog Feed</translate>
+					</h2>
 				</div>
-			</section>
-		</div>
-		<section class="section" v-else>
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
-						<div class="alert alert-info">
+				<div :class="contentColClasses">
+
+					<app-activity-feed-placeholder v-if="!feed" />
+
+					<div v-else>
+
+						<app-activity-feed
+							v-if="feed.hasItems"
+							:feed="feed"
+							:show-edit-controls="true"
+							:show-ads="true"
+							:ad-resource="game"
+							/>
+
+						<div v-else class="alert alert-info">
 							<translate>This devlog doesn't have any posts yet.</translate>
 						</div>
+
 					</div>
 				</div>
 			</div>
-		</section>
-	</div>
+		</div>
+	</section>
 
 </div>

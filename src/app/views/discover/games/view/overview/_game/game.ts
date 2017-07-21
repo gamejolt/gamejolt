@@ -34,6 +34,7 @@ import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/co
 import { Store } from '../../../../../../store/index';
 import { AppUserAvatarImg } from '../../../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
 
 @View
 @Component({
@@ -44,6 +45,7 @@ import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/component
 		AppAdPlacement,
 		AppMediaBar,
 		AppGameGrid,
+		AppGameGridPlaceholder,
 		AppRatingWidget,
 		AppCard,
 		AppJolticon,

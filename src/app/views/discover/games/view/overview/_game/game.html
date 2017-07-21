@@ -203,7 +203,7 @@
 							this when the game changes.
 						-->
 						<app-fade-collapse
-							:collapse-height="2000"
+							:collapse-height="1500"
 							:is-open="showDescription"
 							:key="game.id"
 							@require-change="setCanToggleDescription"
@@ -398,9 +398,7 @@
 	<!--
 		Recommended Games
 	-->
-	<section class="section fill-darker recommended-games section-thin"
-		v-if="recommendedGames.length"
-		>
+	<section class="section fill-darker recommended-games section-thin">
 		<div class="container">
 
 			<h2 class="section-header">
@@ -409,7 +407,15 @@
 
 			<hr class="underbar">
 
+			<app-game-grid-placeholder
+				v-if="!recommendedGames.length"
+				:num="5"
+				:truncate-to-fit="true"
+				:scrollable="true"
+				/>
+
 			<app-game-grid
+				v-else
 				:games="recommendedGames"
 				:truncate-to-fit="true"
 				:scrollable="true"
