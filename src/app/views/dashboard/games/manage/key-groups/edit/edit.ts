@@ -121,7 +121,7 @@ import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/component
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppTimeAgo } from '../../../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { RouteState, RouteStore } from '../../../../../discover/games/view/view.state';
+import { RouteState, RouteStore } from '../../../../../discover/games/view/view.store';
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';

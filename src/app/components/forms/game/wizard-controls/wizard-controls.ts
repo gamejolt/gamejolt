@@ -7,7 +7,7 @@ import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/fo
 import { findVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
 import { AppFormButton } from '../../../../../lib/gj-lib-client/components/form-vue/button/button';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { RouteStore, RouteStateName } from '../../../../views/dashboard/games/manage/manage.state';
+import { RouteStore, RouteStoreName } from '../../../../views/dashboard/games/manage/manage.store';
 
 @View
 @Component({
@@ -22,7 +22,7 @@ export class AppDashGameWizardControls extends Vue {
 	// The manage route store may not be loaded in if we're in the "add" form.
 	// We have to do all this a bit custom so that we don't expect the module to
 	// exist.
-	@State(RouteStateName) manageRoute?: RouteStore;
+	@State(RouteStoreName) manageRoute?: RouteStore;
 
 	form?: AppForm;
 
@@ -57,7 +57,7 @@ export class AppDashGameWizardControls extends Vue {
 		if (this.manageRoute) {
 			// Sadly we can't attach directly to this since manageRoute may not
 			// exist.
-			this.$store.dispatch(`${RouteStateName}/wizardNext`);
+			this.$store.dispatch(`${RouteStoreName}/wizardNext`);
 		}
 	}
 }
