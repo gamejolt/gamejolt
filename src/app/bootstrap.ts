@@ -17,6 +17,7 @@ import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.s
 import { Ads } from '../lib/gj-lib-client/components/ad/ads.service';
 import { bootstrapAppTranslations } from '../utils/translations';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
+import { hijackLinks } from '../lib/gj-lib-client/utils/router';
 
 if (GJ_IS_CLIENT) {
 	// require( './bootstrap-client' );
@@ -37,6 +38,8 @@ Registry.setConfig('User', { maxItems: 100 });
 
 // Match this to the shell top nav height.
 Scroll.setOffsetTop(50);
+
+hijackLinks(router, 'gamejolt.com');
 
 export async function createApp() {
 	await bootstrapAppTranslations();
