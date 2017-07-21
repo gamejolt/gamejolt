@@ -80,6 +80,9 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	@Watch('game.id', { immediate: true })
 	async onGameChange() {
 		if (this.game) {
+			this.comments = [];
+			this.commentsCount = 0;
+
 			const payload = await Comment.fetch('Game', this.game.id, 1);
 			this.commentsCount = payload.count;
 			this.comments = Comment.populate(payload.comments);
