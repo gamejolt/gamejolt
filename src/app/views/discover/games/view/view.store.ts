@@ -183,7 +183,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	bootstrapFeed() {
-		console.log('rawr bootstrap feed');
 		// Try pulling feed from cache.
 		this.feed = ActivityFeedService.bootstrap();
 	}
@@ -230,7 +229,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		// mutation. If there was no cached feed, then we'll generate a new one.
 		// Also regenerate if the game changed.
 		if (!this.feed) {
-			console.log('rawr no feed, populate it');
 			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(payload.posts), {
 				type: 'Fireside_Post',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,
