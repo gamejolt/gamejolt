@@ -9,7 +9,9 @@ import { App } from './app';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { bootstrapAppTranslations } from '../utils/translations';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
+import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 
+Meta.init(router);
 Payload.init(store);
 Analytics.initRouter(router);
 Connection.init(store);
