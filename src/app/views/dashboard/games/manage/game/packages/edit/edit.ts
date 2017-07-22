@@ -138,6 +138,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 					packageId: this.package.id + '',
 					releaseId: response.newReleaseId + '',
 				},
+				query: this.$route.query,
 			});
 		} catch (e) {
 			Growls.error(this.$gettext(`Could not create new release.`));

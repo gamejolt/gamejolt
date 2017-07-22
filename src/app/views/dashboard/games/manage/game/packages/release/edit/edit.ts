@@ -82,6 +82,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 			params: {
 				packageId: this.package.id + '',
 			},
+			query: this.$route.query,
 		});
 	}
 

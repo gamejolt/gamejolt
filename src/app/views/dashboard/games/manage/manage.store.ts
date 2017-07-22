@@ -212,6 +212,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		router.push({
 			name: 'dash.games.manage.game.overview',
 			params: router.currentRoute.params,
+			// Remove the wizard.
 			query: {},
 		});
 	}
@@ -222,6 +223,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		router.push({
 			name: 'dash.games.manage.game.overview',
 			params: router.currentRoute.params,
+			// Remove the wizard.
 			query: {},
 		});
 	}
