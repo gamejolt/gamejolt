@@ -25,7 +25,7 @@ ul.shell-nav
 		text-align: center
 
 		.jolticon
-			vertical-align: middle
+			vertical-align: text-bottom
 
 	.shell-nav-label
 		text-overflow()
@@ -41,12 +41,8 @@ ul.shell-nav
 		line-height: $shell-nav-item-height
 
 		.jolticon
-			vertical-align: middle
+			vertical-align: text-bottom
 
-	// Firefox has a bug if you have a left floated, right floated, and then text-overflow ellipsis content in the middle
-	// it will push the right float down. We can get around it by putting the right float first, but then the content is on top
-	// of the right floated. We do the z-indexing so that at least it's on top.
-	// Example: Chat user list with notification tags.
 	.tag
 	.badge
 	.jolticon
@@ -69,18 +65,6 @@ ul.shell-nav
 			padding-left: 0
 			line-height: $shell-nav-item-height
 
-			// &::before
-			// 	position: absolute
-			// 	display: block
-			// 	content: ''
-			// 	top: 0
-			// 	left: 0
-			// 	bottom: 0
-			// 	width: 3px
-			// 	background-color: $gj-green
-			// 	transform: translate( -4px, 0 )
-			// 	transition: transform 300ms $strong-ease-out
-
 			&:hover
 				color: $white
 				background-color: $gray-darker
@@ -92,9 +76,6 @@ ul.shell-nav
 				&
 				&:hover
 					color: $gj-green
-
-					// &::before
-					// 	transform: translate( 0, 0 )
 
 					.jolticon
 						color: $gj-green
