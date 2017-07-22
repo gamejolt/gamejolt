@@ -27,6 +27,7 @@ export class AppMediaItemCover extends Vue {
 	created() {
 		if (GJ_IS_SSR) {
 			this.recalcHeight();
+			this.isLoaded = true;
 		}
 	}
 
