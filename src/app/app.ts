@@ -24,14 +24,18 @@ export class App extends Vue {
 	Connection = makeObservableService(Connection);
 
 	created() {
-		Analytics.trackTiming('shell', 'vue-init', Date.now() - window._gjStartTime);
+		if (!GJ_IS_SSR) {
+			Analytics.trackTiming('shell', 'vue-init', Date.now() - window._gjStartTime);
+		}
 	}
 
 	mounted() {
-		// Let it finish doing all the initial rendering junk and track after
-		// that.
-		setTimeout(() => {
-			Analytics.trackTiming('shell', 'vue-mounted', Date.now() - window._gjStartTime);
-		});
+		if (!GJ_IS_SSR) {
+			// Let it finish doing all the initial rendering junk and track after
+			// that.
+			setTimeout(() => {
+				Analytics.trackTiming('shell', 'vue-mounted', Date.now() - window._gjStartTime);
+			});
+		}
 	}
 }
