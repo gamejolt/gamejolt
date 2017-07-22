@@ -90,10 +90,11 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			return undefined;
 		}
 
+		const type = route.meta.collectionType;
 		const query = filtering.getQueryString(route);
 
 		let id: string = route.params.id;
-		if (GameCollection.USER_TYPES.indexOf(route.meta.collectionType) !== -1) {
+		if (GameCollection.USER_TYPES.indexOf(type) !== -1) {
 			id = '@' + id;
 		}
 
@@ -101,10 +102,15 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			`/web/library/games/${route.meta.collectionType}/${id}?${query}`
 		);
 
-		if (payload && payload.collection) {
-			const redirect = enforceLocation(route, { slug: payload.collection.slug });
-			if (redirect) {
-				return redirect;
+		// These are the only types with a slug in the URL. The rest have to be
+		// exact param matches and can never change.
+		if (type === 'bundle' || type === 'playlist') {
+			if (payload && payload.collection) {
+				const redirect = enforceLocation(route, { slug: payload.collection.slug });
+				if (redirect) {
+					console.log('redirect!', redirect);
+					return redirect;
+				}
 			}
 		}
 
