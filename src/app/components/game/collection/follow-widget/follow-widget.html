@@ -2,7 +2,7 @@
 	class="game-collection-follow-widget btn"
 	:class="[ !isFollowing ? 'btn-outline' : 'btn-success active' ]"
 	v-app-auth-required
-	v-app-tooltip.bottom-center="
+	v-app-tooltip.bottom="
 		isFollowing
 		? $gettext( 'library.collection.unfollow_button_tooltip' )
 		: $gettext( 'library.collection.follow_button_tooltip' )

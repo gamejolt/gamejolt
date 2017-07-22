@@ -1,13 +1,15 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./reset-password.html';
 
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { FormResetPassword } from '../../../components/forms/reset-password/reset-password';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -15,7 +17,7 @@ import { FormResetPassword } from '../../../components/forms/reset-password/rese
 		FormResetPassword,
 	},
 })
-export default class RouteAuthResetPassword extends Vue {
+export default class RouteAuthResetPassword extends BaseRouteComponent {
 	@Prop(String) userId: string;
 	@Prop(String) token: string;
 

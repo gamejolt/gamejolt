@@ -1,17 +1,19 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./manage.html';
 
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { RouteStateName, RouteState, RouteStore, RouteMutation } from './manage.state';
+import { RouteStoreName, RouteState, RouteStore, RouteMutation } from './manage.store';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -25,11 +27,14 @@ import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago
 		AppTooltip,
 	},
 })
-export default class RouteDashGamesManage extends Vue {
+export default class RouteDashGamesManage extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 	@RouteState isWizard: RouteStore['isWizard'];
 
 	@RouteMutation populate: RouteStore['populate'];
+
+	storeName = RouteStoreName;
+	storeModule = RouteStore;
 
 	Game = Game;
 
@@ -38,15 +43,7 @@ export default class RouteDashGamesManage extends Vue {
 		return Api.sendRequest('/web/dash/developer/games/' + route.params.id);
 	}
 
-	routeInit() {
-		this.$store.registerModule(RouteStateName, new RouteStore());
-	}
-
 	routed() {
 		this.populate(this.$payload);
-	}
-
-	destroyed() {
-		this.$store.unregisterModule(RouteStateName);
 	}
 }

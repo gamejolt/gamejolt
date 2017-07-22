@@ -1,13 +1,12 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./add.html';
 
-import { RouteResolve } from '../../../../../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../../manage.state';
+import { RouteState, RouteStore } from '../../../manage.store';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGamePackage } from '../../../../../../../components/forms/game/package/package';
+import { BaseRouteComponent } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -16,13 +15,10 @@ import { FormGamePackage } from '../../../../../../../components/forms/game/pack
 		FormGamePackage,
 	},
 })
-export default class RouteDashGamesManageGamePackagesAdd extends Vue {
+export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
-	@RouteResolve()
-	routeResolve(this: undefined) {}
-
-	routed() {
+	routeInit() {
 		Meta.title = this.$gettextInterpolate('Add Package for %{ game }', {
 			game: this.game.title,
 		});
@@ -32,6 +28,7 @@ export default class RouteDashGamesManageGamePackagesAdd extends Vue {
 		this.$router.push({
 			name: 'dash.games.manage.game.packages.edit',
 			params: { packageId: newPackage.id + '' },
+			query: this.$route.query,
 		});
 	}
 }

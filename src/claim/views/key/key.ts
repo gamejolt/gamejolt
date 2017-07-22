@@ -1,10 +1,8 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./key.html';
 
-import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppKeyGame } from './_game/game';
@@ -15,6 +13,10 @@ import { AppKeyBundle } from './_bundle/bundle';
 import { ModalConfirm } from '../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
 import { Store } from '../../store/index';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -22,7 +24,7 @@ import { Store } from '../../store/index';
 		AppInvalidKey,
 	},
 })
-export default class RouteKey extends Vue {
+export default class RouteKey extends BaseRouteComponent {
 	@Prop(String) accessKey: string;
 
 	@State app: Store['app'];

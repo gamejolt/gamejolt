@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./home.html?style=./home.styl';
 
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
@@ -22,6 +20,10 @@ import { Store } from '../../../store/index';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 interface DiscoverSection {
 	title: string;
@@ -48,7 +50,7 @@ interface DiscoverSection {
 		AppAuthRequired,
 	},
 })
-export default class RouteDiscoverHome extends Vue {
+export default class RouteDiscoverHome extends BaseRouteComponent {
 	@State app: Store['app'];
 
 	isLoaded = false;
@@ -66,7 +68,7 @@ export default class RouteDiscoverHome extends Vue {
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve({ lazy: true, cache: true })
-	beforeRoute() {
+	routeResolve() {
 		return Api.sendRequest('/web/discover');
 	}
 

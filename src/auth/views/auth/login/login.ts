@@ -1,13 +1,15 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./login.html';
 
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthLogin } from '../../../../lib/gj-lib-client/components/auth/login/login';
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { loggedUserBlock } from '../auth';
 import { UserLinkedAccounts } from '../../../../lib/gj-lib-client/components/user/linked-accounts/linked-accounts.service';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -16,11 +18,11 @@ import { UserLinkedAccounts } from '../../../../lib/gj-lib-client/components/use
 		AppAuthLogin,
 	},
 })
-export default class RouteAuthLogin extends Vue {
+export default class RouteAuthLogin extends BaseRouteComponent {
 	redirect = '';
 
 	@RouteResolve()
-	routeResolve() {
+	async routeResolve() {
 		return loggedUserBlock();
 	}
 

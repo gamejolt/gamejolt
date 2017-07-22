@@ -1,13 +1,16 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 
-import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../lib/gj-lib-client/components/route/route-component';
 
 @Component({})
-export default class RouteLanding extends Vue {
+export default class RouteLanding extends BaseRouteComponent {
 	@RouteResolve()
-	beforeRoute() {
+	routeResolve() {
 		return User.touch();
 	}
 

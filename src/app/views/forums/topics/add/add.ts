@@ -1,11 +1,9 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./add.html';
 
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
@@ -16,6 +14,10 @@ import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/
 import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
 import { AppForumRules } from '../../../../components/forum/rules/rules';
 import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -27,7 +29,7 @@ import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
 		FormForumTopic,
 	},
 })
-export default class RouteForumsTopicsAdd extends Vue {
+export default class RouteForumsTopicsAdd extends BaseRouteComponent {
 	@State app: Store['app'];
 
 	channel: ForumChannel = null as any;

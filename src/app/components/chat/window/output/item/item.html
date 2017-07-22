@@ -61,7 +61,7 @@
 			<app-fade-collapse
 				:collapse-height="138"
 				:is-open="isExpanded"
-				@required="isCollapsable = true"
+				@require-change="isCollapsable = $event"
 				>
 				<div
 					class="chat-window-message-content"

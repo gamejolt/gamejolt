@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./results.html';
 
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { Search } from '../../../components/search/search-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -11,6 +9,10 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -23,7 +25,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 		number,
 	},
 })
-export default class RouteSearchResults extends Vue {
+export default class RouteSearchResults extends BaseRouteComponent {
 	@Prop(Object) payload: any;
 	@Prop(String) query: string;
 

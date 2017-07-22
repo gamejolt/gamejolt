@@ -27,13 +27,14 @@ import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/co
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 import { AppTrophyOverview } from '../../../../../../components/trophy/overview/overview';
-import { RouteState, RouteMutation, RouteStore, RouteAction } from '../../view.state';
+import { RouteState, RouteMutation, RouteStore, RouteAction } from '../../view.store';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { AppScoreOverview } from '../../../../../../components/score/overview/overview';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
 import { Store } from '../../../../../../store/index';
 import { AppUserAvatarImg } from '../../../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
 
 @View
 @Component({
@@ -44,6 +45,7 @@ import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/component
 		AppAdPlacement,
 		AppMediaBar,
 		AppGameGrid,
+		AppGameGridPlaceholder,
 		AppRatingWidget,
 		AppCard,
 		AppJolticon,
@@ -70,6 +72,8 @@ import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/component
 	},
 })
 export class AppDiscoverGamesViewOverviewGame extends Vue {
+	@State app: Store['app'];
+
 	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
 	@RouteState game: RouteStore['game'];
 	@RouteState mediaItems: RouteStore['mediaItems'];
@@ -95,10 +99,10 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteMutation setCommentsCount: RouteStore['setCommentsCount'];
 	@RouteAction loadVideoComments: RouteStore['loadVideoComments'];
 
-	@State app: Store['app'];
-
-	showFullDescription = false;
-	canToggleDescription = false;
+	@RouteState showDescription: RouteStore['showDescription'];
+	@RouteState canToggleDescription: RouteStore['canToggleDescription'];
+	@RouteMutation toggleDescription: RouteStore['toggleDescription'];
+	@RouteMutation setCanToggleDescription: RouteStore['setCanToggleDescription'];
 
 	Screen = makeObservableService(Screen);
 	Environment = Environment;

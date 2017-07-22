@@ -1,16 +1,16 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./header.html';
 
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Popover } from '../../../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { RouteState, RouteStore } from '../../manage.state';
+import { RouteState, RouteStore } from '../../manage.store';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGameHeader } from '../../../../../../components/forms/game/header/header';
 import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
+import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -20,10 +20,10 @@ import { AppDashGameWizardControls } from '../../../../../../components/forms/ga
 		AppDashGameWizardControls,
 	},
 })
-export default class RouteDashGamesManageGameHeader extends Vue {
+export default class RouteDashGamesManageGameHeader extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettextInterpolate('Edit Header for %{ game }', {
 			game: this.game.title,
 		});

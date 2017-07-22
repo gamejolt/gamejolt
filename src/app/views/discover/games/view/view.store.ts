@@ -26,10 +26,10 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { router } from '../../../index';
 
-export const RouteStateName = 'gameRoute';
-export const RouteState = namespace(RouteStateName, State);
-export const RouteAction = namespace(RouteStateName, Action);
-export const RouteMutation = namespace(RouteStateName, Mutation);
+export const RouteStoreName = 'gameRoute';
+export const RouteState = namespace(RouteStoreName, State);
+export const RouteAction = namespace(RouteStoreName, Action);
+export const RouteMutation = namespace(RouteStoreName, Mutation);
 
 type Actions = {
 	bootstrap: any;
@@ -39,7 +39,6 @@ type Actions = {
 };
 
 type Mutations = {
-	clear: undefined;
 	bootstrapGame: number;
 	bootstrapFeed: undefined;
 	processPayload: any;
@@ -48,6 +47,8 @@ type Mutations = {
 	setCommentsCount: number;
 	pushVideoComments: CommentVideo[];
 	showMultiplePackagesMessage: undefined;
+	toggleDescription: undefined;
+	setCanToggleDescription: boolean;
 };
 
 @VuexModule()
@@ -87,7 +88,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	supporters: User[] = [];
 	recommendedGames: Game[] = [];
 
-	showFullDescription = false;
+	showDescription = false;
 	canToggleDescription = false;
 
 	videoComments: CommentVideo[] = [];
@@ -171,19 +172,12 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.processRatingPayload(response);
 	}
 
-	/**
-	 * This will clear things that may not get reset by the bootstrap methods.
-	 */
-	@VuexMutation
-	clear() {
-		this.feed = null;
-		this.showFullDescription = false;
-		this.canToggleDescription = false;
-	}
-
 	@VuexMutation
 	bootstrapGame(gameId: Mutations['bootstrapGame']) {
 		this.game = Registry.find<Game>('Game', gameId) as any;
+		this.showDescription = false;
+		this.isOverviewLoaded = false;
+		this.mediaItems = [];
 	}
 
 	@VuexMutation
@@ -298,5 +292,15 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	showMultiplePackagesMessage() {
 		this.shouldShowMultiplePackagesMessage = true;
+	}
+
+	@VuexMutation
+	toggleDescription() {
+		this.showDescription = !this.showDescription;
+	}
+
+	@VuexMutation
+	setCanToggleDescription(flag: Mutations['setCanToggleDescription']) {
+		this.canToggleDescription = flag;
 	}
 }

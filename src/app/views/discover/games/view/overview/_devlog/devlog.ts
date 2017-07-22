@@ -13,7 +13,7 @@ import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/m
 import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
-import { RouteState, RouteStore } from '../../view.state';
+import { RouteState, RouteStore, RouteMutation } from '../../view.store';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
 import { Store } from '../../../../../../store/index';
@@ -23,6 +23,8 @@ import { AppCommentWidgetAdd } from '../../../../../../../lib/gj-lib-client/comp
 import { Comment } from '../../../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
+import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
+import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
 
 @View
 @Component({
@@ -32,6 +34,7 @@ import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 		AppLazyPlaceholder,
 		AppFadeCollapse,
 		AppActivityFeed,
+		AppActivityFeedPlaceholder,
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
 		AppGamePackageCard,
@@ -39,12 +42,15 @@ import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 		AppCommentPeek,
 		AppCommentWidgetAdd,
 		AppGameGrid,
+		AppGameGridPlaceholder,
 	},
 	directives: {
 		AppTrackEvent,
 	},
 })
 export class AppDiscoverGamesViewOverviewDevlog extends Vue {
+	@State app: Store['app'];
+
 	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
 	@RouteState game: RouteStore['game'];
 	@RouteState mediaItems: RouteStore['mediaItems'];
@@ -55,12 +61,13 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	@RouteState hasReleasesSection: RouteStore['hasReleasesSection'];
 	@RouteState recommendedGames: RouteStore['recommendedGames'];
 
-	@State app: Store['app'];
+	@RouteState showDescription: RouteStore['showDescription'];
+	@RouteState canToggleDescription: RouteStore['canToggleDescription'];
+	@RouteMutation toggleDescription: RouteStore['toggleDescription'];
+	@RouteMutation setCanToggleDescription: RouteStore['setCanToggleDescription'];
 
 	comments: Comment[] = [];
 	commentsCount = 0;
-	showFullDescription = false;
-	canToggleDescription = false;
 
 	headingColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-2';
 	contentColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-7';
@@ -73,6 +80,9 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	@Watch('game.id', { immediate: true })
 	async onGameChange() {
 		if (this.game) {
+			this.comments = [];
+			this.commentsCount = 0;
+
 			const payload = await Comment.fetch('Game', this.game.id, 1);
 			this.commentsCount = payload.count;
 			this.comments = Comment.populate(payload.comments);

@@ -1,5 +1,4 @@
 import { Component, Prop } from 'vue-property-decorator';
-import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import * as View from '!view!./site-editor-modal.html?style=./site-editor-modal.styl';
 
@@ -13,6 +12,7 @@ import { AppThemeSelector } from '../../../lib/gj-lib-client/components/theme/se
 import { AppLoading } from '../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppThemeEditor } from '../../../lib/gj-lib-client/components/theme/theme-editor/theme-editor';
 import { AppContentBlockEditor } from '../../../lib/gj-lib-client/components/content-block/editor/editor';
+import { Store } from '../../store/index';
 
 @View
 @Component({
@@ -27,7 +27,7 @@ export default class AppSiteEditorModal extends BaseModal {
 	@Prop() siteId: number;
 	@Prop() onInit?: Function;
 
-	@State('$route') routeState: VueRouter.Route;
+	@State route: Store['route'];
 
 	site: Site = null as any;
 	templates: SiteTemplate[] = [];
@@ -39,7 +39,7 @@ export default class AppSiteEditorModal extends BaseModal {
 	private isDirty = false;
 
 	get tab() {
-		return this.routeState.params.tab;
+		return this.route.params.tab;
 	}
 
 	get siteUrl() {

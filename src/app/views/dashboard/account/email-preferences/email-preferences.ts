@@ -1,13 +1,15 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./email-preferences.html';
 
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteMutation, RouteStore } from '../account.state';
+import { RouteMutation, RouteStore } from '../account.store';
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { FormEmailPreferences } from '../../../../components/forms/email-preferences/email-preferences';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -15,7 +17,7 @@ import { FormEmailPreferences } from '../../../../components/forms/email-prefere
 		FormEmailPreferences,
 	},
 })
-export default class RouteDashAccountEmailPreferences extends Vue {
+export default class RouteDashAccountEmailPreferences extends BaseRouteComponent {
 	@RouteMutation setHeading: RouteStore['setHeading'];
 
 	user: User = null as any;

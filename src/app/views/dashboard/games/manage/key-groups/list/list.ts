@@ -1,14 +1,12 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html?style=./list.styl';
 
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
 import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../manage.state';
+import { RouteState, RouteStore } from '../../manage.store';
 import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
 import { AppCardListItem } from '../../../../../../../lib/gj-lib-client/components/card/list/item/item';
 import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
@@ -16,6 +14,10 @@ import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/component
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -31,7 +33,7 @@ import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-gr
 		number,
 	},
 })
-export default class RouteDashGamesManageKeyGroupsList extends Vue {
+export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	keyGroups: KeyGroup[] = [];

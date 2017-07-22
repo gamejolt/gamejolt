@@ -1,10 +1,8 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./view.html?style=./view.styl';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -14,8 +12,13 @@ import { AppDevlogPostView } from '../../../../../../components/devlog/post/view
 import { AppDevlogPostViewPlaceholder } from '../../../../../../components/devlog/post/view/placeholder/placeholder';
 import { AppScrollWhen } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll-when.directive.vue';
 import { Registry } from '../../../../../../../lib/gj-lib-client/components/registry/registry.service';
-import { RouteState, RouteStore } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.store';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { enforceLocation } from '../../../../../../../lib/gj-lib-client/utils/router';
 
 @View
 @Component({
@@ -29,7 +32,7 @@ import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/component
 		AppScrollWhen,
 	},
 })
-export default class RouteDiscoverGamesViewDevlogView extends Vue {
+export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent {
 	@Prop() postSlug: string;
 
 	@RouteState game: RouteStore['game'];
@@ -39,9 +42,20 @@ export default class RouteDiscoverGamesViewDevlogView extends Vue {
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve({ lazy: true, cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: VueRouter.Route) {
 		const postHash = FiresidePost.pullHashFromUrl(route.params.postSlug);
-		return Api.sendRequest('/web/discover/games/devlog/' + route.params.id + '/' + postHash);
+		const payload = await Api.sendRequest(
+			'/web/discover/games/devlog/' + route.params.id + '/' + postHash
+		);
+
+		if (payload && payload.post) {
+			const redirect = enforceLocation(route, { postSlug: payload.post.slug });
+			if (redirect) {
+				return redirect;
+			}
+		}
+
+		return payload;
 	}
 
 	routeInit() {
@@ -59,12 +73,6 @@ export default class RouteDiscoverGamesViewDevlogView extends Vue {
 
 		this.post.$viewed();
 		this.post.$expanded();
-
-		// TODO(rewrite)
-		// location.enforce( {
-		// 	slug: $scope['gameCtrl'].game.slug,
-		// 	postSlug: this.post.slug,
-		// } );
 
 		Meta.title = this.post.title;
 		Meta.description = this.$payload.metaDescription;

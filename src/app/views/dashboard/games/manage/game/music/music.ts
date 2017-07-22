@@ -1,13 +1,11 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./music.html';
 
 import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../manage.state';
+import { RouteState, RouteStore } from '../../manage.store';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
 import { AppCardListItem } from '../../../../../../../lib/gj-lib-client/components/card/list/item/item';
@@ -16,6 +14,10 @@ import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/componen
 import { FormGameSong } from '../../../../../../components/forms/game/song/song';
 import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -29,7 +31,7 @@ import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/component
 		AppDashGameWizardControls,
 	},
 })
-export default class RouteDashGamesManageGameMusic extends Vue {
+export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	songs: GameSong[] = [];

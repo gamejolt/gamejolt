@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./overview.html?style=./overview.styl';
@@ -14,6 +13,7 @@ import { AppGameCollectionList } from '../../../components/game/collection/list/
 import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
 import { Store } from '../../../store/index';
 import { LibraryState, LibraryStore } from '../../../store/library';
+import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -24,7 +24,7 @@ import { LibraryState, LibraryStore } from '../../../store/library';
 		AppGameCollectionList,
 	},
 })
-export default class RouteLibraryOverview extends Vue {
+export default class RouteLibraryOverview extends BaseRouteComponent {
 	@State isBootstrapped: Store['isBootstrapped'];
 	@LibraryState followedCollection: LibraryStore['followedCollection'];
 	@LibraryState developerCollection: LibraryStore['developerCollection'];
@@ -35,7 +35,7 @@ export default class RouteLibraryOverview extends Vue {
 	Connection = makeObservableService(Connection);
 	Screen = makeObservableService(Screen);
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettext('library.page_title');
 	}
 

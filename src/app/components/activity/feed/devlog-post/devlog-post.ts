@@ -20,6 +20,8 @@ import { AppActivityFeedDevlogPostSketchfab } from './sketchfab/sketchfab';
 import { AppActivityFeedDevlogPostVideo } from './video/video';
 import { AppActivityFeedDevlogPostControls } from './controls/controls';
 
+const ResizeSensor = require('css-element-queries/src/ResizeSensor');
+
 @View
 @Component({
 	components: {
@@ -40,6 +42,7 @@ export class AppActivityFeedDevlogPost extends Vue {
 	@Prop(ActivityFeedItem) item: ActivityFeedItem;
 
 	post: FiresidePost;
+	private resizeSensor?: any;
 
 	feed: AppActivityFeed;
 	Screen = makeObservableService(Screen);
@@ -59,6 +62,16 @@ export class AppActivityFeedDevlogPost extends Vue {
 	created() {
 		this.feed = findRequiredVueParent(this, AppActivityFeed);
 		this.post = this.item.feedItem as FiresidePost;
+	}
+
+	mounted() {
+		this.resizeSensor = new ResizeSensor(this.$el, () => {
+			this.$emit('resize', this.$el.offsetHeight);
+		});
+	}
+
+	destroyed() {
+		this.resizeSensor = undefined;
 	}
 
 	onExpand() {

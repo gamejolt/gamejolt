@@ -1,17 +1,20 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Watch } from 'vue-property-decorator';
 import * as View from '!view!./widget.html';
-import { RouteResolve } from '../../../../../../../../../lib/gj-lib-client/utils/router';
+
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Sellable } from '../../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { Environment } from '../../../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { makeObservableService } from '../../../../../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({})
-export default class RouteDashGamesManageGamePackagesEditWidget extends Vue {
+export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRouteComponent {
 	sellable: Sellable | null = null;
 	theme: string = null as any;
 	widgetUrl = '';

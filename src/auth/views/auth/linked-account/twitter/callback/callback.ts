@@ -3,13 +3,16 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 
 import { AuthLinkedAccountProcessing } from '../../_processing/processing';
-import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Auth } from '../../../../../../lib/gj-lib-client/components/auth/auth.service';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @Component({})
-export default class RouteAuthLinkedAccountTwitterCallback extends Vue {
+export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComponent {
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		const { oauth_verifier, state } = route.query;

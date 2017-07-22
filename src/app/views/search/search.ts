@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./search.html';
 import './search.styl';
@@ -12,6 +11,7 @@ import { SearchHistory } from '../../components/search/history/history-service';
 import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { number } from '../../../lib/gj-lib-client/vue/filters/number';
+import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -24,7 +24,7 @@ import { number } from '../../../lib/gj-lib-client/vue/filters/number';
 		number,
 	},
 })
-export default class RouteSearch extends Vue {
+export default class RouteSearch extends BaseRouteComponent {
 	query = '';
 	showPagination = false;
 	noResults = false;
@@ -33,7 +33,7 @@ export default class RouteSearch extends Vue {
 	Screen = makeObservableService(Screen);
 	Search = makeObservableService(Search);
 
-	created() {
+	routeInit() {
 		// We store our own version of the search query and sync back to it on form submission.
 		this.query = Search.query;
 	}

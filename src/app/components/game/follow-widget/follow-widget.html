@@ -4,7 +4,7 @@
 	v-app-auth-required
 	:disabled="isProcessing"
 	@click="onClick"
-	v-app-tooltip.bottom-center="!game.is_following ? $gettext( 'Follow this game to add it to your Library and be notified when new posts are added.' ) : undefined"
+	v-app-tooltip.bottom="!game.is_following ? $gettext( 'Follow this game to add it to your Library and be notified when new posts are added.' ) : undefined"
 	v-app-track-event="`game-follow:${!game.is_following ? 'follow' : 'unfollow'}`"
 	>
 	<span class="btn-badge">

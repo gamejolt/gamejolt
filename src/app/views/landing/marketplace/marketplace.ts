@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./marketplace.html';
 
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -14,6 +12,10 @@ import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytic
 import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
 import { AppGameThumbnail } from '../../../components/game/thumbnail/thumbnail';
 import { Store } from '../../../store/index';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -25,7 +27,7 @@ import { Store } from '../../../store/index';
 		AppTrackEvent,
 	},
 })
-export default class RouteLandingMarketplace extends Vue {
+export default class RouteLandingMarketplace extends BaseRouteComponent {
 	@State app: Store['app'];
 
 	firesidePosts: FiresidePost[] = [];
@@ -34,7 +36,7 @@ export default class RouteLandingMarketplace extends Vue {
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve()
-	beforeRoute() {
+	routeResolve() {
 		return Api.sendRequest('/web/marketplace');
 	}
 

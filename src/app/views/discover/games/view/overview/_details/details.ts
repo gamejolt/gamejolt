@@ -5,7 +5,7 @@ import * as View from '!view!./details.html';
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
 import { date } from '../../../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { RouteState, RouteStore } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.store';
 
 @View
 @Component({

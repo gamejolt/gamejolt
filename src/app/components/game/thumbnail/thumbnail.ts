@@ -27,7 +27,7 @@ const thumbnails: AppGameThumbnail[] = [];
 
 // We want to attach to the window focus/blur events globally so that we don't
 // register so many events.
-if (typeof window !== undefined) {
+if (typeof window !== 'undefined') {
 	window.addEventListener('focus', () => {
 		thumbnails.forEach(i => (i.isWindowFocused = true));
 	});

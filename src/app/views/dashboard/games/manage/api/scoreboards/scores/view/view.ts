@@ -1,18 +1,20 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./view.html';
 
-import { RouteResolve } from '../../../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { RouteState, RouteStore } from '../../../../manage.state';
+import { RouteState, RouteStore } from '../../../../manage.store';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -24,7 +26,7 @@ import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/d
 		date,
 	},
 })
-export default class RouteDashGamesManageApiScoreboardsScoresView extends Vue {
+export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	score: UserGameScore = null as any;

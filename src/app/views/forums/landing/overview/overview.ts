@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
@@ -6,10 +5,13 @@ import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-serv
 import { ForumCategory } from '../../../../../lib/gj-lib-client/components/forum/category/category.model';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppForumRules } from '../../../../components/forum/rules/rules';
 import { AppForumChannelList } from '../../../../components/forum/channel-list/channel-list';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -18,19 +20,19 @@ import { AppForumChannelList } from '../../../../components/forum/channel-list/c
 		AppForumChannelList,
 	},
 })
-export default class RouteForumsLandingOverview extends Vue {
+export default class RouteForumsLandingOverview extends BaseRouteComponent {
 	categories: ForumCategory[] = [];
 	groupedChannels: { [k: number]: ForumChannel[] } = {};
 	latestPosts: ForumPost[] = [];
 	postCountPerPage = 0;
 
-	routeInit() {
-		Meta.title = this.$gettext('Forums');
+	@RouteResolve({ cache: true })
+	routeResolve(this: undefined) {
+		return Api.sendRequest('/web/forums');
 	}
 
-	@RouteResolve({ cache: true })
-	routeResolve() {
-		return Api.sendRequest('/web/forums');
+	routeInit() {
+		Meta.title = this.$gettext('Forums');
 	}
 
 	routed() {

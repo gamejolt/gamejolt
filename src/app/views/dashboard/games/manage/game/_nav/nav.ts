@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./nav.html?style=./nav.styl';
 
-import { RouteState, RouteStore, RouteAction } from '../../manage.state';
+import { RouteState, RouteStore, RouteAction } from '../../manage.store';
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppManageGameNavRequired } from './required';
 

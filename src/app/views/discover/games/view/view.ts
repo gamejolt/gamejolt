@@ -1,11 +1,10 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./view.html';
 import './view-content.styl';
 
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
+import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
@@ -26,9 +25,14 @@ import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/c
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { AppMeter } from '../../../../../lib/gj-lib-client/components/meter/meter';
-import { RouteStateName, RouteState, RouteAction, RouteStore, RouteMutation } from './view.state';
+import { RouteStoreName, RouteState, RouteAction, RouteStore, RouteMutation } from './view.store';
 import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Store } from '../../../../store/index';
+import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
+import {
+	RouteResolve,
+	BaseRouteComponent,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -48,7 +52,7 @@ import { Store } from '../../../../store/index';
 		AppTooltip,
 	},
 })
-export default class RouteDiscoverGamesView extends Vue {
+export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@Prop() id: string;
 
 	@RouteState game: RouteStore['game'];
@@ -58,8 +62,10 @@ export default class RouteDiscoverGamesView extends Vue {
 	@RouteAction bootstrap: RouteStore['bootstrap'];
 	@RouteAction refreshRatingInfo: RouteStore['refreshRatingInfo'];
 	@RouteMutation bootstrapGame: RouteStore['bootstrapGame'];
-	@RouteMutation clear: RouteStore['clear'];
 	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
+
+	storeName = RouteStoreName;
+	storeModule = RouteStore;
 
 	@State app: Store['app'];
 
@@ -67,6 +73,7 @@ export default class RouteDiscoverGamesView extends Vue {
 	Screen = makeObservableService(Screen);
 
 	private ratingCallback?: Function;
+	private gaTrackingId?: string;
 
 	get ratingTooltip() {
 		return number(this.game.rating_count || 0) + ' rating(s), avg: ' + this.game.avg_rating;
@@ -91,49 +98,54 @@ export default class RouteDiscoverGamesView extends Vue {
 	}
 
 	@RouteResolve({ lazy: true, cache: true, cacheTag: 'view' })
-	beforeRoute(route: VueRouter.Route) {
-		return Api.sendRequest('/web/discover/games/' + route.params.id);
+	async routeResolve(this: undefined, route: VueRouter.Route) {
+		const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
+
+		if (payload && payload.game) {
+			const redirect = enforceLocation(
+				route,
+				{ slug: payload.game.slug },
+				{
+					ref: payload.userPartnerKey || route.query.ref || undefined,
+				}
+			);
+			if (redirect) {
+				return redirect;
+			}
+		}
+
+		return payload;
 	}
 
 	routeInit() {
-		this.$store.registerModule(RouteStateName, new RouteStore());
 		this.bootstrapGame(parseInt(this.id, 10));
 
-		// Any game rating change will broadcast this event.
-		// We catch it so we can update the page with the new rating! Yay!
-		this.ratingCallback = (gameId: number) => this.onGameRatingChange(gameId);
-		EventBus.on('GameRating.changed', this.ratingCallback);
-	}
+		// Any game rating change will broadcast this event. We catch it so we
+		// can update the page with the new rating! Yay!
+		if (!this.ratingCallback) {
+			this.ratingCallback = (gameId: number) => this.onGameRatingChange(gameId);
+			EventBus.on('GameRating.changed', this.ratingCallback);
+		}
 
-	destroyed() {
-		this.$store.unregisterModule(RouteStateName);
-
-		if (this.ratingCallback) {
-			EventBus.off('GameRating.changed', this.ratingCallback);
-			this.ratingCallback = undefined;
+		// Since routes are reused when switching params (new game page) we want
+		// to unset any previously set tracking IDs.
+		if (this.gaTrackingId) {
+			Analytics.detachAdditionalPageTracker(this.gaTrackingId);
+			this.gaTrackingId = undefined;
 		}
 	}
 
 	routed() {
-		this.clear();
 		this.bootstrap(this.$payload);
 
-		// TODO(rewrite)
 		// If the game has a GA tracking ID, then we attach it to this
 		// scope so all page views within get tracked.
-		// if ( this.game.ga_tracking_id ) {
-		// 	Analytics.attachAdditionalPageTracker( $scope, game.ga_tracking_id );
-		// }
+		if (this.game.ga_tracking_id) {
+			Analytics.attachAdditionalPageTracker(this.game.ga_tracking_id);
+			this.gaTrackingId = this.game.ga_tracking_id;
+		}
 
-		// Ensure the URL for this game page.
-		// We need to wait till we have a referral key for a partner.
-		// This will only get through if the user is a partner.
-		// Location.enforce( {
-		// 	slug: game.slug,
-		// 	ref: this.userPartnerKey || $location.search().ref || undefined,
-		// } );
-
-		// TODO(rewrite) should we sync from the registry or here?
+		// TODO(rewrite)
 		// // For syncing game data to client.
 		// if ( GJ_IS_CLIENT ) {
 
@@ -146,6 +158,17 @@ export default class RouteDiscoverGamesView extends Vue {
 		// 			}
 		// 		} );
 		// }
+	}
+
+	routeDestroy() {
+		if (this.ratingCallback) {
+			EventBus.off('GameRating.changed', this.ratingCallback);
+			this.ratingCallback = undefined;
+		}
+
+		if (this.game.ga_tracking_id) {
+			Analytics.detachAdditionalPageTracker(this.game.ga_tracking_id);
+		}
 	}
 
 	onGameRatingChange(gameId: number) {

@@ -1,11 +1,9 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
-import { RouteState, RouteStore, RouteAction } from '../../manage.state';
+import { RouteState, RouteStore, RouteAction } from '../../manage.store';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -15,6 +13,10 @@ import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/exp
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGameDevStageSelector } from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -32,7 +34,7 @@ import { AppGameDevStageSelector } from '../../../../../../components/forms/game
 		number,
 	},
 })
-export default class RouteDashGamesManageGameOverview extends Vue {
+export default class RouteDashGamesManageGameOverview extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 	@RouteState canPublish: RouteStore['canPublish'];
 

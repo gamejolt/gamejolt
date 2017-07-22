@@ -1,14 +1,17 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./settings.html';
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
+
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteStore, RouteState } from '../../manage.state';
+import { RouteStore, RouteState } from '../../manage.store';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import VueRouter from 'vue-router';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -16,7 +19,7 @@ import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/componen
 		AppJolticon,
 	},
 })
-export default class RouteDashGamesManageApiSettings extends Vue {
+export default class RouteDashGamesManageApiSettings extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	privateKey = '';

@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./comments.html';
 
@@ -7,8 +6,9 @@ import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/sc
 import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils/vue';
 import { AppCommentWidget } from '../../../../../../lib/gj-lib-client/components/comment/widget/widget';
 import { AppAd } from '../../../../../../lib/gj-lib-client/components/ad/ad';
-import { RouteState, RouteStore } from '../view.state';
+import { RouteState, RouteStore } from '../view.store';
 import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -18,12 +18,12 @@ import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/a
 		AppAdPlacement,
 	},
 })
-export default class RouteDiscoverGamesViewComments extends Vue {
+export default class RouteDiscoverGamesViewComments extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	Screen = makeObservableService(Screen);
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettextInterpolate(`Comments for %{ game }`, {
 			game: this.game.title,
 		});

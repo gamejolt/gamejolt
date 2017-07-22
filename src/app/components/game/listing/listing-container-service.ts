@@ -1,6 +1,7 @@
 import VueRouter from 'vue-router';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameFilteringContainer } from '../filtering/container';
+import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
 
 export class GameListingContainer {
 	isBootstrapped = false;
@@ -23,10 +24,7 @@ export class GameListingContainer {
 	}
 
 	removeGame(game: Game) {
-		const index = this.games.findIndex(item => item.id === game.id);
-		if (index !== -1) {
-			this.games.splice(index, 1);
-		}
+		arrayRemove(this.games, i => i.id === game.id);
 		--this.gamesCount;
 	}
 }

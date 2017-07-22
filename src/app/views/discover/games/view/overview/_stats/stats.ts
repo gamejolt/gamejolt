@@ -9,7 +9,7 @@ import { fuzzynumber } from '../../../../../../../lib/gj-lib-client/vue/filters/
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
 import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
-import { RouteState, RouteStore } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.store';
 
 @View
 @Component({

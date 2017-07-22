@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
@@ -30,7 +29,6 @@ import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../../../lib/gj-lib-client/components/game/release/release.model';
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Store } from '../../../store/index';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
@@ -50,6 +48,10 @@ import { AppAnalyticsReportRatingBreakdown } from './_report/rating-breakdown';
 import { AppAnalyticsReportTopComposition } from './_report/top-composition';
 import { AppAnalyticsReportTopCompositionValue } from './_report/top-composition-value';
 import { AppGraph } from '../../../../lib/gj-lib-client/components/graph/graph';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -74,7 +76,7 @@ import { AppGraph } from '../../../../lib/gj-lib-client/components/graph/graph';
 		date,
 	},
 })
-export default class RouteDashAnalytics extends Vue {
+export default class RouteDashAnalytics extends BaseRouteComponent {
 	@State app: Store['app'];
 
 	/**

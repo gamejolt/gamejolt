@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
 import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
@@ -21,6 +19,10 @@ import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/fr
 import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
 import { AppCommentVideoThumbnail } from '../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import { UserGameSession } from '../../../../lib/gj-lib-client/components/user/game-session/game-session.model';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -40,7 +42,7 @@ import { UserGameSession } from '../../../../lib/gj-lib-client/components/user/g
 		number,
 	},
 })
-export default class RouteProfileOverview extends Vue {
+export default class RouteProfileOverview extends BaseRouteComponent {
 	@Prop() user: User;
 	@Prop() gamesCount: number;
 	@Prop() videosCount: number;

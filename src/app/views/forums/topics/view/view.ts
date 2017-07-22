@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
@@ -11,7 +10,7 @@ import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/pos
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Popover } from '../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
+import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
@@ -38,6 +37,10 @@ import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components
 import { Store } from '../../../../store/index';
 import { AppMessageThreadPagination } from '../../../../../lib/gj-lib-client/components/message-thread/pagination/pagination';
 import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -67,7 +70,7 @@ import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
 		number,
 	},
 })
-export default class RouteForumsTopicsView extends Vue {
+export default class RouteForumsTopicsView extends BaseRouteComponent {
 	@State app: Store['app'];
 
 	topic: ForumTopic = null as any;
@@ -93,20 +96,24 @@ export default class RouteForumsTopicsView extends Vue {
 	}
 
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: VueRouter.Route) {
 		HistoryTick.sendBeacon('forum-topic', parseInt(route.params.id, 10));
 
-		return Api.sendRequest(
+		const payload = await Api.sendRequest(
 			'/web/forums/topics/' + route.params.id + '?page=' + (route.query.page || 1)
 		);
+
+		if (payload && payload.topic) {
+			const redirect = enforceLocation(route, { slug: payload.topic.slug });
+			if (redirect) {
+				return redirect;
+			}
+		}
+
+		return payload;
 	}
 
 	routed() {
-		// TODO(rewrite)
-		// Location.enforce( {
-		// 	slug: payload.topic.slug,
-		// } );
-
 		this.topic = new ForumTopic(this.$payload.topic);
 		this.channel = new ForumChannel(this.$payload.channel);
 		this.posts = ForumPost.populate(this.$payload.posts);

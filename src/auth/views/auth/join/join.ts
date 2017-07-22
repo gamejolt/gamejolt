@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Mutation } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./join.html';
@@ -9,8 +8,11 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Store } from '../../../store/index';
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { loggedUserBlock } from '../auth';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -19,13 +21,13 @@ import { loggedUserBlock } from '../auth';
 		AppAuthJoin,
 	},
 })
-export default class RouteAuthJoin extends Vue {
+export default class RouteAuthJoin extends BaseRouteComponent {
 	@Mutation setCredentials: Store['setCredentials'];
 
 	Connection = makeObservableService(Connection);
 
 	@RouteResolve()
-	routeResolve() {
+	async routeResolve() {
 		return loggedUserBlock();
 	}
 

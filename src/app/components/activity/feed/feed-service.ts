@@ -1,35 +1,29 @@
 import { ActivityFeedInput } from './item-service';
 import { ActivityFeedContainer, ActivityFeedContainerOptions } from './feed-container-service';
-import { History } from '../../../../lib/gj-lib-client/components/history/history.service';
-import { router } from '../../../views/index';
 
 /**
  * Number of states we will keep cached.
  * We will purge others out of the cache.
  */
-const MAX_CACHED_COUNT = 3;
+const MaxCachedCount = 3;
 
 interface ActivityFeedState {
-	url: string;
+	key?: string;
 	container: ActivityFeedContainer;
 }
 
 export class ActivityFeedService {
 	private static _states: ActivityFeedState[] = [];
-	private static _currentState: ActivityFeedState;
 
 	static bootstrap(items?: ActivityFeedInput[], options?: ActivityFeedContainerOptions) {
-		const url = History.futureState ? History.futureState.fullPath : router.currentRoute.fullPath;
+		// vue-router maintains a history key for each route in the history.
+		const key: string | undefined =
+			typeof history !== 'undefined' ? history.state && history.state.key : undefined;
 
-		// If we're bootstrapping in historical, just return what we had.
-		// We only do this if we are going back to the latest state that we have
-		// stored items for.
-		if (History.inHistorical) {
-			const state = this._states.find(item => item.url === url);
-			if (state) {
-				this._currentState = state;
-				return this._currentState.container;
-			}
+		// If we have a state container for this historical key...
+		let state = this._states.find(item => item.key === key);
+		if (state) {
+			return state.container;
 		}
 
 		// If items passed in were null then they were trying to pull from
@@ -39,23 +33,16 @@ export class ActivityFeedService {
 			return null;
 		}
 
-		// If we're not going back/forward in history, but rather a new page
-		// then always bootstrap a new state container. This will clear out any
-		// historical ones for this URL.
-		const index = this._states.findIndex(item => item.url === url);
-		if (index !== -1) {
-			this._states.splice(0, index);
-		}
-
-		this._currentState = {
-			url,
+		// New state, yay!
+		state = {
+			key,
 			container: new ActivityFeedContainer(items, options),
 		};
 
 		// Keep it trimmed.
-		this._states.unshift(this._currentState);
-		this._states = this._states.slice(0, MAX_CACHED_COUNT);
+		this._states.unshift(state);
+		this._states = this._states.slice(0, MaxCachedCount);
 
-		return this._currentState.container;
+		return state.container;
 	}
 }

@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
@@ -6,7 +5,6 @@ import * as View from '!view!./list.html';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppGenreList } from '../../../../components/genre/list/list';
-import { RouteResolve } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameFilteringContainer } from '../../../../components/game/filtering/container';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
@@ -15,6 +13,10 @@ import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-serv
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppGameGrid } from '../../../../components/game/grid/grid';
 import { AppGameListing } from '../../../../components/game/listing/listing';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -29,9 +31,8 @@ import { AppGameListing } from '../../../../components/game/listing/listing';
 		AppTooltip,
 	},
 })
-export default class RouteDiscoverGamesList extends Vue {
-	@Prop({ type: String, default: 'hot' })
-	section?: string;
+export default class RouteDiscoverGamesList extends BaseRouteComponent {
+	@Prop(String) section?: string;
 
 	@Prop(String) category?: string;
 
@@ -70,7 +71,7 @@ export default class RouteDiscoverGamesList extends Vue {
 
 	// TODO(rewrite): Still gotta work on this.
 	@RouteResolve({ lazy: true, cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: VueRouter.Route) {
 		const filtering = new GameFilteringContainer();
 		filtering.isPersistent = true;
 
@@ -146,7 +147,7 @@ export default class RouteDiscoverGamesList extends Vue {
 	}
 
 	processGeneralSection() {
-		const sectionTranslationKey = 'games.list.section_' + this.section;
+		const sectionTranslationKey = 'games.list.section_' + (this.section || 'hot');
 		const sectionHuman = this.translations[sectionTranslationKey];
 		let categoryHuman = '';
 		if (this.category) {

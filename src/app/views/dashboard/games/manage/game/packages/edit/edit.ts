@@ -1,14 +1,12 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./edit.html';
 
-import { RouteResolve } from '../../../../../../../../lib/gj-lib-client/utils/router';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../../../../../../../lib/gj-lib-client/components/game/release/release.model';
 import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { RouteState, RouteStore } from '../../../manage.state';
+import { RouteState, RouteStore } from '../../../manage.store';
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePackagePayloadModel } from '../../../../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
@@ -24,6 +22,10 @@ import { FormGamePackage } from '../../../../../../../components/forms/game/pack
 import { AppExpand } from '../../../../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { AppProgressPoller } from '../../../../../../../../lib/gj-lib-client/components/progress/poller/poller';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -42,7 +44,7 @@ import { AppProgressPoller } from '../../../../../../../../lib/gj-lib-client/com
 		AppTooltip,
 	},
 })
-export default class RouteDashGamesManageGamePackagesEdit extends Vue {
+export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
 	package: GamePackage = null as any;
@@ -138,6 +140,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends Vue {
 					packageId: this.package.id + '',
 					releaseId: response.newReleaseId + '',
 				},
+				query: this.$route.query,
 			});
 		} catch (e) {
 			Growls.error(this.$gettext(`Could not create new release.`));

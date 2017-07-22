@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -6,7 +5,6 @@ import * as View from '!view!./profile.html?style=./profile.styl';
 
 import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
-import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
 import { AppPageHeader } from '../../components/page-header/page-header';
@@ -22,6 +20,10 @@ import { UserFriendshipHelper } from '../../components/user/friendships-helper/f
 import { ReportModal } from '../../../lib/gj-lib-client/components/report/modal/modal.service';
 import { Store } from '../../store/index';
 import { UserGameSession } from '../../../lib/gj-lib-client/components/user/game-session/game-session.model';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -38,7 +40,7 @@ import { UserGameSession } from '../../../lib/gj-lib-client/components/user/game
 		AppPopoverTrigger,
 	},
 })
-export default class RouteProfile extends Vue {
+export default class RouteProfile extends BaseRouteComponent {
 	@Prop(String) username: string;
 
 	@State app: Store['app'];
@@ -62,11 +64,6 @@ export default class RouteProfile extends Vue {
 
 	routed() {
 		this.user = new User(this.$payload.user);
-
-		// TODO(rewrite)
-		// Location.enforce( {
-		// 	slug: this.user.slug,
-		// } );
 
 		this.headerMediaItem = this.$payload.headerMediaItem
 			? new MediaItem(this.$payload.headerMediaItem)

@@ -1,7 +1,5 @@
 import '../lib/gj-lib-client/utils/polyfills';
-
-// This has to go first so the popstate event gets attached first.
-import { History } from '../lib/gj-lib-client/components/history/history.service';
+import './main.styl';
 
 import Vue from 'vue';
 
@@ -11,10 +9,13 @@ import { Payload } from '../lib/gj-lib-client/components/payload/payload-service
 import { App } from './app';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { bootstrapAppTranslations } from '../utils/translations';
+import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
+import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 
-Payload.init(store as any, router);
-History.init(router);
+Meta.init(router);
+Payload.init(store);
 Analytics.initRouter(router);
+Connection.init(store);
 
 export async function createApp() {
 	await bootstrapAppTranslations();

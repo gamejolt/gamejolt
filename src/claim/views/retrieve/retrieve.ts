@@ -1,16 +1,18 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./retrieve.html';
 
 import { GameBundle } from '../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
-import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { FormRetrieve } from '../../components/forms/retrieve/retrieve';
 import { AppInvalidKey } from '../../components/invalid-key/invalid-key';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../lib/gj-lib-client/components/route/route-component';
 
 interface SuccessPayload {
 	error: false;
@@ -32,7 +34,7 @@ type Payload = SuccessPayload | ErrorPayload | undefined;
 		AppInvalidKey,
 	},
 })
-export default class RouteRetrieve extends Vue {
+export default class RouteRetrieve extends BaseRouteComponent {
 	invalidKey = false;
 	key = '';
 	bundle: GameBundle | null = null;

@@ -1,10 +1,8 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./build.html';
 
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
@@ -19,12 +17,16 @@ import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/co
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { RouteState, RouteStore } from '../../view.state';
+import { RouteState, RouteStore } from '../../view.store';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Store } from '../../../../../../store/index';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppDiscoverGamesViewOverviewDetails } from '../../overview/_details/details';
 import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 const DownloadDelay = 5000;
 
@@ -42,7 +44,7 @@ const DownloadDelay = 5000;
 		AppDiscoverGamesViewOverviewDetails,
 	},
 })
-export default class RouteDiscoverGamesViewDownloadBuild extends Vue {
+export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 	@RouteState userRating: RouteStore['userRating'];
 
@@ -57,7 +59,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends Vue {
 	Environment = Environment;
 
 	@RouteResolve()
-	beforeRoute(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: VueRouter.Route) {
 		const gameId = parseInt(route.params.id, 10);
 		const buildId = parseInt(route.params.buildId, 10);
 

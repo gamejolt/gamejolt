@@ -1,14 +1,16 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import * as View from '!view!./games.html';
 
 import { GameListingContainer } from '../../../../../components/game/listing/listing-container-service';
-import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameFilteringContainer } from '../../../../../components/game/filtering/container';
 import { AppGameListing } from '../../../../../components/game/listing/listing';
 import { AppGameGrid } from '../../../../../components/game/grid/grid';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -17,13 +19,13 @@ import { AppGameGrid } from '../../../../../components/game/grid/grid';
 		AppGameGrid,
 	},
 })
-export default class RouteDiscoverChannelsViewGames extends Vue {
+export default class RouteDiscoverChannelsViewGames extends BaseRouteComponent {
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
 
 	// TODO(rewrite): Still gotta work on this
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: VueRouter.Route) {
 		const filtering = new GameFilteringContainer();
 
 		// If initialization changed the URL, then we don't want to do the API call.

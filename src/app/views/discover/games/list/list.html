@@ -12,8 +12,7 @@
 			<h1 v-if="section !== 'by-date'">
 				{{ pageTitle }}
 			</h1>
-
-			<h1 v-if="section === 'by-date'">
+			<h1 v-else>
 				<span v-if="!dateRange">
 					<translate :translate-params="{ date }" :escape-html="false">
 						Games Published <small>on %{ date }</small>
@@ -37,41 +36,36 @@
 					Indie %{ category } that we've featured on the homepage, sorted by feature date.
 				</translate>
 			</p>
-
-			<p class="text-muted small" v-if="section === 'best'">
+			<p class="text-muted small" v-else-if="section === 'best'">
 				<translate :translate-params="{ category: descriptiveCategory }">
 					Indie %{ category } sorted by Voltage.
 				</translate>
 				<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.voltage_tooltip' )" />
 			</p>
-
-			<p class="text-muted small" v-if="section === 'fresh'">
+			<p class="text-muted small" v-else-if="section === 'fresh'">
 				<translate :translate-params="{ category: descriptiveCategory }">
 					Indie %{ category } sorted by Freshness.
 				</translate>
 				<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.freshness_tooltip' )" />
 			</p>
-
-			<p class="text-muted small" v-if="section === 'hot'">
+			<p class="text-muted small" v-else-if="!section">
 				<translate :translate-params="{ category: descriptiveCategory }">
 					Indie %{ category } sorted by Hotness.
 				</translate>
 				<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.hotness_tooltip' )" />
 			</p>
-
-			<p class="text-muted small" v-if="section === 'new'">
+			<p class="text-muted small" v-else-if="section === 'new'">
 				<translate :translate-params="{ category: descriptiveCategory }">
 					Indie %{ category } sorted by publication date.
 				</translate>
 			</p>
-
-			<p class="text-muted small" v-if="section === 'by-date'">
+			<p class="text-muted small" v-else-if="section === 'by-date'">
 				<span v-if="!dateRange">
 					<translate :translate-params="{ date }">
 						Games that were published on %{ date }, sorted by Voltage, with the best scores at the top.
 					</translate>
 				</span>
-				<span v-if="dateRange">
+				<span v-else>
 					<translate
 						:translate-params="{
 							dateStart: dateRange[0],
@@ -93,8 +87,7 @@
 			<app-genre-list />
 		</div>
 	</section>
-
-	<section class="section fill-pink section-thin" v-if="section === 'new'">
+	<section class="section fill-pink section-thin" v-else-if="section === 'new'">
 		<div class="container">
 			<translate :escape-html="false">
 				games.list.new_games_warning_html

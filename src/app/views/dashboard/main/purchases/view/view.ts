@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./view.html?style=./view.styl';
@@ -8,7 +7,6 @@ import { OrderPayment } from '../../../../../../lib/gj-lib-client/components/ord
 import { date } from '../../../../../../lib/gj-lib-client/vue/filters/date';
 import { Order } from '../../../../../../lib/gj-lib-client/components/order/order.model';
 import { OrderPaymentRefund } from '../../../../../../lib/gj-lib-client/components/order/payment/refund/refund.model';
-import { RouteResolve } from '../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePackage } from '../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
@@ -18,6 +16,10 @@ import { AppGameThumbnailImg } from '../../../../../../lib/gj-lib-client/compone
 import { currency } from '../../../../../../lib/gj-lib-client/vue/filters/currency';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils/vue';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -29,7 +31,7 @@ import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils
 		date,
 	},
 })
-export default class RouteDashMainPurchasesView extends Vue {
+export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 	order: Order = null as any;
 	packagesBySellable: any = null;
 	games: any = null;

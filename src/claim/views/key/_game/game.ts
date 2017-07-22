@@ -48,7 +48,7 @@ export class AppKeyGame extends Vue {
 	LinkedKey = LinkedKey;
 
 	created() {
-		this.showingThanks = this.$route.query.thanks !== undefined;
+		this.showingThanks = typeof this.$route.query.thanks !== 'undefined';
 
 		this.game = new Game(this.payload.game);
 		this.bundle = this.payload.bundle ? new GameBundle(this.payload.bundle) : null;

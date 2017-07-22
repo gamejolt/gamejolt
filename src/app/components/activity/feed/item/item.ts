@@ -10,7 +10,6 @@ import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scr
 import { AppActivityFeedDevlogPost } from '../devlog-post/devlog-post';
 import { AppActivityFeedNotification } from '../notification/notification';
 import { AppActivityFeedItemPlaceholder } from './placeholder/placeholder';
-import { Ruler } from '../../../../../lib/gj-lib-client/components/ruler/ruler-service';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 
 @View
@@ -59,9 +58,9 @@ export class AppActivityFeedItem extends Vue {
 
 	onInviewChange(visible: boolean) {
 		this.feed.inViewChange(this.item, visible);
+	}
 
-		if (this.$refs.inner) {
-			this.item.height = Ruler.outerHeight(this.$refs.inner as HTMLElement) + 'px';
-		}
+	onResize(height: number) {
+		this.item.height = height + 'px';
 	}
 }

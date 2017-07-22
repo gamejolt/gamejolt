@@ -1,12 +1,14 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./games.html';
 
-import { RouteResolve } from '../../../../lib/gj-lib-client/utils/router';
 import { Search } from '../../../components/search/search-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppGameGrid } from '../../../components/game/grid/grid';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -14,7 +16,7 @@ import { AppGameGrid } from '../../../components/game/grid/grid';
 		AppGameGrid,
 	},
 })
-export default class RouteSearchGames extends Vue {
+export default class RouteSearchGames extends BaseRouteComponent {
 	@Prop(Object) payload: any;
 
 	Search = makeObservableService(Search);

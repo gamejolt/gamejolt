@@ -1,10 +1,7 @@
 import '../lib/gj-lib-client/utils/polyfills';
-
-// This has to go first so the popstate event gets attached first.
-import { History } from '../lib/gj-lib-client/components/history/history.service';
+import './main.styl';
 
 import Vue from 'vue';
-
 import { store } from './store/index';
 import { router } from './views/index';
 import { Payload } from '../lib/gj-lib-client/components/payload/payload-service';
@@ -16,15 +13,19 @@ import { GamePlayModal } from '../lib/gj-lib-client/components/game/play-modal/p
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { Ads } from '../lib/gj-lib-client/components/ad/ads.service';
 import { bootstrapAppTranslations } from '../utils/translations';
+import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
+import { hijackLinks } from '../lib/gj-lib-client/utils/router';
+import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 
 if (GJ_IS_CLIENT) {
 	// require( './bootstrap-client' );
 }
 
-Payload.init(store as any, router);
-History.init(router);
+Meta.init(router);
+Payload.init(store);
 Analytics.initRouter(router);
 Ads.init(router);
+Connection.init(store);
 
 GamePlayModal.init({ canMinimize: true });
 bootstrapShortkey();
@@ -35,6 +36,8 @@ Registry.setConfig('User', { maxItems: 100 });
 
 // Match this to the shell top nav height.
 Scroll.setOffsetTop(50);
+
+hijackLinks(router, 'gamejolt.com');
 
 export async function createApp() {
 	await bootstrapAppTranslations();

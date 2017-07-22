@@ -1,10 +1,8 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Mutation } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./activity.html';
 
-import { RouteResolve } from '../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';
 import { Notification } from '../../../lib/gj-lib-client/components/notification/notification-model';
@@ -16,6 +14,10 @@ import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/
 import { AppActivityFeed } from '../../components/activity/feed/feed';
 import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
 import { Store } from '../../store/index';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -26,7 +28,7 @@ import { Store } from '../../store/index';
 		AppActivityFeedPlaceholder,
 	},
 })
-export default class RouteActivity extends Vue {
+export default class RouteActivity extends BaseRouteComponent {
 	@Prop(String) tab: 'activity' | 'notifications';
 
 	@Mutation setNotificationCount: Store['setNotificationCount'];

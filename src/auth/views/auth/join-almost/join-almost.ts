@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./join-almost.html';
@@ -9,6 +8,7 @@ import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service
 import { AppProgressPoller } from '../../../../lib/gj-lib-client/components/progress/poller/poller';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Store } from '../../../store/index';
+import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -16,10 +16,10 @@ import { Store } from '../../../store/index';
 		AppProgressPoller,
 	},
 })
-export default class RouteJoinAlmost extends Vue {
+export default class RouteJoinAlmost extends BaseRouteComponent {
 	@State credentials: Store['credentials'];
 
-	created() {
+	routeInit() {
 		Meta.title = this.$gettext('auth.join.almost.page_title');
 	}
 

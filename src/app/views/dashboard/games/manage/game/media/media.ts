@@ -1,12 +1,10 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./media.html?style=./media.styl';
 
-import { RouteState, RouteStore, RouteMutation, Media, RouteAction } from '../../manage.state';
+import { RouteState, RouteStore, RouteMutation, Media, RouteAction } from '../../manage.store';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
-import { RouteResolve } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
@@ -20,6 +18,10 @@ import { AppCardListDraggable } from '../../../../../../../lib/gj-lib-client/com
 import { FormGameVideo } from '../../../../../../components/forms/game/video/video';
 import { FormGameSketchfab } from '../../../../../../components/forms/game/sketchfab/sketchfab';
 import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -38,7 +40,7 @@ import { AppDashGameWizardControls } from '../../../../../../components/forms/ga
 		AppTooltip,
 	},
 })
-export default class RouteDashGamesManageGameMedia extends Vue {
+export default class RouteDashGamesManageGameMedia extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 	@RouteState media: RouteStore['media'];
 
