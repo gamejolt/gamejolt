@@ -28,7 +28,7 @@
 				<img :src="user.imgAvatar" />
 
 				<span class="chat-user-status"
-					v-if="user.isOnline !== undefined"
+					v-if="typeof user.isOnline !== 'undefined'"
 					:class="{
 						'offline': !user.isOnline,
 						'online active': user.isOnline,
@@ -72,7 +72,7 @@
 			<span class="tiny">@{{ user.username }}</span>
 
 			<!--<div class="chat-user-list-meta">
-				 <span v-if="user.currently_playing !== undefined && user.currently_playing">
+				 <span v-if="typeof user.currently_playing !== 'undefined' && user.currently_playing">
 					Playing <em>{{ user.currently_playing.game }}</em>
 				</span>
 			</div>-->

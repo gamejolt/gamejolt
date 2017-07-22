@@ -108,7 +108,7 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 	routed() {
 		// Keep them undefined if not on the payload.
 		// This will ensure that if they aren't an account with revenue, it won't show the revenue widget.
-		if (this.$payload.revenueTotal !== undefined && this.$payload.revenueTotal !== null) {
+		if (typeof this.$payload.revenueTotal !== 'undefined' && this.$payload.revenueTotal !== null) {
 			this.revenueTotal = this.$payload.revenueTotal || 0;
 			this.revenueWithdrawn = this.$payload.revenueWithdrawn || 0;
 			this.revenueSpent = this.$payload.revenueSpent || 0;
