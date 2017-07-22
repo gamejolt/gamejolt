@@ -53,7 +53,7 @@
 		"text-mask-core": "5.0.1",
 		"tslint": "5.5.0",
 		"ua-parser-js": "0.7.14",
-		"v-tooltip": "1.1.6",
+		"v-tooltip": "2.0.0-beta.5",
 		"vee-validate": "2.0.0-rc.7",
 		"vue": "2.4.2",
 		"vue-class-component": "5.0.2",

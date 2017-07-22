@@ -9,7 +9,7 @@
 					:class="{ active: isLeftPaneVisible }"
 					@click="toggleLeftPane"
 					v-app-popover-trigger="`main-menu`"
-					v-app-tooltip.right-middle="$gettext( `Menu (m)` )"
+					v-app-tooltip.right="$gettext( `Menu (m)` )"
 					v-app-track-event="`top-nav:main-menu:toggle`"
 					>
 					<app-jolticon icon="menu" />
@@ -49,7 +49,7 @@
 				<router-link
 					:to="{ name: GJ_IS_CLIENT ? 'library.installed' : 'library.overview' }"
 					:class="{ active: $route.name.indexOf( 'library' ) === 0 }"
-					v-app-tooltip.bottom-center="$gettext( `Your Game Library` )"
+					v-app-tooltip.bottom="$gettext( `Your Game Library` )"
 					v-app-track-event="`top-nav:library`"
 					>
 					<app-jolticon icon="books" />
@@ -61,7 +61,7 @@
 				<router-link
 					:to="{ name: 'activity', params: { tab: 'activity' } }"
 					:class="{ active: $route.name.indexOf( 'activity' ) === 0 }"
-					v-app-tooltip.bottom-center="$gettext( `Activity` )"
+					v-app-tooltip.bottom="$gettext( `Activity` )"
 					v-app-track-event="`top-nav:activity:toggle`"
 					>
 					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
@@ -78,7 +78,7 @@
 				<a
 					:class="{ active: friendRequestsShowing }"
 					v-app-popover-trigger="`friend-requests`"
-					v-app-tooltip.bottom-center="$gettext( `Friend Requests` )"
+					v-app-tooltip.bottom="$gettext( `Friend Requests` )"
 					v-app-track-event="`top-nav:friend-requests:toggle`"
 					>
 					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
@@ -134,7 +134,7 @@
 		<!-- Connection Status -->
 		<span v-if="!Connection.isOnline">
 			<span class="navbar-item disconnected-icon"
-				v-app-tooltip.left-middle="$gettext( `We're having trouble connecting to Game Jolt.` )"
+				v-app-tooltip.left="$gettext( `We're having trouble connecting to Game Jolt.` )"
 				>
 				<app-jolticon icon="offline" />
 			</span>
@@ -146,7 +146,7 @@
 				<a
 					:class="{ active: isRightPaneVisible }"
 					@click="toggleRightPane"
-					v-app-tooltip.left-middle="
+					v-app-tooltip.left="
 						app.user
 							? $gettext( `Chat and Friends List (c)` )
 							: $gettext( `Chat (c)` )

@@ -228,7 +228,7 @@
 					v-app-track-event="`sidebar:devlogs`"
 					>
 					<span class="shell-nav-icon"
-						v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Devlogs' ) : ''"
+						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Devlogs' ) : ''"
 						>
 						<app-jolticon icon="devlogs" />
 					</span>
@@ -245,7 +245,7 @@
 					v-app-track-event="`sidebar:forums`"
 					>
 					<span class="shell-nav-icon"
-						v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Forums' ) : ''"
+						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Forums' ) : ''"
 						>
 						<app-jolticon icon="forums" />
 					</span>
@@ -262,7 +262,7 @@
 					v-app-track-event="`sidebar:search`"
 					>
 					<span class="shell-nav-icon"
-						v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Search' ) : ''"
+						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Search' ) : ''"
 						>
 						<app-jolticon icon="search" />
 					</span>
@@ -333,7 +333,7 @@
 							{{ notificationCount < 100 ? notificationCount : '99+' }}
 						</span>
 						<span class="shell-nav-icon"
-							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Activity Feed' ) : ''"
+							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Activity Feed' ) : ''"
 							>
 							<app-jolticon icon="feed" />
 						</span>
@@ -350,7 +350,7 @@
 						v-app-track-event="`sidebar:dashboard`"
 						>
 						<span class="shell-nav-icon"
-							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Dashboard' ) : ''"
+							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Dashboard' ) : ''"
 							>
 							<app-user-avatar-img :user="app.user" />
 						</span>
@@ -371,7 +371,7 @@
 						v-app-track-event="`sidebar:collection:installed`"
 						>
 						<span class="shell-nav-icon"
-							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Installed Games' ) : ''"
+							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Installed Games' ) : ''"
 							>
 							<app-jolticon icon="download-box" />
 						</span>
@@ -388,7 +388,7 @@
 						v-app-track-event="`sidebar:collection:developer`"
 						>
 						<span class="shell-nav-icon"
-							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Your Games' ) : ''"
+							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Your Games' ) : ''"
 							>
 							<app-jolticon icon="user" />
 						</span>
@@ -405,7 +405,7 @@
 						v-app-track-event="`sidebar:collection:followed`"
 						>
 						<span class="shell-nav-icon"
-							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Followed Games' ) : ''"
+							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Followed Games' ) : ''"
 							>
 							<app-jolticon icon="subscribe" />
 						</span>
@@ -422,7 +422,7 @@
 						v-app-track-event="`sidebar:collection:recommended`"
 						>
 						<span class="shell-nav-icon"
-							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Recommended Games' ) : ''"
+							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Recommended Games' ) : ''"
 							>
 							<app-jolticon icon="pedestals-numbers" />
 						</span>
@@ -439,7 +439,7 @@
 						v-app-track-event="`sidebar:collection:owned`"
 						>
 						<span class="shell-nav-icon"
-							v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Owned Games' ) : ''"
+							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Owned Games' ) : ''"
 							>
 							<app-jolticon icon="heart" />
 						</span>
@@ -459,7 +459,7 @@
 							v-app-track-event="`sidebar:playlists`"
 							>
 							<span class="shell-nav-icon"
-								v-app-tooltip.right-middle="!isLeftPaneVisible ? $gettext( 'Playlists' ) : ''"
+								v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Playlists' ) : ''"
 								>
 								<app-jolticon icon="playlist" />
 							</span>
