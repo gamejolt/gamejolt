@@ -53,8 +53,7 @@
 						<translate>dash.games.api.overview.sessions_time_label</translate>
 					</div>
 					<div class="stat-big-digit">
-						<!--TODO(rewrite)-->
-						<!--{{ sessionStats.time | duration }}-->
+						{{ duration( sessionStats.time ) }}
 					</div>
 				</div>
 			</div>
@@ -64,8 +63,7 @@
 						<translate>dash.games.api.overview.sessions_avg_label</translate>
 					</div>
 					<div class="stat-big-digit">
-						<!--TODO(rewrite)-->
-						<!--{{ sessionStats.avg | duration }}-->
+						{{ duration( sessionStats.avg ) }}
 					</div>
 				</div>
 			</div>
@@ -75,8 +73,7 @@
 						<translate>dash.games.api.overview.sessions_users_label</translate>
 					</div>
 					<div class="stat-big-digit">
-						<!--TODO(rewrite)-->
-						<!--{{ sessionStats['user-count'] | number }}-->
+						{{ sessionStats['user-count'] | number }}
 					</div>
 				</div>
 			</div>
