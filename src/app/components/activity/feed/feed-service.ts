@@ -17,7 +17,8 @@ export class ActivityFeedService {
 
 	static bootstrap(items?: ActivityFeedInput[], options?: ActivityFeedContainerOptions) {
 		// vue-router maintains a history key for each route in the history.
-		const key: string | undefined = history.state && history.state.key;
+		const key: string | undefined =
+			typeof history !== 'undefined' ? history.state && history.state.key : undefined;
 
 		// If we have a state container for this historical key...
 		let state = this._states.find(item => item.key === key);
