@@ -32,8 +32,7 @@ import {
 	},
 })
 export default class RouteDiscoverGamesList extends BaseRouteComponent {
-	@Prop({ type: String, default: 'hot' })
-	section?: string;
+	@Prop(String) section?: string;
 
 	@Prop(String) category?: string;
 
@@ -148,7 +147,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	}
 
 	processGeneralSection() {
-		const sectionTranslationKey = 'games.list.section_' + this.section;
+		const sectionTranslationKey = 'games.list.section_' + (this.section || 'hot');
 		const sectionHuman = this.translations[sectionTranslationKey];
 		let categoryHuman = '';
 		if (this.category) {

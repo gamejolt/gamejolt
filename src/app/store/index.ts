@@ -269,7 +269,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			return;
 		}
 
-		this.backdrop = Backdrop.push(document.body);
+		this.backdrop = Backdrop.push({ context: document.body });
 	}
 
 	@VuexMutation
