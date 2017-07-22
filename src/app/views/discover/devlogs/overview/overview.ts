@@ -50,7 +50,7 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 	}
 
 	routeInit() {
-		Meta.title = 'Indie game devlogs';
+		Meta.title = this.$gettext('Indie game devlogs');
 		Meta.description =
 			'Find the latest and greatest games in development and follow their devlog feeds!';
 
@@ -65,6 +65,7 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 		// Try pulling feed from cache.
 		if (!GJ_IS_SSR) {
 			this.feed = ActivityFeedService.bootstrap();
+			console.log('tried getting feed', this.feed);
 		}
 	}
 

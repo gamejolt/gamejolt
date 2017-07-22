@@ -16,19 +16,19 @@ interface ActivityFeedState {
 
 export class ActivityFeedService {
 	private static _states: ActivityFeedState[] = [];
-	private static _currentState: ActivityFeedState;
 
 	static bootstrap(items?: ActivityFeedInput[], options?: ActivityFeedContainerOptions) {
-		const url = History.futureState ? History.futureState.fullPath : router.currentRoute.fullPath;
+		const url = router.currentRoute.fullPath;
 
 		// If we're bootstrapping in historical, just return what we had.
 		// We only do this if we are going back to the latest state that we have
 		// stored items for.
 		if (History.inHistorical) {
+			console.log('in historical state!', url);
 			const state = this._states.find(item => item.url === url);
 			if (state) {
-				this._currentState = state;
-				return this._currentState.container;
+				console.log('got state container!', state);
+				return state.container;
 			}
 		}
 
@@ -36,6 +36,7 @@ export class ActivityFeedService {
 		// cache. Since we got here we don't have any cached state, so return
 		// null.
 		if (!items || !options) {
+			console.log(`couldn't bootstrap feed`);
 			return null;
 		}
 
@@ -47,15 +48,16 @@ export class ActivityFeedService {
 			this._states.splice(0, index);
 		}
 
-		this._currentState = {
+		const newState = {
 			url,
 			container: new ActivityFeedContainer(items, options),
 		};
 
 		// Keep it trimmed.
-		this._states.unshift(this._currentState);
+		this._states.unshift(newState);
 		this._states = this._states.slice(0, MAX_CACHED_COUNT);
 
-		return this._currentState.container;
+		console.log('add new state container', newState);
+		return newState.container;
 	}
 }
