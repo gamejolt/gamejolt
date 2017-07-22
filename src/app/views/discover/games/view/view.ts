@@ -63,7 +63,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@RouteAction refreshRatingInfo: RouteStore['refreshRatingInfo'];
 	@RouteMutation bootstrapGame: RouteStore['bootstrapGame'];
 	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
-	@RouteMutation resetDescription: RouteStore['resetDescription'];
 
 	storeName = RouteStoreName;
 	storeModule = RouteStore;
@@ -119,7 +118,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	routeInit() {
-		this.resetDescription();
 		this.bootstrapGame(parseInt(this.id, 10));
 
 		// Any game rating change will broadcast this event. We catch it so we

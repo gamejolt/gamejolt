@@ -47,7 +47,6 @@ type Mutations = {
 	setCommentsCount: number;
 	pushVideoComments: CommentVideo[];
 	showMultiplePackagesMessage: undefined;
-	resetDescription: undefined;
 	toggleDescription: undefined;
 	setCanToggleDescription: boolean;
 };
@@ -175,10 +174,10 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	bootstrapGame(gameId: Mutations['bootstrapGame']) {
-		const game = Registry.find<Game>('Game', gameId) as any;
-		// if (game) {
-		this.game = game;
-		// }
+		this.game = Registry.find<Game>('Game', gameId) as any;
+		this.showDescription = false;
+		this.isOverviewLoaded = false;
+		this.mediaItems = [];
 	}
 
 	@VuexMutation
@@ -293,11 +292,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	showMultiplePackagesMessage() {
 		this.shouldShowMultiplePackagesMessage = true;
-	}
-
-	@VuexMutation
-	resetDescription() {
-		this.showDescription = false;
 	}
 
 	@VuexMutation
