@@ -155,9 +155,6 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends Vue {
 					this.$gettext('Your YouTube channel has been linked.'),
 					this.$gettext('YouTube Channel Linked')
 				);
-
-				// TODO(rewrite): manage channels in a linked account or account store
-				// $scope.linkedAccountsCtrl.youtubeChannelLinked(this.$payload.channel);
 			}
 		}
 
