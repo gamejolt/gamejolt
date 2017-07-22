@@ -41,7 +41,7 @@
 		<app-page-header
 			:cover-media-item="game.header_media_item"
 			:should-affix-nav="$route.name !== 'discover.games.view.download'"
-			autoscroll-route-param="id"
+			:autoscroll-anchor-key="game.id"
 			>
 
 			<!--

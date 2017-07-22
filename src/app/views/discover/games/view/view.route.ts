@@ -23,7 +23,4 @@ export const routeDiscoverGamesView: VueRouter.RouteConfig = {
 		routeDiscoverGamesViewTrophiesList,
 		routeDiscoverGamesViewScoresList,
 	],
-	meta: {
-		scrollAnchorKey: 'id',
-	},
 };
