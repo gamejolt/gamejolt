@@ -22,7 +22,11 @@ export default class RouteDashGamesManageSiteEditorComponent extends BaseRouteCo
 		return h('div');
 	}
 
-	async routeInit() {
+	routeInit() {
+		this.createModal();
+	}
+
+	private async createModal() {
 		if (!this.editorModal) {
 			this.editorModal = await SiteEditorModal.show(this.site.id);
 		}
