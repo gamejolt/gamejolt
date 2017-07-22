@@ -1,4 +1,5 @@
 import '../lib/gj-lib-client/utils/polyfills';
+import './main.styl';
 
 import Vue from 'vue';
 
