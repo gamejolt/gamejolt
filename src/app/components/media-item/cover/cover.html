@@ -9,6 +9,7 @@
 
 		<div class="media-item-cover-img">
 			<app-img-responsive
+				v-show="isLoaded"
 				:src="mediaItem.mediaserver_url"
 				@imgloadchange="onLoadChange"
 				alt=""
