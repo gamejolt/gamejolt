@@ -211,7 +211,7 @@ export class FormFinancials extends BaseForm<FinancialsFormModel>
 				tos_type: type,
 			});
 			if (response.success !== false) {
-				this.refreshFields(response);
+				this.onLoad(response);
 			}
 		} catch (err) {
 			console.error(err);
@@ -223,7 +223,7 @@ export class FormFinancials extends BaseForm<FinancialsFormModel>
 		try {
 			const response = await Api.sendRequest('/web/dash/financials/save', this.formModel);
 			if (response.success !== false) {
-				this.refreshFields(response);
+				this.onLoad(response);
 			}
 
 			return response;
@@ -252,12 +252,5 @@ export class FormFinancials extends BaseForm<FinancialsFormModel>
 			console.error(err);
 			Growls.error(this.$gettext('Could not get PayPal redirect URL.'));
 		}
-	}
-
-	private refreshFields(response: any) {
-		this.account = new UserStripeManagedAccount(response.account);
-		this.user = new User(response.user);
-
-		// TODO(rewrite): need to update fields in the form model that were based off of the account/user fields?
 	}
 }
