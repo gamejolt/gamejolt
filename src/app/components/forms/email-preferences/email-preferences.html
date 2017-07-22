@@ -5,7 +5,10 @@
 			type="email"
 			:rules="{
 				max: 200,
-				availability: '/web/dash/email-preferences/check-field-availability/email_address',
+				availability: {
+					url: '/web/dash/email-preferences/check-field-availability/email_address',
+					initVal: model.email_address,
+				},
 			}"
 			:validate-on="[ 'blur' ]"
 			/>

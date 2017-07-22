@@ -64,10 +64,14 @@
 				>
 				<app-form-control
 					type="text"
+					data-vv-delay="500"
 					:rules="{
 						pattern: 'urlPath',
 						max: 50,
-						availability: '/web/dash/developer/games/check-field-availability/path',
+						availability: {
+							url: '/web/dash/developer/games/check-field-availability/path',
+							initVal: method === 'edit' ? model.path : undefined,
+						},
 					}"
 					/>
 

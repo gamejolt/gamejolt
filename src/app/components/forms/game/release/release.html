@@ -15,10 +15,14 @@
 		</div>
 
 		<app-form-control
+			data-vv-delay="500"
 			:rules="{
 				pattern: 'semver',
 				max: 50,
-				availability: `/web/dash/developer/games/releases/check-field-availability/${ game.id }/${ package.id }/version_number`
+				availability: {
+					url: `/web/dash/developer/games/releases/check-field-availability/${ game.id }/${ package.id }/version_number`,
+					initVal: model.version_number,
+				},
 			}"
 			/>
 		<app-form-control-errors />

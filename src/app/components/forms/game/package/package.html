@@ -12,9 +12,14 @@
 			</p>
 
 			<app-form-control
+				max="150"
+				data-vv-delay="500"
 				:rules="{
 					max: 150,
-					availability: `/web/dash/developer/games/packages/check-field-availability/${ game.id }/title`
+					availability: {
+						url: `/web/dash/developer/games/packages/check-field-availability/${ game.id }/title`,
+						initVal: method === 'edit' ? (model.title || '') : undefined,
+					},
 				}"
 				/>
 
