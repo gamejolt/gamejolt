@@ -5,6 +5,7 @@
 		'new': isNew,
 		'active': isActive,
 	}"
+	:style="{ height: item.height }"
 	:extra-padding="inviewPadding"
 	@inview="onInviewChange( true )"
 	@outview="onInviewChange( false )"
@@ -18,7 +19,6 @@
 		-->
 		<app-activity-feed-item-placeholder
 			v-if="item.type !== 'notification' && !isInView"
-			:style="{ height: item.height }"
 			:type="item.type"
 			/>
 
@@ -28,6 +28,7 @@
 				:item="item"
 				@clicked="setActive"
 				@expanded="onExpanded"
+				@resize="onResize"
 				/>
 
 			<app-activity-feed-notification
