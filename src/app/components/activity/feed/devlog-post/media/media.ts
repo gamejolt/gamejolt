@@ -30,11 +30,9 @@ export class AppActivityFeedDevlogPostMedia extends Vue {
 	@Prop(ActivityFeedItem) item: ActivityFeedItem;
 	@Prop(Boolean) isNew?: boolean;
 
-	post: FiresidePost;
-
+	post: FiresidePost = null as any;
 	page = 1;
 	activeMediaItem: MediaItem | null = null;
-
 	isDragging = false;
 	isWaitingForFrame = false;
 

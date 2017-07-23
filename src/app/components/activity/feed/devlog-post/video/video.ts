@@ -7,6 +7,7 @@ import { FiresidePostVideo } from '../../../../../../lib/gj-lib-client/component
 import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppVideoEmbed } from '../../../../../../lib/gj-lib-client/components/video/embed/embed';
 import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
+import { ActivityFeedItem } from '../../item-service';
 
 @View
 @Component({
@@ -17,13 +18,15 @@ import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/com
 	},
 })
 export class AppActivityFeedDevlogPostVideo extends Vue {
-	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(ActivityFeedItem) item: ActivityFeedItem;
 
+	post: FiresidePost = null as any;
 	video: FiresidePostVideo | null = null;
 	isShowingVideo = GJ_IS_SSR;
 	shouldAutoplay = !GJ_IS_SSR;
 
 	created() {
+		this.post = this.item.feedItem as FiresidePost;
 		this.video = this.post.videos[0];
 	}
 

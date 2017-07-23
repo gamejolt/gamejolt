@@ -2,7 +2,7 @@
 
 	<app-fade-collapse
 		:collapse-height="500"
-		:is-open="showFullContent"
+		:is-open="item.isOpen"
 		@require-change="canToggleContent = $event"
 		>
 		<div class="fireside-post-body">

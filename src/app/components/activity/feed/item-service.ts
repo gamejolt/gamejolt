@@ -9,6 +9,7 @@ export class ActivityFeedItem {
 	feedItem: ActivityFeedInput;
 	scrollId: string;
 	height: string | null = null;
+	isOpen = false;
 
 	constructor(public sourceItem: ActivityFeedInput) {
 		if (

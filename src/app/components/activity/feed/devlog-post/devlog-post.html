@@ -50,19 +50,19 @@
 
 			<app-activity-feed-devlog-post-text
 				v-if="post.type === 'text'"
-				:post="post"
+				:item="item"
 				@expanded="onExpand"
 				/>
 
 			<app-activity-feed-devlog-post-video
 				v-else-if="post.type === 'video'"
-				:post="post"
+				:item="item"
 				@expanded="onExpand"
 				/>
 
 			<app-activity-feed-devlog-post-sketchfab
 				v-else-if="post.type === 'sketchfab'"
-				:post="post"
+				:item="item"
 				@expanded="onExpand"
 				/>
 
@@ -74,7 +74,7 @@
 				/>
 
 			<app-activity-feed-devlog-post-controls
-				:post="post"
+				:item="item"
 				:show-game-info="feed.showGameInfo"
 				:show-edit-controls="feed.showEditControls"
 				:show-extra-info="!Screen.isXs"

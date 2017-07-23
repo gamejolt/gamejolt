@@ -24,6 +24,7 @@ import { AppSocialTwitterShare } from '../../../../../../lib/gj-lib-client/compo
 import { AppSocialFacebookLike } from '../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppCommentWidgetAdd } from '../../../../../../lib/gj-lib-client/components/comment/widget/add/add';
 import { Store } from '../../../../../store/index';
+import { ActivityFeedItem } from '../../item-service';
 
 @View
 @Component({
@@ -49,7 +50,7 @@ import { Store } from '../../../../../store/index';
 	},
 })
 export class AppActivityFeedDevlogPostControls extends Vue {
-	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(ActivityFeedItem) item: ActivityFeedItem;
 	@Prop(Boolean) showGameInfo?: boolean;
 	@Prop(Boolean) showEditControls?: boolean;
 	@Prop({ type: Boolean, default: true })
@@ -59,10 +60,10 @@ export class AppActivityFeedDevlogPostControls extends Vue {
 
 	@State app: Store['app'];
 
+	post: FiresidePost = null as any;
 	tab: 'comments' | 'likes' | null = null;
 	hasLoadedLikes = false;
 	likes: FiresidePostLike[] = [];
-
 	isShowingShare = false;
 
 	number = number;
@@ -89,6 +90,8 @@ export class AppActivityFeedDevlogPostControls extends Vue {
 	}
 
 	created() {
+		this.post = this.item.feedItem as FiresidePost;
+
 		if (this.requireTabs) {
 			this.tab = 'comments';
 		}

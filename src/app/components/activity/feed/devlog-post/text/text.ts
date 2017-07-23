@@ -5,6 +5,7 @@ import * as View from '!view!./text.html';
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { AppFadeCollapse } from '../../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { AppWidgetCompiler } from '../../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
+import { ActivityFeedItem } from '../../item-service';
 
 @View
 @Component({
@@ -14,13 +15,17 @@ import { AppWidgetCompiler } from '../../../../../../lib/gj-lib-client/component
 	},
 })
 export class AppActivityFeedDevlogPostText extends Vue {
-	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(ActivityFeedItem) item: ActivityFeedItem;
 
+	post: FiresidePost = null as any;
 	canToggleContent = false;
-	showFullContent = false;
+
+	created() {
+		this.post = this.item.feedItem as FiresidePost;
+	}
 
 	toggleFull() {
-		this.showFullContent = !this.showFullContent;
+		this.item.isOpen = !this.item.isOpen;
 		this.$emit('expanded');
 	}
 }

@@ -27,6 +27,12 @@ export class AppActivityFeedItem extends Vue {
 
 	inviewPadding = Screen.windowHeight;
 
+	mounted() {
+		if (this.item.height) {
+			this.$el.style.height = this.item.height;
+		}
+	}
+
 	get isNew() {
 		// Only care if there is a watermark.
 		if (this.feed.notificationWatermark === 0) {
@@ -61,6 +67,7 @@ export class AppActivityFeedItem extends Vue {
 	}
 
 	onResize(height: number) {
+		this.$el.style.height = height + 'px';
 		this.item.height = height + 'px';
 	}
 }

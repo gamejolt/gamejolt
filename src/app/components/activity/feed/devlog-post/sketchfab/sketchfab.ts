@@ -7,6 +7,7 @@ import { FiresidePostSketchfab } from '../../../../../../lib/gj-lib-client/compo
 import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppSketchfabEmbed } from '../../../../../../lib/gj-lib-client/components/sketchfab/embed/embed';
 import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
+import { ActivityFeedItem } from '../../item-service';
 
 @View
 @Component({
@@ -17,12 +18,14 @@ import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/com
 	},
 })
 export class AppActivityFeedDevlogPostSketchfab extends Vue {
-	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(ActivityFeedItem) item: ActivityFeedItem;
 
+	post: FiresidePost = null as any;
 	sketchfab: FiresidePostSketchfab | null = null;
 	isShowing = GJ_IS_SSR;
 
 	created() {
+		this.post = this.item.feedItem as FiresidePost;
 		this.sketchfab = this.post.sketchfabs[0];
 	}
 
