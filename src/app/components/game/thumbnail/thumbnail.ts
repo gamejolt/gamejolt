@@ -79,7 +79,9 @@ export class AppGameThumbnail extends Vue {
 	get isActive() {
 		// When the window is not focused we don't want to play videos. This
 		// should speed up inactive tabs.
-		return !!Settings.get('animated-thumbnails') && this.autoplay && this.isWindowFocused;
+		return (
+			!GJ_IS_SSR && !!Settings.get('animated-thumbnails') && this.autoplay && this.isWindowFocused
+		);
 	}
 
 	get shouldShowVideo() {
