@@ -21,6 +21,8 @@ export class FormGameSong extends BaseForm<GameSong> implements FormOnInit, Form
 	@Prop(Game) game: Game;
 
 	modelClass = GameSong;
+	warnOnDiscard = false;
+
 	maxFilesize = 0;
 
 	number = number;

@@ -16,6 +16,8 @@ export class FormRetrieve extends BaseForm<any> implements FormOnSubmit {
 	@Prop(GameBundle) bundle: GameBundle;
 	@Prop(Game) game: Game;
 
+	warnOnDiscard = false;
+
 	onSubmit() {
 		let url = '/claim/retrieve';
 		if (this.bundle) {

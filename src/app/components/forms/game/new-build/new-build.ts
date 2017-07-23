@@ -23,6 +23,7 @@ export class FormGameNewBuild extends BaseForm<GameBuild> implements FormOnInit,
 	modelClass = GameBuild;
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
+	warnOnDiscard = false;
 
 	@Prop(String) type: 'downloadable' | 'browser';
 	@Prop(Game) game: Game;

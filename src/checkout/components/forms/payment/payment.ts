@@ -39,6 +39,8 @@ export class FormPayment extends BaseForm<any> implements FormOnInit, FormOnSubm
 	@Prop(Array) cards: any[];
 	@Prop(Order) order: Order;
 
+	warnOnDiscard = false;
+
 	stripeError: string | null = null;
 	countries = Geo.getCountries();
 	regions: Region[] | null = null;

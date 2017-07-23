@@ -24,6 +24,8 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export class FormSettings extends BaseForm<any> implements FormOnInit {
+	warnOnDiscard = false;
+
 	ClientAutoStart = ClientAutoStart;
 
 	onInit() {

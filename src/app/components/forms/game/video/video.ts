@@ -17,6 +17,7 @@ export class FormGameVideo extends BaseForm<GameVideo> implements FormOnInit {
 
 	modelClass = GameVideo;
 	resetOnSubmit = true;
+	warnOnDiscard = false;
 
 	GameVideo = GameVideo;
 

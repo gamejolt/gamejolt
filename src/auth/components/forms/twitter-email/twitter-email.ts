@@ -12,6 +12,8 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 export class FormTwitterEmail extends BaseForm<any> implements FormOnSubmit {
 	@Prop(String) stateHandle: string;
 
+	warnOnDiscard = false;
+
 	duplicateEmail = false;
 
 	onChanged() {

@@ -15,6 +15,7 @@ export class FormGameSketchfab extends BaseForm<GameSketchfab> implements FormOn
 
 	modelClass = GameSketchfab;
 	resetOnSubmit = true;
+	warnOnDiscard = false;
 
 	onInit() {
 		this.setField('game_id', this.game.id);

@@ -16,6 +16,8 @@ export class FormResetPassword extends BaseForm<any> implements FormOnInit, Form
 	@Prop(Number) userId: number;
 	@Prop(String) token: string;
 
+	warnOnDiscard = false;
+
 	Connection = makeObservableService(Connection);
 
 	onInit() {

@@ -23,6 +23,8 @@ export class FormWithdrawFunds extends BaseForm<WithdrawFundsFormModel>
 	@Prop(Number) minAmount: number;
 	@Prop(Number) withdrawableAmount: number;
 
+	warnOnDiscard = false;
+
 	readonly currency = currency;
 
 	onInit() {

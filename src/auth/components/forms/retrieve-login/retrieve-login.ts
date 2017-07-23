@@ -17,6 +17,8 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 	},
 })
 export class FormRetrieveLogin extends BaseForm<any> implements FormOnSubmit {
+	warnOnDiscard = false;
+
 	Connection = makeObservableService(Connection);
 
 	onChanged() {

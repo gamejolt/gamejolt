@@ -22,6 +22,7 @@ export class FormDashSiteBuild extends BaseForm<SiteBuild>
 	implements FormOnInit, FormOnLoad, FormOnSubmit {
 	modelClass = SiteBuild;
 	resetOnSubmit = true;
+	warnOnDiscard = false;
 
 	@Prop(Site) site: Site;
 

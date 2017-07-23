@@ -19,6 +19,8 @@ import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
 export class FormGameKeyGroupAddKeys extends BaseForm<any> implements FormOnSubmit {
 	@Prop(KeyGroup) keyGroup: KeyGroup;
 
+	warnOnDiscard = false;
+
 	number = number;
 	KeyGroup = KeyGroup;
 
