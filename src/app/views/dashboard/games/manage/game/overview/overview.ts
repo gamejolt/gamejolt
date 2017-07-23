@@ -13,6 +13,7 @@ import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/exp
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGameDevStageSelector } from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector';
+import { AppGraphWidget } from '../../../../../../../lib/gj-lib-client/components/graph/widget/widget';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -26,6 +27,7 @@ import {
 		AppProgressBar,
 		AppExpand,
 		AppGameDevStageSelector,
+		AppGraphWidget,
 	},
 	directives: {
 		AppTooltip,

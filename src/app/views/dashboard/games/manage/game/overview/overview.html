@@ -77,12 +77,7 @@
 
 	<div class="row">
 		<div class="col-lg-8">
-			<!--TODO(rewrite)-->
-			<!--<app-graph
-				graph-widget-url="/web/dash/developer/games/graphs/overview/{{ game.id }}"
-				[graph-widget-hide-table]="true"
-				>
-			</app-graph>-->
+			<app-graph-widget :url="`/web/dash/developer/games/graphs/overview/${ game.id }`" />
 		</div>
 		<div class="col-lg-4">
 			<div class="row">
