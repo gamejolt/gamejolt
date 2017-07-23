@@ -108,13 +108,17 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			if (payload && payload.collection) {
 				const redirect = enforceLocation(route, { slug: payload.collection.slug });
 				if (redirect) {
-					console.log('redirect!', redirect);
 					return redirect;
 				}
 			}
 		}
 
-		await store.state!.bootstrappedPromise;
+		// We await a user touch in the parent so this should be correct by the
+		// time we get here.
+		if (store.state.app.user) {
+			await store.state!.bootstrappedPromise;
+		}
+
 		return payload;
 	}
 

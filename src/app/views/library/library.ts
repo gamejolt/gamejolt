@@ -11,7 +11,8 @@ import {
 export default class RouteLibrary extends BaseRouteComponent {
 	@RouteResolve()
 	async routeResolve() {
-		User.touch();
+		// Make sure we await this so that the children know if we're logged in.
+		await User.touch();
 	}
 
 	render(h: Vue.CreateElement) {
