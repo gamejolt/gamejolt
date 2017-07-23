@@ -8,7 +8,7 @@ import { RouteState, RouteStore } from '../../manage.store';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import distanceInWords from 'date-fns/distance_in_words';
+import { duration } from '../../../../../../../lib/gj-lib-client/vue/filters/duration';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -24,6 +24,7 @@ import {
 	},
 	filters: {
 		number,
+		duration,
 	},
 })
 export default class RouteDashGamesManageApiOverview extends BaseRouteComponent {
@@ -41,7 +42,7 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		avg: number;
 		time: number;
 		'user-count': number;
-	} = null as any;
+	} = {} as any;
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
@@ -69,9 +70,5 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		fields.forEach(field => {
 			(this as any)[field] = this.$payload[field] || 0;
 		});
-	}
-
-	duration(dur: number) {
-		return distanceInWords(0, dur * 1000, { includeSeconds: true });
 	}
 }

@@ -38,6 +38,7 @@
 		"favico.js": "0.3.10",
 		"game-jolt-frontend-lib": "gamejolt/frontend-lib#more-rewrites",
 		"hammerjs": "2.0.8",
+		"humanize-duration": "3.10.1",
 		"jquery": "3.2.1",
 		"jquery-jcrop": "0.9.13",
 		"jstimezonedetect": "1.0.6",

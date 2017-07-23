@@ -51,7 +51,7 @@
 						<translate>dash.games.api.overview.sessions_time_label</translate>
 					</div>
 					<div class="stat-big-digit">
-						{{ duration( sessionStats.time ) }}
+						{{ sessionStats.time || 0 | duration }}
 					</div>
 				</div>
 			</div>
@@ -61,7 +61,7 @@
 						<translate>dash.games.api.overview.sessions_avg_label</translate>
 					</div>
 					<div class="stat-big-digit">
-						{{ duration( sessionStats.avg ) }}
+						{{ sessionStats.avg || 0 | duration }}
 					</div>
 				</div>
 			</div>
