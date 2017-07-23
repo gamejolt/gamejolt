@@ -33,16 +33,12 @@
 		<div class="input-group">
 			<span class="input-group-addon">$</span>
 			<app-form-control
-				type="number"
-				step="0.01"
-				:min="minAmount"
-				:max="withdrawableAmount"
+				type="currency"
 				:rules="{
 					min_value: minAmount,
 					max_value: withdrawableAmount,
 				}"
 				/>
-			<!-- TODO(rewrite) gj-form-currency-input -->
 		</div>
 		<app-form-control-errors />
 	</app-form-group>

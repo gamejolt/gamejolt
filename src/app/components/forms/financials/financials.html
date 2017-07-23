@@ -167,16 +167,12 @@
 			<div class="input-group">
 				<span class="input-group-addon">$</span>
 				<app-form-control
-					type="number"
-					step="1"
-					min="0"
-					:max="maxWallet / 100"
+					type="currency"
 					:rules="{
 						min_value: 0,
 						max_value: maxWallet / 100,
 					}"
 					/>
-				<!--gj-form-currency-input-->
 			</div>
 			<app-form-control-errors
 				:label="$gettext( 'sum to keep in your wallet' )"
@@ -207,16 +203,12 @@
 			<div class="input-group">
 				<span class="input-group-addon">$</span>
 				<app-form-control
-					type="number"
-					step="1"
-					min="0"
-					:max="maxPayout / 100"
+					type="currency"
 					:rules="{
 						min_value: 0,
 						max_value: maxPayout / 100,
 					}"
 					/>
-				<!--gj-form-currency-input-->
 			</div>
 			<app-form-control-errors
 				:label="$gettext('minimum payout')"

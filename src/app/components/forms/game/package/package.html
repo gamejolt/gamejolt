@@ -155,16 +155,13 @@
 				<div class="col-sm-9">
 					<div class="input-group">
 						<span class="input-group-addon">$</span>
-						<!--TODO(rewrite)-->
 						<app-form-control
-							type="number"
-							step="0.1"
+							type="currency"
 							:rules="{
 								min_value: minPrice / 100,
 							}"
 							:disabled="!formModel.has_suggested_price"
 							/>
-							<!--gj-form-currency-input-->
 					</div>
 					<app-form-control-errors />
 				</div>
@@ -178,15 +175,12 @@
 			>
 			<div class="input-group">
 				<span class="input-group-addon">$</span>
-				<!--TODO(rewrite)-->
 				<app-form-control
-					type="number"
-					step="0.1"
+					type="currency"
 					:rules="{
 						min_value: minPrice / 100,
 					}"
 					/>
-					<!--gj-form-currency-input-->
 			</div>
 			<app-form-control-errors />
 		</app-form-group>
@@ -343,16 +337,12 @@
 					<div class="input-group">
 						<span class="input-group-addon">$</span>
 						<app-form-control
-							type="number"
-							step="0.1"
-							:min="minPrice / 100"
-							:max="formModel.price - 0.01"
+							type="currency"
 							:rules="{
 								min_value: minPrice / 100,
 								max_value: formModel.price - 0.01,
 							}"
 							/>
-							<!-- TODO(rewrite) gj-form-currency-input -->
 					</div>
 
 					<p class="help-block" v-if="formModel.price && formModel.sale_price">
