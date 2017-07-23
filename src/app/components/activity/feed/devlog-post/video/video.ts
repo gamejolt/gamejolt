@@ -20,7 +20,8 @@ export class AppActivityFeedDevlogPostVideo extends Vue {
 	@Prop(FiresidePost) post: FiresidePost;
 
 	video: FiresidePostVideo | null = null;
-	isShowingVideo = false;
+	isShowingVideo = GJ_IS_SSR;
+	shouldAutoplay = !GJ_IS_SSR;
 
 	created() {
 		this.video = this.post.videos[0];
