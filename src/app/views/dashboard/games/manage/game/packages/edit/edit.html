@@ -25,7 +25,6 @@
 	<app-nav-tab-list>
 		<ul>
 			<li>
-				<!--TODO(rewrite)-->
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.packages.edit',
@@ -59,13 +58,19 @@
 					v-if="game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC"
 					>
 					<app-jolticon icon="notice" />
-					<!--TODO(rewrite)-->
-					<!--<span
-						translate
-						translate-params-url="$state.href( 'dash.games.manage.game.overview' )"
+					<translate :escape-html="false">
+						<strong>This package won't show up on your devlog-only game page.</strong> Switch your game page to early access or complete from the Overview/Setup page for it to show.
+					</translate>
+					<router-link
+						:to="{
+							name: 'dash.games.manage.game.overview',
+								params: {
+									id: game.id,
+								},
+							}).href"
 						>
-						<b>This package won't show up on your devlog-only game page.</b> Switch your game page to early access or complete from the <a href="{{ url }}">Overview/Setup</a> page for it to show.
-					</span>-->
+						<translate>Go to Overview/Setup page</translate>
+					</router-link>
 				</div>
 
 				<h3 :class="{ 'section-header': !(game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC) }">
@@ -95,11 +100,6 @@
 
 					<br>
 				</app-expand>
-				<!--<div collapse="!isShowingPackageEdit">-->
-					<!--TODO(rewrite)-->
-					<!---->
-					<!--<br>
-				</div>-->
 
 				<div v-if="isLoadingPreview">
 					<app-loading />
@@ -109,21 +109,21 @@
 						:game="game"
 						:sellable="previewSellable"
 						:package="package"
-						:releases="previewPackage._releases"
-						:builds="previewPackage._builds"
+						:releases="previewPackage ? previewPackage._releases : null"
+						:builds="previewPackage ? previewPackage._builds : null"
 						/>
 
-					<!--TODO(rewrite)-->
-					<!--<div
-						v-if="buildsProcessingCount > 0"
-						gj-progress-poller="/web/dash/developer/games/packages/poll-processing-builds/{{ game.id }}/{{ package.id }}/{{ buildsProcessingCount }}"
-						progress-poller-on-complete="onBuildsProcessed( $response )"
-						>
+					<div v-if="buildsProcessingCount > 0">
+						<app-progress-poller
+							:url="`/web/dash/developer/games/packages/poll-processing-builds/${ game.id }/${ package.id }/${ buildsProcessingCount }`"
+							@complete="onBuildsProcessed( $event )"
+							/>
+
 						<div class="alert alert-info">
 							<app-jolticon icon="notice" />
-							<translate>This package has builds that are still processing. They will translate available in the package as soon as they're finished processing.</span>
+							<translate>This package has builds that are still processing. They will translate available in the package as soon as they're finished processing.</translate>
 						</div>
-					</div>-->
+					</div>
 				</div>
 
 			</div>

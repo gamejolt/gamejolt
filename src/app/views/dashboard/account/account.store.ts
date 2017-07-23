@@ -16,7 +16,6 @@ type Mutations = {
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	heading = '';
-	channels: YoutubeChannel[] = [];
 
 	@VuexMutation
 	setHeading(heading: Mutations['setHeading']) {

@@ -206,10 +206,9 @@
 					-->
 					<h5 class="clearfix" v-if="account.status === 'unverified'">
 						<div class="pull-right">
-							<!-- TODO(rewrite) figure out where value comes from -->
 							<button
 								class="btn btn-danger-outline btn-sparse"
-								v-if="value.verification.status !== 'verified'"
+								v-if="getStripeField( `legal_entity.additional_owners.${ i }.verification.status` ) !== 'verified'"
 								@click="removeAdditionalOwner( i )"
 								>
 								<app-jolticon icon="remove" />

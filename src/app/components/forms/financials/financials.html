@@ -139,6 +139,7 @@
 				}"
 				/>
 			<app-form-control-errors
+				label="percentage"
 				when="pattern"
 				:message="$gettext('Please enter a value between 0 and 10.')"
 				/>
@@ -177,7 +178,9 @@
 					/>
 				<!--gj-form-currency-input-->
 			</div>
-			<app-form-control-errors />
+			<app-form-control-errors
+				:label="$gettext( 'sum to keep in your wallet' )"
+				/>
 		</app-form-group>
 
 	</fieldset>
@@ -215,7 +218,9 @@
 					/>
 				<!--gj-form-currency-input-->
 			</div>
-			<app-form-control-errors />
+			<app-form-control-errors
+				:label="$gettext('minimum payout')"
+				/>
 		</app-form-group>
 
 	</fieldset>

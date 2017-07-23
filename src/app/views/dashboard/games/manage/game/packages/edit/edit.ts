@@ -21,6 +21,7 @@ import { number } from '../../../../../../../../lib/gj-lib-client/vue/filters/nu
 import { FormGamePackage } from '../../../../../../../components/forms/game/package/package';
 import { AppExpand } from '../../../../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
+import { AppProgressPoller } from '../../../../../../../../lib/gj-lib-client/components/progress/poller/poller';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -37,6 +38,7 @@ import {
 		AppExpand,
 		FormGamePackage,
 		AppDashGameWizardControls,
+		AppProgressPoller,
 	},
 	directives: {
 		AppTooltip,

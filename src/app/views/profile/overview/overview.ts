@@ -18,6 +18,7 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
 import { AppCommentVideoThumbnail } from '../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
+import { UserGameSession } from '../../../../lib/gj-lib-client/components/user/game-session/game-session.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -46,7 +47,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	@Prop() gamesCount: number;
 	@Prop() videosCount: number;
 	@Prop() userFriendship: UserFriendship;
-	// @Prop() userGameSession?: UserGameSession;
+	@Prop() activeGameSession?: UserGameSession;
 
 	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];

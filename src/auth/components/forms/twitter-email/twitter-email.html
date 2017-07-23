@@ -23,7 +23,7 @@
 	<div class="alert alert-warning anim-fade-in-enlarge no-animate-leave"
 		v-if="duplicateEmail"
 		>
-		<translate>auth.linked_account.twitter.finalize.duplicate_email_error_html</translate>
+		<translate :escape-html="false">auth.linked_account.twitter.finalize.duplicate_email_error_html</translate>
 	</div>
 
 	<app-form-button icon="chevron-right" class="btn-block btn-outline btn-dark-variant">

@@ -30,7 +30,7 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 			if (this.$payload.reason && this.$payload.reason === 'no-account') {
 				this.$router.push({
 					name: 'auth.linked-account.twitter.finalize',
-					params: { state: this.$route.params.state },
+					params: { state: this.$route.query.state },
 				});
 			} else {
 				Growls.error({

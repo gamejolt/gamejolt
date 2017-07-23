@@ -19,6 +19,7 @@ import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 import { ReportModal } from '../../../lib/gj-lib-client/components/report/modal/modal.service';
 import { Store } from '../../store/index';
+import { UserGameSession } from '../../../lib/gj-lib-client/components/user/game-session/game-session.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -50,7 +51,7 @@ export default class RouteProfile extends BaseRouteComponent {
 	videosCount = 0;
 	isOnline = false;
 	libraryGamesCount = 0;
-	// activeGameSession: any;
+	activeGameSession: UserGameSession | null = null;
 	userFriendship: UserFriendship | null = null;
 
 	UserFriendship = UserFriendship;
@@ -70,8 +71,9 @@ export default class RouteProfile extends BaseRouteComponent {
 		this.gamesCount = this.$payload.gamesCount;
 		this.isOnline = this.$payload.isOnline;
 		this.libraryGamesCount = this.$payload.libraryGamesCount;
-		// TODO(rewrite)
-		// this.activeGameSession = this.$payload.activeGameSession ? new userGameSession( this.$payload.activeGameSession ) : null;
+		this.activeGameSession = this.$payload.activeGameSession
+			? new UserGameSession(this.$payload.activeGameSession)
+			: null;
 		this.videosCount = this.$payload.videosCount || 0;
 
 		if (this.$payload.userFriendship) {

@@ -25,6 +25,8 @@ export class AppDeveloperTerms extends Vue {
 	showAgreement = false;
 	termsTemplate: string = require('../../../../../lib/terms/distribution-agreement/global.md');
 
+	readonly date = date;
+
 	get shouldShowAgreement() {
 		return (
 			(!this.hasSignedSomeAgreement || this.showAgreement) &&

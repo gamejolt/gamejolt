@@ -25,6 +25,8 @@ export class AppPartnerTerms extends Vue {
 	showAgreement = false;
 	termsTemplate: string = require('../../../../../lib/terms/partner/global.md');
 
+	readonly date = date;
+
 	get hasSignedPartnerAgreement() {
 		return this.account && this.account.tos_signed_partner > 0;
 	}

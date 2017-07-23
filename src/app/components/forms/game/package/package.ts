@@ -18,7 +18,14 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoadingFade } from '../../../../../lib/gj-lib-client/components/loading/fade/fade';
-import { AppTimepicker } from '../../../../../lib/gj-lib-client/components/timepicker/timepicker';
+import {
+	TimezoneData,
+	Timezone,
+} from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
+import fns from 'date-fns';
+import { AppDatetimePicker } from '../../../../../lib/gj-lib-client/components/datetime-picker/datetime-picker';
+import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
+import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
 
 type FormGamePackageModel = GamePackage & {
 	primary: boolean;
@@ -37,6 +44,11 @@ type FormGamePackageModel = GamePackage & {
 		AppJolticon,
 		AppFormControlToggle,
 		AppLoadingFade,
+		AppDatetimePicker,
+	},
+	filters: {
+		date,
+		currency,
 	},
 })
 export class FormGamePackage extends BaseForm<FormGamePackageModel>
@@ -61,8 +73,39 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 	pricings: SellablePricing[] = [];
 	originalPricing: SellablePricing | null = null;
 	promotionalPricing: SellablePricing | null = null;
+	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = {};
 
 	GamePackage = GamePackage;
+
+	get saleTimezoneOffset() {
+		if (!this.formModel.sale_timezone) {
+			return 0;
+		}
+
+		const saleTz = this.timezoneByName(this.formModel.sale_timezone);
+		if (!saleTz) {
+			console.warn('Could not find timezone offset for: ' + saleTz);
+			return 0;
+		} else {
+			return saleTz.o * 1000;
+		}
+	}
+
+	get saleStartLocal() {
+		if (!this.formModel.sale_start) {
+			return null;
+		}
+
+		return new Date(this.formModel.sale_start + this.saleTimezoneOffset);
+	}
+
+	get saleEndLocal() {
+		if (!this.formModel.sale_end) {
+			return null;
+		}
+
+		return new Date(this.formModel.sale_end + this.saleTimezoneOffset);
+	}
 
 	get loadUrl() {
 		const params = [this.formModel.game_id];
@@ -81,7 +124,7 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 		}
 	}
 
-	onInit() {
+	async onInit() {
 		this.setField('game_id', this.game.id);
 
 		this.showDescriptionInput = this.formModel.description ? true : false;
@@ -91,21 +134,19 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 		// Auto-detect timezone.
 		this.setField('sale_timezone', determine().name());
 
-		// // Get timezones list.
-		// this.timezones = [];
-		// Timezone.getTimezones().then(function(timezones) {
-		// 	this.timezones = timezones;
-
-		// 	this.timezones.forEach(function(tz) {
-		// 		var offset = tz.o / 3600;
-		// 		if (offset > 0) {
-		// 			offset = '+' + offset + ':00';
-		// 		} else if (offset === 0) {
-		// 			offset = '';
-		// 		}
-		// 		tz.label = '(UTC' + offset + ') ' + tz.i;
-		// 	});
-		// });
+		// Get timezones list.
+		this.timezones = await Timezone.getGroupedTimezones();
+		for (let region in this.timezones) {
+			for (let tz of this.timezones[region]) {
+				let offset = '';
+				if (tz.o > 0) {
+					offset = `+${tz.o / 3600}:00`;
+				} else if (tz.o < 0) {
+					offset = `-${-tz.o / 3600}:00`;
+				}
+				tz.label = `(UTC${offset}) ${tz.i}`;
+			}
+		}
 
 		this.isProcessing = false;
 	}
@@ -128,11 +169,8 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 		}
 
 		this.setField('pricing_type', 'free');
-		// this.setField('sale_start', moment())
-		// 	.add(1, 'day')
-		// 	.startOf('day')
-		// 	.valueOf();
-		// this.setField('sale_end', moment().add(1, 'week').startOf('day').valueOf());
+		this.setField('sale_start', fns.startOfTomorrow().getTime());
+		this.setField('sale_end', fns.startOfDay(fns.addWeeks(Date.now(), 1)).getTime());
 
 		if (this.method === 'add') {
 			this.setField('visibility', GamePackage.VISIBILITY_PUBLIC);
@@ -162,18 +200,21 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 					this.setField('sale_start', this.promotionalPricing.start);
 					this.setField('sale_end', this.promotionalPricing.end);
 					this.setField('sale_price', this.promotionalPricing.amount / 100);
-
-					// this.saleStartLocal = moment(this.promotionalPricing.start).tz(
-					// 	this.promotionalPricing.timezone
-					// );
-					// this.saleEndLocal = moment(this.promotionalPricing.end).tz(
-					// 	this.promotionalPricing.timezone
-					// );
 				}
 
 				this.setField('has_suggested_price', !!this.formModel.price);
 			}
 		}
+	}
+
+	private timezoneByName(timezone: string) {
+		for (let region in this.timezones) {
+			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
+			if (tz) {
+				return tz;
+			}
+		}
+		return null;
 	}
 
 	async cancelSale() {

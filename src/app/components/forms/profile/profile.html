@@ -10,7 +10,10 @@
 				min: 3,
 				max: 30,
 				pattern: 'username',
-				availability: '/web/dash/profile/check-field-availability/username',
+				availability: {
+					url: '/web/dash/profile/check-field-availability/username',
+					initVal: model.username,
+				},
 			}"
 			:validate-on="[ 'blur' ]"
 			/>
@@ -53,7 +56,10 @@
 			type="text"
 			:rules="{
 				max: 100,
-				availability: '/web/dash/profile/check-field-availability/name',
+				availability: {
+					url: '/web/dash/profile/check-field-availability/name',
+					initVal: model.name,
+				},
 			}"
 			:validate-on="[ 'blur' ]"
 			/>
