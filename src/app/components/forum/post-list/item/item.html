@@ -78,12 +78,9 @@
 			@click="loadParentPost"
 			>
 			<app-jolticon class="middle" :icon="'chevron-' + (!showingParent ? 'right' : 'down')" />
-			<translate
-				:escape-html="false"
-				:translate-params="{ user: post.replied_to.display_name }"
-				>
+			<span v-translate="{ user: post.replied_to.display_name }">
 				In response to <b>%{ user }</b>
-			</translate>
+			</span>
 			<small>@{{ post.replied_to.username }}</small>
 		</a>
 

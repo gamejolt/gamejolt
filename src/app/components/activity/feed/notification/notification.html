@@ -50,9 +50,9 @@
 							>
 						</div>
 						<p v-if="notification.type === 'game-rating-add'">
-							<translate :translate-params="{ rating: notification.action_model.rating }" :escape-html="false">
+							<span v-translate="{ rating: notification.action_model.rating }">
 								And the value of the rating thou shalt receive is <b>@{ rating }</b>. No more, no less.
-							</translate>
+							</span>
 						</p>
 					</app-fade-collapse>
 

@@ -10,52 +10,48 @@
 
 		<div class="game-collection-title h4">
 			<span v-if="collection.type === 'developer'">
-				<translate
+				<span
 					v-if="notOwner"
-					:translate-params="{ developer: '@' + collection.owner.username }"
-					:escape-html="false"
+					v-translate="{ developer: '@' + collection.owner.username }"
 					>
 					Games Made <small>by %{ developer }</small>
-				</translate>
+				</span>
 				<translate v-else>
 					Your Games
 				</translate>
 			</span>
 
 			<span v-else-if="collection.type === 'followed'">
-				<translate
+				<span
 					v-if="notOwner"
-					:translate-params="{ user: '@' + collection.owner.username }"
-					:escape-html="false"
+					v-translate="{ user: '@' + collection.owner.username }"
 					>
 					Games Followed <small>by %{ user }</small>
-				</translate>
+				</span>
 				<translate v-else>
 					Your Followed Games
 				</translate>
 			</span>
 
 			<span v-else-if="collection.type === 'owned'">
-				<translate
+				<span
 					v-if="notOwner"
-					:translate-params="{ user: '@' + collection.owner.username }"
-					:escape-html="false"
+					v-translate="{ user: '@' + collection.owner.username }"
 					>
 					Games Owned <small>by %{ user }</small>
-				</translate>
+				</span>
 				<translate v-else>
 					Your Owned Games
 				</translate>
 			</span>
 
 			<span v-else-if="collection.type === 'recommended'">
-				<translate
+				<span
 					v-if="notOwner"
-					:translate-params="{ user: '@' + collection.owner.username }"
-					:escape-html="false"
+					v-translate="{ user: '@' + collection.owner.username }"
 					>
 					Game Recommendations <small>for %{ user }</small>
-				</translate>
+				</span>
 				<translate v-else>
 					Your Recommended Games
 				</translate>

@@ -23,8 +23,8 @@
 					</a>
 				</div>
 				<div class="alert alert-info" v-else-if="keyGroup.type === KeyGroup.TYPE_USER">
-					<p>
-						<translate :escape-html="false"><strong>Not so fast!</strong> In order for the users in this key group to gain access, you'll need to email or message their keys to them. Copy each key page individually below, or export the full set to a CSV. Once they've received and claimed the key into their library, their claim date will appear in the table below.</translate>
+					<p v-translate>
+						<b>Not so fast!</b> In order for the users in this key group to gain access, you'll need to email or message their keys to them. Copy each key page individually below, or export the full set to a CSV. Once they've received and claimed the key into their library, their claim date will appear in the table below.
 					</p>
 				</div>
 

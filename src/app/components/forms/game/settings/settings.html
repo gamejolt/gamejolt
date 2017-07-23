@@ -17,8 +17,8 @@
 			:label="$gettext( `dash.games.settings.ga_tracking_id_error_label` )"
 			/>
 
-		<div class="help-block">
-			<translate :escape-html="false">dash.games.settings.ga_tracking_id_help_html</translate>
+		<div class="help-block" v-translate>
+			dash.games.settings.ga_tracking_id_help_html
 		</div>
 	</app-form-group>
 
@@ -27,8 +27,8 @@
 		name="ads_enabled"
 		:label="$gettext( `dash.games.settings.ads_label` )"
 		>
-		<div class="help-block">
-			<translate :escape-html="false">dash.games.settings.ads_help_html</translate>
+		<div class="help-block" v-translate>
+			dash.games.settings.ads_help_html
 		</div>
 		<app-form-control-toggle />
 	</app-form-group>
@@ -45,8 +45,8 @@
 		name="comments_enabled"
 		:label="$gettext( `dash.games.settings.comments_label` )"
 		>
-		<div class="help-block">
-			<translate :escape-html="false">dash.games.settings.comments_help_html</translate>
+		<div class="help-block" v-translate>
+			dash.games.settings.comments_help_html
 		</div>
 		<app-form-control-toggle />
 	</app-form-group>
@@ -57,13 +57,13 @@
 		>
 		<div class="alert alert-info" v-if="model._is_devlog">
 			<app-jolticon icon="notice" class="warning" />
-			<translate :escape-html="false">
+			<span v-translate>
 				<b>Users can't rate devlog-only games.</b> Enable or disable ratings for when you're ready to transition to early access or a complete game.
-			</translate>
+			</span>
 		</div>
 
-		<div class="help-block">
-			<translate :escape-html="false">dash.games.settings.ratings_help_html</translate>
+		<div class="help-block" v-translate>
+			dash.games.settings.ratings_help_html
 		</div>
 		<app-form-control-toggle />
 	</app-form-group>

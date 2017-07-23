@@ -28,7 +28,7 @@
 				</div>
 
 				<div class="col-sm-9 col-md-8 col-lg-6" :class="{ 'pull-left': !Screen.isXs }">
-					<div><translate :escape-html="false">dash.funds.withdraw.page_help_html</translate></div>
+					<div v-translate>dash.funds.withdraw.page_help_html</div>
 
 					<form-withdraw-funds
 						:user="user"

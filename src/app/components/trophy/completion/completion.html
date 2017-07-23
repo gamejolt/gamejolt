@@ -5,15 +5,14 @@
 
 	<div v-if="achieved > 0">
 		<p>
-			<translate
-				:translate-params="{
+			<span
+				v-translate="{
 					achieved: number( achieved ),
 					total: number( total ),
 				}"
-				:escape-html="false"
 				>
 				You've achieved <b>%{ achieved }</b> trophies out of a possible <b>%{ total }</b>.
-			</translate>
+			</span>
 		</p>
 		<br>
 

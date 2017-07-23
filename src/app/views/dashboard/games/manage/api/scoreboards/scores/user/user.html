@@ -34,10 +34,8 @@
 	</h2>
 
 	<div class="alert alert-warning anim-fade-in" v-if="!scores.length">
-		<p>
-			<translate :escape-html="false">
-				dash.games.scores.user.list.no_scores_html
-			</translate>
+		<p v-translate>
+			dash.games.scores.user.list.no_scores_html
 		</p>
 	</div>
 

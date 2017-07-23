@@ -5,10 +5,8 @@
 			name="title"
 			:label="$gettext( `dash.games.packages.form.title_label` )"
 			>
-			<p class="help-block">
-				<translate :escape-html="false"
-					>dash.games.packages.form.title_help_html
-				</translate>
+			<p class="help-block" v-translate>
+				dash.games.packages.form.title_help_html
 			</p>
 
 			<app-form-control
@@ -31,10 +29,8 @@
 			:label="$gettext( `dash.games.packages.form.description_label` )"
 			:optional="true"
 			>
-			<p class="help-block">
-				<translate :escape-html="false">
-					dash.games.packages.form.description_help_html
-				</translate>
+			<p class="help-block" v-translate>
+				dash.games.packages.form.description_help_html
 			</p>
 
 			<div v-if="!showDescriptionInput">
@@ -67,8 +63,8 @@
 				<label>
 					<app-form-control-radio :value="GamePackage.VISIBILITY_PRIVATE" />
 					<translate>Private</translate> &mdash;
-					<span class="help-inline">
-						<translate :escape-html="false">Only you can access this package, as well as any keys you assign. You can assign keys in your <b>Keys/Access</b> page.</translate>
+					<span class="help-inline" v-translate>
+						Only you can access this package, as well as any keys you assign. You can assign keys in your <b>Keys/Access</b> page.
 					</span>
 				</label>
 			</div>

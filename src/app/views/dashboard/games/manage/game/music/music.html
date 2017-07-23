@@ -1,7 +1,7 @@
 <div class="row" v-if="routeBootstrapped">
 	<div class="col-sm-4 col-sm-push-8">
-		<div class="page-help">
-			<translate :escape-html="false">dash.games.music.page_help_html</translate>
+		<div class="page-help" v-translate>
+			dash.games.music.page_help_html
 		</div>
 	</div>
 
@@ -10,8 +10,9 @@
 		<div
 			class="alert alert-info"
 			v-if="!songs.length"
+			v-translate
 			>
-			<translate :escape-html="false">dash.games.music.no_music_html</translate>
+			dash.games.music.no_music_html
 		</div>
 
 		<app-card-list

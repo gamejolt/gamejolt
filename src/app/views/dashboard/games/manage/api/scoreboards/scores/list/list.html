@@ -21,14 +21,15 @@
 		</div>
 	</div>
 
-	<div class="page-help">
-		<translate :escape-html="false">dash.games.scores.list.page_help_html</translate>
+	<div class="page-help" v-translate>
+		dash.games.scores.list.page_help_html
 	</div>
 
 	<div class="alert alert-warning anim-fade-in"
 		v-if="!scores.length"
+		v-translate
 		>
-		<translate :escape-html="false">dash.games.scores.list.no_scores_html</translate>
+		dash.games.scores.list.no_scores_html
 	</div>
 
 	<app-manage-game-list-scores

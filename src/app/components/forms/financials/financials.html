@@ -118,8 +118,8 @@
 	<fieldset v-if="isVerified && account.tos_signed_developer">
 		<legend><translate>Percentage Split</translate></legend>
 
-		<p class="small">
-			<translate :escape-html="false">You decide what percentage of your sale revenue to give to Game Jolt. <strong>We won't let you give us more than 10%</strong> because we'd rather have you support other indie developers by buying their games.</translate>
+		<p class="small" v-translate>
+			You decide what percentage of your sale revenue to give to Game Jolt. <b>We won't let you give us more than 10%</b> because we'd rather have you support other indie developers by buying their games.
 		</p>
 
 		<app-form-group

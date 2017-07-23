@@ -1,20 +1,18 @@
 <app-form name="gameForm">
 	<div v-if="stage === 'rules'">
 
-		<div>
-			<translate :escape-html="false">
-				<p>You must agree to the following rules before adding a game:</p>
-				<ul>
-					<li>Don't upload games you didn't make. If you are not the game's developer, don't add the game to the site. If you're a fan, encourage the developer to add it themselves.</li>
-					<li>Publishers are not allowed to upload games; only developers are.</li>
-					<li>Only actual <em>games</em> may be uploaded to the site. No applications, software, or tools are allowed at this time. We may accept these in the future or on a case by case basis, but for now, let's just keep it to games.</li>
-					<li>No stripped-down demos or "lite" versions of commercial games are permitted, unless you also add the full version for sale.</li>
-					<li>We welcome and encourage you to add games that are incomplete and still in development, as long as they are tagged as Works-in-Progress. However, you should keep your game hidden until you have something to show. Work-in-Progress games do not have to be playable, but they must be further along than the concept stage. Before you unhide the game, make sure you at least have some screenshots and an informative description.</li>
-					<li>Do not add links to download/play or purchase your game on other sites unless you have already uploaded it to Game Jolt. You can't use your game page as an advertisement for another site.</li>
-					<li>For browser-based games, we don't allow you to display ads in the preloader on Game Jolt. Remove any ads or block them from showing on the site.</li>
-				</ul>
-				<p>If you have questions or concerns about the rules, get in touch: <a href="mailto:contact@gamejolt.com">contact@gamejolt.com</a></p>
-			</translate>
+		<div v-translate>
+			<p>You must agree to the following rules before adding a game:</p>
+			<ul>
+				<li>Don't upload games you didn't make. If you are not the game's developer, don't add the game to the site. If you're a fan, encourage the developer to add it themselves.</li>
+				<li>Publishers are not allowed to upload games; only developers are.</li>
+				<li>Only actual <em>games</em> may be uploaded to the site. No applications, software, or tools are allowed at this time. We may accept these in the future or on a case by case basis, but for now, let's just keep it to games.</li>
+				<li>No stripped-down demos or "lite" versions of commercial games are permitted, unless you also add the full version for sale.</li>
+				<li>We welcome and encourage you to add games that are incomplete and still in development, as long as they are tagged as Works-in-Progress. However, you should keep your game hidden until you have something to show. Work-in-Progress games do not have to be playable, but they must be further along than the concept stage. Before you unhide the game, make sure you at least have some screenshots and an informative description.</li>
+				<li>Do not add links to download/play or purchase your game on other sites unless you have already uploaded it to Game Jolt. You can't use your game page as an advertisement for another site.</li>
+				<li>For browser-based games, we don't allow you to display ads in the preloader on Game Jolt. Remove any ads or block them from showing on the site.</li>
+			</ul>
+			<p>If you have questions or concerns about the rules, get in touch: <a href="mailto:contact@gamejolt.com">contact@gamejolt.com</a></p>
 		</div>
 
 		<br>
@@ -181,10 +179,8 @@
 					<br>
 
 					<div>
-						<em>
-							<translate :escape-html="false">
-								<b>Note</b>: This will only be enabled for "paid" or "name your price" games.
-							</translate>
+						<em v-translate>
+							<b>Note</b>: This will only be enabled for "paid" or "name your price" games.
 						</em>
 					</div>
 

@@ -139,25 +139,15 @@
 					</app-expand>
 
 					<div v-if="revenuePendingWithdraw > 0" class="alert alert-info">
-						<translate
-							:escape-html="false"
-							:translate-params="{
-								amount: currency( revenuePendingWithdraw ),
-							}"
-							>
+						<span v-translate="{ amount: currency( revenuePendingWithdraw ) }">
 							You have pending withdrawals amounting to <b>%{ amount }</b>.
-						</translate>
+						</span>
 					</div>
 
 					<div class="alert alert-info" v-if="revenuePending">
-						<translate
-							:escape-html="false"
-							:translate-params="{
-								amount: currency( revenuePending ),
-							}"
-							>
+						<span v-translate="{ amount: currency( revenuePending ) }">
 							You currently have <b>%{ amount }</b> pending withdrawal.
-						</translate>
+						</span>
 					</div>
 
 					<div>
@@ -225,8 +215,8 @@
 					<h4>
 						<translate>dash.integrate.exp_help_heading</translate>
 					</h4>
-					<div>
-						<translate :escape-html="false">dash.integrate.exp_help_body_html</translate>
+					<div v-translate>
+						dash.integrate.exp_help_body_html
 					</div>
 				</div>
 

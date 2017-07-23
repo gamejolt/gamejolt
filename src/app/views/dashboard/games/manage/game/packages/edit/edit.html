@@ -58,9 +58,9 @@
 					v-if="game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC"
 					>
 					<app-jolticon icon="notice" />
-					<translate :escape-html="false">
+					<span v-translate>
 						<strong>This package won't show up on your devlog-only game page.</strong> Switch your game page to early access or complete from the Overview/Setup page for it to show.
-					</translate>
+					</span>
 					<router-link
 						:to="{
 							name: 'dash.games.manage.game.overview',
@@ -136,10 +136,8 @@
 		<div class="row">
 			<div class="col-sm-4 col-sm-push-8">
 				<div class="page-help">
-					<div>
-						<translate :escape-html="false">
-							dash.games.packages.manage.releases.page_help_html
-						</translate>
+					<div v-translate>
+						dash.games.packages.manage.releases.page_help_html
 					</div>
 					<p>
 						<a class="link-help" href="https://help.gamejolt.com/dev-packages#releases" target="_blank">
@@ -152,10 +150,8 @@
 			<div class="col-sm-8 col-sm-pull-4">
 
 				<div class="alert alert-warning" v-if="!releases.length">
-					<translate :escape-html="false">
-						<p>There are no releases in this package yet.</p>
-						<p>Add a release to this package in order to upload builds/files to it.</p>
-					</translate>
+					<p><translate>There are no releases in this package yet.</translate></p>
+					<p><translate>Add a release to this package in order to upload builds/files to it.</translate></p>
 				</div>
 
 				<div>

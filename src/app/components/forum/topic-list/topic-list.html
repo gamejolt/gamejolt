@@ -48,24 +48,22 @@
 		</div>
 
 		<div class="col-sm-3 col-md-2 text-muted small" :class="{ 'text-right': !Screen.isXs }">
-			<translate
-				:escape-html="false"
+			<span
+				v-translate="{ count: number( topic.replies_count || 0 ) }"
 				:translate-n="topic.replies_count || 0"
-				:translate-params="{ count: number( topic.replies_count || 0 ) }"
 				translate-plural="<b>%{ count }</b> Replies"
 				>
 				<b>1</b> Reply
-			</translate>
+			</span>
 			<br class="hidden-xs">
 			<span class="hidden-sm hidden-md hidden-lg dot-separator"></span>
-			<translate
-				:escape-html="false"
+			<span
+				v-translate="{ count: number( topic.followers_count || 0 ) }"
 				:translate-n="topic.followers_count || 0"
-				:translate-params="{ count: number( topic.followers_count || 0 ) }"
 				translate-plural="<b>%{ count }</b> Followers"
 				>
 				<b>1</b> Follower
-			</translate>
+			</span>
 		</div>
 
 		<div class="col-md-3 text-muted small" v-if="Screen.isDesktop">

@@ -4,10 +4,8 @@
 		:label="$gettext( `dash.games.header.upload_label` )"
 		>
 
-		<p class="help-block">
-			<translate :escape-html="false">
-				dash.forms.image_filetype_help_html
-			</translate>
+		<p class="help-block" v-translate>
+			dash.forms.image_filetype_help_html
 		</p>
 
 		<app-form-control-upload

@@ -69,8 +69,8 @@
 								-->
 								<div v-if="app.user && app.user.id !== game.developer.id && game.ratings_enabled && game.can_user_rate">
 									<br>
-									<p class="small">
-										<translate :escape-html="false">game.download.game.rate_html</translate>
+									<p class="small" v-translate>
+										game.download.game.rate_html
 									</p>
 
 									<app-rating-widget

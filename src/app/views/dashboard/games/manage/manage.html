@@ -73,10 +73,8 @@
 		</p>
 
 		<app-expand :when="game.status === Game.STATUS_VISIBLE && !game.is_listable">
-			<div class="alert alert-warning">
-				<translate :escape-html="false">
-					<b>Your game page is no longer visible in game listings!</b> It must have active game builds for it to show.
-				</translate>
+			<div class="alert alert-warning" v-translate>
+				<b>Your game page is no longer visible in game listings!</b> It must have active game builds for it to show.
 			</div>
 		</app-expand>
 

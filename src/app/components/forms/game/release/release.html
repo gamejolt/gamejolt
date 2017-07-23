@@ -8,7 +8,9 @@
 		:title="$gettext('dash.games.releases.form.version_number_label')"
 		>
 		<div class="help-block">
-			<div><translate :escape-html="false">dash.games.releases.form.version_number_help_html</translate></div>
+			<div v-translate>
+				dash.games.releases.form.version_number_help_html
+			</div>
 			<a class="link-help" href="https://help.gamejolt.com/dev-packages#release-version-numbers" target="_blank">
 				<translate>dash.games.releases.form.version_number_help_link</translate>
 			</a>

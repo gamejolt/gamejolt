@@ -14,20 +14,19 @@
 			</h1>
 			<h1 v-else>
 				<span v-if="!dateRange">
-					<translate :translate-params="{ date }" :escape-html="false">
+					<span v-translate="{ date }">
 						Games Published <small>on %{ date }</small>
-					</translate>
+					</span>
 				</span>
 				<span v-if="dateRange">
-					<translate
-						:escape-html="false"
-						:translate-params="{
+					<span
+						v-translate="{
 							dateStart: dateRange[0],
 							dateEnd: dateRange[1],
 						}"
 						>
 						Games Published <small>between %{ dateStart } and %{ dateEnd }</small>
-					</translate>
+					</span>
 				</span>
 			</h1>
 
@@ -88,10 +87,8 @@
 		</div>
 	</section>
 	<section class="section fill-pink section-thin" v-else-if="section === 'new'">
-		<div class="container">
-			<translate :escape-html="false">
-				games.list.new_games_warning_html
-			</translate>
+		<div class="container" v-translate>
+			games.list.new_games_warning_html
 		</div>
 	</section>
 

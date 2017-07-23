@@ -146,14 +146,13 @@
 				:class="{ active: tab === 'comments' }"
 				@click="toggleComments"
 				>
-				<translate
+				<span
+					v-translate="{ count: number( post.comment_count ) }"
 					:translate-n="post.comment_count"
-					:translate-params="{ count: number( post.comment_count ) }"
 					translate-plural="<b>%{ count }</b> comments"
-					:escape-html="false"
 					>
 					<b>1</b> comment
-				</translate>
+				</span>
 			</a>
 
 			<a class="devlog-post-controls-link link-muted"
@@ -161,14 +160,13 @@
 				:class="{ active: tab === 'likes' }"
 				@click="toggleLikes"
 				>
-				<translate
+				<span
+					v-translate="{ count: number( post.like_count ) }"
 					:translate-n="post.like_count"
-					:translate-params="{ count: number( post.like_count ) }"
 					translate-plural="<b>%{ count }</b> likes"
-					:escape-html="false"
 					>
 					<b>1</b> like
-				</translate>
+				</span>
 			</a>
 
 			<router-link

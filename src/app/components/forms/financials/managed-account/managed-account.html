@@ -70,11 +70,17 @@
 			</div>
 
 			<div class="alert alert-warning" v-if="isVerificationPending">
-				<p><translate :escape-html="false"><strong>Stripe is in the process of verifying your details.</strong> This can take anywhere from a few minutes to a few days. We'll contact you when the verification process is complete and if Stripe requires additional supporting documents (such as a photo ID) in order to identify you. Hang tight!</translate></p>
+				<p>
+					<strong><translate>Stripe is in the process of verifying your details.</translate></strong>
+					<translate>This can take anywhere from a few minutes to a few days. We'll contact you when the verification process is complete and if Stripe requires additional supporting documents (such as a photo ID) in order to identify you. Hang tight!</translate>
+				</p>
 			</div>
 
 			<div class="alert alert-warning" v-if="requiresVerificationDocument">
-				<p><translate :escape-html="false"><strong>Stripe needs additional identification documents in order to verify your account.</strong> Please enter them below.</translate></p>
+				<p>
+					<strong><translate>Stripe needs additional identification documents in order to verify your account.</translate></strong>
+					<translate>Please enter them below.</translate>
+				</p>
 			</div>
 
 			<div class="form-horizontal">
@@ -135,10 +141,10 @@
 
 			<div class="alert alert-info" v-if="account.status === 'unverified'">
 				<p v-if="account.type === 'individual'">
-					<translate :escape-html="false">Please fill in your <strong>personal information</strong>.</translate>
+					<translate>Please fill in your personal information.</translate>
 				</p>
 				<p v-else-if="account.type === 'company'">
-					<translate :escape-html="false">We are required to collection information for a <strong>representative of your company</strong>.</translate>
+					<translate>We are required to collection information for a representative of your company.</translate>
 				</p>
 			</div>
 

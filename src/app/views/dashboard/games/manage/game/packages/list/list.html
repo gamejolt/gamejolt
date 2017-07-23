@@ -1,10 +1,8 @@
 <div class="row">
 	<div class="col-sm-4 col-sm-push-8">
 		<div class="page-help">
-			<div>
-				<translate :escape-html="false">
-					dash.games.packages.page_help_html
-				</translate>
+			<div v-translate>
+				dash.games.packages.page_help_html
 			</div>
 			<p>
 				<a class="link-help" href="https://help.gamejolt.com/dev-packages" target="_blank">
@@ -18,15 +16,12 @@
 
 		<div class="alert alert-info" v-if="game._is_devlog">
 			<app-jolticon icon="notice" class="warning" />
-			<translate :escape-html="false">
-				<b>Public packages do not show on devlog-only game pages.</b> You are only able to create private packages for testers while your game page is only a devlog. Once you publish your game page into early access or as a complete game, your public packages will show.
-			</translate>
+			<b><translate>Public packages do not show on devlog-only game pages.</translate></b>
+			<translate>You are only able to create private packages for testers while your game page is only a devlog. Once you publish your game page into early access or as a complete game, your public packages will show.</translate>
 		</div>
 
-		<div class="alert alert-info" v-if="!packages.length">
-			<translate :escape-html="false">
-				dash.games.packages.no_packages_html
-			</translate>
+		<div class="alert alert-info" v-if="!packages.length" v-translate>
+			dash.games.packages.no_packages_html
 		</div>
 
 		<div>

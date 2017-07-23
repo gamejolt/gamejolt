@@ -24,7 +24,9 @@
 
 				<p>
 					<app-jolticon icon="notice" />
-					<translate :escape-html="false">dash.games.overview.todo_info_builds_processing_html</translate>
+					<span v-translate>
+						dash.games.overview.todo_info_builds_processing_html
+					</span>
 				</p>
 			</div>
 
@@ -221,10 +223,8 @@
 			</h4>
 
 			<div class="page-help">
-				<p>
-					<translate :escape-html="false">
-						Removing your game page will remove it from the site completely. <b>This is permanent!</b>
-					</translate>
+				<p v-translate>
+					Removing your game page will remove it from the site completely. <b>This is permanent!</b>
 				</p>
 			</div>
 

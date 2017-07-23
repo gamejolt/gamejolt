@@ -21,10 +21,8 @@
 
 	<app-expand :when="isFnafDetected">
 		<div class="alert alert-warning">
-			<div>
-				<translate :escape-html="false">
-					dash.games.add.fnaf_autotag_message_html
-				</translate>
+			<div v-translate>
+				dash.games.add.fnaf_autotag_message_html
 			</div>
 
 			<div class="alert-actions">

@@ -2,10 +2,8 @@
 
 	<div class="row">
 		<div class="col-sm-4 col-sm-push-8">
-			<div class="page-help">
-				<translate :escape-html="false">
-					dash.games.media.page_help_html
-				</translate>
+			<div class="page-help" v-translate>
+				dash.games.media.page_help_html
 			</div>
 		</div>
 
@@ -39,10 +37,8 @@
 			<div v-if="tab === 'image'">
 
 				<div class="alert alert-info full-bleed-xs">
-					<div>
-						<translate :escape-html="false">
-							dash.games.media.add.image.page_help_html
-						</translate>
+					<div v-translate>
+						dash.games.media.add.image.page_help_html
 					</div>
 					<br>
 					<div>
@@ -61,10 +57,8 @@
 			<div v-else-if="tab === 'video'">
 
 				<div class="alert alert-info full-bleed-xs">
-					<div>
-						<translate :escape-html="false">
-							dash.games.media.add.video.page_help_html
-						</translate>
+					<div v-translate>
+						dash.games.media.add.video.page_help_html
 					</div>
 					<br>
 					<div>

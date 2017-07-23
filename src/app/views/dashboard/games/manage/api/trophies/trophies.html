@@ -6,8 +6,8 @@
 		</h2>
 
 		<div class="page-help">
-			<div>
-				<translate :escape-html="false">dash.games.trophies.page_help_html</translate>
+			<div v-translate>
+				dash.games.trophies.page_help_html
 			</div>
 			<p>
 				<a class="link-help" href="https://help.gamejolt.com/dev-trophies" target="_blank">
@@ -16,8 +16,8 @@
 			</p>
 		</div>
 
-		<div class="alert alert-warning" v-if="hasHiddenTrophies">
-			<translate :escape-html="false">dash.games.trophies.has_hidden_html</translate>
+		<div class="alert alert-warning" v-if="hasHiddenTrophies" v-translate>
+			dash.games.trophies.has_hidden_html
 		</div>
 
 		<div v-for="difficulty of GameTrophy.difficulties">

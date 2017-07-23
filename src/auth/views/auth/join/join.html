@@ -1,10 +1,8 @@
 <div>
 
 	<div class="auth-lead-text" v-if="Connection.isOnline">
-		<p class="lead anim-fade-in-enlarge">
-			<translate :escape-html="false">
-				auth.join.join_message_html
-			</translate>
+		<p class="lead anim-fade-in-enlarge" v-translate>
+			auth.join.join_message_html
 		</p>
 	</div>
 

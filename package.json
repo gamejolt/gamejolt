@@ -58,7 +58,7 @@
 		"vue": "2.4.2",
 		"vue-class-component": "5.0.2",
 		"vue-color": "2.2.2",
-		"vue-gettext": "gamejolt/vue-gettext#hworld-lazyload",
+		"vue-gettext": "gamejolt/vue-gettext#params",
 		"vue-property-decorator": "5.1.1",
 		"vue-router": "2.7.0",
 		"vue-server-renderer": "2.4.2",

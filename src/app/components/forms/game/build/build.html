@@ -91,8 +91,8 @@
 			:active="true"
 			/>
 
-		<div class="text-center small">
-			<translate :escape-html="false">dash.games.releases.builds.processing_message_html</translate>
+		<div class="text-center small" v-translate>
+			dash.games.releases.builds.processing_message_html
 		</div>
 	</app-expand>
 
@@ -101,17 +101,13 @@
 
 			<div v-if="model.type === GameBuild.TYPE_APPLET" class="alert alert-warning sans-margin">
 				<app-jolticon icon="notice" />
-				<translate :escape-html="false">
-					<strong>Java Applets have been deprecated.</strong>
-					You can no longer edit your Java Applet builds, although gamers will still be able to play them if their browsers support them. You can add .jar files as downloadables and the Game Jolt Client will correctly launch them for users instead.
-				</translate>
+				<strong><translate>Java Applets have been deprecated.</translate></strong>
+				<translate>You can no longer edit your Java Applet builds, although gamers will still be able to play them if their browsers support them. You can add .jar files as downloadables and the Game Jolt Client will correctly launch them for users instead.</translate>
 			</div>
 			<div v-else-if="model.type === GameBuild.TYPE_SILVERLIGHT" class="alert alert-warning sans-margin">
 				<app-jolticon icon="notice" />
-				<translate :escape-html="false">
-					<strong>Silverlight builds have been deprecated.</strong>
-					You can no longer edit your Silverlight builds, although gamers will still be able to play them if their browsers support them.
-				</translate>
+				<strong><translate>Silverlight builds have been deprecated.</translate></strong>
+				<translate>You can no longer edit your Silverlight builds, although gamers will still be able to play them if their browsers support them.</translate>
 			</div>
 
 			<!--
@@ -138,7 +134,9 @@
 						<translate>This build is not launchable on certain platforms. They've been disabled below.</translate>
 					</p>
 
-					<p class="help-block"><translate :escape-html="false">dash.games.builds.form.platforms_help_html</translate></p>
+					<p class="help-block" v-translate>
+						dash.games.builds.form.platforms_help_html
+					</p>
 
 					<div class="clearfix">
 						<div v-for="platform of platformOptions">
@@ -161,7 +159,9 @@
 					</div>
 
 					<app-expand :when="hasPlatformsError">
-						<div class="alert alert-warning sans-margin-bottom"><translate :escape-html="false">dash.games.builds.form.no_platforms_error</translate></div>
+						<div class="alert alert-warning sans-margin-bottom" v-translate>
+							dash.games.builds.form.no_platforms_error
+						</div>
 					</app-expand>
 
 				</div>
@@ -172,7 +172,7 @@
 				-->
 				<p class="sans-margin" v-if="forceOther">
 					<app-jolticon icon="info-circle" />
-					<translate :escape-html="false">This build doesn't seem to be a Windows, Mac, or Linux build, so we've marked it as "Other" for you.</translate>
+					<translate>This build doesn't seem to be a Windows, Mac, or Linux build, so we've marked it as 'Other' for you.</translate>
 				</p>
 
 				<!--
@@ -223,16 +223,14 @@
 
 					<app-expand :when="serverErrors.launchOptions">
 						<div class="alert alert-warning">
-							<translate :escape-html="false">
-								<strong>The launch options you entered are invalid.</strong>
-								Make sure each selected file is in your build and that it works on the appropriate operating system.
-							</translate>
+							<strong><translate>The launch options you entered are invalid.</translate></strong>
+							<translate>Make sure each selected file is in your build and that it works on the appropriate operating system.</translate>
 						</div>
 					</app-expand>
 
 					<app-expand :when="!model.primary_file.is_archive">
-						<div class="alert alert-info sans-margin-bottom">
-							<translate :escape-html="false">dash.games.releases.builds.launch_options.standalone_info_html</translate>
+						<div class="alert alert-info sans-margin-bottom" v-translate>
+							dash.games.releases.builds.launch_options.standalone_info_html
 						</div>
 					</app-expand>
 				</fieldset>
@@ -241,7 +239,9 @@
 					Browser Embed Dimensions
 				-->
 				<div v-if="isBrowserBased">
-					<p class="help-block"><translate :escape-html="false">dash.games.builds.form.dimensions_help_html</translate></p>
+					<p class="help-block" v-translate>
+						dash.games.builds.form.dimensions_help_html
+					</p>
 
 					<div class="row">
 						<div class="col-sm-6">
@@ -291,10 +291,8 @@
 					v-if="model.type === GameBuild.TYPE_UNITY"
 					>
 					<app-jolticon icon="notice" />
-					<translate :escape-html="false">
-						<strong>Most browsers have stopped supporting the Unity Web Player.</strong>
-						Please consider exporting to WebGL instead.
-					</translate>
+					<strong><translate>Most browsers have stopped supporting the Unity Web Player.</translate></strong>
+					<translate>Please consider exporting to WebGL instead.</translate>
 				</div>
 
 				<div class="alert alert-info"
@@ -304,10 +302,8 @@
 					}"
 					>
 					<app-jolticon icon="notice" />
-					<translate :escape-html="false">
-						<strong>Be sure to remove or block ads from showing in your browser games.</strong>
-						We serve our own ads and share the revenue with developers. Domain names to block: gamejolt.com, *.gamejolt.com, gamejolt.net, *.gamejolt.net
-					</translate>
+					<strong><translate>Be sure to remove or block ads from showing in your browser games.</translate></strong>
+					<translate>We serve our own ads and share the revenue with developers. Domain names to block: gamejolt.com, *.gamejolt.com, gamejolt.net, *.gamejolt.net</translate>
 				</div>
 
 				<p class="sans-margin" v-if="model.type === GameBuild.TYPE_ROM">
