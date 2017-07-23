@@ -1,78 +1,12 @@
 <div class="row game-collection-grid">
-
 	<div
 		class="col-xs-12 col-sm-6 col-lg-4 game-collection-grid-item"
 		v-for="collection of collections"
 		:key="collection._id"
 		>
-
-		<router-link
-			:to="collection.routeLocation"
-			v-app-track-event="eventLabel"
-			>
-
-			<app-game-collection-thumbnail
-				:collection="collection"
-				/>
-
-			<div class="game-collection-title h4">
-				<span v-if="collection.type === 'developer'">
-					<translate
-						v-if="collection.from_subscription || collection.id !== app.user.id"
-						:translate-params="{ developer: '@' + collection.owner.username }"
-						:escape-html="false"
-						>
-						Games Made <small>by %{ developer }</small>
-					</translate>
-					<translate v-else>
-						Your Games
-					</translate>
-				</span>
-
-				<span v-else-if="collection.type === 'followed'">
-					<translate
-						v-if="collection.from_subscription || collection.id !== app.user.id"
-						:translate-params="{ user: '@' + collection.owner.username }"
-						:escape-html="false"
-						>
-						Games Followed <small>by %{ user }</small>
-					</translate>
-					<translate v-else>
-						Your Followed Games
-					</translate>
-				</span>
-
-				<span v-else-if="collection.type === 'owned'">
-					<translate
-						v-if="collection.from_subscription || collection.id !== app.user.id"
-						:translate-params="{ user: '@' + collection.owner.username }"
-						:escape-html="false"
-						>
-						Games Owned <small>by %{ user }</small>
-					</translate>
-					<translate v-else>
-						Your Owned Games
-					</translate>
-				</span>
-
-				<span v-else-if="collection.type === 'recommended'">
-					<translate
-						v-if="collection.from_subscription || collection.id !== app.user.id"
-						:translate-params="{ user: '@' + collection.owner.username }"
-						:escape-html="false"
-						>
-						Game Recommendations <small>for %{ user }</small>
-					</translate>
-					<translate v-else>
-						Your Recommended Games
-					</translate>
-				</span>
-
-				<span v-else>
-					{{ collection.name }}
-				</span>
-			</div>
-		</router-link>
+		<app-game-collection-grid-item
+			:collection="collection"
+			:event-label="eventLabel"
+			/>
 	</div>
-
 </div>

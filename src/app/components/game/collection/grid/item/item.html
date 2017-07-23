@@ -1,0 +1,69 @@
+<div class="game-collection-grid-item">
+	<router-link
+		:to="collection.routeLocation"
+		v-app-track-event="eventLabel"
+		>
+
+		<app-game-collection-thumbnail
+			:collection="collection"
+			/>
+
+		<div class="game-collection-title h4">
+			<span v-if="collection.type === 'developer'">
+				<translate
+					v-if="notOwner"
+					:translate-params="{ developer: '@' + collection.owner.username }"
+					:escape-html="false"
+					>
+					Games Made <small>by %{ developer }</small>
+				</translate>
+				<translate v-else>
+					Your Games
+				</translate>
+			</span>
+
+			<span v-else-if="collection.type === 'followed'">
+				<translate
+					v-if="notOwner"
+					:translate-params="{ user: '@' + collection.owner.username }"
+					:escape-html="false"
+					>
+					Games Followed <small>by %{ user }</small>
+				</translate>
+				<translate v-else>
+					Your Followed Games
+				</translate>
+			</span>
+
+			<span v-else-if="collection.type === 'owned'">
+				<translate
+					v-if="notOwner"
+					:translate-params="{ user: '@' + collection.owner.username }"
+					:escape-html="false"
+					>
+					Games Owned <small>by %{ user }</small>
+				</translate>
+				<translate v-else>
+					Your Owned Games
+				</translate>
+			</span>
+
+			<span v-else-if="collection.type === 'recommended'">
+				<translate
+					v-if="notOwner"
+					:translate-params="{ user: '@' + collection.owner.username }"
+					:escape-html="false"
+					>
+					Game Recommendations <small>for %{ user }</small>
+				</translate>
+				<translate v-else>
+					Your Recommended Games
+				</translate>
+			</span>
+
+			<span v-else>
+				{{ collection.name }}
+			</span>
+		</div>
+	</router-link>
+</div>
