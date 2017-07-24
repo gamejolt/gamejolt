@@ -37,7 +37,7 @@ import { AppPageHeader } from '../../../components/page-header/page-header';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
-import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
+import { date as dateFilter } from '../../../../lib/gj-lib-client/vue/filters/date';
 import { AppScrollAffix } from '../../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
@@ -73,7 +73,7 @@ import {
 	filters: {
 		number,
 		currency,
-		date,
+		date: dateFilter,
 	},
 })
 export default class RouteDashAnalytics extends BaseRouteComponent {
@@ -113,6 +113,18 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 
 	Screen = makeObservableService(Screen);
 
+	get routeParamsAllPeriod() {
+		const params = Object.assign({}, this.$route.params);
+		params.period = 'all';
+		return params;
+	}
+
+	get routeParamsMonthlyPeriod() {
+		const params = Object.assign({}, this.$route.params);
+		params.period = 'monthly';
+		return params;
+	}
+
 	@RouteResolve({ cache: false })
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
@@ -143,14 +155,14 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 		this.release = this.$payload.release ? new GameRelease(this.$payload.release) : null;
 		this.partnerMode = !this.user || this.user.id !== this.viewAs;
 
-		this.period = (this.$route.query['period'] as any) || 'monthly';
+		this.period = (this.$route.params['period'] as any) || 'monthly';
 		this.resource = this.$route.params['resource'] as any;
 		this.resourceId = parseInt(this.$route.params['resourceId'], 10);
 
 		switch (this.resource) {
 			case 'User':
 				this.availableMetrics = SiteAnalytics.userMetrics;
-				this.metric = this.availableMetrics[this.$route.params['metricKey'] || 'user-view'];
+				this.metric = this.availableMetrics[this.$route.params['metricKey'] || 'view'];
 				break;
 
 			case 'Game':
@@ -222,7 +234,10 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 		if (this.period === 'monthly') {
 			const date = new Date();
 			let year: number, month: number;
-			if (!this.$route.query['year'] || !this.$route.query['month']) {
+			if (
+				typeof this.$route.query['year'] === 'undefined' ||
+				typeof this.$route.query['month'] === 'undefined'
+			) {
 				year = date.getFullYear();
 				month = date.getMonth();
 			} else {

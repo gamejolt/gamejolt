@@ -2,7 +2,7 @@ import VueRouter from 'vue-router';
 
 export const routeDashAnalytics: VueRouter.RouteConfig = {
 	name: 'dash.analytics',
-	path: 'analytics/:resource/:resourceId/:metricKey?',
+	path: 'analytics/:resource/:resourceId/:period/:metricKey?',
 	// props: true,
 	component: () => import('./analytics'),
 };

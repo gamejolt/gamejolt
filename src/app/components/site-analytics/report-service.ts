@@ -155,13 +155,14 @@ export class SiteAnalyticsReport {
 			request.fetch_fields = fetchFields;
 		}
 
-		// TODO(rewrite)
-		// if ( resourceFields ) {
-		// 	// Resource fields has different string union types as values, and
-		// 	// typescript can't infer it as a merged string union yet.
-		// 	const a: any = _.flatten( _.values( resourceFields ) );
-		// 	request.resource_fields = a;
-		// }
+		if (resourceFields) {
+			request.resource_fields = [];
+			// Resource fields has different string union types as values, and
+			// typescript can't infer it as a merged string union yet.
+			for (let k of Object.keys(resourceFields)) {
+				request.resource_fields.push(...(resourceFields as any)[k]);
+			}
+		}
 
 		if (startTime && endTime) {
 			const date = new Date();

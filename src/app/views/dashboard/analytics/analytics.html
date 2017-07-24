@@ -14,10 +14,10 @@
 						replace
 						active-class="active"
 						>
-						<span class="breadcrumb-tag" translate>User</span>
+						<translate class="breadcrumb-tag" translate>User</translate>
 						@{{ user.username }}
 					</router-link>
-					<span class="breadcrumb-separator jolticon jolticon-chevron-right" v-if="game"></span>
+					<app-jolticon icon="chevron-right" class="breadcrumb-separator" v-if="game" />
 				</li>
 				<li v-if="game">
 					<router-link
@@ -29,10 +29,10 @@
 						replace
 						active-class="active"
 						>
-						<span class="breadcrumb-tag" translate>Game</span>
+						<translate class="breadcrumb-tag">Game</translate>
 						{{ game.title }}
 					</router-link>
-					<span class="breadcrumb-separator jolticon jolticon-chevron-right" v-if="package"></span>
+					<app-jolticon icon="chevron-right" class="breadcrumb-separator" v-if="package" />
 				</li>
 				<li v-if="package">
 					<router-link
@@ -44,10 +44,10 @@
 						replace
 						active-class="active"
 						>
-						<span class="breadcrumb-tag" translate>Package</span>
+						<translate class="breadcrumb-tag" translate>Package</translate>
 						{{ package.title || game.title }}
 					</router-link>
-					<span class="breadcrumb-separator jolticon jolticon-chevron-right" v-if="release"></span>
+					<app-jolticon icon="chevron-right" class="breadcrumb-separator" v-if="release" />
 				</li>
 				<li v-if="release">
 					<router-link
@@ -59,7 +59,7 @@
 						replace
 						active-class="active"
 						>
-						<span class="breadcrumb-tag" translate>Release</span>
+						<translate class="breadcrumb-tag">Release</translate>
 						{{ release.version_number }}
 					</router-link>
 				</li>
@@ -72,8 +72,7 @@
 					<router-link
 						:to="{
 							name: 'dash.analytics',
-							params: $route.params,
-							query: { period: 'all' },
+							params: routeParamsAllPeriod,
 						}"
 						replace
 						:class="{ active: period === 'all' }"
@@ -86,8 +85,7 @@
 					<router-link
 						:to="{
 							name: 'dash.analytics',
-							params: $route.params,
-							query: { period: undefined },
+							params: routeParamsMonthlyPeriod,
 						}"
 						replace
 						:class="{ active: period === 'monthly' }"
@@ -104,8 +102,8 @@
 				<router-link class="btn btn-outline btn-sparse"
 					:to="{
 						name: 'dash.analytics',
-						params: $route.params,
-						query: { period: 'monthly', year: prevYear, month: prevMonth },
+						params: routeParamsMonthlyPeriod,
+						query: { year: prevYear, month: prevMonth },
 					}"
 					replace
 					>
@@ -120,8 +118,8 @@
 					v-if="now > endTime"
 					:to="{
 						name: 'dash.analytics',
-						params: $route.params,
-						query: { period: 'monthly', year: nextYear, month: nextMonth },
+						params: routeParamsMonthlyPeriod,
+						query: { year: nextYear, month: nextMonth },
 					}"
 					replace
 					>
@@ -136,7 +134,6 @@
 
 		<app-expand :when="period === 'monthly' && !!metricData[ metric.key ].graph">
 			<app-graph
-				v-if="metricData[ metric.key ].graph"
 				:dataset="metricData[ metric.key ].graph"
 				/>
 		</app-expand>
