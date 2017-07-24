@@ -60,6 +60,8 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	@RouteState packages: RouteStore['packages'];
 	@RouteState hasReleasesSection: RouteStore['hasReleasesSection'];
 	@RouteState recommendedGames: RouteStore['recommendedGames'];
+	@RouteState partner: RouteStore['partner'];
+	@RouteState partnerKey: RouteStore['partnerKey'];
 
 	@RouteState showDescription: RouteStore['showDescription'];
 	@RouteState canToggleDescription: RouteStore['canToggleDescription'];

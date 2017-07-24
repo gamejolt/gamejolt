@@ -12,6 +12,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { GameDownloader } from '../../../../lib/gj-lib-client/components/game/downloader/downloader.service';
 import { GamePlayModal } from '../../../../lib/gj-lib-client/components/game/play-modal/play-modal.service';
 import { GamePackagePurchaseModal } from '../../../../lib/gj-lib-client/components/game/package/purchase-modal/purchase-modal.service';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 
 @View
 @Component({
@@ -21,12 +22,11 @@ import { GamePackagePurchaseModal } from '../../../../lib/gj-lib-client/componen
 })
 export class AppGameCoverButtons extends Vue {
 	@Prop(Game) game: Game;
-
 	@Prop(Array) packages: GamePackage[];
-
 	@Prop(Array) installableBuilds: GameBuild[];
-
 	@Prop(Array) browserBuilds: GameBuild[];
+	@Prop(String) partnerKey?: string;
+	@Prop(User) partner?: User;
 
 	// isGamePatching = undefined;
 	// hasLocalPackage = false;
@@ -82,14 +82,14 @@ export class AppGameCoverButtons extends Vue {
 			// If the build belongs to a pwyw package, open up the package
 			// payment form.
 			if (build._package!.shouldShowNamePrice()) {
-				this.buy(build._package);
+				this.buy(build._package, build);
 			} else {
 				GameDownloader.download(this.$router, this.game, build);
 			}
 		}
 	}
 
-	buy(pkg?: GamePackage) {
+	buy(pkg?: GamePackage, build?: GameBuild) {
 		if (!pkg) {
 			pkg = this.packages.find(item => item._sellable!.id === this.game.sellable.id);
 			if (!pkg) {
@@ -97,6 +97,12 @@ export class AppGameCoverButtons extends Vue {
 			}
 		}
 
-		GamePackagePurchaseModal.show(this.game, pkg, pkg._sellable!);
+		GamePackagePurchaseModal.show({
+			game: this.game,
+			package: pkg,
+			build,
+			partner: this.partner,
+			partnerKey: this.partnerKey,
+		});
 	}
 }
