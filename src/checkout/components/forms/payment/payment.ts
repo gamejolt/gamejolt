@@ -96,9 +96,9 @@ export class FormPayment extends BaseForm<any> implements FormOnInit, FormOnSubm
 	onCountryChange() {
 		this.regions = Geo.getRegions(this.formModel.country) || null;
 		if (this.regions) {
-			this.formModel.region = this.regions[0].code; // Default to first.
+			this.setField('region', this.regions[0].code); // Default to first.
 		} else {
-			this.formModel.region = '';
+			this.setField('region', '');
 		}
 		this.getTax();
 	}

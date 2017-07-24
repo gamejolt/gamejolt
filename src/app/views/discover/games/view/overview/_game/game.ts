@@ -82,6 +82,8 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState songs: RouteStore['songs'];
 	@RouteState userPartnerKey: RouteStore['userPartnerKey'];
 	@RouteState partnerLink: RouteStore['partnerLink'];
+	@RouteState partner: RouteStore['partner'];
+	@RouteState partnerKey: RouteStore['partnerKey'];
 	@RouteState twitterShareMessage: RouteStore['twitterShareMessage'];
 	@RouteState feed: RouteStore['feed'];
 	@RouteState supporters: RouteStore['supporters'];

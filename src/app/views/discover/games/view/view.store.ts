@@ -70,9 +70,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	userPartnerKey: string | null = null;
 
-	partnerReferredKey = '';
-	partnerReferredBy: User | null = null;
-	partnerNoCut = false;
+	partnerKey = '';
+	partner: User | null = null;
 
 	userRating: GameRating | null = null;
 	ratingBreakdown: number[] = [];
@@ -249,9 +248,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.videoComments = CommentVideo.populate(payload.videoComments);
 		this.videoCommentsCount = payload.videoCommentsCount || 0;
 
-		this.partnerReferredKey = payload.partnerReferredKey || '';
-		this.partnerReferredBy = payload.partnerReferredBy ? new User(payload.partnerReferredBy) : null;
-		this.partnerNoCut = payload.partnerNoCut || false;
+		this.partnerKey = payload.partnerReferredKey || '';
+		this.partner = payload.partnerReferredBy ? new User(payload.partnerReferredBy) : null;
 
 		this.scoresPayload = objectPick(payload, [
 			'scoreTables',

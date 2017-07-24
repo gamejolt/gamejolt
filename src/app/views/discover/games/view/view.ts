@@ -29,6 +29,8 @@ import { RouteStoreName, RouteState, RouteAction, RouteStore, RouteMutation } fr
 import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Store } from '../../../../store/index';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
+import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
 import {
 	RouteResolve,
 	BaseRouteComponent,
@@ -57,6 +59,8 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	@RouteState game: RouteStore['game'];
 	@RouteState userPartnerKey: RouteStore['userPartnerKey'];
+	@RouteState partner: RouteStore['partner'];
+	@RouteState partnerKey: RouteStore['partnerKey'];
 	@RouteState packages: RouteStore['packages'];
 
 	@RouteAction bootstrap: RouteStore['bootstrap'];
@@ -99,6 +103,9 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	@RouteResolve({ lazy: true, cache: true, cacheTag: 'view' })
 	async routeResolve(this: undefined, route: VueRouter.Route) {
+		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
+		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);
+
 		const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
 
 		if (payload && payload.game) {

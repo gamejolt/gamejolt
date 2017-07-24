@@ -225,7 +225,7 @@
 	</app-expand>
 
 	<app-form-button
-		v-if="!valid || (calculatedTax && !isProcessing)"
+		v-if="!valid || (calculatedTax && !state.isProcessing)"
 		class="btn-block btn-success-outline btn-lg"
 		:disabled="!valid"
 		>
@@ -233,7 +233,7 @@
 	</app-form-button>
 
 	<app-loading
-		v-if="isProcessing"
+		v-if="state.isProcessing"
 		class="loading-centered"
 		:label="$gettext(`Processing...`)"
 		/>
