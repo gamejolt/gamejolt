@@ -1,7 +1,8 @@
-// var moment = require('moment-timezone');
-
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { determine } from 'jstimezonedetect';
+import startOfTomorrow from 'date-fns/start_of_tomorrow';
+import startOfDay from 'date-fns/start_of_day';
+import addWeeks from 'date-fns/add_weeks';
 import * as View from '!view!./package.html';
 
 import {
@@ -22,7 +23,6 @@ import {
 	TimezoneData,
 	Timezone,
 } from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
-import fns from 'date-fns';
 import { AppDatetimePicker } from '../../../../../lib/gj-lib-client/components/datetime-picker/datetime-picker';
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
@@ -169,8 +169,8 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 		}
 
 		this.setField('pricing_type', 'free');
-		this.setField('sale_start', fns.startOfTomorrow().getTime());
-		this.setField('sale_end', fns.startOfDay(fns.addWeeks(Date.now(), 1)).getTime());
+		this.setField('sale_start', startOfTomorrow().getTime());
+		this.setField('sale_end', startOfDay(addWeeks(Date.now(), 1)).getTime());
 
 		if (this.method === 'add') {
 			this.setField('visibility', GamePackage.VISIBILITY_PUBLIC);
