@@ -16,6 +16,7 @@ import { bootstrapAppTranslations } from '../utils/translations';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 import { hijackLinks } from '../lib/gj-lib-client/utils/router';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
+import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
 
 if (GJ_IS_CLIENT) {
 	// require( './bootstrap-client' );
@@ -23,6 +24,7 @@ if (GJ_IS_CLIENT) {
 
 Meta.init(router);
 Payload.init(store);
+Referrer.init(router);
 Analytics.initRouter(router);
 Ads.init(router);
 Connection.init(store);
