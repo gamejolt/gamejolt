@@ -16,11 +16,11 @@
 						<ul :class="Screen.isXs ? 'stat-list' : 'list-unstyled'">
 							<li v-if="revenuePending > 0" class="stat-big" :class="{ 'stat-big-smaller': Screen.isXs }">
 								<div class="stat-big-label"><translate>dash.funds.withdraw.revenue_pending</translate></div>
-								<div class="stat-big-digit">{{ revenuePending | currency }}</div>
+								<div class="stat-big-digit">{{ revenuePending * 100 | currency }}</div>
 							</li>
 							<li class="stat-big" :class="{ 'stat-big-smaller': Screen.isXs }">
 								<div class="stat-big-label"><translate>dash.funds.withdraw.revenue_withdrawable</translate></div>
-								<div class="stat-big-digit">{{ revenueWithdrawable | currency }}</div>
+								<div class="stat-big-digit">{{ revenueWithdrawable * 100 | currency }}</div>
 							</li>
 						</ul>
 					</div>
@@ -30,7 +30,7 @@
 				<div class="col-sm-9 col-md-8 col-lg-6" :class="{ 'pull-left': !Screen.isXs }">
 					<div v-translate>dash.funds.withdraw.page_help_html</div>
 
-					<form-withdraw-funds
+					<form-withdraw-funds v-if="user"
 						:user="user"
 						:paypal-email="email"
 						:min-amount="minAmount"
