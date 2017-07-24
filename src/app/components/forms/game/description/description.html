@@ -1,4 +1,4 @@
-<app-form name="descriptionForm">
+<app-form name="descriptionForm" ref="form">
 
 	<app-form-group
 		name="description_markdown"
@@ -6,6 +6,7 @@
 		:hide-label="true"
 		>
 
+		{{ isDisabled ? 'disabled' : 'active' }}
 		<app-form-control-markdown
 			preview-class="game-compiled-description"
 			preview-url="/web/dash/developer/games/description/preview"
@@ -13,6 +14,7 @@
 			:show-media-items="true"
 			media-item-type="game-description"
 			:placeholder="$gettext( `Write your game description here...` )"
+			:disabled="isDisabled"
 			/>
 
 		<app-form-control-errors />

@@ -1,15 +1,18 @@
-import { Component } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import * as View from '!view!./description.html';
 
-import {
-	BaseForm,
-	FormOnInit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppDashGameWizardControls } from '../wizard-controls/wizard-controls';
+import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
+
+type DescriptionFormModel = Game & {
+	autotag?: string;
+	autotag_skip?: boolean;
+};
 
 @View
 @Component({
@@ -20,33 +23,35 @@ import { AppDashGameWizardControls } from '../wizard-controls/wizard-controls';
 		AppDashGameWizardControls,
 	},
 })
-export class FormGameDescription extends BaseForm<Game> implements FormOnInit {
+export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 	modelClass = Game;
 	saveMethod = '$saveDescription' as '$saveDescription';
 
-	onInit() {
-		// TODO(rewrite)
-		// scope.$watchCollection( 'formState.serverErrors["autotag-fnaf"]', ( isFnafDetected: boolean ) =>
-		// {
-		// 	// This will make it so they can't edit the form and force them to choose if they want to tag or not.
-		// 	if ( isFnafDetected ) {
-		// 		scope.isFnafDetected = true;
-		// 		scope.isDisabled = true;
-		// 	}
-		// } );
+	isFnafDetected = false;
+	isDisabled = false;
+
+	$refs: {
+		form: AppForm;
+	};
+
+	@Watch('serverErrors')
+	onServerErrors() {
+		this.isFnafDetected = false;
+		this.isDisabled = false;
+		if (this.serverErrors['autotag-fnaf']) {
+			// This will make it so they can't edit the form and force them to choose if they want to tag or not.
+			this.isFnafDetected = true;
+			this.isDisabled = true;
+		}
 	}
 
 	addAutotag(tag: string) {
-		(this.formModel as any).autotag = tag;
-
-		// TODO(rewrite)
-		// this.onSubmit();
+		this.setField('autotag', tag);
+		this.$refs.form.submit();
 	}
 
 	skipAutotag() {
-		(this.formModel as any).autotag_skip = true;
-
-		// TODO(rewrite)
-		// scope.onSubmit();
+		this.setField('autotag_skip', true);
+		this.$refs.form.submit();
 	}
 }
