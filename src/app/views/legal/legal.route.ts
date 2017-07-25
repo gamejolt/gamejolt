@@ -7,6 +7,6 @@ export const routeLegal: VueRouter.RouteConfig = {
 	name: 'legal',
 	path: '',
 	props: true,
-	component: () => import('./legal'),
+	component: () => import(/* webpackChunkName: "routeLegal" */ './legal'),
 	children: [routeLegalPrivacy, routeLegalTerms],
 };

@@ -6,6 +6,6 @@ import { routeDashGamesAdd } from './add/add.route';
 export const routeDashGames: VueRouter.RouteConfig = {
 	path: 'games',
 	props: true,
-	component: () => import('./games'),
+	component: () => import(/* webpackChunkName: "routeDashGames" */ './games'),
 	children: [routeDashGamesAdd, routeDashGamesManage],
 };

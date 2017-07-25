@@ -5,7 +5,8 @@ import { Modal } from '../../../../../lib/gj-lib-client/components/modal/modal.s
 export class DevlogPostEditModal {
 	static async show(post: FiresidePost) {
 		return await Modal.show<FiresidePost>({
-			component: () => asyncComponentLoader(import('./edit-modal')),
+			component: () =>
+				asyncComponentLoader(import(/* webpackChunkName: "DevlogPostEditModal" */ './edit-modal')),
 			noBackdropClose: true,
 			noEscClose: true,
 			size: 'sm',

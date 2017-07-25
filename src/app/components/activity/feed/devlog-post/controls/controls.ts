@@ -24,6 +24,7 @@ import { AppSocialTwitterShare } from '../../../../../../lib/gj-lib-client/compo
 import { AppSocialFacebookLike } from '../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppCommentWidgetAdd } from '../../../../../../lib/gj-lib-client/components/comment/widget/add/add';
 import { Store } from '../../../../../store/index';
+import { DevlogPostEditModal } from '../../../../devlog/post/edit-modal/edit-modal-service';
 
 @View
 @Component({
@@ -136,9 +137,7 @@ export class AppActivityFeedDevlogPostControls extends Vue {
 	}
 
 	async showEdit() {
-		// Dynamic import since it loads so much form stuff.
-		const module = await import('../../../../devlog/post/edit-modal/edit-modal-service');
-		const post = await module.DevlogPostEditModal.show(this.post);
+		const post = await DevlogPostEditModal.show(this.post);
 		if (post) {
 			this.$emit('edited');
 		}

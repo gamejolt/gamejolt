@@ -4,5 +4,5 @@ export const routeSearchResults: VueRouter.RouteConfig = {
 	name: 'search.results',
 	path: '/search',
 	props: true,
-	component: () => import('./results'),
+	component: () => import(/* webpackChunkName: "routeSearchResults" */ './results'),
 };

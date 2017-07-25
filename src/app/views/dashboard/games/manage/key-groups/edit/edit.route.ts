@@ -4,5 +4,5 @@ export const routeDashGamesManageKeyGroupsEdit: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.key-groups.edit',
 	path: 'keys/edit/:keyGroupId(\\d+)',
 	props: true,
-	component: () => import('./edit'),
+	component: () => import(/* webpackChunkName: "routeDashGamesManageKeyGroupsEdit" */ './edit'),
 };

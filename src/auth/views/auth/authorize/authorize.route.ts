@@ -4,7 +4,7 @@ export const routeAuthAuthorize: VueRouter.RouteConfig = {
 	name: 'auth.authorize',
 	path: 'authorize/:userId/:code/:type',
 	props: true,
-	component: () => import('./authorize'),
+	component: () => import(/* webpackChunkName: "routeAuthAuthorize" */ './authorize'),
 	meta: {
 		hideCoverImage: true,
 	},

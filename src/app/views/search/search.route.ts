@@ -9,6 +9,6 @@ export const routeSearch: VueRouter.RouteConfig = {
 	name: 'search',
 	path: '/search',
 	props: true,
-	component: () => import('./search'),
+	component: () => import(/* webpackChunkName: "routeSearch" */ './search'),
 	children: [routeSearchResults, routeSearchGames, routeSearchDevlogs, routeSearchUsers],
 };

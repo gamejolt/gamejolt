@@ -9,19 +9,19 @@ export const routeDiscoverGamesListSection: VueRouter.RouteConfig = {
 	name: 'discover.games.list._fetch',
 	path: `:section(${SectionRegex})?`,
 	props: true,
-	component: () => import('./list'),
+	component: () => import(/* webpackChunkName: "routeDiscoverGamesList" */ './list'),
 };
 
 export const routeDiscoverGamesListCategory: VueRouter.RouteConfig = {
 	name: 'discover.games.list._fetch-category',
 	path: `:section(${SectionRegex})?/:category(${CategoryRegex})`,
 	props: true,
-	component: () => import('./list'),
+	component: () => import(/* webpackChunkName: "routeDiscoverGamesList" */ './list'),
 };
 
 export const routeDiscoverGamesListDate: VueRouter.RouteConfig = {
 	name: 'discover.games.list._fetch-date',
 	path: `:section(by\\-date)/:date(${DateRegex})(\:)?:endDate(${DateRegex})?`,
 	props: true,
-	component: () => import('./list'),
+	component: () => import(/* webpackChunkName: "routeDiscoverGamesList" */ './list'),
 };

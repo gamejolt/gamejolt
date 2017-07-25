@@ -4,5 +4,5 @@ export const routeDashGamesManageGameHeader: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.game.header',
 	path: 'header',
 	props: true,
-	component: () => import('./header'),
+	component: () => import(/* webpackChunkName: "routeDashGamesManageGameHeader" */ './header'),
 };

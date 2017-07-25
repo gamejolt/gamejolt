@@ -4,5 +4,5 @@ export const routeDashAccountFinancials: VueRouter.RouteConfig = {
 	name: 'dash.account.financials',
 	path: 'financials',
 	props: true,
-	component: () => import('./financials'),
+	component: () => import(/* webpackChunkName: "routeDashAccountFinancials" */ './financials'),
 };

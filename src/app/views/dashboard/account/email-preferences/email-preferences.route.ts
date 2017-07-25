@@ -4,7 +4,8 @@ export const routeDashAccountEmailPreferences: VueRouter.RouteConfig = {
 	name: 'dash.account.email-preferences',
 	path: 'email-preferences',
 	props: true,
-	component: () => import('./email-preferences'),
+	component: () =>
+		import(/* webpackChunkName: "routeDashAccountEmailPreferences" */ './email-preferences'),
 	children: [
 		{
 			path: '/dashboard/profile/email-preferences',

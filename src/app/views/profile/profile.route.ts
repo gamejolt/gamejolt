@@ -8,6 +8,6 @@ export const routeProfile: VueRouter.RouteConfig = {
 	name: 'profile',
 	path: '/@:username',
 	props: true,
-	component: () => import('./profile'),
+	component: () => import(/* webpackChunkName: "routeProfile" */ './profile'),
 	children: [routeProfileOverview, routeProfileLibrary, routeProfileVideos],
 };

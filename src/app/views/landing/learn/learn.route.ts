@@ -4,5 +4,5 @@ export const routeLandingLearn: VueRouter.RouteConfig = {
 	name: 'landing.learn',
 	path: '/learn',
 	props: true,
-	component: () => import('./learn'),
+	component: () => import(/* webpackChunkName: "routeLandingLearn" */ './learn'),
 };

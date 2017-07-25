@@ -4,5 +4,5 @@ export const routeDashGamesManageDevlog: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.devlog',
 	path: 'devlog/:tab(active|draft)?',
 	props: true,
-	component: () => import('./devlog'),
+	component: () => import(/* webpackChunkName: "routeDashGamesManageDevlog" */ './devlog'),
 };

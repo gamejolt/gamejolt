@@ -1,11 +1,11 @@
 import VueRouter from 'vue-router';
 
-
 export const routeAuthLinkedAccountFacebookCallback: VueRouter.RouteConfig = {
 	name: 'auth.linked-account.facebook.callback',
 	path: 'facebook/callback',
 	props: true,
-	component: () => import('./callback'),
+	component: () =>
+		import(/* webpackChunkName: "routeAuthLinkedAccountFacebookCallback" */ './callback'),
 };
 
 // angular.module( 'App.Views' ).config( function( $stateProvider )

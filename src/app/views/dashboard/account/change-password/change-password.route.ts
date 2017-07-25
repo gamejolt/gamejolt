@@ -4,7 +4,8 @@ export const routeDashAccountChangePassword: VueRouter.RouteConfig = {
 	name: 'dash.account.change-password',
 	path: 'change-password',
 	props: true,
-	component: () => import('./change-password'),
+	component: () =>
+		import(/* webpackChunkName: "routeDashAccountChangePassword" */ './change-password'),
 	children: [
 		{
 			path: '/dashboard/profile/change-password',

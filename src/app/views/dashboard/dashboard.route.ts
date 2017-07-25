@@ -11,7 +11,7 @@ export const routeDash: VueRouter.RouteConfig = {
 	name: 'dashboard',
 	path: '/dashboard',
 	props: true,
-	component: () => import('./dashboard'),
+	component: () => import(/* webpackChunkName: "routeDash" */ './dashboard'),
 	children: [
 		routeDashMain,
 		routeDashAccount,

@@ -4,5 +4,5 @@ export const routeSearchUsers: VueRouter.RouteConfig = {
 	name: 'search.users',
 	path: 'users',
 	props: true,
-	component: () => import('./users'),
+	component: () => import(/* webpackChunkName: "routeSearchUsers" */ './users'),
 };

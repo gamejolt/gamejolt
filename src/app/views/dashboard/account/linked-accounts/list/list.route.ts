@@ -4,5 +4,5 @@ export const routeDashAccountLinkedAccountsList: VueRouter.RouteConfig = {
 	name: 'dash.account.linked-accounts.list',
 	path: 'linked-accounts',
 	props: true,
-	component: () => import('./list'),
+	component: () => import(/* webpackChunkName: "routeDashAccountLinkedAccountsList" */ './list'),
 };

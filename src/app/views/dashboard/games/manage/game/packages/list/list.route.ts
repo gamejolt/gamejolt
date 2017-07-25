@@ -4,5 +4,5 @@ export const routeDashGamesManageGamePackagesList: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.game.packages.list',
 	path: 'packages',
 	props: true,
-	component: () => import('./list'),
+	component: () => import(/* webpackChunkName: "routeDashGamesManageGamePackagesList" */ './list'),
 };

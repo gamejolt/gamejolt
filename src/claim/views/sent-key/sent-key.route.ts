@@ -4,5 +4,5 @@ export const routeSentKey: VueRouter.RouteConfig = {
 	name: 'sent-key',
 	path: '/claim/sent',
 	props: true,
-	component: () => import('./sent-key'),
+	component: () => import(/* webpackChunkName: "routeSentKey" */ './sent-key'),
 };

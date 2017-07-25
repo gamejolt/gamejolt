@@ -4,7 +4,7 @@ export const routeDashAnalytics: VueRouter.RouteConfig = {
 	name: 'dash.analytics',
 	path: 'analytics/:resource/:resourceId/:period/:metricKey?',
 	// props: true,
-	component: () => import('./analytics'),
+	component: () => import(/* webpackChunkName: "routeDashAnalytics" */ './analytics'),
 };
 
 // angular.module( 'App.Views' ).config( function( $stateProvider )

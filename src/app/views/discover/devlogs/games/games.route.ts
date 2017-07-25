@@ -4,5 +4,5 @@ export const routeDiscoverDevlogsGames: VueRouter.RouteConfig = {
 	name: 'discover.devlogs.games',
 	path: 'games/:section?',
 	props: true,
-	component: () => import('./games'),
+	component: () => import(/* webpackChunkName: "routeDiscoverDevlogsGames" */ './games'),
 };

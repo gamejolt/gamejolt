@@ -4,5 +4,5 @@ export const routeLandingClient: VueRouter.RouteConfig = {
 	name: 'landing.client',
 	path: '/client',
 	props: true,
-	component: () => import('./client'),
+	component: () => import(/* webpackChunkName: "routeLandingClient" */ './client'),
 };

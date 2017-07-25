@@ -6,6 +6,6 @@ export const routeDashMainSite: VueRouter.RouteConfig = {
 	name: 'dash.main.site',
 	path: 'site',
 	props: true,
-	component: () => import('./site'),
+	component: () => import(/* webpackChunkName: "routeDashMainSite" */ './site'),
 	children: [routeDashMainSiteEditor],
 };

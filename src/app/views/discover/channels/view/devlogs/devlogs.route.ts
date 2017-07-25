@@ -4,5 +4,5 @@ export const routeDiscoverChannelsViewDevlogs: VueRouter.RouteConfig = {
 	name: 'discover.channels.view.devlogs',
 	path: 'devlogs/:section?',
 	props: true,
-	component: () => import('./devlogs'),
+	component: () => import(/* webpackChunkName: "routeDiscoverChannelsViewDevlogs" */ './devlogs'),
 };

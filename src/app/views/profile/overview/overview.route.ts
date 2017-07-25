@@ -4,5 +4,5 @@ export const routeProfileOverview: VueRouter.RouteConfig = {
 	name: 'profile.overview',
 	path: '/@:username',
 	props: true,
-	component: () => import('./overview'),
+	component: () => import(/* webpackChunkName: "routeProfileOverview" */ './overview'),
 };

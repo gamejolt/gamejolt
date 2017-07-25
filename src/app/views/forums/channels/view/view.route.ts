@@ -8,7 +8,7 @@ export const routeForumsChannelsView: VueRouter.RouteConfig = {
 	name: 'forums.channels.view',
 	path: '/f/:name',
 	props: true,
-	component: () => import('./view'),
+	component: () => import(/* webpackChunkName: "routeForumsChannelsView" */ './view'),
 	children: [
 		{ path: `${path}2`, redirect: { name, params: { name: 'gj-feedback' } } },
 		{ path: `${path}7`, redirect: { name, params: { name: 'jams' } } },

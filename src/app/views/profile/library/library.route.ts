@@ -4,7 +4,7 @@ export const routeProfileLibrary: VueRouter.RouteConfig = {
 	name: 'profile.library',
 	path: 'library',
 	props: true,
-	component: () => import('./library'),
+	component: () => import(/* webpackChunkName: "routeProfileLibrary" */ './library'),
 	children: [
 		{
 			// This may not work if their username is different than slug.

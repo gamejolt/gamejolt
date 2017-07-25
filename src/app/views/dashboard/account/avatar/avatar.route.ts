@@ -4,5 +4,5 @@ export const routeDashAccountAvatar: VueRouter.RouteConfig = {
 	name: 'dash.account.avatar',
 	path: 'profile/avatar',
 	props: true,
-	component: () => import('./avatar'),
+	component: () => import(/* webpackChunkName: "routeDashAccountAvatar" */ './avatar'),
 };

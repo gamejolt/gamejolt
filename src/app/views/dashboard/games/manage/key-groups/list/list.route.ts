@@ -4,5 +4,5 @@ export const routeDashGamesManageKeyGroupsList: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.key-groups.list',
 	path: 'keys',
 	props: true,
-	component: () => import('./list'),
+	component: () => import(/* webpackChunkName: "routeDashGamesManageKeyGroupsList" */ './list'),
 };

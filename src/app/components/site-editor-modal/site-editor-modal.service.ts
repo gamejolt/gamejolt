@@ -10,7 +10,10 @@ export class SiteEditorModal {
 	static async show(siteId: number) {
 		return new Promise<AppSiteEditorModal>(resolve => {
 			Modal.show<void>({
-				component: () => asyncComponentLoader(import('./site-editor-modal')),
+				component: () =>
+					asyncComponentLoader(
+						import(/* webpackChunkName: "SiteEditorModal" */ './site-editor-modal')
+					),
 				props: { siteId, onInit: resolve },
 				noBackdrop: true,
 				noBackdropClose: true,

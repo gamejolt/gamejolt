@@ -5,6 +5,6 @@ export const routeDashGamesManageGamePackagesEdit: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.game.packages.edit',
 	path: 'packages/:packageId(\\d+)',
 	props: true,
-	component: () => import('./edit'),
+	component: () => import(/* webpackChunkName: "routeDashGamesManageGamePackagesEdit" */ './edit'),
 	children: [routeDashGamesManageGamePackagesEditWidget],
 };

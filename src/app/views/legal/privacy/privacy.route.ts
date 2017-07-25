@@ -4,5 +4,5 @@ export const routeLegalPrivacy: VueRouter.RouteConfig = {
 	name: 'legal.privacy',
 	path: '/privacy',
 	props: true,
-	component: () => import('./privacy'),
+	component: () => import(/* webpackChunkName: "routeLegalPrivacy" */ './privacy'),
 };

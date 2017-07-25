@@ -4,7 +4,10 @@ import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils'
 export class UserSetPasswordModal {
 	static async show() {
 		return await Modal.show<boolean>({
-			component: () => asyncComponentLoader(import('./set-password-modal')),
+			component: () =>
+				asyncComponentLoader(
+					import(/* webpackChunkName: "UserSetPasswordModal" */ './set-password-modal')
+				),
 			size: 'sm',
 			props: {},
 		});

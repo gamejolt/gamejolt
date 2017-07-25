@@ -12,7 +12,7 @@ import { routeDashAccountFinancials } from './financials/financials.route';
 export const routeDashAccount: VueRouter.RouteConfig = {
 	path: '/dashboard',
 	props: true,
-	component: () => import('./account'),
+	component: () => import(/* webpackChunkName: "routeDashAccount" */ './account'),
 	children: [
 		routeDashAccountEdit,
 		routeDashAccountAvatar,

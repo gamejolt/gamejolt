@@ -4,5 +4,5 @@ export const routeAuthJoin: VueRouter.RouteConfig = {
 	name: 'auth.join',
 	path: 'join',
 	props: true,
-	component: () => import('./join'),
+	component: () => import(/* webpackChunkName: "routeAuthJoin" */ './join'),
 };

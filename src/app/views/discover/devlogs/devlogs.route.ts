@@ -7,6 +7,6 @@ export const routeDiscoverDevlogs: VueRouter.RouteConfig = {
 	name: 'discover.devlogs',
 	path: '/devlogs',
 	props: true,
-	component: () => import('./devlogs'),
+	component: () => import(/* webpackChunkName: "routeDiscoverDevlogs" */ './devlogs'),
 	children: [routeDiscoverDevlogsOverview, routeDiscoverDevlogsGames],
 };

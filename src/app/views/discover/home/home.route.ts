@@ -4,5 +4,5 @@ export const routeDiscoverHome: VueRouter.RouteConfig = {
 	name: 'discover.home',
 	path: '',
 	props: true,
-	component: () => import('./home'),
+	component: () => import(/* webpackChunkName: "routeDiscoverHome" */ './home'),
 };

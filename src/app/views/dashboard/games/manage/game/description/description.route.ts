@@ -4,7 +4,8 @@ export const routeDashGamesManageGameDescription: VueRouter.RouteConfig = {
 	name: 'dash.games.manage.game.description',
 	path: 'description',
 	props: true,
-	component: () => import('./description'),
+	component: () =>
+		import(/* webpackChunkName: "routeDashGamesManageGameDescription" */ './description'),
 	children: [
 		{
 			path: '/dashboard/developer/games/description/:id(\\d+)',

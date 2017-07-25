@@ -4,5 +4,5 @@ export const routeSearchDevlogs: VueRouter.RouteConfig = {
 	name: 'search.devlogs',
 	path: 'devlogs',
 	props: true,
-	component: () => import('./devlogs'),
+	component: () => import(/* webpackChunkName: "routeSearchDevlogs" */ './devlogs'),
 };

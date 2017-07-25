@@ -4,5 +4,5 @@ export const routeLandingPartners: VueRouter.RouteConfig = {
 	name: 'landing.partners',
 	path: '/partners',
 	props: true,
-	component: () => import('./partners'),
+	component: () => import(/* webpackChunkName: "routeLandingPartners" */ './partners'),
 };

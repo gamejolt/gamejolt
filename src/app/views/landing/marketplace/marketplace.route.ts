@@ -4,5 +4,5 @@ export const routeLandingMarketplace: VueRouter.RouteConfig = {
 	name: 'landing.marketplace',
 	path: '/marketplace',
 	props: true,
-	component: () => import('./marketplace'),
+	component: () => import(/* webpackChunkName: "routeLandingMarketplace" */ './marketplace'),
 };

@@ -160,7 +160,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async loadChat() {
-		const mod = await import('../components/chat/client');
+		const mod = await import(/* webpackChunkName: "chat" */ '../components/chat/client');
 		this._setChat(new mod.ChatClient());
 	}
 

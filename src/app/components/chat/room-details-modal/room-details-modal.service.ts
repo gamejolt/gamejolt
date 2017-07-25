@@ -6,7 +6,10 @@ export class ChatRoomDetailsModal {
 	static async show(room: ChatRoom) {
 		return await Modal.show({
 			size: 'sm',
-			component: () => asyncComponentLoader(import('./room-details-modal')),
+			component: () =>
+				asyncComponentLoader(
+					import(/* webpackChunkName: "ChatRoomDetailsModal" */ './room-details-modal')
+				),
 			props: { room },
 		});
 	}

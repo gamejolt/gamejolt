@@ -11,7 +11,10 @@ export class ArchiveFileSelectorModal {
 		platform: string
 	) {
 		return await Modal.show<string>({
-			component: () => asyncComponentLoader(import('./archive-file-selector-modal')),
+			component: () =>
+				asyncComponentLoader(
+					import(/* webpackChunkName: "ArchiveFileSelectorModal" */ './archive-file-selector-modal')
+				),
 			props: { gameId, packageId, releaseId, buildId, primaryFileId, platform },
 		});
 	}

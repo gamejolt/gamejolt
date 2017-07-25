@@ -4,7 +4,8 @@ import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils'
 export class UserTokenModal {
 	static async show() {
 		return await Modal.show<void>({
-			component: () => asyncComponentLoader(import('./token-modal')),
+			component: () =>
+				asyncComponentLoader(import(/* webpackChunkName: "UserTokenModal" */ './token-modal')),
 			size: 'sm',
 			props: {},
 		});

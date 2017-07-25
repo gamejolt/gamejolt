@@ -4,5 +4,6 @@ export const routeDashGamesManageApiScoreboardsScoreUser: VueRouter.RouteConfig 
 	name: 'dash.games.manage.api.scoreboards.scores.user',
 	path: 'scoreboards/:table(\\d+)/user/:user(\\d+)',
 	props: true,
-	component: () => import('./user'),
+	component: () =>
+		import(/* webpackChunkName: "routeDashGamesManageApiScoreboardsScoreUser" */ './user'),
 };

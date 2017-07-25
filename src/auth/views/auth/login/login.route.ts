@@ -4,5 +4,5 @@ export const routeAuthLogin: VueRouter.RouteConfig = {
 	name: 'auth.login',
 	path: 'login',
 	props: true,
-	component: () => import('./login'),
+	component: () => import(/* webpackChunkName: "routeAuthLogin" */ './login'),
 };

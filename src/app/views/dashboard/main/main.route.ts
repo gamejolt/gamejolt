@@ -9,7 +9,7 @@ export const routeDashMain: VueRouter.RouteConfig = {
 	name: 'dash.main',
 	path: '/dashboard',
 	props: true,
-	component: () => import('./main'),
+	component: () => import(/* webpackChunkName: "routeDashMain" */ './main'),
 	children: [
 		routeDashMainOverview,
 		routeDashMainPurchasesList,

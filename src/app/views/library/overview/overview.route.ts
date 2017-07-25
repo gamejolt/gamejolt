@@ -4,5 +4,5 @@ export const routeLibraryOverview: VueRouter.RouteConfig = {
 	name: 'library.overview',
 	path: '/library',
 	props: true,
-	component: () => import('./overview'),
+	component: () => import(/* webpackChunkName: "routeLibraryOverview" */ './overview'),
 };

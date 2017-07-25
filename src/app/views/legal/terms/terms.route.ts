@@ -4,5 +4,5 @@ export const routeLegalTerms: VueRouter.RouteConfig = {
 	name: 'legal.terms',
 	path: '/terms',
 	props: true,
-	component: () => import('./terms'),
+	component: () => import(/* webpackChunkName: "routeLegalTerms" */ './terms'),
 };

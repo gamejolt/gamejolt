@@ -5,5 +5,5 @@ export const routeDashWithdrawFunds: VueRouter.RouteConfig = {
 	path: 'withdraw-funds',
 	alias: 'developer/withdraw-funds',
 	props: true,
-	component: () => import('./withdraw-funds'),
+	component: () => import(/* webpackChunkName: "routeDashWithdrawFunds" */ './withdraw-funds'),
 };

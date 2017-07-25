@@ -4,5 +4,5 @@ export const routeLandingGameApi: VueRouter.RouteConfig = {
 	name: 'landing.game-api',
 	path: '/game-api',
 	props: true,
-	component: () => import('./game-api'),
+	component: () => import(/* webpackChunkName: "routeLandingGameApi" */ './game-api'),
 };

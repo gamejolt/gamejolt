@@ -4,5 +4,6 @@ export const routeDashAccountLinkedAccountsLinking: VueRouter.RouteConfig = {
 	name: 'dash.account.linked-accounts.linking',
 	path: 'linked-accounts/linking',
 	props: true,
-	component: () => import('./linking'),
+	component: () =>
+		import(/* webpackChunkName: "routeDashAccountLinkedAccountsLinking" */ './linking'),
 };

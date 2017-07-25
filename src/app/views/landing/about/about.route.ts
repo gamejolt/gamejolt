@@ -4,5 +4,5 @@ export const routeLandingAbout: VueRouter.RouteConfig = {
 	name: 'landing.about',
 	path: '/about',
 	props: true,
-	component: () => import('./about'),
+	component: () => import(/* webpackChunkName: "routeLandingAbout" */ './about'),
 };

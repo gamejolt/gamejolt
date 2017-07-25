@@ -10,7 +10,7 @@ import { routeDashGamesManageSite } from './site/site.route';
 export const routeDashGamesManage: VueRouter.RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',
 	props: true,
-	component: () => import('./manage'),
+	component: () => import(/* webpackChunkName: "routeDashGamesManage" */ './manage'),
 	children: [
 		routeDashGamesManageGame,
 		routeDashGamesManageApi,
