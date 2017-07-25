@@ -6,6 +6,7 @@ import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-serv
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { FormGame } from '../../../../components/forms/game/game';
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
+import { startWizard } from '../manage/manage.store';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -28,10 +29,11 @@ export default class RouteDashGamesAdd extends BaseRouteComponent {
 	}
 
 	onSubmit(game: Game) {
+		startWizard();
+
 		this.$router.push({
 			name: 'dash.games.manage.game.description',
 			params: { id: game.id + '' },
-			query: { wizard: 'true' },
 		});
 	}
 }

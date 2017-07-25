@@ -13,13 +13,14 @@ import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game
 import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
 import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { store } from '../../../../store/index';
 import { router } from '../../../index';
 
 export const RouteStoreName = 'manageRoute';
 export const RouteState = namespace(RouteStoreName, State);
 export const RouteAction = namespace(RouteStoreName, Action);
 export const RouteMutation = namespace(RouteStoreName, Mutation);
+
+const WizardKey = 'manage-game-wizard';
 
 export type Media = GameScreenshot | GameVideo | GameSketchfab;
 
@@ -42,6 +43,7 @@ type Mutations = {
 	addImages: any[];
 	removeMedia: Media;
 	updateMedia: Media[];
+	finishWizard: undefined;
 };
 
 const STATE_PREFIX = 'dash.games.manage.game';
@@ -79,14 +81,15 @@ function instantiateMediaItem(item: any) {
 	}
 }
 
+export function startWizard() {
+	window.sessionStorage.setItem(WizardKey, 'active');
+}
+
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	game: Game = null as any;
 	media: Media[] = [];
-
-	get isWizard() {
-		return !!store.state.route.query.wizard;
-	}
+	isWizard = false;
 
 	get canPublish() {
 		if (!this.game) {
@@ -127,6 +130,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	populate(payload: Mutations['populate']) {
 		this.game = new Game(payload.game);
+		this.isWizard = !!window.sessionStorage.getItem(WizardKey);
 	}
 
 	@VuexMutation
@@ -169,6 +173,12 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.media = items;
 	}
 
+	@VuexMutation
+	finishWizard() {
+		this.isWizard = false;
+		window.sessionStorage.removeItem(WizardKey);
+	}
+
 	@VuexAction
 	async wizardNext() {
 		if (!this.game) {
@@ -186,7 +196,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 				const next = transitionMap[current];
 				router.push({
 					name: `${STATE_PREFIX}.${next}`,
-					query: { wizard: 'true' },
 				});
 				return;
 			}
@@ -209,22 +218,22 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			Translate.$gettext('dash.games.overview.published_growl_title')
 		);
 
+		this.finishWizard();
+
 		router.push({
 			name: 'dash.games.manage.game.overview',
 			params: router.currentRoute.params,
-			// Remove the wizard.
-			query: {},
 		});
 	}
 
 	@VuexAction
 	async saveDraft() {
+		this.finishWizard();
+
 		// Simply go to the overview and pull out of the wizard!
 		router.push({
 			name: 'dash.games.manage.game.overview',
 			params: router.currentRoute.params,
-			// Remove the wizard.
-			query: {},
 		});
 	}
 
