@@ -85,6 +85,10 @@ export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
 
 		if (this.method === 'add') {
 			this.setField('referrals_enabled', true);
+
+			// We don't want to warn on discarding of the add game form. Only
+			// during edit.
+			this.warnOnDiscard = false;
 		}
 	}
 
