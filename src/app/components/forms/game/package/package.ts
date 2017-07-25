@@ -169,11 +169,8 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 		}
 
 		this.setField('pricing_type', 'free');
-		this.setField('sale_start', startOfTomorrow().getTime() - this.saleTimezoneOffset);
-		this.setField(
-			'sale_end',
-			startOfDay(addWeeks(Date.now(), 1)).getTime() - this.saleTimezoneOffset
-		);
+		this.setField('sale_start', startOfTomorrow().getTime());
+		this.setField('sale_end', startOfDay(addWeeks(Date.now(), 1)).getTime());
 
 		if (this.method === 'add') {
 			this.setField('visibility', GamePackage.VISIBILITY_PUBLIC);
