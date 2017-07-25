@@ -257,8 +257,10 @@
 			</div>
 
 			<div v-if="isShowingSaleForm">
-				<app-form-group name="sale_timezone" :label="$gettext( `Timezone` )">
-
+				<app-form-group
+					name="sale_timezone"
+					:label="$gettext( `Timezone` )"
+					>
 					<p class="help-block">
 						<translate>All time selection below will use this timezone.</translate>
 					</p>
@@ -282,7 +284,6 @@
 					</app-form-control-select>
 
 					<app-form-control-errors />
-
 				</app-form-group>
 
 				<div class="form-group">
@@ -293,7 +294,11 @@
 					<!--
 						Can only set this when first setting up a sale.
 					-->
-					<app-form-group name="sale_start_now" :hide-label="true" v-if="!promotionalPricing">
+					<app-form-group
+						v-if="!promotionalPricing"
+						name="sale_start_now"
+						:hide-label="true"
+						>
 						<div class="checkbox">
 							<label>
 								<app-form-control-checkbox />
@@ -302,38 +307,38 @@
 						</div>
 					</app-form-group>
 
-					<app-form-group name="sale_start" :hide-label="true" v-if="!formModel.sale_start_now || promotionalPricing">
-						<app-datetime-picker
-							name="sale_start"
-							:value="formModel.sale_start"
-							@input="( newSaleStart ) => setField('sale_start', newSaleStart)"
+					<app-form-group
+						v-if="!formModel.sale_start_now || promotionalPricing"
+						name="sale_start"
+						:hide-label="true"
+						>
+						<app-form-control-date
 							:timezone-offset="saleTimezoneOffset"
-							:min-date="now"
+							:rules="{
+								min_date: now,
+							}"
 							/>
-							<!-- TODO(rewrite)
-								date-server-errors="serverErrors"
-								should we use formModel.sale_start as the v-model or :value and @input that would use setField?
-							-->
-						<app-form-control-errors label="start time" />
+						<app-form-control-errors :label="$gettext(`start time`)" />
 					</app-form-group>
 				</div>
 
-				<app-form-group name="sale_end" :label="$gettext( `End` )">
-					<app-datetime-picker
-						name="sale_end"
-						:value="formModel.sale_end"
-						@input="( newSaleEnd ) => setField('sale_end', newSaleEnd)"
+				<app-form-group
+					name="sale_end"
+					:label="$gettext( `End` )"
+					>
+					<app-form-control-date
 						:timezone-offset="saleTimezoneOffset"
-						:min-date="formModel.sale_start"
+						:rules="{
+							min_date: formModel.sale_start,
+						}"
 						/>
-						<!-- TODO(rewrite)
-							date-server-errors="serverErrors"
-							should we use formModel.sale_start as the v-model or :value and @input that would use setField?
-						-->
-					<app-form-control-errors label="end time" />
+					<app-form-control-errors :label="$gettext(`end time`)" />
 				</app-form-group>
 
-				<app-form-group name="sale_price" :label="$gettext( `Sale Price` )">
+				<app-form-group
+					name="sale_price"
+					:label="$gettext( `Sale Price` )"
+					>
 					<div class="input-group">
 						<span class="input-group-addon">$</span>
 						<app-form-control

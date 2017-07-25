@@ -23,9 +23,9 @@ import {
 	TimezoneData,
 	Timezone,
 } from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
-import { AppDatetimePicker } from '../../../../../lib/gj-lib-client/components/datetime-picker/datetime-picker';
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
+import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
 
 type FormGamePackageModel = GamePackage & {
 	primary: boolean;
@@ -42,9 +42,9 @@ type FormGamePackageModel = GamePackage & {
 @Component({
 	components: {
 		AppJolticon,
-		AppFormControlToggle,
 		AppLoadingFade,
-		AppDatetimePicker,
+		AppFormControlToggle,
+		AppFormControlDate,
 	},
 	filters: {
 		date,
