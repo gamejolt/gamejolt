@@ -76,12 +76,9 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 		);
 	}
 
-	saveSort() {
-		// var newPackagesSort = _.pluck(_this.packages, 'id');
-		// if (!angular.equals(newPackagesSort, _this.packagesSort)) {
-		// 	_this.packagesSort = newPackagesSort;
-		// 	Game_Package.$saveSort(manageCtrl.game.id, _this.packagesSort);
-		// }
+	saveSort(packages: GamePackage[]) {
+		this.packages = packages;
+		GamePackage.$saveSort(this.game.id, this.packagesSort);
 	}
 
 	async removePackage(pkg: GamePackage) {
@@ -102,8 +99,8 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 			this.$gettext('Package Removed')
 		);
 
-		// We have to do a refresh since a new package may have been chosen as the primary sellable.
-		// TODO(rewrite)
-		// $state.reload($state.current);
+		// We have to do a refresh since a new package may have been chosen as
+		// the primary sellable.
+		this.reloadRoute();
 	}
 }
