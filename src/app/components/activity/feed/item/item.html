@@ -14,12 +14,12 @@
 		Notifications are so small that there's no reason to not include
 		them into the view.
 	-->
-	<app-activity-feed-item-placeholder
+	<!-- <app-activity-feed-item-placeholder
 		v-if="item.type !== 'notification' && !isInView"
 		:type="item.type"
-		/>
+		/> -->
 
-	<div v-else>
+	<!-- <div v-else> -->
 		<app-activity-feed-devlog-post
 			v-if="item.type === 'devlog-post'"
 			:item="item"
@@ -33,6 +33,6 @@
 			:item="item"
 			@clicked="setActive"
 			/>
-	</div>
+	<!-- </div> -->
 
 </app-scroll-inview>
