@@ -113,18 +113,6 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 
 	Screen = makeObservableService(Screen);
 
-	get routeParamsAllPeriod() {
-		const params = Object.assign({}, this.$route.params);
-		params.period = 'all';
-		return params;
-	}
-
-	get routeParamsMonthlyPeriod() {
-		const params = Object.assign({}, this.$route.params);
-		params.period = 'monthly';
-		return params;
-	}
-
 	@RouteResolve({ cache: false })
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
@@ -155,7 +143,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 		this.release = this.$payload.release ? new GameRelease(this.$payload.release) : null;
 		this.partnerMode = !this.user || this.user.id !== this.viewAs;
 
-		this.period = (this.$route.params['period'] as any) || 'monthly';
+		this.period = (this.$route.query['period'] as any) || 'monthly';
 		this.resource = this.$route.params['resource'] as any;
 		this.resourceId = parseInt(this.$route.params['resourceId'], 10);
 

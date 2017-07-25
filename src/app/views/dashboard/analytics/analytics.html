@@ -72,7 +72,10 @@
 					<router-link
 						:to="{
 							name: 'dash.analytics',
-							params: routeParamsAllPeriod,
+							params: $route.params,
+							query: {
+								period: 'all',
+							},
 						}"
 						replace
 						:class="{ active: period === 'all' }"
@@ -85,7 +88,10 @@
 					<router-link
 						:to="{
 							name: 'dash.analytics',
-							params: routeParamsMonthlyPeriod,
+							params: $route.params,
+							query: {
+								period: 'monthly',
+							},
 						}"
 						replace
 						:class="{ active: period === 'monthly' }"
@@ -102,8 +108,8 @@
 				<router-link class="btn btn-outline btn-sparse"
 					:to="{
 						name: 'dash.analytics',
-						params: routeParamsMonthlyPeriod,
-						query: { year: prevYear, month: prevMonth },
+						params: $route.params,
+						query: { period: 'monthly', year: prevYear, month: prevMonth },
 					}"
 					replace
 					>
@@ -118,8 +124,8 @@
 					v-if="now > endTime"
 					:to="{
 						name: 'dash.analytics',
-						params: routeParamsMonthlyPeriod,
-						query: { year: nextYear, month: nextMonth },
+						params: $route.params,
+						query: { period: 'monthly', year: nextYear, month: nextMonth },
 					}"
 					replace
 					>
