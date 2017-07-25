@@ -1,5 +1,6 @@
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./key-group.html';
+
 import { KeyGroup } from '../../../../../lib/gj-lib-client/components/key-group/key-group.model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
@@ -38,7 +39,7 @@ export class FormGameKeyGroup extends BaseForm<KeyGroup>
 	GamePackage = GamePackage;
 
 	get arePackagesChosen() {
-		return this.formModel.packages.length > 0;
+		return this.formModel.package_ids.length > 0;
 	}
 
 	onInit() {
