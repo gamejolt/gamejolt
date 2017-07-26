@@ -26,13 +26,12 @@
 			:label="$gettext( `dash.games.builds.form.file_error_label` )"
 			/>
 
-		<!-- TODO(rewrite) this is probably all wrong -->
-		<!-- <app-expand :when="newBuildForm.file.$error.browserType">
+		 <app-expand :when="hasBrowserTypeError">
 			<br>
-			<div class="alert alert-warning sans-margin-bottom" translate>
-				You can't upload multiple browser builds of the same type into the same release. If you're trying to update your build, add a new release first.
+			<div class="alert alert-warning sans-margin-bottom">
+				<translate>You can't upload multiple browser builds of the same type into the same release. If you're trying to update your build, add a new release first.</translate>
 			</div>
-		</app-expand> -->
+		</app-expand>
 
 		<p class="help-block" v-if="type === 'browser'">
 			<translate>
