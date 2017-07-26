@@ -5,6 +5,7 @@ var config = {
 	injectVersion: 2,
 	framework: 'vue',
 	sections: ['auth', 'checkout', 'claim'],
+	serverSections: ['auth', 'app'],
 	translations: 'site-translations',
 	translationSections: {
 		auth: ['auth/'],
