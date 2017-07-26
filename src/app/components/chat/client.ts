@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import * as nwGui from 'nw.gui';
-import { Component } from 'vue-property-decorator';
 
 import { store } from '../../store/index';
 import { ChatUser } from './user';
@@ -64,8 +63,7 @@ async function getCookie(name: string) {
 	}
 }
 
-@Component({})
-export class ChatClient extends Vue {
+export class ChatClient {
 	connected = false;
 	allCount = 0;
 	publicRooms: ChatRoom[] = [];
@@ -120,14 +118,18 @@ export class ChatClient extends Vue {
 		return count;
 	}
 
-	async created() {
+	constructor() {
+		this._init();
+	}
+
+	private async _init() {
 		if (GJ_IS_SSR || Environment.isPrerender) {
 			return;
 		}
 
 		// Initialize after we've been created. This allows the chat to get
 		// attached to the store before initializing all models within.
-		await this.$nextTick();
+		await Vue.nextTick();
 		this.reset();
 		this.initPrimus();
 	}
@@ -218,7 +220,7 @@ export class ChatClient extends Vue {
 			}
 
 			if (newRoom.isGroupRoom) {
-				this.$delete(this.notifications, '' + newRoom.id);
+				Vue.delete(this.notifications, '' + newRoom.id);
 			}
 		}
 
@@ -415,7 +417,7 @@ export class ChatClient extends Vue {
 			const roomId = msg.data.roomId;
 
 			if (this.openRooms[roomId]) {
-				this.$delete(this.notifications, roomId);
+				Vue.delete(this.notifications, roomId);
 			}
 		} else if (msg.event === 'user-enter-room') {
 			const user = new ChatUser(msg.data.user);
@@ -538,9 +540,9 @@ export class ChatClient extends Vue {
 				}
 
 				// Reset the room we were in
-				this.$delete(this.usersOnline, roomId);
-				this.$delete(this.openRooms, roomId);
-				this.$delete(this.messages, roomId);
+				Vue.delete(this.usersOnline, roomId);
+				Vue.delete(this.openRooms, roomId);
+				Vue.delete(this.messages, roomId);
 			}
 		} else if (msg.event === 'invalid-room') {
 			const roomId = msg.data.roomId;
@@ -565,11 +567,11 @@ export class ChatClient extends Vue {
 			}
 
 			// Set the room info
-			this.$set(this.openRooms, '' + room.id, room);
-			this.$set(this.messages, '' + room.id, []);
+			Vue.set(this.openRooms, '' + room.id, room);
+			Vue.set(this.messages, '' + room.id, []);
 
 			if (room.isGroupRoom) {
-				this.$set(
+				Vue.set(
 					this.usersOnline,
 					'' + room.id,
 					new ChatUserCollection(ChatUserCollection.TYPE_ROOM, users)
