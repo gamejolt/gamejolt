@@ -1,9 +1,4 @@
-// const fs = require( 'fs' );
-// const path = require('path');
-// const favicon = require('serve-favicon');
-// const compression = require('compression');
-// const serialize = require('serialize-javascript');
-
+const argv = require('minimist')(process.argv);
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -18,9 +13,16 @@ function resolve(file) {
 	return path.resolve(__dirname, file);
 }
 
+const section = argv.section || 'app';
 const server = express();
-const serverBundle = require(path.join(serverBuildPath, 'vue-ssr-server-bundle.json'));
-const clientManifest = require(path.join(clientBuildPath, 'vue-ssr-client-manifest.json'));
+const serverBundle = require(path.join(
+	serverBuildPath,
+	'vue-ssr-server-bundle-' + section + '.json'
+));
+const clientManifest = require(path.join(
+	clientBuildPath,
+	'vue-ssr-client-manifest-' + section + '.json'
+));
 
 const renderer = createBundleRenderer(serverBundle, {
 	runInNewContext: true,
