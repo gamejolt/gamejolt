@@ -1,0 +1,150 @@
+@require '~styles/variables'
+@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+
+@import url('https://fonts.googleapis.com/css?family=Megrim');
+
+.route-landing-indieaf
+	background-color: #0f0005
+
+	.lead
+		font-family: 'Megrim', sans-serif
+		color: $white
+		text-shadow: 0 2px 4px rgba( $gj-blue, 1 )
+		font-size: 35px
+
+	.indieaf-header
+		position: relative
+		text-align: center
+
+		.lead
+			position: absolute
+			left: 50%
+			top: 75px
+			width: 400px
+			margin-left: -(@width / 2)
+			font-size: 60px
+			text-transform: uppercase
+
+		.indieaf-logo
+			margin: 0 auto
+			max-height: 800px
+
+		@media $media-xs
+
+			.lead
+				top: 20px
+				font-size: 45px
+				line-height: 1.1
+
+			.indieaf-logo
+				margin-top: 40px
+
+	.indieaf-body
+		font-weight: 300
+		font-size: 20px
+		color: $white
+
+		a
+			color: $gj-pink
+			font-weight: bold
+
+			&:hover
+				color: $gj-blue
+
+		code
+			background-color: $gj-pink
+			color: $black
+
+		.lead
+			max-width: 500px
+			text-align: center
+			margin: 60px auto
+
+		.underbar
+			border-top-color: $gj-pink !important
+			border-top-width: 2px
+			box-shadow: 0 2px 4px rgba( $gj-pink, 1 )
+
+		h2
+			margin-top: 140px
+			font-family: 'Megrim', sans-serif
+			text-shadow: 0 2px 4px rgba( $gj-pink, 1 )
+			font-size: 40px
+
+		.spacer
+			margin-top: 140px
+
+		@media $media-xs
+
+			h2
+			.spacer
+				margin-top: 80px
+
+	.indieaf-vs
+
+		&-row
+			clearfix()
+			position: relative
+			margin-bottom: 40px
+
+		&-col
+			width: 50%
+
+			&.left
+				float: left
+				padding-right: 40px
+				text-align: right
+
+			&.right
+				float: right
+				padding-left: 40px
+				text-align: left
+
+		&-img
+			position: absolute
+			top: 5px
+			left: 50%
+			width: 30px
+			margin-left: -(@width / 2)
+
+	.indieaf-quote
+		max-width: 400px
+		margin: 0 auto
+		margin-bottom: 60px
+
+		p
+			font-style: italic
+			font-size: 20px
+
+		&-who
+			font-weight: bold
+			text-align: right
+
+	.btn-af
+		button-variant(
+			background: $gj-blue,
+			color: $white,
+			icon-color: $white,
+			outline-color: $gj-blue,
+			active-background: rgba( $gj-pink, 0.4 ),
+			active-color: $white,
+			addon-color: $white,
+			outline-addon-color: $white,
+		)
+
+	.btn-af-outline
+		color: $gj-pink !important
+		border-width: $button-outline-border-size
+		border-style: solid
+		line-height: ($button-line-height - (@border-width * 2))
+		line-height: 60px
+		padding-left: $button-padding-horizontal - @border-width
+		padding-right: @padding-left
+		text-shadow: 0 0 8px rgba( $gj-pink, 1 )
+		box-shadow: 0 0 8px rgba( $gj-blue, 1 )
+		font-size: 25px
+		transition: all 1000ms
+
+		&:hover
+			box-shadow: 0 0 8px rgba( $gj-pink, 1 )
+

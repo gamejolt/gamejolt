@@ -1,0 +1,269 @@
+<div>
+	<section class="section landing-header text-center">
+		<div class="container">
+			<h1 class="anim-fade-in-down">
+				<img
+					:width="1068 / (Screen.isXs ? 4 : 2)"
+					:height="108 / (Screen.isXs ? 4 : 2)"
+					src="./logo.png"
+					alt="Redlight"
+					>
+			</h1>
+
+			<div class="row anim-fade-in-up">
+				<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+					<p class="lead">{{ slogan }}</p>
+				</div>
+			</div>
+
+			<div class="social-widgets text-center">
+				<app-social-twitter-share
+					:content="$gettext('Check out Game Jolt #Redlight. Helping AAA studios reach critical mass. #gamedev')"
+					/>
+
+				<span class="dot-separator hidden-xs"></span>
+
+				<app-social-facebook-like />
+			</div>
+		</div>
+	</section>
+
+	<div class="landing-body redlight-landing-body">
+
+		<section class="section">
+			<div class="container">
+
+				<div class="row">
+					<div class="col-sm-7 col-centered">
+
+						<p class="lead">
+							<span v-translate>We've embraced inclusivity since 2002 and now, with your help, we're <strong>expanding Game Jolt to incorporate AAA games</strong> to our niche indie community.</span>
+						</p>
+
+						<p>
+							<span v-translate>We've created a unique platform for AAA studios and non-indie publishers. Members will <strong>vote on your games</strong> in the Redlight program to judge if they're <strong>good enough quality to be redlit</strong> and part of Game Jolt.</span>
+						</p>
+
+					</div>
+				</div>
+
+				<h1 class="text-center">
+					<translate>The process is simple and direct!</translate>
+				</h1>
+
+				<hr class="underbar underbar-center">
+				<br>
+
+				<div class="row">
+
+					<div class="col-sm-6 col-md-4">
+
+						<div class="landing-graphic">
+							<img src="./laptop.svg" alt="">
+						</div>
+
+						<p class="text-center">
+							<span v-translate><b>Create a Game Jolt account yourself directly. No need for an account manager. <em>Finally!</em></b></span>
+						</p>
+
+					</div>
+
+					<div class="col-sm-6 col-md-4">
+
+						<div class="landing-graphic">
+							<img src="./poster.svg" alt="">
+						</div>
+
+						<p class="text-center">
+							<span v-translate><b>Upload your game directly and add <code>#redlight</code> to your description.</b></span>
+						</p>
+
+					</div>
+
+					<div class="landing-break-sm"></div>
+
+					<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
+
+						<div class="landing-graphic">
+							<img src="./shout.svg" alt="">
+						</div>
+
+						<p class="text-center">
+							<span v-translate><b>Let your fans know that you're on Redlight and require their help directly.</b></span>
+						</p>
+
+					</div>
+
+				</div>
+
+			</div>
+		</section>
+
+		<section class="section fill-lightest">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-1"></div>
+					<div class="col-sm-7 col-md-6 col-lg-5">
+
+						<h2 class="section-header">
+							<span v-translate>Optional Steps<br><small>(but required for success)</small></span>
+						</h2>
+						<hr class="underbar">
+
+						<p><app-jolticon icon="checkbox" /> <translate>Desperately fumble around trying to get votes from anywhere on the internet.</translate></p>
+						<p><app-jolticon icon="checkbox" /> <translate>Spend all your money and free time trying to get redlit.</translate></p>
+						<p><app-jolticon icon="checkbox" /> <translate>Include the Game Jolt Redlight logo on your game pages across all other platforms.</translate></p>
+						<p><app-jolticon icon="checkbox" /> <translate>Add into your game demo "Vote for us on Game Jolt Redlight".</translate></p>
+						<p><app-jolticon icon="checkbox" /> <translate>Upload said demo to all platforms to direct traffic to your Game Jolt Redlight page.</translate></p>
+						<p><app-jolticon icon="checkbox" /> <translate>Wipe away the tears and include Redlight every time you tweet, whether your tweet is related or not.</translate></p>
+						<p><app-jolticon icon="checkbox" /> <translate>Employ a team of people devoted to Redlight. After all, you have the money.</translate></p>
+						<p>
+							<app-jolticon icon="checkbox" /> <translate>Once you're redlit, </translate>
+							<router-link :to="{ name: 'landing.indieaf' }"><translate>get indie AF!</translate></router-link>
+						</p>
+
+					</div>
+					<div class="col-md-1"></div>
+					<div class="col-sm-5">
+
+						<div class="landing-graphic-full hidden-xs">
+							<img src="./redlight-comic.png" alt="">
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-7 col-centered">
+
+						<p class="lead">
+							<span v-translate>Redlight simultaneously prevents our marketplace from becoming overly saturated while <strong>maintaining the high standards</strong> our users have come to expect from a Game Jolt game.</span>
+						</p>
+
+						<h2 class="text-center"><translate>Spread the Word</translate></h2>
+						<hr class="underbar underbar-center">
+
+						<p><translate>Do you love indie games, but also love AAA? Do you have a massive library of games built up on Game Jolt and don't want to use other platforms for your AAA content?</translate></p>
+
+						<p><span v-translate><strong>Help us spread the word!</strong> Tweet at all your favorite game publishers and AAA studios. Get them on board. Join the <strong>#REDLIGHT</strong> movement.</span></p>
+
+						<div class="social-widgets">
+							<app-social-twitter-share :content="tweet" />
+
+							<span class="dot-separator hidden-xs"></span>
+
+							<app-social-facebook-like />
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section fill-black">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-7 col-centered">
+
+						<h2 class="text-center section-header"><translate>What the Industry is Saying</translate></h2>
+						<hr class="underbar underbar-center">
+
+						<p><a href="https://docs.google.com/document/d/1RMMr-9ZTfTFSQMD8Q-1JFkFo9ztX0OktORAn9Se02fg/edit" target="_blank"><translate>We sent out an email to all the top players.</translate></a> <translate>No one has gotten back to us yet. We will update here when they do.</translate></p>
+
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-7 col-centered">
+
+						<h2 class="text-center section-header"><translate>FAQ</translate></h2>
+						<hr class="underbar underbar-center">
+
+						<br>
+						<h4 class="sans-margin-top"><translate>What is Redlight?</translate></h4>
+						<p><translate>Game Jolt Redlight is a system that enlists the community's help in choosing new games to be released on Game Jolt. Publishers and AAA studios upload their games to seek a critical mass of community support in order to get selected for distribution.</translate></p>
+
+						<br>
+						<h4 class="sans-margin-top"><translate>Who should submit their games to Redlight?</translate></h4>
+						<p><translate>AAA studios and non-indie publishers looking to expand their audience to niche indie gamers.</translate></p>
+
+						<br>
+						<h4 class="sans-margin-top"><translate>I know of a game that should be on here? What do I do?</translate></h4>
+						<ol>
+							<li><translate>Publicly tweet at the developers/publishers until they add their games to Redlight.</translate></li>
+							<li><translate>Repeat this process on several different accounts.</translate></li>
+						</ol>
+
+						<br>
+						<h4 class="sans-margin-top"><translate>There's a game on Redlight that I really want to see succeed. What can I do?</translate></h4>
+						<p><translate>Go tell your friends; be super annoying about it.</translate></p>
+
+						<br>
+						<h4 class="sans-margin-top"><translate>What about non-game Software?</translate></h4>
+						<p><translate>Games only. So don't try to upload your desktop application.</translate></p>
+
+						<br>
+						<h4 class="sans-margin-top"><translate>What do I need in order to submit my game?</translate></h4>
+						<ul>
+							<li><translate>Create a Game Jolt account</translate></li>
+							<li><translate>Set up your marketplace account</translate></li>
+							<li><translate>Upload your game</translate></li>
+							<li><span v-translate>Add <code>#redlight</code> to your game page description</span></li>
+						</ul>
+
+						<br>
+						<h4 class="sans-margin-top"><translate>Are there any restrictions on what can be submitted?</translate></h4>
+						<p><translate>You must have distribution rights for the game.</translate></p>
+
+						<br>
+						<h4 class="sans-margin-top"><translate>How can I get more votes for my game?</translate></h4>
+						<p><translate>Pay influencers to talk about it constantly. Make sure they include the Redlight link at the beginning, middle, and end of their videos. And in their descriptions. And in their twitter bios.</translate></p>
+
+						<br>
+						<h4 class="sans-margin-top"><translate>How are games ranked on Redlight? How will I know if my game gets redlit?</translate></h4>
+						<p><translate>It's a completely new and unique system. Games are ranked by the number of up-votes from the community. Once your game is submitted, you will receive an e-mail at the address associated with your account, notifying you when Redlit.</translate></p>
+
+						<br>
+						<h4 class="sans-margin-top"><translate>I have specific questions about selling on Game Jolt and taxes/VAT.</translate></h4>
+						<p><router-link :to="{ name: 'landing.marketplace' }"><translate>Visit gamejolt.com/marketplace</translate></router-link> <translate>for questions about selling on Game Jolt and taxes. If you don't find an answer there, email us. We'll just direct you to the forums.</translate></p>
+
+						<br>
+						<h4 class="sans-margin-top"><translate>Does Redlight cost money to submit to?</translate></h4>
+						<p><translate>For the initial months, we've decided to waive the $5,000-$10,000 submission fee. We'll continue discussing this internally to see if we should add a few extra zeros in there. This is obviously for QA reasons. Only people who make good games have money.</translate></p>
+
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section fill-lightest" v-if="!user">
+			<div class="container">
+
+				<h1 class="section-header text-center">
+					<translate>Join</translate>
+				</h1>
+
+				<hr class="underbar underbar-center">
+				<br>
+
+				<div class="row">
+					<div class="col-sm-6 col-md-5 col-lg-4 col-centered">
+
+						<app-auth-join />
+
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+	</div>
+</div>

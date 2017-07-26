@@ -6,6 +6,8 @@ import { routeLandingGameApi } from './game-api/game-api.route';
 import { routeLandingLearn } from './learn/learn.route';
 import { routeLandingMarketplace } from './marketplace/marketplace.route';
 import { routeLandingClient } from './client/client.route';
+import { routeLandingRedlight } from './redlight/redlight.route';
+import { routeLandingIndieaf } from './indieaf/indieaf.route';
 
 export const routeLanding: VueRouter.RouteConfig = {
 	path: '',
@@ -18,5 +20,7 @@ export const routeLanding: VueRouter.RouteConfig = {
 		routeLandingLearn,
 		routeLandingMarketplace,
 		routeLandingPartners,
+		routeLandingRedlight,
+		routeLandingIndieaf,
 	],
 };
