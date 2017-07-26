@@ -9,7 +9,8 @@ function resolve(file) {
 	return path.resolve(__dirname, file);
 }
 
-const numCPUs = require('os').cpus().length;
+// Leave one free worker so we have a core for old prerender service.
+const numWorkers = require('os').cpus().length - 1;
 const isProd = process.env.NODE_ENV === 'production';
 const section = argv.section || 'app';
 const serverBuildPath = isProd ? '../../build/prod-server/' : '../build/dev-server/';
@@ -28,7 +29,7 @@ if (cluster.isMaster) {
 	console.log(`Master ${process.pid} is running`);
 
 	// Fork workers.
-	for (let i = 0; i < numCPUs; i++) {
+	for (let i = 0; i < numWorkers; i++) {
 		cluster.fork();
 	}
 
