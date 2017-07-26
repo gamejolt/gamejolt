@@ -50,7 +50,7 @@
 
 		</script>
 
-		<title>Game Jolt - Indie games for the love of it</title>
+		<title>{{ meta.title }}</title>
 
 		<!-- FB -->
 		<meta property="fb:app_id" content="410666682312265">
@@ -61,6 +61,7 @@
 		<!-- Twitter -->
 		<meta name="twitter:site" content="@gamejolt">
 
+		{{{ meta.renderTags() }}}
 		{{{ renderStyles() }}}
 
 	</head>

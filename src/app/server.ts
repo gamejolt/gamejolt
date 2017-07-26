@@ -1,7 +1,7 @@
 import { createApp } from './bootstrap';
 import { Device } from '../lib/gj-lib-client/components/device/device.service';
-import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
+import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 
 export default async (context: any) => {
 	const { app, router } = await createApp();
@@ -43,7 +43,9 @@ export default async (context: any) => {
 				};
 
 				context.meta = {
-					title: Meta.title,
+					renderTags() {
+						return Meta.render();
+					},
 				};
 
 				context.prefetchTime = Date.now() - s;
