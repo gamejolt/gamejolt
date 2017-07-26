@@ -26,6 +26,7 @@ const renderer = createBundleRenderer(serverBundle, {
 	runInNewContext: true,
 	template: fs.readFileSync(resolve('./index-ssr.html'), 'utf-8'),
 	clientManifest,
+	inject: false,
 });
 
 if (!isProd) {
