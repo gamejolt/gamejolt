@@ -17,7 +17,7 @@ const server = express();
 const bundle = require('../build/dev-server/vue-ssr-server-bundle.json');
 const renderer = createBundleRenderer(bundle, {
 	runInNewContext: true,
-	template: fs.readFileSync(resolve('../build/dev/index.html'), 'utf-8'),
+	template: fs.readFileSync(resolve('./index-ssr.html'), 'utf-8'),
 });
 
 function serve(path) {
@@ -79,7 +79,8 @@ server.get('*', (req, res) => {
 		}
 		// console.log(html);
 		res.end(html);
-		console.log('request', Date.now() - s + 'ms');
+		const total = Date.now() - s;
+		console.log('total', total + 'ms', 'render', total - context.prefetchTime + 'ms');
 		// console.timeEnd('request');
 	});
 
