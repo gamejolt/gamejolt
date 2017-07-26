@@ -17,6 +17,7 @@ import { AppCardList } from '../../../../../../../../lib/gj-lib-client/component
 import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
 import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
 import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
+import { LocationRedirect } from '../../../../../../../../lib/gj-lib-client/utils/router';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -51,13 +52,16 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 	}
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
-		// TODO(rewrite)
-		// if (!packagesPayload.packages.length) {
-		// 	$state.go('dash.games.manage.game.packages.add', $stateParams);
-		// }
+	async routeResolve(this: undefined, route: VueRouter.Route) {
+		const payload = await Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id);
 
-		return Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id);
+		if (payload.packages && !payload.packages.length) {
+			return new LocationRedirect({
+				name: 'dash.games.manage.game.packages.add',
+			});
+		}
+
+		return payload;
 	}
 
 	routed() {
@@ -72,12 +76,9 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 		);
 	}
 
-	saveSort() {
-		// var newPackagesSort = _.pluck(_this.packages, 'id');
-		// if (!angular.equals(newPackagesSort, _this.packagesSort)) {
-		// 	_this.packagesSort = newPackagesSort;
-		// 	Game_Package.$saveSort(manageCtrl.game.id, _this.packagesSort);
-		// }
+	saveSort(packages: GamePackage[]) {
+		this.packages = packages;
+		GamePackage.$saveSort(this.game.id, this.packagesSort);
 	}
 
 	async removePackage(pkg: GamePackage) {
@@ -98,8 +99,8 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 			this.$gettext('Package Removed')
 		);
 
-		// We have to do a refresh since a new package may have been chosen as the primary sellable.
-		// TODO(rewrite)
-		// $state.reload($state.current);
+		// We have to do a refresh since a new package may have been chosen as
+		// the primary sellable.
+		this.reloadRoute();
 	}
 }

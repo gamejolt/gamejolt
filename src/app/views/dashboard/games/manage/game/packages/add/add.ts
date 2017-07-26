@@ -28,7 +28,6 @@ export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteCompon
 		this.$router.push({
 			name: 'dash.games.manage.game.packages.edit',
 			params: { packageId: newPackage.id + '' },
-			query: this.$route.query,
 		});
 	}
 }

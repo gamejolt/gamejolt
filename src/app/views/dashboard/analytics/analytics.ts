@@ -182,32 +182,6 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 			this.availableMetrics = SiteAnalytics.pickPartnerMetrics(this.availableMetrics);
 		}
 
-		// TODO(rewrite)
-		// // If any of the parameters changed, refresh the state.
-		// if (
-		// 	this.period !== this.$route.params['period']
-		// 	|| this.metric.key !== this.$route.params['metricKey']
-		// 	|| this.resource !== this.$route.params['resource']
-		// 	|| this.resourceId !== parseInt( this.$route.params['resourceId'], 10 )
-		// ) {
-		// 	let options = {};
-		// 	if ( this.paramsBootstrapped ) {
-		// 		options = { location: 'replace' };
-		// 	}
-
-		// 	let stateParams: any = objectPick( this, [ 'period', 'resource', 'resourceId' ] );
-		// 	stateParams.metricKey = this.metric.key;
-
-		// 	this.$state.go(
-		// 		'dash.analytics',
-		// 		stateParams,
-		// 		options,
-		// 	);
-
-		// 	this.paramsBootstrapped = true;
-		// 	return;
-		// }
-
 		this.paramsBootstrapped = true;
 
 		this.now = Date.now();
