@@ -16,7 +16,13 @@
 		<slot />
 	</app-shell-body>
 
-	<app-shell-chat v-if="chat" />
+	<!--
+		Without this containing div vue would fail with the dom diff after
+		logging out and the whole page would disappear.
+	-->
+	<div>
+		<app-shell-chat v-if="chat" />
+	</div>
 
 	<div v-if="GJ_IS_CLIENT">
 		<app-shell-client />
