@@ -1,4 +1,4 @@
-<app-form name="financialsForm" class="form-dashboard-financials">
+<app-form name="financialsForm" class="form-dashboard-financials" ref="form">
 	<div v-if="!isVerified">
 		<div class="alert alert-info">
 			<translate>Before you can use the Marketplace, we'll need to gather some details from you. This will ensure that your account is completely set up and ready to run smoothly on the Game Jolt Marketplace.</translate>
@@ -14,7 +14,7 @@
 				<div class="col-xs-6">
 					<button class="btn btn-block"
 						:class="whichAgreement === 'developer' ? 'btn-success' : 'btn-outline'"
-						@click="whichAgreement = 'developer'"
+						@click.prevent="whichAgreement = 'developer'"
 						>
 						<translate>I'm a game developer</translate>
 					</button>
@@ -22,7 +22,7 @@
 				<div class="col-xs-6">
 					<button class="btn btn-block"
 						:class="whichAgreement === 'partner' ? 'btn-success' : 'btn-outline'"
-						@click="whichAgreement = 'partner'"
+						@click.prevent="whichAgreement = 'partner'"
 						>
 						<translate>I'm a partner</translate>
 					</button>
@@ -81,7 +81,7 @@
 
 			<button
 				class="btn btn-primary-outline"
-				@click="linkPayPal()"
+				@click.prevent="linkPayPal()"
 				>
 				<span v-if="!user.paypal_id"><translate>Link PayPal Account</translate></span>
 				<span v-else><translate>Change PayPal Account</translate></span>

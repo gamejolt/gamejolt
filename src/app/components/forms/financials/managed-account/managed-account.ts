@@ -52,6 +52,7 @@ interface FormModel {
 export class FormFinancialsManagedAccount extends BaseForm<FormModel>
 	implements FormOnInit, FormOnSubmit {
 	resetOnSubmit = true;
+	scriptLoaded = false;
 	isLoaded = false;
 
 	stripePublishableKey = '';
@@ -68,11 +69,12 @@ export class FormFinancialsManagedAccount extends BaseForm<FormModel>
 	readonly Geo = Geo;
 	readonly currency = currency;
 
-	mounted() {
-		return loadScript('https://js.stripe.com/v2/');
-	}
-
 	async onInit() {
+		if (!this.scriptLoaded) {
+			await loadScript('https://js.stripe.com/v2/');
+			this.scriptLoaded = true;
+		}
+
 		// if ( Environment.env === 'development' ) {
 		// 	scope.formModel.bankAccount_country = 'GB';
 		// 	scope.formModel.bankAccount_currency = 'GBP',
@@ -92,7 +94,6 @@ export class FormFinancialsManagedAccount extends BaseForm<FormModel>
 		this.account = new UserStripeManagedAccount(payload.account);
 		this.stripe = payload.stripe;
 		this.stripeMeta = payload.stripe.required;
-		console.log(this.stripe);
 
 		this.setField('additional_owners_count', 0);
 		if (
@@ -222,7 +223,7 @@ export class FormFinancialsManagedAccount extends BaseForm<FormModel>
 
 		// Due by will be set if this account is required to fill in more by a specific date.
 		// This is for additional collection of fields beyond what we want initially.
-		return this.account.is_verified && this.stripe.current.verification.due_by;
+		return this.account.is_verified && !this.stripe.current.verification.due_by;
 	}
 
 	createPiiToken(data: any) {
@@ -250,9 +251,6 @@ export class FormFinancialsManagedAccount extends BaseForm<FormModel>
 	async onSubmit() {
 		// We don't want to send the sensitive data to GJ.
 		const data = JSON.parse(JSON.stringify(this.formModel));
-
-		console.log('Submitting data: ');
-		console.log(data);
 
 		let id;
 		try {

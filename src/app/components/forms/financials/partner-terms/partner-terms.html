@@ -20,7 +20,7 @@
 
 			<button
 				class="btn btn-primary-outline"
-				@click="showAgreement = true"
+				@click.prevent="showAgreement = true"
 				>
 				<translate>Show Partner Agreement</translate>
 			</button>
@@ -43,7 +43,7 @@
 			<button
 				class="btn btn-success-outline"
 				:disabled="!checked"
-				@click="onAccept()"
+				@click.prevent="onAccept()"
 				>
 				<translate>I Agree</translate>
 			</button>

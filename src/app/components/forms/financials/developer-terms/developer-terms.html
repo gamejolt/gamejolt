@@ -40,7 +40,7 @@
 
 			<button
 				class="btn btn-primary-outline"
-				@click="showAgreement = true"
+				@click.prevent="showAgreement = true"
 				v-if="!showAgreement"
 				>
 				<translate>Show Developer Distribution Agreement</translate>
@@ -59,7 +59,7 @@
 
 		<button
 			class="btn btn-primary-outline"
-			@click="showAgreement = true"
+			@click.prevent="showAgreement = true"
 			v-if="!showAgreement"
 			>
 			<translate>Show New Distribution Agreement</translate>
@@ -90,7 +90,7 @@
 		<button
 			class="btn btn-success-outline"
 			:disabled="!checked"
-			@click="onAccept()"
+			@click.prevent="onAccept()"
 			>
 			<translate>I Agree</translate>
 		</button>

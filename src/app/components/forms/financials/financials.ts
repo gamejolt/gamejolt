@@ -1,107 +1,3 @@
-// import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-// import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-
-// FinancialsFormFactory.$inject = ['Form', 'currencyFilter'];
-// export function FinancialsFormFactory(
-// 	Form: any,
-// 	currencyFilter: ng.IFilterCurrency
-// ) {
-// 	const form = new Form({
-// 		template: require('./financials.html'),
-// 	});
-
-// 	form.onInit = (scope: any) => {
-// 		scope.currencyFilter = currencyFilter;
-// 		scope.formState.isLoaded = false;
-
-// 		// We will set this to which agreement we should show them depending on
-// 		// their account type.
-// 		scope.formState.whichAgreement = null;
-
-// 		Api.sendRequest('/web/dash/financials/save').then((payload: any) => {
-// 			scope.account = payload.account;
-// 			scope.user = payload.user;
-// 			scope.partner = payload.partner;
-
-// 			scope.maxWallet = payload.maxWallet;
-// 			scope.maxPayout = payload.maxPayout;
-// 			scope.minWithdraw = payload.minWithdraw;
-
-// 			scope.formModel.wallet_maximum = scope.user.revenue_wallet_maximum / 100;
-// 			scope.formModel.payout_minimum = scope.user.revenue_payout_minimum / 100;
-// 			scope.formModel.percentage_split = 100 - scope.user.revenue_percentage;
-
-// 			scope.formState.isLoaded = true;
-
-// 			if (scope.account) {
-// 				if (scope.account.tos_signed_developer) {
-// 					scope.formState.whichAgreement = 'developer';
-// 				} else if (scope.account.tos_signed_partner) {
-// 					scope.formState.whichAgreement = 'partner';
-// 				}
-// 			}
-
-// 			// We don't show them the partner agreement if they can't be a partner.
-// 			if (!scope.partner && !scope.formState.whichAgreement) {
-// 				scope.formState.whichAgreement = 'developer';
-// 			}
-// 		});
-
-// 		scope.sliderOptions = {
-// 			floor: 0,
-// 			ceil: 100,
-// 			translate: (v: number) => {
-// 				return v + '%';
-// 			},
-// 			onEnd: () => {
-// 				if (scope.formModel.percentage_split > 10) {
-// 					scope.formModel.percentage_split = 10;
-// 				}
-// 			},
-// 		};
-
-// 		scope.hasSignedAgreement = () => {
-// 			if (!scope.account) {
-// 				return false;
-// 			}
-
-// 			return (
-// 				scope.account.tos_signed_developer || scope.account.tos_signed_partner
-// 			);
-// 		};
-
-// 		scope.acceptTerms = (type: 'developer' | 'partner') => {
-// 			return Api.sendRequest('/web/dash/financials/save', { tos_type: type })
-// 				.then((response: any) => {
-// 					if (response.success !== false) {
-// 						scope.account = response.account;
-// 						scope.user = response.user;
-// 					}
-// 				})
-// 				.catch(() => {
-// 					Growls.error('Something went wrong.');
-// 				});
-// 		};
-// 	};
-
-// 	form.onSubmit = (scope: any) => {
-// 		return Api.sendRequest('/web/dash/financials/save', scope.formModel)
-// 			.then((response: any) => {
-// 				if (response.success !== false) {
-// 					scope.account = response.account;
-// 					scope.user = response.user;
-// 				}
-
-// 				return response;
-// 			})
-// 			.catch(() => {
-// 				Growls.error('Something went wrong.');
-// 			});
-// 	};
-
-// 	return form;
-// }
-
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./financials.html?style=./financials.styl';
 import {
@@ -121,8 +17,14 @@ import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { AppPartnerTerms } from './partner-terms/partner-terms';
 import { AppDeveloperTerms } from './developer-terms/developer-terms';
 import { FormFinancialsManagedAccount } from './managed-account/managed-account';
+import {
+	FormOnSubmitError,
+	FormOnInit,
+} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { AppForm } from '../../../../lib/gj-lib-client/components/form-vue/form';
 
-export interface FinancialsFormModel {
+interface FormModel {
+	tos_type?: 'partner' | 'developer';
 	wallet_maximum: number;
 	payout_minimum: number;
 	percentage_split: number;
@@ -144,8 +46,15 @@ export interface FinancialsFormModel {
 		currency,
 	},
 })
-export class FormFinancials extends BaseForm<FinancialsFormModel>
-	implements FormOnSubmit, FormOnLoad {
+export class FormFinancials extends BaseForm<FormModel>
+	implements FormOnInit, FormOnSubmit, FormOnLoad, FormOnSubmitError {
+	resetOnSubmit = true;
+	reloadOnSubmit = true;
+
+	$refs: {
+		form: AppForm;
+	};
+
 	// We will set this to which agreement we should show them depending on
 	// their account type.
 	whichAgreement: 'developer' | 'partner' = null as any;
@@ -177,9 +86,13 @@ export class FormFinancials extends BaseForm<FinancialsFormModel>
 		return this.account && this.account.is_verified;
 	}
 
+	onInit() {
+		this.setField('tos_type', undefined);
+	}
+
 	onLoad(payload: any) {
-		this.account = payload.account ? new UserStripeManagedAccount(payload.account) : null;
 		this.user = new User(payload.user);
+		this.account = payload.account ? new UserStripeManagedAccount(payload.account) : null;
 		this.partner = payload.partner ? new ReferralEntry(payload.partner) : null;
 
 		this.maxWallet = payload.maxWallet;
@@ -206,31 +119,16 @@ export class FormFinancials extends BaseForm<FinancialsFormModel>
 	}
 
 	async acceptTerms(type: 'partner' | 'developer') {
-		try {
-			const response = await Api.sendRequest('/web/dash/financials/save', {
-				tos_type: type,
-			});
-			if (response.success !== false) {
-				this.onLoad(response);
-			}
-		} catch (err) {
-			console.error(err);
-			Growls.error(this.$gettext('Something went wrong.'));
-		}
+		this.setField('tos_type', type);
+		this.$refs.form.submit();
 	}
 
-	async onSubmit() {
-		try {
-			const response = await Api.sendRequest('/web/dash/financials/save', this.formModel);
-			if (response.success !== false) {
-				this.onLoad(response);
-			}
+	onSubmit() {
+		return Api.sendRequest('/web/dash/financials/save', this.formModel);
+	}
 
-			return response;
-		} catch (err) {
-			console.error(err);
-			Growls.error(this.$gettext('Something went wrong.'));
-		}
+	onSubmitError() {
+		Growls.error(this.$gettext('Something went wrong.'));
 	}
 
 	async linkPayPal() {

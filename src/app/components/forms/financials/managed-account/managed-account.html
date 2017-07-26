@@ -215,7 +215,7 @@
 							<button
 								class="btn btn-danger-outline btn-sparse"
 								v-if="getStripeField( `legal_entity.additional_owners.${ i }.verification.status` ) !== 'verified'"
-								@click="removeAdditionalOwner( i )"
+								@click.prevent="removeAdditionalOwner( i )"
 								>
 								<app-jolticon icon="remove" />
 							</button>
@@ -255,7 +255,7 @@
 				<!-- Add additional owner -->
 				<div class="clearfix">
 					<div class="pull-right" v-if="formModel.additional_owners_count <= 3">
-						<button class="btn btn-outline" @click="addAdditionalOwner()">
+						<button class="btn btn-outline" @click.prevent="addAdditionalOwner()">
 							<app-jolticon icon="add" />
 							<translate>Add Additional Owner</translate>
 						</button>
