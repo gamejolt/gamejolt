@@ -18,15 +18,23 @@ export class BroadcastModal {
 			return;
 		}
 
-		// Bootstrap it from when this feature was launched.
-		if (!window.localStorage[this._key()] && user.created_on < 1483566930963) {
-			// Will try pulling articles since June 1st, 2016.
-			window.localStorage[this._key()] = 1464739200000;
+		if (!window.localStorage[this._key()]) {
+			if (user.created_on < 1483566930963) {
+				// Bootstrap it from when this feature was launched.
+				// Will try pulling articles since June 1st, 2016.
+				window.localStorage[this._key()] = 1464739200000;
+			} else {
+				window.localStorage[this._key()] = Date.now();
+			}
 		}
 
-		const payload = await Api.sendRequest('/web/broadcasts', {
-			from: window.localStorage[this._key()],
-		});
+		const payload = await Api.sendRequest(
+			'/web/broadcasts',
+			{
+				from: window.localStorage[this._key()],
+			},
+			{ detach: true }
+		);
 
 		if (payload.broadcasts.length) {
 			const posts = FiresidePost.populate(payload.broadcasts);
