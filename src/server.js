@@ -102,9 +102,8 @@ if (cluster.isMaster) {
 
 			++numRequests;
 			if (numRequests > numRequestsToRestartAt) {
-				console.log('Send close event for worker to restart');
-				server.close(() => {
-					console.log('Got close event for worker. Shutting down.');
+				setTimeout(() => {
+					console.log('Close worker to restart');
 					process.exit();
 				});
 			}
