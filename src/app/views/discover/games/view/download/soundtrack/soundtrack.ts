@@ -35,7 +35,7 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteC
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: VueRouter.Route) {
 		const gameId = parseInt(route.params.id, 10);
 
 		HistoryTick.sendBeacon('game-soundtrack', gameId, {
