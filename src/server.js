@@ -77,12 +77,6 @@ if (cluster.isMaster) {
 
 	let numRequests = 0;
 	app.get('*', (req, res) => {
-		++numRequests;
-		if (numRequests > numRequestsToRestartAt) {
-			console.log('Send close event for worker to restart');
-			server.close();
-		}
-
 		const context = {
 			url: req.url,
 			ua: req.headers['user-agent'],
@@ -105,16 +99,20 @@ if (cluster.isMaster) {
 				req.url,
 				req.headers['user-agent']
 			);
+
+			++numRequests;
+			if (numRequests > numRequestsToRestartAt) {
+				console.log('Send close event for worker to restart');
+				server.close(() => {
+					console.log('Got close event for worker. Shutting down.');
+					process.exit();
+				});
+			}
 		});
 	});
 
 	const port = 3501;
 	server.listen(port, () => {
 		console.log(`server started at localhost:${port}`);
-	});
-
-	server.on('close', () => {
-		console.log('Got close event for worker. Shutting down.');
-		process.exit();
 	});
 }
