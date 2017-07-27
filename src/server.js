@@ -7,14 +7,13 @@ const cluster = require('cluster');
 const { createBundleRenderer } = require('vue-server-renderer');
 
 // We will restart each worker after around this many requests.
-const RestartRequestCount = 200;
+const RestartRequestCount = 250;
 
 function resolve(file) {
 	return path.resolve(__dirname, file);
 }
 
-// Leave one free worker so we have a core for old prerender service.
-const numWorkers = require('os').cpus().length - 1;
+const numWorkers = require('os').cpus().length;
 const isProd = process.env.NODE_ENV === 'production';
 
 if (cluster.isMaster) {
