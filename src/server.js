@@ -1,9 +1,13 @@
 const argv = require('minimist')(process.argv);
 const fs = require('fs');
 const path = require('path');
+const http = require('http');
 const express = require('express');
 const cluster = require('cluster');
 const { createBundleRenderer } = require('vue-server-renderer');
+
+// We will restart each worker after around this many requests.
+const RestartRequestCount = 200;
 
 function resolve(file) {
 	return path.resolve(__dirname, file);
@@ -12,18 +16,6 @@ function resolve(file) {
 // Leave one free worker so we have a core for old prerender service.
 const numWorkers = require('os').cpus().length - 1;
 const isProd = process.env.NODE_ENV === 'production';
-const section = argv.section || 'app';
-const serverBuildPath = isProd ? '../../build/prod-server/' : '../build/dev-server/';
-const clientBuildPath = isProd ? '../../build/prod/' : '../build/dev/';
-
-const serverBundle = require(path.join(
-	serverBuildPath,
-	'vue-ssr-server-bundle-' + section + '.json'
-));
-const clientManifest = require(path.join(
-	clientBuildPath,
-	'vue-ssr-client-manifest-' + section + '.json'
-));
 
 if (cluster.isMaster) {
 	console.log(`Master ${process.pid} is running`);
@@ -40,7 +32,22 @@ if (cluster.isMaster) {
 } else {
 	console.log(`Worker ${process.pid} started`);
 
-	const server = express();
+	const section = argv.section || 'app';
+	const serverBuildPath = isProd ? '../../build/prod-server/' : '../build/dev-server/';
+	const clientBuildPath = isProd ? '../../build/prod/' : '../build/dev/';
+
+	const serverBundle = require(path.join(
+		serverBuildPath,
+		'vue-ssr-server-bundle-' + section + '.json'
+	));
+	const clientManifest = require(path.join(
+		clientBuildPath,
+		'vue-ssr-client-manifest-' + section + '.json'
+	));
+
+	const app = express();
+	const server = http.createServer(app);
+
 	const renderer = createBundleRenderer(serverBundle, {
 		runInNewContext: true,
 		template: fs.readFileSync(resolve('./index-ssr.html'), 'utf-8'),
@@ -59,10 +66,23 @@ if (cluster.isMaster) {
 			});
 		}
 
-		server.use(serve(clientBuildPath));
+		app.use(serve(clientBuildPath));
 	}
 
-	server.get('*', (req, res) => {
+	// Randomize so we don't all restart at same time.
+	const numRequestsToRestartAt =
+		RestartRequestCount + Math.floor(Math.random() * (RestartRequestCount / 15));
+
+	console.log('Worker will restart in', numRequestsToRestartAt, 'requests');
+
+	let numRequests = 0;
+	app.get('*', (req, res) => {
+		++numRequests;
+		if (numRequests > numRequestsToRestartAt) {
+			console.log('Send close event for worker to restart');
+			server.close();
+		}
+
 		const context = {
 			url: req.url,
 			ua: req.headers['user-agent'],
@@ -91,5 +111,10 @@ if (cluster.isMaster) {
 	const port = 3501;
 	server.listen(port, () => {
 		console.log(`server started at localhost:${port}`);
+	});
+
+	server.on('close', () => {
+		console.log('Got close event for worker. Shutting down.');
+		process.exit();
 	});
 }
