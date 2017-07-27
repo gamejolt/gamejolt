@@ -77,7 +77,14 @@ if (cluster.isMaster) {
 			}
 			res.end(html);
 			const total = Date.now() - s;
-			console.log('total', total + 'ms', 'render', total - context.prefetchTime + 'ms');
+			console.log(
+				'total',
+				total + 'ms',
+				'render',
+				total - context.prefetchTime + 'ms',
+				req.url,
+				req.headers['user-agent']
+			);
 		});
 	});
 
