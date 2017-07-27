@@ -1,13 +1,8 @@
 <div @click.stop="go">
-	<router-link
-		:to="notification.routeLocation"
-		>
+	<router-link :to="notification.routeLocation">
+		<app-timeline-list-item :is-new="isNew" :is-active="isActive">
 
-		<div class="timeline-list-item-bubble">
-			<app-jolticon :icon="icon" />
-		</div>
-
-		<div class="timeline-list-item-main">
+			<app-jolticon slot="bubble" :icon="icon" />
 
 			<div class="timeline-list-item-meta">
 				<app-time-ago :date="notification.added_on" />
@@ -66,7 +61,6 @@
 				</div>
 			</div>
 
-		</div>
-
+		</app-timeline-list-item>
 	</router-link>
 </div>

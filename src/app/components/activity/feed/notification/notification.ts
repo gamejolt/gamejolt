@@ -10,10 +10,12 @@ import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago
 import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { AppNotificationDescriptiveAction } from '../../../notification/descriptive-action/descriptive-action';
+import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 
 @View
 @Component({
 	components: {
+		AppTimelineListItem,
 		AppJolticon,
 		AppTimeAgo,
 		AppFadeCollapse,
@@ -22,6 +24,8 @@ import { AppNotificationDescriptiveAction } from '../../../notification/descript
 })
 export class AppActivityFeedNotification extends Vue {
 	@Prop(ActivityFeedItem) item: ActivityFeedItem;
+	@Prop(Boolean) isNew?: boolean;
+	@Prop(Boolean) isActive?: boolean;
 
 	notification: Notification;
 
