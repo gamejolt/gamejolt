@@ -1,13 +1,14 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./placeholder.html';
-import '../../../../../lib/gj-lib-client/components/timeline-list/timeline-list.styl';
 
 import { AppActivityFeedItemPlaceholder } from '../item/placeholder/placeholder';
+import { AppTimelineList } from '../../../../../lib/gj-lib-client/components/timeline-list/timeline-list';
 
 @View
 @Component({
 	components: {
+		AppTimelineList,
 		AppActivityFeedItemPlaceholder,
 	},
 })

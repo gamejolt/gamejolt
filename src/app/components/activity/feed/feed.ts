@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { Subscription } from 'rxjs/Subscription';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import * as View from '!view!./feed.html';
-import '../../../../lib/gj-lib-client/components/timeline-list/timeline-list.styl';
 
 import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedContainer } from './feed-container-service';
@@ -15,6 +14,7 @@ import { isPrerender } from '../../../../lib/gj-lib-client/components/environmen
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppTimelineList } from '../../../../lib/gj-lib-client/components/timeline-list/timeline-list';
 
 @View
 @Component({
@@ -22,6 +22,7 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 		AppLoading,
 		AppActivityFeedItem,
 		AppAd,
+		AppTimelineList,
 	},
 	directives: {
 		AppTrackEvent,

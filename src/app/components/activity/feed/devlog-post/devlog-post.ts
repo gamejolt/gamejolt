@@ -19,12 +19,14 @@ import { AppActivityFeedDevlogPostMedia } from './media/media';
 import { AppActivityFeedDevlogPostSketchfab } from './sketchfab/sketchfab';
 import { AppActivityFeedDevlogPostVideo } from './video/video';
 import { AppActivityFeedDevlogPostControls } from './controls/controls';
+import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
 @View
 @Component({
 	components: {
+		AppTimelineListItem,
 		AppJolticon,
 		AppGameThumbnailImg,
 		AppTimeAgo,
@@ -40,6 +42,8 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 })
 export class AppActivityFeedDevlogPost extends Vue {
 	@Prop(ActivityFeedItem) item: ActivityFeedItem;
+	@Prop(Boolean) isNew?: boolean;
+	@Prop(Boolean) isActive?: boolean;
 
 	post: FiresidePost;
 	private resizeSensor?: any;

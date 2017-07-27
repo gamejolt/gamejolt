@@ -1,10 +1,9 @@
-<div class="devlog-post" :class="'devlog-post-' + post.type">
-
-	<div class="timeline-list-item-bubble">
+<app-timeline-list-item :is-new="isNew" :is-active="isActive">
+	<span slot="bubble">
 		<app-jolticon :icon="icon" />
-	</div>
+	</span>
 
-	<div class="timeline-list-item-main">
+	<div class="devlog-post" :class="'devlog-post-' + post.type">
 
 		<router-link
 			class="devlog-post-game"
@@ -88,4 +87,4 @@
 
 	</div>
 
-</div>
+</app-timeline-list-item>

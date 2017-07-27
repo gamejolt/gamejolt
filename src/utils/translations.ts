@@ -15,14 +15,18 @@ export async function bootstrapAppTranslations() {
 
 	let lang = getTranslationLang();
 
-	// Don't use webpack to require directly. If we did it would generate new
-	// files for each section that we built for.
-	const response = await Axios({
-		url: require('!file-loader!../translations/' + lang + '/main.json'),
-		ignoreLoadingBar: true,
-	});
-
-	const translations = response.data;
+	let translations: any = {};
+	if (GJ_IS_SSR) {
+		translations = require('../translations/en_US/main.json');
+	} else {
+		// Don't use webpack to require directly. If we did it would generate new
+		// files for each section that we built for.
+		const response = await Axios({
+			url: require('!file-loader!../translations/' + lang + '/main.json'),
+			ignoreLoadingBar: true,
+		});
+		translations = response.data;
+	}
 
 	Vue.use(VueGettext, {
 		silent: true,

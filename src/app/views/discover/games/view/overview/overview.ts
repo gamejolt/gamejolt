@@ -8,6 +8,7 @@ import { AppDiscoverGamesViewOverviewGame } from './_game/game';
 import { PartnerReferral } from '../../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
 import { AppDiscoverGamesViewOverviewDevlog } from './_devlog/devlog';
 import { RouteMutation, RouteStore, RouteState } from '../view.store';
+import { HistoryTick } from '../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import {
 	RouteResolve,
 	BaseRouteComponent,
@@ -28,7 +29,13 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@RouteMutation processOverviewPayload: RouteStore['processOverviewPayload'];
 
 	@RouteResolve({ lazy: true, cache: true })
-	routeResolve(route: VueRouter.Route) {
+	routeResolve(this: undefined, route: VueRouter.Route) {
+		const gameId = parseInt(route.params.id, 10);
+		HistoryTick.sendBeacon('game-view', gameId, {
+			sourceResource: 'Game',
+			sourceResourceId: gameId,
+		});
+
 		// If we have a tracked partner "ref" in the URL, we want to pass that along
 		// when gathering the payload.
 		let apiOverviewUrl = '/web/discover/games/overview/' + route.params.id;

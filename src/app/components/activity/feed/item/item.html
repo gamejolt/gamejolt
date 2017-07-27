@@ -1,10 +1,5 @@
 <app-scroll-inview
-	class="timeline-list-item"
 	:id="`activity-feed-item-${item.id}`"
-	:class="{
-		'new': isNew,
-		'active': isActive,
-	}"
 	:extra-padding="inviewPadding"
 	@inview="onInviewChange( true )"
 	@outview="onInviewChange( false )"
@@ -23,6 +18,8 @@
 		<app-activity-feed-devlog-post
 			v-if="item.type === 'devlog-post'"
 			:item="item"
+			:is-new="isNew"
+			:is-active="isActive"
 			@clicked="setActive"
 			@expanded="onExpanded"
 			@resize="onResize"
@@ -31,6 +28,8 @@
 		<app-activity-feed-notification
 			v-else-if="item.type === 'notification'"
 			:item="item"
+			:is-new="isNew"
+			:is-active="isActive"
 			@clicked="setActive"
 			/>
 	<!-- </div> -->
