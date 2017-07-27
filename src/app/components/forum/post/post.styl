@@ -1,38 +1,13 @@
+@require '../../../../lib/gj-lib-client/stylus/mixins/compiled-content'
+
 .forum-post
 
 	&-body
+		compiled-content($font-size-base, $line-height-computed)
 
 		h1, h2, h3, h4, h5, h6
 			@extend .h5
 			font-weight: bold
-
-			&:first-child
-				margin-top: 0
-
-		img
-			@extend .img-responsive
-
-			// Center it if is too small.
-			margin-left: auto
-			margin-right: auto
-
-		h1, h2, h3, h4, h5, h6
-			&:first-child
-				margin-top: 0
-
-		// Widgets some times create empty P tags.
-		// This hides them so they don't add extra spacing to the page.
-		p:empty
-			display: none
-
-		// Removes the added spacing after iframes since they aren't block elements.
-		// They basically by default add their line spacing to the bottom.
-		iframe
-			display: block
-			margin-bottom: $font-size-base
-
-		table
-			@extend .table
 
 		pre
 			padding-left: ($forum-post-list-icon-size / 2) + $forum-post-list-avatar-margin
