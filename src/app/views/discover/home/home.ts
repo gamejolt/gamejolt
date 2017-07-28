@@ -20,12 +20,14 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppAuthJoinLazy } from '../../../components/lazy';
+import { Channels } from '../../../components/channel/channels-service';
+import { splitHomeCollapsedVariation } from '../../../components/split-test/split-test-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 
-interface DiscoverSection {
+export interface DiscoverSection {
 	title: string;
 	smallTitle: string;
 	url: string;
@@ -57,6 +59,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	chosenSection: DiscoverSection | null = null;
 	featuredItems: FeaturedItem[] = [];
 	channels: any[] = [];
+	variation = 0;
 
 	games: { [k: string]: Game[] } = {
 		featured: [],
@@ -73,6 +76,18 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	get discoverSections() {
+		const featuredSection: DiscoverSection = {
+			title: this.$gettext('Featured Games'),
+			smallTitle: this.$gettext('Featured'),
+			url: this.$router.resolve({
+				name: 'discover.games.list._fetch',
+				params: { section: 'featured' },
+			}).href,
+			eventLabel: 'featured-games',
+			// We actually show hot games in the featured tab.
+			games: 'hot',
+		};
+
 		const bestSection: DiscoverSection = {
 			title: this.$gettext('Best Games'),
 			smallTitle: this.$gettext('Best'),
@@ -95,6 +110,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			games: 'hot',
 		};
 
+		let sections: DiscoverSection[] = [];
 		if (this.isLoaded && this.app.user) {
 			const recommendedSection = {
 				title: this.$gettext('Recommended Games'),
@@ -107,10 +123,16 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 				games: 'recommended',
 			};
 
-			return [hotSection, recommendedSection, bestSection];
+			sections = [hotSection, recommendedSection, bestSection];
 		} else {
-			return [hotSection, bestSection];
+			sections = [hotSection, bestSection];
 		}
+
+		if (this.variation === 2) {
+			sections.unshift(featuredSection);
+		}
+
+		return sections;
 	}
 
 	routeInit() {
@@ -140,13 +162,40 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			},
 		};
 
+		this.variation = Math.max(splitHomeCollapsedVariation(this.$route, this.$payload), 0);
+
 		this.featuredItems = FeaturedItem.populate(this.$payload.featuredGames);
 		this.games.featured = this.featuredItems.map(item => item.game);
 		this.games.hot = Game.populate(this.$payload.hotGames);
 		this.games.best = Game.populate(this.$payload.bestGames);
 		this.games.recommended = Game.populate(this.$payload.recommendedGames);
 
-		this.channels = this.$payload.channels;
+		const channels =
+			this.variation === 0
+				? this.$payload.channels
+				: [
+						'action',
+						'horror',
+						'adventure',
+						'fangame',
+						'rpg',
+						'multiplayer',
+						'platformer',
+						'survival',
+						'retro',
+						'shooter',
+						'vr',
+						'strategysim',
+						'fnaf',
+					];
+
+		this.channels = [];
+		for (const channel of channels) {
+			const info = Channels.channels.find(i => i.id === channel);
+			if (info) {
+				this.channels.push(info);
+			}
+		}
 	}
 
 	changeSection(sectionIndex: number) {

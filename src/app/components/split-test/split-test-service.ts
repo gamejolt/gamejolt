@@ -1,9 +1,14 @@
 import VueRouter from 'vue-router';
 
 const ExperimentAnimatedGameThumbnails = 'M5w_VZwVTvypOOsb_ib0sQ';
+const ExperimentHomeCollapsed = 'RwRvq_WGSgC-Btijan1v-w';
 
 export function splitHasAnimatedGameThumbnails(route: VueRouter.Route, payload: any) {
 	return getPayloadVariation(route, payload, ExperimentAnimatedGameThumbnails) === 1;
+}
+
+export function splitHomeCollapsedVariation(route: VueRouter.Route, payload: any) {
+	return getPayloadVariation(route, payload, ExperimentHomeCollapsed);
 }
 
 function getPayloadVariation(route: VueRouter.Route, payload: any, experiment: string): number {
