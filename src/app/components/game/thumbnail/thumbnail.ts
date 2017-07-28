@@ -68,6 +68,7 @@ export class AppGameThumbnail extends Vue {
 
 	@State app: AppStore;
 
+	isHovered = false;
 	isInview = false;
 	isThumbnailLoaded = false;
 	isWindowFocused = typeof document !== 'undefined' && document.hasFocus
@@ -77,6 +78,10 @@ export class AppGameThumbnail extends Vue {
 	Screen = makeObservableService(Screen);
 
 	get isActive() {
+		if (!this.isHovered) {
+			return false;
+		}
+
 		// When the window is not focused we don't want to play videos. This
 		// should speed up inactive tabs.
 		return (

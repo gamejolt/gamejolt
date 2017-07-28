@@ -4,6 +4,8 @@
 		active: isActive,
 		loaded: isThumbnailLoaded,
 	}"
+	@mouseenter.native="isHovered = true"
+	@mouseleave.native="isHovered = false"
 	>
 	<app-scroll-inview
 		:extra-padding="Screen.height"
