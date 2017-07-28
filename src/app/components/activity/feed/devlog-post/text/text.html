@@ -3,7 +3,7 @@
 	<app-fade-collapse
 		:collapse-height="500"
 		:is-open="item.isOpen"
-		@require-change="canToggleContent = $event"
+		@require-change="canToggleChanged"
 		>
 		<div class="fireside-post-body">
 			<app-widget-compiler :content="post.content_compiled" />

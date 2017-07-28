@@ -1,5 +1,6 @@
 <app-scroll-inview
 	:id="`activity-feed-item-${item.id}`"
+	:style="{ height }"
 	:extra-padding="inviewPadding"
 	@inview="onInviewChange( true )"
 	@outview="onInviewChange( false )"
@@ -9,12 +10,7 @@
 		Notifications are so small that there's no reason to not include
 		them into the view.
 	-->
-	<!-- <app-activity-feed-item-placeholder
-		v-if="item.type !== 'notification' && !isInView"
-		:type="item.type"
-		/> -->
-
-	<!-- <div v-else> -->
+	 <div v-if="item.type === 'notification' || isInView">
 		<app-activity-feed-devlog-post
 			v-if="item.type === 'devlog-post'"
 			:item="item"
@@ -32,6 +28,6 @@
 			:is-active="isActive"
 			@clicked="setActive"
 			/>
-	<!-- </div> -->
+	 </div>
 
 </app-scroll-inview>

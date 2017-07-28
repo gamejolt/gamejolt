@@ -43,6 +43,10 @@ export class AppActivityFeedDevlogPostMedia extends Vue {
 		this.activeMediaItem = this.post.media[0];
 	}
 
+	mounted() {
+		this.$emit('content-bootstrapped');
+	}
+
 	shouldVideoPlay(mediaItem: any) {
 		// Must be the active media item.
 		return this.activeMediaItem === mediaItem;

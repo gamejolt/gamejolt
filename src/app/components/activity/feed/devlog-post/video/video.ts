@@ -30,6 +30,10 @@ export class AppActivityFeedDevlogPostVideo extends Vue {
 		this.video = this.post.videos[0];
 	}
 
+	mounted() {
+		this.$emit('content-bootstrapped');
+	}
+
 	play() {
 		this.isShowingVideo = true;
 		this.$emit('expanded');

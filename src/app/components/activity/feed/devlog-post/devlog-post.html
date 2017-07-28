@@ -51,25 +51,26 @@
 				v-if="post.type === 'text'"
 				:item="item"
 				@expanded="onExpand"
+				@content-bootstrapped="onContentBootstrapped"
 				/>
-
 			<app-activity-feed-devlog-post-video
 				v-else-if="post.type === 'video'"
 				:item="item"
 				@expanded="onExpand"
+				@content-bootstrapped="onContentBootstrapped"
 				/>
-
 			<app-activity-feed-devlog-post-sketchfab
 				v-else-if="post.type === 'sketchfab'"
 				:item="item"
 				@expanded="onExpand"
+				@content-bootstrapped="onContentBootstrapped"
 				/>
-
 			<app-activity-feed-devlog-post-media
 				v-else-if="post.type === 'media'"
 				:item="item"
 				@clicked="onClick( $event )"
 				@expanded="onExpand"
+				@content-bootstrapped="onContentBootstrapped"
 				/>
 
 			<app-activity-feed-devlog-post-controls

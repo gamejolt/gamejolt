@@ -19,6 +19,7 @@ export class AppActivityFeedDevlogPostText extends Vue {
 
 	post: FiresidePost = null as any;
 	canToggleContent = false;
+	contentBootstrapped = false;
 
 	created() {
 		this.post = this.item.feedItem as FiresidePost;
@@ -27,5 +28,20 @@ export class AppActivityFeedDevlogPostText extends Vue {
 	toggleFull() {
 		this.item.isOpen = !this.item.isOpen;
 		this.$emit('expanded');
+	}
+
+	// We wait for the fade collapse component to bootstrap in and potentially
+	// restrict the content size before saying we're bootstrapped.
+	async canToggleChanged(canToggle: boolean) {
+		this.canToggleContent = canToggle;
+
+		if (!this.contentBootstrapped) {
+			this.contentBootstrapped = true;
+
+			// Wait for the fade to restrict content now before emitting the
+			// event.
+			await this.$nextTick();
+			this.$emit('content-bootstrapped');
+		}
 	}
 }

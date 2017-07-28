@@ -68,15 +68,19 @@ export class AppActivityFeedDevlogPost extends Vue {
 		this.post = this.item.feedItem as FiresidePost;
 	}
 
-	mounted() {
+	destroyed() {
+		this.resizeSensor = undefined;
+	}
+
+	/**
+	 * Callback for when the component's content has finished bootstrapping into
+	 * the DOM and we hopefully know the height and true content.
+	 */
+	onContentBootstrapped() {
 		this.$emit('resize', this.$el.offsetHeight);
 		this.resizeSensor = new ResizeSensor(this.$el, () => {
 			this.$emit('resize', this.$el.offsetHeight);
 		});
-	}
-
-	destroyed() {
-		this.resizeSensor = undefined;
 	}
 
 	onExpand() {

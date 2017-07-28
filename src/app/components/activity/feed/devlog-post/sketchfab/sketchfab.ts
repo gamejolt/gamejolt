@@ -29,6 +29,10 @@ export class AppActivityFeedDevlogPostSketchfab extends Vue {
 		this.sketchfab = this.post.sketchfabs[0];
 	}
 
+	mounted() {
+		this.$emit('content-bootstrapped');
+	}
+
 	play() {
 		this.isShowing = true;
 		this.$emit('expanded');

@@ -9,7 +9,6 @@ import { ActivityFeedContainer } from '../feed-container-service';
 import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { AppActivityFeedDevlogPost } from '../devlog-post/devlog-post';
 import { AppActivityFeedNotification } from '../notification/notification';
-import { AppActivityFeedItemPlaceholder } from './placeholder/placeholder';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 
 @View
@@ -18,7 +17,6 @@ import { Screen } from '../../../../../lib/gj-lib-client/components/screen/scree
 		AppScrollInview,
 		AppActivityFeedDevlogPost,
 		AppActivityFeedNotification,
-		AppActivityFeedItemPlaceholder,
 	},
 })
 export class AppActivityFeedItem extends Vue {
@@ -26,12 +24,6 @@ export class AppActivityFeedItem extends Vue {
 	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
 
 	inviewPadding = Screen.windowHeight;
-
-	mounted() {
-		if (this.item.height) {
-			this.$el.style.height = this.item.height;
-		}
-	}
 
 	get isNew() {
 		// Only care if there is a watermark.
@@ -54,6 +46,11 @@ export class AppActivityFeedItem extends Vue {
 		return this.feed.activeItem && this.feed.activeItem.id === this.item.id;
 	}
 
+	get height() {
+		// Don't set height for notifications since they're tiny.
+		return this.item.type !== 'notification' ? this.item.height : undefined;
+	}
+
 	setActive() {
 		this.feed.activeItem = this.item;
 	}
@@ -67,7 +64,6 @@ export class AppActivityFeedItem extends Vue {
 	}
 
 	onResize(height: number) {
-		this.$el.style.height = height + 'px';
 		this.item.height = height + 'px';
 	}
 }
