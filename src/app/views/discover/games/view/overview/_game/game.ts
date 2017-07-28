@@ -17,7 +17,6 @@ import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppDiscoverGamesViewOverviewStats } from '../_stats/stats';
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
 import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
-import { AppCommentWidget } from '../../../../../../../lib/gj-lib-client/components/comment/widget/widget';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
@@ -35,6 +34,7 @@ import { Store } from '../../../../../../store/index';
 import { AppUserAvatarImg } from '../../../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
+import { AppCommentWidgetLazy } from '../../../../../../components/lazy';
 
 @View
 @Component({
@@ -52,7 +52,7 @@ import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/p
 		AppFadeCollapse,
 		AppLazyPlaceholder,
 		AppGameOgrs,
-		AppCommentWidget,
+		AppCommentWidget: AppCommentWidgetLazy,
 		AppGamePackageCard,
 		AppGameSoundtrackCard,
 		AppActivityFeed,

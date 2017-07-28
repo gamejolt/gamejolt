@@ -5,16 +5,16 @@ import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/rou
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppSocialTwitterShare } from '../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../lib/gj-lib-client/components/social/facebook/like/like';
-import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
 import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
+import { AppAuthJoinLazy } from '../../../components/lazy';
 
 @View
 @Component({
 	components: {
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
-		AppAuthJoin,
+		AppAuthJoin: AppAuthJoinLazy,
 	},
 	directives: {
 		AppScrollTo,

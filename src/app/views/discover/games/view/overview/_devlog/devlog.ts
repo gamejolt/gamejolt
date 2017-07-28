@@ -19,12 +19,12 @@ import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/co
 import { Store } from '../../../../../../store/index';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
-import { AppCommentWidgetAdd } from '../../../../../../../lib/gj-lib-client/components/comment/widget/add/add';
 import { Comment } from '../../../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
+import { AppCommentWidgetAddLazy } from '../../../../../../components/lazy';
 
 @View
 @Component({
@@ -40,7 +40,7 @@ import { AppActivityFeedPlaceholder } from '../../../../../../components/activit
 		AppGamePackageCard,
 		AppGameSoundtrackCard,
 		AppCommentPeek,
-		AppCommentWidgetAdd,
+		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
 		AppGameGrid,
 		AppGameGridPlaceholder,
 	},

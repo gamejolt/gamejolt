@@ -29,6 +29,7 @@ import { router } from '../views';
 import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
 import { ChatClient } from '../components/chat/client';
+import { ChatClientLazy } from '../components/lazy';
 
 export type Actions = AppActions &
 	LibraryActions &
@@ -155,8 +156,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async loadChat() {
-		const mod = await import(/* webpackChunkName: "chat" */ '../components/chat/client');
-		this._setChat(new mod.ChatClient());
+		const ChatClient_ = await ChatClientLazy();
+		this._setChat(new ChatClient_());
 	}
 
 	@VuexAction

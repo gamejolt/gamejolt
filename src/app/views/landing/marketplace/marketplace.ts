@@ -9,9 +9,9 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
 import { AppGameThumbnail } from '../../../components/game/thumbnail/thumbnail';
 import { Store } from '../../../store/index';
+import { AppAuthJoinLazy } from '../../../components/lazy';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -21,7 +21,7 @@ import {
 @Component({
 	components: {
 		AppGameThumbnail,
-		AppAuthJoin,
+		AppAuthJoin: AppAuthJoinLazy,
 	},
 	directives: {
 		AppTrackEvent,

@@ -8,7 +8,7 @@ import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/a
 import { AppSocialTwitterShare } from '../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
+import { AppAuthJoinLazy } from '../../../components/lazy';
 
 function getRandomInt(min: number, max: number) {
 	min = Math.ceil(min);
@@ -22,7 +22,7 @@ function getRandomInt(min: number, max: number) {
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
 		AppJolticon,
-		AppAuthJoin,
+		AppAuthJoin: AppAuthJoinLazy,
 	},
 })
 export default class RouteLandingRedlight extends BaseRouteComponent {

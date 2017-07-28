@@ -15,16 +15,15 @@ import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/
 import { AppPopoverTrigger } from '../../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppPopover } from '../../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppGameFollowWidget } from '../../../../game/follow-widget/follow-widget';
-import { AppCommentWidget } from '../../../../../../lib/gj-lib-client/components/comment/widget/widget';
 import { AppLoading } from '../../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppCard } from '../../../../../../lib/gj-lib-client/components/card/card';
 import { AppUserAvatarImg } from '../../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppFiresidePostLikeWidget } from '../../../../../../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 import { AppSocialTwitterShare } from '../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
-import { AppCommentWidgetAdd } from '../../../../../../lib/gj-lib-client/components/comment/widget/add/add';
 import { Store } from '../../../../../store/index';
 import { DevlogPostEditModal } from '../../../../devlog/post/edit-modal/edit-modal-service';
+import { AppCommentWidgetAddLazy, AppCommentWidgetLazy } from '../../../../lazy';
 
 @View
 @Component({
@@ -32,8 +31,8 @@ import { DevlogPostEditModal } from '../../../../devlog/post/edit-modal/edit-mod
 		AppJolticon,
 		AppPopover,
 		AppGameFollowWidget,
-		AppCommentWidgetAdd,
-		AppCommentWidget,
+		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
+		AppCommentWidget: AppCommentWidgetLazy,
 		AppLoading,
 		AppCard,
 		AppUserAvatarImg,

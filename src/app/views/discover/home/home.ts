@@ -10,7 +10,6 @@ import { AppGameGrid } from '../../../components/game/grid/grid';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import { AppGenreList } from '../../../components/genre/list/list';
 import { AppChannelThumbnail } from '../../../components/channel/thumbnail/thumbnail';
-import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholder/placeholder';
@@ -20,6 +19,7 @@ import { Store } from '../../../store/index';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { AppAuthJoinLazy } from '../../../components/lazy';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -42,8 +42,8 @@ interface DiscoverSection {
 		AppGameGridPlaceholder,
 		AppGenreList,
 		AppChannelThumbnail,
-		AppAuthJoin,
 		AppAdPlacement,
+		AppAuthJoin: AppAuthJoinLazy,
 	},
 	directives: {
 		AppTrackEvent,
