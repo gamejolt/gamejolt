@@ -1,5 +1,6 @@
 @require '~styles/variables'
 @require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '../../../../lib/gj-lib-client/components/button/button'
 
 @import url('https://fonts.googleapis.com/css?family=Megrim');
 
@@ -9,7 +10,7 @@
 	.lead
 		font-family: 'Megrim', sans-serif
 		color: $white
-		text-shadow: 0 2px 4px rgba( $gj-blue, 1 )
+		text-shadow: 0 2px 4px $gj-blue
 		font-size: 35px
 
 	.indieaf-header
@@ -63,12 +64,12 @@
 		.underbar
 			border-top-color: $gj-pink !important
 			border-top-width: 2px
-			box-shadow: 0 2px 4px rgba( $gj-pink, 1 )
+			box-shadow: 0 2px 4px $gj-pink
 
 		h2
 			margin-top: 140px
 			font-family: 'Megrim', sans-serif
-			text-shadow: 0 2px 4px rgba( $gj-pink, 1 )
+			text-shadow: 0 2px 4px $gj-pink
 			font-size: 40px
 
 		.spacer
@@ -126,7 +127,7 @@
 			color: $white,
 			icon-color: $white,
 			outline-color: $gj-blue,
-			active-background: rgba( $gj-pink, 0.4 ),
+			active-background: rgba($gj-pink, 0.4),
 			active-color: $white,
 			addon-color: $white,
 			outline-addon-color: $white,
@@ -136,15 +137,14 @@
 		color: $gj-pink !important
 		border-width: $button-outline-border-size
 		border-style: solid
-		line-height: ($button-line-height - (@border-width * 2))
 		line-height: 60px
 		padding-left: $button-padding-horizontal - @border-width
 		padding-right: @padding-left
-		text-shadow: 0 0 8px rgba( $gj-pink, 1 )
-		box-shadow: 0 0 8px rgba( $gj-blue, 1 )
+		text-shadow: 0 0 8px $gj-pink
+		box-shadow: 0 0 8px $gj-blue
 		font-size: 25px
 		transition: all 1000ms
 
 		&:hover
-			box-shadow: 0 0 8px rgba( $gj-pink, 1 )
+			box-shadow: 0 0 8px $gj-pink
 
