@@ -163,6 +163,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		};
 
 		this.variation = Math.max(splitHomeCollapsedVariation(this.$route, this.$payload), 0);
+		this.chosenSection = this.discoverSections[0];
 
 		this.featuredItems = FeaturedItem.populate(this.$payload.featuredGames);
 		this.games.featured = this.featuredItems.map(item => item.game);
