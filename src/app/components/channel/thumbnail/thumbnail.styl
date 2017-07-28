@@ -23,12 +23,12 @@
 		border-top-left-radius: $border-radius-base
 		border-top-right-radius: $border-radius-base
 
-		> img
+		& > img
 			width: 116px * 0.5
 			height: 116px * 0.5
 
 	&-info
-		padding: 8px 14px
+		padding: 8px 0
 		color: $white
 		font-size: $font-size-small
 		background-color: $gray-dark
@@ -37,9 +37,17 @@
 
 	&-label
 		font-weight: bold
-
-		a:hover &
-			text-decoration: underline
+		text-align: center
 
 	&-games-count
 		color: $gray-lighter
+
+	&:hover .channel-thumbnail
+		&-info
+			background-color: $gj-green
+			color: $gj-dark-green
+
+	.fill-darker &
+		&-image
+			background-color: $gray-dark
+

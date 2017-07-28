@@ -26,6 +26,11 @@ export default class RouteDiscoverChannelsView extends BaseRouteComponent {
 	Meta = Meta;
 	Channels = Channels;
 
+	get img() {
+		const info = Channels.channels.find(i => i.id === this.channel);
+		return info && info.image;
+	}
+
 	@RouteResolve({ cache: true, lazy: true, cacheTag: 'view' })
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest('/web/discover/channels/' + route.params.channel);

@@ -1,31 +1,16 @@
 <router-link
 	class="channel-thumbnail"
-	:to="{
-		name: 'discover.channels.view.overview',
-		params: { channel },
-	}"
-	v-app-track-event="`channel-list:${ channel }`"
+	:to="location"
+	v-app-track-event="`channel-list:${ channelInfo.type }-${ channelInfo.id }`"
 	>
 	<div class="channel-thumbnail-image-spacer">
 		<div class="channel-thumbnail-image">
-			<img :src="Channels.images[ channel ]" alt="">
+			<img :src="channelInfo.image" alt="">
 		</div>
 	</div>
 	<div class="channel-thumbnail-info">
 		<div class="channel-thumbnail-label">
-			#{{ channel }}
-		</div>
-		<div
-			class="channel-thumbnail-games-count"
-			v-if="gamesCount"
-			>
-			<translate
-				:translate-n="gamesCount"
-				:translate-params="{ count: number( gamesCount ) }"
-				translate-plural="%{ count } games"
-				>
-				1 game
-			</translate>
+			{{ channelInfo.label }}
 		</div>
 	</div>
 </router-link>
