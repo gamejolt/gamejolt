@@ -38,6 +38,7 @@ export class AppGameGrid extends Vue {
 	@Prop(Boolean) scrollable?: boolean;
 	@Prop(Boolean) showAds?: boolean;
 	@Prop(String) eventLabel?: string;
+	@Prop(Boolean) autoplay?: boolean;
 
 	currentPage = 1;
 
