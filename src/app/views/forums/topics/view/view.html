@@ -273,20 +273,19 @@
 						/>
 
 					<div v-if="app.user">
-						<div v-if="!topic.is_locked">
+						<app-message-thread-add
+							v-if="!topic.is_locked"
+							>
+							<h4 class="sans-margin-top" id="add-reply">
+								<translate>Add Reply</translate>
+							</h4>
 
-							<app-message-thread-add>
-								<h4 class="sans-margin-top" id="add-reply">
-									<translate>Add Reply</translate>
-								</h4>
+							<form-forum-post
+								:topic="topic"
+								@submit="onPostAdded"
+								/>
 
-								<form-forum-post
-									:topic="topic"
-									@submit="onPostAdded"
-									/>
-
-							</app-message-thread-add>
-						</div>
+						</app-message-thread-add>
 
 						<div class="alert alert-info full-bleed-xs" v-if="topic.is_locked">
 							<p>

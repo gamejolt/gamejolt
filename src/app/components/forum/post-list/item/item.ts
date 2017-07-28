@@ -25,11 +25,13 @@ import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scr
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { Store } from '../../../../store/index';
 import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components/message-thread/add/add';
+import { AppMessageThread } from '../../../../../lib/gj-lib-client/components/message-thread/message-thread';
 
 @View
 @Component({
 	components: {
 		AppScrollInview,
+		AppMessageThread,
 		AppMessageThreadItem,
 		AppMessageThreadAdd,
 		AppJolticon,

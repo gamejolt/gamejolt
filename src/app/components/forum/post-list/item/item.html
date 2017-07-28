@@ -178,14 +178,15 @@
 					/>
 			</app-message-thread-add>
 
-			<app-forum-post-list-item
-				v-if="isShowingReplies && replies.length > 0"
-				v-for="reply of replies"
-				:key="reply.id"
-				:topic="topic"
-				:post="reply"
-				:is-reply="true"
-				/>
+			<app-message-thread v-if="isShowingReplies && replies.length > 0">
+				<app-forum-post-list-item
+					v-for="reply of replies"
+					:key="reply.id"
+					:topic="topic"
+					:post="reply"
+					:is-reply="true"
+					/>
+			</app-message-thread>
 
 			<div v-if="totalReplyCount - replies.length > 0">
 				<br>
