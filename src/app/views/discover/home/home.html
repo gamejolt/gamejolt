@@ -32,15 +32,13 @@
 
 					<br class="visible-xs">
 
-					<!-- Wrap the <a> tag so that auth-required can block correctly. -->
-					<router-link :to="{ name: 'dash.games.add' }">
-						<a
-							class="btn btn-outline btn-block-xs"
-							v-app-track-event="`home:header-add-game`"
-							v-app-auth-required
-							>
-							<translate>Add Your Game</translate>
-						</a>
+					<router-link
+						class="btn btn-outline btn-block-xs"
+						:to="{ name: 'dash.games.add' }"
+						v-app-track-event="`home:header-add-game`"
+						v-app-auth-required
+						>
+						<translate>Add Your Game</translate>
 					</router-link>
 
 				</div>
