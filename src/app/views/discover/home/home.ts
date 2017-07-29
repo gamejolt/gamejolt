@@ -136,7 +136,9 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	routeInit() {
-		this.chosenSection = this.discoverSections[0];
+		if (!this.chosenSection) {
+			this.chosenSection = this.discoverSections[0];
+		}
 	}
 
 	routed() {
