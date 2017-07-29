@@ -17,7 +17,7 @@ export async function bootstrapAppTranslations() {
 
 	let translations: any = {};
 	if (GJ_IS_SSR) {
-		translations = (await import('!json-loader!../translations/en_US/main.json')).default;
+		translations = await import('!json-loader!../translations/en_US/main.json');
 	} else {
 		// Don't use webpack to require directly. If we did it would generate new
 		// files for each section that we built for.
