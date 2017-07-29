@@ -137,7 +137,7 @@ export class Channels {
 		},
 		{
 			type: 'genre',
-			id: 'strategysim',
+			id: 'strategy-sim',
 			label: Translate.$gettext('Strategy/Sim'),
 			image: require('./strategysim.png'),
 		},

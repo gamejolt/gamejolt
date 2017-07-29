@@ -186,7 +186,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 						'retro',
 						'shooter',
 						'vr',
-						'strategysim',
+						'strategy-sim',
 						'fnaf',
 					];
 
