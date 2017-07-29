@@ -42,10 +42,12 @@
 	&-games-count
 		color: $gray-lighter
 
-	&:hover .channel-thumbnail
-		&-info
-			background-color: $gj-green
-			color: $gj-dark-green
+	// Looks weird on mobile devices.
+	@media $media-md-up
+		&:hover .channel-thumbnail
+			&-info
+				background-color: $gj-green
+				color: $gj-dark-green
 
 	.fill-darker &
 		&-image
