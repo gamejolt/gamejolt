@@ -58,15 +58,15 @@
 		<meta name="twitter:site" content="@gamejolt">
 
 		{{{ meta.renderTags() }}}
+
+		{{{ renderResourceHints() }}}
 		{{{ renderStyles() }}}
 
 	</head>
 
 	<body>
 
-		<div id="app">
-			<!--vue-ssr-outlet-->
-		</div>
+		<!--vue-ssr-outlet-->
 
 		<script async src="https://www.google-analytics.com/analytics.js"></script>
 		<script>
@@ -74,6 +74,9 @@
 			ga('create', 'UA-6742777-1', 'auto');
 			ga('require', 'linkid', 'linkid.js');
 		</script>
+
+		{{{ renderState() }}}
+		{{{ renderScripts() }}}
 
 	</body>
 </html>

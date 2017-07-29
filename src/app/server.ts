@@ -4,7 +4,7 @@ import { Environment } from '../lib/gj-lib-client/components/environment/environ
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 
 export default async (context: any) => {
-	const { app, router } = await createApp();
+	const { app, router, store } = await createApp();
 
 	return new Promise((resolve, reject) => {
 		const s = Date.now();
@@ -25,22 +25,27 @@ export default async (context: any) => {
 			}
 
 			try {
-				// const componentState = await Promise.all(
-				// 	matchedComponents.map((component: any) => {
-				// 		if (component.extendOptions.__INITIAL_STATE__) {
-				// 			return component.extendOptions.__INITIAL_STATE__;
-				// 		} else {
-				// 			return null;
-				// 		}
-				// 	})
-				// );
+				const componentState: { [k: string]: any } = {};
+				for (const component of matchedComponents as any[]) {
+					const name = component.extendOptions.name;
+					componentState[name] =
+						component.extendOptions.__RESOLVER__ && component.extendOptions.__RESOLVER__.payload;
+				}
 
-				console.log(`data pre-fetch: ${Date.now() - s}ms`);
+				console.log(`data fetch: ${Date.now() - s}ms`);
 
 				context.state = {
-					// vuex: store.state,
-					// components: componentState,
+					components: componentState,
 				};
+
+				// Gotta do it this way since the server renderer will call
+				// serialize on the context.state automatically. We don't have
+				// the finalized vuex state yet, so we have to make sure that it
+				// gets pulled during the serialize.
+				Object.defineProperty(context.state, 'vuex', {
+					enumerable: true,
+					get: () => store.getServerState(),
+				});
 
 				context.meta = {
 					renderTags() {

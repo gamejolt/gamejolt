@@ -25,7 +25,7 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppGameCollectionFollowWidget } from '../../../components/game/collection/follow-widget/follow-widget';
-import { store, Store } from '../../../store/index';
+import { store, Store, tillStoreBootstrapped } from '../../../store/index';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { LibraryAction, LibraryStore, LibraryState } from '../../../store/library';
 import {
@@ -116,7 +116,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		// We await a user touch in the parent so this should be correct by the
 		// time we get here.
 		if (store.state.app.user) {
-			await store.state!.bootstrappedPromise;
+			await tillStoreBootstrapped;
 		}
 
 		return payload;
