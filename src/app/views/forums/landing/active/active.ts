@@ -18,6 +18,7 @@ import {
 })
 export default class RouteForumsLandingActive extends BaseRouteComponent {
 	topics: ForumTopic[] = [];
+	postCountPerPage = 0;
 
 	@RouteResolve({ cache: true })
 	routeResolve(this: undefined) {
@@ -30,5 +31,6 @@ export default class RouteForumsLandingActive extends BaseRouteComponent {
 
 	routed() {
 		this.topics = ForumTopic.populate(this.$payload.topics);
+		this.postCountPerPage = this.$payload.postCountPerPage;
 	}
 }
