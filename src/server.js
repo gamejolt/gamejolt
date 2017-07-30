@@ -51,12 +51,10 @@ if (cluster.isMaster) {
 		runInNewContext: true,
 		template: fs.readFileSync(resolve('./index-ssr.html'), 'utf-8'),
 		clientManifest,
-		inject: false,
 	});
 
 	if (!isProd) {
 		function serve(path) {
-			console.log('serving', resolve(path));
 			return express.static(resolve(path), {
 				maxAge: 0,
 				fallthrough: true,
