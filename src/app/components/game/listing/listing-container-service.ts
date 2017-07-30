@@ -1,7 +1,6 @@
 import VueRouter from 'vue-router';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameFilteringContainer } from '../filtering/container';
-import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
 
 export class GameListingContainer {
 	isBootstrapped = false;
@@ -21,10 +20,5 @@ export class GameListingContainer {
 
 		this.currentPage = route.query.page ? parseInt(route.query.page, 10) : 1;
 		this.section = route.params.section || 'hot';
-	}
-
-	removeGame(game: Game) {
-		arrayRemove(this.games, i => i.id === game.id);
-		--this.gamesCount;
 	}
 }

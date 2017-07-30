@@ -253,13 +253,13 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	async removeFromPlaylist(game: Game) {
 		const playlist = this.collection!.playlist!;
 		if (await this.removeGameFromPlaylist({ playlist, game, shouldConfirm: true })) {
-			this.listing!.removeGame(game);
+			this.reloadRoute();
 		}
 	}
 
 	async removeFromLibrary(game: Game) {
 		if (await this.unfollowGame(game)) {
-			this.listing!.removeGame(game);
+			this.reloadRoute();
 		}
 	}
 }
