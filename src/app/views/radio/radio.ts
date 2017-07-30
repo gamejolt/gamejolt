@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./radio.html?style=./radio.styl';
 
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
@@ -40,7 +39,7 @@ export default class RouteRadio extends BaseRouteComponent {
 		Meta.description = 'Discover new game songs through the Game Jolt radio!';
 
 		// Starting the next song will actually change the title.
-		if (!Environment.isPrerender && !GJ_IS_SSR) {
+		if (!GJ_IS_SSR) {
 			this.getNextSong();
 		}
 	}

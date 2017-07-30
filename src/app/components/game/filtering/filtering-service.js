@@ -46,18 +46,14 @@ angular
 					flash: gettextCatalog.getString('games.filtering.browser_flash'),
 					unity: gettextCatalog.getString('games.filtering.browser_unity'),
 					applet: gettextCatalog.getString('games.filtering.browser_applet'),
-					silverlight: gettextCatalog.getString(
-						'games.filtering.browser_silverlight'
-					),
+					silverlight: gettextCatalog.getString('games.filtering.browser_silverlight'),
 				},
 			},
 			maturity: {
 				label: gettextCatalog.getString('games.filtering.maturity'),
 				type: 'array',
 				options: {
-					everyone: gettextCatalog.getString(
-						'games.filtering.maturity_everyone'
-					),
+					everyone: gettextCatalog.getString('games.filtering.maturity_everyone'),
 					teen: gettextCatalog.getString('games.filtering.maturity_teen'),
 					adult: gettextCatalog.getString('games.filtering.maturity_adult'),
 				},
@@ -97,11 +93,7 @@ angular
 					isEmpty = false;
 				} else if (definition.type == 'radio' && value) {
 					isEmpty = false;
-				} else if (
-					!options.skipQuery &&
-					definition.type == 'string' &&
-					value.trim()
-				) {
+				} else if (!options.skipQuery && definition.type == 'string' && value.trim()) {
 					isEmpty = false;
 				}
 			});
@@ -167,10 +159,7 @@ angular
 					// We don't save the filters if we pull from the URL.
 					// We only save when they explicitly set/change them.
 					// This ensures that they can view a shared URL with them without overwriting their filters.
-					angular.forEach(Game_Filtering_Container.filterDefinitions, function(
-						definition,
-						filter
-					) {
+					angular.forEach(Game_Filtering_Container.filterDefinitions, function(definition, filter) {
 						if (stateParams[filter]) {
 							if (definition.type == 'array') {
 								_this.filters[filter] = stateParams[filter].split(',');
@@ -200,7 +189,7 @@ angular
 						updateUrl(state, stateParams, _filters);
 						return;
 					}
-				} else if (_this.shouldDetect && !Environment.isPrerender) {
+				} else if (_this.shouldDetect) {
 					// Don't auto detect any filters if we are prerendering.
 					// console.log( 'from device' );
 
@@ -239,10 +228,7 @@ angular
 			});
 		};
 
-		Game_Filtering_Container.prototype.toggleFilterOption = function(
-			filter,
-			option
-		) {
+		Game_Filtering_Container.prototype.toggleFilterOption = function(filter, option) {
 			if (
 				!Game_Filtering_Container.filterDefinitions[filter] ||
 				Game_Filtering_Container.filterDefinitions[filter].type == 'string'
@@ -301,10 +287,7 @@ angular
 			this._saveFilters();
 		};
 
-		Game_Filtering_Container.prototype.isFilterOptionSet = function(
-			filter,
-			option
-		) {
+		Game_Filtering_Container.prototype.isFilterOptionSet = function(filter, option) {
 			if (
 				!Game_Filtering_Container.filterDefinitions[filter] ||
 				Game_Filtering_Container.filterDefinitions[filter].type == 'string'

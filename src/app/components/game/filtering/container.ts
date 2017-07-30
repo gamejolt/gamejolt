@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
 import { forEach } from '../../../../lib/gj-lib-client/utils/collection';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
@@ -172,7 +171,7 @@ export class GameFilteringContainer {
 				const _filters = this.getRouteData(filters);
 				return !this.updateUrl(route, _filters);
 			}
-		} else if (!GJ_IS_SSR && options.shouldDetect && !Environment.isPrerender) {
+		} else if (!GJ_IS_SSR && options.shouldDetect) {
 			console.log('from device');
 
 			const os = Device.os();
@@ -395,7 +394,7 @@ export class GameFilteringContainer {
 
 	private saveFilters() {
 		// Early out if this isn't a persisent filtering container.
-		if (!this.isPersistent && !GJ_IS_SSR && !Environment.isPrerender) {
+		if (!this.isPersistent && !GJ_IS_SSR) {
 			return;
 		}
 

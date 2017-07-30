@@ -7,7 +7,6 @@ import { ActivityStreamSubscription } from '../../../../lib/gj-lib-client/compon
 import { ActivityStream } from '../../../../lib/gj-lib-client/components/activity/stream/stream.service';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 
 @View
 @Component({
@@ -27,7 +26,7 @@ export class AppScoreFeed extends Vue {
 	@Watch('scoreTable.id', { immediate: true })
 	onScoreTableChange() {
 		// Only works in browser context.
-		if (Environment.isPrerender || GJ_IS_SSR) {
+		if (GJ_IS_SSR) {
 			return;
 		}
 

@@ -123,7 +123,7 @@ export class ChatClient {
 	}
 
 	private async _init() {
-		if (GJ_IS_SSR || Environment.isPrerender) {
+		if (GJ_IS_SSR) {
 			return;
 		}
 

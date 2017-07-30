@@ -10,7 +10,6 @@ import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppActivityFeedItem } from './item/item';
 import { Model } from '../../../../lib/gj-lib-client/components/model/model.service';
-import { isPrerender } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -79,7 +78,7 @@ export class AppActivityFeed extends Vue {
 	}
 
 	shouldShowAd(index: number) {
-		if (!this.showAds || isPrerender || GJ_IS_CLIENT || GJ_IS_SSR || Screen.isXs) {
+		if (!this.showAds || GJ_IS_CLIENT || GJ_IS_SSR || Screen.isXs) {
 			return false;
 		}
 

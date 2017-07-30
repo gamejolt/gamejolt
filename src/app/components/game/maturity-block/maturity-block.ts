@@ -4,7 +4,6 @@ import * as View from '!view!./maturity-block.html?style=./maturity-block.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Settings } from '../../settings/settings.service';
-import { isPrerender } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { State } from 'vuex-class';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
@@ -28,7 +27,6 @@ export class AppGameMaturityBlock extends Vue {
 		return (
 			this.game &&
 			this.game.tigrs_age === 3 &&
-			!isPrerender &&
 			!GJ_IS_SSR &&
 			Settings.get('restricted-browsing') &&
 			!(this.app.user && this.app.user.id === this.game.developer.id) &&
