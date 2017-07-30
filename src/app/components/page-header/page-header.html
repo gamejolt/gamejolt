@@ -54,14 +54,14 @@
 						<div :class="colClasses">
 
 							<div class="row">
-								<div v-if="hasControls" class="col-md-4 col-md-push-8">
+								<div v-if="hasControls" class="col-lg-4 col-lg-push-8">
 									<div class="page-header-controls">
 										<slot name="controls" />
 									</div>
 								</div>
 								<div
 									:class="{
-										'col-md-8 col-md-pull-4': hasControls,
+										'col-lg-8 col-lg-pull-4': hasControls,
 										'col-xs-12': !hasControls,
 									}"
 									>
