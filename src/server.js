@@ -82,11 +82,15 @@ if (cluster.isMaster) {
 		const s = Date.now();
 		renderer.renderToString(context, (err, html) => {
 			if (err) {
-				console.error(err);
+				// console.error(err);
+				console.log('got error', req.url, err.message);
 				res.status(500).end('Internal Server Error');
 				return;
 			}
+
+			res.set('Content-Type', 'text/html');
 			res.end(html);
+
 			const total = Date.now() - s;
 			console.log(
 				'total',
