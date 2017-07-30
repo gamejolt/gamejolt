@@ -151,10 +151,11 @@ export class AppGameThumbnail extends Vue {
 	}
 
 	created() {
-		if (GJ_IS_SSR) {
-			this.isInview = true;
-			this.isThumbnailLoaded = true;
-		}
+		// TODO(ssr): fix this
+		// if (GJ_IS_SSR) {
+		// 	this.isInview = true;
+		// 	this.isThumbnailLoaded = true;
+		// }
 
 		thumbnails.push(this);
 	}

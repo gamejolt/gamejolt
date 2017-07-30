@@ -1,13 +1,15 @@
-<div :class="{ 'is-client-offline': Connection.isClientOffline }">
+<div id="app">
+	<div :class="{ 'is-client-offline': Connection.isClientOffline }">
 
-	<!--<gj-client-intro client-intro-done="App.isClientIntroDone = true" ng-if="!App.isClientIntroDone"></gj-client-intro>-->
+		<!--<gj-client-intro client-intro-done="App.isClientIntroDone = true" ng-if="!App.isClientIntroDone"></gj-client-intro>-->
 
-	<app-shell>
-		<div id="content">
-			<app-error-page>
-				<router-view />
-			</app-error-page>
-		</div>
-	</app-shell>
+		<app-shell>
+			<div id="content">
+				<app-error-page>
+					<router-view />
+				</app-error-page>
+			</div>
+		</app-shell>
 
+	</div>
 </div>

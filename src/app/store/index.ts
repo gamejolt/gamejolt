@@ -60,6 +60,10 @@ export type Mutations = AppMutations &
 		_removeBackdrop: undefined;
 	};
 
+let bootstrapResolver: Function | null = null;
+let backdrop: AppBackdrop | null = null;
+export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
+
 const modules: any = {
 	app: appStore,
 	library: new LibraryStore(),
@@ -83,15 +87,12 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	chat: ChatClient | null = null;
 
 	isBootstrapped = false;
-	_bootstrappedResolver: Function | null = null;
-	bootstrappedPromise = new Promise(resolve => (this._bootstrappedResolver = resolve));
 
 	notificationCount = 0;
 
 	isLeftPaneSticky = Settings.get('sidebar') as boolean;
 	isLeftPaneOverlayed = false;
 	isRightPaneOverlayed = false;
-	backdrop: AppBackdrop | null = null;
 
 	get isLeftPaneVisible() {
 		if (Screen.isDesktop) {
@@ -111,11 +112,11 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async bootstrap() {
-		const prevResolver = this._bootstrappedResolver;
+		const prevResolver = bootstrapResolver;
 		const response = await Api.sendRequest('/web/library');
 
 		// If we failed to finish before we unbootstrapped, then stop.
-		if (this._bootstrappedResolver !== prevResolver) {
+		if (bootstrapResolver !== prevResolver) {
 			return;
 		}
 
@@ -194,16 +195,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		// Ensure we have a backdrop if anything is overlayed.
 		// Otherwise ensure the backdrop is gone.
 		if (this.isRightPaneOverlayed || this.shouldShowLeftPaneBackdrop) {
-			if (this.backdrop) {
+			if (backdrop) {
 				return;
 			}
 
 			this._addBackdrop();
-			this.backdrop!.$on('clicked', () => {
+			backdrop!.$on('clicked', () => {
 				this._clearPanes();
 				this._checkBackdrop();
 			});
-		} else if (this.backdrop) {
+		} else if (backdrop) {
 			this._removeBackdrop();
 		}
 	}
@@ -216,14 +217,14 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	_setBootstrapped() {
 		this.isBootstrapped = true;
-		if (this._bootstrappedResolver) {
-			this._bootstrappedResolver();
+		if (bootstrapResolver) {
+			bootstrapResolver();
 		}
 	}
 
 	@VuexMutation
 	_clear() {
-		this.bootstrappedPromise = new Promise(resolve => (this._bootstrappedResolver = resolve));
+		tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 	}
 
 	@VuexMutation
@@ -261,28 +262,29 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	_addBackdrop() {
-		if (this.backdrop) {
+		if (backdrop) {
 			return;
 		}
 
-		this.backdrop = Backdrop.push({ context: document.body });
+		backdrop = Backdrop.push({ context: document.body });
 	}
 
 	@VuexMutation
 	_removeBackdrop() {
-		if (!this.backdrop) {
+		if (!backdrop) {
 			return;
 		}
 
-		Backdrop.remove(this.backdrop);
-		this.backdrop = null;
+		Backdrop.remove(backdrop);
+		backdrop = null;
 	}
 }
 
 export const store = new Store();
 
 // Sync the routes into the store.
-sync(store as any, router, { moduleName: 'route' });
+// TODO(ssr)
+// sync(store, router, { moduleName: 'route' });
 
 // Bootstrap/clear the app when user changes.
 store.watch(
