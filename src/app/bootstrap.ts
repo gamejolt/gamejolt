@@ -26,7 +26,7 @@ Meta.init(router);
 Payload.init(store);
 Referrer.init(router);
 Analytics.initRouter(router);
-Ads.init(router);
+Ads.init();
 Connection.init(store);
 
 GamePlayModal.init({ canMinimize: true });
