@@ -48,6 +48,7 @@ export default async (context: any) => {
 				});
 
 				context.meta = {
+					title: 'Game Jolt - Indie games for the love of it',
 					renderTags() {
 						return Meta.render();
 					},
