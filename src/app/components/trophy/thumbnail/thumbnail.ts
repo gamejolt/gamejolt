@@ -4,6 +4,7 @@ import * as View from '!view!./thumbnail.html?style=./thumbnail.styl';
 
 import { GameTrophy } from '../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { AppImgResponsive } from '../../../../lib/gj-lib-client/components/img/responsive/responsive';
 
 const imgMapping: any = {
 	bronze: require('./bronze.png'),
@@ -21,6 +22,9 @@ const BaseHeight = 35;
 
 @View
 @Component({
+	components: {
+		AppImgResponsive,
+	},
 	directives: {
 		AppTooltip,
 	},
@@ -29,21 +33,19 @@ export class AppTrophyThumbnail extends Vue {
 	@Prop(GameTrophy) trophy: GameTrophy;
 	@Prop(Boolean) isAchieved?: boolean;
 
-	hasThumbnailImg = false;
-	imgSrc = '';
-	imgWidth = BaseWidth;
-	imgHeight = BaseHeight;
-	imgMultiplier = 1;
+	thumbWidth = BaseWidth;
 
-	isLoaded = false;
+	get hasThumbnailImg() {
+		return (
+			this.trophy.has_thumbnail && (!this.trophy.secret || this.isAchieved || this.trophy.is_owner)
+		);
+	}
 
-	created() {
+	get imgSrc() {
 		// Make sure we don't show thumbnails for secret trophies unless they've
 		// been achieved.
-		if (this.trophy.has_thumbnail && (!this.trophy.secret || this.isAchieved)) {
-			this.imgSrc = this.trophy.img_thumbnail;
-			this.hasThumbnailImg = true;
-			this.isLoaded = true;
+		if (this.hasThumbnailImg) {
+			return this.trophy.img_thumbnail;
 		} else {
 			let img = '';
 			if (this.trophy.difficulty === GameTrophy.DIFFICULTY_BRONZE) {
@@ -60,38 +62,27 @@ export class AppTrophyThumbnail extends Vue {
 				img += '-secret';
 			}
 
-			this.hasThumbnailImg = false;
-			this.imgSrc = imgMapping[img];
-
-			/**
-			 * We delay this because it's more costly to calculate widths and stuff
-			 * while things are moving around. Since it's most likely that they just
-			 * landed on a new page, there may be things shifting around still. Let's calculate
-			 * after to keep it fast.
-			 */
-			// TODO: This doesn't get updated when the window size changes.
-			setTimeout(() => {
-				this.processWidth();
-				this.isLoaded = true;
-			}, 1000);
+			return imgMapping[img];
 		}
 	}
 
-	/**
-	 * We do this because of stupid pixel icons!
-	 * We have to figure out which size to show for the thumbnails.
-	 */
-	private processWidth() {
+	get imgMultiplier() {
+		const imgMultiplier = Math.floor(this.thumbWidth / 34);
+		return Math.min(2, Math.max(1, imgMultiplier));
+	}
+
+	get imgWidth() {
+		return BaseWidth * this.imgMultiplier;
+	}
+
+	get imgHeight() {
+		return BaseHeight * this.imgMultiplier;
+	}
+
+	mounted() {
 		const thumbElem = this.$refs.thumb as HTMLElement;
-
 		if (thumbElem) {
-			const width = thumbElem.offsetWidth - 10;
-
-			this.imgMultiplier = Math.floor(width / 34);
-			this.imgMultiplier = Math.min(2, Math.max(1, this.imgMultiplier));
-
-			this.imgWidth = BaseWidth * this.imgMultiplier;
-			this.imgHeight = BaseHeight * this.imgMultiplier;
+			this.thumbWidth = thumbElem.offsetWidth - 10;
 		}
 	}
 }

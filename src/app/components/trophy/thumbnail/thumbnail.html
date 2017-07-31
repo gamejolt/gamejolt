@@ -7,21 +7,19 @@
 	>
 
 	<div class="trophy-thumbnail-img" ref="thumb">
-		<div
-			class="trophy-thumbnail-img-inner anim-fade-in"
-			:class="{ 'is-loaded': isLoaded }"
-			>
+		<div class="trophy-thumbnail-img-inner">
+			<app-img-responsive
+				v-if="hasThumbnailImg"
+				:src="imgSrc"
+				/>
 			<img
-				:class="[
-					hasThumbnailImg ? 'img-responsive' : undefined,
-					!hasThumbnailImg ? `trophy-thumbnail-img-${ imgMultiplier }x` : undefined,
-				]"
+				v-else
+				:class="`trophy-thumbnail-img-${ imgMultiplier }x`"
 				:style="{
-					width: !hasThumbnailImg ? imgWidth + 'px' : undefined,
-					height: !hasThumbnailImg ? imgHeight + 'px' : undefined,
+					width: imgWidth + 'px',
+					height: imgHeight + 'px',
 				}"
 				:src="imgSrc"
-				:alt="trophy.title"
 				>
 		</div>
 	</div>

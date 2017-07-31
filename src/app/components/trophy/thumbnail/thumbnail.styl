@@ -20,16 +20,12 @@ $trophy-thumbnail-max-width = 75px
 	overflow: hidden
 
 .trophy-thumbnail-img-inner
-	display: none
 	position: absolute
 	top: 0
 	left: 0
 	right: 0
 	bottom: 0
 	background-color: $gray-dark
-
-	&.is-loaded
-		display: block
 
 	> .img-responsive
 		display: block
@@ -51,6 +47,7 @@ $trophy-thumbnail-max-width = 75px
 
 .trophy-thumbnail-difficulty
 	display: block
+	padding-top: $trophy-thumbnail-border-width // match the border
 	font-size: $font-size-tiny
 	text-align: center
 	text-transform: uppercase
