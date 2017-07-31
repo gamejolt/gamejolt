@@ -173,7 +173,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			this.ratingCallback = undefined;
 		}
 
-		if (this.game.ga_tracking_id) {
+		if (this.game && this.game.ga_tracking_id) {
 			Analytics.detachAdditionalPageTracker(this.game.ga_tracking_id);
 		}
 	}
