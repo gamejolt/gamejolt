@@ -81,8 +81,6 @@ if (cluster.isMaster) {
 
 		const s = Date.now();
 		renderer.renderToString(context, (err, html) => {
-			console.log(context.errorCode, context.redirect);
-
 			if (err) {
 				console.log('got error', req.url, err.message);
 				res.status(500).end('Internal Server Error');
