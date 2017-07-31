@@ -49,6 +49,11 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteC
 			game: this.game.title,
 		});
 
+		// Don't download on SSR.
+		if (GJ_IS_SSR) {
+			return;
+		}
+
 		// Wait for view so we can scroll.
 		await this.$nextTick();
 

@@ -82,6 +82,11 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 		this.developerGames = Game.populate(this.$payload.developerGames);
 		this.recommendedGames = Game.populate(this.$payload.recommendedGames);
 
+		// Don't download on SSR.
+		if (GJ_IS_SSR) {
+			return;
+		}
+
 		// Wait for view so we can scroll.
 		await this.$nextTick();
 
