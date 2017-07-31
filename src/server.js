@@ -81,11 +81,19 @@ if (cluster.isMaster) {
 
 		const s = Date.now();
 		renderer.renderToString(context, (err, html) => {
+			console.log(context.errorCode, context.redirect);
+
 			if (err) {
-				// console.error(err);
 				console.log('got error', req.url, err.message);
 				res.status(500).end('Internal Server Error');
 				return;
+			} else if (context.redirect) {
+				console.log('sending redirect', context.redirect);
+				res.redirect(301, context.redirect);
+				return;
+			} else if (context.errorCode) {
+				console.log('sending error code', context.errorCode);
+				res.status(context.errorCode);
 			}
 
 			res.set('Content-Type', 'text/html');
