@@ -28,7 +28,7 @@ import {
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
-const DownloadDelay = 5000;
+const DownloadDelay = 3000;
 
 @View
 @Component({
