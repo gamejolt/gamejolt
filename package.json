@@ -43,7 +43,6 @@
 		"jstimezonedetect": "1.0.6",
 		"lodash": "3.9.3",
 		"nw-builder": "gamejolt/nw-builder#skip-merge-app",
-		"offline-plugin": "4.8.3",
 		"pofile": "1.0.8",
 		"prettier": "1.5.3",
 		"reflect-metadata": "0.1.10",

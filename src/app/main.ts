@@ -1,3 +1,4 @@
+import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import { createApp } from './bootstrap';
 
 createApp().then(({ app, router, store }) => {
@@ -9,3 +10,7 @@ createApp().then(({ app, router, store }) => {
 		app.$mount('#app');
 	});
 });
+
+if (GJ_BUILD_TYPE === 'production' && navigator.serviceWorker) {
+	OfflinePluginRuntime.install();
+}

@@ -17,6 +17,7 @@ var config = {
 		checkout: ['checkout/'],
 		claim: ['claim/'],
 	},
+	offlineSupport: ['auth'],
 	webAppManifest: {
 		app: {
 			name: 'Game Jolt',
