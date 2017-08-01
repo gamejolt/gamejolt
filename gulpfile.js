@@ -17,6 +17,31 @@ var config = {
 		checkout: ['checkout/'],
 		claim: ['claim/'],
 	},
+	webAppManifest: {
+		app: {
+			name: 'Game Jolt',
+			short_name: 'Game Jolt',
+			description: 'Games for the love of it!',
+			background_color: '#191919',
+			theme_color: '#191919',
+			display: 'standalone',
+			start_url: './?utm_source=web_app_manifest',
+			icons: [
+				{
+					src: 'icon-128x128.png',
+					size: 128,
+				},
+				{
+					src: 'icon-144x144.png',
+					size: 144,
+				},
+				{
+					src: 'chrome-touch-icon-192x192.png',
+					size: 192,
+				},
+			],
+		},
+	},
 };
 
 require('./src/lib/gj-lib-client/gulp/tasks/common.js')(config, __dirname);
