@@ -54,6 +54,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 	build: GameBuild = null as any;
 	developerGames: Game[] = [];
 	recommendedGames: Game[] = [];
+	twitterShareMessage = '';
 
 	Screen = makeObservableService(Screen);
 	Environment = Environment;
@@ -81,6 +82,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 
 		this.developerGames = Game.populate(this.$payload.developerGames);
 		this.recommendedGames = Game.populate(this.$payload.recommendedGames);
+		this.twitterShareMessage = this.$payload.twitterShareMessage;
 
 		// Don't download on SSR.
 		if (GJ_IS_SSR) {
