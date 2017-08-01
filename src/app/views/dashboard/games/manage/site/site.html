@@ -26,7 +26,10 @@
 			<div class="col-lg-8">
 
 				<div :class="{ '-disabled': !game.path }">
-					<app-sites-manage-page :site="site" />
+					<app-sites-manage-page
+						:site="site"
+						:game="game"
+						/>
 				</div>
 
 			</div>

@@ -1,13 +1,10 @@
 <div>
 
-	<!--<gj-form-dashboard-site-domain
-		gj-site="$ctrl.site"
-		gj-form-submit-handler="$ctrl.onDomainSaved()"
-		>
-	</gj-form-dashboard-site-domain>-->
-
-	<div class="alert alert-info full-bleed-xs">
-		<p><translate>To set up a custom domain for your site, please contact via email:</translate> <a href="mailto:contact@gamejolt.com">contact@gamejolt.com</a></p>
-	</div>
+	<form-site-domain
+		:model="site"
+		:user="app.user"
+		:game="game"
+		@submit="onDomainSaved"
+		/>
 
 </div>

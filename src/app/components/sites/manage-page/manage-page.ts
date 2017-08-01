@@ -28,7 +28,9 @@ export class AppSitesManagePage extends Vue {
 	@Prop(Site) site: Site;
 	@Prop(Game) game?: Game;
 
-	tab: 'template' | 'static' | 'domain' = 'template';
+	get tab() {
+		return this.$route.params.siteTab || 'template';
+	}
 
 	get staticEnabled() {
 		return this.site.status === Site.STATUS_ACTIVE && this.site.is_static;
@@ -36,10 +38,6 @@ export class AppSitesManagePage extends Vue {
 
 	get templateEnabled() {
 		return this.site.status === Site.STATUS_ACTIVE && !this.site.is_static;
-	}
-
-	onInit() {
-		this.tab = this.staticEnabled ? 'static' : 'template';
 	}
 
 	disable() {

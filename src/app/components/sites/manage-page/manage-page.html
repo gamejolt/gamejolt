@@ -2,40 +2,58 @@
 	<app-nav-tab-list>
 		<ul>
 			<li>
-				<a
+				<router-link
+					:to="{
+						name: $route.name,
+						params: {
+							siteTab: null,
+						},
+					}"
 					:class="{ active: tab === 'template' }"
-					@click="tab = 'template'"
 					>
+					<!-- @click="tab = 'template'" -->
 					<span class="page-active-tab"
 						v-if="templateEnabled"
 						>
 						<app-jolticon icon="checkbox" />
 					</span>
 					<translate>Use a Template</translate>
-				</a>
+				</router-link>
 			</li>
 			<li>
-				<a
+				<router-link
+					:to="{
+						name: $route.name,
+						params: {
+							siteTab: 'static',
+						},
+					}"
 					:class="{ active: tab === 'static' }"
-					@click="tab = 'static'"
 					>
+					<!-- @click="tab = 'static'" -->
 					<span class="page-active-tab"
 						v-if="staticEnabled"
 						>
 						<app-jolticon icon="checkbox" />
 					</span>
 					<translate>Upload Your Own</translate>
-				</a>
+				</router-link>
 			</li>
 		</ul>
 		<ul class="pull-right">
 			<li>
-				<a
+				<router-link
+					:to="{
+						name: $route.name,
+						params: {
+							siteTab: 'domain',
+						},
+					}"
 					:class="{ active: tab === 'domain' }"
-					@click="tab = 'domain'"
 					>
+					<!-- @click="tab = 'domain'" -->
 					<translate>Custom Domain</translate>
-				</a>
+				</router-link>
 			</li>
 		</ul>
 	</app-nav-tab-list>
@@ -89,5 +107,6 @@
 	<app-sites-manage-page-domain
 		v-else-if="tab === 'domain'"
 		:site="site"
+		:game="game"
 		/>
 </div>
