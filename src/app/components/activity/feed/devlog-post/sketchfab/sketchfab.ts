@@ -23,14 +23,20 @@ export class AppActivityFeedDevlogPostSketchfab extends Vue {
 	post: FiresidePost = null as any;
 	sketchfab: FiresidePostSketchfab | null = null;
 	isShowing = GJ_IS_SSR;
+	contentBootstrapped = false;
 
 	created() {
 		this.post = this.item.feedItem as FiresidePost;
 		this.sketchfab = this.post.sketchfabs[0];
 	}
 
-	mounted() {
-		this.$emit('content-bootstrapped');
+	async onDimensionsChange() {
+		if (!this.contentBootstrapped) {
+			this.contentBootstrapped = true;
+
+			await this.$nextTick();
+			this.$emit('content-bootstrapped');
+		}
 	}
 
 	play() {

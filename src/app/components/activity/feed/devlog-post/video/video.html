@@ -1,5 +1,8 @@
 <div class="devlog-post-video-embed timeline-list-full-bleed">
-	<app-responsive-dimensions :ratio="16 / 9">
+	<app-responsive-dimensions
+		:ratio="16 / 9"
+		@change="onDimensionsChange"
+		>
 		<a
 			v-if="!isShowingVideo"
 			@click="play"

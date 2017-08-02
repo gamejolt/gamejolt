@@ -22,6 +22,7 @@ export class AppActivityFeedDevlogPostVideo extends Vue {
 
 	post: FiresidePost = null as any;
 	video: FiresidePostVideo | null = null;
+	contentBootstrapped = false;
 	isShowingVideo = GJ_IS_SSR;
 	shouldAutoplay = !GJ_IS_SSR;
 
@@ -30,8 +31,13 @@ export class AppActivityFeedDevlogPostVideo extends Vue {
 		this.video = this.post.videos[0];
 	}
 
-	mounted() {
-		this.$emit('content-bootstrapped');
+	async onDimensionsChange() {
+		if (!this.contentBootstrapped) {
+			this.contentBootstrapped = true;
+
+			await this.$nextTick();
+			this.$emit('content-bootstrapped');
+		}
 	}
 
 	play() {

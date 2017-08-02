@@ -1,5 +1,8 @@
 <div class="devlog-post-sketchfab-embed timeline-list-full-bleed">
-	<app-responsive-dimensions :ratio="16 / 9">
+	<app-responsive-dimensions
+		:ratio="16 / 9"
+		@change="onDimensionsChange"
+		>
 
 		<a
 			v-if="!isShowing"
@@ -20,6 +23,6 @@
 			:sketchfab-id="sketchfab.sketchfab_id"
 			:autoplay="true"
 			/>
-			
+
 	</app-responsive-dimensions>
 </div>

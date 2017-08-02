@@ -35,16 +35,13 @@ export class AppActivityFeedDevlogPostMedia extends Vue {
 	activeMediaItem: MediaItem | null = null;
 	isDragging = false;
 	isWaitingForFrame = false;
+	contentBootstrapped = false;
 
 	Screen = makeObservableService(Screen);
 
 	created() {
 		this.post = this.item.feedItem as FiresidePost;
 		this.activeMediaItem = this.post.media[0];
-	}
-
-	mounted() {
-		this.$emit('content-bootstrapped');
 	}
 
 	shouldVideoPlay(mediaItem: any) {
@@ -68,6 +65,15 @@ export class AppActivityFeedDevlogPostMedia extends Vue {
 		this.activeMediaItem = this.post.media[this.page - 1];
 		this._updateSliderOffset();
 		this.$emit('expanded');
+	}
+
+	async onDimensionsChange() {
+		if (!this.contentBootstrapped) {
+			this.contentBootstrapped = true;
+
+			await this.$nextTick();
+			this.$emit('content-bootstrapped');
+		}
 	}
 
 	private _updateSliderOffset(extraOffsetPx = 0) {
