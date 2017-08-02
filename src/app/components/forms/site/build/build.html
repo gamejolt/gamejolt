@@ -1,4 +1,4 @@
-<app-form class="form-dash-site-build" name="siteBuildForm">
+<app-form class="form-dash-site-build" name="siteBuildForm" ref="form">
 	<app-form-group
 		name="file"
 		:hide-label="true"
@@ -19,7 +19,7 @@
 			}"
 			accept=".zip"
 			:upload-link-label="$gettext( `Upload a .zip file.` )"
-			@changed="onSubmit()"
+			@changed="onFileSelect"
 			/>
 
 		<app-form-control-errors />

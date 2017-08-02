@@ -11,6 +11,7 @@ import {
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
+import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 
 @View
 @Component({
@@ -29,6 +30,10 @@ export class FormDashSiteBuild extends BaseForm<SiteBuild>
 	maxFilesize = 0;
 	progress = 0;
 
+	$refs: {
+		form: AppForm;
+	};
+
 	get loadUrl() {
 		return `/web/dash/sites/upload-build/${this.site.id}`;
 	}
@@ -42,7 +47,12 @@ export class FormDashSiteBuild extends BaseForm<SiteBuild>
 		this.maxFilesize = payload.maxFilesize;
 	}
 
+	onFileSelect() {
+		this.$refs.form.submit();
+	}
+
 	onSubmit() {
+		console.log('whyyyy');
 		return Api.sendRequest(
 			`/web/dash/sites/upload-build/${this.site.id}`,
 			{},
