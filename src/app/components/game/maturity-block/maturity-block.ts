@@ -35,8 +35,10 @@ export class AppGameMaturityBlock extends Vue {
 	}
 
 	@Watch('game', { immediate: true })
-	onWatch() {
-		this.hasBypassed = false;
+	onWatch(newGame: Game, oldGame?: Game) {
+		if (!oldGame || newGame.id !== oldGame.id) {
+			this.hasBypassed = false;
+		}
 	}
 
 	proceed() {
