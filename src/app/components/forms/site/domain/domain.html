@@ -38,6 +38,10 @@
 				:rules="{
 					max: 100,
 					pattern: 'domain',
+					availability: {
+						url: '/web/dash/sites/check-field-availability/domain',
+						initVal: model.domain,
+					}
 				}"
 				/>
 
