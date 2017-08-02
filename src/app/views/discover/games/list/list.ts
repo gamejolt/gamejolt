@@ -21,6 +21,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDiscoverGamesList',
 	components: {
 		AppPageHeader,
 		AppJolticon,
@@ -34,7 +35,6 @@ import {
 })
 export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	@Prop(String) section?: string;
-
 	@Prop(String) category?: string;
 
 	filtering: GameFilteringContainer | null = null;

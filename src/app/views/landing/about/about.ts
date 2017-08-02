@@ -7,7 +7,9 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
-@Component({})
+@Component({
+	name: 'RouteLandingAbout',
+})
 export default class RouteLandingAbout extends BaseRouteComponent {
 	assetUrls = importContext(require.context('./', false, /\.png$/));
 	Screen = makeObservableService(Screen);

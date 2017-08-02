@@ -15,6 +15,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteProfileVideos',
 	components: {
 		AppCommentVideoThumbnail,
 	},

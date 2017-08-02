@@ -12,6 +12,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteSearchDevlogs',
 	components: {
 		AppGameGrid,
 	},

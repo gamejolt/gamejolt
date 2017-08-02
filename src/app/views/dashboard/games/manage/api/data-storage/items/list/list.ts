@@ -18,6 +18,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageApiDataStorageItemsList',
 	components: {
 		AppPopover,
 		AppJolticon,

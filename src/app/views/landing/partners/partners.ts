@@ -3,5 +3,7 @@ import * as View from '!view!./partners.html';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
-@Component({})
+@Component({
+	name: 'RouteLandingPartners',
+})
 export default class RouteLandingPartners extends BaseRouteComponent {}

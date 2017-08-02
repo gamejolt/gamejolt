@@ -11,7 +11,9 @@ import {
 	RouteResolve,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
-@Component({})
+@Component({
+	name: 'RouteAuthLinkedAccountTwitchCallback',
+})
 export default class RouteAuthLinkedAccountTwitchCallback extends BaseRouteComponent {
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {

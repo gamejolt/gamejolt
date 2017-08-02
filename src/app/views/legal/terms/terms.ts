@@ -6,7 +6,9 @@ import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/rou
 
 const template: string = require('../../../../lib/terms/terms/global.md');
 
-@Component({})
+@Component({
+	name: 'RouteLegalTerms',
+})
 export default class RouteLegalTerms extends BaseRouteComponent {
 	routeInit() {
 		Meta.title = this.$gettext('Terms of Use');

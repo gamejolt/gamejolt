@@ -14,6 +14,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteSearchUsers',
 	components: {
 		AppUserAvatar,
 		AppPagination,

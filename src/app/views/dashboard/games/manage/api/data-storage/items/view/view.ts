@@ -16,6 +16,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageApiDataStorageItemsView',
 	components: {
 		AppJolticon,
 	},

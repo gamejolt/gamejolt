@@ -20,6 +20,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDiscoverGamesViewTrophiesList',
 	components: {
 		AppTrophyCompletion,
 		AppTrophyList,

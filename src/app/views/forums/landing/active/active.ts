@@ -12,6 +12,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteForumsLandingActive',
 	components: {
 		AppForumTopicList,
 	},

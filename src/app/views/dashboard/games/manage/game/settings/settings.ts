@@ -6,13 +6,11 @@ import { RouteState, RouteStore } from '../../manage.store';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { FormGameSettings } from '../../../../../../components/forms/game/settings/settings';
-import {
-	BaseRouteComponent,
-	RouteResolve,
-} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
+	name: 'RouteDashGamesManageGameSettings',
 	components: {
 		FormGameSettings,
 	},
@@ -20,10 +18,7 @@ import {
 export default class RouteDashGamesManageGameSettings extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
-	@RouteResolve()
-	routeResolve(this: undefined) {}
-
-	routed() {
+	routeInit() {
 		Meta.title = this.$gettextInterpolate('Settings for %{ game }', {
 			game: this.game.title,
 		});

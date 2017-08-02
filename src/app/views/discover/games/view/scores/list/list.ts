@@ -26,6 +26,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDiscoverGamesViewScoresList',
 	components: {
 		AppNavTabList,
 		AppScoreList,

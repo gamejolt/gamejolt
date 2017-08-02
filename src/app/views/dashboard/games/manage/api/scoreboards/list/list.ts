@@ -21,6 +21,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageApiScoreboardsList',
 	components: {
 		AppCardList,
 		AppCardListItem,

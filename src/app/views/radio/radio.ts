@@ -15,6 +15,7 @@ import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/
 
 @View
 @Component({
+	name: 'RouteRadio',
 	components: {
 		AppAudioPlayer,
 		AppAudioScrubber,

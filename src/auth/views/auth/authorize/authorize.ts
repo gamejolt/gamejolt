@@ -11,7 +11,9 @@ import {
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
-@Component({})
+@Component({
+	name: 'RouteAuthAuthorize',
+})
 export default class RouteAuthAuthorize extends BaseRouteComponent {
 	isSuccess = false;
 

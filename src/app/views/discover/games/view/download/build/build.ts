@@ -32,6 +32,7 @@ const DownloadDelay = 3000;
 
 @View
 @Component({
+	name: 'RouteDiscoverGamesViewDownloadBuild',
 	components: {
 		AppAd,
 		AppAdPlacement,

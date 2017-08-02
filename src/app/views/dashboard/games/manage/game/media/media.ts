@@ -25,6 +25,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageGameMedia',
 	components: {
 		FormGameImage,
 		FormGameVideo,

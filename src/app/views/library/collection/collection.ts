@@ -35,6 +35,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteLibraryCollection',
 	components: {
 		AppPageHeader,
 		AppGameCollectionThumbnail,

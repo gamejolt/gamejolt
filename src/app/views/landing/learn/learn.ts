@@ -8,6 +8,7 @@ import { AppAuthJoinLazy } from '../../../components/lazy';
 
 @View
 @Component({
+	name: 'RouteLandingLearn',
 	components: {
 		AppAuthJoin: AppAuthJoinLazy,
 	},

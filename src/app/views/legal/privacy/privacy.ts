@@ -6,7 +6,9 @@ import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/rou
 
 const template: string = require('../../../../lib/terms/privacy/global.md');
 
-@Component({})
+@Component({
+	name: 'RouteLegalPrivacy',
+})
 export default class RouteLegalPrivacy extends BaseRouteComponent {
 	routeInit() {
 		Meta.title = this.$gettext('Privacy Policy');

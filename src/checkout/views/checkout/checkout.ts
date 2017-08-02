@@ -18,6 +18,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteCheckout',
 	components: {
 		AppMediaItemCover,
 		FormPayment,

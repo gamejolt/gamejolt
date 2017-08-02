@@ -21,6 +21,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageGameOverview',
 	components: {
 		AppJolticon,
 		AppProgressPoller,

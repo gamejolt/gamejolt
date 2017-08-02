@@ -25,6 +25,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageGamePackagesList',
 	components: {
 		AppJolticon,
 		AppCardList,

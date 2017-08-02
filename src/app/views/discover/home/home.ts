@@ -37,6 +37,7 @@ export interface DiscoverSection {
 
 @View
 @Component({
+	name: 'RouteDiscoverHome',
 	components: {
 		AppJolticon,
 		AppNavTabList,

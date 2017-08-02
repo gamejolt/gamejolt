@@ -21,6 +21,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageKeyGroupsList',
 	components: {
 		AppCardList,
 		AppCardListItem,

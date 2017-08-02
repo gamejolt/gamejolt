@@ -18,6 +18,7 @@ function getRandomInt(min: number, max: number) {
 
 @View
 @Component({
+	name: 'RouteLandingRedlight',
 	components: {
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,

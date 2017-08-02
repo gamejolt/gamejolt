@@ -8,6 +8,7 @@ import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/rou
 
 @View
 @Component({
+	name: 'RouteForumsLanding',
 	components: {
 		AppPageHeader,
 	},

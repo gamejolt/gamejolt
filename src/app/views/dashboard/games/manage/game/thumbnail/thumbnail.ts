@@ -11,6 +11,7 @@ import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/compo
 
 @View
 @Component({
+	name: 'RouteDashGamesManageGameThumbnail',
 	components: {
 		FormGameThumbnail,
 		AppDashGameWizardControls,

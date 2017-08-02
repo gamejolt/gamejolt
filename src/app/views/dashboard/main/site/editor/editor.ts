@@ -6,6 +6,7 @@ import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/componen
 import AppSiteEditorModal from '../../../../../components/site-editor-modal/site-editor-modal';
 
 @Component({
+	name: 'RouteDashGamesManageSiteEditorComponent',
 	beforeRouteLeave(this: RouteDashGamesManageSiteEditorComponent, _to, _from, next) {
 		if (this.editorModal && !this.editorModal.canLeave()) {
 			return next(false);

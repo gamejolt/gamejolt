@@ -24,6 +24,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteForumsChannelsView',
 	components: {
 		AppPageHeader,
 		AppJolticon,

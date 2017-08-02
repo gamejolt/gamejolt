@@ -38,6 +38,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDiscoverGamesView',
 	components: {
 		AppJolticon,
 		AppPageHeader,

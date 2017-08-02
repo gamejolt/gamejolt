@@ -21,6 +21,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteForumsTopicsAdd',
 	components: {
 		AppPageHeader,
 		AppUserAvatar,

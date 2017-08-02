@@ -22,6 +22,7 @@ import { enforceLocation } from '../../../../../../../lib/gj-lib-client/utils/ro
 
 @View
 @Component({
+	name: 'RouteDiscoverGamesViewDevlogView',
 	components: {
 		AppAd,
 		AppAdPlacement,

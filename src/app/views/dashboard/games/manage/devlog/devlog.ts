@@ -17,6 +17,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageDevlog',
 	components: {
 		AppActivityFeed,
 		AppDevlogPostAdd,

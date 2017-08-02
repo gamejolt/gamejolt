@@ -15,6 +15,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageApiSettings',
 	components: {
 		AppJolticon,
 	},

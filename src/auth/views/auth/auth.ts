@@ -25,6 +25,7 @@ export function loggedUserBlock() {
 
 @View
 @Component({
+	name: 'RouteAuth',
 	components: {
 		AppCoverImg,
 		AppTranslateLangSelector,

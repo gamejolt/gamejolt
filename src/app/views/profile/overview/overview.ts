@@ -26,6 +26,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteProfileOverview',
 	components: {
 		AppGameThumbnailImg,
 		AppExpand,

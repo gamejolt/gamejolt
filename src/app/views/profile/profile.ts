@@ -27,6 +27,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteProfile',
 	components: {
 		AppPageHeader,
 		AppJolticon,

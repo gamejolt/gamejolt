@@ -31,6 +31,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashMainOverview',
 	components: {
 		AppJolticon,
 		AppExpand,

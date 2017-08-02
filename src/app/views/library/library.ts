@@ -7,7 +7,9 @@ import {
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
 
-@Component({})
+@Component({
+	name: 'RouteLibrary',
+})
 export default class RouteLibrary extends BaseRouteComponent {
 	@RouteResolve()
 	async routeResolve() {

@@ -21,6 +21,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageGamePackageReleaseEdit',
 	components: {
 		AppJolticon,
 		FormGameRelease,

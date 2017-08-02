@@ -11,6 +11,7 @@ import { AppAuthJoinLazy } from '../../../components/lazy';
 
 @View
 @Component({
+	name: 'RouteLandingIndieaf',
 	components: {
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,

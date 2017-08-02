@@ -20,6 +20,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDiscoverGamesViewDevlogList',
 	components: {
 		AppAd,
 		AppActivityFeed,

@@ -23,6 +23,7 @@ const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 
 @View
 @Component({
+	name: 'RouteLandingClient',
 	components: {
 		AppJolticon,
 		AppFiresidePostList,

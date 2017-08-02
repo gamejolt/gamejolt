@@ -13,6 +13,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashMainPurchasesList',
 	filters: {
 		date,
 		currency,

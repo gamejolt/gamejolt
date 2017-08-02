@@ -22,6 +22,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashAccountLinkedAccountsList',
 	components: {
 		AppJolticon,
 	},

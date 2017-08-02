@@ -44,6 +44,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteForumsTopicsView',
 	components: {
 		AppPageHeader,
 		AppJolticon,

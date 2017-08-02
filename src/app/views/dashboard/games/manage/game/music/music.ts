@@ -21,6 +21,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageGameMusic',
 	components: {
 		FormGameSong,
 		AppCardList,

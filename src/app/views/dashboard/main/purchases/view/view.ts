@@ -23,6 +23,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashMainPurchasesView',
 	components: {
 		AppGameThumbnailImg,
 	},

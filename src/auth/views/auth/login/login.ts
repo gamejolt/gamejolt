@@ -13,6 +13,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteAuthLogin',
 	components: {
 		AppJolticon,
 		AppAuthLogin,

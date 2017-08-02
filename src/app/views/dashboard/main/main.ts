@@ -12,6 +12,7 @@ import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/rou
 
 @View
 @Component({
+	name: 'RouteDashMain',
 	components: {
 		AppPageHeader,
 		AppUserAvatar,

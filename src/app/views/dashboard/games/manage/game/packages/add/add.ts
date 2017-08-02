@@ -10,6 +10,7 @@ import { BaseRouteComponent } from '../../../../../../../../lib/gj-lib-client/co
 
 @View
 @Component({
+	name: 'RouteDashGamesManageGamePackagesAdd',
 	components: {
 		AppJolticon,
 		FormGamePackage,

@@ -28,6 +28,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageKeyGroupsEdit',
 	components: {
 		AppProgressBar,
 		AppJolticon,

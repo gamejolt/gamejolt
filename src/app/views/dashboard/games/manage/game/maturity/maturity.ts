@@ -10,13 +10,11 @@ import { Game } from '../../../../../../../lib/gj-lib-client/components/game/gam
 import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
 import { FormGameMaturity } from '../../../../../../components/forms/game/maturity/maturity';
-import {
-	BaseRouteComponent,
-	RouteResolve,
-} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
+	name: 'RouteDashGamesManageGameMaturity',
 	components: {
 		AppScrollAffix,
 		AppGameOgrs,
@@ -30,10 +28,7 @@ export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent
 
 	Screen = Screen;
 
-	@RouteResolve({})
-	routeResolve(this: void) {}
-
-	routed() {
+	routeInit() {
 		this.current = this.game;
 
 		Meta.title = this.$gettextInterpolate(`Edit Maturity Rating for %{ game }`, {

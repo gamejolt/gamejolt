@@ -6,7 +6,9 @@ import { Store } from '../../store/index';
 import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
 
 @View
-@Component({})
+@Component({
+	name: 'RouteDash',
+})
 export default class RouteDash extends BaseRouteComponent {
 	@State app: Store['app'];
 }

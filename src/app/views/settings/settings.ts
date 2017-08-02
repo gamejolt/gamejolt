@@ -14,6 +14,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteSettings',
 	components: {
 		AppPageHeader,
 		AppScrollAffix,

@@ -23,6 +23,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageApiTrophies',
 	components: {
 		AppCardList,
 		AppCardListDraggable,

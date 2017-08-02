@@ -20,6 +20,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashGamesManageApiScoreboardsScoresUser',
 	components: {
 		AppJolticon,
 		AppManageGameListScores,

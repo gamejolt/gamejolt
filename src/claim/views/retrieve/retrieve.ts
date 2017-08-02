@@ -29,6 +29,7 @@ type Payload = SuccessPayload | ErrorPayload | undefined;
 
 @View
 @Component({
+	name: 'RouteRetrieve',
 	components: {
 		FormRetrieve,
 		AppInvalidKey,

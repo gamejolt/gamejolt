@@ -15,6 +15,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteForumsLandingOverview',
 	components: {
 		AppForumRules,
 		AppForumChannelList,

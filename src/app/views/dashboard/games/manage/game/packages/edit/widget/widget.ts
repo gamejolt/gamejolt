@@ -13,7 +13,9 @@ import {
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
-@Component({})
+@Component({
+	name: 'RouteDashGamesManageGamePackagesEditWidget',
+})
 export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRouteComponent {
 	sellable: Sellable | null = null;
 	theme: string = null as any;

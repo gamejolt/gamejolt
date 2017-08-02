@@ -13,6 +13,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashAccountEmailPreferences',
 	components: {
 		FormEmailPreferences,
 	},

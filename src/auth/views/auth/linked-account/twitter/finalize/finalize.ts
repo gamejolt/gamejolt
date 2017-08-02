@@ -9,6 +9,7 @@ import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/componen
 
 @View
 @Component({
+	name: 'RouteAuthLinkedAccountTwitterFinalize',
 	components: {
 		FormTwitterEmail,
 	},

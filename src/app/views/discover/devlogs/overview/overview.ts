@@ -24,6 +24,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDiscoverDevlogsOverview',
 	components: {
 		AppExpand,
 		AppVideoEmbed,

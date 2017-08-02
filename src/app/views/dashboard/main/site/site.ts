@@ -13,6 +13,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashMainSite',
 	components: {
 		AppSitesManagePage,
 		AppSitesLinkCard,

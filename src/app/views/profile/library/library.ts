@@ -14,6 +14,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteProfileLibrary',
 	components: {
 		AppGameCollectionGrid,
 	},

@@ -7,7 +7,9 @@ import {
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
 
-@Component({})
+@Component({
+	name: 'RouteLanding',
+})
 export default class RouteLanding extends BaseRouteComponent {
 	@RouteResolve()
 	routeResolve() {

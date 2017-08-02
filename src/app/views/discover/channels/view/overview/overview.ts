@@ -22,6 +22,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDiscoverChannelsViewOverview',
 	components: {
 		AppAdPlacement,
 		AppGameGrid,

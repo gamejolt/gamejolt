@@ -4,7 +4,9 @@ import './forums-content.styl';
 
 import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
 
-@Component({})
+@Component({
+	name: 'RouteForums',
+})
 export default class RouteForums extends BaseRouteComponent {
 	render(h: Vue.CreateElement) {
 		return h('router-view', { staticClass: 'route-forums' });

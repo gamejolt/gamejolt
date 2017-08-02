@@ -17,6 +17,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDashAccount',
 	components: {
 		AppJolticon,
 		AppPageHeader,

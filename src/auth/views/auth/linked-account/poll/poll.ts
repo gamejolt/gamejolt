@@ -9,6 +9,7 @@ import { BaseRouteComponent } from '../../../../../lib/gj-lib-client/components/
 
 @View
 @Component({
+	name: 'RouteAuthLinkedAccountPoll',
 	components: {
 		AppProgressPoller,
 		AppLoading,

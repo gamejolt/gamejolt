@@ -12,6 +12,7 @@ import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/componen
 
 @View
 @Component({
+	name: 'RouteDiscoverGamesViewComments',
 	components: {
 		AppCommentWidget,
 		AppAd,

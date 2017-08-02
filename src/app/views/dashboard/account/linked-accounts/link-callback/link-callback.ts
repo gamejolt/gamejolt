@@ -9,12 +9,14 @@ import {
 	RouteResolve,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
-@Component({})
+@Component({
+	name: 'RouteDashAccountLinkedAccountsLinkCallback',
+})
 export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRouteComponent {
 	@AppState user: AppStore['user'];
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: VueRouter.Route) {
 		// Force POST.
 		if (route.params.provider === 'twitter') {
 			return Api.sendRequest(

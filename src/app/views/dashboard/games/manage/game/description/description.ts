@@ -10,6 +10,7 @@ import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/compo
 
 @View
 @Component({
+	name: 'RouteDashGamesManageGameDescription',
 	components: {
 		FormGameDescription,
 	},

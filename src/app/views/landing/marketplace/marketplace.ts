@@ -19,6 +19,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteLandingMarketplace',
 	components: {
 		AppGameThumbnail,
 		AppAuthJoin: AppAuthJoinLazy,

@@ -12,6 +12,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDiscoverChannelsList',
 	components: {
 		AppPageHeader,
 		AppChannelThumbnail,

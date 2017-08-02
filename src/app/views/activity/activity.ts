@@ -21,6 +21,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteActivity',
 	components: {
 		AppPageHeader,
 		AppJolticon,

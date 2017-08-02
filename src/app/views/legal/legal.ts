@@ -8,7 +8,9 @@ import {
 } from '../../../lib/gj-lib-client/components/route/route-component';
 
 @View
-@Component({})
+@Component({
+	name: 'RouteLegal',
+})
 export default class RouteLegal extends BaseRouteComponent {
 	@RouteResolve()
 	routeResolve() {

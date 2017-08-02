@@ -14,6 +14,7 @@ import {
 
 @View
 @Component({
+	name: 'RouteDiscoverChannelsViewGames',
 	components: {
 		AppGameListing,
 		AppGameGrid,

@@ -15,6 +15,7 @@ import {
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 
 @Component({
+	name: 'RouteDiscoverGamesViewOverview',
 	components: {
 		AppDiscoverGamesViewOverviewGame,
 		AppDiscoverGamesViewOverviewDevlog,

@@ -12,6 +12,7 @@ import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/rou
 
 @View
 @Component({
+	name: 'RouteJoinAlmost',
 	components: {
 		AppProgressPoller,
 	},
