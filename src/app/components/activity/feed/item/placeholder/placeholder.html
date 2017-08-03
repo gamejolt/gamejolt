@@ -1,5 +1,5 @@
 <app-timeline-list-item :is-new="isNew" :is-active="isActive">
-	<div v-if="type === 'devlog-post'">
+	<template v-if="type === 'devlog-post'">
 		<div class="timeline-list-item-header">
 			<div class="timeline-list-item-header-content">
 
@@ -25,8 +25,8 @@
 			</div>
 
 		</div>
-	</div>
-	<div v-else-if="type === 'notification'">
+	</template>
+	<template v-else-if="type === 'notification'">
 		<div class="timeline-list-item-meta">
 			<span class="placeholder-small" style="width: 100px"></span>
 		</div>
@@ -34,5 +34,5 @@
 		<div class="timeline-list-item-title">
 			<span class="placeholder-text"></span>
 		</div>
-	</div>
+	</template>
 </app-timeline-list-item>

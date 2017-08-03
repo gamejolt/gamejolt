@@ -19,6 +19,7 @@ import { ActivityFeedItem } from '../../item-service';
 })
 export class AppActivityFeedDevlogPostSketchfab extends Vue {
 	@Prop(ActivityFeedItem) item: ActivityFeedItem;
+	@Prop(Boolean) isHydrated?: boolean;
 
 	post: FiresidePost = null as any;
 	sketchfab: FiresidePostSketchfab | null = null;

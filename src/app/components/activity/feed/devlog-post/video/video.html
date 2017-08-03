@@ -3,25 +3,28 @@
 		:ratio="16 / 9"
 		@change="onDimensionsChange"
 		>
-		<a
-			v-if="!isShowingVideo"
-			@click="play"
-			>
-			<div class="play-button-overlay">
-				<app-jolticon icon="play" />
-			</div>
 
-			<div class="devlog-post-video-embed-thumb"
-				:style="{ 'background-image': `url('${video.thumbnail_url}')` }"
+		<template v-if="isHydrated">
+			<a
+				v-if="!isShowingVideo"
+				@click="play"
 				>
-			</div>
-		</a>
+				<div class="play-button-overlay">
+					<app-jolticon icon="play" />
+				</div>
 
-		<app-video-embed
-			v-if="isShowingVideo"
-			video-provider="youtube"
-			:video-id="video.video_id"
-			:autoplay="shouldAutoplay"
-			/>
+				<div class="devlog-post-video-embed-thumb"
+					:style="{ 'background-image': `url('${video.thumbnail_url}')` }"
+					>
+				</div>
+			</a>
+			<app-video-embed
+				v-else
+				video-provider="youtube"
+				:video-id="video.video_id"
+				:autoplay="shouldAutoplay"
+				/>
+		</template>
+
 	</app-responsive-dimensions>
 </div>

@@ -16,6 +16,7 @@ import { ActivityFeedItem } from '../../item-service';
 })
 export class AppActivityFeedDevlogPostText extends Vue {
 	@Prop(ActivityFeedItem) item: ActivityFeedItem;
+	@Prop(Boolean) isHydrated?: boolean;
 
 	post: FiresidePost = null as any;
 	canToggleContent = false;

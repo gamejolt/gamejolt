@@ -10,6 +10,7 @@ import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scr
 import { AppActivityFeedDevlogPost } from '../devlog-post/devlog-post';
 import { AppActivityFeedNotification } from '../notification/notification';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppActivityFeedItemPlaceholder } from './placeholder/placeholder';
 
 @View
 @Component({
@@ -17,6 +18,7 @@ import { Screen } from '../../../../../lib/gj-lib-client/components/screen/scree
 		AppScrollInview,
 		AppActivityFeedDevlogPost,
 		AppActivityFeedNotification,
+		AppActivityFeedItemPlaceholder,
 	},
 })
 export class AppActivityFeedItem extends Vue {
@@ -24,6 +26,7 @@ export class AppActivityFeedItem extends Vue {
 	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
 
 	inviewPadding = Screen.windowHeight;
+	isBootstrapped = GJ_IS_SSR;
 
 	mounted() {
 		if (this.item.height) {
@@ -44,7 +47,7 @@ export class AppActivityFeedItem extends Vue {
 		}
 	}
 
-	get isInView() {
+	get isHydrated() {
 		return GJ_IS_SSR || !!this.feed.inViewItems[this.item.id];
 	}
 
@@ -67,6 +70,10 @@ export class AppActivityFeedItem extends Vue {
 
 	onInviewChange(visible: boolean) {
 		this.feed.inViewChange(this.item, visible);
+
+		if (visible) {
+			this.isBootstrapped = true;
+		}
 	}
 
 	onResize(height: number) {

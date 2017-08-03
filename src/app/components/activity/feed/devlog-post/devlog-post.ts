@@ -44,6 +44,7 @@ export class AppActivityFeedDevlogPost extends Vue {
 	@Prop(ActivityFeedItem) item: ActivityFeedItem;
 	@Prop(Boolean) isNew?: boolean;
 	@Prop(Boolean) isActive?: boolean;
+	@Prop(Boolean) isHydrated?: boolean;
 
 	post: FiresidePost;
 	private resizeSensor?: any;

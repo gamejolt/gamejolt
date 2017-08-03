@@ -4,25 +4,26 @@
 		@change="onDimensionsChange"
 		>
 
-		<a
-			v-if="!isShowing"
-			@click="play"
-			>
-			<div class="play-button-overlay">
-				<app-jolticon icon="play" />
-			</div>
-
-			<div class="devlog-post-sketchfab-embed-thumb"
-				:style="{ 'background-image': `url( '${sketchfab.thumbnail_url}')` }"
+		<template v-if="isHydrated">
+			<a
+				v-if="!isShowing"
+				@click="play"
 				>
-			</div>
-		</a>
+				<div class="play-button-overlay">
+					<app-jolticon icon="play" />
+				</div>
 
-		<app-sketchfab-embed
-			v-if="isShowing"
-			:sketchfab-id="sketchfab.sketchfab_id"
-			:autoplay="true"
-			/>
+				<div class="devlog-post-sketchfab-embed-thumb"
+					:style="{ 'background-image': `url( '${sketchfab.thumbnail_url}')` }"
+					>
+				</div>
+			</a>
+			<app-sketchfab-embed
+				v-else
+				:sketchfab-id="sketchfab.sketchfab_id"
+				:autoplay="true"
+				/>
+		</template>
 
 	</app-responsive-dimensions>
 </div>
