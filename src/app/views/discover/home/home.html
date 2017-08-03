@@ -1,48 +1,38 @@
 <div class="route-discover-home">
 
-	<section class="section landing-header text-center">
+	<section class="section landing-header" :class="{ 'text-center': !Screen.isLg }">
 		<div class="container">
+
 			<div class="row">
-				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-
-					<p class="lead">Find the indie games you <app-jolticon icon="heart" :big="true" class="header-heart" /> and directly support the developers that make them</p>
-
+				<div class="col-lg-7">
+					<h1 class="sans-margin-top">
+						Bear Week is Coming
+						<br>
+						{{ bear }}
+					</h1>
 					<p>
-						<router-link class="btn btn-outline btn-sm"
-							:to="{ name: 'landing.learn' }"
-							v-app-track-event="`home:header-learn-more`"
-							>
-							<translate>Learn More</translate>
-						</router-link>
+						Prepare yourselves / August 11-18
 					</p>
-					<br>
-
-					<router-link class="btn btn-primary-outline btn-block-xs"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-						v-app-track-event="`home:header-browse-games`"
-						>
-						<translate>Browse Games</translate>
-					</router-link>
-
-					<span class="hidden-xs">
-						&nbsp;&nbsp;&nbsp;
-						<em>or</em>
-						&nbsp;&nbsp;&nbsp;
-					</span>
-
-					<br class="visible-xs">
-
-					<router-link
-						class="btn btn-outline btn-block-xs"
-						:to="{ name: 'dash.games.add' }"
-						v-app-track-event="`home:header-add-game`"
-						v-app-auth-required
-						>
-						<translate>Add Your Game</translate>
-					</router-link>
-
+					<hr class="underbar" :class="{ 'underbar-center': !Screen.isLg }">
+					<div>
+						<a
+							class="btn btn-success-outline"
+							href="http://jams.gamejolt.io/bearjam"
+							target="_blank"
+							>
+							Join BearJam
+						</a>
+					</div>
+				</div>
+				<div class="col-sm-8 col-md-7 col-lg-5" :class="{ 'col-centered': !Screen.isLg }">
+					<br class="hidden-lg">
+					<app-video-embed
+						video-provider="youtube"
+						video-id="6XFW_oXwgtY"
+						/>
 				</div>
 			</div>
+
 		</div>
 	</section>
 
