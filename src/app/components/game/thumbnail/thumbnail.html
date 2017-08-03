@@ -11,14 +11,14 @@
 		>
 
 		<app-game-thumbnail-placeholder v-if="!isBootstrapped" />
-		<div v-else>
+		<template v-else>
 
 			<div
 				class="game-thumbnail-controls"
 				@click.prevent
 				>
 				<slot />
-				<span v-if="showModTools">
+				<template v-if="showModTools">
 					<button class="btn btn-sparse"
 						v-app-popover-trigger="`game-mod-tools-${game.id}`"
 						@click.prevent
@@ -31,14 +31,14 @@
 						>
 						<app-game-mod-links :game="game"></app-game-mod-links>
 					</app-popover>
-				</span>
+				</template>
 			</div>
 
 			<div class="game-thumbnail-thumb">
 				<div class="inner">
 					<app-jolticon icon="game" />
 
-					<div v-if="isHydrated">
+					<template v-if="isHydrated">
 						<app-game-thumbnail-img
 							:game="game"
 							:class="{
@@ -53,7 +53,7 @@
 							:webm="game.thumbnail_media_item.mediaserver_url_webm"
 							:mp4="game.thumbnail_media_item.mediaserver_url_mp4"
 							/>
-					</div>
+					</template>
 				</div>
 			</div>
 
@@ -67,8 +67,8 @@
 						'game-thumbnail-pricing-sale': sale,
 					}"
 					>
-					<div v-if="!isOwned">
-						<div v-if="sellableType === 'paid'">
+					<template v-if="!isOwned">
+						<template v-if="sellableType === 'paid'">
 							<div class="game-thumbnail-pricing-sale-percentage"
 								v-if="sale"
 								>
@@ -84,19 +84,19 @@
 									{{ pricingAmount }}
 								</div>
 							</div>
-						</div>
+						</template>
 						<span class="game-thumbnail-pricing-tag" v-else-if="sellableType === 'pwyw'">
 							<translate>Name Your Price</translate>
 						</span>
 						<span class="game-thumbnail-pricing-tag" v-else>
 							<translate>Free</translate>
 						</span>
-					</div>
-					<div v-if="isOwned">
+					</template>
+					<template v-else>
 						<span class="game-thumbnail-pricing-tag">
 							<translate>Owned</translate>
 						</span>
-					</div>
+					</template>
 				</div>
 
 				<div class="game-thumbnail-avatar">
@@ -129,7 +129,7 @@
 				</div>
 			</div>
 
-		</div>
+		</template>
 
 	</app-scroll-inview>
 </router-link>
