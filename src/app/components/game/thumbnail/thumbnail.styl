@@ -19,17 +19,12 @@
 		right: 5px
 		z-index: $zindex-controls
 
-	// Hide the image until it's loaded in.
-	&.loaded
-		.game-thumbnail-img
-			opacity: 1
-
-		.game-thumbnail-thumb::after
-			display: block
-
 	&-img
 		opacity: 0
 		transition: opacity 500ms
+
+		&.loaded
+			opacity: 1
 
 	&-thumb
 		position: relative
@@ -62,9 +57,10 @@
 
 		>>>
 			img
-			video
 			.video
-				position: relative !important
+				position: absolute !important
+				top: 0
+				left: 0
 				display: block
 				width: 100%
 				height: 100%
@@ -73,7 +69,7 @@
 			img
 				z-index: $zindex-img
 
-			video
+			.video
 				z-index: $zindex-video
 
 	&-meta

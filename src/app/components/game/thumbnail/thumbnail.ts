@@ -19,6 +19,7 @@ import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/
 import { AppScrollInview } from '../../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
 import { Settings } from '../../settings/settings.service';
+import { AppGameThumbnailPlaceholder } from './placeholder/placeholder';
 
 /**
  * An array of all the thumbnails on the page.
@@ -48,6 +49,7 @@ if (typeof window !== 'undefined') {
 		AppGameModLinks,
 		AppUserAvatarImg,
 		AppScrollInview,
+		AppGameThumbnailPlaceholder,
 	},
 	directives: {
 		AppPopoverTrigger,
@@ -66,7 +68,8 @@ export class AppGameThumbnail extends Vue {
 	@State app: AppStore;
 
 	isHovered = false;
-	isInview = true;
+	isBootstrapped = true;
+	isHydrated = true;
 	isThumbnailLoaded = true;
 	isWindowFocused = typeof document !== 'undefined' && document.hasFocus
 		? document.hasFocus()
@@ -81,7 +84,8 @@ export class AppGameThumbnail extends Vue {
 			!GJ_IS_SSR &&
 			!!Settings.get('animated-thumbnails') &&
 			(this.isHovered || this.autoplay) &&
-			this.isWindowFocused
+			this.isWindowFocused &&
+			this.isHydrated
 		);
 	}
 
@@ -90,8 +94,7 @@ export class AppGameThumbnail extends Vue {
 			this.game.thumbnail_media_item &&
 			this.game.thumbnail_media_item.is_animated &&
 			Screen.isDesktop &&
-			this.isActive &&
-			this.isInview
+			this.isActive
 		);
 	}
 
@@ -155,12 +158,22 @@ export class AppGameThumbnail extends Vue {
 	}
 
 	mounted() {
-		this.isInview = false;
+		this.isBootstrapped = false;
+		this.isHydrated = false;
 		this.isThumbnailLoaded = false;
 	}
 
 	destroyed() {
 		arrayRemove(thumbnails, i => i === this);
+	}
+
+	inView() {
+		this.isBootstrapped = true;
+		this.isHydrated = true;
+	}
+
+	outView() {
+		this.isHydrated = false;
 	}
 
 	onThumbnailLoad() {
