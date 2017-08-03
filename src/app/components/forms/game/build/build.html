@@ -271,6 +271,18 @@
 							</app-form-group>
 						</div>
 					</div>
+
+					<app-form-group
+						name="https_enabled"
+						:label="$gettext( `HTTPS enabled?` )"
+						>
+						<p class="help-block"><span v-translate><strong>Supporting HTTPS is highly recommended.</strong>
+						Without HTTPS the game will launch in a new tab.</span></p>
+
+						<app-form-control-toggle
+							@changed="onBuildFieldChanged"
+							/>
+					</app-form-group>
 				</div>
 
 				<!--
