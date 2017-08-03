@@ -274,10 +274,18 @@
 
 					<app-form-group
 						name="https_enabled"
-						:label="$gettext( `HTTPS enabled?` )"
+						:label="$gettext( `HTTPS support?` )"
 						>
-						<p class="help-block"><span v-translate><strong>Supporting HTTPS is highly recommended.</strong>
-						Without HTTPS the game will launch in a new tab.</span></p>
+						<p class="help-block">
+							<translate>If your game doesn't work on HTTPS you can disable this and we'll serve it over HTTP instead.</translate>
+						</p>
+
+						<app-expand :when="!formModel.https_enabled">
+							<p class="help-block">
+								<strong><translate>It's highly recommended to get your game working on HTTPS!</translate></strong>
+								<translate>In order for your game to continue working on Game Jolt we need to pop it out into a new browser window when the user clicks to play it. This results in a worse user experience, but ensures that your game will still continue to be available on the site.</translate>
+							</p>
+						</app-expand>
 
 						<app-form-control-toggle
 							@changed="onBuildFieldChanged"
