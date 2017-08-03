@@ -14,7 +14,7 @@
 				v-if="!room.isPmRoom && isShowingUsers"
 				>
 
-				<div v-if="Screen.isXs">
+				<template v-if="Screen.isXs">
 					<br>
 					<div class="nav-controls">
 						<button class="btn btn-outline btn-block" @click="toggleUsers">
@@ -22,9 +22,9 @@
 							<translate>Back to Chat</translate>
 						</button>
 					</div>
-				</div>
+				</template>
 
-				<div v-if="!room.isPmRoom">
+				<template v-if="!room.isPmRoom">
 					<div class="nav-heading first">
 						<translate>Room Description</translate>
 					</div>
@@ -34,7 +34,7 @@
 							<div v-html="room.description_compiled"></div>
 						</div>
 					</div>
-				</div>
+				</template>
 
 				<div class="nav-heading">
 					<translate>Room Users</translate>
@@ -126,7 +126,7 @@
 							<small>@{{ room.user.username }}</small>
 						</h3>
 
-						<span v-if="!room.isPmRoom && !Screen.isXs">
+						<template v-if="!room.isPmRoom && !Screen.isXs">
 							<app-fade-collapse
 								class="fade-collapse-sm"
 								:collapse-height="60"
@@ -143,7 +143,7 @@
 								>
 								<translate>more</translate>
 							</button>
-						</span>
+						</template>
 
 					</div>
 

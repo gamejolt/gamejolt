@@ -24,8 +24,8 @@
 		<app-shell-chat v-if="chat" />
 	</div>
 
-	<div v-if="GJ_IS_CLIENT">
-		<app-shell-client />
+	<div>
+		<app-shell-client v-if="GJ_IS_CLIENT" />
 	</div>
 
 	<app-loading-bar />

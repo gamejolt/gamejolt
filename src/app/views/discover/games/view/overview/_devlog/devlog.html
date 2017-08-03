@@ -72,7 +72,7 @@
 
 					<br v-if="app.user && commentsCount">
 
-					<div v-if="commentsCount">
+					<template v-if="commentsCount">
 						<app-comment-peek :comments="comments" />
 
 						<router-link
@@ -86,7 +86,7 @@
 								+%{ count } more
 							</translate>
 						</router-link>
-					</div>
+					</template>
 
 				</div>
 			</div>
@@ -108,7 +108,7 @@
 					<app-lazy-placeholder :when="isOverviewLoaded">
 						<div class="lazy-placeholder" style="height: 135px"></div>
 
-						<div v-if="packages.length">
+						<template v-if="packages.length">
 							<app-game-package-card
 								v-for="package of packages"
 								:key="package.id"
@@ -120,7 +120,7 @@
 								:partner-key="partnerKey"
 								:partner="partner"
 								/>
-						</div>
+						</template>
 
 						<app-game-soundtrack-card
 							v-if="songs.length"
@@ -150,7 +150,7 @@
 						<span class="lazy-placeholder"></span>
 						<span class="lazy-placeholder" style="width: 40%"></span>
 					</div>
-					<div v-else>
+					<template v-else>
 						<!--
 							Set a :key to let vue know that it should update
 							this when the game changes.
@@ -167,7 +167,7 @@
 								>
 							</div>
 						</app-fade-collapse>
-					</div>
+					</template>
 
 				</div>
 			</div>

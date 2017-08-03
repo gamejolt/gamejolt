@@ -34,14 +34,14 @@
 			:user="topic.user"
 			/>
 
-		<div slot="nav">
+		<template slot="nav">
 			<app-forum-breadcrumbs
 				:channel="channel"
 				page="view-topic"
 				/>
-		</div>
+		</template>
 
-		<div slot="controls" v-if="app.user">
+		<template slot="controls" v-if="app.user">
 
 			<button
 				class="btn btn-success-outline btn-block"
@@ -70,7 +70,7 @@
 				<translate>Following</translate>
 			</button>
 
-		</div>
+		</template>
 
 	</app-page-header>
 
@@ -173,7 +173,7 @@
 					<!--
 						Hide the main post while it's being edited.
 					-->
-					<div v-if="!isEditingTopic">
+					<template v-if="!isEditingTopic">
 
 						<!--
 							We do a fade collapse for the main post after the first page.
@@ -202,16 +202,13 @@
 						<!--
 							No fade collapse on first page.
 						-->
-						<div v-if="currentPage <= 1">
-							<div class="forum-post-body">
-								<app-widget-compiler
-									:content="topic.main_post.content_compiled"
-									/>
-							</div>
+						<div class="forum-post-body" v-if="currentPage <= 1">
+							<app-widget-compiler
+								:content="topic.main_post.content_compiled"
+								/>
 						</div>
-					</div>
-
-					<div v-if="isEditingTopic">
+					</template>
+					<template v-else>
 						<h3 class="section-header">
 							<translate>Edit Topic</translate>
 						</h3>
@@ -221,7 +218,7 @@
 							@cancel="closeEditTopic"
 							@submit="closeEditTopic"
 							/>
-					</div>
+					</template>
 
 					<p class="text-muted small" v-if="topic.main_post.modified_by">
 						Last modified on
@@ -272,7 +269,7 @@
 						@pagechange="pageChange"
 						/>
 
-					<div v-if="app.user">
+					<template v-if="app.user">
 						<app-message-thread-add
 							v-if="!topic.is_locked"
 							>
@@ -293,7 +290,7 @@
 								<translate>This topic is locked and can no longer be replied to.</translate>
 							</p>
 						</div>
-					</div>
+					</template>
 
 					<div class="alert alert-info full-bleed-xs" v-if="!app.user">
 						<p>

@@ -13,11 +13,10 @@
 			<app-jolticon icon="chevron-up" />
 			<translate>Enter your search query for maximum finding...</translate>
 		</div>
-
-		<div v-if="!isHidden">
+		<template v-else>
 
 			<!-- Regular Search -->
-			<div v-if="mode === 'search'">
+			<template v-if="mode === 'search'">
 
 				<!-- View All -->
 				<div class="list-group list-group-dark">
@@ -30,119 +29,127 @@
 				</div>
 
 				<!-- Installed Games -->
-				<div class="popover-heading" v-if="libraryGames.length">
-					<translate>search.autocomplete.installed_heading</translate>
-				</div>
-				<div class="list-group list-group-dark thin" v-if="libraryGames.length">
-					<router-link
-						class="list-group-item"
-						v-for="libraryGame of libraryGames"
-						:key="libraryGame.id"
-						:to="{
-							name: 'discover.games.view.overview',
-							params: { slug: libraryGame.slug, id: libraryGame.id },
-						}"
-						:class="{ active: items[ selected - 1 ] === libraryGame }"
-						v-app-track-event="`search:autocomplete:go-library-game`"
-						>
+				<template v-if="libraryGames.length">
+					<div class="popover-heading">
+						<translate>search.autocomplete.installed_heading</translate>
+					</div>
+					<div class="list-group list-group-dark thin">
+						<router-link
+							class="list-group-item"
+							v-for="libraryGame of libraryGames"
+							:key="libraryGame.id"
+							:to="{
+								name: 'discover.games.view.overview',
+								params: { slug: libraryGame.slug, id: libraryGame.id },
+							}"
+							:class="{ active: items[ selected - 1 ] === libraryGame }"
+							v-app-track-event="`search:autocomplete:go-library-game`"
+							>
 
-						<!-- TODO: Get this working again. -->
-						<!--<div ng-if="environment.isClient" class="pull-right">
-							<gj-client-game-buttons label="installed" game="libraryGame._game" small-variant="true"></gj-client-game-buttons>
-						</div>-->
+							<!-- TODO: Get this working again. -->
+							<!--<div ng-if="environment.isClient" class="pull-right">
+								<gj-client-game-buttons label="installed" game="libraryGame._game" small-variant="true"></gj-client-game-buttons>
+							</div>-->
 
-						<span class="search-game-thumbnail">
-							<app-game-thumbnail-img :game="libraryGame"></app-game-thumbnail-img>
-						</span>
+							<span class="search-game-thumbnail">
+								<app-game-thumbnail-img :game="libraryGame"></app-game-thumbnail-img>
+							</span>
 
-						{{ libraryGame.title }}
-					</router-link>
-				</div>
+							{{ libraryGame.title }}
+						</router-link>
+					</div>
+				</template>
 
 				<!-- Games -->
-				<div class="popover-heading" v-if="games.length">
-					<translate>search.autocomplete.games_heading</translate>
-				</div>
-				<div class="list-group list-group-dark thin" v-if="games.length">
-					<router-link
-						class="list-group-item"
-						v-for="game of games"
-						:key="game.id"
-						:to="{
-							name: 'discover.games.view.overview',
-							params: { slug: game.slug, id: game.id },
-						}"
-						:class="{ active: items[ selected - 1 ] === game }"
-						v-app-track-event="`search:autocomplete:go-game`"
-						>
+				<template v-if="games.length">
+					<div class="popover-heading">
+						<translate>search.autocomplete.games_heading</translate>
+					</div>
+					<div class="list-group list-group-dark thin">
+						<router-link
+							class="list-group-item"
+							v-for="game of games"
+							:key="game.id"
+							:to="{
+								name: 'discover.games.view.overview',
+								params: { slug: game.slug, id: game.id },
+							}"
+							:class="{ active: items[ selected - 1 ] === game }"
+							v-app-track-event="`search:autocomplete:go-game`"
+							>
 
-						<!-- TODO: Get this working again. -->
-						<!--<div ng-if="environment.isClient" class="pull-right">
-							<gj-client-game-buttons label="not-installed" game="game" small-variant="true"></gj-client-game-buttons>
-						</div>-->
+							<!-- TODO: Get this working again. -->
+							<!--<div ng-if="environment.isClient" class="pull-right">
+								<gj-client-game-buttons label="not-installed" game="game" small-variant="true"></gj-client-game-buttons>
+							</div>-->
 
-						<div class="pull-right">
-							<app-game-compat-icons :game="game"></app-game-compat-icons>
-						</div>
+							<div class="pull-right">
+								<app-game-compat-icons :game="game"></app-game-compat-icons>
+							</div>
 
-						<span class="search-game-thumbnail">
-							<app-game-thumbnail-img :game="game"></app-game-thumbnail-img>
-						</span>
+							<span class="search-game-thumbnail">
+								<app-game-thumbnail-img :game="game"></app-game-thumbnail-img>
+							</span>
 
-						{{ game.title }}
-					</router-link>
-				</div>
+							{{ game.title }}
+						</router-link>
+					</div>
+				</template>
 
 				<!-- Devlogs -->
-				<div class="popover-heading" v-if="devlogs.length">
-					<translate>Devlogs</translate>
-				</div>
-				<div class="list-group list-group-dark thin" v-if="devlogs.length">
-					<router-link
-						class="list-group-item"
-						v-for="game of devlogs"
-						:key="game.id"
-						:to="{
-							name: 'discover.games.view.overview',
-							params: { slug: game.slug, id: game.id },
-						}"
-						:class="{ active: items[ selected - 1 ] === game }"
-						v-app-track-event="`search:autocomplete:go-game`"
-						>
+				<template v-if="devlogs.length">
+					<div class="popover-heading">
+						<translate>Devlogs</translate>
+					</div>
+					<div class="list-group list-group-dark thin">
+						<router-link
+							class="list-group-item"
+							v-for="game of devlogs"
+							:key="game.id"
+							:to="{
+								name: 'discover.games.view.overview',
+								params: { slug: game.slug, id: game.id },
+							}"
+							:class="{ active: items[ selected - 1 ] === game }"
+							v-app-track-event="`search:autocomplete:go-game`"
+							>
 
-						<span class="search-game-thumbnail">
-							<app-game-thumbnail-img :game="game"></app-game-thumbnail-img>
-						</span>
+							<span class="search-game-thumbnail">
+								<app-game-thumbnail-img :game="game"></app-game-thumbnail-img>
+							</span>
 
-						{{ game.title }}
-					</router-link>
-				</div>
+							{{ game.title }}
+						</router-link>
+					</div>
+				</template>
 
 				<!-- Users -->
-				<div class="popover-heading" v-if="users.length">
-					<translate>search.autocomplete.users_heading</translate>
-				</div>
-				<div class="list-group list-group-dark thin" v-if="users.length">
-					<router-link
-						class="list-group-item"
-						v-for="user of users"
-						:key="user.id"
-						:to="{
-							name: 'profile.overview',
-							params: { username: user.username },
-						}"
-						:class="{ active: items[ selected - 1 ] === user }"
-						v-app-track-event="`search:autocomplete:go-user`"
-						>
-						<img :src="user.img_avatar" class="search-user-avatar" alt="">
-						{{ user.display_name }}
-						<span class="tiny text-muted">@{{ user.username }}</span>
-					</router-link>
-				</div>
-			</div>
+				<template v-if="users.length">
+					<div class="popover-heading">
+						<translate>search.autocomplete.users_heading</translate>
+					</div>
+					<div class="list-group list-group-dark thin">
+						<router-link
+							class="list-group-item"
+							v-for="user of users"
+							:key="user.id"
+							:to="{
+								name: 'profile.overview',
+								params: { username: user.username },
+							}"
+							:class="{ active: items[ selected - 1 ] === user }"
+							v-app-track-event="`search:autocomplete:go-user`"
+							>
+							<img :src="user.img_avatar" class="search-user-avatar" alt="">
+							{{ user.display_name }}
+							<span class="tiny text-muted">@{{ user.username }}</span>
+						</router-link>
+					</div>
+				</template>
+			</template>
 
 			<!-- Commands -->
-			<div v-if="mode === 'command'">
+			<template v-else-if="mode === 'command'">
 				<div class="list-group list-group-dark thin" v-if="filteredCommands.length">
 					<a class="list-group-item"
 						v-for="( command, index ) of filteredCommands"
@@ -154,13 +161,12 @@
 						<span class="small text-muted">{{ command.description }}</span>
 					</a>
 				</div>
-
-				<div class="alert alert-warning" v-if="!filteredCommands.length">
+				<div class="alert alert-warning" v-else>
 					<translate>search.autocomplete.no_commands</translate>
 				</div>
-			</div>
+			</template>
 
-		</div>
+		</template>
 
 	</div>
 </app-popover>

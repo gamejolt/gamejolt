@@ -50,7 +50,7 @@
 
 	<br>
 
-	<div v-if="$route.name === 'dash.games.manage.game.packages.edit'">
+	<template v-if="$route.name === 'dash.games.manage.game.packages.edit'">
 		<div class="row">
 			<div class="col-sm-8">
 
@@ -101,10 +101,8 @@
 					<br>
 				</app-expand>
 
-				<div v-if="isLoadingPreview">
-					<app-loading />
-				</div>
-				<div v-else>
+				<app-loading v-if="isLoadingPreview" />
+				<template v-else>
 					<app-game-package-card
 						:game="game"
 						:sellable="previewSellable"
@@ -113,7 +111,7 @@
 						:builds="previewPackage ? previewPackage._builds : null"
 						/>
 
-					<div v-if="buildsProcessingCount > 0">
+					<template v-if="buildsProcessingCount > 0">
 						<app-progress-poller
 							:url="`/web/dash/developer/games/packages/poll-processing-builds/${ game.id }/${ package.id }/${ buildsProcessingCount }`"
 							@complete="onBuildsProcessed( $event )"
@@ -123,8 +121,8 @@
 							<app-jolticon icon="notice" />
 							<translate>This package has builds that are still processing. They will translate available in the package as soon as they're finished processing.</translate>
 						</div>
-					</div>
-				</div>
+					</template>
+				</template>
 
 			</div>
 		</div>
@@ -166,7 +164,7 @@
 				</div>
 				<br>
 
-				<div v-if="releases.length">
+				<template v-if="releases.length">
 
 					<app-card
 						v-for="release of releases"
@@ -213,11 +211,10 @@
 
 							<span class="dot-separator"></span>
 
-							<span v-if="!release.build_count">
+							<template v-if="!release.build_count">
 								<translate>dash.games.packages.manage.releases.builds_count_none</translate>
-							</span>
-
-							<span v-if="release.build_count">
+							</template>
+							<template v-else>
 								<translate
 									:translate-params="{
 										count: number( release.build_count ),
@@ -227,7 +224,7 @@
 									>
 									1 build
 								</translate>
-							</span>
+							</template>
 						</div>
 
 						<div class="card-content" v-if="package.description">
@@ -260,7 +257,7 @@
 
 					</app-card>
 
-				</div>
+				</template>
 
 				<app-dash-game-wizard-controls
 					:disabled="!game._is_devlog && !game.has_active_builds"
@@ -268,7 +265,7 @@
 
 			</div>
 		</div>
-	</div>
+	</template>
 
 	<router-view/>
 

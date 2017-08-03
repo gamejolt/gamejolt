@@ -13,13 +13,13 @@
 	<span class="btn-badge" v-if="followerCount">
 		{{ followerCount | number }}
 	</span>
-	<span v-if="!isFollowing">
+	<template v-if="!isFollowing">
 		<app-jolticon icon="subscribe" />
 		<translate v-if="collection.type === 'developer'">Follow Developer</translate>
 		<translate v-else>Follow Playlist</translate>
-	</span>
-	<span v-if="isFollowing">
+	</template>
+	<template v-else>
 		<app-jolticon icon="subscribed" />
 		<translate>Following</translate>
-	</span>
+	</template>
 </button>

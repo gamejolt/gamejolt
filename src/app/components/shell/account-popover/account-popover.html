@@ -28,7 +28,7 @@
 		<div class="list-group-dark">
 			<router-link
 				class="list-group-item"
-				:to="{ name: env.isClient ? 'library.installed' : 'library.overview' }"
+				:to="{ name: GJ_IS_CLIENT ? 'library.installed' : 'library.overview' }"
 				v-app-track-event="`account-popover:library`"
 				>
 				<translate>Game Library</translate>
@@ -42,7 +42,7 @@
 			</router-link>
 			<router-link
 				class="list-group-item offline-disable"
-				:to="{ name: screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit' }"
+				:to="{ name: Screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit' }"
 				v-app-track-event="`account-popover:account`"
 				>
 				<translate>Edit Account</translate>
@@ -78,7 +78,7 @@
 
 		<app-shell-user-box></app-shell-user-box>
 
-		<div v-if="app.user.is_developer">
+		<template v-if="app.user.is_developer">
 			<div class="account-popover-separator"></div>
 
 			<div class="list-group-dark">
@@ -102,13 +102,13 @@
 					</span>
 				</router-link>
 			</div>
-		</div>
+		</template>
 
 		<!--
 			We do slightly different styling here whether we're in client or not.
 			Enough changes to require different markup.
 		-->
-		<div v-if="!env.isClient">
+		<template v-if="!GJ_IS_CLIENT">
 			<div class="account-popover-separator"></div>
 
 			<div class="list-group-dark">
@@ -120,13 +120,12 @@
 					<translate>Logout</translate>
 				</a>
 			</div>
-		</div>
-
-		<div v-if="env.isClient">
+		</template>
+		<template v-else>
 			<div class="account-popover-separator"></div>
 
 			<div class="clearfix">
-				<div v-if="!conn.isClientOffline" class="pull-left text-center" style="width: 50%">
+				<div v-if="!Connection.isClientOffline" class="pull-left text-center" style="width: 50%">
 
 					<div class="list-group-dark">
 						<a class="list-group-item"
@@ -152,7 +151,7 @@
 
 				</div>
 			</div>
-		</div>
+		</template>
 
 	</div>
 </app-popover>

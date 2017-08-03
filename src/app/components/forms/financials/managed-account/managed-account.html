@@ -98,8 +98,8 @@
 						<translate>Business Type</translate>
 					</label>
 					<div class="form-static col-sm-8">
-						<span v-if="account.type === 'individual'"><translate>Individual</translate></span>
-						<span v-else-if="account.type === 'company'"><translate>Company</translate></span>
+						<template v-if="account.type === 'individual'"><translate>Individual</translate></template>
+						<template v-else-if="account.type === 'company'"><translate>Company</translate></template>
 					</div>
 				</div>
 			</div>
@@ -131,12 +131,12 @@
 				Individual/Company Representative
 			-->
 			<h4>
-				<span v-if="account.type === 'individual'">
+				<template v-if="account.type === 'individual'">
 					<translate>Your Details</translate>
-				</span>
-				<span v-else-if="account.type === 'company'">
+				</template>
+				<template v-else-if="account.type === 'company'">
 					<translate>Representative Details</translate>
-				</span>
+				</template>
 			</h4>
 
 			<div class="alert alert-info" v-if="account.status === 'unverified'">

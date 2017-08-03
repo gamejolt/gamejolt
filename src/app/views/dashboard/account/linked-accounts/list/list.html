@@ -16,13 +16,13 @@
 
 				<div class="linked-accounts-list-body">
 					<h5>
-						<span v-if="provider === 'facebook'"><translate>Facebook</translate></span>
-						<span v-else-if="provider === 'twitter'"><translate>Twitter</translate></span>
-						<span v-else-if="provider === 'google'"><translate>Google+</translate></span>
-						<span v-else-if="provider === 'twitch'"><translate>Twitch</translate></span>
+						<template v-if="provider === 'facebook'"><translate>Facebook</translate></template>
+						<template v-else-if="provider === 'twitter'"><translate>Twitter</translate></template>
+						<template v-else-if="provider === 'google'"><translate>Google+</translate></template>
+						<template v-else-if="provider === 'twitch'"><translate>Twitch</translate></template>
 					</h5>
 
-					<div v-if="(provider === 'facebook' && !user.facebook_id)
+					<template v-if="(provider === 'facebook' && !user.facebook_id)
 						|| (provider === 'twitch' && !user.twitch_id)
 						|| (provider === 'twitter' && !user.twitter_id)
 						|| (provider === 'google' && !user.google_id)"
@@ -34,9 +34,8 @@
 							<app-jolticon icon="link" />
 							<translate>Link Now</translate>
 						</button>
-					</div>
-
-					<div v-if="(provider === 'facebook' && user.facebook_id)
+					</template>
+					<template v-else-if="(provider === 'facebook' && user.facebook_id)
 						|| (provider === 'twitch' && user.twitch_id)
 						|| (provider === 'twitter' && user.twitter_id)
 						|| (provider === 'google' && user.google_id)"
@@ -75,7 +74,7 @@
 								<translate>Unlink</translate>
 							</button>
 						</div>
-					</div>
+					</template>
 				</div>
 
 			</div>

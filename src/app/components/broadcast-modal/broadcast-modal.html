@@ -21,13 +21,13 @@
 
 	<div class="modal-body">
 
-		<div v-if="Screen.isXs && post">
+		<template v-if="Screen.isXs && post">
 			<a class="btn btn-outline btn-block" @click="post = null">
 				<app-jolticon icon="chevron-left" />
 				<translate>Back to Changelog</translate>
 			</a>
 			<br>
-		</div>
+		</template>
 
 		<div class="row">
 			<div class="col-sm-4 col-sm-push-8" v-if="!Screen.isXs || !post">
@@ -88,7 +88,7 @@
 						:post="post"
 						/>
 
-					<span v-if="!GJ_IS_CLIENT">
+					<template v-if="!GJ_IS_CLIENT">
 						<span class="dot-separator hidden-xs"></span>
 						<br class="visible-xs">
 						<br class="visible-xs">
@@ -103,7 +103,7 @@
 						<app-social-facebook-like
 							:url="post.url"
 							/>
-					</span>
+					</template>
 				</div>
 
 				<hr class="underbar">
@@ -124,7 +124,7 @@
 						:post="post"
 						/>
 
-					<span v-if="!GJ_IS_CLIENT">
+					<template v-if="!GJ_IS_CLIENT">
 						<span class="dot-separator hidden-xs"></span>
 						<br class="visible-xs">
 						<br class="visible-xs">
@@ -139,7 +139,7 @@
 						<app-social-facebook-like
 							:url="post.url"
 							/>
-					</span>
+					</template>
 				</div>
 
 			</div>

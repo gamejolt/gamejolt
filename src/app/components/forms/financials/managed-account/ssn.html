@@ -20,12 +20,12 @@
 	<div v-if="parent.getStripeField( namePrefix + '.personal_id_number_provided' )" class="form-horizontal">
 		<div class="form-group">
 			<label class="control-label col-sm-4">
-				<span v-if="countryCode === 'us'">
+				<template v-if="countryCode === 'us'">
 					<translate>SSN/ITIN</translate>
-				</span>
-				<span v-if="countryCode !== 'us'">
+				</template>
+				<template v-if="countryCode !== 'us'">
 					<translate>Foreign Tax Identification Number</translate>
-				</span>
+				</template>
 			</label>
 			<div class="form-static col-sm-8">
 				<translate>Provided</translate>

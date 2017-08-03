@@ -14,19 +14,19 @@
 
 	<app-page-header :hide-nav="isWizard">
 
-		<div v-if="isWizard">
+		<template v-if="isWizard">
 			<h1 class="section-header">
 				<translate>Add Game</translate>
 			</h1>
 			<h4 class="section-header">
 				{{ game.title }}
 			</h4>
-		</div>
-		<div v-else>
+		</template>
+		<template v-else>
 			<h1 class="section-header">
 				{{ game.title }}
 			</h1>
-		</div>
+		</template>
 
 		<p class="text-muted small sans-margin-bottom">
 			<span class="tag tag-blue" v-if="game._is_wip">
@@ -36,19 +36,19 @@
 				<translate>Devlog</translate>
 			</span>
 
-			<span v-if="!isWizard">
+			<template v-if="!isWizard">
 				<span class="tag tag-pink" v-if="game.status === Game.STATUS_HIDDEN">
 					<translate>dash.games.hidden_tag</translate>
 				</span>
 
-				<span v-if="game.status === Game.STATUS_VISIBLE">
+				<template v-if="game.status === Game.STATUS_VISIBLE">
 					<span class="tag tag-active">
 						<translate>dash.games.published_tag</translate>
 					</span>
 					<span class="dot-separator"></span>
 					<app-time-ago :date="game.published_on" />
-				</span>
-			</span>
+				</template>
+			</template>
 		</p>
 		<br>
 

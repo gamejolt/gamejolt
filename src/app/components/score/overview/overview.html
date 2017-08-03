@@ -122,7 +122,7 @@
 					<translate>scores.overview.top_scores_heading</translate>
 				</h4>
 
-				<div v-if="scores.length">
+				<template v-if="scores.length">
 
 					<!--
 						When screen isn't XS, we split the scores out into two columns.
@@ -166,9 +166,8 @@
 						<app-jolticon icon="media-list" />
 						<translate>scores.overview.view_more_button</translate>
 					</router-link>
-				</div>
-
-				<div class="alert alert-warning full-bleed-xs" v-if="!scores.length">
+				</template>
+				<div class="alert alert-warning full-bleed-xs" v-else>
 					<translate>scores.overview.no_scores_html</translate>
 				</div>
 

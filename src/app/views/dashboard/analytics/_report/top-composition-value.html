@@ -28,9 +28,9 @@
 						{{ i + 1 | number }}.
 					</td>
 					<th>
-						<span v-if="typeof val.label !== 'object'">
+						<template v-if="typeof val.label !== 'object'">
 							{{ val.label }}
-						</span>
+						</template>
 						<router-link
 							v-else
 							:to="{
@@ -45,12 +45,12 @@
 						</router-link>
 					</th>
 					<td class="text-right">
-						<span v-if="reportData.fieldType === 'number'">
+						<template v-if="reportData.fieldType === 'number'">
 							{{ val.value | number }}
-						</span>
-						<span v-else-if="reportData.fieldType === 'currency'">
+						</template>
+						<template v-else-if="reportData.fieldType === 'currency'">
 							{{ val.value | currency }}
-						</span>
+						</template>
 					</td>
 				</tr>
 			</tbody>

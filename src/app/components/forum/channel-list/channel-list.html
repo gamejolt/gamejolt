@@ -48,7 +48,7 @@
 				v-for="latestPost of [ indexedPosts[ channel.id ] ]"
 				:key="latestPost.id"
 				>
-				<div v-if="latestPost">
+				<template v-if="latestPost">
 
 					<div class="forum-channel-list-item-latest-topic-avatar">
 						<app-user-avatar :user="latestPost.user" />
@@ -95,8 +95,8 @@
 						</div>
 					</div>
 
-				</div>
-				<span v-if="!latestPost">--</span>
+				</template>
+				<template v-if="!latestPost">--</template>
 			</div>
 		</div>
 	</div>

@@ -52,16 +52,16 @@
 								/>
 
 							<div class="alert alert-info" v-else>
-								<div v-if="tab === 'activity'">
+								<template v-if="tab === 'activity'">
 									<p>
 										<translate>You don't have any activity yet. Follow games to stay up to date on their latest development!</translate>
 									</p>
-								</div>
-								<div v-if="tab === 'notifications'">
+								</template>
+								<template v-if="tab === 'notifications'">
 									<p>
 										<translate>You don't have any notifications yet.</translate>
 									</p>
-								</div>
+								</template>
 							</div>
 						</div>
 					</div>

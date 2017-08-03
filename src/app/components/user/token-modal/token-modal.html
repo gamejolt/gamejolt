@@ -33,9 +33,7 @@
 					<tr>
 						<th>Current Game Token</th>
 						<td>
-							<div v-if="!token">
-								<app-loading />
-							</div>
+							<app-loading v-if="!token" />
 							<p v-else>
 								<code>{{ token }}</code>
 							</p>

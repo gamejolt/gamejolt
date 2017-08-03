@@ -34,7 +34,7 @@
 	<!-- Only include if not a guest -->
 	<div class="chat-friends-list" v-if="chat.currentUser && chat.friendsPopulated">
 
-		<div v-if="chat.friendsPopulated && !chat.friendsList.collection.length">
+		<template v-if="chat.friendsPopulated && !chat.friendsList.collection.length">
 			<div class="nav-heading">
 				<translate>Friends</translate>
 			</div>
@@ -44,15 +44,15 @@
 			<div class="alert fill-dark">
 				<span v-translate>chat.no_friends_message_html</span>
 			</div>
-		</div>
+		</template>
 
 		<!--
 			Mobile is slow to compile really long friend lists.
 			We split out online/offline friends on mobile so that it's fast to display/compile.
 			Will also do it if they have more than 50 friends to keep the site fast.
 		-->
-		<div v-if="Screen.isXs || chat.friendsList.collection.length > 50">
-			<div v-if="chat.friendsList.onlineCount">
+		<template v-if="Screen.isXs || chat.friendsList.collection.length > 50">
+			<template v-if="chat.friendsList.onlineCount">
 				<div class="nav-heading">
 					<span class="badge badge-active"
 						v-if="chat.friendsList.onlineCount > 0"
@@ -66,9 +66,9 @@
 					:users="onlineFriends"
 					:show-pm="true"
 					/>
-			</div>
+			</template>
 
-			<div v-if="chat.friendsList.offlineCount">
+			<template v-if="chat.friendsList.offlineCount">
 				<a class="nav-heading"
 					@click="shouldShowOfflineFriends = !shouldShowOfflineFriends"
 					>
@@ -84,11 +84,11 @@
 					:users="offlineFriends"
 					:show-pm="true"
 					/>
-			</div>
-		</div>
+			</template>
+		</template>
 
-		<div v-if="!Screen.isXs && chat.friendsList.collection.length <= 50">
-			<div v-if="chat.friendsList.collection.length">
+		<template v-if="!Screen.isXs && chat.friendsList.collection.length <= 50">
+			<template v-if="chat.friendsList.collection.length">
 				<div class="nav-heading">
 					<span class="badge">
 						{{ chat.friendsList.collection.length | number }}
@@ -105,8 +105,8 @@
 					:users="chat.friendsList.collection"
 					:show-pm="true"
 					/>
-			</div>
-		</div>
+			</template>
+		</template>
 
 	</div>
 

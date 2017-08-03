@@ -44,12 +44,12 @@
 			<app-time-ago :date="user.created_on" />
 
 			<!-- Logged on -->
-			<span v-if="!isOnline">
+			<template v-if="!isOnline">
 				<span class="dot-separator hidden-xs"></span>
 				<br class="visible-xs">
 				<translate>profile.last_seen</translate>
 				<app-time-ago :date="user.last_logged_on" />
-			</span>
+			</template>
 
 			<span class="dot-separator"></span>
 
@@ -66,7 +66,7 @@
 			</span>
 
 			<!-- Online status -->
-			<span v-if="!activeGameSession">
+			<template v-if="!activeGameSession">
 				<span class="tag" v-if="!isOnline" v-app-tooltip="$gettext( 'profile.offline_tooltip' )">
 					<app-jolticon icon="chat-offline" />
 					<translate>profile.offline_tag</translate>
@@ -75,7 +75,7 @@
 					<app-jolticon icon="chat-online" />
 					<translate>profile.online_tag</translate>
 				</span>
-			</span>
+			</template>
 
 			<!-- In-game -->
 			<span class="tag tag-pink" v-if="activeGameSession" v-app-tooltip="$gettext( 'profile.in_game_tooltip' )">
@@ -84,11 +84,11 @@
 			</span>
 		</div>
 
-		<div slot="spotlight">
+		<template slot="spotlight">
 			<app-user-avatar :user="user" />
-		</div>
+		</template>
 
-		<div slot="nav">
+		<template slot="nav">
 			<nav class="platform-list inline">
 				<ul>
 					<li>
@@ -109,7 +109,6 @@
 					<li v-if="app.user && (app.user.permission_level > 0 || (userFriendship && userFriendship.state) === UserFriendship.STATE_FRIENDS || user.id !== app.user.id)">
 						<a v-app-popover-trigger="`profile-more-options`">
 							<app-jolticon icon="ellipsis-h" />
-							<translate>options.more</translate>
 						</a>
 					</li>
 				</ul>
@@ -141,16 +140,16 @@
 					</a>
 				</div>
 			</app-popover>
-		</div>
+		</template>
 
-		<div slot="controls">
-			<div v-if="app.user && user.id !== app.user.id && !userFriendship && !user.is_verified">
+		<template slot="controls">
+			<template v-if="app.user && user.id !== app.user.id && !userFriendship && !user.is_verified">
 				<a class="btn btn-outline btn-block" @click="sendFriendRequest">
 					<app-jolticon icon="friend-add-2" />
 					<translate>profile.friend_request_button</translate>
 				</a>
-			</div>
-		</div>
+			</template>
+		</template>
 
 	</app-page-header>
 

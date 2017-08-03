@@ -43,18 +43,18 @@
 
 									<div class="card-meta">
 										<span class="tag tag-blue">
-											<span v-if="group.type === KeyGroup.TYPE_ANONYMOUS">
+											<template v-if="group.type === KeyGroup.TYPE_ANONYMOUS">
 												<translate>Unrestricted (Anonymous)</translate>
-											</span>
-											<span v-else-if="group.type === KeyGroup.TYPE_ANONYMOUS_CLAIM">
+											</template>
+											<template v-else-if="group.type === KeyGroup.TYPE_ANONYMOUS_CLAIM">
 												<translate>Claim-Only</translate>
-											</span>
-											<span v-else-if="group.type === KeyGroup.TYPE_EMAIL">
+											</template>
+											<template v-else-if="group.type === KeyGroup.TYPE_EMAIL">
 												<translate>Unrestricted (Email)</translate>
-											</span>
-											<span v-else-if="group.type === KeyGroup.TYPE_USER">
+											</template>
+											<template v-else-if="group.type === KeyGroup.TYPE_USER">
 												<translate>User</translate>
-											</span>
+											</template>
 										</span>
 									</div>
 

@@ -63,12 +63,12 @@
 					<div class="alert alert-info"
 						v-else
 						>
-						<div v-if="_tab === 'active'">
+						<template v-if="_tab === 'active'">
 							<p><translate>You haven't published any posts yet.</translate></p>
-						</div>
-						<div v-else-if="_tab === 'draft'">
+						</template>
+						<template v-else-if="_tab === 'draft'">
 							<p><translate>You don't have any draft posts.</translate></p>
-						</div>
+						</template>
 					</div>
 
 

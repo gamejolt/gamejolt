@@ -16,18 +16,18 @@
 				{{ score.score }}
 			</div>
 			<div class="score-list-user">
-				<span v-if="score.user">
+				<template v-if="score.user">
 					<a :href="score.user.url">
 						{{ score.user.display_name }}
 					</a>
 					<small class="text-muted">@{{ score.user.username }}</small>
-				</span>
-				<span v-if="!score.user">
+				</template>
+				<template v-if="!score.user">
 					{{ score.guest }}
 					<em class="text-muted small">
 						(<translate>scores.guest</translate>)
 					</em>
-				</span>
+				</template>
 			</div>
 			<div class="score-list-time text-muted small">
 				<app-time-ago :date="score.logged_on" />

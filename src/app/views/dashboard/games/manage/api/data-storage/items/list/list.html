@@ -52,8 +52,8 @@
 						</router-link>
 					</td>
 					<td class="small">
-						<span>{{ item.data.slice(0, 50) }}</span>
-						<span v-if="item.data.length > 50">...</span>
+						{{ item.data.slice(0, 50) }}
+						<template v-if="item.data.length > 50">...</template>
 					</td>
 					<td class="small">
 						{{ item.posted_on | date('medium') }}

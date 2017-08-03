@@ -96,7 +96,7 @@
 		</div>
 	</app-expand>
 
-	<div slot="body">
+	<template slot="body">
 		<app-form name="buildForm" ref="form">
 
 			<div v-if="model.type === GameBuild.TYPE_APPLET" class="alert alert-warning sans-margin">
@@ -333,5 +333,5 @@
 
 			</div>
 		</app-form>
-	</div>
+	</template>
 </app-card-list-item>

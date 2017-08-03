@@ -81,15 +81,13 @@
 							/>
 					</app-loading-fade>
 
-					<div v-if="!scores.length">
-						<div class="alert alert-warning full-bleed-xs">
-							<div v-if="type === 'best'">
-								<translate>game.scores.no_scores_html</translate>
-							</div>
-							<div v-else-if="type === 'user'">
-								<translate>game.scores.no_user_scores_html</translate>
-							</div>
-						</div>
+					<div class="alert alert-warning full-bleed-xs" v-if="!scores.length">
+						<template v-if="type === 'best'">
+							<translate>game.scores.no_scores_html</translate>
+						</template>
+						<template v-else-if="type === 'user'">
+							<translate>game.scores.no_user_scores_html</translate>
+						</template>
 					</div>
 
 				</div>

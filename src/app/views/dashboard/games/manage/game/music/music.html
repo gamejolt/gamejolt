@@ -40,13 +40,13 @@
 						<h5>{{ song.title }}</h5>
 					</div>
 
-					<div slot="body">
+					<template slot="body">
 						<form-game-song
 							:game="game"
 							:model="song"
 							@submit="onSongEdited"
 							/>
-					</div>
+					</template>
 
 				</app-card-list-item>
 			</app-card-list-draggable>

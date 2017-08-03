@@ -37,134 +37,128 @@
 		</div>
 		<br>
 
-		<div v-if="packages.length">
-			<app-card-list :items="packages">
-				<app-card-list-draggable @change="saveSort">
-					<app-card-list-item
-						v-for="package of packages"
-						:key="package.id"
-						:item="package"
+		<app-card-list v-if="packages.length" :items="packages">
+			<app-card-list-draggable @change="saveSort">
+				<app-card-list-item
+					v-for="package of packages"
+					:key="package.id"
+					:item="package"
+					>
+
+					<a
+						class="card-remove"
+						v-if="!package.has_sales"
+						@click="removePackage( package )"
 						>
+						<app-jolticon icon="remove" />
+					</a>
 
-						<a
-							class="card-remove"
-							v-if="!package.has_sales"
-							@click="removePackage( package )"
-							>
-							<app-jolticon icon="remove" />
-						</a>
-
-						<div class="card-title">
-							<h4>
-								<router-link
-									:to="{
-										name: 'dash.games.manage.game.packages.edit',
-										params: { packageId: package.id },
-									}"
-									>
-									{{ package.title || game.title }}
-								</router-link>
-							</h4>
-						</div>
-
-						<div class="card-meta">
-
-							<span
-								class="tag tag-active"
-								v-if="sellables[ package.id ].primary"
-								v-app-tooltip="$gettext( `We use the primary package to determine the price to show on game listings.` )"
-								>
-								<translate>Primary Package</translate>
-							</span>
-
-							<span
-								class="tag tag-pink"
-								v-if="package.visibility === GamePackage.VISIBILITY_PRIVATE"
-								v-app-tooltip="$gettext( `This package will only be available to you and any keys that have access.` )"
-								>
-								<translate>Private</translate>
-							</span>
-
-							<span v-if="sellables[ package.id ].type === 'pwyw'">
-								<span class="tag tag-blue">
-									<translate>Pay What You Want</translate>
-								</span>
-								<span class="dot-separator"></span>
-								<span>
-									<strong>
-										<translate>Suggested Price</translate>
-									</strong>
-									&mdash;
-									<span v-if="sellables[ package.id ].pricings[0].amount">
-										{{ sellables[ package.id ].pricings[0].amount | currency }}
-									</span>
-									<span v-else>
-										<translate>None</translate>
-									</span>
-								</span>
-							</span>
-							<span v-else-if="sellables[ package.id ].type === 'paid'">
-								<span class="tag tag-blue">
-									<translate>Paid</translate>
-								</span>
-								<span class="dot-separator"></span>
-								<span>
-									<strong>
-										<translate>Price</translate>
-									</strong>
-									&mdash;
-									{{ sellables[ package.id ].pricings[0].amount | currency }}
-								</span>
-							</span>
-							<span v-else>
-								<span class="tag tag-blue">
-									<translate>Free</translate>
-								</span>
-							</span>
-
-						</div>
-
-						<div class="card-content" v-if="package.description">
-							{{ package.description }}
-						</div>
-
-						<div class="card-controls">
+					<div class="card-title">
+						<h4>
 							<router-link
-								class="btn btn-outline"
 								:to="{
 									name: 'dash.games.manage.game.packages.edit',
 									params: { packageId: package.id },
 								}"
 								>
-								<app-jolticon icon="cog" />
-								<translate>Manage</translate>
+								{{ package.title || game.title }}
 							</router-link>
-							<router-link
-								class="btn btn-outline"
-								:to="{
-									name: 'dash.games.manage.game.packages.edit.widget',
-									params: { packageId: package.id },
-								}"
-								>
-								<app-jolticon icon="plug" />
-								<translate>Widget</translate>
-							</router-link>
-							<router-link
-								class="btn btn-outline"
-								:to="{
-									name: 'dash.analytics',
-									params: { resource: 'Game_Package', resourceId: package.id },
-								}"
-								>
-								<app-jolticon icon="chart" />
-								<translate>Analytics</translate>
-							</router-link>
-						</div>
+						</h4>
+					</div>
 
-					</app-card-list-item>
-				</app-card-list-draggable>
-			</app-card-list>
-		</div>
+					<div class="card-meta">
+
+						<span
+							class="tag tag-active"
+							v-if="sellables[ package.id ].primary"
+							v-app-tooltip="$gettext( `We use the primary package to determine the price to show on game listings.` )"
+							>
+							<translate>Primary Package</translate>
+						</span>
+
+						<span
+							class="tag tag-pink"
+							v-if="package.visibility === GamePackage.VISIBILITY_PRIVATE"
+							v-app-tooltip="$gettext( `This package will only be available to you and any keys that have access.` )"
+							>
+							<translate>Private</translate>
+						</span>
+
+						<template v-if="sellables[ package.id ].type === 'pwyw'">
+							<span class="tag tag-blue">
+								<translate>Pay What You Want</translate>
+							</span>
+							<span class="dot-separator"></span>
+							<strong>
+								<translate>Suggested Price</translate>
+							</strong>
+							&mdash;
+							<template v-if="sellables[ package.id ].pricings[0].amount">
+								{{ sellables[ package.id ].pricings[0].amount | currency }}
+							</template>
+							<template v-else>
+								<translate>None</translate>
+							</template>
+						</template>
+						<template v-else-if="sellables[ package.id ].type === 'paid'">
+							<span class="tag tag-blue">
+								<translate>Paid</translate>
+							</span>
+							<span class="dot-separator"></span>
+							<strong>
+								<translate>Price</translate>
+							</strong>
+							&mdash;
+							{{ sellables[ package.id ].pricings[0].amount | currency }}
+						</template>
+						<template v-else>
+							<span class="tag tag-blue">
+								<translate>Free</translate>
+							</span>
+						</template>
+
+					</div>
+
+					<div class="card-content" v-if="package.description">
+						{{ package.description }}
+					</div>
+
+					<div class="card-controls">
+						<router-link
+							class="btn btn-outline"
+							:to="{
+								name: 'dash.games.manage.game.packages.edit',
+								params: { packageId: package.id },
+							}"
+							>
+							<app-jolticon icon="cog" />
+							<translate>Manage</translate>
+						</router-link>
+						<router-link
+							class="btn btn-outline"
+							:to="{
+								name: 'dash.games.manage.game.packages.edit.widget',
+								params: { packageId: package.id },
+							}"
+							>
+							<app-jolticon icon="plug" />
+							<translate>Widget</translate>
+						</router-link>
+						<router-link
+							class="btn btn-outline"
+							:to="{
+								name: 'dash.analytics',
+								params: { resource: 'Game_Package', resourceId: package.id },
+							}"
+							>
+							<app-jolticon icon="chart" />
+							<translate>Analytics</translate>
+						</router-link>
+					</div>
+
+				</app-card-list-item>
+			</app-card-list-draggable>
+		</app-card-list>
 
 		<app-dash-game-wizard-controls
 			:disabled="!game._is_devlog && !game.has_active_builds"

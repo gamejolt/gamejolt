@@ -41,7 +41,7 @@
 		<div class="shell-nav-label">
 
 			<!-- Only show tags in room user lists -->
-			<span v-if="room">
+			<template v-if="room">
 				<span class="chat-user-role tag tag-active"
 					v-if="user.isMod === 'owner'"
 					:title="$gettext( `Room Admin` )"
@@ -66,23 +66,23 @@
 					>
 					X
 				</span>
-			</span>
+			</template>
 
 			<span>{{ user.displayName }}</span>
 			<span class="tiny">@{{ user.username }}</span>
 
 			<!--<div class="chat-user-list-meta">
-				 <span v-if="typeof user.currently_playing !== 'undefined' && user.currently_playing">
+				 <template v-if="typeof user.currently_playing !== 'undefined' && user.currently_playing">
 					Playing <em>{{ user.currently_playing.game }}</em>
-				</span>
+				</template>
 			</div>-->
 		</div>
 
 	</a>
 
 	<div class="nav-well" v-if="showModTools && areModToolsOpen">
-		<div v-if="canModerate">
-			<span v-if="chat.canModerate( room, user, 'mute' )">
+		<template v-if="canModerate">
+			<template v-if="chat.canModerate( room, user, 'mute' )">
 				<span class="btn btn-sm btn-outline"
 					v-if="!user.isMutedRoom"
 					@click="mute"
@@ -96,9 +96,9 @@
 					>
 					<translate>Unmute</translate>
 				</span>
-			</span>
+			</template>
 
-			<span v-if="chat.canModerate( room, user, 'mod' )">
+			<template v-if="chat.canModerate( room, user, 'mod' )">
 				<span class="btn btn-sm btn-outline"
 					v-if="!user.isMod"
 					@click="mod"
@@ -112,12 +112,11 @@
 					>
 					<translate>Demod</translate>
 				</span>
-			</span>
-		</div>
-
-		<div v-else>
+			</template>
+		</template>
+		<template v-else>
 			<translate>You don't have the correct permissions to moderate this user.</translate>
-		</div>
+		</template>
 	</div>
 
 </li>

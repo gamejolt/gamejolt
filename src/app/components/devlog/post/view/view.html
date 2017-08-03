@@ -13,7 +13,6 @@
 			:content="post.content_compiled"
 			/>
 	</div>
-
 	<div v-else-if="post.type === 'media'" class="full-bleed-xs">
 		<div v-for="item of post.media" :key="item.id">
 
@@ -41,7 +40,6 @@
 
 		</div>
 	</div>
-
 	<div v-else-if="post.type === 'video'" class="full-bleed-xs">
 		<app-video-embed
 			video-provider="youtube"
@@ -49,7 +47,6 @@
 			:autoplay="true"
 			/>
 	</div>
-
 	<div v-else-if="post.type === 'sketchfab'" class="full-bleed-xs">
 		<app-sketchfab-embed
 			:sketchfab-id="post.sketchfabs[0].sketchfab_id"

@@ -9,12 +9,12 @@
 			{{ reportData.fieldLabel }}
 		</div>
 		<div class="stat-big-digit">
-			<span v-if="reportData.fieldType === 'number'">
+			<template v-if="reportData.fieldType === 'number'">
 				{{ reportData.data | number }}
-			</span>
-			<span v-else-if="reportData.fieldType === 'currency'">
+			</template>
+			<template v-else-if="reportData.fieldType === 'currency'">
 				{{ reportData.data | currency }}
-			</span>
+			</template>
 		</div>
 	</div>
 

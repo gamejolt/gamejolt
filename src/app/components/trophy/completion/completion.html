@@ -3,7 +3,7 @@
 	:class="achieved > 0 ? 'alert-info fill-dark' : 'alert-warning'"
 	>
 
-	<div v-if="achieved > 0">
+	<template v-if="achieved > 0">
 		<p>
 			<span
 				v-translate="{
@@ -45,10 +45,9 @@
 				</div>
 			</div>
 		</div>
-	</div>
-
-	<div v-if="!achieved">
+	</template>
+	<template v-else>
 		<translate>You haven't achieved any trophies for this game yet!</translate>
-	</div>
+	</template>
 
 </div>

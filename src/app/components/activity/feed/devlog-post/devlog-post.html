@@ -1,7 +1,7 @@
 <app-timeline-list-item :is-new="isNew" :is-active="isActive">
-	<span slot="bubble">
+	<template slot="bubble">
 		<app-jolticon :icon="icon" />
-	</span>
+	</template>
 
 	<div class="devlog-post" :class="'devlog-post-' + post.type">
 
@@ -25,16 +25,16 @@
 						<div class="timeline-list-item-meta">
 							<app-time-ago :date="post.published_on" />
 
-							<span v-if="post.type === 'media'">
+							<template v-if="post.type === 'media'">
 								<span class="dot-separator"></span>
 								<app-jolticon icon="screenshot" class="middle" />
 								{{ post.media.length | number }}
-							</span>
+							</template>
 
-							<span v-if="feed.showGameInfo">
+							<template v-if="feed.showGameInfo">
 								<span class="dot-separator"></span>
-								<span>{{ post.game.title }}</span>
-							</span>
+								{{ post.game.title }}
+							</template>
 						</div>
 
 						<div class="timeline-list-item-title">

@@ -12,7 +12,7 @@
 				{{ score.content.score }}
 			</div>
 			<div class="score-feed-user">
-				<span v-if="score.user.id">
+				<template v-if="score.user.id">
 					<router-link
 						:to="{
 							name: 'profile.overview',
@@ -22,10 +22,10 @@
 						{{ score.user.display_name }}
 					</router-link>
 					@{{ score.user.username }}
-				</span>
-				<span v-if="score.content.guest">
+				</template>
+				<template v-if="score.content.guest">
 					{{ score.content.guest }}
-				</span>
+				</template>
 			</div>
 			<div class="score-feed-time text-muted">
 				<app-time-ago :date="score.time" />

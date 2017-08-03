@@ -31,15 +31,15 @@
 			</ul>
 		</nav>
 
-		<div v-if="isLoading && isShown">
+		<template v-if="isLoading && isShown">
 			<br>
 			<app-loading :centered="true"></app-loading>
-		</div>
+		</template>
 
 		<!-- Requests -->
-		<div v-if="!isLoading && activeTab === 'requests'">
+		<template v-if="!isLoading && activeTab === 'requests'">
 
-			<div v-if="isShown && requests.length">
+			<template v-if="isShown && requests.length">
 
 				<router-link
 					v-for="request of requests"
@@ -84,15 +84,15 @@
 					</app-card>
 				</router-link>
 
-			</div>
+			</template>
 
 			<div class="alert alert-info" v-if="!requests.length">
 				<span translate>No friend requests right now.</span>
 			</div>
-		</div>
+		</template>
 
 		<!-- Pending -->
-		<div v-if="!isLoading && activeTab === 'pending' && pending.length">
+		<template v-if="!isLoading && activeTab === 'pending' && pending.length">
 
 			<router-link
 				v-for="request of pending"
@@ -131,7 +131,7 @@
 				</app-card>
 			</router-link>
 
-		</div>
+		</template>
 
 	</div>
 

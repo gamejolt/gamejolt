@@ -47,7 +47,7 @@
 			<!--
 				Only show the cover buttons on the overview page.
 			-->
-			<div slot="cover-buttons">
+			<template slot="cover-buttons">
 				<app-game-cover-buttons
 					v-if="
 						!Screen.isXs
@@ -61,7 +61,7 @@
 					:partner="partner"
 					@multiple="scrollToMultiplePackages"
 					/>
-			</div>
+			</template>
 
 			<app-user-avatar
 				slot="spotlight"
@@ -108,7 +108,7 @@
 					</router-link>
 				</span>
 
-				<span v-if="game.tigrs_age || game.ratings_enabled">
+				<template v-if="game.tigrs_age || game.ratings_enabled">
 					<span class="dot-separator hidden-xs"></span>
 					<br class="visible-xs">
 					<br class="visible-xs">
@@ -118,7 +118,7 @@
 						:game="game"
 						/>
 
-					<span v-if="!game._is_devlog && game.ratings_enabled">
+					<template v-if="!game._is_devlog && game.ratings_enabled">
 						<span class="dot-separator"></span>
 						<app-meter
 							:big="true"
@@ -126,8 +126,8 @@
 							:rating="game.avg_rating"
 							v-app-tooltip="ratingTooltip"
 							/>
-					</span>
-				</span>
+					</template>
+				</template>
 			</div>
 
 		</app-page-header>

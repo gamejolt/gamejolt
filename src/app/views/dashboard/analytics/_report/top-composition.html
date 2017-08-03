@@ -29,9 +29,9 @@
 						{{ i + 1 | number }}.
 					</td>
 					<th>
-						<span v-if="typeof val.label !== 'object'">
+						<template v-if="typeof val.label !== 'object'">
 							{{ val.label }}
-						</span>
+						</template>
 						<router-link
 							v-else
 							:to="{

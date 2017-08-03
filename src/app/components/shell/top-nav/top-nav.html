@@ -132,12 +132,12 @@
 		<div class="navbar-separator" v-if="chat || !Connection.isOnline"></div>
 
 		<!-- Connection Status -->
-		<span v-if="!Connection.isOnline">
-			<span class="navbar-item disconnected-icon"
-				v-app-tooltip.left="$gettext( `We're having trouble connecting to Game Jolt.` )"
-				>
-				<app-jolticon icon="offline" />
-			</span>
+		<span
+			v-if="!Connection.isOnline"
+			class="navbar-item disconnected-icon"
+			v-app-tooltip.left="$gettext( `We're having trouble connecting to Game Jolt.` )"
+			>
+			<app-jolticon icon="offline" />
 		</span>
 
 		<!-- Chat -->

@@ -3,18 +3,16 @@
 	<!--
 		If this user is banned, we show very little.
 	-->
-	<div v-if="!user.status">
-		<section class="section fill-pink">
-			<div class="container">
-				<translate>profile.banned_message_html</translate>
-			</div>
-		</section>
-	</div>
+	<section class="section fill-pink" v-if="!user.status">
+		<div class="container">
+			<translate>profile.banned_message_html</translate>
+		</div>
+	</section>
 
 	<!--
 		Active user
 	-->
-	<div v-else>
+	<template v-else>
 
 		<!--
 			Currently Playing
@@ -65,7 +63,7 @@
 						<!--
 							Friend Requests
 						-->
-						<div v-if="userFriendship">
+						<template v-if="userFriendship">
 							<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT" :animate-initial="true">
 								<div class="alert alert-info">
 									<p>
@@ -100,16 +98,26 @@
 									</a>
 								</div>
 							</app-expand>
-						</div>
+						</template>
 
 					</div>
 					<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
 						<div class="row">
 							<div class="col-sm-6 col-md-12">
+								<p>
+									<a class="btn btn-outline btn-block">
+										View Developer's Games
+									</a>
+
+									<a class="btn btn-outline btn-block">
+										View Videos
+									</a>
+								</p>
+
 								<app-user-level-widget :user="user" />
 							</div>
 							<div class="col-sm-6 col-md-12">
-								<div v-if="(
+								<template v-if="(
 									user.facebook_id
 									|| user.twitch_id
 									|| user.twitter_id
@@ -171,8 +179,8 @@
 											<translate>Website</translate>
 										</a>
 									</div>
-								</div>
-								<div v-if="youtubeChannels.length">
+								</template>
+								<template v-if="youtubeChannels.length">
 									<div v-for="channel of youtubeChannels" :key="channel.id">
 										<a
 											class="link-unstyled"
@@ -183,7 +191,7 @@
 											{{ channel.title }}
 										</a>
 									</div>
-								</div>
+								</template>
 							</div>
 						</div>
 					</div>
@@ -217,8 +225,7 @@
 				<div v-if="!gamesCount">
 					<translate>profile.no_developer_games_html</translate>
 				</div>
-
-				<div v-if="gamesCount">
+				<template v-else>
 					<h2 class="section-header">
 						<router-link class="link-unstyled" :to="{ name: 'library.collection.developer', params: { id: user.username } }">
 							<translate>profile.developer_games_teaser_heading</translate>
@@ -250,7 +257,7 @@
 							<translate>View All</translate>
 						</router-link>
 					</div>
-				</div>
+				</template>
 
 			</div>
 		</section>
@@ -290,6 +297,6 @@
 
 			</div>
 		</section>
-	</div>
+	</template>
 
 </div>

@@ -34,7 +34,7 @@
 			</app-nav-tab-list>
 			<br>
 
-			<div v-if="tab === 'image'">
+			<template v-if="tab === 'image'">
 
 				<div class="alert alert-info full-bleed-xs">
 					<div v-translate>
@@ -53,8 +53,8 @@
 					@submit="onImagesAdded"
 					/>
 
-			</div>
-			<div v-else-if="tab === 'video'">
+			</template>
+			<template v-else-if="tab === 'video'">
 
 				<div class="alert alert-info full-bleed-xs">
 					<div v-translate>
@@ -73,8 +73,8 @@
 					@submit="addVideo"
 					/>
 
-			</div>
-			<div v-else-if="tab === 'sketchfab'">
+			</template>
+			<template v-else-if="tab === 'sketchfab'">
 
 				<div class="alert alert-info full-bleed-xs">
 					<p>
@@ -92,9 +92,9 @@
 					@submit="addSketchfab"
 					/>
 
-			</div>
+			</template>
 
-			<div v-if="media.length > 0 ">
+			<template v-if="media.length > 0 ">
 				<hr>
 
 				<app-card-list
@@ -124,7 +124,7 @@
 									<app-jolticon icon="remove" />
 								</a>
 
-								<div v-if="item.media_type === 'image'">
+								<template v-if="item.media_type === 'image'">
 									<div class="card-title">
 										<h5 v-if="item.caption">{{ item.caption }}</h5>
 										<h5 v-else>
@@ -141,8 +141,8 @@
 											<translate>Copy Permalink</translate>
 										</button>
 									</div>
-								</div>
-								<div v-else-if="item.media_type === 'video'">
+								</template>
+								<template v-else-if="item.media_type === 'video'">
 									<div class="card-title" >
 										<h5>{{ item.title }}</h5>
 									</div>
@@ -156,8 +156,8 @@
 											<translate>Copy Permalink</translate>
 										</button>
 									</div>
-								</div>
-								<div v-else-if="item.media_type === 'sketchfab'">
+								</template>
+								<template v-else-if="item.media_type === 'sketchfab'">
 									<div class="card-meta">
 										<div class="tag">Sketchfab</div>
 										<button
@@ -168,11 +168,11 @@
 											<translate>Copy Permalink</translate>
 										</button>
 									</div>
-								</div>
+								</template>
 
 							</div>
 
-							<div slot="body">
+							<template slot="body">
 								<form-game-image
 									v-if="item.media_type === 'image'"
 									:game="game"
@@ -193,13 +193,13 @@
 									:model="item"
 									@submit="onMediaEdited"
 									/>
-							</div>
+							</template>
 
 						</app-card-list-item>
 					</app-card-list-draggable>
 
 				</app-card-list>
-			</div>
+			</template>
 
 			<app-dash-game-wizard-controls />
 

@@ -107,12 +107,12 @@
 							<translate>dash.games.overview.stats_rating</translate>
 						</div>
 						<div class="stat-big-digit">
-							<span v-if="game.avg_rating">
+							<template v-if="game.avg_rating">
 								{{ game.avg_rating | number }}
-							</span>
-							<span v-if="!game.avg_rating">
+							</template>
+							<template v-if="!game.avg_rating">
 								<translate>dash.games.overview.stats_na</translate>
-							</span>
+							</template>
 						</div>
 					</div>
 				</div>

@@ -46,7 +46,7 @@
 		</div>
 	</section>
 
-	<div v-if="variation === 0">
+	<template v-if="variation === 0">
 		<section class="section">
 			<div class="container-lg">
 
@@ -228,8 +228,8 @@
 
 			</div>
 		</section>
-	</div>
-	<div v-else-if="variation === 1">
+	</template>
+	<template v-else-if="variation === 1">
 		<section class="section section-thin fill-darker overlay-scrollbar channel-list">
 			<div class="channel-list-item"
 				v-for="channel of channels"
@@ -352,8 +352,8 @@
 
 			</div>
 		</section>
-	</div>
-	<div v-else-if="variation === 2">
+	</template>
+	<template v-else-if="variation === 2">
 		<section class="section section-thin fill-darker overlay-scrollbar channel-list">
 			<div class="channel-list-item"
 				v-for="channel of channels"
@@ -377,7 +377,7 @@
 							</a>
 						</li>
 					</ul>
-					<span slot="controls">
+					<template slot="controls">
 						<router-link
 							class="btn"
 							:to="chosenSection.url"
@@ -386,10 +386,10 @@
 							<translate>View All</translate>
 							&raquo;
 						</router-link>
-					</span>
+					</template>
 				</app-nav-tab-list>
 
-				<div v-if="chosenSection.eventLabel === 'featured-games'">
+				<template v-if="chosenSection.eventLabel === 'featured-games'">
 					<app-game-grid-placeholder
 						v-if="!isLoaded"
 						:num="8"
@@ -417,7 +417,7 @@
 
 					<div class="page-cut hidden-xs"></div>
 					<h4 class="text-center">More Games</h4>
-				</div>
+				</template>
 
 				<div>
 					<app-game-grid-placeholder
@@ -447,7 +447,7 @@
 
 			</div>
 		</section>
-	</div>
+	</template>
 
 	<app-ad-placement />
 

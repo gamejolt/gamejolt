@@ -1,5 +1,5 @@
 <app-form name="financialsForm" class="form-dashboard-financials" ref="form">
-	<div v-if="!isVerified">
+	<template v-if="!isVerified">
 		<div class="alert alert-info">
 			<translate>Before you can use the Marketplace, we'll need to gather some details from you. This will ensure that your account is completely set up and ready to run smoothly on the Game Jolt Marketplace.</translate>
 		</div>
@@ -29,7 +29,7 @@
 				</div>
 			</div>
 		</fieldset>
-	</div>
+	</template>
 
 	<div class="alert alert-success" v-if="isVerified">
 		<app-jolticon icon="check" />
@@ -83,8 +83,8 @@
 				class="btn btn-primary-outline"
 				@click.prevent="linkPayPal()"
 				>
-				<span v-if="!user.paypal_id"><translate>Link PayPal Account</translate></span>
-				<span v-else><translate>Change PayPal Account</translate></span>
+				<template v-if="!user.paypal_id"><translate>Link PayPal Account</translate></template>
+				<template v-else><translate>Change PayPal Account</translate></template>
 			</button>
 		</div>
 

@@ -52,26 +52,27 @@
 
 		</div>
 
-		<div slot="nav">
+		<template slot="nav">
 			<app-forum-breadcrumbs
 				:channel="channel"
 				/>
-		</div>
+		</template>
 
 	</app-page-header>
 
 	<div class="section">
 		<div class="container" id="forum-topics-list">
 
-			<div v-if="stickyTopics.length">
+			<template v-if="stickyTopics.length">
 				<app-forum-topic-list
 					:topics="stickyTopics"
 					:post-count-per-page="postCountPerPage"
 					/>
-				<hr>
-			</div>
 
-			<div v-if="topics.length">
+				<hr>
+			</template>
+
+			<template v-if="topics.length">
 				<p class="text-muted small">
 					<translate
 						:translate-params="{
@@ -98,9 +99,8 @@
 					:current-page="currentPage"
 					@pagechange="Scroll.to( 'forum-topics-list', { animate: false } )"
 					/>
-			</div>
-
-			<div v-if="!topics.length" class="text-center">
+			</template>
+			<div v-else class="text-center">
 				<p class="lead">
 					<translate>There aren't any topics here yet!</translate>
 				</p>

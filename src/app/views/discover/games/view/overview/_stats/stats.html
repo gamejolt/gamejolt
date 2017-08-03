@@ -31,10 +31,10 @@
 			<div class="stat-big-digit">
 				<app-lazy-placeholder :when="isOverviewLoaded">
 					<span class="lazy-placeholder"></span>
-					<span v-if="showNaPlays">
+					<template v-if="showNaPlays">
 						<translate>games.view.stats.na</translate>
-					</span>
-					<span v-if="!showNaPlays" :title="number( downloadCount + playCount )">
+					</template>
+					<span v-else :title="number( downloadCount + playCount )">
 						{{ fuzzynumber( downloadCount + playCount ) }}
 					</span>
 				</app-lazy-placeholder>
@@ -74,30 +74,31 @@
 		</div>
 	</div>
 
-	<div v-if="game.ratings_enabled">
-		<app-expand :when="isShowingRatingBreakdown">
-			<br>
-			<div class="rating-breakdown well fill-lightest">
-				<table class="table">
-					<tbody>
-						<tr v-for="( ratingString, i ) of ratingStrings">
-							<th class="rating-breakdown-label">
-								{{ ratingString }}
-							</th>
-							<td class="rating-breakdown-progress" style="vertical-align: middle">
-								<app-progress-bar
-									variant="darker"
-									:percent="ratingBreakdown[ (5 - i) ] / game.rating_count * 100"
-									:thin="true"
-									/>
-							</td>
-							<td class="rating-breakdown-count">
-								({{ fuzzynumber( (ratingBreakdown[ (5 - i) ] || 0) ) }})
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</app-expand>
-	</div>
+	<app-expand
+		v-if="game.ratings_enabled"
+		:when="isShowingRatingBreakdown"
+		>
+		<br>
+		<div class="rating-breakdown well fill-lightest">
+			<table class="table">
+				<tbody>
+					<tr v-for="( ratingString, i ) of ratingStrings">
+						<th class="rating-breakdown-label">
+							{{ ratingString }}
+						</th>
+						<td class="rating-breakdown-progress" style="vertical-align: middle">
+							<app-progress-bar
+								variant="darker"
+								:percent="ratingBreakdown[ (5 - i) ] / game.rating_count * 100"
+								:thin="true"
+								/>
+						</td>
+						<td class="rating-breakdown-count">
+							({{ fuzzynumber( (ratingBreakdown[ (5 - i) ] || 0) ) }})
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</app-expand>
 </div>

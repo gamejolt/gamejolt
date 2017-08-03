@@ -81,7 +81,7 @@
 					:sparse="true"
 					/>
 
-				<div v-if="showEditControls && app.user && post.user.id === app.user.id">
+				<template v-if="showEditControls && app.user && post.user.id === app.user.id">
 					<button class="btn btn-success-outline" v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost">
 						<app-jolticon icon="check" />
 						<translate>Publish</translate>
@@ -104,7 +104,7 @@
 							</a>
 						</div>
 					</app-popover>
-				</div>
+				</template>
 			</div>
 		</div>
 
@@ -198,30 +198,28 @@
 
 		<div v-else-if="tab === 'likes'">
 			<app-loading v-if="!hasLoadedLikes" />
-
-			<div v-if="hasLoadedLikes">
-				<router-link
-					v-for="like of likes"
-					:key="like.id"
-					:to="{ name: 'profile.overview', params: { username: like.user.username } }"
-					>
-					<app-card>
-						<div style="width: 40px; height: 40px; float: left">
-							<div class="friend-request-popover-avatar">
-								<app-user-avatar-img :user="like.user" />
-							</div>
+			<router-link
+				v-else
+				v-for="like of likes"
+				:key="like.id"
+				:to="{ name: 'profile.overview', params: { username: like.user.username } }"
+				>
+				<app-card>
+					<div style="width: 40px; height: 40px; float: left">
+						<div class="friend-request-popover-avatar">
+							<app-user-avatar-img :user="like.user" />
 						</div>
-						<div style="margin-left: 55px;">
-							<div class="card-title">
-								<h5>
-									{{ like.user.display_name }}
-									<small>@{{ like.user.username }}</small>
-								</h5>
-							</div>
+					</div>
+					<div style="margin-left: 55px;">
+						<div class="card-title">
+							<h5>
+								{{ like.user.display_name }}
+								<small>@{{ like.user.username }}</small>
+							</h5>
 						</div>
-					</app-card>
-				</router-link>
-			</div>
+					</div>
+				</app-card>
+			</router-link>
 		</div>
 
 	</div>

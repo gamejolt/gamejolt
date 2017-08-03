@@ -7,7 +7,7 @@
 				<!--
 					Broadcast
 				-->
-				<div v-if="latestBroadcast">
+				<template v-if="latestBroadcast">
 					<a :href="latestBroadcast.url" target="_blank" v-app-track-event="`dash:overview:broadcast-view`">
 						<app-card>
 							<div class="row">
@@ -31,12 +31,12 @@
 							<translate>dash.overview.broadcast_view_all</translate>
 						</a>
 					</div>
-				</div>
+				</template>
 
 				<!--
 					Revenue
 				-->
-				<div v-if="typeof revenueTotal !== 'undefined'">
+				<template v-if="typeof revenueTotal !== 'undefined'">
 					<h2>
 						<translate>dash.overview.revenue_heading</translate>
 						<app-jolticon
@@ -138,11 +138,11 @@
 						</div>
 					</app-expand>
 
-					<div v-if="revenuePendingWithdraw > 0" class="alert alert-info">
+					<template v-if="revenuePendingWithdraw > 0" class="alert alert-info">
 						<span v-translate="{ amount: currency( revenuePendingWithdraw ) }">
 							You have pending withdrawals amounting to <b>%{ amount }</b>.
 						</span>
-					</div>
+					</template>
 
 					<div class="alert alert-info" v-if="revenuePending">
 						<span v-translate="{ amount: currency( revenuePending ) }">
@@ -155,7 +155,7 @@
 							<translate>dash.overview.revenue_withdraw_button</translate>
 						</router-link>
 					</div>
-				</div>
+				</template>
 			</div>
 
 			<div class="col-md-7" :class="{ 'pull-left': Screen.isDesktop }">
@@ -163,7 +163,7 @@
 				<!--
 					Integrate
 				-->
-				<div v-if="!isFullyIntegrated">
+				<template v-if="!isFullyIntegrated">
 					<h2 :class="{ 'section-header': Screen.isDesktop }">
 						<translate>dash.integrate.heading</translate>
 					</h2>
@@ -207,7 +207,7 @@
 							</tr>
 						</tbody>
 					</table>
-				</div>
+				</template>
 
 				<br v-if="isFullyIntegrated && Screen.isMobile">
 
@@ -223,7 +223,7 @@
 				<!--
 					Sites
 				-->
-				<div v-if="app.user.is_developer">
+				<template v-if="app.user.is_developer">
 					<h2>
 						<translate>Sites</translate>
 					</h2>
@@ -247,7 +247,7 @@
 							<translate>Edit Portfolio Site</translate>
 						</router-link>
 					</div>
-				</div>
+				</template>
 
 				<!--
 					Manage Games
@@ -256,10 +256,8 @@
 					<translate>Your Games</translate>
 				</h2>
 
-				<div v-if="!games.length">
-					<div class="page-help">
-						<p><translate>Are you a developer? Add your free or commercial game to the site!</translate></p>
-					</div>
+				<div class="page-help" v-if="!games.length">
+					<p><translate>Are you a developer? Add your free or commercial game to the site!</translate></p>
 				</div>
 
 				<div>
@@ -273,7 +271,7 @@
 					</router-link>
 				</div>
 
-				<div v-if="games.length > 0">
+				<template v-if="games.length > 0">
 					<br>
 
 					<app-card
@@ -393,7 +391,7 @@
 							<translate>Expand All</translate>
 						</button>
 					</div>
-				</div>
+				</template>
 
 
 				<!--
@@ -403,7 +401,7 @@
 					<translate>Your Video Comments</translate>
 				</h2>
 
-				<div v-if="!videos.length">
+				<template v-if="!videos.length">
 					<div class="page-help">
 						<p><translate>Are you a let's player? Add your YouTube videos through video comments!</translate></p>
 					</div>
@@ -413,9 +411,8 @@
 							<translate>Learn More</translate>
 						</a>
 					</div>
-				</div>
-
-				<div v-if="videos.length > 0">
+				</template>
+				<template v-else>
 					<div class="row">
 						<app-comment-video-thumbnail
 							class="col-xs-6"
@@ -436,7 +433,7 @@
 							<translate>View All</translate>
 						</router-link>
 					</div>
-				</div>
+				</template>
 
 				<!--
 					Game Jams
@@ -445,10 +442,8 @@
 					<translate>Your Game Jams</translate>
 				</h2>
 
-				<div v-if="!jams.length">
-					<div class="page-help">
-						<p><translate>Got an idea for a game jam? You're already almost done. Simple and powerful, host your jam through Game Jolt!</translate></p>
-					</div>
+				<div class="page-help" v-if="!jams.length">
+					<p><translate>Got an idea for a game jam? You're already almost done. Simple and powerful, host your jam through Game Jolt!</translate></p>
 				</div>
 
 				<div>
@@ -461,7 +456,7 @@
 					</a>
 				</div>
 
-				<div v-if="jams.length > 0">
+				<template v-if="jams.length > 0">
 					<br>
 
 					<app-card
@@ -511,7 +506,7 @@
 							<translate>Expand All</translate>
 						</button>
 					</div>
-				</div>
+				</template>
 
 			</div>
 

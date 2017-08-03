@@ -10,13 +10,13 @@
 	<span class="btn-badge">
 		{{ game.follower_count | number }}
 	</span>
-	<span v-if="!game.is_following">
+	<template v-if="!game.is_following">
 		<app-jolticon icon="subscribe" />
 		<translate v-if="!sparse">Follow Game</translate>
-		<translate v-if="sparse">Follow</translate>
-	</span>
-	<span v-if="game.is_following">
+		<translate v-else>Follow</translate>
+	</template>
+	<template v-if="game.is_following">
 		<app-jolticon icon="subscribed" />
 		<translate v-if="!sparse">Following</translate>
-	</span>
+	</template>
 </button>

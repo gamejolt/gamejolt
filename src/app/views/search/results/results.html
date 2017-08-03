@@ -10,7 +10,7 @@
 		</div>
 	</section>
 
-	<div v-if="Search.query">
+	<template v-if="Search.query">
 
 		<!-- Users -->
 		<section class="section" v-if="payload.users && payload.users.length">
@@ -44,7 +44,7 @@
 			<div class="container-lg">
 
 				<!-- Devlogs -->
-				<div v-if="payload.devlogs && payload.devlogs.length">
+				<template v-if="payload.devlogs && payload.devlogs.length">
 					<div class="clearfix">
 						<router-link class="btn btn-outline pull-right" :to="{ name: 'search.devlogs', query: { q: query } }">
 							<translate>search.results.view_all_link</translate>
@@ -64,7 +64,7 @@
 						event-label="search-overview-devlogs"
 						/>
 
-				</div>
+				</template>
 
 			</div>
 		</section>
@@ -73,7 +73,7 @@
 			<div class="container-lg">
 
 				<!-- Games -->
-				<div v-if="payload.games && payload.games.length">
+				<template v-if="payload.games && payload.games.length">
 					<div class="clearfix">
 						<router-link class="btn btn-outline pull-right" :to="{ name: 'search.games', query: { q: query } }">
 							<translate>search.results.view_all_link</translate>
@@ -93,11 +93,11 @@
 						event-label="search-overview-games"
 						/>
 
-				</div>
+				</template>
 
 			</div>
 		</section>
 
-	</div>
+	</template>
 
 </div>

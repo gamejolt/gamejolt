@@ -28,13 +28,11 @@
 				</translate>
 			</h4>
 
-			<div v-if="!groupedTrophies[ difficulty ].length">
-				<p class="text-muted small">
-					<translate>
-						No trophies added yet for this difficulty level.
-					</translate>
-				</p>
-			</div>
+			<p class="text-muted small" v-if="!groupedTrophies[ difficulty ].length">
+				<translate>
+					No trophies added yet for this difficulty level.
+				</translate>
+			</p>
 
 			<app-card-list
 				:items="groupedTrophies[ difficulty ]"
@@ -109,13 +107,13 @@
 							</div>
 						</div>
 
-						<div slot="body">
+						<template slot="body">
 							<form-game-trophy
 								:game="game"
 								:model="trophy"
 								@submit="onTrophyEdited"
 								/>
-						</div>
+						</template>
 
 					</app-card-list-item>
 				</app-card-list-draggable>

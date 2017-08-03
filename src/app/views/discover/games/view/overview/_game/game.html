@@ -44,14 +44,14 @@
 							<!--
 								Can't rate your own games! Remember that.
 							-->
-							<div v-if="app.user && game.developer.id !== app.user.id && game.ratings_enabled && game.can_user_rate">
+							<template v-if="app.user && game.developer.id !== app.user.id && game.ratings_enabled && game.can_user_rate">
 								<h2 class="rating-widget-label">
-									<span v-if="!!userRating">
+									<template v-if="!!userRating">
 										<translate>Your Rating</translate>
-									</span>
-									<span v-else>
+									</template>
+									<template v-else>
 										<translate>Rate Game</translate>
-									</span>
+									</template>
 								</h2>
 
 								<hr class="underbar">
@@ -64,7 +64,7 @@
 										/>
 								</div>
 								<br>
-							</div>
+							</template>
 						</div>
 						<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
 
@@ -79,21 +79,21 @@
 					<!--
 						Convenience Messaging
 					-->
-					<div v-if="game._is_wip && !game.canceled">
+					<template v-if="game._is_wip && !game.canceled">
 						<br class="visible-xs">
 						<div class="alert alert-info full-bleed-xs" v-translate>
 							This game is in <b>early access</b>. It's still in development and the current version may be buggy or incomplete. Follow along to watch it as it develops!
 						</div>
 						<br class="hidden-xs">
-					</div>
+					</template>
 
-					<div v-if="game.canceled">
+					<template v-if="game.canceled">
 						<br class="visible-xs">
 						<div class="alert alert-warning full-bleed-xs" v-translate>
 							This game was <b>canceled</b>, so the current version might be buggy or incomplete. You can still follow it if you'd like to be notified in the case that development continues.
 						</div>
 						<br class="hidden-xs">
-					</div>
+					</template>
 
 					<!--
 						Builds / Soundtrack
@@ -104,7 +104,7 @@
 						show while we're loading the section. After it's loaded in, we decide if it should show
 						through the "hasReleasesSection" variable which has the correct data.
 					-->
-					<div v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
+					<template v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
 
 						<h2 id="game-releases" :class="{ 'section-header': !Screen.isMobile }">
 							<translate>Releases</translate>
@@ -115,33 +115,31 @@
 						<!--
 							Partner Controls
 						-->
-						<div v-if="hasPartnerControls">
-							<app-card>
-								<div class="card-content">
-									<p>
-										<translate tag="strong">This game is part of the Partner system!</translate>
-										<translate>You can use this link for sharing the game.</translate>
-									</p>
-									<input class="form-control" :value="partnerLink">
-								</div>
-								<div class="card-controls">
-									<button class="btn btn-outline" @click="copyPartnerLink">
-										<app-jolticon icon="link" />
-										<translate>Copy Partner Link</translate>
-									</button>
-									<router-link
-										class="btn btn-outline"
-										:to="{
-											name: 'dash.analytics',
-											params: { resource: 'Game', resourceId: game.id },
-										}"
-										>
-										<app-jolticon icon="chart" />
-										<translate>View Analytics</translate>
-									</router-link>
-								</div>
-							</app-card>
-						</div>
+						<app-card v-if="hasPartnerControls">
+							<div class="card-content">
+								<p>
+									<translate tag="strong">This game is part of the Partner system!</translate>
+									<translate>You can use this link for sharing the game.</translate>
+								</p>
+								<input class="form-control" :value="partnerLink">
+							</div>
+							<div class="card-controls">
+								<button class="btn btn-outline" @click="copyPartnerLink">
+									<app-jolticon icon="link" />
+									<translate>Copy Partner Link</translate>
+								</button>
+								<router-link
+									class="btn btn-outline"
+									:to="{
+										name: 'dash.analytics',
+										params: { resource: 'Game', resourceId: game.id },
+									}"
+									>
+									<app-jolticon icon="chart" />
+									<translate>View Analytics</translate>
+								</router-link>
+							</div>
+						</app-card>
 
 						<div v-if="shouldShowMultiplePackagesMessage" class="alert alert-warning">
 							<app-jolticon icon="notice" />
@@ -151,7 +149,7 @@
 						<app-lazy-placeholder :when="isOverviewLoaded">
 							<div class="lazy-placeholder" style="height: 135px"></div>
 
-							<div v-if="packages.length">
+							<template v-if="packages.length">
 								<app-game-package-card
 									v-for="package of packages"
 									:key="package.id"
@@ -164,7 +162,7 @@
 									:partner-key="partnerKey"
 									:partner="partner"
 									/>
-							</div>
+							</template>
 
 							<app-game-soundtrack-card
 								v-if="songs.length"
@@ -173,7 +171,7 @@
 								/>
 						</app-lazy-placeholder>
 
-					</div>
+					</template>
 
 					<!-- Game Description -->
 					<h2
@@ -218,7 +216,7 @@
 						</a>
 					</div>
 
-					<div v-if="twitterShareMessage && !GJ_IS_CLIENT">
+					<template v-if="twitterShareMessage && !GJ_IS_CLIENT">
 						<br>
 						<div class="social-widgets">
 							<app-social-twitter-share
@@ -230,9 +228,9 @@
 
 							<app-social-facebook-like :url="Environment.baseUrl + game.getUrl()" />
 						</div>
-					</div>
+					</template>
 
-					<div v-if="supporters.length > 0">
+					<template v-if="supporters.length > 0">
 						<h2>
 							<translate>Supporters</translate>
 						</h2>
@@ -262,7 +260,7 @@
 							</div>
 						</div>
 						<br class="visible-xs visible-sm">
-					</div>
+					</template>
 
 				</div>
 
@@ -313,7 +311,7 @@
 	<!--
 		Devlog Feed
 	-->
-	<div v-if="feed && feed.hasItems">
+	<template v-if="feed && feed.hasItems">
 		<div class="page-cut"></div>
 
 		<section class="section">
@@ -337,12 +335,12 @@
 				</div>
 			</div>
 		</section>
-	</div>
+	</template>
 
 	<!--
 		Achievements
 	-->
-	<div v-if="hasScores || trophiesCount">
+	<template v-if="hasScores || trophiesCount">
 		<div class="page-cut"></div>
 
 		<section class="section">
@@ -388,7 +386,7 @@
 
 			</div>
 		</section>
-	</div>
+	</template>
 
 	<!--
 		Recommended Games
@@ -434,7 +432,7 @@
 		<div class="container">
 
 			<!-- Video Comments -->
-			<div v-if="videoComments.length && game.comments_enabled">
+			<template v-if="videoComments.length && game.comments_enabled">
 				<h2 class="section-header sans-margin-bottom">
 					<translate>Video Comments</translate>
 					<small v-if="commentsCount">
@@ -472,7 +470,7 @@
 						<translate>Load More</translate>
 					</a>
 				</div>
-			</div>
+			</template>
 
 			<!-- Comments -->
 			<div id="comments" v-if="isOverviewLoaded">
@@ -480,7 +478,7 @@
 
 					<div class="col-sm-10 col-md-8 col-lg-7">
 
-						<div v-if="!game.comments_enabled">
+						<template v-if="!game.comments_enabled">
 							<h2 class="section-header">
 								<translate>Comments Disabled</translate>
 							</h2>
@@ -488,9 +486,8 @@
 							<p class="text-muted">
 								<translate>Comments have been disabled for this game.</translate>
 							</p>
-						</div>
-
-						<div v-if="game.comments_enabled">
+						</template>
+						<template v-else>
 							<h2 class="section-header">
 								<translate>Comments</translate>
 								<small v-if="commentsCount">
@@ -504,7 +501,7 @@
 								:resource-id="game.id"
 								@count="setCommentsCount"
 								/>
-						</div>
+						</template>
 
 					</div>
 

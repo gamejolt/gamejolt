@@ -41,7 +41,7 @@
 					<translate class="small">leveling.exp</translate>
 				</span>
 
-				<span v-if="achievedIndexed[ trophy.id ]">
+				<template v-if="achievedIndexed[ trophy.id ]">
 					<span class="dot-separator hidden-xs"></span>
 					<br class="visible-xs">
 
@@ -52,7 +52,7 @@
 					<small class="text-muted">
 						<app-time-ago :date="achievedIndexed[ trophy.id ].logged_on" />
 					</small>
-				</span>
+				</template>
 			</div>
 		</div>
 

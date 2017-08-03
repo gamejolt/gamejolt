@@ -5,9 +5,9 @@
 			<div class="row">
 				<div class="col-md-10 col-lg-8 col-centered" :class="{ 'text-center': Screen.isDesktop }">
 					<translate>dash.games.hidden_message</translate>
-					<span v-if="!game.published_on">
+					<template v-if="!game.published_on">
 						<translate>dash.games.hidden_message_unpublished</translate>
-					</span>
+					</template>
 				</div>
 			</div>
 		</div>

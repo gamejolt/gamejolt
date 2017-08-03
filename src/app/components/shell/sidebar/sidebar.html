@@ -312,7 +312,7 @@
 			</li>
 		</ul>
 
-		<div v-if="app.user && isBootstrapped">
+		<template v-if="app.user && isBootstrapped">
 
 			<hr>
 
@@ -450,7 +450,7 @@
 				</li>
 			</ul>
 
-			<div v-if="!isLeftPaneVisible">
+			<template v-if="!isLeftPaneVisible">
 				<ul class="shell-nav">
 					<li class="offline-disable">
 						<router-link
@@ -466,9 +466,9 @@
 						</router-link>
 					</li>
 				</ul>
-			</div>
+			</template>
 
-			<div v-if="isLeftPaneVisible && bundleCollections.length">
+			<template v-if="isLeftPaneVisible && bundleCollections.length">
 				<div class="nav-heading">
 					<translate>library.nav.bundles</translate>
 					<span class="badge">
@@ -496,12 +496,12 @@
 						</router-link>
 					</li>
 				</ul>
-			</div>
+			</template>
 
 			<!--
 				Playlists
 			-->
-			<div v-if="isLeftPaneVisible">
+			<template v-if="isLeftPaneVisible">
 				<div class="nav-heading" :title="$gettext( `library.nav.playlists` )">
 					<translate>library.nav.playlists</translate>
 					<span class="badge">
@@ -528,11 +528,11 @@
 						>
 				</div>
 
-				<div v-if="!collections.length">
+				<template v-if="!collections.length">
 					<div class="alert fill-gray" v-translate>
 						library.nav.no_playlists_html
 					</div>
-				</div>
+				</template>
 
 				<!--
 					Playlist Folders
@@ -569,9 +569,9 @@
 					:filter="playlistFilterQuery"
 					/>
 
-			</div>
+			</template>
 
-		</div>
+		</template>
 
 	</div>
 </div>

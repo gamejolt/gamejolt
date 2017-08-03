@@ -228,12 +228,11 @@
 				<div class="row">
 					<div class="col-sm-6 col-md-5 col-lg-4 col-centered">
 
-						<div v-if="!app.user">
+						<template v-if="!app.user">
 							<app-auth-join />
 							<br>
-						</div>
-
-						<div v-if="app.user" class="text-center">
+						</template>
+						<div v-else class="text-center">
 							<p>
 								Get started at
 							</p>

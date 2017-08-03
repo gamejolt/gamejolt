@@ -84,7 +84,7 @@
 							@change="currentTemplateId = $event"
 							/>
 
-						<div v-if="!!currentTemplateId">
+						<template v-if="!!currentTemplateId">
 							<h3>
 								<translate>Customize Theme</translate>
 							</h3>
@@ -98,7 +98,7 @@
 									@change="themeEdited"
 									/>
 							</div>
-						</div>
+						</template>
 
 					</div>
 				</div>

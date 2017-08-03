@@ -51,13 +51,13 @@
 						</p>
 					</app-fade-collapse>
 
-					<div v-if="canToggleContent">
+					<template v-if="canToggleContent">
 						<br>
 						<span class="hidden-text-expander"
 							@click.stop.prevent="toggleFull"
 							>
 						</span>
-					</div>
+					</template>
 				</div>
 			</div>
 

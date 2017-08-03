@@ -31,7 +31,7 @@
 						<!--
 							Tag
 						-->
-						<div v-if="type === 'tag'">
+						<template v-if="type === 'tag'">
 							<div class="text-muted">
 								<translate>Games tagged with</translate>
 							</div>
@@ -39,13 +39,13 @@
 							<h2 class="sans-margin">
 								#{{ tag }}
 							</h2>
-						</div>
+						</template>
 
 						<!--
 							Followed Games
 						-->
-						<div v-else-if="type === 'followed'">
-							<div v-if="collection.isOwner">
+						<template v-else-if="type === 'followed'">
+							<template v-if="collection.isOwner">
 								<h1>
 									<translate>Your Followed Games</translate>
 								</h1>
@@ -54,8 +54,8 @@
 									<br>
 									<translate>You'll receive notifications when developers post news about any games you're following.</translate>
 								</p>
-							</div>
-							<div v-else>
+							</template>
+							<template v-else>
 								<h1>
 									<translate>Games Followed</translate>
 								</h1>
@@ -71,14 +71,14 @@
 										These are the games that %{ user } is following.
 									</translate>
 								</p>
-							</div>
-						</div>
+							</template>
+						</template>
 
 						<!--
 							Developer Games
 						-->
-						<div v-else-if="type === 'developer'">
-							<div v-if="collection.isOwner">
+						<template v-else-if="type === 'developer'">
+							<template v-if="collection.isOwner">
 								<h1>
 									<translate>Your Games</translate>
 								</h1>
@@ -87,8 +87,8 @@
 									<br>
 									<translate>Feel free to share this page with others to show off your games.</translate>
 								</p>
-							</div>
-							<div v-else>
+							</template>
+							<template v-else>
 								<h1>
 									<translate>Games</translate>
 								</h1>
@@ -104,22 +104,22 @@
 										These are the games made by %{ user }.
 									</translate>
 								</p>
-							</div>
-						</div>
+							</template>
+						</template>
 
 						<!--
 							Owned Games
 						-->
-						<div v-else-if="type === 'owned'">
-							<div v-if="collection.isOwner">
+						<template v-else-if="type === 'owned'">
+							<template v-if="collection.isOwner">
 								<h1>
 									<translate>Your Owned Games</translate>
 								</h1>
 								<p class="text-muted small">
 									<translate>These are all the games you own.</translate>
 								</p>
-							</div>
-							<div v-else>
+							</template>
+							<template v-else>
 								<h1>
 									<translate>Games Owned</translate>
 								</h1>
@@ -135,22 +135,22 @@
 										These are all the games owned by %{ user }.
 									</translate>
 								</p>
-							</div>
-						</div>
+							</template>
+						</template>
 
 						<!--
 							Recommended Games
 						-->
-						<div v-else-if="type === 'recommended'">
-							<div v-if="collection.isOwner">
+						<template v-else-if="type === 'recommended'">
+							<template v-if="collection.isOwner">
 								<h1>
 									<translate>Your Recommended Games</translate>
 								</h1>
 								<p class="text-muted small">
 									<translate>Every day we pick a handful of games that we think you may like!</translate>
 								</p>
-							</div>
-							<div v-else>
+							</template>
+							<template v-else>
 								<h1>
 									<translate>Game Recommendations</translate>
 								</h1>
@@ -161,13 +161,13 @@
 									</router-link>
 									<small>@{{ user.username }}</small>
 								</h4>
-							</div>
-						</div>
+							</template>
+						</template>
 
 						<!--
 							Playlist
 						-->
-						<div v-else-if="type === 'playlist'">
+						<template v-else-if="type === 'playlist'">
 							<h1>
 								{{ playlist.name }}
 							</h1>
@@ -179,15 +179,15 @@
 								</router-link>
 								<small>@{{ playlist.user.username }}</small>
 							</h4>
-						</div>
+						</template>
 
 						<!--
 							Bundle
 						-->
-						<div v-else-if="type === 'bundle'">
+						<template v-else-if="type === 'bundle'">
 							<h1>{{ bundle.title }}</h1>
 							<p class="text-muted small">{{ bundle.description }}</p>
-						</div>
+						</template>
 
 					</div>
 				</transition>
@@ -195,7 +195,7 @@
 			</div>
 		</div>
 
-		<div slot="nav">
+		<template slot="nav">
 
 			<ul class="stat-list">
 				<li class="stat-big stat-big-smaller" v-if="type !== 'bundle' && type !== 'tag'">
@@ -208,9 +208,9 @@
 				</li>
 			</ul>
 
-		</div>
+		</template>
 
-		<div slot="controls">
+		<template slot="controls">
 
 			<!--
 				Weird bug with vue where it wasn't updating the translated text
@@ -219,17 +219,16 @@
 			<span v-for="collection of [ collection ]" :key="collection._id">
 
 				<!-- Following -->
-				<span v-if="shouldShowFollow">
-					<app-game-collection-follow-widget
-						class="btn-block"
-						:collection="collection"
-						:follower-count="followerCount"
-						@follow="++followerCount"
-						@unfollow="--followerCount"
-						/>
-				</span>
+				<app-game-collection-follow-widget
+					v-if="shouldShowFollow"
+					class="btn-block"
+					:collection="collection"
+					:follower-count="followerCount"
+					@follow="++followerCount"
+					@unfollow="--followerCount"
+					/>
 
-				<span v-else-if="type === 'playlist' && collection.isOwner">
+				<template v-else-if="type === 'playlist' && collection.isOwner">
 
 					<!-- Editing Playlist -->
 					<a class="btn btn-outline"
@@ -261,11 +260,11 @@
 						</div>
 					</app-popover>
 
-				</span>
+				</template>
 
 			</span>
 
-		</div>
+		</template>
 
 	</app-page-header>
 

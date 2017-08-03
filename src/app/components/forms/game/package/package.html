@@ -373,19 +373,19 @@
 						:disabled="startedPrimary || !hasPrimarySellable"
 						/>
 
-					<span v-if="!hasPrimarySellable">
+					<template v-if="!hasPrimarySellable">
 						<strong>
 							<translate>Since you don't have any packages yet, we'll mark this as your primary one.</translate>
 						</strong>
-					</span>
-					<span v-else>
-						<span v-if="!startedPrimary">
+					</template>
+					<template v-else>
+						<template v-if="!startedPrimary">
 							<translate>Make this package the primary package</translate>
-						</span>
+						</template>
 						<strong v-else>
 							<translate>This is currently the primary package</translate>
 						</strong>
-					</span>
+					</template>
 				</label>
 			</div>
 		</app-form-group>
@@ -394,12 +394,12 @@
 			v-if="method === 'add' || changed"
 			:icon="method"
 			>
-			<span v-if="method === 'add'">
+			<template v-if="method === 'add'">
 				<translate>dash.games.packages.form.add_package_button</translate>
-			</span>
-			<span v-else-if="method === 'edit'">
+			</template>
+			<template v-else-if="method === 'edit'">
 				<translate>dash.games.packages.form.save_package_button</translate>
-			</span>
+			</template>
 		</app-form-button>
 
 	</app-loading-fade>

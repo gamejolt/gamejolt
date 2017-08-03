@@ -26,10 +26,10 @@
 							<translate>dash.games.api.settings.key_label</translate>
 						</th>
 						<td>
-							<div v-if="shouldShowKey">
+							<template v-if="shouldShowKey">
 								<input type="text" class="form-control" :value="privateKey">
 								<br>
-							</div>
+							</template>
 							<p v-else>
 								<a class="link-muted" @click="shouldShowKey = true">
 									<translate>dash.games.api.settings.key_show_link</translate>

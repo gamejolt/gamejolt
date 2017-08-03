@@ -49,15 +49,15 @@
 						</div>
 
 						<div>
-							<span v-if="address.city">
+							<template v-if="address.city">
 								{{ address.city }}
-							</span>
-							<span v-if="address.region">
+							</template>
+							<template v-if="address.region">
 								{{ Geo.getRegionName( address.country, address.region ) || address.region }}
-							</span>
-							<span v-if="address.postcode">
+							</template>
+							<template v-if="address.postcode">
 								{{ address.postcode }}
-							</span>
+							</template>
 						</div>
 
 						<div v-if="address.country">
@@ -72,27 +72,25 @@
 					</h4>
 					<div v-for="payment of order.payments" :key="payment.id">
 
-						<div v-if="payment.method === OrderPayment.METHOD_CC_STRIPE">
+						<template v-if="payment.method === OrderPayment.METHOD_CC_STRIPE">
 							<span class="tag">
 								{{ payment.stripe_payment_source.brand }}
 							</span>
 							****
 							{{ payment.stripe_payment_source.last4 }}
-						</div>
-
-						<div v-else-if="payment.method === OrderPayment.METHOD_PAYPAL">
+						</template>
+						<template v-else-if="payment.method === OrderPayment.METHOD_PAYPAL">
 							<span class="tag">
 								PayPal
 							</span>
 							{{ payment.paypal_email_address }}
-						</div>
-
-						<div v-else-if="payment.method === OrderPayment.METHOD_WALLET">
+						</template>
+						<template v-else-if="payment.method === OrderPayment.METHOD_WALLET">
 							<span class="tag">
 								Wallet
 							</span>
 							{{ payment.amount | currency }}
-						</div>
+						</template>
 
 					</div>
 				</div>

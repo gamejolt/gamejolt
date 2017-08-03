@@ -5,11 +5,10 @@
 		:hide-nav="!Search.query"
 		>
 
-		<div v-if="Screen.isXs">
+		<template v-if="Screen.isXs">
 			<app-search :autocomplete-disabled="true" />
-		</div>
-
-		<div v-if="!Screen.isXs">
+		</template>
+		<template v-else>
 			<div class="small text-upper text-muted">
 				<translate>search.showing_label</translate>
 			</div>
@@ -19,7 +18,7 @@
 			</h2>
 
 			<br>
-		</div>
+		</template>
 
 		<nav slot="nav" class="platform-list inline">
 			<ul>

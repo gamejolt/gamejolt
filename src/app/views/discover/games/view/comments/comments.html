@@ -8,21 +8,19 @@
 
 				<div class="col-sm-10 col-md-8 col-lg-7">
 
-					<div v-if="!game.comments_enabled">
+					<template v-if="!game.comments_enabled">
 						<h3 class="section-header">
 							<translate>Comments Disabled</translate>
 						</h3>
 						<p class="text-muted">
 							<translate>Comments have been disabled for this game.</translate>
 						</p>
-					</div>
-
-					<div v-if="game.comments_enabled">
-						<app-comment-widget
-							resource="Game"
-							:resource-id="game.id"
-							/>
-					</div>
+					</template>
+					<app-comment-widget
+						v-else
+						resource="Game"
+						:resource-id="game.id"
+						/>
 
 				</div>
 

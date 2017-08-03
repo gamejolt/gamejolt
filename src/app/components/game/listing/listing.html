@@ -65,7 +65,7 @@
 					</li>
 				</ul>
 
-				<div slot="meta">
+				<template slot="meta">
 					<div
 						v-if="listing.isBootstrapped"
 						:class="{ 'text-right': !Screen.isXs }"
@@ -84,12 +84,12 @@
 							%{ count } game.
 						</translate>
 					</div>
-				</div>
+				</template>
 
 			</app-nav-tab-list>
 
-			<div v-if="listing.isBootstrapped">
-				<div v-if="listing.gamesCount">
+			<template v-if="listing.isBootstrapped">
+				<template v-if="listing.gamesCount">
 
 					<app-loading-fade :is-loading="isLoading">
 						<slot />
@@ -103,13 +103,12 @@
 						@pagechange="Scroll.to( 'games', { animate: false } )"
 						/>
 
-				</div>
-			</div>
-			<div v-else>
-
-				<app-game-grid-placeholder :num="16" />
-
-			</div>
+				</template>
+			</template>
+			<app-game-grid-placeholder
+				v-else
+				:num="16"
+				/>
 
 		</div>
 

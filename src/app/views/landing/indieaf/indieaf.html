@@ -66,14 +66,14 @@
 						</div>
 					</div>
 
-					<div v-if="state !== 'indie'">
+					<template v-if="state !== 'indie'">
 						<br>
 						<p class="text-center">
 							<a class="btn btn-af-outline" @click="state = 'indie'">
 								Make this Indie.AF!
 							</a>
 						</p>
-					</div>
+					</template>
 
 					<h2 class="text-center">
 						Why should you be INDIE.AF?

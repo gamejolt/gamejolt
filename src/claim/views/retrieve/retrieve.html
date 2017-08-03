@@ -14,14 +14,14 @@
 		</h1>
 
 		<p>
-			<span v-if="!resourceTitle">
+			<template v-if="!resourceTitle">
 				<translate>Please enter your email address to retrieve your keys.</translate>
-			</span>
-			<span v-if="resourceTitle">
+			</template>
+			<template v-if="resourceTitle">
 				<translate :translate-params="{ resource: resourceTitle }">
 					Please enter your email address to retrieve your keys for <b>%{ resource }</b>.
 				</translate>
-			</span>
+			</template>
 			<translate>We will email you a link to your download(s).</translate>
 		</p>
 

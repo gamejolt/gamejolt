@@ -5,7 +5,6 @@ import * as View from '!view!./account-popover.html?style=./account-popover.styl
 
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
@@ -39,9 +38,8 @@ export class AppShellAccountPopover extends Vue {
 
 	walletAmount: number | false = false;
 
-	env = Environment;
-	screen = makeObservableService(Screen);
-	conn = makeObservableService(Connection);
+	Screen = makeObservableService(Screen);
+	Connection = makeObservableService(Connection);
 	ClientControl: typeof _ClientControl | null = GJ_IS_CLIENT
 		? require('../../client/control/client.service').ClientControl
 		: null;

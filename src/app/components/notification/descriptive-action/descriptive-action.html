@@ -2,9 +2,9 @@
 
 	<!-- User -->
 	<strong v-if="notification.is_user_based">
-		<span v-if="notification.from_model">
+		<template v-if="notification.from_model">
 			{{ notification.from_model.display_name }}
-		</span>
+		</template>
 		<translate v-if="!notification.from_model">
 			Someone
 		</translate>

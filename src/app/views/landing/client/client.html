@@ -251,14 +251,13 @@
 
 				<h2 class="section-header">Latest Client News</h2>
 
-				<div v-if="firesidePosts.length">
+				<template v-if="firesidePosts.length">
 					<div v-if="Screen.isXs" class="full-bleed-xs">
 						<app-fireside-post-list
 							:posts="firesidePosts"
 							/>
 					</div>
-
-					<div class="row" v-if="!Screen.isXs">
+					<div class="row" v-else>
 						<div class="col-sm-6 col-md-4"
 							v-for="post of firesidePosts.slice( 0, 3 )"
 							:key="post.id"
@@ -268,7 +267,7 @@
 								/>
 						</div>
 					</div>
-				</div>
+				</template>
 
 			</div>
 		</section>

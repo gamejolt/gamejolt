@@ -23,7 +23,7 @@
 				<translate>search.recent.none</translate>
 			</div>
 
-			<div v-if="isVisible && recentSearches.length">
+			<template v-if="isVisible && recentSearches.length">
 
 				<div class="list-group list-group-dark thin">
 					<a class="list-group-item"
@@ -45,7 +45,7 @@
 					</a>
 				</div>
 
-			</div>
+			</template>
 
 		</div>
 	</app-popover>

@@ -144,18 +144,18 @@
 						</td>
 
 						<td>
-							<span v-if="!!key.user_id">{{ key.username }}</span>
-							<span v-else>-</span>
+							<template v-if="!!key.user_id">{{ key.username }}</template>
+							<template v-else>-</template>
 						</td>
 
 						<td>
 							<app-time-ago v-if="!!key.claimed_on" :date="key.claimed_on" />
-							<span v-else>-</span>
+							<template v-else>-</template>
 						</td>
 
 						<td>
 							<app-time-ago v-if="!!key.viewed_on" :date="key.viewed_on" />
-							<span v-else>-</span>
+							<template v-else>-</template>
 						</td>
 
 						<td style="text-align: right">

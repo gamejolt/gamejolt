@@ -99,7 +99,7 @@
 
 	<hr>
 
-	<span v-if="model.status !== GameRelease.STATUS_PUBLISHED">
+	<template v-if="model.status !== GameRelease.STATUS_PUBLISHED">
 		<button
 			class="btn btn-success"
 			:disabled="!valid || !builds.length"
@@ -116,8 +116,8 @@
 			>
 			<translate>Save Draft</translate>
 		</button>
-	</span>
-	<span v-else>
+	</template>
+	<template v-else>
 		<button
 			class="btn"
 			:disabled="!valid || !builds.length"
@@ -126,7 +126,7 @@
 			<app-jolticon icon="edit" />
 			<translate>Save Release</translate>
 		</button>
-	</span>
+	</template>
 
 
 	<div :class="{ 'pull-right': !Screen.isXs }">

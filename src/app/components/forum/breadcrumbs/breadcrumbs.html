@@ -1,7 +1,7 @@
 <nav class="breadcrumb dark-variant">
 	<ul>
 		<li>
-			<router-link 
+			<router-link
 				:to="{ name: 'forums.landing.overview' }"
 				>
 				<span class="breadcrumb-tag">&nbsp;</span>
@@ -27,12 +27,12 @@
 		<li v-if="page">
 			<span class="active">
 				<span class="breadcrumb-tag">&nbsp;</span>
-				<span v-if="page === 'add-topic'">
+				<template v-if="page === 'add-topic'">
 					<translate>New Topic</translate>
-				</span>
-				<span v-else-if="page === 'view-topic'">
+				</template>
+				<template v-else-if="page === 'view-topic'">
 					<translate>View Topic</translate>
-				</span>
+				</template>
 			</span>
 		</li>
 	</ul>

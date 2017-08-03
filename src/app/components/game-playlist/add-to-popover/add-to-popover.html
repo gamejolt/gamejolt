@@ -3,13 +3,10 @@
 	@focused="onFocus"
 	@blurred="onBlur"
 	>
-
 	<div class="add-to-playlist-popover" v-if="isShown">
-		<div v-if="isLoading">
-			<app-loading :centered="true" />
-		</div>
 
-		<div v-if="!isLoading">
+		<app-loading :centered="true" v-if="isLoading" />
+		<template v-else>
 			<div class="list-group list-group-dark">
 				<a class="list-group-item has-icon" @click="addToNewPlaylist">
 					<app-jolticon icon="add" />
@@ -40,7 +37,7 @@
 					{{ playlist.name }}
 				</a>
 			</div>
-		</div>
-	</div>
+		</template>
 
+	</div>
 </app-popover>

@@ -49,31 +49,33 @@
 			</a>
 		</div>
 
-		<div v-if="!shouldFadeCollapse" class="chat-window-message-content-wrap">
-			<div
-				class="chat-window-message-content"
-				lang="en"
-				v-html="message.content"
-				>
-				</div>
-		</div>
-		<div v-else class="chat-window-message-content-wrap">
-			<app-fade-collapse
-				:collapse-height="138"
-				:is-open="isExpanded"
-				@require-change="isCollapsable = $event"
-				>
+		<div class="chat-window-message-content-wrap">
+			<template v-if="!shouldFadeCollapse">
 				<div
 					class="chat-window-message-content"
 					lang="en"
 					v-html="message.content"
 					>
-				</div>
-			</app-fade-collapse>
+					</div>
+			</template>
+			<template v-else>
+				<app-fade-collapse
+					:collapse-height="138"
+					:is-open="isExpanded"
+					@require-change="isCollapsable = $event"
+					>
+					<div
+						class="chat-window-message-content"
+						lang="en"
+						v-html="message.content"
+						>
+					</div>
+				</app-fade-collapse>
 
-			<p v-if="isCollapsable">
-				<a class="hidden-text-expander" @click="isExpanded = !isExpanded"></a>
-			</p>
+				<p v-if="isCollapsable">
+					<a class="hidden-text-expander" @click="isExpanded = !isExpanded"></a>
+				</p>
+			</template>
 		</div>
 	</div>
 </div>

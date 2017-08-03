@@ -46,7 +46,7 @@
 								<!--
 									Social sharing
 								-->
-								<div v-if="!GJ_IS_CLIENT">
+								<template v-if="!GJ_IS_CLIENT">
 									<h4>
 										<translate>game.download.game.share_heading</translate>
 									</h4>
@@ -62,12 +62,12 @@
 											:url="Environment.baseUrl + game.getUrl()"
 											/>
 									</div>
-								</div>
+								</template>
 
 								<!--
 									Rating widget
 								-->
-								<div v-if="app.user && app.user.id !== game.developer.id && game.ratings_enabled && game.can_user_rate">
+								<template v-if="app.user && app.user.id !== game.developer.id && game.ratings_enabled && game.can_user_rate">
 									<br>
 									<p class="small" v-translate>
 										game.download.game.rate_html
@@ -78,12 +78,12 @@
 										:big="true"
 										:rating="userRating"
 										/>
-								</div>
+								</template>
 
 								<!--
 									Developer's games
 								-->
-								<div v-if="developerGames.length">
+								<template v-if="developerGames.length">
 
 									<h2>
 										<router-link
@@ -112,7 +112,7 @@
 										</div>
 									</div>
 
-								</div>
+								</template>
 
 								<br class="visible-xs visible-sm">
 

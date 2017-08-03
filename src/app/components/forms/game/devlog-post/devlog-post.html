@@ -152,12 +152,12 @@
 		:disabled="!valid"
 		:icon="model.status !== FiresidePost.STATUS_ACTIVE ? 'add' : 'edit'"
 		>
-		<span v-if="model.status !== FiresidePost.STATUS_ACTIVE">
+		<template v-if="model.status !== FiresidePost.STATUS_ACTIVE">
 			<translate>Publish</translate>
-		</span>
-		<span v-else>
+		</template>
+		<template v-else>
 			<translate>Save</translate>
-		</span>
+		</template>
 	</app-form-button>
 
 	<button

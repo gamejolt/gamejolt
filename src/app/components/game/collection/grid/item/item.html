@@ -9,7 +9,7 @@
 			/>
 
 		<div class="game-collection-title h4">
-			<span v-if="collection.type === 'developer'">
+			<template v-if="collection.type === 'developer'">
 				<span
 					v-if="notOwner"
 					v-translate="{ developer: '@' + collection.owner.username }"
@@ -19,9 +19,8 @@
 				<translate v-else>
 					Your Games
 				</translate>
-			</span>
-
-			<span v-else-if="collection.type === 'followed'">
+			</template>
+			<template v-else-if="collection.type === 'followed'">
 				<span
 					v-if="notOwner"
 					v-translate="{ user: '@' + collection.owner.username }"
@@ -31,9 +30,8 @@
 				<translate v-else>
 					Your Followed Games
 				</translate>
-			</span>
-
-			<span v-else-if="collection.type === 'owned'">
+			</template>
+			<template v-else-if="collection.type === 'owned'">
 				<span
 					v-if="notOwner"
 					v-translate="{ user: '@' + collection.owner.username }"
@@ -43,9 +41,8 @@
 				<translate v-else>
 					Your Owned Games
 				</translate>
-			</span>
-
-			<span v-else-if="collection.type === 'recommended'">
+			</template>
+			<template v-else-if="collection.type === 'recommended'">
 				<span
 					v-if="notOwner"
 					v-translate="{ user: '@' + collection.owner.username }"
@@ -55,11 +52,10 @@
 				<translate v-else>
 					Your Recommended Games
 				</translate>
-			</span>
-
-			<span v-else>
+			</template>
+			<template v-else>
 				{{ collection.name }}
-			</span>
+			</template>
 		</div>
 	</router-link>
 </div>

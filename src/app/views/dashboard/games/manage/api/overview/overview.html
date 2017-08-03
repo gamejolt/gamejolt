@@ -109,13 +109,13 @@
 							/>
 					</div>
 					<div class="stat-big-digit">
-						<span v-if="!numActiveTrophies">
+						<template v-if="!numActiveTrophies">
 							<translate>dash.games.api.overview.na</translate>
-						</span>
-						<span v-else>
+						</template>
+						<template v-else>
 							{{ totalTrophyExp | number }}
 							<translate>leveling.exp</translate>
-						</span>
+						</template>
 					</div>
 				</div>
 			</div>

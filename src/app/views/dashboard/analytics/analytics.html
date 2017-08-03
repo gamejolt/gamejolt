@@ -136,7 +136,7 @@
 
 	</app-page-header>
 
-	<div v-if="metricData[ metric.key ]">
+	<template v-if="metricData[ metric.key ]">
 
 		<app-expand :when="period === 'monthly' && !!metricData[ metric.key ].graph">
 			<app-graph
@@ -174,12 +174,12 @@
 									{{ metric.label }}
 								</div>
 								<div class="stat-big-digit">
-									<span v-if="metric.type === 'number'">
+									<template v-if="metric.type === 'number'">
 										{{ metricData[ metric.key ].total | number }}
-									</span>
-									<span v-else-if="metric.type === 'currency'">
+									</template>
+									<template v-else-if="metric.type === 'currency'">
 										{{ metricData[ metric.key ].total | currency }}
-									</span>
+									</template>
 								</div>
 							</div>
 						</router-link>
@@ -190,7 +190,7 @@
 			</div>
 		</section>
 
-		<div v-if="pageReports.length">
+		<template v-if="pageReports.length">
 
 			<hr>
 
@@ -240,17 +240,14 @@
 											v-if="component.type === 'sum' || component.type === 'average'"
 											:report-data="component"
 											/>
-
 										<app-analytics-report-top-composition
 											v-else-if="component.type === 'top-composition'"
 											:report-data="component"
 											/>
-
 										<app-analytics-report-top-composition-value
 											v-else-if="component.type === 'top-composition-sum' || component.type === 'top-composition-avg'"
 											:report-data="component"
 											/>
-
 										<app-analytics-report-rating-breakdown
 											v-else-if="component.type === 'rating-breakdown'"
 											:report-data="component"
@@ -267,6 +264,6 @@
 				</div>
 			</section>
 
-		</div>
-	</div>
+		</template>
+	</template>
 </div>

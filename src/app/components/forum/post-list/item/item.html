@@ -12,7 +12,7 @@
 		:is-showing-replies="isReplying || isShowingReplies"
 		>
 
-		<span slot="meta">
+		<template slot="meta">
 
 			<span class="dot-separator"></span>
 
@@ -71,7 +71,7 @@
 				</div>
 			</app-popover>
 
-		</span>
+		</template>
 
 		<a class="forum-post-replied-to-btn"
 			v-if="!isReply && post.parent_post_id"
@@ -90,30 +90,28 @@
 					:content="parent.content_compiled"
 					/>
 			</div>
-			<p v-if="!parent">
+			<p v-else>
 				<strong><translate>Post removed.</translate></strong>
 			</p>
 			<hr>
 		</app-expand>
 
 
-		<div v-if="!isEditing">
-			<div class="forum-post-body">
-				<app-widget-compiler
-					:content="post.content_compiled"
-					/>
-			</div>
+		<div v-if="!isEditing" class="forum-post-body">
+			<app-widget-compiler
+				:content="post.content_compiled"
+				/>
 		</div>
-
-		<div v-else>
+		<template v-else>
 			<form-forum-post
 				:model="post"
 				:topic="topic"
 				@cancel="closeEdit"
 				@submit="closeEdit"
 				/>
+
 			<br>
-		</div>
+		</template>
 
 		<p class="text-muted small" v-if="post.modified_by">
 			<translate>Last modified on</translate>
@@ -135,7 +133,7 @@
 			<small>@{{ post.modified_by_user.username }}</small>
 		</p>
 
-		<div v-if="!isReply" slot="controls">
+		<template v-if="!isReply" slot="controls">
 
 			<button
 				class="btn btn-outline btn-sparse btn-circle"
@@ -164,9 +162,9 @@
 				</translate>
 			</a>
 
-		</div>
+		</template>
 
-		<div v-if="isReplying || isShowingReplies" slot="replies">
+		<template v-if="isReplying || isShowingReplies" slot="replies">
 
 			<app-message-thread-add v-if="isReplying">
 				<form-forum-post
@@ -188,7 +186,7 @@
 					/>
 			</app-message-thread>
 
-			<div v-if="totalReplyCount - replies.length > 0">
+			<template v-if="totalReplyCount - replies.length > 0">
 				<br>
 				<p>
 					<translate
@@ -201,9 +199,9 @@
 						+%{ count } more hidden
 					</translate>
 				</p>
-			</div>
+			</template>
 
-		</div>
+		</template>
 
 	</app-message-thread-item>
 </app-scroll-inview>
