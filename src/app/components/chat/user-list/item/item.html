@@ -68,7 +68,7 @@
 				</span>
 			</template>
 
-			<span>{{ user.displayName }}</span>
+			<span v-html="user.displayName"></span>
 			<span class="tiny">@{{ user.username }}</span>
 
 			<!--<div class="chat-user-list-meta">

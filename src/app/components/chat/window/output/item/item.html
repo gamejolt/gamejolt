@@ -21,8 +21,8 @@
 			<a class="chat-window-message-user link-unstyled"
 				v-if="!message.combine"
 				:href="message.user.url"
+				v-html="message.user.displayName"
 				>
-				{{ message.user.displayName }}
 			</a>
 			<span class="chat-window-message-username"
 				v-if="!message.combine"

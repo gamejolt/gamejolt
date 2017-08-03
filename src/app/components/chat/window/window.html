@@ -103,12 +103,13 @@
 						:key="room.id"
 						>
 
-						<a class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
+						<router-link
+							class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
 							v-if="room.isPmRoom"
-							:href="room.user.url"
+							:to="room.user.url"
 							>
 							<img :src="room.user.imgAvatar" alt="">
-						</a>
+						</router-link>
 
 						<h3 v-if="!room.isPmRoom" class="anim-fade-in-right no-animate-xs">
 							{{ room.title }}
@@ -117,11 +118,12 @@
 						<h3 v-if="room.isPmRoom" class="anim-fade-in-right no-animate-xs"
 							:title="`${room.user.displayName} (@${room.user.username})`"
 							>
-							<a class="link-unstyled"
-								:href="room.user.url"
+							<router-link
+								class="link-unstyled"
+								:to="room.user.url"
+								v-html="room.user.displayName"
 								>
-								{{ room.user.displayName }}
-							</a>
+							</router-link>
 							<br>
 							<small>@{{ room.user.username }}</small>
 						</h3>
