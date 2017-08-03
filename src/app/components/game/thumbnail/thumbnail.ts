@@ -68,9 +68,9 @@ export class AppGameThumbnail extends Vue {
 	@State app: AppStore;
 
 	isHovered = false;
-	isBootstrapped = true;
-	isHydrated = true;
-	isThumbnailLoaded = true;
+	isBootstrapped = GJ_IS_SSR;
+	isHydrated = GJ_IS_SSR;
+	isThumbnailLoaded = GJ_IS_SSR;
 	isWindowFocused = typeof document !== 'undefined' && document.hasFocus
 		? document.hasFocus()
 		: true;
@@ -155,12 +155,6 @@ export class AppGameThumbnail extends Vue {
 
 	created() {
 		thumbnails.push(this);
-	}
-
-	mounted() {
-		this.isBootstrapped = false;
-		this.isHydrated = false;
-		this.isThumbnailLoaded = false;
 	}
 
 	destroyed() {
