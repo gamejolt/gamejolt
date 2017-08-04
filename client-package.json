@@ -1,20 +1,20 @@
 {
-  "name": "game-jolt-client",
-  "main": "app://game-jolt-client/index.html#!/",
-  "window": {
-    "show": false,
-    "width": 1250,
-    "height": 700,
-    "min_height": 400,
-    "min_width": 400,
-    "position": "center",
-    "toolbar": false,
-    "frame": true,
-    "icon": "app/img/client/icon-256x256.png"
-  },
-  "webkit": {
-    "plugin": true
-  },
-  "chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
-  "user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
+	"name": "game-jolt-client",
+	"main": "app://game-jolt-client/index.html#/",
+	"window": {
+		"show": true,
+		"width": 1250,
+		"height": 700,
+		"min_height": 400,
+		"min_width": 400,
+		"position": "center",
+		"toolbar": true,
+		"frame": true,
+		"icon": "app/img/client/icon-256x256.png"
+	},
+	"webkit": {
+		"plugin": true
+	},
+	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
 }
