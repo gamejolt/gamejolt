@@ -273,6 +273,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	async mixPlaylist() {
 		if (MixableTypes.indexOf(this.type) === -1) {
+			this.recommendedGames = [];
 			return;
 		}
 
