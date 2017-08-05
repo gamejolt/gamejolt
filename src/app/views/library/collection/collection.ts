@@ -33,6 +33,10 @@ import {
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 
+const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
+
+const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
+
 @View
 @Component({
 	name: 'RouteLibraryCollection',
@@ -75,6 +79,8 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
+
+	recommendedGames: Game[] = [];
 
 	Screen = makeObservableService(Screen);
 
@@ -163,6 +169,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		}
 
 		this.processMeta();
+		this.mixPlaylist();
 	}
 
 	private processMeta() {
@@ -262,5 +269,19 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		if (await this.unfollowGame(game)) {
 			this.reloadRoute();
 		}
+	}
+
+	async mixPlaylist() {
+		if (MixableTypes.indexOf(this.type) === -1) {
+			return;
+		}
+
+		let id = this.id;
+		if (UserTypes.indexOf(this.type) !== -1) {
+			id = '@' + id;
+		}
+
+		const payload = await Api.sendRequest('/web/library/games/mix/' + this.type + '/' + id);
+		this.recommendedGames = Game.populate(payload.games);
 	}
 }
