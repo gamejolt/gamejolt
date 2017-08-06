@@ -19,13 +19,14 @@ export async function bootstrapAppTranslations() {
 	if (GJ_IS_SSR) {
 		translations = await import('!json-loader!../translations/en_US/main.json');
 	} else {
-		// Don't use webpack to require directly. If we did it would generate new
-		// files for each section that we built for.
-		const response = await Axios({
-			url: require('!file-loader!../translations/' + lang + '/main.json'),
-			ignoreLoadingBar: true,
-		});
-		translations = response.data;
+		translations = require('!json-loader!../translations/en_US/main.json');
+		// // Don't use webpack to require directly. If we did it would generate new
+		// // files for each section that we built for.
+		// const response = await Axios({
+		// 	url: require('!file-loader!../translations/' + lang + '/main.json'),
+		// 	ignoreLoadingBar: true,
+		// });
+		// translations = response.data;
 	}
 
 	Vue.use(VueGettext, {
