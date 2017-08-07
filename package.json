@@ -4,7 +4,7 @@
 	"scripts": {
 		"dev": "gulp watch",
 		"build": "gulp --production",
-		"client": "nw build/client/dev/source",
+		"client": "gulp client:run",
 		"client-build-win": "gulp --production --client --arch=32",
 		"client-build-osx": "gulp --production --client --arch=64",
 		"client-build-linux32": "gulp --production --client --arch=32",
