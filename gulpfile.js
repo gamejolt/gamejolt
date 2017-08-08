@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 
 var config = {
-	staticCdn: 'https://s.gjcdn.net',
+	staticCdn: 'https://b6d3e9q9.ssl.hwcdn.net',
 	injectVersion: 2,
 	framework: 'vue',
 	sections: ['auth', 'checkout', 'claim'],
