@@ -4,5 +4,5 @@ export const routeDiscoverChannelsViewGames: VueRouter.RouteConfig = {
 	name: 'discover.channels.view.games',
 	path: 'games/:section?',
 	props: true,
-	component: () => import(/* webpackChunkName: "routeDiscoverChannelsViewGames" */ './games'),
+	component: () => import(/* webpackChunkName: "routeDiscoverChannels" */ './games'),
 };

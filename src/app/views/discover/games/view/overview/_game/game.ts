@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./game.html?style=./game.styl';
 
-import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppTrackEvent } from '../../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
@@ -19,7 +18,6 @@ import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/compo
 import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
-import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
 import { AppCommentVideoThumbnail } from '../../../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import { AppDiscoverGamesViewOverviewDetails } from '../_details/details';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
@@ -34,7 +32,8 @@ import { Store } from '../../../../../../store/index';
 import { AppUserAvatarImg } from '../../../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
-import { AppCommentWidgetLazy } from '../../../../../../components/lazy';
+import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
+import { AppCommentWidgetLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
 
 @View
 @Component({
@@ -43,7 +42,6 @@ import { AppCommentWidgetLazy } from '../../../../../../components/lazy';
 		AppDiscoverGamesViewOverviewDetails,
 		AppAd,
 		AppAdPlacement,
-		AppMediaBar,
 		AppGameGrid,
 		AppGameGridPlaceholder,
 		AppRatingWidget,
@@ -52,16 +50,17 @@ import { AppCommentWidgetLazy } from '../../../../../../components/lazy';
 		AppFadeCollapse,
 		AppLazyPlaceholder,
 		AppGameOgrs,
-		AppCommentWidget: AppCommentWidgetLazy,
 		AppGamePackageCard,
 		AppGameSoundtrackCard,
-		AppActivityFeed,
 		AppCommentVideoThumbnail,
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
 		AppTrophyOverview,
 		AppScoreOverview,
 		AppUserAvatarImg,
+		AppMediaBar,
+		AppCommentWidget: AppCommentWidgetLazy,
+		AppActivityFeed: AppActivityFeedLazy,
 	},
 	directives: {
 		AppTrackEvent,

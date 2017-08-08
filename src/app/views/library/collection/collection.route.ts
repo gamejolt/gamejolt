@@ -15,7 +15,7 @@ export const routeLibraryCollectionRoutes: VueRouter.RouteConfig[] = routes.map(
 		name: `library.collection.${route[0]}`,
 		path: route[1],
 		props: true,
-		component: () => import(/* webpackChunkName: "routeLibraryCollectionRoutes" */ './collection'),
+		component: () => import(/* webpackChunkName: "routeLibrary" */ './collection'),
 		meta: {
 			collectionType: route[0],
 		},

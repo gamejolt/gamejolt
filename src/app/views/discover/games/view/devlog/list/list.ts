@@ -10,20 +10,20 @@ import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/met
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
-import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
 import { RouteState, RouteStore } from '../../view.store';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppActivityFeedLazy } from '../../../../../../components/lazy';
 
 @View
 @Component({
 	name: 'RouteDiscoverGamesViewDevlogList',
 	components: {
 		AppAd,
-		AppActivityFeed,
+		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
 	},
 })
