@@ -19,9 +19,8 @@ type Params = { [k: string]: string };
 type Filters = { [k: string]: any };
 
 export class GameFilteringContainer {
-	static readonly definitions: {
-		[k: string]: GameFilteringContainerDefinition;
-	} = {
+	static get definitions(): { [k: string]: GameFilteringContainerDefinition } {
+		return {
 		price: {
 			label: Translate.$gettext('Price'),
 			type: 'radio',
@@ -85,6 +84,7 @@ export class GameFilteringContainer {
 			type: 'string',
 		},
 	};
+	}
 
 	filters: Filters = {};
 
