@@ -18,160 +18,28 @@ interface GameFilteringContainerDefinition {
 type Params = { [k: string]: string };
 type Filters = { [k: string]: any };
 
-export class GameFilteringContainer {
-	static get definitions(): { [k: string]: GameFilteringContainerDefinition } {
-		return {
-		price: {
-			label: Translate.$gettext('Price'),
-			type: 'radio',
-			options: {
-				free: Translate.$gettext('Free / Name Your Price'),
-				sale: Translate.$gettext('On Sale'),
-				paid: Translate.$gettext('Paid'),
-				'5-less': Translate.$gettext('$5 or less'),
-				'15-less': Translate.$gettext('$15 or less'),
-				'30-less': Translate.$gettext('$30 or less'),
-			},
-		},
-		os: {
-			label: Translate.$gettext('games.filtering.os'),
-			type: 'array',
-			options: {
-				windows: Translate.$gettext('games.filtering.os_windows'),
-				mac: Translate.$gettext('games.filtering.os_mac'),
-				linux: Translate.$gettext('games.filtering.os_linux'),
-				other: Translate.$gettext('games.filtering.os_other'),
-				rom: Translate.$gettext('ROM'),
-			},
-		},
-		browser: {
-			label: Translate.$gettext('games.filtering.browser'),
-			type: 'array',
-			options: {
-				html: Translate.$gettext('games.filtering.browser_html'),
-				flash: Translate.$gettext('games.filtering.browser_flash'),
-				unity: Translate.$gettext('games.filtering.browser_unity'),
-				applet: Translate.$gettext('games.filtering.browser_applet'),
-				silverlight: Translate.$gettext('games.filtering.browser_silverlight'),
-			},
-		},
-		maturity: {
-			label: Translate.$gettext('games.filtering.maturity'),
-			type: 'array',
-			options: {
-				everyone: Translate.$gettext('games.filtering.maturity_everyone'),
-				teen: Translate.$gettext('games.filtering.maturity_teen'),
-				adult: Translate.$gettext('games.filtering.maturity_adult'),
-			},
-		},
-		status: {
-			label: Translate.$gettext('games.filtering.status'),
-			type: 'array',
-			options: {
-				complete: Translate.$gettext('Complete/Stable'),
-				wip: Translate.$gettext('Early Access'),
-			},
-		},
-		partners: {
-			label: Translate.$gettext('Partners'),
-			type: 'array',
-			options: {
-				partners: Translate.$gettext('Show Partner Games'),
-			},
-		},
-		query: {
-			label: Translate.$gettext('Filter'),
-			type: 'string',
-		},
-	};
-	}
+export function checkGameFilteringRoute(route: VueRouter.Route) {
+	const params = route.query;
 
-	filters: Filters = {};
+	let paramFiltersFound = false;
+	forEach(params, (value, param) => {
+		if (GameFilteringContainer.definitions[param] && value) {
+			paramFiltersFound = true;
+		}
+	});
 
-	/**
-	 * Whether or not we should store these filters in the browser.
-	 */
-	isPersistent = false;
-
-	/**
-	 * This is whether or not the filters are empty that we need for tags. It
-	 * doesn't include the query filter.
-	 */
-	get areTagFiltersEmpty() {
-		return this.isEmpty(this.filters, { skipQuery: true });
-	}
-
-	constructor() {
-		// Default all filters to empty values.
-		forEach(GameFilteringContainer.definitions, (definition, key) => {
-			if (definition.type === 'array') {
-				this.filters[key] = [];
-			} else if (definition.type === 'string') {
-				this.filters[key] = '';
-			} else if (definition.type === 'radio') {
-				this.filters[key] = null;
-			}
-		});
-	}
-
-	init(route: VueRouter.Route, options: { shouldDetect?: boolean } = {}) {
-		const params = route.query;
-
-		/**
-		 * We return false if we have changed the URL.
-		 * This prevents any API calls from going out twice.
-		 * We do resolve when we're just pulling the filters from the URL or if there
-		 * are no filters to set.
-		 */
-
-		let paramFiltersFound = false;
-		forEach(params, (value, param) => {
-			if (GameFilteringContainer.definitions[param] && value) {
-				paramFiltersFound = true;
-			}
-		});
-
-		if (paramFiltersFound) {
-			console.log('from url');
-
-			// We don't save the filters if we pull from the URL.
-			// We only save when they explicitly set/change them.
-			// This ensures that they can view a shared URL with them without overwriting their filters.
-			forEach(GameFilteringContainer.definitions, (definition, filter) => {
-				if (params[filter]) {
-					if (definition.type === 'array') {
-						this.filters[filter] = params[filter].split(',');
-					} else if (definition.type === 'string') {
-						this.filters[filter] = params[filter];
-					} else if (definition.type === 'radio') {
-						this.filters[filter] = params[filter];
-					}
-				} else {
-					if (definition.type === 'array') {
-						this.filters[filter] = [];
-					} else if (definition.type === 'string') {
-						this.filters[filter] = '';
-					} else if (definition.type === 'radio') {
-						this.filters[filter] = null;
-					}
-				}
-			});
-		} else if (
-			!GJ_IS_SSR &&
-			options.shouldDetect &&
-			this.isPersistent &&
-			window.localStorage[STORAGE_KEY]
-		) {
-			// Only if this is a persistent filtering container.
+	// We only do work if the URL is bare with no filters set yet.
+	if (!paramFiltersFound && !GJ_IS_SSR) {
+		if (window.localStorage[STORAGE_KEY]) {
 			console.log('from storage');
 
 			let filters = JSON.parse(window.localStorage[STORAGE_KEY]);
-			if (filters && !this.isEmpty(filters)) {
+			if (filters && !isEmpty(filters)) {
 				// Never resolve so we don't switch routes.
-				const _filters = this.getRouteData(filters);
-				return !this.updateUrl(route, _filters);
+				const _filters = getRouteData(filters);
+				return getNewRouteLocation(route, _filters);
 			}
-		} else if (!GJ_IS_SSR && options.shouldDetect) {
+		} else {
 			console.log('from device');
 
 			const os = Device.os();
@@ -195,12 +63,133 @@ export class GameFilteringContainer {
 					filters.browser = ['html'];
 				}
 
-				const _filters = this.getRouteData(filters);
-				return !this.updateUrl(route, _filters);
+				const _filters = getRouteData(filters);
+				return getNewRouteLocation(route, _filters);
 			}
 		}
+	}
+}
 
-		return true;
+export class GameFilteringContainer {
+	static get definitions(): { [k: string]: GameFilteringContainerDefinition } {
+		return {
+			price: {
+				label: Translate.$gettext('Price'),
+				type: 'radio',
+				options: {
+					free: Translate.$gettext('Free / Name Your Price'),
+					sale: Translate.$gettext('On Sale'),
+					paid: Translate.$gettext('Paid'),
+					'5-less': Translate.$gettext('$5 or less'),
+					'15-less': Translate.$gettext('$15 or less'),
+					'30-less': Translate.$gettext('$30 or less'),
+				},
+			},
+			os: {
+				label: Translate.$gettext('games.filtering.os'),
+				type: 'array',
+				options: {
+					windows: Translate.$gettext('games.filtering.os_windows'),
+					mac: Translate.$gettext('games.filtering.os_mac'),
+					linux: Translate.$gettext('games.filtering.os_linux'),
+					other: Translate.$gettext('games.filtering.os_other'),
+					rom: Translate.$gettext('ROM'),
+				},
+			},
+			browser: {
+				label: Translate.$gettext('games.filtering.browser'),
+				type: 'array',
+				options: {
+					html: Translate.$gettext('games.filtering.browser_html'),
+					flash: Translate.$gettext('games.filtering.browser_flash'),
+					unity: Translate.$gettext('games.filtering.browser_unity'),
+					applet: Translate.$gettext('games.filtering.browser_applet'),
+					silverlight: Translate.$gettext('games.filtering.browser_silverlight'),
+				},
+			},
+			maturity: {
+				label: Translate.$gettext('games.filtering.maturity'),
+				type: 'array',
+				options: {
+					everyone: Translate.$gettext('games.filtering.maturity_everyone'),
+					teen: Translate.$gettext('games.filtering.maturity_teen'),
+					adult: Translate.$gettext('games.filtering.maturity_adult'),
+				},
+			},
+			status: {
+				label: Translate.$gettext('games.filtering.status'),
+				type: 'array',
+				options: {
+					complete: Translate.$gettext('Complete/Stable'),
+					wip: Translate.$gettext('Early Access'),
+				},
+			},
+			partners: {
+				label: Translate.$gettext('Partners'),
+				type: 'array',
+				options: {
+					partners: Translate.$gettext('Show Partner Games'),
+				},
+			},
+			query: {
+				label: Translate.$gettext('Filter'),
+				type: 'string',
+			},
+		};
+	}
+
+	filters: Filters = {};
+
+	/**
+	 * Whether or not we should store these filters in the browser.
+	 */
+	isPersistent = false;
+
+	/**
+	 * This is whether or not the filters are empty that we need for tags. It
+	 * doesn't include the query filter.
+	 */
+	get areTagFiltersEmpty() {
+		return isEmpty(this.filters, { skipQuery: true });
+	}
+
+	constructor(route: VueRouter.Route) {
+		// Default all filters to empty values.
+		forEach(GameFilteringContainer.definitions, (definition, key) => {
+			if (definition.type === 'array') {
+				this.filters[key] = [];
+			} else if (definition.type === 'string') {
+				this.filters[key] = '';
+			} else if (definition.type === 'radio') {
+				this.filters[key] = null;
+			}
+		});
+
+		this.init(route);
+	}
+
+	init(route: VueRouter.Route) {
+		const params = route.query;
+
+		forEach(GameFilteringContainer.definitions, (definition, filter) => {
+			if (params[filter]) {
+				if (definition.type === 'array') {
+					this.filters[filter] = params[filter].split(',');
+				} else if (definition.type === 'string') {
+					this.filters[filter] = params[filter];
+				} else if (definition.type === 'radio') {
+					this.filters[filter] = params[filter];
+				}
+			} else {
+				if (definition.type === 'array') {
+					this.filters[filter] = [];
+				} else if (definition.type === 'string') {
+					this.filters[filter] = '';
+				} else if (definition.type === 'radio') {
+					this.filters[filter] = null;
+				}
+			}
+		});
 	}
 
 	toggleFilterOption(filter: string, option: any) {
@@ -339,41 +328,6 @@ export class GameFilteringContainer {
 		return queryPieces.join('&');
 	}
 
-	getRouteData(filters: Filters = this.filters) {
-		let params: Params = {};
-		forEach(GameFilteringContainer.definitions, (definition, filter) => {
-			if (!filters[filter]) {
-				return;
-			}
-
-			const value = filters[filter];
-
-			if (definition.type === 'array' && Array.isArray(value)) {
-				if (!value.length) {
-					return;
-				}
-
-				// Make comma delimited lists of values.
-				// Sort so the URL is always the same.
-				params[filter] = value.sort().join(',');
-			} else if (definition.type === 'string' && typeof value === 'string') {
-				if (!value.trim()) {
-					return;
-				}
-
-				params[filter] = value;
-			} else if (definition.type === 'radio') {
-				if (!value) {
-					return;
-				}
-
-				params[filter] = value;
-			}
-		});
-
-		return params;
-	}
-
 	/**
 	 * When the filters change in any widget.
 	 * We want to refresh the page with the new filtering params.
@@ -381,15 +335,12 @@ export class GameFilteringContainer {
 	onChanged() {
 		Scroll.shouldAutoScroll = false;
 
-		console.log('pass');
+		const query = getRouteData(this.filters);
+		const location = getNewRouteLocation(router.currentRoute, query);
 
-		const query = this.getRouteData();
-		this.updateUrl(router.currentRoute, query);
-
-		// router.replace( {
-		// 	name: router.currentRoute.name,
-		// 	query,
-		// } );
+		if (location) {
+			router.replace(location);
+		}
 	}
 
 	private saveFilters() {
@@ -402,42 +353,72 @@ export class GameFilteringContainer {
 		// This is so they can specifically say not to do our detected OS filters.
 		window.localStorage[STORAGE_KEY] = JSON.stringify(this.filters);
 	}
+}
 
-	private isEmpty(filters: Filters, options: any = {}) {
-		let isEmpty = true;
-		forEach(filters, (value, key) => {
-			if (!GameFilteringContainer.definitions[key]) {
+function getNewRouteLocation(route: VueRouter.Route, filters: Filters) {
+	const query = Object.assign({}, filters);
+
+	if (!objectEquals(query, route.query)) {
+		return {
+			name: route.name,
+			params: route.params,
+			query,
+		} as VueRouter.Location;
+	}
+}
+
+function isEmpty(filters: Filters, options: any = {}) {
+	let ret = true;
+	forEach(filters, (value, key) => {
+		if (!GameFilteringContainer.definitions[key]) {
+			return;
+		}
+
+		const definition = GameFilteringContainer.definitions[key];
+
+		if (definition.type === 'array' && value.length) {
+			ret = false;
+		} else if (definition.type === 'radio' && value) {
+			ret = false;
+		} else if (!options.skipQuery && definition.type === 'string' && value.trim()) {
+			ret = false;
+		}
+	});
+
+	return ret;
+}
+
+function getRouteData(filters: Filters) {
+	let params: Params = {};
+	forEach(GameFilteringContainer.definitions, (definition, filter) => {
+		if (!filters[filter]) {
+			return;
+		}
+
+		const value = filters[filter];
+
+		if (definition.type === 'array' && Array.isArray(value)) {
+			if (!value.length) {
 				return;
 			}
 
-			const definition = GameFilteringContainer.definitions[key];
-
-			if (definition.type === 'array' && value.length) {
-				isEmpty = false;
-			} else if (definition.type === 'radio' && value) {
-				isEmpty = false;
-			} else if (!options.skipQuery && definition.type === 'string' && value.trim()) {
-				isEmpty = false;
+			// Make comma delimited lists of values.
+			// Sort so the URL is always the same.
+			params[filter] = value.sort().join(',');
+		} else if (definition.type === 'string' && typeof value === 'string') {
+			if (!value.trim()) {
+				return;
 			}
-		});
 
-		return isEmpty;
-	}
+			params[filter] = value;
+		} else if (definition.type === 'radio') {
+			if (!value) {
+				return;
+			}
 
-	/**
-	 * Updates the URL only if filters are different than URL.
-	 * Will return true if URL was changed and false otherwise.
-	 */
-	private updateUrl(route: VueRouter.Route, filters: Filters) {
-		const query = Object.assign({}, filters);
-
-		if (!objectEquals(query, route.query)) {
-			router.replace({ name: route.name, params: route.params, query });
-			return true;
+			params[filter] = value;
 		}
+	});
 
-		console.log('should pass');
-
-		return false;
-	}
+	return params;
 }
