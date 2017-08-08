@@ -57,7 +57,7 @@ export class AppActivityFeedDevlogPost extends Vue {
 			return 'blog-article';
 		} else if (this.post.type === 'media') {
 			return 'screenshot';
-		} else if (this.post.type === 'video') {
+		} else if (this.post.type === 'video' || this.post.type === 'comment-video') {
 			return 'video';
 		}
 

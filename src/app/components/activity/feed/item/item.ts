@@ -7,16 +7,18 @@ import { FiresidePost } from '../../../../../lib/gj-lib-client/components/firesi
 import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
 import { ActivityFeedContainer } from '../feed-container-service';
 import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
-import { AppActivityFeedDevlogPost } from '../devlog-post/devlog-post';
 import { AppActivityFeedNotification } from '../notification/notification';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppActivityFeedItemPlaceholder } from './placeholder/placeholder';
+import { AppActivityFeedCommentVideo } from '../comment-video/comment-video';
+import { AppActivityFeedEventItem } from '../event-item/event-item';
 
 @View
 @Component({
 	components: {
 		AppScrollInview,
-		AppActivityFeedDevlogPost,
+		AppActivityFeedEventItem,
+		AppActivityFeedCommentVideo,
 		AppActivityFeedNotification,
 		AppActivityFeedItemPlaceholder,
 	},

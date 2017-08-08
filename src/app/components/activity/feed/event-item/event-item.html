@@ -1,44 +1,58 @@
-<app-timeline-list-item :is-new="isNew" :is-active="isActive">
-	<template slot="bubble">
-		<app-jolticon :icon="icon" />
-	</template>
+<app-timeline-list-item
+	:is-new="isNew"
+	:is-active="isActive"
+	>
 
-	<div class="devlog-post" :class="'devlog-post-' + post.type">
+	<app-jolticon slot="bubble" :icon="icon" />
+
+	<div class="event-item">
 
 		<router-link
-			class="devlog-post-game"
-			v-if="feed.showGameInfo && !Screen.isXs"
-			:to="{ name: 'discover.games.view.overview', params: { slug: post.game.slug, id: post.game.id } }"
+			class="-game"
+			v-if="game && feed.showGameInfo && !Screen.isXs"
+			:to="{
+				name: 'discover.games.view.overview',
+				params: {
+					slug: game.slug,
+					id: game.id,
+				},
+			}"
 			>
-			<app-game-thumbnail-img :game="post.game" />
+			<app-game-thumbnail-img :game="game" />
 		</router-link>
 
 		<div
 			class="timeline-list-item-header"
-			@click.capture="onClick( $event )"
+			@click.capture="onClick"
 			>
-			<router-link
-				:to="{ name: 'discover.games.view.devlog.view', params: { slug: post.game.slug, id: post.game.id, postSlug: post.slug } }"
-				>
+			<router-link :to="link">
 				<div class="timeline-list-item-header-content">
-					<div class="devlog-post-header-content">
+					<div class="-header-content">
 						<div class="timeline-list-item-meta">
-							<app-time-ago :date="post.published_on" />
+							<app-time-ago :date="eventItem.added_on" />
 
-							<template v-if="post.type === 'media'">
+							 <template v-if="post && post.type === 'media'">
 								<span class="dot-separator"></span>
 								<app-jolticon icon="screenshot" class="middle" />
 								{{ post.media.length | number }}
 							</template>
 
-							<template v-if="feed.showGameInfo">
+							<template v-if="game && feed.showGameInfo">
 								<span class="dot-separator"></span>
-								{{ post.game.title }}
+								{{ game.title }}
 							</template>
 						</div>
 
 						<div class="timeline-list-item-title">
-							{{ post.title }}
+							<template v-if="eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD">
+								{{ post.title }}
+							</template>
+							<template v-else-if="eventItem.type === EventItem.TYPE_GAME_PUBLISH">
+								{{ game.title }}
+							</template>
+							<template v-else-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD">
+								{{ eventItem.action.title }}
+							</template>
 						</div>
 					</div>
 				</div>
@@ -47,7 +61,14 @@
 
 		<div class="timeline-list-item-details">
 
-			<app-activity-feed-devlog-post-text
+			<app-activity-feed-comment-video
+				v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"
+				:item="item"
+				:is-hydrated="isHydrated"
+				@expanded="onExpand"
+				@content-bootstrapped="onContentBootstrapped"
+				/>
+			<!-- <app-activity-feed-devlog-post-text
 				v-if="post.type === 'text'"
 				:item="item"
 				:is-hydrated="isHydrated"
@@ -76,11 +97,12 @@
 				@expanded="onExpand"
 				@content-bootstrapped="onContentBootstrapped"
 				/>
+				-->
 
 			<app-activity-feed-devlog-post-controls
-				v-if="post.type !== 'comment-video'"
+				v-if="post"
 				:post="post"
-				:show-game-info="feed.showGameInfo"
+				:show-game-info="false"
 				:show-edit-controls="feed.showEditControls"
 				:show-extra-info="!Screen.isXs"
 				@expanded="onExpand"
@@ -88,6 +110,8 @@
 				@published="feed.onPostPublished( post )"
 				@removed="feed.onPostRemoved( post )"
 				/>
+				<!-- TODO -->
+				<!-- :show-game-info="feed.showGameInfo" -->
 
 		</div>
 

@@ -1,0 +1,136 @@
+<div v-if="routeBootstrapped">
+
+	<div v-app-scroll-when="true"></div>
+
+	<!-- TODO: Make this lazy load -->
+	<div class="fill-darkest">
+		<div :class="{ 'container': !Screen.isXs }">
+
+			<app-responsive-dimensions
+				:ratio="16 / 9"
+				>
+				<app-video-embed
+					v-if="video"
+					video-provider="youtube"
+					:video-id="video.video_id"
+					:autoplay="true"
+					/>
+			</app-responsive-dimensions>
+
+		</div>
+	</div>
+
+	<section class="section">
+		<div class="container">
+
+			<div class="row">
+				<div
+					class="col-lg-7"
+					:class="{ 'pull-left': Screen.isLg }"
+					style="clear: left"
+					>
+
+					<h2 class="section-header">
+						{{ video.title }}
+					</h2>
+					<hr class="underbar">
+
+					<div class="clearfix">
+
+						<div class="pull-left -user-info">
+							<div class="-avatar">
+								<app-user-avatar :user="user" />
+							</div>
+							<div class="-content">
+								<div>
+									<router-link :to="user.url" class="link-unstyled">
+										<strong>{{ user.display_name }}</strong>
+										<small class="text-muted">@{{ user.username }}</small>
+									</router-link>
+								</div>
+
+								<app-user-follow-widget
+									:user="user"
+									size="sm"
+									/>
+
+							</div>
+						</div>
+
+						<app-fireside-post-like-widget
+							class="pull-right"
+							:post="post"
+							/>
+					</div>
+
+					<hr>
+
+					<app-fade-collapse
+						:collapse-height="300"
+						:is-open="showFullDescription"
+						@require-change="canToggleDescription = $event"
+						>
+						<div class="comment-content" v-html="comment.comment_compiled"></div>
+					</app-fade-collapse>
+
+					<a class="hidden-text-expander"
+						v-if="canToggleDescription"
+						@click="showFullDescription = !showFullDescription"
+						v-app-track-event="`comment-video:toggle-full-description`"
+						>
+					</a>
+
+				</div>
+				<div
+					class="col-lg-4"
+					:class="{ 'pull-right': Screen.isLg }"
+					style="clear: right"
+					>
+
+					<!-- On SM/MD size we split this row into 2 columns -->
+					<div class="row">
+						<div class="col-sm-6 col-sm-push-6 col-md-5 col-md-push-7 col-lg-12 col-lg-push-0">
+
+							<div class="visible-md">
+								<h3 :class="{ 'section-header': Screen.isLg }">
+									Game in Video
+								</h3>
+								<hr class="underbar">
+							</div>
+
+							<app-game-thumbnail :game="game" />
+						</div>
+						<div class="col-sm-6 col-sm-pull-6 col-md-7 col-md-pull-5 col-lg-12 col-lg-pull-0">
+							<h3 :class="{ 'section-header': Screen.isLg }">
+								You May Also Like
+							</h3>
+							<hr class="underbar">
+
+							some vidz
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-md-10 col-lg-7"
+					:class="{ 'pull-left': Screen.isLg }"
+					style="clear: left"
+					>
+					<h3>
+						<translate>Comments</translate>
+						<small v-if="commentsCount">
+							({{ commentsCount | number }})
+						</small>
+					</h3>
+					<hr class="underbar">
+
+					<app-comment-widget
+						resource="Fireside_Post"
+						:resource-id="post.id"
+						@count="updateCommentsCount"
+						/>
+				</div>
+			</div>
+
+		</div>
+	</section>
+</div>

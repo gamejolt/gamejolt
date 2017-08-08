@@ -1,21 +1,21 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./videos.html';
+import * as View from '!view!./list.html';
 
-import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { AppCommentVideoThumbnail } from '../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
+import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
+import { AppCommentVideoThumbnail } from '../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
+import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import {
 	BaseRouteComponent,
 	RouteResolve,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
-	name: 'RouteProfileVideos',
+	name: 'RouteProfileVideosList',
 	components: {
 		AppCommentVideoThumbnail,
 	},
@@ -23,7 +23,7 @@ import {
 		AppTrackEvent,
 	},
 })
-export default class RouteProfileVideos extends BaseRouteComponent {
+export default class RouteProfileVideosList extends BaseRouteComponent {
 	@Prop() user: User;
 	@Prop() videosCount: number;
 

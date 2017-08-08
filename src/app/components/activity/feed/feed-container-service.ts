@@ -4,6 +4,7 @@ import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
+import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
 
 /**
  * The number of items from the bottom that we should hit before loading more.
@@ -20,7 +21,7 @@ export interface ActivityFeedContainerOptions {
 	/**
 	 * Which types of models are used in the feed.
 	 */
-	type: 'Fireside_Post' | 'Notification';
+	type: 'Fireside_Post' | 'Notification' | 'EventItem';
 
 	/**
 	 * The URL to hit to load more from the feed.
@@ -39,7 +40,7 @@ export interface ActivityFeedContainerOptions {
 }
 
 export class ActivityFeedContainer {
-	feedType: 'Notification' | 'Fireside_Post';
+	feedType: 'Notification' | 'Fireside_Post' | 'EventItem';
 	items: ActivityFeedItem[] = [];
 	games: { [k: string]: any } = {};
 
@@ -168,6 +169,8 @@ export class ActivityFeedContainer {
 			this.append(Notification.populate(response.items));
 		} else if (this.feedType === 'Fireside_Post') {
 			this.append(FiresidePost.populate(response.items));
+		} else if (this.feedType === 'EventItem') {
+			this.append(EventItem.populate(response.items));
 		}
 	}
 
@@ -176,6 +179,7 @@ export class ActivityFeedContainer {
 	 * are shared across all items. It not only reduces mem usage, but also helps
 	 * to keep things in sync (game follows, etc).
 	 */
+	// TODO
 	private processGames() {
 		for (const item of this.items) {
 			if (item.feedItem instanceof FiresidePost) {

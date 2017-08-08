@@ -8,16 +8,11 @@
 			<translate>profile.banned_message_html</translate>
 		</div>
 	</section>
-
-	<!--
-		Active user
-	-->
 	<template v-else>
 
-		<!--
-			Currently Playing
-		-->
-		<section v-if="activeGameSession" class="section fill-pink">
+		<!-- Currently Playing -->
+		<!-- TODO -->
+		<!-- <section v-if="activeGameSession" class="section fill-pink">
 			<div class="container">
 				<h2 class="section-header">
 					<translate>profile.playing_heading</translate>
@@ -52,17 +47,14 @@
 					</div>
 				</div>
 			</div>
-		</section>
+		</section> -->
 
 		<section class="section">
 			<div class="container">
 				<div class="row">
+					<div class="col-md-8 col-lg-7 pull-left">
 
-					<div class="col-xs-12 col-md-8 col-lg-6 pull-left" style="clear: left">
-
-						<!--
-							Friend Requests
-						-->
+						<!-- Friend Requests -->
 						<template v-if="userFriendship">
 							<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT" :animate-initial="true">
 								<div class="alert alert-info">
@@ -100,103 +92,7 @@
 							</app-expand>
 						</template>
 
-					</div>
-					<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
-						<div class="row">
-							<div class="col-sm-6 col-md-12">
-								<!-- <p>
-									<a class="btn btn-outline btn-block">
-										View Developer's Games
-									</a>
-
-									<a class="btn btn-outline btn-block">
-										View Videos
-									</a>
-								</p> -->
-
-								<app-user-level-widget :user="user" />
-							</div>
-							<div class="col-sm-6 col-md-12">
-								<template v-if="(
-									user.facebook_id
-									|| user.twitch_id
-									|| user.twitter_id
-									|| user.google_id
-									|| user.web_site
-									)"
-									>
-									<div v-if="user.facebook_id">
-										<a
-											class="link-unstyled"
-											target="_blank"
-											:href="`http://facebook.com/${user.facebook_id}`"
-											>
-											<app-jolticon icon="facebook" />
-											{{ user.facebook_name }}
-										</a>
-									</div>
-
-									<div v-if="user.twitter_id">
-										<a
-											class="link-unstyled"
-											target="_blank"
-											:href="`http://twitter.com/${user.twitter_screenname}`"
-											>
-											<app-jolticon icon="twitter-bird" />
-											@{{ user.twitter_screenname }}
-										</a>
-									</div>
-
-									<div v-if="user.google_id">
-										<a
-											class="link-unstyled"
-											target="_blank"
-											:href="`https://plus.google.com/${user.google_id}`"
-											>
-											<app-jolticon icon="google-plus" />
-											{{ user.google_nickname }}
-										</a>
-									</div>
-
-									<div v-if="user.twitch_id">
-										<a
-											class="link-unstyled"
-											target="_blank"
-											:href="`https://twitch.tv/${user.twitch_name}`"
-											>
-											<app-jolticon icon="twitch" />
-											{{ user.twitch_name }}
-										</a>
-									</div>
-
-									<div v-if="user.web_site">
-										<a
-											class="link-unstyled"
-											target="_blank"
-											:href="user.web_site"
-											>
-											<app-jolticon icon="world" />
-											<translate>Website</translate>
-										</a>
-									</div>
-								</template>
-								<template v-if="youtubeChannels.length">
-									<div v-for="channel of youtubeChannels" :key="channel.id">
-										<a
-											class="link-unstyled"
-											target="_blank"
-											:href="`https://www.youtube.com/channel/${channel.channel_id}`"
-											>
-											<app-jolticon icon="youtube" />
-											{{ channel.title }}
-										</a>
-									</div>
-								</template>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-12 col-md-8 col-lg-6 pull-left" style="clear: left">
-
+						<!-- Bio -->
 						<app-fade-collapse
 							:collapse-height="500"
 							:is-open="showFullDescription"
@@ -214,89 +110,198 @@
 							>
 						</a>
 
+						<hr class="visible-xs">
+
 					</div>
-				</div>
-			</div>
-		</section>
+					<div class="col-md-4 pull-right">
 
-		<section class="section" v-if="user.type === User.TYPE_DEVELOPER">
-			<div class="container">
-
-				<div v-if="!gamesCount">
-					<translate>profile.no_developer_games_html</translate>
-				</div>
-				<template v-else>
-					<h2 class="section-header">
-						<router-link class="link-unstyled" :to="{ name: 'library.collection.developer', params: { id: user.username } }">
-							<translate>profile.developer_games_teaser_heading</translate>
-						</router-link>
-						<small>
-							<translate>profile.developer_games_teaser_heading_small</translate>
-						</small>
-					</h2>
-
-					<div class="scrollable-grid-xs">
-						<div class="row">
-							<div
-								class="scrollable-grid-item col-xs-10 col-sm-4"
-								v-for="game of developerGames"
-								:key="game.id"
-								>
-								<app-game-thumbnail :game="game" />
-							</div>
-						</div>
-					</div>
-
-					<div class="page-cut">
-						<router-link class="btn btn-outline"
-							:to="{ name: 'library.collection.developer', params: { id: user.username } }"
-							>
-							<span class="btn-badge">
-								{{ gamesCount | number }}
-							</span>
-							<translate>View All</translate>
-						</router-link>
-					</div>
-				</template>
-
-			</div>
-		</section>
-
-		<section class="section" v-if="videosCount > 0">
-			<div class="container">
-
-				<h2 class="section-header">
-					<router-link class="link-unstyled" :to="{ name: 'profile.videos' }">
-						<translate>Video Comments</translate>
-					</router-link>
-				</h2>
-
-				<div class="row">
-					<div
-						class="col-xs-6 col-sm-3"
-						v-for="video of videos.slice( 0, 8 )"
-						:key="video.id"
-						>
-						<app-comment-video-thumbnail
-							:video="video"
-							:show-game="true"
+						<app-user-level-widget
+							v-if="!Screen.isXs"
+							:user="user"
 							/>
+
+						<template v-if="(
+							user.facebook_id
+							|| user.twitch_id
+							|| user.twitter_id
+							|| user.google_id
+							|| user.web_site
+							)"
+							>
+							<div v-if="user.facebook_id">
+								<a
+									class="link-unstyled"
+									target="_blank"
+									:href="`http://facebook.com/${user.facebook_id}`"
+									>
+									<app-jolticon icon="facebook" />
+									{{ user.facebook_name }}
+								</a>
+							</div>
+
+							<div v-if="user.twitter_id">
+								<a
+									class="link-unstyled"
+									target="_blank"
+									:href="`http://twitter.com/${user.twitter_screenname}`"
+									>
+									<app-jolticon icon="twitter-bird" />
+									@{{ user.twitter_screenname }}
+								</a>
+							</div>
+
+							<div v-if="user.google_id">
+								<a
+									class="link-unstyled"
+									target="_blank"
+									:href="`https://plus.google.com/${user.google_id}`"
+									>
+									<app-jolticon icon="google-plus" />
+									{{ user.google_nickname }}
+								</a>
+							</div>
+
+							<div v-if="user.twitch_id">
+								<a
+									class="link-unstyled"
+									target="_blank"
+									:href="`https://twitch.tv/${user.twitch_name}`"
+									>
+									<app-jolticon icon="twitch" />
+									{{ user.twitch_name }}
+								</a>
+							</div>
+
+							<div v-if="user.web_site">
+								<a
+									class="link-unstyled"
+									target="_blank"
+									:href="user.web_site"
+									>
+									<app-jolticon icon="link" />
+									<translate>Website</translate>
+								</a>
+							</div>
+						</template>
+						<template v-if="youtubeChannels.length">
+							<div v-for="channel of youtubeChannels" :key="channel.id">
+								<a
+									class="link-unstyled"
+									target="_blank"
+									:href="`https://www.youtube.com/channel/${channel.channel_id}`"
+									>
+									<app-jolticon icon="youtube" />
+									{{ channel.title }}
+								</a>
+							</div>
+						</template>
+
+						<br>
+
+						<!-- Add Friend -->
+						<button
+							v-if="app.user && user.id !== app.user.id && !userFriendship && !user.is_verified"
+							class="btn btn-outline btn-block"
+							@click="$emit( 'send-friend-request' )"
+							>
+							<app-jolticon icon="friend-add-2" />
+							<translate>profile.friend_request_button</translate>
+						</button>
+
+						<router-link
+							v-if="gamesCount > 0"
+							class="btn btn-outline btn-block"
+							:to="{
+								name: 'library.collection.developer',
+								params: { id: user.username },
+							}"
+							>
+							{{ gamesCount | number }} Games
+						</router-link>
+
+						<router-link
+							v-if="videosCount > 0"
+							class="btn btn-outline btn-block"
+							:to="{ name: 'profile.videos.list' }"
+							>
+							{{ videosCount | number }} Videos
+						</router-link>
+
+						<hr class="visible-xs">
+
+					</div>
+					<div class="col-md-8 col-lg-7 pull-left" style="clear: left">
+
+						<!-- Games -->
+						<template v-if="gamesCount > 0">
+							<h2>
+								<router-link class="link-unstyled" :to="{ name: 'library.collection.developer', params: { id: user.username } }">
+									<translate>profile.developer_games_teaser_heading</translate>
+								</router-link>
+								<small>
+									<translate>profile.developer_games_teaser_heading_small</translate>
+								</small>
+							</h2>
+							<hr class="underbar">
+
+							<div class="scrollable-grid-xs">
+								<div class="row">
+									<div
+										class="scrollable-grid-item col-xs-10 col-sm-6"
+										v-for="game of developerGames"
+										:key="game.id"
+										>
+										<app-game-thumbnail
+											:game="game"
+											/>
+									</div>
+								</div>
+							</div>
+						</template>
+
+						<!-- Videos -->
+						<template v-if="videosCount > 0">
+							<h2>
+								<router-link class="link-unstyled" :to="{ name: 'profile.videos.list' }">
+									<translate>Latest Videos</translate>
+								</router-link>
+							</h2>
+							<hr class="underbar">
+
+							<div class="row">
+								<div
+									class="col-xs-6 col-sm-3"
+									v-for="video of videos.slice( 0, 8 )"
+									:key="video.id"
+									>
+									<app-comment-video-thumbnail
+										:video="video"
+										:show-game="false"
+										/>
+								</div>
+							</div>
+						</template>
+
+						<!-- Feed -->
+						<h2>
+							<translate>Activity Feed</translate>
+						</h2>
+
+						<hr class="underbar">
+
+						<app-activity-feed-placeholder v-if="!feed" />
+						<app-activity-feed
+							v-else
+							:feed="feed"
+							:show-game-info="true"
+							:show-ads="false"
+							/>
+
 					</div>
 				</div>
-
-				<div class="page-cut">
-					<router-link class="btn btn-outline"
-						:to="{ name: 'profile.videos' }"
-						>
-						<span class="btn-badge">
-							{{ videosCount | number }}
-						</span>
-						<translate>View All</translate>
-					</router-link>
-				</div>
-
 			</div>
 		</section>
+
 	</template>
 
 </div>

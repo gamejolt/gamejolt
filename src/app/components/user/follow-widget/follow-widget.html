@@ -1,0 +1,25 @@
+<button
+	class="user-follow-widget btn"
+	:class="{
+		'btn-success-outline': !user.is_following,
+		'btn-success active': user.is_following,
+		'btn-sm': size === 'sm',
+	}"
+	v-app-auth-required
+	:disabled="isProcessing"
+	@click="onClick"
+	v-app-tooltip.bottom="!user.is_following ? $gettext( 'follow this user' ) : undefined"
+	v-app-track-event="`user-follow:${!user.is_following ? 'follow' : 'unfollow'}`"
+	>
+	<span class="btn-badge" v-if="user.follower_count">
+		{{ user.follower_count | number }}
+	</span>
+	<template v-if="!user.is_following">
+		<app-jolticon icon="subscribe" />
+		<translate>Follow</translate>
+	</template>
+	<template v-else>
+		<app-jolticon icon="subscribed" />
+		<translate>Following</translate>
+	</template>
+</button>

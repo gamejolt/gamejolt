@@ -3,7 +3,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./follow-widget.html';
 
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
@@ -11,6 +10,7 @@ import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/a
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Store } from '../../../store/index';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 
 @View
 @Component({
@@ -26,9 +26,9 @@ import { Store } from '../../../store/index';
 		number,
 	},
 })
-export class AppGameFollowWidget extends Vue {
-	@Prop(Game) game: Game;
-	@Prop(Boolean) sparse?: boolean;
+export class AppUserFollowWidget extends Vue {
+	@Prop(User) user: User;
+	@Prop(String) size?: string;
 
 	@State app: Store['app'];
 
@@ -41,20 +41,17 @@ export class AppGameFollowWidget extends Vue {
 
 		this.isProcessing = true;
 
-		if (!this.game.is_following) {
+		if (!this.user.is_following) {
 			try {
-				await this.game.$follow();
+				await this.user.$follow();
 			} catch (e) {
-				Growls.error(this.$gettext('Something has prevented you from following this game.'));
+				Growls.error(this.$gettext(`Something has prevented you from following this user.`));
 			}
 		} else {
 			try {
-				await this.game.$unfollow();
+				await this.user.$unfollow();
 			} catch (e) {
-				Growls.error(
-					this.$gettext('library.followed.remove_game_error_growl'),
-					this.$gettext('library.followed.remove_game_error_growl_title')
-				);
+				Growls.error(this.$gettext(`For some reason we couldn't unfollow this user.`));
 			}
 		}
 

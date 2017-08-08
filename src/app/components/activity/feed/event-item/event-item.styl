@@ -1,0 +1,28 @@
+@require '~styles/variables'
+
+// This is hardcoded.
+// If any spacing is changed, this may be invalid.
+$event-item-game-thumb-width = 120px
+
+.-game
+	display: none
+	position: absolute
+	right: 10px
+	top: 10px
+	width: $event-item-game-thumb-width
+	padding: 2px
+	border: 2px solid $gray-light
+	border-radius: $border-radius-base
+
+	img
+		border-radius: ($border-radius-base / 2)
+
+	@media $media-sm-up
+		display: block
+
+	&:hover
+		border-color: $white
+
+@media $media-sm-up
+	.-header-content
+		padding-right: $event-item-game-thumb-width + 20px

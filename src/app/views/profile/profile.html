@@ -97,7 +97,7 @@
 						</router-link>
 					</li>
 					<li v-if="videosCount > 0">
-						<router-link :to="{ name: 'profile.videos' }" active-class="active">
+						<router-link :to="{ name: 'profile.videos.list' }" active-class="active">
 							<translate>Videos</translate>
 						</router-link>
 					</li>
@@ -143,12 +143,19 @@
 		</template>
 
 		<template slot="controls">
-			<template v-if="app.user && user.id !== app.user.id && !userFriendship && !user.is_verified">
+			<app-user-follow-widget
+				:user="user"
+				class="btn-block"
+				/>
+			<!-- <button class="btn btn-outline btn-block">
+				Follow
+			</button> -->
+			<!-- <template v-if="app.user && user.id !== app.user.id && !userFriendship && !user.is_verified">
 				<a class="btn btn-outline btn-block" @click="sendFriendRequest">
 					<app-jolticon icon="friend-add-2" />
 					<translate>profile.friend_request_button</translate>
 				</a>
-			</template>
+			</template> -->
 		</template>
 
 	</app-page-header>
@@ -159,6 +166,7 @@
 		:videos-count="videosCount"
 		:user-friendship="userFriendship"
 		:active-game-session="activeGameSession"
+		@send-friend-request="sendFriendRequest"
 		@cancel-friend-request="cancelFriendRequest"
 		@accept-friend-request="acceptFriendRequest"
 		@reject-friend-request="rejectFriendRequest"

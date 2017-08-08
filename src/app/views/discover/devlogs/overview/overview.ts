@@ -66,7 +66,6 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 		// Try pulling feed from cache.
 		if (!GJ_IS_SSR) {
 			this.feed = ActivityFeedService.bootstrap();
-			console.log('tried getting feed', this.feed);
 		}
 	}
 
