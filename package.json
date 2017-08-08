@@ -28,7 +28,7 @@
 		"bootstrap-stylus": "hworld/bootstrap-stylus#master",
 		"chart.js": "2.6.0",
 		"codemirror": "5.28.0",
-		"core-js": "2.4.1",
+		"core-js": "2.5.0",
 		"cropperjs": "1.0.0-rc.3",
 		"css-element-queries": "0.4.0",
 		"date-fns": "1.28.5",
