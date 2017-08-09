@@ -29,11 +29,30 @@ import { Store } from '../../../store/index';
 export class AppGameFollowWidget extends Vue {
 	@Prop(Game) game: Game;
 	@Prop(Boolean) sparse?: boolean;
+	@Prop(Boolean) outline?: boolean;
 
 	@State app: Store['app'];
 
 	followTooltip: string;
 	isProcessing = false;
+
+	get btnClasses() {
+		let classes: string[] = [];
+
+		if (this.sparse) {
+			classes.push('btn-sparse');
+		}
+
+		if (this.game.is_following) {
+			classes.push('btn-success active');
+		} else {
+			if (this.outline) {
+				classes.push('btn-success-outline');
+			}
+		}
+
+		return classes.join(' ');
+	}
 
 	async onClick() {
 		if (!this.app.user || this.isProcessing) {
