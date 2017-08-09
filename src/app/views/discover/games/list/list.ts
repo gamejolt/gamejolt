@@ -6,7 +6,10 @@ import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppGenreList } from '../../../../components/genre/list/list';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { GameFilteringContainer } from '../../../../components/game/filtering/container';
+import {
+	GameFilteringContainer,
+	checkGameFilteringRoute,
+} from '../../../../components/game/filtering/container';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
@@ -14,6 +17,7 @@ import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppGameGrid } from '../../../../components/game/grid/grid';
 import { AppGameListing } from '../../../../components/game/listing/listing';
 import { splitHasAnimatedGameThumbnails } from '../../../../components/split-test/split-test-service';
+import { LocationRedirect } from '../../../../../lib/gj-lib-client/utils/router';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -72,18 +76,14 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 
 	hasAnimatedThumbnails = false;
 
-	// TODO(rewrite): Still gotta work on this.
 	@RouteResolve({ lazy: true, cache: true })
 	async routeResolve(this: undefined, route: VueRouter.Route) {
-		const filtering = new GameFilteringContainer();
-		filtering.isPersistent = true;
-
-		// If initialization changed the URL, then we don't want to do the API call.
-		// This prevents a double API call from going out.
-		if (!filtering.init(route, { shouldDetect: true })) {
-			return undefined;
+		const location = checkGameFilteringRoute(route);
+		if (location) {
+			return new LocationRedirect(location);
 		}
 
+		const filtering = new GameFilteringContainer(route);
 		return Api.sendRequest('/web/discover/games?' + filtering.getQueryString(route));
 	}
 
@@ -105,12 +105,13 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	 */
 	process() {
 		if (!this.listing || !this.filtering) {
-			this.filtering = new GameFilteringContainer();
+			this.filtering = new GameFilteringContainer(this.$route);
 			this.filtering.isPersistent = true;
-			this.filtering.init(this.$route);
 
 			this.listing = new GameListingContainer(this.filtering);
 		}
+
+		this.filtering.init(this.$route);
 
 		if (this.section === 'by-date') {
 			this.processDateSection();

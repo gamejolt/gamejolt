@@ -144,7 +144,7 @@
 						<template v-else-if="type === 'recommended'">
 							<template v-if="collection.isOwner">
 								<h1>
-									<translate>Your Recommended Games</translate>
+									<translate>Your Daily Mix</translate>
 								</h1>
 								<p class="text-muted small">
 									<translate>Every day we pick a handful of games that we think you may like!</translate>
@@ -152,7 +152,7 @@
 							</template>
 							<template v-else>
 								<h1>
-									<translate>Game Recommendations</translate>
+									<translate>Daily Mix</translate>
 								</h1>
 								<h4>
 									<translate>for</translate>
@@ -304,95 +304,41 @@
 
 	</app-game-listing>
 
-	<!--
-		Don't ng-if or the ui-view won't load.
-		Just hide it.
-	-->
-	<!--<section class="section" ng-show="totalGamesCount">
-		<div class="container">
+	<section class="section" v-if="recommendedGames.length">
+		<div class="container-lg">
 
-			<div ng-if="totalGamesCount">
-
-				<div class="row">
-					<div class="col-md-4" ng-class="Screen.isDesktop ? 'pull-right' : ''">
-						<gj-game-filtering-input
-							gj-filtering-container="filteringContainer"
-							>
-						</gj-game-filtering-input>
-					</div>
-					<div class="col-md-8">
-						<gj-game-filtering-tags
-							gj-filtering-container="filteringContainer"
-							>
-						</gj-game-filtering-tags>
-
-						<gj-pagination
-							id="collection-pagination"
-							items-per-page="perPage"
-							total-items="gamesCount"
-							current-page="currentPage">
-						</gj-pagination>
-
-					</div>
+			<div class="clearfix">
+				<h1>
+					<translate>Recommended Games</translate>
+				</h1>
+				<div :class="{ 'pull-left': !Screen.isXs }">
+					<p>
+						<translate>We remixed this playlist into a tasty collection of other games that you may enjoy.</translate>
+					</p>
+					<hr class="underbar">
 				</div>
-
-				<div class="clearfix">
-					<div class="pull-left">
-						<p class="text-muted small"
-							ng-show="!isLoading && gamesCount"
-							translate
-							translate-n="gamesCount"
-							translate-plural="games.list.games_count"
-							translate-params-page="currentPage"
-							translate-comment="{{ page }} expands to the current page of games"
-							>
-							games.list.games_count
-						</p>
-					</div>
-
-					<div class="pull-right" ng-if="type == 'tag'">
-						<gj-sorting sorting-options="tagSorting"></gj-sorting>
-					</div>
-
-					<div class="pull-right" ng-if="type == 'developer'">
-						<gj-sorting sorting-options="developerSorting"></gj-sorting>
-					</div>
+				<div class="hidden-xs pull-right">
+					<button class="btn btn-outline" @click="mixPlaylist(true)">
+						<translate>Refresh</translate>
+					</button>
 				</div>
-
 			</div>
 
-			<ui-view></ui-view>
+			<app-loading-fade :is-loading="isLoadingRecommended">
+				<app-game-grid
+					:games="recommendedGames"
+					:scrollable="true"
+					event="collection-game-mix:click"
+					/>
+			</app-loading-fade>
 
-			<div ng-if="totalGamesCount">
-
-				<gj-pagination
-					items-per-page="perPage"
-					total-items="gamesCount"
-					current-page="currentPage"
-					(on-page-change)="Scroll.to( 'collection-pagination', { animate: false } )">
-				</gj-pagination>
-
-			</div>
+			<p class="visible-xs">
+				<button class="btn btn-outline btn-block" @click="mixPlaylist(true)">
+					<translate>Refresh</translate>
+				</button>
+			</p>
 
 		</div>
-	</section>-->
-
-	<!-- No Games Match Filters -->
-	<!--<section class="section fill-pink anim-fade-in no-animate-leave" ng-if="totalGamesCount && !gamesCount">
-		<div class="container" translate>No games match your filters. <b>Zoinks!</b></div>
-	</section>-->
-
-	<!-- No Games -->
-	<!--<section class="section fill-pink" ng-if="!totalGamesCount">
-		<div class="container" ng-switch="type">
-			<div ng-switch-when="playlist" translate>library.collection.no_games_playlist_html</div>
-			<div ng-switch-when="developer" translate>library.collection.no_games_developer_html</div>
-			<div ng-switch-when="followed" translate>library.collection.no_games_followed_html</div>
-			<div ng-switch-when="bundle" translate>library.collection.no_games_bundle_html</div>
-			<div ng-switch-when="tag" translate>library.collection.no_games_tag_html</div>
-			<div ng-switch-when="owned" translate>You don't own any games yet. Go buy some!</div>
-			<div ng-switch-when="recommended" translate>We don't have enough data from this user to show accurate recommendations yet!</div>
-		</div>
-	</section>-->
+	</section>
 
 </div>

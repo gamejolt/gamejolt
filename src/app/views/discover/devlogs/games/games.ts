@@ -25,7 +25,7 @@ export default class RouteDiscoverDevlogsGames extends BaseRouteComponent {
 
 	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		const filteringContainer = new GameFilteringContainer();
+		const filteringContainer = new GameFilteringContainer(route);
 		return Api.sendRequest(
 			'/web/discover/devlogs/games?' + filteringContainer.getQueryString(route)
 		);

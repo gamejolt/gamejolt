@@ -4,5 +4,5 @@ export const routeDiscoverGamesViewOverview: VueRouter.RouteConfig = {
 	name: 'discover.games.view.overview',
 	path: '/games/:slug/:id(\\d+)',
 	props: true,
-	component: () => import(/* webpackChunkName: "routeDiscoverGamesViewOverview" */ './overview'),
+	component: () => import(/* webpackChunkName: "routeDiscoverGamesView" */ './overview'),
 };

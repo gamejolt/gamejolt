@@ -17,8 +17,8 @@ Payload.init(store);
 Analytics.initRouter(router);
 Connection.init(store);
 
-export async function createApp() {
-	await bootstrapAppTranslations();
+export function createApp() {
+	bootstrapAppTranslations();
 
 	const app = new Vue({
 		store,

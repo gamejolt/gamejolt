@@ -17,7 +17,7 @@
 						type="search"
 						class="form-control"
 						:placeholder="$gettext( 'library.playlists.add_to.filter_placeholder' )"
-						v-app-focus-when="Screen.isDesktop"
+						v-app-focus-when
 						v-model="filterQuery"
 						keydown.esc.stop="close"
 						>

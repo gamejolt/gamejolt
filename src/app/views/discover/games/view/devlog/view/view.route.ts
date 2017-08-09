@@ -4,5 +4,5 @@ export const routeDiscoverGamesViewDevlogView: VueRouter.RouteConfig = {
 	name: 'discover.games.view.devlog.view',
 	path: 'devlog/:postSlug',
 	props: true,
-	component: () => import(/* webpackChunkName: "routeDiscoverGamesViewDevlogView" */ './view'),
+	component: () => import(/* webpackChunkName: "routeDiscoverGamesView" */ './view'),
 };

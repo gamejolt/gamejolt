@@ -8,7 +8,7 @@ export const routeDiscoverChannelsView: VueRouter.RouteConfig = {
 	name: 'discover.channels.view',
 	path: ':channel',
 	props: true,
-	component: () => import(/* webpackChunkName: "routeDiscoverChannelsView" */ './view'),
+	component: () => import(/* webpackChunkName: "routeDiscoverChannels" */ './view'),
 	children: [
 		routeDiscoverChannelsViewOverview,
 		routeDiscoverChannelsViewGames,
