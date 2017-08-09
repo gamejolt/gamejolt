@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { namespace, Action } from 'vuex-class';
+import { Action } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./add-to-popover.html?style=./add-to-popover.styl';
 
@@ -13,9 +13,7 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { LibraryStore, LibraryStoreNamespace } from '../../../store/library';
-
-const LibraryAction = namespace(LibraryStoreNamespace, Action);
+import { LibraryStore } from '../../../store/library';
 
 @View
 @Component({
@@ -31,9 +29,12 @@ const LibraryAction = namespace(LibraryStoreNamespace, Action);
 export class AppGamePlaylistAddToPopover extends Vue {
 	@Prop(Game) game: Game;
 
-	@LibraryAction addGameToPlaylist: LibraryStore['addGameToPlaylist'];
-	@LibraryAction removeGameFromPlaylist: LibraryStore['removeGameFromPlaylist'];
-	@LibraryAction newPlaylist: LibraryStore['newPlaylist'];
+	@Action('library/addGameToPlaylist') addGameToPlaylist: LibraryStore['addGameToPlaylist'];
+
+	@Action('library/removeGameFromPlaylist')
+	removeGameFromPlaylist: LibraryStore['removeGameFromPlaylist'];
+
+	@Action('library/newPlaylist') newPlaylist: LibraryStore['newPlaylist'];
 
 	playlists: GamePlaylist[] = [];
 	playlistsWithGame: number[] = [];

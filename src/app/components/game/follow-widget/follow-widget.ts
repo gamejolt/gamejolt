@@ -52,7 +52,7 @@ export class AppGameFollowWidget extends Vue {
 			}
 		}
 
-		return classes.join(' ');
+		return classes;
 	}
 
 	async onClick() {
