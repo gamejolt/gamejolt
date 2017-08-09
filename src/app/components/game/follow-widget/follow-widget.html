@@ -5,7 +5,7 @@
 	:disabled="isProcessing"
 	@click="onClick"
 	v-app-tooltip.bottom="!game.is_following ? $gettext( 'Follow this game to add it to your Library and be notified when new posts are added.' ) : undefined"
-	v-app-track-event="`game-follow:${!game.is_following ? 'follow' : 'unfollow'}`"
+	v-app-track-event="`game-follow:${eventLabel || 'any'}:${!game.is_following ? 'follow' : 'unfollow'}`"
 	>
 	<span class="btn-badge" v-if="!sparse && game.follower_count">
 		{{ game.follower_count | number }}

@@ -30,6 +30,7 @@ export class AppGameFollowWidget extends Vue {
 	@Prop(Game) game: Game;
 	@Prop(Boolean) sparse?: boolean;
 	@Prop(Boolean) outline?: boolean;
+	@Prop(String) eventLabel?: string;
 
 	@State app: Store['app'];
 

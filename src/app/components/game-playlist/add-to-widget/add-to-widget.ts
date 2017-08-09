@@ -32,6 +32,7 @@ import { AppGamePlaylistAddToPopover } from '../add-to-popover/add-to-popover';
 export class AppGamePlaylistAddToWidget extends Vue {
 	@Prop(Game) game: Game;
 	@Prop(Boolean) outline?: boolean;
+	@Prop(String) eventLabel?: string;
 
 	@State app: Store['app'];
 

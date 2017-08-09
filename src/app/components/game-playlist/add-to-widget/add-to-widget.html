@@ -11,7 +11,7 @@
 			disabled: !app.user,
 		}"
 		v-app-tooltip.bottom="$gettext( 'Add to Playlist' )"
-		v-app-track-event="`add-to-playlist:widget`"
+		v-app-track-event="`add-to-playlist:widget:${eventLabel || 'any'}`"
 		@click.prevent
 		>
 		<app-jolticon icon="add" />
