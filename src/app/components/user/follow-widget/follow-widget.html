@@ -8,7 +8,11 @@
 	v-app-auth-required
 	:disabled="isProcessing"
 	@click="onClick"
-	v-app-tooltip.bottom="!user.is_following ? $gettext( 'follow this user' ) : undefined"
+	v-app-tooltip.bottom="
+		!user.is_following
+		? $gettext( 'Follow this user to get their games, videos, and posts in your feed!' )
+		: undefined
+	"
 	v-app-track-event="`user-follow:${!user.is_following ? 'follow' : 'unfollow'}`"
 	>
 	<span class="btn-badge" v-if="user.follower_count">
