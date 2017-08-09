@@ -1,9 +1,6 @@
 <button
 	class="game-follow-widget btn"
-	:class="[
-		!game.is_following ? 'btn-success-outline' : 'btn-success active',
-		sparse ? 'btn-sparse': '',
-	]"
+	:class="btnClasses"
 	:disabled="isProcessing"
 	v-app-auth-required
 	v-app-tooltip.bottom="
@@ -11,15 +8,15 @@
 		? $gettext( `Follow this game to add it to your Library and be notified when new posts are added.` )
 		: undefined
 	"
-	v-app-track-event="`game-follow:${!game.is_following ? 'follow' : 'unfollow'}`"
+	v-app-track-event="`game-follow:${eventLabel || 'any'}:${!game.is_following ? 'follow' : 'unfollow'}`"
 	@click="onClick"
 	>
-	<span class="btn-badge" v-if="game.follower_count">
+	<span class="btn-badge" v-if="!sparse && game.follower_count">
 		{{ game.follower_count | number }}
 	</span>
 	<template v-if="!game.is_following">
 		<app-jolticon icon="subscribe" />
-		<translate>Follow</translate>
+		<translate v-if="!sparse">Follow</translate>
 	</template>
 	<template v-else>
 		<app-jolticon icon="subscribed" />

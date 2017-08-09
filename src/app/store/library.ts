@@ -17,9 +17,10 @@ import { Game } from '../../lib/gj-lib-client/components/game/game.model';
 import { GamePlaylist } from '../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
 import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
 
-export const LibraryState = namespace('library', State);
-export const LibraryAction = namespace('library', Action);
-export const LibraryMutation = namespace('library', Mutation);
+export const LibraryStoreNamespace = 'library';
+export const LibraryState = namespace(LibraryStoreNamespace, State);
+export const LibraryAction = namespace(LibraryStoreNamespace, Action);
+export const LibraryMutation = namespace(LibraryStoreNamespace, Mutation);
 
 export type Actions = {
 	'library/followCollection': GameCollection;
