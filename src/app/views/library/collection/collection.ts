@@ -28,10 +28,15 @@ import { AppGameCollectionFollowWidget } from '../../../components/game/collecti
 import { store, Store, tillStoreBootstrapped } from '../../../store/index';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { LibraryAction, LibraryStore, LibraryState } from '../../../store/library';
+import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+
+const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
+
+const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 
 @View
 @Component({
@@ -44,6 +49,7 @@ import {
 		AppGameListing,
 		AppGameGrid,
 		AppGameCollectionFollowWidget,
+		AppLoadingFade,
 	},
 	directives: {
 		AppTooltip,
@@ -75,6 +81,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
+
+	recommendedGames: Game[] = [];
+	isLoadingRecommended = false;
 
 	Screen = makeObservableService(Screen);
 
@@ -154,6 +163,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		}
 
 		this.processMeta();
+		this.mixPlaylist();
 	}
 
 	private processMeta() {
@@ -253,5 +263,24 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		if (await this.unfollowGame(game)) {
 			this.reloadRoute();
 		}
+	}
+
+	async mixPlaylist(shouldRefresh = false) {
+		if (MixableTypes.indexOf(this.type) === -1) {
+			this.recommendedGames = [];
+			return;
+		}
+
+		let id = this.id;
+		if (UserTypes.indexOf(this.type) !== -1) {
+			id = '@' + id;
+		}
+
+		const action = shouldRefresh ? 'refresh-mix' : 'mix';
+
+		this.isLoadingRecommended = true;
+		const payload = await Api.sendRequest(`/web/library/games/${action}/` + this.type + '/' + id);
+		this.recommendedGames = Game.populate(payload.games);
+		this.isLoadingRecommended = false;
 	}
 }
