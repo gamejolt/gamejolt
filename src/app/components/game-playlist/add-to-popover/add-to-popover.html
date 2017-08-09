@@ -1,5 +1,6 @@
 <app-popover
-	popover-id="add-to-playlist"
+	:popover-id="`add-to-playlist-${game.id}`"
+	:append-to-body="true"
 	@focused="onFocus"
 	@blurred="onBlur"
 	>

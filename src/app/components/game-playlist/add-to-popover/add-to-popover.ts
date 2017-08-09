@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { namespace, Action } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./add-to-popover.html?style=./add-to-popover.styl';
 
@@ -12,7 +13,9 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { LibraryAction, LibraryStore } from '../../../store/library';
+import { LibraryStore, LibraryStoreNamespace } from '../../../store/library';
+
+const LibraryAction = namespace(LibraryStoreNamespace, Action);
 
 @View
 @Component({
