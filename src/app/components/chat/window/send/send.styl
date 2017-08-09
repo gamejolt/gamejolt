@@ -1,18 +1,33 @@
 @require '~styles/variables'
 
-.chat-window-send
+.-multiline-notice
+	margin-bottom: 5px
+	font-size: $font-size-small
+	color: $gray-light
 
-	textarea
-		resize: none
-		font-size: $font-size-small
-		border: 0
-		background-color: transparent
-		color: $white
+.-container
+	position: relative
 
-		@media $media-sm-up
-			border: 1px solid $gray-dark
+textarea
+	resize: none
+	font-size: $font-size-small
+	border: 0
+	background-color: transparent
+	color: $white
 
-	.chat-window-send-multi-line-notice
-		margin-bottom: 5px
-		font-size: $font-size-small
-		color: $gray-light
+	@media $media-sm-up
+		border: 1px solid $gray-dark
+
+.-button
+	display: none
+
+@media $media-mobile
+	.-input
+		margin-right: 70px
+
+	.-button
+		display: block
+		position: absolute
+		top: 7px
+		right: 5px
+		color: $gray
