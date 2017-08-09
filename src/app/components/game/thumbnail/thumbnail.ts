@@ -20,6 +20,8 @@ import { AppScrollInview } from '../../../../lib/gj-lib-client/components/scroll
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
 import { Settings } from '../../settings/settings.service';
 import { AppGameThumbnailPlaceholder } from './placeholder/placeholder';
+import { AppGameFollowWidget } from '../follow-widget/follow-widget';
+import { AppGamePlaylistAddToWidget } from '../../game-playlist/add-to-widget/add-to-widget';
 
 /**
  * An array of all the thumbnails on the page.
@@ -50,6 +52,8 @@ if (typeof window !== 'undefined') {
 		AppUserAvatarImg,
 		AppScrollInview,
 		AppGameThumbnailPlaceholder,
+		AppGameFollowWidget,
+		AppGamePlaylistAddToWidget,
 	},
 	directives: {
 		AppPopoverTrigger,
@@ -58,12 +62,8 @@ if (typeof window !== 'undefined') {
 export class AppGameThumbnail extends Vue {
 	@Prop(Object) game: Game;
 	@Prop(String) linkTo?: string;
-
-	@Prop({ type: Boolean, default: false })
-	autoplay: boolean;
-
-	@Prop({ type: Boolean, default: false })
-	hidePricing: boolean;
+	@Prop(Boolean) autoplay?: boolean;
+	@Prop(Boolean) hidePricing?: boolean;
 
 	@State app: AppStore;
 
@@ -76,6 +76,11 @@ export class AppGameThumbnail extends Vue {
 		: true;
 
 	Screen = makeObservableService(Screen);
+
+	get shouldShowControls() {
+		// Only show controls if they didn't override with their own.
+		return !this.$slots.default;
+	}
 
 	get isActive() {
 		// When the window is not focused we don't want to play videos. This

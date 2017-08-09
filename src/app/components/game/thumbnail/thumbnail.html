@@ -15,9 +15,22 @@
 
 			<div
 				class="game-thumbnail-controls"
+				v-if="isHydrated"
 				@click.prevent
 				>
 				<slot />
+
+				<template v-if="shouldShowControls">
+					<app-game-follow-widget
+						:game="game"
+						:sparse="true"
+						/>
+
+					<app-game-playlist-add-to-widget
+						:game="game"
+						/>
+				</template>
+
 				<template v-if="showModTools">
 					<button class="btn btn-sparse"
 						v-app-popover-trigger="`game-mod-tools-${game.id}`"
