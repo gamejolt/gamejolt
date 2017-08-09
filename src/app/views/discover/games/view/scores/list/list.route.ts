@@ -4,5 +4,5 @@ export const routeDiscoverGamesViewScoresList: VueRouter.RouteConfig = {
 	name: 'discover.games.view.scores.list',
 	path: 'scores/:tableId(\\d+)/:type',
 	props: true,
-	component: () => import(/* webpackChunkName: "routeDiscoverGamesViewScoresList" */ './list'),
+	component: () => import(/* webpackChunkName: "routeDiscoverGamesViewAchievements" */ './list'),
 };

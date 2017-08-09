@@ -2,11 +2,18 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch Chrome against localhost",
+			"name": "Launch Site in Chrome",
 			"type": "chrome",
 			"request": "launch",
 			"url": "http://localhost:8080",
 			"webRoot": "${workspaceRoot}"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Launch Client",
+			"program": "${workspaceRoot}/node_modules/gulp/bin/gulp.js",
+			"args": ["client:run"]
 		},
 		{
 			"name": "Attach to Chrome",

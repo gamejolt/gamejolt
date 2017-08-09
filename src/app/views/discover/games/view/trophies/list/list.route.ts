@@ -4,5 +4,5 @@ export const routeDiscoverGamesViewTrophiesList: VueRouter.RouteConfig = {
 	name: 'discover.games.view.trophies.list',
 	path: 'trophies',
 	props: true,
-	component: () => import(/* webpackChunkName: "routeDiscoverGamesViewTrophiesList" */ './list'),
+	component: () => import(/* webpackChunkName: "routeDiscoverGamesViewAchievements" */ './list'),
 };

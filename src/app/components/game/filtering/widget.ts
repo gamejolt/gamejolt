@@ -33,7 +33,6 @@ export class AppGameFilteringWidget extends Vue {
 
 	GameFilteringContainer = GameFilteringContainer;
 
-	visiblePopovers: any = {};
 	hovered: any = {};
 
 	orderedFilters: any = {
@@ -45,20 +44,12 @@ export class AppGameFilteringWidget extends Vue {
 		partners: ['partners'],
 	};
 
-	onPopoverShown(filter: string) {
-		this.visiblePopovers[filter] = true;
-	}
-
-	onPopoverHidden(filter: string) {
-		this.visiblePopovers[filter] = false;
-	}
-
 	onMouseover(filter: string, option: any) {
-		Vue.set(this.hovered, filter, option);
+		this.$set(this.hovered, filter, option);
 	}
 
 	onMouseout(filter: string) {
-		Vue.set(this.hovered, filter, null);
+		this.$set(this.hovered, filter, null);
 	}
 
 	toggleFilterOption(filter: string, option: any) {

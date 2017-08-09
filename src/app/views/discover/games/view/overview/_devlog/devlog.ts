@@ -9,8 +9,6 @@ import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
 import { AppFadeCollapse } from '../../../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { AppTrackEvent } from '../../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
-import { AppActivityFeed } from '../../../../../../components/activity/feed/feed';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { RouteState, RouteStore, RouteMutation } from '../../view.store';
@@ -24,25 +22,26 @@ import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/numbe
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
-import { AppCommentWidgetAddLazy } from '../../../../../../components/lazy';
+import { AppCommentWidgetAddLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
+import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
 
 @View
 @Component({
 	components: {
-		AppMediaBar,
 		AppAdPlacement,
 		AppLazyPlaceholder,
 		AppFadeCollapse,
-		AppActivityFeed,
 		AppActivityFeedPlaceholder,
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
 		AppGamePackageCard,
 		AppGameSoundtrackCard,
 		AppCommentPeek,
-		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
 		AppGameGrid,
 		AppGameGridPlaceholder,
+		AppMediaBar,
+		AppActivityFeed: AppActivityFeedLazy,
+		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
 	},
 	directives: {
 		AppTrackEvent,

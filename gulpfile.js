@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 
 var config = {
-	staticCdn: 'https://s.gjcdn.net',
+	staticCdn: 'https://b6d3e9q9.ssl.hwcdn.net',
 	injectVersion: 2,
 	framework: 'vue',
 	sections: ['auth', 'checkout', 'claim'],
@@ -46,7 +46,7 @@ var config = {
 };
 
 require('./src/lib/gj-lib-client/gulp/tasks/common.js')(config, __dirname);
-// require( './tasks/client.js' )( config );
+require('./tasks/client.js')(config);
 require('./tasks/app.js')(config);
 require('./tasks/terms.js')(config);
 require('./tasks/game-api-doc.js')(config);

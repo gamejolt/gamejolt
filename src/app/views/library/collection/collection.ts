@@ -84,20 +84,12 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	Screen = makeObservableService(Screen);
 
-	// TODO(rewrite): Still gotta work on this.
 	// Not really able to make this lazy since it needs payload to build out the
 	// header.
 	@RouteResolve({ cache: true })
 	async routeResolve(this: undefined, route: VueRouter.Route) {
-		const filtering = new GameFilteringContainer();
-
-		// If initialization changed the URL, then we don't want to do the API call.
-		// This prevents a double API call from going out.
-		if (!filtering.init(route)) {
-			return undefined;
-		}
-
 		const type = route.meta.collectionType;
+		const filtering = new GameFilteringContainer(route);
 		const query = filtering.getQueryString(route);
 
 		let id: string = route.params.id;
@@ -131,12 +123,11 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	routed() {
 		if (!this.listing || !this.filtering) {
-			this.filtering = new GameFilteringContainer();
-			this.filtering.init(this.$route);
-
+			this.filtering = new GameFilteringContainer(this.$route);
 			this.listing = new GameListingContainer(this.filtering);
 		}
 
+		this.filtering.init(this.$route);
 		this.listing.processPayload(this.$route, this.$payload);
 
 		this.type = this.$route.meta.collectionType;
@@ -210,9 +201,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			} else if (this.type === 'recommended') {
 				const params = { user: '@' + this.user!.username };
 				if (this.collection!.isOwner) {
-					Meta.title = this.$gettext('Your Recommended Games');
+					Meta.title = this.$gettext('Your Daily Mix');
 				} else {
-					Meta.title = this.$gettextInterpolate('Game Recommendations for %{ user }', params);
+					Meta.title = this.$gettextInterpolate('Daily Mix for %{ user }', params);
 				}
 			} else if (this.type === 'bundle') {
 				Meta.title = this.bundle!.title;

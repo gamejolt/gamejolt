@@ -4,5 +4,5 @@ export const routeDiscoverChannelsViewOverview: VueRouter.RouteConfig = {
 	name: 'discover.channels.view.overview',
 	path: '/channels/:channel',
 	props: true,
-	component: () => import(/* webpackChunkName: "routeDiscoverChannelsViewOverview" */ './overview'),
+	component: () => import(/* webpackChunkName: "routeDiscoverChannels" */ './overview'),
 };

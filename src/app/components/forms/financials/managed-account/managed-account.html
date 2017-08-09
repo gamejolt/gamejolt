@@ -336,7 +336,7 @@
 			</div>
 		</app-expand>
 
-		<app-loading v-if="isProcessing" :label="$gettext( `Processing...` )" />
+		<app-loading v-if="state.isProcessing" :label="$gettext( `Processing...` )" />
 
 		<app-form-button
 			v-if="!isComplete && !isVerificationPending"

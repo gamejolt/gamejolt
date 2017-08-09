@@ -4,6 +4,11 @@ import * as View from '!view!./descriptive-action.html';
 
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
+import { Sellable } from '../../../../lib/gj-lib-client/components/sellable/sellable.model';
+import { OrderItem } from '../../../../lib/gj-lib-client/components/order/item/item.model';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { ForumTopic } from '../../../../lib/gj-lib-client/components/forum/topic/topic.model';
+import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 
 @View
 @Component({})
@@ -12,15 +17,23 @@ export class AppNotificationDescriptiveAction extends Vue {
 
 	get translationValues(): any {
 		if (this.notification.type === Notification.TYPE_SELLABLE_SELL) {
+			const sellable = this.notification.to_model as Sellable;
+			const orderItem = this.notification.action_model as OrderItem;
+			return {
+				object: sellable.title,
+				amount: currency(orderItem.amount),
+			};
+		} else if (
+			this.notification.to_model instanceof Game ||
+			this.notification.to_model instanceof ForumTopic ||
+			this.notification.to_model instanceof FiresidePost
+		) {
 			return {
 				object: this.notification.to_model.title,
-				amount: currency(this.notification.action_model.amount / 100),
 			};
 		}
 
-		return {
-			object: this.notification.to_model.title,
-		};
+		return {};
 	}
 
 	get action() {
@@ -41,13 +54,13 @@ export class AppNotificationDescriptiveAction extends Vue {
 				);
 
 			case Notification.TYPE_FRIENDSHIP_REQUEST:
-				return this.$gettextInterpolate(`sent you a friend request.`, this.translationValues);
+				return this.$gettext(`sent you a friend request.`);
 
 			case Notification.TYPE_FRIENDSHIP_ACCEPT:
-				return this.$gettextInterpolate(`accepted your friend request.`, this.translationValues);
+				return this.$gettext(`accepted your friend request.`);
 
 			case Notification.TYPE_GAME_RATING_ADD:
-				return this.$gettextInterpolate(`received a new rating.`, this.translationValues);
+				return this.$gettext(`received a new rating.`);
 
 			case Notification.TYPE_GAME_FOLLOW:
 				return this.$gettextInterpolate(`followed <b>%{ object }</b>.`, this.translationValues);

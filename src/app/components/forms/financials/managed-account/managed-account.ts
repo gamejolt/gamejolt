@@ -15,12 +15,12 @@ import { AppFinancialsManagedAccountDob } from './dob';
 import { AppFinancialsManagedAccountAddress } from './address';
 import { AppFinancialsManagedAccountSsn } from './ssn';
 import { AppFinancialsManagedAccountIdDocument } from './id-document';
+import { AppFinancialsManagedAccountBusiness } from './business';
 import {
 	BaseForm,
 	FormOnInit,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 
-// CODE REVIEW - populate form model.
 interface FormModel {
 	additional_owners_count: number;
 	'legal_entity.verification.document': any;
@@ -32,10 +32,6 @@ interface FormModel {
 	[k: string]: any;
 }
 
-// CODE REVIEW - change all managed account child components to be normal components and not form components.
-// use components: {
-//        ...CommonFormComponents,
-//    },
 @View
 @Component({
 	components: {
@@ -47,6 +43,7 @@ interface FormModel {
 		AppFinancialsManagedAccountAddress,
 		AppFinancialsManagedAccountSsn,
 		AppFinancialsManagedAccountIdDocument,
+		AppFinancialsManagedAccountBusiness,
 	},
 })
 export class FormFinancialsManagedAccount extends BaseForm<FormModel>

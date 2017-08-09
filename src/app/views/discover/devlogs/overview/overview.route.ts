@@ -4,5 +4,5 @@ export const routeDiscoverDevlogsOverview: VueRouter.RouteConfig = {
 	name: 'discover.devlogs.overview',
 	path: '/devlogs',
 	props: true,
-	component: () => import(/* webpackChunkName: "routeDiscoverDevlogsOverview" */ './overview'),
+	component: () => import(/* webpackChunkName: "routeDiscoverDevlogs" */ './overview'),
 };

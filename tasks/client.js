@@ -7,7 +7,7 @@ var os = require('os');
 var _ = require('lodash');
 var shell = require('gulp-shell');
 var path = require('path');
-var mv = require('mv');
+// var mv = require('mv');
 
 module.exports = function(config) {
 	var packageJson = require(path.resolve(__dirname, '../package.json'));
@@ -33,6 +33,18 @@ module.exports = function(config) {
 			throw new Error('Can not build client on your OS type.');
 	}
 
+	var copyExec = config.platform === 'win' ? 'copy' : 'cp';
+	gulp.task(
+		'client:package.json',
+		shell.task([copyExec + ' client-package.json ' + path.join('build', 'dev', 'package.json')])
+	);
+
+	gulp.task(
+		'client:run',
+		gulp.series('client:package.json', shell.task(['nw ' + path.join('build', 'dev')]))
+	);
+	return;
+
 	// On Windows builds we have to use npm3. For other OSes it's faster to do npm2.
 	// npm3 does a flat directory structure in node_modules, so the path is different.
 	// We have to find where the lzma-native path is so we can compile it.
@@ -41,12 +53,7 @@ module.exports = function(config) {
 		// Will throw if no path exists.
 		fs.statSync(path.resolve(lzmaPath));
 	} catch (e) {
-		lzmaPath = path.join(
-			'node_modules',
-			'client-voodoo',
-			'node_modules',
-			'lzma-native'
-		);
+		lzmaPath = path.join('node_modules', 'client-voodoo', 'node_modules', 'lzma-native');
 	}
 
 	var windowsMutexPath = path.join('node_modules', 'windows-mutex');
@@ -100,11 +107,7 @@ module.exports = function(config) {
 				s3Dir +
 				'/linux64-package.tar.gz --acl public-read',
 
-			'aws s3 cp ' +
-				releaseDir +
-				'/osx.dmg ' +
-				s3Dir +
-				'/GameJoltClient.dmg --acl public-read',
+			'aws s3 cp ' + releaseDir + '/osx.dmg ' + s3Dir + '/GameJoltClient.dmg --acl public-read',
 			'aws s3 cp ' +
 				releaseDir +
 				'/osx64-package.tar.gz ' +
@@ -171,8 +174,7 @@ module.exports = function(config) {
 		'<body class="" ': '<body class="is-client" ',
 
 		// GA tag is different.
-		"ga('create', 'UA-6742777-1', 'auto');":
-			"ga('create', 'UA-6742777-16', 'auto');",
+		"ga('create', 'UA-6742777-1', 'auto');": "ga('create', 'UA-6742777-16', 'auto');",
 	};
 
 	/**
@@ -229,10 +231,7 @@ module.exports = function(config) {
 		}
 
 		// Copy the package.json file over into the build directory.
-		fs.writeFileSync(
-			config.buildDir + '/package.json',
-			JSON.stringify(clientJson)
-		);
+		fs.writeFileSync(config.buildDir + '/package.json', JSON.stringify(clientJson));
 		fs.writeFileSync(
 			config.buildDir + '/update-hook.js',
 			fs.readFileSync(path.resolve('./src/update-hook.js'))
@@ -266,11 +265,7 @@ module.exports = function(config) {
 		nodeModuletasks.push(
 			path.resolve('tasks/rid.exe') +
 				' ' +
-				path.resolve(
-					config.buildDir,
-					windowsMutexPath,
-					'build/Release/CreateMutex.node'
-				) +
+				path.resolve(config.buildDir, windowsMutexPath, 'build/Release/CreateMutex.node') +
 				' nw.exe GameJoltClient.exe'
 		);
 	}
@@ -367,10 +362,7 @@ module.exports = function(config) {
 	gulp.task('client:nw-unpackage', function(cb) {
 		var releaseDir = getReleaseDir();
 		var base = path.join(releaseDir, config.platformArch);
-		var packagePath = path.join(
-			releaseDir,
-			config.platformArch + '-package.zip'
-		);
+		var packagePath = path.join(releaseDir, config.platformArch + '-package.zip');
 
 		if (config.platform != 'osx') {
 			fs.renameSync(path.join(base, 'package.nw'), packagePath);
@@ -388,25 +380,23 @@ module.exports = function(config) {
 
 				stream.on('error', cb);
 				stream.on('end', function() {
-					mv(
-						path.join(base, 'package', 'node_modules'),
-						path.join(base, 'node_modules'),
-						function(err) {
-							if (err) {
-								throw err;
-							}
-							mv(
-								path.join(base, 'package', 'package.json'),
-								path.join(base, 'package.json'),
-								function(err) {
-									if (err) {
-										throw err;
-									}
-									cb();
-								}
-							);
+					mv(path.join(base, 'package', 'node_modules'), path.join(base, 'node_modules'), function(
+						err
+					) {
+						if (err) {
+							throw err;
 						}
-					);
+						mv(
+							path.join(base, 'package', 'package.json'),
+							path.join(base, 'package.json'),
+							function(err) {
+								if (err) {
+									throw err;
+								}
+								cb();
+							}
+						);
+					});
 				});
 			});
 
@@ -444,11 +434,7 @@ module.exports = function(config) {
 							x: 195,
 							y: 370,
 							type: 'file',
-							path:
-								releaseDir +
-									'/' +
-									config.platformArch +
-									'/Game Jolt Client.app',
+							path: releaseDir + '/' + config.platformArch + '/Game Jolt Client.app',
 						},
 						{ x: 429, y: 370, type: 'link', path: '/Applications' },
 					],
