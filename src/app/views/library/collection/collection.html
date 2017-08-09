@@ -304,25 +304,39 @@
 
 	</app-game-listing>
 
-	<section class="section">
+	<section class="section" v-if="recommendedGames.length">
 		<div class="container-lg">
 
-			<template v-if="recommendedGames.length">
-				<div class="text-center">
-					<h1>
-						<translate>Recommended Games</translate>
-					</h1>
+			<div class="clearfix">
+				<h1>
+					<translate>Recommended Games</translate>
+				</h1>
+				<div :class="{ 'pull-left': !Screen.isXs }">
 					<p>
 						<translate>We remixed this playlist into a tasty collection of other games that you may enjoy.</translate>
 					</p>
-					<hr class="underbar underbar-center">
+					<hr class="underbar">
 				</div>
+				<div class="hidden-xs pull-right">
+					<button class="btn btn-outline" @click="mixPlaylist(true)">
+						<translate>Refresh Recommended</translate>
+					</button>
+				</div>
+			</div>
 
+			<app-loading-fade :is-loading="isLoadingRecommended">
 				<app-game-grid
 					:games="recommendedGames"
+					:scrollable="true"
 					event="collection-game-mix:click"
 					/>
-			</template>
+			</app-loading-fade>
+
+			<p class="visible-xs">
+				<button class="btn btn-outline btn-block" @click="mixPlaylist(true)">
+					<translate>Refresh Recommended</translate>
+				</button>
+			</p>
 
 		</div>
 	</section>
