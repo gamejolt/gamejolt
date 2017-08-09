@@ -23,7 +23,6 @@ import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/
 import { AppUserFollowWidget } from '../../../../components/user/follow-widget/follow-widget';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
-import { AppContentCard } from '../../../../components/content-card/content-card';
 import { AppScrollWhen } from '../../../../../lib/gj-lib-client/components/scroll/scroll-when.directive.vue';
 
 @View
@@ -38,7 +37,6 @@ import { AppScrollWhen } from '../../../../../lib/gj-lib-client/components/scrol
 		AppGameThumbnail,
 		AppUserAvatar,
 		AppUserFollowWidget,
-		AppContentCard,
 	},
 	directives: {
 		AppTrackEvent,

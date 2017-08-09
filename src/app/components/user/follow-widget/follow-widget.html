@@ -1,7 +1,7 @@
 <button
 	class="user-follow-widget btn"
 	:class="{
-		'btn-success-outline': !user.is_following,
+		'btn-success-outline': !user.is_following && outline,
 		'btn-success active': user.is_following,
 		'btn-sm': size === 'sm',
 	}"

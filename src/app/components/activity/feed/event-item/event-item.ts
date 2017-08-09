@@ -14,17 +14,13 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 import { AppGameThumbnailImg } from '../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppActivityFeedDevlogPostText } from './text/text';
-import { AppActivityFeedDevlogPostMedia } from './media/media';
-import { AppActivityFeedDevlogPostSketchfab } from './sketchfab/sketchfab';
-import { AppActivityFeedDevlogPostVideo } from './video/video';
-import { AppActivityFeedDevlogPostControls } from './controls/controls';
 import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppActivityFeedCommentVideo } from '../comment-video/comment-video';
+import { AppActivityFeedDevlogPostControls } from '../devlog-post/controls/controls';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
@@ -36,10 +32,10 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppGameThumbnailImg,
 		AppTimeAgo,
 		AppActivityFeedCommentVideo,
-		AppActivityFeedDevlogPostText,
-		AppActivityFeedDevlogPostMedia,
-		AppActivityFeedDevlogPostSketchfab,
-		AppActivityFeedDevlogPostVideo,
+		// AppActivityFeedDevlogPostText,
+		// AppActivityFeedDevlogPostMedia,
+		// AppActivityFeedDevlogPostSketchfab,
+		// AppActivityFeedDevlogPostVideo,
 		AppActivityFeedDevlogPostControls,
 	},
 	filters: {

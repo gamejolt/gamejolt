@@ -89,11 +89,18 @@
 					<small>@{{ game.developer.username }}</small>
 				</router-link>
 
+				<span class="dot-separator"></span>
+
+				<app-user-follow-widget
+					:user="game.developer"
+					size="sm"
+					/>
+
 				<!--
 					Hide on mobile to keep it clean.
 					They can view in the game details.
 				-->
-				<span class="small" v-if="!Screen.isXs && game.published_on">
+				<span class="small hidden-xs" v-if="game.published_on">
 					<span class="dot-separator"></span>
 					<router-link
 						:to="{
@@ -109,8 +116,8 @@
 				</span>
 
 				<template v-if="game.tigrs_age || game.ratings_enabled">
-					<span class="dot-separator hidden-xs"></span>
-					<br class="visible-xs">
+					<span class="dot-separator hidden-xs hidden-sm hidden-md"></span>
+					<br class="hidden-lg">
 					<br class="visible-xs">
 
 					<app-game-ogrs-tag

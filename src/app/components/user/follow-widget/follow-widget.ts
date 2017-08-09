@@ -29,6 +29,7 @@ import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 export class AppUserFollowWidget extends Vue {
 	@Prop(User) user: User;
 	@Prop(String) size?: string;
+	@Prop(Boolean) outline?: boolean;
 
 	@State app: Store['app'];
 
