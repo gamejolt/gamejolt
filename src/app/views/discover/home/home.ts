@@ -172,13 +172,13 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		let sections: DiscoverSection[] = [];
 		if (this.isLoaded && this.app.user) {
 			const recommendedSection = {
-				title: this.$gettext('Recommended Games'),
-				smallTitle: this.$gettext('Recommended'),
+				title: this.$gettext('Your Daily Mix'),
+				smallTitle: this.$gettext('Your Daily Mix'),
 				url: this.$router.resolve({
 					name: 'library.collection.recommended',
 					params: { id: this.app.user.username },
 				}).href,
-				eventLabel: 'recommended-games',
+				eventLabel: 'daily-mix',
 				games: 'recommended',
 			};
 

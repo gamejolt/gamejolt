@@ -95,11 +95,11 @@
 				<!-- Recommended Games -->
 				<div ng-switch-when="recommended">
 					<div ng-if="::collectionCtrl.isOwner">
-						<h1 translate>Your Recommended Games</h1>
+						<h1 translate>Your Daily Mix</h1>
 						<p class="text-muted small" translate>Every day we pick a handful of games that we think you may like!</p>
 					</div>
 					<div ng-if="::!collectionCtrl.isOwner">
-						<h1 translate>Game Recommendations</h1>
+						<h1 translate>Daily Mix</h1>
 						<h4>
 							<span translate>for</span>
 							<a class="link-unstyled" ui-sref="profile.overview( { username: collectionCtrl.user.username } )">

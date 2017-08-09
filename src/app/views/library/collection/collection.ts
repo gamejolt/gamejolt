@@ -194,9 +194,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			} else if (this.type === 'recommended') {
 				const params = { user: '@' + this.user!.username };
 				if (this.collection!.isOwner) {
-					Meta.title = this.$gettext('Your Recommended Games');
+					Meta.title = this.$gettext('Your Daily Mix');
 				} else {
-					Meta.title = this.$gettextInterpolate('Game Recommendations for %{ user }', params);
+					Meta.title = this.$gettextInterpolate('Daily Mix for %{ user }', params);
 				}
 			} else if (this.type === 'bundle') {
 				Meta.title = this.bundle!.title;
