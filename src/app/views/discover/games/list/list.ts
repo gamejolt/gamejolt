@@ -16,7 +16,6 @@ import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-serv
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppGameGrid } from '../../../../components/game/grid/grid';
 import { AppGameListing } from '../../../../components/game/listing/listing';
-import { splitHasAnimatedGameThumbnails } from '../../../../components/split-test/split-test-service';
 import { LocationRedirect } from '../../../../../lib/gj-lib-client/utils/router';
 import {
 	BaseRouteComponent,
@@ -74,8 +73,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		'games.list.section_best': this.$gettext('games.list.section_best'),
 	};
 
-	hasAnimatedThumbnails = false;
-
 	@RouteResolve({ lazy: true, cache: true })
 	async routeResolve(this: undefined, route: VueRouter.Route) {
 		const location = checkGameFilteringRoute(route);
@@ -96,8 +93,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			this.listing.processPayload(this.$route, this.$payload);
 			this.process();
 		}
-
-		this.hasAnimatedThumbnails = splitHasAnimatedGameThumbnails(this.$route, this.$payload);
 	}
 
 	/**

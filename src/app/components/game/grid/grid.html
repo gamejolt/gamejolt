@@ -45,7 +45,6 @@
 					>
 					<app-game-thumbnail
 						:game="game"
-						:autoplay="autoplay"
 						v-app-track-event="eventLabel ? 'game-grid:click:' + eventLabel : undefined"
 						>
 						<slot name="thumbnail-controls" :game="game" />

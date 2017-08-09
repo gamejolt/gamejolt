@@ -62,12 +62,10 @@ if (typeof window !== 'undefined') {
 export class AppGameThumbnail extends Vue {
 	@Prop(Object) game: Game;
 	@Prop(String) linkTo?: string;
-	@Prop(Boolean) autoplay?: boolean;
 	@Prop(Boolean) hidePricing?: boolean;
 
 	@State app: AppStore;
 
-	isHovered = false;
 	isBootstrapped = GJ_IS_SSR;
 	isHydrated = GJ_IS_SSR;
 	isThumbnailLoaded = GJ_IS_SSR;
@@ -86,11 +84,7 @@ export class AppGameThumbnail extends Vue {
 		// When the window is not focused we don't want to play videos. This
 		// should speed up inactive tabs.
 		return (
-			!GJ_IS_SSR &&
-			!!Settings.get('animated-thumbnails') &&
-			(this.isHovered || this.autoplay) &&
-			this.isWindowFocused &&
-			this.isHydrated
+			!GJ_IS_SSR && !!Settings.get('animated-thumbnails') && this.isWindowFocused && this.isHydrated
 		);
 	}
 
