@@ -10,12 +10,14 @@
 
 	<!--
 		ctrl+enter sends key code 10 on Chrome. Yeah.
+		binding the :key allows it to refocus each time the room changes
 	-->
 	<textarea
+		:key="chat.room.id"
 		class="form-control"
 		placeholder="Enter message..."
 		:rows="Screen.isXs ? 1 : 2"
-		v-app-focus-when="Screen.isDesktop"
+		v-app-focus-when
 		v-model="message"
 		@change="onChange"
 		@keydown.shift.enter="shiftEnter"

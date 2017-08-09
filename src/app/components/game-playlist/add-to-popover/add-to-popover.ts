@@ -3,8 +3,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./add-to-popover.html?style=./add-to-popover.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
@@ -40,8 +38,6 @@ export class AppGamePlaylistAddToPopover extends Vue {
 	isShown = false;
 	isLoading = true;
 	filterQuery = '';
-
-	Screen = makeObservableService(Screen);
 
 	get filteredPlaylists() {
 		return this.playlists
