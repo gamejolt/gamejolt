@@ -17,5 +17,6 @@ Translations are done by the community. If you want to participate, feel free to
 	- `npm i`
 	- `./node_modules/.bin/gulp translations:compile`
 	- `npm run dev`
+	- `gulp translations:compile`
 
 That should set up a tiny server that hosts the website for you on your computer at http://localhost:8080. Open that URL up in a web browser and you should have Game Jolt running!
