@@ -104,7 +104,11 @@
 				<app-form-control-errors />
 			</app-form-group>
 
+			<!-- Gotta set keys for these since the data comes in async, vue
+			doesn't properly recheck the selected value after the categories
+			change. -->
 			<app-form-group
+				:key="!!categories"
 				name="category"
 				:label="$gettext( `dash.games.form.category_label` )"
 				>
@@ -124,6 +128,7 @@
 			</app-form-group>
 
 			<app-form-group
+				:key="!!engines"
 				name="creation_tool"
 				:label="$gettext( `dash.games.form.engine_label` )"
 				>
