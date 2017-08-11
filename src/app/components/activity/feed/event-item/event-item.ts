@@ -21,6 +21,7 @@ import { CommentVideo } from '../../../../../lib/gj-lib-client/components/commen
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppActivityFeedCommentVideo } from '../comment-video/comment-video';
 import { AppActivityFeedDevlogPostControls } from '../devlog-post/controls/controls';
+import { AppActivityFeedCommentVideoControls } from '../comment-video-controls/comment-video-controls';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
@@ -37,6 +38,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		// AppActivityFeedDevlogPostSketchfab,
 		// AppActivityFeedDevlogPostVideo,
 		AppActivityFeedDevlogPostControls,
+		AppActivityFeedCommentVideoControls,
 	},
 	filters: {
 		number,

@@ -99,7 +99,7 @@
 				/>
 				-->
 
-			<app-activity-feed-devlog-post-controls
+			<!-- <app-activity-feed-devlog-post-controls
 				v-if="post"
 				:post="post"
 				:show-game-info="false"
@@ -109,9 +109,12 @@
 				@edited="feed.onPostEdited( post )"
 				@published="feed.onPostPublished( post )"
 				@removed="feed.onPostRemoved( post )"
-				/>
+				/> -->
 				<!-- TODO -->
 				<!-- :show-game-info="feed.showGameInfo" -->
+
+			<app-activity-feed-comment-video-controls
+				/>
 
 		</div>
 

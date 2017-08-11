@@ -1,0 +1,23 @@
+<div>
+
+	<div class="devlog-post-controls timeline-list-item-controls">
+			<!-- v-if="canVote"
+			:class="{
+				'btn-success active': !!comment.user_vote,
+				'btn-outline': !comment.user_vote,
+			}"
+			@click="toggleVote"
+			v-app-track-event="`comment-video-lightbox:change-like`" -->
+		<button
+			class="btn btn-outline btn-sparse btn-circle"
+			>
+			<!-- <span class="btn-badge" v-if="comment.votes > 0">
+				{{ comment.votes | number }}
+			</span> -->
+			<app-jolticon icon="thumbs-up" />
+			<!-- <translate v-if="!comment.user_vote">Like</translate>
+			<translate v-else>Liked!</translate> -->
+		</button>
+	</div>
+
+</div>

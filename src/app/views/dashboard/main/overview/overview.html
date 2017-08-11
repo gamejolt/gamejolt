@@ -414,12 +414,9 @@
 				</template>
 				<template v-else>
 					<div class="row">
-						<app-comment-video-thumbnail
-							class="col-xs-6"
-							v-for="video of videos.slice( 0, 4 )"
-							:key="video.id"
-							:video="video"
-							/>
+						<div class="col-xs-6" v-for="video of videos.slice( 0, 4 )" :key="video.id">
+							<app-comment-video-thumbnail :video="video" />
+						</div>
 					</div>
 
 					<div class="page-cut">
