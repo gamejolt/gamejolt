@@ -157,6 +157,7 @@
 						<span class="input-group-addon">$</span>
 						<app-form-control
 							type="currency"
+							step="1"
 							:rules="{
 								min_value: minPrice / 100,
 							}"
@@ -177,6 +178,7 @@
 				<span class="input-group-addon">$</span>
 				<app-form-control
 					type="currency"
+					step="1"
 					:rules="{
 						min_value: minPrice / 100,
 					}"
@@ -343,6 +345,7 @@
 						<span class="input-group-addon">$</span>
 						<app-form-control
 							type="currency"
+							step="1"
 							:rules="{
 								min_value: minPrice / 100,
 								max_value: formModel.price - 0.01,
