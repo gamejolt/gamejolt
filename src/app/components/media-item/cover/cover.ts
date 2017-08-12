@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import { Subscription } from 'rxjs/Subscription';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import * as View from '!view!./cover.html?style=./cover.styl';
 
@@ -7,6 +6,8 @@ import { MediaItem } from '../../../../lib/gj-lib-client/components/media-item/m
 import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppImgResponsive } from '../../../../lib/gj-lib-client/components/img/responsive/responsive';
+
+const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
 @View
 @Component({
@@ -16,13 +17,12 @@ import { AppImgResponsive } from '../../../../lib/gj-lib-client/components/img/r
 })
 export class AppMediaItemCover extends Vue {
 	@Prop(MediaItem) mediaItem: MediaItem;
-
 	@Prop(Number) maxHeight?: number;
+
+	private resizeSensor?: any;
 
 	isLoaded = false;
 	height = 'auto';
-
-	private resize$: Subscription | undefined;
 
 	created() {
 		if (GJ_IS_SSR) {
@@ -33,24 +33,17 @@ export class AppMediaItemCover extends Vue {
 
 	mounted() {
 		this.recalcHeight();
-		this.resize$ = Screen.resizeChanges.subscribe(() => this.recalcHeight());
+		this.resizeSensor = new ResizeSensor(this.$el, () => this.recalcHeight());
 	}
 
 	@Watch('mediaItem')
-	mediaItemWatch() {
-		this.recalcHeight();
-	}
-
 	@Watch('maxHeight')
 	changes() {
 		this.recalcHeight();
 	}
 
 	destroyed() {
-		if (this.resize$) {
-			this.resize$.unsubscribe();
-			this.resize$ = undefined;
-		}
+		this.resizeSensor = undefined;
 	}
 
 	recalcHeight() {
