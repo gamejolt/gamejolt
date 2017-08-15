@@ -12,8 +12,6 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
-import { AppFiresidePostList } from '../../../components/fireside/post/list/list';
-import { AppFiresidePostThumbnail } from '../../../components/fireside/post/thumbnail/thumbnail';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -26,8 +24,6 @@ const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 	name: 'RouteLandingClient',
 	components: {
 		AppJolticon,
-		AppFiresidePostList,
-		AppFiresidePostThumbnail,
 	},
 	directives: {
 		AppTrackEvent,
