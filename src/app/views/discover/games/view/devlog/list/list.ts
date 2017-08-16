@@ -4,7 +4,6 @@ import * as View from '!view!./list.html';
 
 import { ActivityFeedContainer } from '../../../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../../../components/activity/feed/feed-service';
-import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -17,6 +16,7 @@ import {
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppActivityFeedLazy } from '../../../../../../components/lazy';
+import { EventItem } from '../../../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 
 @View
 @Component({
@@ -53,8 +53,8 @@ export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent
 			.title} on Game Jolt`;
 
 		if (!this.feed) {
-			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.posts), {
-				type: 'Fireside_Post',
+			this.feed = ActivityFeedService.bootstrap(EventItem.populate(this.$payload.posts), {
+				type: 'EventItem',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,
 			});
 		}

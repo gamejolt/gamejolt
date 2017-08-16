@@ -184,7 +184,7 @@ export class ActivityFeedContainer {
 		for (const item of this.items) {
 			if (item.feedItem instanceof FiresidePost) {
 				if (!this.games[item.feedItem.game.id]) {
-					Vue.set(this.games, item.feedItem.game.id, item.feedItem.game);
+					Vue.set(this.games as any, item.feedItem.game.id, item.feedItem.game);
 				} else {
 					Vue.set(item.feedItem, 'game', this.games[item.feedItem.game.id]);
 				}

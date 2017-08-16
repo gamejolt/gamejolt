@@ -28,7 +28,6 @@ import { AppTimelineList } from '../../../../lib/gj-lib-client/components/timeli
 	},
 })
 export class AppActivityFeed extends Vue {
-	@Prop(String) type: 'Notification' | 'Fireside_Post';
 	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
 	@Prop(Boolean) showEditControls?: boolean;
 	@Prop(Boolean) showGameInfo?: boolean;

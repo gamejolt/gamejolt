@@ -10,7 +10,6 @@ import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scr
 import { AppActivityFeedNotification } from '../notification/notification';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppActivityFeedItemPlaceholder } from './placeholder/placeholder';
-import { AppActivityFeedCommentVideo } from '../comment-video/comment-video';
 import { AppActivityFeedEventItem } from '../event-item/event-item';
 
 @View
@@ -18,7 +17,6 @@ import { AppActivityFeedEventItem } from '../event-item/event-item';
 	components: {
 		AppScrollInview,
 		AppActivityFeedEventItem,
-		AppActivityFeedCommentVideo,
 		AppActivityFeedNotification,
 		AppActivityFeedItemPlaceholder,
 	},

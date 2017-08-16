@@ -16,15 +16,11 @@ import { ActivityFeedItem } from '../../item-service';
 })
 export class AppActivityFeedDevlogPostText extends Vue {
 	@Prop(ActivityFeedItem) item: ActivityFeedItem;
+	@Prop(FiresidePost) post: FiresidePost;
 	@Prop(Boolean) isHydrated?: boolean;
 
-	post: FiresidePost = null as any;
 	canToggleContent = false;
 	contentBootstrapped = false;
-
-	created() {
-		this.post = this.item.feedItem as FiresidePost;
-	}
 
 	toggleFull() {
 		this.item.isOpen = !this.item.isOpen;

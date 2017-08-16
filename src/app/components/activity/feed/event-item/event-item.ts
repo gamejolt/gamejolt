@@ -16,12 +16,16 @@ import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
+// import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppActivityFeedCommentVideo } from '../comment-video/comment-video';
-import { AppActivityFeedDevlogPostControls } from '../devlog-post/controls/controls';
-import { AppActivityFeedCommentVideoControls } from '../comment-video-controls/comment-video-controls';
+import { AppActivityFeedControls } from '../controls/controls';
+import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
+import { AppActivityFeedDevlogPostMedia } from '../devlog-post/media/media';
+import { AppActivityFeedDevlogPostSketchfab } from '../devlog-post/sketchfab/sketchfab';
+import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
+import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
@@ -33,12 +37,11 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppGameThumbnailImg,
 		AppTimeAgo,
 		AppActivityFeedCommentVideo,
-		// AppActivityFeedDevlogPostText,
-		// AppActivityFeedDevlogPostMedia,
-		// AppActivityFeedDevlogPostSketchfab,
-		// AppActivityFeedDevlogPostVideo,
-		AppActivityFeedDevlogPostControls,
-		AppActivityFeedCommentVideoControls,
+		AppActivityFeedDevlogPostText,
+		AppActivityFeedDevlogPostMedia,
+		AppActivityFeedDevlogPostSketchfab,
+		AppActivityFeedDevlogPostVideo,
+		AppActivityFeedControls,
 	},
 	filters: {
 		number,
@@ -63,18 +66,20 @@ export class AppActivityFeedEventItem extends Vue {
 	get post() {
 		if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
 			return this.eventItem.action as FiresidePost;
-		} else if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
-			const video = this.eventItem.action as CommentVideo;
-			return video.fireside_post;
+		}
+	}
+
+	get video() {
+		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
+			return this.eventItem.action as CommentVideo;
 		}
 	}
 
 	get game() {
-		if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
-			return this.post!.game;
-		} else if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
-			const video = this.eventItem.action as CommentVideo;
-			return video.game;
+		if (this.post) {
+			return this.post.game;
+		} else if (this.video) {
+			return this.video.game;
 		} else if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
 			return this.eventItem.action as Game;
 		}
@@ -101,15 +106,7 @@ export class AppActivityFeedEventItem extends Vue {
 
 	get link() {
 		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
-			const user = this.eventItem.from as User;
-			const video = this.eventItem.action as CommentVideo;
-			return {
-				name: 'profile.videos.view',
-				params: {
-					username: user.username,
-					postHash: video.fireside_post.hash,
-				},
-			};
+			return '';
 		} else if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
 			const game = this.eventItem.action as Game;
 			return {
@@ -159,5 +156,9 @@ export class AppActivityFeedEventItem extends Vue {
 
 	onClick() {
 		this.$emit('clicked');
+
+		if (this.video) {
+			CommentVideoModal.show(this.video);
+		}
 	}
 }
