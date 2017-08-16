@@ -20,10 +20,10 @@ import { AppGameThumbnail } from '../../../../components/game/thumbnail/thumbnai
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppUserFollowWidget } from '../../../../components/user/follow-widget/follow-widget';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { AppScrollWhen } from '../../../../../lib/gj-lib-client/components/scroll/scroll-when.directive.vue';
+import { AppUserFollowWidget } from '../../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
 
 @View
 @Component({
