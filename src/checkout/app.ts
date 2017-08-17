@@ -11,6 +11,7 @@ import { AppUserBar } from '../lib/gj-lib-client/components/user/user-bar/user-b
 import { User } from '../lib/gj-lib-client/components/user/user.model';
 import { AppModals } from '../lib/gj-lib-client/components/modal/modals';
 import { AppLoadingBar } from '../lib/gj-lib-client/components/loading/bar/bar';
+import { loadCurrentLanguage } from '../utils/translations';
 
 @View
 @Component({
@@ -34,5 +35,7 @@ export class App extends Vue {
 		// Will load the user in asynchronously so that the user-bar in the
 		// shell will get loaded with a user.
 		User.touch();
+
+		loadCurrentLanguage(this);
 	}
 }

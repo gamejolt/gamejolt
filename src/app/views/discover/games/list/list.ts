@@ -84,6 +84,10 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		return Api.sendRequest('/web/discover/games?' + filtering.getQueryString(route));
 	}
 
+	get routeTitle() {
+		return this.pageTitle;
+	}
+
 	routeInit() {
 		this.process();
 	}
@@ -115,8 +119,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		} else {
 			this.processGeneralSection();
 		}
-
-		Meta.title = this.pageTitle;
 	}
 
 	processDateSection() {

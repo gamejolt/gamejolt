@@ -49,14 +49,20 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		return Api.sendRequest(apiOverviewUrl);
 	}
 
+	get routeTitle() {
+		if (this.game) {
+			const dev = this.game.developer;
+			return `${this.game.title} by ${dev.display_name} (@${dev.username})`;
+		}
+		return null;
+	}
+
 	routeInit() {
 		// Try pulling feed from cache.
 		this.bootstrapFeed();
 	}
 
 	async routed() {
-		const dev = this.game.developer;
-		Meta.title = `${this.game.title} by ${dev.display_name} (@${dev.username})`;
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb;
 		Meta.twitter = this.$payload.twitter;

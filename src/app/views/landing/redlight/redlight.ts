@@ -68,19 +68,22 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 
 	readonly Screen = makeObservableService(Screen);
 
+	get routeTitle() {
+		return `Redlight`;
+	}
+
 	routeInit() {
-		Meta.title = `Redlight`;
 		Meta.description = `A unique platform for AAA studios and non-indie publishers.`;
 
 		Meta.fb = {
 			type: 'website',
-			title: Meta.title,
+			title: this.routeTitle,
 			description: Meta.description,
 		};
 
 		Meta.twitter = {
 			card: 'summary_large_image',
-			title: Meta.title,
+			title: this.routeTitle,
 			description: Meta.description,
 		};
 

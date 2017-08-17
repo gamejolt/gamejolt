@@ -2,7 +2,6 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html?style=./list.styl';
 
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteMutation, RouteStore } from '../../account.store';
 import { YoutubeChannel } from '../../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
 import { ModalConfirm } from '../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
@@ -38,10 +37,12 @@ export default class RouteDashAccountLinkedAccountsList extends BaseRouteCompone
 		return Api.sendRequest('/web/dash/linked-accounts');
 	}
 
-	routed() {
-		Meta.title = 'Linked Accounts';
-		this.setHeading('Linked Accounts');
+	get routeTitle() {
+		return this.$gettext('Linked Accounts');
+	}
 
+	routed() {
+		this.setHeading(this.$gettext('Linked Accounts'));
 		this.channels = YoutubeChannel.populate(this.$payload.channels);
 	}
 

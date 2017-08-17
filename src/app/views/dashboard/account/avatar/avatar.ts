@@ -4,7 +4,6 @@ import * as View from '!view!./avatar.html';
 
 import { Store } from '../../../../store/index';
 import { RouteStore, RouteMutation } from '../account.store';
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
@@ -23,8 +22,11 @@ export default class RouteDashAccountAvatar extends BaseRouteComponent {
 
 	Screen = makeObservableService(Screen);
 
+	get routeTitle() {
+		return this.$gettext(`dash.avatar.page_title`);
+	}
+
 	routeInit() {
-		Meta.title = this.$gettext(`dash.avatar.page_title`);
 		this.setHeading(this.$gettext('dash.avatar.heading'));
 	}
 }

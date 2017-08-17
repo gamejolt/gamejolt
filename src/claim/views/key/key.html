@@ -2,9 +2,10 @@
 	<app-invalid-key v-if="invalidKey" />
 	<section class="container" v-else>
 		<component
+			v-if="payload"
 			:is="component"
 			:access-key="accessKey"
-			:payload="$payload"
+			:payload="payload"
 			:login-url="loginUrl"
 			@claim="claim"
 			/>

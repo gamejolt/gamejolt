@@ -1,4 +1,5 @@
 import VueRouter from 'vue-router';
+import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./view.html';
 
@@ -12,6 +13,7 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { Store } from '../../../../store/index';
 
 @View
 @Component({
@@ -21,6 +23,8 @@ import {
 	},
 })
 export default class RouteDiscoverChannelsView extends BaseRouteComponent {
+	@State route: Store['route'];
+
 	channel = '';
 
 	number = number;
@@ -37,9 +41,13 @@ export default class RouteDiscoverChannelsView extends BaseRouteComponent {
 		return Api.sendRequest('/web/discover/channels/' + route.params.channel);
 	}
 
+	get routeTitle() {
+		return ChannelsViewHelper.getRouteTitle(this.route.params.channel);
+	}
+
 	routeInit() {
-		this.channel = this.$route.params.channel;
-		ChannelsViewHelper.setDefaultMetaData(this.$route.params.channel);
+		this.channel = this.route.params.channel;
+		ChannelsViewHelper.setDefaultMetaData(this.route.params.channel);
 	}
 
 	routed() {

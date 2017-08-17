@@ -5,7 +5,6 @@ import * as View from '!view!./library.html';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
 import {
 	BaseRouteComponent,
@@ -29,11 +28,16 @@ export default class RouteProfileLibrary extends BaseRouteComponent {
 		return Api.sendRequest('/web/library/@' + route.params.username);
 	}
 
-	routed() {
-		Meta.title = this.$gettextInterpolate(`Library of @%{ user }`, {
-			user: this.user.username,
-		});
+	get routeTitle() {
+		if (this.user) {
+			return this.$gettextInterpolate(`Library of @%{ user }`, {
+				user: this.user.username,
+			});
+		}
+		return null;
+	}
 
+	routed() {
 		this.collections = GameCollection.populate(this.$payload.collections);
 
 		const followedCollection = new GameCollection(this.$payload.followedCollection);

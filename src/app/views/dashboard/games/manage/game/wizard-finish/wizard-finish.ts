@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./wizard-finish.html';
 
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore, RouteAction } from '../../manage.store';
 import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 
@@ -14,7 +13,7 @@ export default class RouteDashGamesManageGameWizardFinish extends BaseRouteCompo
 	@RouteAction publish: RouteStore['publish'];
 	@RouteAction saveDraft: RouteStore['saveDraft'];
 
-	routeInit() {
-		Meta.title = this.$gettext('The End Is Not the End');
+	get routeTitle() {
+		return this.$gettext('The End Is Not the End');
 	}
 }

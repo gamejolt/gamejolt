@@ -9,7 +9,6 @@ import { GameRelease } from '../../../../../../../../../lib/gj-lib-client/compon
 import { GameBuild } from '../../../../../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Growls } from '../../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 // tslint:disable-next-line:max-line-length
 import { GameBuildLaunchOption } from '../../../../../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
 import { FormGameRelease } from '../../../../../../../../components/forms/game/release/release';
@@ -51,6 +50,17 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 		);
 	}
 
+	get routeTitle() {
+		if (this.game && this.package && this.release) {
+			return this.$gettextInterpolate('Edit Release %{ release } - %{ package } - %{ game }', {
+				game: this.game.title,
+				package: this.package.title || this.game.title,
+				release: this.release.version_number,
+			});
+		}
+		return null;
+	}
+
 	routed() {
 		this.package = new GamePackage(this.$payload.package);
 		this.release = new GameRelease(this.$payload.release);
@@ -69,12 +79,6 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 		this.areBuildsLockedByJam = this.$payload.areBuildsLockedByJam || false;
 		this.areWebBuildsLockedBySellable =
 			this.$payload.package.is_in_paid_sellable || this.$payload.package.has_sales || false;
-
-		Meta.title = this.$gettextInterpolate('Edit Release %{ release } - %{ package } - %{ game }', {
-			game: this.game.title,
-			package: this.package.title || this.game.title,
-			release: this.release.version_number,
-		});
 	}
 
 	onSaved() {

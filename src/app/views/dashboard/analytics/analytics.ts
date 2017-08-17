@@ -29,7 +29,6 @@ import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../../../lib/gj-lib-client/components/game/release/release.model';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Store } from '../../../store/index';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -121,8 +120,8 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 		);
 	}
 
-	routeInit() {
-		Meta.title = this.$gettext('Analytics');
+	get routeTitle() {
+		return this.$gettext('Analytics');
 	}
 
 	routed() {

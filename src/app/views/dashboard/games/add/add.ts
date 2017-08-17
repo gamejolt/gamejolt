@@ -2,7 +2,6 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./add.html';
 
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { FormGame } from '../../../../components/forms/game/game';
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
@@ -25,8 +24,8 @@ export default class RouteDashGamesAdd extends BaseRouteComponent {
 		return User.touch();
 	}
 
-	routeInit() {
-		Meta.title = this.$gettext('dash.games.add.page_title');
+	get routeTitle() {
+		return this.$gettext('dash.games.add.page_title');
 	}
 
 	onSubmit(game: Game) {

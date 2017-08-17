@@ -2,7 +2,6 @@ import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
-import { ChannelsViewHelper } from '../../channels-view-helper';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
@@ -65,7 +64,5 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 				url: `/web/discover/channels/posts/${this.channel}`,
 			});
 		}
-
-		ChannelsViewHelper.setDefaultMetaData(this.$route.params.channel);
 	}
 }

@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./overview.html?style=./overview.styl';
 
 import { GameCollection } from '../../../components/game/collection/collection.model';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -36,8 +35,8 @@ export default class RouteLibraryOverview extends BaseRouteComponent {
 	Connection = makeObservableService(Connection);
 	Screen = makeObservableService(Screen);
 
-	routeInit() {
-		Meta.title = this.$gettext('library.page_title');
+	get routeTitle() {
+		return this.$gettext('library.page_title');
 	}
 
 	get collectionGroups() {

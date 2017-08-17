@@ -3,7 +3,6 @@ import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./list.html?style=./list.styl';
 
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../view.store';
 import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { UserGameScore } from '../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
@@ -83,11 +82,16 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 		return Api.sendRequest(url + query);
 	}
 
-	routed() {
-		Meta.title = this.$gettextInterpolate(`Scores for %{ game }`, {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate(`Scores for %{ game }`, {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
 
+	routed() {
 		this.scoreTables = GameScoreTable.populate(this.$payload.scoreTables);
 		this.scoreTable = this.$payload.scoreTable
 			? new GameScoreTable(this.$payload.scoreTable)

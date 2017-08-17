@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./maturity.html';
 
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../manage.store';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
@@ -28,12 +27,17 @@ export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent
 
 	Screen = Screen;
 
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate(`Edit Maturity Rating for %{ game }`, {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
+
 	routeInit() {
 		this.current = this.game;
-
-		Meta.title = this.$gettextInterpolate(`Edit Maturity Rating for %{ game }`, {
-			game: this.game.title,
-		});
 	}
 
 	onSaved() {

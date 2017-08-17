@@ -6,7 +6,6 @@ import { Sellable } from '../../../lib/gj-lib-client/components/sellable/sellabl
 import { Order } from '../../../lib/gj-lib-client/components/order/order.model';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppMediaItemCover } from '../../../app/components/media-item/cover/cover';
@@ -37,15 +36,20 @@ export default class RouteCheckout extends BaseRouteComponent {
 		return Api.sendRequest('/web/checkout/' + route.params.orderId, {});
 	}
 
+	get routeTitle() {
+		if (this.sellable) {
+			return this.$gettextInterpolate('Buy %{ game }', {
+				game: this.sellable.title,
+			});
+		}
+		return null;
+	}
+
 	routed() {
 		this.cards = this.$payload.cards || [];
 		this.sellable = new Sellable(this.$payload.sellable);
 		this.order = new Order(this.$payload.order);
 		this.game = new Game(this.$payload.game);
-
-		Meta.title = this.$gettextInterpolate('Buy %{ game }', {
-			game: this.sellable.title,
-		});
 
 		window.Stripe.setPublishableKey(this.$payload.stripePublishableKey);
 	}

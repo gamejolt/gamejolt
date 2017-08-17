@@ -39,16 +39,21 @@ export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent
 		return Api.sendRequest('/web/discover/games/devlog/' + route.params.id);
 	}
 
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate(`Devlog for %{ game }`, {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
+
 	routeInit() {
 		// Try pulling feed from cache.
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
 	routed() {
-		Meta.title = this.$gettextInterpolate(`Devlog for %{ game }`, {
-			game: this.game.title,
-		});
-
 		Meta.description = `Stay up to date on all the latest posts for ${this.game
 			.title} on Game Jolt`;
 

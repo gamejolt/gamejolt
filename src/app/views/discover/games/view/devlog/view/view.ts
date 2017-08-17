@@ -59,6 +59,10 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		return payload;
 	}
 
+	get routeTitle() {
+		return this.post ? this.post.title : null;
+	}
+
 	routeInit() {
 		const hash = FiresidePost.pullHashFromUrl(this.postSlug);
 		this.post = Registry.find<FiresidePost>('FiresidePost', hash, 'hash');
@@ -75,7 +79,6 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		this.post.$viewed();
 		this.post.$expanded();
 
-		Meta.title = this.post.title;
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb;
 		Meta.twitter = this.$payload.twitter;

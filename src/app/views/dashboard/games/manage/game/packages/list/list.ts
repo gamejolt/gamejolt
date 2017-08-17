@@ -65,11 +65,16 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 		return payload;
 	}
 
-	routed() {
-		Meta.title = this.$gettextInterpolate('Manage Packages for %{ game }', {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Manage Packages for %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
 
+	routed() {
 		this.packages = GamePackage.populate(this.$payload.packages);
 		this.sellables = arrayIndexBy<Sellable>(
 			Sellable.populate(this.$payload.sellables),

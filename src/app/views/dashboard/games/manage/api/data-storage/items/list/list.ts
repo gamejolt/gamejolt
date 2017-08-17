@@ -2,7 +2,6 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
-import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
 import { RouteState, RouteStore } from '../../../../manage.store';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
@@ -40,11 +39,16 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 		return Api.sendRequest('/web/dash/developer/games/api/data-storage/' + route.params.id);
 	}
 
-	routed() {
-		Meta.title = this.$gettextInterpolate('Manage Data Storage for %{ game }', {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Manage Data Storage for %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
 
+	routed() {
 		this.items = GameDataStoreItem.populate(this.$payload.items);
 	}
 

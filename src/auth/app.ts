@@ -7,6 +7,7 @@ import { makeObservableService } from '../lib/gj-lib-client/utils/vue';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 import { AppLoadingBar } from '../lib/gj-lib-client/components/loading/bar/bar';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
+import { loadCurrentLanguage } from '../utils/translations';
 
 @View
 @Component({
@@ -18,4 +19,8 @@ import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 })
 export class App extends Vue {
 	Connection = makeObservableService(Connection);
+
+	mounted() {
+		loadCurrentLanguage(this);
+	}
 }

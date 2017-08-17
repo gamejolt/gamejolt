@@ -26,8 +26,11 @@ export default class RouteDiscoverChannelsList extends BaseRouteComponent {
 		return Api.sendRequest('/web/discover/channels');
 	}
 
+	get routeTitle() {
+		return this.$gettext('Top Channels');
+	}
+
 	routeInit() {
-		Meta.title = this.$gettext('Top Channels');
 		Meta.description = 'Find and discover indie games around specific interests.';
 	}
 

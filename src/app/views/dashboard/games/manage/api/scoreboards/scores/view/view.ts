@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./view.html';
 
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { RouteState, RouteStore } from '../../../../manage.store';
@@ -40,11 +39,16 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 		);
 	}
 
-	routed() {
-		Meta.title = this.$gettextInterpolate('Score Details - %{ game }', {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Score Details - %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
 
+	routed() {
 		this.score = new UserGameScore(this.$payload.score);
 		this.scoreTable = new GameScoreTable(this.$payload.scoreTable);
 	}

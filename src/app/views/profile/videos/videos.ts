@@ -4,7 +4,6 @@ import * as View from '!view!./videos.html';
 
 import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { AppCommentVideoThumbnail } from '../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
@@ -35,9 +34,14 @@ export default class RouteProfileVideos extends BaseRouteComponent {
 		return Api.sendRequest('/web/profile/videos/@' + route.params.username);
 	}
 
-	routed() {
-		Meta.title = `Videos from ${this.user.display_name} (@${this.user.username})`;
+	get routeTitle() {
+		if (this.user) {
+			return `Videos from ${this.user.display_name} (@${this.user.username})`;
+		}
+		return null;
+	}
 
+	routed() {
 		this.videos = CommentVideo.populate(this.$payload.videos);
 	}
 

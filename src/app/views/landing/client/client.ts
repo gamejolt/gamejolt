@@ -42,8 +42,8 @@ export default class RouteLandingClient extends BaseRouteComponent {
 		return Api.sendRequest('/web/client');
 	}
 
-	routeInit() {
-		Meta.title = 'Game Jolt Client';
+	get routeTitle() {
+		return 'Game Jolt Client';
 	}
 
 	routed() {

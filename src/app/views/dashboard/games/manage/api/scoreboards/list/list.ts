@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { GameScoreTable } from '../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { RouteState, RouteStore } from '../../../manage.store';
@@ -52,11 +51,16 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 		return Api.sendRequest('/web/dash/developer/games/api/scores/' + route.params.id);
 	}
 
-	routed() {
-		Meta.title = this.$gettextInterpolate('Manage Scoreboards for %{ game }', {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Manage Scoreboards for %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
 
+	routed() {
 		this.scoreTables = GameScoreTable.populate(this.$payload.scoreTables);
 	}
 

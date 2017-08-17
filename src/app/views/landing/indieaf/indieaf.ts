@@ -26,19 +26,22 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 
 	state: 'bogus' | 'indie' = 'bogus';
 
+	get routeTitle() {
+		return `Get Indie.AF // Freakin' legit customizable game sites`;
+	}
+
 	routeInit() {
-		Meta.title = `Get Indie.AF // Freakin' legit customizable game sites`;
 		Meta.description = `Build your own customizable site with an indie.af domain through Game Jolt Sites!`;
 
 		Meta.fb = {
 			type: 'website',
-			title: Meta.title,
+			title: this.routeTitle,
 			description: Meta.description,
 		};
 
 		Meta.twitter = {
 			card: 'summary_large_image',
-			title: Meta.title,
+			title: this.routeTitle,
 			description: Meta.description,
 		};
 

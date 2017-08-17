@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { ForumCategory } from '../../../../../lib/gj-lib-client/components/forum/category/category.model';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
@@ -32,8 +31,8 @@ export default class RouteForumsLandingOverview extends BaseRouteComponent {
 		return Api.sendRequest('/web/forums');
 	}
 
-	routeInit() {
-		Meta.title = this.$gettext('Forums');
+	get routeTitle() {
+		return this.$gettext('Forums');
 	}
 
 	routed() {

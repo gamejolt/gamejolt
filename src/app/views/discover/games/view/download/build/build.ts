@@ -18,7 +18,6 @@ import { AppRatingWidget } from '../../../../../../components/rating/widget/widg
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { RouteState, RouteStore } from '../../view.store';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Store } from '../../../../../../store/index';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppDiscoverGamesViewOverviewDetails } from '../../overview/_details/details';
@@ -73,11 +72,16 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 		return Api.sendRequest(`/web/discover/games/builds/download-page/${gameId}/${buildId}`);
 	}
 
-	async routed() {
-		Meta.title = this.$gettextInterpolate(`Downloading %{ game }`, {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate(`Downloading %{ game }`, {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
 
+	async routed() {
 		this.build = new GameBuild(this.$payload.build);
 		this.src = null;
 

@@ -5,7 +5,6 @@ import * as View from '!view!./list.html';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Scroll } from '../../../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
-import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../../../manage.store';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { AppManageGameListScores } from '../../_list-scores/list-scores';
@@ -39,17 +38,22 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRo
 		);
 	}
 
+	get routeTitle() {
+		if (this.game && this.scoreTable) {
+			return this.$gettextInterpolate(`View Scores for %{ table } - %{ game }`, {
+				game: this.game.title,
+				table: this.scoreTable.name,
+			});
+		}
+		return null;
+	}
+
 	routed() {
 		this.scoreTables = GameScoreTable.populate(this.$payload.scoreTables);
 		this.scoreTable = new GameScoreTable(this.$payload.scoreTable);
 		this.scores = UserGameScore.populate(this.$payload.scores);
 
 		this.selectedTable = this.scoreTables.find(i => i.id === this.scoreTable.id)!.id;
-
-		Meta.title = this.$gettextInterpolate(`View Scores for %{ table } - %{ game }`, {
-			game: this.game.title,
-			table: this.scoreTable.name,
-		});
 	}
 
 	changeTable() {

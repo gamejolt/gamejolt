@@ -2,7 +2,6 @@ import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./user.html';
 
-import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { User } from '../../../../../../../../../lib/gj-lib-client/components/user/user.model';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
@@ -48,16 +47,21 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 		);
 	}
 
+	get routeTitle() {
+		if (this.game && this.user && this.scoreTable) {
+			return this.$gettextInterpolate('View Scores for %{ user } on %{ table } - %{ game }', {
+				game: this.game.title,
+				user: this.user.display_name,
+				table: this.scoreTable.name,
+			});
+		}
+		return null;
+	}
+
 	routed() {
 		this.user = new User(this.$payload.user);
 		this.scoreTable = new GameScoreTable(this.$payload.scoreTable);
 		this.scores = UserGameScore.populate(this.$payload.scores);
-
-		Meta.title = this.$gettextInterpolate('View Scores for %{ user } on %{ table } - %{ game }', {
-			game: this.game.title,
-			user: this.user.display_name,
-			table: this.scoreTable.name,
-		});
 	}
 
 	onScoreRemoved(score: UserGameScore) {

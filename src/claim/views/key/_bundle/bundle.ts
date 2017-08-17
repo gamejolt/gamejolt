@@ -3,7 +3,6 @@ import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./bundle.html';
 
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
 import { Store } from '../../../store/index';
@@ -30,10 +29,6 @@ export class AppKeyBundle extends Vue {
 	created() {
 		this.bundle = new GameBundle(this.payload.bundle);
 		this.games = Game.populate(this.payload.games);
-
-		Meta.title = this.$gettextInterpolate(`Key Page for %{ bundle }`, {
-			bundle: this.bundle.title,
-		});
 	}
 
 	claim() {

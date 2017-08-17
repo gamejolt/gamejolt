@@ -2,7 +2,6 @@ import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./edit.html';
 
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { RouteMutation, RouteStore } from '../account.store';
@@ -21,8 +20,11 @@ export default class RouteDashAccountEdit extends BaseRouteComponent {
 	@State app: Store['app'];
 	@RouteMutation setHeading: RouteStore['setHeading'];
 
+	get routeTitle() {
+		return this.$gettext(`dash.profile.edit.page_title`);
+	}
+
 	routeInit() {
-		Meta.title = this.$gettext(`dash.profile.edit.page_title`);
 		this.setHeading(this.$gettext('dash.profile.edit.heading'));
 	}
 
