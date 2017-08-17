@@ -2,16 +2,15 @@ import Axios from 'axios';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./client.html?style=./client.styl';
 
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
+import { HistoryTick } from '../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -33,7 +32,6 @@ const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 export default class RouteLandingClient extends BaseRouteComponent {
 	platform = Device.os();
 	downloadSrc = '';
-	firesidePosts: FiresidePost[] = [];
 
 	Screen = makeObservableService(Screen);
 
@@ -44,10 +42,6 @@ export default class RouteLandingClient extends BaseRouteComponent {
 
 	get routeTitle() {
 		return 'Game Jolt Client';
-	}
-
-	routed() {
-		this.firesidePosts = FiresidePost.populate(this.$payload.firesidePosts);
 	}
 
 	async download(platform: string) {
@@ -62,6 +56,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 		// This will reset the iframe since it removes it when there is no download src.
 		this.downloadSrc = '';
 
+		HistoryTick.sendBeacon('client-download');
 		const response = await Axios.get(ManifestUrl);
 
 		if (!response.data[platform] || !response.data[platform].url) {
