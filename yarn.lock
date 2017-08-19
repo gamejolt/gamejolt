@@ -2724,7 +2724,7 @@ function-bind@^1.0.2:
 
 game-jolt-frontend-lib@gamejolt/frontend-lib#master:
   version "0.0.1"
-  resolved "https://codeload.github.com/gamejolt/frontend-lib/tar.gz/afc94ab51273c2e5f3e4da20d4c92479f738d0c4"
+  resolved "https://codeload.github.com/gamejolt/frontend-lib/tar.gz/ce4ede93c746602de524a73a3d13e50a3b883c89"
   dependencies:
     autoprefixer "7.1.2"
     clean-css "4.1.7"
