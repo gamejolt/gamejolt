@@ -127,6 +127,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 					params: {
 						id: this.game.id + '',
 						slug: this.game.slug,
+					},
+					query: {
 						ref: this.userPartnerKey,
 					},
 				}).href
