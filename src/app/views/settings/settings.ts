@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./settings.html';
 
-import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppPageHeader } from '../../components/page-header/page-header';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
@@ -46,7 +45,7 @@ export default class RouteSettings extends BaseRouteComponent {
 		User.touch();
 	}
 
-	routeInit() {
-		Meta.title = this.$gettext('Settings');
+	get routeTitle() {
+		return this.$gettext('Settings');
 	}
 }

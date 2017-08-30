@@ -142,6 +142,28 @@
 		>
 		<div class="fill-darkest">
 			<ul class="shell-nav">
+				<li v-if="!GJ_IS_CLIENT && !Screen.isXs">
+					<router-link
+						:to="{ name: 'landing.client' }"
+						v-app-track-event="`sidebar:client`"
+						>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="client" />
+						</span>
+						<translate>Client</translate>
+					</router-link>
+				</li>
+				<li>
+					<router-link
+						:to="{ name: 'forums.landing.overview' }"
+						v-app-track-event="`sidebar:forums`"
+						>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="forums" />
+						</span>
+						<translate>Forums</translate>
+					</router-link>
+				</li>
 				<li>
 					<router-link
 						:to="{ name: 'radio' }"
@@ -177,17 +199,6 @@
 						<translate>Jams</translate>
 					</a>
 				</li>
-				<li v-if="!GJ_IS_CLIENT && !isLeftPaneVisible">
-					<router-link
-						:to="{ name: 'landing.client' }"
-						v-app-track-event="`sidebar:client`"
-						>
-						<span class="shell-nav-icon">
-							<app-jolticon icon="client" />
-						</span>
-						<translate>Client</translate>
-					</router-link>
-				</li>
 			</ul>
 		</div>
 	</app-popover>
@@ -196,6 +207,29 @@
 
 		<ul class="shell-nav">
 			<li class="offline-disable">
+
+				<router-link
+					v-if="app.user && isBootstrapped"
+					:to="{ name: 'activity', params: { tab: 'activity' } }"
+					:class="{ active: $route.name.indexOf( 'activity' ) === 0 }"
+					v-app-track-event="`sidebar:activity`"
+					>
+					<span
+						class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
+						v-if="notificationCount > 0"
+						>
+						{{ notificationCount < 100 ? notificationCount : '99+' }}
+					</span>
+					<span
+						class="shell-nav-icon"
+						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Activity Feed' ) : ''"
+						>
+						<app-jolticon icon="feed" />
+					</span>
+					<span class="shell-nav-label">
+						<translate>Activity Feed</translate>
+					</span>
+				</router-link>
 
 				<router-link
 					:to="{ name: 'discover.games.list._fetch', params: { section: defaultBrowseSection } }"
@@ -238,23 +272,6 @@
 				</router-link>
 			</li>
 
-			<li class="offline-disable">
-				<router-link
-					:to="{ name: 'forums.landing.overview' }"
-					:class="{ active: $route.name.indexOf( 'forums' ) === 0 }"
-					v-app-track-event="`sidebar:forums`"
-					>
-					<span class="shell-nav-icon"
-						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Forums' ) : ''"
-						>
-						<app-jolticon icon="forums" />
-					</span>
-					<span class="shell-nav-label">
-						<translate>Forums</translate>
-					</span>
-				</router-link>
-			</li>
-
 			<li class="offline-disable" v-if="Screen.isXs">
 				<router-link
 					:to="{ name: 'search.results' }"
@@ -268,21 +285,6 @@
 					</span>
 					<span class="shell-nav-label">
 						<translate>Search</translate>
-					</span>
-				</router-link>
-			</li>
-
-			<li v-if="!GJ_IS_CLIENT && !Screen.isXs && isLeftPaneVisible">
-				<router-link
-					:to="{ name: 'landing.client' }"
-					active-class="active"
-					v-app-track-event="`sidebar:client`"
-					>
-					<span class="shell-nav-icon">
-						<app-jolticon icon="client" />
-					</span>
-					<span class="shell-nav-label">
-						<translate>Client</translate>
 					</span>
 				</router-link>
 			</li>
@@ -321,28 +323,6 @@
 			</div>
 
 			<ul class="shell-nav">
-				<li class="offline-disable">
-					<router-link
-						:to="{ name: 'activity', params: { tab: 'activity' } }"
-						:class="{ active: $route.name.indexOf( 'activity' ) === 0 }"
-						v-app-track-event="`sidebar:activity`"
-						>
-						<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
-							v-if="notificationCount > 0"
-							>
-							{{ notificationCount < 100 ? notificationCount : '99+' }}
-						</span>
-						<span class="shell-nav-icon"
-							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Activity Feed' ) : ''"
-							>
-							<app-jolticon icon="feed" />
-						</span>
-						<span class="shell-nav-label">
-							<translate>Activity Feed</translate>
-						</span>
-					</router-link>
-				</li>
-
 				<li class="offline-disable">
 					<router-link
 						:to="{ name: 'dash.main.overview' }"
@@ -422,12 +402,12 @@
 						v-app-track-event="`sidebar:collection:recommended`"
 						>
 						<span class="shell-nav-icon"
-							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Recommended Games' ) : ''"
+							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Daily Mix' ) : ''"
 							>
 							<app-jolticon icon="pedestals-numbers" />
 						</span>
 						<span class="shell-nav-label">
-							<translate>Recommended Games</translate>
+							<translate>Daily Mix</translate>
 						</span>
 					</router-link>
 				</li>

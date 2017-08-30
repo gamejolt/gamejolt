@@ -3,7 +3,6 @@ import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./add.html';
 
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
@@ -35,8 +34,8 @@ export default class RouteForumsTopicsAdd extends BaseRouteComponent {
 
 	channel: ForumChannel = null as any;
 
-	routeInit() {
-		Meta.title = this.$gettext(`Create a New Topic`);
+	get routeTitle() {
+		return this.$gettext(`Create a New Topic`);
 	}
 
 	@RouteResolve()

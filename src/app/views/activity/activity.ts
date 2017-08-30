@@ -6,7 +6,6 @@ import * as View from '!view!./activity.html';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';
 import { Notification } from '../../../lib/gj-lib-client/components/notification/notification-model';
-import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { FiresidePost } from '../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { AppPageHeader } from '../../components/page-header/page-header';
@@ -43,6 +42,12 @@ export default class RouteActivity extends BaseRouteComponent {
 		return Api.sendRequest('/web/dash/activity/' + route.params.tab);
 	}
 
+	get routeTitle() {
+		return this.tab === 'activity'
+			? this.$gettext('Your Activity Feed')
+			: this.$gettext('Your Notifications');
+	}
+
 	routeInit() {
 		// Try to pull from cache.
 		this.feed = ActivityFeedService.bootstrap();
@@ -50,8 +55,6 @@ export default class RouteActivity extends BaseRouteComponent {
 
 	routed() {
 		if (this.tab === 'activity') {
-			Meta.title = this.$gettext('Your Activity Feed');
-
 			if (!this.feed || this.feed.feedType !== 'Fireside_Post') {
 				this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.items), {
 					type: 'Fireside_Post',
@@ -60,8 +63,6 @@ export default class RouteActivity extends BaseRouteComponent {
 				});
 			}
 		} else {
-			Meta.title = this.$gettext('Your Notifications');
-
 			if (!this.feed || this.feed.feedType !== 'Notification') {
 				this.feed = ActivityFeedService.bootstrap(Notification.populate(this.$payload.items), {
 					type: 'Notification',

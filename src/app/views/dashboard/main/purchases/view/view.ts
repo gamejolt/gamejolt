@@ -9,7 +9,6 @@ import { Order } from '../../../../../../lib/gj-lib-client/components/order/orde
 import { OrderPaymentRefund } from '../../../../../../lib/gj-lib-client/components/order/payment/refund/refund.model';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePackage } from '../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { arrayIndexBy } from '../../../../../../lib/gj-lib-client/utils/array';
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGameThumbnailImg } from '../../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
@@ -49,6 +48,15 @@ export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 		return Api.sendRequest('/web/dash/purchases/' + route.params.id);
 	}
 
+	get routeTitle() {
+		if (this.order) {
+			return this.$gettextInterpolate(`View Order: #%{ orderId }`, {
+				orderId: this.order.id,
+			});
+		}
+		return null;
+	}
+
 	routed() {
 		this.order = new Order(this.$payload.order);
 		this.games = arrayIndexBy(Game.populate(this.$payload.games), 'id');
@@ -66,9 +74,5 @@ export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 		if (this.order._is_refunded && this.order.payments[0] && this.order.payments[0].refunds) {
 			this.firstRefund = this.order.payments[0].refunds[0];
 		}
-
-		Meta.title = this.$gettextInterpolate(`View Order: #%{ orderId }`, {
-			orderId: this.order.id,
-		});
 	}
 }

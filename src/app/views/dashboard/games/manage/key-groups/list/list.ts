@@ -5,7 +5,6 @@ import * as View from '!view!./list.html?style=./list.styl';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
 import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../manage.store';
 import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
 import { AppCardListItem } from '../../../../../../../lib/gj-lib-client/components/card/list/item/item';
@@ -48,13 +47,18 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 		return Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id);
 	}
 
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Manage Key Groups for %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
+
 	routed() {
 		this.keyGroups = KeyGroup.populate(this.$payload.keyGroups);
 		this.packages = GamePackage.populate(this.$payload.packages);
-
-		Meta.title = this.$gettextInterpolate('Manage Key Groups for %{ game }', {
-			game: this.game.title,
-		});
 	}
 
 	onKeyGroupAdded(keyGroup: KeyGroup) {

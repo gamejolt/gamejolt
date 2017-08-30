@@ -1,7 +1,6 @@
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./finalize.html';
 
-import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Auth } from '../../../../../../lib/gj-lib-client/components/auth/auth.service';
 import { FormTwitterEmail } from '../../../../../components/forms/twitter-email/twitter-email';
@@ -17,8 +16,8 @@ import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/componen
 export default class RouteAuthLinkedAccountTwitterFinalize extends BaseRouteComponent {
 	@Prop(String) state: string;
 
-	routeInit() {
-		Meta.title = this.$gettext('auth.linked_account.twitter.finalize.page_title');
+	get routeTitle() {
+		return this.$gettext('auth.linked_account.twitter.finalize.page_title');
 	}
 
 	onSubmitted() {

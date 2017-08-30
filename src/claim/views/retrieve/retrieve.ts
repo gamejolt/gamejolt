@@ -80,6 +80,16 @@ export default class RouteRetrieve extends BaseRouteComponent {
 		};
 	}
 
+	get routeTitle() {
+		if (this.resourceTitle) {
+			return this.$gettextInterpolate(`Retrieve Your Keys for %{ resource }`, {
+				resource: this.resourceTitle,
+			});
+		}
+
+		return this.$gettext(`Retrieve Your Keys`);
+	}
+
 	routed() {
 		// Invalid key.
 		if (this.$payload && (this.$payload.error || this.$payload.payload.error)) {
@@ -100,13 +110,6 @@ export default class RouteRetrieve extends BaseRouteComponent {
 			this.resourceTitle = this.bundle.title;
 		} else if (this.game) {
 			this.resourceTitle = this.game.title;
-		}
-
-		Meta.title = this.$gettext(`Retrieve Your Keys`);
-		if (this.resourceTitle) {
-			Meta.title = this.$gettextInterpolate(`Retrieve Your Keys for %{ resource }`, {
-				resource: this.resourceTitle,
-			});
 		}
 	}
 

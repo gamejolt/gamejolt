@@ -21,7 +21,7 @@
 		<!-- Array type -->
 		<template v-if="GameFilteringContainer.definitions[ filter ].type === 'array'">
 			<span
-				v-for="( option, index ) of value"
+				v-for="(option, index) of value"
 				:key="index"
 				>
 				<a class="tag tag-pink game-filtering-tag" @click="removeFilterOption( filter, option )">

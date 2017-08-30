@@ -50,14 +50,16 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 		return Api.sendRequest('/web/discover/devlogs');
 	}
 
+	get routeTitle() {
+		return this.$gettext('Indie game devlogs');
+	}
+
 	routeInit() {
-		Meta.title = this.$gettext('Indie game devlogs');
+		Meta.fb.title = this.routeTitle;
+		Meta.twitter.title = this.routeTitle;
+
 		Meta.description =
 			'Find the latest and greatest games in development and follow their devlog feeds!';
-
-		Meta.fb.title = Meta.title;
-		Meta.twitter.title = Meta.title;
-
 		Meta.fb.description = Meta.description;
 		Meta.twitter.description = Meta.description;
 

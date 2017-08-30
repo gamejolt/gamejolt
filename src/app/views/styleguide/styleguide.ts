@@ -3,7 +3,6 @@ import * as View from '!view!./styleguide.html';
 
 import { AppButtonStyleguide } from '../../../lib/gj-lib-client/components/button/button-styleguide';
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
-import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 import { AppScrollTo } from '../../../lib/gj-lib-client/components/scroll/to/to.directive';
 import { AppListGroupStyleguide } from '../../../lib/gj-lib-client/components/list-group/list-group-styleguide';
@@ -34,7 +33,7 @@ export default class RouteStyleguide extends BaseRouteComponent {
 		User.touch();
 	}
 
-	routeInit() {
-		Meta.title = 'Styleguide';
+	get routeTitle() {
+		return 'Styleguide';
 	}
 }

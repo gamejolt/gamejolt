@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./site.html?style=./site.styl';
 
 import { RouteState, RouteStore } from '../manage.store';
-import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Site } from '../../../../../../lib/gj-lib-client/components/site/site-model';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppSitesLinkCard } from '../../../../../components/sites/link-card/link-card';
@@ -31,8 +30,8 @@ export default class RouteDashGamesManageSite extends BaseRouteComponent {
 		return Api.sendRequest('/web/dash/sites/' + route.params.id);
 	}
 
-	routeInit() {
-		Meta.title = this.$gettext('Manage Site');
+	get routeTitle() {
+		return this.$gettext('Manage Site');
 	}
 
 	routed() {

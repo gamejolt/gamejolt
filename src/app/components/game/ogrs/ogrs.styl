@@ -9,9 +9,10 @@
 	&.no-descriptors
 		float: left
 
+	// Make sure we override the tag.styl file no matter the order of imports.
 	&-tag
 		float: left
-		border: 0
+		border: 0 !important
 
 	&-descriptors
 		margin-left: 80px

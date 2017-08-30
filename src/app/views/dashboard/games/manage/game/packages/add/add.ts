@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./add.html';
 
-import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../../manage.store';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -19,10 +18,13 @@ import { BaseRouteComponent } from '../../../../../../../../lib/gj-lib-client/co
 export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
-	routeInit() {
-		Meta.title = this.$gettextInterpolate('Add Package for %{ game }', {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Add Package for %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
 	}
 
 	onPackageAdded(newPackage: GamePackage) {

@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../manage.store';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -50,11 +49,16 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		return Api.sendRequest('/web/dash/developer/games/api/' + route.params.id);
 	}
 
-	routed() {
-		Meta.title = this.$gettextInterpolate('Game API for %{ game }', {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Game API for %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
 
+	routed() {
 		this.sessionStats = this.$payload.sessionStats;
 
 		const fields = [

@@ -1,10 +1,9 @@
 import Vue from 'vue';
+import { Action } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./add-to-popover.html?style=./add-to-popover.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
@@ -14,7 +13,7 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { LibraryAction, LibraryStore } from '../../../store/library';
+import { LibraryStore } from '../../../store/library';
 
 @View
 @Component({
@@ -30,9 +29,12 @@ import { LibraryAction, LibraryStore } from '../../../store/library';
 export class AppGamePlaylistAddToPopover extends Vue {
 	@Prop(Game) game: Game;
 
-	@LibraryAction addGameToPlaylist: LibraryStore['addGameToPlaylist'];
-	@LibraryAction removeGameFromPlaylist: LibraryStore['removeGameFromPlaylist'];
-	@LibraryAction newPlaylist: LibraryStore['newPlaylist'];
+	@Action('library/addGameToPlaylist') addGameToPlaylist: LibraryStore['addGameToPlaylist'];
+
+	@Action('library/removeGameFromPlaylist')
+	removeGameFromPlaylist: LibraryStore['removeGameFromPlaylist'];
+
+	@Action('library/newPlaylist') newPlaylist: LibraryStore['newPlaylist'];
 
 	playlists: GamePlaylist[] = [];
 	playlistsWithGame: number[] = [];
@@ -40,8 +42,6 @@ export class AppGamePlaylistAddToPopover extends Vue {
 	isShown = false;
 	isLoading = true;
 	filterQuery = '';
-
-	Screen = makeObservableService(Screen);
 
 	get filteredPlaylists() {
 		return this.playlists

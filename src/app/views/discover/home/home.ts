@@ -64,62 +64,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	channels: any[] = [];
 	variation = 0;
 
-	bear = '';
-	bears = [
-		`ʕ·ᴥ·　ʔ`,
-		`ʕ•ᴥ•ʔ`,
-		`ʕ　·ᴥ·ʔ`,
-		`ʕ •ᴥ•ʔゝ☆`,
-		`＼ʕ •ᴥ•ʔ／`,
-		`＼ʕ •ᴥ•ʔ＼`,
-		`／ʕ •ᴥ•ʔ／`,
-		`ʕ ˵• ₒ •˵ ʔ`,
-		`ʕ •ₒ• ʔ`,
-		`ʕง•ᴥ•ʔง`,
-		`ᕕʕ •ₒ• ʔ୨`,
-		`ʕ　·ᴥʔ`,
-		`ʕ　·ᴥ·ʔ`,
-		`ʕ·ᴥ·　ʔ`,
-		`ʕᴥ·　ʔ`,
-		`ʕ •ᴥ•ʔ`,
-		`,ʕ ﾟ ● ﾟʔ`,
-		`Σʕﾟᴥﾟﾉʔﾉ`,
-		`“φʕ•ᴥ•oʔ`,
-		`ʕ*ﾉᴥﾉʔ`,
-		`ᕦʕ •ᴥ•ʔᕤ`,
-		`┏ʕ •ᴥ•ʔ┛`,
-		`ʅʕ•ᴥ•ʔʃ`,
-		`ʕノ)ᴥ(ヾʔ`,
-		`ʕ/　·ᴥ·ʔ/`,
-		`ʕ╯• ⊱ •╰ʔ`,
-		`ʕ☞ᴥ ☜ʔ`,
-		`ʕ　·ᴥ·ʔ`,
-		`ʕ·ᴥ·　ʔ`,
-		`ʕ·ᴥ·˵　ʔ`,
-		`ʕ　˵·ᴥ·ʔ`,
-		`ʕ♡˙ᴥ˙♡ʔ`,
-		`ʕ≧ᴥ≦ʔ`,
-		`╲ʕ·ᴥ·　╲ʔ`,
-		`ʕ•ᴥ•ʔ`,
-		`ʕ￫ᴥ￩　ʔ`,
-		`ʕ – ᴥ – ʔ`,
-		`ᶘ ͡°ᴥ͡°ᶅ`,
-		`ᶘಠᴥಠᶅ`,
-		`ʕノ•ᴥ•ʔノ`,
-		`ʕ – ㉨ – ʔ`,
-		`ʕ ̿–㉨ ̿– ʔ`,
-		`(ó㉨ò)ﾉ♡`,
-		`ᕦᶘ ᵒ㉨ᵒᶅᕤ`,
-		`ᶘ ᵒ㉨ᵒᶅ`,
-		`ʕ•㉨•ʔ`,
-		`ʕ •㉨• ʔ`,
-		`ʕ≧㉨≦ʔ`,
-		`ʕʘ̅͜ʘ̅ʔ`,
-		`ʕっ˘ڡ˘ςʔ`,
-		`ʕ – o – ʔ`,
-		`ʕ – _ – ʔ`,
-	];
-
 	games: { [k: string]: Game[] } = {
 		featured: [],
 		hot: [],
@@ -172,13 +116,13 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		let sections: DiscoverSection[] = [];
 		if (this.isLoaded && this.app.user) {
 			const recommendedSection = {
-				title: this.$gettext('Recommended Games'),
-				smallTitle: this.$gettext('Recommended'),
+				title: this.$gettext('Your Daily Mix'),
+				smallTitle: this.$gettext('Your Daily Mix'),
 				url: this.$router.resolve({
 					name: 'library.collection.recommended',
 					params: { id: this.app.user.username },
 				}).href,
-				eventLabel: 'recommended-games',
+				eventLabel: 'daily-mix',
 				games: 'recommended',
 			};
 
@@ -195,19 +139,15 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	routeInit() {
+		Meta.title = null;
+
 		if (!this.chosenSection) {
 			this.chosenSection = this.discoverSections[0];
-		}
-
-		if (!this.bear) {
-			this.bear = this.bears[Math.floor(Math.random() * this.bears.length)];
 		}
 	}
 
 	routed() {
 		this.isLoaded = true;
-
-		Meta.title = null;
 
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb;

@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./forgot-sent.html';
 
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
@@ -9,7 +8,7 @@ import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/rou
 	name: 'RouteAuthForgotSent',
 })
 export default class RouteAuthForgotSent extends BaseRouteComponent {
-	routeInit() {
-		Meta.title = this.$gettext('auth.forgot.sent.page_title');
+	get routeTitle() {
+		return this.$gettext('auth.forgot.sent.page_title');
 	}
 }

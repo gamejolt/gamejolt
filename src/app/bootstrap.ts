@@ -41,8 +41,8 @@ Scroll.setOffsetTop(50);
 
 hijackLinks(router, 'gamejolt.com');
 
-export async function createApp() {
-	await bootstrapAppTranslations();
+export function createApp() {
+	bootstrapAppTranslations();
 
 	const app = new Vue({
 		store,

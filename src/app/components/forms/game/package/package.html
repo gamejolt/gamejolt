@@ -74,6 +74,20 @@
 			</div>
 		</app-form-group>
 
+		<app-form-group v-if="game.referrals_enabled"
+			name="partner_visibility"
+			:label="$gettext( `Partner Visibility` )"
+			>
+			<p class="help-block">
+				<translate>Enabling this will allow partners to access this package even if it's marked as Private or your game is a Devlog-only project.</translate>
+				<router-link :to="{ name: 'landing.partners' }" class="link-help" target="_blank">
+					<translate>What is a Game Jolt Partner?</translate>
+				</router-link>
+			</p>
+
+			<app-form-control-toggle />
+		</app-form-group>
+
 		<app-form-group
 			name="pricing_type"
 			:label="$gettext( `Pricing Type` )"
@@ -157,6 +171,7 @@
 						<span class="input-group-addon">$</span>
 						<app-form-control
 							type="currency"
+							step="1"
 							:rules="{
 								min_value: minPrice / 100,
 							}"
@@ -177,6 +192,7 @@
 				<span class="input-group-addon">$</span>
 				<app-form-control
 					type="currency"
+					step="1"
 					:rules="{
 						min_value: minPrice / 100,
 					}"
@@ -343,6 +359,7 @@
 						<span class="input-group-addon">$</span>
 						<app-form-control
 							type="currency"
+							step="1"
 							:rules="{
 								min_value: minPrice / 100,
 								max_value: formModel.price - 0.01,

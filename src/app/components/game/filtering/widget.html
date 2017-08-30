@@ -62,15 +62,10 @@
 		</ul>
 	</nav>
 
-	<!--
-		No need to bind-once anything in these popovers since we remove from DOM when they're not visible.
-	-->
 	<app-popover
 		v-for="( options, filter ) of orderedFilters"
 		:key="filter"
 		:popover-id="`games-filter-${filter}`"
-		@focused="onPopoverShown( filter )"
-		@blurred="onPopoverHidden( filter )"
 		>
 
 		<div class="game-filtering-widget-list-group list-group list-group-dark">

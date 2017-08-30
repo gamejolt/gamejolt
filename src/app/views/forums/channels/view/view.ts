@@ -6,7 +6,6 @@ import * as View from '!view!./view.html';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppForumTopicList } from '../../../../components/forum/topic-list/topic-list';
@@ -57,6 +56,15 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 		);
 	}
 
+	get routeTitle() {
+		if (this.channel) {
+			return this.$gettextInterpolate(`%{ channel } Forum`, {
+				channel: '#' + this.channel.name,
+			});
+		}
+		return null;
+	}
+
 	routed() {
 		this.channel = new ForumChannel(this.$payload.channel);
 		this.topics = ForumTopic.populate(this.$payload.topics);
@@ -67,10 +75,6 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 		} else {
 			this.stickyTopics = [];
 		}
-
-		Meta.title = this.$gettextInterpolate(`%{ channel } Forum`, {
-			channel: '#' + this.channel.name,
-		});
 
 		this.perPage = this.$payload.perPage;
 		this.currentPage = this.$payload.page || 1;

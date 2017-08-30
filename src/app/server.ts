@@ -3,8 +3,8 @@ import { Device } from '../lib/gj-lib-client/components/device/device.service';
 import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 
-export default async (context: any) => {
-	const { app, router, store } = await createApp();
+export default (context: any) => {
+	const { app, router, store } = createApp();
 
 	return new Promise((resolve, reject) => {
 		const s = Date.now();

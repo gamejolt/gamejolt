@@ -4,7 +4,6 @@ import * as View from '!view!./view.html';
 
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Meta } from '../../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../../../manage.store';
 import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
 import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -36,11 +35,16 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 		);
 	}
 
-	routed() {
-		Meta.title = this.$gettextInterpolate('Item Details - %{ game }', {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Item Details - %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
 
+	routed() {
 		this.item = new GameDataStoreItem(this.$payload.item);
 	}
 

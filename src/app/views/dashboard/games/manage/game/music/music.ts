@@ -4,7 +4,6 @@ import * as View from '!view!./music.html';
 
 import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../manage.store';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
@@ -14,6 +13,8 @@ import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/componen
 import { FormGameSong } from '../../../../../../components/forms/game/song/song';
 import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
+import { arrayRemove } from '../../../../../../../lib/gj-lib-client/utils/array';
+import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/components/loading/fade/fade';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -30,6 +31,7 @@ import {
 		AppCardListAdd,
 		AppJolticon,
 		AppDashGameWizardControls,
+		AppLoadingFade,
 	},
 })
 export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
@@ -37,6 +39,7 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 
 	songs: GameSong[] = [];
 	isAdding = false;
+	isProcessing = false;
 	activeItem: GameSong | null = null;
 
 	get currentSort() {
@@ -48,10 +51,13 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 		return Api.sendRequest('/web/dash/developer/games/music/' + route.params.id);
 	}
 
-	routeInit() {
-		Meta.title = this.$gettextInterpolate(`Manage Music for %{ game }`, {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate(`Manage Music for %{ game }`, {
+				game: this.game.title,
+			});
+		}
+		return null;
 	}
 
 	routed() {
@@ -80,11 +86,9 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 			return;
 		}
 
-		const index = this.songs.findIndex(item => item.id === song.id);
-		if (index !== -1) {
-			this.songs.splice(index, 1);
-		}
-
-		return song.$remove();
+		this.isProcessing = true;
+		await song.$remove();
+		arrayRemove(this.songs, i => i.id === song.id);
+		this.isProcessing = false;
 	}
 }

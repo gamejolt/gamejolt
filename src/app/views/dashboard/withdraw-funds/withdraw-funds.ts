@@ -4,7 +4,6 @@ import * as View from '!view!./withdraw-funds.html';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { FormWithdrawFunds } from '../../../components/forms/withdraw-funds/withdraw-funds';
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -36,13 +35,13 @@ export default class RouteDashWithdrawFunds extends BaseRouteComponent {
 
 	readonly Screen = makeObservableService(Screen);
 
-	created() {
-		Meta.title = this.$gettext('dash.funds.withdraw.page_title');
-	}
-
 	@RouteResolve()
 	routeResolve(this: undefined) {
 		return Api.sendRequest('/web/dash/funds');
+	}
+
+	get routeTitle() {
+		return this.$gettext('dash.funds.withdraw.page_title');
 	}
 
 	routed() {

@@ -14,6 +14,7 @@ import { AppLoadingBar } from '../lib/gj-lib-client/components/loading/bar/bar';
 import { makeObservableService } from '../lib/gj-lib-client/utils/vue';
 import { ClientHistoryNavigator } from '../app/components/client/history-navigator/history-navigator.service';
 import { AppJolticon } from '../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { loadCurrentLanguage } from '../utils/translations';
 
 @View
 @Component({
@@ -43,5 +44,7 @@ export class App extends Vue {
 		// Will load the user in asynchronously so that the user-bar in the
 		// shell will get loaded with a user.
 		User.touch();
+
+		loadCurrentLanguage(this);
 	}
 }

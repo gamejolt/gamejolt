@@ -1,8 +1,6 @@
 <router-link
 	class="game-thumbnail"
 	:to="url"
-	@mouseenter.native="isHovered = true"
-	@mouseleave.native="isHovered = false"
 	>
 	<app-scroll-inview
 		:extra-padding="Screen.height"
@@ -15,9 +13,24 @@
 
 			<div
 				class="game-thumbnail-controls"
+				v-if="isHydrated"
 				@click.prevent
 				>
 				<slot />
+
+				<template v-if="shouldShowControls">
+					<app-game-follow-widget
+						:game="game"
+						:sparse="true"
+						event-label="game-thumb"
+						/>
+
+					<app-game-playlist-add-to-widget
+						:game="game"
+						event-label="game-thumb"
+						/>
+				</template>
+
 				<template v-if="showModTools">
 					<button class="btn btn-sparse"
 						v-app-popover-trigger="`game-mod-tools-${game.id}`"

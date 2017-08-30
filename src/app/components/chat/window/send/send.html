@@ -1,7 +1,7 @@
 <!-- Message Sending -->
 <div class="chat-window-send">
 
-	<div class="chat-window-send-multi-line-notice anim-fade-in no-animate-leave"
+	<div class="-multiline-notice anim-fade-in no-animate-leave"
 		v-if="multiLineMode"
 		>
 		<app-jolticon icon="notice" />
@@ -10,19 +10,28 @@
 
 	<!--
 		ctrl+enter sends key code 10 on Chrome. Yeah.
+		binding the :key allows it to refocus each time the room changes
 	-->
-	<textarea
-		class="form-control"
-		placeholder="Enter message..."
-		:rows="Screen.isXs ? 1 : 2"
-		v-app-focus-when="Screen.isDesktop"
-		v-model="message"
-		@change="onChange"
-		@keydown.shift.enter="shiftEnter"
-		@keydown.ctrl.enter.prevent="ctrlEnter"
-		@keydown.ctrl.10.prevent="ctrlEnter"
-		@keydown.enter="enter"
-		>
-	</textarea>
+	<div class="-container">
+		<div class="-button" @click="sendMessage">
+			<app-jolticon icon="add-comment" />
+		</div>
+		<div class="-input">
+			<textarea
+				:key="chat.room.id"
+				class="form-control"
+				placeholder="Enter message..."
+				:rows="Screen.isXs ? 1 : 2"
+				v-app-focus-when
+				v-model="message"
+				@change="onChange"
+				@keydown.shift.enter="shiftEnter"
+				@keydown.ctrl.enter.prevent="ctrlEnter"
+				@keydown.ctrl.10.prevent="ctrlEnter"
+				@keydown.enter="enter"
+				>
+			</textarea>
+		</div>
+	</div>
 
 </div>

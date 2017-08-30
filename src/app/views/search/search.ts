@@ -1,4 +1,5 @@
 import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import * as View from '!view!./search.html';
 import './search.styl';
 
@@ -6,12 +7,12 @@ import { AppExpand } from '../../../lib/gj-lib-client/components/expand/expand';
 import { AppPageHeader } from '../../components/page-header/page-header';
 import { AppSearch } from '../../components/search/search';
 import { Search } from '../../components/search/search-service';
-import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 import { SearchHistory } from '../../components/search/history/history-service';
 import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { number } from '../../../lib/gj-lib-client/vue/filters/number';
 import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
+import { Store } from '../../store/index';
 
 @View
 @Component({
@@ -26,6 +27,8 @@ import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/
 	},
 })
 export default class RouteSearch extends BaseRouteComponent {
+	@State route: Store['route'];
+
 	query = '';
 	showPagination = false;
 	noResults = false;
@@ -33,6 +36,15 @@ export default class RouteSearch extends BaseRouteComponent {
 
 	Screen = makeObservableService(Screen);
 	Search = makeObservableService(Search);
+
+	get routeTitle() {
+		if (this.route.query.q) {
+			return this.$gettextInterpolate('Search results for %{ query }', {
+				query: this.route.query.q,
+			});
+		}
+		return this.$gettext('search.page_title');
+	}
 
 	routeInit() {
 		// We store our own version of the search query and sync back to it on form submission.
@@ -46,18 +58,11 @@ export default class RouteSearch extends BaseRouteComponent {
 		this.payload = {};
 		this.noResults = false;
 
-		if (!this.$route.query.q) {
-			Meta.title = this.$gettext('search.page_title');
+		if (!this.route.query.q) {
 			return;
 		}
 
-		Meta.title = this.$gettextInterpolate('Search results for %{ query }', {
-			query: this.$route.query.q,
-		});
-
-		this.query = this.$route.query.q;
-
-		console.log('search view', this.query);
+		this.query = this.route.query.q;
 
 		// We sync the query to the search service so that all places get updated with the new query.
 		// We also record the search history since it was an explicit search request.

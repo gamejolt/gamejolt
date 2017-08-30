@@ -26,7 +26,7 @@ export default class RouteDiscoverChannelsViewDevlogs extends BaseRouteComponent
 
 	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		const filtering = new GameFilteringContainer();
+		const filtering = new GameFilteringContainer(route);
 		return Api.sendRequest(
 			`/web/discover/channels/devlogs/${route.params.channel}?` + filtering.getQueryString(route)
 		);

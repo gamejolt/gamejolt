@@ -64,11 +64,6 @@
 						<app-jolticon icon="mac" class="text-muted" />
 						<app-jolticon icon="linux" class="text-muted" />
 					</div>
-					<br><br>
-
-					<div>
-						<a href="#news" class="link-help" v-app-scroll-to>What's new?</a>
-					</div>
 					<br>
 				</div>
 			</div>
@@ -241,36 +236,6 @@
 				</div>
 			</section>
 		</div>
-
-		<div class="container">
-			<hr>
-		</div>
-
-		<section class="section" id="news">
-			<div class="container">
-
-				<h2 class="section-header">Latest Client News</h2>
-
-				<template v-if="firesidePosts.length">
-					<div v-if="Screen.isXs" class="full-bleed-xs">
-						<app-fireside-post-list
-							:posts="firesidePosts"
-							/>
-					</div>
-					<div class="row" v-else>
-						<div class="col-sm-6 col-md-4"
-							v-for="post of firesidePosts.slice( 0, 3 )"
-							:key="post.id"
-							>
-							<app-fireside-post-thumbnail
-								:post="post"
-								/>
-						</div>
-					</div>
-				</template>
-
-			</div>
-		</section>
 
 		<section class="download-footer" id="all-downloads">
 			<div class="container text-center">

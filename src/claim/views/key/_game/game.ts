@@ -7,7 +7,6 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
 import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Store } from '../../../store/index';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
@@ -53,17 +52,6 @@ export class AppKeyGame extends Vue {
 		this.game = new Game(this.payload.game);
 		this.bundle = this.payload.bundle ? new GameBundle(this.payload.bundle) : null;
 		this.keyGroup = this.payload.keyGroup ? new KeyGroup(this.payload.keyGroup) : null;
-
-		if (this.payload.type === 'game') {
-			Meta.title = this.$gettextInterpolate(`Key Page for %{ game }`, {
-				game: this.game.title,
-			});
-		} else if (this.payload.type === 'bundle-game' && this.bundle) {
-			Meta.title = this.$gettextInterpolate(`Key Page for %{ game } in %{ bundle }`, {
-				game: this.game.title,
-				bundle: this.bundle.title,
-			});
-		}
 
 		if (
 			this.keyGroup &&

@@ -1,3 +1,5 @@
+import * as nwGui from 'nw.gui';
+import nodePath from 'path';
 const STORAGE_PREFIX = 'settings.';
 
 type SettingValue = string | number | boolean;

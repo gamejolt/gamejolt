@@ -2,7 +2,6 @@ import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as View from '!view!./join-almost.html';
 
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service';
 import { AppProgressPoller } from '../../../../lib/gj-lib-client/components/progress/poller/poller';
@@ -20,8 +19,8 @@ import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/rou
 export default class RouteJoinAlmost extends BaseRouteComponent {
 	@State credentials: Store['credentials'];
 
-	routeInit() {
-		Meta.title = this.$gettext('auth.join.almost.page_title');
+	get routeTitle() {
+		return this.$gettext('auth.join.almost.page_title');
 	}
 
 	async onAuthorized() {

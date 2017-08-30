@@ -2,7 +2,6 @@ import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./reset-password.html';
 
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { FormResetPassword } from '../../../components/forms/reset-password/reset-password';
@@ -30,8 +29,8 @@ export default class RouteAuthResetPassword extends BaseRouteComponent {
 		});
 	}
 
-	routeInit() {
-		Meta.title = this.$gettext('auth.reset_password.page_title');
+	get routeTitle() {
+		return this.$gettext('auth.reset_password.page_title');
 	}
 
 	onSubmitted() {

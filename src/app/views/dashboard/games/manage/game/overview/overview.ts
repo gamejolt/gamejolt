@@ -4,7 +4,6 @@ import * as View from '!view!./overview.html';
 
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { RouteState, RouteStore, RouteAction } from '../../manage.store';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppProgressPoller } from '../../../../../../../lib/gj-lib-client/components/progress/poller/poller';
@@ -79,11 +78,16 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 		return Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id);
 	}
 
-	routed() {
-		Meta.title = this.$gettextInterpolate('Manage %{ game }', {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Manage %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
 
+	routed() {
 		this.viewCount = this.$payload.viewCount || 0;
 		this.downloadCount = this.$payload.downloadCount || 0;
 		this.playCount = this.$payload.playCount || 0;
