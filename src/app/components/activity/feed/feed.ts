@@ -15,6 +15,8 @@ import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppTimelineList } from '../../../../lib/gj-lib-client/components/timeline-list/timeline-list';
 
+// TODO(rewrite,cros) changing between feed and notifications is broken in client
+
 @View
 @Component({
 	components: {

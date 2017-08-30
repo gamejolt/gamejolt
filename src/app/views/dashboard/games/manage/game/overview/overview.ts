@@ -56,7 +56,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 
 	Game = Game;
 
-	// TODO(rewrite)!
+	// TODO(rewrite,cros)!
 	// .run( function( $state, Payload, Location )
 	// {
 	// 	// If there is any sort of error while trying to go to the game dashboard, we want to direct instead to the game page.

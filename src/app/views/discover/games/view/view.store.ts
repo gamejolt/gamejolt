@@ -120,17 +120,23 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	get partnerLink() {
 		if (this.userPartnerKey) {
-			return (
-				Environment.baseUrl +
-				router.resolve({
-					name: 'discover.games.view.overview',
-					params: {
-						id: this.game.id + '',
-						slug: this.game.slug,
-						ref: this.userPartnerKey,
-					},
-				}).href
-			);
+			let urlPath = router.resolve({
+				name: 'discover.games.view.overview',
+				params: {
+					id: this.game.id + '',
+					slug: this.game.slug,
+				},
+				query: {
+					ref: this.userPartnerKey,
+				},
+			}).href;
+
+			if (GJ_IS_CLIENT) {
+				// The client urls are prefixed with a hashtag (#) that needs to be removed when referring to external links
+				urlPath = urlPath.slice(1);
+			}
+
+			return `${Environment.secureBaseUrl}${urlPath}`;
 		}
 		return undefined;
 	}
@@ -237,6 +243,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.songs = GameSong.populate(payload.songs);
 		this.recommendedGames = Game.populate(payload.recommendedGames);
 		this.packagePayload = new GamePackagePayloadModel(payload);
+		this.shouldShowMultiplePackagesMessage = false;
 
 		this.profileCount = payload.profileCount || 0;
 		this.downloadCount = payload.downloadCount || 0;

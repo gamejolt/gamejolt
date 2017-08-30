@@ -18,26 +18,23 @@ export class AppClientTray extends Vue {
 	@State app: Store['app'];
 	@Action logout: Store['logout'];
 
-	/**
-	 * Whether or not the app will actually quit when you tell it to or if it
-	 * will do a soft quit.
-	 */
-	isClientGreedy = true;
-
-	section = 'main';
 	isFocused = false;
 	isMinimized = false;
 	isClosed = false;
 
-	created() {
-		if (/^\/auth\.html/.test(window.location.pathname)) {
-			this.section = 'auth';
-		}
+	get section() {
+		return /^\/auth\.html/.test(window.location.pathname) ? 'auth' : 'main';
+	}
 
-		if (this.section === 'auth') {
-			this.isClientGreedy = true;
-		}
+	/**
+	 * Whether or not the app will actually quit when you tell it to or if it
+	 * will do a soft quit.
+	 */
+	get isClientGreedy() {
+		return this.section !== 'auth';
+	}
 
+	mounted() {
 		const win = gui.Window.get();
 
 		win.on('blur', () => (this.isFocused = false));
@@ -94,8 +91,6 @@ export class AppClientTray extends Vue {
 					packagePrefix +
 					'/app/components/client/tray/' +
 					(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
-				// TODO(rewrite): Click doesn't exist?
-				// it does exist, just not typed for some reason
 				click: () => this.toggleVisibility(),
 			} as any
 		);
@@ -152,7 +147,7 @@ export class AppClientTray extends Vue {
 					click: () => {
 						this.go({
 							name: 'profile.overview',
-							params: { username: this.app.user.username },
+							params: { username: this.app.user!.username },
 						});
 						ClientControl.show();
 					},
@@ -192,14 +187,14 @@ export class AppClientTray extends Vue {
 			);
 		}
 
-		// TODO(rewrite)
-		// menu.append( new gui.MenuItem( {
-		// 	label: 'Quit',
-		// 	click: () =>
-		// 	{
-		// 		ClientControl.quit();
-		// 	},
-		// } ) );
+		menu.append(
+			new gui.MenuItem({
+				label: 'Quit',
+				click: () => {
+					ClientControl.quit();
+				},
+			})
+		);
 
 		tray.menu = menu;
 

@@ -1,12 +1,12 @@
 <ul class="navbar-items">
-	<li ng-if="HistoryNavigator.canGoBack">
-		<a title="Go back" ng-click="HistoryNavigator.back()">
-			<span class="jolticon jolticon-chevron-left"></span>
+	<li v-if="HistoryNavigator.canGoBack">
+		<a title="Go back" @click="HistoryNavigator.back()">
+			<app-jolticon icon="chevron-left" />
 		</a>
 	</li>
-	<li ng-if="HistoryNavigator.canGoForward">
-		<a title="Go forward" ng-click="HistoryNavigator.forward()">
-			<span class="jolticon jolticon-chevron-right"></span>
+	<li v-if="HistoryNavigator.canGoForward">
+		<a title="Go forward" @click="HistoryNavigator.forward()">
+			<app-jolticon icon="chevron-right" />
 		</a>
 	</li>
 </ul>

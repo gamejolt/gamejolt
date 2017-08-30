@@ -3,13 +3,13 @@
 
 		<div id="header">
 			<app-user-bar :user="app.user" site="main" :hide-site-selector="true">
-				<!--<a class="btn btn-outline btn-dark-variant"
-					ng-if="GJ_IS_CLIENT"
-					ng-click="HistoryNavigator.back()"
+				<a class="btn btn-outline btn-dark-variant"
+					v-if="GJ_IS_CLIENT"
+					@click="HistoryNavigator.back()"
 					>
-					<span class="jolticon jolticon-chevron-left"></span>
-					Back to Game
-				</a>-->
+					<app-jolticon icon="chevron-left" />
+					<translate>Back to Game</translate>
+				</a>
 			</app-user-bar>
 		</div>
 

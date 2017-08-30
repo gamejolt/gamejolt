@@ -1,8 +1,11 @@
 import * as gui from 'nw.gui';
 import { ClientControl } from '../control/client.service';
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
 
-export class ClientMacAppMenu {
-	static init() {
+@Component({})
+export class AppClientMacAppMenu extends Vue {
+	mounted() {
 		const win = gui.Window.get();
 		const menu = new gui.Menu({ type: 'menubar' });
 
@@ -25,5 +28,9 @@ export class ClientMacAppMenu {
 		gui.App.on('reopen', function() {
 			ClientControl.show();
 		});
+	}
+
+	render(h: Vue.CreateElement) {
+		h('div');
 	}
 }

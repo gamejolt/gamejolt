@@ -7,15 +7,7 @@ import {
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Settings } from '../../settings/settings.service';
 import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { ClientAutoStart as _ClientAutoStart } from '../../client/autostart/autostart.service';
-import { ClientInstaller as _ClientInstaller } from '../../client/installer/installer.service';
-
-let ClientInstaller: typeof _ClientInstaller | undefined;
-let ClientAutoStart: typeof _ClientAutoStart | undefined;
-if (GJ_IS_CLIENT) {
-	ClientInstaller = require('../../client/installer/installer.service').ClientInstaller;
-	ClientAutoStart = require('../../client/autostart/autostart.service').ClientAutoStart;
-}
+import { ClientAutoStart } from '../../client/autostart/autostart.service';
 
 @View
 @Component({
@@ -26,7 +18,9 @@ if (GJ_IS_CLIENT) {
 export class FormSettings extends BaseForm<any> implements FormOnInit {
 	warnOnDiscard = false;
 
-	ClientAutoStart = ClientAutoStart;
+	ClientAutoStart: typeof ClientAutoStart | null = GJ_IS_CLIENT
+		? require('../../client/autostart/autostart.service').ClientAutoStart
+		: null;
 
 	onInit() {
 		this.setField('chat_notify_friends_online', Settings.get('chat-notify-friends-online'));
@@ -44,7 +38,7 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 			this.setField('max_extract_count', Settings.get('max-extract-count'));
 			this.setField('limit_extractions', this.formModel.max_extract_count !== -1);
 
-			if (ClientAutoStart!.canAutoStart) {
+			if (this.ClientAutoStart!.canAutoStart) {
 				this.setField('autostart_client', Settings.get('autostart-client'));
 			}
 		}
@@ -58,6 +52,11 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 		if (elem) {
 			(elem as HTMLElement).click();
 		}
+	}
+
+	onSelectedInstallDir(dir: string) {
+		this.setField('game_install_dir', dir);
+		this.onChange();
 	}
 
 	@Watch('formModel.limit_downloads')
@@ -93,18 +92,19 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 			Settings.set('max-extract-count', this.formModel.max_extract_count);
 			Settings.set('queue-when-playing', this.formModel.queue_when_playing);
 
-			if (ClientAutoStart!.canAutoStart) {
+			if (this.ClientAutoStart!.canAutoStart) {
 				Settings.set('autostart-client', this.formModel.autostart_client);
 
 				if (this.formModel.autostart_client) {
-					ClientAutoStart!.set();
+					this.ClientAutoStart!.set();
 				} else {
-					ClientAutoStart!.clear();
+					this.ClientAutoStart!.clear();
 				}
 			}
 
 			// Tell's it to use the new settings.
-			ClientInstaller!.checkQueueSettings();
+			this.$store.commit('clientLibrary/checkQueueSettings');
+			// this.clientLibrary.commit('clientLibrary/checkQueueSettings');
 		}
 	}
 }

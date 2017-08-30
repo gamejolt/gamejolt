@@ -17,9 +17,8 @@
 			</li>
 		</ul>
 
-		<!--TODO(rewrite)-->
 		<!-- History Navigator (for desktop client) -->
-		<!--<gj-client-history-navigator ng-if="GJ_IS_CLIENT"></gj-client-history-navigator>-->
+		<app-client-history-navigator v-if="GJ_IS_CLIENT" />
 
 		<router-link class="navbar-item" :to="{ name: 'discover.home' }">
 			<img v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="Game Jolt">

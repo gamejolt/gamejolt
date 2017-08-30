@@ -30,6 +30,7 @@ import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdro
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
 import { ChatClient } from '../components/chat/client';
 import { ChatClientLazy } from '../components/lazy';
+import { ClientControl } from '../components/client/control/client.service';
 
 export type Actions = AppActions &
 	LibraryActions &
@@ -69,8 +70,7 @@ const modules: any = {
 	library: new LibraryStore(),
 };
 if (GJ_IS_CLIENT) {
-	const clientLibrary = require('./client-library').ClientLibraryStore;
-	modules.clientLibrary = new clientLibrary();
+	modules.clientLibrary = new ClientLibraryStore();
 }
 @VuexModule({
 	store: true,
@@ -308,3 +308,17 @@ store.watch(
 		}
 	}
 );
+
+if (GJ_IS_CLIENT) {
+	store.watch(
+		state => state.clientLibrary.currentPatchingProgress,
+		progress => {
+			if (progress === null) {
+				ClientControl.clearProgressBar();
+				return;
+			}
+
+			ClientControl.setProgressBar(progress);
+		}
+	);
+}

@@ -7,15 +7,26 @@ import { makeObservableService } from '../lib/gj-lib-client/utils/vue';
 import { AppShell } from './components/shell/shell';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
+import { AppClientIntro } from './components/client/intro/intro';
+import { AppState, AppStore } from '../lib/gj-lib-client/vue/services/app/app-store';
+
+const components: { [name: string]: new () => Vue } = {
+	AppShell,
+	AppErrorPage,
+};
+
+if (GJ_IS_CLIENT) {
+	// TODO(rewrite,cros) - will this load the client chunks? Do I have to use require here?
+	components.AppClientIntro = AppClientIntro;
+}
 
 @View
 @Component({
-	components: {
-		AppShell,
-		AppErrorPage,
-	},
+	components,
 })
 export class App extends Vue {
+	@AppState userBootstrapped: AppStore['userBootstrapped'];
+
 	Connection = makeObservableService(Connection);
 
 	// On SSR we want to set mount point for the app to this component so that

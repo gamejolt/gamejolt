@@ -1,6 +1,8 @@
 import { SearchPayload } from './payload-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { store } from '../../store/index';
+import { fuzzysearch } from '../../../lib/gj-lib-client/utils/string';
+import { LocalDbGame } from '../client/local-db/game/game.model';
 
 export interface SearchOptions {
 	type: 'all' | 'user' | 'game' | 'devlog' | 'typeahead';
@@ -24,7 +26,7 @@ export class Search {
 
 		// If we're in client, let's try to search their installed games.
 		if (GJ_IS_CLIENT && options.type && options.type === 'typeahead') {
-			searchPromises.push(store.state.clientLibrary.searchInstalledGames(query));
+			searchPromises.push(this.searchInstalledGames(query));
 		}
 
 		const _payload = await Promise.all(searchPromises);
@@ -67,5 +69,21 @@ export class Search {
 		} catch (_e) {
 			return Promise.resolve({});
 		}
+	}
+
+	private static async searchInstalledGames(query: string) {
+		let games: LocalDbGame[] = [];
+
+		for (const game of store.state.clientLibrary.games) {
+			if (fuzzysearch(query.toLowerCase(), game.title.toLowerCase())) {
+				games.push(game);
+			}
+		}
+
+		if (games.length > 0) {
+			games = games.sort((game1, game2) => game1.title.localeCompare(game2.title)).splice(3);
+		}
+
+		return games;
 	}
 }

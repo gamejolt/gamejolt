@@ -13,11 +13,13 @@ import { GameDownloader } from '../../../../lib/gj-lib-client/components/game/do
 import { GamePlayModal } from '../../../../lib/gj-lib-client/components/game/play-modal/play-modal.service';
 import { GamePackagePurchaseModal } from '../../../../lib/gj-lib-client/components/game/package/purchase-modal/purchase-modal.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { AppClientGameButtons } from '../../client/game-buttons/game-buttons';
 
 @View
 @Component({
 	components: {
 		AppJolticon,
+		AppClientGameButtons,
 	},
 })
 export class AppGameCoverButtons extends Vue {
@@ -46,7 +48,7 @@ export class AppGameCoverButtons extends Vue {
 			} else {
 				// When there's more than one package, we have to give them the
 				// option of what to play/download.
-				this.$emit('multiple');
+				this.$emit('show-multiple-packages');
 				return false;
 			}
 		}

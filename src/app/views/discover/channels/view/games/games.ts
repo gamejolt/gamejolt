@@ -24,7 +24,7 @@ export default class RouteDiscoverChannelsViewGames extends BaseRouteComponent {
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
 
-	// TODO(rewrite): Still gotta work on this
+	// TODO(rewrite,cros): Still gotta work on this
 	@RouteResolve({ cache: true })
 	async routeResolve(this: undefined, route: VueRouter.Route) {
 		const filtering = new GameFilteringContainer();

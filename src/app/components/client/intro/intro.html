@@ -1,7 +1,7 @@
 <div class="client-intro">
-	<div class="client-intro-wrap"></div>
-	<div gj-expand-when="ctrl.shouldShowLoading">
+	<div class="client-intro-wrap" ref="wrap"></div>
+	<app-expand :when="shouldShowLoading">
 		<br>
-		<gj-loading class="loading-centered"></gj-loading>
-	</div>
+		<app-loading :centered="true" />
+	</app-expand>
 </div>

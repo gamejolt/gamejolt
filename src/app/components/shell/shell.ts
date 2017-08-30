@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue, { Component as VComponent, AsyncComponent } from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
 import * as View from '!view!./shell.html';
@@ -16,23 +16,28 @@ import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar
 import { Store } from '../../store/index';
 import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
 
+const components: { [key: string]: VComponent | AsyncComponent } = {
+	AppShellTopNav,
+	AppShellNotificationCount,
+	AppShellBody,
+	AppShellSidebar,
+	AppShellHotBottom,
+	AppMinbar,
+	AppOfflineAlert,
+	AppGrowls,
+	AppModals,
+	AppLoadingBar,
+	AppShellChat: () =>
+		import(/* webpackChunkName: "chat" */ './chat/chat').then(m => m.AppShellChat),
+};
+
+if (GJ_IS_CLIENT) {
+	components.AppClient = require('./client/client').AppClient;
+}
+
 @View
 @Component({
-	components: {
-		AppShellTopNav,
-		AppShellNotificationCount,
-		AppShellBody,
-		AppShellSidebar,
-		AppShellHotBottom,
-		AppMinbar,
-		AppOfflineAlert,
-		AppGrowls,
-		AppModals,
-		AppLoadingBar,
-		AppShellChat: () =>
-			import(/* webpackChunkName: "chat" */ './chat/chat').then(m => m.AppShellChat),
-		AppShellClient: GJ_IS_CLIENT ? require('./client/client').AppShellClient : undefined,
-	},
+	components,
 })
 export class AppShell extends Vue {
 	@State app: Store['app'];

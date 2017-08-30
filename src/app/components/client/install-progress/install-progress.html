@@ -1,40 +1,37 @@
-<div class="client-install-progress" ng-if="ctrl.progressKey">
+<div class="client-install-progress" v-if="packageProgress">
 	<p class="client-install-progress-info client-install-progress-info-percent text-center small">
-		<strong>{{ ((ctrl.localPackage[ ctrl.progressKey ].progress || 0) * 100.0).toFixed( 0 ) }}%</strong>
+		<strong>{{ ((packageProgress.progress || 0) * 100.0).toFixed( 0 ) }}%</strong>
 	</p>
 
-	<div class="progress progress-thin"
-		ng-class="{ 'progress-success': ctrl.localPackage.isInstalling(), 'progress-darker': ctrl.localPackage.isUpdating() }"
-		>
-		<div class="progress-bar"
-			ng-class="{ 'progress-striped active': ctrl.localPackage.install_state == LocalDb_Package.UNPACKING }"
-			ng-style="{ width: ((ctrl.localPackage[ ctrl.progressKey ].progress || 0) * 100.0) + '%' }"
-			role="progressbar"
-			ng-attr-aria-valuenow="{{ ((ctrl.localPackage[ ctrl.progressKey ].progress || 0) * 100.0).toFixed( 0 ) }}"
-			aria-valuemin="0"
-			aria-valuemax="100"
-			>
-		</div>
-	</div>
+	<app-progress-bar
+		:percent="(packageProgress.progress || 0) * 100.0"
+		:thin="true"
+		:variant="localPackage.isInstalling ? 'success' : 'darker'"
+		:indeterminate="localPackage.isUnpacking"
+		:active="localPackage.isUnpacking"
+
+		role="progressbar"
+		:aria-valuenow="((packageProgress.progress || 0) * 100.0).toFixed(0)"
+		aria-valuemin="0"
+		aria-valuemax="100"
+		/>
 
 	<p class="client-install-progress-info small clearfix">
-		<span class="pull-left client-install-progress-info-speed" ng-if="ctrl.shouldShowSpeed">
-			Speed:
-			<strong ng-if="ctrl.localPackage[ ctrl.progressKey ].sample">
-				{{ ctrl.localPackage[ ctrl.progressKey ].sample.currentAverage.toFixed( 0 ) }} KBps
-			</strong>
-			<strong ng-if="!ctrl.localPackage[ ctrl.progressKey ].sample">
-				--
-			</strong>
+		<span class="pull-left client-install-progress-info-speed" v-if="shouldShowSpeed">
+			<span v-translate="{
+					speed: packageProgress.rate ? `${packageProgress.rate.toFixed( 0 )} KBps` : '--',
+				}"
+			 	>
+				Speed: <strong>%{ speed }</strong>
+			</span>
 		</span>
 		<span class="pull-right client-install-progress-info-time">
-			Remaining:
-			<strong ng-if="ctrl.localPackage[ ctrl.progressKey ].timeLeft">
-				~{{ ctrl.localPackage[ ctrl.progressKey ].timeLeft | amDurationFormat:'second' }}
-			</strong>
-			<strong ng-if="!ctrl.localPackage[ ctrl.progressKey ].timeLeft">
-				--
-			</strong>
+			<span v-translate="{
+					timeLeft: packageProgress.timeLeft ? `~${duration( packageProgress.timeLeft )}` : '--',
+				}"
+				>
+				Remaining: <strong>%{ timeLeft }</strong>
+			</span>
 		</span>
 	</p>
 </div>

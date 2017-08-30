@@ -72,7 +72,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 
 	hasAnimatedThumbnails = false;
 
-	// TODO(rewrite): Still gotta work on this.
+	// TODO(rewrite,cros): Still gotta work on this.
 	@RouteResolve({ lazy: true, cache: true })
 	async routeResolve(this: undefined, route: VueRouter.Route) {
 		const filtering = new GameFilteringContainer();

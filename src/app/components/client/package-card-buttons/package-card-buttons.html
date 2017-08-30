@@ -1,193 +1,209 @@
 <div class="package-card-buttons">
 
 	<!-- Messaging for weird cases... -->
-	<div class="alert alert-info" ng-if="::ctrl.downloadableUnsupported">
+	<div class="alert alert-info" v-if="downloadableUnsupported">
 		<p>
-			<span class="jolticon jolticon-notice warning"></span>
-			<span translate>This package can not be installed on your system.</span>
+			<app-jolticon icon="notice" :warning="true" />
+			<translate>This package can not be installed on your system.</translate>
 		</p>
 	</div>
 
-	<div class="alert alert-info" ng-if="::ctrl.downloadableUnsupportedHasQuickPlay">
+	<div class="alert alert-info" v-if="downloadableUnsupportedHasQuickPlay">
 		<p>
-			<span class="jolticon jolticon-notice warning"></span>
-			<span translate>This package can not be installed on your system, but can be quick played in the client.</span>
+			<app-jolticon icon="notice" :warning="true" />
+			<translate>This package can not be installed on your system, but can be quick played in the client.</translate>
 		</p>
 	</div>
 
-	<div class="alert alert-warning" ng-if="ctrl.localPackage.install_state == LocalDb_Package.DOWNLOAD_FAILED">
-		<p>
-			<span class="jolticon jolticon-notice"></span>
-			<span translate>Oh no! We couldn't download this package. Perhaps check that you're still online?</span>
-		</p>
-	</div>
+	<template v-if="localPackage">
+		<div class="alert alert-warning" v-if="localPackage.install_state === PatchState.DOWNLOAD_FAILED">
+			<p>
+				<app-jolticon icon="notice" />
+				<translate>Oh no! We couldn't download this package. Perhaps check that you're still online?</translate>
+			</p>
+		</div>
 
-	<div class="alert alert-warning" ng-if="ctrl.localPackage.install_state == LocalDb_Package.UNPACK_FAILED">
-		<p>
-			<span class="jolticon jolticon-notice"></span>
-			<span translate>Oh no! We couldn't unpack this package after downloading it. Maybe try again?</span>
-		</p>
-	</div>
+		<div class="alert alert-warning" v-if="localPackage.install_state === PatchState.UNPACK_FAILED">
+			<p>
+				<app-jolticon icon="notice" />
+				<translate>Oh no! We couldn't unpack this package after downloading it. Maybe try again?</translate>
+			</p>
+		</div>
 
-	<div class="alert alert-success" ng-if="ctrl.localPackage.isRunning()">
-		<p>
-			<span class="jolticon jolticon-play"></span>
-			<span translate>You are currently running this package. Some options have been disabled while it's open.</span>
-		</p>
-	</div>
+		<div class="alert alert-success" v-if="localPackage.isRunning">
+			<p>
+				<app-jolticon icon="play" />
+				<translate>You are currently running this package. Some options have been disabled while it's open.</translate>
+			</p>
+		</div>
+	</template>
 
 	<!-- Able to install game -->
-	<button class="btn btn-success-outline"
-		ng-if="ctrl.canInstall && !ctrl.localPackage"
-		ng-click="ctrl.installClick( ctrl.downloadableBuild )"
+	<button
+		class="btn btn-success-outline"
+		v-if="canInstall && !localPackage"
+		@click="installClick( card.downloadableBuild )"
 		>
-		<span class="jolticon jolticon-download-box"></span>
-		<span translate>Install</span>
-		<small>({{ ::ctrl.downloadableBuild.primary_file.filesize | filesize }})</small>
+		<app-jolticon icon="download-box" />
+		<translate>Install</translate>
+		<small>({{ card.downloadableBuild.primary_file.filesize | filesize }})</small>
 	</button>
 
 	<!-- Game is installing or installed -->
-	<span ng-if="ctrl.localPackage">
+	<template v-if="localPackage">
 
-		<span ng-if="ctrl.localPackage.isPatching()">
+		<template v-if="localPackage.isPatching">
 
-			<div gj-expand-when="ctrl.localPackage.isDownloading() || ctrl.localPackage.isUnpacking()">
+			<app-expand :when="localPackage.isDownloading || localPackage.isUnpacking">
 				<div class="alert alert-info">
-					<gj-client-install-progress local-package="ctrl.localPackage"></gj-client-install-progress>
+					<app-client-install-progress :local-package="localPackage" />
 				</div>
-			</div>
+			</app-expand>
 
-			<span ng-if="ctrl.localPackage.isPatchQueued()">
-				<span class="tag tag-blue big" translate>QUEUED</span>
-			</span>
+			<template v-if="localPackage.isPatchQueued">
+				<span class="tag tag-blue big"><translate>QUEUED</translate></span>
+			</template>
+			<template v-else>
 
-			<span ng-if="!ctrl.localPackage.isPatchQueued()">
-
-				<button class="btn btn-outline"
-					ng-if="!ctrl.localPackage.isPatchPaused()"
-					ng-click="ctrl.pauseInstall()"
+				<button
+					v-if="!localPackage.isPatchPaused"
+					@click="pauseInstall()"
+					class="btn btn-outline"
 					>
-					<span class="jolticon jolticon-pause"></span>
-					<span translate>Pause</span>
+					<app-jolticon icon="pause" />
+					<translate>Pause</translate>
 				</button>
 
-				<button class="btn btn-outline"
-					ng-if="ctrl.localPackage.isPatchPaused()"
-					ng-click="ctrl.resumeInstall()"
+				<button
+					v-else
+					@click="resumeInstall()"
+					class="btn btn-outline"
 					>
-					<span class="jolticon jolticon-play-small"></span>
-					<span translate>Resume</span>
+					<app-jolticon icon="play-small" />
+					<translate>Resume</translate>
 				</button>
-			</span>
-		</span>
+			</template>
+		</template>
 
 		<!-- Game failed to install -->
-		<button class="btn btn-outline"
-			ng-if="ctrl.localPackage.didInstallFail()"
-			ng-click="ctrl.retryInstall()"
+		<button
+			v-if="localPackage.didInstallFail"
+			@click="retryInstall()"
+			class="btn btn-outline"
 			>
-			<span translate>Retry Install</span>
+			<translate>Retry Install</translate>
 		</button>
 
 		<!-- Game failed to update -->
-		<button class="btn btn-outline"
-			ng-if="ctrl.localPackage.didUpdateFail()"
-			ng-click="ctrl.retryInstall()"
+		<button
+			v-if="localPackage.didUpdateFail"
+			@click="retryInstall()"
+			class="btn btn-outline"
 			>
-			<span translate>Retry Update</span>
+			<translate>Retry Update</translate>
 		</button>
 
 		<!--
 			Can only cancel installs, not updates.
 		-->
-		<button class="btn btn-danger-outline btn-sparse"
-			ng-if="ctrl.localPackage.install_state"
-			ng-click="ctrl.cancelInstall()"
-			gj-tooltip="{{ 'Cancel Installation' | translate }}"
+		<button
+			v-if="localPackage.install_state"
+			@click="cancelInstall()"
+			v-app-tooltip="$gettext('Cancel Installation')"
+			class="btn btn-danger-outline btn-sparse"
 			>
-			<span class="jolticon jolticon-remove"></span>
+			<app-jolticon icon="remove" />
 		</button>
 
 		<!-- Game is installed -->
-		<button class="btn btn-primary-outline"
-			ng-if="ctrl.localPackage.isSettled() && !ctrl.localPackage.isRunning()"
-			ng-click="ctrl.launchPackage()"
-			ng-disabled=""
+		<button
+			v-if="localPackage.isSettled && !localPackage.isRunning"
+			@click="launchPackage()"
+			class="btn btn-primary-outline"
 			>
-			<span class="jolticon jolticon-play"></span>
-			<span translate>Launch</span>
+			<app-jolticon icon="play" />
+			<translate>Launch</translate>
 		</button>
 
-	</span>
+	</template>
 
 	<!--
 		Browser quick play
 		We hide this as soon as they install the game.
 	-->
-	<span ng-if="!ctrl.localPackage">
-		<button class="btn btn-primary-outline"
-			ng-if="::ctrl.browserBuild"
-			ng-click="ctrl.buildClick( ctrl.browserBuild )"
+	<template v-else-if="card.browserBuild">
+		<button
+			@click="buildClick(card.browserBuild)"
+			class="btn btn-primary-outline"
 			>
-			<span class="jolticon jolticon-play"></span>
-			<span translate>Quick Play</span>
-			<span class="jolticon-addon jolticon" ng-class="::'jolticon-' + ctrl.showcasedBrowserIcon"></span>
+			<app-jolticon icon="play" />
+			<translate>Quick Play</translate>
+			<app-jolticon
+				icon="addon"
+				:class="`jolticon-${card.showcasedBrowserIcon}`"
+				/>
 		</button>
-	</span>
+	</template>
 
 	<!--
 		If this package only has "Other" builds, then we make it look like a download
 		button with a [...] after.
 		If the package has normal builds too, then we just show it as a more options sparse button.
 	-->
-	<button class="btn btn-outline"
-		ng-if="ctrl.extraBuilds.length || (ctrl.localPackage && !ctrl.localPackage.install_state)"
-		gj-popover-trigger="game-package-card-more-options-{{ ctrl.package.id }}"
-		gj-track-event="game-package-card:more-options"
+	<button
+		v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)"
+		v-app-popover-trigger="`game-package-card-more-options-${ package.id }`"
+		v-app-track-event="`game-package-card:more-options`"
+		class="btn btn-outline"
 		>
-		<span class="jolticon jolticon-ellipsis-h"></span>
-		<span translate>options</span>
+		<app-jolticon icon="ellipsis-h" />
+		<translate>options</translate>
 	</button>
 
-	<gj-popover [popover-id]="'game-package-card-more-options-' + ctrl.package.id">
+	<app-popover :popover-id="`game-package-card-more-options-${package.id}`">
 
-		<div ng-if="ctrl.localPackage && (ctrl.browserBuild || (!ctrl.localPackage.install_state && !ctrl.localPackage.isRemoving()))">
+		<template v-if="localPackage && (card.browserBuild || (!localPackage.install_state && !localPackage.isRemoving))">
 			<div class="list-group nowrap">
 
 				<!--
 					In client, if a package is installed, allow them to remove.
 				-->
-				<a class="list-group-item has-icon warning"
-					ng-if="ctrl.localPackage && !ctrl.localPackage.install_state && !ctrl.localPackage.isRemoving()"
-					ng-click="ctrl.uninstall()"
-					ng-class="{ disabled: ctrl.localPackage.isRunning() }"
+				<a
+					v-if="localPackage && !localPackage.install_state && !localPackage.isRemoving"
+					@click="uninstall()"
+					:class="{ disabled: localPackage.isRunning }"
+					class="list-group-item has-icon warning"
 					>
-					<span class="jolticon jolticon-remove warning"></span>
-					<span translate>Uninstall</span>
+					<app-jolticon icon="remove" :warning="true" />
+					<translate>Uninstall</translate>
 				</a>
 
 				<!--
 					If this game has a quick play web build but is installed, we want
 					to show the quick play here now.
 				-->
-				<a class="list-group-item has-icon warning"
-					ng-if="ctrl.localPackage && ctrl.browserBuild"
-					ng-click="ctrl.buildClick( ctrl.browserBuild )"
+				<a
+					v-if="localPackage && card.browserBuild"
+					@click="buildClick(card.browserBuild)"
+					class="list-group-item has-icon warning"
 					>
-					<span class="jolticon jolticon-html5"></span>
-					<span translate>Quick Play</span>
-					<small class="text-muted">({{ ::ctrl.browserBuild.primary_file.filesize | filesize }})</small>
+					<app-jolticon icon="html5" />
+					<translate>Quick Play</translate>
+					<small class="text-muted">({{ card.browserBuild.primary_file.filesize | filesize }})</small>
 				</a>
 
 			</div>
 			<br>
-		</div>
+		</template>
 
 		<!--
 			The non-client options.
 		-->
-		<gj-game-package-card-more-options></gj-game-package-card-more-options>
+		<app-game-package-card-more-options
+			:card="card"
+			@click="buildClick( $event, true )"
+			/>
 
-	</gj-popover>
+	</app-popover>
 
 </div>

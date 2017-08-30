@@ -19,7 +19,7 @@ import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
 
 if (GJ_IS_CLIENT) {
-	// require( './bootstrap-client' );
+	require('./bootstrap-client');
 }
 
 Meta.init(router);

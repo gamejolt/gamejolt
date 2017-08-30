@@ -6,176 +6,238 @@
 	-->
 
 	<button class="btn btn-success-outline"
-		ng-if="!ctrl.localPackage"
-		ng-class="{ disabled: !ctrl.canInstall, 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small, 'btn-lg': ctrl.large }"
-		ng-mousedown="$event.preventDefault()"
-		ng-click="$event.stopPropagation(); ctrl.install()"
-		gj-tooltip="{{ ctrl.installTooltip }}"
+		v-if="!localPackage"
+		:class="{
+			'disabled': !canInstall,
+			'btn-overlay-variant': overlay,
+			'btn-sm': small,
+			'btn-lg': large,
+		}"
+		@mousedown.prevent
+		@click.stop="install()"
+		v-app-tooltip="installTooltip"
 		>
-		<span class="jolticon jolticon-download-box"></span>
-		Install
+		<app-jolticon icon="download-box" />
+		{{ packageDataPromise ? 'yes' : 'no' }}<br/>
+		<translate>Install</translate>
 	</button>
 
-	<span ng-if="ctrl.localPackage">
+	<template v-else>
 
 		<!-- If we're installing -->
-		<span ng-if="ctrl.localPackage.install_state || ctrl.localPackage.update_state">
+		<template v-if="localPackage.install_state || localPackage.update_state">
 
-			<span ng-if="ctrl.localPackage.didInstallFail() || ctrl.localPackage.didUpdateFail()">
+			<template v-if="localPackage.didInstallFail || localPackage.didUpdateFail">
 				<span class="tag tag-pink">
-					{{ ctrl.localPackage.didInstallFail() ? 'Installation' : 'Update' }} Failed
+					{{ localPackage.didInstallFail ? $gettext('Installation Failed') : $gettext('Update Failed') }}
 				</span>
-				<button class="btn btn-outline"
-					ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small, 'btn-lg': ctrl.large }"
-					ng-mousedown="$event.preventDefault()"
-					ng-click="$event.stopPropagation(); ctrl.retryInstall()"
+				<button
+					class="btn btn-outline"
+					:class="{
+						'btn-overlay-variant': overlay,
+						'btn-sm': small,
+						'btn-lg': large,
+					}"
+					@mousedown.prevent
+					@click.stop="retryInstall()"
 					>
-					Retry
+					<translate>Retry</translate>
 				</button>
-			</span>
+			</template>
 
-			<gj-client-install-progress local-package="ctrl.localPackage"></gj-client-install-progress>
+			<app-client-install-progress :local-package="localPackage" />
 
-			<span ng-if="ctrl.localPackage.isPatching()">
+			<template v-if="localPackage.isPatching">
 
-				<span ng-if="ctrl.localPackage.isPatchQueued()">
-					<span class="tag">QUEUED</span>
-				</span>
+				<template v-if="localPackage.isPatchQueued">
+					<translate class="tag">QUEUED</translate>
+				</template>
 
-				<span ng-if="ctrl.localPackage.isUpdating()">
-					<span class="tag tag-blue">UPDATING</span>
-				</span>
+				<template v-else-if="localPackage.isUpdating">
+					<translate class="tag tag-blue">UPDATING</translate>
+				</template>
 
-				<span ng-if="!ctrl.localPackage.isPatchQueued()">
+				<template v-else-if="!localPackage.isPatchQueued">
 
-					<span ng-if="!ctrl.localPackage.isPatchPaused()">
-						<button class="btn btn-outline"
-							ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm btn-sparse': ctrl.small, 'btn-lg': ctrl.large }"
-							ng-mousedown="$event.preventDefault()"
-							ng-click="$event.stopPropagation(); ctrl.pause()"
+					<template v-if="!localPackage.isPatchPaused">
+						<button
+							class="btn btn-outline"
+							:class="{
+								'btn-overlay-variant': overlay,
+								'btn-sm btn-sparse': small,
+								'btn-lg': large,
+							}"
+							@mousedown.prevent
+							@click.stop="pause()"
 							>
-							<span class="jolticon jolticon-pause"></span>
-							<span ng-if="!ctrl.small">Pause</span>
+							<app-jolticon icon="pause" />
+							<translate v-if="!small">Pause</translate>
 						</button>
-					</span>
+					</template>
 
-					<span ng-if="ctrl.localPackage.isPatchPaused()">
-						<button class="btn btn-outline"
-							ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm btn-sparse': ctrl.small, 'btn-lg': ctrl.large }"
-							ng-mousedown="$event.preventDefault()"
-							ng-click="$event.stopPropagation(); ctrl.resume()"
+					<template v-else>
+						<button
+							class="btn btn-outline"
+							:class="{
+								'btn-overlay-variant': overlay,
+								'btn-sm btn-sparse': small,
+								'btn-lg': large,
+							}"
+							@mousedown.prevent
+							@click.stop="resume()"
 							>
-							<span class="jolticon jolticon-play-small"></span>
-							<span ng-if="!ctrl.small">Resume</span>
+							<app-jolticon icon="play-small" />
+							<translate v-if="!small">Resume</translate>
 						</button>
-					</span>
-				</span>
-			</span>
+					</template>
+				</template>
+			</template>
 
-			<button class="btn btn-danger-outline btn-sparse"
-				ng-if="ctrl.localPackage.install_state"
-				ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small, 'btn-lg': ctrl.large }"
-				ng-mousedown="$event.preventDefault()"
-				ng-click="$event.stopPropagation(); ctrl.cancel()"
-				gj-tooltip="Cancel Installation"
+			<button
+				v-if="localPackage.install_state"
+				class="btn btn-danger-outline btn-sparse"
+				:class="{
+					'btn-overlay-variant': overlay,
+					'btn-sm': small,
+					'btn-lg': large,
+				}"
+				@mousedown.prevent
+				@click.stop="cancel()"
+				v-app-tooltip="$gettext('Cancel Installation')"
 				>
-				<span class="jolticon jolticon-remove"></span>
+				<app-jolticon icon="remove" />
 			</button>
-		</span>
+		</template>
 
-		<span ng-if="ctrl.localPackage.isSettled()">
+		<template v-if="localPackage.isSettled">
 
 			<!--
 				Single game launching.
 			-->
-			<span ng-if="Client_Library.packagesByGame[ ctrl.game.id ].length == 1">
-				<button class="btn btn-primary-outline"
-					ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small, 'btn-lg': ctrl.large }"
-					ng-if="!ctrl.localPackage.isRunning()"
-					ng-mousedown="$event.preventDefault()"
-					ng-click="$event.stopPropagation(); ctrl.launch( ctrl.localPackage )"
-					gj-tooltip="{{ ctrl.localPackage.isRunning() ? 'This game is currently running.' : undefined }}"
+			<template v-if="gamePackages.length == 1">
+				<button
+					v-if="!localPackage.isRunning"
+					class="btn btn-primary-outline"
+					:class="{
+						'btn-overlay-variant': overlay,
+						'btn-sm': small,
+						'btn-lg': large,
+					}"
+					@mousedown.prevent
+					@click.stop="launch( localPackage )"
+					v-app-tooltip="$gettext(localPackage.isRunning ? 'This game is currently running.' : undefined)"
 					>
-					<span class="jolticon jolticon-play"></span>
-					Launch
+					<app-jolticon icon="play" />
+					<translate>Launch</translate>
 				</button>
-			</span>
+			</template>
 
 			<!--
 				Multi game launching.
 				Opens popover.
 			-->
-			<span ng-if="Client_Library.packagesByGame[ ctrl.game.id ].length > 1">
-				<button class="btn btn-primary-outline"
-					ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small, 'btn-lg': ctrl.large }"
-					ng-mousedown="$event.preventDefault()"
-					ng-click="$event.stopPropagation()"
-					gj-popover-trigger="game-buttons-launch-{{ ::ctrl.label }}-{{ ::ctrl.game.id }}"
+			<template v-else-if="gamePackages.length > 1">
+				<button
+					class="btn btn-primary-outline"
+					:class="{
+						'btn-overlay-variant': overlay,
+						'btn-sm': small,
+						'btn-lg': large,
+					}"
+					@mousedown.prevent
+					@click.stop
+					v-app-popover-trigger="`game-buttons-launch-${label}-${game.id}`"
 					>
-					<span class="jolticon jolticon-play"></span>
-					Launch
+					<app-jolticon icon="play" />
+					<translate>Launch</translate>
 				</button>
-			</span>
+			</template>
+		</template>
 
-		</span>
-
-		<button class="btn btn-outline btn-sparse"
-			ng-class="{ 'btn-overlay-variant': ctrl.overlay, 'btn-sm': ctrl.small, 'btn-lg': ctrl.large }"
-			ng-if="!ctrl.localPackage.install_state"
-			ng-mousedown="$event.preventDefault()"
-			ng-click="$event.stopPropagation()"
-			gj-popover-trigger="game-buttons-options-{{ ::ctrl.label }}-{{ ::ctrl.game.id }}"
+		<button
+			v-if="!localPackage.install_state"
+			class="btn btn-outline btn-sparse"
+			:class="{
+				'btn-overlay-variant': overlay,
+				'btn-sm': small,
+				'btn-lg': large,
+			}"
+			@mousedown.prevent
+			@click.stop
+			v-app-popover-trigger="`game-buttons-options-${label}-${game.id}`"
 			>
-			<span class="jolticon jolticon-ellipsis-h"></span>
+			<app-jolticon icon="ellipsis-h" />
 		</button>
 
-		<gj-popover
-			[popover-id]="::'game-buttons-options-' + ctrl.label + '-' + ctrl.game.id"
-			(focused)="ctrl.onShowOptions ? ctrl.onShowOptions( $event ) : null"
-			(blurred)="ctrl.onHideOptions ? ctrl.onHideOptions( $event ) : null"
+		<app-popover
+			:popover-id="`game-buttons-options-${label}-${game.id}`"
+			@focused="$emit('show-options', $event)"
+			@blurred="$emit('hide-options', $event)"
 			>
 			<div class="list-group list-group-dark thin">
-				<a class="list-group-item has-icon" ui-sref="discover.games.view.overview( { slug: ctrl.game.slug, id: ctrl.game.id } )">
-					<span class="jolticon jolticon-game"></span>
-					View Game
-				</a>
-				<a class="list-group-item has-icon"
-					ng-repeat="package in Client_Library.packagesByGame[ ctrl.game.id ] track by package.id"
-					ng-click="ctrl.openFolder( package )"
-					ng-if="package.isSettled()"
+				<router-link
+					class="list-group-item has-icon"
+					:to="{
+						name: 'discover.games.view.overview',
+						params: {
+							slug: game.slug,
+							id: game.id,
+						},
+					}"
 					>
-					<span class="jolticon jolticon-folder-open"></span>
-					Open Folder for {{ package.title || ctrl.game.title }}
-				</a>
-				<a class="list-group-item has-icon"
-					ng-repeat="package in Client_Library.packagesByGame[ ctrl.game.id ] track by package.id"
-					ng-if="!package.install_state && !package.isRemoving()"
-					ng-click="ctrl.uninstallPackage( package )"
-					ng-class="{ disabled: package.isRunning() }"
+					<app-jolticon icon="game" />
+					<translate>View Game</translate>
+				</router-link>
+				<a
+					v-for="package_ of gamePackages"
+					:key="package_.id"
+					v-if="package_.isSettled"
+					class="list-group-item has-icon"
+					@click="openFolder( package_ )"
 					>
-					<span class="jolticon jolticon-remove warning"></span>
-					Uninstall {{ package.title || ctrl.game.title }}
+					<app-jolticon icon="folder-open" />
+					<span v-translate="{ title: package_.title || game.title }">
+						Open Folder for %{ title }
+					</span>
+				</a>
+				<a
+					v-for="package_ of gamePackages"
+					:key="package_.id"
+					v-if="!package_.install_state && !package_.isRemoving"
+					class="list-group-item has-icon"
+					:class="{
+						'disabled': package_.isRunning,
+					}"
+					@click="uninstallPackage( package_ )"
+					>
+					<app-jolticon icon="remove warning" />
+					<span v-translate="{ title: package_.title || game.title }">
+						Uninstall %{ title }
+					</span>
 				</a>
 			</div>
-		</gj-popover>
+		</app-popover>
 
-		<gj-popover
-			[popover-id]="::'game-buttons-launch-' + ctrl.label + '-' + ctrl.game.id"
-			(focused)="ctrl.onShowLaunchOptions ? ctrl.onShowLaunchOptions( $event ) : null"
-			(blurred)="ctrl.onHideLaunchOptions ? ctrl.onHideLaunchOptions( $event ) : null"
+		<app-popover
+			:popover-id="`game-buttons-launch-${label}-${game.id}`"
+			@focused="$emit('show-launch-options', $event)"
+			@blurred="$emit('hide-launch-options', $event)"
 			>
 			<div class="list-group list-group-dark thin">
-				<a class="list-group-item has-icon"
-					ng-repeat="package in Client_Library.packagesByGame[ ctrl.game.id ] track by package.id"
-					ng-if="package.isSettled()"
-					ng-click="ctrl.launch( package )"
-					ng-class="{ disabled: package.isRunning() }"
+				<a
+					v-for="package_ of gamePackages"
+					:key="package_.id"
+					v-if="package_.isSettled"
+					class="list-group-item has-icon"
+					:class="{
+						'disabled': package_.isRunning,
+					}"
+					@click="launch( package_ )"
 					>
-					<span class="jolticon jolticon-play"></span>
-					{{ package.title || ctrl.game.title }}
+					<app-jolticon icon="play" />
+					{{ package_.title || game.title }}
 				</a>
 			</div>
-		</gj-popover>
-	</span>
-
+		</app-popover>
+	</template>
 </div>

@@ -19,17 +19,18 @@
 		>
 
 		<!-- Array type -->
-		<span
-			v-if="GameFilteringContainer.definitions[ filter ].type === 'array'"
-			v-for="( option, index ) of value"
-			:key="index"
-			>
-			<a class="tag tag-pink game-filtering-tag" @click="removeFilterOption( filter, option )">
-				<strong>{{ GameFilteringContainer.definitions[ filter ].label }}:</strong>
-				{{ GameFilteringContainer.definitions[ filter ].options[ option ] }}
-				<app-jolticon icon="remove" />
-			</a>
-		</span>
+		<template v-if="GameFilteringContainer.definitions[ filter ].type === 'array'">
+			<span
+				v-for="( option, index ) of value"
+				:key="index"
+				>
+				<a class="tag tag-pink game-filtering-tag" @click="removeFilterOption( filter, option )">
+					<strong>{{ GameFilteringContainer.definitions[ filter ].label }}:</strong>
+					{{ GameFilteringContainer.definitions[ filter ].options[ option ] }}
+					<app-jolticon icon="remove" />
+				</a>
+			</span>
+		</template>
 
 		<!-- Radio type -->
 		<template

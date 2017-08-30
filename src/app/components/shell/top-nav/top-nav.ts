@@ -17,16 +17,24 @@ import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/
 import { AppSearch } from '../../search/search';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../../chat/client';
+import { AppClientHistoryNavigator } from '../../client/history-navigator/history-navigator';
+
+const components: { [name: string]: new () => Vue } = {
+	AppJolticon,
+	AppUserAvatarImg,
+	AppShellAccountPopover,
+	AppFriendRequestPopover,
+	AppSearch,
+};
+
+if (GJ_IS_CLIENT) {
+	// TODO(rewrite) - would this include the client history chunk for non client builds?
+	components.AppClientHistoryNavigator = AppClientHistoryNavigator;
+}
 
 @View
 @Component({
-	components: {
-		AppJolticon,
-		AppUserAvatarImg,
-		AppShellAccountPopover,
-		AppFriendRequestPopover,
-		AppSearch,
-	},
+	components,
 	directives: {
 		AppTooltip,
 		AppPopoverTrigger,

@@ -1,32 +1,122 @@
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
-import { IDownloadProgress, IExtractProgress, IParsedWrapper } from 'client-voodoo';
-import { Component } from 'vue-property-decorator';
-import Vue from 'vue';
+import { IParsedWrapper } from 'client-voodoo';
+import { store } from '../../../../store/index';
+import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
+import { GameRelease } from '../../../../../lib/gj-lib-client/components/game/release/release.model';
+import { GameBuildLaunchOption } from '../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import {
+	ReturnTypePackageStartUpdate,
+	ReturnTypePackageUninstall,
+	ReturnTypeSetPackageFieldsAndSave,
+} from '../../../../store/client-library';
 
-@Component({})
-export class LocalDbPackage extends Vue {
-	// Will be used for install_state and update_state.
-	static readonly PATCH_PENDING = 'patch-pending';
-	static readonly DOWNLOADING = 'downloading';
-	static readonly DOWNLOAD_FAILED = 'download-failed';
-	static readonly DOWNLOADED = 'downloaded';
-	static readonly UNPACKING = 'unpacking';
-	static readonly UNPACK_FAILED = 'unpack-failed';
-	static readonly UNPACKED = 'unpacked';
+export type Pid = string | IParsedWrapper;
 
-	static readonly REMOVING = 'removing';
-	static readonly REMOVE_FAILED = 'remove-failed';
+export interface Progress {
+	// Float between 0 and 1.
+	progress: number;
 
-	install_dir: string | null = null;
-	install_state: string | null = null;
-	update_state: string | null = null;
-	remove_state: string | null = null;
+	// Time left in seconds.
+	timeLeft: number;
+
+	// kbps
+	rate: number;
+}
+
+export enum PatchState {
+	PATCH_PENDING = 'patch-pending',
+	DOWNLOADING = 'downloading',
+	DOWNLOAD_FAILED = 'download-failed',
+	DOWNLOADED = 'downloaded',
+	UNPACKING = 'unpacking',
+	UNPACK_FAILED = 'unpack-failed',
+	UNPACKED = 'unpacked',
+}
+
+export enum RemoveState {
+	REMOVING = 'removing',
+	REMOVE_FAILED = 'remove-failed',
+}
+
+export enum RunState {
+	LAUNCHING = 'launching',
+	RUNNING = 'running',
+}
+
+export type DbField = {
+	id: 'id';
+	game_id: 'game_id';
+	title: 'title';
+	description: 'description';
+	release: 'release';
+	build: 'build';
+	file: 'file';
+	launch_options: 'launch_options';
+	install_dir: 'install_dir';
+	install_state: 'install_state';
+	update_state: 'update_state';
+	remove_state: 'remove_state';
+	update: 'update';
+	download_progress: 'download_progress';
+	unpack_progress: 'unpack_progress';
+	patch_paused: 'patch_paused';
+	patch_queued: 'patch_queued';
+	run_state: 'run_state';
+	running_pid: 'running_pid';
+};
+
+export const DbFieldMapping: DbField = {
+	id: 'id',
+	game_id: 'game_id',
+	title: 'title',
+	description: 'description',
+	release: 'release',
+	build: 'build',
+	file: 'file',
+	launch_options: 'launch_options',
+	install_dir: 'install_dir',
+	install_state: 'install_state',
+	update_state: 'update_state',
+	remove_state: 'remove_state',
+	update: 'update',
+	download_progress: 'download_progress',
+	unpack_progress: 'unpack_progress',
+	patch_paused: 'patch_paused',
+	patch_queued: 'patch_queued',
+	run_state: 'run_state',
+	running_pid: 'running_pid',
+};
+
+export type DbFieldTypes = { [key in keyof DbField]: LocalDbPackage[DbField[key]] };
+
+export interface BuildData {
+	id: number;
+	folder: string;
+	type: string;
+	archive_type: string;
+	os_windows: boolean;
+	os_windows_64: boolean;
+	os_mac: boolean;
+	os_mac_64: boolean;
+	os_linux: boolean;
+	os_linux_64: boolean;
+	os_other: boolean;
+	modified_on: number;
+}
+
+export class LocalDbPackage {
+	install_dir = '';
+	install_state: PatchState | null = null;
+	update_state: PatchState | null = null;
+	remove_state: RemoveState | null = null;
 	update: LocalDbPackage | null = null;
-	download_progress: IDownloadProgress | null = null;
-	unpack_progress: IExtractProgress | null = null;
+	download_progress: Progress | null = null;
+	unpack_progress: Progress | null = null;
 	patch_paused: boolean | null = null;
 	patch_queued: boolean | null = null;
-	running_pid: IParsedWrapper | null = null;
+	run_state: RunState | null = null;
+	running_pid: Pid | null = null;
 
 	id = 0;
 	game_id = 0;
@@ -38,7 +128,9 @@ export class LocalDbPackage extends Vue {
 		version_number: '',
 	};
 
-	build = {
+	private _build: GameBuild | null = null;
+
+	build: BuildData = {
 		id: 0,
 		folder: '',
 		type: '',
@@ -65,6 +157,228 @@ export class LocalDbPackage extends Vue {
 		executable_path: string;
 	}[] = [];
 
+	static fromPackageInfo(
+		package_: GamePackage,
+		release: GameRelease,
+		build: GameBuild,
+		launchOptions: GameBuildLaunchOption[]
+	) {
+		const localPackage = new LocalDbPackage();
+		localPackage.setData(package_, release, build, launchOptions);
+		return localPackage;
+	}
+
+	static createForInstall(
+		package_: GamePackage,
+		release: GameRelease,
+		build: GameBuild,
+		launchOptions: GameBuildLaunchOption[]
+	) {
+		const localPackage = this.fromPackageInfo(package_, release, build, launchOptions);
+		localPackage.setPackageFields({
+			install_state: PatchState.PATCH_PENDING,
+		});
+
+		return localPackage;
+	}
+
+	static createForUpdate(
+		package_: GamePackage,
+		release: GameRelease,
+		build: GameBuild,
+		launchOptions: GameBuildLaunchOption[]
+	) {
+		const localPackage = this.fromPackageInfo(package_, release, build, launchOptions);
+		localPackage.setPackageFields({
+			update_state: PatchState.PATCH_PENDING,
+		});
+
+		return localPackage;
+	}
+
+	static async getAccessToken(packageId: number): Promise<string> {
+		const result = await Api.sendRequest(`/updater/get-access-token/${packageId}`, null, {
+			apiPath: '/x',
+			processPayload: false,
+			detach: true,
+		});
+
+		if (!result || !result.data || !result.data.token) {
+			throw new Error('Result is empty');
+		}
+
+		return result.data.token;
+	}
+
+	get isSettled() {
+		return !this.install_state && !this.update_state && !this.remove_state;
+	}
+
+	get isPatching() {
+		return (
+			this.install_state === PatchState.PATCH_PENDING ||
+			this.install_state === PatchState.DOWNLOADING ||
+			this.install_state === PatchState.UNPACKING ||
+			this.update_state === PatchState.PATCH_PENDING ||
+			this.update_state === PatchState.DOWNLOADING ||
+			this.update_state === PatchState.UNPACKING
+		);
+	}
+
+	get isInstalling() {
+		return (
+			this.install_state === PatchState.PATCH_PENDING ||
+			this.install_state === PatchState.DOWNLOADING ||
+			this.install_state === PatchState.UNPACKING
+		);
+	}
+
+	get isUpdating() {
+		return (
+			this.update_state === PatchState.PATCH_PENDING ||
+			this.update_state === PatchState.DOWNLOADING ||
+			this.update_state === PatchState.UNPACKING
+		);
+	}
+
+	get isDownloading() {
+		return (
+			this.install_state === PatchState.DOWNLOADING || this.update_state === PatchState.DOWNLOADING
+		);
+	}
+
+	get isUnpacking() {
+		return (
+			this.install_state === PatchState.UNPACKING || this.update_state === PatchState.UNPACKING
+		);
+	}
+
+	get isPatchPaused() {
+		return !!this.patch_paused;
+	}
+
+	get isPatchQueued() {
+		return !!this.patch_queued;
+	}
+
+	get didInstallFail() {
+		return (
+			this.install_state === PatchState.DOWNLOAD_FAILED ||
+			this.install_state === PatchState.UNPACK_FAILED
+		);
+	}
+
+	get didUpdateFail() {
+		return (
+			this.update_state === PatchState.DOWNLOAD_FAILED ||
+			this.update_state === PatchState.UNPACK_FAILED
+		);
+	}
+
+	get isRunning() {
+		return this.run_state || !!this.running_pid;
+	}
+
+	get isRemoving() {
+		return this.remove_state === RemoveState.REMOVING;
+	}
+
+	setData(
+		package_: GamePackage,
+		release: GameRelease,
+		build: GameBuild,
+		launchOptions: GameBuildLaunchOption[]
+	) {
+		// All launch options are passed in.
+		// Let's just pull the ones for our build.
+		const _launchOptions: typeof LocalDbPackage.prototype.launch_options = [];
+		for (let launchOption of launchOptions) {
+			if (launchOption.game_build_id !== build.id) {
+				continue;
+			}
+
+			_launchOptions.push({
+				id: launchOption.id,
+				os: launchOption.os,
+				executable_path: launchOption.executable_path,
+			});
+		}
+
+		this.setPackageFields({
+			id: package_.id,
+			game_id: package_.game_id,
+			title: package_.title,
+			description: package_.description,
+
+			release: {
+				id: release.id,
+				version_number: release.version_number,
+			},
+
+			build: {
+				id: build.id,
+				folder: build.folder,
+				type: build.type,
+				archive_type: build.archive_type,
+				os_windows: build.os_windows,
+				os_windows_64: build.os_windows_64,
+				os_mac: build.os_mac,
+				os_mac_64: build.os_mac_64,
+				os_linux: build.os_linux,
+				os_linux_64: build.os_linux_64,
+				os_other: build.os_other,
+				modified_on: build.modified_on,
+			},
+
+			file: {
+				id: build.primary_file.id,
+				filename: build.primary_file.filename,
+				filesize: build.primary_file.filesize,
+			},
+			launch_options: _launchOptions,
+		});
+	}
+
+	setAllDataAndSave(data: DbFieldTypes) {
+		const release = data.release;
+		const build = data.build;
+		const file = data.file;
+
+		return this.setPackageFieldsAndSave({
+			id: data.id,
+			game_id: data.game_id,
+			title: data.title,
+			description: data.description,
+
+			release: {
+				id: release.id,
+				version_number: release.version_number,
+			},
+
+			build: {
+				id: build.id,
+				folder: build.folder,
+				type: build.type,
+				archive_type: build.archive_type,
+				os_windows: build.os_windows,
+				os_windows_64: build.os_windows_64,
+				os_mac: build.os_mac,
+				os_mac_64: build.os_mac_64,
+				os_linux: build.os_linux,
+				os_linux_64: build.os_linux_64,
+				os_other: build.os_other,
+				modified_on: build.modified_on,
+			},
+
+			file: {
+				id: file.id,
+				filename: file.filename,
+				filesize: file.filesize,
+			},
+			launch_options: data.launch_options,
+		});
+	}
+
 	getDownloadUrl() {
 		if (this.install_state) {
 			return GameBuild.getDownloadUrl(this.build.id, {
@@ -82,78 +396,141 @@ export class LocalDbPackage extends Vue {
 		throw new Error('Not ready to get the package download url');
 	}
 
-	get isSettled() {
-		return !this.install_state && !this.update_state && !this.remove_state;
+	setBuildData(data: BuildData) {
+		this.build = data;
+		this._build = new GameBuild(data);
 	}
 
-	get isPatching() {
-		return (
-			this.install_state === LocalDbPackage.PATCH_PENDING ||
-			this.install_state === LocalDbPackage.DOWNLOADING ||
-			this.install_state === LocalDbPackage.UNPACKING ||
-			this.update_state === LocalDbPackage.PATCH_PENDING ||
-			this.update_state === LocalDbPackage.DOWNLOADING ||
-			this.update_state === LocalDbPackage.UNPACKING
-		);
+	setInstallDir(dir: string) {
+		return this.setPackageFieldsAndSave({
+			install_dir: dir,
+		});
 	}
 
-	get isInstalling() {
-		return (
-			this.install_state === LocalDbPackage.PATCH_PENDING ||
-			this.install_state === LocalDbPackage.DOWNLOADING ||
-			this.install_state === LocalDbPackage.UNPACKING
-		);
+	setInstallState(state: PatchState) {
+		return this.setPackageFieldsAndSave({
+			install_state: state,
+		});
 	}
 
-	get isUpdating() {
-		return (
-			this.update_state === LocalDbPackage.PATCH_PENDING ||
-			this.update_state === LocalDbPackage.DOWNLOADING ||
-			this.update_state === LocalDbPackage.UNPACKING
-		);
+	setPatchPaused() {
+		return this.setPackageFieldsAndSave({
+			patch_paused: true,
+		});
 	}
 
-	get isDownloading() {
-		return (
-			this.install_state === LocalDbPackage.DOWNLOADING ||
-			this.update_state === LocalDbPackage.DOWNLOADING
-		);
+	setPatchResumed() {
+		return this.setPackageFieldsAndSave({
+			patch_paused: false,
+		});
 	}
 
-	get isUnpacking() {
-		return (
-			this.install_state === LocalDbPackage.UNPACKING ||
-			this.update_state === LocalDbPackage.UNPACKING
-		);
+	setPatchQueued() {
+		return this.setPackageFieldsAndSave({
+			patch_queued: true,
+		});
 	}
 
-	get isPatchPaused() {
-		return !!this.patch_paused;
+	setPatchUnqueued() {
+		return this.setPackageFieldsAndSave({
+			patch_queued: false,
+		});
 	}
 
-	get isPatchQueued() {
-		return !!this.patch_queued;
+	setInstalled() {
+		return this.setPackageFieldsAndSave({
+			install_state: null,
+			download_progress: null,
+			unpack_progress: null,
+			patch_paused: null,
+			patch_queued: null,
+		});
 	}
 
-	get didInstallFail() {
-		return (
-			this.install_state === LocalDbPackage.DOWNLOAD_FAILED ||
-			this.install_state === LocalDbPackage.UNPACK_FAILED
-		);
+	setUpdateState(state: PatchState) {
+		return this.setPackageFieldsAndSave({
+			update_state: state,
+		});
 	}
 
-	get didUpdateFail() {
-		return (
-			this.update_state === LocalDbPackage.DOWNLOAD_FAILED ||
-			this.update_state === LocalDbPackage.UNPACK_FAILED
-		);
+	setUpdated() {
+		if (!this.update) {
+			return Promise.reject(new Error('Update package does not exist'));
+		}
+
+		return this.setPackageFieldsAndSave({
+			// Copy the fields from the update package
+			id: this.update.id,
+			game_id: this.update.game_id,
+			title: this.update.title,
+			description: this.update.description,
+			release: this.update.release,
+			build: this.update.build,
+			file: this.update.file,
+			launch_options: this.update.launch_options,
+
+			// Nullify the update state variables, marking the package as fully updated.
+			update: null,
+			update_state: null,
+			download_progress: null,
+			unpack_progress: null,
+			patch_paused: null,
+			patch_queued: null,
+		});
 	}
 
-	get isRunning() {
-		return !!this.running_pid;
+	setUpdateAborted() {
+		return this.setPackageFieldsAndSave({
+			update: null,
+			update_state: null,
+			download_progress: null,
+			unpack_progress: null,
+			patch_paused: null,
+			patch_queued: null,
+		});
 	}
 
-	get isRemoving() {
-		return this.remove_state === LocalDbPackage.REMOVING;
+	setLaunching() {
+		return this.setPackageFieldsAndSave({
+			run_state: RunState.LAUNCHING,
+		});
+	}
+
+	setRunningPid(pid: Pid) {
+		return this.setPackageFieldsAndSave({
+			run_state: RunState.RUNNING,
+			running_pid: pid,
+		});
+	}
+
+	clearRunningPid() {
+		return this.setPackageFieldsAndSave({
+			run_state: null,
+			running_pid: null,
+		});
+	}
+
+	setRemoveState(state: RemoveState) {
+		return this.setPackageFieldsAndSave({
+			remove_state: state,
+		});
+	}
+
+	startUpdate(newBuildId: number): ReturnTypePackageStartUpdate {
+		return store.dispatch('clientLibrary/packageStartUpdate', [this, newBuildId]) as any;
+	}
+
+	uninstall(dbOnly: boolean): ReturnTypePackageUninstall {
+		return store.dispatch('clientLibrary/packageUninstall', [this, dbOnly]) as any;
+	}
+
+	private setPackageFieldsAndSave(
+		fields: Partial<DbFieldTypes>
+	): ReturnTypeSetPackageFieldsAndSave {
+		return store.dispatch('clientLibrary/setPackageFieldsAndSave', [this, fields]) as any;
+	}
+
+	private setPackageFields(fields: Partial<DbFieldTypes>) {
+		store.commit('clientLibrary/setPackageFields', [this, fields]);
 	}
 }

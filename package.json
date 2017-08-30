@@ -73,8 +73,9 @@
 		"appdmg": "0.3.10"
 	},
 	"dependencies": {
-		"client-voodoo": "2.0.0-alpha.11",
+		"client-voodoo": "gamejolt/client-voodoo#joltron",
 		"dexie": "2.0.0-beta.10",
-		"nwjs-snappy-updater": "1.0.0"
+		"nwjs-snappy-updater": "1.0.0",
+		"sanitize-filename": "1.6.1"
 	}
 }

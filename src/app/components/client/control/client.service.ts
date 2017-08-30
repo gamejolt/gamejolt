@@ -2,16 +2,18 @@ import gui from 'nw.gui';
 const win = gui.Window.get();
 
 export class ClientControl {
+	static startedSilently = false;
+
 	static init() {
 		// Whether or not we started "hidden".
-		let startedSilently = false;
+		this.startedSilently = false;
 
 		const app = gui.App;
 		if (app.argv.length) {
 			for (let i = 0; i < app.argv.length; ++i) {
 				if (app.argv[i] === '--silent-start') {
 					console.info('Started silently.');
-					startedSilently = true;
+					this.startedSilently = true;
 					break;
 				}
 			}
@@ -24,7 +26,7 @@ export class ClientControl {
 			this.show();
 		});
 
-		if (!startedSilently) {
+		if (!this.startedSilently) {
 			console.info('Started explicitly. Force showing the window.');
 			this.show();
 		}

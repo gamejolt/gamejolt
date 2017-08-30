@@ -74,17 +74,21 @@ export class AppActivityFeedDevlogPostControls extends Vue {
 	}
 
 	get shareUrl() {
-		return (
-			Environment.baseUrl +
-			this.$router.resolve({
-				name: 'discover.games.view.devlog.view',
-				params: {
-					slug: this.post.game.slug,
-					id: this.post.game.id,
-					postSlug: this.post.slug,
-				},
-			}).href
-		);
+		let urlPath = this.$router.resolve({
+			name: 'discover.games.view.devlog.view',
+			params: {
+				slug: this.post.game.slug,
+				id: this.post.game.id,
+				postSlug: this.post.slug,
+			},
+		}).href;
+
+		if (GJ_IS_CLIENT) {
+			// The client urls are prepended with a hashtag (#) that has to be removed to make the url valid when used outside of the client.
+			urlPath = urlPath.slice(1);
+		}
+
+		return `${Environment.secureBaseUrl}${urlPath}`;
 	}
 
 	created() {

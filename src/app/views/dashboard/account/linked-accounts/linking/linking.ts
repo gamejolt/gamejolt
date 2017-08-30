@@ -6,6 +6,7 @@ import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/gr
 import { AppProgressPoller } from '../../../../../../lib/gj-lib-client/components/progress/poller/poller';
 import { AppLoading } from '../../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { ClientControl } from '../../../../../components/client/control/client.service';
 
 @View
 @Component({
@@ -74,8 +75,7 @@ export default class RouteDashAccountLinkedAccountsLinking extends BaseRouteComp
 		}
 
 		// Focus back to the Client.
-		// TODO(rewrite)
-		// Client.show();
+		ClientControl.show();
 	}
 
 	failed() {

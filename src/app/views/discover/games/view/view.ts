@@ -31,6 +31,9 @@ import { Store } from '../../../../store/index';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
+import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
+import { Clipboard } from '../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
+import { ClientLibraryAction, ClientLibraryStore } from '../../../../store/client-library';
 import {
 	RouteResolve,
 	BaseRouteComponent,
@@ -73,6 +76,10 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	storeModule = RouteStore;
 
 	@State app: Store['app'];
+
+	// TODO(rewrite) Can do this here or do I have to require and commit/dispatch? ugh
+	@State clientLibrary: Store['clientLibrary'];
+	@ClientLibraryAction syncGame: ClientLibraryStore['syncGame'];
 
 	date = date;
 	Screen = makeObservableService(Screen);
@@ -153,19 +160,15 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			this.gaTrackingId = this.game.ga_tracking_id;
 		}
 
-		// TODO(rewrite)
-		// // For syncing game data to client.
-		// if ( GJ_IS_CLIENT ) {
-
-		// 	// Only sync if it's in library.
-		// 	return $injector.get( 'LocalDb_Game' ).fetch( game.id )
-		// 		.then( function( localGame )
-		// 		{
-		// 			if ( localGame ) {
-		// 				return $injector.get( 'LocalDb_Sync' ).syncGame( game.id, game );
-		// 			}
-		// 		} );
-		// }
+		// For syncing game data to client.
+		// TODO(rewrite) - test this - install a game, update something in it, visit the game page and see if it updates in localdb
+		if (GJ_IS_CLIENT) {
+			// Only sync if it's in library.
+			const localGame = this.clientLibrary.gamesById[this.game.id];
+			if (localGame) {
+				return this.syncGame([this.game.id, this.game]);
+			}
+		}
 	}
 
 	routeDestroy() {
@@ -183,6 +186,12 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		if (gameId === this.game.id) {
 			this.refreshRatingInfo();
 		}
+	}
+
+	scrollToPackagePayment(package_: GamePackage) {
+		console.log(package_);
+		Scroll.to(`game-package-card-${package_.id}`);
+		EventBus.emit('GamePackageCard.showPaymentOptions', package_);
 	}
 
 	scrollToMultiplePackages() {

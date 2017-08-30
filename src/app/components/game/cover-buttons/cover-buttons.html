@@ -48,22 +48,21 @@
 			<translate>Download</translate>
 		</a>
 
-		<!--<template v-if="GJ_IS_CLIENT">
-			<gj-client-game-buttons
+		<template v-if="GJ_IS_CLIENT">
+			<app-client-game-buttons
 				label="game-cover"
-				game="game"
-				large-variant="true"
-				overlay-variant="true"
-				is-patching="isGamePatching"
-				has-package="hasLocalPackage"
-				on-show-multiple-packages="onShowMultiplePackages( { $package: $package } )"
-				on-show-package-payment="onShowPackagePayment( { $package: $package } )"
+				:game="game"
+				:large="true"
+				:overlay="true"
+				:is-patching="isGamePatching"
+				:has-package="hasLocalPackage"
+				@show-multiple-packages="$emit('show-multiple-packages')"
+				@show-package-payment="$emit('show-package-payment', $event)"
 
-				has-installable-builds="!!installableBuilds.length"
-				can-install="!!installableBuilds.length"
-				>
-			</gj-client-game-buttons>
-		</template>-->
+				:has-installable-builds="!!installableBuilds.length"
+				:can-install="!!installableBuilds.length"
+				/>
+		</template>
 	</span>
 
 </div>

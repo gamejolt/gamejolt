@@ -33,6 +33,7 @@ export default class RouteSettings extends BaseRouteComponent {
 		}
 
 		return {
+			client /** GJ_IS_CLIENT **/: true ? this.$gettext('settings.client') : undefined,
 			site: this.$gettext('Site'),
 			chat: this.$gettext('settings.chat'),
 			restrictions: this.$gettext('Restrictions'),

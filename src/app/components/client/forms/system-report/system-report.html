@@ -1,14 +1,21 @@
-<form gj-form="formModel" name="systemReportForm">
+<app-form name="systemReportForm">
 
-	<form-group name="description" label="{{ 'system_report.form.description_label' | translate }}">
-		<p class="help-block" translate>system_report.form.description_help</p>
-		<textarea form-control="description" ng-maxlength="1000" rows="5"></textarea>
-		<control-errors></control-errors>
+	<app-form-group
+		name="description"
+		:label="$gettext('system_report.form.description_label')">
+		<p class="help-block"><translate>system_report.form.description_help</translate></p>
+		<app-form-control-textarea
+			maxlength="1000"
+			rows="5"
+			/>
+		<app-form-control-errors />
 	</form-group>
 
-	<button gj-form-submit-button class="btn" ng-disabled="!systemReportForm.$valid" ng-click="onSubmit()">
-		<span class="jolticon jolticon-add"></span>
-		<span translate>system_report.form.submit_button</span>
-	</button>
+	<app-form-button
+		:disabled="!valid"
+		icon="add"
+		>
+		<translate>system_report.form.submit_button</translate>
+	</app-form-button>
 
-</form>
+</app-form>
