@@ -1,25 +1,19 @@
-import VueRouter from 'vue-router';
+// import VueRouter from 'vue-router';
 
-const ExperimentHomeCollapsed = 'RwRvq_WGSgC-Btijan1v-w';
+// function getPayloadVariation(route: VueRouter.Route, payload: any, experiment: string): number {
+// 	let variation = checkHardcoded(route, experiment);
+// 	if (variation !== -1) {
+// 		return variation;
+// 	}
 
-export function splitHomeCollapsedVariation(route: VueRouter.Route, payload: any) {
-	return getPayloadVariation(route, payload, ExperimentHomeCollapsed);
-}
+// 	if (typeof payload._experiment !== 'undefined' && typeof payload._variation !== 'undefined') {
+// 		if (payload._experiment === experiment) {
+// 			return payload._variation;
+// 		}
+// 	}
 
-function getPayloadVariation(route: VueRouter.Route, payload: any, experiment: string): number {
-	let variation = checkHardcoded(route, experiment);
-	if (variation !== -1) {
-		return variation;
-	}
-
-	if (typeof payload._experiment !== 'undefined' && typeof payload._variation !== 'undefined') {
-		if (payload._experiment === experiment) {
-			return payload._variation;
-		}
-	}
-
-	return -1;
-}
+// 	return -1;
+// }
 
 // function getClientSideVariation(route: VueRouter.Route, experiment: string): number {
 // 	if (GJ_IS_SSR) {
@@ -42,22 +36,22 @@ function getPayloadVariation(route: VueRouter.Route, payload: any, experiment: s
 // 	return variation;
 // }
 
-function checkHardcoded(route: VueRouter.Route, experiment: string): number {
-	if (GJ_IS_SSR) {
-		return -1;
-	}
+// function checkHardcoded(route: VueRouter.Route, experiment: string): number {
+// 	if (GJ_IS_SSR) {
+// 		return -1;
+// 	}
 
-	// Allows you to put the experiment in the URL to force it.
-	// Example: /games/best?oCnfrO9TSku9N0t3viKvKg=1
-	const query = route.query;
-	if (query[experiment]) {
-		return parseInt(query[experiment], 10);
-	}
+// 	// Allows you to put the experiment in the URL to force it.
+// 	// Example: /games/best?oCnfrO9TSku9N0t3viKvKg=1
+// 	const query = route.query;
+// 	if (query[experiment]) {
+// 		return parseInt(query[experiment], 10);
+// 	}
 
-	// Allow you to force an experiment variation permanently through localStorage.
-	if (window.localStorage[experiment]) {
-		return parseInt(window.localStorage[experiment], 10);
-	}
+// 	// Allow you to force an experiment variation permanently through localStorage.
+// 	if (window.localStorage[experiment]) {
+// 		return parseInt(window.localStorage[experiment], 10);
+// 	}
 
-	return -1;
-}
+// 	return -1;
+// }
