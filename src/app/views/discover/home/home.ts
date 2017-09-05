@@ -23,6 +23,7 @@ import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
 import { splitHomeCollapsedVariation } from '../../../components/split-test/split-test-service';
 import { AppVideoEmbed } from '../../../../lib/gj-lib-client/components/video/embed/embed';
+import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -144,6 +145,8 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		if (!this.chosenSection) {
 			this.chosenSection = this.discoverSections[0];
 		}
+
+		Ads.setAdUnit('homepage');
 	}
 
 	routed() {

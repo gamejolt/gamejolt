@@ -91,7 +91,7 @@
 			</div>
 		</section>
 
-		<app-ad-placement />
+		<app-ad-placement pos="bottom" />
 
 		<section class="section">
 			<div class="container">
@@ -157,7 +157,7 @@
 			</div>
 		</section>
 
-		<app-ad-placement :hidden-desktop="true" />
+		<app-ad-placement :hidden-desktop="true" pos="bottom" />
 
 		<section class="section">
 			<div class="container-lg">
@@ -211,6 +211,7 @@
 						:games="games[ chosenSection.games ]"
 						:truncate-to-fit="true"
 						:show-ads="Screen.isDesktop"
+						ad-pos="bottom"
 						:event-label="`home-${chosenSection.eventLabel}`"
 						>
 					</app-game-grid>
@@ -335,6 +336,7 @@
 						:games="games[ chosenSection.games ]"
 						:truncate-to-fit="true"
 						:show-ads="Screen.isDesktop"
+						ad-pos="bottom"
 						:event-label="`home-${chosenSection.eventLabel}`"
 						>
 					</app-game-grid>
@@ -431,6 +433,7 @@
 						:games="games[ chosenSection.games ]"
 						:truncate-to-fit="true"
 						:show-ads="Screen.isDesktop"
+						ad-pos="bottom"
 						:event-label="`home-${chosenSection.eventLabel}`"
 						>
 					</app-game-grid>
@@ -449,7 +452,7 @@
 		</section>
 	</template>
 
-	<app-ad-placement />
+	<app-ad-placement pos="bottom" />
 
 	<section class="section fill-lightest" v-if="isLoaded && !app.user">
 		<div class="container">

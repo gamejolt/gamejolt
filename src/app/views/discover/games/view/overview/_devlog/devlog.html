@@ -6,7 +6,7 @@
 		:media-items="mediaItems"
 		/>
 
-	<app-ad-placement :resource="game" />
+	<app-ad-placement :resource="game" pos="top" />
 
 	<section class="section" style="padding-bottom: 0"  v-if="game.canceled">
 		<div class="container">
@@ -217,7 +217,7 @@
 		</div>
 	</section>
 
-	<app-ad-placement :hidden-desktop="true" :resource="game" />
+	<app-ad-placement :hidden-desktop="true" :resource="game" pos="bottom" />
 
 	<section class="section">
 		<div class="container">

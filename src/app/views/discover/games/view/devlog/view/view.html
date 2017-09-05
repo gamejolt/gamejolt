@@ -2,7 +2,7 @@
 
 	<div v-app-scroll-when="true"></div>
 
-	<app-ad-placement :hidden-desktop="true" :resource="game" />
+	<app-ad-placement :hidden-desktop="true" :resource="game" pos="top" />
 
 	<div class="container">
 		<div class="row">
@@ -16,12 +16,12 @@
 			</div>
 			<div class="col-md-4 col-lg-5" v-if="Screen.isDesktop">
 				<div class="desktop-ad-spot">
-					<app-ad class="pull-right" :resource="game" />
+					<app-ad class="pull-right" :resource="game" pos="top" />
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<app-ad-placement :resource="game" />
+	<app-ad-placement :resource="game" pos="bottom" />
 
 </div>

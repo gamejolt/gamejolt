@@ -233,6 +233,14 @@ export class GameFilteringContainer {
 		this.saveFilters();
 	}
 
+	getFilter(filter: string) {
+		if (!GameFilteringContainer.definitions[filter]) {
+			return;
+		}
+
+		return this.filters[filter];
+	}
+
 	unsetFilter(filter: string, option?: any) {
 		if (!GameFilteringContainer.definitions[filter]) {
 			return;

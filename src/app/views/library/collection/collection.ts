@@ -29,6 +29,7 @@ import { store, Store, tillStoreBootstrapped } from '../../../store/index';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { LibraryAction, LibraryStore, LibraryState } from '../../../store/library';
 import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
+import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -183,7 +184,10 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		}
 
 		this.filtering.init(this.$route);
+		this.listing.setAdTargeting(this.$route);
 		this.listing.processPayload(this.$route, this.$payload);
+
+		Ads.setAdUnit('gamesdir');
 
 		this.type = this.$route.meta.collectionType;
 

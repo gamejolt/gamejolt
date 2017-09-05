@@ -7,6 +7,7 @@ import { AppGameGrid } from '../../../../components/game/grid/grid';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
 import { GameFilteringContainer } from '../../../../components/game/filtering/container';
+import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -33,6 +34,9 @@ export default class RouteDiscoverDevlogsGames extends BaseRouteComponent {
 
 	routed() {
 		this.listing = new GameListingContainer();
+		this.listing.setAdTargeting(this.$route);
 		this.listing.processPayload(this.$route, this.$payload);
+
+		Ads.setAdUnit('devlogs');
 	}
 }
