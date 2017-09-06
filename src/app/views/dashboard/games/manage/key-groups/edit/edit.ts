@@ -93,7 +93,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 	}
 
 	copyKeyLink(key: Key) {
-		Clipboard.copy(`${Environment.secureBaseUrl}/claim/${key.key}`);
+		Clipboard.copy(`${Environment.baseUrl}/claim/${key.key}`);
 	}
 
 	onNewKeysAdded() {

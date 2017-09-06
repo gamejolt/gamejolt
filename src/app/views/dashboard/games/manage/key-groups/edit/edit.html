@@ -18,8 +18,8 @@
 
 				<div class="alert alert-info" v-if="keyGroup.type === KeyGroup.TYPE_EMAIL">
 					<p><translate>You can hand out this URL for people to retrieve the keys attached to their email addresses.</translate></p>
-					<a :href="`${Environment.secureBaseUrl}/claim/g-${game.id}`" target="_blank">
-						{{ Environment.secureBaseUrl }}/claim/g-{{ game.id }}
+					<a :href="`${Environment.baseUrl}/claim/g-${game.id}`" target="_blank">
+						{{ Environment.baseUrl }}/claim/g-{{ game.id }}
 					</a>
 				</div>
 				<div class="alert alert-info" v-else-if="keyGroup.type === KeyGroup.TYPE_USER">
