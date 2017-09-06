@@ -139,11 +139,11 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		Meta.microdata = {
 			'@context': 'http://schema.org',
 			'@type': 'WebSite',
-			url: 'http://gamejolt.com/',
+			url: 'https://gamejolt.com/',
 			name: 'Game Jolt',
 			potentialAction: {
 				'@type': 'SearchAction',
-				target: 'http://gamejolt.com/search?q={search_term_string}',
+				target: 'https://gamejolt.com/search?q={search_term_string}',
 				'query-input': 'required name=search_term_string',
 			},
 		};
