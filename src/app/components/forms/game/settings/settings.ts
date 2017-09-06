@@ -23,6 +23,7 @@ export class FormGameSettings extends BaseForm<Game> implements FormOnLoad {
 	saveMethod: '$saveSettings' = '$saveSettings';
 
 	hasPackagesForSale = false;
+	hasAdultContent = false;
 
 	get loadUrl() {
 		return `/web/dash/developer/games/settings/save/${this.model!.id}`;
@@ -30,5 +31,6 @@ export class FormGameSettings extends BaseForm<Game> implements FormOnLoad {
 
 	onLoad(payload: any) {
 		this.hasPackagesForSale = payload.hasPackagesForSale;
+		this.hasAdultContent = payload.hasAdultContent;
 	}
 }
