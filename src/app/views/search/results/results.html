@@ -89,7 +89,7 @@
 					<app-game-grid
 						:games="payload.games"
 						:truncate-to-fit="true"
-						:show-ads="true"
+						:show-ads="!payload.isAdultSearch"
 						ad-pos="bottom"
 						event-label="search-overview-games"
 						/>
