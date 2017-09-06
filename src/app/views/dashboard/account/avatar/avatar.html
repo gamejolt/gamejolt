@@ -3,12 +3,12 @@
 	<div class="col-md-4 col-md-push-8">
 
 		<div class="well fill-lightest text-center">
-			<p><strong><translate>dash.avatar.current_label</translate></strong></p>
+			<p><strong><translate>Current Avatar</translate></strong></p>
 			<img
 				class="img-responsive"
 				style="display: inline-block; max-width: 100px"
 				:src="app.user.img_avatar"
-				:alt="$gettext( `dash.avatar.current_alt` )"
+				:alt="$gettext( 'Your Avatar' )"
 				>
 		</div>
 
@@ -16,17 +16,36 @@
 
 	<div class="col-md-8 col-md-pull-4">
 
+		<h3><translate>Game Jolt Avatar</translate></h3>
+		<form-avatar />
+
+		<!-- <h3><translate>Gravatar</translate></h3>
 		<div v-translate>
-			dash.avatar.body_html
+			<p>If you don't upload a Game Jolt avatar we'll try to use <a href="https://gravatar.com">Gravatar</a> instead.</p>
+			<p>You can click the button below to go to <a href="https://gravatar.com">gravatar.com</a> and sign up for one. Note that you'll need to sign up using your WordPress login. What's that, you don't have a WordPress account, either? No worries! You'll be able to create both accounts at the same time.</p>
+			<p>Have a Gravatar account? Good. Just log in and upload the avatar of your choice, then associate that avatar with the email address you use for Game Jolt. Your avatar will automatically appear throughout the site.</p>
+			<p><em>Note that there might be a short delay before your avatar shows up on the site. If you don't see it after what seems like long enough, try clearing your browser's cache.</em></p>
 		</div>
 
 		<p>
-			<a href="http://gravatar.com" target="_blank" class="btn" :class="{ block: Screen.isXs }">
+			<a href="https://gravatar.com" target="_blank" class="btn btn-success-outline" :class="{ block: Screen.isXs }">
 				<app-jolticon icon="chevron-right" />
-				<translate>dash.avatar.get_avatar_button</translate>
+				<translate>Get Gravatar Account</translate>
 			</a>
 		</p>
+
 		<br>
+		<p >Psst, if you don't want us to use your gravatar account and can't be bothered adding one, you can disable gravatar below.</p>
+
+		<app-form-group
+			name="disable_gravatar"
+			:label="$gettext( `Disable Gravatar` )"
+			label-class="col-sm-4"
+			>
+			<div class="col-sm-8">
+				<app-form-control-toggle />
+			</div>
+		</app-form-group> -->
 
 	</div>
 

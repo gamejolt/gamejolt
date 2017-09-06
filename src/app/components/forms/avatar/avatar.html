@@ -1,0 +1,70 @@
+<app-form name="avatarForm">
+	<app-form-group
+		name="file"
+		:label="$gettext( `Upload New Avatar` )"
+		:optional="true"
+		>
+
+		<p class="help-block" v-translate="{ minSize, maxSize, filesize: filesize( maxFilesize ) }">
+			Your avatar image must be a PNG or JPG between %{minSize}x%{minSize} to %{maxSize}x%{maxSize} and up to %{filesize}
+		</p>
+
+		<app-form-control-upload
+			:rules="{
+				filesize: maxFilesize,
+				min_img_dimensions: [ minSize, minSize ],
+				max_img_dimensions: [ maxSize, maxSize ],
+			}"
+			accept=".png,.jpg,.jpeg"
+			/>
+
+		<app-form-control-errors
+			:label="$gettext( `avatar image` )"
+			/>
+
+	</app-form-group>
+
+	<app-form-group
+		name="crop"
+		:label="$gettext( 'Crop current avatar' )"
+		v-if="formModel.avatar_media_item && !formModel.file"
+		>
+
+		<div class="form-control-static">
+			<app-form-control-crop
+				:src="formModel.avatar_media_item.img_url"
+				aspect-ratio=1
+				:min-width="minSize"
+				:min-height="minSize"
+				/>
+
+			<app-form-control-errors
+				:label="$gettext( 'crop' )"
+				/>
+		</div>
+		<!-- <div v-else>
+			<img :src="formModel.avatar_media_item.img_url" alt="">
+		</div> -->
+	</app-form-group>
+
+	<app-form-button
+		icon="edit"
+		v-if="(formModel.file || formModel.avatar_media_item) && !hasFormErrors"
+		>
+		<translate v-if="formModel.file || !formModel.avatar_media_item">
+			Upload Avatar
+		</translate>
+		<translate v-else>
+			Save Crop
+		</translate>
+	</app-form-button>
+
+	<app-form-button
+		icon="remove"
+		v-if="hasAvatar"
+		@click.native.prevent="clearAvatar"
+		>
+		<translate>Clear</translate>
+	</app-form-button>
+
+</app-form>
