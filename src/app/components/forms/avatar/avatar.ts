@@ -4,7 +4,6 @@ import * as View from '!view!./avatar.html';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { AppFormControlUpload } from '../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 import { AppFormControlCrop } from '../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -12,6 +11,8 @@ import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/f
 import { filesize } from '../../../../lib/gj-lib-client/vue/filters/filesize';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 import { ModalConfirm } from '../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { AppForm } from '../../../../lib/gj-lib-client/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnLoad,
@@ -27,7 +28,6 @@ type FormModel = User & {
 		AppFormControlUpload,
 		AppFormControlCrop,
 		AppFormControlToggle,
-		AppExpand,
 		AppJolticon,
 	},
 })
@@ -35,7 +35,6 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 	@Prop(User) user: User;
 
 	modelClass = User;
-	resetOnSubmit = true;
 	reloadOnSubmit = true;
 	saveMethod: '$saveAvatar' = '$saveAvatar';
 
@@ -45,6 +44,10 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 
 	readonly filesize = filesize;
 	readonly Screen = makeObservableService(Screen);
+
+	$refs: {
+		form: AppForm;
+	};
 
 	get loadUrl() {
 		return `/web/dash/avatar/save`;
@@ -66,11 +69,15 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 	}
 
 	onLoad(payload: any) {
-		// TODO(cros) Can I do this?
-		this.formModel = new User(payload.user);
 		this.maxFilesize = payload.maxFilesize;
 		this.minSize = payload.minSize;
 		this.maxSize = payload.maxSize;
+
+		this.formModel.assign(payload.user);
+	}
+
+	avatarSelected() {
+		this.$refs.form.submit();
 	}
 
 	async clearAvatar() {
@@ -85,5 +92,9 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 		if (result) {
 			this.formModel.$clearAvatar();
 		}
+	}
+
+	gravatarToggled() {
+		Api.sendRequest('/web/dash/avatar/gravatar', this.formModel);
 	}
 }

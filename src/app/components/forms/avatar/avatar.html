@@ -1,12 +1,12 @@
-<app-form name="avatarForm">
+<app-form name="avatarForm" ref="form">
 	<app-form-group
 		name="file"
 		:label="$gettext( `Upload New Avatar` )"
 		:optional="true"
 		>
 
-		<p class="help-block" v-translate="{ minSize, maxSize, filesize: filesize( maxFilesize ) }">
-			Your avatar image must be a PNG or JPG between %{minSize}x%{minSize} to %{maxSize}x%{maxSize} and up to %{filesize}
+		<p class="help-block" v-translate>
+			dash.forms.image_filetype_help_html
 		</p>
 
 		<app-form-control-upload
@@ -15,25 +15,26 @@
 				min_img_dimensions: [ minSize, minSize ],
 				max_img_dimensions: [ maxSize, maxSize ],
 			}"
-			accept=".png,.jpg,.jpeg"
+			accept=".png,.jpg,.jpeg,.gif"
+			@changed="avatarSelected()"
 			/>
 
 		<app-form-control-errors
-			:label="$gettext( `avatar image` )"
+			:label="$gettext( `avatar` )"
 			/>
 
 	</app-form-group>
 
 	<app-form-group
 		name="crop"
-		:label="$gettext( 'Crop current avatar' )"
+		:label="$gettext( 'Your Uploaded Avatar' )"
 		v-if="formModel.avatar_media_item && !formModel.file"
 		>
 
 		<div class="form-control-static">
 			<app-form-control-crop
 				:src="formModel.avatar_media_item.img_url"
-				aspect-ratio=1
+				:aspect-ratio="1"
 				:min-width="minSize"
 				:min-height="minSize"
 				/>
@@ -42,29 +43,40 @@
 				:label="$gettext( 'crop' )"
 				/>
 		</div>
-		<!-- <div v-else>
-			<img :src="formModel.avatar_media_item.img_url" alt="">
-		</div> -->
 	</app-form-group>
 
-	<app-form-button
-		icon="edit"
-		v-if="(formModel.file || formModel.avatar_media_item) && !hasFormErrors"
-		>
-		<translate v-if="formModel.file || !formModel.avatar_media_item">
-			Upload Avatar
-		</translate>
-		<translate v-else>
-			Save Crop
-		</translate>
-	</app-form-button>
+	<template v-if="formModel.avatar_media_item && !hasFormErrors">
+		<div>
+			<app-form-button icon="edit">
+				<translate>Save Crop</translate>
+			</app-form-button>
 
-	<app-form-button
-		icon="remove"
-		v-if="hasAvatar"
-		@click.native.prevent="clearAvatar"
+			<button
+				class="btn btn-danger-outline"
+				@click.prevent.stop="clearAvatar()"
+				>
+				<app-jolticon icon="remove" />
+				<translate>Remove Avatar</translate>
+			</button>
+		</div>
+
+		<br>
+		<br>
+	</template>
+
+	<app-form-group
+		name="disable_gravatar"
+		:label="$gettext( `Disable Gravatar?` )"
 		>
-		<translate>Clear</translate>
-	</app-form-button>
+
+		<p class="help-block">
+			<translate>By default we fallback to using Gravatar if you have one. If you would like to disable the Gravatar fallback, you can toggle this on.</translate>
+			<a href="https://gravatar.com" target="_blank" class="link-help">
+				<translate>What is Gravatar?</translate>
+			</a>
+		</p>
+
+		<app-form-control-toggle @changed="gravatarToggled()" />
+	</app-form-group>
 
 </app-form>
