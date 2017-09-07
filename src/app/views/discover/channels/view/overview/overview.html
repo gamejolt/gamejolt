@@ -1,6 +1,6 @@
 <div>
 
-	<app-ad-placement :visible-desktop="true" />
+	<app-ad-placement :visible-desktop="true" pos="top" />
 
 	<!--
 		Best Games
@@ -37,7 +37,7 @@
 				:games="bestGames"
 				:truncate-to-fit="true"
 				:scrollable="true"
-				:show-ads="true"
+				ad-pos="top"
 				event-label="channel-overview-best-games"
 				/>
 
@@ -57,7 +57,7 @@
 		</div>
 	</section>
 
-	<app-ad-placement :visible-sm="true" />
+	<app-ad-placement :visible-sm="true" pos="bottom" />
 
 	<!--
 		Hot Games
@@ -113,7 +113,7 @@
 		</div>
 	</section>
 
-	<app-ad-placement :hidden-desktop="true" />
+	<app-ad-placement :hidden-desktop="true" pos="bottom" />
 
 	<!--
 		Feed

@@ -14,6 +14,7 @@ import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { AppTrackEvent } from '../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppGameGridPlaceholder } from '../../../../../components/game/grid/placeholder/placeholder';
 import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { Ads } from '../../../../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -64,5 +65,9 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 				url: `/web/discover/channels/posts/${this.channel}`,
 			});
 		}
+
+		Ads.setGlobalTargeting({
+			channel: this.channel,
+		});
 	}
 }

@@ -46,410 +46,131 @@
 		</div>
 	</section>
 
-	<template v-if="variation === 0">
-		<section class="section">
-			<div class="container-lg">
+	<section class="section section-thin fill-darker overlay-scrollbar channel-list">
+		<div class="channel-list-item"
+			v-for="channel of channels"
+			:key="channel.id"
+			>
+			<app-channel-thumbnail :channel="channel.id" />
+		</div>
+	</section>
 
-				<h1 class="section-header text-center">
-					<router-link class="link-unstyled"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-						v-app-track-event="`home:row-heading:featured`"
-						>
-						<translate>Featured Games</translate>
-					</router-link>
-				</h1>
+	<section class="section">
+		<div class="container-lg">
 
-				<hr class="underbar underbar-center">
+			<h1 class="section-header text-center">
+				<router-link class="link-unstyled"
+					:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
+					v-app-track-event="`home:row-heading:featured`"
+					>
+					<translate>Featured Games</translate>
+				</router-link>
+			</h1>
 
-				<div>
-					<app-game-grid-placeholder
-						v-if="!isLoaded"
-						:num="8"
-						:truncate-to-fit="true"
-						:scrollable="true"
-						/>
+			<hr class="underbar underbar-center">
 
-					<app-game-grid
-						v-else
-						:games="games.featured"
-						:truncate-to-fit="true"
-						:scrollable="true"
-						:show-ads="Screen.isDesktop"
-						event-label="home-featured-games"
-						/>
-				</div>
+			<div>
+				<app-game-grid-placeholder
+					v-if="!isLoaded"
+					:num="8"
+					:truncate-to-fit="true"
+					:scrollable="true"
+					/>
 
-				<div class="text-center">
-					<router-link class="btn btn-outline"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-						v-app-track-event="`home:more-btn:featured`"
-						>
-						<translate>Explore All Featured</translate>
-					</router-link>
-				</div>
-
+				<app-game-grid
+					v-else
+					:games="games.featured"
+					:truncate-to-fit="true"
+					:scrollable="true"
+					:show-ads="Screen.isDesktop"
+					event-label="home-featured-games"
+					/>
 			</div>
-		</section>
 
-		<app-ad-placement />
-
-		<section class="section">
-			<div class="container">
-
-				<!--
-					Genres
-				-->
-
-				<h1 class="section-header text-center">
-					<translate>Browse by Genre</translate>
-				</h1>
-				<hr class="underbar underbar-center">
-
-				<div class="well fill-darker full-bleed-xs">
-					<app-genre-list />
-				</div>
-
-				<br>
-				<br>
-
-				<!--
-					Channels
-				-->
-
-				<div class="row text-center">
-					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-
-						<h1 class="section-header sans-margin-bottom">
-							<router-link class="link-unstyled"
-								:to="{ name: 'discover.channels.list' }"
-								v-app-track-event="`home:row-heading:channels`"
-								>
-								<translate>Browse Channels</translate>
-							</router-link>
-						</h1>
-
-						<p class="text-muted small">
-							<translate>Channels are like mini Game Jolts. Find and discover games around specific interests.</translate>
-						</p>
-					</div>
-				</div>
-
-				<hr class="underbar underbar-center">
-
-				<div class="row" v-if="channels.length">
-					<div class="col-xs-6 col-sm-3 col-md-2"
-						v-for="channel of channels"
-						:key="channel.id"
-						>
-						<app-channel-thumbnail :channel="channel.id" />
-					</div>
-				</div>
-
-				<div class="text-center">
-					<router-link class="btn btn-outline"
-						:to="{ name: 'discover.channels.list' }"
-						v-app-track-event="`home:more-btn:channels`"
-						>
-						<translate>View All Channels</translate>
-					</router-link>
-				</div>
-
+			<div class="text-center">
+				<router-link class="btn btn-outline"
+					:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
+					v-app-track-event="`home:more-btn:featured`"
+					>
+					<translate>Explore All Featured</translate>
+				</router-link>
 			</div>
-		</section>
 
-		<app-ad-placement :hidden-desktop="true" />
+		</div>
+	</section>
 
-		<section class="section">
-			<div class="container-lg">
+	<section class="section">
+		<div class="container-lg">
 
-				<!--
-					Game Listings
-				-->
+			<!--
+				Game Listings
+			-->
 
-				<div class="row text-center">
-					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
+			<div class="row text-center">
+				<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 
-						<h1 class="section-header">
-							<router-link class="link-unstyled"
-								:to="{ name: 'discover.channels.list' }"
-								v-app-track-event="`home:row-heading:channels`"
-								>
-								<translate>Discover Games</translate>
-							</router-link>
-						</h1>
+					<h1 class="section-header">
+						<router-link class="link-unstyled"
+							:to="{ name: 'discover.channels.list' }"
+							v-app-track-event="`home:row-heading:channels`"
+							>
+							<translate>Discover Games</translate>
+						</router-link>
+					</h1>
 
-					</div>
 				</div>
-
-				<app-nav-tab-list :center="true">
-					<ul>
-						<li v-for="( section, i ) of discoverSections" :key="section.url">
-							<a
-								@click="changeSection( i )"
-								:class="{ active: chosenSection.url === section.url }"
-								>
-								<span class="hidden-xs">
-									{{ section.title }}
-								</span>
-								<span class="visible-xs">
-									{{ section.smallTitle }}
-								</span>
-							</a>
-						</li>
-					</ul>
-				</app-nav-tab-list>
-
-				<div>
-					<app-game-grid-placeholder
-						v-if="!isLoaded"
-						:num="16"
-						:truncate-to-fit="true"
-						/>
-
-					<app-game-grid
-						v-else
-						:games="games[ chosenSection.games ]"
-						:truncate-to-fit="true"
-						:show-ads="Screen.isDesktop"
-						:event-label="`home-${chosenSection.eventLabel}`"
-						>
-					</app-game-grid>
-				</div>
-
-
-				<div class="text-center">
-					<router-link class="btn btn-outline"
-						:to="chosenSection.url"
-						v-app-track-event="`home:more-btn:${chosenSection.eventLabel}`"
-						>
-						<translate>Load More</translate>
-					</router-link>
-				</div>
-
 			</div>
-		</section>
-	</template>
-	<template v-else-if="variation === 1">
-		<section class="section section-thin fill-darker overlay-scrollbar channel-list">
-			<div class="channel-list-item"
-				v-for="channel of channels"
-				:key="channel.id"
-				>
-				<app-channel-thumbnail :channel="channel.id" />
-			</div>
-		</section>
 
-		<section class="section">
-			<div class="container-lg">
-
-				<h1 class="section-header text-center">
-					<router-link class="link-unstyled"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-						v-app-track-event="`home:row-heading:featured`"
-						>
-						<translate>Featured Games</translate>
-					</router-link>
-				</h1>
-
-				<hr class="underbar underbar-center">
-
-				<div>
-					<app-game-grid-placeholder
-						v-if="!isLoaded"
-						:num="8"
-						:truncate-to-fit="true"
-						:scrollable="true"
-						/>
-
-					<app-game-grid
-						v-else
-						:games="games.featured"
-						:truncate-to-fit="true"
-						:scrollable="true"
-						:show-ads="Screen.isDesktop"
-						event-label="home-featured-games"
-						/>
-				</div>
-
-				<div class="text-center">
-					<router-link class="btn btn-outline"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-						v-app-track-event="`home:more-btn:featured`"
-						>
-						<translate>Explore All Featured</translate>
-					</router-link>
-				</div>
-
-			</div>
-		</section>
-
-		<section class="section">
-			<div class="container-lg">
-
-				<!--
-					Game Listings
-				-->
-
-				<div class="row text-center">
-					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-
-						<h1 class="section-header">
-							<router-link class="link-unstyled"
-								:to="{ name: 'discover.channels.list' }"
-								v-app-track-event="`home:row-heading:channels`"
-								>
-								<translate>Discover Games</translate>
-							</router-link>
-						</h1>
-
-					</div>
-				</div>
-
-				<app-nav-tab-list :center="true">
-					<ul>
-						<li v-for="( section, i ) of discoverSections" :key="section.url">
-							<a
-								@click="changeSection( i )"
-								:class="{ active: chosenSection.url === section.url }"
-								>
-								<span class="hidden-xs">
-									{{ section.title }}
-								</span>
-								<span class="visible-xs">
-									{{ section.smallTitle }}
-								</span>
-							</a>
-						</li>
-					</ul>
-				</app-nav-tab-list>
-
-				<div>
-					<app-game-grid-placeholder
-						v-if="!isLoaded"
-						:num="16"
-						:truncate-to-fit="true"
-						/>
-
-					<app-game-grid
-						v-else
-						:games="games[ chosenSection.games ]"
-						:truncate-to-fit="true"
-						:show-ads="Screen.isDesktop"
-						:event-label="`home-${chosenSection.eventLabel}`"
-						>
-					</app-game-grid>
-				</div>
-
-
-				<div class="text-center">
-					<router-link class="btn btn-outline"
-						:to="chosenSection.url"
-						v-app-track-event="`home:more-btn:${chosenSection.eventLabel}`"
-						>
-						<translate>Load More</translate>
-					</router-link>
-				</div>
-
-			</div>
-		</section>
-	</template>
-	<template v-else-if="variation === 2">
-		<section class="section section-thin fill-darker overlay-scrollbar channel-list">
-			<div class="channel-list-item"
-				v-for="channel of channels"
-				:key="channel.id"
-				>
-				<app-channel-thumbnail :channel="channel.id" />
-			</div>
-		</section>
-
-		<section class="section">
-			<div class="container-lg">
-
-				<app-nav-tab-list>
-					<ul>
-						<li v-for="( section, i ) of discoverSections" :key="section.url">
-							<a
-								@click="changeSection( i )"
-								:class="{ active: chosenSection.url === section.url }"
-								>
+			<app-nav-tab-list :center="true">
+				<ul>
+					<li v-for="( section, i ) of discoverSections" :key="section.url">
+						<a
+							@click="changeSection( i )"
+							:class="{ active: chosenSection.url === section.url }"
+							>
+							<span class="hidden-xs">
+								{{ section.title }}
+							</span>
+							<span class="visible-xs">
 								{{ section.smallTitle }}
-							</a>
-						</li>
-					</ul>
-					<template slot="controls">
-						<router-link
-							class="btn"
-							:to="chosenSection.url"
-							v-app-track-event="`home:all-btn:${chosenSection.eventLabel}`"
-							>
-							<translate>View All</translate>
-							&raquo;
-						</router-link>
-					</template>
-				</app-nav-tab-list>
+							</span>
+						</a>
+					</li>
+				</ul>
+			</app-nav-tab-list>
 
-				<template v-if="chosenSection.eventLabel === 'featured-games'">
-					<app-game-grid-placeholder
-						v-if="!isLoaded"
-						:num="8"
-						:truncate-to-fit="true"
-						:scrollable="true"
-						/>
+			<div>
+				<app-game-grid-placeholder
+					v-if="!isLoaded"
+					:num="16"
+					:truncate-to-fit="true"
+					/>
 
-					<app-game-grid
-						v-else
-						:games="games.featured"
-						:truncate-to-fit="true"
-						:scrollable="true"
-						:show-ads="Screen.isDesktop"
-						event-label="home-featured-games"
-						/>
-
-					<div class="text-center">
-						<router-link class="btn btn-outline"
-							:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-							v-app-track-event="`home:more-btn:featured`"
-							>
-							<translate>Explore All Featured</translate>
-						</router-link>
-					</div>
-
-					<div class="page-cut hidden-xs"></div>
-					<h4 class="text-center">More Games</h4>
-				</template>
-
-				<div>
-					<app-game-grid-placeholder
-						v-if="!isLoaded"
-						:num="16"
-						:truncate-to-fit="true"
-						/>
-
-					<app-game-grid
-						v-else
-						:games="games[ chosenSection.games ]"
-						:truncate-to-fit="true"
-						:show-ads="Screen.isDesktop"
-						:event-label="`home-${chosenSection.eventLabel}`"
-						>
-					</app-game-grid>
-				</div>
-
-				<div class="text-center">
-					<router-link class="btn btn-outline"
-						:to="chosenSection.url"
-						v-app-track-event="`home:more-btn:${chosenSection.eventLabel}`"
-						>
-						<translate>Load More</translate>
-					</router-link>
-				</div>
-
+				<app-game-grid
+					v-else
+					:games="games[ chosenSection.games ]"
+					:truncate-to-fit="true"
+					:show-ads="Screen.isDesktop"
+					ad-pos="bottom"
+					:event-label="`home-${chosenSection.eventLabel}`"
+					>
+				</app-game-grid>
 			</div>
-		</section>
-	</template>
 
-	<app-ad-placement />
+
+			<div class="text-center">
+				<router-link class="btn btn-outline"
+					:to="chosenSection.url"
+					v-app-track-event="`home:more-btn:${chosenSection.eventLabel}`"
+					>
+					<translate>Load More</translate>
+				</router-link>
+			</div>
+
+		</div>
+	</section>
+
+	<app-ad-placement pos="bottom" />
 
 	<section class="section fill-lightest" v-if="isLoaded && !app.user">
 		<div class="container">

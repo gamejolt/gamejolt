@@ -8,7 +8,6 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
-import { AppGenreList } from '../../../components/genre/list/list';
 import { AppChannelThumbnail } from '../../../components/channel/thumbnail/thumbnail';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -21,8 +20,7 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
-import { splitHomeCollapsedVariation } from '../../../components/split-test/split-test-service';
-import { AppVideoEmbed } from '../../../../lib/gj-lib-client/components/video/embed/embed';
+import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -40,12 +38,10 @@ export interface DiscoverSection {
 @Component({
 	name: 'RouteDiscoverHome',
 	components: {
-		AppVideoEmbed,
 		AppJolticon,
 		AppNavTabList,
 		AppGameGrid,
 		AppGameGridPlaceholder,
-		AppGenreList,
 		AppChannelThumbnail,
 		AppAdPlacement,
 		AppAuthJoin: AppAuthJoinLazy,
@@ -62,7 +58,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	chosenSection: DiscoverSection | null = null;
 	featuredItems: FeaturedItem[] = [];
 	channels: any[] = [];
-	variation = 0;
 
 	games: { [k: string]: Game[] } = {
 		featured: [],
@@ -79,18 +74,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	get discoverSections() {
-		const featuredSection: DiscoverSection = {
-			title: this.$gettext('Featured Games'),
-			smallTitle: this.$gettext('Featured'),
-			url: this.$router.resolve({
-				name: 'discover.games.list._fetch',
-				params: { section: 'featured' },
-			}).href,
-			eventLabel: 'featured-games',
-			// We actually show hot games in the featured tab.
-			games: 'hot',
-		};
-
 		const bestSection: DiscoverSection = {
 			title: this.$gettext('Best Games'),
 			smallTitle: this.$gettext('Best'),
@@ -131,10 +114,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			sections = [hotSection, bestSection];
 		}
 
-		if (this.variation === 2) {
-			sections.unshift(featuredSection);
-		}
-
 		return sections;
 	}
 
@@ -144,6 +123,8 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		if (!this.chosenSection) {
 			this.chosenSection = this.discoverSections[0];
 		}
+
+		Ads.setAdUnit('homepage');
 	}
 
 	routed() {
@@ -158,42 +139,38 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		Meta.microdata = {
 			'@context': 'http://schema.org',
 			'@type': 'WebSite',
-			url: 'http://gamejolt.com/',
+			url: 'https://gamejolt.com/',
 			name: 'Game Jolt',
 			potentialAction: {
 				'@type': 'SearchAction',
-				target: 'http://gamejolt.com/search?q={search_term_string}',
+				target: 'https://gamejolt.com/search?q={search_term_string}',
 				'query-input': 'required name=search_term_string',
 			},
 		};
 
-		this.variation = Math.max(splitHomeCollapsedVariation(this.$route, this.$payload), 0);
 		this.chosenSection = this.discoverSections[0];
 
-		this.featuredItems = FeaturedItem.populate(this.$payload.featuredGames);
-		this.games.featured = this.featuredItems.map(item => item.game);
+		const featuredItems = FeaturedItem.populate(this.$payload.featuredGames);
+		this.games.featured = featuredItems.map(item => item.game);
 		this.games.hot = Game.populate(this.$payload.hotGames);
 		this.games.best = Game.populate(this.$payload.bestGames);
 		this.games.recommended = Game.populate(this.$payload.recommendedGames);
 
-		const channels =
-			this.variation === 0
-				? this.$payload.channels
-				: [
-						'action',
-						'horror',
-						'adventure',
-						'fangame',
-						'rpg',
-						'multiplayer',
-						'platformer',
-						'survival',
-						'retro',
-						'shooter',
-						'vr',
-						'strategy-sim',
-						'fnaf',
-					];
+		const channels = [
+			'action',
+			'horror',
+			'adventure',
+			'fangame',
+			'rpg',
+			'multiplayer',
+			'platformer',
+			'survival',
+			'retro',
+			'shooter',
+			'vr',
+			'strategy-sim',
+			'fnaf',
+		];
 
 		this.channels = [];
 		for (const channel of channels) {

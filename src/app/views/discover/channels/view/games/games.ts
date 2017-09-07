@@ -11,6 +11,7 @@ import {
 import { AppGameListing } from '../../../../../components/game/listing/listing';
 import { AppGameGrid } from '../../../../../components/game/grid/grid';
 import { LocationRedirect } from '../../../../../../lib/gj-lib-client/utils/router';
+import { Ads } from '../../../../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -47,6 +48,9 @@ export default class RouteDiscoverChannelsViewGames extends BaseRouteComponent {
 			this.listing = new GameListingContainer(this.filtering);
 		}
 
+		this.listing.setAdTargeting(this.$route);
 		this.listing.processPayload(this.$route, this.$payload);
+
+		Ads.setAdUnit('gamesdir');
 	}
 }

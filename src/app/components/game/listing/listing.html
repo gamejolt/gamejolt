@@ -5,7 +5,7 @@
 		</div>
 	</section>
 
-	<app-ad-placement v-if="showAds" :visible-desktop="true" />
+	<app-ad-placement v-if="showAds" :visible-desktop="true" pos="top" />
 
 	<div class="container" v-if="!hideFilters">
 		<div class="clearfix">
@@ -126,6 +126,6 @@
 	</section>
 
 	<section class="section section-thin" v-if="showAds && !GJ_IS_CLIENT && !Screen.isXs">
-		<app-ad size="leaderboard" />
+		<app-ad size="leaderboard" pos="bottom" />
 	</section>
 </div>

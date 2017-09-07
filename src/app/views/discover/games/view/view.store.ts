@@ -25,6 +25,7 @@ import { objectPick } from '../../../../../lib/gj-lib-client/utils/object';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { router } from '../../../index';
+import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
 
 export const RouteStoreName = 'gameRoute';
 export const RouteState = namespace(RouteStoreName, State);
@@ -50,6 +51,27 @@ type Mutations = {
 	toggleDescription: undefined;
 	setCanToggleDescription: boolean;
 };
+
+function setAdTargeting(game?: Game) {
+	if (!game) {
+		return;
+	}
+
+	let mat: string | undefined = undefined;
+	if (game.tigrs_age === 1) {
+		mat = 'everyone';
+	} else if (game.tigrs_age === 2) {
+		mat = 'teen';
+	} else if (game.tigrs_age === 3) {
+		mat = 'adult';
+	}
+
+	Ads.setGlobalTargeting({
+		mat,
+		genre: game.category,
+		paid: game.is_paid_game ? 'y' : 'n',
+	}).setAdUnit('gamepage');
+}
 
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
@@ -179,6 +201,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.showDescription = false;
 		this.isOverviewLoaded = false;
 		this.mediaItems = [];
+		setAdTargeting(this.game);
 	}
 
 	@VuexMutation
@@ -206,6 +229,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.twitterShareMessage = payload.twitterShareMessage || 'Check out this game!';
 
 		this.userPartnerKey = payload.userPartnerKey;
+		setAdTargeting(this.game);
 	}
 
 	@VuexMutation

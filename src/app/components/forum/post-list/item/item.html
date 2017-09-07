@@ -49,21 +49,21 @@
 					</a>
 					<a class="list-group-item"
 						v-if="app.user.permission_level > 0"
-						:href="Environment.secureBaseUrl + `/moderate/forums/posts/edit/${ post.id }`"
+						:href="Environment.baseUrl + `/moderate/forums/posts/edit/${ post.id }`"
 						target="_blank"
 						>
 						<translate>Edit</translate>
 					</a>
 					<a class="list-group-item"
 						v-if="app.user.permission_level > 0"
-						:href="Environment.secureBaseUrl + `/moderate/forums/posts/remove/${ post.id }`"
+						:href="Environment.baseUrl + `/moderate/forums/posts/remove/${ post.id }`"
 						target="_blank"
 						>
 						<translate>Remove</translate>
 					</a>
 					<a class="list-group-item"
 						v-if="app.user.permission_level > 0"
-						:href="Environment.secureBaseUrl + `/moderate/users/view/${ post.user_id }`"
+						:href="Environment.baseUrl + `/moderate/users/view/${ post.user_id }`"
 						target="_blank"
 						>
 						<translate>Moderate User</translate>
