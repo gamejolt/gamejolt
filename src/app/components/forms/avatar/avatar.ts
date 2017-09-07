@@ -36,6 +36,7 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 
 	modelClass = User;
 	reloadOnSubmit = true;
+	warnOnDiscard = false;
 	saveMethod: '$saveAvatar' = '$saveAvatar';
 
 	maxFilesize = 0;
