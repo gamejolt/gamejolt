@@ -10,6 +10,19 @@ import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 
+const AdRoutes: string[] = [
+	'activity',
+	'discover.home',
+	'discover.games.list._fetch',
+	'discover.games.list._fetch-category',
+	'discover.games.list._fetch-date',
+	'discover.devlogs.overview',
+	'discover.devlogs.games',
+	'discover.channels.view.overview',
+	'discover.channels.view.games',
+	'discover.channels.view.devlogs',
+];
+
 @View
 @Component({
 	components: {
@@ -30,6 +43,10 @@ export class AppShellFooter extends Vue {
 
 	get clientVersion() {
 		return GJ_VERSION;
+	}
+
+	get shouldShowAd() {
+		return !Screen.isXs && AdRoutes.indexOf(this.$route.name!) !== -1;
 	}
 
 	showSystemReport() {
