@@ -78,7 +78,9 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 	}
 
 	avatarSelected() {
-		this.$refs.form.submit();
+		if (this.formModel.file) {
+			this.$refs.form.submit();
+		}
 	}
 
 	async clearAvatar() {
