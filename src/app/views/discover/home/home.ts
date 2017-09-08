@@ -146,7 +146,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		this.isLoaded = true;
 
 		// Only do the split test if it's a guest.
-		if (!this.app.user) {
+		if (!this.app.user && !GJ_IS_SSR) {
 			this.variation = hasDevlogHomepage(this.$route);
 		}
 		Analytics.trackEvent('split-test', 'devlog-homepage', 'variation-' + this.variation);
