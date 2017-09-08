@@ -18,9 +18,15 @@ import { Store } from '../../../store/index';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
-import { AppAuthJoinLazy } from '../../../components/lazy';
+import { AppAuthJoinLazy, AppActivityFeedLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
+import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
+import { ActivityFeedContainer } from '../../../components/activity/feed/feed-container-service';
+import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
+import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { hasDevlogHomepage } from '../../../components/split-test/split-test-service';
+import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -44,6 +50,8 @@ export interface DiscoverSection {
 		AppGameGridPlaceholder,
 		AppChannelThumbnail,
 		AppAdPlacement,
+		AppActivityFeedPlaceholder,
+		AppActivityFeed: AppActivityFeedLazy,
 		AppAuthJoin: AppAuthJoinLazy,
 	},
 	directives: {
@@ -66,12 +74,10 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		recommended: [],
 	};
 
-	Screen = makeObservableService(Screen);
+	variation = 1;
+	feed: ActivityFeedContainer | null = null;
 
-	@RouteResolve({ lazy: true, cache: true })
-	routeResolve() {
-		return Api.sendRequest('/web/discover');
-	}
+	Screen = makeObservableService(Screen);
 
 	get discoverSections() {
 		const bestSection: DiscoverSection = {
@@ -117,7 +123,17 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		return sections;
 	}
 
+	@RouteResolve({ lazy: true, cache: true })
+	routeResolve() {
+		return Api.sendRequest('/web/discover');
+	}
+
 	routeInit() {
+		this.variation = hasDevlogHomepage(this.$route);
+		if (!GJ_IS_SSR && this.variation === 2) {
+			this.feed = ActivityFeedService.bootstrap();
+		}
+
 		Meta.title = null;
 
 		if (!this.chosenSection) {
@@ -125,6 +141,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		}
 
 		Ads.setAdUnit('homepage');
+		Analytics.trackEvent('split-test', 'devlog-homepage', 'variation-' + this.variation);
 	}
 
 	routed() {
@@ -178,6 +195,13 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			if (info) {
 				this.channels.push(info);
 			}
+		}
+
+		if (!this.feed && this.variation === 2) {
+			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.posts), {
+				type: 'Fireside_Post',
+				url: '/web/discover/devlogs/posts',
+			});
 		}
 	}
 
