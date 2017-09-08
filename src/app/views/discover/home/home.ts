@@ -123,14 +123,13 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		return sections;
 	}
 
-	@RouteResolve({ lazy: true, cache: true })
+	@RouteResolve({ cache: true })
 	routeResolve() {
 		return Api.sendRequest('/web/discover');
 	}
 
 	routeInit() {
-		this.variation = hasDevlogHomepage(this.$route);
-		if (!GJ_IS_SSR && this.variation === 2) {
+		if (!GJ_IS_SSR) {
 			this.feed = ActivityFeedService.bootstrap();
 		}
 
@@ -141,11 +140,16 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		}
 
 		Ads.setAdUnit('homepage');
-		Analytics.trackEvent('split-test', 'devlog-homepage', 'variation-' + this.variation);
 	}
 
 	routed() {
 		this.isLoaded = true;
+
+		// Only do the split test if it's a guest.
+		if (!this.app.user) {
+			this.variation = hasDevlogHomepage(this.$route);
+		}
+		Analytics.trackEvent('split-test', 'devlog-homepage', 'variation-' + this.variation);
 
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb;
@@ -197,7 +201,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			}
 		}
 
-		if (!this.feed && this.variation === 2) {
+		if (!this.feed) {
 			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.posts), {
 				type: 'Fireside_Post',
 				url: '/web/discover/devlogs/posts',
