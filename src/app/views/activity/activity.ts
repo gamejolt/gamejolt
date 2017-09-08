@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { Mutation } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./activity.html';
+import * as View from '!view!./activity.html?style=./activity.styl';
 
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';
@@ -13,6 +13,9 @@ import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/
 import { AppActivityFeed } from '../../components/activity/feed/feed';
 import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
 import { Store } from '../../store/index';
+import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
+import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
+import { getTranslationLang } from '../../../lib/gj-lib-client/components/translate/translate.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -37,6 +40,8 @@ export default class RouteActivity extends BaseRouteComponent {
 	activityUnreadCount = 0;
 	notificationsUnreadCount = 0;
 
+	Screen = makeObservableService(Screen);
+
 	@RouteResolve({ cache: true, lazy: true })
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest('/web/dash/activity/' + route.params.tab);
@@ -46,6 +51,10 @@ export default class RouteActivity extends BaseRouteComponent {
 		return this.tab === 'activity'
 			? this.$gettext('Your Activity Feed')
 			: this.$gettext('Your Notifications');
+	}
+
+	get shouldShowHeaderImage() {
+		return getTranslationLang() === 'en_US';
 	}
 
 	routeInit() {
