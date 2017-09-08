@@ -1,6 +1,6 @@
 <div class="route-discover-home">
 
-	<section class="section landing-header text-center" v-if="variation === 1">
+	<section class="section landing-header text-center">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
@@ -46,17 +46,12 @@
 		</div>
 	</section>
 
-	<section class="section section-thin fill-darker">
-		<h2 class="section-header text-center" v-if="variation === 2">
-			<translate>Browse Games</translate>
-		</h2>
-		<div class="overlay-scrollbar channel-list">
-			<div class="channel-list-item"
-				v-for="channel of channels"
-				:key="channel.id"
-				>
-				<app-channel-thumbnail :channel="channel.id" />
-			</div>
+	<section class="section section-thin fill-darker overlay-scrollbar channel-list">
+		<div class="channel-list-item"
+			v-for="channel of channels"
+			:key="channel.id"
+			>
+			<app-channel-thumbnail :channel="channel.id" />
 		</div>
 	</section>
 
