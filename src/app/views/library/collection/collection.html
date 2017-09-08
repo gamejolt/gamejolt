@@ -277,7 +277,7 @@
 		<app-game-grid
 			v-if="listing"
 			:games="listing.games"
-			event="collection-game-list:click"
+			event-label="collection-games"
 			>
 
 			<template slot="thumbnail-controls" scope="props">
@@ -328,7 +328,7 @@
 				<app-game-grid
 					:games="recommendedGames"
 					:scrollable="true"
-					event="collection-game-mix:click"
+					event-label="collection-games-mix"
 					/>
 			</app-loading-fade>
 
