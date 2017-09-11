@@ -16,7 +16,7 @@
 					max: 150,
 					availability: {
 						url: `/web/dash/developer/games/packages/check-field-availability/${ game.id }/title`,
-						initVal: method === 'edit' ? (model.title || '') : undefined,
+						initVal: method === 'edit' ? (model.title || game.title) : undefined,
 					},
 				}"
 				/>
