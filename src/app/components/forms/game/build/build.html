@@ -51,7 +51,7 @@
 		</span>
 		<span class="tag" v-else-if="model.type === GameBuild.TYPE_ROM">
 			<app-jolticon icon="rom" />
-			<span translate>ROM</span>
+			<translate>ROM</translate>
 		</span>
 
 		<!--
@@ -330,7 +330,7 @@
 					<app-jolticon icon="info-circle" />
 					<translate
 						:translate-params="{
-							platform: emulatorInfo[ model.emulator_type ],
+							platform: emulatorsInfo[ model.emulator_type ],
 						}"
 						translate-comment="%{ platform } will be the platform this ROM works on, such as Game Boy, NES, etc."
 						>
