@@ -100,7 +100,7 @@
 			<translate>Releases</translate>
 		</h2>
 
-		<div class="alert alert-info" v-if="game.alert_text" v-html="game.alert_text" />
+		<div class="alert" :class="customGameMessage.class" v-if="customGameMessage" v-html="customGameMessage.message" />
 
 		<div class="packages-list" v-if="packagePayload && packagePayload.packages.length">
 			<app-game-package-card

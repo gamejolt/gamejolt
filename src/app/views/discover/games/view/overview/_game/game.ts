@@ -96,6 +96,7 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState scoresPayload: RouteStore['scoresPayload'];
 	@RouteState packages: RouteStore['packages'];
 	@RouteState hasReleasesSection: RouteStore['hasReleasesSection'];
+	@RouteState customGameMessage: RouteStore['customGameMessage'];
 
 	@RouteMutation setCommentsCount: RouteStore['setCommentsCount'];
 	@RouteAction loadVideoComments: RouteStore['loadVideoComments'];
