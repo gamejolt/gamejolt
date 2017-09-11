@@ -112,6 +112,11 @@
 
 						<hr class="underbar">
 
+						<div class="alert alert-warning" v-if="game.alert_text">
+							<!-- TODO translation support? -->
+							{{ game.alert_text }}
+						</div>
+
 						<!--
 							Partner Controls
 						-->

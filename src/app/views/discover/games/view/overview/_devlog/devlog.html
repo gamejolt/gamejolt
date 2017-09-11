@@ -103,7 +103,12 @@
 						<translate>Releases</translate>
 					</h2>
 				</div>
+
 				<div :class="contentColClasses">
+					<div class="alert alert-warning" v-if="game.alert_text">
+						<!-- TODO translation support? -->
+						{{ game.alert_text }}
+					</div>
 
 					<app-lazy-placeholder :when="isOverviewLoaded">
 						<div class="lazy-placeholder" style="height: 135px"></div>
