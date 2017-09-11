@@ -95,6 +95,16 @@
 						<br class="hidden-xs">
 					</template>
 
+					<template v-if="game.alert_text">
+						<br class="visible-xs">
+						<div class="alert alert-info full-bleed-xs">
+							<app-jolticon icon="notice" />
+							<!-- TODO translation support? -->
+							<span v-html="game.alert_text" />
+						</div>
+						<br class="hidden-xs">
+					</template>
+
 					<!--
 						Builds / Soundtrack
 						This is a bit tricky. _has_packages doesn't yet take into account private packages.
@@ -111,11 +121,6 @@
 						</h2>
 
 						<hr class="underbar">
-
-						<div class="alert alert-warning" v-if="game.alert_text">
-							<!-- TODO translation support? -->
-							{{ game.alert_text }}
-						</div>
 
 						<!--
 							Partner Controls

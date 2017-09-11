@@ -100,10 +100,7 @@
 			<translate>Releases</translate>
 		</h2>
 
-		<div class="alert alert-warning" v-if="game.alert_text">
-			<!-- TODO translation support? -->
-			{{ game.alert_text }}
-		</div>
+		<div class="alert alert-info" v-if="game.alert_text" v-html="game.alert_text" />
 
 		<div class="packages-list" v-if="packagePayload && packagePayload.packages.length">
 			<app-game-package-card

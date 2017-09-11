@@ -20,6 +20,20 @@
 		</div>
 	</section>
 
+	<section class="section" style="padding-bottom: 0"  v-if="game.alert_text">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
+					<div class="alert alert-info full-bleed-xs">
+						<app-jolticon icon="notice" />
+						<!-- TODO translation support? -->
+						<span v-html="game.alert_text" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<section class="section" style="padding-bottom: 0" v-if="twitterShareMessage && !GJ_IS_CLIENT">
 		<div class="container">
 			<div class="row">
@@ -105,11 +119,6 @@
 				</div>
 
 				<div :class="contentColClasses">
-					<div class="alert alert-warning" v-if="game.alert_text">
-						<!-- TODO translation support? -->
-						{{ game.alert_text }}
-					</div>
-
 					<app-lazy-placeholder :when="isOverviewLoaded">
 						<div class="lazy-placeholder" style="height: 135px"></div>
 

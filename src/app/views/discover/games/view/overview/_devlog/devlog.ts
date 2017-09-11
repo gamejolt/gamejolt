@@ -24,6 +24,7 @@ import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/p
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
 import { AppCommentWidgetAddLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
+import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 
 @View
 @Component({
@@ -42,6 +43,7 @@ import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/m
 		AppMediaBar,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
+		AppJolticon,
 	},
 	directives: {
 		AppTrackEvent,
