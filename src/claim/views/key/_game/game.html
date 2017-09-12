@@ -72,10 +72,6 @@
 	</a>
 
 	<template v-if="!isClaimOnly">
-		<h2>
-			<translate>Releases</translate>
-		</h2>
-
 		<div
 			v-for="msg of customGameMessages"
 			class="alert full-bleed-xs"
@@ -87,6 +83,10 @@
 			<app-jolticon icon="notice" />
 			<span v-html="msg.message" />
 		</div>
+
+		<h2>
+			<translate>Releases</translate>
+		</h2>
 
 		<div class="packages-list" v-if="packagePayload && packagePayload.packages.length">
 			<app-game-package-card
