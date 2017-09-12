@@ -298,7 +298,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			'trophiesShowInvisibleTrophyMessage',
 		]);
 
-		this.customGameMessages = payload.customMessages;
+		this.customGameMessages = payload.customMessages || [];
 	}
 
 	@VuexMutation
