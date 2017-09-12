@@ -95,12 +95,12 @@
 						<br class="hidden-xs">
 					</template>
 
-					<template v-if="game.alert_text">
+					<template v-if="customGameMessage">
 						<br class="visible-xs">
-						<div class="alert alert-info full-bleed-xs">
+						<div class="alert full-bleed-xs" :class="customGameMessage.class">
 							<app-jolticon icon="notice" />
 							<!-- TODO translation support? -->
-							<span v-html="game.alert_text" />
+							<span v-html="customGameMessage.message" />
 						</div>
 						<br class="hidden-xs">
 					</template>

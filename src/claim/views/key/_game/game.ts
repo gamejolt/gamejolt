@@ -3,7 +3,10 @@ import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./game.html?style=./game.styl';
 
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import {
+	Game,
+	CustomMessage as CustomGameMessage,
+} from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
 import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -41,6 +44,8 @@ export class AppKeyGame extends Vue {
 	canToggleDescription = false;
 	showingFullDescription = false;
 
+	customGameMessage: CustomGameMessage | null = null;
+
 	Environment = Environment;
 
 	created() {
@@ -57,6 +62,21 @@ export class AppKeyGame extends Vue {
 		) {
 			this.isClaimOnly = true;
 			return;
+		}
+
+		this.customGameMessage = this.payload.customMessage || null;
+		if (this.customGameMessage) {
+			switch (this.customGameMessage.type) {
+				case 'alert': {
+					this.customGameMessage.class = 'alert-warning';
+					break;
+				}
+				case 'info':
+				default: {
+					this.customGameMessage.class = 'alert-info';
+					break;
+				}
+			}
 		}
 
 		if (this.payload.packages && this.payload.packages.length) {

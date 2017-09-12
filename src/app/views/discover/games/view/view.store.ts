@@ -6,7 +6,10 @@ import {
 	VuexMutation,
 } from '../../../../../lib/gj-lib-client/utils/vuex';
 
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import {
+	Game,
+	CustomMessage as CustomGameMessage,
+} from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GameScoreTable } from '../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { GamePackagePayloadModel } from '../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { GameRating } from '../../../../../lib/gj-lib-client/components/game/rating/rating.model';
@@ -118,6 +121,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	scoresPayload: any = null;
 	trophiesPayload: any = null;
+
+	customGameMessage: CustomGameMessage | null = null;
 
 	get packages() {
 		if (!this.packagePayload) {
@@ -292,6 +297,21 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			'trophiesExperienceAchieved',
 			'trophiesShowInvisibleTrophyMessage',
 		]);
+
+		if (payload.customMessage) {
+			this.customGameMessage = payload.customMessage;
+			switch (this.customGameMessage!.type) {
+				case 'alert': {
+					this.customGameMessage!.class = 'alert-warning';
+					break;
+				}
+				case 'info':
+				default: {
+					this.customGameMessage!.class = 'alert-info';
+					break;
+				}
+			}
+		}
 	}
 
 	@VuexMutation
