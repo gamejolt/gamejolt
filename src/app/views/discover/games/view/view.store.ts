@@ -6,7 +6,10 @@ import {
 	VuexMutation,
 } from '../../../../../lib/gj-lib-client/utils/vuex';
 
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import {
+	Game,
+	CustomMessage as CustomGameMessage,
+} from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GameScoreTable } from '../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { GamePackagePayloadModel } from '../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { GameRating } from '../../../../../lib/gj-lib-client/components/game/rating/rating.model';
@@ -118,6 +121,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	scoresPayload: any = null;
 	trophiesPayload: any = null;
+
+	customGameMessages: CustomGameMessage[] = [];
 
 	get packages() {
 		if (!this.packagePayload) {
@@ -292,6 +297,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			'trophiesExperienceAchieved',
 			'trophiesShowInvisibleTrophyMessage',
 		]);
+
+		this.customGameMessages = payload.customMessages;
 	}
 
 	@VuexMutation

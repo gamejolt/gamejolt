@@ -72,29 +72,19 @@
 	</a>
 
 	<template v-if="!isClaimOnly">
-		<template v-if="linkedKeys.length">
-			<h3>
-				<translate>Extra Keys</translate>
-			</h3>
+		<br v-if="customGameMessages.length" />
 
-			<div class="table-responsive">
-				<table class="table">
-					<tbody>
-						<tr v-for="linkedKey of linkedKeys" :key="linkedKey.key">
-							<th>
-								<template v-if="linkedKey.provider === LinkedKey.PROVIDER_STEAM">
-									<app-jolticon icon="steam" />
-									Steam
-								</template>
-							</th>
-							<td>
-								<code>{{ linkedKey.key }}</code>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</template>
+		<div
+			v-for="msg of customGameMessages"
+			class="alert full-bleed-xs"
+			:class="{
+				'alert-info': msg.type === 'info',
+				'alert-warning': msg.type === 'alert',
+			}"
+			>
+			<app-jolticon icon="notice" />
+			<span v-html="msg.message" />
+		</div>
 
 		<h2>
 			<translate>Releases</translate>

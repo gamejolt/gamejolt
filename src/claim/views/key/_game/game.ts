@@ -3,7 +3,10 @@ import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./game.html?style=./game.styl';
 
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import {
+	Game,
+	CustomMessage as CustomGameMessage,
+} from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
 import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -13,7 +16,6 @@ import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-c
 import { AppGamePackageCard } from '../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppMediaItemCover } from '../../../../app/components/media-item/cover/cover';
 import { KeyGroup } from '../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { LinkedKey } from '../../../../lib/gj-lib-client/components/linked-key/linked-key.model';
 
 @View
 @Component({
@@ -37,14 +39,14 @@ export class AppKeyGame extends Vue {
 	game: Game = null as any;
 	bundle: GameBundle | null = null;
 	keyGroup: KeyGroup | null = null;
-	linkedKeys: LinkedKey[] = [];
 	packagePayload: GamePackagePayloadModel | null = null;
 
 	canToggleDescription = false;
 	showingFullDescription = false;
 
+	customGameMessages: CustomGameMessage[] = [];
+
 	Environment = Environment;
-	LinkedKey = LinkedKey;
 
 	created() {
 		this.showingThanks = typeof this.$route.query.thanks !== 'undefined';
@@ -62,7 +64,7 @@ export class AppKeyGame extends Vue {
 			return;
 		}
 
-		this.linkedKeys = LinkedKey.populate(this.payload.linkedKeys);
+		this.customGameMessages = this.payload.customMessages || [];
 
 		if (this.payload.packages && this.payload.packages.length) {
 			this.packagePayload = new GamePackagePayloadModel(this.payload);
