@@ -81,7 +81,7 @@
 							<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_RECEIVED" :animate-initial="true">
 								<div class="alert alert-info">
 									<p>
-										<translate :translate-params="{ username: '@' + userFriendship.target_user.username }">
+										<translate :translate-params="{ username: '@' + userFriendship.user.username }">
 											%{ username } would like to be your friend.
 										</translate>
 									</p>
