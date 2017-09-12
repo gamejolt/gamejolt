@@ -122,7 +122,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	scoresPayload: any = null;
 	trophiesPayload: any = null;
 
-	customGameMessage: CustomGameMessage | null = null;
+	customGameMessages: CustomGameMessage[] = [];
 
 	get packages() {
 		if (!this.packagePayload) {
@@ -298,20 +298,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			'trophiesShowInvisibleTrophyMessage',
 		]);
 
-		if (payload.customMessage) {
-			this.customGameMessage = payload.customMessage;
-			switch (this.customGameMessage!.type) {
-				case 'alert': {
-					this.customGameMessage!.class = 'alert-warning';
-					break;
-				}
-				case 'info':
-				default: {
-					this.customGameMessage!.class = 'alert-info';
-					break;
-				}
-			}
-		}
+		this.customGameMessages = payload.customMessages;
 	}
 
 	@VuexMutation

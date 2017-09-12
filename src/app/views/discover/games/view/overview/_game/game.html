@@ -79,29 +79,35 @@
 					<!--
 						Convenience Messaging
 					-->
-					<template v-if="game._is_wip && !game.canceled">
+					<template v-if="game._is_wip || game.canceled || customGameMessages.length">
 						<br class="visible-xs">
-						<div class="alert alert-info full-bleed-xs" v-translate>
+						<div
+							v-if="game._is_wip && !game.canceled"
+							class="alert alert-info full-bleed-xs"
+							v-translate
+							>
 							This game is in <b>early access</b>. It's still in development and the current version may be buggy or incomplete. Follow along to watch it as it develops!
 						</div>
-						<br class="hidden-xs">
-					</template>
-
-					<template v-if="game.canceled">
-						<br class="visible-xs">
-						<div class="alert alert-warning full-bleed-xs" v-translate>
+						<div
+							v-else-if="game.canceled"
+							class="alert alert-warning full-bleed-xs"
+							v-translate
+							>
 							This game was <b>canceled</b>, so the current version might be buggy or incomplete. You can still follow it if you'd like to be notified in the case that development continues.
 						</div>
-						<br class="hidden-xs">
-					</template>
 
-					<template v-if="customGameMessage">
-						<br class="visible-xs">
-						<div class="alert full-bleed-xs" :class="customGameMessage.class">
+						<div
+							v-for="msg of customGameMessages"
+							class="alert full-bleed-xs"
+							:class="{
+								'alert-info': msg.type === 'info',
+								'alert-warning': msg.type === 'alert',
+							}"
+							>
 							<app-jolticon icon="notice" />
-							<!-- TODO translation support? -->
-							<span v-html="customGameMessage.message" />
+							<span v-html="msg.message" />
 						</div>
+
 						<br class="hidden-xs">
 					</template>
 

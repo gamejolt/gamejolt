@@ -44,7 +44,7 @@ export class AppKeyGame extends Vue {
 	canToggleDescription = false;
 	showingFullDescription = false;
 
-	customGameMessage: CustomGameMessage | null = null;
+	customGameMessages: CustomGameMessage[] = [];
 
 	Environment = Environment;
 
@@ -64,20 +64,7 @@ export class AppKeyGame extends Vue {
 			return;
 		}
 
-		this.customGameMessage = this.payload.customMessage || null;
-		if (this.customGameMessage) {
-			switch (this.customGameMessage.type) {
-				case 'alert': {
-					this.customGameMessage.class = 'alert-warning';
-					break;
-				}
-				case 'info':
-				default: {
-					this.customGameMessage.class = 'alert-info';
-					break;
-				}
-			}
-		}
+		this.customGameMessages = this.payload.customMessages || [];
 
 		if (this.payload.packages && this.payload.packages.length) {
 			this.packagePayload = new GamePackagePayloadModel(this.payload);

@@ -8,26 +8,28 @@
 
 	<app-ad-placement :resource="game" pos="top" />
 
-	<section class="section" style="padding-bottom: 0"  v-if="game.canceled">
+	<section class="section" style="padding-bottom: 0" v-if="game.canceled || customGameMessages.length">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
-					<div class="alert alert-warning full-bleed-xs" v-translate>
+					<div
+						v-if="game.canceled"
+						class="alert alert-warning full-bleed-xs"
+						v-translate
+						>
 						This devlog project has been <b>canceled</b>. You can still follow it if you'd like to be notified in the case that development continues.
 					</div>
-				</div>
-			</div>
-		</div>
-	</section>
 
-	<section class="section" style="padding-bottom: 0" v-if="customGameMessage">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
-					<div class="alert full-bleed-xs" :class="customGameMessage.class">
+					<div
+						v-for="msg of customGameMessages"
+						class="alert full-bleed-xs"
+						:class="{
+							'alert-info': msg.type === 'info',
+							'alert-warning': msg.type === 'alert',
+						}"
+						>
 						<app-jolticon icon="notice" />
-						<!-- TODO translation support? -->
-						<span v-html="customGameMessage.message" />
+						<span v-html="msg.message" />
 					</div>
 				</div>
 			</div>
