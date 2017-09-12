@@ -13,7 +13,6 @@ import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-c
 import { AppGamePackageCard } from '../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppMediaItemCover } from '../../../../app/components/media-item/cover/cover';
 import { KeyGroup } from '../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { LinkedKey } from '../../../../lib/gj-lib-client/components/linked-key/linked-key.model';
 
 @View
 @Component({
@@ -37,14 +36,12 @@ export class AppKeyGame extends Vue {
 	game: Game = null as any;
 	bundle: GameBundle | null = null;
 	keyGroup: KeyGroup | null = null;
-	linkedKeys: LinkedKey[] = [];
 	packagePayload: GamePackagePayloadModel | null = null;
 
 	canToggleDescription = false;
 	showingFullDescription = false;
 
 	Environment = Environment;
-	LinkedKey = LinkedKey;
 
 	created() {
 		this.showingThanks = typeof this.$route.query.thanks !== 'undefined';
@@ -61,8 +58,6 @@ export class AppKeyGame extends Vue {
 			this.isClaimOnly = true;
 			return;
 		}
-
-		this.linkedKeys = LinkedKey.populate(this.payload.linkedKeys);
 
 		if (this.payload.packages && this.payload.packages.length) {
 			this.packagePayload = new GamePackagePayloadModel(this.payload);

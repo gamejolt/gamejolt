@@ -72,30 +72,6 @@
 	</a>
 
 	<template v-if="!isClaimOnly">
-		<template v-if="linkedKeys.length">
-			<h3>
-				<translate>Extra Keys</translate>
-			</h3>
-
-			<div class="table-responsive">
-				<table class="table">
-					<tbody>
-						<tr v-for="linkedKey of linkedKeys" :key="linkedKey.key">
-							<th>
-								<template v-if="linkedKey.provider === LinkedKey.PROVIDER_STEAM">
-									<app-jolticon icon="steam" />
-									Steam
-								</template>
-							</th>
-							<td>
-								<code>{{ linkedKey.key }}</code>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</template>
-
 		<h2>
 			<translate>Releases</translate>
 		</h2>
