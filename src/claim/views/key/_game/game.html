@@ -72,6 +72,8 @@
 	</a>
 
 	<template v-if="!isClaimOnly">
+		<br v-if="customGameMessages.length" />
+
 		<div
 			v-for="msg of customGameMessages"
 			class="alert full-bleed-xs"
