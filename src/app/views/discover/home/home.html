@@ -1,6 +1,9 @@
 <div class="route-discover-home">
 
-	<section class="section landing-header text-center">
+	<section
+		v-if="!app.user || variation !== 'rows-no-banner'"
+		class="section landing-header text-center"
+		>
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
@@ -55,37 +58,7 @@
 		</div>
 	</section>
 
-	<section class="section" v-if="variation === 2">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-
-					<h2 class="section-header text-center">
-						<translate>Latest Game Posts</translate>
-					</h2>
-
-					<!-- <p class="small text-center">
-						<translate>Follow along on the development of games!</translate>
-					</p> -->
-
-					<hr class="underbar underbar-center">
-					<br>
-
-					<div>
-						<app-activity-feed-placeholder v-if="!feed" />
-						<app-activity-feed
-							v-else
-							:feed="feed"
-							:show-game-info="true"
-							:show-ads="true"
-							/>
-					</div>
-
-				</div>
-			</div>
-		</div>
-	</section>
-	<template v-else>
+	<template v-if="variation === 'original'">
 		<section class="section">
 			<div class="container-lg">
 
@@ -199,9 +172,56 @@
 
 			</div>
 		</section>
-
-		<app-ad-placement pos="bottom" />
 	</template>
+	</template v-else-if="variation === 'rows' || variation === 'rows-no-banner'">
+		<section class="section">
+			<div class="container-lg">
+
+				<div v-for="row of rows" :key="row.url">
+					<h2 class="section-header">
+						<router-link
+							class="link-unstyled"
+							:to="row.url"
+							v-app-track-event="`home:row-heading:${row.eventLabel}`"
+							>
+							{{ row.title }}
+						</router-link>
+						<small v-if="row.desc">{{ row.desc }}</small>
+					</h2>
+
+					<div>
+						<app-game-grid-placeholder
+							v-if="!isLoaded"
+							:num="6"
+							:truncate-to-fit="true"
+							:scrollable="true"
+							/>
+						<app-game-grid
+							v-else
+							:games="games[ row.games ].slice(0, 6)"
+							:truncate-to-fit="true"
+							:scrollable="true"
+							:show-ads="false"
+							event-label="home-${row.eventLabel}"
+							/>
+					</div>
+
+					<router-link
+						class="btn btn-outline"
+						:to="row.url"
+						v-app-track-event="`home:more-btn:${row.eventLabel}`"
+						>
+						<translate>Show More</translate>
+					</router-link>
+
+					<hr>
+				</div>
+
+			</div>
+		</section>
+	</template>
+
+	<app-ad-placement pos="bottom" />
 
 	<section class="section fill-lightest" v-if="isLoaded && !app.user">
 		<div class="container">

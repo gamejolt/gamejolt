@@ -18,15 +18,10 @@ import { Store } from '../../../store/index';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
-import { AppAuthJoinLazy, AppActivityFeedLazy } from '../../../components/lazy';
+import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
-import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
-import { ActivityFeedContainer } from '../../../components/activity/feed/feed-container-service';
-import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { hasDevlogHomepage } from '../../../components/split-test/split-test-service';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { hasHomeRowsSplitTest } from '../../../components/split-test/split-test-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -35,6 +30,14 @@ import {
 export interface DiscoverSection {
 	title: string;
 	smallTitle: string;
+	url: string;
+	eventLabel: string;
+	games: string;
+}
+
+export interface DiscoverRow {
+	title: string;
+	desc?: string;
 	url: string;
 	eventLabel: string;
 	games: string;
@@ -50,8 +53,6 @@ export interface DiscoverSection {
 		AppGameGridPlaceholder,
 		AppChannelThumbnail,
 		AppAdPlacement,
-		AppActivityFeedPlaceholder,
-		AppActivityFeed: AppActivityFeedLazy,
 		AppAuthJoin: AppAuthJoinLazy,
 	},
 	directives: {
@@ -74,10 +75,59 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		recommended: [],
 	};
 
-	variation = 1;
-	feed: ActivityFeedContainer | null = null;
+	variation = 'original';
 
 	Screen = makeObservableService(Screen);
+
+	get rows() {
+		const rows: DiscoverRow[] = [];
+
+		rows.push({
+			title: this.$gettext('Featured'),
+			url: this.$router.resolve({
+				name: 'discover.games.list._fetch',
+				params: { section: 'featured' },
+			}).href,
+			eventLabel: 'featured-games',
+			games: 'featured',
+		});
+
+		if (this.isLoaded && this.app.user) {
+			rows.push({
+				title: this.$gettext('Recommended'),
+				desc: this.$gettext(`based on your history`),
+				url: this.$router.resolve({
+					name: 'library.collection.recommended',
+					params: { id: this.app.user.username },
+				}).href,
+				eventLabel: 'daily-mix',
+				games: 'recommended',
+			});
+		}
+
+		rows.push({
+			title: this.$gettext('Hot Games'),
+			desc: this.$gettext(`new stuff that people are enjoying`),
+			url: this.$router.resolve({
+				name: 'discover.games.list._fetch',
+				params: { section: null as any },
+			}).href,
+			eventLabel: 'hot-games',
+			games: 'hot',
+		});
+
+		rows.push({
+			title: this.$gettext('Top Games'),
+			url: this.$router.resolve({
+				name: 'discover.games.list._fetch',
+				params: { section: 'best' },
+			}).href,
+			eventLabel: 'best-games',
+			games: 'best',
+		});
+
+		return rows;
+	}
 
 	get discoverSections() {
 		const bestSection: DiscoverSection = {
@@ -129,10 +179,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	routeInit() {
-		if (!GJ_IS_SSR) {
-			this.feed = ActivityFeedService.bootstrap();
-		}
-
 		Meta.title = null;
 
 		if (!this.chosenSection) {
@@ -144,12 +190,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 	routed() {
 		this.isLoaded = true;
-
-		// Only do the split test if it's a guest.
-		if (!this.app.user && !GJ_IS_SSR) {
-			this.variation = hasDevlogHomepage(this.$route);
-		}
-		Analytics.trackEvent('split-test', 'devlog-homepage', 'variation-' + this.variation);
+		this.variation = hasHomeRowsSplitTest(this.$route, this.$payload);
 
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb;
@@ -199,13 +240,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			if (info) {
 				this.channels.push(info);
 			}
-		}
-
-		if (!this.feed) {
-			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.posts), {
-				type: 'Fireside_Post',
-				url: '/web/discover/devlogs/posts',
-			});
 		}
 	}
 

@@ -1,44 +1,52 @@
 import VueRouter from 'vue-router';
 
-export function hasDevlogHomepage(route: VueRouter.Route) {
-	return getClientSideVariation(route, 'devlog-homepage');
+const ExperimentHomeRows = 'vqkALI9RSwm60UjG8SHevA';
+
+export function hasHomeRowsSplitTest(route: VueRouter.Route, payload: any) {
+	const variation = getPayloadVariation(route, payload, ExperimentHomeRows);
+	if (variation === 1) {
+		return 'rows';
+	} else if (variation === 2) {
+		return 'rows-no-banner';
+	}
+	return 'original';
 }
 
-// function getPayloadVariation(route: VueRouter.Route, payload: any, experiment: string): number {
-// 	let variation = checkHardcoded(route, experiment);
-// 	if (variation !== -1) {
-// 		return variation;
-// 	}
-
-// 	if (typeof payload._experiment !== 'undefined' && typeof payload._variation !== 'undefined') {
-// 		if (payload._experiment === experiment) {
-// 			return payload._variation;
-// 		}
-// 	}
-
-// 	return -1;
-// }
-
-function getClientSideVariation(route: VueRouter.Route, experiment: string): number {
-	if (GJ_IS_SSR) {
-		return 1;
-	}
-
+function getPayloadVariation(route: VueRouter.Route, payload: any, experiment: string): number {
 	let variation = checkHardcoded(route, experiment);
 	if (variation !== -1) {
 		return variation;
 	}
 
-	// Generate their variation.
-	// Only supports half and half currently.
-	variation = 1;
-	if (Math.random() > 0.5) {
-		variation = 2;
+	if (typeof payload._experiment !== 'undefined' && typeof payload._variation !== 'undefined') {
+		if (payload._experiment === experiment) {
+			return payload._variation;
+		}
 	}
 
-	window.localStorage[experiment] = variation;
-	return variation;
+	return -1;
 }
+
+// function getClientSideVariation(route: VueRouter.Route, experiment: string): number {
+// 	if (GJ_IS_SSR) {
+// 		return 1;
+// 	}
+
+// 	let variation = checkHardcoded(route, experiment);
+// 	if (variation !== -1) {
+// 		return variation;
+// 	}
+
+// 	// Generate their variation.
+// 	// Only supports half and half currently.
+// 	variation = 1;
+// 	if (Math.random() > 0.5) {
+// 		variation = 2;
+// 	}
+
+// 	window.localStorage[experiment] = variation;
+// 	return variation;
+// }
 
 function checkHardcoded(route: VueRouter.Route, experiment: string): number {
 	if (GJ_IS_SSR) {
