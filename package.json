@@ -2,6 +2,7 @@
 	"name": "game-jolt",
 	"version": "0.10.4",
 	"scripts": {
+		"postinstall": "sh ./git-hooks/setup-hooks.sh",
 		"dev": "gulp watch",
 		"build": "gulp --production",
 		"translations": "gulp translations:compile",
