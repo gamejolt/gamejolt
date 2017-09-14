@@ -60,7 +60,6 @@
 						v-if="game.ratings_enabled"
 						class="link-unstyled"
 						@click="isShowingRatingBreakdown = !isShowingRatingBreakdown"
-						v-app-tooltip="$gettext( 'games.view.stats.rating_breakdown_tooltip' )"
 						:title="number( game.rating_count || 0 )"
 						>
 						{{ fuzzynumber( game.rating_count || 0 ) }}
