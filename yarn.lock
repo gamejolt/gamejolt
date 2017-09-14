@@ -2909,7 +2909,7 @@ function-bind@^1.0.2, function-bind@^1.1.1, function-bind@~1.1.0:
 
 game-jolt-frontend-lib@gamejolt/frontend-lib#master:
   version "0.0.1"
-  resolved "https://codeload.github.com/gamejolt/frontend-lib/tar.gz/89bbfacbafb3b9ae566217c4405202380df7299e"
+  resolved "https://codeload.github.com/gamejolt/frontend-lib/tar.gz/cdac3a1e19d42261903aef51a8015a73c4c5771e"
   dependencies:
     autoprefixer "7.1.4"
     clean-css "4.1.8"
@@ -2949,7 +2949,7 @@ game-jolt-frontend-lib@gamejolt/frontend-lib#master:
     vue-style-loader "3.0.3"
     vue-template-compiler "2.4.4"
     vue-template-loader "0.3.1"
-    webpack "3.5.6"
+    webpack "3.4.0"
     webpack-bundle-analyzer "2.9.0"
     webpack-dashboard "1.0.0-5"
     webpack-dev-server "2.8.2"
@@ -8397,9 +8397,9 @@ webpack-sources@^1.0.1:
     source-list-map "^2.0.0"
     source-map "~0.5.3"
 
-webpack@3.5.6:
-  version "3.5.6"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.5.6.tgz#a492fb6c1ed7f573816f90e00c8fbb5a20cc5c36"
+webpack@3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.4.0.tgz#e9465b660ad79dd2d33874d968b31746ea9a8e63"
   dependencies:
     acorn "^5.0.0"
     acorn-dynamic-import "^2.0.0"
