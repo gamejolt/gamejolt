@@ -35,11 +35,11 @@ export class GameListingContainer {
 			paid = priceFilter ? (priceFilter !== 'free' ? 'y' : 'n') : undefined;
 		}
 
-		Ads.setGlobalTargeting({
+		Ads.globalTargeting = {
 			mat,
 			genre,
 			channel,
 			paid,
-		});
+		};
 	}
 }

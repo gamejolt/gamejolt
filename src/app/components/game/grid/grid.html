@@ -15,7 +15,7 @@
 
 	<div :class="{ 'scrollable-grid-xs full-bleed-xs': scrollable }">
 		<div class="game-grid-items">
-			<div class="game-grid-ad" v-if="Screen.isDesktop && showAds">
+			<div class="game-grid-ad" v-if="Screen.isDesktop && shouldShowAds">
 				<div class="game-grid-ad-inner">
 					<app-ad size="rectangle" :pos="adPos" />
 					<span class="ad-label visible-lg">

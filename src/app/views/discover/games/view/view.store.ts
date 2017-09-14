@@ -55,7 +55,7 @@ type Mutations = {
 	setCanToggleDescription: boolean;
 };
 
-function setAdTargeting(game?: Game) {
+function setAds(game?: Game) {
 	if (!game) {
 		return;
 	}
@@ -69,11 +69,13 @@ function setAdTargeting(game?: Game) {
 		mat = 'adult';
 	}
 
-	Ads.setGlobalTargeting({
+	Ads.resource = game;
+	Ads.globalTargeting = {
 		mat,
 		genre: game.category,
 		paid: game.is_paid_game ? 'y' : 'n',
-	}).setAdUnit('gamepage');
+	};
+	Ads.setAdUnit('gamepage');
 }
 
 @VuexModule()
@@ -206,7 +208,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.showDescription = false;
 		this.isOverviewLoaded = false;
 		this.mediaItems = [];
-		setAdTargeting(this.game);
+		setAds(this.game);
 	}
 
 	@VuexMutation
@@ -234,7 +236,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.twitterShareMessage = payload.twitterShareMessage || 'Check out this game!';
 
 		this.userPartnerKey = payload.userPartnerKey;
-		setAdTargeting(this.game);
+		setAds(this.game);
 	}
 
 	@VuexMutation

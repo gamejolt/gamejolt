@@ -1,6 +1,6 @@
 <div id="comments">
 
-	<app-ad-placement :hidden-desktop="true" :resource="game" pos="top" />
+	<app-ad-placement :hidden-desktop="true" pos="top" />
 
 	<section class="section">
 		<div class="container">
@@ -30,13 +30,13 @@
 				<div class="col-md-4 col-lg-offset-1 text-right"
 					v-if="Screen.isDesktop"
 					>
-					<app-ad size="rectangle" :resource="game" pos="top" />
+					<app-ad size="rectangle" pos="top" />
 				</div>
 
 			</div>
 		</div>
 	</section>
 
-	<app-ad-placement :visible-desktop="true" :resource="game" pos="bottom" />
+	<app-ad-placement :visible-desktop="true" pos="bottom" />
 
 </div>

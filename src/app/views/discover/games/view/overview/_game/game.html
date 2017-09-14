@@ -30,7 +30,7 @@
 		</div>
 	</section>-->
 
-	<app-ad-placement :resource="game" pos="top" />
+	<app-ad-placement pos="top" />
 
 	<section class="section">
 		<div class="container">
@@ -286,7 +286,7 @@
 
 							<div v-if="Screen.isDesktop" style="width: 300px">
 								<hr>
-								<app-ad size="rectangle" :resource="game" pos="top" />
+								<app-ad size="rectangle" pos="top" />
 							</div>
 
 							<div id="maturity-rating">
@@ -311,7 +311,7 @@
 
 							<div v-if="Screen.isDesktop" style="width: 300px">
 								<br>
-								<app-ad size="rectangle" :resource="game" pos="bottom" />
+								<app-ad size="rectangle" pos="bottom" />
 							</div>
 
 						</div>
@@ -322,7 +322,7 @@
 		</div>
 	</section>
 
-	<app-ad-placement :hidden-desktop="true" :resource="game" pos="bottom" />
+	<app-ad-placement :hidden-desktop="true" pos="bottom" />
 
 	<!--
 		Devlog Feed
@@ -441,7 +441,6 @@
 	<app-ad-placement
 		v-if="hasScores || trophiesCount || (feed && feed.hasItems)"
 		:hidden-desktop="true"
-		:resource="game"
 		pos="bottom"
 		/>
 
@@ -528,6 +527,6 @@
 		</div>
 	</section>
 
-	<app-ad-placement :visible-desktop="true" :resource="game" pos="bottom" />
+	<app-ad-placement :visible-desktop="true" pos="bottom" />
 
 </div>

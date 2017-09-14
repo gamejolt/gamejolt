@@ -17,6 +17,7 @@ import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading
 import { AppGameGridPlaceholder } from '../grid/placeholder/placeholder';
 import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 
 @View
 @Component({
@@ -47,4 +48,8 @@ export class AppGameListing extends Vue {
 	Environment = Environment;
 	Screen = makeObservableService(Screen);
 	Scroll = Scroll;
+
+	get shouldShowAds() {
+		return Ads.shouldShow;
+	}
 }

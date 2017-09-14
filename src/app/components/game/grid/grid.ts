@@ -11,6 +11,7 @@ import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.s
 import { AppPagination } from '../../../../lib/gj-lib-client/components/pagination/pagination';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
+import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 
 export const GameGridRowSizeSm = 2;
 export const GameGridRowSizeMd = 3;
@@ -49,6 +50,10 @@ export class AppGameGrid extends Vue {
 	Screen = makeObservableService(Screen);
 	Scroll = Scroll;
 
+	get shouldShowAds() {
+		return this.showAds && Ads.shouldShow;
+	}
+
 	/**
 	 * Depending on the screen size, we want to only show a certain number of
 	 * games. This will trim the last few games off if it can't fit within the
@@ -65,7 +70,7 @@ export class AppGameGrid extends Vue {
 		let chunkSize = Math.max(1, Math.floor(games.length / rowSize)) * rowSize;
 
 		// Subtract one for the ad slot.
-		if (Screen.isDesktop && this.showAds) {
+		if (Screen.isDesktop && this.shouldShowAds) {
 			chunkSize -= 1;
 		}
 
@@ -85,7 +90,7 @@ export class AppGameGrid extends Vue {
 	}
 
 	shouldShowAd(index: number) {
-		if (!this.showAds || Screen.isXs) {
+		if (!this.shouldShowAds) {
 			return false;
 		}
 

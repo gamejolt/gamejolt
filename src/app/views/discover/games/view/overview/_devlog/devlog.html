@@ -6,7 +6,7 @@
 		:media-items="mediaItems"
 		/>
 
-	<app-ad-placement :resource="game" pos="top" />
+	<app-ad-placement pos="top" />
 
 	<section class="section" style="padding-bottom: 0" v-if="game.canceled || customGameMessages.length">
 		<div class="container">
@@ -233,7 +233,7 @@
 		</div>
 	</section>
 
-	<app-ad-placement :hidden-desktop="true" :resource="game" pos="bottom" />
+	<app-ad-placement :hidden-desktop="true" pos="bottom" />
 
 	<section class="section">
 		<div class="container">
@@ -254,7 +254,6 @@
 							:feed="feed"
 							:show-edit-controls="true"
 							:show-ads="true"
-							:ad-resource="game"
 							/>
 
 						<div v-else class="alert alert-info">

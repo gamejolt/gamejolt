@@ -66,8 +66,8 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 			});
 		}
 
-		Ads.setGlobalTargeting({
+		Ads.globalTargeting = {
 			channel: this.channel,
-		});
+		};
 	}
 }

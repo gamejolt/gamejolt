@@ -56,6 +56,11 @@ export default class RouteSearch extends BaseRouteComponent {
 
 	// Child routes emit an event that calls this.
 	processPayload(payload: any) {
+		// Disable ads for adult searches.
+		if (payload.isAdultSearch) {
+			Ads.isPageDisabled = true;
+		}
+
 		this.query = '';
 		this.showPagination = false;
 		this.payload = {};
