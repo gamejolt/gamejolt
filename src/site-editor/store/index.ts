@@ -29,6 +29,10 @@ export type Mutations = AppMutations & {
 		tab: Tab;
 		response: any;
 	};
+	setTemplateId: number;
+	setThemeData: any;
+	setContentEdited: void;
+	clearIsDirty: void;
 };
 
 @VuexModule({
@@ -46,6 +50,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	templates: SiteTemplate[] = [];
 	currentTemplateId = 0;
 	theme: SiteTheme = null as any;
+	isDirty = false;
 
 	@VuexAction
 	async bootstrapTab({ tab, siteId }: Actions['bootstrapTab']) {
@@ -64,6 +69,28 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			this.currentTemplateId = this.site.theme.template.id;
 			this.theme = this.site.theme;
 		}
+	}
+
+	@VuexMutation
+	setTemplateId(id: Mutations['setTemplateId']) {
+		this.currentTemplateId = id;
+		this.isDirty = true;
+	}
+
+	@VuexMutation
+	setThemeData(themeData: Mutations['setThemeData']) {
+		this.theme.data = themeData;
+		this.isDirty = true;
+	}
+
+	@VuexMutation
+	setContentEdited() {
+		this.isDirty = true;
+	}
+
+	@VuexMutation
+	clearIsDirty() {
+		this.isDirty = false;
 	}
 }
 

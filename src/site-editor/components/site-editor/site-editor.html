@@ -79,7 +79,7 @@
 					<app-theme-selector
 						:templates="templates"
 						:current-template="currentTemplateId"
-						@change="currentTemplateId = $event"
+						@change="setTemplateId($event)"
 						/>
 
 					<template v-if="!!currentTemplateId">

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { State, Mutation } from 'vuex-class';
 import * as View from '!view!./site-editor.html?style=./site-editor.styl';
 
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
@@ -27,8 +27,12 @@ export class AppSiteEditor extends Vue {
 	@State currentTemplateId: Store['currentTemplateId'];
 	@State theme: Store['theme'];
 	@State isLoaded: Store['isLoaded'];
+	@State isDirty: Store['isDirty'];
 
-	isDirty = false;
+	@Mutation setTemplateId: Store['setTemplateId'];
+	@Mutation setThemeData: Store['setThemeData'];
+	@Mutation setContentEdited: Store['setContentEdited'];
+	@Mutation clearIsDirty: Store['clearIsDirty'];
 
 	get siteUrl() {
 		return this.site.url;
@@ -43,7 +47,7 @@ export class AppSiteEditor extends Vue {
 			if (!this.canLeave()) {
 				return next(false);
 			}
-			this.isDirty = false;
+			this.clearIsDirty();
 			next();
 		});
 
@@ -54,13 +58,12 @@ export class AppSiteEditor extends Vue {
 		};
 	}
 
-	themeEdited($theme: any) {
-		this.isDirty = true;
-		this.theme.data = $theme;
+	themeEdited(themeData: any) {
+		this.setThemeData(themeData);
 	}
 
 	contentEdited() {
-		this.isDirty = true;
+		this.setContentEdited();
 	}
 
 	canLeave() {
@@ -74,7 +77,7 @@ export class AppSiteEditor extends Vue {
 			content_blocks: this.site.content_blocks,
 		};
 
-		this.isDirty = false;
+		this.clearIsDirty();
 		await Api.sendRequest(`/web/dash/sites/editor-save/${this.site.id}`, data, {
 			sanitizeComplexData: false,
 		});
