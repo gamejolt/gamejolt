@@ -6,10 +6,6 @@ import {
 	VuexMutation,
 } from '../../../../../lib/gj-lib-client/utils/vuex';
 
-import {
-	Game,
-	CustomMessage as CustomGameMessage,
-} from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GameScoreTable } from '../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { GamePackagePayloadModel } from '../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { GameRating } from '../../../../../lib/gj-lib-client/components/game/rating/rating.model';
@@ -29,6 +25,10 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { router } from '../../../index';
 import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
+import {
+	Game,
+	CustomMessage as CustomGameMessage,
+} from '../../../../../lib/gj-lib-client/components/game/game.model';
 
 export const RouteStoreName = 'gameRoute';
 export const RouteState = namespace(RouteStoreName, State);
@@ -77,6 +77,21 @@ function setAds(game?: Game) {
 		paid: game.is_paid_game ? 'y' : 'n',
 	};
 	Ads.setAdUnit('gamepage');
+}
+
+/**
+ * Check whether this post should cause a redirect to the dashboard when it's a new post being added
+ * to the feed from the developer.
+ */
+export function gameStoreCheckPostRedirect(post: FiresidePost, game: Game) {
+	if (post.status !== FiresidePost.STATUS_ACTIVE) {
+		router.push({
+			name: 'dash.games.manage.devlog',
+			params: { id: game.id + '', tab: 'draft' },
+		});
+		return false;
+	}
+	return true;
 }
 
 @VuexModule()
@@ -340,14 +355,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	addPost(post: Mutations['addPost']) {
-		if (post.status !== FiresidePost.STATUS_ACTIVE) {
-			router.push({
-				name: 'dash.games.manage.devlog',
-				params: { id: this.game.id + '', tab: 'draft' },
-			});
-			return;
+		if (gameStoreCheckPostRedirect(post, this.game)) {
+			this.feed!.prepend([post]);
 		}
-
-		this.feed!.prepend([post]);
 	}
 }

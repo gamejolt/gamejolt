@@ -11,12 +11,20 @@ import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
-import { RouteState, RouteStore } from '../../view.store';
+import {
+	RouteState,
+	RouteStore,
+	RouteMutation,
+	gameStoreCheckPostRedirect,
+} from '../../view.store';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppActivityFeedLazy } from '../../../../../../components/lazy';
+import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
+import { State } from 'vuex-class';
+import { Store } from '../../../../../../store/index';
 
 @View
 @Component({
@@ -25,10 +33,14 @@ import { AppActivityFeedLazy } from '../../../../../../components/lazy';
 		AppAd,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
+		AppDevlogPostAdd,
 	},
 })
 export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent {
+	@State app: Store['app'];
+
 	@RouteState game: RouteStore['game'];
+	@RouteMutation addPost: RouteStore['addPost'];
 
 	feed: ActivityFeedContainer | null = null;
 
@@ -62,6 +74,13 @@ export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent
 				type: 'Fireside_Post',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,
 			});
+		}
+	}
+
+	onPostAdded(post: FiresidePost) {
+		// This feed is different than the one in the game route store.
+		if (gameStoreCheckPostRedirect(post, this.game)) {
+			this.feed!.prepend([post]);
 		}
 	}
 }
