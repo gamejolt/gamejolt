@@ -342,6 +342,19 @@
 						<hr class="underbar">
 						<br>
 
+						<template v-if="app.user && app.user.id === game.developer.id">
+							<h5 class="sans-margin-top">
+								<translate>Add Post</translate>
+							</h5>
+
+							<app-devlog-post-add
+								:game="game"
+								@add="onPostAdded"
+								/>
+
+							<hr>
+						</template>
+
 						<app-activity-feed
 							:feed="feed"
 							:show-edit-controls="true"

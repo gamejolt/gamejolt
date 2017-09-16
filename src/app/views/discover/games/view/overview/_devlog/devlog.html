@@ -83,7 +83,7 @@
 						v-if="app.user"
 						resource="Game"
 						:resource-id="game.id"
-						@submit="onCommentAdd"
+						@submit="onCommentAdded"
 						/>
 
 					<br v-if="app.user && commentsCount">
@@ -245,8 +245,20 @@
 				</div>
 				<div :class="contentColClasses">
 
-					<app-activity-feed-placeholder v-if="!feed" />
+					<template v-if="app.user && app.user.id === game.developer.id">
+						<h5 class="sans-margin-top">
+							<translate>Add Post</translate>
+						</h5>
 
+						<app-devlog-post-add
+							:game="game"
+							@add="onPostAdded"
+							/>
+
+						<hr>
+					</template>
+
+					<app-activity-feed-placeholder v-if="!feed" />
 					<div v-else>
 
 						<app-activity-feed

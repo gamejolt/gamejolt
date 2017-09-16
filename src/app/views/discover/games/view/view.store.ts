@@ -53,6 +53,7 @@ type Mutations = {
 	showMultiplePackagesMessage: undefined;
 	toggleDescription: undefined;
 	setCanToggleDescription: boolean;
+	addPost: FiresidePost;
 };
 
 function setAds(game?: Game) {
@@ -335,5 +336,18 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	setCanToggleDescription(flag: Mutations['setCanToggleDescription']) {
 		this.canToggleDescription = flag;
+	}
+
+	@VuexMutation
+	addPost(post: Mutations['addPost']) {
+		if (post.status !== FiresidePost.STATUS_ACTIVE) {
+			router.push({
+				name: 'dash.games.manage.devlog',
+				params: { id: this.game.id + '', tab: 'draft' },
+			});
+			return;
+		}
+
+		this.feed!.prepend([post]);
 	}
 }
