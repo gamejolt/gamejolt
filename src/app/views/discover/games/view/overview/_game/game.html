@@ -78,8 +78,10 @@
 
 					<!--
 						Convenience Messaging
+						This needs to be a div instead of a template or vue 2.4.4 complains about a
+						patched vnode not existing.
 					-->
-					<template v-if="game._is_wip || game.canceled || customGameMessages.length">
+					<div v-if="game._is_wip || game.canceled || customGameMessages.length">
 						<br class="visible-xs">
 						<div
 							v-if="game._is_wip && !game.canceled"
@@ -109,7 +111,7 @@
 						</div>
 
 						<br class="hidden-xs">
-					</template>
+					</div>
 
 					<!--
 						Builds / Soundtrack
