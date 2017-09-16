@@ -186,6 +186,7 @@
 		v-if="app.user && !tab"
 		resource="Fireside_Post"
 		:resource-id="post.id"
+		@submit="onCommentAdded()"
 		/>
 
 	<div class="devlog-post-controls-well" v-if="tab">
@@ -195,6 +196,7 @@
 			resource="Fireside_Post"
 			:resource-id="post.id"
 			:no-intro="true"
+			@add="onCommentAdded()"
 			@count="updateCommentsCount"
 			/>
 

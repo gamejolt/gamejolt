@@ -97,6 +97,11 @@ export class AppActivityFeedDevlogPostControls extends Vue {
 		this.post.comment_count = count;
 	}
 
+	onCommentAdded() {
+		this.tab = 'comments';
+		this.$emit('expanded');
+	}
+
 	toggleComments() {
 		// If we aren't in the feed, then don't toggle comments out.
 		// We just scroll to the comments.
