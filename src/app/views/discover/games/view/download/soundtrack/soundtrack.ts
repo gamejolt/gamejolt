@@ -3,7 +3,7 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./soundtrack.html';
 
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
-import { RouteState, RouteStore } from '../../view.store';
+import { RouteState, RouteStore, gameStoreGetGameParam } from '../../view.store';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
@@ -36,7 +36,7 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteC
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: VueRouter.Route) {
-		const gameId = parseInt(route.params.id, 10);
+		const gameId = gameStoreGetGameParam(route);
 
 		HistoryTick.sendBeacon('game-soundtrack', gameId, {
 			sourceResource: 'Game',

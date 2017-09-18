@@ -27,7 +27,9 @@
 								<router-link
 									:to="{
 										name: 'discover.games.view.scores.list',
-										params: Object.assign( {}, $route.params, { type: 'best' } ),
+										params: Object.assign({}, $route.params, {
+											type: 'best',
+										}),
 									}"
 									active-class="active"
 									v-app-no-autoscroll="true"
@@ -39,7 +41,9 @@
 								<router-link
 									:to="{
 										name: 'discover.games.view.scores.list',
-										params: Object.assign( {}, $route.params, { type: 'user' } ),
+										params: Object.assign({}, $route.params, {
+											type: 'user',
+										}),
 									}"
 									active-class="active"
 									v-app-no-autoscroll="true"
@@ -109,7 +113,9 @@
 									:key="table.id"
 									:to="{
 										name: 'discover.games.view.scores.list',
-										params: Object.assign( {}, $route.params, { tableId: table.id } ),
+										params: Object.assign({}, $route.params, {
+											tableId: table.id,
+										}),
 									}"
 									:class="{ active: table.id === scoreTable.id }"
 									v-app-no-autoscroll

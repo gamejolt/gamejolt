@@ -12,7 +12,7 @@ import { AppDevlogPostView } from '../../../../../../components/devlog/post/view
 import { AppDevlogPostViewPlaceholder } from '../../../../../../components/devlog/post/view/placeholder/placeholder';
 import { AppScrollWhen } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll-when.directive.vue';
 import { Registry } from '../../../../../../../lib/gj-lib-client/components/registry/registry.service';
-import { RouteState, RouteStore } from '../../view.store';
+import { RouteState, RouteStore, gameStoreGetGameParam } from '../../view.store';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import {
 	BaseRouteComponent,
@@ -44,10 +44,9 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 
 	@RouteResolve({ lazy: true, cache: true })
 	async routeResolve(this: undefined, route: VueRouter.Route) {
+		const gameId = gameStoreGetGameParam(route);
 		const postHash = FiresidePost.pullHashFromUrl(route.params.postSlug);
-		const payload = await Api.sendRequest(
-			'/web/discover/games/devlog/' + route.params.id + '/' + postHash
-		);
+		const payload = await Api.sendRequest('/web/discover/games/devlog/' + gameId + '/' + postHash);
 
 		if (payload && payload.post) {
 			const redirect = enforceLocation(route, { postSlug: payload.post.slug });
@@ -65,7 +64,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 
 	routeInit() {
 		const hash = FiresidePost.pullHashFromUrl(this.postSlug);
-		this.post = Registry.find<FiresidePost>('FiresidePost', hash, 'hash');
+		this.post = Registry.find<FiresidePost>('FiresidePost', hash);
 	}
 
 	routed() {

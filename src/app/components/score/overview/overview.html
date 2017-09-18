@@ -11,12 +11,10 @@
 					class="link-unstyled"
 					:to="{
 						name: 'discover.games.view.scores.list',
-						params: {
-							slug: game.slug,
-							id: game.id,
+						params: Object.assign({}, game.routeParams, {
 							tableId: scoreTable.id,
 							type: 'best',
-						},
+						}),
 					}"
 					>
 					<translate>scores.overview.heading</translate>
@@ -155,12 +153,10 @@
 						class="btn btn-outline btn-block-xs"
 						:to="{
 							name: 'discover.games.view.scores.list',
-							params: {
-								slug: game.slug,
-								id: game.id,
+							params: Object.assign({}, game.routeParams, {
 								tableId: scoreTable.id,
 								type: 'best',
-							},
+							}),
 						}"
 						>
 						<app-jolticon icon="media-list" />

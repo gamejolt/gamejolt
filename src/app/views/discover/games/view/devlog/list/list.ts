@@ -25,6 +25,7 @@ import { AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
 import { State } from 'vuex-class';
 import { Store } from '../../../../../../store/index';
+import { gameStoreGetGameParam } from '../../view.store';
 
 @View
 @Component({
@@ -48,7 +49,8 @@ export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent
 
 	@RouteResolve({ cache: true, lazy: true })
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		return Api.sendRequest('/web/discover/games/devlog/' + route.params.id);
+		const id = gameStoreGetGameParam(route);
+		return Api.sendRequest('/web/discover/games/devlog/' + id);
 	}
 
 	get routeTitle() {

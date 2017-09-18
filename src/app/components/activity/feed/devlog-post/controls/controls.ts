@@ -79,8 +79,7 @@ export class AppActivityFeedDevlogPostControls extends Vue {
 			this.$router.resolve({
 				name: 'discover.games.view.devlog.view',
 				params: {
-					slug: this.post.game.slug,
-					id: this.post.game.id,
+					...this.post.game.routeParams,
 					postSlug: this.post.slug,
 				},
 			}).href

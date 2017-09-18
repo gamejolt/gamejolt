@@ -17,7 +17,7 @@ import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/co
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { RouteState, RouteStore } from '../../view.store';
+import { RouteState, RouteStore, gameStoreGetGameParam } from '../../view.store';
 import { Store } from '../../../../../../store/index';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppDiscoverGamesViewOverviewDetails } from '../../overview/_details/details';
@@ -61,7 +61,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		const gameId = parseInt(route.params.id, 10);
+		const gameId = gameStoreGetGameParam(route);
 		const buildId = parseInt(route.params.buildId, 10);
 
 		HistoryTick.sendBeacon('game-build', buildId, {

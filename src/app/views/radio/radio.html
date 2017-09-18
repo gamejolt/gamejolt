@@ -29,10 +29,7 @@
 
 							<router-link
 								class="radio-box-art"
-								:to="{
-									name: 'discover.games.view.overview',
-									params: { slug: game.slug, id: game.id },
-								}"
+								:to="game.routeLocation"
 								target="_blank"
 								:style="{ 'background-image': `url('${ game.thumbnail_media_item.mediaserver_url }')` }"
 								>

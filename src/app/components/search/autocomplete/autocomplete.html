@@ -38,10 +38,7 @@
 							class="list-group-item"
 							v-for="libraryGame of libraryGames"
 							:key="libraryGame.id"
-							:to="{
-								name: 'discover.games.view.overview',
-								params: { slug: libraryGame.slug, id: libraryGame.id },
-							}"
+							:to="libraryGame.routeLocation"
 							:class="{ active: items[ selected - 1 ] === libraryGame }"
 							v-app-track-event="`search:autocomplete:go-library-game`"
 							>
@@ -70,10 +67,7 @@
 							class="list-group-item"
 							v-for="game of games"
 							:key="game.id"
-							:to="{
-								name: 'discover.games.view.overview',
-								params: { slug: game.slug, id: game.id },
-							}"
+							:to="game.routeLocation"
 							:class="{ active: items[ selected - 1 ] === game }"
 							v-app-track-event="`search:autocomplete:go-game`"
 							>
@@ -106,10 +100,7 @@
 							class="list-group-item"
 							v-for="game of devlogs"
 							:key="game.id"
-							:to="{
-								name: 'discover.games.view.overview',
-								params: { slug: game.slug, id: game.id },
-							}"
+							:to="game.routeLocation"
 							:class="{ active: items[ selected - 1 ] === game }"
 							v-app-track-event="`search:autocomplete:go-game`"
 							>

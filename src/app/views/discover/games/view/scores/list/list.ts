@@ -3,7 +3,7 @@ import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./list.html?style=./list.styl';
 
-import { RouteState, RouteStore } from '../../view.store';
+import { RouteState, RouteStore, gameStoreGetGameParam } from '../../view.store';
 import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { UserGameScore } from '../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
@@ -65,6 +65,8 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 
 	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: VueRouter.Route) {
+		const gameId = gameStoreGetGameParam(route);
+
 		let query = '';
 		if (parseInt(route.query.page, 10) > 1) {
 			query = '?page=' + route.query.page;
@@ -73,7 +75,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 		const url =
 			'/web/discover/games/scores' +
 			'/' +
-			route.params.id +
+			gameId +
 			'/' +
 			route.params.tableId +
 			'/' +
