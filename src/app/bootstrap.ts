@@ -34,7 +34,6 @@ bootstrapShortkey();
 
 Registry.setConfig('Game', { maxItems: 100 });
 Registry.setConfig('FiresidePost', { maxItems: 50 });
-Registry.setConfig('User', { maxItems: 100 });
 
 // Match this to the shell top nav height.
 Scroll.setOffsetTop(50);
