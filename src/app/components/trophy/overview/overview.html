@@ -5,7 +5,7 @@
 			class="link-unstyled"
 			:to="{
 				name: 'discover.games.view.trophies.list',
-				params: { slug: game.slug, id: game.id },
+				params: game.routeParams,
 			}"
 			>
 			<translate>trophies.overview.heading</translate>
@@ -67,7 +67,7 @@
 					class="link-muted small"
 					:to="{
 						name: 'discover.games.view.trophies.list',
-						params: { slug: game.slug, id: game.id },
+						params: game.routeParams,
 					}"
 					>
 					<translate
@@ -87,7 +87,7 @@
 					class="btn btn-outline btn-block-xs"
 					:to="{
 						name: 'discover.games.view.trophies.list',
-						params: { slug: game.slug, id: game.id },
+						params: game.routeParams,
 					}"
 					>
 					<app-jolticon icon="media-list" />

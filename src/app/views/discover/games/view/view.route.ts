@@ -10,7 +10,7 @@ import { routeDiscoverGamesViewScoresList } from './scores/list/list.route';
 import { routeDiscoverGamesViewDownloadSoundtrack } from './download/soundtrack/soundtrack.route';
 
 export const routeDiscoverGamesView: VueRouter.RouteConfig = {
-	path: ':slug/:id(\\d+)',
+	path: '/@:username/:slug',
 	props: true,
 	component: () => import(/* webpackChunkName: "routeDiscoverGamesView" */ './view'),
 	children: [

@@ -174,7 +174,7 @@
 			<router-link
 				class="devlog-post-controls-link link-muted"
 				v-if="showGameInfo"
-				:to="{ name: 'discover.games.view.overview', params: { slug: post.game.slug, id: post.game.id } }"
+				:to="post.game.routeLocation"
 				>
 				<translate>View game</translate>
 			</router-link>

@@ -140,13 +140,7 @@
 						<div class="col-xs-2">
 							<router-link
 								style="display: block"
-								:to="{
-									name: 'discover.games.view.overview',
-									params: {
-										slug: games[ firstPackage.game_id ].slug,
-										id: firstPackage.game_id,
-									},
-								}"
+								:to="games[ firstPackage.game_id ].routeLocation"
 								>
 								<app-game-thumbnail-img
 									:game="games[ firstPackage.game_id ]"
@@ -156,13 +150,7 @@
 						<div class="col-xs-10">
 							<p>
 								<router-link
-									:to="{
-										name: 'discover.games.view.overview',
-										params: {
-											slug: games[ firstPackage.game_id ].slug,
-											id: firstPackage.game_id,
-										},
-									}"
+									:to="games[ firstPackage.game_id ].routeLocation"
 									>
 									{{ games[ firstPackage.game_id ].title }}
 								</router-link>

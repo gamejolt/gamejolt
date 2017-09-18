@@ -275,10 +275,7 @@ export class AppSearchAutocomplete extends Vue {
 	}
 
 	selectGame(game: Game) {
-		this.$router.push({
-			name: 'discover.games.view.overview',
-			params: { slug: game.slug, id: game.id + '' },
-		});
+		this.$router.push(game.routeLocation);
 
 		Analytics.trackEvent('search', 'autocomplete', 'go-game');
 	}
@@ -293,10 +290,7 @@ export class AppSearchAutocomplete extends Vue {
 	}
 
 	selectLibraryGame(localGame: _LocalDbGame) {
-		this.$router.push({
-			name: 'discover.games.view.overview',
-			params: { slug: localGame.slug, id: localGame.id + '' },
-		});
+		this.$router.push(localGame.routeLocation);
 		Analytics.trackEvent('search', 'autocomplete', 'go-library-game');
 	}
 

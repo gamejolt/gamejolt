@@ -16,4 +16,19 @@ export class LocalDbGame {
 		slug: '',
 		img_avatar: '',
 	};
+
+	get routeLocation() {
+		return {
+			name: 'discover.games.view.overview',
+			params: this.routeParams,
+		};
+	}
+
+	get routeParams() {
+		return {
+			id: this.id + '',
+			username: this.developer.username,
+			slug: this.slug,
+		};
+	}
 }

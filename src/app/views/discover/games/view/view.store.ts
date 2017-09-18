@@ -1,3 +1,4 @@
+import VueRouter from 'vue-router';
 import { namespace, Action, Mutation, State } from 'vuex-class';
 import {
 	VuexStore,
@@ -43,7 +44,7 @@ type Actions = {
 };
 
 type Mutations = {
-	bootstrapGame: number;
+	bootstrapGame: string;
 	bootstrapFeed: undefined;
 	processPayload: any;
 	processOverviewPayload: any;
@@ -77,6 +78,10 @@ function setAds(game?: Game) {
 		paid: game.is_paid_game ? 'y' : 'n',
 	};
 	Ads.setAdUnit('gamepage');
+}
+
+export function gameStoreGetGameParam(route: VueRouter.Route) {
+	return encodeURIComponent('@' + route.params.username + '/' + route.params.slug);
 }
 
 /**
@@ -168,11 +173,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			return (
 				Environment.baseUrl +
 				router.resolve({
-					name: 'discover.games.view.overview',
-					params: {
-						id: this.game.id + '',
-						slug: this.game.slug,
-					},
+					...this.game.routeLocation,
 					query: {
 						ref: this.userPartnerKey,
 					},
@@ -219,8 +220,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	bootstrapGame(gameId: Mutations['bootstrapGame']) {
-		this.game = Registry.find<Game>('Game', gameId) as any;
+	bootstrapGame(gameInput: Mutations['bootstrapGame']) {
+		this.game = Registry.find<Game>('Game', gameInput) as any;
 		this.showDescription = false;
 		this.isOverviewLoaded = false;
 		this.mediaItems = [];

@@ -7,7 +7,7 @@ import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-s
 import { AppDiscoverGamesViewOverviewGame } from './_game/game';
 import { PartnerReferral } from '../../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
 import { AppDiscoverGamesViewOverviewDevlog } from './_devlog/devlog';
-import { RouteMutation, RouteStore, RouteState } from '../view.store';
+import { RouteMutation, RouteStore, RouteState, gameStoreGetGameParam } from '../view.store';
 import { HistoryTick } from '../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import {
 	RouteResolve,
@@ -31,7 +31,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	@RouteResolve({ lazy: true, cache: true })
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		const gameId = parseInt(route.params.id, 10);
+		const gameId = gameStoreGetGameParam(route);
 		HistoryTick.sendBeacon('game-view', gameId, {
 			sourceResource: 'Game',
 			sourceResourceId: gameId,
@@ -39,9 +39,9 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 		// If we have a tracked partner "ref" in the URL, we want to pass that along
 		// when gathering the payload.
-		let apiOverviewUrl = '/web/discover/games/overview/' + route.params.id;
+		let apiOverviewUrl = '/web/discover/games/overview/' + gameId;
 
-		const ref = PartnerReferral.getReferrer('Game', parseInt(route.params.id, 10));
+		const ref = PartnerReferral.getReferrer('Game', gameId);
 		if (ref) {
 			apiOverviewUrl += '?ref=' + ref;
 		}

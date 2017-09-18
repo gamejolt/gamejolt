@@ -8,7 +8,7 @@
 		<router-link
 			class="devlog-post-game"
 			v-if="feed.showGameInfo && !Screen.isXs"
-			:to="{ name: 'discover.games.view.overview', params: { slug: post.game.slug, id: post.game.id } }"
+			:to="post.game.routeLocation"
 			>
 			<app-game-thumbnail-img :game="post.game" />
 		</router-link>
@@ -18,7 +18,12 @@
 			@click.capture="onClick( $event )"
 			>
 			<router-link
-				:to="{ name: 'discover.games.view.devlog.view', params: { slug: post.game.slug, id: post.game.id, postSlug: post.slug } }"
+				:to="{
+					name: 'discover.games.view.devlog.view',
+					params: Object.assign({}, post.game.routeParams, {
+						postSlug: post.slug,
+					}),
+				}"
 				>
 				<div class="timeline-list-item-header-content">
 					<div class="devlog-post-header-content">

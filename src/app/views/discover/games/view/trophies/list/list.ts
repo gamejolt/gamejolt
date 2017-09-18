@@ -10,7 +10,7 @@ import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/numbe
 import { AppTrophyList } from '../../../../../../components/trophy/list/list';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { RouteState, RouteStore } from '../../view.store';
+import { RouteState, RouteStore, gameStoreGetGameParam } from '../../view.store';
 import { Store } from '../../../../../../store/index';
 import {
 	BaseRouteComponent,
@@ -49,7 +49,8 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 
 	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: VueRouter.Route) {
-		return Api.sendRequest('/web/discover/games/trophies/' + route.params.id);
+		const gameId = gameStoreGetGameParam(route);
+		return Api.sendRequest('/web/discover/games/trophies/' + gameId);
 	}
 
 	get routeTitle() {

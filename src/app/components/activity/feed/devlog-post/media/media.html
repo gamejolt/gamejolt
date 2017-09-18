@@ -19,7 +19,12 @@
 			@click.capture="clicked"
 			>
 			<router-link
-				:to="{ name: 'discover.games.view.devlog.view', params: { slug: post.game.slug, id: post.game.id, postSlug: post.slug } }"
+				:to="{
+					name: 'discover.games.view.devlog.view',
+					params: Object.assign({}, post.game.routeParams, {
+						postSlug: post.slug,
+					}),
+				}"
 				>
 				<div class="devlog-post-media-slider" ref="slider">
 

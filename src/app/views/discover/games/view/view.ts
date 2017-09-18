@@ -25,7 +25,14 @@ import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/c
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { AppMeter } from '../../../../../lib/gj-lib-client/components/meter/meter';
-import { RouteStoreName, RouteState, RouteAction, RouteStore, RouteMutation } from './view.store';
+import {
+	RouteStoreName,
+	RouteState,
+	RouteAction,
+	RouteStore,
+	RouteMutation,
+	gameStoreGetGameParam,
+} from './view.store';
 import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Store } from '../../../../store/index';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
@@ -104,15 +111,20 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	@RouteResolve({ lazy: true, cache: true, cacheTag: 'view' })
 	async routeResolve(this: undefined, route: VueRouter.Route) {
-		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
-		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);
+		const gameId = gameStoreGetGameParam(route);
 
-		const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
+		HistoryTick.trackSource('Game', gameId);
+		PartnerReferral.trackReferrer('Game', gameId, route);
+
+		const payload = await Api.sendRequest('/web/discover/games/' + gameId);
 
 		if (payload && payload.game) {
 			const redirect = enforceLocation(
 				route,
-				{ slug: payload.game.slug },
+				{
+					username: payload.game.developer.username,
+					slug: payload.game.slug,
+				},
 				{
 					ref: payload.userPartnerKey || route.query.ref || undefined,
 				}
@@ -126,7 +138,8 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	routeInit() {
-		this.bootstrapGame(parseInt(this.id, 10));
+		const gameInput = decodeURIComponent(gameStoreGetGameParam(this.$route));
+		this.bootstrapGame(gameInput);
 
 		// Any game rating change will broadcast this event. We catch it so we
 		// can update the page with the new rating! Yay!
