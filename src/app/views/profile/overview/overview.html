@@ -274,25 +274,13 @@
 									v-for="video of videos.slice( 0, 4 )"
 									:key="video.id"
 									>
-									<app-comment-video-thumbnail :video="video" />
+									<app-comment-video-thumbnail
+										:hide-follow="true"
+										:video="video"
+										/>
 								</div>
 							</div>
 						</template>
-
-						<!-- Feed -->
-						<h2>
-							<translate>Activity Feed</translate>
-						</h2>
-
-						<hr class="underbar">
-
-						<app-activity-feed-placeholder v-if="!feed" />
-						<app-activity-feed
-							v-else
-							:feed="feed"
-							:show-game-info="true"
-							:show-ads="false"
-							/>
 
 					</div>
 				</div>

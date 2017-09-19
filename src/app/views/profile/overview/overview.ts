@@ -25,14 +25,8 @@ import {
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Store } from '../../../store/index';
-import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
-import { AppActivityFeed } from '../../../components/activity/feed/feed';
-import { ActivityFeedContainer } from '../../../components/activity/feed/feed-container-service';
-import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
-import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
 
 @View
 @Component({
@@ -45,8 +39,6 @@ import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/e
 		AppGameThumbnail,
 		AppCommentVideoThumbnail,
 		AppUserLevelWidget,
-		AppActivityFeedPlaceholder,
-		AppActivityFeed,
 	},
 	directives: {
 		AppTooltip,
@@ -67,7 +59,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
 	videos: CommentVideo[] = [];
-	feed: ActivityFeedContainer | null = null;
 
 	showFullDescription = false;
 	canToggleDescription = false;
@@ -79,13 +70,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest('/web/profile/overview/@' + route.params.username);
-	}
-
-	routeInit() {
-		// Try pulling feed from cache.
-		if (!GJ_IS_SSR) {
-			this.feed = ActivityFeedService.bootstrap();
-		}
 	}
 
 	routed() {
@@ -108,12 +92,5 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.developerGames = Game.populate(this.$payload.developerGamesTeaser);
 		this.youtubeChannels = YoutubeChannel.populate(this.$payload.youtubeChannels);
 		this.videos = CommentVideo.populate(this.$payload.videos);
-
-		if (!this.feed) {
-			this.feed = ActivityFeedService.bootstrap(EventItem.populate(this.$payload.feedItems), {
-				type: 'EventItem',
-				url: `/web/profile/feed/${this.user.id}`,
-			});
-		}
 	}
 }

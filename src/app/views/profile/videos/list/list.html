@@ -7,7 +7,10 @@
 				v-for="video of videos"
 				:key="video.id"
 				>
-				<app-comment-video-thumbnail :video="video" />
+				<app-comment-video-thumbnail
+					:hide-follow="true"
+					:video="video"
+					/>
 			</div>
 		</div>
 
