@@ -16,4 +16,8 @@ export class AppActivityFeedDevlogPostVideo extends Vue {
 	@Prop(ActivityFeedItem) item: ActivityFeedItem;
 	@Prop(FiresidePost) post: FiresidePost;
 	@Prop(Boolean) isHydrated?: boolean;
+
+	get video() {
+		return this.post.videos[0];
+	}
 }
