@@ -6,6 +6,7 @@ import { Notification } from '../../../../lib/gj-lib-client/components/notificat
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
 import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 /**
  * The number of items from the bottom that we should hit before loading more.
@@ -43,7 +44,7 @@ export interface ActivityFeedContainerOptions {
 export class ActivityFeedContainer {
 	feedType: 'Notification' | 'Fireside_Post' | 'EventItem';
 	items: ActivityFeedItem[] = [];
-	games: { [k: string]: any } = {};
+	games: { [k: number]: Game } = {};
 
 	notificationWatermark = 0; // Timestamp.
 	reachedEnd = false;
@@ -181,18 +182,20 @@ export class ActivityFeedContainer {
 	}
 
 	/**
-	 * This ensures that any reference to a particular game any of the feed items
-	 * are shared across all items. It not only reduces mem usage, but also helps
-	 * to keep things in sync (game follows, etc).
+	 * This ensures that any reference to a particular game any of the feed items are shared across
+	 * all items. It not only reduces mem usage, but also helps to keep things in sync (game
+	 * follows, etc).
 	 */
-	// TODO
 	private processGames() {
 		for (const item of this.items) {
-			if (item.feedItem instanceof FiresidePost) {
-				if (!this.games[item.feedItem.game.id]) {
-					Vue.set(this.games as any, item.feedItem.game.id, item.feedItem.game);
-				} else {
-					Vue.set(item.feedItem, 'game', this.games[item.feedItem.game.id]);
+			if (item.feedItem instanceof FiresidePost || item.feedItem instanceof EventItem) {
+				const game = item.feedItem.game;
+				if (game) {
+					if (!this.games[game.id]) {
+						Vue.set(this.games as any, game.id, game);
+					} else {
+						item.feedItem.game = this.games[game.id];
+					}
 				}
 			}
 		}

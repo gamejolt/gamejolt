@@ -17,7 +17,6 @@ import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppActivityFeedCommentVideo } from '../comment-video/comment-video';
 import { AppActivityFeedControls } from '../controls/controls';
 import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
@@ -75,13 +74,7 @@ export class AppActivityFeedEventItem extends Vue {
 	}
 
 	get game() {
-		if (this.post) {
-			return this.post.game;
-		} else if (this.video) {
-			return this.video.game;
-		} else if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
-			return this.eventItem.action as Game;
-		}
+		return this.eventItem.game;
 	}
 
 	get icon() {

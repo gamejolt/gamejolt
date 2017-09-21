@@ -108,7 +108,8 @@
 			<app-activity-feed-controls
 				:post="post"
 				:video="video"
-				:show-game-info="false"
+				:game="game"
+				:show-game-info="feed.showGameInfo"
 				:show-edit-controls="feed.showEditControls"
 				:show-extra-info="!Screen.isXs"
 				@expanded="onExpand"

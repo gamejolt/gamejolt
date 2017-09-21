@@ -80,14 +80,14 @@
 				</template>
 			</div>
 
-			<div class="pull-right" v-if="post">
+			<div class="pull-right" v-if="post && game">
 				<app-game-follow-widget
 					v-if="
 						showGameInfo
 						&& (app.user && post.user.id !== app.user.id)
-						&& !post.game.is_following
+						&& !game.is_following
 					"
-					:game="post.game"
+					:game="game"
 					:sparse="Screen.isXs"
 					:outline="true"
 					event-label="activity-feed-controls"
@@ -183,8 +183,14 @@
 
 			<router-link
 				class="activity-feed-controls-link link-muted"
-				v-if="showGameInfo"
-				:to="{ name: 'discover.games.view.overview', params: { slug: post.game.slug, id: post.game.id } }"
+				v-if="showGameInfo && game"
+				:to="{
+					name: 'discover.games.view.overview',
+					params: {
+						slug: game.slug,
+						id: game.id,
+					},
+				}"
 				>
 				<translate>View game</translate>
 			</router-link>

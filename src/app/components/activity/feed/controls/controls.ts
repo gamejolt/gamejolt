@@ -26,6 +26,7 @@ import { DevlogPostEditModal } from '../../../devlog/post/edit-modal/edit-modal-
 import { AppCommentWidgetAddLazy, AppCommentWidgetLazy } from '../../../lazy';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { AppCommentVideoLikeWidget } from '../../../../../lib/gj-lib-client/components/comment/video/like-widget/like-widget';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 
 @View
 @Component({
@@ -54,6 +55,7 @@ import { AppCommentVideoLikeWidget } from '../../../../../lib/gj-lib-client/comp
 export class AppActivityFeedControls extends Vue {
 	@Prop(FiresidePost) post?: FiresidePost;
 	@Prop(CommentVideo) video?: CommentVideo;
+	@Prop(Game) game?: Game;
 	@Prop(Boolean) showGameInfo?: boolean;
 	@Prop(Boolean) showEditControls?: boolean;
 	@Prop({ type: Boolean, default: true })
