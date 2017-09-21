@@ -15,6 +15,7 @@ import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { AppTrackEvent } from '../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppGameGridPlaceholder } from '../../../../../components/game/grid/placeholder/placeholder';
 import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { EventItem } from '../../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -60,8 +61,8 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 		this.hotGames = Game.populate(this.$payload.hotGames).slice(0, 6);
 
 		if (!this.feed) {
-			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.posts), {
-				type: 'Fireside_Post',
+			this.feed = ActivityFeedService.bootstrap(EventItem.populate(this.$payload.posts), {
+				type: 'EventItem',
 				url: `/web/discover/channels/posts/${this.channel}`,
 			});
 		}
