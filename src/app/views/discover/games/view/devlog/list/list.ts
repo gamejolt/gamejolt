@@ -1,4 +1,5 @@
 import VueRouter from 'vue-router';
+import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
@@ -10,13 +11,21 @@ import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
-import { RouteState, RouteStore } from '../../view.store';
+import {
+	RouteState,
+	RouteStore,
+	RouteMutation,
+	gameStoreCheckPostRedirect,
+} from '../../view.store';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { EventItem } from '../../../../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
+import { Store } from '../../../../../../store/index';
+import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 
 @View
 @Component({
@@ -25,10 +34,14 @@ import { EventItem } from '../../../../../../../lib/gj-lib-client/components/eve
 		AppAd,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
+		AppDevlogPostAdd,
 	},
 })
 export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent {
+	@State app: Store['app'];
+
 	@RouteState game: RouteStore['game'];
+	@RouteMutation addPost: RouteStore['addPost'];
 
 	feed: ActivityFeedContainer | null = null;
 
@@ -39,16 +52,21 @@ export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent
 		return Api.sendRequest('/web/discover/games/devlog/' + route.params.id);
 	}
 
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate(`Devlog for %{ game }`, {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
+
 	routeInit() {
 		// Try pulling feed from cache.
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
 	routed() {
-		Meta.title = this.$gettextInterpolate(`Devlog for %{ game }`, {
-			game: this.game.title,
-		});
-
 		Meta.description = `Stay up to date on all the latest posts for ${this.game
 			.title} on Game Jolt`;
 
@@ -57,6 +75,13 @@ export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent
 				type: 'EventItem',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,
 			});
+		}
+	}
+
+	onPostAdded(post: FiresidePost) {
+		// This feed is different than the one in the game route store.
+		if (gameStoreCheckPostRedirect(post, this.game)) {
+			this.feed!.prepend([post]);
 		}
 	}
 }

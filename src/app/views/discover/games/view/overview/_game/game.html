@@ -30,7 +30,7 @@
 		</div>
 	</section>-->
 
-	<app-ad-placement :resource="game" />
+	<app-ad-placement pos="top" />
 
 	<section class="section">
 		<div class="container">
@@ -78,22 +78,40 @@
 
 					<!--
 						Convenience Messaging
+						This needs to be a div instead of a template or vue 2.4.4 complains about a
+						patched vnode not existing.
 					-->
-					<template v-if="game._is_wip && !game.canceled">
+					<div v-if="game._is_wip || game.canceled || customGameMessages.length">
 						<br class="visible-xs">
-						<div class="alert alert-info full-bleed-xs" v-translate>
+						<div
+							v-if="game._is_wip && !game.canceled"
+							class="alert alert-info full-bleed-xs"
+							v-translate
+							>
 							This game is in <b>early access</b>. It's still in development and the current version may be buggy or incomplete. Follow along to watch it as it develops!
 						</div>
-						<br class="hidden-xs">
-					</template>
-
-					<template v-if="game.canceled">
-						<br class="visible-xs">
-						<div class="alert alert-warning full-bleed-xs" v-translate>
+						<div
+							v-else-if="game.canceled"
+							class="alert alert-warning full-bleed-xs"
+							v-translate
+							>
 							This game was <b>canceled</b>, so the current version might be buggy or incomplete. You can still follow it if you'd like to be notified in the case that development continues.
 						</div>
+
+						<div
+							v-for="msg of customGameMessages"
+							class="alert full-bleed-xs"
+							:class="{
+								'alert-info': msg.type === 'info',
+								'alert-warning': msg.type === 'alert',
+							}"
+							>
+							<app-jolticon icon="notice" />
+							<span v-html="msg.message" />
+						</div>
+
 						<br class="hidden-xs">
-					</template>
+					</div>
 
 					<!--
 						Builds / Soundtrack
@@ -270,7 +288,7 @@
 
 							<div v-if="Screen.isDesktop" style="width: 300px">
 								<hr>
-								<app-ad size="rectangle" :resource="game" />
+								<app-ad size="rectangle" pos="top" />
 							</div>
 
 							<div id="maturity-rating">
@@ -295,7 +313,7 @@
 
 							<div v-if="Screen.isDesktop" style="width: 300px">
 								<br>
-								<app-ad size="rectangle" :resource="game" />
+								<app-ad size="rectangle" pos="bottom" />
 							</div>
 
 						</div>
@@ -306,7 +324,7 @@
 		</div>
 	</section>
 
-	<app-ad-placement :hidden-desktop="true" :resource="game" />
+	<app-ad-placement :hidden-desktop="true" pos="bottom" />
 
 	<!--
 		Devlog Feed
@@ -325,6 +343,19 @@
 
 						<hr class="underbar">
 						<br>
+
+						<template v-if="app.user && app.user.id === game.developer.id">
+							<h5 class="sans-margin-top">
+								<translate>Add Post</translate>
+							</h5>
+
+							<app-devlog-post-add
+								:game="game"
+								@add="onPostAdded"
+								/>
+
+							<hr>
+						</template>
 
 						<app-activity-feed
 							:feed="feed"
@@ -425,7 +456,7 @@
 	<app-ad-placement
 		v-if="hasScores || trophiesCount || (feed && feed.hasItems)"
 		:hidden-desktop="true"
-		:resource="game"
+		pos="bottom"
 		/>
 
 	<section class="section">
@@ -508,6 +539,6 @@
 		</div>
 	</section>
 
-	<app-ad-placement :visible-desktop="true" :resource="game" />
+	<app-ad-placement :visible-desktop="true" pos="bottom" />
 
 </div>

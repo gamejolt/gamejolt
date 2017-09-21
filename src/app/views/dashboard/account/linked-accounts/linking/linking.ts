@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./linking.html';
 
-import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppProgressPoller } from '../../../../../../lib/gj-lib-client/components/progress/poller/poller';
 import { AppLoading } from '../../../../../../lib/gj-lib-client/vue/components/loading/loading';
@@ -18,8 +17,11 @@ import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/componen
 export default class RouteDashAccountLinkedAccountsLinking extends BaseRouteComponent {
 	token: string;
 
+	get routeTitle() {
+		return this.$gettext('Waiting for Link');
+	}
+
 	routeInit() {
-		Meta.title = this.$gettext('Waiting for Link');
 		this.token = this.$route.query.token;
 	}
 

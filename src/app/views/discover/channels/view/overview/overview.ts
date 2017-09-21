@@ -2,10 +2,8 @@ import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
-import { ChannelsViewHelper } from '../../channels-view-helper';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
-import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -16,6 +14,7 @@ import { AppTrackEvent } from '../../../../../../lib/gj-lib-client/components/an
 import { AppGameGridPlaceholder } from '../../../../../components/game/grid/placeholder/placeholder';
 import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { EventItem } from '../../../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { Ads } from '../../../../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -67,6 +66,8 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 			});
 		}
 
-		ChannelsViewHelper.setDefaultMetaData(this.$route.params.channel);
+		Ads.globalTargeting = {
+			channel: this.channel,
+		};
 	}
 }

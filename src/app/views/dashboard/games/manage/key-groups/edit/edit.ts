@@ -6,7 +6,6 @@ import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.s
 import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
 import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Key } from '../../../../../../../lib/gj-lib-client/components/key/key-model';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
@@ -68,14 +67,19 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 		);
 	}
 
+	get routeTitle() {
+		if (this.keyGroup) {
+			return this.$gettextInterpolate('Edit Key Group: %{ name }', {
+				name: this.keyGroup.name,
+			});
+		}
+		return null;
+	}
+
 	routed() {
 		this.keyGroup = new KeyGroup(this.$payload.keyGroup);
 		this.packages = GamePackage.populate(this.$payload.packages);
 		this.keys = Key.populate(this.$payload.keys);
-
-		Meta.title = this.$gettextInterpolate('Edit Key Group: %{ name }', {
-			name: this.keyGroup.name,
-		});
 	}
 
 	async searchKeys() {
@@ -89,7 +93,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 	}
 
 	copyKeyLink(key: Key) {
-		Clipboard.copy(`${Environment.secureBaseUrl}/claim/${key.key}`);
+		Clipboard.copy(`${Environment.baseUrl}/claim/${key.key}`);
 	}
 
 	onNewKeysAdded() {

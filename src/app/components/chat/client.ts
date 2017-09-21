@@ -442,10 +442,7 @@ export class ChatClient {
 			if (room && room.isGroupRoom) {
 				// Remove their messages from view.
 				if (this.messages[roomId].length) {
-					const index = this.messages[roomId].findIndex(message => message.userId === userId);
-					if (index !== -1) {
-						this.messages[roomId].splice(index, 1);
-					}
+					this.messages[roomId] = this.messages[roomId].filter(message => message.userId !== userId);
 				}
 
 				// Mark that they're muted in the user list of the room.

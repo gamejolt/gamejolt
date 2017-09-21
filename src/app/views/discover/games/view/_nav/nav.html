@@ -85,7 +85,7 @@
 			</a>
 			<a class="list-group-item has-icon"
 				v-if="app.user && app.user.permission_level > 0"
-				:href="`${Environment.secureBaseUrl}/moderate/games/view/${game.id}`"
+				:href="`${Environment.baseUrl}/moderate/games/view/${game.id}`"
 				target="_blank"
 				>
 				<app-jolticon icon="cog" />

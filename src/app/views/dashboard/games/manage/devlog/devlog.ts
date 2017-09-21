@@ -2,7 +2,6 @@ import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./devlog.html';
 
-import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
 import { RouteState, RouteStore } from '../manage.store';
@@ -43,8 +42,8 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		);
 	}
 
-	routeInit() {
-		Meta.title = this.$gettext('Manage Devlog');
+	get routeTitle() {
+		return this.$gettext('Manage Devlog');
 	}
 
 	routed() {

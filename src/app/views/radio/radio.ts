@@ -35,8 +35,11 @@ export default class RouteRadio extends BaseRouteComponent {
 	currentTime = 0;
 	duration = 0;
 
+	get routeTitle() {
+		return this.song ? this.song.title : this.$gettext('Radio');
+	}
+
 	routeInit() {
-		Meta.title = this.$gettext('Radio');
 		Meta.description = 'Discover new game songs through the Game Jolt radio!';
 
 		// Starting the next song will actually change the title.
@@ -50,8 +53,6 @@ export default class RouteRadio extends BaseRouteComponent {
 
 		this.game = new Game(payload.game);
 		this.song = new GameSong(payload.song);
-
-		Meta.title = this.song.title;
 
 		Analytics.trackEvent('radio', 'load-song');
 	}

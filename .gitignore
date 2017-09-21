@@ -1,4 +1,5 @@
 /node_modules/
+/npm-debug.log
 /src/bower-lib/
 /typings/
 /tasks/vendor/tmp-gamejolt.iss

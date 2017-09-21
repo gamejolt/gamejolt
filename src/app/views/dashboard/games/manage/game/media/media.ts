@@ -6,7 +6,6 @@ import { RouteState, RouteStore, RouteMutation, Media, RouteAction } from '../..
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
@@ -64,10 +63,13 @@ export default class RouteDashGamesManageGameMedia extends BaseRouteComponent {
 		return Api.sendRequest('/web/dash/developer/games/media/' + route.params.id);
 	}
 
-	routeInit() {
-		Meta.title = this.$gettextInterpolate(`Manage Media for %{ game }`, {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate(`Manage Media for %{ game }`, {
+				game: this.game.title,
+			});
+		}
+		return null;
 	}
 
 	routed() {

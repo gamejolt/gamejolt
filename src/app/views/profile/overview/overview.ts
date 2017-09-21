@@ -72,22 +72,27 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return Api.sendRequest('/web/profile/overview/@' + route.params.username);
 	}
 
-	routed() {
-		let title = `${this.user.display_name} (@${this.user.username}) - `;
+	get routeTitle() {
+		if (this.user) {
+			let title = `${this.user.display_name} (@${this.user.username}) - `;
 
-		if (this.user.is_gamer) {
-			title += 'An indie gamer';
-		} else if (this.user.is_developer) {
-			title += 'An indie game developer';
+			if (this.user.is_gamer) {
+				title += 'An indie gamer';
+			} else if (this.user.is_developer) {
+				title += 'An indie game developer';
+			}
+
+			return title;
 		}
+		return null;
+	}
 
-		Meta.title = title;
-
+	routed() {
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb || {};
-		Meta.fb.title = Meta.title;
+		Meta.fb.title = this.routeTitle;
 		Meta.twitter = this.$payload.twitter || {};
-		Meta.twitter.title = Meta.title;
+		Meta.twitter.title = this.routeTitle;
 
 		this.developerGames = Game.populate(this.$payload.developerGamesTeaser);
 		this.youtubeChannels = YoutubeChannel.populate(this.$payload.youtubeChannels);

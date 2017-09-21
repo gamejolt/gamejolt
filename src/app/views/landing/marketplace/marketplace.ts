@@ -41,9 +41,11 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 		return Api.sendRequest('/web/marketplace');
 	}
 
-	routed() {
-		Meta.title = 'Sell Your Games';
+	get routeTitle() {
+		return 'Sell Your Games';
+	}
 
+	routed() {
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb;
 		Meta.twitter = this.$payload.twitter;

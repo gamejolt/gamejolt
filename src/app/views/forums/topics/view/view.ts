@@ -14,7 +14,6 @@ import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
@@ -114,12 +113,17 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 		return payload;
 	}
 
+	get routeTitle() {
+		if (this.topic) {
+			return this.topic.title;
+		}
+		return null;
+	}
+
 	routed() {
 		this.topic = new ForumTopic(this.$payload.topic);
 		this.channel = new ForumChannel(this.$payload.channel);
 		this.posts = ForumPost.populate(this.$payload.posts);
-
-		Meta.title = this.topic.title;
 
 		this.perPage = this.$payload.perPage;
 		this.currentPage = this.$payload.page || 1;

@@ -29,6 +29,7 @@ import { store, Store, tillStoreBootstrapped } from '../../../store/index';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { LibraryAction, LibraryStore, LibraryState } from '../../../store/library';
 import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
+import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -124,6 +125,58 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		return payload;
 	}
 
+	get routeTitle() {
+		if (this.$payload && this.$payload.metaTitle) {
+			return this.$payload.metaTitle;
+		} else if (this.type) {
+			if (this.type === 'followed') {
+				const params = { user: '@' + this.user!.username };
+				if (this.collection!.isOwner) {
+					return this.$gettext('Your Followed Games');
+				} else {
+					return this.$gettextInterpolate('Games Followed by %{ user }', params);
+				}
+			} else if (this.type === 'playlist') {
+				const params = {
+					playlist: this.playlist!.name,
+					user: '@' + this.user!.username,
+				};
+				if (this.collection!.isOwner) {
+					return this.playlist!.name;
+				} else {
+					return this.$gettextInterpolate('%{ playlist } by %{ user }', params);
+				}
+			} else if (this.type === 'developer') {
+				const params = { user: '@' + this.user!.username };
+				if (this.collection!.isOwner) {
+					return this.$gettext('Your Games');
+				} else {
+					return this.$gettextInterpolate('Games by %{ user }', params);
+				}
+			} else if (this.type === 'owned') {
+				const params = { user: '@' + this.user!.username };
+				if (this.collection!.isOwner) {
+					return this.$gettext('Your Owned Games');
+				} else {
+					return this.$gettextInterpolate('Games Owned by %{ user }', params);
+				}
+			} else if (this.type === 'recommended') {
+				const params = { user: '@' + this.user!.username };
+				if (this.collection!.isOwner) {
+					return this.$gettext('Your Daily Mix');
+				} else {
+					return this.$gettextInterpolate('Daily Mix for %{ user }', params);
+				}
+			} else if (this.type === 'bundle') {
+				return this.bundle!.title;
+			} else if (this.type === 'tag') {
+				return `#${this.tag}`;
+			}
+		}
+
+		return null;
+	}
+
 	routed() {
 		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer(this.$route);
@@ -131,7 +184,10 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		}
 
 		this.filtering.init(this.$route);
+		this.listing.setAdTargeting(this.$route);
 		this.listing.processPayload(this.$route, this.$payload);
+
+		Ads.setAdUnit('gamesdir');
 
 		this.type = this.$route.meta.collectionType;
 
@@ -167,66 +223,18 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	}
 
 	private processMeta() {
-		if (this.$payload.metaTitle) {
-			Meta.title = this.$payload.metaTitle;
-		} else {
-			if (this.type === 'followed') {
-				const params = { user: '@' + this.user!.username };
-				if (this.collection!.isOwner) {
-					Meta.title = this.$gettextInterpolate('Your Followed Games', params);
-				} else {
-					Meta.title = this.$gettextInterpolate('Games Followed by %{ user }', params);
-				}
-			} else if (this.type === 'playlist') {
-				const params = {
-					playlist: this.playlist!.name,
-					user: '@' + this.user!.username,
-				};
-				if (this.collection!.isOwner) {
-					Meta.title = this.playlist!.name;
-				} else {
-					Meta.title = this.$gettextInterpolate('%{ playlist } by %{ user }', params);
-				}
-			} else if (this.type === 'developer') {
-				const params = { user: '@' + this.user!.username };
-				if (this.collection!.isOwner) {
-					Meta.title = this.$gettextInterpolate('Your Games', params);
-				} else {
-					Meta.title = this.$gettextInterpolate('Games by %{ user }', params);
-				}
-			} else if (this.type === 'owned') {
-				const params = { user: '@' + this.user!.username };
-				if (this.collection!.isOwner) {
-					Meta.title = this.$gettext('Your Owned Games');
-				} else {
-					Meta.title = this.$gettextInterpolate('Games Owned by %{ user }', params);
-				}
-			} else if (this.type === 'recommended') {
-				const params = { user: '@' + this.user!.username };
-				if (this.collection!.isOwner) {
-					Meta.title = this.$gettext('Your Daily Mix');
-				} else {
-					Meta.title = this.$gettextInterpolate('Daily Mix for %{ user }', params);
-				}
-			} else if (this.type === 'bundle') {
-				Meta.title = this.bundle!.title;
-			} else if (this.type === 'tag') {
-				Meta.title = `#${this.tag}`;
-			}
-		}
-
 		if (this.$payload.metaDescription) {
 			Meta.description = this.$payload.metaDescription;
 		}
 
 		if (this.$payload.fb) {
 			Meta.fb = this.$payload.fb;
-			Meta.fb.title = Meta.title;
+			Meta.fb.title = this.routeTitle;
 		}
 
 		if (this.$payload.twitter) {
 			Meta.twitter = this.$payload.twitter;
-			Meta.twitter.title = Meta.title;
+			Meta.twitter.title = this.routeTitle;
 		}
 	}
 

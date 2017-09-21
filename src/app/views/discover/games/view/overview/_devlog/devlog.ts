@@ -24,6 +24,9 @@ import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/p
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
 import { AppCommentWidgetAddLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
+import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
+import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 
 @View
 @Component({
@@ -42,6 +45,8 @@ import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/m
 		AppMediaBar,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
+		AppJolticon,
+		AppDevlogPostAdd,
 	},
 	directives: {
 		AppTrackEvent,
@@ -61,11 +66,14 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	@RouteState recommendedGames: RouteStore['recommendedGames'];
 	@RouteState partner: RouteStore['partner'];
 	@RouteState partnerKey: RouteStore['partnerKey'];
+	@RouteState customGameMessages: RouteStore['customGameMessages'];
 
 	@RouteState showDescription: RouteStore['showDescription'];
 	@RouteState canToggleDescription: RouteStore['canToggleDescription'];
 	@RouteMutation toggleDescription: RouteStore['toggleDescription'];
 	@RouteMutation setCanToggleDescription: RouteStore['setCanToggleDescription'];
+
+	@RouteMutation addPost: RouteStore['addPost'];
 
 	comments: Comment[] = [];
 	commentsCount = 0;
@@ -90,8 +98,12 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 		}
 	}
 
-	onCommentAdd(comment: Comment) {
+	onCommentAdded(comment: Comment) {
 		++this.commentsCount;
 		this.comments.unshift(comment);
+	}
+
+	onPostAdded(post: FiresidePost) {
+		this.addPost(post);
 	}
 }

@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./header.html';
 
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Popover } from '../../../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { RouteState, RouteStore } from '../../manage.store';
@@ -24,10 +23,13 @@ import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/compo
 export default class RouteDashGamesManageGameHeader extends BaseRouteComponent {
 	@RouteState game: RouteStore['game'];
 
-	routeInit() {
-		Meta.title = this.$gettextInterpolate('Edit Header for %{ game }', {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Edit Header for %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
 	}
 
 	async clearHeader() {

@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./poll.html';
 
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppProgressPoller } from '../../../../../lib/gj-lib-client/components/progress/poller/poller';
 import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/loading/loading';
@@ -19,8 +18,11 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 	token = '';
 	isPolling = true;
 
+	get routeTitle() {
+		return this.$gettext(`Waiting for Login`);
+	}
+
 	routeInit() {
-		Meta.title = this.$gettext(`Waiting for Login`);
 		this.token = this.$route.query.token;
 	}
 

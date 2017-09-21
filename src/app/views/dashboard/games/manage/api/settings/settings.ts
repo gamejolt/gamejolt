@@ -1,12 +1,11 @@
 import { Component } from 'vue-property-decorator';
+import VueRouter from 'vue-router';
 import * as View from '!view!./settings.html';
 
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteStore, RouteState } from '../../manage.store';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import VueRouter from 'vue-router';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import {
 	BaseRouteComponent,
@@ -31,11 +30,16 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 		return Api.sendRequest('/web/dash/developer/games/api/settings/' + route.params.id);
 	}
 
-	routed() {
-		Meta.title = this.$gettextInterpolate('Game API Settings for %{ game }', {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Game API Settings for %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
 
+	routed() {
 		this.privateKey = this.$payload.privateKey;
 	}
 

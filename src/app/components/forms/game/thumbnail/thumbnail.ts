@@ -8,6 +8,7 @@ import {
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 import { AppFormControlCrop } from '../../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
+import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 
 type FormModel = Game & {
 	crop: any;
@@ -23,6 +24,7 @@ type FormModel = Game & {
 export class FormGameThumbnail extends BaseForm<FormModel> implements FormOnLoad {
 	modelClass = Game as any;
 	resetOnSubmit = true;
+	warnOnDiscard = false;
 	saveMethod = '$saveThumbnail' as '$saveThumbnail';
 	maxFilesize = 0;
 	minWidth = 0;
@@ -30,6 +32,10 @@ export class FormGameThumbnail extends BaseForm<FormModel> implements FormOnLoad
 	maxWidth = 0;
 	maxHeight = 0;
 	cropAspectRatio = 0;
+
+	$refs: {
+		form: AppForm;
+	};
 
 	get loadUrl() {
 		return `/web/dash/developer/games/thumbnail/save/${this.model!.id}`;
@@ -76,5 +82,11 @@ export class FormGameThumbnail extends BaseForm<FormModel> implements FormOnLoad
 		}
 
 		return true;
+	}
+
+	thumbSelected() {
+		if (this.formModel.file) {
+			this.$refs.form.submit();
+		}
 	}
 }

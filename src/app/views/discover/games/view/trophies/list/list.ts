@@ -4,7 +4,6 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./list.html';
 
 import { GameTrophy } from '../../../../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { UserGameTrophy } from '../../../../../../../lib/gj-lib-client/components/user/game-trophy/game-trophy.model';
 import { AppTrophyCompletion } from '../../../../../../components/trophy/completion/completion';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
@@ -53,11 +52,16 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 		return Api.sendRequest('/web/discover/games/trophies/' + route.params.id);
 	}
 
-	routed() {
-		Meta.title = this.$gettextInterpolate(`Trophies for %{ game }`, {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate(`Trophies for %{ game }`, {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
 
+	routed() {
 		this.trophies = GameTrophy.populate(this.$payload.trophies);
 		this.achieved = this.$payload.trophiesAchieved
 			? UserGameTrophy.populate(this.$payload.trophiesAchieved)

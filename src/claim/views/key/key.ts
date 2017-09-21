@@ -30,6 +30,8 @@ export default class RouteKey extends BaseRouteComponent {
 
 	@State app: Store['app'];
 
+	// Use payload here so that the children can be reactive to it.
+	payload = null as any;
 	invalidKey = false;
 	type = '';
 
@@ -55,13 +57,40 @@ export default class RouteKey extends BaseRouteComponent {
 		return Api.sendRequest(url);
 	}
 
+	routeInit() {
+		this.payload = null;
+		this.type = '';
+	}
+
+	get routeTitle() {
+		if (this.payload) {
+			if (this.type === 'bundle') {
+				return this.$gettextInterpolate(`Key Page for %{ bundle }`, {
+					bundle: this.payload.bundle.title,
+				});
+			} else if (this.type === 'game') {
+				return this.$gettextInterpolate(`Key Page for %{ game }`, {
+					game: this.payload.game.title,
+				});
+			} else if (this.type === 'bundle-game' && this.payload.bundle) {
+				return this.$gettextInterpolate(`Key Page for %{ game } in %{ bundle }`, {
+					game: this.payload.game.title,
+					bundle: this.payload.bundle.title,
+				});
+			}
+		}
+
+		return null;
+	}
+
 	routed() {
 		if (this.$payload.error === 'invalid-key') {
 			this.invalidKey = true;
 			return;
 		}
 
-		this.type = this.$payload.type;
+		this.payload = this.$payload;
+		this.type = this.payload.type;
 	}
 
 	async claim(resource: Game | GameBundle) {

@@ -2,7 +2,6 @@ import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
@@ -102,8 +101,8 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 		return Api.sendRequest('/web/dash');
 	}
 
-	routeInit() {
-		Meta.title = this.$gettext('dash.overview.page_title');
+	get routeTitle() {
+		return this.$gettext('dash.overview.page_title');
 	}
 
 	routed() {

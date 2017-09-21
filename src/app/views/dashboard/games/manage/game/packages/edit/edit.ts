@@ -5,7 +5,6 @@ import * as View from '!view!./edit.html';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../../../../../../../lib/gj-lib-client/components/game/release/release.model';
 import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
-import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../../manage.store';
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePackagePayloadModel } from '../../../../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
@@ -71,6 +70,16 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		);
 	}
 
+	get routeTitle() {
+		if (this.game && this.package) {
+			return this.$gettextInterpolate(`Edit Package %{ package } - %{ game }`, {
+				game: this.game.title,
+				package: this.package.title || this.game.title,
+			});
+		}
+		return null;
+	}
+
 	routed() {
 		this.package = new GamePackage(this.$payload.package);
 		this.sellable = new Sellable(this.$payload.sellable);
@@ -79,11 +88,6 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		this.previewData = null;
 		this.previewPackage = null;
 		this.isShowingPackageEdit = false;
-
-		Meta.title = this.$gettextInterpolate(`Edit Package %{ package } - %{ game }`, {
-			game: this.game.title,
-			package: this.package.title || this.game.title,
-		});
 
 		this.loadPreview();
 	}

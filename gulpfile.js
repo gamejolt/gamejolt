@@ -4,7 +4,7 @@ var config = {
 	staticCdn: 'https://b6d3e9q9.ssl.hwcdn.net',
 	injectVersion: 2,
 	framework: 'vue',
-	sections: ['auth', 'checkout', 'claim'],
+	sections: ['auth', 'checkout', 'claim', 'site-editor'],
 	serverSections: ['auth', 'app'],
 	translations: 'site-translations',
 	translationSections: {

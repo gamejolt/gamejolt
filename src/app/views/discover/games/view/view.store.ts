@@ -6,7 +6,6 @@ import {
 	VuexMutation,
 } from '../../../../../lib/gj-lib-client/utils/vuex';
 
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GameScoreTable } from '../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { GamePackagePayloadModel } from '../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { GameRating } from '../../../../../lib/gj-lib-client/components/game/rating/rating.model';
@@ -25,6 +24,11 @@ import { objectPick } from '../../../../../lib/gj-lib-client/utils/object';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { router } from '../../../index';
+import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
+import {
+	Game,
+	CustomMessage as CustomGameMessage,
+} from '../../../../../lib/gj-lib-client/components/game/game.model';
 
 export const RouteStoreName = 'gameRoute';
 export const RouteState = namespace(RouteStoreName, State);
@@ -49,7 +53,46 @@ type Mutations = {
 	showMultiplePackagesMessage: undefined;
 	toggleDescription: undefined;
 	setCanToggleDescription: boolean;
+	addPost: FiresidePost;
 };
+
+function setAds(game?: Game) {
+	if (!game) {
+		return;
+	}
+
+	let mat: string | undefined = undefined;
+	if (game.tigrs_age === 1) {
+		mat = 'everyone';
+	} else if (game.tigrs_age === 2) {
+		mat = 'teen';
+	} else if (game.tigrs_age === 3) {
+		mat = 'adult';
+	}
+
+	Ads.resource = game;
+	Ads.globalTargeting = {
+		mat,
+		genre: game.category,
+		paid: game.is_paid_game ? 'y' : 'n',
+	};
+	Ads.setAdUnit('gamepage');
+}
+
+/**
+ * Check whether this post should cause a redirect to the dashboard when it's a new post being added
+ * to the feed from the developer.
+ */
+export function gameStoreCheckPostRedirect(post: FiresidePost, game: Game) {
+	if (post.status !== FiresidePost.STATUS_ACTIVE) {
+		router.push({
+			name: 'dash.games.manage.devlog',
+			params: { id: game.id + '', tab: 'draft' },
+		});
+		return false;
+	}
+	return true;
+}
 
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
@@ -97,6 +140,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	scoresPayload: any = null;
 	trophiesPayload: any = null;
 
+	customGameMessages: CustomGameMessage[] = [];
+
 	get packages() {
 		if (!this.packagePayload) {
 			return [];
@@ -127,6 +172,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 					params: {
 						id: this.game.id + '',
 						slug: this.game.slug,
+					},
+					query: {
 						ref: this.userPartnerKey,
 					},
 				}).href
@@ -177,6 +224,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.showDescription = false;
 		this.isOverviewLoaded = false;
 		this.mediaItems = [];
+		setAds(this.game);
 	}
 
 	@VuexMutation
@@ -204,6 +252,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.twitterShareMessage = payload.twitterShareMessage || 'Check out this game!';
 
 		this.userPartnerKey = payload.userPartnerKey;
+		setAds(this.game);
 	}
 
 	@VuexMutation
@@ -266,6 +315,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			'trophiesExperienceAchieved',
 			'trophiesShowInvisibleTrophyMessage',
 		]);
+
+		this.customGameMessages = payload.customMessages || [];
 	}
 
 	@VuexMutation
@@ -300,5 +351,12 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	setCanToggleDescription(flag: Mutations['setCanToggleDescription']) {
 		this.canToggleDescription = flag;
+	}
+
+	@VuexMutation
+	addPost(post: Mutations['addPost']) {
+		if (gameStoreCheckPostRedirect(post, this.game)) {
+			this.feed!.prepend([post]);
+		}
 	}
 }

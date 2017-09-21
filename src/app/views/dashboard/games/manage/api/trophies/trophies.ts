@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./trophies.html';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../manage.store';
 import { GameTrophy } from '../../../../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
 import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
@@ -81,21 +80,26 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 		return this.trophies.filter(item => !item.visible).length > 0;
 	}
 
-	routeInit() {
-		this.resetActive();
-		this.resetAdding();
-	}
-
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest('/web/dash/developer/games/api/trophies/' + route.params.id);
 	}
 
-	routed() {
-		Meta.title = this.$gettextInterpolate('Manage Trophies for %{ game }', {
-			game: this.game.title,
-		});
+	routeInit() {
+		this.resetActive();
+		this.resetAdding();
+	}
 
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Manage Trophies for %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
+
+	routed() {
 		this.trophies = GameTrophy.populate(this.$payload.trophies);
 	}
 

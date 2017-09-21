@@ -5,6 +5,7 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
 import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 
 /**
  * The number of items from the bottom that we should hit before loading more.
@@ -104,7 +105,7 @@ export class ActivityFeedContainer {
 		this.viewedItems.push(item.id);
 
 		if (item.type === 'devlog-post') {
-			const feedItem = <FiresidePost>item.feedItem;
+			const feedItem = item.feedItem as FiresidePost;
 			feedItem.$viewed();
 		}
 	}
@@ -117,9 +118,11 @@ export class ActivityFeedContainer {
 		this.expandedItems.push(item.id);
 
 		if (item.type === 'devlog-post') {
-			const feedItem = <FiresidePost>item.feedItem;
+			const feedItem = item.feedItem as FiresidePost;
 			feedItem.$expanded();
 		}
+
+		Analytics.trackEvent('activity-feed', 'expanded-item');
 	}
 
 	inViewChange(item: ActivityFeedItem, visible: boolean) {
@@ -162,6 +165,7 @@ export class ActivityFeedContainer {
 
 		if (!response.items || !response.items.length) {
 			this.reachedEnd = true;
+			Analytics.trackEvent('activity-feed', 'reached-end');
 			return;
 		}
 
@@ -172,6 +176,8 @@ export class ActivityFeedContainer {
 		} else if (this.feedType === 'EventItem') {
 			this.append(EventItem.populate(response.items));
 		}
+
+		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.timesLoaded);
 	}
 
 	/**

@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./login.html';
 
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthLogin } from '../../../../lib/gj-lib-client/components/auth/login/login';
 import { loggedUserBlock } from '../auth';
@@ -27,8 +26,11 @@ export default class RouteAuthLogin extends BaseRouteComponent {
 		return loggedUserBlock();
 	}
 
+	get routeTitle() {
+		return this.$gettext('auth.login.page_title');
+	}
+
 	routeInit() {
-		Meta.title = this.$gettext('auth.login.page_title');
 		this.redirect = this.$route.query.redirect || '';
 	}
 

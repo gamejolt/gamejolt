@@ -6,7 +6,6 @@ import { Connection } from '../../../../lib/gj-lib-client/components/connection/
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Store } from '../../../store/index';
 import { loggedUserBlock } from '../auth';
 import {
@@ -32,8 +31,8 @@ export default class RouteAuthJoin extends BaseRouteComponent {
 		return loggedUserBlock();
 	}
 
-	routeInit() {
-		Meta.title = this.$gettext('auth.join.page_title');
+	get routeTitle() {
+		return this.$gettext('auth.join.page_title');
 	}
 
 	onJoin(formModel: any) {

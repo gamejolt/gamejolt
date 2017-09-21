@@ -4,7 +4,6 @@ import * as View from '!view!./music.html';
 
 import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../manage.store';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
@@ -52,10 +51,13 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 		return Api.sendRequest('/web/dash/developer/games/music/' + route.params.id);
 	}
 
-	routeInit() {
-		Meta.title = this.$gettextInterpolate(`Manage Music for %{ game }`, {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate(`Manage Music for %{ game }`, {
+				game: this.game.title,
+			});
+		}
+		return null;
 	}
 
 	routed() {

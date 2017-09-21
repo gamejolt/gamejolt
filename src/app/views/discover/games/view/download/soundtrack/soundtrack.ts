@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import * as View from '!view!./soundtrack.html';
 
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../view.store';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
@@ -45,11 +44,16 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteC
 		});
 	}
 
-	async routed() {
-		Meta.title = this.$gettextInterpolate(`Downloading soundtrack for %{ game }`, {
-			game: this.game.title,
-		});
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate(`Downloading soundtrack for %{ game }`, {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
 
+	async routed() {
 		// Don't download on SSR.
 		if (GJ_IS_SSR) {
 			return;

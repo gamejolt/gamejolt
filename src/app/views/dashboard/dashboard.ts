@@ -4,6 +4,7 @@ import * as View from '!view!./dashboard.html';
 
 import { Store } from '../../store/index';
 import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
+import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
 
 @View
 @Component({
@@ -11,4 +12,8 @@ import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/
 })
 export default class RouteDash extends BaseRouteComponent {
 	@State app: Store['app'];
+
+	routeInit() {
+		Ads.setAdUnit('user');
+	}
 }

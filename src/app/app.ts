@@ -7,6 +7,7 @@ import { makeObservableService } from '../lib/gj-lib-client/utils/vue';
 import { AppShell } from './components/shell/shell';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
+import { loadCurrentLanguage } from '../utils/translations';
 
 @View
 @Component({
@@ -32,12 +33,12 @@ export class App extends Vue {
 	}
 
 	mounted() {
-		if (!GJ_IS_SSR) {
-			// Let it finish doing all the initial rendering junk and track after
-			// that.
-			setTimeout(() => {
-				Analytics.trackTiming('shell', 'vue-mounted', Date.now() - window._gjStartTime);
-			});
-		}
+		// Let it finish doing all the initial rendering junk and track after
+		// that.
+		setTimeout(() => {
+			Analytics.trackTiming('shell', 'vue-mounted', Date.now() - window._gjStartTime);
+		});
+
+		loadCurrentLanguage(this);
 	}
 }

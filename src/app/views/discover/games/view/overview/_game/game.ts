@@ -34,6 +34,8 @@ import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/component
 import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
 import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
 import { AppCommentWidgetLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
+import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
 
 @View
 @Component({
@@ -61,6 +63,7 @@ import { AppCommentWidgetLazy, AppActivityFeedLazy } from '../../../../../../com
 		AppMediaBar,
 		AppCommentWidget: AppCommentWidgetLazy,
 		AppActivityFeed: AppActivityFeedLazy,
+		AppDevlogPostAdd,
 	},
 	directives: {
 		AppTrackEvent,
@@ -96,6 +99,7 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState scoresPayload: RouteStore['scoresPayload'];
 	@RouteState packages: RouteStore['packages'];
 	@RouteState hasReleasesSection: RouteStore['hasReleasesSection'];
+	@RouteState customGameMessages: RouteStore['customGameMessages'];
 
 	@RouteMutation setCommentsCount: RouteStore['setCommentsCount'];
 	@RouteAction loadVideoComments: RouteStore['loadVideoComments'];
@@ -104,6 +108,8 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState canToggleDescription: RouteStore['canToggleDescription'];
 	@RouteMutation toggleDescription: RouteStore['toggleDescription'];
 	@RouteMutation setCanToggleDescription: RouteStore['setCanToggleDescription'];
+
+	@RouteMutation addPost: RouteStore['addPost'];
 
 	Screen = makeObservableService(Screen);
 	Environment = Environment;
@@ -124,5 +130,9 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 		if (this.partnerLink) {
 			Clipboard.copy(this.partnerLink);
 		}
+	}
+
+	onPostAdded(post: FiresidePost) {
+		this.addPost(post);
 	}
 }

@@ -17,6 +17,7 @@ import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppGameGrid } from '../../../../components/game/grid/grid';
 import { AppGameListing } from '../../../../components/game/listing/listing';
 import { LocationRedirect } from '../../../../../lib/gj-lib-client/utils/router';
+import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -84,8 +85,13 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		return Api.sendRequest('/web/discover/games?' + filtering.getQueryString(route));
 	}
 
+	get routeTitle() {
+		return this.pageTitle;
+	}
+
 	routeInit() {
 		this.process();
+		Ads.setAdUnit('gamesdir');
 	}
 
 	routed() {
@@ -107,6 +113,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 
 		this.filtering.init(this.$route);
+		this.listing.setAdTargeting(this.$route);
 
 		if (this.section === 'by-date') {
 			this.processDateSection();
@@ -115,8 +122,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		} else {
 			this.processGeneralSection();
 		}
-
-		Meta.title = this.pageTitle;
 	}
 
 	processDateSection() {
