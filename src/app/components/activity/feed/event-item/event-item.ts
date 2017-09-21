@@ -16,7 +16,6 @@ import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
-// import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppActivityFeedCommentVideo } from '../comment-video/comment-video';
@@ -108,7 +107,7 @@ export class AppActivityFeedEventItem extends Vue {
 		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
 			return '';
 		} else if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
-			const game = this.eventItem.action as Game;
+			const game = this.game!;
 			return {
 				name: 'discover.games.view.overview',
 				params: {
@@ -117,12 +116,13 @@ export class AppActivityFeedEventItem extends Vue {
 				},
 			};
 		} else if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
-			const post = this.eventItem.action as FiresidePost;
+			const post = this.post!;
+			const game = this.game!;
 			return {
 				name: 'discover.games.view.devlog.view',
 				params: {
-					slug: post.game.slug,
-					id: post.game.id,
+					slug: game.slug,
+					id: game.id,
 					postSlug: post.slug,
 				},
 			};

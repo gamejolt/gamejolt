@@ -88,7 +88,7 @@
 						&& !post.game.is_following
 					"
 					:game="post.game"
-					:sparse="true"
+					:sparse="Screen.isXs"
 					:outline="true"
 					event-label="activity-feed-controls"
 					/>
@@ -123,10 +123,9 @@
 		<!--
 			We don't show this in the feed on mobile.
 		-->
-		<div class="activity-feed-controls-links clearfix" v-if="showExtraInfo">
+		<div class="activity-feed-controls-links clearfix" v-if="post && showExtraInfo">
 
-			<!-- TODO -->
-			<!-- <div class="devlog-post-controls-stats text-muted"
+			<div class="activity-feed-controls-stats text-muted"
 				v-if="app.user && post.user.id === app.user.id"
 				>
 
@@ -152,9 +151,9 @@
 					<app-jolticon icon="help-circle" />
 				</span>
 
-			</div> -->
+			</div>
 
-			<!-- <a class="activity-feed-controls-link link-muted"
+			<a class="activity-feed-controls-link link-muted"
 				v-if="post.comment_count > 0"
 				:class="{ active: tab === 'comments' }"
 				@click="toggleComments"
@@ -168,7 +167,7 @@
 				</span>
 			</a>
 
-			<a class="devlog-post-controls-link link-muted"
+			<a class="activity-feed-controls-link link-muted"
 				v-if="post.like_count > 0"
 				:class="{ active: tab === 'likes' }"
 				@click="toggleLikes"
@@ -183,12 +182,12 @@
 			</a>
 
 			<router-link
-				class="devlog-post-controls-link link-muted"
+				class="activity-feed-controls-link link-muted"
 				v-if="showGameInfo"
 				:to="{ name: 'discover.games.view.overview', params: { slug: post.game.slug, id: post.game.id } }"
 				>
 				<translate>View game</translate>
-			</router-link> -->
+			</router-link>
 		</div>
 
 	</div>
@@ -198,15 +197,17 @@
 			v-if="app.user && !tab"
 			resource="Fireside_Post"
 			:resource-id="post.id"
+			@submit="onCommentAdded()"
 			/>
 
-		<div class="devlog-post-controls-well" v-if="tab">
+		<div class="activity-feed-controls-well" v-if="tab">
 
 			<app-comment-widget
 				v-if="tab === 'comments'"
 				resource="Fireside_Post"
 				:resource-id="post.id"
 				:no-intro="true"
+				@add="onCommentAdded()"
 				@count="updateCommentsCount"
 				/>
 
