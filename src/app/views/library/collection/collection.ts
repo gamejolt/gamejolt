@@ -248,8 +248,15 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		return this.id;
 	}
 
+	get shouldShowFollowers() {
+		return this.type !== 'bundle' && this.type !== 'tag' && this.type !== 'owned';
+	}
+
 	get shouldShowFollow() {
-		return !(this.collection && this.collection.isOwner);
+		return !(
+			this.collection &&
+			(this.collection.isOwner || this.collection.type === GameCollection.TYPE_OWNED)
+		);
 	}
 
 	async removeFromPlaylist(game: Game) {
