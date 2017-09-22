@@ -138,9 +138,11 @@ export class AppActivityFeedEventItem extends Vue {
 	 */
 	onContentBootstrapped() {
 		this.$emit('resize', this.$el.offsetHeight);
-		this.resizeSensor = new ResizeSensor(this.$el, () => {
-			this.$emit('resize', this.$el.offsetHeight);
-		});
+		this.resizeSensor =
+			this.resizeSensor ||
+			new ResizeSensor(this.$el, () => {
+				this.$emit('resize', this.$el.offsetHeight);
+			});
 	}
 
 	onExpand() {

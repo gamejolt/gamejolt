@@ -104,11 +104,7 @@ export class ActivityFeedContainer {
 		}
 
 		this.viewedItems.push(item.id);
-
-		if (item.type === 'devlog-post') {
-			const feedItem = item.feedItem as FiresidePost;
-			feedItem.$viewed();
-		}
+		item.$viewed();
 	}
 
 	expanded(item: ActivityFeedItem) {
@@ -117,11 +113,7 @@ export class ActivityFeedContainer {
 		}
 
 		this.expandedItems.push(item.id);
-
-		if (item.type === 'devlog-post') {
-			const feedItem = item.feedItem as FiresidePost;
-			feedItem.$expanded();
-		}
+		item.$expanded();
 
 		Analytics.trackEvent('activity-feed', 'expanded-item');
 	}

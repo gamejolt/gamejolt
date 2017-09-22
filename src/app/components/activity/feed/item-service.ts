@@ -1,12 +1,13 @@
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
 import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
 
 export type ActivityFeedInput = Notification | FiresidePost | EventItem;
 
 export class ActivityFeedItem {
 	id: string;
-	type: 'devlog-post' | 'notification' | 'event-item';
+	type: 'notification' | 'event-item';
 	feedItem: ActivityFeedInput;
 	scrollId: string;
 	height: string | null = null;
@@ -23,7 +24,7 @@ export class ActivityFeedItem {
 			// We have to spoof this as an event item.
 			const post = this.feedItem;
 			this.feedItem = new EventItem({
-				type: 'devlog-post-add',
+				type: EventItem.TYPE_DEVLOG_POST_ADD,
 				added_on: dateVal,
 				scroll_id: post.scroll_id,
 				action_resource_model: post,
@@ -40,5 +41,24 @@ export class ActivityFeedItem {
 
 		this.id = `${this.type}-${this.feedItem.id}-${dateVal}`;
 		this.scrollId = sourceItem.scroll_id as string;
+	}
+
+	$viewed() {
+		if (
+			this.feedItem instanceof EventItem &&
+			this.feedItem.type === EventItem.TYPE_DEVLOG_POST_ADD
+		) {
+			(this.feedItem.action as FiresidePost).$viewed();
+		}
+	}
+
+	$expanded() {
+		if (this.feedItem instanceof EventItem) {
+			if (this.feedItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+				(this.feedItem.action as FiresidePost).$expanded();
+			} else if (this.feedItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
+				(this.feedItem.action as CommentVideo).$viewed();
+			}
+		}
 	}
 }

@@ -79,7 +79,7 @@ export class AppActivityFeedControls extends Vue {
 		if (!this.post) {
 			return '';
 		}
-		return `activity-feed-devlog-post-share-${this.inModal ? 'modal' : 'no-modal'}-${this.post.id}`;
+		return `activity-feed-share-${this.inModal ? 'modal' : 'no-modal'}-${this.post.id}`;
 	}
 
 	get shareUrl() {
