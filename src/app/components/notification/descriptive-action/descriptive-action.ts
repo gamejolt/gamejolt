@@ -70,6 +70,9 @@ export class AppNotificationDescriptiveAction extends Vue {
 					`bought a package in <b>%{ object }</b> for <b>%{ amount }</b>.`,
 					this.translationValues
 				);
+
+			case Notification.TYPE_USER_FOLLOW:
+				return this.$gettext(`followed you.`);
 		}
 	}
 }
