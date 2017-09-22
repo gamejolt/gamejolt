@@ -3,7 +3,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./devlog.html';
 
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
 import { RouteState, RouteStore } from '../manage.store';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
@@ -33,11 +32,13 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		return this.tab || 'active';
 	}
 
-	@RouteResolve()
+	@RouteResolve({ cache: false, lazy: false })
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
-			'/web/dash/developer/games/devlog/posts/' + route.params.id + '/' + route.params.tab ||
-				'active'
+			'/web/dash/developer/games/devlog/posts/' +
+				route.params.id +
+				'/' +
+				(route.params.tab || 'active')
 		);
 	}
 
@@ -46,10 +47,11 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 	}
 
 	routed() {
-		this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.posts), {
-			type: 'Fireside_Post',
+		// Create a new activity feed container each time. Don't cache anything.
+		this.feed = new ActivityFeedContainer(FiresidePost.populate(this.$payload.posts), {
+			type: 'EventItem',
 			url: `/web/dash/developer/games/devlog/posts/${this.game.id}/${this._tab}`,
-		})!;
+		});
 	}
 
 	onPostAdded(post: FiresidePost) {
@@ -70,12 +72,21 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		this.gotoPost(post);
 	}
 
-	private gotoPost(post: FiresidePost) {
-		const tab = post.status === 'active' ? undefined : post.status;
+	onPostRemoved(post: FiresidePost) {
+		this.feed.remove(post);
+	}
 
-		this.$router.replace({
+	private gotoPost(post: FiresidePost) {
+		const tab = post.status === 'active' ? null : post.status;
+		const location = {
 			name: this.$route.name,
 			params: Object.assign({}, this.$route.params, { tab }),
-		});
+		};
+
+		if (this.$router.resolve(location).href === this.$route.fullPath) {
+			this.reloadRoute();
+		} else {
+			this.$router.replace(location);
+		}
 	}
 }

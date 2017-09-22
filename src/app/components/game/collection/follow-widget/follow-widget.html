@@ -1,6 +1,7 @@
 <button
 	class="game-collection-follow-widget btn"
-	:class="[ !isFollowing ? 'btn-outline' : 'btn-success active' ]"
+	:class="[ !isFollowing ? 'btn-success-outline' : 'btn-success active' ]"
+	:disabled="isProcessing"
 	v-app-auth-required
 	v-app-tooltip.bottom="
 		isFollowing

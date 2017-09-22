@@ -28,10 +28,10 @@ if (!GJ_IS_SSR) {
 })
 export class AppActivityFeedDevlogPostMedia extends Vue {
 	@Prop(ActivityFeedItem) item: ActivityFeedItem;
+	@Prop(FiresidePost) post: FiresidePost;
 	@Prop(Boolean) isNew?: boolean;
 	@Prop(Boolean) isHydrated?: boolean;
 
-	post: FiresidePost = null as any;
 	page = 1;
 	activeMediaItem: MediaItem | null = null;
 	isDragging = false;
@@ -41,7 +41,6 @@ export class AppActivityFeedDevlogPostMedia extends Vue {
 	Screen = makeObservableService(Screen);
 
 	created() {
-		this.post = this.item.feedItem as FiresidePost;
 		this.activeMediaItem = this.post.media[0];
 	}
 

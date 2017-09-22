@@ -20,6 +20,7 @@ import { UserFriendshipHelper } from '../../components/user/friendships-helper/f
 import { ReportModal } from '../../../lib/gj-lib-client/components/report/modal/modal.service';
 import { Store } from '../../store/index';
 import { UserGameSession } from '../../../lib/gj-lib-client/components/user/game-session/game-session.model';
+import { AppUserFollowWidget } from '../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
 import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
@@ -36,6 +37,7 @@ import {
 		AppUserAvatar,
 		AppUserDogtag,
 		AppPopover,
+		AppUserFollowWidget,
 	},
 	directives: {
 		AppTooltip,

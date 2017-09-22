@@ -34,7 +34,6 @@ export class AppGameFollowWidget extends Vue {
 
 	@State app: Store['app'];
 
-	followTooltip: string;
 	isProcessing = false;
 
 	get btnClasses() {

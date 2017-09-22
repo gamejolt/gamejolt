@@ -1,22 +1,22 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./text.html';
+import * as View from '!view!./comment-video.html';
 
-import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { AppFadeCollapse } from '../../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { AppWidgetCompiler } from '../../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
-import { ActivityFeedItem } from '../../item-service';
+import { ActivityFeedItem } from '../item-service';
+import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { AppActivityFeedVideo } from '../_video/video';
+import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 
 @View
 @Component({
 	components: {
+		AppActivityFeedVideo,
 		AppFadeCollapse,
-		AppWidgetCompiler,
 	},
 })
-export class AppActivityFeedDevlogPostText extends Vue {
+export class AppActivityFeedCommentVideo extends Vue {
 	@Prop(ActivityFeedItem) item: ActivityFeedItem;
-	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(CommentVideo) video: CommentVideo;
 	@Prop(Boolean) isHydrated?: boolean;
 
 	canToggleContent = false;

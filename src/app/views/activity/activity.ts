@@ -7,12 +7,12 @@ import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';
 import { Notification } from '../../../lib/gj-lib-client/components/notification/notification-model';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { FiresidePost } from '../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { AppPageHeader } from '../../components/page-header/page-header';
 import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppActivityFeed } from '../../components/activity/feed/feed';
 import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
 import { Store } from '../../store/index';
+import { EventItem } from '../../../lib/gj-lib-client/components/event-item/event-item.model';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { getTranslationLang } from '../../../lib/gj-lib-client/components/translate/translate.service';
@@ -64,9 +64,9 @@ export default class RouteActivity extends BaseRouteComponent {
 
 	routed() {
 		if (this.tab === 'activity') {
-			if (!this.feed || this.feed.feedType !== 'Fireside_Post') {
-				this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.items), {
-					type: 'Fireside_Post',
+			if (!this.feed || this.feed.feedType !== 'EventItem') {
+				this.feed = ActivityFeedService.bootstrap(EventItem.populate(this.$payload.items), {
+					type: 'EventItem',
 					url: `/web/dash/activity/more/${this.tab}`,
 					notificationWatermark: this.$payload.unreadWatermark,
 				});

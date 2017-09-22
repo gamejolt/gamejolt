@@ -25,6 +25,7 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { router } from '../../../index';
 import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
+import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import {
 	Game,
 	CustomMessage as CustomGameMessage,
@@ -276,8 +277,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		// mutation. If there was no cached feed, then we'll generate a new one.
 		// Also regenerate if the game changed.
 		if (!this.feed) {
-			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(payload.posts), {
-				type: 'Fireside_Post',
+			this.feed = ActivityFeedService.bootstrap(EventItem.populate(payload.posts), {
+				type: 'EventItem',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,
 				noAutoload: !this.game._is_devlog,
 			});

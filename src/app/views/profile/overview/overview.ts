@@ -1,4 +1,5 @@
 import VueRouter from 'vue-router';
+import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./overview.html';
 
@@ -23,6 +24,9 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { Store } from '../../../store/index';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 
 @View
 @Component({
@@ -50,6 +54,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	@Prop() userFriendship: UserFriendship;
 	@Prop() activeGameSession?: UserGameSession;
 
+	@State app: Store['app'];
+
 	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
 	videos: CommentVideo[] = [];
@@ -59,6 +65,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	User = User;
 	UserFriendship = UserFriendship;
+	Screen = makeObservableService(Screen);
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {

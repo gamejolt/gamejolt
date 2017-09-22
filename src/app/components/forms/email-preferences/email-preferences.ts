@@ -58,6 +58,11 @@ export class FormEmailPreferences extends BaseForm<User> {
 				help: this.$gettext('dash.email_prefs.notify_game_follows_help'),
 			},
 			{
+				key: 'notify_user_follows',
+				label: this.$gettext('User Follows'),
+				help: this.$gettext('Get emails when other users follow you.'),
+			},
+			{
 				key: 'notify_sales',
 				label: this.$gettext('Sales'),
 				help: this.$gettext('Get emails when someone buys your games.'),

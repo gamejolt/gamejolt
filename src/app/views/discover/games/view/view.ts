@@ -31,6 +31,7 @@ import { Store } from '../../../../store/index';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
+import { AppUserFollowWidget } from '../../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
 import {
 	RouteResolve,
 	BaseRouteComponent,
@@ -50,6 +51,7 @@ import {
 		AppTimeAgo,
 		AppGameMaturityBlock,
 		AppGameCoverButtons,
+		AppUserFollowWidget,
 	},
 	directives: {
 		AppTooltip,

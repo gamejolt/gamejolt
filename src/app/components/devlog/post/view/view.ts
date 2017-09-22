@@ -10,7 +10,7 @@ import { AppImgResponsive } from '../../../../../lib/gj-lib-client/components/im
 import { AppVideo } from '../../../../../lib/gj-lib-client/components/video/video';
 import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
 import { AppSketchfabEmbed } from '../../../../../lib/gj-lib-client/components/sketchfab/embed/embed';
-import { AppActivityFeedDevlogPostControls } from '../../../activity/feed/devlog-post/controls/controls';
+import { AppActivityFeedControls } from '../../../activity/feed/controls/controls';
 
 @View
 @Component({
@@ -22,7 +22,7 @@ import { AppActivityFeedDevlogPostControls } from '../../../activity/feed/devlog
 		AppVideo,
 		AppVideoEmbed,
 		AppSketchfabEmbed,
-		AppActivityFeedDevlogPostControls,
+		AppActivityFeedControls,
 	},
 })
 export class AppDevlogPostView extends Vue {
