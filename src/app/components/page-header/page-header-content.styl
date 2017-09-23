@@ -2,13 +2,14 @@
 @require '../../../lib/gj-lib-client/stylus/common/mixins'
 
 .page-header
-
-	$page-header-spotlight-breakpoint = media( min: $screen-sm-min, max: 1450px )
+	$spotlight-size = $page-header-spotlight-size + $page-header-spotlight-margin
+	// Double the spotlight size since it will effectively take up the left AND
+	// right side of screens since content is centered.
+	$screen-lg-full = $screen-lg-min + $shell-sidebar-width + ($spotlight-size * 2)
+	$page-header-spotlight-breakpoint = media(min: $screen-sm-min, max: $screen-lg-full)
 
 	&-cover.has-cover-image
-
 		.page-header-cover-buttons
-
 			.btn
 				margin: 0 5px
 
@@ -16,15 +17,14 @@
 			color: $gray-lightest
 
 		.link-muted
-			color: rgba( $white, 0.6 )
+			color: rgba($white, 0.6)
 
-		.tag
-		.user-dogtag
+		.tag, .user-dogtag
 			text-shadow: none
 
 		.meter-blip
-			background-color: rgba( $white, 0.5 )
-			box-shadow: 1px 1px 1px rgba( $black, 0.3 )
+			background-color: rgba($white, 0.5)
+			box-shadow: 1px 1px 1px rgba($black, 0.3)
 
 		.meter-low .meter-blip-filled
 			background-color: $gj-pink
@@ -36,7 +36,6 @@
 			background-color: $gj-green
 
 	&-content
-
 		h1, h2, h3
 			margin: 0
 
@@ -55,7 +54,6 @@
 			vertical-align: middle
 
 	&-nav
-
 		nav
 			margin-top: 11px !important
 
@@ -67,7 +65,6 @@
 			margin-bottom: 11px
 
 		@media $media-lg
-
 			.platform-list
 				margin-top: 11px !important
 
@@ -81,21 +78,17 @@
 					margin-left: 0
 
 	&.has-spotlight &
-
 		@media $media-sm-md
-
 			&-controls
-			&-nav nav
-				margin-left: 100px + ($grid-gutter-width / 2)
+				margin-left: $spotlight-size
 
 		// For when the page gets too small to float the spotlight off the left edge.
 		@media $page-header-spotlight-breakpoint
-
 			&-spotlight
-				left: 0
+				left: $page-header-spotlight-margin
 
 			&-content
-				padding-left: 100px + ($grid-gutter-width / 2)
+				padding-left: $spotlight-size
 
 			&-nav nav
-				margin-left: 100px + ($grid-gutter-width / 2)
+				margin-left: $spotlight-size
