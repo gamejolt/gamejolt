@@ -52,7 +52,7 @@
 		<section class="section">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-8 col-lg-7 pull-left">
+					<div class="col-xs-12 col-md-8 col-lg-7 pull-left">
 
 						<!-- Friend Requests -->
 						<template v-if="userFriendship">
@@ -110,10 +110,8 @@
 							>
 						</a>
 
-						<hr class="visible-xs">
-
 					</div>
-					<div class="col-md-4 pull-right">
+					<div class="col-xs-12 col-md-4 pull-right">
 
 						<app-user-level-widget
 							v-if="!Screen.isXs"
@@ -227,10 +225,8 @@
 							{{ videosCount | number }} Videos
 						</router-link>
 
-						<hr class="visible-xs">
-
 					</div>
-					<div class="col-md-8 col-lg-7 pull-left" style="clear: left">
+					<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
 
 						<!-- Games -->
 						<template v-if="gamesCount > 0">
