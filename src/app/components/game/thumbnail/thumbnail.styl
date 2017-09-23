@@ -6,7 +6,6 @@
 	$zindex-img = 1
 	$zindex-video = 2
 	$zindex-controls = 3
-
 	position: relative
 	display: block
 	margin-bottom: $grid-gutter-width-xs
@@ -35,9 +34,7 @@
 		background-color: $gray-lightest
 		border-radius: $border-radius-base
 
-		.fill-dark &
-		.fill-darker &
-		.fill-darkest &
+		.fill-dark &, .fill-darker &, .fill-darkest &
 			background-color: $black
 
 		> .inner
@@ -57,8 +54,7 @@
 			color: $gray-lighter
 
 		>>>
-			img
-			.video
+			img, .video
 				position: absolute !important
 				top: 0
 				left: 0
@@ -97,14 +93,16 @@
 		font-weight: bold
 		color: $gray-darker
 
-		.fill-dark &
-		.fill-darker &
-		.fill-darkest &
+		.fill-dark &, .fill-darker &, .fill-darkest &
 			color: $gray-lightest
 
 	&-meta-extra
 		clear: both
 		margin-top: $game-thumbnail-meta-spacing
+		// We show tags and icons in here. We want to make sure that the line
+		// height is always the same no matter what content we show, so let's
+		// force it.
+		line-height: 26px
 
 	&-os
 		display: inline-block
@@ -115,9 +113,7 @@
 		margin-right: $game-thumbnail-meta-spacing
 
 	&-tag
-		.fill-dark &
-		.fill-darker &
-		.fill-darkest &
+		.fill-dark &, .fill-darker &, .fill-darkest &
 			background-color: $gray-dark
 			color: $white
 
