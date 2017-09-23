@@ -263,6 +263,7 @@
 		:listing="listing"
 		:hide-section-nav="true"
 		:is-loading="routeLoading"
+		:show-footer-ad="false"
 		>
 
 		<app-game-grid
@@ -299,7 +300,7 @@
 		<div class="container-lg">
 
 			<div class="clearfix">
-				<h1>
+				<h1 class="section-header">
 					<translate>Recommended Games</translate>
 				</h1>
 				<div :class="{ 'pull-left': !Screen.isXs }">
@@ -331,5 +332,7 @@
 
 		</div>
 	</section>
+
+	<app-ad-placement pos="bottom" />
 
 </div>

@@ -43,6 +43,8 @@ export class AppGameListing extends Vue {
 	@Prop(Boolean) isLoading?: boolean;
 	@Prop({ type: Boolean, default: true })
 	showAds: boolean;
+	@Prop({ type: Boolean, default: true })
+	showFooterAd: boolean;
 
 	number = number;
 	Environment = Environment;

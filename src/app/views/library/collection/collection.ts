@@ -30,6 +30,7 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { LibraryAction, LibraryStore, LibraryState } from '../../../store/library';
 import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
+import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -51,6 +52,7 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		AppGameGrid,
 		AppGameCollectionFollowWidget,
 		AppLoadingFade,
+		AppAdPlacement,
 	},
 	directives: {
 		AppTooltip,
