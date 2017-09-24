@@ -25,6 +25,7 @@
 		</div>
 		<div class="col-sm-3 col-md-2 text-muted small" :class="{ 'text-right': !Screen.isXs }">
 			<span
+				key="topics-count"
 				v-translate="{ count: number( channel.topics_count || 0 ) }"
 				:translate-n="channel.topics_count || 0"
 				translate-plural="<b>%{ count }</b> Topics"
@@ -36,7 +37,8 @@
 			<span class="hidden-sm hidden-md hidden-lg dot-separator"></span>
 
 			<span
-				v-translate="{ count: number( channel.topics_count || 0 ) }"
+				key="replies-count"
+				v-translate="{ count: number( channel.replies_count || 0 ) }"
 				:translate-n="channel.replies_count || 0"
 				translate-plural="<b>%{ count }</b> Replies"
 				>

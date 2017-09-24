@@ -49,6 +49,7 @@
 
 		<div class="col-sm-3 col-md-2 text-muted small" :class="{ 'text-right': !Screen.isXs }">
 			<span
+				key="replies-count"
 				v-translate="{ count: number( topic.replies_count || 0 ) }"
 				:translate-n="topic.replies_count || 0"
 				translate-plural="<b>%{ count }</b> Replies"
@@ -58,6 +59,7 @@
 			<br class="hidden-xs">
 			<span class="hidden-sm hidden-md hidden-lg dot-separator"></span>
 			<span
+				key="followers-count"
 				v-translate="{ count: number( topic.followers_count || 0 ) }"
 				:translate-n="topic.followers_count || 0"
 				translate-plural="<b>%{ count }</b> Followers"

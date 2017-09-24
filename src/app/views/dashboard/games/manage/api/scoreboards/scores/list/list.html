@@ -21,11 +21,17 @@
 		</div>
 	</div>
 
-	<div class="page-help" v-translate>
+	<div
+		class="page-help"
+		key="page-help"
+		v-translate
+		>
 		dash.games.scores.list.page_help_html
 	</div>
 
-	<div class="alert alert-warning anim-fade-in"
+	<div
+		class="alert alert-warning anim-fade-in"
+		key="no-scores"
 		v-if="!scores.length"
 		v-translate
 		>
