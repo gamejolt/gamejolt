@@ -134,7 +134,7 @@
 					:translate-params="{ count: number( post.view_count || 0 ) }"
 					translate-plural="%{ count } views"
 					>
-					1 view
+					%{ count } view
 				</translate>
 
 				<span class="dot-separator"></span>
@@ -144,7 +144,7 @@
 					:translate-params="{ count: number( post.expand_count || 0 ) }"
 					translate-plural="%{ count } expands"
 					>
-					1 expand
+					%{ count } expand
 				</translate>
 
 				<span v-app-tooltip="$gettext( 'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.' )">
@@ -158,13 +158,13 @@
 				:class="{ active: tab === 'comments' }"
 				@click="toggleComments"
 				>
-				<translate
-					:translate-params="{ count: number( post.comment_count ) }"
+				<span
+					v-translate="{ count: number( post.comment_count ) }"
 					:translate-n="post.comment_count"
 					translate-plural="<b>%{ count }</b> comments"
 					>
-					<b>1</b> comment
-				</translate>
+					<b>%{ count }</b> comment
+				</span>
 			</a>
 
 			<a class="activity-feed-controls-link link-muted"
@@ -172,13 +172,13 @@
 				:class="{ active: tab === 'likes' }"
 				@click="toggleLikes"
 				>
-				<translate
-					:translate-params="{ count: number( post.like_count ) }"
+				<span
+					v-translate="{ count: number( post.like_count ) }"
 					:translate-n="post.like_count"
 					translate-plural="<b>%{ count }</b> likes"
 					>
-					<b>1</b> like
-				</translate>
+					<b>%{ count }</b> like
+				</span>
 			</a>
 
 			<router-link
