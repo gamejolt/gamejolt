@@ -158,13 +158,13 @@
 				:class="{ active: tab === 'comments' }"
 				@click="toggleComments"
 				>
-				<span
-					v-translate="{ count: number( post.comment_count ) }"
+				<translate
+					:translate-params="{ count: number( post.comment_count ) }"
 					:translate-n="post.comment_count"
 					translate-plural="<b>%{ count }</b> comments"
 					>
 					<b>1</b> comment
-				</span>
+				</translate>
 			</a>
 
 			<a class="activity-feed-controls-link link-muted"
@@ -172,13 +172,13 @@
 				:class="{ active: tab === 'likes' }"
 				@click="toggleLikes"
 				>
-				<span
-					v-translate="{ count: number( post.like_count ) }"
+				<translate
+					:translate-params="{ count: number( post.like_count ) }"
 					:translate-n="post.like_count"
 					translate-plural="<b>%{ count }</b> likes"
 					>
 					<b>1</b> like
-				</span>
+				</translate>
 			</a>
 
 			<router-link
