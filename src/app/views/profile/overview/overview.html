@@ -5,16 +5,27 @@
 	-->
 	<section class="section fill-pink" v-if="!user.status">
 		<div class="container">
-			<translate>profile.banned_message_html</translate>
-			&nbsp;
-			<button
-				v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
-				class="btn"
-				@click="$emit( 'remove-friend' )"
-				>
-				<app-jolticon icon="friend-remove-2 warning" />
-				<translate>Remove friend</translate>
-			</button>
+			<div>
+				<translate>profile.banned_message_html</translate>
+			</div>
+
+			<app-expand :when="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS">
+				<br>
+				<hr class="underbar">
+				<div>
+					<strong><translate>This user was your friend.</translate></strong>
+					<br>
+					<translate>If you remove them from your friends list, you will no longer be able to access your chat history with them.</translate>
+				</div>
+				<br>
+				<button
+					class="btn"
+					@click="$emit( 'remove-friend' )"
+					>
+					<app-jolticon icon="friend-remove-2 warning" />
+					<translate>profile.remove_friend_button</translate>
+				</button>
+			</app-expand>
 		</div>
 	</section>
 	<template v-else>
