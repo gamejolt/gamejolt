@@ -4,11 +4,10 @@ import { Component, Prop } from 'vue-property-decorator';
 import { importContext } from '../../../../lib/gj-lib-client/utils/utils';
 import { PayloadError } from '../../../../lib/gj-lib-client/components/payload/payload-service';
 
+// We don't emit files since we just want to pull the directory listing.
 const paths = importContext(
 	require.context('!file-loader?-emitFile!../../../../lib/doc-game-api/v1.x/', true, /\.md$/)
 );
-
-console.log('paths', paths);
 
 import {
 	BaseRouteComponent,
@@ -32,13 +31,11 @@ export default class RouteLandingGameApiDoc extends BaseRouteComponent {
 		}
 
 		if (paths[`./${path}.md`]) {
-			return import(/* webpackChunkName: "gameApiDocContent" */ '../../../../lib/doc-game-api/v1.x/' +
-				path +
-				'.md');
+			return import(/* webpackChunkName: "gameApiDocContent" */
+			`../../../../lib/doc-game-api/v1.x/${path}.md`);
 		} else if (paths[`./${path}/index.md`]) {
-			return import(/* webpackChunkName: "gameApiDocContent" */ '../../../../lib/doc-game-api/v1.x/' +
-				path +
-				'/index.md');
+			return import(/* webpackChunkName: "gameApiDocContent" */
+			`../../../../lib/doc-game-api/v1.x/${path}/index.md`);
 		}
 
 		return PayloadError.fromHttpError(404);

@@ -34,7 +34,7 @@
 									<li v-for="item of item.nav" :key="item.url">
 										<router-link
 											:to="`/game-api/doc${item.url}`"
-											:class="inPath( item.url ) ? 'active' : ''"
+											:class="inPath( item.url, true ) ? 'active' : ''"
 											>
 											{{ item.title }}
 										</router-link>

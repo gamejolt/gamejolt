@@ -15,7 +15,10 @@ export default class RouteLandingGameApiDoc extends BaseRouteComponent {
 		return this.$gettext(`Game API Documentation`);
 	}
 
-	inPath(url: string) {
+	inPath(url: string, exact = false) {
+		if (exact) {
+			return '/' + this.$route.params.path === url;
+		}
 		return ('/' + this.$route.params.path).indexOf(url) !== -1;
 	}
 }
