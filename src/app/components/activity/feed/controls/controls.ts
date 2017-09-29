@@ -4,7 +4,6 @@ import { State } from 'vuex-class';
 import * as View from '!view!./controls.html?style=./controls.styl';
 
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { FiresidePostLike } from '../../../../../lib/gj-lib-client/components/fireside/post/like/like-model';
 import { Clipboard } from '../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -15,9 +14,6 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppGameFollowWidget } from '../../../game/follow-widget/follow-widget';
-import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppCard } from '../../../../../lib/gj-lib-client/components/card/card';
-import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppFiresidePostLikeWidget } from '../../../../../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 import { AppSocialTwitterShare } from '../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../lib/gj-lib-client/components/social/facebook/like/like';
@@ -36,9 +32,6 @@ import { Game } from '../../../../../lib/gj-lib-client/components/game/game.mode
 		AppGameFollowWidget,
 		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
 		AppCommentWidget: AppCommentWidgetLazy,
-		AppLoading,
-		AppCard,
-		AppUserAvatarImg,
 		AppFiresidePostLikeWidget,
 		AppCommentVideoLikeWidget,
 		AppSocialTwitterShare,
@@ -65,13 +58,10 @@ export class AppActivityFeedControls extends Vue {
 
 	@State app: Store['app'];
 
-	tab: 'comments' | 'likes' | null = null;
-	hasLoadedLikes = false;
-	likes: FiresidePostLike[] = [];
+	tab: 'comments' | null = null;
 	isShowingShare = false;
 
 	number = number;
-	Environment = Environment;
 	Screen = makeObservableService(Screen);
 	FiresidePost = FiresidePost;
 
@@ -100,6 +90,12 @@ export class AppActivityFeedControls extends Vue {
 		);
 	}
 
+	get shouldShowStats() {
+		return (
+			!!this.post && this.showExtraInfo && !!this.app.user && this.post.user.id === this.app.user.id
+		);
+	}
+
 	created() {
 		if (this.requireTabs) {
 			this.tab = 'comments';
@@ -118,10 +114,6 @@ export class AppActivityFeedControls extends Vue {
 	}
 
 	toggleComments() {
-		// If we aren't in the feed, then don't toggle comments out.
-		// We just scroll to the comments.
-		// this.scroll.to( 'comments' );
-
 		if (this.tab === 'comments' && !this.requireTabs) {
 			this.tab = null;
 		} else {
@@ -129,28 +121,6 @@ export class AppActivityFeedControls extends Vue {
 		}
 
 		this.$emit('expanded');
-	}
-
-	toggleLikes() {
-		if (this.tab === 'likes' && !this.requireTabs) {
-			this.tab = null;
-		} else {
-			this.tab = 'likes';
-		}
-
-		this.$emit('expanded');
-
-		if (this.tab === 'likes') {
-			this.loadLikes();
-		}
-	}
-
-	async loadLikes() {
-		if (this.post) {
-			const likes = await this.post.fetchLikes();
-			this.likes = likes;
-			this.hasLoadedLikes = true;
-		}
 	}
 
 	copyShareUrl() {

@@ -2,7 +2,37 @@
 
 	<!-- Buttons -->
 	<div class="activity-feed-controls timeline-list-item-controls">
-		<!--<hr>-->
+
+		<!--
+			We don't show this in the feed on mobile.
+		-->
+		<div class="activity-feed-controls-stats" v-if="shouldShowStats">
+
+			<hr>
+			<translate
+				:translate-n="post.view_count || 0"
+				:translate-params="{ count: number( post.view_count || 0 ) }"
+				translate-plural="%{ count } views"
+				>
+				%{ count } view
+			</translate>
+
+			<span class="dot-separator"></span>
+
+			<translate
+				:translate-n="post.expand_count || 0"
+				:translate-params="{ count: number( post.expand_count || 0 ) }"
+				translate-plural="%{ count } expands"
+				>
+				%{ count } expand
+			</translate>
+
+			<span v-app-tooltip="$gettext( 'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.' )">
+				<app-jolticon icon="help-circle" />
+			</span>
+			<hr>
+
+		</div>
 
 		<div class="activity-feed-controls-controls clearfix">
 			<div class="pull-left">
@@ -16,7 +46,7 @@
 						class="btn btn-outline btn-sparse btn-circle"
 						v-if="!requireTabs"
 						@click="toggleComments"
-						v-app-tooltip="$gettext( 'Comment on This Post' )"
+						v-app-tooltip="$gettext( 'View Comments' )"
 						>
 						<app-jolticon icon="comment" />
 					</button>
@@ -88,7 +118,9 @@
 						&& !game.is_following
 					"
 					:game="game"
-					:sparse="Screen.isXs"
+					:class="{
+						'btn-sm': Screen.isXs,
+					}"
 					:outline="true"
 					event-label="activity-feed-controls"
 					/>
@@ -120,82 +152,6 @@
 			</div>
 		</div>
 
-		<!--
-			We don't show this in the feed on mobile.
-		-->
-		<div class="activity-feed-controls-links clearfix" v-if="post && showExtraInfo">
-
-			<div class="activity-feed-controls-stats text-muted"
-				v-if="app.user && post.user.id === app.user.id"
-				>
-
-				<translate
-					:translate-n="post.view_count || 0"
-					:translate-params="{ count: number( post.view_count || 0 ) }"
-					translate-plural="%{ count } views"
-					>
-					%{ count } view
-				</translate>
-
-				<span class="dot-separator"></span>
-
-				<translate
-					:translate-n="post.expand_count || 0"
-					:translate-params="{ count: number( post.expand_count || 0 ) }"
-					translate-plural="%{ count } expands"
-					>
-					%{ count } expand
-				</translate>
-
-				<span v-app-tooltip="$gettext( 'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.' )">
-					<app-jolticon icon="help-circle" />
-				</span>
-
-			</div>
-
-			<a class="activity-feed-controls-link link-muted"
-				v-if="post.comment_count > 0"
-				:class="{ active: tab === 'comments' }"
-				@click="toggleComments"
-				>
-				<span
-					v-translate="{ count: number( post.comment_count ) }"
-					:translate-n="post.comment_count"
-					translate-plural="<b>%{ count }</b> comments"
-					>
-					<b>%{ count }</b> comment
-				</span>
-			</a>
-
-			<a class="activity-feed-controls-link link-muted"
-				v-if="post.like_count > 0"
-				:class="{ active: tab === 'likes' }"
-				@click="toggleLikes"
-				>
-				<span
-					v-translate="{ count: number( post.like_count ) }"
-					:translate-n="post.like_count"
-					translate-plural="<b>%{ count }</b> likes"
-					>
-					<b>%{ count }</b> like
-				</span>
-			</a>
-
-			<router-link
-				class="activity-feed-controls-link link-muted"
-				v-if="showGameInfo && game"
-				:to="{
-					name: 'discover.games.view.overview',
-					params: {
-						slug: game.slug,
-						id: game.id,
-					},
-				}"
-				>
-				<translate>View game</translate>
-			</router-link>
-		</div>
-
 	</div>
 
 	<template v-if="post">
@@ -207,7 +163,6 @@
 			/>
 
 		<div class="activity-feed-controls-well" v-if="tab">
-
 			<app-comment-widget
 				v-if="tab === 'comments'"
 				resource="Fireside_Post"
@@ -216,33 +171,6 @@
 				@add="onCommentAdded()"
 				@count="updateCommentsCount"
 				/>
-
-			<div v-else-if="tab === 'likes'">
-				<app-loading v-if="!hasLoadedLikes" />
-				<router-link
-					v-else
-					v-for="like of likes"
-					:key="like.id"
-					:to="{ name: 'profile.overview', params: { username: like.user.username } }"
-					>
-					<app-card>
-						<div style="width: 40px; height: 40px; float: left">
-							<div class="friend-request-popover-avatar">
-								<app-user-avatar-img :user="like.user" />
-							</div>
-						</div>
-						<div style="margin-left: 55px;">
-							<div class="card-title">
-								<h5>
-									{{ like.user.display_name }}
-									<small>@{{ like.user.username }}</small>
-								</h5>
-							</div>
-						</div>
-					</app-card>
-				</router-link>
-			</div>
-
 		</div>
 	</template>
 

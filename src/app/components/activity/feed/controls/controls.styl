@@ -4,35 +4,17 @@
 .activity-feed-controls
 	margin-bottom: $line-height-computed
 
-	&-links
-		margin-bottom: $line-height-computed
-
-		@media $media-xs
-			font-size: $font-size-small
-
-	&-link
-		& + &
-			&::before
-				dot-separator()
-				content: ''
-
-		&.active
-			font-weight: bold
-			color: $black
-
 	&-controls
 		margin-top: $line-height-computed
 		margin-bottom: $line-height-computed
 
 	&-stats
+		margin-bottom: $line-height-computed
 		font-size: $font-size-small
+		color: $text-muted
 
 		@media $media-xs
-			margin-top: $font-size-base
 			margin-bottom: $line-height-computed
-
-		@media $media-sm-up
-			float: right
 
 	&-well
 		position: relative
@@ -41,6 +23,6 @@
 		border-top: 1px solid $gray-lightest
 
 		&::before
-			caret( color: $gray-lightest, direction: 'up', size: 10px )
+			caret(color: $gray-lightest, direction: 'up', size: 10px)
 			display: block
 			content: ''
