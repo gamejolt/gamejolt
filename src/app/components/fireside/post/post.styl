@@ -1,9 +1,10 @@
 @require '../../../../lib/gj-lib-client/stylus/mixins/compiled-content'
 
-$fireside-post-font-family = "Merriweather", Georgia, "Times New Roman", Times, serif
+$fireside-post-font-family = 'Merriweather', Georgia, 'Times New Roman', Times, serif
 $fireside-post-font-size = $font-size-base
 $fireside-post-line-height = 1.7
-$fireside-post-line-height-computed = floor( $fireside-post-font-size * $fireside-post-line-height )
+$fireside-post-line-height-computed_ = $fireside-post-line-height * $fireside-post-font-size
+$fireside-post-line-height-computed = floor($fireside-post-line-height-computed_)
 
 .fireside-post-body
 	compiled-content($fireside-post-font-size, $fireside-post-line-height-computed)
@@ -18,9 +19,11 @@ $fireside-post-line-height-computed = floor( $fireside-post-font-size * $firesid
 
 	a
 		link-underlines($text-color, $white, $gray-lighter)
-		
+
+	// We have to cancel the link-underlines styling.
 	.hashtag
 		text-shadow: none
+		background-image: none !important
 
 	blockquote
 		font-family: $font-family-base
