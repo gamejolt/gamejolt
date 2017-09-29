@@ -15,25 +15,14 @@ import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholde
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { Store } from '../../../store/index';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
-import { hasHomeRowsSplitTest } from '../../../components/split-test/split-test-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
-
-export interface DiscoverSection {
-	title: string;
-	smallTitle: string;
-	url: string;
-	eventLabel: string;
-	games: string;
-}
 
 export interface DiscoverRow {
 	title: string;
@@ -64,8 +53,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	@State app: Store['app'];
 
 	isLoaded = false;
-	chosenSection: DiscoverSection | null = null;
-	featuredItems: FeaturedItem[] = [];
 	channels: any[] = [];
 
 	games: { [k: string]: Game[] } = {
@@ -74,10 +61,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		best: [],
 		recommended: [],
 	};
-
-	variation = 'original';
-
-	Screen = makeObservableService(Screen);
 
 	get rows() {
 		const rows: DiscoverRow[] = [];
@@ -100,7 +83,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 					name: 'library.collection.recommended',
 					params: { id: this.app.user.username },
 				}).href,
-				eventLabel: 'daily-mix',
+				eventLabel: 'recommended',
 				games: 'recommended',
 			});
 		}
@@ -129,50 +112,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		return rows;
 	}
 
-	get discoverSections() {
-		const bestSection: DiscoverSection = {
-			title: this.$gettext('Best Games'),
-			smallTitle: this.$gettext('Best'),
-			url: this.$router.resolve({
-				name: 'discover.games.list._fetch',
-				params: { section: 'best' },
-			}).href,
-			eventLabel: 'best-games',
-			games: 'best',
-		};
-
-		const hotSection: DiscoverSection = {
-			title: this.$gettext('Hot Games'),
-			smallTitle: this.$gettext('Hot'),
-			url: this.$router.resolve({
-				name: 'discover.games.list._fetch',
-				params: { section: null as any },
-			}).href,
-			eventLabel: 'hot-games',
-			games: 'hot',
-		};
-
-		let sections: DiscoverSection[] = [];
-		if (this.isLoaded && this.app.user) {
-			const recommendedSection = {
-				title: this.$gettext('Your Daily Mix'),
-				smallTitle: this.$gettext('Your Daily Mix'),
-				url: this.$router.resolve({
-					name: 'library.collection.recommended',
-					params: { id: this.app.user.username },
-				}).href,
-				eventLabel: 'daily-mix',
-				games: 'recommended',
-			};
-
-			sections = [hotSection, recommendedSection, bestSection];
-		} else {
-			sections = [hotSection, bestSection];
-		}
-
-		return sections;
-	}
-
 	@RouteResolve({ cache: true })
 	routeResolve() {
 		return Api.sendRequest('/web/discover');
@@ -180,17 +119,11 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 	routeInit() {
 		Meta.title = null;
-
-		if (!this.chosenSection) {
-			this.chosenSection = this.discoverSections[0];
-		}
-
 		Ads.setAdUnit('homepage');
 	}
 
 	routed() {
 		this.isLoaded = true;
-		this.variation = hasHomeRowsSplitTest(this.$route, this.$payload);
 
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb;
@@ -209,8 +142,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 				'query-input': 'required name=search_term_string',
 			},
 		};
-
-		this.chosenSection = this.discoverSections[0];
 
 		const featuredItems = FeaturedItem.populate(this.$payload.featuredGames);
 		this.games.featured = featuredItems.map(item => item.game);
@@ -241,9 +172,5 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 				this.channels.push(info);
 			}
 		}
-	}
-
-	changeSection(sectionIndex: number) {
-		this.chosenSection = this.discoverSections[sectionIndex];
 	}
 }

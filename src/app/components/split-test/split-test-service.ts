@@ -1,17 +1,5 @@
 import VueRouter from 'vue-router';
 
-const ExperimentHomeRows = 'vqkALI9RSwm60UjG8SHevA';
-
-export function hasHomeRowsSplitTest(route: VueRouter.Route, payload: any) {
-	const variation = getPayloadVariation(route, payload, ExperimentHomeRows);
-	if (variation === 1) {
-		return 'rows';
-	} else if (variation === 2) {
-		return 'rows-no-banner';
-	}
-	return 'original';
-}
-
 function getPayloadVariation(route: VueRouter.Route, payload: any, experiment: string): number {
 	let variation = checkHardcoded(route, experiment);
 	if (variation !== -1) {

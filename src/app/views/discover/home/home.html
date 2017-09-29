@@ -35,7 +35,7 @@
 	</a>
 
 	<!-- <section
-		v-if="!app.user || variation !== 'rows-no-banner'"
+		v-if="!app.user"
 		class="section landing-header text-center"
 		>
 		<div class="container">
@@ -92,168 +92,51 @@
 		</div>
 	</section>
 
-	<template v-if="variation === 'original'">
-		<section class="section">
-			<div class="container-lg">
+	<section class="section">
+		<div class="container-lg">
 
-				<h1 class="section-header text-center">
-					<router-link class="link-unstyled"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-						v-app-track-event="`home:row-heading:featured`"
+			<div v-for="row of rows" :key="row.url">
+				<h1 class="section-header">
+					<router-link
+						class="link-unstyled"
+						:to="row.url"
+						v-app-track-event="`home:row-heading:${row.eventLabel}`"
 						>
-						<translate>Featured Games</translate>
+						{{ row.title }}
 					</router-link>
+					<small v-if="row.desc">{{ row.desc }}</small>
 				</h1>
 
-				<hr class="underbar underbar-center">
-
 				<div>
 					<app-game-grid-placeholder
 						v-if="!isLoaded"
-						:num="8"
+						:num="6"
 						:truncate-to-fit="true"
 						:scrollable="true"
 						/>
-
 					<app-game-grid
 						v-else
-						:games="games.featured"
+						:games="games[ row.games ].slice(0, 6)"
 						:truncate-to-fit="true"
 						:scrollable="true"
-						:show-ads="Screen.isDesktop"
-						event-label="home-featured-games"
+						:show-ads="false"
+						:event-label="`home-${row.eventLabel}`"
 						/>
 				</div>
 
-				<div class="text-center">
-					<router-link class="btn btn-outline"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-						v-app-track-event="`home:more-btn:featured`"
-						>
-						<translate>Explore All Featured</translate>
-					</router-link>
-				</div>
+				<router-link
+					class="btn btn-outline"
+					:to="row.url"
+					v-app-track-event="`home:more-btn:${row.eventLabel}`"
+					>
+					<translate>Show More</translate>
+				</router-link>
 
+				<hr>
 			</div>
-		</section>
 
-		<section class="section">
-			<div class="container-lg">
-
-				<!--
-					Game Listings
-				-->
-
-				<div class="row text-center">
-					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-
-						<h1 class="section-header">
-							<router-link class="link-unstyled"
-								:to="{ name: 'discover.channels.list' }"
-								v-app-track-event="`home:row-heading:channels`"
-								>
-								<translate>Discover Games</translate>
-							</router-link>
-						</h1>
-
-					</div>
-				</div>
-
-				<app-nav-tab-list :center="true">
-					<ul>
-						<li v-for="( section, i ) of discoverSections" :key="section.url">
-							<a
-								@click="changeSection( i )"
-								:class="{ active: chosenSection.url === section.url }"
-								>
-								<span class="hidden-xs">
-									{{ section.title }}
-								</span>
-								<span class="visible-xs">
-									{{ section.smallTitle }}
-								</span>
-							</a>
-						</li>
-					</ul>
-				</app-nav-tab-list>
-
-				<div>
-					<app-game-grid-placeholder
-						v-if="!isLoaded"
-						:num="16"
-						:truncate-to-fit="true"
-						/>
-
-					<app-game-grid
-						v-else
-						:games="games[ chosenSection.games ]"
-						:truncate-to-fit="true"
-						:show-ads="Screen.isDesktop"
-						ad-pos="bottom"
-						:event-label="`home-${chosenSection.eventLabel}`"
-						/>
-				</div>
-
-
-				<div class="text-center">
-					<router-link class="btn btn-outline"
-						:to="chosenSection.url"
-						v-app-track-event="`home:more-btn:${chosenSection.eventLabel}`"
-						>
-						<translate>Load More</translate>
-					</router-link>
-				</div>
-
-			</div>
-		</section>
-	</template>
-	<template v-else-if="variation === 'rows' || variation === 'rows-no-banner'">
-		<section class="section">
-			<div class="container-lg">
-
-				<div v-for="row of rows" :key="row.url">
-					<h2 class="section-header">
-						<router-link
-							class="link-unstyled"
-							:to="row.url"
-							v-app-track-event="`home:row-heading:${row.eventLabel}`"
-							>
-							{{ row.title }}
-						</router-link>
-						<small v-if="row.desc">{{ row.desc }}</small>
-					</h2>
-
-					<div>
-						<app-game-grid-placeholder
-							v-if="!isLoaded"
-							:num="6"
-							:truncate-to-fit="true"
-							:scrollable="true"
-							/>
-						<app-game-grid
-							v-else
-							:games="games[ row.games ].slice(0, 6)"
-							:truncate-to-fit="true"
-							:scrollable="true"
-							:show-ads="false"
-							:event-label="`home-${row.eventLabel}`"
-							/>
-					</div>
-
-					<router-link
-						class="btn btn-outline"
-						:to="row.url"
-						v-app-track-event="`home:more-btn:${row.eventLabel}`"
-						>
-						<translate>Show More</translate>
-					</router-link>
-
-					<hr>
-				</div>
-
-			</div>
-		</section>
-	</template>
+		</div>
+	</section>
 
 	<app-ad-placement pos="bottom" />
 
