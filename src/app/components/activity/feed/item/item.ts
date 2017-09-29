@@ -3,8 +3,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import * as View from '!view!./item.html';
 
 import { ActivityFeedItem } from '../item-service';
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
 import { ActivityFeedContainer } from '../feed-container-service';
 import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { AppActivityFeedNotification } from '../notification/notification';
@@ -40,11 +38,7 @@ export class AppActivityFeedItem extends Vue {
 			return false;
 		}
 
-		if (this.item.feedItem instanceof Notification) {
-			return this.item.feedItem.added_on > this.feed.notificationWatermark;
-		} else if (this.item.feedItem instanceof FiresidePost) {
-			return this.item.feedItem.published_on > this.feed.notificationWatermark;
-		}
+		return this.item.feedItem.added_on > this.feed.notificationWatermark;
 	}
 
 	get isHydrated() {
