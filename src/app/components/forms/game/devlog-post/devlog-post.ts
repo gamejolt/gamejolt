@@ -13,6 +13,9 @@ import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/compone
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
+import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
+import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -25,6 +28,8 @@ type FormGameDevlogPostModel = FiresidePost & {
 	components: {
 		AppFormControlMarkdown,
 		AppFormControlUpload,
+		AppFormControlToggle,
+		AppUserAvatar,
 	},
 	directives: {
 		AppFocusWhen,
@@ -33,6 +38,8 @@ type FormGameDevlogPostModel = FiresidePost & {
 export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	implements FormOnInit, FormOnLoad {
 	modelClass = FiresidePost as any;
+
+	@AppState user: AppStore['user'];
 
 	$refs: {
 		form: AppForm;
@@ -45,8 +52,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	maxWidth = 0;
 	maxHeight = 0;
 
-	FiresidePost = FiresidePost;
-	GameVideo = GameVideo;
+	readonly FiresidePost = FiresidePost;
+	readonly GameVideo = GameVideo;
 
 	get loadUrl() {
 		return `/web/dash/developer/games/devlog/save/${this.model!.game.id}/${this.model!.id}`;

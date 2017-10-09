@@ -13,7 +13,7 @@
 			:show-media-items="true"
 			media-item-type="game-description"
 			:placeholder="$gettext( `Write your game description here...` )"
-			:disabled="isDisabled"
+			:disabled="isDisabled || !model.hasPerms('details')"
 			/>
 
 		<app-form-control-errors />
@@ -26,30 +26,34 @@
 				dash.games.add.fnaf_autotag_message_html
 			</div>
 
-			<div class="alert-actions">
-				<button
-					class="btn btn-success-outline"
-					@click="addAutotag( 'fnaf' )"
-					>
-					<app-jolticon icon="tag" />
-					<translate>dash.games.add.fnaf_autotag_accept</translate>
-				</button>
+			<app-game-perms required="details">
+				<div class="alert-actions">
+					<button
+						class="btn btn-success-outline"
+						@click="addAutotag( 'fnaf' )"
+						>
+						<app-jolticon icon="tag" />
+						<translate>dash.games.add.fnaf_autotag_accept</translate>
+					</button>
 
-				<button
-					class="btn btn-outline"
-					@click="skipAutotag"
-					>
-					<app-jolticon icon="remove" />
-					<translate>dash.games.add.fnaf_autotag_reject</translate>
-				</button>
-			</div>
+					<button
+						class="btn btn-outline"
+						@click="skipAutotag"
+						>
+						<app-jolticon icon="remove" />
+						<translate>dash.games.add.fnaf_autotag_reject</translate>
+					</button>
+				</div>
+			</app-game-perms>
 		</div>
 	</app-expand>
 
-	<app-dash-game-wizard-controls v-if="!isFnafDetected">
-		<app-form-button icon="edit">
-			<translate>Save Description</translate>
-		</app-form-button>
-	</app-dash-game-wizard-controls>
+	<app-game-perms required="details">
+		<app-dash-game-wizard-controls v-if="!isFnafDetected">
+			<app-form-button icon="edit">
+				<translate>Save Description</translate>
+			</app-form-button>
+		</app-dash-game-wizard-controls>
+	</app-game-perms>
 
 </app-form>

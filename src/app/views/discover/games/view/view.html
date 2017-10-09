@@ -4,35 +4,63 @@
 
 	<app-game-maturity-block :game="game">
 
-		<section class="section section-thin fill-darkest"
-			v-if="app.user && app.user.id === game.developer.id"
-			>
+		<section v-if="collaboratorInvite" class="section section-thin fill-pink">
 			<div class="container text-center">
-
-				<router-link
-					class="btn btn-outline hidden-xs"
-					:to="{
-						name: 'dash.analytics',
-						params: { resource: 'Game', resourceId: game.id },
+				<p v-translate="{
+						username: game.developer.username,
+						role: roleName,
 					}"
 					>
-					<app-jolticon icon="chart" />
-					<translate>View Analytics</translate>
-				</router-link>
-
-				<router-link
-					class="btn btn-outline"
-					:to="{
-						name: 'dash.games.manage.game.overview',
-						params: { id: game.id },
-					}"
+					<b>@%{ username }</b> invited you to collaborate on this game as <b>%{ role }</b>
+				</p>
+				<button
+					class="btn fill-darkest"
+					@click="acceptCollaboration()"
 					>
-					<app-jolticon icon="cog" />
-					<translate>Manage Game</translate>
-				</router-link>
-
+					<app-jolticon icon="check" />
+					<translate>Accept</translate>
+				</button>
+				<button
+					class="btn fill-darkest"
+					@click="declineCollaboration()"
+					>
+					<app-jolticon icon="remove" />
+					<translate>Decline</translate>
+				</button>
 			</div>
 		</section>
+
+		<app-game-perms :game="game">
+			<section class="section section-thin fill-darkest">
+				<div class="container text-center">
+
+					<app-game-perms :game="game" required="analytics">
+						<router-link
+							class="btn btn-outline hidden-xs"
+							:to="{
+								name: 'dash.analytics',
+								params: { resource: 'Game', resourceId: game.id },
+							}"
+							>
+							<app-jolticon icon="chart" />
+							<translate>View Analytics</translate>
+						</router-link>
+					</app-game-perms>
+
+					<router-link
+						class="btn btn-outline"
+						:to="{
+							name: 'dash.games.manage.game.overview',
+							params: { id: game.id },
+						}"
+						>
+						<app-jolticon icon="cog" />
+						<translate>Manage Game</translate>
+					</router-link>
+
+				</div>
+			</section>
+		</app-game-perms>
 
 		<!--
 			Don't affix the nav on download pages.

@@ -5,11 +5,13 @@ import * as View from '!view!./nav.html?style=./nav.styl';
 import { RouteState, RouteStore, RouteAction } from '../../manage.store';
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppManageGameNavRequired } from './required';
+import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 
 @View
 @Component({
 	components: {
 		AppManageGameNavRequired,
+		AppGamePerms,
 	},
 })
 export class AppManageGameNav extends Vue {

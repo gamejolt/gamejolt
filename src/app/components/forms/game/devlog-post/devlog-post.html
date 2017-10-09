@@ -131,6 +131,23 @@
 		</div>
 	</app-form-group>
 
+	<app-form-group
+		name="as_game_owner"
+		v-if="user && model.game && user.id != model.game.developer.id"
+		:label="$gettext(`Post as game owner`)"
+		>
+		<p class="help-block">
+			With this option on, the post will be published on behalf of the game owner.
+		</p>
+		<app-form-control-toggle />
+		<!-- TODO(collaborators) make these show nicely -->
+		&nbsp;
+		<app-user-avatar
+			class="avatar-circle"
+			:user="formModel.as_game_owner ? model.game.developer : user"
+			/>
+	</app-form-group>
+
 	<div
 		class="form-group"
 		v-if="model.published_on && model.key_groups.length"

@@ -18,6 +18,7 @@ import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/
 import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
 import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { LocationRedirect } from '../../../../../../../../lib/gj-lib-client/utils/router';
+import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -32,6 +33,7 @@ import {
 		AppCardListDraggable,
 		AppCardListItem,
 		AppDashGameWizardControls,
+		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,
@@ -57,6 +59,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 		const payload = await Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id);
 
 		if (payload.packages && !payload.packages.length) {
+			// TODO(collaborators) a page for when there are no packages but no permission to create any
 			return new LocationRedirect({
 				name: 'dash.games.manage.game.packages.add',
 			});

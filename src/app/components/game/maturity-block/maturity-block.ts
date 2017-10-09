@@ -29,7 +29,7 @@ export class AppGameMaturityBlock extends Vue {
 			this.game.tigrs_age === 3 &&
 			!GJ_IS_SSR &&
 			Settings.get('restricted-browsing') &&
-			!(this.app.user && this.app.user.id === this.game.developer.id) &&
+			!this.game.hasPerms() &&
 			!this.hasBypassed
 		);
 	}

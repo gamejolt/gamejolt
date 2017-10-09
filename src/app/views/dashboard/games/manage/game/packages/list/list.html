@@ -24,34 +24,38 @@
 			dash.games.packages.no_packages_html
 		</div>
 
-		<div>
-			<router-link
-				class="btn btn-success-outline btn-block"
-				:to="{
-					name: 'dash.games.manage.game.packages.add',
-				}"
-				>
-				<app-jolticon icon="add" />
-				<translate>dash.games.packages.add_package_button</translate>
-			</router-link>
-		</div>
+		<app-game-perms required="all">
+			<div>
+				<router-link
+					class="btn btn-success-outline btn-block"
+					:to="{
+						name: 'dash.games.manage.game.packages.add',
+					}"
+					>
+					<app-jolticon icon="add" />
+					<translate>dash.games.packages.add_package_button</translate>
+				</router-link>
+			</div>
+		</app-game-perms>
 		<br>
 
 		<app-card-list v-if="packages.length" :items="packages">
-			<app-card-list-draggable @change="saveSort">
+			<app-card-list-draggable :disabled="!game.hasPerms('details')" @change="saveSort">
 				<app-card-list-item
 					v-for="package of packages"
 					:key="package.id"
 					:item="package"
 					>
 
-					<a
-						class="card-remove"
-						v-if="!package.has_sales"
-						@click="removePackage( package )"
-						>
-						<app-jolticon icon="remove" />
-					</a>
+					<app-game-perms required="all">
+						<a
+							class="card-remove"
+							v-if="!package.has_sales"
+							@click="removePackage( package )"
+							>
+							<app-jolticon icon="remove" />
+						</a>
+					</app-game-perms>
 
 					<div class="card-title">
 						<h4>
@@ -134,26 +138,30 @@
 							<app-jolticon icon="cog" />
 							<translate>Manage</translate>
 						</router-link>
-						<router-link
-							class="btn btn-outline"
-							:to="{
-								name: 'dash.games.manage.game.packages.edit.widget',
-								params: { packageId: package.id },
-							}"
-							>
-							<app-jolticon icon="plug" />
-							<translate>Widget</translate>
-						</router-link>
-						<router-link
-							class="btn btn-outline"
-							:to="{
-								name: 'dash.analytics',
-								params: { resource: 'Game_Package', resourceId: package.id },
-							}"
-							>
-							<app-jolticon icon="chart" />
-							<translate>Analytics</translate>
-						</router-link>
+						<app-game-perms required="all">
+							<router-link
+								class="btn btn-outline"
+								:to="{
+									name: 'dash.games.manage.game.packages.edit.widget',
+									params: { packageId: package.id },
+								}"
+								>
+								<app-jolticon icon="plug" />
+								<translate>Widget</translate>
+							</router-link>
+						</app-game-perms>
+						<app-game-perms required="analytics">
+							<router-link
+								class="btn btn-outline"
+								:to="{
+									name: 'dash.analytics',
+									params: { resource: 'Game_Package', resourceId: package.id },
+								}"
+								>
+								<app-jolticon icon="chart" />
+								<translate>Analytics</translate>
+							</router-link>
+						</app-game-perms>
 					</div>
 
 				</app-card-list-item>

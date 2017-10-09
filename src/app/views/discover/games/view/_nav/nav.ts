@@ -11,12 +11,14 @@ import { Environment } from '../../../../../../lib/gj-lib-client/components/envi
 import { RouteState, RouteStore } from '../view.store';
 import { ReportModal } from '../../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 import { Store } from '../../../../../store/index';
+import { AppGamePerms } from '../../../../../components/game/perms/perms';
 
 @View
 @Component({
 	components: {
 		AppJolticon,
 		AppPopover,
+		AppGamePerms,
 	},
 	directives: {
 		AppPopoverTrigger,

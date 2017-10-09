@@ -16,6 +16,7 @@ import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/f
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppDashGameWizardControls } from './wizard-controls/wizard-controls';
 import { AppGameDevStageSelector } from './dev-stage-selector/dev-stage-selector';
+import { AppGamePerms } from '../../game/perms/perms';
 
 @View
 @Component({
@@ -25,6 +26,7 @@ import { AppGameDevStageSelector } from './dev-stage-selector/dev-stage-selector
 		AppExpand,
 		AppDashGameWizardControls,
 		AppGameDevStageSelector,
+		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,

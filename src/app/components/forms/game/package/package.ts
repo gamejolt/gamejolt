@@ -26,6 +26,8 @@ import {
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
 import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
+import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppGamePerms } from '../../../game/perms/perms';
 
 type FormGamePackageModel = GamePackage & {
 	primary: boolean;
@@ -45,6 +47,7 @@ type FormGamePackageModel = GamePackage & {
 		AppLoadingFade,
 		AppFormControlToggle,
 		AppFormControlDate,
+		AppGamePerms,
 	},
 	filters: {
 		date,
@@ -56,6 +59,8 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 	modelClass = GamePackage as any;
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
+
+	@AppState user: AppStore['user'];
 
 	@Prop(Game) game: Game;
 	@Prop(Sellable) sellable: Sellable;

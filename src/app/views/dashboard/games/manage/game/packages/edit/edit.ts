@@ -21,6 +21,7 @@ import { FormGamePackage } from '../../../../../../../components/forms/game/pack
 import { AppExpand } from '../../../../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { AppProgressPoller } from '../../../../../../../../lib/gj-lib-client/components/progress/poller/poller';
+import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -39,6 +40,7 @@ import {
 		FormGamePackage,
 		AppDashGameWizardControls,
 		AppProgressPoller,
+		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,

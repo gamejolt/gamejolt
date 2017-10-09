@@ -13,6 +13,7 @@ import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/to
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGameDevStageSelector } from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector';
 import { AppGraphWidget } from '../../../../../../../lib/gj-lib-client/components/graph/widget/widget';
+import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -28,6 +29,7 @@ import {
 		AppExpand,
 		AppGameDevStageSelector,
 		AppGraphWidget,
+		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,

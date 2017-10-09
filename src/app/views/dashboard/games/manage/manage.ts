@@ -10,6 +10,8 @@ import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
+import { AppGamePerms } from '../../../../components/game/perms/perms';
+import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -23,12 +25,14 @@ import {
 		AppPageHeader,
 		AppExpand,
 		AppTimeAgo,
+		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,
 	},
 })
 export default class RouteDashGamesManage extends BaseRouteComponent {
+	@AppState user: AppStore['user'];
 	@RouteState game: RouteStore['game'];
 	@RouteState isWizard: RouteStore['isWizard'];
 

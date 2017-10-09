@@ -32,6 +32,8 @@ import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
 import { AppUserFollowWidget } from '../../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
+import { AppGamePerms } from '../../../../components/game/perms/perms';
+import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import {
 	RouteResolve,
 	BaseRouteComponent,
@@ -52,6 +54,7 @@ import {
 		AppGameMaturityBlock,
 		AppGameCoverButtons,
 		AppUserFollowWidget,
+		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,
@@ -65,22 +68,39 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@RouteState partner: RouteStore['partner'];
 	@RouteState partnerKey: RouteStore['partnerKey'];
 	@RouteState packages: RouteStore['packages'];
+	@RouteState collaboratorInvite: RouteStore['collaboratorInvite'];
 
 	@RouteAction bootstrap: RouteStore['bootstrap'];
 	@RouteAction refreshRatingInfo: RouteStore['refreshRatingInfo'];
 	@RouteMutation bootstrapGame: RouteStore['bootstrapGame'];
 	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
+	@RouteMutation acceptCollaboratorInvite: RouteStore['acceptCollaboratorInvite'];
+	@RouteMutation declineCollaboratorInvite: RouteStore['declineCollaboratorInvite'];
 
 	storeName = RouteStoreName;
 	storeModule = RouteStore;
 
 	@State app: Store['app'];
 
-	date = date;
-	Screen = makeObservableService(Screen);
+	readonly date = date;
+	readonly Screen = makeObservableService(Screen);
 
 	private ratingCallback?: Function;
 	private gaTrackingId?: string;
+
+	private roleNames = {
+		[GameCollaborator.ROLE_COLLABORATOR]: this.$gettext('an equal collaborator'),
+		[GameCollaborator.ROLE_COMMUNITY_MANAGER]: this.$gettext('a community manager'),
+		[GameCollaborator.ROLE_DEVELOPER]: this.$gettext('a developer'),
+	};
+
+	get roleName() {
+		if (!this.collaboratorInvite) {
+			return '';
+		}
+
+		return this.roleNames[this.collaboratorInvite.role] || '';
+	}
 
 	get ratingTooltip() {
 		return number(this.game.rating_count || 0) + ' rating(s), avg: ' + this.game.avg_rating;
@@ -179,6 +199,16 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		if (this.game && this.game.ga_tracking_id) {
 			Analytics.detachAdditionalPageTracker(this.game.ga_tracking_id);
 		}
+	}
+
+	async acceptCollaboration() {
+		await this.collaboratorInvite!.$accept();
+		this.acceptCollaboratorInvite(this.collaboratorInvite!);
+	}
+
+	async declineCollaboration() {
+		await this.collaboratorInvite!.$remove();
+		this.declineCollaboratorInvite();
 	}
 
 	onGameRatingChange(gameId: number) {

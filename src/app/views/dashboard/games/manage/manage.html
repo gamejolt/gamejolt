@@ -25,6 +25,9 @@
 		<template v-else>
 			<h1 class="section-header">
 				{{ game.title }}
+				<small v-if="user.id != game.developer.id">
+					<em><translate>Viewing as Collaborator</translate></em>
+				</small>
 			</h1>
 		</template>
 
@@ -53,16 +56,18 @@
 		<br>
 
 		<p v-if="!isWizard">
-			<router-link
-				class="btn btn-outline hidden-xs"
-				:to="{
-					name: 'dash.analytics',
-					params: { resource: 'Game', resourceId: game.id },
-				}"
-				>
-				<app-jolticon icon="chart" />
-				<translate>View Analytics</translate>
-			</router-link>
+			<app-game-perms required="analytics">
+				<router-link
+					class="btn btn-outline hidden-xs"
+					:to="{
+						name: 'dash.analytics',
+						params: { resource: 'Game', resourceId: game.id },
+					}"
+					>
+					<app-jolticon icon="chart" />
+					<translate>View Analytics</translate>
+				</router-link>
+			</app-game-perms>
 			<router-link
 				class="btn btn-outline"
 				:to="game.getUrl()"
@@ -96,28 +101,50 @@
 						<translate>Devlog</translate>
 					</router-link>
 				</li>
-				<li v-app-tooltip.bottom="$gettext( `dash.games.api_tooltip` )">
+				<app-game-perms required="game-api">
+					<li v-app-tooltip.bottom="$gettext( `dash.games.api_tooltip` )">
+						<router-link
+							:to="{ name: 'dash.games.manage.api.overview' }"
+							:class="{ active: $route.name.indexOf( 'dash.games.manage.api' ) === 0 }"
+							>
+							<translate>dash.games.api_tab</translate>
+						</router-link>
+					</li>
+				</app-game-perms>
+				<app-game-perms required="sales">
+					<li v-app-tooltip.bottom="$gettext( `Manage your game keys and give access to users.` )">
+						<router-link
+							:to="{ name: 'dash.games.manage.key-groups.list' }"
+							:class="{ active: $route.name.indexOf( 'dash.games.manage.key-groups' ) === 0 }"
+							>
+							<translate>Keys/Access</translate>
+						</router-link>
+					</li>
+				</app-game-perms>
+				<app-game-perms required="all">
+					<li v-app-tooltip.bottom="$gettext( `Game Jolt Sites are customizable external sites for your portfolio and games!` )">
+						<router-link
+							:to="{ name: 'dash.games.manage.site' }"
+							active-class="active"
+							>
+							<translate>Site</translate>
+						</router-link>
+					</li>
+				</app-game-perms>
+
+				<li
+					v-if="game.developer.id == user.id"
+					v-app-tooltip.bottom="$gettext( `Allow other users to manage your game.` )"
+					>
 					<router-link
-						:to="{ name: 'dash.games.manage.api.overview' }"
-						:class="{ active: $route.name.indexOf( 'dash.games.manage.api' ) === 0 }"
-						>
-						<translate>dash.games.api_tab</translate>
-					</router-link>
-				</li>
-				<li v-app-tooltip.bottom="$gettext( `Manage your game keys and give access to users.` )">
-					<router-link
-						:to="{ name: 'dash.games.manage.key-groups.list' }"
-						:class="{ active: $route.name.indexOf( 'dash.games.manage.key-groups' ) === 0 }"
-						>
-						<translate>Keys/Access</translate>
-					</router-link>
-				</li>
-				<li v-app-tooltip.bottom="$gettext( `Game Jolt Sites are customizable external sites for your portfolio and games!` )">
-					<router-link
-						:to="{ name: 'dash.games.manage.site' }"
+						:to="{ name: 'dash.games.manage.collaborators.list' }"
 						active-class="active"
 						>
-						<translate>Site</translate>
+						<translate>Collaborators</translate>
+						&nbsp;
+						<span class="tag tag-pink">
+							<translate>New!</translate>
+						</span>
 					</router-link>
 				</li>
 			</ul>

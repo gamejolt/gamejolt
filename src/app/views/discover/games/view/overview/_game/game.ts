@@ -36,6 +36,7 @@ import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/m
 import { AppCommentWidgetLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
+import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 
 @View
 @Component({
@@ -64,6 +65,7 @@ import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/a
 		AppCommentWidget: AppCommentWidgetLazy,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppDevlogPostAdd,
+		AppGamePerms,
 	},
 	directives: {
 		AppTrackEvent,

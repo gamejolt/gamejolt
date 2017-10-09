@@ -6,6 +6,7 @@ import { routeDashGamesManageKeyGroupsList } from './key-groups/list/list.route'
 import { routeDashGamesManageKeyGroupsEdit } from './key-groups/edit/edit.route';
 import { routeDashGamesManageDevlog } from './devlog/devlog.route';
 import { routeDashGamesManageSite } from './site/site.route';
+import { routeDashGamesManageCollaboratorsList } from './collaborators/list/list.route';
 
 export const routeDashGamesManage: VueRouter.RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',
@@ -18,5 +19,6 @@ export const routeDashGamesManage: VueRouter.RouteConfig = {
 		routeDashGamesManageKeyGroupsEdit,
 		routeDashGamesManageDevlog,
 		routeDashGamesManageSite,
+		routeDashGamesManageCollaboratorsList,
 	],
 };

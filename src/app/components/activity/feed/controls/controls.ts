@@ -92,7 +92,11 @@ export class AppActivityFeedControls extends Vue {
 
 	get shouldShowStats() {
 		return (
-			!!this.post && this.showExtraInfo && !!this.app.user && this.post.user.id === this.app.user.id
+			!!this.post &&
+			this.showExtraInfo &&
+			!!this.app.user &&
+			// TODO(collaborators) can we shorten this to just this.game.hasPerms or this.post.game.hasPerms?
+			(this.post.user.id === this.app.user.id || (!!this.game && this.game.hasPerms('devlogs')))
 		);
 	}
 

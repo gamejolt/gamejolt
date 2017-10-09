@@ -73,6 +73,12 @@ export class AppNotificationDescriptiveAction extends Vue {
 
 			case Notification.TYPE_USER_FOLLOW:
 				return this.$gettext(`followed you.`);
+
+			case Notification.TYPE_COLLABORATOR_INVITE:
+				return this.$gettextInterpolate(
+					`invited you to collaborate on <b>%{ object }</b>.`,
+					this.translationValues
+				);
 		}
 	}
 }

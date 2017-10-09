@@ -1,0 +1,127 @@
+<section class="section">
+	<div class="container">
+		<div class="row">
+				<div class="col-lg-7">
+				<h2 class="section-header">
+					<translate>Collaborators</translate>
+				</h2>
+
+				<div class="page-help" v-translate>
+					<p>You can collaborate with other users on your games.</p>
+					<p>Allow users to manage parts of your game by giving them collaborator roles, e.g. community manager for devlogs or developer for the game builds etc</p>
+				</div>
+
+				<h2>Invites</h2>
+
+				<div v-if="invites && invites.length" class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th><translate>User</translate></th>
+								<th><translate>Role</translate></th>
+								<th><translate>Invited On</translate></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="invite of invites" :key="invite.id">
+								<td>
+									@{{ invite.user.username }}
+								</td>
+
+								<td>
+									<template v-if="invite.role === GameCollaborator.ROLE_COLLABORATOR">
+										<translate>Collaborator</translate>
+									</template>
+									<template v-else-if="invite.role === GameCollaborator.ROLE_COMMUNITY_MANAGER">
+										<translate>Community Manager</translate>
+									</template>
+									<template v-else-if="invite.role === GameCollaborator.ROLE_DEVELOPER">
+										<translate>Developer</translate>
+									</template>
+									<template v-else>-</template>
+								</td>
+
+								<td>
+									<app-time-ago :date="invite.added_on" />
+								</td>
+
+								<td style="text-align: right">
+									<button
+										class="btn btn-danger-outline btn-sm btn-sparse"
+										@click="removeInvite( invite )"
+										>
+										<app-jolticon icon="remove" />
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div v-else class="alert alert-info">
+					<translate>There are no pending collaborator invites.</translate>
+				</div>
+
+				<h2>Roles</h2>
+
+				<div v-if="roles && roles.length" class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th><translate>User</translate></th>
+								<th><translate>Role</translate></th>
+								<th><translate>Invited On</translate></th>
+								<th><translate>Accepted On</translate></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="role of roles" :key="role.id">
+								<td>
+									@{{ role.user.username }}
+								</td>
+
+								<td>
+									<template v-if="role.role === GameCollaborator.ROLE_COLLABORATOR">
+										<translate>Collaborator</translate>
+									</template>
+									<template v-else-if="role.role === GameCollaborator.ROLE_COMMUNITY_MANAGER">
+										<translate>Community Manager</translate>
+									</template>
+									<template v-else-if="role.role === GameCollaborator.ROLE_DEVELOPER">
+										<translate>Developer</translate>
+									</template>
+									<template v-else>-</template>
+								</td>
+
+								<td>
+									<app-time-ago :date="role.added_on" />
+								</td>
+
+								<td>
+									<app-time-ago :date="role.accepted_on" />
+								</td>
+
+								<td style="text-align: right">
+									<button
+										class="btn btn-danger-outline btn-sm btn-sparse"
+										@click="removeRole( role )"
+										>
+										<app-jolticon icon="remove" />
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div v-else class="alert alert-info">
+					<translate>You are not collaborating with anyone :(</translate>
+				</div>
+
+				<h2>Add New</h2>
+				<form-game-collaborator
+					:game="game"
+					@submit="onInvited"
+					/>
+			</div>
+		</div>
+	</div>
+</section>
