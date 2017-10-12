@@ -66,6 +66,7 @@
 		"vue-router": "2.7.0",
 		"vue-server-renderer": "2.4.4",
 		"vue-shortkey": "2.2.1",
+		"vue-template-compiler": "2.4.4",
 		"vue-touch": "2.0.0-beta.4",
 		"vuedraggable": "2.14.1",
 		"vuex": "2.4.0",
