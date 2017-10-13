@@ -2355,8 +2355,8 @@ es-to-primitive@^1.1.1:
     is-symbol "^1.0.1"
 
 es5-ext@^0.10.14, es5-ext@^0.10.9, es5-ext@~0.10.14:
-  version "0.10.31"
-  resolved "https://registry.yarnpkg.com/es5-ext/-/es5-ext-0.10.31.tgz#7bb938c95a7f1b9f728092dc09c41edcc398eefe"
+  version "0.10.35"
+  resolved "https://registry.yarnpkg.com/es5-ext/-/es5-ext-0.10.35.tgz#18ee858ce6a3c45c7d79e91c15fcca9ec568494f"
   dependencies:
     es6-iterator "~2.0.1"
     es6-symbol "~3.1.1"
@@ -8471,9 +8471,9 @@ vue-property-decorator@5.3.0:
     reflect-metadata "^0.1.9"
     vue-class-component "^5.0.0"
 
-vue-router@2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.7.0.tgz#16d424493aa51c3c8cce8b7c7210ea4c3a89aff1"
+vue-router@2.8.1:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.8.1.tgz#9833c9ee57ac83beb0269056fefee71713f20695"
 
 vue-server-renderer@2.4.4:
   version "2.4.4"
