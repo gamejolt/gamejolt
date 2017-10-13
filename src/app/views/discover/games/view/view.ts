@@ -32,6 +32,8 @@ import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
 import { AppUserFollowWidget } from '../../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
+import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
+import { IntentService } from '../../../../components/intent/intent.service';
 import {
 	RouteResolve,
 	BaseRouteComponent,
@@ -108,6 +110,15 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	async routeResolve(this: undefined, route: VueRouter.Route) {
 		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
 		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);
+
+		const intentRedirect = IntentService.checkRoute(
+			route,
+			'follow-game',
+			Translate.$gettext(`You're now following this game.`)
+		);
+		if (intentRedirect) {
+			return intentRedirect;
+		}
 
 		const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
 

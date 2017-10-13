@@ -19,6 +19,8 @@ import {
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { enforceLocation } from '../../../../../../../lib/gj-lib-client/utils/router';
+import { IntentService } from '../../../../../../components/intent/intent.service';
+import { Translate } from '../../../../../../../lib/gj-lib-client/components/translate/translate.service';
 
 @View
 @Component({
@@ -44,6 +46,15 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 
 	@RouteResolve({ lazy: true, cache: true })
 	async routeResolve(this: undefined, route: VueRouter.Route) {
+		const intentRedirect = IntentService.checkRoute(
+			route,
+			'like-post',
+			Translate.$gettext(`You like this post! That's cool.`)
+		);
+		if (intentRedirect) {
+			return intentRedirect;
+		}
+
 		const postHash = FiresidePost.pullHashFromUrl(route.params.postSlug);
 		const payload = await Api.sendRequest(
 			'/web/discover/games/devlog/' + route.params.id + '/' + postHash
