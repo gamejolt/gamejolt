@@ -1,0 +1,26 @@
+@require '~styles/variables'
+@require '../../../../../lib/gj-lib-client/stylus/common/mixins'
+
+$game-list-item-thumb-width = 120px
+
+.game-list-item
+	clearfix()
+	margin-bottom: $line-height-computed
+
+.-thumb
+	float: left
+	width: $game-list-item-thumb-width
+
+	>>> img
+		border-radius: $border-radius-base
+
+.-meta
+	margin-left: $game-list-item-thumb-width + 10px
+
+.-title
+	display: block
+	font-weight: bold
+
+.-dev
+	display: block
+	font-size: $font-size-small

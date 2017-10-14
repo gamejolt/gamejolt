@@ -280,7 +280,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate(payload.posts), {
 				type: 'EventItem',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,
-				noAutoload: !this.game._is_devlog,
+				// noAutoload: !this.game._is_devlog,
 			});
 		}
 

@@ -1,0 +1,36 @@
+<div class="game-list-item">
+	<router-link
+		:to="url"
+		>
+		<app-game-thumbnail-img
+			class="-thumb"
+			:game="game"
+			/>
+	</router-link>
+
+	<div class="-meta">
+
+		<!-- <div class="game-list-item-avatar">
+			<app-user-avatar-img :user="game.developer" />
+		</div> -->
+
+		<router-link
+			class="-title link-unstyled"
+			:to="url"
+			:title="game.title"
+			>
+			{{ game.title }}
+		</router-link>
+
+		<router-link
+			class="-dev link-muted"
+			:to="{
+				name: 'profile.overview',
+				params: { username: game.developer.username }
+			}"
+			:title="`${game.developer.display_name} (@${game.developer.username})`"
+			>
+			{{ game.developer.display_name }}
+		</router-link>
+	</div>
+</div>

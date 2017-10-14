@@ -76,7 +76,8 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	render(h: Vue.CreateElement) {
 		return h(
-			this.game._is_devlog ? AppDiscoverGamesViewOverviewDevlog : AppDiscoverGamesViewOverviewGame
+			AppDiscoverGamesViewOverviewGame
+			// this.game._is_devlog ? AppDiscoverGamesViewOverviewDevlog : AppDiscoverGamesViewOverviewGame
 		);
 	}
 }

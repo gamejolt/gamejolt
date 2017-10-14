@@ -6,30 +6,6 @@
 		:media-items="mediaItems"
 		/>
 
-	<!--<section class="section section-thin fill-darker" ng-if="activeJam">
-		<div class="container">
-
-			<div class="row">
-				<div class="col-sm-10 col-md-8 col-centered">
-
-					<h2 class="section-header">{{ activeJam.name }} Voting</h2>
-
-					<p>This game is part of the <strong><a ng-href="{{ activeJam.fullUrl }}">{{ activeJam.name }}</a></strong> game jam. <strong>Voting for the jam is separate from ratings on Game Jolt.</strong> If you'd like to vote on this game for the jam, you may cast your vote below.</p>
-
-					<hr>
-
-					<gj-jam-game-vote-widget
-						gj-jam="activeJam"
-						gj-game="game"
-						>
-					</gj-jam-game-vote-widget>
-
-				</div>
-			</div>
-
-		</div>
-	</section>-->
-
 	<app-ad-placement pos="top" />
 
 	<section class="section">
@@ -37,14 +13,16 @@
 
 			<div class="row">
 
-				<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
+				<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
 					<div class="row">
-						<div class="col-xs-12 col-sm-6 col-sm-push-6 col-md-12 col-md-push-0">
-
+						<div class="col-xs-12 col-md-6">
+							<app-discover-games-view-overview-stats />
+						</div>
+						<div class="col-xs-12 col-md-6">
 							<!--
 								Can't rate your own games! Remember that.
 							-->
-							<template v-if="app.user && game.developer.id !== app.user.id && game.ratings_enabled && game.can_user_rate">
+							<!-- <template v-if="app.user && game.developer.id !== app.user.id && game.ratings_enabled && game.can_user_rate">
 								<h2 class="rating-widget-label">
 									<template v-if="!!userRating">
 										<translate>Your Rating</translate>
@@ -64,24 +42,17 @@
 										/>
 								</div>
 								<br>
-							</template>
-						</div>
-						<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
-
-							<app-discover-games-view-overview-stats />
-
+							</template> -->
 						</div>
 					</div>
-				</div>
-
-				<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
+					<hr>
 
 					<!--
 						Convenience Messaging
 						This needs to be a div instead of a template or vue 2.4.4 complains about a
 						patched vnode not existing.
 					-->
-					<div v-if="game._is_wip || game.canceled || customGameMessages.length">
+					<!-- <div v-if="game._is_wip || game.canceled || customGameMessages.length">
 						<br class="visible-xs">
 						<div
 							key="early-access"
@@ -113,7 +84,7 @@
 						</div>
 
 						<br class="hidden-xs">
-					</div>
+					</div> -->
 
 					<!--
 						Builds / Soundtrack
@@ -125,12 +96,6 @@
 						through the "hasReleasesSection" variable which has the correct data.
 					-->
 					<template v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
-
-						<h2 id="game-releases" :class="{ 'section-header': !Screen.isMobile }">
-							<translate>Releases</translate>
-						</h2>
-
-						<hr class="underbar">
 
 						<!--
 							Partner Controls
@@ -193,16 +158,7 @@
 
 					</template>
 
-					<!-- Game Description -->
-					<h2
-						:class="{
-							'section-header': !Screen.isMobile && !((game._has_packages && !isOverviewLoaded) || hasReleasesSection),
-						}"
-						>
-						<translate>Description</translate>
-					</h2>
-
-					<hr class="underbar">
+					<br>
 
 					<div v-if="!game.description_compiled">
 						<span class="lazy-placeholder"></span>
@@ -216,7 +172,7 @@
 							this when the game changes.
 						-->
 						<app-fade-collapse
-							:collapse-height="1500"
+							:collapse-height="500"
 							:is-open="showDescription"
 							:key="game.id"
 							@require-change="setCanToggleDescription"
@@ -228,123 +184,50 @@
 							</div>
 						</app-fade-collapse>
 
-						<a class="hidden-text-expander"
-							v-if="canToggleDescription"
-							@click="toggleDescription()"
-							v-app-track-event="`game-profile:show-full-description`"
-							>
-						</a>
-					</div>
-
-					<template v-if="twitterShareMessage && !GJ_IS_CLIENT">
-						<br>
-						<div class="social-widgets">
-							<app-social-twitter-share
-								:url="Environment.baseUrl + game.getUrl()"
-								:content="twitterShareMessage"
-								/>
-
-							<span class="dot-separator hidden-xs"></span>
-
-							<app-social-facebook-like :url="Environment.baseUrl + game.getUrl()" />
-						</div>
-					</template>
-
-					<template v-if="supporters.length > 0">
-						<h2>
-							<translate>Supporters</translate>
-						</h2>
-
-						<p class="small text-muted">
-							<translate :translate-params="{ developer: game.developer.display_name }">
-								The kind people that helped support %{ developer } by paying more than the minimum. Sorted by amount contributed.
-							</translate>
-						</p>
-
-						<hr class="underbar">
-
-						<div class="game-supporters">
-							<div class="game-supporter"
-								v-for="user of supporters"
-								:key="user.id"
+						<div class="page-cut" v-if="canToggleDescription">
+							<button class="btn btn-outline"
+								@click="toggleDescription()"
+								v-app-track-event="`game-profile:show-full-description`"
 								>
-								<router-link
-									class="user-avatar ng-scope"
-									:to="user.url"
-									>
-									<app-user-avatar-img
-										:user="user"
-										v-app-tooltip="`${user.display_name} (@${user.username})`"
-										/>
-								</router-link>
-							</div>
-						</div>
-						<br class="visible-xs visible-sm">
-					</template>
-
-				</div>
-
-				<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
-					<div class="row">
-						<div class="col-xs-12 col-sm-6 col-sm-push-6 col-md-12 col-md-push-0">
-
-							<div v-if="Screen.isDesktop" style="width: 300px">
-								<hr>
-								<app-ad size="rectangle" pos="top" />
-							</div>
-
-							<div id="maturity-rating">
-								<br class="visible-md visible-lg">
-								<app-lazy-placeholder :when="isOverviewLoaded">
-									<div class="lazy-placeholder" style="height: 115px"></div>
-									<app-game-ogrs :game="game" />
-								</app-lazy-placeholder>
-							</div>
-
-						</div>
-						<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
-
-							<br>
-							<h2 class="section-header">
-								<translate>Details</translate>
-							</h2>
-
-							<hr class="underbar">
-
-							<app-discover-games-view-overview-details />
-
-							<div v-if="Screen.isDesktop" style="width: 300px">
-								<br>
-								<app-ad size="rectangle" pos="bottom" />
-							</div>
-
+								<translate v-if="!showDescription">Show More</translate>
+								<translate v-else>Less</translate>
+							</button>
 						</div>
 					</div>
-				</div>
-			</div>
 
-		</div>
-	</section>
+					<!-- <h2>
+						<translate>Comments</translate>
+					</h2>
 
-	<app-ad-placement :hidden-desktop="true" pos="bottom" />
+					<app-comment-widget-add
+						v-if="app.user"
+						resource="Game"
+						:resource-id="game.id"
+						/>
 
-	<!--
-		Devlog Feed
-	-->
-	<template v-if="feed && feed.hasItems">
-		<div class="page-cut"></div>
+					<br v-if="app.user && commentsCount">
 
-		<section class="section">
-			<div class="container">
-				<div class="row">
-					<div class="col-xs-12 col-md-8 col-lg-7">
+					<template v-if="commentsCount">
+						<app-comment-peek :comments="comments" />
 
-						<h2 class="section-header">
-							<translate>Project Devlog</translate>
-						</h2>
+						<router-link
+							v-if="commentsCount > 2"
+							class="btn btn-outline btn-block"
+							:to="{ name: 'discover.games.view.comments' }"
+							>
+							<translate
+								:translate-params="{ count: number(commentsCount - 2) }"
+								>
+								+%{ count } more
+							</translate>
+						</router-link>
+					</template> -->
 
-						<hr class="underbar">
+					<template v-if="feed && feed.hasItems">
 						<br>
+
+						<!-- TODO: Show ad -->
+						<!-- <app-ad-placement pos="bottom" /> -->
 
 						<template v-if="app.user && app.user.id === game.developer.id">
 							<h5 class="sans-margin-top">
@@ -361,92 +244,126 @@
 
 						<app-activity-feed
 							:feed="feed"
+							:show-ads="true"
 							:show-edit-controls="true"
 							/>
 
-					</div>
-				</div>
-			</div>
-		</section>
-	</template>
-
-	<!--
-		Achievements
-	-->
-	<template v-if="hasScores || trophiesCount">
-		<div class="page-cut"></div>
-
-		<section class="section">
-			<div class="container">
-
-				<div class="row">
-
-					<!--
-						Scores
-					-->
-					<div
-						v-if="hasScores"
-						:class="isAchievementsTwoCol ? 'col-lg-7' : 'col-xs-12'"
-						>
-
-						<app-score-overview
-							v-if="scoresPayload"
-							:game="game"
-							:initial-payload="scoresPayload"
-							:size="isAchievementsTwoCol ? 'small' : 'full'"
-							/>
-
-					</div>
-
-					<!--
-						Trophies
-					-->
-					<div
-						v-if="trophiesCount"
-						:class="isAchievementsTwoCol ? 'col-lg-4 col-lg-offset-1' : 'col-xs-12'"
-						>
-
-						<app-trophy-overview
-							v-if="trophiesPayload"
-							:game="game"
-							:initial-payload="trophiesPayload"
-							:size="isAchievementsTwoCol ? 'small' : 'full'"
-							/>
-
-					</div>
+					</template>
 
 				</div>
 
+				<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
+
+					<h2 class="section-header">
+						<translate>You May Also Like</translate>
+					</h2>
+
+					<template v-if="recommendedGames.length">
+						<!-- <div class="row">
+							<div class="col-xs-6" v-for="recommendedGame of recommendedGames.slice(0, 4)" :key="recommendedGame.id">
+								<app-game-thumbnail :game="recommendedGame" />
+							</div>
+						</div> -->
+						<app-game-list
+							:games="recommendedGames"
+							/>
+							<!-- v-app-track-event="'game-grid:click:recommended'" -->
+					</template>
+
+					<!-- Video Comments -->
+					<template v-if="videoComments.length && game.comments_enabled">
+						<h2 class="sans-margin-bottom">
+							<translate>Video Comments</translate>
+							<small v-if="commentsCount">
+								({{ videoCommentsCount | number }})
+							</small>
+						</h2>
+
+						<p class="page-help">
+							<translate>Video comments are sorted by most liked.</translate>
+							<a class="link-help" href="https://help.gamejolt.com/video-comments" target="_blank">
+								<translate>How do I add my video?</translate>
+							</a>
+						</p>
+
+						<div class="row">
+							<div
+								class="col-xs-6"
+								v-for="video of videoComments"
+								:key="video.id"
+								>
+								<app-comment-video-thumbnail :video="video" />
+							</div>
+						</div>
+
+						<div class="page-cut" v-if="videoComments.length < videoCommentsCount">
+							<a class="btn btn-outline"
+								@click="loadVideoComments"
+								v-app-track-event="`game-profile:video-comment:more`"
+								>
+								<translate>Show More</translate>
+							</a>
+						</div>
+					</template>
+
+					<h2>
+						<translate>Comments</translate>
+						<small v-if="commentsCount">
+							({{ commentsCount | number }})
+						</small>
+					</h2>
+
+					<app-comment-widget-add
+						v-if="app.user"
+						resource="Game"
+						:resource-id="game.id"
+						/>
+
+					<hr>
+
+					<img width="300" src="https://n3b6p5n5.ssl.hwcdn.net/data/fireside/posts/0/48/5548/media/screenshot from 2017-10-07 15-10-43-u3znbvhg.png" alt="placeholder">
+
+					<br>
+					<br>
+
+					<div class="page-cut">
+						<a class="btn btn-outline">
+							<translate>Show More</translate>
+						</a>
+					</div>
+
+					<!-- <div v-if="Screen.isDesktop" style="width: 300px">
+						<br>
+						<app-ad size="rectangle" pos="top" />
+					</div> -->
+
+						<!-- @submit="onCommentAdded" -->
+
+					<!-- <div id="maturity-rating">
+						<br class="visible-md visible-lg">
+						<app-lazy-placeholder :when="isOverviewLoaded">
+							<div class="lazy-placeholder" style="height: 115px"></div>
+							<app-game-ogrs :game="game" />
+						</app-lazy-placeholder>
+					</div> -->
+
+					<!-- <app-game-grid-placeholder
+						v-if="!recommendedGames.length"
+						:num="5"
+						:truncate-to-fit="true"
+						:scrollable="true"
+						/>
+
+					<app-game-grid
+						v-else
+						:games="recommendedGames"
+						:truncate-to-fit="true"
+						:scrollable="true"
+						event-label="recommended"
+						/> -->
+
+				</div>
 			</div>
-		</section>
-	</template>
-
-	<!--
-		Recommended Games
-	-->
-	<section class="section fill-darker recommended-games section-thin">
-		<div class="container">
-
-			<h2 class="section-header">
-				<translate>You May Also Like</translate>
-			</h2>
-
-			<hr class="underbar">
-
-			<app-game-grid-placeholder
-				v-if="!recommendedGames.length"
-				:num="5"
-				:truncate-to-fit="true"
-				:scrollable="true"
-				/>
-
-			<app-game-grid
-				v-else
-				:games="recommendedGames"
-				:truncate-to-fit="true"
-				:scrollable="true"
-				event-label="recommended"
-				/>
 
 		</div>
 	</section>
@@ -455,92 +372,12 @@
 		Only show this placement if there's enough space separating the
 		previous one.
 	-->
-	<app-ad-placement
+	<!-- <app-ad-placement
 		v-if="hasScores || trophiesCount || (feed && feed.hasItems)"
 		:hidden-desktop="true"
 		pos="bottom"
 		/>
 
-	<section class="section">
-		<div class="container">
-
-			<!-- Video Comments -->
-			<template v-if="videoComments.length && game.comments_enabled">
-				<h2 class="section-header sans-margin-bottom">
-					<translate>Video Comments</translate>
-					<small v-if="commentsCount">
-						({{ videoCommentsCount | number }})
-					</small>
-				</h2>
-
-				<p class="page-help">
-					<translate>Video comments are sorted by most liked.</translate>
-					<a class="link-help" href="https://help.gamejolt.com/video-comments" target="_blank">
-						<translate>How do I add my video?</translate>
-					</a>
-				</p>
-
-				<hr class="underbar">
-
-				<div class="row">
-					<div
-						class="col-xs-6 col-sm-3"
-						v-for="video of videoComments"
-						:key="video.id"
-						>
-						<app-comment-video-thumbnail :video="video" />
-					</div>
-				</div>
-
-				<div class="page-cut" v-if="videoComments.length < videoCommentsCount">
-					<a class="btn btn-outline"
-						@click="loadVideoComments"
-						v-app-track-event="`game-profile:video-comment:more`"
-						>
-						<translate>Load More</translate>
-					</a>
-				</div>
-			</template>
-
-			<!-- Comments -->
-			<div id="comments" v-if="isOverviewLoaded">
-				<div class="row">
-
-					<div class="col-sm-10 col-md-8 col-lg-7">
-
-						<template v-if="!game.comments_enabled">
-							<h2 class="section-header">
-								<translate>Comments Disabled</translate>
-							</h2>
-							<hr class="underbar">
-							<p class="text-muted">
-								<translate>Comments have been disabled for this game.</translate>
-							</p>
-						</template>
-						<template v-else>
-							<h2 class="section-header">
-								<translate>Comments</translate>
-								<small v-if="commentsCount">
-									({{ commentsCount | number }})
-								</small>
-							</h2>
-							<hr class="underbar">
-
-							<app-comment-widget
-								resource="Game"
-								:resource-id="game.id"
-								@count="setCommentsCount"
-								/>
-						</template>
-
-					</div>
-
-				</div>
-			</div>
-
-		</div>
-	</section>
-
-	<app-ad-placement :visible-desktop="true" pos="bottom" />
+	<app-ad-placement :visible-desktop="true" pos="bottom" /> -->
 
 </div>

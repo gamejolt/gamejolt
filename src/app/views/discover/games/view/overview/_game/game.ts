@@ -36,6 +36,10 @@ import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/m
 import { AppCommentWidgetLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
+import { AppGameThumbnail } from '../../../../../../components/game/thumbnail/thumbnail';
+import { AppGameList } from '../../../../../../components/game/list/list';
+import { AppCommentWidgetAdd } from '../../../../../../../lib/gj-lib-client/components/comment/widget/add/add';
+import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
 
 @View
 @Component({
@@ -46,6 +50,9 @@ import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/a
 		AppAdPlacement,
 		AppGameGrid,
 		AppGameGridPlaceholder,
+		AppGameList,
+		AppCommentWidgetAdd,
+		AppCommentPeek,
 		AppRatingWidget,
 		AppCard,
 		AppJolticon,
@@ -64,6 +71,7 @@ import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/a
 		AppCommentWidget: AppCommentWidgetLazy,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppDevlogPostAdd,
+		AppGameThumbnail,
 	},
 	directives: {
 		AppTrackEvent,

@@ -89,34 +89,15 @@
 					<small>@{{ game.developer.username }}</small>
 				</router-link>
 
-				<span class="dot-separator"></span>
+				<!-- <span class="dot-separator"></span>
 
 				<app-user-follow-widget
 					:user="game.developer"
 					size="sm"
 					event-label="game-header"
-					/>
+					/> -->
 
-				<!--
-					Hide on mobile to keep it clean.
-					They can view in the game details.
-				-->
-				<span class="small hidden-xs" v-if="game.published_on">
-					<span class="dot-separator"></span>
-					<router-link
-						:to="{
-							name: 'discover.games.list._fetch-date',
-							params: {
-								section: 'by-date',
-								date: date( game.published_on, 'YYYY-MM-DD' ),
-							},
-						}"
-						>
-						<app-time-ago :date="game.published_on" />
-					</router-link>
-				</span>
-
-				<template v-if="game.tigrs_age || game.ratings_enabled">
+				<!-- <template v-if="game.tigrs_age || game.ratings_enabled">
 					<span class="dot-separator hidden-xs hidden-sm hidden-md"></span>
 					<br class="hidden-lg">
 					<br class="visible-xs">
@@ -135,7 +116,7 @@
 							v-app-tooltip="ratingTooltip"
 							/>
 					</template>
-				</template>
+				</template> -->
 			</div>
 
 		</app-page-header>
