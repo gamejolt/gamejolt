@@ -19,6 +19,7 @@ import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/plac
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
+import { HalloweenMonster } from '../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -172,5 +173,19 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 				this.channels.push(info);
 			}
 		}
+
+		HalloweenMonster.add(
+			new HalloweenMonster({
+				id: 190,
+				user_level: 0,
+				seed: '73nqFm4GiQ83840380',
+				type: 'vampire',
+			})
+		);
+
+		// if (this.$payload.halloweenMonster) {
+		// 	const monster = new HalloweenMonster(this.$payload.halloweenMonster);
+		// 	HalloweenMonster.add(monster);
+		// }
 	}
 }

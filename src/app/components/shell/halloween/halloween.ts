@@ -1,0 +1,64 @@
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
+import * as View from '!view!./halloween.html?style=./halloween.styl';
+import { AppShellHalloweenMonster } from './monster/monster';
+import { HalloweenMonster } from '../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
+import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
+
+@View
+@Component({
+	components: {
+		AppShellHalloweenMonster,
+	},
+})
+export class AppShellHalloween extends Vue {
+	$refs: {
+		overlay: HTMLDivElement;
+		container: HTMLDivElement;
+	};
+
+	private _mouseX = -1;
+	private _mouseY = -1;
+
+	readonly HalloweenMonster = makeObservableService(HalloweenMonster);
+
+	get containerWidth() {
+		return this.$refs.container.offsetWidth;
+	}
+
+	get containerHeight() {
+		return this.$refs.container.offsetHeight;
+	}
+
+	get mouseX() {
+		return this._mouseX;
+	}
+
+	get mouseY() {
+		return this._mouseY;
+	}
+
+	mouseMove(e: MouseEvent) {
+		console.log('Moved mouse');
+		this._mouseX = e.clientX;
+		this._mouseY = e.clientY;
+	}
+
+	startCombat() {
+		this.enablePointerEvents();
+		this.$refs.overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+	}
+
+	endCombat() {
+		this.disablePointerEvents();
+		this.$refs.overlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+	}
+
+	private enablePointerEvents() {
+		this.$refs.overlay.style.pointerEvents = 'all';
+	}
+
+	private disablePointerEvents() {
+		this.$refs.overlay.style.pointerEvents = 'none';
+	}
+}

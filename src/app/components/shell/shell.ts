@@ -15,6 +15,7 @@ import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
 import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar/bar';
 import { Store } from '../../store/index';
 import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
+import { AppShellHalloween } from './halloween/halloween';
 
 @View
 @Component({
@@ -32,6 +33,7 @@ import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
 		AppShellChat: () =>
 			import(/* webpackChunkName: "chat" */ './chat/chat').then(m => m.AppShellChat),
 		AppShellClient: GJ_IS_CLIENT ? require('./client/client').AppShellClient : undefined,
+		AppShellHalloween,
 	},
 })
 export class AppShell extends Vue {
