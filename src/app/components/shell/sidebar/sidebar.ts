@@ -76,7 +76,7 @@ export class AppShellSidebar extends Vue {
 
 	// Show hot when logged in, otherwise default to best.
 	get defaultBrowseSection() {
-		return this.app.user ? null : 'best';
+		return 'featured';
 	}
 
 	get filteredBundleCollections() {
