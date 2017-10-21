@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./grid.html?style=./grid.styl';
+import View from '!view!./grid.html?style=./grid.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';

@@ -1,5 +1,5 @@
 import { Component, Watch } from 'vue-property-decorator';
-import * as View from '!view!./settings.html';
+import View from '!view!./settings.html';
 
 import {
 	BaseForm,

@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./overview.html';
+import View from '!view!./overview.html';
 
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';

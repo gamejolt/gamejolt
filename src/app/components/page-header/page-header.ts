@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./page-header.html?style=./page-header.styl';
+import View from '!view!./page-header.html?style=./page-header.styl';
 import './page-header-content.styl';
 
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';

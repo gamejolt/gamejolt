@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./results.html';
+import View from '!view!./results.html';
 
 import { Search } from '../../../components/search/search-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';

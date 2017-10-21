@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./user.html';
+import View from '!view!./user.html';
 
 import { User } from '../../../../../../../../../lib/gj-lib-client/components/user/user.model';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';

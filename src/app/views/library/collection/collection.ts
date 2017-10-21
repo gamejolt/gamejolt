@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./collection.html?style=./collection.styl';
+import View from '!view!./collection.html?style=./collection.styl';
 
 import { GameFilteringContainer } from '../../../components/game/filtering/container';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';

@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./devlogs.html';
+import View from '!view!./devlogs.html';
 
 import { AppPageHeader } from '../../../components/page-header/page-header';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';

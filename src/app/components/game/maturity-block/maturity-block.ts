@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import * as View from '!view!./maturity-block.html?style=./maturity-block.styl';
+import View from '!view!./maturity-block.html?style=./maturity-block.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Settings } from '../../settings/settings.service';

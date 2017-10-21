@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./key-group.html';
+import View from '!view!./key-group.html';
 
 import { KeyGroup } from '../../../../../lib/gj-lib-client/components/key-group/key-group.model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';

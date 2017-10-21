@@ -1,6 +1,6 @@
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./payment.html?style=./payment.styl';
+import View from '!view!./payment.html?style=./payment.styl';
 
 import {
 	BaseForm,

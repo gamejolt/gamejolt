@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./save-modal.html';
+import View from '!view!./save-modal.html';
 
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormPlaylist } from '../../forms/playlist/playlist';

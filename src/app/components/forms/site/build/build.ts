@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./build.html?style=./build.styl';
+import View from '!view!./build.html?style=./build.styl';
 
 import { SiteBuild } from '../../../../../lib/gj-lib-client/components/site/build/build-model';
 import { Site } from '../../../../../lib/gj-lib-client/components/site/site-model';

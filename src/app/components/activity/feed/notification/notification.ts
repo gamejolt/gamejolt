@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./notification.html';
+import View from '!view!./notification.html';
 
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';

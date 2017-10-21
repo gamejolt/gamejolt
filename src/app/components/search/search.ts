@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import * as View from '!view!./search.html?style=./search.styl';
+import View from '!view!./search.html?style=./search.styl';
 
 import { AppPopoverTrigger } from '../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { Search } from './search-service';

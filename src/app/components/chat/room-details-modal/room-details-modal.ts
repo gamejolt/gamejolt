@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./room-details-modal.html';
+import View from '!view!./room-details-modal.html';
 
 import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
 import { ChatRoom } from '../room';

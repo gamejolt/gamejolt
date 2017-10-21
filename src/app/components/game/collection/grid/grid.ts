@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./grid.html';
+import View from '!view!./grid.html';
 
 import { GameCollection } from '../collection.model';
 import { AppGameCollectionGridItem } from './item/item';

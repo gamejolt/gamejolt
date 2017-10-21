@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./join-almost.html';
+import View from '!view!./join-almost.html';
 
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service';

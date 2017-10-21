@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./follow-widget.html';
+import View from '!view!./follow-widget.html';
 
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';

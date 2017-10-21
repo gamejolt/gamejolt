@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./view.html';
+import View from '!view!./view.html';
 
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';

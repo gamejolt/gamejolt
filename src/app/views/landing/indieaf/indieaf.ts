@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./indieaf.html?style=./indieaf.styl';
+import View from '!view!./indieaf.html?style=./indieaf.styl';
 
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';

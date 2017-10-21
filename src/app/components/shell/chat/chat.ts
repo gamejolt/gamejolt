@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
-import * as View from '!view!./chat.html';
+import View from '!view!./chat.html';
 
 import { AppChatBubbles } from '../../chat/bubbles/bubbles';
 import { AppChatSidebar } from '../../chat/sidebar/sidebar';

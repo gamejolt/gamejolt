@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./listing.html?style=./listing.styl';
+import View from '!view!./listing.html?style=./listing.styl';
 
 import { GameListingContainer } from './listing-container-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';

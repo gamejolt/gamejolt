@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./comments.html';
+import View from '!view!./comments.html';
 
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils/vue';

@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./change-password.html';
+import View from '!view!./change-password.html';
 
 import { RouteMutation, RouteStore } from '../account.store';
 import { FormChangePassword } from '../../../../components/forms/change-password/change-password';

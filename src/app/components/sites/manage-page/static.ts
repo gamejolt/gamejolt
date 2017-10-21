@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./static.html';
+import View from '!view!./static.html';
 
 import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';

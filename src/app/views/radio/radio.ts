@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./radio.html?style=./radio.styl';
+import View from '!view!./radio.html?style=./radio.styl';
 
 import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';

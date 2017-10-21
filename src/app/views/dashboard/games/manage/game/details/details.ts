@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./details.html';
+import View from '!view!./details.html';
 
 import { RouteState, RouteStore } from '../../manage.store';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';

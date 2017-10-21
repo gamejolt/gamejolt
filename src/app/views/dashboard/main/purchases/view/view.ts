@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./view.html?style=./view.styl';
+import View from '!view!./view.html?style=./view.styl';
 
 import { Geo } from '../../../../../../lib/gj-lib-client/components/geo/geo.service';
 import { OrderPayment } from '../../../../../../lib/gj-lib-client/components/order/payment/payment.model';

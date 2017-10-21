@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./wizard-controls.html';
+import View from '!view!./wizard-controls.html';
 
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 import { findVueParent } from '../../../../../lib/gj-lib-client/utils/vue';

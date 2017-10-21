@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./channel-list.html?style=./channel-list.styl';
+import View from '!view!./channel-list.html?style=./channel-list.styl';
 
 import { ForumCategory } from '../../../../lib/gj-lib-client/components/forum/category/category.model';
 import { ForumChannel } from '../../../../lib/gj-lib-client/components/forum/channel/channel.model';

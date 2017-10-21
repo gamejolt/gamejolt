@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./request-popover.html';
+import View from '!view!./request-popover.html';
 
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';

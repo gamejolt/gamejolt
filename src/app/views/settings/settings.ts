@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./settings.html';
+import View from '!view!./settings.html';
 
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppPageHeader } from '../../components/page-header/page-header';

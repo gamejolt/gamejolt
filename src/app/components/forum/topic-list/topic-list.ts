@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./topic-list.html?style=./topic-list.styl';
+import View from '!view!./topic-list.html?style=./topic-list.styl';
 
 import { ForumTopic } from '../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';

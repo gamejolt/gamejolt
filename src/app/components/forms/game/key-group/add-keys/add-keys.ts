@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./add-keys.html';
+import View from '!view!./add-keys.html';
 import { KeyGroup } from '../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
 import { FormOnSubmit } from '../../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { BaseForm } from '../../../../../../lib/gj-lib-client/components/form-vue/form.service';

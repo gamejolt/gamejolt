@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./analytics.html?style=./analytics.styl';
+import View from '!view!./analytics.html?style=./analytics.styl';
 
 import {
 	MetricMap,

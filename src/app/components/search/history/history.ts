@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./history.html?style=./history.styl';
+import View from '!view!./history.html?style=./history.styl';
 
 import { SearchHistory } from './history-service';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';

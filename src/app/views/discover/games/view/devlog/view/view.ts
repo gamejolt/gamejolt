@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./view.html?style=./view.styl';
+import View from '!view!./view.html?style=./view.styl';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
