@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./auth.html?style=./auth.styl';
+import View from '!view!./auth.html?style=./auth.styl';
 import './auth-content.styl';
 
 import { store } from '../../store/index';

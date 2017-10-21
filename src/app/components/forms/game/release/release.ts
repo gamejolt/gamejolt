@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./release.html?style=./release.styl';
+import View from '!view!./release.html?style=./release.styl';
 
 import { GameRelease } from '../../../../../lib/gj-lib-client/components/game/release/release.model';
 import {

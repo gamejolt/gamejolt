@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./thumbnail.html?style=./thumbnail.styl';
+import View from '!view!./thumbnail.html?style=./thumbnail.styl';
 
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
@@ -135,7 +135,8 @@ export class AppGameThumbnail extends Vue {
 		if (this.pricing && this.saleOldPricing) {
 			return ((this.saleOldPricing.amount - this.pricing.amount) /
 				this.saleOldPricing.amount *
-				100).toFixed(0);
+				100
+			).toFixed(0);
 		}
 		return '';
 	}

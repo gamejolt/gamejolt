@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./change-password.html';
+import View from '!view!./change-password.html';
 
 import {
 	BaseForm,

@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./list.html';
+import View from '!view!./list.html';
 
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';

@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./add.html';
+import View from '!view!./add.html';
 
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { FormGame } from '../../../../components/forms/game/game';

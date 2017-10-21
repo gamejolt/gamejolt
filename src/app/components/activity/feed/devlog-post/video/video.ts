@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./video.html';
+import View from '!view!./video.html';
 
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedItem } from '../../item-service';

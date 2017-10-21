@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { Mutation } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./activity.html?style=./activity.styl';
+import View from '!view!./activity.html?style=./activity.styl';
 
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';

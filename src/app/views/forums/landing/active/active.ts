@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./active.html';
+import View from '!view!./active.html';
 
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';

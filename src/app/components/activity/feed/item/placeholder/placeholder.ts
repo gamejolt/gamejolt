@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./placeholder.html?style=./placeholder.styl';
+import View from '!view!./placeholder.html?style=./placeholder.styl';
 
 import { AppButtonPlaceholder } from '../../../../../../lib/gj-lib-client/components/button/placeholder/placeholder';
 import { AppTimelineListItem } from '../../../../../../lib/gj-lib-client/components/timeline-list/item/item';

@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./set-password.html';
+import View from '!view!./set-password.html';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import {
 	BaseForm,

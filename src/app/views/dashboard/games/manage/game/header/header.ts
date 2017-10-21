@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./header.html';
+import View from '!view!./header.html';
 
 import { Popover } from '../../../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';

@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./build.html';
+import View from '!view!./build.html';
 
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';

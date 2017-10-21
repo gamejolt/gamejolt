@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./view.html';
+import View from '!view!./view.html';
 import './view-content.styl';
 
 import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';

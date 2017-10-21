@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./send.html?style=./send.styl';
+import View from '!view!./send.html?style=./send.styl';
 
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';

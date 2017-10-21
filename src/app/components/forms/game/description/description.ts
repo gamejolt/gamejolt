@@ -1,5 +1,5 @@
 import { Component, Watch } from 'vue-property-decorator';
-import * as View from '!view!./description.html';
+import View from '!view!./description.html';
 
 import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./cover-buttons.html?style=./cover-buttons.styl';
+import View from '!view!./cover-buttons.html?style=./cover-buttons.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../../../lib/gj-lib-client/components/game/package/package.model';

@@ -395,7 +395,7 @@ export class SiteAnalytics {
 
 	static get packageMetrics() {
 		if (!this._packageMetrics) {
-			const possibleMetrics: MetricKey[] = ['download'];
+			const possibleMetrics: MetricKey[] = ['download', 'install', 'sale', 'revenue'];
 			this._packageMetrics = <MetricMap>objectPick(this.allMetrics, possibleMetrics);
 		}
 

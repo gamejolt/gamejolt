@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./domain.html';
+import View from '!view!./domain.html';
 
 import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';

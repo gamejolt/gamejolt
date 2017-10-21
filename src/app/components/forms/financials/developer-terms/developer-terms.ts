@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./developer-terms.html';
+import View from '!view!./developer-terms.html';
 import { UserStripeManagedAccount } from '../../../../../lib/gj-lib-client/components/user/stripe-managed-account/stripe-managed-account';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';

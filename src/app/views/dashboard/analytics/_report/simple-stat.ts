@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./simple-stat.html';
+import View from '!view!./simple-stat.html';
 
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';

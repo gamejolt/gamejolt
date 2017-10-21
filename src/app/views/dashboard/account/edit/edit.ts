@@ -1,6 +1,6 @@
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./edit.html';
+import View from '!view!./edit.html';
 
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';

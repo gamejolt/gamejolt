@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./landing.html?style=./landing.styl';
+import View from '!view!./landing.html?style=./landing.styl';
 
 import { AppPageHeader } from '../../../components/page-header/page-header';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';

@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./email-preferences.html';
+import View from '!view!./email-preferences.html';
 
 import { RouteMutation, RouteStore } from '../account.store';
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';

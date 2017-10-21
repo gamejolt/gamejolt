@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./legal.html';
+import View from '!view!./legal.html';
 
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 import {

@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./score-table.html';
+import View from '!view!./score-table.html';
 
 import { GameScoreTable } from '../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';

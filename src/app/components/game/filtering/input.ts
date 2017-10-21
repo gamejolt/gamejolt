@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./input.html?style=./input.styl';
+import View from '!view!./input.html?style=./input.styl';
 
 import { GameFilteringContainer } from './container';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';

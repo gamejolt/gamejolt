@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./widget.html?style=./widget.styl';
+import View from '!view!./widget.html?style=./widget.styl';
 
 import { GameFilteringContainer } from './container';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';

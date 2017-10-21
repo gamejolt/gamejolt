@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Subscription } from 'rxjs/Subscription';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import * as View from '!view!./feed.html';
+import View from '!view!./feed.html';
 
 import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedContainer } from './feed-container-service';

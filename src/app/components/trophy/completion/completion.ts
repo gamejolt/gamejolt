@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./completion.html';
+import View from '!view!./completion.html';
 
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';

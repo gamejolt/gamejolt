@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./marketplace.html';
+import View from '!view!./marketplace.html';
 
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';

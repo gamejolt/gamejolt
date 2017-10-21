@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./placeholder.html?style=./placeholder.styl';
+import View from '!view!./placeholder.html?style=./placeholder.styl';
 
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';

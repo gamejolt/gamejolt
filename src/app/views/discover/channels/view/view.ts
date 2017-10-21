@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./view.html';
+import View from '!view!./view.html';
 
 import { ChannelsViewHelper } from '../channels-view-helper';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';

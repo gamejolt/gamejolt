@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./about.html?style=./about.styl';
+import View from '!view!./about.html?style=./about.styl';
 
 import { importContext } from '../../../../lib/gj-lib-client/utils/utils';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';

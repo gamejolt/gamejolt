@@ -1,6 +1,6 @@
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./profile.html';
+import View from '!view!./profile.html';
 
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import {

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./event-item.html?style=./event-item.styl';
+import View from '!view!./event-item.html?style=./event-item.styl';
 
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';

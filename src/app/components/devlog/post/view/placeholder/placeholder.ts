@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./placeholder.html';
+import View from '!view!./placeholder.html';
 
 import { AppLazyPlaceholder } from '../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
 
