@@ -2,7 +2,7 @@
 
 	<nav class="platform-list inline">
 		<ul>
-			<li v-if="!game._is_devlog">
+			<li>
 				<router-link
 					:to="{ name: 'discover.games.view.overview' }"
 					:class="{ active: $route.name === 'discover.games.view.overview' }"
@@ -11,7 +11,7 @@
 				</router-link>
 			</li>
 
-			<li v-if="game._is_devlog">
+			<!-- <li v-if="game._is_devlog">
 				<router-link
 					:to="{ name: 'discover.games.view.overview' }"
 					:class="{ active: $route.name === 'discover.games.view.overview' || $route.name === 'discover.games.view.devlog.view' }"
@@ -29,9 +29,9 @@
 					<translate>Devlog</translate>
 					<span class="badge">{{ postsCount | number }}</span>
 				</router-link>
-			</li>
+			</li> -->
 
-			<li v-if="game._is_devlog && game.comments_enabled">
+			<li v-if="game.comments_enabled">
 				<router-link
 					:to="{ name: 'discover.games.view.comments' }"
 					active-class="active"

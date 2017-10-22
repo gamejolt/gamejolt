@@ -40,6 +40,7 @@ import { AppGameThumbnail } from '../../../../../../components/game/thumbnail/th
 import { AppGameList } from '../../../../../../components/game/list/list';
 import { AppCommentWidgetAdd } from '../../../../../../../lib/gj-lib-client/components/comment/widget/add/add';
 import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
+import { AppCommentOverview } from '../../../../../../components/comment/overview/overview';
 
 @View
 @Component({
@@ -69,6 +70,7 @@ import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
 		AppUserAvatarImg,
 		AppMediaBar,
 		AppCommentWidget: AppCommentWidgetLazy,
+		AppCommentOverview,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppDevlogPostAdd,
 		AppGameThumbnail,

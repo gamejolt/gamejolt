@@ -270,6 +270,11 @@
 							<!-- v-app-track-event="'game-grid:click:recommended'" -->
 					</template>
 
+					<div v-if="Screen.isDesktop" style="width: 300px">
+						<br>
+						<app-ad size="rectangle" pos="top" />
+					</div>
+
 					<!-- Video Comments -->
 					<template v-if="videoComments.length && game.comments_enabled">
 						<h2 class="sans-margin-bottom">
@@ -319,17 +324,22 @@
 						:resource-id="game.id"
 						/>
 
-					<hr>
+					<br>
 
-					<img width="300" src="https://n3b6p5n5.ssl.hwcdn.net/data/fireside/posts/0/48/5548/media/screenshot from 2017-10-07 15-10-43-u3znbvhg.png" alt="placeholder">
+					<app-comment-overview :game="game" />
 
 					<br>
 					<br>
 
 					<div class="page-cut">
-						<a class="btn btn-outline">
+						<router-link
+							class="btn btn-outline"
+							:to="{
+								name: 'discover.games.view.comments'
+							}"
+							>
 							<translate>Show More</translate>
-						</a>
+						</router-link>
 					</div>
 
 					<!-- <div v-if="Screen.isDesktop" style="width: 300px">

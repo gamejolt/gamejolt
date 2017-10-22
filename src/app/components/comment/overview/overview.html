@@ -1,0 +1,11 @@
+<div class="comment-overview">
+	<div class="-comment" v-for="comment of comments" :key="comment.id">
+		<div>
+			<strong>{{ comment.user.display_name }}</strong>
+			<span class="text-muted">@{{ comment.user.username }}</span>
+		</div>
+		<app-fade-collapse :collapse-height="90">
+			<div v-html="comment.comment_compiled"></div>
+		</app-fade-collapse>
+	</div>
+</div>
