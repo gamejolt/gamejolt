@@ -29,7 +29,6 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 	ClientAutoStart = ClientAutoStart;
 
 	onInit() {
-		this.setField('chat_notify_friends_online', Settings.get('chat-notify-friends-online'));
 		this.setField('restricted_browsing', Settings.get('restricted-browsing'));
 		this.setField('broadcast_modal', Settings.get('broadcast-modal'));
 		this.setField('animated_thumbnails', Settings.get('animated-thumbnails'));
@@ -82,7 +81,6 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 	}
 
 	onChange() {
-		Settings.set('chat-notify-friends-online', this.formModel.chat_notify_friends_online);
 		Settings.set('restricted-browsing', this.formModel.restricted_browsing);
 		Settings.set('broadcast-modal', this.formModel.broadcast_modal);
 		Settings.set('animated-thumbnails', this.formModel.animated_thumbnails);
