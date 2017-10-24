@@ -393,6 +393,80 @@
 					</div>
 				</template>
 
+				<!--
+					Manage Collaborations
+				-->
+				<template v-if="collaborations.length">
+					<h2>
+						<translate>Your Collaborations</translate>
+					</h2>
+
+					<br>
+
+					<app-card
+						v-for="collaboration of collaborations.slice( 0, collaborationsExpanded ? collaborations.length : 5 )"
+						:key="collaboration.id"
+						>
+						<div class="card-title">
+							<h4>
+								<router-link
+									:to="{
+										name: 'dash.games.manage.game.overview',
+										params: { id: collaboration.game.id },
+									}"
+									v-app-track-event="`dash:overview:quick-game`"
+									>
+									{{ collaboration.game.title }}
+								</router-link>
+							</h4>
+						</div>
+						<div class="card-controls">
+							<router-link
+								class="btn btn-outline"
+								:to="{
+									name: 'dash.games.manage.game.overview',
+									params: { id: collaboration.game.id },
+								}"
+								v-app-track-event="`dash:overview:quick-game`"
+								>
+								<app-jolticon icon="cog" />
+								<translate>Manage</translate>
+							</router-link>
+							<router-link
+								class="btn btn-outline"
+								v-if="collaboration.game.hasPerms('analytics')"
+								v-app-track-event="`dash:overview:quick-game-analytics`"
+								:to="{
+									name: 'dash.analytics',
+									params: { resource: 'Game', resourceId: collaboration.game.id },
+								}"
+								>
+								<app-jolticon icon="chart" />
+								<translate>Analytics</translate>
+							</router-link>
+							<button
+								class="btn btn-outline btn-sparse"
+								v-app-track-event="`dash:overview:remove-collaborator`"
+								@click="removeCollaborator(collaboration)"
+								>
+								<app-jolticon icon="remove warning" />
+							</button>
+						</div>
+					</app-card>
+
+					<div class="page-cut" v-if="!collaborationsExpanded && collaborations.length > 5">
+						<button
+							class="btn btn-outline"
+							@click="collaborationsExpanded = true"
+							v-app-track-event="`dash:overview:expand-collaborations`"
+							>
+							<span class="btn-badge">
+								{{ collaborations.length | number }}
+							</span>
+							<translate>Expand All</translate>
+						</button>
+					</div>
+				</template>
 
 				<!--
 					Video Comments

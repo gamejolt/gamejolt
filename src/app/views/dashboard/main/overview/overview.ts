@@ -23,6 +23,8 @@ import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/
 import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { numberSort } from '../../../../../lib/gj-lib-client/utils/array';
 import { Jam } from '../../../../../lib/gj-lib-client/components/jam/jam.model';
+import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
+import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -60,6 +62,7 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 	walletBalance = 0;
 
 	games: Game[] = [];
+	collaborations: GameCollaborator[] = [];
 	videos: CommentVideo[] = [];
 	videosCount = 0;
 	jams: Jam[] = [];
@@ -69,6 +72,7 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 
 	isShowingRevenueBreakdown = false;
 	gamesExpanded = false;
+	collaborationsExpanded = false;
 	jamsExpanded = false;
 
 	isFullyIntegrated = true;
@@ -81,10 +85,10 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 		'has_friend',
 	];
 
-	Game = Game;
-	Screen = makeObservableService(Screen);
-	Environment = Environment;
-	currency = currency;
+	readonly Game = Game;
+	readonly Screen = makeObservableService(Screen);
+	readonly Environment = Environment;
+	readonly currency = currency;
 
 	get integrationTranslations() {
 		return {
@@ -121,6 +125,9 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 		this.games = Game.populate(this.$payload.games);
 		this.games.sort((a, b) => numberSort(a.posted_on, b.posted_on)).reverse();
 
+		this.collaborations = GameCollaborator.populate(this.$payload.collaborations);
+		this.collaborations.sort((a, b) => numberSort(a.accepted_on, b.accepted_on)).reverse();
+
 		this.videos = CommentVideo.populate(this.$payload.videos);
 		this.videosCount = this.$payload.videosCount || 0;
 
@@ -138,5 +145,23 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 				this.isFullyIntegrated = false;
 			}
 		});
+	}
+
+	async removeCollaborator(collaborator: GameCollaborator) {
+		const result = await ModalConfirm.show(
+			this.$gettext(
+				`Are you sure you want to stop the collaboration?
+				You will lose access to the game's management pages including any devlog posts you wrote for it.`
+			),
+			this.$gettextInterpolate('Stop collaborating on %{ game }?', {
+				game: collaborator.game!.title,
+			}),
+			'yes'
+		);
+
+		if (result) {
+			await collaborator.$remove();
+			this.reloadRoute();
+		}
 	}
 }
