@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./redlight.html?style=./redlight.styl';
+import View from '!view!./redlight.html?style=./redlight.styl';
 
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';

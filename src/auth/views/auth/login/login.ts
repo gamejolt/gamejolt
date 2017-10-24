@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./login.html';
+import View from '!view!./login.html';
 
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthLogin } from '../../../../lib/gj-lib-client/components/auth/login/login';

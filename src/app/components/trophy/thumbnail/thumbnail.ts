@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./thumbnail.html?style=./thumbnail.styl';
+import View from '!view!./thumbnail.html?style=./thumbnail.styl';
 
 import { GameTrophy } from '../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';

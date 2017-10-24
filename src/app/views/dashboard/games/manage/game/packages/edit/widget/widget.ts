@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component, Watch } from 'vue-property-decorator';
-import * as View from '!view!./widget.html';
+import View from '!view!./widget.html';
 
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Sellable } from '../../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';

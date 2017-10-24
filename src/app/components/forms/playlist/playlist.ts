@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./playlist.html';
+import View from '!view!./playlist.html';
 
 import { BaseForm } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';

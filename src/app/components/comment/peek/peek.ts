@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./peek.html?style=./peek.styl';
+import View from '!view!./peek.html?style=./peek.styl';
 
 import { Comment } from '../../../../lib/gj-lib-client/components/comment/comment-model';
 import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';

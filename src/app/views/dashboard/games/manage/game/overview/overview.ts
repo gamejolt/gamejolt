@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./overview.html';
+import View from '!view!./overview.html';
 
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { RouteState, RouteStore, RouteAction } from '../../manage.store';

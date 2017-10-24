@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./comment-video.html';
+import View from '!view!./comment-video.html';
 
 import { ActivityFeedItem } from '../item-service';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';

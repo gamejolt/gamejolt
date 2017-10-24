@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./learn.html?style=./learn.styl';
+import View from '!view!./learn.html?style=./learn.styl';
 
 import { Store } from '../../../store/index';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';

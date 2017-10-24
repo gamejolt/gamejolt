@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./authorize.html';
+import View from '!view!./authorize.html';
 
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service';

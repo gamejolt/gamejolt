@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./add-to-widget.html';
+import View from '!view!./add-to-widget.html';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';

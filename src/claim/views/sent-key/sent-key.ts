@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./sent-key.html';
+import View from '!view!./sent-key.html';
 
 import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
 

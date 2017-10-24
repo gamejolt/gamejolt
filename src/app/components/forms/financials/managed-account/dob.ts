@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./dob.html';
+import View from '!view!./dob.html';
 import { FormFinancialsManagedAccount } from './managed-account';
 import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
 import { CommonFormComponents } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';

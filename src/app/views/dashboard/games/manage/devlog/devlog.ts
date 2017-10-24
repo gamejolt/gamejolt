@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./devlog.html';
+import View from '!view!./devlog.html';
 
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';

@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./add.html';
+import View from '!view!./add.html';
 
 import { RouteState, RouteStore } from '../../../manage.store';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';

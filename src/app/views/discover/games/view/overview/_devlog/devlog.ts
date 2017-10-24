@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./devlog.html?style=./devlog.styl';
+import View from '!view!./devlog.html?style=./devlog.styl';
 
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';

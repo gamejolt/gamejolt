@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./list.html';
+import View from '!view!./list.html';
 
 import { ActivityFeedContainer } from '../../../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../../../components/activity/feed/feed-service';

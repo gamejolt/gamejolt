@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./media.html?style=./media.styl';
+import View from '!view!./media.html?style=./media.styl';
 
 import { RouteState, RouteStore, RouteMutation, Media, RouteAction } from '../../manage.store';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';

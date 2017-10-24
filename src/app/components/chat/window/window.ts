@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { State, Action } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./window.html?style=./window.styl';
+import View from '!view!./window.html?style=./window.styl';
 
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { ChatRoom } from '../room';

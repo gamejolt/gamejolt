@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./client.html';
+import View from '!view!./client.html';
 
 import { AppClientTray } from '../../client/tray/tray';
 

@@ -1,6 +1,6 @@
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./overview.html';
+import View from '!view!./overview.html';
 
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';

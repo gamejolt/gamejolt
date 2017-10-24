@@ -13,7 +13,6 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"importHelpers": true,
-		"allowSyntheticDefaultImports": true,
 		"lib": ["dom", "es2015", "es2017.object"]
 	},
 	"exclude": ["build", "node_modules", "src/bower-lib"]

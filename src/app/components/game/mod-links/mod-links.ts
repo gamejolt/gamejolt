@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./mod-links.html';
+import View from '!view!./mod-links.html';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';

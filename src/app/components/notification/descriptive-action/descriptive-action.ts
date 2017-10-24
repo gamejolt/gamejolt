@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./descriptive-action.html';
+import View from '!view!./descriptive-action.html';
 
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';

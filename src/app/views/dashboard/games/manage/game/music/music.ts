@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./music.html';
+import View from '!view!./music.html';
 
 import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';

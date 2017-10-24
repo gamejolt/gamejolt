@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import * as View from '!view!./item.html?style=./item.styl';
+import View from '!view!./item.html?style=./item.styl';
 
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';

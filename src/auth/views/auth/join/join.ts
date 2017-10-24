@@ -1,6 +1,6 @@
 import { Mutation } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./join.html';
+import View from '!view!./join.html';
 
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';

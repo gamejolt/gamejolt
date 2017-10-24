@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./nav.html';
+import View from '!view!./nav.html';
 
 import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';

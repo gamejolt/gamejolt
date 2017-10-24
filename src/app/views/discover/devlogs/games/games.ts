@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./games.html';
+import View from '!view!./games.html';
 
 import { AppGameListing } from '../../../../components/game/listing/listing';
 import { AppGameGrid } from '../../../../components/game/grid/grid';

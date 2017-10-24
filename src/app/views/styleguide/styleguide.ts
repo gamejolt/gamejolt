@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./styleguide.html';
+import View from '!view!./styleguide.html';
 
 import { AppButtonStyleguide } from '../../../lib/gj-lib-client/components/button/button-styleguide';
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';

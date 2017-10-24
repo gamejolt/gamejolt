@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./input.html?style=./input.styl';
+import View from '!view!./input.html?style=./input.styl';
 
 import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppSearch } from '../search';

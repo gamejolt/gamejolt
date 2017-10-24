@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./view.html';
+import View from '!view!./view.html';
 import './view-content.styl';
 
 import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
@@ -34,6 +34,8 @@ import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/par
 import { AppUserFollowWidget } from '../../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
+import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
+import { IntentService } from '../../../../components/intent/intent.service';
 import {
 	RouteResolve,
 	BaseRouteComponent,
@@ -128,6 +130,15 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	async routeResolve(this: undefined, route: VueRouter.Route) {
 		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
 		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);
+
+		const intentRedirect = IntentService.checkRoute(
+			route,
+			'follow-game',
+			Translate.$gettext(`You're now following this game.`)
+		);
+		if (intentRedirect) {
+			return intentRedirect;
+		}
 
 		const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
 

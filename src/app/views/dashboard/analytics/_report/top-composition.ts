@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./top-composition.html?style=./report-percentage.styl';
+import View from '!view!./top-composition.html?style=./report-percentage.styl';
 
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';

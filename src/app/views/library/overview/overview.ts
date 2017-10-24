@@ -1,6 +1,6 @@
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./overview.html?style=./overview.styl';
+import View from '!view!./overview.html?style=./overview.styl';
 
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';

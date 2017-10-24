@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./controls.html?style=./controls.styl';
+import View from '!view!./controls.html?style=./controls.styl';
 
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Clipboard } from '../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';

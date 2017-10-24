@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./controls.html';
+import View from '!view!./controls.html';
 
 import { AppGameFollowWidget } from '../../../../../components/game/follow-widget/follow-widget';
 import { AppGamePlaylistAddToWidget } from '../../../../../components/game-playlist/add-to-widget/add-to-widget';

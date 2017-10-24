@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./profile.html?style=./profile.styl';
+import View from '!view!./profile.html?style=./profile.styl';
 
 import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
@@ -22,6 +22,8 @@ import { Store } from '../../store/index';
 import { UserGameSession } from '../../../lib/gj-lib-client/components/user/game-session/game-session.model';
 import { AppUserFollowWidget } from '../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
 import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
+import { IntentService } from '../../components/intent/intent.service';
+import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -62,7 +64,16 @@ export default class RouteProfile extends BaseRouteComponent {
 	Environment = Environment;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: VueRouter.Route) {
+		const intentRedirect = IntentService.checkRoute(
+			route,
+			'follow-user',
+			Translate.$gettext(`You're now following this user.`)
+		);
+		if (intentRedirect) {
+			return intentRedirect;
+		}
+
 		return Api.sendRequest('/web/profile/@' + route.params.username);
 	}
 

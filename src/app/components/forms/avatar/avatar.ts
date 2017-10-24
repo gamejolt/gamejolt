@@ -1,5 +1,5 @@
 import { Component, Watch, Prop } from 'vue-property-decorator';
-import * as View from '!view!./avatar.html';
+import View from '!view!./avatar.html';
 
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { AppFormControlUpload } from '../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';

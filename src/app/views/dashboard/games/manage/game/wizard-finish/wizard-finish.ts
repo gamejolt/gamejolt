@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./wizard-finish.html';
+import View from '!view!./wizard-finish.html';
 
 import { RouteState, RouteStore, RouteAction } from '../../manage.store';
 import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';

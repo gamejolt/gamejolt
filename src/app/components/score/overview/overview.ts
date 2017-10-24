@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import * as View from '!view!./overview.html?style=./overview.styl';
+import View from '!view!./overview.html?style=./overview.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';

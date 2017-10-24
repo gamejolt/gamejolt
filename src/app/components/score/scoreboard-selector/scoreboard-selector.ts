@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./scoreboard-selector.html';
+import View from '!view!./scoreboard-selector.html';
 
 import { GameScoreTable } from '../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';

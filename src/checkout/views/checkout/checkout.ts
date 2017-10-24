@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./checkout.html?style=./checkout.styl';
+import View from '!view!./checkout.html?style=./checkout.styl';
 
 import { Sellable } from '../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { Order } from '../../../lib/gj-lib-client/components/order/order.model';

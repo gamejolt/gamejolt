@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import VueRouter from 'vue-router';
-import * as View from '!view!./settings.html';
+import View from '!view!./settings.html';
 
 import { RouteStore, RouteState } from '../../manage.store';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';

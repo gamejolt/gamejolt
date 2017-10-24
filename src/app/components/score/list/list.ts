@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./list.html?style=./list.styl';
+import View from '!view!./list.html?style=./list.styl';
 
 import { UserGameScore } from '../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';

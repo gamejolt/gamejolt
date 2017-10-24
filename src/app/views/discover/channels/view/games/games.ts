@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./games.html';
+import View from '!view!./games.html';
 
 import { GameListingContainer } from '../../../../../components/game/listing/listing-container-service';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';

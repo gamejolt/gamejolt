@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./search.html';
+import View from '!view!./search.html';
 import './search.styl';
 
 import { AppExpand } from '../../../lib/gj-lib-client/components/expand/expand';

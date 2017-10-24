@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./follow-widget.html';
+import View from '!view!./follow-widget.html';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
