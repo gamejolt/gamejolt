@@ -3,6 +3,7 @@
 	<app-form-group
 		name="username"
 		:label="$gettext( `Username` )"
+		v-if="method === 'add'"
 		>
 		<app-form-control
 			:rules="{
@@ -52,9 +53,10 @@
 
 	<app-form-button
 		v-if="!!formModel.role"
-		icon="add"
+		:icon="method"
 		>
-		<translate>Invite</translate>
+		<translate v-if="method === 'add'">Invite</translate>
+		<translate v-else>Save</translate>
 	</app-form-button>
 
 </app-form>

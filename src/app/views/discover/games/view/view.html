@@ -6,25 +6,21 @@
 
 		<section v-if="collaboratorInvite" class="section section-thin fill-pink">
 			<div class="container text-center">
-				<p v-translate="{
-						username: game.developer.username,
-						role: roleName,
-					}"
-					>
-					<b>@%{ username }</b> invited you to collaborate on this game as <b>%{ role }</b>
+				<p v-translate="{ username: game.developer.username }">
+					<b>@%{ username }</b> has invited you to collaborate on this game.</b>
 				</p>
 				<button
-					class="btn fill-darkest"
+					class="btn"
 					@click="acceptCollaboration()"
 					>
 					<app-jolticon icon="check" />
 					<translate>Accept</translate>
 				</button>
 				<button
-					class="btn fill-darkest"
+					class="btn"
 					@click="declineCollaboration()"
 					>
-					<app-jolticon icon="remove" />
+					<app-jolticon icon="remove" class="warning" />
 					<translate>Decline</translate>
 				</button>
 			</div>

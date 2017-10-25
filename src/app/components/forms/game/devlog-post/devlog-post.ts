@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import View from '!view!./devlog-post.html';
+import View from '!view!./devlog-post.html?style=./devlog-post.styl';
 
 import {
 	BaseForm,
@@ -15,7 +15,7 @@ import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/fo
 import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
 import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
+import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -29,7 +29,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppFormControlMarkdown,
 		AppFormControlUpload,
 		AppFormControlToggle,
-		AppUserAvatar,
+		AppUserAvatarImg,
 	},
 	directives: {
 		AppFocusWhen,

@@ -26,6 +26,7 @@
 		<app-form-group
 			name="content_markdown"
 			:label="$gettext( `Post Content` )"
+			:hide-label="true"
 			>
 			<app-form-control-markdown
 				preview-class="fireside-post-body"
@@ -134,18 +135,21 @@
 	<app-form-group
 		name="as_game_owner"
 		v-if="user && model.game && user.id != model.game.developer.id"
-		:label="$gettext(`Post as game owner`)"
+		:label="$gettext(`Post as Game Owner`)"
 		>
 		<p class="help-block">
-			With this option on, the post will be published on behalf of the game owner.
+			This will show the game owner as the user that posted instead of you.
 		</p>
-		<app-form-control-toggle />
-		<!-- TODO(collaborators) make these show nicely -->
-		&nbsp;
-		<app-user-avatar
-			class="avatar-circle"
-			:user="formModel.as_game_owner ? model.game.developer : user"
-			/>
+		<div class="-as-owner">
+			<div class="-as-owner-item">
+				<app-form-control-toggle />
+			</div>
+			<div class="-as-owner-item -as-owner-avatar avatar-circle" v-if="formModel.as_game_owner">
+				<app-user-avatar-img
+					:user="model.game.developer"
+					/>
+			</div>
+		</div>
 	</app-form-group>
 
 	<div
