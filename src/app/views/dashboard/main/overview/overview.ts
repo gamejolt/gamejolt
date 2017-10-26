@@ -24,7 +24,6 @@ import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/p
 import { numberSort } from '../../../../../lib/gj-lib-client/utils/array';
 import { Jam } from '../../../../../lib/gj-lib-client/components/jam/jam.model';
 import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
-import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -61,7 +60,8 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 	revenuePendingActivation = 0;
 	walletBalance = 0;
 
-	gamesOrCollabs: (Game | GameCollaborator)[] = [];
+	games: Game[] = [];
+	collabs: GameCollaborator[] = [];
 	videos: CommentVideo[] = [];
 	videosCount = 0;
 	jams: Jam[] = [];
@@ -88,29 +88,12 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 	readonly Environment = Environment;
 	readonly currency = currency;
 
-	get inViewGamesOrCollabs() {
-		if (!this.gamesOrCollabs) {
+	get inViewGames() {
+		if (!this.games) {
 			return [];
 		}
 
-		return this.gamesOrCollabs.slice(0, this.gamesExpanded ? this.gamesOrCollabs.length : 5);
-	}
-
-	get games() {
-		const games: Game[] = [];
-		for (let gameOrCollab of this.inViewGamesOrCollabs) {
-			games.push(gameOrCollab instanceof Game ? gameOrCollab : gameOrCollab.game!);
-		}
-		return games;
-	}
-
-	get gameAnalyticsPerms() {
-		const hasPerms: boolean[] = [];
-		for (let gameOrCollab of this.inViewGamesOrCollabs) {
-			const game = gameOrCollab instanceof Game ? gameOrCollab : gameOrCollab.game!;
-			hasPerms.push(game.hasPerms('analytics'));
-		}
-		return hasPerms;
+		return this.games.slice(0, this.gamesExpanded ? this.games.length : 5);
 	}
 
 	get integrationTranslations() {
@@ -145,14 +128,18 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 			this.walletBalance = this.$payload.walletBalance || 0;
 		}
 
-		this.gamesOrCollabs = [];
-		this.gamesOrCollabs.push(...Game.populate(this.$payload.games));
-		this.gamesOrCollabs.push(...GameCollaborator.populate(this.$payload.collaborations));
-		this.gamesOrCollabs.sort((a, b) => {
-			const aVal = a instanceof Game ? a.posted_on : a.accepted_on;
-			const bVal = b instanceof Game ? b.posted_on : b.accepted_on;
-			return numberSort(bVal, aVal);
-		});
+		const items: (Game | GameCollaborator)[] = [];
+		this.games = items
+			.concat(Game.populate(this.$payload.games))
+			.concat(GameCollaborator.populate(this.$payload.collaborations))
+			.sort((a, b) =>
+				numberSort(
+					a instanceof Game ? a.posted_on : a.accepted_on,
+					b instanceof Game ? b.posted_on : b.accepted_on
+				)
+			)
+			.reverse()
+			.map(i => (i instanceof Game ? i : i.game!));
 
 		this.videos = CommentVideo.populate(this.$payload.videos);
 		this.videosCount = this.$payload.videosCount || 0;
