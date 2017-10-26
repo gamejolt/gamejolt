@@ -19,7 +19,7 @@
 						initVal: method === 'edit' ? (model.title || game.title) : undefined,
 					},
 				}"
-				:disabled="!hasDetailsPerms"
+				:disabled="!hasBuildsPerms"
 				/>
 
 			<app-form-control-errors />
@@ -38,7 +38,7 @@
 				<button
 					class="btn btn-outline btn-sm"
 					@click="showDescriptionInput = true"
-					:disabled="!hasDetailsPerms">
+					:disabled="!hasBuildsPerms">
 					<app-jolticon icon="add" />
 					<translate>dash.games.packages.form.description_change_button</translate>
 				</button>
@@ -47,7 +47,7 @@
 				<app-form-control-textarea
 				rows="2"
 				:rules="{ max: 750 }"
-				:disabled="!hasDetailsPerms"
+				:disabled="!hasBuildsPerms"
 				/>
 				<app-form-control-errors />
 			</div>

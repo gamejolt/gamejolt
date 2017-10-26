@@ -58,10 +58,6 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 		return this.game.hasPerms('builds');
 	}
 
-	get hasDetailsPerms() {
-		return this.game.hasPerms('details');
-	}
-
 	get packagesSort() {
 		return this.packages.map(i => i.id);
 	}

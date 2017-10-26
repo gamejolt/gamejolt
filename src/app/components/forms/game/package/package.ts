@@ -82,8 +82,8 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 
 	GamePackage = GamePackage;
 
-	get hasDetailsPerms() {
-		return this.game && this.game.hasPerms('details');
+	get hasBuildsPerms() {
+		return this.game && this.game.hasPerms('builds');
 	}
 
 	get hasAllPerms() {

@@ -40,7 +40,7 @@
 		<br>
 
 		<app-card-list v-if="packages.length" :items="packages">
-			<app-card-list-draggable :disabled="!hasDetailsPerms" @change="saveSort">
+			<app-card-list-draggable :disabled="!hasBuildsPerms" @change="saveSort">
 				<app-card-list-item
 					v-for="package of packages"
 					:key="package.id"
@@ -59,7 +59,7 @@
 
 					<div class="card-title">
 						<h4>
-							<template v-if="hasBuildPerms">
+							<template v-if="hasBuildsPerms">
 								<router-link
 									:to="{
 										name: 'dash.games.manage.game.packages.edit',

@@ -65,7 +65,7 @@ export class AppActivityFeedControls extends Vue {
 	Screen = makeObservableService(Screen);
 	FiresidePost = FiresidePost;
 
-	get hasDevlogPerms() {
+	get hasDevlogsPerms() {
 		return this.game && this.game.hasPerms('devlogs');
 	}
 
@@ -99,7 +99,7 @@ export class AppActivityFeedControls extends Vue {
 			!!this.post &&
 			this.showExtraInfo &&
 			!!this.app.user &&
-			(this.post.user.id === this.app.user.id || this.hasDevlogPerms)
+			(this.post.user.id === this.app.user.id || this.hasDevlogsPerms)
 		);
 	}
 

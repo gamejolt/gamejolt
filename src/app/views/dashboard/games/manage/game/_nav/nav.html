@@ -89,7 +89,7 @@
 		</app-game-perms>
 		<app-game-perms
 			tag="li"
-			required="builds,details,sales"
+			required="builds,sales"
 			:either="true"
 			v-if="!isWizard || !game._is_devlog"
 			>
@@ -108,7 +108,7 @@
 		</app-game-perms>
 		<app-game-perms
 			tag="li"
-			required="media"
+			required="music"
 			v-if="!isWizard || !game._is_devlog"
 			>
 			<router-link
