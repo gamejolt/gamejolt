@@ -24,10 +24,22 @@
 		</template>
 		<template v-else>
 			<h1 class="section-header">
+				<template v-if="game.developer.id !== user.id">
+					<small>
+						<router-link
+							:to="{
+								name: 'profile.overview',
+								params: {
+									username: game.developer.username,
+								},
+							}"
+							>
+							@{{ game.developer.username }}
+						</router-link>
+					</small>
+					<br>
+				</template>
 				{{ game.title }}
-				<small v-if="user.id != game.developer.id">
-					<em><translate>Viewing as Collaborator</translate></em>
-				</small>
 			</h1>
 		</template>
 

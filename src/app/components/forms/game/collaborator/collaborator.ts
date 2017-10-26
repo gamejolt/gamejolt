@@ -3,13 +3,18 @@ import View from '!view!./collaborator.html';
 
 import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
 import {
 	BaseForm,
 	FormOnInit,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 
 @View
-@Component({})
+@Component({
+	directives: {
+		AppFocusWhen,
+	},
+})
 export class FormGameCollaborator extends BaseForm<GameCollaborator> implements FormOnInit {
 	modelClass = GameCollaborator;
 	saveMethod = '$invite' as '$invite';

@@ -315,10 +315,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		}
 
 		const result = await ModalConfirm.show(
-			Translate.$gettext(
-				`Are you sure you want to leave the project?
-				You will lose access to the game's management pages including any devlog posts you wrote for it.`
-			),
+			Translate.$gettext(`Are you sure you want to leave this project?`),
 			Translate.$gettext('Leave project?'),
 			'yes'
 		);
@@ -329,9 +326,9 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 		await this.collaboration.$remove();
 
-		Growls.info(
-			Translate.$gettext('You left the project, you will be missed ;A;'),
-			Translate.$gettext('Left the project')
+		Growls.success(
+			Translate.$gettext('You left the project. You will be missed! ;A;'),
+			Translate.$gettext('Left Project')
 		);
 
 		router.push({ name: 'dash.main.overview' });

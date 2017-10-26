@@ -48,7 +48,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 	async routeResolve(this: undefined, route: VueRouter.Route) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'like-post',
-			data: { message: Translate.$gettext(`You like this post! That's cool.`) },
+			message: Translate.$gettext(`You like this post! That's cool.`),
 		});
 		if (intentRedirect) {
 			return intentRedirect;

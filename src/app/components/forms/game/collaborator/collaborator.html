@@ -14,7 +14,9 @@
 				},
 			}"
 			:validate-on="[ 'blur' ]"
+			v-app-focus-when
 			/>
+
 		<app-form-control-errors :label="$gettext('username')">
 			<app-form-control-error
 				when="availability"
@@ -30,22 +32,15 @@
 		<div class="radio">
 			<label>
 				<app-form-control-radio :value="GameCollaborator.ROLE_COLLABORATOR" />
-				<translate>Collaborator</translate> &mdash;
-				<translate class="help-inline">Grants complete access to the game and all it's aspects except managing collaborators. It is also the only role that gives access to analytics and sales.</translate>
+				<translate>Full Collaborator</translate> &mdash;
+				<translate class="help-inline">They will be able to access and modify everything for the game. They won't be able to add other collaborators.</translate>
 			</label>
 		</div>
 		<div class="radio">
 			<label>
 				<app-form-control-radio :value="GameCollaborator.ROLE_COMMUNITY_MANAGER" />
 				<translate>Community Manager</translate> &mdash;
-				<translate class="help-inline">Allows managing the game presentation, e.g. description, uploading screenshots, soundtracks and other media as well as posting devlogs and comments on behalf of the project owner.</translate>
-			</label>
-		</div>
-		<div class="radio">
-			<label>
-				<app-form-control-radio :value="GameCollaborator.ROLE_DEVELOPER" />
-				<translate>Developer</translate> &mdash;
-				<translate class="help-inline">Gives access to manage releases, builds and game api. New packages have to be created by a collaborator or the project owner.</translate>
+				<translate class="help-inline">They will be able to modify the game description, details, maturity, and media, as well as post devlogs. They won't be able to modify packages, game API, key groups, sales, or access analytics.</translate>
 			</label>
 		</div>
 		<app-form-control-errors />

@@ -1,31 +1,21 @@
-import VueRouter from 'vue-router';
-import { Growls, GrowlOptions } from '../../../lib/gj-lib-client/components/growls/growls.service';
+import { Route } from 'vue-router';
+import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
 import { LocationRedirect } from '../../../lib/gj-lib-client/utils/router';
 
 export interface Intent {
 	intent: string;
-	data: GrowlOptions;
-	type?: 'success' | 'info' | 'error';
+	message: string;
 }
 
 export class IntentService {
-	static checkRoute(route: VueRouter.Route, ...intents: Intent[]) {
+	static checkRoute(route: Route, ...intents: Intent[]) {
 		if (route.query.intent) {
 			for (let intent of intents) {
 				if (route.query.intent === intent.intent) {
-					const type = intent.type ? intent.type : 'success';
-					switch (type) {
-						case 'info':
-							Growls.info(intent.data);
-							break;
-						case 'error':
-							Growls.error(intent.data);
-							break;
-						case 'success':
-						default:
-							Growls.success(intent.data);
-							break;
-					}
+					Growls.info({
+						sticky: true,
+						message: intent.message,
+					});
 					break;
 				}
 			}

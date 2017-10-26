@@ -48,8 +48,8 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		const intentRedirect = IntentService.checkRoute(route, {
-			intent: 'accept-collaboration',
-			data: { message: Translate.$gettext(`You are now a collaborator`) },
+			intent: 'accept-game-collaboration',
+			message: Translate.$gettext(`You're now a collaborator for this project!`),
 		});
 		if (intentRedirect) {
 			return intentRedirect;
