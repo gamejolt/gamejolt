@@ -50,22 +50,25 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 
 	GamePackage = GamePackage;
 
+	get hasAllPerms() {
+		return this.game.hasPerms('all');
+	}
+
+	get hasBuildsPerms() {
+		return this.game.hasPerms('builds');
+	}
+
+	get hasDetailsPerms() {
+		return this.game.hasPerms('details');
+	}
+
 	get packagesSort() {
 		return this.packages.map(i => i.id);
 	}
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: VueRouter.Route) {
-		const payload = await Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id);
-
-		if (payload.packages && !payload.packages.length) {
-			// TODO(collaborators) a page for when there are no packages but no permission to create any
-			return new LocationRedirect({
-				name: 'dash.games.manage.game.packages.add',
-			});
-		}
-
-		return payload;
+		return Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id);
 	}
 
 	get routeTitle() {
@@ -78,6 +81,20 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 	}
 
 	routed() {
+		if (this.$payload.packages && !this.$payload.packages.length) {
+			if (this.game.hasPerms('all')) {
+				this.$router.push({
+					name: 'dash.games.manage.game.packages.add',
+					params: {
+						id: this.game.id + '',
+					},
+				});
+			}
+			this.packages = [];
+			this.sellables = {};
+			return;
+		}
+
 		this.packages = GamePackage.populate(this.$payload.packages);
 		this.sellables = arrayIndexBy<Sellable>(
 			Sellable.populate(this.$payload.sellables),

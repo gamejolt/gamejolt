@@ -65,6 +65,10 @@ export class AppActivityFeedControls extends Vue {
 	Screen = makeObservableService(Screen);
 	FiresidePost = FiresidePost;
 
+	get hasDevlogPerms() {
+		return this.game && this.game.hasPerms('devlogs');
+	}
+
 	get sharePopoverId() {
 		if (!this.post) {
 			return '';
@@ -95,8 +99,7 @@ export class AppActivityFeedControls extends Vue {
 			!!this.post &&
 			this.showExtraInfo &&
 			!!this.app.user &&
-			// TODO(collaborators) can we shorten this to just this.game.hasPerms or this.post.game.hasPerms?
-			(this.post.user.id === this.app.user.id || (!!this.game && this.game.hasPerms('devlogs')))
+			(this.post.user.id === this.app.user.id || this.hasDevlogPerms)
 		);
 	}
 

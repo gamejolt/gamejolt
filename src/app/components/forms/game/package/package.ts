@@ -82,6 +82,18 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 
 	GamePackage = GamePackage;
 
+	get hasDetailsPerms() {
+		return this.game && this.game.hasPerms('details');
+	}
+
+	get hasAllPerms() {
+		return this.game && this.game.hasPerms('all');
+	}
+
+	get hasSalesPerms() {
+		return this.game && this.game.hasPerms('sales');
+	}
+
 	get saleTimezoneOffset() {
 		if (!this.formModel.sale_timezone) {
 			return 0;

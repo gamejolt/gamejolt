@@ -36,17 +36,15 @@
 						<translate>Your game page is ready to publish to the site for all to see!</translate>
 					</p>
 
-					<app-game-perms required="all">
-						<div class="alert-actions">
-							<button
-								class="btn btn-success-outline btn-block btn-dark-variant"
-								v-app-tooltip="$gettext( `dash.games.overview.todo_info_publish_button_tooltip` )"
-								@click="publish"
-								>
-								<app-jolticon icon="active" />
-								<translate>dash.games.overview.todo_info_publish_button</translate>
-							</button>
-						</div>
+					<app-game-perms required="all" tag="div" class="alert-actions">
+						<button
+							class="btn btn-success-outline btn-block btn-dark-variant"
+							v-app-tooltip="$gettext( `dash.games.overview.todo_info_publish_button_tooltip` )"
+							@click="publish"
+							>
+							<app-jolticon icon="active" />
+							<translate>dash.games.overview.todo_info_publish_button</translate>
+						</button>
 					</app-game-perms>
 				</div>
 			</app-expand>
@@ -57,17 +55,15 @@
 						<translate>Your game is set as being a canceled game. You can transition back to a normal game page at any time!</translate>
 					</p>
 
-					<app-game-perms required="all">
-						<div class="alert-actions">
-							<button
-								class="btn btn-success-outline btn-block btn-dark-variant"
-								v-app-tooltip="$gettext( `This will make your game active again.` )"
-								@click="uncancel"
-								>
-								<app-jolticon icon="active" />
-								<translate>Uncancel Game</translate>
-							</button>
-						</div>
+					<app-game-perms required="all" tag="div" class="alert-actions">
+						<button
+							class="btn btn-success-outline btn-block btn-dark-variant"
+							v-app-tooltip="$gettext( `This will make your game active again.` )"
+							@click="uncancel"
+							>
+							<app-jolticon icon="active" />
+							<translate>Uncancel Game</translate>
+						</button>
 					</app-game-perms>
 				</div>
 			</app-expand>
@@ -154,26 +150,44 @@
 		</div>
 	</div>
 
-	<app-game-perms required="analytics">
-		<div class="visible-xs">
-			<router-link
-				class="btn btn-outline btn-block"
-				:to="{
-					name: 'dash.analytics',
-					params: { resource: 'Game', resourceId: game.id },
-				}"
-				>
-				<app-jolticon icon="chart" />
-				<translate>View Game Analytics</translate>
-			</router-link>
-		</div>
+	<app-game-perms required="analytics" tag="div" class="visible-xs">
+		<router-link
+			class="btn btn-outline btn-block"
+			:to="{
+				name: 'dash.analytics',
+				params: { resource: 'Game', resourceId: game.id },
+			}"
+			>
+			<app-jolticon icon="chart" />
+			<translate>View Game Analytics</translate>
+		</router-link>
 	</app-game-perms>
 
+	<div class="row">
+		<div class="col-lg-8">
 
-	<app-game-perms required="all">
-		<div class="row">
-			<div class="col-lg-8">
+			<template v-if="user.id !== game.developer.id">
+				<h2>
+					<translate>Danger Zone</translate>
+					<app-jolticon icon="notice big warning" />
+				</h2>
 
+				<h4>
+					<translate>Leave Project</translate>
+				</h4>
+
+				<div class="page-help">
+					<p><translate>You are currently a collaborator on this project. Leaving the project will stop the collaboration and revoke all management access to the game, including any devlog posts you may have written for it.</translate></p>
+				</div>
+
+				<button
+					class="btn btn-danger-outline"
+					@click="leaveProject"
+					>
+					<translate>Leave Project</translate>
+				</button>
+			</template>
+			<template v-else>
 				<h2>
 					<translate>Development Stage</translate>
 				</h2>
@@ -241,9 +255,8 @@
 					>
 					<translate>Remove Game</translate>
 				</button>
-
-			</div>
+			</template>
 		</div>
-	</app-game-perms>
+	</div>
 
 </div>

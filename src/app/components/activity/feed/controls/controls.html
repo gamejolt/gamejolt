@@ -125,7 +125,7 @@
 					event-label="activity-feed-controls"
 					/>
 
-				<template v-if="showEditControls && game.hasPerms('devlogs')">
+				<template v-if="showEditControls && hasDevlogPerms">
 					<button class="btn btn-success-outline" v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost">
 						<app-jolticon icon="check" />
 						<translate>Publish</translate>

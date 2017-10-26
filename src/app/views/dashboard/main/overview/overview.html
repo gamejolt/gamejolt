@@ -256,7 +256,7 @@
 					<translate>Your Games</translate>
 				</h2>
 
-				<div class="page-help" v-if="!games.length">
+				<div class="page-help" v-if="!gamesOrCollabs.length">
 					<p><translate>Are you a developer? Add your free or commercial game to the site!</translate></p>
 				</div>
 
@@ -271,23 +271,28 @@
 					</router-link>
 				</div>
 
-				<template v-if="games.length > 0">
+				<template v-if="gamesOrCollabs.length > 0">
 					<br>
 
 					<app-card
-						v-for="game of games.slice( 0, gamesExpanded ? games.length : 5 )"
-						:key="game.id"
+						v-for="(gameOrCollab, index) in inViewGamesOrCollabs"
+						:key="games[index].id"
 						>
 						<div class="card-title">
 							<h4>
 								<router-link
 									:to="{
 										name: 'dash.games.manage.game.overview',
-										params: { id: game.id },
+										params: { id: games[index].id },
 									}"
 									v-app-track-event="`dash:overview:quick-game`"
 									>
-									{{ game.title }}
+									<template v-if="gameOrCollab instanceof Game">
+										{{ games[index].title }}
+									</template>
+									<template v-else>
+										@{{ games[index].developer.username}} / {{ games[index].title }}
+									</template>
 								</router-link>
 							</h4>
 						</div>
@@ -296,25 +301,29 @@
 								class="btn btn-outline"
 								:to="{
 									name: 'dash.games.manage.game.overview',
-									params: { id: game.id },
+									params: { id: games[index].id },
 								}"
 								v-app-track-event="`dash:overview:quick-game`"
 								>
 								<app-jolticon icon="cog" />
 								<translate>Manage</translate>
 							</router-link>
-							<router-link
-								class="btn btn-outline"
-								v-app-track-event="`dash:overview:quick-game-analytics`"
-								:to="{
-									name: 'dash.analytics',
-									params: { resource: 'Game', resourceId: game.id },
-								}"
-								>
-								<app-jolticon icon="chart" />
-								<translate>Analytics</translate>
-							</router-link>
-							<button
+							<template v-if="gameAnalyticsPerms[index]">
+								<router-link
+									class="btn btn-outline"
+									v-app-track-event="`dash:overview:quick-game-analytics`"
+									:to="{
+										name: 'dash.analytics',
+										params: { resource: 'Game', resourceId: games[index].id },
+									}"
+									>
+									<app-jolticon icon="chart" />
+									<translate>Analytics</translate>
+								</router-link>
+							</template>
+
+							<!-- TODO(collaborators) check if anyone even uses this -->
+							<!-- <button
 								class="btn btn-outline btn-sparse"
 								v-app-track-event="`dash:overview:more-game`"
 								v-app-popover-trigger="`overview-game-more-${ game.id }`"
@@ -375,93 +384,18 @@
 										<translate>Site</translate>
 									</router-link>
 								</div>
-							</app-popover>
+							</app-popover> -->
 						</div>
 					</app-card>
 
-					<div class="page-cut" v-if="!gamesExpanded && games.length > 5">
+					<div class="page-cut" v-if="!gamesExpanded && gamesOrCollabs.length > 5">
 						<button
 							class="btn btn-outline"
 							@click="gamesExpanded = true"
 							v-app-track-event="`dash:overview:expand-games`"
 							>
 							<span class="btn-badge">
-								{{ games.length | number }}
-							</span>
-							<translate>Expand All</translate>
-						</button>
-					</div>
-				</template>
-
-				<!--
-					Manage Collaborations
-				-->
-				<template v-if="collaborations.length">
-					<h2>
-						<translate>Your Collaborations</translate>
-					</h2>
-
-					<br>
-
-					<app-card
-						v-for="collaboration of collaborations.slice( 0, collaborationsExpanded ? collaborations.length : 5 )"
-						:key="collaboration.id"
-						>
-						<div class="card-title">
-							<h4>
-								<router-link
-									:to="{
-										name: 'dash.games.manage.game.overview',
-										params: { id: collaboration.game.id },
-									}"
-									v-app-track-event="`dash:overview:quick-game`"
-									>
-									{{ collaboration.game.title }}
-								</router-link>
-							</h4>
-						</div>
-						<div class="card-controls">
-							<router-link
-								class="btn btn-outline"
-								:to="{
-									name: 'dash.games.manage.game.overview',
-									params: { id: collaboration.game.id },
-								}"
-								v-app-track-event="`dash:overview:quick-game`"
-								>
-								<app-jolticon icon="cog" />
-								<translate>Manage</translate>
-							</router-link>
-							<router-link
-								class="btn btn-outline"
-								v-if="collaboration.game.hasPerms('analytics')"
-								v-app-track-event="`dash:overview:quick-game-analytics`"
-								:to="{
-									name: 'dash.analytics',
-									params: { resource: 'Game', resourceId: collaboration.game.id },
-								}"
-								>
-								<app-jolticon icon="chart" />
-								<translate>Analytics</translate>
-							</router-link>
-							<button
-								class="btn btn-outline btn-sparse"
-								v-app-track-event="`dash:overview:remove-collaborator`"
-								@click="removeCollaborator(collaboration)"
-								>
-								<app-jolticon icon="remove warning" />
-							</button>
-						</div>
-					</app-card>
-
-					<div class="page-cut" v-if="!collaborationsExpanded && collaborations.length > 5">
-						<button
-							class="btn btn-outline"
-							@click="collaborationsExpanded = true"
-							v-app-track-event="`dash:overview:expand-collaborations`"
-							>
-							<span class="btn-badge">
-								{{ collaborations.length | number }}
+								{{ gamesOrCollabs.length | number }}
 							</span>
 							<translate>Expand All</translate>
 						</button>

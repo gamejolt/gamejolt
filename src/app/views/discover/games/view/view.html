@@ -26,36 +26,34 @@
 			</div>
 		</section>
 
-		<app-game-perms :game="game">
-			<section class="section section-thin fill-darkest">
-				<div class="container text-center">
+		<app-game-perms :game="game" tag="section" class="section section-thin fill-darkest">
+			<div class="container text-center">
 
-					<app-game-perms :game="game" required="analytics">
-						<router-link
-							class="btn btn-outline hidden-xs"
-							:to="{
-								name: 'dash.analytics',
-								params: { resource: 'Game', resourceId: game.id },
-							}"
-							>
-							<app-jolticon icon="chart" />
-							<translate>View Analytics</translate>
-						</router-link>
-					</app-game-perms>
-
+				<app-game-perms :game="game" required="analytics">
 					<router-link
-						class="btn btn-outline"
+						class="btn btn-outline hidden-xs"
 						:to="{
-							name: 'dash.games.manage.game.overview',
-							params: { id: game.id },
+							name: 'dash.analytics',
+							params: { resource: 'Game', resourceId: game.id },
 						}"
 						>
-						<app-jolticon icon="cog" />
-						<translate>Manage Game</translate>
+						<app-jolticon icon="chart" />
+						<translate>View Analytics</translate>
 					</router-link>
+				</app-game-perms>
 
-				</div>
-			</section>
+				<router-link
+					class="btn btn-outline"
+					:to="{
+						name: 'dash.games.manage.game.overview',
+						params: { id: game.id },
+					}"
+					>
+					<app-jolticon icon="cog" />
+					<translate>Manage Game</translate>
+				</router-link>
+
+			</div>
 		</app-game-perms>
 
 		<!--

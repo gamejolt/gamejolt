@@ -65,6 +65,14 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 	GameRelease = GameRelease;
 	number = number;
 
+	get hasBuildsPerms() {
+		return this.game && this.game.hasPerms('builds');
+	}
+
+	get hasAnalyticsPerms() {
+		return this.game && this.game.hasPerms('analytics');
+	}
+
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(

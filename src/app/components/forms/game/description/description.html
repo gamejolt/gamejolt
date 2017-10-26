@@ -13,7 +13,7 @@
 			:show-media-items="true"
 			media-item-type="game-description"
 			:placeholder="$gettext( `Write your game description here...` )"
-			:disabled="isDisabled || !model.hasPerms('details')"
+			:disabled="isDisabled || !hasDetailsPerms"
 			/>
 
 		<app-form-control-errors />
@@ -26,24 +26,22 @@
 				dash.games.add.fnaf_autotag_message_html
 			</div>
 
-			<app-game-perms required="details">
-				<div class="alert-actions">
-					<button
-						class="btn btn-success-outline"
-						@click="addAutotag( 'fnaf' )"
-						>
-						<app-jolticon icon="tag" />
-						<translate>dash.games.add.fnaf_autotag_accept</translate>
-					</button>
+			<app-game-perms required="details" tag="div" class="alert-actions">
+				<button
+					class="btn btn-success-outline"
+					@click="addAutotag( 'fnaf' )"
+					>
+					<app-jolticon icon="tag" />
+					<translate>dash.games.add.fnaf_autotag_accept</translate>
+				</button>
 
-					<button
-						class="btn btn-outline"
-						@click="skipAutotag"
-						>
-						<app-jolticon icon="remove" />
-						<translate>dash.games.add.fnaf_autotag_reject</translate>
-					</button>
-				</div>
+				<button
+					class="btn btn-outline"
+					@click="skipAutotag"
+					>
+					<app-jolticon icon="remove" />
+					<translate>dash.games.add.fnaf_autotag_reject</translate>
+				</button>
 			</app-game-perms>
 		</div>
 	</app-expand>

@@ -116,6 +116,10 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	Screen = makeObservableService(Screen);
 	Environment = Environment;
 
+	get hasAnyPerms() {
+		return this.game.hasPerms();
+	}
+
 	get hasPartnerControls() {
 		return this.game.referrals_enabled && this.userPartnerKey && this.packages.length;
 	}

@@ -134,26 +134,29 @@
 		</app-game-perms>
 	</ul>
 
-	<app-game-perms required="all">
-		<div class="hidden-xs" v-if="$route.name !== 'dash.games.manage.game.wizard-finish'">
-			<button
-				class="btn btn-success-outline btn-block"
-				v-if="game.status === Game.STATUS_HIDDEN"
-				:disabled="!canPublish"
-				@click="publish"
-				>
-				<translate>Publish</translate>
-			</button>
+	<app-game-perms
+		required="all"
+		tag="div"
+		class="hidden-xs"
+		v-if="$route.name !== 'dash.games.manage.game.wizard-finish'"
+		>
+		<button
+			class="btn btn-success-outline btn-block"
+			v-if="game.status === Game.STATUS_HIDDEN"
+			:disabled="!canPublish"
+			@click="publish"
+			>
+			<translate>Publish</translate>
+		</button>
 
-			<button
-				class="btn btn-outline btn-block"
-				v-if="isWizard"
-				@click="saveDraft"
-				>
-				<translate class="visible-lg">Save Draft</translate>
-				<translate class="visible-md">Save</translate>
-			</button>
-		</div>
+		<button
+			class="btn btn-outline btn-block"
+			v-if="isWizard"
+			@click="saveDraft"
+			>
+			<translate class="visible-lg">Save Draft</translate>
+			<translate class="visible-md">Save</translate>
+		</button>
 	</app-game-perms>
 
 </div>

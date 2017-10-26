@@ -44,6 +44,14 @@ export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
 	categories: any = null;
 	engines: any = null;
 
+	get hasDetailsPerms() {
+		return this.model && this.model.hasPerms('details');
+	}
+
+	get hasBuildsPerms() {
+		return this.model && this.model.hasPerms('builds');
+	}
+
 	get loadUrl() {
 		let url = '/web/dash/developer/games/save';
 		if (this.method === 'edit') {

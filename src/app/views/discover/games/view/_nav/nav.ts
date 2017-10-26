@@ -39,6 +39,10 @@ export class AppDiscoverGamesViewNav extends Vue {
 
 	Environment = Environment;
 
+	get hasAnyPerms() {
+		return this.game && this.game.hasPerms();
+	}
+
 	report() {
 		ReportModal.show(this.game);
 	}

@@ -15,6 +15,10 @@ import { AppGameDevStageSelector } from '../../../../../../components/forms/game
 import { AppGraphWidget } from '../../../../../../../lib/gj-lib-client/components/graph/widget/widget';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import {
+	AppState,
+	AppStore,
+} from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
@@ -39,6 +43,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageGameOverview extends BaseRouteComponent {
+	@AppState user: AppStore['user'];
 	@RouteState game: RouteStore['game'];
 	@RouteState canPublish: RouteStore['canPublish'];
 
@@ -47,6 +52,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 	@RouteAction uncancel: RouteStore['uncancel'];
 	@RouteAction hide: RouteStore['hide'];
 	@RouteAction removeGame: RouteStore['removeGame'];
+	@RouteAction leaveProject: RouteStore['leaveProject'];
 
 	viewCount = 0;
 	downloadCount = 0;

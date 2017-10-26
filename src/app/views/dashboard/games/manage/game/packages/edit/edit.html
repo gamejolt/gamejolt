@@ -35,7 +35,7 @@
 					<translate>Edit Package</translate>
 				</router-link>
 			</li>
-			<app-game-perms tag="li" required="all">
+			<li>
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.packages.edit.widget',
@@ -44,7 +44,7 @@
 					>
 					<translate>Widget</translate>
 				</router-link>
-			</app-game-perms>
+			</li>
 		</ul>
 	</app-nav-tab-list>
 
@@ -77,8 +77,7 @@
 					<translate>Package Preview</translate>
 				</h3>
 
-				<!-- TODO(collaborators) do we want devs to see the package details if they can't change anything in it? -->
-				<app-game-perms tag="div" required="details,sales" :either="true">
+				<app-game-perms tag="div" required="sales" :either="true">
 					<button
 						class="btn btn-outline btn-block"
 						@click="isShowingPackageEdit = !isShowingPackageEdit"
@@ -181,7 +180,7 @@
 
 						<div class="card-title">
 							<h4>
-								<template v-if="game.hasPerms('builds')">
+								<template v-if="hasBuildsPerms">
 									<router-link
 										:to="{
 											name: 'dash.games.manage.game.packages.release.edit',
@@ -239,7 +238,7 @@
 							{{ package.description }}
 						</div>
 
-						<div class="card-controls" v-if="game.hasPerms(['builds', 'analytics'], true)">
+						<div class="card-controls" v-if="hasBuildsPerms || hasAnalyticsPerms">
 							<app-game-perms required="builds">
 								<router-link
 									class="btn btn-outline"

@@ -19,7 +19,7 @@
 						initVal: method === 'edit' ? (model.title || game.title) : undefined,
 					},
 				}"
-				:disabled="!game.hasPerms('details')"
+				:disabled="!hasDetailsPerms"
 				/>
 
 			<app-form-control-errors />
@@ -38,7 +38,7 @@
 				<button
 					class="btn btn-outline btn-sm"
 					@click="showDescriptionInput = true"
-					:disabled="!game.hasPerms('details')">
+					:disabled="!hasDetailsPerms">
 					<app-jolticon icon="add" />
 					<translate>dash.games.packages.form.description_change_button</translate>
 				</button>
@@ -47,7 +47,7 @@
 				<app-form-control-textarea
 				rows="2"
 				:rules="{ max: 750 }"
-				:disabled="!game.hasPerms('details')"
+				:disabled="!hasDetailsPerms"
 				/>
 				<app-form-control-errors />
 			</div>
@@ -57,11 +57,11 @@
 			name="visibility"
 			:label="$gettext( `Visibility` )"
 			>
-			<div class="radio" :class="{ disabled: !game.hasPerms('all') }">
+			<div class="radio" :class="{ disabled: !hasAllPerms }">
 				<label>
 					<app-form-control-radio
 						:value="GamePackage.VISIBILITY_PUBLIC"
-						:disabled="!game.hasPerms('all')"
+						:disabled="!hasAllPerms"
 						/>
 					<translate>Public</translate> &mdash;
 					<span class="help-inline">
@@ -70,11 +70,11 @@
 				</label>
 			</div>
 
-			<div class="radio" :class="{ disabled: !game.hasPerms('all') }">
+			<div class="radio" :class="{ disabled: !hasAllPerms }">
 				<label>
 					<app-form-control-radio
 						:value="GamePackage.VISIBILITY_PRIVATE"
-						:disabled="!game.hasPerms('all')"
+						:disabled="!hasAllPerms"
 						/>
 					<translate>Private</translate> &mdash;
 					<span class="help-inline" v-translate>
@@ -135,11 +135,11 @@
 				</div>
 			</div>
 
-			<div class="radio" :class="{ disabled: !game.hasPerms('sales') }">
+			<div class="radio" :class="{ disabled: !hasSalesPerms }">
 				<label>
 					<app-form-control-radio
 						value="free"
-						:disabled="!game.hasPerms('sales')"
+						:disabled="!hasSalesPerms"
 						/>
 					<translate>Free</translate> &mdash;
 					<span class="help-inline">
@@ -148,11 +148,11 @@
 				</label>
 			</div>
 
-			<div class="radio" :class="{ disabled: !isUserVerified || isFangame || !game.hasPerms('sales') }">
+			<div class="radio" :class="{ disabled: !isUserVerified || isFangame || !hasSalesPerms }">
 				<label>
 					<app-form-control-radio
 						value="pwyw"
-						:disabled="!isUserVerified || isFangame || !game.hasPerms('sales')" />
+						:disabled="!isUserVerified || isFangame || !hasSalesPerms" />
 					<translate>Pay What You Want</translate> &mdash;
 					<span class="help-inline">
 						<translate>They will be able to pay $0 or more. They set the price.</translate>
@@ -162,13 +162,13 @@
 
 			<div class="radio"
 				:class="{
-					disabled: !isUserVerified || (package && package.has_browser_builds) || isFangame || !game.hasPerms('sales'),
+					disabled: !isUserVerified || (package && package.has_browser_builds) || isFangame || !hasSalesPerms,
 				}"
 				>
 				<label>
 					<app-form-control-radio
 						value="paid"
-						:disabled="!isUserVerified || (package && package.has_browser_builds) || isFangame || !game.hasPerms('sales')"
+						:disabled="!isUserVerified || (package && package.has_browser_builds) || isFangame || !hasSalesPerms"
 						/>
 					<translate>Paid</translate> &mdash;
 					<span class="help-inline">
@@ -190,7 +190,7 @@
 						name="has_suggested_price"
 						:hide-label="true"
 						>
-						<app-form-control-toggle :disabled="!game.hasPerms('sales')" />
+						<app-form-control-toggle :disabled="!hasSalesPerms" />
 					</app-form-group>
 					<br class="visible-xs">
 				</div>
@@ -203,7 +203,7 @@
 							:rules="{
 								min_value: minPrice / 100,
 							}"
-							:disabled="!formModel.has_suggested_price || !game.hasPerms('sales')"
+							:disabled="!formModel.has_suggested_price || !hasSalesPerms"
 							/>
 					</div>
 					<app-form-control-errors />
@@ -224,7 +224,7 @@
 					:rules="{
 						min_value: minPrice / 100,
 					}"
-					:disabled="!game.hasPerms('sales')"
+					:disabled="!hasSalesPerms"
 					/>
 			</div>
 			<app-form-control-errors />
@@ -233,7 +233,7 @@
 		<div v-if="formModel.pricing_type === 'paid'">
 			<div class="form-group">
 
-				<label class="control-label" v-if="promotionalPricing || game.hasPerms('sales')">
+				<label class="control-label" v-if="promotionalPricing || hasSalesPerms">
 					<translate>Run a Sale</translate>
 				</label>
 

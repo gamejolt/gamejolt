@@ -52,7 +52,7 @@
 					:rules="{
 						max: 250,
 					}"
-					:disabled="!model.hasPerms('details')"
+					:disabled="!hasDetailsPerms"
 					/>
 				<app-form-control-errors />
 			</app-form-group>
@@ -72,7 +72,7 @@
 							initVal: method === 'edit' ? model.path : undefined,
 						},
 					}"
-					:disabled="!model.hasPerms('details')"
+					:disabled="!hasDetailsPerms"
 					/>
 
 				<app-form-control-errors />
@@ -102,7 +102,7 @@
 					:rules="{
 						max: 250,
 					}"
-					:disabled="!model.hasPerms('details')"
+					:disabled="!hasDetailsPerms"
 					/>
 				<app-form-control-errors />
 			</app-form-group>
@@ -116,7 +116,7 @@
 				:label="$gettext( `dash.games.form.category_label` )"
 				>
 				<app-form-control-select
-					:disabled="!model.hasPerms('details')"
+					:disabled="!hasDetailsPerms"
 					>
 					<option value="">
 						<translate>dash.games.form.category_placeholder</translate>
@@ -138,7 +138,7 @@
 				:label="$gettext( `dash.games.form.engine_label` )"
 				>
 				<app-form-control-select
-					:disabled="!model.hasPerms('builds')"
+					:disabled="!hasBuildsPerms"
 					>
 					<option value="">
 						<translate>dash.games.form.engine_placeholder</translate>
@@ -165,7 +165,7 @@
 						:rules="{
 							max: 200,
 						}"
-						:disabled="!model.hasPerms('builds')"
+						:disabled="!hasBuildsPerms"
 						/>
 
 					<app-form-control-errors />

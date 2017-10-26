@@ -101,35 +101,29 @@
 						<translate>Devlog</translate>
 					</router-link>
 				</li>
-				<app-game-perms required="game-api">
-					<li v-app-tooltip.bottom="$gettext( `dash.games.api_tooltip` )">
-						<router-link
-							:to="{ name: 'dash.games.manage.api.overview' }"
-							:class="{ active: $route.name.indexOf( 'dash.games.manage.api' ) === 0 }"
-							>
-							<translate>dash.games.api_tab</translate>
-						</router-link>
-					</li>
+				<app-game-perms required="game-api" tag="li" v-app-tooltip.bottom="$gettext( `dash.games.api_tooltip` )">
+					<router-link
+						:to="{ name: 'dash.games.manage.api.overview' }"
+						:class="{ active: $route.name.indexOf( 'dash.games.manage.api' ) === 0 }"
+						>
+						<translate>dash.games.api_tab</translate>
+					</router-link>
 				</app-game-perms>
-				<app-game-perms required="sales">
-					<li v-app-tooltip.bottom="$gettext( `Manage your game keys and give access to users.` )">
-						<router-link
-							:to="{ name: 'dash.games.manage.key-groups.list' }"
-							:class="{ active: $route.name.indexOf( 'dash.games.manage.key-groups' ) === 0 }"
-							>
-							<translate>Keys/Access</translate>
-						</router-link>
-					</li>
+				<app-game-perms required="sales" tag="li" v-app-tooltip.bottom="$gettext( `Manage your game keys and give access to users.` )">
+					<router-link
+						:to="{ name: 'dash.games.manage.key-groups.list' }"
+						:class="{ active: $route.name.indexOf( 'dash.games.manage.key-groups' ) === 0 }"
+						>
+						<translate>Keys/Access</translate>
+					</router-link>
 				</app-game-perms>
-				<app-game-perms required="all">
-					<li v-app-tooltip.bottom="$gettext( `Game Jolt Sites are customizable external sites for your portfolio and games!` )">
-						<router-link
-							:to="{ name: 'dash.games.manage.site' }"
-							active-class="active"
-							>
-							<translate>Site</translate>
-						</router-link>
-					</li>
+				<app-game-perms required="all" tag="li" v-app-tooltip.bottom="$gettext( `Game Jolt Sites are customizable external sites for your portfolio and games!` )">
+					<router-link
+						:to="{ name: 'dash.games.manage.site' }"
+						active-class="active"
+						>
+						<translate>Site</translate>
+					</router-link>
 				</app-game-perms>
 
 				<li

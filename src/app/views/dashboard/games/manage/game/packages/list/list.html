@@ -20,27 +20,27 @@
 			<translate>You are only able to create private packages for testers while your game page is only a devlog. Once you publish your game page into early access or as a complete game, your public packages will show.</translate>
 		</div>
 
-		<div class="alert alert-info" v-if="!packages.length" v-translate>
-			dash.games.packages.no_packages_html
+
+		<div class="alert alert-info" v-if="!packages.length">
+			<p v-if="hasAllPerms"><translate>You haven't added any packages yet.</translate></p>
+			<p v-else><translate>This game hasn't got any packages yet, and you don't have permissions to create any.</translate></p>
 		</div>
 
-		<app-game-perms required="all">
-			<div>
-				<router-link
-					class="btn btn-success-outline btn-block"
-					:to="{
-						name: 'dash.games.manage.game.packages.add',
-					}"
-					>
-					<app-jolticon icon="add" />
-					<translate>dash.games.packages.add_package_button</translate>
-				</router-link>
-			</div>
+		<app-game-perms required="all" tag="div">
+			<router-link
+				class="btn btn-success-outline btn-block"
+				:to="{
+					name: 'dash.games.manage.game.packages.add',
+				}"
+				>
+				<app-jolticon icon="add" />
+				<translate>dash.games.packages.add_package_button</translate>
+			</router-link>
 		</app-game-perms>
 		<br>
 
 		<app-card-list v-if="packages.length" :items="packages">
-			<app-card-list-draggable :disabled="!game.hasPerms('details')" @change="saveSort">
+			<app-card-list-draggable :disabled="!hasDetailsPerms" @change="saveSort">
 				<app-card-list-item
 					v-for="package of packages"
 					:key="package.id"
@@ -59,14 +59,19 @@
 
 					<div class="card-title">
 						<h4>
-							<router-link
-								:to="{
-									name: 'dash.games.manage.game.packages.edit',
-									params: { packageId: package.id },
-								}"
-								>
+							<template v-if="hasBuildPerms">
+								<router-link
+									:to="{
+										name: 'dash.games.manage.game.packages.edit',
+										params: { packageId: package.id },
+									}"
+									>
+									{{ package.title || game.title }}
+								</router-link>
+							</template>
+							<template v-else>
 								{{ package.title || game.title }}
-							</router-link>
+							</template>
 						</h4>
 					</div>
 
@@ -128,28 +133,28 @@
 					</div>
 
 					<div class="card-controls">
-						<router-link
-							class="btn btn-outline"
-							:to="{
-								name: 'dash.games.manage.game.packages.edit',
-								params: { packageId: package.id },
-							}"
-							>
-							<app-jolticon icon="cog" />
-							<translate>Manage</translate>
-						</router-link>
-						<app-game-perms required="all">
+						<app-game-perms required="builds">
 							<router-link
 								class="btn btn-outline"
 								:to="{
-									name: 'dash.games.manage.game.packages.edit.widget',
+									name: 'dash.games.manage.game.packages.edit',
 									params: { packageId: package.id },
 								}"
 								>
-								<app-jolticon icon="plug" />
-								<translate>Widget</translate>
+								<app-jolticon icon="cog" />
+								<translate>Manage</translate>
 							</router-link>
 						</app-game-perms>
+						<router-link
+							class="btn btn-outline"
+							:to="{
+								name: 'dash.games.manage.game.packages.edit.widget',
+								params: { packageId: package.id },
+							}"
+							>
+							<app-jolticon icon="plug" />
+							<translate>Widget</translate>
+						</router-link>
 						<app-game-perms required="analytics">
 							<router-link
 								class="btn btn-outline"

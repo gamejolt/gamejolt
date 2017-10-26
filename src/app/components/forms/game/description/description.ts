@@ -36,6 +36,10 @@ export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 		form: AppForm;
 	};
 
+	get hasDetailsPerms() {
+		return this.model && this.model.hasPerms('details');
+	}
+
 	@Watch('serverErrors')
 	onServerErrors() {
 		this.isFnafDetected = false;

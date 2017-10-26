@@ -9,7 +9,7 @@ export class AppGamePerms extends Vue {
 
 	@Prop(Game) game?: Game;
 	@Prop({ type: String, default: '' })
-	required?: string;
+	required: string;
 	@Prop(Boolean) either?: boolean;
 	@Prop({ type: String, default: 'span' })
 	tag: string;
@@ -20,15 +20,20 @@ export class AppGamePerms extends Vue {
 	}
 
 	get hasPerms() {
-		const perms: Perm[] = (this.required as any).split(',');
-		// if (this.debug) {
-		console.log(
-			'Checking that ' +
-				JSON.stringify(this.targetGame.perms) +
-				' has perms ' +
-				JSON.stringify(perms.filter(perm => !!perm))
-		);
-		// }
+		const perms: Perm[] = this.required.split(',');
+		if (this.debug) {
+			console.log(
+				'Checking that ' +
+					JSON.stringify(this.targetGame.perms) +
+					' has perms ' +
+					JSON.stringify(perms.filter(perm => !!perm))
+			);
+		}
+
+		if (!this.targetGame) {
+			throw new Error(`Target game doesn't exist for app-game-perms component.`);
+		}
+
 		return this.targetGame.hasPerms(perms.filter(perm => !!perm), this.either);
 	}
 
