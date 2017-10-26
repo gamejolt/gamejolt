@@ -20,7 +20,7 @@ export class AppGamePerms extends Vue {
 	}
 
 	get hasPerms() {
-		const perms: Perm[] = this.required.split(',');
+		const perms: Perm[] = (this.required as any).split(',');
 		if (this.debug) {
 			console.log(
 				'Checking that ' +
