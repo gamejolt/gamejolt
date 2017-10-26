@@ -16,7 +16,6 @@ import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/f
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppDashGameWizardControls } from './wizard-controls/wizard-controls';
 import { AppGameDevStageSelector } from './dev-stage-selector/dev-stage-selector';
-import { AppGamePerms } from '../../game/perms/perms';
 
 @View
 @Component({
@@ -26,7 +25,6 @@ import { AppGamePerms } from '../../game/perms/perms';
 		AppExpand,
 		AppDashGameWizardControls,
 		AppGameDevStageSelector,
-		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,
@@ -45,11 +43,30 @@ export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
 	engines: any = null;
 
 	get hasDetailsPerms() {
+		// If we're currently adding the game - we automatically have permission for it.
+		if (this.method === 'add') {
+			return true;
+		}
+
 		return this.model && this.model.hasPerms('details');
 	}
 
 	get hasBuildsPerms() {
+		// If we're currently adding the game - we automatically have permission for it.
+		if (this.method === 'add') {
+			return true;
+		}
+
 		return this.model && this.model.hasPerms('builds');
+	}
+
+	get hasSalesPerms() {
+		// If we're currently adding the game - we automatically have permission for it.
+		if (this.method === 'add') {
+			return true;
+		}
+
+		return this.model && this.model.hasPerms('sales');
 	}
 
 	get loadUrl() {

@@ -24,7 +24,7 @@
 
 	<app-nav-tab-list>
 		<ul>
-			<li>
+			<app-game-perms required="builds,sales" :either="true" tag="li">
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.packages.edit',
@@ -34,7 +34,7 @@
 					>
 					<translate>Edit Package</translate>
 				</router-link>
-			</li>
+			</app-game-perms>
 			<li>
 				<router-link
 					:to="{
@@ -77,7 +77,7 @@
 					<translate>Package Preview</translate>
 				</h3>
 
-				<app-game-perms tag="div" required="sales" :either="true">
+				<app-game-perms tag="div" required="sales">
 					<button
 						class="btn btn-outline btn-block"
 						@click="isShowingPackageEdit = !isShowingPackageEdit"

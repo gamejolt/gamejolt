@@ -179,7 +179,7 @@
 				</app-form-group>
 			</app-expand>
 
-			<app-game-perms required="sales">
+			<template v-if="hasSalesPerms">
 				<app-form-group name="referrals_enabled" :label="$gettext( `Add to partner system?` )">
 					<app-form-control-toggle />
 
@@ -214,7 +214,7 @@
 						</div>
 					</div>
 				</app-form-group>
-			</app-game-perms>
+			</template>
 
 		</fieldset>
 

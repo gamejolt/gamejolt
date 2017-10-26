@@ -310,6 +310,10 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexAction
 	async leaveProject() {
+		if (!this.collaboration) {
+			return;
+		}
+
 		const result = await ModalConfirm.show(
 			Translate.$gettext(
 				`Are you sure you want to leave the project?

@@ -1,12 +1,10 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { RouteStore, RouteState } from '../../../views/dashboard/games/manage/manage.store';
+import { RouteStoreName, RouteStore } from '../../../views/dashboard/games/manage/manage.store';
 import { Perm, Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 @Component({})
 export class AppGamePerms extends Vue {
-	@RouteState('game') storeGame: RouteStore['game'];
-
 	@Prop(Game) game?: Game;
 	@Prop({ type: String, default: '' })
 	required: string;
@@ -16,19 +14,29 @@ export class AppGamePerms extends Vue {
 	@Prop(Boolean) debug?: boolean;
 
 	get targetGame() {
-		return this.game || this.storeGame;
+		if (this.game) {
+			return this.game;
+		}
+
+		const store: RouteStore | null = this.$store.state[RouteStoreName];
+		if (store) {
+			return store.game;
+		}
+
+		return null;
 	}
 
 	get hasPerms() {
 		const perms: Perm[] = (this.required as any).split(',');
-		if (this.debug) {
-			console.log(
-				'Checking that ' +
-					JSON.stringify(this.targetGame.perms) +
-					' has perms ' +
-					JSON.stringify(perms.filter(perm => !!perm))
-			);
-		}
+
+		// if (this.debug && this.targetGame) {
+		// 	console.log(
+		// 		'Checking that ' +
+		// 			JSON.stringify(this.targetGame.perms) +
+		// 			' has perms ' +
+		// 			JSON.stringify(perms.filter(perm => !!perm))
+		// 	);
+		// }
 
 		if (!this.targetGame) {
 			throw new Error(`Target game doesn't exist for app-game-perms component.`);
