@@ -65,11 +65,12 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: VueRouter.Route) {
-		const intentRedirect = IntentService.checkRoute(
-			route,
-			'follow-user',
-			Translate.$gettext(`You're now following this user.`)
-		);
+		const intentRedirect = IntentService.checkRoute(route, {
+			intent: 'follow-user',
+			data: {
+				message: Translate.$gettext(`You're now following this user.`),
+			},
+		});
 		if (intentRedirect) {
 			return intentRedirect;
 		}

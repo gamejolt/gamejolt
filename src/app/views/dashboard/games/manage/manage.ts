@@ -12,6 +12,8 @@ import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/ex
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { IntentService } from '../../../../components/intent/intent.service';
+import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -45,6 +47,14 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
+		const intentRedirect = IntentService.checkRoute(route, {
+			intent: 'accept-collaboration',
+			data: { message: Translate.$gettext(`You are now a collaborator`) },
+		});
+		if (intentRedirect) {
+			return intentRedirect;
+		}
+
 		return Api.sendRequest('/web/dash/developer/games/' + route.params.id);
 	}
 

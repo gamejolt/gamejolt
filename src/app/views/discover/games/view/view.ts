@@ -131,10 +131,21 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
 		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);
 
-		const intentRedirect = IntentService.checkRoute(
+		let intentRedirect = IntentService.checkRoute(
 			route,
-			'follow-game',
-			Translate.$gettext(`You're now following this game.`)
+			{
+				intent: 'follow-game',
+				data: {
+					message: Translate.$gettext(`You're now following this game.`),
+				},
+			},
+			{
+				intent: 'reject-collaboration',
+				data: {
+					message: Translate.$gettext(`Aww, you rejected the collaboration`),
+				},
+				type: 'error',
+			}
 		);
 		if (intentRedirect) {
 			return intentRedirect;
