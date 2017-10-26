@@ -10,6 +10,10 @@ import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
+import { AppGamePerms } from '../../../../components/game/perms/perms';
+import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { IntentService } from '../../../../components/intent/intent.service';
+import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -23,12 +27,14 @@ import {
 		AppPageHeader,
 		AppExpand,
 		AppTimeAgo,
+		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,
 	},
 })
 export default class RouteDashGamesManage extends BaseRouteComponent {
+	@AppState user: AppStore['user'];
 	@RouteState game: RouteStore['game'];
 	@RouteState isWizard: RouteStore['isWizard'];
 
@@ -41,6 +47,14 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
+		const intentRedirect = IntentService.checkRoute(route, {
+			intent: 'accept-game-collaboration',
+			message: Translate.$gettext(`You're now a collaborator for this project!`),
+		});
+		if (intentRedirect) {
+			return intentRedirect;
+		}
+
 		return Api.sendRequest('/web/dash/developer/games/' + route.params.id);
 	}
 

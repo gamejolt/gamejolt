@@ -245,7 +245,7 @@
 				</div>
 				<div :class="contentColClasses">
 
-					<template v-if="app.user && app.user.id === game.developer.id">
+					<app-game-perms :game="game" required="devlogs">
 						<h5 class="sans-margin-top">
 							<translate>Add Post</translate>
 						</h5>
@@ -256,7 +256,7 @@
 							/>
 
 						<hr>
-					</template>
+					</app-game-perms>
 
 					<app-activity-feed-placeholder v-if="!feed" />
 					<div v-else>

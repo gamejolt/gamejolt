@@ -42,6 +42,33 @@ export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
 	categories: any = null;
 	engines: any = null;
 
+	get hasAllPerms() {
+		// If we're currently adding the game - we automatically have permission for it.
+		if (this.method === 'add') {
+			return true;
+		}
+
+		return this.model && this.model.hasPerms('all');
+	}
+
+	get hasBuildsPerms() {
+		// If we're currently adding the game - we automatically have permission for it.
+		if (this.method === 'add') {
+			return true;
+		}
+
+		return this.model && this.model.hasPerms('builds');
+	}
+
+	get hasSalesPerms() {
+		// If we're currently adding the game - we automatically have permission for it.
+		if (this.method === 'add') {
+			return true;
+		}
+
+		return this.model && this.model.hasPerms('sales');
+	}
+
 	get loadUrl() {
 		let url = '/web/dash/developer/games/save';
 		if (this.method === 'edit') {

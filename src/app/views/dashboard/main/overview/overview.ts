@@ -23,6 +23,7 @@ import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/
 import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { numberSort } from '../../../../../lib/gj-lib-client/utils/array';
 import { Jam } from '../../../../../lib/gj-lib-client/components/jam/jam.model';
+import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -60,6 +61,7 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 	walletBalance = 0;
 
 	games: Game[] = [];
+	collabs: GameCollaborator[] = [];
 	videos: CommentVideo[] = [];
 	videosCount = 0;
 	jams: Jam[] = [];
@@ -81,10 +83,18 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 		'has_friend',
 	];
 
-	Game = Game;
-	Screen = makeObservableService(Screen);
-	Environment = Environment;
-	currency = currency;
+	readonly Game = Game;
+	readonly Screen = makeObservableService(Screen);
+	readonly Environment = Environment;
+	readonly currency = currency;
+
+	get inViewGames() {
+		if (!this.games) {
+			return [];
+		}
+
+		return this.games.slice(0, this.gamesExpanded ? this.games.length : 5);
+	}
 
 	get integrationTranslations() {
 		return {
@@ -118,8 +128,18 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 			this.walletBalance = this.$payload.walletBalance || 0;
 		}
 
-		this.games = Game.populate(this.$payload.games);
-		this.games.sort((a, b) => numberSort(a.posted_on, b.posted_on)).reverse();
+		const items: (Game | GameCollaborator)[] = [];
+		this.games = items
+			.concat(Game.populate(this.$payload.games))
+			.concat(GameCollaborator.populate(this.$payload.collaborations))
+			.sort((a, b) =>
+				numberSort(
+					a instanceof Game ? a.posted_on : a.accepted_on,
+					b instanceof Game ? b.posted_on : b.accepted_on
+				)
+			)
+			.reverse()
+			.map(i => (i instanceof Game ? i : i.game!));
 
 		this.videos = CommentVideo.populate(this.$payload.videos);
 		this.videosCount = this.$payload.videosCount || 0;

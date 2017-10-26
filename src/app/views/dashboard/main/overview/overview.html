@@ -257,7 +257,7 @@
 				</h2>
 
 				<div class="page-help" v-if="!games.length">
-					<p><translate>Are you a developer? Add your free or commercial game to the site!</translate></p>
+					<p><translate>Are you a developer? Add your free or paid game to the site!</translate></p>
 				</div>
 
 				<div>
@@ -275,7 +275,7 @@
 					<br>
 
 					<app-card
-						v-for="game of games.slice( 0, gamesExpanded ? games.length : 5 )"
+						v-for="game of inViewGames"
 						:key="game.id"
 						>
 						<div class="card-title">
@@ -287,6 +287,10 @@
 									}"
 									v-app-track-event="`dash:overview:quick-game`"
 									>
+									<template v-if="game.developer.id !== app.user.id">
+										<small>@{{ game.developer.username}}</small>
+										/
+									</template>
 									{{ game.title }}
 								</router-link>
 							</h4>
@@ -303,79 +307,19 @@
 								<app-jolticon icon="cog" />
 								<translate>Manage</translate>
 							</router-link>
-							<router-link
-								class="btn btn-outline"
-								v-app-track-event="`dash:overview:quick-game-analytics`"
-								:to="{
-									name: 'dash.analytics',
-									params: { resource: 'Game', resourceId: game.id },
-								}"
-								>
-								<app-jolticon icon="chart" />
-								<translate>Analytics</translate>
-							</router-link>
-							<button
-								class="btn btn-outline btn-sparse"
-								v-app-track-event="`dash:overview:more-game`"
-								v-app-popover-trigger="`overview-game-more-${ game.id }`"
-								>
-								<app-jolticon icon="ellipsis-h" />
-							</button>
-
-							<app-popover :popover-id="`overview-game-more-${ game.id }`">
-								<div class="list-group list-group-dark">
-									<router-link
-										class="list-group-item"
-										v-app-track-event="`dash:overview:quick-game-packages`"
-										:to="{
-											name: 'dash.games.manage.game.packages.list',
-											params: { id: game.id },
-										}"
-										>
-										<translate>Packages</translate>
-									</router-link>
-									<router-link
-										class="list-group-item"
-										v-app-track-event="`dash:overview:quick-game-devlog`"
-										:to="{
-											name: 'dash.games.manage.devlog',
-											params: { id: game.id },
-										}"
-										>
-										<translate>Devlog</translate>
-									</router-link>
-									<router-link
-										class="list-group-item"
-										v-app-track-event="`dash:overview:quick-game-keys`"
-										:to="{
-											name: 'dash.games.manage.key-groups.list',
-											params: { id: game.id },
-										}"
-										>
-										<translate>Keys/Access</translate>
-									</router-link>
-									<router-link
-										class="list-group-item"
-										v-app-track-event="`dash:overview:quick-game-api`"
-										:to="{
-											name: 'dash.games.manage.api.overview',
-											params: { id: game.id },
-										}"
-										>
-										<translate>Game API</translate>
-									</router-link>
-									<router-link
-										class="list-group-item"
-										v-app-track-event="`dash:overview:quick-game-site`"
-										:to="{
-											name: 'dash.games.manage.site',
-											params: { id: game.id },
-										}"
-										>
-										<translate>Site</translate>
-									</router-link>
-								</div>
-							</app-popover>
+							<template v-if="game.hasPerms('analytics')">
+								<router-link
+									class="btn btn-outline"
+									v-app-track-event="`dash:overview:quick-game-analytics`"
+									:to="{
+										name: 'dash.analytics',
+										params: { resource: 'Game', resourceId: game.id },
+									}"
+									>
+									<app-jolticon icon="chart" />
+									<translate>Analytics</translate>
+								</router-link>
+							</template>
 						</div>
 					</app-card>
 
@@ -392,7 +336,6 @@
 						</button>
 					</div>
 				</template>
-
 
 				<!--
 					Video Comments

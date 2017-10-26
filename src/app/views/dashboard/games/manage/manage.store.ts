@@ -14,6 +14,7 @@ import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/vide
 import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { router } from '../../../index';
+import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 
 export const RouteStoreName = 'manageRoute';
 export const RouteState = namespace(RouteStoreName, State);
@@ -88,6 +89,7 @@ export function startWizard() {
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	game: Game = null as any;
+	collaboration: GameCollaborator | null = null;
 	media: Media[] = [];
 	isWizard = false;
 
@@ -130,6 +132,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	populate(payload: Mutations['populate']) {
 		this.game = new Game(payload.game);
+		this.collaboration = payload.collaboration ? new GameCollaborator(payload.collaboration) : null;
 		this.isWizard = !!window.sessionStorage.getItem(WizardKey);
 	}
 
@@ -300,6 +303,32 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		Growls.info(
 			Translate.$gettext('dash.games.removed_growl'),
 			Translate.$gettext('dash.games.removed_growl_title')
+		);
+
+		router.push({ name: 'dash.main.overview' });
+	}
+
+	@VuexAction
+	async leaveProject() {
+		if (!this.collaboration) {
+			return;
+		}
+
+		const result = await ModalConfirm.show(
+			Translate.$gettext(`Are you sure you want to leave this project?`),
+			Translate.$gettext('Leave project?'),
+			'yes'
+		);
+
+		if (!result) {
+			return;
+		}
+
+		await this.collaboration.$remove();
+
+		Growls.success(
+			Translate.$gettext('You left the project. You will be missed! ;A;'),
+			Translate.$gettext('Left Project')
 		);
 
 		router.push({ name: 'dash.main.overview' });

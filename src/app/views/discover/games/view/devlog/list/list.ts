@@ -26,6 +26,7 @@ import { EventItem } from '../../../../../../../lib/gj-lib-client/components/eve
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
 import { Store } from '../../../../../../store/index';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 
 @View
 @Component({
@@ -35,6 +36,7 @@ import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/
 		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
 		AppDevlogPostAdd,
+		AppGamePerms,
 	},
 })
 export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent {
