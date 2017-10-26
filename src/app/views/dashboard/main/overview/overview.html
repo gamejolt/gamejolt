@@ -256,8 +256,8 @@
 					<translate>Your Games</translate>
 				</h2>
 
-				<div class="page-help" v-if="!gamesOrCollabs.length">
-					<p><translate>Are you a developer? Add your free or commercial game to the site!</translate></p>
+				<div class="page-help" v-if="!games.length">
+					<p><translate>Are you a developer? Add your free or paid game to the site!</translate></p>
 				</div>
 
 				<div>
@@ -271,28 +271,27 @@
 					</router-link>
 				</div>
 
-				<template v-if="gamesOrCollabs.length > 0">
+				<template v-if="games.length > 0">
 					<br>
 
 					<app-card
-						v-for="(gameOrCollab, index) in inViewGamesOrCollabs"
-						:key="games[index].id"
+						v-for="game of inViewGames"
+						:key="game.id"
 						>
 						<div class="card-title">
 							<h4>
 								<router-link
 									:to="{
 										name: 'dash.games.manage.game.overview',
-										params: { id: games[index].id },
+										params: { id: game.id },
 									}"
 									v-app-track-event="`dash:overview:quick-game`"
 									>
-									<template v-if="gameOrCollab instanceof Game">
-										{{ games[index].title }}
+									<template v-if="game.developer.id !== app.user.id">
+										<small>@{{ game.developer.username}}</small>
+										/
 									</template>
-									<template v-else>
-										@{{ games[index].developer.username}} / {{ games[index].title }}
-									</template>
+									{{ game.title }}
 								</router-link>
 							</h4>
 						</div>
@@ -301,101 +300,37 @@
 								class="btn btn-outline"
 								:to="{
 									name: 'dash.games.manage.game.overview',
-									params: { id: games[index].id },
+									params: { id: game.id },
 								}"
 								v-app-track-event="`dash:overview:quick-game`"
 								>
 								<app-jolticon icon="cog" />
 								<translate>Manage</translate>
 							</router-link>
-							<template v-if="gameAnalyticsPerms[index]">
+							<template v-if="game.hasPerms('analytics')">
 								<router-link
 									class="btn btn-outline"
 									v-app-track-event="`dash:overview:quick-game-analytics`"
 									:to="{
 										name: 'dash.analytics',
-										params: { resource: 'Game', resourceId: games[index].id },
+										params: { resource: 'Game', resourceId: game.id },
 									}"
 									>
 									<app-jolticon icon="chart" />
 									<translate>Analytics</translate>
 								</router-link>
 							</template>
-
-							<!-- TODO(collaborators) check if anyone even uses this -->
-							<!-- <button
-								class="btn btn-outline btn-sparse"
-								v-app-track-event="`dash:overview:more-game`"
-								v-app-popover-trigger="`overview-game-more-${ game.id }`"
-								>
-								<app-jolticon icon="ellipsis-h" />
-							</button>
-
-							<app-popover :popover-id="`overview-game-more-${ game.id }`">
-								<div class="list-group list-group-dark">
-									<router-link
-										class="list-group-item"
-										v-app-track-event="`dash:overview:quick-game-packages`"
-										:to="{
-											name: 'dash.games.manage.game.packages.list',
-											params: { id: game.id },
-										}"
-										>
-										<translate>Packages</translate>
-									</router-link>
-									<router-link
-										class="list-group-item"
-										v-app-track-event="`dash:overview:quick-game-devlog`"
-										:to="{
-											name: 'dash.games.manage.devlog',
-											params: { id: game.id },
-										}"
-										>
-										<translate>Devlog</translate>
-									</router-link>
-									<router-link
-										class="list-group-item"
-										v-app-track-event="`dash:overview:quick-game-keys`"
-										:to="{
-											name: 'dash.games.manage.key-groups.list',
-											params: { id: game.id },
-										}"
-										>
-										<translate>Keys/Access</translate>
-									</router-link>
-									<router-link
-										class="list-group-item"
-										v-app-track-event="`dash:overview:quick-game-api`"
-										:to="{
-											name: 'dash.games.manage.api.overview',
-											params: { id: game.id },
-										}"
-										>
-										<translate>Game API</translate>
-									</router-link>
-									<router-link
-										class="list-group-item"
-										v-app-track-event="`dash:overview:quick-game-site`"
-										:to="{
-											name: 'dash.games.manage.site',
-											params: { id: game.id },
-										}"
-										>
-										<translate>Site</translate>
-									</router-link>
-								</div>
-							</app-popover> -->
 						</div>
 					</app-card>
 
-					<div class="page-cut" v-if="!gamesExpanded && gamesOrCollabs.length > 5">
+					<div class="page-cut" v-if="!gamesExpanded && games.length > 5">
 						<button
 							class="btn btn-outline"
 							@click="gamesExpanded = true"
 							v-app-track-event="`dash:overview:expand-games`"
 							>
 							<span class="btn-badge">
-								{{ gamesOrCollabs.length | number }}
+								{{ games.length | number }}
 							</span>
 							<translate>Expand All</translate>
 						</button>
