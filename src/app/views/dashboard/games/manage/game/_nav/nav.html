@@ -13,7 +13,7 @@
 				<translate>Overview</translate>
 			</router-link>
 		</li>
-		<li>
+		<app-game-perms tag="li" required="builds,sales" :either="true">
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.details',
@@ -24,7 +24,7 @@
 				<app-manage-game-nav-required :is-complete="true" />
 				<translate>Details</translate>
 			</router-link>
-		</li>
+		</app-game-perms>
 		<app-game-perms tag="li" required="details,media" :either="true">
 			<router-link
 				:to="{

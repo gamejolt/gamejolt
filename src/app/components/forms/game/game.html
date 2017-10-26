@@ -52,7 +52,7 @@
 					:rules="{
 						max: 250,
 					}"
-					:disabled="!hasDetailsPerms"
+					:disabled="!hasAllPerms"
 					/>
 				<app-form-control-errors />
 			</app-form-group>
@@ -72,7 +72,7 @@
 							initVal: method === 'edit' ? model.path : undefined,
 						},
 					}"
-					:disabled="!hasDetailsPerms"
+					:disabled="!hasAllPerms"
 					/>
 
 				<app-form-control-errors />
@@ -102,7 +102,7 @@
 					:rules="{
 						max: 250,
 					}"
-					:disabled="!hasDetailsPerms"
+					:disabled="!hasAllPerms"
 					/>
 				<app-form-control-errors />
 			</app-form-group>
@@ -116,7 +116,7 @@
 				:label="$gettext( `dash.games.form.category_label` )"
 				>
 				<app-form-control-select
-					:disabled="!hasDetailsPerms"
+					:disabled="!hasAllPerms"
 					>
 					<option value="">
 						<translate>dash.games.form.category_placeholder</translate>
