@@ -37,7 +37,7 @@
 			<div v-if="!showDescriptionInput">
 				<button
 					class="btn btn-outline btn-sm"
-					@click="showDescriptionInput = true"
+					@click.prevent="showDescriptionInput = true"
 					:disabled="!hasBuildsPerms">
 					<app-jolticon icon="add" />
 					<translate>dash.games.packages.form.description_change_button</translate>
