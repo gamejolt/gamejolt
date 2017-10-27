@@ -141,7 +141,8 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 		this.game = this.$payload.game ? new Game(this.$payload.game) : null;
 		this.package = this.$payload.package ? new GamePackage(this.$payload.package) : null;
 		this.release = this.$payload.release ? new GameRelease(this.$payload.release) : null;
-		this.partnerMode = !this.user || this.user.id !== this.viewAs;
+		this.partnerMode =
+			(!this.user || this.user.id !== this.viewAs) && !!parseInt(this.$route.query.partner, 10);
 
 		this.period = (this.$route.query['period'] as any) || 'monthly';
 		this.resource = this.$route.params['resource'] as any;

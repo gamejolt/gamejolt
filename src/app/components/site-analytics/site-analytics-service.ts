@@ -115,6 +115,7 @@ export interface Request {
 	target: ResourceName;
 	target_id: number;
 	view_as?: number;
+	as_partner?: boolean;
 	collection: Collection;
 	analyzer: Analyzer;
 	field?: Field;
@@ -531,6 +532,7 @@ export class SiteAnalytics {
 					request[metric.key].field = 'partner_revenue';
 				}
 				request[metric.key].conditions = ['partner'];
+				request[metric.key].as_partner = true;
 			}
 
 			if (dates) {
