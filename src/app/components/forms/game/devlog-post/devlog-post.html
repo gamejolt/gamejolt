@@ -26,6 +26,7 @@
 		<app-form-group
 			name="content_markdown"
 			:label="$gettext( `Post Content` )"
+			:hide-label="true"
 			>
 			<app-form-control-markdown
 				preview-class="fireside-post-body"
@@ -127,6 +128,26 @@
 						<app-form-control-checkbox :value="keyGroup.id" />
 					{{ keyGroup.name }}
 				</label>
+			</div>
+		</div>
+	</app-form-group>
+
+	<app-form-group
+		name="as_game_owner"
+		v-if="user && model.game && user.id != model.game.developer.id"
+		:label="$gettext(`Post as Game Owner`)"
+		>
+		<p class="help-block">
+			This will show the game owner as the user that posted instead of you.
+		</p>
+		<div class="-as-owner">
+			<div class="-as-owner-item">
+				<app-form-control-toggle />
+			</div>
+			<div class="-as-owner-item -as-owner-avatar avatar-circle" v-if="formModel.as_game_owner">
+				<app-user-avatar-img
+					:user="model.game.developer"
+					/>
 			</div>
 		</div>
 	</app-form-group>

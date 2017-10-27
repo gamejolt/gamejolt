@@ -33,7 +33,6 @@ export default class RouteSettings extends BaseRouteComponent {
 
 		return {
 			site: this.$gettext('Site'),
-			chat: this.$gettext('settings.chat'),
 			restrictions: this.$gettext('Restrictions'),
 			notifications: this.$gettext('Notifications'),
 		};

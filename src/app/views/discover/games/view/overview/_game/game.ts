@@ -41,6 +41,7 @@ import { AppGameList } from '../../../../../../components/game/list/list';
 import { AppCommentWidgetAdd } from '../../../../../../../lib/gj-lib-client/components/comment/widget/add/add';
 import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
 import { AppCommentOverview } from '../../../../../../components/comment/overview/overview';
+import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 
 @View
 @Component({
@@ -74,6 +75,7 @@ import { AppCommentOverview } from '../../../../../../components/comment/overvie
 		AppActivityFeed: AppActivityFeedLazy,
 		AppDevlogPostAdd,
 		AppGameThumbnail,
+		AppGamePerms,
 	},
 	directives: {
 		AppTrackEvent,
@@ -123,6 +125,10 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 
 	Screen = makeObservableService(Screen);
 	Environment = Environment;
+
+	get hasAnyPerms() {
+		return this.game.hasPerms();
+	}
 
 	get hasPartnerControls() {
 		return this.game.referrals_enabled && this.userPartnerKey && this.packages.length;

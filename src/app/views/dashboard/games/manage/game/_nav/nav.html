@@ -13,7 +13,7 @@
 				<translate>Overview</translate>
 			</router-link>
 		</li>
-		<li>
+		<app-game-perms tag="li" required="builds,sales" :either="true">
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.details',
@@ -24,8 +24,8 @@
 				<app-manage-game-nav-required :is-complete="true" />
 				<translate>Details</translate>
 			</router-link>
-		</li>
-		<li>
+		</app-game-perms>
+		<app-game-perms tag="li" required="details,media" :either="true">
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.description',
@@ -36,8 +36,8 @@
 				<app-manage-game-nav-required :is-complete="!!game.description_markdown" />
 				<translate>Description</translate>
 			</router-link>
-		</li>
-		<li>
+		</app-game-perms>
+		<app-game-perms tag="li" required="details">
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.maturity',
@@ -48,8 +48,8 @@
 				<app-manage-game-nav-required :is-complete="!!game.tigrs_age" />
 				<translate>Maturity</translate>
 			</router-link>
-		</li>
-		<li>
+		</app-game-perms>
+		<app-game-perms tag="li" required="media">
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.thumbnail',
@@ -60,8 +60,8 @@
 				<app-manage-game-nav-required :is-complete="!!game.thumbnail_media_item" />
 				<translate>Thumbnail</translate>
 			</router-link>
-		</li>
-		<li>
+		</app-game-perms>
+		<app-game-perms tag="li" required="media">
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.header',
@@ -71,8 +71,12 @@
 				>
 				<translate>Header</translate>
 			</router-link>
-		</li>
-		<li v-if="!isWizard || !game._is_devlog">
+		</app-game-perms>
+		<app-game-perms
+			tag="li"
+			required="media"
+			v-if="!isWizard || !game._is_devlog"
+			>
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.media',
@@ -82,8 +86,13 @@
 				>
 				<translate>Media</translate>
 			</router-link>
-		</li>
-		<li v-if="!isWizard || !game._is_devlog">
+		</app-game-perms>
+		<app-game-perms
+			tag="li"
+			required="builds,sales"
+			:either="true"
+			v-if="!isWizard || !game._is_devlog"
+			>
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.packages.list',
@@ -96,8 +105,12 @@
 				<app-manage-game-nav-required v-if="!game._is_devlog" :is-complete="game.has_active_builds" />
 				<translate>Packages</translate>
 			</router-link>
-		</li>
-		<li v-if="!isWizard || !game._is_devlog">
+		</app-game-perms>
+		<app-game-perms
+			tag="li"
+			required="music"
+			v-if="!isWizard || !game._is_devlog"
+			>
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.music',
@@ -107,8 +120,8 @@
 				>
 				<translate>Music</translate>
 			</router-link>
-		</li>
-		<li>
+		</app-game-perms>
+		<app-game-perms tag="li" required="all">
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.settings',
@@ -118,10 +131,15 @@
 				>
 				<translate>Settings</translate>
 			</router-link>
-		</li>
+		</app-game-perms>
 	</ul>
 
-	<div class="hidden-xs" v-if="$route.name !== 'dash.games.manage.game.wizard-finish'">
+	<app-game-perms
+		required="all"
+		tag="div"
+		class="hidden-xs"
+		v-if="$route.name !== 'dash.games.manage.game.wizard-finish'"
+		>
 		<button
 			class="btn btn-success-outline btn-block"
 			v-if="game.status === Game.STATUS_HIDDEN"
@@ -139,6 +157,6 @@
 			<translate class="visible-lg">Save Draft</translate>
 			<translate class="visible-md">Save</translate>
 		</button>
-	</div>
+	</app-game-perms>
 
 </div>

@@ -5,7 +5,7 @@
 			<div class="row">
 				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
 
-					<template v-if="app.user && app.user.id === game.developer.id">
+					<app-game-perms :game="game" required="devlogs">
 						<h5 class="sans-margin-top">
 							<translate>Add Post</translate>
 						</h5>
@@ -16,7 +16,7 @@
 							/>
 
 						<hr>
-					</template>
+					</app-game-perms>
 
 					<app-activity-feed-placeholder v-if="!feed" />
 					<app-activity-feed

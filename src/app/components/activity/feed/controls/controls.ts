@@ -65,6 +65,10 @@ export class AppActivityFeedControls extends Vue {
 	Screen = makeObservableService(Screen);
 	FiresidePost = FiresidePost;
 
+	get hasDevlogsPerms() {
+		return this.game && this.game.hasPerms('devlogs');
+	}
+
 	get sharePopoverId() {
 		if (!this.post) {
 			return '';
@@ -92,7 +96,10 @@ export class AppActivityFeedControls extends Vue {
 
 	get shouldShowStats() {
 		return (
-			!!this.post && this.showExtraInfo && !!this.app.user && this.post.user.id === this.app.user.id
+			!!this.post &&
+			this.showExtraInfo &&
+			!!this.app.user &&
+			(this.post.user.id === this.app.user.id || this.hasDevlogsPerms)
 		);
 	}
 

@@ -26,6 +26,7 @@ import { Environment } from '../../../../../lib/gj-lib-client/components/environ
 import { router } from '../../../index';
 import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
 import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import {
 	Game,
 	CustomMessage as CustomGameMessage,
@@ -49,6 +50,8 @@ type Mutations = {
 	processPayload: any;
 	processOverviewPayload: any;
 	processRatingPayload: any;
+	acceptCollaboratorInvite: GameCollaborator;
+	declineCollaboratorInvite: GameCollaborator;
 	setCommentsCount: number;
 	pushVideoComments: CommentVideo[];
 	showMultiplePackagesMessage: undefined;
@@ -116,6 +119,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	partnerKey = '';
 	partner: User | null = null;
+
+	collaboratorInvite: GameCollaborator | null = null;
 
 	userRating: GameRating | null = null;
 	ratingBreakdown: number[] = [];
@@ -253,6 +258,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.twitterShareMessage = payload.twitterShareMessage || 'Check out this game!';
 
 		this.userPartnerKey = payload.userPartnerKey;
+		this.collaboratorInvite = payload.invite ? new GameCollaborator(payload.invite) : null;
 		setAds(this.game);
 	}
 
@@ -318,6 +324,18 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		]);
 
 		this.customGameMessages = payload.customMessages || [];
+	}
+
+	@VuexMutation
+	acceptCollaboratorInvite(invite: Mutations['acceptCollaboratorInvite']) {
+		console.log('Accepting collaborator invite: ' + JSON.stringify(invite.perms));
+		this.game.perms = invite.perms;
+		this.collaboratorInvite = null;
+	}
+
+	@VuexMutation
+	declineCollaboratorInvite() {
+		this.collaboratorInvite = null;
 	}
 
 	@VuexMutation
