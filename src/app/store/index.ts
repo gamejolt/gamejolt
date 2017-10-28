@@ -95,7 +95,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isRightPaneOverlayed = false;
 
 	get isLeftPaneVisible() {
-		if (Screen.isDesktop) {
+		if (Screen.isLg) {
 			return this.isLeftPaneSticky;
 		}
 
@@ -107,7 +107,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get shouldShowLeftPaneBackdrop() {
-		return this.isLeftPaneOverlayed && Screen.isMobile;
+		return this.isLeftPaneOverlayed && !Screen.isLg;
 	}
 
 	@VuexAction
@@ -239,7 +239,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	_toggleLeftPane() {
-		if (Screen.isDesktop) {
+		if (Screen.isLg) {
 			this.isLeftPaneSticky = !this.isLeftPaneSticky;
 		} else {
 			this.isLeftPaneOverlayed = !this.isLeftPaneOverlayed;
