@@ -324,7 +324,7 @@ class Zombie extends Monster {
 class Witch extends Monster {
 	leaving = false;
 	entering = false;
-	spawnSide = 0;
+	spawnSide = -1;
 
 	get img() {
 		return require('./witch.png');
@@ -374,6 +374,7 @@ class Witch extends Monster {
 			this.interacted = true;
 			this.lifetime = LIFETIME;
 			this.health -= 0.2;
+			this.destination = this.getDestination();
 			this.clickAnimation();
 
 			if (this.health <= 0.01) {
@@ -383,28 +384,14 @@ class Witch extends Monster {
 				if (Math.random() < 0.5 + 0.3 * this.model.user_level) {
 					this.leaving = true;
 
-					// TODO(halloween) make the witch leave and teleport to the other side instead of spawning another monster div
-					// var w = new Witch(this.monstertype);
-					// if (this.spawnSide == 0) {
-					// 	this.destination.x = -this.getWidth() * 2;
-					// 	w.spawnSide = 1;
-					// 	w.x = document.getElementById('monster-container').offsetWidth + this.getWidth() * 2;
-					// } else {
-					// 	this.destination.x =
-					// 		document.getElementById('monster-container').offsetWidth + this.getWidth() * 2;
-					// 	w.spawnSide = 0;
-					// 	w.x = -this.getWidth() * 2;
-					// }
-					// w.destination.x = w.getDestination().x;
-
-					// w.y = this.pos.y;
-					// this.destination.y = this.pos.y;
-					// w.destination.y = this.pos.y;
-					// w.size = 1;
-					// w.opacity = 1;
-					// w.interacted = true;
-					// w.health = this.health;
-					// w.entering = true;
+					if (this.spawnSide == 0) {
+						this.destination.x = -this.width * 2;
+						this.spawnSide = 1;
+					} else {
+						this.destination.x = this.shell.containerWidth + this.width * 2;
+						this.spawnSide = 0;
+					}
+					this.destination.y = this.pos.y;
 				}
 			}
 		}
@@ -425,6 +412,19 @@ class Witch extends Monster {
 				}
 				if (Math.abs(this.pos.y - this.destination.y) < 50 + 30 * level) {
 					this.destination.y = this.getDestination().y;
+				}
+			}
+
+			if (this.leaving && Math.abs(this.pos.x - this.destination.x) < 100) {
+				this.entering = true;
+				this.leaving = false;
+				this.lifetime = LIFETIME;
+				if (this.spawnSide == 0) {
+					this.pos.x = -this.width;
+					this.destination.x = this.width * 2;
+				} else {
+					this.pos.x = this.shell.containerWidth;
+					this.destination.x = this.shell.containerWidth - this.width * 2;
 				}
 			}
 
@@ -463,10 +463,10 @@ class Candy extends Monster {
 		if (this.interacted && this.health > 0) {
 			// TODO(halloween) mouse move isnt detected for some reason
 			if (
-				this.shell.mouseX > this.pos.x - 100 &&
-				this.shell.mouseX < this.pos.x + this.width + 200 &&
-				this.shell.mouseY > this.pos.y - 100 &&
-				this.shell.mouseY < this.pos.y + this.height + 200 &&
+				this.shell.getMouseX() > this.pos.x - 100 &&
+				this.shell.getMouseX() < this.pos.x + this.width + 200 &&
+				this.shell.getMouseY() > this.pos.y - 100 &&
+				this.shell.getMouseY() < this.pos.y + this.height + 200 &&
 				Math.random() < 0.01 + 0.01 * this.model.user_level
 			) {
 				this.destination = this.getDestination();

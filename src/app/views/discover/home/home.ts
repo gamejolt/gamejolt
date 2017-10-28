@@ -179,7 +179,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 				id: 190,
 				user_level: 0,
 				seed: '73nqFm4GiQ83840380',
-				type: 'vampire',
+				type: 'candy',
 			})
 		);
 
