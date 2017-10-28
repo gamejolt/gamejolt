@@ -1,9 +1,10 @@
 <button
+	:id="widgetId"
 	class="game-follow-widget btn"
 	:class="btnClasses"
 	:disabled="isProcessing"
 	v-app-auth-required
-	v-app-tooltip.bottom="
+	v-app-tooltip="
 		!game.is_following
 		? $gettext( `Follow this game to add it to your Library and be notified when new posts are added.` )
 		: undefined
@@ -22,4 +23,22 @@
 		<app-jolticon icon="subscribed" />
 		<translate v-if="!sparse">Following</translate>
 	</template>
+
+	<app-popover
+		v-if="showUserFollow"
+		:popover-id="popoverId"
+		:append-to-body="true"
+		:track-element-width="'#' + widgetId"
+		>
+		<div class="well fill-darkest">
+			<p class="small">
+				<translate>Would you also like to follow this developer? You will get notified when they release new games.</translate>
+			</p>
+			<app-user-follow-widget
+				class="btn-block"
+				:user="game.developer"
+				:outline="true"
+				/>
+		</div>
+	</app-popover>
 </button>
