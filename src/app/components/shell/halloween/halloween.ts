@@ -39,7 +39,6 @@ export class AppShellHalloween extends Vue {
 	}
 
 	mouseMove(e: MouseEvent) {
-		console.log('Moved mouse');
 		this._mouseX = e.clientX;
 		this._mouseY = e.clientY;
 	}

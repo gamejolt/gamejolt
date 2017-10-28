@@ -4,6 +4,7 @@ import * as View from '!view!./monster.html?style=./monster.styl';
 import { AppShellHalloween } from '../halloween';
 import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
 import { HalloweenMonster } from '../../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
+import { ShellHalloweenMonsterModal } from './modal/modal.service';
 
 @View
 @Component({})
@@ -141,6 +142,7 @@ export abstract class Monster {
 	remove() {
 		if (this.interval) {
 			this.shell.endCombat();
+			ShellHalloweenMonsterModal.show(this.img);
 			clearInterval(this.interval);
 			this.interval = null;
 		}

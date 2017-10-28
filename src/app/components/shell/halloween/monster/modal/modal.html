@@ -1,0 +1,55 @@
+<app-modal>
+
+	<div class="modal-body">
+		<div class="monster-avatar">
+			<img :src="avatar" />
+		</div>
+		<div class="monster-stats">
+			<blockquote>
+				<p>"You suck... blood!"</p>
+				<footer>Frustrated vampire</footer>
+			</blockquote>
+
+			<div>
+				<label><app-jolticon icon="exp" /> Your Stats &dash;</label>
+				<span v-translate="{
+						caught: 50,
+						rank: 'Bloody',
+					}"
+					>
+					Caught: <b>%{ caught }</b> Rank: <b>%{ rank }</b>
+				</span>
+			</div>
+			<app-progress-bar :percent="50" variant="green" />
+
+			<br />
+
+			<div>
+				<label><app-jolticon icon="world" /> Global stats &mdash;</label>
+				<span v-translate="{
+						caught: '13,229',
+					}"
+					>
+					Caught: <b>%{ caught }</b>
+				</span>
+			</div>
+			<app-progress-bar :percent="30" variant="green" indeterminate active />
+		</div>
+
+		<div class="controls">
+			<button class="btn btn-primary-outline" @click="modal.dismiss()">
+				<app-jolticon icon="world" />
+				<translate>Stats</translate>
+			</button>
+			<button class="btn btn-danger-outline" @click="modal.dismiss()">
+				<app-jolticon icon="inactive" />
+				<translate>Opt Out</translate>
+			</button>
+			<button class="btn btn-danger-outline" @click="modal.dismiss()">
+				<app-jolticon icon="remove" />
+				<translate>Close</translate>
+			</button>
+		</div>
+	</div>
+
+</app-modal>
