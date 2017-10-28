@@ -201,6 +201,7 @@
 						<app-fade-collapse
 							:collapse-height="500"
 							:is-open="showDescription"
+							:animate="false"
 							:key="game.id"
 							@require-change="setCanToggleDescription"
 							>
@@ -211,12 +212,15 @@
 							</div>
 						</app-fade-collapse>
 
-						<a class="hidden-text-expander"
-							v-if="canToggleDescription"
-							@click="toggleDescription()"
-							v-app-track-event="`game-profile:show-full-description`"
-							>
-						</a>
+						<div class="page-cut" v-if="canToggleDescription">
+							<button class="btn btn-outline"
+								@click="toggleDescription()"
+								v-app-track-event="`game-profile:show-full-description`"
+								>
+								<translate v-if="!showDescription">Show More</translate>
+								<translate v-else>Less</translate>
+							</button>
+						</div>
 					</div>
 
 					<template v-if="twitterShareMessage && !GJ_IS_CLIENT">
