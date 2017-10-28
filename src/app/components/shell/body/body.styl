@@ -25,12 +25,10 @@ body
 		max-width: $container-lg
 
 	// Cut out the space for the left sidebar from the shell body.
-	@media $media-sm
+	@media $media-sm-up
 		margin-left: $shell-top-nav-height
 
-	@media $media-md-up
-		margin-left: $shell-top-nav-height
-
+	@media $media-lg-up
 		.left-pane-visible &
 			margin-left: $shell-sidebar-width
 
