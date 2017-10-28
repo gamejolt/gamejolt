@@ -98,8 +98,9 @@ export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
 	}
 
 	get siteUrl() {
+		const user = this.method === 'add' || !this.model ? this.app.user! : this.model.developer;
 		return (
-			this.app.user!.username.toLowerCase() +
+			user.username.toLowerCase() +
 			'.gamejolt.io' +
 			'/<b>' +
 			(this.formModel.path ? this.formModel.path.toLowerCase() : '_') +
