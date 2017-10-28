@@ -13,13 +13,11 @@ import { AppFadeCollapse } from '../../../../../../../lib/gj-lib-client/componen
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
-import { AppDiscoverGamesViewOverviewStats } from '../_stats/stats';
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
 import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppCommentVideoThumbnail } from '../../../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
-import { AppDiscoverGamesViewOverviewDetails } from '../_details/details';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
@@ -42,12 +40,12 @@ import { AppCommentWidgetAdd } from '../../../../../../../lib/gj-lib-client/comp
 import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
 import { AppCommentOverview } from '../../../../../../components/comment/overview/overview';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
+import { AppDiscoverGamesViewOverviewDetailsBar } from '../_details-bar/details-bar';
 
 @View
 @Component({
 	components: {
-		AppDiscoverGamesViewOverviewStats,
-		AppDiscoverGamesViewOverviewDetails,
+		AppDiscoverGamesViewOverviewDetailsBar,
 		AppAd,
 		AppAdPlacement,
 		AppGameGrid,
