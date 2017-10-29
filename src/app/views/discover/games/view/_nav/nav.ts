@@ -12,6 +12,7 @@ import { RouteState, RouteStore } from '../view.store';
 import { ReportModal } from '../../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 import { Store } from '../../../../../store/index';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { AppGameModLinks } from '../../../../../components/game/mod-links/mod-links';
 
 @View
 @Component({
@@ -19,6 +20,7 @@ import { AppGamePerms } from '../../../../../components/game/perms/perms';
 		AppJolticon,
 		AppPopover,
 		AppGamePerms,
+		AppGameModLinks,
 	},
 	directives: {
 		AppPopoverTrigger,
