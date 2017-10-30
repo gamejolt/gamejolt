@@ -30,17 +30,20 @@ export class AppShellHalloween extends Vue {
 		return this.$refs.container.offsetHeight;
 	}
 
-	get mouseX() {
+	// getters don't work
+	getMouseX() {
 		return this._mouseX;
 	}
 
-	get mouseY() {
+	// getters don't work
+	getMouseY() {
 		return this._mouseY;
 	}
 
 	mouseMove(e: MouseEvent) {
 		this._mouseX = e.clientX;
 		this._mouseY = e.clientY;
+		console.log(this._mouseX, this.getMouseX());
 	}
 
 	startCombat() {
