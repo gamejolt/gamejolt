@@ -35,8 +35,7 @@ export class AppUserHalloweenMonsterWidget extends Vue {
 			const monster = breakdown[monsterType as HalloweenMonsterType];
 
 			monster.type = monsterType;
-			monster.imgUrl =
-				'https://p5b4y2t6.ssl.hwcdn.net/game-thumbnail/400/279665-crop0_75_668_451-mdii6zff-v3.jpg'; // `../${monsterType}.png`;
+			monster.imgUrl = require(`../../../img/halloween/${monsterType}_head.png`);
 			monsters.push(monster);
 		}
 		return monsters;

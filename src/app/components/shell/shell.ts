@@ -33,7 +33,10 @@ import { AppShellHalloween } from './halloween/halloween';
 		AppShellChat: () =>
 			import(/* webpackChunkName: "chat" */ './chat/chat').then(m => m.AppShellChat),
 		AppShellClient: GJ_IS_CLIENT ? require('./client/client').AppShellClient : undefined,
-		AppShellHalloween,
+		AppShellHalloween: () =>
+			import(/* webackChunkName: "halloween" */ './halloween/halloween').then(
+				m => m.AppShellHalloween
+			),
 	},
 })
 export class AppShell extends Vue {
