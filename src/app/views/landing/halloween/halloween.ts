@@ -11,6 +11,7 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { HalloweenMonsterType } from '../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
 import { Halloween2017MonsterBreakdown } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';
+import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 
 @View
 @Component({
@@ -36,12 +37,15 @@ export default class RouteLandingHalloween extends BaseRouteComponent {
 		vampire: require('../../../img/halloween/vampire.png'),
 	};
 
-	@RouteResolve({ cache: true, lazy: true })
+	@RouteResolve()
 	async routeResolve() {
 		return Api.sendRequest('/web/halloween-2017/stats');
 	}
 
 	routed() {
 		this.breakdown = this.$payload.breakdown;
+		if (this.$route.hash === '#monster-stats') {
+			Scroll.to('monster-stats');
+		}
 	}
 }
