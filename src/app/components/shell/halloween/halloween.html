@@ -1,10 +1,11 @@
 <div
-	ref='overlay'
-	class='overlay'
-	@mousemove="mouseMove">
+	class="-overlay"
+	:class="{ 'is-in-combat': isInCombat }"
+	@mousemove="mouseMove"
+	>
 	<div
 		ref="container"
-		class="overlay-content"
+		class="-overlay-content"
 		>
 		<app-shell-halloween-monster
 			v-for="( encounter, index ) of HalloweenMonster.encounters"
