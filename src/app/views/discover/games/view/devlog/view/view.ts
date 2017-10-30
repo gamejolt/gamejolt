@@ -21,6 +21,7 @@ import {
 import { enforceLocation } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { IntentService } from '../../../../../../components/intent/intent.service';
 import { Translate } from '../../../../../../../lib/gj-lib-client/components/translate/translate.service';
+import { HalloweenMonster } from '../../../../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
 
 @View
 @Component({
@@ -79,7 +80,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		this.post = Registry.find<FiresidePost>('FiresidePost', hash, 'hash');
 	}
 
-	routed() {
+	routed(fromCache: boolean) {
 		const post = new FiresidePost(this.$payload.post);
 		if (this.post) {
 			this.post.assign(post);
@@ -93,5 +94,9 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb;
 		Meta.twitter = this.$payload.twitter;
+
+		if (!fromCache && this.$payload.halloweenMonster) {
+			HalloweenMonster.add(new HalloweenMonster(this.$payload.halloweenMonster));
+		}
 	}
 }

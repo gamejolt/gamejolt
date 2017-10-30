@@ -123,7 +123,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		Ads.setAdUnit('homepage');
 	}
 
-	routed() {
+	routed(fromCache: boolean) {
 		this.isLoaded = true;
 
 		Meta.description = this.$payload.metaDescription;
@@ -174,18 +174,8 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			}
 		}
 
-		HalloweenMonster.add(
-			new HalloweenMonster({
-				id: 190,
-				user_level: 0,
-				seed: '73nqFm4GiQ83840380',
-				type: 'vampire',
-			})
-		);
-
-		// if (this.$payload.halloweenMonster) {
-		// 	const monster = new HalloweenMonster(this.$payload.halloweenMonster);
-		// 	HalloweenMonster.add(monster);
-		// }
+		if (!fromCache && this.$payload.halloweenMonster) {
+			HalloweenMonster.add(new HalloweenMonster(this.$payload.halloweenMonster));
+		}
 	}
 }

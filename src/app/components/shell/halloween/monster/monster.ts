@@ -5,6 +5,7 @@ import { AppShellHalloween } from '../halloween';
 import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
 import { HalloweenMonster } from '../../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
 import { ShellHalloweenMonsterModal } from './modal/modal.service';
+import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
 
 @View
 @Component({})
@@ -83,6 +84,11 @@ export abstract class Monster {
 	lifetime = LIFETIME;
 
 	private interval: NodeJS.Timer | null = null;
+	private dedRequest: Promise<any> | null = null;
+
+	get level() {
+		return this.model.user_level / 100;
+	}
 
 	abstract get img(): string;
 	abstract update(): void;
@@ -139,10 +145,36 @@ export abstract class Monster {
 		return this.getRandomPosition();
 	}
 
-	remove() {
+	die() {
+		if (!this.dedRequest) {
+			this.dedRequest = this.model.$capture();
+		}
+	}
+
+	async remove() {
 		if (this.interval) {
+			HalloweenMonster.remove(this.model);
 			this.shell.endCombat();
-			ShellHalloweenMonsterModal.show(this.img);
+			if (this.health <= 0) {
+				try {
+					const result = await this.dedRequest;
+					const user: User = result.user;
+					// return PayloadHelper::output([
+					// 	'success' => true,
+					// 	'user' => $user,
+					// 	'breakdown' => $this->_breakdown(),
+					// 	'pun' => $puns[rand(0, count($puns) - 1)],
+					// 	'mood' => HalloweenMonster::MOODS[rand(0, count(HalloweenMonster::MOODS) - 1)],
+					// ]);
+					ShellHalloweenMonsterModal.show(
+						this.img,
+						user.halloween_2017_breakdown![this.model.type],
+						result.breakdown[this.model.type],
+						result.pun,
+						result.mood + ' ' + this.model.type
+					);
+				} catch (err) {}
+			}
 			clearInterval(this.interval);
 			this.interval = null;
 		}
@@ -194,20 +226,21 @@ export abstract class Monster {
 
 class Pumpkin extends Monster {
 	get img() {
-		return require('./pumpkin.png');
+		return require('../../../../img/halloween/pumpkin.png');
 	}
 
 	interact() {
 		if (this.health > 0) {
 			this.interacted = true;
 			this.lifetime = LIFETIME;
-			this.health -= 0.2 - 0.1 * this.model.user_level;
+			this.health -= 0.2 - 0.1 * this.level;
 			this.destination = this.getDestination();
 			this.clickAnimation();
 
 			if (this.health <= 0.01) {
 				this.health = 0;
 				this.lifetime = 0;
+				this.die();
 			}
 		}
 	}
@@ -215,14 +248,12 @@ class Pumpkin extends Monster {
 	update() {
 		this.grow();
 		if (this.interacted && this.health > 0) {
-			const level = this.model.user_level;
-
-			this.pos.x = lerp(this.destination.x, this.pos.x, 0.99 - 0.01 * level);
-			this.pos.y = lerp(this.destination.y, this.pos.y, 0.99 - 0.01 * level);
-			if (Math.abs(this.pos.x - this.destination.x) < 50 + 30 * level) {
+			this.pos.x = lerp(this.destination.x, this.pos.x, 0.99 - 0.01 * this.level);
+			this.pos.y = lerp(this.destination.y, this.pos.y, 0.99 - 0.01 * this.level);
+			if (Math.abs(this.pos.x - this.destination.x) < 50 + 30 * this.level) {
 				this.destination.x = this.getDestination().x;
 			}
-			if (Math.abs(this.pos.y - this.destination.y) < 50 + 30 * level) {
+			if (Math.abs(this.pos.y - this.destination.y) < 50 + 30 * this.level) {
 				this.destination.y = this.getDestination().y;
 			}
 		}
@@ -237,20 +268,21 @@ class Zombie extends Monster {
 	respawned = false;
 
 	get img() {
-		return require('./zombie.png');
+		return require('../../../../img/halloween/zombie.png');
 	}
 
 	interact() {
 		if (this.health > 0 && !this.respawning) {
 			this.interacted = true;
 			this.lifetime = LIFETIME;
-			this.health -= 0.2 - 0.05 * this.model.user_level;
+			this.health -= 0.2 - 0.05 * this.level;
 			this.destination = this.getDestination();
 			this.clickAnimation();
 
 			if (this.health <= 0.01) {
 				this.health = 0;
 				this.lifetime = 0;
+				this.die();
 			} else {
 				if (Math.random() <= 0.3) {
 					this.respawning = true;
@@ -285,26 +317,24 @@ class Zombie extends Monster {
 					}
 				}
 			} else {
-				const level = this.model.user_level;
-
 				if (this.pos.x < this.destination.x) {
-					this.pos.x += 1 + level * 2;
+					this.pos.x += 1 + this.level * 2;
 					if (this.pos.x >= this.destination.x) {
 						this.pos.x = this.destination.x;
 					}
 				} else if (this.pos.x > this.destination.x) {
-					this.pos.x -= 1 + level * 2;
+					this.pos.x -= 1 + this.level * 2;
 					if (this.pos.x <= this.destination.x) {
 						this.pos.x = this.destination.x;
 					}
 				}
 				if (this.pos.y < this.destination.y) {
-					this.pos.y += 1 + level * 2;
+					this.pos.y += 1 + this.level * 2;
 					if (this.pos.y >= this.destination.y) {
 						this.pos.y = this.destination.y;
 					}
 				} else if (this.pos.y > this.destination.y) {
-					this.pos.y -= 1 + level * 2;
+					this.pos.y -= 1 + this.level * 2;
 					if (this.pos.y <= this.destination.y) {
 						this.pos.y = this.destination.y;
 					}
@@ -327,7 +357,7 @@ class Witch extends Monster {
 	spawnSide = 0;
 
 	get img() {
-		return require('./witch.png');
+		return require('../../../../img/halloween/witch.png');
 	}
 
 	get invulnerable() {
@@ -379,8 +409,9 @@ class Witch extends Monster {
 			if (this.health <= 0.01) {
 				this.health = 0;
 				this.lifetime = 0;
+				this.die();
 			} else {
-				if (Math.random() < 0.5 + 0.3 * this.model.user_level) {
+				if (Math.random() < 0.5 + 0.3 * this.level) {
 					this.leaving = true;
 
 					// TODO(halloween) make the witch leave and teleport to the other side instead of spawning another monster div
@@ -414,16 +445,14 @@ class Witch extends Monster {
 		this.grow();
 
 		if (this.interacted && this.health > 0) {
-			const level = this.model.user_level;
-
-			this.pos.x = lerp(this.destination.x, this.pos.x, 0.99 - 0.01 * level);
-			this.pos.y = lerp(this.destination.y, this.pos.y, 0.99 - 0.01 * level);
+			this.pos.x = lerp(this.destination.x, this.pos.x, 0.99 - 0.01 * this.level);
+			this.pos.y = lerp(this.destination.y, this.pos.y, 0.99 - 0.01 * this.level);
 
 			if (!this.leaving && !this.entering) {
-				if (Math.abs(this.pos.x - this.destination.x) < 50 + 30 * level) {
+				if (Math.abs(this.pos.x - this.destination.x) < 50 + 30 * this.level) {
 					this.destination.x = this.getDestination().x;
 				}
-				if (Math.abs(this.pos.y - this.destination.y) < 50 + 30 * level) {
+				if (Math.abs(this.pos.y - this.destination.y) < 50 + 30 * this.level) {
 					this.destination.y = this.getDestination().y;
 				}
 			}
@@ -440,7 +469,7 @@ class Witch extends Monster {
 
 class Candy extends Monster {
 	get img() {
-		return require('./candy.png');
+		return require('../../../../img/halloween/candy.png');
 	}
 
 	interact() {
@@ -454,6 +483,7 @@ class Candy extends Monster {
 			if (this.health <= 0.01) {
 				this.health = 0;
 				this.lifetime = 0;
+				this.die();
 			}
 		}
 	}
@@ -467,7 +497,7 @@ class Candy extends Monster {
 				this.shell.mouseX < this.pos.x + this.width + 200 &&
 				this.shell.mouseY > this.pos.y - 100 &&
 				this.shell.mouseY < this.pos.y + this.height + 200 &&
-				Math.random() < 0.01 + 0.01 * this.model.user_level
+				Math.random() < 0.01 + 0.01 * this.level
 			) {
 				this.destination = this.getDestination();
 			}
@@ -483,20 +513,21 @@ class Candy extends Monster {
 
 class Vampire extends Monster {
 	get img() {
-		return require('./vampire.png');
+		return require('../../../../img/halloween/vampire.png');
 	}
 
 	interact() {
 		if (this.health > 0) {
 			this.interacted = true;
 			this.lifetime = LIFETIME;
-			this.health -= 0.1 - 0.05 * this.model.user_level;
+			this.health -= 0.1 - 0.05 * this.level;
 			this.destination = this.getDestination();
 			this.clickAnimation();
 
 			if (this.health <= 0.01) {
 				this.health = 0;
 				this.lifetime = 0;
+				this.die();
 			}
 		}
 	}
@@ -504,14 +535,12 @@ class Vampire extends Monster {
 	update() {
 		this.grow();
 		if (this.interacted && this.health > 0) {
-			const level = this.model.user_level;
-
-			this.pos.x = lerp(this.destination.x, this.pos.x, 0.99 - 0.01 * level);
-			this.pos.y = lerp(this.destination.y, this.pos.y, 0.99 - 0.01 * level);
-			if (Math.abs(this.pos.x - this.destination.x) < 50 + 30 * level) {
+			this.pos.x = lerp(this.destination.x, this.pos.x, 0.99 - 0.01 * this.level);
+			this.pos.y = lerp(this.destination.y, this.pos.y, 0.99 - 0.01 * this.level);
+			if (Math.abs(this.pos.x - this.destination.x) < 50 + 30 * this.level) {
 				this.destination.x = this.getDestination().x;
 			}
-			if (Math.abs(this.pos.y - this.destination.y) < 50 + 30 * level) {
+			if (Math.abs(this.pos.y - this.destination.y) < 50 + 30 * this.level) {
 				this.destination.y = this.getDestination().y;
 			}
 		}

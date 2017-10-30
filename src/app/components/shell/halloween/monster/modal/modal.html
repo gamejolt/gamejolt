@@ -1,50 +1,64 @@
 <app-modal>
 
 	<div class="modal-body">
-		<div class="monster-avatar">
-			<img :src="avatar" />
+		<div class="-avatar">
+			<img alt="monster" :src="avatar" />
 		</div>
-		<div class="monster-stats">
+		<div class="-stats">
 			<blockquote>
-				<p>"You suck... blood!"</p>
-				<footer>Frustrated vampire</footer>
+				<p>"{{ pun }}"</p>
+				<footer>{{ mood }}</footer>
 			</blockquote>
 
 			<div>
 				<label><app-jolticon icon="exp" /> Your Stats &dash;</label>
 				<span v-translate="{
-						caught: 50,
-						rank: 'Bloody',
+						caught: userBreakdown.current,
+						rank: userBreakdown.rank,
 					}"
 					>
 					Caught: <b>%{ caught }</b> Rank: <b>%{ rank }</b>
 				</span>
 			</div>
-			<app-progress-bar :percent="50" variant="green" />
+			<app-progress-bar
+				:percent="Math.min((userBreakdown.current - userBreakdown.start) * 100 / (userBreakdown.end - userBreakdown.start), 100)"
+				variant="green"
+				/>
 
-			<br />
+			<br>
 
 			<div>
 				<label><app-jolticon icon="world" /> Global stats &mdash;</label>
 				<span v-translate="{
-						caught: '13,229',
+						caught: globalBreakdown.current,
 					}"
 					>
 					Caught: <b>%{ caught }</b>
 				</span>
 			</div>
-			<app-progress-bar :percent="30" variant="green" indeterminate active />
-		</div>
+			<app-progress-bar
+				:percent="Math.min((globalBreakdown.current - globalBreakdown.start) * 100 / (globalBreakdown.end - globalBreakdown.start), 100)"
+				variant="green"
+				indeterminate
+				active
+				/>
 
-		<div class="controls">
-			<button class="btn btn-primary-outline" @click="modal.dismiss()">
-				<app-jolticon icon="world" />
+			<br>
+
+			<router-link
+				class="btn btn-primary-outline"
+				:to="{ name: 'landing.halloween' }"
+				>
+				<app-jolticon icon="chart" />
 				<translate>Stats</translate>
-			</button>
-			<button class="btn btn-danger-outline" @click="modal.dismiss()">
+			</router-link>
+			<router-link
+				class="btn btn-danger-outline"
+				:to="{ name: 'settings' }"
+				>
 				<app-jolticon icon="inactive" />
 				<translate>Opt Out</translate>
-			</button>
+			</router-link>
 			<button class="btn btn-danger-outline" @click="modal.dismiss()">
 				<app-jolticon icon="remove" />
 				<translate>Close</translate>

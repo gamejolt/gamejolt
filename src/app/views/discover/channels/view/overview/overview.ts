@@ -15,6 +15,7 @@ import { AppGameGridPlaceholder } from '../../../../../components/game/grid/plac
 import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { EventItem } from '../../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import { Ads } from '../../../../../../lib/gj-lib-client/components/ad/ads.service';
+import { HalloweenMonster } from '../../../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -54,7 +55,7 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed() {
+	routed(fromCache: boolean) {
 		this.isLoaded = true;
 		this.bestGames = Game.populate(this.$payload.bestGames).slice(0, 6);
 		this.hotGames = Game.populate(this.$payload.hotGames).slice(0, 6);
@@ -69,5 +70,9 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 		Ads.globalTargeting = {
 			channel: this.channel,
 		};
+
+		if (!fromCache && this.$payload.halloweenMonster) {
+			HalloweenMonster.add(new HalloweenMonster(this.$payload.halloweenMonster));
+		}
 	}
 }

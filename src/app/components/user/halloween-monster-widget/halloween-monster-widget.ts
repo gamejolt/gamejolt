@@ -8,6 +8,7 @@ import {
 import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { HalloweenMonsterType } from '../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
 
 @View
 @Component({
@@ -31,7 +32,7 @@ export class AppUserHalloweenMonsterWidget extends Vue {
 
 		const monsters: Halloween2017MonsterBreakdown[] = [];
 		for (let monsterType in breakdown) {
-			const monster = breakdown[monsterType];
+			const monster = breakdown[monsterType as HalloweenMonsterType];
 
 			monster.type = monsterType;
 			monster.imgUrl =
