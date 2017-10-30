@@ -1,0 +1,69 @@
+<app-modal>
+
+	<div class="modal-body">
+		<div class="-avatar">
+			<img alt="monster" :src="avatar" />
+		</div>
+		<div class="-stats">
+			<blockquote>
+				<p>"{{ pun }}"</p>
+				<footer>{{ mood }}</footer>
+			</blockquote>
+
+			<div>
+				<label><app-jolticon icon="exp" /> Your Stats &dash;</label>
+				<span v-translate="{
+						caught: userBreakdown.current,
+						rank: userBreakdown.rank,
+					}"
+					>
+					Caught: <b>%{ caught }</b> Rank: <b>%{ rank }</b>
+				</span>
+			</div>
+			<app-progress-bar
+				:percent="Math.min((userBreakdown.current - userBreakdown.start) * 100 / (userBreakdown.end - userBreakdown.start), 100)"
+				variant="green"
+				/>
+
+			<br>
+
+			<div>
+				<label><app-jolticon icon="world" /> Global stats &mdash;</label>
+				<span v-translate="{
+						caught: globalBreakdown.current,
+					}"
+					>
+					Caught: <b>%{ caught }</b>
+				</span>
+			</div>
+			<app-progress-bar
+				:percent="Math.min((globalBreakdown.current - globalBreakdown.start) * 100 / (globalBreakdown.end - globalBreakdown.start), 100)"
+				variant="green"
+				indeterminate
+				active
+				/>
+
+			<br>
+
+			<router-link
+				class="btn btn-primary-outline"
+				:to="{ name: 'landing.halloween', hash: '#monster-stats' }"
+				>
+				<app-jolticon icon="chart" />
+				<translate>Stats</translate>
+			</router-link>
+			<router-link
+				class="btn btn-danger-outline"
+				:to="{ name: 'settings' }"
+				>
+				<app-jolticon icon="inactive" />
+				<translate>Opt Out</translate>
+			</router-link>
+			<button class="btn btn-danger-outline" @click="modal.dismiss()">
+				<app-jolticon icon="remove" />
+				<translate>Close</translate>
+			</button>
+		</div>
+	</div>
+
+</app-modal>

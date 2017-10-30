@@ -1,4 +1,4 @@
-<app-form name="settingsForm" @changed="onChange">
+<app-form name="settingsForm" ref="form" @changed="onChange">
 
 	<fieldset id="settings-client" v-if="GJ_IS_CLIENT">
 		<legend>
@@ -118,6 +118,17 @@
 			>
 			<p class="help-block">
 				<translate>Turning this off will show a static image instead of animated thumbnails.</translate>
+			</p>
+			<app-form-control-toggle />
+		</app-form-group>
+
+		<app-form-group
+			name="halloween_2017_opted_out"
+			:label="$gettext( 'Opt out of Halloween event?' )"
+			v-if="model"
+			>
+			<p class="help-block">
+				<translate>Turning this on will opt you out of the halloween event experience.</translate>
 			</p>
 			<app-form-control-toggle />
 		</app-form-group>

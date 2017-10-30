@@ -9,6 +9,8 @@ import { Settings } from '../../settings/settings.service';
 import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { ClientAutoStart as _ClientAutoStart } from '../../client/autostart/autostart.service';
 import { ClientInstaller as _ClientInstaller } from '../../client/installer/installer.service';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { AppForm } from '../../../../lib/gj-lib-client/components/form-vue/form';
 
 let ClientInstaller: typeof _ClientInstaller | undefined;
 let ClientAutoStart: typeof _ClientAutoStart | undefined;
@@ -17,16 +19,37 @@ if (GJ_IS_CLIENT) {
 	ClientAutoStart = require('../../client/autostart/autostart.service').ClientAutoStart;
 }
 
+type FormModel = User & {
+	chat_notify_friends_online: boolean;
+	restricted_browsing: boolean;
+	broadcast_modal: boolean;
+	animated_thumbnails: boolean;
+	game_install_dir: string;
+	queue_when_playing: boolean;
+	max_download_count: number;
+	limit_downloads: boolean;
+	max_extract_count: number;
+	limit_extractions: boolean;
+	autostart_client: boolean;
+};
+
 @View
 @Component({
 	components: {
 		AppFormControlToggle,
 	},
 })
-export class FormSettings extends BaseForm<any> implements FormOnInit {
+export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
+	modelClass = User as any;
+	saveMethod = '$saveSettings' as '$saveSettings';
 	warnOnDiscard = false;
 
-	ClientAutoStart = ClientAutoStart;
+	$refs: {
+		form: AppForm;
+		[key: string]: any;
+	};
+
+	readonly ClientAutoStart = ClientAutoStart;
 
 	onInit() {
 		this.setField('restricted_browsing', Settings.get('restricted-browsing'));
@@ -84,6 +107,13 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 		Settings.set('restricted-browsing', this.formModel.restricted_browsing);
 		Settings.set('broadcast-modal', this.formModel.broadcast_modal);
 		Settings.set('animated-thumbnails', this.formModel.animated_thumbnails);
+
+		if (
+			this.model &&
+			!!this.formModel.halloween_2017_opted_out !== !!this.model.halloween_2017_opted_out
+		) {
+			this.$refs.form.submit();
+		}
 
 		if (GJ_IS_CLIENT) {
 			Settings.set('game-install-dir', this.formModel.game_install_dir);
