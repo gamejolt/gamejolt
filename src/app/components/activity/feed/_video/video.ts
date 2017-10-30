@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./video.html?style=./video.styl';
+import View from '!view!./video.html?style=./video.styl';
 
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';

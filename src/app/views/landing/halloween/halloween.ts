@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./halloween.html?style=./halloween.styl';
+import View from '!view!./halloween.html?style=./halloween.styl';
 
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import {

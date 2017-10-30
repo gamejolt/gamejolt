@@ -1,5 +1,5 @@
 import { Component, Watch } from 'vue-property-decorator';
-import * as View from '!view!./settings.html';
+import View from '!view!./settings.html';
 
 import {
 	BaseForm,
@@ -52,7 +52,6 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 	readonly ClientAutoStart = ClientAutoStart;
 
 	onInit() {
-		this.setField('chat_notify_friends_online', Settings.get('chat-notify-friends-online'));
 		this.setField('restricted_browsing', Settings.get('restricted-browsing'));
 		this.setField('broadcast_modal', Settings.get('broadcast-modal'));
 		this.setField('animated_thumbnails', Settings.get('animated-thumbnails'));
@@ -104,8 +103,7 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 		this.setField('max_extract_count', shouldLimit ? Settings.getDefault('max-extract-count') : -1);
 	}
 
-	async onChange() {
-		Settings.set('chat-notify-friends-online', this.formModel.chat_notify_friends_online);
+	onChange() {
 		Settings.set('restricted-browsing', this.formModel.restricted_browsing);
 		Settings.set('broadcast-modal', this.formModel.broadcast_modal);
 		Settings.set('animated-thumbnails', this.formModel.animated_thumbnails);

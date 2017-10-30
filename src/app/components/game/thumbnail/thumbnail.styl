@@ -2,10 +2,11 @@
 @require '~styles/variables'
 @require '../../../../lib/gj-lib-client/stylus/common/mixins'
 
+$-zindex-img = 1
+$-zindex-video = 2
+$-zindex-controls = 3
+
 .game-thumbnail
-	$zindex-img = 1
-	$zindex-video = 2
-	$zindex-controls = 3
 	position: relative
 	display: block
 	margin-bottom: $grid-gutter-width-xs
@@ -13,182 +14,186 @@
 	@media $media-sm-up
 		margin-bottom: $grid-gutter-width
 
-	&-controls
+.-controls
+	position: absolute
+	top: 5px
+	right: 5px
+	z-index: $-zindex-controls
+	display: none
+
+	.game-thumbnail:hover &
+		display: block
+
+.game-thumbnail-img
+	opacity: 0
+	transition: opacity 500ms
+
+	&.loaded
+		opacity: 1
+
+.-thumb
+	position: relative
+	height: 0
+	padding-top: 56.25% // HD 16:9
+	overflow: hidden
+	background-color: $gray-lightest
+	border-radius: $border-radius-base
+
+	.fill-dark &, .fill-darker &, .fill-darkest &
+		background-color: $black
+
+	> .inner
 		position: absolute
-		top: 5px
-		right: 5px
-		z-index: $zindex-controls
+		top: 0
+		left: 0
+		width: 100%
+		height: 100%
 
-	&-img
-		opacity: 0
-		transition: opacity 500ms
+	.jolticon
+		position: absolute
+		font-size: 16px * 4
+		left: 50%
+		margin-left: -(@font-size / 2)
+		top: @left
+		margin-top: @margin-left
+		color: $gray-lighter
 
-		&.loaded
-			opacity: 1
-
-	&-thumb
-		position: relative
-		height: 0
-		padding-top: 56.25% // HD 16:9
-		overflow: hidden
-		background-color: $gray-lightest
-		border-radius: $border-radius-base
-
-		.fill-dark &, .fill-darker &, .fill-darkest &
-			background-color: $black
-
-		> .inner
-			position: absolute
+	>>>
+		img, .video
+			position: absolute !important
 			top: 0
 			left: 0
+			display: block
 			width: 100%
 			height: 100%
+			border-radius: $border-radius-base
 
-		.jolticon
-			position: absolute
-			font-size: 16px * 4
-			left: 50%
-			margin-left: -(@font-size / 2)
-			top: @left
-			margin-top: @margin-left
-			color: $gray-lighter
+		img
+			z-index: $-zindex-img
 
-		>>>
-			img, .video
-				position: absolute !important
-				top: 0
-				left: 0
-				display: block
-				width: 100%
-				height: 100%
-				border-radius: $border-radius-base
+		.video
+			z-index: $-zindex-video
 
-			img
-				z-index: $zindex-img
+.-meta
+	position: relative
+	padding-top: $game-thumbnail-meta-spacing
 
-			.video
-				z-index: $zindex-video
+.-avatar
+	float: left
+	width: $game-thumbnail-avatar-size
+	height: $game-thumbnail-avatar-size
 
-	&-meta
-		position: relative
-		padding-top: $game-thumbnail-meta-spacing
+.-dev
+	text-overflow()
+	margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
+	color: $text-muted
+	font-weight: bold
+	font-size: $font-size-h6
 
-	&-avatar
-		float: left
-		width: $game-thumbnail-avatar-size
-		height: $game-thumbnail-avatar-size
+.-title
+	text-overflow()
+	margin: 0
+	margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
+	line-height: 1.3
+	font-weight: bold
+	color: $gray-darker
 
-	&-dev
-		text-overflow()
-		margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
-		color: $text-muted
+	.fill-dark &, .fill-darker &, .fill-darkest &
+		color: $gray-lightest
+
+.-meta-extra
+	clear: both
+	margin-top: $game-thumbnail-meta-spacing
+	// We show tags and icons in here. We want to make sure that the line
+	// height is always the same no matter what content we show, so let's
+	// force it.
+	line-height: 26px
+
+.-os
+	display: inline-block
+	margin-right: $game-thumbnail-meta-spacing
+
+.-tags
+	display: inline-block
+	margin-right: $game-thumbnail-meta-spacing
+
+.-tag
+	.fill-dark &, .fill-darker &, .fill-darkest &
+		background-color: $gray-dark
+		color: $white
+
+.-pricing
+	float: right
+	height: 30px
+	line-height: @height
+	margin-left: $game-thumbnail-meta-spacing
+	padding: 0 10px
+	text-align: center
+	border-radius: $border-radius-base
+	background-color: $gray-dark
+
+	&-owned
+		background-color: $gj-green
+		color: $black
+
+		& ^[-1]-tag
+			color: inherit
+
+	&-amount
+		color: $white
+		font-size: $font-size-small
 		font-weight: bold
-		font-size: $font-size-h6
 
-	&-title
-		text-overflow()
-		margin: 0
-		margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
-		line-height: 1.3
-		font-weight: bold
-		color: $gray-darker
+	&-currency
+		color: $gray-lighter
 
-		.fill-dark &, .fill-darker &, .fill-darkest &
-			color: $gray-lightest
-
-	&-meta-extra
-		clear: both
-		margin-top: $game-thumbnail-meta-spacing
-		// We show tags and icons in here. We want to make sure that the line
-		// height is always the same no matter what content we show, so let's
-		// force it.
-		line-height: 26px
-
-	&-os
-		display: inline-block
-		margin-right: $game-thumbnail-meta-spacing
-
-	&-tags
-		display: inline-block
-		margin-right: $game-thumbnail-meta-spacing
+	&-decimal
+		font-size: $font-size-small
 
 	&-tag
-		.fill-dark &, .fill-darker &, .fill-darkest &
-			background-color: $gray-dark
-			color: $white
+		color: $white
+		font-size: $font-size-tiny
+		font-weight: bold
+		text-transform: uppercase
 
-	&-pricing
-		float: right
-		height: 30px
-		line-height: @height
-		margin-left: $game-thumbnail-meta-spacing
-		padding: 0 10px
-		text-align: center
-		border-radius: $border-radius-base
-		background-color: $gray-dark
-
-		&-owned
-			background-color: $gj-green
-			color: $black
-
-			& ^[-1]-tag
-				color: inherit
-
-		&-amount
-			color: $white
-			font-size: $font-size-small
-			font-weight: bold
-
-		&-currency
+		&.muted
 			color: $gray-lighter
 
-		&-decimal
-			font-size: $font-size-small
+	// This is way too complex.
+	&-sale
+		height: 36px
+		line-height: @height
 
-		&-tag
-			color: $white
-			font-size: $font-size-tiny
-			font-weight: bold
-			text-transform: uppercase
+		.-pricing
+			&-sale-percentage
+				display: inline-block
+				vertical-align: top
+				margin-left: -10px
+				margin-right: 10px
+				padding-left: 10px
+				padding-right: 10px
+				height: 36px
+				line-height: @height
+				font-size: $font-size-small
+				font-weight: bold
+				background-color: $gj-green
+				border-top-left-radius: $border-radius-base
+				border-bottom-left-radius: $border-radius-base
+				color: $black
 
-			&.muted
+			&-container
+				display: inline-block
+				height: 36px
+				padding-top: 3px
+				padding-bottom: 3px
+				vertical-align: top
+
+			&-amount
+				line-height: 20px
+
+			&-amount-old
 				color: $gray-lighter
-
-		// This is way too complex.
-		&-sale
-			height: 36px
-			line-height: @height
-
-			.game-thumbnail-pricing
-				&-sale-percentage
-					display: inline-block
-					vertical-align: top
-					margin-left: -10px
-					margin-right: 10px
-					padding-left: 10px
-					padding-right: 10px
-					height: 36px
-					line-height: @height
-					font-size: $font-size-small
-					font-weight: bold
-					background-color: $gj-green
-					border-top-left-radius: $border-radius-base
-					border-bottom-left-radius: $border-radius-base
-					color: $black
-
-				&-container
-					display: inline-block
-					height: 36px
-					padding-top: 3px
-					padding-bottom: 3px
-					vertical-align: top
-
-				&-amount
-					line-height: 20px
-
-				&-amount-old
-					color: $gray-lighter
-					text-decoration: line-through
-					font-size: $font-size-tiny
-					line-height: 10px
-					vertical-align: text-bottom
+				text-decoration: line-through
+				font-size: $font-size-tiny
+				line-height: 10px
+				vertical-align: text-bottom

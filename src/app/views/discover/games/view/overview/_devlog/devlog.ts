@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./devlog.html?style=./devlog.styl';
+import View from '!view!./devlog.html?style=./devlog.styl';
 
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
@@ -27,6 +27,7 @@ import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/m
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 
 @View
 @Component({
@@ -47,6 +48,7 @@ import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/
 		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
 		AppJolticon,
 		AppDevlogPostAdd,
+		AppGamePerms,
 	},
 	directives: {
 		AppTrackEvent,

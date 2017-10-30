@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./token.html';
+import View from '!view!./token.html';
 
 import {
 	BaseForm,

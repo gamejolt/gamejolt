@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
-import * as View from '!view!./shell.html';
+import View from '!view!./shell.html';
 import './shell.styl';
 
 import { AppShellTopNav } from './top-nav/top-nav';

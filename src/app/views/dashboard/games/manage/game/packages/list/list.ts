@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./list.html';
+import View from '!view!./list.html';
 
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
@@ -18,6 +18,7 @@ import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/
 import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
 import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { LocationRedirect } from '../../../../../../../../lib/gj-lib-client/utils/router';
+import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -32,6 +33,7 @@ import {
 		AppCardListDraggable,
 		AppCardListItem,
 		AppDashGameWizardControls,
+		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,
@@ -48,21 +50,21 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 
 	GamePackage = GamePackage;
 
+	get hasAllPerms() {
+		return this.game.hasPerms('all');
+	}
+
+	get hasBuildsPerms() {
+		return this.game.hasPerms('builds');
+	}
+
 	get packagesSort() {
 		return this.packages.map(i => i.id);
 	}
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: VueRouter.Route) {
-		const payload = await Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id);
-
-		if (payload.packages && !payload.packages.length) {
-			return new LocationRedirect({
-				name: 'dash.games.manage.game.packages.add',
-			});
-		}
-
-		return payload;
+		return Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id);
 	}
 
 	get routeTitle() {
@@ -75,6 +77,20 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 	}
 
 	routed() {
+		if (this.$payload.packages && !this.$payload.packages.length) {
+			if (this.game.hasPerms('all')) {
+				this.$router.push({
+					name: 'dash.games.manage.game.packages.add',
+					params: {
+						id: this.game.id + '',
+					},
+				});
+			}
+			this.packages = [];
+			this.sellables = {};
+			return;
+		}
+
 		this.packages = GamePackage.populate(this.$payload.packages);
 		this.sellables = arrayIndexBy<Sellable>(
 			Sellable.populate(this.$payload.sellables),

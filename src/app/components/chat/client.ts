@@ -442,7 +442,9 @@ export class ChatClient {
 			if (room && room.isGroupRoom) {
 				// Remove their messages from view.
 				if (this.messages[roomId].length) {
-					this.messages[roomId] = this.messages[roomId].filter(message => message.userId !== userId);
+					this.messages[roomId] = this.messages[roomId].filter(
+						message => message.userId !== userId
+					);
 				}
 
 				// Mark that they're muted in the user list of the room.
@@ -522,11 +524,9 @@ export class ChatClient {
 		} else if (msg.event === 'friend-online') {
 			const user = new ChatUser(msg.data.user);
 			this.friendsList.online(user);
-			ChatNotification.friendOnline(user.id);
 		} else if (msg.event === 'friend-offline') {
 			const userId = msg.data.userId;
 			this.friendsList.offline(userId);
-			ChatNotification.friendOffline(userId);
 		} else if (msg.event === 'you-leave-room') {
 			const roomId = msg.data.roomId;
 
@@ -618,13 +618,10 @@ export class ChatClient {
 			this.outputMessage(message.roomId, ChatMessage.TypeNormal, message, isPrimer);
 
 			// Emit an event that we've sent out a new message.
-			EventBus.emit(
-				'Chat.newMessage',
-				<ChatNewMessageEvent>{
-					message,
-					isPrimer,
-				}
-			);
+			EventBus.emit('Chat.newMessage', <ChatNewMessageEvent>{
+				message,
+				isPrimer,
+			});
 		});
 	}
 

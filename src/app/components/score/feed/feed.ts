@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import * as View from '!view!./feed.html?style=./feed.styl';
+import View from '!view!./feed.html?style=./feed.styl';
 
 import { GameScoreTable } from '../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { ActivityStreamSubscription } from '../../../../lib/gj-lib-client/components/activity/stream/subscription.service';

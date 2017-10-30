@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./manage-page.html?style=./manage-page.styl';
+import View from '!view!./manage-page.html?style=./manage-page.styl';
 
 import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';

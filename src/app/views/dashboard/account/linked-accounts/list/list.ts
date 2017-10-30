@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./list.html?style=./list.styl';
+import View from '!view!./list.html?style=./list.styl';
 
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { RouteMutation, RouteStore } from '../../account.store';

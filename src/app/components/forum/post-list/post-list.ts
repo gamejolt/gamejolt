@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./post-list.html';
+import View from '!view!./post-list.html';
 
 import { ForumPost } from '../../../../lib/gj-lib-client/components/forum/post/post.model';
 import { ForumTopic } from '../../../../lib/gj-lib-client/components/forum/topic/topic.model';

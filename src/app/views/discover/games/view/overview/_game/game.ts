@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./game.html?style=./game.styl';
+import View from '!view!./game.html?style=./game.styl';
 
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
@@ -36,6 +36,7 @@ import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/m
 import { AppCommentWidgetLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
+import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 
 @View
 @Component({
@@ -64,6 +65,7 @@ import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/a
 		AppCommentWidget: AppCommentWidgetLazy,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppDevlogPostAdd,
+		AppGamePerms,
 	},
 	directives: {
 		AppTrackEvent,
@@ -113,6 +115,10 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 
 	Screen = makeObservableService(Screen);
 	Environment = Environment;
+
+	get hasAnyPerms() {
+		return this.game.hasPerms();
+	}
 
 	get hasPartnerControls() {
 		return this.game.referrals_enabled && this.userPartnerKey && this.packages.length;

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Action } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./add-to-popover.html?style=./add-to-popover.styl';
+import View from '!view!./add-to-popover.html?style=./add-to-popover.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./event-item.html?style=./event-item.styl';
+import View from '!view!./event-item.html?style=./event-item.styl';
 
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -24,6 +24,8 @@ import { AppActivityFeedDevlogPostMedia } from '../devlog-post/media/media';
 import { AppActivityFeedDevlogPostSketchfab } from '../devlog-post/sketchfab/sketchfab';
 import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
 import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
@@ -32,6 +34,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 	components: {
 		AppTimelineListItem,
 		AppJolticon,
+		AppUserAvatarImg,
 		AppGameThumbnailImg,
 		AppTimeAgo,
 		AppActivityFeedCommentVideo,
@@ -77,23 +80,21 @@ export class AppActivityFeedEventItem extends Vue {
 		return this.eventItem.game;
 	}
 
-	get icon() {
+	get user() {
 		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
-			return 'video';
+			return (this.eventItem.action as CommentVideo).comment.user;
 		} else if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
-			return 'game';
+			return (this.eventItem.action as Game).developer;
 		} else if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
 			const post = this.eventItem.action as FiresidePost;
-			if (post.type === 'text') {
-				return 'blog-article';
-			} else if (post.type === 'media') {
-				return 'screenshot';
-			} else if (post.type === 'video' || post.type === 'comment-video') {
-				return 'video';
+			if (post.game && post.as_game_owner) {
+				return post.game.developer;
 			}
+
+			return post.user;
 		}
 
-		return '';
+		return undefined;
 	}
 
 	get link() {

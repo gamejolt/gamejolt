@@ -1,5 +1,5 @@
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import * as View from '!view!./new-build.html';
+import View from '!view!./new-build.html';
 
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';

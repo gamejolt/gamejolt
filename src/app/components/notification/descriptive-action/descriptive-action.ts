@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./descriptive-action.html';
+import View from '!view!./descriptive-action.html';
 
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
@@ -73,6 +73,12 @@ export class AppNotificationDescriptiveAction extends Vue {
 
 			case Notification.TYPE_USER_FOLLOW:
 				return this.$gettext(`followed you.`);
+
+			case Notification.TYPE_COLLABORATOR_INVITE:
+				return this.$gettextInterpolate(
+					`invited you to collaborate on <b>%{ object }</b>.`,
+					this.translationValues
+				);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./devlog.html';
+import View from '!view!./devlog.html';
 
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
@@ -8,6 +8,7 @@ import { RouteState, RouteStore } from '../manage.store';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { AppDevlogPostAdd } from '../../../../../components/devlog/post/add/add';
+import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -19,6 +20,7 @@ import {
 	components: {
 		AppActivityFeed,
 		AppDevlogPostAdd,
+		AppGamePerms,
 	},
 })
 export default class RouteDashGamesManageDevlog extends BaseRouteComponent {

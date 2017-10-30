@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./view.html';
+import View from '!view!./view.html';
 import './view-content.styl';
 
 import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
@@ -32,6 +32,8 @@ import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
 import { AppUserFollowWidget } from '../../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
+import { AppGamePerms } from '../../../../components/game/perms/perms';
+import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 import { IntentService } from '../../../../components/intent/intent.service';
 import { HalloweenMonster } from '../../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
@@ -55,6 +57,7 @@ import {
 		AppGameMaturityBlock,
 		AppGameCoverButtons,
 		AppUserFollowWidget,
+		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,
@@ -68,22 +71,39 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@RouteState partner: RouteStore['partner'];
 	@RouteState partnerKey: RouteStore['partnerKey'];
 	@RouteState packages: RouteStore['packages'];
+	@RouteState collaboratorInvite: RouteStore['collaboratorInvite'];
 
 	@RouteAction bootstrap: RouteStore['bootstrap'];
 	@RouteAction refreshRatingInfo: RouteStore['refreshRatingInfo'];
 	@RouteMutation bootstrapGame: RouteStore['bootstrapGame'];
 	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
+	@RouteMutation acceptCollaboratorInvite: RouteStore['acceptCollaboratorInvite'];
+	@RouteMutation declineCollaboratorInvite: RouteStore['declineCollaboratorInvite'];
 
 	storeName = RouteStoreName;
 	storeModule = RouteStore;
 
 	@State app: Store['app'];
 
-	date = date;
-	Screen = makeObservableService(Screen);
+	readonly date = date;
+	readonly Screen = makeObservableService(Screen);
 
 	private ratingCallback?: Function;
 	private gaTrackingId?: string;
+
+	private roleNames = {
+		[GameCollaborator.ROLE_COLLABORATOR]: this.$gettext('an equal collaborator'),
+		[GameCollaborator.ROLE_COMMUNITY_MANAGER]: this.$gettext('a community manager'),
+		[GameCollaborator.ROLE_DEVELOPER]: this.$gettext('a developer'),
+	};
+
+	get roleName() {
+		if (!this.collaboratorInvite) {
+			return '';
+		}
+
+		return this.roleNames[this.collaboratorInvite.role] || '';
+	}
 
 	get ratingTooltip() {
 		return number(this.game.rating_count || 0) + ' rating(s), avg: ' + this.game.avg_rating;
@@ -114,8 +134,14 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 		const intentRedirect = IntentService.checkRoute(
 			route,
-			'follow-game',
-			Translate.$gettext(`You're now following this game.`)
+			{
+				intent: 'follow-game',
+				message: Translate.$gettext(`You're now following this game.`),
+			},
+			{
+				intent: 'decline-game-collaboration',
+				message: Translate.$gettext(`You've declined the invitation to collaborate.`),
+			}
 		);
 		if (intentRedirect) {
 			return intentRedirect;
@@ -195,6 +221,16 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		if (this.game && this.game.ga_tracking_id) {
 			Analytics.detachAdditionalPageTracker(this.game.ga_tracking_id);
 		}
+	}
+
+	async acceptCollaboration() {
+		await this.collaboratorInvite!.$accept();
+		this.acceptCollaboratorInvite(this.collaboratorInvite!);
+	}
+
+	async declineCollaboration() {
+		await this.collaboratorInvite!.$remove();
+		this.declineCollaboratorInvite();
 	}
 
 	onGameRatingChange(gameId: number) {

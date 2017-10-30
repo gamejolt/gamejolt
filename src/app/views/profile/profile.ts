@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./profile.html?style=./profile.styl';
+import View from '!view!./profile.html?style=./profile.styl';
 
 import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
@@ -65,11 +65,10 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: VueRouter.Route) {
-		const intentRedirect = IntentService.checkRoute(
-			route,
-			'follow-user',
-			Translate.$gettext(`You're now following this user.`)
-		);
+		const intentRedirect = IntentService.checkRoute(route, {
+			intent: 'follow-user',
+			message: Translate.$gettext(`You're now following this user.`),
+		});
 		if (intentRedirect) {
 			return intentRedirect;
 		}

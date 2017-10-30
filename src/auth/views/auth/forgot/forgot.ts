@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./forgot.html';
+import View from '!view!./forgot.html';
 
 import { FormRetrieveLogin } from '../../../components/forms/retrieve-login/retrieve-login';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';

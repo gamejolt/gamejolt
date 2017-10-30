@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./item.html?style=./item.styl';
+import View from '!view!./item.html?style=./item.styl';
 
 import { ChatRoom } from '../../room';
 import { ChatUser } from '../../user';

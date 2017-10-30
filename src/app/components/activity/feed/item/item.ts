@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./item.html';
+import View from '!view!./item.html';
 
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedContainer } from '../feed-container-service';

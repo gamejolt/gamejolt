@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./overview.html';
+import View from '!view!./overview.html';
 
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';

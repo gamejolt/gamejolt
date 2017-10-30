@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./level-widget.html?style=./level-widget.styl';
+import View from '!view!./level-widget.html?style=./level-widget.styl';
 
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';

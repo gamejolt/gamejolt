@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./set-password-modal.html';
+import View from '!view!./set-password-modal.html';
 import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormSetPassword } from '../../forms/set-password/set-password';

@@ -4,21 +4,43 @@
 
 	<app-game-maturity-block :game="game">
 
-		<section class="section section-thin fill-darkest"
-			v-if="app.user && app.user.id === game.developer.id"
-			>
+		<section v-if="collaboratorInvite" class="section section-thin fill-pink">
+			<div class="container text-center">
+				<p v-translate="{ username: game.developer.username }">
+					<b>@%{ username }</b> has invited you to collaborate on this game.</b>
+				</p>
+				<button
+					class="btn"
+					@click="acceptCollaboration()"
+					>
+					<app-jolticon icon="check" />
+					<translate>Accept</translate>
+				</button>
+				<button
+					class="btn"
+					@click="declineCollaboration()"
+					>
+					<app-jolticon icon="remove" class="warning" />
+					<translate>Decline</translate>
+				</button>
+			</div>
+		</section>
+
+		<app-game-perms :game="game" tag="section" class="section section-thin fill-darkest">
 			<div class="container text-center">
 
-				<router-link
-					class="btn btn-outline hidden-xs"
-					:to="{
-						name: 'dash.analytics',
-						params: { resource: 'Game', resourceId: game.id },
-					}"
-					>
-					<app-jolticon icon="chart" />
-					<translate>View Analytics</translate>
-				</router-link>
+				<app-game-perms :game="game" required="analytics">
+					<router-link
+						class="btn btn-outline hidden-xs"
+						:to="{
+							name: 'dash.analytics',
+							params: { resource: 'Game', resourceId: game.id },
+						}"
+						>
+						<app-jolticon icon="chart" />
+						<translate>View Analytics</translate>
+					</router-link>
+				</app-game-perms>
 
 				<router-link
 					class="btn btn-outline"
@@ -32,7 +54,7 @@
 				</router-link>
 
 			</div>
-		</section>
+		</app-game-perms>
 
 		<!--
 			Don't affix the nav on download pages.
@@ -88,14 +110,6 @@
 					{{ game.developer.display_name }}
 					<small>@{{ game.developer.username }}</small>
 				</router-link>
-
-				<span class="dot-separator"></span>
-
-				<app-user-follow-widget
-					:user="game.developer"
-					size="sm"
-					event-label="game-header"
-					/>
 
 				<!--
 					Hide on mobile to keep it clean.

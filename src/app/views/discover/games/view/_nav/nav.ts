@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./nav.html';
+import View from '!view!./nav.html';
 
 import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -11,12 +11,16 @@ import { Environment } from '../../../../../../lib/gj-lib-client/components/envi
 import { RouteState, RouteStore } from '../view.store';
 import { ReportModal } from '../../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 import { Store } from '../../../../../store/index';
+import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { AppGameModLinks } from '../../../../../components/game/mod-links/mod-links';
 
 @View
 @Component({
 	components: {
 		AppJolticon,
 		AppPopover,
+		AppGamePerms,
+		AppGameModLinks,
 	},
 	directives: {
 		AppPopoverTrigger,
@@ -36,6 +40,10 @@ export class AppDiscoverGamesViewNav extends Vue {
 	@State app: Store['app'];
 
 	Environment = Environment;
+
+	get hasAnyPerms() {
+		return this.game && this.game.hasPerms();
+	}
 
 	report() {
 		ReportModal.show(this.game);

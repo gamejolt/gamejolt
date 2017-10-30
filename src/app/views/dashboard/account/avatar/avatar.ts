@@ -1,6 +1,6 @@
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./avatar.html';
+import View from '!view!./avatar.html';
 
 import { Store } from '../../../../store/index';
 import { RouteStore, RouteMutation } from '../account.store';

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./halloween-monster-widget.html?style=./halloween-monster-widget.styl';
+import View from '!view!./halloween-monster-widget.html?style=./halloween-monster-widget.styl';
 import {
 	User,
 	Halloween2017MonsterBreakdown,

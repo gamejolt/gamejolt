@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./financials.html';
+import View from '!view!./financials.html';
 
 import { RouteMutation, RouteStore } from '../account.store';
 import { FormFinancials } from '../../../../components/forms/financials/financials';

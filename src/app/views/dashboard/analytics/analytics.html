@@ -75,6 +75,7 @@
 							params: $route.params,
 							query: {
 								period: 'all',
+								partner: $route.query.partner,
 							},
 						}"
 						replace
@@ -91,6 +92,7 @@
 							params: $route.params,
 							query: {
 								period: 'monthly',
+								partner: $route.query.partner,
 							},
 						}"
 						replace
@@ -109,7 +111,12 @@
 					:to="{
 						name: 'dash.analytics',
 						params: $route.params,
-						query: { period: 'monthly', year: prevYear, month: prevMonth },
+						query: {
+							period: 'monthly',
+							year: prevYear,
+							month: prevMonth,
+							partner: $route.query.partner,
+						},
 					}"
 					replace
 					>
@@ -125,7 +132,12 @@
 					:to="{
 						name: 'dash.analytics',
 						params: $route.params,
-						query: { period: 'monthly', year: nextYear, month: nextMonth },
+						query: {
+							period: 'monthly',
+							year: nextYear,
+							month: nextMonth,
+							partner: $route.query.partner,
+						},
 					}"
 					replace
 					>

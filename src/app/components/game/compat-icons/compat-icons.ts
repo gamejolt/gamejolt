@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./compat-icons.html?style=./compat-icons.styl';
+import View from '!view!./compat-icons.html?style=./compat-icons.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';

@@ -44,7 +44,7 @@
 							<!--
 								Can't rate your own games! Remember that.
 							-->
-							<template v-if="app.user && game.developer.id !== app.user.id && game.ratings_enabled && game.can_user_rate">
+							<template v-if="app.user && !hasAnyPerms && game.ratings_enabled && game.can_user_rate">
 								<h2 class="rating-widget-label">
 									<template v-if="!!userRating">
 										<translate>Your Rating</translate>
@@ -124,13 +124,7 @@
 						show while we're loading the section. After it's loaded in, we decide if it should show
 						through the "hasReleasesSection" variable which has the correct data.
 					-->
-					<template v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
-
-						<h2 id="game-releases" :class="{ 'section-header': !Screen.isMobile }">
-							<translate>Releases</translate>
-						</h2>
-
-						<hr class="underbar">
+					<div id="game-releases" v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
 
 						<!--
 							Partner Controls
@@ -191,18 +185,7 @@
 								/>
 						</app-lazy-placeholder>
 
-					</template>
-
-					<!-- Game Description -->
-					<h2
-						:class="{
-							'section-header': !Screen.isMobile && !((game._has_packages && !isOverviewLoaded) || hasReleasesSection),
-						}"
-						>
-						<translate>Description</translate>
-					</h2>
-
-					<hr class="underbar">
+					</div>
 
 					<div v-if="!game.description_compiled">
 						<span class="lazy-placeholder"></span>
@@ -216,8 +199,9 @@
 							this when the game changes.
 						-->
 						<app-fade-collapse
-							:collapse-height="1500"
+							:collapse-height="500"
 							:is-open="showDescription"
+							:animate="false"
 							:key="game.id"
 							@require-change="setCanToggleDescription"
 							>
@@ -228,12 +212,15 @@
 							</div>
 						</app-fade-collapse>
 
-						<a class="hidden-text-expander"
-							v-if="canToggleDescription"
-							@click="toggleDescription()"
-							v-app-track-event="`game-profile:show-full-description`"
-							>
-						</a>
+						<div class="page-cut" v-if="canToggleDescription">
+							<button class="btn btn-outline"
+								@click="toggleDescription()"
+								v-app-track-event="`game-profile:show-full-description`"
+								>
+								<translate v-if="!showDescription">Show More</translate>
+								<translate v-else>Less</translate>
+							</button>
+						</div>
 					</div>
 
 					<template v-if="twitterShareMessage && !GJ_IS_CLIENT">
@@ -282,6 +269,30 @@
 						<br class="visible-xs visible-sm">
 					</template>
 
+					<template v-if="feed">
+
+						<br>
+
+						<app-game-perms :game="game" required="devlogs">
+							<h5 class="sans-margin-top">
+								<translate>Add Post</translate>
+							</h5>
+
+							<app-devlog-post-add
+								:game="game"
+								@add="onPostAdded"
+								/>
+
+							<hr>
+						</app-game-perms>
+
+						<app-activity-feed
+							v-if="feed.hasItems"
+							:feed="feed"
+							:show-edit-controls="true"
+							/>
+					</template>
+
 				</div>
 
 				<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
@@ -291,6 +302,7 @@
 							<div v-if="Screen.isDesktop" style="width: 300px">
 								<hr>
 								<app-ad size="rectangle" pos="top" />
+								<br>
 							</div>
 
 							<div id="maturity-rating">
@@ -327,48 +339,6 @@
 	</section>
 
 	<app-ad-placement :hidden-desktop="true" pos="bottom" />
-
-	<!--
-		Devlog Feed
-	-->
-	<template v-if="feed && feed.hasItems">
-		<div class="page-cut"></div>
-
-		<section class="section">
-			<div class="container">
-				<div class="row">
-					<div class="col-xs-12 col-md-8 col-lg-7">
-
-						<h2 class="section-header">
-							<translate>Project Devlog</translate>
-						</h2>
-
-						<hr class="underbar">
-						<br>
-
-						<template v-if="app.user && app.user.id === game.developer.id">
-							<h5 class="sans-margin-top">
-								<translate>Add Post</translate>
-							</h5>
-
-							<app-devlog-post-add
-								:game="game"
-								@add="onPostAdded"
-								/>
-
-							<hr>
-						</template>
-
-						<app-activity-feed
-							:feed="feed"
-							:show-edit-controls="true"
-							/>
-
-					</div>
-				</div>
-			</div>
-		</section>
-	</template>
 
 	<!--
 		Achievements

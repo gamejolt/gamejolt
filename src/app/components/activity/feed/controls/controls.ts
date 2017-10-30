@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./controls.html?style=./controls.styl';
+import View from '!view!./controls.html?style=./controls.styl';
 
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Clipboard } from '../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
@@ -65,6 +65,10 @@ export class AppActivityFeedControls extends Vue {
 	Screen = makeObservableService(Screen);
 	FiresidePost = FiresidePost;
 
+	get hasDevlogsPerms() {
+		return this.game && this.game.hasPerms('devlogs');
+	}
+
 	get sharePopoverId() {
 		if (!this.post) {
 			return '';
@@ -92,7 +96,10 @@ export class AppActivityFeedControls extends Vue {
 
 	get shouldShowStats() {
 		return (
-			!!this.post && this.showExtraInfo && !!this.app.user && this.post.user.id === this.app.user.id
+			!!this.post &&
+			this.showExtraInfo &&
+			!!this.app.user &&
+			(this.post.user.id === this.app.user.id || this.hasDevlogsPerms)
 		);
 	}
 

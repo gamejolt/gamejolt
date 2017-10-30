@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./halloween.html?style=./halloween.styl';
+import View from '!view!./halloween.html?style=./halloween.styl';
 import { AppShellHalloweenMonster } from './monster/monster';
 import { HalloweenMonster } from '../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';

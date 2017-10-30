@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./edit.html';
+import View from '!view!./edit.html';
 
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../../../../../../../lib/gj-lib-client/components/game/release/release.model';
@@ -21,6 +21,7 @@ import { FormGamePackage } from '../../../../../../../components/forms/game/pack
 import { AppExpand } from '../../../../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { AppProgressPoller } from '../../../../../../../../lib/gj-lib-client/components/progress/poller/poller';
+import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -39,6 +40,7 @@ import {
 		FormGamePackage,
 		AppDashGameWizardControls,
 		AppProgressPoller,
+		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,
@@ -62,6 +64,14 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 	GamePackage = GamePackage;
 	GameRelease = GameRelease;
 	number = number;
+
+	get hasBuildsPerms() {
+		return this.game && this.game.hasPerms('builds');
+	}
+
+	get hasAnalyticsPerms() {
+		return this.game && this.game.hasPerms('analytics');
+	}
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {

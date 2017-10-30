@@ -1,12 +1,23 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
 import { LocationRedirect } from '../../../lib/gj-lib-client/utils/router';
 
+export interface Intent {
+	intent: string;
+	message: string;
+}
+
 export class IntentService {
-	static checkRoute(route: VueRouter.Route, intent: string, msg: string) {
+	static checkRoute(route: Route, ...intents: Intent[]) {
 		if (route.query.intent) {
-			if (route.query.intent === intent) {
-				Growls.success(msg);
+			for (let intent of intents) {
+				if (route.query.intent === intent.intent) {
+					Growls.info({
+						sticky: true,
+						message: intent.message,
+					});
+					break;
+				}
 			}
 			return LocationRedirect.fromRoute(route, {}, { intent: undefined });
 		}

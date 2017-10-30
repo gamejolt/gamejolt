@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./token-modal.html';
+import View from '!view!./token-modal.html';
 
 import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';

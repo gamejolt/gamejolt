@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./app.html';
+import View from '!view!./app.html';
 
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { Store } from './store/index';

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./monster.html?style=./monster.styl';
+import View from '!view!./monster.html?style=./monster.styl';
 import { AppShellHalloween } from '../halloween';
 import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
 import { HalloweenMonster } from '../../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';

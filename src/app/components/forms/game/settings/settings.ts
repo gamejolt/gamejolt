@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./settings.html';
+import View from '!view!./settings.html';
 
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import {

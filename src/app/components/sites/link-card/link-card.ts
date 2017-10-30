@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./link-card.html';
+import View from '!view!./link-card.html';
 
 import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
 import { Clipboard } from '../../../../lib/gj-lib-client/components/clipboard/clipboard-service';

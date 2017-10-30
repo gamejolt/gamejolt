@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
-import * as View from '!view!./sidebar.html?style=./sidebar.styl';
+import View from '!view!./sidebar.html?style=./sidebar.styl';
 
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -76,7 +76,7 @@ export class AppShellSidebar extends Vue {
 
 	// Show hot when logged in, otherwise default to best.
 	get defaultBrowseSection() {
-		return this.app.user ? null : 'best';
+		return 'featured';
 	}
 
 	get filteredBundleCollections() {
