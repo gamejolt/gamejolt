@@ -11,6 +11,7 @@ import { routeForums } from './forums/forums.route';
 import { routeRadio } from './radio/radio.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeStyleguide } from './styleguide/styleguide.route';
+import { routeTestAds } from './test-ads/test-ads.route';
 
 const routes = [
 	routeDiscover,
@@ -25,6 +26,7 @@ const routes = [
 	routeLegal,
 	routeDash,
 	routeStyleguide,
+	routeTestAds,
 ];
 
 export const router = initRouter(routes);
