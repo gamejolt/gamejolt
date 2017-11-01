@@ -9,6 +9,13 @@
 			"webRoot": "${workspaceRoot}"
 		},
 		{
+			"name": "Launch Site Login in Chrome",
+			"type": "chrome",
+			"request": "launch",
+			"url": "http://localhost:8080/login",
+			"webRoot": "${workspaceRoot}"
+		},
+		{
 			"type": "node",
 			"request": "launch",
 			"name": "Launch Client",

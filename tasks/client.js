@@ -33,10 +33,14 @@ module.exports = function(config) {
 			throw new Error('Can not build client on your OS type.');
 	}
 
+	var mkdirExec = config.platform === 'win' ? 'mkdir' : 'mkdir -p';
 	var copyExec = config.platform === 'win' ? 'copy' : 'cp';
 	gulp.task(
 		'client:package.json',
-		shell.task([copyExec + ' client-package.json ' + path.join('build', 'dev', 'package.json')])
+		shell.task([
+			mkdirExec + ' ' + path.join('build', 'dev'),
+			copyExec + ' client-package.json ' + path.join('build', 'dev', 'package.json'),
+		])
 	);
 
 	gulp.task(

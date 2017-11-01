@@ -1314,7 +1314,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		}
 
 		const package_ = (data.packages as GamePackage[]).find(a => a.id === localPackage.id);
-		const release = (data.release as GameRelease[]).find(a => a.id === localPackage.release.id);
+		const release = (data.releases as GameRelease[]).find(a => a.id === localPackage.release.id);
 		const build = (data.builds as GameBuild[]).find(a => a.id === localPackage.build.id);
 		const launchOptions = (data.launchOptions as GameBuildLaunchOption[]).filter(
 			a => a.game_build_id === localPackage.build.id

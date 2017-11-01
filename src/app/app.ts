@@ -10,8 +10,9 @@ import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.s
 import { AppClientIntro } from './components/client/intro/intro';
 import { AppState, AppStore } from '../lib/gj-lib-client/vue/services/app/app-store';
 import { loadCurrentLanguage } from '../utils/translations';
+import { VueClass } from 'vue-class-component/lib/declarations';
 
-const components: { [name: string]: new () => Vue } = {
+const components: { [name: string]: VueClass } = {
 	AppShell,
 	AppErrorPage,
 };
