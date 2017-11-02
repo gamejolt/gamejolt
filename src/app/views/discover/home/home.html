@@ -1,54 +1,9 @@
 <div class="route-discover-home">
 
-	<a
-		href="https://www.kickstarter.com/projects/745810721/desert-child-a-hoverbike-racing-rpg"
-		target="_blank"
-		v-app-track-event="`home:banner:desertchild`"
-		>
-		<section
-			class="section landing-header"
-			style="
-				background-image: url(https://n3b6p5n5.ssl.hwcdn.net/data/fireside/posts/0/48/5548/media/1-vghw7qa8.png);
-				background-repeat: no-repeat;
-				background-size: cover;
-			"
-			>
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-7 text-center">
-						<div>
-							<img
-								class="img-responsive"
-								style="display: inline-block"
-								src="https://n3b6p5n5.ssl.hwcdn.net/data/fireside/posts/0/48/5548/media/2-2-xsmrpr2u.png"
-								alt=""
-								>
-						</div>
-					</div>
-					<div class="col-lg-5 text-center">
-						<div style="height: 85px" class="visible-lg"></div>
-						<div style="height: 50px" class="hidden-lg"></div>
-						<span
-							class="btn btn-outline btn-lg btn-block btn-overlay-variant"
-							@click.stop.prevent="$router.push({
-								name: 'discover.games.view.overview',
-								params: {slug: 'desertchild', id: '264191'}
-							})"
-							v-app-track-event="`home:banner:desertchild-follow`"
-							>
-							Follow on Game Jolt
-						</span>
-						<span
-							class="btn btn-outline btn-lg btn-block btn-overlay-variant"
-							v-app-track-event="`home:banner:desertchild-ks`"
-							>
-							Back on Kickstarter!
-						</span>
-					</div>
-				</div>
-			</div>
-		</section>
-	</a>
+	<app-discover-home-banner
+		v-if="featuredGame && featuredGame.id === 229681"
+		:game="featuredGame"
+		/>
 
 	<!-- <section
 		v-if="!app.user"

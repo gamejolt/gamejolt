@@ -20,6 +20,7 @@ import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { HalloweenMonster } from '../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
+import { AppDiscoverHomeBanner } from './_banner/banner';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -43,6 +44,7 @@ export interface DiscoverRow {
 		AppGameGridPlaceholder,
 		AppChannelThumbnail,
 		AppAdPlacement,
+		AppDiscoverHomeBanner,
 		AppAuthJoin: AppAuthJoinLazy,
 	},
 	directives: {
@@ -55,6 +57,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 	isLoaded = false;
 	channels: any[] = [];
+	featuredGame: Game | null = null;
 
 	games: { [k: string]: Game[] } = {
 		featured: [],
@@ -149,6 +152,8 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		this.games.hot = Game.populate(this.$payload.hotGames);
 		this.games.best = Game.populate(this.$payload.bestGames);
 		this.games.recommended = Game.populate(this.$payload.recommendedGames);
+
+		this.featuredGame = this.$payload.featuredGame ? new Game(this.$payload.featuredGame) : null;
 
 		const channels = [
 			'action',

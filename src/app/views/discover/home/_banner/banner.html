@@ -1,0 +1,71 @@
+<section
+	class="-banner section landing-header"
+	:style="`
+		background-image: url('${backImg}');
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		background-size: cover;
+	`"
+	>
+	<router-link
+		class="-click"
+		:to="{
+			name: 'discover.games.view.overview',
+			params: {
+				id: game.id,
+				slug: game.slug,
+			},
+		}"
+		v-app-track-event="`home:banner:${game.id}`"
+		>
+	</router-link>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-7 text-center">
+				<img
+					class="img-responsive"
+					style="display: inline-block"
+					:src="img"
+					alt=""
+					>
+			</div>
+			<div class="-info col-md-5">
+				<p class="lead">
+					Exclusive demo now available on Game Jolt!
+				</p>
+
+				<div class="-controls" v-if="!Screen.isXs">
+					<div class="row">
+						<div :class="shouldShowFollow ? 'col-xs-6' : 'col-xs-12'">
+							<router-link
+								:to="{
+									name: 'discover.games.view.overview',
+									params: {
+										id: game.id,
+										slug: game.slug,
+									},
+								}"
+								class="btn btn-outline btn-lg btn-overlay-variant"
+								:class="{
+									'btn-block': shouldShowFollow,
+								}"
+								v-app-track-event="`home:banner:${game.id}`"
+								>
+								<app-jolticon icon="play" />
+								Play Demo
+							</router-link>
+						</div>
+						<div class="col-xs-6" v-if="shouldShowFollow">
+							<app-game-follow-widget
+								:game="game"
+								class="btn-block btn-lg btn-outline btn-overlay-variant"
+								v-app-track-event="`home:banner:follow-${game.id}`"
+								/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
