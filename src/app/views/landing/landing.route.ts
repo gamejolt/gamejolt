@@ -9,7 +9,6 @@ import { routeLandingClient } from './client/client.route';
 import { routeLandingRedlight } from './redlight/redlight.route';
 import { routeLandingIndieaf } from './indieaf/indieaf.route';
 import { routeLandingGameApiDoc } from './game-api-doc/game-api-doc.route';
-import { routeLandingHalloween } from './halloween/halloween.route';
 
 export const routeLanding: VueRouter.RouteConfig = {
 	path: '',
@@ -25,6 +24,5 @@ export const routeLanding: VueRouter.RouteConfig = {
 		routeLandingPartners,
 		routeLandingRedlight,
 		routeLandingIndieaf,
-		routeLandingHalloween,
 	],
 };

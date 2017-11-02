@@ -17,7 +17,6 @@ import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed
 import { Store } from '../../../../store/index';
 import { AppAdPlacement } from '../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { HalloweenMonster } from '../../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -72,7 +71,7 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 		}
 	}
 
-	routed(fromCache: boolean) {
+	routed() {
 		this.games = Game.populate(this.$payload.games);
 
 		if (!this.feed) {
@@ -80,10 +79,6 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 				type: 'EventItem',
 				url: '/web/discover/devlogs/posts',
 			});
-		}
-
-		if (!fromCache && this.$payload.halloweenMonster) {
-			HalloweenMonster.add(new HalloweenMonster(this.$payload.halloweenMonster));
 		}
 	}
 }
