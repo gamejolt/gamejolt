@@ -19,7 +19,6 @@ import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/plac
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
-import { HalloweenMonster } from '../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
 import { AppDiscoverHomeBanner } from './_banner/banner';
 import {
 	BaseRouteComponent,
@@ -126,7 +125,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		Ads.setAdUnit('homepage');
 	}
 
-	routed(fromCache: boolean) {
+	routed() {
 		this.isLoaded = true;
 
 		Meta.description = this.$payload.metaDescription;
@@ -177,10 +176,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			if (info) {
 				this.channels.push(info);
 			}
-		}
-
-		if (!fromCache && this.$payload.halloweenMonster) {
-			HalloweenMonster.add(new HalloweenMonster(this.$payload.halloweenMonster));
 		}
 	}
 }

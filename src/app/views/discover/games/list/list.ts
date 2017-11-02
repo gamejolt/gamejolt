@@ -18,7 +18,6 @@ import { AppGameGrid } from '../../../../components/game/grid/grid';
 import { AppGameListing } from '../../../../components/game/listing/listing';
 import { LocationRedirect } from '../../../../../lib/gj-lib-client/utils/router';
 import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
-import { HalloweenMonster } from '../../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -95,14 +94,10 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		Ads.setAdUnit('gamesdir');
 	}
 
-	routed(fromCache: boolean) {
+	routed() {
 		if (this.listing && this.$payload) {
 			this.listing.processPayload(this.$route, this.$payload);
 			this.process();
-		}
-
-		if (!fromCache && this.$payload.halloweenMonster) {
-			HalloweenMonster.add(new HalloweenMonster(this.$payload.halloweenMonster));
 		}
 	}
 

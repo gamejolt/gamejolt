@@ -108,11 +108,18 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 		Settings.set('broadcast-modal', this.formModel.broadcast_modal);
 		Settings.set('animated-thumbnails', this.formModel.animated_thumbnails);
 
-		if (
-			this.model &&
-			!!this.formModel.halloween_2017_opted_out !== !!this.model.halloween_2017_opted_out
-		) {
-			this.$refs.form.submit();
+		if (this.model) {
+			let needsSubmit = false;
+			// for (let serverField of ['list', 'of', 'server', 'fields']) {
+			// 	if (this.formModel[serverField] !== this.model[serverField]) {
+			// 		needsSubmit = true;
+			// 		break;
+			// 	}
+			// }
+
+			if (needsSubmit) {
+				this.$refs.form.submit();
+			}
 		}
 
 		if (GJ_IS_CLIENT) {

@@ -36,7 +36,6 @@ import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 import { IntentService } from '../../../../components/intent/intent.service';
-import { HalloweenMonster } from '../../../../../lib/gj-lib-client/components/halloween-monster/halloween-monster.model';
 import {
 	RouteResolve,
 	BaseRouteComponent,
@@ -183,7 +182,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 	}
 
-	routed(fromCache: boolean) {
+	routed() {
 		this.bootstrap(this.$payload);
 
 		// If the game has a GA tracking ID, then we attach it to this
@@ -191,10 +190,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		if (this.game.ga_tracking_id) {
 			Analytics.attachAdditionalPageTracker(this.game.ga_tracking_id);
 			this.gaTrackingId = this.game.ga_tracking_id;
-		}
-
-		if (!fromCache && this.$payload.halloweenMonster) {
-			HalloweenMonster.add(new HalloweenMonster(this.$payload.halloweenMonster));
 		}
 
 		// TODO(rewrite)

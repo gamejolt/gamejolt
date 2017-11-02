@@ -27,7 +27,6 @@ import {
 import { Store } from '../../../store/index';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
-import { AppUserHalloweenMonsterWidget } from '../../../components/user/halloween-monster-widget/halloween-monster-widget';
 
 @View
 @Component({
@@ -40,7 +39,6 @@ import { AppUserHalloweenMonsterWidget } from '../../../components/user/hallowee
 		AppGameThumbnail,
 		AppCommentVideoThumbnail,
 		AppUserLevelWidget,
-		AppUserHalloweenMonsterWidget,
 	},
 	directives: {
 		AppTooltip,
