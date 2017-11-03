@@ -70,6 +70,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 		rows.push({
 			title: this.$gettext('Featured'),
+			desc: this.$gettext(`staff picks`),
 			url: this.$router.resolve({
 				name: 'discover.games.list._fetch',
 				params: { section: 'featured' },
@@ -78,18 +79,18 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			games: 'featured',
 		});
 
-		if (this.isLoaded && this.app.user) {
-			rows.push({
-				title: this.$gettext('Recommended'),
-				desc: this.$gettext(`based on your history`),
-				url: this.$router.resolve({
-					name: 'library.collection.recommended',
-					params: { id: this.app.user.username },
-				}).href,
-				eventLabel: 'recommended',
-				games: 'recommended',
-			});
-		}
+		// if (this.isLoaded && this.app.user) {
+		// 	rows.push({
+		// 		title: this.$gettext('Recommended'),
+		// 		desc: this.$gettext(`based on your history`),
+		// 		url: this.$router.resolve({
+		// 			name: 'library.collection.recommended',
+		// 			params: { id: this.app.user.username },
+		// 		}).href,
+		// 		eventLabel: 'recommended',
+		// 		games: 'recommended',
+		// 	});
+		// }
 
 		rows.push({
 			title: this.$gettext('Hot Games'),
@@ -104,6 +105,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 		rows.push({
 			title: this.$gettext('Top Games'),
+			desc: this.$gettext(`based on ratings`),
 			url: this.$router.resolve({
 				name: 'discover.games.list._fetch',
 				params: { section: 'best' },
@@ -126,8 +128,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	routed() {
-		this.isLoaded = true;
-
 		Meta.description = this.$payload.metaDescription;
 		Meta.fb = this.$payload.fb;
 		Meta.twitter = this.$payload.twitter;
@@ -146,13 +146,17 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			},
 		};
 
-		const featuredItems = FeaturedItem.populate(this.$payload.featuredGames);
-		this.games.featured = featuredItems.map(item => item.game);
-		this.games.hot = Game.populate(this.$payload.hotGames);
-		this.games.best = Game.populate(this.$payload.bestGames);
-		this.games.recommended = Game.populate(this.$payload.recommendedGames);
-
 		this.featuredGame = this.$payload.featuredGame ? new Game(this.$payload.featuredGame) : null;
+
+		const featuredItems = FeaturedItem.populate(this.$payload.featuredGames);
+		this.games.featured = featuredItems.map(item => item.game).slice(0, 6);
+		// this.games.recommended = Game.populate(this.$payload.recommendedGames);
+
+		// If we pull from cache, don't refresh with new payload data.
+		if (!this.isLoaded) {
+			this.games.hot = Game.populate(this.$payload.hotGames).slice(0, 15);
+			this.games.best = Game.populate(this.$payload.bestGames).slice(0, 6);
+		}
 
 		const channels = [
 			'action',
@@ -177,5 +181,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 				this.channels.push(info);
 			}
 		}
+
+		this.isLoaded = true;
 	}
 }

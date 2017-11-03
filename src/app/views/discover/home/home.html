@@ -87,7 +87,7 @@
 						/>
 					<app-game-grid
 						v-else
-						:games="games[ row.games ].slice(0, 6)"
+						:games="games[ row.games ]"
 						:truncate-to-fit="true"
 						:scrollable="true"
 						:show-ads="false"
@@ -95,15 +95,15 @@
 						/>
 				</div>
 
-				<router-link
-					class="btn btn-outline"
-					:to="row.url"
-					v-app-track-event="`home:more-btn:${row.eventLabel}`"
-					>
-					<translate>Show More</translate>
-				</router-link>
-
-				<hr>
+				<div class="page-cut">
+					<router-link
+						class="btn btn-outline"
+						:to="row.url"
+						v-app-track-event="`home:more-btn:${row.eventLabel}`"
+						>
+						<translate>Show More</translate>
+					</router-link>
+				</div>
 			</div>
 
 		</div>
