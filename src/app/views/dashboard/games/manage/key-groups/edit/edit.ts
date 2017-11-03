@@ -76,10 +76,10 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 		return null;
 	}
 
-	routed() {
-		this.keyGroup = new KeyGroup(this.$payload.keyGroup);
-		this.packages = GamePackage.populate(this.$payload.packages);
-		this.keys = Key.populate(this.$payload.keys);
+	routed($payload: any) {
+		this.keyGroup = new KeyGroup($payload.keyGroup);
+		this.packages = GamePackage.populate($payload.packages);
+		this.keys = Key.populate($payload.keys);
 	}
 
 	async searchKeys() {

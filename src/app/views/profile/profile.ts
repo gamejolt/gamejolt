@@ -76,24 +76,24 @@ export default class RouteProfile extends BaseRouteComponent {
 		return Api.sendRequest('/web/profile/@' + route.params.username);
 	}
 
-	routed() {
+	routed($payload: any) {
 		Ads.setAdUnit('devprofile');
 
-		this.user = new User(this.$payload.user);
+		this.user = new User($payload.user);
 
-		this.headerMediaItem = this.$payload.headerMediaItem
-			? new MediaItem(this.$payload.headerMediaItem)
+		this.headerMediaItem = $payload.headerMediaItem
+			? new MediaItem($payload.headerMediaItem)
 			: null;
-		this.gamesCount = this.$payload.gamesCount;
-		this.isOnline = this.$payload.isOnline;
-		this.libraryGamesCount = this.$payload.libraryGamesCount;
-		this.activeGameSession = this.$payload.activeGameSession
-			? new UserGameSession(this.$payload.activeGameSession)
+		this.gamesCount = $payload.gamesCount;
+		this.isOnline = $payload.isOnline;
+		this.libraryGamesCount = $payload.libraryGamesCount;
+		this.activeGameSession = $payload.activeGameSession
+			? new UserGameSession($payload.activeGameSession)
 			: null;
-		this.videosCount = this.$payload.videosCount || 0;
+		this.videosCount = $payload.videosCount || 0;
 
-		if (this.$payload.userFriendship) {
-			this.userFriendship = new UserFriendship(this.$payload.userFriendship);
+		if ($payload.userFriendship) {
+			this.userFriendship = new UserFriendship($payload.userFriendship);
 		}
 	}
 

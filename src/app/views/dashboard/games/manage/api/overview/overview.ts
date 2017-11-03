@@ -58,8 +58,8 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		return null;
 	}
 
-	routed() {
-		this.sessionStats = this.$payload.sessionStats;
+	routed($payload: any) {
+		this.sessionStats = $payload.sessionStats;
 
 		const fields = [
 			'numActiveTrophies',
@@ -73,7 +73,7 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		];
 
 		fields.forEach(field => {
-			(this as any)[field] = this.$payload[field] || 0;
+			(this as any)[field] = $payload[field] || 0;
 		});
 	}
 }

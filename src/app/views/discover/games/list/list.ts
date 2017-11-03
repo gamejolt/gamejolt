@@ -94,9 +94,13 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		Ads.setAdUnit('gamesdir');
 	}
 
-	routed() {
-		if (this.listing && this.$payload) {
-			this.listing.processPayload(this.$route, this.$payload);
+	routed($payload: any) {
+		if ($payload && $payload.metaDescription) {
+			Meta.description = $payload.metaDescription;
+		}
+
+		if (this.listing && $payload) {
+			this.listing.processPayload(this.$route, $payload);
 			this.process();
 		}
 	}
@@ -181,10 +185,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			this.descriptiveCategory = this.$gettextInterpolate('%{ category } games', {
 				category: categoryHuman.toLowerCase(),
 			});
-		}
-
-		if (this.$payload) {
-			Meta.description = this.$payload.metaDescription;
 		}
 	}
 

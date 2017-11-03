@@ -31,9 +31,9 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 		);
 	}
 
-	routed() {
-		console.log(this.$payload);
-		this.sellable = this.$payload.sellable ? new Sellable(this.$payload.sellable) : null;
+	routed($payload: any) {
+		console.log($payload);
+		this.sellable = $payload.sellable ? new Sellable($payload.sellable) : null;
 		this.theme = ''; // Default to dark.
 	}
 

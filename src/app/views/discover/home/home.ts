@@ -117,7 +117,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		return rows;
 	}
 
-	@RouteResolve({ cache: true })
+	@RouteResolve({ cache: true, lazy: true })
 	routeResolve() {
 		return Api.sendRequest('/web/discover');
 	}
@@ -127,10 +127,10 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		Ads.setAdUnit('homepage');
 	}
 
-	routed() {
-		Meta.description = this.$payload.metaDescription;
-		Meta.fb = this.$payload.fb;
-		Meta.twitter = this.$payload.twitter;
+	routed($payload: any) {
+		Meta.description = $payload.metaDescription;
+		Meta.fb = $payload.fb;
+		Meta.twitter = $payload.twitter;
 		Meta.fb.image = Meta.twitter.image = require('../../../img/social/social-share-header.png');
 		Meta.fb.url = Meta.twitter.url = Environment.baseUrl;
 
@@ -146,16 +146,20 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			},
 		};
 
-		this.featuredGame = this.$payload.featuredGame ? new Game(this.$payload.featuredGame) : null;
+		this.featuredGame = $payload.featuredGame ? new Game($payload.featuredGame) : null;
 
-		const featuredItems = FeaturedItem.populate(this.$payload.featuredGames);
+		const featuredItems = FeaturedItem.populate($payload.featuredGames);
 		this.games.featured = featuredItems.map(item => item.game).slice(0, 6);
-		// this.games.recommended = Game.populate(this.$payload.recommendedGames);
+		// this.games.recommended = Game.populate($payload.recommendedGames);
 
-		// If we pull from cache, don't refresh with new payload data.
+		// If we pull from cache, don't refresh with new payload data. If it's not cache, we
+		// ovewrite with our cached data.
 		if (!this.isLoaded) {
-			this.games.hot = Game.populate(this.$payload.hotGames).slice(0, 15);
-			this.games.best = Game.populate(this.$payload.bestGames).slice(0, 6);
+			this.games.hot = Game.populate($payload.hotGames).slice(0, 15);
+			this.games.best = Game.populate($payload.bestGames).slice(0, 6);
+		} else {
+			$payload.hotGames = this.games.hot;
+			$payload.bestGames = this.games.best;
 		}
 
 		const channels = [

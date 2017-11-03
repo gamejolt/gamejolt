@@ -41,8 +41,8 @@ export default class RouteLandingGameApiDoc extends BaseRouteComponent {
 		return PayloadError.fromHttpError(404);
 	}
 
-	routed() {
-		this.content = this.$payload;
+	routed($payload: any) {
+		this.content = $payload;
 	}
 
 	render(h: Vue.CreateElement) {

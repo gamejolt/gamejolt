@@ -38,7 +38,7 @@ export default class RouteSearchResults extends BaseRouteComponent {
 		return Search.search(route.query.q);
 	}
 
-	routed() {
-		this.$emit('searchpayload', this.$payload);
+	routed($payload: any) {
+		this.$emit('searchpayload', $payload);
 	}
 }

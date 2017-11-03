@@ -35,7 +35,7 @@ export default class RouteDashAccountChangePassword extends BaseRouteComponent {
 		this.setHeading(this.$gettext('dash.change_pass.heading'));
 	}
 
-	routed() {
-		this.hasPassword = this.$payload.hasPassword;
+	routed($payload: any) {
+		this.hasPassword = $payload.hasPassword;
 	}
 }

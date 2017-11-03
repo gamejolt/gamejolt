@@ -182,8 +182,8 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 	}
 
-	routed() {
-		this.bootstrap(this.$payload);
+	routed($payload: any) {
+		this.bootstrap($payload);
 
 		// If the game has a GA tracking ID, then we attach it to this
 		// scope so all page views within get tracked.

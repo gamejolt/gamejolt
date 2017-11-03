@@ -34,7 +34,7 @@ export default class RouteDashGamesManageSite extends BaseRouteComponent {
 		return this.$gettext('Manage Site');
 	}
 
-	routed() {
-		this.site = new Site(this.$payload.site);
+	routed($payload: any) {
+		this.site = new Site($payload.site);
 	}
 }

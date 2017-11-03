@@ -48,9 +48,9 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		return this.$gettext('Manage Devlog');
 	}
 
-	routed() {
+	routed($payload: any) {
 		// Create a new activity feed container each time. Don't cache anything.
-		this.feed = new ActivityFeedContainer(FiresidePost.populate(this.$payload.posts), {
+		this.feed = new ActivityFeedContainer(FiresidePost.populate($payload.posts), {
 			type: 'EventItem',
 			url: `/web/dash/developer/games/devlog/posts/${this.game.id}/${this._tab}`,
 		});

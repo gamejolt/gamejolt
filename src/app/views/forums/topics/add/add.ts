@@ -43,8 +43,8 @@ export default class RouteForumsTopicsAdd extends BaseRouteComponent {
 		return Api.sendRequest('/web/forums/topics/create/' + route.params.channel);
 	}
 
-	routed() {
-		this.channel = new ForumChannel(this.$payload.channel);
+	routed($payload: any) {
+		this.channel = new ForumChannel($payload.channel);
 	}
 
 	onCreated(formModel: ForumTopic) {

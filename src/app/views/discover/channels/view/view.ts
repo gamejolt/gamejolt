@@ -50,9 +50,9 @@ export default class RouteDiscoverChannelsView extends BaseRouteComponent {
 		ChannelsViewHelper.setDefaultMetaData(this.route.params.channel);
 	}
 
-	routed() {
+	routed($payload: any) {
 		// Overwrite channel from server so we can decide how it displays in the
 		// end.
-		this.channel = this.$payload.channel;
+		this.channel = $payload.channel;
 	}
 }

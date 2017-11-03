@@ -35,7 +35,7 @@ export default class RouteDashAccountEmailPreferences extends BaseRouteComponent
 		this.setHeading(this.$gettext('dash.email_prefs.heading'));
 	}
 
-	routed() {
-		this.user = new User(this.$payload.user);
+	routed($payload: any) {
+		this.user = new User($payload.user);
 	}
 }

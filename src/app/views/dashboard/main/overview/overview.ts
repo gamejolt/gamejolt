@@ -115,23 +115,23 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 		return this.$gettext('dash.overview.page_title');
 	}
 
-	routed() {
+	routed($payload: any) {
 		// Keep them undefined if not on the payload.
 		// This will ensure that if they aren't an account with revenue, it won't show the revenue widget.
-		if (typeof this.$payload.revenueTotal !== 'undefined' && this.$payload.revenueTotal !== null) {
-			this.revenueTotal = this.$payload.revenueTotal || 0;
-			this.revenueWithdrawn = this.$payload.revenueWithdrawn || 0;
-			this.revenueSpent = this.$payload.revenueSpent || 0;
-			this.revenueCurrent = this.$payload.revenueCurrent || 0;
-			this.revenuePendingWithdraw = this.$payload.revenuePendingWithdraw || 0;
-			this.revenuePendingActivation = this.$payload.revenuePendingActivation || 0;
-			this.walletBalance = this.$payload.walletBalance || 0;
+		if (typeof $payload.revenueTotal !== 'undefined' && $payload.revenueTotal !== null) {
+			this.revenueTotal = $payload.revenueTotal || 0;
+			this.revenueWithdrawn = $payload.revenueWithdrawn || 0;
+			this.revenueSpent = $payload.revenueSpent || 0;
+			this.revenueCurrent = $payload.revenueCurrent || 0;
+			this.revenuePendingWithdraw = $payload.revenuePendingWithdraw || 0;
+			this.revenuePendingActivation = $payload.revenuePendingActivation || 0;
+			this.walletBalance = $payload.walletBalance || 0;
 		}
 
 		const items: (Game | GameCollaborator)[] = [];
 		this.games = items
-			.concat(Game.populate(this.$payload.games))
-			.concat(GameCollaborator.populate(this.$payload.collaborations))
+			.concat(Game.populate($payload.games))
+			.concat(GameCollaborator.populate($payload.collaborations))
 			.sort((a, b) =>
 				numberSort(
 					a instanceof Game ? a.posted_on : a.accepted_on,
@@ -141,17 +141,17 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 			.reverse()
 			.map(i => (i instanceof Game ? i : i.game!));
 
-		this.videos = CommentVideo.populate(this.$payload.videos);
-		this.videosCount = this.$payload.videosCount || 0;
+		this.videos = CommentVideo.populate($payload.videos);
+		this.videosCount = $payload.videosCount || 0;
 
-		this.jams = Jam.populate(this.$payload.jams);
+		this.jams = Jam.populate($payload.jams);
 
-		this.activityNotifications = Notification.populate(this.$payload.activityNotifications);
-		this.latestBroadcast = this.$payload.latestBroadcast
-			? new FiresidePost(this.$payload.latestBroadcast)
+		this.activityNotifications = Notification.populate($payload.activityNotifications);
+		this.latestBroadcast = $payload.latestBroadcast
+			? new FiresidePost($payload.latestBroadcast)
 			: null;
 
-		this.integration = this.$payload.integration || {};
+		this.integration = $payload.integration || {};
 
 		this.integrationKeys.forEach(key => {
 			if (this.integration[key] && !this.integration[key].achieved) {

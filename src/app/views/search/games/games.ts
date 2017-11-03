@@ -30,7 +30,7 @@ export default class RouteSearchGames extends BaseRouteComponent {
 		});
 	}
 
-	routed() {
-		this.$emit('searchpayload', this.$payload);
+	routed($payload: any) {
+		this.$emit('searchpayload', $payload);
 	}
 }

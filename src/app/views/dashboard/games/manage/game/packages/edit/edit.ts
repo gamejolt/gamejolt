@@ -90,10 +90,10 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		return null;
 	}
 
-	routed() {
-		this.package = new GamePackage(this.$payload.package);
-		this.sellable = new Sellable(this.$payload.sellable);
-		this.releases = GameRelease.populate(this.$payload.releases);
+	routed($payload: any) {
+		this.package = new GamePackage($payload.package);
+		this.sellable = new Sellable($payload.sellable);
+		this.releases = GameRelease.populate($payload.releases);
 
 		this.previewData = null;
 		this.previewPackage = null;

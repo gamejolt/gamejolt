@@ -34,7 +34,7 @@ export default class RouteDiscoverChannelsList extends BaseRouteComponent {
 		Meta.description = 'Find and discover indie games around specific interests.';
 	}
 
-	routed() {
-		this.channels = this.$payload.channels;
+	routed($payload: any) {
+		this.channels = $payload.channels;
 	}
 }

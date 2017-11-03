@@ -60,8 +60,8 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.songs = GameSong.populate(this.$payload.songs);
+	routed($payload: any) {
+		this.songs = GameSong.populate($payload.songs);
 		this.isAdding = !this.songs.length;
 	}
 

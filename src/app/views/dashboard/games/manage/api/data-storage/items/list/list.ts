@@ -48,8 +48,8 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 		return null;
 	}
 
-	routed() {
-		this.items = GameDataStoreItem.populate(this.$payload.items);
+	routed($payload: any) {
+		this.items = GameDataStoreItem.populate($payload.items);
 	}
 
 	async removeItem(item: GameDataStoreItem) {

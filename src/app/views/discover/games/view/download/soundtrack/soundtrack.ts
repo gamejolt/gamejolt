@@ -53,7 +53,7 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteC
 		return null;
 	}
 
-	async routed() {
+	async routed($payload: any) {
 		// Don't download on SSR.
 		if (GJ_IS_SSR) {
 			return;

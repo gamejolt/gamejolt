@@ -48,10 +48,10 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRo
 		return null;
 	}
 
-	routed() {
-		this.scoreTables = GameScoreTable.populate(this.$payload.scoreTables);
-		this.scoreTable = new GameScoreTable(this.$payload.scoreTable);
-		this.scores = UserGameScore.populate(this.$payload.scores);
+	routed($payload: any) {
+		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
+		this.scoreTable = new GameScoreTable($payload.scoreTable);
+		this.scores = UserGameScore.populate($payload.scores);
 
 		this.selectedTable = this.scoreTables.find(i => i.id === this.scoreTable.id)!.id;
 	}

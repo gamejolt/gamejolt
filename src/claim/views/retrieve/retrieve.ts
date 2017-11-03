@@ -43,7 +43,6 @@ export default class RouteRetrieve extends BaseRouteComponent {
 	resourceTitle = '';
 
 	Meta = makeObservableService(Meta);
-	$payload: Payload;
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: VueRouter.Route): Promise<Payload> {
@@ -90,16 +89,16 @@ export default class RouteRetrieve extends BaseRouteComponent {
 		return this.$gettext(`Retrieve Your Keys`);
 	}
 
-	routed() {
+	routed($payload: Payload) {
 		// Invalid key.
-		if (this.$payload && (this.$payload.error || this.$payload.payload.error)) {
+		if ($payload && ($payload.error || $payload.payload.error)) {
 			this.invalidKey = true;
 			return;
 		}
 
 		// Retrieving a key for a particular bundle or game.
-		if (this.$payload && !this.$payload.error) {
-			const { key, payload: { bundle, game } } = this.$payload;
+		if ($payload && !$payload.error) {
+			const { key, payload: { bundle, game } } = $payload;
 			this.key = key;
 			this.bundle = bundle ? new GameBundle(bundle) : null;
 			this.game = game ? new Game(game) : null;

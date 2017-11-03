@@ -45,13 +45,13 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 		return 'Sell Your Games';
 	}
 
-	routed() {
-		Meta.description = this.$payload.metaDescription;
-		Meta.fb = this.$payload.fb;
-		Meta.twitter = this.$payload.twitter;
+	routed($payload: any) {
+		Meta.description = $payload.metaDescription;
+		Meta.fb = $payload.fb;
+		Meta.twitter = $payload.twitter;
 		Meta.fb.image = Meta.twitter.image = require('./social.png');
 
-		this.firesidePosts = FiresidePost.populate(this.$payload.firesidePosts);
-		this.games = Game.populate(this.$payload.games);
+		this.firesidePosts = FiresidePost.populate($payload.firesidePosts);
+		this.games = Game.populate($payload.games);
 	}
 }

@@ -87,15 +87,15 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		Meta.description = this.$payload.metaDescription;
-		Meta.fb = this.$payload.fb || {};
+	routed($payload: any) {
+		Meta.description = $payload.metaDescription;
+		Meta.fb = $payload.fb || {};
 		Meta.fb.title = this.routeTitle;
-		Meta.twitter = this.$payload.twitter || {};
+		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
 
-		this.developerGames = Game.populate(this.$payload.developerGamesTeaser);
-		this.youtubeChannels = YoutubeChannel.populate(this.$payload.youtubeChannels);
-		this.videos = CommentVideo.populate(this.$payload.videos);
+		this.developerGames = Game.populate($payload.developerGamesTeaser);
+		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
+		this.videos = CommentVideo.populate($payload.videos);
 	}
 }

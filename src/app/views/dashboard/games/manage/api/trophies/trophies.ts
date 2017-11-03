@@ -99,8 +99,8 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 		return null;
 	}
 
-	routed() {
-		this.trophies = GameTrophy.populate(this.$payload.trophies);
+	routed($payload: any) {
+		this.trophies = GameTrophy.populate($payload.trophies);
 	}
 
 	private getTrophyGroup(difficulty: number) {

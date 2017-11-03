@@ -61,13 +61,13 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 		return null;
 	}
 
-	routed() {
-		this.trophies = GameTrophy.populate(this.$payload.trophies);
-		this.achieved = this.$payload.trophiesAchieved
-			? UserGameTrophy.populate(this.$payload.trophiesAchieved)
+	routed($payload: any) {
+		this.trophies = GameTrophy.populate($payload.trophies);
+		this.achieved = $payload.trophiesAchieved
+			? UserGameTrophy.populate($payload.trophiesAchieved)
 			: [];
-		this.experience = this.$payload.trophiesExperienceAchieved || 0;
-		this.showInvisibleTrophyMessage = this.$payload.trophiesShowInvisibleTrophyMessage || false;
+		this.experience = $payload.trophiesExperienceAchieved || 0;
+		this.showInvisibleTrophyMessage = $payload.trophiesShowInvisibleTrophyMessage || false;
 
 		this.achievedIndexed = UserGameTrophy.indexAchieved(this.achieved);
 		this.filteredTrophies = GameTrophy.splitAchieved(this.trophies, this.achievedIndexed);

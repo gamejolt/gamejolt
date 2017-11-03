@@ -58,7 +58,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 		return Api.sendRequest('/web/dash/developer/games/' + route.params.id);
 	}
 
-	routed() {
-		this.populate(this.$payload);
+	routed($payload: any) {
+		this.populate($payload);
 	}
 }

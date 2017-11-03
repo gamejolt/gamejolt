@@ -48,9 +48,9 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 		return null;
 	}
 
-	routed() {
-		this.score = new UserGameScore(this.$payload.score);
-		this.scoreTable = new GameScoreTable(this.$payload.scoreTable);
+	routed($payload: any) {
+		this.score = new UserGameScore($payload.score);
+		this.scoreTable = new GameScoreTable($payload.scoreTable);
 	}
 
 	async removeScore() {

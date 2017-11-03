@@ -290,8 +290,15 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			});
 		}
 
+		// If we pull from cache, don't refresh with new payload data. If it's not cache, we
+		// ovewrite with our cached data. This way the data doesn't refresh when you click back.
+		if (!this.recommendedGames.length) {
+			this.recommendedGames = Game.populate(payload.recommendedGames);
+		} else {
+			payload.recommendedGames = this.recommendedGames;
+		}
+
 		this.songs = GameSong.populate(payload.songs);
-		this.recommendedGames = Game.populate(payload.recommendedGames);
 		this.packagePayload = new GamePackagePayloadModel(payload);
 
 		this.profileCount = payload.profileCount || 0;

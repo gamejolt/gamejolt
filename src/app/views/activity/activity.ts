@@ -62,27 +62,27 @@ export default class RouteActivity extends BaseRouteComponent {
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed() {
+	routed($payload: any) {
 		if (this.tab === 'activity') {
 			if (!this.feed || this.feed.feedType !== 'EventItem') {
-				this.feed = ActivityFeedService.bootstrap(EventItem.populate(this.$payload.items), {
+				this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.items), {
 					type: 'EventItem',
 					url: `/web/dash/activity/more/${this.tab}`,
-					notificationWatermark: this.$payload.unreadWatermark,
+					notificationWatermark: $payload.unreadWatermark,
 				});
 			}
 		} else {
 			if (!this.feed || this.feed.feedType !== 'Notification') {
-				this.feed = ActivityFeedService.bootstrap(Notification.populate(this.$payload.items), {
+				this.feed = ActivityFeedService.bootstrap(Notification.populate($payload.items), {
 					type: 'Notification',
 					url: `/web/dash/activity/more/${this.tab}`,
-					notificationWatermark: this.$payload.unreadWatermark,
+					notificationWatermark: $payload.unreadWatermark,
 				});
 			}
 		}
 
-		this.activityUnreadCount = this.$payload.activityUnreadCount || 0;
-		this.notificationsUnreadCount = this.$payload.notificationsUnreadCount || 0;
+		this.activityUnreadCount = $payload.activityUnreadCount || 0;
+		this.notificationsUnreadCount = $payload.notificationsUnreadCount || 0;
 
 		// Since we clear out the notifications on the page let's set the count
 		// as being the opposite of the tab we're on.

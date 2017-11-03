@@ -45,13 +45,13 @@ export default class RouteCheckout extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.cards = this.$payload.cards || [];
-		this.sellable = new Sellable(this.$payload.sellable);
-		this.order = new Order(this.$payload.order);
-		this.game = new Game(this.$payload.game);
+	routed($payload: any) {
+		this.cards = $payload.cards || [];
+		this.sellable = new Sellable($payload.sellable);
+		this.order = new Order($payload.order);
+		this.game = new Game($payload.game);
 
-		window.Stripe.setPublishableKey(this.$payload.stripePublishableKey);
+		window.Stripe.setPublishableKey($payload.stripePublishableKey);
 	}
 
 	onSubmit(_formModel: any, response: any) {

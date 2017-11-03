@@ -30,8 +30,8 @@ export default class RouteAuthAuthorize extends BaseRouteComponent {
 		return this.$gettext('auth.authorize.invalid.page_title');
 	}
 
-	routed() {
-		this.isSuccess = this.$payload.success;
+	routed($payload: any) {
+		this.isSuccess = $payload.success;
 
 		// Redirect them to their dashboard after a bit.
 		if (this.isSuccess) {

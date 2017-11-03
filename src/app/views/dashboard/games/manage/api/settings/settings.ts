@@ -39,8 +39,8 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 		return null;
 	}
 
-	routed() {
-		this.privateKey = this.$payload.privateKey;
+	routed($payload: any) {
+		this.privateKey = $payload.privateKey;
 	}
 
 	async generateNewKey() {

@@ -56,9 +56,9 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 		return null;
 	}
 
-	routed() {
-		this.keyGroups = KeyGroup.populate(this.$payload.keyGroups);
-		this.packages = GamePackage.populate(this.$payload.packages);
+	routed($payload: any) {
+		this.keyGroups = KeyGroup.populate($payload.keyGroups);
+		this.packages = GamePackage.populate($payload.packages);
 	}
 
 	onKeyGroupAdded(keyGroup: KeyGroup) {

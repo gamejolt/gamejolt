@@ -61,14 +61,14 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 		return null;
 	}
 
-	routed() {
-		this.package = new GamePackage(this.$payload.package);
-		this.release = new GameRelease(this.$payload.release);
-		this.releases = GameRelease.populate(this.$payload.releases);
-		this.builds = GameBuild.populate(this.$payload.builds);
-		this.launchOptions = GameBuildLaunchOption.populate(this.$payload.launchOptions);
+	routed($payload: any) {
+		this.package = new GamePackage($payload.package);
+		this.release = new GameRelease($payload.release);
+		this.releases = GameRelease.populate($payload.releases);
+		this.builds = GameBuild.populate($payload.builds);
+		this.launchOptions = GameBuildLaunchOption.populate($payload.launchOptions);
 
-		this.buildDownloadCounts = this.$payload.buildDownloadCounts || {};
+		this.buildDownloadCounts = $payload.buildDownloadCounts || {};
 		// If the server has no build counts it returns an empty array instead of an empty object.
 		// This is an issue with the backend not explicitly casting empty arrays to objects.
 		if (Array.isArray(this.buildDownloadCounts)) {
@@ -76,9 +76,9 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 		}
 
 		// If the game was entered into a jam that locks its builds.
-		this.areBuildsLockedByJam = this.$payload.areBuildsLockedByJam || false;
+		this.areBuildsLockedByJam = $payload.areBuildsLockedByJam || false;
 		this.areWebBuildsLockedBySellable =
-			this.$payload.package.is_in_paid_sellable || this.$payload.package.has_sales || false;
+			$payload.package.is_in_paid_sellable || $payload.package.has_sales || false;
 	}
 
 	onSaved() {

@@ -24,12 +24,12 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 		);
 	}
 
-	routed() {
-		if (!this.$payload.success) {
+	routed($payload: any) {
+		if (!$payload.success) {
 			// If they don't have an account yet, let's create one for them. For
 			// Twitter, they need to fill out their email address, so take them
 			// to the page to do that.
-			if (this.$payload.reason && this.$payload.reason === 'no-account') {
+			if ($payload.reason && $payload.reason === 'no-account') {
 				this.$router.push({
 					name: 'auth.linked-account.twitter.finalize',
 					params: { state: this.$route.query.state },

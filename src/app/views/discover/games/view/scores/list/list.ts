@@ -91,17 +91,17 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 		return null;
 	}
 
-	routed() {
-		this.scoreTables = GameScoreTable.populate(this.$payload.scoreTables);
-		this.scoreTable = this.$payload.scoreTable
-			? new GameScoreTable(this.$payload.scoreTable)
+	routed($payload: any) {
+		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
+		this.scoreTable = $payload.scoreTable
+			? new GameScoreTable($payload.scoreTable)
 			: null;
-		this.scores = UserGameScore.populate(this.$payload.scores);
-		this.userBestScore = this.$payload.scoresUserBestScore
-			? new UserGameScore(this.$payload.scoresUserBestScore)
+		this.scores = UserGameScore.populate($payload.scores);
+		this.userBestScore = $payload.scoresUserBestScore
+			? new UserGameScore($payload.scoresUserBestScore)
 			: null;
-		this.userScorePlacement = this.$payload.scoresUserScorePlacement || 0;
-		this.userScoreExperience = this.$payload.scoresUserScoreExperience || 0;
+		this.userScorePlacement = $payload.scoresUserScorePlacement || 0;
+		this.userScoreExperience = $payload.scoresUserScoreExperience || 0;
 	}
 
 	changeTable(table: GameScoreTable) {

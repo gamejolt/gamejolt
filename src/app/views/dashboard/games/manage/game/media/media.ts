@@ -72,8 +72,8 @@ export default class RouteDashGamesManageGameMedia extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.populateMedia(this.$payload.mediaItems || []);
+	routed($payload: any) {
+		this.populateMedia($payload.mediaItems || []);
 	}
 
 	onImagesAdded(_model: any, response: any) {

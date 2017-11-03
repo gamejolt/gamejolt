@@ -83,13 +83,13 @@ export default class RouteKey extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		if (this.$payload.error === 'invalid-key') {
+	routed($payload: any) {
+		if ($payload.error === 'invalid-key') {
 			this.invalidKey = true;
 			return;
 		}
 
-		this.payload = this.$payload;
+		this.payload = $payload;
 		this.type = this.payload.type;
 	}
 

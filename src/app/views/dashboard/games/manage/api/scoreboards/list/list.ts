@@ -60,8 +60,8 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 		return null;
 	}
 
-	routed() {
-		this.scoreTables = GameScoreTable.populate(this.$payload.scoreTables);
+	routed($payload: any) {
+		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
 	}
 
 	onTableAdded(table: GameScoreTable) {

@@ -76,8 +76,8 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 		return null;
 	}
 
-	routed() {
-		if (this.$payload.packages && !this.$payload.packages.length) {
+	routed($payload: any) {
+		if ($payload.packages && !$payload.packages.length) {
 			if (this.game.hasPerms('all')) {
 				this.$router.push({
 					name: 'dash.games.manage.game.packages.add',
@@ -91,9 +91,9 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 			return;
 		}
 
-		this.packages = GamePackage.populate(this.$payload.packages);
+		this.packages = GamePackage.populate($payload.packages);
 		this.sellables = arrayIndexBy<Sellable>(
-			Sellable.populate(this.$payload.sellables),
+			Sellable.populate($payload.sellables),
 			'game_package_id'
 		);
 	}

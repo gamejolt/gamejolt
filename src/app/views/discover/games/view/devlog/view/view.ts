@@ -78,8 +78,8 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		this.post = Registry.find<FiresidePost>('FiresidePost', hash, 'hash');
 	}
 
-	routed() {
-		const post = new FiresidePost(this.$payload.post);
+	routed($payload: any) {
+		const post = new FiresidePost($payload.post);
 		if (this.post) {
 			this.post.assign(post);
 		} else {
@@ -89,8 +89,8 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		this.post.$viewed();
 		this.post.$expanded();
 
-		Meta.description = this.$payload.metaDescription;
-		Meta.fb = this.$payload.fb;
-		Meta.twitter = this.$payload.twitter;
+		Meta.description = $payload.metaDescription;
+		Meta.fb = $payload.fb;
+		Meta.twitter = $payload.twitter;
 	}
 }

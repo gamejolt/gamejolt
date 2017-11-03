@@ -95,13 +95,13 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 		return null;
 	}
 
-	routed() {
-		this.viewCount = this.$payload.viewCount || 0;
-		this.downloadCount = this.$payload.downloadCount || 0;
-		this.playCount = this.$payload.playCount || 0;
-		this.commentCount = this.$payload.commentCount || 0;
+	routed($payload: any) {
+		this.viewCount = $payload.viewCount || 0;
+		this.downloadCount = $payload.downloadCount || 0;
+		this.playCount = $payload.playCount || 0;
+		this.commentCount = $payload.commentCount || 0;
 
-		this.hasBuildsProcessing = this.$payload.hasBuildsProcessing || false;
+		this.hasBuildsProcessing = $payload.hasBuildsProcessing || false;
 	}
 
 	// This is called if they loaded up the page and had builds in a processing

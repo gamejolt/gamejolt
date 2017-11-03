@@ -57,11 +57,11 @@ export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.order = new Order(this.$payload.order);
-		this.games = arrayIndexBy(Game.populate(this.$payload.games), 'id');
+	routed($payload: any) {
+		this.order = new Order($payload.order);
+		this.games = arrayIndexBy(Game.populate($payload.games), 'id');
 
-		const packages: GamePackage[] = GamePackage.populate(this.$payload.packages);
+		const packages: GamePackage[] = GamePackage.populate($payload.packages);
 		this.packagesBySellable = {};
 		for (const _package of packages) {
 			if (!this.packagesBySellable[_package.sellable_id]) {

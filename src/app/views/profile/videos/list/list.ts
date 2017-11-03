@@ -41,8 +41,8 @@ export default class RouteProfileVideosList extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.videos = CommentVideo.populate(this.$payload.videos);
+	routed($payload: any) {
+		this.videos = CommentVideo.populate($payload.videos);
 	}
 
 	async loadMore() {

@@ -88,6 +88,8 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	recommendedGames: Game[] = [];
 	isLoadingRecommended = false;
 
+	metaTitle = '';
+
 	Screen = makeObservableService(Screen);
 
 	// Not really able to make this lazy since it needs payload to build out the
@@ -128,8 +130,8 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	}
 
 	get routeTitle() {
-		if (this.$payload && this.$payload.metaTitle) {
-			return this.$payload.metaTitle;
+		if (this.metaTitle) {
+			return this.metaTitle;
 		} else if (this.type) {
 			if (this.type === 'followed') {
 				const params = { user: '@' + this.user!.username };
@@ -179,7 +181,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
+	routed($payload: any) {
 		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer(this.$route);
 			this.listing = new GameListingContainer(this.filtering);
@@ -187,7 +189,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 		this.filtering.init(this.$route);
 		this.listing.setAdTargeting(this.$route);
-		this.listing.processPayload(this.$route, this.$payload);
+		this.listing.processPayload(this.$route, $payload);
 
 		Ads.setAdUnit('gamesdir');
 
@@ -202,40 +204,44 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			) || null;
 
 		if (!this.collection) {
-			this.collection = new GameCollection(this.$payload.collection);
-			this.playlist = this.$payload.playlist ? new GamePlaylist(this.$payload.playlist) : null;
+			this.collection = new GameCollection($payload.collection);
+			this.playlist = $payload.playlist ? new GamePlaylist($payload.playlist) : null;
 		} else {
 			this.playlist = this.collection.playlist || null;
 		}
 
-		this.followerCount = this.$payload.followerCount || 0;
-		this.bundle = this.$payload.bundle ? new GameBundle(this.$payload.bundle) : null;
+		this.followerCount = $payload.followerCount || 0;
+		this.bundle = $payload.bundle ? new GameBundle($payload.bundle) : null;
 
 		this.user = null;
 		if (this.type === 'followed' || this.type === 'owned' || this.type === 'recommended') {
-			this.user = new User(this.$payload.user);
+			this.user = new User($payload.user);
 		} else if (this.type === 'developer') {
-			this.user = new User(this.$payload.developer);
+			this.user = new User($payload.developer);
 		} else if (this.playlist) {
 			this.user = this.playlist.user;
 		}
 
-		this.processMeta();
+		this.processMeta($payload);
 		this.mixPlaylist();
 	}
 
-	private processMeta() {
-		if (this.$payload.metaDescription) {
-			Meta.description = this.$payload.metaDescription;
+	private processMeta($payload: any) {
+		if ($payload.metaTitle) {
+			this.metaTitle = $payload.metaTitle;
 		}
 
-		if (this.$payload.fb) {
-			Meta.fb = this.$payload.fb;
+		if ($payload.metaDescription) {
+			Meta.description = $payload.metaDescription;
+		}
+
+		if ($payload.fb) {
+			Meta.fb = $payload.fb;
 			Meta.fb.title = this.routeTitle;
 		}
 
-		if (this.$payload.twitter) {
-			Meta.twitter = this.$payload.twitter;
+		if ($payload.twitter) {
+			Meta.twitter = $payload.twitter;
 			Meta.twitter.title = this.routeTitle;
 		}
 	}

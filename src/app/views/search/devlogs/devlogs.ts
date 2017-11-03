@@ -30,7 +30,7 @@ export default class RouteSearchDevlogs extends BaseRouteComponent {
 		});
 	}
 
-	routed() {
-		this.$emit('searchpayload', this.$payload);
+	routed($payload: any) {
+		this.$emit('searchpayload', $payload);
 	}
 }
