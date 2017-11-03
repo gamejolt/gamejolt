@@ -13,20 +13,13 @@
 				<translate>settings.game_install_dir_help</translate>
 			</p>
 
-			<!--TODO(rewrite,cros): Need to implement app-form-control-input component -->
 			<input
 				class="hidden"
 				type="file"
 				nwdirectory
-
 				@change="onSelectedInstallDir( $event.target.value )"
-				ref="game-install-dir" />
-			<!-- <app-form-control
-				class="hidden"
-				type="file"
-				nwdirectory
 				ref="game-install-dir"
-				/> -->
+				/>
 
 			<div class="pull-right">
 				<button class="btn btn-sm btn-outline" @click="changeLocation( 'game-install-dir' )">
