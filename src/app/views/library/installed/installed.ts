@@ -1,18 +1,14 @@
-import VueRouter from 'vue-router';
+import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import * as View from '!view!./installed.html';
+
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import { State } from 'vuex-class';
-import {
-	RouteResolve,
-	BaseRouteComponent,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
+import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Store } from '../../../store/index';
-import { arrayGroupBy } from '../../../../lib/gj-lib-client/utils/array';
-import { AppGameThumbnail } from '../../../components/game/thumbnail/thumbnail';
-import { AppClientGameButtons } from '../../../components/client/game-buttons/game-buttons';
 import { AppAlertDismissable } from '../../../../lib/gj-lib-client/components/alert/dismissable/dismissable';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppLibraryInstalledGame } from './_game/game';
+import { AppPageHeader } from '../../../components/page-header/page-header';
 
 @View
 @Component({
@@ -20,23 +16,15 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 	components: {
 		AppAlertDismissable,
 		AppJolticon,
-		AppGameThumbnail,
-		AppClientGameButtons,
+		AppPageHeader,
+		AppLibraryInstalledGame,
 	},
 })
 export default class RouteLibraryInstalled extends BaseRouteComponent {
 	@State clientLibrary: Store['clientLibrary'];
 
-	isHovering = false;
-	isShowingOptions = false;
-	isShowingLaunchOptions = false;
-
 	get games() {
 		return this.clientLibrary.games;
-	}
-
-	get packagesByGameId() {
-		return this.clientLibrary.packagesByGameId;
 	}
 
 	get gamesByTitle() {
@@ -45,24 +33,7 @@ export default class RouteLibraryInstalled extends BaseRouteComponent {
 		});
 	}
 
-	get installingGames() {
-		const packages = this.clientLibrary.packages.filter(localPackage => {
-			return !!localPackage.install_state;
-		});
-		return arrayGroupBy(packages, 'game_id');
-	}
-
-	get updatingGames() {
-		const packages = this.clientLibrary.packages.filter(localPackage => {
-			return !!localPackage.update_state;
-		});
-		return arrayGroupBy(packages, 'game_id');
-	}
-
 	routeInit() {
 		Meta.title = this.$gettext('library.installed.page_title');
 	}
-
-	@RouteResolve()
-	async routeResolve(this: undefined, _route: VueRouter.Route) {}
 }

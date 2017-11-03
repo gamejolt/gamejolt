@@ -1,15 +1,26 @@
 <div>
-	<header class="section">
-		<div class="container">
-
-			<h1><translate>library.installed.heading</translate></h1>
-			<br><br>
-
-		</div>
-	</header>
+	<app-page-header>
+		<h1><translate>library.installed.heading</translate></h1>
+		<br>
+	</app-page-header>
 
 	<section class="section">
 		<div class="container">
+
+			<app-alert-dismissable
+				alert-type="info"
+				dismiss-key="library.install-location-msg"
+				>
+				<app-jolticon icon="info-circle" />
+				<translate
+					translate-comment="Short message to remind them that they can change install location at any time in their settings."
+					>
+					You can change the location where games are installed at any time in your settings.
+				</translate>
+				<router-link :to="{ name: 'settings' }">
+					<translate>Go to Settings?</translate>
+				</router-link>
+			</app-alert-dismissable>
 
 			<div class="alert alert-warning" v-if="!games.length">
 				<translate
@@ -18,78 +29,13 @@
 					library.installed.no_games_message
 				</translate>
 			</div>
-
-			<app-alert-dismissable alert-type="info" dismiss-key="library.install-location-msg">
-				<app-jolticon icon="info-circle" />
-				<translate
-					translate-comment="Short message to remind them that they can change install location at any time in their settings."
-					>
-					You can change the location where games are installed at any time in your settings.
-				</translate>
-				<router-link :to="{ name: 'settings' }"><translate>Go to Settings?</translate></router-link>
-			</app-alert-dismissable>
-
-			<div class="row" v-if="games.length">
-
-				<!--
-					We have to pull the z-index for any game that is showing options to be in front.
-					This way the dropdowns always show over other games.
-				-->
-				<div
+			<div class="row" v-else>
+				<div class="col-md-6 col-lg-4 "
 					v-for="game of gamesByTitle"
 					:key="game.id"
-					@mouseenter="isHovering = true"
-					@mouseleave="isHovering = false"
-					class="col-md-6 col-lg-4 client-installed-game game-thumbnail-anim"
-					:class="{ installing: installingGames[ game.id ] && installingGames[ game.id ].length }"
-					:style="{ 'z-index': isShowingOptions || isShowingLaunchOptions ? 2 : undefined }"
 					>
-
-					<app-game-thumbnail :game="game._game" />
-
-					<!--
-						Try to reduce the # of watchers on page.
-					-->
-					<div class="client-installed-game-meta-outer"
-						v-if="isHovering
-							|| isShowingOptions
-							|| isShowingLaunchOptions
-							|| (installingGames[ game.id ] && installingGames[ game.id ].length)
-							|| (updatingGames[ game.id ] && updatingGames[ game.id ].length)"
-						>
-						<div class="client-installed-game-meta">
-							<!-- TODO(rewrite,cros) CSS for overlay buttons seems broken -->
-							<app-client-game-buttons
-								:game="game._game"
-								:overlay="true"
-								@show-options="isShowingOptions = true"
-								@hide-options="isShowingOptions = false"
-								@show-launch-options="isShowingLaunchOptions = true"
-								@hide-launch-options="isShowingLaunchOptions = false"
-
-								:has-installable-builds="true"
-								:can-install="true"
-								/>
-
-							<span
-								class="client-installed-game-version"
-								v-if="packagesByGameId[ game.id ].length == 1"
-								>
-								{{ packagesByGameId[ game.id ][ 0 ].release.version_number }}
-							</span>
-
-							<translate
-								class="client-installed-game-version"
-								v-if="packagesByGameId[ game.id ].length > 1"
-								translate-comment="This shows instead of a version number for a game on the installed games page if there are multiple packages installed for the game."
-								>
-								library.installed.multiple_packages
-							</translate>
-						</div>
-					</div>
-
+					<app-library-installed-game :game="game" />
 				</div>
-
 			</div>
 
 		</div>

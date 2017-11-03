@@ -1,0 +1,40 @@
+<div
+	class="client-installed-game"
+	:class="{
+		'-is-installing': isInstalling,
+		'-is-active': isShowingOptions || isShowingLaunchOptions,
+	}"
+	@mouseenter="isHovering = true"
+	@mouseleave="isHovering = false"
+	>
+
+	<app-game-thumbnail :game="game._game" />
+
+	<!--
+		Try to reduce the # of watchers on page.
+	-->
+	<div class="-meta-outer" v-if="shouldShowControls">
+		<div class="-meta">
+			<app-client-game-buttons
+				:game="game._game"
+				:overlay="true"
+				@show-options="isShowingOptions = true"
+				@hide-options="isShowingOptions = false"
+				@show-launch-options="isShowingLaunchOptions = true"
+				@hide-launch-options="isShowingLaunchOptions = false"
+				:has-installable-builds="true"
+				:can-install="true"
+				/>
+
+			<span class="-version">
+				<template v-if="!hasMultiplePackages">
+					{{ packageVersion }}
+				</template>
+				<template v-else>
+					<translate>library.installed.multiple_packages</translate>
+				</template>
+			</span>
+		</div>
+	</div>
+
+</div>
