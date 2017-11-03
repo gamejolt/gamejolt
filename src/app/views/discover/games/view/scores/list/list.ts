@@ -93,9 +93,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 
 	routed($payload: any) {
 		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
-		this.scoreTable = $payload.scoreTable
-			? new GameScoreTable($payload.scoreTable)
-			: null;
+		this.scoreTable = $payload.scoreTable ? new GameScoreTable($payload.scoreTable) : null;
 		this.scores = UserGameScore.populate($payload.scores);
 		this.userBestScore = $payload.scoresUserBestScore
 			? new UserGameScore($payload.scoresUserBestScore)

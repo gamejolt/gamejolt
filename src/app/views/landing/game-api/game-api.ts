@@ -32,8 +32,6 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 	routed($payload: any) {
 		this.totalScores = $payload.totalScores || 0;
 		this.totalAchievedTrophies = $payload.totalAchievedTrophies || 0;
-		this.sessionTime = $payload.sessionTime
-			? Math.floor($payload.sessionTime / 60 / 60)
-			: 0;
+		this.sessionTime = $payload.sessionTime ? Math.floor($payload.sessionTime / 60 / 60) : 0;
 	}
 }
