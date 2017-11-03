@@ -1,13 +1,13 @@
-import * as gui from 'nw.gui';
-import { ClientControl } from '../control/client.service';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
+import { ClientControl } from '../control/client.service';
+import { Window, Menu, App } from 'nw.gui';
 
 @Component({})
 export class AppClientMacAppMenu extends Vue {
 	mounted() {
-		const win = gui.Window.get();
-		const menu = new gui.Menu({ type: 'menubar' });
+		const win = Window.get();
+		const menu = new Menu({ type: 'menubar' });
 
 		menu.createMacBuiltin('Game Jolt Client');
 
@@ -25,9 +25,7 @@ export class AppClientMacAppMenu extends Vue {
 
 		// reopen is Mac specific
 		// When they click the dock, we need to show it in case they hid it with the close.
-		gui.App.on('reopen', function() {
-			ClientControl.show();
-		});
+		App.on('reopen', () => ClientControl.show());
 	}
 
 	render(h: Vue.CreateElement) {

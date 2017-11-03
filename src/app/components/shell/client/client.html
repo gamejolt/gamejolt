@@ -1,4 +1,5 @@
 <div>
-	<app-client-tray v-if="Device.os() === 'windows'" />
-	<app-client-mac-app-menu v-else-if="Device.os() === 'mac'" />
+	<app-client-hidpi v-if="os === 'linux'" />
+	<app-client-tray v-if="os === 'windows'" />
+	<app-client-mac-app-menu v-if="os === 'mac'" />
 </div>
