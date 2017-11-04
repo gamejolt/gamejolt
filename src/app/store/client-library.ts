@@ -332,27 +332,26 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		Vue.delete(this.currentlyPatching, localPackage.id + '');
 	}
 
-	get currentPatchingProgress() {
+	get totalPatchProgress() {
 		if (!this.numPatching) {
 			return null;
 		}
 
 		let currentProgress = 0;
 		let numPatching = this.numPatching;
-		for (let packageIdStr in this.currentlyPatching) {
-			const packageId = parseInt(packageIdStr, 10);
-			const pkg = this.packagesById[packageId];
-			const progress = pkg.patchProgress;
+		for (let packageId in this.currentlyPatching) {
+			const progress = this.packagesById[packageId].patchProgress;
 
-			// If the progress is null, we don't count that package progress as part of the total progress,
-			// because it means there was some unexpected error with the stored package.
-			if (progress == null) {
+			// If the progress is null, we don't count that package progress as part of the total
+			// progress, because it means there was some unexpected error with the stored package.
+			if (progress === null) {
 				numPatching -= 1;
 				continue;
 			}
 
 			currentProgress += progress;
 		}
+
 		return currentProgress / numPatching;
 	}
 

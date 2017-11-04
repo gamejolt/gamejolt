@@ -308,17 +308,3 @@ store.watch(
 		}
 	}
 );
-
-if (GJ_IS_CLIENT) {
-	store.watch(
-		state => state.clientLibrary.currentPatchingProgress,
-		progress => {
-			if (progress === null) {
-				ClientControl.clearProgressBar();
-				return;
-			}
-
-			ClientControl.setProgressBar(progress);
-		}
-	);
-}

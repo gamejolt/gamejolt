@@ -6,6 +6,7 @@ import { AppClientTray } from '../../client/tray/tray';
 import { AppClientMacAppMenu } from '../../client/mac-app-menu/mac-app-menu';
 import { AppClientHidpi } from '../../client/hidpi/hidpi';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
+import { AppClientSystemProgress } from '../../client/system-progress/system-progress';
 
 @View
 @Component({
@@ -13,6 +14,7 @@ import { Device } from '../../../../lib/gj-lib-client/components/device/device.s
 		AppClientHidpi,
 		AppClientTray,
 		AppClientMacAppMenu,
+		AppClientSystemProgress,
 	},
 })
 export class AppClient extends Vue {
