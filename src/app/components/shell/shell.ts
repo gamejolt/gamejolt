@@ -32,7 +32,9 @@ const components: { [key: string]: VComponent | AsyncComponent } = {
 };
 
 if (GJ_IS_CLIENT) {
-	components.AppClient = require('./client/client').AppClient;
+	components.AppClient = () => import('./client/client').then(m => m.AppClient);
+	components.AppClientStatusBar = () =>
+		import('../client/status-bar/status-bar').then(m => m.AppClientStatusBar);
 }
 
 @View

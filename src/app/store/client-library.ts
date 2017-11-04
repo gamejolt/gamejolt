@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { State, namespace, Action, Mutation, Getter } from 'vuex-class';
 import {
 	LocalDbPackage,
@@ -49,7 +50,7 @@ import { GameBuildLaunchOption } from '../../lib/gj-lib-client/components/game/b
 import { DbFieldMapping as PackageDbFields } from '../components/client/local-db/package/package.model';
 import { DbFieldMapping as GameDbFields } from '../components/client/local-db/game/game.model';
 import { EventBus } from '../../lib/gj-lib-client/components/event-bus/event-bus.service';
-import { arrayRemove } from '../../lib/gj-lib-client/utils/array';
+import { arrayRemove, arrayIndexBy, arrayGroupBy } from '../../lib/gj-lib-client/utils/array';
 import { Device } from '../../lib/gj-lib-client/components/device/device.service';
 
 const sanitize = require('sanitize-filename');
@@ -277,34 +278,15 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	get packagesById() {
-		console.log('Fetching packages by id');
-		return this.packages.reduce<{
-			[packageId: number]: LocalDbPackage;
-		}>((accum, _package) => {
-			accum[_package.id] = _package;
-			return accum;
-		}, {});
+		return arrayIndexBy(this.packages, 'id');
 	}
 
 	get gamesById() {
-		return this.games.reduce<{
-			[gameId: number]: LocalDbGame;
-		}>((accum, game) => {
-			accum[game.id] = game;
-			return accum;
-		}, {});
+		return arrayIndexBy(this.games, 'id');
 	}
 
 	get packagesByGameId() {
-		return this.packages.reduce<{
-			[gameId: number]: LocalDbPackage[];
-		}>((accum, _package) => {
-			if (!accum[_package.game_id]) {
-				accum[_package.game_id] = [];
-			}
-			accum[_package.game_id].push(_package);
-			return accum;
-		}, {});
+		return arrayGroupBy(this.packages, 'game_id');
 	}
 
 	/**
@@ -341,13 +323,13 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		[localPackage, patchInstance]: Mutations['clientLibrary/setCurrentlyPatching']
 	) {
 		if (!this.currentlyPatching[localPackage.id]) {
-			this.currentlyPatching[localPackage.id] = patchInstance;
+			Vue.set(this.currentlyPatching, localPackage.id + '', patchInstance);
 		}
 	}
 
 	@VuexMutation
 	private unsetCurrentlyPatching(localPackage: Mutations['clientLibrary/unsetCurrentlyPatching']) {
-		delete this.currentlyPatching[localPackage.id];
+		Vue.delete(this.currentlyPatching, localPackage.id + '');
 	}
 
 	get currentPatchingProgress() {
@@ -359,7 +341,8 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		let numPatching = this.numPatching;
 		for (let packageIdStr in this.currentlyPatching) {
 			const packageId = parseInt(packageIdStr, 10);
-			const progress = this.getPackagePatchProgress(packageId);
+			const pkg = this.packagesById[packageId];
+			const progress = pkg.patchProgress;
 
 			// If the progress is null, we don't count that package progress as part of the total progress,
 			// because it means there was some unexpected error with the stored package.
@@ -439,17 +422,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			key = GameDbFields[key];
 			localGame[key] = fields[key]!;
 		}
-	}
-
-	@VuexGetter
-	getPackagePatchProgress(packageId: number) {
-		const localPackage = this.packages[packageId];
-		if (localPackage.download_progress) {
-			return localPackage.download_progress.progress;
-		} else if (localPackage.unpack_progress) {
-			return localPackage.unpack_progress.progress;
-		}
-		return null;
 	}
 
 	@VuexAction
@@ -577,7 +549,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				}
 
 				// Get the number of packages in this game.
-				const count = await db.packages.where('game_id').equals(localPackage.game_id).count();
+				const count = await db.packages
+					.where('game_id')
+					.equals(localPackage.game_id)
+					.count();
 
 				await db.transaction('rw', [db.games, db.packages], async () => {
 					// Note that some times a game is removed before the package (really weird cases).
@@ -1106,6 +1081,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		return this.currentlyPlaying.map(localPackage => localPackage.id);
 	}
 
+	get numPlaying() {
+		return this.currentlyPlaying.length;
+	}
+
 	@VuexMutation
 	setCurrentlyPlaying(localPackage: Mutations['clientLibrary/setCurrentlyPlaying']) {
 		this.currentlyPlaying.push(localPackage);
@@ -1113,7 +1092,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 	@VuexMutation
 	unsetCurrentlyPlaying(localPackage: Mutations['clientLibrary/unsetCurrentlyPlaying']) {
-		arrayRemove(this.currentlyPlaying, localPackage2 => localPackage.id === localPackage2.id);
+		arrayRemove(this.currentlyPlaying, i => localPackage.id === i.id);
 	}
 
 	@VuexAction

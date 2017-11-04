@@ -12,10 +12,6 @@
 	@media $media-sm-up
 		width: $shell-pane-width
 
-	// When things in the hot bottom are active, we need to move up the pane bottoms.
-	body.status-bar-visible &
-		bottom: $status-bar-height
-
 	body.status-bar-visible &
 		bottom: $status-bar-height
 
@@ -27,30 +23,29 @@
 	left: auto
 	right: 0
 
-.right-pane-visible .shell-pane-left
-.right-pane-visible .shell-sidebar
+.right-pane-visible .shell-pane-left, .right-pane-visible .shell-sidebar
 	z-index: $zindex-shell-pane-under !important
 
 // When we are hiding the pane and showing the content again, we want to also
 // keep it visible during this time.
 // To do that, we hook into the main shell removal animation.
-#shell.left-pane-visible-remove .shell-pane
-#shell.right-pane-visible-remove .shell-pane
+#shell.left-pane-visible-remove .shell-pane, #shell.right-pane-visible-remove .shell-pane
 	display: block
 
 // Pane slide transitions
 .shell-pane-left
 	transform: translateX(-100%)
+
 	.left-pane-visible &
 		transform: translateX(0)
 
 .shell-pane-right
 	transform: translateX(100%)
+
 	.right-pane-visible &
 		transform: translateX(0)
 
 @media $media-sm-up
-
 	// On sm-up left pane is always visible.
 	.shell-pane-left
 		transform: translateX(0)

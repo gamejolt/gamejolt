@@ -1,0 +1,11 @@
+<app-progress-bar
+	:percent="(pkg.patchProgress || 0) * 100"
+	thin
+	:class="{
+		'progress-success': pkg.isInstalling,
+		'progress-darker': pkg.isUpdating,
+	}"
+	:style="{ width }"
+	:active="pkg.isUnpacking"
+	:indeterminate="pkg.isUnpacking"
+	/>

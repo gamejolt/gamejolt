@@ -34,7 +34,7 @@
 
 	<app-shell-hot-bottom>
 		<app-minbar v-show="!isRightPaneVisible" />
-		<!--<gj-client-status-bar></gj-client-status-bar>-->
+		<app-client-status-bar v-if="GJ_IS_CLIENT" />
 	</app-shell-hot-bottom>
 
 </div>

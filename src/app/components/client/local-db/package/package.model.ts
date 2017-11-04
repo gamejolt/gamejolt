@@ -283,6 +283,15 @@ export class LocalDbPackage {
 		return this.remove_state === RemoveState.REMOVING;
 	}
 
+	get patchProgress() {
+		if (this.download_progress) {
+			return this.download_progress.progress;
+		} else if (this.unpack_progress) {
+			return this.unpack_progress.progress;
+		}
+		return null;
+	}
+
 	setData(
 		package_: GamePackage,
 		release: GameRelease,
