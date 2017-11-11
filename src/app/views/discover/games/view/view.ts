@@ -189,7 +189,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	scrollToPackagePayment(package_: GamePackage) {
-		console.log(package_);
 		Scroll.to(`game-package-card-${package_.id}`);
 		EventBus.emit('GamePackageCard.showPaymentOptions', package_);
 	}

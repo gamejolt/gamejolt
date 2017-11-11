@@ -98,7 +98,7 @@ export class AppClientGameButtons extends Vue {
 			// Should we both emit show-multiple-packages which causes the scroll AND open the modal?
 			ClientInstallPackageModal.show(this.game);
 
-			this.$emit('show-multiple-packages');
+			// this.$emit('show-multiple-packages');
 			return;
 		}
 

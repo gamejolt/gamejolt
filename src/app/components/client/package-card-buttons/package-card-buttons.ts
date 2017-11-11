@@ -131,10 +131,10 @@ export class AppClientPackageCardButtons extends Vue {
 	}
 
 	installClick(build: GameBuild) {
-		// TODO(rewrite) this is called every time, should only be called for paid non owned and maybe pwyw packages
-		// if (this.parent.showPayment(build)) {
-		// 	return;
-		// }
+		if (build._package!.shouldShowNamePrice()) {
+			this.$emit('show-build-payment', build);
+			return;
+		}
 
 		this.startInstall(build);
 	}
