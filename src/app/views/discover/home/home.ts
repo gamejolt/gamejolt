@@ -19,7 +19,6 @@ import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/plac
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
-import { AppDiscoverHomeBanner } from './_banner/banner';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -43,7 +42,6 @@ export interface DiscoverRow {
 		AppGameGridPlaceholder,
 		AppChannelThumbnail,
 		AppAdPlacement,
-		AppDiscoverHomeBanner,
 		AppAuthJoin: AppAuthJoinLazy,
 	},
 	directives: {
