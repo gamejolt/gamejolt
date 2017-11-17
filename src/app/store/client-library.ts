@@ -322,6 +322,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private setCurrentlyPatching(
 		[localPackage, patchInstance]: Mutations['clientLibrary/setCurrentlyPatching']
 	) {
+		console.log('set: currentlyPatching ' + localPackage.id);
 		if (!this.currentlyPatching[localPackage.id]) {
 			Vue.set(this.currentlyPatching, localPackage.id + '', patchInstance);
 		}
@@ -329,6 +330,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 	@VuexMutation
 	private unsetCurrentlyPatching(localPackage: Mutations['clientLibrary/unsetCurrentlyPatching']) {
+		console.log('unset: currentlyPatching ' + localPackage.id);
 		Vue.delete(this.currentlyPatching, localPackage.id + '');
 	}
 
@@ -359,22 +361,24 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private setCurrentlyUninstalling(
 		[localPackage, uninstallPromise]: Mutations['clientLibrary/setCurrentlyUninstalling']
 	) {
+		console.log('set: currentlyUninstalling ' + localPackage.id);
 		if (this.currentlyUninstalling[localPackage.id]) {
 			return;
 		}
 
-		this.currentlyUninstalling[localPackage.id] = uninstallPromise;
+		Vue.set(this.currentlyUninstalling, localPackage.id + '', uninstallPromise);
 	}
 
 	@VuexMutation
 	private unsetCurrentlyUninstalling(
 		localPackage: Mutations['clientLibrary/unsetCurrentlyUninstalling']
 	) {
+		console.log('unset: currentlyUninstalling ' + localPackage.id);
 		if (!this.currentlyUninstalling[localPackage.id]) {
 			return;
 		}
 
-		delete this.currentlyUninstalling[localPackage.id];
+		Vue.delete(this.currentlyUninstalling, localPackage.id + '');
 	}
 
 	@VuexAction
@@ -486,11 +490,17 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	async packageUninstall(
 		[localPackage, dbOnly]: Actions['clientLibrary/packageUninstall']
 	): ReturnTypePackageUninstall {
+		console.log(
+			'packageUninstall: executed for package ' +
+				localPackage.id +
+				'. db only: ' +
+				(dbOnly ? 'yes' : 'no')
+		);
 		// We just use this so they don't click "uninstall" twice in a row.
 		// No need to save to the DB.
 		let currentlyUninstalling = this.currentlyUninstalling[localPackage.id];
 		if (currentlyUninstalling) {
-			console.log('Not doing uninstall again because already uninstalling');
+			console.log('packageUninstall: already handling an uninstallation for this package. noop.');
 			return currentlyUninstalling;
 		}
 
@@ -499,30 +509,33 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		// Basically if there is a node tick that doesn't 'use' or 'wait on' an indexeddb transaction operation the transaction auto commits,
 		// so we can't do things like asyncronously waiting on filesystem. Therefore we had to split the transaction into chunks.
 		currentlyUninstalling = (async () => {
-			// Are we removing a current install?
+			// Are we removing a FIRST install?
 			const wasInstalling = localPackage.isInstalling;
-
-			// Used to abort the promise chain in the middle.
-			let abortAll = false;
 
 			let localGame: LocalDbGame | undefined;
 
 			try {
-				// Cancel any installs first.
-				// It may or may not be patching.
-				const isCurrentlyPatching = await this.installerCancel(localPackage);
-
-				// If uninstalling has to interrupt a patch operation that is curerntly in progress
-				// we abort the uninstall promise because it'll be called again from the client installer's promise chain.
-				// We need to make sure the uninstall promise doesn't exist by then.
-				// TODO: This is a horrible hack we're going to put up with until the overhaul in the vue codebase.
-				// Get rid of this asap, this flow is ridiculous
-				if (isCurrentlyPatching) {
-					abortAll = true;
-					this.unsetCurrentlyUninstalling(localPackage);
-					throw new Error(
-						'The package uninstall promise chain is aborted. If this was thrown, aborting was not handled correctly.'
-					);
+				// When cancelling a first installation it will end up calling packageUninstall
+				// with dbOnly set to true. In this case joltron will uninstall the package on it's own,
+				// so all we need to do here is clean the package and game if necessary from the indexeddb.
+				// So we only attempt to do installerCancel (which interacts with joltron) if its NOT
+				// a first installation cancellation (dbOnly would be false)
+				if (!dbOnly) {
+					// if no installation or update is currently in progress this will return false immediately,
+					// otherwise it'll await until the cancel message is SENT.
+					// it won't wait for the cancel to be acknowledged and processed,
+					// when the cancel is processed by the installerInstall promise chain,
+					// it'll result in a second call to packageUninstall this time with dbOnly set to true if its
+					// a first installation, or a rollback operation for update operations.
+					// Either way this means we shouldn't continue this uninstallation promise chain.
+					const interruptedPatch = await this.installerCancel(localPackage);
+					if (interruptedPatch) {
+						// We unset the uninstallation because otherwise the second time we call packageUninstall
+						// (for first installations) it'll be a noop instead of actually cleaning the package
+						// from localdb. In case of rollback its not really an uninstallation state either.
+						this.unsetCurrentlyUninstalling(localPackage);
+						return;
+					}
 				}
 
 				// We refetch from db because if cancelling a first installation it might remove the local game from the db.
@@ -548,10 +561,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				}
 
 				// Get the number of packages in this game.
-				const count = await db.packages
-					.where('game_id')
-					.equals(localPackage.game_id)
-					.count();
+				const count = await db.packages.where('game_id').equals(localPackage.game_id).count();
 
 				await db.transaction('rw', [db.games, db.packages], async () => {
 					// Note that some times a game is removed before the package (really weird cases).
@@ -585,11 +595,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 					);
 				}
 			} catch (err) {
-				console.error(err);
-				if (abortAll) {
-					return;
-				}
-
 				if (wasInstalling) {
 					Growls.error('Could not stop the installation.');
 				} else {
@@ -709,9 +714,15 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				);
 			}
 
-			// If we were paused before, let's resume.
-			// This happens if they paused, then restarted client. The patch would still be paused
-			// but if they click resume we want to start a new install again.
+			// This is a very specific edge case.
+			// Normally when you pause an installation/update, the joltron process hangs around.
+			// This allows us to resume it easily with the installerResume function that simply
+			// sends the existing process a resume message and continue with its existing promise chain.
+			// However, if the operation was paused and the client was closed, when the user boots the client
+			// back up again it'll attempt to retry all the installations that were in progress automatically
+			// by calling installerRetry, which will end up calling this method.
+			// Issue is that the package status will still be paused from the previous run so we need to
+			// flick it back to resumed before continuing.
 			if (localPackage.isPatchPaused) {
 				await localPackage.setPatchResumed();
 			}
@@ -724,7 +735,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 				const listeners: Partial<PatchEvents> = {};
 				const cleanupListeners = () => {
-					// Remove all listeners we bound to patch instance so it won't update the local package after the operation is done.
+					// Remove all listeners we bound to patch instance so it won't update the
+					// local package after the operation is done.
+					// This addresses a race condition where we might receive a message from joltron
+					// while trying to remove the package model from indexeddb. reciving a message
+					// will attempt to update the localdb model but since updates are basically upserts
+					// it might re-add a package we just removed!
 					for (let i_event in listeners) {
 						const event: keyof PatchEvents = i_event as any;
 						patchInstance.removeListener(event, listeners[event]!);
@@ -867,22 +883,23 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				const title = operation === 'install' ? 'Game Installed' : 'Game Updated';
 				Growls.success(`${packageTitle} has ${action}.`, title);
 			} else {
-				console.log('Canceling running installation/update');
-				console.log(localPackage);
-				console.log(localPackage.install_state);
-
+				console.log('installerInstall: Handling canceled installation');
 				// If we were cancelling the first installation - we have to treat the package as uninstalled.
+				// By this point we can assume joltron has removed it from disk.
 				if (operation === 'install') {
-					console.log('Canceled a first installation, Marking as uninstalled from db');
+					console.log(
+						'installerInstall: This is a first installation. Marking as uninstalled from db with packageUninstall(true)'
+					);
 
 					// Calling uninstall normally attempts to spawn a client voodoo uninstall instance.
 					// Override that because the uninstallation should be done automatically by the installation process.
 					await localPackage.uninstall(true);
 				} else {
-					console.log('Canceled an update operation. Attempting to rollback.');
+					console.log(
+						'installerInstall: This is an update operation. Attempting to rollback with installerRollback'
+					);
 					try {
 						await this.installerRollback(localPackage);
-						await localPackage.setUpdateAborted();
 						Growls.success(`${packageTitle} aborted the update.`, 'Update Aborted');
 					} catch (err) {
 						if (localPackage.update_state === PatchState.UNPACKING) {
@@ -956,14 +973,16 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	async installerCancel(
 		localPackage: Actions['clientLibrary/installerCancel']
 	): ReturnTypeInstallerCancel {
+		console.log('installerCancel: executed for package ' + localPackage.id);
 		const patchInstance = this.currentlyPatching[localPackage.id];
 		if (!patchInstance) {
+			console.log('installerCancel: no currently running installation/updates for package');
 			return false;
 		}
 
-		console.log('Cancelling running installation');
-		await patchInstance.cancel();
-		console.log('Cancelled running installation');
+		console.log('installerCancel: found running installation/update. sending cancel');
+		await patchInstance.cancel(true);
+		console.log('installerCancel: cancel sent');
 		return true;
 	}
 

@@ -86,7 +86,7 @@ export class AppClientGameButtons extends Vue {
 		Analytics.trackEvent('client-game-buttons', 'install');
 
 		if (!this.packageDataPromise) {
-			this.packageDataPromise = this._install();
+			this.packageDataPromise = this.fetchPackageData();
 		}
 
 		const packageData = await this.packageDataPromise;
@@ -120,7 +120,7 @@ export class AppClientGameButtons extends Vue {
 		]);
 	}
 
-	private async _install() {
+	private async fetchPackageData() {
 		const payload = await Api.sendRequest('/web/discover/games/packages/' + this.game.id);
 
 		const packageData = new GamePackagePayloadModel(payload);

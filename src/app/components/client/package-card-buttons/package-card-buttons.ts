@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./package-card-buttons.html';
+import * as View from '!view!./package-card-buttons.html?style=./package-card-buttons.styl';
 import { PatchState, LocalDbPackage } from '../local-db/package/package.model';
 import { GameBuild } from '../../../../lib/gj-lib-client/components/game/build/build.model';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
@@ -25,6 +25,9 @@ import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popo
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppClientInstallProgress } from '../install-progress/install-progress';
 import { AppGamePackageCardMoreOptions } from '../../../../lib/gj-lib-client/components/game/package/card/more-options';
+import * as fs from 'fs';
+import * as path from 'path';
+import gui from 'nw.gui';
 
 @View
 @Component({
@@ -194,6 +197,22 @@ export class AppClientPackageCardButtons extends Vue {
 
 		Analytics.trackEvent('game-package-card', 'launch');
 		this.launcherLaunch(this.localPackage);
+	}
+
+	openFolder() {
+		if (!this.localPackage) {
+			throw new Error(`Local package isn't set`);
+		}
+
+		fs.readdir(path.resolve(this.localPackage.install_dir), (err, files) => {
+			if (err) {
+				return;
+			}
+
+			// Just open the first file in the folder.
+			// This way we open within the package folder instead of the parent folder.
+			gui.Shell.showItemInFolder(path.resolve(this.localPackage!.install_dir, files[0]));
+		});
 	}
 
 	uninstall() {

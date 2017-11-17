@@ -39,11 +39,7 @@
 	</template>
 
 	<!-- Able to install game -->
-	<button
-		class="btn btn-success-outline"
-		v-if="canInstall && !localPackage"
-		@click="installClick( card.downloadableBuild )"
-		>
+	<button class="btn btn-success-outline" v-if="canInstall && !localPackage" @click="installClick( card.downloadableBuild )">
 		<app-jolticon icon="download-box" />
 		<translate>Install</translate>
 		<small>({{ card.downloadableBuild.primary_file.filesize | filesize }})</small>
@@ -61,24 +57,18 @@
 			</app-expand>
 
 			<template v-if="localPackage.isPatchQueued">
-				<span class="tag tag-blue big"><translate>QUEUED</translate></span>
+				<span class="tag tag-blue big">
+					<translate>QUEUED</translate>
+				</span>
 			</template>
 			<template v-else>
 
-				<button
-					v-if="!localPackage.isPatchPaused"
-					@click="pauseInstall()"
-					class="btn btn-outline"
-					>
+				<button v-if="!localPackage.isPatchPaused" @click="pauseInstall()" class="btn btn-outline">
 					<app-jolticon icon="pause" />
 					<translate>Pause</translate>
 				</button>
 
-				<button
-					v-else
-					@click="resumeInstall()"
-					class="btn btn-outline"
-					>
+				<button v-else @click="resumeInstall()" class="btn btn-outline">
 					<app-jolticon icon="play-small" />
 					<translate>Resume</translate>
 				</button>
@@ -86,41 +76,24 @@
 		</template>
 
 		<!-- Game failed to install -->
-		<button
-			v-if="localPackage.didInstallFail"
-			@click="retryInstall()"
-			class="btn btn-outline"
-			>
+		<button v-if="localPackage.didInstallFail" @click="retryInstall()" class="btn btn-outline">
 			<translate>Retry Install</translate>
 		</button>
 
 		<!-- Game failed to update -->
-		<button
-			v-if="localPackage.didUpdateFail"
-			@click="retryInstall()"
-			class="btn btn-outline"
-			>
+		<button v-if="localPackage.didUpdateFail" @click="retryInstall()" class="btn btn-outline">
 			<translate>Retry Update</translate>
 		</button>
 
 		<!--
 			Can only cancel installs, not updates.
 		-->
-		<button
-			v-if="localPackage.install_state"
-			@click="cancelInstall()"
-			v-app-tooltip="$gettext('Cancel Installation')"
-			class="btn btn-danger-outline btn-sparse"
-			>
+		<button v-if="localPackage.install_state" @click="cancelInstall()" v-app-tooltip="$gettext('Cancel Installation')" class="btn btn-danger-outline btn-sparse">
 			<app-jolticon icon="remove" />
 		</button>
 
 		<!-- Game is installed -->
-		<button
-			v-if="localPackage.isSettled && !localPackage.isRunning"
-			@click="launchPackage()"
-			class="btn btn-primary-outline"
-			>
+		<button v-if="localPackage.isSettled && !localPackage.isRunning" @click="launchPackage()" class="btn btn-primary-outline">
 			<app-jolticon icon="play" />
 			<translate>Launch</translate>
 		</button>
@@ -132,16 +105,10 @@
 		We hide this as soon as they install the game.
 	-->
 	<template v-else-if="card.browserBuild">
-		<button
-			@click="buildClick(card.browserBuild)"
-			class="btn btn-primary-outline"
-			>
+		<button @click="buildClick(card.browserBuild)" class="btn btn-primary-outline">
 			<app-jolticon icon="play" />
 			<translate>Quick Play</translate>
-			<app-jolticon
-				icon="addon"
-				:class="`jolticon-${card.showcasedBrowserIcon}`"
-				/>
+			<app-jolticon icon="addon" :class="`jolticon-${card.showcasedBrowserIcon}`" />
 		</button>
 	</template>
 
@@ -150,59 +117,53 @@
 		button with a [...] after.
 		If the package has normal builds too, then we just show it as a more options sparse button.
 	-->
-	<button
-		v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)"
-		v-app-popover-trigger="`game-package-card-more-options-${ package.id }`"
-		v-app-track-event="`game-package-card:more-options`"
-		class="btn btn-outline"
-		>
+	<button v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)" v-app-popover-trigger="`game-package-card-more-options-${ package.id }`"
+	 v-app-track-event="`game-package-card:more-options`" class="btn btn-outline">
 		<app-jolticon icon="ellipsis-h" />
 		<translate>options</translate>
 	</button>
 
 	<app-popover :popover-id="`game-package-card-more-options-${package.id}`">
 
-		<template v-if="localPackage && (card.browserBuild || (!localPackage.install_state && !localPackage.isRemoving))">
-			<div class="list-group nowrap">
+		<template v-if="localPackage && (card.browserBuild || localPackage.isSettled)">
+			<div class="more-client-options list-group list-group-dark nowrap">
 
-				<!--
-					In client, if a package is installed, allow them to remove.
-				-->
-				<a
-					v-if="localPackage && !localPackage.install_state && !localPackage.isRemoving"
-					@click="uninstall()"
-					:class="{ disabled: localPackage.isRunning }"
-					class="list-group-item has-icon warning"
-					>
-					<app-jolticon icon="remove" :warning="true" />
-					<translate>Uninstall</translate>
-				</a>
+				<template v-if="localPackage.isSettled">
+					<a class="list-group-item has-icon" @click="openFolder()">
+						<app-jolticon icon="folder-open" />
+						<span v-translate="{ title: localPackage.title || game.title }">
+							Open Folder for %{ title }
+						</span>
+					</a>
+
+					<!--
+						In client, if a package is installed, allow them to remove.
+					-->
+					<a @click="uninstall()" :class="{ disabled: localPackage.isRunning }" class="list-group-item has-icon warning">
+						<app-jolticon icon="remove" :warning="true" />
+						<translate>Uninstall</translate>
+					</a>
+				</template>
 
 				<!--
 					If this game has a quick play web build but is installed, we want
 					to show the quick play here now.
 				-->
-				<a
-					v-if="localPackage && card.browserBuild"
-					@click="buildClick(card.browserBuild)"
-					class="list-group-item has-icon warning"
-					>
-					<app-jolticon icon="html5" />
-					<translate>Quick Play</translate>
-					<small class="text-muted">({{ card.browserBuild.primary_file.filesize | filesize }})</small>
-				</a>
+				<template v-else-if="card.browserBuild">
+					<a @click="buildClick(card.browserBuild)" class="list-group-item has-icon warning">
+						<app-jolticon icon="html5" />
+						<translate>Quick Play</translate>
+						<small class="text-muted">({{ card.browserBuild.primary_file.filesize | filesize }})</small>
+					</a>
+				</template>
 
 			</div>
-			<br>
 		</template>
 
 		<!--
 			The non-client options.
 		-->
-		<app-game-package-card-more-options
-			:card="card"
-			@click="buildClick( $event, true )"
-			/>
+		<app-game-package-card-more-options :card="card" @click="buildClick( $event, true )" />
 
 	</app-popover>
 
