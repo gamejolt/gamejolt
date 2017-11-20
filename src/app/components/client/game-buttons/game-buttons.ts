@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./game-buttons.html';
+import View from '!view!./game-buttons.html';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
 import { State } from 'vuex-class';

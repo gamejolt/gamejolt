@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import * as View from '!view!./intro.html?style=./intro.styl';
+import View from '!view!./intro.html?style=./intro.styl';
+
 import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';

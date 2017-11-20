@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./package-card-buttons.html?style=./package-card-buttons.styl';
+import View from '!view!./package-card-buttons.html?style=./package-card-buttons.styl';
 import { PatchState, LocalDbPackage } from '../local-db/package/package.model';
 import { GameBuild } from '../../../../lib/gj-lib-client/components/game/build/build.model';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';

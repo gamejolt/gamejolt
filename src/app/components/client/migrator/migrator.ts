@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import * as View from '!view!./migrator.html?style=./migrator.styl';
+import View from '!view!./migrator.html?style=./migrator.styl';
 import {
 	ClientLibraryStore,
 	ClientLibraryState,

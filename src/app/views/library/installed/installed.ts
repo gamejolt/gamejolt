@@ -1,6 +1,6 @@
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./installed.html';
+import View from '!view!./installed.html';
 
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';

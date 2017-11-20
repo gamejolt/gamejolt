@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./system-report.html';
+import View from '!view!./system-report.html';
 import { ClientLogger } from '../../logger/logger.service';
 import {
 	BaseForm,

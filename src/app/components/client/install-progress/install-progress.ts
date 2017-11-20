@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./install-progress.html';
+import View from '!view!./install-progress.html';
 import { LocalDbPackage, PatchState } from '../local-db/package/package.model';
 import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';
 import { duration } from '../../../../lib/gj-lib-client/vue/filters/duration';

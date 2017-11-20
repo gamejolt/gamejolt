@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./install-package-modal.html';
+import View from '!view!./install-package-modal.html';
 import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
