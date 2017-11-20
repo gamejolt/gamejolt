@@ -1,10 +1,12 @@
 <div :id="id">
 	<div :class="{ 'is-client-offline': Connection.isClientOffline }">
 
-		<template v-if="GJ_IS_CLIENT && userBootstrapped">
-			<app-client-intro />
-			<app-client-migrator />
-		</template>
+		<div>
+			<template v-if="GJ_IS_CLIENT">
+				<app-client-intro />
+				<app-client-migrator v-if="userBootstrapped" />
+			</template>
+		</div>
 
 		<app-shell>
 			<div id="content">

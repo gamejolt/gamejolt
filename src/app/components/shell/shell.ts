@@ -1,4 +1,4 @@
-import Vue, { Component as VComponent, AsyncComponent } from 'vue';
+import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
 import View from '!view!./shell.html';
@@ -16,7 +16,7 @@ import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar
 import { Store } from '../../store/index';
 import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
 
-const components: { [key: string]: VComponent | AsyncComponent } = {
+let components: any = {
 	AppShellTopNav,
 	AppShellNotificationCount,
 	AppShellBody,
@@ -32,9 +32,11 @@ const components: { [key: string]: VComponent | AsyncComponent } = {
 };
 
 if (GJ_IS_CLIENT) {
-	components.AppClient = () => import('./client/client').then(m => m.AppClient);
-	components.AppClientStatusBar = () =>
-		import('../client/status-bar/status-bar').then(m => m.AppClientStatusBar);
+	components = {
+		...components,
+		...require('./client/client'),
+		...require('../client/status-bar/status-bar'),
+	};
 }
 
 @View

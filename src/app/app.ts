@@ -7,10 +7,8 @@ import { makeObservableService } from '../lib/gj-lib-client/utils/vue';
 import { AppShell } from './components/shell/shell';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
-import { AppClientIntro } from './components/client/intro/intro';
 import { AppState, AppStore } from '../lib/gj-lib-client/vue/services/app/app-store';
 import { loadCurrentLanguage } from '../utils/translations';
-import { AppClientMigrator } from './components/client/migrator/migrator';
 
 let components: any = {
 	AppShell,
@@ -18,8 +16,11 @@ let components: any = {
 };
 
 if (GJ_IS_CLIENT) {
-	// TODO(rewrite,cros) - will this load the client chunks? Do I have to use require here?
-	components = { ...components, AppClientIntro, AppClientMigrator };
+	components = {
+		...components,
+		...require('./components/client/intro/intro'),
+		...require('./components/client/migrator/migrator'),
+	};
 }
 
 @View
