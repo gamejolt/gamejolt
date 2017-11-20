@@ -1,5 +1,5 @@
-import { Component } from 'vue-property-decorator';
-import * as View from '!view!./change-password.html';
+import { Component, Prop } from 'vue-property-decorator';
+import View from '!view!./change-password.html';
 
 import {
 	BaseForm,
@@ -7,11 +7,22 @@ import {
 	FormOnSubmit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { FormOnSubmitSuccess } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
+
+type FormModel = {
+	old_password: string;
+	password: string;
+	confirm_password: string;
+};
 
 @View
 @Component({})
-export class FormChangePassword extends BaseForm<any> implements FormOnInit, FormOnSubmit {
+export class FormChangePassword extends BaseForm<FormModel> implements FormOnInit, FormOnSubmit {
+	@Prop({ type: Boolean, default: true })
+	requiresOld: boolean;
+
 	warnOnDiscard = false;
+	resetOnSubmit = true;
 
 	onInit() {
 		this.setField('old_password', '');

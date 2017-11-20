@@ -3,7 +3,7 @@ import { determine } from 'jstimezonedetect';
 import startOfTomorrow from 'date-fns/start_of_tomorrow';
 import startOfDay from 'date-fns/start_of_day';
 import addWeeks from 'date-fns/add_weeks';
-import * as View from '!view!./package.html';
+import View from '!view!./package.html';
 
 import {
 	BaseForm,
@@ -26,6 +26,8 @@ import {
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
 import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
+import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppGamePerms } from '../../../game/perms/perms';
 
 type FormGamePackageModel = GamePackage & {
 	primary: boolean;
@@ -45,6 +47,7 @@ type FormGamePackageModel = GamePackage & {
 		AppLoadingFade,
 		AppFormControlToggle,
 		AppFormControlDate,
+		AppGamePerms,
 	},
 	filters: {
 		date,
@@ -56,6 +59,8 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 	modelClass = GamePackage as any;
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
+
+	@AppState user: AppStore['user'];
 
 	@Prop(Game) game: Game;
 	@Prop(Sellable) sellable: Sellable;
@@ -76,6 +81,18 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = {};
 
 	GamePackage = GamePackage;
+
+	get hasBuildsPerms() {
+		return this.game && this.game.hasPerms('builds');
+	}
+
+	get hasAllPerms() {
+		return this.game && this.game.hasPerms('all');
+	}
+
+	get hasSalesPerms() {
+		return this.game && this.game.hasPerms('sales');
+	}
 
 	get saleTimezoneOffset() {
 		if (!this.formModel.sale_timezone) {

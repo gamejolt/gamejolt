@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 
 import { routeProfileOverview } from './overview/overview.route';
-import { routeProfileVideos } from './videos/videos.route';
+import { routeProfileVideosList } from './videos/list/list.route';
 import { routeProfileLibrary } from './library/library.route';
 
 export const routeProfile: VueRouter.RouteConfig = {
@@ -9,5 +9,5 @@ export const routeProfile: VueRouter.RouteConfig = {
 	path: '/@:username',
 	props: true,
 	component: () => import(/* webpackChunkName: "routeProfile" */ './profile'),
-	children: [routeProfileOverview, routeProfileLibrary, routeProfileVideos],
+	children: [routeProfileOverview, routeProfileLibrary, routeProfileVideosList],
 };

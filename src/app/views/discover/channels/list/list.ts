@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./list.html';
+import View from '!view!./list.html';
 
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
@@ -34,7 +34,7 @@ export default class RouteDiscoverChannelsList extends BaseRouteComponent {
 		Meta.description = 'Find and discover indie games around specific interests.';
 	}
 
-	routed() {
-		this.channels = this.$payload.channels;
+	routed($payload: any) {
+		this.channels = $payload.channels;
 	}
 }

@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./add.html';
+import View from '!view!./add.html';
 
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
@@ -43,8 +43,8 @@ export default class RouteForumsTopicsAdd extends BaseRouteComponent {
 		return Api.sendRequest('/web/forums/topics/create/' + route.params.channel);
 	}
 
-	routed() {
-		this.channel = new ForumChannel(this.$payload.channel);
+	routed($payload: any) {
+		this.channel = new ForumChannel($payload.channel);
 	}
 
 	onCreated(formModel: ForumTopic) {

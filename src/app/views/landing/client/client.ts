@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./client.html?style=./client.styl';
+import View from '!view!./client.html?style=./client.styl';
 
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';

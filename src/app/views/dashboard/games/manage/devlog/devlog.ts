@@ -1,14 +1,14 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./devlog.html';
+import View from '!view!./devlog.html';
 
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
 import { RouteState, RouteStore } from '../manage.store';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { AppDevlogPostAdd } from '../../../../../components/devlog/post/add/add';
+import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -20,6 +20,7 @@ import {
 	components: {
 		AppActivityFeed,
 		AppDevlogPostAdd,
+		AppGamePerms,
 	},
 })
 export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
@@ -33,11 +34,13 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		return this.tab || 'active';
 	}
 
-	@RouteResolve()
+	@RouteResolve({ cache: false, lazy: false })
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
-			'/web/dash/developer/games/devlog/posts/' + route.params.id + '/' + route.params.tab ||
-				'active'
+			'/web/dash/developer/games/devlog/posts/' +
+				route.params.id +
+				'/' +
+				(route.params.tab || 'active')
 		);
 	}
 
@@ -45,11 +48,12 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		return this.$gettext('Manage Devlog');
 	}
 
-	routed() {
-		this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.posts), {
-			type: 'Fireside_Post',
+	routed($payload: any) {
+		// Create a new activity feed container each time. Don't cache anything.
+		this.feed = new ActivityFeedContainer(FiresidePost.populate($payload.posts), {
+			type: 'EventItem',
 			url: `/web/dash/developer/games/devlog/posts/${this.game.id}/${this._tab}`,
-		})!;
+		});
 	}
 
 	onPostAdded(post: FiresidePost) {
@@ -70,12 +74,21 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		this.gotoPost(post);
 	}
 
-	private gotoPost(post: FiresidePost) {
-		const tab = post.status === 'active' ? undefined : post.status;
+	onPostRemoved(post: FiresidePost) {
+		this.feed.remove(post);
+	}
 
-		this.$router.replace({
+	private gotoPost(post: FiresidePost) {
+		const tab = post.status === 'active' ? null : post.status;
+		const location = {
 			name: this.$route.name,
 			params: Object.assign({}, this.$route.params, { tab }),
-		});
+		};
+
+		if (this.$router.resolve(location).href === this.$route.fullPath) {
+			this.reloadRoute();
+		} else {
+			this.$router.replace(location);
+		}
 	}
 }

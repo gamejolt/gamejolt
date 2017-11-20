@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./site.html';
+import View from '!view!./site.html';
 
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Site } from '../../../../../lib/gj-lib-client/components/site/site-model';
@@ -30,7 +30,7 @@ export default class RouteDashMainSite extends BaseRouteComponent {
 		return this.$gettext('Manage Site');
 	}
 
-	routed() {
-		this.site = new Site(this.$payload.site);
+	routed($payload: any) {
+		this.site = new Site($payload.site);
 	}
 }

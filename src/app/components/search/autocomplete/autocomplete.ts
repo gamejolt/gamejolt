@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Subject } from 'rxjs/Subject';
-import * as View from '!view!./autocomplete.html?style=./autocomplete.styl';
+import View from '!view!./autocomplete.html?style=./autocomplete.styl';
 import 'rxjs/add/operator/debounce';
 
 import { Search } from '../search-service';

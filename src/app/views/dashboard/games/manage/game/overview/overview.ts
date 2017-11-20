@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./overview.html';
+import View from '!view!./overview.html';
 
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { RouteState, RouteStore, RouteAction } from '../../manage.store';
@@ -13,6 +13,11 @@ import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/to
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGameDevStageSelector } from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector';
 import { AppGraphWidget } from '../../../../../../../lib/gj-lib-client/components/graph/widget/widget';
+import { AppGamePerms } from '../../../../../../components/game/perms/perms';
+import {
+	AppState,
+	AppStore,
+} from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -28,6 +33,7 @@ import {
 		AppExpand,
 		AppGameDevStageSelector,
 		AppGraphWidget,
+		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,
@@ -37,6 +43,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageGameOverview extends BaseRouteComponent {
+	@AppState user: AppStore['user'];
 	@RouteState game: RouteStore['game'];
 	@RouteState canPublish: RouteStore['canPublish'];
 
@@ -45,6 +52,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 	@RouteAction uncancel: RouteStore['uncancel'];
 	@RouteAction hide: RouteStore['hide'];
 	@RouteAction removeGame: RouteStore['removeGame'];
+	@RouteAction leaveProject: RouteStore['leaveProject'];
 
 	viewCount = 0;
 	downloadCount = 0;
@@ -87,13 +95,13 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 		return null;
 	}
 
-	routed() {
-		this.viewCount = this.$payload.viewCount || 0;
-		this.downloadCount = this.$payload.downloadCount || 0;
-		this.playCount = this.$payload.playCount || 0;
-		this.commentCount = this.$payload.commentCount || 0;
+	routed($payload: any) {
+		this.viewCount = $payload.viewCount || 0;
+		this.downloadCount = $payload.downloadCount || 0;
+		this.playCount = $payload.playCount || 0;
+		this.commentCount = $payload.commentCount || 0;
 
-		this.hasBuildsProcessing = this.$payload.hasBuildsProcessing || false;
+		this.hasBuildsProcessing = $payload.hasBuildsProcessing || false;
 	}
 
 	// This is called if they loaded up the page and had builds in a processing

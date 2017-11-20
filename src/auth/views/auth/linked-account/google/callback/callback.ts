@@ -21,16 +21,16 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 		return Api.sendRequest('/web/auth/google/callback?code=' + code + '&state=' + state, {});
 	}
 
-	routed() {
-		if (!this.$payload.success) {
-			if (this.$payload.reason && this.$payload.reason === 'no-email') {
+	routed($payload: any) {
+		if (!$payload.success) {
+			if ($payload.reason && $payload.reason === 'no-email') {
 				Growls.error({
 					sticky: true,
 					message: this.$gettext(
 						`Your Google+ account did not return an email address. Make sure you have verified it with Google.`
 					),
 				});
-			} else if (this.$payload.reason && this.$payload.reason === 'duplicate-email') {
+			} else if ($payload.reason && $payload.reason === 'duplicate-email') {
 				Growls.error({
 					sticky: true,
 					message: this.$gettext(

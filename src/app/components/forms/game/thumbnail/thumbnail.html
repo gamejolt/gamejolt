@@ -1,4 +1,4 @@
-<app-form name="thumbnailForm">
+<app-form name="thumbnailForm" ref="form">
 	<!--
 		They are required to upload a media item if there is none set yet.
 	-->
@@ -19,6 +19,7 @@
 				max_img_dimensions: [ maxWidth, maxHeight ],
 			}"
 			accept=".png,.jpg,.jpeg,.gif"
+			@changed="thumbSelected()"
 			/>
 
 		<app-form-control-errors

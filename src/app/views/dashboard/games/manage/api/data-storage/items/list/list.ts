@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./list.html';
+import View from '!view!./list.html';
 
 import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
 import { RouteState, RouteStore } from '../../../../manage.store';
@@ -48,8 +48,8 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 		return null;
 	}
 
-	routed() {
-		this.items = GameDataStoreItem.populate(this.$payload.items);
+	routed($payload: any) {
+		this.items = GameDataStoreItem.populate($payload.items);
 	}
 
 	async removeItem(item: GameDataStoreItem) {

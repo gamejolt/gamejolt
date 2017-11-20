@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./view.html';
+import View from '!view!./view.html';
 
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
@@ -120,16 +120,16 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.topic = new ForumTopic(this.$payload.topic);
-		this.channel = new ForumChannel(this.$payload.channel);
-		this.posts = ForumPost.populate(this.$payload.posts);
+	routed($payload: any) {
+		this.topic = new ForumTopic($payload.topic);
+		this.channel = new ForumChannel($payload.channel);
+		this.posts = ForumPost.populate($payload.posts);
 
-		this.perPage = this.$payload.perPage;
-		this.currentPage = this.$payload.page || 1;
-		this.isFollowing = this.$payload.isFollowing || false;
-		this.followerCount = this.$payload.followerCount || 0;
-		this.userPostCounts = this.$payload.userPostCounts || {};
+		this.perPage = $payload.perPage;
+		this.currentPage = $payload.page || 1;
+		this.isFollowing = $payload.isFollowing || false;
+		this.followerCount = $payload.followerCount || 0;
+		this.userPostCounts = $payload.userPostCounts || {};
 	}
 
 	async onPostAdded(newPost: ForumPost, response: any) {

@@ -21,14 +21,14 @@ export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteCom
 		return Api.sendRequest('/web/auth/facebook/callback?code=' + code + '&state=' + state, {});
 	}
 
-	routed() {
-		if (!this.$payload.success) {
-			if (this.$payload.reason && this.$payload.reason === 'no-email') {
+	routed($payload: any) {
+		if (!$payload.success) {
+			if ($payload.reason && $payload.reason === 'no-email') {
 				Growls.error({
 					sticky: true,
 					message: this.$gettext(`auth.linked_account.facebook.no_email_growl`),
 				});
-			} else if (this.$payload.reason && this.$payload.reason === 'duplicate-email') {
+			} else if ($payload.reason && $payload.reason === 'duplicate-email') {
 				Growls.error({
 					sticky: true,
 					message: this.$gettext(`auth.linked_account.facebook.duplicate_email_growl`),

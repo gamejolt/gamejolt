@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./key.html';
+import View from '!view!./key.html';
 
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
@@ -83,13 +83,13 @@ export default class RouteKey extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		if (this.$payload.error === 'invalid-key') {
+	routed($payload: any) {
+		if ($payload.error === 'invalid-key') {
 			this.invalidKey = true;
 			return;
 		}
 
-		this.payload = this.$payload;
+		this.payload = $payload;
 		this.type = this.payload.type;
 	}
 

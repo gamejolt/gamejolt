@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Subscription } from 'rxjs/Subscription';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import * as View from '!view!./feed.html';
+import View from '!view!./feed.html';
 
 import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedContainer } from './feed-container-service';
@@ -10,10 +10,9 @@ import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppActivityFeedItem } from './item/item';
 import { Model } from '../../../../lib/gj-lib-client/components/model/model.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppTimelineList } from '../../../../lib/gj-lib-client/components/timeline-list/timeline-list';
+import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 
 // TODO(rewrite,cros) changing between feed and notifications is broken in client
 
@@ -30,12 +29,10 @@ import { AppTimelineList } from '../../../../lib/gj-lib-client/components/timeli
 	},
 })
 export class AppActivityFeed extends Vue {
-	@Prop(String) type: 'Notification' | 'Fireside_Post';
 	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
 	@Prop(Boolean) showEditControls?: boolean;
 	@Prop(Boolean) showGameInfo?: boolean;
 	@Prop(Boolean) showAds?: boolean;
-	@Prop(Object) adResource?: Model;
 
 	// We save the scroll position every time it changes. When clicking back to
 	// the same feed we can scroll to the previous position that way.
@@ -79,12 +76,12 @@ export class AppActivityFeed extends Vue {
 		return !this.feed.reachedEnd && !this.feed.isLoadingMore;
 	}
 
-	shouldShowAd(index: number) {
-		if (!this.showAds || GJ_IS_CLIENT || GJ_IS_SSR || Screen.isXs) {
-			return false;
-		}
+	get shouldShowAds() {
+		return this.showAds && Ads.shouldShow;
+	}
 
-		if (this.adResource && this.adResource instanceof Game && !this.adResource._should_show_ads) {
+	shouldShowAd(index: number) {
+		if (!this.shouldShowAds) {
 			return false;
 		}
 

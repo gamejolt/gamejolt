@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./users.html';
+import View from '!view!./users.html';
 
 import { Search } from '../../../components/search/search-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
@@ -34,7 +34,7 @@ export default class RouteSearchUsers extends BaseRouteComponent {
 		});
 	}
 
-	routed() {
-		this.$emit('searchpayload', this.$payload);
+	routed($payload: any) {
+		this.$emit('searchpayload', $payload);
 	}
 }

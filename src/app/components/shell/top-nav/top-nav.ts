@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
-import * as View from '!view!./top-nav.html?style=./top-nav.styl';
+import View from '!view!./top-nav.html?style=./top-nav.styl';
 
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';

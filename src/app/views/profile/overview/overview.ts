@@ -1,6 +1,7 @@
 import VueRouter from 'vue-router';
+import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./overview.html';
+import View from '!view!./overview.html';
 
 import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
 import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
@@ -23,6 +24,9 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { Store } from '../../../store/index';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 
 @View
 @Component({
@@ -50,6 +54,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	@Prop() userFriendship: UserFriendship;
 	@Prop() activeGameSession?: UserGameSession;
 
+	@State app: Store['app'];
+
 	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
 	videos: CommentVideo[] = [];
@@ -59,6 +65,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	User = User;
 	UserFriendship = UserFriendship;
+	Screen = makeObservableService(Screen);
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
@@ -80,15 +87,15 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		Meta.description = this.$payload.metaDescription;
-		Meta.fb = this.$payload.fb || {};
+	routed($payload: any) {
+		Meta.description = $payload.metaDescription;
+		Meta.fb = $payload.fb || {};
 		Meta.fb.title = this.routeTitle;
-		Meta.twitter = this.$payload.twitter || {};
+		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
 
-		this.developerGames = Game.populate(this.$payload.developerGamesTeaser);
-		this.youtubeChannels = YoutubeChannel.populate(this.$payload.youtubeChannels);
-		this.videos = CommentVideo.populate(this.$payload.videos);
+		this.developerGames = Game.populate($payload.developerGamesTeaser);
+		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
+		this.videos = CommentVideo.populate($payload.videos);
 	}
 }

@@ -5,14 +5,25 @@
 			<div class="row">
 				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
 
-					<app-activity-feed-placeholder v-if="!feed" />
+					<app-game-perms :game="game" required="devlogs">
+						<h5 class="sans-margin-top">
+							<translate>Add Post</translate>
+						</h5>
 
+						<app-devlog-post-add
+							:game="game"
+							@add="onPostAdded"
+							/>
+
+						<hr>
+					</app-game-perms>
+
+					<app-activity-feed-placeholder v-if="!feed" />
 					<app-activity-feed
 						v-else
 						:feed="feed"
 						:show-edit-controls="true"
 						:show-ads="true"
-						:ad-resource="game"
 						/>
 
 				</div>

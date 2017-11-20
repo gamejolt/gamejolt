@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
-import * as View from '!view!./bubbles.html?style=./bubbles.styl';
+import View from '!view!./bubbles.html?style=./bubbles.styl';
 
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Store } from '../../../store/index';

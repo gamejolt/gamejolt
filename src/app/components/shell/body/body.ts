@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./body.html';
+import View from '!view!./body.html';
 
 import { AppShellFooter } from '../footer/footer';
 import { AppPopoverContext } from '../../../../lib/gj-lib-client/components/popover/popover-context';

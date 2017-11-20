@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./managed-account.html?style=./managed-account.styl';
+import View from '!view!./managed-account.html?style=./managed-account.styl';
 import { Geo } from '../../../../../lib/gj-lib-client/components/geo/geo.service';
 import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';

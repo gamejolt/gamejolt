@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./list.html';
+import View from '!view!./list.html';
 
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -17,6 +17,7 @@ import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppGameGrid } from '../../../../components/game/grid/grid';
 import { AppGameListing } from '../../../../components/game/listing/listing';
 import { LocationRedirect } from '../../../../../lib/gj-lib-client/utils/router';
+import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -90,11 +91,16 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 
 	routeInit() {
 		this.process();
+		Ads.setAdUnit('gamesdir');
 	}
 
-	routed() {
-		if (this.listing && this.$payload) {
-			this.listing.processPayload(this.$route, this.$payload);
+	routed($payload: any) {
+		if ($payload && $payload.metaDescription) {
+			Meta.description = $payload.metaDescription;
+		}
+
+		if (this.listing && $payload) {
+			this.listing.processPayload(this.$route, $payload);
 			this.process();
 		}
 	}
@@ -111,6 +117,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 
 		this.filtering.init(this.$route);
+		this.listing.setAdTargeting(this.$route);
 
 		if (this.section === 'by-date') {
 			this.processDateSection();
@@ -178,10 +185,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			this.descriptiveCategory = this.$gettextInterpolate('%{ category } games', {
 				category: categoryHuman.toLowerCase(),
 			});
-		}
-
-		if (this.$payload) {
-			Meta.description = this.$payload.metaDescription;
 		}
 	}
 

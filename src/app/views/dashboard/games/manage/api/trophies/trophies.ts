@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./trophies.html';
+import View from '!view!./trophies.html';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { RouteState, RouteStore } from '../../manage.store';
@@ -99,8 +99,8 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 		return null;
 	}
 
-	routed() {
-		this.trophies = GameTrophy.populate(this.$payload.trophies);
+	routed($payload: any) {
+		this.trophies = GameTrophy.populate($payload.trophies);
 	}
 
 	private getTrophyGroup(difficulty: number) {

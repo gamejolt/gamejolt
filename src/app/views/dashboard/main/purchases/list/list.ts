@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./list.html';
+import View from '!view!./list.html';
 
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Order } from '../../../../../../lib/gj-lib-client/components/order/order.model';
@@ -32,7 +32,7 @@ export default class RouteDashMainPurchasesList extends BaseRouteComponent {
 		return this.$gettext('Order History');
 	}
 
-	routed() {
-		this.orders = Order.populate(this.$payload.orders);
+	routed($payload: any) {
+		this.orders = Order.populate($payload.orders);
 	}
 }

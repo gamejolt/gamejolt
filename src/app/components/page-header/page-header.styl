@@ -2,7 +2,6 @@
 @require '../../../lib/gj-lib-client/stylus/common/mixins'
 
 .page-header
-
 	// Bootstrap has styling on .page-header.
 	// Gotta override.
 	padding: 0
@@ -53,14 +52,14 @@
 
 	&-spotlight
 		position: absolute
-		width: 100px
-		height: 100px
+		width: $page-header-spotlight-size
+		height: @width
 		bottom: -((@width / 2) + 5px)
-		left: -(@width + ($grid-gutter-width / 2))
+		left: -(@width + $page-header-spotlight-margin / 2)
 		border: 5px solid $white
 		border-radius: 50%
 		background-color: $white
-		z-index: 2
+		z-index: $zindex-page-header-nav + 1
 		display: flex
 		align-items: center
 		justify-content: center
@@ -86,7 +85,6 @@
 
 		@media $media-lg
 			height: 63px
-
 			// Force on to GPU.
 			// For some reason Chrome wasn't repainting when it would disappear.
 			// This fixes the Chrome bug. Odd.

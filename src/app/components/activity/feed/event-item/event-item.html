@@ -1,0 +1,128 @@
+<app-timeline-list-item
+	:is-new="isNew"
+	:is-active="isActive"
+	>
+
+	<app-user-avatar-img
+		slot="bubble"
+		:user="user"
+		/>
+
+	<div class="event-item">
+
+		<router-link
+			class="-game"
+			v-if="game && feed.showGameInfo && !Screen.isXs"
+			:to="{
+				name: 'discover.games.view.overview',
+				params: {
+					slug: game.slug,
+					id: game.id,
+				},
+			}"
+			>
+			<app-game-thumbnail-img :game="game" />
+		</router-link>
+
+		<div
+			class="timeline-list-item-header"
+			@click.capture="onClick"
+			>
+			<router-link :to="link">
+				<div class="timeline-list-item-header-content">
+					<div class="-header-content">
+						<div class="timeline-list-item-meta">
+							<app-time-ago :date="eventItem.added_on" />
+
+							 <template v-if="post && post.type === 'media'">
+								<span class="dot-separator"></span>
+								<app-jolticon icon="screenshot" class="middle" />
+								{{ post.media.length | number }}
+							</template>
+
+							<template v-if="game && feed.showGameInfo">
+								<span class="dot-separator"></span>
+								{{ game.title }}
+							</template>
+						</div>
+
+						<div class="timeline-list-item-title">
+							<template v-if="eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD">
+								{{ post.title }}
+							</template>
+							<template v-else-if="eventItem.type === EventItem.TYPE_GAME_PUBLISH">
+								{{ game.title }}
+							</template>
+							<template v-else-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD">
+								{{ eventItem.action.title }}
+							</template>
+						</div>
+					</div>
+				</div>
+			</router-link>
+		</div>
+
+		<div class="timeline-list-item-details">
+
+			<app-activity-feed-comment-video
+				v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"
+				:item="item"
+				:video="video"
+				:is-hydrated="isHydrated"
+				@expanded="onExpand"
+				@content-bootstrapped="onContentBootstrapped"
+				/>
+			<template v-if="post">
+				<app-activity-feed-devlog-post-text
+					v-if="post.type === 'text'"
+					:item="item"
+					:post="post"
+					:is-hydrated="isHydrated"
+					@expanded="onExpand"
+					@content-bootstrapped="onContentBootstrapped"
+					/>
+				<app-activity-feed-devlog-post-video
+					v-else-if="post.type === 'video'"
+					:item="item"
+					:post="post"
+					:is-hydrated="isHydrated"
+					@expanded="onExpand"
+					@content-bootstrapped="onContentBootstrapped"
+					/>
+				<app-activity-feed-devlog-post-sketchfab
+					v-else-if="post.type === 'sketchfab'"
+					:item="item"
+					:post="post"
+					:is-hydrated="isHydrated"
+					@expanded="onExpand"
+					@content-bootstrapped="onContentBootstrapped"
+					/>
+				<app-activity-feed-devlog-post-media
+					v-else-if="post.type === 'media'"
+					:item="item"
+					:post="post"
+					:is-hydrated="isHydrated"
+					@clicked="onClick( $event )"
+					@expanded="onExpand"
+					@content-bootstrapped="onContentBootstrapped"
+					/>
+			</template>
+
+			<app-activity-feed-controls
+				:post="post"
+				:video="video"
+				:game="game"
+				:show-game-info="feed.showGameInfo"
+				:show-edit-controls="feed.showEditControls"
+				:show-extra-info="!Screen.isXs"
+				@expanded="onExpand"
+				@edited="feed.onPostEdited( post )"
+				@published="feed.onPostPublished( post )"
+				@removed="feed.onPostRemoved( post )"
+				/>
+
+		</div>
+
+	</div>
+
+</app-timeline-list-item>

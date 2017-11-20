@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component, Watch } from 'vue-property-decorator';
-import * as View from '!view!./widget.html';
+import View from '!view!./widget.html';
 
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Sellable } from '../../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
@@ -31,9 +31,9 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 		);
 	}
 
-	routed() {
-		console.log(this.$payload);
-		this.sellable = this.$payload.sellable ? new Sellable(this.$payload.sellable) : null;
+	routed($payload: any) {
+		console.log($payload);
+		this.sellable = $payload.sellable ? new Sellable($payload.sellable) : null;
 		this.theme = ''; // Default to dark.
 	}
 

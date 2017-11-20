@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./active.html';
+import View from '!view!./active.html';
 
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
@@ -29,8 +29,8 @@ export default class RouteForumsLandingActive extends BaseRouteComponent {
 		return this.$gettext(`Active Topics in All Forums`);
 	}
 
-	routed() {
-		this.topics = ForumTopic.populate(this.$payload.topics);
-		this.postCountPerPage = this.$payload.postCountPerPage;
+	routed($payload: any) {
+		this.topics = ForumTopic.populate($payload.topics);
+		this.postCountPerPage = $payload.postCountPerPage;
 	}
 }

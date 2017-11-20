@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./profile.html?style=./profile.styl';
+import View from '!view!./profile.html?style=./profile.styl';
 
 import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
@@ -20,6 +20,10 @@ import { UserFriendshipHelper } from '../../components/user/friendships-helper/f
 import { ReportModal } from '../../../lib/gj-lib-client/components/report/modal/modal.service';
 import { Store } from '../../store/index';
 import { UserGameSession } from '../../../lib/gj-lib-client/components/user/game-session/game-session.model';
+import { AppUserFollowWidget } from '../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
+import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
+import { IntentService } from '../../components/intent/intent.service';
+import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -35,6 +39,7 @@ import {
 		AppUserAvatar,
 		AppUserDogtag,
 		AppPopover,
+		AppUserFollowWidget,
 	},
 	directives: {
 		AppTooltip,
@@ -59,26 +64,36 @@ export default class RouteProfile extends BaseRouteComponent {
 	Environment = Environment;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: VueRouter.Route) {
+		const intentRedirect = IntentService.checkRoute(route, {
+			intent: 'follow-user',
+			message: Translate.$gettext(`You're now following this user.`),
+		});
+		if (intentRedirect) {
+			return intentRedirect;
+		}
+
 		return Api.sendRequest('/web/profile/@' + route.params.username);
 	}
 
-	routed() {
-		this.user = new User(this.$payload.user);
+	routed($payload: any) {
+		Ads.setAdUnit('devprofile');
 
-		this.headerMediaItem = this.$payload.headerMediaItem
-			? new MediaItem(this.$payload.headerMediaItem)
-			: null;
-		this.gamesCount = this.$payload.gamesCount;
-		this.isOnline = this.$payload.isOnline;
-		this.libraryGamesCount = this.$payload.libraryGamesCount;
-		this.activeGameSession = this.$payload.activeGameSession
-			? new UserGameSession(this.$payload.activeGameSession)
-			: null;
-		this.videosCount = this.$payload.videosCount || 0;
+		this.user = new User($payload.user);
 
-		if (this.$payload.userFriendship) {
-			this.userFriendship = new UserFriendship(this.$payload.userFriendship);
+		this.headerMediaItem = $payload.headerMediaItem
+			? new MediaItem($payload.headerMediaItem)
+			: null;
+		this.gamesCount = $payload.gamesCount;
+		this.isOnline = $payload.isOnline;
+		this.libraryGamesCount = $payload.libraryGamesCount;
+		this.activeGameSession = $payload.activeGameSession
+			? new UserGameSession($payload.activeGameSession)
+			: null;
+		this.videosCount = $payload.videosCount || 0;
+
+		if ($payload.userFriendship) {
+			this.userFriendship = new UserFriendship($payload.userFriendship);
 		}
 	}
 

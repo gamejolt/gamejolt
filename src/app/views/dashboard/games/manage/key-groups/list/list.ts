@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./list.html?style=./list.styl';
+import View from '!view!./list.html?style=./list.styl';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
@@ -56,9 +56,9 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 		return null;
 	}
 
-	routed() {
-		this.keyGroups = KeyGroup.populate(this.$payload.keyGroups);
-		this.packages = GamePackage.populate(this.$payload.packages);
+	routed($payload: any) {
+		this.keyGroups = KeyGroup.populate($payload.keyGroups);
+		this.packages = GamePackage.populate($payload.packages);
 	}
 
 	onKeyGroupAdded(keyGroup: KeyGroup) {

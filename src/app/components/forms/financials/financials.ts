@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./financials.html?style=./financials.styl';
+import View from '!view!./financials.html?style=./financials.styl';
 import {
 	BaseForm,
 	FormOnSubmit,

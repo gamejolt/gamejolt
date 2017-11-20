@@ -1,6 +1,24 @@
-import { provide } from 'ng-metadata/core';
-import { GameApiDocCtrl } from './game-api-doc-controller';
+import { Component } from 'vue-property-decorator';
+import View from '!view!./game-api-doc.html?style=./game-api-doc.styl';
 
-export default angular
-	.module('App.Views.Landing.GameApiDoc', [])
-	.controller(...provide('Landing.GameApiDocCtrl', { useClass: GameApiDocCtrl })).name;
+import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
+import nav from '!json-loader!../../../../lib/doc-game-api/v1.x/nav.json';
+
+@View
+@Component({
+	name: 'RouteLandingGameApiDoc',
+})
+export default class RouteLandingGameApiDoc extends BaseRouteComponent {
+	nav = nav;
+
+	get routeTitle() {
+		return this.$gettext(`Game API Documentation`);
+	}
+
+	inPath(url: string, exact = false) {
+		if (exact) {
+			return '/' + this.$route.params.path === url;
+		}
+		return ('/' + this.$route.params.path).indexOf(url) !== -1;
+	}
+}

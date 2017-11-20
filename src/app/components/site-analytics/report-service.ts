@@ -91,6 +91,7 @@ export class SiteAnalyticsReport {
 				analyzer,
 				field,
 				viewAs,
+				partnerMode,
 				conditions,
 				fetchFields,
 				component.resourceFields,
@@ -129,6 +130,7 @@ export class SiteAnalyticsReport {
 		analyzer: Analyzer,
 		field: Field,
 		viewAs: number | undefined,
+		partnerMode: boolean | undefined,
 		conditions: Condition[] | undefined,
 		fetchFields: Field[] | undefined,
 		resourceFields: ResourceFields | undefined,
@@ -145,6 +147,10 @@ export class SiteAnalyticsReport {
 
 		if (viewAs) {
 			request.view_as = viewAs;
+		}
+
+		if (partnerMode) {
+			request.as_partner = partnerMode;
 		}
 
 		if (conditions) {

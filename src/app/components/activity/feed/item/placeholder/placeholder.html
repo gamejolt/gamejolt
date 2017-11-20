@@ -1,5 +1,5 @@
 <app-timeline-list-item :is-new="isNew" :is-active="isActive">
-	<template v-if="type === 'devlog-post'">
+	<template v-if="type === 'event-item'">
 		<div class="timeline-list-item-header">
 			<div class="timeline-list-item-header-content">
 
@@ -20,7 +20,7 @@
 			<hr>
 
 			<div>
-				<app-button-placeholder :sparse="true" />
+				<app-button-placeholder :sparse="true" :circle="true" />
 				<app-button-placeholder />
 			</div>
 

@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./view.html';
+import View from '!view!./view.html';
 
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
@@ -48,9 +48,9 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 		return null;
 	}
 
-	routed() {
-		this.score = new UserGameScore(this.$payload.score);
-		this.scoreTable = new GameScoreTable(this.$payload.scoreTable);
+	routed($payload: any) {
+		this.score = new UserGameScore($payload.score);
+		this.scoreTable = new GameScoreTable($payload.scoreTable);
 	}
 
 	async removeScore() {

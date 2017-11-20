@@ -97,7 +97,7 @@
 						</router-link>
 					</li>
 					<li v-if="videosCount > 0">
-						<router-link :to="{ name: 'profile.videos' }" active-class="active">
+						<router-link :to="{ name: 'profile.videos.list' }" active-class="active">
 							<translate>Videos</translate>
 						</router-link>
 					</li>
@@ -132,7 +132,7 @@
 					</a>
 					<a class="list-group-item has-icon"
 						v-if="app.user && app.user.permission_level > 0"
-						:href="`${Environment.secureBaseUrl}/moderate/users/view/${user.id}`"
+						:href="`${Environment.baseUrl}/moderate/users/view/${user.id}`"
 						target="_blank"
 						>
 						<app-jolticon icon="cog" />
@@ -143,12 +143,12 @@
 		</template>
 
 		<template slot="controls">
-			<template v-if="app.user && user.id !== app.user.id && !userFriendship && !user.is_verified">
-				<a class="btn btn-outline btn-block" @click="sendFriendRequest">
-					<app-jolticon icon="friend-add-2" />
-					<translate>profile.friend_request_button</translate>
-				</a>
-			</template>
+			<app-user-follow-widget
+				class="btn-block"
+				:user="user"
+				:outline="true"
+				event-label="profile"
+				/>
 		</template>
 
 	</app-page-header>
@@ -159,6 +159,8 @@
 		:videos-count="videosCount"
 		:user-friendship="userFriendship"
 		:active-game-session="activeGameSession"
+		@send-friend-request="sendFriendRequest"
+		@remove-friend="removeFriend"
 		@cancel-friend-request="cancelFriendRequest"
 		@accept-friend-request="acceptFriendRequest"
 		@reject-friend-request="rejectFriendRequest"

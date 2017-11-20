@@ -85,7 +85,8 @@
 			<app-genre-list />
 		</div>
 	</section>
-	<section class="section fill-pink section-thin" v-else-if="section === 'new'">
+
+	<section class="section fill-pink section-thin" v-if="section === 'new'">
 		<div class="container" v-translate>
 			games.list.new_games_warning_html
 		</div>
@@ -102,7 +103,7 @@
 		<app-game-grid
 			:games="listing.games"
 			:show-ads="true"
-			event="game-list:click"
+			event-label="browse-games"
 			/>
 
 	</app-game-listing>

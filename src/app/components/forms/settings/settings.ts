@@ -1,5 +1,5 @@
 import { Component, Watch } from 'vue-property-decorator';
-import * as View from '!view!./settings.html';
+import View from '!view!./settings.html';
 
 import {
 	BaseForm,
@@ -9,13 +9,27 @@ import { Settings } from '../../settings/settings.service';
 import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { ClientAutoStart } from '../../client/autostart/autostart.service';
 
+type FormModel = {
+	chat_notify_friends_online: boolean;
+	restricted_browsing: boolean;
+	broadcast_modal: boolean;
+	animated_thumbnails: boolean;
+	game_install_dir: string;
+	queue_when_playing: boolean;
+	max_download_count: number;
+	limit_downloads: boolean;
+	max_extract_count: number;
+	limit_extractions: boolean;
+	autostart_client: boolean;
+};
+
 @View
 @Component({
 	components: {
 		AppFormControlToggle,
 	},
 })
-export class FormSettings extends BaseForm<any> implements FormOnInit {
+export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 	warnOnDiscard = false;
 
 	ClientAutoStart: typeof ClientAutoStart | null = GJ_IS_CLIENT
@@ -23,7 +37,6 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 		: null;
 
 	onInit() {
-		this.setField('chat_notify_friends_online', Settings.get('chat-notify-friends-online'));
 		this.setField('restricted_browsing', Settings.get('restricted-browsing'));
 		this.setField('broadcast_modal', Settings.get('broadcast-modal'));
 		this.setField('animated_thumbnails', Settings.get('animated-thumbnails'));
@@ -81,7 +94,6 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 	}
 
 	onChange() {
-		Settings.set('chat-notify-friends-online', this.formModel.chat_notify_friends_online);
 		Settings.set('restricted-browsing', this.formModel.restricted_browsing);
 		Settings.set('broadcast-modal', this.formModel.broadcast_modal);
 		Settings.set('animated-thumbnails', this.formModel.animated_thumbnails);
@@ -104,7 +116,6 @@ export class FormSettings extends BaseForm<any> implements FormOnInit {
 
 			// Tell's it to use the new settings.
 			this.$store.commit('clientLibrary/checkQueueSettings');
-			// this.clientLibrary.commit('clientLibrary/checkQueueSettings');
 		}
 	}
 }

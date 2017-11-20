@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import { Subscription } from 'rxjs/Subscription';
-import * as View from '!view!./output.html?style=./output.styl';
+import View from '!view!./output.html?style=./output.styl';
 
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';

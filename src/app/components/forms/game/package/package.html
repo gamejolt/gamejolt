@@ -16,9 +16,10 @@
 					max: 150,
 					availability: {
 						url: `/web/dash/developer/games/packages/check-field-availability/${ game.id }/title`,
-						initVal: method === 'edit' ? (model.title || '') : undefined,
+						initVal: method === 'edit' ? (model.title || game.title) : undefined,
 					},
 				}"
+				:disabled="!hasBuildsPerms"
 				/>
 
 			<app-form-control-errors />
@@ -34,13 +35,20 @@
 			</p>
 
 			<div v-if="!showDescriptionInput">
-				<button class="btn btn-outline btn-sm" @click="showDescriptionInput = true">
+				<button
+					class="btn btn-outline btn-sm"
+					@click.prevent="showDescriptionInput = true"
+					:disabled="!hasBuildsPerms">
 					<app-jolticon icon="add" />
 					<translate>dash.games.packages.form.description_change_button</translate>
 				</button>
 			</div>
 			<div v-else>
-				<app-form-control-textarea rows="2" :rules="{ max: 750 }" />
+				<app-form-control-textarea
+				rows="2"
+				:rules="{ max: 750 }"
+				:disabled="!hasBuildsPerms"
+				/>
 				<app-form-control-errors />
 			</div>
 		</app-form-group>
@@ -49,9 +57,12 @@
 			name="visibility"
 			:label="$gettext( `Visibility` )"
 			>
-			<div class="radio">
+			<div class="radio" :class="{ disabled: !hasAllPerms }">
 				<label>
-					<app-form-control-radio :value="GamePackage.VISIBILITY_PUBLIC" />
+					<app-form-control-radio
+						:value="GamePackage.VISIBILITY_PUBLIC"
+						:disabled="!hasAllPerms"
+						/>
 					<translate>Public</translate> &mdash;
 					<span class="help-inline">
 						<translate>Anyone can access this package.</translate>
@@ -59,9 +70,12 @@
 				</label>
 			</div>
 
-			<div class="radio">
+			<div class="radio" :class="{ disabled: !hasAllPerms }">
 				<label>
-					<app-form-control-radio :value="GamePackage.VISIBILITY_PRIVATE" />
+					<app-form-control-radio
+						:value="GamePackage.VISIBILITY_PRIVATE"
+						:disabled="!hasAllPerms"
+						/>
 					<translate>Private</translate> &mdash;
 					<span class="help-inline" v-translate>
 						Only you can access this package, as well as any keys you assign. You can assign keys in your <b>Keys/Access</b> page.
@@ -85,7 +99,7 @@
 				</router-link>
 			</p>
 
-			<app-form-control-toggle />
+			<app-form-control-toggle :disabled="!hasSalesPerms" />
 		</app-form-group>
 
 		<app-form-group
@@ -99,12 +113,21 @@
 			<div v-else>
 				<p class="help-block" v-if="!isUserVerified">
 					<app-jolticon icon="notice" />
-					<translate>
-						You must set up your financial information before you can start accepting money.
-					</translate>
-					<router-link :to="{ name: 'dash.account.financials' }">
-						<translate>Go to financial set up.</translate>
-					</router-link>
+					<template v-if="user && game.developer.id === user.id">
+						<translate>
+							You must set up your financial information before you can start accepting money.
+						</translate>
+						<router-link :to="{ name: 'dash.account.financials' }">
+							<translate>Go to financial set up.</translate>
+						</router-link>
+					</template>
+					<template>
+						<span v-translate="{
+							username: game.developer.username,
+						}">
+							@%{ username } needs to set their financial information before the game can start accepting money.
+						</span>
+					</template>
 				</p>
 
 				<div class="alert alert-warning" v-if="isUserVerified && package && package.has_browser_builds">
@@ -112,9 +135,12 @@
 				</div>
 			</div>
 
-			<div class="radio">
+			<div class="radio" :class="{ disabled: !hasSalesPerms }">
 				<label>
-					<app-form-control-radio value="free" />
+					<app-form-control-radio
+						value="free"
+						:disabled="!hasSalesPerms"
+						/>
 					<translate>Free</translate> &mdash;
 					<span class="help-inline">
 						<translate>Completely free with no option to pay at all.</translate>
@@ -122,9 +148,11 @@
 				</label>
 			</div>
 
-			<div class="radio" :class="{ disabled: !isUserVerified || isFangame }">
+			<div class="radio" :class="{ disabled: !isUserVerified || isFangame || !hasSalesPerms }">
 				<label>
-					<app-form-control-radio value="pwyw" :disabled="!isUserVerified || isFangame" />
+					<app-form-control-radio
+						value="pwyw"
+						:disabled="!isUserVerified || isFangame || !hasSalesPerms" />
 					<translate>Pay What You Want</translate> &mdash;
 					<span class="help-inline">
 						<translate>They will be able to pay $0 or more. They set the price.</translate>
@@ -134,13 +162,13 @@
 
 			<div class="radio"
 				:class="{
-					disabled: !isUserVerified || (package && package.has_browser_builds) || isFangame,
+					disabled: !isUserVerified || (package && package.has_browser_builds) || isFangame || !hasSalesPerms,
 				}"
 				>
 				<label>
 					<app-form-control-radio
 						value="paid"
-						:disabled="!isUserVerified || (package && package.has_browser_builds) || isFangame"
+						:disabled="!isUserVerified || (package && package.has_browser_builds) || isFangame || !hasSalesPerms"
 						/>
 					<translate>Paid</translate> &mdash;
 					<span class="help-inline">
@@ -162,7 +190,7 @@
 						name="has_suggested_price"
 						:hide-label="true"
 						>
-						<app-form-control-toggle />
+						<app-form-control-toggle :disabled="!hasSalesPerms" />
 					</app-form-group>
 					<br class="visible-xs">
 				</div>
@@ -175,7 +203,7 @@
 							:rules="{
 								min_value: minPrice / 100,
 							}"
-							:disabled="!formModel.has_suggested_price"
+							:disabled="!formModel.has_suggested_price || !hasSalesPerms"
 							/>
 					</div>
 					<app-form-control-errors />
@@ -196,6 +224,7 @@
 					:rules="{
 						min_value: minPrice / 100,
 					}"
+					:disabled="!hasSalesPerms"
 					/>
 			</div>
 			<app-form-control-errors />
@@ -204,7 +233,7 @@
 		<div v-if="formModel.pricing_type === 'paid'">
 			<div class="form-group">
 
-				<label class="control-label">
+				<label class="control-label" v-if="promotionalPricing || hasSalesPerms">
 					<translate>Run a Sale</translate>
 				</label>
 
@@ -252,7 +281,7 @@
 						</table>
 					</div>
 
-					<div>
+					<app-game-perms tag="div" required="sales">
 						<a class="btn btn-outline btn-sm" @click="isShowingSaleForm = true" v-if="!isShowingSaleForm">
 							<app-jolticon icon="edit" />
 							<translate>Edit Sale</translate>
@@ -261,15 +290,15 @@
 							<app-jolticon icon="remove" />
 							<translate>Cancel Sale</translate>
 						</a>
-					</div>
+					</app-game-perms>
 				</div>
 
-				<div v-if="!promotionalPricing">
+				<app-game-perms tag="div" required="sales" v-if="!promotionalPricing">
 					<a class="btn btn-outline btn-sm" @click="isShowingSaleForm = true" v-if="!isShowingSaleForm">
 						<app-jolticon icon="add" />
 						<translate>Setup Sale</translate>
 					</a>
-				</div>
+				</app-game-perms>
 			</div>
 
 			<div v-if="isShowingSaleForm">

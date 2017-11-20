@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./settings.html';
+import View from '!view!./settings.html';
 
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import {
@@ -23,6 +23,7 @@ export class FormGameSettings extends BaseForm<Game> implements FormOnLoad {
 	saveMethod: '$saveSettings' = '$saveSettings';
 
 	hasPackagesForSale = false;
+	hasAdultContent = false;
 
 	get loadUrl() {
 		return `/web/dash/developer/games/settings/save/${this.model!.id}`;
@@ -30,5 +31,6 @@ export class FormGameSettings extends BaseForm<Game> implements FormOnLoad {
 
 	onLoad(payload: any) {
 		this.hasPackagesForSale = payload.hasPackagesForSale;
+		this.hasAdultContent = payload.hasAdultContent;
 	}
 }

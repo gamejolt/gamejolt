@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./follow-widget.html';
+import View from '!view!./follow-widget.html';
 
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -32,6 +32,8 @@ export class AppGameCollectionFollowWidget extends Vue {
 	@LibraryAction followCollection: LibraryStore['followCollection'];
 	@LibraryAction unfollowCollection: LibraryStore['unfollowCollection'];
 
+	isProcessing = false;
+
 	get isFollowing() {
 		return (
 			this.collections.findIndex(
@@ -41,6 +43,8 @@ export class AppGameCollectionFollowWidget extends Vue {
 	}
 
 	async onClick() {
+		this.isProcessing = true;
+
 		if (this.isFollowing) {
 			await this.unfollowCollection(this.collection);
 			this.$emit('unfollow');
@@ -48,5 +52,7 @@ export class AppGameCollectionFollowWidget extends Vue {
 			await this.followCollection(this.collection);
 			this.$emit('follow');
 		}
+
+		this.isProcessing = false;
 	}
 }

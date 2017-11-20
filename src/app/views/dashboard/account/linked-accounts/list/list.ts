@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./list.html?style=./list.styl';
+import View from '!view!./list.html?style=./list.styl';
 
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { RouteMutation, RouteStore } from '../../account.store';
@@ -41,9 +41,9 @@ export default class RouteDashAccountLinkedAccountsList extends BaseRouteCompone
 		return this.$gettext('Linked Accounts');
 	}
 
-	routed() {
+	routed($payload: any) {
 		this.setHeading(this.$gettext('Linked Accounts'));
-		this.channels = YoutubeChannel.populate(this.$payload.channels);
+		this.channels = YoutubeChannel.populate($payload.channels);
 	}
 
 	getProviderIcon(provider: Provider) {

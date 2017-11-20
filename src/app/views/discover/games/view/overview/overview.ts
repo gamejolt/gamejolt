@@ -62,16 +62,16 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		this.bootstrapFeed();
 	}
 
-	async routed() {
-		Meta.description = this.$payload.metaDescription;
-		Meta.fb = this.$payload.fb;
-		Meta.twitter = this.$payload.twitter;
+	async routed($payload: any) {
+		Meta.description = $payload.metaDescription;
+		Meta.fb = $payload.fb;
+		Meta.twitter = $payload.twitter;
 
-		if (this.$payload.microdata) {
-			Meta.microdata = this.$payload.microdata;
+		if ($payload.microdata) {
+			Meta.microdata = $payload.microdata;
 		}
 
-		this.processOverviewPayload(this.$payload);
+		this.processOverviewPayload($payload);
 	}
 
 	render(h: Vue.CreateElement) {

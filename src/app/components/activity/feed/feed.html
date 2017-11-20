@@ -8,7 +8,7 @@
 
 		<div class="timeline-list-ad" v-if="shouldShowAd(i)">
 			<section class="section section-thin fill-lightest text-center">
-				<app-ad size="rectangle" :resource="adResource" />
+				<app-ad size="rectangle" pos="bottom" />
 				<div class="ad-label">
 					<translate>Advertisement</translate>
 				</div>
@@ -16,7 +16,7 @@
 		</div>
 	</div>
 
-	<div v-if="shouldShowLoadMore" class="text-center">
+	<div v-if="shouldShowLoadMore" class="page-cut">
 		<button class="btn btn-outline" @click="loadMore" v-app-track-event="`activity-feed:more`">
 			<translate>Load More</translate>
 		</button>

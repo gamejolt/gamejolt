@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./build.html';
+import View from '!view!./build.html';
 
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
@@ -81,13 +81,13 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 		return null;
 	}
 
-	async routed() {
-		this.build = new GameBuild(this.$payload.build);
+	async routed($payload: any) {
+		this.build = new GameBuild($payload.build);
 		this.src = null;
 
-		this.developerGames = Game.populate(this.$payload.developerGames);
-		this.recommendedGames = Game.populate(this.$payload.recommendedGames);
-		this.twitterShareMessage = this.$payload.twitterShareMessage;
+		this.developerGames = Game.populate($payload.developerGames);
+		this.recommendedGames = Game.populate($payload.recommendedGames);
+		this.twitterShareMessage = $payload.twitterShareMessage;
 
 		// Don't download on SSR.
 		if (GJ_IS_SSR) {

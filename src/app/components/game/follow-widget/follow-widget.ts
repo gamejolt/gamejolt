@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./follow-widget.html';
+import View from '!view!./follow-widget.html';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
@@ -11,11 +11,16 @@ import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/a
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Store } from '../../../store/index';
+import { AppUserFollowWidget } from '../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
+import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
+import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 
 @View
 @Component({
 	components: {
 		AppJolticon,
+		AppUserFollowWidget,
+		AppPopover,
 	},
 	directives: {
 		AppAuthRequired,
@@ -31,11 +36,19 @@ export class AppGameFollowWidget extends Vue {
 	@Prop(Boolean) sparse?: boolean;
 	@Prop(Boolean) outline?: boolean;
 	@Prop(String) eventLabel?: string;
+	@Prop(Boolean) showUserFollow?: boolean;
 
 	@State app: Store['app'];
 
-	followTooltip: string;
 	isProcessing = false;
+
+	get widgetId() {
+		return `game-follow-widget-${this.game.id}`;
+	}
+
+	get popoverId() {
+		return `game-follow-widget-user-follow-${this.game.id}`;
+	}
 
 	get btnClasses() {
 		let classes: string[] = [];
@@ -67,6 +80,14 @@ export class AppGameFollowWidget extends Vue {
 				await this.game.$follow();
 			} catch (e) {
 				Growls.error(this.$gettext('Something has prevented you from following this game.'));
+			}
+
+			if (this.showUserFollow && !this.game.developer.is_following) {
+				const popover = Popover.getPopover(this.popoverId);
+				if (popover) {
+					await this.$nextTick();
+					popover.show(this.$el);
+				}
 			}
 		} else {
 			try {

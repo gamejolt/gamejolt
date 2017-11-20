@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./site.html?style=./site.styl';
+import View from '!view!./site.html?style=./site.styl';
 
 import { RouteState, RouteStore } from '../manage.store';
 import { Site } from '../../../../../../lib/gj-lib-client/components/site/site-model';
@@ -34,7 +34,7 @@ export default class RouteDashGamesManageSite extends BaseRouteComponent {
 		return this.$gettext('Manage Site');
 	}
 
-	routed() {
-		this.site = new Site(this.$payload.site);
+	routed($payload: any) {
+		this.site = new Site($payload.site);
 	}
 }

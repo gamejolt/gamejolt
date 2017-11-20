@@ -1,10 +1,9 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./overview.html';
+import View from '!view!./overview.html';
 
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
-import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -14,6 +13,8 @@ import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { AppTrackEvent } from '../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppGameGridPlaceholder } from '../../../../../components/game/grid/placeholder/placeholder';
 import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { EventItem } from '../../../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { Ads } from '../../../../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -53,16 +54,20 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed() {
+	routed($payload: any) {
 		this.isLoaded = true;
-		this.bestGames = Game.populate(this.$payload.bestGames).slice(0, 6);
-		this.hotGames = Game.populate(this.$payload.hotGames).slice(0, 6);
+		this.bestGames = Game.populate($payload.bestGames).slice(0, 6);
+		this.hotGames = Game.populate($payload.hotGames).slice(0, 6);
 
 		if (!this.feed) {
-			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.posts), {
-				type: 'Fireside_Post',
+			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {
+				type: 'EventItem',
 				url: `/web/discover/channels/posts/${this.channel}`,
 			});
 		}
+
+		Ads.globalTargeting = {
+			channel: this.channel,
+		};
 	}
 }

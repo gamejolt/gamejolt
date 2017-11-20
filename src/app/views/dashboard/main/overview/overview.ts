@@ -1,6 +1,6 @@
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./overview.html';
+import View from '!view!./overview.html';
 
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
@@ -23,6 +23,7 @@ import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/
 import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { numberSort } from '../../../../../lib/gj-lib-client/utils/array';
 import { Jam } from '../../../../../lib/gj-lib-client/components/jam/jam.model';
+import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -60,6 +61,7 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 	walletBalance = 0;
 
 	games: Game[] = [];
+	collabs: GameCollaborator[] = [];
 	videos: CommentVideo[] = [];
 	videosCount = 0;
 	jams: Jam[] = [];
@@ -81,10 +83,18 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 		'has_friend',
 	];
 
-	Game = Game;
-	Screen = makeObservableService(Screen);
-	Environment = Environment;
-	currency = currency;
+	readonly Game = Game;
+	readonly Screen = makeObservableService(Screen);
+	readonly Environment = Environment;
+	readonly currency = currency;
+
+	get inViewGames() {
+		if (!this.games) {
+			return [];
+		}
+
+		return this.games.slice(0, this.gamesExpanded ? this.games.length : 5);
+	}
 
 	get integrationTranslations() {
 		return {
@@ -105,33 +115,43 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 		return this.$gettext('dash.overview.page_title');
 	}
 
-	routed() {
+	routed($payload: any) {
 		// Keep them undefined if not on the payload.
 		// This will ensure that if they aren't an account with revenue, it won't show the revenue widget.
-		if (typeof this.$payload.revenueTotal !== 'undefined' && this.$payload.revenueTotal !== null) {
-			this.revenueTotal = this.$payload.revenueTotal || 0;
-			this.revenueWithdrawn = this.$payload.revenueWithdrawn || 0;
-			this.revenueSpent = this.$payload.revenueSpent || 0;
-			this.revenueCurrent = this.$payload.revenueCurrent || 0;
-			this.revenuePendingWithdraw = this.$payload.revenuePendingWithdraw || 0;
-			this.revenuePendingActivation = this.$payload.revenuePendingActivation || 0;
-			this.walletBalance = this.$payload.walletBalance || 0;
+		if (typeof $payload.revenueTotal !== 'undefined' && $payload.revenueTotal !== null) {
+			this.revenueTotal = $payload.revenueTotal || 0;
+			this.revenueWithdrawn = $payload.revenueWithdrawn || 0;
+			this.revenueSpent = $payload.revenueSpent || 0;
+			this.revenueCurrent = $payload.revenueCurrent || 0;
+			this.revenuePendingWithdraw = $payload.revenuePendingWithdraw || 0;
+			this.revenuePendingActivation = $payload.revenuePendingActivation || 0;
+			this.walletBalance = $payload.walletBalance || 0;
 		}
 
-		this.games = Game.populate(this.$payload.games);
-		this.games.sort((a, b) => numberSort(a.posted_on, b.posted_on)).reverse();
+		const items: (Game | GameCollaborator)[] = [];
+		this.games = items
+			.concat(Game.populate($payload.games))
+			.concat(GameCollaborator.populate($payload.collaborations))
+			.sort((a, b) =>
+				numberSort(
+					a instanceof Game ? a.posted_on : a.accepted_on,
+					b instanceof Game ? b.posted_on : b.accepted_on
+				)
+			)
+			.reverse()
+			.map(i => (i instanceof Game ? i : i.game!));
 
-		this.videos = CommentVideo.populate(this.$payload.videos);
-		this.videosCount = this.$payload.videosCount || 0;
+		this.videos = CommentVideo.populate($payload.videos);
+		this.videosCount = $payload.videosCount || 0;
 
-		this.jams = Jam.populate(this.$payload.jams);
+		this.jams = Jam.populate($payload.jams);
 
-		this.activityNotifications = Notification.populate(this.$payload.activityNotifications);
-		this.latestBroadcast = this.$payload.latestBroadcast
-			? new FiresidePost(this.$payload.latestBroadcast)
+		this.activityNotifications = Notification.populate($payload.activityNotifications);
+		this.latestBroadcast = $payload.latestBroadcast
+			? new FiresidePost($payload.latestBroadcast)
 			: null;
 
-		this.integration = this.$payload.integration || {};
+		this.integration = $payload.integration || {};
 
 		this.integrationKeys.forEach(key => {
 			if (this.integration[key] && !this.integration[key].achieved) {

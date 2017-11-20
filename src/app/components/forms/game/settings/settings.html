@@ -23,7 +23,7 @@
 	</app-form-group>
 
 	<app-form-group
-		v-if="!hasPackagesForSale"
+		v-if="!hasPackagesForSale && !hasAdultContent"
 		name="ads_enabled"
 		:label="$gettext( `dash.games.settings.ads_label` )"
 		>
@@ -37,9 +37,15 @@
 			<translate>dash.games.settings.ads_label</translate>
 		</label>
 		<div class="alert alert-info">
-			<translate>We don't show ads on Marketplace game pages (even for pay what you want games).</translate>
+			<translate v-if="hasPackagesForSale">
+				We don't show ads on Marketplace game pages (even for pay what you want games).
+			</translate>
+			<translate v-else-if="hasAdultContent">
+				We don't show ads on adult games.
+			</translate>
 		</div>
 	</div>
+
 
 	<app-form-group
 		name="comments_enabled"

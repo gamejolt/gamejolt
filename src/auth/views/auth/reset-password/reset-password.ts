@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./reset-password.html';
+import View from '!view!./reset-password.html';
 
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';

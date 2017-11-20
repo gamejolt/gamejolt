@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./linking.html';
+import View from '!view!./linking.html';
 
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppProgressPoller } from '../../../../../../lib/gj-lib-client/components/progress/poller/poller';

@@ -1,11 +1,5 @@
 import VueRouter from 'vue-router';
 
-const ExperimentHomeCollapsed = 'RwRvq_WGSgC-Btijan1v-w';
-
-export function splitHomeCollapsedVariation(route: VueRouter.Route, payload: any) {
-	return getPayloadVariation(route, payload, ExperimentHomeCollapsed);
-}
-
 function getPayloadVariation(route: VueRouter.Route, payload: any, experiment: string): number {
 	let variation = checkHardcoded(route, experiment);
 	if (variation !== -1) {

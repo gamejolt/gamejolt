@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./home.html?style=./home.styl';
+import View from '!view!./home.html?style=./home.styl';
 
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
@@ -8,7 +8,6 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
-import { AppGenreList } from '../../../components/genre/list/list';
 import { AppChannelThumbnail } from '../../../components/channel/thumbnail/thumbnail';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -16,21 +15,18 @@ import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholde
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { Store } from '../../../store/index';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
-import { splitHomeCollapsedVariation } from '../../../components/split-test/split-test-service';
-import { AppVideoEmbed } from '../../../../lib/gj-lib-client/components/video/embed/embed';
+import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 
-export interface DiscoverSection {
+export interface DiscoverRow {
 	title: string;
-	smallTitle: string;
+	desc?: string;
 	url: string;
 	eventLabel: string;
 	games: string;
@@ -40,12 +36,10 @@ export interface DiscoverSection {
 @Component({
 	name: 'RouteDiscoverHome',
 	components: {
-		AppVideoEmbed,
 		AppJolticon,
 		AppNavTabList,
 		AppGameGrid,
 		AppGameGridPlaceholder,
-		AppGenreList,
 		AppChannelThumbnail,
 		AppAdPlacement,
 		AppAuthJoin: AppAuthJoinLazy,
@@ -59,10 +53,8 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	@State app: Store['app'];
 
 	isLoaded = false;
-	chosenSection: DiscoverSection | null = null;
-	featuredItems: FeaturedItem[] = [];
 	channels: any[] = [];
-	variation = 0;
+	featuredGame: Game | null = null;
 
 	games: { [k: string]: Game[] } = {
 		featured: [],
@@ -71,129 +63,118 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		recommended: [],
 	};
 
-	Screen = makeObservableService(Screen);
+	get rows() {
+		const rows: DiscoverRow[] = [];
 
-	@RouteResolve({ lazy: true, cache: true })
-	routeResolve() {
-		return Api.sendRequest('/web/discover');
-	}
-
-	get discoverSections() {
-		const featuredSection: DiscoverSection = {
-			title: this.$gettext('Featured Games'),
-			smallTitle: this.$gettext('Featured'),
+		rows.push({
+			title: this.$gettext('Featured'),
+			desc: this.$gettext(`staff picks`),
 			url: this.$router.resolve({
 				name: 'discover.games.list._fetch',
 				params: { section: 'featured' },
 			}).href,
 			eventLabel: 'featured-games',
-			// We actually show hot games in the featured tab.
-			games: 'hot',
-		};
+			games: 'featured',
+		});
 
-		const bestSection: DiscoverSection = {
-			title: this.$gettext('Best Games'),
-			smallTitle: this.$gettext('Best'),
-			url: this.$router.resolve({
-				name: 'discover.games.list._fetch',
-				params: { section: 'best' },
-			}).href,
-			eventLabel: 'best-games',
-			games: 'best',
-		};
+		// if (this.isLoaded && this.app.user) {
+		// 	rows.push({
+		// 		title: this.$gettext('Recommended'),
+		// 		desc: this.$gettext(`based on your history`),
+		// 		url: this.$router.resolve({
+		// 			name: 'library.collection.recommended',
+		// 			params: { id: this.app.user.username },
+		// 		}).href,
+		// 		eventLabel: 'recommended',
+		// 		games: 'recommended',
+		// 	});
+		// }
 
-		const hotSection: DiscoverSection = {
+		rows.push({
 			title: this.$gettext('Hot Games'),
-			smallTitle: this.$gettext('Hot'),
+			desc: this.$gettext(`new stuff that people are enjoying`),
 			url: this.$router.resolve({
 				name: 'discover.games.list._fetch',
 				params: { section: null as any },
 			}).href,
 			eventLabel: 'hot-games',
 			games: 'hot',
-		};
+		});
 
-		let sections: DiscoverSection[] = [];
-		if (this.isLoaded && this.app.user) {
-			const recommendedSection = {
-				title: this.$gettext('Your Daily Mix'),
-				smallTitle: this.$gettext('Your Daily Mix'),
-				url: this.$router.resolve({
-					name: 'library.collection.recommended',
-					params: { id: this.app.user.username },
-				}).href,
-				eventLabel: 'daily-mix',
-				games: 'recommended',
-			};
+		rows.push({
+			title: this.$gettext('Top Games'),
+			desc: this.$gettext(`based on ratings`),
+			url: this.$router.resolve({
+				name: 'discover.games.list._fetch',
+				params: { section: 'best' },
+			}).href,
+			eventLabel: 'best-games',
+			games: 'best',
+		});
 
-			sections = [hotSection, recommendedSection, bestSection];
-		} else {
-			sections = [hotSection, bestSection];
-		}
+		return rows;
+	}
 
-		if (this.variation === 2) {
-			sections.unshift(featuredSection);
-		}
-
-		return sections;
+	@RouteResolve({ cache: true, lazy: true })
+	routeResolve() {
+		return Api.sendRequest('/web/discover');
 	}
 
 	routeInit() {
 		Meta.title = null;
-
-		if (!this.chosenSection) {
-			this.chosenSection = this.discoverSections[0];
-		}
+		Ads.setAdUnit('homepage');
 	}
 
-	routed() {
-		this.isLoaded = true;
-
-		Meta.description = this.$payload.metaDescription;
-		Meta.fb = this.$payload.fb;
-		Meta.twitter = this.$payload.twitter;
+	routed($payload: any) {
+		Meta.description = $payload.metaDescription;
+		Meta.fb = $payload.fb;
+		Meta.twitter = $payload.twitter;
 		Meta.fb.image = Meta.twitter.image = require('../../../img/social/social-share-header.png');
 		Meta.fb.url = Meta.twitter.url = Environment.baseUrl;
 
 		Meta.microdata = {
 			'@context': 'http://schema.org',
 			'@type': 'WebSite',
-			url: 'http://gamejolt.com/',
+			url: 'https://gamejolt.com/',
 			name: 'Game Jolt',
 			potentialAction: {
 				'@type': 'SearchAction',
-				target: 'http://gamejolt.com/search?q={search_term_string}',
+				target: 'https://gamejolt.com/search?q={search_term_string}',
 				'query-input': 'required name=search_term_string',
 			},
 		};
 
-		this.variation = Math.max(splitHomeCollapsedVariation(this.$route, this.$payload), 0);
-		this.chosenSection = this.discoverSections[0];
+		this.featuredGame = $payload.featuredGame ? new Game($payload.featuredGame) : null;
 
-		this.featuredItems = FeaturedItem.populate(this.$payload.featuredGames);
-		this.games.featured = this.featuredItems.map(item => item.game);
-		this.games.hot = Game.populate(this.$payload.hotGames);
-		this.games.best = Game.populate(this.$payload.bestGames);
-		this.games.recommended = Game.populate(this.$payload.recommendedGames);
+		const featuredItems = FeaturedItem.populate($payload.featuredGames);
+		this.games.featured = featuredItems.map(item => item.game).slice(0, 6);
+		// this.games.recommended = Game.populate($payload.recommendedGames);
 
-		const channels =
-			this.variation === 0
-				? this.$payload.channels
-				: [
-						'action',
-						'horror',
-						'adventure',
-						'fangame',
-						'rpg',
-						'multiplayer',
-						'platformer',
-						'survival',
-						'retro',
-						'shooter',
-						'vr',
-						'strategy-sim',
-						'fnaf',
-					];
+		// If we pull from cache, don't refresh with new payload data. If it's not cache, we
+		// ovewrite with our cached data.
+		if (!this.isLoaded) {
+			this.games.hot = Game.populate($payload.hotGames).slice(0, 15);
+			this.games.best = Game.populate($payload.bestGames).slice(0, 6);
+		} else {
+			$payload.hotGames = this.games.hot;
+			$payload.bestGames = this.games.best;
+		}
+
+		const channels = [
+			'action',
+			'horror',
+			'adventure',
+			'fangame',
+			'rpg',
+			'multiplayer',
+			'platformer',
+			'survival',
+			'retro',
+			'shooter',
+			'vr',
+			'strategy-sim',
+			'fnaf',
+		];
 
 		this.channels = [];
 		for (const channel of channels) {
@@ -202,9 +183,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 				this.channels.push(info);
 			}
 		}
-	}
 
-	changeSection(sectionIndex: number) {
-		this.chosenSection = this.discoverSections[sectionIndex];
+		this.isLoaded = true;
 	}
 }

@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./list.html';
+import View from '!view!./list.html';
 
 import { GameTrophy } from '../../../../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
 import { UserGameTrophy } from '../../../../../../../lib/gj-lib-client/components/user/game-trophy/game-trophy.model';
@@ -61,13 +61,13 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 		return null;
 	}
 
-	routed() {
-		this.trophies = GameTrophy.populate(this.$payload.trophies);
-		this.achieved = this.$payload.trophiesAchieved
-			? UserGameTrophy.populate(this.$payload.trophiesAchieved)
+	routed($payload: any) {
+		this.trophies = GameTrophy.populate($payload.trophies);
+		this.achieved = $payload.trophiesAchieved
+			? UserGameTrophy.populate($payload.trophiesAchieved)
 			: [];
-		this.experience = this.$payload.trophiesExperienceAchieved || 0;
-		this.showInvisibleTrophyMessage = this.$payload.trophiesShowInvisibleTrophyMessage || false;
+		this.experience = $payload.trophiesExperienceAchieved || 0;
+		this.showInvisibleTrophyMessage = $payload.trophiesShowInvisibleTrophyMessage || false;
 
 		this.achievedIndexed = UserGameTrophy.indexAchieved(this.achieved);
 		this.filteredTrophies = GameTrophy.splitAchieved(this.trophies, this.achievedIndexed);

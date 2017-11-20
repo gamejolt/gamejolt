@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./song.html';
+import View from '!view!./song.html';
 
 import { GameSong } from '../../../../../lib/gj-lib-client/components/game/song/song.model';
 import {

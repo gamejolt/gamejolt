@@ -1,10 +1,13 @@
 @require '~styles/variables'
 
 .manage-game-nav-required
-
-	@media $media-md-up
+	@media $media-md
 		position: absolute
-		left: -25px
+		right: -25px
+
+	@media $media-lg
+		position: absolute
+		right: 0
 
 .incomplete
 	.jolticon

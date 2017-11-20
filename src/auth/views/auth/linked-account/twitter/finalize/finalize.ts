@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./finalize.html';
+import View from '!view!./finalize.html';
 
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Auth } from '../../../../../../lib/gj-lib-client/components/auth/auth.service';

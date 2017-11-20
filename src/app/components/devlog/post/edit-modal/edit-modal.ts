@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./edit-modal.html';
+import View from '!view!./edit-modal.html';
 
 import { BaseModal } from '../../../../../lib/gj-lib-client/components/modal/base';
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';

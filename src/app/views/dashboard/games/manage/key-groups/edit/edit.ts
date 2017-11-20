@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./edit.html';
+import View from '!view!./edit.html';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
@@ -76,10 +76,10 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 		return null;
 	}
 
-	routed() {
-		this.keyGroup = new KeyGroup(this.$payload.keyGroup);
-		this.packages = GamePackage.populate(this.$payload.packages);
-		this.keys = Key.populate(this.$payload.keys);
+	routed($payload: any) {
+		this.keyGroup = new KeyGroup($payload.keyGroup);
+		this.packages = GamePackage.populate($payload.packages);
+		this.keys = Key.populate($payload.keys);
 	}
 
 	async searchKeys() {
@@ -93,7 +93,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 	}
 
 	copyKeyLink(key: Key) {
-		Clipboard.copy(`${Environment.secureBaseUrl}/claim/${key.key}`);
+		Clipboard.copy(`${Environment.baseUrl}/claim/${key.key}`);
 	}
 
 	onNewKeysAdded() {

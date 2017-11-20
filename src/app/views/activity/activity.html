@@ -1,14 +1,25 @@
 <div>
 
 	<app-page-header
+		:class="{ '-header': shouldShowHeaderImage }"
 		:should-affix-nav="true"
 		col-classes="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7"
 		>
 
-		<h1>
-			<translate>Activity Feed</translate>
-		</h1>
-		<br>
+		<img
+			v-if="shouldShowHeaderImage"
+			class="-header-img"
+			src="./header.png"
+			:width="704 / (Screen.isXs ? 3 : 2)"
+			:height="416 / (Screen.isXs ? 3 : 2)"
+			alt="Activity Feed"
+			>
+		<template v-else>
+			<h1>
+				<translate>Activity Feed</translate>
+			</h1>
+			<br>
+		</template>
 
 		<nav slot="nav" class="platform-list inline nav-justified">
 			<ul>
@@ -41,7 +52,6 @@
 				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
 
 					<app-activity-feed-placeholder v-if="!feed" />
-
 					<div v-else>
 
 						<div v-for="_feed of [ feed ]" :key="feed.type">

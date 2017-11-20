@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./dev-stage-selector.html?style=./dev-stage-selector.styl';
+import View from '!view!./dev-stage-selector.html?style=./dev-stage-selector.styl';
 
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';

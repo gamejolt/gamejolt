@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./broadcast-modal.html';
+import View from '!view!./broadcast-modal.html';
 
 import { FiresidePost } from '../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
@@ -12,6 +12,7 @@ import { AppFiresidePostLikeWidget } from '../../../lib/gj-lib-client/components
 import { AppSocialTwitterShare } from '../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppSocialFacebookLike } from '../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { BaseModal } from '../../../lib/gj-lib-client/components/modal/base';
+import { AppCommentWidgetLazy } from '../lazy';
 
 @View
 @Component({
@@ -22,6 +23,7 @@ import { BaseModal } from '../../../lib/gj-lib-client/components/modal/base';
 		AppFiresidePostLikeWidget,
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
+		AppCommentWidget: AppCommentWidgetLazy,
 	},
 })
 export default class AppBroadcastModal extends BaseModal {

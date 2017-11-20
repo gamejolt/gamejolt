@@ -4,6 +4,9 @@ import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
+import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 /**
  * The number of items from the bottom that we should hit before loading more.
@@ -20,7 +23,7 @@ export interface ActivityFeedContainerOptions {
 	/**
 	 * Which types of models are used in the feed.
 	 */
-	type: 'Fireside_Post' | 'Notification';
+	type: 'Fireside_Post' | 'Notification' | 'EventItem';
 
 	/**
 	 * The URL to hit to load more from the feed.
@@ -39,9 +42,9 @@ export interface ActivityFeedContainerOptions {
 }
 
 export class ActivityFeedContainer {
-	feedType: 'Notification' | 'Fireside_Post';
+	feedType: 'Notification' | 'Fireside_Post' | 'EventItem';
 	items: ActivityFeedItem[] = [];
-	games: { [k: string]: any } = {};
+	games: { [k: number]: Game } = {};
 
 	notificationWatermark = 0; // Timestamp.
 	reachedEnd = false;
@@ -101,11 +104,7 @@ export class ActivityFeedContainer {
 		}
 
 		this.viewedItems.push(item.id);
-
-		if (item.type === 'devlog-post') {
-			const feedItem = <FiresidePost>item.feedItem;
-			feedItem.$viewed();
-		}
+		item.$viewed();
 	}
 
 	expanded(item: ActivityFeedItem) {
@@ -114,11 +113,9 @@ export class ActivityFeedContainer {
 		}
 
 		this.expandedItems.push(item.id);
+		item.$expanded();
 
-		if (item.type === 'devlog-post') {
-			const feedItem = <FiresidePost>item.feedItem;
-			feedItem.$expanded();
-		}
+		Analytics.trackEvent('activity-feed', 'expanded-item');
 	}
 
 	inViewChange(item: ActivityFeedItem, visible: boolean) {
@@ -161,6 +158,7 @@ export class ActivityFeedContainer {
 
 		if (!response.items || !response.items.length) {
 			this.reachedEnd = true;
+			Analytics.trackEvent('activity-feed', 'reached-end');
 			return;
 		}
 
@@ -168,21 +166,28 @@ export class ActivityFeedContainer {
 			this.append(Notification.populate(response.items));
 		} else if (this.feedType === 'Fireside_Post') {
 			this.append(FiresidePost.populate(response.items));
+		} else if (this.feedType === 'EventItem') {
+			this.append(EventItem.populate(response.items));
 		}
+
+		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.timesLoaded);
 	}
 
 	/**
-	 * This ensures that any reference to a particular game any of the feed items
-	 * are shared across all items. It not only reduces mem usage, but also helps
-	 * to keep things in sync (game follows, etc).
+	 * This ensures that any reference to a particular game any of the feed items are shared across
+	 * all items. It not only reduces mem usage, but also helps to keep things in sync (game
+	 * follows, etc).
 	 */
 	private processGames() {
 		for (const item of this.items) {
-			if (item.feedItem instanceof FiresidePost) {
-				if (!this.games[item.feedItem.game.id]) {
-					Vue.set(this.games, item.feedItem.game.id, item.feedItem.game);
-				} else {
-					Vue.set(item.feedItem, 'game', this.games[item.feedItem.game.id]);
+			if (item.feedItem instanceof FiresidePost || item.feedItem instanceof EventItem) {
+				const game = item.feedItem.game;
+				if (game) {
+					if (!this.games[game.id]) {
+						Vue.set(this.games as any, game.id, game);
+					} else {
+						item.feedItem.game = this.games[game.id];
+					}
 				}
 			}
 		}

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import * as View from '!view!./cover.html?style=./cover.styl';
+import View from '!view!./cover.html?style=./cover.styl';
 
 import { MediaItem } from '../../../../lib/gj-lib-client/components/media-item/media-item-model';
 import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';

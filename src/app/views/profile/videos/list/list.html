@@ -1,0 +1,27 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div
+				class="col-xs-6 col-sm-3"
+				v-for="video of videos"
+				:key="video.id"
+				>
+				<app-comment-video-thumbnail
+					:hide-follow="true"
+					:video="video"
+					/>
+			</div>
+		</div>
+
+		<div class="page-cut" v-if="videos.length < videosCount">
+			<a class="btn btn-outline"
+				@click="loadMore"
+				v-app-track-event="`profile-videos:more`"
+				>
+				<translate>Load More</translate>
+			</a>
+		</div>
+
+	</div>
+</section>

@@ -1,5 +1,5 @@
 import { Component, Watch } from 'vue-property-decorator';
-import * as View from '!view!./description.html';
+import View from '!view!./description.html';
 
 import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
@@ -8,6 +8,7 @@ import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/compone
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppDashGameWizardControls } from '../wizard-controls/wizard-controls';
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
+import { AppGamePerms } from '../../../game/perms/perms';
 
 type DescriptionFormModel = Game & {
 	autotag?: string;
@@ -21,6 +22,7 @@ type DescriptionFormModel = Game & {
 		AppFormControlMarkdown,
 		AppJolticon,
 		AppDashGameWizardControls,
+		AppGamePerms,
 	},
 })
 export class FormGameDescription extends BaseForm<DescriptionFormModel> {
@@ -33,6 +35,10 @@ export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 	$refs: {
 		form: AppForm;
 	};
+
+	get hasDetailsPerms() {
+		return this.model && this.model.hasPerms('details');
+	}
 
 	@Watch('serverErrors')
 	onServerErrors() {

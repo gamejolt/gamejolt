@@ -1,4 +1,4 @@
-@require '~styles/variables';
+@require '~styles/variables'
 @require '../../../../lib/gj-lib-client/stylus/common/mixins'
 @require '../../../../lib/gj-lib-client/components/overlay-scrollbar/overlay-scrollbar'
 
@@ -11,7 +11,6 @@ body
 	z-index: $zindex-shell-body
 	overflow-x: hidden
 	min-height: 100vh
-
 	// Space for the top nav.
 	margin-top: $shell-top-nav-height
 
@@ -20,37 +19,18 @@ body
 	.gj-scroll-affixed
 		margin-top: $shell-top-nav-height + ($grid-gutter-width / 2)
 
-	/**
-	 * Helper mixin to help creating containers when the sidebar is different
-	 * widths.
-	 */
-	shell-body-main-container( $_width )
-		margin-left: $_width
+	// Containers are fluid until they hit the "lg" width.
+	.container
+		width: 100%
+		max-width: $container-lg
 
-		.container
-			container-fixed()
+	// Cut out the space for the left sidebar from the shell body.
+	@media $media-sm-up
+		margin-left: $shell-top-nav-height
 
-			@media $media-min-tablet
-				width: $container-sm - $_width
-
-			@media $media-min-desktop
-				width: $container-md - $_width
-
-			@media $media-min-lg-desktop
-				width: $container-lg - $_width
-
-			$media-min-lg-desktop-sidebar = minw( $screen-lg + $_width )
-			@media $media-min-lg-desktop-sidebar
-				width: $container-lg
-
-	@media $media-sm
-		shell-body-main-container( $shell-top-nav-height )
-
-	@media $media-md-up
-		shell-body-main-container( $shell-top-nav-height )
-
+	@media $media-lg-up
 		.left-pane-visible &
-			shell-body-main-container( $shell-sidebar-width )
+			margin-left: $shell-sidebar-width
 
 // Set the content BG so that we don't show the html color.
 #content

@@ -1,7 +1,6 @@
 <div :id="`grid-pagination-${id}`">
 	<p class="text-muted small" v-if="gamesCount">
 		<translate
-			translate
 			:translate-n="gamesCount"
 			:translate-params="{
 				count: number( gamesCount ),
@@ -9,15 +8,15 @@
 			}"
 			translate-plural="Page %{ page } of %{ count } games."
 			>
-			1 game.
+			Page %{ page } of %{ count } games.
 		</translate>
 	</p>
 
 	<div :class="{ 'scrollable-grid-xs full-bleed-xs': scrollable }">
 		<div class="game-grid-items">
-			<div class="game-grid-ad" v-if="Screen.isDesktop && showAds">
+			<div class="game-grid-ad" v-if="Screen.isDesktop && shouldShowAds">
 				<div class="game-grid-ad-inner">
-					<app-ad size="rectangle" />
+					<app-ad size="rectangle" :pos="adPos" />
 					<span class="ad-label visible-lg">
 						<translate>Advertisement</translate>
 					</span>
@@ -35,7 +34,7 @@
 					:key="game.id + '-ad'"
 					>
 					<div class="game-grid-ad-inner">
-						<app-ad size="rectangle" />
+						<app-ad size="rectangle" pos="bottom" />
 						<span class="ad-label visible-lg">
 							<translate>Advertisement</translate>
 						</span>

@@ -1,12 +1,13 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./template.html';
+import View from '!view!./template.html';
 
 import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { FormSiteSettings } from '../../forms/site/settings/settings';
+import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 
 @View
 @Component({
@@ -45,14 +46,6 @@ export class AppSitesManagePageTemplate extends Vue {
 	}
 
 	private getEditorLocation(tab: string) {
-		let name = 'dash.main.site.editor';
-		if (this.site!.game_id) {
-			name = 'dash.games.manage.site.editor';
-		}
-
-		return {
-			name,
-			params: Object.assign({}, this.$route, { tab }),
-		};
+		return Environment.baseUrlInsecure + `/site-editor/${tab}?id=${this.site!.id}`;
 	}
 }

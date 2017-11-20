@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./settings.html';
+import View from '!view!./settings.html';
 
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppPageHeader } from '../../components/page-header/page-header';
@@ -34,7 +34,6 @@ export default class RouteSettings extends BaseRouteComponent {
 		return {
 			client /** GJ_IS_CLIENT **/: true ? this.$gettext('settings.client') : undefined,
 			site: this.$gettext('Site'),
-			chat: this.$gettext('settings.chat'),
 			restrictions: this.$gettext('Restrictions'),
 			notifications: this.$gettext('Notifications'),
 		};

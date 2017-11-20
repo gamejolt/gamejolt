@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./email-preferences.html';
+import View from '!view!./email-preferences.html';
 
 import { RouteMutation, RouteStore } from '../account.store';
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
@@ -35,7 +35,7 @@ export default class RouteDashAccountEmailPreferences extends BaseRouteComponent
 		this.setHeading(this.$gettext('dash.email_prefs.heading'));
 	}
 
-	routed() {
-		this.user = new User(this.$payload.user);
+	routed($payload: any) {
+		this.user = new User($payload.user);
 	}
 }

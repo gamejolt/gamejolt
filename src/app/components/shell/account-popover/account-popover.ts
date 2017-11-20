@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
-import * as View from '!view!./account-popover.html?style=./account-popover.styl';
+import View from '!view!./account-popover.html?style=./account-popover.styl';
 
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';

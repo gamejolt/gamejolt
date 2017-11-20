@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./analytics.html?style=./analytics.styl';
+import View from '!view!./analytics.html?style=./analytics.styl';
 
 import {
 	MetricMap,
@@ -124,7 +124,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 		return this.$gettext('Analytics');
 	}
 
-	routed() {
+	routed($payload: any) {
 		this.resource = this.$route.params.resource as ResourceName;
 		this.resourceId = parseInt(this.$route.params.resourceId, 10);
 
@@ -137,11 +137,12 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 			this.viewAs = appUser.id;
 		}
 
-		this.user = this.$payload.user ? new User(this.$payload.user) : null;
-		this.game = this.$payload.game ? new Game(this.$payload.game) : null;
-		this.package = this.$payload.package ? new GamePackage(this.$payload.package) : null;
-		this.release = this.$payload.release ? new GameRelease(this.$payload.release) : null;
-		this.partnerMode = !this.user || this.user.id !== this.viewAs;
+		this.user = $payload.user ? new User($payload.user) : null;
+		this.game = $payload.game ? new Game($payload.game) : null;
+		this.package = $payload.package ? new GamePackage($payload.package) : null;
+		this.release = $payload.release ? new GameRelease($payload.release) : null;
+		this.partnerMode =
+			(!this.user || this.user.id !== this.viewAs) && !!parseInt(this.$route.query.partner, 10);
 
 		this.period = (this.$route.query['period'] as any) || 'monthly';
 		this.resource = this.$route.params['resource'] as any;

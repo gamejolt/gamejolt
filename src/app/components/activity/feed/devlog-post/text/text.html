@@ -3,6 +3,7 @@
 	<app-fade-collapse
 		:collapse-height="500"
 		:is-open="item.isOpen"
+		:animate="false"
 		@require-change="canToggleChanged"
 		>
 		<div class="fireside-post-body">
@@ -15,7 +16,5 @@
 		@click="toggleFull"
 		>
 	</a>
-
-	<hr>
 
 </div>

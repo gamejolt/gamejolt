@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./withdraw-funds.html';
+import View from '!view!./withdraw-funds.html';
 
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
@@ -44,15 +44,15 @@ export default class RouteDashWithdrawFunds extends BaseRouteComponent {
 		return this.$gettext('dash.funds.withdraw.page_title');
 	}
 
-	routed() {
-		this.user = new User(this.$payload.user);
-		this.minAmount = this.$payload.minAmount || 0;
-		this.revenueTotal = this.$payload.revenueTotal || 0;
-		this.revenueWithdrawn = this.$payload.revenueWithdrawn || 0;
-		this.revenueCurrent = this.$payload.revenueCurrent || 0;
-		this.revenuePending = this.$payload.revenuePending || 0;
-		this.revenueWithdrawable = this.$payload.revenueWithdrawable || 0;
-		this.email = this.$payload.email || '';
+	routed($payload: any) {
+		this.user = new User($payload.user);
+		this.minAmount = $payload.minAmount || 0;
+		this.revenueTotal = $payload.revenueTotal || 0;
+		this.revenueWithdrawn = $payload.revenueWithdrawn || 0;
+		this.revenueCurrent = $payload.revenueCurrent || 0;
+		this.revenuePending = $payload.revenuePending || 0;
+		this.revenueWithdrawable = $payload.revenueWithdrawable || 0;
+		this.email = $payload.email || '';
 	}
 
 	onSubmit() {

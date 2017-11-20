@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./edit.html';
+import View from '!view!./edit.html';
 
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../../../../../../../lib/gj-lib-client/components/game/release/release.model';
@@ -21,6 +21,7 @@ import { FormGamePackage } from '../../../../../../../components/forms/game/pack
 import { AppExpand } from '../../../../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { AppProgressPoller } from '../../../../../../../../lib/gj-lib-client/components/progress/poller/poller';
+import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -39,6 +40,7 @@ import {
 		FormGamePackage,
 		AppDashGameWizardControls,
 		AppProgressPoller,
+		AppGamePerms,
 	},
 	directives: {
 		AppTooltip,
@@ -63,6 +65,14 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 	GameRelease = GameRelease;
 	number = number;
 
+	get hasBuildsPerms() {
+		return this.game && this.game.hasPerms('builds');
+	}
+
+	get hasAnalyticsPerms() {
+		return this.game && this.game.hasPerms('analytics');
+	}
+
 	@RouteResolve()
 	routeResolve(this: undefined, route: VueRouter.Route) {
 		return Api.sendRequest(
@@ -80,10 +90,10 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		return null;
 	}
 
-	routed() {
-		this.package = new GamePackage(this.$payload.package);
-		this.sellable = new Sellable(this.$payload.sellable);
-		this.releases = GameRelease.populate(this.$payload.releases);
+	routed($payload: any) {
+		this.package = new GamePackage($payload.package);
+		this.sellable = new Sellable($payload.sellable);
+		this.releases = GameRelease.populate($payload.releases);
 
 		this.previewData = null;
 		this.previewPackage = null;

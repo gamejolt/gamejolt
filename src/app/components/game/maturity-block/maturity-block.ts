@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import * as View from '!view!./maturity-block.html?style=./maturity-block.styl';
+import View from '!view!./maturity-block.html?style=./maturity-block.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Settings } from '../../settings/settings.service';
@@ -29,7 +29,7 @@ export class AppGameMaturityBlock extends Vue {
 			this.game.tigrs_age === 3 &&
 			!GJ_IS_SSR &&
 			Settings.get('restricted-browsing') &&
-			!(this.app.user && this.app.user.id === this.game.developer.id) &&
+			!this.game.hasPerms() &&
 			!this.hasBypassed
 		);
 	}

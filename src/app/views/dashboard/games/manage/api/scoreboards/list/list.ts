@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./list.html';
+import View from '!view!./list.html';
 
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameScoreTable } from '../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
@@ -60,8 +60,8 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 		return null;
 	}
 
-	routed() {
-		this.scoreTables = GameScoreTable.populate(this.$payload.scoreTables);
+	routed($payload: any) {
+		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
 	}
 
 	onTableAdded(table: GameScoreTable) {

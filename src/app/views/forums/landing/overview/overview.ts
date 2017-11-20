@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./overview.html';
+import View from '!view!./overview.html';
 
 import { ForumCategory } from '../../../../../lib/gj-lib-client/components/forum/category/category.model';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
@@ -35,13 +35,13 @@ export default class RouteForumsLandingOverview extends BaseRouteComponent {
 		return this.$gettext('Forums');
 	}
 
-	routed() {
-		this.categories = ForumCategory.populate(this.$payload.categories);
-		this.latestPosts = ForumPost.populate(this.$payload.latestPosts);
-		this.postCountPerPage = this.$payload.postCountPerPage;
+	routed($payload: any) {
+		this.categories = ForumCategory.populate($payload.categories);
+		this.latestPosts = ForumPost.populate($payload.latestPosts);
+		this.postCountPerPage = $payload.postCountPerPage;
 
 		this.groupedChannels = {};
-		const channels = ForumChannel.populate(this.$payload.channels);
+		const channels = ForumChannel.populate($payload.channels);
 		for (const channel of channels) {
 			if (!this.groupedChannels[channel.category.id]) {
 				this.groupedChannels[channel.category.id] = [];

@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./twitter-email.html';
+import View from '!view!./twitter-email.html';
 
 import {
 	BaseForm,

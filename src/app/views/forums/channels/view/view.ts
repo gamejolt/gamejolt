@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./view.html';
+import View from '!view!./view.html';
 
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
@@ -65,18 +65,18 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.channel = new ForumChannel(this.$payload.channel);
-		this.topics = ForumTopic.populate(this.$payload.topics);
-		this.postCountPerPage = this.$payload.postCountPerPage;
+	routed($payload: any) {
+		this.channel = new ForumChannel($payload.channel);
+		this.topics = ForumTopic.populate($payload.topics);
+		this.postCountPerPage = $payload.postCountPerPage;
 
-		if (this.$payload.stickyTopics && this.$payload.stickyTopics.length) {
-			this.stickyTopics = ForumTopic.populate(this.$payload.stickyTopics);
+		if ($payload.stickyTopics && $payload.stickyTopics.length) {
+			this.stickyTopics = ForumTopic.populate($payload.stickyTopics);
 		} else {
 			this.stickyTopics = [];
 		}
 
-		this.perPage = this.$payload.perPage;
-		this.currentPage = this.$payload.page || 1;
+		this.perPage = $payload.perPage;
+		this.currentPage = $payload.page || 1;
 	}
 }

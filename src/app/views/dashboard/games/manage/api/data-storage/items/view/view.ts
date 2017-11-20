@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./view.html';
+import View from '!view!./view.html';
 
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
@@ -44,8 +44,8 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 		return null;
 	}
 
-	routed() {
-		this.item = new GameDataStoreItem(this.$payload.item);
+	routed($payload: any) {
+		this.item = new GameDataStoreItem($payload.item);
 	}
 
 	async remove() {

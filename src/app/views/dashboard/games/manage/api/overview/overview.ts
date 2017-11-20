@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./overview.html';
+import View from '!view!./overview.html';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { RouteState, RouteStore } from '../../manage.store';
@@ -58,8 +58,8 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		return null;
 	}
 
-	routed() {
-		this.sessionStats = this.$payload.sessionStats;
+	routed($payload: any) {
+		this.sessionStats = $payload.sessionStats;
 
 		const fields = [
 			'numActiveTrophies',
@@ -73,7 +73,7 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		];
 
 		fields.forEach(field => {
-			(this as any)[field] = this.$payload[field] || 0;
+			(this as any)[field] = $payload[field] || 0;
 		});
 	}
 }

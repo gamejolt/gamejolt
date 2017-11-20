@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./dogtag.html';
+import View from '!view!./dogtag.html';
 import './dogtag.styl';
 
 @View

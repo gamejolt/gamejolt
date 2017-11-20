@@ -1,4 +1,4 @@
-<app-form name="settingsForm" @changed="onChange">
+<app-form name="settingsForm" ref="form" @changed="onChange">
 
 	<fieldset id="settings-client" v-if="GJ_IS_CLIENT">
 		<legend>
@@ -119,19 +119,6 @@
 			<p class="help-block">
 				<translate>Turning this off will show a static image instead of animated thumbnails.</translate>
 			</p>
-			<app-form-control-toggle />
-		</app-form-group>
-	</fieldset>
-
-	<fieldset id="settings-chat">
-		<legend>
-			<translate>settings.chat</translate>
-		</legend>
-
-		<app-form-group
-			name="chat_notify_friends_online"
-			:label="$gettext( 'settings.chat_notify_friends_online_label' )"
-			>
 			<app-form-control-toggle />
 		</app-form-group>
 	</fieldset>

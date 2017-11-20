@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./search.html';
+import View from '!view!./search.html';
 import './search.styl';
 
 import { AppExpand } from '../../../lib/gj-lib-client/components/expand/expand';
@@ -13,6 +13,7 @@ import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-serv
 import { number } from '../../../lib/gj-lib-client/vue/filters/number';
 import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
 import { Store } from '../../store/index';
+import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
 
 @View
 @Component({
@@ -49,10 +50,17 @@ export default class RouteSearch extends BaseRouteComponent {
 	routeInit() {
 		// We store our own version of the search query and sync back to it on form submission.
 		this.query = Search.query;
+
+		Ads.setAdUnit('search');
 	}
 
 	// Child routes emit an event that calls this.
 	processPayload(payload: any) {
+		// Disable ads for adult searches.
+		if (payload.isAdultSearch) {
+			Ads.isPageDisabled = true;
+		}
+
 		this.query = '';
 		this.showPagination = false;
 		this.payload = {};

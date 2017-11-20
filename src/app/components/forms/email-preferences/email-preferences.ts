@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./email-preferences.html';
+import View from '!view!./email-preferences.html';
 
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { BaseForm } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
@@ -58,9 +58,19 @@ export class FormEmailPreferences extends BaseForm<User> {
 				help: this.$gettext('dash.email_prefs.notify_game_follows_help'),
 			},
 			{
+				key: 'notify_user_follows',
+				label: this.$gettext('User Follows'),
+				help: this.$gettext('Get emails when other users follow you.'),
+			},
+			{
 				key: 'notify_sales',
 				label: this.$gettext('Sales'),
 				help: this.$gettext('Get emails when someone buys your games.'),
+			},
+			{
+				key: 'notify_collaborator_invites',
+				label: this.$gettext('Collaborator Invites'),
+				help: this.$gettext('Get emails when you are invited to collaborate.'),
 			},
 		];
 	}

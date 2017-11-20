@@ -7,11 +7,10 @@ $shell-nav-item-color = $gray-lightest
 
 ul.shell-nav
 	@extend .list-unstyled
-	font-size: 15px  // Stupid custom size!
+	font-size: 15px // Stupid custom size!
 	margin-bottom: 0
 
-	.tag
-	.badge
+	.tag, .badge
 		float: right
 		margin-left: 5px
 		margin-top: 15px
@@ -43,19 +42,17 @@ ul.shell-nav
 		.jolticon
 			vertical-align: text-bottom
 
-	.tag
-	.badge
-	.jolticon
+	.tag, .badge, .jolticon
 		position: relative
 		z-index: 1
 
 	small
 		color: $text-muted
 
-	> li
+	& > li
 		margin-bottom: 0
 
-		> a
+		& > a
 			@extend .clearfix
 			position: relative
 			display: block
@@ -73,8 +70,7 @@ ul.shell-nav
 				padding-left: 15px
 
 			&.active
-				&
-				&:hover
+				&, &:hover
 					color: $gj-green
 
 					.jolticon
@@ -92,20 +88,19 @@ ul.shell-nav
 
 // Nested ULs
 ul.shell-nav ul
-
-	> li > a
+	& > li > a
 		position: relative
 		padding-left: 15px
 
 		&::after
-			content: '';
-			display: block;
-			position: absolute;
-			left: 21px;
-			top: 0;
-			bottom: 0;
-			width: 3px;
-			background-color: $gray-darker;
+			content: ''
+			display: block
+			position: absolute
+			left: 21px
+			top: 0
+			bottom: 0
+			width: 3px
+			background-color: $gray-darker
 
 			&:hover
 				display: none
@@ -129,12 +124,12 @@ ul.shell-nav ul
 	&.first
 		margin-top: $font-size-base
 
-	> small
+	& > small
 		float: right
 		color: $gray-light
 		font-weight: normal
 
-	> .badge
+	& > .badge
 		float: right
 		margin-top: -3px
 		margin-left: 5px
@@ -166,12 +161,11 @@ ul.shell-nav ul
 .nav-controls
 	padding: 0 7px 0 15px
 
-	> .form-control
-	> .btn
+	& > .form-control, > .btn
 		margin-bottom: $font-size-base
 
-	> .form-control
-		placeholder( $gray-light )
+	& > .form-control
+		placeholder($gray-light)
 		border: 0
 		font-size: $font-size-small
 		background-color: $gray-lighter

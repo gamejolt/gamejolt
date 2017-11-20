@@ -1,9 +1,8 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as View from '!view!./overview.html';
+import View from '!view!./overview.html';
 
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
@@ -17,6 +16,7 @@ import { AppGameGridPlaceholder } from '../../../../components/game/grid/placeho
 import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
 import { Store } from '../../../../store/index';
 import { AppAdPlacement } from '../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -68,16 +68,15 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 		// Try pulling feed from cache.
 		if (!GJ_IS_SSR) {
 			this.feed = ActivityFeedService.bootstrap();
-			console.log('tried getting feed', this.feed);
 		}
 	}
 
-	routed() {
-		this.games = Game.populate(this.$payload.games);
+	routed($payload: any) {
+		this.games = Game.populate($payload.games);
 
 		if (!this.feed) {
-			this.feed = ActivityFeedService.bootstrap(FiresidePost.populate(this.$payload.posts), {
-				type: 'Fireside_Post',
+			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {
+				type: 'EventItem',
 				url: '/web/discover/devlogs/posts',
 			});
 		}

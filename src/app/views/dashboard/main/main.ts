@@ -1,6 +1,6 @@
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./main.html';
+import View from '!view!./main.html';
 
 import { Store } from '../../../store/index';
 import { AppPageHeader } from '../../../components/page-header/page-header';

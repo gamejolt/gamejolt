@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./soundtrack.html';
+import View from '!view!./soundtrack.html';
 
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { RouteState, RouteStore } from '../../view.store';
@@ -53,7 +53,7 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteC
 		return null;
 	}
 
-	async routed() {
+	async routed($payload: any) {
 		// Don't download on SSR.
 		if (GJ_IS_SSR) {
 			return;

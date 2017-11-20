@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import * as View from '!view!./view.html';
+import View from '!view!./view.html';
 
 import { ChannelsViewHelper } from '../channels-view-helper';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
@@ -50,9 +50,9 @@ export default class RouteDiscoverChannelsView extends BaseRouteComponent {
 		ChannelsViewHelper.setDefaultMetaData(this.route.params.channel);
 	}
 
-	routed() {
+	routed($payload: any) {
 		// Overwrite channel from server so we can decide how it displays in the
 		// end.
-		this.channel = this.$payload.channel;
+		this.channel = $payload.channel;
 	}
 }

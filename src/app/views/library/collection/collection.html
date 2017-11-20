@@ -198,7 +198,7 @@
 		<template slot="nav">
 
 			<ul class="stat-list">
-				<li class="stat-big stat-big-smaller" v-if="type !== 'bundle' && type !== 'tag'">
+				<li class="stat-big stat-big-smaller" v-if="shouldShowFollowers">
 					<div class="stat-big-label"><translate>library.collection.followers_label</translate></div>
 					<div class="stat-big-digit">{{ followerCount | number }}</div>
 				</li>
@@ -212,57 +212,48 @@
 
 		<template slot="controls">
 
-			<!--
-				Weird bug with vue where it wasn't updating the translated text
-				when switching between playlists and things to follow.
-			-->
-			<span v-for="collection of [ collection ]" :key="collection._id">
+			<!-- Following -->
+			<app-game-collection-follow-widget
+				v-if="shouldShowFollow"
+				class="btn-block"
+				:collection="collection"
+				:follower-count="followerCount"
+				@follow="++followerCount"
+				@unfollow="--followerCount"
+				/>
+			<template v-else-if="type === 'playlist' && collection.isOwner">
 
-				<!-- Following -->
-				<app-game-collection-follow-widget
-					v-if="shouldShowFollow"
-					class="btn-block"
-					:collection="collection"
-					:follower-count="followerCount"
-					@follow="++followerCount"
-					@unfollow="--followerCount"
-					/>
+				<!-- Editing Playlist -->
+				<a class="btn btn-outline"
+					v-if="type === 'playlist' && collection.isOwner"
+					@click="editPlaylist( collection )"
+					>
+					<app-jolticon icon="edit" />
+					<translate>Edit Playlist</translate>
+				</a>
 
-				<template v-else-if="type === 'playlist' && collection.isOwner">
+				<!-- More options -->
+				<a class="btn btn-outline sparse"
+					v-app-popover-trigger="`collection-options`"
+					v-if="type === 'playlist' && collection.isOwner"
+					>
+					<app-jolticon icon="ellipsis-h" />
+					<translate>options.more</translate>
+				</a>
 
-					<!-- Editing Playlist -->
-					<a class="btn btn-outline"
-						v-if="type === 'playlist' && collection.isOwner"
-						@click="editPlaylist( collection )"
-						>
-						<app-jolticon icon="edit" />
-						<translate>Edit Playlist</translate>
-					</a>
+				<app-popover popover-id="collection-options">
+					<div class="list-group list-group-dark">
+						<a
+							class="list-group-item has-icon"
+							@click="removePlaylist( collection )"
+							>
+							<app-jolticon icon="remove" class="warning" />
+							<translate>library.collection.remove_playlist_button</translate>
+						</a>
+					</div>
+				</app-popover>
 
-					<!-- More options -->
-					<a class="btn btn-outline sparse"
-						v-app-popover-trigger="`collection-options`"
-						v-if="type === 'playlist' && collection.isOwner"
-						>
-						<app-jolticon icon="ellipsis-h" />
-						<translate>options.more</translate>
-					</a>
-
-					<app-popover popover-id="collection-options">
-						<div class="list-group list-group-dark">
-							<a
-								class="list-group-item has-icon"
-								@click="removePlaylist( collection )"
-								>
-								<app-jolticon icon="remove" class="warning" />
-								<translate>library.collection.remove_playlist_button</translate>
-							</a>
-						</div>
-					</app-popover>
-
-				</template>
-
-			</span>
+			</template>
 
 		</template>
 
@@ -272,12 +263,13 @@
 		:listing="listing"
 		:hide-section-nav="true"
 		:is-loading="routeLoading"
+		:show-footer-ad="false"
 		>
 
 		<app-game-grid
 			v-if="listing"
 			:games="listing.games"
-			event="collection-game-list:click"
+			event-label="collection-games"
 			>
 
 			<template slot="thumbnail-controls" scope="props">
@@ -308,7 +300,7 @@
 		<div class="container-lg">
 
 			<div class="clearfix">
-				<h1>
+				<h1 class="section-header">
 					<translate>Recommended Games</translate>
 				</h1>
 				<div :class="{ 'pull-left': !Screen.isXs }">
@@ -328,7 +320,7 @@
 				<app-game-grid
 					:games="recommendedGames"
 					:scrollable="true"
-					event="collection-game-mix:click"
+					event-label="collection-games-mix"
 					/>
 			</app-loading-fade>
 
@@ -340,5 +332,7 @@
 
 		</div>
 	</section>
+
+	<app-ad-placement pos="bottom" />
 
 </div>

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import * as View from '!view!./listing.html?style=./listing.styl';
+import View from '!view!./listing.html?style=./listing.styl';
 
 import { GameListingContainer } from './listing-container-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -17,6 +17,7 @@ import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading
 import { AppGameGridPlaceholder } from '../grid/placeholder/placeholder';
 import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 
 @View
 @Component({
@@ -42,9 +43,15 @@ export class AppGameListing extends Vue {
 	@Prop(Boolean) isLoading?: boolean;
 	@Prop({ type: Boolean, default: true })
 	showAds: boolean;
+	@Prop({ type: Boolean, default: true })
+	showFooterAd: boolean;
 
 	number = number;
 	Environment = Environment;
 	Screen = makeObservableService(Screen);
 	Scroll = Scroll;
+
+	get shouldShowAds() {
+		return Ads.shouldShow;
+	}
 }

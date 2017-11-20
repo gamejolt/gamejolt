@@ -1,0 +1,30 @@
+<div class="-video-embed timeline-list-full-bleed">
+	<app-responsive-dimensions
+		:ratio="16 / 9"
+		@change="onDimensionsChange"
+		>
+
+		<template v-if="isHydrated">
+			<a
+				v-if="!isShowingVideo"
+				@click="play"
+				>
+				<div class="play-button-overlay">
+					<app-jolticon icon="play" />
+				</div>
+
+				<div class="-thumb"
+					:style="{ 'background-image': `url('${thumbnail}')` }"
+					>
+				</div>
+			</a>
+			<app-video-embed
+				v-else
+				video-provider="youtube"
+				:video-id="videoId"
+				:autoplay="shouldAutoplay"
+				/>
+		</template>
+
+	</app-responsive-dimensions>
+</div>
