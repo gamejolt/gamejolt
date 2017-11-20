@@ -6,7 +6,7 @@
 		/> -->
 
 	<section
-		v-if="!app.user"
+		v-if="isLoaded && !app.user"
 		class="section landing-header text-center"
 		>
 		<div class="container">
