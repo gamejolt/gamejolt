@@ -99,6 +99,7 @@ export type Mutations = {
 		packages: LocalDbPackage[];
 		games: LocalDbGame[];
 	};
+	'clientLibrary/setLocalDbReady': boolean;
 	'clientLibrary/setCurrentlyPatching': [LocalDbPackage, PatchInstance];
 	'clientLibrary/unsetCurrentlyPatching': LocalDbPackage;
 	'clientLibrary/setCurrentlyUninstalling': [LocalDbPackage, Promise<void>];
@@ -175,6 +176,8 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private _bootstrapPromise: Promise<void> | null = null;
 	private _bootstrapPromiseResolver: Function = null as any;
 
+	// Localdb variables
+	isLocalDbReady = false;
 	packages: LocalDbPackage[] = [];
 	games: LocalDbGame[] = [];
 
@@ -197,8 +200,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 		this._startBootstrap();
 
-		// TODO(rewrite) - port migrator
-
 		const [packages, games] = await Promise.all([
 			// Need these type hints because dexie returns its own Dexie.Promises.
 			db.packages.toArray() as Promise<LocalDbPackage[]>,
@@ -210,6 +211,8 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		if (GJ_ENVIRONMENT === 'development') {
 			Config.env = 'development';
 		}
+
+		this.setLocalDbReady(true);
 
 		this.installerInit();
 		this.launcherInit();
@@ -312,6 +315,11 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		}
 
 		return localPackages[0];
+	}
+
+	@VuexMutation
+	setLocalDbReady(ready: Mutations['clientLibrary/setLocalDbReady']) {
+		this.isLocalDbReady = ready;
 	}
 
 	get numPatching() {

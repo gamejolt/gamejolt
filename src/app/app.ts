@@ -11,6 +11,7 @@ import { AppClientIntro } from './components/client/intro/intro';
 import { AppState, AppStore } from '../lib/gj-lib-client/vue/services/app/app-store';
 import { loadCurrentLanguage } from '../utils/translations';
 import { VueClass } from 'vue-class-component/lib/declarations';
+import { AppClientMigrator } from './components/client/migrator/migrator';
 
 const components: { [name: string]: VueClass } = {
 	AppShell,
@@ -20,6 +21,7 @@ const components: { [name: string]: VueClass } = {
 if (GJ_IS_CLIENT) {
 	// TODO(rewrite,cros) - will this load the client chunks? Do I have to use require here?
 	components.AppClientIntro = AppClientIntro;
+	components.AppClientMigrator = AppClientMigrator;
 }
 
 @View

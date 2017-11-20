@@ -19,7 +19,7 @@
 		"@types/favico.js": "0.0.28",
 		"@types/hammerjs": "2.0.34",
 		"@types/jstimezonedetect": "1.0.0",
-		"@types/node": "8.0.20",
+		"@types/node": "8.0.53",
 		"@types/nw.gui": "0.0.20",
 		"@types/stripe": "2.0.2",
 		"@types/ua-parser-js": "0.7.31",

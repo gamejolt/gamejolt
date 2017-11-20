@@ -295,16 +295,24 @@ store.watch(
 			store.dispatch('bootstrap');
 			store.dispatch('loadChat');
 
-			if (GJ_IS_CLIENT) {
-				store.dispatch('clientLibrary/bootstrap');
-			}
+			// TODO(rewrite) client in offline mode will not bootstrap because user will not be able to be resolved.
+			// is this the desired behaviour?
+			// we need client to be bootstrapped for the migrator, so i've commented the code below.
+			// if (GJ_IS_CLIENT) {
+			// 	store.dispatch('clientLibrary/bootstrap');
+			// }
 		} else {
 			store.dispatch('clear');
 			store.dispatch('clearChat');
 
-			if (GJ_IS_CLIENT) {
-				store.dispatch('clientLibrary/clear');
-			}
+			// TODO(rewrite) this used to be uncommented, but really, what's the reason to clear the client library?
+			// if (GJ_IS_CLIENT) {
+			// 	store.dispatch('clientLibrary/clear');
+			// }
 		}
 	}
 );
+
+if (GJ_IS_CLIENT) {
+	store.dispatch('clientLibrary/bootstrap');
+}
