@@ -18,12 +18,12 @@ export class AppOfflineAlert extends Vue {
 
 	Connection = makeObservableService(Connection);
 
-	@Watch('Connection.isOnline')
-	onlineChange(isOnline: boolean) {
-		this.shouldShow = !isOnline;
+	@Watch('Connection.isOffline')
+	onlineChange(isOffline: boolean) {
+		this.shouldShow = isOffline;
 
 		// Always reset the force hidden state when we switch to offline.
-		if (!isOnline) {
+		if (isOffline) {
 			this.forceHidden = false;
 		}
 	}

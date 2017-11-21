@@ -97,9 +97,9 @@ export class AppClientIntro extends Vue {
 		this.shouldTransitionOut = true;
 	}
 
-	@Watch('Connection.isOnline', { immediate: true })
-	onConnectionOnlineChanged(isOnline: boolean) {
-		if (!isOnline) {
+	@Watch('Connection.isOffline', { immediate: true })
+	onConnectionOnlineChanged(isOffline: boolean) {
+		if (isOffline) {
 			this.initialStateChangeResolver();
 		}
 	}
