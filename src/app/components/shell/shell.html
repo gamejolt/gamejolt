@@ -1,6 +1,7 @@
 <div
 	id="shell"
 	:class="{
+		'is-client-offline': Connection.isClientOffline,
 		'left-pane-visible': isLeftPaneVisible,
 		'right-pane-visible': isRightPaneVisible
 	}"

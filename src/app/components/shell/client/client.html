@@ -1,4 +1,12 @@
 <div>
+	<div v-if="userBootstrapped">
+		<app-client-intro
+			v-if="isShowingIntro"
+			@finish="isShowingIntro = false"
+			/>
+		<app-client-migrator />
+	</div>
+
 	<app-client-hidpi v-if="os === 'linux'" />
 	<app-client-tray v-if="os === 'windows'" />
 	<app-client-mac-app-menu v-if="os === 'mac'" />

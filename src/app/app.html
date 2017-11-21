@@ -1,21 +1,9 @@
 <div :id="id">
-	<div :class="{ 'is-client-offline': Connection.isClientOffline }">
-
-		<div v-if="GJ_IS_CLIENT && userBootstrapped">
-			<app-client-intro
-				v-if="isShowingIntro"
-				@finish="isShowingIntro = false"
-				/>
-			<app-client-migrator v-if="userBootstrapped" />
+	<app-shell>
+		<div id="content">
+			<app-error-page>
+				<router-view />
+			</app-error-page>
 		</div>
-
-		<app-shell>
-			<div id="content">
-				<app-error-page>
-					<router-view />
-				</app-error-page>
-			</div>
-		</app-shell>
-
-	</div>
+	</app-shell>
 </div>

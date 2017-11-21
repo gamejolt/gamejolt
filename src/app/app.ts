@@ -2,38 +2,19 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./app.html';
 
-import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
-import { makeObservableService } from '../lib/gj-lib-client/utils/vue';
 import { AppShell } from './components/shell/shell';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
-import { AppState, AppStore } from '../lib/gj-lib-client/vue/services/app/app-store';
 import { loadCurrentLanguage } from '../utils/translations';
-
-let components: any = {
-	AppShell,
-	AppErrorPage,
-};
-
-if (GJ_IS_CLIENT) {
-	components = {
-		...components,
-		...require('./components/client/intro/intro'),
-		...require('./components/client/migrator/migrator'),
-	};
-}
 
 @View
 @Component({
-	components,
+	components: {
+		AppShell,
+		AppErrorPage,
+	},
 })
 export class App extends Vue {
-	@AppState userBootstrapped: AppStore['userBootstrapped'];
-
-	isShowingIntro = GJ_IS_CLIENT;
-
-	Connection = makeObservableService(Connection);
-
 	// On SSR we want to set mount point for the app to this component so that
 	// we can hydrate the component. On browser we want to set the "app" in the
 	// index template.
