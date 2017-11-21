@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import gui from 'nw.gui';
+import * as gui from 'nw.gui';
 import { Component } from 'vue-property-decorator';
 
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -81,19 +81,17 @@ export class AppClientTray extends Vue {
 			tray = undefined;
 		}
 
-		tray = new gui.Tray(
-			{
-				title: 'Game Jolt Client',
+		tray = new gui.Tray({
+			title: 'Game Jolt Client',
 
-				// We split this up so that it doesn't get injected.
-				// It needs to stay as a relative file path or it will break.
-				icon:
-					packagePrefix +
-					'/app/components/client/tray/' +
-					(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
-				click: () => this.toggleVisibility(),
-			} as any
-		);
+			// We split this up so that it doesn't get injected.
+			// It needs to stay as a relative file path or it will break.
+			icon:
+				packagePrefix +
+				'/app/components/client/tray/' +
+				(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
+			click: () => this.toggleVisibility(),
+		} as any);
 
 		const menu = new gui.Menu();
 

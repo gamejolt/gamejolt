@@ -29,6 +29,6 @@ export class AppClientMacAppMenu extends Vue {
 	}
 
 	render(h: Vue.CreateElement) {
-		h('div');
+		return h('div');
 	}
 }
