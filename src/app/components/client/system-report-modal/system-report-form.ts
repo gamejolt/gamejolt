@@ -1,12 +1,13 @@
 import { Component } from 'vue-property-decorator';
-import View from '!view!./system-report.html';
-import { ClientLogger } from '../../logger/logger.service';
+import { IClientOSInfo } from 'client-voodoo';
+import View from '!view!./system-report-form.html';
+
+import { ClientLogger } from '../logger/logger.service';
 import {
 	BaseForm,
 	FormOnSubmit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { IClientOSInfo } from 'client-voodoo';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 
 interface FormModel {
 	description: string;
@@ -17,7 +18,7 @@ interface FormModel {
 @View
 @Component({})
 export class FormClientSystemReport extends BaseForm<FormModel> implements FormOnSubmit {
-	onSubmit(): Promise<any> {
+	onSubmit() {
 		const log = ClientLogger.getLogInfo();
 
 		this.setField('log_lines', log.logLines.join('\n'));

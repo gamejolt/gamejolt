@@ -32,10 +32,10 @@ export class AppShellFooter extends Vue {
 		return GJ_VERSION;
 	}
 
-	showSystemReport() {
+	async showSystemReport() {
 		if (GJ_IS_CLIENT) {
-			// TODO(rewrite)
-			// getProvider<any>( 'Client_SystemReportModal' ).show();
+			const m = await import('../../client/system-report-modal/system-report-modal.service');
+			m.ClientSystemReportModal.show();
 		}
 	}
 }
