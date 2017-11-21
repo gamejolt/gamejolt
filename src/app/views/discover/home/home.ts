@@ -1,3 +1,4 @@
+import { Location } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import View from '!view!./home.html?style=./home.styl';
@@ -27,7 +28,7 @@ import {
 export interface DiscoverRow {
 	title: string;
 	desc?: string;
-	url: string;
+	url: Location;
 	eventLabel: string;
 	games: string;
 }
@@ -69,10 +70,10 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		rows.push({
 			title: this.$gettext('Featured'),
 			desc: this.$gettext(`staff picks`),
-			url: this.$router.resolve({
+			url: {
 				name: 'discover.games.list._fetch',
 				params: { section: 'featured' },
-			}).href,
+			},
 			eventLabel: 'featured-games',
 			games: 'featured',
 		});
@@ -81,10 +82,10 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		// 	rows.push({
 		// 		title: this.$gettext('Recommended'),
 		// 		desc: this.$gettext(`based on your history`),
-		// 		url: this.$router.resolve({
+		// 		url: {
 		// 			name: 'library.collection.recommended',
 		// 			params: { id: this.app.user.username },
-		// 		}).href,
+		// 		},
 		// 		eventLabel: 'recommended',
 		// 		games: 'recommended',
 		// 	});
@@ -93,10 +94,10 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		rows.push({
 			title: this.$gettext('Hot Games'),
 			desc: this.$gettext(`new stuff that people are enjoying`),
-			url: this.$router.resolve({
+			url: {
 				name: 'discover.games.list._fetch',
 				params: { section: null as any },
-			}).href,
+			},
 			eventLabel: 'hot-games',
 			games: 'hot',
 		});
@@ -104,10 +105,10 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		rows.push({
 			title: this.$gettext('Top Games'),
 			desc: this.$gettext(`based on ratings`),
-			url: this.$router.resolve({
+			url: {
 				name: 'discover.games.list._fetch',
 				params: { section: 'best' },
-			}).href,
+			},
 			eventLabel: 'best-games',
 			games: 'best',
 		});
