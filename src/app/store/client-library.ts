@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { State, namespace, Action, Mutation, Getter } from 'vuex-class';
+import { State, namespace, Action, Mutation } from 'vuex-class';
 import {
 	LocalDbPackage,
 	DbFieldTypes as PackageFields,
@@ -58,7 +58,6 @@ const sanitize = require('sanitize-filename');
 export const ClientLibraryState = namespace('clientLibrary', State);
 export const ClientLibraryAction = namespace('clientLibrary', Action);
 export const ClientLibraryMutation = namespace('clientLibrary', Mutation);
-export const ClientLibraryGetter = namespace('clientLibrary', Getter);
 
 export type Actions = {
 	'clientLibrary/bootstrap': undefined;
@@ -569,7 +568,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				}
 
 				// Get the number of packages in this game.
-				const count = await db.packages.where('game_id').equals(localPackage.game_id).count();
+				const count = await db.packages
+					.where('game_id')
+					.equals(localPackage.game_id)
+					.count();
 
 				await db.transaction('rw', [db.games, db.packages], async () => {
 					// Note that some times a game is removed before the package (really weird cases).

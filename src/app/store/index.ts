@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
 import {
 	VuexStore,
@@ -30,7 +30,6 @@ import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdro
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
 import { ChatClient } from '../components/chat/client';
 import { ChatClientLazy } from '../components/lazy';
-import { ClientControl } from '../components/client/control/client.service';
 
 export type Actions = AppActions &
 	LibraryActions &
@@ -82,7 +81,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	clientLibrary: ClientLibraryStore;
 
 	// From the vuex-router-sync.
-	route: VueRouter.Route;
+	route: Route;
 
 	chat: ChatClient | null = null;
 
@@ -283,7 +282,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 export const store = new Store();
 
 // Sync the routes into the store.
-sync(store, router, { moduleName: 'route' });
+sync(store as any, router, { moduleName: 'route' });
 
 // Bootstrap/clear the app when user changes.
 store.watch(

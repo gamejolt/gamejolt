@@ -1,18 +1,22 @@
 import Vue from 'vue';
+import * as fs from 'fs';
+import * as path from 'path';
+import { Shell } from 'nw.gui';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./game-buttons.html';
+
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import { State } from 'vuex-class';
-import { ClientLibraryStore, ClientLibraryAction } from '../../../store/client-library';
+import {
+	ClientLibraryStore,
+	ClientLibraryAction,
+	ClientLibraryState,
+} from '../../../store/client-library';
 import { LocalDbPackage } from '../local-db/package/package.model';
 import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 
-import gui from 'nw.gui';
-import * as fs from 'fs';
-import * as path from 'path';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { arrayGroupBy } from '../../../../lib/gj-lib-client/utils/array';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -21,7 +25,6 @@ import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popo
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppClientInstallProgress } from '../install-progress/install-progress';
 import { ClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
-import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -36,7 +39,8 @@ import { Store } from '../../../store/index';
 	},
 })
 export class AppClientGameButtons extends Vue {
-	@State clientLibrary: Store['clientLibrary'];
+	@ClientLibraryState packagesByGameId: ClientLibraryStore['packagesByGameId'];
+	@ClientLibraryState findActiveForGame: ClientLibraryStore['findActiveForGame'];
 	@ClientLibraryAction packageInstall: ClientLibraryStore['packageInstall'];
 	@ClientLibraryAction launcherLaunch: ClientLibraryStore['launcherLaunch'];
 	@ClientLibraryAction installerPause: ClientLibraryStore['installerPause'];
@@ -67,11 +71,11 @@ export class AppClientGameButtons extends Vue {
 	// We try to pull a package with some action on it.
 	// For example, if a package is installing, we want to pull that one to show.
 	get localPackage() {
-		return this.clientLibrary.findActiveForGame(this.game.id);
+		return this.findActiveForGame(this.game.id);
 	}
 
 	get gamePackages(): LocalDbPackage[] | undefined {
-		return this.clientLibrary.packagesByGameId[this.game.id];
+		return this.packagesByGameId[this.game.id];
 	}
 
 	created() {
@@ -188,7 +192,7 @@ export class AppClientGameButtons extends Vue {
 
 			// Just open the first file in the folder.
 			// This way we open within the package folder instead of the parent folder.
-			gui.Shell.showItemInFolder(path.resolve(localPackage.install_dir, files[0]));
+			Shell.showItemInFolder(path.resolve(localPackage.install_dir, files[0]));
 		});
 	}
 

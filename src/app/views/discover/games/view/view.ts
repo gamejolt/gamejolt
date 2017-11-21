@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import View from '!view!./view.html';
@@ -32,7 +32,11 @@ import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
 import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { ClientLibraryAction, ClientLibraryStore } from '../../../../store/client-library';
+import {
+	ClientLibraryAction,
+	ClientLibraryStore,
+	ClientLibraryState,
+} from '../../../../store/client-library';
 import { AppUserFollowWidget } from '../../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
@@ -86,8 +90,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	@State app: Store['app'];
 
-	// TODO(rewrite) Can do this here or do I have to require and commit/dispatch? ugh
-	@State clientLibrary: Store['clientLibrary'];
+	@ClientLibraryState gamesById: ClientLibraryStore['gamesById'];
 	@ClientLibraryAction syncGame: ClientLibraryStore['syncGame'];
 
 	readonly date = date;
@@ -133,7 +136,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	@RouteResolve({ lazy: true, cache: true, cacheTag: 'view' })
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
 		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);
 
@@ -202,7 +205,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		// TODO(rewrite) - test this - install a game, update something in it, visit the game page and see if it updates in localdb
 		if (GJ_IS_CLIENT) {
 			// Only sync if it's in library.
-			const localGame = this.clientLibrary.gamesById[this.game.id];
+			const localGame = this.gamesById[this.game.id];
 			if (localGame) {
 				return this.syncGame([this.game.id, this.game]);
 			}
