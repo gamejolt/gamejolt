@@ -4,7 +4,9 @@ import { ClientControl } from './components/client/control/client.service';
 import { ClientHistoryNavigator } from './components/client/history-navigator/history-navigator.service';
 import { ClientShortcut } from './components/client/shortcut/shortcut.service';
 import { ClientUser } from './components/client/user/user.service';
+import { initClientApiInterceptors } from './components/client/api/api.service';
 
+initClientApiInterceptors();
 ClientUser.init();
 ClientAutoStart.init();
 ClientControl.init();
