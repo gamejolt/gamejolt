@@ -53,14 +53,14 @@ export class AppClientIntro extends Vue {
 		// `client-intro-login-play` value through log in and catch it here to make sure we play
 		// anyway.
 		if (!this.user && !sessionStorage.getItem('client-intro-login-play')) {
-			console.log('Not logged in');
+			console.log('Skip intro -- not logged in.');
 			return;
 		}
 
 		// Only play once per session. This fixes issues when the client auto-updates and it has to
 		// refresh the app.
 		if (sessionStorage.getItem('client-intro-has-played')) {
-			console.log('Already played this session');
+			console.log('Skip intro -- already played this session.');
 			this.finish();
 			return;
 		}
@@ -70,7 +70,7 @@ export class AppClientIntro extends Vue {
 		// and are now logging in, let's play the intro since they had to manually bring the client
 		// forward to do that.
 		if (ClientControl.startedSilently && !sessionStorage.getItem('client-intro-login-play')) {
-			console.log('Started silently');
+			console.log('Skip intro -- client started silently.');
 			this.finish();
 			return;
 		}
@@ -78,11 +78,9 @@ export class AppClientIntro extends Vue {
 		// Be sure to set that we've played.
 		sessionStorage.setItem('client-intro-has-played', 'played');
 
-		console.log('Playing sound');
 		await this.startAudio();
 
 		// The sound effect/anim takes about 1.6s
-		console.log('Showing logo');
 		this.shouldShowLogo = true;
 		await sleep(1600);
 
@@ -92,7 +90,6 @@ export class AppClientIntro extends Vue {
 
 		// We do the leave animation as soon as the initial state has come into view behind this
 		// intro anim.
-		console.log('Waiting for loading to be done');
 		await initialStateChangePromise;
 		clearTimeout(timer);
 
@@ -108,7 +105,6 @@ export class AppClientIntro extends Vue {
 	}
 
 	leaveAnimFinished() {
-		console.log('TRANISITIONED OUT');
 		this.finish();
 	}
 
