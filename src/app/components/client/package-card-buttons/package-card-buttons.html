@@ -117,7 +117,6 @@
 		button with a [...] after.
 		If the package has normal builds too, then we just show it as a more options sparse button.
 	-->
-	{{ package.id }}
 	<button
 		v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)"
 		v-app-popover-trigger="`game-package-card-more-options-${ package.id }`"
