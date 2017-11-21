@@ -37,7 +37,7 @@
 		"decompress-zip": "0.3.0",
 		"express": "4.15.4",
 		"favico.js": "0.3.10",
-		"game-jolt-frontend-lib": "gamejolt/frontend-lib#client-vue",
+		"game-jolt-frontend-lib": "gamejolt/frontend-lib#dbef476b790fc4f853df5608b53bb5e39647922f",
 		"hammerjs": "2.0.8",
 		"humanize-duration": "3.10.1",
 		"jquery": "3.2.1",

@@ -3030,9 +3030,9 @@ function-bind@^1.0.2, function-bind@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
 
-game-jolt-frontend-lib@gamejolt/frontend-lib#client-vue:
+game-jolt-frontend-lib@gamejolt/frontend-lib#dbef476b790fc4f853df5608b53bb5e39647922f:
   version "0.0.1"
-  resolved "https://codeload.github.com/gamejolt/frontend-lib/tar.gz/b0f9f7c4d6ca9639a2e0b91b1f865fb8836c7882"
+  resolved "https://codeload.github.com/gamejolt/frontend-lib/tar.gz/dbef476b790fc4f853df5608b53bb5e39647922f"
   dependencies:
     autoprefixer "7.1.4"
     clean-css "4.1.8"
