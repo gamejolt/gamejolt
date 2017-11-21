@@ -314,7 +314,7 @@
 			</li>
 		</ul>
 
-		<template v-if="app.user && isBootstrapped">
+		<template v-if="app.user">
 
 			<hr>
 
@@ -344,7 +344,7 @@
 			<hr>
 
 			<ul class="shell-nav">
-				<li class="offline-disable" v-if="GJ_IS_CLIENT">
+				<li v-if="GJ_IS_CLIENT">
 					<router-link
 						:to="{ name: 'library.installed' }"
 						active-class="active"
@@ -481,7 +481,7 @@
 			<!--
 				Playlists
 			-->
-			<template v-if="isLeftPaneVisible">
+			<template v-if="isLeftPaneVisible && isBootstrapped">
 				<div class="nav-heading" :title="$gettext( `library.nav.playlists` )">
 					<translate>library.nav.playlists</translate>
 					<span class="badge">
