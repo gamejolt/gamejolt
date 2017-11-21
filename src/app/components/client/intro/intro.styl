@@ -1,9 +1,9 @@
 @require '~styles/variables'
 
-.client-intro-no-overflow
+>>> body.client-intro-no-overflow
 	overflow: hidden
 
-body.is-client gj-client-intro
+.client-intro
 	position: fixed
 	top: 0
 	right: 0
@@ -15,21 +15,19 @@ body.is-client gj-client-intro
 	align-items: center
 	justify-content: center
 
-.client-intro-wrap img
+	&.-leave
+		transition: all 500ms
+		background-color: rgba($gray-darkest, 0)
+		pointer-events: none
+
+		.-wrap
+			transition: all 500ms $strong-ease-out
+			opacity: 0
+			transform: scale(2)
+
+		.loading
+			opacity: 0
+
+.-logo
 	display: inline-block
 	margin: 0 4px
-
-.client-intro-leave
-	animation-duration: 500ms
-
-	.client-intro
-		transition: all 500ms
-		background-color: rgba( $gray-darkest, 0 )
-
-	.client-intro-wrap
-		transition: all 500ms $strong-ease-out
-		opacity: 0
-		transform: scale(2)
-
-	gj-loading
-		opacity: 0

@@ -30,6 +30,8 @@ if (GJ_IS_CLIENT) {
 export class App extends Vue {
 	@AppState userBootstrapped: AppStore['userBootstrapped'];
 
+	isShowingIntro = GJ_IS_CLIENT;
+
 	Connection = makeObservableService(Connection);
 
 	// On SSR we want to set mount point for the app to this component so that

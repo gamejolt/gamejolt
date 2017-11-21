@@ -23,8 +23,9 @@ import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading
 export class AppClientIntro extends Vue {
 	@AppState user: AppStore['user'];
 
-	done = false;
+	shouldShowLogo = false;
 	shouldShowLoading = false;
+	shouldTransitionOut = false;
 	initialStateChangeResolver: Function = null as any;
 
 	$refs: {
@@ -36,37 +37,38 @@ export class AppClientIntro extends Vue {
 	async created() {
 		document.body.classList.add('client-intro-no-overflow');
 
+		// Whatever happens first.
+		// The page loaded or the connection is gone.
 		const initialStateChangePromise = new Promise(
 			resolve => (this.initialStateChangeResolver = resolve)
 		);
 
-		// Whatever happens first.
-		// The page loaded or the connection is gone.
 		EventBus.on('routeChangeAfter', () => {
-			console.log('page loaded');
 			this.initialStateChangeResolver();
 		});
 
-		// We only show the intro if they're logged in.
-		// Otherwise we just keep everything hidden and wait for the Client_User service to redirect.
-		// When we first log in, we don't have a user many times since the first payload hasn't gotten to us.
-		// We set the `client-intro-login-play` value through log in and catch it here to make sure we play anyway.
+		// We only show the intro if they're logged in. Otherwise we just keep everything hidden and
+		// wait for the Client_User service to redirect. When we first log in, we don't have a user
+		// many times since the first payload hasn't gotten to us. We set the
+		// `client-intro-login-play` value through log in and catch it here to make sure we play
+		// anyway.
 		if (!this.user && !sessionStorage.getItem('client-intro-login-play')) {
 			console.log('Not logged in');
 			return;
 		}
 
-		// Only play once per session.
-		// This fixes issues when the client auto-updates and it has to refresh the app.
+		// Only play once per session. This fixes issues when the client auto-updates and it has to
+		// refresh the app.
 		if (sessionStorage.getItem('client-intro-has-played')) {
 			console.log('Already played this session');
 			this.finish();
 			return;
 		}
 
-		// If we started silently (through autostart with computer start), then we don't want to play the intro
-		// since it'll be in the background. However, if they started it up silently and are now logging in,
-		// let's play the intro since they had to manually bring the client forward to do that.
+		// If we started silently (through autostart with computer start), then we don't want to
+		// play the intro since it'll be in the background. However, if they started it up silently
+		// and are now logging in, let's play the intro since they had to manually bring the client
+		// forward to do that.
 		if (ClientControl.startedSilently && !sessionStorage.getItem('client-intro-login-play')) {
 			console.log('Started silently');
 			this.finish();
@@ -77,32 +79,25 @@ export class AppClientIntro extends Vue {
 		sessionStorage.setItem('client-intro-has-played', 'played');
 
 		console.log('Playing sound');
-		await this.playSound();
+		await this.startAudio();
 
 		// The sound effect/anim takes about 1.6s
 		console.log('Showing logo');
-		this.showLogo();
+		this.shouldShowLogo = true;
 		await sleep(1600);
 
-		// We want to show a "loading" message after a bit of waiting.
-		// If it hasn't loaded the homepage by the time the intro has finished, they probably have a slow connection.
-		let loadingDone = false;
-		sleep(1000).then(() => {
-			if (!loadingDone) {
-				this.shouldShowLoading = true;
-			}
-		});
+		// We want to show a "loading" message after a bit of waiting. If it hasn't loaded the
+		// homepage by the time the intro has finished, they probably have a slow connection.
+		let timer = setTimeout(() => (this.shouldShowLoading = true), 1000);
 
-		// We do the leave animation as soon as the initial state has come into
-		// view behind this intro anim.
+		// We do the leave animation as soon as the initial state has come into view behind this
+		// intro anim.
 		console.log('Waiting for loading to be done');
 		await initialStateChangePromise;
-		console.log('eyyy');
-		loadingDone = true;
-		this.shouldShowLoading = false;
+		clearTimeout(timer);
 
-		await this.setAnim(this.$el, 'client-intro-leave', true);
-		this.finish();
+		this.shouldShowLoading = false;
+		this.shouldTransitionOut = true;
 	}
 
 	@Watch('Connection.isOnline', { immediate: true })
@@ -112,28 +107,12 @@ export class AppClientIntro extends Vue {
 		}
 	}
 
-	private setAnim(element: HTMLElement, className: string, transition?: boolean) {
-		const type = transition ? 'transitionend' : 'animationend';
-
-		return new Promise<HTMLElement>(resolve => {
-			const endHandler = () => {
-				element.removeEventListener(type, endHandler);
-				resolve(element);
-			};
-			element.addEventListener(type, endHandler);
-			element.classList.add(className);
-		});
+	leaveAnimFinished() {
+		console.log('TRANISITIONED OUT');
+		this.finish();
 	}
 
-	private showLogo() {
-		const img = new Image(328, 36);
-		img.src = require('./intro.gif');
-		img.className = 'client-intro-logo';
-
-		this.$refs.wrap.appendChild(img);
-	}
-
-	private playSound() {
+	private startAudio() {
 		return new Promise(resolve => {
 			const audio = new Audio(require('./intro.ogg'));
 			audio.volume = 0.15;
@@ -149,7 +128,6 @@ export class AppClientIntro extends Vue {
 
 	private finish() {
 		document.body.classList.remove('client-intro-no-overflow');
-		this.done = true;
-		this.$emit('done');
+		this.$emit('finish');
 	}
 }

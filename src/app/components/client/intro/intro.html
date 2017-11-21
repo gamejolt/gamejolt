@@ -1,7 +1,22 @@
-<div class="client-intro">
-	<div class="client-intro-wrap" ref="wrap"></div>
+<div
+	class="client-intro"
+	:class="{
+		'-leave': shouldTransitionOut
+	}"
+	@transitionend="leaveAnimFinished"
+	>
+	<div class="-wrap">
+		<img
+			v-if="shouldShowLogo"
+			class="-logo"
+			src="./intro.gif"
+			width="328"
+			height="36"
+			alt="Game Jolt"
+			>
+	</div>
 	<app-expand :when="shouldShowLoading">
 		<br>
-		<app-loading :centered="true" />
+		<app-loading centered />
 	</app-expand>
 </div>
