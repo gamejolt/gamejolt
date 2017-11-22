@@ -37,7 +37,7 @@
 		"decompress-zip": "0.3.0",
 		"express": "4.16.2",
 		"favico.js": "0.3.10",
-		"game-jolt-frontend-lib": "gamejolt/frontend-lib#282dc4cfce752b53ae0f635c48a3f30ac932b00b",
+		"game-jolt-frontend-lib": "file:./src/lib/gj-lib-client",
 		"hammerjs": "2.0.8",
 		"humanize-duration": "3.12.0",
 		"jquery": "3.2.1",
