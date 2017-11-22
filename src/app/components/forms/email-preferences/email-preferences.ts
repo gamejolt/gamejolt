@@ -72,6 +72,11 @@ export class FormEmailPreferences extends BaseForm<User> {
 				label: this.$gettext('Collaborator Invites'),
 				help: this.$gettext('Get emails when you are invited to collaborate.'),
 			},
+			{
+				key: 'notify_mentions',
+				label: this.$gettext('Mentions'),
+				help: this.$gettext('Get emails when you are mentioned.'),
+			},
 		];
 	}
 }

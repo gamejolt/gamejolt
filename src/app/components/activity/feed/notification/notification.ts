@@ -11,6 +11,7 @@ import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fad
 import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { AppNotificationDescriptiveAction } from '../../../notification/descriptive-action/descriptive-action';
 import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
+import { Mention } from '../../../../../lib/gj-lib-client/components/mention/mention.model';
 
 @View
 @Component({
@@ -39,6 +40,13 @@ export class AppActivityFeedNotification extends Vue {
 	}
 
 	get hasDetails() {
+		if (
+			this.notification.type === Notification.TYPE_MENTION &&
+			(this.notification.action_model as Mention).resource === 'Comment'
+		) {
+			return true;
+		}
+
 		return (
 			[
 				Notification.TYPE_COMMENT_ADD,

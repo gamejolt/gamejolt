@@ -33,18 +33,21 @@
 						@require-change="canToggleContent = $event"
 						>
 						<div
-							v-if="notification.type === 'comment-add'"
+							v-if="
+								notification.type === 'comment-add' ||
+								notification.type === 'comment-add-object-owner'
+							"
 							class="comment-widget-comment-content"
 							v-html="notification.action_model.comment_compiled"
 							>
 						</div>
 						<div
-							v-if="notification.type === 'comment-add-object-owner'"
+							v-else-if="notification.type === 'mention'"
 							class="comment-widget-comment-content"
-							v-html="notification.action_model.comment_compiled"
+							v-html="notification.action_model.comment.comment_compiled"
 							>
 						</div>
-						<p v-if="notification.type === 'game-rating-add'">
+						<p v-else-if="notification.type === 'game-rating-add'">
 							<span v-translate="{ rating: notification.action_model.rating }">
 								And the value of the rating thou shalt receive is <b>%{ rating }</b>. No more, no less.
 							</span>
