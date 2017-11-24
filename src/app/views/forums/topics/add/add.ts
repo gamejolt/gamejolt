@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./add.html';
@@ -39,7 +39,7 @@ export default class RouteForumsTopicsAdd extends BaseRouteComponent {
 	}
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/forums/topics/create/' + route.params.channel);
 	}
 

@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./view.html?style=./view.styl';
 
@@ -45,7 +45,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve({ lazy: true, cache: true })
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'like-post',
 			message: Translate.$gettext(`You like this post! That's cool.`),

@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./add.html';
 
@@ -20,7 +20,7 @@ import {
 })
 export default class RouteDashGamesAdd extends BaseRouteComponent {
 	@RouteResolve()
-	routeResolve(this: undefined, _route: VueRouter.Route) {
+	routeResolve(this: undefined, _route: Route) {
 		return User.touch();
 	}
 

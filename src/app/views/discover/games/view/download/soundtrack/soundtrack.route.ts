@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDiscoverGamesViewDownloadSoundtrack: VueRouter.RouteConfig = {
+export const routeDiscoverGamesViewDownloadSoundtrack: RouteConfig = {
 	name: 'discover.games.view.download.soundtrack',
 	path: 'download/soundtrack',
 	props: true,

@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashGamesManageDevlog: VueRouter.RouteConfig = {
+export const routeDashGamesManageDevlog: RouteConfig = {
 	name: 'dash.games.manage.devlog',
 	path: 'devlog/:tab(active|draft)?',
 	props: true,

@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashGamesAdd: VueRouter.RouteConfig = {
+export const routeDashGamesAdd: RouteConfig = {
 	name: 'dash.games.add',
 	path: 'add',
 	props: true,

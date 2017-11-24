@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./view.html';
@@ -37,7 +37,7 @@ export default class RouteDiscoverChannelsView extends BaseRouteComponent {
 	}
 
 	@RouteResolve({ cache: true, lazy: true, cacheTag: 'view' })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/discover/channels/' + route.params.channel);
 	}
 

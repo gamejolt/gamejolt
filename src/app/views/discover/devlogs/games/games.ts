@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./games.html';
 
@@ -25,7 +25,7 @@ export default class RouteDiscoverDevlogsGames extends BaseRouteComponent {
 	listing: GameListingContainer | null = null;
 
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		const filteringContainer = new GameFilteringContainer(route);
 		return Api.sendRequest(
 			'/web/discover/devlogs/games?' + filteringContainer.getQueryString(route)

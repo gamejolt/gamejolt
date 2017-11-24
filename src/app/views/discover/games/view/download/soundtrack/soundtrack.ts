@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./soundtrack.html';
 
@@ -35,7 +35,7 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteC
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve()
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		const gameId = parseInt(route.params.id, 10);
 
 		HistoryTick.sendBeacon('game-soundtrack', gameId, {
@@ -53,7 +53,7 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteC
 		return null;
 	}
 
-	async routed($payload: any) {
+	async routed() {
 		// Don't download on SSR.
 		if (GJ_IS_SSR) {
 			return;

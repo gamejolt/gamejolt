@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeLandingGameApi: VueRouter.RouteConfig = {
+export const routeLandingGameApi: RouteConfig = {
 	name: 'landing.game-api',
 	path: '/game-api',
 	props: true,

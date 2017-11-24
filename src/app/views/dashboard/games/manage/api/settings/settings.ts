@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import View from '!view!./settings.html';
 
 import { RouteStore, RouteState } from '../../manage.store';
@@ -26,7 +26,7 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 	shouldShowKey = false;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/api/settings/' + route.params.id);
 	}
 

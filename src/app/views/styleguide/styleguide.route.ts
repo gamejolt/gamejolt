@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeStyleguide: VueRouter.RouteConfig = {
+export const routeStyleguide: RouteConfig = {
 	name: 'styleguide',
 	path: '/styleguide',
 	props: true,

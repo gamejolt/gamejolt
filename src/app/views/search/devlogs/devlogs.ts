@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./devlogs.html';
 
@@ -23,7 +23,7 @@ export default class RouteSearchDevlogs extends BaseRouteComponent {
 	Search = makeObservableService(Search);
 
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Search.search(route.query.q, {
 			type: 'devlog',
 			page: route.query.page ? parseInt(route.query.page, 10) : 1,

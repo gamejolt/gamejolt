@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashGamesManageGameMusic: VueRouter.RouteConfig = {
+export const routeDashGamesManageGameMusic: RouteConfig = {
 	name: 'dash.games.manage.game.music',
 	path: 'music',
 	props: true,

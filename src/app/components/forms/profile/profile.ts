@@ -1,4 +1,4 @@
-import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
+import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./profile.html';
 

@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./library.html';
 
@@ -24,7 +24,7 @@ export default class RouteProfileLibrary extends BaseRouteComponent {
 	collections: GameCollection[] = [];
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/library/@' + route.params.username);
 	}
 

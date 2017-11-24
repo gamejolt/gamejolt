@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
@@ -16,7 +16,7 @@ export default class RouteLanding extends BaseRouteComponent {
 		return User.touch();
 	}
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		return h('router-view');
 	}
 }

@@ -1,9 +1,8 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
 
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { Meta } from '../../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { RouteState, RouteStore } from '../../../manage.store';
 import { arrayIndexBy } from '../../../../../../../../lib/gj-lib-client/utils/array';
 import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
@@ -17,7 +16,6 @@ import { AppCardList } from '../../../../../../../../lib/gj-lib-client/component
 import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
 import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
 import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
-import { LocationRedirect } from '../../../../../../../../lib/gj-lib-client/utils/router';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import {
 	BaseRouteComponent,
@@ -63,7 +61,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 	}
 
 	@RouteResolve()
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id);
 	}
 

@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashAccountEdit: VueRouter.RouteConfig = {
+export const routeDashAccountEdit: RouteConfig = {
 	name: 'dash.account.edit',
 	path: 'profile/edit',
 	props: true,

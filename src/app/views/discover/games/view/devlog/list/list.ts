@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
@@ -50,7 +50,7 @@ export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve({ cache: true, lazy: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/discover/games/devlog/' + route.params.id);
 	}
 
@@ -69,8 +69,9 @@ export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent
 	}
 
 	routed($payload: any) {
-		Meta.description = `Stay up to date on all the latest posts for ${this.game
-			.title} on Game Jolt`;
+		Meta.description = `Stay up to date on all the latest posts for ${
+			this.game.title
+		} on Game Jolt`;
 
 		if (!this.feed) {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {

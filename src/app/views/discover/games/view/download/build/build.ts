@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./build.html';
@@ -60,7 +60,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 	Environment = Environment;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		const gameId = parseInt(route.params.id, 10);
 		const buildId = parseInt(route.params.buildId, 10);
 

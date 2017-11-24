@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeLandingRedlight: VueRouter.RouteConfig = {
+export const routeLandingRedlight: RouteConfig = {
 	name: 'landing.redlight',
 	path: '/redlight',
 	props: true,

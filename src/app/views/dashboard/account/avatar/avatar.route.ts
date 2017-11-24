@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashAccountAvatar: VueRouter.RouteConfig = {
+export const routeDashAccountAvatar: RouteConfig = {
 	name: 'dash.account.avatar',
 	path: 'profile/avatar',
 	props: true,

@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashGamesManageApiSettings: VueRouter.RouteConfig = {
+export const routeDashGamesManageApiSettings: RouteConfig = {
 	name: 'dash.games.manage.api.settings',
 	path: 'settings',
 	props: true,

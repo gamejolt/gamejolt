@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import Vue, { CreateElement } from 'vue';
+import { Location } from 'vue-router';
 import gui from 'nw.gui';
 import { Component } from 'vue-property-decorator';
 
@@ -70,12 +70,12 @@ export class AppClientTray extends Vue {
 		}
 	}
 
-	private go(location: VueRouter.Location) {
+	private go(location: Location) {
 		this.$router.push(location);
 		ClientControl.show();
 	}
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		// Changes to these will refresh the render function.
 		const section = this.section;
 
@@ -84,21 +84,19 @@ export class AppClientTray extends Vue {
 			tray = undefined;
 		}
 
-		tray = new gui.Tray(
-			{
-				title: 'Game Jolt Client',
+		tray = new gui.Tray({
+			title: 'Game Jolt Client',
 
-				// We split this up so that it doesn't get injected.
-				// It needs to stay as a relative file path or it will break.
-				icon:
-					packagePrefix +
-					'/app/components/client/tray/' +
-					(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
-				// TODO(rewrite): Click doesn't exist?
-				// it does exist, just not typed for some reason
-				click: () => this.toggleVisibility(),
-			} as any
-		);
+			// We split this up so that it doesn't get injected.
+			// It needs to stay as a relative file path or it will break.
+			icon:
+				packagePrefix +
+				'/app/components/client/tray/' +
+				(Screen.isHiDpi ? 'icon-2x.png' : 'icon.png'),
+			// TODO(rewrite): Click doesn't exist?
+			// it does exist, just not typed for some reason
+			click: () => this.toggleVisibility(),
+		} as any);
 
 		const menu = new gui.Menu();
 

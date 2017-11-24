@@ -19,8 +19,6 @@ export class AppMediaItemCover extends Vue {
 	@Prop(MediaItem) mediaItem: MediaItem;
 	@Prop(Number) maxHeight?: number;
 
-	private resizeSensor?: any;
-
 	isLoaded = false;
 	height = 'auto';
 
@@ -33,17 +31,15 @@ export class AppMediaItemCover extends Vue {
 
 	mounted() {
 		this.recalcHeight();
-		this.resizeSensor = new ResizeSensor(this.$el, () => this.recalcHeight());
+
+		// tslint:disable-next-line:no-unused-expression
+		new ResizeSensor(this.$el, () => this.recalcHeight());
 	}
 
 	@Watch('mediaItem')
 	@Watch('maxHeight')
 	changes() {
 		this.recalcHeight();
-	}
-
-	destroyed() {
-		this.resizeSensor = undefined;
 	}
 
 	recalcHeight() {

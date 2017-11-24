@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeAuthResetPassword: VueRouter.RouteConfig = {
+export const routeAuthResetPassword: RouteConfig = {
 	name: 'auth.reset-password',
 	path: 'reset-password/:userId/:token',
 	props: true,

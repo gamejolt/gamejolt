@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeLandingLearn: VueRouter.RouteConfig = {
+export const routeLandingLearn: RouteConfig = {
 	name: 'landing.learn',
 	path: '/learn',
 	props: true,

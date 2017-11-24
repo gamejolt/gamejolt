@@ -4,7 +4,7 @@ import View from '!view!./change-password.html';
 import { RouteMutation, RouteStore } from '../account.store';
 import { FormChangePassword } from '../../../../components/forms/change-password/change-password';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -27,7 +27,7 @@ export default class RouteDashAccountChangePassword extends BaseRouteComponent {
 	}
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, _route: Route) {
 		return Api.sendRequest('/web/dash/account/has_password');
 	}
 

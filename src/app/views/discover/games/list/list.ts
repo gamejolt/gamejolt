@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./list.html';
 
@@ -75,7 +75,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	};
 
 	@RouteResolve({ lazy: true, cache: true })
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		const location = checkGameFilteringRoute(route);
 		if (location) {
 			return new LocationRedirect(location);
@@ -189,7 +189,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	}
 
 	processWorstSection() {
-		this.pageTitle =
-			'Ṣ̢̖͇͈͙̹̦Y̱͍͉S̺̳̞͠Y̸̱͚̙͕̺̺ͅS͎̘̲͕̹̀ͅT͉͕̺̲ͅE͓̱̥̠̰̱͚M̪̙̪̥̹ͅ ͏̼̲̫̰E͇̺̩̼R͏̗͙Ŕ͖̦͕Ơ̰̱͖̗̯̞R҉̻̯̠͚';
+		this.pageTitle = 'Ṣ̢̖͇͈͙̹̦Y̱͍͉S̺̳̞͠Y̸̱͚̙͕̺̺ͅS͎̘̲͕̹̀ͅT͉͕̺̲ͅE͓̱̥̠̰̱͚M̪̙̪̥̹ͅ ͏̼̲̫̰E͇̺̩̼R͏̗͙Ŕ͖̦͕Ơ̰̱͖̗̯̞R҉̻̯̠͚';
 	}
 }

@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./view.html';
@@ -50,7 +50,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/forums/channels/' + route.params.name + '?page=' + (route.query.page || 1)
 		);

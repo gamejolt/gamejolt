@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeLandingAbout: VueRouter.RouteConfig = {
+export const routeLandingAbout: RouteConfig = {
 	name: 'landing.about',
 	path: '/about',
 	props: true,

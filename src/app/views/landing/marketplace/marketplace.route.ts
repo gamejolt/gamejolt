@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeLandingMarketplace: VueRouter.RouteConfig = {
+export const routeLandingMarketplace: RouteConfig = {
 	name: 'landing.marketplace',
 	path: '/marketplace',
 	props: true,

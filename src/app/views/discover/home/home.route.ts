@@ -1,7 +1,7 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 import RouteDiscoverHome from './home';
 
-export const routeDiscoverHome: VueRouter.RouteConfig = {
+export const routeDiscoverHome: RouteConfig = {
 	name: 'discover.home',
 	path: '',
 	props: true,

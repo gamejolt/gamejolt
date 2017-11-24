@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./list.html?style=./list.styl';
@@ -64,7 +64,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 	}
 
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		let query = '';
 		if (parseInt(route.query.page, 10) > 1) {
 			query = '?page=' + route.query.page;

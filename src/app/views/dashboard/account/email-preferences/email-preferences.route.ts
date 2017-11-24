@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashAccountEmailPreferences: VueRouter.RouteConfig = {
+export const routeDashAccountEmailPreferences: RouteConfig = {
 	name: 'dash.account.email-preferences',
 	path: 'email-preferences',
 	props: true,

@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeAuthLinkedAccountGoogleCallback: VueRouter.RouteConfig = {
+export const routeAuthLinkedAccountGoogleCallback: RouteConfig = {
 	name: 'auth.linked-account.google.callback',
 	path: 'google/callback',
 	props: true,

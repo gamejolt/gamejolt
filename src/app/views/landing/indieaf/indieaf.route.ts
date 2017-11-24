@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeLandingIndieaf: VueRouter.RouteConfig = {
+export const routeLandingIndieaf: RouteConfig = {
 	name: 'landing.indieaf',
 	path: '/indieaf',
 	props: true,

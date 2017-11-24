@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 
-function getPayloadVariation(route: VueRouter.Route, payload: any, experiment: string): number {
+function getPayloadVariation(route: Route, payload: any, experiment: string): number {
 	let variation = checkHardcoded(route, experiment);
 	if (variation !== -1) {
 		return variation;
@@ -15,7 +15,7 @@ function getPayloadVariation(route: VueRouter.Route, payload: any, experiment: s
 	return -1;
 }
 
-// function getClientSideVariation(route: VueRouter.Route, experiment: string): number {
+// function getClientSideVariation(route: Route, experiment: string): number {
 // 	if (GJ_IS_SSR) {
 // 		return 1;
 // 	}
@@ -36,7 +36,7 @@ function getPayloadVariation(route: VueRouter.Route, payload: any, experiment: s
 // 	return variation;
 // }
 
-function checkHardcoded(route: VueRouter.Route, experiment: string): number {
+function checkHardcoded(route: Route, experiment: string): number {
 	if (GJ_IS_SSR) {
 		return -1;
 	}

@@ -9,7 +9,6 @@ import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.s
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppActivityFeedItem } from './item/item';
-import { Model } from '../../../../lib/gj-lib-client/components/model/model.service';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { AppTimelineList } from '../../../../lib/gj-lib-client/components/timeline-list/timeline-list';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';

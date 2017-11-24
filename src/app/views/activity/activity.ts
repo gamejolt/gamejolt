@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Mutation } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./activity.html?style=./activity.styl';
@@ -43,7 +43,7 @@ export default class RouteActivity extends BaseRouteComponent {
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve({ cache: true, lazy: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/activity/' + route.params.tab);
 	}
 

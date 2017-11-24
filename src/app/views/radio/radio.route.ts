@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeRadio: VueRouter.RouteConfig = {
+export const routeRadio: RouteConfig = {
 	name: 'radio',
 	path: '/radio',
 	props: true,

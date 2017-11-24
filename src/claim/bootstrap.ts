@@ -21,7 +21,7 @@ export function createApp() {
 	bootstrapAppTranslations();
 
 	const app = new Vue({
-		store,
+		store: store as any,
 		router,
 		render: h => h(App),
 	});

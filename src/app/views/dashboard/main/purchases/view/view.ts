@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./view.html?style=./view.styl';
 
@@ -44,7 +44,7 @@ export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/purchases/' + route.params.id);
 	}
 

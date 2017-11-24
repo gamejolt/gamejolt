@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-const routeLandingGameApiDocContent: VueRouter.RouteConfig = {
+const routeLandingGameApiDocContent: RouteConfig = {
 	name: 'landing.game-api-doc',
 	path: ':path*',
 	props: true,
@@ -8,7 +8,7 @@ const routeLandingGameApiDocContent: VueRouter.RouteConfig = {
 		import(/* webpackChunkName: "routeLandingGameApiDoc" */ './game-api-doc-content'),
 };
 
-export const routeLandingGameApiDoc: VueRouter.RouteConfig = {
+export const routeLandingGameApiDoc: RouteConfig = {
 	path: '/game-api/doc',
 	component: () => import(/* webpackChunkName: "routeLandingGameApiDoc" */ './game-api-doc'),
 	children: [routeLandingGameApiDocContent],

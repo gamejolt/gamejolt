@@ -34,13 +34,13 @@ type Tab = 'requests' | 'pending';
 export class AppFriendRequestPopover extends Vue {
 	@State app: Store['app'];
 
-	private isShown = false;
-	private isLoading = true;
+	isShown = false;
+	isLoading = true;
 
-	private activeTab: Tab = 'requests';
-	private requests: any[] = [];
-	private requestsCount = 0;
-	private pending: any[] = [];
+	activeTab: Tab = 'requests';
+	requests: any[] = [];
+	requestsCount = 0;
+	pending: any[] = [];
 	private countInterval: NodeJS.Timer;
 
 	mounted() {

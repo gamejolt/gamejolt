@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./authorize.html';
 
@@ -17,7 +17,7 @@ export default class RouteAuthAuthorize extends BaseRouteComponent {
 	isSuccess = false;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		const { userId, code, type } = route.params;
 		return Api.sendRequest(`/web/auth/authorize/${userId}/${code}/${type}`);
 	}

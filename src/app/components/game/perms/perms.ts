@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { RouteStoreName, RouteStore } from '../../../views/dashboard/games/manage/manage.store';
 import { Perm, Game } from '../../../../lib/gj-lib-client/components/game/game.model';
@@ -45,7 +45,7 @@ export class AppGamePerms extends Vue {
 		return this.targetGame.hasPerms(perms.filter(perm => !!perm), this.either);
 	}
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		if (this.hasPerms) {
 			return h(this.tag, this.$slots.default);
 		}

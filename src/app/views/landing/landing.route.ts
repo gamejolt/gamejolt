@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 import RouteLanding from './landing';
 import { routeLandingPartners } from './partners/partners.route';
 import { routeLandingAbout } from './about/about.route';
@@ -10,7 +10,7 @@ import { routeLandingRedlight } from './redlight/redlight.route';
 import { routeLandingIndieaf } from './indieaf/indieaf.route';
 import { routeLandingGameApiDoc } from './game-api-doc/game-api-doc.route';
 
-export const routeLanding: VueRouter.RouteConfig = {
+export const routeLanding: RouteConfig = {
 	path: '',
 	props: true,
 	component: RouteLanding,

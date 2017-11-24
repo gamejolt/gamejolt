@@ -1,10 +1,10 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
 // For the redirects.
 const path = '/community/forums/:slug/';
 const name = 'forums.channels.view';
 
-export const routeForumsChannelsView: VueRouter.RouteConfig = {
+export const routeForumsChannelsView: RouteConfig = {
 	name: 'forums.channels.view',
 	path: '/f/:name',
 	props: true,

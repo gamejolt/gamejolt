@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./devlog.html';
 
@@ -35,7 +35,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 	}
 
 	@RouteResolve({ cache: false, lazy: false })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/devlog/posts/' +
 				route.params.id +

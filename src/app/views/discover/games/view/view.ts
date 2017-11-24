@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import View from '!view!./view.html';
@@ -90,7 +90,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	private ratingCallback?: Function;
 	private gaTrackingId?: string;
 
-	private roleNames = {
+	private roleNames: { [k: string]: string } = {
 		[GameCollaborator.ROLE_COLLABORATOR]: this.$gettext('an equal collaborator'),
 		[GameCollaborator.ROLE_COMMUNITY_MANAGER]: this.$gettext('a community manager'),
 		[GameCollaborator.ROLE_DEVELOPER]: this.$gettext('a developer'),
@@ -101,7 +101,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			return '';
 		}
 
-		return this.roleNames[this.collaboratorInvite.role] || '';
+		return this.roleNames[this.collaboratorInvite.role as string] || '';
 	}
 
 	get ratingTooltip() {
@@ -127,7 +127,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	@RouteResolve({ lazy: true, cache: true, cacheTag: 'view' })
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
 		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);
 

@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./overview.html';
 
@@ -82,7 +82,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 	// } );
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id);
 	}
 

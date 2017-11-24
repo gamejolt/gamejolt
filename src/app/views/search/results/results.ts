@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./results.html';
 
@@ -34,7 +34,7 @@ export default class RouteSearchResults extends BaseRouteComponent {
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Search.search(route.query.q);
 	}
 

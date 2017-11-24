@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./media.html?style=./media.styl';
 
@@ -59,7 +59,7 @@ export default class RouteDashGamesManageGameMedia extends BaseRouteComponent {
 	Clipboard = Clipboard;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/media/' + route.params.id);
 	}
 

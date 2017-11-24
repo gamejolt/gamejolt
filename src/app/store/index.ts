@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
 import {
 	VuexStore,
@@ -82,7 +82,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	clientLibrary: ClientLibraryStore;
 
 	// From the vuex-router-sync.
-	route: VueRouter.Route;
+	route: Route;
 
 	chat: ChatClient | null = null;
 

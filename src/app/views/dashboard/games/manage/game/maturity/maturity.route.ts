@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashGamesManageGameMaturity: VueRouter.RouteConfig = {
+export const routeDashGamesManageGameMaturity: RouteConfig = {
 	name: 'dash.games.manage.game.maturity',
 	path: 'maturity',
 	props: true,
