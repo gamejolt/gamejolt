@@ -32,6 +32,6 @@ export class AppDiscoverHomeBanner extends Vue {
 	readonly Screen = makeObservableService(Screen);
 
 	get shouldShowFollow() {
-		return this.app.user && !this.game.is_following;
+		return this.app.user && !this.game.is_following && this.app.user.id !== this.game.developer.id;
 	}
 }
