@@ -36,6 +36,7 @@ import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components
 import { Store } from '../../../../store/index';
 import { AppMessageThreadPagination } from '../../../../../lib/gj-lib-client/components/message-thread/pagination/pagination';
 import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
+import { AppForumTopicUpvoteWidget } from '../../../../components/forum/topic/upvote-widget/upvote-widget';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -59,6 +60,7 @@ import {
 		AppMessageThreadPagination,
 		FormForumPost,
 		FormForumTopic,
+		AppForumTopicUpvoteWidget,
 	},
 	directives: {
 		AppTooltip,
@@ -93,6 +95,10 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 
 	get loginUrl() {
 		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
+	}
+
+	get sort() {
+		return this.$route.query.sort;
 	}
 
 	@RouteResolve({ cache: true })

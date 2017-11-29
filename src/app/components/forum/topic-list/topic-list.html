@@ -5,45 +5,54 @@
 		:key="topic.id"
 		>
 		<div class="col-sm-9 col-md-7">
-			<h5 class="forum-topic-list-item-title">
+			<div
+				class="pull-left"
+				v-if="useUpvotes"
+				>
+				<app-forum-topic-upvote-widget :topic="topic" />
+			</div>
+			<div>
+				<h5 class="forum-topic-list-item-title">
 
-				<!-- Notifications -->
-				<span class="tag tag-pink" v-if="!!topic.notifications.length">
-					{{ topic.notifications.length | number }}
-				</span>
+					<!-- Notifications -->
+					<span class="tag tag-pink" v-if="!!topic.notifications.length">
+						{{ topic.notifications.length | number }}
+					</span>
 
-				<!-- Pinned -->
-				<span v-if="topic.is_sticky" v-app-tooltip="$gettext( `This topic is pinned.` )">
-					<app-jolticon icon="thumbtack" class="active" />
-				</span>
+					<!-- Pinned -->
+					<span v-if="topic.is_sticky" v-app-tooltip="$gettext( `This topic is pinned.` )">
+						<app-jolticon icon="thumbtack" class="active" />
+					</span>
 
-				<!-- Locked -->
-				<span v-if="topic.is_locked" v-app-tooltip="$gettext( `This topic is locked and can no longer be replied to.` )">
-					<app-jolticon icon="lock" class="text-muted" />
-				</span>
+					<!-- Locked -->
+					<span v-if="topic.is_locked" v-app-tooltip="$gettext( `This topic is locked and can no longer be replied to.` )">
+						<app-jolticon icon="lock" class="text-muted" />
+					</span>
 
-				<router-link
-					class="link-unstyled"
-					:to="{
-						name: 'forums.topics.view',
-						params: { slug: topic.slug, id: topic.id },
-					}"
-					>
-					{{ topic.title }}
-				</router-link>
-			</h5>
-			<div class="forum-topic-list-item-author">
-				<translate>by</translate>
-				<router-link
-					class="link-muted"
-					:to="{
-						name: 'profile.overview',
-						params: { username: topic.user.username },
-					}"
-					>
-					{{ topic.user.display_name }}
-				</router-link>
-				<span class="tiny">@{{ topic.user.username }}</span>
+					<router-link
+						class="link-unstyled"
+						:to="{
+							name: 'forums.topics.view',
+							params: { slug: topic.slug, id: topic.id },
+							query: { sort: sort },
+						}"
+						>
+						{{ topic.title }}
+					</router-link>
+				</h5>
+				<div class="forum-topic-list-item-author">
+					<translate>by</translate>
+					<router-link
+						class="link-muted"
+						:to="{
+							name: 'profile.overview',
+							params: { username: topic.user.username },
+						}"
+						>
+						{{ topic.user.display_name }}
+					</router-link>
+					<span class="tiny">@{{ topic.user.username }}</span>
+				</div>
 			</div>
 		</div>
 
@@ -85,6 +94,7 @@
 								hash: '#forum-post-' + topic.latest_post.id,
 								query: {
 									page: getPostPage( topic ),
+									sort: sort,
 								},
 							}"
 							>

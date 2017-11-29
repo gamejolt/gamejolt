@@ -37,38 +37,50 @@
 		<template slot="nav">
 			<app-forum-breadcrumbs
 				:channel="channel"
+				:sort="sort"
 				page="view-topic"
 				/>
 		</template>
 
 		<template slot="controls" v-if="app.user">
 
-			<button
-				class="btn btn-success-outline btn-block"
-				v-if="!isFollowing"
-				@click="follow"
-				v-app-tooltip="$gettext( `Keep track of replies in this topic.` )"
-				>
-				<app-jolticon icon="subscribe" />
-				<translate>Follow</translate>
-			</button>
-
-			<button
-				class="btn btn-block"
-				:class="{
-					'btn-success': Screen.isXs,
-					'btn-success': !Screen.isXs && !unfollowHover,
-					'btn-danger': !Screen.isXs && unfollowHover
+			<div :class="{
+				'pull-right': topic.can_upvote,
 				}"
-				v-else
-				v-app-tooltip="$gettext( `Stop Following` )"
-				@click="unfollow"
-				@mouseenter="unfollowHover = true"
-				@mouseleave="unfollowHover = false"
 				>
-				<app-jolticon :icon="!unfollowHover ? 'subscribe' : 'subscribed'" />
-				<translate>Following</translate>
-			</button>
+				<app-forum-topic-upvote-widget :topic="topic" />
+
+				<button
+					class="btn btn-success-outline"
+					:class="{
+						'btn-block': !topic.can_upvote,
+					}"
+					v-if="!isFollowing"
+					@click="follow"
+					v-app-tooltip="$gettext( `Keep track of replies in this topic.` )"
+					>
+					<app-jolticon icon="subscribe" />
+					<translate>Follow</translate>
+				</button>
+
+				<button
+					class="btn"
+					:class="{
+						'btn-block': !topic.can_upvote,
+						'btn-success': Screen.isXs,
+						'btn-success': !Screen.isXs && !unfollowHover,
+						'btn-danger': !Screen.isXs && unfollowHover
+					}"
+					v-else
+					v-app-tooltip="$gettext( `Stop Following` )"
+					@click="unfollow"
+					@mouseenter="unfollowHover = true"
+					@mouseleave="unfollowHover = false"
+					>
+					<app-jolticon :icon="!unfollowHover ? 'subscribe' : 'subscribed'" />
+					<translate>Following</translate>
+				</button>
+			</div>
 
 		</template>
 
@@ -258,6 +270,7 @@
 						id="forum-posts-list"
 						:topic="topic"
 						:posts="posts"
+						:sort="sort"
 						:user-post-counts="userPostCounts"
 						@replied="onPostAdded"
 						/>
