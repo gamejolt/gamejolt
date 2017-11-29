@@ -290,10 +290,7 @@
 									v-for="video of videos.slice( 0, 4 )"
 									:key="video.id"
 									>
-									<app-comment-video-thumbnail
-										:hide-follow="true"
-										:video="video"
-										/>
+									<app-comment-video-thumbnail :video="video" />
 								</div>
 							</div>
 						</template>
