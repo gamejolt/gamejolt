@@ -7,8 +7,7 @@
 		event-label="game-header"
 		/>
 
-	<div class="game-header-follow-container"
-		v-if="!app.user || app.user.id !== game.developer.id">
+	<div class="game-header-follow-container">
 		<app-game-follow-widget
 			class="btn-block"
 			:outline="true"

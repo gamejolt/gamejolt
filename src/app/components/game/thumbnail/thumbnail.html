@@ -21,7 +21,6 @@
 
 				<template v-if="shouldShowControls">
 					<app-game-follow-widget
-						v-if="!app.user || app.user.id !== game.developer.id"
 						:game="game"
 						:sparse="true"
 						event-label="game-thumb"
