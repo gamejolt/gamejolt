@@ -1,19 +1,17 @@
-var argv = require('minimist')(process.argv);
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var plugins = require('gulp-load-plugins')();
-var fs = require('fs');
-var os = require('os');
-var _ = require('lodash');
-var shell = require('gulp-shell');
-var path = require('path');
-// var mv = require('mv');
+const argv = require('minimist')(process.argv);
+const gulp = require('gulp');
+const gutil = require('gulp-util');
+const plugins = require('gulp-load-plugins')();
+const fs = require('fs');
+const os = require('os');
+const _ = require('lodash');
+const shell = require('gulp-shell');
+const path = require('path');
+// const mv = require('mv');
 
-module.exports = function(config) {
-	var packageJson = require(path.resolve(__dirname, '../package.json'));
-	config.client = argv.client || false;
+module.exports = config => {
+	const packageJson = require(path.resolve(__dirname, '../package.json'));
 	config.arch = argv.arch || '64';
-	config.gypArch = config.arch == '64' ? 'x64' : 'ia32';
 
 	// Get our platform that we are building on.
 	switch (os.type()) {
@@ -33,69 +31,10 @@ module.exports = function(config) {
 			throw new Error('Can not build client on your OS type.');
 	}
 
-	var mkdirExec = config.platform === 'win' ? 'mkdir' : 'mkdir -p';
-	var copyExec = config.platform === 'win' ? 'copy' : 'cp';
-	gulp.task(
-		'client:package.json',
-		shell.task([
-			mkdirExec + ' ' + path.join('build', 'dev-client'),
-			copyExec + ' client-package.json ' + path.join('build', 'dev-client', 'package.json'),
-		])
-	);
-
-	gulp.task(
-		'client:run',
-		gulp.series('client:package.json', shell.task(['nw ' + path.join('build', 'dev-client')]))
-	);
-	return;
-
-	// On Windows builds we have to use npm3. For other OSes it's faster to do npm2.
-	// npm3 does a flat directory structure in node_modules, so the path is different.
-	// We have to find where the lzma-native path is so we can compile it.
-	var lzmaPath = path.join('node_modules', 'lzma-native');
-	try {
-		// Will throw if no path exists.
-		fs.statSync(path.resolve(lzmaPath));
-	} catch (e) {
-		lzmaPath = path.join('node_modules', 'client-voodoo', 'node_modules', 'lzma-native');
-	}
-
-	var windowsMutexPath = path.join('node_modules', 'windows-mutex');
-	if (config.platform === 'win') {
-		try {
-			// Will throw if no path exists.
-			fs.statSync(path.resolve(windowsMutexPath));
-		} catch (e) {
-			windowsMutexPath = path.join(
-				'node_modules',
-				'client-voodoo',
-				'node_modules',
-				'windows-mutex'
-			);
-		}
-	}
-
-	var gypTasks = [
-		'cd ' +
-			path.resolve(lzmaPath) +
-			' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' +
-			config.gypArch,
-	];
-	if (config.platform == 'win') {
-		gypTasks.push(
-			'cd ' +
-				path.resolve(windowsMutexPath) +
-				' && nw-gyp clean configure build --target=0.12.3 --arch=' +
-				config.gypArch
-		);
-	}
-
-	gulp.task('client:gyp', shell.task(gypTasks));
-
 	// For releasing to S3.
 	// We have to gather all the builds into the versioned folder before pushing.
-	var releaseDir = path.join('build/client/prod', 'v' + packageJson.version);
-	var s3Dir = 's3://gjolt-data/data/client/releases/v' + packageJson.version;
+	const releaseDir = path.join('build/prod-client', 'v' + packageJson.version);
+	const s3Dir = 's3://gjolt-data/data/client/releases/v' + packageJson.version;
 
 	gulp.task(
 		'client:push-releases',
@@ -137,206 +76,149 @@ module.exports = function(config) {
 	}
 
 	config.platformArch = config.platform + config.arch;
-	config.includeNode = true; // Include nodejs files.
-	config.noInject = true; // Don't revision filenames.
-	config.noSourcemaps = true; // Reduce package size. Not needed.
 
-	config.clientBuildCacheDir = 'build/client/cache';
+	// TODO(client): Do in webpack somehow
+	// // Injections to modify App for client build.
+	// config.injections = {
+	// 	// Attach a class to say that we're in client.
+	// 	// Makes it easy to target client before angular has loaded in completely with CSS.
+	// 	'<body class="" ': '<body class="is-client" ',
 
-	if (config.production) {
-		config.buildDir = 'build/client/prod/source';
-		config.clientBuildDir = 'build/client/prod';
-	} else {
-		config.buildDir = 'build/client/dev/source';
-		config.clientBuildDir = 'build/client/dev';
-	}
+	// 	// GA tag is different.
+	// 	"ga('create', 'UA-6742777-1', 'auto');": "ga('create', 'UA-6742777-16', 'auto');",
+	// };
 
-	var appScripts = ['<script src="/app/modules/client.js"></script>'];
+	// /**
+	//  * Modify base tags for main HTML files.
+	//  * This is needed for non-html5 location fallback.
+	//  */
+	// const modifySections = config.sections.map(section => {
+	// 	if (section === 'app') {
+	// 		section = 'index';
+	// 	}
 
-	var baseScripts = [
-		'<script src="/app/modules/client.js"></script>',
-		'<script src="/app/modules/client-base.js"></script>',
-	];
+	// 	gulp.task('client:modify-index:' + section, () => {
+	// 		// Base tag for index.html is different.
+	// 		// App uses fallback mode for location since it's not served through a server.
+	// 		let base = '/' + section + '.html';
 
-	if (config.production) {
-		appScripts.push('<script src="/app/modules/client-updater.js"></script>');
-		baseScripts.push('<script src="/app/modules/client-updater.js"></script>');
-	}
+	// 		// When packaged up, we put it in the sub-folder: "package".
+	// 		if (!config.watching && os.type() !== 'Darwin') {
+	// 			base = '/package' + base;
+	// 		}
 
-	// Injections to modify App for client build.
-	config.injections = {
-		'/* inject client:modules */': "'App.Client',",
-		'<!-- inject client:modules -->': appScripts.join(' '),
+	// 		return gulp
+	// 			.src(config.buildDir + '/' + section + '.html')
+	// 			.pipe(plugins.replace('<base href="/">', '<base href="' + base + '">'))
+	// 			.pipe(gulp.dest(config.buildDir));
+	// 	});
 
-		// For other sections we don't load the whole client JS but only load the angular modules we want
-		// through the base-client.js module.
-		'/* inject client:base:modules */': "'App.ClientBase',",
-		'<!-- inject client:base:modules -->': baseScripts.join(' '),
+	// 	return 'client:modify-index:' + section;
+	// });
 
-		// Attach a class to say that we're in client.
-		// Makes it easy to target client before angular has loaded in completely with CSS.
-		'<body class="" ': '<body class="is-client" ',
+	// // Set it up as a post-html build task.
+	// gulp.task('html:post', gulp.parallel(modifySections));
 
-		// GA tag is different.
-		"ga('create', 'UA-6742777-1', 'auto');": "ga('create', 'UA-6742777-16', 'auto');",
-	};
+	// TODO(client): Update hook?
+	// gulp.task('client:prepare', cb => {
+	// 	// Load in the client package.
+	// 	const packageJson = require('../package.json');
+	// 	const clientJson = require('../client-package.json');
 
-	/**
-	 * Modify base tags for main HTML files.
-	 * This is needed for non-html5 location fallback.
-	 */
-	var modifySections = config.sections.map(function(section) {
-		if (section == 'app') {
-			section = 'index';
-		}
+	// 	// Copy over values from main package.json to keep in sync.
+	// 	clientJson.version = packageJson.version;
 
-		gulp.task('client:modify-index:' + section, function() {
-			// Base tag for index.html is different.
-			// App uses fallback mode for location since it's not served through a server.
-			var base = '/' + section + '.html';
+	// 	// Gotta pull the node_modules that we need.
+	// 	clientJson.dependencies = packageJson.dependencies;
 
-			// When packaged up, we put it in the sub-folder: "package".
-			if (!config.watching && os.type() != 'Darwin') {
-				base = '/package' + base;
-			}
+	// 	// If we're in dev, then add the toolbar for debugging.
+	// 	if (!config.production) {
+	// 		clientJson.window.toolbar = true;
+	// 	}
 
-			return gulp
-				.src(config.buildDir + '/' + section + '.html')
-				.pipe(plugins.replace('<base href="/">', '<base href="' + base + '">'))
-				.pipe(gulp.dest(config.buildDir));
-		});
+	// 	if (!config.watching && os.type() !== 'Darwin') {
+	// 		// We set the base directory to use the "package" folder.
+	// 		clientJson.main = 'app://game-jolt-client/package/index.html#!/';
+	// 		clientJson.window.icon = 'package/' + clientJson.window.icon;
+	// 	}
 
-		return 'client:modify-index:' + section;
-	});
+	// 	// Copy the package.json file over into the build directory.
+	// 	fs.writeFileSync(config.buildDir + '/package.json', JSON.stringify(clientJson));
+	// 	fs.writeFileSync(
+	// 		config.buildDir + '/update-hook.js',
+	// 		fs.readFileSync(path.resolve('./src/update-hook.js'))
+	// 	);
 
-	// Set it up as a post-html build task.
-	gulp.task('html:post', gulp.parallel(modifySections));
+	// 	cb();
+	// });
 
-	gulp.task('client:prepare', function(cb) {
-		// Load in the client package.
-		var packageJson = require('../package.json');
-		var clientJson = require('../client-package.json');
+	gulp.task(
+		'client:node-modules',
+		shell.task(['cd ' + config.buildDir + ' && npm install --production'])
+	);
 
-		// Copy over values from main package.json to keep in sync.
-		clientJson.version = packageJson.version;
+	// TODO(client): do in webpack base url
+	// /**
+	//  * This should rewrite all file references to have the correct packaged folder prefix.
+	//  */
+	// gulp.task('client:modify-urls', cb => {
+	// 	if (os.type() === 'Darwin') {
+	// 		cb();
+	// 		return;
+	// 	}
 
-		// Gotta pull the node_modules that we need.
-		clientJson.dependencies = packageJson.dependencies;
+	// 	const revAll = new plugins.revAll({
+	// 		prefix: 'app://game-jolt-client/package',
+	// 		dontGlobal: [/^\/node_modules\/.*$/, /^\/tmp\/.*$/],
+	// 		dontRenameFile: [/^.*$/], // Don't rename anything.
+	// 		transformFilename: function(file, hash) {
+	// 			// Don't rename the file reference at all, either.
+	// 			return path.basename(file.path);
+	// 		},
+	// 		debug: true,
+	// 	});
 
-		// If we're in dev, then add the toolbar for debugging.
-		if (!config.production) {
-			clientJson.window.toolbar = true;
-		}
-
-		if (!config.watching && os.type() != 'Darwin') {
-			// We set the base directory to use the "package" folder.
-			clientJson.main = 'app://game-jolt-client/package/index.html#!/';
-			clientJson.window.icon = 'package/' + clientJson.window.icon;
-		}
-
-		// Copy the package.json file over into the build directory.
-		fs.writeFileSync(config.buildDir + '/package.json', JSON.stringify(clientJson));
-		fs.writeFileSync(
-			config.buildDir + '/update-hook.js',
-			fs.readFileSync(path.resolve('./src/update-hook.js'))
-		);
-
-		cb();
-	});
-
-	var nodeModuletasks = [
-		'cd ' + config.buildDir + ' && npm install --production',
-		'cd ' +
-			path.resolve(config.buildDir, lzmaPath) +
-			' && node-pre-gyp clean configure build --runtime=node-webkit --target=0.12.3 --target_arch=' +
-			config.gypArch,
-	];
-
-	// http://developers.ironsrc.com/rename-import-dll/
-	if (config.platform == 'win') {
-		nodeModuletasks.push(
-			'cd ' +
-				path.resolve(config.buildDir, windowsMutexPath) +
-				' && nw-gyp clean configure build --target=0.12.3 --arch=' +
-				config.gypArch
-		);
-		nodeModuletasks.push(
-			path.resolve('tasks/rid.exe') +
-				' ' +
-				path.resolve(config.buildDir, lzmaPath, 'binding/lzma_native.node') +
-				' nw.exe GameJoltClient.exe'
-		);
-		nodeModuletasks.push(
-			path.resolve('tasks/rid.exe') +
-				' ' +
-				path.resolve(config.buildDir, windowsMutexPath, 'build/Release/CreateMutex.node') +
-				' nw.exe GameJoltClient.exe'
-		);
-	}
-
-	gulp.task('client:node-modules', shell.task(nodeModuletasks));
-
-	/**
-	 * This should rewrite all file references to have the correct packaged folder prefix.
-	 */
-	gulp.task('client:modify-urls', function(cb) {
-		if (os.type() == 'Darwin') {
-			cb();
-			return;
-		}
-
-		var revAll = new plugins.revAll({
-			prefix: 'app://game-jolt-client/package',
-			dontGlobal: [/^\/node_modules\/.*$/, /^\/tmp\/.*$/],
-			dontRenameFile: [/^.*$/], // Don't rename anything.
-			transformFilename: function(file, hash) {
-				// Don't rename the file reference at all, either.
-				return path.basename(file.path);
-			},
-			debug: true,
-		});
-
-		// Ignore folders from the very beginning speeds up the injection a lot.
-		return gulp
-			.src([
-				config.buildDir + '/**',
-				'!' + config.buildDir + '/node_modules/**',
-				'!' + config.buildDir + '/tmp/**',
-			])
-			.pipe(revAll.revision())
-			.pipe(gulp.dest(config.buildDir));
-	});
+	// 	// Ignore folders from the very beginning speeds up the injection a lot.
+	// 	return gulp
+	// 		.src([
+	// 			config.buildDir + '/**',
+	// 			'!' + config.buildDir + '/node_modules/**',
+	// 			'!' + config.buildDir + '/tmp/**',
+	// 		])
+	// 		.pipe(revAll.revision())
+	// 		.pipe(gulp.dest(config.buildDir));
+	// });
 
 	/**
 	 * Does the actual building into an NW executable.
 	 */
-	gulp.task('client:nw', function() {
-		var clientJson = require('../client-package.json');
-		var NwBuilder = require('nw-builder');
+	gulp.task('client:nw', () => {
+		const packageJson = require(config.base + '/package.json');
+		const NwBuilder = require('nw-builder');
 
 		// We want the name to be:
 		// 'game-jolt-client' on linux - because kebabs rock
 		// 'GameJoltClient' on win - so it shows up well in process list and stuff
 		// 'Game Jolt Client' on mac - so it shows up well in Applications folder.
-		var appName = 'game-jolt-client';
-		if (config.platform == 'win') {
+		let appName = 'game-jolt-client';
+		if (config.platform === 'win') {
 			appName = 'GameJoltClient';
-		} else if (config.platform == 'osx') {
+		} else if (config.platform === 'osx') {
 			appName = 'Game Jolt Client';
 		}
 
-		var nw = new NwBuilder({
+		const nw = new NwBuilder({
 			version: '0.12.3',
 			files: config.buildDir + '/**/*',
 			buildDir: config.clientBuildDir,
 			cacheDir: config.clientBuildCacheDir,
 			platforms: [config.platformArch],
 			appName: appName,
-			buildType: function() {
+			buildType: () => {
 				// return 'v' + this.appVersion;
 				return 'build';
 			},
-			appVersion: clientJson.version,
+			appVersion: packageJson.version,
 			macZip: false, // Use a app.nw folder instead of ZIP file
 			macIcns: 'src/app/img/client/mac.icns',
 			winIco: 'src/app/img/client/winico.ico',
@@ -350,63 +232,48 @@ module.exports = function(config) {
 		return nw.build();
 	});
 
-	// We have to load paths only when we're actually running the gulp task.
-	// Otherwise the client config gulp task won't have a chance to run.
-	function getReleaseDir() {
-		// Load in the client package.
-		var packageJson = require('../package.json');
-		return path.join(config.clientBuildDir, 'build');
-	}
-
 	/**
-	 * When packaging up the client, we need to push all the app files into a "package" folder.
-	 * We do this so we can update really easily.
-	 * This unzips the package.nw folder that nw-builder creates and pushes it into a "package" folder.
+	 * When packaging up the client, we need to push all the app files into a "package" folder. We
+	 * do this so we can update really easily. This unzips the package.nw folder that nw-builder
+	 * creates and pushes it into a "package" folder.
 	 */
-	gulp.task('client:nw-unpackage', function(cb) {
-		var releaseDir = getReleaseDir();
-		var base = path.join(releaseDir, config.platformArch);
-		var packagePath = path.join(releaseDir, config.platformArch + '-package.zip');
+	gulp.task('client:nw-unpackage', cb => {
+		const base = path.join(config.clientBuildDir, config.platformArch);
+		const packagePath = path.join(config.clientBuildDir, config.platformArch + '-package.zip');
 
-		if (config.platform != 'osx') {
+		if (config.platform !== 'osx') {
 			fs.renameSync(path.join(base, 'package.nw'), packagePath);
 
-			var DecompressZip = require('decompress-zip');
-			var unzipper = new DecompressZip(packagePath);
+			const DecompressZip = require('decompress-zip');
+			const unzipper = new DecompressZip(packagePath);
 
 			unzipper.on('error', cb);
-			unzipper.on('extract', function() {
-				var stream = gulp
+			unzipper.on('extract', () => {
+				const stream = gulp
 					.src(base + '/package/**/*')
 					.pipe(plugins.tar(config.platformArch + '-package.tar'))
 					.pipe(plugins.gzip())
-					.pipe(gulp.dest(releaseDir));
+					.pipe(gulp.dest(config.clientBuildDir));
 
 				stream.on('error', cb);
-				stream.on('end', function() {
-					mv(path.join(base, 'package', 'node_modules'), path.join(base, 'node_modules'), function(
-						err
-					) {
+				stream.on('end', () => {
+					mv(path.join(base, 'package', 'node_modules'), path.join(base, 'node_modules'), err => {
 						if (err) {
 							throw err;
 						}
-						mv(
-							path.join(base, 'package', 'package.json'),
-							path.join(base, 'package.json'),
-							function(err) {
-								if (err) {
-									throw err;
-								}
-								cb();
+						mv(path.join(base, 'package', 'package.json'), path.join(base, 'package.json'), err => {
+							if (err) {
+								throw err;
 							}
-						);
+							cb();
+						});
 					});
 				});
 			});
 
 			unzipper.extract({ path: path.join(base, 'package') });
 		} else {
-			var stream = gulp
+			const stream = gulp
 				.src(base + '/Game Jolt Client.app/Contents/Resources/app.nw/**/*')
 				.pipe(plugins.tar(config.platformArch + '-package.tar'))
 				.pipe(plugins.gzip())
@@ -420,13 +287,12 @@ module.exports = function(config) {
 	/**
 	 * Packages up the client builds into archive files so they can be distributed easier.
 	 */
-	if (config.platform == 'osx') {
-		gulp.task('client:package', function(cb) {
-			var appdmg = require('appdmg');
-			var releaseDir = getReleaseDir();
+	gulp.task('client:package', cb => {
+		if (config.platform === 'osx') {
+			const appdmg = require('appdmg');
 
-			var dmg = appdmg({
-				target: releaseDir + '/osx.dmg',
+			const dmg = appdmg({
+				target: config.clientBuildDir + '/osx.dmg',
 				basepath: path.resolve(__dirname, '..'),
 				specification: {
 					title: 'Game Jolt Client',
@@ -438,60 +304,53 @@ module.exports = function(config) {
 							x: 195,
 							y: 370,
 							type: 'file',
-							path: releaseDir + '/' + config.platformArch + '/Game Jolt Client.app',
+							path: config.clientBuildDir + '/' + config.platformArch + '/Game Jolt Client.app',
 						},
 						{ x: 429, y: 370, type: 'link', path: '/Applications' },
 					],
 				},
 			});
 
-			dmg.on('progress', function(info) {
+			dmg.on('progress', info => {
 				console.log(info);
 			});
-			dmg.on('finish', function() {
+			dmg.on('finish', () => {
 				console.log('Finished building DMG.');
 				cb();
 			});
-			dmg.on('error', function(err) {
+			dmg.on('error', err => {
 				console.error(err);
 				cb(err);
 			});
-		});
-	} else if (config.platform == 'win') {
-		gulp.task('client:package', function() {
-			var releaseDir = getReleaseDir();
-			var packageJson = require(path.resolve(__dirname, '..', 'package.json'));
+		} else if (config.platform === 'win') {
+			const packageJson = require(path.resolve(__dirname, '..', 'package.json'));
 
-			var InnoSetup = require('./inno-setup');
-			var certFile = config.production
+			const InnoSetup = require('./inno-setup');
+			const certFile = config.production
 				? path.resolve(__dirname, 'certs', 'cert.pfx')
 				: path.resolve('tasks', 'vendor', 'cert.pfx');
-			var certPw = config.production ? process.env['GJ_CERT_PASS'] : 'GJ123456';
-			var builder = new InnoSetup(
-				path.resolve(releaseDir, config.platformArch),
-				path.resolve(releaseDir),
+			const certPw = config.production ? process.env['GJ_CERT_PASS'] : 'GJ123456';
+			const builder = new InnoSetup(
+				path.resolve(config.clientBuildDir, config.platformArch),
+				path.resolve(config.clientBuildDir),
 				packageJson.version,
 				certFile,
 				certPw.trim()
 			);
 			return builder.build();
-		});
-	} else {
-		gulp.task('client:package', function(cb) {
-			var releaseDir = getReleaseDir();
-
+		} else {
 			if (!config.production) {
 				cb();
 				return;
 			}
 
 			return gulp
-				.src(releaseDir + '/' + config.platformArch + '/**/*')
+				.src(config.clientBuildDir + '/' + config.platformArch + '/**/*')
 				.pipe(plugins.tar(config.platformArch + '.tar'))
 				.pipe(plugins.gzip())
-				.pipe(gulp.dest(releaseDir));
-		});
-	}
+				.pipe(gulp.dest(config.clientBuildDir));
+		}
+	});
 
 	if (config.client) {
 		if (config.watching) {
