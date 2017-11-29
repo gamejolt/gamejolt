@@ -25,7 +25,7 @@
 	</template>
 
 	<app-popover
-		v-if="showUserFollow"
+		v-if="shouldShowFollow"
 		:popover-id="popoverId"
 		:append-to-body="true"
 		:track-element-width="'#' + widgetId"
