@@ -1020,13 +1020,18 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	async installerUninstall(
 		localPackage: Actions['clientLibrary/installerUninstall']
 	): ReturnTypeInstallerUninstall {
-		const uninstallInstance = await Uninstaller.uninstall(localPackage as any);
-		return new Promise<void>((resolve, reject) => {
-			uninstallInstance
-				.on('uninstallFinished', () => resolve())
-				.on('uninstallFailed', reject)
-				.on('fatal', reject);
-		});
+		try {
+			const uninstallInstance = await Uninstaller.uninstall(localPackage as any);
+			return new Promise<void>((resolve, reject) => {
+				uninstallInstance
+					.on('uninstallFinished', () => resolve())
+					.on('uninstallFailed', reject)
+					.on('fatal', reject);
+			});
+		} catch (err) {
+			console.error(err);
+			throw err;
+		}
 	}
 
 	@VuexAction

@@ -5,11 +5,15 @@ import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/pa
 import { GameRelease } from '../../../../../lib/gj-lib-client/components/game/release/release.model';
 import { GameBuildLaunchOption } from '../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { Device as _Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
+import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import {
 	ReturnTypePackageStartUpdate,
 	ReturnTypePackageUninstall,
 	ReturnTypeSetPackageFieldsAndSave,
 } from '../../../../store/client-library';
+
+const Device = makeObservableService(_Device);
 
 export type Pid = string | IParsedWrapper;
 
@@ -290,6 +294,37 @@ export class LocalDbPackage {
 			return this.unpack_progress.progress;
 		}
 		return null;
+	}
+
+	get executablePath() {
+		const launchOption = this.findLaunchOption();
+		return launchOption ? launchOption.executable_path : '';
+	}
+
+	findLaunchOption() {
+		const os = Device.os();
+		const arch = Device.arch();
+
+		let result = undefined;
+		for (let launchOption of this.launch_options) {
+			let lOs: (string | null)[] = launchOption.os ? launchOption.os.split('_') : [];
+			if (lOs.length === 0) {
+				lOs = [null, '32'];
+			} else if (lOs.length === 1) {
+				lOs.push('32');
+			}
+
+			if (lOs[0] === os) {
+				if (lOs[1] === arch) {
+					return launchOption;
+				}
+				result = launchOption;
+			} else if (lOs[0] === null && !result) {
+				result = launchOption;
+			}
+		}
+
+		return result;
 	}
 
 	setData(

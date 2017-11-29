@@ -38,14 +38,14 @@ module.exports = function(config) {
 	gulp.task(
 		'client:package.json',
 		shell.task([
-			mkdirExec + ' ' + path.join('build', 'dev'),
-			copyExec + ' client-package.json ' + path.join('build', 'dev', 'package.json'),
+			mkdirExec + ' ' + path.join('build', 'dev-client'),
+			copyExec + ' client-package.json ' + path.join('build', 'dev-client', 'package.json'),
 		])
 	);
 
 	gulp.task(
 		'client:run',
-		gulp.series('client:package.json', shell.task(['nw ' + path.join('build', 'dev')]))
+		gulp.series('client:package.json', shell.task(['nw ' + path.join('build', 'dev-client')]))
 	);
 	return;
 

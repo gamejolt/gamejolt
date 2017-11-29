@@ -13,7 +13,7 @@ export async function AppCommentWidgetLazy() {
 }
 
 export async function AppCommentWidgetAddLazy() {
-	return (await import(/* webpackChunkName: "commentWidget" */ '../../lib/gj-lib-client/components/comment/widget/add/add'))
+	return (await import(/* webpackChunkName: "commentWidget" */ '../../lib/gj-lib-client/components/comment/add/add'))
 		.AppCommentWidgetAdd;
 }
 

@@ -1,4 +1,4 @@
-import gui from 'nw.gui';
+import * as gui from 'nw.gui';
 const win = gui.Window.get();
 
 export class ClientControl {

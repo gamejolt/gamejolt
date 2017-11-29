@@ -37,7 +37,7 @@
 		"decompress-zip": "0.3.0",
 		"express": "4.15.4",
 		"favico.js": "0.3.10",
-		"game-jolt-frontend-lib": "gamejolt/frontend-lib#dbef476b790fc4f853df5608b53bb5e39647922f",
+		"game-jolt-frontend-lib": "file:src/lib/gj-lib-client",
 		"hammerjs": "2.0.8",
 		"humanize-duration": "3.10.1",
 		"jquery": "3.2.1",
@@ -78,9 +78,9 @@
 		"appdmg": "0.3.10"
 	},
 	"dependencies": {
-		"client-voodoo": "gamejolt/client-voodoo#joltron",
+		"client-voodoo": "github:gamejolt/client-voodoo#client-vue",
 		"dexie": "2.0.0-beta.10",
-		"nwjs-snappy-updater": "1.0.0",
+		"nwjs-snappy-updater": "github:gamejolt/nwjs-snappy-updater#client-vue",
 		"sanitize-filename": "1.6.1"
 	}
 }
