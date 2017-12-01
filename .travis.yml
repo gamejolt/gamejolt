@@ -11,9 +11,9 @@ addons:
       - ubuntu-toolchain-r-test
   artifacts:
     paths:
-      - ./build/prod-client-build/build/linux64-package.zip
+      - ./build/prod-client-build/linux64-package.zip
       - ./build/prod-client-build/linux64.tar.gz
-      - ./build/prod-client-build/build/osx64-package.tar.gz
+      - ./build/prod-client-build/osx64-package.tar.gz
       - ./build/prod-client-build/osx.dmg
 
 before_install:
