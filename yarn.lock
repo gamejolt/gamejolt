@@ -1153,16 +1153,11 @@ clean-css@4.1.9, clean-css@4.1.x, clean-css@^4.1.9:
   version "2.0.0-alpha.11"
   resolved "https://codeload.github.com/gamejolt/client-voodoo/tar.gz/d80fc55c25c8283e0fcf87a19d63bddf4e76089c"
   dependencies:
-    "@types/bluebird" "^3.5.8"
-    "@types/mkdirp" "0.3.29"
-    "@types/node" "4.2.11"
-    JSONStream "1.3.1"
+    JSONStream "github:gamejolt/JSONStream#no-shebang"
     bluebird "^3.5.0"
     mkdirp "0.5.1"
     shell-escape "0.2.0"
   optionalDependencies:
-    "@types/winreg" "1.2.30"
-    "@types/xdg-basedir" "2.0.0"
     applescript "1.0.0"
     ps-node "0.1.6"
     winreg "1.2.4"
