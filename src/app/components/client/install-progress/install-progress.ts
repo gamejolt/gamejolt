@@ -1,9 +1,10 @@
+import View from '!view!./install-progress.html';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./install-progress.html';
-import { LocalDbPackage, PatchState } from '../local-db/package/package.model';
+
 import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';
 import { duration } from '../../../../lib/gj-lib-client/vue/filters/duration';
+import { LocalDbPackage, PatchState } from '../local-db/package/package.model';
 
 @View
 @Component({
@@ -13,8 +14,6 @@ import { duration } from '../../../../lib/gj-lib-client/vue/filters/duration';
 })
 export class AppClientInstallProgress extends Vue {
 	@Prop(LocalDbPackage) localPackage: LocalDbPackage;
-
-	duration = duration;
 
 	get patchState() {
 		if (!this.localPackage) {
@@ -44,5 +43,23 @@ export class AppClientInstallProgress extends Vue {
 
 	get shouldShowSpeed() {
 		return this.patchState === PatchState.DOWNLOADING;
+	}
+
+	get timeLeft() {
+		if (
+			this.packageProgress &&
+			this.packageProgress.timeLeft &&
+			this.packageProgress.timeLeft !== Infinity
+		) {
+			return `~${duration(this.packageProgress.timeLeft)}`;
+		}
+		return '--';
+	}
+
+	get speed() {
+		if (this.packageProgress && this.packageProgress.rate) {
+			return `${this.packageProgress.rate.toFixed(0)} KBps`;
+		}
+		return '--';
 	}
 }

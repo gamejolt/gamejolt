@@ -18,18 +18,12 @@
 
 	<p class="client-install-progress-info small clearfix">
 		<span class="pull-left client-install-progress-info-speed" v-if="shouldShowSpeed">
-			<span v-translate="{
-					speed: packageProgress.rate ? `${packageProgress.rate.toFixed( 0 )} KBps` : '--',
-				}"
-			 	>
+			<span v-translate="{ speed }">
 				Speed: <strong>%{ speed }</strong>
 			</span>
 		</span>
 		<span class="pull-right client-install-progress-info-time">
-			<span v-translate="{
-					timeLeft: packageProgress.timeLeft ? `~${duration( packageProgress.timeLeft )}` : '--',
-				}"
-				>
+			<span v-translate="{ timeLeft }">
 				Remaining: <strong>%{ timeLeft }</strong>
 			</span>
 		</span>
