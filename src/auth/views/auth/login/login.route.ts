@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeAuthLogin: VueRouter.RouteConfig = {
+export const routeAuthLogin: RouteConfig = {
 	name: 'auth.login',
 	path: 'login',
 	props: true,

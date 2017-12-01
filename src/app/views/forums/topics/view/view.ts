@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./view.html';
@@ -96,7 +96,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 	}
 
 	@RouteResolve({ cache: true })
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		HistoryTick.sendBeacon('forum-topic', parseInt(route.params.id, 10));
 
 		const payload = await Api.sendRequest(

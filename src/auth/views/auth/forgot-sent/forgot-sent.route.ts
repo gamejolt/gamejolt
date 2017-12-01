@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeAuthForgotSent: VueRouter.RouteConfig = {
+export const routeAuthForgotSent: RouteConfig = {
 	name: 'auth.forgot-sent',
 	path: 'forgot/sent',
 	props: true,

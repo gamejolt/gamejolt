@@ -70,7 +70,7 @@ export class ChatClient {
 
 	currentUser: ChatUser | null = null;
 	friendsList: ChatUserCollection = null as any;
-	private friendsPopulated = false;
+	friendsPopulated = false;
 
 	room: ChatRoom | null = null;
 
@@ -643,6 +643,7 @@ export class ChatClient {
 				this.room.id,
 				// tslint:disable-next-line:max-line-length
 				`*Beep boop bop.* You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. *Bzzzzzzzzt.*`,
+				// tslint:disable-next-line:max-line-length
 				`<p><em>Beep boop bop.</em> You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. <em>Bzzzzzzzzt.</em></p>`
 			);
 			this.sendingMessage = false;

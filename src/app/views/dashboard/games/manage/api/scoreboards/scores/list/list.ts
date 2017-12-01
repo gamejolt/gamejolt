@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
 
@@ -29,7 +29,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRo
 	scores: UserGameScore[] = [];
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/api/scores/list-table-scores/' +
 				route.params.id +

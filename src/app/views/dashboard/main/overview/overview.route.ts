@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashMainOverview: VueRouter.RouteConfig = {
+export const routeDashMainOverview: RouteConfig = {
 	name: 'dash.main.overview',
 	path: '/dashboard',
 	props: true,

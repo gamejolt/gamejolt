@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./edit.html';
 
@@ -39,7 +39,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 	areWebBuildsLockedBySellable = false;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/releases/' +
 				route.params.id +

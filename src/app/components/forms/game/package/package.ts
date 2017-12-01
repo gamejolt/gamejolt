@@ -1,8 +1,8 @@
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { determine } from 'jstimezonedetect';
-import startOfTomorrow from 'date-fns/start_of_tomorrow';
-import startOfDay from 'date-fns/start_of_day';
-import addWeeks from 'date-fns/add_weeks';
+import * as startOfTomorrow from 'date-fns/start_of_tomorrow';
+import * as startOfDay from 'date-fns/start_of_day';
+import * as addWeeks from 'date-fns/add_weeks';
 import View from '!view!./package.html';
 
 import {

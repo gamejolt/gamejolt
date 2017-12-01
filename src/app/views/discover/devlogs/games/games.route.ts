@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDiscoverDevlogsGames: VueRouter.RouteConfig = {
+export const routeDiscoverDevlogsGames: RouteConfig = {
 	name: 'discover.devlogs.games',
 	path: 'games/:section?',
 	props: true,

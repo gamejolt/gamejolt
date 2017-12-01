@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
 import RouteAuth from './auth';
 import { routeAuthLogin } from './login/login.route';
@@ -10,7 +10,7 @@ import { routeAuthResetPassword } from './reset-password/reset-password.route';
 import { routeAuthAuthorize } from './authorize/authorize.route';
 import { routeAuthLinkedAccount } from './linked-account/linked-account.route';
 
-export const routeAuth: VueRouter.RouteConfig = {
+export const routeAuth: RouteConfig = {
 	path: '/',
 	props: true,
 	component: RouteAuth,

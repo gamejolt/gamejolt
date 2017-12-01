@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue, { CreateElement } from 'vue';
 import { Mutation } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 
@@ -30,7 +30,7 @@ export class AppShellNotificationCount extends Vue {
 		} catch (e) {}
 	}
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		return h('div', { staticClass: 'hidden' });
 	}
 }

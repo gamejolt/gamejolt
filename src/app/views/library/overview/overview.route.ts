@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeLibraryOverview: VueRouter.RouteConfig = {
+export const routeLibraryOverview: RouteConfig = {
 	name: 'library.overview',
 	path: '/library',
 	props: true,

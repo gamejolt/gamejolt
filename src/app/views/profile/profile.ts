@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import View from '!view!./profile.html?style=./profile.styl';
@@ -64,7 +64,7 @@ export default class RouteProfile extends BaseRouteComponent {
 	Environment = Environment;
 
 	@RouteResolve()
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'follow-user',
 			message: Translate.$gettext(`You're now following this user.`),

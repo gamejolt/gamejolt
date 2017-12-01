@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./checkout.html?style=./checkout.styl';
 
@@ -32,7 +32,7 @@ export default class RouteCheckout extends BaseRouteComponent {
 	Environment = Environment;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/checkout/' + route.params.orderId, {});
 	}
 

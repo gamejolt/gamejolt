@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
 import { routeDashGamesManageApiOverview } from './overview/overview.route';
 import { routeDashGamesManageApiTrophies } from './trophies/trophies.route';
@@ -10,7 +10,7 @@ import { routeDashGamesManageApiScoreboardsScoresList } from './scoreboards/scor
 import { routeDashGamesManageApiScoreboardsScoresView } from './scoreboards/scores/view/view.route';
 import { routeDashGamesManageApiScoreboardsScoreUser } from './scoreboards/scores/user/user.route';
 
-export const routeDashGamesManageApi: VueRouter.RouteConfig = {
+export const routeDashGamesManageApi: RouteConfig = {
 	path: 'api',
 	props: true,
 	component: () => import(/* webpackChunkName: "routeDashGamesManageApi" */ './api'),

@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDiscoverDevlogsOverview: VueRouter.RouteConfig = {
+export const routeDiscoverDevlogsOverview: RouteConfig = {
 	name: 'discover.devlogs.overview',
 	path: '/devlogs',
 	props: true,

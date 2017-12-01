@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDiscoverChannelsViewDevlogs: VueRouter.RouteConfig = {
+export const routeDiscoverChannelsViewDevlogs: RouteConfig = {
 	name: 'discover.channels.view.devlogs',
 	path: 'devlogs/:section?',
 	props: true,

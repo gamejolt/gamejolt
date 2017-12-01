@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashAccountMobileNav: VueRouter.RouteConfig = {
+export const routeDashAccountMobileNav: RouteConfig = {
 	name: 'dash.account-mobile-nav',
 	path: 'account/nav',
 	props: true,

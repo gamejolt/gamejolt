@@ -30,4 +30,16 @@ export class AppGameModLinks extends Vue {
 			Growls.success('Tagged the game.');
 		}
 	}
+
+	async untag(tag: string) {
+		// It won't return what site api expects for output, so gotta catch.
+		try {
+			await Api.sendRequest(`/games/tags/untag/${this.game.id}/${tag}`, null, {
+				apiPath: '/moderate',
+				processPayload: false,
+			});
+		} catch (_e) {
+			Growls.success('Untagged the game.');
+		}
+	}
 }

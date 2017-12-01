@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./widget.html';
 
@@ -25,7 +25,7 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/packages/preview/' + route.params.id + '/' + route.params.packageId
 		);

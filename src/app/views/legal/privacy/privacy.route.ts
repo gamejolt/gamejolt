@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeLegalPrivacy: VueRouter.RouteConfig = {
+export const routeLegalPrivacy: RouteConfig = {
 	name: 'legal.privacy',
 	path: '/privacy',
 	props: true,

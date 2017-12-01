@@ -1,13 +1,13 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
 import * as gui from 'nw.gui';
+import Vue, { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
+import { Location } from 'vue-router';
+import { Action, State } from 'vuex-class';
 
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { ClientControl } from '../control/client.service';
-import { State, Action } from 'vuex-class';
 import { Store } from '../../../store/index';
 import { UserTokenModal } from '../../user/token-modal/token-modal.service';
+import { ClientControl } from '../control/client.service';
 
 const packagePrefix = GJ_BUILD_TYPE === 'production' ? '/package' : '';
 
@@ -67,12 +67,12 @@ export class AppClientTray extends Vue {
 		}
 	}
 
-	private go(location: VueRouter.Location) {
+	private go(location: Location) {
 		this.$router.push(location);
 		ClientControl.show();
 	}
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		// Changes to these will refresh the render function.
 		const section = this.section;
 

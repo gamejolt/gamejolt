@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./retrieve.html';
 
@@ -45,7 +45,7 @@ export default class RouteRetrieve extends BaseRouteComponent {
 	Meta = makeObservableService(Meta);
 
 	@RouteResolve()
-	async routeResolve(this: undefined, route: VueRouter.Route): Promise<Payload> {
+	async routeResolve(this: undefined, route: Route): Promise<Payload> {
 		let type: 'game' | 'bundle' | undefined;
 		let key = '';
 

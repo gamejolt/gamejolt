@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDiscoverGamesViewComments: VueRouter.RouteConfig = {
+export const routeDiscoverGamesViewComments: RouteConfig = {
 	name: 'discover.games.view.comments',
 	path: 'comments',
 	props: true,

@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashMainSite: VueRouter.RouteConfig = {
+export const routeDashMainSite: RouteConfig = {
 	name: 'dash.main.site',
 	path: 'site/:siteTab?',
 	props: true,

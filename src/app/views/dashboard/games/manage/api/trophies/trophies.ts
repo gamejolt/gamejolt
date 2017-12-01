@@ -1,10 +1,13 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./trophies.html';
 
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { RouteState, RouteStore } from '../../manage.store';
-import { GameTrophy } from '../../../../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
+import {
+	GameTrophy,
+	GameTrophyDifficulty,
+} from '../../../../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
 import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
 import { AppCardListDraggable } from '../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
 import { AppCardListItem } from '../../../../../../../lib/gj-lib-client/components/card/list/item/item';
@@ -81,7 +84,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 	}
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/api/trophies/' + route.params.id);
 	}
 
@@ -130,7 +133,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 		Scroll.to('trophy-container-' + trophy.id);
 	}
 
-	saveTrophySort(difficulty: number, trophies: GameTrophy[]) {
+	saveTrophySort(difficulty: GameTrophyDifficulty, trophies: GameTrophy[]) {
 		// Pull out the trophies and then add them back in in the correct order.
 		const trophyIds = trophies.map(i => i.id);
 		let filtered = this.trophies.filter(i => trophyIds.indexOf(i.id) === -1).concat(trophies);

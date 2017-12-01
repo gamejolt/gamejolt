@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeActivity: VueRouter.RouteConfig = {
+export const routeActivity: RouteConfig = {
 	name: 'activity',
 	path: '/:tab(activity|notifications)',
 	props: true,

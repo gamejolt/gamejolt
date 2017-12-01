@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
 import { routeDashGamesManageGameOverview } from './overview/overview.route';
 import { routeDashGamesManageGameDetails } from './details/details.route';
@@ -15,7 +15,7 @@ import { routeDashGamesManageGameMaturity } from './maturity/maturity.route';
 import { routeDashGamesManageGameWizardFinish } from './wizard-finish/wizard-finish.route';
 import { routeDashGamesManageGamePackageReleaseEdit } from './packages/release/edit/edit.route';
 
-export const routeDashGamesManageGame: VueRouter.RouteConfig = {
+export const routeDashGamesManageGame: RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',
 	props: true,
 	component: () => import(/* webpackChunkName: "routeDashGamesManageGame" */ './game'),

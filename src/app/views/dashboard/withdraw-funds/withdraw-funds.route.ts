@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashWithdrawFunds: VueRouter.RouteConfig = {
+export const routeDashWithdrawFunds: RouteConfig = {
 	name: 'dash.withdraw-funds',
 	path: 'withdraw-funds',
 	alias: 'developer/withdraw-funds',

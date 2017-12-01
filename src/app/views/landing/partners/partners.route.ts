@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeLandingPartners: VueRouter.RouteConfig = {
+export const routeLandingPartners: RouteConfig = {
 	name: 'landing.partners',
 	path: '/partners',
 	props: true,

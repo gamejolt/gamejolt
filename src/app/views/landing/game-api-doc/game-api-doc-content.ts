@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { CreateElement } from 'vue';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { importContext } from '../../../../lib/gj-lib-client/utils/utils';
 import { PayloadError } from '../../../../lib/gj-lib-client/components/payload/payload-service';
@@ -23,7 +23,7 @@ export default class RouteLandingGameApiDoc extends BaseRouteComponent {
 	content = '';
 
 	@RouteResolve()
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		// First check the path as is, then check with "index".
 		let path = route.params.path;
 		if (!path) {
@@ -45,7 +45,7 @@ export default class RouteLandingGameApiDoc extends BaseRouteComponent {
 		this.content = $payload;
 	}
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		return h('div', { domProps: { innerHTML: this.content } });
 	}
 }

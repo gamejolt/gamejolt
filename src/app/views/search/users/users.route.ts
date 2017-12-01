@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeSearchUsers: VueRouter.RouteConfig = {
+export const routeSearchUsers: RouteConfig = {
 	name: 'search.users',
 	path: 'users',
 	props: true,

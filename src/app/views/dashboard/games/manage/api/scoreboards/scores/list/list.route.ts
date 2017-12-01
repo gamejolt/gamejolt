@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashGamesManageApiScoreboardsScoresList: VueRouter.RouteConfig = {
+export const routeDashGamesManageApiScoreboardsScoresList: RouteConfig = {
 	name: 'dash.games.manage.api.scoreboards.scores.list',
 	path: 'scoreboards/:table(\\d+)',
 	props: true,

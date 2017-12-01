@@ -1,5 +1,4 @@
 import { namespace, State, Action, Mutation } from 'vuex-class';
-import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
 import { VuexModule, VuexStore, VuexMutation } from '../../../../lib/gj-lib-client/utils/vuex';
 
 export const RouteStoreName = 'accountRoute';

@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./overview.html';
 
@@ -45,7 +45,7 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 	Screen = Screen;
 
 	@RouteResolve({ cache: true, lazy: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/discover/channels/overview/' + route.params.channel);
 	}
 

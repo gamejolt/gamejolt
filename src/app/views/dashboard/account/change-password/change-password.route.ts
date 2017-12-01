@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashAccountChangePassword: VueRouter.RouteConfig = {
+export const routeDashAccountChangePassword: RouteConfig = {
 	name: 'dash.account.change-password',
 	path: 'change-password',
 	props: true,

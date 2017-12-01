@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { CreateElement } from 'vue';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
@@ -16,7 +16,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 	@AppState user: AppStore['user'];
 
 	@RouteResolve()
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		// Force POST.
 		if (route.params.provider === 'twitter') {
 			return Api.sendRequest(
@@ -168,7 +168,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 		});
 	}
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		return h('div');
 	}
 }

@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeAuthLinkedAccountPoll: VueRouter.RouteConfig = {
+export const routeAuthLinkedAccountPoll: RouteConfig = {
 	name: 'auth.linked-account.poll',
 	path: 'linked-account/poll',
 	props: true,

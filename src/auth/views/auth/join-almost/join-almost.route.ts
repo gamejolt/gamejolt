@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeAuthJoinAlmost: VueRouter.RouteConfig = {
+export const routeAuthJoinAlmost: RouteConfig = {
 	name: 'auth.join-almost',
 	path: 'join/almost',
 	props: true,

@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
@@ -13,7 +13,7 @@ export default class RouteLegalTerms extends BaseRouteComponent {
 		return this.$gettext('Terms of Use');
 	}
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		return h('div', { domProps: { innerHTML: template } });
 	}
 }

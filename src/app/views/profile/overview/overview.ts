@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./overview.html';
@@ -68,7 +68,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	Screen = makeObservableService(Screen);
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/profile/overview/@' + route.params.username);
 	}
 

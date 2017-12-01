@@ -99,7 +99,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	private ratingCallback?: Function;
 	private gaTrackingId?: string;
 
-	private roleNames = {
+	private roleNames: { [k: string]: string } = {
 		[GameCollaborator.ROLE_COLLABORATOR]: this.$gettext('an equal collaborator'),
 		[GameCollaborator.ROLE_COMMUNITY_MANAGER]: this.$gettext('a community manager'),
 		[GameCollaborator.ROLE_DEVELOPER]: this.$gettext('a developer'),
@@ -110,7 +110,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			return '';
 		}
 
-		return this.roleNames[this.collaboratorInvite.role] || '';
+		return this.roleNames[this.collaboratorInvite.role as string] || '';
 	}
 
 	get ratingTooltip() {

@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashAccountLinkedAccountsLinkCallback: VueRouter.RouteConfig = {
+export const routeDashAccountLinkedAccountsLinkCallback: RouteConfig = {
 	name: 'dash.account.linked-accounts.link-callback',
 	path: 'linked-accounts/link-callback/:provider',
 	props: true,

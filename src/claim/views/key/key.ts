@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./key.html';
@@ -47,7 +47,7 @@ export default class RouteKey extends BaseRouteComponent {
 	}
 
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		let url = '/claim/view/' + route.params.accessKey;
 
 		if (route.query.bundleGameId) {

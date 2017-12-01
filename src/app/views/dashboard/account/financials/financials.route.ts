@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashAccountFinancials: VueRouter.RouteConfig = {
+export const routeDashAccountFinancials: RouteConfig = {
 	name: 'dash.account.financials',
 	path: 'financials',
 	props: true,

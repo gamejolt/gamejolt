@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./manage.html';
 
@@ -46,7 +46,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 	Game = Game;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'accept-game-collaboration',
 			message: Translate.$gettext(`You're now a collaborator for this project!`),

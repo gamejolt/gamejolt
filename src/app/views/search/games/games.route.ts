@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeSearchGames: VueRouter.RouteConfig = {
+export const routeSearchGames: RouteConfig = {
 	name: 'search.games',
 	path: 'games',
 	props: true,

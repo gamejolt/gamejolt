@@ -7,7 +7,6 @@ import {
 	FormOnSubmit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { FormOnSubmitSuccess } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 
 type FormModel = {
 	old_password: string;

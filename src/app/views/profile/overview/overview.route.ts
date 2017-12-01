@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeProfileOverview: VueRouter.RouteConfig = {
+export const routeProfileOverview: RouteConfig = {
 	name: 'profile.overview',
 	path: '/@:username',
 	props: true,

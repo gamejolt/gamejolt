@@ -74,7 +74,7 @@ export class FormPayment extends BaseForm<any> implements FormOnInit, FormOnSubm
 		this.setField('country', 'us');
 		this.setField('selectedCard', 0);
 		if (this.cards && this.cards.length) {
-			this.formModel.selectedCard = this.cards[0].id;
+			this.setField('selectedCard', this.cards[0].id);
 		}
 
 		this.setField('save_card', true);

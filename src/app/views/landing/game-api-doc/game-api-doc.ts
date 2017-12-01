@@ -2,7 +2,7 @@ import { Component } from 'vue-property-decorator';
 import View from '!view!./game-api-doc.html?style=./game-api-doc.styl';
 
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
-import nav from '!json-loader!../../../../lib/doc-game-api/v1.x/nav.json';
+import * as nav from '!json-loader!../../../../lib/doc-game-api/v1.x/nav.json';
 
 @View
 @Component({

@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
@@ -48,7 +48,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 	currentFilter = 'all';
 
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/discover/games/trophies/' + route.params.id);
 	}
 

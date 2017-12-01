@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
 import { routeDashMain } from './main/main.route';
 import { routeDashAccount } from './account/account.route';
@@ -7,7 +7,7 @@ import { routeDashAnalytics } from './analytics/analytics.route';
 import { routeDashGames } from './games/games.route';
 import { routeDashWithdrawFunds } from './withdraw-funds/withdraw-funds.route';
 
-export const routeDash: VueRouter.RouteConfig = {
+export const routeDash: RouteConfig = {
 	name: 'dashboard',
 	path: '/dashboard',
 	props: true,
