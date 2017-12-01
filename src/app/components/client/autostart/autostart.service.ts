@@ -1,5 +1,6 @@
-import { Settings } from '../../settings/settings.service';
 import { Autostarter } from 'client-voodoo';
+
+import { Settings } from '../../../../_common/settings/settings.service';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
 
 export class ClientAutoStart {

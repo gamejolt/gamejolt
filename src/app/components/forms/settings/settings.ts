@@ -1,12 +1,12 @@
-import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./settings.html';
+import { Component, Watch } from 'vue-property-decorator';
 
+import { Settings } from '../../../../_common/settings/settings.service';
+import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import {
 	BaseForm,
 	FormOnInit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Settings } from '../../settings/settings.service';
-import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { ClientAutoStart } from '../../client/autostart/autostart.service';
 
 type FormModel = {

@@ -1,35 +1,36 @@
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
-import {
-	VuexStore,
-	VuexModule,
-	VuexAction,
-	VuexMutation,
-} from '../../lib/gj-lib-client/utils/vuex';
-import {
-	AppStore,
-	Mutations as AppMutations,
-	Actions as AppActions,
-	appStore,
-} from '../../lib/gj-lib-client/vue/services/app/app-store';
-import { LibraryStore, Mutations as LibraryMutations, Actions as LibraryActions } from './library';
-import {
-	ClientLibraryStore,
-	Mutations as ClientLibraryMutations,
-	Actions as ClientLibraryActions,
-} from './client-library';
-import { Settings } from '../components/settings/settings.service';
+
+import { Settings } from '../../_common/settings/settings.service';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
-import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
-import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
-import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
-import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
-import { router } from '../views';
 import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
+import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
+import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
+import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
+import {
+	VuexAction,
+	VuexModule,
+	VuexMutation,
+	VuexStore,
+} from '../../lib/gj-lib-client/utils/vuex';
+import {
+	Actions as AppActions,
+	AppStore,
+	appStore,
+	Mutations as AppMutations,
+} from '../../lib/gj-lib-client/vue/services/app/app-store';
+import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { ChatClient } from '../components/chat/client';
 import { ChatClientLazy } from '../components/lazy';
+import { router } from '../views';
+import {
+	Actions as ClientLibraryActions,
+	ClientLibraryStore,
+	Mutations as ClientLibraryMutations,
+} from './client-library';
+import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
 
 export type Actions = AppActions &
 	LibraryActions &

@@ -1,18 +1,19 @@
 import { Queue } from 'client-voodoo';
-import { Settings } from '../../settings/settings.service';
-import { store } from '../../../store/index';
-import { LocalDbPackage } from '../local-db/package/package.model';
-import { LocalDbGame } from '../local-db/game/game.model';
+
+import { Settings } from '../../../../_common/settings/settings.service';
 import {
-	ReturnTypeRetryAllInstallations,
-	ReturnTypeInstallerRetry,
+	ReturnTypeInstallerCancel,
 	ReturnTypeInstallerInstall,
 	ReturnTypeInstallerPause,
 	ReturnTypeInstallerResume,
-	ReturnTypeInstallerCancel,
+	ReturnTypeInstallerRetry,
 	ReturnTypeInstallerRollback,
 	ReturnTypeInstallerUninstall,
+	ReturnTypeRetryAllInstallations,
 } from '../../../store/client-library';
+import { store } from '../../../store/index';
+import { LocalDbGame } from '../local-db/game/game.model';
+import { LocalDbPackage } from '../local-db/package/package.model';
 
 export abstract class ClientInstaller {
 	static init() {

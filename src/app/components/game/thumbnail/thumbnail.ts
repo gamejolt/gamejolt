@@ -1,27 +1,27 @@
+import View from '!view!./thumbnail.html?style=./thumbnail.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import View from '!view!./thumbnail.html?style=./thumbnail.styl';
 
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
+import { Settings } from '../../../../_common/settings/settings.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { AppGameCompatIcons } from '../compat-icons/compat-icons';
-import { AppVideo } from '../../../../lib/gj-lib-client/components/video/video';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { AppGameModLinks } from '../mod-links/mod-links';
-import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
+import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollInview } from '../../../../lib/gj-lib-client/components/scroll/inview/inview';
+import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
+import { AppVideo } from '../../../../lib/gj-lib-client/components/video/video';
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
-import { Settings } from '../../settings/settings.service';
-import { AppGameThumbnailPlaceholder } from './placeholder/placeholder';
-import { AppGameFollowWidget } from '../follow-widget/follow-widget';
+import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
+import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppGamePlaylistAddToWidget } from '../../game-playlist/add-to-widget/add-to-widget';
+import { AppGameCompatIcons } from '../compat-icons/compat-icons';
+import { AppGameFollowWidget } from '../follow-widget/follow-widget';
+import { AppGameModLinks } from '../mod-links/mod-links';
+import { AppGameThumbnailPlaceholder } from './placeholder/placeholder';
 
 /**
  * An array of all the thumbnails on the page.

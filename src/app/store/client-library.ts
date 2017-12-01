@@ -1,57 +1,58 @@
-import Vue from 'vue';
-import { State, namespace, Action, Mutation } from 'vuex-class';
 import {
-	LocalDbPackage,
-	DbFieldTypes as PackageFields,
-} from '../components/client/local-db/package/package.model';
-import {
-	LocalDbGame,
-	DbFieldTypes as GameFields,
-} from '../components/client/local-db/game/game.model';
-import {
-	VuexModule,
-	VuexStore,
-	VuexAction,
-	VuexMutation,
-	VuexGetter,
-} from '../../lib/gj-lib-client/utils/vuex';
-import { db } from '../components/client/local-db/local-db.service';
-import {
-	Patcher,
-	PatchInstance,
-	PatchEvents,
-	State as PatcherState,
+	Config,
 	Launcher,
 	LaunchInstance,
+	MsgResultResponse,
 	OldLaunchInstance,
+	Patcher,
+	PatchEvents,
+	PatchInstance,
 	Queue,
 	Rollbacker,
+	State as PatcherState,
 	Uninstaller,
-	MsgResultResponse,
-	Config,
 } from 'client-voodoo';
-import { Settings } from '../components/settings/settings.service';
-import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import * as fs from 'fs';
-import * as path from 'path';
 import * as nwGui from 'nw.gui';
-import {
-	RemoveState as PackageRemoveState,
-	PatchState,
-	Progress,
-} from '../components/client/local-db/package/package.model';
-import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
-import { HistoryTick } from '../../lib/gj-lib-client/components/history-tick/history-tick-service';
+import * as path from 'path';
+import Vue from 'vue';
+import { Action, Mutation, namespace, State } from 'vuex-class';
+
+import { Settings } from '../../_common/settings/settings.service';
+import { Api } from '../../lib/gj-lib-client/components/api/api.service';
+import { Device } from '../../lib/gj-lib-client/components/device/device.service';
+import { EventBus } from '../../lib/gj-lib-client/components/event-bus/event-bus.service';
+import { GameBuild } from '../../lib/gj-lib-client/components/game/build/build.model';
+import { GameBuildLaunchOption } from '../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
 import { Game } from '../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../lib/gj-lib-client/components/game/release/release.model';
-import { GameBuild } from '../../lib/gj-lib-client/components/game/build/build.model';
-import { GameBuildLaunchOption } from '../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
-import { DbFieldMapping as PackageDbFields } from '../components/client/local-db/package/package.model';
+import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
+import { HistoryTick } from '../../lib/gj-lib-client/components/history-tick/history-tick-service';
+import { arrayGroupBy, arrayIndexBy, arrayRemove } from '../../lib/gj-lib-client/utils/array';
+import {
+	VuexAction,
+	VuexGetter,
+	VuexModule,
+	VuexMutation,
+	VuexStore,
+} from '../../lib/gj-lib-client/utils/vuex';
+import {
+	DbFieldTypes as GameFields,
+	LocalDbGame,
+} from '../components/client/local-db/game/game.model';
 import { DbFieldMapping as GameDbFields } from '../components/client/local-db/game/game.model';
-import { EventBus } from '../../lib/gj-lib-client/components/event-bus/event-bus.service';
-import { arrayRemove, arrayIndexBy, arrayGroupBy } from '../../lib/gj-lib-client/utils/array';
-import { Device } from '../../lib/gj-lib-client/components/device/device.service';
+import { db } from '../components/client/local-db/local-db.service';
+import {
+	PatchState,
+	Progress,
+	RemoveState as PackageRemoveState,
+} from '../components/client/local-db/package/package.model';
+import {
+	DbFieldTypes as PackageFields,
+	LocalDbPackage,
+} from '../components/client/local-db/package/package.model';
+import { DbFieldMapping as PackageDbFields } from '../components/client/local-db/package/package.model';
 
 const sanitize = require('sanitize-filename');
 
