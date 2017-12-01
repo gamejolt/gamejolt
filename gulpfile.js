@@ -5,9 +5,55 @@ const path = require('path');
 const config = {
 	staticCdn: 'https://b6d3e9q9.ssl.hwcdn.net',
 	injectVersion: 2,
-	framework: 'vue',
-	sections: ['auth', 'checkout', 'claim', 'site-editor'],
-	serverSections: ['auth', 'app'],
+	sections: {
+		app: {
+			title: 'Game Jolt - Indie games for the love of it',
+			server: true,
+			client: true,
+			offline: true,
+			webAppManifest: {
+				name: 'Game Jolt',
+				short_name: 'Game Jolt',
+				description: 'Games for the love of it!',
+				background_color: '#191919',
+				theme_color: '#191919',
+				display: 'standalone',
+				start_url: './?utm_source=web_app_manifest',
+				icons: [
+					{
+						src: 'icon-128x128.png',
+						size: 128,
+					},
+					{
+						src: 'icon-144x144.png',
+						size: 144,
+					},
+					{
+						src: 'chrome-touch-icon-192x192.png',
+						size: 192,
+					},
+				],
+			},
+		},
+		auth: {
+			title: 'Game Jolt - Indie games for the love of it',
+			server: true,
+			client: true,
+		},
+		checkout: {
+			title: 'Checkout - Game Jolt',
+			client: true,
+			crawl: false,
+		},
+		claim: {
+			title: 'Claim - Game Jolt',
+			crawl: false,
+		},
+		'site-editor': {
+			title: 'Edit Site - Game Jolt',
+			crawl: false,
+		},
+	},
 	translations: 'site-translations',
 	translationSections: {
 		auth: ['auth/'],
@@ -19,35 +65,9 @@ const config = {
 		checkout: ['checkout/'],
 		claim: ['claim/'],
 	},
-	offlineSupport: ['app'],
-	webAppManifest: {
-		app: {
-			name: 'Game Jolt',
-			short_name: 'Game Jolt',
-			description: 'Games for the love of it!',
-			background_color: '#191919',
-			theme_color: '#191919',
-			display: 'standalone',
-			start_url: './?utm_source=web_app_manifest',
-			icons: [
-				{
-					src: 'icon-128x128.png',
-					size: 128,
-				},
-				{
-					src: 'icon-144x144.png',
-					size: 144,
-				},
-				{
-					src: 'chrome-touch-icon-192x192.png',
-					size: 192,
-				},
-			],
-		},
-	},
 };
 
-require('./src/lib/gj-lib-client/gulp/tasks/common')(config, __dirname);
+require('game-jolt-frontend-lib/gulp/tasks/common')(config, __dirname);
 
 // For releasing to S3.
 // We have to gather all the builds into the versioned folder before pushing.

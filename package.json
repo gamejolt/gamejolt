@@ -26,7 +26,6 @@
 		"@types/stripe": "2.0.2",
 		"@types/ua-parser-js": "0.7.32",
 		"autosize": "4.0.0",
-		"axios": "0.16.2",
 		"bootstrap-stylus": "hworld/bootstrap-stylus#master",
 		"chart.js": "2.7.0",
 		"codemirror": "5.29.0",
@@ -35,9 +34,10 @@
 		"css-element-queries": "0.4.0",
 		"date-fns": "1.28.5",
 		"decompress-zip": "0.3.0",
+		"dexie": "2.0.0-beta.10",
 		"express": "4.15.4",
 		"favico.js": "0.3.10",
-		"game-jolt-frontend-lib": "file:src/lib/gj-lib-client",
+		"game-jolt-frontend-lib": "link:src/lib/gj-lib-client",
 		"hammerjs": "2.0.8",
 		"humanize-duration": "3.10.1",
 		"jquery": "3.2.1",
@@ -72,13 +72,13 @@
 		"vuedraggable": "2.14.1",
 		"vuex": "3.0.0",
 		"vuex-class": "0.3.0",
-		"vuex-router-sync": "5.0.0",
-		"dexie": "2.0.0-beta.10"
+		"vuex-router-sync": "5.0.0"
 	},
 	"optionalDependencies": {
-		"appdmg": "0.3.10"
+		"appdmg": "0.5.2"
 	},
 	"dependencies": {
+		"axios": "0.17.1",
 		"client-voodoo": "github:gamejolt/client-voodoo#client-vue",
 		"nwjs-snappy-updater": "github:gamejolt/nwjs-snappy-updater#client-vue",
 		"sanitize-filename": "1.6.1"
@@ -93,28 +93,26 @@
 		"position": "center",
 		"toolbar": true,
 		"frame": true,
-		"icon": "app/img/client/icon-256x256.png"
+		"icon": "static-assets/client/icon-256x256.png"
 	},
 	"webkit": {
 		"plugin": true
 	},
-	"chromium-args":
-		"--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
-	"user-agent":
-		"GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
+	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
 		"linux": {
 			"main": "app://game-jolt-client/package/index.html#/",
 			"window": {
 				"toolbar": false,
-				"icon": "package/app/img/client/icon-256x256.png"
+				"icon": "package/static-assets/client/icon-256x256.png"
 			}
 		},
 		"win": {
 			"main": "app://game-jolt-client/package/index.html#/",
 			"window": {
 				"toolbar": false,
-				"icon": "package/app/img/client/icon-256x256.png"
+				"icon": "package/static-assets/client/icon-256x256.png"
 			}
 		},
 		"osx": {
