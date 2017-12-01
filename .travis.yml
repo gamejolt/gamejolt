@@ -3,23 +3,18 @@ language: cpp
 
 os:
   - linux
-  # - osx
+  - osx
 
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
-    # packages:
-    #   - gcc-4.9
-    #   - g++-4.9
-    #   - gcc-4.9-multilib
-    #   - g++-4.9-multilib
   artifacts:
     paths:
       - ./build/prod-client-build/build/linux64-package.zip
       - ./build/prod-client-build/linux64.tar.gz
-      # - ./build/prod-client-build/build/osx64-package.tar.gz
-      # - ./build/prod-client-build/osx.dmg
+      - ./build/prod-client-build/build/osx64-package.tar.gz
+      - ./build/prod-client-build/osx.dmg
 
 before_install:
   - git submodule update --init --recursive
@@ -27,15 +22,12 @@ before_install:
   - source ./.nvm/nvm.sh
   - nvm install 8.9.1
   - nvm use 8.9.1
-  # - $CXX --version
-  # - npm install -g gulp-cli bower node-pre-gyp nw-gyp
 
 install:
   - npm i -g yarn
-  # - bower i
   - yarn
 
 script:
   - echo $TRAVIS_OS_NAME
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then yarn run client-build-linux64; fi
-  # - if [ "$TRAVIS_OS_NAME" == "osx" ]; then yarn run client-build-osx; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then yarn run client-build-osx; fi
