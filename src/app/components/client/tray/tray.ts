@@ -86,6 +86,7 @@ export class AppClientTray extends Vue {
 
 			// We split this up so that it doesn't get injected.
 			// It needs to stay as a relative file path or it will break.
+			// TODO(client): This probably needs to use webpack and some testing.
 			icon:
 				packagePrefix +
 				'/app/components/client/tray/' +
