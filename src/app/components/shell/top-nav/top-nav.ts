@@ -17,9 +17,8 @@ import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/
 import { AppSearch } from '../../search/search';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../../chat/client';
-import { AppClientHistoryNavigator } from '../../client/history-navigator/history-navigator';
 
-const components: { [name: string]: new () => Vue } = {
+let components: any = {
 	AppJolticon,
 	AppUserAvatarImg,
 	AppShellAccountPopover,
@@ -28,8 +27,10 @@ const components: { [name: string]: new () => Vue } = {
 };
 
 if (GJ_IS_CLIENT) {
-	// TODO(rewrite) - would this include the client history chunk for non client builds?
-	components.AppClientHistoryNavigator = AppClientHistoryNavigator;
+	components = {
+		...components,
+		...require('../../client/history-navigator/history-navigator'),
+	};
 }
 
 @View

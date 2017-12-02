@@ -17,13 +17,13 @@
 		<div class="-meta">
 			<app-client-game-buttons
 				:game="game._game"
-				:overlay="true"
+				overlay
+				has-installable-builds
+				can-install
 				@show-options="isShowingOptions = true"
 				@hide-options="isShowingOptions = false"
 				@show-launch-options="isShowingLaunchOptions = true"
 				@hide-launch-options="isShowingLaunchOptions = false"
-				:has-installable-builds="true"
-				:can-install="true"
 				/>
 
 			<span class="-version">

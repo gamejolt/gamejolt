@@ -25,16 +25,12 @@ import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.se
 import { ChatClient } from '../components/chat/client';
 import { ChatClientLazy } from '../components/lazy';
 import { router } from '../views';
-import {
-	Actions as ClientLibraryActions,
-	ClientLibraryStore,
-	Mutations as ClientLibraryMutations,
-} from './client-library';
+import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
 
 export type Actions = AppActions &
 	LibraryActions &
-	ClientLibraryActions & {
+	_ClientLibraryMod.Actions & {
 		bootstrap: undefined;
 		logout: undefined;
 		clear: undefined;
@@ -48,7 +44,7 @@ export type Actions = AppActions &
 
 export type Mutations = AppMutations &
 	LibraryMutations &
-	ClientLibraryMutations & {
+	_ClientLibraryMod.Mutations & {
 		setNotificationsCount: number;
 		_setBootstrapped: undefined;
 		_clear: undefined;
@@ -69,9 +65,12 @@ const modules: any = {
 	app: appStore,
 	library: new LibraryStore(),
 };
+
 if (GJ_IS_CLIENT) {
-	modules.clientLibrary = new ClientLibraryStore();
+	const m: typeof _ClientLibraryMod = require('./client-library');
+	modules.clientLibrary = new m.ClientLibraryStore();
 }
+
 @VuexModule({
 	store: true,
 	modules: modules,
@@ -79,7 +78,7 @@ if (GJ_IS_CLIENT) {
 export class Store extends VuexStore<Store, Actions, Mutations> {
 	app: AppStore;
 	library: LibraryStore;
-	clientLibrary: ClientLibraryStore;
+	clientLibrary: _ClientLibraryMod.ClientLibraryStore;
 
 	// From the vuex-router-sync.
 	route: Route;

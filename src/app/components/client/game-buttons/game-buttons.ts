@@ -1,30 +1,31 @@
-import Vue from 'vue';
-import * as fs from 'fs';
-import * as path from 'path';
-import { Shell } from 'nw.gui';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./game-buttons.html';
+import * as fs from 'fs';
+import { Shell } from 'nw.gui';
+import * as path from 'path';
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { Watch } from 'vue-property-decorator';
 
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import {
-	ClientLibraryStore,
-	ClientLibraryAction,
-	ClientLibraryState,
-} from '../../../store/client-library';
-import { LocalDbPackage } from '../local-db/package/package.model';
-import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
-
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
+import { GamePackagePurchaseModal } from '../../../../lib/gj-lib-client/components/game/package/purchase-modal/purchase-modal.service';
+import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
+import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
+import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { arrayGroupBy } from '../../../../lib/gj-lib-client/utils/array';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { AppClientInstallProgress } from '../install-progress/install-progress';
+import {
+	ClientLibraryAction,
+	ClientLibraryState,
+	ClientLibraryStore,
+} from '../../../store/client-library';
 import { ClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
+import { AppClientInstallProgress } from '../install-progress/install-progress';
+import { LocalDbPackage } from '../local-db/package/package.model';
 
 @View
 @Component({
@@ -57,16 +58,16 @@ export class AppClientGameButtons extends Vue {
 
 	isLoadingPackageData = false;
 	packageDataPromise: Promise<GamePackagePayloadModel> | null = null;
-	installTooltip: string | null = null;
 
 	readonly LocalDbPackage = LocalDbPackage;
 	readonly os = Device.os();
 	readonly arch = Device.arch();
 
-	// TODO(rewrite) when switching between games for some reason the header game buttons don't update???
-	// E.G. go to eggnogg page and click install, then go to bendy and click install and it'll show the pwyw form for eggnogg
-	// The local variables like isLoadingPackageData and packageDataPromise don't seem to get reinitialized when switching games.
-	// The component doesn't get recreated.
+	@Watch('game')
+	onGameChange() {
+		this.isLoadingPackageData = false;
+		this.packageDataPromise = null;
+	}
 
 	// We try to pull a package with some action on it.
 	// For example, if a package is installing, we want to pull that one to show.
@@ -78,11 +79,9 @@ export class AppClientGameButtons extends Vue {
 		return this.packagesByGameId[this.game.id];
 	}
 
-	created() {
-		if (!this.hasInstallableBuilds) {
-			this.installTooltip = this.$gettext(`This game doesn't have any installable builds yet.`);
-		} else if (!this.canInstall) {
-			this.installTooltip = this.$gettext(`This game is not available for installing on your OS.`);
+	get installTooltip() {
+		if (!this.canInstall) {
+			return this.$gettext(`This game is not available for installing on your OS.`);
 		}
 	}
 
@@ -101,8 +100,6 @@ export class AppClientGameButtons extends Vue {
 			// but it looks weird if we also scroll and show a "please select package" in the game page,
 			// Should we both emit show-multiple-packages which causes the scroll AND open the modal?
 			ClientInstallPackageModal.show(this.game);
-
-			// this.$emit('show-multiple-packages');
 			return;
 		}
 
@@ -111,7 +108,15 @@ export class AppClientGameButtons extends Vue {
 		// If the build belongs to a pwyw package, open up the package
 		// payment form.
 		if (build._package!.shouldShowNamePrice()) {
-			this.$emit('show-package-payment', build._package);
+			GamePackagePurchaseModal.show({
+				game: this.game,
+				package: build._package!,
+				build,
+
+				// TODO(client): we need to pass this through somehow?
+				// partner: this.partner,
+				// partnerKey: this.partnerKey,
+			});
 			return;
 		}
 

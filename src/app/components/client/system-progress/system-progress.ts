@@ -1,5 +1,6 @@
-import Vue from 'vue';
+import Vue, { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
+
 import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 import { ClientControl } from '../control/client.service';
 
@@ -7,7 +8,7 @@ import { ClientControl } from '../control/client.service';
 export class AppClientSystemProgress extends Vue {
 	@ClientLibraryState totalPatchProgress: ClientLibraryStore['totalPatchProgress'];
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		const progress = this.totalPatchProgress;
 		if (progress === null) {
 			ClientControl.clearProgressBar();

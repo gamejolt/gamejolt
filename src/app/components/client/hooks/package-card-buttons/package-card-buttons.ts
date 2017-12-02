@@ -1,33 +1,33 @@
-import Vue from 'vue';
-import * as fs from 'fs';
-import * as path from 'path';
-import { Shell } from 'nw.gui';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./package-card-buttons.html?style=./package-card-buttons.styl';
+import * as fs from 'fs';
+import { Shell } from 'nw.gui';
+import * as path from 'path';
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
 
-import { PatchState, LocalDbPackage } from '../local-db/package/package.model';
-import { GameBuild } from '../../../../lib/gj-lib-client/components/game/build/build.model';
-import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import { GamePackageCardModel } from '../../../../lib/gj-lib-client/components/game/package/card/card.model';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
-import { GamePackage } from '../../../../lib/gj-lib-client/components/game/package/package.model';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
+import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
+import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { GamePackageCardModel } from '../../../../../lib/gj-lib-client/components/game/package/card/card.model';
+import { AppGamePackageCardMoreOptions } from '../../../../../lib/gj-lib-client/components/game/package/card/more-options';
+import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
+import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
+import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { Popover } from '../../../../../lib/gj-lib-client/components/popover/popover.service';
+import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
+import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { filesize } from '../../../../../lib/gj-lib-client/vue/filters/filesize';
 import {
-	ClientLibraryStore,
 	ClientLibraryAction,
 	ClientLibraryState,
-} from '../../../store/client-library';
-import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { filesize } from '../../../../lib/gj-lib-client/vue/filters/filesize';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppClientInstallProgress } from '../install-progress/install-progress';
-import { AppGamePackageCardMoreOptions } from '../../../../lib/gj-lib-client/components/game/package/card/more-options';
+	ClientLibraryStore,
+} from '../../../../store/client-library';
+import { AppClientInstallProgress } from '../../install-progress/install-progress';
+import { LocalDbPackage, PatchState } from '../../local-db/package/package.model';
 
 @View
 @Component({

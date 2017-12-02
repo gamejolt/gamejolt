@@ -5,15 +5,12 @@ import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/pa
 import { GameRelease } from '../../../../../lib/gj-lib-client/components/game/release/release.model';
 import { GameBuildLaunchOption } from '../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Device as _Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
+import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import {
 	ReturnTypePackageStartUpdate,
 	ReturnTypePackageUninstall,
 	ReturnTypeSetPackageFieldsAndSave,
 } from '../../../../store/client-library';
-
-const Device = makeObservableService(_Device);
 
 export type Pid = string | IParsedWrapper;
 

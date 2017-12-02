@@ -5,8 +5,8 @@
 	>
 
 	<!--
-		If the primary is for sale and they don't own it yet, the only button we
-		should show is the buy button.
+		If the primary is for sale and they don't own it yet, the only button we should show is the
+		buy button.
 	-->
 	<button
 		class="btn btn-lg btn-success-outline btn-overlay-variant"
@@ -18,51 +18,17 @@
 	</button>
 
 	<!--
-		If the game is not for sale, or if they own the game, then show the
-		normal buttons.
+		If the game is not for sale, or if they own the game, then show the normal buttons.
 	-->
-	<span v-else>
-
-		<!--
-			For Client we hide this once they start installing a package or if
-			they have something installed.
-		-->
-		<a class="btn btn-lg btn-primary-outline btn-overlay-variant"
-			v-if="browserBuilds.length && !hasLocalPackage"
-			@click="play()"
-			>
-			<app-jolticon icon="play" />
-			<translate v-if="!GJ_IS_CLIENT">Play Game</translate>
-			<translate v-else>Quick Play</translate>
-		</a>
-
-		<!--
-			We don't show this in Client. Instead we let the client-game-buttons
-			component handle it.
-		-->
-		<a class="btn btn-lg btn-success-outline btn-overlay-variant"
-			v-if="installableBuilds.length && !GJ_IS_CLIENT"
-			@click="download()"
-			>
-			<app-jolticon icon="download" />
-			<translate>Download</translate>
-		</a>
-
-		<template v-if="GJ_IS_CLIENT">
-			<app-client-game-buttons
-				label="game-cover"
-				:game="game"
-				:large="true"
-				:overlay="true"
-				:is-patching="isGamePatching"
-				:has-package="hasLocalPackage"
-				@show-multiple-packages="$emit('show-multiple-packages')"
-				@show-package-payment="$emit('show-package-payment', $event)"
-
-				:has-installable-builds="!!installableBuilds.length"
-				:can-install="!!installableBuilds.length"
-				/>
-		</template>
-	</span>
+	<component
+		v-else
+		:is="buildButtonsComponent"
+		:game="game"
+		:downloadable-builds="downloadableBuilds"
+		:browser-builds="browserBuilds"
+		:installable-builds="installableBuilds"
+		@play="play()"
+		@download="download()"
+		/>
 
 </div>

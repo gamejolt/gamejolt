@@ -17,7 +17,7 @@
 
 		<p><translate>This game has multiple installable packages. Please choose the one you'd like to install.</translate></p>
 
-		<app-loading :big="true" v-if="isLoading" />
+		<app-loading big v-if="isLoading" />
 		<template v-else-if="packageData.packages.length">
 			<app-game-package-card
 				v-for="package of packageData.packages"
@@ -31,50 +31,6 @@
 				:partner-key="partnerKey"
 				:partner="partner"
 				/>
-
-			<!-- Switched this to work with the app-game-package-card - made more sense.
-			<!- -
-				We only show the packages that can be installed to their computer.
-			- ->
-			<div
-				class="game-package-card fill-darker"
-				v-for="package of packageData.packages"
-				:key="package.id"
-				v-if="buildsByPackage[ package.id ]"
-				>
-				<div class="game-package-card-body">
-
-					<h4 class="game-package-card-title">
-						{{ package.title || game.title }}
-					</h4>
-
-					<br v-if="!package.description">
-
-					<div class="game-package-card-description" v-else>
-						<app-fade-collapse
-							:collapse-height="100"
-							:is-open="showFullDescription"
-							>
-							<!- - (required)="modalCtrl.canToggleDescription = true" - ->
-							<p v-html="linkedDescription"></p> <!- - ng-bind-html="::package.description | linky" - ->
-						</app-fade-collapse>
-					</div>
-
-					<a class="hidden-text-expander"
-						v-if="canToggleDescription"
-						@click="showFullDescription = !showFullDescription"
-						v-app-track-event="`game-package-card:show-full-description`"
-						>
-					</a>
-
-					<button class="btn btn-success-outline" @click="install( package )">
-						<app-jolticon icon="download-box" />
-						Install
-						<small>({{ buildsByPackage[ package.id ].primary_file.filesize | filesize }})</small>
-					</button>
-
-				</div>
-			</div>-->
 		</template>
 		<template v-else class="alert alert-warning">
 			<translate>This game doesn't have any packages to install.</translate>

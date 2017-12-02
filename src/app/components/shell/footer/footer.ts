@@ -9,6 +9,12 @@ import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
+import * as _ClientSystemReportModalMod from '../../client/system-report-modal/system-report-modal.service';
+
+let ClientSystemReportModalMod: typeof _ClientSystemReportModalMod | undefined;
+if (GJ_IS_CLIENT) {
+	ClientSystemReportModalMod = require('../../client/system-report-modal/system-report-modal.service');
+}
 
 @View
 @Component({
@@ -33,9 +39,8 @@ export class AppShellFooter extends Vue {
 	}
 
 	async showSystemReport() {
-		if (GJ_IS_CLIENT) {
-			const m = await import('../../client/system-report-modal/system-report-modal.service');
-			m.ClientSystemReportModal.show();
+		if (ClientSystemReportModalMod) {
+			ClientSystemReportModalMod.ClientSystemReportModal.show();
 		}
 	}
 }

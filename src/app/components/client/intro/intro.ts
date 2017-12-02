@@ -11,8 +11,6 @@ import { sleep } from '../../../../lib/gj-lib-client/utils/utils';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 
-// TODO(rewrite,cros) - Intro doesn't work. The styles don't show the loading and the loading may not be done at the right moment.
-
 @View
 @Component({
 	components: {

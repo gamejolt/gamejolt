@@ -6,7 +6,6 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
 import { arrayIndexBy } from '../../../../lib/gj-lib-client/utils/array';
-import { GamePackage } from '../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameBuild } from '../../../../lib/gj-lib-client/components/game/build/build.model';
 import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-library';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -32,14 +31,15 @@ import { AppGamePackageCard } from '../../../../lib/gj-lib-client/components/gam
 })
 export default class AppClientInstallPackageModal extends BaseModal {
 	@ClientLibraryAction packageInstall: ClientLibraryStore['packageInstall'];
+
+	// TODO(client): Can't pull from route store here since it may show outside of the store.
 	@RouteState partner: RouteStore['partner'];
 	@RouteState partnerKey: RouteStore['partnerKey'];
 
 	@Prop(Game) game: Game;
 
-	private isLoading = true;
-	private showFullDescription = false;
-	private packageData: GamePackagePayloadModel = null as any;
+	isLoading = true;
+	packageData: GamePackagePayloadModel = null as any;
 
 	get buildsByPackage(): { [packageId: number]: GameBuild } {
 		const builds = this.packageData.installableBuilds;
@@ -51,9 +51,6 @@ export default class AppClientInstallPackageModal extends BaseModal {
 	}
 
 	async created() {
-		this.isLoading = true;
-		this.showFullDescription = false;
-
 		const payload = await Api.sendRequest(`/web/discover/games/packages/${this.game.id}`);
 		this.packageData = new GamePackagePayloadModel(payload);
 

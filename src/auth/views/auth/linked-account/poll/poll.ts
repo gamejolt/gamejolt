@@ -5,7 +5,12 @@ import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growl
 import { AppProgressPoller } from '../../../../../lib/gj-lib-client/components/progress/poller/poller';
 import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { BaseRouteComponent } from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { ClientControl } from '../../../../../app/components/client/control/client.service';
+import * as _ClientControlMod from '../../../../../app/components/client/control/client.service';
+
+let ClientControlMod: typeof _ClientControlMod | undefined;
+if (GJ_IS_CLIENT) {
+	ClientControlMod = require('../../../../../app/components/client/control/client.service');
+}
 
 @View
 @Component({
@@ -57,11 +62,9 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 		this.isPolling = false;
 
 		// Focus back to the Client.
-		// TODO(rewrite) test this
-		if (GJ_IS_CLIENT) {
-			const cc: typeof ClientControl = require('../../../../../app/components/client/control/client.service')
-				.ClientControl;
-			cc.show();
+		// TODO(client) test this
+		if (ClientControlMod) {
+			ClientControlMod.ClientControl.show();
 		}
 	}
 

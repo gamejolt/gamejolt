@@ -1,37 +1,42 @@
+import View from '!view!./cover-buttons.html?style=./cover-buttons.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./cover-buttons.html?style=./cover-buttons.styl';
 
+import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
+import { GameBuild } from '../../../../lib/gj-lib-client/components/game/build/build.model';
+import { GameDownloader } from '../../../../lib/gj-lib-client/components/game/downloader/downloader.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../../../lib/gj-lib-client/components/game/package/package.model';
-import { GameBuild } from '../../../../lib/gj-lib-client/components/game/build/build.model';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { arrayUnique } from '../../../../lib/gj-lib-client/utils/array';
-import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { GameDownloader } from '../../../../lib/gj-lib-client/components/game/downloader/downloader.service';
-import { GamePlayModal } from '../../../../lib/gj-lib-client/components/game/play-modal/play-modal.service';
 import { GamePackagePurchaseModal } from '../../../../lib/gj-lib-client/components/game/package/purchase-modal/purchase-modal.service';
+import { GamePlayModal } from '../../../../lib/gj-lib-client/components/game/play-modal/play-modal.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { AppClientGameButtons } from '../../client/game-buttons/game-buttons';
+import { arrayUnique } from '../../../../lib/gj-lib-client/utils/array';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppGameCoverButtonsBuildButtons } from './build-buttons';
 
 @View
 @Component({
 	components: {
 		AppJolticon,
-		AppClientGameButtons,
 	},
 })
 export class AppGameCoverButtons extends Vue {
 	@Prop(Game) game: Game;
 	@Prop(Array) packages: GamePackage[];
-	@Prop(Array) installableBuilds: GameBuild[];
+	@Prop(Array) downloadableBuilds: GameBuild[];
 	@Prop(Array) browserBuilds: GameBuild[];
+	@Prop(Array) installableBuilds: GameBuild[];
 	@Prop(String) partnerKey?: string;
 	@Prop(User) partner?: User;
 
-	// isGamePatching = undefined;
-	// hasLocalPackage = false;
+	static hook = {
+		buildButtons: undefined as typeof Vue | undefined,
+	};
+
+	get buildButtonsComponent() {
+		return AppGameCoverButtons.hook.buildButtons || AppGameCoverButtonsBuildButtons;
+	}
 
 	private chooseBuild(builds: GameBuild[], defaultBuild?: GameBuild) {
 		let chosen: GameBuild | undefined;

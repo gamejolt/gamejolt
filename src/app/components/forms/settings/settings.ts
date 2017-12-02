@@ -7,7 +7,12 @@ import {
 	BaseForm,
 	FormOnInit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { ClientAutoStart } from '../../client/autostart/autostart.service';
+import * as _ClientAutoStartMod from '../../client/autostart/autostart.service';
+
+let ClientAutoStartMod: typeof _ClientAutoStartMod | undefined;
+if (GJ_IS_CLIENT) {
+	ClientAutoStartMod = require('../../client/autostart/autostart.service');
+}
 
 type FormModel = {
 	chat_notify_friends_online: boolean;
@@ -32,9 +37,9 @@ type FormModel = {
 export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 	warnOnDiscard = false;
 
-	ClientAutoStart: typeof ClientAutoStart | null = GJ_IS_CLIENT
-		? require('../../client/autostart/autostart.service').ClientAutoStart
-		: null;
+	get canClientAutostart() {
+		return ClientAutoStartMod && ClientAutoStartMod.ClientAutoStart.canAutoStart;
+	}
 
 	onInit() {
 		this.setField('restricted_browsing', Settings.get('restricted-browsing'));
@@ -51,7 +56,7 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 			this.setField('max_extract_count', Settings.get('max-extract-count'));
 			this.setField('limit_extractions', this.formModel.max_extract_count !== -1);
 
-			if (this.ClientAutoStart!.canAutoStart) {
+			if (this.canClientAutostart) {
 				this.setField('autostart_client', Settings.get('autostart-client'));
 			}
 		}
@@ -104,13 +109,13 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 			Settings.set('max-extract-count', this.formModel.max_extract_count);
 			Settings.set('queue-when-playing', this.formModel.queue_when_playing);
 
-			if (this.ClientAutoStart!.canAutoStart) {
+			if (ClientAutoStartMod && this.canClientAutostart) {
 				Settings.set('autostart-client', this.formModel.autostart_client);
 
 				if (this.formModel.autostart_client) {
-					this.ClientAutoStart!.set();
+					ClientAutoStartMod.ClientAutoStart.set();
 				} else {
-					this.ClientAutoStart!.clear();
+					ClientAutoStartMod.ClientAutoStart.clear();
 				}
 			}
 

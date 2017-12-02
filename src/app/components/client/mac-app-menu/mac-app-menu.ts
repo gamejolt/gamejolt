@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue, { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import { ClientControl } from '../control/client.service';
 import { Window, Menu, App } from 'nw.gui';
@@ -28,7 +28,7 @@ export class AppClientMacAppMenu extends Vue {
 		App.on('reopen', () => ClientControl.show());
 	}
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		return h('div');
 	}
 }

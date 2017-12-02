@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeLibraryInstalled: VueRouter.RouteConfig = {
+export const routeLibraryInstalled: RouteConfig = {
 	name: 'library.installed',
 	path: '/installed',
 	props: true,

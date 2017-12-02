@@ -1,36 +1,38 @@
-import { namespace, Action, Mutation, State } from 'vuex-class';
-import {
-	VuexStore,
-	VuexModule,
-	VuexAction,
-	VuexMutation,
-} from '../../../../../lib/gj-lib-client/utils/vuex';
+import { Action, Mutation, namespace, State } from 'vuex-class';
 
-import { GameScoreTable } from '../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { GamePackagePayloadModel } from '../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
-import { GameRating } from '../../../../../lib/gj-lib-client/components/game/rating/rating.model';
-import { Registry } from '../../../../../lib/gj-lib-client/components/registry/registry.service';
-import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
-import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
-import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
-import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
-import { GameSong } from '../../../../../lib/gj-lib-client/components/game/song/song.model';
-import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
-import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
-import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { objectPick } from '../../../../../lib/gj-lib-client/utils/object';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { router } from '../../../index';
 import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
+import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
+import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import {
-	Game,
 	CustomMessage as CustomGameMessage,
+	Game,
 } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { GamePackagePayloadModel } from '../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
+import { GameRating } from '../../../../../lib/gj-lib-client/components/game/rating/rating.model';
+import { GameScoreTable } from '../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
+import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
+import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
+import { GameSong } from '../../../../../lib/gj-lib-client/components/game/song/song.model';
+import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
+import { Registry } from '../../../../../lib/gj-lib-client/components/registry/registry.service';
+import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
+import { objectPick } from '../../../../../lib/gj-lib-client/utils/object';
+import {
+	VuexAction,
+	VuexModule,
+	VuexMutation,
+	VuexStore,
+} from '../../../../../lib/gj-lib-client/utils/vuex';
+import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
+import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
+import { router } from '../../../index';
 
 export const RouteStoreName = 'gameRoute';
 export const RouteState = namespace(RouteStoreName, State);
@@ -164,6 +166,28 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		return this.packagePayload.releases;
 	}
 
+	get installableBuilds() {
+		const os = Device.os();
+		const arch = Device.arch();
+		return Game.pluckInstallableBuilds(this.packages, os, arch);
+	}
+
+	get downloadableBuilds() {
+		return Game.pluckDownloadableBuilds(this.packages);
+	}
+
+	get browserBuilds() {
+		let builds = Game.pluckBrowserBuilds(this.packages);
+
+		// On Client we only want to include HTML games.
+		if (GJ_IS_CLIENT) {
+			builds = builds.filter(item => item.type === GameBuild.TYPE_HTML);
+		}
+
+		// Pull in ROMs to the browser builds.
+		return builds.concat(Game.pluckRomBuilds(this.packages));
+	}
+
 	get hasReleasesSection() {
 		// The releases section exists if there are releases or songs.
 		return this.packages.length > 0 || this.songs.length > 0;
@@ -187,7 +211,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 				urlPath = urlPath.slice(1);
 			}
 
-			return `${Environment.secureBaseUrl}${urlPath}`;
+			return `${Environment.baseUrl}${urlPath}`;
 		}
 		return undefined;
 	}

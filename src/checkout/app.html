@@ -5,7 +5,7 @@
 			<app-user-bar :user="app.user" site="main" :hide-site-selector="true">
 				<a class="btn btn-outline btn-dark-variant"
 					v-if="GJ_IS_CLIENT"
-					@click="HistoryNavigator.back()"
+					@click="navigateBack()"
 					>
 					<app-jolticon icon="chevron-left" />
 					<translate>Back to Game</translate>

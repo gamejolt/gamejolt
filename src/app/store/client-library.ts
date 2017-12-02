@@ -53,6 +53,7 @@ import {
 	LocalDbPackage,
 } from '../components/client/local-db/package/package.model';
 import { DbFieldMapping as PackageDbFields } from '../components/client/local-db/package/package.model';
+import { fuzzysearch } from '../../lib/gj-lib-client/utils/string';
 
 const sanitize = require('sanitize-filename');
 
@@ -230,9 +231,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 	@VuexMutation
 	private _bootstrap({ packages, games }: Mutations['clientLibrary/_bootstrap']) {
-		console.log('Set packages');
-		console.log(packages);
-
 		for (let localPackage of packages) {
 			localPackage.setBuildData(localPackage.build);
 		}
@@ -300,9 +298,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	 */
 	@VuexGetter
 	findActiveForGame(gameId: number) {
-		console.log('Finding active package for game: ' + gameId);
-		console.log(this.packages);
-		console.log(this.packagesByGameId);
 		const localPackages = this.packagesByGameId[gameId];
 		if (!localPackages || !localPackages.length) {
 			return null;
@@ -315,6 +310,15 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		}
 
 		return localPackages[0];
+	}
+
+	@VuexGetter
+	searchInstalledGames(query: string, limit = 3) {
+		query = query.toLowerCase();
+		return this.games
+			.filter(i => fuzzysearch(query, i.title.toLowerCase()))
+			.sort((g1, g2) => g1.title.localeCompare(g2.title))
+			.slice(0, limit);
 	}
 
 	@VuexMutation
@@ -330,7 +334,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private setCurrentlyPatching(
 		[localPackage, patchInstance]: Mutations['clientLibrary/setCurrentlyPatching']
 	) {
-		console.log('set: currentlyPatching ' + localPackage.id);
 		if (!this.currentlyPatching[localPackage.id]) {
 			Vue.set(this.currentlyPatching, localPackage.id + '', patchInstance);
 		}
@@ -338,7 +341,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 	@VuexMutation
 	private unsetCurrentlyPatching(localPackage: Mutations['clientLibrary/unsetCurrentlyPatching']) {
-		console.log('unset: currentlyPatching ' + localPackage.id);
 		Vue.delete(this.currentlyPatching, localPackage.id + '');
 	}
 
@@ -369,7 +371,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private setCurrentlyUninstalling(
 		[localPackage, uninstallPromise]: Mutations['clientLibrary/setCurrentlyUninstalling']
 	) {
-		console.log('set: currentlyUninstalling ' + localPackage.id);
 		if (this.currentlyUninstalling[localPackage.id]) {
 			return;
 		}
@@ -381,7 +382,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private unsetCurrentlyUninstalling(
 		localPackage: Mutations['clientLibrary/unsetCurrentlyUninstalling']
 	) {
-		console.log('unset: currentlyUninstalling ' + localPackage.id);
 		if (!this.currentlyUninstalling[localPackage.id]) {
 			return;
 		}

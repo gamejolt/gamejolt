@@ -1,11 +1,16 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./linking.html';
+import { Component } from 'vue-property-decorator';
 
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppProgressPoller } from '../../../../../../lib/gj-lib-client/components/progress/poller/poller';
-import { AppLoading } from '../../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/components/route/route-component';
-import { ClientControl } from '../../../../../components/client/control/client.service';
+import { AppLoading } from '../../../../../../lib/gj-lib-client/vue/components/loading/loading';
+import * as _ClientControlMod from '../../../../../components/client/control/client.service';
+
+let ClientControlMod: typeof _ClientControlMod | undefined;
+if (GJ_IS_CLIENT) {
+	ClientControlMod = require('../../../../../components/client/control/client.service');
+}
 
 @View
 @Component({
@@ -77,7 +82,9 @@ export default class RouteDashAccountLinkedAccountsLinking extends BaseRouteComp
 		}
 
 		// Focus back to the Client.
-		ClientControl.show();
+		if (ClientControlMod) {
+			ClientControlMod.ClientControl.show();
+		}
 	}
 
 	failed() {

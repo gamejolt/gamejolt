@@ -8,7 +8,7 @@
   dependencies:
     "@types/jquery" "*"
 
-"@types/bluebird@3.5.18":
+"@types/bluebird@3.5.18", "@types/bluebird@^3.5.8":
   version "3.5.18"
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.18.tgz#6a60435d4663e290f3709898a4f75014f279c4d6"
 
@@ -92,6 +92,10 @@
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.1.tgz#b683eb60be358304ef146f5775db4c0e3696a550"
 
+"@types/mkdirp@0.3.29":
+  version "0.3.29"
+  resolved "https://registry.yarnpkg.com/@types/mkdirp/-/mkdirp-0.3.29.tgz#7f2ad7ec55f914482fc9b1ec4bb1ae6028d46066"
+
 "@types/node@*", "@types/node@8.0.53":
   version "8.0.53"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.53.tgz#396b35af826fa66aad472c8cb7b8d5e277f4e6d8"
@@ -119,9 +123,17 @@
   version "0.7.32"
   resolved "https://registry.yarnpkg.com/@types/ua-parser-js/-/ua-parser-js-0.7.32.tgz#8827d451d6702307248073b5d98aa9293d02b5e5"
 
-"JSONStream@github:gamejolt/JSONStream#no-shebang":
+"@types/winreg@1.2.30":
+  version "1.2.30"
+  resolved "https://registry.yarnpkg.com/@types/winreg/-/winreg-1.2.30.tgz#91d6710e536d345b9c9b017c574cf6a8da64c518"
+
+"@types/xdg-basedir@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/xdg-basedir/-/xdg-basedir-2.0.0.tgz#fa41b1ab916b01bcbb2827a3cae8e03dffab65ca"
+
+JSONStream@1.3.1:
   version "1.3.1"
-  resolved "https://codeload.github.com/gamejolt/JSONStream/tar.gz/1ce912172a8b2221c573a4f8da9ecc414b69a68f"
+  resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.1.tgz#707f761e01dae9e16f1bcf93703b78c70966579a"
   dependencies:
     jsonparse "^1.2.0"
     through ">=2.2.7 <3"
@@ -1161,11 +1173,16 @@ clean-css@4.1.9, clean-css@4.1.x, clean-css@^4.1.9:
   version "2.0.0-alpha.11"
   resolved "https://codeload.github.com/gamejolt/client-voodoo/tar.gz/d80fc55c25c8283e0fcf87a19d63bddf4e76089c"
   dependencies:
-    JSONStream "github:gamejolt/JSONStream#no-shebang"
+    "@types/bluebird" "^3.5.8"
+    "@types/mkdirp" "0.3.29"
+    "@types/node" "4.2.11"
+    JSONStream "1.3.1"
     bluebird "^3.5.0"
     mkdirp "0.5.1"
     shell-escape "0.2.0"
   optionalDependencies:
+    "@types/winreg" "1.2.30"
+    "@types/xdg-basedir" "2.0.0"
     applescript "1.0.0"
     ps-node "0.1.6"
     winreg "1.2.4"
@@ -8006,11 +8023,7 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vue-class-component@6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-6.0.0.tgz#abb87f0acdc77428973401ca3bfaae133c826432"
-
-vue-class-component@^6.0.0:
+vue-class-component@6.1.0, vue-class-component@^6.0.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-6.1.0.tgz#41a51a7991f2c0d51ff73f08436de0c2bfd934d6"
 

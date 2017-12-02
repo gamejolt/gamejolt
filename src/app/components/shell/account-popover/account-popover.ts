@@ -16,7 +16,12 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Store } from '../../../store/index';
 import { UserTokenModal } from '../../user/token-modal/token-modal.service';
-import { ClientControl } from '../../client/control/client.service';
+import * as _ClientControlMod from '../../client/control/client.service';
+
+let ClientControlMod: typeof _ClientControlMod | undefined;
+if (GJ_IS_CLIENT) {
+	ClientControlMod = require('../../client/control/client.service');
+}
 
 @View
 @Component({
@@ -40,9 +45,6 @@ export class AppShellAccountPopover extends Vue {
 
 	Screen = makeObservableService(Screen);
 	Connection = makeObservableService(Connection);
-	ClientControl: typeof ClientControl | null = GJ_IS_CLIENT
-		? require('../../client/control/client.service').ClientControl
-		: null;
 
 	@Action logout: Store['logout'];
 
@@ -68,5 +70,11 @@ export class AppShellAccountPopover extends Vue {
 			}
 		);
 		this.walletAmount = response.amount;
+	}
+
+	quit() {
+		if (ClientControlMod) {
+			ClientControlMod.ClientControl.quit();
+		}
 	}
 }

@@ -2,7 +2,6 @@
 	"name": "game-jolt-client",
 	"version": "0.10.4",
 	"scripts": {
-		"update-lib": "npm remove game-jolt-frontend-lib && npm install --save-dev game-jolt-frontend-lib@file:./src/lib/gj-lib-client",
 		"postinstall": "sh ./git-hooks/setup-hooks.sh",
 		"dev": "gulp watch",
 		"build": "gulp --production",
@@ -61,7 +60,7 @@
 		"v-tooltip": "2.0.0-rc.23",
 		"vee-validate": "2.0.0-rc.7",
 		"vue": "2.5.8",
-		"vue-class-component": "6.0.0",
+		"vue-class-component": "6.1.0",
 		"vue-color": "2.4.3",
 		"vue-gettext": "github:gamejolt/vue-gettext#lazy",
 		"vue-property-decorator": "6.0.0",
@@ -99,8 +98,10 @@
 	"webkit": {
 		"plugin": true
 	},
-	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
-	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
+	"chromium-args":
+		"--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+	"user-agent":
+		"GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
 		"linux": {
 			"main": "app://game-jolt-client/package/index.html#/",

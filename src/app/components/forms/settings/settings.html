@@ -98,7 +98,7 @@
 		</app-form-group>
 
 		<app-form-group
-			v-if="ClientAutoStart.canAutoStart"
+			v-if="canClientAutoStart"
 			name="autostart_client"
 			:label="$gettext( 'settings.autostart_client_label' )"
 			>

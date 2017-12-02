@@ -1,8 +1,6 @@
 import { SearchPayload } from './payload-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { store } from '../../store/index';
-import { fuzzysearch } from '../../../lib/gj-lib-client/utils/string';
-import { LocalDbGame } from '../client/local-db/game/game.model';
 
 export interface SearchOptions {
 	type: 'all' | 'user' | 'game' | 'devlog' | 'typeahead';
@@ -72,18 +70,6 @@ export class Search {
 	}
 
 	private static async searchInstalledGames(query: string) {
-		let games: LocalDbGame[] = [];
-
-		for (const game of store.state.clientLibrary.games) {
-			if (fuzzysearch(query.toLowerCase(), game.title.toLowerCase())) {
-				games.push(game);
-			}
-		}
-
-		if (games.length > 0) {
-			games = games.sort((game1, game2) => game1.title.localeCompare(game2.title)).splice(3);
-		}
-
-		return games;
+		return store.state.clientLibrary.searchInstalledGames(query, 3);
 	}
 }
