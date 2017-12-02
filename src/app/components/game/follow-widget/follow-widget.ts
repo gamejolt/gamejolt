@@ -42,6 +42,10 @@ export class AppGameFollowWidget extends Vue {
 
 	isProcessing = false;
 
+	get shouldShowFollow() {
+		return this.showUserFollow && (!this.app.user || this.app.user.id !== this.game.developer.id);
+	}
+
 	get widgetId() {
 		return `game-follow-widget-${this.game.id}`;
 	}
