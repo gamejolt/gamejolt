@@ -113,9 +113,8 @@
 					</li>
 				</ul>
 
-				<template v-if="topics.length">
+				<template slot="meta" v-if="topics.length">
 					<span class="text-muted small">
-						&nbsp;
 						<translate
 							:translate-params="{
 								currentPage: number( currentPage ),

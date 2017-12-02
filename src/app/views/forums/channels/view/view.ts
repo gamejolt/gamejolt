@@ -78,9 +78,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 
 	routed($payload: any) {
 		this.channel = new ForumChannel($payload.channel);
-		console.log($payload.topics.map((topic: any) => topic.latest_post));
 		this.topics = ForumTopic.populate($payload.topics);
-		console.log(this.topics.map(topic => topic.latest_post));
 		this.postCountPerPage = $payload.postCountPerPage;
 
 		if ($payload.stickyTopics && $payload.stickyTopics.length) {

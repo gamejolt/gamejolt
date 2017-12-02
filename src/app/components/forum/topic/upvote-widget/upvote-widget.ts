@@ -39,21 +39,10 @@ export class AppForumTopicUpvoteWidget extends Vue {
 	}
 
 	get upvoteTooltip() {
-		const count = this.upvoteCount;
-
-		if (this.isUpvoted) {
-			return this.$gettext('You upvoted this topic');
-		} else if (!count) {
-			return this.$gettext('Be the first to upvote this topic!');
+		if (!this.isUpvoted) {
+			return this.$gettext(`Upvote this topic!`);
 		} else {
-			return this.$gettextInterpolate(
-				this.$ngettext(
-					'One person upvoted this topic.',
-					'%{ count } people upvoted this topic.',
-					count
-				),
-				{ count }
-			);
+			return this.$gettext(`Cool. You've upvoted this topic.`);
 		}
 	}
 
@@ -61,7 +50,7 @@ export class AppForumTopicUpvoteWidget extends Vue {
 		if (!this.isUpvoted) {
 			this.topic.$upvote();
 		} else {
-			this.topic.$unupvote();
+			this.topic.$removeUpvote();
 		}
 	}
 }

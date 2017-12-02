@@ -2,6 +2,7 @@
 @require '../../../../lib/gj-lib-client/stylus/common/mixins'
 
 .forum-topic-list-item
+	clearfix()
 	margin-bottom: $line-height-computed
 
 	h5
@@ -22,7 +23,6 @@
 				text-decoration: underline
 
 	&-latest-post
-
 		&-avatar
 			float: right
 			margin-left: 10px
@@ -32,3 +32,11 @@
 			&-username
 				text-overflow()
 				font-weight: bold
+
+.-vote
+	float: left
+	width: 90px
+
+.-main
+	.-has-voting &
+		margin-left: 90px
