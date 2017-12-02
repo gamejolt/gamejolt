@@ -7,11 +7,11 @@ import {
 	BaseForm,
 	FormOnInit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import * as _ClientAutoStartMod from '../../client/autostart/autostart.service';
+import * as _ClientAutoStartMod from '../../../../_common/client/autostart/autostart.service';
 
 let ClientAutoStartMod: typeof _ClientAutoStartMod | undefined;
 if (GJ_IS_CLIENT) {
-	ClientAutoStartMod = require('../../client/autostart/autostart.service');
+	ClientAutoStartMod = require('../../../../_common/client/autostart/autostart.service');
 }
 
 type FormModel = {

@@ -1,6 +1,7 @@
-import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
 import { Shortcut } from 'client-voodoo';
 import * as path from 'path';
+
+import { Device } from '../../../lib/gj-lib-client/components/device/device.service';
 
 export class ClientShortcut {
 	static get supportsShortcuts() {
@@ -11,6 +12,7 @@ export class ClientShortcut {
 		}
 		return true;
 	}
+
 	static create() {
 		if (!this.supportsShortcuts) {
 			return;
@@ -18,7 +20,7 @@ export class ClientShortcut {
 
 		return Shortcut.create(
 			process.execPath,
-			path.resolve(require('../../../../static-assets/client/icon-256x256.png'))
+			path.resolve(require('../../../static-assets/client/icon-256x256.png'))
 		);
 	}
 

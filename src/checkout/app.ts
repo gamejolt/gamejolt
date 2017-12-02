@@ -3,7 +3,7 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 
-import * as _ClientHistoryNavigatorMod from '../app/components/client/history-navigator/history-navigator.service';
+import * as _ClientHistoryNavigatorMod from '../_common/client/history-navigator/history-navigator.service';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { AppGrowls } from '../lib/gj-lib-client/components/growls/growls';
 import { AppLoadingBar } from '../lib/gj-lib-client/components/loading/bar/bar';
@@ -17,7 +17,7 @@ import { Store } from './store/index';
 
 let ClientHistoryNavigatorMod: typeof _ClientHistoryNavigatorMod | undefined;
 if (GJ_IS_CLIENT) {
-	ClientHistoryNavigatorMod = require('../app/components/client/history-navigator/history-navigator.service');
+	ClientHistoryNavigatorMod = require('../_common/client/history-navigator/history-navigator.service');
 }
 
 @View

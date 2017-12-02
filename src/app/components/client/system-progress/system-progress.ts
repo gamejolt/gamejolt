@@ -2,7 +2,7 @@ import Vue, { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 
 import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
-import { ClientControl } from '../control/client.service';
+import { Client } from '../../../../_common/client/client.service';
 
 @Component({})
 export class AppClientSystemProgress extends Vue {
@@ -11,9 +11,9 @@ export class AppClientSystemProgress extends Vue {
 	render(h: CreateElement) {
 		const progress = this.totalPatchProgress;
 		if (progress === null) {
-			ClientControl.clearProgressBar();
+			Client.clearProgressBar();
 		} else {
-			ClientControl.setProgressBar(progress);
+			Client.setProgressBar(progress);
 		}
 
 		return h('div');

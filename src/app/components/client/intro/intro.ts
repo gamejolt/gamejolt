@@ -6,7 +6,7 @@ import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/eve
 import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { ClientControl } from '../control/client.service';
+import { Client } from '../../../../_common/client/client.service';
 import { sleep } from '../../../../lib/gj-lib-client/utils/utils';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
@@ -67,7 +67,7 @@ export class AppClientIntro extends Vue {
 		// play the intro since it'll be in the background. However, if they started it up silently
 		// and are now logging in, let's play the intro since they had to manually bring the client
 		// forward to do that.
-		if (ClientControl.startedSilently && !sessionStorage.getItem('client-intro-login-play')) {
+		if (Client.startedSilently && !sessionStorage.getItem('client-intro-login-play')) {
 			console.log('Skip intro -- client started silently.');
 			this.finish();
 			return;

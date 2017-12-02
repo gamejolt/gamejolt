@@ -2,10 +2,10 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import View from '!view!./cover.html?style=./cover.styl';
 
-import { MediaItem } from '../../../../lib/gj-lib-client/components/media-item/media-item-model';
-import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppImgResponsive } from '../../../../lib/gj-lib-client/components/img/responsive/responsive';
+import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
+import { Ruler } from '../../../lib/gj-lib-client/components/ruler/ruler-service';
+import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppImgResponsive } from '../../../lib/gj-lib-client/components/img/responsive/responsive';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 

@@ -1,7 +1,8 @@
+import { App, Menu, Window } from 'nw.gui';
 import Vue, { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
-import { ClientControl } from '../control/client.service';
-import { Window, Menu, App } from 'nw.gui';
+
+import { Client } from '../client.service';
 
 @Component({})
 export class AppClientMacAppMenu extends Vue {
@@ -17,15 +18,15 @@ export class AppClientMacAppMenu extends Vue {
 			// If we should just minimize instead of quitting.
 			// Many applications on mac just minimize instead of actually close.
 			if (intent !== 'quit') {
-				ClientControl.close();
+				Client.close();
 			} else {
-				ClientControl.quit();
+				Client.quit();
 			}
 		});
 
 		// reopen is Mac specific
 		// When they click the dock, we need to show it in case they hid it with the close.
-		App.on('reopen', () => ClientControl.show());
+		App.on('reopen', () => Client.show());
 	}
 
 	render(h: CreateElement) {

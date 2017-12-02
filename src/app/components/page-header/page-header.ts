@@ -7,8 +7,8 @@ import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/aff
 import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
 import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppMediaItemCover } from '../media-item/cover/cover';
 import { AppAutoscrollAnchor } from '../../../lib/gj-lib-client/components/scroll/auto-scroll/anchor';
+import { AppMediaItemCover } from '../../../_common/media-item/cover/cover';
 
 @View
 @Component({

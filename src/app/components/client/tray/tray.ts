@@ -7,7 +7,7 @@ import { Action, State } from 'vuex-class';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Store } from '../../../store/index';
 import { UserTokenModal } from '../../user/token-modal/token-modal.service';
-import { ClientControl } from '../control/client.service';
+import { Client } from '../../../../_common/client/client.service';
 
 const packagePrefix = GJ_BUILD_TYPE === 'production' ? '/package' : '';
 
@@ -50,7 +50,7 @@ export class AppClientTray extends Vue {
 				win.hide();
 			} else {
 				// Otherwise actually quit.
-				ClientControl.quit();
+				Client.quit();
 			}
 		});
 	}
@@ -59,7 +59,7 @@ export class AppClientTray extends Vue {
 		const win = gui.Window.get();
 
 		if (this.isClosed || this.isMinimized || !this.isFocused) {
-			ClientControl.show();
+			Client.show();
 			this.isClosed = false;
 		} else {
 			// If the window is being shown and is focused, let's minimize it.
@@ -69,7 +69,7 @@ export class AppClientTray extends Vue {
 
 	private go(location: Location) {
 		this.$router.push(location);
-		ClientControl.show();
+		Client.show();
 	}
 
 	render(h: CreateElement) {
@@ -115,7 +115,7 @@ export class AppClientTray extends Vue {
 					label: 'Game Library',
 					click: () => {
 						this.go({ name: 'library.installed' });
-						ClientControl.show();
+						Client.show();
 					},
 				})
 			);
@@ -125,7 +125,7 @@ export class AppClientTray extends Vue {
 					label: 'Dashboard',
 					click: () => {
 						this.go({ name: 'dash.main.overview' });
-						ClientControl.show();
+						Client.show();
 					},
 				})
 			);
@@ -135,7 +135,7 @@ export class AppClientTray extends Vue {
 					label: 'Edit Account',
 					click: () => {
 						this.go({ name: 'dash.account.edit' });
-						ClientControl.show();
+						Client.show();
 					},
 				})
 			);
@@ -148,7 +148,7 @@ export class AppClientTray extends Vue {
 							name: 'profile.overview',
 							params: { username: this.app.user!.username },
 						});
-						ClientControl.show();
+						Client.show();
 					},
 				})
 			);
@@ -158,7 +158,7 @@ export class AppClientTray extends Vue {
 					label: 'Your Game Token',
 					click: () => {
 						UserTokenModal.show();
-						ClientControl.show();
+						Client.show();
 					},
 				})
 			);
@@ -168,7 +168,7 @@ export class AppClientTray extends Vue {
 					label: 'Settings',
 					click: () => {
 						this.go({ name: 'settings' });
-						ClientControl.show();
+						Client.show();
 					},
 				})
 			);
@@ -180,7 +180,7 @@ export class AppClientTray extends Vue {
 					label: 'Logout',
 					click: () => {
 						this.logout();
-						ClientControl.show();
+						Client.show();
 					},
 				})
 			);
@@ -190,7 +190,7 @@ export class AppClientTray extends Vue {
 			new gui.MenuItem({
 				label: 'Quit',
 				click: () => {
-					ClientControl.quit();
+					Client.quit();
 				},
 			})
 		);

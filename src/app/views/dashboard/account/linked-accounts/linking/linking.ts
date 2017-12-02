@@ -5,11 +5,11 @@ import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/gr
 import { AppProgressPoller } from '../../../../../../lib/gj-lib-client/components/progress/poller/poller';
 import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppLoading } from '../../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import * as _ClientControlMod from '../../../../../components/client/control/client.service';
+import * as _ClientMod from '../../../../../../_common/client/client.service';
 
-let ClientControlMod: typeof _ClientControlMod | undefined;
+let ClientMod: typeof _ClientMod | undefined;
 if (GJ_IS_CLIENT) {
-	ClientControlMod = require('../../../../../components/client/control/client.service');
+	ClientMod = require('../../../../../../_common/client/client.service');
 }
 
 @View
@@ -82,8 +82,8 @@ export default class RouteDashAccountLinkedAccountsLinking extends BaseRouteComp
 		}
 
 		// Focus back to the Client.
-		if (ClientControlMod) {
-			ClientControlMod.ClientControl.show();
+		if (ClientMod) {
+			ClientMod.Client.show();
 		}
 	}
 

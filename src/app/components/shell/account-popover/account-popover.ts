@@ -16,11 +16,11 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Store } from '../../../store/index';
 import { UserTokenModal } from '../../user/token-modal/token-modal.service';
-import * as _ClientControlMod from '../../client/control/client.service';
+import * as _ClientMod from '../../../../_common/client/client.service';
 
-let ClientControlMod: typeof _ClientControlMod | undefined;
+let ClientMod: typeof _ClientMod | undefined;
 if (GJ_IS_CLIENT) {
-	ClientControlMod = require('../../client/control/client.service');
+	ClientMod = require('../../../../_common/client/client.service');
 }
 
 @View
@@ -73,8 +73,8 @@ export class AppShellAccountPopover extends Vue {
 	}
 
 	quit() {
-		if (ClientControlMod) {
-			ClientControlMod.ClientControl.quit();
+		if (ClientMod) {
+			ClientMod.Client.quit();
 		}
 	}
 }

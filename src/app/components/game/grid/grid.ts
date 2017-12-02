@@ -1,17 +1,17 @@
+import View from '!view!./grid.html?style=./grid.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./grid.html?style=./grid.styl';
 
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppGameThumbnail } from '../thumbnail/thumbnail';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { AppPagination } from '../../../../lib/gj-lib-client/components/pagination/pagination';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { AppPagination } from '../../../../lib/gj-lib-client/components/pagination/pagination';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
+import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 
 export const GameGridRowSizeSm = 2;
 export const GameGridRowSizeMd = 3;

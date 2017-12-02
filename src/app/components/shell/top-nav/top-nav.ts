@@ -29,7 +29,7 @@ let components: any = {
 if (GJ_IS_CLIENT) {
 	components = {
 		...components,
-		...require('../../client/history-navigator/history-navigator'),
+		...require('../../../../_common/client/history-navigator/history-navigator'),
 	};
 }
 

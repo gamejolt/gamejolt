@@ -1,11 +1,11 @@
+import View from '!view!./game.html?style=./game.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./game.html?style=./game.styl';
 
-import { LocalDbGame } from '../../../../components/client/local-db/game/game.model';
-import { AppGameThumbnail } from '../../../../components/game/thumbnail/thumbnail';
+import { AppGameThumbnail } from '../../../../../_common/game/thumbnail/thumbnail';
 import { AppClientGameButtons } from '../../../../components/client/game-buttons/game-buttons';
-import { ClientLibraryStore, ClientLibraryState } from '../../../../store/client-library';
+import { LocalDbGame } from '../../../../components/client/local-db/game/game.model';
+import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
 
 @View
 @Component({

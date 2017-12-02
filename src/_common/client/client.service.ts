@@ -1,7 +1,7 @@
 import * as gui from 'nw.gui';
 const win = gui.Window.get();
 
-export class ClientControl {
+export class Client {
 	static startedSilently = false;
 
 	static init() {

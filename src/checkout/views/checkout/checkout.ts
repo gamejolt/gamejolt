@@ -8,7 +8,7 @@ import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppMediaItemCover } from '../../../app/components/media-item/cover/cover';
+import { AppMediaItemCover } from '../../../_common/media-item/cover/cover';
 import { FormPayment } from '../../components/forms/payment/payment';
 import {
 	BaseRouteComponent,

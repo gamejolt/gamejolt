@@ -3,24 +3,24 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 
-import { Settings } from '../../../../_common/settings/settings.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppScrollInview } from '../../../../lib/gj-lib-client/components/scroll/inview/inview';
-import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
-import { AppVideo } from '../../../../lib/gj-lib-client/components/video/video';
-import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
-import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { AppGamePlaylistAddToWidget } from '../../game-playlist/add-to-widget/add-to-widget';
-import { AppGameCompatIcons } from '../compat-icons/compat-icons';
-import { AppGameFollowWidget } from '../follow-widget/follow-widget';
-import { AppGameModLinks } from '../mod-links/mod-links';
+import { AppGamePlaylistAddToWidget } from '../../../app/components/game-playlist/add-to-widget/add-to-widget';
+import { AppGameCompatIcons } from '../../../app/components/game/compat-icons/compat-icons';
+import { AppGameFollowWidget } from '../../../app/components/game/follow-widget/follow-widget';
+import { AppGameModLinks } from '../../../app/components/game/mod-links/mod-links';
+import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
+import { AppGameThumbnailImg } from '../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
+import { AppPopover } from '../../../lib/gj-lib-client/components/popover/popover';
+import { AppPopoverTrigger } from '../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppScrollInview } from '../../../lib/gj-lib-client/components/scroll/inview/inview';
+import { AppUserAvatarImg } from '../../../lib/gj-lib-client/components/user/user-avatar/img/img';
+import { AppVideo } from '../../../lib/gj-lib-client/components/video/video';
+import { arrayRemove } from '../../../lib/gj-lib-client/utils/array';
+import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
+import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { currency } from '../../../lib/gj-lib-client/vue/filters/currency';
+import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
+import { Settings } from '../../settings/settings.service';
 import { AppGameThumbnailPlaceholder } from './placeholder/placeholder';
 
 /**
@@ -133,7 +133,8 @@ export class AppGameThumbnail extends Vue {
 
 	get salePercentageOff() {
 		if (this.pricing && this.saleOldPricing) {
-			return ((this.saleOldPricing.amount - this.pricing.amount) /
+			return (
+				(this.saleOldPricing.amount - this.pricing.amount) /
 				this.saleOldPricing.amount *
 				100
 			).toFixed(0);
