@@ -1,19 +1,19 @@
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./install-package-modal.html';
-import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { Component, Prop } from 'vue-property-decorator';
+
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import { arrayIndexBy } from '../../../../lib/gj-lib-client/utils/array';
 import { GameBuild } from '../../../../lib/gj-lib-client/components/game/build/build.model';
-import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-library';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { AppGamePackageCard } from '../../../../lib/gj-lib-client/components/game/package/card/card';
+import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
+import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
+import { arrayIndexBy } from '../../../../lib/gj-lib-client/utils/array';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { filesize } from '../../../../lib/gj-lib-client/vue/filters/filesize';
-import { RouteState, RouteStore } from '../../../views/discover/games/view/view.store';
-import { AppGamePackageCard } from '../../../../lib/gj-lib-client/components/game/package/card/card';
+import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-library';
 
 @View
 @Component({
@@ -30,13 +30,9 @@ import { AppGamePackageCard } from '../../../../lib/gj-lib-client/components/gam
 	},
 })
 export default class AppClientInstallPackageModal extends BaseModal {
-	@ClientLibraryAction packageInstall: ClientLibraryStore['packageInstall'];
-
-	// TODO(client): Can't pull from route store here since it may show outside of the store.
-	@RouteState partner: RouteStore['partner'];
-	@RouteState partnerKey: RouteStore['partnerKey'];
-
 	@Prop(Game) game: Game;
+
+	@ClientLibraryAction packageInstall: ClientLibraryStore['packageInstall'];
 
 	isLoading = true;
 	packageData: GamePackagePayloadModel = null as any;

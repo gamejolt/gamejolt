@@ -112,10 +112,6 @@ export class AppClientGameButtons extends Vue {
 				game: this.game,
 				package: build._package!,
 				build,
-
-				// TODO(client): we need to pass this through somehow?
-				// partner: this.partner,
-				// partnerKey: this.partnerKey,
 			});
 			return;
 		}

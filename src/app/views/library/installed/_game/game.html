@@ -8,7 +8,10 @@
 	@mouseleave="isHovering = false"
 	>
 
-	<app-game-thumbnail :game="game._game" />
+	<app-game-thumbnail
+		:game="game._game"
+		hide-pricing
+		/>
 
 	<!--
 		Try to reduce the # of watchers on page.
