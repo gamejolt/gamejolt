@@ -6,7 +6,16 @@ jobs:
      steps:
        - checkout
        - run: 'git submodule update --init --recursive'
+       - restore_cache:
+          keys:
+            - v1-yarn-deps-{{ checksum "yarn.lock" }}-{{ arch }}
+            - v1-yarn-deps-
        - run: 'yarn'
+       - save_cache:
+          key: v1-yarn-deps-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
+            - ./node_modules
        - run: 'yarn run client-build-osx'
        - store_artifacts:
            path: ./build/prod-client-build/osx64-package.zip
