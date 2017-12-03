@@ -1,0 +1,13 @@
+version: 2
+jobs:
+   build:
+     docker:
+       - image: circleci/node:8.9.1
+     steps:
+       - checkout
+       - run: 'npm i -g yarn'
+       - run: 'yarn'
+       - run: 'yarn run client-build-osx'
+       - store_artifacts:
+           path: test-results.xml
+           prefix: tests
