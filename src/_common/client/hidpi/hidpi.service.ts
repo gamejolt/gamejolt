@@ -5,6 +5,6 @@ export function checkClientHiDpi() {
 		const win = Window.get();
 
 		console.log('Detected HiDPI screen. Changing zoom level.');
-		win.zoomLevel = 2;
+		win.zoomLevel = 4;
 	}
 }
