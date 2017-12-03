@@ -3,7 +3,6 @@ import Vue from 'vue';
 import { initClientApiInterceptors } from '../_common/client/api/api.service';
 import { ClientAutoStart } from '../_common/client/autostart/autostart.service';
 import { Client } from '../_common/client/client.service';
-import { checkClientHiDpi } from '../_common/client/hidpi/hidpi.service';
 import { ClientHistoryNavigator } from '../_common/client/history-navigator/history-navigator.service';
 import { ClientShortcut } from '../_common/client/shortcut/shortcut.service';
 import { AppGamePackageCard } from '../lib/gj-lib-client/components/game/package/card/card';
@@ -15,7 +14,6 @@ import { AppGameCoverButtons } from './components/game/cover-buttons/cover-butto
 import { hookDownloadPackage } from './components/client/hooks/game-package-purchase-modal/game-package-purchase-modal';
 import AppGamePackagePurchaseModal from '../lib/gj-lib-client/components/game/package/purchase-modal/purchase-modal';
 
-checkClientHiDpi();
 initClientApiInterceptors();
 ClientUser.init();
 ClientAutoStart.init();
