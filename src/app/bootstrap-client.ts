@@ -12,6 +12,8 @@ import { AppClientPackageCardButtons } from './components/client/hooks/package-c
 import { AppClientPackageCardMeta } from './components/client/hooks/package-card-meta/package-card-meta';
 import { ClientUser } from './components/client/user/user.service';
 import { AppGameCoverButtons } from './components/game/cover-buttons/cover-buttons';
+import { hookDownloadPackage } from './components/client/hooks/game-package-purchase-modal/game-package-purchase-modal';
+import AppGamePackagePurchaseModal from '../lib/gj-lib-client/components/game/package/purchase-modal/purchase-modal';
 
 checkClientHiDpi();
 initClientApiInterceptors();
@@ -24,6 +26,7 @@ ClientShortcut.create();
 AppGamePackageCard.hook.buttons = AppClientPackageCardButtons;
 AppGamePackageCard.hook.meta = AppClientPackageCardMeta;
 AppGameCoverButtons.hook.buildButtons = AppClientGameCoverButtons;
+AppGamePackagePurchaseModal.hook.downloadPackage = hookDownloadPackage;
 
 Vue.use(vue => {
 	(vue.prototype as any).GJ_IS_CLIENT = GJ_IS_CLIENT;
