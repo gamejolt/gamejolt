@@ -27,11 +27,12 @@ jobs:
 workflows:
   version: 2
   build_all:
-    triggers:
-      - schedule:
+    jobs:
+      - build-macos:
           filters:
             branches:
               only: client-build
-    jobs:
-      - build-macos
-      - build-linux
+      - build-linux:
+          filters:
+            branches:
+              only: client-build
