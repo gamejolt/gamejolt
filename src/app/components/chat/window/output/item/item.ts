@@ -1,15 +1,16 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./item.html?style=./item.styl';
 import './item-content.styl';
 
-import { ChatMessage } from '../../../message';
+import View from '!view!./item.html?style=./item.styl';
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { ChatClient } from '../../../client';
-import { ChatRoom } from '../../../room';
+
 import { AppFadeCollapse } from '../../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { date } from '../../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { date } from '../../../../../../lib/gj-lib-client/vue/filters/date';
+import { ChatClient } from '../../../client';
+import { ChatMessage } from '../../../message';
+import { ChatRoom } from '../../../room';
 
 @View
 @Component({
@@ -30,8 +31,8 @@ export class AppChatWindowOutputItem extends Vue {
 	isExpanded = false;
 	isCollapsable = false;
 
-	date = date;
-	ChatMessage = ChatMessage;
+	readonly date = date;
+	readonly ChatMessage = ChatMessage;
 
 	get shouldFadeCollapse() {
 		return this.message.contentRaw.split('\n').length > 6 || this.message.contentRaw.length >= 500;

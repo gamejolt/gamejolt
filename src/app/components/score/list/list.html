@@ -17,9 +17,9 @@
 			</div>
 			<div class="score-list-user">
 				<template v-if="score.user">
-					<a :href="score.user.url">
+					<router-link :to="score.user.url">
 						{{ score.user.display_name }}
-					</a>
+					</router-link>
 					<small class="text-muted">@{{ score.user.username }}</small>
 				</template>
 				<template v-if="!score.user">

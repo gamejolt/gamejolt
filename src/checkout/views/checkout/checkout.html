@@ -15,7 +15,7 @@
 		<h1>
 			<a
 				class="link-unstyled"
-				:href="`${ Environment.wttfBaseUrl }/games/${ game.slug }/${ game.id }`"
+				:href="Environment.baseUrl + `/games/${ game.slug }/${ game.id }`"
 				target="_blank"
 				>
 				{{ game.title }}
@@ -25,7 +25,7 @@
 			<translate>by</translate>
 			<a
 				class="link-unstyled"
-				:href="`${ Environment.wttfBaseUrl }/profile/${ game.developer.slug }/${ game.developer.id }`"
+				:href="Environment.baseUrl + `/profile/${ game.developer.slug }/${ game.developer.id }`"
 				>
 				{{ game.developer.display_name }}
 			</a>

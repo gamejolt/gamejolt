@@ -149,8 +149,8 @@
 							<div v-if="user.facebook_id">
 								<a
 									class="link-unstyled"
-									target="_blank"
 									:href="`http://facebook.com/${user.facebook_id}`"
+									target="_blank"
 									>
 									<app-jolticon icon="facebook" />
 									{{ user.facebook_name }}
@@ -160,8 +160,8 @@
 							<div v-if="user.twitter_id">
 								<a
 									class="link-unstyled"
-									target="_blank"
 									:href="`http://twitter.com/${user.twitter_screenname}`"
+									target="_blank"
 									>
 									<app-jolticon icon="twitter-bird" />
 									@{{ user.twitter_screenname }}
@@ -171,8 +171,8 @@
 							<div v-if="user.google_id">
 								<a
 									class="link-unstyled"
-									target="_blank"
 									:href="`https://plus.google.com/${user.google_id}`"
+									target="_blank"
 									>
 									<app-jolticon icon="google-plus" />
 									{{ user.google_nickname }}
@@ -182,8 +182,8 @@
 							<div v-if="user.twitch_id">
 								<a
 									class="link-unstyled"
-									target="_blank"
 									:href="`https://twitch.tv/${user.twitch_name}`"
+									target="_blank"
 									>
 									<app-jolticon icon="twitch" />
 									{{ user.twitch_name }}
@@ -193,8 +193,8 @@
 							<div v-if="user.web_site">
 								<a
 									class="link-unstyled"
-									target="_blank"
 									:href="user.web_site"
+									target="_blank"
 									>
 									<app-jolticon icon="link" />
 									<translate>Website</translate>
@@ -205,8 +205,8 @@
 							<div v-for="channel of youtubeChannels" :key="channel.id">
 								<a
 									class="link-unstyled"
-									target="_blank"
 									:href="`https://www.youtube.com/channel/${channel.channel_id}`"
+									target="_blank"
 									>
 									<app-jolticon icon="youtube" />
 									{{ channel.title }}

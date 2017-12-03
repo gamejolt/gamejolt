@@ -115,13 +115,13 @@
 		<!-- Login/Join Buttons -->
 		<ul class="navbar-items" v-if="!app.user">
 			<li>
-				<a :href="Environment.authBaseUrl + '/login'" target="_self" v-app-track-event="`top-nav:login:click`">
+				<a :href="Environment.authBaseUrl + '/login'" v-app-track-event="`top-nav:login:click`">
 					<app-jolticon class="hidden-xs" icon="sign-in" />
 					<translate>nav.login</translate>
 				</a>
 			</li>
 			<li>
-				<a :href="Environment.authBaseUrl + '/join'" target="_self" v-app-track-event="`top-nav:join:click`">
+				<a :href="Environment.authBaseUrl + '/join'" v-app-track-event="`top-nav:join:click`">
 					<app-jolticon class="hidden-xs" icon="friends" />
 					<translate>nav.join</translate>
 				</a>

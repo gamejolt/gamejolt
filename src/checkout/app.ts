@@ -4,6 +4,7 @@ import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 
 import * as _ClientHistoryNavigatorMod from '../_common/client/history-navigator/history-navigator.service';
+import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { AppGrowls } from '../lib/gj-lib-client/components/growls/growls';
 import { AppLoadingBar } from '../lib/gj-lib-client/components/loading/bar/bar';
@@ -38,6 +39,8 @@ export class App extends Vue {
 	@State app: Store['app'];
 
 	curDate = new Date();
+
+	readonly Environment = Environment;
 
 	mounted() {
 		// Will load the user in asynchronously so that the user-bar in the
