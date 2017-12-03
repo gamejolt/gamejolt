@@ -29,9 +29,9 @@ workflows:
   build_all:
     triggers:
       - schedule:
-        filters:
-          branches:
-            only: client-build
+          filters:
+            branches:
+              only: client-build
     jobs:
       - build-macos
       - build-linux
