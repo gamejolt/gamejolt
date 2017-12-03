@@ -282,7 +282,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 export const store = new Store();
 
 // Sync the routes into the store.
-sync(store as any, router, { moduleName: 'route' });
+sync(store, router, { moduleName: 'route' });
 
 // Bootstrap/clear the app when user changes.
 store.watch(
