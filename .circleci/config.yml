@@ -8,3 +8,7 @@ jobs:
        - run: 'git submodule update --init --recursive'
        - run: 'yarn'
        - run: 'yarn run client-build-osx'
+       - store_artifacts:
+           path: ./build/prod-client-build/osx64-package.zip
+       - store_artifacts:
+           path: ./build/prod-client-build/osx.dmg
