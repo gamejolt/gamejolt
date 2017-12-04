@@ -40,6 +40,7 @@ import { LibraryStore, LibraryAction, LibraryState } from '../../../store/librar
 export class AppShellSidebar extends Vue {
 	@State app: Store['app'];
 	@State isBootstrapped: Store['isBootstrapped'];
+	@State isLibraryBootstrapped: Store['isLibraryBootstrapped'];
 	@State notificationCount: Store['notificationCount'];
 	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
 	@LibraryState bundleCollections: LibraryStore['bundleCollections'];

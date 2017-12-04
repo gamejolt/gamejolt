@@ -27,6 +27,7 @@ import { ChatClientLazy } from '../components/lazy';
 import { router } from '../views';
 import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
+import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
 
 export type Actions = AppActions &
 	LibraryActions &
@@ -47,6 +48,7 @@ export type Mutations = AppMutations &
 	_ClientLibraryMod.Mutations & {
 		setNotificationsCount: number;
 		_setBootstrapped: undefined;
+		_setLibraryBootstrapped: undefined;
 		_clear: undefined;
 		_setChat: ChatClient;
 		_clearChat: undefined;
@@ -86,6 +88,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	chat: ChatClient | null = null;
 
 	isBootstrapped = false;
+	isLibraryBootstrapped = false;
 
 	notificationCount = 0;
 
@@ -112,17 +115,22 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexAction
 	async bootstrap() {
 		const prevResolver = bootstrapResolver;
-		const response = await Api.sendRequest('/web/library');
 
-		// If we failed to finish before we unbootstrapped, then stop.
-		if (bootstrapResolver !== prevResolver) {
-			return;
-		}
+		// Detach so that errors in it doesn't cause the not found page to show. This is considered
+		// a sort of "async" load.
+		try {
+			const response = await Api.sendRequest('/web/library', null, { detach: true });
+			this._setLibraryBootstrapped();
 
-		this.commit('library/bootstrap', response);
+			// If we failed to finish before we unbootstrapped, then stop.
+			if (bootstrapResolver !== prevResolver) {
+				return;
+			}
+
+			this.commit('library/bootstrap', response);
+		} catch (e) {}
 
 		this._setBootstrapped();
-
 		BroadcastModal.check();
 	}
 
@@ -222,6 +230,11 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
+	_setLibraryBootstrapped() {
+		this.isLibraryBootstrapped = true;
+	}
+
+	@VuexMutation
 	_clear() {
 		tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 	}
@@ -303,3 +316,16 @@ store.watch(
 		}
 	}
 );
+
+// If we were offline, but we're online now, make sure our library is bootstrapped. Remember we
+// always have an app user even if we were offline.
+if (GJ_IS_CLIENT) {
+	store.watch(
+		() => Connection.isOffline,
+		(isOffline, prev) => {
+			if (!isOffline && prev === true) {
+				store.dispatch('bootstrap');
+			}
+		}
+	);
+}
