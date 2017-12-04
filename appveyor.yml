@@ -12,6 +12,9 @@ build_script:
   - yarn
   - yarn run client-build-win
 
+# Maybe this will work to tell it there's no tests.
+test_script:
+
 artifacts:
   - path: build\prod-client-build\Setup.exe
   - path: build\prod-client-buildwin32-package.tar.gz
