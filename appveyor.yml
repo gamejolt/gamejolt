@@ -17,4 +17,4 @@ test_script:
 
 artifacts:
   - path: build\prod-client-build\Setup.exe
-  - path: build\prod-client-buildwin32-package.tar.gz
+  - path: build\prod-client-build\win32-package.tar.gz
