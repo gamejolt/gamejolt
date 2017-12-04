@@ -34,7 +34,7 @@
 		"css-element-queries": "0.4.0",
 		"date-fns": "1.29.0",
 		"decompress-zip": "0.3.0",
-		"dexie": "2.0.0-beta.10",
+		"dexie": "2.0.1",
 		"express": "4.16.2",
 		"favico.js": "0.3.10",
 		"game-jolt-frontend-lib": "link:src/lib/gj-lib-client",
@@ -80,8 +80,7 @@
 	"dependencies": {
 		"axios": "0.17.1",
 		"client-voodoo": "github:gamejolt/client-voodoo#client-vue",
-		"nwjs-snappy-updater": "github:gamejolt/nwjs-snappy-updater#client-vue",
-		"sanitize-filename": "1.6.1"
+		"nwjs-snappy-updater": "github:gamejolt/nwjs-snappy-updater#client-vue"
 	},
 	"main": "app://game-jolt-client/index.html#/",
 	"window": {
@@ -98,10 +97,8 @@
 	"webkit": {
 		"plugin": true
 	},
-	"chromium-args":
-		"--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
-	"user-agent":
-		"GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
+	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
 		"linux": {
 			"main": "app://game-jolt-client/package/index.html#/",

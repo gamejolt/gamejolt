@@ -55,8 +55,6 @@ import {
 import { DbFieldMapping as PackageDbFields } from '../components/client/local-db/package/package.model';
 import { fuzzysearch } from '../../lib/gj-lib-client/utils/string';
 
-const sanitize = require('sanitize-filename');
-
 export const ClientLibraryState = namespace('clientLibrary', State);
 export const ClientLibraryAction = namespace('clientLibrary', Action);
 export const ClientLibraryMutation = namespace('clientLibrary', Mutation);
@@ -100,7 +98,6 @@ export type Mutations = {
 		packages: LocalDbPackage[];
 		games: LocalDbGame[];
 	};
-	'clientLibrary/setLocalDbReady': boolean;
 	'clientLibrary/setCurrentlyPatching': [LocalDbPackage, PatchInstance];
 	'clientLibrary/unsetCurrentlyPatching': LocalDbPackage;
 	'clientLibrary/setCurrentlyUninstalling': [LocalDbPackage, Promise<void>];
@@ -178,7 +175,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private _bootstrapPromiseResolver: Function = null as any;
 
 	// Localdb variables
-	isLocalDbReady = false;
 	packages: LocalDbPackage[] = [];
 	games: LocalDbGame[] = [];
 
@@ -212,8 +208,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		if (GJ_ENVIRONMENT === 'development') {
 			Config.env = 'development';
 		}
-
-		this.setLocalDbReady(true);
 
 		this.installerInit();
 		this.launcherInit();
@@ -319,11 +313,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			.filter(i => fuzzysearch(query, i.title.toLowerCase()))
 			.sort((g1, g2) => g1.title.localeCompare(g2.title))
 			.slice(0, limit);
-	}
-
-	@VuexMutation
-	setLocalDbReady(ready: Mutations['clientLibrary/setLocalDbReady']) {
-		this.isLocalDbReady = ready;
 	}
 
 	get numPatching() {
@@ -715,7 +704,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		try {
 			// We freeze the installation directory in time.
 			if (!localPackage.install_dir) {
-				const title = sanitize(localPackage.title || 'default');
+				const title = (localPackage.title || 'default').replace(/[\/\?<>\\:\*\|":]/g, '');
 				await localPackage.setInstallDir(
 					path.join(
 						Settings.get('game-install-dir'),
