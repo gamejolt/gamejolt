@@ -1285,8 +1285,8 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 					// TODO(rewrite,cros) do we want to wrap these in a try catch so we don't fail the rest of the update operations?
 					// Since this isn't running in a db transaction if a single fails it won't rollback the others,
 					// so we might just want to log.
-					const packageId: number = data.packageId;
-					const newBuildId: number = data.newBuildId;
+					const packageId = data.packageId as number;
+					const newBuildId = data.newBuildId as number;
 
 					const localPackage = this.packagesById[packageId];
 					if (!localPackage) {
