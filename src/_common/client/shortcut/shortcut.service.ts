@@ -20,7 +20,8 @@ export class ClientShortcut {
 
 		return Shortcut.create(
 			process.execPath,
-			path.resolve(require('../../../static-assets/client/icon-256x256.png'))
+			// Path is absolute, so we make it relative to get the resolve working.
+			path.resolve(require('../../../static-assets/client/icon-256x256.png').substr(1))
 		);
 	}
 
