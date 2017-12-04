@@ -9,7 +9,6 @@ import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import {
 	BaseRouteComponent,
@@ -32,7 +31,7 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteC
 
 	src: string | null = null;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: Route) {

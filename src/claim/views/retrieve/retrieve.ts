@@ -6,7 +6,6 @@ import { GameBundle } from '../../../lib/gj-lib-client/components/game-bundle/ga
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
-import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { FormRetrieve } from '../../components/forms/retrieve/retrieve';
 import { AppInvalidKey } from '../../components/invalid-key/invalid-key';
 import {
@@ -42,7 +41,7 @@ export default class RouteRetrieve extends BaseRouteComponent {
 	game: Game | null = null;
 	resourceTitle = '';
 
-	Meta = makeObservableService(Meta);
+	readonly Meta = Meta;
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: Route): Promise<Payload> {

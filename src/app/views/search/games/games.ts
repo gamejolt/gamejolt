@@ -3,7 +3,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./games.html';
 
 import { Search } from '../../../components/search/search-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import {
 	BaseRouteComponent,
@@ -20,7 +19,7 @@ import {
 export default class RouteSearchGames extends BaseRouteComponent {
 	@Prop(Object) payload: any;
 
-	Search = makeObservableService(Search);
+	readonly Search = Search;
 
 	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: Route) {

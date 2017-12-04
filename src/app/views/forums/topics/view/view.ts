@@ -19,7 +19,6 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppScrollTo } from '../../../../../lib/gj-lib-client/components/scroll/to/to.directive';
@@ -88,8 +87,8 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 	userPostCounts: any = null;
 	unfollowHover = false;
 
-	Screen = makeObservableService(Screen);
-	Environment = Environment;
+	readonly Screen = Screen;
+	readonly Environment = Environment;
 
 	get loginUrl() {
 		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);

@@ -5,7 +5,6 @@ import View from '!view!./sidebar.html?style=./sidebar.styl';
 
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
@@ -72,8 +71,8 @@ export class AppShellSidebar extends Vue {
 		other: 'Other',
 	};
 
-	Environment = Environment;
-	Screen = makeObservableService(Screen);
+	readonly Environment = Environment;
+	readonly Screen = Screen;
 
 	// Show hot when logged in, otherwise default to best.
 	get defaultBrowseSection() {

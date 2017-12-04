@@ -16,7 +16,6 @@ import { AppScrollInview } from '../../../lib/gj-lib-client/components/scroll/in
 import { AppUserAvatarImg } from '../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppVideo } from '../../../lib/gj-lib-client/components/video/video';
 import { arrayRemove } from '../../../lib/gj-lib-client/utils/array';
-import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { currency } from '../../../lib/gj-lib-client/vue/filters/currency';
 import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
@@ -73,7 +72,7 @@ export class AppGameThumbnail extends Vue {
 		? document.hasFocus()
 		: true;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	get shouldShowControls() {
 		// Only show controls if they didn't override with their own.

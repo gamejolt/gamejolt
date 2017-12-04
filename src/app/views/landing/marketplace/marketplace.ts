@@ -13,7 +13,6 @@ import {
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
 
@@ -34,7 +33,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 	firesidePosts: FiresidePost[] = [];
 	games: Game[] = [];
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve()
 	routeResolve() {

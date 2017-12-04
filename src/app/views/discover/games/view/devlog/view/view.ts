@@ -6,7 +6,6 @@ import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.s
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppDevlogPostView } from '../../../../../../components/devlog/post/view/view';
 import { AppDevlogPostViewPlaceholder } from '../../../../../../components/devlog/post/view/placeholder/placeholder';
@@ -42,7 +41,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 
 	post: FiresidePost | null = null;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve({ lazy: true, cache: true })
 	async routeResolve(this: undefined, route: Route) {

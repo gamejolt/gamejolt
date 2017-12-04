@@ -12,7 +12,6 @@ import { AppNoAutoscroll } from '../../../../../../../lib/gj-lib-client/componen
 import { AppScoreList } from '../../../../../../components/score/list/list';
 import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppScoreboardSelector } from '../../../../../../components/score/scoreboard-selector/scoreboard-selector';
 import { Popover } from '../../../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
@@ -51,7 +50,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 	userScorePlacement = 0;
 	userScoreExperience = 0;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	// Even.
 	get scoresLeft() {

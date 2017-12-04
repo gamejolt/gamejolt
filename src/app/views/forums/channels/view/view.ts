@@ -13,7 +13,6 @@ import { AppPagination } from '../../../../../lib/gj-lib-client/components/pagin
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Store } from '../../../../store/index';
 import {
@@ -45,9 +44,9 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 	perPage = 0;
 	currentPage = 1;
 
-	number = number;
-	Scroll = Scroll;
-	Screen = makeObservableService(Screen);
+	readonly number = number;
+	readonly Scroll = Scroll;
+	readonly Screen = Screen;
 
 	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: Route) {

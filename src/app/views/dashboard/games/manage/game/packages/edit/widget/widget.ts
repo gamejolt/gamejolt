@@ -5,7 +5,6 @@ import View from '!view!./widget.html';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Sellable } from '../../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { Environment } from '../../../../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { makeObservableService } from '../../../../../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import {
 	BaseRouteComponent,
@@ -22,7 +21,7 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 	widgetUrl = '';
 	widgetCode = '';
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {

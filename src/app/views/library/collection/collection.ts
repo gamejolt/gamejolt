@@ -21,7 +21,6 @@ import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/pop
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppGameCollectionFollowWidget } from '../../../components/game/collection/follow-widget/follow-widget';
@@ -90,7 +89,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	metaTitle = '';
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	// Not really able to make this lazy since it needs payload to build out the
 	// header.

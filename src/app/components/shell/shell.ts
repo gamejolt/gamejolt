@@ -15,7 +15,6 @@ import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
 import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar/bar';
 import { Store } from '../../store/index';
 import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
-import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { Connection } from '../../../lib/gj-lib-client/components/connection/connection-service';
 
 let components: any = {
@@ -54,7 +53,7 @@ export class AppShell extends Vue {
 
 	@Action clearPanes: Store['clearPanes'];
 
-	readonly Connection = makeObservableService(Connection);
+	readonly Connection = Connection;
 
 	mounted() {
 		// When changing routes, hide all overlays.

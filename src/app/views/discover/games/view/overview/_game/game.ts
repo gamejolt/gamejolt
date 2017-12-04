@@ -4,7 +4,6 @@ import { State } from 'vuex-class';
 import View from '!view!./game.html?style=./game.styl';
 
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppTrackEvent } from '../../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import { AppCard } from '../../../../../../../lib/gj-lib-client/components/card/card';
@@ -113,8 +112,8 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 
 	@RouteMutation addPost: RouteStore['addPost'];
 
-	Screen = makeObservableService(Screen);
-	Environment = Environment;
+	readonly Screen = Screen;
+	readonly Environment = Environment;
 
 	get hasAnyPerms() {
 		return this.game.hasPerms();

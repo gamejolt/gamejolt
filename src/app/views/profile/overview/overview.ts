@@ -22,7 +22,6 @@ import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/fr
 import { UserGameSession } from '../../../../lib/gj-lib-client/components/user/game-session/game-session.model';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
@@ -63,9 +62,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	showFullDescription = false;
 	canToggleDescription = false;
 
-	User = User;
-	UserFriendship = UserFriendship;
-	Screen = makeObservableService(Screen);
+	readonly User = User;
+	readonly UserFriendship = UserFriendship;
+	readonly Screen = Screen;
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {

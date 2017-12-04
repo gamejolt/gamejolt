@@ -5,7 +5,6 @@ import View from '!view!./overview.html?style=./overview.styl';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { State } from 'vuex-class';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { UserGameTrophy } from '../../../../lib/gj-lib-client/components/user/game-trophy/game-trophy.model';
 import { GameTrophy } from '../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
@@ -40,8 +39,8 @@ export class AppTrophyOverview extends Vue {
 	achieved: UserGameTrophy[] = [];
 	achievedIndexed: any = {};
 
-	Screen = makeObservableService(Screen);
-	number = number;
+	readonly Screen = Screen;
+	readonly number = number;
 
 	get desktopThumbSizes() {
 		if (this.size === 'full') {

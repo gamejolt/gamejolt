@@ -10,7 +10,6 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppPagination } from '../../../../lib/gj-lib-client/components/pagination/pagination';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 
 export const GameGridRowSizeSm = 2;
@@ -46,9 +45,9 @@ export class AppGameGrid extends Vue {
 
 	id = ++idCounter;
 
-	number = number;
-	Screen = makeObservableService(Screen);
-	Scroll = Scroll;
+	readonly number = number;
+	readonly Screen = Screen;
+	readonly Scroll = Scroll;
 
 	get shouldShowAds() {
 		return this.showAds && Ads.shouldShow;

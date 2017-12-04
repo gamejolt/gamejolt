@@ -6,7 +6,6 @@ import { GameListingContainer } from './listing-container-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
@@ -46,10 +45,10 @@ export class AppGameListing extends Vue {
 	@Prop({ type: Boolean, default: true })
 	showFooterAd: boolean;
 
-	number = number;
-	Environment = Environment;
-	Screen = makeObservableService(Screen);
-	Scroll = Scroll;
+	readonly number = number;
+	readonly Environment = Environment;
+	readonly Screen = Screen;
+	readonly Scroll = Scroll;
 
 	get shouldShowAds() {
 		return Ads.shouldShow;

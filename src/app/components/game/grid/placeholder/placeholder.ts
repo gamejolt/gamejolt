@@ -4,7 +4,6 @@ import { Component, Prop } from 'vue-property-decorator';
 
 import { AppGameThumbnailPlaceholder } from '../../../../../_common/game/thumbnail/placeholder/placeholder';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { GameGridRowSizeLg, GameGridRowSizeMd, GameGridRowSizeSm } from '../grid';
 
 @View
@@ -18,7 +17,7 @@ export class AppGameGridPlaceholder extends Vue {
 	@Prop(Boolean) truncateToFit?: boolean;
 	@Prop(Boolean) scrollable?: boolean;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	get count() {
 		if (!this.truncateToFit) {

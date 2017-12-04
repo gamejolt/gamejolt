@@ -18,7 +18,6 @@ import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/
 import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { Popover } from '../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { filesize } from '../../../../../lib/gj-lib-client/vue/filters/filesize';
 import {
@@ -63,7 +62,7 @@ export class AppClientPackageCardButtons extends Vue {
 	downloadableUnsupported = false;
 	downloadableUnsupportedHasQuickPlay = false;
 
-	readonly Device = makeObservableService(Device);
+	readonly Device = Device;
 	readonly PatchState = PatchState;
 
 	get canInstall() {

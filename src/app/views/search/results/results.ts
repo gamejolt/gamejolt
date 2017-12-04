@@ -3,7 +3,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./results.html';
 
 import { Search } from '../../../components/search/search-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
@@ -30,8 +29,8 @@ export default class RouteSearchResults extends BaseRouteComponent {
 	@Prop(Object) payload: any;
 	@Prop(String) query: string;
 
-	Search = makeObservableService(Search);
-	Screen = makeObservableService(Screen);
+	readonly Search = Search;
+	readonly Screen = Screen;
 
 	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: Route) {

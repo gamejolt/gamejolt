@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
 import View from '!view!./account-popover.html?style=./account-popover.styl';
 
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
@@ -43,8 +42,8 @@ export class AppShellAccountPopover extends Vue {
 
 	walletAmount: number | false = false;
 
-	Screen = makeObservableService(Screen);
-	Connection = makeObservableService(Connection);
+	readonly Screen = Screen;
+	readonly Connection = Connection;
 
 	@Action logout: Store['logout'];
 

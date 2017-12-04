@@ -3,7 +3,6 @@ import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./intro.html?style=./intro.styl';
 
 import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Client } from '../../../../_common/client/client.service';
@@ -30,7 +29,7 @@ export class AppClientIntro extends Vue {
 		wrap: HTMLDivElement;
 	};
 
-	readonly Connection = makeObservableService(Connection);
+	readonly Connection = Connection;
 
 	async created() {
 		document.body.classList.add('client-intro-no-overflow');

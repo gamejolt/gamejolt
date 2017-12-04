@@ -3,7 +3,6 @@ import { State, Action } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./window.html?style=./window.styl';
 
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { ChatRoom } from '../room';
 import { ChatMessage } from '../message';
 import { ChatUserCollection } from '../user-collection';
@@ -42,8 +41,8 @@ export class AppChatWindow extends Vue {
 	isShowingUsers = false;
 	isDescriptionCollapsed = false;
 
-	ChatRoom = ChatRoom;
-	Screen = makeObservableService(Screen);
+	readonly ChatRoom = ChatRoom;
+	readonly Screen = Screen;
 
 	minimize() {
 		this.chat.minimizeRoom();

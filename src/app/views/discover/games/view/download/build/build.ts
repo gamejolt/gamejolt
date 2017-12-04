@@ -19,7 +19,6 @@ import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
@@ -56,8 +55,8 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 	recommendedGames: Game[] = [];
 	twitterShareMessage = '';
 
-	Screen = makeObservableService(Screen);
-	Environment = Environment;
+	readonly Screen = Screen;
+	readonly Environment = Environment;
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {

@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import View from '!view!./redlight.html?style=./redlight.styl';
 
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
@@ -63,10 +62,11 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 
 	readonly slogan = this.slogans[getRandomInt(0, this.slogans.length)];
 	readonly chosenHandle = this.handles[getRandomInt(0, this.handles.length)];
-	readonly tweet = `Hey @${this
-		.chosenHandle}! I think your games would be a good fit for Game Jolt #redlight #gamedev`;
+	readonly tweet = `Hey @${
+		this.chosenHandle
+	}! I think your games would be a good fit for Game Jolt #redlight #gamedev`;
 
-	readonly Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	get routeTitle() {
 		return `Redlight`;

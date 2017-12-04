@@ -2,7 +2,6 @@ import { Component } from 'vue-property-decorator';
 import View from '!view!./game.html';
 
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils/vue';
 import { RouteState, RouteStore, RouteAction } from '../manage.store';
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppExpand } from '../../../../../../lib/gj-lib-client/components/expand/expand';
@@ -30,6 +29,6 @@ export default class RouteDashGamesManageGame extends BaseRouteComponent {
 
 	@RouteAction saveDraft: RouteStore['saveDraft'];
 
-	Game = Game;
-	Screen = makeObservableService(Screen);
+	readonly Game = Game;
+	readonly Screen = Screen;
 }

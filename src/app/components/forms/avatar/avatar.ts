@@ -5,7 +5,6 @@ import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { AppFormControlUpload } from '../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 import { AppFormControlCrop } from '../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { filesize } from '../../../../lib/gj-lib-client/vue/filters/filesize';
@@ -44,7 +43,7 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 	maxSize = 0;
 
 	readonly filesize = filesize;
-	readonly Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	$refs: {
 		form: AppForm;

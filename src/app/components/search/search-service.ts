@@ -1,6 +1,7 @@
 import { SearchPayload } from './payload-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { store } from '../../store/index';
+import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 
 export interface SearchOptions {
 	type: 'all' | 'user' | 'game' | 'devlog' | 'typeahead';
@@ -73,3 +74,5 @@ export class Search {
 		return store.state.clientLibrary.searchInstalledGames(query, 3);
 	}
 }
+
+makeObservableService(Search);

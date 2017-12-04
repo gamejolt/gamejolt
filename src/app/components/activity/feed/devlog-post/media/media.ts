@@ -6,7 +6,6 @@ import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fir
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { ActivityFeedItem } from '../../item-service';
 import { MediaItem } from '../../../../../../lib/gj-lib-client/components/media-item/media-item-model';
-import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppImgResponsive } from '../../../../../../lib/gj-lib-client/components/img/responsive/responsive';
 import { AppVideo } from '../../../../../../lib/gj-lib-client/components/video/video';
@@ -38,7 +37,7 @@ export class AppActivityFeedDevlogPostMedia extends Vue {
 	isWaitingForFrame = false;
 	contentBootstrapped = false;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	created() {
 		this.activeMediaItem = this.post.media[0];

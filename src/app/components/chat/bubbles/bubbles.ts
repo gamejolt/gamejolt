@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
 import View from '!view!./bubbles.html?style=./bubbles.styl';
 
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../client';
 
@@ -14,7 +13,7 @@ export class AppChatBubbles extends Vue {
 	@State isRightPaneVisible: Store['isRightPaneVisible'];
 	@Action toggleRightPane: Store['toggleRightPane'];
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	activateRoom(roomId: number) {
 		if (!this.isRightPaneVisible) {

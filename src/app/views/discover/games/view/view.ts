@@ -8,7 +8,6 @@ import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppDiscoverGamesViewNav } from './_nav/nav';
@@ -86,7 +85,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@State app: Store['app'];
 
 	readonly date = date;
-	readonly Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	private ratingCallback?: Function;
 	private gaTrackingId?: string;
