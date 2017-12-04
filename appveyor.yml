@@ -1,6 +1,10 @@
 platform:
   - x86
 
+branches:
+  only:
+    - client-build
+
 install:
   - ps: Install-Product node 8.9.1
   - npm install -g yarn
