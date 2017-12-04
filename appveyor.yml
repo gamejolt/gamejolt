@@ -6,7 +6,7 @@ install:
   - npm install -g yarn
   - git submodule update --init --recursive
   - choco install -y InnoSetup
-  - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
+  - set PATH="C:\ProgramData\chocolatey\bin";%PATH%
 
 build_script:
   - yarn
