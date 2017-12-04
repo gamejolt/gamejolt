@@ -1,9 +1,9 @@
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { store } from '../../../store/index';
+import { VuexStore } from '../../../lib/gj-lib-client/utils/vuex';
+import { User } from '../../../lib/gj-lib-client/components/user/user.model';
+import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 
 export class ClientUser {
-	static init() {
+	static init(store: VuexStore) {
 		// We bootstrap the client with the previously stored user if there was any.
 		// This way they can access client offline with their previous user.
 		const localUser = localStorage.getItem('user');

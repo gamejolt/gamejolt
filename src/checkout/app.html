@@ -1,4 +1,4 @@
-<div>
+<div :class="{ 'is-client-offline': Connection.isClientOffline }">
 	<div id="shell">
 
 		<div id="header">
@@ -19,6 +19,7 @@
 			</app-error-page>
 		</div>
 
+		<app-client-base v-if="GJ_IS_CLIENT" />
 		<app-loading-bar />
 		<app-growls />
 		<app-modals />

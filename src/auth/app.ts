@@ -9,13 +9,22 @@ import { AppLoadingBar } from '../lib/gj-lib-client/components/loading/bar/bar';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { loadCurrentLanguage } from '../utils/translations';
 
+let components: any = {
+	AppLoadingBar,
+	AppGrowls,
+	AppErrorPage,
+};
+
+if (GJ_IS_CLIENT) {
+	components = {
+		...components,
+		...require('../_common/client/base/base'),
+	};
+}
+
 @View
 @Component({
-	components: {
-		AppLoadingBar,
-		AppGrowls,
-		AppErrorPage,
-	},
+	components,
 })
 export class App extends Vue {
 	Connection = makeObservableService(Connection);

@@ -15,22 +15,29 @@ import { AppJolticon } from '../lib/gj-lib-client/vue/components/jolticon/joltic
 import { date } from '../lib/gj-lib-client/vue/filters/date';
 import { loadCurrentLanguage } from '../utils/translations';
 import { Store } from './store/index';
+import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
+
+let components: any = {
+	AppErrorPage,
+	AppLoadingBar,
+	AppGrowls,
+	AppModals,
+	AppUserBar,
+	AppJolticon,
+};
 
 let ClientHistoryNavigatorMod: typeof _ClientHistoryNavigatorMod | undefined;
 if (GJ_IS_CLIENT) {
 	ClientHistoryNavigatorMod = require('../_common/client/history-navigator/history-navigator.service');
+	components = {
+		...components,
+		...require('../_common/client/base/base'),
+	};
 }
 
 @View
 @Component({
-	components: {
-		AppErrorPage,
-		AppLoadingBar,
-		AppGrowls,
-		AppModals,
-		AppUserBar,
-		AppJolticon,
-	},
+	components,
 	filters: {
 		date,
 	},
@@ -40,6 +47,7 @@ export class App extends Vue {
 
 	curDate = new Date();
 
+	readonly Connection = Connection;
 	readonly Environment = Environment;
 
 	mounted() {

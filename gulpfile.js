@@ -44,6 +44,7 @@ const config = {
 			title: 'Checkout - Game Jolt',
 			client: true,
 			crawl: false,
+			scripts: '<script type="text/javascript" src="https://js.stripe.com/v2/"></script>',
 		},
 		claim: {
 			title: 'Claim - Game Jolt',

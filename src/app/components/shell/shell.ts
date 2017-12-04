@@ -36,6 +36,7 @@ let components: any = {
 if (GJ_IS_CLIENT) {
 	components = {
 		...components,
+		...require('../../../_common/client/base/base'),
 		...require('./client/client'),
 		...require('../client/status-bar/status-bar'),
 	};
