@@ -13,8 +13,6 @@ import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { AppTimelineList } from '../../../../lib/gj-lib-client/components/timeline-list/timeline-list';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 
-// TODO(rewrite,cros) changing between feed and notifications is broken in client
-
 @View
 @Component({
 	components: {

@@ -62,7 +62,6 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 		this.isPolling = false;
 
 		// Focus back to the Client.
-		// TODO(client) test this
 		if (ClientMod) {
 			ClientMod.Client.show();
 		}

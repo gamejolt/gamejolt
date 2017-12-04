@@ -29,11 +29,6 @@ import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
 import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
-// import {
-// 	ClientLibraryAction,
-// 	ClientLibraryStore,
-// 	ClientLibraryState,
-// } from '../../../../store/client-library';
 import { AppUserFollowWidget } from '../../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
@@ -89,9 +84,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	storeModule = RouteStore;
 
 	@State app: Store['app'];
-
-	// @ClientLibraryState gamesById: ClientLibraryStore['gamesById'];
-	// @ClientLibraryAction syncGame: ClientLibraryStore['syncGame'];
 
 	readonly date = date;
 	readonly Screen = makeObservableService(Screen);
@@ -182,16 +174,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			Analytics.attachAdditionalPageTracker(this.game.ga_tracking_id);
 			this.gaTrackingId = this.game.ga_tracking_id;
 		}
-
-		// For syncing game data to client.
-		// TODO(rewrite) - test this - install a game, update something in it, visit the game page and see if it updates in localdb
-		// if (GJ_IS_CLIENT) {
-		// 	// Only sync if it's in library.
-		// 	const localGame = this.gamesById[this.game.id];
-		// 	if (localGame) {
-		// 		return this.syncGame([this.game.id, this.game]);
-		// 	}
-		// }
 	}
 
 	routeDestroy() {

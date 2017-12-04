@@ -96,9 +96,6 @@ export class AppClientGameButtons extends Vue {
 		const byPackageId = arrayGroupBy(packageData.installableBuilds!, 'game_package_id');
 		// If more than one package for their OS, then we have to show an install package modal.
 		if (Object.keys(byPackageId).length > 1) {
-			// TODO(rewrite,cros) this works and will show a popup to select package from these,
-			// but it looks weird if we also scroll and show a "please select package" in the game page,
-			// Should we both emit show-multiple-packages which causes the scroll AND open the modal?
 			ClientInstallPackageModal.show(this.game);
 			return;
 		}
