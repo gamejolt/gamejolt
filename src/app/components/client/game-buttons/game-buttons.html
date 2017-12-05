@@ -24,7 +24,7 @@
 	<template v-else>
 
 		<!-- If we're installing -->
-		<template v-if="localPackage.install_state || localPackage.update_state">
+		<span v-if="localPackage.install_state || localPackage.update_state">
 
 			<template v-if="localPackage.didInstallFail || localPackage.didUpdateFail">
 				<span class="tag tag-pink">
@@ -106,14 +106,14 @@
 				>
 				<app-jolticon icon="remove" />
 			</button>
-		</template>
+		</span>
 
-		<template v-if="localPackage.isSettled">
+		<span v-if="localPackage.isSettled">
 
 			<!--
 				Single game launching.
 			-->
-			<template v-if="gamePackages.length == 1">
+			<template v-if="gamePackages.length === 1">
 				<button
 					v-if="!localPackage.isRunning"
 					class="btn btn-primary-outline"
@@ -151,7 +151,7 @@
 					<translate>Launch</translate>
 				</button>
 			</template>
-		</template>
+		</span>
 
 		<button
 			v-if="!localPackage.install_state"
