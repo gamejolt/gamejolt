@@ -47,8 +47,6 @@ import {
 } from '../components/client/local-db/package/package.model';
 import { fuzzysearch } from '../../lib/gj-lib-client/utils/string';
 
-const sanitize = require('sanitize-filename');
-
 export const ClientLibraryState = namespace('clientLibrary', State);
 export const ClientLibraryAction = namespace('clientLibrary', Action);
 export const ClientLibraryMutation = namespace('clientLibrary', Mutation);
@@ -72,7 +70,6 @@ export type Actions = {
 };
 
 export type Mutations = {
-	'clientLibrary/gameSaved': LocalDbGame;
 	'clientLibrary/checkQueueSettings': undefined;
 	'clientLibrary/syncInit': undefined;
 	'clientLibrary/syncSetInterval': NodeJS.Timer;
@@ -85,7 +82,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private _bootstrapPromiseResolver: Function = null as any;
 
 	// Localdb variables
-	isLocalDbReady = false;
 	packages: LocalDbPackage[] = [];
 	games: LocalDbGame[] = [];
 
@@ -164,8 +160,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			Config.env = 'development';
 		}
 
-		this.setLocalDbReady(true);
-
 		this.installerInit();
 		this.launcherInit();
 
@@ -217,11 +211,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			.filter(i => fuzzysearch(query, i.title.toLowerCase()))
 			.sort((g1, g2) => g1.title.localeCompare(g2.title))
 			.slice(0, limit);
-	}
-
-	@VuexMutation
-	private setLocalDbReady(ready: boolean) {
-		this.isLocalDbReady = ready;
 	}
 
 	@VuexMutation
@@ -345,7 +334,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		try {
 			// We freeze the installation directory in time.
 			if (!localPackage.install_dir) {
-				const title = sanitize(localPackage.title || 'default');
+				const title = (localPackage.title || 'default').replace(/[\/\?<>\\:\*\|":]/g, '');
 				await this.setPackageInstallDir([
 					localPackage,
 					path.join(
