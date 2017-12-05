@@ -42,11 +42,13 @@ import { LocalDbPackage } from '../local-db/package/package.model';
 export class AppClientGameButtons extends Vue {
 	@ClientLibraryState packagesByGameId: ClientLibraryStore['packagesByGameId'];
 	@ClientLibraryState findActiveForGame: ClientLibraryStore['findActiveForGame'];
-	@ClientLibraryAction packageInstall: ClientLibraryStore['packageInstall'];
-	@ClientLibraryAction launcherLaunch: ClientLibraryStore['launcherLaunch'];
-	@ClientLibraryAction installerPause: ClientLibraryStore['installerPause'];
-	@ClientLibraryAction installerResume: ClientLibraryStore['installerResume'];
-	@ClientLibraryAction installerRetry: ClientLibraryStore['installerRetry'];
+
+	@ClientLibraryAction private packageInstall: ClientLibraryStore['packageInstall'];
+	@ClientLibraryAction private packageUninstall: ClientLibraryStore['packageUninstall'];
+	@ClientLibraryAction private launcherLaunch: ClientLibraryStore['launcherLaunch'];
+	@ClientLibraryAction private installerPause: ClientLibraryStore['installerPause'];
+	@ClientLibraryAction private installerResume: ClientLibraryStore['installerResume'];
+	@ClientLibraryAction private installerRetry: ClientLibraryStore['installerRetry'];
 
 	@Prop(Game) game: Game;
 	@Prop(Boolean) overlay?: boolean;
@@ -159,7 +161,7 @@ export class AppClientGameButtons extends Vue {
 		}
 
 		Analytics.trackEvent('client-game-buttons', 'cancel-install');
-		this.localPackage.uninstall(false);
+		this.packageUninstall([this.localPackage, false]);
 	}
 
 	retryInstall() {
@@ -194,7 +196,7 @@ export class AppClientGameButtons extends Vue {
 		});
 	}
 
-	uninstallPackage(localPackage: LocalDbPackage) {
+	async uninstallPackage(localPackage: LocalDbPackage) {
 		// If running, do nothing.
 		if (localPackage.isRunning) {
 			return;
@@ -202,6 +204,7 @@ export class AppClientGameButtons extends Vue {
 
 		Analytics.trackEvent('client-game-buttons', 'uninstall');
 		Popover.hideAll();
-		return localPackage.uninstall(false);
+
+		await this.packageUninstall([localPackage, false]);
 	}
 }

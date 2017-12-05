@@ -17,6 +17,12 @@ export class LocalDb extends Dexie {
 		this.games.mapToClass(LocalDbGame);
 		this.packages.mapToClass(LocalDbPackage);
 
+		// this.games.hook('reading', obj => {
+		// 	obj.hydrate();
+		// 	console.log('reading hook', obj);
+		// 	return obj;
+		// });
+
 		this.open();
 	}
 }

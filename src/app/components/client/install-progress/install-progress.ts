@@ -4,7 +4,7 @@ import { Component, Prop } from 'vue-property-decorator';
 
 import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';
 import { duration } from '../../../../lib/gj-lib-client/vue/filters/duration';
-import { LocalDbPackage, PatchState } from '../local-db/package/package.model';
+import { LocalDbPackage, LocalDbPackagePatchState } from '../local-db/package/package.model';
 
 @View
 @Component({
@@ -33,16 +33,16 @@ export class AppClientInstallProgress extends Vue {
 
 	get packageProgress() {
 		const state = this.patchState;
-		if (state === PatchState.DOWNLOADING) {
+		if (state === LocalDbPackagePatchState.DOWNLOADING) {
 			return this.localPackage.download_progress;
-		} else if (state === PatchState.UNPACKING) {
+		} else if (state === LocalDbPackagePatchState.UNPACKING) {
 			return this.localPackage.unpack_progress;
 		}
 		return null;
 	}
 
 	get shouldShowSpeed() {
-		return this.patchState === PatchState.DOWNLOADING;
+		return this.patchState === LocalDbPackagePatchState.DOWNLOADING;
 	}
 
 	get timeLeft() {

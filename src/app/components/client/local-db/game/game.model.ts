@@ -1,38 +1,22 @@
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { ReturnTypeSetGameFieldsAndSave } from '../../../../store/client-library';
-import { store } from '../../../../store/index';
+import { LocalDbModel } from '../model.service';
+import { MediaItem } from '../../../../../lib/gj-lib-client/components/media-item/media-item-model';
 
-export type DbField = {
-	id: 'id';
-	title: 'title';
-	slug: 'slug';
-	img_thumbnail: 'img_thumbnail';
-	compatibility: 'compatibility';
-	modified_on: 'modified_on';
-	developer: 'developer';
-};
+export class LocalDbGame implements LocalDbModel<LocalDbGame> {
+	private static readonly CachedGames = new WeakMap<LocalDbGame, Game>();
 
-export const DbFieldMapping: DbField = {
-	id: 'id',
-	title: 'title',
-	slug: 'slug',
-	img_thumbnail: 'img_thumbnail',
-	compatibility: 'compatibility',
-	modified_on: 'modified_on',
-	developer: 'developer',
-};
-
-export type DbFieldTypes = { [key in keyof DbField]: LocalDbGame[DbField[key]] };
-
-export class LocalDbGame {
 	id = 0;
 
 	title = '';
 	slug = '';
-	img_thumbnail = '';
-	// header_media_item?: MediaItem;
-	compatibility: any = null;
 	modified_on = 0;
+
+	// Shouldn't this have fields/types?
+	compatibility: any = null;
+
+	// TODO: Fix this... it's wrong.
+	header_media_item: MediaItem | null = null;
+	thumbnail_media_item: MediaItem | null = null;
 
 	developer = {
 		id: 0,
@@ -43,67 +27,44 @@ export class LocalDbGame {
 		img_avatar: '',
 	};
 
-	_game: Game;
+	get _game() {
+		let game = LocalDbGame.CachedGames.get(this);
+		if (!game) {
+			game = new Game(this);
+			LocalDbGame.CachedGames.set(this, game);
+		}
 
-	static fromGame(game: Game) {
-		const localGame = new LocalDbGame();
-		localGame.setData(game);
-
-		// TODO(rewrite) check if reactivity is fucked up when fields on _game are modified
-		localGame._game = new Game(game);
-
-		return localGame;
+		return game;
 	}
 
-	setData(data: DbFieldTypes) {
-		const dev = data.developer;
-		this.setGameFields({
-			id: data.id,
-			title: data.title,
-			slug: data.slug,
-			img_thumbnail: data.img_thumbnail,
-			// header_media_item
-			compatibility: data.compatibility,
-			modified_on: data.modified_on,
+	// hydrate() {
+	// 	if (this.header_media_item) {
+	// 		this.header_media_item = new MediaItem(this.header_media_item);
+	// 	}
 
-			developer: {
-				id: dev.id,
-				username: dev.username,
-				name: dev.name,
-				display_name: dev.display_name,
-				slug: dev.slug,
-				img_avatar: dev.img_avatar,
-			},
-		});
-	}
+	// 	if (this.thumbnail_media_item) {
+	// 		this.thumbnail_media_item = new MediaItem(this.thumbnail_media_item);
+	// 	}
+	// }
 
-	setDataAndSave(data: DbFieldTypes) {
-		const dev = data.developer;
-		return this.setGameFieldsAndSave({
-			id: data.id,
-			title: data.title,
-			slug: data.slug,
-			img_thumbnail: data.img_thumbnail,
-			// header_media_item
-			compatibility: data.compatibility,
-			modified_on: data.modified_on,
+	set(data: Partial<LocalDbGame>) {
+		const updateData = Object.assign({}, this, data);
 
-			developer: {
-				id: dev.id,
-				username: dev.username,
-				name: dev.name,
-				display_name: dev.display_name,
-				slug: dev.slug,
-				img_avatar: dev.img_avatar,
-			},
-		});
-	}
+		this.id = updateData.id;
+		this.title = updateData.title;
+		this.slug = updateData.slug;
+		this.compatibility = updateData.compatibility;
+		this.modified_on = updateData.modified_on;
 
-	private setGameFieldsAndSave(fields: Partial<DbFieldTypes>): ReturnTypeSetGameFieldsAndSave {
-		return store.dispatch('clientLibrary/setGameFieldsAndSave', [this, fields]) as any;
-	}
+		this.developer.id = updateData.developer.id;
+		this.developer.username = updateData.developer.username;
+		this.developer.name = updateData.developer.name;
+		this.developer.display_name = updateData.developer.display_name;
+		this.developer.slug = updateData.developer.slug;
+		this.developer.img_avatar = updateData.developer.img_avatar;
 
-	private setGameFields(fields: Partial<DbFieldTypes>) {
-		store.commit('clientLibrary/setGameFields', [this, fields]);
+		// Copy full data for these.
+		this.thumbnail_media_item = updateData.thumbnail_media_item;
+		this.header_media_item = updateData.header_media_item;
 	}
 }

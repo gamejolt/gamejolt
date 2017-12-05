@@ -2,7 +2,6 @@ import {
 	Config,
 	Launcher,
 	LaunchInstance,
-	MsgResultResponse,
 	OldLaunchInstance,
 	Patcher,
 	PatchEvents,
@@ -21,7 +20,6 @@ import { Action, Mutation, namespace, State } from 'vuex-class';
 import { Settings } from '../../_common/settings/settings.service';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { Device } from '../../lib/gj-lib-client/components/device/device.service';
-import { EventBus } from '../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { GameBuild } from '../../lib/gj-lib-client/components/game/build/build.model';
 import { GameBuildLaunchOption } from '../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
 import { Game } from '../../lib/gj-lib-client/components/game/game.model';
@@ -37,22 +35,16 @@ import {
 	VuexMutation,
 	VuexStore,
 } from '../../lib/gj-lib-client/utils/vuex';
-import {
-	DbFieldTypes as GameFields,
-	LocalDbGame,
-} from '../components/client/local-db/game/game.model';
-import { DbFieldMapping as GameDbFields } from '../components/client/local-db/game/game.model';
+import { LocalDbGame } from '../components/client/local-db/game/game.model';
 import { db } from '../components/client/local-db/local-db.service';
 import {
-	PatchState,
-	Progress,
-	RemoveState as PackageRemoveState,
-} from '../components/client/local-db/package/package.model';
-import {
-	DbFieldTypes as PackageFields,
 	LocalDbPackage,
+	LocalDbPackagePid,
+	LocalDbPackagePatchState,
+	LocalDbPackageProgress,
+	LocalDbPackageRemoveState,
+	LocalDbPackageRunState,
 } from '../components/client/local-db/package/package.model';
-import { DbFieldMapping as PackageDbFields } from '../components/client/local-db/package/package.model';
 import { fuzzysearch } from '../../lib/gj-lib-client/utils/string';
 
 const sanitize = require('sanitize-filename');
@@ -61,11 +53,9 @@ export const ClientLibraryState = namespace('clientLibrary', State);
 export const ClientLibraryAction = namespace('clientLibrary', Action);
 export const ClientLibraryMutation = namespace('clientLibrary', Mutation);
 
+// These are only the public actions/mutations.
 export type Actions = {
 	'clientLibrary/bootstrap': undefined;
-	'clientLibrary/clear': undefined;
-	'clientLibrary/setPackageFieldsAndSave': [LocalDbPackage, Partial<PackageFields>];
-	'clientLibrary/setGameFieldsAndSave': [LocalDbGame, Partial<GameFields>];
 	'clientLibrary/packageInstall': [
 		Game,
 		GamePackage,
@@ -75,102 +65,19 @@ export type Actions = {
 	];
 	'clientLibrary/packageStartUpdate': [LocalDbPackage, number];
 	'clientLibrary/packageUninstall': [LocalDbPackage, boolean];
-	'clientLibrary/installerInit': undefined;
-	'clientLibrary/retryAllInstallations': undefined;
 	'clientLibrary/installerRetry': LocalDbPackage;
-	'clientLibrary/installerInstall': [LocalDbGame, LocalDbPackage];
 	'clientLibrary/installerPause': LocalDbPackage;
 	'clientLibrary/installerResume': LocalDbPackage;
-	'clientLibrary/installerCancel': LocalDbPackage;
-	'clientLibrary/installerRollback': LocalDbPackage;
-	'clientLibrary/installerUninstall': LocalDbPackage;
-	'clientLibrary/launcherInit': undefined;
 	'clientLibrary/launcherLaunch': LocalDbPackage;
-	'clientLibrary/launcherReattach': LocalDbPackage;
-	'clientLibrary/launcherAttach': [LocalDbPackage, LaunchInstance | OldLaunchInstance];
-	'clientLibrary/launcherClear': LocalDbPackage;
-	'clientLibrary/syncCheck': undefined;
-	'clientLibrary/syncGame': [number, GameFields];
-	'clientLibrary/syncPackage': [number, any];
 };
 
 export type Mutations = {
-	'clientLibrary/_startBootstrap': undefined;
-	'clientLibrary/_bootstrap': {
-		packages: LocalDbPackage[];
-		games: LocalDbGame[];
-	};
-	'clientLibrary/setLocalDbReady': boolean;
-	'clientLibrary/setCurrentlyPatching': [LocalDbPackage, PatchInstance];
-	'clientLibrary/unsetCurrentlyPatching': LocalDbPackage;
-	'clientLibrary/setCurrentlyUninstalling': [LocalDbPackage, Promise<void>];
-	'clientLibrary/unsetCurrentlyUninstalling': LocalDbPackage;
-	'clientLibrary/setPackageFields': Actions['clientLibrary/setPackageFieldsAndSave'];
-	'clientLibrary/setGameFields': Actions['clientLibrary/setGameFieldsAndSave'];
+	'clientLibrary/gameSaved': LocalDbGame;
 	'clientLibrary/checkQueueSettings': undefined;
-	'clientLibrary/setLauncherReady': boolean;
-	'clientLibrary/setCurrentlyPlaying': LocalDbPackage;
-	'clientLibrary/unsetCurrentlyPlaying': LocalDbPackage;
 	'clientLibrary/syncInit': undefined;
 	'clientLibrary/syncSetInterval': NodeJS.Timer;
 	'clientLibrary/syncClear': undefined;
 };
-
-// Action types
-// Type aliases can't be used as async function return types because of a nasty Typescript compiler bug.
-// It fails to detect the down-level aliased Promise type is compilant with the es3/5 promises, so it has to be backed with a type.
-// See https://github.com/Microsoft/TypeScript/issues/12776 for more info
-export type ReturnTypeBootstrap = Promise<void>;
-export type ReturnTypeClear = Promise<void>;
-export type ReturnTypeSetPackageFieldsAndSave = Promise<number>;
-export type ReturnTypeSetGameFieldsAndSave = Promise<number>;
-export type ReturnTypePackageInstall = Promise<void>;
-export type ReturnTypePackageStartUpdate = Promise<boolean>;
-export type ReturnTypePackageUninstall = Promise<void>;
-export type ReturnTyeInstallerInit = Promise<Promise<void>[]>;
-export type ReturnTypeRetryAllInstallations = Promise<Promise<void>[]>;
-export type ReturnTypeInstallerRetry = Promise<void>;
-export type ReturnTypeInstallerInstall = Promise<void>;
-export type ReturnTypeInstallerPause = Promise<MsgResultResponse>;
-export type ReturnTypeInstallerResume = Promise<MsgResultResponse | void>;
-export type ReturnTypeInstallerCancel = Promise<boolean>;
-export type ReturnTypeInstallerRollback = Promise<number>;
-export type ReturnTypeInstallerUninstall = Promise<void>;
-export type ReturnTypeLauncherInit = Promise<void>;
-export type ReturnTypeLauncherLaunch = Promise<void>;
-export type ReturnTypeLauncherReattach = Promise<void>;
-export type ReturnTypeLauncherAttach = Promise<number>;
-export type ReturnTypeLauncherClear = Promise<number>;
-export type ReturnTypeSyncInit = Promise<void>;
-export type ReturnTypeSyncCheck = Promise<[number[], number[], boolean[]]>;
-export type ReturnTypeSyncGame = Promise<number>;
-export type ReturnTypeSyncPackage = Promise<number>;
-
-export const ReturnTypeBootstrap = Promise;
-export const ReturnTypeClear = Promise;
-export const ReturnTypeSetPackageFieldsAndSave = Promise;
-export const ReturnTypeSetGameFieldsAndSave = Promise;
-export const ReturnTypePackageInstall = Promise;
-export const ReturnTypePackageStartUpdate = Promise;
-export const ReturnTypePackageUninstall = Promise;
-export const ReturnTyeInstallerInit = Promise;
-export const ReturnTypeRetryAllInstallations = Promise;
-export const ReturnTypeInstallerRetry = Promise;
-export const ReturnTypeInstallerInstall = Promise;
-export const ReturnTypeInstallerPause = Promise;
-export const ReturnTypeInstallerResume = Promise;
-export const ReturnTypeInstallerCancel = Promise;
-export const ReturnTypeInstallerRollback = Promise;
-export const ReturnTypeInstallerUninstall = Promise;
-export const ReturnTypeLauncherInit = Promise;
-export const ReturnTypeLauncherLaunch = Promise;
-export const ReturnTypeLauncherReattach = Promise;
-export const ReturnTypeLauncherAttach = Promise;
-export const ReturnTypeLauncherClear = Promise;
-export const ReturnTypeSyncInit = Promise;
-export const ReturnTypeSyncCheck = Promise;
-export const ReturnTypeSyncGame = Promise;
-export const ReturnTypeSyncPackage = Promise;
 
 @VuexModule()
 export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, Mutations> {
@@ -184,17 +91,61 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 	// Installer variables
 	currentlyPatching: { [packageId: number]: PatchInstance } = {};
-	private currentlyUninstalling: { [packageId: number]: Promise<void> | undefined } = {};
+	currentlyUninstalling: { [packageId: number]: Promise<void> | undefined } = {};
 
 	// Launcher variables
 	isLauncherReady = false;
 	currentlyPlaying: LocalDbPackage[] = [];
 
-	// Syncer variables
-	private syncCheckInterval: NodeJS.Timer = null as any;
+	get packagesById() {
+		return arrayIndexBy(this.packages, 'id');
+	}
+
+	get gamesById() {
+		return arrayIndexBy(this.games, 'id');
+	}
+
+	get packagesByGameId() {
+		return arrayGroupBy(this.packages, 'game_id');
+	}
+
+	get runningPackageIds() {
+		return this.currentlyPlaying.map(localPackage => localPackage.id);
+	}
+
+	get numPlaying() {
+		return this.currentlyPlaying.length;
+	}
+
+	get numPatching() {
+		return Object.keys(this.currentlyPatching).length;
+	}
+
+	get totalPatchProgress() {
+		if (!this.numPatching) {
+			return null;
+		}
+
+		let currentProgress = 0;
+		let numPatching = this.numPatching;
+		for (let packageId in this.currentlyPatching) {
+			const progress = this.packagesById[packageId].patchProgress;
+
+			// If the progress is null, we don't count that package progress as part of the total
+			// progress, because it means there was some unexpected error with the stored package.
+			if (progress === null) {
+				numPatching -= 1;
+				continue;
+			}
+
+			currentProgress += progress;
+		}
+
+		return currentProgress / numPatching;
+	}
 
 	@VuexAction
-	async bootstrap(): ReturnTypeBootstrap {
+	async bootstrap() {
 		if (this._bootstrapPromise) {
 			return;
 		}
@@ -217,7 +168,9 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 		this.installerInit();
 		this.launcherInit();
-		this.syncInit();
+
+		this.syncCheck();
+		setInterval(() => this.syncCheck(), 60 * 60 * 1000); // 1hr currently
 
 		this._bootstrapPromiseResolver();
 	}
@@ -230,64 +183,9 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	private _bootstrap({ packages, games }: Mutations['clientLibrary/_bootstrap']) {
-		for (let localPackage of packages) {
-			localPackage.setBuildData(localPackage.build);
-		}
+	private _bootstrap({ packages, games }: { packages: LocalDbPackage[]; games: LocalDbGame[] }) {
 		this.packages = packages;
-
-		for (let localGame of games) {
-			localGame._game = new Game(localGame);
-		}
 		this.games = games;
-
-		// If we need to do something like cross process indexeddb changes we'd have to use these hooks.
-		// These allow us to reflect changes to indexeddb in the store's local games and packages arrays.
-		// We have to make sure we do everything when the transaction completes and not before.
-		// db.games.hook('creating', (_id, localGame, trans) => {
-		// 	trans.on('complete', () => {
-		// 		this.games.push(localGame);
-		// 	});
-		// });
-		// db.packages.hook('creating', (_id, localPackage, trans) => {
-		// 	trans.on('complete', () => {
-		// 		this.packages.push(localPackage);
-		// 	});
-		// });
-		// db.games.hook('deleting', (id, _localGame, trans) => {
-		// 	trans.on('complete', () => {
-		// 		arrayRemove(this.games, localGame => localGame.id === id);
-		// 	});
-		// });
-		// db.packages.hook('deleting', (id, _localPackage, trans) => {
-		// 	trans.on('complete', () => {
-		// 		arrayRemove(this.packages, localPackage => localPackage.id === id);
-		// 	});
-		// });
-	}
-
-	@VuexAction
-	async clear(): ReturnTypeClear {
-		if (this._bootstrapPromise) {
-			await this._bootstrapPromise;
-		}
-
-		// TODO(rewrite): clear stuff
-		this.syncClear();
-
-		this._bootstrapPromise = null;
-	}
-
-	get packagesById() {
-		return arrayIndexBy(this.packages, 'id');
-	}
-
-	get gamesById() {
-		return arrayIndexBy(this.games, 'id');
-	}
-
-	get packagesByGameId() {
-		return arrayGroupBy(this.packages, 'game_id');
 	}
 
 	/**
@@ -322,54 +220,25 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	setLocalDbReady(ready: Mutations['clientLibrary/setLocalDbReady']) {
+	private setLocalDbReady(ready: boolean) {
 		this.isLocalDbReady = ready;
 	}
 
-	get numPatching() {
-		return Object.keys(this.currentlyPatching).length;
-	}
-
 	@VuexMutation
-	private setCurrentlyPatching(
-		[localPackage, patchInstance]: Mutations['clientLibrary/setCurrentlyPatching']
-	) {
+	private setCurrentlyPatching([localPackage, patchInstance]: [LocalDbPackage, PatchInstance]) {
 		if (!this.currentlyPatching[localPackage.id]) {
 			Vue.set(this.currentlyPatching, localPackage.id + '', patchInstance);
 		}
 	}
 
 	@VuexMutation
-	private unsetCurrentlyPatching(localPackage: Mutations['clientLibrary/unsetCurrentlyPatching']) {
+	private unsetCurrentlyPatching(localPackage: LocalDbPackage) {
 		Vue.delete(this.currentlyPatching, localPackage.id + '');
-	}
-
-	get totalPatchProgress() {
-		if (!this.numPatching) {
-			return null;
-		}
-
-		let currentProgress = 0;
-		let numPatching = this.numPatching;
-		for (let packageId in this.currentlyPatching) {
-			const progress = this.packagesById[packageId].patchProgress;
-
-			// If the progress is null, we don't count that package progress as part of the total
-			// progress, because it means there was some unexpected error with the stored package.
-			if (progress === null) {
-				numPatching -= 1;
-				continue;
-			}
-
-			currentProgress += progress;
-		}
-
-		return currentProgress / numPatching;
 	}
 
 	@VuexMutation
 	private setCurrentlyUninstalling(
-		[localPackage, uninstallPromise]: Mutations['clientLibrary/setCurrentlyUninstalling']
+		[localPackage, uninstallPromise]: [LocalDbPackage, Promise<void>]
 	) {
 		if (this.currentlyUninstalling[localPackage.id]) {
 			return;
@@ -379,9 +248,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	private unsetCurrentlyUninstalling(
-		localPackage: Mutations['clientLibrary/unsetCurrentlyUninstalling']
-	) {
+	private unsetCurrentlyUninstalling(localPackage: LocalDbPackage) {
 		if (!this.currentlyUninstalling[localPackage.id]) {
 			return;
 		}
@@ -389,56 +256,706 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		Vue.delete(this.currentlyUninstalling, localPackage.id + '');
 	}
 
-	@VuexAction
-	async setPackageFieldsAndSave(
-		[localPackage, fields]: Actions['clientLibrary/setPackageFieldsAndSave']
-	): ReturnTypeSetPackageFieldsAndSave {
-		this.setPackageFields([localPackage, fields]);
-		const dbId = await db.packages.put(localPackage);
-		if (!this.packagesById[localPackage.id]) {
-			this.packages.push(localPackage);
+	@VuexMutation
+	checkQueueSettings() {
+		Queue.faster = {
+			downloads: Settings.get('max-download-count'),
+			extractions: Settings.get('max-extract-count'),
+		};
+
+		if (Settings.get('queue-when-playing')) {
+			Queue.slower = {
+				downloads: 0,
+				extractions: 0,
+			};
+		} else {
+			Queue.slower = Queue.faster;
 		}
-		return dbId;
+	}
+
+	@VuexAction
+	private installerInit() {
+		this.checkQueueSettings();
+		return this.retryAllInstallations();
+	}
+
+	@VuexAction
+	private retryAllInstallations() {
+		const promises = [];
+		// This will retry to install anything that was installing before client was closed.
+		for (let packageId in this.packages) {
+			const localPackage = this.packages[packageId];
+			if (localPackage.isPatching && !localPackage.isPatchPaused) {
+				promises.push(this.installerRetry(localPackage));
+			}
+		}
+
+		return Promise.resolve(promises);
+	}
+
+	@VuexAction
+	async installerRetry(localPackage: Actions['clientLibrary/installerRetry']) {
+		// Reset states.
+		const downloadStates = [
+			LocalDbPackagePatchState.DOWNLOADING,
+			LocalDbPackagePatchState.DOWNLOAD_FAILED,
+		];
+		const unpackStates = [
+			LocalDbPackagePatchState.UNPACKING,
+			LocalDbPackagePatchState.UNPACK_FAILED,
+		];
+
+		if (localPackage.install_state) {
+			if (downloadStates.indexOf(localPackage.install_state) !== -1) {
+				this.setPackageInstallState([localPackage, LocalDbPackagePatchState.PATCH_PENDING]);
+			} else if (unpackStates.indexOf(localPackage.install_state) !== -1) {
+				this.setPackageInstallState([localPackage, LocalDbPackagePatchState.DOWNLOADED]);
+			}
+		} else if (localPackage.update_state) {
+			if (downloadStates.indexOf(localPackage.update_state || '') !== -1) {
+				this.setPackageUpdateState([localPackage, LocalDbPackagePatchState.PATCH_PENDING]);
+			} else if (unpackStates.indexOf(localPackage.update_state || '') !== -1) {
+				this.setPackageUpdateState([localPackage, LocalDbPackagePatchState.DOWNLOADED]);
+			}
+		}
+
+		const game = this.gamesById[localPackage.game_id];
+		return this.doPatch([game, localPackage]);
+	}
+
+	@VuexAction
+	private async doPatch([localGame, localPackage]: [LocalDbGame, LocalDbPackage]) {
+		const packageId = localPackage.id;
+		const authTokenGetter = () => LocalDbPackage.getAccessToken(packageId);
+
+		let authToken = '';
+		try {
+			authToken = await authTokenGetter();
+		} catch (err) {
+			console.log(`Could not get access token for package ${packageId}`);
+			console.warn(err);
+		}
+
+		const operation = localPackage.install_state ? 'install' : 'update';
+		let packageTitle = localPackage.title || localGame.title;
+		if (packageTitle !== localGame.title) {
+			packageTitle += ' for ' + localGame.title;
+		}
+
+		try {
+			// We freeze the installation directory in time.
+			if (!localPackage.install_dir) {
+				const title = sanitize(localPackage.title || 'default');
+				await this.setPackageInstallDir([
+					localPackage,
+					path.join(
+						Settings.get('game-install-dir'),
+						`${localGame.slug}-${localGame.id}`,
+						`${title}-${packageId}`
+					),
+				]);
+			}
+
+			// This is a very specific edge case.
+			// Normally when you pause an installation/update, the joltron process hangs around.
+			// This allows us to resume it easily with the installerResume function that simply
+			// sends the existing process a resume message and continue with its existing promise chain.
+			// However, if the operation was paused and the client was closed, when the user boots the client
+			// back up again it'll attempt to retry all the installations that were in progress automatically
+			// by calling installerRetry, which will end up calling this method.
+			// Issue is that the package status will still be paused from the previous run so we need to
+			// flick it back to resumed before continuing.
+			if (localPackage.isPatchPaused) {
+				await this.setPackagePatchResumed(localPackage);
+			}
+
+			const patchInstance = await Patcher.patch(localPackage as any, authTokenGetter, {
+				authToken,
+			});
+			const canceled = await new Promise<boolean>((resolve, reject) => {
+				this.setCurrentlyPatching([localPackage, patchInstance]);
+
+				const listeners: Partial<PatchEvents> = {};
+				const cleanupListeners = () => {
+					// Remove all listeners we bound to patch instance so it won't update the
+					// local package after the operation is done.
+					// This addresses a race condition where we might receive a message from joltron
+					// while trying to remove the package model from indexeddb. reciving a message
+					// will attempt to update the localdb model but since updates are basically upserts
+					// it might re-add a package we just removed!
+					for (let i_event in listeners) {
+						const event: keyof PatchEvents = i_event as any;
+						patchInstance.removeListener(event, listeners[event]!);
+						delete listeners[event];
+					}
+				};
+
+				patchInstance
+					.on(
+						'state',
+						(listeners.state = state => {
+							switch (state) {
+								case PatcherState.Downloading:
+									if (localPackage.install_state) {
+										this.setPackageInstallState([
+											localPackage,
+											LocalDbPackagePatchState.DOWNLOADING,
+										]);
+									} else if (localPackage.update_state) {
+										this.setPackageUpdateState([
+											localPackage,
+											LocalDbPackagePatchState.DOWNLOADING,
+										]);
+									}
+									break;
+
+								case PatcherState.Patching:
+									// No longer needed.
+									this.setPackageDownloadProgress([localPackage, null]);
+
+									if (localPackage.install_state) {
+										this.setPackageInstallState([localPackage, LocalDbPackagePatchState.UNPACKING]);
+									} else if (localPackage.update_state) {
+										this.setPackageUpdateState([localPackage, LocalDbPackagePatchState.UNPACKING]);
+									}
+									break;
+							}
+						})
+					)
+					.on(
+						'progress',
+						(listeners.progress = progress => {
+							const progressType = progress.type;
+
+							const newProgress: LocalDbPackageProgress = {
+								// Newer version of client voodoo return progress as an integer between 0-100,
+								// but old client-voodoo returned a float between 0-1.
+								// To maintain compatibility, make this function return the float always.
+								progress: progress.percent / 100,
+
+								timeLeft: Math.round(
+									(progress.total - progress.current) /
+										(progress.sample ? progress.sample.movingAverage : 1)
+								),
+
+								// divide by 1024 to convert to kbps
+								rate: progress.sample ? Math.round(progress.sample.movingAverage / 1024) : 0,
+							};
+
+							if (progressType === 'download') {
+								this.setPackageDownloadProgress([localPackage, newProgress]);
+							} else {
+								this.setPackageUnpackProgress([localPackage, newProgress]);
+							}
+						})
+					)
+					.on(
+						'paused',
+						(listeners.paused = queued => {
+							console.log(
+								'Pause received in gamejolt repo. From queue: ' + (queued ? 'yes' : 'no')
+							);
+
+							if (queued) {
+								this.setPackagePatchQueued(localPackage);
+							} else {
+								this.setPackagePatchPaused(localPackage);
+							}
+						})
+					)
+					.on(
+						'resumed',
+						(listeners.resumed = unqueued => {
+							console.log(
+								'Resume received in gamejolt repo. From queue: ' + (unqueued ? 'yes' : 'no')
+							);
+
+							if (unqueued) {
+								this.setPackagePatchUnqueued(localPackage);
+							} else {
+								this.setPackagePatchResumed(localPackage);
+							}
+						})
+					)
+					.on(
+						'updateFailed',
+						(listeners.updateFailed = reason => {
+							cleanupListeners();
+
+							// If the update was canceled the 'context canceled' will be emitted as the updateFailed reason.
+							if (reason === 'context canceled') {
+								return resolve(true);
+							}
+							reject(new Error(reason));
+						})
+					)
+					.on(
+						'updateFinished',
+						(listeners.updateFinished = () => {
+							cleanupListeners();
+							resolve(false);
+						})
+					)
+					.on(
+						'fatal',
+						(listeners.fatal = err => {
+							cleanupListeners();
+
+							console.log('Received fatal error in patcher in gamejolt repo: ' + err.message);
+							reject(err);
+						})
+					);
+			});
+
+			this.unsetCurrentlyPatching(localPackage);
+
+			if (!canceled) {
+				if (localPackage.install_state) {
+					await this.clearPackageOperations(localPackage);
+				} else if (localPackage.update_state) {
+					await this.setPackageUpdateComplete(localPackage);
+				}
+
+				const action =
+					operation === 'install' ? 'finished installing' : 'updated to the latest version';
+				const title = operation === 'install' ? 'Game Installed' : 'Game Updated';
+				Growls.success(`${packageTitle} has ${action}.`, title);
+			} else {
+				console.log('installerInstall: Handling canceled installation');
+				// If we were cancelling the first installation - we have to treat the package as uninstalled.
+				// By this point we can assume joltron has removed it from disk.
+				if (operation === 'install') {
+					console.log(
+						'installerInstall: This is a first installation. Marking as uninstalled from db with packageUninstall(true)'
+					);
+
+					// Calling uninstall normally attempts to spawn a client voodoo uninstall instance.
+					// Override that because the uninstallation should be done automatically by the installation process.
+					await this.packageUninstall([localPackage, true]);
+				} else {
+					console.log(
+						'installerInstall: This is an update operation. Attempting to rollback with installerRollback'
+					);
+					try {
+						await this.installerRollback(localPackage);
+						Growls.success(`${packageTitle} aborted the update.`, 'Update Aborted');
+					} catch (err) {
+						if (localPackage.update_state === LocalDbPackagePatchState.UNPACKING) {
+							await this.setPackageUpdateState([
+								localPackage,
+								LocalDbPackagePatchState.UNPACK_FAILED,
+							]);
+						} else {
+							await this.setPackageUpdateState([
+								localPackage,
+								LocalDbPackagePatchState.DOWNLOAD_FAILED,
+							]);
+						}
+						Growls.error(
+							`${packageTitle} cannot abort at this time. Retry or uninstall it.`,
+							'Update Failed'
+						);
+					}
+				}
+			}
+		} catch (err) {
+			console.error(err);
+
+			const action = operation === 'install' ? 'install' : 'update';
+			const title = operation === 'install' ? 'Installation Failed' : 'Update Failed';
+			Growls.error(`${packageTitle} failed to ${action}.`, title);
+
+			if (localPackage.install_state) {
+				if (localPackage.install_state === LocalDbPackagePatchState.UNPACKING) {
+					await this.setPackageInstallState([localPackage, LocalDbPackagePatchState.UNPACK_FAILED]);
+				} else {
+					await this.setPackageInstallState([
+						localPackage,
+						LocalDbPackagePatchState.DOWNLOAD_FAILED,
+					]);
+				}
+			} else if (localPackage.update_state) {
+				if (localPackage.update_state === LocalDbPackagePatchState.UNPACKING) {
+					await this.setPackageUpdateState([localPackage, LocalDbPackagePatchState.UNPACK_FAILED]);
+				} else {
+					await this.setPackageUpdateState([
+						localPackage,
+						LocalDbPackagePatchState.DOWNLOAD_FAILED,
+					]);
+				}
+			}
+
+			this.unsetCurrentlyPatching(localPackage);
+		}
+	}
+
+	@VuexAction
+	installerPause(localPackage: Actions['clientLibrary/installerPause']) {
+		const patchInstance = this.currentlyPatching[localPackage.id];
+		if (!patchInstance) {
+			throw new Error('Package is not installing.');
+		}
+
+		return patchInstance.pause();
+	}
+
+	@VuexAction
+	async installerResume(localPackage: Actions['clientLibrary/installerResume']) {
+		const patchInstance = this.currentlyPatching[localPackage.id];
+		if (!patchInstance) {
+			return this.installerRetry(localPackage);
+		}
+
+		let authToken = '';
+		try {
+			authToken = await LocalDbPackage.getAccessToken(localPackage.id);
+		} catch (err) {
+			console.log(`Could not get access token for package ${localPackage.id}`);
+			console.error(err);
+		}
+
+		return patchInstance.resume({ authToken });
+	}
+
+	@VuexAction
+	private async installerCancel(localPackage: LocalDbPackage) {
+		console.log('installerCancel: executed for package ' + localPackage.id);
+		const patchInstance = this.currentlyPatching[localPackage.id];
+		if (!patchInstance) {
+			console.log('installerCancel: no currently running installation/updates for package');
+			return false;
+		}
+
+		console.log('installerCancel: found running installation/update. sending cancel');
+		await patchInstance.cancel(true);
+		console.log('installerCancel: cancel sent');
+		return true;
+	}
+
+	@VuexAction
+	private async installerRollback(localPackage: LocalDbPackage) {
+		const rollbackInstance = await Rollbacker.rollback(localPackage as any);
+		await new Promise((resolve, reject) => {
+			rollbackInstance
+				.on('rollbackFailed', (reason: string) => {
+					console.log(`Received rollbackFailed in gamejolt: ${reason}`);
+					reject(new Error(reason));
+				})
+				.on('rollbackFinished', () => {
+					console.log('Received rollbackFinished in gamejolt');
+					resolve();
+				})
+				.on('fatal', reject);
+		});
+
+		await this.clearPackageOperations(localPackage);
+	}
+
+	@VuexAction
+	private async doUninstall(localPackage: LocalDbPackage) {
+		try {
+			const uninstallInstance = await Uninstaller.uninstall(localPackage as any);
+			return new Promise<void>((resolve, reject) => {
+				uninstallInstance
+					.on('uninstallFinished', () => resolve())
+					.on('uninstallFailed', reject)
+					.on('fatal', reject);
+			});
+		} catch (err) {
+			console.error(err);
+			throw err;
+		}
+	}
+
+	@VuexAction
+	private async launcherInit() {
+		const pidDir = path.resolve(nwGui.App.dataPath, 'game-pids');
+		Config.setPidDir(pidDir);
+
+		try {
+			await Config.ensurePidDir();
+
+			// Get all running packages by looking at the old launcher's game pid directory.
+			// This finds games that were started outside the client as well.
+			const runningPackageIds = fs
+				.readdirSync(pidDir)
+				.map(filename => {
+					// Pid files are named after the package ids they are currently running.
+					try {
+						return parseInt(path.basename(filename), 10);
+					} catch (err) {
+						return 0;
+					}
+				})
+				.filter(packageId => !!packageId && !isNaN(packageId));
+
+			console.log(`Running package ids by game pid file: [${runningPackageIds.join(',')}]`);
+
+			// For all the packages that have a game pid file and aren't marked as running in the
+			// localdb - mark as running before attaching. This will mark them as running using the
+			// old client launcher's running format.
+			for (const runningPackageId of runningPackageIds) {
+				const localPackage = this.packagesById[runningPackageId];
+				if (localPackage && !localPackage.isRunning) {
+					try {
+						await this.setPackageRunningPid([
+							localPackage,
+							{ wrapperId: localPackage.id.toString() },
+						]);
+					} catch (e) {
+						console.warn(`Could not mark package as running: ${localPackage.id}`);
+						console.warn(e);
+					}
+				}
+			}
+
+			// Reattach all running games after a restart.
+			for (const localPackage of this.packages) {
+				if (localPackage.isRunning) {
+					try {
+						await this.launcherReattach(localPackage);
+					} catch (e) {
+						console.warn(e);
+					}
+				}
+			}
+
+			// We only mark the launcher as loaded once it at least finished reattaching to the
+			// currently running instances.
+			console.log('Launcher loaded and ready');
+
+			this.setLauncherReady(true);
+		} catch (err) {
+			console.error('Failed to initialize everything for launcher');
+			console.error(err);
+			this.setLauncherReady(true);
+		}
 	}
 
 	@VuexMutation
-	setPackageFields([localPackage, fields]: Mutations['clientLibrary/setPackageFields']) {
-		let key: keyof typeof fields;
-		for (key in fields) {
-			key = PackageDbFields[key];
-			if (key === 'build') {
-				localPackage.setBuildData(fields.build!);
-				continue;
+	private setLauncherReady(ready: boolean) {
+		this.isLauncherReady = ready;
+	}
+
+	@VuexMutation
+	private setCurrentlyPlaying(localPackage: LocalDbPackage) {
+		this.currentlyPlaying.push(localPackage);
+	}
+
+	@VuexMutation
+	private unsetCurrentlyPlaying(localPackage: LocalDbPackage) {
+		arrayRemove(this.currentlyPlaying, i => localPackage.id === i.id);
+	}
+
+	@VuexAction
+	async launcherLaunch(localPackage: Actions['clientLibrary/launcherLaunch']) {
+		try {
+			await this.setPackageLaunching(localPackage);
+
+			let payload: any = null;
+			try {
+				payload = await Api.sendRequest('/web/dash/token/get-for-game', {
+					game_id: localPackage.game_id,
+				});
+			} catch (err) {
+				console.log('Could not get game token to launch with - launching anyways');
+				console.warn(err);
 			}
-			localPackage[key] = fields[key]!;
+
+			const credentials =
+				payload && payload.username && payload.token
+					? { username: payload.username, user_token: payload.token }
+					: null;
+
+			// return Launcher.launch( localPackage, os, arch, credentials ).promise;
+			const launchInstance = await Launcher.launch(localPackage as any, credentials);
+			this.launcherAttach([localPackage, launchInstance]);
+		} catch (err) {
+			console.error(err);
+			Growls.error('Could not launch game.');
+			this.launcherClear(localPackage);
 		}
 	}
 
 	@VuexAction
-	async setGameFieldsAndSave(
-		[localGame, fields]: Actions['clientLibrary/setGameFieldsAndSave']
-	): ReturnTypeSetGameFieldsAndSave {
-		this.setGameFields([localGame, fields]);
+	private async launcherReattach(localPackage: LocalDbPackage) {
+		if (!localPackage.running_pid) {
+			throw new Error('Package is not running');
+		}
+
+		try {
+			const launchInstance = await Launcher.attach(localPackage.running_pid);
+			this.launcherAttach([localPackage, launchInstance]);
+		} catch (err) {
+			console.log(`Could not reattach launcher instance: ${localPackage.running_pid}`);
+			console.error(err);
+			this.launcherClear(localPackage);
+		}
+	}
+
+	@VuexAction
+	private async launcherAttach(
+		[localPackage, launchInstance]: [LocalDbPackage, LaunchInstance | OldLaunchInstance]
+	) {
+		this.setCurrentlyPlaying(localPackage);
+
+		// Typescript for some reason can't detect that all possible types of launchInstance have a .on( 'gameOver' ), so we have to assert type.
+		if (launchInstance instanceof LaunchInstance) {
+			launchInstance.on('gameOver', () => this.launcherClear(localPackage));
+		} else {
+			launchInstance.on('gameOver', () => this.launcherClear(localPackage));
+		}
+
+		await this.setPackageRunningPid([localPackage, launchInstance.pid]);
+	}
+
+	@VuexAction
+	private async launcherClear(localPackage: LocalDbPackage) {
+		this.unsetCurrentlyPlaying(localPackage);
+		await this.clearPackageRunningPid(localPackage);
+	}
+
+	@VuexAction
+	private async syncCheck() {
+		console.log('Syncing library.');
+
+		const builds = this.packages.map(i => i.build);
+
+		const os = Device.os();
+		const arch = Device.arch();
+
+		const request: any = {
+			games: {},
+			builds: {},
+			os: os,
+			arch: arch,
+		};
+
+		// The modified_on fields are what tells us if the client has up to date info
+		// for each model.
+		for (const localGame of this.games) {
+			request.games[localGame.id] = localGame.modified_on || 0;
+		}
+
+		for (const build of builds) {
+			request.builds[build.id] = build.modified_on || 0;
+		}
+
+		type ApiResponse = {
+			games: any[] | undefined;
+			builds: any[] | undefined;
+			updateBuilds: any[] | undefined;
+		};
+
+		const response = (await Api.sendRequest('/web/client/sync', request, {
+			detach: true,
+
+			// If we allowed it to sanitize, it would filter out arrays in the request.
+			sanitizeComplexData: false,
+		})) as ApiResponse;
+
+		// Important! Don't the whole thing if any of these fail.
+		if (response.games) {
+			for (const gameData of response.games) {
+				try {
+					await this.syncGame([gameData.id, gameData]);
+				} catch (e) {
+					console.error(e);
+				}
+			}
+		}
+
+		if (response.builds) {
+			for (const buildData of response.builds) {
+				try {
+					await this.syncPackage([buildData.game_package_id, response]);
+				} catch (e) {
+					console.error(e);
+				}
+			}
+		}
+
+		if (response.updateBuilds) {
+			for (const data of response.updateBuilds) {
+				const packageId = data.packageId as number;
+				const newBuildId = data.newBuildId as number;
+
+				try {
+					const localPackage = this.packagesById[packageId];
+					if (!localPackage) {
+						throw new Error('Tried updating package not set in localdb.');
+					}
+
+					await this.packageStartUpdate([localPackage, newBuildId]);
+				} catch (e) {
+					console.error(e);
+				}
+			}
+		}
+	}
+
+	@VuexAction
+	private async syncGame([gameId, data]: [number, any]) {
+		const localGame = this.gamesById[gameId];
+		if (!localGame) {
+			throw new Error('Game is not set in localdb.');
+		}
+
+		await this.setGameData([localGame, data]);
+	}
+
+	@VuexAction
+	private async syncPackage([packageId, data]: [number, any]) {
+		const localPackage = this.packagesById[packageId];
+		if (!localPackage) {
+			throw new Error('Game is not set in localdb.');
+		}
+
+		const pkg = (data.packages as GamePackage[]).find(a => a.id === localPackage.id);
+		const release = (data.releases as GameRelease[]).find(a => a.id === localPackage.release.id);
+		const build = (data.builds as GameBuild[]).find(a => a.id === localPackage.build.id);
+		const launchOptions = (data.launchOptions as GameBuildLaunchOption[]).filter(
+			a => a.game_build_id === localPackage.build.id
+		);
+
+		// If those are not set then this package is not even valid.
+		if (!pkg || !release || !build) {
+			throw new Error(
+				`Package ${localPackage.id} is no longer valid. ` +
+					`The payload did not contain the package, it's release (${localPackage.release.id})` +
+					` or it's build (${localPackage.build.id})`
+			);
+		}
+
+		await this.setPackageData([
+			localPackage,
+			LocalDbPackage.fromSitePackageInfo(pkg, release, build, launchOptions),
+		]);
+	}
+
+	@VuexAction
+	private async setGameData([localGame, data]: [LocalDbGame, Partial<LocalDbGame>]) {
+		this._setGameData([localGame, data]);
+
 		const dbId = await db.games.put(localGame);
+
 		if (!this.gamesById[localGame.id]) {
 			this.games.push(localGame);
 		}
+
 		return dbId;
 	}
 
 	@VuexMutation
-	setGameFields([localGame, fields]: Mutations['clientLibrary/setGameFields']) {
-		let key: keyof typeof fields;
-		for (key in fields) {
-			key = GameDbFields[key];
-			localGame[key] = fields[key]!;
-		}
+	private _setGameData([localGame, data]: [LocalDbGame, Partial<LocalDbGame>]) {
+		localGame.set(data);
 	}
 
 	@VuexAction
 	async packageInstall(
-		[game, package_, release, build, launchOptions]: Actions['clientLibrary/packageInstall']
-	): ReturnTypePackageInstall {
+		[game, pkg, release, build, launchOptions]: Actions['clientLibrary/packageInstall']
+	) {
+		// TODO: Are these needed?
 		HistoryTick.sendBeacon('game-build', build.id, {
 			sourceResource: 'Game',
 			sourceResourceId: game.id,
@@ -448,22 +965,27 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			sourceResourceId: game.id,
 		});
 
-		const localGame = LocalDbGame.fromGame(game);
-		const localPackage = LocalDbPackage.createForInstall(package_, release, build, launchOptions);
+		const localGame = new LocalDbGame();
+		const localPackage = new LocalDbPackage();
 
 		await db.transaction('rw', [db.games, db.packages], async () => {
-			await Promise.all([db.games.put(localGame), db.packages.put(localPackage)]);
-			this.games.push(localGame);
-			this.packages.push(localPackage);
+			await this.setGameData([localGame, game]);
+			await this.setPackageData([
+				localPackage,
+				{
+					...LocalDbPackage.fromSitePackageInfo(pkg, release, build, launchOptions),
+					install_state: LocalDbPackagePatchState.PATCH_PENDING,
+				},
+			]);
 		});
 
-		return this.installerInstall([localGame, localPackage]);
+		return this.doPatch([localGame, localPackage]);
 	}
 
 	@VuexAction
 	async packageStartUpdate(
 		[localPackage, newBuildId]: Actions['clientLibrary/packageStartUpdate']
-	): ReturnTypePackageStartUpdate {
+	) {
 		// If this package isn't installed (and at rest), we don't update.
 		// We also don't update if we're currently running the game. Imagine that happening!
 		if (!localPackage.isSettled || localPackage.isRunning) {
@@ -473,37 +995,36 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		const response = await Api.sendRequest(`/web/client/get-build-for-update/${newBuildId}`, null, {
 			detach: true,
 		});
+
 		if (!response || !response.package) {
 			return false;
 		}
 
-		await this.setPackageFieldsAndSave([
-			localPackage,
-			{
-				update: LocalDbPackage.createForUpdate(
-					response.package,
-					response.release,
-					response.build,
-					response.launchOptions
-				),
-			},
-		]);
+		// We store the new data from the site into update data so we can pull it into the localdb
+		// package model after the update finishes.
+		const updateData = new LocalDbPackage();
+
+		// Don't put into localdb. Just call set manually to set the fields.
+		updateData.set(
+			LocalDbPackage.fromSitePackageInfo(
+				response.package,
+				response.release,
+				response.build,
+				response.launchOptions
+			)
+		);
+
+		await this.setPackageUpdateData([localPackage, updateData]);
+		await this.setPackageUpdateState([localPackage, LocalDbPackagePatchState.PATCH_PENDING]);
 
 		const game = this.gamesById[localPackage.game_id];
-		this.installerInstall([game, localPackage]);
+		this.doPatch([game, localPackage]);
+
 		return true;
 	}
 
 	@VuexAction
-	async packageUninstall(
-		[localPackage, dbOnly]: Actions['clientLibrary/packageUninstall']
-	): ReturnTypePackageUninstall {
-		console.log(
-			'packageUninstall: executed for package ' +
-				localPackage.id +
-				'. db only: ' +
-				(dbOnly ? 'yes' : 'no')
-		);
+	async packageUninstall([localPackage, dbOnly]: Actions['clientLibrary/packageUninstall']) {
 		// We just use this so they don't click "uninstall" twice in a row.
 		// No need to save to the DB.
 		let currentlyUninstalling = this.currentlyUninstalling[localPackage.id];
@@ -523,8 +1044,8 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			let localGame: LocalDbGame | undefined;
 
 			try {
-				// When cancelling a first installation it will end up calling packageUninstall
-				// with dbOnly set to true. In this case joltron will uninstall the package on it's own,
+				// When canceling a first installation it will end up calling packageUninstall
+				// with dbOnly set to true. In this case joltron will uninstall the package on its own,
 				// so all we need to do here is clean the package and game if necessary from the indexeddb.
 				// So we only attempt to do installerCancel (which interacts with joltron) if its NOT
 				// a first installation cancellation (dbOnly would be false)
@@ -546,26 +1067,16 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 					}
 				}
 
-				// We refetch from db because if cancelling a first installation it might remove the local game from the db.
+				// We refetch from db because if canceling a first installation it might remove the local game from the db.
 				localGame = await db.games.get(localPackage.game_id);
 
 				// Make sure we're clean.
-				await this.setPackageFieldsAndSave([
-					localPackage,
-					{
-						install_state: null,
-						download_progress: null,
-						unpack_progress: null,
-						patch_paused: null,
-						patch_queued: null,
-						remove_state: PackageRemoveState.REMOVING,
-					},
-				]);
+				await this.clearPackageOperations(localPackage);
+				await this.setPackageRemoveState([localPackage, LocalDbPackageRemoveState.REMOVING]);
 
 				// Skip removing the package if we don't want to actually uninstall from disk.
 				if (!dbOnly) {
-					console.log('Doing uninstall');
-					await this.installerUninstall(localPackage);
+					await this.doUninstall(localPackage);
 				}
 
 				// Get the number of packages in this game.
@@ -617,7 +1128,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 					);
 				}
 
-				await localPackage.setRemoveState(PackageRemoveState.REMOVE_FAILED);
+				await this.setPackageRemoveState([localPackage, LocalDbPackageRemoveState.REMOVE_FAILED]);
 			} finally {
 				this.unsetCurrentlyUninstalling(localPackage);
 			}
@@ -627,723 +1138,149 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		return currentlyUninstalling;
 	}
 
-	@VuexMutation
-	checkQueueSettings() {
-		Queue.faster = {
-			downloads: Settings.get('max-download-count'),
-			extractions: Settings.get('max-extract-count'),
-		};
-
-		if (Settings.get('queue-when-playing')) {
-			Queue.slower = {
-				downloads: 0,
-				extractions: 0,
-			};
-		} else {
-			Queue.slower = Queue.faster;
-		}
+	@VuexAction
+	async setPackageInstallDir([localPackage, dir]: [LocalDbPackage, string]) {
+		await this.setPackageData([localPackage, { install_dir: dir }]);
 	}
 
 	@VuexAction
-	installerInit(): ReturnTyeInstallerInit {
-		this.checkQueueSettings();
-
-		return this.retryAllInstallations();
+	async setPackageInstallState([localPackage, state]: [LocalDbPackage, LocalDbPackagePatchState]) {
+		await this.setPackageData([localPackage, { install_state: state }]);
 	}
 
 	@VuexAction
-	retryAllInstallations(): ReturnTypeRetryAllInstallations {
-		const promises = [];
-		// This will retry to install anything that was installing before client was closed.
-		for (let packageId in this.packages) {
-			const localPackage = this.packages[packageId];
-			if (localPackage.isPatching && !localPackage.isPatchPaused) {
-				promises.push(this.installerRetry(localPackage));
-			}
-		}
-
-		return Promise.resolve(promises);
+	async setPackagePatchPaused(localPackage: LocalDbPackage) {
+		await this.setPackageData([localPackage, { patch_paused: true }]);
 	}
 
 	@VuexAction
-	async installerRetry(
-		localPackage: Actions['clientLibrary/installerRetry']
-	): ReturnTypeInstallerRetry {
-		// Reset states.
-		const downloadStates = [PatchState.DOWNLOADING, PatchState.DOWNLOAD_FAILED];
-		const unpackStates = [PatchState.UNPACKING, PatchState.UNPACK_FAILED];
-
-		if (localPackage.install_state) {
-			if (downloadStates.indexOf(localPackage.install_state) !== -1) {
-				await localPackage.setInstallState(PatchState.PATCH_PENDING);
-			} else if (unpackStates.indexOf(localPackage.install_state) !== -1) {
-				await localPackage.setInstallState(PatchState.DOWNLOADED);
-			}
-		} else if (localPackage.update_state) {
-			if (downloadStates.indexOf(localPackage.update_state || '') !== -1) {
-				await localPackage.setUpdateState(PatchState.PATCH_PENDING);
-			} else if (unpackStates.indexOf(localPackage.update_state || '') !== -1) {
-				await localPackage.setUpdateState(PatchState.DOWNLOADED);
-			}
-		}
-
-		const game = this.gamesById[localPackage.game_id];
-		return this.installerInstall([game, localPackage]);
+	async setPackagePatchResumed(localPackage: LocalDbPackage) {
+		await this.setPackageData([localPackage, { patch_paused: false }]);
 	}
 
 	@VuexAction
-	async installerInstall(
-		[localGame, localPackage]: Actions['clientLibrary/installerInstall']
-	): ReturnTypeInstallerInstall {
-		const packageId = localPackage.id;
-		const authTokenGetter = () => LocalDbPackage.getAccessToken(packageId);
-
-		let authToken = '';
-		try {
-			authToken = await authTokenGetter();
-		} catch (err) {
-			console.log(`Could not get access token for package ${packageId}`);
-			console.warn(err);
-		}
-
-		const operation = localPackage.install_state ? 'install' : 'update';
-		let packageTitle = localPackage.title || localGame.title;
-		if (packageTitle !== localGame.title) {
-			packageTitle += ' for ' + localGame.title;
-		}
-
-		try {
-			// We freeze the installation directory in time.
-			if (!localPackage.install_dir) {
-				const title = sanitize(localPackage.title || 'default');
-				await localPackage.setInstallDir(
-					path.join(
-						Settings.get('game-install-dir'),
-						`${localGame.slug}-${localGame.id}`,
-						`${title}-${packageId}`
-					)
-				);
-			}
-
-			// This is a very specific edge case.
-			// Normally when you pause an installation/update, the joltron process hangs around.
-			// This allows us to resume it easily with the installerResume function that simply
-			// sends the existing process a resume message and continue with its existing promise chain.
-			// However, if the operation was paused and the client was closed, when the user boots the client
-			// back up again it'll attempt to retry all the installations that were in progress automatically
-			// by calling installerRetry, which will end up calling this method.
-			// Issue is that the package status will still be paused from the previous run so we need to
-			// flick it back to resumed before continuing.
-			if (localPackage.isPatchPaused) {
-				await localPackage.setPatchResumed();
-			}
-
-			const patchInstance = await Patcher.patch(localPackage as any, authTokenGetter, {
-				authToken,
-			});
-			const canceled = await new Promise<boolean>((resolve, reject) => {
-				this.setCurrentlyPatching([localPackage, patchInstance]);
-
-				const listeners: Partial<PatchEvents> = {};
-				const cleanupListeners = () => {
-					// Remove all listeners we bound to patch instance so it won't update the
-					// local package after the operation is done.
-					// This addresses a race condition where we might receive a message from joltron
-					// while trying to remove the package model from indexeddb. reciving a message
-					// will attempt to update the localdb model but since updates are basically upserts
-					// it might re-add a package we just removed!
-					for (let i_event in listeners) {
-						const event: keyof PatchEvents = i_event as any;
-						patchInstance.removeListener(event, listeners[event]!);
-						delete listeners[event];
-					}
-				};
-
-				patchInstance
-					.on(
-						'state',
-						(listeners.state = state => {
-							switch (state) {
-								case PatcherState.Downloading:
-									if (localPackage.install_state) {
-										localPackage.setInstallState(PatchState.DOWNLOADING);
-									} else if (localPackage.update_state) {
-										localPackage.setUpdateState(PatchState.DOWNLOADING);
-									}
-									break;
-
-								case PatcherState.Patching:
-									// No longer needed.
-									this.setPackageFields([localPackage, { download_progress: null }]);
-
-									if (localPackage.install_state) {
-										localPackage.setInstallState(PatchState.UNPACKING);
-									} else if (localPackage.update_state) {
-										localPackage.setUpdateState(PatchState.UNPACKING);
-									}
-									break;
-							}
-						})
-					)
-					.on(
-						'progress',
-						(listeners.progress = progress => {
-							const progressType = progress.type;
-
-							const newProgress: Progress = {
-								// Newer version of client voodoo return progress as an integer between 0-100,
-								// but old client-voodoo returned a float between 0-1.
-								// To maintain compatibility, make this function return the float always.
-								progress: progress.percent / 100,
-
-								timeLeft: Math.round(
-									(progress.total - progress.current) /
-										(progress.sample ? progress.sample.movingAverage : 1)
-								),
-
-								// divide by 1024 to convert to kbps
-								rate: progress.sample ? Math.round(progress.sample.movingAverage / 1024) : 0,
-							};
-
-							if (progressType === 'download') {
-								this.setPackageFieldsAndSave([
-									localPackage,
-									{
-										download_progress: newProgress,
-									},
-								]);
-							} else {
-								this.setPackageFieldsAndSave([
-									localPackage,
-									{
-										unpack_progress: newProgress,
-									},
-								]);
-							}
-						})
-					)
-					.on(
-						'paused',
-						(listeners.paused = queued => {
-							console.log(
-								'Pause received in gamejolt repo. From queue: ' + (queued ? 'yes' : 'no')
-							);
-
-							if (queued) {
-								localPackage.setPatchQueued();
-							} else {
-								localPackage.setPatchPaused();
-							}
-						})
-					)
-					.on(
-						'resumed',
-						(listeners.resumed = unqueued => {
-							console.log(
-								'Resume received in gamejolt repo. From queue: ' + (unqueued ? 'yes' : 'no')
-							);
-
-							if (unqueued) {
-								localPackage.setPatchUnqueued();
-							} else {
-								localPackage.setPatchResumed();
-							}
-						})
-					)
-					.on(
-						'updateFailed',
-						(listeners.updateFailed = reason => {
-							cleanupListeners();
-
-							// If the update was canceled the 'context canceled' will be emitted as the updateFailed reason.
-							if (reason === 'context canceled') {
-								return resolve(true);
-							}
-							reject(new Error(reason));
-						})
-					)
-					.on(
-						'updateFinished',
-						(listeners.updateFinished = () => {
-							cleanupListeners();
-							resolve(false);
-						})
-					)
-					.on(
-						'fatal',
-						(listeners.fatal = err => {
-							cleanupListeners();
-
-							console.log('Received fatal error in patcher in gamejolt repo: ' + err.message);
-							reject(err);
-						})
-					);
-			});
-
-			this.unsetCurrentlyPatching(localPackage);
-
-			if (!canceled) {
-				if (localPackage.install_state) {
-					await localPackage.setInstalled();
-				} else if (localPackage.update_state) {
-					await localPackage.setUpdated();
-				}
-
-				const action =
-					operation === 'install' ? 'finished installing' : 'updated to the latest version';
-				const title = operation === 'install' ? 'Game Installed' : 'Game Updated';
-				Growls.success(`${packageTitle} has ${action}.`, title);
-			} else {
-				console.log('installerInstall: Handling canceled installation');
-				// If we were cancelling the first installation - we have to treat the package as uninstalled.
-				// By this point we can assume joltron has removed it from disk.
-				if (operation === 'install') {
-					console.log(
-						'installerInstall: This is a first installation. Marking as uninstalled from db with packageUninstall(true)'
-					);
-
-					// Calling uninstall normally attempts to spawn a client voodoo uninstall instance.
-					// Override that because the uninstallation should be done automatically by the installation process.
-					await localPackage.uninstall(true);
-				} else {
-					console.log(
-						'installerInstall: This is an update operation. Attempting to rollback with installerRollback'
-					);
-					try {
-						await this.installerRollback(localPackage);
-						Growls.success(`${packageTitle} aborted the update.`, 'Update Aborted');
-					} catch (err) {
-						if (localPackage.update_state === PatchState.UNPACKING) {
-							await localPackage.setUpdateState(PatchState.UNPACK_FAILED);
-						} else {
-							await localPackage.setUpdateState(PatchState.DOWNLOAD_FAILED);
-						}
-						Growls.error(
-							`${packageTitle} cannot abort at this time. Retry or uninstall it.`,
-							'Update Failed'
-						);
-					}
-				}
-			}
-		} catch (err) {
-			console.error(err);
-
-			const action = operation === 'install' ? 'install' : 'update';
-			const title = operation === 'install' ? 'Installation Failed' : 'Update Failed';
-			Growls.error(`${packageTitle} failed to ${action}.`, title);
-
-			if (localPackage.install_state) {
-				if (localPackage.install_state === PatchState.UNPACKING) {
-					await localPackage.setInstallState(PatchState.UNPACK_FAILED);
-				} else {
-					await localPackage.setInstallState(PatchState.DOWNLOAD_FAILED);
-				}
-			} else if (localPackage.update_state) {
-				if (localPackage.update_state === PatchState.UNPACKING) {
-					await localPackage.setUpdateState(PatchState.UNPACK_FAILED);
-				} else {
-					await localPackage.setUpdateState(PatchState.DOWNLOAD_FAILED);
-				}
-			}
-
-			this.unsetCurrentlyPatching(localPackage);
-		}
+	async setPackagePatchQueued(localPackage: LocalDbPackage) {
+		await this.setPackageData([localPackage, { patch_queued: true }]);
 	}
 
 	@VuexAction
-	installerPause(localPackage: Actions['clientLibrary/installerPause']): ReturnTypeInstallerPause {
-		const patchInstance = this.currentlyPatching[localPackage.id];
-		if (!patchInstance) {
-			throw new Error('Package is not installing.');
-		}
-
-		return patchInstance.pause();
+	async setPackagePatchUnqueued(localPackage: LocalDbPackage) {
+		await this.setPackageData([localPackage, { patch_queued: false }]);
 	}
 
 	@VuexAction
-	async installerResume(
-		localPackage: Actions['clientLibrary/installerResume']
-	): ReturnTypeInstallerResume {
-		const patchInstance = this.currentlyPatching[localPackage.id];
-		if (!patchInstance) {
-			return this.installerRetry(localPackage);
-		}
-
-		let authToken = '';
-		try {
-			authToken = await LocalDbPackage.getAccessToken(localPackage.id);
-		} catch (err) {
-			console.log(`Could not get access token for package ${localPackage.id}`);
-			console.error(err);
-		}
-
-		return patchInstance.resume({ authToken });
+	async setPackageUpdateData([localPackage, update]: [LocalDbPackage, LocalDbPackage]) {
+		await this.setPackageData([localPackage, { update }]);
 	}
 
 	@VuexAction
-	async installerCancel(
-		localPackage: Actions['clientLibrary/installerCancel']
-	): ReturnTypeInstallerCancel {
-		console.log('installerCancel: executed for package ' + localPackage.id);
-		const patchInstance = this.currentlyPatching[localPackage.id];
-		if (!patchInstance) {
-			console.log('installerCancel: no currently running installation/updates for package');
-			return false;
-		}
-
-		console.log('installerCancel: found running installation/update. sending cancel');
-		await patchInstance.cancel(true);
-		console.log('installerCancel: cancel sent');
-		return true;
+	async setPackageUpdateState([localPackage, state]: [LocalDbPackage, LocalDbPackagePatchState]) {
+		await this.setPackageData([localPackage, { update_state: state }]);
 	}
 
 	@VuexAction
-	async installerRollback(
-		localPackage: Actions['clientLibrary/installerRollback']
-	): ReturnTypeInstallerRollback {
-		const rollbackInstance = await Rollbacker.rollback(localPackage as any);
-		await new Promise((resolve, reject) => {
-			rollbackInstance
-				.on('rollbackFailed', (reason: string) => {
-					console.log(`Received rollbackFailed in gamejolt: ${reason}`);
-					reject(new Error(reason));
-				})
-				.on('rollbackFinished', () => {
-					console.log('Received rollbackFinished in gamejolt');
-					resolve();
-				})
-				.on('fatal', reject);
-		});
-		return localPackage.setUpdateAborted();
+	async setPackageUpdateComplete(localPackage: LocalDbPackage) {
+		// The new data that we need to put on the package is in the "update" property of the local
+		// package.
+		if (!localPackage.update) {
+			throw new Error('Update package does not exist');
+		}
+
+		await this.clearPackageOperations(localPackage);
+
+		await this.setPackageData([
+			localPackage,
+			{
+				// It's a localdb package, so it should have all the correct fields.
+				...localPackage.update,
+			},
+		]);
 	}
 
 	@VuexAction
-	async installerUninstall(
-		localPackage: Actions['clientLibrary/installerUninstall']
-	): ReturnTypeInstallerUninstall {
-		try {
-			const uninstallInstance = await Uninstaller.uninstall(localPackage as any);
-			return new Promise<void>((resolve, reject) => {
-				uninstallInstance
-					.on('uninstallFinished', () => resolve())
-					.on('uninstallFailed', reject)
-					.on('fatal', reject);
-			});
-		} catch (err) {
-			console.error(err);
-			throw err;
-		}
+	async setPackageDownloadProgress(
+		[localPackage, progress]: [LocalDbPackage, LocalDbPackageProgress | null]
+	) {
+		await this.setPackageData([localPackage, { download_progress: progress }]);
 	}
 
 	@VuexAction
-	async launcherInit(): ReturnTypeLauncherInit {
-		const pidDir = path.resolve(nwGui.App.dataPath, 'game-pids');
-		Config.setPidDir(pidDir);
+	async setPackageUnpackProgress(
+		[localPackage, progress]: [LocalDbPackage, LocalDbPackageProgress | null]
+	) {
+		await this.setPackageData([localPackage, { unpack_progress: progress }]);
+	}
 
-		try {
-			await Config.ensurePidDir();
+	/**
+	 * Clears any state information contained in the package to a clean slate. Can be used after
+	 * operations complete or fail.
+	 */
+	@VuexAction
+	async clearPackageOperations(localPackage: LocalDbPackage) {
+		await this.setPackageData([
+			localPackage,
+			{
+				update: null,
+				install_state: null,
+				update_state: null,
+				remove_state: null,
+				run_state: null,
+				download_progress: null,
+				unpack_progress: null,
+				patch_paused: null,
+				patch_queued: null,
+				running_pid: null,
+			},
+		]);
+	}
 
-			// Get all running packages by looking at the old launcher's game pid directory.
-			// This finds games that were started outside the client as well.
-			const runningPackageIds = fs
-				.readdirSync(pidDir)
-				.map(filename => {
-					// Pid files are named after the package ids they are currently running.
-					try {
-						return parseInt(path.basename(filename), 10);
-					} catch (err) {
-						return 0;
-					}
-				})
-				.filter(packageId => !!packageId && !isNaN(packageId));
+	@VuexAction
+	async setPackageLaunching(localPackage: LocalDbPackage) {
+		await this.setPackageData([localPackage, { run_state: LocalDbPackageRunState.LAUNCHING }]);
+	}
 
-			console.log(`Running package ids by game pid file: [${runningPackageIds.join(',')}]`);
+	@VuexAction
+	async setPackageRunningPid([localPackage, pid]: [LocalDbPackage, LocalDbPackagePid]) {
+		await this.setPackageData([
+			localPackage,
+			{
+				run_state: LocalDbPackageRunState.RUNNING,
+				running_pid: pid,
+			},
+		]);
+	}
 
-			// For all the packages that have a game pid file and aren't marked as running in the localdb - mark as running before attaching.
-			// This will mark them as runnig using the old client launcher's running format.
-			const markedAsRunning: Promise<number>[] = [];
-			for (let runningPackageId of runningPackageIds) {
-				const localPackage = this.packagesById[runningPackageId];
-				if (localPackage && !localPackage.isRunning) {
-					markedAsRunning.push(
-						localPackage
-							.setRunningPid({
-								wrapperId: localPackage.id.toString(),
-							})
-							.catch(err => {
-								console.warn(`Could not mark package as running: ${localPackage.id}`);
-								console.warn(err);
-								return 0;
-							})
-					);
-				}
-			}
+	@VuexAction
+	async clearPackageRunningPid(localPackage: LocalDbPackage) {
+		await this.setPackageData([
+			localPackage,
+			{
+				run_state: null,
+				running_pid: null,
+			},
+		]);
+	}
 
-			await Promise.all(markedAsRunning);
+	@VuexAction
+	async setPackageRemoveState([localPackage, state]: [LocalDbPackage, LocalDbPackageRemoveState]) {
+		await this.setPackageData([localPackage, { remove_state: state }]);
+	}
 
-			// Reattach all running games after a restart.
-			const reattachingPromises = this.packages
-				.filter(localPackage => localPackage.isRunning)
-				.map(localPackage => {
-					this.launcherReattach(localPackage).catch((err: Error) => {
-						console.warn(err);
-						// We catch here to make sure failing reattachment doesn't make Promise.all return early.
-						// This is because we need all attachment operations to complete reliably before starting the migration.
-						return null;
-					});
-				});
+	@VuexAction
+	private async setPackageData([localPackage, data]: [LocalDbPackage, Partial<LocalDbPackage>]) {
+		this._setPackageData([localPackage, data]);
 
-			// We only mark the launcher as loaded once it at least finished reattaching to the currently running instances.
-			// This is so that the migrator can check when the packages are no longer running.
-			await Promise.all(reattachingPromises);
-			console.log('Launcher loaded and ready');
+		const dbId = await db.packages.put(localPackage);
 
-			this.setLauncherReady(true);
-		} catch (err) {
-			console.error('Failed to initialize everything for launcher');
-			console.error(err);
-			this.setLauncherReady(true);
+		if (!this.packagesById[localPackage.id]) {
+			this.packages.push(localPackage);
 		}
+
+		return dbId;
 	}
 
 	@VuexMutation
-	setLauncherReady(ready: Mutations['clientLibrary/setLauncherReady']) {
-		this.isLauncherReady = ready;
-	}
-
-	get runningPackageIds() {
-		return this.currentlyPlaying.map(localPackage => localPackage.id);
-	}
-
-	get numPlaying() {
-		return this.currentlyPlaying.length;
-	}
-
-	@VuexMutation
-	setCurrentlyPlaying(localPackage: Mutations['clientLibrary/setCurrentlyPlaying']) {
-		this.currentlyPlaying.push(localPackage);
-	}
-
-	@VuexMutation
-	unsetCurrentlyPlaying(localPackage: Mutations['clientLibrary/unsetCurrentlyPlaying']) {
-		arrayRemove(this.currentlyPlaying, i => localPackage.id === i.id);
-	}
-
-	@VuexAction
-	async launcherLaunch(
-		localPackage: Actions['clientLibrary/launcherLaunch']
-	): ReturnTypeLauncherLaunch {
-		try {
-			await localPackage.setLaunching();
-
-			let payload: any = null;
-			try {
-				payload = await Api.sendRequest('/web/dash/token/get-for-game', {
-					game_id: localPackage.game_id,
-				});
-			} catch (err) {
-				console.log('Could not get game token to launch with - launching anyways');
-				console.warn(err);
-			}
-
-			const credentials =
-				payload && payload.username && payload.token
-					? { username: payload.username, user_token: payload.token }
-					: null;
-
-			// return Launcher.launch( localPackage, os, arch, credentials ).promise;
-			const launchInstance = await Launcher.launch(localPackage as any, credentials);
-			this.launcherAttach([localPackage, launchInstance]);
-		} catch (err) {
-			console.error(err);
-			Growls.error('Could not launch game.');
-			this.launcherClear(localPackage);
-		}
-	}
-
-	@VuexAction
-	async launcherReattach(
-		localPackage: Actions['clientLibrary/launcherReattach']
-	): ReturnTypeLauncherReattach {
-		if (!localPackage.running_pid) {
-			throw new Error('Package is not running');
-		}
-
-		try {
-			const launchInstance = await Launcher.attach(localPackage.running_pid);
-			this.launcherAttach([localPackage, launchInstance]);
-		} catch (err) {
-			console.log(`Could not reattach launcher instance: ${localPackage.running_pid}`);
-			console.error(err);
-			this.launcherClear(localPackage);
-		}
-	}
-
-	@VuexAction
-	launcherAttach(
-		[localPackage, launchInstance]: Actions['clientLibrary/launcherAttach']
-	): ReturnTypeLauncherAttach {
-		this.setCurrentlyPlaying(localPackage);
-
-		// Typescript for some reason can't detect that all possible types of launchInstance have a .on( 'gameOver' ), so we have to assert type.
-		if (launchInstance instanceof LaunchInstance) {
-			launchInstance.on('gameOver', () => this.launcherClear(localPackage));
-		} else {
-			launchInstance.on('gameOver', () => this.launcherClear(localPackage));
-		}
-
-		EventBus.emit('ClientLauncher.gameLaunched', this.currentlyPlaying.length);
-
-		return localPackage.setRunningPid(launchInstance.pid);
-	}
-
-	@VuexAction
-	launcherClear(localPackage: Actions['clientLibrary/launcherClear']): ReturnTypeLauncherClear {
-		const numPlaying = this.currentlyPlaying.length;
-		this.unsetCurrentlyPlaying(localPackage);
-		const newNumPlaying = this.currentlyPlaying.length;
-		if (numPlaying !== newNumPlaying) {
-			EventBus.emit('ClientLauncher.gameClosed', newNumPlaying);
-		}
-
-		return localPackage.clearRunningPid();
-	}
-
-	@VuexAction
-	async syncInit(): ReturnTypeSyncInit {
-		this.syncCheck();
-		this.syncSetInterval(setInterval(() => this.syncCheck(), 60 * 60 * 1000)); // 1hr currently
-	}
-
-	@VuexMutation
-	syncSetInterval(interval: Mutations['clientLibrary/syncSetInterval']) {
-		this.syncCheckInterval = interval;
-	}
-
-	@VuexMutation
-	syncClear() {
-		clearInterval(this.syncCheckInterval);
-	}
-
-	@VuexAction
-	async syncCheck(): ReturnTypeSyncCheck {
-		console.log('Checking for updates');
-		const builds = this.packages.map(localPackage => localPackage.build);
-
-		const os = Device.os();
-		const arch = Device.arch();
-
-		const request: any = {
-			games: {},
-			builds: {},
-			os: os,
-			arch: arch,
-		};
-
-		// The modified_on fields are what tells us if the client has up to date info
-		// for each model.
-		for (let localGame of this.games) {
-			request.games[localGame.id] = localGame.modified_on || 0;
-		}
-
-		for (let build of builds) {
-			request.builds[build.id] = build.modified_on || 0;
-		}
-
-		console.log(request);
-		const response = await Api.sendRequest('/web/client/sync', request, {
-			detach: true,
-
-			// If we allowed it to sanitize, it would filter out arrays in the request.
-			sanitizeComplexData: false,
-		});
-		console.log(response);
-
-		// Don't do anything if we don't have anything to update.
-		if (
-			response &&
-			((response.builds && response.builds.length) ||
-				(response.games && response.games.length) ||
-				(response.updateBuilds && response.updateBuilds.length))
-		) {
-			const gamePromises = db.transaction('rw', [db.games], async () => {
-				const promises = (response.games as any[]).map((game: any) =>
-					this.syncGame([game.id, game])
-				);
-				return await Promise.all(promises);
-			});
-
-			const packagePromises = db.transaction('rw', [db.packages], async () => {
-				const promises = (response.builds as any[]).map((build: any) =>
-					this.syncPackage([build.game_package_id, response])
-				);
-				return await Promise.all(promises);
-			});
-
-			const updatePromises = Promise.all(
-				(response.updateBuilds as any[]).map((data: any) => {
-					// TODO(rewrite,cros) do we want to wrap these in a try catch so we don't fail the rest of the update operations?
-					// Since this isn't running in a db transaction if a single fails it won't rollback the others,
-					// so we might just want to log.
-					const packageId = data.packageId as number;
-					const newBuildId = data.newBuildId as number;
-
-					const localPackage = this.packagesById[packageId];
-					if (!localPackage) {
-						throw new Error('Package is not set in localdb');
-					}
-
-					return this.packageStartUpdate([localPackage, newBuildId]);
-				})
-			);
-
-			return await Promise.all<number[], number[], boolean[]>([
-				gamePromises,
-				packagePromises,
-				updatePromises,
-			]);
-		} else {
-			return [[], [], []];
-		}
-	}
-
-	@VuexAction
-	async syncGame([gameId, data]: Actions['clientLibrary/syncGame']): ReturnTypeSyncGame {
-		const localGame = this.gamesById[gameId];
-		if (!localGame) {
-			throw new Error('Game is not set in localdb');
-		}
-
-		return await localGame.setDataAndSave(data);
-	}
-
-	@VuexAction
-	async syncPackage(
-		[packageId, data]: Actions['clientLibrary/syncPackage']
-	): ReturnTypeSyncPackage {
-		const localPackage = this.packagesById[packageId];
-		if (!localPackage) {
-			throw new Error('Game is not set in localdb');
-		}
-
-		const package_ = (data.packages as GamePackage[]).find(a => a.id === localPackage.id);
-		const release = (data.releases as GameRelease[]).find(a => a.id === localPackage.release.id);
-		const build = (data.builds as GameBuild[]).find(a => a.id === localPackage.build.id);
-		const launchOptions = (data.launchOptions as GameBuildLaunchOption[]).filter(
-			a => a.game_build_id === localPackage.build.id
-		);
-
-		// If those are not set then this package is not even valid.
-		if (!package_ || !release || !build) {
-			throw new Error(
-				`Package ${localPackage.id} is no longer valid. ` +
-					`The payload did not contain the package, it's release (${localPackage.release.id})` +
-					` or it's build (${localPackage.build.id})`
-			);
-		}
-
-		// Assign so we don't lose fields.
-		localPackage.setData(package_, release, build, launchOptions);
-		return await db.packages.put(localPackage);
+	private _setPackageData([localPackage, data]: [LocalDbPackage, Partial<LocalDbPackage>]) {
+		localPackage.set(data);
 	}
 }

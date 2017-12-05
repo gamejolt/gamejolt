@@ -26,7 +26,7 @@ import {
 	ClientLibraryStore,
 } from '../../../../store/client-library';
 import { AppClientInstallProgress } from '../../install-progress/install-progress';
-import { LocalDbPackage, PatchState } from '../../local-db/package/package.model';
+import { LocalDbPackage, LocalDbPackagePatchState } from '../../local-db/package/package.model';
 
 @View
 @Component({
@@ -48,11 +48,13 @@ import { LocalDbPackage, PatchState } from '../../local-db/package/package.model
 })
 export class AppClientPackageCardButtons extends Vue {
 	@ClientLibraryState packagesById: ClientLibraryStore['packagesById'];
-	@ClientLibraryAction packageInstall: ClientLibraryStore['packageInstall'];
-	@ClientLibraryAction installerPause: ClientLibraryStore['installerPause'];
-	@ClientLibraryAction installerResume: ClientLibraryStore['installerResume'];
-	@ClientLibraryAction installerRetry: ClientLibraryStore['installerRetry'];
-	@ClientLibraryAction launcherLaunch: ClientLibraryStore['launcherLaunch'];
+
+	@ClientLibraryAction private packageInstall: ClientLibraryStore['packageInstall'];
+	@ClientLibraryAction private packageUninstall: ClientLibraryStore['packageUninstall'];
+	@ClientLibraryAction private installerPause: ClientLibraryStore['installerPause'];
+	@ClientLibraryAction private installerResume: ClientLibraryStore['installerResume'];
+	@ClientLibraryAction private installerRetry: ClientLibraryStore['installerRetry'];
+	@ClientLibraryAction private launcherLaunch: ClientLibraryStore['launcherLaunch'];
 
 	@Prop(Game) game: Game;
 	@Prop(GamePackage) package: GamePackage;
@@ -63,7 +65,7 @@ export class AppClientPackageCardButtons extends Vue {
 	downloadableUnsupportedHasQuickPlay = false;
 
 	readonly Device = Device;
-	readonly PatchState = PatchState;
+	readonly PatchState = LocalDbPackagePatchState;
 
 	get canInstall() {
 		const arch = Device.arch();
@@ -175,7 +177,7 @@ export class AppClientPackageCardButtons extends Vue {
 		}
 
 		Analytics.trackEvent('game-package-card', 'cancel-install');
-		this.localPackage.uninstall(false);
+		this.packageUninstall([this.localPackage, false]);
 	}
 
 	retryInstall() {
@@ -219,7 +221,8 @@ export class AppClientPackageCardButtons extends Vue {
 		}
 
 		Analytics.trackEvent('game-package-card', 'uninstall');
-		this.localPackage.uninstall(false);
 		Popover.hideAll();
+
+		this.packageUninstall([this.localPackage, false]);
 	}
 }
