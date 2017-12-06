@@ -29,7 +29,7 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 	}
 
 	routeInit() {
-		this.token = this.$route.query.token;
+		this.token = this.$route.params.token;
 	}
 
 	completed(response: any) {
