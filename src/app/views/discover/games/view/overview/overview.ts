@@ -9,6 +9,7 @@ import { PartnerReferral } from '../../../../../../lib/gj-lib-client/components/
 import { AppDiscoverGamesViewOverviewDevlog } from './_devlog/devlog';
 import { RouteMutation, RouteStore, RouteState } from '../view.store';
 import { HistoryTick } from '../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
+import { CommentModal } from '../../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
 import {
 	RouteResolve,
 	BaseRouteComponent,
@@ -72,6 +73,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		}
 
 		this.processOverviewPayload($payload);
+		CommentModal.show({ resource: 'Game', resourceId: this.game.id });
 	}
 
 	render(h: CreateElement) {

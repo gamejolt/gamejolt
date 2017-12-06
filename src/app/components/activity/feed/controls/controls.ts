@@ -19,10 +19,11 @@ import { AppSocialTwitterShare } from '../../../../../lib/gj-lib-client/componen
 import { AppSocialFacebookLike } from '../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { Store } from '../../../../store/index';
 import { DevlogPostEditModal } from '../../../devlog/post/edit-modal/edit-modal-service';
-import { AppCommentWidgetAddLazy, AppCommentWidgetLazy } from '../../../lazy';
+import { FormCommentLazy, AppCommentWidgetLazy } from '../../../lazy';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { AppCommentVideoLikeWidget } from '../../../../../lib/gj-lib-client/components/comment/video/like-widget/like-widget';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { CommentModal } from '../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
 
 @View
 @Component({
@@ -30,7 +31,7 @@ import { Game } from '../../../../../lib/gj-lib-client/components/game/game.mode
 		AppJolticon,
 		AppPopover,
 		AppGameFollowWidget,
-		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
+		AppCommentWidgetAdd: FormCommentLazy,
 		AppCommentWidget: AppCommentWidgetLazy,
 		AppFiresidePostLikeWidget,
 		AppCommentVideoLikeWidget,
@@ -121,10 +122,8 @@ export class AppActivityFeedControls extends Vue {
 	}
 
 	toggleComments() {
-		if (this.tab === 'comments' && !this.requireTabs) {
-			this.tab = null;
-		} else {
-			this.tab = 'comments';
+		if (this.post) {
+			CommentModal.show({ resource: 'Fireside_Post', resourceId: this.post.id });
 		}
 
 		this.$emit('expanded');

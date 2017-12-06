@@ -1,6 +1,6 @@
 <div @click.stop="go">
 	<router-link :to="notification.routeLocation">
-		<app-timeline-list-item :is-new="isNew" :is-active="isActive">
+		<app-timeline-list-item is-thread :is-new="isNew" :is-active="isActive">
 
 			<app-jolticon slot="bubble" :icon="icon" />
 
@@ -37,13 +37,13 @@
 								notification.type === 'comment-add' ||
 								notification.type === 'comment-add-object-owner'
 							"
-							class="comment-widget-comment-content"
+							class="comment-content"
 							v-html="notification.action_model.comment_compiled"
 							>
 						</div>
 						<div
 							v-else-if="notification.type === 'mention'"
-							class="comment-widget-comment-content"
+							class="comment-content"
 							v-html="notification.action_model.comment.comment_compiled"
 							>
 						</div>

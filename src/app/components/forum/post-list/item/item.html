@@ -10,64 +10,62 @@
 		:is-active="isActive"
 		:is-new="!!post.notification"
 		:is-showing-replies="isReplying || isShowingReplies"
+		:is-reply="isReply"
+		:is-last="isLastInThread"
 		>
 
 		<template slot="meta">
-
-			<span class="dot-separator"></span>
-
-			<a class="link-muted"
-				@click="copyPermalink"
-				v-app-tooltip="$gettext( `Copy Link to Clipboard` )"
-				>
-				<app-jolticon icon="link" class="middle" />
-			</a>
-
-			<a class="link-muted"
-				v-if="app.user && post.user_id === app.user.id && !topic.is_locked && !isEditing"
-				@click="edit()"
-				v-app-tooltip="$gettext( 'Edit Post' )"
-				>
-				<app-jolticon icon="edit" class="middle" />
-			</a>
 
 			<a class="link-muted"
 				v-if="app.user"
 				v-app-popover-trigger="`forum-post-popover-${ id }`"
 				v-app-tooltip="$gettext( 'Options' )"
 				>
-				<app-jolticon icon="ellipsis-h" class="middle" />
+				<app-jolticon icon="ellipsis-v" class="middle" />
 			</a>
 
 			<app-popover :popover-id="`forum-post-popover-${ id }`" v-if="app.user">
 				<div class="list-group list-group-dark">
+					<a class="list-group-item has-icon"
+						@click="copyPermalink"
+						>
+						<app-jolticon icon="link" />
+						<translate>Copy Permalink</translate>
+					</a>
+
+					<a class="list-group-item has-icon"
+						v-if="app.user && post.user_id === app.user.id && !topic.is_locked && !isEditing"
+						@click="edit()"
+						>
+						<app-jolticon icon="edit" />
+						<translate>Edit Post</translate>
+					</a>
 					<a class="list-group-item has-icon"
 						@click="report"
 						>
 						<app-jolticon icon="flag" class="warning" />
 						<translate>Report Post</translate>
 					</a>
-					<a class="list-group-item"
-						v-if="app.user.permission_level > 0"
-						:href="Environment.baseUrl + `/moderate/forums/posts/edit/${ post.id }`"
-						target="_blank"
-						>
-						<translate>Edit</translate>
-					</a>
-					<a class="list-group-item"
-						v-if="app.user.permission_level > 0"
-						:href="Environment.baseUrl + `/moderate/forums/posts/remove/${ post.id }`"
-						target="_blank"
-						>
-						<translate>Remove</translate>
-					</a>
-					<a class="list-group-item"
-						v-if="app.user.permission_level > 0"
-						:href="Environment.baseUrl + `/moderate/users/view/${ post.user_id }`"
-						target="_blank"
-						>
-						<translate>Moderate User</translate>
-					</a>
+					<template v-if="app.user.permission_level > 0">
+						<a class="list-group-item"
+							:href="Environment.baseUrl + `/moderate/forums/posts/edit/${ post.id }`"
+							target="_blank"
+							>
+							<translate>Edit (Mod)</translate>
+						</a>
+						<a class="list-group-item"
+							:href="Environment.baseUrl + `/moderate/forums/posts/remove/${ post.id }`"
+							target="_blank"
+							>
+							<translate>Remove (Mod)</translate>
+						</a>
+						<a class="list-group-item"
+							:href="Environment.baseUrl + `/moderate/users/view/${ post.user_id }`"
+							target="_blank"
+							>
+							<translate>Moderate User</translate>
+						</a>
+					</template>
 				</div>
 			</app-popover>
 
@@ -178,11 +176,12 @@
 
 			<app-message-thread v-if="isShowingReplies && replies.length > 0">
 				<app-forum-post-list-item
-					v-for="reply of replies"
+					v-for="(reply, i) of replies"
 					:key="reply.id"
 					:topic="topic"
 					:post="reply"
 					:is-reply="true"
+					:is-last-in-thread="i === replies.length - 1"
 					/>
 			</app-message-thread>
 

@@ -22,7 +22,7 @@ import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/numbe
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
-import { AppCommentWidgetAddLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
+import { FormCommentLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
@@ -45,7 +45,7 @@ import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 		AppGameGridPlaceholder,
 		AppMediaBar,
 		AppActivityFeed: AppActivityFeedLazy,
-		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
+		AppCommentWidgetAdd: FormCommentLazy,
 		AppJolticon,
 		AppDevlogPostAdd,
 		AppGamePerms,
