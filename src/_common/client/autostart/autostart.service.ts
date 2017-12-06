@@ -10,12 +10,12 @@ export class ClientAutoStart {
 		}
 	}
 
-	static canAutoStart() {
+	static get canAutoStart() {
 		return GJ_BUILD_TYPE === 'production' && Device.os() === 'windows';
 	}
 
 	static async set() {
-		if (!this.canAutoStart()) {
+		if (!this.canAutoStart) {
 			return;
 		}
 
@@ -23,7 +23,7 @@ export class ClientAutoStart {
 	}
 
 	static async clear() {
-		if (!this.canAutoStart()) {
+		if (!this.canAutoStart) {
 			return;
 		}
 
@@ -31,7 +31,7 @@ export class ClientAutoStart {
 	}
 
 	static async check() {
-		if (!this.canAutoStart()) {
+		if (!this.canAutoStart) {
 			return;
 		}
 

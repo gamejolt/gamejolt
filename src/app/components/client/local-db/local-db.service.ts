@@ -22,6 +22,20 @@ export class LocalDb extends Dexie {
 			packages: 'id,game_id',
 		});
 
+		this.version(2)
+			.stores({
+				games: 'id',
+				packages: 'id,game_id',
+			})
+			.upgrade(trans => {
+				return trans
+					.table('games')
+					.toCollection()
+					.modify(game => {
+						game.modified_on = 0;
+					});
+			});
+
 		this.games.mapToClass(LocalDbGame);
 		this.packages.mapToClass(LocalDbPackage);
 
