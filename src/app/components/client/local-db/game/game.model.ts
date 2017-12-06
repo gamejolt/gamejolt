@@ -2,7 +2,7 @@ import { Game } from '../../../../../lib/gj-lib-client/components/game/game.mode
 import { LocalDbModel } from '../model.service';
 import { MediaItem } from '../../../../../lib/gj-lib-client/components/media-item/media-item-model';
 
-export class LocalDbGame implements LocalDbModel<LocalDbGame> {
+export class LocalDbGame extends LocalDbModel<LocalDbGame> {
 	private static readonly CachedGames = new WeakMap<LocalDbGame, Game>();
 
 	id = 0;
@@ -14,7 +14,6 @@ export class LocalDbGame implements LocalDbModel<LocalDbGame> {
 	// Shouldn't this have fields/types?
 	compatibility: any = null;
 
-	// TODO: Fix this... it's wrong.
 	header_media_item: MediaItem | null = null;
 	thumbnail_media_item: MediaItem | null = null;
 
@@ -37,15 +36,15 @@ export class LocalDbGame implements LocalDbModel<LocalDbGame> {
 		return game;
 	}
 
-	// hydrate() {
-	// 	if (this.header_media_item) {
-	// 		this.header_media_item = new MediaItem(this.header_media_item);
-	// 	}
+	hydrate() {
+		if (this.header_media_item) {
+			this.header_media_item = new MediaItem(this.header_media_item);
+		}
 
-	// 	if (this.thumbnail_media_item) {
-	// 		this.thumbnail_media_item = new MediaItem(this.thumbnail_media_item);
-	// 	}
-	// }
+		if (this.thumbnail_media_item) {
+			this.thumbnail_media_item = new MediaItem(this.thumbnail_media_item);
+		}
+	}
 
 	set(data: Partial<LocalDbGame>) {
 		const updateData = Object.assign({}, this, data);
@@ -64,7 +63,15 @@ export class LocalDbGame implements LocalDbModel<LocalDbGame> {
 		this.developer.img_avatar = updateData.developer.img_avatar;
 
 		// Copy full data for these.
-		this.thumbnail_media_item = updateData.thumbnail_media_item;
 		this.header_media_item = updateData.header_media_item;
+		this.thumbnail_media_item = updateData.thumbnail_media_item;
+
+		if (this.header_media_item && !(this.header_media_item instanceof MediaItem)) {
+			this.header_media_item = new MediaItem(updateData.header_media_item);
+		}
+
+		if (this.thumbnail_media_item && !(this.thumbnail_media_item instanceof MediaItem)) {
+			this.thumbnail_media_item = new MediaItem(updateData.thumbnail_media_item);
+		}
 	}
 }

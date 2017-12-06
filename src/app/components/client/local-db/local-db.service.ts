@@ -1,6 +1,14 @@
 import Dexie from 'dexie';
 import { LocalDbGame } from './game/game.model';
 import { LocalDbPackage } from './package/package.model';
+import { LocalDbModel } from './model.service';
+
+function setHooks<T extends LocalDbModel>(table: Dexie.Table<T, number>) {
+	table.hook('reading', obj => {
+		obj.hydrate();
+		return obj;
+	});
+}
 
 export class LocalDb extends Dexie {
 	games: Dexie.Table<LocalDbGame, number>;
@@ -17,11 +25,8 @@ export class LocalDb extends Dexie {
 		this.games.mapToClass(LocalDbGame);
 		this.packages.mapToClass(LocalDbPackage);
 
-		// this.games.hook('reading', obj => {
-		// 	obj.hydrate();
-		// 	console.log('reading hook', obj);
-		// 	return obj;
-		// });
+		setHooks(this.games);
+		setHooks(this.packages);
 
 		this.open();
 	}

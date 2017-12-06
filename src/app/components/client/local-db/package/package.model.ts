@@ -72,7 +72,7 @@ class LocalDbPackageLaunchOption {
 	executable_path = '';
 }
 
-export class LocalDbPackage implements LocalDbModel<LocalDbPackage> {
+export class LocalDbPackage extends LocalDbModel<LocalDbPackage> {
 	install_dir = '';
 	install_state: LocalDbPackagePatchState | null = null;
 	update_state: LocalDbPackagePatchState | null = null;
@@ -184,6 +184,15 @@ export class LocalDbPackage implements LocalDbModel<LocalDbPackage> {
 		return launchOption ? launchOption.executable_path : '';
 	}
 
+	hydrate() {
+		this.release = Object.assign(new LocalDbPackageRelease(), this.release);
+		this.build = Object.assign(new LocalDbPackageBuild(), this.build);
+		this.file = Object.assign(new LocalDbPackageFile(), this.file);
+		this.launch_options = this.launch_options.map(i =>
+			Object.assign(new LocalDbPackageLaunchOption(), i)
+		);
+	}
+
 	static fromSitePackageInfo(
 		pkg: GamePackage,
 		release: GameRelease,
@@ -191,7 +200,6 @@ export class LocalDbPackage implements LocalDbModel<LocalDbPackage> {
 		launchOptions: GameBuildLaunchOption[]
 	) {
 		// All launch options are passed in. Let's just pull the ones for our build.
-		// const launchOptions: typeof LocalDbPackage.prototype.launch_options = [];
 		launchOptions = launchOptions.filter(i => i.game_build_id === build.id);
 
 		return {

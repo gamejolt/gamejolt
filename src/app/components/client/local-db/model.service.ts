@@ -1,4 +1,4 @@
-export interface LocalDbModel<T> {
-	// hydrate(): void;
-	set(data: Partial<T>): void;
+export abstract class LocalDbModel<T = any> {
+	abstract hydrate(): void;
+	abstract set(data: Partial<T>): void;
 }
