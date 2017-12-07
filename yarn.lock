@@ -62,8 +62,8 @@
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-2.0.0.tgz#5a7306e367c539b9f6543499de8dd519fac37a8b"
 
 "@types/node@*":
-  version "8.0.55"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.55.tgz#015966c0af809216b8a46cc527b5c211994d36f0"
+  version "8.0.57"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.57.tgz#e5d8b4dc112763e35cfc51988f4f38da3c486d99"
 
 "@types/node@8.0.53":
   version "8.0.53"
@@ -850,11 +850,11 @@ browserslist@^1.3.6, browserslist@^1.5.2, browserslist@^1.7.6:
     electron-to-chromium "^1.2.7"
 
 browserslist@^2.5.1:
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-2.9.1.tgz#b72d3982ab01b5cd24da62ff6d45573886aff275"
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-2.10.0.tgz#bac5ee1cc69ca9d96403ffb8a3abdc5b6aed6346"
   dependencies:
-    caniuse-lite "^1.0.30000770"
-    electron-to-chromium "^1.3.27"
+    caniuse-lite "^1.0.30000780"
+    electron-to-chromium "^1.3.28"
 
 buffer-alloc-unsafe@^0.1.0:
   version "0.1.1"
@@ -977,7 +977,7 @@ caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
   version "1.0.30000780"
   resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000780.tgz#8d1977561d00ff0f0ed2b6b66140328ab4504c0a"
 
-caniuse-lite@^1.0.30000748, caniuse-lite@^1.0.30000770:
+caniuse-lite@^1.0.30000748, caniuse-lite@^1.0.30000780:
   version "1.0.30000780"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000780.tgz#1f9095f2efd4940e0ba6c5992ab7a9b64cc35ba4"
 
@@ -1124,7 +1124,7 @@ clean-css@4.1.9, clean-css@4.1.x, clean-css@^4.1.9:
 
 "client-voodoo@github:gamejolt/client-voodoo#client-vue":
   version "2.0.0-alpha.11"
-  resolved "https://codeload.github.com/gamejolt/client-voodoo/tar.gz/fa5b0932a08f34460e4e38f178cfb8fa4d5d6238"
+  resolved "https://codeload.github.com/gamejolt/client-voodoo/tar.gz/3a675ef990a37d7c7ce6973a76fb8de19b7c40f0"
   dependencies:
     JSONStream "github:gamejolt/JSONStream#no-shebang"
     follow-redirects "1.2.6"
@@ -2057,7 +2057,7 @@ ejs@^2.3.4, ejs@^2.5.6:
   version "2.5.7"
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.5.7.tgz#cc872c168880ae3c7189762fd5ffc00896c9518a"
 
-electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.27:
+electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.28:
   version "1.3.28"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.28.tgz#8dd4e6458086644e9f9f0a1cf32e2a1f9dffd9ee"
 
@@ -2712,7 +2712,7 @@ fs-exists-sync@^0.1.0:
 
 fs-extra@^0.30.0:
   version "0.30.0"
-  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-0.30.0.tgz#f233ffcc08d4da7d432daa449776989db1df93f0"
+  resolved "http://registry.npmjs.org/fs-extra/-/fs-extra-0.30.0.tgz#f233ffcc08d4da7d432daa449776989db1df93f0"
   dependencies:
     graceful-fs "^4.1.2"
     jsonfile "^2.1.0"
@@ -5233,7 +5233,7 @@ number-is-nan@^1.0.0:
 
 "nwjs-snappy-updater@github:gamejolt/nwjs-snappy-updater#client-vue":
   version "1.0.0"
-  resolved "https://codeload.github.com/gamejolt/nwjs-snappy-updater/tar.gz/e75b374c44d4307bce77ee652852624c2ac3e898"
+  resolved "https://codeload.github.com/gamejolt/nwjs-snappy-updater/tar.gz/2751ccf4f78ce3f578496e99be9191ed032883b8"
   dependencies:
     del "2.2.0"
     download "4.4.3"
@@ -7574,9 +7574,13 @@ ts-loader@3.1.1:
     loader-utils "^1.0.2"
     semver "^5.0.1"
 
-tslib@1.8.0, tslib@^1.7.1:
+tslib@1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.8.0.tgz#dc604ebad64bcbf696d613da6c954aa0e7ea1eb6"
+
+tslib@^1.7.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.8.1.tgz#6946af2d1d651a7b1863b531d6e5afa41aa44eac"
 
 tslint@5.8.0:
   version "5.8.0"
