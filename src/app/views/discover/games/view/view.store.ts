@@ -257,6 +257,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.game = Registry.find<Game>('Game', gameId) as any;
 		this.showDescription = false;
 		this.isOverviewLoaded = false;
+		this.recommendedGames = [];
 		this.mediaItems = [];
 		setAds(this.game);
 	}
