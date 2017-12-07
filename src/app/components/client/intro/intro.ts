@@ -40,6 +40,11 @@ export class AppClientIntro extends Vue {
 			resolve => (this.initialStateChangeResolver = resolve)
 		);
 
+		// If we started offline, skip immediately.
+		if (Connection.isOffline) {
+			this.initialStateChangeResolver();
+		}
+
 		EventBus.on('routeChangeAfter', () => {
 			this.initialStateChangeResolver();
 		});
@@ -94,7 +99,7 @@ export class AppClientIntro extends Vue {
 		this.shouldTransitionOut = true;
 	}
 
-	@Watch('Connection.isOffline', { immediate: true })
+	@Watch('Connection.isOffline')
 	onConnectionOnlineChanged(isOffline: boolean) {
 		if (isOffline) {
 			this.initialStateChangeResolver();
