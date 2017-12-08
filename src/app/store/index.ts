@@ -131,7 +131,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		} catch (e) {}
 
 		this._setBootstrapped();
-		BroadcastModal.check();
+
+		if (!GJ_IS_CLIENT) {
+			BroadcastModal.check();
+		}
 	}
 
 	@VuexAction
