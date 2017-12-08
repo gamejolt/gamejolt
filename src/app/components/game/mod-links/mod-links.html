@@ -35,6 +35,13 @@
 		<span>Tag: #gjboost</span>
 	</a>
 	<a class="list-group-item has-icon"
+		@click="tag( 'gjhome' )"
+		target="_blank"
+		>
+		<app-jolticon icon="tag" />
+		<span>Tag: #gjhome</span>
+	</a>
+	<a class="list-group-item has-icon"
 		:href="Environment.baseUrl + `/moderate/games/view/${game.id}`"
 		target="_blank"
 		>

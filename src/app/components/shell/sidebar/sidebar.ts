@@ -71,13 +71,11 @@ export class AppShellSidebar extends Vue {
 		other: 'Other',
 	};
 
+	// This is "hot".
+	defaultBrowseSection = null;
+
 	readonly Environment = Environment;
 	readonly Screen = Screen;
-
-	// Show hot when logged in, otherwise default to best.
-	get defaultBrowseSection() {
-		return 'featured';
-	}
 
 	get filteredBundleCollections() {
 		return this.bundleCollections.sort((a, b) => stringSort(a.name, b.name));

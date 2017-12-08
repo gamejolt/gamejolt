@@ -24,19 +24,19 @@
 				<li>
 					<router-link
 						class="no-icon"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-						v-app-track-event="`sidebar:games:featured`"
+						:to="{ name: 'discover.games.list._fetch', params: { section: null } }"
+						v-app-track-event="`sidebar:games:hot`"
 						>
-						<translate>Featured Games</translate>
+						<translate>Hot Games</translate>
 					</router-link>
 				</li>
 				<li>
 					<router-link
 						class="no-icon"
-						:to="{ name: 'discover.games.list._fetch', params: { section: null } }"
-						v-app-track-event="`sidebar:games:hot`"
+						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
+						v-app-track-event="`sidebar:games:featured`"
 						>
-						<translate>Hot Games</translate>
+						<translate>Featured Games</translate>
 					</router-link>
 				</li>
 				<li>

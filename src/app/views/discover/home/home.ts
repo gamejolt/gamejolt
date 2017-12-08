@@ -8,7 +8,6 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { AppGameGrid } from '../../../components/game/grid/grid';
-import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import { AppChannelThumbnail } from '../../../components/channel/thumbnail/thumbnail';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -20,6 +19,8 @@ import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/plac
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
+import { AppDiscoverHomeBanner } from './_banner/banner';
+import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -44,6 +45,7 @@ export interface DiscoverRow {
 		AppChannelThumbnail,
 		AppAdPlacement,
 		AppAuthJoin: AppAuthJoinLazy,
+		AppDiscoverHomeBanner,
 	},
 	directives: {
 		AppTrackEvent,
@@ -55,66 +57,8 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 	isLoaded = false;
 	channels: any[] = [];
-	featuredGame: Game | null = null;
-
-	games: { [k: string]: Game[] } = {
-		featured: [],
-		hot: [],
-		best: [],
-		recommended: [],
-	};
-
-	get rows() {
-		const rows: DiscoverRow[] = [];
-
-		rows.push({
-			title: this.$gettext('Featured'),
-			desc: this.$gettext(`staff picks`),
-			url: {
-				name: 'discover.games.list._fetch',
-				params: { section: 'featured' },
-			},
-			eventLabel: 'featured-games',
-			games: 'featured',
-		});
-
-		// if (this.isLoaded && this.app.user) {
-		// 	rows.push({
-		// 		title: this.$gettext('Recommended'),
-		// 		desc: this.$gettext(`based on your history`),
-		// 		url: {
-		// 			name: 'library.collection.recommended',
-		// 			params: { id: this.app.user.username },
-		// 		},
-		// 		eventLabel: 'recommended',
-		// 		games: 'recommended',
-		// 	});
-		// }
-
-		rows.push({
-			title: this.$gettext('Hot Games'),
-			desc: this.$gettext(`new stuff that people are enjoying`),
-			url: {
-				name: 'discover.games.list._fetch',
-				params: { section: null as any },
-			},
-			eventLabel: 'hot-games',
-			games: 'hot',
-		});
-
-		rows.push({
-			title: this.$gettext('Top Games'),
-			desc: this.$gettext(`based on ratings`),
-			url: {
-				name: 'discover.games.list._fetch',
-				params: { section: 'best' },
-			},
-			eventLabel: 'best-games',
-			games: 'best',
-		});
-
-		return rows;
-	}
+	featuredItem: FeaturedItem | null = null;
+	games: Game[] = [];
 
 	@RouteResolve({ cache: true, lazy: true })
 	routeResolve() {
@@ -145,21 +89,8 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			},
 		};
 
-		this.featuredGame = $payload.featuredGame ? new Game($payload.featuredGame) : null;
-
-		const featuredItems = FeaturedItem.populate($payload.featuredGames);
-		this.games.featured = featuredItems.map(item => item.game).slice(0, 6);
-		// this.games.recommended = Game.populate($payload.recommendedGames);
-
-		// If we pull from cache, don't refresh with new payload data. If it's not cache, we
-		// ovewrite with our cached data.
-		if (!this.isLoaded) {
-			this.games.hot = Game.populate($payload.hotGames).slice(0, 15);
-			this.games.best = Game.populate($payload.bestGames).slice(0, 6);
-		} else {
-			$payload.hotGames = this.games.hot;
-			$payload.bestGames = this.games.best;
-		}
+		this.featuredItem = $payload.featuredItem ? new FeaturedItem($payload.featuredItem) : null;
+		this.games = Game.populate($payload.games);
 
 		const channels = [
 			'action',
