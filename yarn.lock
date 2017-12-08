@@ -755,7 +755,7 @@ boom@5.x.x:
   dependencies:
     hoek "4.x.x"
 
-"bootstrap-stylus@github:hworld/bootstrap-stylus#master":
+bootstrap-stylus@hworld/bootstrap-stylus#master:
   version "3.1.1"
   resolved "https://codeload.github.com/hworld/bootstrap-stylus/tar.gz/885d2dae5530774b0c011162060379ceb08bf405"
 
@@ -6342,10 +6342,6 @@ reflect-metadata@0.1.10, reflect-metadata@^0.1.10:
 regenerate@^1.2.1:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.3.3.tgz#0c336d3980553d755c39b586ae3b20aa49c82b7f"
-
-regenerator-runtime@^0.9.5:
-  version "0.9.6"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.9.6.tgz#d33eb95d0d2001a4be39659707c51b0cb71ce029"
 
 regenerator-runtime@^0.9.5:
   version "0.9.6"
