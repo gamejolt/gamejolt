@@ -38,14 +38,13 @@ export class AppChatUserListItem extends Vue {
 		return this.chat.canModerate(this.room, this.user);
 	}
 
-	onUserClick() {
-		// Otherwise, the default is just to follow the link, which is fine.
+	onUserClick(e: Event) {
 		if (!this.showPm) {
-			return true;
+			return;
 		}
 
 		this.chat.enterRoom(this.user.roomId, true);
-		return false;
+		e.preventDefault();
 	}
 
 	toggleModTools() {

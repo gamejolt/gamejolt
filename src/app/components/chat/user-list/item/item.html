@@ -6,7 +6,7 @@
 			active: showPm && chat.room && chat.room.id === user.roomId,
 		}"
 		:title="`${user.displayName} (@${user.username})`"
-		@click="onUserClick"
+		@click.native.capture="onUserClick"
 		>
 
 		<span class="tag tag-pink notifications-tag"
