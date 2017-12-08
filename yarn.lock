@@ -1122,9 +1122,9 @@ clean-css@4.1.9, clean-css@4.1.x, clean-css@^4.1.9:
   dependencies:
     source-map "0.5.x"
 
-"client-voodoo@github:gamejolt/client-voodoo#client-vue":
-  version "2.0.0-alpha.11"
-  resolved "https://codeload.github.com/gamejolt/client-voodoo/tar.gz/3a675ef990a37d7c7ce6973a76fb8de19b7c40f0"
+client-voodoo@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.0.0.tgz#8be5eebc8c88db1a5e87ba86938b706f8bcdc0ea"
   dependencies:
     JSONStream "github:gamejolt/JSONStream#no-shebang"
     follow-redirects "1.2.6"
@@ -5231,9 +5231,9 @@ number-is-nan@^1.0.0:
     update-notifier "^0.1.8"
     winresourcer "^0.9.0"
 
-"nwjs-snappy-updater@github:gamejolt/nwjs-snappy-updater#client-vue":
-  version "1.0.0"
-  resolved "https://codeload.github.com/gamejolt/nwjs-snappy-updater/tar.gz/2751ccf4f78ce3f578496e99be9191ed032883b8"
+nwjs-snappy-updater@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/nwjs-snappy-updater/-/nwjs-snappy-updater-1.1.0.tgz#43b819d3aacb3d521f364a07371933392be635d1"
   dependencies:
     del "2.2.0"
     download "4.4.3"
