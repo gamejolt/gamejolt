@@ -1,9 +1,11 @@
-import { Window, Tray, Menu, MenuItem } from 'nw.gui';
 import Vue, { CreateElement } from 'vue';
+import { State } from 'vuex-class';
+import { Window, Tray, Menu, MenuItem } from 'nw.gui';
 import { Component } from 'vue-property-decorator';
+
 import { Client } from '../client.service';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
+import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 
 declare var global: NodeJS.Global & {
 	tray: Tray | undefined;
@@ -11,6 +13,8 @@ declare var global: NodeJS.Global & {
 
 @Component({})
 export class AppClientTray extends Vue {
+	@State app: AppStore;
+
 	isFocused = false;
 	isMinimized = false;
 	isClosed = false;
@@ -19,23 +23,12 @@ export class AppClientTray extends Vue {
 		menuBuilder: undefined as ((menu: Menu) => void) | undefined,
 	};
 
-	get section() {
-		if (window.location.href.startsWith(Environment.wttfBaseUrl)) {
-			return 'app';
-		} else if (window.location.href.startsWith(Environment.authBaseUrl)) {
-			return 'auth';
-		} else if (window.location.href.startsWith(Environment.checkoutBaseUrl)) {
-			return 'checkout';
-		}
-		throw new Error(`Invalid section.`);
-	}
-
 	/**
 	 * Whether or not the app will actually quit when you tell it to or if it
 	 * will do a soft quit.
 	 */
 	get isClientGreedy() {
-		return this.section === 'app';
+		return this.app.clientSection === 'app';
 	}
 
 	mounted() {
