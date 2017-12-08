@@ -3,12 +3,12 @@ import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import View from '!view!./banner.html?style=./banner.styl';
 
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { Store } from '../../../../../site-editor/store/index';
 import { AppGameFollowWidget } from '../../../../components/game/follow-widget/follow-widget';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { FeaturedItem } from '../../../../components/featured-item/featured-item.model';
 
 @View
 @Component({
@@ -21,16 +21,13 @@ import { Screen } from '../../../../../lib/gj-lib-client/components/screen/scree
 	},
 })
 export class AppDiscoverHomeBanner extends Vue {
-	@Prop(Game) game: Game;
+	@Prop(FeaturedItem) item: FeaturedItem;
 
 	@State app: Store['app'];
-
-	img = 'https://n3b6p5n5.ssl.hwcdn.net/data/fireside/posts/0/48/5548/media/coma_logo_white-small-dxystxur.png';
-	backImg = 'https://n3b6p5n5.ssl.hwcdn.net/data/fireside/posts/0/48/5548/media/onceuponacoma_gamejoltbanner-cropped-q98gsi2v.jpg';
 
 	readonly Screen = Screen;
 
 	get shouldShowFollow() {
-		return this.app.user && !this.game.is_following;
+		return this.app.user && !this.item.game.is_following;
 	}
 }

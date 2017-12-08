@@ -1,13 +1,12 @@
 import { Model } from '../../../lib/gj-lib-client/components/model/model.service';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
-import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
 
 export class FeaturedItem extends Model {
-	content: string;
-	img_version: number;
-	header_media_item: MediaItem;
-	posted_on: number;
 	game: Game;
+	content: string;
+	back_url: string;
+	front_url: string;
+	posted_on: number;
 
 	constructor(data: any = {}) {
 		super(data);
