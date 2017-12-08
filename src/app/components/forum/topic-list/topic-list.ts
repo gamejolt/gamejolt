@@ -10,6 +10,7 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppForumTopicUpvoteWidget } from '../topic/upvote-widget/upvote-widget';
 
 @View
 @Component({
@@ -17,6 +18,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 		AppJolticon,
 		AppTimeAgo,
 		AppUserAvatar,
+		AppForumTopicUpvoteWidget,
 	},
 	directives: {
 		AppTooltip,
@@ -27,6 +29,8 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 })
 export class AppForumTopicList extends Vue {
 	@Prop(Array) topics: ForumTopic[];
+	@Prop(String) sort: string;
+	@Prop(Boolean) useUpvotes: boolean;
 	@Prop(Number) postCountPerPage: number;
 
 	readonly date = date;

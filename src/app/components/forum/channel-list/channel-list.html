@@ -13,7 +13,7 @@
 					class="link-unstyled"
 					:to="{
 						name: 'forums.channels.view',
-						params: { name: channel.name },
+						params: { name: channel.name, sort: 'active' },
 					}"
 					>
 					#{{ channel.name }}
@@ -48,6 +48,7 @@
 		<div class="col-md-3" v-if="Screen.isDesktop">
 			<div class="forum-channel-list-item-latest-topic clearfix"
 				v-for="latestPost of [ indexedPosts[ channel.id ] ]"
+				v-if="latestPost"
 				:key="latestPost.id"
 				>
 				<template v-if="latestPost">

@@ -15,6 +15,7 @@ import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Store } from '../../../../store/index';
+import { AppNavTabList } from '../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -29,6 +30,7 @@ import {
 		AppForumTopicList,
 		AppPagination,
 		AppForumBreadcrumbs,
+		AppNavTabList,
 	},
 	filters: {
 		number,
@@ -50,9 +52,18 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 
 	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: Route) {
+		const sort = route.params.sort || 'active';
 		return Api.sendRequest(
-			'/web/forums/channels/' + route.params.name + '?page=' + (route.query.page || 1)
+			`/web/forums/channels/${route.params.name}/${sort}?page=${route.query.page || 1}`
 		);
+	}
+
+	get sort() {
+		return this.$route.params.sort || 'active';
+	}
+
+	get page() {
+		return this.$route.query.page || 1;
 	}
 
 	get routeTitle() {

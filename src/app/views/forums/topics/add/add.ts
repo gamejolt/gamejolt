@@ -60,7 +60,7 @@ export default class RouteForumsTopicsAdd extends BaseRouteComponent {
 
 		this.$router.push({
 			name: 'forums.channels.view',
-			params: { name: this.channel.name },
+			params: { name: this.channel.name, sort: 'active' },
 		});
 	}
 }
