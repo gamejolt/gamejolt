@@ -93,6 +93,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
 
+		this.showFullDescription = false;
+
 		this.developerGames = Game.populate($payload.developerGamesTeaser);
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
 		this.videos = CommentVideo.populate($payload.videos);
