@@ -132,7 +132,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 		this._setBootstrapped();
 
-		if (!GJ_IS_CLIENT) {
+		if (!GJ_IS_CLIENT && !GJ_IS_SSR) {
 			BroadcastModal.check();
 		}
 	}
@@ -167,6 +167,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async loadChat() {
+		if (GJ_IS_SSR) {
+			return;
+		}
+
 		const ChatClient_ = await ChatClientLazy();
 		this._setChat(new ChatClient_());
 	}
