@@ -79,8 +79,8 @@
 	},
 	"dependencies": {
 		"axios": "0.17.1",
-		"client-voodoo": "github:gamejolt/client-voodoo#client-vue",
-		"nwjs-snappy-updater": "github:gamejolt/nwjs-snappy-updater#client-vue"
+		"client-voodoo": "2.0.0",
+		"nwjs-snappy-updater": "1.1.0"
 	},
 	"main": "app://game-jolt-client/index.html#/",
 	"window": {
@@ -97,11 +97,9 @@
 	"webkit": {
 		"plugin": true
 	},
-	"clientManifestUrl": "https://dl.dropboxusercontent.com/s/zwetmtafcld8sse/manifest-2.json",
-	"chromium-args":
-		"--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
-	"user-agent":
-		"GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
+	"clientManifestUrl": "https://d.gamejolt.net/data/client/manifest-2.json",
+	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
 		"linux": {
 			"main": "app://game-jolt-client/package/index.html#/",
