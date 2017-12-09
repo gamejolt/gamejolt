@@ -23,41 +23,29 @@
 			:label="$gettext( `header` )"
 			/>
 
-	</app-form-group>
+		<br />
 
-	<app-form-group
-		name="crop"
-		:label="$gettext( 'Your Uploaded Header' )"
-		v-if="formModel.header_media_item && !formModel.file"
-		>
-
-		<div class="form-control-static">
-			<app-form-control-crop
-				:src="formModel.header_media_item.img_url"
-				:aspect-ratio="1"
-				:min-width="minSize"
-				:min-height="minSize"
-				/>
-
-			<app-form-control-errors
-				:label="$gettext( 'crop' )"
-				/>
-		</div>
+		<app-form-button icon="edit" v-if="this.formModel.file">
+			<translate>Upload Header</translate>
+		</app-form-button>
 	</app-form-group>
 
 	<template v-if="formModel.header_media_item && !hasFormErrors">
 		<div>
-			<app-form-button icon="edit">
-				<translate>Save Crop</translate>
-			</app-form-button>
+			<app-form-group
+				name="preview"
+				:label="$gettext( `Your Header` )">
 
-			<button
-				class="btn btn-danger-outline"
-				@click.prevent.stop="clearHeader()"
-				>
-				<app-jolticon icon="remove" />
-				<translate>Remove Header</translate>
-			</button>
+				<img ref="img" :src="formModel.header_media_item.img_url" alt="">
+
+				<button
+					class="btn btn-danger-outline"
+					@click.prevent.stop="clearHeader()"
+					>
+					<app-jolticon icon="remove" />
+					<translate>Remove Header</translate>
+				</button>
+			</app-form-group>
 		</div>
 
 		<br>

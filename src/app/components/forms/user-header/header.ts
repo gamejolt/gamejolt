@@ -16,10 +16,6 @@ import {
 	FormOnLoad,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 
-type FormModel = User & {
-	crop?: any;
-};
-
 @View
 @Component({
 	components: {
@@ -29,7 +25,7 @@ type FormModel = User & {
 		AppJolticon,
 	},
 })
-export class FormUserHeader extends BaseForm<FormModel> implements FormOnLoad {
+export class FormUserHeader extends BaseForm<User> implements FormOnLoad {
 	@Prop(User) user: User;
 
 	modelClass = User;
@@ -56,17 +52,6 @@ export class FormUserHeader extends BaseForm<FormModel> implements FormOnLoad {
 		return !!this.formModel.header_media_item;
 	}
 
-	get crop() {
-		return this.formModel.header_media_item
-			? this.formModel.header_media_item.getCrop()
-			: undefined;
-	}
-
-	@Watch('crop')
-	onCropChange() {
-		this.setField('crop', this.crop);
-	}
-
 	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.minSize = payload.minSize;
@@ -76,6 +61,12 @@ export class FormUserHeader extends BaseForm<FormModel> implements FormOnLoad {
 	}
 
 	headerSelected() {
+		// if (this.formModel.file) {
+		// 	this.$refs.form.submit();
+		// }
+	}
+
+	async uploadHeader() {
 		if (this.formModel.file) {
 			this.$refs.form.submit();
 		}
