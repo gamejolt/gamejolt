@@ -1,0 +1,67 @@
+<app-form name="userHeaderForm" ref="form">
+	<app-form-group
+		name="file"
+		:label="$gettext( `Upload New Header` )"
+		:optional="true"
+		>
+
+		<p class="help-block" v-translate>
+			dash.forms.image_filetype_help_html
+		</p>
+
+		<app-form-control-upload
+			:rules="{
+				filesize: maxFilesize,
+				min_img_dimensions: [ minSize, minSize ],
+				max_img_dimensions: [ maxSize, maxSize ],
+			}"
+			accept=".png,.jpg,.jpeg,.gif"
+			@changed="headerSelected()"
+			/>
+
+		<app-form-control-errors
+			:label="$gettext( `header` )"
+			/>
+
+	</app-form-group>
+
+	<app-form-group
+		name="crop"
+		:label="$gettext( 'Your Uploaded Header' )"
+		v-if="formModel.header_media_item && !formModel.file"
+		>
+
+		<div class="form-control-static">
+			<app-form-control-crop
+				:src="formModel.header_media_item.img_url"
+				:aspect-ratio="1"
+				:min-width="minSize"
+				:min-height="minSize"
+				/>
+
+			<app-form-control-errors
+				:label="$gettext( 'crop' )"
+				/>
+		</div>
+	</app-form-group>
+
+	<template v-if="formModel.header_media_item && !hasFormErrors">
+		<div>
+			<app-form-button icon="edit">
+				<translate>Save Crop</translate>
+			</app-form-button>
+
+			<button
+				class="btn btn-danger-outline"
+				@click.prevent.stop="clearHeader()"
+				>
+				<app-jolticon icon="remove" />
+				<translate>Remove Header</translate>
+			</button>
+		</div>
+
+		<br>
+		<br>
+	</template>
+
+</app-form>
