@@ -103,10 +103,7 @@
 							<div class="text-muted">
 								@{{ topic.latest_post.user.username }}
 							</div>
-							<app-time-ago
-								:title="date( topic.latest_post.posted_on, 'medium' )"
-								:date="topic.latest_post.posted_on"
-								/>
+							<app-time-ago :date="topic.latest_post.posted_on" />
 						</div>
 					</div>
 				</div>
