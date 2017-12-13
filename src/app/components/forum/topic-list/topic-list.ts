@@ -47,4 +47,8 @@ export class AppForumTopicList extends Vue {
 
 		return page;
 	}
+
+	shouldShowVoting(topic: ForumTopic) {
+		return this.useUpvotes && !topic.is_locked;
+	}
 }
