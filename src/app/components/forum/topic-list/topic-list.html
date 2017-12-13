@@ -3,11 +3,11 @@
 	<div class="forum-topic-list-item"
 		v-for="topic of topics"
 		:key="topic.id"
-		:class="{ '-has-voting': useUpvotes && !topic.is_locked }"
+		:class="{ '-has-voting': shouldShowVoting(topic) }"
 		>
 		<div
 			class="-vote"
-			v-if="useUpvotes && !topic.is_locked"
+			v-if="shouldShowVoting(topic)"
 			>
 			<app-forum-topic-upvote-widget :topic="topic" />
 		</div>
