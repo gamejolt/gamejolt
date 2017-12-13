@@ -93,11 +93,17 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 	readonly Environment = Environment;
 
 	get loginUrl() {
-		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
+		return (
+			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
+		);
 	}
 
 	get sort() {
 		return this.$route.query.sort;
+	}
+
+	get shouldShowVoting() {
+		return this.topic.can_upvote && !this.topic.is_locked;
 	}
 
 	@RouteResolve({ cache: true })
