@@ -111,6 +111,18 @@
 							<translate>Top</translate>
 						</router-link>
 					</li>
+					<li v-if="channel.type === 'voting'">
+						<router-link
+							:to="{
+								name: 'forums.channels.view',
+								params: { name: channel.name, sort: 'archived' },
+								query: { page: page },
+							}"
+							:class="{ active: sort === 'archived' }"
+							>
+							<translate>Archived</translate>
+						</router-link>
+					</li>
 				</ul>
 
 				<template slot="meta" v-if="topics.length">
