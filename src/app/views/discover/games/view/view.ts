@@ -108,6 +108,16 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		return number(this.game.rating_count || 0) + ' rating(s), avg: ' + this.game.avg_rating;
 	}
 
+	get shouldShowCoverButtons() {
+		// Only show cover buttons on the overview page.
+		return (
+			(!Screen.isXs &&
+				this.$route.name === 'discover.games.view.overview' &&
+				this.packages.length > 0) ||
+			this.game.hasPerms()
+		);
+	}
+
 	@RouteResolve({ lazy: true, cache: true, cacheTag: 'view' })
 	async routeResolve(this: undefined, route: Route) {
 		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));

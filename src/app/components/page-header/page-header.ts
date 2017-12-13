@@ -26,12 +26,9 @@ export class AppPageHeader extends Vue {
 	@Prop({ type: String, default: 'col-xs-12' })
 	colClasses?: string;
 	@Prop() autoscrollAnchorKey: any;
+	@Prop(Boolean) showCoverButtons?: boolean;
 
 	readonly Screen = Screen;
-
-	get hasCoverButtons() {
-		return !!this.$slots['cover-buttons'];
-	}
 
 	get hasSpotlight() {
 		return !!this.$slots['spotlight'];

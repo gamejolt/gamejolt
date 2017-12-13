@@ -1,6 +1,8 @@
 @require '~styles/variables'
 @require '../../../lib/gj-lib-client/stylus/common/mixins'
 
+$-cover-buttons-height = $button-line-height + 20px
+
 .page-header
 	// Bootstrap has styling on .page-header.
 	// Gotta override.
@@ -22,17 +24,6 @@
 		&.has-cover-image
 			padding: 0
 
-			.page-header-cover-buttons
-				position: absolute
-				margin-bottom: 0
-				left: 0
-				right: 0
-				top: 0
-				bottom: 60px
-				display: flex
-				align-items: center
-				justify-content: center
-
 			.page-header-content
 				text-shadow: 1px 1px 1px rgba($black, 0.5)
 
@@ -41,6 +32,48 @@
 					bottom: 0
 					left: ($grid-gutter-width / 2)
 					right: @left
+
+		&.has-cover-buttons
+			// When no image, we want to make sure it has enough separation
+			// between the bottom content, otherwise it looks very cluttered.
+			padding-top: $-cover-buttons-height + 80px
+
+		&.has-cover-image.has-cover-buttons
+			padding-top: ($-cover-buttons-height / 2)
+
+		.page-header-cover-buttons
+			position: absolute
+			margin-bottom: 0
+			left: 0
+			right: 0
+			top: 0
+			height: ($-cover-buttons-height / 2)
+			background-color: $gray-darkest
+			text-align: center
+
+			&-inner
+				position: relative
+				display: inline-flex
+				min-width: 100px
+				height: $-cover-buttons-height
+				background-color: $gray-darkest
+				padding-top: 7px
+
+			&-edge
+				$-half = ($-cover-buttons-height / 2)
+				position: absolute
+				bottom: 0
+				width: $-half
+				height: $-half
+
+				path
+					fill: $gray-darkest
+
+				&.-left
+					left: -($-half) + 1px
+
+				&.-right
+					right: -($-half) + 1px
 
 	&-content
 		padding-bottom: 10px
