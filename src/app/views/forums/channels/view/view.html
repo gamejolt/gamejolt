@@ -21,7 +21,7 @@
 						Topics
 					</div>
 					<div class="stat-big-digit">
-						{{ channel.total_topics_count || 0 | number }}
+						{{ channel.topics_count || 0 | number }}
 					</div>
 				</li>
 				<li class="stat-big stat-big-smaller">
@@ -130,9 +130,9 @@
 						<translate
 							:translate-params="{
 								currentPage: number( currentPage ),
-								count: number( channel.topics_count ),
+								count: number( listableTopicsCount ),
 							}"
-							:translate-n="channel.topics_count"
+							:translate-n="listableTopicsCount"
 							translate-plural="Page %{ currentPage } of %{ count } topics."
 							>
 							%{ count } topic.
@@ -154,7 +154,7 @@
 				<app-pagination
 					:pager="true"
 					:items-per-page="perPage"
-					:total-items="channel.topics_count"
+					:total-items="channel.listableTopicsCount"
 					:current-page="currentPage"
 					@pagechange="Scroll.to( 'forum-topics-list', { animate: false } )"
 					/>
