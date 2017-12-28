@@ -56,7 +56,7 @@ export class Search {
 			requestOptions.detach = true;
 		}
 
-		let searchParams = ['q=' + (query || '')];
+		let searchParams = ['q=' + encodeURIComponent(query || '')];
 
 		if (options.page && options.page > 1) {
 			searchParams.push('page=' + options.page);
@@ -64,7 +64,11 @@ export class Search {
 
 		// Catch failures and return an empty success instead.
 		try {
-			return await Api.sendRequest(endpoint + '?' + searchParams.join('&'), null, requestOptions);
+			return await Api.sendRequest(
+				endpoint + '?' + searchParams.join('&'),
+				null,
+				requestOptions
+			);
 		} catch (_e) {
 			return Promise.resolve({});
 		}
