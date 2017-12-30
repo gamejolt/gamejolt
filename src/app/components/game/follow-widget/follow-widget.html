@@ -25,7 +25,7 @@
 	</template>
 
 	<app-popover
-		v-if="showUserFollow"
+		v-if="shouldShowFollow"
 		:popover-id="popoverId"
 		:append-to-body="true"
 		:track-element-width="'#' + widgetId"
@@ -38,6 +38,7 @@
 				class="btn-block"
 				:user="game.developer"
 				:outline="true"
+				event-label="game-follow-widget"
 				/>
 		</div>
 	</app-popover>

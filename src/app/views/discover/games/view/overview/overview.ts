@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { CreateElement } from 'vue';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
@@ -30,7 +30,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@RouteMutation processOverviewPayload: RouteStore['processOverviewPayload'];
 
 	@RouteResolve({ lazy: true, cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		const gameId = parseInt(route.params.id, 10);
 		HistoryTick.sendBeacon('game-view', gameId, {
 			sourceResource: 'Game',
@@ -62,19 +62,19 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		this.bootstrapFeed();
 	}
 
-	async routed() {
-		Meta.description = this.$payload.metaDescription;
-		Meta.fb = this.$payload.fb;
-		Meta.twitter = this.$payload.twitter;
+	async routed($payload: any) {
+		Meta.description = $payload.metaDescription;
+		Meta.fb = $payload.fb;
+		Meta.twitter = $payload.twitter;
 
-		if (this.$payload.microdata) {
-			Meta.microdata = this.$payload.microdata;
+		if ($payload.microdata) {
+			Meta.microdata = $payload.microdata;
 		}
 
-		this.processOverviewPayload(this.$payload);
+		this.processOverviewPayload($payload);
 	}
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		return h(
 			AppDiscoverGamesViewOverviewGame
 			// this.game._is_devlog ? AppDiscoverGamesViewOverviewDevlog : AppDiscoverGamesViewOverviewGame

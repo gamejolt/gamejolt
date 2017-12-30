@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
 
@@ -35,7 +35,7 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 	items: GameDataStoreItem[] = [];
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/api/data-storage/' + route.params.id);
 	}
 
@@ -48,8 +48,8 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 		return null;
 	}
 
-	routed() {
-		this.items = GameDataStoreItem.populate(this.$payload.items);
+	routed($payload: any) {
+		this.items = GameDataStoreItem.populate($payload.items);
 	}
 
 	async removeItem(item: GameDataStoreItem) {

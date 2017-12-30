@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./view.html?style=./view.styl';
 
@@ -6,7 +6,6 @@ import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.s
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppDevlogPostView } from '../../../../../../components/devlog/post/view/view';
 import { AppDevlogPostViewPlaceholder } from '../../../../../../components/devlog/post/view/placeholder/placeholder';
@@ -42,10 +41,10 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 
 	post: FiresidePost | null = null;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve({ lazy: true, cache: true })
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'like-post',
 			message: Translate.$gettext(`You like this post! That's cool.`),
@@ -78,8 +77,8 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		this.post = Registry.find<FiresidePost>('FiresidePost', hash, 'hash');
 	}
 
-	routed() {
-		const post = new FiresidePost(this.$payload.post);
+	routed($payload: any) {
+		const post = new FiresidePost($payload.post);
 		if (this.post) {
 			this.post.assign(post);
 		} else {
@@ -89,8 +88,8 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		this.post.$viewed();
 		this.post.$expanded();
 
-		Meta.description = this.$payload.metaDescription;
-		Meta.fb = this.$payload.fb;
-		Meta.twitter = this.$payload.twitter;
+		Meta.description = $payload.metaDescription;
+		Meta.fb = $payload.fb;
+		Meta.twitter = $payload.twitter;
 	}
 }

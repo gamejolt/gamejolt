@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameFilteringContainer } from '../filtering/container';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
@@ -13,7 +13,7 @@ export class GameListingContainer {
 
 	constructor(public filteringContainer?: GameFilteringContainer) {}
 
-	processPayload(route: VueRouter.Route, payload: any) {
+	processPayload(route: Route, payload: any) {
 		this.isBootstrapped = true;
 		this.games = Game.populate(payload.games);
 		this.gamesCount = payload.gamesCount;
@@ -23,7 +23,7 @@ export class GameListingContainer {
 		this.section = route.params.section || 'hot';
 	}
 
-	setAdTargeting(route: VueRouter.Route) {
+	setAdTargeting(route: Route) {
 		const genre = route.params.category || undefined;
 		const channel = route.params.channel || undefined;
 

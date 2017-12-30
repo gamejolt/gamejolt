@@ -1,13 +1,13 @@
-import Vue from 'vue';
-import { State } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./bundle.html';
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
-import { Store } from '../../../store/index';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppGameThumbnail } from '../../../../app/components/game/thumbnail/thumbnail';
+import { Store } from '../../../store/index';
 
 @View
 @Component({

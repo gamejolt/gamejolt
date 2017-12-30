@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashGamesManageKeyGroupsEdit: VueRouter.RouteConfig = {
+export const routeDashGamesManageKeyGroupsEdit: RouteConfig = {
 	name: 'dash.games.manage.key-groups.edit',
 	path: 'keys/edit/:keyGroupId(\\d+)',
 	props: true,

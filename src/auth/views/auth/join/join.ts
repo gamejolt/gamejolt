@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import View from '!view!./join.html';
 
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
 import { Store } from '../../../store/index';
@@ -24,7 +23,7 @@ import {
 export default class RouteAuthJoin extends BaseRouteComponent {
 	@Mutation setCredentials: Store['setCredentials'];
 
-	Connection = makeObservableService(Connection);
+	readonly Connection = Connection;
 
 	@RouteResolve()
 	async routeResolve() {

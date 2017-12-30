@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDiscoverChannelsViewOverview: VueRouter.RouteConfig = {
+export const routeDiscoverChannelsViewOverview: RouteConfig = {
 	name: 'discover.channels.view.overview',
 	path: '/channels/:channel',
 	props: true,

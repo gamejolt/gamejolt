@@ -1,14 +1,14 @@
+import View from '!view!./maturity-block.html?style=./maturity-block.styl';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import View from '!view!./maturity-block.html?style=./maturity-block.styl';
-
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Settings } from '../../settings/settings.service';
-import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { State } from 'vuex-class';
+
+import { Settings } from '../../../../_common/settings/settings.service';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { AppGameOgrs } from '../ogrs/ogrs';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { Store } from '../../../store/index';
+import { AppGameOgrs } from '../ogrs/ogrs';
 
 @View
 @Component({

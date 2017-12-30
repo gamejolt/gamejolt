@@ -8,7 +8,12 @@ import { AppTranslateLangSelector } from '../../../../lib/gj-lib-client/componen
 import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
+import * as _ClientSystemReportModalMod from '../../client/system-report-modal/system-report-modal.service';
+
+let ClientSystemReportModalMod: typeof _ClientSystemReportModalMod | undefined;
+if (GJ_IS_CLIENT) {
+	ClientSystemReportModalMod = require('../../client/system-report-modal/system-report-modal.service');
+}
 
 @View
 @Component({
@@ -26,16 +31,15 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 })
 export class AppShellFooter extends Vue {
 	curDate = new Date();
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	get clientVersion() {
 		return GJ_VERSION;
 	}
 
-	showSystemReport() {
-		if (GJ_IS_CLIENT) {
-			// TODO(rewrite)
-			// getProvider<any>( 'Client_SystemReportModal' ).show();
+	async showSystemReport() {
+		if (ClientSystemReportModalMod) {
+			ClientSystemReportModalMod.ClientSystemReportModal.show();
 		}
 	}
 }

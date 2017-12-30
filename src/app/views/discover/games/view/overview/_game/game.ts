@@ -4,7 +4,6 @@ import { State } from 'vuex-class';
 import View from '!view!./game.html?style=./game.styl';
 
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppTrackEvent } from '../../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import { AppCard } from '../../../../../../../lib/gj-lib-client/components/card/card';
@@ -34,13 +33,13 @@ import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/m
 import { AppCommentWidgetLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
-import { AppGameThumbnail } from '../../../../../../components/game/thumbnail/thumbnail';
 import { AppGameList } from '../../../../../../components/game/list/list';
-import { AppCommentWidgetAdd } from '../../../../../../../lib/gj-lib-client/components/comment/widget/add/add';
 import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
 import { AppCommentOverview } from '../../../../../../components/comment/overview/overview';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { AppDiscoverGamesViewOverviewDetailsBar } from '../_details-bar/details-bar';
+import { AppCommentWidgetAdd } from '../../../../../../../lib/gj-lib-client/components/comment/add/add';
+import { AppGameThumbnail } from '../../../../../../../_common/game/thumbnail/thumbnail';
 
 @View
 @Component({
@@ -121,8 +120,8 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 
 	@RouteMutation addPost: RouteStore['addPost'];
 
-	Screen = makeObservableService(Screen);
-	Environment = Environment;
+	readonly Screen = Screen;
+	readonly Environment = Environment;
 
 	get hasAnyPerms() {
 		return this.game.hasPerms();

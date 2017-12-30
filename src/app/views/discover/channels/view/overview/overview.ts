@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./overview.html';
 
@@ -45,7 +45,7 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 	Screen = Screen;
 
 	@RouteResolve({ cache: true, lazy: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/discover/channels/overview/' + route.params.channel);
 	}
 
@@ -54,13 +54,13 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed() {
+	routed($payload: any) {
 		this.isLoaded = true;
-		this.bestGames = Game.populate(this.$payload.bestGames).slice(0, 6);
-		this.hotGames = Game.populate(this.$payload.hotGames).slice(0, 6);
+		this.bestGames = Game.populate($payload.bestGames).slice(0, 6);
+		this.hotGames = Game.populate($payload.hotGames).slice(0, 6);
 
 		if (!this.feed) {
-			this.feed = ActivityFeedService.bootstrap(EventItem.populate(this.$payload.posts), {
+			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {
 				type: 'EventItem',
 				url: `/web/discover/channels/posts/${this.channel}`,
 			});

@@ -1,31 +1,30 @@
-import VueRouter from 'vue-router';
-import { State } from 'vuex-class';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./build.html';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { State } from 'vuex-class';
 
-import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
-import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { GameBuild } from '../../../../../../../lib/gj-lib-client/components/game/build/build.model';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
-import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppGameThumbnail } from '../../../../../../../_common/game/thumbnail/thumbnail';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
-import { AppGameThumbnail } from '../../../../../../components/game/thumbnail/thumbnail';
-import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
-import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
-import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
-import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { RouteState, RouteStore } from '../../view.store';
-import { Store } from '../../../../../../store/index';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
-import { AppDiscoverGamesViewOverviewDetails } from '../../overview/_details/details';
-import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
+import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
+import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
+import { GameBuild } from '../../../../../../../lib/gj-lib-client/components/game/build/build.model';
+import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
+import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
+import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
+import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
+import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
+import { Store } from '../../../../../../store/index';
+import { AppDiscoverGamesViewOverviewDetails } from '../../overview/_details/details';
+import { RouteState, RouteStore } from '../../view.store';
 
 const DownloadDelay = 3000;
 
@@ -56,11 +55,11 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 	recommendedGames: Game[] = [];
 	twitterShareMessage = '';
 
-	Screen = makeObservableService(Screen);
-	Environment = Environment;
+	readonly Screen = Screen;
+	readonly Environment = Environment;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		const gameId = parseInt(route.params.id, 10);
 		const buildId = parseInt(route.params.buildId, 10);
 
@@ -81,13 +80,13 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 		return null;
 	}
 
-	async routed() {
-		this.build = new GameBuild(this.$payload.build);
+	async routed($payload: any) {
+		this.build = new GameBuild($payload.build);
 		this.src = null;
 
-		this.developerGames = Game.populate(this.$payload.developerGames);
-		this.recommendedGames = Game.populate(this.$payload.recommendedGames);
-		this.twitterShareMessage = this.$payload.twitterShareMessage;
+		this.developerGames = Game.populate($payload.developerGames);
+		this.recommendedGames = Game.populate($payload.recommendedGames);
+		this.twitterShareMessage = $payload.twitterShareMessage;
 
 		// Don't download on SSR.
 		if (GJ_IS_SSR) {

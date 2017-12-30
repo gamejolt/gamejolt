@@ -1,3 +1,4 @@
+import { Location } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import View from '!view!./home.html?style=./home.styl';
@@ -7,7 +8,6 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { AppGameGrid } from '../../../components/game/grid/grid';
-import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import { AppChannelThumbnail } from '../../../components/channel/thumbnail/thumbnail';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -19,6 +19,8 @@ import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/plac
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
+import { AppDiscoverHomeBanner } from './_banner/banner';
+import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -27,7 +29,7 @@ import {
 export interface DiscoverRow {
 	title: string;
 	desc?: string;
-	url: string;
+	url: Location;
 	eventLabel: string;
 	games: string;
 }
@@ -43,6 +45,7 @@ export interface DiscoverRow {
 		AppChannelThumbnail,
 		AppAdPlacement,
 		AppAuthJoin: AppAuthJoinLazy,
+		AppDiscoverHomeBanner,
 	},
 	directives: {
 		AppTrackEvent,
@@ -54,65 +57,10 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 	isLoaded = false;
 	channels: any[] = [];
+	featuredItem: FeaturedItem | null = null;
+	games: Game[] = [];
 
-	games: { [k: string]: Game[] } = {
-		featured: [],
-		hot: [],
-		best: [],
-		recommended: [],
-	};
-
-	get rows() {
-		const rows: DiscoverRow[] = [];
-
-		rows.push({
-			title: this.$gettext('Featured'),
-			url: this.$router.resolve({
-				name: 'discover.games.list._fetch',
-				params: { section: 'featured' },
-			}).href,
-			eventLabel: 'featured-games',
-			games: 'featured',
-		});
-
-		if (this.isLoaded && this.app.user) {
-			rows.push({
-				title: this.$gettext('Recommended'),
-				desc: this.$gettext(`based on your history`),
-				url: this.$router.resolve({
-					name: 'library.collection.recommended',
-					params: { id: this.app.user.username },
-				}).href,
-				eventLabel: 'recommended',
-				games: 'recommended',
-			});
-		}
-
-		rows.push({
-			title: this.$gettext('Hot Games'),
-			desc: this.$gettext(`new stuff that people are enjoying`),
-			url: this.$router.resolve({
-				name: 'discover.games.list._fetch',
-				params: { section: null as any },
-			}).href,
-			eventLabel: 'hot-games',
-			games: 'hot',
-		});
-
-		rows.push({
-			title: this.$gettext('Top Games'),
-			url: this.$router.resolve({
-				name: 'discover.games.list._fetch',
-				params: { section: 'best' },
-			}).href,
-			eventLabel: 'best-games',
-			games: 'best',
-		});
-
-		return rows;
-	}
-
-	@RouteResolve({ cache: true })
+	@RouteResolve({ cache: true, lazy: true })
 	routeResolve() {
 		return Api.sendRequest('/web/discover');
 	}
@@ -122,12 +70,10 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		Ads.setAdUnit('homepage');
 	}
 
-	routed() {
-		this.isLoaded = true;
-
-		Meta.description = this.$payload.metaDescription;
-		Meta.fb = this.$payload.fb;
-		Meta.twitter = this.$payload.twitter;
+	routed($payload: any) {
+		Meta.description = $payload.metaDescription;
+		Meta.fb = $payload.fb;
+		Meta.twitter = $payload.twitter;
 		Meta.fb.image = Meta.twitter.image = require('../../../img/social/social-share-header.png');
 		Meta.fb.url = Meta.twitter.url = Environment.baseUrl;
 
@@ -143,11 +89,8 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			},
 		};
 
-		const featuredItems = FeaturedItem.populate(this.$payload.featuredGames);
-		this.games.featured = featuredItems.map(item => item.game);
-		this.games.hot = Game.populate(this.$payload.hotGames);
-		this.games.best = Game.populate(this.$payload.bestGames);
-		this.games.recommended = Game.populate(this.$payload.recommendedGames);
+		this.featuredItem = $payload.featuredItem ? new FeaturedItem($payload.featuredItem) : null;
+		this.games = Game.populate($payload.games);
 
 		const channels = [
 			'action',
@@ -172,5 +115,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 				this.channels.push(info);
 			}
 		}
+
+		this.isLoaded = true;
 	}
 }

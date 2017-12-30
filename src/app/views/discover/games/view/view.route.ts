@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
 import { routeDiscoverGamesViewOverview } from './overview/overview.route';
 import { routeDiscoverGamesViewDevlogList } from './devlog/list/list.route';
@@ -9,7 +9,7 @@ import { routeDiscoverGamesViewTrophiesList } from './trophies/list/list.route';
 import { routeDiscoverGamesViewScoresList } from './scores/list/list.route';
 import { routeDiscoverGamesViewDownloadSoundtrack } from './download/soundtrack/soundtrack.route';
 
-export const routeDiscoverGamesView: VueRouter.RouteConfig = {
+export const routeDiscoverGamesView: RouteConfig = {
 	path: ':slug/:id(\\d+)',
 	props: true,
 	component: () => import(/* webpackChunkName: "routeDiscoverGamesView" */ './view'),

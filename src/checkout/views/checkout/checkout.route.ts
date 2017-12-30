@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeCheckout: VueRouter.RouteConfig = {
+export const routeCheckout: RouteConfig = {
 	name: 'checkout',
 	path: '/checkout/:orderId',
 	props: true,

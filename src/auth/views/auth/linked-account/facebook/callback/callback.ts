@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { CreateElement } from 'vue';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 
 import { AuthLinkedAccountProcessing } from '../../_processing/processing';
@@ -16,19 +16,19 @@ import {
 })
 export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteComponent {
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		const { code, state } = route.query;
 		return Api.sendRequest('/web/auth/facebook/callback?code=' + code + '&state=' + state, {});
 	}
 
-	routed() {
-		if (!this.$payload.success) {
-			if (this.$payload.reason && this.$payload.reason === 'no-email') {
+	routed($payload: any) {
+		if (!$payload.success) {
+			if ($payload.reason && $payload.reason === 'no-email') {
 				Growls.error({
 					sticky: true,
 					message: this.$gettext(`auth.linked_account.facebook.no_email_growl`),
 				});
-			} else if (this.$payload.reason && this.$payload.reason === 'duplicate-email') {
+			} else if ($payload.reason && $payload.reason === 'duplicate-email') {
 				Growls.error({
 					sticky: true,
 					message: this.$gettext(`auth.linked_account.facebook.duplicate_email_growl`),
@@ -47,7 +47,7 @@ export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteCom
 		Auth.redirectDashboard();
 	}
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		return h(AuthLinkedAccountProcessing);
 	}
 }

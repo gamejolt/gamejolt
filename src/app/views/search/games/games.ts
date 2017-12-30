@@ -1,9 +1,8 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./games.html';
 
 import { Search } from '../../../components/search/search-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import {
 	BaseRouteComponent,
@@ -20,17 +19,17 @@ import {
 export default class RouteSearchGames extends BaseRouteComponent {
 	@Prop(Object) payload: any;
 
-	Search = makeObservableService(Search);
+	readonly Search = Search;
 
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Search.search(route.query.q, {
 			type: 'game',
 			page: route.query.page ? parseInt(route.query.page, 10) : 1,
 		});
 	}
 
-	routed() {
-		this.$emit('searchpayload', this.$payload);
+	routed($payload: any) {
+		this.$emit('searchpayload', $payload);
 	}
 }

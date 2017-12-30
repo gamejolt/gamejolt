@@ -2,24 +2,30 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "2.0.0",
-    "tasks": [
-        {
+	"tasks": [
+		{
 			"taskName": "Watch Site Dev",
 			"type": "shell",
-			"command": "gulp",
+			"command": "./node_modules/.bin/gulp",
 			"args": [
-				"watch", "--development"
+				"watch",
+				"--development"
 			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
+			"problemMatcher": [
+				"$tsc-watch",
+				"$tslint5",
+				"$gulp-tsc"
+			],
 			"isBackground": true
 		},
 		{
 			"taskName": "Watch Site Prod",
 			"type": "shell",
-			"command": "gulp",
+			"command": "./node_modules/.bin/gulp",
 			"args": [
 				"watch"
 			],
@@ -27,15 +33,63 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"problemMatcher": ["$tsc-watch","$tslint5","$gulp-tsc"],
+			"problemMatcher": [
+				"$tsc-watch",
+				"$tslint5",
+				"$gulp-tsc"
+			],
+			"isBackground": true
+		},
+		{
+			"taskName": "Watch Site Login Dev",
+			"type": "shell",
+			"command": "./node_modules/.bin/gulp",
+			"args": [
+				"watch",
+				"--development",
+				"--section",
+				"auth"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$tsc-watch",
+				"$tslint5",
+				"$gulp-tsc"
+			],
+			"isBackground": true
+		},
+		{
+			"taskName": "Watch Site Login Prod",
+			"type": "shell",
+			"command": "./node_modules/.bin/gulp",
+			"args": [
+				"watch",
+				"--section",
+				"auth"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$tsc-watch",
+				"$tslint5",
+				"$gulp-tsc"
+			],
 			"isBackground": true
 		},
 		{
 			"taskName": "Watch Client Dev",
 			"type": "shell",
-			"command": "gulp",
+			"command": "./node_modules/.bin/gulp",
 			"args": [
-				"watch", "--development", "--client", "--write"
+				"watch",
+				"--development",
+				"--client",
+				"--write"
 			],
 			"group": {
 				"kind": "build",
@@ -46,15 +100,17 @@
 		{
 			"taskName": "Watch Client Prod",
 			"type": "shell",
-			"command": "gulp",
+			"command": "./node_modules/.bin/gulp",
 			"args": [
-				"watch", "--client", "--write"
+				"watch",
+				"--client",
+				"--write"
 			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
 			"isBackground": true
-        }
-    ]
+		}
+	]
 }

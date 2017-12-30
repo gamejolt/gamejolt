@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeAuthJoin: VueRouter.RouteConfig = {
+export const routeAuthJoin: RouteConfig = {
 	name: 'auth.join',
 	path: 'join',
 	props: true,

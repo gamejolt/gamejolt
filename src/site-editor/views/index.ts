@@ -1,7 +1,7 @@
-import VueRouter from 'vue-router';
+import { CreateElement } from 'vue';
+import { Route, RouteConfig } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import { initRouter } from '../../lib/gj-lib-client/utils/router';
-import Vue from 'vue';
 import {
 	RouteResolve,
 	BaseRouteComponent,
@@ -16,18 +16,18 @@ import { store } from '../store/index';
 })
 class RouteEditor extends BaseRouteComponent {
 	@RouteResolve({ lazy: false, cache: false })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		const tab: any = route.params.tab;
 		const siteId = parseInt(route.query.id, 10);
 		return store.dispatch('bootstrapTab', { tab, siteId });
 	}
 
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		return h('div');
 	}
 }
 
-const routes: VueRouter.RouteConfig[] = [
+const routes: RouteConfig[] = [
 	{
 		name: 'editor',
 		path: '/site-editor/:tab',

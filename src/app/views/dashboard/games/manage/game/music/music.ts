@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./music.html';
 
@@ -47,7 +47,7 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 	}
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/music/' + route.params.id);
 	}
 
@@ -60,8 +60,8 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.songs = GameSong.populate(this.$payload.songs);
+	routed($payload: any) {
+		this.songs = GameSong.populate($payload.songs);
 		this.isAdding = !this.songs.length;
 	}
 

@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashMainPurchasesList: VueRouter.RouteConfig = {
+export const routeDashMainPurchasesList: RouteConfig = {
 	name: 'dash.main.purchases.list',
 	path: 'purchases',
 	props: true,

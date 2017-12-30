@@ -5,7 +5,6 @@ import View from '!view!./top-composition.html';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 
 @View
 @Component({
@@ -17,5 +16,5 @@ import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vu
 export class AppAnalyticsReportTopCompositionValue extends Vue {
 	@Prop(Object) reportData: any;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 }

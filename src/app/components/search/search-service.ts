@@ -1,6 +1,7 @@
 import { SearchPayload } from './payload-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { store } from '../../store/index';
+import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 
 export interface SearchOptions {
 	type: 'all' | 'user' | 'game' | 'devlog' | 'typeahead';
@@ -24,7 +25,7 @@ export class Search {
 
 		// If we're in client, let's try to search their installed games.
 		if (GJ_IS_CLIENT && options.type && options.type === 'typeahead') {
-			searchPromises.push(store.state.clientLibrary.searchInstalledGames(query));
+			searchPromises.push(this.searchInstalledGames(query));
 		}
 
 		const _payload = await Promise.all(searchPromises);
@@ -68,4 +69,10 @@ export class Search {
 			return Promise.resolve({});
 		}
 	}
+
+	private static async searchInstalledGames(query: string) {
+		return store.state.clientLibrary.searchInstalledGames(query, 3);
+	}
 }
+
+makeObservableService(Search);

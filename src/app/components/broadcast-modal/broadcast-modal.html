@@ -51,7 +51,7 @@
 								<app-time-ago :date="_post.published_on" />
 							</div>
 						</h5>
-						<p class="list-group-item-text">
+						<p class="list-group-item-text" v-if="_post.lead">
 							{{ _post.lead }}
 						</p>
 					</a>
@@ -76,7 +76,7 @@
 					</a>
 				</h2>
 
-				<p class="lead">
+				<p class="lead" v-if="post.lead">
 					{{ post.lead }}
 				</p>
 

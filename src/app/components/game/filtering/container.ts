@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { Route, Location } from 'vue-router';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
 import { forEach } from '../../../../lib/gj-lib-client/utils/collection';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
@@ -18,7 +18,7 @@ interface GameFilteringContainerDefinition {
 type Params = { [k: string]: string };
 type Filters = { [k: string]: any };
 
-export function checkGameFilteringRoute(route: VueRouter.Route) {
+export function checkGameFilteringRoute(route: Route) {
 	const params = route.query;
 
 	let paramFiltersFound = false;
@@ -57,7 +57,7 @@ export function checkGameFilteringRoute(route: VueRouter.Route) {
 				// Always add in all browser types if we auto-detected.
 				// TODO: Would be nice to not have to manually add every single one in, but rather just a single filter for all browser types.
 				if (!GJ_IS_CLIENT) {
-					filters.browser = Object.keys(GameFilteringContainer.definitions.browser.options);
+					filters.browser = Object.keys(GameFilteringContainer.definitions.browser.options || {});
 				} else {
 					// On client we only do HTML for now.
 					filters.browser = ['html'];
@@ -153,7 +153,7 @@ export class GameFilteringContainer {
 		return isEmpty(this.filters, { skipQuery: true });
 	}
 
-	constructor(route: VueRouter.Route) {
+	constructor(route: Route) {
 		// Default all filters to empty values.
 		forEach(GameFilteringContainer.definitions, (definition, key) => {
 			if (definition.type === 'array') {
@@ -168,7 +168,7 @@ export class GameFilteringContainer {
 		this.init(route);
 	}
 
-	init(route: VueRouter.Route) {
+	init(route: Route) {
 		const params = route.query;
 
 		forEach(GameFilteringContainer.definitions, (definition, filter) => {
@@ -277,7 +277,7 @@ export class GameFilteringContainer {
 		return this.filters[filter].indexOf(option) !== -1;
 	}
 
-	getQueryString(route: VueRouter.Route) {
+	getQueryString(route: Route) {
 		let queryPieces: string[] = [];
 
 		if (route.params.section) {
@@ -363,7 +363,7 @@ export class GameFilteringContainer {
 	}
 }
 
-function getNewRouteLocation(route: VueRouter.Route, filters: Filters) {
+function getNewRouteLocation(route: Route, filters: Filters) {
 	const query = Object.assign({}, filters);
 
 	if (!objectEquals(query, route.query)) {
@@ -371,7 +371,7 @@ function getNewRouteLocation(route: VueRouter.Route, filters: Filters) {
 			name: route.name,
 			params: route.params,
 			query,
-		} as VueRouter.Location;
+		} as Location;
 	}
 }
 

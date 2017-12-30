@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./games.html';
 
@@ -30,7 +30,7 @@ export default class RouteDiscoverChannelsViewGames extends BaseRouteComponent {
 	listing: GameListingContainer | null = null;
 
 	@RouteResolve({ cache: true })
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		const location = checkGameFilteringRoute(route);
 		if (location) {
 			return new LocationRedirect(location);
@@ -42,14 +42,14 @@ export default class RouteDiscoverChannelsViewGames extends BaseRouteComponent {
 		);
 	}
 
-	routed() {
+	routed($payload: any) {
 		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer(this.$route);
 			this.listing = new GameListingContainer(this.filtering);
 		}
 
 		this.listing.setAdTargeting(this.$route);
-		this.listing.processPayload(this.$route, this.$payload);
+		this.listing.processPayload(this.$route, $payload);
 
 		Ads.setAdUnit('gamesdir');
 	}

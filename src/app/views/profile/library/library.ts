@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./library.html';
 
@@ -24,7 +24,7 @@ export default class RouteProfileLibrary extends BaseRouteComponent {
 	collections: GameCollection[] = [];
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/library/@' + route.params.username);
 	}
 
@@ -37,15 +37,15 @@ export default class RouteProfileLibrary extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.collections = GameCollection.populate(this.$payload.collections);
+	routed($payload: any) {
+		this.collections = GameCollection.populate($payload.collections);
 
-		const followedCollection = new GameCollection(this.$payload.followedCollection);
-		const ownedCollection = new GameCollection(this.$payload.ownedCollection);
-		const recommendedCollection = new GameCollection(this.$payload.recommendedCollection);
+		const followedCollection = new GameCollection($payload.followedCollection);
+		const ownedCollection = new GameCollection($payload.ownedCollection);
+		const recommendedCollection = new GameCollection($payload.recommendedCollection);
 
-		const developerCollection = this.$payload.developerCollection
-			? new GameCollection(this.$payload.developerCollection)
+		const developerCollection = $payload.developerCollection
+			? new GameCollection($payload.developerCollection)
 			: null;
 
 		this.collections.unshift(recommendedCollection);

@@ -29,8 +29,8 @@ export default class RouteForumsLandingActive extends BaseRouteComponent {
 		return this.$gettext(`Active Topics in All Forums`);
 	}
 
-	routed() {
-		this.topics = ForumTopic.populate(this.$payload.topics);
-		this.postCountPerPage = this.$payload.postCountPerPage;
+	routed($payload: any) {
+		this.topics = ForumTopic.populate($payload.topics);
+		this.postCountPerPage = $payload.postCountPerPage;
 	}
 }

@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
@@ -8,7 +8,6 @@ import { ActivityFeedService } from '../../../../../../components/activity/feed/
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
 import {
@@ -47,10 +46,10 @@ export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent
 
 	feed: ActivityFeedContainer | null = null;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve({ cache: true, lazy: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/discover/games/devlog/' + route.params.id);
 	}
 
@@ -68,12 +67,13 @@ export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed() {
-		Meta.description = `Stay up to date on all the latest posts for ${this.game
-			.title} on Game Jolt`;
+	routed($payload: any) {
+		Meta.description = `Stay up to date on all the latest posts for ${
+			this.game.title
+		} on Game Jolt`;
 
 		if (!this.feed) {
-			this.feed = ActivityFeedService.bootstrap(EventItem.populate(this.$payload.posts), {
+			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {
 				type: 'EventItem',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,
 			});

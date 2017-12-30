@@ -6,7 +6,6 @@ import { Device } from '../../../../lib/gj-lib-client/components/device/device.s
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
@@ -33,7 +32,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 	platform = Device.os();
 	downloadSrc = '';
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve({ cache: true, lazy: true })
 	routeResolve() {

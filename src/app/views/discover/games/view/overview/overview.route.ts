@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDiscoverGamesViewOverview: VueRouter.RouteConfig = {
+export const routeDiscoverGamesViewOverview: RouteConfig = {
 	name: 'discover.games.view.overview',
 	path: '/games/:slug/:id(\\d+)',
 	props: true,

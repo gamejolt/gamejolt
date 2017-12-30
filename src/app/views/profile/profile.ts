@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import View from '!view!./profile.html?style=./profile.styl';
@@ -64,7 +64,7 @@ export default class RouteProfile extends BaseRouteComponent {
 	Environment = Environment;
 
 	@RouteResolve()
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'follow-user',
 			message: Translate.$gettext(`You're now following this user.`),
@@ -76,24 +76,26 @@ export default class RouteProfile extends BaseRouteComponent {
 		return Api.sendRequest('/web/profile/@' + route.params.username);
 	}
 
-	routed() {
+	routed($payload: any) {
 		Ads.setAdUnit('devprofile');
 
-		this.user = new User(this.$payload.user);
+		this.user = new User($payload.user);
 
-		this.headerMediaItem = this.$payload.headerMediaItem
-			? new MediaItem(this.$payload.headerMediaItem)
+		this.headerMediaItem = $payload.headerMediaItem
+			? new MediaItem($payload.headerMediaItem)
 			: null;
-		this.gamesCount = this.$payload.gamesCount;
-		this.isOnline = this.$payload.isOnline;
-		this.libraryGamesCount = this.$payload.libraryGamesCount;
-		this.activeGameSession = this.$payload.activeGameSession
-			? new UserGameSession(this.$payload.activeGameSession)
+		this.gamesCount = $payload.gamesCount || 0;
+		this.isOnline = $payload.isOnline || false;
+		this.libraryGamesCount = $payload.libraryGamesCount || 0;
+		this.activeGameSession = $payload.activeGameSession
+			? new UserGameSession($payload.activeGameSession)
 			: null;
-		this.videosCount = this.$payload.videosCount || 0;
+		this.videosCount = $payload.videosCount || 0;
 
-		if (this.$payload.userFriendship) {
-			this.userFriendship = new UserFriendship(this.$payload.userFriendship);
+		if ($payload.userFriendship) {
+			this.userFriendship = new UserFriendship($payload.userFriendship);
+		} else {
+			this.userFriendship = null;
 		}
 	}
 

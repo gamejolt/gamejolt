@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./view.html';
@@ -19,7 +19,6 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppScrollTo } from '../../../../../lib/gj-lib-client/components/scroll/to/to.directive';
@@ -36,6 +35,7 @@ import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components
 import { Store } from '../../../../store/index';
 import { AppMessageThreadPagination } from '../../../../../lib/gj-lib-client/components/message-thread/pagination/pagination';
 import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
+import { AppForumTopicUpvoteWidget } from '../../../../components/forum/topic/upvote-widget/upvote-widget';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -59,6 +59,7 @@ import {
 		AppMessageThreadPagination,
 		FormForumPost,
 		FormForumTopic,
+		AppForumTopicUpvoteWidget,
 	},
 	directives: {
 		AppTooltip,
@@ -88,15 +89,25 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 	userPostCounts: any = null;
 	unfollowHover = false;
 
-	Screen = makeObservableService(Screen);
-	Environment = Environment;
+	readonly Screen = Screen;
+	readonly Environment = Environment;
 
 	get loginUrl() {
-		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
+		return (
+			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
+		);
+	}
+
+	get sort() {
+		return this.$route.query.sort;
+	}
+
+	get shouldShowVoting() {
+		return this.topic.can_upvote && !this.topic.is_locked;
 	}
 
 	@RouteResolve({ cache: true })
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		HistoryTick.sendBeacon('forum-topic', parseInt(route.params.id, 10));
 
 		const payload = await Api.sendRequest(
@@ -120,16 +131,16 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.topic = new ForumTopic(this.$payload.topic);
-		this.channel = new ForumChannel(this.$payload.channel);
-		this.posts = ForumPost.populate(this.$payload.posts);
+	routed($payload: any) {
+		this.topic = new ForumTopic($payload.topic);
+		this.channel = new ForumChannel($payload.channel);
+		this.posts = ForumPost.populate($payload.posts);
 
-		this.perPage = this.$payload.perPage;
-		this.currentPage = this.$payload.page || 1;
-		this.isFollowing = this.$payload.isFollowing || false;
-		this.followerCount = this.$payload.followerCount || 0;
-		this.userPostCounts = this.$payload.userPostCounts || {};
+		this.perPage = $payload.perPage;
+		this.currentPage = $payload.page || 1;
+		this.isFollowing = $payload.isFollowing || false;
+		this.followerCount = $payload.followerCount || 0;
+		this.userPostCounts = $payload.userPostCounts || {};
 	}
 
 	async onPostAdded(newPost: ForumPost, response: any) {

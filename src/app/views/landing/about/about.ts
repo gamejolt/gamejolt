@@ -2,7 +2,6 @@ import { Component } from 'vue-property-decorator';
 import View from '!view!./about.html?style=./about.styl';
 
 import { importContext } from '../../../../lib/gj-lib-client/utils/utils';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 
@@ -11,8 +10,8 @@ import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/rou
 	name: 'RouteLandingAbout',
 })
 export default class RouteLandingAbout extends BaseRouteComponent {
-	assetUrls = importContext(require.context('./', false, /\.png$/));
-	Screen = makeObservableService(Screen);
+	readonly assetUrls = importContext(require.context('./', false, /\.png$/));
+	readonly Screen = Screen;
 
 	colors = {
 		ccff00: 'fill-green',

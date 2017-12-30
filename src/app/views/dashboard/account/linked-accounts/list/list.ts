@@ -41,9 +41,9 @@ export default class RouteDashAccountLinkedAccountsList extends BaseRouteCompone
 		return this.$gettext('Linked Accounts');
 	}
 
-	routed() {
+	routed($payload: any) {
 		this.setHeading(this.$gettext('Linked Accounts'));
-		this.channels = YoutubeChannel.populate(this.$payload.channels);
+		this.channels = YoutubeChannel.populate($payload.channels);
 	}
 
 	getProviderIcon(provider: Provider) {

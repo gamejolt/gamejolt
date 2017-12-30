@@ -44,7 +44,12 @@ export default (context: any) => {
 				// gets pulled during the serialize.
 				Object.defineProperty(context.state, 'vuex', {
 					enumerable: true,
-					get: () => store.getServerState(),
+					get: () => {
+						if (store.getServerState) {
+							return store.getServerState();
+						}
+						return {};
+					},
 				});
 
 				context.meta = {

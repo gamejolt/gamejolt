@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
 
@@ -47,7 +47,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 	}
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/api/scores/' + route.params.id);
 	}
 
@@ -60,8 +60,8 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 		return null;
 	}
 
-	routed() {
-		this.scoreTables = GameScoreTable.populate(this.$payload.scoreTables);
+	routed($payload: any) {
+		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
 	}
 
 	onTableAdded(table: GameScoreTable) {

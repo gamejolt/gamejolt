@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./view.html';
@@ -13,9 +13,9 @@ import { AppPagination } from '../../../../../lib/gj-lib-client/components/pagin
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Store } from '../../../../store/index';
+import { AppNavTabList } from '../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -30,6 +30,7 @@ import {
 		AppForumTopicList,
 		AppPagination,
 		AppForumBreadcrumbs,
+		AppNavTabList,
 	},
 	filters: {
 		number,
@@ -44,16 +45,26 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 	stickyTopics: ForumTopic[] = [];
 	perPage = 0;
 	currentPage = 1;
+	listableTopicsCount = 0;
 
-	number = number;
-	Scroll = Scroll;
-	Screen = makeObservableService(Screen);
+	readonly number = number;
+	readonly Scroll = Scroll;
+	readonly Screen = Screen;
 
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
+		const sort = route.params.sort || 'active';
 		return Api.sendRequest(
-			'/web/forums/channels/' + route.params.name + '?page=' + (route.query.page || 1)
+			`/web/forums/channels/${route.params.name}/${sort}?page=${route.query.page || 1}`
 		);
+	}
+
+	get sort() {
+		return this.$route.params.sort || 'active';
+	}
+
+	get page() {
+		return this.$route.query.page || 1;
 	}
 
 	get routeTitle() {
@@ -65,18 +76,19 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.channel = new ForumChannel(this.$payload.channel);
-		this.topics = ForumTopic.populate(this.$payload.topics);
-		this.postCountPerPage = this.$payload.postCountPerPage;
+	routed($payload: any) {
+		this.channel = new ForumChannel($payload.channel);
+		this.topics = ForumTopic.populate($payload.topics);
+		this.postCountPerPage = $payload.postCountPerPage;
+		this.listableTopicsCount = $payload.listableTopicsCount;
 
-		if (this.$payload.stickyTopics && this.$payload.stickyTopics.length) {
-			this.stickyTopics = ForumTopic.populate(this.$payload.stickyTopics);
+		if ($payload.stickyTopics && $payload.stickyTopics.length) {
+			this.stickyTopics = ForumTopic.populate($payload.stickyTopics);
 		} else {
 			this.stickyTopics = [];
 		}
 
-		this.perPage = this.$payload.perPage;
-		this.currentPage = this.$payload.page || 1;
+		this.perPage = $payload.perPage;
+		this.currentPage = $payload.page || 1;
 	}
 }

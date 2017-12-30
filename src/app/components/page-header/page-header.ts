@@ -5,10 +5,9 @@ import './page-header-content.styl';
 
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
-import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppMediaItemCover } from '../media-item/cover/cover';
 import { AppAutoscrollAnchor } from '../../../lib/gj-lib-client/components/scroll/auto-scroll/anchor';
+import { AppMediaItemCover } from '../../../_common/media-item/cover/cover';
 
 @View
 @Component({
@@ -28,7 +27,7 @@ export class AppPageHeader extends Vue {
 	colClasses?: string;
 	@Prop() autoscrollAnchorKey: any;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	get hasCoverButtons() {
 		return !!this.$slots['cover-buttons'];

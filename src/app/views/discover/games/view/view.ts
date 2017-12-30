@@ -1,16 +1,13 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import View from '!view!./view.html';
 import './view-content.styl';
 
 import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppDiscoverGamesViewNav } from './_nav/nav';
@@ -23,7 +20,6 @@ import { AppGameMaturityBlock } from '../../../../components/game/maturity-block
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/cover-buttons';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { AppMeter } from '../../../../../lib/gj-lib-client/components/meter/meter';
 import { RouteStoreName, RouteState, RouteAction, RouteStore, RouteMutation } from './view.store';
 import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
@@ -31,6 +27,7 @@ import { Store } from '../../../../store/index';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
+import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { AppUserFollowWidget } from '../../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
@@ -71,6 +68,9 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@RouteState partnerKey: RouteStore['partnerKey'];
 	@RouteState packages: RouteStore['packages'];
 	@RouteState collaboratorInvite: RouteStore['collaboratorInvite'];
+	@RouteState downloadableBuilds: RouteStore['downloadableBuilds'];
+	@RouteState browserBuilds: RouteStore['browserBuilds'];
+	@RouteState installableBuilds: RouteStore['installableBuilds'];
 
 	@RouteAction bootstrap: RouteStore['bootstrap'];
 	@RouteAction refreshRatingInfo: RouteStore['refreshRatingInfo'];
@@ -85,12 +85,12 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@State app: Store['app'];
 
 	readonly date = date;
-	readonly Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	private ratingCallback?: Function;
 	private gaTrackingId?: string;
 
-	private roleNames = {
+	private roleNames: { [k: string]: string } = {
 		[GameCollaborator.ROLE_COLLABORATOR]: this.$gettext('an equal collaborator'),
 		[GameCollaborator.ROLE_COMMUNITY_MANAGER]: this.$gettext('a community manager'),
 		[GameCollaborator.ROLE_DEVELOPER]: this.$gettext('a developer'),
@@ -101,33 +101,15 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			return '';
 		}
 
-		return this.roleNames[this.collaboratorInvite.role] || '';
+		return this.roleNames[this.collaboratorInvite.role as string] || '';
 	}
 
 	get ratingTooltip() {
 		return number(this.game.rating_count || 0) + ' rating(s), avg: ' + this.game.avg_rating;
 	}
 
-	get installableBuilds() {
-		const os = Device.os();
-		const arch = Device.arch();
-		return Game.pluckInstallableBuilds(this.packages, os, arch);
-	}
-
-	get browserBuilds() {
-		let builds = Game.pluckBrowserBuilds(this.packages);
-
-		// On Client we only want to include HTML games.
-		if (GJ_IS_CLIENT) {
-			builds = builds.filter(item => item.type === GameBuild.TYPE_HTML);
-		}
-
-		// Pull in ROMs to the browser builds.
-		return builds.concat(Game.pluckRomBuilds(this.packages));
-	}
-
 	@RouteResolve({ lazy: true, cache: true, cacheTag: 'view' })
-	async routeResolve(this: undefined, route: VueRouter.Route) {
+	async routeResolve(this: undefined, route: Route) {
 		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
 		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);
 
@@ -182,8 +164,8 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 	}
 
-	routed() {
-		this.bootstrap(this.$payload);
+	routed($payload: any) {
+		this.bootstrap($payload);
 
 		// If the game has a GA tracking ID, then we attach it to this
 		// scope so all page views within get tracked.
@@ -191,20 +173,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			Analytics.attachAdditionalPageTracker(this.game.ga_tracking_id);
 			this.gaTrackingId = this.game.ga_tracking_id;
 		}
-
-		// TODO(rewrite)
-		// // For syncing game data to client.
-		// if ( GJ_IS_CLIENT ) {
-
-		// 	// Only sync if it's in library.
-		// 	return $injector.get( 'LocalDb_Game' ).fetch( game.id )
-		// 		.then( function( localGame )
-		// 		{
-		// 			if ( localGame ) {
-		// 				return $injector.get( 'LocalDb_Sync' ).syncGame( game.id, game );
-		// 			}
-		// 		} );
-		// }
 	}
 
 	routeDestroy() {
@@ -232,6 +200,11 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		if (gameId === this.game.id) {
 			this.refreshRatingInfo();
 		}
+	}
+
+	scrollToPackagePayment(package_: GamePackage) {
+		Scroll.to(`game-package-card-${package_.id}`);
+		EventBus.emit('GamePackageCard.showPaymentOptions', package_);
 	}
 
 	scrollToMultiplePackages() {

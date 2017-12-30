@@ -2,7 +2,6 @@ import { Component } from 'vue-property-decorator';
 import View from '!view!./landing.html?style=./landing.styl';
 
 import { AppPageHeader } from '../../../components/page-header/page-header';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 
@@ -14,5 +13,5 @@ import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/rou
 	},
 })
 export default class RouteForumsLanding extends BaseRouteComponent {
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 }

@@ -42,6 +42,12 @@ export class AppGameFollowWidget extends Vue {
 
 	isProcessing = false;
 
+	get shouldShowFollow() {
+		return (
+			this.showUserFollow && (!this.app.user || this.app.user.id !== this.game.developer.id)
+		);
+	}
+
 	get widgetId() {
 		return `game-follow-widget-${this.game.id}`;
 	}
@@ -79,7 +85,9 @@ export class AppGameFollowWidget extends Vue {
 			try {
 				await this.game.$follow();
 			} catch (e) {
-				Growls.error(this.$gettext('Something has prevented you from following this game.'));
+				Growls.error(
+					this.$gettext('Something has prevented you from following this game.')
+				);
 			}
 
 			if (this.showUserFollow && !this.game.developer.is_following) {

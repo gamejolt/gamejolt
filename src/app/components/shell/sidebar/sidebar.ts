@@ -5,7 +5,6 @@ import View from '!view!./sidebar.html?style=./sidebar.styl';
 
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
@@ -40,6 +39,7 @@ import { LibraryStore, LibraryAction, LibraryState } from '../../../store/librar
 export class AppShellSidebar extends Vue {
 	@State app: Store['app'];
 	@State isBootstrapped: Store['isBootstrapped'];
+	@State isLibraryBootstrapped: Store['isLibraryBootstrapped'];
 	@State notificationCount: Store['notificationCount'];
 	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
 	@LibraryState bundleCollections: LibraryStore['bundleCollections'];
@@ -71,13 +71,11 @@ export class AppShellSidebar extends Vue {
 		other: 'Other',
 	};
 
-	Environment = Environment;
-	Screen = makeObservableService(Screen);
+	// This is "hot".
+	defaultBrowseSection = null;
 
-	// Show hot when logged in, otherwise default to best.
-	get defaultBrowseSection() {
-		return 'featured';
-	}
+	readonly Environment = Environment;
+	readonly Screen = Screen;
 
 	get filteredBundleCollections() {
 		return this.bundleCollections.sort((a, b) => stringSort(a.name, b.name));

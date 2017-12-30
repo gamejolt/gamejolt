@@ -1,9 +1,9 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
 import { routeForumsLandingOverview } from './overview/overview.route';
 import { routeForumsLandingActive } from './active/active.route';
 
-export const routeForumsLanding: VueRouter.RouteConfig = {
+export const routeForumsLanding: RouteConfig = {
 	name: 'forums.landing',
 	path: '',
 	props: true,

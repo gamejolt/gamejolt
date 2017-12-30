@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./list.html?style=./list.styl';
@@ -12,7 +12,6 @@ import { AppNoAutoscroll } from '../../../../../../../lib/gj-lib-client/componen
 import { AppScoreList } from '../../../../../../components/score/list/list';
 import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppScoreboardSelector } from '../../../../../../components/score/scoreboard-selector/scoreboard-selector';
 import { Popover } from '../../../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
@@ -51,7 +50,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 	userScorePlacement = 0;
 	userScoreExperience = 0;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	// Even.
 	get scoresLeft() {
@@ -64,7 +63,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 	}
 
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		let query = '';
 		if (parseInt(route.query.page, 10) > 1) {
 			query = '?page=' + route.query.page;
@@ -91,17 +90,15 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 		return null;
 	}
 
-	routed() {
-		this.scoreTables = GameScoreTable.populate(this.$payload.scoreTables);
-		this.scoreTable = this.$payload.scoreTable
-			? new GameScoreTable(this.$payload.scoreTable)
+	routed($payload: any) {
+		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
+		this.scoreTable = $payload.scoreTable ? new GameScoreTable($payload.scoreTable) : null;
+		this.scores = UserGameScore.populate($payload.scores);
+		this.userBestScore = $payload.scoresUserBestScore
+			? new UserGameScore($payload.scoresUserBestScore)
 			: null;
-		this.scores = UserGameScore.populate(this.$payload.scores);
-		this.userBestScore = this.$payload.scoresUserBestScore
-			? new UserGameScore(this.$payload.scoresUserBestScore)
-			: null;
-		this.userScorePlacement = this.$payload.scoresUserScorePlacement || 0;
-		this.userScoreExperience = this.$payload.scoresUserScoreExperience || 0;
+		this.userScorePlacement = $payload.scoresUserScorePlacement || 0;
+		this.userScoreExperience = $payload.scoresUserScoreExperience || 0;
 	}
 
 	changeTable(table: GameScoreTable) {

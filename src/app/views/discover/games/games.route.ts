@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 import {
 	routeDiscoverGamesListSection,
 	routeDiscoverGamesListCategory,
@@ -7,7 +7,7 @@ import {
 import { routeDiscoverGamesView } from './view/view.route';
 import RouteDiscoverGames from './games';
 
-export const routeDiscoverGames: VueRouter.RouteConfig = {
+export const routeDiscoverGames: RouteConfig = {
 	path: 'games',
 	props: true,
 	component: RouteDiscoverGames,

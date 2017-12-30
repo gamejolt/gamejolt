@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./devlogs.html';
 
@@ -26,17 +26,17 @@ export default class RouteDiscoverChannelsViewDevlogs extends BaseRouteComponent
 	listing: GameListingContainer | null = null;
 
 	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		const filtering = new GameFilteringContainer(route);
 		return Api.sendRequest(
 			`/web/discover/channels/devlogs/${route.params.channel}?` + filtering.getQueryString(route)
 		);
 	}
 
-	routed() {
+	routed($payload: any) {
 		this.listing = new GameListingContainer();
 		this.listing.setAdTargeting(this.$route);
-		this.listing.processPayload(this.$route, this.$payload);
+		this.listing.processPayload(this.$route, $payload);
 
 		Ads.setAdUnit('devlogs');
 	}

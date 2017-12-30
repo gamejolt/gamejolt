@@ -5,7 +5,6 @@ import View from '!view!./overview.html?style=./overview.styl';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { GameScoreTable } from '../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { UserGameScore } from '../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
@@ -52,7 +51,7 @@ export class AppScoreOverview extends Vue {
 	userScorePlacement = 0;
 	userScoreExperience = 0;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	// Even.
 	get scoresLeft() {

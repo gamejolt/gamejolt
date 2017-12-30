@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
 
@@ -29,7 +29,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRo
 	scores: UserGameScore[] = [];
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/api/scores/list-table-scores/' +
 				route.params.id +
@@ -48,10 +48,10 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRo
 		return null;
 	}
 
-	routed() {
-		this.scoreTables = GameScoreTable.populate(this.$payload.scoreTables);
-		this.scoreTable = new GameScoreTable(this.$payload.scoreTable);
-		this.scores = UserGameScore.populate(this.$payload.scores);
+	routed($payload: any) {
+		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
+		this.scoreTable = new GameScoreTable($payload.scoreTable);
+		this.scores = UserGameScore.populate($payload.scores);
 
 		this.selectedTable = this.scoreTables.find(i => i.id === this.scoreTable.id)!.id;
 	}

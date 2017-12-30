@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeAuthLinkedAccountTwitterFinalize: VueRouter.RouteConfig = {
+export const routeAuthLinkedAccountTwitterFinalize: RouteConfig = {
 	name: 'auth.linked-account.twitter.finalize',
 	path: 'twitter/finalize/:state',
 	props: true,

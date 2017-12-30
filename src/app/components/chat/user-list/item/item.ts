@@ -1,13 +1,13 @@
-import Vue from 'vue';
-import { State } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./item.html?style=./item.styl';
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 
-import { ChatRoom } from '../../room';
-import { ChatUser } from '../../user';
-import { ChatClient, ChatSiteModPermission } from '../../client';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+import { ChatClient, ChatSiteModPermission } from '../../client';
+import { ChatRoom } from '../../room';
+import { ChatUser } from '../../user';
 
 @View
 @Component({
@@ -28,7 +28,7 @@ export class AppChatUserListItem extends Vue {
 
 	areModToolsOpen = false;
 
-	ChatSiteModPermission = ChatSiteModPermission;
+	readonly ChatSiteModPermission = ChatSiteModPermission;
 
 	get canModerate() {
 		if (!this.room || !this.showModTools) {
@@ -38,13 +38,13 @@ export class AppChatUserListItem extends Vue {
 		return this.chat.canModerate(this.room, this.user);
 	}
 
-	onUserClick() {
-		// Otherwise, the default is just to follow the link, which is fine.
+	onUserClick(e: Event) {
 		if (!this.showPm) {
 			return;
 		}
 
 		this.chat.enterRoom(this.user.roomId, true);
+		e.preventDefault();
 	}
 
 	toggleModTools() {

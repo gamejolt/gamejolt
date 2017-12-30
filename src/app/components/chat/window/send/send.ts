@@ -5,7 +5,6 @@ import View from '!view!./send.html?style=./send.styl';
 
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { ChatClient } from '../../client';
 
@@ -24,7 +23,7 @@ export class AppChatWindowSend extends Vue {
 	message = '';
 	multiLineMode = false;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	// Vue will trigger all events that match, which means the "enter" event
 	// always fires. We use this to know if we handled the event in another

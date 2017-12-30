@@ -37,14 +37,17 @@
 		<template slot="nav">
 			<app-forum-breadcrumbs
 				:channel="channel"
+				:sort="sort"
 				page="view-topic"
 				/>
 		</template>
 
 		<template slot="controls" v-if="app.user">
-
 			<button
-				class="btn btn-success-outline btn-block"
+				class="btn btn-success-outline"
+				:class="{
+					'btn-block': Screen.isXs || Screen.isDesktop,
+				}"
 				v-if="!isFollowing"
 				@click="follow"
 				v-app-tooltip="$gettext( `Keep track of replies in this topic.` )"
@@ -54,8 +57,9 @@
 			</button>
 
 			<button
-				class="btn btn-block"
+				class="btn"
 				:class="{
+					'btn-block': Screen.isXs || Screen.isDesktop,
 					'btn-success': Screen.isXs,
 					'btn-success': !Screen.isXs && !unfollowHover,
 					'btn-danger': !Screen.isXs && unfollowHover
@@ -69,7 +73,6 @@
 				<app-jolticon :icon="!unfollowHover ? 'subscribe' : 'subscribed'" />
 				<translate>Following</translate>
 			</button>
-
 		</template>
 
 	</app-page-header>
@@ -79,7 +82,7 @@
 
 			<div class="row">
 
-				<div class="col-md-3 col-md-push-8 col-md-offset-1">
+				<div class="col-sm-3 col-sm-push-9 col-md-offset-1 col-md-push-8">
 
 					<app-scroll-affix :should-affix="Screen.isDesktop" v-if="app.user">
 						<button
@@ -168,44 +171,58 @@
 
 				</div>
 
-				<div class="col-sm-10 col-md-8 col-md-pull-4">
+				<div class="col-sm-9 col-sm-pull-3 col-md-8 col-md-pull-4">
 
 					<!--
 						Hide the main post while it's being edited.
 					-->
 					<template v-if="!isEditingTopic">
+						<div :class="shouldShowVoting ? 'row' : ''">
+							<div :class="shouldShowVoting ? 'col-sm-9' : ''">
 
-						<!--
-							We do a fade collapse for the main post after the first page.
-						-->
-						<div v-if="currentPage > 1">
-							<app-fade-collapse
-								:collapse-height="200"
-								:is-open="showFullDescription"
-								@require-change="canToggleDescription = $event"
-								>
-								<div class="forum-post-body">
+								<!--
+									We do a fade collapse for the main post after the first page.
+								-->
+								<div v-if="currentPage > 1">
+									<app-fade-collapse
+										:collapse-height="200"
+										:is-open="showFullDescription"
+										@require-change="canToggleDescription = $event"
+										>
+										<div class="forum-post-body">
+											<app-widget-compiler
+												:content="topic.main_post.content_compiled"
+												/>
+										</div>
+									</app-fade-collapse>
+
+									<a class="hidden-text-expander"
+										v-if="canToggleDescription"
+										v-app-track-event="`forum-topic:show-full-post`"
+										@click="showFullDescription = !showFullDescription"
+										>
+									</a>
+								</div>
+
+								<!--
+									No fade collapse on first page.
+								-->
+								<div class="forum-post-body" v-if="currentPage <= 1">
 									<app-widget-compiler
 										:content="topic.main_post.content_compiled"
 										/>
 								</div>
-							</app-fade-collapse>
-
-							<a class="hidden-text-expander"
-								v-if="canToggleDescription"
-								v-app-track-event="`forum-topic:show-full-post`"
-								@click="showFullDescription = !showFullDescription"
+							</div>
+							<div
+								v-if="shouldShowVoting"
+								class="col-sm-3"
+								:class="{
+									'text-center': Screen.isXs,
+									'text-right': !Screen.isXs,
+								}"
 								>
-							</a>
-						</div>
-
-						<!--
-							No fade collapse on first page.
-						-->
-						<div class="forum-post-body" v-if="currentPage <= 1">
-							<app-widget-compiler
-								:content="topic.main_post.content_compiled"
-								/>
+								<app-forum-topic-upvote-widget :topic="topic" />
+							</div>
 						</div>
 					</template>
 					<template v-else>
@@ -258,6 +275,7 @@
 						id="forum-posts-list"
 						:topic="topic"
 						:posts="posts"
+						:sort="sort"
 						:user-post-counts="userPostCounts"
 						@replied="onPostAdded"
 						/>

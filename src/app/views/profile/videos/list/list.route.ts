@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeProfileVideosList: VueRouter.RouteConfig = {
+export const routeProfileVideosList: RouteConfig = {
 	name: 'profile.videos.list',
 	path: 'videos',
 	props: true,

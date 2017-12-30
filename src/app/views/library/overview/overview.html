@@ -23,8 +23,7 @@
 		</p>
 	</section>
 
-	<!--TODO(rewrite): CLIENT-->
-	<!--<gj-client-hide-offline>-->
+	<template v-else>
 		<section
 			class="section collection-row-section"
 			v-for="group of collectionGroups"
@@ -57,6 +56,6 @@
 			</div>
 
 		</section>
-	<!--</gj-client-hide-offline>-->
+	</template>
 
 </div>

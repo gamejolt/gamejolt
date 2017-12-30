@@ -1,0 +1,19 @@
+<div>
+	<button
+		class="btn btn-lg btn-primary-outline btn-overlay-variant"
+		v-if="browserBuilds.length"
+		@click="$emit('play')"
+		>
+		<app-jolticon icon="play" />
+		<translate>Play Game</translate>
+	</button>
+
+	<button
+		class="btn btn-lg btn-success-outline btn-overlay-variant"
+		v-if="installableBuilds.length"
+		@click="$emit('download')"
+		>
+		<app-jolticon icon="download" />
+		<translate>Download</translate>
+	</button>
+</div>

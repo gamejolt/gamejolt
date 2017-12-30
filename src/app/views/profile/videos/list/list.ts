@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./list.html';
 
@@ -30,7 +30,7 @@ export default class RouteProfileVideosList extends BaseRouteComponent {
 	page = 0;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/profile/videos/@' + route.params.username);
 	}
 
@@ -41,8 +41,9 @@ export default class RouteProfileVideosList extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.videos = CommentVideo.populate(this.$payload.videos);
+	routed($payload: any) {
+		this.page = 0;
+		this.videos = CommentVideo.populate($payload.videos);
 	}
 
 	async loadMore() {

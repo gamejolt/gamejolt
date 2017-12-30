@@ -54,8 +54,8 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 		return null;
 	}
 
-	routed() {
-		this.collaborators = GameCollaborator.populate(this.$payload.collaborators);
+	routed($payload: any) {
+		this.collaborators = GameCollaborator.populate($payload.collaborators);
 		if (!this.collaborators.length) {
 			this.isAdding = true;
 		}

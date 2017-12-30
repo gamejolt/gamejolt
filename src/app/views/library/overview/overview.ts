@@ -4,7 +4,6 @@ import View from '!view!./overview.html?style=./overview.styl';
 
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppPageHeader } from '../../../components/page-header/page-header';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -32,8 +31,8 @@ export default class RouteLibraryOverview extends BaseRouteComponent {
 	@LibraryState recommendedCollection: LibraryStore['recommendedCollection'];
 	@LibraryState collections: LibraryStore['collections'];
 
-	Connection = makeObservableService(Connection);
-	Screen = makeObservableService(Screen);
+	readonly Connection = Connection;
+	readonly Screen = Screen;
 
 	get routeTitle() {
 		return this.$gettext('library.page_title');

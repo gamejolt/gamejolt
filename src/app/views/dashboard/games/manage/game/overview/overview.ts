@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./overview.html';
 
@@ -63,7 +63,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 
 	Game = Game;
 
-	// TODO(rewrite)!
+	// TODO(rewrite,cros)!
 	// .run( function( $state, Payload, Location )
 	// {
 	// 	// If there is any sort of error while trying to go to the game dashboard, we want to direct instead to the game page.
@@ -82,7 +82,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 	// } );
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id);
 	}
 
@@ -95,13 +95,13 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 		return null;
 	}
 
-	routed() {
-		this.viewCount = this.$payload.viewCount || 0;
-		this.downloadCount = this.$payload.downloadCount || 0;
-		this.playCount = this.$payload.playCount || 0;
-		this.commentCount = this.$payload.commentCount || 0;
+	routed($payload: any) {
+		this.viewCount = $payload.viewCount || 0;
+		this.downloadCount = $payload.downloadCount || 0;
+		this.playCount = $payload.playCount || 0;
+		this.commentCount = $payload.commentCount || 0;
 
-		this.hasBuildsProcessing = this.$payload.hasBuildsProcessing || false;
+		this.hasBuildsProcessing = $payload.hasBuildsProcessing || false;
 	}
 
 	// This is called if they loaded up the page and had builds in a processing

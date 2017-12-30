@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./overview.html';
 
@@ -45,7 +45,7 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 	} = {} as any;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/api/' + route.params.id);
 	}
 
@@ -58,8 +58,8 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		return null;
 	}
 
-	routed() {
-		this.sessionStats = this.$payload.sessionStats;
+	routed($payload: any) {
+		this.sessionStats = $payload.sessionStats;
 
 		const fields = [
 			'numActiveTrophies',
@@ -73,7 +73,7 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		];
 
 		fields.forEach(field => {
-			(this as any)[field] = this.$payload[field] || 0;
+			(this as any)[field] = $payload[field] || 0;
 		});
 	}
 }

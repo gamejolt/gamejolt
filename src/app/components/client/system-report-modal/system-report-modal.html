@@ -1,24 +1,30 @@
-<div class="modal-controls">
-	<button class="btn btn-danger-outline" ng-click="modalCtrl.close()">
-		<span class="jolticon jolticon-remove"></span>
-		<span translate>system_report.send.close</span>
-	</button>
-</div>
+<app-modal>
 
-<div class="modal-header">
-	<h2 class="modal-title" translate>system_report.send.heading</h2>
-</div>
+	<div class="modal-controls">
+		<button class="btn btn-danger-outline" @click="modal.dismiss()">
+			<app-jolticon icon="remove" />
+			<translate>Close</translate>
+		</button>
+	</div>
 
-<div class="modal-body">
-	<p class="help-block" translate>
-		system_report.send.help
-	</p>
+	<div class="modal-header">
+		<h2 class="modal-title">
+			<translate>system_report.send.heading</translate>
+		</h2>
+	</div>
 
-	<p class="help-block" translate>
-		system_report.send.issue_tracker
-	</p>
+	<div class="modal-body">
+		<p class="text-muted small">
+			<translate>system_report.send.help</translate>
+		</p>
 
-	<gj-client-form-system-report
-		gj-form-submit-handler="modalCtrl.onSubmit()">
-	</gj-client-form-system-report>
-</div>
+		<p class="text-muted small" v-translate>
+			system_report.send.issue_tracker
+		</p>
+
+		<form-client-system-report
+			@submit="onSubmit"
+			/>
+	</div>
+
+</app-modal>

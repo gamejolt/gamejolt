@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeSettings: VueRouter.RouteConfig = {
+export const routeSettings: RouteConfig = {
 	name: 'settings',
 	path: '/settings',
 	props: true,

@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./retrieve.html';
 
@@ -6,7 +6,6 @@ import { GameBundle } from '../../../lib/gj-lib-client/components/game-bundle/ga
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
-import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { FormRetrieve } from '../../components/forms/retrieve/retrieve';
 import { AppInvalidKey } from '../../components/invalid-key/invalid-key';
 import {
@@ -42,11 +41,10 @@ export default class RouteRetrieve extends BaseRouteComponent {
 	game: Game | null = null;
 	resourceTitle = '';
 
-	Meta = makeObservableService(Meta);
-	$payload: Payload;
+	readonly Meta = Meta;
 
 	@RouteResolve()
-	async routeResolve(this: undefined, route: VueRouter.Route): Promise<Payload> {
+	async routeResolve(this: undefined, route: Route): Promise<Payload> {
 		let type: 'game' | 'bundle' | undefined;
 		let key = '';
 
@@ -90,16 +88,16 @@ export default class RouteRetrieve extends BaseRouteComponent {
 		return this.$gettext(`Retrieve Your Keys`);
 	}
 
-	routed() {
+	routed($payload: Payload) {
 		// Invalid key.
-		if (this.$payload && (this.$payload.error || this.$payload.payload.error)) {
+		if ($payload && ($payload.error || $payload.payload.error)) {
 			this.invalidKey = true;
 			return;
 		}
 
 		// Retrieving a key for a particular bundle or game.
-		if (this.$payload && !this.$payload.error) {
-			const { key, payload: { bundle, game } } = this.$payload;
+		if ($payload && !$payload.error) {
+			const { key, payload: { bundle, game } } = $payload;
 			this.key = key;
 			this.bundle = bundle ? new GameBundle(bundle) : null;
 			this.game = game ? new Game(game) : null;

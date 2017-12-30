@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./analytics.html?style=./analytics.styl';
@@ -41,7 +41,6 @@ import { AppScrollAffix } from '../../../../lib/gj-lib-client/components/scroll/
 import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppAnalyticsReportSimpleStat } from './_report/simple-stat';
 import { AppAnalyticsReportRatingBreakdown } from './_report/rating-breakdown';
 import { AppAnalyticsReportTopComposition } from './_report/top-composition';
@@ -79,14 +78,6 @@ import {
 export default class RouteDashAnalytics extends BaseRouteComponent {
 	@State app: Store['app'];
 
-	/**
-	 * When the page first loads we check the state params to make sure they are all filled in.
-	 * If they weren't, we change the URL. When this happens it'll replace the previous URL
-	 * unless we skip the replacement. After our initial params are bootstrapped it's fine to
-	 * replace the URL from there on out.
-	 */
-	private paramsBootstrapped = false;
-
 	user: User | null = null;
 	game: Game | null = null;
 	package: GamePackage | null = null;
@@ -111,10 +102,10 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 	nextMonth = 0;
 	nextYear = 0;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve({ cache: false })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/analytics/' + route.params.resource + '/' + route.params.resourceId
 		);
@@ -124,7 +115,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 		return this.$gettext('Analytics');
 	}
 
-	routed() {
+	routed($payload: any) {
 		this.resource = this.$route.params.resource as ResourceName;
 		this.resourceId = parseInt(this.$route.params.resourceId, 10);
 
@@ -137,11 +128,12 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 			this.viewAs = appUser.id;
 		}
 
-		this.user = this.$payload.user ? new User(this.$payload.user) : null;
-		this.game = this.$payload.game ? new Game(this.$payload.game) : null;
-		this.package = this.$payload.package ? new GamePackage(this.$payload.package) : null;
-		this.release = this.$payload.release ? new GameRelease(this.$payload.release) : null;
-		this.partnerMode = !this.user || this.user.id !== this.viewAs;
+		this.user = $payload.user ? new User($payload.user) : null;
+		this.game = $payload.game ? new Game($payload.game) : null;
+		this.package = $payload.package ? new GamePackage($payload.package) : null;
+		this.release = $payload.release ? new GameRelease($payload.release) : null;
+		this.partnerMode =
+			(!this.user || this.user.id !== this.viewAs) && !!parseInt(this.$route.query.partner, 10);
 
 		this.period = (this.$route.query['period'] as any) || 'monthly';
 		this.resource = this.$route.params['resource'] as any;
@@ -181,8 +173,6 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 		if (this.partnerMode) {
 			this.availableMetrics = SiteAnalytics.pickPartnerMetrics(this.availableMetrics);
 		}
-
-		this.paramsBootstrapped = true;
 
 		this.now = Date.now();
 		this.startTime = 0;

@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
 import { routeDashAccountEdit } from './edit/edit.route';
 import { routeDashAccountAvatar } from './avatar/avatar.route';
@@ -9,7 +9,7 @@ import { routeDashAccountLinkedAccountsLinking } from './linked-accounts/linking
 import { routeDashAccountLinkedAccountsLinkCallback } from './linked-accounts/link-callback/link-callback.route';
 import { routeDashAccountFinancials } from './financials/financials.route';
 
-export const routeDashAccount: VueRouter.RouteConfig = {
+export const routeDashAccount: RouteConfig = {
 	path: '/dashboard',
 	props: true,
 	component: () => import(/* webpackChunkName: "routeDashAccount" */ './account'),

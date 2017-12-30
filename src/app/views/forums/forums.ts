@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import './forums-content.styl';
 
@@ -9,7 +9,7 @@ import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
 	name: 'RouteForums',
 })
 export default class RouteForums extends BaseRouteComponent {
-	render(h: Vue.CreateElement) {
+	render(h: CreateElement) {
 		return h('router-view', { staticClass: 'route-forums' });
 	}
 

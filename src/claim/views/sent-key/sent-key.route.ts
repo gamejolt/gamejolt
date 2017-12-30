@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeSentKey: VueRouter.RouteConfig = {
+export const routeSentKey: RouteConfig = {
 	name: 'sent-key',
 	path: '/claim/sent',
 	props: true,

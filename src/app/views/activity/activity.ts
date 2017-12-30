@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Mutation } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./activity.html?style=./activity.styl';
@@ -14,7 +14,6 @@ import { AppActivityFeedPlaceholder } from '../../components/activity/feed/place
 import { Store } from '../../store/index';
 import { EventItem } from '../../../lib/gj-lib-client/components/event-item/event-item.model';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { getTranslationLang } from '../../../lib/gj-lib-client/components/translate/translate.service';
 import {
 	BaseRouteComponent,
@@ -40,10 +39,10 @@ export default class RouteActivity extends BaseRouteComponent {
 	activityUnreadCount = 0;
 	notificationsUnreadCount = 0;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve({ cache: true, lazy: true })
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/activity/' + route.params.tab);
 	}
 
@@ -62,27 +61,27 @@ export default class RouteActivity extends BaseRouteComponent {
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed() {
+	routed($payload: any) {
 		if (this.tab === 'activity') {
 			if (!this.feed || this.feed.feedType !== 'EventItem') {
-				this.feed = ActivityFeedService.bootstrap(EventItem.populate(this.$payload.items), {
+				this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.items), {
 					type: 'EventItem',
 					url: `/web/dash/activity/more/${this.tab}`,
-					notificationWatermark: this.$payload.unreadWatermark,
+					notificationWatermark: $payload.unreadWatermark,
 				});
 			}
 		} else {
 			if (!this.feed || this.feed.feedType !== 'Notification') {
-				this.feed = ActivityFeedService.bootstrap(Notification.populate(this.$payload.items), {
+				this.feed = ActivityFeedService.bootstrap(Notification.populate($payload.items), {
 					type: 'Notification',
 					url: `/web/dash/activity/more/${this.tab}`,
-					notificationWatermark: this.$payload.unreadWatermark,
+					notificationWatermark: $payload.unreadWatermark,
 				});
 			}
 		}
 
-		this.activityUnreadCount = this.$payload.activityUnreadCount || 0;
-		this.notificationsUnreadCount = this.$payload.notificationsUnreadCount || 0;
+		this.activityUnreadCount = $payload.activityUnreadCount || 0;
+		this.notificationsUnreadCount = $payload.notificationsUnreadCount || 0;
 
 		// Since we clear out the notifications on the page let's set the count
 		// as being the opposite of the tab we're on.

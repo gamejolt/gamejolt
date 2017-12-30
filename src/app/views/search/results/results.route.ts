@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeSearchResults: VueRouter.RouteConfig = {
+export const routeSearchResults: RouteConfig = {
 	name: 'search.results',
 	path: '/search',
 	props: true,

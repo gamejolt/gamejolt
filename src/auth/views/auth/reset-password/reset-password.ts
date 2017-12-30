@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./reset-password.html';
 
@@ -22,7 +22,7 @@ export default class RouteAuthResetPassword extends BaseRouteComponent {
 	@Prop(String) token: string;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		// Will return a 404 if the key isn't correct for this user.
 		return Api.sendRequest('/web/auth/check-reset-key/' + route.params.userId, {
 			key: route.params.token,

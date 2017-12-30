@@ -32,7 +32,7 @@ export default class RouteDashMainPurchasesList extends BaseRouteComponent {
 		return this.$gettext('Order History');
 	}
 
-	routed() {
-		this.orders = Order.populate(this.$payload.orders);
+	routed($payload: any) {
+		this.orders = Order.populate($payload.orders);
 	}
 }

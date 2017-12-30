@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeRetrieve: VueRouter.RouteConfig = {
+export const routeRetrieve: RouteConfig = {
 	name: 'retrieve',
 	path: '/claim/:input([gb]{1}\\-[0-9a-zA-Z]+)?',
 	props: true,

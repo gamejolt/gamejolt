@@ -1,5 +1,5 @@
 <app-form name="retrieveLoginForm">
-	<fieldset :disabled="!Connection.isOnline">
+	<fieldset :disabled="Connection.isClientOffline">
 
 		<app-form-group name="email" :label="$gettext( 'auth.forgot.email_label' )" :hide-label="true">
 			<p class="help-block">

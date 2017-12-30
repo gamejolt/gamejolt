@@ -1,4 +1,4 @@
-<app-form name="settingsForm" @changed="onChange">
+<app-form name="settingsForm" ref="form" @changed="onChange">
 
 	<fieldset id="settings-client" v-if="GJ_IS_CLIENT">
 		<legend>
@@ -13,12 +13,12 @@
 				<translate>settings.game_install_dir_help</translate>
 			</p>
 
-			<!--TODO(rewrite): Will this work?-->
-			<app-form-control
+			<input
 				class="hidden"
 				type="file"
-				ref="game-install-dir"
 				nwdirectory
+				@change="onSelectedInstallDir( $event.target.value )"
+				ref="game-install-dir"
 				/>
 
 			<div class="pull-right">
@@ -98,7 +98,7 @@
 		</app-form-group>
 
 		<app-form-group
-			v-if="ClientAutoStart.canAutoStart"
+			v-if="canClientAutostart"
 			name="autostart_client"
 			:label="$gettext( 'settings.autostart_client_label' )"
 			>

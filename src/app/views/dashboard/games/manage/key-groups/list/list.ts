@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html?style=./list.styl';
 
@@ -43,7 +43,7 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 	KeyGroup = KeyGroup;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id);
 	}
 
@@ -56,9 +56,9 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 		return null;
 	}
 
-	routed() {
-		this.keyGroups = KeyGroup.populate(this.$payload.keyGroups);
-		this.packages = GamePackage.populate(this.$payload.packages);
+	routed($payload: any) {
+		this.keyGroups = KeyGroup.populate($payload.keyGroups);
+		this.packages = GamePackage.populate($payload.packages);
 	}
 
 	onKeyGroupAdded(keyGroup: KeyGroup) {

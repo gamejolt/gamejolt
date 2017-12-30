@@ -53,7 +53,7 @@
 								</router-link>
 							</li>
 							<li>
-								<a href="http://fireside.gamejolt.com">
+								<a href="http://fireside.gamejolt.com" target="_blank">
 									<translate>Fireside</translate>
 								</a>
 							</li>
@@ -63,7 +63,7 @@
 								</router-link>
 							</li>
 							<li>
-								<a href="http://jams.gamejolt.com">
+								<a href="http://jams.gamejolt.com" target="_blank">
 									<translate>Jams</translate>
 								</a>
 							</li>
@@ -104,6 +104,16 @@
 							<li>
 								<a href="https://github.com/gamejolt" target="_blank">
 									<translate>footer.open_source</translate>
+								</a>
+							</li>
+							<li>
+								<router-link :to="{ name: 'forums.channels.view', params: { name: 'gj-improve' } }">
+									<translate>Feature Requests</translate>
+								</router-link>
+							</li>
+							<li>
+								<a href="https://github.com/gamejolt/issue-tracker" target="_blank">
+									<translate>Bug Tracker</translate>
 								</a>
 							</li>
 						</ol>

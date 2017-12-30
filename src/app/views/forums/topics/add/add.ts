@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./add.html';
@@ -39,12 +39,12 @@ export default class RouteForumsTopicsAdd extends BaseRouteComponent {
 	}
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/forums/topics/create/' + route.params.channel);
 	}
 
-	routed() {
-		this.channel = new ForumChannel(this.$payload.channel);
+	routed($payload: any) {
+		this.channel = new ForumChannel($payload.channel);
 	}
 
 	onCreated(formModel: ForumTopic) {
@@ -60,7 +60,7 @@ export default class RouteForumsTopicsAdd extends BaseRouteComponent {
 
 		this.$router.push({
 			name: 'forums.channels.view',
-			params: { name: this.channel.name },
+			params: { name: this.channel.name, sort: 'active' },
 		});
 	}
 }

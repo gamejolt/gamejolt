@@ -12,7 +12,6 @@ import { Game } from '../../../../../lib/gj-lib-client/components/game/game.mode
 import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { GameBuildLaunchOption } from '../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
@@ -53,7 +52,7 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 
 	buildForms: FormGameBuild[] = [];
 
-	readonly Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 	readonly GameRelease = GameRelease;
 
 	get loadUrl() {

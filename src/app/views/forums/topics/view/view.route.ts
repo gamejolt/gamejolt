@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeForumsTopicsView: VueRouter.RouteConfig = {
+export const routeForumsTopicsView: RouteConfig = {
 	name: 'forums.topics.view',
 	path: '/f/:slug/:id(\\d+)',
 	props: true,

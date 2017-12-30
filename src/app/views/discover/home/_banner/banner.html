@@ -1,0 +1,70 @@
+<section
+	class="-banner section landing-header"
+	:style="`
+		background-image: url('${item.back_url}');
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		background-size: cover;
+	`"
+	>
+	<router-link
+		class="-click"
+		:to="{
+			name: 'discover.games.view.overview',
+			params: {
+				id: item.game.id,
+				slug: item.game.slug,
+			},
+		}"
+		v-app-track-event="`home:banner:${item.game.id}`"
+		>
+	</router-link>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-7 text-center">
+				<img
+					class="img-responsive"
+					style="display: inline-block"
+					:src="item.front_url"
+					alt=""
+					>
+			</div>
+			<div class="-info col-md-5">
+				<p class="lead">
+					{{ item.content }}
+				</p>
+
+				<div class="-controls" v-if="!Screen.isXs">
+					<div class="row">
+						<div :class="shouldShowFollow ? 'col-xs-6' : 'col-xs-12'">
+							<router-link
+								:to="{
+									name: 'discover.games.view.overview',
+									params: {
+										id: item.game.id,
+										slug: item.game.slug,
+									},
+								}"
+								class="btn btn-outline btn-lg btn-overlay-variant"
+								:class="{
+									'btn-block': shouldShowFollow,
+								}"
+								v-app-track-event="`home:banner:${item.game.id}`"
+								>
+								<translate>View Game</translate>
+							</router-link>
+						</div>
+						<div class="col-xs-6" v-if="shouldShowFollow">
+							<app-game-follow-widget
+								:game="item.game"
+								class="btn-block btn-lg btn-outline btn-overlay-variant"
+								v-app-track-event="`home:banner:follow-${item.game.id}`"
+								/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

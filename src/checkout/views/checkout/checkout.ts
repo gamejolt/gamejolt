@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./checkout.html?style=./checkout.styl';
 
@@ -8,7 +8,7 @@ import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppMediaItemCover } from '../../../app/components/media-item/cover/cover';
+import { AppMediaItemCover } from '../../../_common/media-item/cover/cover';
 import { FormPayment } from '../../components/forms/payment/payment';
 import {
 	BaseRouteComponent,
@@ -32,7 +32,7 @@ export default class RouteCheckout extends BaseRouteComponent {
 	Environment = Environment;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/checkout/' + route.params.orderId, {});
 	}
 
@@ -45,13 +45,13 @@ export default class RouteCheckout extends BaseRouteComponent {
 		return null;
 	}
 
-	routed() {
-		this.cards = this.$payload.cards || [];
-		this.sellable = new Sellable(this.$payload.sellable);
-		this.order = new Order(this.$payload.order);
-		this.game = new Game(this.$payload.game);
+	routed($payload: any) {
+		this.cards = $payload.cards || [];
+		this.sellable = new Sellable($payload.sellable);
+		this.order = new Order($payload.order);
+		this.game = new Game($payload.game);
 
-		window.Stripe.setPublishableKey(this.$payload.stripePublishableKey);
+		window.Stripe.setPublishableKey($payload.stripePublishableKey);
 	}
 
 	onSubmit(_formModel: any, response: any) {

@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./edit.html';
 
@@ -74,7 +74,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 	}
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/packages/' + route.params.id + '/' + route.params.packageId
 		);
@@ -90,10 +90,10 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		return null;
 	}
 
-	routed() {
-		this.package = new GamePackage(this.$payload.package);
-		this.sellable = new Sellable(this.$payload.sellable);
-		this.releases = GameRelease.populate(this.$payload.releases);
+	routed($payload: any) {
+		this.package = new GamePackage($payload.package);
+		this.sellable = new Sellable($payload.sellable);
+		this.releases = GameRelease.populate($payload.releases);
 
 		this.previewData = null;
 		this.previewPackage = null;

@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDashGamesManageGameThumbnail: VueRouter.RouteConfig = {
+export const routeDashGamesManageGameThumbnail: RouteConfig = {
 	name: 'dash.games.manage.game.thumbnail',
 	path: 'thumbnail',
 	props: true,

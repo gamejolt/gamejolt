@@ -84,7 +84,7 @@
 						show while we're loading the section. After it's loaded in, we decide if it should show
 						through the "hasReleasesSection" variable which has the correct data.
 					-->
-					<template v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
+					<div id="game-releases" v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
 
 						<!--
 							Partner Controls
@@ -145,9 +145,7 @@
 								/>
 						</app-lazy-placeholder>
 
-					</template>
-
-					<br>
+					</div>
 
 					<div v-if="!game.description_compiled">
 						<span class="lazy-placeholder"></span>
@@ -163,6 +161,7 @@
 						<app-fade-collapse
 							:collapse-height="500"
 							:is-open="showDescription"
+							:animate="false"
 							:key="game.id"
 							@require-change="setCanToggleDescription"
 							>
@@ -184,39 +183,55 @@
 						</div>
 					</div>
 
-					<!-- <h2>
-						<translate>Comments</translate>
-					</h2>
-
-					<app-comment-widget-add
-						v-if="app.user"
-						resource="Game"
-						:resource-id="game.id"
-						/>
-
-					<br v-if="app.user && commentsCount">
-
-					<template v-if="commentsCount">
-						<app-comment-peek :comments="comments" />
-
-						<router-link
-							v-if="commentsCount > 2"
-							class="btn btn-outline btn-block"
-							:to="{ name: 'discover.games.view.comments' }"
-							>
-							<translate
-								:translate-params="{ count: number(commentsCount - 2) }"
-								>
-								+%{ count } more
-							</translate>
-						</router-link>
-					</template> -->
-
-					<template v-if="feed && feed.hasItems">
+					<template v-if="twitterShareMessage && !GJ_IS_CLIENT">
 						<br>
+						<div class="social-widgets">
+							<app-social-twitter-share
+								:url="Environment.baseUrl + game.getUrl()"
+								:content="twitterShareMessage"
+								/>
 
-						<!-- TODO: Show ad -->
-						<!-- <app-ad-placement pos="bottom" /> -->
+							<span class="dot-separator hidden-xs"></span>
+
+							<app-social-facebook-like :url="Environment.baseUrl + game.getUrl()" />
+						</div>
+					</template>
+
+					<template v-if="supporters.length > 0">
+						<h2>
+							<translate>Supporters</translate>
+						</h2>
+
+						<p class="small text-muted">
+							<translate :translate-params="{ developer: game.developer.display_name }">
+								The kind people that helped support %{ developer } by paying more than the minimum. Sorted by amount contributed.
+							</translate>
+						</p>
+
+						<hr class="underbar">
+
+						<div class="game-supporters">
+							<div class="game-supporter"
+								v-for="user of supporters"
+								:key="user.id"
+								>
+								<router-link
+									class="user-avatar ng-scope"
+									:to="user.url"
+									>
+									<app-user-avatar-img
+										:user="user"
+										v-app-tooltip="`${user.display_name} (@${user.username})`"
+										/>
+								</router-link>
+							</div>
+						</div>
+						<br class="visible-xs visible-sm">
+					</template>
+
+					<template v-if="feed">
+
+						<br>
 
 						<app-game-perms :game="game" required="devlogs">
 							<h5 class="sans-margin-top">
@@ -232,11 +247,10 @@
 						</app-game-perms>
 
 						<app-activity-feed
+							v-if="feed.hasItems"
 							:feed="feed"
-							:show-ads="true"
 							:show-edit-controls="true"
 							/>
-
 					</template>
 
 				</div>

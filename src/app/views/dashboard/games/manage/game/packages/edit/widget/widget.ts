@@ -1,11 +1,10 @@
-import VueRouter from 'vue-router';
+import { Route } from 'vue-router';
 import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./widget.html';
 
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Sellable } from '../../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { Environment } from '../../../../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { makeObservableService } from '../../../../../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import {
 	BaseRouteComponent,
@@ -22,18 +21,18 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 	widgetUrl = '';
 	widgetCode = '';
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve()
-	routeResolve(this: undefined, route: VueRouter.Route) {
+	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/packages/preview/' + route.params.id + '/' + route.params.packageId
 		);
 	}
 
-	routed() {
-		console.log(this.$payload);
-		this.sellable = this.$payload.sellable ? new Sellable(this.$payload.sellable) : null;
+	routed($payload: any) {
+		console.log($payload);
+		this.sellable = $payload.sellable ? new Sellable($payload.sellable) : null;
 		this.theme = ''; // Default to dark.
 	}
 

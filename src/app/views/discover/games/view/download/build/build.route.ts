@@ -1,6 +1,6 @@
-import VueRouter from 'vue-router';
+import { RouteConfig } from 'vue-router';
 
-export const routeDiscoverGamesViewDownloadBuild: VueRouter.RouteConfig = {
+export const routeDiscoverGamesViewDownloadBuild: RouteConfig = {
 	name: 'discover.games.view.download.build',
 	path: 'download/build/:buildId',
 	props: true,

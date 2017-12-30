@@ -1,0 +1,12 @@
+<ul class="navbar-items">
+	<li v-if="HistoryNavigator.canGoBack">
+		<a title="Go back" @click="HistoryNavigator.back()">
+			<app-jolticon icon="chevron-left" />
+		</a>
+	</li>
+	<li v-if="HistoryNavigator.canGoForward">
+		<a title="Go forward" @click="HistoryNavigator.forward()">
+			<app-jolticon icon="chevron-right" />
+		</a>
+	</li>
+</ul>

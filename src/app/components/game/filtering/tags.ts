@@ -6,7 +6,6 @@ import { GameFilteringContainer } from './container';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { Genre } from '../../genre/genre';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 
 @View
 @Component({
@@ -17,8 +16,8 @@ import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 export class AppGameFilteringTags extends Vue {
 	@Prop(Object) filtering: GameFilteringContainer;
 
-	GameFilteringContainer = GameFilteringContainer;
-	Genre = makeObservableService(Genre);
+	readonly GameFilteringContainer = GameFilteringContainer;
+	readonly Genre = Genre;
 
 	get genre() {
 		return this.$route.params.category;
