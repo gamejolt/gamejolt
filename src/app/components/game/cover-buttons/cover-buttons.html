@@ -1,15 +1,11 @@
-<div class="game-cover-buttons"
-	:class="{
-		'game-cover-buttons-patching': isGamePatching,
-	}"
-	>
+<div class="game-cover-buttons">
 
 	<!--
 		If the primary is for sale and they don't own it yet, the only button we should show is the
 		buy button.
 	-->
 	<button
-		class="btn btn-lg btn-success-outline btn-overlay-variant"
+		class="btn btn-success-outline"
 		v-if="game._can_buy_primary_sellable"
 		@click="buy()"
 		>
