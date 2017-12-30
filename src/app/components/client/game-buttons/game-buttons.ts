@@ -57,6 +57,7 @@ export class AppClientGameButtons extends Vue {
 	@Prop(String) label?: string;
 	@Prop(Boolean) hasInstallableBuilds?: boolean;
 	@Prop(Boolean) canInstall?: boolean;
+	@Prop(Boolean) noProgress?: boolean;
 
 	isLoadingPackageData = false;
 	packageDataPromise: Promise<GamePackagePayloadModel> | null = null;
