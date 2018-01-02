@@ -8,6 +8,7 @@ import { AppScrollTo } from '../../../lib/gj-lib-client/components/scroll/to/to.
 import { AppListGroupStyleguide } from '../../../lib/gj-lib-client/components/list-group/list-group-styleguide';
 import { AppJolticonsStyleguide } from '../../../lib/gj-lib-client/components/jolticons/jolticons-styleguide';
 import { AppProgressBarStyleguide } from '../../../lib/gj-lib-client/components/progress/bar/bar-styleguide';
+import { AppLinkStyleguide } from '../../../lib/gj-lib-client/components/router/link-styleguide';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -18,6 +19,7 @@ import {
 	name: 'RouteStyleguide',
 	components: {
 		AppScrollAffix,
+		AppLinkStyleguide,
 		AppButtonStyleguide,
 		AppListGroupStyleguide,
 		AppProgressBarStyleguide,
