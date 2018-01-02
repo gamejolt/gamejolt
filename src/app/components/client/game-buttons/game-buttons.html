@@ -44,7 +44,10 @@
 				</button>
 			</template>
 
-			<app-client-install-progress :local-package="localPackage" />
+			<app-client-install-progress
+				v-if="!noProgress"
+				:local-package="localPackage"
+				/>
 
 			<template v-if="localPackage.isPatching">
 

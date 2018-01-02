@@ -84,7 +84,7 @@ export class GameCollection extends Model {
 
 		return {
 			slug: this.slug,
-			id: id,
+			id: encodeURIComponent(id),
 		};
 	}
 

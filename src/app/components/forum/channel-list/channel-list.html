@@ -91,10 +91,7 @@
 							<span class="tiny">@{{ latestPost.user.username }}</span>
 						</div>
 						<div class="text-muted">
-							<app-time-ago
-								:title="date( latestPost.posted_on, 'medium' )"
-								:date="latestPost.posted_on"
-								/>
+							<app-time-ago :date="latestPost.posted_on" />
 						</div>
 					</div>
 
