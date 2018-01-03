@@ -45,6 +45,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 	stickyTopics: ForumTopic[] = [];
 	perPage = 0;
 	currentPage = 1;
+	listableTopicsCount = 0;
 
 	readonly number = number;
 	readonly Scroll = Scroll;
@@ -79,6 +80,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 		this.channel = new ForumChannel($payload.channel);
 		this.topics = ForumTopic.populate($payload.topics);
 		this.postCountPerPage = $payload.postCountPerPage;
+		this.listableTopicsCount = $payload.listableTopicsCount;
 
 		if ($payload.stickyTopics && $payload.stickyTopics.length) {
 			this.stickyTopics = ForumTopic.populate($payload.stickyTopics);

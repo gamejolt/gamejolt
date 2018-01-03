@@ -177,8 +177,8 @@
 						Hide the main post while it's being edited.
 					-->
 					<template v-if="!isEditingTopic">
-						<div :class="topic.can_upvote ? 'row' : ''">
-							<div :class="topic.can_upvote ? 'col-sm-9' : ''">
+						<div :class="shouldShowVoting ? 'row' : ''">
+							<div :class="shouldShowVoting ? 'col-sm-9' : ''">
 
 								<!--
 									We do a fade collapse for the main post after the first page.
@@ -214,7 +214,7 @@
 								</div>
 							</div>
 							<div
-								v-if="topic.can_upvote"
+								v-if="shouldShowVoting"
 								class="col-sm-3"
 								:class="{
 									'text-center': Screen.isXs,

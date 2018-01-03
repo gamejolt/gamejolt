@@ -83,7 +83,10 @@ export class AppGameThumbnail extends Vue {
 		// When the window is not focused we don't want to play videos. This
 		// should speed up inactive tabs.
 		return (
-			!GJ_IS_SSR && !!Settings.get('animated-thumbnails') && this.isWindowFocused && this.isHydrated
+			!GJ_IS_SSR &&
+			!!Settings.get('animated-thumbnails') &&
+			this.isWindowFocused &&
+			this.isHydrated
 		);
 	}
 
@@ -150,7 +153,7 @@ export class AppGameThumbnail extends Vue {
 	}
 
 	get showModTools() {
-		return this.app.user && this.app.user.permission_level >= 3;
+		return this.app.user && this.app.user.isMod;
 	}
 
 	created() {

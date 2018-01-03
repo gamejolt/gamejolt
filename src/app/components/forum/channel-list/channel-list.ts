@@ -9,7 +9,6 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 import { arrayIndexByFunc } from '../../../../lib/gj-lib-client/utils/array';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
 import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
 
 @View
@@ -30,7 +29,6 @@ export class AppForumChannelList extends Vue {
 	@Prop(Number) postCountPerPage: number;
 
 	readonly number = number;
-	readonly date = date;
 	readonly Screen = Screen;
 
 	get indexedPosts() {

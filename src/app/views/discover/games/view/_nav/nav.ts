@@ -45,6 +45,10 @@ export class AppDiscoverGamesViewNav extends Vue {
 		return this.game && this.game.hasPerms();
 	}
 
+	get shouldShowModTools() {
+		return this.app.user && this.app.user.isMod;
+	}
+
 	report() {
 		ReportModal.show(this.game);
 	}
