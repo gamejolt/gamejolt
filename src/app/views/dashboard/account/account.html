@@ -19,7 +19,14 @@
 
 	</app-page-header>
 
-	<section class="section">
+	<app-expand :when="$route.name === 'dash.account.header'" v-if="app.user.header_media_item">
+		<app-media-item-cover
+			:media-item="app.user.header_media_item"
+			/>
+	</app-expand>
+
+	<!-- Don't show content before this route has loaded in the account data. -->
+	<section class="section" v-if="routeBootstrapped">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-3 col-md-2" v-if="!Screen.isXs">
@@ -47,7 +54,7 @@
 									:to="{ name: 'dash.account.header' }"
 									active-class="active"
 									>
-									<translate>Header</translate>
+									<translate>Profile Header</translate>
 								</router-link>
 							</li>
 							<li>

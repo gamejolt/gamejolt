@@ -8,6 +8,7 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { BaseRouteComponent } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { FormUserHeader } from '../../../../components/forms/user-header/header';
+import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 
 @View
 @Component({
@@ -28,6 +29,17 @@ export default class RouteDashAccountHeader extends BaseRouteComponent {
 	}
 
 	routeInit() {
-		this.setHeading(this.$gettext('Getting a Header image'));
+		this.setHeading(this.$gettext('Edit Your Profile Header'));
+	}
+
+	async clearHeader() {
+		const result = await ModalConfirm.show(
+			this.$gettext(`Are you sure you want to remove your profile header?`),
+			undefined,
+			'yes'
+		);
+		if (result) {
+			this.app.user!.$clearHeader();
+		}
 	}
 }

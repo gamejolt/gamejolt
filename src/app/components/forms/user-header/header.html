@@ -22,34 +22,5 @@
 		<app-form-control-errors
 			:label="$gettext( `header` )"
 			/>
-
-		<br />
-
-		<app-form-button icon="edit" v-if="this.formModel.file">
-			<translate>Upload Header</translate>
-		</app-form-button>
 	</app-form-group>
-
-	<template v-if="formModel.header_media_item && !hasFormErrors">
-		<div>
-			<app-form-group
-				name="preview"
-				:label="$gettext( `Your Header` )">
-
-				<img ref="img" :src="formModel.header_media_item.img_url" alt="">
-
-				<button
-					class="btn btn-danger-outline"
-					@click.prevent.stop="clearHeader()"
-					>
-					<app-jolticon icon="remove" />
-					<translate>Remove Header</translate>
-				</button>
-			</app-form-group>
-		</div>
-
-		<br>
-		<br>
-	</template>
-
 </app-form>

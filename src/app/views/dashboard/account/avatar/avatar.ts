@@ -28,6 +28,6 @@ export default class RouteDashAccountAvatar extends BaseRouteComponent {
 	}
 
 	routeInit() {
-		this.setHeading(this.$gettext('Getting an Avatar'));
+		this.setHeading(this.$gettext('Edit Your Avatar'));
 	}
 }

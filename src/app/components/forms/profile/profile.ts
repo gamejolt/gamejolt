@@ -46,8 +46,6 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad {
 		this.nameChangedOn = payload.nameChangedOn;
 		this.nameTimeLeft = payload.nameTimeLeft;
 
-		this.formModel.assign(payload.user);
-
 		if (this.usernameTimeLeft) {
 			this.usernameDuration = distanceInWordsToNow(Date.now() + this.usernameTimeLeft);
 		}
