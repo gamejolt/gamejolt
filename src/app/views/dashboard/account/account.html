@@ -22,6 +22,7 @@
 	<app-expand :when="$route.name === 'dash.account.header'" v-if="app.user.header_media_item">
 		<app-media-item-cover
 			:media-item="app.user.header_media_item"
+			:max-height="400"
 			/>
 	</app-expand>
 
