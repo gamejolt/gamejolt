@@ -2,7 +2,7 @@
 	<div class="col-sm-4 col-sm-push-8">
 		<button
 			class="btn btn-danger-outline btn-block"
-			v-if="game.header_media_item"
+			v-if="app.user.header_media_item"
 			@click="clearHeader"
 			>
 			<app-jolticon icon="remove" />
@@ -26,12 +26,11 @@
 
 	<div class="col-sm-8 col-sm-pull-4">
 
-		<form-game-header
-			:model="game"
-			@submit="onSaved"
+		<form-user-header
+			:model="app.user"
 			/>
-
-		<app-dash-game-wizard-controls />
 
 	</div>
 </div>
+
+
