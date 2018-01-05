@@ -38,32 +38,13 @@ export default class RouteAuthJoin extends BaseRouteComponent {
 	}
 
 	async onJoin(formModel: any) {
-		// TODO(mailer-panic) This is temporarily disabled to allow new registers to bypass verification.
-		// Enable this once mailer is good to go.
-		// // We store these so we can log them in automatically once their
-		// // verification happens.
-		// this.setCredentials({
-		// 	username: formModel.username,
-		// 	password: formModel.password,
-		// });
-
-		// this.$router.push({ name: 'auth.join-almost' });
-
-		// Same as what join-almost does when waiting for verification.
-		const response = await Api.sendRequest('/web/auth/login', {
+		// We store these so we can log them in automatically once their
+		// verification happens.
+		this.setCredentials({
 			username: formModel.username,
 			password: formModel.password,
 		});
 
-		if (!response.success) {
-			Growls.error({
-				message: this.$gettext(`Couldn't log you in for some reason.`),
-				sticky: true,
-			});
-			return;
-		}
-
-		// If it worked, redirect to dashboard. They're good to go!
-		Auth.redirectDashboard();
+		this.$router.push({ name: 'auth.join-almost' });
 	}
 }
