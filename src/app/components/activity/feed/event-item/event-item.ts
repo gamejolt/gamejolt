@@ -23,6 +23,7 @@ import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
 import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
+import { FormPoll } from '../../../forms/poll/poll';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
@@ -40,6 +41,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
 		AppActivityFeedControls,
+		FormPoll,
 	},
 	filters: {
 		number,

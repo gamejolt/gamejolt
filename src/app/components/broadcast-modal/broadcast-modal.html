@@ -114,6 +114,11 @@
 						/>
 				</div>
 
+				<form-poll
+					v-if="post.poll"
+					:model="post.poll"
+					/>
+
 				<!--
 					Need to refresh social widgets any time post changes.
 				-->

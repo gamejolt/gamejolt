@@ -17,7 +17,6 @@
 			:rules="{
 				max: 250,
 			}"
-			v-app-focus-when
 			/>
 		<app-form-control-errors />
 	</app-form-group>
@@ -102,6 +101,113 @@
 			<app-form-control type="text" />
 			<app-form-control-errors />
 		</app-form-group>
+	</div>
+
+	<div>
+		<button
+			class="btn btn-outline"
+			v-if="!hasPoll"
+			@click.prevent="createPoll()"
+			>
+			<translate>Add poll</translate>
+		</button>
+		<app-expand :when="hasPoll">
+			<!-- i starts from 1 -->
+			<template v-for="i in formModel.poll_item_count">
+				<app-form-group
+					:name="'poll_item' + i"
+					:hide-label="true"
+					>
+					<input type="radio" disabled />
+
+					<app-form-control
+						type="text"
+						:placeholder="$gettextInterpolate('Choice %{ num }', { num: i })"
+						:disabled="!isPollEditable"
+						/>
+					
+					<!-- Can't have less than 2 poll items -->
+					<a
+						v-if="formModel.poll_item_count > 2 && isPollEditable"
+						@click.stop="removePollItem(i)"
+						>
+						<app-jolticon icon="remove" />
+					</a>
+				</app-form-group>
+			</template>
+
+			<button
+				class="btn btn-outline"
+				v-if="isPollEditable"
+				:disabled="formModel.poll_item_count >= MAX_POLL_ITEMS"
+				@click.prevent="addPollItem()"
+				>
+				<app-jolticon icon="add" />
+				<translate>Add Choice</translate>
+			</button>
+
+			<div class="poll-duration">
+				<app-form-group
+					name="poll_days"
+					:label="$gettext('Days')"
+					>
+					<app-form-control
+						type="number"
+						step="1"
+						min="0"
+						:disabled="!isPollEditable"
+						:rules="{
+							pattern: /^\d*$/,
+							min_value: 0,
+						}"
+						/>
+				</app-form-group>
+
+				<app-form-group
+					name="poll_hours"
+					:label="$gettext('Hours')"
+					>
+					<app-form-control
+						type="number"
+						step="1"
+						min="0"
+						max="23"
+						:disabled="!isPollEditable"
+						:rules="{
+							pattern: /^\d*$/,
+							min_value: 0,
+							max_value: 23,
+						}"
+						/>
+				</app-form-group>
+
+				<app-form-group
+					name="poll_minutes"
+					:label="$gettext('Minutes')"
+					>
+					<app-form-control
+						type="number"
+						step="1"
+						min="0"
+						max="59"
+						:disabled="!isPollEditable"
+						:rules="{
+							pattern: /^\d*$/,
+							min_value: 0,
+							max_value: 59,
+						}"
+						/>
+				</app-form-group>
+			</div>
+
+			<button
+				class="btn btn-outline"
+				@click.prevent="removePoll()"
+				>
+				<app-jolticon icon="remove" />
+				<translate>Remove poll</translate>
+			</button>
+		</app-expand>
 	</div>
 
 	<!--

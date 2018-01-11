@@ -1,0 +1,66 @@
+<app-form name="poll" ref="form">
+
+	<template v-if="!showResults">
+		<app-form-group name="voteId" :hide-label="true">
+			<div
+				class="radio"
+				v-for="(item, i) in model.items"
+				:key="item.id"
+				>
+				<label>
+					<app-form-control-radio
+						:value="item.id"
+						:checked="item.is_voted"
+						/>
+					{{ item.text }}
+				</label>
+			</div>
+		</app-form-group>
+
+		<app-form-button v-if="this.formModel.voteId">
+			<translate>Vote</translate>
+		</app-form-button>
+
+		<a
+			@click.stop="showResults = true"
+			>
+			&nbsp;<translate>Show results</translate>
+		</a>
+	</template>
+	<template v-else>
+		<div
+			class="radio"
+			v-for="(item, i) in model.items"
+			:key="i"
+			>
+			<label>
+				<app-progress-bar :percent="(item.vote_count || 0) * 100 / Math.max(totalVotes, 1)">
+					<!-- align left -->
+					{{ item.text }}
+
+					<app-jolticon v-if="item.is_voted" icon="check" />
+
+					<!-- align right -->
+					{{ (item.vote_count || 0) * 100 / Math.max(totalVotes, 1) }}%
+				</app-progress-bar>
+			</label>
+		</div>
+
+		<translate
+			:translate-n="totalVotes || 0"
+			:translate-params="{ votes: number(totalVotes || 0) }"
+			translate-plural="%{ votes } votes"
+			>
+			%{ votes } vote
+		</translate>
+		<br>
+
+		<a
+			v-if="isVotable"
+			@click.stop="showResults = false"
+			>
+			<translate>Hide results</translate>
+		</a>
+	</template>
+
+</app-form>
