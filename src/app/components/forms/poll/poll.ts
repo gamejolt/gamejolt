@@ -28,7 +28,7 @@ export class FormPoll extends BaseForm<FormModel>
 	modelClass = Poll as any;
 
 	now = Date.now();
-	showResults = !this.isVotable;
+	showResults = !this.isVotable || this.getVotedId !== null;
 
 	readonly number = number;
 
