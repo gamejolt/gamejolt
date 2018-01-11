@@ -27,7 +27,7 @@ export class FormPoll extends BaseForm<FormModel>
 	implements FormOnInit, FormOnSubmit, FormOnSubmitSuccess {
 	modelClass = Poll as any;
 
-	now = Date.now() / 1000;
+	now = Date.now();
 	showResults = !this.isVotable;
 
 	readonly number = number;
@@ -50,7 +50,7 @@ export class FormPoll extends BaseForm<FormModel>
 	}
 
 	get isVotable() {
-		return this.model!.end_time < this.now;
+		return this.model!.end_time > this.now;
 	}
 
 	onInit() {
