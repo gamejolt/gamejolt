@@ -17,7 +17,10 @@
 			</div>
 		</app-form-group>
 
-		<app-form-button v-if="this.formModel.voteId">
+		<app-form-button
+			v-if="this.formModel.voteId"
+			:disabled="this.formModel.voteId === getVotedId"
+			>
 			<translate>Vote</translate>
 		</app-form-button>
 
