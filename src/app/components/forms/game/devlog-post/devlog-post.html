@@ -227,7 +227,7 @@
 			</div>
 		</fieldset>
 
-		<div class="text-right">
+		<div class="text-right" v-if="isPollEditable">
 			<button
 				class="btn btn-outline"
 				@click.prevent="removePoll()"
@@ -259,7 +259,7 @@
 
 			<div class="checkbox" v-for="keyGroup of keyGroups" :key="keyGroup.id">
 				<label>
-						<app-form-control-checkbox :value="keyGroup.id" />
+					<app-form-control-checkbox :value="keyGroup.id" />
 					{{ keyGroup.name }}
 				</label>
 			</div>

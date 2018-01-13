@@ -19,7 +19,6 @@ import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/service
 import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 
 type FormGameDevlogPostModel = FiresidePost & {
