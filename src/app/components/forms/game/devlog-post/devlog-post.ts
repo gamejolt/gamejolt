@@ -20,6 +20,7 @@ import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/us
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -55,6 +56,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 	},
 	directives: {
 		AppFocusWhen,
+		AppTooltip,
 	},
 })
 export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
@@ -141,21 +143,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.maxHeight = payload.maxHeight;
 	}
 
-	// createPoll() {
-	// 	if (this.formModel.poll) {
-	// 		return;
-	// 	}
-
-	// 	// Create new poll with defaults.
-	// 	const poll = new Poll(<Poll>{
-	// 		fireside_post_id: this.formModel.id,
-	// 		duration: 1440, // 1 day in minutes
-	// 	});
-	// 	poll.ensureMinimumItems();
-
-	// 	this.setField('poll', poll);
-	// }
-
 	createPoll() {
 		// Initialize default poll
 		this.setField('poll_days', 1);
@@ -168,14 +155,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	async removePoll() {
-		const remove = await ModalConfirm.show(
-			this.$gettext('Are you sure you want to remove the poll?'),
-			this.$gettext('Remove poll'),
-			'yes'
-		);
-		if (remove) {
-			this.setField('poll_item_count', 0);
-		}
+		this.setField('poll_item_count', 0);
 	}
 
 	removePollItem(idx: number) {
