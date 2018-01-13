@@ -163,9 +163,9 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		}
 
 		for (let i = idx; i < this.formModel.poll_item_count; i++) {
-			console.log('Setting content of poll_item' + i + ' to content of poll_item' + (i + 1));
 			this.setField(('poll_item' + i) as any, (this.formModel as any)['poll_item' + (i + 1)]);
 		}
+
 		this.setField('poll_item_count', this.formModel.poll_item_count - 1);
 	}
 

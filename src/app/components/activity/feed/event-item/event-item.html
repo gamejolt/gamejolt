@@ -107,9 +107,10 @@
 					@content-bootstrapped="onContentBootstrapped"
 					/>
 				
-				<template v-if="post.poll !== null">
-					<form-poll :model="post.poll" />
-				</template>
+				<app-poll-voting
+					v-if="post.poll !== null"
+					:poll="post.poll"
+					/>
 			</template>
 
 			<app-activity-feed-controls

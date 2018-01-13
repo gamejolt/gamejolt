@@ -128,15 +128,16 @@
 				>
 				<app-form-group
 					:name="'poll_item' + i"
+					:label="$gettext(`choice`)"
 					:hide-label="true"
 					>
-					<!-- <input type="radio" disabled /> -->
-
 					<app-form-control
 						type="text"
 						:placeholder="$gettextInterpolate('Choice %{ num }', { num: i })"
 						:disabled="!isPollEditable"
 						/>
+
+					<app-form-control-errors />
 				</app-form-group>
 
 				<!-- Can't have less than 2 poll items -->

@@ -11,6 +11,7 @@ import { AppVideo } from '../../../../../lib/gj-lib-client/components/video/vide
 import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
 import { AppSketchfabEmbed } from '../../../../../lib/gj-lib-client/components/sketchfab/embed/embed';
 import { AppActivityFeedControls } from '../../../activity/feed/controls/controls';
+import { AppPollVoting } from '../../../poll/voting/voting';
 
 @View
 @Component({
@@ -23,6 +24,7 @@ import { AppActivityFeedControls } from '../../../activity/feed/controls/control
 		AppVideoEmbed,
 		AppSketchfabEmbed,
 		AppActivityFeedControls,
+		AppPollVoting,
 	},
 })
 export class AppDevlogPostView extends Vue {

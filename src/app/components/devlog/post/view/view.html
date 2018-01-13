@@ -54,6 +54,11 @@
 			/>
 	</div>
 
+	<app-poll-voting
+		v-if="post.poll"
+		:poll="post.poll"
+		/>
+
 	<hr>
 
 	<app-activity-feed-controls

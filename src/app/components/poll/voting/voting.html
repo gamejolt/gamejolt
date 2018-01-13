@@ -1,0 +1,53 @@
+<div class="poll-voting">
+	<template v-if="!showResults">
+		<div>
+			<button
+				class="btn btn-outline btn-block"
+				v-for="item of poll.items"
+				:key="item.id"
+				:disabled="isProcessing"
+				@click="vote(item.id)"
+				>
+				{{ item.text }}
+			</button>
+		</div>
+
+		<br>
+	</template>
+	<template v-else>
+		<div
+			v-for="item of poll.items"
+			:key="item.id"
+			:class="{
+				'-chosen': item.is_voted
+			}"
+			>
+			<app-progress-bar :percent="getItemPercentage(item) * 100">
+				<span class="-progress-percent">
+					{{ number(getItemPercentage(item), { style: 'percent', maximumFractionDigits: 0 }) }}
+				</span>
+
+				<app-jolticon v-if="item.is_voted" icon="check" class="middle" />
+
+				{{ item.text }}
+			</app-progress-bar>
+		</div>
+	</template>
+
+	<div class="text-muted">
+		<translate
+			:translate-n="totalVotes || 0"
+			:translate-params="{ votes: number(totalVotes || 0) }"
+			translate-plural="%{ votes } votes"
+			>
+			%{ votes } vote
+		</translate>
+
+		<span class="dot-separator"></span>
+
+		<app-time-ago v-if="isVotable" :date="poll.end_time" is-future />
+		<translate v-else>
+			Voting finished
+		</translate>
+	</div>
+</div>
