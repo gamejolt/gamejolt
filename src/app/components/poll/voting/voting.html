@@ -31,8 +31,8 @@
 			</app-progress-bar>
 		</div>
 
-		<div v-if="poll.is_private && votedId" class="alert alert-info">
-			<translate>Thank you for voting! The results are not available yet, check back later?</translate>
+		<div v-if="poll.is_private" class="alert alert-info">
+			<translate>The results of this poll are private.</translate>
 		</div>
 	</template>
 

@@ -20,7 +20,6 @@ import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/us
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { Poll } from '../../../../../lib/gj-lib-client/components/poll/poll.model';
 import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
 
 type FormGameDevlogPostModel = FiresidePost & {
@@ -65,8 +64,6 @@ type FormGameDevlogPostModel = FiresidePost & {
 export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	implements FormOnInit, FormOnLoad, FormOnSubmit {
 	modelClass = FiresidePost as any;
-	resetOnSubmit = true;
-	reloadOnSubmit = true;
 
 	@AppState user: AppStore['user'];
 
@@ -120,23 +117,25 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	onInit() {
+		const model = this.model!;
+
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
-		if (this.model!.type === FiresidePost.TYPE_VIDEO) {
-			if (this.model!.videos.length) {
+		if (model.type === FiresidePost.TYPE_VIDEO) {
+			if (model.videos.length) {
 				this.setField(
 					'video_url',
-					'https://www.youtube.com/watch?v=' + this.model!.videos[0].video_id
+					'https://www.youtube.com/watch?v=' + model.videos[0].video_id
 				);
 			}
-		} else if (this.model!.type === FiresidePost.TYPE_SKETCHFAB) {
-			if (this.model!.sketchfabs.length) {
-				this.setField('sketchfab_id', this.model!.sketchfabs[0].sketchfab_id);
+		} else if (model.type === FiresidePost.TYPE_SKETCHFAB) {
+			if (model.sketchfabs.length) {
+				this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);
 			}
 		}
 
-		if (this.model!.poll !== null) {
-			const poll = this.model!.poll!;
+		if (model.poll) {
+			const poll = model.poll;
 
 			let duration = poll.duration / 60; // We want to work in minutes.
 			this.setField('poll_duration', duration);

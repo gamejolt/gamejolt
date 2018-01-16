@@ -75,7 +75,6 @@ export class AppPollVoting extends Vue {
 
 		this.isProcessing = true;
 		await this.poll.$vote(id);
-		console.log(this.poll.items.map(item => item.is_voted));
 		this.isProcessing = false;
 	}
 
