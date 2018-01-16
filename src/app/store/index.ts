@@ -24,6 +24,7 @@ import {
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { ChatClient } from '../components/chat/client';
 import { ChatClientLazy } from '../components/lazy';
+import { GridClient } from '../components/grid/client';
 import { router } from '../views';
 import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
@@ -37,6 +38,8 @@ export type Actions = AppActions &
 		clear: undefined;
 		loadChat: undefined;
 		clearChat: undefined;
+		loadGrid: undefined;
+		clearGrid: undefined;
 		toggleLeftPane: undefined;
 		toggleRightPane: undefined;
 		clearPanes: undefined;
@@ -51,7 +54,9 @@ export type Mutations = AppMutations &
 		_setLibraryBootstrapped: undefined;
 		_clear: undefined;
 		_setChat: ChatClient;
+		_setGrid: GridClient;
 		_clearChat: undefined;
+		_clearGrid: undefined;
 		_toggleLeftPane: undefined;
 		_toggleRightPane: undefined;
 		_clearPanes: undefined;
@@ -86,6 +91,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	route: Route;
 
 	chat: ChatClient | null = null;
+	grid: GridClient | null = null;
 
 	isBootstrapped = false;
 	isLibraryBootstrapped = false;
@@ -156,7 +162,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		// We go to the homepage currently just in case they're in a view they shouldn't be.
 		router.push({ name: 'discover.home' });
 
-		Growls.success(Translate.$gettext('You are now logged out.'), Translate.$gettext('Goodbye!'));
+		Growls.success(
+			Translate.$gettext('You are now logged out.'),
+			Translate.$gettext('Goodbye!')
+		);
 	}
 
 	@VuexAction
@@ -183,6 +192,24 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		}
 
 		this._clearChat();
+	}
+
+	@VuexAction
+	async loadGrid() {
+		if (GJ_IS_SSR) {
+			return;
+		}
+
+		this._setGrid(new GridClient());
+	}
+
+	@VuexAction
+	async clearGrid() {
+		if (this.grid) {
+			this.grid.disconnect();
+		}
+
+		this._clearGrid();
 	}
 
 	@VuexAction
@@ -257,6 +284,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
+	_setGrid(grid: Mutations['_setGrid']) {
+		this.grid = grid;
+	}
+
+	@VuexMutation
+	_clearGrid() {
+		this.grid = null;
+	}
+
+	@VuexMutation
 	_toggleLeftPane() {
 		if (Screen.isLg) {
 			this.isLeftPaneSticky = !this.isLeftPaneSticky;
@@ -313,6 +350,7 @@ store.watch(
 		if (isLoggedIn) {
 			store.dispatch('bootstrap');
 			store.dispatch('loadChat');
+			store.dispatch('loadGrid');
 
 			if (GJ_IS_CLIENT) {
 				store.dispatch('clientLibrary/bootstrap');
@@ -320,6 +358,7 @@ store.watch(
 		} else {
 			store.dispatch('clear');
 			store.dispatch('clearChat');
+			store.dispatch('clearGrid');
 		}
 	}
 );
