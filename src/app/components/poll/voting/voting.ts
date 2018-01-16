@@ -8,6 +8,8 @@ import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progres
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { PollItem } from '../../../../lib/gj-lib-client/components/poll/item/item.model';
 import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
+import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 @View
 @Component({
@@ -16,26 +18,27 @@ import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ag
 		AppJolticon,
 		AppTimeAgo,
 	},
+	directives: {
+		AppAuthRequired,
+	},
 })
 export class AppPollVoting extends Vue {
 	@Prop(Poll) poll: Poll;
+	@Prop(Game) game?: Game;
 
 	isProcessing = false;
+	areResultsReady = false;
 	now = Date.now();
 	private dateRefresh: NodeJS.Timer | null = null;
 
 	readonly number = number;
 
 	get showResults() {
-		return !this.isVotable || this.votedId !== null;
-	}
-
-	get totalVotes() {
-		let sum = 0;
-		for (const item of this.poll.items) {
-			sum += item.vote_count || 0;
-		}
-		return sum;
+		return (
+			(!this.isVotable && this.areResultsReady) ||
+			this.votedId !== null ||
+			(this.game && this.game.hasPerms())
+		);
 	}
 
 	get votedId() {
@@ -48,11 +51,15 @@ export class AppPollVoting extends Vue {
 	}
 
 	get isVotable() {
-		return this.poll.end_time > this.now;
+		return this.poll.end_time && this.poll.end_time > this.now;
 	}
 
 	mounted() {
-		this.setInterval();
+		if (this.isVotable) {
+			this.setInterval();
+		} else {
+			this.areResultsReady = true;
+		}
 	}
 
 	destroyed() {
@@ -60,7 +67,7 @@ export class AppPollVoting extends Vue {
 	}
 
 	getItemPercentage(item: PollItem) {
-		return (item.vote_count || 0) / Math.max(this.totalVotes, 1);
+		return (item.vote_count || 0) / Math.max(this.poll.vote_count, 1);
 	}
 
 	async vote(id: number) {
@@ -69,7 +76,8 @@ export class AppPollVoting extends Vue {
 		}
 
 		this.isProcessing = true;
-		this.poll.$vote(id);
+		await this.poll.$vote(id);
+		console.log(this.poll.items.map(item => item.is_voted));
 		this.isProcessing = false;
 	}
 
@@ -85,7 +93,14 @@ export class AppPollVoting extends Vue {
 	private setInterval() {
 		if (!GJ_IS_SSR) {
 			this.clearInterval();
-			setInterval(() => (this.now = Date.now()), 1000);
+			this.dateRefresh = setInterval(async () => {
+				this.now = Date.now();
+				if (!this.isVotable) {
+					this.clearInterval();
+					await this.poll.$refresh();
+					this.areResultsReady = true;
+				}
+			}, 1000);
 		}
 	}
 }

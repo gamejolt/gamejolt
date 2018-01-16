@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import View from '!view!./devlog-post.html?style=./devlog-post.styl';
 
 import {
@@ -20,6 +20,7 @@ import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/us
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { Poll } from '../../../../../lib/gj-lib-client/components/poll/poll.model';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -28,6 +29,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 
 	poll_item_count: number;
 	poll_duration: number;
+	poll_is_private: boolean;
 	poll_days: number;
 	poll_hours: number;
 	poll_minutes: number;
@@ -61,6 +63,8 @@ type FormGameDevlogPostModel = FiresidePost & {
 export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	implements FormOnInit, FormOnLoad, FormOnSubmit {
 	modelClass = FiresidePost as any;
+	resetOnSubmit = true;
+	reloadOnSubmit = true;
 
 	@AppState user: AppStore['user'];
 
@@ -81,6 +85,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	readonly GameVideo = GameVideo;
 
 	readonly MAX_POLL_ITEMS = 10;
+	readonly MIN_DURATION = 5;
+	readonly MAX_DURATION = 20160;
 
 	get loadUrl() {
 		return `/web/dash/developer/games/devlog/save/${this.model!.game.id}/${this.model!.id}`;
@@ -96,6 +102,14 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 			return poll.end_time === 0;
 		}
 		return true;
+	}
+
+	get duration() {
+		return (
+			this.formModel.poll_days * 1440 +
+			this.formModel.poll_hours * 60 +
+			this.formModel.poll_minutes * 1 // cast to int lol
+		);
 	}
 
 	onInit() {
@@ -126,6 +140,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 			duration -= this.formModel.poll_hours * 60;
 			this.setField('poll_minutes', duration);
 
+			this.setField('poll_is_private', poll.is_private);
+
 			this.setField('poll_item_count', poll.items.length);
 			for (let i = 0; i < poll.items.length; i++) {
 				this.setField(('poll_item' + (i + 1)) as any, poll.items[i].text);
@@ -140,6 +156,10 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
+
+		if (this.model) {
+			(this.model as FiresidePost).poll = new Poll(payload.poll);
+		}
 	}
 
 	createPoll() {
@@ -184,13 +204,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	async onSubmit() {
-		const duration =
-			this.formModel.poll_days * 1440 +
-			this.formModel.poll_hours * 60 +
-			this.formModel.poll_minutes;
-
-		this.setField('poll_duration', duration * 60); // site-api expects duration in seconds.
-
+		this.setField('poll_duration', this.duration * 60); // site-api expects duration in seconds.
 		return this.formModel.$save();
 	}
 }

@@ -1,6 +1,6 @@
 <div class="poll-voting">
 	<template v-if="!showResults">
-		<div>
+		<div v-app-auth-required>
 			<button
 				class="btn btn-outline btn-block"
 				v-for="item of poll.items"
@@ -23,7 +23,7 @@
 			}"
 			>
 			<app-progress-bar :percent="getItemPercentage(item) * 100">
-				<span class="-progress-percent">
+				<span v-if="!poll.is_private" class="-progress-percent">
 					{{ number(getItemPercentage(item), { style: 'percent', maximumFractionDigits: 0 }) }}
 				</span>
 
@@ -32,12 +32,16 @@
 				{{ item.text }}
 			</app-progress-bar>
 		</div>
+
+		<div v-if="poll.is_private && votedId" class="alert alert-info">
+			<translate>Thank you for voting! The results are not available yet, check back later?</translate>
+		</div>
 	</template>
 
 	<div class="text-muted">
 		<translate
-			:translate-n="totalVotes || 0"
-			:translate-params="{ votes: number(totalVotes || 0) }"
+			:translate-n="poll.vote_count || 0"
+			:translate-params="{ votes: number(poll.vote_count || 0) }"
 			translate-plural="%{ votes } votes"
 			>
 			%{ votes } vote
@@ -46,8 +50,11 @@
 		<span class="dot-separator"></span>
 
 		<app-time-ago v-if="isVotable" :date="poll.end_time" is-future />
-		<translate v-else>
+		<translate v-else-if="poll.end_time">
 			Voting finished
+		</translate>
+		<translate v-else>
+			Poll is unpublished
 		</translate>
 	</div>
 </div>

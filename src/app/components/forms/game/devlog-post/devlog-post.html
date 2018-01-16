@@ -17,6 +17,7 @@
 			:rules="{
 				max: 250,
 			}"
+			v-app-focus-when
 			/>
 		<app-form-control-errors />
 	</app-form-group>
@@ -133,6 +134,10 @@
 					>
 					<app-form-control
 						type="text"
+						maxlength="64"
+						:rules="{
+							max: 64,
+						}"
 						:placeholder="$gettextInterpolate('Choice %{ num }', { num: i })"
 						:disabled="!isPollEditable"
 						/>
@@ -162,7 +167,7 @@
 
 		<br>
 
-		<fieldset>
+		<fieldset class="-poll-duration">
 			<legend class="compact">
 				<translate>Duration</translate>
 			</legend>
@@ -177,10 +182,12 @@
 							type="number"
 							step="1"
 							min="0"
+							max="14"
 							:disabled="!isPollEditable"
 							:rules="{
 								pattern: /^\d*$/,
 								min_value: 0,
+								max_value: 14,
 							}"
 							/>
 					</app-form-group>
@@ -226,7 +233,18 @@
 					</app-form-group>
 				</div>
 			</div>
+			<p v-if="duration < MIN_DURATION" class="help-block error"><translate>Too short! Polls must be at least 5 minutes</translate></p>
+			<p v-else-if="duration > MAX_DURATION" class="help-block error"><translate>Too long! Polls may run for up to 14 days</translate></p>
+			<br v-else>
 		</fieldset>
+
+		<app-form-group
+			name="poll_is_private"
+			:label="$gettext('Private poll?')"
+			>
+			<p class="help-block"><translate>The poll's results will be kept hidden if this is turned on.</translate></p>
+			<app-form-control-toggle />
+		</app-form-group>
 
 		<div class="text-right" v-if="isPollEditable">
 			<button
