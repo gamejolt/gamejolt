@@ -21,6 +21,7 @@ import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/ex
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
+import { FormOnSubmitSuccess } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -62,7 +63,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 	},
 })
 export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
-	implements FormOnInit, FormOnLoad, FormOnSubmit {
+	implements FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess {
 	modelClass = FiresidePost as any;
 
 	@AppState user: AppStore['user'];
@@ -208,5 +209,9 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	async onSubmit() {
 		this.setField('poll_duration', this.duration * 60); // site-api expects duration in seconds.
 		return this.formModel.$save();
+	}
+
+	onSubmitSuccess() {
+		Object.assign(this.model as FiresidePost, this.formModel);
 	}
 }
