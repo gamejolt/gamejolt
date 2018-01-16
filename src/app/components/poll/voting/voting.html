@@ -27,8 +27,6 @@
 					{{ number(getItemPercentage(item), { style: 'percent', maximumFractionDigits: 0 }) }}
 				</span>
 
-				<app-jolticon v-if="item.is_voted" icon="check" class="middle" />
-
 				{{ item.text }}
 			</app-progress-bar>
 		</div>
@@ -54,7 +52,7 @@
 			Voting finished
 		</translate>
 		<translate v-else>
-			Poll is unpublished
+			Draft poll
 		</translate>
 	</div>
 </div>

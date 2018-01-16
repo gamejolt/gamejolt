@@ -5,7 +5,6 @@ import View from '!view!./voting.html?style=./voting.styl';
 import { Poll } from '../../../../lib/gj-lib-client/components/poll/poll.model';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { PollItem } from '../../../../lib/gj-lib-client/components/poll/item/item.model';
 import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
@@ -15,7 +14,6 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 @Component({
 	components: {
 		AppProgressBar,
-		AppJolticon,
 		AppTimeAgo,
 	},
 	directives: {

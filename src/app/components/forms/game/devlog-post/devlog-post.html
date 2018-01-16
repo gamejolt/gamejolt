@@ -104,7 +104,7 @@
 		</app-form-group>
 	</div>
 
-	<template v-if="!hasPoll">
+	<template v-if="!isPublished && !hasPoll">
 		<div>
 			<button
 				class="btn btn-outline btn-sparse"
@@ -116,11 +116,11 @@
 		</div>
 		<br>
 	</template>
-	<div class="well fill-lightest full-bleed" v-else>
+	<div class="well fill-lightest full-bleed" v-else-if="hasPoll">
 		<fieldset>
-			<legend class="compact">
+			<app-form-legend compact>
 				<translate>Set up poll</translate>
-			</legend>
+			</app-form-legend>
 
 			<!-- i starts from 1 -->
 			<div
@@ -168,9 +168,9 @@
 		<br>
 
 		<fieldset class="-poll-duration">
-			<legend class="compact">
+			<app-form-legend compact>
 				<translate>Duration</translate>
-			</legend>
+			</app-form-legend>
 
 			<div class="row">
 				<div class="col-xs-4">
@@ -233,18 +233,38 @@
 					</app-form-group>
 				</div>
 			</div>
-			<p v-if="duration < MIN_DURATION" class="help-block error"><translate>Too short! Polls must be at least 5 minutes</translate></p>
-			<p v-else-if="duration > MAX_DURATION" class="help-block error"><translate>Too long! Polls may run for up to 14 days</translate></p>
+
+			<p v-if="duration < MIN_DURATION" class="help-block error">
+				<translate>Too short! Polls must be between 5 minutes and 14 days long.</translate>
+			</p>
+			<p v-else-if="duration > MAX_DURATION" class="help-block error">
+				<translate>Too long! Polls must be between 5 minutes and 14 days long.</translate>
+			</p>
 			<br v-else>
 		</fieldset>
 
-		<app-form-group
-			name="poll_is_private"
-			:label="$gettext('Private poll?')"
-			>
-			<p class="help-block"><translate>The poll's results will be kept hidden if this is turned on.</translate></p>
-			<app-form-control-toggle />
-		</app-form-group>
+		<fieldset>
+			<app-form-legend
+				compact
+				expandable
+				:expanded="isShowingMoreOptions"
+				@click.native="isShowingMoreOptions = !isShowingMoreOptions"
+				>
+				<translate>More options</translate>
+			</app-form-legend>
+
+			<div v-show="isShowingMoreOptions">
+				<app-form-group
+					name="poll_is_private"
+					:label="$gettext(`Private results?`)"
+					>
+					<app-form-control-toggle class="pull-right" />
+					<p class="help-block sans-margin-top">
+						<translate>The poll's results will be kept hidden if this is turned on.</translate>
+					</p>
+				</app-form-group>
+			</div>
+		</fieldset>
 
 		<div class="text-right" v-if="isPollEditable">
 			<button

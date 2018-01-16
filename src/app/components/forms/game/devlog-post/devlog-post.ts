@@ -21,6 +21,7 @@ import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/ex
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Poll } from '../../../../../lib/gj-lib-client/components/poll/poll.model';
+import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -51,6 +52,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppFormControlMarkdown,
 		AppFormControlUpload,
 		AppFormControlToggle,
+		AppFormLegend,
 		AppUserAvatarImg,
 		AppExpand,
 		AppJolticon,
@@ -80,6 +82,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	maxFilesize = 0;
 	maxWidth = 0;
 	maxHeight = 0;
+	isShowingMoreOptions = false;
 
 	readonly FiresidePost = FiresidePost;
 	readonly GameVideo = GameVideo;
@@ -90,6 +93,10 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 	get loadUrl() {
 		return `/web/dash/developer/games/devlog/save/${this.model!.game.id}/${this.model!.id}`;
+	}
+
+	get isPublished() {
+		return this.model && this.model.status === FiresidePost.STATUS_ACTIVE;
 	}
 
 	get hasPoll() {
@@ -156,10 +163,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
-
-		if (this.model) {
-			(this.model as FiresidePost).poll = new Poll(payload.poll);
-		}
 	}
 
 	createPoll() {
