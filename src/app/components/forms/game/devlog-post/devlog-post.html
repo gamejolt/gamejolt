@@ -104,6 +104,175 @@
 		</app-form-group>
 	</div>
 
+	<template v-if="!isPublished && !hasPoll">
+		<div>
+			<button
+				class="btn btn-outline btn-sparse"
+				v-app-tooltip="$gettext(`Add poll`)"
+				@click.prevent="createPoll()"
+				>
+				<app-jolticon icon="pedestals-numbers" />
+			</button>
+		</div>
+		<br>
+	</template>
+	<div class="well fill-lightest full-bleed" v-else-if="hasPoll">
+		<fieldset>
+			<app-form-legend compact>
+				<translate>Set up poll</translate>
+			</app-form-legend>
+
+			<!-- i starts from 1 -->
+			<div
+				class="-poll-option"
+				v-for="i of formModel.poll_item_count"
+				>
+				<app-form-group
+					:name="'poll_item' + i"
+					:label="$gettext(`choice`)"
+					:hide-label="true"
+					>
+					<app-form-control
+						type="text"
+						:rules="{
+							max: 64,
+						}"
+						:placeholder="$gettextInterpolate('Choice %{ num }', { num: i })"
+						:disabled="!isPollEditable"
+						/>
+
+					<app-form-control-errors />
+				</app-form-group>
+
+				<!-- Can't have less than 2 poll items -->
+				<a
+					class="-poll-option-remove link-muted"
+					v-if="formModel.poll_item_count > 2 && isPollEditable"
+					@click="removePollItem(i)"
+					>
+					<app-jolticon icon="remove" />
+				</a>
+			</div>
+
+			<div>
+				<a
+					v-if="isPollEditable && formModel.poll_item_count < MAX_POLL_ITEMS"
+					@click="addPollItem()"
+					>
+					+ <translate>Add choice</translate>
+				</a>
+			</div>
+		</fieldset>
+
+		<br>
+
+		<fieldset class="-poll-duration">
+			<app-form-legend compact>
+				<translate>Duration</translate>
+			</app-form-legend>
+
+			<div class="row">
+				<div class="col-xs-4">
+					<app-form-group
+						name="poll_days"
+						:label="$gettext('Days')"
+						>
+						<app-form-control
+							type="number"
+							step="1"
+							min="0"
+							max="14"
+							:disabled="!isPollEditable"
+							:rules="{
+								min_value: 0,
+								max_value: 14,
+							}"
+							/>
+					</app-form-group>
+				</div>
+
+				<div class="col-xs-4">
+					<app-form-group
+						name="poll_hours"
+						:label="$gettext('Hours')"
+						>
+						<app-form-control
+							type="number"
+							step="1"
+							min="0"
+							max="23"
+							:disabled="!isPollEditable"
+							:rules="{
+								min_value: 0,
+								max_value: 23,
+							}"
+							/>
+					</app-form-group>
+				</div>
+
+				<div class="col-xs-4">
+					<app-form-group
+						name="poll_minutes"
+						:label="$gettext('Minutes')"
+						>
+						<app-form-control
+							type="number"
+							step="1"
+							min="0"
+							max="59"
+							:disabled="!isPollEditable"
+							:rules="{
+								min_value: 0,
+								max_value: 59,
+							}"
+							/>
+					</app-form-group>
+				</div>
+			</div>
+
+			<p v-if="duration < MIN_DURATION" class="help-block error">
+				<translate>Too short! Polls must be between 5 minutes and 14 days long.</translate>
+			</p>
+			<p v-else-if="duration > MAX_DURATION" class="help-block error">
+				<translate>Too long! Polls must be between 5 minutes and 14 days long.</translate>
+			</p>
+			<br v-else>
+		</fieldset>
+
+		<fieldset>
+			<app-form-legend
+				compact
+				expandable
+				:expanded="isShowingMoreOptions"
+				@click.native="isShowingMoreOptions = !isShowingMoreOptions"
+				>
+				<translate>More options</translate>
+			</app-form-legend>
+
+			<div v-show="isShowingMoreOptions">
+				<app-form-group
+					name="poll_is_private"
+					:label="$gettext(`Private results?`)"
+					>
+					<app-form-control-toggle class="pull-right" />
+					<p class="help-block sans-margin-top">
+						<translate>The poll's results will be kept hidden if this is turned on.</translate>
+					</p>
+				</app-form-group>
+			</div>
+		</fieldset>
+
+		<div class="text-right" v-if="isPollEditable">
+			<button
+				class="btn btn-outline"
+				@click.prevent="removePoll()"
+				>
+				<app-jolticon icon="remove" />
+				<translate>Remove poll</translate>
+			</button>
+		</div>
+	</div>
+
 	<!--
 		Can only modify access control before it's published for the first time.'
 	-->
@@ -125,7 +294,7 @@
 
 			<div class="checkbox" v-for="keyGroup of keyGroups" :key="keyGroup.id">
 				<label>
-						<app-form-control-checkbox :value="keyGroup.id" />
+					<app-form-control-checkbox :value="keyGroup.id" />
 					{{ keyGroup.name }}
 				</label>
 			</div>
