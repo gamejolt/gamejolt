@@ -24,6 +24,7 @@ export class AppPollVoting extends Vue {
 	@Prop(Poll) poll: Poll;
 	@Prop(Game) game?: Game;
 
+	chosenItemId: number | null = null;
 	isProcessing = false;
 	areResultsReady = false;
 	now = Date.now();

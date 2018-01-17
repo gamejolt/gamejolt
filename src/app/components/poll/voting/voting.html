@@ -1,18 +1,22 @@
 <div class="poll-voting">
 	<template v-if="!showResults">
-		<div v-app-auth-required>
-			<button
-				class="btn btn-outline btn-block"
+		<div class="form-group">
+			<div
+				class="radio"
 				v-for="item of poll.items"
 				:key="item.id"
-				:disabled="isProcessing"
-				@click="vote(item.id)"
 				>
-				{{ item.text }}
-			</button>
+				<label>
+					<input
+						type="radio"
+						:value="item.id"
+						:disabled="isProcessing"
+						v-model="chosenItemId"
+						>
+					{{ item.text }}
+				</label>
+			</div>
 		</div>
-
-		<br>
 	</template>
 	<template v-else>
 		<div
@@ -36,23 +40,38 @@
 		</div>
 	</template>
 
-	<div class="text-muted">
-		<translate
-			:translate-n="poll.vote_count || 0"
-			:translate-params="{ votes: number(poll.vote_count || 0) }"
-			translate-plural="%{ votes } votes"
-			>
-			%{ votes } vote
-		</translate>
+	<div>
+		<template v-if="!showResults">
+			<span v-app-auth-required>
+				<button
+					class="btn btn-outline"
+					:disabled="!chosenItemId || isProcessing"
+					@click="vote(chosenItemId)"
+					>
+					<translate>Vote</translate>
+				</button>
+			</span>
+			&nbsp;
+		</template>
 
-		<span class="dot-separator"></span>
+		<span class="text-muted">
+			<translate
+				:translate-n="poll.vote_count || 0"
+				:translate-params="{ votes: number(poll.vote_count || 0) }"
+				translate-plural="%{ votes } votes"
+				>
+				%{ votes } vote
+			</translate>
 
-		<app-time-ago v-if="isVotable" :date="poll.end_time" is-future />
-		<translate v-else-if="poll.end_time">
-			Voting finished
-		</translate>
-		<translate v-else>
-			Draft poll
-		</translate>
+			<span class="dot-separator"></span>
+
+			<app-time-ago v-if="isVotable" :date="poll.end_time" is-future />
+			<translate v-else-if="poll.end_time">
+				Voting finished
+			</translate>
+			<translate v-else>
+				Draft poll
+			</translate>
+		</span>
 	</div>
 </div>
