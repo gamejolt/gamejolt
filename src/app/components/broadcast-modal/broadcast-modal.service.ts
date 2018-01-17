@@ -4,6 +4,7 @@ import { FiresidePost } from '../../../lib/gj-lib-client/components/fireside/pos
 import { Modal } from '../../../lib/gj-lib-client/components/modal/modal.service';
 import { asyncComponentLoader } from '../../../lib/gj-lib-client/utils/utils';
 import { appStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
+import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 
 const STORAGE_KEY_PREFIX = 'broadcast-modal:date:';
 
@@ -14,7 +15,7 @@ export class BroadcastModal {
 
 	static async check() {
 		const user = appStore.state.user;
-		if (!user || !Settings.get('broadcast-modal') || GJ_IS_SSR) {
+		if (!user || !Settings.get('broadcast-modal') || GJ_IS_SSR || Screen.isXs) {
 			return;
 		}
 
@@ -47,7 +48,9 @@ export class BroadcastModal {
 	private static async show(posts: FiresidePost[]) {
 		await Modal.show({
 			component: () =>
-				asyncComponentLoader(import(/* webpackChunkName: "BroadcastModal" */ './broadcast-modal')),
+				asyncComponentLoader(
+					import(/* webpackChunkName: "BroadcastModal" */ './broadcast-modal')
+				),
 			props: { posts },
 			noBackdropClose: true,
 		});
