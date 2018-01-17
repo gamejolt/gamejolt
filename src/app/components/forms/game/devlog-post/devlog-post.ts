@@ -1,4 +1,4 @@
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./devlog-post.html?style=./devlog-post.styl';
 
 import {
