@@ -11,6 +11,7 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { FormModel } from '../../../../lib/gj-lib-client/components/auth/join/join-form';
 
 @View
 @Component({
@@ -34,7 +35,7 @@ export default class RouteAuthJoin extends BaseRouteComponent {
 		return this.$gettext('auth.join.page_title');
 	}
 
-	async onJoin(formModel: any) {
+	async onJoining(formModel: FormModel) {
 		// We store these so we can log them in automatically once their
 		// verification happens.
 		this.setCredentials({
@@ -42,6 +43,9 @@ export default class RouteAuthJoin extends BaseRouteComponent {
 			password: formModel.password,
 		});
 
-		this.$router.push({ name: 'auth.join-almost' });
+		this.$router.push({
+			name: 'auth.join-almost',
+			params: { token: formModel.token },
+		});
 	}
 }
