@@ -84,9 +84,9 @@ export default class RouteProfile extends BaseRouteComponent {
 		this.headerMediaItem = $payload.headerMediaItem
 			? new MediaItem($payload.headerMediaItem)
 			: null;
-		this.gamesCount = $payload.gamesCount;
-		this.isOnline = $payload.isOnline;
-		this.libraryGamesCount = $payload.libraryGamesCount;
+		this.gamesCount = $payload.gamesCount || 0;
+		this.isOnline = $payload.isOnline || false;
+		this.libraryGamesCount = $payload.libraryGamesCount || 0;
 		this.activeGameSession = $payload.activeGameSession
 			? new UserGameSession($payload.activeGameSession)
 			: null;
@@ -94,6 +94,8 @@ export default class RouteProfile extends BaseRouteComponent {
 
 		if ($payload.userFriendship) {
 			this.userFriendship = new UserFriendship($payload.userFriendship);
+		} else {
+			this.userFriendship = null;
 		}
 	}
 

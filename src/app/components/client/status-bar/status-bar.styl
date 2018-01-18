@@ -1,0 +1,30 @@
+@require '~styles/variables'
+@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+
+.status-bar
+	padding: 0 10px
+	height: $status-bar-height
+	line-height: @height
+	font-size: $font-size-tiny
+	transform: translateY($status-bar-height)
+	transition: transform 250ms $strong-ease-out
+
+	&.-is-showing
+		transform: translateY(0)
+
+	.jolticon
+		vertical-align: middle
+
+.-progress
+	display: inline-block
+	width: 200px
+
+.-item
+	text-overflow()
+	float: left
+	margin-right: 30px
+	max-width: 300px
+
+	.pull-right &
+		margin-right: 0
+		margin-left: 30px

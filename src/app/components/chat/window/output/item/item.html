@@ -9,21 +9,21 @@
 	}"
 	>
 
-	<a class="chat-window-message-avatar"
+	<router-link class="chat-window-message-avatar"
 		v-if="!message.combine"
-		:href="message.user.url"
+		:to="message.user.url"
 		>
 		<img class="img-responsive" :src="message.user.imgAvatar" alt="">
-	</a>
+	</router-link>
 
 	<div class="chat-window-message-container">
 		<div class="chat-window-message-byline">
-			<a class="chat-window-message-user link-unstyled"
+			<router-link class="chat-window-message-user link-unstyled"
 				v-if="!message.combine"
-				:href="message.user.url"
+				:to="message.user.url"
 				v-html="message.user.displayName"
 				>
-			</a>
+			</router-link>
 			<span class="chat-window-message-username"
 				v-if="!message.combine"
 				>

@@ -14,7 +14,6 @@ import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.m
 import { AppGameThumbnailImg } from '../../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { currency } from '../../../../../../lib/gj-lib-client/vue/filters/currency';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../../lib/gj-lib-client/utils/vue';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -38,10 +37,10 @@ export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 
 	firstRefund: OrderPaymentRefund | null = null;
 
-	Geo = Geo;
-	OrderPayment = OrderPayment;
-	date = date;
-	Screen = makeObservableService(Screen);
+	readonly Geo = Geo;
+	readonly OrderPayment = OrderPayment;
+	readonly date = date;
+	readonly Screen = Screen;
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {

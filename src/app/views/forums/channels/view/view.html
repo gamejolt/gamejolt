@@ -80,7 +80,7 @@
 							:to="{
 								name: 'forums.channels.view',
 								params: { name: channel.name, sort: 'active' },
-								query: { page: page },
+								query: { page: 1 },
 							}"
 							:class="{ active: sort === 'active' }"
 							>
@@ -92,7 +92,7 @@
 							:to="{
 								name: 'forums.channels.view',
 								params: { name: channel.name, sort: 'new' },
-								query: { page: page },
+								query: { page: 1 },
 							}"
 							:class="{ active: sort === 'new' }"
 							>
@@ -104,11 +104,23 @@
 							:to="{
 								name: 'forums.channels.view',
 								params: { name: channel.name, sort: 'top' },
-								query: { page: page },
+								query: { page: 1 },
 							}"
 							:class="{ active: sort === 'top' }"
 							>
 							<translate>Top</translate>
+						</router-link>
+					</li>
+					<li>
+						<router-link
+							:to="{
+								name: 'forums.channels.view',
+								params: { name: channel.name, sort: 'archived' },
+								query: { page: 1 },
+							}"
+							:class="{ active: sort === 'archived' }"
+							>
+							<translate>Archived</translate>
 						</router-link>
 					</li>
 				</ul>
@@ -118,9 +130,9 @@
 						<translate
 							:translate-params="{
 								currentPage: number( currentPage ),
-								count: number( channel.topics_count ),
+								count: number( listableTopicsCount ),
 							}"
-							:translate-n="channel.topics_count"
+							:translate-n="listableTopicsCount"
 							translate-plural="Page %{ currentPage } of %{ count } topics."
 							>
 							%{ count } topic.
@@ -142,7 +154,7 @@
 				<app-pagination
 					:pager="true"
 					:items-per-page="perPage"
-					:total-items="channel.topics_count"
+					:total-items="listableTopicsCount"
 					:current-page="currentPage"
 					@pagechange="Scroll.to( 'forum-topics-list', { animate: false } )"
 					/>

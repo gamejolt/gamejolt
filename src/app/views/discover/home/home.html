@@ -1,11 +1,11 @@
 <div class="route-discover-home">
 
-	<!-- <app-discover-home-banner
-		v-if="featuredGame && featuredGame.id === 229681"
-		:game="featuredGame"
-		/> -->
+	<app-discover-home-banner
+		v-if="featuredItem"
+		:item="featuredItem"
+		/>
 
-	<section
+	<!-- <section
 		v-if="isLoaded && !app.user"
 		class="section landing-header text-center"
 		>
@@ -52,7 +52,7 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</section> -->
 
 	<section class="section section-thin fill-darker overlay-scrollbar channel-list">
 		<div class="channel-list-item"
@@ -66,44 +66,38 @@
 	<section class="section">
 		<div class="container-lg">
 
-			<div v-for="row of rows" :key="row.url">
-				<h1 class="section-header">
-					<router-link
-						class="link-unstyled"
-						:to="row.url"
-						v-app-track-event="`home:row-heading:${row.eventLabel}`"
-						>
-						{{ row.title }}
-					</router-link>
-					<small v-if="row.desc">{{ row.desc }}</small>
-				</h1>
+			<h1 class="section-header text-center">
+				<translate>Featured Games</translate>
+			</h1>
 
-				<div>
-					<app-game-grid-placeholder
-						v-if="!isLoaded"
-						:num="6"
-						:truncate-to-fit="true"
-						:scrollable="true"
-						/>
-					<app-game-grid
-						v-else
-						:games="games[ row.games ]"
-						:truncate-to-fit="true"
-						:scrollable="true"
-						:show-ads="false"
-						:event-label="`home-${row.eventLabel}`"
-						/>
-				</div>
+			<p class="text-center">
+				<translate>Check these games out and follow along in their development!</translate>
+			</p>
 
-				<div class="page-cut">
-					<router-link
-						class="btn btn-outline"
-						:to="row.url"
-						v-app-track-event="`home:more-btn:${row.eventLabel}`"
-						>
-						<translate>Show More</translate>
-					</router-link>
-				</div>
+			<hr class="underbar underbar-center">
+
+			<app-game-grid-placeholder
+				v-if="!isLoaded"
+				:num="6"
+				/>
+			<app-game-grid
+				v-else
+				:games="games"
+				truncate-to-fit
+				event-label="home"
+				/>
+
+			<div class="page-cut">
+				<router-link
+					class="btn btn-outline"
+					:to="{
+						name: 'discover.games.list._fetch',
+						params: { section: null }
+					}"
+					v-app-track-event="`home:more-btn:browse`"
+					>
+					<translate>Browse More Games</translate>
+				</router-link>
 			</div>
 
 		</div>

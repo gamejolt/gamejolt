@@ -7,26 +7,33 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+		<% if (htmlWebpackPlugin.options._crawl) { %>
+			<!-- Keep it from being crawled -->
+			<meta name="robots" content="noindex, nofollow">
+		<% } %>
+
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-
-		<!-- Add to homescreen for Chrome on Android -->
-		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="HandheldFriendly" content="True">
 		<meta name="theme-color" content="#191919">
-
-		<!-- Add to homescreen for Safari on iOS -->
-		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-		<meta name="apple-mobile-web-app-title" content="Game Jolt">
-		<link rel="apple-touch-icon-precomposed" href="${require(`~img/touch/apple-touch-icon-precomposed.png`)}">
 
-		<!-- Tile icon for Win8 (144x144 + tile color) -->
-		<meta name="msapplication-TileImage" content="${require(`~img/touch/ms-touch-icon-144x144-precomposed.png`)}">
-		<meta name="msapplication-TileColor" content="#191919">
+		<% if (htmlWebpackPlugin.options._section === 'app') { %>
+			<!-- Add to homescreen for Chrome on Android -->
+			<meta name="mobile-web-app-capable" content="yes">
+
+			<!-- Add to homescreen for Safari on iOS -->
+			<meta name="apple-mobile-web-app-capable" content="yes">
+			<meta name="apple-mobile-web-app-title" content="Game Jolt">
+			<link rel="apple-touch-icon-precomposed" href="<%= require(`./app/img/touch/apple-touch-icon-precomposed.png`) %>">
+
+			<!-- Tile icon for Win8 (144x144 + tile color) -->
+			<meta name="msapplication-TileImage" content="<%= require(`./app/img/touch/ms-touch-icon-144x144-precomposed.png`) %>">
+			<meta name="msapplication-TileColor" content="#191919">
+		<% } %>
 
 		<!-- http://blogs.windows.com/windows_phone/b/wpdev/archive/2012/11/15/adapting-your-webkit-optimized-site-for-internet-explorer-10.aspx#step5 -->
 		<meta name="msapplication-tap-highlight" content="no">
 
-		<!-- App start timer. -->
 		<script>
 			window._gjStartTime = Date.now();
 		</script>
@@ -45,29 +52,31 @@
 
 		</script>
 
-		<title>Game Jolt - Indie games for the love of it</title>
+		<title><%= htmlWebpackPlugin.options._title %></title>
 
 		<!-- FB -->
 		<meta property="fb:app_id" content="410666682312265">
 		<meta property="og:site_name" content="Game Jolt">
 		<meta property="fb:admins" content="1070315546">
-		<meta property="og:image" content="${require(`~img/meta-default-image.png`)}">
+		<meta property="og:image" content="<%= require(`./app/img/meta-default-image.png`) %>">
 
 		<!-- Twitter -->
 		<meta name="twitter:site" content="@gamejolt">
 
 	</head>
 
-	<body class="">
+	<body>
 
 		<div id="app"></div>
 
 		<script async src="https://www.google-analytics.com/analytics.js"></script>
 		<script>
 			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-			ga('create', 'UA-6742777-1', 'auto');
+			ga('create', '<%= !htmlWebpackPlugin.options._isClient ? `UA-6742777-1` : `UA-6742777-16` %>', 'auto');
 			ga('require', 'linkid', 'linkid.js');
 		</script>
+
+		<%= htmlWebpackPlugin.options._scripts %>
 
 	</body>
 </html>

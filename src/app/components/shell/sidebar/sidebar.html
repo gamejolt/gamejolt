@@ -24,19 +24,19 @@
 				<li>
 					<router-link
 						class="no-icon"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-						v-app-track-event="`sidebar:games:featured`"
+						:to="{ name: 'discover.games.list._fetch', params: { section: null } }"
+						v-app-track-event="`sidebar:games:hot`"
 						>
-						<translate>Featured Games</translate>
+						<translate>Hot Games</translate>
 					</router-link>
 				</li>
 				<li>
 					<router-link
 						class="no-icon"
-						:to="{ name: 'discover.games.list._fetch', params: { section: null } }"
-						v-app-track-event="`sidebar:games:hot`"
+						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
+						v-app-track-event="`sidebar:games:featured`"
 						>
-						<translate>Hot Games</translate>
+						<translate>Featured Games</translate>
 					</router-link>
 				</li>
 				<li>
@@ -314,7 +314,7 @@
 			</li>
 		</ul>
 
-		<template v-if="app.user && isBootstrapped">
+		<template v-if="app.user">
 
 			<hr>
 
@@ -344,7 +344,7 @@
 			<hr>
 
 			<ul class="shell-nav">
-				<li class="offline-disable" v-if="GJ_IS_CLIENT">
+				<li v-if="GJ_IS_CLIENT">
 					<router-link
 						:to="{ name: 'library.installed' }"
 						active-class="active"
@@ -481,7 +481,7 @@
 			<!--
 				Playlists
 			-->
-			<template v-if="isLeftPaneVisible">
+			<template v-if="isLeftPaneVisible && isLibraryBootstrapped">
 				<div class="nav-heading" :title="$gettext( `library.nav.playlists` )">
 					<translate>library.nav.playlists</translate>
 					<span class="badge">

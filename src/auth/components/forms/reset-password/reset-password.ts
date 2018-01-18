@@ -7,7 +7,6 @@ import {
 	FormOnSubmit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 
 @View
@@ -18,7 +17,7 @@ export class FormResetPassword extends BaseForm<any> implements FormOnInit, Form
 
 	warnOnDiscard = false;
 
-	Connection = makeObservableService(Connection);
+	readonly Connection = Connection;
 
 	onInit() {
 		this.setField('password', '');

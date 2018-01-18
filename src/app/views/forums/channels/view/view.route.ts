@@ -6,7 +6,7 @@ const name = 'forums.channels.view';
 
 export const routeForumsChannelsView: RouteConfig = {
 	name: 'forums.channels.view',
-	path: '/f/:name/:sort(active|new|top)?',
+	path: '/f/:name/:sort(active|new|top|archived)?',
 	props: true,
 	component: () => import(/* webpackChunkName: "routeForumsChannelsView" */ './view'),
 	children: [

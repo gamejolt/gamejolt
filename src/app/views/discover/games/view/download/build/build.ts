@@ -1,31 +1,30 @@
+import View from '!view!./build.html';
+import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { Component } from 'vue-property-decorator';
-import View from '!view!./build.html';
 
-import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
-import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { GameBuild } from '../../../../../../../lib/gj-lib-client/components/game/build/build.model';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
-import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppGameThumbnail } from '../../../../../../../_common/game/thumbnail/thumbnail';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
-import { AppGameThumbnail } from '../../../../../../components/game/thumbnail/thumbnail';
-import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
-import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
-import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
-import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { RouteState, RouteStore } from '../../view.store';
-import { Store } from '../../../../../../store/index';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
-import { AppDiscoverGamesViewOverviewDetails } from '../../overview/_details/details';
-import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
+import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
+import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
+import { GameBuild } from '../../../../../../../lib/gj-lib-client/components/game/build/build.model';
+import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
+import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
+import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
+import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
+import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
+import { Store } from '../../../../../../store/index';
+import { AppDiscoverGamesViewOverviewDetails } from '../../overview/_details/details';
+import { RouteState, RouteStore } from '../../view.store';
 
 const DownloadDelay = 3000;
 
@@ -56,8 +55,8 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 	recommendedGames: Game[] = [];
 	twitterShareMessage = '';
 
-	Screen = makeObservableService(Screen);
-	Environment = Environment;
+	readonly Screen = Screen;
+	readonly Environment = Environment;
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {

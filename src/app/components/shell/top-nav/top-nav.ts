@@ -5,7 +5,6 @@ import View from '!view!./top-nav.html?style=./top-nav.styl';
 
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
@@ -18,15 +17,24 @@ import { AppSearch } from '../../search/search';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../../chat/client';
 
+let components: any = {
+	AppJolticon,
+	AppUserAvatarImg,
+	AppShellAccountPopover,
+	AppFriendRequestPopover,
+	AppSearch,
+};
+
+if (GJ_IS_CLIENT) {
+	components = {
+		...components,
+		...require('../../../../_common/client/history-navigator/history-navigator'),
+	};
+}
+
 @View
 @Component({
-	components: {
-		AppJolticon,
-		AppUserAvatarImg,
-		AppShellAccountPopover,
-		AppFriendRequestPopover,
-		AppSearch,
-	},
+	components,
 	directives: {
 		AppTooltip,
 		AppPopoverTrigger,
@@ -44,9 +52,9 @@ export class AppShellTopNav extends Vue {
 	friendRequestsShowing = false;
 	userMenuShowing = false;
 
-	Environment = Environment;
-	Screen = makeObservableService(Screen);
-	Connection = makeObservableService(Connection);
+	readonly Environment = Environment;
+	readonly Screen = Screen;
+	readonly Connection = Connection;
 
 	@Action toggleRightPane: Store['toggleRightPane'];
 	@Action toggleLeftPane: Store['toggleLeftPane'];

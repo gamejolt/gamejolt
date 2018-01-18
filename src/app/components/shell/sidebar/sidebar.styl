@@ -9,6 +9,9 @@
 	z-index: $zindex-shell-pane
 	will-change: width
 
+	body.status-bar-visible &
+		bottom: $status-bar-height
+
 	hr
 		margin: $line-height-computed 15px
 		border-color: $gray-dark
@@ -27,8 +30,7 @@
 
 	// When hiding, keep the styling active. Only when the animation is fully
 	// done should we revert back to the styling above.
-	.left-pane-visible &
-	.left-pane-visible-remove &
+	.left-pane-visible &, .left-pane-visible-remove &
 		width: $shell-sidebar-width
 
 		.shell-nav-label

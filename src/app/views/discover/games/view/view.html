@@ -26,36 +26,6 @@
 			</div>
 		</section>
 
-		<app-game-perms :game="game" tag="section" class="section section-thin fill-darkest">
-			<div class="container text-center">
-
-				<app-game-perms :game="game" required="analytics">
-					<router-link
-						class="btn btn-outline hidden-xs"
-						:to="{
-							name: 'dash.analytics',
-							params: { resource: 'Game', resourceId: game.id },
-						}"
-						>
-						<app-jolticon icon="chart" />
-						<translate>View Analytics</translate>
-					</router-link>
-				</app-game-perms>
-
-				<router-link
-					class="btn btn-outline"
-					:to="{
-						name: 'dash.games.manage.game.overview',
-						params: { id: game.id },
-					}"
-					>
-					<app-jolticon icon="cog" />
-					<translate>Manage Game</translate>
-				</router-link>
-
-			</div>
-		</app-game-perms>
-
 		<!--
 			Don't affix the nav on download pages.
 			It takes a lot of space out vertically when on small browser size.
@@ -64,25 +34,51 @@
 			:cover-media-item="game.header_media_item"
 			:should-affix-nav="$route.name !== 'discover.games.view.download'"
 			:autoscroll-anchor-key="game.id"
+			:show-cover-buttons="shouldShowCoverButtons"
 			>
 
-			<!--
-				Only show the cover buttons on the overview page.
-			-->
-			<template slot="cover-buttons">
+			<template slot="cover-buttons" v-if="shouldShowCoverButtons">
 				<app-game-cover-buttons
-					v-if="
-						!Screen.isXs
-						&& $route.name === 'discover.games.view.overview'
-					"
+					v-if="!Screen.isXs"
 					:game="game"
 					:packages="packages"
-					:installable-builds="installableBuilds"
+					:downloadable-builds="downloadableBuilds"
 					:browser-builds="browserBuilds"
+					:installable-builds="installableBuilds"
 					:partner-key="partnerKey"
 					:partner="partner"
-					@multiple="scrollToMultiplePackages"
+					@show-multiple-packages="scrollToMultiplePackages"
+					@show-package-payment="scrollToPackagePayment"
 					/>
+
+				<app-game-perms :game="game">
+					<!-- we need this stupid space for some reason -->
+					&nbsp;
+
+					<router-link
+						class="btn btn-outline btn-sparse"
+						:to="{
+							name: 'dash.games.manage.game.overview',
+							params: { id: game.id },
+						}"
+						v-app-tooltip="$gettext(`Manage Game`)"
+						>
+						<app-jolticon icon="cog" />
+					</router-link>
+
+					<app-game-perms :game="game" required="analytics">
+						<router-link
+							class="btn btn-outline btn-sparse"
+							:to="{
+								name: 'dash.analytics',
+								params: { resource: 'Game', resourceId: game.id },
+							}"
+							v-app-tooltip="$gettext(`View Game Analytics`)"
+							>
+							<app-jolticon icon="chart" />
+						</router-link>
+					</app-game-perms>
+				</app-game-perms>
 			</template>
 
 			<app-user-avatar

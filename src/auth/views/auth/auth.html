@@ -24,7 +24,7 @@
 			<div class="col-sm-8 col-md-6 col-lg-4 col-centered">
 
 				<div class="auth-island">
-					<div class="alert alert-warning" v-if="!Connection.isOnline">
+					<div class="alert alert-warning" v-if="Connection.isClientOffline">
 						<p>
 							<app-jolticon icon="offline" />
 							<translate>We're having trouble connecting to Game Jolt. Please check your connection to the Internet.</translate>
@@ -38,10 +38,10 @@
 		</div>
 
 		<div class="auth-shell-bottom-links">
-			<a class="link-unstyled anim-fade-in stagger" :href="Environment.baseUrl + '/terms'">
+			<a class="link-unstyled anim-fade-in stagger" :href="Environment.baseUrl + '/terms'" target="_blank">
 				<translate>auth.legal.terms</translate>
 			</a>
-			<a class="link-unstyled anim-fade-in stagger" :href="Environment.baseUrl + '/privacy'">
+			<a class="link-unstyled anim-fade-in stagger" :href="Environment.baseUrl + '/privacy'" target="_blank">
 				<translate>auth.legal.privacy</translate>
 			</a>
 

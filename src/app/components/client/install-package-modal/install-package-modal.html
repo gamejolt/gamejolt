@@ -1,73 +1,38 @@
-<div class="modal-controls">
-	<button class="btn btn-danger-outline" ng-click="modalCtrl.close()">
-		<span class="jolticon jolticon-remove"></span>
-		<span translate>Close</span>
-	</button>
-</div>
-
-<div class="modal-header">
-	<h2 class="modal-title">
-		<span class="jolticon jolticon-download-box big"></span>
-		<span translate>Choose a Package</span>
-	</h2>
-</div>
-
-<div class="modal-body">
-
-	<p>This game has multiple installable packages. Please choose the one you'd like to install.</p>
-
-	<div ng-if="modalCtrl.isLoading">
-		<gj-loading class="loading-big"></gj-loading>
+<app-modal>
+	<div class="modal-controls">
+		<button class="btn btn-danger-outline" @click="modal.dismiss()">
+			<app-jolticon icon="remove" />
+			<translate>Close</translate>
+		</button>
 	</div>
 
-	<div ng-if="!modalCtrl.isLoading">
-		<div ng-if="modalCtrl.packages.length">
-
-			<!--
-				We only show the packages that can be installed to their computer.
-			-->
-			<div class="game-package-card fill-darker"
-				ng-repeat="package in modalCtrl.packages"
-				ng-if="modalCtrl.buildsByPackage[ package.id ]"
-				>
-				<div class="game-package-card-body">
-
-					<h4 class="game-package-card-title">
-						{{ ::(package.title || modalCtrl.game.title) }}
-					</h4>
-
-					<br ng-if="::!package.description">
-
-					<div class="game-package-card-description" ng-if="::package.description">
-						<gj-fade-collapse
-							[collapse-height]="100"
-							[is-open]="modalCtrl.showFullDescription"
-							(required)="modalCtrl.canToggleDescription = true"
-							>
-							<p ng-bind-html="::package.description | linky"></p>
-						</gj-fade-collapse>
-					</div>
-
-					<a class="hidden-text-expander"
-						ng-if="modalCtrl.canToggleDescription"
-						ng-click="modalCtrl.showFullDescription = !modalCtrl.showFullDescription"
-						gj-track-event="game-package-card:show-full-description"
-						></a>
-
-						<button class="btn btn-success-outline" ng-click="modalCtrl.install( package )">
-						<span class="jolticon jolticon-download-box"></span>
-						Install
-						<small>({{ ::modalCtrl.buildsByPackage[ package.id ].primary_file.filesize | filesize }})</small>
-					</button>
-
-				</div>
-			</div>
-
-		</div>
-
-		<div ng-if="!modalCtrl.packages.length" class="alert alert-warning">
-			This game doesn't have any packages to install.
-		</div>
+	<div class="modal-header">
+		<h2 class="modal-title">
+			<app-jolticon icon="download-box" :big="true" />
+			<translate>Choose a Package</translate>
+		</h2>
 	</div>
 
-</div>
+	<div class="modal-body">
+
+		<p><translate>This game has multiple installable packages. Please choose the one you'd like to install.</translate></p>
+
+		<app-loading big v-if="isLoading" />
+		<template v-else-if="packageData.packages.length">
+			<app-game-package-card
+				v-for="package of packageData.packages"
+				:key="package.id"
+				v-if="buildsByPackage[ package.id ]"
+				:game="game"
+				:sellable="package._sellable"
+				:package="package"
+				:releases="package._releases"
+				:builds="package._builds"
+				/>
+		</template>
+		<template v-else class="alert alert-warning">
+			<translate>This game doesn't have any packages to install.</translate>
+		</template>
+
+	</div>
+</app-modal>

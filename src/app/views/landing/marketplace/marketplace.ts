@@ -1,21 +1,20 @@
+import View from '!view!./marketplace.html';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import View from '!view!./marketplace.html';
 
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
+import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppGameThumbnail } from '../../../components/game/thumbnail/thumbnail';
-import { Store } from '../../../store/index';
-import { AppAuthJoinLazy } from '../../../components/lazy';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppAuthJoinLazy } from '../../../components/lazy';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -34,7 +33,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 	firesidePosts: FiresidePost[] = [];
 	games: Game[] = [];
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve()
 	routeResolve() {

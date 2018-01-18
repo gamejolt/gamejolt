@@ -3,7 +3,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./users.html';
 
 import { Search } from '../../../components/search/search-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppPagination } from '../../../../lib/gj-lib-client/components/pagination/pagination';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
@@ -23,8 +22,8 @@ import {
 export default class RouteSearchUsers extends BaseRouteComponent {
 	@Prop(Object) payload: any;
 
-	Search = makeObservableService(Search);
-	Scroll = Scroll;
+	readonly Search = Search;
+	readonly Scroll = Scroll;
 
 	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: Route) {

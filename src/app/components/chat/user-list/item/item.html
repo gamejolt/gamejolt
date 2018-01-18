@@ -1,12 +1,12 @@
 <li class="chat-user">
 
-	<a
-		:href="user.url"
+	<router-link
+		:to="user.url"
 		:class="{
 			active: showPm && chat.room && chat.room.id === user.roomId,
 		}"
 		:title="`${user.displayName} (@${user.username})`"
-		@click.stop.prevent="onUserClick"
+		@click.native.capture="onUserClick"
 		>
 
 		<span class="tag tag-pink notifications-tag"
@@ -78,7 +78,7 @@
 			</div>-->
 		</div>
 
-	</a>
+	</router-link>
 
 	<div class="nav-well" v-if="showModTools && areModToolsOpen">
 		<template v-if="canModerate">

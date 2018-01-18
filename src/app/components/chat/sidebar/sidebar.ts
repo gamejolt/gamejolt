@@ -3,7 +3,6 @@ import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./sidebar.html?style=./sidebar.styl';
 
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
@@ -23,7 +22,7 @@ import { ChatClient } from '../client';
 export class AppChatSidebar extends Vue {
 	@State chat: ChatClient;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	shouldShowOfflineFriends = false;
 

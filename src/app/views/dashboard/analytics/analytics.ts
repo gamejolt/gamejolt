@@ -41,7 +41,6 @@ import { AppScrollAffix } from '../../../../lib/gj-lib-client/components/scroll/
 import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppAnalyticsReportSimpleStat } from './_report/simple-stat';
 import { AppAnalyticsReportRatingBreakdown } from './_report/rating-breakdown';
 import { AppAnalyticsReportTopComposition } from './_report/top-composition';
@@ -103,7 +102,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 	nextMonth = 0;
 	nextYear = 0;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve({ cache: false })
 	routeResolve(this: undefined, route: Route) {

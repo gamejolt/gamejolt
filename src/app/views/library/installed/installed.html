@@ -1,89 +1,43 @@
-<header class="section">
-	<div class="container">
+<div>
+	<app-page-header>
+		<h1><translate>library.installed.heading</translate></h1>
+		<br>
+	</app-page-header>
 
-		<h1 translate>library.installed.heading</h1>
-		<br><br>
+	<section class="section">
+		<div class="container">
 
-	</div>
-</header>
-
-<section class="section">
-	<div class="container">
-
-		<div class="alert alert-warning" ng-if="!installedCtrl.games.length"
-			translate
-			translate-comment="The message shown when there are no games installed yet in their library."
-			>
-			library.installed.no_games_message
-		</div>
-
-		<gj-alert-dismissable alert-type="info" dismiss-key="library.install-location-msg">
-			<span class="jolticon jolticon-info-circle"></span>
-			<span translate translate-comment="Short message to remind them that they can change install location at any time in their settings.">
-				library.installed.change_location_message
-			</span>
-		</gj-alert-dismissable>
-
-		<div class="row" ng-if="installedCtrl.games.length">
-
-			<!--
-				We have to pull the z-index for any game that is showing options to be in front.
-				This way the dropdowns always show over other games.
-			-->
-			<div class="col-md-6 col-lg-4 client-installed-game game-thumbnail-anim"
-				ng-repeat="game in installedCtrl.games | orderBy:'title.toLowerCase()' track by game.id"
-				ng-class="{ installing: installedCtrl.installingGames[ game.id ].length }"
-				ng-mouseenter="game._isHovering = true"
-				ng-mouseleave="game._isHovering = false"
-				ng-style="{ 'z-index': game._isShowingOptions || game._isShowingLaunchOptions ? 2 : undefined }"
+			<app-alert-dismissable
+				alert-type="info"
+				dismiss-key="library.install-location-msg"
 				>
-
-				<gj-game-thumbnail [game]="game._game"></gj-game-thumbnail>
-
-				<!--
-					Try to reduce the # of watchers on page.
-				-->
-				<div class="client-installed-game-meta-outer"
-					ng-if="game._isHovering
-						|| game._isShowingOptions
-						|| game._isShowingLaunchOptions
-						|| installedCtrl.installingGames[ game.id ].length
-						|| installedCtrl.updatingGames[ game.id ].length"
+				<app-jolticon icon="info-circle" />
+				<translate
+					translate-comment="Short message to remind them that they can change install location at any time in their settings."
 					>
-					<div class="client-installed-game-meta">
-						<gj-client-game-buttons
-							game="game._game"
-							overlay-variant="true"
-							on-show-options="game._isShowingOptions = true"
-							on-hide-options="game._isShowingOptions = false"
-							on-show-launch-options="game._isShowingLaunchOptions = true"
-							on-hide-launch-options="game._isShowingLaunchOptions = false"
+					You can change the location where games are installed at any time in your settings.
+				</translate>
+				<router-link :to="{ name: 'settings' }">
+					<translate>Go to Settings?</translate>
+				</router-link>
+			</app-alert-dismissable>
 
-							has-installable-builds="true"
-							can-install="true"
-							>
-						</gj-client-game-buttons>
-
-						<span
-							class="client-installed-game-version"
-							ng-if="Client_Library.packagesByGame[ game.id ].length == 1">
-							{{ ::Client_Library.packagesByGame[ game.id ][ 0 ].release.version_number }}
-						</span>
-
-						<span
-							class="client-installed-game-version"
-							ng-if="Client_Library.packagesByGame[ game.id ].length > 1"
-							translate
-							translate-comment="This shows instead of a version number for a game on the installed games page if there are multiple packages installed for the game."
-							>
-							library.installed.multiple_packages
-						</span>
-					</div>
+			<div class="alert alert-warning" v-if="!games.length">
+				<translate
+					translate-comment="The message shown when there are no games installed yet in their library."
+					>
+					library.installed.no_games_message
+				</translate>
+			</div>
+			<div class="row" v-else>
+				<div class="col-md-6 col-lg-4 "
+					v-for="game of gamesByTitle"
+					:key="game.id"
+					>
+					<app-library-installed-game :game="game" />
 				</div>
-
 			</div>
 
 		</div>
-
-	</div>
-</section>
+	</section>
+</div>

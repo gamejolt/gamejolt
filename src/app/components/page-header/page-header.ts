@@ -5,10 +5,9 @@ import './page-header-content.styl';
 
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
-import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppMediaItemCover } from '../media-item/cover/cover';
 import { AppAutoscrollAnchor } from '../../../lib/gj-lib-client/components/scroll/auto-scroll/anchor';
+import { AppMediaItemCover } from '../../../_common/media-item/cover/cover';
 
 @View
 @Component({
@@ -27,12 +26,9 @@ export class AppPageHeader extends Vue {
 	@Prop({ type: String, default: 'col-xs-12' })
 	colClasses?: string;
 	@Prop() autoscrollAnchorKey: any;
+	@Prop(Boolean) showCoverButtons?: boolean;
 
-	Screen = makeObservableService(Screen);
-
-	get hasCoverButtons() {
-		return !!this.$slots['cover-buttons'];
-	}
+	readonly Screen = Screen;
 
 	get hasSpotlight() {
 		return !!this.$slots['spotlight'];

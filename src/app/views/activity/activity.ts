@@ -14,7 +14,6 @@ import { AppActivityFeedPlaceholder } from '../../components/activity/feed/place
 import { Store } from '../../store/index';
 import { EventItem } from '../../../lib/gj-lib-client/components/event-item/event-item.model';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { getTranslationLang } from '../../../lib/gj-lib-client/components/translate/translate.service';
 import {
 	BaseRouteComponent,
@@ -40,7 +39,7 @@ export default class RouteActivity extends BaseRouteComponent {
 	activityUnreadCount = 0;
 	notificationsUnreadCount = 0;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve({ cache: true, lazy: true })
 	routeResolve(this: undefined, route: Route) {

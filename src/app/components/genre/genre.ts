@@ -1,4 +1,5 @@
 import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
+import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 
 export class Genre {
 	static get genres() {
@@ -56,3 +57,5 @@ export class Genre {
 		};
 	}
 }
+
+makeObservableService(Genre);

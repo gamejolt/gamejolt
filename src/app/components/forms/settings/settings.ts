@@ -1,25 +1,20 @@
-import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./settings.html';
+import { Component, Watch } from 'vue-property-decorator';
 
+import { Settings } from '../../../../_common/settings/settings.service';
+import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import {
 	BaseForm,
 	FormOnInit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Settings } from '../../settings/settings.service';
-import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { ClientAutoStart as _ClientAutoStart } from '../../client/autostart/autostart.service';
-import { ClientInstaller as _ClientInstaller } from '../../client/installer/installer.service';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { AppForm } from '../../../../lib/gj-lib-client/components/form-vue/form';
+import * as _ClientAutoStartMod from '../../../../_common/client/autostart/autostart.service';
 
-let ClientInstaller: typeof _ClientInstaller | undefined;
-let ClientAutoStart: typeof _ClientAutoStart | undefined;
+let ClientAutoStartMod: typeof _ClientAutoStartMod | undefined;
 if (GJ_IS_CLIENT) {
-	ClientInstaller = require('../../client/installer/installer.service').ClientInstaller;
-	ClientAutoStart = require('../../client/autostart/autostart.service').ClientAutoStart;
+	ClientAutoStartMod = require('../../../../_common/client/autostart/autostart.service');
 }
 
-type FormModel = User & {
+type FormModel = {
 	chat_notify_friends_online: boolean;
 	restricted_browsing: boolean;
 	broadcast_modal: boolean;
@@ -40,16 +35,11 @@ type FormModel = User & {
 	},
 })
 export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
-	modelClass = User as any;
-	saveMethod = '$saveSettings' as '$saveSettings';
 	warnOnDiscard = false;
 
-	$refs: {
-		form: AppForm;
-		[key: string]: any;
-	};
-
-	readonly ClientAutoStart = ClientAutoStart;
+	get canClientAutostart() {
+		return ClientAutoStartMod && ClientAutoStartMod.ClientAutoStart.canAutoStart;
+	}
 
 	onInit() {
 		this.setField('restricted_browsing', Settings.get('restricted-browsing'));
@@ -66,7 +56,7 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 			this.setField('max_extract_count', Settings.get('max-extract-count'));
 			this.setField('limit_extractions', this.formModel.max_extract_count !== -1);
 
-			if (ClientAutoStart!.canAutoStart) {
+			if (this.canClientAutostart) {
 				this.setField('autostart_client', Settings.get('autostart-client'));
 			}
 		}
@@ -80,6 +70,11 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 		if (elem) {
 			(elem as HTMLElement).click();
 		}
+	}
+
+	onSelectedInstallDir(dir: string) {
+		this.setField('game_install_dir', dir);
+		this.onChange();
 	}
 
 	@Watch('formModel.limit_downloads')
@@ -108,38 +103,24 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 		Settings.set('broadcast-modal', this.formModel.broadcast_modal);
 		Settings.set('animated-thumbnails', this.formModel.animated_thumbnails);
 
-		if (this.model) {
-			let needsSubmit = false;
-			// for (let serverField of ['list', 'of', 'server', 'fields']) {
-			// 	if (this.formModel[serverField] !== this.model[serverField]) {
-			// 		needsSubmit = true;
-			// 		break;
-			// 	}
-			// }
-
-			if (needsSubmit) {
-				this.$refs.form.submit();
-			}
-		}
-
 		if (GJ_IS_CLIENT) {
 			Settings.set('game-install-dir', this.formModel.game_install_dir);
 			Settings.set('max-download-count', this.formModel.max_download_count);
 			Settings.set('max-extract-count', this.formModel.max_extract_count);
 			Settings.set('queue-when-playing', this.formModel.queue_when_playing);
 
-			if (ClientAutoStart!.canAutoStart) {
+			if (ClientAutoStartMod && this.canClientAutostart) {
 				Settings.set('autostart-client', this.formModel.autostart_client);
 
 				if (this.formModel.autostart_client) {
-					ClientAutoStart!.set();
+					ClientAutoStartMod.ClientAutoStart.set();
 				} else {
-					ClientAutoStart!.clear();
+					ClientAutoStartMod.ClientAutoStart.clear();
 				}
 			}
 
 			// Tell's it to use the new settings.
-			ClientInstaller!.checkQueueSettings();
+			this.$store.commit('clientLibrary/checkQueueSettings');
 		}
 	}
 }

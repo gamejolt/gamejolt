@@ -1,32 +1,31 @@
+import View from '!view!./overview.html';
+import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./overview.html';
 
-import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
-import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
+import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { AppGameThumbnail } from '../../../components/game/thumbnail/thumbnail';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
-import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
 import { AppCommentVideoThumbnail } from '../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
-import { UserGameSession } from '../../../../lib/gj-lib-client/components/user/game-session/game-session.model';
+import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
+import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
+import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
-import { Store } from '../../../store/index';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
+import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
+import { UserGameSession } from '../../../../lib/gj-lib-client/components/user/game-session/game-session.model';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -63,9 +62,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	showFullDescription = false;
 	canToggleDescription = false;
 
-	User = User;
-	UserFriendship = UserFriendship;
-	Screen = makeObservableService(Screen);
+	readonly User = User;
+	readonly UserFriendship = UserFriendship;
+	readonly Screen = Screen;
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {
@@ -93,6 +92,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		Meta.fb.title = this.routeTitle;
 		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
+
+		this.showFullDescription = false;
 
 		this.developerGames = Game.populate($payload.developerGamesTeaser);
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);

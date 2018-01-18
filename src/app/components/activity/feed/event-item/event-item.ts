@@ -5,10 +5,7 @@ import View from '!view!./event-item.html?style=./event-item.styl';
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { ActivityFeedItem } from '../item-service';
-import {
-	makeObservableService,
-	findRequiredVueParent,
-} from '../../../../../lib/gj-lib-client/utils/vue';
+import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
 import { AppActivityFeed } from '../feed';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppGameThumbnailImg } from '../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
@@ -26,6 +23,7 @@ import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
 import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
+import { AppPollVoting } from '../../../poll/voting/voting';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
@@ -43,6 +41,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
 		AppActivityFeedControls,
+		AppPollVoting,
 	},
 	filters: {
 		number,
@@ -57,8 +56,8 @@ export class AppActivityFeedEventItem extends Vue {
 	private resizeSensor?: any;
 
 	feed: AppActivityFeed;
-	Screen = makeObservableService(Screen);
-	EventItem = EventItem;
+	readonly Screen = Screen;
+	readonly EventItem = EventItem;
 
 	get eventItem() {
 		return this.item.feedItem as EventItem;

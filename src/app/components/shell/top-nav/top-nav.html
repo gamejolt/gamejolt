@@ -17,9 +17,8 @@
 			</li>
 		</ul>
 
-		<!--TODO(rewrite)-->
 		<!-- History Navigator (for desktop client) -->
-		<!--<gj-client-history-navigator ng-if="GJ_IS_CLIENT"></gj-client-history-navigator>-->
+		<app-client-history-navigator v-if="GJ_IS_CLIENT" />
 
 		<router-link class="navbar-item" :to="{ name: 'discover.home' }">
 			<img v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="Game Jolt">
@@ -116,24 +115,24 @@
 		<!-- Login/Join Buttons -->
 		<ul class="navbar-items" v-if="!app.user">
 			<li>
-				<a :href="Environment.authBaseUrl + '/login'" target="_self" v-app-track-event="`top-nav:login:click`">
+				<a :href="Environment.authBaseUrl + '/login'" v-app-track-event="`top-nav:login:click`">
 					<app-jolticon class="hidden-xs" icon="sign-in" />
 					<translate>nav.login</translate>
 				</a>
 			</li>
 			<li>
-				<a :href="Environment.authBaseUrl + '/join'" target="_self" v-app-track-event="`top-nav:join:click`">
+				<a :href="Environment.authBaseUrl + '/join'" v-app-track-event="`top-nav:join:click`">
 					<app-jolticon class="hidden-xs" icon="friends" />
 					<translate>nav.join</translate>
 				</a>
 			</li>
 		</ul>
 
-		<div class="navbar-separator" v-if="chat || !Connection.isOnline"></div>
+		<div class="navbar-separator" v-if="chat || Connection.isOffline"></div>
 
 		<!-- Connection Status -->
 		<span
-			v-if="!Connection.isOnline"
+			v-if="Connection.isOffline"
 			class="navbar-item disconnected-icon"
 			v-app-tooltip.left="$gettext( `We're having trouble connecting to Game Jolt.` )"
 			>

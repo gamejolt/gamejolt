@@ -7,7 +7,6 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Store } from '../../../../store/index';
@@ -84,7 +83,7 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 	];
 
 	readonly Game = Game;
-	readonly Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 	readonly Environment = Environment;
 	readonly currency = currency;
 

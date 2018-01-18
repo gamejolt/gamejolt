@@ -1,0 +1,112 @@
+{
+	"Model definition": {
+		"prefix": "model",
+		"body": [
+			"",
+			"export class ${1:Comment} extends Model {",
+			"\tconstructor(data: any = {}) {",
+			"\t\tsuper( data );",
+			"\t}",
+			"}",
+			"",
+			"Model.create(${1:Comment});",
+			""
+		]
+	},
+	"Vue Component": {
+		"prefix": "vue-component",
+		"body": [
+			"import Vue from 'vue';",
+			"import { Component } from 'vue-property-decorator';",
+			"import View from '!view!./$3.html?style=./$3.styl';",
+			"",
+			"@View",
+			"@Component({})",
+			"export class App${2:Component} extends Vue {",
+			"\t$0",
+			"}",
+			""
+		]
+	},
+	"Vue Route Component": {
+		"prefix": "vue-route-component",
+		"body": [
+			"import { Route } from 'vue-router';",
+			"import { Component } from 'vue-property-decorator';",
+			"import View from '!view!./$3.html';",
+			"",
+			"@View",
+			"@Component({",
+			"\tname: 'Route${2:Component}',",
+			"})",
+			"export default class Route${2:Component} extends BaseRouteComponent {",
+			"\t@RouteResolve()",
+			"\trouteResolve(this: undefined, route: Route) {",
+			"\t\t$0",
+			"\t}",
+			"}",
+			""
+		]
+	},
+	"Vue Route": {
+		"prefix": "vue-route",
+		"body": [
+			"import { RouteConfig } from 'vue-router';",
+			"",
+			"export const route${1:Home}: RouteConfig = {",
+			"\tname: '${2:home}',",
+			"\tpath: '${3:home}',",
+			"\tprops: true,",
+			"\tcomponent: () => import(/* webpackChunkName: \"route${1:Home}\" */ './${4:home}'),",
+			"};",
+			"$0"
+		]
+	},
+	"Vue form": {
+		"prefix": "vue-form",
+		"body": [
+			"import { Component } from 'vue-property-decorator';",
+			"import View from '!view!./${3:login}.html';",
+			"",
+			"@View",
+			"@Component({})",
+			"export class Form${1:Login} extends BaseForm<$2> implements FormOnInit {",
+			"\tmodelClass = $2;",
+			"",
+			"\tonInit() {",
+			"\t\t$0",
+			"\t}",
+			"}",
+			""
+		]
+	},
+	"Vue modal component": {
+		"prefix": "vue-modal-component",
+		"body": [
+			"import { Component } from 'vue-property-decorator';",
+			"import View from '!view!./${3:modal}.html';",
+			"",
+			"@View",
+			"@Component({})",
+			"export default class App${1:Login}Modal extends BaseModal {",
+			"$0",
+			"}",
+			""
+		]
+	},
+	"Vue modal service": {
+		"prefix": "vue-modal-service",
+		"body": [
+			"",
+			"export class ${1:Login}Modal {",
+			"\tstatic async show( $2 ) {",
+			"\t\treturn await Modal.show<${3:boolean}>({",
+			"\t\t\tcomponent: () => asyncComponentLoader(import(/* webpackChunkName: \"${1:Login}Modal\" */ './$4')),",
+			"\t\t\tprops: { $5 },",
+			"\t\t});",
+			"\t}",
+			"}",
+			"$0"
+		]
+	}
+}

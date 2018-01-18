@@ -7,7 +7,6 @@ import { FiresidePost } from '../../../../../lib/gj-lib-client/components/firesi
 import { Clipboard } from '../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -62,9 +61,9 @@ export class AppActivityFeedControls extends Vue {
 	tab: 'comments' | null = null;
 	isShowingShare = false;
 
-	number = number;
-	Screen = makeObservableService(Screen);
-	FiresidePost = FiresidePost;
+	readonly number = number;
+	readonly Screen = Screen;
+	readonly FiresidePost = FiresidePost;
 
 	get hasDevlogsPerms() {
 		return this.game && this.game.hasPerms('devlogs');

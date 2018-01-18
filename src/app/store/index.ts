@@ -1,39 +1,37 @@
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
-import {
-	VuexStore,
-	VuexModule,
-	VuexAction,
-	VuexMutation,
-} from '../../lib/gj-lib-client/utils/vuex';
-import {
-	AppStore,
-	Mutations as AppMutations,
-	Actions as AppActions,
-	appStore,
-} from '../../lib/gj-lib-client/vue/services/app/app-store';
-import { LibraryStore, Mutations as LibraryMutations, Actions as LibraryActions } from './library';
-import {
-	ClientLibraryStore,
-	Mutations as ClientLibraryMutations,
-	Actions as ClientLibraryActions,
-} from './client-library';
-import { Settings } from '../components/settings/settings.service';
+
+import { Settings } from '../../_common/settings/settings.service';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
-import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
-import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
-import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
-import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
-import { router } from '../views';
 import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
+import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
+import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
+import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
+import {
+	VuexAction,
+	VuexModule,
+	VuexMutation,
+	VuexStore,
+} from '../../lib/gj-lib-client/utils/vuex';
+import {
+	Actions as AppActions,
+	AppStore,
+	appStore,
+	Mutations as AppMutations,
+} from '../../lib/gj-lib-client/vue/services/app/app-store';
+import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { ChatClient } from '../components/chat/client';
 import { ChatClientLazy } from '../components/lazy';
+import { router } from '../views';
+import * as _ClientLibraryMod from './client-library';
+import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
+import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
 
 export type Actions = AppActions &
 	LibraryActions &
-	ClientLibraryActions & {
+	_ClientLibraryMod.Actions & {
 		bootstrap: undefined;
 		logout: undefined;
 		clear: undefined;
@@ -47,9 +45,10 @@ export type Actions = AppActions &
 
 export type Mutations = AppMutations &
 	LibraryMutations &
-	ClientLibraryMutations & {
+	_ClientLibraryMod.Mutations & {
 		setNotificationsCount: number;
 		_setBootstrapped: undefined;
+		_setLibraryBootstrapped: undefined;
 		_clear: undefined;
 		_setChat: ChatClient;
 		_clearChat: undefined;
@@ -68,10 +67,12 @@ const modules: any = {
 	app: appStore,
 	library: new LibraryStore(),
 };
+
 if (GJ_IS_CLIENT) {
-	const clientLibrary = require('./client-library').ClientLibraryStore;
-	modules.clientLibrary = new clientLibrary();
+	const m: typeof _ClientLibraryMod = require('./client-library');
+	modules.clientLibrary = new m.ClientLibraryStore();
 }
+
 @VuexModule({
 	store: true,
 	modules: modules,
@@ -79,7 +80,7 @@ if (GJ_IS_CLIENT) {
 export class Store extends VuexStore<Store, Actions, Mutations> {
 	app: AppStore;
 	library: LibraryStore;
-	clientLibrary: ClientLibraryStore;
+	clientLibrary: _ClientLibraryMod.ClientLibraryStore;
 
 	// From the vuex-router-sync.
 	route: Route;
@@ -87,6 +88,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	chat: ChatClient | null = null;
 
 	isBootstrapped = false;
+	isLibraryBootstrapped = false;
 
 	notificationCount = 0;
 
@@ -113,18 +115,26 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexAction
 	async bootstrap() {
 		const prevResolver = bootstrapResolver;
-		const response = await Api.sendRequest('/web/library');
 
-		// If we failed to finish before we unbootstrapped, then stop.
-		if (bootstrapResolver !== prevResolver) {
-			return;
-		}
+		// Detach so that errors in it doesn't cause the not found page to show. This is considered
+		// a sort of "async" load.
+		try {
+			const response = await Api.sendRequest('/web/library', null, { detach: true });
+			this._setLibraryBootstrapped();
 
-		this.commit('library/bootstrap', response);
+			// If we failed to finish before we unbootstrapped, then stop.
+			if (bootstrapResolver !== prevResolver) {
+				return;
+			}
+
+			this.commit('library/bootstrap', response);
+		} catch (e) {}
 
 		this._setBootstrapped();
 
-		BroadcastModal.check();
+		if (!GJ_IS_CLIENT && !GJ_IS_SSR) {
+			BroadcastModal.check();
+		}
 	}
 
 	@VuexAction
@@ -157,6 +167,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async loadChat() {
+		if (GJ_IS_SSR) {
+			return;
+		}
+
 		const ChatClient_ = await ChatClientLazy();
 		this._setChat(new ChatClient_());
 	}
@@ -220,6 +234,11 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		if (bootstrapResolver) {
 			bootstrapResolver();
 		}
+	}
+
+	@VuexMutation
+	_setLibraryBootstrapped() {
+		this.isLibraryBootstrapped = true;
 	}
 
 	@VuexMutation
@@ -301,10 +320,19 @@ store.watch(
 		} else {
 			store.dispatch('clear');
 			store.dispatch('clearChat');
-
-			if (GJ_IS_CLIENT) {
-				store.dispatch('clientLibrary/clear');
-			}
 		}
 	}
 );
+
+// If we were offline, but we're online now, make sure our library is bootstrapped. Remember we
+// always have an app user even if we were offline.
+if (GJ_IS_CLIENT) {
+	store.watch(
+		() => Connection.isOffline,
+		(isOffline, prev) => {
+			if (!isOffline && prev === true) {
+				store.dispatch('bootstrap');
+			}
+		}
+	);
+}

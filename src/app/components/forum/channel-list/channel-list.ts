@@ -6,11 +6,9 @@ import { ForumCategory } from '../../../../lib/gj-lib-client/components/forum/ca
 import { ForumChannel } from '../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumPost } from '../../../../lib/gj-lib-client/components/forum/post/post.model';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { arrayIndexByFunc } from '../../../../lib/gj-lib-client/utils/array';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
 import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
 
 @View
@@ -30,9 +28,8 @@ export class AppForumChannelList extends Vue {
 	latestPosts: ForumPost[];
 	@Prop(Number) postCountPerPage: number;
 
-	number = number;
-	date = date;
-	Screen = makeObservableService(Screen);
+	readonly number = number;
+	readonly Screen = Screen;
 
 	get indexedPosts() {
 		return arrayIndexByFunc(this.latestPosts, item => item.topic!.channel_id);

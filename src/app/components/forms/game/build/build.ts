@@ -90,8 +90,9 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 	};
 
 	get loadUrl() {
-		return `/web/dash/developer/games/builds/save/${this.game.id}/${this.package.id}/${this.release
-			.id}/${this.model!.id}`;
+		return `/web/dash/developer/games/builds/save/${this.game.id}/${this.package.id}/${
+			this.release.id
+		}/${this.model!.id}`;
 	}
 
 	get hasBrowserError() {
@@ -99,7 +100,7 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 	}
 
 	get isBrowserBased() {
-		return this.model!.isBrowserBased();
+		return this.model!.isBrowserBased;
 	}
 
 	get hasPlatformsError() {

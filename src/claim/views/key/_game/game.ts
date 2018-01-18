@@ -14,7 +14,7 @@ import { Store } from '../../../store/index';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { AppGamePackageCard } from '../../../../lib/gj-lib-client/components/game/package/card/card';
-import { AppMediaItemCover } from '../../../../app/components/media-item/cover/cover';
+import { AppMediaItemCover } from '../../../../_common/media-item/cover/cover';
 import { KeyGroup } from '../../../../lib/gj-lib-client/components/key-group/key-group.model';
 
 @View

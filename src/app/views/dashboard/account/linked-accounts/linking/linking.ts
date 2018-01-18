@@ -1,10 +1,16 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./linking.html';
+import { Component } from 'vue-property-decorator';
 
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppProgressPoller } from '../../../../../../lib/gj-lib-client/components/progress/poller/poller';
-import { AppLoading } from '../../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppLoading } from '../../../../../../lib/gj-lib-client/vue/components/loading/loading';
+import * as _ClientMod from '../../../../../../_common/client/client.service';
+
+let ClientMod: typeof _ClientMod | undefined;
+if (GJ_IS_CLIENT) {
+	ClientMod = require('../../../../../../_common/client/client.service');
+}
 
 @View
 @Component({
@@ -76,8 +82,9 @@ export default class RouteDashAccountLinkedAccountsLinking extends BaseRouteComp
 		}
 
 		// Focus back to the Client.
-		// TODO(rewrite)
-		// Client.show();
+		if (ClientMod) {
+			ClientMod.Client.show();
+		}
 	}
 
 	failed() {

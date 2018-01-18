@@ -9,7 +9,6 @@ import { ActivityFeedItem } from '../item-service';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { AppNotificationDescriptiveAction } from '../../../notification/descriptive-action/descriptive-action';
 import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 import { Mention } from '../../../../../lib/gj-lib-client/components/mention/mention.model';
@@ -34,7 +33,7 @@ export class AppActivityFeedNotification extends Vue {
 	canToggleContent = false;
 	showFullContent = false;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	get icon() {
 		return this.notification.jolticon.replace('jolticon-', '');

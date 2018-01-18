@@ -1,11 +1,18 @@
 <header
 	class="section page-header"
-	:class="{ 'has-controls': hasControls, 'has-spotlight': hasSpotlight }"
+	:class="{
+		'has-controls': hasControls,
+		'has-spotlight': hasSpotlight,
+		'has-nav': hasNav && !hideNav,
+	}"
 	>
 
 	<section
 		class="section page-header-cover fill-darker"
-		:class="{ 'has-cover-image': !!coverMediaItem }"
+		:class="{
+			'has-cover-image': !!coverMediaItem,
+			'has-cover-buttons': showCoverButtons,
+		}"
 		>
 
 		<app-media-item-cover
@@ -16,9 +23,32 @@
 
 		<div
 			class="page-header-cover-buttons"
-			v-if="hasCoverButtons"
+			v-if="showCoverButtons"
 			>
-			<slot name="cover-buttons" />
+			<div class="page-header-cover-buttons-inner">
+				<svg class="page-header-cover-buttons-edge -left" viewBox="0 0 10 10">
+					<path d="
+						M0,0
+						L10,0
+						L10,10
+						C5,10 5,0 0,0
+						z
+					"
+					/>
+				</svg>
+				<svg class="page-header-cover-buttons-edge -right" viewBox="0 0 10 10">
+					<path d="
+						M10,0
+						L0,0
+						L0,10
+						C5,10 5,0 10,0
+						z
+					"
+					/>
+				</svg>
+
+				<slot name="cover-buttons" />
+			</div>
 		</div>
 
 		<div class="container">

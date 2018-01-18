@@ -13,7 +13,6 @@ import { AppPagination } from '../../../../../lib/gj-lib-client/components/pagin
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
-import { makeObservableService } from '../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Store } from '../../../../store/index';
 import { AppNavTabList } from '../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
@@ -46,10 +45,11 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 	stickyTopics: ForumTopic[] = [];
 	perPage = 0;
 	currentPage = 1;
+	listableTopicsCount = 0;
 
-	number = number;
-	Scroll = Scroll;
-	Screen = makeObservableService(Screen);
+	readonly number = number;
+	readonly Scroll = Scroll;
+	readonly Screen = Screen;
 
 	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: Route) {
@@ -80,6 +80,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 		this.channel = new ForumChannel($payload.channel);
 		this.topics = ForumTopic.populate($payload.topics);
 		this.postCountPerPage = $payload.postCountPerPage;
+		this.listableTopicsCount = $payload.listableTopicsCount;
 
 		if ($payload.stickyTopics && $payload.stickyTopics.length) {
 			this.stickyTopics = ForumTopic.populate($payload.stickyTopics);

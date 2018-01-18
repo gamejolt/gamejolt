@@ -1,15 +1,15 @@
-<div>
+<div :class="{ 'is-client-offline': Connection.isClientOffline }">
 	<div id="shell">
 
 		<div id="header">
 			<app-user-bar :user="app.user" site="main" :hide-site-selector="true">
-				<!--<a class="btn btn-outline btn-dark-variant"
-					ng-if="GJ_IS_CLIENT"
-					ng-click="HistoryNavigator.back()"
+				<a class="btn btn-outline btn-dark-variant"
+					v-if="GJ_IS_CLIENT"
+					@click="navigateBack()"
 					>
-					<span class="jolticon jolticon-chevron-left"></span>
-					Back to Game
-				</a>-->
+					<app-jolticon icon="chevron-left" />
+					<translate>Back to Game</translate>
+				</a>
 			</app-user-bar>
 		</div>
 
@@ -19,6 +19,7 @@
 			</app-error-page>
 		</div>
 
+		<app-client-base v-if="GJ_IS_CLIENT" />
 		<app-loading-bar />
 		<app-growls />
 		<app-modals />
@@ -31,9 +32,9 @@
 					<p class="footer-links">
 						<a href="mailto:contact@gamejolt.com">Contact Game Jolt</a>
 						&nbsp;|&nbsp;
-						<a href="http://gamejolt.com/terms">Terms</a>
+						<a :href="Environment.baseUrl + '/terms'" target="_blank">Terms</a>
 						&nbsp;|&nbsp;
-						<a href="http://gamejolt.com/privacy">Privacy Policy</a>
+						<a :href="Environment.baseUrl + '/privacy'" target="_blank">Privacy Policy</a>
 					</p>
 				</div>
 				<div class="col-sm-6">

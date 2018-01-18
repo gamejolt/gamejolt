@@ -66,7 +66,7 @@
 				</router-link>
 			</li>
 
-			<li>
+			<li v-if="app.user">
 				<a v-app-popover-trigger="`game-more-options`">
 					<app-jolticon icon="ellipsis-h" />
 				</a>
@@ -95,7 +95,10 @@
 				<app-jolticon icon="flag warning" />
 				<translate>games.view.report_game_button</translate>
 			</a>
-			<app-game-mod-links :game="game" />
+			<app-game-mod-links
+				v-if="shouldShowModTools"
+				:game="game"
+				/>
 		</div>
 	</app-popover>
 

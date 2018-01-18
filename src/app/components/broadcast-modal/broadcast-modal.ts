@@ -4,7 +4,6 @@ import View from '!view!./broadcast-modal.html';
 import { FiresidePost } from '../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTimeAgo } from '../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppWidgetCompiler } from '../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
@@ -13,6 +12,7 @@ import { AppSocialTwitterShare } from '../../../lib/gj-lib-client/components/soc
 import { AppSocialFacebookLike } from '../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { BaseModal } from '../../../lib/gj-lib-client/components/modal/base';
 import { AppCommentWidgetLazy } from '../lazy';
+import { AppPollVoting } from '../poll/voting/voting';
 
 @View
 @Component({
@@ -21,6 +21,7 @@ import { AppCommentWidgetLazy } from '../lazy';
 		AppTimeAgo,
 		AppWidgetCompiler,
 		AppFiresidePostLikeWidget,
+		AppPollVoting,
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
 		AppCommentWidget: AppCommentWidgetLazy,
@@ -32,8 +33,8 @@ export default class AppBroadcastModal extends BaseModal {
 
 	post: FiresidePost | null = null;
 
-	Screen = makeObservableService(Screen);
-	Environment = Environment;
+	readonly Screen = Screen;
+	readonly Environment = Environment;
 
 	created() {
 		if (!Screen.isXs) {

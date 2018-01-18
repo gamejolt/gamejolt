@@ -6,7 +6,6 @@ import {
 	FormOnSubmit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 
@@ -19,7 +18,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 export class FormRetrieveLogin extends BaseForm<any> implements FormOnSubmit {
 	warnOnDiscard = false;
 
-	Connection = makeObservableService(Connection);
+	readonly Connection = Connection;
 
 	onChanged() {
 		this.setState('invalidEmail', false);

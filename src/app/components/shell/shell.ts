@@ -15,24 +15,35 @@ import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
 import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar/bar';
 import { Store } from '../../store/index';
 import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
+import { Connection } from '../../../lib/gj-lib-client/components/connection/connection-service';
+
+let components: any = {
+	AppShellTopNav,
+	AppShellNotificationCount,
+	AppShellBody,
+	AppShellSidebar,
+	AppShellHotBottom,
+	AppMinbar,
+	AppOfflineAlert,
+	AppGrowls,
+	AppModals,
+	AppLoadingBar,
+	AppShellChat: () =>
+		import(/* webpackChunkName: "chat" */ './chat/chat').then(m => m.AppShellChat),
+};
+
+if (GJ_IS_CLIENT) {
+	components = {
+		...components,
+		...require('../../../_common/client/base/base'),
+		...require('./client/client'),
+		...require('../client/status-bar/status-bar'),
+	};
+}
 
 @View
 @Component({
-	components: {
-		AppShellTopNav,
-		AppShellNotificationCount,
-		AppShellBody,
-		AppShellSidebar,
-		AppShellHotBottom,
-		AppMinbar,
-		AppOfflineAlert,
-		AppGrowls,
-		AppModals,
-		AppLoadingBar,
-		AppShellChat: () =>
-			import(/* webpackChunkName: "chat" */ './chat/chat').then(m => m.AppShellChat),
-		AppShellClient: GJ_IS_CLIENT ? require('./client/client').AppShellClient : undefined,
-	},
+	components,
 })
 export class AppShell extends Vue {
 	@State app: Store['app'];
@@ -41,6 +52,8 @@ export class AppShell extends Vue {
 	@State isRightPaneVisible: Store['isRightPaneVisible'];
 
 	@Action clearPanes: Store['clearPanes'];
+
+	readonly Connection = Connection;
 
 	mounted() {
 		// When changing routes, hide all overlays.

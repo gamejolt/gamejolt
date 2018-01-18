@@ -1,11 +1,10 @@
-import { Component, Watch, Prop } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./avatar.html';
 
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { AppFormControlUpload } from '../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 import { AppFormControlCrop } from '../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { filesize } from '../../../../lib/gj-lib-client/vue/filters/filesize';
@@ -32,8 +31,6 @@ type FormModel = User & {
 	},
 })
 export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
-	@Prop(User) user: User;
-
 	modelClass = User;
 	reloadOnSubmit = true;
 	warnOnDiscard = false;
@@ -44,7 +41,7 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 	maxSize = 0;
 
 	readonly filesize = filesize;
-	readonly Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	$refs: {
 		form: AppForm;
@@ -73,8 +70,6 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 		this.maxFilesize = payload.maxFilesize;
 		this.minSize = payload.minSize;
 		this.maxSize = payload.maxSize;
-
-		this.formModel.assign(payload.user);
 	}
 
 	avatarSelected() {

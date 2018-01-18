@@ -1,13 +1,14 @@
 <div>
 
-	<div class="auth-lead-text" v-if="Connection.isOnline">
+	<div class="auth-lead-text" v-if="!Connection.isClientOffline">
 		<p class="lead anim-fade-in-enlarge" v-translate>
 			auth.join.join_message_html
 		</p>
 	</div>
 
 	<app-auth-join
-		:dark-variant="true"
+		dark-variant
+		:should-redirect="false"
 		@joined="onJoin"
 		/>
 

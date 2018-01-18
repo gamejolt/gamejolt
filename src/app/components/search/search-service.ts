@@ -1,6 +1,7 @@
 import { SearchPayload } from './payload-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { store } from '../../store/index';
+import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 
 export interface SearchOptions {
 	type: 'all' | 'user' | 'game' | 'devlog' | 'typeahead';
@@ -24,7 +25,7 @@ export class Search {
 
 		// If we're in client, let's try to search their installed games.
 		if (GJ_IS_CLIENT && options.type && options.type === 'typeahead') {
-			searchPromises.push(store.state.clientLibrary.searchInstalledGames(query));
+			searchPromises.push(this.searchInstalledGames(query));
 		}
 
 		const _payload = await Promise.all(searchPromises);
@@ -55,7 +56,7 @@ export class Search {
 			requestOptions.detach = true;
 		}
 
-		let searchParams = ['q=' + (query || '')];
+		let searchParams = ['q=' + encodeURIComponent(query || '')];
 
 		if (options.page && options.page > 1) {
 			searchParams.push('page=' + options.page);
@@ -63,9 +64,19 @@ export class Search {
 
 		// Catch failures and return an empty success instead.
 		try {
-			return await Api.sendRequest(endpoint + '?' + searchParams.join('&'), null, requestOptions);
+			return await Api.sendRequest(
+				endpoint + '?' + searchParams.join('&'),
+				null,
+				requestOptions
+			);
 		} catch (_e) {
 			return Promise.resolve({});
 		}
 	}
+
+	private static async searchInstalledGames(query: string) {
+		return store.state.clientLibrary.searchInstalledGames(query, 3);
+	}
 }
+
+makeObservableService(Search);

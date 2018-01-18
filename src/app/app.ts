@@ -1,9 +1,11 @@
+if (GJ_IS_CLIENT && GJ_ENVIRONMENT === 'production') {
+	require('../_common/client/updater/updater');
+}
+
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./app.html';
 
-import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
-import { makeObservableService } from '../lib/gj-lib-client/utils/vue';
 import { AppShell } from './components/shell/shell';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
@@ -17,8 +19,6 @@ import { loadCurrentLanguage } from '../utils/translations';
 	},
 })
 export class App extends Vue {
-	Connection = makeObservableService(Connection);
-
 	// On SSR we want to set mount point for the app to this component so that
 	// we can hydrate the component. On browser we want to set the "app" in the
 	// index template.

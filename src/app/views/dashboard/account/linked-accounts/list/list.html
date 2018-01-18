@@ -43,22 +43,22 @@
 
 						<p>
 							<strong v-if="provider === 'facebook'">
-								<a :href="`https://facebook.com/${ user.facebook_id }`">
+								<a :href="`https://facebook.com/${ user.facebook_id }`" target="_blank">
 									{{ user.facebook_name }}
 								</a>
 							</strong>
 							<strong v-else-if="provider === 'twitter'">
-								<a :href="`https://twitter.com/${ user.twitter_screenname }`">
+								<a :href="`https://twitter.com/${ user.twitter_screenname }`" target="_blank">
 									{{ user.twitter_screenname }}
 								</a>
 							</strong>
 							<strong v-else-if="provider === 'google'">
-								<a :href="`https://plus.google.com/${ user.google_id }`">
+								<a :href="`https://plus.google.com/${ user.google_id }`" target="_blank">
 									{{ user.google_nickname }}
 								</a>
 							</strong>
 							<strong v-else-if="provider === 'twitch'">
-								<a :href="`https://twitch.tv/${ user.twitch_name }`">
+								<a :href="`https://twitch.tv/${ user.twitch_name }`" target="_blank">
 									{{ user.twitch_name }}
 								</a>
 							</strong>

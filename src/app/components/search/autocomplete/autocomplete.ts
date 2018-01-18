@@ -1,27 +1,33 @@
+import 'rxjs/add/operator/debounce';
+
+import View from '!view!./autocomplete.html?style=./autocomplete.styl';
+import { Subject } from 'rxjs/Subject';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Subject } from 'rxjs/Subject';
-import View from '!view!./autocomplete.html?style=./autocomplete.styl';
-import 'rxjs/add/operator/debounce';
 
-import { Search } from '../search-service';
-import { SearchHistory } from '../history/history-service';
+import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
+import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
-import { AppSearch } from '../search';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
+import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { AppGameCompatIcons } from '../../game/compat-icons/compat-icons';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { LocalDbGame as _LocalDbGame } from '../../client/local-db/game/game.model';
+import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
+import { AppGameCompatIcons } from '../../game/compat-icons/compat-icons';
+import { SearchHistory } from '../history/history-service';
+import { AppSearch } from '../search';
+import { Search } from '../search-service';
+
+let LocalDbGameMod: typeof _LocalDbGameMod | undefined;
+if (GJ_IS_CLIENT) {
+	LocalDbGameMod = require('../../client/local-db/game/game.model');
+}
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -57,7 +63,7 @@ export class AppSearchAutocomplete extends Vue {
 	games: Game[] = [];
 	devlogs: Game[] = [];
 	users: User[] = [];
-	libraryGames: _LocalDbGame[] = [];
+	libraryGames: _LocalDbGameMod.LocalDbGame[] = [];
 	items: any[] = [];
 
 	modes = ['search', 'command'];
@@ -249,10 +255,8 @@ export class AppSearchAutocomplete extends Vue {
 					this.selectGame(item);
 				} else if (item instanceof User) {
 					this.selectUser(item);
-				} else if (GJ_IS_CLIENT) {
-					const LocalDbGame: typeof _LocalDbGame = require('../../client/local-db/game/game.model')
-						.LocalDbGame;
-					if (item instanceof LocalDbGame) {
+				} else if (LocalDbGameMod) {
+					if (item instanceof LocalDbGameMod.LocalDbGame) {
 						this.selectLibraryGame(item);
 					}
 				}
@@ -292,7 +296,7 @@ export class AppSearchAutocomplete extends Vue {
 		Analytics.trackEvent('search', 'autocomplete', 'go-user');
 	}
 
-	selectLibraryGame(localGame: _LocalDbGame) {
+	selectLibraryGame(localGame: _LocalDbGameMod.LocalDbGame) {
 		this.$router.push({
 			name: 'discover.games.view.overview',
 			params: { slug: localGame.slug, id: localGame.id + '' },

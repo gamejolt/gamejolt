@@ -9,7 +9,6 @@ import { AppSearchAutocomplete } from './autocomplete/autocomplete';
 import { Popover } from '../../../lib/gj-lib-client/components/popover/popover.service';
 import { SearchHistory } from './history/history-service';
 import { AppSearchInput } from './input/input';
-import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -59,7 +58,7 @@ export class AppSearch extends Vue {
 	inputElem: HTMLElement | undefined;
 	keydownSpies: Function[] = [];
 
-	Search = makeObservableService(Search);
+	readonly Search = Search;
 
 	created() {
 		this.query = Search.query;

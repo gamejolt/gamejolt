@@ -1,6 +1,7 @@
 <div
 	id="shell"
 	:class="{
+		'is-client-offline': Connection.isClientOffline,
 		'left-pane-visible': isLeftPaneVisible,
 		'right-pane-visible': isRightPaneVisible
 	}"
@@ -24,8 +25,9 @@
 		<app-shell-chat v-if="chat" />
 	</div>
 
-	<div>
-		<app-shell-client v-if="GJ_IS_CLIENT" />
+	<div v-if="GJ_IS_CLIENT">
+		<app-client-base />
+		<app-shell-client />
 	</div>
 
 	<app-loading-bar />
@@ -34,7 +36,7 @@
 
 	<app-shell-hot-bottom>
 		<app-minbar v-show="!isRightPaneVisible" />
-		<!--<gj-client-status-bar></gj-client-status-bar>-->
+		<app-client-status-bar v-if="GJ_IS_CLIENT" />
 	</app-shell-hot-bottom>
 
 </div>

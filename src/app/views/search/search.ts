@@ -8,7 +8,6 @@ import { AppPageHeader } from '../../components/page-header/page-header';
 import { AppSearch } from '../../components/search/search';
 import { Search } from '../../components/search/search-service';
 import { SearchHistory } from '../../components/search/history/history-service';
-import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { number } from '../../../lib/gj-lib-client/vue/filters/number';
 import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
@@ -35,8 +34,8 @@ export default class RouteSearch extends BaseRouteComponent {
 	noResults = false;
 	payload: any = {};
 
-	Screen = makeObservableService(Screen);
-	Search = makeObservableService(Search);
+	readonly Screen = Screen;
+	readonly Search = Search;
 
 	get routeTitle() {
 		if (this.route.query.q) {

@@ -3,7 +3,6 @@ import { Component } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
 import View from '!view!./account-popover.html?style=./account-popover.styl';
 
-import { makeObservableService } from '../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
@@ -16,7 +15,12 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Store } from '../../../store/index';
 import { UserTokenModal } from '../../user/token-modal/token-modal.service';
-import { ClientControl as _ClientControl } from '../../client/control/client.service';
+import * as _ClientMod from '../../../../_common/client/client.service';
+
+let ClientMod: typeof _ClientMod | undefined;
+if (GJ_IS_CLIENT) {
+	ClientMod = require('../../../../_common/client/client.service');
+}
 
 @View
 @Component({
@@ -38,11 +42,8 @@ export class AppShellAccountPopover extends Vue {
 
 	walletAmount: number | false = false;
 
-	Screen = makeObservableService(Screen);
-	Connection = makeObservableService(Connection);
-	ClientControl: typeof _ClientControl | null = GJ_IS_CLIENT
-		? require('../../client/control/client.service').ClientControl
-		: null;
+	readonly Screen = Screen;
+	readonly Connection = Connection;
 
 	@Action logout: Store['logout'];
 
@@ -68,5 +69,11 @@ export class AppShellAccountPopover extends Vue {
 			}
 		);
 		this.walletAmount = response.amount;
+	}
+
+	quit() {
+		if (ClientMod) {
+			ClientMod.Client.quit();
+		}
 	}
 }

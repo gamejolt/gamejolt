@@ -1,46 +1,46 @@
-<div gj-expand-when="ctrl.isShowing">
-	<div class="status-bar">
+<div class="status-bar fill-darker clearfix" :class="{ '-is-showing': isShowing }">
+	<!-- <div gj-expand-when="ctrl.isShowing"> -->
 
-		<div class="status-bar-item" ng-if="Client_Launcher.currentlyPlaying.length">
-			<span class="jolticon jolticon-play"></span>
-			Currently Playing:
-			<strong ng-repeat="package in Client_Launcher.currentlyPlaying track by package.id">
-				<span ng-show="$index > 0">,</span>
-				{{ Client_Library.games[ package.game_id ].title }}
-			</strong>
-		</div>
-
-		<router-link class="status-bar-item link-unstyled"
-			ng-if="Client_Installer.numPatching"
-			:to="{ name: 'library.installed' }"
-			gj-tooltip="View Downloads"
-			>
-			<strong>{{ Client_Installer.numPatching }}</strong>
-			Download(s)
-			&nbsp;
-			<div class="status-bar-progress">
-				<div class="progress progress-thin"
-					ng-repeat="(packageId, patchHandle) in Client_Installer.currentlyPatching track by packageId"
-					ng-show="Client_Installer.getPackagePatchProgress( packageId )"
-					ng-class="{ 'progress-success': Client_Library.packages[ packageId ].isInstalling(), 'progress-darker': Client_Library.packages[ packageId ].isUpdating() }"
-					ng-style="{ width: (($index + 1) / Client_Installer.numPatching * 100.0) + '%' }"
-					>
-					<div class="progress-bar"
-						ng-class="{ 'progress-striped active': Client_Library.packages[ packageId ].install_state == LocalDb_Package.UNPACKING }"
-						ng-style="{ width: (Client_Installer.getPackagePatchProgress( packageId ) * 100.0) + '%' }"
-						>
-					</div>
-				</div>
-			</div>
-		</router-link>
-
-		<!--<div class="pull-right">
-			<div class="status-bar-item">
-				Restart Client to apply updates.
-				&nbsp;
-				<button class="btn btn-sm btn-success-outline">Restart Now</button>
-			</div>
-		</div>-->
-
+	<div
+		class="-item"
+		v-if="numPlaying > 0"
+		>
+		<app-jolticon icon="play" />
+		<translate>Currently Playing:</translate>
+		<strong :title="currentlyPlayingList">
+			{{ currentlyPlayingList }}
+		</strong>
 	</div>
+
+	<router-link
+		class="-item link-unstyled"
+		v-if="numPatching > 0"
+		:to="{ name: 'library.installed' }"
+		v-app-tooltip="$gettext( `View Downloads` )"
+		>
+		<strong>{{ numPatching | number }}</strong>
+		<translate
+			:translate-n="numPatching"
+			translate-plural="Downloads"
+			>
+			Download
+		</translate>
+		&nbsp;
+		<div class="-progress">
+			<app-client-status-bar-patch-item
+				v-for="packageId of currentlyPatchingIds"
+				:key="packageId"
+				:package-id="packageId"
+				/>
+		</div>
+	</router-link>
+
+	<!--<div class="pull-right">
+		<div class="status-bar-item">
+			Restart Client to apply updates.
+			&nbsp;
+			<button class="btn btn-sm btn-success-outline">Restart Now</button>
+		</div>
+	</div>-->
+
 </div>

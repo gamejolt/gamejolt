@@ -8,7 +8,6 @@ import { ActivityFeedService } from '../../../../../../components/activity/feed/
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
 import {
@@ -47,7 +46,7 @@ export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent
 
 	feed: ActivityFeedContainer | null = null;
 
-	Screen = makeObservableService(Screen);
+	readonly Screen = Screen;
 
 	@RouteResolve({ cache: true, lazy: true })
 	routeResolve(this: undefined, route: Route) {

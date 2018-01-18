@@ -4,7 +4,6 @@ import { State } from 'vuex-class';
 import View from '!view!./devlog.html?style=./devlog.styl';
 
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { makeObservableService } from '../../../../../../../lib/gj-lib-client/utils/vue';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
 import { AppFadeCollapse } from '../../../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
@@ -84,9 +83,9 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	contentColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-7';
 	contentColClassesFull = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-10';
 
-	Screen = makeObservableService(Screen);
-	Environment = Environment;
-	number = number;
+	readonly Screen = Screen;
+	readonly Environment = Environment;
+	readonly number = number;
 
 	@Watch('game.id', { immediate: true })
 	async onGameChange() {
