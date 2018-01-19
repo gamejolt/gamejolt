@@ -3,6 +3,10 @@ import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.serv
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import * as nwGui from 'nw.gui';
 import { store } from '../../store/index';
+import {
+	Notification,
+	getNotificationText,
+} from '../../../lib/gj-lib-client/components/notification/notification-model';
 
 function getCookie(name: string): Promise<string | undefined> {
 	return new Promise(resolve => {
@@ -62,6 +66,8 @@ export class GridClient {
 			return;
 		}
 
+		console.log('Connecting to the Grid!');
+
 		const userId = user.id.toString();
 
 		this.socket = new Socket(Environment.gridHost);
@@ -85,20 +91,24 @@ export class GridClient {
 				}
 			});
 
-		channel.on('new_notification', payload => {
+		channel.on('new-notification', payload => {
 			this.spawnNewNotification(payload.notification_data);
 		});
 	}
 
 	spawnNewNotification(notificationData: any) {
 		if (this.connected) {
+			const data = notificationData.event_item;
+			const notification = new Notification(data);
+			const message = getNotificationText(notification);
+			const icon =
+				notification.from_model === undefined ? '' : notification.from_model.img_avatar;
+
 			Growls.info({
-				message: notificationData.message,
-				title: notificationData.title,
-				icon: 'https://i.imgur.com/035u64t.png',
-				onclick: () => {
-					window.location.href = Environment.baseUrl + notificationData.url;
-				},
+				message: message,
+				title: 'New Notification',
+				icon: icon,
+				onclick: notification.go,
 			});
 		}
 	}
