@@ -33,6 +33,13 @@ export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteCom
 					sticky: true,
 					message: this.$gettext(`auth.linked_account.facebook.duplicate_email_growl`),
 				});
+			} else if ($payload.reason && $payload.reason === 'rate-limit') {
+				Growls.error({
+					sticky: true,
+					message: this.$gettext(
+						`You can't register another account yet. Try again later.`
+					),
+				});
 			} else {
 				Growls.error({
 					sticky: true,

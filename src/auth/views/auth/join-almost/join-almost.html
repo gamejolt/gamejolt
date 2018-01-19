@@ -14,13 +14,20 @@
 			<translate v-else-if="serverErrors.email || serverErrors.username">
 				Uh oh, someone already registered with your email or username!
 			</translate>
-			<translate v-else="serverErrors.captcha">
+			<translate v-else-if="serverErrors.captcha">
 				Mind trying the captcha again?
+			</translate>
+			<translate v-else-if="serverErrors['rate-limit']">
+				Sorry, you can't register another account yet. Try again later.
+			</translate>
+			<translate v-else>
+				Uh oh, something weird happened!
 			</translate>
 			<br>
 			<button
 				class="btn"
 				@click="gotoJoin"
+				v-if="!serverErrors['rate-limit']"
 				>
 				<app-jolticon icon="reply" />
 				<translate>Retry?</translate>

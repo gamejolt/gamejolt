@@ -32,6 +32,7 @@ export default class RouteJoinAlmost extends BaseRouteComponent {
 		captcha: boolean;
 		email: boolean;
 		username: boolean;
+		'rate-limit': boolean;
 	} = null as any;
 
 	$refs: {
