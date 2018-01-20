@@ -53,10 +53,8 @@ export type Mutations = AppMutations &
 		_setBootstrapped: undefined;
 		_setLibraryBootstrapped: undefined;
 		_clear: undefined;
-		_setChat: ChatClient;
-		_setGrid: GridClient;
-		_clearChat: undefined;
-		_clearGrid: undefined;
+		_setChat: ChatClient | null;
+		_setGrid: GridClient | null;
 		_toggleLeftPane: undefined;
 		_toggleRightPane: undefined;
 		_clearPanes: undefined;
@@ -191,7 +189,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			this.chat.logout();
 		}
 
-		this._clearChat();
+		this._setChat(null);
 	}
 
 	@VuexAction
@@ -209,7 +207,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			this.grid.disconnect();
 		}
 
-		this._clearGrid();
+		this._setGrid(null);
 	}
 
 	@VuexAction
@@ -279,18 +277,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_clearChat() {
-		this.chat = null;
-	}
-
-	@VuexMutation
 	_setGrid(grid: Mutations['_setGrid']) {
 		this.grid = grid;
-	}
-
-	@VuexMutation
-	_clearGrid() {
-		this.grid = null;
 	}
 
 	@VuexMutation

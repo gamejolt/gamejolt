@@ -7,6 +7,13 @@ import {
 	Notification,
 	getNotificationText,
 } from '../../../lib/gj-lib-client/components/notification/notification-model';
+import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
+
+interface NewNotificationPayload {
+	notification_data: {
+		event_item: any;
+	};
+}
 
 export class GridClient {
 	connected = false;
@@ -30,15 +37,17 @@ export class GridClient {
 			return;
 		}
 
-		console.log('Connecting to the Grid!');
+		console.log('Connecting to The Grid!');
 
 		const userId = user.id.toString();
 
-		this.socket = new Socket(Environment.gridHost);
-		this.socket.connect({
-			frontend_cookie: cookie,
-			user_id: userId,
+		this.socket = new Socket(Environment.gridHost, {
+			params: {
+				frontend_cookie: cookie,
+				user_id: userId,
+			},
 		});
+		this.socket.connect();
 
 		const channel = this.socket.channel('notifications:' + userId, {
 			frontend_cookie: cookie,
@@ -46,32 +55,32 @@ export class GridClient {
 
 		channel
 			.join()
-			.receive('error', () => console.log('Failed to connect to Grid!'))
+			.receive('error', () => console.warn('Failed to connect to The Grid.'))
 			.receive('ok', () => {
 				if (!this.connected) {
 					this.connected = true;
 					this.channels.push(channel);
-					console.log('User joined notifications channel.');
+					console.log('The Grid: User joined notifications channel.');
 				}
 			});
 
-		channel.on('new-notification', payload => {
-			this.spawnNewNotification(payload.notification_data);
-		});
+		channel.on('new-notification', (payload: NewNotificationPayload) =>
+			this.spawnNewNotification(payload)
+		);
 	}
 
-	spawnNewNotification(notificationData: any) {
+	spawnNewNotification(payload: NewNotificationPayload) {
 		if (this.connected) {
-			const data = notificationData.event_item;
+			const data = payload.notification_data.event_item;
 			const notification = new Notification(data);
 			const message = getNotificationText(notification);
 			const icon =
 				notification.from_model === undefined ? '' : notification.from_model.img_avatar;
 
 			Growls.info({
-				message: message,
-				title: 'New Notification',
-				icon: icon,
+				message,
+				title: Translate.$gettext('New Notification'),
+				icon,
 				onclick: notification.go,
 			});
 		}
@@ -79,9 +88,7 @@ export class GridClient {
 
 	disconnect() {
 		this.connected = false;
-		this.channels.forEach(channel => {
-			channel.leave();
-		});
+		this.channels.forEach(channel => channel.leave());
 		this.channels = [];
 		if (this.socket !== null) {
 			this.socket.disconnect();
