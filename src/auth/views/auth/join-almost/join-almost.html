@@ -1,72 +1,32 @@
 <div class="anim-fade-in-up">
-	<template v-if="doingCaptcha">
-		<h2 class="section-header">
-			<translate>Are you a robot?</translate><br>
-			(ノಠ益ಠ)ノ彡┻━┻
-		</h2>
+	<h2 class="section-header">
+		<!-- signups with gamejolt required a captcha to be solved. lets congratulate them \o/ -->
+		<template v-if="isGamejoltSignup">
+			<translate>Almost there, human!</translate><br>
+			(ヽ° - °)ヽ┳━┳
+		</template>
+		<template v-else>
+			<translate>Almost there!</translate>
+		</template>
+	</h2>
 
-		<app-loading v-if="!recaptchaReady" />
-		<div v-else ref="recaptcha" key="recaptcha"/><br>
-		<div class="alert alert-warning" v-if="serverErrors">
-			<translate v-if="serverErrors.token">
-				Oh no, your sign-up request has expired!
-			</translate>
-			<translate v-else-if="serverErrors.email || serverErrors.username">
-				Uh oh, someone already registered with your email or username!
-			</translate>
-			<translate v-else-if="serverErrors.captcha">
-				Mind trying the captcha again?
-			</translate>
-			<translate v-else-if="serverErrors['rate-limit']">
-				Sorry, you can't register another account yet. Try again later.
-			</translate>
-			<translate v-else>
-				Uh oh, something weird happened!
-			</translate>
-			<br>
-			<button
-				class="btn"
-				@click="gotoJoin"
-				v-if="!serverErrors['rate-limit']"
-				>
-				<app-jolticon icon="reply" />
-				<translate>Retry?</translate>
-			</button>
-		</div>
-		<div v-translate>
-			Only humans are allowed to use Game Jolt.
-		</div>
-	</template>
+	<div v-translate>
+		auth.join.almost.body_html
+	</div>
+	<p class="small text-muted">
+		<translate>auth.join.almost.spam</translate>
+	</p>
+	<p class="small text-muted">
+		<translate>auth.join.almost.urgency</translate>
+	</p>
 
-	<template v-else>
-		<h2 class="section-header">
-			<template v-if="$route.params.token">
-				<translate>Welcome, human!</translate><br>
-				(ヽ° - °)ヽ┳━┳
-			</template>
-			<template v-else>
-				<translate>Almost there!</translate>
-			</template>
-		</h2>
-
-		<div v-translate>
-			auth.join.almost.body_html
-		</div>
-		<p class="small text-muted">
-			<translate>auth.join.almost.spam</translate>
-		</p>
-		<p class="small text-muted">
-			<translate>auth.join.almost.urgency</translate>
-		</p>
-
-		<!--
-			We poll to see if their account gets authorized or not.
-			When it does, we can log them in.
-		-->
-		<app-progress-poller
-			v-if="credentials && credentials.username && credentials.password"
-			:url="`/web/auth/poll-authorized/${credentials.username}`"
-			@complete="onAuthorized"
-			/>
-	</template>
+	<!--
+		We poll to see if their account gets authorized or not.
+		When it does, we can log them in.
+	-->
+	<app-progress-poller
+		v-if="isGamejoltSignup"
+		:url="`/web/auth/poll-authorized/${username}`"
+		@complete="onAuthorized"
+		/>
 </div>

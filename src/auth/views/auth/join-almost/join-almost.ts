@@ -1,15 +1,14 @@
 import { Component } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
 import View from '!view!./join-almost.html';
 
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service';
 import { AppProgressPoller } from '../../../../lib/gj-lib-client/components/progress/poller/poller';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Store } from '../../../store/index';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 
 @View
 @Component({
@@ -21,79 +20,36 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 	},
 })
 export default class RouteJoinAlmost extends BaseRouteComponent {
-	@State credentials: Store['credentials'];
-
-	doingCaptcha = true;
-	recaptchaReady = false;
-	recaptchaInterval: NodeJS.Timer = null as any;
-
-	serverErrors: {
-		token: boolean;
-		captcha: boolean;
-		email: boolean;
-		username: boolean;
-		'rate-limit': boolean;
-	} = null as any;
-
-	$refs: {
-		recaptcha: HTMLDivElement;
-	};
+	username: string | null = null;
+	password: string | null = null;
 
 	get routeTitle() {
 		return this.$gettext('auth.join.almost.page_title');
 	}
 
+	get isGamejoltSignup() {
+		return this.username || this.password;
+	}
+
 	routeInit() {
-		this.doingCaptcha = !!this.$route.params.token;
-
-		this.recaptchaInterval = setInterval(() => {
-			if (grecaptcha) {
-				this.recaptchaReady = true;
-				clearInterval(this.recaptchaInterval);
-
-				setImmediate(() => {
-					grecaptcha.render(this.$refs.recaptcha, {
-						// TODO(spam) pull this from config / webpack.
-						sitekey: '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT',
-						theme: 'dark',
-						callback: response => this.onRecaptcha(response),
-					});
-				});
-			}
-		}, 1000);
-	}
-
-	async onRecaptcha(captchaResponse: string) {
-		this.serverErrors = null as any;
-
-		const response = await Api.sendRequest('/web/auth/join', {
-			token: this.$route.params.token,
-			captcha: captchaResponse,
-		});
-
-		console.log(response);
-		if (response.success) {
-			this.doingCaptcha = false;
-			return;
-		}
-
-		this.serverErrors = response.errors;
-		if (this.serverErrors.captcha) {
-			grecaptcha.reset();
-		}
-	}
-
-	gotoJoin() {
-		this.$router.push({ name: 'auth.join' });
+		this.username = sessionStorage.getItem('signup-username');
+		this.password = sessionStorage.getItem('signup-password');
 	}
 
 	async onAuthorized() {
-		if (!this.credentials) {
+		if (!this.isGamejoltSignup) {
 			return;
 		}
 
 		// Now that they're authorized, we try to log them in with the credentials they used to sign up.
-		const response = await Api.sendRequest('/web/auth/login', this.credentials);
+		const response = await Api.sendRequest('/web/auth/login', {
+			username: this.username,
+			password: this.password,
+		});
+
+		sessionStorage.removeItem('signup-username');
+		sessionStorage.removeItem('signup-password');
+
 		if (!response.success) {
 			Growls.error({
 				message: this.$gettext(`Couldn't log you in for some reason.`),

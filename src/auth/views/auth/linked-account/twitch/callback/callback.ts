@@ -37,13 +37,6 @@ export default class RouteAuthLinkedAccountTwitchCallback extends BaseRouteCompo
 						`The email address on this Twitch account is already in use. Perhaps you already have an account?`
 					),
 				});
-			} else if ($payload.reason && $payload.reason === 'rate-limit') {
-				Growls.error({
-					sticky: true,
-					message: this.$gettext(
-						`You can't register another account yet. Try again later.`
-					),
-				});
 			} else {
 				Growls.error({
 					sticky: true,

@@ -6,6 +6,7 @@ import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import {
 	FormOnLoad,
 	BaseForm,
+	FormOnSubmitError,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
@@ -22,7 +23,7 @@ import { AppFormControlMarkdown } from '../../../../lib/gj-lib-client/components
 		AppFormControlMarkdown,
 	},
 })
-export class FormProfile extends BaseForm<User> implements FormOnLoad {
+export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSubmitError {
 	modelClass = User;
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
@@ -33,6 +34,7 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad {
 	nameChangedOn = 0;
 	nameTimeLeft = 0;
 	nameDuration = '';
+	isBioLocked = false;
 
 	Environment = Environment;
 
@@ -52,6 +54,14 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad {
 
 		if (this.nameTimeLeft) {
 			this.nameDuration = distanceInWordsToNow(Date.now() + this.nameTimeLeft);
+		}
+
+		this.isBioLocked = payload.isBioLocked;
+	}
+
+	onSubmitError(response: any) {
+		if (response.errors && response.errors['bio-locked']) {
+			this.isBioLocked = true;
 		}
 	}
 }
