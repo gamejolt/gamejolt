@@ -5,6 +5,7 @@ import { routeAuthLogin } from './login/login.route';
 import { routeAuthJoin } from './join/join.route';
 import { routeAuthForgot } from './forgot/forgot.route';
 import { routeAuthForgotSent } from './forgot-sent/forgot-sent.route';
+import { routeAuthJoinCaptcha } from './join-captcha/join-captcha.route';
 import { routeAuthJoinAlmost } from './join-almost/join-almost.route';
 import { routeAuthResetPassword } from './reset-password/reset-password.route';
 import { routeAuthAuthorize } from './authorize/authorize.route';
@@ -17,6 +18,7 @@ export const routeAuth: RouteConfig = {
 	children: [
 		routeAuthLogin,
 		routeAuthJoin,
+		routeAuthJoinCaptcha,
 		routeAuthJoinAlmost,
 		routeAuthForgot,
 		routeAuthForgotSent,
