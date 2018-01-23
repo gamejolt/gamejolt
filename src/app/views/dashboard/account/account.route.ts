@@ -2,6 +2,7 @@ import { RouteConfig } from 'vue-router';
 
 import { routeDashAccountEdit } from './edit/edit.route';
 import { routeDashAccountAvatar } from './avatar/avatar.route';
+import { routeDashAccountHeader } from './header/header.route';
 import { routeDashAccountEmailPreferences } from './email-preferences/email-preferences.route';
 import { routeDashAccountChangePassword } from './change-password/change-password.route';
 import { routeDashAccountLinkedAccountsList } from './linked-accounts/list/list.route';
@@ -16,6 +17,7 @@ export const routeDashAccount: RouteConfig = {
 	children: [
 		routeDashAccountEdit,
 		routeDashAccountAvatar,
+		routeDashAccountHeader,
 		routeDashAccountEmailPreferences,
 		routeDashAccountChangePassword,
 		routeDashAccountLinkedAccountsList,

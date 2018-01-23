@@ -15,6 +15,7 @@ export class FormTwitterEmail extends BaseForm<any> implements FormOnSubmit {
 	warnOnDiscard = false;
 
 	duplicateEmail = false;
+	rateLimit = false;
 
 	onChanged() {
 		// As soon as they change the form reset the error message.
@@ -33,9 +34,11 @@ export class FormTwitterEmail extends BaseForm<any> implements FormOnSubmit {
 			this.formModel
 		);
 
-		if (response.success === false) {
-			if (response.reason && response.reason === 'duplicate-email') {
+		if (response.success === false && response.reason) {
+			if (response.reason === 'duplicate-email') {
 				this.duplicateEmail = true;
+			} else if (response.reason === 'rate-limit') {
+				this.rateLimit = true;
 			}
 		}
 

@@ -81,6 +81,7 @@ function setAds(game?: Game) {
 		mat,
 		genre: game.category,
 		paid: game.is_paid_game ? 'y' : 'n',
+		game: game.id + '',
 	};
 	Ads.setAdUnit('gamepage');
 }

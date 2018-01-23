@@ -86,7 +86,7 @@ $-cover-buttons-height = $button-line-height + 20px
 		position: absolute
 		width: $page-header-spotlight-size
 		height: @width
-		bottom: -((@width / 2) + 5px)
+		bottom: -20px // this just seems to look the best
 		left: -(@width + $page-header-spotlight-margin / 2)
 		border: 5px solid $white
 		border-radius: 50%
@@ -96,6 +96,11 @@ $-cover-buttons-height = $button-line-height + 20px
 		align-items: center
 		justify-content: center
 		overflow: hidden
+
+		// When there's a nav, we want to push the avatar to be half over the header, and half over
+		// the nav.
+		.has-nav &
+			bottom: -((@width / 2) + 5px)
 
 		&.dark
 			background-color: $gray-darker

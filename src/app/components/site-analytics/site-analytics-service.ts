@@ -375,6 +375,7 @@ export class SiteAnalytics {
 
 	private static _allMetrics: MetricMap;
 	private static _packageMetrics: MetricMap;
+	private static _releaseMetrics: MetricMap;
 
 	static get allMetrics() {
 		if (!this._allMetrics) {
@@ -405,7 +406,12 @@ export class SiteAnalytics {
 
 	// Current release metrics are the same as package metrics.
 	static get releaseMetrics() {
-		return this.packageMetrics;
+		if (!this._releaseMetrics) {
+			const possibleMetrics: MetricKey[] = ['download', 'install'];
+			this._releaseMetrics = <MetricMap>objectPick(this.allMetrics, possibleMetrics);
+		}
+
+		return this._releaseMetrics;
 	}
 
 	static pickPartnerMetrics(metrics: MetricMap) {

@@ -1,0 +1,6 @@
+{
+	"translate": {
+		"prefix": "translate",
+		"body": ["<translate>$TM_SELECTED_TEXT</translate>"]
+	}
+}
