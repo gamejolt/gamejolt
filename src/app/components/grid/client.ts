@@ -8,6 +8,7 @@ import {
 	getNotificationText,
 } from '../../../lib/gj-lib-client/components/notification/notification-model';
 import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
+import { router } from '../../views';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -81,7 +82,7 @@ export class GridClient {
 				message,
 				title: Translate.$gettext('New Notification'),
 				icon,
-				onclick: notification.go,
+				onclick: () => notification.go(router),
 			});
 		}
 	}
