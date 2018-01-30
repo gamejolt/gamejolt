@@ -26,6 +26,8 @@ export class FormUserHeader extends BaseForm<User> implements FormOnLoad {
 	maxFilesize = 0;
 	minSize = 0;
 	maxSize = 0;
+	minAspectRatio = 0;
+	maxAspectRatio = 0;
 
 	$refs: {
 		form: AppForm;
@@ -39,6 +41,8 @@ export class FormUserHeader extends BaseForm<User> implements FormOnLoad {
 		this.maxFilesize = payload.maxFilesize;
 		this.minSize = payload.minSize;
 		this.maxSize = payload.maxSize;
+		this.minAspectRatio = payload.minAspectRatio;
+		this.maxAspectRatio = payload.maxAspectRatio;
 	}
 
 	headerSelected() {
