@@ -49,7 +49,8 @@ export type Actions = AppActions &
 export type Mutations = AppMutations &
 	LibraryMutations &
 	_ClientLibraryMod.Mutations & {
-		setNotificationsCount: number;
+		setNotificationCount: number;
+		incrementNotificationCount: number;
 		_setBootstrapped: undefined;
 		_setLibraryBootstrapped: undefined;
 		_clear: undefined;
@@ -249,8 +250,13 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	setNotificationCount(count: Mutations['setNotificationsCount']) {
-		this.notificationCount += count;
+	incrementNotificationCount(amount: Mutations['incrementNotificationCount']) {
+		this.notificationCount += amount;
+	}
+
+	@VuexMutation
+	setNotificationCount(count: Mutations['setNotificationCount']) {
+		this.notificationCount = count;
 	}
 
 	@VuexMutation

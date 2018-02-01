@@ -72,6 +72,9 @@ export class GridClient {
 
 	spawnNewNotification(payload: NewNotificationPayload) {
 		if (this.connected) {
+			// increment the notification counter by 1.
+			store.commit('incrementNotificationCount', 1);
+
 			const data = payload.notification_data.event_item;
 			const notification = new Notification(data);
 			const message = getNotificationText(notification);
