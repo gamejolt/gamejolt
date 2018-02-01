@@ -22,10 +22,10 @@ export class GridClient {
 	channels: Channel[] = [];
 
 	constructor() {
-		this._init();
+		this.init();
 	}
 
-	private async _init() {
+	private async init() {
 		if (GJ_IS_SSR) {
 			return;
 		}

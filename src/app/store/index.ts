@@ -250,7 +250,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	setNotificationCount(count: Mutations['setNotificationsCount']) {
-		this.notificationCount = count;
+		this.notificationCount += count;
 	}
 
 	@VuexMutation
