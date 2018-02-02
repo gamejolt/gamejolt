@@ -1,15 +1,10 @@
-import { Mutation } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./join.html';
 
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
-import { Store } from '../../../store/index';
 import { loggedUserBlock } from '../auth';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -24,8 +19,6 @@ import {
 	},
 })
 export default class RouteAuthJoin extends BaseRouteComponent {
-	@Mutation setCredentials: Store['setCredentials'];
-
 	readonly Connection = Connection;
 
 	@RouteResolve()
@@ -35,16 +28,5 @@ export default class RouteAuthJoin extends BaseRouteComponent {
 
 	get routeTitle() {
 		return this.$gettext('auth.join.page_title');
-	}
-
-	async onJoin(formModel: any) {
-		// We store these so we can log them in automatically once their
-		// verification happens.
-		this.setCredentials({
-			username: formModel.username,
-			password: formModel.password,
-		});
-
-		this.$router.push({ name: 'auth.join-almost' });
 	}
 }

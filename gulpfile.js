@@ -86,16 +86,16 @@ gulp.task(
 			'/game-jolt-client.tar.gz --acl public-read',
 		'aws s3 cp ' +
 			releaseDir +
-			'/linux64-package.tar.gz ' +
+			'/linux64-package.zip ' +
 			s3Dir +
-			'/linux64-package.tar.gz --acl public-read',
+			'/linux64-package.zip --acl public-read',
 
 		'aws s3 cp ' + releaseDir + '/osx.dmg ' + s3Dir + '/GameJoltClient.dmg --acl public-read',
 		'aws s3 cp ' +
 			releaseDir +
-			'/osx64-package.tar.gz ' +
+			'/osx64-package.zip ' +
 			s3Dir +
-			'/osx64-package.tar.gz --acl public-read',
+			'/osx64-package.zip --acl public-read',
 
 		'aws s3 cp ' +
 			releaseDir +
@@ -104,8 +104,8 @@ gulp.task(
 			'/GameJoltClientSetup.exe --acl public-read',
 		'aws s3 cp ' +
 			releaseDir +
-			'/win32-package.tar.gz ' +
+			'/win32-package.zip ' +
 			s3Dir +
-			'/win32-package.tar.gz --acl public-read',
+			'/win32-package.zip --acl public-read',
 	])
 );

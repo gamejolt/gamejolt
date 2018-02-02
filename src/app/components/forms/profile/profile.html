@@ -111,9 +111,16 @@
 			preview-class="user-compiled-description"
 			preview-url="/web/dash/profile/preview-description"
 			markdown-mode="users"
+			:disabled="isBioLocked"
 			/>
 
 		<app-form-control-errors />
+
+		<div v-if="isBioLocked" class="control-errors">
+			<p class="help-block error">
+				<translate>You cannot edit your bio. It's been flagged as spam.</translate>
+			</p>
+		</div>
 
 	</app-form-group>
 

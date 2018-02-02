@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.13.2",
+	"version": "0.13.5",
 	"scripts": {
 		"postinstall": "sh ./git-hooks/setup-hooks.sh",
 		"dev": "gulp watch",
@@ -19,6 +19,7 @@
 		"@types/cropperjs": "1.1.0",
 		"@types/express": "4.0.39",
 		"@types/favico.js": "0.0.28",
+		"@types/grecaptcha": "2.0.34",
 		"@types/hammerjs": "2.0.35",
 		"@types/jstimezonedetect": "1.0.1",
 		"@types/node": "8.0.53",
@@ -81,7 +82,7 @@
 	},
 	"dependencies": {
 		"axios": "0.17.1",
-		"client-voodoo": "2.0.0",
+		"client-voodoo": "2.0.3",
 		"nwjs-snappy-updater": "1.1.0"
 	},
 	"main": "app://game-jolt-client/index.html#/",
@@ -100,10 +101,8 @@
 		"plugin": true
 	},
 	"clientManifestUrl": "https://d.gamejolt.net/data/client/manifest-2.json",
-	"chromium-args":
-		"--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
-	"user-agent":
-		"GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
+	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
 		"linux": {
 			"main": "app://game-jolt-client/package/index.html#/",

@@ -106,6 +106,12 @@
 					@expanded="onExpand"
 					@content-bootstrapped="onContentBootstrapped"
 					/>
+				
+				<app-poll-voting
+					v-if="post.poll"
+					:poll="post.poll"
+					:game="post.game"
+					/>
 			</template>
 
 			<app-activity-feed-controls
