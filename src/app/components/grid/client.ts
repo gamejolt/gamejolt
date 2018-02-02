@@ -9,6 +9,7 @@ import {
 } from '../../../lib/gj-lib-client/components/notification/notification-model';
 import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
 import { router } from '../../views';
+import Axios from 'axios';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -40,9 +41,15 @@ export class GridClient {
 
 		console.log('Connecting to The Grid!');
 
+		// get hostname from loadbalancer first
+		const response = await Axios.get(Environment.gridHost);
+		const host = `ws://${response.data}/socket`;
+
+		console.log('Grid server selected', host);
+
 		const userId = user.id.toString();
 
-		this.socket = new Socket(Environment.gridHost, {
+		this.socket = new Socket(host, {
 			params: {
 				frontend_cookie: cookie,
 				user_id: userId,
