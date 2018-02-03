@@ -20,21 +20,24 @@ interface NewNotificationPayload {
 
 /**
  * Polls a request until it returns a result, increases the delay time between requests after each failed attempt.
- * @param context Context for logging when the request fails
- * @param request The promise containing the request. Throw to fail
+ * @param context Context for logging
+ * @param requestGetter Function that generates a promise that represents the request
  */
-async function pollRequest(context: string, request: Promise<any>): Promise<any> {
+async function pollRequest(context: string, requestGetter: () => Promise<any>): Promise<any> {
 	let result = null;
 	let finished = false;
 
-	let delay = 1;
+	let delay = 0;
+
+	console.log(`[Grid] ${context}`);
 
 	while (!finished) {
 		try {
-			result = await request;
+			const promise = requestGetter();
+			result = await promise;
 			finished = true;
 		} catch (e) {
-			const sleepMs = Math.random() * (delay * 1000);
+			const sleepMs = Math.random() * delay * 1000 + 1000;
 			console.log(`[Grid] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
 			await sleep(sleepMs);
 		}
@@ -51,10 +54,10 @@ export class GridClient {
 	channels: Channel[] = [];
 
 	constructor() {
-		this.init();
+		this.connect();
 	}
 
-	private async init() {
+	private async connect() {
 		if (GJ_IS_SSR) {
 			return;
 		}
@@ -68,10 +71,11 @@ export class GridClient {
 		}
 
 		console.log('[Grid] Connecting...');
-		console.log('[Grid] Selecting server...');
 
 		// get hostname from loadbalancer first
-		const hostResult = await pollRequest('Get host', Axios.get(Environment.gridHost));
+		const hostResult = await pollRequest('Select server', () =>
+			Axios.get(Environment.gridHost)
+		);
 		const host = `ws://${hostResult.data}/socket`;
 
 		console.log('[Grid] Server selected:', host);
@@ -85,14 +89,24 @@ export class GridClient {
 			},
 		});
 
+		// HACK
+		// there is built in way to stop a Phoenix socket from attempting to reconnect on its own after it got disconnected.
+		// this replaces the socket's "reconnectTimer" property with an empty object that matches the Phoenix "Timer" signature
+		// The 'reconnectTimer' usually restarts the connection after a delay, this prevents that from happening
+		let socketAny: any = this.socket;
+		if (socketAny.hasOwnProperty('reconnectTimer')) {
+			socketAny.reconnectTimer = { scheduleTimeout: () => {}, reset: () => {} };
+		}
+
 		await pollRequest(
 			'Connect to socket',
-			new Promise(resolve => {
-				if (this.socket !== null) {
-					this.socket.connect();
-				}
-				resolve();
-			})
+			() =>
+				new Promise(resolve => {
+					if (this.socket !== null) {
+						this.socket.connect();
+					}
+					resolve();
+				})
 		);
 
 		const channel = this.socket.channel('notifications:' + userId, {
@@ -101,23 +115,31 @@ export class GridClient {
 
 		await pollRequest(
 			'Join user notification channel',
-			new Promise((resolve, reject) => {
-				channel
-					.join()
-					.receive('error', reject)
-					.receive('ok', () => {
-						this.connected = true;
-						this.channels.push(channel);
-						resolve();
-					});
-			})
+			() =>
+				new Promise((resolve, reject) => {
+					channel
+						.join()
+						.receive('error', reject)
+						.receive('ok', () => {
+							this.connected = true;
+							this.channels.push(channel);
+							resolve();
+						});
+				})
 		);
-
-		console.log('[Grid] User joined notifications channel.');
 
 		channel.on('new-notification', (payload: NewNotificationPayload) =>
 			this.spawnNewNotification(payload)
 		);
+
+		channel.onError(reason => {
+			console.log(`[Grid] Connection error encountered (Reason: ${reason}).`);
+			// teardown and try to reconnect
+			if (this.connected) {
+				this.disconnect();
+				this.connect();
+			}
+		});
 	}
 
 	spawnNewNotification(payload: NewNotificationPayload) {
@@ -156,10 +178,16 @@ export class GridClient {
 			console.log('[Grid] Disconnecting...');
 
 			this.connected = false;
-			this.channels.forEach(channel => channel.leave());
+			this.channels.forEach(channel => {
+				channel.leave();
+				if (this.socket !== null) {
+					this.socket.remove(channel);
+				}
+			});
 			this.channels = [];
 			if (this.socket !== null) {
 				this.socket.disconnect();
+				this.socket = null;
 			}
 		}
 	}
