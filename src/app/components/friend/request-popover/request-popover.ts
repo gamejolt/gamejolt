@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import View from '!view!./request-popover.html';
 
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
@@ -13,6 +12,7 @@ import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-h
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { Store } from '../../../store/index';
 import { Mutation } from 'vuex-class/lib/bindings';
+import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 const INITIAL_LAG = 3000;
 
@@ -32,8 +32,8 @@ type Tab = 'requests' | 'pending';
 	},
 })
 export class AppFriendRequestPopover extends Vue {
-	@State app: Store['app'];
 	@Mutation setFriendRequestCount: Store['setFriendRequestCount'];
+	@AppState user: AppStore['user'];
 
 	isShown = false;
 	isLoading = true;
