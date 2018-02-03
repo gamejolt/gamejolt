@@ -90,7 +90,7 @@ export class GridClient {
 		});
 
 		// HACK
-		// there is built in way to stop a Phoenix socket from attempting to reconnect on its own after it got disconnected.
+		// there is no built in way to stop a Phoenix socket from attempting to reconnect on its own after it got disconnected.
 		// this replaces the socket's "reconnectTimer" property with an empty object that matches the Phoenix "Timer" signature
 		// The 'reconnectTimer' usually restarts the connection after a delay, this prevents that from happening
 		let socketAny: any = this.socket;
