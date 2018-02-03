@@ -41,15 +41,10 @@ export class AppFriendRequestPopover extends Vue {
 	activeTab: Tab = 'requests';
 	requests: any[] = [];
 	pending: any[] = [];
-	private countInterval: NodeJS.Timer;
 
 	mounted() {
 		// Fetch count right away.
 		setTimeout(() => this.fetchCount(), INITIAL_LAG);
-	}
-
-	destroyed() {
-		clearInterval(this.countInterval);
 	}
 
 	onFocus() {
