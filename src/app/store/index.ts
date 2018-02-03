@@ -51,6 +51,8 @@ export type Mutations = AppMutations &
 	_ClientLibraryMod.Mutations & {
 		setNotificationCount: number;
 		incrementNotificationCount: number;
+		setFriendRequestCount: number;
+		changeFriendRequestCount: number;
 		_setBootstrapped: undefined;
 		_setLibraryBootstrapped: undefined;
 		_clear: undefined;
@@ -96,6 +98,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isLibraryBootstrapped = false;
 
 	notificationCount = 0;
+	friendRequestCount = 0;
 
 	isLeftPaneSticky = Settings.get('sidebar') as boolean;
 	isLeftPaneOverlayed = false;
@@ -257,6 +260,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	setNotificationCount(count: Mutations['setNotificationCount']) {
 		this.notificationCount = count;
+	}
+
+	@VuexMutation
+	setFriendRequestCount(amount: Mutations['setFriendRequestCount']) {
+		this.friendRequestCount = amount;
+	}
+
+	@VuexMutation
+	changeFriendRequestCount(amount: Mutations['changeFriendRequestCount']) {
+		this.friendRequestCount += amount;
 	}
 
 	@VuexMutation

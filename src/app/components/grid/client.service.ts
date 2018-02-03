@@ -129,7 +129,7 @@ export class GridClient {
 		);
 
 		channel.on('new-notification', (payload: NewNotificationPayload) =>
-			this.spawnNewNotification(payload)
+			this.handleNotification(payload)
 		);
 
 		channel.onError(reason => {
@@ -142,34 +142,53 @@ export class GridClient {
 		});
 	}
 
-	spawnNewNotification(payload: NewNotificationPayload) {
+	handleNotification(payload: NewNotificationPayload) {
 		if (this.connected) {
-			// increment the notification counter by 1.
-			store.commit('incrementNotificationCount', 1);
-
 			const data = payload.notification_data.event_item;
 			const notification = new Notification(data);
-			const message = getNotificationText(notification);
-			const icon =
-				notification.from_model === undefined ? '' : notification.from_model.img_avatar;
 
-			if (message !== undefined) {
-				Growls.info({
-					message,
-					title: Translate.$gettext('New Notification'),
-					icon,
-					onclick: () => notification.go(router),
-				});
-			} else {
-				// received a notification that cannot be parsed properly...
-				Growls.info({
-					message:
-						'You received a new notification. Click here to view your notification feed.',
-					title: Translate.$gettext('New Notification'),
-					icon: undefined,
-					onclick: () => router.push('/notifications'),
-				});
+			switch (notification.type) {
+				case Notification.TYPE_FRIENDSHIP_CANCEL:
+					// this special type of notification only decrements the friend request number
+					store.commit('changeFriendRequestCount', -1);
+					break;
+
+				case Notification.TYPE_FRIENDSHIP_REQUEST:
+					// for an incoming friend request, increase the friend request number
+					store.commit('changeFriendRequestCount', 1);
+					this.spawnNotification(notification);
+					break;
+
+				default:
+					this.spawnNotification(notification);
+					break;
 			}
+		}
+	}
+
+	spawnNotification(notification: Notification) {
+		store.commit('incrementNotificationCount', 1);
+
+		const message = getNotificationText(notification);
+		const icon =
+			notification.from_model === undefined ? '' : notification.from_model.img_avatar;
+
+		if (message !== undefined) {
+			Growls.info({
+				message,
+				title: Translate.$gettext('New Notification'),
+				icon,
+				onclick: () => notification.go(router),
+			});
+		} else {
+			// received a notification that cannot be parsed properly...
+			Growls.info({
+				message:
+					'You received a new notification. Click here to view your notification feed.',
+				title: Translate.$gettext('New Notification'),
+				icon: undefined,
+				onclick: () => router.push('/notifications'),
+			});
 		}
 	}
 
