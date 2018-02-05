@@ -14,6 +14,8 @@
 				filesize: maxFilesize,
 				min_img_dimensions: [ minSize, minSize ],
 				max_img_dimensions: [ maxSize, maxSize ],
+				min_img_ratio: minAspectRatio,
+				max_img_ratio: maxAspectRatio,
 			}"
 			accept=".png,.jpg,.jpeg,.gif"
 			@changed="headerSelected()"

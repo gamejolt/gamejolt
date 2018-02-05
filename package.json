@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.13.5",
+	"version": "0.13.6",
 	"scripts": {
 		"postinstall": "sh ./git-hooks/setup-hooks.sh",
 		"dev": "gulp watch",
