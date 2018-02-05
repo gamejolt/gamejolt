@@ -28,6 +28,6 @@ export class AppDiscoverHomeBanner extends Vue {
 	readonly Screen = Screen;
 
 	get shouldShowFollow() {
-		return this.app.user && !this.item.game.is_following;
+		return this.app.user && !this.item.game.is_following && !Screen.isXs;
 	}
 }
