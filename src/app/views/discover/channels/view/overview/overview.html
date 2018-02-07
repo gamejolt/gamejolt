@@ -134,8 +134,8 @@
 					<app-activity-feed
 						v-if="feed.hasItems"
 						:feed="feed"
-						:show-game-info="true"
-						:show-ads="true"
+						show-game-info
+						show-ads
 						/>
 
 					<div class="alert alert-info" v-if="!feed.hasItems">

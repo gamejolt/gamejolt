@@ -83,7 +83,7 @@ export class AppActivityFeed extends Vue {
 		}
 
 		index = index + 1;
-		if (index === 2 || index === 12 || index === 22) {
+		if (index === 2 || (index - 2) % 5 === 0) {
 			return true;
 		}
 
