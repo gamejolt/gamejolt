@@ -223,20 +223,6 @@
 						</div>
 					</div>
 
-					<template v-if="twitterShareMessage && !GJ_IS_CLIENT">
-						<br>
-						<div class="social-widgets">
-							<app-social-twitter-share
-								:url="Environment.baseUrl + game.getUrl()"
-								:content="twitterShareMessage"
-								/>
-
-							<span class="dot-separator hidden-xs"></span>
-
-							<app-social-facebook-like :url="Environment.baseUrl + game.getUrl()" />
-						</div>
-					</template>
-
 					<template v-if="supporters.length > 0">
 						<h2>
 							<translate>Supporters</translate>
@@ -256,7 +242,7 @@
 								:key="user.id"
 								>
 								<router-link
-									class="user-avatar ng-scope"
+									class="user-avatar"
 									:to="user.url"
 									>
 									<app-user-avatar-img
