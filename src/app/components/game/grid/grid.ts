@@ -36,6 +36,7 @@ export class AppGameGrid extends Vue {
 	@Prop(Number) perPage?: number;
 	@Prop(Boolean) truncateToFit?: boolean;
 	@Prop(Boolean) scrollable?: boolean;
+	@Prop(Boolean) forceScrollable?: boolean;
 	@Prop(Boolean) showAds?: boolean;
 	@Prop(String) eventLabel?: string;
 	@Prop({ type: String, default: 'top' })
@@ -53,6 +54,10 @@ export class AppGameGrid extends Vue {
 		return this.showAds && Ads.shouldShow;
 	}
 
+	get isScrollable() {
+		return (Screen.isXs && this.scrollable) || this.forceScrollable;
+	}
+
 	/**
 	 * Depending on the screen size, we want to only show a certain number of
 	 * games. This will trim the last few games off if it can't fit within the
@@ -61,7 +66,7 @@ export class AppGameGrid extends Vue {
 	get processedGames() {
 		const games = this.games;
 
-		if (!this.truncateToFit) {
+		if (!this.truncateToFit || this.isScrollable) {
 			return games;
 		}
 
@@ -89,7 +94,7 @@ export class AppGameGrid extends Vue {
 	}
 
 	shouldShowAd(index: number) {
-		if (!this.shouldShowAds) {
+		if (!this.shouldShowAds || this.isScrollable) {
 			return false;
 		}
 
@@ -121,11 +126,6 @@ export class AppGameGrid extends Vue {
 				return true;
 			}
 		} else if (Screen.isXs) {
-			// Never show ads on XS when it's scrollable.
-			if (this.scrollable) {
-				return false;
-			}
-
 			// Show after the first 2 games, but only if 6 or more will show
 			// after the ad.
 			if (index === 3 && numGames - index >= 6) {
