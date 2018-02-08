@@ -59,7 +59,7 @@
 								v-if="_feed.hasItems"
 								:feed="_feed"
 								show-game-info
-								show-ads
+								:show-ads="tab === 'activity'"
 								/>
 
 							<div class="alert alert-info" v-else>
