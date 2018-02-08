@@ -7,6 +7,8 @@ export class FeaturedItem extends Model {
 	back_url: string;
 	front_url: string;
 	posted_on: number;
+	custom_text: string | null;
+	custom_url: string | null;
 
 	constructor(data: any = {}) {
 		super(data);

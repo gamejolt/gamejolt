@@ -1,0 +1,16 @@
+@require '~styles/variables'
+@require '../../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '../item/item'
+
+.-thumb
+	background-color: $gray-lightest
+	border-radius: $border-radius-base
+
+.-placeholder
+	&-title
+		lazy-placeholder-block()
+
+	&-dev
+		lazy-placeholder-block()
+		margin-top: 6px
+		width: 60%

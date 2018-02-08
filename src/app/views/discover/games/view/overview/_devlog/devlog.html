@@ -6,7 +6,7 @@
 		:media-items="mediaItems"
 		/>
 
-	<app-ad-placement pos="top" />
+	<app-ad-placement hidden-xs pos="top" />
 
 	<section class="section" style="padding-bottom: 0" v-if="game.canceled || customGameMessages.length">
 		<div class="container">
@@ -36,129 +36,66 @@
 		</div>
 	</section>
 
-	<section class="section" style="padding-bottom: 0" v-if="twitterShareMessage && !GJ_IS_CLIENT">
+	<section class="section">
 		<div class="container">
 			<div class="row">
-				<div :class="[ headingColClasses, { 'text-right': Screen.isLg } ]">
-					<h2 class="section-header" :class="{ 'h4': Screen.isLg }">
-						<translate>Share This</translate>
-					</h2>
-				</div>
-				<div :class="contentColClasses">
 
-					<div class="social-widgets">
-						<app-social-twitter-share
-							:url="Environment.baseUrl + game.getUrl()"
-							:content="twitterShareMessage"
+				<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
+					<template v-if="!Screen.isXs && game.comments_enabled && (app.user || commentsCount)">
+						<app-comment-widget-add
+							v-if="app.user"
+							resource="Game"
+							:resource-id="game.id"
+							@submit="onCommentAdded"
 							/>
 
-						<span class="dot-separator hidden-xs"></span>
+						<br v-if="app.user && commentsCount">
 
-						<app-social-facebook-like :url="Environment.baseUrl + game.getUrl()" />
-					</div>
+						<template v-if="commentsCount">
+							<app-comment-peek :comments="comments" />
 
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section
-		v-if="!Screen.isXs && game.comments_enabled && (app.user || commentsCount)"
-		class="section"
-		style="padding-bottom: 0"
-		>
-		<div class="container">
-			<div class="row">
-				<div :class="[ headingColClasses, { 'text-right': Screen.isLg } ]">
-					<h2 class="section-header" :class="{ 'h4': Screen.isLg }">
-						<translate>Comments</translate>
-					</h2>
-					<p class="text-muted small">
-						<translate>Leave a comment on this devlog project.</translate>
-					</p>
-				</div>
-				<div :class="contentColClasses">
-
-					<app-comment-widget-add
-						v-if="app.user"
-						resource="Game"
-						:resource-id="game.id"
-						@submit="onCommentAdded"
-						/>
-
-					<br v-if="app.user && commentsCount">
-
-					<template v-if="commentsCount">
-						<app-comment-peek :comments="comments" />
-
-						<router-link
-							v-if="commentsCount > 2"
-							class="btn btn-outline btn-block"
-							:to="{ name: 'discover.games.view.comments' }"
-							>
-							<translate
-								:translate-params="{ count: number(commentsCount - 2) }"
+							<router-link
+								v-if="commentsCount > 2"
+								class="btn btn-outline btn-block"
+								:to="{ name: 'discover.games.view.comments' }"
 								>
-								+%{ count } more
-							</translate>
-						</router-link>
-					</template>
-
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section class="section" style="padding-bottom: 0"
-		v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection"
-		>
-		<div class="container">
-			<div class="row">
-				<div :class="[ headingColClasses, { 'text-right': Screen.isLg } ]">
-					<h2 id="game-releases" class="section-header" :class="{ 'h4': Screen.isLg }">
-						<translate>Releases</translate>
-					</h2>
-				</div>
-
-				<div :class="contentColClasses">
-					<app-lazy-placeholder :when="isOverviewLoaded">
-						<div class="lazy-placeholder" style="height: 135px"></div>
-
-						<template v-if="packages.length">
-							<app-game-package-card
-								v-for="package of packages"
-								:key="package.id"
-								:game="game"
-								:sellable="package._sellable"
-								:package="package"
-								:releases="package._releases"
-								:builds="package._builds"
-								:partner-key="partnerKey"
-								:partner="partner"
-								/>
+								<translate
+									:translate-params="{ count: number(commentsCount - 2) }"
+									>
+									+%{ count } more
+								</translate>
+							</router-link>
 						</template>
 
-						<app-game-soundtrack-card
-							v-if="songs.length"
-							:game="game"
-							:songs="songs"
-							/>
-					</app-lazy-placeholder>
+						<!-- Make some room for the description below -->
+						<div class="-spacer"></div>
+					</template>
 
-				</div>
-			</div>
-		</div>
-	</section>
+					<template v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
+						<app-lazy-placeholder :when="isOverviewLoaded">
+							<div class="lazy-placeholder" style="height: 135px"></div>
 
-	<section class="section" style="padding-bottom: 0">
-		<div class="container">
-			<div class="row">
-				<div :class="[ headingColClasses, { 'text-right': Screen.isLg } ]">
-					<h2 class="section-header" :class="{ 'h4': Screen.isLg }">
-						<translate>Description</translate>
-					</h2>
-				</div>
-				<div :class="contentColClasses">
+							<template v-if="packages.length">
+								<app-game-package-card
+									v-for="package of packages"
+									:key="package.id"
+									:game="game"
+									:sellable="package._sellable"
+									:package="package"
+									:releases="package._releases"
+									:builds="package._builds"
+									:partner-key="partnerKey"
+									:partner="partner"
+									/>
+							</template>
+
+							<app-game-soundtrack-card
+								v-if="songs.length"
+								:game="game"
+								:songs="songs"
+								/>
+						</app-lazy-placeholder>
+					</template>
 
 					<div v-if="!game.description_compiled">
 						<span class="lazy-placeholder"></span>
@@ -166,13 +103,13 @@
 						<span class="lazy-placeholder"></span>
 						<span class="lazy-placeholder" style="width: 40%"></span>
 					</div>
-					<template v-else>
+					<div v-else>
 						<!--
 							Set a :key to let vue know that it should update
 							this when the game changes.
 						-->
 						<app-fade-collapse
-							:collapse-height="1000"
+							:collapse-height="500"
 							:is-open="showDescription"
 							:key="game.id"
 							@require-change="setCanToggleDescription"
@@ -183,68 +120,39 @@
 								>
 							</div>
 						</app-fade-collapse>
+
+						<div class="page-cut" v-if="canToggleDescription">
+							<button class="btn btn-outline"
+								@click="toggleDescription()"
+								v-app-track-event="`game-profile:show-full-description`"
+								>
+								<translate v-if="!showDescription">Show More</translate>
+								<translate v-else>Less</translate>
+							</button>
+						</div>
+					</div>
+
+					<div class="-spacer"></div>
+				</div>
+
+				<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
+					<h2 class="section-header" :class="{ 'h4': Screen.isXs }">
+						<translate>You Might Also Like</translate>
+					</h2>
+
+					<app-discover-games-view-overview-recommended />
+
+					<template v-if="Screen.isDesktop">
+						<hr>
+						<div style="width: 300px">
+							<app-ad size="rectangle" pos="bottom" />
+						</div>
 					</template>
 
+					<div class="-spacer"></div>
 				</div>
-			</div>
-		</div>
-	</section>
 
-	<div class="page-cut" v-if="canToggleDescription">
-		<button class="btn btn-outline"
-			@click="toggleDescription()"
-			v-app-track-event="`game-profile:show-full-description`"
-			>
-			<translate v-if="!showDescription">Show Full Description</translate>
-			<translate v-else>Less</translate>
-		</button>
-	</div>
-
-	<section class="section" style="padding-bottom: 0">
-		<div class="container">
-			<div class="row">
-				<div :class="[ headingColClasses, { 'text-right': Screen.isLg } ]">
-					<h2 class="section-header" :class="{ 'h4': Screen.isLg }">
-						<translate>Recommended Devlogs</translate>
-					</h2>
-					<p class="text-muted small">
-						<translate>Check out these other devlogs! You may like 'em.</translate>
-					</p>
-				</div>
-				<div :class="contentColClassesFull">
-
-					<app-game-grid-placeholder
-						v-if="!recommendedGames.length"
-						:num="5"
-						:truncate-to-fit="true"
-						:scrollable="true"
-						/>
-
-					<app-game-grid
-						v-else
-						:games="recommendedGames"
-						:truncate-to-fit="true"
-						:scrollable="true"
-						event-label="recommended-devlog"
-						/>
-
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<app-ad-placement :hidden-desktop="true" pos="bottom" />
-
-	<section class="section">
-		<div class="container">
-			<div class="row">
-				<div :class="[ headingColClasses, { 'text-right': Screen.isLg } ]">
-					<h2 class="section-header" :class="{ 'h4': Screen.isLg }">
-						<translate>Devlog Feed</translate>
-					</h2>
-				</div>
-				<div :class="contentColClasses">
-
+				<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
 					<app-game-perms :game="game" required="devlogs">
 						<h5 class="sans-margin-top">
 							<translate>Add Post</translate>
@@ -264,8 +172,8 @@
 						<app-activity-feed
 							v-if="feed.hasItems"
 							:feed="feed"
-							:show-edit-controls="true"
-							:show-ads="true"
+							show-edit-controls
+							show-ads
 							/>
 
 						<div v-else class="alert alert-info">
@@ -274,6 +182,7 @@
 
 					</div>
 				</div>
+
 			</div>
 		</div>
 	</section>
