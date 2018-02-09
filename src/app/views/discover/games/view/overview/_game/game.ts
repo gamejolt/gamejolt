@@ -19,8 +19,6 @@ import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/numbe
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppCommentVideoThumbnail } from '../../../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import { AppDiscoverGamesViewOverviewDetails } from '../_details/details';
-import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
-import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 import { AppTrophyOverview } from '../../../../../../components/trophy/overview/overview';
 import { RouteState, RouteMutation, RouteStore, RouteAction } from '../../view.store';
@@ -55,8 +53,6 @@ import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 		AppGamePackageCard,
 		AppGameSoundtrackCard,
 		AppCommentVideoThumbnail,
-		AppSocialTwitterShare,
-		AppSocialFacebookLike,
 		AppTrophyOverview,
 		AppScoreOverview,
 		AppUserAvatarImg,
