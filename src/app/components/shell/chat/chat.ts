@@ -3,7 +3,6 @@ import { Component, Watch } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
 import View from '!view!./chat.html';
 
-import { AppChatBubbles } from '../../chat/bubbles/bubbles';
 import { AppChatSidebar } from '../../chat/sidebar/sidebar';
 import { AppChatWindows } from '../../chat/windows/windows';
 import { Store } from '../../../store/index';
@@ -14,7 +13,6 @@ import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/eve
 @View
 @Component({
 	components: {
-		AppChatBubbles,
 		AppChatSidebar,
 		AppChatWindows,
 	},
@@ -52,7 +50,11 @@ export class AppShellChat extends Vue {
 			// came in because we were priming output for a room with old
 			// messages, we don't want to increase notification counts.
 			if (!this.isWindowFocused && this.chat.room) {
-				if (!event.isPrimer && event.message && event.message.roomId === this.chat.room.id) {
+				if (
+					!event.isPrimer &&
+					event.message &&
+					event.message.roomId === this.chat.room.id
+				) {
 					++this.unfocusedNotificationsCount;
 				}
 			}
@@ -90,8 +92,8 @@ export class AppShellChat extends Vue {
 
 		// If the chat sidebar is no longer visible, but we are in a room, close
 		// it.
-		if (this.chat.isInRoom()) {
-			this.chat.minimizeRoom();
+		if (this.chat.isInRoom() && this.chat.room !== null) {
+			this.chat.leaveRoom(this.chat.room.id);
 		}
 	}
 

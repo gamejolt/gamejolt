@@ -44,10 +44,6 @@ export class AppChatWindow extends Vue {
 	readonly ChatRoom = ChatRoom;
 	readonly Screen = Screen;
 
-	minimize() {
-		this.chat.minimizeRoom();
-	}
-
 	close() {
 		this.chat.leaveRoom(this.room.id);
 	}

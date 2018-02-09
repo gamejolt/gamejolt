@@ -10,13 +10,10 @@ import { Environment } from '../../../lib/gj-lib-client/components/environment/e
 import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoomStorage } from './room-storage.service';
-import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
-import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { EventBus } from '../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { ChatNotification } from './notification/notification.service';
 
 export const ChatMaxNumMessages = 200;
-export const ChatMaxNumTabs = 10;
 export const ChatSiteModPermission = 2;
 
 interface PrimusChatEvent {
@@ -80,7 +77,6 @@ export class ChatClient {
 	messages: { [k: string]: ChatMessage[] } = {};
 	usersOnline: { [k: string]: ChatUserCollection } = {};
 	notifications: { [k: string]: number } = {};
-	openRooms: { [k: string]: ChatRoom } = {};
 	isFocused = true;
 
 	private messageQueue: string[] = [];
@@ -89,14 +85,6 @@ export class ChatClient {
 	private spark: any = null;
 	private primus: any = null;
 	private startTime = 0;
-
-	/**
-	 * Whether or not to allow only one open room at a time.
-	 */
-	get singleRoomMode() {
-		// If the user is chatting as guest, or they're on mobile.
-		return !this.currentUser || Screen.isXs;
-	}
 
 	get friendNotificationsCount() {
 		let count = 0;
@@ -149,7 +137,6 @@ export class ChatClient {
 		this.messages = {};
 		this.usersOnline = {};
 		this.notifications = {};
-		this.openRooms = {};
 		this.isFocused = true;
 
 		this.messageQueue = [];
@@ -204,7 +191,7 @@ export class ChatClient {
 
 		// In single-room mode, if there is a currently active room, we always want
 		// to clear it out. Whether we're setting to null or a new room.
-		if (this.singleRoomMode && this.room) {
+		if (this.room) {
 			this.leaveRoom(this.room.id);
 		}
 
@@ -247,18 +234,9 @@ export class ChatClient {
 	 */
 	enterRoom(roomId: number, isSource: boolean) {
 		if (this.room && this.room.id === roomId) {
-			this.minimizeRoom();
+			this.leaveRoom(this.room.id);
 		} else {
-			if (roomId && !this.openRooms[roomId]) {
-				// Only allow a certain number of tabs to be open at once.
-				if (Object.keys(this.openRooms).length >= ChatMaxNumTabs) {
-					Growls.error(
-						'You can only have ' + ChatMaxNumTabs + ' chat tabs open at once.',
-						'Too Many Chats'
-					);
-					return;
-				}
-
+			if (roomId) {
 				this.primus.write({
 					event: 'enter-room',
 					roomId: roomId,
@@ -278,7 +256,7 @@ export class ChatClient {
 	}
 
 	leaveRoom(roomId: number) {
-		if (roomId && this.openRooms[roomId]) {
+		if (roomId && this.room && this.room.id === roomId) {
 			this.primus.write({
 				event: 'leave-room',
 				roomId: roomId,
@@ -289,13 +267,9 @@ export class ChatClient {
 	}
 
 	maximizeRoom(roomId: number) {
-		if (this.openRooms[roomId]) {
-			this.setRoom(this.openRooms[roomId]);
+		if (this.room && this.room.id === roomId) {
+			this.setRoom(this.room);
 		}
-	}
-
-	minimizeRoom() {
-		this.setRoom(undefined);
 	}
 
 	queueMessage(message: string) {
@@ -311,7 +285,7 @@ export class ChatClient {
 	}
 
 	outputMessage(roomId: number, type: ChatMessageType, message: ChatMessage, isPrimer: boolean) {
-		if (this.openRooms[roomId]) {
+		if (this.room && this.room.id === roomId) {
 			message.type = type;
 			message.loggedOn = new Date(message.loggedOn);
 			message.combine = false;
@@ -339,7 +313,7 @@ export class ChatClient {
 				message.dateSplit = true;
 			}
 
-			if (!this.openRooms[roomId].isPrivateRoom && !isPrimer) {
+			if (!this.room.isPrivateRoom && !isPrimer) {
 				this.newNotification(roomId);
 			}
 
@@ -359,26 +333,19 @@ export class ChatClient {
 			const ms = Date.now() - this.startTime;
 			Analytics.trackTiming('chat', 'connected', Math.min(ms, 60000));
 
-			const lastRoomId = this.room ? this.room.id : undefined;
-
 			this.currentUser = msg.data.user ? new ChatUser(msg.data.user) : null;
 			this.connected = true;
-			this.openRooms = {}; // If there are open rooms, we can't re-enter the room.
 
 			this.setRoom(undefined);
 
-			if (!this.singleRoomMode) {
-				ChatRoomStorage.init();
-				ChatRoomStorage.getJoinedRooms().forEach(roomId =>
-					this.enterRoom(roomId, roomId === lastRoomId)
-				);
-			} else {
-				ChatRoomStorage.destroy();
-			}
+			ChatRoomStorage.destroy();
 		} else if (msg.event === 'friends-list') {
 			const friendsList = msg.data.friendsList;
 			if (friendsList) {
-				this.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND, friendsList);
+				this.friendsList = new ChatUserCollection(
+					ChatUserCollection.TYPE_FRIEND,
+					friendsList
+				);
 				this.friendsPopulated = true;
 			}
 		} else if (msg.event === 'public-rooms') {
@@ -418,30 +385,29 @@ export class ChatClient {
 		} else if (msg.event === 'clear-notifications') {
 			const roomId = msg.data.roomId;
 
-			if (this.openRooms[roomId]) {
+			if (this.room && this.room.id === roomId) {
 				Vue.delete(this.notifications, roomId);
 			}
 		} else if (msg.event === 'user-enter-room') {
 			const user = new ChatUser(msg.data.user);
 			const roomId = msg.data.roomId;
 
-			if (this.openRooms[roomId] && this.openRooms[roomId].isGroupRoom) {
+			if (this.room && this.room.id === roomId && this.room.isGroupRoom) {
 				this.usersOnline[roomId].add(user);
 			}
 		} else if (msg.event === 'user-leave-room') {
 			const userId = msg.data.userId;
 			const roomId = msg.data.roomId;
 
-			if (this.openRooms[roomId] && this.openRooms[roomId].isGroupRoom) {
+			if (this.room && this.room.id === roomId && this.room.isGroupRoom) {
 				this.usersOnline[roomId].remove(userId);
 			}
 		} else if (msg.event === 'user-muted') {
 			const userId = msg.data.userId;
 			const roomId = msg.data.roomId;
 			const isGlobal = msg.data.isGlobal;
-			const room = this.openRooms[roomId];
 
-			if (room && room.isGroupRoom) {
+			if (this.room && this.room.isGroupRoom) {
 				// Remove their messages from view.
 				if (this.messages[roomId].length) {
 					this.messages[roomId] = this.messages[roomId].filter(
@@ -458,9 +424,8 @@ export class ChatClient {
 			const userId = msg.data.userId;
 			const roomId = msg.data.roomId;
 			const isGlobal = msg.data.isGlobal;
-			const room = this.openRooms[roomId];
 
-			if (room && room.isGroupRoom) {
+			if (this.room && this.room.isGroupRoom) {
 				// Mark that they're unmuted in the user list of the room.
 				if (this.usersOnline[roomId]) {
 					this.usersOnline[roomId].unmute(userId, isGlobal);
@@ -470,9 +435,8 @@ export class ChatClient {
 			const userId = msg.data.userId;
 			const roomId = msg.data.roomId;
 			const action = msg.data.action;
-			const room = this.openRooms[roomId];
 
-			if (room && room.isGroupRoom && this.usersOnline[roomId]) {
+			if (this.room && this.room.isGroupRoom && this.usersOnline[roomId]) {
 				if (action === 'mod') {
 					this.usersOnline[roomId].mod(userId);
 				} else if (action === 'demod') {
@@ -505,7 +469,7 @@ export class ChatClient {
 			const roomId = msg.data.roomId;
 			const user = new ChatUser(msg.data.user);
 
-			if (this.openRooms[roomId] && this.openRooms[roomId].isGroupRoom) {
+			if (this.room && this.room.id === roomId && this.room.isGroupRoom) {
 				this.usersOnline[roomId].update(user);
 			}
 		} else if (msg.event === 'friend-updated') {
@@ -532,7 +496,7 @@ export class ChatClient {
 		} else if (msg.event === 'you-leave-room') {
 			const roomId = msg.data.roomId;
 
-			if (this.openRooms[roomId]) {
+			if (this.room && this.room.id === roomId) {
 				if (this.room && this.room.id === roomId) {
 					// Sending an unfocus event while we're not in the room results in an error.
 					this.setRoom(undefined, { sendUnfocusEvent: false });
@@ -540,7 +504,6 @@ export class ChatClient {
 
 				// Reset the room we were in
 				Vue.delete(this.usersOnline, roomId);
-				Vue.delete(this.openRooms, roomId);
 				Vue.delete(this.messages, roomId);
 			}
 		} else if (msg.event === 'invalid-room') {
@@ -566,7 +529,6 @@ export class ChatClient {
 			}
 
 			// Set the room info
-			Vue.set(this.openRooms, '' + room.id, room);
 			Vue.set(this.messages, '' + room.id, []);
 
 			if (room.isGroupRoom) {

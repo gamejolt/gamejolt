@@ -200,7 +200,7 @@ export class ChatUserCollection {
 		if (this.type === ChatUserCollection.TYPE_ROOM) {
 			// We sort muted users to the bottom of the list.
 			if (user.isMutedRoom || user.isMutedGlobal) {
-				return 7;
+				return 6;
 			}
 
 			// Sort mods to top of room lists.
@@ -221,10 +221,6 @@ export class ChatUserCollection {
 			return 4;
 		}
 
-		if (user.isOnline) {
-			return 5;
-		}
-
-		return 6;
+		return 5;
 	}
 }
