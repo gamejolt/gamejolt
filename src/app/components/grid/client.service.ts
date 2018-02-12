@@ -83,6 +83,7 @@ export class GridClient {
 		const userId = user.id.toString();
 
 		this.socket = new Socket(host, {
+			heartbeatIntervalMs: 10000,
 			params: {
 				frontend_cookie: cookie,
 				user_id: userId,
