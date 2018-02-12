@@ -82,6 +82,7 @@ export class GridClient {
 
 		const userId = user.id.toString();
 
+		// heartbeat is 10 seconds, backend disconnects after 30 seconds
 		this.socket = new Socket(host, {
 			heartbeatIntervalMs: 10000,
 		});
