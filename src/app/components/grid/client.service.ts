@@ -76,7 +76,7 @@ export class GridClient {
 		const hostResult = await pollRequest('Select server', () =>
 			Axios.get(Environment.gridHost)
 		);
-		const host = `ws://${hostResult.data}/socket`;
+		const host = `ws://${hostResult.data}/grid/socket`;
 
 		console.log('[Grid] Server selected:', host);
 
@@ -180,8 +180,7 @@ export class GridClient {
 		} else {
 			// received a notification that cannot be parsed properly...
 			Growls.info({
-				message:
-					'You received a new notification. Click here to view your notification feed.',
+				message: Translate.$gettext('You have a new notification.'),
 				title: Translate.$gettext('New Notification'),
 				icon: undefined,
 				onclick: () => router.push('/notifications'),
