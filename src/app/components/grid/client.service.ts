@@ -37,7 +37,7 @@ async function pollRequest(context: string, requestGetter: () => Promise<any>): 
 			result = await promise;
 			finished = true;
 		} catch (e) {
-			const sleepMs = Math.random() * delay * 1000 + 1000;
+			const sleepMs = Math.min(30000, Math.random() * delay * 1000 + 1000);
 			console.log(`[Grid] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
 			await sleep(sleepMs);
 		}
