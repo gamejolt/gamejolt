@@ -77,6 +77,10 @@
   version "0.0.20"
   resolved "https://registry.yarnpkg.com/@types/nw.gui/-/nw.gui-0.0.20.tgz#b690fbbb501404662737db85d595fdebefba6f98"
 
+"@types/phoenix@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@types/phoenix/-/phoenix-0.0.4.tgz#6ada6be91dfdc1fa77ed57691f92821920f71d12"
+
 "@types/serve-static@*":
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.13.1.tgz#1d2801fa635d274cd97d4ec07e26b21b44127492"
@@ -5639,6 +5643,10 @@ performance-now@^0.2.0:
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
+
+phoenix@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/phoenix/-/phoenix-1.3.0.tgz#1df2c27f986ee295e37c9983ec28ebac1d7f4a3e"
 
 pify@^2.0.0, pify@^2.3.0:
   version "2.3.0"
