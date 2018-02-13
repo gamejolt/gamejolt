@@ -30,9 +30,11 @@ import { router } from '../views';
 import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
 import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
+import { BannerStore, BannerMutations, BannerActions } from './banner';
 
 export type Actions = AppActions &
 	LibraryActions &
+	BannerActions &
 	_ClientLibraryMod.Actions & {
 		bootstrap: undefined;
 		logout: undefined;
@@ -49,6 +51,7 @@ export type Actions = AppActions &
 
 export type Mutations = AppMutations &
 	LibraryMutations &
+	BannerMutations &
 	_ClientLibraryMod.Mutations & {
 		setNotificationCount: number;
 		incrementNotificationCount: number;
@@ -73,6 +76,7 @@ export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = r
 const modules: any = {
 	app: appStore,
 	library: new LibraryStore(),
+	banner: new BannerStore(),
 };
 
 if (GJ_IS_CLIENT) {
@@ -82,11 +86,12 @@ if (GJ_IS_CLIENT) {
 
 @VuexModule({
 	store: true,
-	modules: modules,
+	modules,
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
 	app: AppStore;
 	library: LibraryStore;
+	banner: BannerStore;
 	clientLibrary: _ClientLibraryMod.ClientLibraryStore;
 
 	// From the vuex-router-sync.

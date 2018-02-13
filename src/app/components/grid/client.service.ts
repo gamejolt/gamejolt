@@ -11,6 +11,7 @@ import { Translate } from '../../../lib/gj-lib-client/components/translate/trans
 import { router } from '../../views';
 import Axios from 'axios';
 import { sleep } from '../../../lib/gj-lib-client/utils/utils';
+import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -58,10 +59,6 @@ export class GridClient {
 	}
 
 	private async connect() {
-		if (GJ_IS_SSR) {
-			return;
-		}
-
 		const cookie = await getCookie('frontend');
 		const user = store.state.app.user;
 
@@ -178,18 +175,26 @@ export class GridClient {
 			}
 
 			Growls.info({
+				title,
 				message,
-				title: title,
 				icon,
-				onclick: () => notification.go(router),
+				onclick: () => {
+					Analytics.trackEvent('grid', 'notification-click', notification.type);
+					notification.go(router);
+				},
+				system: true,
 			});
 		} else {
 			// received a notification that cannot be parsed properly...
 			Growls.info({
-				message: Translate.$gettext('You have a new notification.'),
 				title: Translate.$gettext('New Notification'),
+				message: Translate.$gettext('You have a new notification.'),
 				icon: undefined,
-				onclick: () => router.push('/notifications'),
+				onclick: () => {
+					Analytics.trackEvent('grid', 'notification-click', notification.type);
+					router.push('/notifications');
+				},
+				system: true,
 			});
 		}
 	}
