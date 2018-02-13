@@ -4,6 +4,7 @@ import { Translate } from '../../lib/gj-lib-client/components/translate/translat
 import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
 import { store } from './index';
+import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
 
 export const BannerStoreNamespace = 'banner';
 export const BannerState = namespace(BannerStoreNamespace, State);
@@ -51,8 +52,16 @@ class NotificationsBanner extends Banner {
 		);
 	}
 
-	onClick() {
-		Notification.requestPermission();
+	async onClick() {
+		Analytics.trackEvent('notifications', 'request');
+
+		const result = await Notification.requestPermission();
+		if (result === 'denied') {
+			Analytics.trackEvent('notifications', 'denied');
+		} else if (result === 'default') {
+			Analytics.trackEvent('notifications', 'accepted');
+			return;
+		}
 	}
 }
 
