@@ -172,14 +172,14 @@ export class GridClient {
 			notification.from_model === undefined ? '' : notification.from_model.img_avatar;
 
 		if (message !== undefined) {
-			let title = 'New Notification';
+			let title = Translate.$gettext('New Notification');
 			if (notification.type === Notification.TYPE_DEVLOG_POST_ADD) {
-				title = 'New Post';
+				title = Translate.$gettext('New Post');
 			}
 
 			Growls.info({
 				message,
-				title: Translate.$gettext(title),
+				title: title,
 				icon,
 				onclick: () => notification.go(router),
 			});
