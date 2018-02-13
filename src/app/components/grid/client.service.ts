@@ -76,7 +76,7 @@ export class GridClient {
 		const hostResult = await pollRequest('Select server', () =>
 			Axios.get(Environment.gridHost)
 		);
-		const host = `ws://${hostResult.data}/grid/socket`;
+		const host = `${hostResult.data}/grid/socket`;
 
 		console.log('[Grid] Server selected:', host);
 

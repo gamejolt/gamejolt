@@ -25,6 +25,7 @@ import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.se
 import { ChatClient } from '../components/chat/client';
 import { ChatClientLazy } from '../components/lazy';
 import { GridClient } from '../components/grid/client.service';
+import { GridClientLazy } from '../components/lazy';
 import { router } from '../views';
 import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
@@ -202,7 +203,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			return;
 		}
 
-		this._setGrid(new GridClient());
+		const GridClient_ = await GridClientLazy();
+		this._setGrid(new GridClient_());
 	}
 
 	@VuexAction
