@@ -143,12 +143,9 @@
 				<app-jolticon icon="reply" />
 			</button>
 
-			&nbsp;
-			&nbsp;
-
 			<a
 				v-if="post.replies_count && !isEditing"
-				class="small"
+				class="btn btn-trans"
 				@click="toggleReplies"
 				>
 				<translate
