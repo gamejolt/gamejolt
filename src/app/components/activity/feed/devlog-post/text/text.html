@@ -5,6 +5,7 @@
 		:is-open="item.isOpen"
 		:animate="false"
 		@require-change="canToggleChanged"
+		@expand="toggleFull"
 		>
 		<div class="fireside-post-body">
 			<app-widget-compiler :content="post.content_compiled" />

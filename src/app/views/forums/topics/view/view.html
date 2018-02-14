@@ -188,6 +188,7 @@
 										:collapse-height="200"
 										:is-open="showFullDescription"
 										@require-change="canToggleDescription = $event"
+										@expand="showFullDescription = true"
 										>
 										<div class="forum-post-body">
 											<app-widget-compiler

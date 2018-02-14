@@ -13,6 +13,7 @@
 		:collapse-height="300"
 		:is-open="item.isOpen"
 		@require-change="canToggleChanged"
+		@expand="toggleFull"
 		>
 		<div class="comment-content" v-html="video.comment.comment_compiled"></div>
 	</app-fade-collapse>
