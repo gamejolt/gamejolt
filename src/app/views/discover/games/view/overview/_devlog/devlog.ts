@@ -8,8 +8,6 @@ import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
 import { AppFadeCollapse } from '../../../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { AppTrackEvent } from '../../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
-import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { RouteState, RouteStore, RouteMutation } from '../../view.store';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/components/game/soundtrack/card/card';
@@ -18,8 +16,6 @@ import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/component
 import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
 import { Comment } from '../../../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppGameGrid } from '../../../../../../components/game/grid/grid';
-import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
 import { FormCommentLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
@@ -27,22 +23,22 @@ import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/componen
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
+import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
+import { AppDiscoverGamesViewOverviewRecommended } from '../_recommended/recommended';
 
 @View
 @Component({
 	components: {
+		AppDiscoverGamesViewOverviewRecommended,
 		AppAdPlacement,
+		AppAd,
 		AppLazyPlaceholder,
 		AppFadeCollapse,
-		AppActivityFeedPlaceholder,
-		AppSocialTwitterShare,
-		AppSocialFacebookLike,
 		AppGamePackageCard,
 		AppGameSoundtrackCard,
 		AppCommentPeek,
-		AppGameGrid,
-		AppGameGridPlaceholder,
 		AppMediaBar,
+		AppActivityFeedPlaceholder,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppCommentWidgetAdd: FormCommentLazy,
 		AppJolticon,

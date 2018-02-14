@@ -78,16 +78,22 @@ export class AppActivityFeed extends Vue {
 	}
 
 	shouldShowAd(index: number) {
-		if (!this.shouldShowAds) {
+		// Show an ad after this many posts at the beginning of the feed.
+		const firstAd = 2;
+
+		// Show an ad every X posts thereafter.
+		const adGap = 5;
+
+		// Only show a max of this many ads in the feed.
+		const totalAds = 4;
+
+		index = index + 1;
+
+		if (!this.shouldShowAds || index >= adGap * totalAds + firstAd) {
 			return false;
 		}
 
-		index = index + 1;
-		if (index === 2 || index === 12 || index === 22) {
-			return true;
-		}
-
-		return false;
+		return index === firstAd || (index - firstAd) % adGap === 0;
 	}
 
 	onPostEdited(post: FiresidePost) {

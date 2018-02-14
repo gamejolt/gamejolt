@@ -2,6 +2,11 @@ export async function ChatClientLazy() {
 	return (await import(/* webpackChunkName: "chat" */ '../components/chat/client')).ChatClient;
 }
 
+export async function GridClientLazy() {
+	return (await import(/* webpackChunkName: "grid" */ '../components/grid/client.service'))
+		.GridClient;
+}
+
 export async function AppAuthJoinLazy() {
 	return (await import(/* webpackChunkName: "authJoin" */ './../../lib/gj-lib-client/components/auth/join/join'))
 		.AppAuthJoin;

@@ -16,11 +16,16 @@ export class AppGameGridPlaceholder extends Vue {
 	@Prop(Number) num: number;
 	@Prop(Boolean) truncateToFit?: boolean;
 	@Prop(Boolean) scrollable?: boolean;
+	@Prop(Boolean) forceScrollable?: boolean;
 
 	readonly Screen = Screen;
 
+	get isScrollable() {
+		return (Screen.isXs && this.scrollable) || this.forceScrollable;
+	}
+
 	get count() {
-		if (!this.truncateToFit) {
+		if (!this.truncateToFit || this.isScrollable) {
 			return this.num;
 		}
 

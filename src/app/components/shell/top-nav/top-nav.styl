@@ -7,9 +7,11 @@
 	right: 0
 	z-index: $zindex-shell-top-nav
 
+	#shell.has-banner &
+		top: $shell-top-nav-height
+
 	.disconnected-icon
 		color: $gj-pink
 
-		&
-		.jolticon
+		&, .jolticon
 			cursor: help

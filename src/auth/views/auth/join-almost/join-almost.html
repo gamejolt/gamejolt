@@ -1,6 +1,13 @@
 <div class="anim-fade-in-up">
 	<h2 class="section-header">
-		<translate>auth.join.almost.heading</translate>
+		<!-- signups with gamejolt required a captcha to be solved. lets congratulate them \o/ -->
+		<template v-if="isGamejoltSignup">
+			<translate>Almost there, human!</translate><br>
+			(ヽ° - °)ヽ┳━┳
+		</template>
+		<template v-else>
+			<translate>Almost there!</translate>
+		</template>
 	</h2>
 
 	<div v-translate>
@@ -18,8 +25,8 @@
 		When it does, we can log them in.
 	-->
 	<app-progress-poller
-		v-if="credentials && credentials.username && credentials.password"
-		:url="`/web/auth/poll-authorized/${credentials.username}`"
+		v-if="isGamejoltSignup"
+		:url="`/web/auth/poll-authorized/${username}`"
 		@complete="onAuthorized"
 		/>
 </div>

@@ -1,0 +1,34 @@
+<div class="game-list-item">
+	<router-link
+		:to="url"
+		v-app-track-event="eventLabel ? 'game-list:click:' + eventLabel : undefined"
+		>
+		<app-game-thumbnail-img
+			class="-thumb"
+			:game="game"
+			/>
+	</router-link>
+
+	<div class="-meta">
+		<router-link
+			class="-title link-unstyled"
+			:to="url"
+			:title="game.title"
+			v-app-track-event="eventLabel ? 'game-list:click:' + eventLabel : undefined"
+			>
+			{{ game.title }}
+		</router-link>
+
+		<router-link
+			class="-dev link-muted"
+			:to="{
+				name: 'profile.overview',
+				params: { username: game.developer.username }
+			}"
+			:title="`${game.developer.display_name} (@${game.developer.username})`"
+			v-app-track-event="eventLabel ? 'game-list:dev:' + eventLabel : undefined"
+			>
+			{{ game.developer.display_name }}
+		</router-link>
+	</div>
+</div>
