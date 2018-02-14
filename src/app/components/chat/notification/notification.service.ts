@@ -16,6 +16,7 @@ export class ChatNotification {
 				onclick: () => {
 					this.chat.enterRoom(message.roomId, true);
 				},
+				system: true,
 			});
 		}
 	}

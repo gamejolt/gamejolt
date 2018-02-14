@@ -22,6 +22,9 @@
 		body.chat-tabs-visible.status-bar-visible &
 			bottom: $status-bar-height + 10px
 
+		#shell.has-banner &
+			top: $shell-top-nav-height * 2 + 10px
+
 .chat-window-back-close
 	position: absolute
 	top: 0
@@ -53,7 +56,6 @@
 	position: relative
 	background-color: $gray-darkest
 	z-index: 1
-
 	// Always show the scrollbar.
 	// This fixes a bug where it was flashing the scrollbar in and out on Chrome.
 	// https://github.com/gamejolt/issue-tracker/issues/454
@@ -91,8 +93,7 @@
 	clearfix()
 	padding: $chat-room-window-padding
 
-	h2
-	h3
+	h2, h3
 		text-overflow()
 		margin: 0
 		line-height: 1

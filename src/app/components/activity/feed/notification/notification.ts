@@ -3,12 +3,14 @@ import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./notification.html';
 
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
+import {
+	Notification,
+	getNotificationText,
+} from '../../../../../lib/gj-lib-client/components/notification/notification-model';
 import { ActivityFeedItem } from '../item-service';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { AppNotificationDescriptiveAction } from '../../../notification/descriptive-action/descriptive-action';
 import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 import { Mention } from '../../../../../lib/gj-lib-client/components/mention/mention.model';
 
@@ -19,7 +21,6 @@ import { Mention } from '../../../../../lib/gj-lib-client/components/mention/men
 		AppJolticon,
 		AppTimeAgo,
 		AppFadeCollapse,
-		AppNotificationDescriptiveAction,
 	},
 })
 export class AppActivityFeedNotification extends Vue {
@@ -33,6 +34,10 @@ export class AppActivityFeedNotification extends Vue {
 	showFullContent = false;
 
 	readonly Screen = Screen;
+
+	get titleText() {
+		return getNotificationText(this.notification);
+	}
 
 	get icon() {
 		return this.notification.jolticon.replace('jolticon-', '');

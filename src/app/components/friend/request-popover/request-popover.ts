@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import View from '!view!./request-popover.html';
 
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
@@ -12,8 +11,9 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { Store } from '../../../store/index';
+import { Mutation } from 'vuex-class/lib/bindings';
+import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 
-const COUNT_INTERVAL = 5 * 60 * 1000; // 5 minutes.
 const INITIAL_LAG = 3000;
 
 type Tab = 'requests' | 'pending';
@@ -32,27 +32,19 @@ type Tab = 'requests' | 'pending';
 	},
 })
 export class AppFriendRequestPopover extends Vue {
-	@State app: Store['app'];
+	@Mutation setFriendRequestCount: Store['setFriendRequestCount'];
+	@AppState user: AppStore['user'];
 
 	isShown = false;
 	isLoading = true;
 
 	activeTab: Tab = 'requests';
 	requests: any[] = [];
-	requestsCount = 0;
 	pending: any[] = [];
-	private countInterval: NodeJS.Timer;
 
 	mounted() {
 		// Fetch count right away.
 		setTimeout(() => this.fetchCount(), INITIAL_LAG);
-
-		// Fetch counts every X minutes afterwards.
-		this.countInterval = setInterval(() => this.fetchCount(), COUNT_INTERVAL);
-	}
-
-	destroyed() {
-		clearInterval(this.countInterval);
 	}
 
 	onFocus() {
@@ -67,8 +59,7 @@ export class AppFriendRequestPopover extends Vue {
 	}
 
 	private setCount(count: number) {
-		this.requestsCount = count;
-		this.$emit('count', this.requestsCount);
+		this.setFriendRequestCount(count);
 	}
 
 	async fetchCount() {

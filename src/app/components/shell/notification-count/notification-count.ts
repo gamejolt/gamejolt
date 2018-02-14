@@ -5,28 +5,21 @@ import { Component } from 'vue-property-decorator';
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
 import { Store } from '../../../store/index';
 
-const CountInterval = 5 * 60 * 1000; // 5 minutes.
+// wait 3 seconds before submitting call, hopefully all other critical components have loaded by then :S
 const InitialLag = 3000;
 
 @Component({})
 export class AppShellNotificationCount extends Vue {
-	private interval: NodeJS.Timer;
-
-	@Mutation setNotificationCount: Store['setNotificationCount'];
+	@Mutation incrementNotificationCount: Store['incrementNotificationCount'];
 
 	created() {
 		setTimeout(() => this.fetchCount(), InitialLag);
-		this.interval = setInterval(() => this.fetchCount(), CountInterval);
-	}
-
-	destroyed() {
-		clearInterval(this.interval);
 	}
 
 	private async fetchCount() {
 		try {
 			const response = await Notification.fetchNotificationsCount();
-			this.setNotificationCount(response.notificationsCount);
+			this.incrementNotificationCount(response.notificationsCount);
 		} catch (e) {}
 	}
 

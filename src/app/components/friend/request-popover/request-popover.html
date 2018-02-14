@@ -44,12 +44,12 @@
 				<router-link
 					v-for="request of requests"
 					:key="request.id"
-					:to="request.getThem( app.user ).url"
+					:to="request.getThem( user ).url"
 					>
 					<app-card>
 						<div class="shell-card-popover-card-media">
 							<div class="friend-request-popover-avatar">
-								<app-user-avatar-img :user="request.getThem( app.user )" />
+								<app-user-avatar-img :user="request.getThem( user )" />
 							</div>
 						</div>
 						<div class="shell-card-popover-card-body">
@@ -71,9 +71,9 @@
 
 							<div class="card-title">
 								<h5>
-									{{ request.getThem( app.user ).display_name }}
+									{{ request.getThem( user ).display_name }}
 									<br>
-									<small>@{{ request.getThem( app.user ).username }}</small>
+									<small>@{{ request.getThem( user ).username }}</small>
 								</h5>
 							</div>
 
@@ -97,12 +97,12 @@
 			<router-link
 				v-for="request of pending"
 				:key="request.id"
-				:to="request.getThem( app.user ).url"
+				:to="request.getThem( user ).url"
 				>
 				<app-card>
 					<div class="shell-card-popover-card-media">
 						<div class="friend-request-popover-avatar">
-							<app-user-avatar-img :user="request.getThem( app.user )" />
+							<app-user-avatar-img :user="request.getThem( user )" />
 						</div>
 					</div>
 					<div class="shell-card-popover-card-body">
@@ -118,9 +118,9 @@
 
 						<div class="card-title">
 							<h5>
-								{{ request.getThem( app.user ).display_name }}
+								{{ request.getThem( user ).display_name }}
 								<br>
-								<small>@{{ request.getThem( app.user ).username }}</small>
+								<small>@{{ request.getThem( user ).username }}</small>
 							</h5>
 						</div>
 
