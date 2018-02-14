@@ -4,12 +4,12 @@
 
 			<app-jolticon slot="bubble" :icon="icon" />
 
-			<div class="timeline-list-item-meta">
-				<app-time-ago :date="notification.added_on" />
-			</div>
-
 			<div class="timeline-list-item-title">
 				<app-notification-descriptive-action :notification="notification" />
+			</div>
+
+			<div class="timeline-list-item-meta">
+				<app-time-ago :date="notification.added_on" />
 			</div>
 
 			<div class="timeline-list-item-details" v-if="hasDetails">

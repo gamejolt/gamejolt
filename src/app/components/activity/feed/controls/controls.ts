@@ -53,12 +53,11 @@ export class AppActivityFeedControls extends Vue {
 	@Prop(Boolean) showEditControls?: boolean;
 	@Prop({ type: Boolean, default: true })
 	showExtraInfo: boolean;
-	@Prop(Boolean) requireTabs?: boolean;
+	@Prop(Boolean) showComments?: boolean;
 	@Prop(Boolean) inModal?: boolean;
 
 	@State app: Store['app'];
 
-	tab: 'comments' | null = null;
 	isShowingShare = false;
 
 	readonly number = number;
@@ -94,6 +93,15 @@ export class AppActivityFeedControls extends Vue {
 		);
 	}
 
+	get shouldShowManage() {
+		return this.shouldShowManageControls || this.shouldShowStats;
+	}
+
+	get shouldShowManageControls() {
+		return this.post && this.game && this.showEditControls && this.hasDevlogsPerms;
+	}
+
+	// TODO: Figure out if this can be collapsed into the same func as "showManageControls"
 	get shouldShowStats() {
 		return (
 			!!this.post &&
@@ -103,12 +111,6 @@ export class AppActivityFeedControls extends Vue {
 		);
 	}
 
-	created() {
-		if (this.requireTabs) {
-			this.tab = 'comments';
-		}
-	}
-
 	updateCommentsCount(count: number) {
 		if (this.post) {
 			this.post.comment_count = count;
@@ -116,7 +118,6 @@ export class AppActivityFeedControls extends Vue {
 	}
 
 	onCommentAdded() {
-		this.tab = 'comments';
 		this.$emit('expanded');
 	}
 
