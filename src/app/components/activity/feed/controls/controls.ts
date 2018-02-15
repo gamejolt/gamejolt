@@ -121,7 +121,7 @@ export class AppActivityFeedControls extends Vue {
 		this.$emit('expanded');
 	}
 
-	toggleComments() {
+	openComments() {
 		if (this.post) {
 			CommentModal.show({ resource: 'Fireside_Post', resourceId: this.post.id });
 		}

@@ -1,38 +1,26 @@
-<app-timeline-list-item is-thread :is-new="isNew" :is-active="isActive">
-	<template v-if="type === 'event-item'">
-		<div class="timeline-list-item-header">
-			<div class="timeline-list-item-header-content">
+<app-timeline-list-item is-thread>
+	<span slot="bubble"></span>
 
-				<div><span class="placeholder-time"></span></div>
-				<div><span class="placeholder-title"></span></div>
+	<div class="timeline-list-item-title">
+		<span class="placeholder-title"></span>
+	</div>
 
-			</div>
-		</div>
+	<div class="timeline-list-item-meta">
+		<span class="placeholder-time"></span>
+	</div>
 
-		<div class="timeline-list-item-details">
-
-			<div>
-				<span class="placeholder-text"></span>
-				<span class="placeholder-text"></span>
-				<span class="placeholder-text" style="width: 40%"></span>
-			</div>
-
-			<hr>
-
-			<div>
-				<app-button-placeholder :sparse="true" :circle="true" />
-				<app-button-placeholder />
-			</div>
-
-		</div>
-	</template>
-	<template v-else-if="type === 'notification'">
-		<div class="timeline-list-item-meta">
-			<span class="placeholder-small" style="width: 100px"></span>
-		</div>
-
-		<div class="timeline-list-item-title">
+	<div class="timeline-list-item-details">
+		<div>
 			<span class="placeholder-text"></span>
+			<span class="placeholder-text"></span>
+			<span class="placeholder-text" style="width: 40%"></span>
 		</div>
-	</template>
+
+		<br>
+
+		<div>
+			<app-button-placeholder :sparse="true" :circle="true" />
+			<app-button-placeholder />
+		</div>
+	</div>
 </app-timeline-list-item>

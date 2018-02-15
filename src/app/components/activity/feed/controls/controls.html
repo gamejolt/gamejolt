@@ -72,7 +72,7 @@
 			<template v-if="!showComments">
 				<button
 					class="btn btn-outline btn-sparse btn-circle"
-					@click="toggleComments"
+					@click="openComments()"
 					v-app-tooltip="$gettext( 'View Comments' )"
 					>
 					<app-jolticon icon="comment" />
