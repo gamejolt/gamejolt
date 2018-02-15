@@ -288,7 +288,10 @@
 						@pagechange="pageChange"
 						/>
 
+					<hr>
+
 					<template v-if="app.user">
+
 						<app-message-thread-add
 							v-if="!topic.is_locked"
 							>
@@ -310,8 +313,7 @@
 							</p>
 						</div>
 					</template>
-
-					<div class="alert alert-info full-bleed-xs" v-if="!app.user">
+					<div v-else class="alert alert-info full-bleed-xs">
 						<p>
 							<app-jolticon icon="exclamation-circle" />
 							<a :href="loginUrl">

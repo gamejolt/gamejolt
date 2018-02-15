@@ -1,76 +1,19 @@
-<app-scroll-inview
-	@inview="onInviewChange( true )"
-	@outview="onInviewChange( false )"
+<app-message-thread-item
+	:id="`forum-post-${ id }`"
+	:user="post.user"
+	:replied-to="isReply ? post.replied_to : undefined"
+	:date="post.posted_on"
+	:is-active="isActive"
+	:is-new="!!post.notification"
+	:is-showing-replies="isReplying || isShowingReplies"
+	:is-reply="isReply"
+	:is-last="isLastInThread"
 	>
-	<app-message-thread-item
-		:id="`forum-post-${ id }`"
-		:user="post.user"
-		:replied-to="isReply ? post.replied_to : undefined"
-		:date="post.posted_on"
-		:is-active="isActive"
-		:is-new="!!post.notification"
-		:is-showing-replies="isReplying || isShowingReplies"
-		:is-reply="isReply"
-		:is-last="isLastInThread"
+
+	<app-scroll-inview
+		@inview="onInviewChange( true )"
+		@outview="onInviewChange( false )"
 		>
-
-		<template slot="meta">
-
-			<a class="link-muted"
-				v-if="app.user"
-				v-app-popover-trigger="`forum-post-popover-${ id }`"
-				v-app-tooltip="$gettext( 'Options' )"
-				>
-				<app-jolticon icon="ellipsis-v" class="middle" />
-			</a>
-
-			<app-popover :popover-id="`forum-post-popover-${ id }`" v-if="app.user">
-				<div class="list-group list-group-dark">
-					<a class="list-group-item has-icon"
-						@click="copyPermalink"
-						>
-						<app-jolticon icon="link" />
-						<translate>Copy Link</translate>
-					</a>
-
-					<a class="list-group-item has-icon"
-						v-if="app.user && post.user_id === app.user.id && !topic.is_locked && !isEditing"
-						@click="edit()"
-						>
-						<app-jolticon icon="edit" />
-						<translate>Edit Post</translate>
-					</a>
-					<a class="list-group-item has-icon"
-						@click="report"
-						>
-						<app-jolticon icon="flag" class="warning" />
-						<translate>Report Post</translate>
-					</a>
-					<template v-if="app.user.permission_level > 0">
-						<a class="list-group-item"
-							:href="Environment.baseUrl + `/moderate/forums/posts/edit/${ post.id }`"
-							target="_blank"
-							>
-							<translate>Edit (Mod)</translate>
-						</a>
-						<a class="list-group-item"
-							:href="Environment.baseUrl + `/moderate/forums/posts/remove/${ post.id }`"
-							target="_blank"
-							>
-							<translate>Remove (Mod)</translate>
-						</a>
-						<a class="list-group-item"
-							:href="Environment.baseUrl + `/moderate/users/view/${ post.user_id }`"
-							target="_blank"
-							>
-							<translate>Moderate User</translate>
-						</a>
-					</template>
-				</div>
-			</app-popover>
-
-		</template>
-
 		<a class="forum-post-replied-to-btn"
 			v-if="!isReply && post.parent_post_id"
 			@click="loadParentPost"
@@ -130,74 +73,131 @@
 			</router-link>
 			<small>@{{ post.modified_by_user.username }}</small>
 		</p>
+	</app-scroll-inview>
 
-		<template v-if="!isReply" slot="controls">
+	<template slot="meta">
 
-			<button
-				class="btn btn-outline btn-sparse btn-circle"
-				v-if="!topic.is_locked && app.user"
-				v-app-tooltip="$gettext( 'Reply' )"
-				:disabled="isEditing"
-				@click="reply"
-				>
-				<app-jolticon icon="reply" />
-			</button>
+		<a class="link-muted"
+			v-if="app.user"
+			v-app-popover-trigger="`forum-post-popover-${ id }`"
+			v-app-tooltip="$gettext( 'Options' )"
+			>
+			<app-jolticon icon="ellipsis-v" class="middle" />
+		</a>
 
-			<a
-				v-if="post.replies_count && !isEditing"
-				class="btn btn-trans"
-				@click="toggleReplies"
-				>
-				<translate
-					:translate-n="post.replies_count"
-					:translate-params="{ count: post.replies_count }"
-					translate-plural="+%{ count } replies"
+		<app-popover :popover-id="`forum-post-popover-${ id }`" v-if="app.user">
+			<div class="list-group list-group-dark">
+				<a class="list-group-item has-icon"
+					@click="copyPermalink"
 					>
-					+%{ count } reply
-				</translate>
-			</a>
+					<app-jolticon icon="link" />
+					<translate>Copy Link</translate>
+				</a>
 
-		</template>
-
-		<template v-if="isReplying || isShowingReplies" slot="replies">
-
-			<app-message-thread-add v-if="isReplying">
-				<form-forum-post
-					v-if="isReplying"
-					:topic="topic"
-					:reply-to="post"
-					@cancel="closeReply"
-					@submit="onReplied"
-					/>
-			</app-message-thread-add>
-
-			<app-message-thread v-if="isShowingReplies && replies.length > 0">
-				<app-forum-post-list-item
-					v-for="(reply, i) of replies"
-					:key="reply.id"
-					:topic="topic"
-					:post="reply"
-					:is-reply="true"
-					:is-last-in-thread="i === replies.length - 1"
-					/>
-			</app-message-thread>
-
-			<template v-if="totalReplyCount - replies.length > 0">
-				<br>
-				<p>
-					<translate
-						:translate-n="totalReplyCount - replies.length"
-						:translate-params="{
-							count: number( totalReplyCount - replies.length )
-						}"
-						translate-plural="+%{ count } more hidden"
+				<a class="list-group-item has-icon"
+					v-if="app.user && post.user_id === app.user.id && !topic.is_locked && !isEditing"
+					@click="edit()"
+					>
+					<app-jolticon icon="edit" />
+					<translate>Edit Post</translate>
+				</a>
+				<a class="list-group-item has-icon"
+					@click="report"
+					>
+					<app-jolticon icon="flag" class="warning" />
+					<translate>Report Post</translate>
+				</a>
+				<template v-if="app.user.permission_level > 0">
+					<a class="list-group-item"
+						:href="Environment.baseUrl + `/moderate/forums/posts/edit/${ post.id }`"
+						target="_blank"
 						>
-						+%{ count } more hidden
-					</translate>
-				</p>
-			</template>
+						<translate>Edit (Mod)</translate>
+					</a>
+					<a class="list-group-item"
+						:href="Environment.baseUrl + `/moderate/forums/posts/remove/${ post.id }`"
+						target="_blank"
+						>
+						<translate>Remove (Mod)</translate>
+					</a>
+					<a class="list-group-item"
+						:href="Environment.baseUrl + `/moderate/users/view/${ post.user_id }`"
+						target="_blank"
+						>
+						<translate>Moderate User</translate>
+					</a>
+				</template>
+			</div>
+		</app-popover>
 
+	</template>
+
+	<template v-if="!isReply" slot="controls">
+
+		<button
+			class="btn btn-outline btn-sparse btn-circle"
+			v-if="!topic.is_locked && app.user"
+			v-app-tooltip="$gettext( 'Reply' )"
+			:disabled="isEditing"
+			@click="reply"
+			>
+			<app-jolticon icon="reply" />
+		</button>
+
+		<a
+			v-if="post.replies_count && !isEditing"
+			class="btn btn-trans"
+			@click="toggleReplies"
+			>
+			<translate
+				:translate-n="post.replies_count"
+				:translate-params="{ count: post.replies_count }"
+				translate-plural="+%{ count } replies"
+				>
+				+%{ count } reply
+			</translate>
+		</a>
+
+	</template>
+
+	<template v-if="isReplying || isShowingReplies" slot="replies">
+
+		<app-message-thread-add v-if="isReplying">
+			<form-forum-post
+				v-if="isReplying"
+				:topic="topic"
+				:reply-to="post"
+				@cancel="closeReply"
+				@submit="onReplied"
+				/>
+		</app-message-thread-add>
+
+		<app-message-thread v-if="isShowingReplies && replies.length > 0">
+			<app-forum-post-list-item
+				v-for="(reply, i) of replies"
+				:key="reply.id"
+				:topic="topic"
+				:post="reply"
+				:is-reply="true"
+				:is-last-in-thread="i === replies.length - 1"
+				/>
+		</app-message-thread>
+
+		<template v-if="totalReplyCount - replies.length > 0">
+			<br>
+			<p>
+				<translate
+					:translate-n="totalReplyCount - replies.length"
+					:translate-params="{
+						count: number( totalReplyCount - replies.length )
+					}"
+					translate-plural="+%{ count } more hidden"
+					>
+					+%{ count } more hidden
+				</translate>
+			</p>
 		</template>
 
-	</app-message-thread-item>
-</app-scroll-inview>
+	</template>
+
+</app-message-thread-item>
