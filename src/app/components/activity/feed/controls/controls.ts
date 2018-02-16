@@ -23,6 +23,10 @@ import { CommentVideo } from '../../../../../lib/gj-lib-client/components/commen
 import { AppCommentVideoLikeWidget } from '../../../../../lib/gj-lib-client/components/comment/video/like-widget/like-widget';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { CommentModal } from '../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
+import {
+	CommentState,
+	CommentStore,
+} from '../../../../../lib/gj-lib-client/components/comment/comment-store';
 
 @View
 @Component({
@@ -57,6 +61,7 @@ export class AppActivityFeedControls extends Vue {
 	@Prop(Boolean) inModal?: boolean;
 
 	@State app: Store['app'];
+	@CommentState getCommentBag: CommentStore['getCommentBag'];
 
 	isShowingShare = false;
 
@@ -111,10 +116,19 @@ export class AppActivityFeedControls extends Vue {
 		);
 	}
 
-	updateCommentsCount(count: number) {
+	get commentsBag() {
 		if (this.post) {
-			this.post.comment_count = count;
+			return this.getCommentBag('Fireside_Post', this.post.id);
 		}
+	}
+
+	get commentsCount() {
+		if (this.commentsBag) {
+			return this.commentsBag.count;
+		} else if (this.post) {
+			return this.post.comment_count;
+		}
+		return 0;
 	}
 
 	onCommentAdded() {

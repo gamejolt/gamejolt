@@ -415,7 +415,7 @@
 			<template v-if="videoComments.length && game.comments_enabled">
 				<h2 class="section-header sans-margin-bottom">
 					<translate>Video Comments</translate>
-					<small v-if="commentsCount">
+					<small>
 						({{ videoCommentsCount | number }})
 					</small>
 				</h2>
@@ -476,7 +476,6 @@
 							<app-comment-widget
 								resource="Game"
 								:resource-id="game.id"
-								@count="setCommentsCount"
 								/>
 						</template>
 

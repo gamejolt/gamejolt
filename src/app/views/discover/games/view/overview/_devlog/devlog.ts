@@ -14,7 +14,6 @@ import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/co
 import { Store } from '../../../../../../store/index';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
-import { Comment } from '../../../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
 import { FormCommentLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
@@ -25,6 +24,12 @@ import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppDiscoverGamesViewOverviewRecommended } from '../_recommended/recommended';
+import {
+	CommentStore,
+	CommentState,
+	CommentAction,
+	CommentMutation,
+} from '../../../../../../../lib/gj-lib-client/components/comment/comment-store';
 
 @View
 @Component({
@@ -72,8 +77,9 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 
 	@RouteMutation addPost: RouteStore['addPost'];
 
-	comments: Comment[] = [];
-	commentsCount = 0;
+	@CommentState getCommentBag: CommentStore['getCommentBag'];
+	@CommentAction fetchComments: CommentStore['fetchComments'];
+	@CommentMutation onCommentAdd: CommentStore['onCommentAdd'];
 
 	headingColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-2';
 	contentColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-7';
@@ -83,21 +89,29 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	readonly Environment = Environment;
 	readonly number = number;
 
-	@Watch('game.id', { immediate: true })
-	async onGameChange() {
+	get commentBag() {
 		if (this.game) {
-			this.comments = [];
-			this.commentsCount = 0;
-
-			const payload = await Comment.fetch('Game', this.game.id, 1);
-			this.commentsCount = payload.count;
-			this.comments = Comment.populate(payload.comments);
+			return this.getCommentBag('Game', this.game.id);
 		}
 	}
 
-	onCommentAdded(comment: Comment) {
-		++this.commentsCount;
-		this.comments.unshift(comment);
+	get comments() {
+		return this.commentBag ? this.commentBag.parentComments : [];
+	}
+
+	get commentsCount() {
+		return this.commentBag ? this.commentBag.count : 0;
+	}
+
+	@Watch('game.id', { immediate: true })
+	@Watch('game.comments_enabled')
+	async onGameChange() {
+		if (this.game && this.game.comments_enabled) {
+			this.fetchComments({
+				resource: 'Game',
+				resourceId: this.game.id,
+			});
+		}
 	}
 
 	onPostAdded(post: FiresidePost) {

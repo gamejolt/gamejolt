@@ -2,7 +2,6 @@ import { Action, Mutation, namespace, State } from 'vuex-class';
 
 import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -41,7 +40,6 @@ export const RouteMutation = namespace(RouteStoreName, Mutation);
 
 type Actions = {
 	bootstrap: any;
-	loadCommentsCount: undefined;
 	loadVideoComments: undefined;
 	refreshRatingInfo: undefined;
 };
@@ -54,7 +52,6 @@ type Mutations = {
 	processRatingPayload: any;
 	acceptCollaboratorInvite: GameCollaborator;
 	declineCollaboratorInvite: GameCollaborator;
-	setCommentsCount: number;
 	pushVideoComments: CommentVideo[];
 	showMultiplePackagesMessage: undefined;
 	toggleDescription: undefined;
@@ -108,7 +105,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	// We will bootstrap this right away, so it should always be set for use.
 	game: Game = null as any;
 
-	commentsCount = 0;
 	postsCount = 0;
 	trophiesCount = 0;
 	hasScores = false;
@@ -221,16 +217,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	async bootstrap(payload: Actions['bootstrap']) {
 		this.processPayload(payload);
 		this.processRatingPayload(payload);
-
-		if (this.game.comments_enabled) {
-			this.loadCommentsCount();
-		}
-	}
-
-	@VuexAction
-	async loadCommentsCount() {
-		const response = await Comment.fetch('Game', this.game.id, 1);
-		this.setCommentsCount(response.count || 0);
 	}
 
 	@VuexAction
@@ -382,11 +368,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.ratingBreakdown = payload.ratingBreakdown;
 		this.game.rating_count = payload.game.rating_count;
 		this.game.avg_rating = payload.game.avg_rating;
-	}
-
-	@VuexMutation
-	setCommentsCount(count: Mutations['setCommentsCount']) {
-		this.commentsCount = count;
 	}
 
 	@VuexMutation

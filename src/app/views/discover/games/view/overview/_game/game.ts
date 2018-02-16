@@ -34,6 +34,10 @@ import { AppCommentWidgetLazy, AppActivityFeedLazy } from '../../../../../../com
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
+import {
+	CommentState,
+	CommentStore,
+} from '../../../../../../../lib/gj-lib-client/components/comment/comment-store';
 
 @View
 @Component({
@@ -73,6 +77,8 @@ import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@State app: Store['app'];
 
+	@CommentState getCommentBag: CommentStore['getCommentBag'];
+
 	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
 	@RouteState game: RouteStore['game'];
 	@RouteState mediaItems: RouteStore['mediaItems'];
@@ -86,7 +92,6 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState twitterShareMessage: RouteStore['twitterShareMessage'];
 	@RouteState feed: RouteStore['feed'];
 	@RouteState supporters: RouteStore['supporters'];
-	@RouteState commentsCount: RouteStore['commentsCount'];
 	@RouteState videoComments: RouteStore['videoComments'];
 	@RouteState videoCommentsCount: RouteStore['videoCommentsCount'];
 	@RouteState shouldShowMultiplePackagesMessage: RouteStore['shouldShowMultiplePackagesMessage'];
@@ -98,7 +103,6 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState hasReleasesSection: RouteStore['hasReleasesSection'];
 	@RouteState customGameMessages: RouteStore['customGameMessages'];
 
-	@RouteMutation setCommentsCount: RouteStore['setCommentsCount'];
 	@RouteAction loadVideoComments: RouteStore['loadVideoComments'];
 
 	@RouteState showDescription: RouteStore['showDescription'];
@@ -125,6 +129,11 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	 */
 	get isAchievementsTwoCol() {
 		return this.hasScores && this.trophiesCount;
+	}
+
+	get commentsCount() {
+		const bag = this.getCommentBag('Game', this.game.id);
+		return bag ? bag.count : 0;
 	}
 
 	copyPartnerLink() {
