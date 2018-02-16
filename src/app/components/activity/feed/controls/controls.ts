@@ -26,6 +26,9 @@ import { CommentModal } from '../../../../../lib/gj-lib-client/components/commen
 import {
 	CommentState,
 	CommentStore,
+	CommentAction,
+	CommentMutation,
+	CommentStoreModel,
 } from '../../../../../lib/gj-lib-client/components/comment/comment-store';
 
 @View
@@ -62,7 +65,10 @@ export class AppActivityFeedControls extends Vue {
 
 	@State app: Store['app'];
 	@CommentState getCommentStore: CommentStore['getCommentStore'];
+	@CommentAction lockCommentStore: CommentStore['lockCommentStore'];
+	@CommentMutation releaseCommentStore: CommentStore['releaseCommentStore'];
 
+	commentStore: CommentStoreModel | null = null;
 	isShowingShare = false;
 
 	readonly number = number;
@@ -116,19 +122,27 @@ export class AppActivityFeedControls extends Vue {
 		);
 	}
 
-	get commentStore() {
+	get commentsCount() {
+		return this.commentStore ? this.commentStore.count : 0;
+	}
+
+	async created() {
 		if (this.post) {
-			return this.getCommentStore('Fireside_Post', this.post.id);
+			this.commentStore = await this.lockCommentStore({
+				resource: 'Fireside_Post',
+				resourceId: this.post.id,
+			});
+
+			// I shouldn't do this outside a mutation, but come on!
+			this.commentStore.count = this.post.comment_count;
 		}
 	}
 
-	get commentsCount() {
+	destroyed() {
 		if (this.commentStore) {
-			return this.commentStore.count;
-		} else if (this.post) {
-			return this.post.comment_count;
+			this.releaseCommentStore(this.commentStore);
+			this.commentStore = null;
 		}
-		return 0;
 	}
 
 	onCommentAdded() {
