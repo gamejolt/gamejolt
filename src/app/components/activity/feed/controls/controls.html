@@ -1,9 +1,6 @@
 <div>
-
-	<!-- Buttons -->
 	<div class="activity-feed-controls timeline-list-item-controls">
 
-		<!-- <div class="-stats" v-if="shouldShowStats"> -->
 		<div class="-manage" v-if="shouldShowManage">
 			<hr>
 
@@ -66,7 +63,7 @@
 
 			<app-fireside-post-like-widget
 				:post="post"
-				:circle="true"
+				circle
 				/>
 
 			<template v-if="!showComments">
@@ -79,11 +76,11 @@
 				</button>
 				<span
 					class="blip light filled"
-					v-if="post.comment_count > 0"
+					v-if="commentsCount > 0"
 					>
 					<span class="blip-caret"></span>
 					<span class="blip-count">
-						{{ post.comment_count | number }}
+						{{ commentsCount | number }}
 					</span>
 				</span>
 			</template>
@@ -127,8 +124,8 @@
 		<div class="-controls" v-else-if="video">
 			<app-comment-video-like-widget
 				:video="video"
-				:sparse="true"
-				:circle="true"
+				sparse
+				circle
 				/>
 		</div>
 
@@ -141,7 +138,6 @@
 			resource="Fireside_Post"
 			:resource-id="post.id"
 			@add="onCommentAdded()"
-			@count="updateCommentsCount"
 			/>
 	</template>
 </div>

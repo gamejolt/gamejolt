@@ -23,6 +23,13 @@ import { CommentVideo } from '../../../../../lib/gj-lib-client/components/commen
 import { AppCommentVideoLikeWidget } from '../../../../../lib/gj-lib-client/components/comment/video/like-widget/like-widget';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { CommentModal } from '../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
+import {
+	CommentState,
+	CommentStore,
+	CommentAction,
+	CommentMutation,
+	CommentStoreModel,
+} from '../../../../../lib/gj-lib-client/components/comment/comment-store';
 
 @View
 @Component({
@@ -57,7 +64,12 @@ export class AppActivityFeedControls extends Vue {
 	@Prop(Boolean) inModal?: boolean;
 
 	@State app: Store['app'];
+	@CommentState getCommentStore: CommentStore['getCommentStore'];
+	@CommentAction lockCommentStore: CommentStore['lockCommentStore'];
+	@CommentMutation releaseCommentStore: CommentStore['releaseCommentStore'];
+	@CommentMutation setCommentCount: CommentStore['setCommentCount'];
 
+	commentStore: CommentStoreModel | null = null;
 	isShowingShare = false;
 
 	readonly number = number;
@@ -111,9 +123,26 @@ export class AppActivityFeedControls extends Vue {
 		);
 	}
 
-	updateCommentsCount(count: number) {
+	get commentsCount() {
+		return this.commentStore ? this.commentStore.count : 0;
+	}
+
+	async created() {
 		if (this.post) {
-			this.post.comment_count = count;
+			this.commentStore = await this.lockCommentStore({
+				resource: 'Fireside_Post',
+				resourceId: this.post.id,
+			});
+
+			// Bootstrap it with the post comment count since that's all we have.
+			this.setCommentCount({ store: this.commentStore, count: this.post.comment_count });
+		}
+	}
+
+	destroyed() {
+		if (this.commentStore) {
+			this.releaseCommentStore(this.commentStore);
+			this.commentStore = null;
 		}
 	}
 
