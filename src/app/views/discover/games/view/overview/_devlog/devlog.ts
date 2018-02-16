@@ -29,6 +29,7 @@ import {
 	CommentState,
 	CommentAction,
 	CommentMutation,
+	CommentStoreModel,
 } from '../../../../../../../lib/gj-lib-client/components/comment/comment-store';
 
 @View
@@ -79,21 +80,18 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 
 	@CommentState getCommentStore: CommentStore['getCommentStore'];
 	@CommentAction fetchComments: CommentStore['fetchComments'];
+	@CommentAction lockCommentStore: CommentStore['lockCommentStore'];
+	@CommentMutation releaseCommentStore: CommentStore['releaseCommentStore'];
 	@CommentMutation onCommentAdd: CommentStore['onCommentAdd'];
 
 	headingColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-2';
 	contentColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-7';
 	contentColClassesFull = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-10';
+	commentStore: CommentStoreModel | null = null;
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
 	readonly number = number;
-
-	get commentStore() {
-		if (this.game) {
-			return this.getCommentStore('Game', this.game.id);
-		}
-	}
 
 	get comments() {
 		return this.commentStore ? this.commentStore.parentComments : [];
@@ -107,10 +105,25 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	@Watch('game.comments_enabled')
 	async onGameChange() {
 		if (this.game && this.game.comments_enabled) {
-			this.fetchComments({
+			if (this.commentStore) {
+				this.releaseCommentStore(this.commentStore);
+			}
+
+			this.commentStore = await this.lockCommentStore({
 				resource: 'Game',
 				resourceId: this.game.id,
 			});
+
+			this.fetchComments({
+				store: this.commentStore,
+			});
+		}
+	}
+
+	destroyed() {
+		if (this.commentStore) {
+			this.releaseCommentStore(this.commentStore);
+			this.commentStore = null;
 		}
 	}
 
