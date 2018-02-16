@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./view.html';
+import View from '!view!./view.html?style=./view.styl';
 
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import View from '!view!./placeholder.html?style=./placeholder.styl';
 
 import { AppButtonPlaceholder } from '../../../../../../lib/gj-lib-client/components/button/placeholder/placeholder';
@@ -12,8 +12,4 @@ import { AppTimelineListItem } from '../../../../../../lib/gj-lib-client/compone
 		AppButtonPlaceholder,
 	},
 })
-export class AppActivityFeedItemPlaceholder extends Vue {
-	@Prop(String) type: string;
-	@Prop(Boolean) isNew?: boolean;
-	@Prop(Boolean) isActive?: boolean;
-}
+export class AppActivityFeedItemPlaceholder extends Vue {}

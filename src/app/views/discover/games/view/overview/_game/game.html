@@ -205,6 +205,7 @@
 							:animate="false"
 							:key="game.id"
 							@require-change="setCanToggleDescription"
+							@expand="toggleDescription()"
 							>
 							<div
 								class="game-compiled-description"
@@ -224,8 +225,32 @@
 						</div>
 					</div>
 
+					<template v-if="feed">
+
+						<br>
+
+						<app-game-perms :game="game" required="devlogs">
+							<h5 class="sans-margin-top">
+								<translate>Add Post</translate>
+							</h5>
+
+							<app-devlog-post-add
+								:game="game"
+								@add="onPostAdded"
+								/>
+
+							<hr>
+						</app-game-perms>
+
+						<app-activity-feed
+							v-if="feed.hasItems"
+							:feed="feed"
+							show-edit-controls
+							/>
+					</template>
+
 					<template v-if="supporters.length > 0">
-						<h2>
+						<h2 class="section-header">
 							<translate>Supporters</translate>
 						</h2>
 
@@ -254,30 +279,6 @@
 							</div>
 						</div>
 						<br class="visible-xs visible-sm">
-					</template>
-
-					<template v-if="feed">
-
-						<br>
-
-						<app-game-perms :game="game" required="devlogs">
-							<h5 class="sans-margin-top">
-								<translate>Add Post</translate>
-							</h5>
-
-							<app-devlog-post-add
-								:game="game"
-								@add="onPostAdded"
-								/>
-
-							<hr>
-						</app-game-perms>
-
-						<app-activity-feed
-							v-if="feed.hasItems"
-							:feed="feed"
-							show-edit-controls
-							/>
 					</template>
 
 				</div>

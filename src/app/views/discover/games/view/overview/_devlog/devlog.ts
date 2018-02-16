@@ -17,7 +17,7 @@ import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
 import { Comment } from '../../../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
-import { AppCommentWidgetAddLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
+import { FormCommentLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
@@ -40,7 +40,7 @@ import { AppDiscoverGamesViewOverviewRecommended } from '../_recommended/recomme
 		AppMediaBar,
 		AppActivityFeedPlaceholder,
 		AppActivityFeed: AppActivityFeedLazy,
-		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
+		AppCommentWidgetAdd: FormCommentLazy,
 		AppJolticon,
 		AppDevlogPostAdd,
 		AppGamePerms,

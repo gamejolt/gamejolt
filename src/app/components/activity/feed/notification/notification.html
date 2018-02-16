@@ -1,15 +1,15 @@
 <div @click.stop="go">
 	<router-link :to="notification.routeLocation">
-		<app-timeline-list-item :is-new="isNew" :is-active="isActive">
+		<app-timeline-list-item is-thread :is-new="isNew" :is-active="isActive">
 
 			<app-jolticon slot="bubble" :icon="icon" />
 
-			<div class="timeline-list-item-meta">
-				<app-time-ago :date="notification.added_on" />
+			<div class="timeline-list-item-title timeline-list-item-title-small">
+				{{ titleText }}
 			</div>
 
-			<div class="timeline-list-item-title">
-				{{ titleText }}
+			<div class="timeline-list-item-meta">
+				<app-time-ago :date="notification.added_on" />
 			</div>
 
 			<div class="timeline-list-item-details" v-if="hasDetails">
@@ -31,19 +31,20 @@
 						:collapse-height="80"
 						:is-open="showFullContent"
 						@require-change="canToggleContent = $event"
+						@expand="toggleFull"
 						>
 						<div
 							v-if="
 								notification.type === 'comment-add' ||
 								notification.type === 'comment-add-object-owner'
 							"
-							class="comment-widget-comment-content"
+							class="comment-content"
 							v-html="notification.action_model.comment_compiled"
 							>
 						</div>
 						<div
 							v-else-if="notification.type === 'mention'"
-							class="comment-widget-comment-content"
+							class="comment-content"
 							v-html="notification.action_model.comment.comment_compiled"
 							>
 						</div>

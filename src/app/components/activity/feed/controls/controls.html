@@ -3,175 +3,145 @@
 	<!-- Buttons -->
 	<div class="activity-feed-controls timeline-list-item-controls">
 
-		<!--
-			We don't show this in the feed on mobile.
-		-->
-		<div class="activity-feed-controls-stats" v-if="shouldShowStats">
-
+		<!-- <div class="-stats" v-if="shouldShowStats"> -->
+		<div class="-manage" v-if="shouldShowManage">
 			<hr>
-			<translate
-				:translate-n="post.view_count || 0"
-				:translate-params="{ count: number( post.view_count || 0 ) }"
-				translate-plural="%{ count } views"
-				>
-				%{ count } view
-			</translate>
 
-			<span class="dot-separator"></span>
+			<span class="-manage-controls" v-if="shouldShowManageControls">
+				<button class="btn btn-success-outline" v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost">
+					<app-jolticon icon="check" />
+					<translate>Publish</translate>
+				</button>
+				<button class="btn btn-outline" @click="showEdit">
+					<app-jolticon icon="edit" />
+					<translate>Edit</translate>
+				</button>
+				<button class="btn btn-outline btn-sparse" v-app-popover-trigger="`activity-feed-controls-options-${post.id}`">
+					<app-jolticon icon="ellipsis-h" />
+				</button>
 
-			<translate
-				:translate-n="post.expand_count || 0"
-				:translate-params="{ count: number( post.expand_count || 0 ) }"
-				translate-plural="%{ count } expands"
-				>
-				%{ count } expand
-			</translate>
-
-			<span v-app-tooltip="$gettext( 'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.' )">
-				<app-jolticon icon="help-circle" />
+				<app-popover :popover-id="`activity-feed-controls-options-${post.id}`">
+					<div class="list-group list-group-dark">
+						<a class="list-group-item has-icon"
+							@click="removePost"
+							>
+							<app-jolticon icon="remove" class="warning" />
+							<translate>Remove Post</translate>
+						</a>
+					</div>
+				</app-popover>
 			</span>
-			<hr>
 
+			<span class="-manage-stats" v-if="shouldShowStats">
+				<translate
+					:translate-n="post.view_count || 0"
+					:translate-params="{ count: number( post.view_count || 0 ) }"
+					translate-plural="%{ count } views"
+					>
+					%{ count } view
+				</translate>
+
+				<span class="dot-separator"></span>
+
+				<translate
+					:translate-n="post.expand_count || 0"
+					:translate-params="{ count: number( post.expand_count || 0 ) }"
+					translate-plural="%{ count } expands"
+					>
+					%{ count } expand
+				</translate>
+
+				<span
+					class="hidden-xs"
+					v-app-tooltip="$gettext( 'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.' )"
+					>
+					<app-jolticon icon="help-circle" />
+				</span>
+			</span>
+
+			<hr>
 		</div>
 
-		<div class="activity-feed-controls-controls clearfix">
-			<div class="pull-left">
+		<div class="-controls" v-if="post && post.status === FiresidePost.STATUS_ACTIVE">
 
-				<template v-if="post && post.status === FiresidePost.STATUS_ACTIVE">
+			<app-fireside-post-like-widget
+				:post="post"
+				:circle="true"
+				/>
 
-					<!--
-						If we require tabs, then there is no reason to show the reply button.
-					-->
-					<button
-						class="btn btn-outline btn-sparse btn-circle"
-						v-if="!requireTabs"
-						@click="toggleComments"
-						v-app-tooltip="$gettext( 'View Comments' )"
-						>
-						<app-jolticon icon="comment" />
-					</button>
-					<span
-						class="blip light filled"
-						v-if="!requireTabs && post.comment_count > 0"
-						>
-						<span class="blip-caret"></span>
-						<span class="blip-count">
-							{{ post.comment_count | number }}
-						</span>
+			<template v-if="!showComments">
+				<button
+					class="btn btn-outline btn-sparse btn-circle"
+					@click="openComments()"
+					v-app-tooltip="$gettext( 'View Comments' )"
+					>
+					<app-jolticon icon="comment" />
+				</button>
+				<span
+					class="blip light filled"
+					v-if="post.comment_count > 0"
+					>
+					<span class="blip-caret"></span>
+					<span class="blip-count">
+						{{ post.comment_count | number }}
 					</span>
+				</span>
+			</template>
 
-					<app-fireside-post-like-widget
-						:post="post"
-						:circle="true"
-						/>
+			<button
+				class="btn btn-outline btn-sparse btn-circle"
+				v-app-popover-trigger="sharePopoverId"
+				v-app-tooltip="$gettext( 'Share' )"
+				>
+				<app-jolticon icon="share" />
+			</button>
 
-					<button
-						class="btn btn-outline btn-sparse btn-circle"
-						v-app-popover-trigger="sharePopoverId"
-						v-app-tooltip="$gettext( 'Share' )"
-						>
-						<app-jolticon icon="share" />
+			<app-popover
+				:popover-id="sharePopoverId"
+				:append-to-body="!inModal"
+				@focused="isShowingShare = true"
+				@blurred="isShowingShare = false"
+				>
+
+				<div class="well fill-darkest sans-margin" v-if="isShowingShare">
+					<div class="social-widgets" v-if="!GJ_IS_CLIENT">
+						<app-social-twitter-share
+							:url="shareUrl"
+							:content="post.title"
+							/>
+
+						<span class="dot-separator"></span>
+
+						<app-social-facebook-like
+							:url="shareUrl"
+							/>
+					</div>
+
+					<button class="btn btn-outline btn-block" @click="copyShareUrl">
+						<translate>Copy Permalink</translate>
 					</button>
+				</div>
 
-					<app-popover
-						:popover-id="sharePopoverId"
-						:append-to-body="!inModal"
-						@focused="isShowingShare = true"
-						@blurred="isShowingShare = false"
-						>
-
-						<div class="well fill-darkest sans-margin" v-if="isShowingShare">
-							<div class="social-widgets" v-if="!GJ_IS_CLIENT">
-								<app-social-twitter-share
-									:url="shareUrl"
-									:content="post.title"
-									/>
-
-								<span class="dot-separator"></span>
-
-								<app-social-facebook-like
-									:url="shareUrl"
-									/>
-							</div>
-
-							<button class="btn btn-outline btn-block" @click="copyShareUrl">
-								<translate>Copy Permalink</translate>
-							</button>
-						</div>
-
-					</app-popover>
-				</template>
-				<template v-if="video">
-					<app-comment-video-like-widget
-						:video="video"
-						:sparse="true"
-						:circle="true"
-						/>
-				</template>
-			</div>
-
-			<div class="pull-right" v-if="post && game">
-				<app-game-follow-widget
-					v-if="
-						showGameInfo
-						&& (app.user && post.user.id !== app.user.id)
-						&& !game.is_following
-					"
-					:game="game"
-					:class="{
-						'btn-sm': Screen.isXs,
-					}"
-					:outline="true"
-					event-label="activity-feed-controls"
-					/>
-
-				<template v-if="showEditControls && hasDevlogsPerms">
-					<button class="btn btn-success-outline" v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost">
-						<app-jolticon icon="check" />
-						<translate>Publish</translate>
-					</button>
-					<button class="btn btn-outline" @click="showEdit">
-						<app-jolticon icon="edit" />
-						<translate>Edit</translate>
-					</button>
-					<button class="btn btn-outline btn-sparse" v-app-popover-trigger="`activity-feed-controls-options-${post.id}`">
-						<app-jolticon icon="ellipsis-h" />
-					</button>
-
-					<app-popover :popover-id="`activity-feed-controls-options-${post.id}`">
-						<div class="list-group list-group-dark">
-							<a class="list-group-item has-icon"
-								@click="removePost"
-								>
-								<app-jolticon icon="remove" class="warning" />
-								<translate>Remove Post</translate>
-							</a>
-						</div>
-					</app-popover>
-				</template>
-			</div>
+			</app-popover>
+		</div>
+		<div class="-controls" v-else-if="video">
+			<app-comment-video-like-widget
+				:video="video"
+				:sparse="true"
+				:circle="true"
+				/>
 		</div>
 
 	</div>
 
-	<template v-if="post">
-		<app-comment-widget-add
-			v-if="app.user && !tab"
+	<template v-if="post && showComments">
+		<br>
+
+		<app-comment-widget
 			resource="Fireside_Post"
 			:resource-id="post.id"
-			@submit="onCommentAdded()"
+			@add="onCommentAdded()"
+			@count="updateCommentsCount"
 			/>
-
-		<div class="activity-feed-controls-well" v-if="tab">
-			<app-comment-widget
-				v-if="tab === 'comments'"
-				resource="Fireside_Post"
-				:resource-id="post.id"
-				:no-intro="true"
-				@add="onCommentAdded()"
-				@count="updateCommentsCount"
-				/>
-		</div>
 	</template>
-
 </div>

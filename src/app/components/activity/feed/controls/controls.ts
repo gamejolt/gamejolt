@@ -18,10 +18,11 @@ import { AppSocialTwitterShare } from '../../../../../lib/gj-lib-client/componen
 import { AppSocialFacebookLike } from '../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { Store } from '../../../../store/index';
 import { DevlogPostEditModal } from '../../../devlog/post/edit-modal/edit-modal-service';
-import { AppCommentWidgetAddLazy, AppCommentWidgetLazy } from '../../../lazy';
+import { FormCommentLazy, AppCommentWidgetLazy } from '../../../lazy';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { AppCommentVideoLikeWidget } from '../../../../../lib/gj-lib-client/components/comment/video/like-widget/like-widget';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { CommentModal } from '../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
 
 @View
 @Component({
@@ -29,7 +30,7 @@ import { Game } from '../../../../../lib/gj-lib-client/components/game/game.mode
 		AppJolticon,
 		AppPopover,
 		AppGameFollowWidget,
-		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
+		AppCommentWidgetAdd: FormCommentLazy,
 		AppCommentWidget: AppCommentWidgetLazy,
 		AppFiresidePostLikeWidget,
 		AppCommentVideoLikeWidget,
@@ -52,12 +53,11 @@ export class AppActivityFeedControls extends Vue {
 	@Prop(Boolean) showEditControls?: boolean;
 	@Prop({ type: Boolean, default: true })
 	showExtraInfo: boolean;
-	@Prop(Boolean) requireTabs?: boolean;
+	@Prop(Boolean) showComments?: boolean;
 	@Prop(Boolean) inModal?: boolean;
 
 	@State app: Store['app'];
 
-	tab: 'comments' | null = null;
 	isShowingShare = false;
 
 	readonly number = number;
@@ -93,6 +93,15 @@ export class AppActivityFeedControls extends Vue {
 		);
 	}
 
+	get shouldShowManage() {
+		return this.shouldShowManageControls || this.shouldShowStats;
+	}
+
+	get shouldShowManageControls() {
+		return this.post && this.game && this.showEditControls && this.hasDevlogsPerms;
+	}
+
+	// TODO: Figure out if this can be collapsed into the same func as "showManageControls"
 	get shouldShowStats() {
 		return (
 			!!this.post &&
@@ -102,12 +111,6 @@ export class AppActivityFeedControls extends Vue {
 		);
 	}
 
-	created() {
-		if (this.requireTabs) {
-			this.tab = 'comments';
-		}
-	}
-
 	updateCommentsCount(count: number) {
 		if (this.post) {
 			this.post.comment_count = count;
@@ -115,15 +118,12 @@ export class AppActivityFeedControls extends Vue {
 	}
 
 	onCommentAdded() {
-		this.tab = 'comments';
 		this.$emit('expanded');
 	}
 
-	toggleComments() {
-		if (this.tab === 'comments' && !this.requireTabs) {
-			this.tab = null;
-		} else {
-			this.tab = 'comments';
+	openComments() {
+		if (this.post) {
+			CommentModal.show({ resource: 'Fireside_Post', resourceId: this.post.id });
 		}
 
 		this.$emit('expanded');

@@ -79,6 +79,14 @@ export class AppActivityFeedEventItem extends Vue {
 		return this.eventItem.game;
 	}
 
+	get gameUrl() {
+		if (this.game) {
+			return this.game.getUrl();
+		}
+
+		return undefined;
+	}
+
 	get user() {
 		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
 			return (this.eventItem.action as CommentVideo).comment.user;

@@ -4,25 +4,23 @@
 .activity-feed-controls
 	margin-bottom: $line-height-computed
 
-	&-controls
-		margin-top: $line-height-computed
-		margin-bottom: $line-height-computed
+.-controls
+	margin-top: $line-height-computed
+	margin-bottom: $line-height-computed
 
-	&-stats
-		margin-bottom: $line-height-computed
-		font-size: $font-size-small
-		color: $text-muted
+.-manage-controls, .-manage-stats
+	display: block
 
-		@media $media-xs
-			margin-bottom: $line-height-computed
+	@media $media-sm-up
+		display: inline-block
 
-	&-well
-		position: relative
-		margin-top: $line-height-computed + 10px
-		padding-top: $line-height-computed
-		border-top: 1px solid $gray-lightest
+.-manage-controls
+	margin-bottom: $line-height-computed
 
-		&::before
-			caret(color: $gray-lightest, direction: 'up', size: 10px)
-			display: block
-			content: ''
+	@media $media-sm-up
+		margin-right: 10px
+		margin-bottom: 0
+
+.-manage-stats
+	font-size: $font-size-small
+	color: $text-muted
