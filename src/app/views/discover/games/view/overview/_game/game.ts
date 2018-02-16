@@ -77,7 +77,7 @@ import {
 export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@State app: Store['app'];
 
-	@CommentState getCommentBag: CommentStore['getCommentBag'];
+	@CommentState getCommentStore: CommentStore['getCommentStore'];
 
 	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
 	@RouteState game: RouteStore['game'];
@@ -132,8 +132,8 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	}
 
 	get commentsCount() {
-		const bag = this.getCommentBag('Game', this.game.id);
-		return bag ? bag.count : 0;
+		const store = this.getCommentStore('Game', this.game.id);
+		return store ? store.count : 0;
 	}
 
 	copyPartnerLink() {

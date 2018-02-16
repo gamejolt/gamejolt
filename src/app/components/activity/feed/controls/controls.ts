@@ -61,7 +61,7 @@ export class AppActivityFeedControls extends Vue {
 	@Prop(Boolean) inModal?: boolean;
 
 	@State app: Store['app'];
-	@CommentState getCommentBag: CommentStore['getCommentBag'];
+	@CommentState getCommentStore: CommentStore['getCommentStore'];
 
 	isShowingShare = false;
 
@@ -116,15 +116,15 @@ export class AppActivityFeedControls extends Vue {
 		);
 	}
 
-	get commentsBag() {
+	get commentStore() {
 		if (this.post) {
-			return this.getCommentBag('Fireside_Post', this.post.id);
+			return this.getCommentStore('Fireside_Post', this.post.id);
 		}
 	}
 
 	get commentsCount() {
-		if (this.commentsBag) {
-			return this.commentsBag.count;
+		if (this.commentStore) {
+			return this.commentStore.count;
 		} else if (this.post) {
 			return this.post.comment_count;
 		}

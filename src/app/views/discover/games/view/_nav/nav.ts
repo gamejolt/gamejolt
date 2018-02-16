@@ -42,7 +42,7 @@ export class AppDiscoverGamesViewNav extends Vue {
 
 	@State app: Store['app'];
 
-	@CommentState getCommentBag: CommentStore['getCommentBag'];
+	@CommentState getCommentStore: CommentStore['getCommentStore'];
 
 	Environment = Environment;
 
@@ -56,8 +56,8 @@ export class AppDiscoverGamesViewNav extends Vue {
 
 	get commentsCount() {
 		if (this.game) {
-			const bag = this.getCommentBag('Game', this.game.id);
-			return bag ? bag.count : 0;
+			const store = this.getCommentStore('Game', this.game.id);
+			return store ? store.count : 0;
 		}
 		return 0;
 	}

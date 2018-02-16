@@ -77,7 +77,7 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 
 	@RouteMutation addPost: RouteStore['addPost'];
 
-	@CommentState getCommentBag: CommentStore['getCommentBag'];
+	@CommentState getCommentStore: CommentStore['getCommentStore'];
 	@CommentAction fetchComments: CommentStore['fetchComments'];
 	@CommentMutation onCommentAdd: CommentStore['onCommentAdd'];
 
@@ -89,18 +89,18 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	readonly Environment = Environment;
 	readonly number = number;
 
-	get commentBag() {
+	get commentStore() {
 		if (this.game) {
-			return this.getCommentBag('Game', this.game.id);
+			return this.getCommentStore('Game', this.game.id);
 		}
 	}
 
 	get comments() {
-		return this.commentBag ? this.commentBag.parentComments : [];
+		return this.commentStore ? this.commentStore.parentComments : [];
 	}
 
 	get commentsCount() {
-		return this.commentBag ? this.commentBag.count : 0;
+		return this.commentStore ? this.commentStore.count : 0;
 	}
 
 	@Watch('game.id', { immediate: true })
