@@ -67,6 +67,7 @@ export class AppActivityFeedControls extends Vue {
 	@CommentState getCommentStore: CommentStore['getCommentStore'];
 	@CommentAction lockCommentStore: CommentStore['lockCommentStore'];
 	@CommentMutation releaseCommentStore: CommentStore['releaseCommentStore'];
+	@CommentMutation setCommentCount: CommentStore['setCommentCount'];
 
 	commentStore: CommentStoreModel | null = null;
 	isShowingShare = false;
@@ -133,8 +134,8 @@ export class AppActivityFeedControls extends Vue {
 				resourceId: this.post.id,
 			});
 
-			// I shouldn't do this outside a mutation, but come on!
-			this.commentStore.count = this.post.comment_count;
+			// Bootstrap it with the post comment count since that's all we have.
+			this.setCommentCount({ store: this.commentStore, count: this.post.comment_count });
 		}
 	}
 
