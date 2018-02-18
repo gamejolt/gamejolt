@@ -5,7 +5,6 @@ import View from '!view!./shell.html';
 import './shell.styl';
 
 import { AppShellTopNav } from './top-nav/top-nav';
-import { AppShellNotificationCount } from './notification-count/notification-count';
 import { AppShellBody } from './body/body';
 import { AppShellSidebar } from './sidebar/sidebar';
 import { AppShellHotBottom } from './hot-bottom/hot-bottom';
@@ -19,7 +18,6 @@ import { BannerState, BannerStore } from '../../store/banner';
 
 let components: any = {
 	AppShellTopNav,
-	AppShellNotificationCount,
 	AppShellBody,
 	AppShellSidebar,
 	AppShellHotBottom,
