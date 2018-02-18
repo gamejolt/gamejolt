@@ -181,8 +181,6 @@ export class GridClient {
 	}
 
 	handleNotification(payload: NewNotificationPayload) {
-		document.title = '(*) Game Jolt - Indie games for the love of it';
-
 		if (this.connected) {
 			// if no bootstrap has been received yet, store new notifications in a backlog to process them later
 			// the bootstrap delivers the timestamp of the last event item included in the bootstrap's notification count
