@@ -26,7 +26,7 @@
 		<div class="timeline-list-item-meta">
 			<app-time-ago :date="eventItem.added_on" />
 
-				<template v-if="post && post.type === 'media'">
+			<template v-if="post && post.type === 'media'">
 				<span class="dot-separator"></span>
 				<app-jolticon icon="screenshot" class="middle" />
 				{{ post.media.length | number }}
@@ -84,7 +84,7 @@
 					@expanded="onExpand"
 					@content-bootstrapped="onContentBootstrapped"
 					/>
-				
+
 				<div class="-poll" v-if="post.poll">
 					<app-poll-voting
 						:poll="post.poll"

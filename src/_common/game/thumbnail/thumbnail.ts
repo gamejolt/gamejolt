@@ -20,7 +20,6 @@ import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/
 import { currency } from '../../../lib/gj-lib-client/vue/filters/currency';
 import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Settings } from '../../settings/settings.service';
-import { AppGameThumbnailPlaceholder } from './placeholder/placeholder';
 
 /**
  * An array of all the thumbnails on the page.
@@ -50,7 +49,6 @@ if (typeof window !== 'undefined') {
 		AppGameModLinks,
 		AppUserAvatarImg,
 		AppScrollInview,
-		AppGameThumbnailPlaceholder,
 		AppGameFollowWidget,
 		AppGamePlaylistAddToWidget,
 	},
@@ -65,7 +63,6 @@ export class AppGameThumbnail extends Vue {
 
 	@State app: AppStore;
 
-	isBootstrapped = GJ_IS_SSR;
 	isHydrated = GJ_IS_SSR;
 	isThumbnailLoaded = GJ_IS_SSR;
 	isWindowFocused = typeof document !== 'undefined' && document.hasFocus
@@ -165,7 +162,6 @@ export class AppGameThumbnail extends Vue {
 	}
 
 	inView() {
-		this.isBootstrapped = true;
 		this.isHydrated = true;
 	}
 

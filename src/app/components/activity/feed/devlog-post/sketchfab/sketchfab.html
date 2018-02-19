@@ -4,9 +4,10 @@
 		@change="onDimensionsChange"
 		>
 
-		<template v-if="isHydrated">
+		<transition>
 			<a
-				v-if="!isShowing"
+				v-if="isHydrated && !isShowing"
+				class="anim-fade-enter"
 				@click="play"
 				>
 				<div class="play-button-overlay">
@@ -19,11 +20,11 @@
 				</div>
 			</a>
 			<app-sketchfab-embed
-				v-else
+				v-else-if="isHydrated && isShowing"
 				:sketchfab-id="sketchfab.sketchfab_id"
 				:autoplay="true"
 				/>
-		</template>
+		</transition>
 
 	</app-responsive-dimensions>
 </div>

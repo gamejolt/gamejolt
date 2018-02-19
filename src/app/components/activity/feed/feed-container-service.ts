@@ -8,17 +8,6 @@ import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/e
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
-/**
- * The number of items from the bottom that we should hit before loading more.
- */
-const LOAD_MORE_FROM_BOTTOM = 5;
-
-/**
- * The number of times we should do an auto-load of items before stopping
- * and requiring them to do it manually.
- */
-const LOAD_MORE_TIMES = 3;
-
 export interface ActivityFeedContainerOptions {
 	/**
 	 * Which types of models are used in the feed.
@@ -122,19 +111,6 @@ export class ActivityFeedContainer {
 		if (visible) {
 			Vue.set(this.inViewItems, item.id, item);
 			this.viewed(item);
-
-			// Auto-loading while scrolling.
-			if (
-				!this.noAutoload &&
-				!this.isLoadingMore &&
-				!this.reachedEnd &&
-				this.timesLoaded < LOAD_MORE_TIMES
-			) {
-				const index = this.items.findIndex(_item => _item.id === item.id);
-				if (index >= this.items.length - LOAD_MORE_FROM_BOTTOM) {
-					this.loadMore();
-				}
-			}
 		} else {
 			Vue.delete(this.inViewItems, item.id);
 		}
