@@ -14,8 +14,6 @@ import { Store } from '../../../store/index';
 import { Mutation } from 'vuex-class/lib/bindings';
 import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 
-const INITIAL_LAG = 3000;
-
 type Tab = 'requests' | 'pending';
 
 @View
@@ -41,11 +39,6 @@ export class AppFriendRequestPopover extends Vue {
 	activeTab: Tab = 'requests';
 	requests: any[] = [];
 	pending: any[] = [];
-
-	mounted() {
-		// Fetch count right away.
-		setTimeout(() => this.fetchCount(), INITIAL_LAG);
-	}
 
 	onFocus() {
 		this.isShown = true;
