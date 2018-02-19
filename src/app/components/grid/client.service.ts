@@ -64,7 +64,7 @@ export class GridClient {
 	channels: Channel[] = [];
 	notificationBacklog: NewNotificationPayload[] = [];
 	bootstrapReceived = false;
-	bootstrapTimestamp: number = 0;
+	bootstrapTimestamp = 0;
 
 	constructor() {
 		this.connect();
@@ -140,7 +140,7 @@ export class GridClient {
 		);
 
 		channel.on('bootstrap', (payload: BootstrapPayload) => {
-			if (payload.status == 'ok') {
+			if (payload.status === 'ok') {
 				console.log('[Grid] Received notification count bootstrap.');
 
 				channel.onError(reason => {
@@ -153,10 +153,11 @@ export class GridClient {
 				this.bootstrapTimestamp = payload.body.lastNotificationTime;
 
 				this.bootstrapReceived = true;
+
 				// handle backlog
-				this.notificationBacklog.forEach(notification => {
+				for (const notification of this.notificationBacklog) {
 					this.handleNotification(notification);
-				});
+				}
 				this.notificationBacklog = [];
 			} else {
 				// error
@@ -167,7 +168,7 @@ export class GridClient {
 			}
 		});
 
-		channel.push('request_bootstrap', { user_id: userId });
+		channel.push('request-bootstrap', { user_id: userId });
 	}
 
 	async restart(sleepMs: number = 2000) {
