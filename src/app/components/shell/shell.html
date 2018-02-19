@@ -3,17 +3,16 @@
 	:class="{
 		'is-client-offline': Connection.isClientOffline,
 		'left-pane-visible': isLeftPaneVisible,
-		'right-pane-visible': isRightPaneVisible
+		'right-pane-visible': isRightPaneVisible,
+		'has-banner': shouldShowBanner,
 	}"
 	>
 
-	<app-shell-notification-count v-if="app.user" />
-	<app-offline-alert />
+	<app-shell-banner />
 	<app-shell-top-nav />
 	<app-shell-sidebar />
 
 	<app-shell-body>
-		<!--<gj-terms-change-alert></gj-terms-change-alert>-->
 		<slot />
 	</app-shell-body>
 

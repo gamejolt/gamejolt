@@ -6,9 +6,11 @@
 			:item="item"
 			/>
 
-		<div class="timeline-list-ad" v-if="shouldShowAd(i)">
+		<div class="timeline-list-item-ad" v-if="shouldShowAd(i)">
 			<section class="section section-thin fill-lightest text-center">
-				<app-ad size="rectangle" pos="bottom" />
+				<div class="timeline-list-item-ad-container">
+					<app-ad size="rectangle" pos="bottom" />
+				</div>
 				<div class="ad-label">
 					<translate>Advertisement</translate>
 				</div>

@@ -1,16 +1,10 @@
 @require '~styles/variables'
 
 .devlog-post-media
-
-	.timeline-list-item-header
-		margin-bottom: 0
-
-	.timeline-list-item-details
-		margin-top: 0
-
 	&-embed
 		position: relative
 		background-color: $gray-darker
+		border-radius: $border-radius-base
 
 		&-img
 			display: block
@@ -25,13 +19,16 @@
 			vertical-align: middle
 			width: 100%
 
-			img
+			>>> img
 				display: block
 				width: 100%
 				height: auto
+				border-radius: $border-radius-base
 
-	&-prev
-	&-next
+			>>> video
+				border-radius: $border-radius-base
+
+	&-prev, &-next
 		display: none
 		position: absolute
 		top: 50%

@@ -46,13 +46,15 @@
 							v-if="app.user"
 							resource="Game"
 							:resource-id="game.id"
-							@submit="onCommentAdded"
+							@submit="onCommentAdd"
 							/>
 
 						<br v-if="app.user && commentsCount">
 
 						<template v-if="commentsCount">
-							<app-comment-peek :comments="comments" />
+							<app-comment-peek
+								:comments="comments"
+								/>
 
 							<router-link
 								v-if="commentsCount > 2"
@@ -113,6 +115,7 @@
 							:is-open="showDescription"
 							:key="game.id"
 							@require-change="setCanToggleDescription"
+							@expand="toggleDescription()"
 							>
 							<div
 								class="game-compiled-description"
