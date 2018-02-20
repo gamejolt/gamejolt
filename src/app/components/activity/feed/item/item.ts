@@ -7,6 +7,7 @@ import { ActivityFeedContainer } from '../feed-container-service';
 import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { AppActivityFeedNotification } from '../notification/notification';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppActivityFeedItemPlaceholder } from './placeholder/placeholder';
 import { AppActivityFeedEventItem } from '../event-item/event-item';
 
 @View
@@ -15,6 +16,7 @@ import { AppActivityFeedEventItem } from '../event-item/event-item';
 		AppScrollInview,
 		AppActivityFeedEventItem,
 		AppActivityFeedNotification,
+		AppActivityFeedItemPlaceholder,
 	},
 })
 export class AppActivityFeedItem extends Vue {
@@ -38,8 +40,12 @@ export class AppActivityFeedItem extends Vue {
 		return this.item.feedItem.added_on > this.feed.notificationWatermark;
 	}
 
+	get isBootstrapped() {
+		return GJ_IS_SSR || typeof this.feed.bootstrappedItems[this.item.id] !== 'undefined';
+	}
+
 	get isHydrated() {
-		return GJ_IS_SSR || !!this.feed.inViewItems[this.item.id];
+		return GJ_IS_SSR || typeof this.feed.hydratedItems[this.item.id] !== 'undefined';
 	}
 
 	get isActive() {

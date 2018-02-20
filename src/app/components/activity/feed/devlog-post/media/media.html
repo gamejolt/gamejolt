@@ -31,22 +31,19 @@
 						@change="onDimensionsChange"
 						>
 
-						<transition>
-							<app-img-responsive
-								v-if="isHydrated && !item.is_animated"
-								class="anim-fade-enter"
-								:src="item.mediaserver_url"
-								alt=""
-								ondragstart="return false"
-								/>
-							<app-video
-								v-else-if="isHydrated && item.is_animated && shouldVideoPlay( item )"
-								:poster="item.mediaserver_url"
-								:webm="item.mediaserver_url_webm"
-								:mp4="item.mediaserver_url_mp4"
-								:show-loading="true"
-								/>
-						</transition>
+						<app-img-responsive
+							v-if="!isHydrated || !item.is_animated"
+							:src="item.mediaserver_url"
+							alt=""
+							ondragstart="return false"
+							/>
+						<app-video
+							v-else-if="shouldVideoPlay( item )"
+							:poster="item.mediaserver_url"
+							:webm="item.mediaserver_url_webm"
+							:mp4="item.mediaserver_url_mp4"
+							:show-loading="true"
+							/>
 
 					</app-responsive-dimensions>
 

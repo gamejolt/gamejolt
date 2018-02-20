@@ -4,27 +4,24 @@
 		@change="onDimensionsChange"
 		>
 
-		<transition>
-			<a
-				v-if="isHydrated && !isShowing"
-				class="anim-fade-enter"
-				@click="play"
-				>
-				<div class="play-button-overlay">
-					<app-jolticon icon="play" />
-				</div>
+		<a
+			v-if="!isHydrated || !isShowing"
+			@click="play"
+			>
+			<div class="play-button-overlay">
+				<app-jolticon icon="play" />
+			</div>
 
-				<div class="devlog-post-sketchfab-embed-thumb"
-					:style="{ 'background-image': `url( '${sketchfab.thumbnail_url}')` }"
-					>
-				</div>
-			</a>
-			<app-sketchfab-embed
-				v-else-if="isHydrated && isShowing"
-				:sketchfab-id="sketchfab.sketchfab_id"
-				:autoplay="true"
-				/>
-		</transition>
+			<div class="devlog-post-sketchfab-embed-thumb"
+				:style="{ 'background-image': `url( '${sketchfab.thumbnail_url}')` }"
+				>
+			</div>
+		</a>
+		<app-sketchfab-embed
+			v-else
+			:sketchfab-id="sketchfab.sketchfab_id"
+			:autoplay="true"
+			/>
 
 	</app-responsive-dimensions>
 </div>

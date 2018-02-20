@@ -40,7 +40,8 @@ export class ActivityFeedContainer {
 
 	viewedItems: string[] = [];
 	expandedItems: string[] = [];
-	inViewItems: { [k: string]: ActivityFeedItem } = {};
+	bootstrappedItems: { [k: string]: null } = {};
+	hydratedItems: { [k: string]: null } = {};
 	activeItem: ActivityFeedItem | null = null;
 	scroll = 0;
 	noAutoload = false;
@@ -65,15 +66,28 @@ export class ActivityFeedContainer {
 	}
 
 	prepend(input: ActivityFeedInput[]) {
-		const items = input.map(item => new ActivityFeedItem(item));
-		this.items = items.concat(this.items);
-		this.processGames();
+		this.addItems(input, 'start');
 	}
 
 	append(input: ActivityFeedInput[]) {
+		this.addItems(input, 'end');
+	}
+
+	private addItems(input: ActivityFeedInput[], position: 'start' | 'end' = 'start') {
 		const items = input.map(item => new ActivityFeedItem(item));
-		this.items = this.items.concat(items);
+
+		if (position === 'start') {
+			this.items = items.concat(this.items);
+		} else if (position === 'end') {
+			this.items = this.items.concat(items);
+		}
+
 		this.processGames();
+
+		// We bootstrap right away. We only use bootstrapping for going back into the feeds.
+		for (const i of items) {
+			Vue.set(this.bootstrappedItems, i.id, null);
+		}
 	}
 
 	update(_input: ActivityFeedInput) {
@@ -83,7 +97,6 @@ export class ActivityFeedContainer {
 	remove(input: ActivityFeedInput) {
 		const item = new ActivityFeedItem(input);
 		arrayRemove(this.items, i => i.type === item.type && i.feedItem.id === item.feedItem.id);
-
 		this.processGames();
 	}
 
@@ -109,11 +122,16 @@ export class ActivityFeedContainer {
 
 	inViewChange(item: ActivityFeedItem, visible: boolean) {
 		if (visible) {
-			Vue.set(this.inViewItems, item.id, item);
+			Vue.set(this.bootstrappedItems, item.id, null);
+			Vue.set(this.hydratedItems, item.id, null);
 			this.viewed(item);
 		} else {
-			Vue.delete(this.inViewItems, item.id);
+			Vue.delete(this.hydratedItems, item.id);
 		}
+	}
+
+	resetBootstrapped() {
+		this.bootstrappedItems = {};
 	}
 
 	async loadMore() {

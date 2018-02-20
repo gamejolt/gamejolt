@@ -5,26 +5,33 @@
 	@outview="onInviewChange( false )"
 	>
 
-	<!--
-		Notifications are so small that there's no reason to not include them
-		into the view.
-	-->
-	<app-activity-feed-event-item
-		v-if="item.type === 'event-item'"
-		:item="item"
-		:is-new="isNew"
-		:is-active="isActive"
-		:is-hydrated="isHydrated"
-		@clicked="setActive"
-		@expanded="onExpanded"
-		@resize="onResize"
+	<app-activity-feed-item-placeholder
+		v-if="item.type !== 'notification' && !isBootstrapped"
 		/>
-	<app-activity-feed-notification
-		v-else-if="item.type === 'notification'"
-		:item="item"
-		:is-new="isNew"
-		:is-active="isActive"
-		@clicked="setActive"
-		/>
+	<template v-else>
+
+		<!--
+			Notifications are so small that there's no reason to not include them
+			into the view.
+		-->
+		<app-activity-feed-event-item
+			v-if="item.type === 'event-item'"
+			:item="item"
+			:is-new="isNew"
+			:is-active="isActive"
+			:is-hydrated="isHydrated"
+			@clicked="setActive"
+			@expanded="onExpanded"
+			@resize="onResize"
+			/>
+		<app-activity-feed-notification
+			v-else-if="item.type === 'notification'"
+			:item="item"
+			:is-new="isNew"
+			:is-active="isActive"
+			@clicked="setActive"
+			/>
+
+	 </template>
 
 </app-scroll-inview>
