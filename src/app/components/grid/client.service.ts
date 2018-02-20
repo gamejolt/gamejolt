@@ -226,6 +226,8 @@ export class GridClient {
 			let title = Translate.$gettext('New Notification');
 			if (notification.type === Notification.TYPE_DEVLOG_POST_ADD) {
 				title = Translate.$gettext('New Post');
+			} else if (notification.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
+				title = Translate.$gettext('New Video');
 			}
 
 			Growls.info({
