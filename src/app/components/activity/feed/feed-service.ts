@@ -23,6 +23,8 @@ export class ActivityFeedService {
 		// If we have a state container for this historical key...
 		let state = this._states.find(item => item.key === key);
 		if (state) {
+			// Reset bootstrapped items so that we can go "back" to this feed really fast.
+			state.container.resetBootstrapped();
 			return state.container;
 		}
 

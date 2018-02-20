@@ -4,27 +4,25 @@
 		@change="onDimensionsChange"
 		>
 
-		<template v-if="isHydrated">
-			<a
-				v-if="!isShowingVideo"
-				@click="play"
-				>
-				<div class="play-button-overlay">
-					<app-jolticon icon="play" />
-				</div>
+		<a
+			v-if="!isHydrated || !isShowingVideo"
+			@click="play"
+			>
+			<div class="play-button-overlay">
+				<app-jolticon icon="play" />
+			</div>
 
-				<div class="-thumb"
-					:style="{ 'background-image': `url('${thumbnail}')` }"
-					>
-				</div>
-			</a>
-			<app-video-embed
-				v-else
-				video-provider="youtube"
-				:video-id="videoId"
-				:autoplay="shouldAutoplay"
-				/>
-		</template>
+			<div class="-thumb"
+				:style="{ 'background-image': `url('${thumbnail}')` }"
+				>
+			</div>
+		</a>
+		<app-video-embed
+			v-else
+			video-provider="youtube"
+			:video-id="videoId"
+			:autoplay="shouldAutoplay"
+			/>
 
 	</app-responsive-dimensions>
 </div>

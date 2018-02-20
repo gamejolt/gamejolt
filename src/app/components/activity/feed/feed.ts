@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/sampleTime';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import View from '!view!./feed.html';
 
@@ -12,6 +13,24 @@ import { AppActivityFeedItem } from './item/item';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { AppTimelineList } from '../../../../lib/gj-lib-client/components/timeline-list/timeline-list';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
+import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+
+/**
+ * The distance from the bottom of the feed that we should start loading more.
+ */
+const LoadMoreOffset = Screen.windowHeight * 2;
+
+/**
+ * The number of times we should do an auto-load of items before stopping and requiring them to do
+ * it manually.
+ */
+const LoadMoreTimes = 3;
+
+/**
+ * Wait this long between scroll checks.
+ */
+const ScrollSampleTime = 1000;
 
 @View
 @Component({
@@ -37,7 +56,26 @@ export class AppActivityFeed extends Vue {
 	private scroll$: Subscription | undefined;
 
 	mounted() {
-		this.scroll$ = Scroll.scrollChanges.subscribe(change => (this.scroll = change.top));
+		this.scroll$ = Scroll.scrollChanges.sampleTime(ScrollSampleTime).subscribe(() => {
+			const { top, height } = Scroll.getScrollChange();
+			this.scroll = top;
+
+			// Auto-loading while scrolling.
+			if (
+				!this.feed.noAutoload &&
+				!this.feed.isLoadingMore &&
+				!this.feed.reachedEnd &&
+				this.feed.timesLoaded < LoadMoreTimes
+			) {
+				const feedOffset = Ruler.offset(this.$el);
+				const feedBottom = feedOffset.top + feedOffset.height;
+				const scrollBottom = top + height;
+
+				if (feedBottom - scrollBottom < LoadMoreOffset) {
+					this.loadMore();
+				}
+			}
+		});
 	}
 
 	destroyed() {
