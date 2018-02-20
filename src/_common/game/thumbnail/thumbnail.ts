@@ -63,6 +63,7 @@ export class AppGameThumbnail extends Vue {
 
 	@State app: AppStore;
 
+	isBootstrapped = GJ_IS_SSR;
 	isHydrated = GJ_IS_SSR;
 	isThumbnailLoaded = GJ_IS_SSR;
 	isWindowFocused = typeof document !== 'undefined' && document.hasFocus
@@ -76,23 +77,18 @@ export class AppGameThumbnail extends Vue {
 		return !this.$slots.default;
 	}
 
-	get isActive() {
-		// When the window is not focused we don't want to play videos. This
-		// should speed up inactive tabs.
-		return (
-			!GJ_IS_SSR &&
-			!!Settings.get('animated-thumbnails') &&
-			this.isWindowFocused &&
-			this.isHydrated
-		);
-	}
-
 	get shouldShowVideo() {
+		// When the window is not focused, or when we're scrolling, we don't want to play videos.
+		// This should speed up inactive tabs.
 		return (
 			this.game.thumbnail_media_item &&
 			this.game.thumbnail_media_item.is_animated &&
 			Screen.isDesktop &&
-			this.isActive
+			!GJ_IS_SSR &&
+			!!Settings.get('animated-thumbnails') &&
+			this.isWindowFocused &&
+			!Screen.isScrolling &&
+			this.isHydrated
 		);
 	}
 
@@ -162,6 +158,7 @@ export class AppGameThumbnail extends Vue {
 	}
 
 	inView() {
+		this.isBootstrapped = true;
 		this.isHydrated = true;
 	}
 
