@@ -192,7 +192,7 @@
 				</router-link>
 				<a
 					v-for="package_ of gamePackages"
-					:key="package_.id"
+					:key="`open-folder-${package_.id}`"
 					v-if="package_.isSettled"
 					class="list-group-item has-icon"
 					@click="openFolder( package_ )"
@@ -204,7 +204,7 @@
 				</a>
 				<a
 					v-for="package_ of gamePackages"
-					:key="package_.id"
+					:key="`uninstall-${package_.id}`"
 					v-if="!package_.install_state && !package_.isRemoving"
 					class="list-group-item has-icon"
 					:class="{
@@ -228,7 +228,7 @@
 			<div class="list-group list-group-dark thin">
 				<a
 					v-for="package_ of gamePackages"
-					:key="package_.id"
+					:key="`launch-${package_.id}`"
 					v-if="package_.isSettled"
 					class="list-group-item has-icon"
 					:class="{
