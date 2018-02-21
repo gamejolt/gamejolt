@@ -20,7 +20,6 @@ import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/
 import { currency } from '../../../lib/gj-lib-client/vue/filters/currency';
 import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Settings } from '../../settings/settings.service';
-import { AppGameThumbnailPlaceholder } from './placeholder/placeholder';
 
 /**
  * An array of all the thumbnails on the page.
@@ -50,7 +49,6 @@ if (typeof window !== 'undefined') {
 		AppGameModLinks,
 		AppUserAvatarImg,
 		AppScrollInview,
-		AppGameThumbnailPlaceholder,
 		AppGameFollowWidget,
 		AppGamePlaylistAddToWidget,
 	},
@@ -79,23 +77,18 @@ export class AppGameThumbnail extends Vue {
 		return !this.$slots.default;
 	}
 
-	get isActive() {
-		// When the window is not focused we don't want to play videos. This
-		// should speed up inactive tabs.
-		return (
-			!GJ_IS_SSR &&
-			!!Settings.get('animated-thumbnails') &&
-			this.isWindowFocused &&
-			this.isHydrated
-		);
-	}
-
 	get shouldShowVideo() {
+		// When the window is not focused, or when we're scrolling, we don't want to play videos.
+		// This should speed up inactive tabs.
 		return (
 			this.game.thumbnail_media_item &&
 			this.game.thumbnail_media_item.is_animated &&
 			Screen.isDesktop &&
-			this.isActive
+			!GJ_IS_SSR &&
+			!!Settings.get('animated-thumbnails') &&
+			this.isWindowFocused &&
+			!Screen.isScrolling &&
+			this.isHydrated
 		);
 	}
 

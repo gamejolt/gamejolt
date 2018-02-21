@@ -1,4 +1,4 @@
-<div>
+<div class="devlog-post-view">
 
 	<div class="tiny text-muted">
 		<app-time-ago :date="post.published_on" />
@@ -60,13 +60,11 @@
 		:game="post.game"
 		/>
 
-	<hr>
-
 	<app-activity-feed-controls
+		show-comments
 		:post="post"
 		:show-game-info="showGameInfo"
 		:in-modal="inModal"
-		:require-tabs="true"
 		/>
 
 </div>

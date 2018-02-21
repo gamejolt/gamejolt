@@ -57,6 +57,7 @@ export class AppForumPostListItem extends Vue {
 	@Prop(ForumPost) post: ForumPost;
 	@Prop(Boolean) isReply: boolean;
 	@Prop(Boolean) showReplies: boolean;
+	@Prop(Boolean) isLastInThread?: boolean;
 
 	@State app: Store['app'];
 

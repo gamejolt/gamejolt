@@ -2,6 +2,8 @@
 
 .-video-embed
 	position: relative
+	background-color: $gray-lightest
+	border-radius: $border-radius-base
 
 	a
 		display: block
@@ -15,3 +17,7 @@
 	background-repeat: no-repeat
 	background-position: center center
 	background-size: cover
+
+// It's a thumbnail first, then after clicking it becomes an iframe embed.
+.-thumb, >>> iframe
+	border-radius: $border-radius-base

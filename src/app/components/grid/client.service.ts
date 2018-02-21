@@ -19,6 +19,15 @@ interface NewNotificationPayload {
 	};
 }
 
+interface BootstrapPayload {
+	status: string;
+	body: {
+		friendRequestCount: number;
+		lastNotificationTime: number;
+		notificationCount: number;
+	};
+}
+
 /**
  * Polls a request until it returns a result, increases the delay time between requests after each failed attempt.
  * @param context Context for logging
@@ -53,6 +62,9 @@ export class GridClient {
 	connected = false;
 	socket: Socket | null = null;
 	channels: Channel[] = [];
+	notificationBacklog: NewNotificationPayload[] = [];
+	bootstrapReceived = false;
+	bootstrapTimestamp = 0;
 
 	constructor() {
 		this.connect();
@@ -127,36 +139,78 @@ export class GridClient {
 			this.handleNotification(payload)
 		);
 
-		channel.onError(reason => {
-			console.log(`[Grid] Connection error encountered (Reason: ${reason}).`);
-			// teardown and try to reconnect
-			if (this.connected) {
-				this.disconnect();
-				this.connect();
+		channel.on('bootstrap', (payload: BootstrapPayload) => {
+			if (payload.status === 'ok') {
+				console.log('[Grid] Received notification count bootstrap.');
+
+				channel.onError(reason => {
+					console.log(`[Grid] Connection error encountered (Reason: ${reason}).`);
+					this.restart(0);
+				});
+
+				store.commit('setNotificationCount', payload.body.notificationCount);
+				store.commit('setFriendRequestCount', payload.body.friendRequestCount);
+				this.bootstrapTimestamp = payload.body.lastNotificationTime;
+
+				this.bootstrapReceived = true;
+
+				// handle backlog
+				for (const notification of this.notificationBacklog) {
+					this.handleNotification(notification);
+				}
+				this.notificationBacklog = [];
+			} else {
+				// error
+				console.log(
+					`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`
+				);
+				this.restart();
 			}
 		});
+
+		channel.push('request-bootstrap', { user_id: userId });
+	}
+
+	async restart(sleepMs: number = 2000) {
+		// sleep a bit before trying to reconnect
+		await sleep(sleepMs);
+		// teardown and try to reconnect
+		if (this.connected) {
+			this.disconnect();
+			this.connect();
+		}
 	}
 
 	handleNotification(payload: NewNotificationPayload) {
 		if (this.connected) {
-			const data = payload.notification_data.event_item;
-			const notification = new Notification(data);
+			// if no bootstrap has been received yet, store new notifications in a backlog to process them later
+			// the bootstrap delivers the timestamp of the last event item included in the bootstrap's notification count
+			// all event notifications received before the timestamp from the bootstrap will be ignored
+			if (!this.bootstrapReceived) {
+				this.notificationBacklog.push(payload);
+			} else {
+				const data = payload.notification_data.event_item;
+				const notification = new Notification(data);
 
-			switch (notification.type) {
-				case Notification.TYPE_FRIENDSHIP_CANCEL:
-					// this special type of notification only decrements the friend request number
-					store.commit('changeFriendRequestCount', -1);
-					break;
+				// only handle if timestamp is newer than the bootstrap timestamp
+				if (notification.added_on > this.bootstrapTimestamp) {
+					switch (notification.type) {
+						case Notification.TYPE_FRIENDSHIP_CANCEL:
+							// this special type of notification only decrements the friend request number
+							store.commit('changeFriendRequestCount', -1);
+							break;
 
-				case Notification.TYPE_FRIENDSHIP_REQUEST:
-					// for an incoming friend request, increase the friend request number
-					store.commit('changeFriendRequestCount', 1);
-					this.spawnNotification(notification);
-					break;
+						case Notification.TYPE_FRIENDSHIP_REQUEST:
+							// for an incoming friend request, increase the friend request number
+							store.commit('changeFriendRequestCount', 1);
+							this.spawnNotification(notification);
+							break;
 
-				default:
-					this.spawnNotification(notification);
-					break;
+						default:
+							this.spawnNotification(notification);
+							break;
+					}
+				}
 			}
 		}
 	}
@@ -172,6 +226,8 @@ export class GridClient {
 			let title = Translate.$gettext('New Notification');
 			if (notification.type === Notification.TYPE_DEVLOG_POST_ADD) {
 				title = Translate.$gettext('New Post');
+			} else if (notification.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
+				title = Translate.$gettext('New Video');
 			}
 
 			Growls.info({
@@ -204,6 +260,9 @@ export class GridClient {
 			console.log('[Grid] Disconnecting...');
 
 			this.connected = false;
+			this.bootstrapReceived = false;
+			this.notificationBacklog = [];
+			this.bootstrapTimestamp = 0;
 			this.channels.forEach(channel => {
 				channel.leave();
 				if (this.socket !== null) {

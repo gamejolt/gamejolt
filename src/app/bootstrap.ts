@@ -5,7 +5,6 @@ import { store } from './store/index';
 import { router } from './views/index';
 import { App } from './app';
 import { bootstrapShortkey } from '../lib/gj-lib-client/vue/shortkey';
-import { Scroll } from '../lib/gj-lib-client/components/scroll/scroll.service';
 import { Registry } from '../lib/gj-lib-client/components/registry/registry.service';
 import { GamePlayModal } from '../lib/gj-lib-client/components/game/play-modal/play-modal.service';
 import { Ads } from '../lib/gj-lib-client/components/ad/ads.service';
@@ -24,6 +23,3 @@ bootstrapShortkey();
 
 Registry.setConfig('Game', { maxItems: 100 });
 Registry.setConfig('FiresidePost', { maxItems: 50 });
-
-// Match this to the shell top nav height.
-Scroll.setOffsetTop(50);

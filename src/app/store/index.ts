@@ -31,10 +31,16 @@ import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
 import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
 import { BannerStore, BannerMutations, BannerActions } from './banner';
+import {
+	CommentActions,
+	CommentMutations,
+	CommentStore,
+} from '../../lib/gj-lib-client/components/comment/comment-store';
 
 export type Actions = AppActions &
 	LibraryActions &
 	BannerActions &
+	CommentActions &
 	_ClientLibraryMod.Actions & {
 		bootstrap: undefined;
 		logout: undefined;
@@ -52,6 +58,7 @@ export type Actions = AppActions &
 export type Mutations = AppMutations &
 	LibraryMutations &
 	BannerMutations &
+	CommentMutations &
 	_ClientLibraryMod.Mutations & {
 		setNotificationCount: number;
 		incrementNotificationCount: number;
@@ -77,6 +84,7 @@ const modules: any = {
 	app: appStore,
 	library: new LibraryStore(),
 	banner: new BannerStore(),
+	comment: new CommentStore(),
 };
 
 if (GJ_IS_CLIENT) {
@@ -92,6 +100,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	app: AppStore;
 	library: LibraryStore;
 	banner: BannerStore;
+	comment: CommentStore;
 	clientLibrary: _ClientLibraryMod.ClientLibraryStore;
 
 	// From the vuex-router-sync.

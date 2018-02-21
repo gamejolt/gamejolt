@@ -1,10 +1,11 @@
-<div>
+<div class="-devlog-post-text" :class="{'-hydrated': isHydrated }">
 
 	<app-fade-collapse
 		:collapse-height="500"
 		:is-open="item.isOpen"
 		:animate="false"
 		@require-change="canToggleChanged"
+		@expand="toggleFull"
 		>
 		<div class="fireside-post-body">
 			<app-widget-compiler :content="post.content_compiled" />

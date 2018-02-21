@@ -14,10 +14,9 @@ import { AppGameSoundtrackCard } from '../../../../../../../lib/gj-lib-client/co
 import { Store } from '../../../../../../store/index';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
-import { Comment } from '../../../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
-import { AppCommentWidgetAddLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
+import { FormCommentLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
@@ -25,6 +24,13 @@ import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppDiscoverGamesViewOverviewRecommended } from '../_recommended/recommended';
+import {
+	CommentStore,
+	CommentState,
+	CommentAction,
+	CommentMutation,
+	CommentStoreModel,
+} from '../../../../../../../lib/gj-lib-client/components/comment/comment-store';
 
 @View
 @Component({
@@ -40,7 +46,7 @@ import { AppDiscoverGamesViewOverviewRecommended } from '../_recommended/recomme
 		AppMediaBar,
 		AppActivityFeedPlaceholder,
 		AppActivityFeed: AppActivityFeedLazy,
-		AppCommentWidgetAdd: AppCommentWidgetAddLazy,
+		AppCommentWidgetAdd: FormCommentLazy,
 		AppJolticon,
 		AppDevlogPostAdd,
 		AppGamePerms,
@@ -72,32 +78,53 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 
 	@RouteMutation addPost: RouteStore['addPost'];
 
-	comments: Comment[] = [];
-	commentsCount = 0;
+	@CommentState getCommentStore: CommentStore['getCommentStore'];
+	@CommentAction fetchComments: CommentStore['fetchComments'];
+	@CommentAction lockCommentStore: CommentStore['lockCommentStore'];
+	@CommentMutation releaseCommentStore: CommentStore['releaseCommentStore'];
+	@CommentMutation onCommentAdd: CommentStore['onCommentAdd'];
 
 	headingColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-2';
 	contentColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-7';
 	contentColClassesFull = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-10';
+	commentStore: CommentStoreModel | null = null;
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
 	readonly number = number;
 
-	@Watch('game.id', { immediate: true })
-	async onGameChange() {
-		if (this.game) {
-			this.comments = [];
-			this.commentsCount = 0;
+	get comments() {
+		return this.commentStore ? this.commentStore.parentComments : [];
+	}
 
-			const payload = await Comment.fetch('Game', this.game.id, 1);
-			this.commentsCount = payload.count;
-			this.comments = Comment.populate(payload.comments);
+	get commentsCount() {
+		return this.commentStore ? this.commentStore.count : 0;
+	}
+
+	@Watch('game.id', { immediate: true })
+	@Watch('game.comments_enabled')
+	async onGameChange() {
+		if (this.game && this.game.comments_enabled) {
+			if (this.commentStore) {
+				this.releaseCommentStore(this.commentStore);
+			}
+
+			this.commentStore = await this.lockCommentStore({
+				resource: 'Game',
+				resourceId: this.game.id,
+			});
+
+			this.fetchComments({
+				store: this.commentStore,
+			});
 		}
 	}
 
-	onCommentAdded(comment: Comment) {
-		++this.commentsCount;
-		this.comments.unshift(comment);
+	destroyed() {
+		if (this.commentStore) {
+			this.releaseCommentStore(this.commentStore);
+			this.commentStore = null;
+		}
 	}
 
 	onPostAdded(post: FiresidePost) {

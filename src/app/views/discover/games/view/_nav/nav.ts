@@ -13,6 +13,10 @@ import { ReportModal } from '../../../../../../lib/gj-lib-client/components/repo
 import { Store } from '../../../../../store/index';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppGameModLinks } from '../../../../../components/game/mod-links/mod-links';
+import {
+	CommentStore,
+	CommentState,
+} from '../../../../../../lib/gj-lib-client/components/comment/comment-store';
 
 @View
 @Component({
@@ -32,12 +36,13 @@ import { AppGameModLinks } from '../../../../../components/game/mod-links/mod-li
 export class AppDiscoverGamesViewNav extends Vue {
 	@RouteState game: RouteStore['game'];
 	@RouteState postsCount: RouteStore['postsCount'];
-	@RouteState commentsCount: RouteStore['commentsCount'];
 	@RouteState trophiesCount: RouteStore['trophiesCount'];
 	@RouteState hasScores: RouteStore['hasScores'];
 	@RouteState primaryScoreTable: RouteStore['primaryScoreTable'];
 
 	@State app: Store['app'];
+
+	@CommentState getCommentStore: CommentStore['getCommentStore'];
 
 	Environment = Environment;
 
@@ -47,6 +52,14 @@ export class AppDiscoverGamesViewNav extends Vue {
 
 	get shouldShowModTools() {
 		return this.app.user && this.app.user.isMod;
+	}
+
+	get commentsCount() {
+		if (this.game) {
+			const store = this.getCommentStore('Game', this.game.id);
+			return store ? store.count : 0;
+		}
+		return 0;
 	}
 
 	report() {

@@ -61,6 +61,7 @@
 		:collapse-height="isClaimOnly ? undefined : 400"
 		:is-open="showingFullDescription"
 		@require-change="canToggleDescription = $event"
+		@expand="showingFullDescription = true"
 		>
 		<div class="game-compiled-description" v-html="game.description_compiled"></div>
 	</app-fade-collapse>

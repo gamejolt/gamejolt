@@ -1,0 +1,10 @@
+@require '~styles/variables'
+
+.-devlog-post-text
+	// Hide images and widgets until we are hydrated.
+	>>> img, >>> iframe
+		visibility: hidden
+
+	&.-hydrated
+		>>> img, >>> iframe
+			visibility: visible

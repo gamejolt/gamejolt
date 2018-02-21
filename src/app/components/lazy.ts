@@ -17,9 +17,9 @@ export async function AppCommentWidgetLazy() {
 		.AppCommentWidget;
 }
 
-export async function AppCommentWidgetAddLazy() {
+export async function FormCommentLazy() {
 	return (await import(/* webpackChunkName: "commentWidget" */ '../../lib/gj-lib-client/components/comment/add/add'))
-		.AppCommentWidgetAdd;
+		.FormComment;
 }
 
 export async function AppActivityFeedLazy() {

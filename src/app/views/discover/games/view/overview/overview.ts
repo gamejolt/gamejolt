@@ -13,6 +13,7 @@ import {
 	RouteResolve,
 	BaseRouteComponent,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { CommentModal } from '../../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
 
 @Component({
 	name: 'RouteDiscoverGamesViewOverview',
@@ -58,6 +59,8 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	routeInit() {
+		CommentModal.checkPermalink(this.$router);
+
 		// Try pulling feed from cache.
 		this.bootstrapFeed();
 	}
@@ -76,7 +79,9 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	render(h: CreateElement) {
 		return h(
-			this.game._is_devlog ? AppDiscoverGamesViewOverviewDevlog : AppDiscoverGamesViewOverviewGame
+			this.game._is_devlog
+				? AppDiscoverGamesViewOverviewDevlog
+				: AppDiscoverGamesViewOverviewGame
 		);
 	}
 }
