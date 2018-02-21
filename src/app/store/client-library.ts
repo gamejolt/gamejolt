@@ -1034,6 +1034,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				response.launchOptions
 			)
 		);
+		updateData.install_dir = localPackage.install_dir;
 
 		await this.setPackageUpdateData([localPackage, updateData]);
 		await this.setPackageUpdateState([localPackage, LocalDbPackagePatchState.PATCH_PENDING]);
@@ -1223,13 +1224,18 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			throw new Error('Update package does not exist');
 		}
 
+		const update = localPackage.update;
+		if (!update.install_dir) {
+			update.install_dir = localPackage.install_dir;
+		}
+
 		await this.clearPackageOperations(localPackage);
 
 		await this.setPackageData([
 			localPackage,
 			{
 				// It's a localdb package, so it should have all the correct fields.
-				...localPackage.update,
+				...update,
 			},
 		]);
 	}
