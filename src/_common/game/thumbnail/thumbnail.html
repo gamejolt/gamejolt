@@ -58,10 +58,11 @@
 						/>
 
 					<app-video
-						v-if="shouldShowVideo"
+						v-if="hasVideo"
 						:poster="game.thumbnail_media_item.mediaserver_url"
 						:webm="game.thumbnail_media_item.mediaserver_url_webm"
 						:mp4="game.thumbnail_media_item.mediaserver_url_mp4"
+						:should-play="shouldPlayVideo"
 						/>
 				</template>
 			</div>
