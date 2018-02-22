@@ -84,27 +84,21 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 	}
 
 	@Watch('formModel.limit_downloads')
-	limitDownloadsChange(shouldLimit: boolean, prev: boolean) {
-		if (shouldLimit === prev) {
-			return;
-		}
-
+	limitDownloadsChange(shouldLimit: boolean) {
 		this.setField(
 			'max_download_count',
 			shouldLimit ? Settings.getDefault('max-download-count') : -1
 		);
+		this.onChange();
 	}
 
 	@Watch('formModel.limit_extractions')
-	limitExtractionsChange(shouldLimit: boolean, prev: boolean) {
-		if (shouldLimit === prev) {
-			return;
-		}
-
+	limitExtractionsChange(shouldLimit: boolean) {
 		this.setField(
 			'max_extract_count',
 			shouldLimit ? Settings.getDefault('max-extract-count') : -1
 		);
+		this.onChange();
 	}
 
 	onChange() {
