@@ -65,7 +65,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		this.bootstrapFeed();
 	}
 
-	async routed($payload: any) {
+	async routed($payload: any, fromCache: boolean) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
@@ -74,7 +74,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 			Meta.microdata = $payload.microdata;
 		}
 
-		this.processOverviewPayload($payload);
+		this.processOverviewPayload({ payload: $payload, fromCache });
 	}
 
 	render(h: CreateElement) {

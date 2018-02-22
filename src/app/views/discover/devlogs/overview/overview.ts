@@ -71,10 +71,10 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 		}
 	}
 
-	routed($payload: any) {
+	routed($payload: any, fromCache: boolean) {
 		this.games = Game.populate($payload.games);
 
-		if (!this.feed) {
+		if (!fromCache && !this.feed) {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {
 				type: 'EventItem',
 				url: '/web/discover/devlogs/posts',

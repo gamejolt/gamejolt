@@ -54,12 +54,12 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed($payload: any) {
+	routed($payload: any, fromCache: boolean) {
 		this.isLoaded = true;
 		this.bestGames = Game.populate($payload.bestGames).slice(0, 6);
 		this.hotGames = Game.populate($payload.hotGames).slice(0, 6);
 
-		if (!this.feed) {
+		if (!fromCache && !this.feed) {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {
 				type: 'EventItem',
 				url: `/web/discover/channels/posts/${this.channel}`,
