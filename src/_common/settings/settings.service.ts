@@ -60,6 +60,10 @@ const defaultSettings: { [k: string]: Setting } = {
 		type: 'boolean',
 		val: 1,
 	},
+	'feed-notifications': {
+		type: 'boolean',
+		val: 1,
+	},
 };
 
 export class Settings {

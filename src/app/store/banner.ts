@@ -5,6 +5,7 @@ import { Connection } from '../../lib/gj-lib-client/components/connection/connec
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
 import { store } from './index';
 import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
+import { Settings } from '../../_common/settings/settings.service';
 
 export const BannerStoreNamespace = 'banner';
 export const BannerState = namespace(BannerStoreNamespace, State);
@@ -22,6 +23,7 @@ abstract class Banner {
 	abstract message: string;
 	abstract isActive: boolean;
 	onClick?(): void;
+	onClose?(): void;
 
 	type: string = 'info';
 	isClosed = false;
@@ -48,7 +50,8 @@ class NotificationsBanner extends Banner {
 			store &&
 			store.state.route.name === 'activity' &&
 			'Notification' in window &&
-			(Notification as any).permission === 'default'
+			(Notification as any).permission === 'default' &&
+			Settings.get('feed-notifications')
 		);
 	}
 
@@ -58,10 +61,16 @@ class NotificationsBanner extends Banner {
 		const result = await Notification.requestPermission();
 		if (result === 'denied') {
 			Analytics.trackEvent('notifications', 'denied');
+			Settings.set('feed-notifications', false);
 		} else if (result === 'default') {
 			Analytics.trackEvent('notifications', 'accepted');
+			Settings.set('feed-notifications', true);
 			return;
 		}
+	}
+
+	onClose() {
+		Settings.set('feed-notifications', false);
 	}
 }
 
@@ -111,6 +120,9 @@ export class BannerStore extends VuexStore<BannerStore, BannerActions, BannerMut
 		const banner = this.currentBanner;
 		if (banner) {
 			banner.isClosed = true;
+			if (banner.onClose) {
+				banner.onClose();
+			}
 		}
 	}
 }
