@@ -8,7 +8,6 @@ import { Primus } from '../../../lib/gj-lib-client/components/primus/primus.serv
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { ChatMessage, ChatMessageType } from './message';
-import { ChatRoomStorage } from './room-storage.service';
 import { EventBus } from '../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { ChatNotification } from './notification/notification.service';
 import { getCookie } from '../../../_common/cookie/cookie.service';
@@ -118,7 +117,6 @@ export class ChatClient {
 
 	logout() {
 		this.reconnect();
-		ChatRoomStorage.logout();
 	}
 
 	/**
@@ -206,8 +204,6 @@ export class ChatClient {
 					roomId: roomId,
 					isSource: isSource || false,
 				});
-
-				ChatRoomStorage.joinRoom(roomId);
 			} else {
 				this.maximizeRoom(roomId);
 			}
@@ -225,8 +221,6 @@ export class ChatClient {
 				event: 'leave-room',
 				roomId: roomId,
 			});
-
-			ChatRoomStorage.leaveRoom(roomId);
 		}
 	}
 
@@ -301,8 +295,6 @@ export class ChatClient {
 			this.connected = true;
 
 			this.setRoom(undefined);
-
-			ChatRoomStorage.destroy();
 		} else if (msg.event === 'friends-list') {
 			const friendsList = msg.data.friendsList;
 			if (friendsList) {
@@ -470,12 +462,6 @@ export class ChatClient {
 				Vue.delete(this.usersOnline, roomId);
 				Vue.delete(this.messages, roomId);
 			}
-		} else if (msg.event === 'invalid-room') {
-			const roomId = msg.data.roomId;
-
-			// Remove this room from room storage if it happened to be there.
-			// If other local sessions were joined, let's disconnect them.
-			ChatRoomStorage.leaveRoom(roomId);
 		} else if (msg.event === 'online-count') {
 			this.allCount = msg.data.onlineCount;
 		}
