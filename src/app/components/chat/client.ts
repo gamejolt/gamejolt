@@ -489,13 +489,13 @@ export class ChatClient {
 				);
 			}
 
-			this._processNewOutput(messages, true);
-
 			// If isSource is true, that means that this client actually opened the room
 			// so we open it here. In the other clients we don't.
 			if (isSource) {
 				this.setRoom(room);
 			}
+
+			this._processNewOutput(messages, true);
 		}
 	}
 
