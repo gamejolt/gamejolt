@@ -10,6 +10,8 @@ export class ChatRoomStorage {
 	}
 
 	static init() {
+		console.log('[CHAT] Room storage initializing');
+
 		if (!window.localStorage.getItem(STORAGE_KEY)) {
 			window.localStorage.setItem(
 				STORAGE_KEY,
@@ -40,6 +42,10 @@ export class ChatRoomStorage {
 	}
 
 	static joinRoom(roomId: number) {
+		if (!this.storageListener) {
+			return;
+		}
+
 		const data = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '{}');
 
 		// Don't reprocess the same command.
@@ -60,6 +66,10 @@ export class ChatRoomStorage {
 	}
 
 	static leaveRoom(roomId: number) {
+		if (!this.storageListener) {
+			return;
+		}
+
 		const data = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '{}');
 
 		// Don't reprocess the same command.
@@ -81,6 +91,10 @@ export class ChatRoomStorage {
 	}
 
 	static logout() {
+		if (!this.storageListener) {
+			return;
+		}
+
 		const data = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '{}');
 
 		data.time = Date.now();
@@ -93,6 +107,10 @@ export class ChatRoomStorage {
 	}
 
 	private static cleanRooms() {
+		if (!this.storageListener) {
+			return;
+		}
+
 		const data = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '{}');
 
 		data.rooms = data.rooms.filter((roomId: number) => {
