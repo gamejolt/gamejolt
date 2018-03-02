@@ -184,7 +184,7 @@ export class ChatClient {
 			if (this.notifications[roomId]) {
 				this.notifications[roomId] = this.notifications[roomId] + 1;
 			} else {
-				this.notifications[roomId] = 1;
+				Vue.set(this.notifications, '' + roomId, 1);
 			}
 		}
 	}
@@ -342,7 +342,7 @@ export class ChatClient {
 			const roomId = msg.data.roomId;
 
 			if (this.room && this.room.id === roomId) {
-				Vue.delete(this.notifications, roomId);
+				Vue.delete(this.notifications, '' + roomId);
 			}
 		} else if (msg.event === 'user-enter-room') {
 			const user = new ChatUser(msg.data.user);
