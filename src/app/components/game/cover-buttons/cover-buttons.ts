@@ -111,9 +111,10 @@ export class AppGameCoverButtons extends Vue {
 		GamePackagePurchaseModal.show({
 			game: this.game,
 			package: pkg,
-			build,
+			build: build || null,
 			partner: this.partner,
 			partnerKey: this.partnerKey,
+			fromExtraSection: false,
 		});
 	}
 }
