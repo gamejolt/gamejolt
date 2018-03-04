@@ -12,6 +12,7 @@ import { router } from '../../views';
 import Axios from 'axios';
 import { sleep } from '../../../lib/gj-lib-client/utils/utils';
 import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { Settings } from '../../../_common/settings/settings.service';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -217,6 +218,13 @@ export class GridClient {
 
 	spawnNotification(notification: Notification) {
 		store.commit('incrementNotificationCount', 1);
+
+		// In Client when the feed notifications setting is disabled, don't show them notifications.
+		// On site we only use it to disable native browser notifications, but still try to show in
+		// the Growl.
+		if (GJ_IS_CLIENT && !Settings.get('feed-notifications')) {
+			return;
+		}
 
 		const message = getNotificationText(notification);
 		const icon =

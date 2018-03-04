@@ -77,19 +77,21 @@ export class AppGameThumbnail extends Vue {
 		return !this.$slots.default;
 	}
 
-	get shouldShowVideo() {
-		// When the window is not focused, or when we're scrolling, we don't want to play videos.
-		// This should speed up inactive tabs.
+	get hasVideo() {
 		return (
 			this.game.thumbnail_media_item &&
 			this.game.thumbnail_media_item.is_animated &&
 			Screen.isDesktop &&
 			!GJ_IS_SSR &&
 			!!Settings.get('animated-thumbnails') &&
-			this.isWindowFocused &&
-			!Screen.isScrolling &&
 			this.isHydrated
 		);
+	}
+
+	get shouldPlayVideo() {
+		// When the window is not focused, or when we're scrolling, we don't want to play videos.
+		// This should speed up inactive tabs.
+		return this.hasVideo && this.isWindowFocused && !Screen.isScrolling;
 	}
 
 	get url() {

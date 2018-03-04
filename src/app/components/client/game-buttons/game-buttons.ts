@@ -111,7 +111,8 @@ export class AppClientGameButtons extends Vue {
 			GamePackagePurchaseModal.show({
 				game: this.game,
 				package: build._package!,
-				build,
+				build: build,
+				fromExtraSection: false,
 			});
 			return;
 		}

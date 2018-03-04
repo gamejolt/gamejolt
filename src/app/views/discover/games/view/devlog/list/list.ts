@@ -67,12 +67,12 @@ export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed($payload: any) {
+	routed($payload: any, fromCache: boolean) {
 		Meta.description = `Stay up to date on all the latest posts for ${
 			this.game.title
 		} on Game Jolt`;
 
-		if (!this.feed) {
+		if (!fromCache && !this.feed) {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {
 				type: 'EventItem',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,

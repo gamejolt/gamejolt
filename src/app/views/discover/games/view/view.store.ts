@@ -48,7 +48,7 @@ type Mutations = {
 	bootstrapGame: number;
 	bootstrapFeed: undefined;
 	processPayload: any;
-	processOverviewPayload: any;
+	processOverviewPayload: { payload: any; fromCache: boolean };
 	processRatingPayload: any;
 	acceptCollaboratorInvite: GameCollaborator;
 	declineCollaboratorInvite: GameCollaborator;
@@ -279,7 +279,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	processOverviewPayload(payload: Mutations['processOverviewPayload']) {
+	processOverviewPayload(data: Mutations['processOverviewPayload']) {
+		const { payload, fromCache } = data;
 		this.isOverviewLoaded = true;
 
 		this.mediaItems = [];
@@ -298,7 +299,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		// This may have been bootstrapped from cache in the `bootstrapFeed`
 		// mutation. If there was no cached feed, then we'll generate a new one.
 		// Also regenerate if the game changed.
-		if (!this.feed) {
+		if (!fromCache && !this.feed) {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate(payload.posts), {
 				type: 'EventItem',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,
