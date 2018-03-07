@@ -45,7 +45,13 @@ export class AppChatWindow extends Vue {
 	readonly Screen = Screen;
 
 	close() {
-		this.chat.leaveRoom(this.room.id);
+		// xs size needs to show the friends list when closing the room.
+		// any other size can close the whole chat instead
+		if (Screen.isXs) {
+			this.chat.leaveRoom();
+		} else {
+			this.chat.closeChat();
+		}
 	}
 
 	// Closes chat completely. When you click on the empty space behind the

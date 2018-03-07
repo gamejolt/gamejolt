@@ -9,7 +9,7 @@ export class ChatNotification {
 
 	static notification(message: ChatMessage) {
 		// Skip if already in the room.
-		if (this.chat.room && this.chat.room.id === message.roomId) {
+		if (this.chat.isInRoom(message.roomId)) {
 			return;
 		}
 
@@ -18,7 +18,7 @@ export class ChatNotification {
 			message: message.contentRaw, // Use the raw message so we don't show compiled markdown.
 			icon: message.user.imgAvatar,
 			onclick: () => {
-				this.chat.toggleRoom(message.roomId);
+				this.chat.enterRoom(message.roomId);
 			},
 			system: true,
 		});

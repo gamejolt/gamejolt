@@ -9,6 +9,8 @@ import { Store } from '../../../store/index';
 import { ChatClient, ChatNewMessageEvent } from '../../chat/client';
 import { Favicon } from '../../../../lib/gj-lib-client/components/favicon/favicon.service';
 import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
+import { EscapeStack } from '../../../../lib/gj-lib-client/components/escape-stack/escape-stack.service';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 
 @View
 @Component({
@@ -31,6 +33,7 @@ export class AppShellChat extends Vue {
 	private newMessageCallback?: Function;
 	private focusCallback?: EventListener;
 	private blurCallback?: EventListener;
+	private escapeCallback?: Function;
 
 	get totalNotificationsCount() {
 		return this.chat.roomNotificationsCount + this.unfocusedNotificationsCount;
@@ -39,10 +42,7 @@ export class AppShellChat extends Vue {
 	mounted() {
 		this.blurCallback = () => (this.isWindowFocused = false);
 		this.focusCallback = () => (this.isWindowFocused = true);
-
-		window.addEventListener('blur', this.blurCallback);
-		window.addEventListener('focus', this.focusCallback);
-
+		this.escapeCallback = () => this.hideChatPane();
 		this.newMessageCallback = (event: ChatNewMessageEvent) => {
 			// If we have a general room open, and our window is unfocused or
 			// minimized, then increment our room notifications count (since
@@ -60,6 +60,9 @@ export class AppShellChat extends Vue {
 			}
 		};
 
+		window.addEventListener('blur', this.blurCallback);
+		window.addEventListener('focus', this.focusCallback);
+		EscapeStack.register(this.escapeCallback);
 		EventBus.on('Chat.newMessage', this.newMessageCallback);
 	}
 
@@ -80,20 +83,34 @@ export class AppShellChat extends Vue {
 			window.removeEventListener('blur', this.focusCallback);
 			this.focusCallback = undefined;
 		}
+
+		if (this.escapeCallback) {
+			EscapeStack.deregister(this.escapeCallback);
+			this.escapeCallback = undefined;
+		}
 	}
 
-	// When the chat sidebar is closed, we want to make sure we leave their
-	// current active room.
-	@Watch('isRightPaneVisible')
-	onRightPaneChange() {
-		if (this.isRightPaneVisible) {
-			return;
+	showChatPane() {
+		if (!this.isRightPaneVisible) {
+			this.toggleRightPane();
 		}
+	}
 
-		// If the chat sidebar is no longer visible, but we are in a room, close
-		// it.
-		if (this.chat.isInRoom() && this.chat.room !== null) {
-			this.chat.leaveRoom(this.chat.room.id);
+	hideChatPane() {
+		if (this.isRightPaneVisible) {
+			this.toggleRightPane();
+		}
+	}
+
+	@Watch('isRightPaneVisible')
+	onRightPaneChange(isVisible: boolean) {
+		if (isVisible) {
+			// xs size needs to show the friends list
+			if (this.chat.sessionRoomId && !Screen.isXs) {
+				this.chat.enterRoom(this.chat.sessionRoomId);
+			}
+		} else {
+			this.chat.leaveRoom();
 		}
 	}
 
