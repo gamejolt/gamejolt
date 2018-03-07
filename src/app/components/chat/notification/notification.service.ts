@@ -18,7 +18,7 @@ export class ChatNotification {
 			message: message.contentRaw, // Use the raw message so we don't show compiled markdown.
 			icon: message.user.imgAvatar,
 			onclick: () => {
-				this.chat.enterRoom(message.roomId);
+				this.chat.toggleRoom(message.roomId);
 			},
 			system: true,
 		});

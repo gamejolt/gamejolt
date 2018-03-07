@@ -189,7 +189,7 @@ export class ChatClient {
 		}
 	}
 
-	enterRoom(roomId: number) {
+	toggleRoom(roomId: number) {
 		if (this.room && this.room.id === roomId) {
 			this.leaveRoom(this.room.id);
 		} else {

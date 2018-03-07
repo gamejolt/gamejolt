@@ -49,6 +49,6 @@ export class AppChatSidebar extends Vue {
 	}
 
 	onPublicRoomClicked(roomId: number) {
-		this.chat.enterRoom(roomId);
+		this.chat.toggleRoom(roomId);
 	}
 }
