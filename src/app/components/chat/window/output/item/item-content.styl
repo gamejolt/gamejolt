@@ -1,26 +1,26 @@
 @require '~styles/variables'
 
 .chat-window-message
-
 	&-content
-
 		p
 			margin-bottom: 5px
 
-		ul
-		ol
+		ul, ol
 			list-style-position: inside
 			padding-left: 0
 			margin-bottom: 5px
 
-			> li
+			& > li
 				margin-bottom: 0
 
-		// Full-bleed pre tags.
 		pre
 			margin-bottom: 5px
-			margin-left: -(35px + 10px + $chat-room-window-padding)
-			margin-right: -($chat-room-window-padding)
+
+		// Overwrite for dark theme
+		code, pre
+			color: inherit
+			background-color: $gray-darkest
+			border: 0
 
 		// If this pre tag is the first part of the first message, be sure to move it down past the avatar.
 		.chat-window-message-not-combined & pre:first-child
