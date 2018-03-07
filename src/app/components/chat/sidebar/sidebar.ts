@@ -8,6 +8,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppChatUserList } from '../user-list/user-list';
 import { ChatClient } from '../client';
+import { ChatUser } from '../user';
 
 @View
 @Component({
@@ -24,16 +25,28 @@ export class AppChatSidebar extends Vue {
 
 	readonly Screen = Screen;
 
-	shouldShowOfflineFriends = false;
+	showFriends = false;
 
-	get onlineFriends() {
-		return this.chat.friendsList.collection.filter(
-			item => item.isOnline || this.chat.notifications[item.roomId]
-		);
+	mounted() {
+		this.showFriends = this.shouldAlwaysShowFriends;
 	}
 
-	get offlineFriends() {
-		return this.chat.friendsList.collection.filter(item => !item.isOnline);
+	get shouldAlwaysShowFriends() {
+		return !this.Screen.isXs || this.chat.friendsList.collection.length <= 50;
+	}
+
+	get shouldShowFriends() {
+		return this.shouldAlwaysShowFriends || this.showFriends;
+	}
+
+	get friends() {
+		return this.chat.friendsList.collection;
+	}
+
+	changeFriendListVisibility() {
+		if (!this.shouldAlwaysShowFriends) {
+			this.showFriends = !this.showFriends;
+		}
 	}
 
 	onPublicRoomClicked(roomId: number) {
