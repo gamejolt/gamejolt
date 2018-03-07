@@ -189,12 +189,7 @@ export class ChatClient {
 		}
 	}
 
-	/**
-	 * isSource is whether or not we opened it in this session. If it's false,
-	 * then it may have been opened through another session and we just want it
-	 * to show in our rooms list.
-	 */
-	enterRoom(roomId: number, isSource: boolean) {
+	enterRoom(roomId: number) {
 		if (this.room && this.room.id === roomId) {
 			this.leaveRoom(this.room.id);
 		} else {
@@ -202,14 +197,16 @@ export class ChatClient {
 				this.primus.write({
 					event: 'enter-room',
 					roomId: roomId,
-					isSource: isSource || false,
+					// isSource was when you could be in multiple rooms at a time.
+					// It's no longer used.
+					isSource: true,
 				});
 			} else {
 				this.maximizeRoom(roomId);
 			}
 
 			// If we opened this room in this session explicitly, make sure the right pane is visible.
-			if (isSource && !store.state.isRightPaneVisible) {
+			if (!store.state.isRightPaneVisible) {
 				store.dispatch('toggleRightPane');
 			}
 		}

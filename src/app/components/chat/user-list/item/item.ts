@@ -43,7 +43,7 @@ export class AppChatUserListItem extends Vue {
 			return;
 		}
 
-		this.chat.enterRoom(this.user.roomId, true);
+		this.chat.enterRoom(this.user.roomId);
 		e.preventDefault();
 	}
 
