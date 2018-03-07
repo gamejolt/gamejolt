@@ -608,7 +608,7 @@ export class ChatClient {
 	}
 
 	canModerate(room: ChatRoom, targetUser: ChatUser, action = '') {
-		if (!this.currentUser) {
+		if (!this.currentUser || room.type === 'pm') {
 			return false;
 		}
 
