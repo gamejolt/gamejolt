@@ -313,6 +313,12 @@ export class ChatClient {
 
 			this._processNewOutput([message], false);
 
+			const friend = this.friendsList.getByRoom(message.roomId);
+			if (friend) {
+				friend.lastMessageOn = message.loggedOn.getTime();
+				this.friendsList.update(friend);
+			}
+
 			// TODO: Old functionality, change this later on. This was for checking if the message was sent successfully or not.
 			this.sendingMessage = false;
 
@@ -336,6 +342,14 @@ export class ChatClient {
 			// We got a notification for some room.
 			// If the notification key is null, set it to 1.
 			this.newNotification(message.roomId);
+
+			const friend = this.friendsList.getByRoom(message.roomId);
+			if (friend) {
+				console.log(message);
+				friend.lastMessageOn = message.loggedOn.getTime();
+				console.log('Updated friend timestamp to ' + friend.lastMessageOn);
+				this.friendsList.update(friend);
+			}
 
 			ChatNotification.notification(message);
 		} else if (msg.event === 'clear-notifications') {

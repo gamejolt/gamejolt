@@ -32,7 +32,7 @@ export class AppChatSidebar extends Vue {
 	}
 
 	get shouldAlwaysShowFriends() {
-		return !this.Screen.isXs && this.chat.friendsList.collection.length <= 50;
+		return !this.Screen.isXs || this.chat.friendsList.collection.length <= 50;
 	}
 
 	get shouldShowFriends() {

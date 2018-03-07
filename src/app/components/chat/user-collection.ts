@@ -3,9 +3,6 @@ import { ChatRoom } from './room';
 import { store } from '../../store/index';
 import { ChatSiteModPermission } from './client';
 
-// Mapping of user IDs to their notification count.
-type UserNotifications = { [k: number]: number };
-
 export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
 	static readonly TYPE_ROOM = 'room';
@@ -169,17 +166,19 @@ export class ChatUserCollection {
 	}
 
 	sort() {
-		// Mapping of user IDs to their notification count.
-		let notifications: UserNotifications;
-		if (this.type === ChatUserCollection.TYPE_FRIEND && this.chat) {
-			notifications = this.chat.notifications;
+		if (this.type === ChatUserCollection.TYPE_FRIEND) {
+			this.collection.sort((a, b) => {
+				return b.lastMessageOn - a.lastMessageOn;
+			});
+
+			return;
 		}
 
 		this.collection.sort((a, b) => {
 			// We group users into different areas.
 			// The grouped sort val takes precedence.
-			const aSort = this.getSortVal(a, notifications);
-			const bSort = this.getSortVal(b, notifications);
+			const aSort = this.getSortVal(a);
+			const bSort = this.getSortVal(b);
 			if (aSort > bSort) {
 				return 1;
 			} else if (aSort < bSort) {
@@ -196,11 +195,11 @@ export class ChatUserCollection {
 		});
 	}
 
-	private getSortVal(user: ChatUser, notifications: UserNotifications) {
+	private getSortVal(user: ChatUser) {
 		if (this.type === ChatUserCollection.TYPE_ROOM) {
 			// We sort muted users to the bottom of the list.
 			if (user.isMutedRoom || user.isMutedGlobal) {
-				return 6;
+				return 4;
 			}
 
 			// Sort mods to top of room lists.
@@ -213,14 +212,6 @@ export class ChatUserCollection {
 			}
 		}
 
-		// Sort users with notifications at the top of friend lists.
-		if (notifications && notifications[user.roomId]) {
-			if (user.isOnline) {
-				return 3;
-			}
-			return 4;
-		}
-
-		return 5;
+		return 3;
 	}
 }
