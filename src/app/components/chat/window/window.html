@@ -5,12 +5,12 @@
 		It takes up the empty background space so you can click that to close chat.
 	-->
 	<div class="chat-window-back-close" @click="closeChat"></div>
-	<div class="chat-window anim-fade-in-up">
+	<div class="chat-window">
 		<div class="chat-window-back-close" @click="closeChat"></div>
 
 		<!-- Room Users -->
 		<transition>
-			<div class="fill-darkest chat-window-users scrollable overlay-scrollbar anim-fade-enter-enlarge anim-fade-leave-shrink"
+			<div class="fill-darkest chat-window-users scrollable overlay-scrollbar"
 				v-if="!room.isPmRoom && isShowingUsers"
 				>
 
