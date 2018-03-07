@@ -8,7 +8,6 @@ import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.s
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 
 @View
 @Component({

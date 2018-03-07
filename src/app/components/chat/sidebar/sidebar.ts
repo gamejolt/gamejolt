@@ -8,7 +8,6 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppChatUserList } from '../user-list/user-list';
 import { ChatClient } from '../client';
-import { ChatUser } from '../user';
 
 @View
 @Component({
