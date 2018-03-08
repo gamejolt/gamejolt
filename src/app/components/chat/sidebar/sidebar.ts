@@ -22,30 +22,14 @@ import { ChatClient } from '../client';
 export class AppChatSidebar extends Vue {
 	@State chat: ChatClient;
 
+	friendsTab: 'all' | 'online' = 'all';
+
 	readonly Screen = Screen;
 
-	showFriends = false;
-
-	mounted() {
-		this.showFriends = this.shouldAlwaysShowFriends;
-	}
-
-	get shouldAlwaysShowFriends() {
-		return !this.Screen.isXs || this.chat.friendsList.collection.length <= 50;
-	}
-
-	get shouldShowFriends() {
-		return this.shouldAlwaysShowFriends || this.showFriends;
-	}
-
 	get friends() {
-		return this.chat.friendsList.collection;
-	}
-
-	changeFriendListVisibility() {
-		if (!this.shouldAlwaysShowFriends) {
-			this.showFriends = !this.showFriends;
-		}
+		return this.friendsTab === 'online'
+			? this.chat.friendsList.collection.filter(i => i.isOnline)
+			: this.chat.friendsList.collection;
 	}
 
 	onPublicRoomClicked(roomId: number) {
