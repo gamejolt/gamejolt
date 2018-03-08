@@ -8,10 +8,14 @@ import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { ChatClient, ChatSiteModPermission } from '../../client';
 import { ChatRoom } from '../../room';
 import { ChatUser } from '../../user';
+import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { ChatModerateUserModal } from '../../moderate-user-modal/moderate-user-modal.service';
 
 @View
 @Component({
 	components: {
+		AppScrollInview,
 		AppJolticon,
 	},
 	filters: {
@@ -26,9 +30,10 @@ export class AppChatUserListItem extends Vue {
 
 	@State chat: ChatClient;
 
-	areModToolsOpen = false;
+	isInview = false;
 
 	readonly ChatSiteModPermission = ChatSiteModPermission;
+	readonly Screen = Screen;
 
 	get canModerate() {
 		if (!this.room || !this.showModTools) {
@@ -47,35 +52,9 @@ export class AppChatUserListItem extends Vue {
 		e.preventDefault();
 	}
 
-	toggleModTools() {
-		this.areModToolsOpen = !this.areModToolsOpen;
-	}
-
-	mod() {
-		if (!this.canModerate) {
-			return;
+	openModTools() {
+		if (this.room) {
+			ChatModerateUserModal.show(this.room, this.user);
 		}
-		this.chat.mod(this.user.id, this.room!.id);
-	}
-
-	demod() {
-		if (!this.canModerate) {
-			return;
-		}
-		this.chat.demod(this.user.id, this.room!.id);
-	}
-
-	mute() {
-		if (!this.canModerate) {
-			return;
-		}
-		this.chat.mute(this.user.id, this.room!.id);
-	}
-
-	unmute() {
-		if (!this.canModerate) {
-			return;
-		}
-		this.chat.unmute(this.user.id, this.room!.id);
 	}
 }

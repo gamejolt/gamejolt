@@ -5,6 +5,7 @@ import View from '!view!./user-list.html';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 import { AppChatUserListItem } from './item/item';
+import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
 
 @View
 @Component({
@@ -19,4 +20,18 @@ export class AppChatUserList extends Vue {
 	@Prop(Boolean) showModTools?: boolean;
 
 	filterQuery = '';
+	// inviewUsers: { [k: string]: boolean } = {};
+
+	get filteredUsers() {
+		if (!this.filterQuery) {
+			return this.users;
+		}
+
+		const filter = this.filterQuery.toLowerCase();
+		return this.users.filter(
+			i =>
+				fuzzysearch(filter, i.displayName.toLowerCase()) ||
+				fuzzysearch(filter, i.username.toLowerCase())
+		);
+	}
 }

@@ -11,10 +11,12 @@ import { Favicon } from '../../../../lib/gj-lib-client/components/favicon/favico
 import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { EscapeStack } from '../../../../lib/gj-lib-client/components/escape-stack/escape-stack.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
 
 @View
 @Component({
 	components: {
+		AppScrollInviewParent,
 		AppChatSidebar,
 		AppChatWindows,
 	},
