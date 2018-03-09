@@ -3,10 +3,10 @@
 	position-by="fixed"
 	:append-to-body="true"
 	:hide-on-state-change="true"
+	@inview-parent="inviewParent = $event"
 	@focused="onFocus"
 	@blurred="onBlur"
 	>
-
 	<div class="shell-card-popover fill-darker">
 
 		<nav class="platform-list inline nav-justified no-animate">
@@ -16,123 +16,39 @@
 						:class="{ active: activeTab === 'requests' }"
 						@click="setActiveTab( 'requests' )"
 						>
-						<span translate>Friend Requests</span>
+						<translate>Friend Requests</translate>
 						<span class="badge">{{ requestsCount }}</span>
 					</a>
 				</li>
-				<li v-if="pending.length">
-					<a :class="{ active: activeTab === 'pending' }"
+				<li v-if="outgoing.length">
+					<a
+						:class="{ active: activeTab === 'pending' }"
 						@click="setActiveTab( 'pending' )"
 						>
-						<span translate>Sent Requests</span>
-						<span class="badge">{{ pending.length }}</span>
+						<translate>Sent Requests</translate>
+						<span class="badge">{{ outgoing.length }}</span>
 					</a>
 				</li>
 			</ul>
 		</nav>
 
-		<template v-if="isLoading && isShown">
+		<template v-if="isLoading">
 			<br>
 			<app-loading :centered="true"></app-loading>
 		</template>
-
-		<!-- Requests -->
-		<template v-if="!isLoading && activeTab === 'requests'">
-
-			<template v-if="isShown && requests.length">
-
-				<router-link
-					v-for="request of requests"
-					:key="request.id"
-					:to="request.getThem( user ).url"
-					>
-					<app-card>
-						<div class="shell-card-popover-card-media">
-							<div class="friend-request-popover-avatar">
-								<app-user-avatar-img :user="request.getThem( user )" />
-							</div>
-						</div>
-						<div class="shell-card-popover-card-body">
-
-							<div class="shell-card-popover-card-controls">
-								<span class="btn btn-success-outline btn-sparse"
-									v-app-tooltip="'Add Friend'"
-									@click.stop.prevent="acceptRequest( request )"
-									>
-									<app-jolticon icon="friend-add-2" />
-								</span>
-								<span class="btn btn-danger-outline btn-sparse"
-									v-app-tooltip="'Dismiss request. Sender will not be notified.'"
-									@click.stop.prevent="rejectRequest( request )"
-									>
-									<app-jolticon icon="friend-remove-2" />
-								</span>
-							</div>
-
-							<div class="card-title">
-								<h5>
-									{{ request.getThem( user ).display_name }}
-									<br>
-									<small>@{{ request.getThem( user ).username }}</small>
-								</h5>
-							</div>
-
-							<div class="card-meta">
-								<!--<span am-time-ago="request.created_on"></span>-->
-							</div>
-						</div>
-					</app-card>
-				</router-link>
-
-			</template>
-
-			<div class="alert alert-info" v-if="!requests.length">
-				<span translate>No friend requests right now.</span>
-			</div>
-		</template>
-
-		<!-- Pending -->
-		<template v-if="!isLoading && activeTab === 'pending' && pending.length">
-
-			<router-link
-				v-for="request of pending"
+		<template v-else-if="requests.length">
+			<app-friend-request-popover-item
+				v-for="request of requests"
 				:key="request.id"
-				:to="request.getThem( user ).url"
-				>
-				<app-card>
-					<div class="shell-card-popover-card-media">
-						<div class="friend-request-popover-avatar">
-							<app-user-avatar-img :user="request.getThem( user )" />
-						</div>
-					</div>
-					<div class="shell-card-popover-card-body">
-
-						<div class="shell-card-popover-card-controls">
-							<span class="btn btn-danger-outline btn-sparse"
-								v-app-tooltip="'Cancel'"
-								@click.stop.prevent="cancelRequest( request )"
-								>
-								<app-jolticon icon="friend-remove-2" />
-							</span>
-						</div>
-
-						<div class="card-title">
-							<h5>
-								{{ request.getThem( user ).display_name }}
-								<br>
-								<small>@{{ request.getThem( user ).username }}</small>
-							</h5>
-						</div>
-
-						<div class="card-meta">
-							<!--<span am-time-ago="request.created_on"></span>-->
-						</div>
-					</div>
-				</app-card>
-			</router-link>
-
+				:request="request"
+				@accept="acceptRequest(request)"
+				@reject="rejectRequest(request)"
+				@cancel="cancelRequest(request)"
+				/>
 		</template>
+		<div class="alert alert-info" v-else>
+			<translate>No friend requests right now.</translate>
+		</div>
 
 	</div>
-
 </app-popover>

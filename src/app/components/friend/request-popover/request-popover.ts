@@ -1,18 +1,16 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./request-popover.html';
 
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppCard } from '../../../../lib/gj-lib-client/components/card/card';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
-import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { Store } from '../../../store/index';
 import { Mutation } from 'vuex-class/lib/bindings';
 import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppFriendRequestPopoverItem } from './item/item';
+import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
 
 type Tab = 'requests' | 'pending';
 
@@ -21,12 +19,7 @@ type Tab = 'requests' | 'pending';
 	components: {
 		AppPopover,
 		AppLoading,
-		AppCard,
-		AppJolticon,
-		AppUserAvatarImg,
-	},
-	directives: {
-		AppTooltip,
+		AppFriendRequestPopoverItem,
 	},
 })
 export class AppFriendRequestPopover extends Vue {
@@ -37,8 +30,25 @@ export class AppFriendRequestPopover extends Vue {
 	isLoading = true;
 
 	activeTab: Tab = 'requests';
-	requests: any[] = [];
-	pending: any[] = [];
+	incoming: UserFriendship[] = [];
+	outgoing: UserFriendship[] = [];
+
+	// Don't set default value so it doesn't watch.
+	private inviewParent: AppScrollInviewParent;
+
+	get requests() {
+		return this.activeTab === 'requests' ? this.incoming : this.outgoing;
+	}
+
+	/**
+	 * When our list changes, make sure to recheck items in view since things shifted.
+	 */
+	@Watch('requests')
+	onRequestsChange() {
+		if (this.inviewParent) {
+			this.inviewParent.container.queueCheck();
+		}
+	}
 
 	onFocus() {
 		this.isShown = true;
@@ -61,10 +71,10 @@ export class AppFriendRequestPopover extends Vue {
 	}
 
 	async fetchRequests() {
-		const response = await UserFriendship.fetchRequests();
-		this.requests = response.requests;
-		this.setCount(this.requests.length);
-		this.pending = response.pending;
+		const { requests, pending } = await UserFriendship.fetchRequests();
+		this.incoming = requests;
+		this.setCount(this.incoming.length);
+		this.outgoing = pending;
 		this.isLoading = false;
 	}
 
@@ -92,11 +102,15 @@ export class AppFriendRequestPopover extends Vue {
 	}
 
 	private removeRequest(request: UserFriendship) {
-		const index = this.requests.findIndex(item => item.id === request.id);
+		const index = this.incoming.findIndex(item => item.id === request.id);
 		if (index !== -1) {
-			this.requests.splice(index, 1);
+			this.incoming.splice(index, 1);
 		}
 
-		this.setCount(this.requests.length);
+		this.setCount(this.incoming.length);
+
+		if (this.activeTab === 'pending' && !this.outgoing.length) {
+			this.setActiveTab('requests');
+		}
 	}
 }
