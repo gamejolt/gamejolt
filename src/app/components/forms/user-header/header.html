@@ -1,0 +1,28 @@
+<app-form name="userHeaderForm" ref="form">
+	<app-form-group
+		name="file"
+		:label="$gettext( `Upload New Header` )"
+		:optional="true"
+		>
+
+		<p class="help-block" v-translate>
+			dash.forms.image_filetype_help_html
+		</p>
+
+		<app-form-control-upload
+			:rules="{
+				filesize: maxFilesize,
+				min_img_dimensions: [ minSize, minSize ],
+				max_img_dimensions: [ maxSize, maxSize ],
+				min_img_ratio: minAspectRatio,
+				max_img_ratio: maxAspectRatio,
+			}"
+			accept=".png,.jpg,.jpeg,.gif"
+			@changed="headerSelected()"
+			/>
+
+		<app-form-control-errors
+			:label="$gettext( `header` )"
+			/>
+	</app-form-group>
+</app-form>

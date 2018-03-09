@@ -17,8 +17,6 @@ import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
 import { AppCommentVideoThumbnail } from '../../../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
-import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
-import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 import { AppTrophyOverview } from '../../../../../../components/trophy/overview/overview';
 import { RouteState, RouteMutation, RouteStore, RouteAction } from '../../view.store';
@@ -38,8 +36,11 @@ import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
 import { AppCommentOverview } from '../../../../../../components/comment/overview/overview';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { AppDiscoverGamesViewOverviewDetailsBar } from '../_details-bar/details-bar';
-import { AppCommentWidgetAdd } from '../../../../../../../lib/gj-lib-client/components/comment/add/add';
 import { AppGameThumbnail } from '../../../../../../../_common/game/thumbnail/thumbnail';
+import {
+	CommentState,
+	CommentStore,
+} from '../../../../../../../lib/gj-lib-client/components/comment/comment-store';
 
 @View
 @Component({
@@ -50,7 +51,6 @@ import { AppGameThumbnail } from '../../../../../../../_common/game/thumbnail/th
 		AppGameGrid,
 		AppGameGridPlaceholder,
 		AppGameList,
-		AppCommentWidgetAdd,
 		AppCommentPeek,
 		AppRatingWidget,
 		AppCard,
@@ -61,8 +61,6 @@ import { AppGameThumbnail } from '../../../../../../../_common/game/thumbnail/th
 		AppGamePackageCard,
 		AppGameSoundtrackCard,
 		AppCommentVideoThumbnail,
-		AppSocialTwitterShare,
-		AppSocialFacebookLike,
 		AppTrophyOverview,
 		AppScoreOverview,
 		AppUserAvatarImg,
@@ -85,6 +83,8 @@ import { AppGameThumbnail } from '../../../../../../../_common/game/thumbnail/th
 export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@State app: Store['app'];
 
+	@CommentState getCommentStore: CommentStore['getCommentStore'];
+
 	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
 	@RouteState game: RouteStore['game'];
 	@RouteState mediaItems: RouteStore['mediaItems'];
@@ -98,7 +98,6 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState twitterShareMessage: RouteStore['twitterShareMessage'];
 	@RouteState feed: RouteStore['feed'];
 	@RouteState supporters: RouteStore['supporters'];
-	@RouteState commentsCount: RouteStore['commentsCount'];
 	@RouteState videoComments: RouteStore['videoComments'];
 	@RouteState videoCommentsCount: RouteStore['videoCommentsCount'];
 	@RouteState shouldShowMultiplePackagesMessage: RouteStore['shouldShowMultiplePackagesMessage'];
@@ -110,7 +109,6 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState hasReleasesSection: RouteStore['hasReleasesSection'];
 	@RouteState customGameMessages: RouteStore['customGameMessages'];
 
-	@RouteMutation setCommentsCount: RouteStore['setCommentsCount'];
 	@RouteAction loadVideoComments: RouteStore['loadVideoComments'];
 
 	@RouteState showDescription: RouteStore['showDescription'];
@@ -137,6 +135,11 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	 */
 	get isAchievementsTwoCol() {
 		return this.hasScores && this.trophiesCount;
+	}
+
+	get commentsCount() {
+		const store = this.getCommentStore('Game', this.game.id);
+		return store ? store.count : 0;
 	}
 
 	copyPartnerLink() {

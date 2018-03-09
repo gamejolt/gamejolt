@@ -12,6 +12,7 @@ import { AppSocialTwitterShare } from '../../../lib/gj-lib-client/components/soc
 import { AppSocialFacebookLike } from '../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { BaseModal } from '../../../lib/gj-lib-client/components/modal/base';
 import { AppCommentWidgetLazy } from '../lazy';
+import { AppPollVoting } from '../poll/voting/voting';
 
 @View
 @Component({
@@ -20,6 +21,7 @@ import { AppCommentWidgetLazy } from '../lazy';
 		AppTimeAgo,
 		AppWidgetCompiler,
 		AppFiresidePostLikeWidget,
+		AppPollVoting,
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
 		AppCommentWidget: AppCommentWidgetLazy,

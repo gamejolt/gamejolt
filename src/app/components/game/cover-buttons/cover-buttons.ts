@@ -59,7 +59,7 @@ export class AppGameCoverButtons extends Vue {
 		}
 
 		if (!chosen) {
-			chosen = builds[0];
+			chosen = defaultBuild;
 		}
 
 		return chosen;
@@ -82,8 +82,12 @@ export class AppGameCoverButtons extends Vue {
 
 		const os = Device.os();
 		const arch = Device.arch();
-		const defaultBuild = Game.chooseBestBuild(this.installableBuilds, os, arch);
 
+		// This will return builds that may not work for this OS, but it's still the "best" to get.
+		const defaultBuild = Game.chooseBestBuild(this.downloadableBuilds, os, arch);
+
+		// We then try to see within the actual installable builds for this OS, if there are
+		// multiple packages we may have to choose from.
 		const build = this.chooseBuild(this.installableBuilds, defaultBuild);
 		if (build) {
 			// If the build belongs to a pwyw package, open up the package
@@ -107,9 +111,10 @@ export class AppGameCoverButtons extends Vue {
 		GamePackagePurchaseModal.show({
 			game: this.game,
 			package: pkg,
-			build,
+			build: build || null,
 			partner: this.partner,
 			partnerKey: this.partnerKey,
+			fromExtraSection: false,
 		});
 	}
 }

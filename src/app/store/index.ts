@@ -24,19 +24,32 @@ import {
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { ChatClient } from '../components/chat/client';
 import { ChatClientLazy } from '../components/lazy';
+import { GridClient } from '../components/grid/client.service';
+import { GridClientLazy } from '../components/lazy';
 import { router } from '../views';
 import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
 import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
+import { BannerStore, BannerMutations, BannerActions } from './banner';
+import {
+	CommentActions,
+	CommentMutations,
+	CommentStore,
+} from '../../lib/gj-lib-client/components/comment/comment-store';
+import { ContentFocus } from '../../_common/content-focus/content-focus.service';
 
 export type Actions = AppActions &
 	LibraryActions &
+	BannerActions &
+	CommentActions &
 	_ClientLibraryMod.Actions & {
 		bootstrap: undefined;
 		logout: undefined;
 		clear: undefined;
 		loadChat: undefined;
 		clearChat: undefined;
+		loadGrid: undefined;
+		clearGrid: undefined;
 		toggleLeftPane: undefined;
 		toggleRightPane: undefined;
 		clearPanes: undefined;
@@ -45,13 +58,18 @@ export type Actions = AppActions &
 
 export type Mutations = AppMutations &
 	LibraryMutations &
+	BannerMutations &
+	CommentMutations &
 	_ClientLibraryMod.Mutations & {
-		setNotificationsCount: number;
+		setNotificationCount: number;
+		incrementNotificationCount: number;
+		setFriendRequestCount: number;
+		changeFriendRequestCount: number;
 		_setBootstrapped: undefined;
 		_setLibraryBootstrapped: undefined;
 		_clear: undefined;
-		_setChat: ChatClient;
-		_clearChat: undefined;
+		_setChat: ChatClient | null;
+		_setGrid: GridClient | null;
 		_toggleLeftPane: undefined;
 		_toggleRightPane: undefined;
 		_clearPanes: undefined;
@@ -66,6 +84,8 @@ export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = r
 const modules: any = {
 	app: appStore,
 	library: new LibraryStore(),
+	banner: new BannerStore(),
+	comment: new CommentStore(),
 };
 
 if (GJ_IS_CLIENT) {
@@ -75,22 +95,26 @@ if (GJ_IS_CLIENT) {
 
 @VuexModule({
 	store: true,
-	modules: modules,
+	modules,
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
 	app: AppStore;
 	library: LibraryStore;
+	banner: BannerStore;
+	comment: CommentStore;
 	clientLibrary: _ClientLibraryMod.ClientLibraryStore;
 
 	// From the vuex-router-sync.
 	route: Route;
 
 	chat: ChatClient | null = null;
+	grid: GridClient | null = null;
 
 	isBootstrapped = false;
 	isLibraryBootstrapped = false;
 
 	notificationCount = 0;
+	friendRequestCount = 0;
 
 	isLeftPaneSticky = Settings.get('sidebar') as boolean;
 	isLeftPaneOverlayed = false;
@@ -156,7 +180,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		// We go to the homepage currently just in case they're in a view they shouldn't be.
 		router.push({ name: 'discover.home' });
 
-		Growls.success(Translate.$gettext('You are now logged out.'), Translate.$gettext('Goodbye!'));
+		Growls.success(
+			Translate.$gettext('You are now logged out.'),
+			Translate.$gettext('Goodbye!')
+		);
 	}
 
 	@VuexAction
@@ -182,7 +209,26 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			this.chat.logout();
 		}
 
-		this._clearChat();
+		this._setChat(null);
+	}
+
+	@VuexAction
+	async loadGrid() {
+		if (GJ_IS_SSR) {
+			return;
+		}
+
+		const GridClient_ = await GridClientLazy();
+		this._setGrid(new GridClient_());
+	}
+
+	@VuexAction
+	async clearGrid() {
+		if (this.grid) {
+			this.grid.disconnect();
+		}
+
+		this._setGrid(null);
 	}
 
 	@VuexAction
@@ -224,8 +270,23 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	setNotificationCount(count: Mutations['setNotificationsCount']) {
+	incrementNotificationCount(amount: Mutations['incrementNotificationCount']) {
+		this.notificationCount += amount;
+	}
+
+	@VuexMutation
+	setNotificationCount(count: Mutations['setNotificationCount']) {
 		this.notificationCount = count;
+	}
+
+	@VuexMutation
+	setFriendRequestCount(amount: Mutations['setFriendRequestCount']) {
+		this.friendRequestCount = amount;
+	}
+
+	@VuexMutation
+	changeFriendRequestCount(amount: Mutations['changeFriendRequestCount']) {
+		this.friendRequestCount += amount;
 	}
 
 	@VuexMutation
@@ -252,8 +313,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_clearChat() {
-		this.chat = null;
+	_setGrid(grid: Mutations['_setGrid']) {
+		this.grid = grid;
 	}
 
 	@VuexMutation
@@ -304,6 +365,11 @@ export const store = new Store();
 // Sync the routes into the store.
 sync(store, router, { moduleName: 'route' });
 
+// Sync with the ContentFocus service.
+ContentFocus.registerWatcher(
+	() => !store.state.isLeftPaneOverlayed && !store.state.isRightPaneVisible
+);
+
 // Bootstrap/clear the app when user changes.
 store.watch(
 	state => state.app.user && state.app.user.id,
@@ -313,6 +379,7 @@ store.watch(
 		if (isLoggedIn) {
 			store.dispatch('bootstrap');
 			store.dispatch('loadChat');
+			store.dispatch('loadGrid');
 
 			if (GJ_IS_CLIENT) {
 				store.dispatch('clientLibrary/bootstrap');
@@ -320,6 +387,7 @@ store.watch(
 		} else {
 			store.dispatch('clear');
 			store.dispatch('clearChat');
+			store.dispatch('clearGrid');
 		}
 	}
 );

@@ -23,6 +23,7 @@ import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
 import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
+import { AppPollVoting } from '../../../poll/voting/voting';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
@@ -40,6 +41,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
 		AppActivityFeedControls,
+		AppPollVoting,
 	},
 	filters: {
 		number,
@@ -75,6 +77,14 @@ export class AppActivityFeedEventItem extends Vue {
 
 	get game() {
 		return this.eventItem.game;
+	}
+
+	get gameUrl() {
+		if (this.game) {
+			return this.game.getUrl();
+		}
+
+		return undefined;
 	}
 
 	get user() {

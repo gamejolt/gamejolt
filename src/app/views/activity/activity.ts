@@ -61,22 +61,29 @@ export default class RouteActivity extends BaseRouteComponent {
 		this.feed = ActivityFeedService.bootstrap();
 	}
 
-	routed($payload: any) {
-		if (this.tab === 'activity') {
-			if (!this.feed || this.feed.feedType !== 'EventItem') {
-				this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.items), {
-					type: 'EventItem',
-					url: `/web/dash/activity/more/${this.tab}`,
-					notificationWatermark: $payload.unreadWatermark,
-				});
-			}
-		} else {
-			if (!this.feed || this.feed.feedType !== 'Notification') {
-				this.feed = ActivityFeedService.bootstrap(Notification.populate($payload.items), {
-					type: 'Notification',
-					url: `/web/dash/activity/more/${this.tab}`,
-					notificationWatermark: $payload.unreadWatermark,
-				});
+	routed($payload: any, fromCache: boolean) {
+		// Never pull data from cache for feed since the feed is already bootstrapped from its own
+		// cache.
+		if (!fromCache) {
+			if (this.tab === 'activity') {
+				if (!this.feed || this.feed.feedType !== 'EventItem') {
+					this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.items), {
+						type: 'EventItem',
+						url: `/web/dash/activity/more/${this.tab}`,
+						notificationWatermark: $payload.unreadWatermark,
+					});
+				}
+			} else {
+				if (!this.feed || this.feed.feedType !== 'Notification') {
+					this.feed = ActivityFeedService.bootstrap(
+						Notification.populate($payload.items),
+						{
+							type: 'Notification',
+							url: `/web/dash/activity/more/${this.tab}`,
+							notificationWatermark: $payload.unreadWatermark,
+						}
+					);
+				}
 			}
 		}
 

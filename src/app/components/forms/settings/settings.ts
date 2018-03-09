@@ -19,6 +19,7 @@ type FormModel = {
 	restricted_browsing: boolean;
 	broadcast_modal: boolean;
 	animated_thumbnails: boolean;
+	feed_notifications: boolean;
 	game_install_dir: string;
 	queue_when_playing: boolean;
 	max_download_count: number;
@@ -41,10 +42,15 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 		return ClientAutoStartMod && ClientAutoStartMod.ClientAutoStart.canAutoStart;
 	}
 
+	get browserNotificationsDisabled() {
+		return (Notification as any).permission === 'denied';
+	}
+
 	onInit() {
 		this.setField('restricted_browsing', Settings.get('restricted-browsing'));
 		this.setField('broadcast_modal', Settings.get('broadcast-modal'));
 		this.setField('animated_thumbnails', Settings.get('animated-thumbnails'));
+		this.setField('feed_notifications', Settings.get('feed-notifications'));
 
 		if (GJ_IS_CLIENT) {
 			this.setField('game_install_dir', Settings.get('game-install-dir'));
@@ -78,30 +84,28 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 	}
 
 	@Watch('formModel.limit_downloads')
-	limitDownloadsChange(shouldLimit: boolean, prev: boolean) {
-		if (shouldLimit === prev) {
-			return;
-		}
-
+	limitDownloadsChange(shouldLimit: boolean) {
 		this.setField(
 			'max_download_count',
 			shouldLimit ? Settings.getDefault('max-download-count') : -1
 		);
+		this.onChange();
 	}
 
 	@Watch('formModel.limit_extractions')
-	limitExtractionsChange(shouldLimit: boolean, prev: boolean) {
-		if (shouldLimit === prev) {
-			return;
-		}
-
-		this.setField('max_extract_count', shouldLimit ? Settings.getDefault('max-extract-count') : -1);
+	limitExtractionsChange(shouldLimit: boolean) {
+		this.setField(
+			'max_extract_count',
+			shouldLimit ? Settings.getDefault('max-extract-count') : -1
+		);
+		this.onChange();
 	}
 
 	onChange() {
 		Settings.set('restricted-browsing', this.formModel.restricted_browsing);
 		Settings.set('broadcast-modal', this.formModel.broadcast_modal);
 		Settings.set('animated-thumbnails', this.formModel.animated_thumbnails);
+		Settings.set('feed-notifications', this.formModel.feed_notifications);
 
 		if (GJ_IS_CLIENT) {
 			Settings.set('game-install-dir', this.formModel.game_install_dir);

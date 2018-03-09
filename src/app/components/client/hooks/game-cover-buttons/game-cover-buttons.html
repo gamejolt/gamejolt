@@ -4,7 +4,7 @@
 		installed.
 	-->
 	<button
-		class="btn btn-lg btn-primary-outline btn-overlay-variant"
+		class="btn btn-primary-outline"
 		v-if="browserBuilds.length > 0 && !localPackage"
 		@click="$emit('play')"
 		>
@@ -19,10 +19,9 @@
 	<app-client-game-buttons
 		v-if="downloadableBuilds.length > 0"
 		label="game-cover"
-		large
-		overlay
 		:game="game"
 		:can-install="installableBuilds.length > 0"
+		no-progress
 		/>
 
 </div>

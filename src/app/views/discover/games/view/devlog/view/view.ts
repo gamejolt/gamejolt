@@ -20,6 +20,7 @@ import {
 import { enforceLocation } from '../../../../../../../lib/gj-lib-client/utils/router';
 import { IntentService } from '../../../../../../components/intent/intent.service';
 import { Translate } from '../../../../../../../lib/gj-lib-client/components/translate/translate.service';
+import { CommentModal } from '../../../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
 
 @View
 @Component({
@@ -73,6 +74,8 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 	}
 
 	routeInit() {
+		CommentModal.checkPermalink(this.$router);
+
 		const hash = FiresidePost.pullHashFromUrl(this.postSlug);
 		this.post = Registry.find<FiresidePost>('FiresidePost', hash, 'hash');
 	}

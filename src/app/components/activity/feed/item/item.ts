@@ -24,7 +24,6 @@ export class AppActivityFeedItem extends Vue {
 	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
 
 	inviewPadding = Screen.windowHeight;
-	isBootstrapped = GJ_IS_SSR;
 
 	mounted() {
 		if (this.item.height) {
@@ -41,8 +40,12 @@ export class AppActivityFeedItem extends Vue {
 		return this.item.feedItem.added_on > this.feed.notificationWatermark;
 	}
 
+	get isBootstrapped() {
+		return GJ_IS_SSR || typeof this.feed.bootstrappedItems[this.item.id] !== 'undefined';
+	}
+
 	get isHydrated() {
-		return GJ_IS_SSR || !!this.feed.inViewItems[this.item.id];
+		return GJ_IS_SSR || typeof this.feed.hydratedItems[this.item.id] !== 'undefined';
 	}
 
 	get isActive() {
@@ -64,10 +67,6 @@ export class AppActivityFeedItem extends Vue {
 
 	onInviewChange(visible: boolean) {
 		this.feed.inViewChange(this.item, visible);
-
-		if (visible) {
-			this.isBootstrapped = true;
-		}
 	}
 
 	onResize(height: number) {

@@ -1,4 +1,4 @@
-<div>
+<div class="devlog-post-view">
 
 	<div class="tiny text-muted">
 		<app-time-ago :date="post.published_on" />
@@ -54,13 +54,17 @@
 			/>
 	</div>
 
-	<hr>
+	<app-poll-voting
+		v-if="post.poll"
+		:poll="post.poll"
+		:game="post.game"
+		/>
 
 	<app-activity-feed-controls
+		show-comments
 		:post="post"
 		:show-game-info="showGameInfo"
 		:in-modal="inModal"
-		:require-tabs="true"
 		/>
 
 </div>

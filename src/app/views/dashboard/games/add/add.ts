@@ -4,12 +4,12 @@ import View from '!view!./add.html';
 
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { FormGame } from '../../../../components/forms/game/game';
-import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
 import { startWizard } from '../manage/manage.store';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 
 @View
 @Component({
@@ -21,7 +21,8 @@ import {
 export default class RouteDashGamesAdd extends BaseRouteComponent {
 	@RouteResolve()
 	routeResolve(this: undefined, _route: Route) {
-		return User.touch();
+		// Make sure they can add a game.
+		return Api.sendRequest('/web/dash/developer/games/add');
 	}
 
 	get routeTitle() {

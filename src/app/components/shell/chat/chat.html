@@ -1,14 +1,13 @@
-<div
-	v-shortkey="[ 'c' ]"
-	@shortkey="toggleRightPane"
-	>
-	<div
+<div>
+	<span v-shortkey="[ 'c' ]" @shortkey="showChatPane()"></span>
+
+	<app-scroll-inview-parent
 		id="shell-chat-pane"
 		class="shell-pane shell-pane-right scrollable overlay-scrollbar"
 		:class="{ visible: isRightPaneVisible }"
+		:throttle="0"
 		>
 		<app-chat-sidebar v-if="isRightPaneVisible" />
-	</div>
-	<app-chat-bubbles />
+	</app-scroll-inview-parent>
 	<app-chat-windows />
 </div>

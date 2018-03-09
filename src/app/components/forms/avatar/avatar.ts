@@ -1,4 +1,4 @@
-import { Component, Watch, Prop } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./avatar.html';
 
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
@@ -31,8 +31,6 @@ type FormModel = User & {
 	},
 })
 export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
-	@Prop(User) user: User;
-
 	modelClass = User;
 	reloadOnSubmit = true;
 	warnOnDiscard = false;
@@ -72,8 +70,6 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 		this.maxFilesize = payload.maxFilesize;
 		this.minSize = payload.minSize;
 		this.maxSize = payload.maxSize;
-
-		this.formModel.assign(payload.user);
 	}
 
 	avatarSelected() {

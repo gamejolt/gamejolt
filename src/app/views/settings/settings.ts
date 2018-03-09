@@ -31,12 +31,13 @@ export default class RouteSettings extends BaseRouteComponent {
 			sections.client = this.$gettext('settings.client');
 		}
 
-		return {
-			client /** GJ_IS_CLIENT **/: true ? this.$gettext('settings.client') : undefined,
+		Object.assign(sections, {
 			site: this.$gettext('Site'),
 			restrictions: this.$gettext('Restrictions'),
 			notifications: this.$gettext('Notifications'),
-		};
+		});
+
+		return sections;
 	}
 
 	@RouteResolve()

@@ -11,9 +11,8 @@
 	<ul class="shell-nav" v-show="users.length">
 
 		<app-chat-user-list-item
-			v-for="user of users"
+			v-for="user of filteredUsers"
 			:key="user.id"
-			v-show="!filterQuery || user.displayName.toLowerCase().indexOf( filterQuery.toLowerCase() ) !== -1"
 			:user="user"
 			:room="room"
 			:show-pm="showPm"

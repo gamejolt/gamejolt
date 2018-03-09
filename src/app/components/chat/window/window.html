@@ -5,54 +5,54 @@
 		It takes up the empty background space so you can click that to close chat.
 	-->
 	<div class="chat-window-back-close" @click="closeChat"></div>
-	<div class="chat-window anim-fade-in-up">
+	<div class="chat-window">
 		<div class="chat-window-back-close" @click="closeChat"></div>
 
 		<!-- Room Users -->
-		<transition>
-			<div class="fill-darkest chat-window-users scrollable overlay-scrollbar anim-fade-enter-enlarge anim-fade-leave-shrink"
-				v-if="!room.isPmRoom && isShowingUsers"
-				>
+		<app-scroll-inview-parent
+			class="fill-darkest chat-window-users scrollable overlay-scrollbar"
+			v-if="!room.isPmRoom && isShowingUsers"
+			:throttle="0"
+			>
 
-				<template v-if="Screen.isXs">
-					<br>
-					<div class="nav-controls">
-						<button class="btn btn-outline btn-block" @click="toggleUsers">
-							<app-jolticon icon="chevron-left" />
-							<translate>Back to Chat</translate>
-						</button>
-					</div>
-				</template>
+			<template v-if="Screen.isXs">
+				<br>
+				<div class="nav-controls">
+					<button class="btn btn-outline btn-block" @click="toggleUsers">
+						<app-jolticon icon="chevron-left" />
+						<translate>Back to Chat</translate>
+					</button>
+				</div>
+			</template>
 
-				<template v-if="!room.isPmRoom">
-					<div class="nav-heading first">
-						<translate>Room Description</translate>
-					</div>
-
-					<div class="nav-well">
-						<div class="chat-compiled-room-description">
-							<div v-html="room.description_compiled"></div>
-						</div>
-					</div>
-				</template>
-
-				<div class="nav-heading">
-					<translate>Room Users</translate>
-					<span class="badge" :class="{ 'badge-active': users && users.onlineCount > 0 }">
-						{{ users ? users.onlineCount : 0 | number }}
-					</span>
+			<template v-if="!room.isPmRoom">
+				<div class="nav-heading first">
+					<translate>Room Description</translate>
 				</div>
 
-				<app-chat-user-list
-					v-if="users"
-					:room="room"
-					:users="users.collection"
-					:show-mod-tools="room.isMod"
-					>
-				</app-chat-user-list>
+				<div class="nav-well">
+					<div class="chat-compiled-room-description">
+						<div v-html="room.description_compiled"></div>
+					</div>
+				</div>
+			</template>
 
+			<div class="nav-heading">
+				<translate>Room Users</translate>
+				<span class="badge" :class="{ 'badge-active': users && users.onlineCount > 0 }">
+					{{ users ? users.onlineCount : 0 | number }}
+				</span>
 			</div>
-		</transition>
+
+			<app-chat-user-list
+				v-if="users"
+				:room="room"
+				:users="users.collection"
+				:show-mod-tools="room.isMod"
+				>
+			</app-chat-user-list>
+
+		</app-scroll-inview-parent>
 
 		<div class="chat-window-main">
 
@@ -75,14 +75,6 @@
 							:title="$gettext( 'Edit Room Details' )"
 							>
 							<app-jolticon icon="edit" />
-						</button>
-
-						<button class="btn btn-sparse"
-							v-if="!chat.singleRoomMode"
-							@click="minimize"
-							:title="$gettext( 'Minimize Room' )"
-							>
-							<app-jolticon icon="minus" />
 						</button>
 
 						<button class="btn btn-sparse"
@@ -130,7 +122,7 @@
 
 						<template v-if="!room.isPmRoom && !Screen.isXs">
 							<app-fade-collapse
-								class="fade-collapse-sm"
+								size="sm"
 								:collapse-height="60"
 								@require-change="isDescriptionCollapsed = $event"
 								>

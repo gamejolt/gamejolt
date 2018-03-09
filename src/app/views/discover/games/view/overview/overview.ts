@@ -13,6 +13,7 @@ import {
 	RouteResolve,
 	BaseRouteComponent,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { CommentModal } from '../../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
 
 @Component({
 	name: 'RouteDiscoverGamesViewOverview',
@@ -58,11 +59,13 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	routeInit() {
+		CommentModal.checkPermalink(this.$router);
+
 		// Try pulling feed from cache.
 		this.bootstrapFeed();
 	}
 
-	async routed($payload: any) {
+	async routed($payload: any, fromCache: boolean) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
@@ -71,7 +74,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 			Meta.microdata = $payload.microdata;
 		}
 
-		this.processOverviewPayload($payload);
+		this.processOverviewPayload({ payload: $payload, fromCache });
 	}
 
 	render(h: CreateElement) {

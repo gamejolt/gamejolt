@@ -45,6 +45,10 @@
   version "0.0.28"
   resolved "https://registry.yarnpkg.com/@types/favico.js/-/favico.js-0.0.28.tgz#bb7b7caa118217318d034666920d687a58d65eeb"
 
+"@types/grecaptcha@2.0.34":
+  version "2.0.34"
+  resolved "https://registry.yarnpkg.com/@types/grecaptcha/-/grecaptcha-2.0.34.tgz#6f6a3585f0f3b0eac2f46257da9ff7805af1e274"
+
 "@types/hammerjs@2.0.35":
   version "2.0.35"
   resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.35.tgz#7b7c950c7d54593e23bffc8d2b4feba9866a7277"
@@ -72,6 +76,10 @@
 "@types/nw.gui@0.0.20":
   version "0.0.20"
   resolved "https://registry.yarnpkg.com/@types/nw.gui/-/nw.gui-0.0.20.tgz#b690fbbb501404662737db85d595fdebefba6f98"
+
+"@types/phoenix@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@types/phoenix/-/phoenix-0.0.4.tgz#6ada6be91dfdc1fa77ed57691f92821920f71d12"
 
 "@types/serve-static@*":
   version "1.13.1"
@@ -1122,9 +1130,9 @@ clean-css@4.1.9, clean-css@4.1.x, clean-css@^4.1.9:
   dependencies:
     source-map "0.5.x"
 
-client-voodoo@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.0.0.tgz#8be5eebc8c88db1a5e87ba86938b706f8bcdc0ea"
+client-voodoo@2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.0.3.tgz#c7d647a92cb5ba3da762b85071c530c2fe55349a"
   dependencies:
     JSONStream "github:gamejolt/JSONStream#no-shebang"
     follow-redirects "1.2.6"
@@ -5635,6 +5643,10 @@ performance-now@^0.2.0:
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
+
+phoenix@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/phoenix/-/phoenix-1.3.0.tgz#1df2c27f986ee295e37c9983ec28ebac1d7f4a3e"
 
 pify@^2.0.0, pify@^2.3.0:
   version "2.3.0"

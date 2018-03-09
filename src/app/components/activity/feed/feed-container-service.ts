@@ -8,17 +8,6 @@ import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/e
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
-/**
- * The number of items from the bottom that we should hit before loading more.
- */
-const LOAD_MORE_FROM_BOTTOM = 5;
-
-/**
- * The number of times we should do an auto-load of items before stopping
- * and requiring them to do it manually.
- */
-const LOAD_MORE_TIMES = 3;
-
 export interface ActivityFeedContainerOptions {
 	/**
 	 * Which types of models are used in the feed.
@@ -51,7 +40,8 @@ export class ActivityFeedContainer {
 
 	viewedItems: string[] = [];
 	expandedItems: string[] = [];
-	inViewItems: { [k: string]: ActivityFeedItem } = {};
+	bootstrappedItems: { [k: string]: null } = {};
+	hydratedItems: { [k: string]: null } = {};
 	activeItem: ActivityFeedItem | null = null;
 	scroll = 0;
 	noAutoload = false;
@@ -76,15 +66,28 @@ export class ActivityFeedContainer {
 	}
 
 	prepend(input: ActivityFeedInput[]) {
-		const items = input.map(item => new ActivityFeedItem(item));
-		this.items = items.concat(this.items);
-		this.processGames();
+		this.addItems(input, 'start');
 	}
 
 	append(input: ActivityFeedInput[]) {
+		this.addItems(input, 'end');
+	}
+
+	private addItems(input: ActivityFeedInput[], position: 'start' | 'end' = 'start') {
 		const items = input.map(item => new ActivityFeedItem(item));
-		this.items = this.items.concat(items);
+
+		if (position === 'start') {
+			this.items = items.concat(this.items);
+		} else if (position === 'end') {
+			this.items = this.items.concat(items);
+		}
+
 		this.processGames();
+
+		// We bootstrap right away. We only use bootstrapping for going back into the feeds.
+		for (const i of items) {
+			Vue.set(this.bootstrappedItems, i.id, null);
+		}
 	}
 
 	update(_input: ActivityFeedInput) {
@@ -94,7 +97,6 @@ export class ActivityFeedContainer {
 	remove(input: ActivityFeedInput) {
 		const item = new ActivityFeedItem(input);
 		arrayRemove(this.items, i => i.type === item.type && i.feedItem.id === item.feedItem.id);
-
 		this.processGames();
 	}
 
@@ -120,24 +122,16 @@ export class ActivityFeedContainer {
 
 	inViewChange(item: ActivityFeedItem, visible: boolean) {
 		if (visible) {
-			Vue.set(this.inViewItems, item.id, item);
+			Vue.set(this.bootstrappedItems, item.id, null);
+			Vue.set(this.hydratedItems, item.id, null);
 			this.viewed(item);
-
-			// Auto-loading while scrolling.
-			if (
-				!this.noAutoload &&
-				!this.isLoadingMore &&
-				!this.reachedEnd &&
-				this.timesLoaded < LOAD_MORE_TIMES
-			) {
-				const index = this.items.findIndex(_item => _item.id === item.id);
-				if (index >= this.items.length - LOAD_MORE_FROM_BOTTOM) {
-					this.loadMore();
-				}
-			}
 		} else {
-			Vue.delete(this.inViewItems, item.id);
+			Vue.delete(this.hydratedItems, item.id);
 		}
+	}
+
+	resetBootstrapped() {
+		this.bootstrappedItems = {};
 	}
 
 	async loadMore() {

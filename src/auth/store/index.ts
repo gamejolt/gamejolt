@@ -13,11 +13,6 @@ import {
 import { MediaItem } from '../../lib/gj-lib-client/components/media-item/media-item-model';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 
-interface AuthCredentials {
-	username: string;
-	password: string;
-}
-
 export type Actions = AppActions & {
 	bootstrap: undefined;
 };
@@ -26,7 +21,6 @@ export type Mutations = AppMutations & {
 	showCoverImage: undefined;
 	hideCoverImage: undefined;
 	processPayload: any;
-	setCredentials: any;
 };
 
 @VuexModule({
@@ -40,12 +34,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	shouldShowCoverImage = true;
 	coverMediaItem?: MediaItem = undefined;
-
-	/**
-	 * We store these when they sign up so that we can log them in once they
-	 * authorize their account.
-	 */
-	credentials: AuthCredentials | null = null;
 
 	@VuexAction
 	async bootstrap() {
@@ -68,11 +56,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		if (payload.mediaItem) {
 			this.coverMediaItem = new MediaItem(payload.mediaItem);
 		}
-	}
-
-	@VuexMutation
-	setCredentials(credentials: AuthCredentials) {
-		this.credentials = credentials;
 	}
 }
 

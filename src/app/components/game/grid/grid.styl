@@ -3,7 +3,6 @@
 @require './../../../../lib/gj-lib-client/stylus/common/mixins'
 
 .game-grid
-
 	&-ad
 		@media $media-xs
 			full-bleed()
@@ -53,14 +52,19 @@
 		@media $media-md-up
 			width: (100% / 3)
 
-// When the grid is scrollable on XS size.
-@media $media-xs
-	.scrollable-grid-xs .game-grid
-		&-items
-			padding-left: -($grid-gutter-width-xs / 2)
-			padding-right: -($grid-gutter-width-xs / 2)
+.scrollable-grid .game-grid
+	&-items
+		margin-left: 0
+		margin-right: 0
 
+	@media $media-xs
 		&-item
 			padding-left: ($grid-gutter-width-xs / 2)
 			padding-right: ($grid-gutter-width-xs / 2)
 			width: 85%
+
+	@media $media-sm-up
+		&-item
+			padding-left: ($grid-gutter-width / 2)
+			padding-right: ($grid-gutter-width / 2)
+			width: 40%

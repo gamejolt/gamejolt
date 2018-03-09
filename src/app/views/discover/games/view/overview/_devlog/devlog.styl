@@ -1,2 +1,17 @@
+@require '~styles/variables'
+@require '../../../../../../../lib/gj-lib-client/stylus/common/mixins.styl'
+
 .section-header
 	word-wrap: normal
+
+.-spacer
+	display: block
+	height: $line-height-computed * 2
+
+	@media $media-xs
+		full-bleed()
+		height: ($line-height-computed / 2)
+		background-color: $gray-lightest
+		border-top: 1px solid $gray-lighter
+		border-bottom: 1px solid $gray-lighter
+		margin-bottom: $line-height-computed

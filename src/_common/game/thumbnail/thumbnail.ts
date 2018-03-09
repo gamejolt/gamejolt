@@ -15,29 +15,11 @@ import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-serv
 import { AppScrollInview } from '../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { AppUserAvatarImg } from '../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppVideo } from '../../../lib/gj-lib-client/components/video/video';
-import { arrayRemove } from '../../../lib/gj-lib-client/utils/array';
 import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { currency } from '../../../lib/gj-lib-client/vue/filters/currency';
 import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Settings } from '../../settings/settings.service';
-import { AppGameThumbnailPlaceholder } from './placeholder/placeholder';
-
-/**
- * An array of all the thumbnails on the page.
- */
-const thumbnails: AppGameThumbnail[] = [];
-
-// We want to attach to the window focus/blur events globally so that we don't
-// register so many events.
-if (typeof window !== 'undefined') {
-	window.addEventListener('focus', () => {
-		thumbnails.forEach(i => (i.isWindowFocused = true));
-	});
-
-	window.addEventListener('blur', () => {
-		thumbnails.forEach(i => (i.isWindowFocused = false));
-	});
-}
+import { ContentFocus } from '../../content-focus/content-focus.service';
 
 @View
 @Component({
@@ -50,7 +32,6 @@ if (typeof window !== 'undefined') {
 		AppGameModLinks,
 		AppUserAvatarImg,
 		AppScrollInview,
-		AppGameThumbnailPlaceholder,
 		AppGameFollowWidget,
 		AppGamePlaylistAddToWidget,
 	},
@@ -68,9 +49,6 @@ export class AppGameThumbnail extends Vue {
 	isBootstrapped = GJ_IS_SSR;
 	isHydrated = GJ_IS_SSR;
 	isThumbnailLoaded = GJ_IS_SSR;
-	isWindowFocused = typeof document !== 'undefined' && document.hasFocus
-		? document.hasFocus()
-		: true;
 
 	readonly Screen = Screen;
 
@@ -79,24 +57,21 @@ export class AppGameThumbnail extends Vue {
 		return !this.$slots.default;
 	}
 
-	get isActive() {
-		// When the window is not focused we don't want to play videos. This
-		// should speed up inactive tabs.
-		return (
-			!GJ_IS_SSR &&
-			!!Settings.get('animated-thumbnails') &&
-			this.isWindowFocused &&
-			this.isHydrated
-		);
-	}
-
-	get shouldShowVideo() {
+	get hasVideo() {
 		return (
 			this.game.thumbnail_media_item &&
 			this.game.thumbnail_media_item.is_animated &&
 			Screen.isDesktop &&
-			this.isActive
+			!GJ_IS_SSR &&
+			!!Settings.get('animated-thumbnails') &&
+			this.isHydrated
 		);
+	}
+
+	get shouldPlayVideo() {
+		// When the window is not focused, or when we're scrolling, we don't want to play videos.
+		// This should speed up inactive tabs.
+		return this.hasVideo && ContentFocus.hasFocus && !Screen.isScrolling;
 	}
 
 	get url() {
@@ -154,14 +129,6 @@ export class AppGameThumbnail extends Vue {
 
 	get showModTools() {
 		return this.app.user && this.app.user.isMod;
-	}
-
-	created() {
-		thumbnails.push(this);
-	}
-
-	destroyed() {
-		arrayRemove(thumbnails, i => i === this);
 	}
 
 	inView() {
