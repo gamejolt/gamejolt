@@ -3,7 +3,7 @@ const shell = require('gulp-shell');
 const path = require('path');
 
 const config = {
-	staticCdn: 'https://s.gjcdn.net',
+	staticCdn: 'https://b6d3e9q9.ssl.hwcdn.net',
 	injectVersion: 2,
 	sections: {
 		app: {
