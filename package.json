@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.14.1",
+	"version": "0.15.0",
 	"scripts": {
 		"postinstall": "sh ./git-hooks/setup-hooks.sh",
 		"dev": "gulp watch",
@@ -10,7 +10,8 @@
 		"client-build-win": "gulp --production --client --arch=32",
 		"client-build-osx": "gulp --production --client --arch=64",
 		"client-build-linux32": "gulp --production --client --arch=32",
-		"client-build-linux64": "gulp --production --client --arch=64"
+		"client-build-linux64": "gulp --production --client --arch=64",
+		"check": "tsc --noEmit"
 	},
 	"devDependencies": {
 		"@types/autosize": "3.0.6",
@@ -101,8 +102,10 @@
 		"plugin": true
 	},
 	"clientManifestUrl": "https://d.gamejolt.net/data/client/manifest-2.json",
-	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
-	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
+	"chromium-args":
+		"--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+	"user-agent":
+		"GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
 		"linux": {
 			"main": "app://game-jolt-client/package/index.html#/",

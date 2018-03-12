@@ -23,6 +23,10 @@ export class AppChatWindowSend extends Vue {
 	message = '';
 	multiLineMode = false;
 
+	$refs: {
+		input: HTMLTextAreaElement;
+	};
+
 	readonly Screen = Screen;
 
 	// Vue will trigger all events that match, which means the "enter" event
@@ -57,6 +61,11 @@ export class AppChatWindowSend extends Vue {
 			event.preventDefault();
 			return;
 		}
+	}
+
+	sendClicked() {
+		this.$refs.input.focus();
+		this.sendMessage();
 	}
 
 	sendMessage() {

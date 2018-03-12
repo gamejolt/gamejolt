@@ -56,8 +56,8 @@ export class AppActivityFeed extends Vue {
 	private scroll$: Subscription | undefined;
 
 	mounted() {
-		this.scroll$ = Scroll.scrollChanges.sampleTime(ScrollSampleTime).subscribe(() => {
-			const { top, height } = Scroll.getScrollChange();
+		this.scroll$ = Scroll.watcher.changes.sampleTime(ScrollSampleTime).subscribe(() => {
+			const { top, height } = Scroll.watcher.getScrollChange();
 			this.scroll = top;
 
 			// Auto-loading while scrolling.

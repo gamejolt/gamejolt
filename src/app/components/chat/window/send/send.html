@@ -13,11 +13,12 @@
 		binding the :key allows it to refocus each time the room changes
 	-->
 	<div class="-container">
-		<div class="-button" @click="sendMessage">
+		<div class="-button" @click="sendClicked()">
 			<app-jolticon icon="add-comment" />
 		</div>
 		<div class="-input">
 			<textarea
+				ref="input"
 				:key="chat.room.id"
 				class="form-control"
 				placeholder="Enter message..."
