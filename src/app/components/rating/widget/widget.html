@@ -12,8 +12,8 @@
 				icon="gamejolt"
 				class="rating-widget-icon"
 				:class="{
-					hover: hovered >= i,
-					selected: gameRating && gameRating.rating >= i,
+					hover: isHovered(i),
+					selected: isSelected(i),
 					big,
 				}"
 				v-app-tooltip="getTooltip( i )"

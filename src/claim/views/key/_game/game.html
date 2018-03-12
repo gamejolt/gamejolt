@@ -80,7 +80,7 @@
 			class="alert full-bleed-xs"
 			:class="{
 				'alert-info': msg.type === 'info',
-				'alert-warning': msg.type === 'alert',
+				'alert-notice': msg.type === 'alert',
 			}"
 			>
 			<app-jolticon icon="notice" />
@@ -104,7 +104,7 @@
 				/>
 		</div>
 
-		<div class="alert alert-warning" v-else>
+		<div class="alert alert-notice" v-else>
 			<translate>No releases yet.</translate>
 		</div>
 	</template>

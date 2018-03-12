@@ -63,7 +63,7 @@
 					v-app-tooltip.bottom="$gettext( `Activity` )"
 					v-app-track-event="`top-nav:activity:toggle`"
 					>
-					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
+					<span class="notification-tag tag tag-notice anim-fade-enter anim-fade-leave"
 						v-if="notificationCount > 0"
 						>
 						{{ notificationCount < 100 ? notificationCount : '99+' }}
@@ -80,7 +80,7 @@
 					v-app-tooltip.bottom="$gettext( `Friend Requests` )"
 					v-app-track-event="`top-nav:friend-requests:toggle`"
 					>
-					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
+					<span class="notification-tag tag tag-notice anim-fade-enter anim-fade-leave"
 						v-if="friendRequestCount"
 						>
 						{{ friendRequestCount }}
@@ -151,7 +151,7 @@
 					"
 					v-app-track-event="`top-nav:chat:toggle`"
 					>
-					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
+					<span class="notification-tag tag tag-notice anim-fade-enter anim-fade-leave"
 						v-if="chat.friendNotificationsCount"
 						>
 						{{ chat.friendNotificationsCount }}

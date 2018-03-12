@@ -95,7 +95,7 @@
 						<div
 							key="wip"
 							v-else-if="game.canceled"
-							class="alert alert-warning full-bleed-xs"
+							class="alert alert-notice full-bleed-xs"
 							v-translate
 							>
 							This game was <b>canceled</b>, so the current version might be buggy or incomplete. You can still follow it if you'd like to be notified in the case that development continues.
@@ -106,7 +106,7 @@
 							class="alert full-bleed-xs"
 							:class="{
 								'alert-info': msg.type === 'info',
-								'alert-warning': msg.type === 'alert',
+								'alert-notice': msg.type === 'alert',
 							}"
 							>
 							<app-jolticon icon="notice" />
@@ -156,7 +156,7 @@
 							</div>
 						</app-card>
 
-						<div v-if="shouldShowMultiplePackagesMessage" class="alert alert-warning">
+						<div v-if="shouldShowMultiplePackagesMessage" class="alert alert-notice">
 							<app-jolticon icon="notice" />
 							<translate>There are multiple packages for your device. Please choose one below.</translate>
 						</div>

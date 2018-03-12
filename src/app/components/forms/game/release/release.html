@@ -34,7 +34,7 @@
 	<fieldset>
 		<legend><translate>Builds</translate></legend>
 
-		<div class="alert alert-warning" v-if="!builds.length">
+		<div class="alert alert-notice" v-if="!builds.length">
 			<translate>You don't have any builds in this release yet. You won't be able to publish until you put some in.</translate>
 		</div>
 
@@ -57,7 +57,7 @@
 
 		<br>
 
-		<div class="alert alert-warning sans-margin" v-if="areBuildsLockedByJam">
+		<div class="alert alert-notice sans-margin" v-if="areBuildsLockedByJam">
 			<app-jolticon icon="notice" />
 			<strong><translate>Your game is part of a jam that locks builds during voting.</translate></strong>
 			<translate>You will not be able to add new builds until the voting period ends.</translate>

@@ -16,14 +16,14 @@
 	</div>
 
 	<template v-if="localPackage">
-		<div class="alert alert-warning" v-if="localPackage.install_state === PatchState.DOWNLOAD_FAILED">
+		<div class="alert alert-notice" v-if="localPackage.install_state === PatchState.DOWNLOAD_FAILED">
 			<p>
 				<app-jolticon icon="notice" />
 				<translate>Oh no! We couldn't download this package. Perhaps check that you're still online?</translate>
 			</p>
 		</div>
 
-		<div class="alert alert-warning" v-if="localPackage.install_state === PatchState.UNPACK_FAILED">
+		<div class="alert alert-notice" v-if="localPackage.install_state === PatchState.UNPACK_FAILED">
 			<p>
 				<app-jolticon icon="notice" />
 				<translate>Oh no! We couldn't unpack this package after downloading it. Maybe try again?</translate>

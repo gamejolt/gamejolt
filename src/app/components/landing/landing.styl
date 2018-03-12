@@ -51,7 +51,6 @@
 		margin-top: $line-height-computed * 2
 
 .landing-body
-
 	h1, h2, h3, h4, h5, h6
 		text-transform: uppercase
 
@@ -60,7 +59,7 @@
 			margin-top: $line-height-computed
 
 	a
-		link-underlines( $black, $white, $white )
+		link-underlines($black, $white, $white)
 		font-weight: bold
 
 	.section
@@ -70,28 +69,27 @@
 		background-image: none !important
 		text-shadow: none !important
 
-	.fill-lightest
+	.fill-offset
 		a
-			link-underlines( $text-color, $gray-lightest, $gray-lightest )
+			link-underlines($text-color, $gray-lightest, $gray-lightest)
 
 	.fill-darkest
 		a
-			link-underlines( $gj-green, $gray-darkest, $gray-darkest )
+			link-underlines(var(--user-green), $gray-darkest, $gray-darkest)
 
 		.game-thumbnail
 			background: none
 
 	.fill-pink
 		a
-			link-underlines( $white, $gj-pink, $gj-pink )
+			link-underlines($white, var(--user-pink), var(--user-pink))
 
 	.section
 		position: relative
 
 	.fill-black
-
 		h1, h2, h3
-			color: $gj-pink
+			color: var(--user-pink)
 
 	p
 		line-height: 1.6
@@ -99,9 +97,7 @@
 	.stat-big-digit
 		font-size: $font-size-h1 * 1.2
 
-.landing-break-lg
-.landing-break-md
-.landing-break-sm
+.landing-break-lg, .landing-break-md, .landing-break-sm
 	display: none
 
 @media $media-sm
@@ -122,8 +118,7 @@
 		clear: both
 		height: $grid-gutter-width * 1.5
 
-.landing-graphic
-.landing-graphic-full
+.landing-graphic, .landing-graphic-full
 	text-align: center
 
 	> img

@@ -27,7 +27,7 @@
 		<span v-if="localPackage.install_state || localPackage.update_state">
 
 			<template v-if="localPackage.didInstallFail || localPackage.didUpdateFail">
-				<span class="tag tag-pink">
+				<span class="tag tag-notice">
 					{{ localPackage.didInstallFail ? $gettext('Installation Failed') : $gettext('Update Failed') }}
 				</span>
 				<button

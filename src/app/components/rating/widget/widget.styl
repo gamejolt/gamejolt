@@ -37,32 +37,23 @@
 				display: block
 
 			&:hover
-				color: $gj-pink
+				user-prop('color', 'notice')
 
 			.rating-widget:hover &
 				display: block
 
 	&-icon
+		content-prop('color', 'muted')
 		float: left
 		cursor: pointer
 		margin: 0 !important
 
-		&
-		.rating-widget-icons:hover &
-			color: $gray-lighter
-
-			.rating-widget-dark &
-				color: $gray-lightest
-
+		// &, .rating-widget-icons:hover &
+		// // color: $gray-lighter
 		&.hover
-			color: $gj-blue !important
-
-			.rating-widget-dark &
-				color: $gj-green !important
+			content-prop('color', 'link')
+			// color: var(--user-blue) !important
 
 		&.selected
-			color: $gj-blue
-
-			.rating-widget-dark &
-				color: $gj-green
-
+			content-prop('color', 'link')
+			// color: var(--user-blue)

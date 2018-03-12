@@ -2,11 +2,9 @@
 @require '../../../../../lib/gj-lib-client/stylus/common/mixins'
 
 .fireside-post-list
-
 	$height = 100px
 	$line-height = 20px
 	$overlay-padding = 15px
-
 	list-style: none
 	padding: 0
 
@@ -22,7 +20,7 @@
 
 		&:hover
 			.fireside-post-list-item-title
-				color: $gj-blue
+				color: var(--user-blue)
 
 			.fireside-post-list-item-meta
 				background-color: $gray-darkest
@@ -45,7 +43,7 @@
 			top: 50%
 			margin-top: -(($line-height * 2 + $overlay-padding * 2) / 2)
 			padding: $overlay-padding
-			background-color: rgba( $gray-darkest, 0.8 )
+			background-color: rgba($gray-darkest, 0.8)
 
 		&-title
 			text-overflow()

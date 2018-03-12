@@ -39,7 +39,7 @@
 						{{ order.completed_on | date( 'mediumDate' ) }}
 					</td>
 					<td class="text-right">
-						<span class="tag tag-pink" v-if="order._is_refunded">
+						<span class="tag tag-notice" v-if="order._is_refunded">
 							<translate>Refunded</translate>
 						</span>
 						{{ order.total_amount | currency }}

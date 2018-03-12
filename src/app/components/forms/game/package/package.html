@@ -107,7 +107,7 @@
 			:label="$gettext( `Pricing Type` )"
 			>
 
-			<div class="alert alert-warning" v-if="isFangame">
+			<div class="alert alert-notice" v-if="isFangame">
 				<translate>Accepting payments for fangames is illegal and against our terms. If you sell fangames, we will remove your account and block you from the Marketplace.</translate>
 			</div>
 			<div v-else>
@@ -130,7 +130,7 @@
 					</template>
 				</p>
 
-				<div class="alert alert-warning" v-if="isUserVerified && package && package.has_browser_builds">
+				<div class="alert alert-notice" v-if="isUserVerified && package && package.has_browser_builds">
 					<translate>Packages with browser builds cannot be sold at this time.</translate>
 				</div>
 			</div>

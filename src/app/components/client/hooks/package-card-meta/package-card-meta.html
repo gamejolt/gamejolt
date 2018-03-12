@@ -2,7 +2,7 @@
 	<template v-if="localPackage.isInstalling">
 		<template v-if="!localPackage.isPatchPaused">
 			<translate class="tag tag-blue text-upper" v-if="localPackage.isInstalling">Installing</translate>
-			<translate class="tag tag-pink text-upper" v-else-if="localPackage.didInstallFail">Install Failed</translate>
+			<translate class="tag tag-notice text-upper" v-else-if="localPackage.didInstallFail">Install Failed</translate>
 		</template>
 		<template v-else>
 			<translate class="tag text-upper">Install Paused</translate>
@@ -11,7 +11,7 @@
 	<template v-else-if="localPackage.isUpdating">
 		<template v-if="!localPackage.isPatchPaused">
 			<translate class="tag tag-blue text-upper" v-if="localPackage.isUpdating">Updating</translate>
-			<translate class="tag tag-pink text-upper" v-else-if="localPackage.didUpdateFail">Update Failed</translate>
+			<translate class="tag tag-notice text-upper" v-else-if="localPackage.didUpdateFail">Update Failed</translate>
 		</template>
 		<template v-else>
 			<translate class="tag text-upper">Update Paused</translate>

@@ -2,7 +2,6 @@
 @require '../../../../../lib/gj-lib-client/stylus/common/mixins'
 
 .chat-user
-
 	&:hover
 		.chat-user-moderate-action
 			opacity: 1
@@ -21,7 +20,7 @@
 			opacity: 0
 
 			&:hover .jolticon
-				color: $gj-blue !important
+				color: var(--user-blue) !important
 
 	&-role
 		float: none !important
@@ -47,14 +46,14 @@
 			bottom: 8px
 			width: 12px
 			height: 12px
-			border: 2px solid rgb( 25, 25, 25 )
+			border: 2px solid rgb(25, 25, 25)
 			border-radius: 100%
 
 			&.online
-				background-color: $gj-green
+				background-color: var(--user-green)
 
 			&.in-game
-				background-color: $gj-pink
+				background-color: var(--user-pink)
 
 			&.offline
 				background-color: $gray-lightest

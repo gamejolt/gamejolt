@@ -34,6 +34,45 @@
 		<!-- http://blogs.windows.com/windows_phone/b/wpdev/archive/2012/11/15/adapting-your-webkit-optimized-site-for-internet-explorer-10.aspx#step5 -->
 		<meta name="msapplication-tap-highlight" content="no">
 
+		<style>
+			:root {
+				--user-highlight: #efffca;
+				--user-offlight: #793c36;
+				--user-notice: #c77a5b;
+
+				--user-green: var(--user-highlight);
+				--user-dark-green: var(--user-offlight);
+				--user-blue: var(--user-highlight);
+				--user-pink: var(--user-highlight);
+			}
+
+			/* Light theme */
+			:root {
+				--content-base: #fff;
+				--content-offset: #f3f3f3;
+				--content-text: #363636;
+				--content-muted: #7e7e7e;
+				--content-link: var(--user-offlight);
+				--content-link-hover: #000;
+
+				--content-base-trans: rgba(1, 1, 1, 0);
+			}
+
+			/* Dark theme */
+			.theme-dark, .fill-dark, .fill-darker, .fill-darkest, .fill-black {
+				--content-base: #292929;
+				--content-offset: #363636;
+				--content-text: #d1d1d1;
+				--content-muted: #7e7e7e;
+				--content-link: var(--user-highlight);
+				--content-link-hover: #fff;
+
+				--content-base-trans: rgba(41, 41, 41, 0);
+			}
+
+			/*
+		</style>
+
 		<script>
 			window._gjStartTime = Date.now();
 		</script>

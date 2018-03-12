@@ -1,7 +1,6 @@
 @require '~styles/variables'
 
 @media $media-xs
-
 	.genre-list
 		overflow-x: scroll
 		white-space: nowrap
@@ -16,8 +15,8 @@
 
 	&.active
 		.genre-list-genre-label
-			background-color: $gj-dark-green
-			color: $gj-green
+			background-color: var(--user-dark-green)
+			color: var(--user-green)
 
 	img
 		width: 116px * 0.5
@@ -32,4 +31,4 @@
 
 	&:hover
 		.genre-list-genre-label
-			color: $gj-green
+			color: var(--user-green)

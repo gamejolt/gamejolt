@@ -14,7 +14,7 @@
 					:class="{ active: chat.room && chat.room.id === room.id }"
 					:title="room.title"
 					>
-					<span class="tag tag-pink notifications-tag"
+					<span class="tag tag-notice notifications-tag"
 						v-if="chat.roomId === room.id && Chat.roomNotifications"
 						>
 						{{ Chat.roomNotifications | number }}
@@ -38,7 +38,7 @@
 			<div class="nav-heading">
 				<translate>Friends</translate>
 			</div>
-			<div class="alert alert-warning">
+			<div class="alert alert-notice">
 				<translate>No friends yet.</translate>
 			</div>
 			<div class="alert fill-dark">

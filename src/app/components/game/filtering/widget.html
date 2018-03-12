@@ -5,7 +5,7 @@
 			<li>
 				<a v-app-popover-trigger="`games-filter-price`" v-app-track-event="`game-filtering:tab-price`">
 					<translate>Price</translate>
-					<span class="badge badge-pink" v-if="filtering.filters.price">
+					<span class="badge badge-notice" v-if="filtering.filters.price">
 						1
 					</span>
 					<app-jolticon icon="chevron-down" />
@@ -14,7 +14,7 @@
 			<li>
 				<a v-app-popover-trigger="`games-filter-os`" v-app-track-event="`game-filtering:tab-os`">
 					<translate>games.filtering.os_label</translate>
-					<span class="badge badge-pink" v-if="filtering.filters.os.length">
+					<span class="badge badge-notice" v-if="filtering.filters.os.length">
 						{{ filtering.filters.os.length | number }}
 					</span>
 					<app-jolticon icon="chevron-down" />
@@ -23,7 +23,7 @@
 			<li>
 				<a v-app-popover-trigger="`games-filter-browser`" v-app-track-event="`game-filtering:tab-browser`">
 					<translate>games.filtering.browser_label</translate>
-					<span class="badge badge-pink" v-if="filtering.filters.browser.length">
+					<span class="badge badge-notice" v-if="filtering.filters.browser.length">
 						{{ filtering.filters.browser.length | number }}
 					</span>
 					<app-jolticon icon="chevron-down" />
@@ -32,7 +32,7 @@
 			<li>
 				<a v-app-popover-trigger="`games-filter-maturity`" v-app-track-event="`game-filtering:tab-maturity`">
 					<translate>games.filtering.maturity_label</translate>
-					<span class="badge badge-pink" v-if="filtering.filters.maturity.length">
+					<span class="badge badge-notice" v-if="filtering.filters.maturity.length">
 						{{ filtering.filters.maturity.length | number }}
 					</span>
 					<app-jolticon icon="chevron-down" />
@@ -41,7 +41,7 @@
 			<li>
 				<a v-app-popover-trigger="`games-filter-status`" v-app-track-event="`game-filtering:tab-status`">
 					<translate>games.filtering.status_label</translate>
-					<span class="badge badge-pink" v-if="filtering.filters.status.length">
+					<span class="badge badge-notice" v-if="filtering.filters.status.length">
 						{{ filtering.filters.status.length | number }}
 					</span>
 					<app-jolticon icon="chevron-down" />
@@ -53,7 +53,7 @@
 					<span class="tag tag-active">
 						<translate>New</translate>
 					</span>
-					<span class="badge badge-pink" v-if="filtering.filters.partners.length">
+					<span class="badge badge-notice" v-if="filtering.filters.partners.length">
 						{{ filtering.filters.partners.length | number }}
 					</span>
 					<app-jolticon icon="chevron-down" />

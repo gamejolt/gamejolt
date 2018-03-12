@@ -5,19 +5,17 @@
 	-->
 	<section class="section fill-pink" v-if="!user.status">
 		<div class="container">
-			<div>
+			<p>
 				<translate>profile.banned_message_html</translate>
-			</div>
+			</p>
 
 			<app-expand :when="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS">
-				<br>
-				<hr class="underbar">
-				<div>
+				<p>
 					<strong><translate>This user was your friend.</translate></strong>
 					<br>
 					<translate>If you remove them from your friends list, you will no longer be able to access your chat history with them.</translate>
-				</div>
-				<br>
+				</p>
+
 				<button
 					class="btn"
 					@click="$emit( 'remove-friend' )"
@@ -259,7 +257,6 @@
 									<translate>profile.developer_games_teaser_heading_small</translate>
 								</small>
 							</h2>
-							<hr class="underbar">
 
 							<div class="scrollable-grid-xs">
 								<div class="row">
@@ -283,7 +280,6 @@
 									<translate>Latest Videos</translate>
 								</router-link>
 							</h2>
-							<hr class="underbar">
 
 							<div class="row">
 								<div

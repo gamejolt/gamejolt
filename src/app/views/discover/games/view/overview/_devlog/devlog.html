@@ -14,7 +14,7 @@
 				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
 					<div
 						v-if="game.canceled"
-						class="alert alert-warning full-bleed-xs"
+						class="alert alert-notice full-bleed-xs"
 						v-translate
 						>
 						This devlog project has been <b>canceled</b>. You can still follow it if you'd like to be notified in the case that development continues.
@@ -25,7 +25,7 @@
 						class="alert full-bleed-xs"
 						:class="{
 							'alert-info': msg.type === 'info',
-							'alert-warning': msg.type === 'alert',
+							'alert-notice': msg.type === 'alert',
 						}"
 						>
 						<app-jolticon icon="notice" />

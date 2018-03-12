@@ -49,6 +49,15 @@ export class AppRatingWidget extends Vue {
 		return undefined;
 	}
 
+	isHovered(i: number) {
+		return this.hovered >= i;
+	}
+
+	isSelected(i: number) {
+		// Don't how any selected when hovering.
+		return this.hovered === 0 && this.gameRating && this.gameRating.rating >= i;
+	}
+
 	hover(index?: number) {
 		if (typeof index === 'undefined') {
 			this.hovered = 0;

@@ -6,7 +6,7 @@
 
 	<br>
 	<app-grecaptcha-widget @response="onRecaptchaResponse"/><br>
-	<div class="alert alert-warning" v-if="serverErrors">
+	<div class="alert alert-notice" v-if="serverErrors">
 		<translate v-if="serverErrors.token">
 			Oh no, your sign-up session has expired!
 		</translate>

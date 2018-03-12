@@ -22,20 +22,18 @@
 		background-size: cover
 		margin-bottom: $font-size-base
 
-		&::before
-		&::after
+		&::before, &::after
 			overlay-img()
 			opacity: 0
 			transition: opacity 400ms
 
 		&::before
-			background-image: linear-gradient( to right, rgba( $gj-pink, 0.15 ) 0%, rgba( $gj-pink, 0 ) 25% )
+			background-image: linear-gradient(to right, rgba($gj-pink, 0.15) 0, rgba($gj-pink, 0) 25%)
 
 		&::after
-			background-image: linear-gradient( to right, rgba( $gj-blue, 0 ) 75%, rgba( $gj-blue, 0.15 ) 100% )
+			background-image: linear-gradient(to right, rgba($gj-blue, 0) 75%, rgba($gj-blue, 0.15) 100%)
 
 		&:hover
-			&::before
-			&::after
+			&::before, &::after
 				opacity: 1
 				transition: none

@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .user-level-widget-level
 	float: left
@@ -14,11 +15,11 @@
 	font-family: $font-family-heading
 	font-weight: 300
 	font-size: $font-size-h2
-	color: $gj-green
+	color: var(--user-green)
 
 .user-level-widget-level-label
+	content-prop('color', 'muted')
 	font-size: $font-size-small
-	color: $gray-lighter
 
 .user-level-widget-experience
 	padding: 7px
