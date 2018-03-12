@@ -48,6 +48,7 @@ export class AppShellTopNav extends Vue {
 	@State friendRequestCount: Store['friendRequestCount'];
 	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
 	@State isRightPaneVisible: Store['isRightPaneVisible'];
+	@State darkMode: Store['darkMode'];
 
 	friendRequestsShowing = false;
 	userMenuShowing = false;
@@ -58,4 +59,5 @@ export class AppShellTopNav extends Vue {
 
 	@Action toggleRightPane: Store['toggleRightPane'];
 	@Action toggleLeftPane: Store['toggleLeftPane'];
+	@Action toggleDarkMode: Store['toggleDarkMode'];
 }
