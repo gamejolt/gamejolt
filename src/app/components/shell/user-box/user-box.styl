@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .user-box-exp
 	color: $gray-light
@@ -27,7 +27,7 @@
 			font-size: $font-size-large
 			font-style: normal
 			font-weight: 300
-			color: var(--user-green)
+			color: var(--theme-green)
 
 		strong
 			color: $white
@@ -44,7 +44,7 @@
 				color: $white
 
 				&:hover
-					color: var(--user-blue)
+					color: var(--theme-blue)
 
 	&-progress
 		clearfix()

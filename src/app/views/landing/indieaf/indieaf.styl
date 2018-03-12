@@ -1,8 +1,7 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 @require '../../../../lib/gj-lib-client/components/button/button'
-
-@import url('https://fonts.googleapis.com/css?family=Megrim');
+@import url('https://fonts.googleapis.com/css?family=Megrim')
 
 .route-landing-indieaf
 	background-color: #0f0005
@@ -31,7 +30,6 @@
 			max-height: 800px
 
 		@media $media-xs
-
 			.lead
 				top: 20px
 				font-size: 45px
@@ -76,13 +74,10 @@
 			margin-top: 140px
 
 		@media $media-xs
-
-			h2
-			.spacer
+			h2, .spacer
 				margin-top: 80px
 
 	.indieaf-vs
-
 		&-row
 			clearfix()
 			position: relative
@@ -122,16 +117,7 @@
 			text-align: right
 
 	.btn-af
-		button-variant(
-			background: $gj-blue,
-			color: $white,
-			icon-color: $white,
-			outline-color: $gj-blue,
-			active-background: rgba($gj-pink, 0.4),
-			active-color: $white,
-			addon-color: $white,
-			outline-addon-color: $white,
-		)
+		button-variant(, background: $gj-blue, color: $white, icon-color: $white, outline-color: $gj-blue, active-background: rgba($gj-pink, 0.4), active-color: $white, addon-color: $white, outline-addon-color: $white)
 
 	.btn-af-outline
 		color: $gj-pink !important
@@ -147,4 +133,3 @@
 
 		&:hover
 			box-shadow: 0 0 8px $gj-pink
-

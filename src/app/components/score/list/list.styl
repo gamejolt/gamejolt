@@ -1,10 +1,10 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 $score-list-avatar-size-xs = 50px
 $score-list-avatar-size = 100px
-$score-list-gutter-xs = $grid-gutter-width-xs / 2
-$score-list-gutter = $grid-gutter-width / 2
+$score-list-gutter-xs = ($grid-gutter-width-xs / 2)
+$score-list-gutter = ($grid-gutter-width / 2)
 
 .score-list-item
 	position: relative
@@ -36,7 +36,7 @@ $score-list-gutter = $grid-gutter-width / 2
 		line-height: 25px
 		height: 25px
 		background-color: $gray-darkest
-		color: var(--user-green)
+		color: var(--theme-green)
 		font-weight: bold
 		text-align: right
 		padding: 0 4px

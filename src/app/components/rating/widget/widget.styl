@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .rating-widget
 	clearfix()
@@ -37,13 +37,13 @@
 				display: block
 
 			&:hover
-				user-prop('color', 'notice')
+				theme-prop('color', 'notice')
 
 			.rating-widget:hover &
 				display: block
 
 	&-icon
-		content-prop('color', 'muted')
+		content-prop('color', 'fg-muted')
 		float: left
 		cursor: pointer
 		margin: 0 !important
@@ -52,8 +52,8 @@
 		// // color: $gray-lighter
 		&.hover
 			content-prop('color', 'link')
-			// color: var(--user-blue) !important
+			// color: var(--theme-blue) !important
 
 		&.selected
 			content-prop('color', 'link')
-			// color: var(--user-blue)
+			// color: var(--theme-blue)

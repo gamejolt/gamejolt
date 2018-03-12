@@ -205,6 +205,10 @@
 
 	<div class="shell-sidebar-content fill-darkest scrollable overlay-scrollbar">
 
+		<button class="btn btn-lg btn-block btn-trans" @click="toggleDarkMode()">
+			{{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+		</button>
+
 		<ul class="shell-nav">
 			<li class="offline-disable">
 

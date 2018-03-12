@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .channel-thumbnail
 	display: block
@@ -19,7 +20,7 @@
 		display: flex
 		align-items: center
 		justify-content: center
-		background-color: $gray-darker
+		background-color: $gray-darkest
 		border-top-left-radius: $border-radius-base
 		border-top-right-radius: $border-radius-base
 
@@ -31,7 +32,7 @@
 		padding: 8px 0
 		color: $white
 		font-size: $font-size-small
-		background-color: $gray-dark
+		background-color: $gray-darkest
 		border-bottom-left-radius: $border-radius-base
 		border-bottom-right-radius: $border-radius-base
 
@@ -40,15 +41,10 @@
 		text-align: center
 
 	&-games-count
-		color: $gray-lighter
+		content-prop('background', 'fg-muted')
 
 	// Looks weird on mobile devices.
 	@media $media-md-up
 		&:hover .channel-thumbnail
 			&-info
-				background-color: var(--user-green)
-				color: var(--user-dark-green)
-
-	.fill-darker &
-		&-image
-			background-color: $gray-dark
+				theme-prop('color', 'highlight')

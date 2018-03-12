@@ -74,6 +74,8 @@ export class AppShellSidebar extends Vue {
 	// This is "hot".
 	defaultBrowseSection = null;
 
+	isDarkMode = false;
+
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 
@@ -94,6 +96,16 @@ export class AppShellSidebar extends Vue {
 		const collection = await this.newPlaylist();
 		if (collection) {
 			this.$router.push(collection.routeLocation);
+		}
+	}
+
+	toggleDarkMode() {
+		if (!this.isDarkMode) {
+			this.isDarkMode = true;
+			document.body.classList.add('theme-dark');
+		} else {
+			this.isDarkMode = false;
+			document.body.classList.remove('theme-dark');
 		}
 	}
 }

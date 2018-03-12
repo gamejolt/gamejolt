@@ -71,7 +71,7 @@
 		<div class="-meta">
 
 			<div
-				class="-pricing"
+				class="-pricing fill-offset"
 				v-if="game._has_packages && !hidePricing"
 				:class="{
 					'-pricing-owned': isOwned,
@@ -80,11 +80,6 @@
 				>
 				<template v-if="!isOwned">
 					<template v-if="sellableType === 'paid'">
-						<div class="-pricing-sale-percentage"
-							v-if="sale"
-							>
-							-{{ salePercentageOff }}%
-						</div>
 						<div class="-pricing-container">
 							<div class="-pricing-amount-old"
 								v-if="sale"
@@ -94,6 +89,11 @@
 							<div class="-pricing-amount">
 								{{ pricingAmount }}
 							</div>
+						</div>
+						<div class="-pricing-sale-percentage"
+							v-if="sale"
+							>
+							-{{ salePercentageOff }}%
 						</div>
 					</template>
 					<span class="-pricing-tag" v-else-if="sellableType === 'pwyw'">

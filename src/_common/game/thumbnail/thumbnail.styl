@@ -1,6 +1,6 @@
 @require './variables'
 @require '~styles/variables'
-@require '../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 $-zindex-img = 1
 $-zindex-video = 2
@@ -10,6 +10,7 @@ $-zindex-controls = 3
 	position: relative
 	display: block
 	margin-bottom: $grid-gutter-width-xs
+	color: inherit
 
 	@media $media-sm-up
 		margin-bottom: $grid-gutter-width
@@ -32,7 +33,7 @@ $-zindex-controls = 3
 		opacity: 1
 
 .-thumb
-	content-prop('background-color', 'offset')
+	content-prop('background-color', 'bg-offset')
 	position: relative
 	height: 0
 	padding-top: 56.25% // HD 16:9
@@ -47,7 +48,7 @@ $-zindex-controls = 3
 		height: 100%
 
 	.jolticon
-		content-prop('color', 'muted')
+		content-prop('color', 'fg-muted')
 		position: absolute
 		font-size: 16px * 4
 		left: 50%
@@ -82,14 +83,13 @@ $-zindex-controls = 3
 
 .-dev
 	text-overflow()
-	content-prop('color', 'muted')
+	content-prop('color', 'fg-muted')
 	margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
 	font-weight: bold
 	font-size: $font-size-h6
 
 .-title
 	text-overflow()
-	content-prop('color', 'text')
 	margin: 0
 	margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
 	line-height: 1.3
@@ -119,34 +119,25 @@ $-zindex-controls = 3
 	padding: 0 10px
 	text-align: center
 	border-radius: $border-radius-base
-	background-color: $gray-dark
 
 	&-owned
-		user-prop('background-color', 'highlight')
+		theme-prop('background-color', 'highlight')
 		color: $black
 
 		& ^[-1]-tag
 			color: inherit
 
 	&-amount
-		color: $white
 		font-size: $font-size-small
 		font-weight: bold
-
-	&-currency
-		color: $gray-lighter
 
 	&-decimal
 		font-size: $font-size-small
 
 	&-tag
-		color: $white
 		font-size: $font-size-tiny
 		font-weight: bold
 		text-transform: uppercase
-
-		&.muted
-			color: $gray-lighter
 
 	// This is way too complex.
 	&-sale
@@ -155,20 +146,20 @@ $-zindex-controls = 3
 
 		.-pricing
 			&-sale-percentage
+				theme-prop('color', 'highlight')
+				background-color: $gray
 				display: inline-block
 				vertical-align: top
-				margin-left: -10px
-				margin-right: 10px
-				padding-left: 10px
+				margin-right: -10px
+				margin-left: 10px
 				padding-right: 10px
+				padding-left: 10px
 				height: 36px
 				line-height: @height
 				font-size: $font-size-small
 				font-weight: bold
-				background-color: var(--user-green)
-				border-top-left-radius: $border-radius-base
-				border-bottom-left-radius: $border-radius-base
-				color: $black
+				border-top-right-radius: $border-radius-base
+				border-bottom-right-radius: $border-radius-base
 
 			&-container
 				display: inline-block
@@ -181,7 +172,7 @@ $-zindex-controls = 3
 				line-height: 20px
 
 			&-amount-old
-				color: $gray-lighter
+				content-prop('color', 'fg-muted')
 				text-decoration: line-through
 				font-size: $font-size-tiny
 				line-height: 10px

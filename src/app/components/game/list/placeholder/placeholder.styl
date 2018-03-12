@@ -1,9 +1,9 @@
 @require '~styles/variables'
-@require '../../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 @require '../item/item'
 
 .-thumb
-	background-color: $gray-lightest
+	content-prop('background-color', 'bg-offset')
 	border-radius: $border-radius-base
 
 .-placeholder

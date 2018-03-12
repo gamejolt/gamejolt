@@ -1,15 +1,9 @@
 @require '~styles/variables'
-
-$trophy-thumbnail-border-width = 3px
-$trophy-thumbnail-color = $gray-lighter
-$trophy-thumbnail-border-color = $black
-$trophy-thumbnail-achieved-color = $white
-$trophy-thumbnail-achieved-border-color = var(--user-blue)
-$trophy-thumbnail-max-width = 75px
+@require '~styles-lib/mixins'
 
 .trophy-thumbnail
-	padding: $trophy-thumbnail-border-width
-	background-color: $trophy-thumbnail-border-color
+	padding: 3px
+	background-color: $black
 	border-radius: $border-radius-base
 	text-align: center
 
@@ -46,14 +40,14 @@ $trophy-thumbnail-max-width = 75px
 
 .trophy-thumbnail-difficulty
 	display: block
-	padding-top: $trophy-thumbnail-border-width // match the border
+	padding-top: 3px // match the border
 	font-size: $font-size-tiny
 	text-align: center
 	text-transform: uppercase
-	color: $trophy-thumbnail-color
+	color: $gray-lighter
 
 .trophy-thumbnail-achieved
-	background-color: $trophy-thumbnail-achieved-border-color
+	theme-prop('background-color', 'highlight')
 
 	.trophy-thumbnail-difficulty
-		color: $trophy-thumbnail-achieved-color
+		theme-prop('color', 'downlight')

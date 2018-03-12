@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require './../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 fieldset
 	margin-top: $line-height-computed
@@ -38,7 +38,7 @@ fieldset
 
 	&:focus
 		outline: 1px solid $input-border-focus
-		outline-offset: 0  // Chrome adds an offset on focus for outlines.
+		outline-offset: 0 // Chrome adds an offset on focus for outlines.
 		z-index: 2
 
 	&.has-icon

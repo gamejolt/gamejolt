@@ -169,7 +169,6 @@
 					<app-card
 						v-for="release of releases"
 						:key="release.id"
-						:is-inactive="release.status === GameRelease.STATUS_HIDDEN"
 						>
 
 						<app-game-perms required="builds">
@@ -200,7 +199,7 @@
 						</div>
 
 						<div class="card-meta">
-							<span class="tag"
+							<span class="tag tag-notice"
 								v-if="release.status === GameRelease.STATUS_HIDDEN"
 								v-app-tooltip="$gettext( `dash.games.packages.manage.releases.hidden_tooltip` )"
 								>

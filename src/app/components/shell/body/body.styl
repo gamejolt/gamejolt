@@ -1,9 +1,9 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 @require '../../../../lib/gj-lib-client/components/overlay-scrollbar/overlay-scrollbar'
 
 body
-	@extend .overlay-scrollbar, .overlay-scrollbar-light
+	@extend .overlay-scrollbar
 
 #shell-body
 	position: relative
@@ -40,8 +40,8 @@ body
 
 // Set the content BG so that we don't show the html color.
 #content
-	content-prop('background-color', 'base')
-	content-prop('color', 'text')
+	content-prop('background-color', 'bg')
+	content-prop('color', 'fg')
 
 .shell-body-main
 	background-color: $white

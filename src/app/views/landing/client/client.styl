@@ -5,7 +5,6 @@
 	overflow-y: hidden
 
 	.highlight-rows
-
 		@media $media-sm-up
 			section
 				padding: 60px 0
@@ -13,7 +12,7 @@
 		.jolticon
 			margin-left: 0
 			margin-right: 10px
-			color: var(--user-green) !important
+			color: var(--theme-green) !important
 			vertical-align: middle
 
 		p
@@ -53,7 +52,7 @@
 			height: 400px
 			background-color: $gray-dark
 			z-index: 0
-			transform: rotate( -8deg )
+			transform: rotate(-8deg)
 
 		.container
 			z-index: 1
@@ -82,9 +81,9 @@
 			bottom: -60px
 			left: -30%
 			width: 160%
-			background-color: var(--user-green)
+			background-color: var(--theme-green)
 			z-index: 0
-			transform: rotate( 8deg )
+			transform: rotate(8deg)
 
 		.container
 			position: relative
@@ -92,7 +91,8 @@
 
 	@media $media-xs
 		.features-stripe-col
-			margin-bottom: ($grid-gutter-width)
+			margin-bottom: $grid-gutter-width
+
 			&:last-child
 				margin-bottom: 0
 
@@ -113,9 +113,9 @@
 			bottom: -40px
 			left: -30%
 			width: 160%
-			background-color: var(--user-pink)
+			background-color: var(--theme-pink)
 			z-index: 0
-			transform: rotate( -8deg )
+			transform: rotate(-8deg)
 
 		.container
 			position: relative
@@ -123,6 +123,7 @@
 
 	@media $media-xs
 		.download-footer-col
-			margin-bottom: ($grid-gutter-width)
+			margin-bottom: $grid-gutter-width
+
 			&:last-child
 				margin-bottom: 0

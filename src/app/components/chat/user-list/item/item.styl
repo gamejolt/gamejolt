@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .chat-user
 	height: 50px
@@ -23,7 +23,7 @@
 			opacity: 0
 
 			&:hover .jolticon
-				color: var(--user-blue) !important
+				color: var(--theme-blue) !important
 
 	&-role
 		float: none !important
@@ -53,10 +53,10 @@
 			border-radius: 100%
 
 			&.online
-				background-color: var(--user-green)
+				background-color: var(--theme-green)
 
 			&.in-game
-				background-color: var(--user-pink)
+				background-color: var(--theme-pink)
 
 			&.offline
 				background-color: $gray-lightest

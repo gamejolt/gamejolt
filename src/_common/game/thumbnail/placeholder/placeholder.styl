@@ -1,6 +1,6 @@
 @require '../variables'
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .game-thumbnail-placeholder
 	margin-bottom: $grid-gutter-width-xs
@@ -10,9 +10,9 @@
 
 .placeholder
 	&-thumb
+		content-prop('background-color', 'bg-offset')
 		height: 0
 		padding-top: 56.25% // HD 16:9
-		background-color: $gray-lightest
 		border-radius: $border-radius-base
 
 	&-meta
@@ -20,10 +20,10 @@
 		padding-top: 10px
 
 	&-avatar
+		content-prop('background-color', 'bg-offset')
 		float: left
 		width: $game-thumbnail-avatar-size
 		height: $game-thumbnail-avatar-size
-		background-color: $gray-lightest
 		border-radius: $border-radius-base
 
 	&-dev

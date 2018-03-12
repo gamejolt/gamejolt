@@ -1,8 +1,8 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .account-popover
 	min-width: 250px
-
 	$account-popover-padding = 10px
 
 	h4
@@ -21,10 +21,10 @@
 		padding: 10px $account-popover-padding
 
 	&-separator
+		content-prop('background-color', 'bg-subtle')
 		margin: 10px $account-popover-padding
 		height: 1px
 		line-height: 1px
-		background-color: $gray-dark
 
 	&-currency
-		color: var(--user-green)
+		theme-prop('color', 'highlight')

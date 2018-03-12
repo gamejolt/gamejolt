@@ -1,8 +1,7 @@
 @require '~styles/variables'
-@require '../../../../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .route-game-overview
-
 	// Match the styling of .stat-big labels.
 	.rating-widget-label
 		margin-top: 0
@@ -29,7 +28,6 @@
 
 	// Collapse spacing between headers a bit on really small screens.
 	@media $media-xs
-
 		h2
 			margin-top: $line-height-computed
 
@@ -37,6 +35,5 @@
 				margin-top: 0
 
 	@media $media-sm
-
 		#maturity-rating
 			margin-top: 60px
