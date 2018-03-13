@@ -8,7 +8,7 @@
 	list-style: none
 	padding: 0
 
-	> li
+	& > li
 		margin-top: 0
 		margin-bottom: $line-height-computed
 
@@ -26,12 +26,12 @@
 				background-color: $gray-darkest
 
 		&-img
+			content-prop('background-color', 'bg-offset')
 			position: absolute
 			top: 0
 			right: 0
 			bottom: 0
 			left: 0
-			background-color: $gray-lightest
 			background-repeat: no-repeat
 			background-position: center center
 			background-size: cover

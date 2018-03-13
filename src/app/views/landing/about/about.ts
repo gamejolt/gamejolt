@@ -27,6 +27,6 @@ export default class RouteLandingAbout extends BaseRouteComponent {
 		'555555': 'fill-gray',
 		'7e7e7e': 'fill-light',
 		d1d1d1: 'fill-lighter',
-		f3f3f3: 'fill-lightest',
+		f3f3f3: 'fill-offset',
 	};
 }

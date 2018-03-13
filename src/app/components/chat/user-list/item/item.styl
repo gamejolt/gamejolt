@@ -53,10 +53,10 @@
 			border-radius: 100%
 
 			&.online
-				background-color: var(--theme-green)
+				theme-prop('background-color', 'highlight')
 
 			&.in-game
-				background-color: var(--theme-pink)
+				theme-prop('background-color', 'notice')
 
 			&.offline
-				background-color: $gray-lightest
+				theme-prop('background-color', 'bg-offset')

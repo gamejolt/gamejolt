@@ -71,18 +71,18 @@
 
 	.fill-offset
 		a
-			link-underlines($text-color, $gray-lightest, $gray-lightest)
+			link-underlines(var(--content-fg), var(--content-bg-offset), var(--content-bg-offset))
 
 	.fill-darkest
 		a
-			link-underlines(var(--theme-green), $gray-darkest, $gray-darkest)
+			link-underlines($gj-green, $gray-darkest, $gray-darkest)
 
 		.game-thumbnail
 			background: none
 
 	.fill-pink
 		a
-			link-underlines($white, var(--theme-pink), var(--theme-pink))
+			link-underlines($white, $gj-pink, $gj-pink)
 
 	.section
 		position: relative
