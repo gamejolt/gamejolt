@@ -1,10 +1,11 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .devlog-post-sketchfab
 	&-embed
+		rounded-corners()
 		position: relative
 		background-color: $gray-lightest
-		border-radius: $border-radius-base
 
 		a
 			display: block

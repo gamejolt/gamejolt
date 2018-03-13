@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .devlog-post-media
 	&-embed
@@ -13,20 +14,20 @@
 		transition: transform 300ms $strong-ease-out
 
 		&-item
+			rounded-corners()
 			display: inline-block
 			vertical-align: middle
 			width: 100%
 			background-color: $gray-lightest
-			border-radius: $border-radius-base
 
 			>>> img
+				rounded-corners()
 				display: block
 				width: 100%
 				height: auto
-				border-radius: $border-radius-base
 
 			>>> video
-				border-radius: $border-radius-base
+				rounded-corners()
 
 	&-prev, &-next
 		display: none

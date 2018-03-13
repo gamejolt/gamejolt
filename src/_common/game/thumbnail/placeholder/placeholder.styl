@@ -10,21 +10,21 @@
 
 .placeholder
 	&-thumb
+		rounded-corners()
 		content-prop('background-color', 'bg-offset')
 		height: 0
 		padding-top: 56.25% // HD 16:9
-		border-radius: $border-radius-base
 
 	&-meta
 		position: relative
 		padding-top: 10px
 
 	&-avatar
+		rounded-corners()
 		content-prop('background-color', 'bg-offset')
 		float: left
 		width: $game-thumbnail-avatar-size
 		height: $game-thumbnail-avatar-size
-		border-radius: $border-radius-base
 
 	&-dev
 		lazy-placeholder-block()
@@ -44,5 +44,5 @@
 
 	&-tags
 		lazy-placeholder-inline()
+		rounded-corners()
 		width: 60px
-		border-radius: $border-radius-base

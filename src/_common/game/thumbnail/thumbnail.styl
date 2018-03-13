@@ -33,12 +33,12 @@ $-zindex-controls = 3
 		opacity: 1
 
 .-thumb
+	rounded-corners()
 	content-prop('background-color', 'bg-offset')
 	position: relative
 	height: 0
 	padding-top: 56.25% // HD 16:9
 	overflow: hidden
-	border-radius: $border-radius-base
 
 	> .inner
 		position: absolute
@@ -58,13 +58,13 @@ $-zindex-controls = 3
 
 	>>>
 		img, .video
+			rounded-corners()
 			position: absolute !important
 			top: 0
 			left: 0
 			display: block
 			width: 100%
 			height: 100%
-			border-radius: $border-radius-base
 
 		img
 			z-index: $-zindex-img
@@ -112,13 +112,13 @@ $-zindex-controls = 3
 	margin-right: $game-thumbnail-meta-spacing
 
 .-pricing
+	rounded-corners()
 	float: right
 	height: 30px
 	line-height: @height
 	margin-left: $game-thumbnail-meta-spacing
 	padding: 0 10px
 	text-align: center
-	border-radius: $border-radius-base
 
 	&-owned
 		theme-prop('background-color', 'highlight')
