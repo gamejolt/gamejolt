@@ -2,13 +2,13 @@
 @require '~styles-lib/mixins'
 
 .page-cut
-	content-prop('background-color', 'bg')
+	theme-prop('background-color', 'bg')
 	position: relative
 	text-align: center
 	padding-bottom: $grid-gutter-width
 
 	&::before
-		content-prop('border-top-color', 'bg-subtle')
+		theme-prop('border-top-color', 'bg-subtle')
 		content: ''
 		position: absolute
 		top: 18px
@@ -21,7 +21,7 @@
 		overflow: hidden
 
 	.btn
-		content-prop('background-color', 'bg')
+		theme-prop('background-color', 'bg')
 		position: relative
 		z-index: 2
 

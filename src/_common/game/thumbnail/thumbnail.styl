@@ -34,7 +34,7 @@ $-zindex-controls = 3
 
 .-thumb
 	rounded-corners()
-	content-prop('background-color', 'bg-offset')
+	theme-prop('background-color', 'bg-offset')
 	position: relative
 	height: 0
 	padding-top: 56.25% // HD 16:9
@@ -48,7 +48,7 @@ $-zindex-controls = 3
 		height: 100%
 
 	.jolticon
-		content-prop('color', 'fg-muted')
+		theme-prop('color', 'fg-muted')
 		position: absolute
 		font-size: 16px * 4
 		left: 50%
@@ -83,7 +83,7 @@ $-zindex-controls = 3
 
 .-dev
 	text-overflow()
-	content-prop('color', 'fg-muted')
+	theme-prop('color', 'fg-muted')
 	margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
 	font-weight: bold
 	font-size: $font-size-h6
@@ -172,7 +172,7 @@ $-zindex-controls = 3
 				line-height: 20px
 
 			&-amount-old
-				content-prop('color', 'fg-muted')
+				theme-prop('color', 'fg-muted')
 				text-decoration: line-through
 				font-size: $font-size-tiny
 				line-height: 10px
