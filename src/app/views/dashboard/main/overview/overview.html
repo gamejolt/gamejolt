@@ -138,13 +138,13 @@
 						</div>
 					</app-expand>
 
-					<template v-if="revenuePendingWithdraw > 0" class="alert alert-info">
+					<template v-if="revenuePendingWithdraw > 0" class="alert">
 						<span v-translate="{ amount: currency( revenuePendingWithdraw ) }">
 							You have pending withdrawals amounting to <b>%{ amount }</b>.
 						</span>
 					</template>
 
-					<div class="alert alert-info" v-if="revenuePending">
+					<div class="alert" v-if="revenuePending">
 						<span v-translate="{ amount: currency( revenuePending ) }">
 							You currently have <b>%{ amount }</b> pending withdrawal.
 						</span>
@@ -211,7 +211,7 @@
 
 				<br v-if="isFullyIntegrated && Screen.isMobile">
 
-				<div class="alert alert-info">
+				<div class="alert">
 					<h4>
 						<translate>dash.integrate.exp_help_heading</translate>
 					</h4>

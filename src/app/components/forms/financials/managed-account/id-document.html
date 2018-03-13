@@ -10,7 +10,7 @@
 		>
 		<hr>
 
-		<div class="alert alert-info" v-if="parent.getStripeField( namePrefix + '.details' )">
+		<div class="alert" v-if="parent.getStripeField( namePrefix + '.details' )">
 			<app-jolticon icon="notice" />
 			{{ parent.getStripeField( namePrefix + '.details' ) }}
 		</div>

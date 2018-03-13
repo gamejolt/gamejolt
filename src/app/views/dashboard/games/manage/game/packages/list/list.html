@@ -14,14 +14,14 @@
 
 	<div class="col-sm-8 col-sm-pull-4">
 
-		<div class="alert alert-info" v-if="game._is_devlog">
+		<div class="alert" v-if="game._is_devlog">
 			<app-jolticon icon="notice" class="warning" />
 			<b><translate>Public packages do not show on devlog-only game pages.</translate></b>
 			<translate>You are only able to create private packages for testers while your game page is only a devlog. Once you publish your game page into early access or as a complete game, your public packages will show.</translate>
 		</div>
 
 
-		<div class="alert alert-info" v-if="!packages.length">
+		<div class="alert" v-if="!packages.length">
 			<p v-if="hasAllPerms"><translate>You haven't added any packages yet.</translate></p>
 			<p v-else><translate>This game hasn't got any packages yet, and you don't have permissions to create any.</translate></p>
 		</div>

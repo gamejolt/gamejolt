@@ -24,7 +24,6 @@
 						v-for="msg of customGameMessages"
 						class="alert full-bleed-xs"
 						:class="{
-							'alert-info': msg.type === 'info',
 							'alert-notice': msg.type === 'alert',
 						}"
 						>
@@ -179,7 +178,7 @@
 							show-ads
 							/>
 
-						<div v-else class="alert alert-info">
+						<div v-else class="alert">
 							<translate>This devlog doesn't have any posts yet.</translate>
 						</div>
 

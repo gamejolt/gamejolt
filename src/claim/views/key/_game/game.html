@@ -35,7 +35,7 @@
 		</h4>
 	</div>
 
-	<div class="alert alert-info full-bleed full-bleed-xs" v-if="showingThanks">
+	<div class="alert full-bleed full-bleed-xs" v-if="showingThanks">
 		<p><strong>Thanks for buying the game!</strong></p>
 		<p>We've emailed you your key's URL (this page) just so you can always find it. You are able to find your download(s) below. Any future updates to the game will be available here as well.</p>
 		<p>~ Warm thanks from both {{ game.developer.display_name }} and the Game Jolt team.</p>
@@ -43,7 +43,7 @@
 	</div>
 
 	<template v-if="!bundle">
-		<div class="alert alert-info full-bleed full-bleed-xs text-center" v-if="!app.user">
+		<div class="alert full-bleed full-bleed-xs text-center" v-if="!app.user">
 			<p><a :href="loginUrl"><translate>Sign in to Game Jolt to be able to claim this game into your Library.</translate></a></p>
 		</div>
 		<p v-else>
@@ -79,7 +79,6 @@
 			v-for="msg of customGameMessages"
 			class="alert full-bleed-xs"
 			:class="{
-				'alert-info': msg.type === 'info',
 				'alert-notice': msg.type === 'alert',
 			}"
 			>

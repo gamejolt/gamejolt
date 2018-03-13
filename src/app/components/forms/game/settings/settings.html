@@ -36,7 +36,7 @@
 		<label class="control-label">
 			<translate>dash.games.settings.ads_label</translate>
 		</label>
-		<div class="alert alert-info">
+		<div class="alert">
 			<translate v-if="hasPackagesForSale">
 				We don't show ads on Marketplace game pages (even for pay what you want games).
 			</translate>
@@ -61,7 +61,7 @@
 		name="ratings_enabled"
 		:label="$gettext( `dash.games.settings.ratings_label` )"
 		>
-		<div class="alert alert-info" v-if="model._is_devlog">
+		<div class="alert" v-if="model._is_devlog">
 			<app-jolticon icon="notice" class="warning" />
 			<span v-translate>
 				<b>Users can't rate devlog-only games.</b> Enable or disable ratings for when you're ready to transition to early access or a complete game.

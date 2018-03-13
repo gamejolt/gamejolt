@@ -3,13 +3,13 @@
 	<div class="row">
 		<div class="col-lg-8">
 
-			<div class="alert alert-success" v-if="game.is_published">
+			<div class="alert alert-highlight" v-if="game.is_published">
 				<app-jolticon icon="check" />
 				<translate>This game page is published to the site.</translate>
 			</div>
 
 			<!-- Show a little message if they still have builds being processed. -->
-			<div class="alert alert-info" v-if="hasBuildsProcessing">
+			<div class="alert" v-if="hasBuildsProcessing">
 				<app-progress-poller
 					:url="`/web/dash/developer/games/poll-build-progress/${ game.id }`"
 					@complete="onAllBuildsProcessed"
@@ -31,7 +31,7 @@
 			</div>
 
 			<app-expand :when="!game.is_published && canPublish">
-				<div class="alert alert-success">
+				<div class="alert alert-highlight">
 					<p>
 						<translate>Your game page is ready to publish to the site for all to see!</translate>
 					</p>
@@ -50,7 +50,7 @@
 			</app-expand>
 
 			<app-expand :when="game.canceled">
-				<div class="alert alert-info">
+				<div class="alert">
 					<p>
 						<translate>Your game is set as being a canceled game. You can transition back to a normal game page at any time!</translate>
 					</p>
@@ -246,7 +246,7 @@
 					</p>
 				</div>
 
-				<div class="alert alert-info" v-if="game.has_sales">
+				<div class="alert" v-if="game.has_sales">
 					<translate>You can't remove games with active sales at this time.</translate>
 				</div>
 

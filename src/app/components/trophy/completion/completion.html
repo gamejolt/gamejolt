@@ -1,6 +1,8 @@
 <div
 	class="trophy-completion alert"
-	:class="achieved > 0 ? 'alert-info' : 'alert-notice'"
+	:class="{
+		'alert-dark': achieved > 0
+	}"
 	>
 
 	<template v-if="achieved > 0">

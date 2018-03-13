@@ -306,14 +306,14 @@
 
 						</app-message-thread-add>
 
-						<div class="alert alert-info full-bleed-xs" v-if="topic.is_locked">
+						<div class="alert full-bleed-xs" v-if="topic.is_locked">
 							<p>
 								<app-jolticon icon="lock" />
 								<translate>This topic is locked and can no longer be replied to.</translate>
 							</p>
 						</div>
 					</template>
-					<div v-else class="alert alert-info full-bleed-xs">
+					<div v-else class="alert full-bleed-xs">
 						<p>
 							<app-jolticon icon="exclamation-circle" />
 							<a :href="loginUrl">

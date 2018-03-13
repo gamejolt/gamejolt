@@ -1,6 +1,6 @@
 <app-form name="financialsForm" class="form-dashboard-financials" ref="form">
 	<template v-if="!isVerified">
-		<div class="alert alert-info">
+		<div class="alert">
 			<translate>Before you can use the Marketplace, we'll need to gather some details from you. This will ensure that your account is completely set up and ready to run smoothly on the Game Jolt Marketplace.</translate>
 		</div>
 
@@ -31,7 +31,7 @@
 		</fieldset>
 	</template>
 
-	<div class="alert alert-success" v-if="isVerified">
+	<div class="alert" v-if="isVerified">
 		<app-jolticon icon="check" />
 		<translate>Your account is ready for the Game Jolt Marketplace! You can set additional options below.</translate>
 	</div>
@@ -105,7 +105,7 @@
 			v-if="!account.skip_stripe"
 			/>
 
-		<div class="alert alert-info" v-if="account.skip_stripe">
+		<div class="alert" v-if="account.skip_stripe">
 			<p>
 				<translate>You've been manually approved for the Marketplace.</translate>
 			</p>

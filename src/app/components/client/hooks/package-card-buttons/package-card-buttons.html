@@ -1,14 +1,14 @@
 <div class="package-card-buttons">
 
 	<!-- Messaging for weird cases... -->
-	<div class="alert alert-info" v-if="downloadableUnsupported">
+	<div class="alert" v-if="downloadableUnsupported">
 		<p>
 			<app-jolticon icon="notice" :warning="true" />
 			<translate>This package can not be installed on your system.</translate>
 		</p>
 	</div>
 
-	<div class="alert alert-info" v-if="downloadableUnsupportedHasQuickPlay">
+	<div class="alert" v-if="downloadableUnsupportedHasQuickPlay">
 		<p>
 			<app-jolticon icon="notice" :warning="true" />
 			<translate>This package can not be installed on your system, but can be quick played in the client.</translate>
@@ -30,7 +30,7 @@
 			</p>
 		</div>
 
-		<div class="alert alert-success" v-if="localPackage.isRunning">
+		<div class="alert alert-highlight" v-if="localPackage.isRunning">
 			<p>
 				<app-jolticon icon="play" />
 				<translate>You are currently running this package. Some options have been disabled while it's open.</translate>
@@ -51,7 +51,7 @@
 		<template v-if="localPackage.isPatching">
 
 			<app-expand :when="localPackage.isDownloading || localPackage.isUnpacking">
-				<div class="alert alert-info">
+				<div class="alert">
 					<app-client-install-progress :local-package="localPackage" />
 				</div>
 			</app-expand>

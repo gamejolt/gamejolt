@@ -229,7 +229,7 @@
 					</app-expand>
 
 					<app-expand :when="!model.primary_file.is_archive">
-						<div class="alert alert-info sans-margin-bottom" v-translate>
+						<div class="alert sans-margin-bottom" v-translate>
 							dash.games.releases.builds.launch_options.standalone_info_html
 						</div>
 					</app-expand>
@@ -315,7 +315,7 @@
 					<translate>Please consider exporting to WebGL instead.</translate>
 				</div>
 
-				<div class="alert alert-info"
+				<div class="alert"
 					v-if="isBrowserBased"
 					:class="{
 						'sans-margin-bottom': !hasBrowserError

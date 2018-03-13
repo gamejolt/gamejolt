@@ -83,7 +83,7 @@
 				</label>
 			</div>
 
-			<div class="alert alert-info">
+			<div class="alert">
 				<translate>Note that regardless of this setting, your package will only be visible on your game's page if it has published releases in it.</translate>
 			</div>
 		</app-form-group>
@@ -238,8 +238,8 @@
 				</label>
 
 				<div v-if="promotionalPricing">
-					<div class="alert alert-info" v-if="promotionalPricing.start > now"><translate>A sale is currently scheduled.</translate></div>
-					<div class="alert alert-success" v-if="promotionalPricing.start <= now"><translate>Your sale is currently running.</translate></div>
+					<div class="alert" v-if="promotionalPricing.start > now"><translate>A sale is currently scheduled.</translate></div>
+					<div class="alert alert-highlight" v-if="promotionalPricing.start <= now"><translate>Your sale is currently running.</translate></div>
 
 					<div class="table-responsive" v-if="promotionalPricing">
 						<table class="table sans-margin-bottom">
