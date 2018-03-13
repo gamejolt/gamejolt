@@ -58,7 +58,7 @@
 
 			<!-- Friend status -->
 			<span
-				class="tag tag-active"
+				class="tag tag-highlight"
 				v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
 				v-app-tooltip="$gettext( 'profile.friend_tooltip' )"
 				>
@@ -71,7 +71,7 @@
 					<app-jolticon icon="chat-offline" />
 					<translate>profile.offline_tag</translate>
 				</span>
-				<span class="tag tag-active" v-if="isOnline" v-app-tooltip="$gettext( 'profile.online_tooltip' )">
+				<span class="tag tag-highlight" v-if="isOnline" v-app-tooltip="$gettext( 'profile.online_tooltip' )">
 					<app-jolticon icon="chat-online" />
 					<translate>profile.online_tag</translate>
 				</span>

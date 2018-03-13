@@ -44,26 +44,26 @@
 		</template>
 
 		<p class="text-muted small sans-margin-bottom">
-			<span class="tag tag-blue" v-if="game._is_wip">
-				<translate>Early Access</translate>
-			</span>
-			<span class="tag tag-blue" v-else-if="game._is_devlog">
-				<translate>Devlog</translate>
-			</span>
-
 			<template v-if="!isWizard">
 				<span class="tag tag-notice" v-if="game.status === Game.STATUS_HIDDEN">
 					<translate>dash.games.hidden_tag</translate>
 				</span>
 
 				<template v-if="game.status === Game.STATUS_VISIBLE">
-					<span class="tag tag-active">
+					<span class="tag tag-highlight">
 						<translate>dash.games.published_tag</translate>
 					</span>
 					<span class="dot-separator"></span>
 					<app-time-ago :date="game.published_on" />
 				</template>
 			</template>
+
+			<span class="tag" v-if="game._is_wip">
+				<translate>Early Access</translate>
+			</span>
+			<span class="tag" v-else-if="game._is_devlog">
+				<translate>Devlog</translate>
+			</span>
 		</p>
 		<br>
 

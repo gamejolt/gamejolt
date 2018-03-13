@@ -63,10 +63,10 @@
 		</span>
 
 		<span v-else>
-			<span class="tag tag-blue" v-if="model.status === GameBuild.STATUS_ADDING">
+			<span class="tag" v-if="model.status === GameBuild.STATUS_ADDING">
 				<translate>Processing</translate>
 			</span>
-			<span class="tag tag-active" v-else-if="model.status === GameBuild.STATUS_ACTIVE">
+			<span class="tag tag-highlight" v-else-if="model.status === GameBuild.STATUS_ACTIVE">
 				<app-jolticon icon="check" />
 				<translate>Active</translate>
 			</span>

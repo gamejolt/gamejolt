@@ -78,7 +78,7 @@
 					<div class="card-meta">
 
 						<span
-							class="tag tag-active"
+							class="tag tag-highlight"
 							v-if="sellables[ package.id ] && sellables[ package.id ].primary"
 							v-app-tooltip="$gettext( `We use the primary package to determine the price to show on game listings.` )"
 							>
@@ -94,7 +94,7 @@
 						</span>
 
 						<template v-if="sellables[ package.id ] && sellables[ package.id ].type === 'pwyw'">
-							<span class="tag tag-blue">
+							<span class="tag">
 								<translate>Pay What You Want</translate>
 							</span>
 							<span class="dot-separator"></span>
@@ -110,7 +110,7 @@
 							</template>
 						</template>
 						<template v-else-if="sellables[ package.id ] && sellables[ package.id ].type === 'paid'">
-							<span class="tag tag-blue">
+							<span class="tag">
 								<translate>Paid</translate>
 							</span>
 							<span class="dot-separator"></span>
@@ -121,7 +121,7 @@
 							{{ sellables[ package.id ].pricings[0].amount | currency }}
 						</template>
 						<template v-else>
-							<span class="tag tag-blue">
+							<span class="tag">
 								<translate>Free</translate>
 							</span>
 						</template>

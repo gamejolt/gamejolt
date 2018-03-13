@@ -50,7 +50,7 @@
 			<li v-if="app.user && app.user.is_partner">
 				<a v-app-popover-trigger="`games-filter-partners`" v-app-track-event="`game-filtering:tab-partners`">
 					<translate>Partners</translate>
-					<span class="tag tag-active">
+					<span class="tag tag-notice">
 						<translate>New</translate>
 					</span>
 					<span class="badge badge-notice" v-if="filtering.filters.partners.length">
