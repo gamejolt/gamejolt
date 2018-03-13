@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.15.0",
+	"version": "0.16.0",
 	"scripts": {
 		"postinstall": "sh ./git-hooks/setup-hooks.sh",
 		"dev": "gulp watch",
@@ -102,10 +102,8 @@
 		"plugin": true
 	},
 	"clientManifestUrl": "https://d.gamejolt.net/data/client/manifest-2.json",
-	"chromium-args":
-		"--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
-	"user-agent":
-		"GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
+	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
 		"linux": {
 			"main": "app://game-jolt-client/package/index.html#/",
