@@ -52,7 +52,7 @@ ul.shell-nav
 	& > li
 		margin-bottom: 0
 
-		& > a
+		a
 			@extend .clearfix
 			position: relative
 			display: block
@@ -82,13 +82,9 @@ ul.shell-nav
 					.badge
 						@extend .badge-active
 
-			// On press of it.
-			&:active
-				transform: translateY(2px)
-
 // Nested ULs
 ul.shell-nav ul
-	& > li > a
+	& > li a
 		position: relative
 		padding-left: 15px
 
@@ -104,6 +100,13 @@ ul.shell-nav ul
 
 			&:hover
 				display: none
+
+/**
+ * Nav Inline
+ */
+.shell-nav-inline
+	padding-left: 15px
+	padding-right: 15px
 
 /**
  * Nav headings

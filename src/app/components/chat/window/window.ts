@@ -15,11 +15,13 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { ChatClient } from '../client';
 import { Store } from '../../../store/index';
+import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
 
 @View
 @Component({
 	components: {
 		AppJolticon,
+		AppScrollInviewParent,
 		AppChatUserList,
 		AppChatWindowSend,
 		AppChatWindowOutput,
@@ -44,12 +46,14 @@ export class AppChatWindow extends Vue {
 	readonly ChatRoom = ChatRoom;
 	readonly Screen = Screen;
 
-	minimize() {
-		this.chat.minimizeRoom();
-	}
-
 	close() {
-		this.chat.leaveRoom(this.room.id);
+		// xs size needs to show the friends list when closing the room.
+		// any other size can close the whole chat instead
+		if (Screen.isXs) {
+			this.chat.leaveRoom();
+		} else {
+			this.chat.closeChat();
+		}
 	}
 
 	// Closes chat completely. When you click on the empty space behind the

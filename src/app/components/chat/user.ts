@@ -1,6 +1,7 @@
 export class ChatUser {
 	id: number;
 	roomId: number;
+	lastMessageOn: number;
 	username: string;
 	displayName: string;
 	imgAvatar: string;

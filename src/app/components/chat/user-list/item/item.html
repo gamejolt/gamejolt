@@ -1,122 +1,89 @@
-<li class="chat-user">
-
-	<router-link
-		:to="user.url"
-		:class="{
-			active: showPm && chat.room && chat.room.id === user.roomId,
-		}"
-		:title="`${user.displayName} (@${user.username})`"
-		@click.native.capture="onUserClick"
-		>
-
-		<span class="tag tag-pink notifications-tag"
-			v-if="chat.notifications[ user.roomId ] || 0"
+<app-scroll-inview
+	tag="li"
+	class="chat-user"
+	:extra-padding="Screen.height / 2"
+	@inview="isInview = true"
+	@outview="isInview = false"
+	>
+	<template v-if="isInview">
+		<router-link
+			:to="user.url"
+			:class="{
+				active: showPm && chat.room && chat.room.id === user.roomId,
+			}"
+			:title="`${user.displayName} (@${user.username})`"
+			@click.native.capture="onUserClick"
 			>
-			{{ chat.notifications[ user.roomId ] || 0 | number }}
-		</span>
 
-		<div class="chat-user-moderate" v-if="showModTools">
-			<span class="chat-user-moderate-action"
-				@click.stop.prevent="toggleModTools"
+			<span class="tag tag-pink notifications-tag"
+				v-if="chat.notifications[ user.roomId ] || 0"
 				>
-				<app-jolticon icon="cog" />
+				{{ chat.notifications[ user.roomId ] || 0 | number }}
 			</span>
-		</div>
 
-		<div class="shell-nav-icon">
-			<div class="user-avatar">
-				<img :src="user.imgAvatar" />
-
-				<span class="chat-user-status"
-					v-if="typeof user.isOnline !== 'undefined'"
-					:class="{
-						'offline': !user.isOnline,
-						'online active': user.isOnline,
-					}"
+			<div class="chat-user-moderate" v-if="showModTools">
+				<span class="chat-user-moderate-action"
+					@click.stop.prevent="openModTools"
 					>
+					<app-jolticon icon="cog" />
 				</span>
 			</div>
-		</div>
 
-		<div class="shell-nav-label">
+			<div class="shell-nav-icon">
+				<div class="user-avatar">
+					<img :src="user.imgAvatar" />
 
-			<!-- Only show tags in room user lists -->
-			<template v-if="room">
-				<span class="chat-user-role tag tag-active"
-					v-if="user.isMod === 'owner'"
-					:title="$gettext( `Room Admin` )"
-					>
-					A
-				</span>
-				<span class="chat-user-role tag tag-active"
-					v-if="user.isMod === 'moderator'"
-					:title="$gettext( `Room Moderator` )"
-					>
-					M
-				</span>
-				<span class="chat-user-role tag tag-active"
-					v-if="user.permissionLevel >= ChatSiteModPermission"
-					:title="$gettext( `Site Moderator` )"
-					>
-					S
-				</span>
-				<span class="chat-user-role tag tag-pink"
-					v-if="showModTools && (user.isMutedRoom || user.isMutedGlobal)"
-					:title="$gettext( `Muted` )"
-					>
-					X
-				</span>
-			</template>
+					<span class="chat-user-status"
+						v-if="typeof user.isOnline !== 'undefined'"
+						:class="{
+							'offline': !user.isOnline,
+							'online active': user.isOnline,
+						}"
+						>
+					</span>
+				</div>
+			</div>
 
-			<span v-html="user.displayName"></span>
-			<span class="tiny">@{{ user.username }}</span>
+			<div class="shell-nav-label">
 
-			<!--<div class="chat-user-list-meta">
-				 <template v-if="typeof user.currently_playing !== 'undefined' && user.currently_playing">
-					Playing <em>{{ user.currently_playing.game }}</em>
+				<!-- Only show tags in room user lists -->
+				<template v-if="room">
+					<span class="chat-user-role tag tag-active"
+						v-if="user.isMod === 'owner'"
+						:title="$gettext( `Room Admin` )"
+						>
+						A
+					</span>
+					<span class="chat-user-role tag tag-active"
+						v-if="user.isMod === 'moderator'"
+						:title="$gettext( `Room Moderator` )"
+						>
+						M
+					</span>
+					<span class="chat-user-role tag tag-active"
+						v-if="user.permissionLevel >= ChatSiteModPermission"
+						:title="$gettext( `Site Moderator` )"
+						>
+						S
+					</span>
+					<span class="chat-user-role tag tag-pink"
+						v-if="showModTools && (user.isMutedRoom || user.isMutedGlobal)"
+						:title="$gettext( `Muted` )"
+						>
+						X
+					</span>
 				</template>
-			</div>-->
-		</div>
 
-	</router-link>
+				{{ user.displayName }}
+				<span class="tiny">@{{ user.username }}</span>
 
-	<div class="nav-well" v-if="showModTools && areModToolsOpen">
-		<template v-if="canModerate">
-			<template v-if="chat.canModerate( room, user, 'mute' )">
-				<span class="btn btn-sm btn-outline"
-					v-if="!user.isMutedRoom"
-					@click="mute"
-					>
-					<translate>Mute</translate>
-				</span>
+				<!--<div class="chat-user-list-meta">
+					<template v-if="typeof user.currently_playing !== 'undefined' && user.currently_playing">
+						Playing <em>{{ user.currently_playing.game }}</em>
+					</template>
+				</div>-->
+			</div>
 
-				<span class="btn btn-sm btn-outline"
-					v-else
-					@click="unmute"
-					>
-					<translate>Unmute</translate>
-				</span>
-			</template>
-
-			<template v-if="chat.canModerate( room, user, 'mod' )">
-				<span class="btn btn-sm btn-outline"
-					v-if="!user.isMod"
-					@click="mod"
-					>
-					<translate>Mod</translate>
-				</span>
-
-				<span class="btn btn-sm btn-outline"
-					v-else
-					@click="demod"
-					>
-					<translate>Demod</translate>
-				</span>
-			</template>
-		</template>
-		<template v-else>
-			<translate>You don't have the correct permissions to moderate this user.</translate>
-		</template>
-	</div>
-
-</li>
+		</router-link>
+	</template>
+</app-scroll-inview>

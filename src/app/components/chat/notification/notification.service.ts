@@ -8,16 +8,19 @@ export class ChatNotification {
 	}
 
 	static notification(message: ChatMessage) {
-		if (!this.chat.room || !this.chat.openRooms[message.roomId]) {
-			Growls.info({
-				title: message.user.displayName,
-				message: message.contentRaw, // Use the raw message so we don't show compiled markdown.
-				icon: message.user.imgAvatar,
-				onclick: () => {
-					this.chat.enterRoom(message.roomId, true);
-				},
-				system: true,
-			});
+		// Skip if already in the room.
+		if (this.chat.isInRoom(message.roomId)) {
+			return;
 		}
+
+		Growls.info({
+			title: message.user.displayName,
+			message: message.contentRaw, // Use the raw message so we don't show compiled markdown.
+			icon: message.user.imgAvatar,
+			onclick: () => {
+				this.chat.enterRoom(message.roomId);
+			},
+			system: true,
+		});
 	}
 }

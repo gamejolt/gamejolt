@@ -36,6 +36,7 @@ import {
 	CommentMutations,
 	CommentStore,
 } from '../../lib/gj-lib-client/components/comment/comment-store';
+import { ContentFocus } from '../../_common/content-focus/content-focus.service';
 
 export type Actions = AppActions &
 	LibraryActions &
@@ -363,6 +364,11 @@ export const store = new Store();
 
 // Sync the routes into the store.
 sync(store, router, { moduleName: 'route' });
+
+// Sync with the ContentFocus service.
+ContentFocus.registerWatcher(
+	() => !store.state.isLeftPaneOverlayed && !store.state.isRightPaneVisible
+);
 
 // Bootstrap/clear the app when user changes.
 store.watch(
