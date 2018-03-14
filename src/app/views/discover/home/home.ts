@@ -25,7 +25,6 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 
 export interface DiscoverRow {
 	title: string;
@@ -72,10 +71,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	routed($payload: any) {
-		Growls.info({ title: 'info', message: 'info growl', sticky: true });
-		Growls.success({ title: 'success', message: 'success growl', sticky: true });
-		Growls.error({ title: 'error', message: 'error growl', sticky: true });
-
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;

@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 @media $media-xs
 	.genre-list
@@ -15,8 +16,8 @@
 
 	&.active
 		.genre-list-genre-label
-			background-color: var(--theme-dark-green)
-			color: var(--theme-green)
+			theme-prop('background-color', 'highlight')
+			theme-prop('color', 'highlight-fg')
 
 	img
 		width: 116px * 0.5
@@ -31,4 +32,4 @@
 
 	&:hover
 		.genre-list-genre-label
-			color: var(--theme-green)
+			theme-prop('color', 'highlight')
