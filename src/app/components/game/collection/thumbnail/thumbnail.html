@@ -1,5 +1,5 @@
 <div class="collection-thumbnail">
-	<span class="tag" v-if="!hideTag">
+	<span class="tag tag-highlight" v-if="!hideTag">
 		<translate v-if="collection.type === 'developer'">library.playlists.developer_tag</translate>
 		<translate v-else-if="collection.type === 'followed'">library.playlists.followed_tag</translate>
 		<translate v-else-if="collection.type === 'playlist'">library.playlists.playlist_tag</translate>
