@@ -1,10 +1,10 @@
 <div v-if="routeBootstrapped">
 
-	<section class="section section-thin fill-pink" v-if="game.is_locked">
+	<section class="section section-thin fill-notice" v-if="game.is_locked">
 		<div class="container">
 			<div class="col-sm-10 col-md-8 col-lg-6 col-centered text-center">
 				<p>
-					<app-jolticon icon="notice" :big="true" />
+					<app-jolticon icon="notice" big />
 				</p>
 				<p><b><translate>This game was removed from the site.</translate></b></p>
 				<p><translate>We have received a DMCA takedown notice and were required to remove it from the site. Only you are able to view it.</translate></p>

@@ -4,7 +4,7 @@
 
 	<app-game-maturity-block :game="game">
 
-		<section v-if="collaboratorInvite" class="section section-thin fill-pink">
+		<section v-if="collaboratorInvite" class="section section-thin fill-highlight">
 			<div class="container text-center">
 				<p v-translate="{ username: game.developer.username }">
 					<b>@%{ username }</b> has invited you to collaborate on this game.</b>
@@ -20,7 +20,7 @@
 					class="btn"
 					@click="declineCollaboration()"
 					>
-					<app-jolticon icon="remove" class="warning" />
+					<app-jolticon icon="remove" notice />
 					<translate>Decline</translate>
 				</button>
 			</div>

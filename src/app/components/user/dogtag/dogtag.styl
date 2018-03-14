@@ -1,25 +1,26 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 // Alternate between all dogtag types!
 @keyframes user-dogtag-guy
 	0%
-		background-color: var(--theme-pink)
+		background-color: $gj-pink
 		color: $white
 
 	25%
-		background-color: var(--theme-green)
-		color: var(--theme-dark-green)
+		background-color: $gj-green
+		color: $gj-dark-green
 
 	50%
-		background-color: var(--theme-blue)
+		background-color: $gj-blue
 		color: $gray-darker
 
 	75%
-		background-color: var(--theme-dark-green)
-		color: var(--theme-green)
+		background-color: $gj-dark-green
+		color: $gj-green
 
 	100%
-		background-color: var(--theme-pink)
+		background-color: $gj-pink
 		color: $white
 
 .user-dogtag

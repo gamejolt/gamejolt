@@ -3,7 +3,7 @@
 	<!--
 		If this user is banned, we show very little.
 	-->
-	<section class="section fill-pink" v-if="!user.status">
+	<section class="section fill-notice" v-if="!user.status">
 		<div class="container">
 			<p>
 				<translate>profile.banned_message_html</translate>
@@ -20,7 +20,7 @@
 					class="btn"
 					@click="$emit( 'remove-friend' )"
 					>
-					<app-jolticon icon="friend-remove-2 warning" />
+					<app-jolticon icon="friend-remove-2" notice />
 					<translate>profile.remove_friend_button</translate>
 				</button>
 			</app-expand>
@@ -30,7 +30,7 @@
 
 		<!-- Currently Playing -->
 		<!-- TODO -->
-		<!-- <section v-if="activeGameSession" class="section fill-pink">
+		<!-- <section v-if="activeGameSession" class="section fill-highlight">
 			<div class="container">
 				<h2 class="section-header">
 					<translate>profile.playing_heading</translate>

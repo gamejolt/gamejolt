@@ -9,7 +9,7 @@
 
 				<div class="linked-accounts-list-icon">
 					<app-jolticon
-						:big="true"
+						big
 						:icon="getProviderIcon( provider )"
 						/>
 				</div>
@@ -66,7 +66,7 @@
 
 						<div>
 							<button class="btn btn-outline" @click="link( provider )">
-								<app-jolticon icon="retweet" class="need-icon" />
+								<app-jolticon icon="retweet" />
 								<translate>Sync</translate>
 							</button>
 							<button class="btn btn-danger-outline" @click="unlink( provider )">

@@ -28,9 +28,8 @@
 	color: var(--theme-green)
 
 .stat-big-label
-	color: $text-muted
+	theme-prop('color', 'fg-muted')
 
 	// For inactive editable accordion items, we need to make ourselves a lighter gray.
 	.card-inactive &
 		color: $gray-lighter
-

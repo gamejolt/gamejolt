@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .game-collection-grid-item
 	margin-bottom: $grid-gutter-width-xs
@@ -29,4 +30,4 @@
 		color: $headings-color
 
 	> small
-		color: $text-muted
+		theme-prop('color', 'fg-muted')

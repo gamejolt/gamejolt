@@ -32,7 +32,7 @@
 			<app-jolticon
 				v-if="user.is_verified"
 				icon="verified"
-				:big="true"
+				big
 				class="verified-account-tag"
 				v-app-tooltip="$gettext( 'profile.verified_tooltip' )"
 				/>
@@ -120,14 +120,14 @@
 						v-if="app.user && user.id !== app.user.id"
 						@click="report"
 						>
-						<app-jolticon icon="flag warning" />
+						<app-jolticon icon="flag" notice />
 						<translate>profile.report_user_button</translate>
 					</a>
 					<a class="list-group-item has-icon"
 						v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
 						@click="removeFriend"
 						>
-						<app-jolticon icon="friend-remove-2 warning" />
+						<app-jolticon icon="friend-remove-2" notice />
 						<translate>profile.remove_friend_button</translate>
 					</a>
 					<a class="list-group-item has-icon"

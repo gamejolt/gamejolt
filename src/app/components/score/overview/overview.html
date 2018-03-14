@@ -70,10 +70,12 @@
 						class="col-xs-12 col-sm-9 anim-fade-in-right no-animate-leave no-animate-xs"
 						>
 
-						<div class="alert alert-notice full-bleed-xs" v-if="!userBestScore">
-							<h4 class="sans-margin">
-								<translate>scores.overview.user_best_none_heading</translate>
-							</h4>
+						<div class="alert full-bleed-xs" v-if="!userBestScore">
+							<p>
+								<strong>
+									<translate>scores.overview.user_best_none_heading</translate>
+								</strong>
+							</p>
 							<p v-translate>
 								scores.overview.user_best_none_body_html
 							</p>
@@ -167,7 +169,7 @@
 						<translate>scores.overview.view_more_button</translate>
 					</router-link>
 				</template>
-				<div class="alert alert-notice full-bleed-xs" v-else>
+				<div class="alert full-bleed-xs" v-else>
 					<translate>scores.overview.no_scores_html</translate>
 				</div>
 

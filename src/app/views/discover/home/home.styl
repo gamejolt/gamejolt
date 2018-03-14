@@ -1,8 +1,9 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .route-discover-home
 	.header-heart
-		color: var(--theme-pink)
+		theme-prop('color', 'highlight')
 
 	.channel-list
 		overflow-x: auto

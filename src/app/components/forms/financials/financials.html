@@ -62,7 +62,7 @@
 	<fieldset v-if="account">
 		<legend>
 			<span v-if="user.paypal_id" class="pull-right done-icon" v-app-tooltip="$gettext( `You have completed this section.` )">
-				<app-jolticon icon="check big" />
+				<app-jolticon icon="check" big />
 			</span>
 			<translate>PayPal Account</translate>
 		</legend>
@@ -96,7 +96,7 @@
 	<fieldset v-if="account && user.paypal_id">
 		<legend>
 			<span v-if="isVerified" class="pull-right done-icon" v-app-tooltip="$gettext( `You have completed this section.` )">
-				<app-jolticon icon="check" :big="true" />
+				<app-jolticon icon="check" big />
 			</span>
 			<translate>Marketplace Account</translate>
 		</legend>

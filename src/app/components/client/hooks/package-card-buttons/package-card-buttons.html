@@ -3,14 +3,14 @@
 	<!-- Messaging for weird cases... -->
 	<div class="alert" v-if="downloadableUnsupported">
 		<p>
-			<app-jolticon icon="notice" :warning="true" />
+			<app-jolticon icon="notice" notice />
 			<translate>This package can not be installed on your system.</translate>
 		</p>
 	</div>
 
 	<div class="alert" v-if="downloadableUnsupportedHasQuickPlay">
 		<p>
-			<app-jolticon icon="notice" :warning="true" />
+			<app-jolticon icon="notice" notice />
 			<translate>This package can not be installed on your system, but can be quick played in the client.</translate>
 		</p>
 	</div>
@@ -143,7 +143,7 @@
 						In client, if a package is installed, allow them to remove.
 					-->
 					<a @click="uninstall()" :class="{ disabled: localPackage.isRunning }" class="list-group-item has-icon warning">
-						<app-jolticon icon="remove" :warning="true" />
+						<app-jolticon icon="remove" notice />
 						<translate>Uninstall</translate>
 					</a>
 				</template>

@@ -11,7 +11,7 @@
 
 	&-list-meta
 		text-overflow()
-		color: $text-muted
+		theme-prop('color', 'fg-muted')
 		font-size: $font-size-small
 
 	&-moderate
@@ -21,9 +21,6 @@
 		&-moderate-action
 			display: inline-block
 			opacity: 0
-
-			&:hover .jolticon
-				color: var(--theme-blue) !important
 
 	&-role
 		float: none !important
@@ -56,7 +53,7 @@
 				theme-prop('background-color', 'highlight')
 
 			&.in-game
-				theme-prop('background-color', 'notice')
+				theme-prop('background-color', 'fg')
 
 			&.offline
 				theme-prop('background-color', 'bg-offset')

@@ -122,7 +122,7 @@ $-zindex-controls = 3
 
 	&-owned
 		theme-prop('background-color', 'highlight')
-		color: $black
+		theme-prop('color', 'highlight-fg')
 
 		& ^[-1]-tag
 			color: inherit
@@ -135,6 +135,7 @@ $-zindex-controls = 3
 		font-size: $font-size-small
 
 	&-tag
+		theme-prop('color', 'fg')
 		font-size: $font-size-tiny
 		font-weight: bold
 		text-transform: uppercase
@@ -177,3 +178,10 @@ $-zindex-controls = 3
 				font-size: $font-size-tiny
 				line-height: 10px
 				vertical-align: text-bottom
+
+// Text color
+.-title
+	theme-prop('color', 'fg')
+
+	.game-thumbnail:hover &
+		theme-prop('color', 'link')

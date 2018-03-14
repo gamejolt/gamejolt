@@ -1,12 +1,12 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .library-collection-header
-
 	.collection-copy
 		margin-bottom: $font-size-base
 
 		h4
-			color: $text-muted
+			theme-prop('color', 'fg-muted')
 			margin-top: 0
 
 		p

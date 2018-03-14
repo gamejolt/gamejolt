@@ -3,8 +3,8 @@
 	class="-banner"
 	:class="{
 		'-clickable': currentBanner.canClick,
-		'fill-dark-green': currentBanner.type === 'info',
-		'fill-pink': currentBanner.type === 'error',
+		'fill-gray': currentBanner.type === 'info',
+		'fill-notice': currentBanner.type === 'error',
 	}"
 	@click="clickBanner()"
 	>

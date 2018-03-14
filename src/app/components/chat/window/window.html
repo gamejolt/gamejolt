@@ -39,7 +39,7 @@
 
 			<div class="nav-heading">
 				<translate>Room Users</translate>
-				<span class="badge" :class="{ 'badge-active': users && users.onlineCount > 0 }">
+				<span class="badge" :class="{ 'badge-highlight': users && users.onlineCount > 0 }">
 					{{ users ? users.onlineCount : 0 | number }}
 				</span>
 			</div>

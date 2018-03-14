@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .add-to-playlist-popover
 	.loading
@@ -34,5 +35,5 @@
 						display: none
 
 					.jolticon-remove
+						theme-prop('color', 'notice')
 						display: inline-block
-						color: var(--theme-pink)

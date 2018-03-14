@@ -34,12 +34,12 @@
 		vertical-align: bottom
 
 	&-username
-		color: $text-muted
+		theme-prop('color', 'fg-muted')
 		font-size: $font-size-tiny
 
 	&-time
+		theme-prop('color', 'fg-muted')
 		margin-left: 5px
-		color: $text-muted
 		font-size: $font-size-tiny
 
 	// This ridiculousness is so that we can show <pre> tags full bleed even if they're in fade-collapsers.

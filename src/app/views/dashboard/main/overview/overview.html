@@ -20,7 +20,7 @@
 									</div>
 								</div>
 								<div class="col-xs-2 text-center">
-									<app-jolticon icon="broadcast" :big="true" />
+									<app-jolticon icon="broadcast" big />
 								</div>
 							</div>
 						</app-card>
@@ -40,9 +40,9 @@
 					<h2>
 						<translate>dash.overview.revenue_heading</translate>
 						<app-jolticon
-							icon="help-circle"
-							:big="true"
 							class="text-muted"
+							icon="help-circle"
+							big
 							v-app-tooltip="$gettext( `dash.overview.revenue_tooltip` )"
 							/>
 					</h2>
@@ -68,8 +68,8 @@
 								<div class="stat-big-digit">
 									{{ revenuePendingActivation | currency }}
 									<app-jolticon
-										icon="help-circle"
 										class="text-muted"
+										icon="help-circle"
 										v-app-tooltip="$gettext( `To account for refunds, chargebacks, and fraud, we hold on to sales revenue for 7 days.` )"
 										/>
 								</div>
