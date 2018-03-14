@@ -3,7 +3,7 @@
 	class="-banner"
 	:class="{
 		'-clickable': currentBanner.canClick,
-		'fill-gray': currentBanner.type === 'info',
+		'fill-highlight': currentBanner.type === 'info',
 		'fill-notice': currentBanner.type === 'error',
 	}"
 	@click="clickBanner()"

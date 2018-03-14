@@ -16,16 +16,18 @@
 	font-weight: bold
 
 	a
+		theme-prop('border-bottom-color', 'bg-subtle')
 		text-decoration: none
-		border-bottom: 3px solid $gray-lighter
+		border-bottom-width: 3px
+		border-bottom-style: solid
 		color: inherit
 
 		&:hover
+			theme-prop('border-bottom-color', 'link')
 			text-decoration: none
-			border-color: $black
 
 .stat-big-highlight
-	color: var(--theme-green)
+	theme-prop('color', 'link')
 
 .stat-big-label
 	theme-prop('color', 'fg-muted')
