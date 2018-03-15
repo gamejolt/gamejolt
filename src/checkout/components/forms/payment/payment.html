@@ -226,7 +226,8 @@
 
 	<app-form-button
 		v-if="!valid || (calculatedTax && !state.isProcessing)"
-		class="btn-block btn-lg"
+		lg
+		block
 		:disabled="!valid"
 		>
 		Pay {{ order.amount + taxAmount | currency }}

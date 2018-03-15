@@ -146,10 +146,7 @@
 		</div>
 	</app-expand>
 
-	<app-form-button
-		v-if="!!formModel.type && changed && arePackagesChosen"
-		:icon="method"
-		>
+	<app-form-button v-if="!!formModel.type && changed && arePackagesChosen">
 		<translate>Save Key Group</translate>
 	</app-form-button>
 

@@ -443,10 +443,7 @@
 			</div>
 		</app-form-group>
 
-		<app-form-button
-			v-if="method === 'add' || changed"
-			:icon="method"
-			>
+		<app-form-button v-if="method === 'add' || changed">
 			<template v-if="method === 'add'">
 				<translate>dash.games.packages.form.add_package_button</translate>
 			</template>

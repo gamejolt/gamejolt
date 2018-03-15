@@ -5,7 +5,6 @@
 		<div class="pull-right">
 			<app-form-button
 				v-if="inForm"
-				icon="chevron-right"
 				:disabled="!canProceed"
 				@click.native="next()"
 				>
@@ -13,7 +12,6 @@
 			</app-form-button>
 			<app-button
 				v-else
-				icon="chevron-right"
 				:disabled="!canProceed"
 				@click="next()"
 				>
