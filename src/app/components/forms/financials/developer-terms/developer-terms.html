@@ -40,13 +40,13 @@
 			</div>
 			<br>
 
-			<button
-				class="btn btn-primary-outline"
+			<app-button
+				primary
 				@click.prevent="showAgreement = true"
 				v-if="!showAgreement"
 				>
 				<translate>Show Developer Distribution Agreement</translate>
-			</button>
+			</app-button>
 		</div>
 
 	</div>
@@ -59,13 +59,13 @@
 			</router-link>
 		</div>
 
-		<button
-			class="btn btn-primary-outline"
+		<app-button
+			primary
 			@click.prevent="showAgreement = true"
 			v-if="!showAgreement"
 			>
 			<translate>Show New Distribution Agreement</translate>
-		</button>
+		</app-button>
 
 		<!--
 			Show a diff between the terms.
@@ -94,13 +94,14 @@
 		</div>
 		<br>
 
-		<button
-			class="btn btn-success-outline"
+		<!-- TODO(buttons) made this a primary solid because it feels like a very important action. pls review -->
+		<app-button
+			primary solid
 			:disabled="!checked"
 			@click.prevent="onAccept()"
 			>
 			<translate>I Agree</translate>
-		</button>
+		</app-button>
 	</div>
 
 </fieldset>

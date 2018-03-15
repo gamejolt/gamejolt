@@ -18,10 +18,9 @@
 			<template v-if="Screen.isXs">
 				<br>
 				<div class="nav-controls">
-					<button class="btn btn-outline btn-block" @click="toggleUsers">
-						<app-jolticon icon="chevron-left" />
+					<app-button block icon="chevron-left" @click="toggleUsers">
 						<translate>Back to Chat</translate>
-					</button>
+					</app-button>
 				</div>
 			</template>
 
@@ -62,27 +61,21 @@
 
 					<div class="chat-window-header-controls">
 
-						<button class="btn btn-sparse anim-fade-in"
+						<app-button sparse icon="users" class="anim-fade-in"
 							v-if="!room.isPmRoom"
 							@click="toggleUsers"
-							>
-							<app-jolticon icon="users" />
-						</button>
+							/>
 
-						<button class="btn btn-sparse anim-fade-in"
+						<app-button sparse icon="edit" class="anim-fade-in"
 							@click="showEditRoomModal"
 							v-if="room.isMod"
 							:title="$gettext( 'Edit Room Details' )"
-							>
-							<app-jolticon icon="edit" />
-						</button>
+							/>
 
-						<button class="btn btn-sparse"
+						<app-button sparse icon="remove"
 							@click="close"
 							:title="$gettext( 'Close Room' )"
-							>
-							<app-jolticon icon="remove" />
-						</button>
+							/>
 
 					</div>
 
@@ -131,12 +124,12 @@
 								</div>
 							</app-fade-collapse>
 
-							<button class="btn btn-sm btn-outline anim-fade-in"
+							<app-button sm class="anim-fade-in"
 								v-if="isDescriptionCollapsed && !isShowingUsers"
 								@click="toggleUsers"
 								>
 								<translate>more</translate>
-							</button>
+							</app-button>
 						</template>
 
 					</div>

@@ -1,19 +1,18 @@
 <div>
-	<button
-		class="btn btn-primary-outline"
+	<!-- TODO(buttons) I think primary solid here makes sense as an exception, in the absence of primary vs success distinction. pls review. -->
+	<app-button
+		primary solid icon="play"
 		v-if="browserBuilds.length"
 		@click="$emit('play')"
 		>
-		<app-jolticon icon="play" />
 		<translate>Play Game</translate>
-	</button>
+	</app-button>
 
-	<button
-		class="btn btn-success-outline"
+	<app-button
+		primary icon="download"
 		v-if="downloadableBuilds.length"
 		@click="$emit('download')"
 		>
-		<app-jolticon icon="download" />
 		<translate>Download</translate>
-	</button>
+	</app-button>
 </div>

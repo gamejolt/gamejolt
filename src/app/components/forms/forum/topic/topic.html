@@ -31,12 +31,12 @@
 		<translate v-if="method === 'edit'">Save</translate>
 	</app-form-button>
 
-	<button
-		class="btn btn-danger-outline"
+	<app-button
+		trans
 		v-if="method === 'edit'"
 		@click.prevent="onCancel"
 		>
 		<translate>Cancel</translate>
-	</button>
+	</app-button>
 
 </app-form>

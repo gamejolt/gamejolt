@@ -10,13 +10,13 @@
 					<translate>Use one of our pre-built templates and customize it to your style.</translate>
 				</p>
 
-				<button
-					class="btn btn-success-outline"
+				<app-button
+					primary
 					@click="enable()"
 					v-app-tooltip="staticEnabled ? $gettext('This will disable your static site and use a customizable template instead.') : undefined"
 					>
 					<translate>Turn On</translate>
-				</button>
+				</app-button>
 
 			</div>
 		</div>
@@ -28,23 +28,23 @@
 		</div>
 
 		<div class="hidden-xs">
-			<a
-				class="btn btn-outline anim-fade-in no-animate-leave stagger"
+			<app-button
+				type="a" icon="cog"
+				class="anim-fade-in no-animate-leave stagger"
 				:href="themeEditorLocation"
 				target="_blank"
 				>
-				<app-jolticon icon="cog" />
 				<translate>Customize Theme</translate>
-			</a>
+			</app-button>
 
-			<a
-				class="btn btn-outline anim-fade-in no-animate-leave stagger"
+			<app-button
+				type="a" icon="edit"
+				class="anim-fade-in no-animate-leave stagger"
 				:href="contentEditorLocation"
 				target="_blank"
 				>
-				<app-jolticon icon="edit" />
 				<translate>Edit Content</translate>
-			</a>
+			</app-button>
 		</div>
 
 		<h2>

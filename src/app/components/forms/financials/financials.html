@@ -12,20 +12,20 @@
 
 			<div class="row">
 				<div class="col-xs-6">
-					<button class="btn btn-block"
-						:class="whichAgreement === 'developer' ? 'btn-success' : 'btn-outline'"
+					<app-button block
+						:solid="whichAgreement === 'developer'"
 						@click.prevent="whichAgreement = 'developer'"
 						>
 						<translate>I'm a game developer</translate>
-					</button>
+					</app-button>
 				</div>
 				<div class="col-xs-6">
-					<button class="btn btn-block"
-						:class="whichAgreement === 'partner' ? 'btn-success' : 'btn-outline'"
+					<app-button block
+						:solid="whichAgreement === 'partner'"
 						@click.prevent="whichAgreement = 'partner'"
 						>
 						<translate>I'm a partner</translate>
-					</button>
+					</app-button>
 				</div>
 			</div>
 		</fieldset>
@@ -79,13 +79,10 @@
 				<br>
 			</div>
 
-			<button
-				class="btn btn-primary-outline"
-				@click.prevent="linkPayPal()"
-				>
+			<app-button @click.prevent="linkPayPal()">
 				<template v-if="!user.paypal_id"><translate>Link PayPal Account</translate></template>
 				<template v-else><translate>Change PayPal Account</translate></template>
-			</button>
+			</app-button>
 		</div>
 
 	</fieldset>

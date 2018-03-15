@@ -11,15 +11,14 @@
 				>
 				<translate>Save & Next</translate>
 			</app-form-button>
-			<button
+			<app-button
 				v-else
-				class="btn btn-outline"
+				icon="chevron-right"
 				:disabled="!canProceed"
 				@click="next()"
 				>
-				<app-jolticon icon="chevron-right" />
 				<translate>Next Step</translate>
-			</button>
+			</app-button>
 		</div>
 	</div>
 	<div v-else>

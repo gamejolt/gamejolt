@@ -58,14 +58,12 @@
 	</div>
 
 	<div class="modal-footer">
-		<button class="btn btn-success-outline" @click="proceed()">
-			<app-jolticon icon="check" />
+		<app-button primary icon="check" @click="proceed()">
 			<translate>Proceed</translate>
-		</button>
-		<button class="btn btn-danger-outline" @click="cancel()">
-			<app-jolticon icon="remove" />
+		</app-button>
+		<app-button trans icon="remove" @click="cancel()">
 			<translate>Cancel</translate>
-		</button>
+		</app-button>
 	</div>
 
 </app-modal>

@@ -6,18 +6,14 @@
 		<input class="form-control" :value="site.url">
 	</div>
 	<div class="card-controls">
-		<button class="btn btn-outline btn-block"
-			@click="copyLink"
-			>
-			<app-jolticon icon="link" />
+		<app-button block icon="link" @click="copyLink">
 			<translate>Copy Link</translate>
-		</button>
-		<a class="btn btn-outline btn-block"
-			:href="site.url"
-			target="_blank"
+		</app-button>
+		<app-button
+			type="a" block icon="share"
+			:href="site.url" target="_blank"
 			>
-			<app-jolticon icon="share" />
 			<translate>View Site</translate>
-		</a>
+		</app-button>
 	</div>
 </app-card>

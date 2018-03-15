@@ -154,7 +154,6 @@
 						/>
 
 					<router-link
-						class="btn btn-outline btn-block-xs"
 						:to="{
 							name: 'discover.games.view.scores.list',
 							params: {
@@ -165,8 +164,9 @@
 							},
 						}"
 						>
-						<app-jolticon icon="media-list" />
-						<translate>scores.overview.view_more_button</translate>
+						<app-button blockXs icon="media-list">
+							<translate>scores.overview.view_more_button</translate>
+						</app-button>
 					</router-link>
 				</template>
 				<div class="alert full-bleed-xs" v-else>

@@ -1,10 +1,9 @@
 <app-modal>
 
 	<div class="modal-controls">
-		<button class="btn btn-danger-outline" @click="modal.dismiss()">
-			<app-jolticon icon="remove" />
+		<app-button icon="remove" @click="modal.dismiss()">
 			<translate>Close</translate>
-		</button>
+		</app-button>
 	</div>
 
 	<div class="modal-header">
@@ -52,10 +51,9 @@
 	</div>
 
 	<div class="modal-footer">
-		<button class="btn btn-outline anim-fade-enter anim-fade-leave" @click="showChangeForm" v-if="!isChanging">
-			<app-jolticon icon="edit" />
+		<app-button icon="edit" class="anim-fade-enter anim-fade-leave" @click="showChangeForm" v-if="!isChanging">
 			<translate>Change Game Token</translate>
-		</button>
+		</app-button>
 	</div>
 
 </app-modal>

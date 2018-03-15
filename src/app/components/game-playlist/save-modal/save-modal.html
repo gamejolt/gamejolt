@@ -1,10 +1,9 @@
 <app-modal :modal="modal">
 
 	<div class="modal-controls">
-		<button class="btn btn-danger-outline" @click="modal.dismiss()">
-			<app-jolticon icon="remove" />
+		<app-button icon="remove" @click="modal.dismiss()">
 			<translate>Close</translate>
-		</button>
+		</app-button>
 	</div>
 
 	<div class="modal-header">

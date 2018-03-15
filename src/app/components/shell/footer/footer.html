@@ -9,8 +9,10 @@
 					</router-link>
 				</p>
 				<p>
-					<router-link :to="{ name: 'landing.client' }" class="btn btn-primary">
-						<translate>Get It Now</translate>
+					<router-link :to="{ name: 'landing.client' }">
+						<app-button primary>
+							<translate>Get It Now</translate>
+						</app-button>
 					</router-link>
 				</p>
 			</div>
@@ -162,12 +164,14 @@
 			<div class="footer-meta">
 
 				<p>
-					<a class="btn btn-sparse" href="https://twitter.com/gamejolt" target="_blank">
-						<app-jolticon icon="twitter-bird" />
-					</a>
-					<a class="btn btn-sparse" href="https://facebook.com/gamejolt" target="_blank">
-						<app-jolticon icon="facebook" />
-					</a>
+					<app-button
+						type="a" sparse icon="twitter-bird"
+						href="https://twitter.com/gamejolt" target="_blank"
+						/>
+					<app-button
+						type="a" sparse icon="facebook"
+						href="https://facebook.com/gamejolt" target="_blank"
+						/>
 				</p>
 
 				<p class="tiny">

@@ -5,17 +5,13 @@
 			<hr>
 
 			<span class="-manage-controls" v-if="shouldShowManageControls">
-				<button class="btn btn-success-outline" v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost">
-					<app-jolticon icon="check" />
+				<app-button primary icon="check" v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost">
 					<translate>Publish</translate>
-				</button>
-				<button class="btn btn-outline" @click="showEdit">
-					<app-jolticon icon="edit" />
+				</app-button>
+				<app-button icon="edit" @click="showEdit">
 					<translate>Edit</translate>
-				</button>
-				<button class="btn btn-outline btn-sparse" v-app-popover-trigger="`activity-feed-controls-options-${post.id}`">
-					<app-jolticon icon="ellipsis-h" />
-				</button>
+				</app-button>
+				<app-button sparse icon="ellipsis-h" v-app-popover-trigger="`activity-feed-controls-options-${post.id}`" />
 
 				<app-popover :popover-id="`activity-feed-controls-options-${post.id}`">
 					<div class="list-group list-group-dark">
@@ -67,13 +63,11 @@
 				/>
 
 			<template v-if="!showComments">
-				<button
-					class="btn btn-outline btn-sparse btn-circle"
+				<app-button
+					circle icon="comment"
 					@click="openComments()"
 					v-app-tooltip="$gettext( 'View Comments' )"
-					>
-					<app-jolticon icon="comment" />
-				</button>
+					/>
 				<span
 					class="blip filled"
 					v-if="commentsCount > 0"
@@ -85,13 +79,11 @@
 				</span>
 			</template>
 
-			<button
-				class="btn btn-outline btn-sparse btn-circle"
+			<app-button
+				circle icon="share"
 				v-app-popover-trigger="sharePopoverId"
 				v-app-tooltip="$gettext( 'Share' )"
-				>
-				<app-jolticon icon="share" />
-			</button>
+				/>
 
 			<app-popover
 				:popover-id="sharePopoverId"
@@ -114,9 +106,9 @@
 							/>
 					</div>
 
-					<button class="btn btn-outline btn-block" @click="copyShareUrl">
+					<app-button block @click="copyShareUrl">
 						<translate>Copy Permalink</translate>
-					</button>
+					</app-button>
 				</div>
 
 			</app-popover>

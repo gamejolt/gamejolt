@@ -30,10 +30,9 @@
 						<p>
 							<small class="text-muted"><translate>Not linked.</translate></small>
 						</p>
-						<button class="btn btn-success-outline" @click="link( provider )">
-							<app-jolticon icon="link" />
+						<app-button primary icon="link" @click="link( provider )">
 							<translate>Link Now</translate>
-						</button>
+						</app-button>
 					</template>
 					<template v-else-if="(provider === 'facebook' && user.facebook_id)
 						|| (provider === 'twitch' && user.twitch_id)
@@ -65,14 +64,12 @@
 						</p>
 
 						<div>
-							<button class="btn btn-outline" @click="link( provider )">
-								<app-jolticon icon="retweet" />
+							<app-button icon="retweet" @click="link( provider )">
 								<translate>Sync</translate>
-							</button>
-							<button class="btn btn-danger-outline" @click="unlink( provider )">
-								<app-jolticon icon="remove" />
+							</app-button>
+							<app-button icon="remove" @click="unlink( provider )">
 								<translate>Unlink</translate>
-							</button>
+							</app-button>
 						</div>
 					</template>
 				</div>
@@ -96,13 +93,12 @@
 					:key="channel.id"
 					>
 					<div class="pull-right">
-						<button
-							class="btn btn-danger-outline btn-sm"
+						<app-button
+							sm icon="remove"
 							@click="unlinkYoutube( channel )"
 							>
-							<app-jolticon icon="remove" />
 							<translate>Unlink</translate>
-						</button>
+						</app-button>
 					</div>
 					<strong>
 						<a :href="`https://www.youtube.com/channel/${ channel.channel_id }`" target="_blank">
@@ -113,10 +109,9 @@
 			</div>
 
 			<div>
-				<button class="btn btn-success-outline" @click="link( 'youtube-channel' )">
-					<app-jolticon icon="add" />
+				<app-button primary icon="add" @click="link( 'youtube-channel' )">
 					<translate>Link YouTube Channel</translate>
-				</button>
+				</app-button>
 			</div>
 		</div>
 	</div>

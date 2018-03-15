@@ -106,13 +106,11 @@
 
 	<template v-if="!isPublished && !hasPoll">
 		<div>
-			<button
-				class="btn btn-outline btn-sparse"
+			<app-button
+				sparse icon="pedestals-numbers"
 				v-app-tooltip="$gettext(`Add poll`)"
 				@click.prevent="createPoll()"
-				>
-				<app-jolticon icon="pedestals-numbers" />
-			</button>
+				/>
 		</div>
 		<br>
 	</template>
@@ -263,13 +261,12 @@
 		</fieldset>
 
 		<div class="text-right" v-if="isPollEditable">
-			<button
-				class="btn btn-outline"
+			<app-button
+				icon="remove"
 				@click.prevent="removePoll()"
 				>
-				<app-jolticon icon="remove" />
 				<translate>Remove poll</translate>
-			</button>
+			</app-button>
 		</div>
 	</div>
 
@@ -350,12 +347,11 @@
 		</template>
 	</app-form-button>
 
-	<button
-		class="btn btn-outline"
+	<app-button
 		v-if="model.status !== FiresidePost.STATUS_ACTIVE"
 		:disabled="!valid"
 		@click.prevent="onDraftSubmit()"
 		>
 		<translate>Save as Draft</translate>
-	</button>
+	</app-button>
 </app-form>

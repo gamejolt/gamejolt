@@ -16,14 +16,14 @@
 					@submit="onBuildAdded"
 					/>
 
-				<button
-					class="btn btn-success-outline"
+				<app-button
+					primary
 					v-if="site.build"
 					@click="activateBuild()"
 					v-app-tooltip="templateEnabled ? $gettext('This will disable your template and use your static build instead.') : undefined"
 					>
 					<translate>Turn On</translate>
-				</button>
+				</app-button>
 
 			</div>
 		</div>

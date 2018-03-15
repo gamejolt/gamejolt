@@ -107,7 +107,7 @@
 
 		<div slot="controls" :class="{ 'text-right': !Screen.isXs }">
 			<div class="analytics-month-selector" v-if="period === 'monthly'">
-				<router-link class="btn btn-outline btn-sparse"
+				<router-link
 					:to="{
 						name: 'dash.analytics',
 						params: $route.params,
@@ -120,14 +120,14 @@
 					}"
 					replace
 					>
-					<app-jolticon icon="chevron-left" />
+					<app-button sparse icon="chevron-left" />
 				</router-link>
 
 				<strong>
 					{{ startTime | date( 'MMMM YYYY' ) }}
 				</strong>
 
-				<router-link class="btn btn-outline btn-sparse"
+				<router-link
 					v-if="now > endTime"
 					:to="{
 						name: 'dash.analytics',
@@ -141,7 +141,7 @@
 					}"
 					replace
 					>
-					<app-jolticon icon="chevron-right" />
+					<app-button sparse icon="chevron-right" />
 				</router-link>
 			</div>
 		</div>

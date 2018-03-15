@@ -133,13 +133,13 @@
 									</div>
 									<div class="card-meta">
 										<div class="tag"><translate>Image</translate></div>
-										<button
-											class="btn btn-sm btn-outline"
+										<app-button
+											sm
 											@click.stop="Clipboard.copy( Environment.baseUrl + item.getUrl( game ) )"
 											v-app-tooltip="$gettext( `Copy the direct link to view this image on your game page.` )"
 											>
 											<translate>Copy Link</translate>
-										</button>
+										</app-button>
 									</div>
 								</template>
 								<template v-else-if="item.media_type === 'video'">
@@ -148,25 +148,25 @@
 									</div>
 									<div class="card-meta">
 										<div class="tag"><translate>Video</translate></div>
-										<button
-											class="btn btn-sm btn-outline"
+										<app-button
+											sm
 											@click.stop="Clipboard.copy( Environment.baseUrl + item.getUrl( game ) )"
 											v-app-tooltip="$gettext( `Copy the direct link to view this video on your game page.` )"
 											>
 											<translate>Copy Link</translate>
-										</button>
+										</app-button>
 									</div>
 								</template>
 								<template v-else-if="item.media_type === 'sketchfab'">
 									<div class="card-meta">
 										<div class="tag">Sketchfab</div>
-										<button
-											class="btn btn-sm btn-outline"
+										<app-button
+											sm
 											@click.stop="Clipboard.copy( Environment.baseUrl + item.getUrl( game ) )"
 											v-app-tooltip="$gettext( `Copy the direct link to view this sketchfab model on your game page.` )"
 											>
 											<translate>Copy Link</translate>
-										</button>
+										</app-button>
 									</div>
 								</template>
 

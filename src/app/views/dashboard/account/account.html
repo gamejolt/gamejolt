@@ -1,9 +1,10 @@
 <div>
 
 	<div v-if="Screen.isXs" class="well fill-darker sans-margin-bottom">
-		<router-link class="btn btn-outline btn-block" :to="{ name: 'dash.account-mobile-nav' }">
-			<app-jolticon icon="chevron-left" />
-			<translate>Back to Account</translate>
+		<router-link :to="{ name: 'dash.account-mobile-nav' }">
+			<app-button block icon="chevron-left">
+				<translate>Back to Account</translate>
+			</app-button>
 		</router-link>
 	</div>
 

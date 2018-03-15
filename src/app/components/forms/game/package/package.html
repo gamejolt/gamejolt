@@ -35,13 +35,12 @@
 			</p>
 
 			<div v-if="!showDescriptionInput">
-				<button
-					class="btn btn-outline btn-sm"
+				<app-button
+					sm icon="add"
 					@click.prevent="showDescriptionInput = true"
 					:disabled="!hasBuildsPerms">
-					<app-jolticon icon="add" />
 					<translate>dash.games.packages.form.description_change_button</translate>
-				</button>
+				</app-button>
 			</div>
 			<div v-else>
 				<app-form-control-textarea
@@ -282,22 +281,30 @@
 					</div>
 
 					<app-game-perms tag="div" required="sales">
-						<a class="btn btn-outline btn-sm" @click="isShowingSaleForm = true" v-if="!isShowingSaleForm">
-							<app-jolticon icon="edit" />
+						<app-button
+							type="a" sm icon="edit"
+							@click="isShowingSaleForm = true"
+							v-if="!isShowingSaleForm"
+							>
 							<translate>Edit Sale</translate>
-						</a>
-						<a class="btn btn-danger-outline btn-sm" @click="cancelSale()">
-							<app-jolticon icon="remove" />
+						</app-button>
+						<app-button
+							type="a" trans sm icon="remove"
+							@click="cancelSale()"
+							>
 							<translate>Cancel Sale</translate>
-						</a>
+						</app-button>
 					</app-game-perms>
 				</div>
 
 				<app-game-perms tag="div" required="sales" v-if="!promotionalPricing">
-					<a class="btn btn-outline btn-sm" @click="isShowingSaleForm = true" v-if="!isShowingSaleForm">
-						<app-jolticon icon="add" />
+					<app-button
+						type="a" sm icon="add"
+						@click="isShowingSaleForm = true"
+						v-if="!isShowingSaleForm"
+						>
 						<translate>Setup Sale</translate>
-					</a>
+					</app-button>
 				</app-game-perms>
 			</div>
 

@@ -18,12 +18,12 @@
 			</div>
 			<br>
 
-			<button
-				class="btn btn-primary-outline"
+			<app-button
+				primary
 				@click.prevent="showAgreement = true"
 				>
 				<translate>Show Partner Agreement</translate>
-			</button>
+			</app-button>
 		</div>
 
 		<div class="form-group" v-if="!hasSignedSomeAgreement || showAgreement">
@@ -40,13 +40,14 @@
 			</div>
 			<br>
 
-			<button
-				class="btn btn-success-outline"
+			<!-- TODO(buttons) used primary solid because it seems like an important action. pls review -->
+			<app-button
+				primary solid
 				:disabled="!checked"
 				@click.prevent="onAccept()"
 				>
 				<translate>I Agree</translate>
-			</button>
+			</app-button>
 		</div>
 
 	</div>

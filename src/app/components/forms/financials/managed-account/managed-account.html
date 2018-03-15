@@ -214,13 +214,11 @@
 					-->
 					<h5 class="clearfix" v-if="account.status === 'unverified'">
 						<div class="pull-right">
-							<button
-								class="btn btn-danger-outline btn-sparse"
+							<app-button
+								sparse icon="remove"
 								v-if="getStripeField( `legal_entity.additional_owners.${ i }.verification.status` ) !== 'verified'"
 								@click.prevent="removeAdditionalOwner( i )"
-								>
-								<app-jolticon icon="remove" />
-							</button>
+								/>
 						</div>
 
 						<span>
@@ -257,10 +255,9 @@
 				<!-- Add additional owner -->
 				<div class="clearfix">
 					<div class="pull-right" v-if="formModel.additional_owners_count <= 3">
-						<button class="btn btn-outline" @click.prevent="addAdditionalOwner()">
-							<app-jolticon icon="add" />
+						<app-button icon="add" @click.prevent="addAdditionalOwner()">
 							<translate>Add Additional Owner</translate>
-						</button>
+						</app-button>
 					</div>
 				</div>
 

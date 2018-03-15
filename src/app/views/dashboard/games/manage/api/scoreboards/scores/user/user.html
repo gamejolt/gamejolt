@@ -2,13 +2,11 @@
 
 	<h2 class="section-header">
 		<div class="section-header-controls">
-			<button
-				class="btn btn-sparse btn-danger-outline"
+			<app-button
+				sparse icon="remove"
 				@click="removeAll"
 				v-app-tooltip="$gettext( `Remove All Scores` )"
-				>
-				<app-jolticon icon="remove" />
-			</button>
+				/>
 		</div>
 
 		<translate>dash.games.scores.user.list.heading</translate>

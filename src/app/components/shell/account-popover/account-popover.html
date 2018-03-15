@@ -64,13 +64,13 @@
 		</div>
 
 		<div class="account-popover-button offline-disable">
-			<router-link
-				class="btn btn-outline btn-block"
-				:to="{ name: 'dash.games.add' }"
-				v-app-track-event="`account-popover:add-game`"
-				>
-				<app-jolticon icon="add" />
-				<translate>Add Game</translate>
+			<router-link :to="{ name: 'dash.games.add' }">
+				<app-button
+					block icon="add"
+					v-app-track-event="`account-popover:add-game`"
+					>
+					<translate>Add Game</translate>
+				</app-button>
 			</router-link>
 		</div>
 

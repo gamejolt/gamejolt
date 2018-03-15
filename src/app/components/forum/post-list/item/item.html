@@ -134,19 +134,17 @@
 
 	<template v-if="!isReply" slot="controls">
 
-		<button
-			class="btn btn-outline btn-sparse btn-circle"
+		<app-button
+			circle icon="reply"
 			v-if="!topic.is_locked && app.user"
 			v-app-tooltip="$gettext( 'Reply' )"
 			:disabled="isEditing"
 			@click="reply"
-			>
-			<app-jolticon icon="reply" />
-		</button>
+			/>
 
-		<a
+		<app-button
+			type="a" trans
 			v-if="post.replies_count && !isEditing"
-			class="btn btn-trans"
 			@click="toggleReplies"
 			>
 			<translate
@@ -156,7 +154,7 @@
 				>
 				+%{ count } reply
 			</translate>
-		</a>
+		</app-button>
 
 	</template>
 

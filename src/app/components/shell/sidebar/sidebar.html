@@ -205,9 +205,9 @@
 
 	<div class="shell-sidebar-content fill-darkest scrollable overlay-scrollbar">
 
-		<button class="btn btn-lg btn-block btn-trans" @click="toggleDarkMode()">
-			{{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
-		</button>
+		<app-button lg block trans :icon="isDarkMode ? 'light-off' : 'light-oon'" @click="toggleDarkMode()">
+			{{ isDarkMode ? 'Dark Mode' : 'Light Mode' }}
+		</app-button>
 
 		<ul class="shell-nav">
 			<li class="offline-disable">
@@ -494,14 +494,16 @@
 				</div>
 
 				<div class="nav-controls">
-					<a
-						class="btn btn-outline btn-block offline-disable"
+					<!-- TODO(buttons) margins are wrong, also what is offline-disable -->
+					<app-button
+						type="a"
+						block icon="add"
+						class="offline-disable"
 						@click="showAddPlaylistModal"
 						v-app-track-event="`sidebar:playlist-add`"
 						>
-						<app-jolticon icon="add" />
 						<translate>library.nav.new_playlist_button</translate>
-					</a>
+					</app-button>
 				</div>
 
 				<div class="nav-controls" v-if="collections.length">

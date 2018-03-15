@@ -4,14 +4,13 @@
 		If the primary is for sale and they don't own it yet, the only button we should show is the
 		buy button.
 	-->
-	<button
-		class="btn btn-success-outline"
+	<app-button
+		primary icon="heart"
 		v-if="game._can_buy_primary_sellable"
 		@click="buy()"
 		>
-		<app-jolticon icon="heart" />
 		<translate>Buy Game</translate>
-	</button>
+	</app-button>
 
 	<!--
 		If the game is not for sale, or if they own the game, then show the normal buttons.

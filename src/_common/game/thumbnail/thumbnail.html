@@ -29,12 +29,14 @@
 			</template>
 
 			<template v-if="showModTools">
-				<button class="btn btn-sparse"
+				<!-- TODO(buttons) this looks bad -->
+				<app-button
+					sparse
+					icon="cog"
 					v-app-popover-trigger="`game-mod-tools-${game.id}`"
 					@click.prevent
 					>
-					<app-jolticon icon="cog" />
-				</button>
+				</app-button>
 				<app-popover
 					:popover-id="`game-mod-tools-${game.id}`"
 					:append-to-body="true"

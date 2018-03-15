@@ -1,10 +1,10 @@
 <app-modal>
 
 	<div class="modal-controls">
-		<button class="btn btn-danger-outline" @click="modal.dismiss()">
-			<app-jolticon icon="remove" />
+		<!-- TODO(buttons) the button no longer looks like a tab. the top border is visible. fix this for all modal buttons. search for modal.dismiss -->
+		<app-button icon="remove" @click="modal.dismiss()">
 			<translate>Close</translate>
-		</button>
+		</app-button>
 	</div>
 
 	<div class="modal-header">
@@ -22,10 +22,9 @@
 	<div class="modal-body">
 
 		<template v-if="Screen.isXs && post">
-			<a class="btn btn-outline btn-block" @click="post = null">
-				<app-jolticon icon="chevron-left" />
+			<app-button type="a" block icon="chevron-left" @click="post = null">
 				<translate>Back to Changelog</translate>
-			</a>
+			</app-button>
 			<br>
 		</template>
 
@@ -59,12 +58,12 @@
 				<br>
 
 				<div>
-					<a class="btn btn-outline btn-block"
+					<app-button type="a" block
 						:href="Environment.firesideBaseUrl + '/tag/gjbroadcast'"
 						target="_blank"
 						>
 						<translate>View Full Changelog</translate>
-					</a>
+					</app-button>
 				</div>
 
 			</div>
