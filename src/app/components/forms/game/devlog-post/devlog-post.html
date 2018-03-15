@@ -335,10 +335,7 @@
 		</div>
 	</div>
 
-	<app-form-button
-		:disabled="!valid"
-		:icon="model.status !== FiresidePost.STATUS_ACTIVE ? 'add' : 'edit'"
-		>
+	<app-form-button :disabled="!valid">
 		<template v-if="model.status !== FiresidePost.STATUS_ACTIVE">
 			<translate>Publish</translate>
 		</template>

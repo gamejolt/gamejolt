@@ -227,10 +227,7 @@
 	<app-dash-game-wizard-controls
 		:disabled="!formModel.tigrs_age"
 		>
-		<app-form-button
-			icon="edit"
-			:disabled="!formModel.tigrs_age || !valid"
-			>
+		<app-form-button :disabled="!formModel.tigrs_age || !valid">
 			<translate>dash.games.maturity.save_button</translate>
 		</app-form-button>
 	</app-dash-game-wizard-controls>

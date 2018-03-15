@@ -46,10 +46,7 @@
 		<app-form-control-errors />
 	</app-form-group>
 
-	<app-form-button
-		v-if="!!formModel.role"
-		:icon="method"
-		>
+	<app-form-button v-if="!!formModel.role">
 		<translate v-if="method === 'add'">Invite</translate>
 		<translate v-else>Save</translate>
 	</app-form-button>

@@ -337,10 +337,7 @@
 
 		<app-loading v-if="state.isProcessing" :label="$gettext( `Processing...` )" />
 
-		<app-form-button
-			v-if="!isComplete && !isVerificationPending"
-			icon="chevron-right"
-			>
+		<app-form-button v-if="!isComplete && !isVerificationPending">
 			<translate>Save and Continue</translate>
 		</app-form-button>
 
