@@ -8,6 +8,8 @@ import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.s
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 import { bootstrapAppTranslations } from '../utils/translations';
 import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
+import { AppButton } from '../lib/gj-lib-client/components/button/button';
+import { AppJolticon } from '../lib/gj-lib-client/vue/components/jolticon/jolticon';
 
 /**
  * Bootstraps common services and returns a "createApp" function that our entry point can call to
@@ -21,6 +23,10 @@ export function bootstrapCommon(store: VuexStore, router: VueRouter, appComponen
 	Connection.init(store);
 
 	hijackLinks(router, 'gamejolt.com');
+
+	// Common components.
+	Vue.component('AppButton', AppButton);
+	Vue.component('AppJolticon', AppJolticon);
 
 	return () => {
 		bootstrapAppTranslations();
