@@ -3,7 +3,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./follow-widget.html';
 
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
@@ -12,21 +11,18 @@ import { LibraryState, LibraryStore, LibraryAction } from '../../../../store/lib
 
 @View
 @Component({
-	components: {
-		AppJolticon,
-	},
 	directives: {
 		AppTrackEvent,
 		AppTooltip,
 		AppAuthRequired,
 	},
-	filters: {
-		number,
-	},
 })
 export class AppGameCollectionFollowWidget extends Vue {
 	@Prop(GameCollection) collection: GameCollection;
 	@Prop(Number) followerCount?: number;
+	@Prop(Boolean) overlay?: boolean;
+	@Prop(Boolean) circle?: boolean;
+	@Prop(Boolean) block?: boolean;
 
 	@LibraryState collections: LibraryStore['collections'];
 	@LibraryAction followCollection: LibraryStore['followCollection'];
@@ -37,9 +33,30 @@ export class AppGameCollectionFollowWidget extends Vue {
 	get isFollowing() {
 		return (
 			this.collections.findIndex(
-				item => item.type === this.collection.type && (item as any).id === this.collection.id
+				item =>
+					item.type === this.collection.type && (item as any).id === this.collection.id
 			) !== -1
 		);
+	}
+
+	get badge() {
+		return !this.circle && this.isFollowing && this.followerCount
+			? number(this.followerCount)
+			: false;
+	}
+
+	get tooltip() {
+		return this.isFollowing
+			? this.$gettext('library.collection.unfollow_button_tooltip')
+			: this.$gettext('library.collection.follow_button_tooltip');
+	}
+
+	get icon() {
+		if (!this.circle) {
+			return false;
+		}
+
+		return !this.isFollowing ? 'subscribe' : 'subscribed';
 	}
 
 	async onClick() {

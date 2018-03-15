@@ -1,10 +1,10 @@
 <span>
-	<button
+	<app-button
 		v-if="game.status === Game.STATUS_VISIBLE"
-		class="btn btn-sparse"
-		:class="{
-			'btn-outline': outline,
-		}"
+		icon="add"
+		sparse
+		:overlay="overlay"
+		:circle="circle"
 		v-app-auth-required
 		v-app-popover-trigger="{
 			id: `add-to-playlist-${game.id}`,
@@ -13,9 +13,7 @@
 		v-app-tooltip.bottom="$gettext( 'Add to Playlist' )"
 		v-app-track-event="`add-to-playlist:widget:${eventLabel || 'any'}`"
 		@click.prevent
-		>
-		<app-jolticon icon="add" />
-	</button>
+		/>
 
 	<app-game-playlist-add-to-popover
 		:game="game"

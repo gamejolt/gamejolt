@@ -47,13 +47,16 @@
 										slug: item.game.slug,
 									},
 								}"
-								class="btn btn-outline btn-lg btn-overlay-variant"
-								:class="{
-									'btn-block': shouldShowFollow,
-								}"
 								v-app-track-event="`home:banner:${item.game.id}`"
 								>
-								<translate>View Game</translate>
+								<app-button
+									tag="a"
+									lg
+									overlay
+									:block="shouldShowFollow"
+									>
+									<translate>View Game</translate>
+								</app-button>
 							</router-link>
 							<a
 								v-else-if="item.custom_url"
@@ -71,7 +74,9 @@
 						<div class="col-xs-6" v-if="shouldShowFollow">
 							<app-game-follow-widget
 								:game="item.game"
-								class="btn-block btn-lg btn-outline btn-overlay-variant"
+								block
+								lg
+								overlay
 								v-app-track-event="`home:banner:follow-${item.game.id}`"
 								/>
 						</div>

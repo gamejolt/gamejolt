@@ -8,7 +8,7 @@
 		@outview="outView"
 		>
 		<div
-			class="-controls"
+			class="-controls theme-dark"
 			v-if="app.user && Screen.isLg && isHydrated"
 			@click.prevent
 			>
@@ -18,20 +18,23 @@
 			<template v-if="shouldShowControls">
 				<app-game-follow-widget
 					:game="game"
-					:sparse="true"
+					overlay
+					circle
 					event-label="game-thumb"
 					/>
 
 				<app-game-playlist-add-to-widget
 					:game="game"
+					overlay
+					circle
 					event-label="game-thumb"
 					/>
 			</template>
 
 			<template v-if="showModTools">
-				<!-- TODO(buttons) this looks bad -->
 				<app-button
-					sparse
+					overlay
+					circle
 					icon="cog"
 					v-app-popover-trigger="`game-mod-tools-${game.id}`"
 					@click.prevent
