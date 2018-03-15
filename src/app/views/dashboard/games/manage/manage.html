@@ -70,22 +70,21 @@
 		<p v-if="!isWizard">
 			<app-game-perms required="analytics">
 				<router-link
-					class="btn btn-outline hidden-xs"
+					class="hidden-xs"
 					:to="{
 						name: 'dash.analytics',
 						params: { resource: 'Game', resourceId: game.id },
 					}"
 					>
-					<app-jolticon icon="chart" />
-					<translate>View Analytics</translate>
+					<app-button icon="chart">
+						<translate>View Analytics</translate>
+					</app-button>
 				</router-link>
 			</app-game-perms>
-			<router-link
-				class="btn btn-outline"
-				:to="game.getUrl()"
-				>
-				<app-jolticon icon="share" />
-				<translate>dash.games.view_page_button</translate>
+			<router-link :to="game.getUrl()">
+				<app-button icon="share">
+					<translate>dash.games.view_page_button</translate>
+				</app-button>
 			</router-link>
 		</p>
 

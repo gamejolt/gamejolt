@@ -28,13 +28,17 @@
 
 		<app-game-perms required="all" tag="div">
 			<router-link
-				class="btn btn-success-outline btn-block"
 				:to="{
 					name: 'dash.games.manage.game.packages.add',
 				}"
 				>
-				<app-jolticon icon="add" />
-				<translate>dash.games.packages.add_package_button</translate>
+				<app-button
+					primary
+					block
+					icon="add"
+					>
+					<translate>dash.games.packages.add_package_button</translate>
+				</app-button>
 			</router-link>
 		</app-game-perms>
 		<br>
@@ -135,36 +139,36 @@
 					<div class="card-controls">
 						<app-game-perms required="builds">
 							<router-link
-								class="btn btn-outline"
 								:to="{
 									name: 'dash.games.manage.game.packages.edit',
 									params: { packageId: package.id },
 								}"
 								>
-								<app-jolticon icon="cog" />
-								<translate>Manage</translate>
+								<app-button icon="cog">
+									<translate>Manage</translate>
+								</app-button>
 							</router-link>
 						</app-game-perms>
 						<router-link
-							class="btn btn-outline"
 							:to="{
 								name: 'dash.games.manage.game.packages.edit.widget',
 								params: { packageId: package.id },
 							}"
 							>
-							<app-jolticon icon="plug" />
-							<translate>Widget</translate>
+							<app-button icon="plug">
+								<translate>Widget</translate>
+							</app-button>
 						</router-link>
 						<app-game-perms required="analytics">
 							<router-link
-								class="btn btn-outline"
 								:to="{
 									name: 'dash.analytics',
 									params: { resource: 'Game_Package', resourceId: package.id },
 								}"
 								>
-								<app-jolticon icon="chart" />
-								<translate>Analytics</translate>
+								<app-button icon="chart">
+									<translate>Analytics</translate>
+								</app-button>
 							</router-link>
 						</app-game-perms>
 					</div>

@@ -151,8 +151,10 @@
 					</div>
 
 					<div>
-						<router-link class="btn btn-outline btn-block" :to="{ name: 'dash.withdraw-funds' }">
-							<translate>dash.overview.revenue_withdraw_button</translate>
+						<router-link :to="{ name: 'dash.withdraw-funds' }">
+							<app-button block>
+								<translate>dash.overview.revenue_withdraw_button</translate>
+							</app-button>
 						</router-link>
 					</div>
 				</template>
@@ -239,12 +241,15 @@
 
 					<div>
 						<router-link
-							class="btn btn-success-outline"
 							:to="{ name: 'dash.main.site' }"
 							v-app-track-event="`dash:overview:quick-profile-site`"
 							>
-							<app-jolticon icon="cog" />
-							<translate>Edit Portfolio Site</translate>
+							<app-button
+								primary
+								icon="cog"
+								>
+								<translate>Edit Portfolio Site</translate>
+							</app-button>
 						</router-link>
 					</div>
 				</template>
@@ -262,12 +267,15 @@
 
 				<div>
 					<router-link
-						class="btn btn-success-outline"
 						:to="{ name: 'dash.games.add' }"
 						v-app-track-event="`dash:overview:quick-add-game`"
 						>
-						<app-jolticon icon="add" />
-						<translate>Add Game</translate>
+						<app-button
+							primary
+							icon="add"
+							>
+							<translate>Add Game</translate>
+						</app-button>
 					</router-link>
 				</div>
 
@@ -297,43 +305,39 @@
 						</div>
 						<div class="card-controls">
 							<router-link
-								class="btn btn-outline"
 								:to="{
 									name: 'dash.games.manage.game.overview',
 									params: { id: game.id },
 								}"
 								v-app-track-event="`dash:overview:quick-game`"
 								>
-								<app-jolticon icon="cog" />
-								<translate>Manage</translate>
+								<app-button icon="cog">
+									<translate>Manage</translate>
+								</app-button>
 							</router-link>
 							<template v-if="game.hasPerms('analytics')">
 								<router-link
-									class="btn btn-outline"
 									v-app-track-event="`dash:overview:quick-game-analytics`"
 									:to="{
 										name: 'dash.analytics',
 										params: { resource: 'Game', resourceId: game.id },
 									}"
 									>
-									<app-jolticon icon="chart" />
-									<translate>Analytics</translate>
+									<app-button icon="chart">
+										<translate>Analytics</translate>
+									</app-button>
 								</router-link>
 							</template>
 						</div>
 					</app-card>
 
 					<div class="page-cut" v-if="!gamesExpanded && games.length > 5">
-						<button
-							class="btn btn-outline"
+						<app-button :badge="number(games.length)"
 							@click="gamesExpanded = true"
 							v-app-track-event="`dash:overview:expand-games`"
 							>
-							<span class="btn-badge">
-								{{ games.length | number }}
-							</span>
 							<translate>Expand All</translate>
-						</button>
+						</app-button>
 					</div>
 				</template>
 
@@ -350,9 +354,9 @@
 					</div>
 
 					<div>
-						<a class="btn btn-outline" href="https://help.gamejolt.com/video-comments" target="_blank">
+						<app-button type="a" href="https://help.gamejolt.com/video-comments" target="_blank">
 							<translate>Learn More</translate>
-						</a>
+						</app-button>
 					</div>
 				</template>
 				<template v-else>
@@ -363,14 +367,13 @@
 					</div>
 
 					<div class="page-cut">
-						<router-link class="btn btn-outline"
+						<router-link
 							:to="{ name: 'profile.videos.list', params: { username: app.user.username } }"
 							v-app-track-event="`dash:overview:expand-videos`"
 							>
-							<span class="btn-badge">
-								{{ videosCount | number }}
-							</span>
-							<translate>View All</translate>
+							<app-button :badge="number(videosCount)">
+								<translate>View All</translate>
+							</app-button>
 						</router-link>
 					</div>
 				</template>
@@ -387,13 +390,23 @@
 				</div>
 
 				<div>
-					<a class="btn btn-success-outline" href="http://jams.gamejolt.com/manage/jams/add" target="_blank">
-						<app-jolticon icon="add" />
+					<app-button
+						type="a"
+						primary
+						icon="add"
+						href="http://jams.gamejolt.com/manage/jams/add"
+						target="_blank"
+						>
 						<translate>Create Jam</translate>
-					</a>
-					<a v-if="!jams.length" class="btn btn-outline" href="http://jams.gamejolt.com" target="_blank">
+					</app-button>
+					<app-button
+						v-if="!jams.length"
+						type="a"
+						href="http://jams.gamejolt.com"
+						target="_blank"
+						>
 						<translate>Learn More</translate>
-					</a>
+					</app-button>
 				</div>
 
 				<template v-if="jams.length > 0">
@@ -415,36 +428,35 @@
 							</h4>
 						</div>
 						<div class="card-controls">
-							<a class="btn btn-outline"
+							<app-button
+								type="a"
+								icon="cog"
 								:href="jam.manageUrl"
 								target="_blank"
 								v-app-track-event="`dash:overview:quick-jam`"
 								>
-								<app-jolticon icon="cog" />
 								<translate>Manage</translate>
-							</a>
-							<a class="btn btn-outline"
+							</app-button>
+							<app-button
+								type="a"
+								icon="share"
 								:href="jam.fullUrl"
 								target="_blank"
 								v-app-track-event="`dash:overview:quick-jam-view`"
 								>
-								<app-jolticon icon="share" />
 								<translate>View Jam</translate>
-							</a>
+							</app-button>
 						</div>
 					</app-card>
 
 					<div class="page-cut" v-if="!jamsExpanded && jams.length > 5">
-						<button
-							class="btn btn-outline"
+						<app-button
+							:badge="number(jams.length)"
 							@click="jamsExpanded = true"
 							v-app-track-event="`dash:overview:expand-jams`"
 							>
-							<span class="btn-badge">
-								{{ jams.length | number }}
-							</span>
 							<translate>Expand All</translate>
-						</button>
+						</app-button>
 					</div>
 				</template>
 

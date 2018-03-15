@@ -138,19 +138,21 @@
 								<input class="form-control" :value="partnerLink">
 							</div>
 							<div class="card-controls">
-								<button class="btn btn-outline" @click="copyPartnerLink">
-									<app-jolticon icon="link" />
+								<app-button
+									icon="link"
+									@click="copyPartnerLink"
+									>
 									<translate>Copy Partner Link</translate>
-								</button>
+								</app-button>
 								<router-link
-									class="btn btn-outline"
 									:to="{
 										name: 'dash.analytics',
 										params: { resource: 'Game', resourceId: game.id },
 									}"
 									>
-									<app-jolticon icon="chart" />
-									<translate>View Analytics</translate>
+									<app-button icon="chart">
+										<translate>View Analytics</translate>
+									</app-button>
 								</router-link>
 							</div>
 						</app-card>
@@ -214,13 +216,13 @@
 						</app-fade-collapse>
 
 						<div class="page-cut" v-if="canToggleDescription">
-							<button class="btn btn-outline"
+							<app-button
 								@click="toggleDescription()"
 								v-app-track-event="`game-profile:show-full-description`"
 								>
 								<translate v-if="!showDescription">Show More</translate>
 								<translate v-else>Less</translate>
-							</button>
+							</app-button>
 						</div>
 					</div>
 
@@ -439,12 +441,13 @@
 				</div>
 
 				<div class="page-cut" v-if="videoComments.length < videoCommentsCount">
-					<a class="btn btn-outline"
+					<app-button
+						type="a"
 						@click="loadVideoComments"
 						v-app-track-event="`game-profile:video-comment:more`"
 						>
 						<translate>Load More</translate>
-					</a>
+					</app-button>
 				</div>
 			</template>
 

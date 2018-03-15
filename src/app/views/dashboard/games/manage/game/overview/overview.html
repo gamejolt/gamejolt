@@ -37,14 +37,16 @@
 					</p>
 
 					<app-game-perms required="all" tag="div" class="alert-actions">
-						<button
-							class="btn btn-success-outline btn-block btn-dark-variant"
+						<!-- TODO(buttons) used to have a 'btn-dark-variant' class. Not sure how this plays with alerts. -->
+						<app-button
+							primary
+							block
+							icon="active"
 							v-app-tooltip="$gettext( `dash.games.overview.todo_info_publish_button_tooltip` )"
 							@click="publish"
 							>
-							<app-jolticon icon="active" />
 							<translate>dash.games.overview.todo_info_publish_button</translate>
-						</button>
+						</app-button>
 					</app-game-perms>
 				</div>
 			</app-expand>
@@ -56,14 +58,16 @@
 					</p>
 
 					<app-game-perms required="all" tag="div" class="alert-actions">
-						<button
-							class="btn btn-success-outline btn-block btn-dark-variant"
+						<!-- TODO(buttons) used to have a 'btn-dark-variant' class. Not sure how this plays with alerts. -->
+						<app-button
+							primary
+							block
+							icon="active"
 							v-app-tooltip="$gettext( `This will make your game active again.` )"
 							@click="uncancel"
 							>
-							<app-jolticon icon="active" />
 							<translate>Uncancel Game</translate>
-						</button>
+						</app-button>
 					</app-game-perms>
 				</div>
 			</app-expand>
@@ -152,14 +156,17 @@
 
 	<app-game-perms required="analytics" tag="div" class="visible-xs">
 		<router-link
-			class="btn btn-outline btn-block"
 			:to="{
 				name: 'dash.analytics',
 				params: { resource: 'Game', resourceId: game.id },
 			}"
 			>
-			<app-jolticon icon="chart" />
-			<translate>View Game Analytics</translate>
+			<app-button
+				block
+				icon="chart"
+				>
+				<translate>View Game Analytics</translate>
+			</app-button>
 		</router-link>
 	</app-game-perms>
 
@@ -182,12 +189,9 @@
 					</p>
 				</div>
 
-				<button
-					class="btn btn-danger-outline"
-					@click="leaveProject"
-					>
+				<app-button @click="leaveProject">
 					<translate>Leave Project</translate>
-				</button>
+				</app-button>
 			</template>
 			<template v-else>
 				<h2>
@@ -210,12 +214,9 @@
 						<p><translate>Your game page is currently published and active. You can hide it to remove it from the game listings. People with the link will still be able to view it.</translate></p>
 					</div>
 
-					<button
-						class="btn btn-danger-outline"
-						@click="hide"
-						>
+					<app-button @click="hide">
 						<translate>Hide Game</translate>
-					</button>
+					</app-button>
 				</app-expand>
 
 				<app-expand :when="!game.canceled">
@@ -228,12 +229,11 @@
 						<p><translate>If you've transitioned development off of Game Jolt, you must remove your game instead.</translate></p>
 					</div>
 
-					<button
-						class="btn btn-danger-outline"
+					<app-button
 						@click="cancel"
 						>
 						<translate>Cancel Game</translate>
-					</button>
+					</app-button>
 				</app-expand>
 
 				<h4>
@@ -250,13 +250,12 @@
 					<translate>You can't remove games with active sales at this time.</translate>
 				</div>
 
-				<button
-					class="btn btn-danger-outline"
+				<app-button
 					@click="removeGame"
 					:disabled="game.has_sales"
 					>
 					<translate>Remove Game</translate>
-				</button>
+				</app-button>
 			</template>
 		</div>
 	</div>

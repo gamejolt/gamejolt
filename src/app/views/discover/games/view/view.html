@@ -9,20 +9,21 @@
 				<p v-translate="{ username: game.developer.username }">
 					<b>@%{ username }</b> has invited you to collaborate on this game.</b>
 				</p>
-				<button
-					class="btn"
+				<!-- TODO(buttons) this looks bad -->
+				<app-button
+					primary
+					icon="check"
 					@click="acceptCollaboration()"
 					>
-					<app-jolticon icon="check" />
 					<translate>Accept</translate>
-				</button>
-				<button
-					class="btn"
+				</app-button>
+				<app-button
+					trans
+					icon="remove"
 					@click="declineCollaboration()"
 					>
-					<app-jolticon icon="remove" notice />
 					<translate>Decline</translate>
-				</button>
+				</app-button>
 			</div>
 		</section>
 
@@ -56,26 +57,30 @@
 					&nbsp;
 
 					<router-link
-						class="btn btn-outline btn-sparse"
 						:to="{
 							name: 'dash.games.manage.game.overview',
 							params: { id: game.id },
 						}"
 						v-app-tooltip="$gettext(`Manage Game`)"
 						>
-						<app-jolticon icon="cog" />
+						<app-button
+							sparse
+							icon="cog"
+							/>
 					</router-link>
 
 					<app-game-perms :game="game" required="analytics">
 						<router-link
-							class="btn btn-outline btn-sparse"
 							:to="{
 								name: 'dash.analytics',
 								params: { resource: 'Game', resourceId: game.id },
 							}"
 							v-app-tooltip="$gettext(`View Game Analytics`)"
 							>
-							<app-jolticon icon="chart" />
+							<app-button
+								sparse
+								icon="chart"
+								/>
 						</router-link>
 					</app-game-perms>
 				</app-game-perms>

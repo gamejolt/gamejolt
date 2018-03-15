@@ -43,14 +43,15 @@
 
 			<div class="text-center">
 				<router-link
-					class="btn btn-outline"
 					:to="{
 						name: 'discover.channels.view.games',
 						params: { section: 'best' },
 					}"
 					v-app-track-event="`channel:more-btn:best`"
 					>
-					<translate>Load More</translate>
+					<app-button>
+						<translate>Load More</translate>
+					</app-button>
 				</router-link>
 			</div>
 
@@ -99,14 +100,15 @@
 
 			<div class="text-center">
 				<router-link
-					class="btn btn-outline"
 					:to="{
 						name: 'discover.channels.view.games',
 						params: { section: 'hot' },
 					}"
 					v-app-track-event="`channel:more-btn:hot`"
 					>
-					<translate>Load More</translate>
+					<app-button>
+						<translate>Load More</translate>
+					</app-button>
 				</router-link>
 			</div>
 

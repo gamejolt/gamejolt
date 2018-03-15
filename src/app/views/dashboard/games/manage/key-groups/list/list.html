@@ -90,14 +90,15 @@
 							</div>
 
 							<div class="card-controls">
-								<router-link class="btn btn-outline"
+								<router-link
 									:to="{
 										name: 'dash.games.manage.key-groups.edit',
 										params: { keyGroupId: group.id },
 									}"
 									>
-									<app-jolticon icon="cog" />
-									<translate>Manage</translate>
+									<app-button icon="cog">
+										<translate>Manage</translate>
+									</app-button>
 								</router-link>
 							</div>
 						</app-card-list-item>

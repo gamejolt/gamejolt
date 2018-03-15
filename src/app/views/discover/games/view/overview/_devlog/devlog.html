@@ -57,14 +57,15 @@
 
 							<router-link
 								v-if="commentsCount > 2"
-								class="btn btn-outline btn-block"
 								:to="{ name: 'discover.games.view.comments' }"
 								>
-								<translate
-									:translate-params="{ count: number(commentsCount - 2) }"
-									>
-									+%{ count } more
-								</translate>
+								<app-button block>
+									<translate
+										:translate-params="{ count: number(commentsCount - 2) }"
+										>
+										+%{ count } more
+									</translate>
+								</app-button>
 							</router-link>
 						</template>
 
@@ -124,13 +125,13 @@
 						</app-fade-collapse>
 
 						<div class="page-cut" v-if="canToggleDescription">
-							<button class="btn btn-outline"
+							<app-button
 								@click="toggleDescription()"
 								v-app-track-event="`game-profile:show-full-description`"
 								>
 								<translate v-if="!showDescription">Show More</translate>
 								<translate v-else>Less</translate>
-							</button>
+							</app-button>
 						</div>
 					</div>
 

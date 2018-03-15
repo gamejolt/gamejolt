@@ -53,10 +53,13 @@
 				<hr>
 
 				<div>
-					<button class="btn btn-danger-outline btn-block" @click="removeGroup( keyGroup )">
-						<app-jolticon icon="remove" />
+					<app-button
+						block
+						icon="remove"
+						@click="removeGroup( keyGroup )"
+						>
 						<translate>Remove Key Group</translate>
-					</button>
+					</app-button>
 				</div>
 
 			</div>
@@ -64,20 +67,19 @@
 
 		<h2>
 			<div class="section-header-controls">
-				<button
-					class="btn btn-success-outline"
+				<app-button
+					icon="add"
 					@click="isShowingAddKeys = !isShowingAddKeys"
 					>
-					<app-jolticon icon="add" />
 					<translate>Add Keys</translate>
-				</button>
-				<a
-					class="btn btn-outline"
+				</app-button>
+				<app-button
+					type="a"
 					:href="`${ Environment.baseUrl }/x/keys/export-csv/${ game.id }/${ keyGroup.id }`"
 					target="_blank"
 					>
 					<translate>Export CSV</translate>
-				</a>
+				</app-button>
 			</div>
 
 			<translate>Keys</translate>
@@ -111,9 +113,9 @@
 						>
 				</div>
 
-				<button class="btn btn-outline">
-					<translate>Submit</translate>
-				</button>
+				<app-button>
+					<translate>Search</translate>
+				</app-button>
 			</form>
 
 		</div>
@@ -159,12 +161,12 @@
 						</td>
 
 						<td style="text-align: right">
-							<button
-								class="btn btn-danger-outline btn-sm btn-sparse"
+							<app-button
+								sm
+								sparse
+								icon="remove"
 								@click="removeKey( key )"
-								>
-								<app-jolticon icon="remove" />
-							</button>
+								/>
 						</td>
 					</tr>
 				</tbody>

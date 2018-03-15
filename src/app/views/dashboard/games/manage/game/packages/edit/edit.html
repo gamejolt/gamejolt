@@ -78,14 +78,14 @@
 				</h3>
 
 				<app-game-perms tag="div" required="sales">
-					<button
-						class="btn btn-outline btn-block"
+					<app-button
+						block
+						icon="edit"
 						@click="isShowingPackageEdit = !isShowingPackageEdit"
 						>
-						<app-jolticon icon="edit" />
 						<translate v-if="!isShowingPackageEdit">Edit Package Details</translate>
 						<translate v-else>Hide Package Details</translate>
-					</button>
+					</app-button>
 					<br>
 				</app-game-perms>
 
@@ -153,14 +153,15 @@
 				</div>
 
 				<app-game-perms tag="div" required="builds">
-					<button
-						class="btn btn-success-outline btn-block"
+					<app-button
+						primary
+						block
+						icon="add"
 						@click="newRelease"
 						:disabled="isAddingRelease"
 						>
-						<app-jolticon icon="add" />
 						<translate>New Release</translate>
-					</button>
+					</app-button>
 					<br>
 				</app-game-perms>
 
@@ -240,27 +241,27 @@
 						<div class="card-controls" v-if="hasBuildsPerms || hasAnalyticsPerms">
 							<app-game-perms required="builds">
 								<router-link
-									class="btn btn-outline"
 									:to="{
 										name: 'dash.games.manage.game.packages.release.edit',
 										params: { packageId: package.id, releaseId: release.id },
 									}"
 									>
-									<app-jolticon icon="edit" />
-									<translate>Edit Release</translate>
+									<app-button icon="edit">
+										<translate>Edit Release</translate>
+									</app-button>
 								</router-link>
 							</app-game-perms>
 
 							<app-game-perms required="analytics">
 								<router-link
-									class="btn btn-outline"
 									:to="{
 										name: 'dash.analytics',
 										params: { resource: 'Game_Release', resourceId: release.id },
 									}"
 									>
-									<app-jolticon icon="chart" />
-									<translate>Analytics</translate>
+									<app-button icon="chart">
+										<translate>Analytics</translate>
+									</app-button>
 								</router-link>
 							</app-game-perms>
 						</div>
