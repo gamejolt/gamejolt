@@ -326,6 +326,7 @@
 
 					<div class="page-cut" v-if="!gamesExpanded && games.length > 5">
 						<app-button
+							trans
 							:badge="number(games.length)"
 							@click="gamesExpanded = true"
 							v-app-track-event="`dash:overview:expand-games`"
@@ -362,6 +363,7 @@
 
 					<div class="page-cut">
 						<app-button
+							trans
 							:badge="number(videosCount)"
 							:to="{ name: 'profile.videos.list', params: { username: app.user.username } }"
 							v-app-track-event="`dash:overview:expand-videos`">
@@ -439,6 +441,7 @@
 
 					<div class="page-cut" v-if="!jamsExpanded && jams.length > 5">
 						<app-button
+							trans
 							:badge="number(jams.length)"
 							@click="jamsExpanded = true"
 							v-app-track-event="`dash:overview:expand-jams`"
