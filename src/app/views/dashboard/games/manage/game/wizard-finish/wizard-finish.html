@@ -10,7 +10,6 @@
 			</div>
 
 			<div class="alert-actions">
-				<!-- TODO(buttons) used to have a 'btn-dark-variant' class. Not sure how this plays with alerts. -->
 				<app-button
 					primary
 					:disabled="!canPublish"
@@ -19,8 +18,7 @@
 					<translate>Publish</translate>
 				</app-button>
 
-				<!-- TODO(buttons) used to have a 'btn-dark-variant' class. Not sure how this plays with alerts. -->
-				<app-button @click="saveDraft()">
+				<app-button trans @click="saveDraft()">
 					<translate>Save Draft</translate>
 				</app-button>
 			</div>

@@ -14,7 +14,7 @@
 		@inview="onInviewChange( true )"
 		@outview="onInviewChange( false )"
 		>
-		<a class="forum-post-replied-to-btn"
+		<a class="forum-post-replied-to-button"
 			v-if="!isReply && post.parent_post_id"
 			@click="loadParentPost"
 			>
