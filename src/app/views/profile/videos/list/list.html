@@ -12,12 +12,13 @@
 		</div>
 
 		<div class="page-cut" v-if="videos.length < videosCount">
-			<a class="btn btn-outline"
+			<app-button
+				trans
 				@click="loadMore"
 				v-app-track-event="`profile-videos:more`"
 				>
 				<translate>Load More</translate>
-			</a>
+			</app-button>
 		</div>
 
 	</div>

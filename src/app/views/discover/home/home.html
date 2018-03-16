@@ -39,17 +39,16 @@
 				/>
 
 			<div class="page-cut">
-				<router-link
+				<app-button
+					trans
 					:to="{
 						name: 'discover.games.list._fetch',
 						params: { section: null }
 					}"
 					v-app-track-event="`home:more-btn:browse`"
 					>
-					<app-button>
-						<translate>Browse More Games</translate>
-					</app-button>
-				</router-link>
+					<translate>Browse More Games</translate>
+				</app-button>
 			</div>
 
 		</div>

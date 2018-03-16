@@ -217,6 +217,7 @@
 
 						<div class="page-cut" v-if="canToggleDescription">
 							<app-button
+								trans
 								@click="toggleDescription()"
 								v-app-track-event="`game-profile:show-full-description`"
 								>
@@ -442,7 +443,7 @@
 
 				<div class="page-cut" v-if="videoComments.length < videoCommentsCount">
 					<app-button
-						type="a"
+						trans
 						@click="loadVideoComments"
 						v-app-track-event="`game-profile:video-comment:more`"
 						>

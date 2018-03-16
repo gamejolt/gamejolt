@@ -37,14 +37,13 @@
 			</div>
 
 			<div class="page-cut">
-				<router-link
+				<app-button
+					trans
 					:to="{ name: 'discover.devlogs.games' }"
 					v-app-track-event="`channel:more-btn:best`"
 					>
-					<app-button>
-						<translate>Load More</translate>
-					</app-button>
-				</router-link>
+					<translate>Load More</translate>
+				</app-button>
 			</div>
 
 		</div>

@@ -332,7 +332,9 @@
 					</app-card>
 
 					<div class="page-cut" v-if="!gamesExpanded && games.length > 5">
-						<app-button :badge="number(games.length)"
+						<app-button
+							trans
+							:badge="number(games.length)"
 							@click="gamesExpanded = true"
 							v-app-track-event="`dash:overview:expand-games`"
 							>
@@ -367,14 +369,14 @@
 					</div>
 
 					<div class="page-cut">
-						<router-link
+						<app-button
+							trans
 							:to="{ name: 'profile.videos.list', params: { username: app.user.username } }"
+							:badge="number(videosCount)"
 							v-app-track-event="`dash:overview:expand-videos`"
 							>
-							<app-button :badge="number(videosCount)">
-								<translate>View All</translate>
-							</app-button>
-						</router-link>
+							<translate>View All</translate>
+						</app-button>
 					</div>
 				</template>
 
@@ -451,6 +453,7 @@
 
 					<div class="page-cut" v-if="!jamsExpanded && jams.length > 5">
 						<app-button
+							trans
 							:badge="number(jams.length)"
 							@click="jamsExpanded = true"
 							v-app-track-event="`dash:overview:expand-jams`"
