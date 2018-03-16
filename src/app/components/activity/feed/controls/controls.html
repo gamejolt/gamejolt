@@ -64,10 +64,12 @@
 
 			<template v-if="!showComments">
 				<app-button
-					circle icon="comment"
+					icon="comment"
+					circle
 					@click="openComments()"
 					v-app-tooltip="$gettext( 'View Comments' )"
 					/>
+
 				<span
 					class="blip filled"
 					v-if="commentsCount > 0"
@@ -80,7 +82,8 @@
 			</template>
 
 			<app-button
-				circle icon="share"
+				icon="share"
+				circle
 				v-app-popover-trigger="sharePopoverId"
 				v-app-tooltip="$gettext( 'Share' )"
 				/>
@@ -116,7 +119,6 @@
 		<div class="-controls" v-else-if="video">
 			<app-comment-video-like-widget
 				:video="video"
-				sparse
 				circle
 				/>
 		</div>
