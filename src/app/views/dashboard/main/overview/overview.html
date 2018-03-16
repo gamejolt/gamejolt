@@ -151,11 +151,12 @@
 					</div>
 
 					<div>
-						<router-link :to="{ name: 'dash.withdraw-funds' }">
-							<app-button block>
-								<translate>dash.overview.revenue_withdraw_button</translate>
-							</app-button>
-						</router-link>
+						<app-button
+							block
+							:to="{ name: 'dash.withdraw-funds' }"
+							>
+							<translate>dash.overview.revenue_withdraw_button</translate>
+						</app-button>
 					</div>
 				</template>
 			</div>
@@ -240,17 +241,14 @@
 					</p>
 
 					<div>
-						<router-link
+						<app-button
+							primary
+							icon="cog"
 							:to="{ name: 'dash.main.site' }"
 							v-app-track-event="`dash:overview:quick-profile-site`"
 							>
-							<app-button
-								primary
-								icon="cog"
-								>
-								<translate>Edit Portfolio Site</translate>
-							</app-button>
-						</router-link>
+							<translate>Edit Portfolio Site</translate>
+						</app-button>
 					</div>
 				</template>
 
@@ -266,17 +264,14 @@
 				</div>
 
 				<div>
-					<router-link
+					<app-button
+						primary
+						icon="add"
 						:to="{ name: 'dash.games.add' }"
 						v-app-track-event="`dash:overview:quick-add-game`"
 						>
-						<app-button
-							primary
-							icon="add"
-							>
-							<translate>Add Game</translate>
-						</app-button>
-					</router-link>
+						<translate>Add Game</translate>
+					</app-button>
 				</div>
 
 				<template v-if="games.length > 0">
@@ -304,29 +299,27 @@
 							</h4>
 						</div>
 						<div class="card-controls">
-							<router-link
+							<app-button
+								icon="cog"
 								:to="{
 									name: 'dash.games.manage.game.overview',
 									params: { id: game.id },
 								}"
 								v-app-track-event="`dash:overview:quick-game`"
 								>
-								<app-button icon="cog">
-									<translate>Manage</translate>
-								</app-button>
-							</router-link>
+								<translate>Manage</translate>
+							</app-button>
 							<template v-if="game.hasPerms('analytics')">
-								<router-link
+								<app-button
+									icon="chart"
 									v-app-track-event="`dash:overview:quick-game-analytics`"
 									:to="{
 										name: 'dash.analytics',
 										params: { resource: 'Game', resourceId: game.id },
 									}"
 									>
-									<app-button icon="chart">
-										<translate>Analytics</translate>
-									</app-button>
-								</router-link>
+									<translate>Analytics</translate>
+								</app-button>
 							</template>
 						</div>
 					</app-card>
@@ -356,7 +349,7 @@
 					</div>
 
 					<div>
-						<app-button type="a" href="https://help.gamejolt.com/video-comments" target="_blank">
+						<app-button href="https://help.gamejolt.com/video-comments" target="_blank">
 							<translate>Learn More</translate>
 						</app-button>
 					</div>
@@ -371,10 +364,9 @@
 					<div class="page-cut">
 						<app-button
 							trans
-							:to="{ name: 'profile.videos.list', params: { username: app.user.username } }"
 							:badge="number(videosCount)"
-							v-app-track-event="`dash:overview:expand-videos`"
-							>
+							:to="{ name: 'profile.videos.list', params: { username: app.user.username } }"
+							v-app-track-event="`dash:overview:expand-videos`">
 							<translate>View All</translate>
 						</app-button>
 					</div>
@@ -393,7 +385,6 @@
 
 				<div>
 					<app-button
-						type="a"
 						primary
 						icon="add"
 						href="http://jams.gamejolt.com/manage/jams/add"
@@ -403,7 +394,6 @@
 					</app-button>
 					<app-button
 						v-if="!jams.length"
-						type="a"
 						href="http://jams.gamejolt.com"
 						target="_blank"
 						>
@@ -431,7 +421,6 @@
 						</div>
 						<div class="card-controls">
 							<app-button
-								type="a"
 								icon="cog"
 								:href="jam.manageUrl"
 								target="_blank"
@@ -440,7 +429,6 @@
 								<translate>Manage</translate>
 							</app-button>
 							<app-button
-								type="a"
 								icon="share"
 								:href="jam.fullUrl"
 								target="_blank"

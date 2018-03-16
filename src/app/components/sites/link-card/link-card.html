@@ -6,12 +6,18 @@
 		<input class="form-control" :value="site.url">
 	</div>
 	<div class="card-controls">
-		<app-button block icon="link" @click="copyLink">
+		<app-button
+			block
+			icon="link"
+			@click="copyLink"
+			>
 			<translate>Copy Link</translate>
 		</app-button>
 		<app-button
-			type="a" block icon="share"
-			:href="site.url" target="_blank"
+			block
+			icon="share"
+			:href="site.url"
+			target="_blank"
 			>
 			<translate>View Site</translate>
 		</app-button>

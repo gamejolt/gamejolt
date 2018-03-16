@@ -107,7 +107,9 @@
 
 		<div slot="controls" :class="{ 'text-right': !Screen.isXs }">
 			<div class="analytics-month-selector" v-if="period === 'monthly'">
-				<router-link
+				<app-button
+					sparse
+					icon="chevron-left"
 					:to="{
 						name: 'dash.analytics',
 						params: $route.params,
@@ -119,16 +121,16 @@
 						},
 					}"
 					replace
-					>
-					<app-button sparse icon="chevron-left" />
-				</router-link>
+					/>
 
 				<strong>
 					{{ startTime | date( 'MMMM YYYY' ) }}
 				</strong>
 
-				<router-link
+				<app-button
 					v-if="now > endTime"
+					sparse
+					icon="chevron-right"
 					:to="{
 						name: 'dash.analytics',
 						params: $route.params,
@@ -140,9 +142,7 @@
 						},
 					}"
 					replace
-					>
-					<app-button sparse icon="chevron-right" />
-				</router-link>
+					/>
 			</div>
 		</div>
 

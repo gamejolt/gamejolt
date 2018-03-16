@@ -5,17 +5,15 @@
 			<div class="alert">
 				<p><translate>In order to set up a custom site for your game, you first have to set a URL path in your game details page.</translate></p>
 				<div class="alert-actions">
-					<router-link
+					<app-button
 						class="btn-dark-variant"
 						:to="{
 							name: 'dash.games.manage.game.details',
 							params: { id: game.id },
 						}"
 						>
-						<app-button>
-							<translate>Edit Game Details</translate>
-						</app-button>
-					</router-link>
+						<translate>Edit Game Details</translate>
+					</app-button>
 				</div>
 			</div>
 			<br>

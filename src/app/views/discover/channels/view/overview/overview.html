@@ -42,17 +42,15 @@
 				/>
 
 			<div class="text-center">
-				<router-link
+				<app-button
 					:to="{
 						name: 'discover.channels.view.games',
 						params: { section: 'best' },
 					}"
 					v-app-track-event="`channel:more-btn:best`"
 					>
-					<app-button>
-						<translate>Load More</translate>
-					</app-button>
-				</router-link>
+					<translate>Load More</translate>
+				</app-button>
 			</div>
 
 		</div>
@@ -99,17 +97,15 @@
 				/>
 
 			<div class="text-center">
-				<router-link
+				<app-button
 					:to="{
 						name: 'discover.channels.view.games',
 						params: { section: 'hot' },
 					}"
 					v-app-track-event="`channel:more-btn:hot`"
 					>
-					<app-button>
-						<translate>Load More</translate>
-					</app-button>
-				</router-link>
+					<translate>Load More</translate>
+				</app-button>
 			</div>
 
 		</div>

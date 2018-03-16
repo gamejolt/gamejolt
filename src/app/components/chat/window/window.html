@@ -18,7 +18,11 @@
 			<template v-if="Screen.isXs">
 				<br>
 				<div class="nav-controls">
-					<app-button block icon="chevron-left" @click="toggleUsers">
+					<app-button
+						block
+						icon="chevron-left"
+						@click="toggleUsers"
+						>
 						<translate>Back to Chat</translate>
 					</app-button>
 				</div>
@@ -61,18 +65,26 @@
 
 					<div class="chat-window-header-controls">
 
-						<app-button sparse icon="users" class="anim-fade-in"
+						<app-button
 							v-if="!room.isPmRoom"
+							sparse
+							icon="users"
+							class="anim-fade-in"
 							@click="toggleUsers"
 							/>
 
-						<app-button sparse icon="edit" class="anim-fade-in"
-							@click="showEditRoomModal"
+						<app-button
 							v-if="room.isMod"
+							sparse
+							icon="edit"
+							class="anim-fade-in"
+							@click="showEditRoomModal"
 							:title="$gettext( 'Edit Room Details' )"
 							/>
 
-						<app-button sparse icon="remove"
+						<app-button
+							sparse
+							icon="remove"
 							@click="close"
 							:title="$gettext( 'Close Room' )"
 							/>
@@ -124,8 +136,10 @@
 								</div>
 							</app-fade-collapse>
 
-							<app-button sm class="anim-fade-in"
+							<app-button
 								v-if="isDescriptionCollapsed && !isShowingUsers"
+								sm
+								class="anim-fade-in"
 								@click="toggleUsers"
 								>
 								<translate>more</translate>

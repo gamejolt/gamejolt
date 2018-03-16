@@ -30,7 +30,11 @@
 						<p>
 							<small class="text-muted"><translate>Not linked.</translate></small>
 						</p>
-						<app-button primary icon="link" @click="link( provider )">
+						<app-button
+							primary
+							icon="link"
+							@click="link( provider )"
+							>
 							<translate>Link Now</translate>
 						</app-button>
 					</template>
@@ -64,10 +68,16 @@
 						</p>
 
 						<div>
-							<app-button icon="retweet" @click="link( provider )">
+							<app-button
+								icon="retweet"
+								@click="link( provider )"
+								>
 								<translate>Sync</translate>
 							</app-button>
-							<app-button icon="remove" @click="unlink( provider )">
+							<app-button
+								icon="remove"
+								@click="unlink( provider )"
+								>
 								<translate>Unlink</translate>
 							</app-button>
 						</div>
@@ -109,7 +119,11 @@
 			</div>
 
 			<div>
-				<app-button primary icon="add" @click="link( 'youtube-channel' )">
+				<app-button
+					primary
+					icon="add"
+					@click="link( 'youtube-channel' )"
+					>
 					<translate>Link YouTube Channel</translate>
 				</app-button>
 			</div>

@@ -41,9 +41,9 @@
 			<br>
 
 			<app-button
+				v-if="!showAgreement"
 				primary
 				@click.prevent="showAgreement = true"
-				v-if="!showAgreement"
 				>
 				<translate>Show Developer Distribution Agreement</translate>
 			</app-button>
@@ -60,9 +60,9 @@
 		</div>
 
 		<app-button
+			v-if="!showAgreement"
 			primary
 			@click.prevent="showAgreement = true"
-			v-if="!showAgreement"
 			>
 			<translate>Show New Distribution Agreement</translate>
 		</app-button>
@@ -96,7 +96,8 @@
 
 		<!-- TODO(buttons) made this a primary solid because it feels like a very important action. pls review -->
 		<app-button
-			primary solid
+			primary
+			solid
 			:disabled="!checked"
 			@click.prevent="onAccept()"
 			>

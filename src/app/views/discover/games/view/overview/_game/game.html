@@ -144,16 +144,15 @@
 									>
 									<translate>Copy Partner Link</translate>
 								</app-button>
-								<router-link
+								<app-button
+									icon="chart"
 									:to="{
 										name: 'dash.analytics',
 										params: { resource: 'Game', resourceId: game.id },
 									}"
 									>
-									<app-button icon="chart">
-										<translate>View Analytics</translate>
-									</app-button>
-								</router-link>
+									<translate>View Analytics</translate>
+								</app-button>
 							</div>
 						</app-card>
 

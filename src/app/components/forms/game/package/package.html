@@ -36,7 +36,8 @@
 
 			<div v-if="!showDescriptionInput">
 				<app-button
-					sm icon="add"
+					sm
+					icon="add"
 					@click.prevent="showDescriptionInput = true"
 					:disabled="!hasBuildsPerms">
 					<translate>dash.games.packages.form.description_change_button</translate>
@@ -282,14 +283,19 @@
 
 					<app-game-perms tag="div" required="sales">
 						<app-button
-							type="a" sm icon="edit"
-							@click="isShowingSaleForm = true"
 							v-if="!isShowingSaleForm"
+							type="a"
+							sm
+							icon="edit"
+							@click="isShowingSaleForm = true"
 							>
 							<translate>Edit Sale</translate>
 						</app-button>
 						<app-button
-							type="a" trans sm icon="remove"
+							type="a"
+							trans
+							sm
+							icon="remove"
 							@click="cancelSale()"
 							>
 							<translate>Cancel Sale</translate>
@@ -299,9 +305,11 @@
 
 				<app-game-perms tag="div" required="sales" v-if="!promotionalPricing">
 					<app-button
-						type="a" sm icon="add"
-						@click="isShowingSaleForm = true"
 						v-if="!isShowingSaleForm"
+						type="a"
+						sm
+						icon="add"
+						@click="isShowingSaleForm = true"
 						>
 						<translate>Setup Sale</translate>
 					</app-button>

@@ -240,29 +240,27 @@
 
 						<div class="card-controls" v-if="hasBuildsPerms || hasAnalyticsPerms">
 							<app-game-perms required="builds">
-								<router-link
+								<app-button
+									icon="edit"
 									:to="{
 										name: 'dash.games.manage.game.packages.release.edit',
 										params: { packageId: package.id, releaseId: release.id },
 									}"
 									>
-									<app-button icon="edit">
-										<translate>Edit Release</translate>
-									</app-button>
-								</router-link>
+									<translate>Edit Release</translate>
+								</app-button>
 							</app-game-perms>
 
 							<app-game-perms required="analytics">
-								<router-link
+								<app-button
+									icon="chart"
 									:to="{
 										name: 'dash.analytics',
 										params: { resource: 'Game_Release', resourceId: release.id },
 									}"
 									>
-									<app-button icon="chart">
-										<translate>Analytics</translate>
-									</app-button>
-								</router-link>
+									<translate>Analytics</translate>
+								</app-button>
 							</app-game-perms>
 						</div>
 

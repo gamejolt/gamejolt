@@ -102,7 +102,9 @@
 	<template v-if="model.status !== GameRelease.STATUS_PUBLISHED">
 		<!-- TODO(button) used primary solid because action seemed important enough. pls review -->
 		<app-button
-			primary solid icon="method"
+			primary
+			solid
+			icon="method"
 			:disabled="!valid || !builds.length"
 			@click.prevent="savePublished()"
 			>

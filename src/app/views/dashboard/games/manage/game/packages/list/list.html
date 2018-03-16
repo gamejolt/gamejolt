@@ -138,38 +138,35 @@
 
 					<div class="card-controls">
 						<app-game-perms required="builds">
-							<router-link
+							<app-button
+								icon="cog"
 								:to="{
 									name: 'dash.games.manage.game.packages.edit',
 									params: { packageId: package.id },
 								}"
 								>
-								<app-button icon="cog">
-									<translate>Manage</translate>
-								</app-button>
-							</router-link>
+								<translate>Manage</translate>
+							</app-button>
 						</app-game-perms>
-						<router-link
+						<app-button
+							icon="plug"
 							:to="{
 								name: 'dash.games.manage.game.packages.edit.widget',
 								params: { packageId: package.id },
 							}"
 							>
-							<app-button icon="plug">
-								<translate>Widget</translate>
-							</app-button>
-						</router-link>
+							<translate>Widget</translate>
+						</app-button>
 						<app-game-perms required="analytics">
-							<router-link
+							<app-button
+								icon="chart"
 								:to="{
 									name: 'dash.analytics',
 									params: { resource: 'Game_Package', resourceId: package.id },
 								}"
 								>
-								<app-button icon="chart">
-									<translate>Analytics</translate>
-								</app-button>
-							</router-link>
+								<translate>Analytics</translate>
+							</app-button>
 						</app-game-perms>
 					</div>
 

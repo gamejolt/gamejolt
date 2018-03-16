@@ -83,16 +83,16 @@
 			</div>
 
 			<p>
-				<router-link
+				<app-button
+					blockXs
+					icon="media-list"
 					:to="{
 						name: 'discover.games.view.trophies.list',
 						params: { slug: game.slug, id: game.id },
 					}"
 					>
-					<app-button blockXs icon="media-list">
-						<translate>trophies.overview.view_more_button</translate>
-					</app-button>
-				</router-link>
+					<translate>trophies.overview.view_more_button</translate>
+				</app-button>
 			</p>
 
 		</div>

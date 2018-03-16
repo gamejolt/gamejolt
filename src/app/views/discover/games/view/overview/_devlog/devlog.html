@@ -55,18 +55,17 @@
 								:comments="comments"
 								/>
 
-							<router-link
+							<app-button
 								v-if="commentsCount > 2"
+								block
 								:to="{ name: 'discover.games.view.comments' }"
 								>
-								<app-button block>
-									<translate
-										:translate-params="{ count: number(commentsCount - 2) }"
-										>
-										+%{ count } more
-									</translate>
-								</app-button>
-							</router-link>
+								<translate
+									:translate-params="{ count: number(commentsCount - 2) }"
+									>
+									+%{ count } more
+								</translate>
+							</app-button>
 						</template>
 
 						<!-- Make some room for the description below -->

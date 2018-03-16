@@ -107,7 +107,8 @@
 	<template v-if="!isPublished && !hasPoll">
 		<div>
 			<app-button
-				sparse icon="pedestals-numbers"
+				sparse
+				icon="pedestals-numbers"
 				v-app-tooltip="$gettext(`Add poll`)"
 				@click.prevent="createPoll()"
 				/>

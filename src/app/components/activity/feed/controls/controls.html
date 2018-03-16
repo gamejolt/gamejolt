@@ -5,13 +5,24 @@
 			<hr>
 
 			<span class="-manage-controls" v-if="shouldShowManageControls">
-				<app-button primary icon="check" v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost">
+				<app-button
+					v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost"
+					primary
+					icon="check"
+					>
 					<translate>Publish</translate>
 				</app-button>
-				<app-button icon="edit" @click="showEdit">
+				<app-button
+					icon="edit"
+					@click="showEdit"
+					>
 					<translate>Edit</translate>
 				</app-button>
-				<app-button sparse icon="ellipsis-h" v-app-popover-trigger="`activity-feed-controls-options-${post.id}`" />
+				<app-button
+					sparse
+					icon="ellipsis-h"
+					v-app-popover-trigger="`activity-feed-controls-options-${post.id}`"
+					/>
 
 				<app-popover :popover-id="`activity-feed-controls-options-${post.id}`">
 					<div class="list-group list-group-dark">
@@ -109,7 +120,10 @@
 							/>
 					</div>
 
-					<app-button block @click="copyShareUrl">
+					<app-button
+						block
+						@click="copyShareUrl"
+						>
 						<translate>Copy Permalink</translate>
 					</app-button>
 				</div>
