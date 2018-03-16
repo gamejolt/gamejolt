@@ -1,7 +1,10 @@
 <app-modal>
 
 	<div class="modal-controls">
-		<app-button icon="remove" @click="modal.dismiss()">
+		<app-button
+			icon="remove"
+			@click="modal.dismiss()"
+			>
 			<translate>Close</translate>
 		</app-button>
 	</div>
@@ -51,7 +54,12 @@
 	</div>
 
 	<div class="modal-footer">
-		<app-button icon="edit" class="anim-fade-enter anim-fade-leave" @click="showChangeForm" v-if="!isChanging">
+		<app-button
+			v-if="!isChanging"
+			icon="edit"
+			class="anim-fade-enter anim-fade-leave"
+			@click="showChangeForm"
+			>
 			<translate>Change Game Token</translate>
 		</app-button>
 	</div>

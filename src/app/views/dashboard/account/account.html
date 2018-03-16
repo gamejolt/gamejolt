@@ -1,11 +1,13 @@
 <div>
 
 	<div v-if="Screen.isXs" class="well fill-darker sans-margin-bottom">
-		<router-link :to="{ name: 'dash.account-mobile-nav' }">
-			<app-button block icon="chevron-left">
-				<translate>Back to Account</translate>
-			</app-button>
-		</router-link>
+		<app-button
+			block
+			icon="chevron-left"
+			:to="{ name: 'dash.account-mobile-nav' }"
+			>
+			<translate>Back to Account</translate>
+		</app-button>
 	</div>
 
 	<app-page-header>

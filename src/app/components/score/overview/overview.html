@@ -153,7 +153,9 @@
 						v-if="Screen.isXs"
 						/>
 
-					<router-link
+					<app-button
+						blockXs
+						icon="media-list"
 						:to="{
 							name: 'discover.games.view.scores.list',
 							params: {
@@ -164,10 +166,8 @@
 							},
 						}"
 						>
-						<app-button blockXs icon="media-list">
-							<translate>scores.overview.view_more_button</translate>
-						</app-button>
-					</router-link>
+						<translate>scores.overview.view_more_button</translate>
+					</app-button>
 				</template>
 				<div class="alert full-bleed-xs" v-else>
 					<translate>scores.overview.no_scores_html</translate>

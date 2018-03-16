@@ -9,11 +9,12 @@
 					</router-link>
 				</p>
 				<p>
-					<router-link :to="{ name: 'landing.client' }">
-						<app-button primary>
-							<translate>Get It Now</translate>
-						</app-button>
-					</router-link>
+					<app-button
+						primary
+						:to="{ name: 'landing.client' }"
+						>
+						<translate>Get It Now</translate>
+					</app-button>
 				</p>
 			</div>
 
@@ -165,11 +166,13 @@
 
 				<p>
 					<app-button
-						type="a" sparse icon="twitter-bird"
+						sparse
+						icon="twitter-bird"
 						href="https://twitter.com/gamejolt" target="_blank"
 						/>
 					<app-button
-						type="a" sparse icon="facebook"
+						sparse
+						icon="facebook"
 						href="https://facebook.com/gamejolt" target="_blank"
 						/>
 				</p>

@@ -1,8 +1,10 @@
 <div class="row">
 	<div class="col-sm-4 col-sm-push-8">
 		<app-button
-			block trans icon="remove"
 			v-if="game.header_media_item"
+			block
+			trans
+			icon="remove"
 			@click="clearHeader"
 			>
 			<translate>Clear Header</translate>

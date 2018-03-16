@@ -135,16 +135,18 @@
 	<template v-if="!isReply" slot="controls">
 
 		<app-button
-			circle icon="reply"
 			v-if="!topic.is_locked && app.user"
+			circle
+			icon="reply"
 			v-app-tooltip="$gettext( 'Reply' )"
 			:disabled="isEditing"
 			@click="reply"
 			/>
 
 		<app-button
-			type="a" trans
 			v-if="post.replies_count && !isEditing"
+			type="a"
+			trans
 			@click="toggleReplies"
 			>
 			<translate

@@ -1,8 +1,9 @@
 <div class="row">
 	<div class="col-sm-4 col-sm-push-8">
 		<app-button
-			block icon="remove"
 			v-if="app.user.header_media_item"
+			block
+			icon="remove"
 			@click="clearHeader"
 			>
 			<translate>Clear Header</translate>

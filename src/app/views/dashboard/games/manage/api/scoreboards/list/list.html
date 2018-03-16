@@ -97,17 +97,16 @@
 						<div class="card-controls">
 
 							<!-- Don't propagate the click so that it doesn't open the accordion item. -->
-							<router-link
+							<app-button
+								icon="chevron-right"
 								:to="{
 									name: 'dash.games.manage.api.scoreboards.scores.list',
 									params: { table: scoreTable.id }
 								}"
 								@click.native.stop
 								>
-								<app-button icon="chevron-right">
-									<translate>dash.games.scoreboards.scores_button</translate>
-								</app-button>
-							</router-link>
+								<translate>dash.games.scoreboards.scores_button</translate>
+							</app-button>
 
 						</div>
 

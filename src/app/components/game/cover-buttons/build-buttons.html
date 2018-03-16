@@ -1,16 +1,19 @@
 <div>
 	<!-- TODO(buttons) I think primary solid here makes sense as an exception, in the absence of primary vs success distinction. pls review. -->
 	<app-button
-		primary solid icon="play"
 		v-if="browserBuilds.length"
+		primary
+		solid
+		icon="play"
 		@click="$emit('play')"
 		>
 		<translate>Play Game</translate>
 	</app-button>
 
 	<app-button
-		primary icon="download"
 		v-if="downloadableBuilds.length"
+		primary
+		icon="download"
 		@click="$emit('download')"
 		>
 		<translate>Download</translate>

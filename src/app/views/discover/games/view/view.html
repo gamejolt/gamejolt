@@ -56,32 +56,26 @@
 					<!-- we need this stupid space for some reason -->
 					&nbsp;
 
-					<router-link
+					<app-button
+						sparse
+						icon="cog"
 						:to="{
 							name: 'dash.games.manage.game.overview',
 							params: { id: game.id },
 						}"
 						v-app-tooltip="$gettext(`Manage Game`)"
-						>
-						<app-button
-							sparse
-							icon="cog"
-							/>
-					</router-link>
+						/>
 
 					<app-game-perms :game="game" required="analytics">
-						<router-link
+						<app-button
+							sparse
+							icon="chart"
 							:to="{
 								name: 'dash.analytics',
 								params: { resource: 'Game', resourceId: game.id },
 							}"
 							v-app-tooltip="$gettext(`View Game Analytics`)"
-							>
-							<app-button
-								sparse
-								icon="chart"
-								/>
-						</router-link>
+							/>
 					</app-game-perms>
 				</app-game-perms>
 			</template>

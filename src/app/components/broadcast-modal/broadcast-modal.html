@@ -2,7 +2,10 @@
 
 	<div class="modal-controls">
 		<!-- TODO(buttons) the button no longer looks like a tab. the top border is visible. fix this for all modal buttons. search for modal.dismiss -->
-		<app-button icon="remove" @click="modal.dismiss()">
+		<app-button
+			icon="remove"
+			@click="modal.dismiss()"
+			>
 			<translate>Close</translate>
 		</app-button>
 	</div>
@@ -22,7 +25,12 @@
 	<div class="modal-body">
 
 		<template v-if="Screen.isXs && post">
-			<app-button type="a" block icon="chevron-left" @click="post = null">
+			<app-button
+				type="a"
+				block
+				icon="chevron-left"
+				@click="post = null"
+				>
 				<translate>Back to Changelog</translate>
 			</app-button>
 			<br>
@@ -58,7 +66,8 @@
 				<br>
 
 				<div>
-					<app-button type="a" block
+					<app-button
+						block
 						:href="Environment.firesideBaseUrl + '/tag/gjbroadcast'"
 						target="_blank"
 						>

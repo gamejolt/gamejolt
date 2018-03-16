@@ -69,23 +69,23 @@
 
 		<p v-if="!isWizard">
 			<app-game-perms required="analytics">
-				<router-link
+				<app-button
+					icon="chart"
 					class="hidden-xs"
 					:to="{
 						name: 'dash.analytics',
 						params: { resource: 'Game', resourceId: game.id },
 					}"
 					>
-					<app-button icon="chart">
-						<translate>View Analytics</translate>
-					</app-button>
-				</router-link>
-			</app-game-perms>
-			<router-link :to="game.getUrl()">
-				<app-button icon="share">
-					<translate>dash.games.view_page_button</translate>
+					<translate>View Analytics</translate>
 				</app-button>
-			</router-link>
+			</app-game-perms>
+			<app-button
+				icon="share"
+				:to="game.getUrl()"
+				>
+				<translate>dash.games.view_page_button</translate>
+			</app-button>
 		</p>
 
 		<app-expand :when="game.status === Game.STATUS_VISIBLE && !game.is_listable">

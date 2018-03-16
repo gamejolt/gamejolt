@@ -15,19 +15,26 @@
 				<div class="shell-card-popover-card-controls">
 					<template v-if="isPending">
 						<app-button
-							type="span" sparse icon="friend-remove-2"
+							type="span"
+							sparse
+							icon="friend-remove-2"
 							v-app-tooltip="$gettext(`Cancel`)"
 							@click.stop.prevent="cancel"
 							/>
 					</template>
 					<template v-else>
 						<app-button
-							type="span" primary sparse icon="friend-add-2"
+							type="span"
+							primary
+							sparse
+							icon="friend-add-2"
 							v-app-tooltip="$gettext(`Add Friend`)"
 							@click.stop.prevent="accept"
 							/>
 						<app-button
-							type="span" sparse icon="friend-remove-2"
+							type="span"
+							sparse
+							icon="friend-remove-2"
 							v-app-tooltip="$gettext(`Dismiss request. Sender will not be notified.`)"
 							@click.stop.prevent="reject"
 							/>

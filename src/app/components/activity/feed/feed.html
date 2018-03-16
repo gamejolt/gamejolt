@@ -20,7 +20,10 @@
 
 	<div v-if="shouldShowLoadMore" class="page-cut">
 		<!-- TODO(buttons) displayed behind the dashed line -->
-		<app-button @click="loadMore" v-app-track-event="`activity-feed:more`">
+		<app-button
+			@click="loadMore"
+			v-app-track-event="`activity-feed:more`"
+			>
 			<translate>Load More</translate>
 		</app-button>
 	</div>

@@ -155,19 +155,16 @@
 	</div>
 
 	<app-game-perms required="analytics" tag="div" class="visible-xs">
-		<router-link
+		<app-button
+			block
+			icon="chart"
 			:to="{
 				name: 'dash.analytics',
 				params: { resource: 'Game', resourceId: game.id },
 			}"
 			>
-			<app-button
-				block
-				icon="chart"
-				>
-				<translate>View Game Analytics</translate>
-			</app-button>
-		</router-link>
+			<translate>View Game Analytics</translate>
+		</app-button>
 	</app-game-perms>
 
 	<div class="row">
@@ -229,9 +226,7 @@
 						<p><translate>If you've transitioned development off of Game Jolt, you must remove your game instead.</translate></p>
 					</div>
 
-					<app-button
-						@click="cancel"
-						>
+					<app-button @click="cancel">
 						<translate>Cancel Game</translate>
 					</app-button>
 				</app-expand>

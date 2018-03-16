@@ -141,9 +141,9 @@
 		v-if="$route.name !== 'dash.games.manage.game.wizard-finish'"
 		>
 		<app-button
+			v-if="game.status === Game.STATUS_HIDDEN"
 			primary
 			block
-			v-if="game.status === Game.STATUS_HIDDEN"
 			:disabled="!canPublish"
 			@click="publish"
 			>
@@ -151,9 +151,9 @@
 		</app-button>
 
 		<app-button
+			v-if="isWizard"
 			primary
 			block
-			v-if="isWizard"
 			@click="saveDraft"
 			>
 			<translate class="visible-lg">Save Draft</translate>
