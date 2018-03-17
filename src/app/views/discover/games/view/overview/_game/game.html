@@ -139,13 +139,13 @@
 							</div>
 							<div class="card-controls">
 								<app-button
-									icon="link"
+									primary
 									@click="copyPartnerLink"
 									>
 									<translate>Copy Partner Link</translate>
 								</app-button>
 								<app-button
-									icon="chart"
+									trans
 									:to="{
 										name: 'dash.analytics',
 										params: { resource: 'Game', resourceId: game.id },

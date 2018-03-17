@@ -28,6 +28,7 @@ import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/
 import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppGamePerms } from '../../../game/perms/perms';
 import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
+import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 
 type FormGamePackageModel = GamePackage & {
 	primary: boolean;
@@ -48,6 +49,7 @@ type FormGamePackageModel = GamePackage & {
 		AppFormControlToggle,
 		AppFormControlDate,
 		AppGamePerms,
+		AppTimeAgo,
 	},
 	filters: {
 		date,

@@ -186,7 +186,8 @@
 						</div>
 
 						<div class="card-meta">
-							<span class="tag tag-notice"
+							<span
+								class="tag tag-notice"
 								v-if="release.status === GameRelease.STATUS_HIDDEN"
 								v-app-tooltip="$gettext( `dash.games.packages.manage.releases.hidden_tooltip` )"
 								>
@@ -194,7 +195,8 @@
 								<translate>dash.games.packages.manage.releases.hidden_tag</translate>
 							</span>
 
-							<span class="tag tag-highlight"
+							<span
+								class="tag tag-highlight"
 								v-if="release.status === GameRelease.STATUS_PUBLISHED"
 								v-app-tooltip="$gettext( `dash.games.packages.manage.releases.published_tooltip` )"
 								>

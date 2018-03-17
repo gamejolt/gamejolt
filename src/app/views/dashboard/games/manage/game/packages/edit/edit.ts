@@ -134,12 +134,10 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		}
 	}
 
-	onEdited() {
+	async editPackage() {
+		// Keep our preview in sync.
+		await GamePackageEditModal.show(this.game, this.package, this.sellable);
 		this.loadPreview();
-	}
-
-	editPackage() {
-		GamePackageEditModal.show(this.game, this.package, this.sellable);
 	}
 
 	async newRelease() {

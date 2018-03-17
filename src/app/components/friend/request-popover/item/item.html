@@ -4,7 +4,7 @@
 	@outview="isInview = false"
 	>
 	<router-link v-if="isInview" :to="them.url">
-		<app-card >
+		<app-card>
 			<div class="shell-card-popover-card-media">
 				<div class="friend-request-popover-avatar">
 					<app-user-avatar-img :user="them" />
@@ -16,8 +16,9 @@
 					<template v-if="isPending">
 						<app-button
 							type="span"
-							sparse
-							icon="friend-remove-2"
+							trans
+							circle
+							icon="remove"
 							v-app-tooltip="$gettext(`Cancel`)"
 							@click.stop.prevent="cancel"
 							/>
@@ -26,15 +27,16 @@
 						<app-button
 							type="span"
 							primary
-							sparse
+							circle
 							icon="friend-add-2"
 							v-app-tooltip="$gettext(`Add Friend`)"
 							@click.stop.prevent="accept"
 							/>
 						<app-button
 							type="span"
-							sparse
-							icon="friend-remove-2"
+							trans
+							circle
+							icon="remove"
 							v-app-tooltip="$gettext(`Dismiss request. Sender will not be notified.`)"
 							@click.stop.prevent="reject"
 							/>

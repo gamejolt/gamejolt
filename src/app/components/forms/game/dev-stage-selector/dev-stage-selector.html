@@ -1,7 +1,5 @@
-<div class="row dev-stage-selector">
-	<div class="col-xs-12"
-		v-for="stage of stages"
-		>
+<div class="dev-stage-selector">
+	<div v-for="stage of stages">
 		<a @click="select( stage )">
 			<app-card :is-disabled="!isEnabled( stage )">
 				<div class="dev-stage-selector-content">

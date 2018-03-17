@@ -9,17 +9,14 @@
 				<p v-translate="{ username: game.developer.username }">
 					<b>@%{ username }</b> has invited you to collaborate on this game.</b>
 				</p>
-				<!-- TODO(buttons) this looks bad -->
 				<app-button
 					primary
-					icon="check"
 					@click="acceptCollaboration()"
 					>
 					<translate>Accept</translate>
 				</app-button>
 				<app-button
 					trans
-					icon="remove"
 					@click="declineCollaboration()"
 					>
 					<translate>Decline</translate>

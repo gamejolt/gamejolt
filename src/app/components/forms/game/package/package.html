@@ -391,9 +391,9 @@
 						<th><translate>Price</translate></th>
 						<td>
 							{{ promotionalPricing.amount | currency }}
-							<div class="text-muted small">
+							<small class="text-muted">
 								{{ ((originalPricing.amount - promotionalPricing.amount) / originalPricing.amount * 100).toFixed( 0 ) }}% off
-							</div>
+							</small>
 						</td>
 					</tr>
 				</table>
