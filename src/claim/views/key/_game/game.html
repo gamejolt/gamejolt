@@ -12,17 +12,16 @@
 	-->
 	<template v-if="bundle">
 		<br>
-		<router-link
-			class="btn btn-outline btn-block"
+		<app-button
+			block
 			:to="{
 				name: 'key',
 				params: $route.params,
 				query: {},
 			}"
 			>
-			<app-jolticon icon="chevron-left" />
 			<translate>Back to Bundle</translate>
-		</router-link>
+		</app-button>
 	</template>
 
 	<div class="text-center">
@@ -47,13 +46,13 @@
 			<p><a :href="loginUrl"><translate>Sign in to Game Jolt to be able to claim this game into your Library.</translate></a></p>
 		</div>
 		<p v-else>
-			<button
-				class="btn btn-success-outline btn-block"
+			<app-button
+				primary
+				block
 				@click="claim"
 				>
-				<app-jolticon icon="key-diagonal" />
 				<translate>Claim Game into Library</translate>
-			</button>
+			</app-button>
 		</p>
 	</template>
 

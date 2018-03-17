@@ -177,44 +177,6 @@
 			</div>
 		</section>
 
-		<section class="section fill-darkest">
-			<div class="container">
-
-				<h1 class="section-header text-center">
-					Who's using it?
-				</h1>
-				<hr class="underbar underbar-center">
-				<br>
-
-				<div class="row">
-					<app-game-thumbnail
-						class="col-sm-4 col-md-3 meter-dark"
-						:class="{ 'scrollable-grid-item': Screen.isXs }"
-						v-for="( game, i ) of games.slice( 0, Screen.isSm ? 3 : 4 )"
-						:key="game.id"
-						:game="game"
-						v-app-track-event="`marketplace:game:${i}`"
-						/>
-				</div>
-
-				<div class="row">
-					<div class="col-md-6 col-centered">
-						<router-link
-							class="btn btn-primary-outline btn-block"
-							:to="{
-								name: 'discover.games.list._fetch',
-								params: { section: 'best' },
-								query: { price: 'paid' },
-							}"
-							>
-							View More
-						</router-link>
-					</div>
-				</div>
-
-			</div>
-		</section>
-
 		<section class="section">
 			<div class="container">
 
@@ -237,9 +199,9 @@
 								Get started at
 							</p>
 							<p>
-								<router-link class="btn btn-success" :to="{ name: 'dash.account.financials' }">
+								<app-button primary :to="{ name: 'dash.account.financials' }">
 									Marketplace Account Setup
-								</router-link>
+								</app-button>
 							</p>
 						</div>
 

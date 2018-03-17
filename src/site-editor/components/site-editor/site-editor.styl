@@ -10,23 +10,13 @@
 	z-index: $zindex-modal
 	background-color: transparent
 
-	&-backdrop
-		position: fixed
-		top: 0
-		left: 0
-		right: 0
-		bottom: 0
-		z-index: ($zindex-modal-background - 10)
-		background-color: $gray-darkest
-
 	&-nav
 		position: absolute
 		top: 0
 		left: 0
 		right: 0
 
-	&-sidebar
-	&-content
+	&-sidebar, &-content
 		position: absolute
 		top: $navbar-height
 		bottom: 0
@@ -34,7 +24,6 @@
 	&-sidebar
 		left: 0
 		width: 350px
-		background-color: $gray-darker
 
 	&-bottom
 		position: absolute
@@ -42,7 +31,6 @@
 		left: 0
 		right: 0
 		height: 40%
-		background-color: $gray-darker
 		overflow-y: auto
 		z-index: 2
 

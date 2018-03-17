@@ -37,17 +37,16 @@
 			<br class="visible-xs">
 
 			<div :class="{ 'pull-left': !Screen.isXs }">
-				<router-link
-					class="btn btn-success-outline"
-					:class="{ 'btn-block': Screen.isXs }"
+				<app-button
+					primary
+					:block="Screen.isXs"
 					:to="{
 						name: 'forums.topics.add',
 						params: { channel: channel.name },
 					}"
 					>
-					<app-jolticon icon="add" />
 					<translate>Add Topic</translate>
-				</router-link>
+				</app-button>
 			</div>
 
 		</div>
@@ -164,14 +163,15 @@
 					<translate>There aren't any topics here yet!</translate>
 				</p>
 				<p>
-					<router-link class="btn btn-outline"
+					<app-button
+						primary
 						:to="{
 							name: 'forums.topics.add',
 							params: { channel: channel.name },
 						}"
 						>
 						<translate>Add Topic</translate>
-					</router-link>
+					</app-button>
 				</p>
 			</div>
 

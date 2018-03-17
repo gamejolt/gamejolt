@@ -243,7 +243,6 @@
 					<div>
 						<app-button
 							primary
-							icon="cog"
 							:to="{ name: 'dash.main.site' }"
 							v-app-track-event="`dash:overview:quick-profile-site`"
 							>
@@ -266,7 +265,6 @@
 				<div>
 					<app-button
 						primary
-						icon="add"
 						:to="{ name: 'dash.games.add' }"
 						v-app-track-event="`dash:overview:quick-add-game`"
 						>
@@ -300,7 +298,7 @@
 						</div>
 						<div class="card-controls">
 							<app-button
-								icon="cog"
+								primary
 								:to="{
 									name: 'dash.games.manage.game.overview',
 									params: { id: game.id },
@@ -311,7 +309,7 @@
 							</app-button>
 							<template v-if="game.hasPerms('analytics')">
 								<app-button
-									icon="chart"
+									trans
 									v-app-track-event="`dash:overview:quick-game-analytics`"
 									:to="{
 										name: 'dash.analytics',
@@ -386,7 +384,6 @@
 				<div>
 					<app-button
 						primary
-						icon="add"
 						href="http://jams.gamejolt.com/manage/jams/add"
 						target="_blank"
 						>
@@ -421,7 +418,7 @@
 						</div>
 						<div class="card-controls">
 							<app-button
-								icon="cog"
+								primary
 								:href="jam.manageUrl"
 								target="_blank"
 								v-app-track-event="`dash:overview:quick-jam`"
@@ -429,7 +426,7 @@
 								<translate>Manage</translate>
 							</app-button>
 							<app-button
-								icon="share"
+								trans
 								:href="jam.fullUrl"
 								target="_blank"
 								v-app-track-event="`dash:overview:quick-jam-view`"

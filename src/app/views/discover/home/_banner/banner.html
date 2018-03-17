@@ -54,18 +54,17 @@
 								>
 								<translate>View Game</translate>
 							</app-button>
-							<a
+							<app-button
 								v-else-if="item.custom_url"
+								lg
+								overlay
+								:block="shouldShowFollow || Screen.isXs"
 								:href="item.custom_url"
 								target="_blank"
-								class="btn btn-outline btn-lg btn-overlay-variant"
-								:class="{
-									'btn-block': shouldShowFollow || Screen.isXs,
-								}"
 								v-app-track-event="`home:banner-custom:${item.game.id}`"
 								>
 								{{ item.custom_text }}
-							</a>
+							</app-button>
 						</div>
 						<div class="col-xs-6" v-if="shouldShowFollow">
 							<app-game-follow-widget

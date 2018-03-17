@@ -36,10 +36,9 @@
 
 			<div v-if="!showDescriptionInput">
 				<app-button
-					sm
-					icon="add"
+					:disabled="!hasBuildsPerms"
 					@click.prevent="showDescriptionInput = true"
-					:disabled="!hasBuildsPerms">
+					>
 					<translate>dash.games.packages.form.description_change_button</translate>
 				</app-button>
 			</div>
@@ -152,7 +151,9 @@
 				<label>
 					<app-form-control-radio
 						value="pwyw"
-						:disabled="!isUserVerified || isFangame || !hasSalesPerms" />
+						:disabled="!isUserVerified || isFangame || !hasSalesPerms"
+						/>
+
 					<translate>Pay What You Want</translate> &mdash;
 					<span class="help-inline">
 						<translate>They will be able to pay $0 or more. They set the price.</translate>
@@ -231,192 +232,187 @@
 		</app-form-group>
 
 		<div v-if="formModel.pricing_type === 'paid'">
-			<div class="form-group">
-
-				<label class="control-label" v-if="promotionalPricing || hasSalesPerms">
-					<translate>Run a Sale</translate>
-				</label>
-
-				<div v-if="promotionalPricing">
-					<div class="alert" v-if="promotionalPricing.start > now"><translate>A sale is currently scheduled.</translate></div>
-					<div class="alert alert-highlight" v-if="promotionalPricing.start <= now"><translate>Your sale is currently running.</translate></div>
-
-					<div class="table-responsive" v-if="promotionalPricing">
-						<table class="table sans-margin-bottom">
-							<colgroup>
-								<col class="col-xs-4 col-sm-4 col-md-3">
-							</colgroup>
-							<tr>
-								<th><translate>Timezone</translate></th>
-								<td>
-									{{ promotionalPricing.timezone }}
-									<div class="text-muted small">
-										<translate>All times are based off this timezone.</translate>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<th><translate>Start</translate></th>
-								<td>
-									{{ saleStartLocal | date('medium') }}
-									<app-time-ago :date="promotionalPricing.start" class="text-muted small" />
-								</td>
-							</tr>
-							<tr>
-								<th><translate>End</translate></th>
-								<td>
-									{{ saleEndLocal | date('medium') }}
-									<app-time-ago :date="promotionalPricing.end" class="text-muted small" />
-								</td>
-							</tr>
-							<tr>
-								<th><translate>Price</translate></th>
-								<td>
-									{{ promotionalPricing.amount | currency }}
-									<div class="text-muted small">
-										{{ ((originalPricing.amount - promotionalPricing.amount) / originalPricing.amount * 100).toFixed( 0 ) }}% off
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div>
-
-					<app-game-perms tag="div" required="sales">
-						<app-button
-							v-if="!isShowingSaleForm"
-							type="a"
-							sm
-							icon="edit"
-							@click="isShowingSaleForm = true"
-							>
-							<translate>Edit Sale</translate>
-						</app-button>
-						<app-button
-							type="a"
-							trans
-							sm
-							icon="remove"
-							@click="cancelSale()"
-							>
-							<translate>Cancel Sale</translate>
-						</app-button>
-					</app-game-perms>
-				</div>
-
-				<app-game-perms tag="div" required="sales" v-if="!promotionalPricing">
-					<app-button
-						v-if="!isShowingSaleForm"
-						type="a"
-						sm
-						icon="add"
-						@click="isShowingSaleForm = true"
-						>
-						<translate>Setup Sale</translate>
+			<app-game-perms
+				tag="div"
+				required="sales"
+				v-if="!promotionalPricing && !isShowingSaleForm"
+				>
+				<div>
+					<app-button @click.prevent="isShowingSaleForm = true">
+						<translate>Set Up Sale</translate>
 					</app-button>
-				</app-game-perms>
-			</div>
+				</div>
+				<br>
+			</app-game-perms>
+			<div class="well fill-offset full-bleed" v-else-if="isShowingSaleForm">
+				<fieldset>
+					<app-form-legend compact>
+						<translate>Set up sale</translate>
+					</app-form-legend>
 
-			<div v-if="isShowingSaleForm">
-				<app-form-group
-					name="sale_timezone"
-					:label="$gettext( `Timezone` )"
-					>
-					<p class="help-block">
-						<translate>All time selection below will use this timezone.</translate>
-					</p>
-
-					<p class="help-block">
-						<strong><translate>Should auto-detect, but if it doesn't, choose your closest city.</translate></strong>
-					</p>
-
-					<app-form-control-select>
-						<optgroup
-							v-for="(timezones, region) in timezones"
-							:label="region"
-							>
-							<option
-								v-for="timezone in timezones"
-								:value="timezone.i"
-								>
-								{{ timezone.label }}
-							</option>
-						</optgroup>
-					</app-form-control-select>
-
-					<app-form-control-errors />
-				</app-form-group>
-
-				<div class="form-group">
-					<label class="control-label">
-						<translate>Start</translate>
-					</label>
-
-					<!--
-						Can only set this when first setting up a sale.
-					-->
 					<app-form-group
-						v-if="!promotionalPricing"
-						name="sale_start_now"
-						:hide-label="true"
+						name="sale_timezone"
+						:label="$gettext( `Timezone` )"
 						>
-						<div class="checkbox">
-							<label>
-								<app-form-control-checkbox />
-								<translate>Start immediately?</translate>
-							</label>
-						</div>
+						<p class="help-block">
+							<translate>All time selection below will use this timezone.</translate>
+						</p>
+
+						<p class="help-block">
+							<strong><translate>Should auto-detect, but if it doesn't, choose your closest city.</translate></strong>
+						</p>
+
+						<app-form-control-select>
+							<optgroup
+								v-for="(timezones, region) in timezones"
+								:label="region"
+								>
+								<option
+									v-for="timezone in timezones"
+									:value="timezone.i"
+									>
+									{{ timezone.label }}
+								</option>
+							</optgroup>
+						</app-form-control-select>
+
+						<app-form-control-errors />
 					</app-form-group>
 
+					<div class="form-group">
+						<label class="control-label">
+							<translate>Start</translate>
+						</label>
+
+						<!--
+							Can only set this when first setting up a sale.
+						-->
+						<app-form-group
+							v-if="!promotionalPricing"
+							name="sale_start_now"
+							:hide-label="true"
+							>
+							<div class="checkbox">
+								<label>
+									<app-form-control-checkbox />
+									<translate>Start immediately?</translate>
+								</label>
+							</div>
+						</app-form-group>
+
+						<app-form-group
+							v-if="!formModel.sale_start_now || promotionalPricing"
+							name="sale_start"
+							:hide-label="true"
+							>
+							<app-form-control-date
+								:timezone-offset="saleTimezoneOffset"
+								:rules="{
+									min_date: now,
+								}"
+								/>
+							<app-form-control-errors :label="$gettext(`start time`)" />
+						</app-form-group>
+					</div>
+
 					<app-form-group
-						v-if="!formModel.sale_start_now || promotionalPricing"
-						name="sale_start"
-						:hide-label="true"
+						name="sale_end"
+						:label="$gettext( `End` )"
 						>
 						<app-form-control-date
 							:timezone-offset="saleTimezoneOffset"
 							:rules="{
-								min_date: now,
+								min_date: formModel.sale_start,
 							}"
 							/>
-						<app-form-control-errors :label="$gettext(`start time`)" />
+						<app-form-control-errors :label="$gettext(`end time`)" />
 					</app-form-group>
+
+					<app-form-group
+						name="sale_price"
+						:label="$gettext( `Sale Price` )"
+						>
+						<div class="input-group">
+							<span class="input-group-addon">$</span>
+							<app-form-control
+								type="currency"
+								step="1"
+								:rules="{
+									min_value: minPrice / 100,
+									max_value: formModel.price - 0.01,
+								}"
+								/>
+						</div>
+
+						<p class="help-block" v-if="formModel.price && formModel.sale_price">
+							{{ ((formModel.price - formModel.sale_price) / formModel.price * 100).toFixed( 0 ) }}% off
+						</p>
+
+						<app-form-control-errors />
+					</app-form-group>
+				</fieldset>
+			</div>
+			<div class="well fill-offset full-bleed" v-else-if="promotionalPricing">
+				<div class="alert" v-if="promotionalPricing.start > now">
+					<translate>A sale is currently scheduled.</translate>
+				</div>
+				<div class="alert alert-highlight" v-else>
+					<translate>Your sale is currently running.</translate>
 				</div>
 
-				<app-form-group
-					name="sale_end"
-					:label="$gettext( `End` )"
-					>
-					<app-form-control-date
-						:timezone-offset="saleTimezoneOffset"
-						:rules="{
-							min_date: formModel.sale_start,
-						}"
-						/>
-					<app-form-control-errors :label="$gettext(`end time`)" />
-				</app-form-group>
+				<table class="table sans-margin-bottom">
+					<colgroup>
+						<col class="col-xs-4 col-sm-4 col-md-3">
+					</colgroup>
+					<tr>
+						<th><translate>Timezone</translate></th>
+						<td>
+							{{ promotionalPricing.timezone }}
+							<div class="text-muted small">
+								<translate>All times are based off this timezone.</translate>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th><translate>Start</translate></th>
+						<td>
+							{{ saleStartLocal | date('medium') }}
+							<app-time-ago :date="promotionalPricing.start" class="text-muted small" />
+						</td>
+					</tr>
+					<tr>
+						<th><translate>End</translate></th>
+						<td>
+							{{ saleEndLocal | date('medium') }}
+							<app-time-ago :date="promotionalPricing.end" class="text-muted small" />
+						</td>
+					</tr>
+					<tr>
+						<th><translate>Price</translate></th>
+						<td>
+							{{ promotionalPricing.amount | currency }}
+							<div class="text-muted small">
+								{{ ((originalPricing.amount - promotionalPricing.amount) / originalPricing.amount * 100).toFixed( 0 ) }}% off
+							</div>
+						</td>
+					</tr>
+				</table>
+				<br>
 
-				<app-form-group
-					name="sale_price"
-					:label="$gettext( `Sale Price` )"
-					>
-					<div class="input-group">
-						<span class="input-group-addon">$</span>
-						<app-form-control
-							type="currency"
-							step="1"
-							:rules="{
-								min_value: minPrice / 100,
-								max_value: formModel.price - 0.01,
-							}"
-							/>
-					</div>
-
-					<p class="help-block" v-if="formModel.price && formModel.sale_price">
-						{{ ((formModel.price - formModel.sale_price) / formModel.price * 100).toFixed( 0 ) }}% off
-					</p>
-
-					<app-form-control-errors />
-				</app-form-group>
+				<app-game-perms tag="div" required="sales">
+					<app-button
+						v-if="!isShowingSaleForm"
+						@click.prevent="isShowingSaleForm = true"
+						>
+						<translate>Edit Sale</translate>
+					</app-button>
+					<app-button
+						trans
+						@click.prevent="cancelSale()"
+						>
+						<translate>Cancel Sale</translate>
+					</app-button>
+				</app-game-perms>
 			</div>
 		</div>
 
@@ -451,13 +447,9 @@
 			</div>
 		</app-form-group>
 
-		<app-form-button v-if="method === 'add' || changed">
-			<template v-if="method === 'add'">
-				<translate>dash.games.packages.form.add_package_button</translate>
-			</template>
-			<template v-else-if="method === 'edit'">
-				<translate>dash.games.packages.form.save_package_button</translate>
-			</template>
+		<app-form-button>
+			<translate v-if="method === 'add'">dash.games.packages.form.add_package_button</translate>
+			<translate v-else-if="method === 'edit'">dash.games.packages.form.save_package_button</translate>
 		</app-form-button>
 
 	</app-loading-fade>

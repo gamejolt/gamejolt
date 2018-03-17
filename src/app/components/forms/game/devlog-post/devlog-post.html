@@ -263,7 +263,7 @@
 
 		<div class="text-right" v-if="isPollEditable">
 			<app-button
-				icon="remove"
+				trans
 				@click.prevent="removePoll()"
 				>
 				<translate>Remove poll</translate>
@@ -347,6 +347,7 @@
 
 	<app-button
 		v-if="model.status !== FiresidePost.STATUS_ACTIVE"
+		trans
 		:disabled="!valid"
 		@click.prevent="onDraftSubmit()"
 		>

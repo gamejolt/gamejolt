@@ -79,27 +79,14 @@
 
 				<app-game-perms tag="div" required="sales">
 					<app-button
+						primary
 						block
-						icon="edit"
-						@click="isShowingPackageEdit = !isShowingPackageEdit"
+						@click="editPackage()"
 						>
-						<translate v-if="!isShowingPackageEdit">Edit Package Details</translate>
-						<translate v-else>Hide Package Details</translate>
+						Edit Package Details
 					</app-button>
 					<br>
 				</app-game-perms>
-
-				<app-expand :when="isShowingPackageEdit">
-					<form-game-package
-						:model="package"
-						:game="game"
-						:sellable="sellable"
-						@submit="onEdited"
-						@salecanceled="onEdited"
-						/>
-
-					<br>
-				</app-expand>
 
 				<app-loading v-if="isLoadingPreview" />
 				<template v-else>
@@ -156,7 +143,6 @@
 					<app-button
 						primary
 						block
-						icon="add"
 						@click="newRelease"
 						:disabled="isAddingRelease"
 						>
@@ -241,7 +227,7 @@
 						<div class="card-controls" v-if="hasBuildsPerms || hasAnalyticsPerms">
 							<app-game-perms required="builds">
 								<app-button
-									icon="edit"
+									primary
 									:to="{
 										name: 'dash.games.manage.game.packages.release.edit',
 										params: { packageId: package.id, releaseId: release.id },
@@ -253,7 +239,7 @@
 
 							<app-game-perms required="analytics">
 								<app-button
-									icon="chart"
+									trans
 									:to="{
 										name: 'dash.analytics',
 										params: { resource: 'Game_Release', resourceId: release.id },

@@ -23,12 +23,12 @@
 			Something weird happened!
 		</translate>
 		<br>
-		<button
-			class="btn"
+		<app-button
+			primary
 			@click="retryJoin"
 			v-if="!serverErrors['rate-limit']"
 			>
 			<translate>Retry</translate>
-		</button>
+		</app-button>
 	</div>
 </div>

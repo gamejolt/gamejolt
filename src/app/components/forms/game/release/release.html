@@ -100,11 +100,9 @@
 	<hr>
 
 	<template v-if="model.status !== GameRelease.STATUS_PUBLISHED">
-		<!-- TODO(button) used primary solid because action seemed important enough. pls review -->
 		<app-button
 			primary
 			solid
-			icon="method"
 			:disabled="!valid || !builds.length"
 			@click.prevent="savePublished()"
 			>
@@ -120,7 +118,6 @@
 	</template>
 	<template v-else>
 		<app-button
-			icon="edit"
 			:disabled="!valid || !builds.length"
 			@click.prevent="save()"
 			>
@@ -133,14 +130,14 @@
 		<br class="visible-xs">
 
 		<app-button
+			trans
 			v-if="model.status === GameRelease.STATUS_PUBLISHED"
 			@click.prevent="unpublish()"
 			>
 			<translate>Unpublish Release</translate>
 		</app-button>
 
-		<!-- TODO(buttons) I think we should have some danger color here -->
-		<app-button @click.prevent="remove()">
+		<app-button trans @click.prevent="remove()">
 			<translate>Remove Release</translate>
 		</app-button>
 	</div>

@@ -39,6 +39,7 @@ const config = {
 			title: 'Game Jolt - Indie games for the love of it',
 			server: true,
 			client: true,
+			bodyClass: 'theme-dark',
 		},
 		checkout: {
 			title: 'Checkout - Game Jolt',

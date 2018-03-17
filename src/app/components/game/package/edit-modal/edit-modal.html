@@ -7,10 +7,13 @@
 	</div>
 
 	<div class="modal-body">
-		<form-game-devlog-post
-			:model="post"
+		<form-game-package
+			:model="gamePackage"
+			:game="game"
+			:sellable="sellable"
 			@submit="onSubmitted"
 			/>
+			<!-- @salecanceled="onEdited" -->
 	</div>
 
 </app-modal>

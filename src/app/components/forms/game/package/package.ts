@@ -17,7 +17,6 @@ import { SellablePricing } from '../../../../../lib/gj-lib-client/components/sel
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoadingFade } from '../../../../../lib/gj-lib-client/components/loading/fade/fade';
 import {
 	TimezoneData,
@@ -28,6 +27,7 @@ import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency'
 import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
 import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppGamePerms } from '../../../game/perms/perms';
+import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
 
 type FormGamePackageModel = GamePackage & {
 	primary: boolean;
@@ -43,7 +43,7 @@ type FormGamePackageModel = GamePackage & {
 @View
 @Component({
 	components: {
-		AppJolticon,
+		AppFormLegend,
 		AppLoadingFade,
 		AppFormControlToggle,
 		AppFormControlDate,
@@ -208,9 +208,13 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 
 				this.originalPricing = SellablePricing.getOriginalPricing(this.pricings) || null;
 
-				this.promotionalPricing = SellablePricing.getPromotionalPricing(this.pricings) || null;
+				this.promotionalPricing =
+					SellablePricing.getPromotionalPricing(this.pricings) || null;
 
-				this.setField('price', this.originalPricing ? this.originalPricing.amount / 100 : 0);
+				this.setField(
+					'price',
+					this.originalPricing ? this.originalPricing.amount / 100 : 0
+				);
 
 				if (this.promotionalPricing) {
 					this.setField('sale_timezone', this.promotionalPricing.timezone);
@@ -246,7 +250,9 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 		this.isProcessing = true;
 
 		const params = [this.formModel.game_id, this.formModel.id];
-		await Api.sendRequest('/web/dash/developer/games/packages/cancel-sales/' + params.join('/'));
+		await Api.sendRequest(
+			'/web/dash/developer/games/packages/cancel-sales/' + params.join('/')
+		);
 
 		this.promotionalPricing = null;
 		this.setField('sale_timezone', determine().name());

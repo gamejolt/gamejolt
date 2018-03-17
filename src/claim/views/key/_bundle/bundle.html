@@ -5,12 +5,13 @@
 	</div>
 
 	<p v-if="app.user">
-		<button class="btn btn-success-outline btn-block"
+		<app-button
+			primary
+			block
 			@click="claim( bundle )"
 			>
-			<app-jolticon icon="key-diagonal" />
 			<translate>Claim Bundle into Library</translate>
-		</button>
+		</app-button>
 	</p>
 
 	<h1 class="section-header">{{ bundle.title }}</h1>
