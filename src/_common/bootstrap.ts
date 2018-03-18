@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { Theme } from './theme/theme.service';
 import { VueRouter } from 'vue-router/types/router';
 import { VuexStore } from '../lib/gj-lib-client/utils/vuex';
 import { hijackLinks } from '../lib/gj-lib-client/utils/router';
@@ -16,6 +17,7 @@ import { AppJolticon } from '../lib/gj-lib-client/vue/components/jolticon/joltic
  * get what it needs.
  */
 export function bootstrapCommon(store: VuexStore, router: VueRouter, appComponent: typeof Vue) {
+	Theme.sync();
 	Meta.init(router);
 	Payload.init(store);
 	Referrer.init(router);

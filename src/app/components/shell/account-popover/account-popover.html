@@ -61,6 +61,17 @@
 				>
 				<translate>Settings</translate>
 			</router-link>
+			<a
+				class="list-group-item"
+				v-app-track-event="`account-popover:dark`"
+				@click="toggleDark()"
+				>
+				<small class="pull-right text-muted">
+					<translate v-if="Theme.isDark">on</translate>
+					<translate v-else>off</translate>
+				</small>
+				<translate>Dark Side</translate>
+			</a>
 		</div>
 
 		<div class="account-popover-button offline-disable">
