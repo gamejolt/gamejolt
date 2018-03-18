@@ -69,13 +69,12 @@
 
 						<div>
 							<app-button
-								icon="retweet"
 								@click="link( provider )"
 								>
 								<translate>Sync</translate>
 							</app-button>
 							<app-button
-								icon="remove"
+								trans
 								@click="unlink( provider )"
 								>
 								<translate>Unlink</translate>
@@ -104,7 +103,7 @@
 					>
 					<div class="pull-right">
 						<app-button
-							sm icon="remove"
+							trans
 							@click="unlinkYoutube( channel )"
 							>
 							<translate>Unlink</translate>
@@ -121,7 +120,7 @@
 			<div>
 				<app-button
 					primary
-					icon="add"
+					icon="link"
 					@click="link( 'youtube-channel' )"
 					>
 					<translate>Link YouTube Channel</translate>

@@ -8,19 +8,17 @@
 				<app-button
 					v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost"
 					primary
-					icon="check"
 					>
 					<translate>Publish</translate>
 				</app-button>
 				<app-button
-					icon="edit"
 					@click="showEdit"
 					>
 					<translate>Edit</translate>
 				</app-button>
 				<app-button
 					sparse
-					icon="ellipsis-h"
+					icon="ellipsis-v"
 					v-app-popover-trigger="`activity-feed-controls-options-${post.id}`"
 					/>
 

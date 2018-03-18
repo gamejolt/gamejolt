@@ -54,7 +54,8 @@
 					&nbsp;
 
 					<app-button
-						sparse
+						circle
+						trans
 						icon="cog"
 						:to="{
 							name: 'dash.games.manage.game.overview',
@@ -65,7 +66,8 @@
 
 					<app-game-perms :game="game" required="analytics">
 						<app-button
-							sparse
+							circle
+							trans
 							icon="chart"
 							:to="{
 								name: 'dash.analytics',

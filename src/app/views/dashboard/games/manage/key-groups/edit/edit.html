@@ -55,7 +55,6 @@
 				<div>
 					<app-button
 						block
-						icon="remove"
 						@click="removeGroup( keyGroup )"
 						>
 						<translate>Remove Key Group</translate>
@@ -68,7 +67,7 @@
 		<h2>
 			<div class="section-header-controls">
 				<app-button
-					icon="add"
+					primary
 					@click="isShowingAddKeys = !isShowingAddKeys"
 					>
 					<translate>Add Keys</translate>
@@ -163,6 +162,7 @@
 							<app-button
 								sm
 								sparse
+								trans
 								icon="remove"
 								@click="removeKey( key )"
 								/>

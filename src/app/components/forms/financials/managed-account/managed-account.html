@@ -256,10 +256,7 @@
 				<!-- Add additional owner -->
 				<div class="clearfix">
 					<div class="pull-right" v-if="formModel.additional_owners_count <= 3">
-						<app-button
-							icon="add"
-							@click.prevent="addAdditionalOwner()"
-							>
+						<app-button @click.prevent="addAdditionalOwner()">
 							<translate>Add Additional Owner</translate>
 						</app-button>
 					</div>
