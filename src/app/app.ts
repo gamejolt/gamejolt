@@ -1,4 +1,4 @@
-if (GJ_IS_CLIENT && GJ_ENVIRONMENT === 'production') {
+if (GJ_IS_CLIENT && GJ_WITH_UPDATER) {
 	require('../_common/client/updater/updater');
 }
 
