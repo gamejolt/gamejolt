@@ -58,4 +58,12 @@ export class AppShellTopNav extends Vue {
 
 	@Action toggleRightPane: Store['toggleRightPane'];
 	@Action toggleLeftPane: Store['toggleLeftPane'];
+
+	get clientUpdateState() {
+		if (!GJ_IS_CLIENT) {
+			return 'none';
+		}
+
+		return (this.$store as Store).state.clientLibrary.clientUpdateStatus;
+	}
 }

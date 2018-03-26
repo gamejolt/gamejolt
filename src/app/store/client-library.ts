@@ -13,6 +13,7 @@ import {
 } from 'client-voodoo';
 import * as fs from 'fs';
 import * as nwGui from 'nw.gui';
+import Updater from '../../_common/client/updater/updater';
 import * as path from 'path';
 import Vue from 'vue';
 import { Action, Mutation, namespace, State } from 'vuex-class';
@@ -51,9 +52,12 @@ export const ClientLibraryState = namespace('clientLibrary', State);
 export const ClientLibraryAction = namespace('clientLibrary', Action);
 export const ClientLibraryMutation = namespace('clientLibrary', Mutation);
 
+export type ClientUpdateStatus = 'checking' | 'none' | 'fetching' | 'ready' | 'error';
+
 // These are only the public actions/mutations.
 export type Actions = {
 	'clientLibrary/bootstrap': undefined;
+	'clientLibrary/update': undefined;
 	'clientLibrary/packageInstall': [
 		Game,
 		GamePackage,
@@ -70,6 +74,7 @@ export type Actions = {
 };
 
 export type Mutations = {
+	'clientLibrary/setClientUpdateStatus': ClientUpdateStatus;
 	'clientLibrary/checkQueueSettings': undefined;
 	'clientLibrary/syncInit': undefined;
 	'clientLibrary/syncSetInterval': NodeJS.Timer;
@@ -80,6 +85,8 @@ export type Mutations = {
 export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, Mutations> {
 	private _bootstrapPromise: Promise<void> | null = null;
 	private _bootstrapPromiseResolver: Function = null as any;
+
+	private _clientUpdateStatus: ClientUpdateStatus = 'none';
 
 	// Localdb variables
 	packages: LocalDbPackage[] = [];
@@ -92,6 +99,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	// Launcher variables
 	isLauncherReady = false;
 	currentlyPlaying: LocalDbPackage[] = [];
+
+	get clientUpdateStatus() {
+		return this._clientUpdateStatus;
+	}
 
 	get packagesById() {
 		return arrayIndexBy(this.packages, 'id');
@@ -180,6 +191,21 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private _bootstrap({ packages, games }: { packages: LocalDbPackage[]; games: LocalDbGame[] }) {
 		this.packages = packages;
 		this.games = games;
+	}
+
+	@VuexAction
+	async update() {
+		if (GJ_WITH_UPDATER) {
+			const updater = require('../_common/client/updater/updater') as typeof Updater;
+			return await updater.update();
+		}
+		return false;
+	}
+
+	@VuexMutation
+	setClientUpdateStatus(status: Mutations['clientLibrary/setClientUpdateStatus']) {
+		console.log('set client update state: ' + status);
+		this._clientUpdateStatus = status;
 	}
 
 	/**

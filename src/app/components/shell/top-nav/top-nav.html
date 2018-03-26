@@ -127,7 +127,7 @@
 			</li>
 		</ul>
 
-		<div class="navbar-separator" v-if="chat || Connection.isOffline"></div>
+		<div class="navbar-separator" v-if="chat || Connection.isOffline || clientUpdateState !== 'none' "></div>
 
 		<!-- Connection Status -->
 		<span
@@ -137,6 +137,15 @@
 			>
 			<app-jolticon icon="offline" />
 		</span>
+
+		<template v-if="clientUpdateState !== 'none'">
+			<span
+				class="navbar-item client-icon"
+				v-app-tooltip="$gettext( `Update available. Click to restart` )"
+				>
+				<app-jolticon icon="download" />
+			</span>
+		</template>
 
 		<!-- Chat -->
 		<ul class="navbar-items" v-if="chat">
