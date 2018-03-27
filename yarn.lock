@@ -45,6 +45,10 @@
   version "0.0.28"
   resolved "https://registry.yarnpkg.com/@types/favico.js/-/favico.js-0.0.28.tgz#bb7b7caa118217318d034666920d687a58d65eeb"
 
+"@types/fs-readdir-recursive@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/fs-readdir-recursive/-/fs-readdir-recursive-1.0.0.tgz#404f77bdadc6b90cccd3f04d15f6dd85cdde38ef"
+
 "@types/grecaptcha@2.0.34":
   version "2.0.34"
   resolved "https://registry.yarnpkg.com/@types/grecaptcha/-/grecaptcha-2.0.34.tgz#6f6a3585f0f3b0eac2f46257da9ff7805af1e274"
@@ -2735,6 +2739,10 @@ fs-extra@^4.0.2:
     graceful-fs "^4.1.2"
     jsonfile "^4.0.0"
     universalify "^0.1.0"
+
+fs-readdir-recursive@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/fs-readdir-recursive/-/fs-readdir-recursive-1.1.0.tgz#e32fc030a2ccee44a6b5371308da54be0b397d27"
 
 fs-temp@^1.0.0:
   version "1.1.2"

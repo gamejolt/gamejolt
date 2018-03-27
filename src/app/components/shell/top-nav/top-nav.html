@@ -127,6 +127,38 @@
 			</li>
 		</ul>
 
+		<template v-if="clientUpdateState !== 'none'">
+			<span
+				v-if="clientUpdateState === 'checking'"
+				class="navbar-item client-icon"
+				v-app-tooltip="$gettext( `Checking for updates...` )"
+				>
+				<app-jolticon class="-checking-for-updates" icon="retweet" />
+			</span>
+			<span
+				v-if="clientUpdateState === 'fetching'"
+				class="navbar-item client-icon"
+				v-app-tooltip="$gettext( `Downloading update...` )"
+				>
+				<app-jolticon class="-fetching-update" icon="download" />
+			</span>
+			<span
+				v-if="clientUpdateState === 'ready'"
+				class="navbar-item client-icon"
+				v-app-tooltip="$gettext( `Update available. Click to restart` )"
+				@click="updateApply"
+				>
+				<app-jolticon class="-update-ready" icon="download" />
+			</span>
+			<span
+				v-if="clientUpdateState === 'error'"
+				class="navbar-item client-icon"
+				v-app-tooltip="$gettext( `Failed to update!` )"
+				>
+				<app-jolticon class="-update-error" icon="notice" />
+			</span>
+		</template>
+
 		<div class="navbar-separator" v-if="chat || Connection.isOffline || clientUpdateState !== 'none' "></div>
 
 		<!-- Connection Status -->
@@ -137,15 +169,6 @@
 			>
 			<app-jolticon icon="offline" />
 		</span>
-
-		<template v-if="clientUpdateState !== 'none'">
-			<span
-				class="navbar-item client-icon"
-				v-app-tooltip="$gettext( `Update available. Click to restart` )"
-				>
-				<app-jolticon icon="download" />
-			</span>
-		</template>
 
 		<!-- Chat -->
 		<ul class="navbar-items" v-if="chat">

@@ -1,7 +1,3 @@
-if (GJ_IS_CLIENT && GJ_WITH_UPDATER) {
-	require('../_common/client/updater/updater');
-}
-
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./app.html';

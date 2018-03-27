@@ -66,4 +66,12 @@ export class AppShellTopNav extends Vue {
 
 		return (this.$store as Store).state.clientLibrary.clientUpdateStatus;
 	}
+
+	updateApply() {
+		console.log('applying');
+		if (GJ_IS_CLIENT && GJ_WITH_UPDATER) {
+			console.log('client dispatch');
+			(this.$store as Store).dispatch('clientLibrary/updateClient');
+		}
+	}
 }

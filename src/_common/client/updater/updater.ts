@@ -1,14 +1,14 @@
 import * as path from 'path';
 import * as os from 'os';
 import { SelfUpdater, SelfUpdaterInstance } from 'client-voodoo';
-import { ClientUpdateStatus } from '../../../app/store/client-library';
 import { store } from '../../../app/store/index';
+import { ClientUpdateStatus } from '../../../app/store/client-library';
 
 import * as gui from 'nw.gui';
 const win = gui.Window.get();
 
 class Updater {
-	static readonly CHECK_INTERVAL = 15 * 60 * 1000; // 15min currently
+	static readonly CHECK_INTERVAL = 5 * 60 * 1000; // 15min currently
 	private manifestPath: string;
 	private instance: SelfUpdaterInstance;
 
@@ -19,7 +19,7 @@ class Updater {
 		}
 		this.manifestPath = path.resolve(cwd, '..', '.manifest');
 
-		this.check();
+		window.setTimeout(() => this.check()); // delay first check to let the store a chance to load in
 		window.setInterval(() => this.check(), Updater.CHECK_INTERVAL);
 	}
 
@@ -43,10 +43,11 @@ class Updater {
 	}
 
 	async update() {
-		if (store.state.clientLibrary.clientUpdateStatus === 'ready') {
-			return await this.instance.updateApply();
-		}
-		return false;
+		console.log('running update from client updater');
+		// if (store.state.clientLibrary.clientUpdateStatus === 'ready') {
+		return await this.instance.updateApply();
+		// }
+		// return false;
 	}
 
 	private async makeInstance() {
@@ -56,7 +57,7 @@ class Updater {
 				this.setClientUpdateStatus('none');
 			})
 			.on('updateAvailable', () => {
-				this.instance.updateBegin().catch(err => {
+				this.instance.updateBegin().catch((err: Error) => {
 					console.error(err);
 				});
 			})

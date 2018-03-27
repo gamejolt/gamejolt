@@ -13,7 +13,15 @@ import {
 } from 'client-voodoo';
 import * as fs from 'fs';
 import * as nwGui from 'nw.gui';
-import Updater from '../../_common/client/updater/updater';
+
+import * as _Updater from '../../_common/client/updater/updater';
+let Updater: typeof _Updater | undefined;
+if (GJ_WITH_UPDATER) {
+	Updater = require('../../_common/client/updater/updater');
+	console.log('Updater: ');
+	console.log(Updater);
+}
+
 import * as path from 'path';
 import Vue from 'vue';
 import { Action, Mutation, namespace, State } from 'vuex-class';
@@ -57,7 +65,7 @@ export type ClientUpdateStatus = 'checking' | 'none' | 'fetching' | 'ready' | 'e
 // These are only the public actions/mutations.
 export type Actions = {
 	'clientLibrary/bootstrap': undefined;
-	'clientLibrary/update': undefined;
+	'clientLibrary/updateClient': undefined;
 	'clientLibrary/packageInstall': [
 		Game,
 		GamePackage,
@@ -194,10 +202,14 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async update() {
-		if (GJ_WITH_UPDATER) {
-			const updater = require('../_common/client/updater/updater') as typeof Updater;
-			return await updater.update();
+	async updateClient() {
+		try {
+			console.log('updateClient in clientLibrary store: ' + JSON.stringify(GJ_WITH_UPDATER));
+			if (GJ_WITH_UPDATER) {
+				return await Updater!.default.update();
+			}
+		} catch (err) {
+			console.error(err);
 		}
 		return false;
 	}
