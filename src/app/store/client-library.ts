@@ -206,10 +206,14 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		try {
 			console.log('updateClient in clientLibrary store: ' + JSON.stringify(GJ_WITH_UPDATER));
 			if (GJ_WITH_UPDATER) {
-				return await Updater!.default.update();
+				const updateStarted = await Updater!.default.update();
+				if (!updateStarted) {
+					throw new Error('Failed to apply the update');
+				}
 			}
 		} catch (err) {
 			console.error(err);
+			this.setClientUpdateStatus('error');
 		}
 		return false;
 	}

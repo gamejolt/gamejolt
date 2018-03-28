@@ -8,7 +8,7 @@ import * as gui from 'nw.gui';
 const win = gui.Window.get();
 
 class Updater {
-	static readonly CHECK_INTERVAL = 5 * 60 * 1000; // 15min currently
+	static readonly CHECK_INTERVAL = 15 * 60 * 1000; // 15min currently
 	private manifestPath: string;
 	private instance: SelfUpdaterInstance;
 
@@ -35,7 +35,10 @@ class Updater {
 			}
 
 			console.log('Sending checkForUpdates...');
-			await this.instance.checkForUpdates();
+			const checked = await this.instance.checkForUpdates();
+			if (!checked) {
+				throw new Error('Failed to check for updates');
+			}
 		} catch (err) {
 			console.error(err);
 			this.setClientUpdateStatus('error');
@@ -44,10 +47,10 @@ class Updater {
 
 	async update() {
 		console.log('running update from client updater');
-		// if (store.state.clientLibrary.clientUpdateStatus === 'ready') {
-		return await this.instance.updateApply();
-		// }
-		// return false;
+		if (store.state.clientLibrary.clientUpdateStatus === 'ready') {
+			return await this.instance.updateApply();
+		}
+		return false;
 	}
 
 	private async makeInstance() {
@@ -57,9 +60,17 @@ class Updater {
 				this.setClientUpdateStatus('none');
 			})
 			.on('updateAvailable', () => {
-				this.instance.updateBegin().catch((err: Error) => {
-					console.error(err);
-				});
+				this.instance
+					.updateBegin()
+					.catch((err: Error) => {
+						console.error(err);
+						this.setClientUpdateStatus('error');
+					})
+					.then(began => {
+						if (!began) {
+							throw new Error('Failed to begin update');
+						}
+					});
 			})
 			.on('updateBegin', () => {
 				this.setClientUpdateStatus('fetching');
