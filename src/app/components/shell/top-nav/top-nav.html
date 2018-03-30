@@ -138,16 +138,9 @@
 			<app-jolticon icon="offline" />
 		</span>
 
-		<ul class="navbar-items">
-			<!-- Dark mode / Light mode -->
+		<!-- Chat -->
+		<ul class="navbar-items" v-if="chat">
 			<li>
-				<a @click="toggleDarkMode">
-					<app-jolticon :icon="darkMode ? 'light-off' : 'light-on'" />
-				</a>
-			</li>
-
-			<!-- Chat -->
-			<li v-if="chat">
 				<a
 					:class="{ active: isRightPaneVisible }"
 					@click="toggleRightPane"

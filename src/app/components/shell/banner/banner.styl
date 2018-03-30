@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '../../../../lib/gj-lib-client/stylus/common/fills'
 @require '../../../../lib/gj-lib-client/stylus/common/mixins'
 
 .-banner
@@ -36,3 +37,8 @@
 
 	@media $media-sm-up
 		margin-left: 0
+
+.-dark-mode
+	@extend .fill-black
+	color: $gj-green
+	// border-bottom: 2px solid $gj-green

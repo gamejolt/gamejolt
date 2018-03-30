@@ -5,6 +5,7 @@
 		'-clickable': currentBanner.canClick,
 		'fill-dark-green': currentBanner.type === 'info',
 		'fill-pink': currentBanner.type === 'error',
+		'-dark-mode': currentBanner.type == 'dark-mode',
 	}"
 	@click="clickBanner()"
 	>

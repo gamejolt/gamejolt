@@ -52,7 +52,6 @@ export type Actions = AppActions &
 		clearGrid: undefined;
 		toggleLeftPane: undefined;
 		toggleRightPane: undefined;
-		toggleDarkMode: undefined;
 		clearPanes: undefined;
 		_checkBackdrop: undefined;
 	};
@@ -73,7 +72,7 @@ export type Mutations = AppMutations &
 		_setGrid: GridClient | null;
 		_toggleLeftPane: undefined;
 		_toggleRightPane: undefined;
-		_toggleDarkMode: undefined;
+		toggleDarkMode: undefined;
 		_clearPanes: undefined;
 		_addBackdrop: undefined;
 		_removeBackdrop: undefined;
@@ -156,7 +155,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			}
 
 			this.commit('library/bootstrap', response);
-		} catch (e) {}
+		} catch (e) { }
 
 		this._setBootstrapped();
 
@@ -255,11 +254,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async toggleDarkMode() {
-		this._toggleDarkMode();
-	}
-
-	@VuexAction
 	async _checkBackdrop() {
 		// Ensure we have a backdrop if anything is overlayed.
 		// Otherwise ensure the backdrop is gone.
@@ -350,7 +344,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_toggleDarkMode() {
+	toggleDarkMode() {
 		this.darkMode = !this.darkMode;
 	}
 
