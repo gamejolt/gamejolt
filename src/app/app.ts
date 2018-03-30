@@ -10,11 +10,13 @@ import { AppShell } from './components/shell/shell';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { loadCurrentLanguage } from '../utils/translations';
+import { AppTheme } from '../_common/theme/theme';
 
 @View
 @Component({
 	components: {
 		AppShell,
+		AppTheme,
 		AppErrorPage,
 	},
 })
