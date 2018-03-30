@@ -50,7 +50,7 @@ class DarkModeBanner extends Banner {
 	}
 
 	get isActive() {
-		return !GJ_IS_SSR && !GJ_IS_CLIENT;
+		return (!Screen.isXs && !GJ_IS_SSR && !GJ_IS_CLIENT) || store.state.darkMode;
 	}
 
 	async onClick() {
