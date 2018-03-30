@@ -54,7 +54,7 @@ export class AppGameFollowWidget extends Vue {
 	}
 
 	get badge() {
-		return !this.circle && this.game.follower_count ? number(this.game.follower_count) : false;
+		return !this.circle && this.game.follower_count ? number(this.game.follower_count) : '';
 	}
 
 	get tooltip() {
@@ -67,7 +67,7 @@ export class AppGameFollowWidget extends Vue {
 
 	get icon() {
 		if (!this.circle) {
-			return false;
+			return '';
 		}
 
 		return !this.game.is_following ? 'subscribe' : 'subscribed';

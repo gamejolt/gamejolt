@@ -42,7 +42,7 @@ export class AppGameCollectionFollowWidget extends Vue {
 	get badge() {
 		return !this.circle && this.isFollowing && this.followerCount
 			? number(this.followerCount)
-			: false;
+			: '';
 	}
 
 	get tooltip() {
@@ -53,7 +53,7 @@ export class AppGameCollectionFollowWidget extends Vue {
 
 	get icon() {
 		if (!this.circle) {
-			return false;
+			return '';
 		}
 
 		return !this.isFollowing ? 'subscribe' : 'subscribed';
