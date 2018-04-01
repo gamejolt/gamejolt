@@ -15,8 +15,10 @@ import { Store } from '../../store/index';
 import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
 import { Connection } from '../../../lib/gj-lib-client/components/connection/connection-service';
 import { BannerState, BannerStore } from '../../store/banner';
+import { AppShellDarkMode } from './dark-mode/dark-mode';
 
 let components: any = {
+	AppShellDarkMode,
 	AppShellTopNav,
 	AppShellBody,
 	AppShellSidebar,
@@ -49,6 +51,7 @@ export class AppShell extends Vue {
 	@State chat: Store['chat'];
 	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
 	@State isRightPaneVisible: Store['isRightPaneVisible'];
+	@State darkMode: Store['darkMode'];
 	@BannerState shouldShowBanner: BannerStore['shouldShowBanner'];
 
 	@Action clearPanes: Store['clearPanes'];
