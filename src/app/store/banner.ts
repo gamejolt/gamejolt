@@ -28,7 +28,6 @@ abstract class Banner {
 	onClick?(): void;
 	onClose?(): void;
 
-
 	get canClick() {
 		return !!this.onClick;
 	}
@@ -39,17 +38,23 @@ class DarkModeBanner extends Banner {
 
 	get message() {
 		if (!store.state.darkMode) {
-			return Translate.$gettext(
-				`Dark mode is finally here! <em>Turn OFF the lights</em>`
-			) + ' <span class="jolticon jolticon-light-on">';
+			return (
+				Translate.$gettext(`Dark mode is finally here! <em>Turn OFF the lights</em>`) +
+				' <span class="jolticon jolticon-light-on">'
+			);
 		} else {
-			return Translate.$gettext(
-				`Dark mode is finally here! <em>Turn ON the lights</em>`
-			) + ' <span class="jolticon jolticon-light-off">';
+			return (
+				Translate.$gettext(`Dark mode is finally here! <em>Turn ON the lights</em>`) +
+				' <span class="jolticon jolticon-light-off">'
+			);
 		}
 	}
 
 	get isActive() {
+		if (!store) {
+			return false;
+		}
+
 		return (!Screen.isXs && !GJ_IS_SSR && !GJ_IS_CLIENT) || store.state.darkMode;
 	}
 
