@@ -9,6 +9,7 @@ import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import * as _ClientSystemReportModalMod from '../../client/system-report-modal/system-report-modal.service';
+import { ThemeEditorModal } from '../../../../_common/theme/editor-modal.service';
 
 let ClientSystemReportModalMod: typeof _ClientSystemReportModalMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -41,5 +42,9 @@ export class AppShellFooter extends Vue {
 		if (ClientSystemReportModalMod) {
 			ClientSystemReportModalMod.ClientSystemReportModal.show();
 		}
+	}
+
+	showThemeEditor() {
+		ThemeEditorModal.show();
 	}
 }

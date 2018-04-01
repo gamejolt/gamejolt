@@ -1,30 +1,25 @@
 import Vue, { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
-import { readableColor } from 'polished';
+import { Theme } from './theme.service';
 
 @Component({})
 export class AppTheme extends Vue {
-	notice = '#ff5a00';
-	highlight = '#86a2d6';
-	backlight = '#2d3447';
-
 	render(h: CreateElement) {
-		const highlightFg = readableColor(this.highlight);
-		const noticeFg = readableColor(this.notice);
+		const theme = Theme.theme;
 
 		const styles = `
 			:root {
-				--theme-highlight: ${this.highlight};
-				--theme-highlight-fg: ${highlightFg};
-				--theme-backlight: ${this.backlight};
-				--theme-notice: ${this.notice};
-				--theme-notice-fg: ${noticeFg};
-				--theme-bi-bg: ${this.backlight};
-				--theme-bi-fg: ${this.highlight};
-				--theme-link: ${this.backlight};
-				--dark-theme-link: ${this.highlight};
-				--dark-theme-bi-bg: ${this.highlight};
-				--dark-theme-bi-fg: ${highlightFg};
+				--theme-highlight: ${theme.highlight};
+				--theme-highlight-fg: ${theme.highlightFg};
+				--theme-backlight: ${theme.backlight};
+				--theme-notice: ${theme.notice};
+				--theme-notice-fg: ${theme.noticeFg};
+				--theme-bi-bg: ${theme.backlight};
+				--theme-bi-fg: ${theme.highlight};
+				--theme-link: ${theme.backlight};
+				--dark-theme-link: ${theme.highlight};
+				--dark-theme-bi-bg: ${theme.highlight};
+				--dark-theme-bi-fg: ${theme.highlightFg};
 			}
 		`;
 

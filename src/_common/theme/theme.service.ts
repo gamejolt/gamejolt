@@ -1,8 +1,10 @@
 import { Settings } from '../settings/settings.service';
 import { makeObservableService } from '../../lib/gj-lib-client/utils/vue';
+import { ThemeModel } from './theme.model';
 
 export class Theme {
 	static isDark = false;
+	static theme = new ThemeModel();
 
 	static sync() {
 		if (Settings.get('theme-dark')) {
