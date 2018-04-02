@@ -20,50 +20,16 @@ export type BannerMutations = {
 };
 
 abstract class Banner {
-	type = 'info';
-	isClosed = false;
-
 	abstract message: string;
 	abstract isActive: boolean;
 	onClick?(): void;
 	onClose?(): void;
 
+	type: string = 'info';
+	isClosed = false;
 
 	get canClick() {
 		return !!this.onClick;
-	}
-}
-
-class DarkModeBanner extends Banner {
-	type = 'dark-mode';
-
-	get message() {
-		if (!store.state.darkMode) {
-			return Translate.$gettext(
-				`Dark mode is finally here! <em>Turn OFF the lights</em>`
-			) + ' <span class="jolticon jolticon-light-on">';
-		} else {
-			return Translate.$gettext(
-				`Dark mode is finally here! <em>Turn ON the lights</em>`
-			) + ' <span class="jolticon jolticon-light-off">';
-		}
-	}
-
-	get isActive() {
-		return (!Screen.isXs && !GJ_IS_SSR && !GJ_IS_CLIENT) || store.state.darkMode;
-	}
-
-	async onClick() {
-		// When clicking the dark mode banner it toggles dark mode, doesn't close.
-		this.isClosed = false;
-
-		store.commit('toggleDarkMode');
-	}
-
-	onClose() {
-		if (store.state.darkMode) {
-			store.commit('toggleDarkMode');
-		}
 	}
 }
 
@@ -130,7 +96,7 @@ class OfflineBanner extends Banner {
 
 @VuexModule()
 export class BannerStore extends VuexStore<BannerStore, BannerActions, BannerMutations> {
-	banners: Banner[] = [new DarkModeBanner(), new NotificationsBanner(), new OfflineBanner()];
+	banners: Banner[] = [new NotificationsBanner(), new OfflineBanner()];
 
 	get shouldShowBanner() {
 		return !!this.currentBanner;

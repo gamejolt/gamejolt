@@ -72,7 +72,6 @@ export type Mutations = AppMutations &
 		_setGrid: GridClient | null;
 		_toggleLeftPane: undefined;
 		_toggleRightPane: undefined;
-		toggleDarkMode: undefined;
 		_clearPanes: undefined;
 		_addBackdrop: undefined;
 		_removeBackdrop: undefined;
@@ -121,8 +120,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isLeftPaneOverlayed = false;
 	isRightPaneOverlayed = false;
 
-	darkMode = false;
-
 	get isLeftPaneVisible() {
 		if (Screen.isLg) {
 			return this.isLeftPaneSticky;
@@ -155,7 +152,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			}
 
 			this.commit('library/bootstrap', response);
-		} catch (e) { }
+		} catch (e) {}
 
 		this._setBootstrapped();
 
@@ -341,11 +338,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	_clearPanes() {
 		this.isRightPaneOverlayed = false;
 		this.isLeftPaneOverlayed = false;
-	}
-
-	@VuexMutation
-	toggleDarkMode() {
-		this.darkMode = !this.darkMode;
 	}
 
 	@VuexMutation
