@@ -252,23 +252,18 @@
 				<p class="text-center">Wanna look like us? Check these hex codes out!</p>
 
 				<div class="row">
-					<div class="col-sm-3"
-						v-for="( classname, hex ) of colors"
+					<div
+						class="col-sm-3"
+						v-for="(fg, bg) of colors"
 						>
-						<div class="well color-hex-code" :class="classname">
-							#{{ hex }}
-						</div>
-					</div>
-				</div>
-
-				<p class="text-center">And don't forget our fifty shades of gray.</p>
-
-				<div class="row">
-					<div class="col-sm-3"
-						v-for="( classname, hex ) of grays"
-						>
-						<div class="well color-hex-code" :class="classname">
-							#{{ hex }}
+						<div
+							class="well color-hex-code"
+							:style="{
+								color: fg,
+								'background-color': bg,
+							}"
+							>
+							{{ bg }}
 						</div>
 					</div>
 				</div>

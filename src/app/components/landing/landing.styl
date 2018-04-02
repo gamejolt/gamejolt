@@ -59,37 +59,37 @@
 			margin-top: $line-height-computed
 
 	a
-		link-underlines($black, $white, $white)
+		link-underlines(var(--theme-fg), var(--theme-bg), var(--theme-bg))
 		font-weight: bold
 
 	.section
 		padding: 60px 0
 
-	a.btn
+	a.button
 		background-image: none !important
 		text-shadow: none !important
 
 	.fill-offset
 		a
-			link-underlines(var(--content-fg), var(--content-bg-offset), var(--content-bg-offset))
+			link-underlines(var(--theme-fg), var(--theme-bg-offset), var(--theme-bg-offset))
+
+	.fill-highlight
+		a
+			link-underlines(var(--theme-highlight-fg), var(--theme-highlight), var(--theme-highlight))
 
 	.fill-darkest
 		a
-			link-underlines($gj-green, $gray-darkest, $gray-darkest)
+			link-underlines(var(--dark-theme-link), $gray-darkest, $gray-darkest)
 
 		.game-thumbnail
 			background: none
-
-	.fill-notice
-		a
-			link-underlines($white, $gj-pink, $gj-pink)
 
 	.section
 		position: relative
 
 	.fill-black
 		h1, h2, h3
-			theme-prop('color', 'notice')
+			theme-prop('color', 'highlight')
 
 	p
 		line-height: 1.6

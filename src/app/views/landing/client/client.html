@@ -25,41 +25,44 @@
 			<div class="row">
 				<div class="col-lg-6 col-centered">
 					<div>
-						<a class="btn btn-success-outline"
-							:class="{ 'btn-lg': !Screen.isXs }"
+						<app-button
+							primary
+							:lg="!Screen.isXs"
 							v-if="platform === 'linux'"
 							v-app-track-event="`client-landing:download:linux`"
 							@click="download( 'linux' )"
 							>
 							<app-jolticon icon="download" />
 							Download for Linux 64bit
-						</a>
+						</app-button>
 
-						<a class="btn btn-success-outline"
-							:class="{ 'btn-lg': !Screen.isXs }"
+						<app-button
+							primary
+							:lg="!Screen.isXs"
 							v-if="platform === 'mac'"
 							v-app-track-event="`client-landing:download:mac`"
 							@click="download( 'mac' )"
 							>
 							<app-jolticon icon="download" />
 							Download for OS X
-						</a>
+						</app-button>
 
-						<a class="btn btn-success-outline"
-							:class="{ 'btn-lg': !Screen.isXs }"
+						<app-button
+							primary
+							:lg="!Screen.isXs"
 							v-if="platform === 'windows'"
 							v-app-track-event="`client-landing:download:win`"
 							@click="download( 'windows' )"
 							>
 							<app-jolticon icon="download" />
 							Download for Windows
-						</a>
+						</app-button>
 					</div>
 					<br>
 
 					<div>
-						Download for <a href="#all-downloads" class="link-unstyled" v-app-scroll-to>other platforms</a>
-						<br>
+						or download for <a href="#all-downloads" v-app-scroll-to>other platforms</a>
+						<br><br>
 						<app-jolticon icon="windows" class="text-muted" />
 						<app-jolticon icon="mac" class="text-muted" />
 						<app-jolticon icon="linux" class="text-muted" />
@@ -245,37 +248,43 @@
 							<div class="download-footer-col col-sm-4">
 								<p><app-jolticon icon="jolticon-linux" class="jolticon-4x" /></p>
 								<p>
-									<a class="btn btn-block btn-success-outline"
+									<app-button
+										primary
+										block
 										v-app-track-event="`client-landing:download:linux`"
 										@click="download( 'linux' )"
 										>
 										<app-jolticon icon="download" />
 										Download Linux 64bit
-									</a>
+									</app-button>
 								</p>
 							</div>
 							<div class="download-footer-col col-sm-4">
 								<p><app-jolticon icon="jolticon-mac" class="jolticon-4x" /></p>
 								<p>
-									<a class="btn btn-block btn-success-outline"
+									<app-button
+										primary
+										block
 										v-app-track-event="`client-landing:download:mac`"
 										@click="download( 'mac' )"
 										>
 										<app-jolticon icon="download" />
 										Download Mac
-									</a>
+									</app-button>
 								</p>
 							</div>
 							<div class="download-footer-col col-sm-4">
 								<p><app-jolticon icon="jolticon-windows" class="jolticon-4x" /></p>
 								<p>
-									<a class="btn btn-block btn-success-outline"
+									<app-button
+										primary
+										block
 										v-app-track-event="`client-landing:download:win`"
 										@click="download( 'windows' )"
 										>
 										<app-jolticon icon="download" />
 										Download Windows
-									</a>
+									</app-button>
 								</p>
 							</div>
 						</div>
@@ -284,7 +293,7 @@
 				<br>
 
 				<p class="lead">
-					Play games. Make games. Stay indie.
+					Play games. Make games.
 				</p>
 			</div>
 		</section>

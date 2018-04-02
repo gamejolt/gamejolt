@@ -14,19 +14,9 @@ export default class RouteLandingAbout extends BaseRouteComponent {
 	readonly Screen = Screen;
 
 	colors = {
-		ccff00: 'fill-green',
-		'2f7f6f': 'fill-dark-green',
-		'31d6ff': 'fill-blue',
-		ff3fac: 'fill-pink',
-	};
-
-	grays = {
-		'191919': 'fill-darkest',
-		'292929': 'fill-darker',
-		'363636': 'fill-dark',
-		'555555': 'fill-gray',
-		'7e7e7e': 'fill-light',
-		d1d1d1: 'fill-lighter',
-		f3f3f3: 'fill-offset',
+		'#ccff00': 'black',
+		'#2f7f6f': 'white',
+		'#31d6ff': 'white',
+		'#ff3fac': 'white',
 	};
 }

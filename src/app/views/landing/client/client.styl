@@ -23,6 +23,7 @@
 			color: $gray-lightest
 
 		img
+			rounded-corners()
 			border: 2px solid $white
 
 	section.client-presentation
@@ -69,12 +70,13 @@
 		z-index: 2
 
 		&, h5
-			color: $gray-darkest
+			theme-prop('color', 'highlight-fg')
 
 		h5
 			margin-top: 0
 
 		&::before
+			theme-prop('background-color', 'highlight')
 			content: ''
 			display: block
 			position: absolute
@@ -82,7 +84,6 @@
 			bottom: -60px
 			left: -30%
 			width: 160%
-			background-color: $gj-green
 			z-index: 0
 			transform: rotate(8deg)
 
@@ -114,7 +115,7 @@
 			bottom: -40px
 			left: -30%
 			width: 160%
-			background-color: $gj-pink
+			background-color: $gray-darkest
 			z-index: 0
 			transform: rotate(-8deg)
 
