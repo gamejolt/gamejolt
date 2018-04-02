@@ -1,7 +1,9 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .report-percentage
+	rounded-corners()
+	theme-prop('background-color', 'fg-muted')
 	display: inline-block
 	vertical-align: middle
 	height: 15px
-	background-color: $gj-blue

@@ -1,17 +1,16 @@
 <div class="row">
 	<div class="col-sm-4 col-sm-push-8">
-		<button
-			class="btn btn-danger-outline btn-block"
+		<app-button
 			v-if="app.user.header_media_item"
+			block
 			@click="clearHeader"
 			>
-			<app-jolticon icon="remove" />
 			<translate>Clear Header</translate>
-		</button>
+		</app-button>
 		<br>
 
 		<div class="page-help">
-			<p>	
+			<p>
 				<translate>
 					Headers are the big, banner-like images that adorn the tops of pages. For your header to look its best on all devices, make sure anything important is located near the center of the image.
 				</translate>

@@ -16,6 +16,7 @@ import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-sto
 import { Store } from '../../../store/index';
 import { UserTokenModal } from '../../user/token-modal/token-modal.service';
 import * as _ClientMod from '../../../../_common/client/client.service';
+import { Theme } from '../../../../_common/theme/theme.service';
 
 let ClientMod: typeof _ClientMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -44,6 +45,7 @@ export class AppShellAccountPopover extends Vue {
 
 	readonly Screen = Screen;
 	readonly Connection = Connection;
+	readonly Theme = Theme;
 
 	@Action logout: Store['logout'];
 
@@ -58,6 +60,10 @@ export class AppShellAccountPopover extends Vue {
 
 	showToken() {
 		UserTokenModal.show();
+	}
+
+	toggleDark() {
+		Theme.setDark(!Theme.isDark);
 	}
 
 	async getWallet() {

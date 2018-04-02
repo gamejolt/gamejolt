@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .comment-peek
 	margin-left: -10px
@@ -24,6 +25,5 @@
 			background-color: $white
 
 	&-content
+		rounded-corners()
 		padding: 10px
-		border-radius: $border-radius-base
-

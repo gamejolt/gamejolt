@@ -50,7 +50,7 @@
 	</app-form-group>
 
 	<app-expand :when="serverErrors['num-keys']">
-		<div class="alert alert-warning">
+		<div class="alert alert-notice">
 			<translate
 				:translate-params="{
 					max: number( 20000 ),
@@ -61,7 +61,7 @@
 		</div>
 	</app-expand>
 
-	<app-form-button icon="add">
+	<app-form-button>
 		<translate>Add</translate>
 	</app-form-button>
 

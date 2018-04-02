@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require './../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 fieldset
 	margin-top: $line-height-computed
@@ -20,10 +20,10 @@ fieldset
 		border-radius: 0
 
 	.jolticon
+		theme-prop('color', 'fg-muted')
 		position: absolute
 		left: 8px
 		top: 11px
-		color: $text-muted
 		z-index: 3
 
 // Change form styling to use outlines instead of borders.
@@ -38,7 +38,7 @@ fieldset
 
 	&:focus
 		outline: 1px solid $input-border-focus
-		outline-offset: 0  // Chrome adds an offset on focus for outlines.
+		outline-offset: 0 // Chrome adds an offset on focus for outlines.
 		z-index: 2
 
 	&.has-icon
@@ -77,12 +77,12 @@ fieldset
 
 a.card-list-item
 	clearfix()
+	rounded-corners()
 	display: block
 	color: $black
 	padding: 15px
 	margin-bottom: 10px
 	border: 1px solid $gray-lighter
-	border-radius: $border-radius-base
 
 	&:hover
 		border-color: $gray-lighter

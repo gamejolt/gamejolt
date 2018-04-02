@@ -12,10 +12,10 @@
 				icon="gamejolt"
 				class="rating-widget-icon"
 				:class="{
-					hover: hovered >= i,
-					selected: gameRating && gameRating.rating >= i,
-					big,
+					hover: isHovered(i),
+					selected: isSelected(i),
 				}"
+				:big="big"
 				v-app-tooltip="getTooltip( i )"
 				/>
 		</span>
@@ -31,7 +31,7 @@
 				>
 				<app-jolticon
 					icon="remove"
-					:class="{ big }"
+					:big="big"
 					v-app-tooltip="$gettext( 'rating.clear' )"
 					/>
 			</span>

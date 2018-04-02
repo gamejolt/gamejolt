@@ -16,17 +16,17 @@
 
 	</app-form-group>
 
-	<app-form-button :icon="method">
+	<app-form-button>
 		<translate v-if="method === 'add'">Add Reply</translate>
 		<translate v-if="method === 'edit'">Save</translate>
 	</app-form-button>
 
-	<button
-		class="btn btn-danger-outline"
+	<app-button
 		v-if="method === 'edit' || replyTo"
+		trans
 		@click.prevent="onCancel"
 		>
 		<translate>Cancel</translate>
-	</button>
+	</app-button>
 
 </app-form>

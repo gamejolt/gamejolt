@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .chat-window-wrap
 	position: fixed
@@ -105,15 +105,15 @@
 		height: 45px
 
 		img
+			rounded-corners()
 			display: block
 			width: 45px
 			height: 45px
-			border-radius: $border-radius-base
 
 .chat-window-header-controls
 	float: right
 
-	> .btn
+	> .button
 		position: relative
 		vertical-align: top
 		margin-left: 5px

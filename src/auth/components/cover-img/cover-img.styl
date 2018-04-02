@@ -1,18 +1,14 @@
 @require '~styles/variables'
 
 .cover-img
-
-	&
-	&-container
-	&-highlight
+	&, &-container, &-highlight
 		position: absolute
 		top: 0
 		right: 0
 		bottom: 0
 		left: 0
 
-	&
-	&-highlight
+	&, &-highlight
 		display: none
 		background-attachment: fixed
 
@@ -35,4 +31,4 @@
 		z-index: $zindex-cover-img-highlight
 
 		@media $media-sm-up
-			background-image: linear-gradient( to right, rgba( $gj-pink, 0.15 ) 0%, rgba( $gj-pink, 0 ) 25%, rgba( $gj-blue, 0 ) 75%, rgba( $gj-blue, 0.15 ) 100% )
+			background-image: linear-gradient(to right, rgba($gj-pink, 0.15) 0, rgba($gj-pink, 0) 25%, rgba($gj-blue, 0) 75%, rgba($gj-blue, 0.15) 100%)

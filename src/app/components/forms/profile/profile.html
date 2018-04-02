@@ -26,7 +26,7 @@
 		</p>
 
 		<app-expand :when="formModel.username !== model.username">
-			<div class="alert alert-info">
+			<div class="alert">
 				<translate>Changing your username will change your public profile URL. Any current links to your old profile URL will not automatically redirect to your new profile URL.</translate>
 			</div>
 		</app-expand>
@@ -124,7 +124,7 @@
 
 	</app-form-group>
 
-	<app-form-button icon="edit">
+	<app-form-button>
 		<translate>dash.profile.edit.submit_button</translate>
 	</app-form-button>
 </app-form>

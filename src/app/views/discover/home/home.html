@@ -5,55 +5,6 @@
 		:item="featuredItem"
 		/>
 
-	<!-- <section
-		v-if="isLoaded && !app.user"
-		class="section landing-header text-center"
-		>
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-
-					<p class="lead">Find the indie games you <app-jolticon icon="heart" :big="true" class="header-heart" /> and directly support the developers that make them</p>
-
-					<p>
-						<router-link class="btn btn-outline btn-sm"
-							:to="{ name: 'landing.learn' }"
-							v-app-track-event="`home:header-learn-more`"
-							>
-							<translate>Learn More</translate>
-						</router-link>
-					</p>
-					<br>
-
-					<router-link class="btn btn-primary-outline btn-block-xs"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-						v-app-track-event="`home:header-browse-games`"
-						>
-						<translate>Browse Games</translate>
-					</router-link>
-
-					<span class="hidden-xs">
-						&nbsp;&nbsp;&nbsp;
-						<em>or</em>
-						&nbsp;&nbsp;&nbsp;
-					</span>
-
-					<br class="visible-xs">
-
-					<router-link
-						class="btn btn-outline btn-block-xs"
-						:to="{ name: 'dash.games.add' }"
-						v-app-track-event="`home:header-add-game`"
-						v-app-auth-required
-						>
-						<translate>Add Your Game</translate>
-					</router-link>
-
-				</div>
-			</div>
-		</div>
-	</section> -->
-
 	<section class="section section-thin fill-darker overlay-scrollbar channel-list">
 		<div class="channel-list-item"
 			v-for="channel of channels"
@@ -88,8 +39,8 @@
 				/>
 
 			<div class="page-cut">
-				<router-link
-					class="btn btn-outline"
+				<app-button
+					trans
 					:to="{
 						name: 'discover.games.list._fetch',
 						params: { section: null }
@@ -97,7 +48,7 @@
 					v-app-track-event="`home:more-btn:browse`"
 					>
 					<translate>Browse More Games</translate>
-				</router-link>
+				</app-button>
 			</div>
 
 		</div>
@@ -105,7 +56,7 @@
 
 	<app-ad-placement pos="bottom" />
 
-	<section class="section fill-lightest" v-if="isLoaded && !app.user">
+	<section class="section fill-offset" v-if="isLoaded && !app.user">
 		<div class="container">
 
 			<h1 class="section-header text-center">

@@ -43,36 +43,27 @@
 		</template>
 
 		<template slot="controls" v-if="app.user">
-			<button
-				class="btn btn-success-outline"
-				:class="{
-					'btn-block': Screen.isXs || Screen.isDesktop,
-				}"
+			<app-button
 				v-if="!isFollowing"
+				primary
+				:block="Screen.isXs || Screen.isDesktop"
 				@click="follow"
 				v-app-tooltip="$gettext( `Keep track of replies in this topic.` )"
 				>
-				<app-jolticon icon="subscribe" />
 				<translate>Follow</translate>
-			</button>
-
-			<button
-				class="btn"
-				:class="{
-					'btn-block': Screen.isXs || Screen.isDesktop,
-					'btn-success': Screen.isXs,
-					'btn-success': !Screen.isXs && !unfollowHover,
-					'btn-danger': !Screen.isXs && unfollowHover
-				}"
+			</app-button>
+			<app-button
 				v-else
-				v-app-tooltip="$gettext( `Stop Following` )"
+				primary
+				solid
+				:block="Screen.isXs || Screen.isDesktop"
 				@click="unfollow"
 				@mouseenter="unfollowHover = true"
 				@mouseleave="unfollowHover = false"
+				v-app-tooltip="$gettext( `Stop Following` )"
 				>
-				<app-jolticon :icon="!unfollowHover ? 'subscribe' : 'subscribed'" />
 				<translate>Following</translate>
-			</button>
+			</app-button>
 		</template>
 
 	</app-page-header>
@@ -85,40 +76,39 @@
 				<div class="col-sm-3 col-sm-push-9 col-md-offset-1 col-md-push-8">
 
 					<app-scroll-affix :should-affix="Screen.isDesktop" v-if="app.user">
-						<button
-							class="btn btn-primary-outline btn-block"
+						<app-button
 							v-if="!topic.is_locked"
+							primary
+							block
 							v-app-scroll-to="`add-reply`"
 							>
-							<app-jolticon icon="add" />
 							<translate>Add Reply</translate>
-						</button>
+						</app-button>
 
-						<button
-							class="btn btn-outline btn-block"
+						<app-button
 							v-if="topic.user_id === app.user.id && !topic.is_locked"
+							block
 							@click="editTopic"
 							:disabled="isEditingTopic"
 							>
-							<app-jolticon icon="edit" />
 							<translate>Edit</translate>
-						</button>
+						</app-button>
 
 						<!-- Mod Tools -->
-						<button
-							class="btn btn-sparse btn-outline btn-block"
+						<app-button
 							v-if="app.user"
+							block
+							sparse
+							icon="ellipsis-v"
 							v-app-popover-trigger="`forum-topic-popover`"
-							>
-							<app-jolticon icon="ellipsis-h" />
-						</button>
+							/>
 
 						<app-popover popover-id="forum-topic-popover" v-if="app.user">
 							<div class="list-group list-group-dark thin">
 								<a class="list-group-item has-icon"
 									@click="report"
 									>
-									<app-jolticon icon="flag warning" />
+									<app-jolticon icon="flag" notice />
 									<translate>Report Topic</translate>
 								</a>
 								<a class="list-group-item"
@@ -306,14 +296,14 @@
 
 						</app-message-thread-add>
 
-						<div class="alert alert-info full-bleed-xs" v-if="topic.is_locked">
+						<div class="alert full-bleed-xs" v-if="topic.is_locked">
 							<p>
 								<app-jolticon icon="lock" />
 								<translate>This topic is locked and can no longer be replied to.</translate>
 							</p>
 						</div>
 					</template>
-					<div v-else class="alert alert-info full-bleed-xs">
+					<div v-else class="alert full-bleed-xs">
 						<p>
 							<app-jolticon icon="exclamation-circle" />
 							<a :href="loginUrl">

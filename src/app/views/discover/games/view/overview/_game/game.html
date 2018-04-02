@@ -87,7 +87,7 @@
 						<div
 							key="early-access"
 							v-if="game._is_wip && !game.canceled"
-							class="alert alert-info full-bleed-xs"
+							class="alert full-bleed-xs"
 							v-translate
 							>
 							This game is in <b>early access</b>. It's still in development and the current version may be buggy or incomplete. Follow along to watch it as it develops!
@@ -95,7 +95,7 @@
 						<div
 							key="wip"
 							v-else-if="game.canceled"
-							class="alert alert-warning full-bleed-xs"
+							class="alert alert-notice full-bleed-xs"
 							v-translate
 							>
 							This game was <b>canceled</b>, so the current version might be buggy or incomplete. You can still follow it if you'd like to be notified in the case that development continues.
@@ -105,8 +105,7 @@
 							v-for="msg of customGameMessages"
 							class="alert full-bleed-xs"
 							:class="{
-								'alert-info': msg.type === 'info',
-								'alert-warning': msg.type === 'alert',
+								'alert-notice': msg.type === 'alert',
 							}"
 							>
 							<app-jolticon icon="notice" />
@@ -139,24 +138,25 @@
 								<input class="form-control" :value="partnerLink">
 							</div>
 							<div class="card-controls">
-								<button class="btn btn-outline" @click="copyPartnerLink">
-									<app-jolticon icon="link" />
+								<app-button
+									primary
+									@click="copyPartnerLink"
+									>
 									<translate>Copy Partner Link</translate>
-								</button>
-								<router-link
-									class="btn btn-outline"
+								</app-button>
+								<app-button
+									trans
 									:to="{
 										name: 'dash.analytics',
 										params: { resource: 'Game', resourceId: game.id },
 									}"
 									>
-									<app-jolticon icon="chart" />
 									<translate>View Analytics</translate>
-								</router-link>
+								</app-button>
 							</div>
 						</app-card>
 
-						<div v-if="shouldShowMultiplePackagesMessage" class="alert alert-warning">
+						<div v-if="shouldShowMultiplePackagesMessage" class="alert alert-notice">
 							<app-jolticon icon="notice" />
 							<translate>There are multiple packages for your device. Please choose one below.</translate>
 						</div>
@@ -215,13 +215,14 @@
 						</app-fade-collapse>
 
 						<div class="page-cut" v-if="canToggleDescription">
-							<button class="btn btn-outline"
+							<app-button
+								trans
 								@click="toggleDescription()"
 								v-app-track-event="`game-profile:show-full-description`"
 								>
 								<translate v-if="!showDescription">Show More</translate>
 								<translate v-else>Less</translate>
-							</button>
+							</app-button>
 						</div>
 					</div>
 
@@ -440,12 +441,13 @@
 				</div>
 
 				<div class="page-cut" v-if="videoComments.length < videoCommentsCount">
-					<a class="btn btn-outline"
+					<app-button
+						trans
 						@click="loadVideoComments"
 						v-app-track-event="`game-profile:video-comment:more`"
 						>
 						<translate>Load More</translate>
-					</a>
+					</app-button>
 				</div>
 			</template>
 

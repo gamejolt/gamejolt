@@ -215,7 +215,7 @@
 					v-app-track-event="`sidebar:activity`"
 					>
 					<span
-						class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
+						class="notification-tag tag tag-notice anim-fade-enter anim-fade-leave"
 						v-if="notificationCount > 0"
 						>
 						{{ notificationCount < 100 ? notificationCount : '99+' }}
@@ -490,14 +490,15 @@
 				</div>
 
 				<div class="nav-controls">
-					<a
-						class="btn btn-outline btn-block offline-disable"
+					<app-button
+						primary
+						block
+						class="offline-disable"
 						@click="showAddPlaylistModal"
 						v-app-track-event="`sidebar:playlist-add`"
 						>
-						<app-jolticon icon="add" />
 						<translate>library.nav.new_playlist_button</translate>
-					</a>
+					</app-button>
 				</div>
 
 				<div class="nav-controls" v-if="collections.length">

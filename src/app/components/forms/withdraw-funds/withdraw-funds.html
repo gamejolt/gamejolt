@@ -1,6 +1,6 @@
 <app-form name="withdrawFundsForm">
 
-	<div class="alert alert-info"><translate>dash.funds.withdraw.form_help_html</translate></div>
+	<div class="alert"><translate>dash.funds.withdraw.form_help_html</translate></div>
 
 	<app-form-group
 		v-if="!user.paypal_id"
@@ -44,7 +44,7 @@
 		<app-form-control-errors />
 	</app-form-group>
 
-	<app-form-button icon="chevron-right">
+	<app-form-button>
 		<translate>dash.funds.withdraw.submit_button</translate>
 	</app-form-button>
 

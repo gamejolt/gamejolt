@@ -4,7 +4,7 @@
 	@outview="isInview = false"
 	>
 	<router-link v-if="isInview" :to="them.url">
-		<app-card >
+		<app-card>
 			<div class="shell-card-popover-card-media">
 				<div class="friend-request-popover-avatar">
 					<app-user-avatar-img :user="them" />
@@ -14,28 +14,32 @@
 
 				<div class="shell-card-popover-card-controls">
 					<template v-if="isPending">
-						<span class="btn btn-danger-outline btn-sparse"
+						<app-button
+							type="span"
+							trans
+							circle
+							icon="remove"
 							v-app-tooltip="$gettext(`Cancel`)"
 							@click.stop.prevent="cancel"
-							>
-							<app-jolticon icon="friend-remove-2" />
-						</span>
+							/>
 					</template>
 					<template v-else>
-						<span
-							class="btn btn-success-outline btn-sparse"
+						<app-button
+							type="span"
+							primary
+							circle
+							icon="friend-add-2"
 							v-app-tooltip="$gettext(`Add Friend`)"
 							@click.stop.prevent="accept"
-							>
-							<app-jolticon icon="friend-add-2" />
-						</span>
-						<span
-							class="btn btn-danger-outline btn-sparse"
+							/>
+						<app-button
+							type="span"
+							trans
+							circle
+							icon="remove"
 							v-app-tooltip="$gettext(`Dismiss request. Sender will not be notified.`)"
 							@click.stop.prevent="reject"
-							>
-							<app-jolticon icon="friend-remove-2" />
-						</span>
+							/>
 					</template>
 				</div>
 

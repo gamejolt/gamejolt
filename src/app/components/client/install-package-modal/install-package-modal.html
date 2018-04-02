@@ -1,14 +1,13 @@
 <app-modal>
 	<div class="modal-controls">
-		<button class="btn btn-danger-outline" @click="modal.dismiss()">
-			<app-jolticon icon="remove" />
+		<app-button @click="modal.dismiss()">
 			<translate>Close</translate>
-		</button>
+		</app-button>
 	</div>
 
 	<div class="modal-header">
 		<h2 class="modal-title">
-			<app-jolticon icon="download-box" :big="true" />
+			<app-jolticon icon="download-box" big />
 			<translate>Choose a Package</translate>
 		</h2>
 	</div>
@@ -30,7 +29,7 @@
 				:builds="package._builds"
 				/>
 		</template>
-		<template v-else class="alert alert-warning">
+		<template v-else class="alert alert-notice">
 			<translate>This game doesn't have any packages to install.</translate>
 		</template>
 

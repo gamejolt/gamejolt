@@ -29,7 +29,6 @@
 		"@types/stripe": "2.0.2",
 		"@types/ua-parser-js": "0.7.32",
 		"autosize": "4.0.0",
-		"bootstrap-stylus": "hworld/bootstrap-stylus#master",
 		"chart.js": "2.7.1",
 		"codemirror": "5.32.0",
 		"core-js": "2.5.1",
@@ -84,7 +83,8 @@
 	"dependencies": {
 		"axios": "0.17.1",
 		"client-voodoo": "2.0.3",
-		"nwjs-snappy-updater": "1.1.0"
+		"nwjs-snappy-updater": "1.1.0",
+		"polished": "^1.9.2"
 	},
 	"main": "app://game-jolt-client/index.html#/",
 	"window": {

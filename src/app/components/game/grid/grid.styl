@@ -1,18 +1,18 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 @require '../../scrollable-grid/scrollable-grid'
-@require './../../../../lib/gj-lib-client/stylus/common/mixins'
 
 .game-grid
 	&-ad
 		@media $media-xs
 			full-bleed()
-			background-color: $gray-lightest
+			content-prop('background-color', 'bg-offset')
 			padding-top: ($grid-gutter-width-xs / 2)
 			padding-bottom: ($grid-gutter-width-xs / 2)
 			margin-bottom: $grid-gutter-width-xs
 
 		@media $media-sm
-			background-color: $gray-lightest
+			content-prop('background-color', 'bg-offset')
 			padding-top: ($grid-gutter-width / 2)
 			padding-bottom: ($grid-gutter-width / 2)
 			margin-bottom: $grid-gutter-width
@@ -28,9 +28,9 @@
 			text-align: center
 
 			@media screen and (min-width: 1550px)
+				content-prop('background-color', 'bg-offset')
 				padding: 20px
 				width: 300px + @padding * 2
-				background-color: $gray-lightest
 
 	&-items
 		@media $media-sm-up

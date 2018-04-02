@@ -12,10 +12,7 @@
 		<app-form-control-errors />
 	</app-form-group>
 
-	<app-form-button
-		show-when-valid
-		:icon="method"
-		>
+	<app-form-button show-when-valid>
 		<translate v-if="method === 'add'">Add</translate>
 		<translate v-else-if="method === 'edit'">Save</translate>
 	</app-form-button>

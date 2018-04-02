@@ -215,7 +215,7 @@
 			<!-- Following -->
 			<app-game-collection-follow-widget
 				v-if="shouldShowFollow"
-				class="btn-block"
+				block
 				:collection="collection"
 				:follower-count="followerCount"
 				@follow="++followerCount"
@@ -224,22 +224,18 @@
 			<template v-else-if="type === 'playlist' && collection.isOwner">
 
 				<!-- Editing Playlist -->
-				<a class="btn btn-outline"
-					v-if="type === 'playlist' && collection.isOwner"
+				<app-button
 					@click="editPlaylist( collection )"
 					>
-					<app-jolticon icon="edit" />
 					<translate>Edit Playlist</translate>
-				</a>
+				</app-button>
 
 				<!-- More options -->
-				<a class="btn btn-outline sparse"
+				<app-button
+					icon="ellipsis-v"
+					circle
 					v-app-popover-trigger="`collection-options`"
-					v-if="type === 'playlist' && collection.isOwner"
-					>
-					<app-jolticon icon="ellipsis-h" />
-					<translate>options.more</translate>
-				</a>
+					/>
 
 				<app-popover popover-id="collection-options">
 					<div class="list-group list-group-dark">
@@ -247,7 +243,7 @@
 							class="list-group-item has-icon"
 							@click="removePlaylist( collection )"
 							>
-							<app-jolticon icon="remove" class="warning" />
+							<app-jolticon icon="remove" notice />
 							<translate>library.collection.remove_playlist_button</translate>
 						</a>
 					</div>
@@ -274,21 +270,23 @@
 
 			<template slot="thumbnail-controls" scope="props">
 
-				<button class="btn btn-sparse"
+				<app-button
+					icon="remove"
+					circle
+					overlay
 					v-if="type === 'playlist' && collection.isOwner"
 					v-app-tooltip="$gettext( `library.collection.thumbnail_control_playlist_tooltip` )"
 					@click="removeFromPlaylist( props.game )"
-					>
-					<app-jolticon icon="remove" />
-				</button>
+					/>
 
-				<button class="btn btn-sparse"
+				<app-button
+					icon="remove"
+					circle
+					overlay
 					v-if="type === 'followed' && collection.isOwner"
 					v-app-tooltip="$gettext( `library.collection.thumbnail_control_unfollow_tooltip` )"
 					@click="removeFromLibrary( props.game )"
-					>
-					<app-jolticon icon="subscribed" />
-				</button>
+					/>
 
 			</template>
 
@@ -310,9 +308,9 @@
 					<hr class="underbar">
 				</div>
 				<div class="hidden-xs pull-right">
-					<button class="btn btn-outline" @click="mixPlaylist(true)">
+					<app-button @click="mixPlaylist(true)">
 						<translate>Refresh</translate>
-					</button>
+					</app-button>
 				</div>
 			</div>
 
@@ -325,9 +323,9 @@
 			</app-loading-fade>
 
 			<p class="visible-xs">
-				<button class="btn btn-outline btn-block" @click="mixPlaylist(true)">
+				<app-button block @click="mixPlaylist(true)">
 					<translate>Refresh</translate>
-				</button>
+				</app-button>
 			</p>
 
 		</div>

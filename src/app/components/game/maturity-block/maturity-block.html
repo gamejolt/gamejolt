@@ -14,11 +14,17 @@
 						<br>
 
 						<p>
-							<button class="btn btn-danger-outline btn-block" @click="proceed">
+							<app-button
+								block
+								primary
+								@click="proceed"
+								>
 								<translate>Proceed to Game</translate>
-							</button>
+							</app-button>
 						</p>
+
 						<br>
+						<hr class="underbar underbar-center">
 
 						<p>
 							<a class="link-muted" @click="removeRestriction">

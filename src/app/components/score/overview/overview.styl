@@ -1,17 +1,16 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .score-overview-user-best
-	.well
-	.alert
+	.well, .alert
 		position: relative
 		margin-bottom: 0
 
 	@media $media-sm-up
 		.alert::before
-			caret( $gj-pink, size: 9px )
+			caret(var(--theme-bg-offset), size: 9px)
 			content: ''
 
 		.well::before
-			caret( $gray-dark, size: 9px )
+			caret($gray-darkest, size: 9px)
 			content: ''

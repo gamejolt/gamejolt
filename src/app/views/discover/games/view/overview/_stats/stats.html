@@ -78,7 +78,7 @@
 		:when="isShowingRatingBreakdown"
 		>
 		<br>
-		<div class="rating-breakdown well fill-lightest">
+		<div class="rating-breakdown well fill-offset">
 			<table class="table">
 				<tbody>
 					<tr v-for="( ratingString, i ) of ratingStrings">
@@ -88,8 +88,8 @@
 						<td class="rating-breakdown-progress" style="vertical-align: middle">
 							<app-progress-bar
 								variant="darker"
+								thin
 								:percent="ratingBreakdown[ (5 - i) ] / game.rating_count * 100"
-								:thin="true"
 								/>
 						</td>
 						<td class="rating-breakdown-count">

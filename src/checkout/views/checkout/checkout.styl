@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require './../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .game-cover
 	margin-top: -($grid-gutter-width / 2)
@@ -15,7 +15,7 @@ h1
 	margin-bottom: 0
 
 h4
+	theme-prop('color', 'fg-muted')
 	margin-top: 0
 	margin-bottom: $line-height-computed
-	color: $text-muted
 	font-family: $font-family-base

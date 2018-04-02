@@ -1,15 +1,15 @@
 <div :class="{ 'is-client-offline': Connection.isClientOffline }">
 	<div id="shell">
 
-		<div id="header">
+		<div id="header" class="theme-dark">
 			<app-user-bar :user="app.user" site="main" :hide-site-selector="true">
-				<a class="btn btn-outline btn-dark-variant"
+				<app-button
 					v-if="GJ_IS_CLIENT"
+					icon="chevron-left"
 					@click="navigateBack()"
 					>
-					<app-jolticon icon="chevron-left" />
 					<translate>Back to Game</translate>
-				</a>
+				</app-button>
 			</app-user-bar>
 		</div>
 

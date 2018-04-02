@@ -1,5 +1,5 @@
 <app-form name="devlogPostForm" ref="form">
-	<div v-if="formModel.type === 'sketchfab'" class="alert alert-info">
+	<div v-if="formModel.type === 'sketchfab'" class="alert">
 		<p><translate>With Sketchfab you can embed 3D content from your game in the browser. You can also view that content from any Virtual Reality headset. AMAZING!</translate></p>
 		<p>
 			<a href="https://sketchfab.com/" class="link-help" target="_blank">
@@ -41,7 +41,7 @@
 		</app-form-group>
 	</div>
 	<div v-else-if="formModel.type === 'media'">
-		<div class="alert alert-info">
+		<div class="alert">
 			<translate>Note that at this time we don't allow you to modify the media after you save the post. Make sure it's lookin' good before you save.</translate>
 		</div>
 
@@ -106,17 +106,16 @@
 
 	<template v-if="!isPublished && !hasPoll">
 		<div>
-			<button
-				class="btn btn-outline btn-sparse"
+			<app-button
+				sparse
+				icon="pedestals-numbers"
 				v-app-tooltip="$gettext(`Add poll`)"
 				@click.prevent="createPoll()"
-				>
-				<app-jolticon icon="pedestals-numbers" />
-			</button>
+				/>
 		</div>
 		<br>
 	</template>
-	<div class="well fill-lightest full-bleed" v-else-if="hasPoll">
+	<div class="well fill-offset full-bleed" v-else-if="hasPoll">
 		<fieldset>
 			<app-form-legend compact>
 				<translate>Set up poll</translate>
@@ -263,13 +262,12 @@
 		</fieldset>
 
 		<div class="text-right" v-if="isPollEditable">
-			<button
-				class="btn btn-outline"
+			<app-button
+				trans
 				@click.prevent="removePoll()"
 				>
-				<app-jolticon icon="remove" />
 				<translate>Remove poll</translate>
-			</button>
+			</app-button>
 		</div>
 	</div>
 
@@ -282,7 +280,7 @@
 		:label="$gettext(`Access Permissions`)"
 		>
 		<div
-			class="alert alert-info"
+			class="alert"
 			v-if="!keyGroups.length"
 			>
 			<translate>You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. You can create a user key group through the "Keys/Access" page.</translate>
@@ -328,7 +326,7 @@
 		<label class="control-label">
 			<translate>Access Permissions</translate>
 		</label>
-		<div class="alert alert-info">
+		<div class="alert">
 			<translate>The below key groups have access to this post. You can't edit who has access after posting since notifications have already gone out.</translate>
 		</div>
 		<div>
@@ -338,10 +336,7 @@
 		</div>
 	</div>
 
-	<app-form-button
-		:disabled="!valid"
-		:icon="model.status !== FiresidePost.STATUS_ACTIVE ? 'add' : 'edit'"
-		>
+	<app-form-button :disabled="!valid">
 		<template v-if="model.status !== FiresidePost.STATUS_ACTIVE">
 			<translate>Publish</translate>
 		</template>
@@ -350,12 +345,12 @@
 		</template>
 	</app-form-button>
 
-	<button
-		class="btn btn-outline"
+	<app-button
 		v-if="model.status !== FiresidePost.STATUS_ACTIVE"
+		trans
 		:disabled="!valid"
 		@click.prevent="onDraftSubmit()"
 		>
 		<translate>Save as Draft</translate>
-	</button>
+	</app-button>
 </app-form>

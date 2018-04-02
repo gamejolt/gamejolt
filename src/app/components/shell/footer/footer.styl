@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 #footer
 	position: relative
@@ -9,9 +10,6 @@
 
 	@media $media-xs
 		text-align: center
-
-	hr
-		border-color: $gray-dark
 
 .footer
 	&-ad .ad-inner
@@ -25,7 +23,7 @@
 			font-size: $font-size-small
 
 		> li > a
-			color: $text-muted
+			theme-prop('color', 'fg-muted')
 
 			&:hover
 				color: $white

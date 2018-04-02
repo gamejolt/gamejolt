@@ -1,26 +1,29 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .collection-thumbnail
+	theme-prop('background-color', 'bg-offset')
 	position: relative
 	height: 0
-	padding-top: 56.25%  // HD 16:9
+	padding-top: 56.25% // HD 16:9
 	overflow: hidden
-	background-color: $gray-lightest
 
 	> .tag
 		position: absolute
 		left: 0
 		top: 10px
 		z-index: 2
+		border-top-left-radius: 0
+		border-bottom-left-radius: 0
 
 	> .jolticon
+		theme-prop('color', 'bg-subtle')
 		position: absolute
 		font-size: 16px * 4
 		left: 50%
 		margin-left: -(@font-size / 2)
 		top: @left
 		margin-top: @margin-left
-		color: $gray-lighter
 
 		// We have a much smaller view in lists.
 		.game-collection-list &

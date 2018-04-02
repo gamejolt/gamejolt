@@ -57,16 +57,16 @@
 		<!--
 			Missing fields.
 		-->
-		<span class="tag tag-pink" v-if="model.hasError( GameBuild.ERROR_MISSING_FIELDS )">
+		<span class="tag tag-notice" v-if="model.hasError( GameBuild.ERROR_MISSING_FIELDS )">
 			<app-jolticon icon="notice" />
 			<translate>Incomplete</translate>
 		</span>
 
 		<span v-else>
-			<span class="tag tag-blue" v-if="model.status === GameBuild.STATUS_ADDING">
+			<span class="tag" v-if="model.status === GameBuild.STATUS_ADDING">
 				<translate>Processing</translate>
 			</span>
-			<span class="tag tag-active" v-else-if="model.status === GameBuild.STATUS_ACTIVE">
+			<span class="tag tag-highlight" v-else-if="model.status === GameBuild.STATUS_ACTIVE">
 				<app-jolticon icon="check" />
 				<translate>Active</translate>
 			</span>
@@ -85,10 +85,10 @@
 
 		<br>
 		<app-progress-bar
-			:thin="true"
-			:indeterminate="true"
+			thin
+			indeterminate
+			active
 			:percent="100"
-			:active="true"
 			/>
 
 		<div class="text-center small" v-translate>
@@ -99,12 +99,12 @@
 	<template slot="body">
 		<app-form name="buildForm" ref="form">
 
-			<div v-if="model.type === GameBuild.TYPE_APPLET" class="alert alert-warning sans-margin">
+			<div v-if="model.type === GameBuild.TYPE_APPLET" class="alert alert-notice sans-margin">
 				<app-jolticon icon="notice" />
 				<strong><translate>Java Applets have been deprecated.</translate></strong>
 				<translate>You can no longer edit your Java Applet builds, although gamers will still be able to play them if their browsers support them. You can add .jar files as downloadables and the Game Jolt Client will correctly launch them for users instead.</translate>
 			</div>
-			<div v-else-if="model.type === GameBuild.TYPE_SILVERLIGHT" class="alert alert-warning sans-margin">
+			<div v-else-if="model.type === GameBuild.TYPE_SILVERLIGHT" class="alert alert-notice sans-margin">
 				<app-jolticon icon="notice" />
 				<strong><translate>Silverlight builds have been deprecated.</translate></strong>
 				<translate>You can no longer edit your Silverlight builds, although gamers will still be able to play them if their browsers support them.</translate>
@@ -159,7 +159,7 @@
 					</div>
 
 					<app-expand :when="hasPlatformsError">
-						<div class="alert alert-warning sans-margin-bottom" v-translate>
+						<div class="alert alert-notice sans-margin-bottom" v-translate>
 							dash.games.builds.form.no_platforms_error
 						</div>
 					</app-expand>
@@ -222,14 +222,14 @@
 					</div>
 
 					<app-expand :when="serverErrors.launchOptions">
-						<div class="alert alert-warning">
+						<div class="alert alert-notice">
 							<strong><translate>The launch options you entered are invalid.</translate></strong>
 							<translate>Make sure each selected file is in your build and that it works on the appropriate operating system.</translate>
 						</div>
 					</app-expand>
 
 					<app-expand :when="!model.primary_file.is_archive">
-						<div class="alert alert-info sans-margin-bottom" v-translate>
+						<div class="alert sans-margin-bottom" v-translate>
 							dash.games.releases.builds.launch_options.standalone_info_html
 						</div>
 					</app-expand>
@@ -307,7 +307,7 @@
 						/>
 				</app-form-group>
 
-				<div class="alert alert-warning"
+				<div class="alert alert-notice"
 					v-if="model.type === GameBuild.TYPE_UNITY"
 					>
 					<app-jolticon icon="notice" />
@@ -315,7 +315,7 @@
 					<translate>Please consider exporting to WebGL instead.</translate>
 				</div>
 
-				<div class="alert alert-info"
+				<div class="alert"
 					v-if="isBrowserBased"
 					:class="{
 						'sans-margin-bottom': !hasBrowserError
@@ -339,7 +339,7 @@
 				</p>
 
 				<app-expand :when="hasBrowserError">
-					<div class="alert alert-warning sans-margin-bottom">
+					<div class="alert alert-notice sans-margin-bottom">
 						<translate>This build has more info to fill in before it will be available in this release.</translate>
 					</div>
 				</app-expand>

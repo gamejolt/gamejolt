@@ -15,7 +15,7 @@
 			@click.native.capture="onUserClick"
 			>
 
-			<span class="tag tag-pink notifications-tag"
+			<span class="tag tag-notice notifications-tag"
 				v-if="chat.notifications[ user.roomId ] || 0"
 				>
 				{{ chat.notifications[ user.roomId ] || 0 | number }}
@@ -48,25 +48,25 @@
 
 				<!-- Only show tags in room user lists -->
 				<template v-if="room">
-					<span class="chat-user-role tag tag-active"
+					<span class="chat-user-role tag tag-highlight"
 						v-if="user.isMod === 'owner'"
 						:title="$gettext( `Room Admin` )"
 						>
 						A
 					</span>
-					<span class="chat-user-role tag tag-active"
+					<span class="chat-user-role tag tag-highlight"
 						v-if="user.isMod === 'moderator'"
 						:title="$gettext( `Room Moderator` )"
 						>
 						M
 					</span>
-					<span class="chat-user-role tag tag-active"
+					<span class="chat-user-role tag tag-highlight"
 						v-if="user.permissionLevel >= ChatSiteModPermission"
 						:title="$gettext( `Site Moderator` )"
 						>
 						S
 					</span>
-					<span class="chat-user-role tag tag-pink"
+					<span class="chat-user-role tag tag-notice"
 						v-if="showModTools && (user.isMutedRoom || user.isMutedGlobal)"
 						:title="$gettext( `Muted` )"
 						>

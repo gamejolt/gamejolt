@@ -3,16 +3,14 @@
 	<app-game-playlist-add-to-widget
 		class="game-header-add"
 		:game="game"
-		:outline="true"
 		event-label="game-header"
 		/>
 
 	<div class="game-header-follow-container">
 		<app-game-follow-widget
-			class="btn-block"
-			:outline="true"
 			:game="game"
-			:show-user-follow="true"
+			block
+			show-user-follow
 			event-label="game-header"
 			/>
 	</div>

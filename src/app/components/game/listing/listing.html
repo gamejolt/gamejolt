@@ -1,5 +1,5 @@
 <div class="game-listing" id="games">
-	<section class="section fill-lightest nav-only" v-if="!hideFilters">
+	<section class="section fill-offset nav-only" v-if="!hideFilters">
 		<div class="container">
 			<app-game-filtering-widget :filtering="listing.filteringContainer" />
 		</div>
@@ -115,7 +115,7 @@
 		<div class="container anim-fade-in"
 			v-if="listing.isBootstrapped && !listing.gamesCount"
 			>
-			<div class="alert alert-warning">
+			<div class="alert alert-notice">
 				<div class="container">
 					<p>
 						<translate>No games match your filters. Zoinks!</translate>

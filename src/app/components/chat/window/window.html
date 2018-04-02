@@ -18,10 +18,13 @@
 			<template v-if="Screen.isXs">
 				<br>
 				<div class="nav-controls">
-					<button class="btn btn-outline btn-block" @click="toggleUsers">
-						<app-jolticon icon="chevron-left" />
+					<app-button
+						block
+						icon="chevron-left"
+						@click="toggleUsers"
+						>
 						<translate>Back to Chat</translate>
-					</button>
+					</app-button>
 				</div>
 			</template>
 
@@ -39,7 +42,7 @@
 
 			<div class="nav-heading">
 				<translate>Room Users</translate>
-				<span class="badge" :class="{ 'badge-active': users && users.onlineCount > 0 }">
+				<span class="badge" :class="{ 'badge-highlight': users && users.onlineCount > 0 }">
 					{{ users ? users.onlineCount : 0 | number }}
 				</span>
 			</div>
@@ -62,27 +65,29 @@
 
 					<div class="chat-window-header-controls">
 
-						<button class="btn btn-sparse anim-fade-in"
+						<app-button
 							v-if="!room.isPmRoom"
+							sparse
+							icon="users"
+							class="anim-fade-in"
 							@click="toggleUsers"
-							>
-							<app-jolticon icon="users" />
-						</button>
+							/>
 
-						<button class="btn btn-sparse anim-fade-in"
-							@click="showEditRoomModal"
+						<app-button
 							v-if="room.isMod"
+							sparse
+							icon="edit"
+							class="anim-fade-in"
+							@click="showEditRoomModal"
 							:title="$gettext( 'Edit Room Details' )"
-							>
-							<app-jolticon icon="edit" />
-						</button>
+							/>
 
-						<button class="btn btn-sparse"
+						<app-button
+							sparse
+							icon="remove"
 							@click="close"
 							:title="$gettext( 'Close Room' )"
-							>
-							<app-jolticon icon="remove" />
-						</button>
+							/>
 
 					</div>
 
@@ -131,12 +136,14 @@
 								</div>
 							</app-fade-collapse>
 
-							<button class="btn btn-sm btn-outline anim-fade-in"
+							<app-button
 								v-if="isDescriptionCollapsed && !isShowingUsers"
+								sm
+								class="anim-fade-in"
 								@click="toggleUsers"
 								>
 								<translate>more</translate>
-							</button>
+							</app-button>
 						</template>
 
 					</div>

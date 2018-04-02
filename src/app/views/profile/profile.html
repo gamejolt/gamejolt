@@ -32,7 +32,7 @@
 			<app-jolticon
 				v-if="user.is_verified"
 				icon="verified"
-				:big="true"
+				big
 				class="verified-account-tag"
 				v-app-tooltip="$gettext( 'profile.verified_tooltip' )"
 				/>
@@ -58,7 +58,7 @@
 
 			<!-- Friend status -->
 			<span
-				class="tag tag-active"
+				class="tag tag-highlight"
 				v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
 				v-app-tooltip="$gettext( 'profile.friend_tooltip' )"
 				>
@@ -71,14 +71,14 @@
 					<app-jolticon icon="chat-offline" />
 					<translate>profile.offline_tag</translate>
 				</span>
-				<span class="tag tag-active" v-if="isOnline" v-app-tooltip="$gettext( 'profile.online_tooltip' )">
+				<span class="tag tag-highlight" v-if="isOnline" v-app-tooltip="$gettext( 'profile.online_tooltip' )">
 					<app-jolticon icon="chat-online" />
 					<translate>profile.online_tag</translate>
 				</span>
 			</template>
 
 			<!-- In-game -->
-			<span class="tag tag-pink" v-if="activeGameSession" v-app-tooltip="$gettext( 'profile.in_game_tooltip' )">
+			<span class="tag tag-notice" v-if="activeGameSession" v-app-tooltip="$gettext( 'profile.in_game_tooltip' )">
 				<app-jolticon icon="chat-in-game" />
 				<translate>profile.in_game_tag</translate>
 			</span>
@@ -120,14 +120,14 @@
 						v-if="app.user && user.id !== app.user.id"
 						@click="report"
 						>
-						<app-jolticon icon="flag warning" />
+						<app-jolticon icon="flag" notice />
 						<translate>profile.report_user_button</translate>
 					</a>
 					<a class="list-group-item has-icon"
 						v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
 						@click="removeFriend"
 						>
-						<app-jolticon icon="friend-remove-2 warning" />
+						<app-jolticon icon="friend-remove-2" notice />
 						<translate>profile.remove_friend_button</translate>
 					</a>
 					<a class="list-group-item has-icon"
@@ -145,9 +145,8 @@
 		<template slot="controls">
 			<app-user-follow-widget
 				v-if="!app.user || user.id !== app.user.id"
-				class="btn-block"
 				:user="user"
-				:outline="true"
+				block
 				event-label="profile"
 				/>
 		</template>

@@ -7,11 +7,13 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Store } from '../../../store/index';
+import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';
 
 @View
 @Component({
 	components: {
 		AppJolticon,
+		AppProgressBar,
 	},
 	directives: {
 		AppTooltip,

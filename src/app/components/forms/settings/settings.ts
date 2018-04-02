@@ -8,6 +8,7 @@ import {
 	FormOnInit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import * as _ClientAutoStartMod from '../../../../_common/client/autostart/autostart.service';
+import { Theme } from '../../../../_common/theme/theme.service';
 
 let ClientAutoStartMod: typeof _ClientAutoStartMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -27,6 +28,7 @@ type FormModel = {
 	max_extract_count: number;
 	limit_extractions: boolean;
 	autostart_client: boolean;
+	theme_dark: boolean;
 };
 
 @View
@@ -51,6 +53,7 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 		this.setField('broadcast_modal', Settings.get('broadcast-modal'));
 		this.setField('animated_thumbnails', Settings.get('animated-thumbnails'));
 		this.setField('feed_notifications', Settings.get('feed-notifications'));
+		this.setField('theme_dark', Theme.isDark);
 
 		if (GJ_IS_CLIENT) {
 			this.setField('game_install_dir', Settings.get('game-install-dir'));
@@ -106,6 +109,7 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 		Settings.set('broadcast-modal', this.formModel.broadcast_modal);
 		Settings.set('animated-thumbnails', this.formModel.animated_thumbnails);
 		Settings.set('feed-notifications', this.formModel.feed_notifications);
+		Theme.setDark(this.formModel.theme_dark);
 
 		if (GJ_IS_CLIENT) {
 			Settings.set('game-install-dir', this.formModel.game_install_dir);

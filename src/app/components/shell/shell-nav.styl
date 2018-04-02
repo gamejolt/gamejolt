@@ -3,7 +3,7 @@
  */
 $shell-nav-item-spacing = 12px
 $shell-nav-item-height = 50px
-$shell-nav-item-color = $gray-lightest
+$shell-nav-item-color = $dark-theme-fg
 
 ul.shell-nav
 	@extend .list-unstyled
@@ -47,7 +47,7 @@ ul.shell-nav
 		z-index: 1
 
 	small
-		color: $text-muted
+		color: $dark-theme-fg-muted
 
 	& > li
 		margin-bottom: 0
@@ -63,24 +63,24 @@ ul.shell-nav
 			line-height: $shell-nav-item-height
 
 			&:hover
-				color: $white
 				background-color: $gray-darker
+				color: $dark-theme-link-hover
 
 			&.no-icon
 				padding-left: 15px
 
 			&.active
 				&, &:hover
-					color: $gj-green
+					theme-prop('color', 'highlight')
 
 					.jolticon
-						color: $gj-green
+						theme-prop('color', 'highlight')
 
 					.tag
-						@extend .tag-pink
+						@extend .tag-notice
 
 					.badge
-						@extend .badge-active
+						@extend .badge-highlight
 
 // Nested ULs
 ul.shell-nav ul
@@ -118,7 +118,7 @@ ul.shell-nav ul
 	letter-spacing: 0.1em
 	line-height: 1
 	text-transform: uppercase
-	color: $gray-lightest
+	color: $dark-theme-fg
 	margin-top: $font-size-base * 2
 	margin-bottom: ($font-size-base / 2)
 	margin-left: 15px
@@ -129,7 +129,7 @@ ul.shell-nav ul
 
 	& > small
 		float: right
-		color: $gray-light
+		color: $dark-theme-fg-muted
 		font-weight: normal
 
 	& > .badge
@@ -138,18 +138,17 @@ ul.shell-nav ul
 		margin-left: 5px
 
 	a&:hover
-		color: $white
+		color: $dark-theme-link-hover
 		text-decoration: underline
 
 /**
  * Nav Wells
  */
 .nav-well
-	// margin: 0 15px $font-size-base 15px
 	padding: 15px
 	font-size: $font-size-small
 	background-color: $gray-darker
-	color: $gray-lighter
+	color: $$dark-theme-fg
 
 /**
  * Alert Panes
@@ -164,15 +163,5 @@ ul.shell-nav ul
 .nav-controls
 	padding: 0 7px 0 15px
 
-	& > .form-control, > .btn
+	& > .form-control, & > .button
 		margin-bottom: $font-size-base
-
-	& > .form-control
-		placeholder($gray-light)
-		border: 0
-		font-size: $font-size-small
-		background-color: $gray-lighter
-		color: $gray-darkest
-
-		&:focus
-			background-color: $gray-lightest

@@ -27,7 +27,7 @@
 		<span v-if="localPackage.install_state || localPackage.update_state">
 
 			<template v-if="localPackage.didInstallFail || localPackage.didUpdateFail">
-				<span class="tag tag-pink">
+				<span class="tag tag-notice">
 					{{ localPackage.didInstallFail ? $gettext('Installation Failed') : $gettext('Update Failed') }}
 				</span>
 				<button
@@ -56,7 +56,7 @@
 				</template>
 
 				<template v-else-if="localPackage.isUpdating">
-					<translate class="tag tag-blue">UPDATING</translate>
+					<translate class="tag tag-highlight">UPDATING</translate>
 				</template>
 
 				<template v-else-if="!localPackage.isPatchQueued">
@@ -212,7 +212,7 @@
 					}"
 					@click="uninstallPackage( package_ )"
 					>
-					<app-jolticon icon="remove warning" />
+					<app-jolticon icon="remove" notice />
 					<span v-translate="{ title: package_.title || game.title }">
 						Uninstall %{ title }
 					</span>

@@ -14,9 +14,9 @@
 	<!--
 		When they are offline, we show them this message.
 	-->
-	<section class="section fill-pink text-center" v-if="Connection.isClientOffline">
+	<section class="section fill-notice text-center" v-if="Connection.isClientOffline">
 		<p>
-			<app-jolticon icon="notice" :big="true" />
+			<app-jolticon icon="notice" big />
 		</p>
 		<p class="sans-margin">
 			<translate>You must be online to access your playlists.</translate>

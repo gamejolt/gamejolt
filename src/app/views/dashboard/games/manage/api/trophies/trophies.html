@@ -16,7 +16,7 @@
 			</p>
 		</div>
 
-		<div class="alert alert-warning" v-if="hasHiddenTrophies" v-translate>
+		<div class="alert alert-notice" v-if="hasHiddenTrophies" v-translate>
 			dash.games.trophies.has_hidden_html
 		</div>
 
@@ -47,7 +47,6 @@
 						:key="trophy.id"
 						:id="`trophy-container-${ trophy.id }`"
 						:item="trophy"
-						:is-inactive="!trophy.visible"
 						>
 
 						<div class="row">
@@ -90,7 +89,7 @@
 								<div class="card-meta" v-if="!trophy.visible || trophy.secret">
 									<span
 										v-if="!trophy.visible"
-										class="tag tag-pink"
+										class="tag tag-notice"
 										v-app-tooltip="$gettext( `dash.games.trophies.hidden_tooltip` )"
 										>
 										<translate>dash.games.trophies.hidden_tag</translate>

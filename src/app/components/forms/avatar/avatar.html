@@ -47,17 +47,16 @@
 
 	<template v-if="formModel.avatar_media_item && !hasFormErrors">
 		<div>
-			<app-form-button icon="edit">
+			<app-form-button>
 				<translate>Save Crop</translate>
 			</app-form-button>
 
-			<button
-				class="btn btn-danger-outline"
+			<app-button
+				trans
 				@click.prevent.stop="clearAvatar()"
 				>
-				<app-jolticon icon="remove" />
 				<translate>Remove Avatar</translate>
-			</button>
+			</app-button>
 		</div>
 
 		<br>

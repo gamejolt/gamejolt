@@ -42,8 +42,7 @@
 				/>
 
 			<div class="text-center">
-				<router-link
-					class="btn btn-outline"
+				<app-button
 					:to="{
 						name: 'discover.channels.view.games',
 						params: { section: 'best' },
@@ -51,7 +50,7 @@
 					v-app-track-event="`channel:more-btn:best`"
 					>
 					<translate>Load More</translate>
-				</router-link>
+				</app-button>
 			</div>
 
 		</div>
@@ -98,8 +97,7 @@
 				/>
 
 			<div class="text-center">
-				<router-link
-					class="btn btn-outline"
+				<app-button
 					:to="{
 						name: 'discover.channels.view.games',
 						params: { section: 'hot' },
@@ -107,7 +105,7 @@
 					v-app-track-event="`channel:more-btn:hot`"
 					>
 					<translate>Load More</translate>
-				</router-link>
+				</app-button>
 			</div>
 
 		</div>
@@ -138,7 +136,7 @@
 						show-ads
 						/>
 
-					<div class="alert alert-info" v-if="!feed.hasItems">
+					<div class="alert" v-if="!feed.hasItems">
 						<translate>This channel doesn't have any posts yet.</translate>
 					</div>
 

@@ -58,7 +58,7 @@
 						</div>
 
 						<div class="card-meta">
-							<span class="tag tag-active"
+							<span class="tag tag-highlight"
 								v-if="i === 0"
 								v-app-tooltip="$gettext( `dash.games.scoreboards.primary_tooltip` )"
 								>
@@ -97,17 +97,15 @@
 						<div class="card-controls">
 
 							<!-- Don't propagate the click so that it doesn't open the accordion item. -->
-							<router-link
-								class="btn btn-outline"
+							<app-button
 								:to="{
 									name: 'dash.games.manage.api.scoreboards.scores.list',
 									params: { table: scoreTable.id }
 								}"
 								@click.native.stop
 								>
-								<app-jolticon icon="chevron-right" />
 								<translate>dash.games.scoreboards.scores_button</translate>
-							</router-link>
+							</app-button>
 
 						</div>
 

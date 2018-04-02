@@ -763,10 +763,6 @@ boom@5.x.x:
   dependencies:
     hoek "4.x.x"
 
-bootstrap-stylus@hworld/bootstrap-stylus#master:
-  version "3.1.1"
-  resolved "https://codeload.github.com/hworld/bootstrap-stylus/tar.gz/885d2dae5530774b0c011162060379ceb08bf405"
-
 bplist-creator@~0.0.3:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/bplist-creator/-/bplist-creator-0.0.7.tgz#37df1536092824b87c42f957b01344117372ae45"
@@ -5712,6 +5708,10 @@ pofile@1.0.9:
 pofile@~1.0.0:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/pofile/-/pofile-1.0.10.tgz#503dda9499403984e83ff4489ba2d80af276172a"
+
+polished@^1.9.2:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/polished/-/polished-1.9.2.tgz#d705cac66f3a3ed1bd38aad863e2c1e269baf6b6"
 
 popper.js@^1.12.6:
   version "1.12.9"

@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../../../../../lib/gj-lib-client/stylus/common/mixins.styl'
+@require '~styles-lib/mixins'
 
 .section-header
 	word-wrap: normal
@@ -10,8 +10,8 @@
 
 	@media $media-xs
 		full-bleed()
+		theme-prop('background-color', 'bg-offset')
 		height: ($line-height-computed / 2)
-		background-color: $gray-lightest
 		border-top: 1px solid $gray-lighter
 		border-bottom: 1px solid $gray-lighter
 		margin-bottom: $line-height-computed

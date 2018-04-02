@@ -18,13 +18,14 @@
 		<br>
 
 		<div>
-			<a
-				class="btn btn-success-outline btn-block"
+			<app-button
+				type="a"
+				primary
+				block
 				@click="acceptRules"
 				>
-				<app-jolticon icon="checkbox" />
 				<translate>dash.games.add.rules_accept_button</translate>
-			</a>
+			</app-button>
 		</div>
 
 	</div>
@@ -205,7 +206,7 @@
 						-->
 						<div v-if="account && account.tos_signed_developer === 1">
 							<br>
-							<div class="alert alert-warning">
+							<div class="alert alert-notice">
 								<translate>You must sign the new Distribution Agreement which covers the terms for the Partner Program before your games will become available in the Partner Program.</translate>
 								<router-link :to="{ name: 'dash.account.financials' }">
 									<translate>Click here to view the new Distribution Agreement</translate>
@@ -219,10 +220,7 @@
 		</fieldset>
 
 		<app-dash-game-wizard-controls>
-			<app-form-button
-				v-if="method === 'edit'"
-				icon="edit"
-				>
+			<app-form-button v-if="method === 'edit'">
 				<translate>Save Details</translate>
 			</app-form-button>
 		</app-dash-game-wizard-controls>

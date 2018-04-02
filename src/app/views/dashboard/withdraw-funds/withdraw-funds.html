@@ -12,7 +12,7 @@
 
 				<div class="col-sm-3 col-md-4 col-lg-6" :class="{ 'pull-right': !Screen.isXs }">
 
-					<div :class="{ 'well fill-lightest text-center': Screen.isXs }">
+					<div :class="{ 'well fill-offset text-center': Screen.isXs }">
 						<ul :class="Screen.isXs ? 'stat-list' : 'list-unstyled'">
 							<li v-if="revenuePending > 0" class="stat-big" :class="{ 'stat-big-smaller': Screen.isXs }">
 								<div class="stat-big-label"><translate>dash.funds.withdraw.revenue_pending</translate></div>

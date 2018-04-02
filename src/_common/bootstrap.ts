@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { Theme } from './theme/theme.service';
 import { VueRouter } from 'vue-router/types/router';
 import { VuexStore } from '../lib/gj-lib-client/utils/vuex';
 import { hijackLinks } from '../lib/gj-lib-client/utils/router';
@@ -8,12 +9,15 @@ import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.s
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 import { bootstrapAppTranslations } from '../utils/translations';
 import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
+import { AppButton } from '../lib/gj-lib-client/components/button/button';
+import { AppJolticon } from '../lib/gj-lib-client/vue/components/jolticon/jolticon';
 
 /**
  * Bootstraps common services and returns a "createApp" function that our entry point can call to
  * get what it needs.
  */
 export function bootstrapCommon(store: VuexStore, router: VueRouter, appComponent: typeof Vue) {
+	Theme.sync();
 	Meta.init(router);
 	Payload.init(store);
 	Referrer.init(router);
@@ -21,6 +25,10 @@ export function bootstrapCommon(store: VuexStore, router: VueRouter, appComponen
 	Connection.init(store);
 
 	hijackLinks(router, 'gamejolt.com');
+
+	// Common components.
+	Vue.component('AppButton', AppButton);
+	Vue.component('AppJolticon', AppJolticon);
 
 	return () => {
 		bootstrapAppTranslations();

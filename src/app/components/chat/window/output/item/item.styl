@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .chat-window-message
 	position: relative
@@ -18,7 +18,7 @@
 		z-index: 1
 
 		> img
-			border-radius: $border-radius-base
+			rounded-corners()
 
 	&-container
 		margin-left: 35px + 20px
@@ -34,12 +34,12 @@
 		vertical-align: bottom
 
 	&-username
-		color: $text-muted
+		theme-prop('color', 'fg-muted')
 		font-size: $font-size-tiny
 
 	&-time
+		theme-prop('color', 'fg-muted')
 		margin-left: 5px
-		color: $text-muted
 		font-size: $font-size-tiny
 
 	// This ridiculousness is so that we can show <pre> tags full bleed even if they're in fade-collapsers.
@@ -81,18 +81,15 @@
 
 	&-content
 		display: block
-
 		// If we don't break words then it can make the window too large to try
 		// to fit in the text. We also try to hyphenate.
 		// Note: hyphens only works on Chrome in Mac and Android.
 		// Luckily this is mostly where it matters.
 		word-wrap: break-word
 		hyphens: auto
-
 		// Add in the padding again.
 		padding-left: 35px + 10px + $chat-room-window-padding
 		padding-right: 34px + 1px + $chat-room-window-padding
-
 		// Try to limit the effects of what zalgo text can do to chat.
 		overflow: hidden
 

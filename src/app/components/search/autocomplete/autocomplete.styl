@@ -1,17 +1,14 @@
 @require '~styles/variables'
 
 .search-autocomplete-popover
-
-	.search-user-avatar
-	.search-game-thumbnail
+	.search-user-avatar, .search-game-thumbnail
 		float: left
 		margin-right: 10px
-		background-color: $gray-lightest
+		background-color: $dark-theme-bg-offset
 		border: 0
 
 	.search-game-thumbnail
-		&
-		& > img
+		&, & > img
 			height: 20px
 			width: @height * (16 / 9)
 
@@ -35,12 +32,11 @@
 			width: 150px
 
 	.client-game-buttons
-
 		.tag
 			margin: 0
 
 		// In list-group-items this gets floated.
-		.tag-pink
+		.tag-notice
 			float: none
 
 	.client-install-progress-info

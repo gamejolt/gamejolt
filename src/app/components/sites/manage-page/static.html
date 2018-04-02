@@ -1,6 +1,6 @@
 <div>
 	<div
-		class="well fill-lightest text-center"
+		class="well fill-offset text-center"
 		v-if="!enabled"
 		>
 		<div class="row">
@@ -16,14 +16,14 @@
 					@submit="onBuildAdded"
 					/>
 
-				<button
-					class="btn btn-success-outline"
-					v-if="site.build"
+				<app-button
+					v-else
+					primary
 					@click="activateBuild()"
 					v-app-tooltip="templateEnabled ? $gettext('This will disable your template and use your static build instead.') : undefined"
 					>
 					<translate>Turn On</translate>
-				</button>
+				</app-button>
 
 			</div>
 		</div>

@@ -9,9 +9,12 @@
 					</router-link>
 				</p>
 				<p>
-					<router-link :to="{ name: 'landing.client' }" class="btn btn-primary">
+					<app-button
+						primary
+						:to="{ name: 'landing.client' }"
+						>
 						<translate>Get It Now</translate>
-					</router-link>
+					</app-button>
 				</p>
 			</div>
 
@@ -162,16 +165,20 @@
 			<div class="footer-meta">
 
 				<p>
-					<a class="btn btn-sparse" href="https://twitter.com/gamejolt" target="_blank">
-						<app-jolticon icon="twitter-bird" />
-					</a>
-					<a class="btn btn-sparse" href="https://facebook.com/gamejolt" target="_blank">
-						<app-jolticon icon="facebook" />
-					</a>
+					<app-button
+						sparse
+						icon="twitter-bird"
+						href="https://twitter.com/gamejolt" target="_blank"
+						/>
+					<app-button
+						sparse
+						icon="facebook"
+						href="https://facebook.com/gamejolt" target="_blank"
+						/>
 				</p>
 
 				<p class="tiny">
-					&copy; {{ curDate | date( 'YYYY' ) }} Lucent Web Creative, LLC
+					&copy; {{ curDate | date( 'YYYY' ) }} Lucent Web Creative, <span @click="showThemeEditor()">LLC</span>
 				</p>
 
 				<p class="tiny text-muted" v-if="GJ_IS_CLIENT">

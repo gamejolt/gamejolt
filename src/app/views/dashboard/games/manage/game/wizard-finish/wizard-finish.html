@@ -1,10 +1,7 @@
 <div class="row">
 	<div class="col-sm-7">
 
-		<div
-			class="alert"
-			:class="canPublish ? 'alert-success' : 'alert-info'"
-			>
+		<div class="alert">
 			<div v-if="canPublish">
 				<translate>Your game is ready to be published to the site! If you're not ready yet, you can always save it for later.</translate>
 			</div>
@@ -13,20 +10,17 @@
 			</div>
 
 			<div class="alert-actions">
-				<button
-					class="btn btn-success-outline btn-dark-variant"
+				<app-button
+					primary
 					:disabled="!canPublish"
 					@click="publish()"
 					>
 					<translate>Publish</translate>
-				</button>
+				</app-button>
 
-				<button
-					class="btn btn-outline btn-dark-variant"
-					@click="saveDraft()"
-					>
+				<app-button trans @click="saveDraft()">
 					<translate>Save Draft</translate>
-				</button>
+				</app-button>
 			</div>
 		</div>
 

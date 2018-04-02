@@ -15,7 +15,6 @@ import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-serv
 import { AppScrollInview } from '../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { AppUserAvatarImg } from '../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppVideo } from '../../../lib/gj-lib-client/components/video/video';
-import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { currency } from '../../../lib/gj-lib-client/vue/filters/currency';
 import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Settings } from '../../settings/settings.service';
@@ -24,7 +23,6 @@ import { ContentFocus } from '../../content-focus/content-focus.service';
 @View
 @Component({
 	components: {
-		AppJolticon,
 		AppGameThumbnailImg,
 		AppGameCompatIcons,
 		AppVideo,

@@ -2,9 +2,11 @@
 
 	<h2 class="section-header">
 		<div class="section-header-controls">
-			<button class="btn btn-sparse btn-danger-outline" @click="remove">
-				<app-jolticon icon="remove" />
-			</button>
+			<app-button
+				sparse
+				icon="remove"
+				@click="remove"
+				/>
 		</div>
 
 		<translate>dash.games.data_store.items.view.heading</translate>

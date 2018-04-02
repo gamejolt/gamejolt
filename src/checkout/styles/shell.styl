@@ -14,6 +14,9 @@ body
 		padding-bottom: ($grid-gutter-width / 2)
 		background-color: $white
 
+		@media $media-sm-up
+			rounded-corners()
+
 		&.page-error
 			padding-top: 0
 			padding-bottom: 0
@@ -38,4 +41,3 @@ body
 
 		.footer-copyright
 			float: right
-
