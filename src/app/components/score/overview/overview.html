@@ -175,26 +175,6 @@
 			</div>
 
 		</div>
-
-		<!--
-			Latest Scores
-			Don't even include the feed if there is no scores for this scoreboard.
-		-->
-		<div class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''"
-			v-if="scores.length"
-			>
-
-			<div class="score-overview-feed">
-				<h4>
-					<translate>Latest Scores</translate>
-				</h4>
-
-				<div class="scrollable-grid-xs">
-					<app-score-feed :score-table="scoreTable" />
-				</div>
-			</div>
-
-		</div>
 	</div>
 
 </div>
