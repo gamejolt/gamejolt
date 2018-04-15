@@ -149,6 +149,16 @@
 				block
 				event-label="profile"
 				/>
+			<app-button
+				v-else
+				primary
+				block
+				:to="{
+					name: 'dash.account.edit',
+				}"
+				>
+				<translate>Edit Profile</translate>
+			</app-button>
 		</template>
 
 	</app-page-header>
