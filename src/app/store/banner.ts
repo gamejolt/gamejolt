@@ -102,7 +102,7 @@ class MigrationBanner extends Banner {
 	}
 
 	get isActive() {
-		if (Screen.isXs) {
+		if (Screen.isXs || !store || !store.state.app.user) {
 			return false;
 		}
 
