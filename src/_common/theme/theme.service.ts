@@ -7,6 +7,10 @@ export class Theme {
 	static theme = new ThemeModel();
 
 	static sync() {
+		if (GJ_IS_SSR) {
+			return;
+		}
+
 		if (Settings.get('theme-dark')) {
 			document.body.classList.add('theme-dark');
 			this.isDark = true;
