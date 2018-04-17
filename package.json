@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.16.0",
+	"version": "0.16.1",
 	"scripts": {
 		"postinstall": "sh ./git-hooks/setup-hooks.sh",
 		"dev": "gulp watch",
@@ -82,7 +82,7 @@
 	},
 	"dependencies": {
 		"axios": "0.17.1",
-		"client-voodoo": "2.0.3",
+		"client-voodoo": "2.0.4",
 		"nwjs-snappy-updater": "1.1.0",
 		"polished": "^1.9.2"
 	},
