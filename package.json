@@ -82,7 +82,7 @@
 	},
 	"dependencies": {
 		"axios": "0.17.1",
-		"client-voodoo": "2.0.3",
+		"client-voodoo": "2.0.4",
 		"nwjs-snappy-updater": "1.1.0",
 		"polished": "^1.9.2"
 	},
