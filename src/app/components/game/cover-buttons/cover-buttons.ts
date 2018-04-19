@@ -69,9 +69,15 @@ export class AppGameCoverButtons extends Vue {
 		Analytics.trackEvent('game-cover-buttons', 'download', 'play');
 
 		// Prioritize HTML build.
-		const defaultBuild = this.browserBuilds.find(item => item.type === GameBuild.TYPE_HTML);
+		let defaultBuild = this.browserBuilds.find(item => item.type === GameBuild.TYPE_HTML);
+
+		// If no HTML build, use something else.
+		if (!defaultBuild && this.browserBuilds.length) {
+			defaultBuild = this.browserBuilds[0];
+		}
 
 		const build = this.chooseBuild(this.browserBuilds, defaultBuild);
+
 		if (build) {
 			GamePlayModal.show(this.game, build);
 		}
