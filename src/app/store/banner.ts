@@ -94,25 +94,9 @@ class OfflineBanner extends Banner {
 	}
 }
 
-class MigrationBanner extends Banner {
-	get message() {
-		return Translate.$gettext(
-			`Heads up! Game Jolt will be offline starting Wednesday midnight Eastern Time for an estimated 6 hours while we do some planned migration work.`
-		);
-	}
-
-	get isActive() {
-		if (Screen.isXs || !store || !store.state.app.user) {
-			return false;
-		}
-
-		return true;
-	}
-}
-
 @VuexModule()
 export class BannerStore extends VuexStore<BannerStore, BannerActions, BannerMutations> {
-	banners: Banner[] = [new NotificationsBanner(), new OfflineBanner(), new MigrationBanner()];
+	banners: Banner[] = [new NotificationsBanner(), new OfflineBanner()];
 
 	get shouldShowBanner() {
 		return !!this.currentBanner;
