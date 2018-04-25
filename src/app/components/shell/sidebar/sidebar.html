@@ -7,7 +7,6 @@
 	v-shortkey="[ 'm' ]"
 	@shortkey="toggleLeftPane"
 	>
-
 	<!--
 		Gotta put any popovers out of the content area.
 		This is so that we can scroll on the Y axis, but overflow on the X.
@@ -203,7 +202,10 @@
 		</div>
 	</app-popover>
 
-	<div class="shell-sidebar-content fill-darkest scrollable overlay-scrollbar">
+	<app-scroll-scroller
+		overlay
+		class="shell-sidebar-content fill-darkest"
+		>
 
 		<ul class="shell-nav">
 			<li class="offline-disable">
@@ -554,5 +556,5 @@
 
 		</template>
 
-	</div>
+	</app-scroll-scroller>
 </div>

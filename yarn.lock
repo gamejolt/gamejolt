@@ -88,6 +88,10 @@
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
 
+"@types/simplebar@2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@types/simplebar/-/simplebar-2.4.1.tgz#19d40e2982115be98cb743debf3b286c3a014550"
+
 "@types/stripe@2.0.2":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@types/stripe/-/stripe-2.0.2.tgz#d27c2f5a26ded985f83f7159e135ba2fcbc7b16f"
@@ -4430,7 +4434,7 @@ lodash.clonedeep@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
 
-lodash.debounce@^4.0.6:
+lodash.debounce@^4.0.6, lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
 
@@ -5260,7 +5264,7 @@ object-assign@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-3.0.0.tgz#9bedd5ca0897949bca47e7ff408062d549f587f2"
 
-object-assign@^4.0.0, object-assign@^4.0.1, object-assign@^4.1.0:
+object-assign@^4.0.0, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
 
@@ -6557,6 +6561,10 @@ requires-port@1.0.x, requires-port@1.x.x, requires-port@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
 
+resize-observer-polyfill@^1.4.2:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.0.tgz#660ff1d9712a2382baa2cad450a4716209f9ca69"
+
 resolve-cwd@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/resolve-cwd/-/resolve-cwd-2.0.0.tgz#00a9f7387556e27038eae232caa372a6a59b665a"
@@ -6689,6 +6697,10 @@ schema-utils@^0.3.0:
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-0.3.0.tgz#f5877222ce3e931edae039f17eb3716e7137f8cf"
   dependencies:
     ajv "^5.0.0"
+
+scrollbarwidth@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/scrollbarwidth/-/scrollbarwidth-0.1.3.tgz#1b0de64e288c38c427f4a01fe00a462a04b94fdf"
 
 seek-bzip@^1.0.3:
   version "1.0.5"
@@ -6837,6 +6849,15 @@ simple-glob@~0.1.0:
     glob "~3.2.8"
     lodash "~2.4.1"
     minimatch "~0.2.14"
+
+simplebar@2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/simplebar/-/simplebar-2.6.1.tgz#578871eb91823712fc62d357a671062e12cb7ad6"
+  dependencies:
+    lodash.debounce "^4.0.8"
+    object-assign "^4.1.1"
+    resize-observer-polyfill "^1.4.2"
+    scrollbarwidth "^0.1.3"
 
 slash@^1.0.0:
   version "1.0.0"

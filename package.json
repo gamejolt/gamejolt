@@ -28,6 +28,7 @@
 		"@types/phoenix": "0.0.4",
 		"@types/stripe": "2.0.2",
 		"@types/ua-parser-js": "0.7.32",
+		"@types/simplebar": "2.4.1",
 		"autosize": "4.0.0",
 		"chart.js": "2.7.1",
 		"codemirror": "5.32.0",
@@ -75,7 +76,8 @@
 		"vuedraggable": "2.15.0",
 		"vuex": "3.0.1",
 		"vuex-class": "0.3.0",
-		"vuex-router-sync": "5.0.0"
+		"vuex-router-sync": "5.0.0",
+		"simplebar": "2.6.1"
 	},
 	"optionalDependencies": {
 		"appdmg": "0.5.2"
@@ -102,8 +104,10 @@
 		"plugin": true
 	},
 	"clientManifestUrl": "https://d.gamejolt.net/data/client/manifest-2.json",
-	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
-	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
+	"chromium-args":
+		"--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+	"user-agent":
+		"GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
 		"linux": {
 			"main": "app://game-jolt-client/package/index.html#/",
