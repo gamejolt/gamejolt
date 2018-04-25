@@ -9,6 +9,7 @@ import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppCard } from '../../../../../lib/gj-lib-client/components/card/card';
 import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 
 @View
 @Component({
@@ -28,6 +29,8 @@ export class AppFriendRequestPopoverItem extends Vue {
 	@AppState user: AppStore['user'];
 
 	isInview = false;
+
+	readonly Screen = Screen;
 
 	get them() {
 		return this.request.getThem(this.user!);
