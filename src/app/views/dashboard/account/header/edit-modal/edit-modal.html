@@ -1,0 +1,48 @@
+<app-modal>
+
+	<div class="modal-controls">
+		<app-button @click="modal.dismiss()">
+			<translate>Close</translate>
+		</app-button>
+	</div>
+
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-sm-4 col-sm-push-8">
+				<app-button
+					v-if="app.user.header_media_item"
+					block
+					@click.prevent="clearHeader"
+					>
+					<translate>Clear Header</translate>
+				</app-button>
+				<br>
+
+				<div class="page-help">
+					<p>
+						<translate>
+							Headers are the big, banner-like images that adorn the tops of pages. For your header to look its best on all devices, make sure anything important is located near the center of the image.
+						</translate>
+					</p>
+					<p>
+						<a class="link-help" href="https://help.gamejolt.com/dev-page-headers" target="_blank">
+							<translate>What are the header requirements and guidelines?</translate>
+						</a>
+					</p>
+				</div>
+			</div>
+
+			<div class="col-sm-8 col-sm-pull-4">
+
+				<form-user-header
+					:model="app.user"
+					@submit="modal.dismiss()"
+					/>
+
+			</div>
+		</div>
+	</div>
+
+</app-modal>
+
+
