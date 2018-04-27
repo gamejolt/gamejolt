@@ -1,6 +1,6 @@
 <div>
 
-	<div v-if="Screen.isXs" class="well fill-darker sans-margin-bottom">
+	<div v-if="Screen.isXs" class="well-row fill-darker sans-margin-bottom">
 		<app-button
 			block
 			icon="chevron-left"
@@ -18,15 +18,40 @@
 			<small>@{{ app.user.username }}</small>
 		</p>
 
-		<app-user-avatar slot="spotlight" :user="app.user" />
+		<app-editable-overlay
+			slot="spotlight"
+			class="-fill"
+			@click="showEditAvatar()"
+			:disabled="$route.name !== 'dash.account.edit'"
+			>
+			<translate slot="overlay">Change</translate>
+			<app-user-avatar
+				:user="app.user"
+				/>
+		</app-editable-overlay>
 
 	</app-page-header>
 
-	<app-expand :when="$route.name === 'dash.account.header'" v-if="app.user.header_media_item">
-		<app-media-item-cover
-			:media-item="app.user.header_media_item"
-			:max-height="400"
-			/>
+	<app-expand :when="$route.name === 'dash.account.edit'">
+		<app-editable-overlay @click="showEditHeader()">
+			<translate slot="overlay">Change Profile Header</translate>
+
+			<!--
+				If no header yet, show their highlight color with a min-height.
+			-->
+			<div
+				class="fill-highlight"
+				:style="{
+					'min-height': !app.user.header_media_item ? '200px' : '',
+				}"
+				>
+				<app-media-item-cover
+					v-if="app.user.header_media_item"
+					:media-item="app.user.header_media_item"
+					:max-height="400"
+					/>
+			</div>
+		</app-editable-overlay>
 	</app-expand>
 
 	<!-- Don't show content before this route has loaded in the account data. -->
@@ -43,22 +68,6 @@
 									active-class="active"
 									>
 									<translate>Profile</translate>
-								</router-link>
-							</li>
-							<li>
-								<router-link
-									:to="{ name: 'dash.account.avatar' }"
-									active-class="active"
-									>
-									<translate>Avatar</translate>
-								</router-link>
-							</li>
-							<li>
-								<router-link
-									:to="{ name: 'dash.account.header' }"
-									active-class="active"
-									>
-									<translate>Profile Header</translate>
 								</router-link>
 							</li>
 							<li>
