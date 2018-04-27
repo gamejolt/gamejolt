@@ -13,10 +13,12 @@ import { User } from '../lib/gj-lib-client/components/user/user.model';
 import { date } from '../lib/gj-lib-client/vue/filters/date';
 import { loadCurrentLanguage } from '../utils/translations';
 import { Store } from './store/index';
+import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
 
 @View
 @Component({
 	components: {
+		AppTheme,
 		AppErrorPage,
 		AppLoadingBar,
 		AppGrowls,

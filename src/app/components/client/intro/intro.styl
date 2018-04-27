@@ -1,15 +1,16 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 >>> body.client-intro-no-overflow
 	overflow: hidden
 
 .client-intro
+	theme-prop('background-color', 'darkest')
 	position: fixed
 	top: 0
 	right: 0
 	bottom: 0
 	left: 0
-	background-color: $gray-darkest
 	z-index: 100000
 	display: flex
 	align-items: center
@@ -17,8 +18,8 @@
 	flex-direction: column
 
 	&.-leave
+		theme-prop('background-color', 'darkest-trans')
 		transition: all 500ms
-		background-color: rgba($gray-darkest, 0)
 		pointer-events: none
 
 		.-wrap

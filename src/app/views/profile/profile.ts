@@ -28,6 +28,7 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
+import { ThemeMutation, ThemeStore } from '../../../lib/gj-lib-client/components/theme/theme.store';
 
 @View
 @Component({
@@ -50,6 +51,7 @@ export default class RouteProfile extends BaseRouteComponent {
 	@Prop(String) username: string;
 
 	@State app: Store['app'];
+	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
 
 	user: User | null = null;
 	headerMediaItem: MediaItem | null = null;
@@ -80,6 +82,7 @@ export default class RouteProfile extends BaseRouteComponent {
 		Ads.setAdUnit('devprofile');
 
 		this.user = new User($payload.user);
+		this.setPageTheme(this.user.theme);
 
 		this.headerMediaItem = $payload.headerMediaItem
 			? new MediaItem($payload.headerMediaItem)
@@ -97,6 +100,10 @@ export default class RouteProfile extends BaseRouteComponent {
 		} else {
 			this.userFriendship = null;
 		}
+	}
+
+	destroyed() {
+		this.setPageTheme(null);
 	}
 
 	acceptFriendRequest() {

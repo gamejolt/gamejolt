@@ -1,13 +1,13 @@
 // The popping in/out when the page's height changes is really jarring.
 // Always show the vertical scrollbar.
-body
+html, body
+	theme-prop('background-color', 'darkest')
 	overflow-y: scroll
-	background-color: $gray-darkest
 
 #content
+	theme-prop('background-color', 'darkest')
 	overflow: hidden
 	margin-bottom: ($grid-gutter-width / 2)
-	background-color: $gray-darkest
 
 	.container
 		padding-top: ($grid-gutter-width / 2)

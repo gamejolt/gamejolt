@@ -7,8 +7,10 @@ import { Connection } from '../lib/gj-lib-client/components/connection/connectio
 import { AppLoadingBar } from '../lib/gj-lib-client/components/loading/bar/bar';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { loadCurrentLanguage } from '../utils/translations';
+import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
 
 let components: any = {
+	AppTheme,
 	AppLoadingBar,
 	AppGrowls,
 	AppErrorPage,

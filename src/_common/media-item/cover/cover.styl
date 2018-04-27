@@ -1,11 +1,12 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .media-item-cover-container
+	theme-prop('background-color', 'gray')
 	display: block
 	overflow: hidden
 	width: 100%
 	height: auto
-	background-color: $gray
 
 .media-item-cover
 	padding: 0

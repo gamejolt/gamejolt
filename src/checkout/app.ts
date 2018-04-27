@@ -16,8 +16,10 @@ import { date } from '../lib/gj-lib-client/vue/filters/date';
 import { loadCurrentLanguage } from '../utils/translations';
 import { Store } from './store/index';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
+import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
 
 let components: any = {
+	AppTheme,
 	AppErrorPage,
 	AppLoadingBar,
 	AppGrowls,

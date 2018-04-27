@@ -53,8 +53,8 @@ fieldset
 	width: 50%
 
 .checkbox
+	theme-prop('color', 'gray')
 	cursor: pointer
-	color: $gray
 	font-weight: normal
 	font-size: $font-size-small
 
@@ -72,23 +72,25 @@ fieldset
 
 		// Up arrow.
 		&::before
-			caret(color: $gray-lightest, direction: 'up', size: 10px)
+			caret(color: var(--theme-lightest), direction: 'up', size: 10px)
 			content: ''
 
 a.card-list-item
 	clearfix()
 	rounded-corners()
+	theme-prop('border-color', 'lighter')
 	display: block
 	color: $black
 	padding: 15px
 	margin-bottom: 10px
-	border: 1px solid $gray-lighter
+	border-width: 1px
+	border-style: solid
 
 	&:hover
-		border-color: $gray-lighter
+		theme-prop('border-color', 'lighter')
 
 	&.active
-		border-color: $gray
+		theme-prop('border-color', 'gray')
 
 h4
 	font-weight: 300

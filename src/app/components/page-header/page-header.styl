@@ -42,20 +42,20 @@ $-cover-buttons-height = $button-md-line-height + 20px
 			padding-top: ($-cover-buttons-height / 2)
 
 		.page-header-cover-buttons
+			theme-prop('background-color', 'darkest')
 			position: absolute
 			margin-bottom: 0
 			left: 0
 			right: 0
 			top: 0
 			height: ($-cover-buttons-height / 2)
-			background-color: $gray-darkest
 			text-align: center
 
 			&-inner
+				theme-prop('background-color', 'darkest')
 				position: relative
 				display: inline-flex
 				height: $-cover-buttons-height
-				background-color: $gray-darkest
 				padding-top: 7px
 
 			&-edge
@@ -66,7 +66,7 @@ $-cover-buttons-height = $button-md-line-height + 20px
 				height: $-half
 
 				path
-					fill: $gray-darkest
+					theme-prop('fill', 'darkest')
 
 				&.-left
 					left: -($-half) + 1px
@@ -103,8 +103,8 @@ $-cover-buttons-height = $button-md-line-height + 20px
 			bottom: -((@width / 2) + 5px)
 
 		&.dark
-			background-color: $gray-darker
-			border-color: $gray
+			theme-prop('background-color', 'darker')
+			theme-prop('border-color', 'gray')
 
 		img
 			max-width: 100%
