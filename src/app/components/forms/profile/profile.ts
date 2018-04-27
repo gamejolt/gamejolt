@@ -31,9 +31,6 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSub
 	usernameChangedOn = 0;
 	usernameTimeLeft = 0;
 	usernameDuration = '';
-	nameChangedOn = 0;
-	nameTimeLeft = 0;
-	nameDuration = '';
 	isBioLocked = false;
 
 	Environment = Environment;
@@ -45,15 +42,9 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSub
 	onLoad(payload: any) {
 		this.usernameChangedOn = payload.usernameChangedOn;
 		this.usernameTimeLeft = payload.usernameTimeLeft;
-		this.nameChangedOn = payload.nameChangedOn;
-		this.nameTimeLeft = payload.nameTimeLeft;
 
 		if (this.usernameTimeLeft) {
 			this.usernameDuration = distanceInWordsToNow(Date.now() + this.usernameTimeLeft);
-		}
-
-		if (this.nameTimeLeft) {
-			this.nameDuration = distanceInWordsToNow(Date.now() + this.nameTimeLeft);
 		}
 
 		this.isBioLocked = payload.isBioLocked;
