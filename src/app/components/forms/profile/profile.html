@@ -47,7 +47,6 @@
 	</div>
 
 	<app-form-group
-		v-if="!nameTimeLeft"
 		name="name"
 		:label="$gettext( `dash.profile.edit.display_name_label` )"
 		:optional="true"
@@ -70,18 +69,6 @@
 			<translate>Your display name is an optional personal identifier (such as a company name or real name). Unlike usernames, display names can contain spaces and special characters.</translate>
 		</p>
 	</app-form-group>
-
-	<div class="form-group" v-else>
-		<label class="control-label"><translate>dash.profile.edit.display_name_label</translate></label>
-		<p class="form-control-static">{{ formModel.name }}</p>
-		<p class="help-block">
-			<translate>You can only change your display name once a week.</translate>
-			<br>
-			<translate :translate-params="{ duration: nameDuration }">
-				You have %{ duration } left until you can change it again.
-			</translate>
-		</p>
-	</div>
 
 	<app-form-group
 		name="web_site"
