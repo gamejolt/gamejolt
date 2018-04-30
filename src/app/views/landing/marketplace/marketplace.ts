@@ -15,6 +15,7 @@ import {
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
+import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 
 @View
 @Component({
@@ -22,6 +23,7 @@ import { Store } from '../../../store/index';
 	components: {
 		AppGameThumbnail,
 		AppAuthJoin: AppAuthJoinLazy,
+		AppThemeSvg,
 	},
 	directives: {
 		AppTrackEvent,

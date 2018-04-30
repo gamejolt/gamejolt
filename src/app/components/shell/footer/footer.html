@@ -5,7 +5,7 @@
 			<div class="text-center">
 				<p>
 					<router-link :to="{ name: 'landing.client' }" v-app-track-event="`footer:client-promo`">
-						<img src="~img/game-jolt-client-logo.svg" alt="Game Jolt Client">
+						<app-theme-svg src="~img/game-jolt-client-logo.svg" alt="Game Jolt Client" />
 					</router-link>
 				</p>
 				<p>
@@ -25,7 +25,7 @@
 
 		<div class="footer-jolt" v-if="Screen.isXs">
 			<router-link :to="{ name: 'discover.home' }">
-				<img src="~img/jolt.svg" alt="Game Jolt" width="68" height="72">
+				<app-theme-svg src="~img/jolt.svg" alt="" width="68" height="72" />
 			</router-link>
 		</div>
 
@@ -159,7 +159,7 @@
 		<div class="clearfix">
 			<div class="footer-jolt" v-if="!Screen.isXs">
 				<router-link :to="{ name: 'discover.home' }">
-					<img src="~img/jolt.svg" alt="Game Jolt" width="68" height="72">
+					<app-theme-svg src="~img/jolt.svg" alt="" width="68" height="72" />
 				</router-link>
 			</div>
 			<div class="footer-meta">

@@ -21,8 +21,8 @@
 		<app-client-history-navigator v-if="GJ_IS_CLIENT" />
 
 		<router-link class="navbar-item" :to="{ name: 'discover.home' }">
-			<img v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="Game Jolt">
-			<img v-if="Screen.isMobile" src="~img/jolt.svg" alt="Game Jolt">
+			<app-theme-svg v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="" />
+			<app-theme-svg v-if="Screen.isMobile" src="~img/jolt.svg" alt="" />
 		</router-link>
 
 		<div class="navbar-separator hidden-xs"></div>

@@ -9,6 +9,7 @@ import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import * as _ClientSystemReportModalMod from '../../client/system-report-modal/system-report-modal.service';
+import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 
 let ClientSystemReportModalMod: typeof _ClientSystemReportModalMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -21,6 +22,7 @@ if (GJ_IS_CLIENT) {
 		AppJolticon,
 		AppTranslateLangSelector,
 		AppAd,
+		AppThemeSvg,
 	},
 	directives: {
 		AppTrackEvent,

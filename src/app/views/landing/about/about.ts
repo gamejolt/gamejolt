@@ -4,10 +4,14 @@ import View from '!view!./about.html?style=./about.styl';
 import { importContext } from '../../../../lib/gj-lib-client/utils/utils';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 
 @View
 @Component({
 	name: 'RouteLandingAbout',
+	components: {
+		AppThemeSvg,
+	},
 })
 export default class RouteLandingAbout extends BaseRouteComponent {
 	readonly assetUrls = importContext(require.context('./', false, /\.png$/));

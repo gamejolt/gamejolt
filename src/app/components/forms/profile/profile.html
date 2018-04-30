@@ -8,7 +8,7 @@
 			@changed="onThemeChanged()"
 			/>
 		<p class="help-block">
-			<translate>Setting a color theme will change how Game Jolt looks for you. When other people view your profile, they'll also be switched to your theme.</translate>
+			<translate>Setting a theme will change how Game Jolt looks for you. When other people view your profile, they'll also be switched to your theme.</translate>
 		</p>
 	</app-form-group>
 
@@ -102,10 +102,6 @@
 		:label="$gettext( `dash.profile.edit.description_label` )"
 		:optional="true"
 		>
-
-		<p class="help-block" v-translate>
-			dash.profile.edit.description_help_html
-		</p>
 
 		<app-form-control-markdown
 			preview-class="user-compiled-description"
