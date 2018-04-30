@@ -18,11 +18,8 @@ import { Settings } from './settings/settings.service';
  */
 export function bootstrapCommon(store: VuexStore, router: VueRouter, appComponent: typeof Vue) {
 	if (store.state.theme) {
-		if (Settings.get('theme-dark')) {
-			store.commit('theme/setDark', true);
-		} else {
-			store.commit('theme/setDark', false);
-		}
+		store.commit('theme/setDark', Settings.get('theme-dark'));
+		store.commit('theme/setAlwaysOurs', Settings.get('theme-always-ours'));
 	}
 
 	Meta.init(router);

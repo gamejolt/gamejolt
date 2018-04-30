@@ -15,6 +15,10 @@ const defaultSettings: { [k: string]: Setting } = {
 		type: 'boolean',
 		val: false,
 	},
+	'theme-always-ours': {
+		type: 'boolean',
+		val: false,
+	},
 	'game-install-dir': {
 		type: 'string',
 		val: () => {
