@@ -1,5 +1,18 @@
 <app-form name="profileForm">
 	<app-form-group
+		name="theme"
+		:label="$gettext(`Color Theme`)"
+		>
+		<app-form-control-theme
+			class="pull-right"
+			@changed="onThemeChanged()"
+			/>
+		<p class="help-block">
+			<translate>Setting a color theme will change how Game Jolt looks for you. When other people view your profile, they'll also be switched to your theme.</translate>
+		</p>
+	</app-form-group>
+
+	<app-form-group
 		v-if="!usernameTimeLeft"
 		name="username"
 		:label="$gettext( `dash.profile.edit.username_label` )"

@@ -82,7 +82,7 @@ export default class RouteProfile extends BaseRouteComponent {
 		Ads.setAdUnit('devprofile');
 
 		this.user = new User($payload.user);
-		this.setPageTheme(this.user.theme);
+		this.setPageTheme(this.user.theme || null);
 
 		this.headerMediaItem = $payload.headerMediaItem
 			? new MediaItem($payload.headerMediaItem)

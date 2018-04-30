@@ -13,6 +13,11 @@ import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppFormControlMarkdown } from '../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
+import { AppFormControlTheme } from '../../../../lib/gj-lib-client/components/form-vue/control/theme/theme';
+import {
+	ThemeMutation,
+	ThemeStore,
+} from '../../../../lib/gj-lib-client/components/theme/theme.store';
 
 @View
 @Component({
@@ -21,12 +26,15 @@ import { AppFormControlMarkdown } from '../../../../lib/gj-lib-client/components
 		AppExpand,
 		AppJolticon,
 		AppFormControlMarkdown,
+		AppFormControlTheme,
 	},
 })
 export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSubmitError {
 	modelClass = User;
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
+
+	@ThemeMutation setFormTheme: ThemeStore['setFormTheme'];
 
 	usernameChangedOn = 0;
 	usernameTimeLeft = 0;
@@ -37,6 +45,10 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSub
 
 	get loadUrl() {
 		return '/web/dash/profile/save';
+	}
+
+	destroyed() {
+		this.setFormTheme(null);
 	}
 
 	onLoad(payload: any) {
@@ -54,5 +66,9 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSub
 		if (response.errors && response.errors['bio-locked']) {
 			this.isBioLocked = true;
 		}
+	}
+
+	onThemeChanged() {
+		this.setFormTheme(this.formModel.theme || null);
 	}
 }
