@@ -8,7 +8,11 @@ import {
 	FormOnInit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import * as _ClientAutoStartMod from '../../../../_common/client/autostart/autostart.service';
-import { Theme } from '../../../../_common/theme/theme.service';
+import {
+	ThemeState,
+	ThemeMutation,
+	ThemeStore,
+} from '../../../../lib/gj-lib-client/components/theme/theme.store';
 
 let ClientAutoStartMod: typeof _ClientAutoStartMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -29,6 +33,7 @@ type FormModel = {
 	limit_extractions: boolean;
 	autostart_client: boolean;
 	theme_dark: boolean;
+	theme_always_ours: boolean;
 };
 
 @View
@@ -38,6 +43,11 @@ type FormModel = {
 	},
 })
 export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
+	@ThemeState isDark: ThemeStore['isDark'];
+	@ThemeState alwaysOurs: ThemeStore['alwaysOurs'];
+	@ThemeMutation setDark: ThemeStore['setDark'];
+	@ThemeMutation setAlwaysOurs: ThemeStore['setAlwaysOurs'];
+
 	warnOnDiscard = false;
 
 	get canClientAutostart() {
@@ -53,7 +63,8 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 		this.setField('broadcast_modal', Settings.get('broadcast-modal'));
 		this.setField('animated_thumbnails', Settings.get('animated-thumbnails'));
 		this.setField('feed_notifications', Settings.get('feed-notifications'));
-		this.setField('theme_dark', Theme.isDark);
+		this.setField('theme_dark', this.isDark);
+		this.setField('theme_always_ours', this.alwaysOurs);
 
 		if (GJ_IS_CLIENT) {
 			this.setField('game_install_dir', Settings.get('game-install-dir'));
@@ -109,7 +120,10 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 		Settings.set('broadcast-modal', this.formModel.broadcast_modal);
 		Settings.set('animated-thumbnails', this.formModel.animated_thumbnails);
 		Settings.set('feed-notifications', this.formModel.feed_notifications);
-		Theme.setDark(this.formModel.theme_dark);
+		Settings.set('theme-dark', this.formModel.theme_dark);
+		Settings.set('theme-always-ours', this.formModel.theme_always_ours);
+		this.setDark(this.formModel.theme_dark);
+		this.setAlwaysOurs(this.formModel.theme_always_ours);
 
 		if (GJ_IS_CLIENT) {
 			Settings.set('game-install-dir', this.formModel.game_install_dir);

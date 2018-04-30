@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .stat-graph-overlay
 	display: block
@@ -6,6 +7,7 @@
 	margin-bottom: $line-height-computed
 
 	&::before
+		theme-prop('background-color', 'light')
 		display: block
 		content: ''
 		position: absolute
@@ -14,7 +16,6 @@
 		bottom: 0
 		height: 3px
 		opacity: 0
-		background-color: $gray-light
 		transition: opacity 300ms
 		z-index: 1
 

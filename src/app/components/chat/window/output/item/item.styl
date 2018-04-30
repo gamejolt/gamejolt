@@ -53,12 +53,14 @@
 
 		// Some different styling for the fade collapse.
 		.fade-collapse-collapsed
+			theme-prop('border-bottom-color', 'light')
 			margin-bottom: 5px
-			border-bottom: 1px dashed $gray-light
+			border-bottom-width: 1px
+			border-bottom-style: dashed
 
 			&::before
+				theme-prop('background', 'darker', true)
 				max-height: 5px !important
-				background: $gray-darker !important
 
 		// Only shown during fade-collapse of messages that are too long.
 		.hidden-text-expander
@@ -69,11 +71,11 @@
 
 		// Only show mod tools on larger screens
 		@media $media-sm-up
+			theme-prop('background-color', 'darker')
 			position: absolute
 			top: 0
 			right: 0
 			padding: 2px
-			background-color: $gray-darker
 			z-index: 2
 
 			../:hover &
@@ -96,7 +98,7 @@
 	// System chat messages.
 	// Robo-Jolt and such.
 	.chat-msg-type-system
-		color: $gray
+		theme-prop('color', 'gray')
 		font-style: italic
 
 		span

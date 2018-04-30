@@ -8,10 +8,14 @@ import {
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 
 @View
 @Component({
 	name: 'RouteLandingGameApi',
+	components: {
+		AppThemeSvg,
+	},
 	directives: {
 		AppTooltip,
 	},

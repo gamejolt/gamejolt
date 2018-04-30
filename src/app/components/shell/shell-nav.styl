@@ -63,7 +63,7 @@ ul.shell-nav
 			line-height: $shell-nav-item-height
 
 			&:hover
-				background-color: $gray-darker
+				theme-prop('background-color', 'darker')
 				color: $dark-theme-link-hover
 
 			&.no-icon
@@ -89,6 +89,7 @@ ul.shell-nav ul
 		padding-left: 15px
 
 		&::after
+			theme-prop('background-color', 'darker')
 			content: ''
 			display: block
 			position: absolute
@@ -96,7 +97,6 @@ ul.shell-nav ul
 			top: 0
 			bottom: 0
 			width: 3px
-			background-color: $gray-darker
 
 			&:hover
 				display: none
@@ -145,10 +145,10 @@ ul.shell-nav ul
  * Nav Wells
  */
 .nav-well
+	theme-prop('background-color', 'darker')
 	padding: 15px
 	font-size: $font-size-small
-	background-color: $gray-darker
-	color: $$dark-theme-fg
+	color: $dark-theme-fg
 
 /**
  * Alert Panes

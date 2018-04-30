@@ -11,13 +11,10 @@ fieldset
 
 >>> .form-group
 	position: relative
-	margin: 0
+	margin-bottom: 6px
 
 	label[for]
 		display: none
-
-	.form-control
-		border-radius: 0
 
 	.jolticon
 		theme-prop('color', 'fg-muted')
@@ -26,20 +23,9 @@ fieldset
 		top: 11px
 		z-index: 3
 
-// Change form styling to use outlines instead of borders.
-// This will allow the outlines to overlap each other properly.
 >>> .form-control
 	position: relative
 	height: 40px
-	box-shadow: none
-	border: 0 !important
-	outline: 1px solid $input-border
-	z-index: 1
-
-	&:focus
-		outline: 1px solid $input-border-focus
-		outline-offset: 0 // Chrome adds an offset on focus for outlines.
-		z-index: 2
 
 	&.has-icon
 		padding-left: 33px
@@ -47,14 +33,16 @@ fieldset
 .left-col
 	float: left
 	width: 50%
+	padding-right: (6px / 2)
 
 .right-col
 	float: right
 	width: 50%
+	padding-left: (6px / 2)
 
 .checkbox
+	theme-prop('color', 'fg-muted')
 	cursor: pointer
-	color: $gray
 	font-weight: normal
 	font-size: $font-size-small
 
@@ -72,23 +60,25 @@ fieldset
 
 		// Up arrow.
 		&::before
-			caret(color: $gray-lightest, direction: 'up', size: 10px)
+			caret(color: var(--theme-bg-offset), direction: 'up', size: 10px)
 			content: ''
 
 a.card-list-item
 	clearfix()
 	rounded-corners()
+	theme-prop('border-color', 'bg-subtle')
 	display: block
-	color: $black
+	// color: $black
 	padding: 15px
 	margin-bottom: 10px
-	border: 1px solid $gray-lighter
+	border-width: 2px
+	border-style: solid
 
 	&:hover
-		border-color: $gray-lighter
+		theme-prop('border-color', 'highlight')
 
 	&.active
-		border-color: $gray
+		theme-prop('border-color', 'highlight')
 
 h4
 	font-weight: 300

@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .client-installed-game
 	position: relative
@@ -54,10 +55,10 @@
 			font-size: $font-size-tiny
 
 .-version
+	theme-prop('background', 'darkest')
 	position: absolute
 	bottom: 0
 	right: ($grid-gutter-width / 2)
-	background: $gray-darkest
 	color: $white
 	padding: 5px 10px
 	font-size: $font-size-tiny

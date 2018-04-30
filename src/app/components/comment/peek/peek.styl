@@ -21,7 +21,9 @@
 		margin-right: 10px
 
 		>>> img
-			border: 2px solid $gray-lighter
+			theme-prop('border-color', 'lighter')
+			border-width: 2px
+			border-style: solid
 			background-color: $white
 
 	&-content
