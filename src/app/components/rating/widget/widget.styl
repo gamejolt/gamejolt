@@ -3,53 +3,47 @@
 
 .rating-widget
 	clearfix()
-	position: relative
 	display: inline-block
 
-	&-icons
-		display: inline-block
-		margin-right: 20px
+.-icons
+	display: flex
+	align-items: center
+	justify-content: center
 
-		.rating-widget-big &
-			margin-right: 40px
+.-bubble
+	display: flex
+	margin-right: 3px
+	width: 30px
+	height: 30px
+	align-items: center
+	justify-content: center
+	border-radius: 50%
+	cursor: pointer
+	user-select: none
 
-	&-clear
-		theme-prop('color', 'fg-muted')
-		position: absolute
-		bottom: 4px
-		right: 0
-		width: 20px
-		text-align: center
-		cursor: pointer
-
-		.rating-widget-dark &
-			theme-prop('color', 'lightest')
-
-		.rating-widget-big &
-			width: 40px
-			right: 5px
-
-		.jolticon
-			display: none
-			cursor: pointer
-
-			@media $media-mobile
-				display: block
-
-			&:hover
-				theme-prop('color', 'notice')
-
-			.rating-widget:hover &
-				display: block
-
-	&-icon
-		theme-prop('color', 'fg-muted')
-		float: left
-		cursor: pointer
+	.jolticon
 		margin: 0 !important
+		cursor: pointer
 
-		&.hover
-			theme-prop('color', 'link')
+	&.-hover, &.-selected
+		theme-prop('background-color', 'highlight')
+		theme-prop('color', 'highlight-fg')
 
-		&.selected
-			theme-prop('color', 'link')
+.-clear
+	theme-prop('color', 'fg-muted')
+	width: 40px
+	text-align: center
+	cursor: pointer
+
+	.jolticon
+		display: none
+		cursor: pointer
+
+		@media $media-mobile
+			display: block
+
+		&:hover
+			theme-prop('color', 'notice')
+
+		.rating-widget:hover &
+			display: block
