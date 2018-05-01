@@ -36,7 +36,8 @@
 			<div class="col-sm-4 col-sm-push-8" v-if="!Screen.isXs || !post">
 
 				<div class="list-group">
-					<a class="list-group-item"
+					<a
+						class="list-group-item"
 						:class="{ 'has-icon': !Screen.isXs }"
 						v-for="_post of posts"
 						:key="_post.id"
@@ -54,12 +55,9 @@
 								<app-time-ago :date="_post.published_on" />
 							</div>
 						</h5>
-						<p class="list-group-item-text" v-if="_post.lead">
-							{{ _post.lead }}
-						</p>
 					</a>
 				</div>
-				<br>
+				<!-- <br>
 
 				<div>
 					<app-button
@@ -69,48 +67,37 @@
 						>
 						<translate>View Full Changelog</translate>
 					</app-button>
-				</div>
+				</div> -->
 
 			</div>
 			<div class="col-sm-8 col-sm-pull-4" v-if="!Screen.isXs || post">
 
 				<h2 class="section-header">
-					<a class="link-unstyled" :href="post.url" target="_blank">
+					<router-link
+						class="link-unstyled"
+						:to="{
+							name: 'discover.games.view.devlog.view',
+							params: {
+								slug: post.game.slug,
+								id: post.game.id,
+								postSlug: post.slug
+							}
+						}"
+						>
 						{{ post.title }}
-					</a>
+					</router-link>
 				</h2>
-
-				<p class="lead" v-if="post.lead">
-					{{ post.lead }}
-				</p>
 
 				<!--
 					Need to refresh social widgets any time post changes.
 				-->
-				<div class="social-widgets" v-for="post of [ post ]" :key="post.id">
+				<div class="social-widgets" :key="post.id">
 					<app-fireside-post-like-widget
 						:post="post"
 						/>
-
-					<template v-if="!GJ_IS_CLIENT">
-						<span class="dot-separator hidden-xs"></span>
-						<br class="visible-xs">
-						<br class="visible-xs">
-
-						<app-social-twitter-share
-							:url="post.url"
-							:content="post.title"
-							/>
-
-						<span class="dot-separator"></span>
-
-						<app-social-facebook-like
-							:url="post.url"
-							/>
-					</template>
 				</div>
 
-				<hr class="underbar">
+				<br>
 
 				<div class="fireside-post-body">
 					<app-widget-compiler
@@ -126,27 +113,10 @@
 				<!--
 					Need to refresh social widgets any time post changes.
 				-->
-				<div class="social-widgets" v-for="post of [ post ]" :key="post.id">
+				<div class="social-widgets" :key="post.id">
 					<app-fireside-post-like-widget
 						:post="post"
 						/>
-
-					<template v-if="!GJ_IS_CLIENT">
-						<span class="dot-separator hidden-xs"></span>
-						<br class="visible-xs">
-						<br class="visible-xs">
-
-						<app-social-twitter-share
-							:url="post.url"
-							:content="post.title"
-							/>
-
-						<span class="dot-separator"></span>
-
-						<app-social-facebook-like
-							:url="post.url"
-							/>
-					</template>
 				</div>
 
 				<hr>
