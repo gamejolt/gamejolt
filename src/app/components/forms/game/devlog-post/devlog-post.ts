@@ -1,5 +1,6 @@
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./devlog-post.html?style=./devlog-post.styl';
+import { determine } from 'jstimezonedetect';
 
 import {
 	BaseForm,
@@ -22,6 +23,10 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
 import { FormOnSubmitSuccess } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { TimezoneData, Timezone } from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
+import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
+import * as startOfDay from 'date-fns/start_of_day';
+import * as addWeeks from 'date-fns/add_weeks';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -44,6 +49,9 @@ type FormGameDevlogPostModel = FiresidePost & {
 	poll_item8: string;
 	poll_item9: string;
 	poll_item10: string;
+
+	scheduled_timezone: string;
+	is_scheduled: boolean;
 };
 
 @View
@@ -56,6 +64,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppUserAvatarImg,
 		AppExpand,
 		AppJolticon,
+		AppFormControlDate
 	},
 	directives: {
 		AppFocusWhen,
@@ -81,6 +90,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	maxWidth = 0;
 	maxHeight = 0;
 	isShowingMoreOptions = false;
+	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = {};
+	now = 0;
 
 	readonly FiresidePost = FiresidePost;
 	readonly GameVideo = GameVideo;
@@ -117,7 +128,44 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		);
 	}
 
-	onInit() {
+	get scheduledTimezoneOffset() {
+		if (!this.formModel.scheduled_timezone) {
+			return 0;
+		}
+
+		const saleTz = this.timezoneByName(this.formModel.scheduled_timezone);
+		if (!saleTz) {
+			console.warn('Could not find timezone offset for: ' + saleTz);
+			return 0;
+		} else {
+			return saleTz.o * 1000;
+		}
+	}
+
+	get isScheduling() {
+		return this.formModel.is_scheduled;
+	}
+
+	async onInit() {
+		this.now = Date.now();
+
+		// Auto-detect timezone.
+		this.setField('scheduled_timezone', determine().name());
+
+		// Get timezones list.
+		this.timezones = await Timezone.getGroupedTimezones();
+		for (let region in this.timezones) {
+			for (let tz of this.timezones[region]) {
+				let offset = '';
+				if (tz.o > 0) {
+					offset = `+${tz.o / 3600}:00`;
+				} else if (tz.o < 0) {
+					offset = `-${-tz.o / 3600}:00`;
+				}
+				tz.label = `(UTC${offset}) ${tz.i}`;
+			}
+		}
+
 		const model = this.model!;
 
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
@@ -163,6 +211,24 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
+
+		if (this.model!.status == FiresidePost.STATUS_SCHEDULED) {
+			this.setField('scheduled_for', this.model!.scheduled_for);
+			this.setField('is_scheduled', true);
+		}
+		else {
+			this.setField('scheduled_for', startOfDay(addWeeks(Date.now(), 1)).getTime());
+		}
+	}
+
+	private timezoneByName(timezone: string) {
+		for (let region in this.timezones) {
+			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
+			if (tz) {
+				return tz;
+			}
+		}
+		return null;
 	}
 
 	createPoll() {
@@ -213,5 +279,14 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 	onSubmitSuccess() {
 		Object.assign(this.model as FiresidePost, this.formModel);
+	}
+
+	onSchedule() {
+		this.setField('is_scheduled', true);
+		this.now = Date.now();
+	}
+
+	stopScheduling() {
+		this.setField('is_scheduled', false);
 	}
 }

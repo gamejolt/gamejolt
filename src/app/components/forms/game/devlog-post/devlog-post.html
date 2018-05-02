@@ -104,18 +104,27 @@
 		</app-form-group>
 	</div>
 
-	<template v-if="!isPublished && !hasPoll">
+	<template v-if="!isPublished && (!hasPoll || !isScheduling)">
 		<div>
 			<app-button
+			 	v-if="!hasPoll"
 				sparse
 				icon="pedestals-numbers"
 				v-app-tooltip="$gettext(`Add poll`)"
 				@click.prevent="createPoll()"
 				/>
+			<app-button
+				v-if="!isScheduling"
+				sparse
+				v-app-tooltip="$gettext(`Automatically publish your post`)"
+				@click.prevent="onSchedule()"
+				>
+				<translate>Schedule Post</translate>
+			</app-button>
 		</div>
 		<br>
 	</template>
-	<div class="well fill-offset full-bleed" v-else-if="hasPoll">
+	<div class="well fill-offset full-bleed" v-if="hasPoll">
 		<fieldset>
 			<app-form-legend compact>
 				<translate>Set up poll</translate>
@@ -267,6 +276,65 @@
 				@click.prevent="removePoll()"
 				>
 				<translate>Remove poll</translate>
+			</app-button>
+		</div>
+	</div>
+	<div class="well fill-offset full-bleed" v-if="isScheduling">
+		<fieldset>
+			<app-form-legend compact>
+				<translate>Schedule publishing of post</translate>
+			</app-form-legend>
+
+			<app-form-group
+				name="scheduled_timezone"
+				:label="$gettext( `Timezone` )"
+				>
+				<p class="help-block">
+					<translate>All time selection below will use this timezone.</translate>
+				</p>
+
+				<p class="help-block">
+					<strong><translate>Should auto-detect, but if it doesn't, choose your closest city.</translate></strong>
+				</p>
+
+				<app-form-control-select>
+					<optgroup
+						v-for="(timezones, region) in timezones"
+						:label="region"
+						>
+						<option
+							v-for="timezone in timezones"
+							:value="timezone.i"
+							>
+							{{ timezone.label }}
+						</option>
+					</optgroup>
+				</app-form-control-select>
+
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group
+				name="scheduled_for"
+				:label="$gettext( `Date and time` )"
+				>
+				<app-form-control-date
+					:timezone-offset="scheduledTimezoneOffset"
+					:rules="{
+						min_date: now,
+					}"
+					/>
+				<app-form-control-errors :label="$gettext(`scheduled for`)" />
+			</app-form-group>
+
+		</fieldset>
+
+		<div class="text-right" v-if="isPollEditable">
+			<app-button
+				trans
+				@click.prevent="stopScheduling()"
+				>
+				<translate>Stop scheduling</translate>
 			</app-button>
 		</div>
 	</div>
