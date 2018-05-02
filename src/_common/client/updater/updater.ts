@@ -4,7 +4,6 @@
 import { Updater as NwjsUpdater } from 'nwjs-snappy-updater';
 import * as path from 'path';
 import * as os from 'os';
-import { Window } from 'nw.gui';
 import { Config } from 'client-voodoo';
 
 class Updater {
@@ -12,7 +11,7 @@ class Updater {
 
 	constructor() {
 		this.check();
-		window.setInterval(() => this.check(), Updater.CHECK_INTERVAL);
+		setInterval(() => this.check(), Updater.CHECK_INTERVAL);
 	}
 
 	async check() {
@@ -56,8 +55,7 @@ class Updater {
 		}
 
 		console.log('Updated! Reloading...');
-		const win = Window.get();
-		(win as any).reloadDev();
+		nw.Window.get().reload();
 	}
 }
 

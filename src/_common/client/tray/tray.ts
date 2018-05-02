@@ -1,6 +1,5 @@
 import Vue, { CreateElement } from 'vue';
 import { State } from 'vuex-class';
-import { Window, Tray, Menu, MenuItem } from 'nw.gui';
 import { Component } from 'vue-property-decorator';
 
 import { Client } from '../client.service';
@@ -8,7 +7,7 @@ import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-serv
 import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 
 declare var global: NodeJS.Global & {
-	tray: Tray | undefined;
+	tray: nw.Tray | undefined;
 };
 
 @Component({})
@@ -20,7 +19,7 @@ export class AppClientTray extends Vue {
 	isClosed = false;
 
 	static hook = {
-		menuBuilder: undefined as ((menu: Menu) => void) | undefined,
+		menuBuilder: undefined as ((menu: nw.Menu) => void) | undefined,
 	};
 
 	/**
@@ -32,7 +31,7 @@ export class AppClientTray extends Vue {
 	}
 
 	mounted() {
-		const win = Window.get();
+		const win = nw.Window.get();
 
 		win.on('blur', () => (this.isFocused = false));
 		win.on('focus', () => (this.isFocused = true));
@@ -53,7 +52,7 @@ export class AppClientTray extends Vue {
 	}
 
 	private toggleVisibility() {
-		const win = Window.get();
+		const win = nw.Window.get();
 
 		if (this.isClosed || this.isMinimized || !this.isFocused) {
 			Client.show();
@@ -71,21 +70,21 @@ export class AppClientTray extends Vue {
 			global.tray = undefined;
 		}
 
-		const tray = new Tray({
+		const tray = new nw.Tray({
 			title: 'Game Jolt Client',
 			// This has to be a relative path, hence the removal of the first /.
 			icon: require(`./icon${Screen.isHiDpi ? '-2x' : ''}-2x.png`).substr(1),
 			click: () => this.toggleVisibility(),
 		} as any);
 
-		const menu = new Menu();
+		const menu = new nw.Menu();
 
 		if (AppClientTray.hook.menuBuilder) {
 			AppClientTray.hook.menuBuilder(menu);
 		}
 
 		menu.append(
-			new MenuItem({
+			new nw.MenuItem({
 				label: this.$gettext('Quit'),
 				click: () => Client.quit(),
 			})

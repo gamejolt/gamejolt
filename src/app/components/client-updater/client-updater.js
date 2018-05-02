@@ -68,9 +68,7 @@
 					}
 
 					console.log('Updated! Reloading...');
-					var gui = require('nw.gui');
-					var win = gui.Window.get();
-					win.reloadDev();
+					nw.Window.get().reload();
 				});
 			})
 			.catch(function(err) {

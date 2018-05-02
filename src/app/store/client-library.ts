@@ -12,7 +12,6 @@ import {
 	Uninstaller,
 } from 'client-voodoo';
 import * as fs from 'fs';
-import * as nwGui from 'nw.gui';
 import * as path from 'path';
 import Vue from 'vue';
 import { Action, Mutation, namespace, State } from 'vuex-class';
@@ -682,7 +681,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 	@VuexAction
 	private async launcherInit() {
-		const pidDir = path.resolve(nwGui.App.dataPath, 'game-pids');
+		const pidDir = path.resolve(nw.App.dataPath, 'game-pids');
 		Config.setPidDir(pidDir);
 
 		try {

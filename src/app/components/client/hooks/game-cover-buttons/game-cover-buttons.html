@@ -3,14 +3,15 @@
 		For Client we hide this once they start installing a package or if they have something
 		installed.
 	-->
-	<button
-		class="btn btn-primary-outline"
+	<app-button
+		primary
+		outline
+		icon="play"
 		v-if="browserBuilds.length > 0 && !localPackage"
 		@click="$emit('play')"
 		>
-		<app-jolticon icon="play" />
 		<translate>Quick Play</translate>
-	</button>
+	</app-button>
 
 	<!--
 		Only show if there is any downloadable builds for the game. The component will show a

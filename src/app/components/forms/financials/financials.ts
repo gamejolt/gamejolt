@@ -142,7 +142,7 @@ export class FormFinancials extends BaseForm<FormModel>
 			}
 
 			if (GJ_IS_CLIENT) {
-				require('nw.gui').Shell.openExternal(response.authUrl);
+				nw.Shell.openExternal(response.authUrl);
 			} else {
 				window.location.href = response.authUrl;
 			}

@@ -73,9 +73,11 @@
   version "8.0.53"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.53.tgz#396b35af826fa66aad472c8cb7b8d5e277f4e6d8"
 
-"@types/nw.gui@0.0.20":
-  version "0.0.20"
-  resolved "https://registry.yarnpkg.com/@types/nw.gui/-/nw.gui-0.0.20.tgz#b690fbbb501404662737db85d595fdebefba6f98"
+"@types/nw.js@0.13.8":
+  version "0.13.8"
+  resolved "https://registry.yarnpkg.com/@types/nw.js/-/nw.js-0.13.8.tgz#c9504e2cc07de621dceb5db62dfea44b9d0bfd7d"
+  dependencies:
+    "@types/node" "*"
 
 "@types/phoenix@0.0.4":
   version "0.0.4"

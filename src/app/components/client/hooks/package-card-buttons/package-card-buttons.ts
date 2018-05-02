@@ -1,6 +1,5 @@
 import View from '!view!./package-card-buttons.html?style=./package-card-buttons.styl';
 import * as fs from 'fs';
-import { Shell } from 'nw.gui';
 import * as path from 'path';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
@@ -210,7 +209,7 @@ export class AppClientPackageCardButtons extends Vue {
 
 			// Just open the first file in the folder.
 			// This way we open within the package folder instead of the parent folder.
-			Shell.showItemInFolder(path.resolve(this.localPackage!.install_dir, files[0]));
+			nw.Shell.showItemInFolder(path.resolve(this.localPackage!.install_dir, files[0]));
 		});
 	}
 

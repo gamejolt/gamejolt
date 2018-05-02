@@ -24,7 +24,7 @@
 		"@types/hammerjs": "2.0.35",
 		"@types/jstimezonedetect": "1.0.1",
 		"@types/node": "8.0.53",
-		"@types/nw.gui": "0.0.20",
+		"@types/nw.js": "0.13.8",
 		"@types/phoenix": "0.0.4",
 		"@types/stripe": "2.0.2",
 		"@types/ua-parser-js": "0.7.32",
@@ -88,7 +88,8 @@
 		"nwjs-snappy-updater": "1.1.0",
 		"polished": "^1.9.2"
 	},
-	"main": "app://game-jolt-client/index.html#/",
+	"main": "chrome-extension://game-jolt-client/index.html#/",
+	"domain": "game-jolt-client",
 	"window": {
 		"show": true,
 		"width": 1250,
@@ -96,7 +97,6 @@
 		"min_height": 400,
 		"min_width": 400,
 		"position": "center",
-		"toolbar": true,
 		"frame": true,
 		"icon": "static-assets/client/icon-256x256.png"
 	},
@@ -110,23 +110,19 @@
 		"GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
 		"linux": {
-			"main": "app://game-jolt-client/package/index.html#/",
+			"main": "chrome-extension://game-jolt-client/package/index.html#/",
 			"window": {
-				"toolbar": false,
 				"icon": "package/static-assets/client/icon-256x256.png"
 			}
 		},
 		"win": {
-			"main": "app://game-jolt-client/package/index.html#/",
+			"main": "chrome-extension://game-jolt-client/package/index.html#/",
 			"window": {
-				"toolbar": false,
 				"icon": "package/static-assets/client/icon-256x256.png"
 			}
 		},
 		"osx": {
-			"window": {
-				"toolbar": false
-			}
+			"window": {}
 		}
 	}
 }

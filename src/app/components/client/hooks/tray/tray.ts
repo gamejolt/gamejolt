@@ -1,5 +1,4 @@
 import { Location } from 'vue-router';
-import { Menu, MenuItem } from 'nw.gui';
 import { Client } from '../../../../../_common/client/client.service';
 import { UserTokenModal } from '../../../user/token-modal/token-modal.service';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
@@ -11,9 +10,9 @@ function go(location: Location) {
 	Client.show();
 }
 
-export function clientTrayMenuBuilder(this: undefined, menu: Menu) {
+export function clientTrayMenuBuilder(this: undefined, menu: nw.Menu) {
 	menu.append(
-		new MenuItem({
+		new nw.MenuItem({
 			label: Translate.$gettext('Browse Games'),
 			click: () =>
 				go({
@@ -23,31 +22,31 @@ export function clientTrayMenuBuilder(this: undefined, menu: Menu) {
 		})
 	);
 
-	menu.append(new MenuItem({ type: 'separator' }));
+	menu.append(new nw.MenuItem({ type: 'separator' }));
 
 	menu.append(
-		new MenuItem({
+		new nw.MenuItem({
 			label: Translate.$gettext('Game Library'),
 			click: () => go({ name: 'library.installed' }),
 		})
 	);
 
 	menu.append(
-		new MenuItem({
+		new nw.MenuItem({
 			label: Translate.$gettext('Dashboard'),
 			click: () => go({ name: 'dash.main.overview' }),
 		})
 	);
 
 	menu.append(
-		new MenuItem({
+		new nw.MenuItem({
 			label: Translate.$gettext('Edit Account'),
 			click: () => go({ name: 'dash.account.edit' }),
 		})
 	);
 
 	menu.append(
-		new MenuItem({
+		new nw.MenuItem({
 			label: Translate.$gettext('Your Profile'),
 			click: () =>
 				go({
@@ -58,7 +57,7 @@ export function clientTrayMenuBuilder(this: undefined, menu: Menu) {
 	);
 
 	menu.append(
-		new MenuItem({
+		new nw.MenuItem({
 			label: Translate.$gettext('Your Game Token'),
 			click: () => {
 				UserTokenModal.show();
@@ -68,16 +67,16 @@ export function clientTrayMenuBuilder(this: undefined, menu: Menu) {
 	);
 
 	menu.append(
-		new MenuItem({
+		new nw.MenuItem({
 			label: Translate.$gettext('Settings'),
 			click: () => go({ name: 'settings' }),
 		})
 	);
 
-	menu.append(new MenuItem({ type: 'separator' }));
+	menu.append(new nw.MenuItem({ type: 'separator' }));
 
 	menu.append(
-		new MenuItem({
+		new nw.MenuItem({
 			label: Translate.$gettext('Logout'),
 			click: () => {
 				store.dispatch('logout');

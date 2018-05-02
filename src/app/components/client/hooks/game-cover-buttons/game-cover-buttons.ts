@@ -1,6 +1,6 @@
-import View from '!view!./game-cover-buttons.html?style=./game-cover-buttons.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import View from '!view!./game-cover-buttons.html';
 
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
