@@ -127,10 +127,6 @@ export class AppActivityFeedControls extends Vue {
 		return this.commentStore ? this.commentStore.count : 0;
 	}
 
-	get hasScheduleData() {
-		return !!this.post && !!this.post.scheduled_for && this.post.scheduled_for > 0;
-	}
-
 	async created() {
 		if (this.post) {
 			this.commentStore = await this.lockCommentStore({

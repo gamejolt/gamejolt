@@ -132,6 +132,10 @@ export class AppActivityFeedEventItem extends Vue {
 		return '';
 	}
 
+	get shouldShowScheduled() {
+		return this.post && this.post.isScheduled;
+	}
+
 	created() {
 		this.feed = findRequiredVueParent(this, AppActivityFeed);
 	}

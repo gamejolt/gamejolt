@@ -282,7 +282,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		Object.assign(this.model as FiresidePost, this.formModel);
 	}
 
-	onSchedule() {
+	addSchedule() {
 		this.setField('is_scheduled', true);
 		this.now = Date.now();
 	}

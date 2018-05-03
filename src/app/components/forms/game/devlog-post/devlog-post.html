@@ -113,14 +113,14 @@
 				v-app-tooltip="$gettext(`Add poll`)"
 				@click.prevent="createPoll()"
 				/>
+
 			<app-button
 				v-if="!isScheduling"
 				sparse
-				v-app-tooltip="$gettext(`Automatically publish your post`)"
-				@click.prevent="onSchedule()"
-				>
-				<translate>Schedule Post</translate>
-			</app-button>
+				icon="calendar-plus"
+				v-app-tooltip="$gettext(`Schedule your post`)"
+				@click.prevent="addSchedule()"
+				/>
 		</div>
 		<br>
 	</template>
