@@ -24,7 +24,7 @@ export class ChatMessage {
 	constructor(data: Partial<ChatMessage> = {}) {
 		Object.assign(this, data);
 
-		if (typeof this.loggedOn === 'number') {
+		if (typeof this.loggedOn === 'number' || typeof this.loggedOn === 'string') {
 			this.loggedOn = new Date(this.loggedOn);
 		}
 
